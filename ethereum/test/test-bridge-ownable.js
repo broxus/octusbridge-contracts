@@ -1,17 +1,36 @@
+const EthereumBridge = artifacts.require("EthereumBridge");
+
+const utils = require('./utils');
+const assert = require('assert');
+
+let ethereumBridge;
+
 contract('Testing Ethereum bridge ownable', async (accounts) => {
   before(async () => {
-  
+    ethereumBridge = await EthereumBridge.deployed();
   });
   
-  it('Unauthorized update of the owners', async () => {
-  
+  describe('Update owners set', async () => {
+    it('Unauthorized', async () => {
+    
+    });
+
+    it('Authorized', async () => {
+    
+    });
   });
   
-  it('Unauthorized update of the ', async () => {
+  describe('Update minimum owners to execute call', async () => {
+    it('Unauthorized', async () => {
+      const requiredOwnersToExecuteCall = await ethereumBridge
+        .requiredOwnersToExecuteCall();
   
-  });
+    });
   
-  it('Authorized update owners set', async () => {
+    it('Authorized', async () => {
+      const requiredOwnersToExecuteCall = await ethereumBridge
+        .requiredOwnersToExecuteCall();
   
+    });
   });
 });

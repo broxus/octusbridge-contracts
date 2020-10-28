@@ -1,8 +1,8 @@
 pragma solidity ^0.6.0;
 
 
-contract TargetExampleState {
-    uint currentState = 0;
+contract EventContractExample {
+    uint public currentState = 0;
 
     event StateChange(
         uint state,
