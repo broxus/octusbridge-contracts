@@ -11,7 +11,9 @@
   "dependencies": {
     "dotenv": "^8.2.0",
     "ganache-cli": "^6.12.1",
+    "minimist": "^1.2.5",
     "solidity-docgen": "^0.5.7",
+    "truffle": "^5.1.51",
     "truffle-hdwallet-provider": "^1.0.17"
   },
   "devDependencies": {
