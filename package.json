@@ -9,6 +9,8 @@
   "author": "pavlovdog_ <pavlovdog.moscow@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "solidity-docgen": "^0.5.7",
+    "truffle-hdwallet-provider": "^1.0.17"
   }
 }
