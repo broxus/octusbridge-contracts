@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.6.0;
 pragma experimental ABIEncoderV2;
 
@@ -6,11 +7,21 @@ import "./libraries/SafeMath.sol";
 import "./DistributedOwnable.sol";
 
 
+/**
+    @title Basic smart contract for implementing Bridge logic.
+    @dev Uses DistributedOwnable contract as identity and access management solution
+**/
 contract EthereumBridge is DistributedOwnable {
     using SafeMath for uint;
 
     mapping(uint => bool) receiptUsed;
 
+    /**
+        @notice Bridge constructor
+        @param owners Initial list of owners addresses
+        @param initialRequiredOwnersToExecuteCall Initial amount of owners required to execute call
+        @param initialRequiredOwnersToUpdateOwners Initial amount of owners required to update owners set
+    **/
     constructor(
         address[] memory owners,
         uint initialRequiredOwnersToExecuteCall,
@@ -22,8 +33,9 @@ contract EthereumBridge is DistributedOwnable {
     ) public {}
 
     /**
-        @dev Check that the specific receipt was used
+        @notice Check that the specific receipt was used.
         @param receiptID - Unique ID of the reveal receipt
+        @return Boolean status of usage
     */
     function isReceiptUsed(uint receiptID) public view returns(bool) {
         return receiptUsed[receiptID];
@@ -31,7 +43,7 @@ contract EthereumBridge is DistributedOwnable {
 
 
     /**
-        @dev Execute arbitrary call by providing the list of signatures
+        @notice Execute arbitrary call by providing the list of signatures
         @param receipt - ABI encoded payload
         @param signatures - List of signatures for receipt
     */

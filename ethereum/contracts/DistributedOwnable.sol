@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.6.0;
 pragma experimental ABIEncoderV2;
 
@@ -13,6 +14,8 @@ contract DistributedOwnable {
 
     event OwnershipGranted(address indexed newOwner);
     event OwnershipRemoved(address indexed removedOwner);
+    event UpdateRequiredOwnersToUpdateOwners(uint value);
+    event UpdateRequiredOwnersToExecuteCall(uint value);
 
     uint public requiredOwnersToExecuteCall;
     uint public requiredOwnersToUpdateOwners;
@@ -28,17 +31,23 @@ contract DistributedOwnable {
         uint initialRequiredOwnersToExecuteCall,
         uint initialRequiredOwnersToUpdateOwners
     ) public {
+        require(
+            owners.length >= initialRequiredOwnersToExecuteCall && owners.length >= initialRequiredOwnersToUpdateOwners,
+            "Ownable: initial settings are wrong"
+        );
+
         for (uint i=0; i < owners.length; i++) {
-            _owners[owners[i]] = true;
+            grantOwnership(owners[i]);
         }
 
-        requiredOwnersToExecuteCall = initialRequiredOwnersToExecuteCall;
-        requiredOwnersToUpdateOwners = initialRequiredOwnersToUpdateOwners;
+        updateRequiredOwnersToUpdateOwners(initialRequiredOwnersToUpdateOwners);
+        updateRequiredOwnersToExecuteCall(initialRequiredOwnersToExecuteCall);
     }
 
     /**
-     * @dev Returns true is the account is owner
-     * @param checkAddr - account to be checked
+     * @notice Check if account has ownership
+     * @param checkAddr Address to be checked
+     * @return Boolean status of the address
      */
     function isOwner(address checkAddr) public view returns (bool) {
         return _owners[checkAddr];
@@ -54,9 +63,9 @@ contract DistributedOwnable {
     }
 
     /**
-     * @dev Count how much signatures are made by owners.
-     * @param receipt - payload which was signed
-     * @param signatures - payload signatures
+     * @notice Count how much signatures are made by owners.
+     * @param receipt Bytes payload, which was signed
+     * @param signatures Bytes array with payload signatures
     */
     function countOwnersSignatures(
         bytes memory receipt,
@@ -74,7 +83,7 @@ contract DistributedOwnable {
     }
 
     /**
-     * @dev Throws an error in case not enough owners confirmations have been provided
+     * @notice Access management modifier. Throws an error in case not enough owners signatures have been provided
      * @param receipt - payload which was signed
      * @param signatures - array of signatures
      * @param requiredOwnersSignatures - minimum amount of owners signatures that should be provided
@@ -127,6 +136,8 @@ contract DistributedOwnable {
         uint newRequiredOwnersToUpdateOwners
     ) internal {
         requiredOwnersToUpdateOwners = newRequiredOwnersToUpdateOwners;
+
+        emit UpdateRequiredOwnersToUpdateOwners(newRequiredOwnersToUpdateOwners);
     }
 
     /**
@@ -137,13 +148,18 @@ contract DistributedOwnable {
         uint newRequiredOwnersToExecuteCall
     ) internal {
         requiredOwnersToExecuteCall = newRequiredOwnersToExecuteCall;
+
+        emit UpdateRequiredOwnersToExecuteCall(newRequiredOwnersToExecuteCall);
     }
 
     /**
-     * @dev External function for updating owners set. Grants or remove ownership.
-     *      Also update "required owners to update owners" setting
-     * @param receipt - ABI encoded payload
-     * @param signatures - bytes array with receipt signatures
+     * @notice Updating owners set. Grants or remove ownership for some account.
+     * @dev Receipt is ABI encoded (address, uint, bool)
+     * @dev First parameter is a target account - address, which ownership should be removed or granted to
+     * @dev Second parameter is new amount of owners required to update owners
+     * @dev Third parameter is an action - true means grant ownership, false means remove ownership
+     * @param receipt ABI encoded payload
+     * @param signatures Bytes array with receipt signatures. Requires requiredOwnersToUpdateOwners signatures.
     */
     function updateOwnership(
         bytes memory receipt,
@@ -156,8 +172,6 @@ contract DistributedOwnable {
         (
             address target,
             uint newRequiredOwnersToUpdateOwners,
-            // true means "grant ownership to target"
-            // false means "remove ownership from target"
             bool action
         ) = abi.decode(
             receipt,
