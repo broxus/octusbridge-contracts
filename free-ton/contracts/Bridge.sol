@@ -32,6 +32,8 @@ contract FreeTonBridge {
         bytes[] ethereumAddress,
         address eventProxyAddress
     ) public {
+        tvm.accept();
+
         ethereumEventsConfiguration.push(EthereumEventConfiguration({
             ethereumEventABI: ethereumEventABI,
             ethereumAddress: ethereumAddress,
@@ -42,6 +44,8 @@ contract FreeTonBridge {
     }
 
     function confirmEthereumEventConfiguration(uint ethereumEventConfigurationID) public {
+        tvm.accept();
+
         require(ethereumEventConfigurationID < ethereumEventsConfiguration.length);
 
         ethereumEventsConfiguration[ethereumEventConfigurationID].confirmations++;

@@ -69,26 +69,26 @@ describe('Test FreeTON bridge', function() {
     logger.success(`Event proxy address - ${eventProxyContract.address}`);
   });
   
-  it('Add event configuration', async () => {
-    const ethereumEventABIAsBytes = utils.stringToBytesArray('{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"state","type":"uint256"},{"indexed":false,"internalType":"address","name":"author","type":"address"}],"name":"StateChange","type":"event"}');
-    const ethereumAddressAsBytes = utils.stringToBytesArray('0x62a84E9356E62Bd003c97E138b65a8661762A2E0');
-    
-    // await bridgeContract.run('addEthereumEventConfiguration', {
-    //   ethereumEventABI: ethereumEventABIAsBytes,
-    //   ethereumAddressAsBytes: ethereumAddressAsBytes,
-    //   eventProxyAddress: eventProxyContract.address,
-    // });
+  it('Add Ethereum event configuration', async () => {
+    // const ethereumEventABIAsBytes = utils.stringToBytesArray('{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"state","type":"uint256"},{"indexed":false,"internalType":"address","name":"author","type":"address"}],"name":"StateChange","type":"event"}');
+    // const ethereumAddressAsBytes = utils.stringToBytesArray('0x62a84E9356E62Bd003c97E138b65a8661762A2E0');
+    //
+    await bridgeContract.run('addEthereumEventConfiguration', {
+      ethereumEventABI: [],
+      ethereumAddress: [],
+      eventProxyAddress: eventProxyContract.address,
+    });
   });
   
-  it('Confirm event configuration', async () => {
-  
-  });
-  
-  it('Emit event', async () => {
+  it('Confirm Ethereum event configuration', async () => {
   
   });
   
-  it('Confirm event', async () => {
+  it('Emit Ethereum event', async () => {
+  
+  });
+  
+  it('Confirm Ethereum event', async () => {
   
   });
 });

@@ -37,7 +37,7 @@ class ContractWrapper {
     imageBase64,
     constructorParams={},
     initParams={},
-    initialBalance=100000000
+    initialBalance=10000000000
   ) {
     await this.setup();
     
@@ -125,6 +125,12 @@ class ContractWrapper {
       );
   }
   
+  /**
+   * Run method function (in terms of TON - call).
+   * @param functionName Name of the function
+   * @param input Dict of method parameters
+   * @returns {Promise<void>}
+   */
   async run(functionName, input) {
     const runMessage = await this.ton.contracts.createRunMessage({
       address: this.address,
@@ -133,10 +139,16 @@ class ContractWrapper {
       input,
       keyPair: this.config.keys,
     });
-    
+  
     await this.waitForRunTransaction(runMessage);
   }
   
+  /**
+   * Read data from the contract (in terms of TON - run).
+   * @param functionName
+   * @param input
+   * @returns {Promise<void>}
+   */
   async read(functionName, input) {
   
   }
