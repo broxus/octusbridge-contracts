@@ -7,7 +7,7 @@ compile_contract_by_name() {
   solc-ton ./../contracts/$1.sol;
 
   echo ">> Link $1.sol";
-  res_log=`tvm_linker compile ./$1.code --lib /home/pavlovdog/TON-Solidity-Compiler/lib/stdlib_sol.tvm`
+  res_log=`tvm_linker compile ./$1.code --lib /home/pavlovdog/TON-Solidity-Compiler/lib/stdlib_sol.tvm`;
   [[ $res_log =~ [[:space:]]*([a-z0-9]+\.tvc) ]] && tvc_file=${BASH_REMATCH[1]};
 
   echo ">> TVC file: $tvc_file";
@@ -21,3 +21,4 @@ compile_contract_by_name() {
 compile_contract_by_name "Bridge";
 compile_contract_by_name "TargetExample";
 compile_contract_by_name "EventProxyExample";
+compile_contract_by_name "Giver";

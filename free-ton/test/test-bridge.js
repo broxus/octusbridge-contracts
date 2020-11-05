@@ -16,13 +16,14 @@ const contractWrapperConfig = {
     secret: process.env.SECRET_KEY,
   },
   giver: process.env.GIVER_CONTRACT,
+  giverAbi: JSON.parse(process.env.GIVER_ABI),
 };
 
 
 describe('Test FreeTON bridge', function() {
-  this.timeout(10000);
+  before(async function () {
+    this.timeout(100000);
 
-  before(async () => {
     logger.log('Deploying contracts');
 
     bridgeContract = new ContractWrapper(
@@ -36,7 +37,9 @@ describe('Test FreeTON bridge', function() {
         nonce: utils.getRandomNonce(),
       }
     );
-    
+  
+    logger.success(`Bridge address - ${bridgeContract.address}`);
+  
     targetContract = new ContractWrapper(
       contractWrapperConfig,
       utils.loadJSONFromFile(process.env.CONTRACT_TARGET_ABI),
@@ -48,7 +51,9 @@ describe('Test FreeTON bridge', function() {
         nonce: utils.getRandomNonce(),
       }
     );
-
+  
+    logger.success(`Target address - ${targetContract.address}`);
+  
     eventProxyContract = new ContractWrapper(
       contractWrapperConfig,
       utils.loadJSONFromFile(process.env.CONTRACT_EVENT_PROXY_ABI),
@@ -60,15 +65,19 @@ describe('Test FreeTON bridge', function() {
         nonce: utils.getRandomNonce(),
       }
     );
-
-
-    logger.success(`Bridge address - ${bridgeContract.address}`);
-    logger.success(`Target address - ${targetContract.address}`);
+    
     logger.success(`Event proxy address - ${eventProxyContract.address}`);
   });
   
   it('Add event configuration', async () => {
-  
+    const ethereumEventABIAsBytes = utils.stringToBytesArray('{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"state","type":"uint256"},{"indexed":false,"internalType":"address","name":"author","type":"address"}],"name":"StateChange","type":"event"}');
+    const ethereumAddressAsBytes = utils.stringToBytesArray('0x62a84E9356E62Bd003c97E138b65a8661762A2E0');
+    
+    // await bridgeContract.run('addEthereumEventConfiguration', {
+    //   ethereumEventABI: ethereumEventABIAsBytes,
+    //   ethereumAddressAsBytes: ethereumAddressAsBytes,
+    //   eventProxyAddress: eventProxyContract.address,
+    // });
   });
   
   it('Confirm event configuration', async () => {

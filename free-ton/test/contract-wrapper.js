@@ -1,27 +1,6 @@
 const { TONClient } = require('ton-client-node-js');
 
 
-const giverAbi = {
-  "ABI version": 1,
-  "functions": [
-    {
-      "name": "constructor",
-      "inputs": [],
-      "outputs": []
-    },
-    {
-      "name": "sendGrams",
-      "inputs": [
-        {"name":"dest","type":"address"},
-        {"name":"amount","type":"uint64"}
-      ],
-      "outputs": []
-    }
-  ],
-  "events": [],
-  "data": []
-};
-
 
 class ContractWrapper {
   constructor(config, abi, address) {
@@ -58,7 +37,7 @@ class ContractWrapper {
     imageBase64,
     constructorParams={},
     initParams={},
-    initialBalance=1000000
+    initialBalance=100000000
   ) {
     await this.setup();
     
@@ -70,7 +49,7 @@ class ContractWrapper {
       constructorParams,
       initParams
     );
-
+    
     // Send grams from giver
     await this.requestGiverTONs(futureAddress, initialBalance);
   
@@ -117,9 +96,9 @@ class ContractWrapper {
     const message = await this.ton.contracts.createRunMessage({
       address: this.config.giver,
       functionName: 'sendGrams',
-      abi: giverAbi,
+      abi: this.config.giverAbi,
       input: { dest, amount },
-      keyPair: null,
+      keyPair: this.config.keys,
     });
     
     await this.waitForRunTransaction(message);
@@ -144,6 +123,22 @@ class ContractWrapper {
         message,
         messageProcessingState
       );
+  }
+  
+  async run(functionName, input) {
+    const runMessage = await this.ton.contracts.createRunMessage({
+      address: this.address,
+      abi: this.abi,
+      functionName,
+      input,
+      keyPair: this.config.keys,
+    });
+    
+    await this.waitForRunTransaction(runMessage);
+  }
+  
+  async read(functionName, input) {
+  
   }
 }
 

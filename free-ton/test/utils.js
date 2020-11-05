@@ -14,8 +14,16 @@ const loadBase64FromFile = (filePath) => {
 const getRandomNonce = () => Math.random() * 1000000000 | 0;
 
 
+const stringToBytesArray = (dataString) => {
+  return dataString
+    .split("")
+    .reduce((hex,c)=>[...hex, c.charCodeAt(0).toString(16).padStart(2,"0")],[]);
+};
+
+
 module.exports = {
   loadJSONFromFile,
   loadBase64FromFile,
   getRandomNonce,
+  stringToBytesArray,
 };

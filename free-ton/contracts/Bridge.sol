@@ -12,6 +12,7 @@ contract FreeTonBridge {
     struct EthereumEventConfiguration {
         bytes[] ethereumEventABI;
         bytes[] ethereumAddress;
+        address eventProxyAddress;
         uint confirmations;
         bool confirmed;
     }
@@ -28,11 +29,13 @@ contract FreeTonBridge {
 
     function addEthereumEventConfiguration(
         bytes[] ethereumEventABI,
-        bytes[] ethereumAddress
+        bytes[] ethereumAddress,
+        address eventProxyAddress
     ) public {
         ethereumEventsConfiguration.push(EthereumEventConfiguration({
             ethereumEventABI: ethereumEventABI,
             ethereumAddress: ethereumAddress,
+            eventProxyAddress: eventProxyAddress,
             confirmations: 0,
             confirmed: false
         }));
