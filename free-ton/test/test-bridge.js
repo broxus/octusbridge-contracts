@@ -1,6 +1,7 @@
 require('dotenv').config({ path: './env/freeton.env' });
 
 const logger = require('mocha-logger');
+const assert = require('assert');
 const { ContractWrapper } = require('./contract-wrapper');
 const utils = require('./utils');
 
@@ -24,7 +25,7 @@ describe('Test FreeTON bridge', function() {
   before(async function () {
     this.timeout(100000);
 
-    logger.log('Deploying contracts');
+    logger.success('Deploying contracts');
 
     bridgeContract = new ContractWrapper(
       contractWrapperConfig,
@@ -70,18 +71,58 @@ describe('Test FreeTON bridge', function() {
   });
   
   it('Add Ethereum event configuration', async () => {
-    // const ethereumEventABIAsBytes = utils.stringToBytesArray('{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"state","type":"uint256"},{"indexed":false,"internalType":"address","name":"author","type":"address"}],"name":"StateChange","type":"event"}');
-    // const ethereumAddressAsBytes = utils.stringToBytesArray('0x62a84E9356E62Bd003c97E138b65a8661762A2E0');
-    //
+    const ethereumEventABIAsBytes = utils.stringToBytesArray('{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"state","type":"uint256"},{"indexed":false,"internalType":"address","name":"author","type":"address"}],"name":"StateChange","type":"event"}');
+    const ethereumAddressAsBytes = utils.stringToBytesArray('0x62a84E9356E62Bd003c97E138b65a8661762A2E0');
+
     await bridgeContract.run('addEthereumEventConfiguration', {
-      ethereumEventABI: [],
-      ethereumAddress: [],
+      ethereumEventABI: ethereumEventABIAsBytes,
+      ethereumAddress: ethereumAddressAsBytes,
       eventProxyAddress: eventProxyContract.address,
     });
+  
+    const ethereumEvents = await bridgeContract
+      .runLocal('getEthereumEventsConfiguration');
+    
+    assert.deepStrictEqual(
+      ethereumEvents.length,
+      1,
+      'Wrong Ethereum events size',
+    );
+    
+    const [ethereumEvent] = ethereumEvents;
+    
+    assert.deepStrictEqual(
+      parseInt(ethereumEvent.confirmations, 16),
+      1,
+      'Wrong Ethereum event confirmations'
+    );
+  
+    assert.deepStrictEqual(
+      ethereumEvent.confirmed,
+      false,
+      'Wrong Ethereum event confirmation status'
+    );
   });
   
   it('Confirm Ethereum event configuration', async () => {
+    await bridgeContract.run('confirmEthereumEventConfiguration', {
+      ethereumEventConfigurationID: 0,
+    });
   
+    const [ethereumEvent] = await bridgeContract
+      .runLocal('getEthereumEventsConfiguration');
+
+    assert.deepStrictEqual(
+      parseInt(ethereumEvent.confirmations, 16),
+      2,
+      'Wrong Ethereum event confirmations'
+    );
+  
+    assert.deepStrictEqual(
+      ethereumEvent.confirmed,
+      true,
+      'Wrong Ethereum event confirmation status'
+    );
   });
   
   it('Emit Ethereum event', async () => {

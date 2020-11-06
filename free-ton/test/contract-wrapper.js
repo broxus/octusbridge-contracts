@@ -50,9 +50,18 @@ class ContractWrapper {
       initParams
     );
     
-    // Send grams from giver
-    await this.requestGiverTONs(futureAddress, initialBalance);
-  
+    // Send grams from giver to pay for contract deployment
+    const giverContract = new ContractWrapper(
+      this.config,
+      this.config.giverAbi,
+      this.config.giver,
+    );
+    await giverContract.setup();
+    await giverContract.run('sendGrams', {
+      dest: futureAddress,
+      amount: initialBalance,
+    });
+
     // Send the deploy message
     const deployMessage = await this.createDeployMessage(
       imageBase64,
@@ -86,23 +95,23 @@ class ContractWrapper {
     });
   }
   
-  /**
-   * Sends TONs to the specific address.
-   * @param dest At which address to send TONs
-   * @param amount How much TONs to send
-   * @returns {Promise<void>}
-   */
-  async requestGiverTONs(dest, amount) {
-    const message = await this.ton.contracts.createRunMessage({
-      address: this.config.giver,
-      functionName: 'sendGrams',
-      abi: this.config.giverAbi,
-      input: { dest, amount },
-      keyPair: this.config.keys,
-    });
-    
-    await this.waitForRunTransaction(message);
-  }
+  // /**
+  //  * Sends TONs to the specific address.
+  //  * @param dest At which address to send TONs
+  //  * @param amount How much TONs to send
+  //  * @returns {Promise<void>}
+  //  */
+  // async requestGiverTONs(dest, amount) {
+  //   const message = await this.ton.contracts.createRunMessage({
+  //     address: this.config.giver,
+  //     functionName: 'sendGrams',
+  //     abi: this.config.giverAbi,
+  //     input: { dest, amount },
+  //     keyPair: this.config.keys,
+  //   });
+  //
+  //   await this.waitForRunTransaction(message);
+  // }
   
   /**
    * Handy way to wait until message confirmed or reverted
@@ -131,7 +140,7 @@ class ContractWrapper {
    * @param input Dict of method parameters
    * @returns {Promise<void>}
    */
-  async run(functionName, input) {
+  async run(functionName, input={}) {
     const runMessage = await this.ton.contracts.createRunMessage({
       address: this.address,
       abi: this.abi,
@@ -147,10 +156,27 @@ class ContractWrapper {
    * Read data from the contract (in terms of TON - run).
    * @param functionName
    * @param input
-   * @returns {Promise<void>}
+   * @returns {Promise<unknown[]>}
    */
-  async read(functionName, input) {
-  
+  async runLocal(functionName, input={}) {
+    const {
+      output,
+    } = await this.ton.contracts.runLocal({
+      address: this.address,
+      abi: this.abi,
+      functionName,
+      fullRun: true,
+      input,
+      keyPair: this.config.keys,
+    });
+    
+    // Convert {value0, value1, ...} into the array
+    const outputAsArray = [...Array(Object.keys(output).length).keys()]
+      .map(key => output[`value${key}`]);
+    
+    if (outputAsArray.length === 1) return outputAsArray[0];
+    
+    return outputAsArray;
   }
 }
 

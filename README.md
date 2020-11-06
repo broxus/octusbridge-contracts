@@ -21,18 +21,37 @@ npm install
 
 ## Configuration
 
+Different configurations are used for FreeTON and Ethereum smart contracts. Choose what you need.
+
+### Ethereum
+
 Create an environment file from the template
 
 ```
 cd env
-cp env/ethereum.template.env env/ethereum.env
+cp ethereum.template.env ethereum.env
 ```
 
 Fill the settings in the `ethereum.env`. Leave the `ETHEREUM_` settings empty if you're not going to perform custom deploy (e.g. )
 
-## Local deploy
+### Free TON
 
-### Run the local Ethereum node
+Create an environment file from the template
+
+```
+cd env
+cp freeton.template.env freeton.env
+```
+
+Fill the `PUBLIC_KEY` and `SECRET_KEY`. This keys will be used for signing every transaction during the migrations and tests.
+
+## Local test
+
+Both Ethereum and Free TON parts can be tested locally.
+
+### Ethereum 
+
+#### Run the local Ethereum node
 
 The RPC will be available on the http://127.0.0.1:8545
 
@@ -54,4 +73,23 @@ Specify the `ETHEREUM_` settings in the `env/ethereum.env` file. Then deploy the
 ```
 cd ethereum/
 truffle migrate --network env
+```
+
+### FreeTON
+
+#### Run the local TON node
+
+Use the [TON local-node](https://hub.docker.com/r/tonlabs/local-node) for local environment.
+
+```
+docker run --rm -d --name local-node -p80:80 tonlabs/local-node
+```
+
+#### Prepare the smart contracts
+
+At this step contracts are compiled 
+
+```
+cd free-ton
+./scripts/build-contract.sh
 ```
