@@ -5,8 +5,11 @@ pragma AbiHeader expire;
 import "./EventsContract.sol";
 import "./VotingForAddEventType.sol";
 import "./VotingForRemoveEventType.sol";
+import "./VotingForChangeConfig.sol";
+import "./interfaces/IBridgeConfigUpdater.sol";
+import "./interfaces/IEventConfigUpdater.sol";
 
-contract FreeTonBridge is IEventConfigUpdater {
+contract FreeTonBridge is IEventConfigUpdater, IBridgeConfigUpdater {
     uint public nonce;
 
     struct EthereumEventConfiguration {
@@ -25,9 +28,16 @@ contract FreeTonBridge is IEventConfigUpdater {
         tvm.accept();
 
         ethereumEventConfigurationRequiredConfirmations = 2;
-
         changeNonce = 0;
-        eventConfigurationRequiredConfirmationsPercent = 65;
+
+        config = BridgeConfiguration({
+            addEventTypeRequiredConfirmationsPercent: 65,
+            removeEventTypeRequiredConfirmationsPercent: 65,
+            addRelayRequiredConfirmationsPercent: 65,
+            removeRelayRequiredConfirmationsPercent: 65,
+            updateConfigRequiredConfirmationsPercent: 100
+        });
+
     }
 
     /**
@@ -92,6 +102,16 @@ contract FreeTonBridge is IEventConfigUpdater {
     /////////////////////////////////////////////////////////////////////////////////////////////////
     //tonToEth
 
+    BridgeConfiguration config;
+
+    struct BridgeConfiguration {
+        uint8 addEventTypeRequiredConfirmationsPercent;
+        uint8 removeEventTypeRequiredConfirmationsPercent;
+        uint8 addRelayRequiredConfirmationsPercent;
+        uint8 removeRelayRequiredConfirmationsPercent;
+        uint8 updateConfigRequiredConfirmationsPercent;
+    }
+
     function isRelay() public view returns (bool) {
         return currentRelays.exists(msg.sender) && currentRelays.at(msg.sender);
     }
@@ -107,7 +127,6 @@ contract FreeTonBridge is IEventConfigUpdater {
     //change nonce => is applied
     mapping(uint256 => bool) appliedChanges;
     uint256 changeNonce;
-    uint8 eventConfigurationRequiredConfirmationsPercent;
 
     mapping(address => uint256) relaysTonPublicKeys;
 //  mapping(address => uint256) relaysEthPublicKeys;
@@ -147,6 +166,90 @@ contract FreeTonBridge is IEventConfigUpdater {
         return validCount;
     }
 
+    // Update config logic
+    event VotingForUpdateConfigStarted(address votingAddress);
+
+    function updateConfig(
+        uint8 addEventTypeRequiredConfirmationsPercent,
+        uint8 removeEventTypeRequiredConfirmationsPercent,
+        uint8 addRelayRequiredConfirmationsPercent,
+        uint8 removeRelayRequiredConfirmationsPercent,
+        uint8 updateConfigRequiredConfirmationsPercent,
+        uint256 _changeNonce,
+        address[] signers,
+        uint256[] signaturesHighParts,
+        uint256[] signaturesLowParts
+    ) external override {
+
+        require(addEventTypeRequiredConfirmationsPercent > 0);
+        require(addEventTypeRequiredConfirmationsPercent <= 100);
+
+        require(removeEventTypeRequiredConfirmationsPercent > 0);
+        require(removeEventTypeRequiredConfirmationsPercent <= 100);
+
+        require(addRelayRequiredConfirmationsPercent > 0);
+        require(addRelayRequiredConfirmationsPercent <= 100);
+
+        require(removeRelayRequiredConfirmationsPercent > 0);
+        require(removeRelayRequiredConfirmationsPercent <= 100);
+
+        require(updateConfigRequiredConfirmationsPercent > 0);
+        require(updateConfigRequiredConfirmationsPercent <= 100);
+
+        require(!appliedChanges.exists(_changeNonce));
+
+        TvmBuilder builder;
+        builder.store(
+            addEventTypeRequiredConfirmationsPercent,
+            removeEventTypeRequiredConfirmationsPercent,
+            addRelayRequiredConfirmationsPercent,
+            removeRelayRequiredConfirmationsPercent,
+            updateConfigRequiredConfirmationsPercent,
+            _changeNonce);
+        TvmCell cell = builder.toCell();
+        uint256 hash = tvm.hash(cell);
+
+        if (validSignaturesCount(hash, signers, signaturesHighParts, signaturesLowParts) * 100 / currentRelaysCount >=
+            config.updateConfigRequiredConfirmationsPercent) {
+
+            appliedChanges[_changeNonce] = true;
+
+            config = BridgeConfiguration({
+                addEventTypeRequiredConfirmationsPercent: addEventTypeRequiredConfirmationsPercent,
+                removeEventTypeRequiredConfirmationsPercent: removeEventTypeRequiredConfirmationsPercent,
+                addRelayRequiredConfirmationsPercent: addRelayRequiredConfirmationsPercent,
+                removeRelayRequiredConfirmationsPercent: removeRelayRequiredConfirmationsPercent,
+                updateConfigRequiredConfirmationsPercent: updateConfigRequiredConfirmationsPercent
+            });
+
+        }
+
+    }
+
+    function startVotingForUpdateConfig(
+        TvmCell stateInit,
+        uint8 addEventTypeRequiredConfirmationsPercent,
+        uint8 removeEventTypeRequiredConfirmationsPercent,
+        uint8 addRelayRequiredConfirmationsPercent,
+        uint8 removeRelayRequiredConfirmationsPercent,
+        uint8 updateConfigRequiredConfirmationsPercent
+    ) public onlyRelay {
+
+        address voting = new VotingForChangeConfig{stateInit : stateInit, value : msg.value}(this, addEventTypeRequiredConfirmationsPercent, removeEventTypeRequiredConfirmationsPercent, addRelayRequiredConfirmationsPercent, removeRelayRequiredConfirmationsPercent, updateConfigRequiredConfirmationsPercent, changeNonce);
+
+        emit VotingForUpdateConfigStarted(voting);
+
+        changeNonce++;
+    }
+
+    function voteForUpdateConfig(
+        address votingAddress,
+        uint256 highPart,
+        uint256 lowPart
+    ) public onlyRelay {
+        VotingForChangeConfig(votingAddress).vote(msg.sender, highPart, lowPart, relaysTonPublicKeys.at(msg.sender));
+    }
+
     // Add EventType logic
 
     event VotingForAddEventTypeStarted(address votingAddress);
@@ -183,7 +286,7 @@ contract FreeTonBridge is IEventConfigUpdater {
         uint256 hash = tvm.hash(cell);
 
         if (validSignaturesCount(hash, signers, signaturesHighParts, signaturesLowParts) * 100 / currentRelaysCount >=
-            eventConfigurationRequiredConfirmationsPercent) {
+            config.addEventTypeRequiredConfirmationsPercent) {
 
             appliedChanges[_changeNonce] = true;
 
@@ -208,8 +311,8 @@ contract FreeTonBridge is IEventConfigUpdater {
         TvmCell stateInit,
         address tonAddress,
         bytes ethAddress,
-    //      bytes ethEventABI,
-    //      address eventProxyAddress,
+//      bytes ethEventABI,
+//      address eventProxyAddress,
         uint8 minSigns,
         uint8 minSignsPercent
     ) public onlyRelay {
@@ -252,7 +355,7 @@ contract FreeTonBridge is IEventConfigUpdater {
         uint256 hash = tvm.hash(cell);
 
         if (validSignaturesCount(hash, signers, signaturesHighParts, signaturesLowParts) * 100 / currentRelaysCount >=
-            eventConfigurationRequiredConfirmationsPercent) {
+            config.removeEventTypeRequiredConfirmationsPercent) {
 
             appliedChanges[_changeNonce] = true;
 //          bytes ethAddress = tonToEthMap.at(tonAddress);
