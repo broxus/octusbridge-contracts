@@ -1,12 +1,12 @@
 pragma solidity >= 0.5.0;
-pragma experimental ABIEncoderV2;
 pragma AbiHeader expire;
 
 
 import "./EventsContract.sol";
+import "./VotingForAddEventType.sol";
+import "./VotingForRemoveEventType.sol";
 
-
-contract FreeTonBridge {
+contract FreeTonBridge is IEventConfigUpdater {
     uint public nonce;
 
     struct EthereumEventConfiguration {
@@ -25,6 +25,9 @@ contract FreeTonBridge {
         tvm.accept();
 
         ethereumEventConfigurationRequiredConfirmations = 2;
+
+        changeNonce = 0;
+        eventConfigurationRequiredConfirmationsPercent = 65;
     }
 
     /**
@@ -86,14 +89,25 @@ contract FreeTonBridge {
         return ethereumEventsConfiguration;
     }
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////
     //tonToEth
+
+    function isRelay() public view returns (bool) {
+        return currentRelays.exists(msg.sender) && currentRelays.at(msg.sender);
+    }
+
+    modifier onlyRelay() {
+        require(isRelay(), 100);
+        _;
+    }
 
     mapping(address => bool) currentRelays;
     uint8 currentRelaysCount;
 
     //change nonce => is applied
     mapping(uint256 => bool) appliedChanges;
-    uint8 eventConfigurationRequiredConfirmationsPercent = 65;
+    uint256 changeNonce;
+    uint8 eventConfigurationRequiredConfirmationsPercent;
 
     mapping(address => uint256) relaysTonPublicKeys;
 //  mapping(address => uint256) relaysEthPublicKeys;
@@ -133,6 +147,10 @@ contract FreeTonBridge {
         return validCount;
     }
 
+    // Add EventType logic
+
+    event VotingForAddEventTypeStarted(address votingAddress);
+
     function addEventType(
         address tonAddress,
         bytes ethAddress,
@@ -140,12 +158,15 @@ contract FreeTonBridge {
 //      address eventProxyAddress,
         uint8 minSigns,
         uint8 minSignsPercent,
-        uint256 changeNonce,
+        uint256 _changeNonce,
         address[] signers,
         uint256[] signaturesHighParts,
-        uint256[] signaturesLowParts) public {
+        uint256[] signaturesLowParts
+    ) external override {
 
-        require(!appliedChanges.exists(changeNonce));
+        require(minSigns > 0 || minSignsPercent > 0);
+        require(minSignsPercent <= 100);
+        require(!appliedChanges.exists(_changeNonce));
         require(!tonToEthMap.exists(tonAddress));
 //      require(!ethToTonMap.exists(ethAddress));
 
@@ -157,14 +178,14 @@ contract FreeTonBridge {
 //          eventProxyAddress,
             minSigns,
             minSignsPercent,
-            changeNonce);
+            _changeNonce);
         TvmCell cell = builder.toCell();
         uint256 hash = tvm.hash(cell);
 
         if (validSignaturesCount(hash, signers, signaturesHighParts, signaturesLowParts) * 100 / currentRelaysCount >=
             eventConfigurationRequiredConfirmationsPercent) {
 
-            appliedChanges[changeNonce] = true;
+            appliedChanges[_changeNonce] = true;
 
             TonEventConfiguration newConfig = TonEventConfiguration({
                 tonAddress: tonAddress,
@@ -183,25 +204,57 @@ contract FreeTonBridge {
 
     }
 
+    function startVotingForAddEventType(
+        TvmCell stateInit,
+        address tonAddress,
+        bytes ethAddress,
+    //      bytes ethEventABI,
+    //      address eventProxyAddress,
+        uint8 minSigns,
+        uint8 minSignsPercent
+    ) public onlyRelay {
+
+        require(minSigns > 0 || minSignsPercent > 0);
+        require(minSignsPercent <= 100);
+
+        address voting = new VotingForAddEventType{stateInit : stateInit, value : msg.value}(this, tonAddress, ethAddress, minSigns, minSignsPercent, changeNonce);
+
+        emit VotingForAddEventTypeStarted(voting);
+
+        changeNonce++;
+    }
+
+    function voteForAddEventType(
+        address votingAddress,
+        uint256 highPart,
+        uint256 lowPart
+    ) public onlyRelay {
+        VotingForAddEventType(votingAddress).vote(msg.sender, highPart, lowPart, relaysTonPublicKeys.at(msg.sender));
+    }
+
+    // Remove EventType logic
+
+    event VotingForRemoveEventTypeStarted(address votingAddress);
+
     function removeEventType(
         address tonAddress,
-        uint256 changeNonce,
+        uint256 _changeNonce,
         address[] signers,
         uint256[] signaturesHighParts,
-        uint256[] signaturesLowParts) public {
+        uint256[] signaturesLowParts
+    )  external override {
 
-        require(!appliedChanges.exists(changeNonce));
+        require(!appliedChanges.exists(_changeNonce));
 
         TvmBuilder builder;
-        builder.store(tonAddress, changeNonce);
+        builder.store(tonAddress, _changeNonce);
         TvmCell cell = builder.toCell();
         uint256 hash = tvm.hash(cell);
 
-        //FIXME: change required signatures count
         if (validSignaturesCount(hash, signers, signaturesHighParts, signaturesLowParts) * 100 / currentRelaysCount >=
             eventConfigurationRequiredConfirmationsPercent) {
 
-            appliedChanges[changeNonce] = true;
+            appliedChanges[_changeNonce] = true;
 //          bytes ethAddress = tonToEthMap.at(tonAddress);
 //          delete ethToTonMap[ethAddress];
             delete tonToEthMap[tonAddress];
@@ -209,6 +262,26 @@ contract FreeTonBridge {
 
         }
 
+    }
+
+    function startVotingForRemoveEventType(
+        TvmCell stateInit,
+        address tonAddress
+    ) public onlyRelay {
+
+        address voting = new VotingForRemoveEventType{stateInit : stateInit, value : msg.value}(this, tonAddress, changeNonce);
+
+        emit VotingForRemoveEventTypeStarted(voting);
+
+        changeNonce++;
+    }
+
+    function voteForRemoveEventType(
+        address votingAddress,
+        uint256 highPart,
+        uint256 lowPart
+    ) public onlyRelay {
+        VotingForRemoveEventType(votingAddress).vote(msg.sender, highPart, lowPart, relaysTonPublicKeys.at(msg.sender));
     }
 
 
