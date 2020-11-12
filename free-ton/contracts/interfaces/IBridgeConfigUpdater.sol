@@ -7,6 +7,7 @@ interface IBridgeConfigUpdater {
         uint8 addRelayRequiredConfirmationsPercent,
         uint8 removeRelayRequiredConfirmationsPercent,
         uint8 updateConfigRequiredConfirmationsPercent,
+        TvmCell tonToEthEventCode,
         uint256 _changeNonce,
         address[] signers,
         uint256[] signaturesHighParts,

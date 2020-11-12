@@ -12,6 +12,7 @@ contract VotingForChangeConfig is SimpleOwnable {
     uint8 addRelayRequiredConfirmationsPercent;
     uint8 removeRelayRequiredConfirmationsPercent;
     uint8 updateConfigRequiredConfirmationsPercent;
+    TvmCell tonToEthEventCode;
 
     uint256 changeNonce;
 
@@ -28,6 +29,7 @@ contract VotingForChangeConfig is SimpleOwnable {
         uint8 _addRelayRequiredConfirmationsPercent,
         uint8 _removeRelayRequiredConfirmationsPercent,
         uint8 _updateConfigRequiredConfirmationsPercent,
+        TvmCell _tonToEthEventCode,
         uint256 _changeNonce
     ) public {
         tvm.accept();
@@ -39,6 +41,7 @@ contract VotingForChangeConfig is SimpleOwnable {
         addRelayRequiredConfirmationsPercent = _addRelayRequiredConfirmationsPercent;
         removeRelayRequiredConfirmationsPercent = _removeRelayRequiredConfirmationsPercent;
         updateConfigRequiredConfirmationsPercent = _updateConfigRequiredConfirmationsPercent;
+        tonToEthEventCode = _tonToEthEventCode;
 
         changeNonce = _changeNonce;
     }
@@ -58,6 +61,7 @@ contract VotingForChangeConfig is SimpleOwnable {
             addRelayRequiredConfirmationsPercent,
             removeRelayRequiredConfirmationsPercent,
             updateConfigRequiredConfirmationsPercent,
+            tonToEthEventCode,
             changeNonce
         );
         TvmCell cell = builder.toCell();
@@ -86,6 +90,7 @@ contract VotingForChangeConfig is SimpleOwnable {
             addRelayRequiredConfirmationsPercent,
             removeRelayRequiredConfirmationsPercent,
             updateConfigRequiredConfirmationsPercent,
+            tonToEthEventCode,
             changeNonce,
             signers,
             signaturesHighParts,
@@ -93,12 +98,13 @@ contract VotingForChangeConfig is SimpleOwnable {
         );
     }
 
-    function getDetails() external view returns(uint8, uint8, uint8, uint8, uint8, uint256) {
+    function getDetails() external view returns(uint8, uint8, uint8, uint8, uint8, TvmCell, uint256) {
         return (addEventTypeRequiredConfirmationsPercent,
                 removeEventTypeRequiredConfirmationsPercent,
                 addRelayRequiredConfirmationsPercent,
                 removeRelayRequiredConfirmationsPercent,
                 updateConfigRequiredConfirmationsPercent,
+                tonToEthEventCode,
                 changeNonce);
     }
 }

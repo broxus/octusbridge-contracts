@@ -23,4 +23,9 @@ compile_contract_by_name() {
 compile_contract_by_name "Bridge";
 compile_contract_by_name "TargetExample";
 compile_contract_by_name "EventProxyExample";
+compile_contract_by_name "TonToEthEvent";
+compile_contract_by_name "TonToEthEventRoot";
+compile_contract_by_name "VotingForChangeConfig";
+compile_contract_by_name "VotingForAddEventType";
+compile_contract_by_name "VotingForRemoveEventType";
 compile_contract_by_name "Giver";
