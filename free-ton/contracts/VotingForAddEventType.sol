@@ -18,6 +18,8 @@ contract VotingForAddEventType is SimpleOwnable {
 
     mapping(address => bool) existsSigners;
 
+    uint256 hash;
+
     address[] signers;
     uint256[] signaturesHighParts;
     uint256[] signaturesLowParts;
@@ -44,15 +46,6 @@ contract VotingForAddEventType is SimpleOwnable {
         minSignsPercent = _minSignsPercent;
 
         changeNonce = _changeNonce;
-    }
-
-    function vote(
-        address signer,
-        uint256 highPart,
-        uint256 lowPart,
-        uint256 publicKey
-    ) external onlyOwner returns (bool) {
-        require(!existsSigners.exists(signer));
 
         TvmBuilder builder;
         builder.store(
@@ -64,7 +57,16 @@ contract VotingForAddEventType is SimpleOwnable {
             minSignsPercent,
             changeNonce);
         TvmCell cell = builder.toCell();
-        uint256 hash = tvm.hash(cell);
+        hash = tvm.hash(cell);
+    }
+
+    function vote(
+        address signer,
+        uint256 highPart,
+        uint256 lowPart,
+        uint256 publicKey
+    ) external onlyOwner returns (bool) {
+        require(!existsSigners.exists(signer));
 
         if(tvm.checkSign(hash, highPart, lowPart, publicKey)) {
             signers.push(signer);

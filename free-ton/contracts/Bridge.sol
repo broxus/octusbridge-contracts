@@ -3,7 +3,7 @@ pragma AbiHeader expire;
 
 
 import "./EventsContract.sol";
-import "./TonToEthEventRoot.sol";
+import "./EventRoot.sol";
 import "./VotingForAddEventType.sol";
 import "./VotingForRemoveEventType.sol";
 import "./VotingForChangeConfig.sol";
@@ -24,7 +24,9 @@ contract FreeTonBridge is IEventConfigUpdater, IBridgeConfigUpdater {
     EthereumEventConfiguration[] ethereumEventsConfiguration;
     uint ethereumEventConfigurationRequiredConfirmations;
 
-    constructor(TvmCell _tonToEthEventCode) public {
+    constructor(TvmCell _eventRootCode,
+                TvmCell _tonToEthEventCode,
+                TvmCell _ethToTonEventCode) public {
         require(tvm.pubkey() != 0);
         tvm.accept();
 
@@ -37,7 +39,9 @@ contract FreeTonBridge is IEventConfigUpdater, IBridgeConfigUpdater {
             addRelayRequiredConfirmationsPercent: 65,
             removeRelayRequiredConfirmationsPercent: 65,
             updateConfigRequiredConfirmationsPercent: 100,
-            tonToEthEventCode: _tonToEthEventCode
+            eventRootCode: _eventRootCode,
+            tonToEthEventCode: _tonToEthEventCode,
+            ethToTonEventCode: _ethToTonEventCode
         });
 
     }
@@ -112,7 +116,9 @@ contract FreeTonBridge is IEventConfigUpdater, IBridgeConfigUpdater {
         uint8 addRelayRequiredConfirmationsPercent;
         uint8 removeRelayRequiredConfirmationsPercent;
         uint8 updateConfigRequiredConfirmationsPercent;
+        TvmCell eventRootCode;
         TvmCell tonToEthEventCode;
+        TvmCell ethToTonEventCode;
     }
 
     function isRelay() public view returns (bool) {
@@ -178,7 +184,9 @@ contract FreeTonBridge is IEventConfigUpdater, IBridgeConfigUpdater {
         uint8 addRelayRequiredConfirmationsPercent,
         uint8 removeRelayRequiredConfirmationsPercent,
         uint8 updateConfigRequiredConfirmationsPercent,
+        TvmCell eventRootCode,
         TvmCell tonToEthEventCode,
+        TvmCell ethToTonEventCode,
         uint256 _changeNonce,
         address[] signers,
         uint256[] signaturesHighParts,
@@ -209,7 +217,9 @@ contract FreeTonBridge is IEventConfigUpdater, IBridgeConfigUpdater {
             addRelayRequiredConfirmationsPercent,
             removeRelayRequiredConfirmationsPercent,
             updateConfigRequiredConfirmationsPercent,
+            eventRootCode,
             tonToEthEventCode,
+            ethToTonEventCode,
             _changeNonce);
         TvmCell cell = builder.toCell();
         uint256 hash = tvm.hash(cell);
@@ -225,7 +235,9 @@ contract FreeTonBridge is IEventConfigUpdater, IBridgeConfigUpdater {
                 addRelayRequiredConfirmationsPercent: addRelayRequiredConfirmationsPercent,
                 removeRelayRequiredConfirmationsPercent: removeRelayRequiredConfirmationsPercent,
                 updateConfigRequiredConfirmationsPercent: updateConfigRequiredConfirmationsPercent,
-                tonToEthEventCode: tonToEthEventCode
+                eventRootCode: eventRootCode,
+                tonToEthEventCode: tonToEthEventCode,
+                ethToTonEventCode: ethToTonEventCode
             });
 
         }
@@ -239,10 +251,12 @@ contract FreeTonBridge is IEventConfigUpdater, IBridgeConfigUpdater {
         uint8 addRelayRequiredConfirmationsPercent,
         uint8 removeRelayRequiredConfirmationsPercent,
         uint8 updateConfigRequiredConfirmationsPercent,
-        TvmCell tonToEthEventCode
+        TvmCell eventRootCode,
+        TvmCell tonToEthEventCode,
+        TvmCell ethToTonEventCode
     ) public onlyRelay {
 
-        address voting = new VotingForChangeConfig{stateInit : stateInit, value : msg.value}(this, addEventTypeRequiredConfirmationsPercent, removeEventTypeRequiredConfirmationsPercent, addRelayRequiredConfirmationsPercent, removeRelayRequiredConfirmationsPercent, updateConfigRequiredConfirmationsPercent, tonToEthEventCode, changeNonce);
+        address voting = new VotingForChangeConfig{stateInit : stateInit, value : msg.value}(this, addEventTypeRequiredConfirmationsPercent, removeEventTypeRequiredConfirmationsPercent, addRelayRequiredConfirmationsPercent, removeRelayRequiredConfirmationsPercent, updateConfigRequiredConfirmationsPercent, eventRootCode, tonToEthEventCode, ethToTonEventCode, changeNonce);
 
         emit VotingForUpdateConfigStarted(voting);
 
@@ -315,8 +329,7 @@ contract FreeTonBridge is IEventConfigUpdater, IBridgeConfigUpdater {
     }
 
     function startVotingForAddEventType(
-        TvmCell stateInit,
-        address tonAddress,
+        TvmCell votingStateInit,
         bytes ethAddress,
 //      bytes ethEventABI,
 //      address eventProxyAddress,
@@ -324,10 +337,17 @@ contract FreeTonBridge is IEventConfigUpdater, IBridgeConfigUpdater {
         uint8 minSignsPercent
     ) public onlyRelay {
 
+        //TODO: value?
+        require(msg.value > 2e9);
         require(minSigns > 0 || minSignsPercent > 0);
         require(minSignsPercent <= 100);
 
-        address voting = new VotingForAddEventType{stateInit : stateInit, value : msg.value}(this, tonAddress, ethAddress, minSigns, minSignsPercent, changeNonce);
+        //TODO: pubkey?
+        TvmCell eventData = tvm.buildEmptyData(tvm.pubkey());
+        TvmCell stateInit = tvm.buildStateInit(config.eventRootCode, eventData);
+        address eventRootAddress = new EventRoot{stateInit : stateInit, value : msg.value - 1e9}(this, ethAddress, config.tonToEthEventCode, config.ethToTonEventCode);
+
+        address voting = new VotingForAddEventType{stateInit : votingStateInit, value : 1e9}(this, eventRootAddress, ethAddress, minSigns, minSignsPercent, changeNonce);
 
         emit VotingForAddEventTypeStarted(voting);
 
@@ -402,7 +422,11 @@ contract FreeTonBridge is IEventConfigUpdater, IBridgeConfigUpdater {
         address eventRootAddress) public onlyRelay {
         //TODO: check sign by ethPublicKey
 
-        TonToEthEventRoot(eventRootAddress).processSign(payload, signer, sign, signedAt);
+        TonEventConfiguration eventConfig = tonToConfig.at(eventRootAddress);
+
+        uint8 minSigns = math.max(eventConfig.minSigns, eventConfig.minSignsPercent * currentRelaysCount / 100);
+
+        EventRoot(eventRootAddress).processTonToEthSign(payload, signer, sign, signedAt, minSigns);
     }
 
 }

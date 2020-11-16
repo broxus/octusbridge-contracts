@@ -3,29 +3,37 @@ pragma solidity >= 0.5.0;
 import "./SimpleOwnable.sol";
 import "./TonToEthEvent.sol";
 
-contract TonToEthEventRoot is SimpleOwnable {
+contract EventRoot is SimpleOwnable {
+
+    address bridgeAddress;
 
     bytes ethAddress;
-    uint8 minSigns;
+//  address proxyEventAddress;
 
     TvmCell tonToEthEventCode;
+    TvmCell ethToTonEventCode;
 
-    constructor(bytes _ethAddress,
-                uint8 _minSigns,
-                TvmCell _tonToEthEventCode
+    constructor(address _bridgeAddress,
+                bytes _ethAddress,
+//              address _proxyEventAddress,
+                TvmCell _tonToEthEventCode,
+                TvmCell _ethToTonEventCode
     ) public {
         tvm.accept();
 
+        bridgeAddress = _bridgeAddress;
         ethAddress = _ethAddress;
-        minSigns = _minSigns;
+//      proxyEventAddress = _proxyEventAddress;
         tonToEthEventCode = _tonToEthEventCode;
+        ethToTonEventCode = _ethToTonEventCode;
     }
 
-    function processSign(
+    function processTonToEthSign(
         bytes payload,
         address signer,
         bytes sign,
-        uint256 signedAt
+        uint256 signedAt,
+        uint8 minSigns
     ) external onlyOwner {
         //TODO: pubkey?
         TvmCell eventData = tvm.buildEmptyData(tvm.pubkey());
@@ -35,6 +43,11 @@ contract TonToEthEventRoot is SimpleOwnable {
         //TODO: it not fail if already exists?
         address eventAddress = new TonToEthEvent{stateInit : stateInit, value : 1e9}(this, ethAddress, payload, minSigns);
         TonToEthEvent(eventAddress).saveSign(signer, sign, signedAt);
+
+    }
+
+    //TODO
+    function processEthToTonSign() external onlyOwner {
 
     }
 }

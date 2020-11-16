@@ -12,11 +12,15 @@ contract VotingForChangeConfig is SimpleOwnable {
     uint8 addRelayRequiredConfirmationsPercent;
     uint8 removeRelayRequiredConfirmationsPercent;
     uint8 updateConfigRequiredConfirmationsPercent;
+    TvmCell eventRootCode;
     TvmCell tonToEthEventCode;
+    TvmCell ethToTonEventCode;
 
     uint256 changeNonce;
 
     mapping(address => bool) existsSigners;
+
+    uint256 hash;
 
     address[] signers;
     uint256[] signaturesHighParts;
@@ -29,7 +33,9 @@ contract VotingForChangeConfig is SimpleOwnable {
         uint8 _addRelayRequiredConfirmationsPercent,
         uint8 _removeRelayRequiredConfirmationsPercent,
         uint8 _updateConfigRequiredConfirmationsPercent,
+        TvmCell _eventRootCode,
         TvmCell _tonToEthEventCode,
+        TvmCell _ethToTonEventCode,
         uint256 _changeNonce
     ) public {
         tvm.accept();
@@ -41,9 +47,26 @@ contract VotingForChangeConfig is SimpleOwnable {
         addRelayRequiredConfirmationsPercent = _addRelayRequiredConfirmationsPercent;
         removeRelayRequiredConfirmationsPercent = _removeRelayRequiredConfirmationsPercent;
         updateConfigRequiredConfirmationsPercent = _updateConfigRequiredConfirmationsPercent;
+        eventRootCode = _eventRootCode;
         tonToEthEventCode = _tonToEthEventCode;
+        ethToTonEventCode = _ethToTonEventCode;
 
         changeNonce = _changeNonce;
+
+        TvmBuilder builder;
+        builder.store(
+            addEventTypeRequiredConfirmationsPercent,
+            removeEventTypeRequiredConfirmationsPercent,
+            addRelayRequiredConfirmationsPercent,
+            removeRelayRequiredConfirmationsPercent,
+            updateConfigRequiredConfirmationsPercent,
+            eventRootCode,
+            tonToEthEventCode,
+            ethToTonEventCode,
+            changeNonce
+        );
+        TvmCell cell = builder.toCell();
+        hash = tvm.hash(cell);
     }
 
     function vote(
@@ -53,19 +76,6 @@ contract VotingForChangeConfig is SimpleOwnable {
         uint256 publicKey
     ) external onlyOwner returns (bool) {
         require(!existsSigners.exists(signer));
-
-        TvmBuilder builder;
-        builder.store(
-            addEventTypeRequiredConfirmationsPercent,
-            removeEventTypeRequiredConfirmationsPercent,
-            addRelayRequiredConfirmationsPercent,
-            removeRelayRequiredConfirmationsPercent,
-            updateConfigRequiredConfirmationsPercent,
-            tonToEthEventCode,
-            changeNonce
-        );
-        TvmCell cell = builder.toCell();
-        uint256 hash = tvm.hash(cell);
 
         if(tvm.checkSign(hash, highPart, lowPart, publicKey)) {
             signers.push(signer);
@@ -90,7 +100,9 @@ contract VotingForChangeConfig is SimpleOwnable {
             addRelayRequiredConfirmationsPercent,
             removeRelayRequiredConfirmationsPercent,
             updateConfigRequiredConfirmationsPercent,
+            eventRootCode,
             tonToEthEventCode,
+            ethToTonEventCode,
             changeNonce,
             signers,
             signaturesHighParts,
@@ -98,13 +110,15 @@ contract VotingForChangeConfig is SimpleOwnable {
         );
     }
 
-    function getDetails() external view returns(uint8, uint8, uint8, uint8, uint8, TvmCell, uint256) {
+    function getDetails() external view returns(uint8, uint8, uint8, uint8, uint8, TvmCell, TvmCell, TvmCell, uint256) {
         return (addEventTypeRequiredConfirmationsPercent,
                 removeEventTypeRequiredConfirmationsPercent,
                 addRelayRequiredConfirmationsPercent,
                 removeRelayRequiredConfirmationsPercent,
                 updateConfigRequiredConfirmationsPercent,
+                eventRootCode,
                 tonToEthEventCode,
+                ethToTonEventCode,
                 changeNonce);
     }
 }

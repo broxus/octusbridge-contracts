@@ -22,7 +22,6 @@ const stringToBytesArray = (dataString) => {
 
 
 module.exports = {
-  loadStringFromFile,
   loadJSONFromFile,
   loadBase64FromFile,
   getRandomNonce,

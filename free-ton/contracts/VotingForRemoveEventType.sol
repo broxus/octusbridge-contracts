@@ -13,6 +13,8 @@ contract VotingForRemoveEventType is SimpleOwnable {
 
     mapping(address => bool) existsSigners;
 
+    uint256 hash;
+
     address[] signers;
     uint256[] signaturesHighParts;
     uint256[] signaturesLowParts;
@@ -29,6 +31,11 @@ contract VotingForRemoveEventType is SimpleOwnable {
         tonAddress = _tonAddress;
 
         changeNonce = _changeNonce;
+
+        TvmBuilder builder;
+        builder.store(tonAddress, changeNonce);
+        TvmCell cell = builder.toCell();
+        hash = tvm.hash(cell);
     }
 
     function vote(
@@ -38,11 +45,6 @@ contract VotingForRemoveEventType is SimpleOwnable {
         uint256 publicKey
     ) external onlyOwner returns (bool) {
         require(!existsSigners.exists(signer));
-
-        TvmBuilder builder;
-        builder.store(tonAddress, changeNonce);
-        TvmCell cell = builder.toCell();
-        uint256 hash = tvm.hash(cell);
 
         if(tvm.checkSign(hash, highPart, lowPart, publicKey)) {
             signers.push(signer);
