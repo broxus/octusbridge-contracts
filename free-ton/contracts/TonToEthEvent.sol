@@ -10,6 +10,7 @@ contract TonToEthEvent is SimpleOwnable {
     uint8 minSigns;
 
     address[] signers;
+    bytes[] ethPublicKeys;
     bytes[] signs;
     uint256[] signedAt;
 
@@ -29,6 +30,7 @@ contract TonToEthEvent is SimpleOwnable {
 
     function saveSign(
         address signer,
+        bytes ethPublicKey,
         bytes sign,
         uint256 ts
     ) external onlyOwner {
@@ -36,6 +38,7 @@ contract TonToEthEvent is SimpleOwnable {
 
         signers.push(signer);
         signs.push(sign);
+        ethPublicKeys.push(ethPublicKey);
         signedAt.push(ts);
 
         existsSigners[signer] = true;

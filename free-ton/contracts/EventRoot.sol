@@ -29,20 +29,31 @@ contract EventRoot is SimpleOwnable {
     }
 
     function processTonToEthSign(
-        bytes payload,
         address signer,
+        bytes payload,
+        bytes ethPublicKey,
         bytes sign,
         uint256 signedAt,
         uint8 minSigns
     ) external onlyOwner {
-        //TODO: pubkey?
-        TvmCell eventData = tvm.buildEmptyData(tvm.pubkey());
-        TvmCell stateInit = tvm.buildStateInit(tonToEthEventCode, eventData);
 
-        //TODO: value?
-        //TODO: it not fail if already exists?
-        address eventAddress = new TonToEthEvent{stateInit : stateInit, value : 1e9}(this, ethAddress, payload, minSigns);
-        TonToEthEvent(eventAddress).saveSign(signer, sign, signedAt);
+        //TODO: how to calculate address?
+        address eventAddress = address(0);
+        TonToEthEvent(eventAddress).saveSign(signer, ethPublicKey, sign, signedAt);
+    }
+
+    function onBounce(TvmSlice slice) external {
+        uint32 functionId = slice.decode(uint32);
+        if (functionId == tvm.functionId(TonToEthEvent.saveSign)) {
+            (signer, ethPublicKey, sign, signedAt) = slice.decodeFunctionParams(TonToEthEvent.saveSign);
+
+            //TODO: publicKey?, data?
+            TvmCell eventData = tvm.buildEmptyData(tvm.pubkey());
+            TvmCell stateInit = tvm.buildStateInit(tonToEthEventCode, eventData);
+            //TODO: value?
+            address eventAddress = new TonToEthEvent{stateInit : stateInit, value : 1e9}(this, ethAddress, payload, minSigns);
+            TonToEthEvent(eventAddress).saveSign(signer, ethPublicKey, sign, signedAt);
+        }
 
     }
 

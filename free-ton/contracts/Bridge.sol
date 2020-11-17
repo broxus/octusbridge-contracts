@@ -140,6 +140,12 @@ contract FreeTonBridge is IEventConfigUpdater, IBridgeConfigUpdater {
     mapping(address => uint256) relaysTonPublicKeys;
 //  mapping(address => uint256) relaysEthPublicKeys;
 
+    function incrementChangeNonce() private {
+        while(appliedChanges.exists(changeNonce)) {
+            changeNonce++;
+        }
+    }
+
     //TODO: merge it with EthereumEventConfiguration to EventConfiguration
     struct TonEventConfiguration {
         address tonAddress;
@@ -260,7 +266,7 @@ contract FreeTonBridge is IEventConfigUpdater, IBridgeConfigUpdater {
 
         emit VotingForUpdateConfigStarted(voting);
 
-        changeNonce++;
+        incrementChangeNonce();
     }
 
     function voteForUpdateConfig(
@@ -351,7 +357,7 @@ contract FreeTonBridge is IEventConfigUpdater, IBridgeConfigUpdater {
 
         emit VotingForAddEventTypeStarted(voting);
 
-        changeNonce++;
+        incrementChangeNonce();
     }
 
     function voteForAddEventType(
@@ -403,7 +409,7 @@ contract FreeTonBridge is IEventConfigUpdater, IBridgeConfigUpdater {
 
         emit VotingForRemoveEventTypeStarted(voting);
 
-        changeNonce++;
+        incrementChangeNonce();
     }
 
     function voteForRemoveEventType(
@@ -416,17 +422,17 @@ contract FreeTonBridge is IEventConfigUpdater, IBridgeConfigUpdater {
 
     function signTonToEthEvent(
         bytes payload,
-        address signer,
+        bytes ethPublicKey,
         bytes sign,
         uint256 signedAt,
-        address eventRootAddress) public onlyRelay {
-        //TODO: check sign by ethPublicKey
+        address eventRootAddress
+    ) public onlyRelay {
 
         TonEventConfiguration eventConfig = tonToConfig.at(eventRootAddress);
 
         uint8 minSigns = math.max(eventConfig.minSigns, eventConfig.minSignsPercent * currentRelaysCount / 100);
 
-        EventRoot(eventRootAddress).processTonToEthSign(payload, signer, sign, signedAt, minSigns);
+        EventRoot(eventRootAddress).processTonToEthSign(msg.sender, payload, ethPublicKey, sign, signedAt, minSigns);
     }
 
 }
