@@ -150,15 +150,47 @@ contract FreeTonBridge is IEventConfigUpdater, IBridgeConfigUpdater {
     struct TonEventConfiguration {
         address tonAddress;
         bytes ethAddress;
-//      bytes ethEventABI;
-//      address eventProxyAddress;
+        bytes ethEventABI;
+        address eventProxyAddress;
         uint8 minSigns;
         uint8 minSignsPercent;
+        uint256 tonToEthRate;
+        uint256 ethToTonRate;
     }
 
-//  mapping(bytes => address) ethToTonMap;
+    function getCurrentConfig() external view returns (uint8, uint8, uint8, uint8, uint8, TvmCell, TvmCell, TvmCell) {
+        return (config.addEventTypeRequiredConfirmationsPercent,
+        config.removeEventTypeRequiredConfirmationsPercent,
+        config.addRelayRequiredConfirmationsPercent,
+        config.removeRelayRequiredConfirmationsPercent,
+        config.updateConfigRequiredConfirmationsPercent,
+        config.eventRootCode,
+        config.tonToEthEventCode,
+        config.ethToTonEventCode);
+    }
+
+    mapping(bytes => address) ethToTonMap;
     mapping(address => bytes) tonToEthMap;
     mapping(address => TonEventConfiguration) tonToConfig;
+    address[] eventRoots;
+
+    function getEventRoots() external view returns(address[]) {
+        return eventRoots;
+    }
+
+    function getEventConfig(address eventRootAddress) external view returns(address, bytes, bytes, address, uint8, uint8, uint256, uint256) {
+        TonEventConfiguration eventConfig = tonToConfig.at(eventRootAddress);
+        return (
+        eventConfig.tonAddress,
+        eventConfig.ethAddress,
+        eventConfig.ethEventABI,
+        eventConfig.eventProxyAddress,
+        eventConfig.minSigns,
+        eventConfig.minSignsPercent,
+        eventConfig.tonToEthRate,
+        eventConfig.ethToTonRate
+        );
+    }
 
     function validSignaturesCount(
         uint256 hash,
@@ -183,6 +215,7 @@ contract FreeTonBridge is IEventConfigUpdater, IBridgeConfigUpdater {
 
     // Update config logic
     event VotingForUpdateConfigStarted(address votingAddress);
+    event BridgeConfigUpdated();
 
     function updateConfig(
         uint8 addEventTypeRequiredConfirmationsPercent,
@@ -251,7 +284,6 @@ contract FreeTonBridge is IEventConfigUpdater, IBridgeConfigUpdater {
     }
 
     function startVotingForUpdateConfig(
-        TvmCell stateInit,
         uint8 addEventTypeRequiredConfirmationsPercent,
         uint8 removeEventTypeRequiredConfirmationsPercent,
         uint8 addRelayRequiredConfirmationsPercent,
@@ -260,13 +292,18 @@ contract FreeTonBridge is IEventConfigUpdater, IBridgeConfigUpdater {
         TvmCell eventRootCode,
         TvmCell tonToEthEventCode,
         TvmCell ethToTonEventCode
-    ) public onlyRelay {
+    ) external onlyRelay returns (address) {
+
+        incrementChangeNonce();
+
+        TvmCell eventData = tvm.buildEmptyData(tvm.pubkey());
+        TvmCell stateInit = tvm.buildStateInit(tonToEthEventCode, eventData);
 
         address voting = new VotingForChangeConfig{stateInit : stateInit, value : msg.value}(this, addEventTypeRequiredConfirmationsPercent, removeEventTypeRequiredConfirmationsPercent, addRelayRequiredConfirmationsPercent, removeRelayRequiredConfirmationsPercent, updateConfigRequiredConfirmationsPercent, eventRootCode, tonToEthEventCode, ethToTonEventCode, changeNonce);
 
         emit VotingForUpdateConfigStarted(voting);
 
-        incrementChangeNonce();
+        return voting;
     }
 
     function voteForUpdateConfig(
@@ -280,14 +317,16 @@ contract FreeTonBridge is IEventConfigUpdater, IBridgeConfigUpdater {
     // Add EventType logic
 
     event VotingForAddEventTypeStarted(address votingAddress);
+    event EventTypeAdded(address eventRootAddress);
 
     function addEventType(
-        address tonAddress,
         bytes ethAddress,
-//      bytes ethEventABI,
-//      address eventProxyAddress,
+        bytes ethEventABI,
+        address eventProxyAddress,
         uint8 minSigns,
         uint8 minSignsPercent,
+        uint256 tonToEthRate,
+        uint256 ethToTonRate,
         uint256 _changeNonce,
         address[] signers,
         uint256[] signaturesHighParts,
@@ -297,17 +336,17 @@ contract FreeTonBridge is IEventConfigUpdater, IBridgeConfigUpdater {
         require(minSigns > 0 || minSignsPercent > 0);
         require(minSignsPercent <= 100);
         require(!appliedChanges.exists(_changeNonce));
-        require(!tonToEthMap.exists(tonAddress));
-//      require(!ethToTonMap.exists(ethAddress));
+        require(!ethToTonMap.exists(ethAddress));
 
         TvmBuilder builder;
         builder.store(
-            tonAddress,
             ethAddress,
-//          ethEventABI
-//          eventProxyAddress,
+            ethEventABI,
+            eventProxyAddress,
             minSigns,
             minSignsPercent,
+            tonToEthRate,
+            ethToTonRate,
             _changeNonce);
         TvmCell cell = builder.toCell();
         uint256 hash = tvm.hash(cell);
@@ -317,60 +356,68 @@ contract FreeTonBridge is IEventConfigUpdater, IBridgeConfigUpdater {
 
             appliedChanges[_changeNonce] = true;
 
+            TvmCell eventData = tvm.buildEmptyData(tvm.pubkey());
+            TvmCell stateInit = tvm.buildStateInit(config.eventRootCode, eventData);
+            address tonAddress = new EventRoot{stateInit : stateInit, value : 1e9}(this, ethAddress, eventProxyAddress, config.tonToEthEventCode, config.ethToTonEventCode);
+
             TonEventConfiguration newConfig = TonEventConfiguration({
                 tonAddress: tonAddress,
                 ethAddress: ethAddress,
-//              ethEventABI: ethEventABI,
-//              eventProxyAddress: eventProxyAddress,
+                ethEventABI: ethEventABI,
+                eventProxyAddress: eventProxyAddress,
                 minSigns: minSigns,
-                minSignsPercent: minSignsPercent
+                minSignsPercent: minSignsPercent,
+                tonToEthRate: tonToEthRate,
+                ethToTonRate: ethToTonRate
             });
 
-//          ethToTonMap[ethAddress] = tonAddress;
+            ethToTonMap[ethAddress] = tonAddress;
             tonToEthMap[tonAddress] = ethAddress;
             tonToConfig[tonAddress] = newConfig;
+
+            emit EventTypeAdded(tonAddress);
 
         }
 
     }
 
     function startVotingForAddEventType(
-        TvmCell votingStateInit,
         bytes ethAddress,
-//      bytes ethEventABI,
-//      address eventProxyAddress,
+        bytes ethEventABI,
+        address eventProxyAddress,
         uint8 minSigns,
-        uint8 minSignsPercent
-    ) public onlyRelay {
+        uint8 minSignsPercent,
+        uint256 tonToEthRate,
+        uint256 ethToTonRate
+    ) external onlyRelay returns (address) {
 
-        //TODO: value?
-        require(msg.value > 2e9);
         require(minSigns > 0 || minSignsPercent > 0);
         require(minSignsPercent <= 100);
 
-        //TODO: pubkey?
-        TvmCell eventData = tvm.buildEmptyData(tvm.pubkey());
-        TvmCell stateInit = tvm.buildStateInit(config.eventRootCode, eventData);
-        address eventRootAddress = new EventRoot{stateInit : stateInit, value : msg.value - 1e9}(this, ethAddress, config.tonToEthEventCode, config.ethToTonEventCode);
+        incrementChangeNonce();
 
-        address voting = new VotingForAddEventType{stateInit : votingStateInit, value : 1e9}(this, eventRootAddress, ethAddress, minSigns, minSignsPercent, changeNonce);
+        TvmCell eventData = tvm.buildEmptyData(tvm.pubkey());
+        TvmCell stateInit = tvm.buildStateInit(config.tonToEthEventCode, eventData);
+
+        address voting = new VotingForAddEventType{stateInit : stateInit, value : 1e9}(this, ethAddress, ethEventABI, eventProxyAddress, minSigns, minSignsPercent, tonToEthRate, ethToTonRate, changeNonce);
 
         emit VotingForAddEventTypeStarted(voting);
 
-        incrementChangeNonce();
+        return voting;
     }
 
     function voteForAddEventType(
         address votingAddress,
         uint256 highPart,
         uint256 lowPart
-    ) public onlyRelay {
+    ) external onlyRelay {
         VotingForAddEventType(votingAddress).vote(msg.sender, highPart, lowPart, relaysTonPublicKeys.at(msg.sender));
     }
 
     // Remove EventType logic
 
     event VotingForRemoveEventTypeStarted(address votingAddress);
+    event EventTypeRemoved(address eventRootAddress);
 
     function removeEventType(
         address tonAddress,
@@ -396,27 +443,30 @@ contract FreeTonBridge is IEventConfigUpdater, IBridgeConfigUpdater {
             delete tonToEthMap[tonAddress];
             delete tonToConfig[tonAddress];
 
+            emit EventTypeRemoved(tonAddress);
         }
 
     }
 
-    function startVotingForRemoveEventType(
-        TvmCell stateInit,
-        address tonAddress
-    ) public onlyRelay {
+    function startVotingForRemoveEventType(address tonAddress) external onlyRelay returns (address) {
+
+        incrementChangeNonce();
+
+        TvmCell eventData = tvm.buildEmptyData(tvm.pubkey());
+        TvmCell stateInit = tvm.buildStateInit(config.tonToEthEventCode, eventData);
 
         address voting = new VotingForRemoveEventType{stateInit : stateInit, value : msg.value}(this, tonAddress, changeNonce);
 
         emit VotingForRemoveEventTypeStarted(voting);
 
-        incrementChangeNonce();
+        return voting;
     }
 
     function voteForRemoveEventType(
         address votingAddress,
         uint256 highPart,
         uint256 lowPart
-    ) public onlyRelay {
+    ) external onlyRelay {
         VotingForRemoveEventType(votingAddress).vote(msg.sender, highPart, lowPart, relaysTonPublicKeys.at(msg.sender));
     }
 
@@ -426,7 +476,7 @@ contract FreeTonBridge is IEventConfigUpdater, IBridgeConfigUpdater {
         bytes sign,
         uint256 signedAt,
         address eventRootAddress
-    ) public onlyRelay {
+    ) external onlyRelay {
 
         TonEventConfiguration eventConfig = tonToConfig.at(eventRootAddress);
 

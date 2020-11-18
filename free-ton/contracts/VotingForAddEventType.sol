@@ -7,12 +7,13 @@ contract VotingForAddEventType is SimpleOwnable {
 
     address bridgeAddress;
 
-    address tonAddress;
     bytes ethAddress;
-    //  bytes ethEventABI;
-    //  address eventProxyAddress;
+    bytes ethEventABI;
+    address eventProxyAddress;
     uint8 minSigns;
     uint8 minSignsPercent;
+    uint256 tonToEthRate;
+    uint256 ethToTonRate;
 
     uint256 changeNonce;
 
@@ -26,35 +27,38 @@ contract VotingForAddEventType is SimpleOwnable {
 
     constructor(
         address _bridgeAddress,
-        address _tonAddress,
         bytes _ethAddress,
-//      bytes _ethEventABI,
-//      address _eventProxyAddress,
+        bytes _ethEventABI,
+        address _eventProxyAddress,
         uint8 _minSigns,
         uint8 _minSignsPercent,
+        uint256 _tonToEthRate,
+        uint256 _ethToTonRate,
         uint256 _changeNonce
     ) public {
         tvm.accept();
 
         bridgeAddress = _bridgeAddress;
 
-        tonAddress = _tonAddress;
         ethAddress = _ethAddress;
-//      ethEventABI = _ethEventABI;
-//      eventProxyAddress = _eventProxyAddress
+        ethEventABI = _ethEventABI;
+        eventProxyAddress = _eventProxyAddress;
         minSigns = _minSigns;
         minSignsPercent = _minSignsPercent;
+        tonToEthRate = _tonToEthRate;
+        ethToTonRate = _ethToTonRate;
 
         changeNonce = _changeNonce;
 
         TvmBuilder builder;
         builder.store(
-            tonAddress,
             ethAddress,
-//          ethEventABI
-//          eventProxyAddress,
+            ethEventABI,
+            eventProxyAddress,
             minSigns,
             minSignsPercent,
+            tonToEthRate,
+            ethToTonRate,
             changeNonce);
         TvmCell cell = builder.toCell();
         hash = tvm.hash(cell);
@@ -84,19 +88,20 @@ contract VotingForAddEventType is SimpleOwnable {
 
     function applyChange() public {
         IEventConfigUpdater(bridgeAddress).addEventType(
-            tonAddress,
             ethAddress,
-//          bytes _ethEventABI,
-//          address _eventProxyAddress,
+            ethEventABI,
+            eventProxyAddress,
             minSigns,
             minSignsPercent,
+            tonToEthRate,
+            ethToTonRate,
             changeNonce,
             signers,
             signaturesHighParts,
             signaturesLowParts);
     }
 
-    function getDetails() external view returns(address, bytes, uint8, uint8, uint256) {
-        return (tonAddress, ethAddress, minSigns, minSignsPercent, changeNonce);
+    function getDetails() external view returns(bytes, bytes, address, uint8, uint8, uint256, uint256, uint256) {
+        return (ethAddress, ethEventABI, eventProxyAddress, minSigns, minSignsPercent, tonToEthRate, ethToTonRate, changeNonce);
     }
 }

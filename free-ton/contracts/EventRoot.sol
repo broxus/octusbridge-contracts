@@ -8,14 +8,13 @@ contract EventRoot is SimpleOwnable {
     address bridgeAddress;
 
     bytes ethAddress;
-//  address proxyEventAddress;
-
+    address proxyEventAddress;
     TvmCell tonToEthEventCode;
     TvmCell ethToTonEventCode;
 
     constructor(address _bridgeAddress,
                 bytes _ethAddress,
-//              address _proxyEventAddress,
+                address _proxyEventAddress,
                 TvmCell _tonToEthEventCode,
                 TvmCell _ethToTonEventCode
     ) public {
@@ -23,7 +22,7 @@ contract EventRoot is SimpleOwnable {
 
         bridgeAddress = _bridgeAddress;
         ethAddress = _ethAddress;
-//      proxyEventAddress = _proxyEventAddress;
+        proxyEventAddress = _proxyEventAddress;
         tonToEthEventCode = _tonToEthEventCode;
         ethToTonEventCode = _ethToTonEventCode;
     }
@@ -39,26 +38,33 @@ contract EventRoot is SimpleOwnable {
 
         //TODO: how to calculate address?
         address eventAddress = address(0);
-        TonToEthEvent(eventAddress).saveSign(signer, ethPublicKey, sign, signedAt);
-    }
-
-    function onBounce(TvmSlice slice) external {
-        uint32 functionId = slice.decode(uint32);
-        if (functionId == tvm.functionId(TonToEthEvent.saveSign)) {
-            (signer, ethPublicKey, sign, signedAt) = slice.decodeFunctionParams(TonToEthEvent.saveSign);
-
-            //TODO: publicKey?, data?
-            TvmCell eventData = tvm.buildEmptyData(tvm.pubkey());
-            TvmCell stateInit = tvm.buildStateInit(tonToEthEventCode, eventData);
-            //TODO: value?
-            address eventAddress = new TonToEthEvent{stateInit : stateInit, value : 1e9}(this, ethAddress, payload, minSigns);
-            TonToEthEvent(eventAddress).saveSign(signer, ethPublicKey, sign, signedAt);
-        }
-
+        TonToEthEvent(eventAddress).saveSign(signer, ethPublicKey, sign, signedAt, payload, minSigns);
     }
 
     //TODO
     function processEthToTonSign() external onlyOwner {
+
+    }
+
+    onBounce(TvmSlice slice) external {
+        uint32 functionId = slice.decode(uint32);
+        if (functionId == tvm.functionId(TonToEthEvent.saveSign)) {
+            address signer;
+            bytes ethPublicKey;
+            bytes sign;
+            uint256 signedAt;
+            bytes payload;
+            uint8 minSigns;
+
+            (signer, ethPublicKey, sign, signedAt, payload, minSigns) = slice.decodeFunctionParams(TonToEthEvent.saveSign);
+
+            TvmCell eventData = tvm.buildEmptyData(tvm.pubkey());
+            TvmCell stateInit = tvm.buildStateInit(tonToEthEventCode, eventData);
+
+            address eventAddress = new TonToEthEvent{stateInit : stateInit, value : 1e9}(this, ethAddress, payload, minSigns);
+
+            TonToEthEvent(eventAddress).saveSign(signer, ethPublicKey, sign, signedAt, payload, minSigns);
+        }
 
     }
 }

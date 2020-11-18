@@ -32,7 +32,9 @@ contract TonToEthEvent is SimpleOwnable {
         address signer,
         bytes ethPublicKey,
         bytes sign,
-        uint256 ts
+        uint256 ts,
+        bytes _unused_payload, //only for onBounce in EventRoot
+        uint8 _unused_minSigns //only for onBounce in EventRoot
     ) external onlyOwner {
         require(!existsSigners.exists(signer));
 
