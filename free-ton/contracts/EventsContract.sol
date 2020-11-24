@@ -4,12 +4,12 @@ pragma AbiHeader expire;
 
 
 contract EventsConfiguration {
-    bytes[] ethereumEventABI;
-    bytes[] ethereumAddress;
+    bytes ethereumEventABI;
+    bytes ethereumAddress;
 
     constructor(
-        bytes[] _ethereumEventABI,
-        bytes[] _ethereumAddress
+        bytes _ethereumEventABI,
+        bytes _ethereumAddress
     ) public {
         tvm.accept();
 
@@ -17,7 +17,7 @@ contract EventsConfiguration {
         ethereumAddress = _ethereumAddress;
     }
 
-    function getEventDetails() external view returns(bytes[], bytes[]) {
+    function getEventDetails() external view returns(bytes, bytes) {
         return (ethereumEventABI, ethereumAddress);
     }
 }
