@@ -33,7 +33,11 @@ describe('Test FreeTON bridge', function() {
     );
     await bridgeContract.deploy(
       utils.loadBase64FromFile(process.env.CONTRACT_BRIDGE_BASE64),
-      {},
+      {
+        _eventRootCode: utils.loadBase64FromFile(process.env.CONTRACT_EVENT_ROOT_BASE64),
+        _tonToEthEventCode: utils.loadBase64FromFile(process.env.CONTRACT_TONTOETH_EVENT_BASE64),
+        _ethToTonEventCode: utils.loadBase64FromFile(process.env.CONTRACT_ETHTOTON_EVENT_BASE64)
+      },
       {
         nonce: utils.getRandomNonce(),
       }
