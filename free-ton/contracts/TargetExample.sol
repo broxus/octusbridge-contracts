@@ -6,7 +6,7 @@ pragma AbiHeader expire;
 contract Target {
     uint public nonce;
     uint state;
-    bytes[] author;
+    bytes author;
 
     constructor() public {
         require(tvm.pubkey() != 0);
@@ -15,12 +15,12 @@ contract Target {
         state = 0;
     }
 
-    function setState(uint newState, bytes[] newAuthor) public {
+    function setState(uint newState, bytes newAuthor) public {
         state = newState;
         author = newAuthor;
     }
 
-    function getState() external view returns(uint, bytes[]) {
+    function getState() external view returns(uint, bytes) {
         return (state, author);
     }
 }

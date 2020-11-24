@@ -10,8 +10,8 @@ contract FreeTonBridge {
     uint public nonce;
 
     struct EthereumEventConfiguration {
-        bytes[] ethereumEventABI;
-        bytes[] ethereumAddress;
+        bytes ethereumEventABI;
+        bytes ethereumAddress;
         address eventProxyAddress;
         uint confirmations;
         bool confirmed;
@@ -35,8 +35,8 @@ contract FreeTonBridge {
         @param eventProxyAddress TON address of the corresponding event proxy address (callback implementation)
     **/
     function addEthereumEventConfiguration(
-        bytes[] ethereumEventABI,
-        bytes[] ethereumAddress,
+        bytes ethereumEventABI,
+        bytes ethereumAddress,
         address eventProxyAddress
     ) public {
         tvm.accept();
