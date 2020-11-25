@@ -1,4 +1,4 @@
-const HDWalletProvider = require("truffle-hdwallet-provider");
+const HDWalletProvider = require("@truffle/hdwallet-provider");
 require('dotenv').config({ path: './../env/ethereum.env' });
 
 /**
@@ -55,7 +55,7 @@ module.exports = {
       gasPrice: parseInt(process.env.ETHEREUM_GAS_PRICE),
     },
     development: {
-     host: "127.0.0.1",     // Localhost (default: none)
+     host: 'ganache',     // Localhost (default: none)
      port: 8545,            // Standard Ethereum port (default: none)
      network_id: "*",       // Any network (default: none)
     },

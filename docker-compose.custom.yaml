@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  migrator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: migrator_img
+    command: truffle migrate --network env
+    volumes:
+      - ./ethereum:/app/
+      - ./env:/env
