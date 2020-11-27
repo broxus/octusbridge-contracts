@@ -96,17 +96,19 @@ cd free-ton
 
 
 ## Testing with docker
+First of all, create `freeton.env` and `ethereum.env` files.
 1. If you want to test on local node, run:
 ```
 ./scripts/up.sh
 ```
-This command will setup local ganache node accessible on http://127.0.0.1:8545 and run truffle migrations.
+This command will setup local ganache node accessible on http://127.0.0.1:8545 and run truffle migrations for Ethereum
+ and setup local TON node on http://127.0.0.1:80 + run mocha tests
 
-2. If you want to deploy to custom network, at first create `ethereum.env` file, and then run:
+2. If you want to deploy to custom networks (specified in .env files), run:
 ```
 ./scripts/up_custom.sh
 ```
-This command will run `truffle migrate` with flag `--network env` . 
+This command doesn't setup local nodes, only run migrations on specified custom networks.
 
 To check logs of running containers, run:
 ```
@@ -117,4 +119,4 @@ This will output last `N` rows of logs.
 To stop running containers, run:
 ```
 ./scripts/down.sh
-```
+_```_
