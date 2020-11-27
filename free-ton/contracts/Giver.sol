@@ -1,4 +1,4 @@
-pragma solidity >= 0.5.0;
+pragma solidity >= 0.6.0;
 pragma AbiHeader expire;
 
 contract Giver {
@@ -6,11 +6,7 @@ contract Giver {
         tvm.accept();
     }
 
-//    receive() external {
-//        tvm.accept();
-//    }
-
-    function sendGrams(address dest, uint64 amount) public {
+    function sendGrams(address dest, uint64 amount) public pure {
         tvm.accept();
         require(address(this).balance > amount, 60);
         dest.transfer(amount, false, 1);

@@ -1,17 +1,20 @@
-pragma solidity >= 0.5.0;
-pragma experimental ABIEncoderV2;
+pragma solidity >= 0.6.0;
 pragma AbiHeader expire;
 
 
 contract EventProxy {
-    uint public nonce;
+    uint static nonce;
 
     constructor() public {
         require(tvm.pubkey() != 0);
         tvm.accept();
     }
 
-    function broxusBridgeCallback() public {
+    function broxusBridgeCallback(
+        bytes eventTransaction,
+        uint eventIndex,
+        TvmCell eventData
+    ) public {
 
     }
 }

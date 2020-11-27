@@ -16,6 +16,7 @@
     "mocha": "^8.2.1",
     "mocha-logger": "^1.0.7",
     "solidity-docgen": "^0.5.7",
+    "ton-client-js": "^0.28.1",
     "ton-client-node-js": "^0.24.0",
     "truffle": "^5.1.51",
     "@truffle/hdwallet-provider": "^1.2.0",

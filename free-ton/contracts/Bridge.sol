@@ -1,88 +1,106 @@
-pragma solidity >= 0.5.0;
-pragma experimental ABIEncoderV2;
+pragma solidity >= 0.6.0;
 pragma AbiHeader expire;
 
 
-import "./EventsContract.sol";
+import "./EthereumEventConfiguration.sol";
+import "./KeysOwnable.sol";
 
 
-contract FreeTonBridge {
-    uint public nonce;
+contract FreeTonBridge is KeysOwnable {
+    uint static nonce;
 
-    struct EthereumEventConfiguration {
-        bytes ethereumEventABI;
-        bytes ethereumAddress;
-        address eventProxyAddress;
-        uint confirmations;
-        bool confirmed;
+    TvmCell ethereumEventConfigurationCode;
+    TvmCell ethereumEventCode;
+
+    struct BridgeConfiguration {
+        uint ethereumEventConfigurationRequiredConfirmations;
+        uint ethereumEventConfigurationRequiredRejects;
+        uint ethereumEventConfigurationSequentialIndex;
     }
+    BridgeConfiguration bridgeConfiguration;
 
-    EthereumEventConfiguration[] ethereumEventsConfiguration;
-    uint ethereumEventConfigurationRequiredConfirmations;
+    event AddEthereumEventConfigurationEvent(address indexed ethereumEventConfigurationAddress);
 
-    constructor() public {
+    constructor(
+        TvmCell _ethereumEventConfigurationCode,
+        TvmCell _ethereumEventCode,
+        uint[] _relayKeys,
+        uint _ethereumEventConfigurationRequiredConfirmations,
+        uint _ethereumEventConfigurationRequiredRejects
+    ) public {
         require(tvm.pubkey() != 0);
         tvm.accept();
 
-        ethereumEventConfigurationRequiredConfirmations = 2;
+        for (uint i=0; i < _relayKeys.length; i++) {
+            _grantOwnership(_relayKeys[i]);
+        }
+
+        ethereumEventConfigurationCode = _ethereumEventConfigurationCode;
+        ethereumEventCode = _ethereumEventCode;
+
+        bridgeConfiguration.ethereumEventConfigurationRequiredConfirmations = _ethereumEventConfigurationRequiredConfirmations;
+        bridgeConfiguration.ethereumEventConfigurationRequiredRejects = _ethereumEventConfigurationRequiredRejects;
+
+        bridgeConfiguration.ethereumEventConfigurationSequentialIndex = 0;
     }
 
     /**
-        @notice Propose new Ethereum event configuration. Need more confirmation in general
-        @dev One confirmation is received from the proposal author
-        @param ethereumEventABI Bytes encoded Event ABI
-        @param ethereumAddress Bytes encoded Ethereum address
-        @param eventProxyAddress TON address of the corresponding event proxy address (callback implementation)
+        @notice Propose new Ethereum event configuration. Only relay can do this.
+        @dev One confirmation is received from the proposal author. Need more confirmation in general
+        @param eventProxyAddress TON address of the event proxy address
     **/
     function addEthereumEventConfiguration(
         bytes ethereumEventABI,
         bytes ethereumAddress,
         address eventProxyAddress
-    ) public {
+    ) public returns(address) {
         tvm.accept();
 
-        ethereumEventsConfiguration.push(EthereumEventConfiguration({
-            ethereumEventABI: ethereumEventABI,
-            ethereumAddress: ethereumAddress,
-            eventProxyAddress: eventProxyAddress,
-            confirmations: 0,
-            confirmed: false
-        }));
+        address ethereumEventConfigurationAddress = new EthereumEventConfiguration{
+            code: ethereumEventConfigurationCode,
+            pubkey: tvm.pubkey(),
+            varInit: {
+                eventABI: ethereumEventABI,
+                eventAddress: ethereumAddress,
+                proxyAddress: eventProxyAddress,
+                bridgeAddress: address(this)
+            },
+            value: 10 ton
+        }(
+            bridgeConfiguration.ethereumEventConfigurationRequiredConfirmations,
+            bridgeConfiguration.ethereumEventConfigurationRequiredRejects,
+            ethereumEventCode
+//            msg.pubkey()
+        );
 
-        confirmEthereumEventConfiguration(ethereumEventsConfiguration.length - 1);
+        bridgeConfiguration.ethereumEventConfigurationSequentialIndex++;
+
+        emit AddEthereumEventConfigurationEvent(ethereumEventConfigurationAddress);
+
+        return ethereumEventConfigurationAddress;
     }
 
-    /**
-        @notice Confirm Ethereum event configuration.
-        @param ethereumEventConfigurationID Sequential ID of the Ethereum event configuration
-    **/
-    function confirmEthereumEventConfiguration(uint ethereumEventConfigurationID) public {
+    function confirmEthereumEventConfiguration(
+        address ethereumEventConfigurationAddress
+    ) public pure {
         tvm.accept();
 
-        require(ethereumEventConfigurationID < ethereumEventsConfiguration.length);
-
-        ethereumEventsConfiguration[ethereumEventConfigurationID].confirmations++;
-
-        if (ethereumEventsConfiguration[ethereumEventConfigurationID].confirmations >= ethereumEventConfigurationRequiredConfirmations) {
-            ethereumEventsConfiguration[ethereumEventConfigurationID].confirmed = true;
-        }
+        EthereumEventConfiguration(ethereumEventConfigurationAddress).confirm(msg.pubkey());
     }
 
-    /**
-        @notice Confirm new Ethereum event
-        @dev In case there's no previous confirmation - new Event Contract will be deployed under the hood
-        @param ethereumEventConfigurationID Sequential ID of the Ethereum event configuration
-        @param ethereumEventData Encoded data of the Ethereum event
-    **/
-    function confirmEventInstance(
-        uint ethereumEventConfigurationID,
-        TvmCell ethereumEventData
-    ) public {
-        // Calculate
-    }
-
-    function getEthereumEventsConfiguration() external view returns (EthereumEventConfiguration[]) {
+    function confirmEthereumEvent(
+        bytes eventTransaction,
+        uint eventIndex,
+        TvmCell eventData,
+        address ethereumEventConfigurationAddress
+    ) public pure {
         tvm.accept();
-        return ethereumEventsConfiguration;
+
+        EthereumEventConfiguration(ethereumEventConfigurationAddress).confirmEvent(
+            eventTransaction,
+            eventIndex,
+            eventData,
+            msg.pubkey()
+        );
     }
 }
