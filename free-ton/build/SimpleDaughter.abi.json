@@ -1,0 +1,26 @@
+{
+	"ABI version": 2,
+	"header": ["time", "expire"],
+	"functions": [
+		{
+			"name": "constructor",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "isDaughter",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"bool"}
+			]
+		}
+	],
+	"data": [
+		{"key":1,"name":"daughterNonce","type":"uint256"}
+	],
+	"events": [
+	]
+}

@@ -1,0 +1,490 @@
+.globl	constructor
+.public	constructor
+.type	constructor, @function
+GETGLOB 1
+ISNULL
+PUSHCONT {
+	CALL $c4_to_c7_with_init_storage$
+}
+IF
+;; constructor protection
+GETGLOB 6
+THROWIF 51
+PUSHINT 1
+SETGLOB 6
+;; end constructor protection
+; Decode input parameters
+; Decode relayKey
+LDU 256
+ENDS
+;; param: relayKey
+; constructor EthereumEvent
+;; push identifier relayKey
+DUP
+GTINT 0
+THROWIFNOT 100
+ACCEPT
+DROP
+; end constructor EthereumEvent
+CALL $c7_to_c4$
+TRUE
+SETGLOB 7
+
+.globl	confirm
+.public	confirm
+.type	confirm, @function
+GETGLOB 1
+ISNULL
+PUSHCONT {
+	CALL $c4_to_c7$
+}
+IF
+; Decode input parameters
+; Decode relayKey
+LDU 256
+ENDS
+;; param: relayKey
+; function confirm
+;; push identifier relayKey
+DUP
+GTINT 0
+THROWIFNOT 100
+;; ++
+; expValue
+;; fetch confirmations
+GETGLOB 16
+; end expValue
+INC
+; colValue
+SETGLOB 16
+; end colValue
+; expValue
+; end expValue
+TRUE
+; colValue
+SETGLOB 15
+; end colValue
+;; Remote call Proxy.broxusBridgeCallback
+;; push identifier proxyAddress
+GETGLOB 13
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHSLICE x3989680000000000000000000000000004_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x5b7b9df9
+;; eventTransaction
+;; push identifier eventTransaction
+GETGLOB 10
+STREFR
+;; eventIndex
+;; push identifier eventIndex
+GETGLOB 11
+STUR 256
+;; eventData
+;; push identifier eventData
+GETGLOB 12
+STREFR
+ENDC
+PUSHINT 1
+SENDRAWMSG
+DROP
+; end function confirm
+CALL $c7_to_c4$
+TRUE
+SETGLOB 7
+
+.globl	confirm_internal
+.type	confirm_internal, @function
+;; param: relayKey
+; function confirm
+;; push identifier relayKey
+DUP
+GTINT 0
+THROWIFNOT 100
+;; ++
+; expValue
+;; fetch confirmations
+GETGLOB 16
+; end expValue
+INC
+; colValue
+SETGLOB 16
+; end colValue
+; expValue
+; end expValue
+TRUE
+; colValue
+SETGLOB 15
+; end colValue
+;; Remote call Proxy.broxusBridgeCallback
+;; push identifier proxyAddress
+GETGLOB 13
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHSLICE x3989680000000000000000000000000004_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x5b7b9df9
+;; eventTransaction
+;; push identifier eventTransaction
+GETGLOB 10
+STREFR
+;; eventIndex
+;; push identifier eventIndex
+GETGLOB 11
+STUR 256
+;; eventData
+;; push identifier eventData
+GETGLOB 12
+STREFR
+ENDC
+PUSHINT 1
+SENDRAWMSG
+DROP
+; end function confirm
+
+.globl	getDetails
+.public	getDetails
+.type	getDetails, @function
+GETGLOB 1
+ISNULL
+PUSHCONT {
+	CALL $c4_to_c7$
+}
+IF
+; Decode input parameters
+ENDS
+; function getDetails
+;; ret param: _proxyCallbackExecuted
+PUSHINT 0
+;; ret param: _confirmations
+PUSHINT 0
+ACCEPT
+;; return
+;; push identifier proxyCallbackExecuted
+GETGLOB 15
+;; push identifier confirmations
+GETGLOB 16
+BLKDROP2 2, 2
+;; emitting 2 value(s)
+PUSH S2
+EQINT -1
+PUSHCONT {
+	PUSH S4
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST x8137d5cd
+	PUSH S2
+	STIR 1
+	PUSH S1
+	STUR 256
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+}
+IF
+DROP2
+; end function getDetails
+PUSHCONT {
+	CALL $c7_to_c4$
+}
+IF
+TRUE
+SETGLOB 7
+
+.globl	getDetails_internal
+.type	getDetails_internal, @function
+; function getDetails
+;; ret param: _proxyCallbackExecuted
+PUSHINT 0
+;; ret param: _confirmations
+PUSHINT 0
+ACCEPT
+;; return
+;; push identifier proxyCallbackExecuted
+GETGLOB 15
+;; push identifier confirmations
+GETGLOB 16
+BLKDROP2 2, 2
+; end function getDetails
+
+.globl	c7_to_c4
+.type	c7_to_c4, @function
+GETGLOB 2
+NEWC
+STU 256
+GETGLOB 3
+STUR 64
+GETGLOB 6
+STUR 1
+NEWC
+GETGLOB 14
+GETGLOB 16
+XCHG s2
+STSLICE
+STU 256
+GETGLOB 10
+GETGLOB 11
+GETGLOB 12
+GETGLOB 13
+GETGLOB 15
+REVERSE 7, 0
+STBREF
+STREF
+STU 256
+STREF
+STSLICE
+STI 1
+ENDC
+POP C4
+
+.globl	c4_to_c7
+.type	c4_to_c7, @function
+PUSHROOT
+CTOS        ; c4
+LDU 256      ; pubkey c4
+LDU 64      ; pubkey timestamp c4
+LDU 1       ; pubkey [timestamp] constructor_flag memory
+LDREFRTOS
+LDMSGADDR
+PLDU 256
+SETGLOB 16
+SETGLOB 14
+LDREF
+LDU 256
+LDREF
+LDMSGADDR
+PLDI 1
+SETGLOB 15
+SETGLOB 13
+SETGLOB 12
+SETGLOB 11
+SETGLOB 10
+TRUE
+SETGLOB 1   ; pubkey [timestamp] constructor_flag
+SETGLOB 6   ; pubkey [timestamp]
+SETGLOB 3   ; D
+SETGLOB 2
+
+.macro c4_to_c7_with_init_storage
+PUSHROOT
+CTOS        ; c4
+DUP        ; c4 c4
+SBITS      ; c4 bits
+GTINT 1    ; c4 bits>1
+PUSHCONT {
+	LDU 256      ; pubkey c4
+	LDU 64      ; pubkey timestamp c4
+	LDU 1       ; pubkey [timestamp] constructor_flag memory
+	LDREFRTOS
+	LDMSGADDR
+	PLDU 256
+	SETGLOB 16
+	SETGLOB 14
+	LDREF
+	LDU 256
+	LDREF
+	LDMSGADDR
+	PLDI 1
+	SETGLOB 15
+	SETGLOB 13
+	SETGLOB 12
+	SETGLOB 11
+	SETGLOB 10
+	TRUE
+	SETGLOB 1   ; pubkey [timestamp] constructor_flag
+	SETGLOB 6   ; pubkey [timestamp]
+	SETGLOB 3   ; D
+	SETGLOB 2
+}
+PUSHCONT {
+	PLDDICT   ; D
+	; init eventTransaction
+	PUSHINT 1
+	PUSH S1
+	PUSHINT 64
+	DICTUGETREF
+	PUSHCONT {
+		NEWC
+		ENDC
+	}
+	IFNOT
+	SETGLOB 10
+	; init eventIndex
+	PUSHINT 2
+	PUSH S1
+	PUSHINT 64
+	DICTUGET
+	PUSHCONT {
+		PLDU 256
+	}
+	PUSHCONT {
+		PUSHINT 0
+	}
+	IFELSE
+	SETGLOB 11
+	; init eventData
+	PUSHINT 3
+	PUSH S1
+	PUSHINT 64
+	DICTUGETREF
+	PUSHCONT {
+		NEWC
+		ENDC
+	}
+	IFNOT
+	SETGLOB 12
+	; init proxyAddress
+	PUSHINT 4
+	PUSH S1
+	PUSHINT 64
+	DICTUGET
+	PUSHCONT {
+		PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	IFNOT
+	SETGLOB 13
+	; init ethereumEventConfirguration
+	PUSHINT 5
+	PUSH S1
+	PUSHINT 64
+	DICTUGET
+	PUSHCONT {
+		PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	IFNOT
+	SETGLOB 14
+	; init proxyCallbackExecuted
+	PUSHINT 0
+	SETGLOB 15
+	; init confirmations
+	PUSHINT 0
+	SETGLOB 16
+	; set contract pubkey
+	PUSHINT 0
+	SWAP
+	PUSHINT 64
+	DICTUGET
+	THROWIFNOT 61
+	PLDU 256
+	SETGLOB 2
+	PUSHINT 0 ; timestamp
+	SETGLOB 3
+	PUSHINT 0 ; constructor_flag
+	SETGLOB 6
+	TRUE
+	SETGLOB 1
+	;; init state var: proxyCallbackExecuted
+	FALSE
+	SETGLOB 15
+	;; init state var: confirmations
+	PUSHINT 0
+	SETGLOB 16
+}
+IFELSE
+
+.internal-alias :main_internal,        0
+.internal	:main_internal
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Function: main_internal
+;; param: contract_balance
+;; param: msg_balance
+;; param: int_msg_info
+;; param: msg_body_slice
+PUSHINT 0  ; main_external trans id
+PUSH S2
+CTOS
+PLDU 4
+MODPOW2 1
+IFRET
+PUSH S1    ; body
+SEMPTY     ; isEmpty
+IFRET
+PUSH S1 ; body
+LDU 32  ; funcId body'
+PUSH S1 ; funcId body' funcId
+IFNOTRET
+PUSH S1 ; funcId body' funcId
+LESSINT 3            ; funcId body' funcId<3
+PUSH S2              ; funcId body' funcId<3 funcId
+PUSHINT 4294967293   ; funcId body' funcId<3 funcId 4294967293
+GREATER              ; funcId body' funcId<3 funcId>4294967293
+OR                   ; funcId body' funcId<3||funcId>4294967293
+PUSHCONT {
+	DROP2
+	THROW 60
+}
+IFJMP
+SWAP    ; body funcId
+CALL 1
+GETGLOB 7
+ISNULL
+PUSHCONT {
+	DROP
+	THROW 60
+}
+IF
+
+.internal-alias :main_external,        -1
+.internal	:main_external
+PUSHINT -1 ; main_external trans id
+PUSH S1
+CALL $c4_to_c7_with_init_storage$
+LDU 1 ; haveSign msgSlice
+SWAP
+PUSHCONT {
+	PUSHINT 512
+	LDSLICEX ; signatureSlice msgSlice
+	DUP      ; signatureSlice msgSlice msgSlice
+	HASHSU   ; signatureSlice msgSlice hashMsgSlice
+	ROT
+	GETGLOB 2
+	CHKSIGNU      ; msgSlice isSigned
+	THROWIFNOT 40 ; msgSlice
+}
+IF
+LDU 64                         ; timestamp msgSlice
+SWAP                           ; msgSlice timestamp
+CALL $replay_protection_macro$ ; msgSlice
+LDU 32  ; expireAt msgSlice
+SWAP    ; msgSlice expireAt
+NOW     ; msgSlice expireAt now
+GREATER ; msgSlice expireAt>now
+THROWIFNOT 57
+LDU  32 ; funcId body
+PUSH S1 ; funcId body funcId
+LESSINT 3            ; funcId body' funcId<3
+PUSH S2              ; funcId body' funcId<3 funcId
+PUSHINT 4294967293   ; funcId body' funcId<3 funcId 4294967293
+GREATER              ; funcId body' funcId<3 funcId>4294967293
+OR                   ; funcId body' funcId<3||funcId>4294967293
+PUSHCONT {
+	DROP2
+	THROW 60
+}
+IFJMP
+SWAP    ; body funcId
+CALL 1
+GETGLOB 7
+ISNULL
+PUSHCONT {
+	DROP
+	THROW 60
+}
+IF
+
