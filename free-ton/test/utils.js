@@ -1,4 +1,5 @@
 const fs = require('fs');
+const BigNumber = require('bignumber.js');
 
 
 const loadJSONFromFile = (filePath) => {
@@ -14,6 +15,15 @@ const loadBase64FromFile = (filePath) => {
 const getRandomNonce = () => Math.random() * 1000000000 | 0;
 
 
+const convertCrystal = (crystalAmount, dimension) => {
+  const crystalBN = new BigNumber(crystalAmount);
+  
+  if (dimension === 'nano') {
+    return crystalBN.times(10**9).toFixed(0);
+  }
+};
+
+
 const stringToBytesArray = (dataString) => {
   return Buffer.from(dataString).toString('hex')
 };
@@ -23,5 +33,6 @@ module.exports = {
   loadJSONFromFile,
   loadBase64FromFile,
   getRandomNonce,
+  convertCrystal,
   stringToBytesArray,
 };
