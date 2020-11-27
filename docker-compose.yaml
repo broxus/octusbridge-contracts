@@ -6,17 +6,32 @@ services:
     command: --seed 123123
     ports:
       - 8545:8545
-    volumes:
-    - ./:/db
 
-  migrator:
+  eth_migrator:
     build:
       context: .
       dockerfile: Dockerfile
     image: migrator_img
-    command: wait-for-it.sh -s -t 0 ganache:8545 -- truffle migrate --network development
+    command: wait-for-it.sh -s -t 0 ganache:8545 -- /node_modules/.bin/truffle migrate --network development
     volumes:
     - ./ethereum:/app/
     - ./env:/env
     depends_on:
       - ganache
+
+  ton_node:
+    image: tonlabs/local-node
+    environment:
+      - USER_AGREEMENT=yes
+    ports:
+      - 80:80
+
+  ton_migrator:
+    image: migrator_img
+    command: wait-for-it.sh -s -t 0 ton_node:80 -- sleep_and_test_ton.sh
+    volumes:
+    - ./env:/app/env
+    - ./free-ton:/app/
+    - ./free-ton/build:/app/free-ton/build
+    depends_on:
+      - ton_node
