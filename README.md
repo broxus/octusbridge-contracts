@@ -93,3 +93,28 @@ At this step contracts are compiled
 cd free-ton
 ./scripts/build-contract.sh
 ```
+
+
+## Testing with docker
+1. If you want to test on local node, run:
+```
+./scripts/up.sh
+```
+This command will setup local ganache node accessible on http://127.0.0.1:8545 and run truffle migrations.
+
+2. If you want to deploy to custom network, at first create `ethereum.env` file, and then run:
+```
+./scripts/up_custom.sh
+```
+This command will run `truffle migrate` with flag `--network env` . 
+
+To check logs of running containers, run:
+```
+./scripts/logs.sh N
+```
+This will output last `N` rows of logs.
+
+To stop running containers, run:
+```
+./scripts/down.sh
+```

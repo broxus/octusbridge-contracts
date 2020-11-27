@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  ganache:
+    image: trufflesuite/ganache-cli
+    command: --seed 123123
+    ports:
+      - 8545:8545
+    volumes:
+    - ./:/db
+
+  migrator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: migrator_img
+    command: wait-for-it.sh -s -t 0 ganache:8545 -- truffle migrate --network development
+    volumes:
+    - ./ethereum:/app/
+    - ./env:/env
+    depends_on:
+      - ganache
