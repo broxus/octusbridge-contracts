@@ -73,6 +73,11 @@ contract EthereumEventConfiguration {
         }
     }
 
+    // TODO: add reject logic
+    function reject(uint relayKey) public view onlyBridge {
+        require(relayKey > 0);
+    }
+
     /*
         Confirm Ethereum-TON event instance. Works only when configuration is active.
         @dev This function either deploy EthereumEvent or confirm it

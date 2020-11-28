@@ -23,8 +23,14 @@
 			"inputs": [
 			],
 			"outputs": [
+				{"name":"_eventTransaction","type":"bytes"},
+				{"name":"_eventIndex","type":"uint256"},
+				{"name":"_eventData","type":"cell"},
+				{"name":"_proxyAddress","type":"address"},
+				{"name":"_ethereumEventConfirguration","type":"address"},
 				{"name":"_proxyCallbackExecuted","type":"bool"},
-				{"name":"_confirmations","type":"uint256"}
+				{"name":"_confirmKeys","type":"uint256[]"},
+				{"name":"_rejectKeys","type":"uint256[]"}
 			]
 		}
 	],

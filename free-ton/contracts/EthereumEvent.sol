@@ -20,8 +20,6 @@ contract EthereumEvent {
 
     bool proxyCallbackExecuted = false;
 
-    uint confirmations = 0;
-
     uint[] confirmKeys;
     uint[] rejectKeys;
 
@@ -43,8 +41,12 @@ contract EthereumEvent {
         @param relayKey Public key of the relay, who initiated the config creation
     */
     function confirm(uint relayKey) public {
-        require(relayKey > 0);
-        confirmations++;
+        for (uint i=0; i<confirmKeys.length; i++) {
+            require(confirmKeys[i] != relayKey, 404);
+        }
+
+        confirmKeys.push(relayKey);
+
         proxyCallbackExecuted = true;
 
         Proxy(proxyAddress).broxusBridgeCallback(
@@ -54,27 +56,27 @@ contract EthereumEvent {
         );
     }
 
-    function confirm(uint relayKey) public onlyBridge {
-        for (uint i=0; i<confirmKeys.length; i++) {
-            require(confirmKeys[i] != relayKey, KEY_ALREADY_USED);
-        }
-
-        confirmKeys.push(relayKey);
-
-        if (confirmKeys.length >= requiredConfirmations) {
-            active = true;
-        }
-    }
-
     function getDetails() public view returns (
+        bytes _eventTransaction,
+        uint _eventIndex,
+        TvmCell _eventData,
+        address _proxyAddress,
+        address _ethereumEventConfirguration,
         bool _proxyCallbackExecuted,
-        uint _confirmations
+        uint[] _confirmKeys,
+        uint[] _rejectKeys
     ) {
         tvm.accept();
 
         return (
+            eventTransaction,
+            eventIndex,
+            eventData,
+            proxyAddress,
+            ethereumEventConfirguration,
             proxyCallbackExecuted,
-            confirmations
+            confirmKeys,
+            rejectKeys
         );
     }
 }

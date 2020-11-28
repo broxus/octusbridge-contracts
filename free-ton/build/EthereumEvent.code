@@ -45,16 +45,63 @@ LDU 256
 ENDS
 ;; param: relayKey
 ; function confirm
-;; push identifier relayKey
-DUP
-GTINT 0
-THROWIFNOT 100
-;; ++
+; for
+PUSHINT 0
+;; decl: i
+PUSHCONT {
+	;; push identifier i
+	DUP
+	;; get member length
+	;; push identifier confirmKeys
+	GETGLOB 16
+	FIRST
+	;; <
+	LESS
+}
+PUSHCONT {
+	;; index
+	;; push identifier i
+	DUP
+	;; push identifier confirmKeys
+	GETGLOB 16
+	INDEX 1
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PLDU 256
+	;; push identifier relayKey
+	PUSH S2
+	;; !=
+	NEQ
+	THROWIFNOT 404
+	;; ++
+	; expValue
+	; end expValue
+	INC
+	; colValue
+	; end colValue
+}
+WHILE
+DROP
+; end for
 ; expValue
-;; fetch confirmations
+;; fetch confirmKeys
 GETGLOB 16
 ; end expValue
+;; push identifier relayKey
+PUSH S1
+;; array.push(..)
+NEWC
+STU 256
+SWAP
+UNPAIR
+PUSH S1
 INC
+XCHG s3
+ROTREV
+PUSHINT 32
+DICTUSETB
+PAIR
 ; colValue
 SETGLOB 16
 ; end colValue
@@ -100,16 +147,63 @@ SETGLOB 7
 .type	confirm_internal, @function
 ;; param: relayKey
 ; function confirm
-;; push identifier relayKey
-DUP
-GTINT 0
-THROWIFNOT 100
-;; ++
+; for
+PUSHINT 0
+;; decl: i
+PUSHCONT {
+	;; push identifier i
+	DUP
+	;; get member length
+	;; push identifier confirmKeys
+	GETGLOB 16
+	FIRST
+	;; <
+	LESS
+}
+PUSHCONT {
+	;; index
+	;; push identifier i
+	DUP
+	;; push identifier confirmKeys
+	GETGLOB 16
+	INDEX 1
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PLDU 256
+	;; push identifier relayKey
+	PUSH S2
+	;; !=
+	NEQ
+	THROWIFNOT 404
+	;; ++
+	; expValue
+	; end expValue
+	INC
+	; colValue
+	; end colValue
+}
+WHILE
+DROP
+; end for
 ; expValue
-;; fetch confirmations
+;; fetch confirmKeys
 GETGLOB 16
 ; end expValue
+;; push identifier relayKey
+PUSH S1
+;; array.push(..)
+NEWC
+STU 256
+SWAP
+UNPAIR
+PUSH S1
 INC
+XCHG s3
+ROTREV
+PUSHINT 32
+DICTUSETB
+PAIR
 ; colValue
 SETGLOB 16
 ; end colValue
@@ -160,22 +254,52 @@ IF
 ; Decode input parameters
 ENDS
 ; function getDetails
+;; ret param: _eventTransaction
+NEWC
+ENDC
+;; ret param: _eventIndex
+PUSHINT 0
+;; ret param: _eventData
+NEWC
+ENDC
+;; ret param: _proxyAddress
+PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+;; ret param: _ethereumEventConfirguration
+PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 ;; ret param: _proxyCallbackExecuted
 PUSHINT 0
-;; ret param: _confirmations
+;; ret param: _confirmKeys
 PUSHINT 0
+NEWDICT
+PAIR
+;; ret param: _rejectKeys
+PUSHINT 0
+NEWDICT
+PAIR
 ACCEPT
 ;; return
+;; push identifier eventTransaction
+GETGLOB 10
+;; push identifier eventIndex
+GETGLOB 11
+;; push identifier eventData
+GETGLOB 12
+;; push identifier proxyAddress
+GETGLOB 13
+;; push identifier ethereumEventConfirguration
+GETGLOB 14
 ;; push identifier proxyCallbackExecuted
 GETGLOB 15
-;; push identifier confirmations
+;; push identifier confirmKeys
 GETGLOB 16
-BLKDROP2 2, 2
-;; emitting 2 value(s)
-PUSH S2
+;; push identifier rejectKeys
+GETGLOB 17
+BLKDROP2 8, 8
+;; emitting 8 value(s)
+PUSH S8
 EQINT -1
 PUSHCONT {
-	PUSH S4
+	PUSH S10
 	CTOS
 	LDU 2
 	LDMSGADDR
@@ -187,18 +311,40 @@ PUSHCONT {
 	PUSHINT 96
 	STZEROES
 	STSLICECONST 0
-	STSLICECONST 0
-	STSLICECONST x8137d5cd
-	PUSH S2
-	STIR 1
-	PUSH S1
+	STSLICECONST 1
+	NEWC
+	STSLICECONST x80026f30
+	PUSH S9
+	STREFR
+	PUSH S8
 	STUR 256
+	PUSH S7
+	STREFR
+	PUSH S6
+	STSLICER
+	PUSH S5
+	STSLICER
+	PUSH S4
+	STIR 1
+	PUSH S3
+	UNPAIR
+	XCHG s2
+	STU 32
+	STDICT
+	NEWC
+	PUSH S3
+	UNPAIR
+	XCHG s2
+	STU 32
+	STDICT
+	STBREFR
+	STBREFR
 	ENDC
 	PUSHINT 1
 	SENDRAWMSG
 }
 IF
-DROP2
+BLKDROP 8
 ; end function getDetails
 PUSHCONT {
 	CALL $c7_to_c4$
@@ -210,17 +356,47 @@ SETGLOB 7
 .globl	getDetails_internal
 .type	getDetails_internal, @function
 ; function getDetails
+;; ret param: _eventTransaction
+NEWC
+ENDC
+;; ret param: _eventIndex
+PUSHINT 0
+;; ret param: _eventData
+NEWC
+ENDC
+;; ret param: _proxyAddress
+PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+;; ret param: _ethereumEventConfirguration
+PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 ;; ret param: _proxyCallbackExecuted
 PUSHINT 0
-;; ret param: _confirmations
+;; ret param: _confirmKeys
 PUSHINT 0
+NEWDICT
+PAIR
+;; ret param: _rejectKeys
+PUSHINT 0
+NEWDICT
+PAIR
 ACCEPT
 ;; return
+;; push identifier eventTransaction
+GETGLOB 10
+;; push identifier eventIndex
+GETGLOB 11
+;; push identifier eventData
+GETGLOB 12
+;; push identifier proxyAddress
+GETGLOB 13
+;; push identifier ethereumEventConfirguration
+GETGLOB 14
 ;; push identifier proxyCallbackExecuted
 GETGLOB 15
-;; push identifier confirmations
+;; push identifier confirmKeys
 GETGLOB 16
-BLKDROP2 2, 2
+;; push identifier rejectKeys
+GETGLOB 17
+BLKDROP2 8, 8
 ; end function getDetails
 
 .globl	c7_to_c4
@@ -234,22 +410,28 @@ GETGLOB 6
 STUR 1
 NEWC
 GETGLOB 14
-GETGLOB 16
-XCHG s2
+GETGLOB 17
+UNTUPLE 2
+REVERSE 4, 0
 STSLICE
-STU 256
+STU 32
+STDICT
 GETGLOB 10
 GETGLOB 11
 GETGLOB 12
 GETGLOB 13
 GETGLOB 15
-REVERSE 7, 0
+GETGLOB 16
+UNTUPLE 2
+REVERSE 9, 0
 STBREF
 STREF
 STU 256
 STREF
 STSLICE
 STI 1
+STU 32
+STDICT
 ENDC
 POP C4
 
@@ -262,14 +444,20 @@ LDU 64      ; pubkey timestamp c4
 LDU 1       ; pubkey [timestamp] constructor_flag memory
 LDREFRTOS
 LDMSGADDR
-PLDU 256
-SETGLOB 16
+LDU 32
+PLDDICT
+PAIR
+SETGLOB 17
 SETGLOB 14
 LDREF
 LDU 256
 LDREF
 LDMSGADDR
-PLDI 1
+LDI 1
+LDU 32
+PLDDICT
+PAIR
+SETGLOB 16
 SETGLOB 15
 SETGLOB 13
 SETGLOB 12
@@ -293,14 +481,20 @@ PUSHCONT {
 	LDU 1       ; pubkey [timestamp] constructor_flag memory
 	LDREFRTOS
 	LDMSGADDR
-	PLDU 256
-	SETGLOB 16
+	LDU 32
+	PLDDICT
+	PAIR
+	SETGLOB 17
 	SETGLOB 14
 	LDREF
 	LDU 256
 	LDREF
 	LDMSGADDR
-	PLDI 1
+	LDI 1
+	LDU 32
+	PLDDICT
+	PAIR
+	SETGLOB 16
 	SETGLOB 15
 	SETGLOB 13
 	SETGLOB 12
@@ -372,9 +566,16 @@ PUSHCONT {
 	; init proxyCallbackExecuted
 	PUSHINT 0
 	SETGLOB 15
-	; init confirmations
+	; init confirmKeys
 	PUSHINT 0
+	NEWDICT
+	PAIR
 	SETGLOB 16
+	; init rejectKeys
+	PUSHINT 0
+	NEWDICT
+	PAIR
+	SETGLOB 17
 	; set contract pubkey
 	PUSHINT 0
 	SWAP
@@ -392,9 +593,6 @@ PUSHCONT {
 	;; init state var: proxyCallbackExecuted
 	FALSE
 	SETGLOB 15
-	;; init state var: confirmations
-	PUSHINT 0
-	SETGLOB 16
 }
 IFELSE
 

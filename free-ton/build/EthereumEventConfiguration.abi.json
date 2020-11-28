@@ -22,6 +22,14 @@
 			]
 		},
 		{
+			"name": "reject",
+			"inputs": [
+				{"name":"relayKey","type":"uint256"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "confirmEvent",
 			"inputs": [
 				{"name":"eventTransaction","type":"bytes"},

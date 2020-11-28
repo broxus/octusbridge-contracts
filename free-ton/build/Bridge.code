@@ -546,6 +546,89 @@ SENDRAWMSG
 DROP
 ; end function confirmEthereumEventConfiguration
 
+.globl	rejectEthereumEventConfiguration
+.public	rejectEthereumEventConfiguration
+.type	rejectEthereumEventConfiguration, @function
+; Decode input parameters
+; Decode ethereumEventConfigurationAddress
+LDMSGADDRQ
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+}
+IFNOT
+ENDS
+;; param: ethereumEventConfigurationAddress
+; function rejectEthereumEventConfiguration
+ACCEPT
+;; Remote call EthereumEventConfiguration.reject
+;; push identifier ethereumEventConfigurationAddress
+DUP
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHSLICE x3989680000000000000000000000000004_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x70151477
+;; relayKey
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+STUR 256
+ENDC
+PUSHINT 1
+SENDRAWMSG
+DROP
+; end function rejectEthereumEventConfiguration
+PUSHCONT {
+	CALL $c7_to_c4$
+}
+IF
+TRUE
+SETGLOB 7
+
+.globl	rejectEthereumEventConfiguration_internal
+.type	rejectEthereumEventConfiguration_internal, @function
+;; param: ethereumEventConfigurationAddress
+; function rejectEthereumEventConfiguration
+ACCEPT
+;; Remote call EthereumEventConfiguration.reject
+;; push identifier ethereumEventConfigurationAddress
+DUP
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHSLICE x3989680000000000000000000000000004_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x70151477
+;; relayKey
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+STUR 256
+ENDC
+PUSHINT 1
+SENDRAWMSG
+DROP
+; end function rejectEthereumEventConfiguration
+
 .globl	confirmEthereumEvent
 .public	confirmEthereumEvent
 .type	confirmEthereumEvent, @function

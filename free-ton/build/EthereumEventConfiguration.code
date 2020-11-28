@@ -326,6 +326,79 @@ IF
 DROP
 ; end modifier onlyBridge
 
+.globl	reject
+.public	reject
+.type	reject, @function
+GETGLOB 1
+ISNULL
+PUSHCONT {
+	CALL $c4_to_c7$
+}
+IF
+; Decode input parameters
+; Decode relayKey
+LDU 256
+ENDS
+;; param: relayKey
+; modifier onlyBridge
+;; push identifier MSG_SENDER_NOT_BRIDGE
+GETGLOB 19
+DUP
+LESSINT 2
+PUSHCONT {
+	DROP
+	PUSHINT 100
+}
+IF
+;; get member sender
+GETGLOB 9
+;; push identifier bridgeAddress
+GETGLOB 13
+SDEQ
+THROWANYIFNOT
+; function reject
+;; push identifier relayKey
+DUP
+GTINT 0
+THROWIFNOT 100
+; end function reject
+DROP
+; end modifier onlyBridge
+PUSHCONT {
+	CALL $c7_to_c4$
+}
+IF
+TRUE
+SETGLOB 7
+
+.globl	reject_internal
+.type	reject_internal, @function
+;; param: relayKey
+; modifier onlyBridge
+;; push identifier MSG_SENDER_NOT_BRIDGE
+GETGLOB 19
+DUP
+LESSINT 2
+PUSHCONT {
+	DROP
+	PUSHINT 100
+}
+IF
+;; get member sender
+GETGLOB 9
+;; push identifier bridgeAddress
+GETGLOB 13
+SDEQ
+THROWANYIFNOT
+; function reject
+;; push identifier relayKey
+DUP
+GTINT 0
+THROWIFNOT 100
+; end function reject
+DROP
+; end modifier onlyBridge
+
 .globl	confirmEvent
 .public	confirmEvent
 .type	confirmEvent, @function
