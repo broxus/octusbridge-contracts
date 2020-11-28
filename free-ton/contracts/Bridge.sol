@@ -1,5 +1,6 @@
 pragma solidity >= 0.6.0;
 pragma AbiHeader expire;
+pragma AbiHeader pubkey;
 
 
 import "./EthereumEventConfiguration.sol";
@@ -69,8 +70,8 @@ contract FreeTonBridge is KeysOwnable {
         }(
             bridgeConfiguration.ethereumEventConfigurationRequiredConfirmations,
             bridgeConfiguration.ethereumEventConfigurationRequiredRejects,
-            ethereumEventCode
-//            msg.pubkey()
+            ethereumEventCode,
+            msg.pubkey()
         );
 
         bridgeConfiguration.ethereumEventConfigurationSequentialIndex++;

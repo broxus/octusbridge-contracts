@@ -16,12 +16,13 @@ contract EthereumEventConfiguration {
 
     TvmCell ethereumEventCode;
 
-    mapping(uint => uint) confirmKeys;
-    mapping(uint => uint) rejectKeys;
+    uint[] confirmKeys;
+    uint[] rejectKeys;
 
     // Error codes
     uint MSG_SENDER_NOT_BRIDGE = 202;
     uint EVENT_CONFIGURATION_NOT_ACTIVE = 203;
+    uint KEY_ALREADY_USED = 204;
 
     bool active = false;
 
@@ -35,8 +36,8 @@ contract EthereumEventConfiguration {
     constructor(
         uint _requiredConfirmations,
         uint _requiredRejects,
-        TvmCell _ethereumEventCode
-//        uint relayKey
+        TvmCell _ethereumEventCode,
+        uint relayKey
     ) public {
         tvm.accept();
 
@@ -44,51 +45,19 @@ contract EthereumEventConfiguration {
         requiredRejects = _requiredRejects;
         ethereumEventCode = _ethereumEventCode;
 
-//        confirm(relayKey);
-    }
-
-    function getArrayOfConfirmKeys() public view returns(uint[] keys) {
-        optional(uint, uint) relayKey = confirmKeys.min();
-
-        while (relayKey.hasValue()) {
-            (uint key, ) = relayKey.get();
-
-            keys[keys.length] = key;
-        }
-    }
-
-
-    function getArrayOfRejectKeys() public view returns(uint[] keys) {
-        optional(uint, uint) relayKey = rejectKeys.min();
-
-        while (relayKey.hasValue()) {
-            (uint key, ) = relayKey.get();
-
-            keys[keys.length] = key;
-        }
-
+        confirm(relayKey);
     }
 
     function confirm(uint relayKey) public onlyBridge {
-//        require(
-//            confirmKeys.add(relayKey, true) == true,
-//            203
-//        );
-//    confirmKeys[relayKey] = 1;
+        for (uint i=0; i<confirmKeys.length; i++) {
+            require(confirmKeys[i] != relayKey, KEY_ALREADY_USED);
+        }
 
-        // TODO: fix issue with 50 error code on adding key to the confirmed keys mapping
-        require(relayKey > 0);
-        active = true;
+        confirmKeys.push(relayKey);
 
-//        if (active) {
-//            address ethereumRootContractAddress = deployRootContract();
-//
-//            emit EthereumRootEventDeployedEvent(ethereumRootContractAddress);
-//        }
-
-//        if (getArrayOfConfirmKeys().length >= requiredConfirmations) {
-//            active = true;
-//        }
+        if (confirmKeys.length >= requiredConfirmations) {
+            active = true;
+        }
     }
 
     /*
@@ -146,8 +115,8 @@ contract EthereumEventConfiguration {
             proxyAddress,
             requiredConfirmations,
             requiredRejects,
-            getArrayOfConfirmKeys(),
-            getArrayOfRejectKeys(),
+            confirmKeys,
+            rejectKeys,
             active
         );
     }

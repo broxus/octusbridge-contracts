@@ -224,16 +224,18 @@ class ContractWrapper {
    * Run method function (in terms of TON - call).
    * @param functionName Name of the function
    * @param input Dict of method parameters
-   * @param keyPair
+   * @param _keyPair Key pair to sign the message
    * @returns {Promise<void>}
    */
-  async run(functionName, input={}, keyPair) {
+  async run(functionName, input={}, _keyPair) {
+    const keyPair = _keyPair === undefined ? this.tonWrapper.keys[0] : _keyPair;
+    
     const runMessage = await this.tonWrapper.ton.contracts.createRunMessage({
       address: this.address,
       abi: this.abi,
       functionName,
       input,
-      keyPair: keyPair === undefined ? this.tonWrapper.keys[0] : keyPair,
+      keyPair,
     });
     
     await this.waitForRunTransaction(runMessage);

@@ -27,7 +27,15 @@ ROTREV
 PAIR
 SWAP
 ; Decode _ethereumEventConfigurationRequiredConfirmations
-LDU 256
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
 ; Decode _ethereumEventConfigurationRequiredRejects
 LDUQ 256
 PUSHCONT {
@@ -148,7 +156,15 @@ LDREF
 ; Decode ethereumAddress
 LDREF
 ; Decode eventProxyAddress
-LDMSGADDR
+LDMSGADDRQ
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+}
+IFNOT
 ENDS
 ;; param: ethereumEventABI
 ;; param: ethereumAddress
@@ -219,7 +235,7 @@ PUSH S2
 STREFR
 STSLICECONST 1
 NEWC
-STSLICECONST x7f141ec2
+STSLICECONST x1f73060b
 ;; _requiredConfirmations
 ;; get member ethereumEventConfigurationRequiredConfirmations
 ;; push identifier bridgeConfiguration
@@ -236,6 +252,16 @@ STUR 256
 ;; push identifier ethereumEventCode
 GETGLOB 13
 STREFR
+;; relayKey
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+STUR 256
 STBREFR
 ENDC
 PUSHINT 1
@@ -373,7 +399,7 @@ PUSH S2
 STREFR
 STSLICECONST 1
 NEWC
-STSLICECONST x7f141ec2
+STSLICECONST x1f73060b
 ;; _requiredConfirmations
 ;; get member ethereumEventConfigurationRequiredConfirmations
 ;; push identifier bridgeConfiguration
@@ -390,6 +416,16 @@ STUR 256
 ;; push identifier ethereumEventCode
 GETGLOB 13
 STREFR
+;; relayKey
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+STUR 256
 STBREFR
 ENDC
 PUSHINT 1
@@ -432,7 +468,15 @@ BLKDROP 3
 .type	confirmEthereumEventConfiguration, @function
 ; Decode input parameters
 ; Decode ethereumEventConfigurationAddress
-LDMSGADDR
+LDMSGADDRQ
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+}
+IFNOT
 ENDS
 ;; param: ethereumEventConfigurationAddress
 ; function confirmEthereumEventConfiguration
@@ -509,9 +553,29 @@ DROP
 ; Decode eventTransaction
 LDREF
 ; Decode eventIndex
-LDU 256
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
 ; Decode eventData
 ;; decode TvmCell
+DUP
+SBITREFS
+EQINT 1
+SWAP
+EQINT 0
+AND
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
 LDREF
 ; Decode ethereumEventConfigurationAddress
 LDMSGADDRQ
@@ -841,14 +905,30 @@ PUSHCONT {
 	LDSLICEX ; signatureSlice msgSlice
 	DUP      ; signatureSlice msgSlice msgSlice
 	HASHSU   ; signatureSlice msgSlice hashMsgSlice
-	ROT
-	GETGLOB 2
+	SWAP  ; signatureSlice hashMsgSlice msgSlice
+	LDU 1 ; signatureSlice hashMsgSlice havePubkey msgSlice
+	SWAP  ; signatureSlice hashMsgSlice msgSlice havePubkey
+	PUSHCONT {
+		LDU 256       ; signatureSlice hashMsgSlice pubkey msgSlice
+		XCHG s3
+		SWAP
+	}
+	PUSHCONT {
+		XCHG s2
+		GETGLOB 2
+	}
+	IFELSE
 	DUP
 	SETGLOB 5
 	CHKSIGNU      ; msgSlice isSigned
 	THROWIFNOT 40 ; msgSlice
 }
-IF
+PUSHCONT {
+	LDU 1      ; havePubkey msgSlice
+	SWAP       ; msgSlice havePubkey
+	THROWIF 58 ; msgSlice
+}
+IFELSE
 LDU 64                         ; timestamp msgSlice
 SWAP                           ; msgSlice timestamp
 CALL $replay_protection_macro$ ; msgSlice

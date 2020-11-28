@@ -28,399 +28,65 @@ PUSHCONT {
 IFNOT
 ; Decode _ethereumEventCode
 ;; decode TvmCell
+DUP
+SBITREFS
+EQINT 1
+SWAP
+EQINT 0
+AND
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
 LDREF
+; Decode relayKey
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
 ENDS
 ;; param: _requiredConfirmations
 ;; param: _requiredRejects
 ;; param: _ethereumEventCode
+;; param: relayKey
 ; constructor EthereumEventConfiguration
 ACCEPT
 ; expValue
 ; end expValue
 ;; push identifier _requiredConfirmations
-PUSH S2
+PUSH S3
 ; colValue
 SETGLOB 14
 ; end colValue
 ; expValue
 ; end expValue
 ;; push identifier _requiredRejects
-PUSH S1
+PUSH S2
 ; colValue
 SETGLOB 15
 ; end colValue
 ; expValue
 ; end expValue
 ;; push identifier _ethereumEventCode
-DUP
+PUSH S1
 ; colValue
 SETGLOB 16
 ; end colValue
-BLKDROP 3
+;; push identifier relayKey
+DUP
+CALL $confirm_internal$
+BLKDROP 4
 ; end constructor EthereumEventConfiguration
 CALL $c7_to_c4$
 TRUE
 SETGLOB 7
-
-.globl	getArrayOfConfirmKeys
-.public	getArrayOfConfirmKeys
-.type	getArrayOfConfirmKeys, @function
-GETGLOB 1
-ISNULL
-PUSHCONT {
-	CALL $c4_to_c7$
-}
-IF
-; Decode input parameters
-ENDS
-; function getArrayOfConfirmKeys
-;; ret param: keys
-PUSHINT 0
-NEWDICT
-PAIR
-;; map.min
-;; push identifier confirmKeys
-GETGLOB 17
-PUSHINT 256
-DICTUMIN
-PUSHCONT {
-	SWAP
-	PLDU 256
-	TUPLE 2
-}
-PUSHCONT {
-	NULL
-}
-IFELSE
-;; decl: relayKey
-; while
-PUSHCONT {
-	;; push identifier relayKey
-	DUP
-	ISNULL
-	NOT
-}
-PUSHCONT {
-	;; push identifier relayKey
-	DUP
-	DUP
-	ISNULL
-	THROWIF 63
-	UNTUPLE 2
-	;; decl: key
-	; expValue
-	PUSH S3
-	UNPAIR
-	;; get member length
-	;; push identifier keys
-	PUSH S5
-	FIRST
-	SWAP
-	PUSH2 s1,s2
-	LESS
-	THROWIFNOT 50
-	; end expValue
-	;; push identifier key
-	PUSH S4
-	; colValue
-	NEWC
-	STU 256
-	ROTREV
-	PUSHINT 32
-	DICTUSETB
-	PAIR
-	POP s4
-	; end colValue
-	DROP2
-}
-WHILE
-; end while
-;; returning named params
-DROP
-;; emitting 1 value(s)
-PUSH S1
-EQINT -1
-PUSHCONT {
-	PUSH S3
-	CTOS
-	LDU 2
-	LDMSGADDR
-	DROP
-	NIP
-	NEWC
-	STSLICECONST xc
-	STSLICE
-	PUSHINT 96
-	STZEROES
-	STSLICECONST 0
-	STSLICECONST 0
-	STSLICECONST x947ef9e7
-	PUSH S1
-	UNPAIR
-	XCHG s2
-	STU 32
-	STDICT
-	ENDC
-	PUSHINT 1
-	SENDRAWMSG
-}
-IF
-DROP
-; end function getArrayOfConfirmKeys
-PUSHCONT {
-	CALL $c7_to_c4$
-}
-IF
-TRUE
-SETGLOB 7
-
-.globl	getArrayOfConfirmKeys_internal
-.type	getArrayOfConfirmKeys_internal, @function
-; function getArrayOfConfirmKeys
-;; ret param: keys
-PUSHINT 0
-NEWDICT
-PAIR
-;; map.min
-;; push identifier confirmKeys
-GETGLOB 17
-PUSHINT 256
-DICTUMIN
-PUSHCONT {
-	SWAP
-	PLDU 256
-	TUPLE 2
-}
-PUSHCONT {
-	NULL
-}
-IFELSE
-;; decl: relayKey
-; while
-PUSHCONT {
-	;; push identifier relayKey
-	DUP
-	ISNULL
-	NOT
-}
-PUSHCONT {
-	;; push identifier relayKey
-	DUP
-	DUP
-	ISNULL
-	THROWIF 63
-	UNTUPLE 2
-	;; decl: key
-	; expValue
-	PUSH S3
-	UNPAIR
-	;; get member length
-	;; push identifier keys
-	PUSH S5
-	FIRST
-	SWAP
-	PUSH2 s1,s2
-	LESS
-	THROWIFNOT 50
-	; end expValue
-	;; push identifier key
-	PUSH S4
-	; colValue
-	NEWC
-	STU 256
-	ROTREV
-	PUSHINT 32
-	DICTUSETB
-	PAIR
-	POP s4
-	; end colValue
-	DROP2
-}
-WHILE
-; end while
-;; returning named params
-DROP
-; end function getArrayOfConfirmKeys
-
-.globl	getArrayOfRejectKeys
-.public	getArrayOfRejectKeys
-.type	getArrayOfRejectKeys, @function
-GETGLOB 1
-ISNULL
-PUSHCONT {
-	CALL $c4_to_c7$
-}
-IF
-; Decode input parameters
-ENDS
-; function getArrayOfRejectKeys
-;; ret param: keys
-PUSHINT 0
-NEWDICT
-PAIR
-;; map.min
-;; push identifier rejectKeys
-GETGLOB 18
-PUSHINT 256
-DICTUMIN
-PUSHCONT {
-	SWAP
-	PLDU 256
-	TUPLE 2
-}
-PUSHCONT {
-	NULL
-}
-IFELSE
-;; decl: relayKey
-; while
-PUSHCONT {
-	;; push identifier relayKey
-	DUP
-	ISNULL
-	NOT
-}
-PUSHCONT {
-	;; push identifier relayKey
-	DUP
-	DUP
-	ISNULL
-	THROWIF 63
-	UNTUPLE 2
-	;; decl: key
-	; expValue
-	PUSH S3
-	UNPAIR
-	;; get member length
-	;; push identifier keys
-	PUSH S5
-	FIRST
-	SWAP
-	PUSH2 s1,s2
-	LESS
-	THROWIFNOT 50
-	; end expValue
-	;; push identifier key
-	PUSH S4
-	; colValue
-	NEWC
-	STU 256
-	ROTREV
-	PUSHINT 32
-	DICTUSETB
-	PAIR
-	POP s4
-	; end colValue
-	DROP2
-}
-WHILE
-; end while
-;; returning named params
-DROP
-;; emitting 1 value(s)
-PUSH S1
-EQINT -1
-PUSHCONT {
-	PUSH S3
-	CTOS
-	LDU 2
-	LDMSGADDR
-	DROP
-	NIP
-	NEWC
-	STSLICECONST xc
-	STSLICE
-	PUSHINT 96
-	STZEROES
-	STSLICECONST 0
-	STSLICECONST 0
-	STSLICECONST xd3ead725
-	PUSH S1
-	UNPAIR
-	XCHG s2
-	STU 32
-	STDICT
-	ENDC
-	PUSHINT 1
-	SENDRAWMSG
-}
-IF
-DROP
-; end function getArrayOfRejectKeys
-PUSHCONT {
-	CALL $c7_to_c4$
-}
-IF
-TRUE
-SETGLOB 7
-
-.globl	getArrayOfRejectKeys_internal
-.type	getArrayOfRejectKeys_internal, @function
-; function getArrayOfRejectKeys
-;; ret param: keys
-PUSHINT 0
-NEWDICT
-PAIR
-;; map.min
-;; push identifier rejectKeys
-GETGLOB 18
-PUSHINT 256
-DICTUMIN
-PUSHCONT {
-	SWAP
-	PLDU 256
-	TUPLE 2
-}
-PUSHCONT {
-	NULL
-}
-IFELSE
-;; decl: relayKey
-; while
-PUSHCONT {
-	;; push identifier relayKey
-	DUP
-	ISNULL
-	NOT
-}
-PUSHCONT {
-	;; push identifier relayKey
-	DUP
-	DUP
-	ISNULL
-	THROWIF 63
-	UNTUPLE 2
-	;; decl: key
-	; expValue
-	PUSH S3
-	UNPAIR
-	;; get member length
-	;; push identifier keys
-	PUSH S5
-	FIRST
-	SWAP
-	PUSH2 s1,s2
-	LESS
-	THROWIFNOT 50
-	; end expValue
-	;; push identifier key
-	PUSH S4
-	; colValue
-	NEWC
-	STU 256
-	ROTREV
-	PUSHINT 32
-	DICTUSETB
-	PAIR
-	POP s4
-	; end colValue
-	DROP2
-}
-WHILE
-; end while
-;; returning named params
-DROP
-; end function getArrayOfRejectKeys
 
 .globl	confirm
 .public	confirm
@@ -453,16 +119,94 @@ GETGLOB 13
 SDEQ
 THROWANYIFNOT
 ; function confirm
-;; push identifier relayKey
-DUP
-GTINT 0
-THROWIFNOT 100
+; for
+PUSHINT 0
+;; decl: i
+PUSHCONT {
+	;; push identifier i
+	DUP
+	;; get member length
+	;; push identifier confirmKeys
+	GETGLOB 17
+	FIRST
+	;; <
+	LESS
+}
+PUSHCONT {
+	;; push identifier KEY_ALREADY_USED
+	GETGLOB 21
+	DUP
+	LESSINT 2
+	PUSHCONT {
+		DROP
+		PUSHINT 100
+	}
+	IF
+	;; index
+	;; push identifier i
+	PUSH S1
+	;; push identifier confirmKeys
+	GETGLOB 17
+	INDEX 1
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PLDU 256
+	;; push identifier relayKey
+	PUSH S3
+	;; !=
+	NEQ
+	THROWANYIFNOT
+	;; ++
+	; expValue
+	; end expValue
+	INC
+	; colValue
+	; end colValue
+}
+WHILE
+DROP
+; end for
 ; expValue
+;; fetch confirmKeys
+GETGLOB 17
 ; end expValue
-TRUE
+;; push identifier relayKey
+PUSH S1
+;; array.push(..)
+NEWC
+STU 256
+SWAP
+UNPAIR
+PUSH S1
+INC
+XCHG s3
+ROTREV
+PUSHINT 32
+DICTUSETB
+PAIR
 ; colValue
-SETGLOB 21
+SETGLOB 17
 ; end colValue
+;; if
+;; get member length
+;; push identifier confirmKeys
+GETGLOB 17
+FIRST
+;; push identifier requiredConfirmations
+GETGLOB 14
+;; >=
+GEQ
+PUSHCONT {
+	; expValue
+	; end expValue
+	TRUE
+	; colValue
+	SETGLOB 22
+	; end colValue
+}
+IF
+;; end if
 ; end function confirm
 DROP
 ; end modifier onlyBridge
@@ -490,16 +234,94 @@ GETGLOB 13
 SDEQ
 THROWANYIFNOT
 ; function confirm
-;; push identifier relayKey
-DUP
-GTINT 0
-THROWIFNOT 100
+; for
+PUSHINT 0
+;; decl: i
+PUSHCONT {
+	;; push identifier i
+	DUP
+	;; get member length
+	;; push identifier confirmKeys
+	GETGLOB 17
+	FIRST
+	;; <
+	LESS
+}
+PUSHCONT {
+	;; push identifier KEY_ALREADY_USED
+	GETGLOB 21
+	DUP
+	LESSINT 2
+	PUSHCONT {
+		DROP
+		PUSHINT 100
+	}
+	IF
+	;; index
+	;; push identifier i
+	PUSH S1
+	;; push identifier confirmKeys
+	GETGLOB 17
+	INDEX 1
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PLDU 256
+	;; push identifier relayKey
+	PUSH S3
+	;; !=
+	NEQ
+	THROWANYIFNOT
+	;; ++
+	; expValue
+	; end expValue
+	INC
+	; colValue
+	; end colValue
+}
+WHILE
+DROP
+; end for
 ; expValue
+;; fetch confirmKeys
+GETGLOB 17
 ; end expValue
-TRUE
+;; push identifier relayKey
+PUSH S1
+;; array.push(..)
+NEWC
+STU 256
+SWAP
+UNPAIR
+PUSH S1
+INC
+XCHG s3
+ROTREV
+PUSHINT 32
+DICTUSETB
+PAIR
 ; colValue
-SETGLOB 21
+SETGLOB 17
 ; end colValue
+;; if
+;; get member length
+;; push identifier confirmKeys
+GETGLOB 17
+FIRST
+;; push identifier requiredConfirmations
+GETGLOB 14
+;; >=
+GEQ
+PUSHCONT {
+	; expValue
+	; end expValue
+	TRUE
+	; colValue
+	SETGLOB 22
+	; end colValue
+}
+IF
+;; end if
 ; end function confirm
 DROP
 ; end modifier onlyBridge
@@ -563,7 +385,7 @@ PUSHCONT {
 }
 IF
 ;; push identifier active
-GETGLOB 21
+GETGLOB 22
 THROWANYIFNOT
 NEWDICT
 GETGLOB 2
@@ -719,7 +541,7 @@ PUSHCONT {
 }
 IF
 ;; push identifier active
-GETGLOB 21
+GETGLOB 22
 THROWANYIFNOT
 NEWDICT
 GETGLOB 2
@@ -885,10 +707,12 @@ GETGLOB 12
 GETGLOB 14
 ;; push identifier requiredRejects
 GETGLOB 15
-CALL $getArrayOfConfirmKeys_internal$
-CALL $getArrayOfRejectKeys_internal$
+;; push identifier confirmKeys
+GETGLOB 17
+;; push identifier rejectKeys
+GETGLOB 18
 ;; push identifier active
-GETGLOB 21
+GETGLOB 22
 BLKDROP2 8, 8
 ;; emitting 8 value(s)
 PUSH S8
@@ -985,10 +809,12 @@ GETGLOB 12
 GETGLOB 14
 ;; push identifier requiredRejects
 GETGLOB 15
-CALL $getArrayOfConfirmKeys_internal$
-CALL $getArrayOfRejectKeys_internal$
+;; push identifier confirmKeys
+GETGLOB 17
+;; push identifier rejectKeys
+GETGLOB 18
 ;; push identifier active
-GETGLOB 21
+GETGLOB 22
 BLKDROP2 8, 8
 ; end function getDetails
 
@@ -1006,24 +832,30 @@ GETGLOB 14
 GETGLOB 15
 GETGLOB 16
 GETGLOB 17
+UNTUPLE 2
 GETGLOB 18
+UNTUPLE 2
 GETGLOB 19
-REVERSE 7, 0
+REVERSE 9, 0
 STU 256
 STU 256
 STREF
+STU 32
 STDICT
+STU 32
 STDICT
 STU 256
 NEWC
 GETGLOB 20
-SWAP
+GETGLOB 21
+XCHG s2
+STU 256
 STU 256
 GETGLOB 10
 GETGLOB 11
 GETGLOB 12
 GETGLOB 13
-GETGLOB 21
+GETGLOB 22
 REVERSE 8, 0
 STBREF
 STBREF
@@ -1046,24 +878,32 @@ LDREFRTOS
 LDU 256
 LDU 256
 LDREF
+LDU 32
 LDDICT
+ROTREV
+PAIR
+SETGLOB 17
+LDU 32
 LDDICT
+ROTREV
+PAIR
+SETGLOB 18
 PLDU 256
 SETGLOB 19
-SETGLOB 18
-SETGLOB 17
 SETGLOB 16
 SETGLOB 15
 SETGLOB 14
 LDREFRTOS
+LDU 256
 PLDU 256
+SETGLOB 21
 SETGLOB 20
 LDREF
 LDREF
 LDMSGADDR
 LDMSGADDR
 PLDI 1
-SETGLOB 21
+SETGLOB 22
 SETGLOB 13
 SETGLOB 12
 SETGLOB 11
@@ -1088,24 +928,32 @@ PUSHCONT {
 	LDU 256
 	LDU 256
 	LDREF
+	LDU 32
 	LDDICT
+	ROTREV
+	PAIR
+	SETGLOB 17
+	LDU 32
 	LDDICT
+	ROTREV
+	PAIR
+	SETGLOB 18
 	PLDU 256
 	SETGLOB 19
-	SETGLOB 18
-	SETGLOB 17
 	SETGLOB 16
 	SETGLOB 15
 	SETGLOB 14
 	LDREFRTOS
+	LDU 256
 	PLDU 256
+	SETGLOB 21
 	SETGLOB 20
 	LDREF
 	LDREF
 	LDMSGADDR
 	LDMSGADDR
 	PLDI 1
-	SETGLOB 21
+	SETGLOB 22
 	SETGLOB 13
 	SETGLOB 12
 	SETGLOB 11
@@ -1171,10 +1019,14 @@ PUSHCONT {
 	ENDC
 	SETGLOB 16
 	; init confirmKeys
+	PUSHINT 0
 	NEWDICT
+	PAIR
 	SETGLOB 17
 	; init rejectKeys
+	PUSHINT 0
 	NEWDICT
+	PAIR
 	SETGLOB 18
 	; init MSG_SENDER_NOT_BRIDGE
 	PUSHINT 0
@@ -1182,9 +1034,12 @@ PUSHCONT {
 	; init EVENT_CONFIGURATION_NOT_ACTIVE
 	PUSHINT 0
 	SETGLOB 20
-	; init active
+	; init KEY_ALREADY_USED
 	PUSHINT 0
 	SETGLOB 21
+	; init active
+	PUSHINT 0
+	SETGLOB 22
 	; set contract pubkey
 	PUSHINT 0
 	SWAP
@@ -1205,9 +1060,12 @@ PUSHCONT {
 	;; init state var: EVENT_CONFIGURATION_NOT_ACTIVE
 	PUSHINT 203
 	SETGLOB 20
+	;; init state var: KEY_ALREADY_USED
+	PUSHINT 204
+	SETGLOB 21
 	;; init state var: active
 	FALSE
-	SETGLOB 21
+	SETGLOB 22
 }
 IFELSE
 

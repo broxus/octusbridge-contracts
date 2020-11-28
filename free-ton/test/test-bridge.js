@@ -82,7 +82,7 @@ describe('Test FreeTON bridge', function() {
       {
         nonce: utils.getRandomNonce(),
       },
-      utils.convertCrystal('100', 'nano'),
+      utils.convertCrystal('1000', 'nano'),
     );
 
     logger.success(`Bridge address - ${bridgeContract.address}`);
@@ -117,7 +117,8 @@ describe('Test FreeTON bridge', function() {
       {},
       {
         nonce: utils.getRandomNonce(),
-      }
+      },
+      utils.convertCrystal('10', 'nano'),
     );
 
     logger.success(`Event proxy address - ${eventProxyContract.address}`);
@@ -158,6 +159,8 @@ describe('Test FreeTON bridge', function() {
     const ethereumEventConfigurationDetails = await ethereumEventConfigurationContract
       .runLocal('getDetails', {});
     
+    // console.log(ethereumEventConfigurationDetails);
+    
     assert.equal(
       ethereumEventConfigurationDetails._proxyAddress,
       eventProxyContract.address,
@@ -175,21 +178,45 @@ describe('Test FreeTON bridge', function() {
       ethereumEventAddress,
       'Wrong Ethereum Event address',
     );
+  
+    assert.equal(
+      ethereumEventConfigurationDetails._confirmKeys.length,
+      1,
+      'Wrong amount of confirmations',
+    );
+  
+    assert.equal(
+      ethereumEventConfigurationDetails._active,
+      false,
+      'Wrong active status',
+    );
   });
 
   it('Confirm Ethereum event configuration', async () => {
+    // Confirm with another relay key
     await bridgeContract.run(
       'confirmEthereumEventConfiguration',
       {
         ethereumEventConfigurationAddress: ethereumEventConfigurationContract.address
-      }
+      },
+      tonWrapper.keys[1]
     );
 
     // Check the deployed data
     const ethereumEventConfigurationDetails = await ethereumEventConfigurationContract
       .runLocal('getDetails', {});
-    
-    // console.log(ethereumEventConfigurationDetails);
+
+    assert.equal(
+      ethereumEventConfigurationDetails._confirmKeys.length,
+      2,
+      'Wrong amount of confirmations',
+    );
+
+    assert.equal(
+      ethereumEventConfigurationDetails._active,
+      true,
+      'Wrong active status',
+    );
   });
 
   it('Emit Ethereum event', async () => {
@@ -199,21 +226,21 @@ describe('Test FreeTON bridge', function() {
       eventData: '',
       ethereumEventConfigurationAddress: ethereumEventConfigurationContract.address
     });
-    
+
     const [{
       output: {
         ethereumEventAddress,
       }
     }] = await ethereumEventConfigurationContract.getEvents('ConfirmEthereumEvent');
-    
+
     logger.success(`Ethereum event address: ${ethereumEventAddress}`);
-    
+
     ethereumEventContract = new ContractWrapper(
       tonWrapper,
       utils.loadJSONFromFile(process.env.CONTRACT_ETHEREUM_EVENT_ABI),
       ethereumEventAddress,
     );
-    
+
     const details = await ethereumEventContract.runLocal('getDetails', {});
     // console.log(details);
   });
@@ -225,7 +252,7 @@ describe('Test FreeTON bridge', function() {
       eventData: '',
       ethereumEventConfigurationAddress: ethereumEventConfigurationContract.address
     });
-  
+
     const details = await ethereumEventContract.runLocal('getDetails', {});
     // console.log(details);
   });

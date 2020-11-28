@@ -7,25 +7,10 @@
 			"inputs": [
 				{"name":"_requiredConfirmations","type":"uint256"},
 				{"name":"_requiredRejects","type":"uint256"},
-				{"name":"_ethereumEventCode","type":"cell"}
+				{"name":"_ethereumEventCode","type":"cell"},
+				{"name":"relayKey","type":"uint256"}
 			],
 			"outputs": [
-			]
-		},
-		{
-			"name": "getArrayOfConfirmKeys",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"keys","type":"uint256[]"}
-			]
-		},
-		{
-			"name": "getArrayOfRejectKeys",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"keys","type":"uint256[]"}
 			]
 		},
 		{
