@@ -33,6 +33,14 @@ contract EthereumEventConfiguration {
 
     event ConfirmEthereumEvent(address indexed ethereumEventAddress);
 
+    /*
+        Contract with Ethereum-TON configuration
+        @dev Created only by Bridge contract
+        @param _requiredConfirmations Required confirmations to activate configuration
+        @param _requiredRejects Required confirmations to reject configuration
+        @param _ethereumEventCode Code for Ethereum-TON event contract
+        @param relayKey Public key of the relay, who initiated the config creation
+    */
     constructor(
         uint _requiredConfirmations,
         uint _requiredRejects,
@@ -48,6 +56,11 @@ contract EthereumEventConfiguration {
         confirm(relayKey);
     }
 
+    /*
+        Confirm the configuration. If enough confirmations is collected, configuration turns active.
+        @dev Should be called only through Bridge contract
+        @param relayKey Public key of the relay, who initiated the config confirmation
+    */
     function confirm(uint relayKey) public onlyBridge {
         for (uint i=0; i<confirmKeys.length; i++) {
             require(confirmKeys[i] != relayKey, KEY_ALREADY_USED);
@@ -63,7 +76,8 @@ contract EthereumEventConfiguration {
     /*
         Confirm Ethereum-TON event instance. Works only when configuration is active.
         @dev This function either deploy EthereumEvent or confirm it
-        Two transactions is sent (deploy and confirm) and one of it always fail
+        Two transactions is sent (deploy and confirm) and one is always fail
+        EventAddress is always emitted!
         @param eventTransaction Bytes encoded transaction hash
         @param eventIndex Event Index from the transaction
         @param eventData TvmCell encoded event data
@@ -97,6 +111,12 @@ contract EthereumEventConfiguration {
         emit ConfirmEthereumEvent(ethereumEventAddress);
     }
 
+    /*
+        Get configuration details.
+        @returns Ethereum event ABI, Ethereum event address, Proxy contract address,
+        amount of required confirmations, amount of required rejects,
+        list of confirm keys, list of reject keys, enabled / disabled
+    */
     function getDetails() public view returns(
         bytes _eventABI,
         bytes _eventAddress,

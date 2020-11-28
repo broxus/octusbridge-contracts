@@ -8,6 +8,7 @@ import "./KeysOwnable.sol";
 
 
 contract FreeTonBridge is KeysOwnable {
+    // Same nonce with the same keys means same address
     uint static nonce;
 
     TvmCell ethereumEventConfigurationCode;
@@ -22,6 +23,14 @@ contract FreeTonBridge is KeysOwnable {
 
     event AddEthereumEventConfigurationEvent(address indexed ethereumEventConfigurationAddress);
 
+    /*
+        Basic Bridge contract
+        @param _ethereumEventConfigurationCode Ethereum Event configuration contract code
+        @param _ethereumEventCode Ethereum Event contract code
+        @param _relayKeys List of relays public keys
+        @param _ethereumEventConfigurationRequiredConfirmations Required confirmations to confirm Ethereum-TON config
+        @param _ethereumEventConfigurationRequiredRejects Required rejects to reject Ethereum-TON config
+    */
     constructor(
         TvmCell _ethereumEventConfigurationCode,
         TvmCell _ethereumEventCode,
@@ -48,6 +57,8 @@ contract FreeTonBridge is KeysOwnable {
     /**
         @notice Propose new Ethereum event configuration. Only relay can do this.
         @dev One confirmation is received from the proposal author. Need more confirmation in general
+        @param ethereumEventABI Ethereum event ABI
+        @param ethereumAddress Ethereum event address
         @param eventProxyAddress TON address of the event proxy address
     **/
     function addEthereumEventConfiguration(
@@ -81,6 +92,11 @@ contract FreeTonBridge is KeysOwnable {
         return ethereumEventConfigurationAddress;
     }
 
+    /*
+        Confirm Ethereum Event configuration.
+        @dev Called only by relay
+        @param ethereumEventConfigurationAddress Ethereum event configuration contract address
+    */
     function confirmEthereumEventConfiguration(
         address ethereumEventConfigurationAddress
     ) public pure {
@@ -89,6 +105,14 @@ contract FreeTonBridge is KeysOwnable {
         EthereumEventConfiguration(ethereumEventConfigurationAddress).confirm(msg.pubkey());
     }
 
+    /*
+        Confirm Ethereum event instance.
+        @dev Called only by relay
+        @param eventTransaction Ethereum event transaction ID
+        @param eventIndex Ethereum event index
+        @param eventData Ethereum event encoded data
+        @param ethereumEventConfigurationAddress Ethereum Event configuration contract address
+    */
     function confirmEthereumEvent(
         bytes eventTransaction,
         uint eventIndex,

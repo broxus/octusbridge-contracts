@@ -22,14 +22,23 @@ contract EthereumEvent {
 
     uint confirmations = 0;
 
+    /*
+        Ethereum-TON event instance. Collects confirmations and than execute the Proxy callback.
+        @dev Should be deployed only by EthereumEventConfiguration contract
+        @param relayKey Public key of the relay, who initiated the event creation
+    */
     constructor(
         uint relayKey
     ) public {
         require(relayKey > 0);
         tvm.accept();
-
     }
 
+    /*
+        Confirm event instance.
+        @dev Should be called by Bridge -> EthereumEventConfiguration
+        @param relayKey Public key of the relay, who initiated the config creation
+    */
     function confirm(uint relayKey) public {
         require(relayKey > 0);
         confirmations++;
