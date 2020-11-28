@@ -22,6 +22,9 @@ contract EthereumEvent {
 
     uint confirmations = 0;
 
+    uint[] confirmKeys;
+    uint[] rejectKeys;
+
     /*
         Ethereum-TON event instance. Collects confirmations and than execute the Proxy callback.
         @dev Should be deployed only by EthereumEventConfiguration contract
@@ -49,6 +52,18 @@ contract EthereumEvent {
             eventIndex,
             eventData
         );
+    }
+
+    function confirm(uint relayKey) public onlyBridge {
+        for (uint i=0; i<confirmKeys.length; i++) {
+            require(confirmKeys[i] != relayKey, KEY_ALREADY_USED);
+        }
+
+        confirmKeys.push(relayKey);
+
+        if (confirmKeys.length >= requiredConfirmations) {
+            active = true;
+        }
     }
 
     function getDetails() public view returns (

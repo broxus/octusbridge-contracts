@@ -47,12 +47,12 @@ module.exports = {
     //
     env: {
       provider: () => new HDWalletProvider(
-        process.env.ETHEREUM_PRIVATE_KEY,
-        process.env.ETHEREUM_RPC_HTTP
+        process.env.ENV_NETWORK_PRIVATE_KEY,
+        process.env.ENV_NETWORK_RPC_HTTP
       ),
-      network_id: process.env.ETHEREUM_NETWORK_ID,
-      // gas: parseInt(process.env.ETHEREUM_GAS),
-      gasPrice: parseInt(process.env.ETHEREUM_GAS_PRICE),
+      network_id: process.env.ENV_NETWORK_NETWORK_ID,
+      // gas: parseInt(process.env.ENV_NETWORK_GAS),
+      gasPrice: parseInt(process.env.ENV_NETWORK_GAS_PRICE),
     },
     development: {
      host: 'ganache',     // Localhost (default: none)
