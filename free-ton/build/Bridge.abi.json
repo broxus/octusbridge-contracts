@@ -58,9 +58,9 @@
 	],
 	"events": [
 		{
-			"name": "AddEthereumEventConfigurationEvent",
+			"name": "NewEthereumEventConfiguration",
 			"inputs": [
-				{"name":"ethereumEventConfigurationAddress","type":"address"}
+				{"name":"addr","type":"address"}
 			],
 			"outputs": [
 			]

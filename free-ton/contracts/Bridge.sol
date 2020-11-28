@@ -21,7 +21,7 @@ contract FreeTonBridge is KeysOwnable {
     }
     BridgeConfiguration bridgeConfiguration;
 
-    event AddEthereumEventConfigurationEvent(address indexed ethereumEventConfigurationAddress);
+    event NewEthereumEventConfiguration(address indexed addr);
 
     /*
         Basic Bridge contract
@@ -87,7 +87,7 @@ contract FreeTonBridge is KeysOwnable {
 
         bridgeConfiguration.ethereumEventConfigurationSequentialIndex++;
 
-        emit AddEthereumEventConfigurationEvent(ethereumEventConfigurationAddress);
+        emit NewEthereumEventConfiguration(ethereumEventConfigurationAddress);
 
         return ethereumEventConfigurationAddress;
     }

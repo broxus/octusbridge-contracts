@@ -559,17 +559,21 @@ STUR 256
 ENDC
 PUSHINT 1
 SENDRAWMSG
-;; emit ConfirmEthereumEvent
+;; emit NewEthereumEventConfirmation
 NEWC
 PUSHSLICE xc0000000000000000000000002_
 STSLICER
 STSLICECONST 0
 STSLICECONST 0
-STSLICECONST x18666d31
-;; ethereumEventAddress
+STSLICECONST x7baebd22
+;; addr
 ;; push identifier ethereumEventAddress
 PUSH S1
 STSLICER
+;; relayKey
+;; push identifier relayKey
+PUSH S2
+STUR 256
 ENDC
 PUSHINT 1
 SENDRAWMSG
@@ -715,17 +719,21 @@ STUR 256
 ENDC
 PUSHINT 1
 SENDRAWMSG
-;; emit ConfirmEthereumEvent
+;; emit NewEthereumEventConfirmation
 NEWC
 PUSHSLICE xc0000000000000000000000002_
 STSLICER
 STSLICECONST 0
 STSLICECONST 0
-STSLICECONST x18666d31
-;; ethereumEventAddress
+STSLICECONST x7baebd22
+;; addr
 ;; push identifier ethereumEventAddress
 PUSH S1
 STSLICER
+;; relayKey
+;; push identifier relayKey
+PUSH S2
+STUR 256
 ENDC
 PUSHINT 1
 SENDRAWMSG

@@ -141,9 +141,9 @@ describe('Test FreeTON bridge', function() {
     // Derive EthereumEventConfiguration address from the event
     const [{
       output: {
-        ethereumEventConfigurationAddress,
+        addr: ethereumEventConfigurationAddress,
       }
-    }] = await bridgeContract.getEvents('AddEthereumEventConfigurationEvent');
+    }] = await bridgeContract.getEvents('NewEthereumEventConfiguration');
 
     logger.success(`Ethereum event configuration address: ${ethereumEventConfigurationAddress}`);
 
@@ -229,9 +229,9 @@ describe('Test FreeTON bridge', function() {
 
     const [{
       output: {
-        ethereumEventAddress,
+        addr: ethereumEventAddress,
       }
-    }] = await ethereumEventConfigurationContract.getEvents('ConfirmEthereumEvent');
+    }] = await ethereumEventConfigurationContract.getEvents('NewEthereumEventConfirmation');
 
     logger.success(`Ethereum event address: ${ethereumEventAddress}`);
 

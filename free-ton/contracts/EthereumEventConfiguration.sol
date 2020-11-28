@@ -31,7 +31,7 @@ contract EthereumEventConfiguration {
         _;
     }
 
-    event ConfirmEthereumEvent(address indexed ethereumEventAddress);
+    event NewEthereumEventConfirmation(address indexed addr, uint relayKey);
 
     /*
         Contract with Ethereum-TON configuration
@@ -113,7 +113,7 @@ contract EthereumEventConfiguration {
 
         EthereumEvent(ethereumEventAddress).confirm(relayKey);
 
-        emit ConfirmEthereumEvent(ethereumEventAddress);
+        emit NewEthereumEventConfirmation(ethereumEventAddress, relayKey);
     }
 
     /*

@@ -64,9 +64,10 @@
 	],
 	"events": [
 		{
-			"name": "ConfirmEthereumEvent",
+			"name": "NewEthereumEventConfirmation",
 			"inputs": [
-				{"name":"ethereumEventAddress","type":"address"}
+				{"name":"addr","type":"address"},
+				{"name":"relayKey","type":"uint256"}
 			],
 			"outputs": [
 			]

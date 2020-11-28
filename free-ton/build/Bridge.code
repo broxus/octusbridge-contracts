@@ -280,14 +280,14 @@ INC
 SETINDEX 2
 SETGLOB 14
 ; end colValue
-;; emit AddEthereumEventConfigurationEvent
+;; emit NewEthereumEventConfiguration
 NEWC
 PUSHSLICE xc0000000000000000000000002_
 STSLICER
 STSLICECONST 0
 STSLICECONST 0
-STSLICECONST x3a213e9c
-;; ethereumEventConfigurationAddress
+STSLICECONST x4c93c13e
+;; addr
 ;; push identifier ethereumEventConfigurationAddress
 PUSH S1
 STSLICER
@@ -444,14 +444,14 @@ INC
 SETINDEX 2
 SETGLOB 14
 ; end colValue
-;; emit AddEthereumEventConfigurationEvent
+;; emit NewEthereumEventConfiguration
 NEWC
 PUSHSLICE xc0000000000000000000000002_
 STSLICER
 STSLICECONST 0
 STSLICECONST 0
-STSLICECONST x3a213e9c
-;; ethereumEventConfigurationAddress
+STSLICECONST x4c93c13e
+;; addr
 ;; push identifier ethereumEventConfigurationAddress
 PUSH S1
 STSLICER

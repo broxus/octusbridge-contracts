@@ -19,7 +19,7 @@ function addEthereumEventConfiguration(
 
 ### Subscribe to new Ethereum event configurations
 
-While adding new Ethereum event configuration `event AddEthereumEventConfigurationEvent(address indexed ethereumEventConfigurationAddress)` is emitted. Subscribe to it, to receive new Ethereum event configurations.
+While adding new Ethereum event configuration `event NewEthereumEventConfiguration(address indexed addr)` is emitted. Subscribe to it, to receive new Ethereum event configurations.
 
 ### Confirm Ethereum event configuration
 
@@ -41,6 +41,10 @@ function confirmEthereumEvent(
         address ethereumEventConfigurationAddress
     )
 ```
+
+### Monitor Ethereum events confirmations
+
+Subscribe to the `event NewEthereumEventConfirmation(address indexed addr, uint relayKey)`.
 
 ## Ethereum event configuration contract
 
