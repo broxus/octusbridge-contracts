@@ -1,5 +1,6 @@
 const { TONClient } = require('ton-client-node-js');
 const { QMessageType } = require('ton-client-js');
+const utils = require('./utils');
 
 
 class TonWrapper {
@@ -131,17 +132,21 @@ class ContractWrapper {
    * @dev Uses Giver contract to pay for deploy (https://docs.ton.dev/86757ecb2/p/00f9a3-ton-os-se-giver)
    * @param imageBase64 Base64 encoded code
    * @param constructorParams Constructor params for contract constructor
-   * @param initParams Initial state params for the contract
+   * @param _initParams
    * @param initialBalance TONs to request from giver for deployment
-   * @param giverConfig Giver ABI and address
    * @returns {Promise<void>}
    */
   async deploy(
     imageBase64,
     constructorParams={},
-    initParams={},
+    _initParams={},
     initialBalance=10000000000,
   ) {
+    const initParams = {
+      ..._initParams,
+      truffleNonce: this.tonWrapper.config.randomTruffleNonce ? utils.getRandomNonce() : 1,
+    };
+    
     // Derive future contract address from the deploy message
     const {
       address: futureAddress,

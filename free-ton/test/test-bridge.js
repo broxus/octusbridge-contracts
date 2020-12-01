@@ -23,6 +23,7 @@ const giverConfig = {
 const tonWrapper = new TonWrapper({
   network: process.env.NETWORK,
   seed: process.env.SEED,
+  randomTruffleNonce: Boolean(process.env.RANDOM_TRUFFLE_NONCE),
   giverConfig,
 });
 
@@ -37,6 +38,8 @@ describe('Test FreeTON bridge', function() {
   
   before(async function() {
     await tonWrapper.setup();
+    
+    tonWrapper.keys.map((key, i) => logger.log(`Key #${i} - ${JSON.stringify(key)}`));
   });
   
   it('Deploy bridge', async function() {
@@ -68,7 +71,7 @@ describe('Test FreeTON bridge', function() {
           process.env.CONTRACT_ETHEREUM_EVENT_BASE64
         ),
       });
-
+    
     // Deploy Bridge contract
     await bridgeContract.deploy(
       utils.loadBase64FromFile(process.env.CONTRACT_BRIDGE_BASE64),
@@ -78,10 +81,9 @@ describe('Test FreeTON bridge', function() {
         _relayKeys: tonWrapper.keys.map(({ secret }) => `0x${secret}`),
         _ethereumEventConfigurationRequiredConfirmations: 2,
         _ethereumEventConfigurationRequiredRejects: 2,
+        _ethereumEventRequiredConfirmations: 2,
       },
-      {
-        nonce: utils.getRandomNonce(),
-      },
+      {},
       utils.convertCrystal('1000', 'nano'),
     );
 
@@ -97,9 +99,7 @@ describe('Test FreeTON bridge', function() {
     await targetContract.deploy(
       utils.loadBase64FromFile(process.env.CONTRACT_TARGET_BASE64),
       {},
-      {
-        nonce: utils.getRandomNonce(),
-      },
+      {},
       utils.convertCrystal('10', 'nano'),
     );
 
@@ -115,9 +115,7 @@ describe('Test FreeTON bridge', function() {
     await eventProxyContract.deploy(
       utils.loadBase64FromFile(process.env.CONTRACT_EVENT_PROXY_BASE64),
       {},
-      {
-        nonce: utils.getRandomNonce(),
-      },
+      {},
       utils.convertCrystal('10', 'nano'),
     );
 
@@ -149,17 +147,13 @@ describe('Test FreeTON bridge', function() {
 
     ethereumEventConfigurationContract = new ContractWrapper(
       tonWrapper,
-      utils.loadJSONFromFile(
-        process.env.CONTRACT_ETHEREUM_EVENT_CONFIGURATION_ABI
-      ),
+      utils.loadJSONFromFile(process.env.CONTRACT_ETHEREUM_EVENT_CONFIGURATION_ABI),
       ethereumEventConfigurationAddress,
     );
 
     // Check the deployed data
     const ethereumEventConfigurationDetails = await ethereumEventConfigurationContract
       .runLocal('getDetails', {});
-    
-    // console.log(ethereumEventConfigurationDetails);
     
     assert.equal(
       ethereumEventConfigurationDetails._proxyAddress,
@@ -178,13 +172,13 @@ describe('Test FreeTON bridge', function() {
       ethereumEventAddress,
       'Wrong Ethereum Event address',
     );
-  
+
     assert.equal(
       ethereumEventConfigurationDetails._confirmKeys.length,
       1,
       'Wrong amount of confirmations',
     );
-  
+
     assert.equal(
       ethereumEventConfigurationDetails._active,
       false,
@@ -242,7 +236,12 @@ describe('Test FreeTON bridge', function() {
     );
 
     const details = await ethereumEventContract.runLocal('getDetails', {});
-    // console.log(details);
+    
+    assert.equal(
+      details._proxyCallbackExecuted,
+      false,
+      'Wrong callback executed status'
+    );
   });
 
   it('Confirm Ethereum event', async () => {
@@ -251,9 +250,23 @@ describe('Test FreeTON bridge', function() {
       eventIndex: ethereumEventIndex,
       eventData: '',
       ethereumEventConfigurationAddress: ethereumEventConfigurationContract.address
-    });
+    }, tonWrapper.keys[1]);
 
-    const details = await ethereumEventContract.runLocal('getDetails', {});
-    // console.log(details);
+    const eventDetails = await ethereumEventContract.runLocal('getDetails', {});
+    
+    assert.equal(
+      eventDetails._proxyCallbackExecuted,
+      true,
+      'Wrong callback executed status'
+    );
+    
+    // Check that Proxy received the callback call
+    const proxyDetails = await eventProxyContract.runLocal('getDetails');
+    
+    assert.equal(
+      proxyDetails._callbackReceived,
+      true,
+      'Wrong proxy callback status',
+    );
   });
 });

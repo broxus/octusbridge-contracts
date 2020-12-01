@@ -5,12 +5,18 @@ pragma AbiHeader expire;
 contract KeysOwnable {
     mapping(uint => bool) ownerKeys;
 
+    function getKeyStatus(uint key) public view returns(bool _status) {
+        tvm.accept();
+
+        return ownerKeys[key];
+    }
+
     modifier onlyOwnerKey(uint key) {
-        require(ownerKeys.exists(key) && ownerKeys.at(key) == true, 303);
+        require(ownerKeys[key] == true, 303);
         _;
     }
 
-    function _grantOwnership(uint publicKey) internal {
-        ownerKeys[publicKey] = true;
+    function _grantOwnership(uint key) internal {
+        ownerKeys[key] = true;
     }
 }

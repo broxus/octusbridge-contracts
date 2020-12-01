@@ -7,6 +7,7 @@
 			"inputs": [
 				{"name":"_requiredConfirmations","type":"uint256"},
 				{"name":"_requiredRejects","type":"uint256"},
+				{"name":"_eventRequiredConfirmations","type":"uint256"},
 				{"name":"_ethereumEventCode","type":"cell"},
 				{"name":"relayKey","type":"uint256"}
 			],

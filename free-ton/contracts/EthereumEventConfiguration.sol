@@ -13,6 +13,7 @@ contract EthereumEventConfiguration {
 
     uint requiredConfirmations;
     uint requiredRejects;
+    uint eventRequiredConfirmations;
 
     TvmCell ethereumEventCode;
 
@@ -38,12 +39,14 @@ contract EthereumEventConfiguration {
         @dev Created only by Bridge contract
         @param _requiredConfirmations Required confirmations to activate configuration
         @param _requiredRejects Required confirmations to reject configuration
+        @param _eventRequiredConfirmations Required confirmations to execute event
         @param _ethereumEventCode Code for Ethereum-TON event contract
         @param relayKey Public key of the relay, who initiated the config creation
     */
     constructor(
         uint _requiredConfirmations,
         uint _requiredRejects,
+        uint _eventRequiredConfirmations,
         TvmCell _ethereumEventCode,
         uint relayKey
     ) public {
@@ -51,6 +54,8 @@ contract EthereumEventConfiguration {
 
         requiredConfirmations = _requiredConfirmations;
         requiredRejects = _requiredRejects;
+        eventRequiredConfirmations = _eventRequiredConfirmations;
+
         ethereumEventCode = _ethereumEventCode;
 
         confirm(relayKey);
@@ -83,6 +88,7 @@ contract EthereumEventConfiguration {
         @dev This function either deploy EthereumEvent or confirm it
         Two transactions is sent (deploy and confirm) and one is always fail
         EventAddress is always emitted!
+        @dev Should be called only through Bridge contract
         @param eventTransaction Bytes encoded transaction hash
         @param eventIndex Event Index from the transaction
         @param eventData TvmCell encoded event data
@@ -108,7 +114,8 @@ contract EthereumEventConfiguration {
                 ethereumEventConfirguration: address(this)
             }
         }(
-            relayKey
+            relayKey,
+            eventRequiredConfirmations
         );
 
         EthereumEvent(ethereumEventAddress).confirm(relayKey);

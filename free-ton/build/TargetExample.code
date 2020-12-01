@@ -206,7 +206,7 @@ PUSHCONT {
 }
 PUSHCONT {
 	PLDDICT   ; D
-	; init nonce
+	; init truffleNonce
 	PUSHINT 1
 	PUSH S1
 	PUSHINT 64

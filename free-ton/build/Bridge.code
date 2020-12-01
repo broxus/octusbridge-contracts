@@ -46,12 +46,23 @@ PUSHCONT {
 	LDU 256
 }
 IFNOT
+; Decode _ethereumEventRequiredConfirmations
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
 ENDS
 ;; param: _ethereumEventConfigurationCode
 ;; param: _ethereumEventCode
 ;; param: _relayKeys
 ;; param: _ethereumEventConfigurationRequiredConfirmations
 ;; param: _ethereumEventConfigurationRequiredRejects
+;; param: _ethereumEventRequiredConfirmations
 ; constructor FreeTonBridge
 GETGLOB 2
 NEQINT 0
@@ -65,7 +76,7 @@ PUSHCONT {
 	DUP
 	;; get member length
 	;; push identifier _relayKeys
-	PUSH S4
+	PUSH S5
 	FIRST
 	;; <
 	LESS
@@ -75,7 +86,7 @@ PUSHCONT {
 	;; push identifier i
 	DUP
 	;; push identifier _relayKeys
-	PUSH S4
+	PUSH S5
 	INDEX 1
 	PUSHINT 32
 	DICTUGET
@@ -95,14 +106,14 @@ DROP
 ; expValue
 ; end expValue
 ;; push identifier _ethereumEventConfigurationCode
-PUSH S4
+PUSH S5
 ; colValue
 SETGLOB 12
 ; end colValue
 ; expValue
 ; end expValue
 ;; push identifier _ethereumEventCode
-PUSH S3
+PUSH S4
 ; colValue
 SETGLOB 13
 ; end colValue
@@ -111,7 +122,7 @@ SETGLOB 13
 GETGLOB 14
 ; end expValue
 ;; push identifier _ethereumEventConfigurationRequiredConfirmations
-PUSH S2
+PUSH S3
 ; colValue
 SETINDEX 0
 SETGLOB 14
@@ -121,7 +132,7 @@ SETGLOB 14
 GETGLOB 14
 ; end expValue
 ;; push identifier _ethereumEventConfigurationRequiredRejects
-PUSH S1
+PUSH S2
 ; colValue
 SETINDEX 1
 SETGLOB 14
@@ -130,12 +141,22 @@ SETGLOB 14
 ;; fetch bridgeConfiguration
 GETGLOB 14
 ; end expValue
-PUSHINT 0
+;; push identifier _ethereumEventRequiredConfirmations
+PUSH S1
 ; colValue
 SETINDEX 2
 SETGLOB 14
 ; end colValue
-BLKDROP 5
+; expValue
+;; fetch bridgeConfiguration
+GETGLOB 14
+; end expValue
+PUSHINT 0
+; colValue
+SETINDEX 3
+SETGLOB 14
+; end colValue
+BLKDROP 6
 ; end constructor FreeTonBridge
 CALL $c7_to_c4$
 TRUE
@@ -171,6 +192,26 @@ ENDS
 ;; param: eventProxyAddress
 ; function addEthereumEventConfiguration
 ACCEPT
+;; emit Key
+NEWC
+PUSHSLICE xc0000000000000000000000002_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x08891f09
+;; key
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+STUR 256
+ENDC
+PUSHINT 1
+SENDRAWMSG
 NEWDICT
 GETGLOB 2
 NEWC
@@ -235,7 +276,7 @@ PUSH S2
 STREFR
 STSLICECONST 1
 NEWC
-STSLICECONST x1f73060b
+STSLICECONST x46b7de18
 ;; _requiredConfirmations
 ;; get member ethereumEventConfigurationRequiredConfirmations
 ;; push identifier bridgeConfiguration
@@ -248,10 +289,17 @@ STUR 256
 GETGLOB 14
 INDEX 1
 STUR 256
+;; _eventRequiredConfirmations
+;; get member ethereumEventRequiredConfirmations
+;; push identifier bridgeConfiguration
+GETGLOB 14
+INDEX 2
+STUR 256
 ;; _ethereumEventCode
 ;; push identifier ethereumEventCode
 GETGLOB 13
 STREFR
+NEWC
 ;; relayKey
 GETGLOB 5
 DUP
@@ -263,6 +311,7 @@ PUSHCONT {
 IF
 STUR 256
 STBREFR
+STBREFR
 ENDC
 PUSHINT 1
 SENDRAWMSG
@@ -273,11 +322,11 @@ NIP
 ;; fetch bridgeConfiguration
 GETGLOB 14
 DUP
-INDEX 2
+INDEX 3
 ; end expValue
 INC
 ; colValue
-SETINDEX 2
+SETINDEX 3
 SETGLOB 14
 ; end colValue
 ;; emit NewEthereumEventConfiguration
@@ -335,6 +384,26 @@ SETGLOB 7
 ;; param: eventProxyAddress
 ; function addEthereumEventConfiguration
 ACCEPT
+;; emit Key
+NEWC
+PUSHSLICE xc0000000000000000000000002_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x08891f09
+;; key
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+STUR 256
+ENDC
+PUSHINT 1
+SENDRAWMSG
 NEWDICT
 GETGLOB 2
 NEWC
@@ -399,7 +468,7 @@ PUSH S2
 STREFR
 STSLICECONST 1
 NEWC
-STSLICECONST x1f73060b
+STSLICECONST x46b7de18
 ;; _requiredConfirmations
 ;; get member ethereumEventConfigurationRequiredConfirmations
 ;; push identifier bridgeConfiguration
@@ -412,10 +481,17 @@ STUR 256
 GETGLOB 14
 INDEX 1
 STUR 256
+;; _eventRequiredConfirmations
+;; get member ethereumEventRequiredConfirmations
+;; push identifier bridgeConfiguration
+GETGLOB 14
+INDEX 2
+STUR 256
 ;; _ethereumEventCode
 ;; push identifier ethereumEventCode
 GETGLOB 13
 STREFR
+NEWC
 ;; relayKey
 GETGLOB 5
 DUP
@@ -427,6 +503,7 @@ PUSHCONT {
 IF
 STUR 256
 STBREFR
+STBREFR
 ENDC
 PUSHINT 1
 SENDRAWMSG
@@ -437,11 +514,11 @@ NIP
 ;; fetch bridgeConfiguration
 GETGLOB 14
 DUP
-INDEX 2
+INDEX 3
 ; end expValue
 INC
 ; colValue
-SETINDEX 2
+SETINDEX 3
 SETGLOB 14
 ; end colValue
 ;; emit NewEthereumEventConfiguration
@@ -769,14 +846,117 @@ SENDRAWMSG
 BLKDROP 4
 ; end function confirmEthereumEvent
 
+.globl	getKeyStatus
+.public	getKeyStatus
+.type	getKeyStatus, @function
+GETGLOB 1
+ISNULL
+PUSHCONT {
+	CALL $c4_to_c7$
+}
+IF
+; Decode input parameters
+; Decode key
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+ENDS
+;; param: key
+; function getKeyStatus
+;; ret param: _status
+PUSHINT 0
+ACCEPT
+;; return
+;; index
+;; push identifier key
+PUSH S1
+;; push identifier ownerKeys
+GETGLOB 10
+PUSHINT 256
+DICTUGET
+PUSHCONT {
+	PLDI 1
+}
+PUSHCONT {
+	PUSHINT 0
+}
+IFELSE
+NIP
+NIP
+;; emitting 1 value(s)
+PUSH S1
+EQINT -1
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST x957003d0
+	PUSH S1
+	STIR 1
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+}
+IF
+DROP
+; end function getKeyStatus
+PUSHCONT {
+	CALL $c7_to_c4$
+}
+IF
+TRUE
+SETGLOB 7
+
+.globl	getKeyStatus_internal
+.type	getKeyStatus_internal, @function
+;; param: key
+; function getKeyStatus
+;; ret param: _status
+PUSHINT 0
+ACCEPT
+;; return
+;; index
+;; push identifier key
+PUSH S1
+;; push identifier ownerKeys
+GETGLOB 10
+PUSHINT 256
+DICTUGET
+PUSHCONT {
+	PLDI 1
+}
+PUSHCONT {
+	PUSHINT 0
+}
+IFELSE
+NIP
+NIP
+; end function getKeyStatus
+
 .globl	_grantOwnership_internal
 .type	_grantOwnership_internal, @function
-;; param: publicKey
+;; param: key
 ; function _grantOwnership
 ; expValue
 ;; fetch ownerKeys
 GETGLOB 10
-;; push identifier publicKey
+;; push identifier key
 PUSH S1
 SWAP
 ; end expValue
@@ -812,16 +992,20 @@ STU 256
 STREF
 STREF
 SWAP
-UNTUPLE 3
+UNTUPLE 4
 NEWC
+NEWC
+PUSH S2
+STUR 256
+STBREFR
+PUSH S4
+STUR 256
 PUSH S3
 STUR 256
 PUSH S2
 STUR 256
-PUSH S1
-STUR 256
-XCHG s3
-BLKDROP 3
+XCHG s4
+BLKDROP 4
 STBREFR
 ENDC
 POP C4
@@ -839,10 +1023,14 @@ LDREF
 LDREF
 LDREFRTOS
 NIP
+LDREF
 LDU 256
 LDU 256
 PLDU 256
-TUPLE 3
+BLKSWAP 1, 3
+CTOS
+PLDU 256
+TUPLE 4
 SETGLOB 14
 SETGLOB 13
 SETGLOB 12
@@ -870,10 +1058,14 @@ PUSHCONT {
 	LDREF
 	LDREFRTOS
 	NIP
+	LDREF
 	LDU 256
 	LDU 256
 	PLDU 256
-	TUPLE 3
+	BLKSWAP 1, 3
+	CTOS
+	PLDU 256
+	TUPLE 4
 	SETGLOB 14
 	SETGLOB 13
 	SETGLOB 12
@@ -887,7 +1079,7 @@ PUSHCONT {
 }
 PUSHCONT {
 	PLDDICT   ; D
-	; init nonce
+	; init truffleNonce
 	PUSHINT 1
 	PUSH S1
 	PUSHINT 64
@@ -912,7 +1104,8 @@ PUSHCONT {
 	PUSHINT 0
 	PUSHINT 0
 	PUSHINT 0
-	TUPLE 3
+	PUSHINT 0
+	TUPLE 4
 	SETGLOB 14
 	; init ownerKeys
 	NEWDICT
