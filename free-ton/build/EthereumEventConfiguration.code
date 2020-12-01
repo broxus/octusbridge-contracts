@@ -26,6 +26,16 @@ PUSHCONT {
 	LDU 256
 }
 IFNOT
+; Decode _eventRequiredConfirmations
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
 ; Decode _ethereumEventCode
 ;; decode TvmCell
 DUP
@@ -54,6 +64,7 @@ IFNOT
 ENDS
 ;; param: _requiredConfirmations
 ;; param: _requiredRejects
+;; param: _eventRequiredConfirmations
 ;; param: _ethereumEventCode
 ;; param: relayKey
 ; constructor EthereumEventConfiguration
@@ -61,28 +72,35 @@ ACCEPT
 ; expValue
 ; end expValue
 ;; push identifier _requiredConfirmations
-PUSH S3
+PUSH S4
 ; colValue
 SETGLOB 14
 ; end colValue
 ; expValue
 ; end expValue
 ;; push identifier _requiredRejects
-PUSH S2
+PUSH S3
 ; colValue
 SETGLOB 15
+; end colValue
+; expValue
+; end expValue
+;; push identifier _eventRequiredConfirmations
+PUSH S2
+; colValue
+SETGLOB 16
 ; end colValue
 ; expValue
 ; end expValue
 ;; push identifier _ethereumEventCode
 PUSH S1
 ; colValue
-SETGLOB 16
+SETGLOB 17
 ; end colValue
 ;; push identifier relayKey
 DUP
 CALL $confirm_internal$
-BLKDROP 4
+BLKDROP 5
 ; end constructor EthereumEventConfiguration
 CALL $c7_to_c4$
 TRUE
@@ -104,7 +122,7 @@ ENDS
 ;; param: relayKey
 ; modifier onlyBridge
 ;; push identifier MSG_SENDER_NOT_BRIDGE
-GETGLOB 19
+GETGLOB 20
 DUP
 LESSINT 2
 PUSHCONT {
@@ -127,14 +145,14 @@ PUSHCONT {
 	DUP
 	;; get member length
 	;; push identifier confirmKeys
-	GETGLOB 17
+	GETGLOB 18
 	FIRST
 	;; <
 	LESS
 }
 PUSHCONT {
 	;; push identifier KEY_ALREADY_USED
-	GETGLOB 21
+	GETGLOB 22
 	DUP
 	LESSINT 2
 	PUSHCONT {
@@ -146,7 +164,7 @@ PUSHCONT {
 	;; push identifier i
 	PUSH S1
 	;; push identifier confirmKeys
-	GETGLOB 17
+	GETGLOB 18
 	INDEX 1
 	PUSHINT 32
 	DICTUGET
@@ -169,7 +187,7 @@ DROP
 ; end for
 ; expValue
 ;; fetch confirmKeys
-GETGLOB 17
+GETGLOB 18
 ; end expValue
 ;; push identifier relayKey
 PUSH S1
@@ -186,12 +204,12 @@ PUSHINT 32
 DICTUSETB
 PAIR
 ; colValue
-SETGLOB 17
+SETGLOB 18
 ; end colValue
 ;; if
 ;; get member length
 ;; push identifier confirmKeys
-GETGLOB 17
+GETGLOB 18
 FIRST
 ;; push identifier requiredConfirmations
 GETGLOB 14
@@ -202,7 +220,7 @@ PUSHCONT {
 	; end expValue
 	TRUE
 	; colValue
-	SETGLOB 22
+	SETGLOB 23
 	; end colValue
 }
 IF
@@ -219,7 +237,7 @@ SETGLOB 7
 ;; param: relayKey
 ; modifier onlyBridge
 ;; push identifier MSG_SENDER_NOT_BRIDGE
-GETGLOB 19
+GETGLOB 20
 DUP
 LESSINT 2
 PUSHCONT {
@@ -242,14 +260,14 @@ PUSHCONT {
 	DUP
 	;; get member length
 	;; push identifier confirmKeys
-	GETGLOB 17
+	GETGLOB 18
 	FIRST
 	;; <
 	LESS
 }
 PUSHCONT {
 	;; push identifier KEY_ALREADY_USED
-	GETGLOB 21
+	GETGLOB 22
 	DUP
 	LESSINT 2
 	PUSHCONT {
@@ -261,7 +279,7 @@ PUSHCONT {
 	;; push identifier i
 	PUSH S1
 	;; push identifier confirmKeys
-	GETGLOB 17
+	GETGLOB 18
 	INDEX 1
 	PUSHINT 32
 	DICTUGET
@@ -284,7 +302,7 @@ DROP
 ; end for
 ; expValue
 ;; fetch confirmKeys
-GETGLOB 17
+GETGLOB 18
 ; end expValue
 ;; push identifier relayKey
 PUSH S1
@@ -301,12 +319,12 @@ PUSHINT 32
 DICTUSETB
 PAIR
 ; colValue
-SETGLOB 17
+SETGLOB 18
 ; end colValue
 ;; if
 ;; get member length
 ;; push identifier confirmKeys
-GETGLOB 17
+GETGLOB 18
 FIRST
 ;; push identifier requiredConfirmations
 GETGLOB 14
@@ -317,7 +335,7 @@ PUSHCONT {
 	; end expValue
 	TRUE
 	; colValue
-	SETGLOB 22
+	SETGLOB 23
 	; end colValue
 }
 IF
@@ -342,7 +360,7 @@ ENDS
 ;; param: relayKey
 ; modifier onlyBridge
 ;; push identifier MSG_SENDER_NOT_BRIDGE
-GETGLOB 19
+GETGLOB 20
 DUP
 LESSINT 2
 PUSHCONT {
@@ -376,7 +394,7 @@ SETGLOB 7
 ;; param: relayKey
 ; modifier onlyBridge
 ;; push identifier MSG_SENDER_NOT_BRIDGE
-GETGLOB 19
+GETGLOB 20
 DUP
 LESSINT 2
 PUSHCONT {
@@ -433,7 +451,7 @@ ENDS
 ;; param: relayKey
 ; modifier onlyBridge
 ;; push identifier MSG_SENDER_NOT_BRIDGE
-GETGLOB 19
+GETGLOB 20
 DUP
 LESSINT 2
 PUSHCONT {
@@ -449,7 +467,7 @@ SDEQ
 THROWANYIFNOT
 ; function confirmEvent
 ;; push identifier EVENT_CONFIGURATION_NOT_ACTIVE
-GETGLOB 20
+GETGLOB 21
 DUP
 LESSINT 2
 PUSHCONT {
@@ -458,7 +476,7 @@ PUSHCONT {
 }
 IF
 ;; push identifier active
-GETGLOB 22
+GETGLOB 23
 THROWANYIFNOT
 NEWDICT
 GETGLOB 2
@@ -503,7 +521,7 @@ NEWC
 STDICT
 ENDC
 ;; push identifier ethereumEventCode
-GETGLOB 16
+GETGLOB 17
 NEWC
 STSLICECONST x2_
 STOPTREF
@@ -530,12 +548,18 @@ STSLICECONST xc_
 STSLICECONST 1
 PUSH S2
 STREFR
-STSLICECONST 0
-STSLICECONST x3c91e1c5
+STSLICECONST 1
+NEWC
+STSLICECONST x486f8e09
 ;; relayKey
 ;; push identifier relayKey
-PUSH S3
+PUSH S4
 STUR 256
+;; _requiredConfirmations
+;; push identifier eventRequiredConfirmations
+GETGLOB 16
+STUR 256
+STBREFR
 ENDC
 PUSHINT 1
 SENDRAWMSG
@@ -593,7 +617,7 @@ SETGLOB 7
 ;; param: relayKey
 ; modifier onlyBridge
 ;; push identifier MSG_SENDER_NOT_BRIDGE
-GETGLOB 19
+GETGLOB 20
 DUP
 LESSINT 2
 PUSHCONT {
@@ -609,7 +633,7 @@ SDEQ
 THROWANYIFNOT
 ; function confirmEvent
 ;; push identifier EVENT_CONFIGURATION_NOT_ACTIVE
-GETGLOB 20
+GETGLOB 21
 DUP
 LESSINT 2
 PUSHCONT {
@@ -618,7 +642,7 @@ PUSHCONT {
 }
 IF
 ;; push identifier active
-GETGLOB 22
+GETGLOB 23
 THROWANYIFNOT
 NEWDICT
 GETGLOB 2
@@ -663,7 +687,7 @@ NEWC
 STDICT
 ENDC
 ;; push identifier ethereumEventCode
-GETGLOB 16
+GETGLOB 17
 NEWC
 STSLICECONST x2_
 STOPTREF
@@ -690,12 +714,18 @@ STSLICECONST xc_
 STSLICECONST 1
 PUSH S2
 STREFR
-STSLICECONST 0
-STSLICECONST x3c91e1c5
+STSLICECONST 1
+NEWC
+STSLICECONST x486f8e09
 ;; relayKey
 ;; push identifier relayKey
-PUSH S3
+PUSH S4
 STUR 256
+;; _requiredConfirmations
+;; push identifier eventRequiredConfirmations
+GETGLOB 16
+STUR 256
+STBREFR
 ENDC
 PUSHINT 1
 SENDRAWMSG
@@ -789,11 +819,11 @@ GETGLOB 14
 ;; push identifier requiredRejects
 GETGLOB 15
 ;; push identifier confirmKeys
-GETGLOB 17
-;; push identifier rejectKeys
 GETGLOB 18
+;; push identifier rejectKeys
+GETGLOB 19
 ;; push identifier active
-GETGLOB 22
+GETGLOB 23
 BLKDROP2 8, 8
 ;; emitting 8 value(s)
 PUSH S8
@@ -891,11 +921,11 @@ GETGLOB 14
 ;; push identifier requiredRejects
 GETGLOB 15
 ;; push identifier confirmKeys
-GETGLOB 17
-;; push identifier rejectKeys
 GETGLOB 18
+;; push identifier rejectKeys
+GETGLOB 19
 ;; push identifier active
-GETGLOB 22
+GETGLOB 23
 BLKDROP2 8, 8
 ; end function getDetails
 
@@ -913,11 +943,12 @@ GETGLOB 14
 GETGLOB 15
 GETGLOB 16
 GETGLOB 17
-UNTUPLE 2
 GETGLOB 18
 UNTUPLE 2
 GETGLOB 19
+UNTUPLE 2
 REVERSE 9, 0
+STU 256
 STU 256
 STU 256
 STREF
@@ -925,18 +956,19 @@ STU 32
 STDICT
 STU 32
 STDICT
-STU 256
 NEWC
 GETGLOB 20
 GETGLOB 21
-XCHG s2
+GETGLOB 22
+REVERSE 4, 0
+STU 256
 STU 256
 STU 256
 GETGLOB 10
 GETGLOB 11
 GETGLOB 12
 GETGLOB 13
-GETGLOB 22
+GETGLOB 23
 REVERSE 8, 0
 STBREF
 STBREF
@@ -958,25 +990,26 @@ LDU 1       ; pubkey [timestamp] constructor_flag memory
 LDREFRTOS
 LDU 256
 LDU 256
+LDU 256
 LDREF
 LDU 32
 LDDICT
 ROTREV
 PAIR
-SETGLOB 17
-LDU 32
-LDDICT
-ROTREV
-PAIR
 SETGLOB 18
-PLDU 256
+LDU 32
+PLDDICT
+PAIR
 SETGLOB 19
+SETGLOB 17
 SETGLOB 16
 SETGLOB 15
 SETGLOB 14
 LDREFRTOS
 LDU 256
+LDU 256
 PLDU 256
+SETGLOB 22
 SETGLOB 21
 SETGLOB 20
 LDREF
@@ -984,7 +1017,7 @@ LDREF
 LDMSGADDR
 LDMSGADDR
 PLDI 1
-SETGLOB 22
+SETGLOB 23
 SETGLOB 13
 SETGLOB 12
 SETGLOB 11
@@ -1008,25 +1041,26 @@ PUSHCONT {
 	LDREFRTOS
 	LDU 256
 	LDU 256
+	LDU 256
 	LDREF
 	LDU 32
 	LDDICT
 	ROTREV
 	PAIR
-	SETGLOB 17
-	LDU 32
-	LDDICT
-	ROTREV
-	PAIR
 	SETGLOB 18
-	PLDU 256
+	LDU 32
+	PLDDICT
+	PAIR
 	SETGLOB 19
+	SETGLOB 17
 	SETGLOB 16
 	SETGLOB 15
 	SETGLOB 14
 	LDREFRTOS
 	LDU 256
+	LDU 256
 	PLDU 256
+	SETGLOB 22
 	SETGLOB 21
 	SETGLOB 20
 	LDREF
@@ -1034,7 +1068,7 @@ PUSHCONT {
 	LDMSGADDR
 	LDMSGADDR
 	PLDI 1
-	SETGLOB 22
+	SETGLOB 23
 	SETGLOB 13
 	SETGLOB 12
 	SETGLOB 11
@@ -1095,32 +1129,35 @@ PUSHCONT {
 	; init requiredRejects
 	PUSHINT 0
 	SETGLOB 15
+	; init eventRequiredConfirmations
+	PUSHINT 0
+	SETGLOB 16
 	; init ethereumEventCode
 	NEWC
 	ENDC
-	SETGLOB 16
+	SETGLOB 17
 	; init confirmKeys
 	PUSHINT 0
 	NEWDICT
 	PAIR
-	SETGLOB 17
+	SETGLOB 18
 	; init rejectKeys
 	PUSHINT 0
 	NEWDICT
 	PAIR
-	SETGLOB 18
+	SETGLOB 19
 	; init MSG_SENDER_NOT_BRIDGE
 	PUSHINT 0
-	SETGLOB 19
+	SETGLOB 20
 	; init EVENT_CONFIGURATION_NOT_ACTIVE
 	PUSHINT 0
-	SETGLOB 20
+	SETGLOB 21
 	; init KEY_ALREADY_USED
 	PUSHINT 0
-	SETGLOB 21
+	SETGLOB 22
 	; init active
 	PUSHINT 0
-	SETGLOB 22
+	SETGLOB 23
 	; set contract pubkey
 	PUSHINT 0
 	SWAP
@@ -1137,16 +1174,16 @@ PUSHCONT {
 	SETGLOB 1
 	;; init state var: MSG_SENDER_NOT_BRIDGE
 	PUSHINT 202
-	SETGLOB 19
+	SETGLOB 20
 	;; init state var: EVENT_CONFIGURATION_NOT_ACTIVE
 	PUSHINT 203
-	SETGLOB 20
+	SETGLOB 21
 	;; init state var: KEY_ALREADY_USED
 	PUSHINT 204
-	SETGLOB 21
+	SETGLOB 22
 	;; init state var: active
 	FALSE
-	SETGLOB 22
+	SETGLOB 23
 }
 IFELSE
 

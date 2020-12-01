@@ -9,7 +9,8 @@
 				{"name":"_ethereumEventCode","type":"cell"},
 				{"name":"_relayKeys","type":"uint256[]"},
 				{"name":"_ethereumEventConfigurationRequiredConfirmations","type":"uint256"},
-				{"name":"_ethereumEventConfigurationRequiredRejects","type":"uint256"}
+				{"name":"_ethereumEventConfigurationRequiredRejects","type":"uint256"},
+				{"name":"_ethereumEventRequiredConfirmations","type":"uint256"}
 			],
 			"outputs": [
 			]
@@ -51,16 +52,33 @@
 			],
 			"outputs": [
 			]
+		},
+		{
+			"name": "getKeyStatus",
+			"inputs": [
+				{"name":"key","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"_status","type":"bool"}
+			]
 		}
 	],
 	"data": [
-		{"key":1,"name":"nonce","type":"uint256"}
+		{"key":1,"name":"truffleNonce","type":"uint256"}
 	],
 	"events": [
 		{
 			"name": "NewEthereumEventConfiguration",
 			"inputs": [
 				{"name":"addr","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "Key",
+			"inputs": [
+				{"name":"key","type":"uint256"}
 			],
 			"outputs": [
 			]

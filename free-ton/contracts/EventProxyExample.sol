@@ -3,7 +3,12 @@ pragma AbiHeader expire;
 
 
 contract EventProxy {
-    uint static nonce;
+    uint static truffleNonce;
+
+    bool callbackReceived = false;
+    bytes eventTransaction;
+    uint eventIndex;
+    TvmCell eventData;
 
     constructor() public {
         require(tvm.pubkey() != 0);
@@ -11,10 +16,29 @@ contract EventProxy {
     }
 
     function broxusBridgeCallback(
-        bytes eventTransaction,
-        uint eventIndex,
-        TvmCell eventData
+        bytes _eventTransaction,
+        uint _eventIndex,
+        TvmCell _eventData
     ) public {
+        callbackReceived = true;
+        eventTransaction = _eventTransaction;
+        eventIndex = _eventIndex;
+        eventData = _eventData;
+    }
 
+    function getDetails() public view returns (
+        bool _callbackReceived,
+        bytes _eventTransaction,
+        uint _eventIndex,
+        TvmCell _eventData
+    ) {
+        tvm.accept();
+
+        return (
+            callbackReceived,
+            eventTransaction,
+            eventIndex,
+            eventData
+        );
     }
 }

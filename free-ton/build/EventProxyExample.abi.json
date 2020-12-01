@@ -12,16 +12,27 @@
 		{
 			"name": "broxusBridgeCallback",
 			"inputs": [
-				{"name":"eventTransaction","type":"bytes"},
-				{"name":"eventIndex","type":"uint256"},
-				{"name":"eventData","type":"cell"}
+				{"name":"_eventTransaction","type":"bytes"},
+				{"name":"_eventIndex","type":"uint256"},
+				{"name":"_eventData","type":"cell"}
 			],
 			"outputs": [
+			]
+		},
+		{
+			"name": "getDetails",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"_callbackReceived","type":"bool"},
+				{"name":"_eventTransaction","type":"bytes"},
+				{"name":"_eventIndex","type":"uint256"},
+				{"name":"_eventData","type":"cell"}
 			]
 		}
 	],
 	"data": [
-		{"key":1,"name":"nonce","type":"uint256"}
+		{"key":1,"name":"truffleNonce","type":"uint256"}
 	],
 	"events": [
 	]

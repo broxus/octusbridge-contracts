@@ -9,7 +9,7 @@ import "./KeysOwnable.sol";
 
 contract FreeTonBridge is KeysOwnable {
     // Same nonce with the same keys means same address
-    uint static nonce;
+    uint static truffleNonce;
 
     TvmCell ethereumEventConfigurationCode;
     TvmCell ethereumEventCode;
@@ -17,11 +17,13 @@ contract FreeTonBridge is KeysOwnable {
     struct BridgeConfiguration {
         uint ethereumEventConfigurationRequiredConfirmations;
         uint ethereumEventConfigurationRequiredRejects;
+        uint ethereumEventRequiredConfirmations;
         uint ethereumEventConfigurationSequentialIndex;
     }
     BridgeConfiguration bridgeConfiguration;
 
     event NewEthereumEventConfiguration(address indexed addr);
+    event Key(uint key);
 
     /*
         Basic Bridge contract
@@ -36,7 +38,8 @@ contract FreeTonBridge is KeysOwnable {
         TvmCell _ethereumEventCode,
         uint[] _relayKeys,
         uint _ethereumEventConfigurationRequiredConfirmations,
-        uint _ethereumEventConfigurationRequiredRejects
+        uint _ethereumEventConfigurationRequiredRejects,
+        uint _ethereumEventRequiredConfirmations
     ) public {
         require(tvm.pubkey() != 0);
         tvm.accept();
@@ -50,6 +53,7 @@ contract FreeTonBridge is KeysOwnable {
 
         bridgeConfiguration.ethereumEventConfigurationRequiredConfirmations = _ethereumEventConfigurationRequiredConfirmations;
         bridgeConfiguration.ethereumEventConfigurationRequiredRejects = _ethereumEventConfigurationRequiredRejects;
+        bridgeConfiguration.ethereumEventRequiredConfirmations = _ethereumEventRequiredConfirmations;
 
         bridgeConfiguration.ethereumEventConfigurationSequentialIndex = 0;
     }
@@ -68,6 +72,8 @@ contract FreeTonBridge is KeysOwnable {
     ) public returns(address) {
         tvm.accept();
 
+        emit Key(msg.pubkey());
+
         address ethereumEventConfigurationAddress = new EthereumEventConfiguration{
             code: ethereumEventConfigurationCode,
             pubkey: tvm.pubkey(),
@@ -81,6 +87,7 @@ contract FreeTonBridge is KeysOwnable {
         }(
             bridgeConfiguration.ethereumEventConfigurationRequiredConfirmations,
             bridgeConfiguration.ethereumEventConfigurationRequiredRejects,
+            bridgeConfiguration.ethereumEventRequiredConfirmations,
             ethereumEventCode,
             msg.pubkey()
         );

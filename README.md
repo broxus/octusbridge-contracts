@@ -18,6 +18,7 @@ FreeTON env configuration will probably change, keep your eyes on.
 - Use `NETWORK` http://ton_node in case you're using Docker compose
 - Use `SEED` to generate keys. Seed can be generated with `tonos-cli genphrase`
 - Setup your own path in `TVM_STDLIB_SOL_PATH` in case you're going to build contracts on your own
+- Leave `RANDOM_TRUFFLE_NONCE` blank if you need to determine contract address. Means, that test can be run only once. Set it `1` to deploy new addresses each time.
 
 ## Docker run
 
