@@ -9,8 +9,7 @@
 				{"name":"_ethereumEventCode","type":"cell"},
 				{"name":"_relayKeys","type":"uint256[]"},
 				{"name":"_ethereumEventConfigurationRequiredConfirmations","type":"uint256"},
-				{"name":"_ethereumEventConfigurationRequiredRejects","type":"uint256"},
-				{"name":"_ethereumEventRequiredConfirmations","type":"uint256"}
+				{"name":"_ethereumEventConfigurationRequiredRejects","type":"uint256"}
 			],
 			"outputs": [
 			]
@@ -20,6 +19,9 @@
 			"inputs": [
 				{"name":"ethereumEventABI","type":"bytes"},
 				{"name":"ethereumAddress","type":"bytes"},
+				{"name":"ethereumEventBlocksToConfirm","type":"uint256"},
+				{"name":"ethereumEventRequiredConfirmations","type":"uint256"},
+				{"name":"ethereumEventRequiredRejects","type":"uint256"},
 				{"name":"eventProxyAddress","type":"address"}
 			],
 			"outputs": [
@@ -48,6 +50,8 @@
 				{"name":"eventTransaction","type":"bytes"},
 				{"name":"eventIndex","type":"uint256"},
 				{"name":"eventData","type":"cell"},
+				{"name":"eventBlockNumber","type":"uint256"},
+				{"name":"eventBlock","type":"bytes"},
 				{"name":"ethereumEventConfigurationAddress","type":"address"}
 			],
 			"outputs": [

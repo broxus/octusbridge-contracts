@@ -9,11 +9,14 @@ contract EthereumEventConfiguration {
     bytes static eventABI;
     bytes static eventAddress;
     address static proxyAddress;
+    uint static ethereumEventBlocksToConfirm;
     address static bridgeAddress;
 
     uint requiredConfirmations;
     uint requiredRejects;
+
     uint eventRequiredConfirmations;
+    uint eventRequiredRejects;
 
     TvmCell ethereumEventCode;
 
@@ -40,6 +43,7 @@ contract EthereumEventConfiguration {
         @param _requiredConfirmations Required confirmations to activate configuration
         @param _requiredRejects Required confirmations to reject configuration
         @param _eventRequiredConfirmations Required confirmations to execute event
+        @param _eventRequiredRejects Required rejects to ban event
         @param _ethereumEventCode Code for Ethereum-TON event contract
         @param relayKey Public key of the relay, who initiated the config creation
     */
@@ -47,6 +51,7 @@ contract EthereumEventConfiguration {
         uint _requiredConfirmations,
         uint _requiredRejects,
         uint _eventRequiredConfirmations,
+        uint _eventRequiredRejects,
         TvmCell _ethereumEventCode,
         uint relayKey
     ) public {
@@ -55,6 +60,7 @@ contract EthereumEventConfiguration {
         requiredConfirmations = _requiredConfirmations;
         requiredRejects = _requiredRejects;
         eventRequiredConfirmations = _eventRequiredConfirmations;
+        eventRequiredRejects = _eventRequiredRejects;
 
         ethereumEventCode = _ethereumEventCode;
 
@@ -98,6 +104,8 @@ contract EthereumEventConfiguration {
         bytes eventTransaction,
         uint eventIndex,
         TvmCell eventData,
+        uint eventBlockNumber,
+        bytes eventBlock,
         uint relayKey
     ) public onlyBridge {
         require(active, EVENT_CONFIGURATION_NOT_ACTIVE);
@@ -111,11 +119,14 @@ contract EthereumEventConfiguration {
                 eventIndex: eventIndex,
                 proxyAddress: proxyAddress,
                 eventData: eventData,
+                eventBlockNumber: eventBlockNumber,
+                eventBlock: eventBlock,
                 ethereumEventConfirguration: address(this)
             }
         }(
             relayKey,
-            eventRequiredConfirmations
+            eventRequiredConfirmations,
+            eventRequiredRejects
         );
 
         EthereumEvent(ethereumEventAddress).confirm(relayKey);
@@ -125,14 +136,21 @@ contract EthereumEventConfiguration {
 
     /*
         Get configuration details.
-        @returns Ethereum event ABI, Ethereum event address, Proxy contract address,
-        amount of required confirmations, amount of required rejects,
-        list of confirm keys, list of reject keys, enabled / disabled
+        @returns _eventABI Ethereum event ABI
+        @returns _eventAddress Ethereum event address
+        @returns _proxyAddress proxy contract address
+        @returns _ethereumEventBlocksToConfirm Ethereum blocks to wait before submit confirmation
+        @returns _requiredConfirmations amount of required confirmations
+        @returns _requiredRejects amount of required rejects
+        @returns _confirmKeys list of confirm keys
+        @returns _rejectKeys list of reject keys
+        @returns _active Status of configuration - enabled / disabled
     */
     function getDetails() public view returns(
         bytes _eventABI,
         bytes _eventAddress,
         address _proxyAddress,
+        uint _ethereumEventBlocksToConfirm,
         uint _requiredConfirmations,
         uint _requiredRejects,
         uint[] _confirmKeys,
@@ -145,6 +163,7 @@ contract EthereumEventConfiguration {
             eventABI,
             eventAddress,
             proxyAddress,
+            ethereumEventBlocksToConfirm,
             requiredConfirmations,
             requiredRejects,
             confirmKeys,

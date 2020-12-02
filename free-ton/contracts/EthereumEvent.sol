@@ -16,11 +16,14 @@ contract EthereumEvent {
     uint static eventIndex;
     TvmCell static eventData;
     address static proxyAddress;
+    uint static eventBlockNumber;
+    bytes static eventBlock;
     address static ethereumEventConfirguration;
 
     bool proxyCallbackExecuted = false;
 
     uint requiredConfirmations;
+    uint requiredRejects;
 
     uint PROXY_CALLBACK_ALREADY_EXECUTED = 501;
 
@@ -35,16 +38,20 @@ contract EthereumEvent {
     /*
         Ethereum-TON event instance. Collects confirmations and than execute the Proxy callback.
         @dev Should be deployed only by EthereumEventConfiguration contract
-        @param requiredConfirmations Required confirmations to execute event
         @param relayKey Public key of the relay, who initiated the event creation
+        @param _requiredConfirmations Required confirmations to execute event
+        @param _requiredRejects Required rejects to ban event
     */
     constructor(
         uint relayKey,
-        uint _requiredConfirmations
+        uint _requiredConfirmations,
+        uint _requiredRejects
     ) public {
         tvm.accept();
 
         requiredConfirmations = _requiredConfirmations;
+        requiredRejects = _requiredRejects;
+
         confirm(relayKey);
     }
 
@@ -90,6 +97,8 @@ contract EthereumEvent {
         uint _eventIndex,
         TvmCell _eventData,
         address _proxyAddress,
+        uint _eventBlockNumber,
+        bytes _eventBlock,
         address _ethereumEventConfirguration,
         bool _proxyCallbackExecuted,
         uint[] _confirmKeys,
@@ -102,6 +111,8 @@ contract EthereumEvent {
             eventIndex,
             eventData,
             proxyAddress,
+            eventBlockNumber,
+            eventBlock,
             ethereumEventConfirguration,
             proxyCallbackExecuted,
             confirmKeys,

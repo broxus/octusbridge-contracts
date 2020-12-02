@@ -17,7 +17,6 @@ contract FreeTonBridge is KeysOwnable {
     struct BridgeConfiguration {
         uint ethereumEventConfigurationRequiredConfirmations;
         uint ethereumEventConfigurationRequiredRejects;
-        uint ethereumEventRequiredConfirmations;
         uint ethereumEventConfigurationSequentialIndex;
     }
     BridgeConfiguration bridgeConfiguration;
@@ -38,8 +37,7 @@ contract FreeTonBridge is KeysOwnable {
         TvmCell _ethereumEventCode,
         uint[] _relayKeys,
         uint _ethereumEventConfigurationRequiredConfirmations,
-        uint _ethereumEventConfigurationRequiredRejects,
-        uint _ethereumEventRequiredConfirmations
+        uint _ethereumEventConfigurationRequiredRejects
     ) public {
         require(tvm.pubkey() != 0);
         tvm.accept();
@@ -53,7 +51,6 @@ contract FreeTonBridge is KeysOwnable {
 
         bridgeConfiguration.ethereumEventConfigurationRequiredConfirmations = _ethereumEventConfigurationRequiredConfirmations;
         bridgeConfiguration.ethereumEventConfigurationRequiredRejects = _ethereumEventConfigurationRequiredRejects;
-        bridgeConfiguration.ethereumEventRequiredConfirmations = _ethereumEventRequiredConfirmations;
 
         bridgeConfiguration.ethereumEventConfigurationSequentialIndex = 0;
     }
@@ -63,11 +60,17 @@ contract FreeTonBridge is KeysOwnable {
         @dev One confirmation is received from the proposal author. Need more confirmation in general
         @param ethereumEventABI Ethereum event ABI
         @param ethereumAddress Ethereum event address
+        @param ethereumEventBlocksToConfirm How much blocks to wait until confirm event instance
+        @param ethereumEventRequiredConfirmations How much confirmations needed to confirm event
+        @param ethereumEventRequiredRejects How much rejects needed to reject event
         @param eventProxyAddress TON address of the event proxy address
     **/
     function addEthereumEventConfiguration(
         bytes ethereumEventABI,
         bytes ethereumAddress,
+        uint ethereumEventBlocksToConfirm,
+        uint ethereumEventRequiredConfirmations,
+        uint ethereumEventRequiredRejects,
         address eventProxyAddress
     ) public returns(address) {
         tvm.accept();
@@ -81,13 +84,15 @@ contract FreeTonBridge is KeysOwnable {
                 eventABI: ethereumEventABI,
                 eventAddress: ethereumAddress,
                 proxyAddress: eventProxyAddress,
+                ethereumEventBlocksToConfirm: ethereumEventBlocksToConfirm,
                 bridgeAddress: address(this)
             },
             value: 10 ton
         }(
             bridgeConfiguration.ethereumEventConfigurationRequiredConfirmations,
             bridgeConfiguration.ethereumEventConfigurationRequiredRejects,
-            bridgeConfiguration.ethereumEventRequiredConfirmations,
+            ethereumEventRequiredConfirmations,
+            ethereumEventRequiredRejects,
             ethereumEventCode,
             msg.pubkey()
         );
@@ -131,12 +136,16 @@ contract FreeTonBridge is KeysOwnable {
         @param eventTransaction Ethereum event transaction ID
         @param eventIndex Ethereum event index
         @param eventData Ethereum event encoded data
+        @param eventBlockNumber Ethereum block number including event transaction
+        @param eventBlock Ethereum block hash including event transaction
         @param ethereumEventConfigurationAddress Ethereum Event configuration contract address
     */
     function confirmEthereumEvent(
         bytes eventTransaction,
         uint eventIndex,
         TvmCell eventData,
+        uint eventBlockNumber,
+        bytes eventBlock,
         address ethereumEventConfigurationAddress
     ) public pure {
         tvm.accept();
@@ -145,6 +154,8 @@ contract FreeTonBridge is KeysOwnable {
             eventTransaction,
             eventIndex,
             eventData,
+            eventBlockNumber,
+            eventBlock,
             msg.pubkey()
         );
     }

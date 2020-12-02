@@ -30,6 +30,7 @@ const tonWrapper = new TonWrapper({
 
 const ethereumEventABI = '{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"state","type":"uint256"},{"indexed":false,"internalType":"address","name":"author","type":"address"}],"name":"StateChange","type":"event"}';
 const ethereumEventAddress = '0x62a84E9356E62Bd003c97E138b65a8661762A2E0';
+const ethereumEventBlock = '0xd694484e5194f171896162f308ed5c3777d5be52f9bdc9c50369fe79a478ff5d';
 const ethereumEventTransaction = '0x794396dde8d19d69a0a91b2eeb249a02631e48c0809c701bfb95fb24d64a5b7f';
 const ethereumEventIndex = 0;
 
@@ -81,7 +82,6 @@ describe('Test FreeTON bridge', function() {
         _relayKeys: tonWrapper.keys.map(({ secret }) => `0x${secret}`),
         _ethereumEventConfigurationRequiredConfirmations: 2,
         _ethereumEventConfigurationRequiredRejects: 2,
-        _ethereumEventRequiredConfirmations: 2,
       },
       {},
       utils.convertCrystal('1000', 'nano'),
@@ -133,6 +133,9 @@ describe('Test FreeTON bridge', function() {
         ethereumEventABI: ethereumEventABIAsBytes,
         ethereumAddress: ethereumAddressAsBytes,
         eventProxyAddress: eventProxyContract.address,
+        ethereumEventBlocksToConfirm: 1,
+        ethereumEventRequiredConfirmations: 2,
+        ethereumEventRequiredRejects: 2,
       }
     );
 
@@ -178,7 +181,13 @@ describe('Test FreeTON bridge', function() {
       1,
       'Wrong amount of confirmations',
     );
-
+    
+    assert.equal(
+      ethereumEventConfigurationDetails._ethereumEventBlocksToConfirm,
+      1,
+      'Wrong blocks to confirm',
+    );
+  
     assert.equal(
       ethereumEventConfigurationDetails._active,
       false,
@@ -199,7 +208,7 @@ describe('Test FreeTON bridge', function() {
     // Check the deployed data
     const ethereumEventConfigurationDetails = await ethereumEventConfigurationContract
       .runLocal('getDetails', {});
-
+    
     assert.equal(
       ethereumEventConfigurationDetails._confirmKeys.length,
       2,
@@ -218,6 +227,8 @@ describe('Test FreeTON bridge', function() {
       eventTransaction: utils.stringToBytesArray(ethereumEventTransaction),
       eventIndex: ethereumEventIndex,
       eventData: '',
+      eventBlockNumber: 123,
+      eventBlock: utils.stringToBytesArray(ethereumEventBlock),
       ethereumEventConfigurationAddress: ethereumEventConfigurationContract.address
     });
 
@@ -236,11 +247,23 @@ describe('Test FreeTON bridge', function() {
     );
 
     const details = await ethereumEventContract.runLocal('getDetails', {});
-    
+
     assert.equal(
       details._proxyCallbackExecuted,
       false,
       'Wrong callback executed status'
+    );
+    
+    assert.equal(
+      details._eventBlockNumber,
+      123,
+      'Wrong block number'
+    );
+    
+    assert.equal(
+      details._eventBlock.toString('utf8'),
+      ethereumEventBlock,
+      'Wrong block hash',
     );
   });
 
@@ -249,20 +272,22 @@ describe('Test FreeTON bridge', function() {
       eventTransaction: utils.stringToBytesArray(ethereumEventTransaction),
       eventIndex: ethereumEventIndex,
       eventData: '',
+      eventBlockNumber: 123,
+      eventBlock: utils.stringToBytesArray(ethereumEventBlock),
       ethereumEventConfigurationAddress: ethereumEventConfigurationContract.address
     }, tonWrapper.keys[1]);
 
     const eventDetails = await ethereumEventContract.runLocal('getDetails', {});
-    
+
     assert.equal(
       eventDetails._proxyCallbackExecuted,
       true,
       'Wrong callback executed status'
     );
-    
+
     // Check that Proxy received the callback call
     const proxyDetails = await eventProxyContract.runLocal('getDetails');
-    
+
     assert.equal(
       proxyDetails._callbackReceived,
       true,
