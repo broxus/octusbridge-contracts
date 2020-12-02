@@ -22,7 +22,6 @@ contract FreeTonBridge is KeysOwnable {
     BridgeConfiguration bridgeConfiguration;
 
     event NewEthereumEventConfiguration(address indexed addr);
-    event Key(uint key);
 
     /*
         Basic Bridge contract
@@ -74,8 +73,6 @@ contract FreeTonBridge is KeysOwnable {
         address eventProxyAddress
     ) public returns(address) {
         tvm.accept();
-
-        emit Key(msg.pubkey());
 
         address ethereumEventConfigurationAddress = new EthereumEventConfiguration{
             code: ethereumEventConfigurationCode,
