@@ -156,4 +156,34 @@ contract FreeTonBridge is KeysOwnable {
             msg.pubkey()
         );
     }
+
+    /*
+        Reject Ethereum event instance.
+        @dev Called only by relay. Only reject already existing EthereumEvent contract, not create it.
+        @param eventTransaction Ethereum event transaction ID
+        @param eventIndex Ethereum event index
+        @param eventData Ethereum event encoded data
+        @param eventBlockNumber Ethereum block number including event transaction
+        @param eventBlock Ethereum block hash including event transaction
+        @param ethereumEventConfigurationAddress Ethereum Event configuration contract address
+    */
+    function rejectEthereumEvent(
+        bytes eventTransaction,
+        uint eventIndex,
+        TvmCell eventData,
+        uint eventBlockNumber,
+        bytes eventBlock,
+        address ethereumEventConfigurationAddress
+    ) public pure {
+        tvm.accept();
+
+        EthereumEventConfiguration(ethereumEventConfigurationAddress).rejectEvent(
+            eventTransaction,
+            eventIndex,
+            eventData,
+            eventBlockNumber,
+            eventBlock,
+            msg.pubkey()
+        );
+    }
 }

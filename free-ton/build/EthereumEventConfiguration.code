@@ -842,6 +842,401 @@ DROP
 BLKDROP 6
 ; end modifier onlyBridge
 
+.globl	rejectEvent
+.public	rejectEvent
+.type	rejectEvent, @function
+GETGLOB 1
+ISNULL
+PUSHCONT {
+	CALL $c4_to_c7$
+}
+IF
+; Decode input parameters
+; Decode eventTransaction
+LDREF
+; Decode eventIndex
+LDU 256
+; Decode eventData
+;; decode TvmCell
+LDREF
+; Decode eventBlockNumber
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+; Decode eventBlock
+DUP
+SBITREFS
+EQINT 1
+SWAP
+EQINT 0
+AND
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDREF
+; Decode relayKey
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+ENDS
+;; param: eventTransaction
+;; param: eventIndex
+;; param: eventData
+;; param: eventBlockNumber
+;; param: eventBlock
+;; param: relayKey
+; modifier onlyBridge
+;; push identifier MSG_SENDER_NOT_BRIDGE
+GETGLOB 22
+DUP
+LESSINT 2
+PUSHCONT {
+	DROP
+	PUSHINT 100
+}
+IF
+;; get member sender
+GETGLOB 9
+;; push identifier bridgeAddress
+GETGLOB 14
+SDEQ
+THROWANYIFNOT
+; function rejectEvent
+NEWDICT
+GETGLOB 2
+NEWC
+STU 256
+PUSHINT 0
+ROT
+PUSHINT 64
+DICTUSETB
+;; push identifier eventTransaction
+PUSH S6
+PUSHINT 1
+ROT
+PUSHINT 64
+DICTUSETREF
+;; push identifier eventIndex
+PUSH S5
+NEWC
+STU 256
+PUSHINT 2
+ROT
+PUSHINT 64
+DICTUSETB
+;; push identifier proxyAddress
+GETGLOB 12
+PUSHINT 4
+ROT
+PUSHINT 64
+DICTUSET
+;; push identifier eventData
+PUSH S4
+PUSHINT 3
+ROT
+PUSHINT 64
+DICTUSETREF
+;; push identifier eventBlockNumber
+PUSH S3
+NEWC
+STU 256
+PUSHINT 5
+ROT
+PUSHINT 64
+DICTUSETB
+;; push identifier eventBlock
+PUSH S2
+PUSHINT 6
+ROT
+PUSHINT 64
+DICTUSETREF
+MYADDR
+PUSHINT 7
+ROT
+PUSHINT 64
+DICTUSET
+NEWC
+STDICT
+ENDC
+;; push identifier ethereumEventCode
+GETGLOB 19
+NEWC
+STSLICECONST x2_
+STOPTREF
+STOPTREF
+STZERO
+ENDC
+DUP
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+ENDC
+CTOS
+PUSHINT 0
+PUSH S1
+NEWC
+STSLICECONST x62_
+STSLICE
+SWAP
+STGRAMS
+PUSHINT 105
+STZEROES
+STSLICECONST xc_
+STSLICECONST 1
+PUSH S2
+STREFR
+STSLICECONST 1
+NEWC
+STSLICECONST x6063ee11
+;; relayKey
+;; push identifier relayKey
+PUSH S4
+STUR 256
+;; _requiredConfirmations
+;; push identifier eventRequiredConfirmations
+GETGLOB 17
+STUR 256
+;; _requiredRejects
+;; push identifier eventRequiredRejects
+GETGLOB 18
+STUR 256
+STBREFR
+ENDC
+PUSHINT 1
+SENDRAWMSG
+NIP
+;; decl: ethereumEventAddress
+;; Remote call EthereumEvent.reject
+;; push identifier ethereumEventAddress
+DUP
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHSLICE x3989680000000000000000000000000004_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x70151477
+;; relayKey
+;; push identifier relayKey
+PUSH S2
+STUR 256
+ENDC
+PUSHINT 1
+SENDRAWMSG
+;; emit NewEthereumEventReject
+NEWC
+PUSHSLICE xc0000000000000000000000002_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x140a0195
+;; addr
+;; push identifier ethereumEventAddress
+PUSH S1
+STSLICER
+;; relayKey
+;; push identifier relayKey
+PUSH S2
+STUR 256
+ENDC
+PUSHINT 1
+SENDRAWMSG
+DROP
+; end function rejectEvent
+BLKDROP 6
+; end modifier onlyBridge
+CALL $c7_to_c4$
+TRUE
+SETGLOB 7
+
+.globl	rejectEvent_internal
+.type	rejectEvent_internal, @function
+;; param: eventTransaction
+;; param: eventIndex
+;; param: eventData
+;; param: eventBlockNumber
+;; param: eventBlock
+;; param: relayKey
+; modifier onlyBridge
+;; push identifier MSG_SENDER_NOT_BRIDGE
+GETGLOB 22
+DUP
+LESSINT 2
+PUSHCONT {
+	DROP
+	PUSHINT 100
+}
+IF
+;; get member sender
+GETGLOB 9
+;; push identifier bridgeAddress
+GETGLOB 14
+SDEQ
+THROWANYIFNOT
+; function rejectEvent
+NEWDICT
+GETGLOB 2
+NEWC
+STU 256
+PUSHINT 0
+ROT
+PUSHINT 64
+DICTUSETB
+;; push identifier eventTransaction
+PUSH S6
+PUSHINT 1
+ROT
+PUSHINT 64
+DICTUSETREF
+;; push identifier eventIndex
+PUSH S5
+NEWC
+STU 256
+PUSHINT 2
+ROT
+PUSHINT 64
+DICTUSETB
+;; push identifier proxyAddress
+GETGLOB 12
+PUSHINT 4
+ROT
+PUSHINT 64
+DICTUSET
+;; push identifier eventData
+PUSH S4
+PUSHINT 3
+ROT
+PUSHINT 64
+DICTUSETREF
+;; push identifier eventBlockNumber
+PUSH S3
+NEWC
+STU 256
+PUSHINT 5
+ROT
+PUSHINT 64
+DICTUSETB
+;; push identifier eventBlock
+PUSH S2
+PUSHINT 6
+ROT
+PUSHINT 64
+DICTUSETREF
+MYADDR
+PUSHINT 7
+ROT
+PUSHINT 64
+DICTUSET
+NEWC
+STDICT
+ENDC
+;; push identifier ethereumEventCode
+GETGLOB 19
+NEWC
+STSLICECONST x2_
+STOPTREF
+STOPTREF
+STZERO
+ENDC
+DUP
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+ENDC
+CTOS
+PUSHINT 0
+PUSH S1
+NEWC
+STSLICECONST x62_
+STSLICE
+SWAP
+STGRAMS
+PUSHINT 105
+STZEROES
+STSLICECONST xc_
+STSLICECONST 1
+PUSH S2
+STREFR
+STSLICECONST 1
+NEWC
+STSLICECONST x6063ee11
+;; relayKey
+;; push identifier relayKey
+PUSH S4
+STUR 256
+;; _requiredConfirmations
+;; push identifier eventRequiredConfirmations
+GETGLOB 17
+STUR 256
+;; _requiredRejects
+;; push identifier eventRequiredRejects
+GETGLOB 18
+STUR 256
+STBREFR
+ENDC
+PUSHINT 1
+SENDRAWMSG
+NIP
+;; decl: ethereumEventAddress
+;; Remote call EthereumEvent.reject
+;; push identifier ethereumEventAddress
+DUP
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHSLICE x3989680000000000000000000000000004_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x70151477
+;; relayKey
+;; push identifier relayKey
+PUSH S2
+STUR 256
+ENDC
+PUSHINT 1
+SENDRAWMSG
+;; emit NewEthereumEventReject
+NEWC
+PUSHSLICE xc0000000000000000000000002_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x140a0195
+;; addr
+;; push identifier ethereumEventAddress
+PUSH S1
+STSLICER
+;; relayKey
+;; push identifier relayKey
+PUSH S2
+STUR 256
+ENDC
+PUSHINT 1
+SENDRAWMSG
+DROP
+; end function rejectEvent
+BLKDROP 6
+; end modifier onlyBridge
+
 .globl	getDetails
 .public	getDetails
 .type	getDetails, @function

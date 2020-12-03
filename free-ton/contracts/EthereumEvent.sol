@@ -21,6 +21,7 @@ contract EthereumEvent {
     address static ethereumEventConfirguration;
 
     bool proxyCallbackExecuted = false;
+    bool eventRejected = false;
 
     uint requiredConfirmations;
     uint requiredRejects;
@@ -61,6 +62,8 @@ contract EthereumEvent {
         @param relayKey Public key of the relay, who initiated the config creation
     */
     function confirm(uint relayKey) public onlyNotExecuted {
+        require(eventRejected == false, 405);
+
         for (uint i=0; i<confirmKeys.length; i++) {
             require(confirmKeys[i] != relayKey, 404);
         }
@@ -69,6 +72,23 @@ contract EthereumEvent {
 
         if (confirmKeys.length >= requiredConfirmations) {
             _executeProxyCallback();
+        }
+    }
+
+    /*
+        Reject event instance.
+        @dev Should be called by Bridge -> EthereumEventConfiguration
+        @param relayKey Public key of the relay, who initiated the config creation
+    */
+    function reject(uint relayKey) public onlyNotExecuted {
+        for (uint i=0; i<rejectKeys.length; i++) {
+            require(rejectKeys[i] != relayKey, 404);
+        }
+
+        rejectKeys.push(relayKey);
+
+        if (rejectKeys.length >= requiredRejects) {
+            eventRejected = true;
         }
     }
 
@@ -88,9 +108,17 @@ contract EthereumEvent {
 
     /*
         Read contract details
-        @returns Ethereum event transaction, Ethereum event index,
-        Ethereum event data, Proxy contract address, Ethereum event configuration contract,
-        proxy callback executed or not, list of confirm keys, list of reject keys
+        @returns Ethereum event transaction
+        @returns Ethereum event index
+        @returns Ethereum event data
+        @returns Proxy contract address
+        @returns Event transaction block number
+        @returns Event transaction block hash
+        @returns Ethereum event configuration contract
+        @returns Proxy callback executed status
+        @returns Event rejected status
+        @returns List of confirm keys
+        @returns List of reject keys
     */
     function getDetails() public view returns (
         bytes _eventTransaction,
@@ -101,6 +129,7 @@ contract EthereumEvent {
         bytes _eventBlock,
         address _ethereumEventConfirguration,
         bool _proxyCallbackExecuted,
+        bool _eventRejected,
         uint[] _confirmKeys,
         uint[] _rejectKeys
     ) {
@@ -115,6 +144,7 @@ contract EthereumEvent {
             eventBlock,
             ethereumEventConfirguration,
             proxyCallbackExecuted,
+            eventRejected,
             confirmKeys,
             rejectKeys
         );

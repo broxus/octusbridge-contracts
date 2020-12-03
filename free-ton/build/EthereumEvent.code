@@ -47,14 +47,14 @@ ACCEPT
 ;; push identifier _requiredConfirmations
 PUSH S1
 ; colValue
-SETGLOB 18
+SETGLOB 19
 ; end colValue
 ; expValue
 ; end expValue
 ;; push identifier _requiredRejects
 DUP
 ; colValue
-SETGLOB 19
+SETGLOB 20
 ; end colValue
 ;; push identifier relayKey
 PUSH S2
@@ -81,7 +81,7 @@ ENDS
 ;; param: relayKey
 ; modifier onlyNotExecuted
 ;; push identifier PROXY_CALLBACK_ALREADY_EXECUTED
-GETGLOB 20
+GETGLOB 21
 DUP
 LESSINT 2
 PUSHCONT {
@@ -96,6 +96,12 @@ FALSE
 EQUAL
 THROWANYIFNOT
 ; function confirm
+;; push identifier eventRejected
+GETGLOB 18
+FALSE
+;; ==
+EQUAL
+THROWIFNOT 405
 ; for
 PUSHINT 0
 ;; decl: i
@@ -104,7 +110,7 @@ PUSHCONT {
 	DUP
 	;; get member length
 	;; push identifier confirmKeys
-	GETGLOB 21
+	GETGLOB 22
 	FIRST
 	;; <
 	LESS
@@ -114,7 +120,7 @@ PUSHCONT {
 	;; push identifier i
 	DUP
 	;; push identifier confirmKeys
-	GETGLOB 21
+	GETGLOB 22
 	INDEX 1
 	PUSHINT 32
 	DICTUGET
@@ -137,7 +143,7 @@ DROP
 ; end for
 ; expValue
 ;; fetch confirmKeys
-GETGLOB 21
+GETGLOB 22
 ; end expValue
 ;; push identifier relayKey
 PUSH S1
@@ -154,15 +160,15 @@ PUSHINT 32
 DICTUSETB
 PAIR
 ; colValue
-SETGLOB 21
+SETGLOB 22
 ; end colValue
 ;; if
 ;; get member length
 ;; push identifier confirmKeys
-GETGLOB 21
+GETGLOB 22
 FIRST
 ;; push identifier requiredConfirmations
-GETGLOB 18
+GETGLOB 19
 ;; >=
 GEQ
 PUSHCONT {
@@ -182,7 +188,7 @@ SETGLOB 7
 ;; param: relayKey
 ; modifier onlyNotExecuted
 ;; push identifier PROXY_CALLBACK_ALREADY_EXECUTED
-GETGLOB 20
+GETGLOB 21
 DUP
 LESSINT 2
 PUSHCONT {
@@ -197,6 +203,12 @@ FALSE
 EQUAL
 THROWANYIFNOT
 ; function confirm
+;; push identifier eventRejected
+GETGLOB 18
+FALSE
+;; ==
+EQUAL
+THROWIFNOT 405
 ; for
 PUSHINT 0
 ;; decl: i
@@ -205,7 +217,7 @@ PUSHCONT {
 	DUP
 	;; get member length
 	;; push identifier confirmKeys
-	GETGLOB 21
+	GETGLOB 22
 	FIRST
 	;; <
 	LESS
@@ -215,7 +227,7 @@ PUSHCONT {
 	;; push identifier i
 	DUP
 	;; push identifier confirmKeys
-	GETGLOB 21
+	GETGLOB 22
 	INDEX 1
 	PUSHINT 32
 	DICTUGET
@@ -238,7 +250,7 @@ DROP
 ; end for
 ; expValue
 ;; fetch confirmKeys
-GETGLOB 21
+GETGLOB 22
 ; end expValue
 ;; push identifier relayKey
 PUSH S1
@@ -255,15 +267,15 @@ PUSHINT 32
 DICTUSETB
 PAIR
 ; colValue
-SETGLOB 21
+SETGLOB 22
 ; end colValue
 ;; if
 ;; get member length
 ;; push identifier confirmKeys
-GETGLOB 21
+GETGLOB 22
 FIRST
 ;; push identifier requiredConfirmations
-GETGLOB 18
+GETGLOB 19
 ;; >=
 GEQ
 PUSHCONT {
@@ -272,6 +284,226 @@ PUSHCONT {
 IF
 ;; end if
 ; end function confirm
+DROP
+; end modifier onlyNotExecuted
+
+.globl	reject
+.public	reject
+.type	reject, @function
+GETGLOB 1
+ISNULL
+PUSHCONT {
+	CALL $c4_to_c7$
+}
+IF
+; Decode input parameters
+; Decode relayKey
+LDU 256
+ENDS
+;; param: relayKey
+; modifier onlyNotExecuted
+;; push identifier PROXY_CALLBACK_ALREADY_EXECUTED
+GETGLOB 21
+DUP
+LESSINT 2
+PUSHCONT {
+	DROP
+	PUSHINT 100
+}
+IF
+;; push identifier proxyCallbackExecuted
+GETGLOB 17
+FALSE
+;; ==
+EQUAL
+THROWANYIFNOT
+; function reject
+; for
+PUSHINT 0
+;; decl: i
+PUSHCONT {
+	;; push identifier i
+	DUP
+	;; get member length
+	;; push identifier rejectKeys
+	GETGLOB 23
+	FIRST
+	;; <
+	LESS
+}
+PUSHCONT {
+	;; index
+	;; push identifier i
+	DUP
+	;; push identifier rejectKeys
+	GETGLOB 23
+	INDEX 1
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PLDU 256
+	;; push identifier relayKey
+	PUSH S2
+	;; !=
+	NEQ
+	THROWIFNOT 404
+	;; ++
+	; expValue
+	; end expValue
+	INC
+	; colValue
+	; end colValue
+}
+WHILE
+DROP
+; end for
+; expValue
+;; fetch rejectKeys
+GETGLOB 23
+; end expValue
+;; push identifier relayKey
+PUSH S1
+;; array.push(..)
+NEWC
+STU 256
+SWAP
+UNPAIR
+PUSH S1
+INC
+XCHG s3
+ROTREV
+PUSHINT 32
+DICTUSETB
+PAIR
+; colValue
+SETGLOB 23
+; end colValue
+;; if
+;; get member length
+;; push identifier rejectKeys
+GETGLOB 23
+FIRST
+;; push identifier requiredRejects
+GETGLOB 20
+;; >=
+GEQ
+PUSHCONT {
+	; expValue
+	; end expValue
+	TRUE
+	; colValue
+	SETGLOB 18
+	; end colValue
+}
+IF
+;; end if
+; end function reject
+DROP
+; end modifier onlyNotExecuted
+CALL $c7_to_c4$
+TRUE
+SETGLOB 7
+
+.globl	reject_internal
+.type	reject_internal, @function
+;; param: relayKey
+; modifier onlyNotExecuted
+;; push identifier PROXY_CALLBACK_ALREADY_EXECUTED
+GETGLOB 21
+DUP
+LESSINT 2
+PUSHCONT {
+	DROP
+	PUSHINT 100
+}
+IF
+;; push identifier proxyCallbackExecuted
+GETGLOB 17
+FALSE
+;; ==
+EQUAL
+THROWANYIFNOT
+; function reject
+; for
+PUSHINT 0
+;; decl: i
+PUSHCONT {
+	;; push identifier i
+	DUP
+	;; get member length
+	;; push identifier rejectKeys
+	GETGLOB 23
+	FIRST
+	;; <
+	LESS
+}
+PUSHCONT {
+	;; index
+	;; push identifier i
+	DUP
+	;; push identifier rejectKeys
+	GETGLOB 23
+	INDEX 1
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PLDU 256
+	;; push identifier relayKey
+	PUSH S2
+	;; !=
+	NEQ
+	THROWIFNOT 404
+	;; ++
+	; expValue
+	; end expValue
+	INC
+	; colValue
+	; end colValue
+}
+WHILE
+DROP
+; end for
+; expValue
+;; fetch rejectKeys
+GETGLOB 23
+; end expValue
+;; push identifier relayKey
+PUSH S1
+;; array.push(..)
+NEWC
+STU 256
+SWAP
+UNPAIR
+PUSH S1
+INC
+XCHG s3
+ROTREV
+PUSHINT 32
+DICTUSETB
+PAIR
+; colValue
+SETGLOB 23
+; end colValue
+;; if
+;; get member length
+;; push identifier rejectKeys
+GETGLOB 23
+FIRST
+;; push identifier requiredRejects
+GETGLOB 20
+;; >=
+GEQ
+PUSHCONT {
+	; expValue
+	; end expValue
+	TRUE
+	; colValue
+	SETGLOB 18
+	; end colValue
+}
+IF
+;; end if
+; end function reject
 DROP
 ; end modifier onlyNotExecuted
 
@@ -343,6 +575,8 @@ ENDC
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 ;; ret param: _proxyCallbackExecuted
 PUSHINT 0
+;; ret param: _eventRejected
+PUSHINT 0
 ;; ret param: _confirmKeys
 PUSHINT 0
 NEWDICT
@@ -369,16 +603,18 @@ GETGLOB 15
 GETGLOB 16
 ;; push identifier proxyCallbackExecuted
 GETGLOB 17
+;; push identifier eventRejected
+GETGLOB 18
 ;; push identifier confirmKeys
-GETGLOB 21
-;; push identifier rejectKeys
 GETGLOB 22
-BLKDROP2 10, 10
-;; emitting 10 value(s)
-PUSH S10
+;; push identifier rejectKeys
+GETGLOB 23
+BLKDROP2 11, 11
+;; emitting 11 value(s)
+PUSH S11
 EQINT -1
 PUSHCONT {
-	PUSH S12
+	PUSH S13
 	CTOS
 	LDU 2
 	LDMSGADDR
@@ -392,22 +628,24 @@ PUSHCONT {
 	STSLICECONST 0
 	STSLICECONST 1
 	NEWC
-	STSLICECONST x85abf4e7
+	STSLICECONST xd3124cea
+	PUSH S12
+	STREFR
 	PUSH S11
-	STREFR
+	STUR 256
 	PUSH S10
-	STUR 256
-	PUSH S9
 	STREFR
-	PUSH S8
+	PUSH S9
 	STSLICER
-	PUSH S7
+	PUSH S8
 	STUR 256
-	PUSH S6
+	PUSH S7
 	STREFR
 	NEWC
-	PUSH S6
+	PUSH S7
 	STSLICER
+	PUSH S6
+	STIR 1
 	PUSH S5
 	STIR 1
 	PUSH S4
@@ -427,7 +665,7 @@ PUSHCONT {
 	SENDRAWMSG
 }
 IF
-BLKDROP 10
+BLKDROP 11
 ; end function getDetails
 PUSHCONT {
 	CALL $c7_to_c4$
@@ -458,6 +696,8 @@ ENDC
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 ;; ret param: _proxyCallbackExecuted
 PUSHINT 0
+;; ret param: _eventRejected
+PUSHINT 0
 ;; ret param: _confirmKeys
 PUSHINT 0
 NEWDICT
@@ -484,11 +724,13 @@ GETGLOB 15
 GETGLOB 16
 ;; push identifier proxyCallbackExecuted
 GETGLOB 17
+;; push identifier eventRejected
+GETGLOB 18
 ;; push identifier confirmKeys
-GETGLOB 21
-;; push identifier rejectKeys
 GETGLOB 22
-BLKDROP2 10, 10
+;; push identifier rejectKeys
+GETGLOB 23
+BLKDROP2 11, 11
 ; end function getDetails
 
 .globl	c7_to_c4
@@ -504,10 +746,10 @@ NEWC
 GETGLOB 14
 GETGLOB 15
 GETGLOB 16
-GETGLOB 18
-GETGLOB 21
-UNTUPLE 2
+GETGLOB 19
 GETGLOB 22
+UNTUPLE 2
+GETGLOB 23
 UNTUPLE 2
 REVERSE 9, 0
 STU 256
@@ -519,8 +761,8 @@ STDICT
 STU 32
 STDICT
 NEWC
-GETGLOB 19
 GETGLOB 20
+GETGLOB 21
 XCHG s2
 STU 256
 STU 256
@@ -529,13 +771,15 @@ GETGLOB 11
 GETGLOB 12
 GETGLOB 13
 GETGLOB 17
-REVERSE 8, 0
+GETGLOB 18
+REVERSE 9, 0
 STBREF
 STBREF
 STREF
 STU 256
 STREF
 STSLICE
+STI 1
 STI 1
 ENDC
 POP C4
@@ -556,25 +800,27 @@ LDU 32
 LDDICT
 ROTREV
 PAIR
-SETGLOB 21
+SETGLOB 22
 LDU 32
 PLDDICT
 PAIR
-SETGLOB 22
-SETGLOB 18
+SETGLOB 23
+SETGLOB 19
 SETGLOB 16
 SETGLOB 15
 SETGLOB 14
 LDREFRTOS
 LDU 256
 PLDU 256
+SETGLOB 21
 SETGLOB 20
-SETGLOB 19
 LDREF
 LDU 256
 LDREF
 LDMSGADDR
+LDI 1
 PLDI 1
+SETGLOB 18
 SETGLOB 17
 SETGLOB 13
 SETGLOB 12
@@ -605,25 +851,27 @@ PUSHCONT {
 	LDDICT
 	ROTREV
 	PAIR
-	SETGLOB 21
+	SETGLOB 22
 	LDU 32
 	PLDDICT
 	PAIR
-	SETGLOB 22
-	SETGLOB 18
+	SETGLOB 23
+	SETGLOB 19
 	SETGLOB 16
 	SETGLOB 15
 	SETGLOB 14
 	LDREFRTOS
 	LDU 256
 	PLDU 256
+	SETGLOB 21
 	SETGLOB 20
-	SETGLOB 19
 	LDREF
 	LDU 256
 	LDREF
 	LDMSGADDR
+	LDI 1
 	PLDI 1
+	SETGLOB 18
 	SETGLOB 17
 	SETGLOB 13
 	SETGLOB 12
@@ -719,25 +967,28 @@ PUSHCONT {
 	; init proxyCallbackExecuted
 	PUSHINT 0
 	SETGLOB 17
-	; init requiredConfirmations
+	; init eventRejected
 	PUSHINT 0
 	SETGLOB 18
-	; init requiredRejects
+	; init requiredConfirmations
 	PUSHINT 0
 	SETGLOB 19
-	; init PROXY_CALLBACK_ALREADY_EXECUTED
+	; init requiredRejects
 	PUSHINT 0
 	SETGLOB 20
+	; init PROXY_CALLBACK_ALREADY_EXECUTED
+	PUSHINT 0
+	SETGLOB 21
 	; init confirmKeys
 	PUSHINT 0
 	NEWDICT
 	PAIR
-	SETGLOB 21
+	SETGLOB 22
 	; init rejectKeys
 	PUSHINT 0
 	NEWDICT
 	PAIR
-	SETGLOB 22
+	SETGLOB 23
 	; set contract pubkey
 	PUSHINT 0
 	SWAP
@@ -755,9 +1006,12 @@ PUSHCONT {
 	;; init state var: proxyCallbackExecuted
 	FALSE
 	SETGLOB 17
+	;; init state var: eventRejected
+	FALSE
+	SETGLOB 18
 	;; init state var: PROXY_CALLBACK_ALREADY_EXECUTED
 	PUSHINT 501
-	SETGLOB 20
+	SETGLOB 21
 }
 IFELSE
 

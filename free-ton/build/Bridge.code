@@ -886,6 +886,191 @@ SENDRAWMSG
 BLKDROP 6
 ; end function confirmEthereumEvent
 
+.globl	rejectEthereumEvent
+.public	rejectEthereumEvent
+.type	rejectEthereumEvent, @function
+; Decode input parameters
+; Decode eventTransaction
+LDREF
+; Decode eventIndex
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+; Decode eventData
+;; decode TvmCell
+DUP
+SREFS
+EQINT 1
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDREF
+; Decode eventBlockNumber
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+; Decode eventBlock
+DUP
+SBITREFS
+EQINT 1
+SWAP
+EQINT 0
+AND
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDREF
+; Decode ethereumEventConfigurationAddress
+LDMSGADDRQ
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+}
+IFNOT
+ENDS
+;; param: eventTransaction
+;; param: eventIndex
+;; param: eventData
+;; param: eventBlockNumber
+;; param: eventBlock
+;; param: ethereumEventConfigurationAddress
+; function rejectEthereumEvent
+ACCEPT
+;; Remote call EthereumEventConfiguration.rejectEvent
+;; push identifier ethereumEventConfigurationAddress
+DUP
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHSLICE x3989680000000000000000000000000004_
+STSLICER
+STSLICECONST 0
+STSLICECONST 1
+NEWC
+STSLICECONST x766e609a
+;; eventTransaction
+;; push identifier eventTransaction
+PUSH S7
+STREFR
+;; eventIndex
+;; push identifier eventIndex
+PUSH S6
+STUR 256
+;; eventData
+;; push identifier eventData
+PUSH S5
+STREFR
+;; eventBlockNumber
+;; push identifier eventBlockNumber
+PUSH S4
+STUR 256
+;; eventBlock
+;; push identifier eventBlock
+PUSH S3
+STREFR
+;; relayKey
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+STUR 256
+STBREFR
+ENDC
+PUSHINT 1
+SENDRAWMSG
+BLKDROP 6
+; end function rejectEthereumEvent
+PUSHCONT {
+	CALL $c7_to_c4$
+}
+IF
+TRUE
+SETGLOB 7
+
+.globl	rejectEthereumEvent_internal
+.type	rejectEthereumEvent_internal, @function
+;; param: eventTransaction
+;; param: eventIndex
+;; param: eventData
+;; param: eventBlockNumber
+;; param: eventBlock
+;; param: ethereumEventConfigurationAddress
+; function rejectEthereumEvent
+ACCEPT
+;; Remote call EthereumEventConfiguration.rejectEvent
+;; push identifier ethereumEventConfigurationAddress
+DUP
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHSLICE x3989680000000000000000000000000004_
+STSLICER
+STSLICECONST 0
+STSLICECONST 1
+NEWC
+STSLICECONST x766e609a
+;; eventTransaction
+;; push identifier eventTransaction
+PUSH S7
+STREFR
+;; eventIndex
+;; push identifier eventIndex
+PUSH S6
+STUR 256
+;; eventData
+;; push identifier eventData
+PUSH S5
+STREFR
+;; eventBlockNumber
+;; push identifier eventBlockNumber
+PUSH S4
+STUR 256
+;; eventBlock
+;; push identifier eventBlock
+PUSH S3
+STREFR
+;; relayKey
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+STUR 256
+STBREFR
+ENDC
+PUSHINT 1
+SENDRAWMSG
+BLKDROP 6
+; end function rejectEthereumEvent
+
 .globl	getKeyStatus
 .public	getKeyStatus
 .type	getKeyStatus, @function

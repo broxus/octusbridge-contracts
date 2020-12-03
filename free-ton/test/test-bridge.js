@@ -294,4 +294,71 @@ describe('Test FreeTON bridge', function() {
       'Wrong proxy callback status',
     );
   });
+  
+  describe('Test Ethereum event rejection', async () => {
+    it('Add new event', async () => {
+      await bridgeContract.run('confirmEthereumEvent', {
+        eventTransaction: utils.stringToBytesArray(ethereumEventTransaction),
+        eventIndex: ethereumEventIndex,
+        eventData: '',
+        eventBlockNumber: 124,
+        eventBlock: utils.stringToBytesArray(ethereumEventBlock),
+        ethereumEventConfigurationAddress: ethereumEventConfigurationContract.address
+      });
+  
+      // console.log((await ethereumEventConfigurationContract.getEvents('NewEthereumEventConfirmation')));
+      
+      const [,,{
+        output: {
+          addr: ethereumEventAddress,
+        }
+      }] = await ethereumEventConfigurationContract.getEvents('NewEthereumEventConfirmation');
+
+      logger.success(`Ethereum event address: ${ethereumEventAddress}`);
+
+      ethereumEventContract = new ContractWrapper(
+        tonWrapper,
+        utils.loadJSONFromFile(process.env.CONTRACT_ETHEREUM_EVENT_ABI),
+        ethereumEventAddress,
+      );
+
+      const details = await ethereumEventContract.runLocal('getDetails', {});
+
+      // console.log(details);
+    });
+    
+    it('Reject event', async () => {
+      await bridgeContract.run('rejectEthereumEvent', {
+        eventTransaction: utils.stringToBytesArray(ethereumEventTransaction),
+        eventIndex: ethereumEventIndex,
+        eventData: '',
+        eventBlockNumber: 124,
+        eventBlock: utils.stringToBytesArray(ethereumEventBlock),
+        ethereumEventConfigurationAddress: ethereumEventConfigurationContract.address
+      }, tonWrapper.keys[1]);
+  
+      await bridgeContract.run('rejectEthereumEvent', {
+        eventTransaction: utils.stringToBytesArray(ethereumEventTransaction),
+        eventIndex: ethereumEventIndex,
+        eventData: '',
+        eventBlockNumber: 124,
+        eventBlock: utils.stringToBytesArray(ethereumEventBlock),
+        ethereumEventConfigurationAddress: ethereumEventConfigurationContract.address
+      }, tonWrapper.keys[2]);
+  
+      const details = await ethereumEventContract.runLocal('getDetails', {});
+  
+      assert.equal(
+        details._eventRejected,
+        true,
+        'Wrong event rejected status'
+      );
+      
+      assert.equal(
+        details._rejectKeys.length,
+        2,
+        'Wrong amount of reject keys'
+      );
+    });
+  });
 });

@@ -36,6 +36,7 @@ contract EthereumEventConfiguration {
     }
 
     event NewEthereumEventConfirmation(address indexed addr, uint relayKey);
+    event NewEthereumEventReject(address indexed addr, uint relayKey);
 
     /*
         Contract with Ethereum-TON configuration
@@ -132,6 +133,50 @@ contract EthereumEventConfiguration {
         EthereumEvent(ethereumEventAddress).confirm(relayKey);
 
         emit NewEthereumEventConfirmation(ethereumEventAddress, relayKey);
+    }
+
+/*
+    Reject Ethereum-TON event instance.
+    @dev This function calls the reject method of the corresponding EthereumEvent contract
+    Two transactions is sent (deploy and confirm) and one is always fail
+    EventAddress is always emitted!
+    @dev Should be called only through Bridge contract
+    @param eventTransaction Bytes encoded transaction hash
+    @param eventIndex Event Index from the transaction
+    @param eventData TvmCell encoded event data
+    @param relayKey Relay key, who initialized the Bridge Ethereum event confirmation
+**/
+    function rejectEvent(
+        bytes eventTransaction,
+        uint eventIndex,
+        TvmCell eventData,
+        uint eventBlockNumber,
+        bytes eventBlock,
+        uint relayKey
+    ) public onlyBridge {
+        // TODO: remove deploy step in favor of address derivation (not supported by compiler yet)
+        address ethereumEventAddress = new EthereumEvent{
+            value: 0 ton,
+            code: ethereumEventCode,
+            pubkey: tvm.pubkey(),
+            varInit: {
+                eventTransaction: eventTransaction,
+                eventIndex: eventIndex,
+                proxyAddress: proxyAddress,
+                eventData: eventData,
+                eventBlockNumber: eventBlockNumber,
+                eventBlock: eventBlock,
+                ethereumEventConfirguration: address(this)
+            }
+        }(
+            relayKey,
+            eventRequiredConfirmations,
+            eventRequiredRejects
+        );
+
+        EthereumEvent(ethereumEventAddress).reject(relayKey);
+
+        emit NewEthereumEventReject(ethereumEventAddress, relayKey);
     }
 
     /*
