@@ -6,7 +6,7 @@ const {
   ContractWrapper,
   TonWrapper
 } = require('./freeton-truffle');
-const utils = require('./utils');
+const utils = require('./freeton-truffle/utils');
 
 let bridgeContract;
 let ethereumEventConfigurationContract;
@@ -29,10 +29,12 @@ const tonWrapper = new TonWrapper({
 
 
 const ethereumEventABI = '{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"state","type":"uint256"},{"indexed":false,"internalType":"address","name":"author","type":"address"}],"name":"StateChange","type":"event"}';
-const ethereumEventAddress = '0x62a84E9356E62Bd003c97E138b65a8661762A2E0';
+const ethereumEventAddress = '0x4169D71D56563eA9FDE76D92185bEB7aa1Da6fB8';
+
 const ethereumEventBlock = '0xd694484e5194f171896162f308ed5c3777d5be52f9bdc9c50369fe79a478ff5d';
 const ethereumEventTransaction = '0x794396dde8d19d69a0a91b2eeb249a02631e48c0809c701bfb95fb24d64a5b7f';
 const ethereumEventIndex = 0;
+
 
 describe('Test FreeTON bridge', function() {
   this.timeout(100000);
