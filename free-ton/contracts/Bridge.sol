@@ -4,39 +4,38 @@ pragma AbiHeader pubkey;
 
 
 import "./EthereumEventConfiguration.sol";
+import "./BridgeConfigurationUpdate.sol";
+import "./structures/BridgeConfigurationStructure.sol";
 import "./KeysOwnable.sol";
 
 
-contract FreeTonBridge is KeysOwnable {
-    // Same nonce with the same keys means same address
+contract FreeTonBridge is KeysOwnable, BridgeConfigurationStructure {
     uint static truffleNonce;
 
-    TvmCell ethereumEventConfigurationCode;
-    TvmCell ethereumEventCode;
-
-    struct BridgeConfiguration {
-        uint ethereumEventConfigurationRequiredConfirmations;
-        uint ethereumEventConfigurationRequiredRejects;
-        uint ethereumEventConfigurationSequentialIndex;
-    }
     BridgeConfiguration bridgeConfiguration;
 
+    struct SequentialIndex {
+        uint ethereumEventConfiguration;
+        uint bridgeConfigurationUpdateVoting;
+    }
+    SequentialIndex sequentialIndex;
+
     event NewEthereumEventConfiguration(address indexed addr);
+    event NewBridgeConfigurationUpdate(address indexed addr);
+
+    modifier onlyActive() {
+        require(bridgeConfiguration.active == true, 12312);
+        _;
+    }
 
     /*
         Basic Bridge contract
-        @param _ethereumEventConfigurationCode Ethereum Event configuration contract code
-        @param _ethereumEventCode Ethereum Event contract code
         @param _relayKeys List of relays public keys
-        @param _ethereumEventConfigurationRequiredConfirmations Required confirmations to confirm Ethereum-TON config
-        @param _ethereumEventConfigurationRequiredRejects Required rejects to reject Ethereum-TON config
+        @param _bridgeConfiguration Initial Bridge configuration
     */
     constructor(
-        TvmCell _ethereumEventConfigurationCode,
-        TvmCell _ethereumEventCode,
         uint[] _relayKeys,
-        uint _ethereumEventConfigurationRequiredConfirmations,
-        uint _ethereumEventConfigurationRequiredRejects
+        BridgeConfiguration _bridgeConfiguration
     ) public {
         require(tvm.pubkey() != 0);
         tvm.accept();
@@ -45,13 +44,51 @@ contract FreeTonBridge is KeysOwnable {
             _grantOwnership(_relayKeys[i]);
         }
 
-        ethereumEventConfigurationCode = _ethereumEventConfigurationCode;
-        ethereumEventCode = _ethereumEventCode;
+        bridgeConfiguration = _bridgeConfiguration;
+        bridgeConfiguration.active = true;
 
-        bridgeConfiguration.ethereumEventConfigurationRequiredConfirmations = _ethereumEventConfigurationRequiredConfirmations;
-        bridgeConfiguration.ethereumEventConfigurationRequiredRejects = _ethereumEventConfigurationRequiredRejects;
+        sequentialIndex.ethereumEventConfiguration = 0;
+        sequentialIndex.bridgeConfigurationUpdateVoting = 0;
+    }
 
-        bridgeConfiguration.ethereumEventConfigurationSequentialIndex = 0;
+    /*
+        Confirm Bridge configuration update. Only relay can do this.
+        @dev One confirmation is received from the proposal author. Need more confirmation in general
+        @param _bridgeConfiguration New bridge configuration
+    */
+    function confirmBridgeConfigurationUpdate(
+        BridgeConfiguration _bridgeConfiguration
+    ) public onlyActive onlyOwnerKey(msg.pubkey()) returns(address) {
+        tvm.accept();
+
+        address bridgeConfigurationUpdateAddress = new BridgeConfigurationUpdate{
+            code: bridgeConfiguration.bridgeConfigurationUpdateCode,
+            pubkey: tvm.pubkey(),
+            varInit: {
+                bridgeAddress: address(this)
+            },
+            value: bridgeConfiguration.bridgeConfigurationUpdateInitialBalance
+        }(
+            msg.pubkey(),
+            bridgeConfiguration.bridgeConfigurationUpdateRequiredConfirmations,
+            bridgeConfiguration.bridgeConfigurationUpdateRequiredRejects,
+            _bridgeConfiguration
+        );
+
+        BridgeConfigurationUpdate(bridgeConfigurationUpdateAddress).confirm(msg.pubkey());
+
+        emit NewBridgeConfigurationUpdate(bridgeConfigurationUpdateAddress);
+
+        return bridgeConfigurationUpdateAddress;
+    }
+
+    /*
+        Update Bridge configuration, can be called only be the correct BridgeConfigurationUpdate contract
+        @param _bridgeConfiguration New bridge configuration
+    */
+    function updateBridgeConfiguration(BridgeConfiguration _bridgeConfiguration) public {
+        // TODO: only BridgeConfigurationUpdate contract should be able to call this
+        bridgeConfiguration = _bridgeConfiguration;
     }
 
     /**
@@ -71,11 +108,11 @@ contract FreeTonBridge is KeysOwnable {
         uint ethereumEventRequiredConfirmations,
         uint ethereumEventRequiredRejects,
         address eventProxyAddress
-    ) public returns(address) {
+    ) public onlyActive onlyOwnerKey(msg.pubkey()) returns(address) {
         tvm.accept();
 
         address ethereumEventConfigurationAddress = new EthereumEventConfiguration{
-            code: ethereumEventConfigurationCode,
+            code: bridgeConfiguration.ethereumEventConfigurationCode,
             pubkey: tvm.pubkey(),
             varInit: {
                 eventABI: ethereumEventABI,
@@ -84,17 +121,17 @@ contract FreeTonBridge is KeysOwnable {
                 ethereumEventBlocksToConfirm: ethereumEventBlocksToConfirm,
                 bridgeAddress: address(this)
             },
-            value: 10 ton
+            value: bridgeConfiguration.ethereumEventConfigurationInitialBalance
         }(
             bridgeConfiguration.ethereumEventConfigurationRequiredConfirmations,
             bridgeConfiguration.ethereumEventConfigurationRequiredRejects,
             ethereumEventRequiredConfirmations,
             ethereumEventRequiredRejects,
-            ethereumEventCode,
+            bridgeConfiguration.ethereumEventCode,
             msg.pubkey()
         );
 
-        bridgeConfiguration.ethereumEventConfigurationSequentialIndex++;
+        sequentialIndex.ethereumEventConfiguration++;
 
         emit NewEthereumEventConfiguration(ethereumEventConfigurationAddress);
 
@@ -108,7 +145,7 @@ contract FreeTonBridge is KeysOwnable {
     */
     function confirmEthereumEventConfiguration(
         address ethereumEventConfigurationAddress
-    ) public pure {
+    ) public view onlyActive onlyOwnerKey(msg.pubkey()) {
         tvm.accept();
 
         EthereumEventConfiguration(ethereumEventConfigurationAddress).confirm(msg.pubkey());
@@ -121,7 +158,7 @@ contract FreeTonBridge is KeysOwnable {
     */
     function rejectEthereumEventConfiguration(
         address ethereumEventConfigurationAddress
-    ) public pure {
+    ) public view onlyActive onlyOwnerKey(msg.pubkey()) {
         tvm.accept();
 
         EthereumEventConfiguration(ethereumEventConfigurationAddress).reject(msg.pubkey());
@@ -144,7 +181,7 @@ contract FreeTonBridge is KeysOwnable {
         uint eventBlockNumber,
         bytes eventBlock,
         address ethereumEventConfigurationAddress
-    ) public pure {
+    ) public view onlyActive onlyOwnerKey(msg.pubkey()) {
         tvm.accept();
 
         EthereumEventConfiguration(ethereumEventConfigurationAddress).confirmEvent(
@@ -174,7 +211,7 @@ contract FreeTonBridge is KeysOwnable {
         uint eventBlockNumber,
         bytes eventBlock,
         address ethereumEventConfigurationAddress
-    ) public pure {
+    ) public view onlyActive onlyOwnerKey(msg.pubkey()) {
         tvm.accept();
 
         EthereumEventConfiguration(ethereumEventConfigurationAddress).rejectEvent(
@@ -184,6 +221,21 @@ contract FreeTonBridge is KeysOwnable {
             eventBlockNumber,
             eventBlock,
             msg.pubkey()
+        );
+    }
+
+    /*
+        Get Bridge details.
+        @returns _bridgeConfiguration Structure with Bridge configuration details
+        @returns _sequentialIndex Structure with counters
+    */
+    function getDetails() public view returns (
+        BridgeConfiguration _bridgeConfiguration,
+        SequentialIndex _sequentialIndex
+    ) {
+        return (
+            bridgeConfiguration,
+            sequentialIndex
         );
     }
 }

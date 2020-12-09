@@ -13,55 +13,9 @@ THROWIF 51
 PUSHINT 1
 SETGLOB 6
 ;; end constructor protection
-; Decode input parameters
 ENDS
-; constructor SimpleDaughter
 ACCEPT
-; end constructor SimpleDaughter
 CALL $c7_to_c4$
-TRUE
-SETGLOB 7
-
-.globl	isDaughter
-.public	isDaughter
-.type	isDaughter, @function
-; Decode input parameters
-ENDS
-; function isDaughter
-ACCEPT
-;; return
-TRUE
-;; emitting 1 value(s)
-PUSH S1
-EQINT -1
-PUSHCONT {
-	PUSH S3
-	CTOS
-	LDU 2
-	LDMSGADDR
-	DROP
-	NIP
-	NEWC
-	STSLICECONST xc
-	STSLICE
-	PUSHINT 96
-	STZEROES
-	STSLICECONST 0
-	STSLICECONST 0
-	STSLICECONST x82eb326a
-	PUSH S1
-	STIR 1
-	ENDC
-	PUSHINT 1
-	SENDRAWMSG
-}
-IF
-DROP
-; end function isDaughter
-PUSHCONT {
-	CALL $c7_to_c4$
-}
-IF
 TRUE
 SETGLOB 7
 
@@ -115,18 +69,8 @@ PUSHCONT {
 }
 PUSHCONT {
 	PLDDICT   ; D
-	; init daughterNonce
-	PUSHINT 1
-	PUSH S1
-	PUSHINT 64
-	DICTUGET
-	PUSHCONT {
-		PLDU 256
-	}
-	PUSHCONT {
-		PUSHINT 0
-	}
-	IFELSE
+	; init KEY_ALREADY_USED
+	PUSHINT 0
 	SETGLOB 10
 	; set contract pubkey
 	PUSHINT 0
@@ -142,6 +86,9 @@ PUSHCONT {
 	SETGLOB 6
 	TRUE
 	SETGLOB 1
+	;; init state var: KEY_ALREADY_USED
+	PUSHINT 101
+	SETGLOB 10
 }
 IFELSE
 

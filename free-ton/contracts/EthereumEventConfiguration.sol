@@ -202,8 +202,6 @@ contract EthereumEventConfiguration {
         uint[] _rejectKeys,
         bool _active
     ) {
-        tvm.accept();
-
         return (
             eventABI,
             eventAddress,

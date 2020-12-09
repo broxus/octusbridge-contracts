@@ -32,8 +32,6 @@ contract EventProxy {
         uint _eventIndex,
         TvmCell _eventData
     ) {
-        tvm.accept();
-
         return (
             callbackReceived,
             eventTransaction,

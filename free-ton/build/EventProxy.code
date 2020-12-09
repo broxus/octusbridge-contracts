@@ -138,7 +138,6 @@ PUSHINT 0
 ;; ret param: _eventData
 NEWC
 ENDC
-ACCEPT
 ;; return
 ;; push identifier callbackReceived
 GETGLOB 11
@@ -202,7 +201,6 @@ PUSHINT 0
 ;; ret param: _eventData
 NEWC
 ENDC
-ACCEPT
 ;; return
 ;; push identifier callbackReceived
 GETGLOB 11

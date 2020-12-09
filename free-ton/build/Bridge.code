@@ -14,19 +14,18 @@ PUSHINT 1
 SETGLOB 6
 ;; end constructor protection
 ; Decode input parameters
-; Decode _ethereumEventConfigurationCode
-;; decode TvmCell
-LDREF
-; Decode _ethereumEventCode
-;; decode TvmCell
-LDREF
 ; Decode _relayKeys
 LDU 32
 LDDICT
 ROTREV
 PAIR
 SWAP
-; Decode _ethereumEventConfigurationRequiredConfirmations
+; Decode _bridgeConfiguration
+;; decode struct BridgeConfiguration _bridgeConfiguration
+;; decode BridgeConfiguration.ethereumEventConfigurationCode
+;; decode TvmCell
+LDREF
+;; decode BridgeConfiguration.ethereumEventConfigurationRequiredConfirmations
 LDUQ 256
 PUSHCONT {
 	;; load next cell
@@ -36,7 +35,7 @@ PUSHCONT {
 	LDU 256
 }
 IFNOT
-; Decode _ethereumEventConfigurationRequiredRejects
+;; decode BridgeConfiguration.ethereumEventConfigurationRequiredRejects
 LDUQ 256
 PUSHCONT {
 	;; load next cell
@@ -46,12 +45,90 @@ PUSHCONT {
 	LDU 256
 }
 IFNOT
+;; decode BridgeConfiguration.ethereumEventConfigurationInitialBalance
+LDUQ 128
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 128
+}
+IFNOT
+;; decode BridgeConfiguration.ethereumEventCode
+;; decode TvmCell
+DUP
+SREFS
+EQINT 1
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDREF
+;; decode BridgeConfiguration.bridgeConfigurationUpdateCode
+;; decode TvmCell
+DUP
+SBITREFS
+EQINT 1
+SWAP
+EQINT 0
+AND
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDREF
+;; decode BridgeConfiguration.bridgeConfigurationUpdateRequiredConfirmations
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+;; decode BridgeConfiguration.bridgeConfigurationUpdateRequiredRejects
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+;; decode BridgeConfiguration.bridgeConfigurationUpdateInitialBalance
+LDUQ 128
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 128
+}
+IFNOT
+;; decode BridgeConfiguration.active
+LDIQ 1
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDI 1
+}
+IFNOT
+;; build struct BridgeConfiguration ss:12
+BLKSWAP 10, 1
+TUPLE 10
+SWAP
 ENDS
-;; param: _ethereumEventConfigurationCode
-;; param: _ethereumEventCode
 ;; param: _relayKeys
-;; param: _ethereumEventConfigurationRequiredConfirmations
-;; param: _ethereumEventConfigurationRequiredRejects
+;; param: _bridgeConfiguration
 ; constructor FreeTonBridge
 GETGLOB 2
 NEQINT 0
@@ -65,7 +142,7 @@ PUSHCONT {
 	DUP
 	;; get member length
 	;; push identifier _relayKeys
-	PUSH S4
+	PUSH S3
 	FIRST
 	;; <
 	LESS
@@ -75,7 +152,7 @@ PUSHCONT {
 	;; push identifier i
 	DUP
 	;; push identifier _relayKeys
-	PUSH S4
+	PUSH S3
 	INDEX 1
 	PUSHINT 32
 	DICTUGET
@@ -94,52 +171,731 @@ DROP
 ; end for
 ; expValue
 ; end expValue
-;; push identifier _ethereumEventConfigurationCode
-PUSH S4
+;; push identifier _bridgeConfiguration
+DUP
 ; colValue
 SETGLOB 12
 ; end colValue
 ; expValue
+;; fetch bridgeConfiguration
+GETGLOB 12
 ; end expValue
-;; push identifier _ethereumEventCode
-PUSH S3
+TRUE
 ; colValue
-SETGLOB 13
+SETINDEX 9
+SETGLOB 12
 ; end colValue
 ; expValue
-;; fetch bridgeConfiguration
-GETGLOB 14
-; end expValue
-;; push identifier _ethereumEventConfigurationRequiredConfirmations
-PUSH S2
-; colValue
-SETINDEX 0
-SETGLOB 14
-; end colValue
-; expValue
-;; fetch bridgeConfiguration
-GETGLOB 14
-; end expValue
-;; push identifier _ethereumEventConfigurationRequiredRejects
-PUSH S1
-; colValue
-SETINDEX 1
-SETGLOB 14
-; end colValue
-; expValue
-;; fetch bridgeConfiguration
-GETGLOB 14
+;; fetch sequentialIndex
+GETGLOB 13
 ; end expValue
 PUSHINT 0
 ; colValue
-SETINDEX 2
-SETGLOB 14
+SETINDEX 0
+SETGLOB 13
 ; end colValue
-BLKDROP 5
+; expValue
+;; fetch sequentialIndex
+GETGLOB 13
+; end expValue
+PUSHINT 0
+; colValue
+SETINDEX 1
+SETGLOB 13
+; end colValue
+DROP2
 ; end constructor FreeTonBridge
 CALL $c7_to_c4$
 TRUE
 SETGLOB 7
+
+.globl	confirmBridgeConfigurationUpdate
+.public	confirmBridgeConfigurationUpdate
+.type	confirmBridgeConfigurationUpdate, @function
+GETGLOB 1
+ISNULL
+PUSHCONT {
+	CALL $c4_to_c7$
+}
+IF
+; Decode input parameters
+; Decode _bridgeConfiguration
+;; decode struct BridgeConfiguration _bridgeConfiguration
+;; decode BridgeConfiguration.ethereumEventConfigurationCode
+;; decode TvmCell
+LDREF
+;; decode BridgeConfiguration.ethereumEventConfigurationRequiredConfirmations
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+;; decode BridgeConfiguration.ethereumEventConfigurationRequiredRejects
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+;; decode BridgeConfiguration.ethereumEventConfigurationInitialBalance
+LDUQ 128
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 128
+}
+IFNOT
+;; decode BridgeConfiguration.ethereumEventCode
+;; decode TvmCell
+DUP
+SREFS
+EQINT 1
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDREF
+;; decode BridgeConfiguration.bridgeConfigurationUpdateCode
+;; decode TvmCell
+DUP
+SBITREFS
+EQINT 1
+SWAP
+EQINT 0
+AND
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDREF
+;; decode BridgeConfiguration.bridgeConfigurationUpdateRequiredConfirmations
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+;; decode BridgeConfiguration.bridgeConfigurationUpdateRequiredRejects
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+;; decode BridgeConfiguration.bridgeConfigurationUpdateInitialBalance
+LDUQ 128
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 128
+}
+IFNOT
+;; decode BridgeConfiguration.active
+LDIQ 1
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDI 1
+}
+IFNOT
+;; build struct BridgeConfiguration ss:11
+BLKSWAP 10, 1
+TUPLE 10
+SWAP
+ENDS
+;; param: _bridgeConfiguration
+; modifier onlyActive
+PUSHINT 12312
+;; get member active
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 9
+TRUE
+;; ==
+EQUAL
+THROWANYIFNOT
+; modifier onlyOwnerKey
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+;; index
+;; push identifier key
+DUP
+;; push identifier ownerKeys
+GETGLOB 10
+PUSHINT 256
+DICTUGET
+PUSHCONT {
+	PLDI 1
+}
+PUSHCONT {
+	PUSHINT 0
+}
+IFELSE
+TRUE
+;; ==
+EQUAL
+THROWIFNOT 303
+; function confirmBridgeConfigurationUpdate
+ACCEPT
+NEWDICT
+GETGLOB 2
+NEWC
+STU 256
+PUSHINT 0
+ROT
+PUSHINT 64
+DICTUSETB
+MYADDR
+PUSHINT 1
+ROT
+PUSHINT 64
+DICTUSET
+NEWC
+STDICT
+ENDC
+;; get member bridgeConfigurationUpdateCode
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 5
+NEWC
+STSLICECONST x2_
+STOPTREF
+STOPTREF
+STZERO
+ENDC
+DUP
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+ENDC
+CTOS
+;; get member bridgeConfigurationUpdateInitialBalance
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 8
+PUSH S1
+NEWC
+STSLICECONST x62_
+STSLICE
+SWAP
+STGRAMS
+PUSHINT 105
+STZEROES
+STSLICECONST xc_
+STSLICECONST 1
+PUSH S2
+STREFR
+STSLICECONST 1
+NEWC
+STSLICECONST x209f940f
+;; relayKey
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+STUR 256
+;; _requiredConfirmations
+;; get member bridgeConfigurationUpdateRequiredConfirmations
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 6
+STUR 256
+;; _requiredRejects
+;; get member bridgeConfigurationUpdateRequiredRejects
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 7
+STUR 256
+;; _bridgeConfiguration
+;; push identifier _bridgeConfiguration
+PUSH S5
+UNTUPLE 10
+BLKSWAP 1, 10
+PUSH S10
+STREFR
+NEWC
+PUSH S10
+STUR 256
+PUSH S9
+STUR 256
+PUSH S8
+STUR 128
+PUSH S7
+STREFR
+PUSH S6
+STREFR
+PUSH S5
+STUR 256
+NEWC
+PUSH S5
+STUR 256
+PUSH S4
+STUR 128
+PUSH S3
+STIR 1
+BLKDROP2 10, 3
+STBREFR
+STBREFR
+STBREFR
+ENDC
+PUSHINT 1
+SENDRAWMSG
+NIP
+;; decl: bridgeConfigurationUpdateAddress
+;; Remote call BridgeConfigurationUpdate.confirm
+;; push identifier bridgeConfigurationUpdateAddress
+DUP
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHSLICE x3989680000000000000000000000000004_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x7c5f8264
+;; relayKey
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+STUR 256
+ENDC
+PUSHINT 1
+SENDRAWMSG
+;; emit NewBridgeConfigurationUpdate
+NEWC
+PUSHSLICE xc0000000000000000000000002_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x2fe5d2ba
+;; addr
+;; push identifier bridgeConfigurationUpdateAddress
+PUSH S1
+STSLICER
+ENDC
+PUSHINT 1
+SENDRAWMSG
+;; return
+;; emitting 1 value(s)
+PUSH S3
+EQINT -1
+PUSHCONT {
+	PUSH S5
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST xd5f0bd00
+	PUSH S1
+	STSLICER
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+}
+IF
+DROP
+; end function confirmBridgeConfigurationUpdate
+DROP
+; end modifier onlyOwnerKey
+DROP
+; end modifier onlyActive
+CALL $c7_to_c4$
+TRUE
+SETGLOB 7
+
+.globl	confirmBridgeConfigurationUpdate_internal
+.type	confirmBridgeConfigurationUpdate_internal, @function
+;; param: _bridgeConfiguration
+; modifier onlyActive
+PUSHINT 12312
+;; get member active
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 9
+TRUE
+;; ==
+EQUAL
+THROWANYIFNOT
+; modifier onlyOwnerKey
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+;; index
+;; push identifier key
+DUP
+;; push identifier ownerKeys
+GETGLOB 10
+PUSHINT 256
+DICTUGET
+PUSHCONT {
+	PLDI 1
+}
+PUSHCONT {
+	PUSHINT 0
+}
+IFELSE
+TRUE
+;; ==
+EQUAL
+THROWIFNOT 303
+; function confirmBridgeConfigurationUpdate
+ACCEPT
+NEWDICT
+GETGLOB 2
+NEWC
+STU 256
+PUSHINT 0
+ROT
+PUSHINT 64
+DICTUSETB
+MYADDR
+PUSHINT 1
+ROT
+PUSHINT 64
+DICTUSET
+NEWC
+STDICT
+ENDC
+;; get member bridgeConfigurationUpdateCode
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 5
+NEWC
+STSLICECONST x2_
+STOPTREF
+STOPTREF
+STZERO
+ENDC
+DUP
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+ENDC
+CTOS
+;; get member bridgeConfigurationUpdateInitialBalance
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 8
+PUSH S1
+NEWC
+STSLICECONST x62_
+STSLICE
+SWAP
+STGRAMS
+PUSHINT 105
+STZEROES
+STSLICECONST xc_
+STSLICECONST 1
+PUSH S2
+STREFR
+STSLICECONST 1
+NEWC
+STSLICECONST x209f940f
+;; relayKey
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+STUR 256
+;; _requiredConfirmations
+;; get member bridgeConfigurationUpdateRequiredConfirmations
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 6
+STUR 256
+;; _requiredRejects
+;; get member bridgeConfigurationUpdateRequiredRejects
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 7
+STUR 256
+;; _bridgeConfiguration
+;; push identifier _bridgeConfiguration
+PUSH S5
+UNTUPLE 10
+BLKSWAP 1, 10
+PUSH S10
+STREFR
+NEWC
+PUSH S10
+STUR 256
+PUSH S9
+STUR 256
+PUSH S8
+STUR 128
+PUSH S7
+STREFR
+PUSH S6
+STREFR
+PUSH S5
+STUR 256
+NEWC
+PUSH S5
+STUR 256
+PUSH S4
+STUR 128
+PUSH S3
+STIR 1
+BLKDROP2 10, 3
+STBREFR
+STBREFR
+STBREFR
+ENDC
+PUSHINT 1
+SENDRAWMSG
+NIP
+;; decl: bridgeConfigurationUpdateAddress
+;; Remote call BridgeConfigurationUpdate.confirm
+;; push identifier bridgeConfigurationUpdateAddress
+DUP
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHSLICE x3989680000000000000000000000000004_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x7c5f8264
+;; relayKey
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+STUR 256
+ENDC
+PUSHINT 1
+SENDRAWMSG
+;; emit NewBridgeConfigurationUpdate
+NEWC
+PUSHSLICE xc0000000000000000000000002_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x2fe5d2ba
+;; addr
+;; push identifier bridgeConfigurationUpdateAddress
+PUSH S1
+STSLICER
+ENDC
+PUSHINT 1
+SENDRAWMSG
+;; return
+TUPLE 1
+SETGLOB 8
+; end function confirmBridgeConfigurationUpdate
+DROP
+; end modifier onlyOwnerKey
+DROP
+; end modifier onlyActive
+GETGLOB 8
+UNTUPLE 1
+
+.globl	updateBridgeConfiguration
+.public	updateBridgeConfiguration
+.type	updateBridgeConfiguration, @function
+GETGLOB 1
+ISNULL
+PUSHCONT {
+	CALL $c4_to_c7$
+}
+IF
+; Decode input parameters
+; Decode _bridgeConfiguration
+;; decode struct BridgeConfiguration _bridgeConfiguration
+;; decode BridgeConfiguration.ethereumEventConfigurationCode
+;; decode TvmCell
+LDREF
+;; decode BridgeConfiguration.ethereumEventConfigurationRequiredConfirmations
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+;; decode BridgeConfiguration.ethereumEventConfigurationRequiredRejects
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+;; decode BridgeConfiguration.ethereumEventConfigurationInitialBalance
+LDUQ 128
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 128
+}
+IFNOT
+;; decode BridgeConfiguration.ethereumEventCode
+;; decode TvmCell
+DUP
+SREFS
+EQINT 1
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDREF
+;; decode BridgeConfiguration.bridgeConfigurationUpdateCode
+;; decode TvmCell
+DUP
+SBITREFS
+EQINT 1
+SWAP
+EQINT 0
+AND
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDREF
+;; decode BridgeConfiguration.bridgeConfigurationUpdateRequiredConfirmations
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+;; decode BridgeConfiguration.bridgeConfigurationUpdateRequiredRejects
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+;; decode BridgeConfiguration.bridgeConfigurationUpdateInitialBalance
+LDUQ 128
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 128
+}
+IFNOT
+;; decode BridgeConfiguration.active
+LDIQ 1
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDI 1
+}
+IFNOT
+;; build struct BridgeConfiguration ss:11
+BLKSWAP 10, 1
+TUPLE 10
+SWAP
+ENDS
+;; param: _bridgeConfiguration
+; function updateBridgeConfiguration
+; expValue
+; end expValue
+;; push identifier _bridgeConfiguration
+DUP
+; colValue
+SETGLOB 12
+; end colValue
+DROP
+; end function updateBridgeConfiguration
+CALL $c7_to_c4$
+TRUE
+SETGLOB 7
+
+.globl	updateBridgeConfiguration_internal
+.type	updateBridgeConfiguration_internal, @function
+;; param: _bridgeConfiguration
+; function updateBridgeConfiguration
+; expValue
+; end expValue
+;; push identifier _bridgeConfiguration
+DUP
+; colValue
+SETGLOB 12
+; end colValue
+DROP
+; end function updateBridgeConfiguration
 
 .globl	addEthereumEventConfiguration
 .public	addEthereumEventConfiguration
@@ -202,6 +958,43 @@ ENDS
 ;; param: ethereumEventRequiredConfirmations
 ;; param: ethereumEventRequiredRejects
 ;; param: eventProxyAddress
+; modifier onlyActive
+PUSHINT 12312
+;; get member active
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 9
+TRUE
+;; ==
+EQUAL
+THROWANYIFNOT
+; modifier onlyOwnerKey
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+;; index
+;; push identifier key
+DUP
+;; push identifier ownerKeys
+GETGLOB 10
+PUSHINT 256
+DICTUGET
+PUSHCONT {
+	PLDI 1
+}
+PUSHCONT {
+	PUSHINT 0
+}
+IFELSE
+TRUE
+;; ==
+EQUAL
+THROWIFNOT 303
 ; function addEthereumEventConfiguration
 ACCEPT
 NEWDICT
@@ -213,25 +1006,25 @@ ROT
 PUSHINT 64
 DICTUSETB
 ;; push identifier ethereumEventABI
-PUSH S6
+PUSH S7
 PUSHINT 1
 ROT
 PUSHINT 64
 DICTUSETREF
 ;; push identifier ethereumAddress
-PUSH S5
+PUSH S6
 PUSHINT 2
 ROT
 PUSHINT 64
 DICTUSETREF
 ;; push identifier eventProxyAddress
-PUSH S1
+PUSH S2
 PUSHINT 3
 ROT
 PUSHINT 64
 DICTUSET
 ;; push identifier ethereumEventBlocksToConfirm
-PUSH S4
+PUSH S5
 NEWC
 STU 256
 PUSHINT 4
@@ -246,8 +1039,10 @@ DICTUSET
 NEWC
 STDICT
 ENDC
-;; push identifier ethereumEventConfigurationCode
+;; get member ethereumEventConfigurationCode
+;; push identifier bridgeConfiguration
 GETGLOB 12
+INDEX 0
 NEWC
 STSLICECONST x2_
 STOPTREF
@@ -261,7 +1056,10 @@ STSLICECONST x801_
 STU 256
 ENDC
 CTOS
-PUSHINT 10000000000
+;; get member ethereumEventConfigurationInitialBalance
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 3
 PUSH S1
 NEWC
 STSLICECONST x62_
@@ -280,27 +1078,29 @@ STSLICECONST x015918a6
 ;; _requiredConfirmations
 ;; get member ethereumEventConfigurationRequiredConfirmations
 ;; push identifier bridgeConfiguration
-GETGLOB 14
-INDEX 0
+GETGLOB 12
+INDEX 1
 STUR 256
 ;; _requiredRejects
 ;; get member ethereumEventConfigurationRequiredRejects
 ;; push identifier bridgeConfiguration
-GETGLOB 14
-INDEX 1
+GETGLOB 12
+INDEX 2
 STUR 256
 ;; _eventRequiredConfirmations
 ;; push identifier ethereumEventRequiredConfirmations
-PUSH S6
+PUSH S7
 STUR 256
 NEWC
 ;; _eventRequiredRejects
 ;; push identifier ethereumEventRequiredRejects
-PUSH S6
+PUSH S7
 STUR 256
 ;; _ethereumEventCode
-;; push identifier ethereumEventCode
-GETGLOB 13
+;; get member ethereumEventCode
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 4
 STREFR
 ;; relayKey
 GETGLOB 5
@@ -321,15 +1121,15 @@ NIP
 ;; decl: ethereumEventConfigurationAddress
 ;; ++
 ; expValue
-;; fetch bridgeConfiguration
-GETGLOB 14
+;; fetch sequentialIndex
+GETGLOB 13
 DUP
-INDEX 2
+INDEX 0
 ; end expValue
 INC
 ; colValue
-SETINDEX 2
-SETGLOB 14
+SETINDEX 0
+SETGLOB 13
 ; end colValue
 ;; emit NewEthereumEventConfiguration
 NEWC
@@ -346,13 +1146,11 @@ ENDC
 PUSHINT 1
 SENDRAWMSG
 ;; return
-XCHG s6
-BLKDROP 6
 ;; emitting 1 value(s)
-PUSH S1
+PUSH S8
 EQINT -1
 PUSHCONT {
-	PUSH S3
+	PUSH S10
 	CTOS
 	LDU 2
 	LDMSGADDR
@@ -375,6 +1173,10 @@ PUSHCONT {
 IF
 DROP
 ; end function addEthereumEventConfiguration
+DROP
+; end modifier onlyOwnerKey
+BLKDROP 6
+; end modifier onlyActive
 CALL $c7_to_c4$
 TRUE
 SETGLOB 7
@@ -387,6 +1189,43 @@ SETGLOB 7
 ;; param: ethereumEventRequiredConfirmations
 ;; param: ethereumEventRequiredRejects
 ;; param: eventProxyAddress
+; modifier onlyActive
+PUSHINT 12312
+;; get member active
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 9
+TRUE
+;; ==
+EQUAL
+THROWANYIFNOT
+; modifier onlyOwnerKey
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+;; index
+;; push identifier key
+DUP
+;; push identifier ownerKeys
+GETGLOB 10
+PUSHINT 256
+DICTUGET
+PUSHCONT {
+	PLDI 1
+}
+PUSHCONT {
+	PUSHINT 0
+}
+IFELSE
+TRUE
+;; ==
+EQUAL
+THROWIFNOT 303
 ; function addEthereumEventConfiguration
 ACCEPT
 NEWDICT
@@ -398,25 +1237,25 @@ ROT
 PUSHINT 64
 DICTUSETB
 ;; push identifier ethereumEventABI
-PUSH S6
+PUSH S7
 PUSHINT 1
 ROT
 PUSHINT 64
 DICTUSETREF
 ;; push identifier ethereumAddress
-PUSH S5
+PUSH S6
 PUSHINT 2
 ROT
 PUSHINT 64
 DICTUSETREF
 ;; push identifier eventProxyAddress
-PUSH S1
+PUSH S2
 PUSHINT 3
 ROT
 PUSHINT 64
 DICTUSET
 ;; push identifier ethereumEventBlocksToConfirm
-PUSH S4
+PUSH S5
 NEWC
 STU 256
 PUSHINT 4
@@ -431,8 +1270,10 @@ DICTUSET
 NEWC
 STDICT
 ENDC
-;; push identifier ethereumEventConfigurationCode
+;; get member ethereumEventConfigurationCode
+;; push identifier bridgeConfiguration
 GETGLOB 12
+INDEX 0
 NEWC
 STSLICECONST x2_
 STOPTREF
@@ -446,7 +1287,10 @@ STSLICECONST x801_
 STU 256
 ENDC
 CTOS
-PUSHINT 10000000000
+;; get member ethereumEventConfigurationInitialBalance
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 3
 PUSH S1
 NEWC
 STSLICECONST x62_
@@ -465,27 +1309,29 @@ STSLICECONST x015918a6
 ;; _requiredConfirmations
 ;; get member ethereumEventConfigurationRequiredConfirmations
 ;; push identifier bridgeConfiguration
-GETGLOB 14
-INDEX 0
+GETGLOB 12
+INDEX 1
 STUR 256
 ;; _requiredRejects
 ;; get member ethereumEventConfigurationRequiredRejects
 ;; push identifier bridgeConfiguration
-GETGLOB 14
-INDEX 1
+GETGLOB 12
+INDEX 2
 STUR 256
 ;; _eventRequiredConfirmations
 ;; push identifier ethereumEventRequiredConfirmations
-PUSH S6
+PUSH S7
 STUR 256
 NEWC
 ;; _eventRequiredRejects
 ;; push identifier ethereumEventRequiredRejects
-PUSH S6
+PUSH S7
 STUR 256
 ;; _ethereumEventCode
-;; push identifier ethereumEventCode
-GETGLOB 13
+;; get member ethereumEventCode
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 4
 STREFR
 ;; relayKey
 GETGLOB 5
@@ -506,15 +1352,15 @@ NIP
 ;; decl: ethereumEventConfigurationAddress
 ;; ++
 ; expValue
-;; fetch bridgeConfiguration
-GETGLOB 14
+;; fetch sequentialIndex
+GETGLOB 13
 DUP
-INDEX 2
+INDEX 0
 ; end expValue
 INC
 ; colValue
-SETINDEX 2
-SETGLOB 14
+SETINDEX 0
+SETGLOB 13
 ; end colValue
 ;; emit NewEthereumEventConfiguration
 NEWC
@@ -531,13 +1377,25 @@ ENDC
 PUSHINT 1
 SENDRAWMSG
 ;; return
-XCHG s6
-BLKDROP 6
+TUPLE 1
+SETGLOB 8
 ; end function addEthereumEventConfiguration
+DROP
+; end modifier onlyOwnerKey
+BLKDROP 6
+; end modifier onlyActive
+GETGLOB 8
+UNTUPLE 1
 
 .globl	confirmEthereumEventConfiguration
 .public	confirmEthereumEventConfiguration
 .type	confirmEthereumEventConfiguration, @function
+GETGLOB 1
+ISNULL
+PUSHCONT {
+	CALL $c4_to_c7$
+}
+IF
 ; Decode input parameters
 ; Decode ethereumEventConfigurationAddress
 LDMSGADDRQ
@@ -551,11 +1409,48 @@ PUSHCONT {
 IFNOT
 ENDS
 ;; param: ethereumEventConfigurationAddress
+; modifier onlyActive
+PUSHINT 12312
+;; get member active
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 9
+TRUE
+;; ==
+EQUAL
+THROWANYIFNOT
+; modifier onlyOwnerKey
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+;; index
+;; push identifier key
+DUP
+;; push identifier ownerKeys
+GETGLOB 10
+PUSHINT 256
+DICTUGET
+PUSHCONT {
+	PLDI 1
+}
+PUSHCONT {
+	PUSHINT 0
+}
+IFELSE
+TRUE
+;; ==
+EQUAL
+THROWIFNOT 303
 ; function confirmEthereumEventConfiguration
 ACCEPT
 ;; Remote call EthereumEventConfiguration.confirm
 ;; push identifier ethereumEventConfigurationAddress
-DUP
+PUSH S1
 NEWC
 STSLICECONST x62_
 STSLICE
@@ -577,8 +1472,11 @@ STUR 256
 ENDC
 PUSHINT 1
 SENDRAWMSG
-DROP
 ; end function confirmEthereumEventConfiguration
+DROP
+; end modifier onlyOwnerKey
+DROP
+; end modifier onlyActive
 PUSHCONT {
 	CALL $c7_to_c4$
 }
@@ -589,11 +1487,48 @@ SETGLOB 7
 .globl	confirmEthereumEventConfiguration_internal
 .type	confirmEthereumEventConfiguration_internal, @function
 ;; param: ethereumEventConfigurationAddress
+; modifier onlyActive
+PUSHINT 12312
+;; get member active
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 9
+TRUE
+;; ==
+EQUAL
+THROWANYIFNOT
+; modifier onlyOwnerKey
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+;; index
+;; push identifier key
+DUP
+;; push identifier ownerKeys
+GETGLOB 10
+PUSHINT 256
+DICTUGET
+PUSHCONT {
+	PLDI 1
+}
+PUSHCONT {
+	PUSHINT 0
+}
+IFELSE
+TRUE
+;; ==
+EQUAL
+THROWIFNOT 303
 ; function confirmEthereumEventConfiguration
 ACCEPT
 ;; Remote call EthereumEventConfiguration.confirm
 ;; push identifier ethereumEventConfigurationAddress
-DUP
+PUSH S1
 NEWC
 STSLICECONST x62_
 STSLICE
@@ -615,12 +1550,21 @@ STUR 256
 ENDC
 PUSHINT 1
 SENDRAWMSG
-DROP
 ; end function confirmEthereumEventConfiguration
+DROP
+; end modifier onlyOwnerKey
+DROP
+; end modifier onlyActive
 
 .globl	rejectEthereumEventConfiguration
 .public	rejectEthereumEventConfiguration
 .type	rejectEthereumEventConfiguration, @function
+GETGLOB 1
+ISNULL
+PUSHCONT {
+	CALL $c4_to_c7$
+}
+IF
 ; Decode input parameters
 ; Decode ethereumEventConfigurationAddress
 LDMSGADDRQ
@@ -634,11 +1578,48 @@ PUSHCONT {
 IFNOT
 ENDS
 ;; param: ethereumEventConfigurationAddress
+; modifier onlyActive
+PUSHINT 12312
+;; get member active
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 9
+TRUE
+;; ==
+EQUAL
+THROWANYIFNOT
+; modifier onlyOwnerKey
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+;; index
+;; push identifier key
+DUP
+;; push identifier ownerKeys
+GETGLOB 10
+PUSHINT 256
+DICTUGET
+PUSHCONT {
+	PLDI 1
+}
+PUSHCONT {
+	PUSHINT 0
+}
+IFELSE
+TRUE
+;; ==
+EQUAL
+THROWIFNOT 303
 ; function rejectEthereumEventConfiguration
 ACCEPT
 ;; Remote call EthereumEventConfiguration.reject
 ;; push identifier ethereumEventConfigurationAddress
-DUP
+PUSH S1
 NEWC
 STSLICECONST x62_
 STSLICE
@@ -660,8 +1641,11 @@ STUR 256
 ENDC
 PUSHINT 1
 SENDRAWMSG
-DROP
 ; end function rejectEthereumEventConfiguration
+DROP
+; end modifier onlyOwnerKey
+DROP
+; end modifier onlyActive
 PUSHCONT {
 	CALL $c7_to_c4$
 }
@@ -672,11 +1656,48 @@ SETGLOB 7
 .globl	rejectEthereumEventConfiguration_internal
 .type	rejectEthereumEventConfiguration_internal, @function
 ;; param: ethereumEventConfigurationAddress
+; modifier onlyActive
+PUSHINT 12312
+;; get member active
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 9
+TRUE
+;; ==
+EQUAL
+THROWANYIFNOT
+; modifier onlyOwnerKey
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+;; index
+;; push identifier key
+DUP
+;; push identifier ownerKeys
+GETGLOB 10
+PUSHINT 256
+DICTUGET
+PUSHCONT {
+	PLDI 1
+}
+PUSHCONT {
+	PUSHINT 0
+}
+IFELSE
+TRUE
+;; ==
+EQUAL
+THROWIFNOT 303
 ; function rejectEthereumEventConfiguration
 ACCEPT
 ;; Remote call EthereumEventConfiguration.reject
 ;; push identifier ethereumEventConfigurationAddress
-DUP
+PUSH S1
 NEWC
 STSLICECONST x62_
 STSLICE
@@ -698,12 +1719,21 @@ STUR 256
 ENDC
 PUSHINT 1
 SENDRAWMSG
-DROP
 ; end function rejectEthereumEventConfiguration
+DROP
+; end modifier onlyOwnerKey
+DROP
+; end modifier onlyActive
 
 .globl	confirmEthereumEvent
 .public	confirmEthereumEvent
 .type	confirmEthereumEvent, @function
+GETGLOB 1
+ISNULL
+PUSHCONT {
+	CALL $c4_to_c7$
+}
+IF
 ; Decode input parameters
 ; Decode eventTransaction
 LDREF
@@ -770,11 +1800,48 @@ ENDS
 ;; param: eventBlockNumber
 ;; param: eventBlock
 ;; param: ethereumEventConfigurationAddress
+; modifier onlyActive
+PUSHINT 12312
+;; get member active
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 9
+TRUE
+;; ==
+EQUAL
+THROWANYIFNOT
+; modifier onlyOwnerKey
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+;; index
+;; push identifier key
+DUP
+;; push identifier ownerKeys
+GETGLOB 10
+PUSHINT 256
+DICTUGET
+PUSHCONT {
+	PLDI 1
+}
+PUSHCONT {
+	PUSHINT 0
+}
+IFELSE
+TRUE
+;; ==
+EQUAL
+THROWIFNOT 303
 ; function confirmEthereumEvent
 ACCEPT
 ;; Remote call EthereumEventConfiguration.confirmEvent
 ;; push identifier ethereumEventConfigurationAddress
-DUP
+PUSH S1
 NEWC
 STSLICECONST x62_
 STSLICE
@@ -786,23 +1853,23 @@ NEWC
 STSLICECONST x460e6e0e
 ;; eventTransaction
 ;; push identifier eventTransaction
-PUSH S7
+PUSH S8
 STREFR
 ;; eventIndex
 ;; push identifier eventIndex
-PUSH S6
+PUSH S7
 STUR 256
 ;; eventData
 ;; push identifier eventData
-PUSH S5
+PUSH S6
 STREFR
 ;; eventBlockNumber
 ;; push identifier eventBlockNumber
-PUSH S4
+PUSH S5
 STUR 256
 ;; eventBlock
 ;; push identifier eventBlock
-PUSH S3
+PUSH S4
 STREFR
 ;; relayKey
 GETGLOB 5
@@ -818,8 +1885,11 @@ STBREFR
 ENDC
 PUSHINT 1
 SENDRAWMSG
-BLKDROP 6
 ; end function confirmEthereumEvent
+DROP
+; end modifier onlyOwnerKey
+BLKDROP 6
+; end modifier onlyActive
 PUSHCONT {
 	CALL $c7_to_c4$
 }
@@ -835,11 +1905,48 @@ SETGLOB 7
 ;; param: eventBlockNumber
 ;; param: eventBlock
 ;; param: ethereumEventConfigurationAddress
+; modifier onlyActive
+PUSHINT 12312
+;; get member active
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 9
+TRUE
+;; ==
+EQUAL
+THROWANYIFNOT
+; modifier onlyOwnerKey
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+;; index
+;; push identifier key
+DUP
+;; push identifier ownerKeys
+GETGLOB 10
+PUSHINT 256
+DICTUGET
+PUSHCONT {
+	PLDI 1
+}
+PUSHCONT {
+	PUSHINT 0
+}
+IFELSE
+TRUE
+;; ==
+EQUAL
+THROWIFNOT 303
 ; function confirmEthereumEvent
 ACCEPT
 ;; Remote call EthereumEventConfiguration.confirmEvent
 ;; push identifier ethereumEventConfigurationAddress
-DUP
+PUSH S1
 NEWC
 STSLICECONST x62_
 STSLICE
@@ -851,23 +1958,23 @@ NEWC
 STSLICECONST x460e6e0e
 ;; eventTransaction
 ;; push identifier eventTransaction
-PUSH S7
+PUSH S8
 STREFR
 ;; eventIndex
 ;; push identifier eventIndex
-PUSH S6
+PUSH S7
 STUR 256
 ;; eventData
 ;; push identifier eventData
-PUSH S5
+PUSH S6
 STREFR
 ;; eventBlockNumber
 ;; push identifier eventBlockNumber
-PUSH S4
+PUSH S5
 STUR 256
 ;; eventBlock
 ;; push identifier eventBlock
-PUSH S3
+PUSH S4
 STREFR
 ;; relayKey
 GETGLOB 5
@@ -883,12 +1990,21 @@ STBREFR
 ENDC
 PUSHINT 1
 SENDRAWMSG
-BLKDROP 6
 ; end function confirmEthereumEvent
+DROP
+; end modifier onlyOwnerKey
+BLKDROP 6
+; end modifier onlyActive
 
 .globl	rejectEthereumEvent
 .public	rejectEthereumEvent
 .type	rejectEthereumEvent, @function
+GETGLOB 1
+ISNULL
+PUSHCONT {
+	CALL $c4_to_c7$
+}
+IF
 ; Decode input parameters
 ; Decode eventTransaction
 LDREF
@@ -955,11 +2071,48 @@ ENDS
 ;; param: eventBlockNumber
 ;; param: eventBlock
 ;; param: ethereumEventConfigurationAddress
+; modifier onlyActive
+PUSHINT 12312
+;; get member active
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 9
+TRUE
+;; ==
+EQUAL
+THROWANYIFNOT
+; modifier onlyOwnerKey
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+;; index
+;; push identifier key
+DUP
+;; push identifier ownerKeys
+GETGLOB 10
+PUSHINT 256
+DICTUGET
+PUSHCONT {
+	PLDI 1
+}
+PUSHCONT {
+	PUSHINT 0
+}
+IFELSE
+TRUE
+;; ==
+EQUAL
+THROWIFNOT 303
 ; function rejectEthereumEvent
 ACCEPT
 ;; Remote call EthereumEventConfiguration.rejectEvent
 ;; push identifier ethereumEventConfigurationAddress
-DUP
+PUSH S1
 NEWC
 STSLICECONST x62_
 STSLICE
@@ -971,23 +2124,23 @@ NEWC
 STSLICECONST x766e609a
 ;; eventTransaction
 ;; push identifier eventTransaction
-PUSH S7
+PUSH S8
 STREFR
 ;; eventIndex
 ;; push identifier eventIndex
-PUSH S6
+PUSH S7
 STUR 256
 ;; eventData
 ;; push identifier eventData
-PUSH S5
+PUSH S6
 STREFR
 ;; eventBlockNumber
 ;; push identifier eventBlockNumber
-PUSH S4
+PUSH S5
 STUR 256
 ;; eventBlock
 ;; push identifier eventBlock
-PUSH S3
+PUSH S4
 STREFR
 ;; relayKey
 GETGLOB 5
@@ -1003,8 +2156,11 @@ STBREFR
 ENDC
 PUSHINT 1
 SENDRAWMSG
-BLKDROP 6
 ; end function rejectEthereumEvent
+DROP
+; end modifier onlyOwnerKey
+BLKDROP 6
+; end modifier onlyActive
 PUSHCONT {
 	CALL $c7_to_c4$
 }
@@ -1020,11 +2176,48 @@ SETGLOB 7
 ;; param: eventBlockNumber
 ;; param: eventBlock
 ;; param: ethereumEventConfigurationAddress
+; modifier onlyActive
+PUSHINT 12312
+;; get member active
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 9
+TRUE
+;; ==
+EQUAL
+THROWANYIFNOT
+; modifier onlyOwnerKey
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+;; index
+;; push identifier key
+DUP
+;; push identifier ownerKeys
+GETGLOB 10
+PUSHINT 256
+DICTUGET
+PUSHCONT {
+	PLDI 1
+}
+PUSHCONT {
+	PUSHINT 0
+}
+IFELSE
+TRUE
+;; ==
+EQUAL
+THROWIFNOT 303
 ; function rejectEthereumEvent
 ACCEPT
 ;; Remote call EthereumEventConfiguration.rejectEvent
 ;; push identifier ethereumEventConfigurationAddress
-DUP
+PUSH S1
 NEWC
 STSLICECONST x62_
 STSLICE
@@ -1036,23 +2229,23 @@ NEWC
 STSLICECONST x766e609a
 ;; eventTransaction
 ;; push identifier eventTransaction
-PUSH S7
+PUSH S8
 STREFR
 ;; eventIndex
 ;; push identifier eventIndex
-PUSH S6
+PUSH S7
 STUR 256
 ;; eventData
 ;; push identifier eventData
-PUSH S5
+PUSH S6
 STREFR
 ;; eventBlockNumber
 ;; push identifier eventBlockNumber
-PUSH S4
+PUSH S5
 STUR 256
 ;; eventBlock
 ;; push identifier eventBlock
-PUSH S3
+PUSH S4
 STREFR
 ;; relayKey
 GETGLOB 5
@@ -1068,8 +2261,147 @@ STBREFR
 ENDC
 PUSHINT 1
 SENDRAWMSG
-BLKDROP 6
 ; end function rejectEthereumEvent
+DROP
+; end modifier onlyOwnerKey
+BLKDROP 6
+; end modifier onlyActive
+
+.globl	getDetails
+.public	getDetails
+.type	getDetails, @function
+GETGLOB 1
+ISNULL
+PUSHCONT {
+	CALL $c4_to_c7$
+}
+IF
+; Decode input parameters
+ENDS
+; function getDetails
+;; ret param: _bridgeConfiguration
+NEWC
+ENDC
+PUSHINT 0
+PUSHINT 0
+PUSHINT 0
+NEWC
+ENDC
+NEWC
+ENDC
+PUSHINT 0
+PUSHINT 0
+PUSHINT 0
+PUSHINT 0
+TUPLE 10
+;; ret param: _sequentialIndex
+PUSHINT 0
+PUSHINT 0
+TUPLE 2
+;; return
+;; push identifier bridgeConfiguration
+GETGLOB 12
+;; push identifier sequentialIndex
+GETGLOB 13
+BLKDROP2 2, 2
+;; emitting 2 value(s)
+PUSH S2
+EQINT -1
+PUSHCONT {
+	PUSH S4
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 1
+	NEWC
+	STSLICECONST xbf6aff03
+	PUSH S3
+	UNTUPLE 10
+	BLKSWAP 1, 10
+	PUSH S10
+	STREFR
+	PUSH S9
+	STUR 256
+	PUSH S8
+	STUR 256
+	PUSH S7
+	STUR 128
+	PUSH S6
+	STREFR
+	PUSH S5
+	STREFR
+	PUSH S4
+	STUR 256
+	NEWC
+	PUSH S4
+	STUR 256
+	PUSH S3
+	STUR 128
+	PUSH S2
+	STIR 1
+	BLKDROP2 10, 2
+	PUSH S3
+	UNTUPLE 2
+	ROT
+	PUSH S2
+	STUR 256
+	PUSH S1
+	STUR 256
+	NIP
+	NIP
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+}
+IF
+DROP2
+; end function getDetails
+PUSHCONT {
+	CALL $c7_to_c4$
+}
+IF
+TRUE
+SETGLOB 7
+
+.globl	getDetails_internal
+.type	getDetails_internal, @function
+; function getDetails
+;; ret param: _bridgeConfiguration
+NEWC
+ENDC
+PUSHINT 0
+PUSHINT 0
+PUSHINT 0
+NEWC
+ENDC
+NEWC
+ENDC
+PUSHINT 0
+PUSHINT 0
+PUSHINT 0
+PUSHINT 0
+TUPLE 10
+;; ret param: _sequentialIndex
+PUSHINT 0
+PUSHINT 0
+TUPLE 2
+;; return
+;; push identifier bridgeConfiguration
+GETGLOB 12
+;; push identifier sequentialIndex
+GETGLOB 13
+BLKDROP2 2, 2
+; end function getDetails
 
 .globl	getKeyStatus
 .public	getKeyStatus
@@ -1210,23 +2542,46 @@ GETGLOB 10
 GETGLOB 11
 GETGLOB 12
 GETGLOB 13
-GETGLOB 14
-REVERSE 6, 0
+REVERSE 5, 0
 STDICT
 STU 256
-STREF
-STREF
 SWAP
-UNTUPLE 3
+UNTUPLE 10
 NEWC
-PUSH S3
+NEWC
+PUSH S4
 STUR 256
+PUSH S3
+STUR 128
+PUSH S2
+STIR 1
+STBREFR
+PUSH S10
+STREFR
+PUSH S9
+STUR 256
+PUSH S8
+STUR 256
+PUSH S7
+STUR 128
+PUSH S6
+STREFR
+PUSH S5
+STREFR
+PUSH S4
+STUR 256
+XCHG s10
+BLKDROP 10
+STBREFR
+SWAP
+UNTUPLE 2
+NEWC
 PUSH S2
 STUR 256
 PUSH S1
 STUR 256
-XCHG s3
-BLKDROP 3
+NIP
+NIP
 STBREFR
 ENDC
 POP C4
@@ -1240,17 +2595,28 @@ LDU 64      ; pubkey timestamp c4
 LDU 1       ; pubkey [timestamp] constructor_flag memory
 LDDICT
 LDU 256
+LDREFRTOS
 LDREF
 LDREF
+LDU 256
+LDU 256
+LDU 128
+LDREF
+LDREF
+PLDU 256
+BLKSWAP 1, 7
+CTOS
+LDU 256
+LDU 128
+PLDI 1
+TUPLE 10
+SETGLOB 12
 LDREFRTOS
 NIP
 LDU 256
-LDU 256
 PLDU 256
-TUPLE 3
-SETGLOB 14
+TUPLE 2
 SETGLOB 13
-SETGLOB 12
 SETGLOB 11
 SETGLOB 10
 TRUE
@@ -1271,17 +2637,28 @@ PUSHCONT {
 	LDU 1       ; pubkey [timestamp] constructor_flag memory
 	LDDICT
 	LDU 256
+	LDREFRTOS
 	LDREF
 	LDREF
+	LDU 256
+	LDU 256
+	LDU 128
+	LDREF
+	LDREF
+	PLDU 256
+	BLKSWAP 1, 7
+	CTOS
+	LDU 256
+	LDU 128
+	PLDI 1
+	TUPLE 10
+	SETGLOB 12
 	LDREFRTOS
 	NIP
 	LDU 256
-	LDU 256
 	PLDU 256
-	TUPLE 3
-	SETGLOB 14
+	TUPLE 2
 	SETGLOB 13
-	SETGLOB 12
 	SETGLOB 11
 	SETGLOB 10
 	TRUE
@@ -1305,20 +2682,27 @@ PUSHCONT {
 	}
 	IFELSE
 	SETGLOB 11
-	; init ethereumEventConfigurationCode
-	NEWC
-	ENDC
-	SETGLOB 12
-	; init ethereumEventCode
-	NEWC
-	ENDC
-	SETGLOB 13
 	; init bridgeConfiguration
+	NEWC
+	ENDC
 	PUSHINT 0
 	PUSHINT 0
 	PUSHINT 0
-	TUPLE 3
-	SETGLOB 14
+	NEWC
+	ENDC
+	NEWC
+	ENDC
+	PUSHINT 0
+	PUSHINT 0
+	PUSHINT 0
+	PUSHINT 0
+	TUPLE 10
+	SETGLOB 12
+	; init sequentialIndex
+	PUSHINT 0
+	PUSHINT 0
+	TUPLE 2
+	SETGLOB 13
 	; init ownerKeys
 	NEWDICT
 	SETGLOB 10
