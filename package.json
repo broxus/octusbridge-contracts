@@ -4,14 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build-ton": "cd free-ton/ && ./scripts/build-contract.sh"
+    "postinstall": "npm link free-ton/freeton-truffle",
+    "migrate-ton": "cd free-ton && node migration && cd ..",
+    "compile-ton": "cd free-ton && node compile && cd ..",
+    "test-ton": "cd free-ton && mocha test/ --exit && cd .."
   },
   "author": "pavlovdog_ <pavlovdog.moscow@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "@truffle/hdwallet-provider": "^1.2.0",
     "bignumber.js": "^9.0.1",
+    "directory-tree": "^2.2.5",
     "dotenv": "^8.2.0",
     "ganache-cli": "^6.12.1",
     "minimist": "^1.2.5",

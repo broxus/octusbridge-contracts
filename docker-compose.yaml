@@ -3,7 +3,7 @@ version: '3.8'
 services:
   ganache:
     image: trufflesuite/ganache-cli
-    command: --seed 123123
+    command: --seed 123123 --blockTime 10
     ports:
       - 8545:8545
 
@@ -28,10 +28,13 @@ services:
 
   ton_migrator:
     image: migrator_img
-    command: wait-for-it.sh -s -t 0 ton_node:80 -- sleep_and_test_ton.sh
+    command: bash -c "sleep 10 && npm run migrate-ton && /node_modules/.bin/mocha test/ --exit"
     volumes:
-    - ./env:/app/env
-    - ./free-ton:/app/
-    - ./free-ton/build:/app/free-ton/build
+      - ./free-ton:/app/
+      - ./free-ton:/app/free-ton
+      - ./free-ton/build:/app/free-ton/build
+      - ./package.json:/app/package.json
+      - ./env:/app/env
+      - ./env:/env
     depends_on:
       - ton_node

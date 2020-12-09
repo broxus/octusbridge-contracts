@@ -1273,7 +1273,6 @@ NEWDICT
 PAIR
 ;; ret param: _active
 PUSHINT 0
-ACCEPT
 ;; return
 ;; push identifier eventABI
 GETGLOB 10
@@ -1381,7 +1380,6 @@ NEWDICT
 PAIR
 ;; ret param: _active
 PUSHINT 0
-ACCEPT
 ;; return
 ;; push identifier eventABI
 GETGLOB 10

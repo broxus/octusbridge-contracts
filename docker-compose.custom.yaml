@@ -13,7 +13,7 @@ services:
 
   ton_migrator:
     image: migrator_img
-    command: /node_modules/.bin/mocha /app/test/test-bridge.js
+    command: /node_modules/.bin/mocha /app/test/1-test-eth-ton.js
     volumes:
       - ./env:/app/env
       - ./free-ton:/app/

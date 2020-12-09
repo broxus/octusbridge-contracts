@@ -133,8 +133,6 @@ contract EthereumEvent {
         uint[] _confirmKeys,
         uint[] _rejectKeys
     ) {
-        tvm.accept();
-
         return (
             eventTransaction,
             eventIndex,

@@ -1,6 +1,8 @@
 const { TONClient } = require('ton-client-node-js');
 const { QMessageType } = require('ton-client-js');
 const utils = require('./utils');
+const fs = require('fs');
+const BigNumber = require('bignumber.js');
 
 
 class TonWrapper {
@@ -54,6 +56,8 @@ class OutputDecoder {
     switch (schema.type) {
       case 'bytes':
         return this.decodeBytes(encoded_value);
+      case 'cell':
+        return encoded_value;
       case 'uint256':
       case 'uint128':
       case 'uint64':
@@ -86,7 +90,8 @@ class OutputDecoder {
   }
   
   decodeInt(value) {
-    return BigInt(value);
+    // return BigInt(value);
+    return new BigNumber(value);
   }
   
   decodeIntArray(value) {
@@ -121,23 +126,22 @@ class OutputDecoder {
 
 
 class ContractWrapper {
-  constructor(tonWrapper, abi, address) {
+  constructor(tonWrapper, abi, imageBase64, address) {
     this.tonWrapper = tonWrapper;
     this.abi = abi;
+    this.imageBase64 = imageBase64;
     this.address = address;
   }
   
   /**
    * Deploy smart contract to the network
    * @dev Uses Giver contract to pay for deploy (https://docs.ton.dev/86757ecb2/p/00f9a3-ton-os-se-giver)
-   * @param imageBase64 Base64 encoded code
    * @param constructorParams Constructor params for contract constructor
    * @param _initParams
    * @param initialBalance TONs to request from giver for deployment
    * @returns {Promise<void>}
    */
   async deploy(
-    imageBase64,
     constructorParams={},
     _initParams={},
     initialBalance=10000000000,
@@ -151,7 +155,7 @@ class ContractWrapper {
     const {
       address: futureAddress,
     } = await this.createDeployMessage(
-      imageBase64,
+      this.imageBase64,
       constructorParams,
       initParams
     );
@@ -160,6 +164,7 @@ class ContractWrapper {
     const giverContract = new ContractWrapper(
       this.tonWrapper,
       this.tonWrapper.giverConfig.abi,
+      null,
       this.tonWrapper.giverConfig.address,
     );
 
@@ -170,7 +175,7 @@ class ContractWrapper {
 
     // Send the deploy message
     const deployMessage = await this.createDeployMessage(
-      imageBase64,
+      this.imageBase64,
       constructorParams,
       initParams,
     );
@@ -179,6 +184,21 @@ class ContractWrapper {
     await this.waitForRunTransaction(deployMessage);
 
     this.address = futureAddress;
+  }
+  
+  /**
+   * Check migration applied on this contract so address already exists
+   * @dev load 'address' attribute from the migration-log.json file
+   * @returns {Promise<void>}
+   */
+  async loadMigration() {
+    const migrationLog = JSON.parse(fs.readFileSync('migration-log.json', 'utf8'));
+  
+    if (migrationLog[this.name] !== undefined) {
+      this.address = migrationLog[this.name];
+    } else {
+      throw new Error(`Contract ${this.name} not found in the migration`);
+    }
   }
   
   /**
@@ -234,6 +254,8 @@ class ContractWrapper {
    */
   async run(functionName, input={}, _keyPair) {
     const keyPair = _keyPair === undefined ? this.tonWrapper.keys[0] : _keyPair;
+    
+    // console.log(this.address, keyPair);
     
     const runMessage = await this.tonWrapper.ton.contracts.createRunMessage({
       address: this.address,
@@ -346,7 +368,35 @@ class ContractWrapper {
 }
 
 
+const requireContract = async (tonWrapper, name, address) => {
+  const contractBase64 = utils.loadBase64FromFile(`build/${name}.base64`);
+  const contractABI = utils.loadJSONFromFile(`build/${name}.abi.json`);
+  
+  const {
+    codeBase64: contractCode
+  } = await tonWrapper
+    .ton
+    .contracts
+    .getCodeFromImage({
+      imageBase64: contractBase64,
+    });
+  
+  const contractInstance = new ContractWrapper(tonWrapper, contractABI, contractBase64);
+  
+  contractInstance.code = contractCode;
+  contractInstance.name = name;
+  
+  if (address) {
+    contractInstance.address = address;
+  }
+  
+  return contractInstance;
+};
+
+
+
 module.exports = {
   ContractWrapper,
   TonWrapper,
+  requireContract,
 };
