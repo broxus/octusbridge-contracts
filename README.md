@@ -17,7 +17,6 @@ FreeTON env configuration will probably change, keep your eyes on.
 
 - Use `NETWORK` http://ton_node in case you're using Docker compose
 - Use `SEED` to generate keys. Seed can be generated with `tonos-cli genphrase`
-- Setup your own path in `TVM_STDLIB_SOL_PATH` in case you're going to build contracts on your own
 - Leave `RANDOM_TRUFFLE_NONCE` blank if you need to determine contract address. Means, that test can be run only once. Set it `1` to deploy new addresses each time.
 
 ## Docker run
@@ -83,8 +82,19 @@ docker run --rm -d --name local-node -p80:80 tonlabs/local-node
 By default, there're all the necessary artifacts at the `free-ton/build/` directory. To rebuild the contracts, use the one liner:
 
 ```
-cd free-ton
-./scripts/build-contract.sh
+npm run compile-ton
+```
+
+#### Run the migrations
+
+```
+npm run migrate-ton
+```
+
+#### Run the tests
+
+```
+npm run test-ton
 ```
 
 ## Testing with docker
