@@ -26,28 +26,20 @@ PUSHCONT {
 	LDU 256
 }
 IFNOT
-; Decode _eventRequiredConfirmations
-LDUQ 256
-PUSHCONT {
-	;; load next cell
-	LDREF
-	ENDS
-	CTOS
-	LDU 256
-}
-IFNOT
-; Decode _eventRequiredRejects
-LDUQ 256
-PUSHCONT {
-	;; load next cell
-	LDREF
-	ENDS
-	CTOS
-	LDU 256
-}
-IFNOT
 ; Decode _ethereumEventCode
 ;; decode TvmCell
+DUP
+SBITREFS
+EQINT 1
+SWAP
+EQINT 0
+AND
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
 LDREF
 ; Decode relayKey
 LDUQ 256
@@ -62,8 +54,6 @@ IFNOT
 ENDS
 ;; param: _requiredConfirmations
 ;; param: _requiredRejects
-;; param: _eventRequiredConfirmations
-;; param: _eventRequiredRejects
 ;; param: _ethereumEventCode
 ;; param: relayKey
 ; constructor EthereumEventConfiguration
@@ -71,27 +61,13 @@ ACCEPT
 ; expValue
 ; end expValue
 ;; push identifier _requiredConfirmations
-PUSH S5
-; colValue
-SETGLOB 15
-; end colValue
-; expValue
-; end expValue
-;; push identifier _requiredRejects
-PUSH S4
-; colValue
-SETGLOB 16
-; end colValue
-; expValue
-; end expValue
-;; push identifier _eventRequiredConfirmations
 PUSH S3
 ; colValue
 SETGLOB 17
 ; end colValue
 ; expValue
 ; end expValue
-;; push identifier _eventRequiredRejects
+;; push identifier _requiredRejects
 PUSH S2
 ; colValue
 SETGLOB 18
@@ -106,7 +82,7 @@ SETGLOB 19
 ;; push identifier relayKey
 DUP
 CALL $confirm_internal$
-BLKDROP 6
+BLKDROP 4
 ; end constructor EthereumEventConfiguration
 CALL $c7_to_c4$
 TRUE
@@ -139,7 +115,7 @@ IF
 ;; get member sender
 GETGLOB 9
 ;; push identifier bridgeAddress
-GETGLOB 14
+GETGLOB 16
 SDEQ
 THROWANYIFNOT
 ; function confirm
@@ -218,7 +194,7 @@ SETGLOB 20
 GETGLOB 20
 FIRST
 ;; push identifier requiredConfirmations
-GETGLOB 15
+GETGLOB 17
 ;; >=
 GEQ
 PUSHCONT {
@@ -254,7 +230,7 @@ IF
 ;; get member sender
 GETGLOB 9
 ;; push identifier bridgeAddress
-GETGLOB 14
+GETGLOB 16
 SDEQ
 THROWANYIFNOT
 ; function confirm
@@ -333,7 +309,7 @@ SETGLOB 20
 GETGLOB 20
 FIRST
 ;; push identifier requiredConfirmations
-GETGLOB 15
+GETGLOB 17
 ;; >=
 GEQ
 PUSHCONT {
@@ -377,7 +353,7 @@ IF
 ;; get member sender
 GETGLOB 9
 ;; push identifier bridgeAddress
-GETGLOB 14
+GETGLOB 16
 SDEQ
 THROWANYIFNOT
 ; function reject
@@ -411,7 +387,7 @@ IF
 ;; get member sender
 GETGLOB 9
 ;; push identifier bridgeAddress
-GETGLOB 14
+GETGLOB 16
 SDEQ
 THROWANYIFNOT
 ; function reject
@@ -494,7 +470,7 @@ IF
 ;; get member sender
 GETGLOB 9
 ;; push identifier bridgeAddress
-GETGLOB 14
+GETGLOB 16
 SDEQ
 THROWANYIFNOT
 ; function confirmEvent
@@ -533,7 +509,7 @@ ROT
 PUSHINT 64
 DICTUSETB
 ;; push identifier proxyAddress
-GETGLOB 12
+GETGLOB 15
 PUSHINT 4
 ROT
 PUSHINT 64
@@ -581,7 +557,7 @@ STSLICECONST x801_
 STU 256
 ENDC
 CTOS
-PUSHINT 1000000000
+PUSHINT 2000000000
 PUSH S1
 NEWC
 STSLICECONST x62_
@@ -603,11 +579,11 @@ PUSH S4
 STUR 256
 ;; _requiredConfirmations
 ;; push identifier eventRequiredConfirmations
-GETGLOB 17
+GETGLOB 12
 STUR 256
 ;; _requiredRejects
 ;; push identifier eventRequiredRejects
-GETGLOB 18
+GETGLOB 13
 STUR 256
 STBREFR
 ENDC
@@ -680,7 +656,7 @@ IF
 ;; get member sender
 GETGLOB 9
 ;; push identifier bridgeAddress
-GETGLOB 14
+GETGLOB 16
 SDEQ
 THROWANYIFNOT
 ; function confirmEvent
@@ -719,7 +695,7 @@ ROT
 PUSHINT 64
 DICTUSETB
 ;; push identifier proxyAddress
-GETGLOB 12
+GETGLOB 15
 PUSHINT 4
 ROT
 PUSHINT 64
@@ -767,7 +743,7 @@ STSLICECONST x801_
 STU 256
 ENDC
 CTOS
-PUSHINT 1000000000
+PUSHINT 2000000000
 PUSH S1
 NEWC
 STSLICECONST x62_
@@ -789,11 +765,11 @@ PUSH S4
 STUR 256
 ;; _requiredConfirmations
 ;; push identifier eventRequiredConfirmations
-GETGLOB 17
+GETGLOB 12
 STUR 256
 ;; _requiredRejects
 ;; push identifier eventRequiredRejects
-GETGLOB 18
+GETGLOB 13
 STUR 256
 STBREFR
 ENDC
@@ -913,7 +889,7 @@ IF
 ;; get member sender
 GETGLOB 9
 ;; push identifier bridgeAddress
-GETGLOB 14
+GETGLOB 16
 SDEQ
 THROWANYIFNOT
 ; function rejectEvent
@@ -940,7 +916,7 @@ ROT
 PUSHINT 64
 DICTUSETB
 ;; push identifier proxyAddress
-GETGLOB 12
+GETGLOB 15
 PUSHINT 4
 ROT
 PUSHINT 64
@@ -1010,11 +986,11 @@ PUSH S4
 STUR 256
 ;; _requiredConfirmations
 ;; push identifier eventRequiredConfirmations
-GETGLOB 17
+GETGLOB 12
 STUR 256
 ;; _requiredRejects
 ;; push identifier eventRequiredRejects
-GETGLOB 18
+GETGLOB 13
 STUR 256
 STBREFR
 ENDC
@@ -1087,7 +1063,7 @@ IF
 ;; get member sender
 GETGLOB 9
 ;; push identifier bridgeAddress
-GETGLOB 14
+GETGLOB 16
 SDEQ
 THROWANYIFNOT
 ; function rejectEvent
@@ -1114,7 +1090,7 @@ ROT
 PUSHINT 64
 DICTUSETB
 ;; push identifier proxyAddress
-GETGLOB 12
+GETGLOB 15
 PUSHINT 4
 ROT
 PUSHINT 64
@@ -1184,11 +1160,11 @@ PUSH S4
 STUR 256
 ;; _requiredConfirmations
 ;; push identifier eventRequiredConfirmations
-GETGLOB 17
+GETGLOB 12
 STUR 256
 ;; _requiredRejects
 ;; push identifier eventRequiredRejects
-GETGLOB 18
+GETGLOB 13
 STUR 256
 STBREFR
 ENDC
@@ -1263,6 +1239,10 @@ PUSHINT 0
 PUSHINT 0
 ;; ret param: _requiredRejects
 PUSHINT 0
+;; ret param: _eventRequiredConfirmations
+PUSHINT 0
+;; ret param: _eventRequiredRejects
+PUSHINT 0
 ;; ret param: _confirmKeys
 PUSHINT 0
 NEWDICT
@@ -1279,25 +1259,29 @@ GETGLOB 10
 ;; push identifier eventAddress
 GETGLOB 11
 ;; push identifier proxyAddress
-GETGLOB 12
-;; push identifier ethereumEventBlocksToConfirm
-GETGLOB 13
-;; push identifier requiredConfirmations
 GETGLOB 15
+;; push identifier ethereumEventBlocksToConfirm
+GETGLOB 14
+;; push identifier requiredConfirmations
+GETGLOB 17
 ;; push identifier requiredRejects
-GETGLOB 16
+GETGLOB 18
+;; push identifier eventRequiredConfirmations
+GETGLOB 12
+;; push identifier eventRequiredRejects
+GETGLOB 13
 ;; push identifier confirmKeys
 GETGLOB 20
 ;; push identifier rejectKeys
 GETGLOB 21
 ;; push identifier active
 GETGLOB 25
-BLKDROP2 9, 9
-;; emitting 9 value(s)
-PUSH S9
+BLKDROP2 11, 11
+;; emitting 11 value(s)
+PUSH S11
 EQINT -1
 PUSHCONT {
-	PUSH S11
+	PUSH S13
 	CTOS
 	LDU 2
 	LDMSGADDR
@@ -1311,18 +1295,22 @@ PUSHCONT {
 	STSLICECONST 0
 	STSLICECONST 1
 	NEWC
-	STSLICECONST x8b0c2bd9
+	STSLICECONST xce24b804
+	PUSH S12
+	STREFR
+	PUSH S11
+	STREFR
 	PUSH S10
-	STREFR
-	PUSH S9
-	STREFR
-	PUSH S8
 	STSLICER
-	PUSH S7
+	PUSH S9
 	STUR 256
-	PUSH S6
+	PUSH S8
 	STUR 256
 	NEWC
+	PUSH S8
+	STUR 256
+	PUSH S7
+	STUR 256
 	PUSH S6
 	STUR 256
 	PUSH S5
@@ -1344,7 +1332,7 @@ PUSHCONT {
 	SENDRAWMSG
 }
 IF
-BLKDROP 9
+BLKDROP 11
 ; end function getDetails
 PUSHCONT {
 	CALL $c7_to_c4$
@@ -1370,6 +1358,10 @@ PUSHINT 0
 PUSHINT 0
 ;; ret param: _requiredRejects
 PUSHINT 0
+;; ret param: _eventRequiredConfirmations
+PUSHINT 0
+;; ret param: _eventRequiredRejects
+PUSHINT 0
 ;; ret param: _confirmKeys
 PUSHINT 0
 NEWDICT
@@ -1386,20 +1378,24 @@ GETGLOB 10
 ;; push identifier eventAddress
 GETGLOB 11
 ;; push identifier proxyAddress
-GETGLOB 12
-;; push identifier ethereumEventBlocksToConfirm
-GETGLOB 13
-;; push identifier requiredConfirmations
 GETGLOB 15
+;; push identifier ethereumEventBlocksToConfirm
+GETGLOB 14
+;; push identifier requiredConfirmations
+GETGLOB 17
 ;; push identifier requiredRejects
-GETGLOB 16
+GETGLOB 18
+;; push identifier eventRequiredConfirmations
+GETGLOB 12
+;; push identifier eventRequiredRejects
+GETGLOB 13
 ;; push identifier confirmKeys
 GETGLOB 20
 ;; push identifier rejectKeys
 GETGLOB 21
 ;; push identifier active
 GETGLOB 25
-BLKDROP2 9, 9
+BLKDROP2 11, 11
 ; end function getDetails
 
 .globl	c7_to_c4
@@ -1428,9 +1424,9 @@ GETGLOB 21
 UNTUPLE 2
 REVERSE 10, 0
 STBREF
+STU 256
 STSLICE
-STU 256
-STU 256
+STSLICE
 STREF
 STU 32
 STDICT
@@ -1454,7 +1450,7 @@ STBREF
 STBREF
 STREF
 STREF
-STSLICE
+STU 256
 STU 256
 STI 1
 ENDC
@@ -1473,9 +1469,9 @@ LDU 256
 PLDU 256
 SETGLOB 24
 SETGLOB 23
+LDU 256
 LDMSGADDR
-LDU 256
-LDU 256
+LDMSGADDR
 LDREF
 LDU 32
 LDDICT
@@ -1499,7 +1495,7 @@ SETGLOB 18
 SETGLOB 17
 LDREF
 LDREF
-LDMSGADDR
+LDU 256
 LDU 256
 PLDI 1
 SETGLOB 25
@@ -1529,9 +1525,9 @@ PUSHCONT {
 	PLDU 256
 	SETGLOB 24
 	SETGLOB 23
+	LDU 256
 	LDMSGADDR
-	LDU 256
-	LDU 256
+	LDMSGADDR
 	LDREF
 	LDU 32
 	LDDICT
@@ -1555,7 +1551,7 @@ PUSHCONT {
 	SETGLOB 17
 	LDREF
 	LDREF
-	LDMSGADDR
+	LDU 256
 	LDU 256
 	PLDI 1
 	SETGLOB 25
@@ -1593,17 +1589,20 @@ PUSHCONT {
 	}
 	IFNOT
 	SETGLOB 11
-	; init proxyAddress
+	; init eventRequiredConfirmations
 	PUSHINT 3
 	PUSH S1
 	PUSHINT 64
 	DICTUGET
 	PUSHCONT {
-		PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+		PLDU 256
 	}
-	IFNOT
+	PUSHCONT {
+		PUSHINT 0
+	}
+	IFELSE
 	SETGLOB 12
-	; init ethereumEventBlocksToConfirm
+	; init eventRequiredRejects
 	PUSHINT 4
 	PUSH S1
 	PUSHINT 64
@@ -1616,8 +1615,21 @@ PUSHCONT {
 	}
 	IFELSE
 	SETGLOB 13
-	; init bridgeAddress
+	; init ethereumEventBlocksToConfirm
 	PUSHINT 5
+	PUSH S1
+	PUSHINT 64
+	DICTUGET
+	PUSHCONT {
+		PLDU 256
+	}
+	PUSHCONT {
+		PUSHINT 0
+	}
+	IFELSE
+	SETGLOB 14
+	; init proxyAddress
+	PUSHINT 6
 	PUSH S1
 	PUSHINT 64
 	DICTUGET
@@ -1625,17 +1637,21 @@ PUSHCONT {
 		PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	}
 	IFNOT
-	SETGLOB 14
+	SETGLOB 15
+	; init bridgeAddress
+	PUSHINT 7
+	PUSH S1
+	PUSHINT 64
+	DICTUGET
+	PUSHCONT {
+		PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	IFNOT
+	SETGLOB 16
 	; init requiredConfirmations
 	PUSHINT 0
-	SETGLOB 15
-	; init requiredRejects
-	PUSHINT 0
-	SETGLOB 16
-	; init eventRequiredConfirmations
-	PUSHINT 0
 	SETGLOB 17
-	; init eventRequiredRejects
+	; init requiredRejects
 	PUSHINT 0
 	SETGLOB 18
 	; init ethereumEventCode

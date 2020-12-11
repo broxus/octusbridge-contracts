@@ -1017,22 +1017,38 @@ PUSHINT 2
 ROT
 PUSHINT 64
 DICTUSETREF
-;; push identifier eventProxyAddress
-PUSH S2
+;; push identifier ethereumEventRequiredConfirmations
+PUSH S4
+NEWC
+STU 256
 PUSHINT 3
 ROT
 PUSHINT 64
-DICTUSET
-;; push identifier ethereumEventBlocksToConfirm
-PUSH S5
+DICTUSETB
+;; push identifier ethereumEventRequiredRejects
+PUSH S3
 NEWC
 STU 256
 PUSHINT 4
 ROT
 PUSHINT 64
 DICTUSETB
-MYADDR
+;; push identifier ethereumEventBlocksToConfirm
+PUSH S5
+NEWC
+STU 256
 PUSHINT 5
+ROT
+PUSHINT 64
+DICTUSETB
+;; push identifier eventProxyAddress
+PUSH S2
+PUSHINT 6
+ROT
+PUSHINT 64
+DICTUSET
+MYADDR
+PUSHINT 7
 ROT
 PUSHINT 64
 DICTUSET
@@ -1074,7 +1090,7 @@ PUSH S2
 STREFR
 STSLICECONST 1
 NEWC
-STSLICECONST x015918a6
+STSLICECONST x1f73060b
 ;; _requiredConfirmations
 ;; get member ethereumEventConfigurationRequiredConfirmations
 ;; push identifier bridgeConfiguration
@@ -1086,15 +1102,6 @@ STUR 256
 ;; push identifier bridgeConfiguration
 GETGLOB 12
 INDEX 2
-STUR 256
-;; _eventRequiredConfirmations
-;; push identifier ethereumEventRequiredConfirmations
-PUSH S7
-STUR 256
-NEWC
-;; _eventRequiredRejects
-;; push identifier ethereumEventRequiredRejects
-PUSH S7
 STUR 256
 ;; _ethereumEventCode
 ;; get member ethereumEventCode
@@ -1112,7 +1119,6 @@ PUSHCONT {
 }
 IF
 STUR 256
-STBREFR
 STBREFR
 ENDC
 PUSHINT 1
@@ -1248,22 +1254,38 @@ PUSHINT 2
 ROT
 PUSHINT 64
 DICTUSETREF
-;; push identifier eventProxyAddress
-PUSH S2
+;; push identifier ethereumEventRequiredConfirmations
+PUSH S4
+NEWC
+STU 256
 PUSHINT 3
 ROT
 PUSHINT 64
-DICTUSET
-;; push identifier ethereumEventBlocksToConfirm
-PUSH S5
+DICTUSETB
+;; push identifier ethereumEventRequiredRejects
+PUSH S3
 NEWC
 STU 256
 PUSHINT 4
 ROT
 PUSHINT 64
 DICTUSETB
-MYADDR
+;; push identifier ethereumEventBlocksToConfirm
+PUSH S5
+NEWC
+STU 256
 PUSHINT 5
+ROT
+PUSHINT 64
+DICTUSETB
+;; push identifier eventProxyAddress
+PUSH S2
+PUSHINT 6
+ROT
+PUSHINT 64
+DICTUSET
+MYADDR
+PUSHINT 7
 ROT
 PUSHINT 64
 DICTUSET
@@ -1305,7 +1327,7 @@ PUSH S2
 STREFR
 STSLICECONST 1
 NEWC
-STSLICECONST x015918a6
+STSLICECONST x1f73060b
 ;; _requiredConfirmations
 ;; get member ethereumEventConfigurationRequiredConfirmations
 ;; push identifier bridgeConfiguration
@@ -1317,15 +1339,6 @@ STUR 256
 ;; push identifier bridgeConfiguration
 GETGLOB 12
 INDEX 2
-STUR 256
-;; _eventRequiredConfirmations
-;; push identifier ethereumEventRequiredConfirmations
-PUSH S7
-STUR 256
-NEWC
-;; _eventRequiredRejects
-;; push identifier ethereumEventRequiredRejects
-PUSH S7
 STUR 256
 ;; _ethereumEventCode
 ;; get member ethereumEventCode
@@ -1343,7 +1356,6 @@ PUSHCONT {
 }
 IF
 STUR 256
-STBREFR
 STBREFR
 ENDC
 PUSHINT 1

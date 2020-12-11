@@ -117,16 +117,16 @@ contract FreeTonBridge is KeysOwnable, BridgeConfigurationStructure {
             varInit: {
                 eventABI: ethereumEventABI,
                 eventAddress: ethereumAddress,
-                proxyAddress: eventProxyAddress,
+                eventRequiredConfirmations: ethereumEventRequiredConfirmations,
+                eventRequiredRejects: ethereumEventRequiredRejects,
                 ethereumEventBlocksToConfirm: ethereumEventBlocksToConfirm,
+                proxyAddress: eventProxyAddress,
                 bridgeAddress: address(this)
             },
             value: bridgeConfiguration.ethereumEventConfigurationInitialBalance
         }(
             bridgeConfiguration.ethereumEventConfigurationRequiredConfirmations,
             bridgeConfiguration.ethereumEventConfigurationRequiredRejects,
-            ethereumEventRequiredConfirmations,
-            ethereumEventRequiredRejects,
             bridgeConfiguration.ethereumEventCode,
             msg.pubkey()
         );

@@ -8,15 +8,14 @@ import './EthereumEvent.sol';
 contract EthereumEventConfiguration {
     bytes static eventABI;
     bytes static eventAddress;
-    address static proxyAddress;
+    uint static eventRequiredConfirmations;
+    uint static eventRequiredRejects;
     uint static ethereumEventBlocksToConfirm;
+    address static proxyAddress;
     address static bridgeAddress;
 
     uint requiredConfirmations;
     uint requiredRejects;
-
-    uint eventRequiredConfirmations;
-    uint eventRequiredRejects;
 
     TvmCell ethereumEventCode;
 
@@ -43,16 +42,12 @@ contract EthereumEventConfiguration {
         @dev Created only by Bridge contract
         @param _requiredConfirmations Required confirmations to activate configuration
         @param _requiredRejects Required confirmations to reject configuration
-        @param _eventRequiredConfirmations Required confirmations to execute event
-        @param _eventRequiredRejects Required rejects to ban event
         @param _ethereumEventCode Code for Ethereum-TON event contract
         @param relayKey Public key of the relay, who initiated the config creation
     */
     constructor(
         uint _requiredConfirmations,
         uint _requiredRejects,
-        uint _eventRequiredConfirmations,
-        uint _eventRequiredRejects,
         TvmCell _ethereumEventCode,
         uint relayKey
     ) public {
@@ -60,8 +55,6 @@ contract EthereumEventConfiguration {
 
         requiredConfirmations = _requiredConfirmations;
         requiredRejects = _requiredRejects;
-        eventRequiredConfirmations = _eventRequiredConfirmations;
-        eventRequiredRejects = _eventRequiredRejects;
 
         ethereumEventCode = _ethereumEventCode;
 
@@ -112,7 +105,7 @@ contract EthereumEventConfiguration {
         require(active, EVENT_CONFIGURATION_NOT_ACTIVE);
 
         address ethereumEventAddress = new EthereumEvent{
-            value: 1 ton,
+            value: 2 ton,
             code: ethereumEventCode,
             pubkey: tvm.pubkey(),
             varInit: {
@@ -198,6 +191,8 @@ contract EthereumEventConfiguration {
         uint _ethereumEventBlocksToConfirm,
         uint _requiredConfirmations,
         uint _requiredRejects,
+        uint _eventRequiredConfirmations,
+        uint _eventRequiredRejects,
         uint[] _confirmKeys,
         uint[] _rejectKeys,
         bool _active
@@ -209,6 +204,8 @@ contract EthereumEventConfiguration {
             ethereumEventBlocksToConfirm,
             requiredConfirmations,
             requiredRejects,
+            eventRequiredConfirmations,
+            eventRequiredRejects,
             confirmKeys,
             rejectKeys,
             active
