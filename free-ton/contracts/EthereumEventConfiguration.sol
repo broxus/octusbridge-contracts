@@ -11,6 +11,7 @@ contract EthereumEventConfiguration {
     uint static eventRequiredConfirmations;
     uint static eventRequiredRejects;
     uint static ethereumEventBlocksToConfirm;
+    uint128 static eventInitialBalance;
     address static proxyAddress;
     address static bridgeAddress;
 
@@ -105,7 +106,7 @@ contract EthereumEventConfiguration {
         require(active, EVENT_CONFIGURATION_NOT_ACTIVE);
 
         address ethereumEventAddress = new EthereumEvent{
-            value: 2 ton,
+            value: eventInitialBalance,
             code: ethereumEventCode,
             pubkey: tvm.pubkey(),
             varInit: {

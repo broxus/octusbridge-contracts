@@ -60,15 +60,16 @@ describe('Test ETH-TON event transfer', function() {
           ethereumEventBlocksToConfirm: 1,
           ethereumEventRequiredConfirmations: 2,
           ethereumEventRequiredRejects: 2,
+          ethereumEventInitialBalance: utils.convertCrystal(10, 'nano'),
         }
       );
 
       // Derive EthereumEventConfiguration address from the event
-      const [{
+      const {
         output: {
           addr: ethereumEventConfigurationAddress,
         }
-      }] = await Bridge.getEvents('NewEthereumEventConfiguration');
+      } = (await Bridge.getEvents('NewEthereumEventConfiguration')).pop();
 
       logger.success(`Ethereum event configuration address: ${ethereumEventConfigurationAddress}`);
   
@@ -157,11 +158,11 @@ describe('Test ETH-TON event transfer', function() {
 
       await Bridge.run('confirmEthereumEvent', ethereumEventParams);
 
-      const [{
+      const {
         output: {
           addr: ethereumEventAddress,
         }
-      }] = await EthereumEventConfiguration.getEvents('NewEthereumEventConfirmation');
+      } = (await EthereumEventConfiguration.getEvents('NewEthereumEventConfirmation')).pop();
 
       logger.success(`Ethereum event address: ${ethereumEventAddress}`);
 
@@ -216,7 +217,7 @@ describe('Test ETH-TON event transfer', function() {
   
   describe('Test Ethereum event rejection', async function() {
     let ethereumEventParams;
-    
+
     it('Add new event', async function() {
       ethereumEventParams = {
         eventTransaction: utils.stringToBytesArray(ethereumEventTransaction),
@@ -226,17 +227,17 @@ describe('Test ETH-TON event transfer', function() {
         eventBlock: utils.stringToBytesArray(ethereumEventBlock),
         ethereumEventConfigurationAddress: EthereumEventConfiguration.address
       };
-  
+
       await Bridge.run('confirmEthereumEvent', ethereumEventParams);
-      
-      const [,,{
+
+      const {
         output: {
           addr: ethereumEventAddress,
         }
-      }] = await EthereumEventConfiguration.getEvents('NewEthereumEventConfirmation');
+      } = (await EthereumEventConfiguration.getEvents('NewEthereumEventConfirmation')).pop();
 
       logger.success(`Ethereum event address: ${ethereumEventAddress}`);
-  
+
       EthereumEvent = await freeton.requireContract(
         tonWrapper,
         'EthereumEvent',
@@ -256,7 +257,7 @@ describe('Test ETH-TON event transfer', function() {
         0,
         'Wrong amount of reject keys',
       );
-      
+
       assert.equal(
         details._eventRejected,
         false,
@@ -275,7 +276,7 @@ describe('Test ETH-TON event transfer', function() {
       await Bridge.run('rejectEthereumEvent', ethereumEventParams, tonWrapper.keys[2]);
 
       const details = await EthereumEvent.runLocal('getDetails', {});
-      
+
       assert.equal(
         details._eventRejected,
         true,

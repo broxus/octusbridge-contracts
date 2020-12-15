@@ -1,6 +1,7 @@
 pragma solidity >= 0.6.0;
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
+pragma msgValue 2 ton;
 
 
 import "./EthereumEventConfiguration.sol";
@@ -99,6 +100,7 @@ contract FreeTonBridge is KeysOwnable, BridgeConfigurationStructure {
         @param ethereumEventBlocksToConfirm How much blocks to wait until confirm event instance
         @param ethereumEventRequiredConfirmations How much confirmations needed to confirm event
         @param ethereumEventRequiredRejects How much rejects needed to reject event
+        @param ethereumEventInitialBalance How much TON send to the Ethereum event contract
         @param eventProxyAddress TON address of the event proxy address
     **/
     function addEthereumEventConfiguration(
@@ -107,6 +109,7 @@ contract FreeTonBridge is KeysOwnable, BridgeConfigurationStructure {
         uint ethereumEventBlocksToConfirm,
         uint ethereumEventRequiredConfirmations,
         uint ethereumEventRequiredRejects,
+        uint128 ethereumEventInitialBalance,
         address eventProxyAddress
     ) public onlyActive onlyOwnerKey(msg.pubkey()) returns(address) {
         tvm.accept();
@@ -120,6 +123,7 @@ contract FreeTonBridge is KeysOwnable, BridgeConfigurationStructure {
                 eventRequiredConfirmations: ethereumEventRequiredConfirmations,
                 eventRequiredRejects: ethereumEventRequiredRejects,
                 ethereumEventBlocksToConfirm: ethereumEventBlocksToConfirm,
+                eventInitialBalance: ethereumEventInitialBalance,
                 proxyAddress: eventProxyAddress,
                 bridgeAddress: address(this)
             },
