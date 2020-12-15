@@ -131,7 +131,9 @@ contract EthereumEvent {
         bool _proxyCallbackExecuted,
         bool _eventRejected,
         uint[] _confirmKeys,
-        uint[] _rejectKeys
+        uint[] _rejectKeys,
+        uint _requiredConfirmations,
+        uint _requiredRejects
     ) {
         return (
             eventTransaction,
@@ -144,7 +146,9 @@ contract EthereumEvent {
             proxyCallbackExecuted,
             eventRejected,
             confirmKeys,
-            rejectKeys
+            rejectKeys,
+            requiredConfirmations,
+            requiredRejects
         );
     }
 }

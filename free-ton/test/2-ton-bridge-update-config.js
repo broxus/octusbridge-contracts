@@ -49,11 +49,11 @@ describe('Test Bridge configuration update', function() {
       _bridgeConfiguration: newBridgeConfiguration,
     });
   
-    const [{
+    const {
       output: {
         addr: bridgeConfigurationUpdateAddress,
       }
-    }] = await Bridge.getEvents('NewBridgeConfigurationUpdate');
+    } = (await Bridge.getEvents('NewBridgeConfigurationUpdate')).pop();
     
     logger.success(`Bridge configuration update address: ${bridgeConfigurationUpdateAddress}`);
     

@@ -585,6 +585,10 @@ PAIR
 PUSHINT 0
 NEWDICT
 PAIR
+;; ret param: _requiredConfirmations
+PUSHINT 0
+;; ret param: _requiredRejects
+PUSHINT 0
 ;; return
 ;; push identifier eventTransaction
 GETGLOB 10
@@ -608,12 +612,16 @@ GETGLOB 18
 GETGLOB 22
 ;; push identifier rejectKeys
 GETGLOB 23
-BLKDROP2 11, 11
-;; emitting 11 value(s)
-PUSH S11
+;; push identifier requiredConfirmations
+GETGLOB 19
+;; push identifier requiredRejects
+GETGLOB 20
+BLKDROP2 13, 13
+;; emitting 13 value(s)
+PUSH S13
 EQINT -1
 PUSHCONT {
-	PUSH S13
+	PUSH S15
 	CTOS
 	LDU 2
 	LDMSGADDR
@@ -627,36 +635,40 @@ PUSHCONT {
 	STSLICECONST 0
 	STSLICECONST 1
 	NEWC
-	STSLICECONST xd3124cea
+	STSLICECONST x84bcef83
+	PUSH S14
+	STREFR
+	PUSH S13
+	STUR 256
 	PUSH S12
 	STREFR
 	PUSH S11
-	STUR 256
+	STSLICER
 	PUSH S10
+	STUR 256
+	PUSH S9
 	STREFR
+	NEWC
 	PUSH S9
 	STSLICER
 	PUSH S8
-	STUR 256
+	STIR 1
 	PUSH S7
-	STREFR
-	NEWC
-	PUSH S7
-	STSLICER
+	STIR 1
 	PUSH S6
-	STIR 1
+	UNPAIR
+	XCHG s2
+	STU 32
+	STDICT
 	PUSH S5
-	STIR 1
+	UNPAIR
+	XCHG s2
+	STU 32
+	STDICT
 	PUSH S4
-	UNPAIR
-	XCHG s2
-	STU 32
-	STDICT
+	STUR 256
 	PUSH S3
-	UNPAIR
-	XCHG s2
-	STU 32
-	STDICT
+	STUR 256
 	STBREFR
 	STBREFR
 	ENDC
@@ -664,7 +676,7 @@ PUSHCONT {
 	SENDRAWMSG
 }
 IF
-BLKDROP 11
+BLKDROP 13
 ; end function getDetails
 PUSHCONT {
 	CALL $c7_to_c4$
@@ -705,6 +717,10 @@ PAIR
 PUSHINT 0
 NEWDICT
 PAIR
+;; ret param: _requiredConfirmations
+PUSHINT 0
+;; ret param: _requiredRejects
+PUSHINT 0
 ;; return
 ;; push identifier eventTransaction
 GETGLOB 10
@@ -728,7 +744,11 @@ GETGLOB 18
 GETGLOB 22
 ;; push identifier rejectKeys
 GETGLOB 23
-BLKDROP2 11, 11
+;; push identifier requiredConfirmations
+GETGLOB 19
+;; push identifier requiredRejects
+GETGLOB 20
+BLKDROP2 13, 13
 ; end function getDetails
 
 .globl	c7_to_c4
