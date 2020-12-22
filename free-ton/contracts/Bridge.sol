@@ -1,7 +1,6 @@
 pragma solidity >= 0.6.0;
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
-pragma msgValue 2 ton;
 
 
 import "./EthereumEventConfiguration.sol";
@@ -76,7 +75,7 @@ contract FreeTonBridge is KeysOwnable, BridgeConfigurationStructure {
             _bridgeConfiguration
         );
 
-        BridgeConfigurationUpdate(bridgeConfigurationUpdateAddress).confirm(msg.pubkey());
+        BridgeConfigurationUpdate(bridgeConfigurationUpdateAddress).confirm{value: 1 ton}(msg.pubkey());
 
         emit NewBridgeConfigurationUpdate(bridgeConfigurationUpdateAddress);
 
@@ -149,10 +148,10 @@ contract FreeTonBridge is KeysOwnable, BridgeConfigurationStructure {
     */
     function confirmEthereumEventConfiguration(
         address ethereumEventConfigurationAddress
-    ) public view onlyActive onlyOwnerKey(msg.pubkey()) {
+    ) public onlyActive onlyOwnerKey(msg.pubkey()) {
         tvm.accept();
 
-        EthereumEventConfiguration(ethereumEventConfigurationAddress).confirm(msg.pubkey());
+        EthereumEventConfiguration(ethereumEventConfigurationAddress).confirm{value: 1 ton}(msg.pubkey());
     }
 
     /*
@@ -165,7 +164,7 @@ contract FreeTonBridge is KeysOwnable, BridgeConfigurationStructure {
     ) public view onlyActive onlyOwnerKey(msg.pubkey()) {
         tvm.accept();
 
-        EthereumEventConfiguration(ethereumEventConfigurationAddress).reject(msg.pubkey());
+        EthereumEventConfiguration(ethereumEventConfigurationAddress).reject{value: 1 ton}(msg.pubkey());
     }
 
     /*
@@ -179,16 +178,16 @@ contract FreeTonBridge is KeysOwnable, BridgeConfigurationStructure {
         @param ethereumEventConfigurationAddress Ethereum Event configuration contract address
     */
     function confirmEthereumEvent(
-        bytes eventTransaction,
+        uint eventTransaction,
         uint eventIndex,
         TvmCell eventData,
         uint eventBlockNumber,
-        bytes eventBlock,
+        uint eventBlock,
         address ethereumEventConfigurationAddress
-    ) public view onlyActive onlyOwnerKey(msg.pubkey()) {
+    ) public onlyActive onlyOwnerKey(msg.pubkey()) {
         tvm.accept();
 
-        EthereumEventConfiguration(ethereumEventConfigurationAddress).confirmEvent(
+        EthereumEventConfiguration(ethereumEventConfigurationAddress).confirmEvent{value: 1 ton}(
             eventTransaction,
             eventIndex,
             eventData,
@@ -209,16 +208,16 @@ contract FreeTonBridge is KeysOwnable, BridgeConfigurationStructure {
         @param ethereumEventConfigurationAddress Ethereum Event configuration contract address
     */
     function rejectEthereumEvent(
-        bytes eventTransaction,
+        uint eventTransaction,
         uint eventIndex,
         TvmCell eventData,
         uint eventBlockNumber,
-        bytes eventBlock,
+        uint eventBlock,
         address ethereumEventConfigurationAddress
-    ) public view onlyActive onlyOwnerKey(msg.pubkey()) {
+    ) public onlyActive onlyOwnerKey(msg.pubkey()) {
         tvm.accept();
 
-        EthereumEventConfiguration(ethereumEventConfigurationAddress).rejectEvent(
+        EthereumEventConfiguration(ethereumEventConfigurationAddress).rejectEvent{value: 1 ton}(
             eventTransaction,
             eventIndex,
             eventData,

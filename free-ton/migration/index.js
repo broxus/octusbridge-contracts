@@ -135,18 +135,18 @@ class Migration {
       ethereumEventConfigurationCode: EthereumEventConfiguration.code,
       ethereumEventConfigurationRequiredConfirmations: 2,
       ethereumEventConfigurationRequiredRejects: 2,
-      ethereumEventConfigurationInitialBalance: utils.convertCrystal('20', 'nano'),
+      ethereumEventConfigurationInitialBalance: utils.convertCrystal('30', 'nano'),
 
       ethereumEventCode: EthereumEvent.code,
   
       bridgeConfigurationUpdateCode: BridgeConfigurationUpdate.code,
       bridgeConfigurationUpdateRequiredConfirmations: 2,
       bridgeConfigurationUpdateRequiredRejects: 2,
-      bridgeConfigurationUpdateInitialBalance: utils.convertCrystal('20', 'nano'),
+      bridgeConfigurationUpdateInitialBalance: utils.convertCrystal('30', 'nano'),
 
       active: true,
     }
-  }, {}, utils.convertCrystal('100', 'nano'));
+  }, {}, utils.convertCrystal('200', 'nano')).catch(e => console.log(e));
   
   // - Deploy Target
   const Target = await freeton.requireContract(tonWrapper, 'Target');
@@ -154,7 +154,7 @@ class Migration {
     {},
     {},
     utils.convertCrystal('10', 'nano')
-  );
+  ).catch(e => console.log(e));
   
   // - Deploy EventProxy
   const EventProxy = await freeton.requireContract(tonWrapper, 'EventProxy');
@@ -162,7 +162,7 @@ class Migration {
     {},
     {},
     utils.convertCrystal('10', 'nano')
-  );
+  ).catch(e => console.log(e));
   
   migration.logHistory();
   

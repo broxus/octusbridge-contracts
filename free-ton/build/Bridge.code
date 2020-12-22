@@ -476,15 +476,15 @@ PUSHINT 1
 SENDRAWMSG
 NIP
 ;; decl: bridgeConfigurationUpdateAddress
-;; Remote call BridgeConfigurationUpdate.confirm
 ;; push identifier bridgeConfigurationUpdateAddress
 DUP
 NEWC
 STSLICECONST x62_
 STSLICE
-PUSHSLICE x477359400000000000000000000000000004_
+PUSHSLICE x43b9aca00000000000000000000000000004_
 STSLICER
 STSLICECONST 0
+;; Remote call BridgeConfigurationUpdate.confirm
 STSLICECONST 0
 STSLICECONST x7c5f8264
 ;; relayKey
@@ -702,15 +702,15 @@ PUSHINT 1
 SENDRAWMSG
 NIP
 ;; decl: bridgeConfigurationUpdateAddress
-;; Remote call BridgeConfigurationUpdate.confirm
 ;; push identifier bridgeConfigurationUpdateAddress
 DUP
 NEWC
 STSLICECONST x62_
 STSLICE
-PUSHSLICE x477359400000000000000000000000000004_
+PUSHSLICE x43b9aca00000000000000000000000000004_
 STSLICER
 STSLICECONST 0
+;; Remote call BridgeConfigurationUpdate.confirm
 STSLICECONST 0
 STSLICECONST x7c5f8264
 ;; relayKey
@@ -1488,15 +1488,15 @@ EQUAL
 THROWIFNOT 303
 ; function confirmEthereumEventConfiguration
 ACCEPT
-;; Remote call EthereumEventConfiguration.confirm
 ;; push identifier ethereumEventConfigurationAddress
 PUSH S1
 NEWC
 STSLICECONST x62_
 STSLICE
-PUSHSLICE x477359400000000000000000000000000004_
+PUSHSLICE x43b9aca00000000000000000000000000004_
 STSLICER
 STSLICECONST 0
+;; Remote call EthereumEventConfiguration.confirm
 STSLICECONST 0
 STSLICECONST x7c5f8264
 ;; relayKey
@@ -1517,10 +1517,7 @@ DROP
 ; end modifier onlyOwnerKey
 DROP
 ; end modifier onlyActive
-PUSHCONT {
-	CALL $c7_to_c4$
-}
-IF
+CALL $c7_to_c4$
 TRUE
 SETGLOB 7
 
@@ -1566,15 +1563,15 @@ EQUAL
 THROWIFNOT 303
 ; function confirmEthereumEventConfiguration
 ACCEPT
-;; Remote call EthereumEventConfiguration.confirm
 ;; push identifier ethereumEventConfigurationAddress
 PUSH S1
 NEWC
 STSLICECONST x62_
 STSLICE
-PUSHSLICE x477359400000000000000000000000000004_
+PUSHSLICE x43b9aca00000000000000000000000000004_
 STSLICER
 STSLICECONST 0
+;; Remote call EthereumEventConfiguration.confirm
 STSLICECONST 0
 STSLICECONST x7c5f8264
 ;; relayKey
@@ -1657,15 +1654,15 @@ EQUAL
 THROWIFNOT 303
 ; function rejectEthereumEventConfiguration
 ACCEPT
-;; Remote call EthereumEventConfiguration.reject
 ;; push identifier ethereumEventConfigurationAddress
 PUSH S1
 NEWC
 STSLICECONST x62_
 STSLICE
-PUSHSLICE x477359400000000000000000000000000004_
+PUSHSLICE x43b9aca00000000000000000000000000004_
 STSLICER
 STSLICECONST 0
+;; Remote call EthereumEventConfiguration.reject
 STSLICECONST 0
 STSLICECONST x70151477
 ;; relayKey
@@ -1735,15 +1732,15 @@ EQUAL
 THROWIFNOT 303
 ; function rejectEthereumEventConfiguration
 ACCEPT
-;; Remote call EthereumEventConfiguration.reject
 ;; push identifier ethereumEventConfigurationAddress
 PUSH S1
 NEWC
 STSLICECONST x62_
 STSLICE
-PUSHSLICE x477359400000000000000000000000000004_
+PUSHSLICE x43b9aca00000000000000000000000000004_
 STSLICER
 STSLICECONST 0
+;; Remote call EthereumEventConfiguration.reject
 STSLICECONST 0
 STSLICECONST x70151477
 ;; relayKey
@@ -1776,7 +1773,15 @@ PUSHCONT {
 IF
 ; Decode input parameters
 ; Decode eventTransaction
-LDREF
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
 ; Decode eventIndex
 LDUQ 256
 PUSHCONT {
@@ -1790,8 +1795,11 @@ IFNOT
 ; Decode eventData
 ;; decode TvmCell
 DUP
-SREFS
+SBITREFS
 EQINT 1
+SWAP
+EQINT 0
+AND
 PUSHCONT {
 	LDREF
 	ENDS
@@ -1810,19 +1818,15 @@ PUSHCONT {
 }
 IFNOT
 ; Decode eventBlock
-DUP
-SBITREFS
-EQINT 1
-SWAP
-EQINT 0
-AND
+LDUQ 256
 PUSHCONT {
+	;; load next cell
 	LDREF
 	ENDS
 	CTOS
+	LDU 256
 }
-IF
-LDREF
+IFNOT
 ; Decode ethereumEventConfigurationAddress
 LDMSGADDRQ
 PUSHCONT {
@@ -1879,22 +1883,22 @@ EQUAL
 THROWIFNOT 303
 ; function confirmEthereumEvent
 ACCEPT
-;; Remote call EthereumEventConfiguration.confirmEvent
 ;; push identifier ethereumEventConfigurationAddress
 PUSH S1
 NEWC
 STSLICECONST x62_
 STSLICE
-PUSHSLICE x477359400000000000000000000000000004_
+PUSHSLICE x43b9aca00000000000000000000000000004_
 STSLICER
 STSLICECONST 0
+;; Remote call EthereumEventConfiguration.confirmEvent
 STSLICECONST 1
 NEWC
-STSLICECONST x460e6e0e
+STSLICECONST x246a9cbc
 ;; eventTransaction
 ;; push identifier eventTransaction
 PUSH S8
-STREFR
+STUR 256
 ;; eventIndex
 ;; push identifier eventIndex
 PUSH S7
@@ -1907,10 +1911,11 @@ STREFR
 ;; push identifier eventBlockNumber
 PUSH S5
 STUR 256
+NEWC
 ;; eventBlock
 ;; push identifier eventBlock
-PUSH S4
-STREFR
+PUSH S5
+STUR 256
 ;; relayKey
 GETGLOB 5
 DUP
@@ -1922,6 +1927,7 @@ PUSHCONT {
 IF
 STUR 256
 STBREFR
+STBREFR
 ENDC
 PUSHINT 1
 SENDRAWMSG
@@ -1930,10 +1936,7 @@ DROP
 ; end modifier onlyOwnerKey
 BLKDROP 6
 ; end modifier onlyActive
-PUSHCONT {
-	CALL $c7_to_c4$
-}
-IF
+CALL $c7_to_c4$
 TRUE
 SETGLOB 7
 
@@ -1984,22 +1987,22 @@ EQUAL
 THROWIFNOT 303
 ; function confirmEthereumEvent
 ACCEPT
-;; Remote call EthereumEventConfiguration.confirmEvent
 ;; push identifier ethereumEventConfigurationAddress
 PUSH S1
 NEWC
 STSLICECONST x62_
 STSLICE
-PUSHSLICE x477359400000000000000000000000000004_
+PUSHSLICE x43b9aca00000000000000000000000000004_
 STSLICER
 STSLICECONST 0
+;; Remote call EthereumEventConfiguration.confirmEvent
 STSLICECONST 1
 NEWC
-STSLICECONST x460e6e0e
+STSLICECONST x246a9cbc
 ;; eventTransaction
 ;; push identifier eventTransaction
 PUSH S8
-STREFR
+STUR 256
 ;; eventIndex
 ;; push identifier eventIndex
 PUSH S7
@@ -2012,10 +2015,11 @@ STREFR
 ;; push identifier eventBlockNumber
 PUSH S5
 STUR 256
+NEWC
 ;; eventBlock
 ;; push identifier eventBlock
-PUSH S4
-STREFR
+PUSH S5
+STUR 256
 ;; relayKey
 GETGLOB 5
 DUP
@@ -2026,6 +2030,7 @@ PUSHCONT {
 }
 IF
 STUR 256
+STBREFR
 STBREFR
 ENDC
 PUSHINT 1
@@ -2047,7 +2052,15 @@ PUSHCONT {
 IF
 ; Decode input parameters
 ; Decode eventTransaction
-LDREF
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
 ; Decode eventIndex
 LDUQ 256
 PUSHCONT {
@@ -2061,8 +2074,11 @@ IFNOT
 ; Decode eventData
 ;; decode TvmCell
 DUP
-SREFS
+SBITREFS
 EQINT 1
+SWAP
+EQINT 0
+AND
 PUSHCONT {
 	LDREF
 	ENDS
@@ -2081,19 +2097,15 @@ PUSHCONT {
 }
 IFNOT
 ; Decode eventBlock
-DUP
-SBITREFS
-EQINT 1
-SWAP
-EQINT 0
-AND
+LDUQ 256
 PUSHCONT {
+	;; load next cell
 	LDREF
 	ENDS
 	CTOS
+	LDU 256
 }
-IF
-LDREF
+IFNOT
 ; Decode ethereumEventConfigurationAddress
 LDMSGADDRQ
 PUSHCONT {
@@ -2150,22 +2162,22 @@ EQUAL
 THROWIFNOT 303
 ; function rejectEthereumEvent
 ACCEPT
-;; Remote call EthereumEventConfiguration.rejectEvent
 ;; push identifier ethereumEventConfigurationAddress
 PUSH S1
 NEWC
 STSLICECONST x62_
 STSLICE
-PUSHSLICE x477359400000000000000000000000000004_
+PUSHSLICE x43b9aca00000000000000000000000000004_
 STSLICER
 STSLICECONST 0
+;; Remote call EthereumEventConfiguration.rejectEvent
 STSLICECONST 1
 NEWC
-STSLICECONST x766e609a
+STSLICECONST x3b26aa04
 ;; eventTransaction
 ;; push identifier eventTransaction
 PUSH S8
-STREFR
+STUR 256
 ;; eventIndex
 ;; push identifier eventIndex
 PUSH S7
@@ -2178,10 +2190,11 @@ STREFR
 ;; push identifier eventBlockNumber
 PUSH S5
 STUR 256
+NEWC
 ;; eventBlock
 ;; push identifier eventBlock
-PUSH S4
-STREFR
+PUSH S5
+STUR 256
 ;; relayKey
 GETGLOB 5
 DUP
@@ -2193,6 +2206,7 @@ PUSHCONT {
 IF
 STUR 256
 STBREFR
+STBREFR
 ENDC
 PUSHINT 1
 SENDRAWMSG
@@ -2201,10 +2215,7 @@ DROP
 ; end modifier onlyOwnerKey
 BLKDROP 6
 ; end modifier onlyActive
-PUSHCONT {
-	CALL $c7_to_c4$
-}
-IF
+CALL $c7_to_c4$
 TRUE
 SETGLOB 7
 
@@ -2255,22 +2266,22 @@ EQUAL
 THROWIFNOT 303
 ; function rejectEthereumEvent
 ACCEPT
-;; Remote call EthereumEventConfiguration.rejectEvent
 ;; push identifier ethereumEventConfigurationAddress
 PUSH S1
 NEWC
 STSLICECONST x62_
 STSLICE
-PUSHSLICE x477359400000000000000000000000000004_
+PUSHSLICE x43b9aca00000000000000000000000000004_
 STSLICER
 STSLICECONST 0
+;; Remote call EthereumEventConfiguration.rejectEvent
 STSLICECONST 1
 NEWC
-STSLICECONST x766e609a
+STSLICECONST x3b26aa04
 ;; eventTransaction
 ;; push identifier eventTransaction
 PUSH S8
-STREFR
+STUR 256
 ;; eventIndex
 ;; push identifier eventIndex
 PUSH S7
@@ -2283,10 +2294,11 @@ STREFR
 ;; push identifier eventBlockNumber
 PUSH S5
 STUR 256
+NEWC
 ;; eventBlock
 ;; push identifier eventBlock
-PUSH S4
-STREFR
+PUSH S5
+STUR 256
 ;; relayKey
 GETGLOB 5
 DUP
@@ -2297,6 +2309,7 @@ PUSHCONT {
 }
 IF
 STUR 256
+STBREFR
 STBREFR
 ENDC
 PUSHINT 1
