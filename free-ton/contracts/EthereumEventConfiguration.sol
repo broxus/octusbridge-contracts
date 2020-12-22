@@ -3,9 +3,10 @@ pragma AbiHeader expire;
 
 
 import './EthereumEvent.sol';
+import "./TransferChangeBack.sol";
 
 
-contract EthereumEventConfiguration {
+contract EthereumEventConfiguration is TransferChangeBack {
     bytes static eventABI;
     bytes static eventAddress;
     uint static eventRequiredConfirmations;
@@ -35,7 +36,9 @@ contract EthereumEventConfiguration {
         _;
     }
 
-    event NewEthereumEventConfirmation(addressз indexed addr, uint relayKey);
+    event NewEthereumConfigurationConfirmation(uint relayKey);
+    event NewEthereumConfigurationReject(uint relayKey);
+    event NewEthereumEventConfirmation(address indexed addr, uint relayKey);
     event NewEthereumEventReject(address indexed addr, uint relayKey);
 
     /*
@@ -74,6 +77,8 @@ contract EthereumEventConfiguration {
 
         confirmKeys.push(relayKey);
 
+        emit NewEthereumConfigurationConfirmation(relayKey);
+
         if (confirmKeys.length >= requiredConfirmations) {
             active = true;
         }
@@ -81,7 +86,7 @@ contract EthereumEventConfiguration {
 
     // TODO: add reject logic
     function reject(uint relayKey) public view onlyBridge {
-        require(relayKey > 0);
+        emit NewEthereumConfigurationReject(relayKey);
     }
 
     /*
@@ -96,11 +101,11 @@ contract EthereumEventConfiguration {
         @param relayKey Relay key, who initialized the Bridge Ethereum event confirmation
     **/
     function confirmEvent(
-        bytes eventTransaction,
+        uint eventTransaction,
         uint eventIndex,
         TvmCell eventData,
         uint eventBlockNumber,
-        bytes eventBlock,
+        uint eventBlock,
         uint relayKey
     ) public onlyBridge {
         require(active, EVENT_CONFIGURATION_NOT_ACTIVE);
@@ -124,28 +129,30 @@ contract EthereumEventConfiguration {
             eventRequiredRejects
         );
 
-        EthereumEvent(ethereumEventAddress).confirm(relayKey);
+        EthereumEvent(ethereumEventAddress).confirm{value: 1 ton}(relayKey);
 
         emit NewEthereumEventConfirmation(ethereumEventAddress, relayKey);
     }
 
-/*
-    Reject Ethereum-TON event instance.
-    @dev This function calls the reject method of the corresponding EthereumEvent contract
-    Two transactions is sent (deploy and confirm) and one is always fail
-    EventAddress is always emitted!
-    @dev Should be called only through Bridge contract
-    @param eventTransaction Bytes encoded transaction hash
-    @param eventIndex Event Index from the transaction
-    @param eventData TvmCell encoded event data
-    @param relayKey Relay key, who initialized the Bridge Ethereum event confirmation
-**/
+    /*
+        Reject Ethereum-TON event instance.
+        @dev This function calls the reject method of the corresponding EthereumEvent contract
+        Two transactions is sent (deploy and confirm) and one is always fail
+        EventAddress is always emitted!
+        @dev Should be called only through Bridge contract
+        @param eventTransaction Uint encoded transaction hash
+        @param eventIndex Event Index from the transaction
+        @param eventData TvmCell encoded event data
+        @param eventBlockNumber Ethereum block number with event transaction
+        @param eventBlock Uint encoded block hash
+        @param relayKey Relay key, who initialized the Bridge Ethereum event reject
+    **/
     function rejectEvent(
-        bytes eventTransaction,
+        uint eventTransaction,
         uint eventIndex,
         TvmCell eventData,
         uint eventBlockNumber,
-        bytes eventBlock,
+        uint eventBlock,
         uint relayKey
     ) public onlyBridge {
         // TODO: remove deploy step in favor of address derivation (not supported by compiler yet)
@@ -168,7 +175,7 @@ contract EthereumEventConfiguration {
             eventRequiredRejects
         );
 
-        EthereumEvent(ethereumEventAddress).reject(relayKey);
+        EthereumEvent(ethereumEventAddress).reject{value: 1 ton}(relayKey);
 
         emit NewEthereumEventReject(ethereumEventAddress, relayKey);
     }

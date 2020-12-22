@@ -86,7 +86,7 @@
 	],
 	"events": [
 		{
-			"name": "NewEthereumConfigurationConfiguration",
+			"name": "NewEthereumConfigurationConfirmation",
 			"inputs": [
 				{"name":"relayKey","type":"uint256"}
 			],

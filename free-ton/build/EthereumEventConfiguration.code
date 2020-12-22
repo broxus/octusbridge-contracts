@@ -188,13 +188,13 @@ PAIR
 ; colValue
 SETGLOB 21
 ; end colValue
-;; emit NewEthereumConfigurationConfiguration
+;; emit NewEthereumConfigurationConfirmation
 NEWC
 PUSHSLICE xc0000000000000000000000002_
 STSLICER
 STSLICECONST 0
 STSLICECONST 0
-STSLICECONST x46edd3e1
+STSLICECONST x7909a434
 ;; relayKey
 ;; push identifier relayKey
 PUSH S1
@@ -317,13 +317,13 @@ PAIR
 ; colValue
 SETGLOB 21
 ; end colValue
-;; emit NewEthereumConfigurationConfiguration
+;; emit NewEthereumConfigurationConfirmation
 NEWC
 PUSHSLICE xc0000000000000000000000002_
 STSLICER
 STSLICECONST 0
 STSLICECONST 0
-STSLICECONST x46edd3e1
+STSLICECONST x7909a434
 ;; relayKey
 ;; push identifier relayKey
 PUSH S1
