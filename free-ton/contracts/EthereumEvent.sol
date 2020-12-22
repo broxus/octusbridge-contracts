@@ -2,22 +2,16 @@ pragma solidity >= 0.6.0;
 pragma AbiHeader expire;
 
 
-interface Proxy {
-    function broxusBridgeCallback(
-        bytes eventTransaction,
-        uint eventIndex,
-        TvmCell eventData
-    ) external;
-}
+import "./interfaces/Proxy.sol";
 
 
 contract EthereumEvent {
-    bytes static eventTransaction;
+    uint static eventTransaction;
     uint static eventIndex;
     TvmCell static eventData;
     address static proxyAddress;
     uint static eventBlockNumber;
-    bytes static eventBlock;
+    uint static eventBlock;
     address static ethereumEventConfirguration;
 
     bool proxyCallbackExecuted = false;
@@ -99,7 +93,7 @@ contract EthereumEvent {
     function _executeProxyCallback() internal {
         proxyCallbackExecuted = true;
 
-        Proxy(proxyAddress).broxusBridgeCallback(
+        Proxy(proxyAddress).broxusBridgeCallback{value: 1 ton}(
             eventTransaction,
             eventIndex,
             eventData
@@ -121,12 +115,12 @@ contract EthereumEvent {
         @returns List of reject keys
     */
     function getDetails() public view returns (
-        bytes _eventTransaction,
+        uint _eventTransaction,
         uint _eventIndex,
         TvmCell _eventData,
         address _proxyAddress,
         uint _eventBlockNumber,
-        bytes _eventBlock,
+        uint _eventBlock,
         address _ethereumEventConfirguration,
         bool _proxyCallbackExecuted,
         bool _eventRejected,

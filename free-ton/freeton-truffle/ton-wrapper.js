@@ -21,7 +21,7 @@ class TonWrapper {
     
     if (tonAfterRunSleepMs === undefined) {
       if (this.config.network === 'https://net.ton.dev') {
-        await utils.sleep(10000);
+        await utils.sleep(4000);
       } else { // Default
         await utils.sleep(100);
       }
@@ -36,6 +36,7 @@ class TonWrapper {
     this.ton.config.setData({
       servers: [this.config.network],
       waitForTimeout: this.config.waitForTimeout ? this.config.waitForTimeout : 5000,
+      messageExpirationTimeout: 120000,
     });
     
     await this.ton.setup();

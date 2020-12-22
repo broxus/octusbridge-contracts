@@ -15,118 +15,16 @@ SETGLOB 6
 ;; end constructor protection
 ; Decode input parameters
 ENDS
-; constructor EventProxy
-GETGLOB 2
-NEQINT 0
-THROWIFNOT 100
+; constructor Counter
 ACCEPT
-; end constructor EventProxy
+; end constructor Counter
 CALL $c7_to_c4$
 TRUE
 SETGLOB 7
 
-.globl	broxusBridgeCallback
-.public	broxusBridgeCallback
-.type	broxusBridgeCallback, @function
-GETGLOB 1
-ISNULL
-PUSHCONT {
-	CALL $c4_to_c7$
-}
-IF
-; Decode input parameters
-; Decode _eventTransaction
-LDU 256
-; Decode _eventIndex
-LDUQ 256
-PUSHCONT {
-	;; load next cell
-	LDREF
-	ENDS
-	CTOS
-	LDU 256
-}
-IFNOT
-; Decode _eventData
-;; decode TvmCell
-LDREF
-ENDS
-;; param: _eventTransaction
-;; param: _eventIndex
-;; param: _eventData
-; function broxusBridgeCallback
-; expValue
-; end expValue
-TRUE
-; colValue
-SETGLOB 11
-; end colValue
-; expValue
-; end expValue
-;; push identifier _eventTransaction
-PUSH S2
-; colValue
-SETGLOB 12
-; end colValue
-; expValue
-; end expValue
-;; push identifier _eventIndex
-PUSH S1
-; colValue
-SETGLOB 13
-; end colValue
-; expValue
-; end expValue
-;; push identifier _eventData
-DUP
-; colValue
-SETGLOB 14
-; end colValue
-BLKDROP 3
-; end function broxusBridgeCallback
-CALL $c7_to_c4$
-TRUE
-SETGLOB 7
-
-.globl	broxusBridgeCallback_internal
-.type	broxusBridgeCallback_internal, @function
-;; param: _eventTransaction
-;; param: _eventIndex
-;; param: _eventData
-; function broxusBridgeCallback
-; expValue
-; end expValue
-TRUE
-; colValue
-SETGLOB 11
-; end colValue
-; expValue
-; end expValue
-;; push identifier _eventTransaction
-PUSH S2
-; colValue
-SETGLOB 12
-; end colValue
-; expValue
-; end expValue
-;; push identifier _eventIndex
-PUSH S1
-; colValue
-SETGLOB 13
-; end colValue
-; expValue
-; end expValue
-;; push identifier _eventData
-DUP
-; colValue
-SETGLOB 14
-; end colValue
-BLKDROP 3
-; end function broxusBridgeCallback
-
-.globl	getDetails
-.public	getDetails
-.type	getDetails, @function
+.globl	increment
+.public	increment
+.type	increment, @function
 GETGLOB 1
 ISNULL
 PUSHCONT {
@@ -135,31 +33,57 @@ PUSHCONT {
 IF
 ; Decode input parameters
 ENDS
-; function getDetails
-;; ret param: _callbackReceived
-PUSHINT 0
-;; ret param: _eventTransaction
-PUSHINT 0
-;; ret param: _eventIndex
-PUSHINT 0
-;; ret param: _eventData
-NEWC
-ENDC
+; function increment
+ACCEPT
+;; ++
+; expValue
+;; fetch asd
+GETGLOB 10
+; end expValue
+INC
+; colValue
+SETGLOB 10
+; end colValue
+; end function increment
+CALL $c7_to_c4$
+TRUE
+SETGLOB 7
+
+.globl	increment_internal
+.type	increment_internal, @function
+; function increment
+ACCEPT
+;; ++
+; expValue
+;; fetch asd
+GETGLOB 10
+; end expValue
+INC
+; colValue
+SETGLOB 10
+; end colValue
+; end function increment
+
+.globl	getter
+.public	getter
+.type	getter, @function
+GETGLOB 1
+ISNULL
+PUSHCONT {
+	CALL $c4_to_c7$
+}
+IF
+; Decode input parameters
+ENDS
+; function getter
 ;; return
-;; push identifier callbackReceived
-GETGLOB 11
-;; push identifier eventTransaction
-GETGLOB 12
-;; push identifier eventIndex
-GETGLOB 13
-;; push identifier eventData
-GETGLOB 14
-BLKDROP2 4, 4
-;; emitting 4 value(s)
-PUSH S4
+;; push identifier asd
+GETGLOB 10
+;; emitting 1 value(s)
+PUSH S1
 EQINT -1
 PUSHCONT {
-	PUSH S6
+	PUSH S3
 	CTOS
 	LDU 2
 	LDMSGADDR
@@ -172,22 +96,16 @@ PUSHCONT {
 	STZEROES
 	STSLICECONST 0
 	STSLICECONST 0
-	STSLICECONST xf8613c57
-	PUSH S4
-	STIR 1
-	PUSH S3
-	STUR 256
-	PUSH S2
-	STUR 256
+	STSLICECONST xeb7a20b8
 	PUSH S1
-	STREFR
+	STUR 256
 	ENDC
 	PUSHINT 1
 	SENDRAWMSG
 }
 IF
-BLKDROP 4
-; end function getDetails
+DROP
+; end function getter
 PUSHCONT {
 	CALL $c7_to_c4$
 }
@@ -195,29 +113,13 @@ IF
 TRUE
 SETGLOB 7
 
-.globl	getDetails_internal
-.type	getDetails_internal, @function
-; function getDetails
-;; ret param: _callbackReceived
-PUSHINT 0
-;; ret param: _eventTransaction
-PUSHINT 0
-;; ret param: _eventIndex
-PUSHINT 0
-;; ret param: _eventData
-NEWC
-ENDC
+.globl	getter_internal
+.type	getter_internal, @function
+; function getter
 ;; return
-;; push identifier callbackReceived
-GETGLOB 11
-;; push identifier eventTransaction
-GETGLOB 12
-;; push identifier eventIndex
-GETGLOB 13
-;; push identifier eventData
-GETGLOB 14
-BLKDROP2 4, 4
-; end function getDetails
+;; push identifier asd
+GETGLOB 10
+; end function getter
 
 .globl	c7_to_c4
 .type	c7_to_c4, @function
@@ -228,20 +130,9 @@ GETGLOB 3
 STUR 64
 GETGLOB 6
 STUR 1
-NEWC
-GETGLOB 13
+GETGLOB 10
 SWAP
 STU 256
-GETGLOB 10
-GETGLOB 11
-GETGLOB 12
-GETGLOB 14
-REVERSE 6, 0
-STBREF
-STU 256
-STI 1
-STU 256
-STREF
 ENDC
 POP C4
 
@@ -252,16 +143,7 @@ CTOS        ; c4
 LDU 256      ; pubkey c4
 LDU 64      ; pubkey timestamp c4
 LDU 1       ; pubkey [timestamp] constructor_flag memory
-LDREFRTOS
 PLDU 256
-SETGLOB 13
-LDU 256
-LDI 1
-LDU 256
-PLDREF
-SETGLOB 14
-SETGLOB 12
-SETGLOB 11
 SETGLOB 10
 TRUE
 SETGLOB 1   ; pubkey [timestamp] constructor_flag
@@ -279,16 +161,7 @@ PUSHCONT {
 	LDU 256      ; pubkey c4
 	LDU 64      ; pubkey timestamp c4
 	LDU 1       ; pubkey [timestamp] constructor_flag memory
-	LDREFRTOS
 	PLDU 256
-	SETGLOB 13
-	LDU 256
-	LDI 1
-	LDU 256
-	PLDREF
-	SETGLOB 14
-	SETGLOB 12
-	SETGLOB 11
 	SETGLOB 10
 	TRUE
 	SETGLOB 1   ; pubkey [timestamp] constructor_flag
@@ -298,32 +171,9 @@ PUSHCONT {
 }
 PUSHCONT {
 	PLDDICT   ; D
-	; init truffleNonce
-	PUSHINT 1
-	PUSH S1
-	PUSHINT 64
-	DICTUGET
-	PUSHCONT {
-		PLDU 256
-	}
-	PUSHCONT {
-		PUSHINT 0
-	}
-	IFELSE
+	; init asd
+	PUSHINT 0
 	SETGLOB 10
-	; init callbackReceived
-	PUSHINT 0
-	SETGLOB 11
-	; init eventTransaction
-	PUSHINT 0
-	SETGLOB 12
-	; init eventIndex
-	PUSHINT 0
-	SETGLOB 13
-	; init eventData
-	NEWC
-	ENDC
-	SETGLOB 14
 	; set contract pubkey
 	PUSHINT 0
 	SWAP
@@ -338,9 +188,9 @@ PUSHCONT {
 	SETGLOB 6
 	TRUE
 	SETGLOB 1
-	;; init state var: callbackReceived
-	FALSE
-	SETGLOB 11
+	;; init state var: asd
+	PUSHINT 0
+	SETGLOB 10
 }
 IFELSE
 

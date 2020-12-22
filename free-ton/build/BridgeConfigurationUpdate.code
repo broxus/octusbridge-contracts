@@ -288,15 +288,15 @@ PUSHCONT {
 	; colValue
 	SETGLOB 14
 	; end colValue
-	;; Remote call Bridge.updateBridgeConfiguration
 	;; push identifier bridgeAddress
 	GETGLOB 10
 	NEWC
 	STSLICECONST x62_
 	STSLICE
-	PUSHSLICE x3989680000000000000000000000000004_
+	PUSHSLICE x43b9aca00000000000000000000000000004_
 	STSLICER
 	STSLICECONST 0
+	;; Remote call Bridge.updateBridgeConfiguration
 	STSLICECONST 1
 	NEWC
 	STSLICECONST x29e24fef
@@ -431,15 +431,15 @@ PUSHCONT {
 	; colValue
 	SETGLOB 14
 	; end colValue
-	;; Remote call Bridge.updateBridgeConfiguration
 	;; push identifier bridgeAddress
 	GETGLOB 10
 	NEWC
 	STSLICECONST x62_
 	STSLICE
-	PUSHSLICE x3989680000000000000000000000000004_
+	PUSHSLICE x43b9aca00000000000000000000000000004_
 	STSLICER
 	STSLICECONST 0
+	;; Remote call Bridge.updateBridgeConfiguration
 	STSLICECONST 1
 	NEWC
 	STSLICECONST x29e24fef

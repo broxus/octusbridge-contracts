@@ -188,6 +188,20 @@ PAIR
 ; colValue
 SETGLOB 21
 ; end colValue
+;; emit NewEthereumConfigurationConfiguration
+NEWC
+PUSHSLICE xc0000000000000000000000002_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x46edd3e1
+;; relayKey
+;; push identifier relayKey
+PUSH S1
+STUR 256
+ENDC
+PUSHINT 1
+SENDRAWMSG
 ;; if
 ;; get member length
 ;; push identifier confirmKeys
@@ -303,6 +317,20 @@ PAIR
 ; colValue
 SETGLOB 21
 ; end colValue
+;; emit NewEthereumConfigurationConfiguration
+NEWC
+PUSHSLICE xc0000000000000000000000002_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x46edd3e1
+;; relayKey
+;; push identifier relayKey
+PUSH S1
+STUR 256
+ENDC
+PUSHINT 1
+SENDRAWMSG
 ;; if
 ;; get member length
 ;; push identifier confirmKeys
@@ -357,10 +385,20 @@ GETGLOB 17
 SDEQ
 THROWANYIFNOT
 ; function reject
+;; emit NewEthereumConfigurationReject
+NEWC
+PUSHSLICE xc0000000000000000000000002_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x4521c4b8
+;; relayKey
 ;; push identifier relayKey
-DUP
-GTINT 0
-THROWIFNOT 100
+PUSH S1
+STUR 256
+ENDC
+PUSHINT 1
+SENDRAWMSG
 ; end function reject
 DROP
 ; end modifier onlyBridge
@@ -391,10 +429,20 @@ GETGLOB 17
 SDEQ
 THROWANYIFNOT
 ; function reject
+;; emit NewEthereumConfigurationReject
+NEWC
+PUSHSLICE xc0000000000000000000000002_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x4521c4b8
+;; relayKey
 ;; push identifier relayKey
-DUP
-GTINT 0
-THROWIFNOT 100
+PUSH S1
+STUR 256
+ENDC
+PUSHINT 1
+SENDRAWMSG
 ; end function reject
 DROP
 ; end modifier onlyBridge
@@ -410,13 +458,8 @@ PUSHCONT {
 IF
 ; Decode input parameters
 ; Decode eventTransaction
-LDREF
-; Decode eventIndex
 LDU 256
-; Decode eventData
-;; decode TvmCell
-LDREF
-; Decode eventBlockNumber
+; Decode eventIndex
 LDUQ 256
 PUSHCONT {
 	;; load next cell
@@ -426,7 +469,8 @@ PUSHCONT {
 	LDU 256
 }
 IFNOT
-; Decode eventBlock
+; Decode eventData
+;; decode TvmCell
 DUP
 SBITREFS
 EQINT 1
@@ -440,6 +484,26 @@ PUSHCONT {
 }
 IF
 LDREF
+; Decode eventBlockNumber
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+; Decode eventBlock
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
 ; Decode relayKey
 LDUQ 256
 PUSHCONT {
@@ -496,10 +560,12 @@ PUSHINT 64
 DICTUSETB
 ;; push identifier eventTransaction
 PUSH S6
+NEWC
+STU 256
 PUSHINT 1
 ROT
 PUSHINT 64
-DICTUSETREF
+DICTUSETB
 ;; push identifier eventIndex
 PUSH S5
 NEWC
@@ -530,10 +596,12 @@ PUSHINT 64
 DICTUSETB
 ;; push identifier eventBlock
 PUSH S2
+NEWC
+STU 256
 PUSHINT 6
 ROT
 PUSHINT 64
-DICTUSETREF
+DICTUSETB
 MYADDR
 PUSHINT 7
 ROT
@@ -592,15 +660,15 @@ PUSHINT 1
 SENDRAWMSG
 NIP
 ;; decl: ethereumEventAddress
-;; Remote call EthereumEvent.confirm
 ;; push identifier ethereumEventAddress
 DUP
 NEWC
 STSLICECONST x62_
 STSLICE
-PUSHSLICE x3989680000000000000000000000000004_
+PUSHSLICE x43b9aca00000000000000000000000000004_
 STSLICER
 STSLICECONST 0
+;; Remote call EthereumEvent.confirm
 STSLICECONST 0
 STSLICECONST x7c5f8264
 ;; relayKey
@@ -683,10 +751,12 @@ PUSHINT 64
 DICTUSETB
 ;; push identifier eventTransaction
 PUSH S6
+NEWC
+STU 256
 PUSHINT 1
 ROT
 PUSHINT 64
-DICTUSETREF
+DICTUSETB
 ;; push identifier eventIndex
 PUSH S5
 NEWC
@@ -717,10 +787,12 @@ PUSHINT 64
 DICTUSETB
 ;; push identifier eventBlock
 PUSH S2
+NEWC
+STU 256
 PUSHINT 6
 ROT
 PUSHINT 64
-DICTUSETREF
+DICTUSETB
 MYADDR
 PUSHINT 7
 ROT
@@ -779,15 +851,15 @@ PUSHINT 1
 SENDRAWMSG
 NIP
 ;; decl: ethereumEventAddress
-;; Remote call EthereumEvent.confirm
 ;; push identifier ethereumEventAddress
 DUP
 NEWC
 STSLICECONST x62_
 STSLICE
-PUSHSLICE x3989680000000000000000000000000004_
+PUSHSLICE x43b9aca00000000000000000000000000004_
 STSLICER
 STSLICECONST 0
+;; Remote call EthereumEvent.confirm
 STSLICECONST 0
 STSLICECONST x7c5f8264
 ;; relayKey
@@ -831,13 +903,8 @@ PUSHCONT {
 IF
 ; Decode input parameters
 ; Decode eventTransaction
-LDREF
-; Decode eventIndex
 LDU 256
-; Decode eventData
-;; decode TvmCell
-LDREF
-; Decode eventBlockNumber
+; Decode eventIndex
 LDUQ 256
 PUSHCONT {
 	;; load next cell
@@ -847,7 +914,8 @@ PUSHCONT {
 	LDU 256
 }
 IFNOT
-; Decode eventBlock
+; Decode eventData
+;; decode TvmCell
 DUP
 SBITREFS
 EQINT 1
@@ -861,6 +929,26 @@ PUSHCONT {
 }
 IF
 LDREF
+; Decode eventBlockNumber
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+; Decode eventBlock
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
 ; Decode relayKey
 LDUQ 256
 PUSHCONT {
@@ -905,10 +993,12 @@ PUSHINT 64
 DICTUSETB
 ;; push identifier eventTransaction
 PUSH S6
+NEWC
+STU 256
 PUSHINT 1
 ROT
 PUSHINT 64
-DICTUSETREF
+DICTUSETB
 ;; push identifier eventIndex
 PUSH S5
 NEWC
@@ -939,10 +1029,12 @@ PUSHINT 64
 DICTUSETB
 ;; push identifier eventBlock
 PUSH S2
+NEWC
+STU 256
 PUSHINT 6
 ROT
 PUSHINT 64
-DICTUSETREF
+DICTUSETB
 MYADDR
 PUSHINT 7
 ROT
@@ -1000,15 +1092,15 @@ PUSHINT 1
 SENDRAWMSG
 NIP
 ;; decl: ethereumEventAddress
-;; Remote call EthereumEvent.reject
 ;; push identifier ethereumEventAddress
 DUP
 NEWC
 STSLICECONST x62_
 STSLICE
-PUSHSLICE x3989680000000000000000000000000004_
+PUSHSLICE x43b9aca00000000000000000000000000004_
 STSLICER
 STSLICECONST 0
+;; Remote call EthereumEvent.reject
 STSLICECONST 0
 STSLICECONST x70151477
 ;; relayKey
@@ -1079,10 +1171,12 @@ PUSHINT 64
 DICTUSETB
 ;; push identifier eventTransaction
 PUSH S6
+NEWC
+STU 256
 PUSHINT 1
 ROT
 PUSHINT 64
-DICTUSETREF
+DICTUSETB
 ;; push identifier eventIndex
 PUSH S5
 NEWC
@@ -1113,10 +1207,12 @@ PUSHINT 64
 DICTUSETB
 ;; push identifier eventBlock
 PUSH S2
+NEWC
+STU 256
 PUSHINT 6
 ROT
 PUSHINT 64
-DICTUSETREF
+DICTUSETB
 MYADDR
 PUSHINT 7
 ROT
@@ -1174,15 +1270,15 @@ PUSHINT 1
 SENDRAWMSG
 NIP
 ;; decl: ethereumEventAddress
-;; Remote call EthereumEvent.reject
 ;; push identifier ethereumEventAddress
 DUP
 NEWC
 STSLICECONST x62_
 STSLICE
-PUSHSLICE x3989680000000000000000000000000004_
+PUSHSLICE x43b9aca00000000000000000000000000004_
 STSLICER
 STSLICECONST 0
+;; Remote call EthereumEvent.reject
 STSLICECONST 0
 STSLICECONST x70151477
 ;; relayKey

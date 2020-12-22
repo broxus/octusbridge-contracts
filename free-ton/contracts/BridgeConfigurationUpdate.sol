@@ -69,7 +69,7 @@ contract BridgeConfigurationUpdate is BridgeConfigurationStructure {
         if (confirmKeys.length >= requiredConfirmations) {
             executed = true;
 
-            Bridge(bridgeAddress).updateBridgeConfiguration(bridgeConfiguration);
+            Bridge(bridgeAddress).updateBridgeConfiguration{value: 1 ton}(bridgeConfiguration);
         }
     }
 

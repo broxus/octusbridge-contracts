@@ -6,7 +6,7 @@ contract EventProxy {
     uint static truffleNonce;
 
     bool callbackReceived = false;
-    bytes eventTransaction;
+    uint eventTransaction;
     uint eventIndex;
     TvmCell eventData;
 
@@ -16,7 +16,7 @@ contract EventProxy {
     }
 
     function broxusBridgeCallback(
-        bytes _eventTransaction,
+        uint _eventTransaction,
         uint _eventIndex,
         TvmCell _eventData
     ) public {
@@ -28,7 +28,7 @@ contract EventProxy {
 
     function getDetails() public view returns (
         bool _callbackReceived,
-        bytes _eventTransaction,
+        uint _eventTransaction,
         uint _eventIndex,
         TvmCell _eventData
     ) {

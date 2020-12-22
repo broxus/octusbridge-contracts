@@ -18,7 +18,7 @@ let BridgeConfigurationUpdate;
 
 
 describe('Test Bridge configuration update', function() {
-  this.timeout(100000);
+  this.timeout(12000000);
   
   let newBridgeConfiguration;
   

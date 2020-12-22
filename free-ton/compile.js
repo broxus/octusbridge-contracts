@@ -34,7 +34,12 @@ contractsTree.map(({ path }) => {
   
   const [,contractFileName] = path.match(new RegExp('contracts/(.*).sol'));
   
-  execSync(`cd build && solc-ton ./../${path}`);
+  const output = execSync(`cd build && solc-ton ./../${path}`);
+
+  if (output.toString() === '') {
+    // No code was compiled, probably interface compilation
+    return;
+  }
   
   const contractNameNoFolderStructure = contractFileName.split('/')[contractFileName.split('/').length - 1];
   
