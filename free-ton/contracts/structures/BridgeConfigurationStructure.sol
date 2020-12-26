@@ -4,17 +4,14 @@ pragma AbiHeader expire;
 
 interface BridgeConfigurationStructure {
     struct BridgeConfiguration {
-        TvmCell ethereumEventConfigurationCode;
-        uint ethereumEventConfigurationRequiredConfirmations;
-        uint ethereumEventConfigurationRequiredRejects;
-        uint128 ethereumEventConfigurationInitialBalance;
+        uint16 eventConfigurationRequiredConfirmations;
+        uint16 eventConfigurationRequiredRejects;
 
-        TvmCell ethereumEventCode;
+        uint16 bridgeConfigurationUpdateRequiredConfirmations;
+        uint16 bridgeConfigurationUpdateRequiredRejects;
 
-        TvmCell bridgeConfigurationUpdateCode;
-        uint bridgeConfigurationUpdateRequiredConfirmations;
-        uint bridgeConfigurationUpdateRequiredRejects;
-        uint128 bridgeConfigurationUpdateInitialBalance;
+        uint16 bridgeRelayUpdateRequiredConfirmations;
+        uint16 bridgeRelayUpdateRequiredRejects;
 
         bool active;
     }

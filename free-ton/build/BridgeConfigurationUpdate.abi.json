@@ -8,7 +8,7 @@
 				{"name":"relayKey","type":"uint256"},
 				{"name":"_requiredConfirmations","type":"uint256"},
 				{"name":"_requiredRejects","type":"uint256"},
-				{"components":[{"name":"ethereumEventConfigurationCode","type":"cell"},{"name":"ethereumEventConfigurationRequiredConfirmations","type":"uint256"},{"name":"ethereumEventConfigurationRequiredRejects","type":"uint256"},{"name":"ethereumEventConfigurationInitialBalance","type":"uint128"},{"name":"ethereumEventCode","type":"cell"},{"name":"bridgeConfigurationUpdateCode","type":"cell"},{"name":"bridgeConfigurationUpdateRequiredConfirmations","type":"uint256"},{"name":"bridgeConfigurationUpdateRequiredRejects","type":"uint256"},{"name":"bridgeConfigurationUpdateInitialBalance","type":"uint128"},{"name":"active","type":"bool"}],"name":"_bridgeConfiguration","type":"tuple"}
+				{"components":[{"name":"eventConfigurationRequiredConfirmations","type":"uint256"},{"name":"eventConfigurationRequiredRejects","type":"uint256"},{"name":"bridgeConfigurationUpdateRequiredConfirmations","type":"uint256"},{"name":"bridgeConfigurationUpdateRequiredRejects","type":"uint256"},{"name":"active","type":"bool"}],"name":"_bridgeConfiguration","type":"tuple"}
 			],
 			"outputs": [
 			]
@@ -26,7 +26,7 @@
 			"inputs": [
 			],
 			"outputs": [
-				{"components":[{"name":"ethereumEventConfigurationCode","type":"cell"},{"name":"ethereumEventConfigurationRequiredConfirmations","type":"uint256"},{"name":"ethereumEventConfigurationRequiredRejects","type":"uint256"},{"name":"ethereumEventConfigurationInitialBalance","type":"uint128"},{"name":"ethereumEventCode","type":"cell"},{"name":"bridgeConfigurationUpdateCode","type":"cell"},{"name":"bridgeConfigurationUpdateRequiredConfirmations","type":"uint256"},{"name":"bridgeConfigurationUpdateRequiredRejects","type":"uint256"},{"name":"bridgeConfigurationUpdateInitialBalance","type":"uint128"},{"name":"active","type":"bool"}],"name":"_bridgeConfiguration","type":"tuple"},
+				{"components":[{"name":"eventConfigurationRequiredConfirmations","type":"uint256"},{"name":"eventConfigurationRequiredRejects","type":"uint256"},{"name":"bridgeConfigurationUpdateRequiredConfirmations","type":"uint256"},{"name":"bridgeConfigurationUpdateRequiredRejects","type":"uint256"},{"name":"active","type":"bool"}],"name":"_bridgeConfiguration","type":"tuple"},
 				{"name":"_requiredConfirmations","type":"uint256"},
 				{"name":"_requiredRejects","type":"uint256"},
 				{"name":"_confirmKeys","type":"uint256[]"},

@@ -6,8 +6,6 @@ contract KeysOwnable {
     mapping(uint => bool) ownerKeys;
 
     function getKeyStatus(uint key) public view returns(bool _status) {
-        tvm.accept();
-
         return ownerKeys[key];
     }
 
@@ -18,5 +16,9 @@ contract KeysOwnable {
 
     function _grantOwnership(uint key) internal {
         ownerKeys[key] = true;
+    }
+
+    function _removeOwnership(uint key) internal {
+        ownerKeys[key] = false;
     }
 }
