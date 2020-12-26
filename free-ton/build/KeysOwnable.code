@@ -36,7 +36,6 @@ ENDS
 ; function getKeyStatus
 ;; ret param: _status
 PUSHINT 0
-ACCEPT
 ;; return
 ;; index
 ;; push identifier key
@@ -94,7 +93,6 @@ SETGLOB 7
 ; function getKeyStatus
 ;; ret param: _status
 PUSHINT 0
-ACCEPT
 ;; return
 ;; index
 ;; push identifier key
@@ -136,6 +134,29 @@ SETGLOB 10
 ; end colValue
 DROP
 ; end function _grantOwnership
+
+.globl	_removeOwnership_internal
+.type	_removeOwnership_internal, @function
+;; param: key
+; function _removeOwnership
+; expValue
+;; fetch ownerKeys
+GETGLOB 10
+;; push identifier key
+PUSH S1
+SWAP
+; end expValue
+FALSE
+; colValue
+NEWC
+STI 1
+ROTREV
+PUSHINT 256
+DICTUSETB
+SETGLOB 10
+; end colValue
+DROP
+; end function _removeOwnership
 
 .globl	c7_to_c4
 .type	c7_to_c4, @function

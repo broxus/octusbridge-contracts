@@ -38,19 +38,7 @@ PUSHCONT {
 IFNOT
 ; Decode _bridgeConfiguration
 ;; decode struct BridgeConfiguration _bridgeConfiguration
-;; decode BridgeConfiguration.ethereumEventConfigurationCode
-;; decode TvmCell
-DUP
-SREFS
-EQINT 1
-PUSHCONT {
-	LDREF
-	ENDS
-	CTOS
-}
-IF
-LDREF
-;; decode BridgeConfiguration.ethereumEventConfigurationRequiredConfirmations
+;; decode BridgeConfiguration.eventConfigurationRequiredConfirmations
 LDUQ 256
 PUSHCONT {
 	;; load next cell
@@ -60,7 +48,7 @@ PUSHCONT {
 	LDU 256
 }
 IFNOT
-;; decode BridgeConfiguration.ethereumEventConfigurationRequiredRejects
+;; decode BridgeConfiguration.eventConfigurationRequiredRejects
 LDUQ 256
 PUSHCONT {
 	;; load next cell
@@ -70,43 +58,6 @@ PUSHCONT {
 	LDU 256
 }
 IFNOT
-;; decode BridgeConfiguration.ethereumEventConfigurationInitialBalance
-LDUQ 128
-PUSHCONT {
-	;; load next cell
-	LDREF
-	ENDS
-	CTOS
-	LDU 128
-}
-IFNOT
-;; decode BridgeConfiguration.ethereumEventCode
-;; decode TvmCell
-DUP
-SREFS
-EQINT 1
-PUSHCONT {
-	LDREF
-	ENDS
-	CTOS
-}
-IF
-LDREF
-;; decode BridgeConfiguration.bridgeConfigurationUpdateCode
-;; decode TvmCell
-DUP
-SBITREFS
-EQINT 1
-SWAP
-EQINT 0
-AND
-PUSHCONT {
-	LDREF
-	ENDS
-	CTOS
-}
-IF
-LDREF
 ;; decode BridgeConfiguration.bridgeConfigurationUpdateRequiredConfirmations
 LDUQ 256
 PUSHCONT {
@@ -127,29 +78,11 @@ PUSHCONT {
 	LDU 256
 }
 IFNOT
-;; decode BridgeConfiguration.bridgeConfigurationUpdateInitialBalance
-LDUQ 128
-PUSHCONT {
-	;; load next cell
-	LDREF
-	ENDS
-	CTOS
-	LDU 128
-}
-IFNOT
 ;; decode BridgeConfiguration.active
-LDIQ 1
-PUSHCONT {
-	;; load next cell
-	LDREF
-	ENDS
-	CTOS
-	LDI 1
-}
-IFNOT
-;; build struct BridgeConfiguration ss:14
-BLKSWAP 10, 1
-TUPLE 10
+LDI 1
+;; build struct BridgeConfiguration ss:9
+BLKSWAP 5, 1
+TUPLE 5
 SWAP
 ENDS
 ;; param: relayKey
@@ -211,6 +144,7 @@ GETGLOB 10
 SDEQ
 THROWANYIFNOT
 ; function confirm
+ACCEPT
 ; for
 PUSHINT 0
 ;; decl: i
@@ -220,7 +154,7 @@ PUSHCONT {
 	;; get member length
 	;; push identifier confirmKeys
 	GETGLOB 15
-	FIRST
+	INDEX 0
 	;; <
 	LESS
 }
@@ -276,7 +210,7 @@ SETGLOB 15
 ;; get member length
 ;; push identifier confirmKeys
 GETGLOB 15
-FIRST
+INDEX 0
 ;; push identifier requiredConfirmations
 GETGLOB 12
 ;; >=
@@ -288,6 +222,7 @@ PUSHCONT {
 	; colValue
 	SETGLOB 14
 	; end colValue
+	;; Remote call Bridge.updateBridgeConfiguration
 	;; push identifier bridgeAddress
 	GETGLOB 10
 	NEWC
@@ -296,37 +231,26 @@ PUSHCONT {
 	PUSHSLICE x43b9aca00000000000000000000000000004_
 	STSLICER
 	STSLICECONST 0
-	;; Remote call Bridge.updateBridgeConfiguration
 	STSLICECONST 1
 	NEWC
-	STSLICECONST x29e24fef
+	STSLICECONST x7a9e3054
 	;; _bridgeConfiguration
 	;; push identifier bridgeConfiguration
 	GETGLOB 11
-	UNTUPLE 10
-	BLKSWAP 1, 10
-	PUSH S10
-	STREFR
-	PUSH S9
-	STUR 256
-	PUSH S8
-	STUR 256
-	PUSH S7
-	STUR 128
-	PUSH S6
-	STREFR
+	UNTUPLE 5
+	BLKSWAP 1, 5
 	PUSH S5
-	STREFR
-	PUSH S4
 	STUR 256
-	NEWC
 	PUSH S4
 	STUR 256
 	PUSH S3
-	STUR 128
+	STUR 256
+	NEWC
+	PUSH S3
+	STUR 256
 	PUSH S2
 	STIR 1
-	BLKDROP2 10, 2
+	BLKDROP2 5, 2
 	STBREFR
 	STBREFR
 	ENDC
@@ -354,6 +278,7 @@ GETGLOB 10
 SDEQ
 THROWANYIFNOT
 ; function confirm
+ACCEPT
 ; for
 PUSHINT 0
 ;; decl: i
@@ -363,7 +288,7 @@ PUSHCONT {
 	;; get member length
 	;; push identifier confirmKeys
 	GETGLOB 15
-	FIRST
+	INDEX 0
 	;; <
 	LESS
 }
@@ -419,7 +344,7 @@ SETGLOB 15
 ;; get member length
 ;; push identifier confirmKeys
 GETGLOB 15
-FIRST
+INDEX 0
 ;; push identifier requiredConfirmations
 GETGLOB 12
 ;; >=
@@ -431,6 +356,7 @@ PUSHCONT {
 	; colValue
 	SETGLOB 14
 	; end colValue
+	;; Remote call Bridge.updateBridgeConfiguration
 	;; push identifier bridgeAddress
 	GETGLOB 10
 	NEWC
@@ -439,37 +365,26 @@ PUSHCONT {
 	PUSHSLICE x43b9aca00000000000000000000000000004_
 	STSLICER
 	STSLICECONST 0
-	;; Remote call Bridge.updateBridgeConfiguration
 	STSLICECONST 1
 	NEWC
-	STSLICECONST x29e24fef
+	STSLICECONST x7a9e3054
 	;; _bridgeConfiguration
 	;; push identifier bridgeConfiguration
 	GETGLOB 11
-	UNTUPLE 10
-	BLKSWAP 1, 10
-	PUSH S10
-	STREFR
-	PUSH S9
-	STUR 256
-	PUSH S8
-	STUR 256
-	PUSH S7
-	STUR 128
-	PUSH S6
-	STREFR
+	UNTUPLE 5
+	BLKSWAP 1, 5
 	PUSH S5
-	STREFR
-	PUSH S4
 	STUR 256
-	NEWC
 	PUSH S4
 	STUR 256
 	PUSH S3
-	STUR 128
+	STUR 256
+	NEWC
+	PUSH S3
+	STUR 256
 	PUSH S2
 	STIR 1
-	BLKDROP2 10, 2
+	BLKDROP2 5, 2
 	STBREFR
 	STBREFR
 	ENDC
@@ -495,20 +410,12 @@ IF
 ENDS
 ; function getDetails
 ;; ret param: _bridgeConfiguration
-NEWC
-ENDC
-PUSHINT 0
-PUSHINT 0
-PUSHINT 0
-NEWC
-ENDC
-NEWC
-ENDC
 PUSHINT 0
 PUSHINT 0
 PUSHINT 0
 PUSHINT 0
-TUPLE 10
+PUSHINT 0
+TUPLE 5
 ;; ret param: _requiredConfirmations
 PUSHINT 0
 ;; ret param: _requiredRejects
@@ -555,32 +462,22 @@ PUSHCONT {
 	STSLICECONST 0
 	STSLICECONST 1
 	NEWC
-	STSLICECONST x97569ac0
+	STSLICECONST xc56b6a23
 	PUSH S7
-	UNTUPLE 10
-	BLKSWAP 1, 10
-	PUSH S10
-	STREFR
-	PUSH S9
-	STUR 256
-	PUSH S8
-	STUR 256
-	PUSH S7
-	STUR 128
-	PUSH S6
-	STREFR
+	UNTUPLE 5
+	BLKSWAP 1, 5
 	PUSH S5
-	STREFR
-	PUSH S4
 	STUR 256
-	NEWC
 	PUSH S4
 	STUR 256
 	PUSH S3
-	STUR 128
+	STUR 256
+	NEWC
+	PUSH S3
+	STUR 256
 	PUSH S2
 	STIR 1
-	BLKDROP2 10, 2
+	BLKDROP2 5, 2
 	PUSH S7
 	STUR 256
 	PUSH S6
@@ -617,20 +514,12 @@ SETGLOB 7
 .type	getDetails_internal, @function
 ; function getDetails
 ;; ret param: _bridgeConfiguration
-NEWC
-ENDC
-PUSHINT 0
-PUSHINT 0
-PUSHINT 0
-NEWC
-ENDC
-NEWC
-ENDC
 PUSHINT 0
 PUSHINT 0
 PUSHINT 0
 PUSHINT 0
-TUPLE 10
+PUSHINT 0
+TUPLE 5
 ;; ret param: _requiredConfirmations
 PUSHINT 0
 ;; ret param: _requiredRejects
@@ -686,32 +575,22 @@ REVERSE 10, 0
 STBREF
 STSLICE
 SWAP
-UNTUPLE 10
+UNTUPLE 5
 NEWC
 NEWC
-PUSH S4
-STUR 256
 PUSH S3
-STUR 128
+STUR 256
 PUSH S2
 STIR 1
 STBREFR
-PUSH S10
-STREFR
-PUSH S9
-STUR 256
-PUSH S8
-STUR 256
-PUSH S7
-STUR 128
-PUSH S6
-STREFR
 PUSH S5
-STREFR
+STUR 256
 PUSH S4
 STUR 256
-XCHG s10
-BLKDROP 10
+PUSH S3
+STUR 256
+XCHG s5
+BLKDROP 5
 STBREFR
 STU 256
 STI 1
@@ -735,19 +614,14 @@ SETGLOB 13
 LDMSGADDR
 LDREFRTOS
 LDREF
-LDREF
 LDU 256
 LDU 256
-LDU 128
-LDREF
-LDREF
 PLDU 256
-BLKSWAP 1, 7
+BLKSWAP 1, 3
 CTOS
 LDU 256
-LDU 128
 PLDI 1
-TUPLE 10
+TUPLE 5
 SETGLOB 11
 LDU 256
 LDI 1
@@ -785,19 +659,14 @@ PUSHCONT {
 	LDMSGADDR
 	LDREFRTOS
 	LDREF
-	LDREF
 	LDU 256
 	LDU 256
-	LDU 128
-	LDREF
-	LDREF
 	PLDU 256
-	BLKSWAP 1, 7
+	BLKSWAP 1, 3
 	CTOS
 	LDU 256
-	LDU 128
 	PLDI 1
-	TUPLE 10
+	TUPLE 5
 	SETGLOB 11
 	LDU 256
 	LDI 1
@@ -832,20 +701,12 @@ PUSHCONT {
 	IFNOT
 	SETGLOB 10
 	; init bridgeConfiguration
-	NEWC
-	ENDC
-	PUSHINT 0
-	PUSHINT 0
-	PUSHINT 0
-	NEWC
-	ENDC
-	NEWC
-	ENDC
 	PUSHINT 0
 	PUSHINT 0
 	PUSHINT 0
 	PUSHINT 0
-	TUPLE 10
+	PUSHINT 0
+	TUPLE 5
 	SETGLOB 11
 	; init requiredConfirmations
 	PUSHINT 0

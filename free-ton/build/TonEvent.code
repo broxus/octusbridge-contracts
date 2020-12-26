@@ -16,15 +16,20 @@ SETGLOB 6
 ; Decode input parameters
 ; Decode relayKey
 LDU 256
+; Decode eventDataSignature
+LDREF
 ENDS
 ;; param: relayKey
-; constructor EthereumEvent
+;; param: eventDataSignature
+; constructor TonEvent
 ACCEPT
 ;; push identifier relayKey
-DUP
+PUSH S1
+;; push identifier eventDataSignature
+PUSH S1
 CALL $confirm_internal$
-DROP
-; end constructor EthereumEvent
+DROP2
+; end constructor TonEvent
 CALL $c7_to_c4$
 TRUE
 SETGLOB 7
@@ -41,31 +46,22 @@ IF
 ; Decode input parameters
 ; Decode relayKey
 LDU 256
+; Decode eventDataSignature
+LDREF
 ENDS
 ;; param: relayKey
-; modifier onlyNotExecuted
-;; push identifier PROXY_CALLBACK_ALREADY_EXECUTED
-GETGLOB 21
-DUP
-LESSINT 2
-PUSHCONT {
-	DROP
-	PUSHINT 100
-}
-IF
-;; push identifier proxyCallbackExecuted
-GETGLOB 19
-FALSE
-;; ==
-EQUAL
-THROWANYIFNOT
+;; param: eventDataSignature
+; modifier onlyNotConfirmed
+;; get member length
+;; push identifier confirmKeys
+GETGLOB 18
+INDEX 0
+;; push identifier requiredConfirmations
+GETGLOB 16
+;; <
+LESS
+THROWIFNOT 602
 ; function confirm
-;; push identifier eventRejected
-GETGLOB 20
-FALSE
-;; ==
-EQUAL
-THROWIFNOT 405
 ; for
 PUSHINT 0
 ;; decl: i
@@ -74,7 +70,7 @@ PUSHCONT {
 	DUP
 	;; get member length
 	;; push identifier confirmKeys
-	GETGLOB 22
+	GETGLOB 18
 	INDEX 0
 	;; <
 	LESS
@@ -84,14 +80,14 @@ PUSHCONT {
 	;; push identifier i
 	DUP
 	;; push identifier confirmKeys
-	GETGLOB 22
+	GETGLOB 18
 	INDEX 1
 	PUSHINT 32
 	DICTUGET
 	THROWIFNOT 50
 	PLDU 256
 	;; push identifier relayKey
-	PUSH S2
+	PUSH S3
 	;; !=
 	NEQ
 	THROWIFNOT 404
@@ -107,10 +103,10 @@ DROP
 ; end for
 ; expValue
 ;; fetch confirmKeys
-GETGLOB 22
+GETGLOB 18
 ; end expValue
 ;; push identifier relayKey
-PUSH S1
+PUSH S2
 ;; array.push(..)
 NEWC
 STU 256
@@ -124,22 +120,46 @@ PUSHINT 32
 DICTUSETB
 PAIR
 ; colValue
-SETGLOB 22
+SETGLOB 18
+; end colValue
+; expValue
+;; fetch eventDataSignatures
+GETGLOB 19
+; end expValue
+;; push identifier eventDataSignature
+PUSH S1
+;; array.push(..)
+SWAP
+UNPAIR
+PUSH S1
+INC
+XCHG s3
+ROTREV
+PUSHINT 32
+DICTUSETREF
+PAIR
+; colValue
+SETGLOB 19
 ; end colValue
 ;; if
 ;; get member length
 ;; push identifier confirmKeys
-GETGLOB 22
+GETGLOB 18
 INDEX 0
 ;; push identifier requiredConfirmations
-GETGLOB 17
+GETGLOB 16
 ;; >=
 GEQ
 PUSHCONT {
-	CALL $_executeProxyCallback_internal$
+	; expValue
+	; end expValue
+	TRUE
+	; colValue
+	SETGLOB 21
+	; end colValue
 	;; transfer()
-	;; push identifier ethereumEventConfirguration
-	GETGLOB 16
+	;; push identifier tonEventConfiguration
+	GETGLOB 15
 	NEWC
 	STSLICECONST x62_
 	STSLICE
@@ -154,8 +174,8 @@ PUSHCONT {
 IF
 ;; end if
 ; end function confirm
-DROP
-; end modifier onlyNotExecuted
+DROP2
+; end modifier onlyNotConfirmed
 CALL $c7_to_c4$
 TRUE
 SETGLOB 7
@@ -163,29 +183,18 @@ SETGLOB 7
 .globl	confirm_internal
 .type	confirm_internal, @function
 ;; param: relayKey
-; modifier onlyNotExecuted
-;; push identifier PROXY_CALLBACK_ALREADY_EXECUTED
-GETGLOB 21
-DUP
-LESSINT 2
-PUSHCONT {
-	DROP
-	PUSHINT 100
-}
-IF
-;; push identifier proxyCallbackExecuted
-GETGLOB 19
-FALSE
-;; ==
-EQUAL
-THROWANYIFNOT
+;; param: eventDataSignature
+; modifier onlyNotConfirmed
+;; get member length
+;; push identifier confirmKeys
+GETGLOB 18
+INDEX 0
+;; push identifier requiredConfirmations
+GETGLOB 16
+;; <
+LESS
+THROWIFNOT 602
 ; function confirm
-;; push identifier eventRejected
-GETGLOB 20
-FALSE
-;; ==
-EQUAL
-THROWIFNOT 405
 ; for
 PUSHINT 0
 ;; decl: i
@@ -194,7 +203,7 @@ PUSHCONT {
 	DUP
 	;; get member length
 	;; push identifier confirmKeys
-	GETGLOB 22
+	GETGLOB 18
 	INDEX 0
 	;; <
 	LESS
@@ -204,14 +213,14 @@ PUSHCONT {
 	;; push identifier i
 	DUP
 	;; push identifier confirmKeys
-	GETGLOB 22
+	GETGLOB 18
 	INDEX 1
 	PUSHINT 32
 	DICTUGET
 	THROWIFNOT 50
 	PLDU 256
 	;; push identifier relayKey
-	PUSH S2
+	PUSH S3
 	;; !=
 	NEQ
 	THROWIFNOT 404
@@ -227,10 +236,10 @@ DROP
 ; end for
 ; expValue
 ;; fetch confirmKeys
-GETGLOB 22
+GETGLOB 18
 ; end expValue
 ;; push identifier relayKey
-PUSH S1
+PUSH S2
 ;; array.push(..)
 NEWC
 STU 256
@@ -244,22 +253,46 @@ PUSHINT 32
 DICTUSETB
 PAIR
 ; colValue
-SETGLOB 22
+SETGLOB 18
+; end colValue
+; expValue
+;; fetch eventDataSignatures
+GETGLOB 19
+; end expValue
+;; push identifier eventDataSignature
+PUSH S1
+;; array.push(..)
+SWAP
+UNPAIR
+PUSH S1
+INC
+XCHG s3
+ROTREV
+PUSHINT 32
+DICTUSETREF
+PAIR
+; colValue
+SETGLOB 19
 ; end colValue
 ;; if
 ;; get member length
 ;; push identifier confirmKeys
-GETGLOB 22
+GETGLOB 18
 INDEX 0
 ;; push identifier requiredConfirmations
-GETGLOB 17
+GETGLOB 16
 ;; >=
 GEQ
 PUSHCONT {
-	CALL $_executeProxyCallback_internal$
+	; expValue
+	; end expValue
+	TRUE
+	; colValue
+	SETGLOB 21
+	; end colValue
 	;; transfer()
-	;; push identifier ethereumEventConfirguration
-	GETGLOB 16
+	;; push identifier tonEventConfiguration
+	GETGLOB 15
 	NEWC
 	STSLICECONST x62_
 	STSLICE
@@ -274,8 +307,8 @@ PUSHCONT {
 IF
 ;; end if
 ; end function confirm
-DROP
-; end modifier onlyNotExecuted
+DROP2
+; end modifier onlyNotConfirmed
 
 .globl	reject
 .public	reject
@@ -291,22 +324,6 @@ IF
 LDU 256
 ENDS
 ;; param: relayKey
-; modifier onlyNotExecuted
-;; push identifier PROXY_CALLBACK_ALREADY_EXECUTED
-GETGLOB 21
-DUP
-LESSINT 2
-PUSHCONT {
-	DROP
-	PUSHINT 100
-}
-IF
-;; push identifier proxyCallbackExecuted
-GETGLOB 19
-FALSE
-;; ==
-EQUAL
-THROWANYIFNOT
 ; function reject
 ; for
 PUSHINT 0
@@ -316,7 +333,7 @@ PUSHCONT {
 	DUP
 	;; get member length
 	;; push identifier rejectKeys
-	GETGLOB 23
+	GETGLOB 20
 	INDEX 0
 	;; <
 	LESS
@@ -326,7 +343,7 @@ PUSHCONT {
 	;; push identifier i
 	DUP
 	;; push identifier rejectKeys
-	GETGLOB 23
+	GETGLOB 20
 	INDEX 1
 	PUSHINT 32
 	DICTUGET
@@ -349,7 +366,7 @@ DROP
 ; end for
 ; expValue
 ;; fetch rejectKeys
-GETGLOB 23
+GETGLOB 20
 ; end expValue
 ;; push identifier relayKey
 PUSH S1
@@ -366,15 +383,15 @@ PUSHINT 32
 DICTUSETB
 PAIR
 ; colValue
-SETGLOB 23
+SETGLOB 20
 ; end colValue
 ;; if
 ;; get member length
 ;; push identifier rejectKeys
-GETGLOB 23
+GETGLOB 20
 INDEX 0
 ;; push identifier requiredRejects
-GETGLOB 18
+GETGLOB 17
 ;; >=
 GEQ
 PUSHCONT {
@@ -382,11 +399,11 @@ PUSHCONT {
 	; end expValue
 	TRUE
 	; colValue
-	SETGLOB 20
+	SETGLOB 22
 	; end colValue
 	;; transfer()
-	;; push identifier ethereumEventConfirguration
-	GETGLOB 16
+	;; push identifier tonEventConfiguration
+	GETGLOB 15
 	NEWC
 	STSLICECONST x62_
 	STSLICE
@@ -400,9 +417,8 @@ PUSHCONT {
 }
 IF
 ;; end if
-; end function reject
 DROP
-; end modifier onlyNotExecuted
+; end function reject
 CALL $c7_to_c4$
 TRUE
 SETGLOB 7
@@ -410,22 +426,6 @@ SETGLOB 7
 .globl	reject_internal
 .type	reject_internal, @function
 ;; param: relayKey
-; modifier onlyNotExecuted
-;; push identifier PROXY_CALLBACK_ALREADY_EXECUTED
-GETGLOB 21
-DUP
-LESSINT 2
-PUSHCONT {
-	DROP
-	PUSHINT 100
-}
-IF
-;; push identifier proxyCallbackExecuted
-GETGLOB 19
-FALSE
-;; ==
-EQUAL
-THROWANYIFNOT
 ; function reject
 ; for
 PUSHINT 0
@@ -435,7 +435,7 @@ PUSHCONT {
 	DUP
 	;; get member length
 	;; push identifier rejectKeys
-	GETGLOB 23
+	GETGLOB 20
 	INDEX 0
 	;; <
 	LESS
@@ -445,7 +445,7 @@ PUSHCONT {
 	;; push identifier i
 	DUP
 	;; push identifier rejectKeys
-	GETGLOB 23
+	GETGLOB 20
 	INDEX 1
 	PUSHINT 32
 	DICTUGET
@@ -468,7 +468,7 @@ DROP
 ; end for
 ; expValue
 ;; fetch rejectKeys
-GETGLOB 23
+GETGLOB 20
 ; end expValue
 ;; push identifier relayKey
 PUSH S1
@@ -485,15 +485,15 @@ PUSHINT 32
 DICTUSETB
 PAIR
 ; colValue
-SETGLOB 23
+SETGLOB 20
 ; end colValue
 ;; if
 ;; get member length
 ;; push identifier rejectKeys
-GETGLOB 23
+GETGLOB 20
 INDEX 0
 ;; push identifier requiredRejects
-GETGLOB 18
+GETGLOB 17
 ;; >=
 GEQ
 PUSHCONT {
@@ -501,11 +501,11 @@ PUSHCONT {
 	; end expValue
 	TRUE
 	; colValue
-	SETGLOB 20
+	SETGLOB 22
 	; end colValue
 	;; transfer()
-	;; push identifier ethereumEventConfirguration
-	GETGLOB 16
+	;; push identifier tonEventConfiguration
+	GETGLOB 15
 	NEWC
 	STSLICECONST x62_
 	STSLICE
@@ -519,46 +519,8 @@ PUSHCONT {
 }
 IF
 ;; end if
-; end function reject
 DROP
-; end modifier onlyNotExecuted
-
-.globl	_executeProxyCallback_internal
-.type	_executeProxyCallback_internal, @function
-; function _executeProxyCallback
-; expValue
-; end expValue
-TRUE
-; colValue
-SETGLOB 19
-; end colValue
-;; Remote call Proxy.broxusBridgeCallback
-;; push identifier proxyAddress
-GETGLOB 13
-NEWC
-STSLICECONST x62_
-STSLICE
-PUSHSLICE x43b9aca00000000000000000000000000004_
-STSLICER
-STSLICECONST 0
-STSLICECONST 0
-STSLICECONST x181beb92
-;; eventTransaction
-;; push identifier eventTransaction
-GETGLOB 10
-STUR 256
-;; eventIndex
-;; push identifier eventIndex
-GETGLOB 11
-STUR 256
-;; eventData
-;; push identifier eventData
-GETGLOB 12
-STREFR
-ENDC
-PUSHINT 1
-SENDRAWMSG
-; end function _executeProxyCallback
+; end function reject
 
 .globl	getDetails
 .public	getDetails
@@ -579,23 +541,21 @@ PUSHINT 0
 ;; ret param: _eventData
 NEWC
 ENDC
-;; ret param: _proxyAddress
-PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 ;; ret param: _eventBlockNumber
 PUSHINT 0
 ;; ret param: _eventBlock
 PUSHINT 0
-;; ret param: _ethereumEventConfirguration
+;; ret param: _tonEventConfiguration
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
-;; ret param: _proxyCallbackExecuted
-PUSHINT 0
-;; ret param: _eventRejected
-PUSHINT 0
 ;; ret param: _confirmKeys
 PUSHINT 0
 NEWDICT
 PAIR
 ;; ret param: _rejectKeys
+PUSHINT 0
+NEWDICT
+PAIR
+;; ret param: _eventDataSignatures
 PUSHINT 0
 NEWDICT
 PAIR
@@ -610,32 +570,28 @@ GETGLOB 10
 GETGLOB 11
 ;; push identifier eventData
 GETGLOB 12
-;; push identifier proxyAddress
-GETGLOB 13
 ;; push identifier eventBlockNumber
-GETGLOB 14
+GETGLOB 13
 ;; push identifier eventBlock
+GETGLOB 14
+;; push identifier tonEventConfiguration
 GETGLOB 15
-;; push identifier ethereumEventConfirguration
-GETGLOB 16
-;; push identifier proxyCallbackExecuted
-GETGLOB 19
-;; push identifier eventRejected
-GETGLOB 20
 ;; push identifier confirmKeys
-GETGLOB 22
-;; push identifier rejectKeys
-GETGLOB 23
-;; push identifier requiredConfirmations
-GETGLOB 17
-;; push identifier requiredRejects
 GETGLOB 18
-BLKDROP2 13, 13
-;; emitting 13 value(s)
-PUSH S13
+;; push identifier rejectKeys
+GETGLOB 20
+;; push identifier eventDataSignatures
+GETGLOB 19
+;; push identifier requiredConfirmations
+GETGLOB 16
+;; push identifier requiredRejects
+GETGLOB 17
+BLKDROP2 11, 11
+;; emitting 11 value(s)
+PUSH S11
 EQINT -1
 PUSHCONT {
-	PUSH S15
+	PUSH S13
 	CTOS
 	LDU 2
 	LDMSGADDR
@@ -649,26 +605,25 @@ PUSHCONT {
 	STSLICECONST 0
 	STSLICECONST 1
 	NEWC
-	STSLICECONST xa5f5f4c4
-	PUSH S14
-	STUR 256
-	PUSH S13
-	STUR 256
+	STSLICECONST xa49e0771
 	PUSH S12
-	STREFR
-	PUSH S11
-	STSLICER
-	NEWC
+	STUR 256
 	PUSH S11
 	STUR 256
 	PUSH S10
-	STUR 256
+	STREFR
 	PUSH S9
-	STSLICER
+	STUR 256
+	NEWC
+	PUSH S9
+	STUR 256
 	PUSH S8
-	STIR 1
+	STSLICER
 	PUSH S7
-	STIR 1
+	UNPAIR
+	XCHG s2
+	STU 32
+	STDICT
 	PUSH S6
 	UNPAIR
 	XCHG s2
@@ -679,9 +634,9 @@ PUSHCONT {
 	XCHG s2
 	STU 32
 	STDICT
-	NEWC
-	PUSH S5
+	PUSH S4
 	STUR 256
+	NEWC
 	PUSH S4
 	STUR 256
 	STBREFR
@@ -692,7 +647,7 @@ PUSHCONT {
 	SENDRAWMSG
 }
 IF
-BLKDROP 13
+BLKDROP 11
 ; end function getDetails
 PUSHCONT {
 	CALL $c7_to_c4$
@@ -711,23 +666,21 @@ PUSHINT 0
 ;; ret param: _eventData
 NEWC
 ENDC
-;; ret param: _proxyAddress
-PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 ;; ret param: _eventBlockNumber
 PUSHINT 0
 ;; ret param: _eventBlock
 PUSHINT 0
-;; ret param: _ethereumEventConfirguration
+;; ret param: _tonEventConfiguration
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
-;; ret param: _proxyCallbackExecuted
-PUSHINT 0
-;; ret param: _eventRejected
-PUSHINT 0
 ;; ret param: _confirmKeys
 PUSHINT 0
 NEWDICT
 PAIR
 ;; ret param: _rejectKeys
+PUSHINT 0
+NEWDICT
+PAIR
+;; ret param: _eventDataSignatures
 PUSHINT 0
 NEWDICT
 PAIR
@@ -742,27 +695,23 @@ GETGLOB 10
 GETGLOB 11
 ;; push identifier eventData
 GETGLOB 12
-;; push identifier proxyAddress
-GETGLOB 13
 ;; push identifier eventBlockNumber
-GETGLOB 14
+GETGLOB 13
 ;; push identifier eventBlock
+GETGLOB 14
+;; push identifier tonEventConfiguration
 GETGLOB 15
-;; push identifier ethereumEventConfirguration
-GETGLOB 16
-;; push identifier proxyCallbackExecuted
-GETGLOB 19
-;; push identifier eventRejected
-GETGLOB 20
 ;; push identifier confirmKeys
-GETGLOB 22
-;; push identifier rejectKeys
-GETGLOB 23
-;; push identifier requiredConfirmations
-GETGLOB 17
-;; push identifier requiredRejects
 GETGLOB 18
-BLKDROP2 13, 13
+;; push identifier rejectKeys
+GETGLOB 20
+;; push identifier eventDataSignatures
+GETGLOB 19
+;; push identifier requiredConfirmations
+GETGLOB 16
+;; push identifier requiredRejects
+GETGLOB 17
+BLKDROP2 11, 11
 ; end function getDetails
 
 .globl	c7_to_c4
@@ -778,14 +727,14 @@ NEWC
 GETGLOB 13
 GETGLOB 14
 GETGLOB 15
-GETGLOB 22
+GETGLOB 19
 UNTUPLE 2
-GETGLOB 23
+GETGLOB 20
 UNTUPLE 2
 REVERSE 8, 0
+STU 256
+STU 256
 STSLICE
-STU 256
-STU 256
 STU 32
 STDICT
 STU 32
@@ -793,22 +742,17 @@ STDICT
 NEWC
 GETGLOB 16
 GETGLOB 17
-GETGLOB 18
-REVERSE 4, 0
-STSLICE
+XCHG s2
 STU 256
-STU 256
-NEWC
-GETGLOB 21
-SWAP
 STU 256
 GETGLOB 10
 GETGLOB 11
 GETGLOB 12
-GETGLOB 19
-GETGLOB 20
-REVERSE 9, 0
-STBREF
+GETGLOB 21
+GETGLOB 22
+GETGLOB 18
+UNTUPLE 2
+REVERSE 10, 0
 STBREF
 STBREF
 STU 256
@@ -816,6 +760,8 @@ STU 256
 STREF
 STI 1
 STI 1
+STU 32
+STDICT
 ENDC
 POP C4
 
@@ -827,38 +773,37 @@ LDU 256      ; pubkey c4
 LDU 64      ; pubkey timestamp c4
 LDU 1       ; pubkey [timestamp] constructor_flag memory
 LDREFRTOS
+LDU 256
+LDU 256
 LDMSGADDR
-LDU 256
-LDU 256
 LDU 32
 LDDICT
 ROTREV
 PAIR
-SETGLOB 22
+SETGLOB 19
 LDU 32
 PLDDICT
 PAIR
-SETGLOB 23
+SETGLOB 20
 SETGLOB 15
 SETGLOB 14
 SETGLOB 13
 LDREFRTOS
-LDMSGADDR
 LDU 256
 PLDU 256
-SETGLOB 18
 SETGLOB 17
 SETGLOB 16
-LDREFRTOS
-PLDU 256
-SETGLOB 21
 LDU 256
 LDU 256
 LDREF
 LDI 1
-PLDI 1
-SETGLOB 20
-SETGLOB 19
+LDI 1
+LDU 32
+PLDDICT
+PAIR
+SETGLOB 18
+SETGLOB 22
+SETGLOB 21
 SETGLOB 12
 SETGLOB 11
 SETGLOB 10
@@ -879,38 +824,37 @@ PUSHCONT {
 	LDU 64      ; pubkey timestamp c4
 	LDU 1       ; pubkey [timestamp] constructor_flag memory
 	LDREFRTOS
+	LDU 256
+	LDU 256
 	LDMSGADDR
-	LDU 256
-	LDU 256
 	LDU 32
 	LDDICT
 	ROTREV
 	PAIR
-	SETGLOB 22
+	SETGLOB 19
 	LDU 32
 	PLDDICT
 	PAIR
-	SETGLOB 23
+	SETGLOB 20
 	SETGLOB 15
 	SETGLOB 14
 	SETGLOB 13
 	LDREFRTOS
-	LDMSGADDR
 	LDU 256
 	PLDU 256
-	SETGLOB 18
 	SETGLOB 17
 	SETGLOB 16
-	LDREFRTOS
-	PLDU 256
-	SETGLOB 21
 	LDU 256
 	LDU 256
 	LDREF
 	LDI 1
-	PLDI 1
-	SETGLOB 20
-	SETGLOB 19
+	LDI 1
+	LDU 32
+	PLDDICT
+	PAIR
+	SETGLOB 18
+	SETGLOB 22
+	SETGLOB 21
 	SETGLOB 12
 	SETGLOB 11
 	SETGLOB 10
@@ -959,17 +903,20 @@ PUSHCONT {
 	}
 	IFNOT
 	SETGLOB 12
-	; init proxyAddress
+	; init eventBlockNumber
 	PUSHINT 4
 	PUSH S1
 	PUSHINT 64
 	DICTUGET
 	PUSHCONT {
-		PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+		PLDU 256
 	}
-	IFNOT
+	PUSHCONT {
+		PUSHINT 0
+	}
+	IFELSE
 	SETGLOB 13
-	; init eventBlockNumber
+	; init eventBlock
 	PUSHINT 5
 	PUSH S1
 	PUSHINT 64
@@ -982,8 +929,18 @@ PUSHCONT {
 	}
 	IFELSE
 	SETGLOB 14
-	; init eventBlock
+	; init tonEventConfiguration
 	PUSHINT 6
+	PUSH S1
+	PUSHINT 64
+	DICTUGET
+	PUSHCONT {
+		PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	IFNOT
+	SETGLOB 15
+	; init requiredConfirmations
+	PUSHINT 7
 	PUSH S1
 	PUSHINT 64
 	DICTUGET
@@ -994,18 +951,8 @@ PUSHCONT {
 		PUSHINT 0
 	}
 	IFELSE
-	SETGLOB 15
-	; init ethereumEventConfirguration
-	PUSHINT 7
-	PUSH S1
-	PUSHINT 64
-	DICTUGET
-	PUSHCONT {
-		PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
-	}
-	IFNOT
 	SETGLOB 16
-	; init requiredConfirmations
+	; init requiredRejects
 	PUSHINT 8
 	PUSH S1
 	PUSHINT 64
@@ -1018,38 +965,27 @@ PUSHCONT {
 	}
 	IFELSE
 	SETGLOB 17
-	; init requiredRejects
-	PUSHINT 9
-	PUSH S1
-	PUSHINT 64
-	DICTUGET
-	PUSHCONT {
-		PLDU 256
-	}
-	PUSHCONT {
-		PUSHINT 0
-	}
-	IFELSE
-	SETGLOB 18
-	; init proxyCallbackExecuted
-	PUSHINT 0
-	SETGLOB 19
-	; init eventRejected
-	PUSHINT 0
-	SETGLOB 20
-	; init PROXY_CALLBACK_ALREADY_EXECUTED
-	PUSHINT 0
-	SETGLOB 21
 	; init confirmKeys
 	PUSHINT 0
 	NEWDICT
 	PAIR
-	SETGLOB 22
+	SETGLOB 18
+	; init eventDataSignatures
+	PUSHINT 0
+	NEWDICT
+	PAIR
+	SETGLOB 19
 	; init rejectKeys
 	PUSHINT 0
 	NEWDICT
 	PAIR
-	SETGLOB 23
+	SETGLOB 20
+	; init eventConfirmed
+	PUSHINT 0
+	SETGLOB 21
+	; init eventRejected
+	PUSHINT 0
+	SETGLOB 22
 	; set contract pubkey
 	PUSHINT 0
 	SWAP
@@ -1064,15 +1000,12 @@ PUSHCONT {
 	SETGLOB 6
 	TRUE
 	SETGLOB 1
-	;; init state var: proxyCallbackExecuted
+	;; init state var: eventConfirmed
 	FALSE
-	SETGLOB 19
+	SETGLOB 21
 	;; init state var: eventRejected
 	FALSE
-	SETGLOB 20
-	;; init state var: PROXY_CALLBACK_ALREADY_EXECUTED
-	PUSHINT 501
-	SETGLOB 21
+	SETGLOB 22
 }
 IFELSE
 

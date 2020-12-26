@@ -14,9 +14,12 @@ class OutputDecoder {
     switch (schema.type) {
       case 'bytes':
         return this.decodeBytes(encoded_value);
+      case 'bytes[]':
+        return this.decodeBytesArray(encoded_value);
       case 'cell':
         return encoded_value;
       case 'uint256':
+      case 'uint160':
       case 'uint128':
       case 'uint64':
       case 'uint32':
@@ -41,6 +44,10 @@ class OutputDecoder {
   
   decodeBytes(value) {
     return Buffer.from(value, 'hex');
+  }
+  
+  decodeBytesArray(value) {
+    return value.map(v => this.decodeBytes(v));
   }
   
   decodeBool(value) {
@@ -95,28 +102,29 @@ class ContractWrapper {
    * Deploy smart contract to the network
    * @dev Uses Giver contract to pay for deploy (https://docs.ton.dev/86757ecb2/p/00f9a3-ton-os-se-giver)
    * @param constructorParams Constructor params for contract constructor
-   * @param _initParams
+   * @param initParams Contract initial params (static values in Solidity)
    * @param initialBalance TONs to request from giver for deployment
+   * @param truffleNonce Special initParam - if true, set to random value. Gives easy way to deploy
+   * same contract on different addresses.
    * @returns {Promise<void>}
    */
   async deploy(
     constructorParams={},
-    _initParams={},
+    initParams={},
     initialBalance=10000000000,
+    truffleNonce=false
   ) {
-    const initParams = {
-      ..._initParams,
-      truffleNonce: this.tonWrapper.config.randomTruffleNonce ? utils.getRandomNonce() : 1,
-    };
-    
+    const deployParams = [
+      this.imageBase64,
+      constructorParams,
+      truffleNonce === true ?
+        {...initParams, truffleNonce: utils.getRandomNonce()} : initParams,
+    ];
+
     // Derive future contract address from the deploy message
     const {
       address: futureAddress,
-    } = await this.createDeployMessage(
-      this.imageBase64,
-      constructorParams,
-      initParams
-    );
+    } = await this.createDeployMessage(...deployParams);
     
     // Send grams from giver to pay for contract deployment
     const giverContract = new ContractWrapper(
@@ -132,11 +140,7 @@ class ContractWrapper {
     }, null);
     
     // Send the deploy message
-    const deployMessage = await this.createDeployMessage(
-      this.imageBase64,
-      constructorParams,
-      initParams,
-    );
+    const deployMessage = await this.createDeployMessage(...deployParams);
     
     // - Wait deployment confirmed
     const status = await this.waitForRunTransaction(deployMessage);
@@ -151,15 +155,18 @@ class ContractWrapper {
   /**
    * Check migration applied on this contract so address already exists
    * @dev load 'address' attribute from the migration-log.json file
+   * @param alias Alias of the contract. If not specified - contract name is used
    * @returns {Promise<void>}
    */
-  async loadMigration() {
+  async loadMigration(alias) {
     const migrationLog = JSON.parse(fs.readFileSync('migration-log.json', 'utf8'));
     
-    if (migrationLog[this.name] !== undefined) {
-      this.address = migrationLog[this.name];
+    const aliasName = alias === undefined ? this.name : alias;
+    
+    if (migrationLog[aliasName] !== undefined) {
+      this.address = migrationLog[aliasName].address;
     } else {
-      throw new Error(`Contract ${this.name} not found in the migration`);
+      throw new Error(`Contract ${aliasName} not found in the migration`);
     }
   }
   

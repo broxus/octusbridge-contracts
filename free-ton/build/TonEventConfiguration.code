@@ -15,9 +15,9 @@ SETGLOB 6
 ;; end constructor protection
 ; Decode input parameters
 ENDS
-; constructor EthereumEventConfiguration
+; constructor TonEventConfiguration
 ACCEPT
-; end constructor EthereumEventConfiguration
+; end constructor TonEventConfiguration
 CALL $c7_to_c4$
 TRUE
 SETGLOB 7
@@ -47,11 +47,8 @@ IFNOT
 ; Decode eventData
 ;; decode TvmCell
 DUP
-SBITREFS
+SREFS
 EQINT 1
-SWAP
-EQINT 0
-AND
 PUSHCONT {
 	LDREF
 	ENDS
@@ -79,6 +76,8 @@ PUSHCONT {
 	LDU 256
 }
 IFNOT
+; Decode eventDataSignature
+LDREF
 ; Decode relayKey
 LDUQ 256
 PUSHCONT {
@@ -95,10 +94,11 @@ ENDS
 ;; param: eventData
 ;; param: eventBlockNumber
 ;; param: eventBlock
+;; param: eventDataSignature
 ;; param: relayKey
 ; modifier onlyBridge
 ;; push identifier MSG_SENDER_NOT_BRIDGE
-GETGLOB 19
+GETGLOB 18
 DUP
 LESSINT 2
 PUSHCONT {
@@ -109,16 +109,15 @@ IF
 ;; get member sender
 GETGLOB 9
 ;; push identifier bridgeAddress
-GETGLOB 17
+GETGLOB 16
 SDEQ
 THROWANYIFNOT
 ; modifier transferAfter
 ;; push identifier bridgeAddress
-GETGLOB 17
+GETGLOB 16
 ;; get member value
 CALL $message_balance_macro$
 ; function confirmEvent
-ACCEPT
 NEWDICT
 GETGLOB 2
 NEWC
@@ -128,7 +127,7 @@ ROT
 PUSHINT 64
 DICTUSETB
 ;; push identifier eventTransaction
-PUSH S8
+PUSH S9
 NEWC
 STU 256
 PUSHINT 1
@@ -136,26 +135,28 @@ ROT
 PUSHINT 64
 DICTUSETB
 ;; push identifier eventIndex
-PUSH S7
+PUSH S8
 NEWC
 STU 256
 PUSHINT 2
 ROT
 PUSHINT 64
 DICTUSETB
-;; push identifier proxyAddress
-GETGLOB 16
-PUSHINT 4
-ROT
-PUSHINT 64
-DICTUSET
 ;; push identifier eventData
-PUSH S6
+PUSH S7
 PUSHINT 3
 ROT
 PUSHINT 64
 DICTUSETREF
 ;; push identifier eventBlockNumber
+PUSH S6
+NEWC
+STU 256
+PUSHINT 4
+ROT
+PUSHINT 64
+DICTUSETB
+;; push identifier eventBlock
 PUSH S5
 NEWC
 STU 256
@@ -163,19 +164,19 @@ PUSHINT 5
 ROT
 PUSHINT 64
 DICTUSETB
-;; push identifier eventBlock
-PUSH S4
-NEWC
-STU 256
+MYADDR
 PUSHINT 6
 ROT
 PUSHINT 64
-DICTUSETB
-MYADDR
+DICTUSET
+;; push identifier eventRequiredConfirmations
+GETGLOB 12
+NEWC
+STU 256
 PUSHINT 7
 ROT
 PUSHINT 64
-DICTUSET
+DICTUSETB
 ;; push identifier eventRequiredConfirmations
 GETGLOB 12
 NEWC
@@ -184,19 +185,11 @@ PUSHINT 8
 ROT
 PUSHINT 64
 DICTUSETB
-;; push identifier eventRequiredConfirmations
-GETGLOB 12
-NEWC
-STU 256
-PUSHINT 9
-ROT
-PUSHINT 64
-DICTUSETB
 NEWC
 STDICT
 ENDC
 ;; push identifier eventCode
-GETGLOB 18
+GETGLOB 17
 NEWC
 STSLICECONST x2_
 STOPTREF
@@ -211,7 +204,7 @@ STU 256
 ENDC
 CTOS
 ;; push identifier eventInitialBalance
-GETGLOB 15
+GETGLOB 14
 PUSH S1
 NEWC
 STSLICECONST x62_
@@ -225,18 +218,22 @@ STSLICECONST 1
 PUSH S2
 STREFR
 STSLICECONST 0
-STSLICECONST x3c91e1c5
+STSLICECONST x1a711165
 ;; relayKey
 ;; push identifier relayKey
 PUSH S5
 STUR 256
+;; eventDataSignature
+;; push identifier eventDataSignature
+PUSH S6
+STREFR
 ENDC
 PUSHINT 1
 SENDRAWMSG
 NIP
-;; decl: ethereumEventAddress
-;; Remote call EthereumEvent.confirm
-;; push identifier ethereumEventAddress
+;; decl: tonEventAddress
+;; Remote call TonEvent.confirm
+;; push identifier tonEventAddress
 DUP
 NEWC
 STSLICECONST x62_
@@ -245,11 +242,15 @@ PUSHSLICE x43b9aca00000000000000000000000000004_
 STSLICER
 STSLICECONST 0
 STSLICECONST 0
-STSLICECONST x7c5f8264
+STSLICECONST x586a42e6
 ;; relayKey
 ;; push identifier relayKey
 PUSH S4
 STUR 256
+;; eventDataSignature
+;; push identifier eventDataSignature
+PUSH S5
+STREFR
 ENDC
 PUSHINT 1
 SENDRAWMSG
@@ -261,7 +262,7 @@ STSLICECONST 0
 STSLICECONST 0
 STSLICECONST x0c075cbc
 ;; addr
-;; push identifier ethereumEventAddress
+;; push identifier tonEventAddress
 PUSH S1
 STSLICER
 ;; relayKey
@@ -292,7 +293,7 @@ PUSHINT 1
 SENDRAWMSG
 DROP2
 ; end modifier transferAfter
-BLKDROP 6
+BLKDROP 7
 ; end modifier onlyBridge
 CALL $c7_to_c4$
 TRUE
@@ -305,10 +306,11 @@ SETGLOB 7
 ;; param: eventData
 ;; param: eventBlockNumber
 ;; param: eventBlock
+;; param: eventDataSignature
 ;; param: relayKey
 ; modifier onlyBridge
 ;; push identifier MSG_SENDER_NOT_BRIDGE
-GETGLOB 19
+GETGLOB 18
 DUP
 LESSINT 2
 PUSHCONT {
@@ -319,16 +321,15 @@ IF
 ;; get member sender
 GETGLOB 9
 ;; push identifier bridgeAddress
-GETGLOB 17
+GETGLOB 16
 SDEQ
 THROWANYIFNOT
 ; modifier transferAfter
 ;; push identifier bridgeAddress
-GETGLOB 17
+GETGLOB 16
 ;; get member value
 CALL $message_balance_macro$
 ; function confirmEvent
-ACCEPT
 NEWDICT
 GETGLOB 2
 NEWC
@@ -338,7 +339,7 @@ ROT
 PUSHINT 64
 DICTUSETB
 ;; push identifier eventTransaction
-PUSH S8
+PUSH S9
 NEWC
 STU 256
 PUSHINT 1
@@ -346,26 +347,28 @@ ROT
 PUSHINT 64
 DICTUSETB
 ;; push identifier eventIndex
-PUSH S7
+PUSH S8
 NEWC
 STU 256
 PUSHINT 2
 ROT
 PUSHINT 64
 DICTUSETB
-;; push identifier proxyAddress
-GETGLOB 16
-PUSHINT 4
-ROT
-PUSHINT 64
-DICTUSET
 ;; push identifier eventData
-PUSH S6
+PUSH S7
 PUSHINT 3
 ROT
 PUSHINT 64
 DICTUSETREF
 ;; push identifier eventBlockNumber
+PUSH S6
+NEWC
+STU 256
+PUSHINT 4
+ROT
+PUSHINT 64
+DICTUSETB
+;; push identifier eventBlock
 PUSH S5
 NEWC
 STU 256
@@ -373,19 +376,19 @@ PUSHINT 5
 ROT
 PUSHINT 64
 DICTUSETB
-;; push identifier eventBlock
-PUSH S4
-NEWC
-STU 256
+MYADDR
 PUSHINT 6
 ROT
 PUSHINT 64
-DICTUSETB
-MYADDR
+DICTUSET
+;; push identifier eventRequiredConfirmations
+GETGLOB 12
+NEWC
+STU 256
 PUSHINT 7
 ROT
 PUSHINT 64
-DICTUSET
+DICTUSETB
 ;; push identifier eventRequiredConfirmations
 GETGLOB 12
 NEWC
@@ -394,19 +397,11 @@ PUSHINT 8
 ROT
 PUSHINT 64
 DICTUSETB
-;; push identifier eventRequiredConfirmations
-GETGLOB 12
-NEWC
-STU 256
-PUSHINT 9
-ROT
-PUSHINT 64
-DICTUSETB
 NEWC
 STDICT
 ENDC
 ;; push identifier eventCode
-GETGLOB 18
+GETGLOB 17
 NEWC
 STSLICECONST x2_
 STOPTREF
@@ -421,7 +416,7 @@ STU 256
 ENDC
 CTOS
 ;; push identifier eventInitialBalance
-GETGLOB 15
+GETGLOB 14
 PUSH S1
 NEWC
 STSLICECONST x62_
@@ -435,18 +430,22 @@ STSLICECONST 1
 PUSH S2
 STREFR
 STSLICECONST 0
-STSLICECONST x3c91e1c5
+STSLICECONST x1a711165
 ;; relayKey
 ;; push identifier relayKey
 PUSH S5
 STUR 256
+;; eventDataSignature
+;; push identifier eventDataSignature
+PUSH S6
+STREFR
 ENDC
 PUSHINT 1
 SENDRAWMSG
 NIP
-;; decl: ethereumEventAddress
-;; Remote call EthereumEvent.confirm
-;; push identifier ethereumEventAddress
+;; decl: tonEventAddress
+;; Remote call TonEvent.confirm
+;; push identifier tonEventAddress
 DUP
 NEWC
 STSLICECONST x62_
@@ -455,11 +454,15 @@ PUSHSLICE x43b9aca00000000000000000000000000004_
 STSLICER
 STSLICECONST 0
 STSLICECONST 0
-STSLICECONST x7c5f8264
+STSLICECONST x586a42e6
 ;; relayKey
 ;; push identifier relayKey
 PUSH S4
 STUR 256
+;; eventDataSignature
+;; push identifier eventDataSignature
+PUSH S5
+STREFR
 ENDC
 PUSHINT 1
 SENDRAWMSG
@@ -471,7 +474,7 @@ STSLICECONST 0
 STSLICECONST 0
 STSLICECONST x0c075cbc
 ;; addr
-;; push identifier ethereumEventAddress
+;; push identifier tonEventAddress
 PUSH S1
 STSLICER
 ;; relayKey
@@ -502,7 +505,7 @@ PUSHINT 1
 SENDRAWMSG
 DROP2
 ; end modifier transferAfter
-BLKDROP 6
+BLKDROP 7
 ; end modifier onlyBridge
 
 .globl	rejectEvent
@@ -581,7 +584,7 @@ ENDS
 ;; param: relayKey
 ; modifier onlyBridge
 ;; push identifier MSG_SENDER_NOT_BRIDGE
-GETGLOB 19
+GETGLOB 18
 DUP
 LESSINT 2
 PUSHCONT {
@@ -592,16 +595,15 @@ IF
 ;; get member sender
 GETGLOB 9
 ;; push identifier bridgeAddress
-GETGLOB 17
+GETGLOB 16
 SDEQ
 THROWANYIFNOT
 ; modifier transferAfter
 ;; push identifier bridgeAddress
-GETGLOB 17
+GETGLOB 16
 ;; get member value
 CALL $message_balance_macro$
 ; function rejectEvent
-ACCEPT
 NEWDICT
 GETGLOB 2
 NEWC
@@ -626,12 +628,6 @@ PUSHINT 2
 ROT
 PUSHINT 64
 DICTUSETB
-;; push identifier proxyAddress
-GETGLOB 16
-PUSHINT 4
-ROT
-PUSHINT 64
-DICTUSET
 ;; push identifier eventData
 PUSH S6
 PUSHINT 3
@@ -642,7 +638,7 @@ DICTUSETREF
 PUSH S5
 NEWC
 STU 256
-PUSHINT 5
+PUSHINT 4
 ROT
 PUSHINT 64
 DICTUSETB
@@ -650,15 +646,23 @@ DICTUSETB
 PUSH S4
 NEWC
 STU 256
-PUSHINT 6
+PUSHINT 5
 ROT
 PUSHINT 64
 DICTUSETB
 MYADDR
-PUSHINT 7
+PUSHINT 6
 ROT
 PUSHINT 64
 DICTUSET
+;; push identifier eventRequiredConfirmations
+GETGLOB 12
+NEWC
+STU 256
+PUSHINT 7
+ROT
+PUSHINT 64
+DICTUSETB
 ;; push identifier eventRequiredConfirmations
 GETGLOB 12
 NEWC
@@ -667,19 +671,11 @@ PUSHINT 8
 ROT
 PUSHINT 64
 DICTUSETB
-;; push identifier eventRequiredConfirmations
-GETGLOB 12
-NEWC
-STU 256
-PUSHINT 9
-ROT
-PUSHINT 64
-DICTUSETB
 NEWC
 STDICT
 ENDC
 ;; push identifier eventCode
-GETGLOB 18
+GETGLOB 17
 NEWC
 STSLICECONST x2_
 STOPTREF
@@ -707,18 +703,22 @@ STSLICECONST 1
 PUSH S2
 STREFR
 STSLICECONST 0
-STSLICECONST x3c91e1c5
+STSLICECONST x1a711165
 ;; relayKey
 ;; push identifier relayKey
 PUSH S5
 STUR 256
+;; eventDataSignature
+NEWC
+ENDC
+STREFR
 ENDC
 PUSHINT 1
 SENDRAWMSG
 NIP
-;; decl: ethereumEventAddress
-;; Remote call EthereumEvent.reject
-;; push identifier ethereumEventAddress
+;; decl: tonEventAddress
+;; Remote call TonEvent.reject
+;; push identifier tonEventAddress
 DUP
 NEWC
 STSLICECONST x62_
@@ -743,7 +743,7 @@ STSLICECONST 0
 STSLICECONST 0
 STSLICECONST x06cb52f7
 ;; addr
-;; push identifier ethereumEventAddress
+;; push identifier tonEventAddress
 PUSH S1
 STSLICER
 ;; relayKey
@@ -790,7 +790,7 @@ SETGLOB 7
 ;; param: relayKey
 ; modifier onlyBridge
 ;; push identifier MSG_SENDER_NOT_BRIDGE
-GETGLOB 19
+GETGLOB 18
 DUP
 LESSINT 2
 PUSHCONT {
@@ -801,16 +801,15 @@ IF
 ;; get member sender
 GETGLOB 9
 ;; push identifier bridgeAddress
-GETGLOB 17
+GETGLOB 16
 SDEQ
 THROWANYIFNOT
 ; modifier transferAfter
 ;; push identifier bridgeAddress
-GETGLOB 17
+GETGLOB 16
 ;; get member value
 CALL $message_balance_macro$
 ; function rejectEvent
-ACCEPT
 NEWDICT
 GETGLOB 2
 NEWC
@@ -835,12 +834,6 @@ PUSHINT 2
 ROT
 PUSHINT 64
 DICTUSETB
-;; push identifier proxyAddress
-GETGLOB 16
-PUSHINT 4
-ROT
-PUSHINT 64
-DICTUSET
 ;; push identifier eventData
 PUSH S6
 PUSHINT 3
@@ -851,7 +844,7 @@ DICTUSETREF
 PUSH S5
 NEWC
 STU 256
-PUSHINT 5
+PUSHINT 4
 ROT
 PUSHINT 64
 DICTUSETB
@@ -859,15 +852,23 @@ DICTUSETB
 PUSH S4
 NEWC
 STU 256
-PUSHINT 6
+PUSHINT 5
 ROT
 PUSHINT 64
 DICTUSETB
 MYADDR
-PUSHINT 7
+PUSHINT 6
 ROT
 PUSHINT 64
 DICTUSET
+;; push identifier eventRequiredConfirmations
+GETGLOB 12
+NEWC
+STU 256
+PUSHINT 7
+ROT
+PUSHINT 64
+DICTUSETB
 ;; push identifier eventRequiredConfirmations
 GETGLOB 12
 NEWC
@@ -876,19 +877,11 @@ PUSHINT 8
 ROT
 PUSHINT 64
 DICTUSETB
-;; push identifier eventRequiredConfirmations
-GETGLOB 12
-NEWC
-STU 256
-PUSHINT 9
-ROT
-PUSHINT 64
-DICTUSETB
 NEWC
 STDICT
 ENDC
 ;; push identifier eventCode
-GETGLOB 18
+GETGLOB 17
 NEWC
 STSLICECONST x2_
 STOPTREF
@@ -916,18 +909,22 @@ STSLICECONST 1
 PUSH S2
 STREFR
 STSLICECONST 0
-STSLICECONST x3c91e1c5
+STSLICECONST x1a711165
 ;; relayKey
 ;; push identifier relayKey
 PUSH S5
 STUR 256
+;; eventDataSignature
+NEWC
+ENDC
+STREFR
 ENDC
 PUSHINT 1
 SENDRAWMSG
 NIP
-;; decl: ethereumEventAddress
-;; Remote call EthereumEvent.reject
-;; push identifier ethereumEventAddress
+;; decl: tonEventAddress
+;; Remote call TonEvent.reject
+;; push identifier tonEventAddress
 DUP
 NEWC
 STSLICECONST x62_
@@ -952,7 +949,7 @@ STSLICECONST 0
 STSLICECONST 0
 STSLICECONST x06cb52f7
 ;; addr
-;; push identifier ethereumEventAddress
+;; push identifier tonEventAddress
 PUSH S1
 STSLICER
 ;; relayKey
@@ -1002,16 +999,14 @@ ENDS
 NEWC
 ENDC
 ;; ret param: _eventAddress
-PUSHINT 0
-;; ret param: _proxyAddress
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
-;; ret param: _eventBlocksToConfirm
-PUSHINT 0
 ;; ret param: _eventRequiredConfirmations
 PUSHINT 0
 ;; ret param: _eventRequiredRejects
 PUSHINT 0
 ;; ret param: _eventInitialBalance
+PUSHINT 0
+;; ret param: _proxyAddress
 PUSHINT 0
 ;; ret param: _bridgeAddress
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
@@ -1023,26 +1018,24 @@ ENDC
 GETGLOB 10
 ;; push identifier eventAddress
 GETGLOB 11
-;; push identifier proxyAddress
-GETGLOB 16
-;; push identifier eventBlocksToConfirm
-GETGLOB 14
 ;; push identifier eventRequiredConfirmations
 GETGLOB 12
 ;; push identifier eventRequiredRejects
 GETGLOB 13
 ;; push identifier eventInitialBalance
+GETGLOB 14
+;; push identifier proxyAddress
 GETGLOB 15
 ;; push identifier bridgeAddress
-GETGLOB 17
+GETGLOB 16
 ;; push identifier eventCode
-GETGLOB 18
-BLKDROP2 9, 9
-;; emitting 9 value(s)
-PUSH S9
+GETGLOB 17
+BLKDROP2 8, 8
+;; emitting 8 value(s)
+PUSH S8
 EQINT -1
 PUSHCONT {
-	PUSH S11
+	PUSH S10
 	CTOS
 	LDU 2
 	LDMSGADDR
@@ -1056,22 +1049,20 @@ PUSHCONT {
 	STSLICECONST 0
 	STSLICECONST 1
 	NEWC
-	STSLICECONST xb37328c0
-	PUSH S10
-	STREFR
+	STSLICECONST x86e05b2b
 	PUSH S9
-	STUR 160
+	STREFR
 	PUSH S8
 	STSLICER
 	PUSH S7
 	STUR 256
 	PUSH S6
 	STUR 256
-	NEWC
-	PUSH S6
-	STUR 256
 	PUSH S5
 	STUR 128
+	NEWC
+	PUSH S5
+	STUR 160
 	PUSH S4
 	STSLICER
 	PUSH S3
@@ -1083,7 +1074,7 @@ PUSHCONT {
 	SENDRAWMSG
 }
 IF
-BLKDROP 9
+BLKDROP 8
 ; end function getDetails
 PUSHCONT {
 	CALL $c7_to_c4$
@@ -1099,16 +1090,14 @@ SETGLOB 7
 NEWC
 ENDC
 ;; ret param: _eventAddress
-PUSHINT 0
-;; ret param: _proxyAddress
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
-;; ret param: _eventBlocksToConfirm
-PUSHINT 0
 ;; ret param: _eventRequiredConfirmations
 PUSHINT 0
 ;; ret param: _eventRequiredRejects
 PUSHINT 0
 ;; ret param: _eventInitialBalance
+PUSHINT 0
+;; ret param: _proxyAddress
 PUSHINT 0
 ;; ret param: _bridgeAddress
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
@@ -1120,21 +1109,19 @@ ENDC
 GETGLOB 10
 ;; push identifier eventAddress
 GETGLOB 11
-;; push identifier proxyAddress
-GETGLOB 16
-;; push identifier eventBlocksToConfirm
-GETGLOB 14
 ;; push identifier eventRequiredConfirmations
 GETGLOB 12
 ;; push identifier eventRequiredRejects
 GETGLOB 13
 ;; push identifier eventInitialBalance
+GETGLOB 14
+;; push identifier proxyAddress
 GETGLOB 15
 ;; push identifier bridgeAddress
-GETGLOB 17
+GETGLOB 16
 ;; push identifier eventCode
-GETGLOB 18
-BLKDROP2 9, 9
+GETGLOB 17
+BLKDROP2 8, 8
 ; end function getDetails
 
 .globl	c7_to_c4
@@ -1147,31 +1134,26 @@ STUR 64
 GETGLOB 6
 STUR 1
 NEWC
-GETGLOB 14
+GETGLOB 13
 GETGLOB 15
 GETGLOB 16
-GETGLOB 17
+GETGLOB 18
 REVERSE 5, 0
 STU 256
-STU 128
+STU 160
 STSLICE
-STSLICE
-NEWC
-GETGLOB 19
-SWAP
 STU 256
 GETGLOB 10
 GETGLOB 11
 GETGLOB 12
-GETGLOB 13
-GETGLOB 18
-REVERSE 8, 0
-STBREF
+GETGLOB 14
+GETGLOB 17
+REVERSE 7, 0
 STBREF
 STREF
-STU 160
+STSLICE
 STU 256
-STU 256
+STU 128
 STREF
 ENDC
 POP C4
@@ -1185,22 +1167,20 @@ LDU 64      ; pubkey timestamp c4
 LDU 1       ; pubkey [timestamp] constructor_flag memory
 LDREFRTOS
 LDU 256
-LDU 128
+LDU 160
 LDMSGADDR
-SETGLOB 17
+PLDU 256
+SETGLOB 18
 SETGLOB 16
 SETGLOB 15
-SETGLOB 14
-LDREFRTOS
-PLDU 256
-SETGLOB 19
-LDREF
-LDU 160
-LDU 256
-LDU 256
-PLDREF
-SETGLOB 18
 SETGLOB 13
+LDREF
+LDMSGADDR
+LDU 256
+LDU 128
+PLDREF
+SETGLOB 17
+SETGLOB 14
 SETGLOB 12
 SETGLOB 11
 SETGLOB 10
@@ -1222,22 +1202,20 @@ PUSHCONT {
 	LDU 1       ; pubkey [timestamp] constructor_flag memory
 	LDREFRTOS
 	LDU 256
-	LDU 128
+	LDU 160
 	LDMSGADDR
-	SETGLOB 17
+	PLDU 256
+	SETGLOB 18
 	SETGLOB 16
 	SETGLOB 15
-	SETGLOB 14
-	LDREFRTOS
-	PLDU 256
-	SETGLOB 19
-	LDREF
-	LDU 160
-	LDU 256
-	LDU 256
-	PLDREF
-	SETGLOB 18
 	SETGLOB 13
+	LDREF
+	LDMSGADDR
+	LDU 256
+	LDU 128
+	PLDREF
+	SETGLOB 17
+	SETGLOB 14
 	SETGLOB 12
 	SETGLOB 11
 	SETGLOB 10
@@ -1266,12 +1244,9 @@ PUSHCONT {
 	PUSHINT 64
 	DICTUGET
 	PUSHCONT {
-		PLDU 160
+		PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	}
-	PUSHCONT {
-		PUSHINT 0
-	}
-	IFELSE
+	IFNOT
 	SETGLOB 11
 	; init eventRequiredConfirmations
 	PUSHINT 3
@@ -1299,21 +1274,8 @@ PUSHCONT {
 	}
 	IFELSE
 	SETGLOB 13
-	; init eventBlocksToConfirm
-	PUSHINT 5
-	PUSH S1
-	PUSHINT 64
-	DICTUGET
-	PUSHCONT {
-		PLDU 256
-	}
-	PUSHCONT {
-		PUSHINT 0
-	}
-	IFELSE
-	SETGLOB 14
 	; init eventInitialBalance
-	PUSHINT 6
+	PUSHINT 5
 	PUSH S1
 	PUSHINT 64
 	DICTUGET
@@ -1324,8 +1286,21 @@ PUSHCONT {
 		PUSHINT 0
 	}
 	IFELSE
-	SETGLOB 15
+	SETGLOB 14
 	; init proxyAddress
+	PUSHINT 6
+	PUSH S1
+	PUSHINT 64
+	DICTUGET
+	PUSHCONT {
+		PLDU 160
+	}
+	PUSHCONT {
+		PUSHINT 0
+	}
+	IFELSE
+	SETGLOB 15
+	; init bridgeAddress
 	PUSHINT 7
 	PUSH S1
 	PUSHINT 64
@@ -1335,18 +1310,8 @@ PUSHCONT {
 	}
 	IFNOT
 	SETGLOB 16
-	; init bridgeAddress
-	PUSHINT 8
-	PUSH S1
-	PUSHINT 64
-	DICTUGET
-	PUSHCONT {
-		PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
-	}
-	IFNOT
-	SETGLOB 17
 	; init eventCode
-	PUSHINT 9
+	PUSHINT 8
 	PUSH S1
 	PUSHINT 64
 	DICTUGETREF
@@ -1355,10 +1320,10 @@ PUSHCONT {
 		ENDC
 	}
 	IFNOT
-	SETGLOB 18
+	SETGLOB 17
 	; init MSG_SENDER_NOT_BRIDGE
 	PUSHINT 0
-	SETGLOB 19
+	SETGLOB 18
 	; set contract pubkey
 	PUSHINT 0
 	SWAP
@@ -1375,7 +1340,7 @@ PUSHCONT {
 	SETGLOB 1
 	;; init state var: MSG_SENDER_NOT_BRIDGE
 	PUSHINT 202
-	SETGLOB 19
+	SETGLOB 18
 }
 IFELSE
 

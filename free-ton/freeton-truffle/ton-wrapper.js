@@ -1,5 +1,7 @@
 const { TONClient } = require('ton-client-node-js');
 const utils = require('./utils');
+const BigNumber = require('bignumber.js');
+
 
 class TonWrapper {
   constructor({ giverConfig, ...config}) {
@@ -53,6 +55,17 @@ class TonWrapper {
         path,
       });
     }));
+  }
+  
+  async getBalance(address) {
+    const [{ balance }] = await this.ton.queries.accounts.query(
+      {
+        id: { eq: address },
+      },
+      'balance',
+    );
+  
+    return new BigNumber(balance);
   }
 }
 

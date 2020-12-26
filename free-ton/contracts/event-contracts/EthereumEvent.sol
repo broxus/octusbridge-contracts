@@ -2,7 +2,7 @@ pragma solidity >= 0.6.0;
 pragma AbiHeader expire;
 
 
-import "./interfaces/Proxy.sol";
+import "./../interfaces/Proxy.sol";
 
 
 contract EthereumEvent {
@@ -10,15 +10,18 @@ contract EthereumEvent {
     uint static eventIndex;
     TvmCell static eventData;
     address static proxyAddress;
+
     uint static eventBlockNumber;
     uint static eventBlock;
+
     address static ethereumEventConfirguration;
+
+    uint static requiredConfirmations;
+    uint static requiredRejects;
+
 
     bool proxyCallbackExecuted = false;
     bool eventRejected = false;
-
-    uint requiredConfirmations;
-    uint requiredRejects;
 
     uint PROXY_CALLBACK_ALREADY_EXECUTED = 501;
 
@@ -34,18 +37,11 @@ contract EthereumEvent {
         Ethereum-TON event instance. Collects confirmations and than execute the Proxy callback.
         @dev Should be deployed only by EthereumEventConfiguration contract
         @param relayKey Public key of the relay, who initiated the event creation
-        @param _requiredConfirmations Required confirmations to execute event
-        @param _requiredRejects Required rejects to ban event
     */
     constructor(
-        uint relayKey,
-        uint _requiredConfirmations,
-        uint _requiredRejects
+        uint relayKey
     ) public {
         tvm.accept();
-
-        requiredConfirmations = _requiredConfirmations;
-        requiredRejects = _requiredRejects;
 
         confirm(relayKey);
     }
@@ -66,6 +62,7 @@ contract EthereumEvent {
 
         if (confirmKeys.length >= requiredConfirmations) {
             _executeProxyCallback();
+            ethereumEventConfirguration.transfer({ flag: 128, value: 0 });
         }
     }
 
@@ -83,6 +80,7 @@ contract EthereumEvent {
 
         if (rejectKeys.length >= requiredRejects) {
             eventRejected = true;
+            ethereumEventConfirguration.transfer({ flag: 128, value: 0 });
         }
     }
 
@@ -102,17 +100,19 @@ contract EthereumEvent {
 
     /*
         Read contract details
-        @returns Ethereum event transaction
-        @returns Ethereum event index
-        @returns Ethereum event data
-        @returns Proxy contract address
-        @returns Event transaction block number
-        @returns Event transaction block hash
-        @returns Ethereum event configuration contract
-        @returns Proxy callback executed status
-        @returns Event rejected status
-        @returns List of confirm keys
-        @returns List of reject keys
+        @returns _eventTransaction Ethereum event transaction
+        @returns _eventIndex Ethereum event index
+        @returns _eventData Ethereum event data
+        @returns _proxyAddress Proxy contract address
+        @returns _eventBlockNumber Event transaction block number
+        @returns _eventBlock Event transaction block hash
+        @returns _ethereumEventConfiguration Ethereum event configuration contract
+        @returns _proxyCallbackExecuted Status of the proxy callback
+        @returns _eventRejected Status of the event reject
+        @returns _confirmKeys List of confirm keys
+        @returns _rejectKeys List of reject keys
+        @returns _requiredConfirmations Amount of confirmations to confirm event
+        @returns _requiredRejects Amount of rejects to reject event
     */
     function getDetails() public view returns (
         uint _eventTransaction,

@@ -1,5 +1,6 @@
 const fs = require('fs');
 const BigNumber = require('bignumber.js');
+const assert = require('assert');
 
 
 const loadJSONFromFile = (filePath) => {
@@ -34,6 +35,25 @@ async function sleep(ms) {
 }
 
 
+async function catchRunFail(runPromise, expectedExitCode) {
+  try {
+    await runPromise;
+  } catch (e) {
+    if (expectedExitCode !== undefined) {
+      assert.equal(
+        e.data.exit_code,
+        expectedExitCode,
+        "Wrong exit code"
+      );
+    }
+    
+    return;
+  }
+  
+  throw new Error('Run succeed, expected fail');
+}
+
+
 module.exports = {
   loadJSONFromFile,
   loadBase64FromFile,
@@ -41,4 +61,5 @@ module.exports = {
   convertCrystal,
   stringToBytesArray,
   sleep,
+  catchRunFail,
 };

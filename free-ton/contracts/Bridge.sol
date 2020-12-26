@@ -3,28 +3,43 @@ pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 
-import "./EthereumEventConfiguration.sol";
-import "./BridgeConfigurationUpdate.sol";
+import "./event-configuration-contracts/EthereumEventConfiguration.sol";
+import "./event-configuration-contracts/TonEventConfiguration.sol";
+
 import "./structures/BridgeConfigurationStructure.sol";
-import "./KeysOwnable.sol";
+import "./structures/BridgeRelayStructure.sol";
+import "./structures/VoteStructure.sol";
 
 
-contract FreeTonBridge is KeysOwnable, BridgeConfigurationStructure {
+import "./utils/KeysOwnable.sol";
+
+
+contract Bridge is KeysOwnable, BridgeConfigurationStructure, BridgeRelayStructure, VoteStructure {
     uint static truffleNonce;
 
     BridgeConfiguration bridgeConfiguration;
 
-    struct SequentialIndex {
-        uint ethereumEventConfiguration;
-        uint bridgeConfigurationUpdateVoting;
-    }
-    SequentialIndex sequentialIndex;
+    event EventConfigurationVote(address addr, uint relayKey, bool vote);
 
-    event NewEthereumEventConfiguration(address indexed addr);
-    event NewBridgeConfigurationUpdate(address indexed addr);
+    event BridgeConfigurationUpdateVote(BridgeConfiguration _bridgeConfiguration, uint relayKey, Vote vote);
+    event BridgeConfigurationUpdateEnd(BridgeConfiguration _bridgeConfiguration, bool status);
+
+    event BridgeRelaysUpdateVote(BridgeRelay target, uint relayKey, Vote vote);
+    event BridgeRelaysUpdateEnd(BridgeRelay target, bool status);
+
+    mapping(address => mapping(uint => bool)) eventConfigurationVotes;
+    mapping(BridgeConfiguration => mapping(uint => bool)) bridgeConfigurationVotes;
+    mapping(BridgeRelay => mapping(uint => bool)) bridgeRelayVotes;
 
     modifier onlyActive() {
         require(bridgeConfiguration.active == true, 12312);
+        _;
+    }
+
+    modifier onlyActiveEventConfiguration(address eventConfiguration) {
+        (,,bool status) = getEventConfigurationStatus(eventConfiguration);
+        require(status == true, 12313);
+
         _;
     }
 
@@ -46,125 +61,65 @@ contract FreeTonBridge is KeysOwnable, BridgeConfigurationStructure {
 
         bridgeConfiguration = _bridgeConfiguration;
         bridgeConfiguration.active = true;
-
-        sequentialIndex.ethereumEventConfiguration = 0;
-        sequentialIndex.bridgeConfigurationUpdateVoting = 0;
     }
 
     /*
-        Confirm Bridge configuration update. Only relay can do this.
-        @dev One confirmation is received from the proposal author. Need more confirmation in general
-        @param _bridgeConfiguration New bridge configuration
-    */
-    function confirmBridgeConfigurationUpdate(
-        BridgeConfiguration _bridgeConfiguration
-    ) public onlyActive onlyOwnerKey(msg.pubkey()) returns(address) {
-        tvm.accept();
-
-        address bridgeConfigurationUpdateAddress = new BridgeConfigurationUpdate{
-            code: bridgeConfiguration.bridgeConfigurationUpdateCode,
-            pubkey: tvm.pubkey(),
-            varInit: {
-                bridgeAddress: address(this)
-            },
-            value: bridgeConfiguration.bridgeConfigurationUpdateInitialBalance
-        }(
-            msg.pubkey(),
-            bridgeConfiguration.bridgeConfigurationUpdateRequiredConfirmations,
-            bridgeConfiguration.bridgeConfigurationUpdateRequiredRejects,
-            _bridgeConfiguration
-        );
-
-        BridgeConfigurationUpdate(bridgeConfigurationUpdateAddress).confirm{value: 1 ton}(msg.pubkey());
-
-        emit NewBridgeConfigurationUpdate(bridgeConfigurationUpdateAddress);
-
-        return bridgeConfigurationUpdateAddress;
-    }
-
-    /*
-        Update Bridge configuration, can be called only be the correct BridgeConfigurationUpdate contract
-        @param _bridgeConfiguration New bridge configuration
-    */
-    function updateBridgeConfiguration(BridgeConfiguration _bridgeConfiguration) public {
-        // TODO: only BridgeConfigurationUpdate contract should be able to call this
-        bridgeConfiguration = _bridgeConfiguration;
-    }
-
-    /**
-        @notice Propose new Ethereum event configuration. Only relay can do this.
-        @dev One confirmation is received from the proposal author. Need more confirmation in general
-        @param ethereumEventABI Ethereum event ABI
-        @param ethereumAddress Ethereum event address
-        @param ethereumEventBlocksToConfirm How much blocks to wait until confirm event instance
-        @param ethereumEventRequiredConfirmations How much confirmations needed to confirm event
-        @param ethereumEventRequiredRejects How much rejects needed to reject event
-        @param ethereumEventInitialBalance How much TON send to the Ethereum event contract
-        @param eventProxyAddress TON address of the event proxy address
-    **/
-    function addEthereumEventConfiguration(
-        bytes ethereumEventABI,
-        bytes ethereumAddress,
-        uint ethereumEventBlocksToConfirm,
-        uint ethereumEventRequiredConfirmations,
-        uint ethereumEventRequiredRejects,
-        uint128 ethereumEventInitialBalance,
-        address eventProxyAddress
-    ) public onlyActive onlyOwnerKey(msg.pubkey()) returns(address) {
-        tvm.accept();
-
-        address ethereumEventConfigurationAddress = new EthereumEventConfiguration{
-            code: bridgeConfiguration.ethereumEventConfigurationCode,
-            pubkey: tvm.pubkey(),
-            varInit: {
-                eventABI: ethereumEventABI,
-                eventAddress: ethereumAddress,
-                eventRequiredConfirmations: ethereumEventRequiredConfirmations,
-                eventRequiredRejects: ethereumEventRequiredRejects,
-                ethereumEventBlocksToConfirm: ethereumEventBlocksToConfirm,
-                eventInitialBalance: ethereumEventInitialBalance,
-                proxyAddress: eventProxyAddress,
-                bridgeAddress: address(this)
-            },
-            value: bridgeConfiguration.ethereumEventConfigurationInitialBalance
-        }(
-            bridgeConfiguration.ethereumEventConfigurationRequiredConfirmations,
-            bridgeConfiguration.ethereumEventConfigurationRequiredRejects,
-            bridgeConfiguration.ethereumEventCode,
-            msg.pubkey()
-        );
-
-        sequentialIndex.ethereumEventConfiguration++;
-
-        emit NewEthereumEventConfiguration(ethereumEventConfigurationAddress);
-
-        return ethereumEventConfigurationAddress;
-    }
-
-    /*
-        Confirm Ethereum Event configuration.
+        Confirm TON Event configuration.
         @dev Called only by relay
-        @param ethereumEventConfigurationAddress Ethereum event configuration contract address
+        @param eventConfiguration TON event configuration contract address
+        @param vote Confirm or reject (true / false)
     */
-    function confirmEthereumEventConfiguration(
-        address ethereumEventConfigurationAddress
+    function updateEventConfiguration(
+        address eventConfiguration,
+        bool vote
     ) public onlyActive onlyOwnerKey(msg.pubkey()) {
         tvm.accept();
 
-        EthereumEventConfiguration(ethereumEventConfigurationAddress).confirm{value: 1 ton}(msg.pubkey());
+        emit EventConfigurationVote(eventConfiguration, msg.pubkey(), vote);
+
+        eventConfigurationVotes[eventConfiguration][msg.pubkey()] = vote;
     }
 
     /*
-        Reject Ethereum Event configuration.
-        @dev Called only by relay
-        @param ethereumEventConfigurationAddress Ethereum event configuration contract address
+        Get Bridge details.
+        @returns _bridgeConfiguration Structure with Bridge configuration details
     */
-    function rejectEthereumEventConfiguration(
-        address ethereumEventConfigurationAddress
-    ) public view onlyActive onlyOwnerKey(msg.pubkey()) {
-        tvm.accept();
+    function getDetails() public view returns (
+        BridgeConfiguration _bridgeConfiguration
+    ) {
+        return (
+            bridgeConfiguration
+        );
+    }
 
-        EthereumEventConfiguration(ethereumEventConfigurationAddress).reject{value: 1 ton}(msg.pubkey());
+    /*
+        Get list of confirm and reject keys for specific address. Also get status - confirmed or not.
+
+        @param eventConfiguration Address of the event configuration contract
+        @returns confirmKeys List of keys who confirmed the configuration
+        @returns rejectKeys List of keys who rejected the configuration
+        @returns status Is configuration confirmed or rejected (same as not confirmed)
+    */
+    function getEventConfigurationStatus(
+        address eventConfiguration
+    ) public view returns (
+        uint[] confirmKeys,
+        uint[] rejectKeys,
+        bool status
+    ) {
+        for ((uint key, bool vote): eventConfigurationVotes[eventConfiguration]) {
+            if (vote == true) {
+                confirmKeys.push(key);
+            } else {
+                rejectKeys.push(key);
+            }
+        }
+
+        if (rejectKeys.length >= bridgeConfiguration.eventConfigurationRequiredRejects) {
+            status = false;
+        } else if (confirmKeys.length >= bridgeConfiguration.eventConfigurationRequiredConfirmations) {
+            status = true;
+        }
     }
 
     /*
@@ -175,7 +130,7 @@ contract FreeTonBridge is KeysOwnable, BridgeConfigurationStructure {
         @param eventData Ethereum event encoded data
         @param eventBlockNumber Ethereum block number including event transaction
         @param eventBlock Ethereum block hash including event transaction
-        @param ethereumEventConfigurationAddress Ethereum Event configuration contract address
+        @param eventConfiguration Ethereum Event configuration contract address
     */
     function confirmEthereumEvent(
         uint eventTransaction,
@@ -183,11 +138,11 @@ contract FreeTonBridge is KeysOwnable, BridgeConfigurationStructure {
         TvmCell eventData,
         uint eventBlockNumber,
         uint eventBlock,
-        address ethereumEventConfigurationAddress
-    ) public onlyActive onlyOwnerKey(msg.pubkey()) {
+        address eventConfiguration
+    ) public view onlyActive onlyOwnerKey(msg.pubkey()) {
         tvm.accept();
 
-        EthereumEventConfiguration(ethereumEventConfigurationAddress).confirmEvent{value: 1 ton}(
+        EthereumEventConfiguration(eventConfiguration).confirmEvent{value: 1 ton}(
             eventTransaction,
             eventIndex,
             eventData,
@@ -205,7 +160,7 @@ contract FreeTonBridge is KeysOwnable, BridgeConfigurationStructure {
         @param eventData Ethereum event encoded data
         @param eventBlockNumber Ethereum block number including event transaction
         @param eventBlock Ethereum block hash including event transaction
-        @param ethereumEventConfigurationAddress Ethereum Event configuration contract address
+        @param eventConfiguration Ethereum Event configuration contract address
     */
     function rejectEthereumEvent(
         uint eventTransaction,
@@ -213,11 +168,11 @@ contract FreeTonBridge is KeysOwnable, BridgeConfigurationStructure {
         TvmCell eventData,
         uint eventBlockNumber,
         uint eventBlock,
-        address ethereumEventConfigurationAddress
-    ) public onlyActive onlyOwnerKey(msg.pubkey()) {
+        address eventConfiguration
+    ) public view onlyActive onlyOwnerKey(msg.pubkey()) {
         tvm.accept();
 
-        EthereumEventConfiguration(ethereumEventConfigurationAddress).rejectEvent{value: 1 ton}(
+        EthereumEventConfiguration(eventConfiguration).rejectEvent{value: 1 ton}(
             eventTransaction,
             eventIndex,
             eventData,
@@ -228,17 +183,198 @@ contract FreeTonBridge is KeysOwnable, BridgeConfigurationStructure {
     }
 
     /*
-        Get Bridge details.
-        @returns _bridgeConfiguration Structure with Bridge configuration details
-        @returns _sequentialIndex Structure with counters
+        Confirm TON event instance.
+        @dev Called only by relay
+        @param eventTransaction TON event transaction
+        @param eventIndex TON event index (message number)
+        @param eventData TON event encoded data
+        @param eventBlockNumber TON block number including event transaction
+        @param eventBlock TON block hash including event transaction
+        @param eventDataSignature Relay's signature of the Ethereum callback
+        @param eventConfiguration Ethereum Event configuration contract address
     */
-    function getDetails() public view returns (
-        BridgeConfiguration _bridgeConfiguration,
-        SequentialIndex _sequentialIndex
-    ) {
-        return (
-            bridgeConfiguration,
-            sequentialIndex
+    function confirmTonEvent(
+        uint eventTransaction,
+        uint eventIndex,
+        TvmCell eventData,
+        uint eventBlockNumber,
+        uint eventBlock,
+        bytes eventDataSignature,
+        address eventConfiguration
+    ) public view onlyActive onlyOwnerKey(msg.pubkey()) {
+        tvm.accept();
+
+        TonEventConfiguration(eventConfiguration).confirmEvent{value: 1 ton}(
+            eventTransaction,
+            eventIndex,
+            eventData,
+            eventBlockNumber,
+            eventBlock,
+            eventDataSignature,
+            msg.pubkey()
         );
+    }
+
+    /*
+        Reject TON event instance.
+        @dev Called only by relay. Only reject already existing TonEvent contract, not create it.
+        @param eventTransaction TON event transaction
+        @param eventIndex TON event index (message number)
+        @param eventData TON event encoded data
+        @param eventBlockNumber TON block number including event transaction
+        @param eventBlock TON block hash including event transaction
+        @param eventDataSignature Relay's signature of the Ethereum callback
+        @param eventConfiguration Ethereum Event configuration contract address
+    */
+    function rejectTonEvent(
+        uint eventTransaction,
+        uint eventIndex,
+        TvmCell eventData,
+        uint eventBlockNumber,
+        uint eventBlock,
+        address eventConfiguration
+    ) public view onlyActive onlyOwnerKey(msg.pubkey()) {
+        tvm.accept();
+
+        TonEventConfiguration(eventConfiguration).rejectEvent{value: 1 ton}(
+            eventTransaction,
+            eventIndex,
+            eventData,
+            eventBlockNumber,
+            eventBlock,
+            msg.pubkey()
+        );
+    }
+
+    function getVotingDirection(Vote _vote) public pure returns(bool vote) {
+        if (_vote.signature.length == 0) {
+            vote = false;
+        } else {
+            vote = true;
+        }
+    }
+
+    /*
+        Vote for Bridge configuration update
+        @dev Can be called only by relay
+        @param _bridgeConfiguration New bridge configuration
+        @param _vote Vote structure. Signature and payload are empty for reject.
+    */
+    function updateBridgeConfiguration(
+        BridgeConfiguration _bridgeConfiguration,
+        Vote _vote
+    ) public onlyOwnerKey(msg.pubkey()) {
+        tvm.accept();
+
+        emit BridgeConfigurationUpdateVote(_bridgeConfiguration, msg.pubkey(), _vote);
+
+        bool vote = getVotingDirection(_vote);
+
+        bridgeConfigurationVotes[_bridgeConfiguration][msg.pubkey()] = vote;
+
+        // Check the results
+        (uint[] confirmKeys, uint[] rejectKeys) = getBridgeConfigurationVotes(_bridgeConfiguration);
+
+        // - If enough confirmations received - update configuration and remove voting
+        if (confirmKeys.length == bridgeConfiguration.bridgeConfigurationUpdateRequiredConfirmations) {
+            bridgeConfiguration = _bridgeConfiguration;
+            _removeBridgeConfigurationVoting(_bridgeConfiguration);
+
+            emit BridgeConfigurationUpdateEnd(_bridgeConfiguration, true);
+        }
+
+        // - If enough rejects received - remove voting
+        if (rejectKeys.length == bridgeConfiguration.bridgeConfigurationUpdateRequiredRejects) {
+            _removeBridgeConfigurationVoting(_bridgeConfiguration);
+
+            emit BridgeConfigurationUpdateEnd(_bridgeConfiguration, false);
+        }
+    }
+
+    function _removeBridgeConfigurationVoting(
+        BridgeConfiguration _bridgeConfiguration
+    ) internal {
+        delete bridgeConfigurationVotes[_bridgeConfiguration];
+    }
+
+    /*
+        Get list of votes for bridge configuration update ID
+        @param _bridgeConfiguration Bridge configuration
+        @returns confirmKeys List of keys who confirmed the update
+        @returns rejectKeys List of keys who rejected the update
+    */
+    function getBridgeConfigurationVotes(
+        BridgeConfiguration _bridgeConfiguration
+    ) public view returns(
+        uint[] confirmKeys,
+        uint[] rejectKeys
+    ) {
+        for ((uint key, bool vote): bridgeConfigurationVotes[_bridgeConfiguration]) {
+            if (vote == true) {
+                confirmKeys.push(key);
+            } else {
+                rejectKeys.push(key);
+            }
+        }
+    }
+
+    /*
+        Vote for Bridge relays update
+        @dev Called only by relay
+        @param target Target relay
+        @param _vote Vote structure. Signature and payload are empty for reject.
+    */
+    function updateBridgeRelays(
+        BridgeRelay target,
+        Vote _vote
+    ) public onlyOwnerKey(msg.pubkey()) {
+        tvm.accept();
+
+        emit BridgeRelaysUpdateVote(target, msg.pubkey(), _vote);
+
+        bool vote = getVotingDirection(_vote);
+
+        bridgeRelayVotes[target][msg.pubkey()] = vote;
+
+        // Check the results
+        (uint[] confirmKeys, uint[] rejectKeys) = getBridgeRelayVotes(target);
+
+        // - If enough confirmations received - update configuration and remove voting
+        if (confirmKeys.length == bridgeConfiguration.bridgeRelayUpdateRequiredConfirmations) {
+            if (target.action) {
+                _grantOwnership(target.key);
+            } else {
+                _removeOwnership(target.key);
+            }
+
+            _removeBridgeRelayVoting(target);
+
+            emit BridgeRelaysUpdateEnd(target, true);
+        }
+
+        // - If enough rejects received - remove voting
+        if (rejectKeys.length == bridgeConfiguration.bridgeRelayUpdateRequiredRejects) {
+            _removeBridgeRelayVoting(target);
+
+            emit BridgeRelaysUpdateEnd(target, false);
+        }
+    }
+
+    function getBridgeRelayVotes(
+        BridgeRelay target
+    ) public view returns(uint[] confirmKeys, uint[] rejectKeys) {
+        for ((uint key, bool vote): bridgeRelayVotes[target]) {
+            if (vote == true) {
+                confirmKeys.push(key);
+            } else {
+                rejectKeys.push(key);
+            }
+        }
+    }
+
+    function _removeBridgeRelayVoting(
+        BridgeRelay target
+    ) internal {
+        delete bridgeRelayVotes[target];
     }
 }
