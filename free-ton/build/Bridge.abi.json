@@ -40,6 +40,14 @@
 			]
 		},
 		{
+			"name": "getActiveEventConfigurations",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"contracts","type":"address[]"}
+			]
+		},
+		{
 			"name": "confirmEthereumEvent",
 			"inputs": [
 				{"name":"eventTransaction","type":"uint256"},

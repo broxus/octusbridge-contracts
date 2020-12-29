@@ -37,9 +37,16 @@ contract Bridge is KeysOwnable, BridgeConfigurationStructure, BridgeRelayStructu
     }
 
     modifier onlyActiveEventConfiguration(address eventConfiguration) {
-        (,,bool status) = getEventConfigurationStatus(eventConfiguration);
-        require(status == true, 12313);
-
+        uint16 total;
+        uint16 confirmations;
+        for ((, bool vote): eventConfigurationVotes[eventConfiguration]) {
+            total += 1;
+            if (vote) {
+                confirmations += 1;
+            }
+        }
+        require(confirmations >= bridgeConfiguration.eventConfigurationRequiredRejects
+             && (total - confirmations) < bridgeConfiguration.eventConfigurationRequiredConfirmations, 12313);
         _;
     }
 
@@ -123,6 +130,32 @@ contract Bridge is KeysOwnable, BridgeConfigurationStructure, BridgeRelayStructu
     }
 
     /*
+        Get list of active event configuration contracts
+        @returns eventConfigurations List of active event configuration contracts
+    */
+    function getActiveEventConfigurations() public view returns (
+        address[] contracts
+    ) {
+        uint16 requiredRejects = bridgeConfiguration.eventConfigurationRequiredRejects;
+        uint16 requiredConfirmations = bridgeConfiguration.eventConfigurationRequiredConfirmations;
+
+        for ((address addr, mapping(uint => bool) votes): eventConfigurationVotes) {
+            uint16 total;
+            uint16 confirmations;
+            for ((, bool vote): votes) {
+                total += 1;
+                if (vote) {
+                    confirmations += 1;
+                }
+            }
+
+            if (confirmations >= requiredConfirmations && (total - confirmations) < requiredRejects) {
+                contracts.push(addr);
+            }
+        }
+    }
+
+    /*
         Confirm Ethereum event instance.
         @dev Called only by relay
         @param eventTransaction Ethereum event transaction ID
@@ -139,7 +172,7 @@ contract Bridge is KeysOwnable, BridgeConfigurationStructure, BridgeRelayStructu
         uint eventBlockNumber,
         uint eventBlock,
         address eventConfiguration
-    ) public view onlyActive onlyOwnerKey(msg.pubkey()) {
+    ) public view onlyActive onlyOwnerKey(msg.pubkey()) onlyActiveEventConfiguration(eventConfiguration) {
         tvm.accept();
 
         EthereumEventConfiguration(eventConfiguration).confirmEvent{value: 1 ton}(
@@ -169,7 +202,7 @@ contract Bridge is KeysOwnable, BridgeConfigurationStructure, BridgeRelayStructu
         uint eventBlockNumber,
         uint eventBlock,
         address eventConfiguration
-    ) public view onlyActive onlyOwnerKey(msg.pubkey()) {
+    ) public view onlyActive onlyOwnerKey(msg.pubkey()) onlyActiveEventConfiguration(eventConfiguration) {
         tvm.accept();
 
         EthereumEventConfiguration(eventConfiguration).rejectEvent{value: 1 ton}(
@@ -201,7 +234,7 @@ contract Bridge is KeysOwnable, BridgeConfigurationStructure, BridgeRelayStructu
         uint eventBlock,
         bytes eventDataSignature,
         address eventConfiguration
-    ) public view onlyActive onlyOwnerKey(msg.pubkey()) {
+    ) public view onlyActive onlyOwnerKey(msg.pubkey()) onlyActiveEventConfiguration(eventConfiguration) {
         tvm.accept();
 
         TonEventConfiguration(eventConfiguration).confirmEvent{value: 1 ton}(
@@ -233,7 +266,7 @@ contract Bridge is KeysOwnable, BridgeConfigurationStructure, BridgeRelayStructu
         uint eventBlockNumber,
         uint eventBlock,
         address eventConfiguration
-    ) public view onlyActive onlyOwnerKey(msg.pubkey()) {
+    ) public view onlyActive onlyOwnerKey(msg.pubkey()) onlyActiveEventConfiguration(eventConfiguration) {
         tvm.accept();
 
         TonEventConfiguration(eventConfiguration).rejectEvent{value: 1 ton}(

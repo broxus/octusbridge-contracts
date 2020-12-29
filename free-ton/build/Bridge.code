@@ -914,6 +914,476 @@ BLKSWAP 1, 3
 DROP
 ; end function getEventConfigurationStatus
 
+.globl	getActiveEventConfigurations
+.public	getActiveEventConfigurations
+.type	getActiveEventConfigurations, @function
+GETGLOB 1
+ISNULL
+PUSHCONT {
+	CALL $c4_to_c7$
+}
+IF
+; Decode input parameters
+ENDS
+; function getActiveEventConfigurations
+;; ret param: contracts
+PUSHINT 0
+NEWDICT
+PAIR
+;; get member eventConfigurationRequiredRejects
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 1
+;; decl: requiredRejects
+;; get member eventConfigurationRequiredConfirmations
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 0
+;; decl: requiredConfirmations
+;; push identifier eventConfigurationVotes
+GETGLOB 13
+DUP
+PUSHINT 267
+DICTMIN
+NULLSWAPIFNOT
+PUSHCONT {
+	SWAP
+	PLDDICT
+	TUPLE 2
+}
+IF
+DUP
+ISNULL
+PUSHCONT {
+	NULL
+	NULL
+}
+PUSHCONT {
+	UNTUPLE 2
+	PUSH S1
+}
+IFELSE
+PUSHCONT {
+	DUP
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	PUSHINT 0
+	;; decl: total
+	PUSHINT 0
+	;; decl: confirmations
+	;; push identifier votes
+	PUSH S3
+	DUP
+	PUSHINT 256
+	DICTUMIN
+	NULLSWAPIFNOT
+	PUSHCONT {
+		SWAP
+		PLDI 1
+		TUPLE 2
+	}
+	IF
+	DUP
+	ISNULL
+	PUSHCONT {
+		NULL
+		NULL
+	}
+	PUSHCONT {
+		UNTUPLE 2
+		PUSH S1
+	}
+	IFELSE
+	PUSHCONT {
+		DUP
+		ISNULL
+		NOT
+	}
+	PUSHCONT {
+		PUSHINT 1
+		; expValue
+		PUSH S6
+		; end expValue
+		SWAP
+		ADD
+		UFITS 16
+		; colValue
+		POP S6
+		; end colValue
+		;; if
+		;; push identifier vote
+		PUSH S1
+		PUSHCONT {
+			PUSHINT 1
+			; expValue
+			PUSH S5
+			; end expValue
+			SWAP
+			ADD
+			UFITS 16
+			; colValue
+			POP S5
+			; end colValue
+		}
+		IF
+		;; end if
+		DUP
+		PUSH S4
+		PUSHINT 256
+		DICTUGETNEXT
+		NULLSWAPIFNOT
+		PUSHCONT {
+			SWAP
+			PLDI 1
+			TUPLE 2
+		}
+		IF
+		DUP
+		ISNULL
+		PUSHCONT {
+			POP S1
+		}
+		PUSHCONT {
+			UNTUPLE 2
+			POP S3
+			DUP
+			POP S4
+			POP S1
+		}
+		IFELSE
+	}
+	WHILE
+	BLKDROP 4
+	; end for
+	;; if
+	;; push identifier confirmations
+	DUP
+	;; push identifier requiredConfirmations
+	PUSH S7
+	;; >=
+	GEQ
+	;; short-circuiting &&
+	DUP
+	PUSHCONT {
+		DROP
+		;; push identifier total
+		PUSH S1
+		;; push identifier confirmations
+		PUSH S1
+		;; -
+		SUB
+		UFITS 16
+		;; push identifier requiredRejects
+		PUSH S8
+		;; <
+		LESS
+	}
+	IF
+	PUSHCONT {
+		; expValue
+		PUSH S8
+		; end expValue
+		;; push identifier addr
+		PUSH S5
+		;; array.push(..)
+		SWAP
+		UNPAIR
+		PUSH S1
+		INC
+		XCHG s3
+		ROTREV
+		PUSHINT 32
+		DICTUSET
+		PAIR
+		; colValue
+		POP S9
+		; end colValue
+	}
+	IF
+	;; end if
+	DROP2
+	DUP
+	PUSH S4
+	PUSHINT 267
+	DICTGETNEXT
+	NULLSWAPIFNOT
+	PUSHCONT {
+		SWAP
+		PLDDICT
+		TUPLE 2
+	}
+	IF
+	DUP
+	ISNULL
+	PUSHCONT {
+		POP S1
+	}
+	PUSHCONT {
+		UNTUPLE 2
+		POP S3
+		DUP
+		POP S4
+		POP S1
+	}
+	IFELSE
+}
+WHILE
+BLKDROP 4
+; end for
+;; returning named params
+DROP2
+;; emitting 1 value(s)
+PUSH S1
+EQINT -1
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST xabf4c988
+	PUSH S1
+	UNPAIR
+	XCHG s2
+	STU 32
+	STDICT
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+}
+IF
+DROP
+; end function getActiveEventConfigurations
+PUSHCONT {
+	CALL $c7_to_c4$
+}
+IF
+TRUE
+SETGLOB 7
+
+.globl	getActiveEventConfigurations_internal
+.type	getActiveEventConfigurations_internal, @function
+; function getActiveEventConfigurations
+;; ret param: contracts
+PUSHINT 0
+NEWDICT
+PAIR
+;; get member eventConfigurationRequiredRejects
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 1
+;; decl: requiredRejects
+;; get member eventConfigurationRequiredConfirmations
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 0
+;; decl: requiredConfirmations
+;; push identifier eventConfigurationVotes
+GETGLOB 13
+DUP
+PUSHINT 267
+DICTMIN
+NULLSWAPIFNOT
+PUSHCONT {
+	SWAP
+	PLDDICT
+	TUPLE 2
+}
+IF
+DUP
+ISNULL
+PUSHCONT {
+	NULL
+	NULL
+}
+PUSHCONT {
+	UNTUPLE 2
+	PUSH S1
+}
+IFELSE
+PUSHCONT {
+	DUP
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	PUSHINT 0
+	;; decl: total
+	PUSHINT 0
+	;; decl: confirmations
+	;; push identifier votes
+	PUSH S3
+	DUP
+	PUSHINT 256
+	DICTUMIN
+	NULLSWAPIFNOT
+	PUSHCONT {
+		SWAP
+		PLDI 1
+		TUPLE 2
+	}
+	IF
+	DUP
+	ISNULL
+	PUSHCONT {
+		NULL
+		NULL
+	}
+	PUSHCONT {
+		UNTUPLE 2
+		PUSH S1
+	}
+	IFELSE
+	PUSHCONT {
+		DUP
+		ISNULL
+		NOT
+	}
+	PUSHCONT {
+		PUSHINT 1
+		; expValue
+		PUSH S6
+		; end expValue
+		SWAP
+		ADD
+		UFITS 16
+		; colValue
+		POP S6
+		; end colValue
+		;; if
+		;; push identifier vote
+		PUSH S1
+		PUSHCONT {
+			PUSHINT 1
+			; expValue
+			PUSH S5
+			; end expValue
+			SWAP
+			ADD
+			UFITS 16
+			; colValue
+			POP S5
+			; end colValue
+		}
+		IF
+		;; end if
+		DUP
+		PUSH S4
+		PUSHINT 256
+		DICTUGETNEXT
+		NULLSWAPIFNOT
+		PUSHCONT {
+			SWAP
+			PLDI 1
+			TUPLE 2
+		}
+		IF
+		DUP
+		ISNULL
+		PUSHCONT {
+			POP S1
+		}
+		PUSHCONT {
+			UNTUPLE 2
+			POP S3
+			DUP
+			POP S4
+			POP S1
+		}
+		IFELSE
+	}
+	WHILE
+	BLKDROP 4
+	; end for
+	;; if
+	;; push identifier confirmations
+	DUP
+	;; push identifier requiredConfirmations
+	PUSH S7
+	;; >=
+	GEQ
+	;; short-circuiting &&
+	DUP
+	PUSHCONT {
+		DROP
+		;; push identifier total
+		PUSH S1
+		;; push identifier confirmations
+		PUSH S1
+		;; -
+		SUB
+		UFITS 16
+		;; push identifier requiredRejects
+		PUSH S8
+		;; <
+		LESS
+	}
+	IF
+	PUSHCONT {
+		; expValue
+		PUSH S8
+		; end expValue
+		;; push identifier addr
+		PUSH S5
+		;; array.push(..)
+		SWAP
+		UNPAIR
+		PUSH S1
+		INC
+		XCHG s3
+		ROTREV
+		PUSHINT 32
+		DICTUSET
+		PAIR
+		; colValue
+		POP S9
+		; end colValue
+	}
+	IF
+	;; end if
+	DROP2
+	DUP
+	PUSH S4
+	PUSHINT 267
+	DICTGETNEXT
+	NULLSWAPIFNOT
+	PUSHCONT {
+		SWAP
+		PLDDICT
+		TUPLE 2
+	}
+	IF
+	DUP
+	ISNULL
+	PUSHCONT {
+		POP S1
+	}
+	PUSHCONT {
+		UNTUPLE 2
+		POP S3
+		DUP
+		POP S4
+		POP S1
+	}
+	IFELSE
+}
+WHILE
+BLKDROP 4
+; end for
+;; returning named params
+DROP2
+; end function getActiveEventConfigurations
+
 .globl	confirmEthereumEvent
 .public	confirmEthereumEvent
 .type	confirmEthereumEvent, @function
@@ -1033,11 +1503,143 @@ TRUE
 ;; ==
 EQUAL
 THROWIFNOT 303
+; modifier onlyActiveEventConfiguration
+;; push identifier eventConfiguration
+PUSH S1
+PUSHINT 0
+;; decl: total
+PUSHINT 0
+;; decl: confirmations
+;; index
+;; push identifier eventConfiguration
+PUSH S2
+;; push identifier eventConfigurationVotes
+GETGLOB 13
+PUSHINT 267
+DICTGET
+PUSHCONT {
+	PLDDICT
+}
+PUSHCONT {
+	NEWDICT
+}
+IFELSE
+DUP
+PUSHINT 256
+DICTUMIN
+NULLSWAPIFNOT
+PUSHCONT {
+	SWAP
+	PLDI 1
+	TUPLE 2
+}
+IF
+DUP
+ISNULL
+PUSHCONT {
+	NULL
+	NULL
+}
+PUSHCONT {
+	UNTUPLE 2
+	PUSH S1
+}
+IFELSE
+PUSHCONT {
+	DUP
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	PUSHINT 1
+	; expValue
+	PUSH S6
+	; end expValue
+	SWAP
+	ADD
+	UFITS 16
+	; colValue
+	POP S6
+	; end colValue
+	;; if
+	;; push identifier vote
+	PUSH S1
+	PUSHCONT {
+		PUSHINT 1
+		; expValue
+		PUSH S5
+		; end expValue
+		SWAP
+		ADD
+		UFITS 16
+		; colValue
+		POP S5
+		; end colValue
+	}
+	IF
+	;; end if
+	DUP
+	PUSH S4
+	PUSHINT 256
+	DICTUGETNEXT
+	NULLSWAPIFNOT
+	PUSHCONT {
+		SWAP
+		PLDI 1
+		TUPLE 2
+	}
+	IF
+	DUP
+	ISNULL
+	PUSHCONT {
+		POP S1
+	}
+	PUSHCONT {
+		UNTUPLE 2
+		POP S3
+		DUP
+		POP S4
+		POP S1
+	}
+	IFELSE
+}
+WHILE
+BLKDROP 4
+; end for
+PUSHINT 12313
+;; push identifier confirmations
+PUSH S1
+;; get member eventConfigurationRequiredRejects
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 1
+;; >=
+GEQ
+;; short-circuiting &&
+DUP
+PUSHCONT {
+	DROP
+	;; push identifier total
+	PUSH S2
+	;; push identifier confirmations
+	PUSH S2
+	;; -
+	SUB
+	UFITS 16
+	;; get member eventConfigurationRequiredConfirmations
+	;; push identifier bridgeConfiguration
+	GETGLOB 12
+	INDEX 0
+	;; <
+	LESS
+}
+IF
+THROWANYIFNOT
 ; function confirmEthereumEvent
 ACCEPT
 ;; Remote call EthereumEventConfiguration.confirmEvent
 ;; push identifier eventConfiguration
-PUSH S1
+PUSH S4
 NEWC
 STSLICECONST x62_
 STSLICE
@@ -1049,24 +1651,24 @@ NEWC
 STSLICECONST x246a9cbc
 ;; eventTransaction
 ;; push identifier eventTransaction
-PUSH S8
+PUSH S11
 STUR 256
 ;; eventIndex
 ;; push identifier eventIndex
-PUSH S7
+PUSH S10
 STUR 256
 ;; eventData
 ;; push identifier eventData
-PUSH S6
+PUSH S9
 STREFR
 ;; eventBlockNumber
 ;; push identifier eventBlockNumber
-PUSH S5
+PUSH S8
 STUR 256
 NEWC
 ;; eventBlock
 ;; push identifier eventBlock
-PUSH S5
+PUSH S8
 STUR 256
 ;; relayKey
 GETGLOB 5
@@ -1084,6 +1686,8 @@ ENDC
 PUSHINT 1
 SENDRAWMSG
 ; end function confirmEthereumEvent
+BLKDROP 3
+; end modifier onlyActiveEventConfiguration
 DROP
 ; end modifier onlyOwnerKey
 BLKDROP 6
@@ -1140,11 +1744,143 @@ TRUE
 ;; ==
 EQUAL
 THROWIFNOT 303
+; modifier onlyActiveEventConfiguration
+;; push identifier eventConfiguration
+PUSH S1
+PUSHINT 0
+;; decl: total
+PUSHINT 0
+;; decl: confirmations
+;; index
+;; push identifier eventConfiguration
+PUSH S2
+;; push identifier eventConfigurationVotes
+GETGLOB 13
+PUSHINT 267
+DICTGET
+PUSHCONT {
+	PLDDICT
+}
+PUSHCONT {
+	NEWDICT
+}
+IFELSE
+DUP
+PUSHINT 256
+DICTUMIN
+NULLSWAPIFNOT
+PUSHCONT {
+	SWAP
+	PLDI 1
+	TUPLE 2
+}
+IF
+DUP
+ISNULL
+PUSHCONT {
+	NULL
+	NULL
+}
+PUSHCONT {
+	UNTUPLE 2
+	PUSH S1
+}
+IFELSE
+PUSHCONT {
+	DUP
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	PUSHINT 1
+	; expValue
+	PUSH S6
+	; end expValue
+	SWAP
+	ADD
+	UFITS 16
+	; colValue
+	POP S6
+	; end colValue
+	;; if
+	;; push identifier vote
+	PUSH S1
+	PUSHCONT {
+		PUSHINT 1
+		; expValue
+		PUSH S5
+		; end expValue
+		SWAP
+		ADD
+		UFITS 16
+		; colValue
+		POP S5
+		; end colValue
+	}
+	IF
+	;; end if
+	DUP
+	PUSH S4
+	PUSHINT 256
+	DICTUGETNEXT
+	NULLSWAPIFNOT
+	PUSHCONT {
+		SWAP
+		PLDI 1
+		TUPLE 2
+	}
+	IF
+	DUP
+	ISNULL
+	PUSHCONT {
+		POP S1
+	}
+	PUSHCONT {
+		UNTUPLE 2
+		POP S3
+		DUP
+		POP S4
+		POP S1
+	}
+	IFELSE
+}
+WHILE
+BLKDROP 4
+; end for
+PUSHINT 12313
+;; push identifier confirmations
+PUSH S1
+;; get member eventConfigurationRequiredRejects
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 1
+;; >=
+GEQ
+;; short-circuiting &&
+DUP
+PUSHCONT {
+	DROP
+	;; push identifier total
+	PUSH S2
+	;; push identifier confirmations
+	PUSH S2
+	;; -
+	SUB
+	UFITS 16
+	;; get member eventConfigurationRequiredConfirmations
+	;; push identifier bridgeConfiguration
+	GETGLOB 12
+	INDEX 0
+	;; <
+	LESS
+}
+IF
+THROWANYIFNOT
 ; function confirmEthereumEvent
 ACCEPT
 ;; Remote call EthereumEventConfiguration.confirmEvent
 ;; push identifier eventConfiguration
-PUSH S1
+PUSH S4
 NEWC
 STSLICECONST x62_
 STSLICE
@@ -1156,24 +1892,24 @@ NEWC
 STSLICECONST x246a9cbc
 ;; eventTransaction
 ;; push identifier eventTransaction
-PUSH S8
+PUSH S11
 STUR 256
 ;; eventIndex
 ;; push identifier eventIndex
-PUSH S7
+PUSH S10
 STUR 256
 ;; eventData
 ;; push identifier eventData
-PUSH S6
+PUSH S9
 STREFR
 ;; eventBlockNumber
 ;; push identifier eventBlockNumber
-PUSH S5
+PUSH S8
 STUR 256
 NEWC
 ;; eventBlock
 ;; push identifier eventBlock
-PUSH S5
+PUSH S8
 STUR 256
 ;; relayKey
 GETGLOB 5
@@ -1191,6 +1927,8 @@ ENDC
 PUSHINT 1
 SENDRAWMSG
 ; end function confirmEthereumEvent
+BLKDROP 3
+; end modifier onlyActiveEventConfiguration
 DROP
 ; end modifier onlyOwnerKey
 BLKDROP 6
@@ -1315,11 +2053,143 @@ TRUE
 ;; ==
 EQUAL
 THROWIFNOT 303
+; modifier onlyActiveEventConfiguration
+;; push identifier eventConfiguration
+PUSH S1
+PUSHINT 0
+;; decl: total
+PUSHINT 0
+;; decl: confirmations
+;; index
+;; push identifier eventConfiguration
+PUSH S2
+;; push identifier eventConfigurationVotes
+GETGLOB 13
+PUSHINT 267
+DICTGET
+PUSHCONT {
+	PLDDICT
+}
+PUSHCONT {
+	NEWDICT
+}
+IFELSE
+DUP
+PUSHINT 256
+DICTUMIN
+NULLSWAPIFNOT
+PUSHCONT {
+	SWAP
+	PLDI 1
+	TUPLE 2
+}
+IF
+DUP
+ISNULL
+PUSHCONT {
+	NULL
+	NULL
+}
+PUSHCONT {
+	UNTUPLE 2
+	PUSH S1
+}
+IFELSE
+PUSHCONT {
+	DUP
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	PUSHINT 1
+	; expValue
+	PUSH S6
+	; end expValue
+	SWAP
+	ADD
+	UFITS 16
+	; colValue
+	POP S6
+	; end colValue
+	;; if
+	;; push identifier vote
+	PUSH S1
+	PUSHCONT {
+		PUSHINT 1
+		; expValue
+		PUSH S5
+		; end expValue
+		SWAP
+		ADD
+		UFITS 16
+		; colValue
+		POP S5
+		; end colValue
+	}
+	IF
+	;; end if
+	DUP
+	PUSH S4
+	PUSHINT 256
+	DICTUGETNEXT
+	NULLSWAPIFNOT
+	PUSHCONT {
+		SWAP
+		PLDI 1
+		TUPLE 2
+	}
+	IF
+	DUP
+	ISNULL
+	PUSHCONT {
+		POP S1
+	}
+	PUSHCONT {
+		UNTUPLE 2
+		POP S3
+		DUP
+		POP S4
+		POP S1
+	}
+	IFELSE
+}
+WHILE
+BLKDROP 4
+; end for
+PUSHINT 12313
+;; push identifier confirmations
+PUSH S1
+;; get member eventConfigurationRequiredRejects
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 1
+;; >=
+GEQ
+;; short-circuiting &&
+DUP
+PUSHCONT {
+	DROP
+	;; push identifier total
+	PUSH S2
+	;; push identifier confirmations
+	PUSH S2
+	;; -
+	SUB
+	UFITS 16
+	;; get member eventConfigurationRequiredConfirmations
+	;; push identifier bridgeConfiguration
+	GETGLOB 12
+	INDEX 0
+	;; <
+	LESS
+}
+IF
+THROWANYIFNOT
 ; function rejectEthereumEvent
 ACCEPT
 ;; Remote call EthereumEventConfiguration.rejectEvent
 ;; push identifier eventConfiguration
-PUSH S1
+PUSH S4
 NEWC
 STSLICECONST x62_
 STSLICE
@@ -1331,24 +2201,24 @@ NEWC
 STSLICECONST x3b26aa04
 ;; eventTransaction
 ;; push identifier eventTransaction
-PUSH S8
+PUSH S11
 STUR 256
 ;; eventIndex
 ;; push identifier eventIndex
-PUSH S7
+PUSH S10
 STUR 256
 ;; eventData
 ;; push identifier eventData
-PUSH S6
+PUSH S9
 STREFR
 ;; eventBlockNumber
 ;; push identifier eventBlockNumber
-PUSH S5
+PUSH S8
 STUR 256
 NEWC
 ;; eventBlock
 ;; push identifier eventBlock
-PUSH S5
+PUSH S8
 STUR 256
 ;; relayKey
 GETGLOB 5
@@ -1366,6 +2236,8 @@ ENDC
 PUSHINT 1
 SENDRAWMSG
 ; end function rejectEthereumEvent
+BLKDROP 3
+; end modifier onlyActiveEventConfiguration
 DROP
 ; end modifier onlyOwnerKey
 BLKDROP 6
@@ -1422,11 +2294,143 @@ TRUE
 ;; ==
 EQUAL
 THROWIFNOT 303
+; modifier onlyActiveEventConfiguration
+;; push identifier eventConfiguration
+PUSH S1
+PUSHINT 0
+;; decl: total
+PUSHINT 0
+;; decl: confirmations
+;; index
+;; push identifier eventConfiguration
+PUSH S2
+;; push identifier eventConfigurationVotes
+GETGLOB 13
+PUSHINT 267
+DICTGET
+PUSHCONT {
+	PLDDICT
+}
+PUSHCONT {
+	NEWDICT
+}
+IFELSE
+DUP
+PUSHINT 256
+DICTUMIN
+NULLSWAPIFNOT
+PUSHCONT {
+	SWAP
+	PLDI 1
+	TUPLE 2
+}
+IF
+DUP
+ISNULL
+PUSHCONT {
+	NULL
+	NULL
+}
+PUSHCONT {
+	UNTUPLE 2
+	PUSH S1
+}
+IFELSE
+PUSHCONT {
+	DUP
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	PUSHINT 1
+	; expValue
+	PUSH S6
+	; end expValue
+	SWAP
+	ADD
+	UFITS 16
+	; colValue
+	POP S6
+	; end colValue
+	;; if
+	;; push identifier vote
+	PUSH S1
+	PUSHCONT {
+		PUSHINT 1
+		; expValue
+		PUSH S5
+		; end expValue
+		SWAP
+		ADD
+		UFITS 16
+		; colValue
+		POP S5
+		; end colValue
+	}
+	IF
+	;; end if
+	DUP
+	PUSH S4
+	PUSHINT 256
+	DICTUGETNEXT
+	NULLSWAPIFNOT
+	PUSHCONT {
+		SWAP
+		PLDI 1
+		TUPLE 2
+	}
+	IF
+	DUP
+	ISNULL
+	PUSHCONT {
+		POP S1
+	}
+	PUSHCONT {
+		UNTUPLE 2
+		POP S3
+		DUP
+		POP S4
+		POP S1
+	}
+	IFELSE
+}
+WHILE
+BLKDROP 4
+; end for
+PUSHINT 12313
+;; push identifier confirmations
+PUSH S1
+;; get member eventConfigurationRequiredRejects
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 1
+;; >=
+GEQ
+;; short-circuiting &&
+DUP
+PUSHCONT {
+	DROP
+	;; push identifier total
+	PUSH S2
+	;; push identifier confirmations
+	PUSH S2
+	;; -
+	SUB
+	UFITS 16
+	;; get member eventConfigurationRequiredConfirmations
+	;; push identifier bridgeConfiguration
+	GETGLOB 12
+	INDEX 0
+	;; <
+	LESS
+}
+IF
+THROWANYIFNOT
 ; function rejectEthereumEvent
 ACCEPT
 ;; Remote call EthereumEventConfiguration.rejectEvent
 ;; push identifier eventConfiguration
-PUSH S1
+PUSH S4
 NEWC
 STSLICECONST x62_
 STSLICE
@@ -1438,24 +2442,24 @@ NEWC
 STSLICECONST x3b26aa04
 ;; eventTransaction
 ;; push identifier eventTransaction
-PUSH S8
+PUSH S11
 STUR 256
 ;; eventIndex
 ;; push identifier eventIndex
-PUSH S7
+PUSH S10
 STUR 256
 ;; eventData
 ;; push identifier eventData
-PUSH S6
+PUSH S9
 STREFR
 ;; eventBlockNumber
 ;; push identifier eventBlockNumber
-PUSH S5
+PUSH S8
 STUR 256
 NEWC
 ;; eventBlock
 ;; push identifier eventBlock
-PUSH S5
+PUSH S8
 STUR 256
 ;; relayKey
 GETGLOB 5
@@ -1473,6 +2477,8 @@ ENDC
 PUSHINT 1
 SENDRAWMSG
 ; end function rejectEthereumEvent
+BLKDROP 3
+; end modifier onlyActiveEventConfiguration
 DROP
 ; end modifier onlyOwnerKey
 BLKDROP 6
@@ -1609,11 +2615,143 @@ TRUE
 ;; ==
 EQUAL
 THROWIFNOT 303
+; modifier onlyActiveEventConfiguration
+;; push identifier eventConfiguration
+PUSH S1
+PUSHINT 0
+;; decl: total
+PUSHINT 0
+;; decl: confirmations
+;; index
+;; push identifier eventConfiguration
+PUSH S2
+;; push identifier eventConfigurationVotes
+GETGLOB 13
+PUSHINT 267
+DICTGET
+PUSHCONT {
+	PLDDICT
+}
+PUSHCONT {
+	NEWDICT
+}
+IFELSE
+DUP
+PUSHINT 256
+DICTUMIN
+NULLSWAPIFNOT
+PUSHCONT {
+	SWAP
+	PLDI 1
+	TUPLE 2
+}
+IF
+DUP
+ISNULL
+PUSHCONT {
+	NULL
+	NULL
+}
+PUSHCONT {
+	UNTUPLE 2
+	PUSH S1
+}
+IFELSE
+PUSHCONT {
+	DUP
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	PUSHINT 1
+	; expValue
+	PUSH S6
+	; end expValue
+	SWAP
+	ADD
+	UFITS 16
+	; colValue
+	POP S6
+	; end colValue
+	;; if
+	;; push identifier vote
+	PUSH S1
+	PUSHCONT {
+		PUSHINT 1
+		; expValue
+		PUSH S5
+		; end expValue
+		SWAP
+		ADD
+		UFITS 16
+		; colValue
+		POP S5
+		; end colValue
+	}
+	IF
+	;; end if
+	DUP
+	PUSH S4
+	PUSHINT 256
+	DICTUGETNEXT
+	NULLSWAPIFNOT
+	PUSHCONT {
+		SWAP
+		PLDI 1
+		TUPLE 2
+	}
+	IF
+	DUP
+	ISNULL
+	PUSHCONT {
+		POP S1
+	}
+	PUSHCONT {
+		UNTUPLE 2
+		POP S3
+		DUP
+		POP S4
+		POP S1
+	}
+	IFELSE
+}
+WHILE
+BLKDROP 4
+; end for
+PUSHINT 12313
+;; push identifier confirmations
+PUSH S1
+;; get member eventConfigurationRequiredRejects
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 1
+;; >=
+GEQ
+;; short-circuiting &&
+DUP
+PUSHCONT {
+	DROP
+	;; push identifier total
+	PUSH S2
+	;; push identifier confirmations
+	PUSH S2
+	;; -
+	SUB
+	UFITS 16
+	;; get member eventConfigurationRequiredConfirmations
+	;; push identifier bridgeConfiguration
+	GETGLOB 12
+	INDEX 0
+	;; <
+	LESS
+}
+IF
+THROWANYIFNOT
 ; function confirmTonEvent
 ACCEPT
 ;; Remote call TonEventConfiguration.confirmEvent
 ;; push identifier eventConfiguration
-PUSH S1
+PUSH S4
 NEWC
 STSLICECONST x62_
 STSLICE
@@ -1625,28 +2763,28 @@ NEWC
 STSLICECONST x1c4c8ff0
 ;; eventTransaction
 ;; push identifier eventTransaction
-PUSH S9
+PUSH S12
 STUR 256
 ;; eventIndex
 ;; push identifier eventIndex
-PUSH S8
+PUSH S11
 STUR 256
 ;; eventData
 ;; push identifier eventData
-PUSH S7
+PUSH S10
 STREFR
 ;; eventBlockNumber
 ;; push identifier eventBlockNumber
-PUSH S6
+PUSH S9
 STUR 256
 NEWC
 ;; eventBlock
 ;; push identifier eventBlock
-PUSH S6
+PUSH S9
 STUR 256
 ;; eventDataSignature
 ;; push identifier eventDataSignature
-PUSH S5
+PUSH S8
 STREFR
 ;; relayKey
 GETGLOB 5
@@ -1664,6 +2802,8 @@ ENDC
 PUSHINT 1
 SENDRAWMSG
 ; end function confirmTonEvent
+BLKDROP 3
+; end modifier onlyActiveEventConfiguration
 DROP
 ; end modifier onlyOwnerKey
 BLKDROP 7
@@ -1721,11 +2861,143 @@ TRUE
 ;; ==
 EQUAL
 THROWIFNOT 303
+; modifier onlyActiveEventConfiguration
+;; push identifier eventConfiguration
+PUSH S1
+PUSHINT 0
+;; decl: total
+PUSHINT 0
+;; decl: confirmations
+;; index
+;; push identifier eventConfiguration
+PUSH S2
+;; push identifier eventConfigurationVotes
+GETGLOB 13
+PUSHINT 267
+DICTGET
+PUSHCONT {
+	PLDDICT
+}
+PUSHCONT {
+	NEWDICT
+}
+IFELSE
+DUP
+PUSHINT 256
+DICTUMIN
+NULLSWAPIFNOT
+PUSHCONT {
+	SWAP
+	PLDI 1
+	TUPLE 2
+}
+IF
+DUP
+ISNULL
+PUSHCONT {
+	NULL
+	NULL
+}
+PUSHCONT {
+	UNTUPLE 2
+	PUSH S1
+}
+IFELSE
+PUSHCONT {
+	DUP
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	PUSHINT 1
+	; expValue
+	PUSH S6
+	; end expValue
+	SWAP
+	ADD
+	UFITS 16
+	; colValue
+	POP S6
+	; end colValue
+	;; if
+	;; push identifier vote
+	PUSH S1
+	PUSHCONT {
+		PUSHINT 1
+		; expValue
+		PUSH S5
+		; end expValue
+		SWAP
+		ADD
+		UFITS 16
+		; colValue
+		POP S5
+		; end colValue
+	}
+	IF
+	;; end if
+	DUP
+	PUSH S4
+	PUSHINT 256
+	DICTUGETNEXT
+	NULLSWAPIFNOT
+	PUSHCONT {
+		SWAP
+		PLDI 1
+		TUPLE 2
+	}
+	IF
+	DUP
+	ISNULL
+	PUSHCONT {
+		POP S1
+	}
+	PUSHCONT {
+		UNTUPLE 2
+		POP S3
+		DUP
+		POP S4
+		POP S1
+	}
+	IFELSE
+}
+WHILE
+BLKDROP 4
+; end for
+PUSHINT 12313
+;; push identifier confirmations
+PUSH S1
+;; get member eventConfigurationRequiredRejects
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 1
+;; >=
+GEQ
+;; short-circuiting &&
+DUP
+PUSHCONT {
+	DROP
+	;; push identifier total
+	PUSH S2
+	;; push identifier confirmations
+	PUSH S2
+	;; -
+	SUB
+	UFITS 16
+	;; get member eventConfigurationRequiredConfirmations
+	;; push identifier bridgeConfiguration
+	GETGLOB 12
+	INDEX 0
+	;; <
+	LESS
+}
+IF
+THROWANYIFNOT
 ; function confirmTonEvent
 ACCEPT
 ;; Remote call TonEventConfiguration.confirmEvent
 ;; push identifier eventConfiguration
-PUSH S1
+PUSH S4
 NEWC
 STSLICECONST x62_
 STSLICE
@@ -1737,28 +3009,28 @@ NEWC
 STSLICECONST x1c4c8ff0
 ;; eventTransaction
 ;; push identifier eventTransaction
-PUSH S9
+PUSH S12
 STUR 256
 ;; eventIndex
 ;; push identifier eventIndex
-PUSH S8
+PUSH S11
 STUR 256
 ;; eventData
 ;; push identifier eventData
-PUSH S7
+PUSH S10
 STREFR
 ;; eventBlockNumber
 ;; push identifier eventBlockNumber
-PUSH S6
+PUSH S9
 STUR 256
 NEWC
 ;; eventBlock
 ;; push identifier eventBlock
-PUSH S6
+PUSH S9
 STUR 256
 ;; eventDataSignature
 ;; push identifier eventDataSignature
-PUSH S5
+PUSH S8
 STREFR
 ;; relayKey
 GETGLOB 5
@@ -1776,6 +3048,8 @@ ENDC
 PUSHINT 1
 SENDRAWMSG
 ; end function confirmTonEvent
+BLKDROP 3
+; end modifier onlyActiveEventConfiguration
 DROP
 ; end modifier onlyOwnerKey
 BLKDROP 7
@@ -1900,11 +3174,143 @@ TRUE
 ;; ==
 EQUAL
 THROWIFNOT 303
+; modifier onlyActiveEventConfiguration
+;; push identifier eventConfiguration
+PUSH S1
+PUSHINT 0
+;; decl: total
+PUSHINT 0
+;; decl: confirmations
+;; index
+;; push identifier eventConfiguration
+PUSH S2
+;; push identifier eventConfigurationVotes
+GETGLOB 13
+PUSHINT 267
+DICTGET
+PUSHCONT {
+	PLDDICT
+}
+PUSHCONT {
+	NEWDICT
+}
+IFELSE
+DUP
+PUSHINT 256
+DICTUMIN
+NULLSWAPIFNOT
+PUSHCONT {
+	SWAP
+	PLDI 1
+	TUPLE 2
+}
+IF
+DUP
+ISNULL
+PUSHCONT {
+	NULL
+	NULL
+}
+PUSHCONT {
+	UNTUPLE 2
+	PUSH S1
+}
+IFELSE
+PUSHCONT {
+	DUP
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	PUSHINT 1
+	; expValue
+	PUSH S6
+	; end expValue
+	SWAP
+	ADD
+	UFITS 16
+	; colValue
+	POP S6
+	; end colValue
+	;; if
+	;; push identifier vote
+	PUSH S1
+	PUSHCONT {
+		PUSHINT 1
+		; expValue
+		PUSH S5
+		; end expValue
+		SWAP
+		ADD
+		UFITS 16
+		; colValue
+		POP S5
+		; end colValue
+	}
+	IF
+	;; end if
+	DUP
+	PUSH S4
+	PUSHINT 256
+	DICTUGETNEXT
+	NULLSWAPIFNOT
+	PUSHCONT {
+		SWAP
+		PLDI 1
+		TUPLE 2
+	}
+	IF
+	DUP
+	ISNULL
+	PUSHCONT {
+		POP S1
+	}
+	PUSHCONT {
+		UNTUPLE 2
+		POP S3
+		DUP
+		POP S4
+		POP S1
+	}
+	IFELSE
+}
+WHILE
+BLKDROP 4
+; end for
+PUSHINT 12313
+;; push identifier confirmations
+PUSH S1
+;; get member eventConfigurationRequiredRejects
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 1
+;; >=
+GEQ
+;; short-circuiting &&
+DUP
+PUSHCONT {
+	DROP
+	;; push identifier total
+	PUSH S2
+	;; push identifier confirmations
+	PUSH S2
+	;; -
+	SUB
+	UFITS 16
+	;; get member eventConfigurationRequiredConfirmations
+	;; push identifier bridgeConfiguration
+	GETGLOB 12
+	INDEX 0
+	;; <
+	LESS
+}
+IF
+THROWANYIFNOT
 ; function rejectTonEvent
 ACCEPT
 ;; Remote call TonEventConfiguration.rejectEvent
 ;; push identifier eventConfiguration
-PUSH S1
+PUSH S4
 NEWC
 STSLICECONST x62_
 STSLICE
@@ -1916,24 +3322,24 @@ NEWC
 STSLICECONST x3b26aa04
 ;; eventTransaction
 ;; push identifier eventTransaction
-PUSH S8
+PUSH S11
 STUR 256
 ;; eventIndex
 ;; push identifier eventIndex
-PUSH S7
+PUSH S10
 STUR 256
 ;; eventData
 ;; push identifier eventData
-PUSH S6
+PUSH S9
 STREFR
 ;; eventBlockNumber
 ;; push identifier eventBlockNumber
-PUSH S5
+PUSH S8
 STUR 256
 NEWC
 ;; eventBlock
 ;; push identifier eventBlock
-PUSH S5
+PUSH S8
 STUR 256
 ;; relayKey
 GETGLOB 5
@@ -1951,6 +3357,8 @@ ENDC
 PUSHINT 1
 SENDRAWMSG
 ; end function rejectTonEvent
+BLKDROP 3
+; end modifier onlyActiveEventConfiguration
 DROP
 ; end modifier onlyOwnerKey
 BLKDROP 6
@@ -2007,11 +3415,143 @@ TRUE
 ;; ==
 EQUAL
 THROWIFNOT 303
+; modifier onlyActiveEventConfiguration
+;; push identifier eventConfiguration
+PUSH S1
+PUSHINT 0
+;; decl: total
+PUSHINT 0
+;; decl: confirmations
+;; index
+;; push identifier eventConfiguration
+PUSH S2
+;; push identifier eventConfigurationVotes
+GETGLOB 13
+PUSHINT 267
+DICTGET
+PUSHCONT {
+	PLDDICT
+}
+PUSHCONT {
+	NEWDICT
+}
+IFELSE
+DUP
+PUSHINT 256
+DICTUMIN
+NULLSWAPIFNOT
+PUSHCONT {
+	SWAP
+	PLDI 1
+	TUPLE 2
+}
+IF
+DUP
+ISNULL
+PUSHCONT {
+	NULL
+	NULL
+}
+PUSHCONT {
+	UNTUPLE 2
+	PUSH S1
+}
+IFELSE
+PUSHCONT {
+	DUP
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	PUSHINT 1
+	; expValue
+	PUSH S6
+	; end expValue
+	SWAP
+	ADD
+	UFITS 16
+	; colValue
+	POP S6
+	; end colValue
+	;; if
+	;; push identifier vote
+	PUSH S1
+	PUSHCONT {
+		PUSHINT 1
+		; expValue
+		PUSH S5
+		; end expValue
+		SWAP
+		ADD
+		UFITS 16
+		; colValue
+		POP S5
+		; end colValue
+	}
+	IF
+	;; end if
+	DUP
+	PUSH S4
+	PUSHINT 256
+	DICTUGETNEXT
+	NULLSWAPIFNOT
+	PUSHCONT {
+		SWAP
+		PLDI 1
+		TUPLE 2
+	}
+	IF
+	DUP
+	ISNULL
+	PUSHCONT {
+		POP S1
+	}
+	PUSHCONT {
+		UNTUPLE 2
+		POP S3
+		DUP
+		POP S4
+		POP S1
+	}
+	IFELSE
+}
+WHILE
+BLKDROP 4
+; end for
+PUSHINT 12313
+;; push identifier confirmations
+PUSH S1
+;; get member eventConfigurationRequiredRejects
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 1
+;; >=
+GEQ
+;; short-circuiting &&
+DUP
+PUSHCONT {
+	DROP
+	;; push identifier total
+	PUSH S2
+	;; push identifier confirmations
+	PUSH S2
+	;; -
+	SUB
+	UFITS 16
+	;; get member eventConfigurationRequiredConfirmations
+	;; push identifier bridgeConfiguration
+	GETGLOB 12
+	INDEX 0
+	;; <
+	LESS
+}
+IF
+THROWANYIFNOT
 ; function rejectTonEvent
 ACCEPT
 ;; Remote call TonEventConfiguration.rejectEvent
 ;; push identifier eventConfiguration
-PUSH S1
+PUSH S4
 NEWC
 STSLICECONST x62_
 STSLICE
@@ -2023,24 +3563,24 @@ NEWC
 STSLICECONST x3b26aa04
 ;; eventTransaction
 ;; push identifier eventTransaction
-PUSH S8
+PUSH S11
 STUR 256
 ;; eventIndex
 ;; push identifier eventIndex
-PUSH S7
+PUSH S10
 STUR 256
 ;; eventData
 ;; push identifier eventData
-PUSH S6
+PUSH S9
 STREFR
 ;; eventBlockNumber
 ;; push identifier eventBlockNumber
-PUSH S5
+PUSH S8
 STUR 256
 NEWC
 ;; eventBlock
 ;; push identifier eventBlock
-PUSH S5
+PUSH S8
 STUR 256
 ;; relayKey
 GETGLOB 5
@@ -2058,6 +3598,8 @@ ENDC
 PUSHINT 1
 SENDRAWMSG
 ; end function rejectTonEvent
+BLKDROP 3
+; end modifier onlyActiveEventConfiguration
 DROP
 ; end modifier onlyOwnerKey
 BLKDROP 6
