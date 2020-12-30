@@ -19,7 +19,8 @@ contract Bridge is KeysOwnable, BridgeConfigurationStructure, BridgeRelayStructu
 
     BridgeConfiguration bridgeConfiguration;
 
-    event EventConfigurationVote(address addr, uint relayKey, bool vote);
+    event EventConfigurationCreationVote(address addr, uint relayKey, bool vote);
+    event EventConfigurationCreationEnd(address addr, bool active);
 
     event BridgeConfigurationUpdateVote(BridgeConfiguration _bridgeConfiguration, uint relayKey, Vote vote);
     event BridgeConfigurationUpdateEnd(BridgeConfiguration _bridgeConfiguration, bool status);
@@ -47,8 +48,8 @@ contract Bridge is KeysOwnable, BridgeConfigurationStructure, BridgeRelayStructu
             }
         }
 
-        require(confirmations >= bridgeConfiguration.eventConfigurationRequiredRejects
-            && (total - confirmations) < bridgeConfiguration.eventConfigurationRequiredConfirmations, 12313);
+        require(confirmations >= bridgeConfiguration.eventConfigurationRequiredConfirmations
+            && (total - confirmations) < bridgeConfiguration.eventConfigurationRequiredRejects, 12313);
     }
 
     /*
@@ -83,9 +84,39 @@ contract Bridge is KeysOwnable, BridgeConfigurationStructure, BridgeRelayStructu
     ) public onlyActive onlyOwnerKey(msg.pubkey()) {
         tvm.accept();
 
-        emit EventConfigurationVote(eventConfiguration, msg.pubkey(), vote);
+        uint key = msg.pubkey();
+        uint16 requiredConfirmations = bridgeConfiguration.eventConfigurationRequiredConfirmations;
+        uint16 requiredRejects = bridgeConfiguration.eventConfigurationRequiredRejects;
+        bool hasAlreadyFinished = false;
 
+        // Calculate existing votes
+        uint16 total;
+        uint16 confirmations;
+        uint16 rejects;
+        for ((uint existingKey, bool existingVote): eventConfigurationVotes[eventConfiguration]) {
+            if (existingKey == key) {
+                return; // do nothing when voting second time
+            }
+
+            total += 1;
+            if (existingVote) {
+                confirmations += 1;
+            }
+        }
+        rejects = total - confirmations;
+
+        // Insert new vote
         eventConfigurationVotes[eventConfiguration][msg.pubkey()] = vote;
+        emit EventConfigurationCreationVote(eventConfiguration, msg.pubkey(), vote);
+
+        // Emit voting end event once 
+        hasAlreadyFinished = (confirmations >= requiredConfirmations) || (rejects >= requiredRejects);
+
+        if (!hasAlreadyFinished && vote && (confirmations + 1) >= requiredConfirmations) {
+            emit EventConfigurationCreationEnd(eventConfiguration, true);
+        } else if (!hasAlreadyFinished && !vote && (rejects + 1) >= requiredRejects) {
+            emit EventConfigurationCreationEnd(eventConfiguration, false);
+        }
     }
 
     /*
