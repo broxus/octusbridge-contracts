@@ -162,11 +162,20 @@
 	],
 	"events": [
 		{
-			"name": "EventConfigurationVote",
+			"name": "EventConfigurationCreationVote",
 			"inputs": [
 				{"name":"addr","type":"address"},
 				{"name":"relayKey","type":"uint256"},
 				{"name":"vote","type":"bool"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "EventConfigurationCreationEnd",
+			"inputs": [
+				{"name":"addr","type":"address"},
+				{"name":"active","type":"bool"}
 			],
 			"outputs": [
 			]
