@@ -7,8 +7,11 @@ const _ = require('underscore');
 
 
 let Bridge;
-let EthereumEventConfiguration;
+let ValidEthereumEventConfiguration;
+let InvalidEthereumEventConfiguration;
 let TonEventConfiguration;
+
+let EthereumEventConfigurationContracts;
 
 
 const tonWrapper = new freeton.TonWrapper({
@@ -27,34 +30,46 @@ describe('Test event configurations', function() {
       .requireContract(tonWrapper, 'Bridge');
     await Bridge.loadMigration();
   
-    EthereumEventConfiguration = await freeton
+    ValidEthereumEventConfiguration = await freeton
       .requireContract(tonWrapper, 'EthereumEventConfiguration');
-    await EthereumEventConfiguration.loadMigration();
+    await ValidEthereumEventConfiguration.loadMigration('valid');
+
+    InvalidEthereumEventConfiguration = await freeton
+      .requireContract(tonWrapper, 'EthereumEventConfiguration');
+    await InvalidEthereumEventConfiguration.loadMigration('invalid');
+
+    EthereumEventConfigurationContracts = {
+      valid: ValidEthereumEventConfiguration,
+      invalid: InvalidEthereumEventConfiguration
+    };
   
     TonEventConfiguration = await freeton
       .requireContract(tonWrapper, 'TonEventConfiguration');
     await TonEventConfiguration.loadMigration();
   
     logger.log(`Bridge address: ${Bridge.address}`);
-    logger.log(`Ethereum event configuration address: ${EthereumEventConfiguration.address}`);
-    logger.log(`TON event configuration address: ${TonEventConfiguration.address}`);
+    logger.log(`Valid Ethereum event configuration address: ${ValidEthereumEventConfiguration.address}`);
+    logger.log(`Invalid Ethereum event configuration address: ${InvalidEthereumEventConfiguration.address}`);
+    logger.log(`Valid TON event configuration address: ${TonEventConfiguration.address}`);
   });
 
   describe('Confirm Ethereum event configuration', async function() {
     it('Check initial state', async function() {
-      const {
-        confirmKeys,
-        rejectKeys,
-        status,
-      } = await Bridge.runLocal('getEventConfigurationStatus', {
-        eventConfiguration: EthereumEventConfiguration.address,
-      });
-  
-      expect(confirmKeys).to.have.lengthOf(0, 'Non-empty confirmations');
-      expect(rejectKeys).to.have.lengthOf(0, 'Non-empty rejects');
-      expect(status).to.equal(false, 'Wrong status');
-    });
+      for (alias of ['valid', 'invalid']) {
+        const {
+          confirmKeys,
+          rejectKeys,
+          status,
+        } = await Bridge.runLocal('getEventConfigurationStatus', {
+          eventConfiguration: EthereumEventConfigurationContracts[alias].address,
+        });
     
+        expect(confirmKeys).to.have.lengthOf(0, `Non-empty confirmations for ${alias} configuration`);
+        expect(rejectKeys).to.have.lengthOf(0, `Non-empty rejects for ${alias} configuration`);
+        expect(status).to.equal(false, `Wrong status for ${alias} configuration`);
+      }
+    });
+
     it('Vote enough times for reject', async function() {
       const {
         eventConfigurationRequiredRejects,
@@ -62,7 +77,7 @@ describe('Test event configurations', function() {
   
       for (const keyId of _.range(eventConfigurationRequiredRejects.toString())) {
         await Bridge.run('updateEventConfiguration', {
-          eventConfiguration: EthereumEventConfiguration.address,
+          eventConfiguration: InvalidEthereumEventConfiguration.address,
           vote: false,
         }, tonWrapper.keys[keyId]);
       }
@@ -72,17 +87,17 @@ describe('Test event configurations', function() {
         rejectKeys,
         status,
       } = await Bridge.runLocal('getEventConfigurationStatus', {
-        eventConfiguration: EthereumEventConfiguration.address,
+        eventConfiguration: InvalidEthereumEventConfiguration.address,
       });
   
-      expect(confirmKeys).to.have.lengthOf(0, 'Non-empty rejects');
+      expect(confirmKeys).to.have.lengthOf(0, 'Non-empty confirmations');
       expect(rejectKeys).to.have.lengthOf(
         eventConfigurationRequiredRejects.toString(),
         'Wrong amount of rejects'
       );
       expect(status).to.equal(false, 'Wrong status');
     });
-  
+    
     it('Vote enough times for confirmation', async function() {
       const {
         eventConfigurationRequiredConfirmations,
@@ -90,7 +105,7 @@ describe('Test event configurations', function() {
     
       for (const keyId of _.range(eventConfigurationRequiredConfirmations.toString())) {
         await Bridge.run('updateEventConfiguration', {
-          eventConfiguration: EthereumEventConfiguration.address,
+          eventConfiguration: ValidEthereumEventConfiguration.address,
           vote: true,
         }, tonWrapper.keys[keyId]);
       }
@@ -100,7 +115,7 @@ describe('Test event configurations', function() {
         rejectKeys,
         status,
       } = await Bridge.runLocal('getEventConfigurationStatus', {
-        eventConfiguration: EthereumEventConfiguration.address,
+        eventConfiguration: ValidEthereumEventConfiguration.address,
       });
     
       expect(confirmKeys).to.have.lengthOf(
@@ -116,7 +131,7 @@ describe('Test event configurations', function() {
   
       await freeton.utils.catchRunFail(
         Bridge.run('updateEventConfiguration', {
-          eventConfiguration: EthereumEventConfiguration.address,
+          eventConfiguration: ValidEthereumEventConfiguration.address,
           vote: true,
         }, arbitraryKeyPair),
         303

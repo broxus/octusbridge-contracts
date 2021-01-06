@@ -106,8 +106,8 @@ contract Bridge is KeysOwnable, BridgeConfigurationStructure, BridgeRelayStructu
         rejects = total - confirmations;
 
         // Insert new vote
-        eventConfigurationVotes[eventConfiguration][msg.pubkey()] = vote;
-        emit EventConfigurationCreationVote(eventConfiguration, msg.pubkey(), vote);
+        eventConfigurationVotes[eventConfiguration][key] = vote;
+        emit EventConfigurationCreationVote(eventConfiguration, key, vote);
 
         // Emit voting end event once 
         hasAlreadyFinished = (confirmations >= requiredConfirmations) || (rejects >= requiredRejects);

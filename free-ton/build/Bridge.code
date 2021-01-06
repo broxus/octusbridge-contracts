@@ -496,13 +496,11 @@ PUSHCONT {
 	; colValue
 	NIP
 	; end colValue
-	;; push identifier vote
-	PUSH S8
 	; expValue
 	;; fetch eventConfigurationVotes
 	GETGLOB 13
 	;; push identifier eventConfiguration
-	PUSH S11
+	PUSH S10
 	SWAP
 	PUSH2 S1, S0
 	PUSHINT 267
@@ -514,17 +512,12 @@ PUSHCONT {
 		NEWDICT
 	}
 	IFELSE
-	GETGLOB 5
-	DUP
-	ISNULL
-	PUSHCONT {
-		DROP
-		PUSHINT 0
-	}
-	IF
+	;; push identifier key
+	PUSH S9
 	SWAP
 	; end expValue
-	BLKSWAP 1, 4
+	;; push identifier vote
+	PUSH S12
 	; colValue
 	NEWC
 	STI 1
@@ -550,14 +543,8 @@ PUSHCONT {
 	PUSH S10
 	STSLICER
 	;; relayKey
-	GETGLOB 5
-	DUP
-	ISNULL
-	PUSHCONT {
-		DROP
-		PUSHINT 0
-	}
-	IF
+	;; push identifier key
+	PUSH S7
 	STUR 256
 	;; vote
 	;; push identifier vote
@@ -910,13 +897,11 @@ PUSHCONT {
 	; colValue
 	NIP
 	; end colValue
-	;; push identifier vote
-	PUSH S8
 	; expValue
 	;; fetch eventConfigurationVotes
 	GETGLOB 13
 	;; push identifier eventConfiguration
-	PUSH S11
+	PUSH S10
 	SWAP
 	PUSH2 S1, S0
 	PUSHINT 267
@@ -928,17 +913,12 @@ PUSHCONT {
 		NEWDICT
 	}
 	IFELSE
-	GETGLOB 5
-	DUP
-	ISNULL
-	PUSHCONT {
-		DROP
-		PUSHINT 0
-	}
-	IF
+	;; push identifier key
+	PUSH S9
 	SWAP
 	; end expValue
-	BLKSWAP 1, 4
+	;; push identifier vote
+	PUSH S12
 	; colValue
 	NEWC
 	STI 1
@@ -964,14 +944,8 @@ PUSHCONT {
 	PUSH S10
 	STSLICER
 	;; relayKey
-	GETGLOB 5
-	DUP
-	ISNULL
-	PUSHCONT {
-		DROP
-		PUSHINT 0
-	}
-	IF
+	;; push identifier key
+	PUSH S7
 	STUR 256
 	;; vote
 	;; push identifier vote

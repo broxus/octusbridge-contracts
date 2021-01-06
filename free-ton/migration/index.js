@@ -61,23 +61,26 @@ const tonWrapper = new freeton.TonWrapper({
     _randomNonce: true,
   }).catch(e => console.log(e));
   
-  // -- Deploy EventConfiguration
-  await migration.deploy({
-    contract: EthereumEventConfiguration,
-    constructorParams: {},
-    initParams: {
-      eventABI: freeton.utils.stringToBytesArray(''),
-      eventAddress: 0,
-      eventRequiredConfirmations: 2,
-      eventRequiredRejects: 2,
-      eventBlocksToConfirm: 1,
-      eventInitialBalance: freeton.utils.convertCrystal('10', 'nano'),
-      proxyAddress: EventProxy.address,
-      bridgeAddress: Bridge.address,
-      eventCode: EthereumEvent.code,
-    },
-    initialBalance: freeton.utils.convertCrystal('100', 'nano')
-  }).catch(e => console.log(e));
+  // -- Deploy EventConfiguration contracts
+  for (alias of ['valid', 'invalid']) {
+    await migration.deploy({
+      alias,
+      contract: EthereumEventConfiguration,
+      constructorParams: {},
+      initParams: {
+        eventABI: freeton.utils.stringToBytesArray(alias),
+        eventAddress: 0,
+        eventRequiredConfirmations: 2,
+        eventRequiredRejects: 2,
+        eventBlocksToConfirm: 1,
+        eventInitialBalance: freeton.utils.convertCrystal('10', 'nano'),
+        proxyAddress: EventProxy.address,
+        bridgeAddress: Bridge.address,
+        eventCode: EthereumEvent.code,
+      },
+      initialBalance: freeton.utils.convertCrystal('100', 'nano')
+    }).catch(e => console.log(e));
+  }
   
   // - Prepare TON event configuration
   const TonEventConfiguration = await freeton

@@ -30,7 +30,7 @@ describe('Test Ethereum event', async function() {
     
     EthereumEventConfiguration = await freeton
       .requireContract(tonWrapper, 'EthereumEventConfiguration');
-    await EthereumEventConfiguration.loadMigration();
+    await EthereumEventConfiguration.loadMigration('valid');
     
     logger.log(`Bridge address: ${Bridge.address}`);
     logger.log(`Ethereum event configuration address: ${EthereumEventConfiguration.address}`);
