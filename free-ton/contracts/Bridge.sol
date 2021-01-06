@@ -15,7 +15,7 @@ import "./utils/KeysOwnable.sol";
 
 
 contract Bridge is KeysOwnable, BridgeConfigurationStructure, BridgeRelayStructure, VoteStructure {
-    uint static truffleNonce;
+    uint static _randomNonce;
 
     BridgeConfiguration bridgeConfiguration;
 

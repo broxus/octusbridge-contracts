@@ -298,7 +298,7 @@ PUSHCONT {
 }
 PUSHCONT {
 	PLDDICT   ; D
-	; init truffleNonce
+	; init _randomNonce
 	PUSHINT 1
 	PUSH S1
 	PUSHINT 64

@@ -3,7 +3,7 @@ pragma AbiHeader expire;
 
 
 contract EventProxy {
-    uint static truffleNonce;
+    uint static _randomNonce;
 
     bool callbackReceived = false;
     uint eventTransaction;

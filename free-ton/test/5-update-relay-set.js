@@ -2,9 +2,8 @@ require('dotenv').config({ path: './../env/freeton.env' });
 
 const logger = require('mocha-logger');
 const { expect } = require('chai');
-const freeton = require('freeton-truffle');
+const freeton = require('ton-testing-suite');
 const _ = require('underscore');
-const utils = require('freeton-truffle/utils');
 
 
 let Bridge;
@@ -54,8 +53,8 @@ describe('Test Bridge relay update', async function() {
         await Bridge.run('updateBridgeRelays', {
           target,
           _vote: {
-            signature: utils.stringToBytesArray(''),
-            payload: utils.stringToBytesArray(''),
+            signature: freeton.utils.stringToBytesArray(''),
+            payload: freeton.utils.stringToBytesArray(''),
           },
         }, tonWrapper.keys[keyId]);
       }
@@ -83,8 +82,8 @@ describe('Test Bridge relay update', async function() {
         await Bridge.run('updateBridgeRelays', {
           target,
           _vote: {
-            signature: utils.stringToBytesArray('123'),
-            payload: utils.stringToBytesArray('123'),
+            signature: freeton.utils.stringToBytesArray('123'),
+            payload: freeton.utils.stringToBytesArray('123'),
           },
         }, tonWrapper.keys[keyId]);
       }
@@ -120,8 +119,8 @@ describe('Test Bridge relay update', async function() {
         await Bridge.run('updateBridgeRelays', {
           target,
           _vote: {
-            signature: utils.stringToBytesArray('123'),
-            payload: utils.stringToBytesArray('123'),
+            signature: freeton.utils.stringToBytesArray('123'),
+            payload: freeton.utils.stringToBytesArray('123'),
           },
         }, tonWrapper.keys[keyId]);
       }

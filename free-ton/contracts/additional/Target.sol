@@ -3,7 +3,7 @@ pragma AbiHeader expire;
 
 
 contract Target {
-    uint static truffleNonce;
+    uint static _randomNonce;
 
     uint state;
     bytes author;

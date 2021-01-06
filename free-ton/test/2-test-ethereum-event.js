@@ -2,9 +2,8 @@ require('dotenv').config({ path: './../env/freeton.env' });
 
 const logger = require('mocha-logger');
 const { expect } = require('chai');
-const freeton = require('freeton-truffle');
+const freeton = require('ton-testing-suite');
 const _ = require('underscore');
-const utils = require('freeton-truffle/utils');
 
 
 let Bridge;
@@ -77,7 +76,7 @@ describe('Test Ethereum event', async function() {
     it('Try to confirm event with non-relay key', async function() {
       const arbitraryKeyPair = await tonWrapper.ton.crypto.ed25519Keypair();
   
-      await utils.catchRunFail(
+      await freeton.utils.catchRunFail(
         Bridge.run('confirmEthereumEvent', eventParams, arbitraryKeyPair),
         303
       );
@@ -142,7 +141,7 @@ describe('Test Ethereum event', async function() {
     it('Try to reject event with non-relay key', async function() {
       const arbitraryKeyPair = await tonWrapper.ton.crypto.ed25519Keypair();
   
-      await utils.catchRunFail(
+      await freeton.utils.catchRunFail(
         Bridge.run('rejectEthereumEvent', eventParams, arbitraryKeyPair),
         303
       );

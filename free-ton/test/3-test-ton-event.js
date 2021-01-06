@@ -2,9 +2,8 @@ require('dotenv').config({ path: './../env/freeton.env' });
 
 const logger = require('mocha-logger');
 const { expect } = require('chai');
-const freeton = require('freeton-truffle');
+const freeton = require('ton-testing-suite');
 const _ = require('underscore');
-const utils = require('freeton-truffle/utils');
 
 
 let Bridge;
@@ -45,7 +44,7 @@ describe('Test TON event', async function() {
         eventData: '',
         eventBlockNumber: 1,
         eventBlock: 1,
-        eventDataSignature: utils.stringToBytesArray(''),
+        eventDataSignature: freeton.utils.stringToBytesArray(''),
         eventConfiguration: TonEventConfiguration.address
       };
       
@@ -80,7 +79,7 @@ describe('Test TON event', async function() {
     it('Try to confirm event with non-relay key', async function() {
       const arbitraryKeyPair = await tonWrapper.ton.crypto.ed25519Keypair();
 
-      await utils.catchRunFail(
+      await freeton.utils.catchRunFail(
         Bridge.run('confirmTonEvent', eventParams, arbitraryKeyPair),
         303
       );
@@ -112,7 +111,7 @@ describe('Test TON event', async function() {
         eventData: '',
         eventBlockNumber: 1,
         eventBlock: 1,
-        eventDataSignature: utils.stringToBytesArray(''),
+        eventDataSignature: freeton.utils.stringToBytesArray(''),
         eventConfiguration: TonEventConfiguration.address
       };
 
@@ -149,7 +148,7 @@ describe('Test TON event', async function() {
 
       delete eventParams.eventDataSignature;
       
-      await utils.catchRunFail(
+      await freeton.utils.catchRunFail(
         Bridge.run('rejectTonEvent', eventParams, arbitraryKeyPair),
         303
       );
