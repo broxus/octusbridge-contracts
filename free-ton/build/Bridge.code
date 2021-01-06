@@ -228,10 +228,10 @@ BLKDROP 4
 PUSHINT 12313
 ;; push identifier confirmations
 PUSH S1
-;; get member eventConfigurationRequiredRejects
+;; get member eventConfigurationRequiredConfirmations
 ;; push identifier bridgeConfiguration
 GETGLOB 12
-INDEX 1
+INDEX 0
 ;; >=
 GEQ
 ;; short-circuiting &&
@@ -245,10 +245,10 @@ PUSHCONT {
 	;; -
 	SUB
 	UFITS 16
-	;; get member eventConfigurationRequiredConfirmations
+	;; get member eventConfigurationRequiredRejects
 	;; push identifier bridgeConfiguration
 	GETGLOB 12
-	INDEX 0
+	INDEX 1
 	;; <
 	LESS
 }
@@ -328,77 +328,369 @@ TRUE
 EQUAL
 THROWIFNOT 303
 ; function updateEventConfiguration
-ACCEPT
-;; emit EventConfigurationVote
-NEWC
-PUSHSLICE xc0000000000000000000000002_
-STSLICER
-STSLICECONST 0
-STSLICECONST 0
-STSLICECONST x27772ecc
-;; addr
-;; push identifier eventConfiguration
-PUSH S3
-STSLICER
-;; relayKey
-GETGLOB 5
-DUP
-ISNULL
 PUSHCONT {
-	DROP
+	ACCEPT
+	GETGLOB 5
+	DUP
+	ISNULL
+	PUSHCONT {
+		DROP
+		PUSHINT 0
+	}
+	IF
+	;; decl: key
+	;; get member eventConfigurationRequiredConfirmations
+	;; push identifier bridgeConfiguration
+	GETGLOB 12
+	INDEX 0
+	;; decl: requiredConfirmations
+	;; get member eventConfigurationRequiredRejects
+	;; push identifier bridgeConfiguration
+	GETGLOB 12
+	INDEX 1
+	;; decl: requiredRejects
+	FALSE
+	;; decl: hasAlreadyFinished
 	PUSHINT 0
-}
-IF
-STUR 256
-;; vote
-;; push identifier vote
-PUSH S2
-STIR 1
-ENDC
-PUSHINT 1
-SENDRAWMSG
-;; push identifier vote
-PUSH S1
-; expValue
-;; fetch eventConfigurationVotes
-GETGLOB 13
-;; push identifier eventConfiguration
-PUSH S4
-SWAP
-PUSH2 S1, S0
-PUSHINT 267
-DICTGET
-PUSHCONT {
-	PLDDICT
-}
-PUSHCONT {
-	NEWDICT
-}
-IFELSE
-GETGLOB 5
-DUP
-ISNULL
-PUSHCONT {
-	DROP
+	;; decl: total
 	PUSHINT 0
+	;; decl: confirmations
+	PUSHINT 0
+	;; decl: rejects
+	;; index
+	;; push identifier eventConfiguration
+	PUSH S9
+	;; push identifier eventConfigurationVotes
+	GETGLOB 13
+	PUSHINT 267
+	DICTGET
+	PUSHCONT {
+		PLDDICT
+	}
+	PUSHCONT {
+		NEWDICT
+	}
+	IFELSE
+	DUP
+	PUSHINT 256
+	DICTUMIN
+	NULLSWAPIFNOT
+	PUSHCONT {
+		SWAP
+		PLDI 1
+		TUPLE 2
+	}
+	IF
+	DUP
+	ISNULL
+	PUSHCONT {
+		NULL
+		NULL
+	}
+	PUSHCONT {
+		UNTUPLE 2
+		PUSH S1
+	}
+	IFELSE
+	FALSE ; decl return flag
+	PUSHCONT {
+		DUP
+		LESSINT 2
+		DUP
+		PUSHCONT {
+			DROP
+			PUSH S1
+			ISNULL
+			NOT
+		}
+		IF
+	}
+	PUSHCONT {
+		PUSHCONT {
+			;; if
+			;; push identifier existingKey
+			PUSH S3
+			;; push identifier key
+			PUSH S12
+			;; ==
+			EQUAL
+			PUSHCONT {
+				;; return
+				BLKDROP 12
+				PUSHINT 4
+				RET
+			}
+			IFJMP
+			;; end if
+			PUSHINT 1
+			; expValue
+			PUSH S8
+			; end expValue
+			SWAP
+			ADD
+			UFITS 16
+			; colValue
+			POP S8
+			; end colValue
+			;; if
+			;; push identifier existingVote
+			PUSH S2
+			PUSHCONT {
+				PUSHINT 1
+				; expValue
+				PUSH S7
+				; end expValue
+				SWAP
+				ADD
+				UFITS 16
+				; colValue
+				POP S7
+				; end colValue
+			}
+			IF
+			;; end if
+		}
+		CALLX
+		DUP
+		GTINT 1
+		IFRET
+		PUSH S1
+		PUSH S5
+		PUSHINT 256
+		DICTUGETNEXT
+		NULLSWAPIFNOT
+		PUSHCONT {
+			SWAP
+			PLDI 1
+			TUPLE 2
+		}
+		IF
+		DUP
+		ISNULL
+		PUSHCONT {
+			POP S2
+		}
+		PUSHCONT {
+			UNTUPLE 2
+			POP S4
+			DUP
+			POP S5
+			POP S2
+		}
+		IFELSE
+	}
+	WHILE
+	EQINT 4
+	IFRET
+	BLKDROP 4
+	; end for
+	; expValue
+	; end expValue
+	;; push identifier total
+	PUSH S2
+	;; push identifier confirmations
+	PUSH S2
+	;; -
+	SUB
+	UFITS 16
+	; colValue
+	NIP
+	; end colValue
+	;; push identifier vote
+	PUSH S8
+	; expValue
+	;; fetch eventConfigurationVotes
+	GETGLOB 13
+	;; push identifier eventConfiguration
+	PUSH S11
+	SWAP
+	PUSH2 S1, S0
+	PUSHINT 267
+	DICTGET
+	PUSHCONT {
+		PLDDICT
+	}
+	PUSHCONT {
+		NEWDICT
+	}
+	IFELSE
+	GETGLOB 5
+	DUP
+	ISNULL
+	PUSHCONT {
+		DROP
+		PUSHINT 0
+	}
+	IF
+	SWAP
+	; end expValue
+	BLKSWAP 1, 4
+	; colValue
+	NEWC
+	STI 1
+	ROTREV
+	PUSHINT 256
+	DICTUSETB
+	NEWC
+	STDICT
+	ROTREV
+	PUSHINT 267
+	DICTSETB
+	SETGLOB 13
+	; end colValue
+	;; emit EventConfigurationCreationVote
+	NEWC
+	PUSHSLICE xc0000000000000000000000002_
+	STSLICER
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST x38f1975f
+	;; addr
+	;; push identifier eventConfiguration
+	PUSH S10
+	STSLICER
+	;; relayKey
+	GETGLOB 5
+	DUP
+	ISNULL
+	PUSHCONT {
+		DROP
+		PUSHINT 0
+	}
+	IF
+	STUR 256
+	;; vote
+	;; push identifier vote
+	PUSH S9
+	STIR 1
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+	; expValue
+	; end expValue
+	;; push identifier confirmations
+	PUSH S1
+	;; push identifier requiredConfirmations
+	PUSH S6
+	;; >=
+	GEQ
+	;; short-circuiting ||
+	DUP
+	PUSHCONT {
+		DROP
+		;; push identifier rejects
+		DUP
+		;; push identifier requiredRejects
+		PUSH S5
+		;; >=
+		GEQ
+	}
+	IFNOT
+	; colValue
+	POP S4
+	; end colValue
+	;; if
+	;; !
+	;; push identifier hasAlreadyFinished
+	PUSH S3
+	NOT
+	;; push identifier vote
+	PUSH S9
+	AND
+	;; short-circuiting &&
+	DUP
+	PUSHCONT {
+		DROP
+		;; push identifier confirmations
+		PUSH S1
+		PUSHINT 1
+		;; +
+		ADD
+		UFITS 16
+		;; push identifier requiredConfirmations
+		PUSH S6
+		;; >=
+		GEQ
+	}
+	IF
+	PUSHCONT {
+		;; emit EventConfigurationCreationEnd
+		NEWC
+		PUSHSLICE xc0000000000000000000000002_
+		STSLICER
+		STSLICECONST 0
+		STSLICECONST 0
+		STSLICECONST x052b7c38
+		;; addr
+		;; push identifier eventConfiguration
+		PUSH S10
+		STSLICER
+		;; active
+		TRUE
+		STIR 1
+		ENDC
+		PUSHINT 1
+		SENDRAWMSG
+	}
+	PUSHCONT {
+		;; if
+		;; !
+		;; push identifier hasAlreadyFinished
+		PUSH S3
+		NOT
+		;; short-circuiting &&
+		DUP
+		PUSHCONT {
+			DROP
+			;; !
+			;; push identifier vote
+			PUSH S8
+			NOT
+			;; short-circuiting &&
+			DUP
+			PUSHCONT {
+				DROP
+				;; push identifier rejects
+				DUP
+				PUSHINT 1
+				;; +
+				ADD
+				UFITS 16
+				;; push identifier requiredRejects
+				PUSH S5
+				;; >=
+				GEQ
+			}
+			IF
+		}
+		IF
+		PUSHCONT {
+			;; emit EventConfigurationCreationEnd
+			NEWC
+			PUSHSLICE xc0000000000000000000000002_
+			STSLICER
+			STSLICECONST 0
+			STSLICECONST 0
+			STSLICECONST x052b7c38
+			;; addr
+			;; push identifier eventConfiguration
+			PUSH S10
+			STSLICER
+			;; active
+			FALSE
+			STIR 1
+			ENDC
+			PUSHINT 1
+			SENDRAWMSG
+		}
+		IF
+		;; end if
+	}
+	IFELSE
+	;; end if
+	BLKDROP 7
 }
-IF
-SWAP
-; end expValue
-BLKSWAP 1, 4
-; colValue
-NEWC
-STI 1
-ROTREV
-PUSHINT 256
-DICTUSETB
-NEWC
-STDICT
-ROTREV
-PUSHINT 267
-DICTSETB
-SETGLOB 13
-; end colValue
+CALLX
 ; end function updateEventConfiguration
 DROP
 ; end modifier onlyOwnerKey
@@ -450,77 +742,369 @@ TRUE
 EQUAL
 THROWIFNOT 303
 ; function updateEventConfiguration
-ACCEPT
-;; emit EventConfigurationVote
-NEWC
-PUSHSLICE xc0000000000000000000000002_
-STSLICER
-STSLICECONST 0
-STSLICECONST 0
-STSLICECONST x27772ecc
-;; addr
-;; push identifier eventConfiguration
-PUSH S3
-STSLICER
-;; relayKey
-GETGLOB 5
-DUP
-ISNULL
 PUSHCONT {
-	DROP
+	ACCEPT
+	GETGLOB 5
+	DUP
+	ISNULL
+	PUSHCONT {
+		DROP
+		PUSHINT 0
+	}
+	IF
+	;; decl: key
+	;; get member eventConfigurationRequiredConfirmations
+	;; push identifier bridgeConfiguration
+	GETGLOB 12
+	INDEX 0
+	;; decl: requiredConfirmations
+	;; get member eventConfigurationRequiredRejects
+	;; push identifier bridgeConfiguration
+	GETGLOB 12
+	INDEX 1
+	;; decl: requiredRejects
+	FALSE
+	;; decl: hasAlreadyFinished
 	PUSHINT 0
-}
-IF
-STUR 256
-;; vote
-;; push identifier vote
-PUSH S2
-STIR 1
-ENDC
-PUSHINT 1
-SENDRAWMSG
-;; push identifier vote
-PUSH S1
-; expValue
-;; fetch eventConfigurationVotes
-GETGLOB 13
-;; push identifier eventConfiguration
-PUSH S4
-SWAP
-PUSH2 S1, S0
-PUSHINT 267
-DICTGET
-PUSHCONT {
-	PLDDICT
-}
-PUSHCONT {
-	NEWDICT
-}
-IFELSE
-GETGLOB 5
-DUP
-ISNULL
-PUSHCONT {
-	DROP
+	;; decl: total
 	PUSHINT 0
+	;; decl: confirmations
+	PUSHINT 0
+	;; decl: rejects
+	;; index
+	;; push identifier eventConfiguration
+	PUSH S9
+	;; push identifier eventConfigurationVotes
+	GETGLOB 13
+	PUSHINT 267
+	DICTGET
+	PUSHCONT {
+		PLDDICT
+	}
+	PUSHCONT {
+		NEWDICT
+	}
+	IFELSE
+	DUP
+	PUSHINT 256
+	DICTUMIN
+	NULLSWAPIFNOT
+	PUSHCONT {
+		SWAP
+		PLDI 1
+		TUPLE 2
+	}
+	IF
+	DUP
+	ISNULL
+	PUSHCONT {
+		NULL
+		NULL
+	}
+	PUSHCONT {
+		UNTUPLE 2
+		PUSH S1
+	}
+	IFELSE
+	FALSE ; decl return flag
+	PUSHCONT {
+		DUP
+		LESSINT 2
+		DUP
+		PUSHCONT {
+			DROP
+			PUSH S1
+			ISNULL
+			NOT
+		}
+		IF
+	}
+	PUSHCONT {
+		PUSHCONT {
+			;; if
+			;; push identifier existingKey
+			PUSH S3
+			;; push identifier key
+			PUSH S12
+			;; ==
+			EQUAL
+			PUSHCONT {
+				;; return
+				BLKDROP 12
+				PUSHINT 4
+				RET
+			}
+			IFJMP
+			;; end if
+			PUSHINT 1
+			; expValue
+			PUSH S8
+			; end expValue
+			SWAP
+			ADD
+			UFITS 16
+			; colValue
+			POP S8
+			; end colValue
+			;; if
+			;; push identifier existingVote
+			PUSH S2
+			PUSHCONT {
+				PUSHINT 1
+				; expValue
+				PUSH S7
+				; end expValue
+				SWAP
+				ADD
+				UFITS 16
+				; colValue
+				POP S7
+				; end colValue
+			}
+			IF
+			;; end if
+		}
+		CALLX
+		DUP
+		GTINT 1
+		IFRET
+		PUSH S1
+		PUSH S5
+		PUSHINT 256
+		DICTUGETNEXT
+		NULLSWAPIFNOT
+		PUSHCONT {
+			SWAP
+			PLDI 1
+			TUPLE 2
+		}
+		IF
+		DUP
+		ISNULL
+		PUSHCONT {
+			POP S2
+		}
+		PUSHCONT {
+			UNTUPLE 2
+			POP S4
+			DUP
+			POP S5
+			POP S2
+		}
+		IFELSE
+	}
+	WHILE
+	EQINT 4
+	IFRET
+	BLKDROP 4
+	; end for
+	; expValue
+	; end expValue
+	;; push identifier total
+	PUSH S2
+	;; push identifier confirmations
+	PUSH S2
+	;; -
+	SUB
+	UFITS 16
+	; colValue
+	NIP
+	; end colValue
+	;; push identifier vote
+	PUSH S8
+	; expValue
+	;; fetch eventConfigurationVotes
+	GETGLOB 13
+	;; push identifier eventConfiguration
+	PUSH S11
+	SWAP
+	PUSH2 S1, S0
+	PUSHINT 267
+	DICTGET
+	PUSHCONT {
+		PLDDICT
+	}
+	PUSHCONT {
+		NEWDICT
+	}
+	IFELSE
+	GETGLOB 5
+	DUP
+	ISNULL
+	PUSHCONT {
+		DROP
+		PUSHINT 0
+	}
+	IF
+	SWAP
+	; end expValue
+	BLKSWAP 1, 4
+	; colValue
+	NEWC
+	STI 1
+	ROTREV
+	PUSHINT 256
+	DICTUSETB
+	NEWC
+	STDICT
+	ROTREV
+	PUSHINT 267
+	DICTSETB
+	SETGLOB 13
+	; end colValue
+	;; emit EventConfigurationCreationVote
+	NEWC
+	PUSHSLICE xc0000000000000000000000002_
+	STSLICER
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST x38f1975f
+	;; addr
+	;; push identifier eventConfiguration
+	PUSH S10
+	STSLICER
+	;; relayKey
+	GETGLOB 5
+	DUP
+	ISNULL
+	PUSHCONT {
+		DROP
+		PUSHINT 0
+	}
+	IF
+	STUR 256
+	;; vote
+	;; push identifier vote
+	PUSH S9
+	STIR 1
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+	; expValue
+	; end expValue
+	;; push identifier confirmations
+	PUSH S1
+	;; push identifier requiredConfirmations
+	PUSH S6
+	;; >=
+	GEQ
+	;; short-circuiting ||
+	DUP
+	PUSHCONT {
+		DROP
+		;; push identifier rejects
+		DUP
+		;; push identifier requiredRejects
+		PUSH S5
+		;; >=
+		GEQ
+	}
+	IFNOT
+	; colValue
+	POP S4
+	; end colValue
+	;; if
+	;; !
+	;; push identifier hasAlreadyFinished
+	PUSH S3
+	NOT
+	;; push identifier vote
+	PUSH S9
+	AND
+	;; short-circuiting &&
+	DUP
+	PUSHCONT {
+		DROP
+		;; push identifier confirmations
+		PUSH S1
+		PUSHINT 1
+		;; +
+		ADD
+		UFITS 16
+		;; push identifier requiredConfirmations
+		PUSH S6
+		;; >=
+		GEQ
+	}
+	IF
+	PUSHCONT {
+		;; emit EventConfigurationCreationEnd
+		NEWC
+		PUSHSLICE xc0000000000000000000000002_
+		STSLICER
+		STSLICECONST 0
+		STSLICECONST 0
+		STSLICECONST x052b7c38
+		;; addr
+		;; push identifier eventConfiguration
+		PUSH S10
+		STSLICER
+		;; active
+		TRUE
+		STIR 1
+		ENDC
+		PUSHINT 1
+		SENDRAWMSG
+	}
+	PUSHCONT {
+		;; if
+		;; !
+		;; push identifier hasAlreadyFinished
+		PUSH S3
+		NOT
+		;; short-circuiting &&
+		DUP
+		PUSHCONT {
+			DROP
+			;; !
+			;; push identifier vote
+			PUSH S8
+			NOT
+			;; short-circuiting &&
+			DUP
+			PUSHCONT {
+				DROP
+				;; push identifier rejects
+				DUP
+				PUSHINT 1
+				;; +
+				ADD
+				UFITS 16
+				;; push identifier requiredRejects
+				PUSH S5
+				;; >=
+				GEQ
+			}
+			IF
+		}
+		IF
+		PUSHCONT {
+			;; emit EventConfigurationCreationEnd
+			NEWC
+			PUSHSLICE xc0000000000000000000000002_
+			STSLICER
+			STSLICECONST 0
+			STSLICECONST 0
+			STSLICECONST x052b7c38
+			;; addr
+			;; push identifier eventConfiguration
+			PUSH S10
+			STSLICER
+			;; active
+			FALSE
+			STIR 1
+			ENDC
+			PUSHINT 1
+			SENDRAWMSG
+		}
+		IF
+		;; end if
+	}
+	IFELSE
+	;; end if
+	BLKDROP 7
 }
-IF
-SWAP
-; end expValue
-BLKSWAP 1, 4
-; colValue
-NEWC
-STI 1
-ROTREV
-PUSHINT 256
-DICTUSETB
-NEWC
-STDICT
-ROTREV
-PUSHINT 267
-DICTSETB
-SETGLOB 13
-; end colValue
+CALLX
 ; end function updateEventConfiguration
 DROP
 ; end modifier onlyOwnerKey
