@@ -2,25 +2,25 @@ pragma solidity >= 0.6.0;
 pragma AbiHeader expire;
 
 
-contract TonEvent {
-    uint static eventTransaction;
-    uint static eventIndex;
-    TvmCell static eventData;
-    uint static eventBlockNumber;
-    uint static eventBlock;
-    address static tonEventConfiguration;
-    uint static requiredConfirmations;
-    uint static requiredRejects;
+import "./../interfaces/IEvent.sol";
+
+
+contract TonEvent is IEvent {
+    TonEventInitData static initData;
 
     uint[] confirmKeys;
     bytes[] eventDataSignatures;
     uint[] rejectKeys;
 
-    bool eventConfirmed = false;
-    bool eventRejected = false;
+    Status status;
 
-    modifier onlyNotConfirmed() {
-        require(confirmKeys.length < requiredConfirmations, 602);
+    modifier eventInProcess() {
+        require(status == Status.InProcess, 16428);
+        _;
+    }
+
+    modifier onlyEventConfiguration(address configuration) {
+        require(msg.sender == configuration, 12642);
         _;
     }
 
@@ -36,15 +36,21 @@ contract TonEvent {
     ) public {
         tvm.accept();
 
+        status = Status.InProcess;
+
         confirm(relayKey, eventDataSignature);
     }
 
     /*
         Confirm event instance.
-        @dev Should be called by Bridge -> EthereumEventConfiguration
+        @dev Should be called by TonEventConfiguration
         @param relayKey Public key of the relay, who initiated the config creation
+        @param eventDataSignature Signature of the data to be passed in Ethereum (made with Ethereum public key)
     */
-    function confirm(uint relayKey, bytes eventDataSignature) public onlyNotConfirmed {
+    function confirm(
+        uint relayKey,
+        bytes eventDataSignature
+    ) public onlyEventConfiguration(initData.tonEventConfiguration) eventInProcess {
         for (uint i=0; i<confirmKeys.length; i++) {
             require(confirmKeys[i] != relayKey, 404);
         }
@@ -52,69 +58,53 @@ contract TonEvent {
         confirmKeys.push(relayKey);
         eventDataSignatures.push(eventDataSignature);
 
-        if (confirmKeys.length >= requiredConfirmations) {
-            eventConfirmed = true;
-            tonEventConfiguration.transfer({ flag: 128, value: 0 });
+        if (confirmKeys.length >= initData.requiredConfirmations) {
+            status = Status.Confirmed;
+
+            initData.tonEventConfiguration.transfer({ flag: 128, value: 0 });
         }
     }
 
     /*
         Reject event instance.
-        @dev Should be called by Bridge -> EthereumEventConfiguration
+        @dev Should be called by TonEventConfiguration
         @param relayKey Public key of the relay, who initiated the config creation
     */
-    function reject(uint relayKey) public {
+    function reject(uint relayKey) public onlyEventConfiguration(initData.tonEventConfiguration) eventInProcess {
         for (uint i=0; i<rejectKeys.length; i++) {
             require(rejectKeys[i] != relayKey, 404);
         }
 
         rejectKeys.push(relayKey);
 
-        if (rejectKeys.length >= requiredRejects) {
-            eventRejected = true;
-            tonEventConfiguration.transfer({ flag: 128, value: 0 });
+        if (rejectKeys.length >= initData.requiredRejects) {
+            status = Status.Rejected;
+
+            initData.tonEventConfiguration.transfer({ flag: 128, value: 0 });
         }
     }
 
     /*
         Read contract details
-        @returns _eventTransaction TON event transaction
-        @returns _eventIndex TON event index
-        @returns _eventData TON event data
-        @returns _eventBlockNumber Event transaction block number
-        @returns _eventBlock Event transaction block hash
-        @returns _tonEventConfiguration TON event configuration contract
+        @return initData Initial data
+        @returns _status Current event status
         @returns _confirmKeys List of confirm keys
         @returns _rejectKeys List of reject keys
         @returns _eventDataSignatures List of relay's signatures
-        @returns _requiredConfirmations Amount of confirmations to confirm event
-        @returns _requiredRejects Amount of rejects to reject event
     */
     function getDetails() public view returns (
-        uint _eventTransaction,
-        uint _eventIndex,
-        TvmCell _eventData,
-        uint _eventBlockNumber,
-        uint _eventBlock,
-        address _tonEventConfiguration,
+        TonEventInitData _initData,
+        Status _status,
         uint[] _confirmKeys,
         uint[] _rejectKeys,
-        bytes[] _eventDataSignatures,
-        uint _requiredConfirmations,
-        uint _requiredRejects
+        bytes[] _eventDataSignatures
     ) {
         return (
-            eventTransaction,
-            eventIndex,
-            eventData,
-            eventBlockNumber,
-            eventBlock,
-            tonEventConfiguration,
+            initData,
+            status,
             confirmKeys,
             rejectKeys,
-            eventDataSignatures,
-            requiredConfirmations,
-            requiredRejects
+            eventDataSignatures
         );
     }
 }

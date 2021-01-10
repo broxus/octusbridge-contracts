@@ -39,13 +39,18 @@ describe('Test TON event', async function() {
   describe('Confirm event', async function() {
     it('Initialize event', async function() {
       eventParams = {
-        eventTransaction: 1,
-        eventIndex: 1,
-        eventData: '',
-        eventBlockNumber: 1,
-        eventBlock: 1,
+        eventInitData: {
+          eventTransaction: 1,
+          eventIndex: 1,
+          eventData: '',
+          eventBlockNumber: 1,
+          eventBlock: 1,
+          tonEventConfiguration: TonEventConfiguration.address,
+          requiredConfirmations: 0,
+          requiredRejects: 0,
+        },
         eventDataSignature: freeton.utils.stringToBytesArray(''),
-        eventConfiguration: TonEventConfiguration.address
+        configurationID: 333
       };
       
       await Bridge.run('confirmTonEvent', eventParams).catch(e => console.log(e));
@@ -66,11 +71,12 @@ describe('Test TON event', async function() {
       
       const details = await TonEvent.runLocal('getDetails', {});
       
-      expect(details._eventTransaction.toNumber()).to.equal(eventParams.eventTransaction, 'Wrong event transaction');
-      expect(details._eventIndex.toNumber()).to.equal(eventParams.eventIndex, 'Wrong event index');
-      expect(details._eventBlockNumber.toNumber()).to.equal(eventParams.eventBlockNumber, 'Wrong block number');
-      expect(details._eventBlock.toNumber()).to.equal(eventParams.eventBlock, 'Wrong block');
-
+      expect(details._initData.eventTransaction.toNumber()).to.equal(eventParams.eventInitData.eventTransaction, 'Wrong event transaction');
+      expect(details._initData.eventIndex.toNumber()).to.equal(eventParams.eventInitData.eventIndex, 'Wrong event index');
+      expect(details._initData.eventBlockNumber.toNumber()).to.equal(eventParams.eventInitData.eventBlockNumber, 'Wrong block number');
+      expect(details._initData.eventBlock.toNumber()).to.equal(eventParams.eventInitData.eventBlock, 'Wrong block');
+  
+      expect(details._status.toNumber()).to.equal(0, 'Wrong status');
       expect(details._confirmKeys).to.have.lengthOf(1, 'Wrong amount of confirmations');
       expect(details._eventDataSignatures).to.have.lengthOf(1, 'Wrong amount of signatures');
       expect(details._rejectKeys).to.have.lengthOf(0, 'Wrong amount of rejects');
@@ -87,17 +93,20 @@ describe('Test TON event', async function() {
     
     it('Confirm event enough times', async function() {
       const {
-        _requiredConfirmations
+        _initData: {
+          requiredConfirmations,
+        }
       } = await TonEvent.runLocal('getDetails');
-
-      for (const keyId of _.range(1, _requiredConfirmations.toNumber())) {
+      
+      for (const keyId of _.range(1, requiredConfirmations.toNumber())) {
         await Bridge.run('confirmTonEvent', eventParams, tonWrapper.keys[keyId]);
       }
 
       const details = await TonEvent.runLocal('getDetails', {});
-
-      expect(details._confirmKeys).to.have.lengthOf(_requiredConfirmations.toNumber(), 'Wrong amount of confirmations');
-      expect(details._eventDataSignatures).to.have.lengthOf(_requiredConfirmations.toNumber(), 'Wrong amount of confirmations');
+  
+      expect(details._status.toNumber()).to.equal(1, 'Wrong status');
+      expect(details._confirmKeys).to.have.lengthOf(requiredConfirmations.toNumber(), 'Wrong amount of confirmations');
+      expect(details._eventDataSignatures).to.have.lengthOf(requiredConfirmations.toNumber(), 'Wrong amount of confirmations');
       expect(details._rejectKeys).to.have.lengthOf(0, 'Wrong amount of rejects');
       expect((await tonWrapper.getBalance(TonEvent.address)).toNumber()).to.equal(0, 'Wrong balance');
     });
@@ -106,13 +115,18 @@ describe('Test TON event', async function() {
   describe('Reject event', async function() {
     it('Initialize event', async function() {
       eventParams = {
-        eventTransaction: 2,
-        eventIndex: 1,
-        eventData: '',
-        eventBlockNumber: 1,
-        eventBlock: 1,
+        eventInitData: {
+          eventTransaction: 2,
+          eventIndex: 1,
+          eventData: '',
+          eventBlockNumber: 1,
+          eventBlock: 1,
+          tonEventConfiguration: TonEventConfiguration.address,
+          requiredConfirmations: 0,
+          requiredRejects: 0,
+        },
         eventDataSignature: freeton.utils.stringToBytesArray(''),
-        eventConfiguration: TonEventConfiguration.address
+        configurationID: 333
       };
 
       await Bridge.run('confirmTonEvent', eventParams).catch(e => console.log(e));
@@ -133,11 +147,12 @@ describe('Test TON event', async function() {
 
       const details = await TonEvent.runLocal('getDetails', {});
   
-      expect(details._eventTransaction.toNumber()).to.equal(eventParams.eventTransaction, 'Wrong event transaction');
-      expect(details._eventIndex.toNumber()).to.equal(eventParams.eventIndex, 'Wrong event index');
-      expect(details._eventBlockNumber.toNumber()).to.equal(eventParams.eventBlockNumber, 'Wrong block number');
-      expect(details._eventBlock.toNumber()).to.equal(eventParams.eventBlock, 'Wrong block');
+      expect(details._initData.eventTransaction.toNumber()).to.equal(eventParams.eventInitData.eventTransaction, 'Wrong event transaction');
+      expect(details._initData.eventIndex.toNumber()).to.equal(eventParams.eventInitData.eventIndex, 'Wrong event index');
+      expect(details._initData.eventBlockNumber.toNumber()).to.equal(eventParams.eventInitData.eventBlockNumber, 'Wrong block number');
+      expect(details._initData.eventBlock.toNumber()).to.equal(eventParams.eventInitData.eventBlock, 'Wrong block');
   
+      expect(details._status.toNumber()).to.equal(0, 'Wrong status');
       expect(details._confirmKeys).to.have.lengthOf(1, 'Wrong amount of confirmations');
       expect(details._eventDataSignatures).to.have.lengthOf(1, 'Wrong amount of signatures');
       expect(details._rejectKeys).to.have.lengthOf(0, 'Wrong amount of rejects');
@@ -156,18 +171,21 @@ describe('Test TON event', async function() {
 
     it('Reject event enough times', async function() {
       const {
-        _requiredRejects
+        _initData: {
+          requiredRejects,
+        }
       } = await TonEvent.runLocal('getDetails');
 
-      for (const keyId of _.range(1, _requiredRejects.toNumber() + 1)) {
+      for (const keyId of _.range(1, requiredRejects.toNumber() + 1)) {
         await Bridge.run('rejectTonEvent', eventParams, tonWrapper.keys[keyId]);
       }
 
       const details = await TonEvent.runLocal('getDetails', {});
-
+  
+      expect(details._status.toNumber()).to.equal(2, 'Wrong status');
       expect(details._confirmKeys).to.have.lengthOf(1, 'Wrong amount of confirmations');
       expect(details._eventDataSignatures).to.have.lengthOf(1, 'Wrong amount of signatures');
-      expect(details._rejectKeys).to.have.lengthOf(_requiredRejects.toNumber(), 'Wrong amount of rejects');
+      expect(details._rejectKeys).to.have.lengthOf(requiredRejects.toNumber(), 'Wrong amount of rejects');
       expect((await tonWrapper.getBalance(TonEvent.address)).toNumber()).to.equal(0, 'Wrong balance');
     });
   });

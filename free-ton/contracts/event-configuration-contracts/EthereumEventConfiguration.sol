@@ -4,31 +4,23 @@ pragma AbiHeader expire;
 
 import './../event-contracts/EthereumEvent.sol';
 import './../utils/TransferUtils.sol';
+import './../interfaces/IEvent.sol';
+import './../interfaces/IEventConfiguration.sol';
 
 /*
     Contract with Ethereum-TON configuration
 */
-contract EthereumEventConfiguration is TransferUtils {
-    bytes static eventABI;
-    uint160 static eventAddress;
-    uint static eventRequiredConfirmations;
-    uint static eventRequiredRejects;
-    uint static eventBlocksToConfirm;
-    uint128 static eventInitialBalance;
-    address static proxyAddress;
-    address static bridgeAddress;
-    TvmCell static eventCode;
+contract EthereumEventConfiguration is TransferUtils, IEventConfiguration {
+    BasicConfigurationInitData static basicInitData;
+    EthereumEventConfigurationInitData static initData;
 
     // Error codes
     uint MSG_SENDER_NOT_BRIDGE = 202;
 
     modifier onlyBridge() {
-        require(msg.sender == bridgeAddress, MSG_SENDER_NOT_BRIDGE);
+        require(msg.sender == basicInitData.bridgeAddress, MSG_SENDER_NOT_BRIDGE);
         _;
     }
-
-    event EventConfirmation(address addr, uint relayKey);
-    event EventReject(address addr, uint relayKey);
 
     constructor() public {
         tvm.accept();
@@ -40,35 +32,26 @@ contract EthereumEventConfiguration is TransferUtils {
         Two transactions is sent (deploy and confirm) and one is always fail
         EventAddress is always emitted!
         @dev Should be called only through Bridge contract
-        @param eventTransaction Bytes encoded transaction hash
-        @param eventIndex Event Index from the transaction
-        @param eventData TvmCell encoded event data
+        @param initData Ethereum event init data
         @param relayKey Relay key, who initialized the Bridge Ethereum event confirmation
     **/
     function confirmEvent(
-        uint eventTransaction,
-        uint eventIndex,
-        TvmCell eventData,
-        uint eventBlockNumber,
-        uint eventBlock,
+        IEvent.EthereumEventInitData eventInitData,
         uint relayKey
-    ) public onlyBridge transferAfter(bridgeAddress, msg.value) {
+    ) public onlyBridge transferAfter(basicInitData.bridgeAddress, msg.value) {
         tvm.accept();
 
+        eventInitData.ethereumEventConfiguration = address(this);
+        eventInitData.requiredConfirmations = basicInitData.eventRequiredConfirmations;
+        eventInitData.requiredRejects = basicInitData.eventRequiredConfirmations;
+        eventInitData.proxyAddress = initData.proxyAddress;
+
         address ethereumEventAddress = new EthereumEvent{
-            value: eventInitialBalance,
-            code: eventCode,
+            value: basicInitData.eventInitialBalance,
+            code: basicInitData.eventCode,
             pubkey: tvm.pubkey(),
             varInit: {
-                eventTransaction: eventTransaction,
-                eventIndex: eventIndex,
-                proxyAddress: proxyAddress,
-                eventData: eventData,
-                eventBlockNumber: eventBlockNumber,
-                eventBlock: eventBlock,
-                ethereumEventConfirguration: address(this),
-                requiredConfirmations: eventRequiredConfirmations,
-                requiredRejects: eventRequiredConfirmations
+                initData: eventInitData
             }
         }(
             relayKey
@@ -85,37 +68,26 @@ contract EthereumEventConfiguration is TransferUtils {
         Two transactions is sent (deploy and confirm) and one is always fail
         EventAddress is always emitted!
         @dev Should be called only through Bridge contract
-        @param eventTransaction Uint encoded transaction hash
-        @param eventIndex Event Index from the transaction
-        @param eventData TvmCell encoded event data
-        @param eventBlockNumber Ethereum block number with event transaction
-        @param eventBlock Uint encoded block hash
+        @param eventInitData Initial data for event contract
         @param relayKey Relay key, who initialized the Bridge Ethereum event reject
     **/
     function rejectEvent(
-        uint eventTransaction,
-        uint eventIndex,
-        TvmCell eventData,
-        uint eventBlockNumber,
-        uint eventBlock,
+        IEvent.EthereumEventInitData eventInitData,
         uint relayKey
-    ) public onlyBridge transferAfter(bridgeAddress, msg.value) {
+    ) public onlyBridge transferAfter(basicInitData.bridgeAddress, msg.value) {
         tvm.accept();
+
+        eventInitData.ethereumEventConfiguration = address(this);
+        eventInitData.requiredConfirmations = basicInitData.eventRequiredConfirmations;
+        eventInitData.requiredRejects = basicInitData.eventRequiredConfirmations;
+        eventInitData.proxyAddress = initData.proxyAddress;
 
         address ethereumEventAddress = new EthereumEvent{
             value: 0 ton,
-            code: eventCode,
+            code: basicInitData.eventCode,
             pubkey: tvm.pubkey(),
             varInit: {
-                eventTransaction: eventTransaction,
-                eventIndex: eventIndex,
-                proxyAddress: proxyAddress,
-                eventData: eventData,
-                eventBlockNumber: eventBlockNumber,
-                eventBlock: eventBlock,
-                ethereumEventConfirguration: address(this),
-                requiredConfirmations: eventRequiredConfirmations,
-                requiredRejects: eventRequiredConfirmations
+                initData: eventInitData
             }
         }(
             relayKey
@@ -128,37 +100,33 @@ contract EthereumEventConfiguration is TransferUtils {
 
     /*
         Get configuration details.
-        @returns _eventABI Ethereum event ABI
-        @returns _eventAddress Ethereum event address
-        @returns _proxyAddress proxy contract address
-        @returns _eventBlocksToConfirm Ethereum blocks to wait before submit confirmation
-        @returns _eventRequiredConfirmations Amount of required confirmations
-        @returns _eventRequiredRejects Amount of required rejects
-        @returns _eventInitialBalance How much to send on deploy new EventContract
-        @returns _bridgeAddress Address of the Bridge contract
-        @return _eventCode Code of the Event contract
+        @return _basicInitData Basic configuration init data
+        @return _initData Configuration init data
+        @return _type Configuration type - Ethereum or TON
     */
     function getDetails() public view returns(
-        bytes _eventABI,
-        uint160 _eventAddress,
-        address _proxyAddress,
-        uint _eventBlocksToConfirm,
-        uint _eventRequiredConfirmations,
-        uint _eventRequiredRejects,
-        uint128 _eventInitialBalance,
-        address _bridgeAddress,
-        TvmCell _eventCode
+        BasicConfigurationInitData _basicInitData,
+        EthereumEventConfigurationInitData _initData,
+        EventType _type
     ) {
         return (
-            eventABI,
-            eventAddress,
-            proxyAddress,
-            eventBlocksToConfirm,
-            eventRequiredConfirmations,
-            eventRequiredRejects,
-            eventInitialBalance,
-            bridgeAddress,
-            eventCode
+            basicInitData,
+            initData,
+            EventType.Ethereum
         );
+    }
+
+    /*
+        Update configuration data
+        @dev Should be called only by Bridge contract
+        @param _basicInitData New basic init data
+        @param _initData New init data
+    */
+    function updateInitData(
+        BasicConfigurationInitData _basicInitData,
+        EthereumEventConfigurationInitData _initData
+    ) public onlyBridge transferAfter(basicInitData.bridgeAddress, msg.value) {
+        basicInitData = _basicInitData;
+        initData = _initData;
     }
 }

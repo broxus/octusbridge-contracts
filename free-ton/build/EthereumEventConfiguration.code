@@ -32,9 +32,11 @@ PUSHCONT {
 }
 IF
 ; Decode input parameters
-; Decode eventTransaction
+; Decode eventInitData
+;; decode struct EthereumEventInitData eventInitData
+;; decode EthereumEventInitData.eventTransaction
 LDU 256
-; Decode eventIndex
+;; decode EthereumEventInitData.eventIndex
 LDUQ 256
 PUSHCONT {
 	;; load next cell
@@ -44,7 +46,7 @@ PUSHCONT {
 	LDU 256
 }
 IFNOT
-; Decode eventData
+;; decode EthereumEventInitData.eventData
 ;; decode TvmCell
 DUP
 SBITREFS
@@ -59,7 +61,7 @@ PUSHCONT {
 }
 IF
 LDREF
-; Decode eventBlockNumber
+;; decode EthereumEventInitData.eventBlockNumber
 LDUQ 256
 PUSHCONT {
 	;; load next cell
@@ -69,7 +71,7 @@ PUSHCONT {
 	LDU 256
 }
 IFNOT
-; Decode eventBlock
+;; decode EthereumEventInitData.eventBlock
 LDUQ 256
 PUSHCONT {
 	;; load next cell
@@ -79,6 +81,50 @@ PUSHCONT {
 	LDU 256
 }
 IFNOT
+;; decode EthereumEventInitData.ethereumEventConfiguration
+LDMSGADDRQ
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+}
+IFNOT
+;; decode EthereumEventInitData.requiredConfirmations
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+;; decode EthereumEventInitData.requiredRejects
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+;; decode EthereumEventInitData.proxyAddress
+LDMSGADDRQ
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+}
+IFNOT
+;; build struct EthereumEventInitData ss:10
+BLKSWAP 9, 1
+TUPLE 9
+SWAP
 ; Decode relayKey
 LDUQ 256
 PUSHCONT {
@@ -90,15 +136,11 @@ PUSHCONT {
 }
 IFNOT
 ENDS
-;; param: eventTransaction
-;; param: eventIndex
-;; param: eventData
-;; param: eventBlockNumber
-;; param: eventBlock
+;; param: eventInitData
 ;; param: relayKey
 ; modifier onlyBridge
 ;; push identifier MSG_SENDER_NOT_BRIDGE
-GETGLOB 19
+GETGLOB 12
 DUP
 LESSINT 2
 PUSHCONT {
@@ -108,17 +150,63 @@ PUSHCONT {
 IF
 ;; get member sender
 GETGLOB 9
-;; push identifier bridgeAddress
-GETGLOB 17
+;; get member bridgeAddress
+;; push identifier basicInitData
+GETGLOB 10
+INDEX 4
 SDEQ
 THROWANYIFNOT
 ; modifier transferAfter
-;; push identifier bridgeAddress
-GETGLOB 17
+;; get member bridgeAddress
+;; push identifier basicInitData
+GETGLOB 10
+INDEX 4
 ;; get member value
 CALL $message_balance_macro$
 ; function confirmEvent
 ACCEPT
+MYADDR
+; expValue
+PUSH S4
+; end expValue
+SWAP
+; colValue
+SETINDEX 5
+POP S4
+; end colValue
+; expValue
+PUSH S3
+; end expValue
+;; get member eventRequiredConfirmations
+;; push identifier basicInitData
+GETGLOB 10
+INDEX 1
+; colValue
+SETINDEX 6
+POP S4
+; end colValue
+; expValue
+PUSH S3
+; end expValue
+;; get member eventRequiredConfirmations
+;; push identifier basicInitData
+GETGLOB 10
+INDEX 1
+; colValue
+SETINDEX 7
+POP S4
+; end colValue
+; expValue
+PUSH S3
+; end expValue
+;; get member proxyAddress
+;; push identifier initData
+GETGLOB 11
+INDEX 2
+; colValue
+SETINDEX 8
+POP S4
+; end colValue
 NEWDICT
 GETGLOB 2
 NEWC
@@ -127,76 +215,46 @@ PUSHINT 0
 ROT
 PUSHINT 64
 DICTUSETB
-;; push identifier eventTransaction
-PUSH S8
+;; push identifier eventInitData
+PUSH S4
+UNTUPLE 9
 NEWC
-STU 256
+NEWC
+PUSH S6
+STUR 256
+PUSH S5
+STSLICER
+PUSH S4
+STUR 256
+STBREFR
+NEWC
+PUSH S3
+STUR 256
+PUSH S2
+STSLICER
+STBREFR
+PUSH S9
+STUR 256
+PUSH S8
+STUR 256
+PUSH S7
+STREFR
+PUSH S6
+STUR 256
+XCHG s9
+BLKDROP 9
+ENDC
 PUSHINT 1
 ROT
 PUSHINT 64
-DICTUSETB
-;; push identifier eventIndex
-PUSH S7
-NEWC
-STU 256
-PUSHINT 2
-ROT
-PUSHINT 64
-DICTUSETB
-;; push identifier proxyAddress
-GETGLOB 16
-PUSHINT 4
-ROT
-PUSHINT 64
-DICTUSET
-;; push identifier eventData
-PUSH S6
-PUSHINT 3
-ROT
-PUSHINT 64
 DICTUSETREF
-;; push identifier eventBlockNumber
-PUSH S5
-NEWC
-STU 256
-PUSHINT 5
-ROT
-PUSHINT 64
-DICTUSETB
-;; push identifier eventBlock
-PUSH S4
-NEWC
-STU 256
-PUSHINT 6
-ROT
-PUSHINT 64
-DICTUSETB
-MYADDR
-PUSHINT 7
-ROT
-PUSHINT 64
-DICTUSET
-;; push identifier eventRequiredConfirmations
-GETGLOB 12
-NEWC
-STU 256
-PUSHINT 8
-ROT
-PUSHINT 64
-DICTUSETB
-;; push identifier eventRequiredConfirmations
-GETGLOB 12
-NEWC
-STU 256
-PUSHINT 9
-ROT
-PUSHINT 64
-DICTUSETB
 NEWC
 STDICT
 ENDC
-;; push identifier eventCode
-GETGLOB 18
+;; get member eventCode
+;; push identifier basicInitData
+GETGLOB 10
+INDEX 3
 NEWC
 STSLICECONST x2_
 STOPTREF
@@ -210,8 +268,10 @@ STSLICECONST x801_
 STU 256
 ENDC
 CTOS
-;; push identifier eventInitialBalance
-GETGLOB 15
+;; get member eventInitialBalance
+;; push identifier basicInitData
+GETGLOB 10
+INDEX 5
 PUSH S1
 NEWC
 STSLICECONST x62_
@@ -292,7 +352,7 @@ PUSHINT 1
 SENDRAWMSG
 DROP2
 ; end modifier transferAfter
-BLKDROP 6
+DROP2
 ; end modifier onlyBridge
 CALL $c7_to_c4$
 TRUE
@@ -300,15 +360,11 @@ SETGLOB 7
 
 .globl	confirmEvent_internal
 .type	confirmEvent_internal, @function
-;; param: eventTransaction
-;; param: eventIndex
-;; param: eventData
-;; param: eventBlockNumber
-;; param: eventBlock
+;; param: eventInitData
 ;; param: relayKey
 ; modifier onlyBridge
 ;; push identifier MSG_SENDER_NOT_BRIDGE
-GETGLOB 19
+GETGLOB 12
 DUP
 LESSINT 2
 PUSHCONT {
@@ -318,17 +374,63 @@ PUSHCONT {
 IF
 ;; get member sender
 GETGLOB 9
-;; push identifier bridgeAddress
-GETGLOB 17
+;; get member bridgeAddress
+;; push identifier basicInitData
+GETGLOB 10
+INDEX 4
 SDEQ
 THROWANYIFNOT
 ; modifier transferAfter
-;; push identifier bridgeAddress
-GETGLOB 17
+;; get member bridgeAddress
+;; push identifier basicInitData
+GETGLOB 10
+INDEX 4
 ;; get member value
 CALL $message_balance_macro$
 ; function confirmEvent
 ACCEPT
+MYADDR
+; expValue
+PUSH S4
+; end expValue
+SWAP
+; colValue
+SETINDEX 5
+POP S4
+; end colValue
+; expValue
+PUSH S3
+; end expValue
+;; get member eventRequiredConfirmations
+;; push identifier basicInitData
+GETGLOB 10
+INDEX 1
+; colValue
+SETINDEX 6
+POP S4
+; end colValue
+; expValue
+PUSH S3
+; end expValue
+;; get member eventRequiredConfirmations
+;; push identifier basicInitData
+GETGLOB 10
+INDEX 1
+; colValue
+SETINDEX 7
+POP S4
+; end colValue
+; expValue
+PUSH S3
+; end expValue
+;; get member proxyAddress
+;; push identifier initData
+GETGLOB 11
+INDEX 2
+; colValue
+SETINDEX 8
+POP S4
+; end colValue
 NEWDICT
 GETGLOB 2
 NEWC
@@ -337,76 +439,46 @@ PUSHINT 0
 ROT
 PUSHINT 64
 DICTUSETB
-;; push identifier eventTransaction
-PUSH S8
+;; push identifier eventInitData
+PUSH S4
+UNTUPLE 9
 NEWC
-STU 256
+NEWC
+PUSH S6
+STUR 256
+PUSH S5
+STSLICER
+PUSH S4
+STUR 256
+STBREFR
+NEWC
+PUSH S3
+STUR 256
+PUSH S2
+STSLICER
+STBREFR
+PUSH S9
+STUR 256
+PUSH S8
+STUR 256
+PUSH S7
+STREFR
+PUSH S6
+STUR 256
+XCHG s9
+BLKDROP 9
+ENDC
 PUSHINT 1
 ROT
 PUSHINT 64
-DICTUSETB
-;; push identifier eventIndex
-PUSH S7
-NEWC
-STU 256
-PUSHINT 2
-ROT
-PUSHINT 64
-DICTUSETB
-;; push identifier proxyAddress
-GETGLOB 16
-PUSHINT 4
-ROT
-PUSHINT 64
-DICTUSET
-;; push identifier eventData
-PUSH S6
-PUSHINT 3
-ROT
-PUSHINT 64
 DICTUSETREF
-;; push identifier eventBlockNumber
-PUSH S5
-NEWC
-STU 256
-PUSHINT 5
-ROT
-PUSHINT 64
-DICTUSETB
-;; push identifier eventBlock
-PUSH S4
-NEWC
-STU 256
-PUSHINT 6
-ROT
-PUSHINT 64
-DICTUSETB
-MYADDR
-PUSHINT 7
-ROT
-PUSHINT 64
-DICTUSET
-;; push identifier eventRequiredConfirmations
-GETGLOB 12
-NEWC
-STU 256
-PUSHINT 8
-ROT
-PUSHINT 64
-DICTUSETB
-;; push identifier eventRequiredConfirmations
-GETGLOB 12
-NEWC
-STU 256
-PUSHINT 9
-ROT
-PUSHINT 64
-DICTUSETB
 NEWC
 STDICT
 ENDC
-;; push identifier eventCode
-GETGLOB 18
+;; get member eventCode
+;; push identifier basicInitData
+GETGLOB 10
+INDEX 3
 NEWC
 STSLICECONST x2_
 STOPTREF
@@ -420,8 +492,10 @@ STSLICECONST x801_
 STU 256
 ENDC
 CTOS
-;; push identifier eventInitialBalance
-GETGLOB 15
+;; get member eventInitialBalance
+;; push identifier basicInitData
+GETGLOB 10
+INDEX 5
 PUSH S1
 NEWC
 STSLICECONST x62_
@@ -502,7 +576,7 @@ PUSHINT 1
 SENDRAWMSG
 DROP2
 ; end modifier transferAfter
-BLKDROP 6
+DROP2
 ; end modifier onlyBridge
 
 .globl	rejectEvent
@@ -515,9 +589,11 @@ PUSHCONT {
 }
 IF
 ; Decode input parameters
-; Decode eventTransaction
+; Decode eventInitData
+;; decode struct EthereumEventInitData eventInitData
+;; decode EthereumEventInitData.eventTransaction
 LDU 256
-; Decode eventIndex
+;; decode EthereumEventInitData.eventIndex
 LDUQ 256
 PUSHCONT {
 	;; load next cell
@@ -527,7 +603,7 @@ PUSHCONT {
 	LDU 256
 }
 IFNOT
-; Decode eventData
+;; decode EthereumEventInitData.eventData
 ;; decode TvmCell
 DUP
 SBITREFS
@@ -542,7 +618,7 @@ PUSHCONT {
 }
 IF
 LDREF
-; Decode eventBlockNumber
+;; decode EthereumEventInitData.eventBlockNumber
 LDUQ 256
 PUSHCONT {
 	;; load next cell
@@ -552,7 +628,7 @@ PUSHCONT {
 	LDU 256
 }
 IFNOT
-; Decode eventBlock
+;; decode EthereumEventInitData.eventBlock
 LDUQ 256
 PUSHCONT {
 	;; load next cell
@@ -562,6 +638,50 @@ PUSHCONT {
 	LDU 256
 }
 IFNOT
+;; decode EthereumEventInitData.ethereumEventConfiguration
+LDMSGADDRQ
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+}
+IFNOT
+;; decode EthereumEventInitData.requiredConfirmations
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+;; decode EthereumEventInitData.requiredRejects
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+;; decode EthereumEventInitData.proxyAddress
+LDMSGADDRQ
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+}
+IFNOT
+;; build struct EthereumEventInitData ss:10
+BLKSWAP 9, 1
+TUPLE 9
+SWAP
 ; Decode relayKey
 LDUQ 256
 PUSHCONT {
@@ -573,15 +693,11 @@ PUSHCONT {
 }
 IFNOT
 ENDS
-;; param: eventTransaction
-;; param: eventIndex
-;; param: eventData
-;; param: eventBlockNumber
-;; param: eventBlock
+;; param: eventInitData
 ;; param: relayKey
 ; modifier onlyBridge
 ;; push identifier MSG_SENDER_NOT_BRIDGE
-GETGLOB 19
+GETGLOB 12
 DUP
 LESSINT 2
 PUSHCONT {
@@ -591,17 +707,63 @@ PUSHCONT {
 IF
 ;; get member sender
 GETGLOB 9
-;; push identifier bridgeAddress
-GETGLOB 17
+;; get member bridgeAddress
+;; push identifier basicInitData
+GETGLOB 10
+INDEX 4
 SDEQ
 THROWANYIFNOT
 ; modifier transferAfter
-;; push identifier bridgeAddress
-GETGLOB 17
+;; get member bridgeAddress
+;; push identifier basicInitData
+GETGLOB 10
+INDEX 4
 ;; get member value
 CALL $message_balance_macro$
 ; function rejectEvent
 ACCEPT
+MYADDR
+; expValue
+PUSH S4
+; end expValue
+SWAP
+; colValue
+SETINDEX 5
+POP S4
+; end colValue
+; expValue
+PUSH S3
+; end expValue
+;; get member eventRequiredConfirmations
+;; push identifier basicInitData
+GETGLOB 10
+INDEX 1
+; colValue
+SETINDEX 6
+POP S4
+; end colValue
+; expValue
+PUSH S3
+; end expValue
+;; get member eventRequiredConfirmations
+;; push identifier basicInitData
+GETGLOB 10
+INDEX 1
+; colValue
+SETINDEX 7
+POP S4
+; end colValue
+; expValue
+PUSH S3
+; end expValue
+;; get member proxyAddress
+;; push identifier initData
+GETGLOB 11
+INDEX 2
+; colValue
+SETINDEX 8
+POP S4
+; end colValue
 NEWDICT
 GETGLOB 2
 NEWC
@@ -610,76 +772,46 @@ PUSHINT 0
 ROT
 PUSHINT 64
 DICTUSETB
-;; push identifier eventTransaction
-PUSH S8
+;; push identifier eventInitData
+PUSH S4
+UNTUPLE 9
 NEWC
-STU 256
+NEWC
+PUSH S6
+STUR 256
+PUSH S5
+STSLICER
+PUSH S4
+STUR 256
+STBREFR
+NEWC
+PUSH S3
+STUR 256
+PUSH S2
+STSLICER
+STBREFR
+PUSH S9
+STUR 256
+PUSH S8
+STUR 256
+PUSH S7
+STREFR
+PUSH S6
+STUR 256
+XCHG s9
+BLKDROP 9
+ENDC
 PUSHINT 1
 ROT
 PUSHINT 64
-DICTUSETB
-;; push identifier eventIndex
-PUSH S7
-NEWC
-STU 256
-PUSHINT 2
-ROT
-PUSHINT 64
-DICTUSETB
-;; push identifier proxyAddress
-GETGLOB 16
-PUSHINT 4
-ROT
-PUSHINT 64
-DICTUSET
-;; push identifier eventData
-PUSH S6
-PUSHINT 3
-ROT
-PUSHINT 64
 DICTUSETREF
-;; push identifier eventBlockNumber
-PUSH S5
-NEWC
-STU 256
-PUSHINT 5
-ROT
-PUSHINT 64
-DICTUSETB
-;; push identifier eventBlock
-PUSH S4
-NEWC
-STU 256
-PUSHINT 6
-ROT
-PUSHINT 64
-DICTUSETB
-MYADDR
-PUSHINT 7
-ROT
-PUSHINT 64
-DICTUSET
-;; push identifier eventRequiredConfirmations
-GETGLOB 12
-NEWC
-STU 256
-PUSHINT 8
-ROT
-PUSHINT 64
-DICTUSETB
-;; push identifier eventRequiredConfirmations
-GETGLOB 12
-NEWC
-STU 256
-PUSHINT 9
-ROT
-PUSHINT 64
-DICTUSETB
 NEWC
 STDICT
 ENDC
-;; push identifier eventCode
-GETGLOB 18
+;; get member eventCode
+;; push identifier basicInitData
+GETGLOB 10
+INDEX 3
 NEWC
 STSLICECONST x2_
 STOPTREF
@@ -774,7 +906,7 @@ PUSHINT 1
 SENDRAWMSG
 DROP2
 ; end modifier transferAfter
-BLKDROP 6
+DROP2
 ; end modifier onlyBridge
 CALL $c7_to_c4$
 TRUE
@@ -782,15 +914,11 @@ SETGLOB 7
 
 .globl	rejectEvent_internal
 .type	rejectEvent_internal, @function
-;; param: eventTransaction
-;; param: eventIndex
-;; param: eventData
-;; param: eventBlockNumber
-;; param: eventBlock
+;; param: eventInitData
 ;; param: relayKey
 ; modifier onlyBridge
 ;; push identifier MSG_SENDER_NOT_BRIDGE
-GETGLOB 19
+GETGLOB 12
 DUP
 LESSINT 2
 PUSHCONT {
@@ -800,17 +928,63 @@ PUSHCONT {
 IF
 ;; get member sender
 GETGLOB 9
-;; push identifier bridgeAddress
-GETGLOB 17
+;; get member bridgeAddress
+;; push identifier basicInitData
+GETGLOB 10
+INDEX 4
 SDEQ
 THROWANYIFNOT
 ; modifier transferAfter
-;; push identifier bridgeAddress
-GETGLOB 17
+;; get member bridgeAddress
+;; push identifier basicInitData
+GETGLOB 10
+INDEX 4
 ;; get member value
 CALL $message_balance_macro$
 ; function rejectEvent
 ACCEPT
+MYADDR
+; expValue
+PUSH S4
+; end expValue
+SWAP
+; colValue
+SETINDEX 5
+POP S4
+; end colValue
+; expValue
+PUSH S3
+; end expValue
+;; get member eventRequiredConfirmations
+;; push identifier basicInitData
+GETGLOB 10
+INDEX 1
+; colValue
+SETINDEX 6
+POP S4
+; end colValue
+; expValue
+PUSH S3
+; end expValue
+;; get member eventRequiredConfirmations
+;; push identifier basicInitData
+GETGLOB 10
+INDEX 1
+; colValue
+SETINDEX 7
+POP S4
+; end colValue
+; expValue
+PUSH S3
+; end expValue
+;; get member proxyAddress
+;; push identifier initData
+GETGLOB 11
+INDEX 2
+; colValue
+SETINDEX 8
+POP S4
+; end colValue
 NEWDICT
 GETGLOB 2
 NEWC
@@ -819,76 +993,46 @@ PUSHINT 0
 ROT
 PUSHINT 64
 DICTUSETB
-;; push identifier eventTransaction
-PUSH S8
+;; push identifier eventInitData
+PUSH S4
+UNTUPLE 9
 NEWC
-STU 256
+NEWC
+PUSH S6
+STUR 256
+PUSH S5
+STSLICER
+PUSH S4
+STUR 256
+STBREFR
+NEWC
+PUSH S3
+STUR 256
+PUSH S2
+STSLICER
+STBREFR
+PUSH S9
+STUR 256
+PUSH S8
+STUR 256
+PUSH S7
+STREFR
+PUSH S6
+STUR 256
+XCHG s9
+BLKDROP 9
+ENDC
 PUSHINT 1
 ROT
 PUSHINT 64
-DICTUSETB
-;; push identifier eventIndex
-PUSH S7
-NEWC
-STU 256
-PUSHINT 2
-ROT
-PUSHINT 64
-DICTUSETB
-;; push identifier proxyAddress
-GETGLOB 16
-PUSHINT 4
-ROT
-PUSHINT 64
-DICTUSET
-;; push identifier eventData
-PUSH S6
-PUSHINT 3
-ROT
-PUSHINT 64
 DICTUSETREF
-;; push identifier eventBlockNumber
-PUSH S5
-NEWC
-STU 256
-PUSHINT 5
-ROT
-PUSHINT 64
-DICTUSETB
-;; push identifier eventBlock
-PUSH S4
-NEWC
-STU 256
-PUSHINT 6
-ROT
-PUSHINT 64
-DICTUSETB
-MYADDR
-PUSHINT 7
-ROT
-PUSHINT 64
-DICTUSET
-;; push identifier eventRequiredConfirmations
-GETGLOB 12
-NEWC
-STU 256
-PUSHINT 8
-ROT
-PUSHINT 64
-DICTUSETB
-;; push identifier eventRequiredConfirmations
-GETGLOB 12
-NEWC
-STU 256
-PUSHINT 9
-ROT
-PUSHINT 64
-DICTUSETB
 NEWC
 STDICT
 ENDC
-;; push identifier eventCode
-GETGLOB 18
+;; get member eventCode
+;; push identifier basicInitData
+GETGLOB 10
+INDEX 3
 NEWC
 STSLICECONST x2_
 STOPTREF
@@ -983,7 +1127,7 @@ PUSHINT 1
 SENDRAWMSG
 DROP2
 ; end modifier transferAfter
-BLKDROP 6
+DROP2
 ; end modifier onlyBridge
 
 .globl	getDetails
@@ -998,51 +1142,36 @@ IF
 ; Decode input parameters
 ENDS
 ; function getDetails
-;; ret param: _eventABI
+;; ret param: _basicInitData
 NEWC
 ENDC
-;; ret param: _eventAddress
 PUSHINT 0
-;; ret param: _proxyAddress
-PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
-;; ret param: _eventBlocksToConfirm
 PUSHINT 0
-;; ret param: _eventRequiredConfirmations
-PUSHINT 0
-;; ret param: _eventRequiredRejects
-PUSHINT 0
-;; ret param: _eventInitialBalance
-PUSHINT 0
-;; ret param: _bridgeAddress
-PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
-;; ret param: _eventCode
 NEWC
 ENDC
+PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+PUSHINT 0
+TUPLE 6
+;; ret param: _initData
+PUSHINT 0
+PUSHINT 0
+PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+TUPLE 3
+;; ret param: _type
+PUSHINT 0
 ;; return
-;; push identifier eventABI
+;; push identifier basicInitData
 GETGLOB 10
-;; push identifier eventAddress
+;; push identifier initData
 GETGLOB 11
-;; push identifier proxyAddress
-GETGLOB 16
-;; push identifier eventBlocksToConfirm
-GETGLOB 14
-;; push identifier eventRequiredConfirmations
-GETGLOB 12
-;; push identifier eventRequiredRejects
-GETGLOB 13
-;; push identifier eventInitialBalance
-GETGLOB 15
-;; push identifier bridgeAddress
-GETGLOB 17
-;; push identifier eventCode
-GETGLOB 18
-BLKDROP2 9, 9
-;; emitting 9 value(s)
-PUSH S9
+;; get member Ethereum
+PUSHINT 0
+BLKDROP2 3, 3
+;; emitting 3 value(s)
+PUSH S3
 EQINT -1
 PUSHCONT {
-	PUSH S11
+	PUSH S5
 	CTOS
 	LDU 2
 	LDMSGADDR
@@ -1056,34 +1185,44 @@ PUSHCONT {
 	STSLICECONST 0
 	STSLICECONST 1
 	NEWC
-	STSLICECONST xb37328c0
-	PUSH S10
-	STREFR
-	PUSH S9
-	STUR 160
-	PUSH S8
-	STSLICER
-	PUSH S7
-	STUR 256
-	PUSH S6
-	STUR 256
-	NEWC
-	PUSH S6
-	STUR 256
-	PUSH S5
-	STUR 128
+	STSLICECONST xf51bf0c8
 	PUSH S4
-	STSLICER
+	UNTUPLE 6
+	BLKSWAP 1, 6
+	PUSH S6
+	STREFR
+	PUSH S5
+	STUR 16
+	PUSH S4
+	STUR 16
 	PUSH S3
 	STREFR
-	STBREFR
+	PUSH S2
+	STSLICER
+	PUSH S1
+	STUR 128
+	XCHG s6
+	BLKDROP 6
+	PUSH S3
+	UNTUPLE 3
+	BLKSWAP 1, 3
+	PUSH S3
+	STUR 160
+	PUSH S2
+	STUR 16
+	PUSH S1
+	STSLICER
+	XCHG s3
+	BLKDROP 3
+	PUSH S2
+	STUR 8
 	STBREFR
 	ENDC
 	PUSHINT 1
 	SENDRAWMSG
 }
 IF
-BLKDROP 9
+BLKDROP 3
 ; end function getDetails
 PUSHCONT {
 	CALL $c7_to_c4$
@@ -1095,47 +1234,241 @@ SETGLOB 7
 .globl	getDetails_internal
 .type	getDetails_internal, @function
 ; function getDetails
-;; ret param: _eventABI
+;; ret param: _basicInitData
 NEWC
 ENDC
-;; ret param: _eventAddress
 PUSHINT 0
-;; ret param: _proxyAddress
-PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
-;; ret param: _eventBlocksToConfirm
 PUSHINT 0
-;; ret param: _eventRequiredConfirmations
-PUSHINT 0
-;; ret param: _eventRequiredRejects
-PUSHINT 0
-;; ret param: _eventInitialBalance
-PUSHINT 0
-;; ret param: _bridgeAddress
-PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
-;; ret param: _eventCode
 NEWC
 ENDC
+PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+PUSHINT 0
+TUPLE 6
+;; ret param: _initData
+PUSHINT 0
+PUSHINT 0
+PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+TUPLE 3
+;; ret param: _type
+PUSHINT 0
 ;; return
-;; push identifier eventABI
+;; push identifier basicInitData
 GETGLOB 10
-;; push identifier eventAddress
+;; push identifier initData
 GETGLOB 11
-;; push identifier proxyAddress
-GETGLOB 16
-;; push identifier eventBlocksToConfirm
-GETGLOB 14
-;; push identifier eventRequiredConfirmations
-GETGLOB 12
-;; push identifier eventRequiredRejects
-GETGLOB 13
-;; push identifier eventInitialBalance
-GETGLOB 15
-;; push identifier bridgeAddress
-GETGLOB 17
-;; push identifier eventCode
-GETGLOB 18
-BLKDROP2 9, 9
+;; get member Ethereum
+PUSHINT 0
+BLKDROP2 3, 3
 ; end function getDetails
+
+.globl	updateInitData
+.public	updateInitData
+.type	updateInitData, @function
+GETGLOB 1
+ISNULL
+PUSHCONT {
+	CALL $c4_to_c7$
+}
+IF
+; Decode input parameters
+; Decode _basicInitData
+;; decode struct BasicConfigurationInitData _basicInitData
+;; decode BasicConfigurationInitData.eventABI
+LDREF
+;; decode BasicConfigurationInitData.eventRequiredConfirmations
+LDU 16
+;; decode BasicConfigurationInitData.eventRequiredRejects
+LDU 16
+;; decode BasicConfigurationInitData.eventCode
+;; decode TvmCell
+LDREF
+;; decode BasicConfigurationInitData.bridgeAddress
+LDMSGADDR
+;; decode BasicConfigurationInitData.eventInitialBalance
+LDUQ 128
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 128
+}
+IFNOT
+;; build struct BasicConfigurationInitData ss:7
+BLKSWAP 6, 1
+TUPLE 6
+SWAP
+; Decode _initData
+;; decode struct EthereumEventConfigurationInitData _initData
+;; decode EthereumEventConfigurationInitData.eventAddress
+LDUQ 160
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 160
+}
+IFNOT
+;; decode EthereumEventConfigurationInitData.eventBlocksToConfirm
+LDUQ 16
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 16
+}
+IFNOT
+;; decode EthereumEventConfigurationInitData.proxyAddress
+LDMSGADDRQ
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+}
+IFNOT
+;; build struct EthereumEventConfigurationInitData ss:5
+BLKSWAP 3, 1
+TUPLE 3
+SWAP
+ENDS
+;; param: _basicInitData
+;; param: _initData
+; modifier onlyBridge
+;; push identifier MSG_SENDER_NOT_BRIDGE
+GETGLOB 12
+DUP
+LESSINT 2
+PUSHCONT {
+	DROP
+	PUSHINT 100
+}
+IF
+;; get member sender
+GETGLOB 9
+;; get member bridgeAddress
+;; push identifier basicInitData
+GETGLOB 10
+INDEX 4
+SDEQ
+THROWANYIFNOT
+; modifier transferAfter
+;; get member bridgeAddress
+;; push identifier basicInitData
+GETGLOB 10
+INDEX 4
+;; get member value
+CALL $message_balance_macro$
+; function updateInitData
+; expValue
+; end expValue
+;; push identifier _basicInitData
+PUSH S3
+; colValue
+SETGLOB 10
+; end colValue
+; expValue
+; end expValue
+;; push identifier _initData
+PUSH S2
+; colValue
+SETGLOB 11
+; end colValue
+; end function updateInitData
+;; transfer()
+;; push identifier value
+DUP
+;; push identifier receiver
+PUSH S2
+NEWC
+STSLICECONST x62_
+STSLICE
+SWAP
+STGRAMS
+PUSHINT 105
+STZEROES
+STSLICECONST 0
+STSLICECONST 0
+ENDC
+PUSHINT 1
+SENDRAWMSG
+DROP2
+; end modifier transferAfter
+DROP2
+; end modifier onlyBridge
+CALL $c7_to_c4$
+TRUE
+SETGLOB 7
+
+.globl	updateInitData_internal
+.type	updateInitData_internal, @function
+;; param: _basicInitData
+;; param: _initData
+; modifier onlyBridge
+;; push identifier MSG_SENDER_NOT_BRIDGE
+GETGLOB 12
+DUP
+LESSINT 2
+PUSHCONT {
+	DROP
+	PUSHINT 100
+}
+IF
+;; get member sender
+GETGLOB 9
+;; get member bridgeAddress
+;; push identifier basicInitData
+GETGLOB 10
+INDEX 4
+SDEQ
+THROWANYIFNOT
+; modifier transferAfter
+;; get member bridgeAddress
+;; push identifier basicInitData
+GETGLOB 10
+INDEX 4
+;; get member value
+CALL $message_balance_macro$
+; function updateInitData
+; expValue
+; end expValue
+;; push identifier _basicInitData
+PUSH S3
+; colValue
+SETGLOB 10
+; end colValue
+; expValue
+; end expValue
+;; push identifier _initData
+PUSH S2
+; colValue
+SETGLOB 11
+; end colValue
+; end function updateInitData
+;; transfer()
+;; push identifier value
+DUP
+;; push identifier receiver
+PUSH S2
+NEWC
+STSLICECONST x62_
+STSLICE
+SWAP
+STGRAMS
+PUSHINT 105
+STZEROES
+STSLICECONST 0
+STSLICECONST 0
+ENDC
+PUSHINT 1
+SENDRAWMSG
+DROP2
+; end modifier transferAfter
+DROP2
+; end modifier onlyBridge
 
 .globl	c7_to_c4
 .type	c7_to_c4, @function
@@ -1146,33 +1479,41 @@ GETGLOB 3
 STUR 64
 GETGLOB 6
 STUR 1
-NEWC
-GETGLOB 14
-GETGLOB 15
-GETGLOB 16
-GETGLOB 17
-REVERSE 5, 0
-STU 256
-STU 128
-STSLICE
-STSLICE
-NEWC
-GETGLOB 19
-SWAP
-STU 256
 GETGLOB 10
 GETGLOB 11
 GETGLOB 12
-GETGLOB 13
-GETGLOB 18
-REVERSE 8, 0
-STBREF
-STBREF
-STREF
-STU 160
+REVERSE 4, 0
+SWAP
+UNTUPLE 6
+NEWC
+PUSH S6
+STREFR
+PUSH S5
+STUR 16
+PUSH S4
+STUR 16
+PUSH S3
+STREFR
+PUSH S2
+STSLICER
+PUSH S1
+STUR 128
+XCHG s6
+BLKDROP 6
+STBREFR
+SWAP
+UNTUPLE 3
+NEWC
+PUSH S3
+STUR 160
+PUSH S2
+STUR 16
+PUSH S1
+STSLICER
+XCHG s3
+BLKDROP 3
+STBREFR
 STU 256
-STU 256
-STREF
 ENDC
 POP C4
 
@@ -1184,26 +1525,21 @@ LDU 256      ; pubkey c4
 LDU 64      ; pubkey timestamp c4
 LDU 1       ; pubkey [timestamp] constructor_flag memory
 LDREFRTOS
-LDU 256
-LDU 128
-LDMSGADDR
-SETGLOB 17
-SETGLOB 16
-SETGLOB 15
-SETGLOB 14
-LDREFRTOS
-PLDU 256
-SETGLOB 19
 LDREF
-LDU 160
-LDU 256
-LDU 256
-PLDREF
-SETGLOB 18
-SETGLOB 13
-SETGLOB 12
-SETGLOB 11
+LDU 16
+LDU 16
+LDREF
+LDMSGADDR
+PLDU 128
+TUPLE 6
 SETGLOB 10
+LDREFRTOS
+LDU 160
+LDU 16
+TUPLE 3
+SETGLOB 11
+PLDU 256
+SETGLOB 12
 TRUE
 SETGLOB 1   ; pubkey [timestamp] constructor_flag
 SETGLOB 6   ; pubkey [timestamp]
@@ -1221,26 +1557,21 @@ PUSHCONT {
 	LDU 64      ; pubkey timestamp c4
 	LDU 1       ; pubkey [timestamp] constructor_flag memory
 	LDREFRTOS
-	LDU 256
-	LDU 128
-	LDMSGADDR
-	SETGLOB 17
-	SETGLOB 16
-	SETGLOB 15
-	SETGLOB 14
-	LDREFRTOS
-	PLDU 256
-	SETGLOB 19
 	LDREF
-	LDU 160
-	LDU 256
-	LDU 256
-	PLDREF
-	SETGLOB 18
-	SETGLOB 13
-	SETGLOB 12
-	SETGLOB 11
+	LDU 16
+	LDU 16
+	LDREF
+	LDMSGADDR
+	PLDU 128
+	TUPLE 6
 	SETGLOB 10
+	LDREFRTOS
+	LDU 160
+	LDU 16
+	TUPLE 3
+	SETGLOB 11
+	PLDU 256
+	SETGLOB 12
 	TRUE
 	SETGLOB 1   ; pubkey [timestamp] constructor_flag
 	SETGLOB 6   ; pubkey [timestamp]
@@ -1249,116 +1580,54 @@ PUSHCONT {
 }
 PUSHCONT {
 	PLDDICT   ; D
-	; init eventABI
+	; init basicInitData
 	PUSHINT 1
 	PUSH S1
 	PUSHINT 64
-	DICTUGETREF
+	DICTUGET
+	PUSHCONT {
+		LDREF
+		LDU 16
+		LDU 16
+		LDREF
+		LDMSGADDR
+		PLDU 128
+		TUPLE 6
+	}
 	PUSHCONT {
 		NEWC
 		ENDC
+		PUSHINT 0
+		PUSHINT 0
+		NEWC
+		ENDC
+		PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+		PUSHINT 0
+		TUPLE 6
 	}
-	IFNOT
+	IFELSE
 	SETGLOB 10
-	; init eventAddress
+	; init initData
 	PUSHINT 2
 	PUSH S1
 	PUSHINT 64
 	DICTUGET
 	PUSHCONT {
-		PLDU 160
+		LDU 160
+		LDU 16
+		TUPLE 3
 	}
 	PUSHCONT {
 		PUSHINT 0
+		PUSHINT 0
+		PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+		TUPLE 3
 	}
 	IFELSE
 	SETGLOB 11
-	; init eventRequiredConfirmations
-	PUSHINT 3
-	PUSH S1
-	PUSHINT 64
-	DICTUGET
-	PUSHCONT {
-		PLDU 256
-	}
-	PUSHCONT {
-		PUSHINT 0
-	}
-	IFELSE
-	SETGLOB 12
-	; init eventRequiredRejects
-	PUSHINT 4
-	PUSH S1
-	PUSHINT 64
-	DICTUGET
-	PUSHCONT {
-		PLDU 256
-	}
-	PUSHCONT {
-		PUSHINT 0
-	}
-	IFELSE
-	SETGLOB 13
-	; init eventBlocksToConfirm
-	PUSHINT 5
-	PUSH S1
-	PUSHINT 64
-	DICTUGET
-	PUSHCONT {
-		PLDU 256
-	}
-	PUSHCONT {
-		PUSHINT 0
-	}
-	IFELSE
-	SETGLOB 14
-	; init eventInitialBalance
-	PUSHINT 6
-	PUSH S1
-	PUSHINT 64
-	DICTUGET
-	PUSHCONT {
-		PLDU 128
-	}
-	PUSHCONT {
-		PUSHINT 0
-	}
-	IFELSE
-	SETGLOB 15
-	; init proxyAddress
-	PUSHINT 7
-	PUSH S1
-	PUSHINT 64
-	DICTUGET
-	PUSHCONT {
-		PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
-	}
-	IFNOT
-	SETGLOB 16
-	; init bridgeAddress
-	PUSHINT 8
-	PUSH S1
-	PUSHINT 64
-	DICTUGET
-	PUSHCONT {
-		PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
-	}
-	IFNOT
-	SETGLOB 17
-	; init eventCode
-	PUSHINT 9
-	PUSH S1
-	PUSHINT 64
-	DICTUGETREF
-	PUSHCONT {
-		NEWC
-		ENDC
-	}
-	IFNOT
-	SETGLOB 18
 	; init MSG_SENDER_NOT_BRIDGE
 	PUSHINT 0
-	SETGLOB 19
+	SETGLOB 12
 	; set contract pubkey
 	PUSHINT 0
 	SWAP
@@ -1375,7 +1644,7 @@ PUSHCONT {
 	SETGLOB 1
 	;; init state var: MSG_SENDER_NOT_BRIDGE
 	PUSHINT 202
-	SETGLOB 19
+	SETGLOB 12
 }
 IFELSE
 

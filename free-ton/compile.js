@@ -1,5 +1,6 @@
 const dirTree = require("directory-tree");
 const { execSync } = require('child_process');
+const fs = require('fs');
 
 
 function flatDirTree(tree) {
@@ -51,4 +52,5 @@ try {
     execSync(`cd build && mv ${tvcFile} ${contractNameNoFolderStructure}.tvc`);
   });
 } catch (e) {
+  console.log(e.message);
 }

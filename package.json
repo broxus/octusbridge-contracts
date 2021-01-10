@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "npm link free-ton/freeton-truffle",
     "migrate-ton": "cd free-ton && node migration && cd ..",
     "compile-ton": "cd free-ton && node compile && cd ..",
     "test-ton": "cd free-ton && mocha test/$npm_config_test --exit && cd .."
@@ -25,7 +24,7 @@
     "solidity-docgen": "^0.5.7",
     "ton-client-js": "^0.28.1",
     "ton-client-node-js": "^0.24.0",
-    "ton-testing-suite": "^1.0.1",
+    "ton-testing-suite": "^1.0.4",
     "truffle": "^5.1.51",
     "underscore": "^1.12.0",
     "web3": "^1.3.0"
