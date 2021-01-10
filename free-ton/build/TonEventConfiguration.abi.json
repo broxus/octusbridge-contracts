@@ -12,11 +12,7 @@
 		{
 			"name": "confirmEvent",
 			"inputs": [
-				{"name":"eventTransaction","type":"uint256"},
-				{"name":"eventIndex","type":"uint256"},
-				{"name":"eventData","type":"cell"},
-				{"name":"eventBlockNumber","type":"uint256"},
-				{"name":"eventBlock","type":"uint256"},
+				{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint256"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint256"},{"name":"eventBlock","type":"uint256"},{"name":"tonEventConfiguration","type":"address"},{"name":"requiredConfirmations","type":"uint256"},{"name":"requiredRejects","type":"uint256"}],"name":"eventInitData","type":"tuple"},
 				{"name":"eventDataSignature","type":"bytes"},
 				{"name":"relayKey","type":"uint256"}
 			],
@@ -26,11 +22,7 @@
 		{
 			"name": "rejectEvent",
 			"inputs": [
-				{"name":"eventTransaction","type":"uint256"},
-				{"name":"eventIndex","type":"uint256"},
-				{"name":"eventData","type":"cell"},
-				{"name":"eventBlockNumber","type":"uint256"},
-				{"name":"eventBlock","type":"uint256"},
+				{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint256"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint256"},{"name":"eventBlock","type":"uint256"},{"name":"tonEventConfiguration","type":"address"},{"name":"requiredConfirmations","type":"uint256"},{"name":"requiredRejects","type":"uint256"}],"name":"eventInitData","type":"tuple"},
 				{"name":"relayKey","type":"uint256"}
 			],
 			"outputs": [
@@ -41,26 +33,24 @@
 			"inputs": [
 			],
 			"outputs": [
-				{"name":"_eventABI","type":"bytes"},
-				{"name":"_eventAddress","type":"address"},
-				{"name":"_eventRequiredConfirmations","type":"uint256"},
-				{"name":"_eventRequiredRejects","type":"uint256"},
-				{"name":"_eventInitialBalance","type":"uint128"},
-				{"name":"_proxyAddress","type":"uint160"},
-				{"name":"_bridgeAddress","type":"address"},
-				{"name":"_eventCode","type":"cell"}
+				{"components":[{"name":"eventABI","type":"bytes"},{"name":"eventRequiredConfirmations","type":"uint16"},{"name":"eventRequiredRejects","type":"uint16"},{"name":"eventCode","type":"cell"},{"name":"bridgeAddress","type":"address"},{"name":"eventInitialBalance","type":"uint128"}],"name":"_basicInitData","type":"tuple"},
+				{"components":[{"name":"eventAddress","type":"address"},{"name":"proxyAddress","type":"uint160"}],"name":"_initData","type":"tuple"},
+				{"name":"_type","type":"uint8"}
+			]
+		},
+		{
+			"name": "updateInitData",
+			"inputs": [
+				{"components":[{"name":"eventABI","type":"bytes"},{"name":"eventRequiredConfirmations","type":"uint16"},{"name":"eventRequiredRejects","type":"uint16"},{"name":"eventCode","type":"cell"},{"name":"bridgeAddress","type":"address"},{"name":"eventInitialBalance","type":"uint128"}],"name":"_basicInitData","type":"tuple"},
+				{"components":[{"name":"eventAddress","type":"address"},{"name":"proxyAddress","type":"uint160"}],"name":"_initData","type":"tuple"}
+			],
+			"outputs": [
 			]
 		}
 	],
 	"data": [
-		{"key":1,"name":"eventABI","type":"bytes"},
-		{"key":2,"name":"eventAddress","type":"address"},
-		{"key":3,"name":"eventRequiredConfirmations","type":"uint256"},
-		{"key":4,"name":"eventRequiredRejects","type":"uint256"},
-		{"key":5,"name":"eventInitialBalance","type":"uint128"},
-		{"key":6,"name":"proxyAddress","type":"uint160"},
-		{"key":7,"name":"bridgeAddress","type":"address"},
-		{"key":8,"name":"eventCode","type":"cell"}
+		{"components":[{"name":"eventABI","type":"bytes"},{"name":"eventRequiredConfirmations","type":"uint16"},{"name":"eventRequiredRejects","type":"uint16"},{"name":"eventCode","type":"cell"},{"name":"bridgeAddress","type":"address"},{"name":"eventInitialBalance","type":"uint128"}],"key":1,"name":"basicInitData","type":"tuple"},
+		{"components":[{"name":"eventAddress","type":"address"},{"name":"proxyAddress","type":"uint160"}],"key":2,"name":"initData","type":"tuple"}
 	],
 	"events": [
 		{

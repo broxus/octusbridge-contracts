@@ -5,16 +5,26 @@
 		{
 			"name": "constructor",
 			"inputs": [
+				{"name":"_ethereumEventConfiguration","type":"address"},
+				{"name":"_ethereumEventCode","type":"cell"},
+				{"name":"_ethereumEventPubKey","type":"uint256"}
 			],
 			"outputs": [
 			]
 		},
 		{
+			"name": "buildEventProxyAddress",
+			"inputs": [
+				{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint256"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint256"},{"name":"eventBlock","type":"uint256"},{"name":"ethereumEventConfiguration","type":"address"},{"name":"requiredConfirmations","type":"uint256"},{"name":"requiredRejects","type":"uint256"},{"name":"proxyAddress","type":"address"}],"name":"_eventData","type":"tuple"}
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
+			]
+		},
+		{
 			"name": "broxusBridgeCallback",
 			"inputs": [
-				{"name":"_eventTransaction","type":"uint256"},
-				{"name":"_eventIndex","type":"uint256"},
-				{"name":"_eventData","type":"cell"}
+				{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint256"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint256"},{"name":"eventBlock","type":"uint256"},{"name":"ethereumEventConfiguration","type":"address"},{"name":"requiredConfirmations","type":"uint256"},{"name":"requiredRejects","type":"uint256"},{"name":"proxyAddress","type":"address"}],"name":"_eventData","type":"tuple"}
 			],
 			"outputs": [
 			]
@@ -25,9 +35,9 @@
 			],
 			"outputs": [
 				{"name":"_callbackReceived","type":"bool"},
-				{"name":"_eventTransaction","type":"uint256"},
-				{"name":"_eventIndex","type":"uint256"},
-				{"name":"_eventData","type":"cell"}
+				{"name":"_ethereumEventConfiguration","type":"address"},
+				{"name":"_ethereumEventCode","type":"cell"},
+				{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint256"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint256"},{"name":"eventBlock","type":"uint256"},{"name":"ethereumEventConfiguration","type":"address"},{"name":"requiredConfirmations","type":"uint256"},{"name":"requiredRejects","type":"uint256"},{"name":"proxyAddress","type":"address"}],"name":"_eventData","type":"tuple"}
 			]
 		}
 	],

@@ -23,6 +23,13 @@ ENDS
 ;; param: eventDataSignature
 ; constructor TonEvent
 ACCEPT
+; expValue
+; end expValue
+;; get member InProcess
+PUSHINT 0
+; colValue
+SETGLOB 14
+; end colValue
 ;; push identifier relayKey
 PUSH S1
 ;; push identifier eventDataSignature
@@ -51,16 +58,27 @@ LDREF
 ENDS
 ;; param: relayKey
 ;; param: eventDataSignature
-; modifier onlyNotConfirmed
-;; get member length
-;; push identifier confirmKeys
-GETGLOB 18
-INDEX 0
-;; push identifier requiredConfirmations
-GETGLOB 16
-;; <
-LESS
-THROWIFNOT 602
+; modifier onlyEventConfiguration
+;; get member tonEventConfiguration
+;; push identifier initData
+GETGLOB 10
+INDEX 5
+PUSHINT 12642
+;; get member sender
+GETGLOB 9
+;; push identifier configuration
+PUSH S2
+SDEQ
+THROWANYIFNOT
+; modifier eventInProcess
+PUSHINT 16428
+;; push identifier status
+GETGLOB 14
+;; get member InProcess
+PUSHINT 0
+;; ==
+EQUAL
+THROWANYIFNOT
 ; function confirm
 ; for
 PUSHINT 0
@@ -70,7 +88,7 @@ PUSHCONT {
 	DUP
 	;; get member length
 	;; push identifier confirmKeys
-	GETGLOB 18
+	GETGLOB 11
 	INDEX 0
 	;; <
 	LESS
@@ -80,14 +98,14 @@ PUSHCONT {
 	;; push identifier i
 	DUP
 	;; push identifier confirmKeys
-	GETGLOB 18
+	GETGLOB 11
 	INDEX 1
 	PUSHINT 32
 	DICTUGET
 	THROWIFNOT 50
 	PLDU 256
 	;; push identifier relayKey
-	PUSH S3
+	PUSH S4
 	;; !=
 	NEQ
 	THROWIFNOT 404
@@ -103,10 +121,10 @@ DROP
 ; end for
 ; expValue
 ;; fetch confirmKeys
-GETGLOB 18
+GETGLOB 11
 ; end expValue
 ;; push identifier relayKey
-PUSH S2
+PUSH S3
 ;; array.push(..)
 NEWC
 STU 256
@@ -120,14 +138,14 @@ PUSHINT 32
 DICTUSETB
 PAIR
 ; colValue
-SETGLOB 18
+SETGLOB 11
 ; end colValue
 ; expValue
 ;; fetch eventDataSignatures
-GETGLOB 19
+GETGLOB 12
 ; end expValue
 ;; push identifier eventDataSignature
-PUSH S1
+PUSH S2
 ;; array.push(..)
 SWAP
 UNPAIR
@@ -139,27 +157,32 @@ PUSHINT 32
 DICTUSETREF
 PAIR
 ; colValue
-SETGLOB 19
+SETGLOB 12
 ; end colValue
 ;; if
 ;; get member length
 ;; push identifier confirmKeys
-GETGLOB 18
+GETGLOB 11
 INDEX 0
-;; push identifier requiredConfirmations
-GETGLOB 16
+;; get member requiredConfirmations
+;; push identifier initData
+GETGLOB 10
+INDEX 6
 ;; >=
 GEQ
 PUSHCONT {
 	; expValue
 	; end expValue
-	TRUE
+	;; get member Confirmed
+	PUSHINT 1
 	; colValue
-	SETGLOB 21
+	SETGLOB 14
 	; end colValue
 	;; transfer()
-	;; push identifier tonEventConfiguration
-	GETGLOB 15
+	;; get member tonEventConfiguration
+	;; push identifier initData
+	GETGLOB 10
+	INDEX 5
 	NEWC
 	STSLICECONST x62_
 	STSLICE
@@ -174,8 +197,9 @@ PUSHCONT {
 IF
 ;; end if
 ; end function confirm
-DROP2
-; end modifier onlyNotConfirmed
+; end modifier eventInProcess
+BLKDROP 3
+; end modifier onlyEventConfiguration
 CALL $c7_to_c4$
 TRUE
 SETGLOB 7
@@ -184,16 +208,27 @@ SETGLOB 7
 .type	confirm_internal, @function
 ;; param: relayKey
 ;; param: eventDataSignature
-; modifier onlyNotConfirmed
-;; get member length
-;; push identifier confirmKeys
-GETGLOB 18
-INDEX 0
-;; push identifier requiredConfirmations
-GETGLOB 16
-;; <
-LESS
-THROWIFNOT 602
+; modifier onlyEventConfiguration
+;; get member tonEventConfiguration
+;; push identifier initData
+GETGLOB 10
+INDEX 5
+PUSHINT 12642
+;; get member sender
+GETGLOB 9
+;; push identifier configuration
+PUSH S2
+SDEQ
+THROWANYIFNOT
+; modifier eventInProcess
+PUSHINT 16428
+;; push identifier status
+GETGLOB 14
+;; get member InProcess
+PUSHINT 0
+;; ==
+EQUAL
+THROWANYIFNOT
 ; function confirm
 ; for
 PUSHINT 0
@@ -203,7 +238,7 @@ PUSHCONT {
 	DUP
 	;; get member length
 	;; push identifier confirmKeys
-	GETGLOB 18
+	GETGLOB 11
 	INDEX 0
 	;; <
 	LESS
@@ -213,14 +248,14 @@ PUSHCONT {
 	;; push identifier i
 	DUP
 	;; push identifier confirmKeys
-	GETGLOB 18
+	GETGLOB 11
 	INDEX 1
 	PUSHINT 32
 	DICTUGET
 	THROWIFNOT 50
 	PLDU 256
 	;; push identifier relayKey
-	PUSH S3
+	PUSH S4
 	;; !=
 	NEQ
 	THROWIFNOT 404
@@ -236,10 +271,10 @@ DROP
 ; end for
 ; expValue
 ;; fetch confirmKeys
-GETGLOB 18
+GETGLOB 11
 ; end expValue
 ;; push identifier relayKey
-PUSH S2
+PUSH S3
 ;; array.push(..)
 NEWC
 STU 256
@@ -253,14 +288,14 @@ PUSHINT 32
 DICTUSETB
 PAIR
 ; colValue
-SETGLOB 18
+SETGLOB 11
 ; end colValue
 ; expValue
 ;; fetch eventDataSignatures
-GETGLOB 19
+GETGLOB 12
 ; end expValue
 ;; push identifier eventDataSignature
-PUSH S1
+PUSH S2
 ;; array.push(..)
 SWAP
 UNPAIR
@@ -272,27 +307,32 @@ PUSHINT 32
 DICTUSETREF
 PAIR
 ; colValue
-SETGLOB 19
+SETGLOB 12
 ; end colValue
 ;; if
 ;; get member length
 ;; push identifier confirmKeys
-GETGLOB 18
+GETGLOB 11
 INDEX 0
-;; push identifier requiredConfirmations
-GETGLOB 16
+;; get member requiredConfirmations
+;; push identifier initData
+GETGLOB 10
+INDEX 6
 ;; >=
 GEQ
 PUSHCONT {
 	; expValue
 	; end expValue
-	TRUE
+	;; get member Confirmed
+	PUSHINT 1
 	; colValue
-	SETGLOB 21
+	SETGLOB 14
 	; end colValue
 	;; transfer()
-	;; push identifier tonEventConfiguration
-	GETGLOB 15
+	;; get member tonEventConfiguration
+	;; push identifier initData
+	GETGLOB 10
+	INDEX 5
 	NEWC
 	STSLICECONST x62_
 	STSLICE
@@ -307,8 +347,9 @@ PUSHCONT {
 IF
 ;; end if
 ; end function confirm
-DROP2
-; end modifier onlyNotConfirmed
+; end modifier eventInProcess
+BLKDROP 3
+; end modifier onlyEventConfiguration
 
 .globl	reject
 .public	reject
@@ -324,6 +365,27 @@ IF
 LDU 256
 ENDS
 ;; param: relayKey
+; modifier onlyEventConfiguration
+;; get member tonEventConfiguration
+;; push identifier initData
+GETGLOB 10
+INDEX 5
+PUSHINT 12642
+;; get member sender
+GETGLOB 9
+;; push identifier configuration
+PUSH S2
+SDEQ
+THROWANYIFNOT
+; modifier eventInProcess
+PUSHINT 16428
+;; push identifier status
+GETGLOB 14
+;; get member InProcess
+PUSHINT 0
+;; ==
+EQUAL
+THROWANYIFNOT
 ; function reject
 ; for
 PUSHINT 0
@@ -333,7 +395,7 @@ PUSHCONT {
 	DUP
 	;; get member length
 	;; push identifier rejectKeys
-	GETGLOB 20
+	GETGLOB 13
 	INDEX 0
 	;; <
 	LESS
@@ -343,14 +405,14 @@ PUSHCONT {
 	;; push identifier i
 	DUP
 	;; push identifier rejectKeys
-	GETGLOB 20
+	GETGLOB 13
 	INDEX 1
 	PUSHINT 32
 	DICTUGET
 	THROWIFNOT 50
 	PLDU 256
 	;; push identifier relayKey
-	PUSH S2
+	PUSH S3
 	;; !=
 	NEQ
 	THROWIFNOT 404
@@ -366,10 +428,10 @@ DROP
 ; end for
 ; expValue
 ;; fetch rejectKeys
-GETGLOB 20
+GETGLOB 13
 ; end expValue
 ;; push identifier relayKey
-PUSH S1
+PUSH S2
 ;; array.push(..)
 NEWC
 STU 256
@@ -383,27 +445,32 @@ PUSHINT 32
 DICTUSETB
 PAIR
 ; colValue
-SETGLOB 20
+SETGLOB 13
 ; end colValue
 ;; if
 ;; get member length
 ;; push identifier rejectKeys
-GETGLOB 20
+GETGLOB 13
 INDEX 0
-;; push identifier requiredRejects
-GETGLOB 17
+;; get member requiredRejects
+;; push identifier initData
+GETGLOB 10
+INDEX 7
 ;; >=
 GEQ
 PUSHCONT {
 	; expValue
 	; end expValue
-	TRUE
+	;; get member Rejected
+	PUSHINT 2
 	; colValue
-	SETGLOB 22
+	SETGLOB 14
 	; end colValue
 	;; transfer()
-	;; push identifier tonEventConfiguration
-	GETGLOB 15
+	;; get member tonEventConfiguration
+	;; push identifier initData
+	GETGLOB 10
+	INDEX 5
 	NEWC
 	STSLICECONST x62_
 	STSLICE
@@ -417,8 +484,10 @@ PUSHCONT {
 }
 IF
 ;; end if
-DROP
 ; end function reject
+; end modifier eventInProcess
+DROP2
+; end modifier onlyEventConfiguration
 CALL $c7_to_c4$
 TRUE
 SETGLOB 7
@@ -426,6 +495,27 @@ SETGLOB 7
 .globl	reject_internal
 .type	reject_internal, @function
 ;; param: relayKey
+; modifier onlyEventConfiguration
+;; get member tonEventConfiguration
+;; push identifier initData
+GETGLOB 10
+INDEX 5
+PUSHINT 12642
+;; get member sender
+GETGLOB 9
+;; push identifier configuration
+PUSH S2
+SDEQ
+THROWANYIFNOT
+; modifier eventInProcess
+PUSHINT 16428
+;; push identifier status
+GETGLOB 14
+;; get member InProcess
+PUSHINT 0
+;; ==
+EQUAL
+THROWANYIFNOT
 ; function reject
 ; for
 PUSHINT 0
@@ -435,7 +525,7 @@ PUSHCONT {
 	DUP
 	;; get member length
 	;; push identifier rejectKeys
-	GETGLOB 20
+	GETGLOB 13
 	INDEX 0
 	;; <
 	LESS
@@ -445,14 +535,14 @@ PUSHCONT {
 	;; push identifier i
 	DUP
 	;; push identifier rejectKeys
-	GETGLOB 20
+	GETGLOB 13
 	INDEX 1
 	PUSHINT 32
 	DICTUGET
 	THROWIFNOT 50
 	PLDU 256
 	;; push identifier relayKey
-	PUSH S2
+	PUSH S3
 	;; !=
 	NEQ
 	THROWIFNOT 404
@@ -468,10 +558,10 @@ DROP
 ; end for
 ; expValue
 ;; fetch rejectKeys
-GETGLOB 20
+GETGLOB 13
 ; end expValue
 ;; push identifier relayKey
-PUSH S1
+PUSH S2
 ;; array.push(..)
 NEWC
 STU 256
@@ -485,27 +575,32 @@ PUSHINT 32
 DICTUSETB
 PAIR
 ; colValue
-SETGLOB 20
+SETGLOB 13
 ; end colValue
 ;; if
 ;; get member length
 ;; push identifier rejectKeys
-GETGLOB 20
+GETGLOB 13
 INDEX 0
-;; push identifier requiredRejects
-GETGLOB 17
+;; get member requiredRejects
+;; push identifier initData
+GETGLOB 10
+INDEX 7
 ;; >=
 GEQ
 PUSHCONT {
 	; expValue
 	; end expValue
-	TRUE
+	;; get member Rejected
+	PUSHINT 2
 	; colValue
-	SETGLOB 22
+	SETGLOB 14
 	; end colValue
 	;; transfer()
-	;; push identifier tonEventConfiguration
-	GETGLOB 15
+	;; get member tonEventConfiguration
+	;; push identifier initData
+	GETGLOB 10
+	INDEX 5
 	NEWC
 	STSLICECONST x62_
 	STSLICE
@@ -519,8 +614,10 @@ PUSHCONT {
 }
 IF
 ;; end if
-DROP
 ; end function reject
+; end modifier eventInProcess
+DROP2
+; end modifier onlyEventConfiguration
 
 .globl	getDetails
 .public	getDetails
@@ -534,19 +631,19 @@ IF
 ; Decode input parameters
 ENDS
 ; function getDetails
-;; ret param: _eventTransaction
+;; ret param: _initData
 PUSHINT 0
-;; ret param: _eventIndex
 PUSHINT 0
-;; ret param: _eventData
 NEWC
 ENDC
-;; ret param: _eventBlockNumber
 PUSHINT 0
-;; ret param: _eventBlock
 PUSHINT 0
-;; ret param: _tonEventConfiguration
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+PUSHINT 0
+PUSHINT 0
+TUPLE 8
+;; ret param: _status
+PUSHINT 0
 ;; ret param: _confirmKeys
 PUSHINT 0
 NEWDICT
@@ -559,39 +656,23 @@ PAIR
 PUSHINT 0
 NEWDICT
 PAIR
-;; ret param: _requiredConfirmations
-PUSHINT 0
-;; ret param: _requiredRejects
-PUSHINT 0
 ;; return
-;; push identifier eventTransaction
+;; push identifier initData
 GETGLOB 10
-;; push identifier eventIndex
-GETGLOB 11
-;; push identifier eventData
-GETGLOB 12
-;; push identifier eventBlockNumber
-GETGLOB 13
-;; push identifier eventBlock
+;; push identifier status
 GETGLOB 14
-;; push identifier tonEventConfiguration
-GETGLOB 15
 ;; push identifier confirmKeys
-GETGLOB 18
+GETGLOB 11
 ;; push identifier rejectKeys
-GETGLOB 20
+GETGLOB 13
 ;; push identifier eventDataSignatures
-GETGLOB 19
-;; push identifier requiredConfirmations
-GETGLOB 16
-;; push identifier requiredRejects
-GETGLOB 17
-BLKDROP2 11, 11
-;; emitting 11 value(s)
-PUSH S11
+GETGLOB 12
+BLKDROP2 5, 5
+;; emitting 5 value(s)
+PUSH S5
 EQINT -1
 PUSHCONT {
-	PUSH S13
+	PUSH S7
 	CTOS
 	LDU 2
 	LDMSGADDR
@@ -605,25 +686,31 @@ PUSHCONT {
 	STSLICECONST 0
 	STSLICECONST 1
 	NEWC
-	STSLICECONST xa49e0771
-	PUSH S12
+	STSLICECONST xb6e3150c
+	PUSH S6
+	UNTUPLE 8
+	BLKSWAP 1, 8
+	PUSH S8
 	STUR 256
-	PUSH S11
+	PUSH S7
 	STUR 256
-	PUSH S10
+	PUSH S6
 	STREFR
-	PUSH S9
+	PUSH S5
 	STUR 256
 	NEWC
-	PUSH S9
+	PUSH S5
 	STUR 256
-	PUSH S8
+	PUSH S4
 	STSLICER
+	PUSH S3
+	STUR 256
+	NEWC
+	PUSH S3
+	STUR 256
+	BLKDROP2 8, 3
 	PUSH S7
-	UNPAIR
-	XCHG s2
-	STU 32
-	STDICT
+	STUR 8
 	PUSH S6
 	UNPAIR
 	XCHG s2
@@ -635,10 +722,10 @@ PUSHCONT {
 	STU 32
 	STDICT
 	PUSH S4
-	STUR 256
-	NEWC
-	PUSH S4
-	STUR 256
+	UNPAIR
+	XCHG s2
+	STU 32
+	STDICT
 	STBREFR
 	STBREFR
 	STBREFR
@@ -647,7 +734,7 @@ PUSHCONT {
 	SENDRAWMSG
 }
 IF
-BLKDROP 11
+BLKDROP 5
 ; end function getDetails
 PUSHCONT {
 	CALL $c7_to_c4$
@@ -659,19 +746,19 @@ SETGLOB 7
 .globl	getDetails_internal
 .type	getDetails_internal, @function
 ; function getDetails
-;; ret param: _eventTransaction
+;; ret param: _initData
 PUSHINT 0
-;; ret param: _eventIndex
 PUSHINT 0
-;; ret param: _eventData
 NEWC
 ENDC
-;; ret param: _eventBlockNumber
 PUSHINT 0
-;; ret param: _eventBlock
 PUSHINT 0
-;; ret param: _tonEventConfiguration
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+PUSHINT 0
+PUSHINT 0
+TUPLE 8
+;; ret param: _status
+PUSHINT 0
 ;; ret param: _confirmKeys
 PUSHINT 0
 NEWDICT
@@ -684,34 +771,18 @@ PAIR
 PUSHINT 0
 NEWDICT
 PAIR
-;; ret param: _requiredConfirmations
-PUSHINT 0
-;; ret param: _requiredRejects
-PUSHINT 0
 ;; return
-;; push identifier eventTransaction
+;; push identifier initData
 GETGLOB 10
-;; push identifier eventIndex
-GETGLOB 11
-;; push identifier eventData
-GETGLOB 12
-;; push identifier eventBlockNumber
-GETGLOB 13
-;; push identifier eventBlock
+;; push identifier status
 GETGLOB 14
-;; push identifier tonEventConfiguration
-GETGLOB 15
 ;; push identifier confirmKeys
-GETGLOB 18
+GETGLOB 11
 ;; push identifier rejectKeys
-GETGLOB 20
+GETGLOB 13
 ;; push identifier eventDataSignatures
-GETGLOB 19
-;; push identifier requiredConfirmations
-GETGLOB 16
-;; push identifier requiredRejects
-GETGLOB 17
-BLKDROP2 11, 11
+GETGLOB 12
+BLKDROP2 5, 5
 ; end function getDetails
 
 .globl	c7_to_c4
@@ -723,43 +794,46 @@ GETGLOB 3
 STUR 64
 GETGLOB 6
 STUR 1
-NEWC
-GETGLOB 13
-GETGLOB 14
-GETGLOB 15
-GETGLOB 19
-UNTUPLE 2
-GETGLOB 20
-UNTUPLE 2
-REVERSE 8, 0
-STU 256
-STU 256
-STSLICE
-STU 32
-STDICT
-STU 32
-STDICT
-NEWC
-GETGLOB 16
-GETGLOB 17
-XCHG s2
-STU 256
-STU 256
 GETGLOB 10
 GETGLOB 11
-GETGLOB 12
-GETGLOB 21
-GETGLOB 22
-GETGLOB 18
 UNTUPLE 2
-REVERSE 10, 0
-STBREF
-STBREF
-STU 256
-STU 256
-STREF
-STI 1
-STI 1
+GETGLOB 12
+UNTUPLE 2
+GETGLOB 14
+GETGLOB 13
+UNTUPLE 2
+REVERSE 9, 0
+SWAP
+UNTUPLE 8
+NEWC
+NEWC
+PUSH S5
+STUR 256
+PUSH S4
+STSLICER
+PUSH S3
+STUR 256
+STBREFR
+NEWC
+PUSH S2
+STUR 256
+STBREFR
+PUSH S8
+STUR 256
+PUSH S7
+STUR 256
+PUSH S6
+STREFR
+PUSH S5
+STUR 256
+XCHG s8
+BLKDROP 8
+STBREFR
+STU 32
+STDICT
+STU 32
+STDICT
+STU 8
 STU 32
 STDICT
 ENDC
@@ -773,40 +847,38 @@ LDU 256      ; pubkey c4
 LDU 64      ; pubkey timestamp c4
 LDU 1       ; pubkey [timestamp] constructor_flag memory
 LDREFRTOS
+LDREF
+LDREF
 LDU 256
+LDU 256
+LDREF
+PLDU 256
+BLKSWAP 1, 5
+CTOS
 LDU 256
 LDMSGADDR
+PLDU 256
+BLKSWAP 1, 7
+CTOS
+PLDU 256
+TUPLE 8
+SETGLOB 10
 LDU 32
 LDDICT
 ROTREV
 PAIR
-SETGLOB 19
-LDU 32
-PLDDICT
-PAIR
-SETGLOB 20
-SETGLOB 15
-SETGLOB 14
-SETGLOB 13
-LDREFRTOS
-LDU 256
-PLDU 256
-SETGLOB 17
-SETGLOB 16
-LDU 256
-LDU 256
-LDREF
-LDI 1
-LDI 1
-LDU 32
-PLDDICT
-PAIR
-SETGLOB 18
-SETGLOB 22
-SETGLOB 21
-SETGLOB 12
 SETGLOB 11
-SETGLOB 10
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SETGLOB 12
+LDU 8
+LDU 32
+PLDDICT
+PAIR
+SETGLOB 13
+SETGLOB 14
 TRUE
 SETGLOB 1   ; pubkey [timestamp] constructor_flag
 SETGLOB 6   ; pubkey [timestamp]
@@ -824,40 +896,38 @@ PUSHCONT {
 	LDU 64      ; pubkey timestamp c4
 	LDU 1       ; pubkey [timestamp] constructor_flag memory
 	LDREFRTOS
+	LDREF
+	LDREF
 	LDU 256
+	LDU 256
+	LDREF
+	PLDU 256
+	BLKSWAP 1, 5
+	CTOS
 	LDU 256
 	LDMSGADDR
+	PLDU 256
+	BLKSWAP 1, 7
+	CTOS
+	PLDU 256
+	TUPLE 8
+	SETGLOB 10
 	LDU 32
 	LDDICT
 	ROTREV
 	PAIR
-	SETGLOB 19
-	LDU 32
-	PLDDICT
-	PAIR
-	SETGLOB 20
-	SETGLOB 15
-	SETGLOB 14
-	SETGLOB 13
-	LDREFRTOS
-	LDU 256
-	PLDU 256
-	SETGLOB 17
-	SETGLOB 16
-	LDU 256
-	LDU 256
-	LDREF
-	LDI 1
-	LDI 1
-	LDU 32
-	PLDDICT
-	PAIR
-	SETGLOB 18
-	SETGLOB 22
-	SETGLOB 21
-	SETGLOB 12
 	SETGLOB 11
-	SETGLOB 10
+	LDU 32
+	LDDICT
+	ROTREV
+	PAIR
+	SETGLOB 12
+	LDU 8
+	LDU 32
+	PLDDICT
+	PAIR
+	SETGLOB 13
+	SETGLOB 14
 	TRUE
 	SETGLOB 1   ; pubkey [timestamp] constructor_flag
 	SETGLOB 6   ; pubkey [timestamp]
@@ -866,126 +936,61 @@ PUSHCONT {
 }
 PUSHCONT {
 	PLDDICT   ; D
-	; init eventTransaction
+	; init initData
 	PUSHINT 1
-	PUSH S1
-	PUSHINT 64
-	DICTUGET
-	PUSHCONT {
-		PLDU 256
-	}
-	PUSHCONT {
-		PUSHINT 0
-	}
-	IFELSE
-	SETGLOB 10
-	; init eventIndex
-	PUSHINT 2
-	PUSH S1
-	PUSHINT 64
-	DICTUGET
-	PUSHCONT {
-		PLDU 256
-	}
-	PUSHCONT {
-		PUSHINT 0
-	}
-	IFELSE
-	SETGLOB 11
-	; init eventData
-	PUSHINT 3
 	PUSH S1
 	PUSHINT 64
 	DICTUGETREF
 	PUSHCONT {
+		CTOS
+		LDREF
+		LDREF
+		LDU 256
+		LDU 256
+		LDREF
+		PLDU 256
+		BLKSWAP 1, 5
+		CTOS
+		LDU 256
+		LDMSGADDR
+		PLDU 256
+		BLKSWAP 1, 7
+		CTOS
+		PLDU 256
+		TUPLE 8
+	}
+	PUSHCONT {
+		PUSHINT 0
+		PUSHINT 0
 		NEWC
 		ENDC
-	}
-	IFNOT
-	SETGLOB 12
-	; init eventBlockNumber
-	PUSHINT 4
-	PUSH S1
-	PUSHINT 64
-	DICTUGET
-	PUSHCONT {
-		PLDU 256
-	}
-	PUSHCONT {
 		PUSHINT 0
-	}
-	IFELSE
-	SETGLOB 13
-	; init eventBlock
-	PUSHINT 5
-	PUSH S1
-	PUSHINT 64
-	DICTUGET
-	PUSHCONT {
-		PLDU 256
-	}
-	PUSHCONT {
 		PUSHINT 0
-	}
-	IFELSE
-	SETGLOB 14
-	; init tonEventConfiguration
-	PUSHINT 6
-	PUSH S1
-	PUSHINT 64
-	DICTUGET
-	PUSHCONT {
 		PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
-	}
-	IFNOT
-	SETGLOB 15
-	; init requiredConfirmations
-	PUSHINT 7
-	PUSH S1
-	PUSHINT 64
-	DICTUGET
-	PUSHCONT {
-		PLDU 256
-	}
-	PUSHCONT {
 		PUSHINT 0
+		PUSHINT 0
+		TUPLE 8
 	}
 	IFELSE
-	SETGLOB 16
-	; init requiredRejects
-	PUSHINT 8
-	PUSH S1
-	PUSHINT 64
-	DICTUGET
-	PUSHCONT {
-		PLDU 256
-	}
-	PUSHCONT {
-		PUSHINT 0
-	}
-	IFELSE
-	SETGLOB 17
+	SETGLOB 10
 	; init confirmKeys
 	PUSHINT 0
 	NEWDICT
 	PAIR
-	SETGLOB 18
+	SETGLOB 11
 	; init eventDataSignatures
 	PUSHINT 0
 	NEWDICT
 	PAIR
-	SETGLOB 19
+	SETGLOB 12
 	; init rejectKeys
 	PUSHINT 0
 	NEWDICT
 	PAIR
-	SETGLOB 20
-	; init eventConfirmed
+	SETGLOB 13
+	; init status
 	PUSHINT 0
-	SETGLOB 21
-	; init eventRejected
-	PUSHINT 0
-	SETGLOB 22
+	SETGLOB 14
 	; set contract pubkey
 	PUSHINT 0
 	SWAP
@@ -1000,12 +1005,6 @@ PUSHCONT {
 	SETGLOB 6
 	TRUE
 	SETGLOB 1
-	;; init state var: eventConfirmed
-	FALSE
-	SETGLOB 21
-	;; init state var: eventRejected
-	FALSE
-	SETGLOB 22
 }
 IFELSE
 
@@ -1020,7 +1019,10 @@ IFELSE
 PUSHINT 0  ; main_external trans id
 PUSH S2
 CTOS
-PLDU 4
+LDU 4       ; bounced tail
+LDMSGADDR   ; bounced src tail
+DROP
+SETGLOB 9
 MODPOW2 1
 IFRET
 PUSH S1    ; body
@@ -1054,6 +1056,8 @@ IF
 .internal-alias :main_external,        -1
 .internal	:main_external
 PUSHINT -1 ; main_external trans id
+PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+SETGLOB 9
 PUSH S1
 CALL $c4_to_c7_with_init_storage$
 LDU 1 ; haveSign msgSlice

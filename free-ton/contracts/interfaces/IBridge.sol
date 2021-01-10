@@ -1,8 +1,6 @@
 pragma solidity >= 0.6.0;
-pragma AbiHeader expire;
 
-
-interface BridgeConfigurationStructure {
+interface IBridge {
     struct BridgeConfiguration {
         uint16 eventConfigurationRequiredConfirmations;
         uint16 eventConfigurationRequiredRejects;
@@ -14,5 +12,15 @@ interface BridgeConfigurationStructure {
         uint16 bridgeRelayUpdateRequiredRejects;
 
         bool active;
+    }
+
+    struct BridgeRelay {
+        uint key;
+        bool action;
+    }
+
+    struct Vote {
+        bytes signature;
+        bytes payload;
     }
 }

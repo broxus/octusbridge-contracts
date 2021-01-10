@@ -2,34 +2,26 @@ pragma solidity >= 0.6.0;
 pragma AbiHeader expire;
 
 
-import "./../interfaces/Proxy.sol";
+import "./../interfaces/IProxy.sol";
+import "./../interfaces/IEvent.sol";
 
 
-contract EthereumEvent {
-    uint static eventTransaction;
-    uint static eventIndex;
-    TvmCell static eventData;
-    address static proxyAddress;
+contract EthereumEvent is IEvent {
+    EthereumEventInitData static initData;
 
-    uint static eventBlockNumber;
-    uint static eventBlock;
-
-    address static ethereumEventConfirguration;
-
-    uint static requiredConfirmations;
-    uint static requiredRejects;
-
-
-    bool proxyCallbackExecuted = false;
-    bool eventRejected = false;
-
-    uint PROXY_CALLBACK_ALREADY_EXECUTED = 501;
+    Status status;
 
     uint[] confirmKeys;
     uint[] rejectKeys;
 
-    modifier onlyNotExecuted() {
-        require(proxyCallbackExecuted == false, PROXY_CALLBACK_ALREADY_EXECUTED);
+
+    modifier eventInProcess() {
+        require(status == Status.InProcess, 16428);
+        _;
+    }
+
+    modifier onlyEventConfiguration(address configuration) {
+        require(msg.sender == configuration, 12642);
         _;
     }
 
@@ -43,6 +35,8 @@ contract EthereumEvent {
     ) public {
         tvm.accept();
 
+        status = Status.InProcess;
+
         confirm(relayKey);
     }
 
@@ -51,18 +45,20 @@ contract EthereumEvent {
         @dev Should be called by Bridge -> EthereumEventConfiguration
         @param relayKey Public key of the relay, who initiated the config creation
     */
-    function confirm(uint relayKey) public onlyNotExecuted {
-        require(eventRejected == false, 405);
-
+    function confirm(
+        uint relayKey
+    ) public onlyEventConfiguration(initData.ethereumEventConfiguration) eventInProcess {
         for (uint i=0; i<confirmKeys.length; i++) {
             require(confirmKeys[i] != relayKey, 404);
         }
 
         confirmKeys.push(relayKey);
 
-        if (confirmKeys.length >= requiredConfirmations) {
+        if (confirmKeys.length >= initData.requiredConfirmations) {
             _executeProxyCallback();
-            ethereumEventConfirguration.transfer({ flag: 128, value: 0 });
+            status = Status.Confirmed;
+
+            initData.ethereumEventConfiguration.transfer({ flag: 128, value: 0 });
         }
     }
 
@@ -71,16 +67,19 @@ contract EthereumEvent {
         @dev Should be called by Bridge -> EthereumEventConfiguration
         @param relayKey Public key of the relay, who initiated the config creation
     */
-    function reject(uint relayKey) public onlyNotExecuted {
+    function reject(
+        uint relayKey
+    ) public onlyEventConfiguration(initData.ethereumEventConfiguration) eventInProcess {
         for (uint i=0; i<rejectKeys.length; i++) {
             require(rejectKeys[i] != relayKey, 404);
         }
 
         rejectKeys.push(relayKey);
 
-        if (rejectKeys.length >= requiredRejects) {
-            eventRejected = true;
-            ethereumEventConfirguration.transfer({ flag: 128, value: 0 });
+        if (rejectKeys.length >= initData.requiredRejects) {
+            status = Status.Rejected;
+
+            initData.ethereumEventConfiguration.transfer({ flag: 128, value: 0 });
         }
     }
 
@@ -88,61 +87,28 @@ contract EthereumEvent {
         Execute callback on proxy contract
         @dev Called internally, after required amount of confirmations received
     */
-    function _executeProxyCallback() internal {
-        proxyCallbackExecuted = true;
-
-        Proxy(proxyAddress).broxusBridgeCallback{value: 1 ton}(
-            eventTransaction,
-            eventIndex,
-            eventData
-        );
+    function _executeProxyCallback() internal view {
+        IProxy(initData.proxyAddress).broxusBridgeCallback{value: 1 ton}(initData);
     }
 
     /*
         Read contract details
-        @returns _eventTransaction Ethereum event transaction
-        @returns _eventIndex Ethereum event index
-        @returns _eventData Ethereum event data
-        @returns _proxyAddress Proxy contract address
-        @returns _eventBlockNumber Event transaction block number
-        @returns _eventBlock Event transaction block hash
-        @returns _ethereumEventConfiguration Ethereum event configuration contract
-        @returns _proxyCallbackExecuted Status of the proxy callback
-        @returns _eventRejected Status of the event reject
+        @returns _initData Init data
+        @returns _status Current event status
         @returns _confirmKeys List of confirm keys
         @returns _rejectKeys List of reject keys
-        @returns _requiredConfirmations Amount of confirmations to confirm event
-        @returns _requiredRejects Amount of rejects to reject event
     */
     function getDetails() public view returns (
-        uint _eventTransaction,
-        uint _eventIndex,
-        TvmCell _eventData,
-        address _proxyAddress,
-        uint _eventBlockNumber,
-        uint _eventBlock,
-        address _ethereumEventConfirguration,
-        bool _proxyCallbackExecuted,
-        bool _eventRejected,
+        EthereumEventInitData _initData,
+        Status _status,
         uint[] _confirmKeys,
-        uint[] _rejectKeys,
-        uint _requiredConfirmations,
-        uint _requiredRejects
+        uint[] _rejectKeys
     ) {
         return (
-            eventTransaction,
-            eventIndex,
-            eventData,
-            proxyAddress,
-            eventBlockNumber,
-            eventBlock,
-            ethereumEventConfirguration,
-            proxyCallbackExecuted,
-            eventRejected,
+            initData,
+            status,
             confirmKeys,
-            rejectKeys,
-            requiredConfirmations,
-            requiredRejects
+            rejectKeys
         );
     }
 }

@@ -33,29 +33,16 @@
 			"inputs": [
 			],
 			"outputs": [
-				{"name":"_eventTransaction","type":"uint256"},
-				{"name":"_eventIndex","type":"uint256"},
-				{"name":"_eventData","type":"cell"},
-				{"name":"_eventBlockNumber","type":"uint256"},
-				{"name":"_eventBlock","type":"uint256"},
-				{"name":"_tonEventConfiguration","type":"address"},
+				{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint256"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint256"},{"name":"eventBlock","type":"uint256"},{"name":"tonEventConfiguration","type":"address"},{"name":"requiredConfirmations","type":"uint256"},{"name":"requiredRejects","type":"uint256"}],"name":"_initData","type":"tuple"},
+				{"name":"_status","type":"uint8"},
 				{"name":"_confirmKeys","type":"uint256[]"},
 				{"name":"_rejectKeys","type":"uint256[]"},
-				{"name":"_eventDataSignatures","type":"bytes[]"},
-				{"name":"_requiredConfirmations","type":"uint256"},
-				{"name":"_requiredRejects","type":"uint256"}
+				{"name":"_eventDataSignatures","type":"bytes[]"}
 			]
 		}
 	],
 	"data": [
-		{"key":1,"name":"eventTransaction","type":"uint256"},
-		{"key":2,"name":"eventIndex","type":"uint256"},
-		{"key":3,"name":"eventData","type":"cell"},
-		{"key":4,"name":"eventBlockNumber","type":"uint256"},
-		{"key":5,"name":"eventBlock","type":"uint256"},
-		{"key":6,"name":"tonEventConfiguration","type":"address"},
-		{"key":7,"name":"requiredConfirmations","type":"uint256"},
-		{"key":8,"name":"requiredRejects","type":"uint256"}
+		{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint256"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint256"},{"name":"eventBlock","type":"uint256"},{"name":"tonEventConfiguration","type":"address"},{"name":"requiredConfirmations","type":"uint256"},{"name":"requiredRejects","type":"uint256"}],"key":1,"name":"initData","type":"tuple"}
 	],
 	"events": [
 	]
