@@ -14,17 +14,34 @@ contract DistributedOwnable {
 
     event OwnershipGranted(address indexed newOwner);
     event OwnershipRemoved(address indexed removedOwner);
+    event UpdateRequiredOwnersToUpdateOwners(uint value);
+    event UpdateRequiredOwnersToExecuteCall(uint value);
+
+    uint public requiredOwnersToExecuteCall;
+    uint public requiredOwnersToUpdateOwners;
 
     /**
      * @dev Initializes the contract setting the deployer as the initial owner.
      * @param owners - List of initial owners addresses
+     * @param initialRequiredOwnersToExecuteCall - Initial value for required owners amount to execute call operation
+     * @param initialRequiredOwnersToUpdateOwners - Initial value for required owners amount to update owners set
      */
     constructor(
-        address[] memory owners
+        address[] memory owners,
+        uint initialRequiredOwnersToExecuteCall,
+        uint initialRequiredOwnersToUpdateOwners
     ) public {
+        require(
+            owners.length >= initialRequiredOwnersToExecuteCall && owners.length >= initialRequiredOwnersToUpdateOwners,
+            "Ownable: initial settings are wrong"
+        );
+
         for (uint i=0; i < owners.length; i++) {
             grantOwnership(owners[i]);
         }
+
+        updateRequiredOwnersToUpdateOwners(initialRequiredOwnersToUpdateOwners);
+        updateRequiredOwnersToExecuteCall(initialRequiredOwnersToExecuteCall);
     }
 
     /**
@@ -66,6 +83,30 @@ contract DistributedOwnable {
     }
 
     /**
+     * @notice Access management modifier. Throws an error in case not enough owners signatures have been provided
+     * @param receipt - payload which was signed
+     * @param signatures - array of signatures
+     * @param requiredOwnersSignatures - minimum amount of owners signatures that should be provided
+     */
+    modifier enoughOwnersSigned(
+        bytes memory receipt,
+        bytes[] memory signatures,
+        uint requiredOwnersSignatures
+    ) {
+        uint ownersSignatures = countOwnersSignatures(
+            receipt,
+            signatures
+        );
+
+        require(
+            ownersSignatures >= requiredOwnersSignatures,
+            "Ownable: not enough owners signed"
+        );
+
+        _;
+    }
+
+    /**
      * @dev Internal ownership granting.
      * @param newOwner - Account to grant ownership
     */
@@ -85,5 +126,71 @@ contract DistributedOwnable {
         ownersAmount--;
 
         emit OwnershipRemoved(ownerToRemove);
+    }
+
+    /**
+     * @dev Internal update for setting "required owners to update owners"
+     * @param newRequiredOwnersToUpdateOwners - new setting value
+    */
+    function updateRequiredOwnersToUpdateOwners(
+        uint newRequiredOwnersToUpdateOwners
+    ) internal {
+        requiredOwnersToUpdateOwners = newRequiredOwnersToUpdateOwners;
+
+        emit UpdateRequiredOwnersToUpdateOwners(newRequiredOwnersToUpdateOwners);
+    }
+
+    /**
+     * @dev Internal update for setting "required owners to execute call"
+     * @param newRequiredOwnersToExecuteCall - new setting value
+    */
+    function updateRequiredOwnersToExecuteCall(
+        uint newRequiredOwnersToExecuteCall
+    ) internal {
+        requiredOwnersToExecuteCall = newRequiredOwnersToExecuteCall;
+
+        emit UpdateRequiredOwnersToExecuteCall(newRequiredOwnersToExecuteCall);
+    }
+
+    /**
+     * @notice Updating owners set. Grants or remove ownership for some account.
+     * @dev Receipt is ABI encoded (address, uint, bool)
+     * @dev First parameter is a target account - address, which ownership should be removed or granted to
+     * @dev Second parameter is new amount of owners required to update owners
+     * @dev Third parameter is an action - true means grant ownership, false means remove ownership
+     * @param receipt ABI encoded payload
+     * @param signatures Bytes array with receipt signatures. Requires requiredOwnersToUpdateOwners signatures.
+    */
+    function updateOwnership(
+        bytes memory receipt,
+        bytes[] memory signatures
+    ) public enoughOwnersSigned(
+        receipt,
+        signatures,
+        requiredOwnersToUpdateOwners
+    ) {
+        (
+            address target,
+            uint newRequiredOwnersToUpdateOwners,
+            bool action
+        ) = abi.decode(
+            receipt,
+            (address, uint, bool)
+        );
+
+        if (action) {
+            require(!isOwner(target), "Ownable: target account already owner");
+            grantOwnership(target);
+        } else {
+            require(isOwner(target), "Ownable: target account not owner");
+            removeOwnership(target);
+        }
+
+        require(
+            newRequiredOwnersToUpdateOwners <= ownersAmount,
+            "Ownable: wrong setting for update owners"
+        );
+
+        updateRequiredOwnersToUpdateOwners(newRequiredOwnersToUpdateOwners);
     }
 }

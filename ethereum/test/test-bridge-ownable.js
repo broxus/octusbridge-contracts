@@ -19,4 +19,18 @@ contract('Testing Ethereum bridge ownable', async (accounts) => {
     
     });
   });
+  
+  describe('Update minimum owners to execute call', async () => {
+    it('Unauthorized', async () => {
+      const requiredOwnersToExecuteCall = await ethereumBridge
+        .requiredOwnersToExecuteCall();
+  
+    });
+  
+    it('Authorized', async () => {
+      const requiredOwnersToExecuteCall = await ethereumBridge
+        .requiredOwnersToExecuteCall();
+  
+    });
+  });
 });
