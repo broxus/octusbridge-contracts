@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.0;
+pragma experimental ABIEncoderV2;
 
 
 /**
@@ -19,8 +20,9 @@ contract EventContractSimple {
         emit EthereumStateChange(_state);
     }
 
-    function setStateFromTON(bytes payload, bytes[] signature) public {
+    function setStateFromTON(bytes memory payload, bytes[] memory signature) public {
         // Check signatures validity and sufficiency with Bridge contract
+        require(signature.length > 0);
 
         // Decode and update state
         (uint _state) = abi.decode(payload, (uint));

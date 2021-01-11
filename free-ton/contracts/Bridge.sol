@@ -27,7 +27,7 @@ contract Bridge is KeysOwnable, IBridge {
 
     mapping(uint => EventConfiguration) eventConfigurations;
     event EventConfigurationCreationVote(uint id, uint relayKey, bool vote);
-    event EventConfigurationCreationEnd(uint id, bool active, IEventConfiguration.EventType _type);
+    event EventConfigurationCreationEnd(uint id, bool active, address addr, IEventConfiguration.EventType _type);
 
     struct EventConfigurationUpdate {
         mapping(uint => bool) votes;
@@ -143,14 +143,14 @@ contract Bridge is KeysOwnable, IBridge {
         ) {
             eventConfigurations[id].status = true;
 
-            emit EventConfigurationCreationEnd(id, true, eventConfigurations[id]._type);
+            emit EventConfigurationCreationEnd(id, true, eventConfigurations[id].addr, eventConfigurations[id]._type);
         } else if (
             // -- Relay voted for reject AND enough rejects received
             // -- Remove configuration
             rejectKeys.length >= bridgeConfiguration.eventConfigurationRequiredRejects &&
             vote == false
         ) {
-            emit EventConfigurationCreationEnd(id, false, eventConfigurations[id]._type);
+            emit EventConfigurationCreationEnd(id, false, eventConfigurations[id].addr, eventConfigurations[id]._type);
 
             delete eventConfigurations[id];
         }
@@ -183,16 +183,22 @@ contract Bridge is KeysOwnable, IBridge {
 
     /*
         Get list of active event configuration contracts
-        @returns eventConfigurations List of active event configuration contracts
+        @returns ids List of active event configuration ids
+        @returns addrs List of active event configuration addresses
+        @returns _types List of active event configurations types
     */
     function getActiveEventConfigurations() public view returns (
-        uint[] ids
+        uint[] ids,
+        address[] addrs,
+        IEventConfiguration.EventType[] _types
     ) {
         tvm.accept();
 
         for ((uint id, EventConfiguration configuration): eventConfigurations) {
             if (configuration.status) {
                 ids.push(id);
+                addrs.push(configuration.addr);
+                _types.push(configuration._type);
             }
         }
     }

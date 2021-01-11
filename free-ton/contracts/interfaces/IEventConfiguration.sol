@@ -1,10 +1,7 @@
 pragma solidity >= 0.6.0;
 
 interface IEventConfiguration {
-    enum EventType {
-        Ethereum,
-        TON
-    }
+    enum EventType { Ethereum, TON }
 
     struct BasicConfigurationInitData {
         bytes eventABI;

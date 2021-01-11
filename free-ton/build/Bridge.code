@@ -767,7 +767,7 @@ PUSHCONT {
 	STSLICER
 	STSLICECONST 0
 	STSLICECONST 0
-	STSLICECONST x16a1d7d6
+	STSLICECONST x228ee80c
 	;; id
 	;; push identifier id
 	PUSH S8
@@ -775,6 +775,31 @@ PUSHCONT {
 	;; active
 	TRUE
 	STIR 1
+	;; addr
+	;; get member addr
+	;; index
+	;; push identifier id
+	PUSH S8
+	;; push identifier eventConfigurations
+	GETGLOB 13
+	PUSHINT 256
+	DICTUGET
+	PUSHCONT {
+		NEWC
+		PUSHINT 1
+		STZEROES
+		PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+		STSLICER
+		PUSHINT 9
+		STZEROES
+		ENDC
+		CTOS
+	}
+	IFNOT
+	SKIPDICT
+	LDMSGADDR
+	DROP
+	STSLICER
 	;; _type
 	;; get member _type
 	;; index
@@ -837,7 +862,7 @@ PUSHCONT {
 		STSLICER
 		STSLICECONST 0
 		STSLICECONST 0
-		STSLICECONST x16a1d7d6
+		STSLICECONST x228ee80c
 		;; id
 		;; push identifier id
 		PUSH S8
@@ -845,6 +870,31 @@ PUSHCONT {
 		;; active
 		FALSE
 		STIR 1
+		;; addr
+		;; get member addr
+		;; index
+		;; push identifier id
+		PUSH S8
+		;; push identifier eventConfigurations
+		GETGLOB 13
+		PUSHINT 256
+		DICTUGET
+		PUSHCONT {
+			NEWC
+			PUSHINT 1
+			STZEROES
+			PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+			STSLICER
+			PUSHINT 9
+			STZEROES
+			ENDC
+			CTOS
+		}
+		IFNOT
+		SKIPDICT
+		LDMSGADDR
+		DROP
+		STSLICER
 		;; _type
 		;; get member _type
 		;; index
@@ -1150,7 +1200,7 @@ PUSHCONT {
 	STSLICER
 	STSLICECONST 0
 	STSLICECONST 0
-	STSLICECONST x16a1d7d6
+	STSLICECONST x228ee80c
 	;; id
 	;; push identifier id
 	PUSH S8
@@ -1158,6 +1208,31 @@ PUSHCONT {
 	;; active
 	TRUE
 	STIR 1
+	;; addr
+	;; get member addr
+	;; index
+	;; push identifier id
+	PUSH S8
+	;; push identifier eventConfigurations
+	GETGLOB 13
+	PUSHINT 256
+	DICTUGET
+	PUSHCONT {
+		NEWC
+		PUSHINT 1
+		STZEROES
+		PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+		STSLICER
+		PUSHINT 9
+		STZEROES
+		ENDC
+		CTOS
+	}
+	IFNOT
+	SKIPDICT
+	LDMSGADDR
+	DROP
+	STSLICER
 	;; _type
 	;; get member _type
 	;; index
@@ -1220,7 +1295,7 @@ PUSHCONT {
 		STSLICER
 		STSLICECONST 0
 		STSLICECONST 0
-		STSLICECONST x16a1d7d6
+		STSLICECONST x228ee80c
 		;; id
 		;; push identifier id
 		PUSH S8
@@ -1228,6 +1303,31 @@ PUSHCONT {
 		;; active
 		FALSE
 		STIR 1
+		;; addr
+		;; get member addr
+		;; index
+		;; push identifier id
+		PUSH S8
+		;; push identifier eventConfigurations
+		GETGLOB 13
+		PUSHINT 256
+		DICTUGET
+		PUSHCONT {
+			NEWC
+			PUSHINT 1
+			STZEROES
+			PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+			STSLICER
+			PUSHINT 9
+			STZEROES
+			ENDC
+			CTOS
+		}
+		IFNOT
+		SKIPDICT
+		LDMSGADDR
+		DROP
+		STSLICER
 		;; _type
 		;; get member _type
 		;; index
@@ -1782,6 +1882,14 @@ ENDS
 PUSHINT 0
 NEWDICT
 PAIR
+;; ret param: addrs
+PUSHINT 0
+NEWDICT
+PAIR
+;; ret param: _types
+PUSHINT 0
+NEWDICT
+PAIR
 ACCEPT
 ;; push identifier eventConfigurations
 GETGLOB 13
@@ -1823,13 +1931,55 @@ PUSHCONT {
 	INDEX 2
 	PUSHCONT {
 		; expValue
-		PUSH S4
+		PUSH S6
 		; end expValue
 		;; push identifier id
 		PUSH S3
 		;; array.push(..)
 		NEWC
 		STU 256
+		SWAP
+		UNPAIR
+		PUSH S1
+		INC
+		XCHG s3
+		ROTREV
+		PUSHINT 32
+		DICTUSETB
+		PAIR
+		; colValue
+		POP S7
+		; end colValue
+		; expValue
+		PUSH S5
+		; end expValue
+		;; get member addr
+		;; push identifier configuration
+		PUSH S2
+		INDEX 1
+		;; array.push(..)
+		SWAP
+		UNPAIR
+		PUSH S1
+		INC
+		XCHG s3
+		ROTREV
+		PUSHINT 32
+		DICTUSET
+		PAIR
+		; colValue
+		POP S6
+		; end colValue
+		; expValue
+		PUSH S4
+		; end expValue
+		;; get member _type
+		;; push identifier configuration
+		PUSH S2
+		INDEX 3
+		;; array.push(..)
+		NEWC
+		STU 8
 		SWAP
 		UNPAIR
 		PUSH S1
@@ -1878,11 +2028,11 @@ WHILE
 BLKDROP 4
 ; end for
 ;; returning named params
-;; emitting 1 value(s)
-PUSH S1
+;; emitting 3 value(s)
+PUSH S3
 EQINT -1
 PUSHCONT {
-	PUSH S3
+	PUSH S5
 	CTOS
 	LDU 2
 	LDMSGADDR
@@ -1895,7 +2045,17 @@ PUSHCONT {
 	STZEROES
 	STSLICECONST 0
 	STSLICECONST 0
-	STSLICECONST xcadc1643
+	STSLICECONST xb6a4062e
+	PUSH S3
+	UNPAIR
+	XCHG s2
+	STU 32
+	STDICT
+	PUSH S2
+	UNPAIR
+	XCHG s2
+	STU 32
+	STDICT
 	PUSH S1
 	UNPAIR
 	XCHG s2
@@ -1906,7 +2066,7 @@ PUSHCONT {
 	SENDRAWMSG
 }
 IF
-DROP
+BLKDROP 3
 ; end function getActiveEventConfigurations
 PUSHCONT {
 	CALL $c7_to_c4$
@@ -1919,6 +2079,14 @@ SETGLOB 7
 .type	getActiveEventConfigurations_internal, @function
 ; function getActiveEventConfigurations
 ;; ret param: ids
+PUSHINT 0
+NEWDICT
+PAIR
+;; ret param: addrs
+PUSHINT 0
+NEWDICT
+PAIR
+;; ret param: _types
 PUSHINT 0
 NEWDICT
 PAIR
@@ -1963,13 +2131,55 @@ PUSHCONT {
 	INDEX 2
 	PUSHCONT {
 		; expValue
-		PUSH S4
+		PUSH S6
 		; end expValue
 		;; push identifier id
 		PUSH S3
 		;; array.push(..)
 		NEWC
 		STU 256
+		SWAP
+		UNPAIR
+		PUSH S1
+		INC
+		XCHG s3
+		ROTREV
+		PUSHINT 32
+		DICTUSETB
+		PAIR
+		; colValue
+		POP S7
+		; end colValue
+		; expValue
+		PUSH S5
+		; end expValue
+		;; get member addr
+		;; push identifier configuration
+		PUSH S2
+		INDEX 1
+		;; array.push(..)
+		SWAP
+		UNPAIR
+		PUSH S1
+		INC
+		XCHG s3
+		ROTREV
+		PUSHINT 32
+		DICTUSET
+		PAIR
+		; colValue
+		POP S6
+		; end colValue
+		; expValue
+		PUSH S4
+		; end expValue
+		;; get member _type
+		;; push identifier configuration
+		PUSH S2
+		INDEX 3
+		;; array.push(..)
+		NEWC
+		STU 8
 		SWAP
 		UNPAIR
 		PUSH S1

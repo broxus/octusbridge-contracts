@@ -3,7 +3,7 @@ version: '3.8'
 services:
   ganache:
     image: trufflesuite/ganache-cli
-    command: --seed 123123 --blockTime 10
+    command: --seed 123123 --blockTime 5
     ports:
       - 8545:8545
 
