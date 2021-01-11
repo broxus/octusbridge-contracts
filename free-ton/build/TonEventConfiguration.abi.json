@@ -34,7 +34,14 @@
 			],
 			"outputs": [
 				{"components":[{"name":"eventABI","type":"bytes"},{"name":"eventRequiredConfirmations","type":"uint16"},{"name":"eventRequiredRejects","type":"uint16"},{"name":"eventCode","type":"cell"},{"name":"bridgeAddress","type":"address"},{"name":"eventInitialBalance","type":"uint128"}],"name":"_basicInitData","type":"tuple"},
-				{"components":[{"name":"eventAddress","type":"address"},{"name":"proxyAddress","type":"uint160"}],"name":"_initData","type":"tuple"},
+				{"components":[{"name":"eventAddress","type":"address"},{"name":"proxyAddress","type":"uint160"}],"name":"_initData","type":"tuple"}
+			]
+		},
+		{
+			"name": "getType",
+			"inputs": [
+			],
+			"outputs": [
 				{"name":"_type","type":"uint8"}
 			]
 		},

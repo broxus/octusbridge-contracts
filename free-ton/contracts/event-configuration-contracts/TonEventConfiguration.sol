@@ -119,7 +119,7 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration {
         Get event configuration type
         @return _type Configuration type - Ethereum or TON
     */
-    function getType() public view returns(EventType _type) {
+    function getType() public pure returns(EventType _type) {
         return EventType.TON;
     }
 

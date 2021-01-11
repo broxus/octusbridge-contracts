@@ -360,9 +360,18 @@ describe('Test event configurations', function() {
 
   describe('Finish', async function() {
     it('Check active configurations', async function() {
-      const activeConfigurations = await Bridge.runLocal('getActiveEventConfigurations');
+      const {
+        ids,
+      } = await Bridge.runLocal('getActiveEventConfigurations');
       
-      expect(activeConfigurations.map(c => c.toNumber())).to.have.members([111, 333]).but.not.members([222]);
+      expect(ids).to.have.lengthOf(2, 'Wrong active configurations amount');
+      expect(ids.map(c => c.toNumber()))
+        .to
+        .have
+        .members([111, 333], 'Wrong active configurations')
+        .but
+        .not
+        .members([222], 'Configuration should be in-active');
     });
   });
 });

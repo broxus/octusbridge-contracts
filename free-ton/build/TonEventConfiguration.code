@@ -1117,21 +1117,17 @@ TUPLE 6
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 PUSHINT 0
 TUPLE 2
-;; ret param: _type
-PUSHINT 0
 ;; return
 ;; push identifier basicInitData
 GETGLOB 10
 ;; push identifier initData
 GETGLOB 11
-;; get member TON
-PUSHINT 1
-BLKDROP2 3, 3
-;; emitting 3 value(s)
-PUSH S3
+BLKDROP2 2, 2
+;; emitting 2 value(s)
+PUSH S2
 EQINT -1
 PUSHCONT {
-	PUSH S5
+	PUSH S4
 	CTOS
 	LDU 2
 	LDMSGADDR
@@ -1145,8 +1141,8 @@ PUSHCONT {
 	STSLICECONST 0
 	STSLICECONST 1
 	NEWC
-	STSLICECONST xee3c0c35
-	PUSH S4
+	STSLICECONST x8873da97
+	PUSH S3
 	UNTUPLE 6
 	BLKSWAP 1, 6
 	PUSH S6
@@ -1163,7 +1159,7 @@ PUSHCONT {
 	STUR 128
 	XCHG s6
 	BLKDROP 6
-	PUSH S3
+	PUSH S2
 	UNTUPLE 2
 	ROT
 	PUSH S2
@@ -1172,15 +1168,13 @@ PUSHCONT {
 	STUR 160
 	NIP
 	NIP
-	PUSH S2
-	STUR 8
 	STBREFR
 	ENDC
 	PUSHINT 1
 	SENDRAWMSG
 }
 IF
-BLKDROP 3
+DROP2
 ; end function getDetails
 PUSHCONT {
 	CALL $c7_to_c4$
@@ -1206,17 +1200,70 @@ TUPLE 6
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 PUSHINT 0
 TUPLE 2
-;; ret param: _type
-PUSHINT 0
 ;; return
 ;; push identifier basicInitData
 GETGLOB 10
 ;; push identifier initData
 GETGLOB 11
+BLKDROP2 2, 2
+; end function getDetails
+
+.globl	getType
+.public	getType
+.type	getType, @function
+; Decode input parameters
+ENDS
+; function getType
+;; ret param: _type
+PUSHINT 0
+;; return
+DROP
 ;; get member TON
 PUSHINT 1
-BLKDROP2 3, 3
-; end function getDetails
+;; emitting 1 value(s)
+PUSH S1
+EQINT -1
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST xece8faf2
+	PUSH S1
+	STUR 8
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+}
+IF
+DROP
+; end function getType
+PUSHCONT {
+	CALL $c7_to_c4$
+}
+IF
+TRUE
+SETGLOB 7
+
+.globl	getType_internal
+.type	getType_internal, @function
+; function getType
+;; ret param: _type
+PUSHINT 0
+;; return
+DROP
+;; get member TON
+PUSHINT 1
+; end function getType
 
 .globl	updateInitData
 .public	updateInitData
