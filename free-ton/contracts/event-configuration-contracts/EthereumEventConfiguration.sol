@@ -102,18 +102,23 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration {
         Get configuration details.
         @return _basicInitData Basic configuration init data
         @return _initData Configuration init data
-        @return _type Configuration type - Ethereum or TON
     */
     function getDetails() public view returns(
         BasicConfigurationInitData _basicInitData,
-        EthereumEventConfigurationInitData _initData,
-        EventType _type
+        EthereumEventConfigurationInitData _initData
     ) {
         return (
             basicInitData,
-            initData,
-            EventType.Ethereum
+            initData
         );
+    }
+
+    /*
+        Get event configuration type
+        @return _type Configuration type - Ethereum or TON
+    */
+    function getType() public view returns(EventType _type) {
+        return EventType.Ethereum;
     }
 
     /*

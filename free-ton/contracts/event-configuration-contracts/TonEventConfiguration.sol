@@ -103,19 +103,26 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration {
         Get configuration details.
         @return _basicInitData Basic configuration init data
         @return _initData Configuration init data
-        @return _type Configuration type - Ethereum or TON
     */
     function getDetails() public view returns(
         BasicConfigurationInitData _basicInitData,
-        TonEventConfigurationInitData _initData,
-        EventType _type
+        TonEventConfigurationInitData _initData
     ) {
         return (
             basicInitData,
-            initData,
-            EventType.TON
+            initData
         );
     }
+
+
+    /*
+        Get event configuration type
+        @return _type Configuration type - Ethereum or TON
+    */
+    function getType() public view returns(EventType _type) {
+        return EventType.TON;
+    }
+
 
     /*
         Update configuration data

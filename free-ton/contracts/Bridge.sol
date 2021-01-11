@@ -186,13 +186,13 @@ contract Bridge is KeysOwnable, IBridge {
         @returns eventConfigurations List of active event configuration contracts
     */
     function getActiveEventConfigurations() public view returns (
-        uint[] ids
+        (uint, address, EventType)[] configurations
     ) {
         tvm.accept();
 
         for ((uint id, EventConfiguration configuration): eventConfigurations) {
             if (configuration.status) {
-                ids.push(id);
+                ids.push((id, configuration.addr, configuration._type));
             }
         }
     }
