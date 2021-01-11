@@ -14,6 +14,7 @@
     "@truffle/hdwallet-provider": "^1.2.0",
     "bignumber.js": "^9.0.1",
     "chai": "^4.2.0",
+    "commander": "^6.2.1",
     "directory-tree": "^2.2.5",
     "dotenv": "^8.2.0",
     "ganache-cli": "^6.12.1",

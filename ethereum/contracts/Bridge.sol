@@ -5,36 +5,33 @@ pragma experimental ABIEncoderV2;
 
 import "./libraries/SafeMath.sol";
 import "./utils/DistributedOwnable.sol";
+import "./interfaces/IBridge.sol";
 
 
 /**
-    @title Basic smart contract for implementing Bridge logic.
+    @title Ethereum Bridge main contract.
     @dev Uses DistributedOwnable contract as identity and access management solution
 **/
-contract EthereumBridge is DistributedOwnable {
+contract EthereumBridge is DistributedOwnable, IBridge {
     using SafeMath for uint;
 
     /**
         @notice Bridge constructor
         @param owners Initial list of owners addresses
-        @param initialRequiredOwnersToExecuteCall Initial amount of owners required to execute call
-        @param initialRequiredOwnersToUpdateOwners Initial amount of owners required to update owners set
     **/
     constructor(
-        address[] memory owners,
-        uint initialRequiredOwnersToExecuteCall,
-        uint initialRequiredOwnersToUpdateOwners
-    ) DistributedOwnable(
-        owners,
-        initialRequiredOwnersToExecuteCall,
-        initialRequiredOwnersToUpdateOwners
-    ) public {}
+        address[] memory owners
+    ) DistributedOwnable(owners) public {}
 
-    function updateOwnership(bytes payload, bytes[] signatures) public {
+//    function updateOwnership(bytes memory payload, bytes[] memory signatures) public {
+//
+//    }
+//
+//    function updateConfiguration(bytes memory payload, bytes[] memory signatures) public {
+//
+//    }
 
-    }
-
-    function updateConfiguration(bytes payload, bytes[] signatures) public {
-
+    function isRelay(address candidate) public view override returns(bool) {
+        return isOwner(candidate);
     }
 }

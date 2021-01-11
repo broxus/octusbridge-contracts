@@ -345,9 +345,15 @@ describe('Test event configurations', function() {
         id: updateParams.id,
       });
   
-      expect(details.confirmKeys).to.have.lengthOf(0, 'Wrong confirmations amount');
-      expect(details.rejectKeys).to.have.lengthOf(0, 'Wrong rejects amount');
-      expect(details.targetID.toNumber()).to.equal(0, 'Wrong target ID');
+      expect(details.confirmKeys)
+        .to
+        .have.lengthOf(0, 'Wrong confirmations amount');
+      expect(details.rejectKeys)
+        .to
+        .have.lengthOf(0, 'Wrong rejects amount');
+      expect(details.targetID.toNumber())
+        .to
+        .equal(0, 'Wrong target ID');
       
       // Check the EventConfiguration contract
       const configurationDetails = await ValidEthereumEventConfiguration.runLocal('getDetails');
