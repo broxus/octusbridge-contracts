@@ -531,6 +531,19 @@ SETGLOB 11
 ;; push identifier _eventData
 DUP
 ; colValue
+SETGLOB 16
+; end colValue
+;; get member eventData
+;; push identifier _eventData
+DUP
+INDEX 2
+CTOS
+LDU 256
+; colValue
+DROP
+; expValue
+; end expValue
+; colValue
 SETGLOB 15
 ; end colValue
 DROP
@@ -579,6 +592,19 @@ SETGLOB 11
 ;; push identifier _eventData
 DUP
 ; colValue
+SETGLOB 16
+; end colValue
+;; get member eventData
+;; push identifier _eventData
+DUP
+INDEX 2
+CTOS
+LDU 256
+; colValue
+DROP
+; expValue
+; end expValue
+; colValue
 SETGLOB 15
 ; end colValue
 DROP
@@ -615,6 +641,8 @@ PUSHINT 0
 PUSHINT 0
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 TUPLE 9
+;; ret param: _state
+PUSHINT 0
 ;; return
 ;; push identifier callbackReceived
 GETGLOB 11
@@ -623,13 +651,15 @@ GETGLOB 12
 ;; push identifier ethereumEventCode
 GETGLOB 13
 ;; push identifier eventData
+GETGLOB 16
+;; push identifier state
 GETGLOB 15
-BLKDROP2 4, 4
-;; emitting 4 value(s)
-PUSH S4
+BLKDROP2 5, 5
+;; emitting 5 value(s)
+PUSH S5
 EQINT -1
 PUSHCONT {
-	PUSH S6
+	PUSH S7
 	CTOS
 	LDU 2
 	LDMSGADDR
@@ -643,14 +673,14 @@ PUSHCONT {
 	STSLICECONST 0
 	STSLICECONST 1
 	NEWC
-	STSLICECONST xcc854f55
-	PUSH S5
+	STSLICECONST xf9c9aa51
+	PUSH S6
 	STIR 1
-	PUSH S4
+	PUSH S5
 	STSLICER
-	PUSH S3
+	PUSH S4
 	STREFR
-	PUSH S2
+	PUSH S3
 	UNTUPLE 9
 	BLKSWAP 1, 9
 	PUSH S9
@@ -674,6 +704,10 @@ PUSHCONT {
 	PUSH S3
 	STSLICER
 	BLKDROP2 9, 3
+	NEWC
+	PUSH S5
+	STUR 256
+	STBREFR
 	STBREFR
 	STBREFR
 	STBREFR
@@ -682,7 +716,7 @@ PUSHCONT {
 	SENDRAWMSG
 }
 IF
-BLKDROP 4
+BLKDROP 5
 ; end function getDetails
 PUSHCONT {
 	CALL $c7_to_c4$
@@ -713,6 +747,8 @@ PUSHINT 0
 PUSHINT 0
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 TUPLE 9
+;; ret param: _state
+PUSHINT 0
 ;; return
 ;; push identifier callbackReceived
 GETGLOB 11
@@ -721,8 +757,10 @@ GETGLOB 12
 ;; push identifier ethereumEventCode
 GETGLOB 13
 ;; push identifier eventData
+GETGLOB 16
+;; push identifier state
 GETGLOB 15
-BLKDROP2 4, 4
+BLKDROP2 5, 5
 ; end function getDetails
 
 .globl	c7_to_c4
@@ -736,13 +774,15 @@ GETGLOB 6
 STUR 1
 NEWC
 GETGLOB 14
-SWAP
+GETGLOB 15
+XCHG s2
+STU 256
 STU 256
 GETGLOB 10
 GETGLOB 11
 GETGLOB 12
 GETGLOB 13
-GETGLOB 15
+GETGLOB 16
 REVERSE 7, 0
 STBREF
 STU 256
@@ -788,7 +828,9 @@ LDU 256      ; pubkey c4
 LDU 64      ; pubkey timestamp c4
 LDU 1       ; pubkey [timestamp] constructor_flag memory
 LDREFRTOS
+LDU 256
 PLDU 256
+SETGLOB 15
 SETGLOB 14
 LDU 256
 LDI 1
@@ -811,7 +853,7 @@ BLKSWAP 1, 7
 CTOS
 LDU 256
 TUPLE 9
-SETGLOB 15
+SETGLOB 16
 SETGLOB 13
 SETGLOB 12
 SETGLOB 11
@@ -833,7 +875,9 @@ PUSHCONT {
 	LDU 64      ; pubkey timestamp c4
 	LDU 1       ; pubkey [timestamp] constructor_flag memory
 	LDREFRTOS
+	LDU 256
 	PLDU 256
+	SETGLOB 15
 	SETGLOB 14
 	LDU 256
 	LDI 1
@@ -856,7 +900,7 @@ PUSHCONT {
 	CTOS
 	LDU 256
 	TUPLE 9
-	SETGLOB 15
+	SETGLOB 16
 	SETGLOB 13
 	SETGLOB 12
 	SETGLOB 11
@@ -895,6 +939,9 @@ PUSHCONT {
 	; init ethereumEventPubKey
 	PUSHINT 0
 	SETGLOB 14
+	; init state
+	PUSHINT 0
+	SETGLOB 15
 	; init eventData
 	PUSHINT 0
 	PUSHINT 0
@@ -907,7 +954,7 @@ PUSHCONT {
 	PUSHINT 0
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	TUPLE 9
-	SETGLOB 15
+	SETGLOB 16
 	; set contract pubkey
 	PUSHINT 0
 	SWAP

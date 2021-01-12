@@ -47,7 +47,7 @@ describe('Test Ethereum event', async function() {
         eventInitData: {
           eventTransaction: 1,
           eventIndex: 1,
-          eventData: '',
+          eventData: 'te6ccgEBAQEAIgAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEtaH',
           eventBlockNumber: 1,
           eventBlock: 1,
           ethereumEventConfiguration: EthereumEventConfiguration.address,
@@ -122,6 +122,10 @@ describe('Test Ethereum event', async function() {
       expect((await tonWrapper.getBalance(EthereumEvent.address)).toNumber()).to.equal(0, 'Wrong balance');
 
       const proxyDetails = await EventProxy.runLocal('getDetails', {});
+
+      expect(proxyDetails._state.toNumber())
+        .to
+        .equal(1234567, 'Wrong decoded event data');
 
       expect(proxyDetails._ethereumEventConfiguration)
         .to
