@@ -16,6 +16,7 @@ interface IBridge {
 
     struct BridgeRelay {
         uint key;
+        uint160 ethereumAccount;
         bool action;
     }
 

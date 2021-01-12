@@ -1,9 +1,10 @@
-require('dotenv').config({ path: './../env/freeton.env' });
-
 const logger = require('mocha-logger');
 const { expect } = require('chai');
 const freeton = require('ton-testing-suite');
 const _ = require('underscore');
+
+const BigNumber = require('bignumber.js');
+BigNumber.config({ EXPONENTIAL_AT: 257 });
 
 
 let Bridge;
@@ -12,8 +13,8 @@ let target;
 
 
 const tonWrapper = new freeton.TonWrapper({
-  network: process.env.NETWORK,
-  seed: process.env.SEED,
+  network: process.env.TON_NETWORK,
+  seed: process.env.TON_SEED,
 });
 
 
@@ -36,6 +37,7 @@ describe('Test Bridge relay update', async function() {
     it('Initial check', async () => {
       target = {
         key: `0x${key.public}`,
+        ethereumAccount: 123,
         action: true,
       };
       
@@ -108,6 +110,7 @@ describe('Test Bridge relay update', async function() {
     it('Confirm enough times', async function() {
       target = {
         key: `0x${key.public}`,
+        ethereumAccount: 123,
         action: false,
       };
 

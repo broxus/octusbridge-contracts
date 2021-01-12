@@ -12,6 +12,24 @@
 			]
 		},
 		{
+			"name": "getEthereumAccount",
+			"inputs": [
+				{"name":"key","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"ethereumAccount","type":"uint160"}
+			]
+		},
+		{
+			"name": "getKeys",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"keys","type":"uint256[]"},
+				{"name":"ethereumAccounts","type":"uint160[]"}
+			]
+		},
+		{
 			"name": "constructor",
 			"inputs": [
 			],
@@ -22,5 +40,21 @@
 	"data": [
 	],
 	"events": [
+		{
+			"name": "OwnershipGranted",
+			"inputs": [
+				{"name":"key","type":"uint256"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "OwnershipRemoved",
+			"inputs": [
+				{"name":"key","type":"uint256"}
+			],
+			"outputs": [
+			]
+		}
 	]
 }
