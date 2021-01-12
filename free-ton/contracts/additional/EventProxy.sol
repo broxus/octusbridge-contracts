@@ -15,6 +15,7 @@ contract EventProxy is IProxy {
     address ethereumEventConfiguration;
     TvmCell ethereumEventCode;
     uint ethereumEventPubKey;
+    uint state;
 
     IEvent.EthereumEventInitData eventData;
 
@@ -55,19 +56,22 @@ contract EventProxy is IProxy {
 
         callbackReceived = true;
         eventData = _eventData;
+        (state) = _eventData.eventData.toSlice().decode((uint));
     }
 
     function getDetails() public view returns (
         bool _callbackReceived,
         address _ethereumEventConfiguration,
         TvmCell _ethereumEventCode,
-        IEvent.EthereumEventInitData _eventData
+        IEvent.EthereumEventInitData _eventData,
+        uint _state
     ) {
         return (
             callbackReceived,
             ethereumEventConfiguration,
             ethereumEventCode,
-            eventData
+            eventData,
+            state
         );
     }
 }
