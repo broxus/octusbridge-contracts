@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "migrate-ton": "cd free-ton && node migration && cd ..",
+    "migrate-ton": "cd free-ton && node migration/index.js $npm_config_determine && cd ..",
     "compile-ton": "cd free-ton && node compile && cd ..",
     "test-ton": "cd free-ton && mocha test/$npm_config_test --exit && cd .."
   },
@@ -14,8 +14,10 @@
     "@truffle/hdwallet-provider": "^1.2.0",
     "bignumber.js": "^9.0.1",
     "chai": "^4.2.0",
+    "commander": "^6.2.1",
     "directory-tree": "^2.2.5",
     "dotenv": "^8.2.0",
+    "ethers": "^5.0.25",
     "ganache-cli": "^6.12.1",
     "minimist": "^1.2.5",
     "mocha": "^8.2.1",
@@ -24,7 +26,7 @@
     "solidity-docgen": "^0.5.7",
     "ton-client-js": "^0.28.1",
     "ton-client-node-js": "^0.24.0",
-    "ton-testing-suite": "^1.0.4",
+    "ton-testing-suite": "^1.0.5",
     "truffle": "^5.1.51",
     "underscore": "^1.12.0",
     "web3": "^1.3.0"

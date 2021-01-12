@@ -112,15 +112,109 @@ NIP
 NIP
 ; end function getKeyStatus
 
+.globl	getEthereumAccount
+.public	getEthereumAccount
+.type	getEthereumAccount, @function
+GETGLOB 1
+ISNULL
+PUSHCONT {
+	CALL $c4_to_c7$
+}
+IF
+; Decode input parameters
+; Decode key
+LDU 256
+ENDS
+;; param: key
+; function getEthereumAccount
+;; ret param: ethereumAccount
+PUSHINT 0
+;; return
+;; index
+;; push identifier key
+PUSH S1
+;; push identifier ownerEthereumAccounts
+GETGLOB 11
+PUSHINT 256
+DICTUGET
+PUSHCONT {
+	PLDU 160
+}
+PUSHCONT {
+	PUSHINT 0
+}
+IFELSE
+NIP
+NIP
+;; emitting 1 value(s)
+PUSH S1
+EQINT -1
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST xe7f62634
+	PUSH S1
+	STUR 160
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+}
+IF
+DROP
+; end function getEthereumAccount
+PUSHCONT {
+	CALL $c7_to_c4$
+}
+IF
+TRUE
+SETGLOB 7
+
+.globl	getEthereumAccount_internal
+.type	getEthereumAccount_internal, @function
+;; param: key
+; function getEthereumAccount
+;; ret param: ethereumAccount
+PUSHINT 0
+;; return
+;; index
+;; push identifier key
+PUSH S1
+;; push identifier ownerEthereumAccounts
+GETGLOB 11
+PUSHINT 256
+DICTUGET
+PUSHCONT {
+	PLDU 160
+}
+PUSHCONT {
+	PUSHINT 0
+}
+IFELSE
+NIP
+NIP
+; end function getEthereumAccount
+
 .globl	_grantOwnership_internal
 .type	_grantOwnership_internal, @function
 ;; param: key
+;; param: ethereumAccount
 ; function _grantOwnership
 ; expValue
 ;; fetch ownerKeys
 GETGLOB 10
 ;; push identifier key
-PUSH S1
+PUSH S2
 SWAP
 ; end expValue
 TRUE
@@ -132,13 +226,45 @@ PUSHINT 256
 DICTUSETB
 SETGLOB 10
 ; end colValue
-DROP
+; expValue
+;; fetch ownerEthereumAccounts
+GETGLOB 11
+;; push identifier key
+PUSH S2
+SWAP
+; end expValue
+;; push identifier ethereumAccount
+PUSH S2
+; colValue
+NEWC
+STU 160
+ROTREV
+PUSHINT 256
+DICTUSETB
+SETGLOB 11
+; end colValue
+;; emit OwnershipGranted
+NEWC
+PUSHSLICE xc0000000000000000000000002_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x7e5ebe43
+;; key
+;; push identifier key
+PUSH S2
+STUR 256
+ENDC
+PUSHINT 1
+SENDRAWMSG
+DROP2
 ; end function _grantOwnership
 
 .globl	_removeOwnership_internal
 .type	_removeOwnership_internal, @function
 ;; param: key
 ; function _removeOwnership
+;; delete
 ; expValue
 ;; fetch ownerKeys
 GETGLOB 10
@@ -146,17 +272,357 @@ GETGLOB 10
 PUSH S1
 SWAP
 ; end expValue
-FALSE
-; colValue
-NEWC
-STI 1
-ROTREV
+PUSH S1
+SWAP
 PUSHINT 256
-DICTUSETB
+DICTUDEL
+DROP
+; colValue
+NIP
 SETGLOB 10
 ; end colValue
+;; delete
+; expValue
+;; fetch ownerEthereumAccounts
+GETGLOB 11
+;; push identifier key
+PUSH S1
+SWAP
+; end expValue
+PUSH S1
+SWAP
+PUSHINT 256
+DICTUDEL
+DROP
+; colValue
+NIP
+SETGLOB 11
+; end colValue
+;; emit OwnershipRemoved
+NEWC
+PUSHSLICE xc0000000000000000000000002_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x00f93e0c
+;; key
+;; push identifier key
+PUSH S1
+STUR 256
+ENDC
+PUSHINT 1
+SENDRAWMSG
 DROP
 ; end function _removeOwnership
+
+.globl	getKeys
+.public	getKeys
+.type	getKeys, @function
+GETGLOB 1
+ISNULL
+PUSHCONT {
+	CALL $c4_to_c7$
+}
+IF
+; Decode input parameters
+ENDS
+; function getKeys
+;; ret param: keys
+PUSHINT 0
+NEWDICT
+PAIR
+;; ret param: ethereumAccounts
+PUSHINT 0
+NEWDICT
+PAIR
+;; push identifier ownerKeys
+GETGLOB 10
+DUP
+PUSHINT 256
+DICTUMIN
+NULLSWAPIFNOT
+PUSHCONT {
+	SWAP
+	PLDI 1
+	TUPLE 2
+}
+IF
+DUP
+ISNULL
+PUSHCONT {
+	NULL
+	NULL
+}
+PUSHCONT {
+	UNTUPLE 2
+	PUSH S1
+}
+IFELSE
+PUSHCONT {
+	DUP
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	;; if
+	;; push identifier status
+	PUSH S1
+	PUSHCONT {
+		; expValue
+		PUSH S5
+		; end expValue
+		;; push identifier key
+		PUSH S3
+		;; array.push(..)
+		NEWC
+		STU 256
+		SWAP
+		UNPAIR
+		PUSH S1
+		INC
+		XCHG s3
+		ROTREV
+		PUSHINT 32
+		DICTUSETB
+		PAIR
+		; colValue
+		POP S6
+		; end colValue
+		; expValue
+		PUSH S4
+		; end expValue
+		;; index
+		;; push identifier key
+		PUSH S3
+		;; push identifier ownerEthereumAccounts
+		GETGLOB 11
+		PUSHINT 256
+		DICTUGET
+		PUSHCONT {
+			PLDU 160
+		}
+		PUSHCONT {
+			PUSHINT 0
+		}
+		IFELSE
+		;; array.push(..)
+		NEWC
+		STU 160
+		SWAP
+		UNPAIR
+		PUSH S1
+		INC
+		XCHG s3
+		ROTREV
+		PUSHINT 32
+		DICTUSETB
+		PAIR
+		; colValue
+		POP S5
+		; end colValue
+	}
+	IF
+	;; end if
+	DUP
+	PUSH S4
+	PUSHINT 256
+	DICTUGETNEXT
+	NULLSWAPIFNOT
+	PUSHCONT {
+		SWAP
+		PLDI 1
+		TUPLE 2
+	}
+	IF
+	DUP
+	ISNULL
+	PUSHCONT {
+		POP S1
+	}
+	PUSHCONT {
+		UNTUPLE 2
+		POP S3
+		DUP
+		POP S4
+		POP S1
+	}
+	IFELSE
+}
+WHILE
+BLKDROP 4
+; end for
+;; returning named params
+;; emitting 2 value(s)
+PUSH S2
+EQINT -1
+PUSHCONT {
+	PUSH S4
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST x8a77a422
+	PUSH S2
+	UNPAIR
+	XCHG s2
+	STU 32
+	STDICT
+	PUSH S1
+	UNPAIR
+	XCHG s2
+	STU 32
+	STDICT
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+}
+IF
+DROP2
+; end function getKeys
+PUSHCONT {
+	CALL $c7_to_c4$
+}
+IF
+TRUE
+SETGLOB 7
+
+.globl	getKeys_internal
+.type	getKeys_internal, @function
+; function getKeys
+;; ret param: keys
+PUSHINT 0
+NEWDICT
+PAIR
+;; ret param: ethereumAccounts
+PUSHINT 0
+NEWDICT
+PAIR
+;; push identifier ownerKeys
+GETGLOB 10
+DUP
+PUSHINT 256
+DICTUMIN
+NULLSWAPIFNOT
+PUSHCONT {
+	SWAP
+	PLDI 1
+	TUPLE 2
+}
+IF
+DUP
+ISNULL
+PUSHCONT {
+	NULL
+	NULL
+}
+PUSHCONT {
+	UNTUPLE 2
+	PUSH S1
+}
+IFELSE
+PUSHCONT {
+	DUP
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	;; if
+	;; push identifier status
+	PUSH S1
+	PUSHCONT {
+		; expValue
+		PUSH S5
+		; end expValue
+		;; push identifier key
+		PUSH S3
+		;; array.push(..)
+		NEWC
+		STU 256
+		SWAP
+		UNPAIR
+		PUSH S1
+		INC
+		XCHG s3
+		ROTREV
+		PUSHINT 32
+		DICTUSETB
+		PAIR
+		; colValue
+		POP S6
+		; end colValue
+		; expValue
+		PUSH S4
+		; end expValue
+		;; index
+		;; push identifier key
+		PUSH S3
+		;; push identifier ownerEthereumAccounts
+		GETGLOB 11
+		PUSHINT 256
+		DICTUGET
+		PUSHCONT {
+			PLDU 160
+		}
+		PUSHCONT {
+			PUSHINT 0
+		}
+		IFELSE
+		;; array.push(..)
+		NEWC
+		STU 160
+		SWAP
+		UNPAIR
+		PUSH S1
+		INC
+		XCHG s3
+		ROTREV
+		PUSHINT 32
+		DICTUSETB
+		PAIR
+		; colValue
+		POP S5
+		; end colValue
+	}
+	IF
+	;; end if
+	DUP
+	PUSH S4
+	PUSHINT 256
+	DICTUGETNEXT
+	NULLSWAPIFNOT
+	PUSHCONT {
+		SWAP
+		PLDI 1
+		TUPLE 2
+	}
+	IF
+	DUP
+	ISNULL
+	PUSHCONT {
+		POP S1
+	}
+	PUSHCONT {
+		UNTUPLE 2
+		POP S3
+		DUP
+		POP S4
+		POP S1
+	}
+	IFELSE
+}
+WHILE
+BLKDROP 4
+; end for
+;; returning named params
+; end function getKeys
 
 .globl	c7_to_c4
 .type	c7_to_c4, @function
@@ -168,7 +634,9 @@ STUR 64
 GETGLOB 6
 STUR 1
 GETGLOB 10
-SWAP
+GETGLOB 11
+XCHG s2
+STDICT
 STDICT
 ENDC
 POP C4
@@ -180,7 +648,9 @@ CTOS        ; c4
 LDU 256      ; pubkey c4
 LDU 64      ; pubkey timestamp c4
 LDU 1       ; pubkey [timestamp] constructor_flag memory
+LDDICT
 PLDDICT
+SETGLOB 11
 SETGLOB 10
 TRUE
 SETGLOB 1   ; pubkey [timestamp] constructor_flag
@@ -198,7 +668,9 @@ PUSHCONT {
 	LDU 256      ; pubkey c4
 	LDU 64      ; pubkey timestamp c4
 	LDU 1       ; pubkey [timestamp] constructor_flag memory
+	LDDICT
 	PLDDICT
+	SETGLOB 11
 	SETGLOB 10
 	TRUE
 	SETGLOB 1   ; pubkey [timestamp] constructor_flag
@@ -211,6 +683,9 @@ PUSHCONT {
 	; init ownerKeys
 	NEWDICT
 	SETGLOB 10
+	; init ownerEthereumAccounts
+	NEWDICT
+	SETGLOB 11
 	; set contract pubkey
 	PUSHINT 0
 	SWAP

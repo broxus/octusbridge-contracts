@@ -3,7 +3,9 @@ version: '3.8'
 services:
   ganache:
     image: trufflesuite/ganache-cli
-    command: --seed 123123 --blockTime 5
+    command: --mnemonic "${ETH_SEED}" --accounts ${RELAYS_AMOUNT} --blockTime 5
+    env_file:
+      - settings.env
     ports:
       - 8545:8545
 
@@ -13,9 +15,10 @@ services:
       dockerfile: Dockerfile
     image: migrator_img
     command: wait-for-it.sh -s -t 0 ganache:8545 -- /node_modules/.bin/truffle migrate --network development
+    env_file:
+      - settings.env
     volumes:
     - ./ethereum:/app/
-    - ./env:/env
     depends_on:
       - ganache
 
@@ -28,13 +31,14 @@ services:
 
   ton_migrator:
     image: migrator_img
-    command: bash -c "sleep 10 && npm run migrate-ton && /node_modules/.bin/mocha test/ --exit"
+    command: bash -c "sleep 10 && DETERMINE_DEPLOY=1 npm run migrate-ton && /node_modules/.bin/mocha test/ --exit"
+    env_file:
+      - settings.env
     volumes:
       - ./free-ton:/app/
       - ./free-ton:/app/free-ton
       - ./free-ton/build:/app/free-ton/build
       - ./package.json:/app/package.json
       - ./env:/app/env
-      - ./env:/env
     depends_on:
       - ton_node

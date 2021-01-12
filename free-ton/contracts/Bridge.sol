@@ -68,17 +68,20 @@ contract Bridge is KeysOwnable, IBridge {
     /*
         Basic Bridge contract
         @param _relayKeys List of relays public keys
+        @param _relayEthereumAccounts List of relays Ethereum accounts
         @param _bridgeConfiguration Initial Bridge configuration
     */
     constructor(
         uint[] _relayKeys,
+        uint160[] _relayEthereumAccounts,
         BridgeConfiguration _bridgeConfiguration
     ) public {
         require(tvm.pubkey() != 0);
+        require(_relayKeys.length == _relayEthereumAccounts.length);
         tvm.accept();
 
         for (uint i=0; i < _relayKeys.length; i++) {
-            _grantOwnership(_relayKeys[i]);
+            _grantOwnership(_relayKeys[i], _relayEthereumAccounts[i]);
         }
 
         bridgeConfiguration = _bridgeConfiguration;
@@ -521,7 +524,7 @@ contract Bridge is KeysOwnable, IBridge {
         // - If enough confirmations received - update configuration and remove voting
         if (confirmKeys.length == bridgeConfiguration.bridgeRelayUpdateRequiredConfirmations) {
             if (target.action) {
-                _grantOwnership(target.key);
+                _grantOwnership(target.key, target.ethereumAccount);
             } else {
                 _removeOwnership(target.key);
             }

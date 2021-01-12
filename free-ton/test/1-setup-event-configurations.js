@@ -1,5 +1,3 @@
-require('dotenv').config({ path: './../env/freeton.env' });
-
 const logger = require('mocha-logger');
 const { expect } = require('chai');
 const freeton = require('ton-testing-suite');
@@ -15,8 +13,8 @@ let EthereumEventConfigurationContracts;
 
 
 const tonWrapper = new freeton.TonWrapper({
-  network: process.env.NETWORK,
-  seed: process.env.SEED,
+  network: process.env.TON_NETWORK,
+  seed: process.env.TON_SEED,
 });
 
 

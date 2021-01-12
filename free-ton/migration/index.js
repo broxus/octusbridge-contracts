@@ -1,22 +1,30 @@
-require('dotenv').config({ path: './../env/freeton.env' });
-
 const freeton = require('ton-testing-suite');
+const { Wallet } = require('ethers');
+
+const BigNumber = require('bignumber.js');
+BigNumber.config({ EXPONENTIAL_AT: 257 });
+
+
+// True gives the repeatable migration
+const determineDeploy = !!process.env.DETERMINE_DEPLOY;
 
 const giverConfig = {
-  address: process.env.GIVER_CONTRACT,
-  abi: JSON.parse(process.env.GIVER_ABI),
+  address: process.env.TON_GIVER_CONTRACT,
+  abi: JSON.parse(process.env.TON_GIVER_ABI),
 };
 
 const tonWrapper = new freeton.TonWrapper({
-  network: process.env.NETWORK,
-  seed: process.env.SEED,
+  network: process.env.TON_NETWORK,
+  seed: process.env.TON_SEED,
   giverConfig,
 });
 
 
 // Deploy contracts
 (async () => {
-  await tonWrapper.setup();
+  const relaysAmount = parseInt(process.env.RELAYS_AMOUNT);
+
+  await tonWrapper.setup(relaysAmount);
   
   tonWrapper.keys.map((key, i) => console.log(`Key #${i} - ${JSON.stringify(key)}`));
 
@@ -24,12 +32,20 @@ const tonWrapper = new freeton.TonWrapper({
   
   const Bridge = await freeton
     .requireContract(tonWrapper, 'Bridge');
-
+  
+  // Derive Ethereum addresses
+  // - Prepare paths
+  const paths = [...Array(relaysAmount).keys()].map(i => `m/44'/60'/0'/0/${i}`);
+  const ethereumAccounts = paths
+    .map(p => Wallet.fromMnemonic(process.env.ETH_SEED, p)) // Convert path to account
+    .map(a => new BigNumber(a.address.toLowerCase())); // Convert address to uint
+  
   // - Deploy Bridge
   await migration.deploy({
     contract: Bridge,
     constructorParams: {
       _relayKeys: tonWrapper.keys.map((key) => `0x${key.public}`),
+      _relayEthereumAccounts: ethereumAccounts,
       _bridgeConfiguration: {
         eventConfigurationRequiredConfirmations: 2,
         eventConfigurationRequiredRejects: 2,
@@ -40,9 +56,10 @@ const tonWrapper = new freeton.TonWrapper({
         active: true,
       }
     },
-    initParams: {},
+    initParams: {
+      _randomNonce: determineDeploy ? 1 : freeton.utils.getRandomNonce(),
+    },
     initialBalance: freeton.utils.convertCrystal('50', 'nano'),
-    _randomNonce: true,
   }).catch(e => console.log(e));
 
   // - Prepare Ethereum event configuration
@@ -59,7 +76,7 @@ const tonWrapper = new freeton.TonWrapper({
     .requireContract(tonWrapper, 'EventProxy');
 
   // -- Fix EventProxy nonce to determine it's address
-  const eventProxyNonce = freeton.utils.getRandomNonce();
+  const eventProxyNonce = determineDeploy ? 1 : freeton.utils.getRandomNonce();
 
   // -- Derive EventProxy future address
   const eventProxyFutureAddress = await EventProxy.deploy(
