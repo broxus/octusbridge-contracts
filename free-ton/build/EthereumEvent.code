@@ -188,6 +188,13 @@ PUSHCONT {
 	SETGLOB 24
 	; end colValue
 	;; transfer()
+	;; get member balance
+	GETPARAM 7
+	INDEX 0
+	PUSHINT 100000
+	;; -
+	SUB
+	UFITS 128
 	;; get member ethereumEventConfiguration
 	;; push identifier initData
 	GETGLOB 23
@@ -195,12 +202,14 @@ PUSHCONT {
 	NEWC
 	STSLICECONST x62_
 	STSLICE
-	PUSHINT 109
+	SWAP
+	STGRAMS
+	PUSHINT 105
 	STZEROES
 	STSLICECONST 0
 	STSLICECONST 0
 	ENDC
-	PUSHINT 128
+	PUSHINT 1
 	SENDRAWMSG
 }
 IF
@@ -344,6 +353,13 @@ PUSHCONT {
 	SETGLOB 24
 	; end colValue
 	;; transfer()
+	;; get member balance
+	GETPARAM 7
+	INDEX 0
+	PUSHINT 100000
+	;; -
+	SUB
+	UFITS 128
 	;; get member ethereumEventConfiguration
 	;; push identifier initData
 	GETGLOB 23
@@ -351,12 +367,14 @@ PUSHCONT {
 	NEWC
 	STSLICECONST x62_
 	STSLICE
-	PUSHINT 109
+	SWAP
+	STGRAMS
+	PUSHINT 105
 	STZEROES
 	STSLICECONST 0
 	STSLICECONST 0
 	ENDC
-	PUSHINT 128
+	PUSHINT 1
 	SENDRAWMSG
 }
 IF
@@ -507,6 +525,13 @@ PUSHCONT {
 	SETGLOB 24
 	; end colValue
 	;; transfer()
+	;; get member balance
+	GETPARAM 7
+	INDEX 0
+	PUSHINT 100000
+	;; -
+	SUB
+	UFITS 128
 	;; get member ethereumEventConfiguration
 	;; push identifier initData
 	GETGLOB 23
@@ -514,12 +539,14 @@ PUSHCONT {
 	NEWC
 	STSLICECONST x62_
 	STSLICE
-	PUSHINT 109
+	SWAP
+	STGRAMS
+	PUSHINT 105
 	STZEROES
 	STSLICECONST 0
 	STSLICECONST 0
 	ENDC
-	PUSHINT 128
+	PUSHINT 1
 	SENDRAWMSG
 }
 IF
@@ -662,6 +689,13 @@ PUSHCONT {
 	SETGLOB 24
 	; end colValue
 	;; transfer()
+	;; get member balance
+	GETPARAM 7
+	INDEX 0
+	PUSHINT 100000
+	;; -
+	SUB
+	UFITS 128
 	;; get member ethereumEventConfiguration
 	;; push identifier initData
 	GETGLOB 23
@@ -669,12 +703,14 @@ PUSHCONT {
 	NEWC
 	STSLICECONST x62_
 	STSLICE
-	PUSHINT 109
+	SWAP
+	STGRAMS
+	PUSHINT 105
 	STZEROES
 	STSLICECONST 0
 	STSLICECONST 0
 	ENDC
-	PUSHINT 128
+	PUSHINT 1
 	SENDRAWMSG
 }
 IF

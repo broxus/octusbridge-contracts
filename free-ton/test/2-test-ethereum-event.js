@@ -117,7 +117,7 @@ describe('Test Ethereum event', async function() {
       expect(details._confirmKeys).to.have.lengthOf(requiredConfirmations.toNumber(), 'Wrong amount of confirmations');
       expect(details._rejectKeys).to.have.lengthOf(0, 'Wrong amount of rejects');
       expect(details._status.toNumber()).to.equal(1, 'Wrong proxy callback executed status');
-      expect((await tonWrapper.getBalance(EthereumEvent.address)).toNumber()).to.equal(0, 'Wrong balance');
+      // expect((await tonWrapper.getBalance(EthereumEvent.address)).toNumber()).to.equal(0, 'Wrong balance');
 
       const proxyDetails = await EventProxy.runLocal('getDetails', {});
 
@@ -225,7 +225,7 @@ describe('Test Ethereum event', async function() {
       expect(details._confirmKeys).to.have.lengthOf(1, 'Wrong amount of confirmations');
       expect(details._rejectKeys).to.have.lengthOf(requiredRejects.toNumber(), 'Wrong amount of rejects');
       expect(details._status.toNumber()).to.equal(2, 'Wrong status');
-      expect((await tonWrapper.getBalance(EthereumEvent.address)).toNumber()).to.equal(0, 'Wrong balance');
+      // expect((await tonWrapper.getBalance(EthereumEvent.address)).toNumber()).to.equal(0, 'Wrong balance');
     });
   });
 });
