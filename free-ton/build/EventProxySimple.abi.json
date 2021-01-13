@@ -30,6 +30,14 @@
 			]
 		},
 		{
+			"name": "setState",
+			"inputs": [
+				{"name":"_state","type":"uint256"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "getDetails",
 			"inputs": [
 			],
@@ -46,5 +54,13 @@
 		{"key":1,"name":"_randomNonce","type":"uint256"}
 	],
 	"events": [
+		{
+			"name": "TONStateChange",
+			"inputs": [
+				{"name":"state","type":"uint256"}
+			],
+			"outputs": [
+			]
+		}
 	]
 }

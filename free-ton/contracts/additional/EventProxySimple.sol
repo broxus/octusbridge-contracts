@@ -19,6 +19,8 @@ contract EventProxySimple is IProxy {
 
     IEvent.EthereumEventInitData eventData;
 
+    event TONStateChange(uint state);
+
     constructor(
         address _ethereumEventConfiguration,
         TvmCell _ethereumEventCode,
@@ -57,6 +59,14 @@ contract EventProxySimple is IProxy {
         callbackReceived = true;
         eventData = _eventData;
         (state) = _eventData.eventData.toSlice().decode((uint));
+    }
+
+    function setState(uint _state) public {
+        tvm.accept();
+
+        state = _state;
+
+        emit TONStateChange(_state);
     }
 
     function getDetails() public view returns (
