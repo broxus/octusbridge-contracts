@@ -4,6 +4,7 @@ pragma experimental ABIEncoderV2;
 
 import "./../interfaces/IToken.sol";
 import "./../interfaces/IBridge.sol";
+import "./../interfaces/IProxy.sol";
 
 
 /*
@@ -11,7 +12,7 @@ import "./../interfaces/IBridge.sol";
     token transfers between Ethereum and TON with Broxus bridge.
     Each ProxyToken corresponds to a single
 */
-contract ProxyToken {
+contract ProxyToken is IProxy {
     address public token;
     address public bridge;
 
@@ -59,8 +60,13 @@ contract ProxyToken {
             'Not enough relays signed'
         );
 
-        (uint amount, address addr) = abi.decode(
+        (TONEvent memory _event) = abi.decode(
             payload,
+            (TONEvent)
+        );
+
+        (uint amount, address addr) = abi.decode(
+            _event.eventData,
             (uint, address)
         );
 
