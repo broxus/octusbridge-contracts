@@ -610,6 +610,78 @@ SETGLOB 15
 DROP
 ; end function broxusBridgeCallback
 
+.globl	setState
+.public	setState
+.type	setState, @function
+GETGLOB 1
+ISNULL
+PUSHCONT {
+	CALL $c4_to_c7$
+}
+IF
+; Decode input parameters
+; Decode _state
+LDU 256
+ENDS
+;; param: _state
+; function setState
+ACCEPT
+; expValue
+; end expValue
+;; push identifier _state
+DUP
+; colValue
+SETGLOB 15
+; end colValue
+;; emit TONStateChange
+NEWC
+PUSHSLICE xc0000000000000000000000002_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x073120b6
+;; state
+;; push identifier _state
+PUSH S1
+STUR 256
+ENDC
+PUSHINT 1
+SENDRAWMSG
+DROP
+; end function setState
+CALL $c7_to_c4$
+TRUE
+SETGLOB 7
+
+.globl	setState_internal
+.type	setState_internal, @function
+;; param: _state
+; function setState
+ACCEPT
+; expValue
+; end expValue
+;; push identifier _state
+DUP
+; colValue
+SETGLOB 15
+; end colValue
+;; emit TONStateChange
+NEWC
+PUSHSLICE xc0000000000000000000000002_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x073120b6
+;; state
+;; push identifier _state
+PUSH S1
+STUR 256
+ENDC
+PUSHINT 1
+SENDRAWMSG
+DROP
+; end function setState
+
 .globl	getDetails
 .public	getDetails
 .type	getDetails, @function
