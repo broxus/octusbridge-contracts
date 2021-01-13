@@ -12,8 +12,10 @@ import "./interfaces/IBridge.sol";
     @title Basic smart contract for implementing Bridge logic.
     @dev Uses DistributedOwnable contract as identity and access management solution
 **/
-contract EthereumBridge is DistributedOwnable, IBridge {
+contract Bridge is DistributedOwnable, IBridge {
     using SafeMath for uint;
+
+    mapping(address => bool) relays;
 
     /**
         @notice Bridge constructor

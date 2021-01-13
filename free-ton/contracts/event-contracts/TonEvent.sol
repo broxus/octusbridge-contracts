@@ -51,7 +51,11 @@ contract TonEvent is IEvent, ErrorCodes {
     function confirm(
         uint relayKey,
         bytes eventDataSignature
-    ) public onlyEventConfiguration(initData.tonEventConfiguration) eventInProcess {
+    )
+        public
+        onlyEventConfiguration(initData.tonEventConfiguration)
+        eventInProcess
+    {
         for (uint i=0; i<confirmKeys.length; i++) {
             require(confirmKeys[i] != relayKey, KEY_ALREADY_CONFIRMED);
         }
@@ -71,7 +75,13 @@ contract TonEvent is IEvent, ErrorCodes {
         @dev Should be called by TonEventConfiguration
         @param relayKey Public key of the relay, who initiated the config creation
     */
-    function reject(uint relayKey) public onlyEventConfiguration(initData.tonEventConfiguration) eventInProcess {
+    function reject(
+        uint relayKey
+    )
+        public
+        onlyEventConfiguration(initData.tonEventConfiguration)
+        eventInProcess
+    {
         for (uint i=0; i<rejectKeys.length; i++) {
             require(rejectKeys[i] != relayKey, KEY_ALREADY_REJECTED);
         }

@@ -8,7 +8,7 @@ pragma experimental ABIEncoderV2;
     @dev Emits StateChange(uint,address) event each time someone calls the setStateToTON method
     @dev Allows to transfer event from TON by processing the payload and
 **/
-contract EventContractSimple {
+contract ProxySimple {
     uint public state = 0;
 
     event EthereumStateChange(uint state);
@@ -20,7 +20,7 @@ contract EventContractSimple {
         emit EthereumStateChange(_state);
     }
 
-    function setStateFromTON(bytes memory payload, bytes[] memory signature) public {
+    function broxusBridgeCallback(bytes memory payload, bytes[] memory signature) public {
         // Check signatures validity and sufficiency with Bridge contract
         require(signature.length > 0);
 

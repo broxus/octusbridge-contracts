@@ -60,7 +60,6 @@ describe('Test Bridge configuration update', async function() {
           _bridgeConfiguration: newBridgeConfiguration,
           _vote: {
             signature: freeton.utils.stringToBytesArray('123'),
-            payload: freeton.utils.stringToBytesArray('123')
           },
         }, tonWrapper.keys[keyId]);
       }
@@ -87,7 +86,6 @@ describe('Test Bridge configuration update', async function() {
           _bridgeConfiguration: newBridgeConfiguration,
           _vote: {
             signature: freeton.utils.stringToBytesArray(''),
-            payload: freeton.utils.stringToBytesArray('')
           },
         }, tonWrapper.keys[keyId]);
       }
@@ -117,7 +115,6 @@ describe('Test Bridge configuration update', async function() {
           _bridgeConfiguration: newBridgeConfiguration,
           _vote: {
             signature: freeton.utils.stringToBytesArray('123'),
-            payload: freeton.utils.stringToBytesArray('123')
           },
         }, tonWrapper.keys[keyId]);
       }

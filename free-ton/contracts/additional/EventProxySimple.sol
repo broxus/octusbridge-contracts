@@ -7,7 +7,7 @@ import './../interfaces/IEvent.sol';
 import './../event-contracts/EthereumEvent.sol';
 
 
-contract EventProxy is IProxy {
+contract EventProxySimple is IProxy {
     uint static _randomNonce;
 
     bool callbackReceived = false;

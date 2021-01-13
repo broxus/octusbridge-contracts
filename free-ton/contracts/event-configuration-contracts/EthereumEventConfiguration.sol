@@ -36,7 +36,11 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Error
     function confirmEvent(
         IEvent.EthereumEventInitData eventInitData,
         uint relayKey
-    ) public onlyBridge transferAfter(basicInitData.bridgeAddress, msg.value) {
+    )
+        public
+        onlyBridge
+        transferAfter(basicInitData.bridgeAddress, msg.value)
+    {
         tvm.accept();
 
         eventInitData.ethereumEventConfiguration = address(this);

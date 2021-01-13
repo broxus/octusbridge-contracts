@@ -22,6 +22,5 @@ interface IBridge {
 
     struct Vote {
         bytes signature;
-        bytes payload;
     }
 }

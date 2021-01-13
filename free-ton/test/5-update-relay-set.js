@@ -56,7 +56,6 @@ describe('Test Bridge relay update', async function() {
           target,
           _vote: {
             signature: freeton.utils.stringToBytesArray(''),
-            payload: freeton.utils.stringToBytesArray(''),
           },
         }, tonWrapper.keys[keyId]);
       }
@@ -85,7 +84,6 @@ describe('Test Bridge relay update', async function() {
           target,
           _vote: {
             signature: freeton.utils.stringToBytesArray('123'),
-            payload: freeton.utils.stringToBytesArray('123'),
           },
         }, tonWrapper.keys[keyId]);
       }
@@ -123,7 +121,6 @@ describe('Test Bridge relay update', async function() {
           target,
           _vote: {
             signature: freeton.utils.stringToBytesArray('123'),
-            payload: freeton.utils.stringToBytesArray('123'),
           },
         }, tonWrapper.keys[keyId]);
       }

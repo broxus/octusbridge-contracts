@@ -21,6 +21,16 @@ ENDS
 ; constructor EthereumEvent
 ACCEPT
 ; expValue
+;; fetch initData
+GETGLOB 23
+; end expValue
+;; get member sender
+GETGLOB 9
+; colValue
+SETINDEX 5
+SETGLOB 23
+; end colValue
+; expValue
 ; end expValue
 ;; get member InProcess
 PUSHINT 0

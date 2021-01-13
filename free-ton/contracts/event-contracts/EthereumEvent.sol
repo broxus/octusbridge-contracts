@@ -34,8 +34,10 @@ contract EthereumEvent is IEvent, ErrorCodes {
     constructor(
         uint relayKey
     ) public {
+        // TODO: discuss deployer set in the constructor
         tvm.accept();
 
+        initData.ethereumEventConfiguration = msg.sender;
         status = Status.InProcess;
 
         confirm(relayKey);
@@ -48,7 +50,11 @@ contract EthereumEvent is IEvent, ErrorCodes {
     */
     function confirm(
         uint relayKey
-    ) public onlyEventConfiguration(initData.ethereumEventConfiguration) eventInProcess {
+    )
+        public
+        onlyEventConfiguration(initData.ethereumEventConfiguration)
+        eventInProcess
+    {
         for (uint i=0; i<confirmKeys.length; i++) {
             require(confirmKeys[i] != relayKey, KEY_ALREADY_CONFIRMED);
         }
@@ -70,7 +76,11 @@ contract EthereumEvent is IEvent, ErrorCodes {
     */
     function reject(
         uint relayKey
-    ) public onlyEventConfiguration(initData.ethereumEventConfiguration) eventInProcess {
+    )
+        public
+        onlyEventConfiguration(initData.ethereumEventConfiguration)
+        eventInProcess
+    {
         for (uint i=0; i<rejectKeys.length; i++) {
             require(rejectKeys[i] != relayKey, KEY_ALREADY_REJECTED);
         }

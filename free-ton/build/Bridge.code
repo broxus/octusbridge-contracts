@@ -4084,11 +4084,9 @@ DROP2
 ;; decode struct Vote _vote
 ;; decode Vote.signature
 LDREF
-;; decode Vote.payload
-LDREF
-;; build struct Vote ss:3
-ROTREV
-TUPLE 2
+;; build struct Vote ss:2
+SWAP
+TUPLE 1
 SWAP
 ENDS
 ;; param: _vote
@@ -4143,7 +4141,7 @@ PUSHCONT {
 	STZEROES
 	STSLICECONST 0
 	STSLICECONST 0
-	STSLICECONST xc41839ac
+	STSLICECONST xdb2c770b
 	PUSH S1
 	STIR 1
 	ENDC
@@ -4233,11 +4231,9 @@ SWAP
 ;; decode struct Vote _vote
 ;; decode Vote.signature
 LDREF
-;; decode Vote.payload
-LDREF
-;; build struct Vote ss:4
-ROTREV
-TUPLE 2
+;; build struct Vote ss:3
+SWAP
+TUPLE 1
 SWAP
 ENDS
 ;; param: _bridgeConfiguration
@@ -4286,7 +4282,7 @@ PUSHSLICE xc0000000000000000000000002_
 STSLICER
 STSLICECONST 0
 STSLICECONST 0
-STSLICECONST x60ef2009
+STSLICECONST x43e4c9a2
 ;; _bridgeConfiguration
 ;; push identifier _bridgeConfiguration
 PUSH S3
@@ -4321,13 +4317,10 @@ STUR 256
 ;; vote
 ;; push identifier _vote
 PUSH S2
-UNTUPLE 2
-ROT
-PUSH S2
-STREFR
+UNTUPLE 1
+SWAP
 PUSH S1
 STREFR
-NIP
 NIP
 ENDC
 PUSHINT 1
@@ -4570,7 +4563,7 @@ PUSHSLICE xc0000000000000000000000002_
 STSLICER
 STSLICECONST 0
 STSLICECONST 0
-STSLICECONST x60ef2009
+STSLICECONST x43e4c9a2
 ;; _bridgeConfiguration
 ;; push identifier _bridgeConfiguration
 PUSH S3
@@ -4605,13 +4598,10 @@ STUR 256
 ;; vote
 ;; push identifier _vote
 PUSH S2
-UNTUPLE 2
-ROT
-PUSH S2
-STREFR
+UNTUPLE 1
+SWAP
 PUSH S1
 STREFR
-NIP
 NIP
 ENDC
 PUSHINT 1
@@ -8309,21 +8299,10 @@ SWAP
 ; Decode _vote
 ;; decode struct Vote _vote
 ;; decode Vote.signature
-DUP
-SREFS
-EQINT 1
-PUSHCONT {
-	LDREF
-	ENDS
-	CTOS
-}
-IF
 LDREF
-;; decode Vote.payload
-LDREF
-;; build struct Vote ss:4
-ROTREV
-TUPLE 2
+;; build struct Vote ss:3
+SWAP
+TUPLE 1
 SWAP
 ENDS
 ;; param: target
@@ -8372,7 +8351,7 @@ PUSHSLICE xc0000000000000000000000002_
 STSLICER
 STSLICECONST 0
 STSLICECONST 0
-STSLICECONST x1294d8c1
+STSLICECONST x7804701c
 ;; target
 ;; push identifier target
 PUSH S3
@@ -8399,13 +8378,10 @@ STUR 256
 ;; vote
 ;; push identifier _vote
 PUSH S2
-UNTUPLE 2
-ROT
-PUSH S2
-STREFR
+UNTUPLE 1
+SWAP
 PUSH S1
 STREFR
-NIP
 NIP
 ENDC
 PUSHINT 1
@@ -8642,7 +8618,7 @@ PUSHSLICE xc0000000000000000000000002_
 STSLICER
 STSLICECONST 0
 STSLICECONST 0
-STSLICECONST x1294d8c1
+STSLICECONST x7804701c
 ;; target
 ;; push identifier target
 PUSH S3
@@ -8669,13 +8645,10 @@ STUR 256
 ;; vote
 ;; push identifier _vote
 PUSH S2
-UNTUPLE 2
-ROT
-PUSH S2
-STREFR
+UNTUPLE 1
+SWAP
 PUSH S1
 STREFR
-NIP
 NIP
 ENDC
 PUSHINT 1
