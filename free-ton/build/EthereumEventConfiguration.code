@@ -139,8 +139,8 @@ ENDS
 ;; param: eventInitData
 ;; param: relayKey
 ; modifier onlyBridge
-;; push identifier MSG_SENDER_NOT_BRIDGE
-GETGLOB 12
+;; push identifier SENDER_NOT_BRIDGE
+GETGLOB 18
 DUP
 LESSINT 2
 PUSHCONT {
@@ -152,14 +152,14 @@ IF
 GETGLOB 9
 ;; get member bridgeAddress
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 INDEX 4
 SDEQ
 THROWANYIFNOT
 ; modifier transferAfter
 ;; get member bridgeAddress
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 INDEX 4
 ;; get member value
 CALL $message_balance_macro$
@@ -179,7 +179,7 @@ PUSH S3
 ; end expValue
 ;; get member eventRequiredConfirmations
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 INDEX 1
 ; colValue
 SETINDEX 6
@@ -190,7 +190,7 @@ PUSH S3
 ; end expValue
 ;; get member eventRequiredConfirmations
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 INDEX 1
 ; colValue
 SETINDEX 7
@@ -201,7 +201,7 @@ PUSH S3
 ; end expValue
 ;; get member proxyAddress
 ;; push identifier initData
-GETGLOB 11
+GETGLOB 24
 INDEX 2
 ; colValue
 SETINDEX 8
@@ -253,7 +253,7 @@ STDICT
 ENDC
 ;; get member eventCode
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 INDEX 3
 NEWC
 STSLICECONST x2_
@@ -270,7 +270,7 @@ ENDC
 CTOS
 ;; get member eventInitialBalance
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 INDEX 5
 PUSH S1
 NEWC
@@ -363,8 +363,8 @@ SETGLOB 7
 ;; param: eventInitData
 ;; param: relayKey
 ; modifier onlyBridge
-;; push identifier MSG_SENDER_NOT_BRIDGE
-GETGLOB 12
+;; push identifier SENDER_NOT_BRIDGE
+GETGLOB 18
 DUP
 LESSINT 2
 PUSHCONT {
@@ -376,14 +376,14 @@ IF
 GETGLOB 9
 ;; get member bridgeAddress
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 INDEX 4
 SDEQ
 THROWANYIFNOT
 ; modifier transferAfter
 ;; get member bridgeAddress
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 INDEX 4
 ;; get member value
 CALL $message_balance_macro$
@@ -403,7 +403,7 @@ PUSH S3
 ; end expValue
 ;; get member eventRequiredConfirmations
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 INDEX 1
 ; colValue
 SETINDEX 6
@@ -414,7 +414,7 @@ PUSH S3
 ; end expValue
 ;; get member eventRequiredConfirmations
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 INDEX 1
 ; colValue
 SETINDEX 7
@@ -425,7 +425,7 @@ PUSH S3
 ; end expValue
 ;; get member proxyAddress
 ;; push identifier initData
-GETGLOB 11
+GETGLOB 24
 INDEX 2
 ; colValue
 SETINDEX 8
@@ -477,7 +477,7 @@ STDICT
 ENDC
 ;; get member eventCode
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 INDEX 3
 NEWC
 STSLICECONST x2_
@@ -494,7 +494,7 @@ ENDC
 CTOS
 ;; get member eventInitialBalance
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 INDEX 5
 PUSH S1
 NEWC
@@ -696,8 +696,8 @@ ENDS
 ;; param: eventInitData
 ;; param: relayKey
 ; modifier onlyBridge
-;; push identifier MSG_SENDER_NOT_BRIDGE
-GETGLOB 12
+;; push identifier SENDER_NOT_BRIDGE
+GETGLOB 18
 DUP
 LESSINT 2
 PUSHCONT {
@@ -709,14 +709,14 @@ IF
 GETGLOB 9
 ;; get member bridgeAddress
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 INDEX 4
 SDEQ
 THROWANYIFNOT
 ; modifier transferAfter
 ;; get member bridgeAddress
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 INDEX 4
 ;; get member value
 CALL $message_balance_macro$
@@ -736,7 +736,7 @@ PUSH S3
 ; end expValue
 ;; get member eventRequiredConfirmations
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 INDEX 1
 ; colValue
 SETINDEX 6
@@ -747,7 +747,7 @@ PUSH S3
 ; end expValue
 ;; get member eventRequiredConfirmations
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 INDEX 1
 ; colValue
 SETINDEX 7
@@ -758,7 +758,7 @@ PUSH S3
 ; end expValue
 ;; get member proxyAddress
 ;; push identifier initData
-GETGLOB 11
+GETGLOB 24
 INDEX 2
 ; colValue
 SETINDEX 8
@@ -810,7 +810,7 @@ STDICT
 ENDC
 ;; get member eventCode
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 INDEX 3
 NEWC
 STSLICECONST x2_
@@ -917,8 +917,8 @@ SETGLOB 7
 ;; param: eventInitData
 ;; param: relayKey
 ; modifier onlyBridge
-;; push identifier MSG_SENDER_NOT_BRIDGE
-GETGLOB 12
+;; push identifier SENDER_NOT_BRIDGE
+GETGLOB 18
 DUP
 LESSINT 2
 PUSHCONT {
@@ -930,14 +930,14 @@ IF
 GETGLOB 9
 ;; get member bridgeAddress
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 INDEX 4
 SDEQ
 THROWANYIFNOT
 ; modifier transferAfter
 ;; get member bridgeAddress
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 INDEX 4
 ;; get member value
 CALL $message_balance_macro$
@@ -957,7 +957,7 @@ PUSH S3
 ; end expValue
 ;; get member eventRequiredConfirmations
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 INDEX 1
 ; colValue
 SETINDEX 6
@@ -968,7 +968,7 @@ PUSH S3
 ; end expValue
 ;; get member eventRequiredConfirmations
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 INDEX 1
 ; colValue
 SETINDEX 7
@@ -979,7 +979,7 @@ PUSH S3
 ; end expValue
 ;; get member proxyAddress
 ;; push identifier initData
-GETGLOB 11
+GETGLOB 24
 INDEX 2
 ; colValue
 SETINDEX 8
@@ -1031,7 +1031,7 @@ STDICT
 ENDC
 ;; get member eventCode
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 INDEX 3
 NEWC
 STSLICECONST x2_
@@ -1159,9 +1159,9 @@ PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 TUPLE 3
 ;; return
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 ;; push identifier initData
-GETGLOB 11
+GETGLOB 24
 BLKDROP2 2, 2
 ;; emitting 2 value(s)
 PUSH S2
@@ -1245,9 +1245,9 @@ PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 TUPLE 3
 ;; return
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 ;; push identifier initData
-GETGLOB 11
+GETGLOB 24
 BLKDROP2 2, 2
 ; end function getDetails
 
@@ -1385,8 +1385,8 @@ ENDS
 ;; param: _basicInitData
 ;; param: _initData
 ; modifier onlyBridge
-;; push identifier MSG_SENDER_NOT_BRIDGE
-GETGLOB 12
+;; push identifier SENDER_NOT_BRIDGE
+GETGLOB 18
 DUP
 LESSINT 2
 PUSHCONT {
@@ -1398,14 +1398,14 @@ IF
 GETGLOB 9
 ;; get member bridgeAddress
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 INDEX 4
 SDEQ
 THROWANYIFNOT
 ; modifier transferAfter
 ;; get member bridgeAddress
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 INDEX 4
 ;; get member value
 CALL $message_balance_macro$
@@ -1415,14 +1415,14 @@ CALL $message_balance_macro$
 ;; push identifier _basicInitData
 PUSH S3
 ; colValue
-SETGLOB 10
+SETGLOB 23
 ; end colValue
 ; expValue
 ; end expValue
 ;; push identifier _initData
 PUSH S2
 ; colValue
-SETGLOB 11
+SETGLOB 24
 ; end colValue
 ; end function updateInitData
 ;; transfer()
@@ -1455,8 +1455,8 @@ SETGLOB 7
 ;; param: _basicInitData
 ;; param: _initData
 ; modifier onlyBridge
-;; push identifier MSG_SENDER_NOT_BRIDGE
-GETGLOB 12
+;; push identifier SENDER_NOT_BRIDGE
+GETGLOB 18
 DUP
 LESSINT 2
 PUSHCONT {
@@ -1468,14 +1468,14 @@ IF
 GETGLOB 9
 ;; get member bridgeAddress
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 INDEX 4
 SDEQ
 THROWANYIFNOT
 ; modifier transferAfter
 ;; get member bridgeAddress
 ;; push identifier basicInitData
-GETGLOB 10
+GETGLOB 23
 INDEX 4
 ;; get member value
 CALL $message_balance_macro$
@@ -1485,14 +1485,14 @@ CALL $message_balance_macro$
 ;; push identifier _basicInitData
 PUSH S3
 ; colValue
-SETGLOB 10
+SETGLOB 23
 ; end colValue
 ; expValue
 ; end expValue
 ;; push identifier _initData
 PUSH S2
 ; colValue
-SETGLOB 11
+SETGLOB 24
 ; end colValue
 ; end function updateInitData
 ;; transfer()
@@ -1526,10 +1526,16 @@ GETGLOB 3
 STUR 64
 GETGLOB 6
 STUR 1
-GETGLOB 10
-GETGLOB 11
+NEWC
 GETGLOB 12
-REVERSE 4, 0
+GETGLOB 13
+GETGLOB 14
+GETGLOB 23
+GETGLOB 24
+REVERSE 6, 0
+STU 256
+STU 256
+STU 256
 SWAP
 UNTUPLE 6
 NEWC
@@ -1560,6 +1566,36 @@ STSLICER
 XCHG s3
 BLKDROP 3
 STBREFR
+NEWC
+GETGLOB 15
+GETGLOB 16
+GETGLOB 17
+REVERSE 4, 0
+STU 256
+STU 256
+STU 256
+NEWC
+GETGLOB 18
+GETGLOB 19
+GETGLOB 20
+REVERSE 4, 0
+STU 256
+STU 256
+STU 256
+NEWC
+GETGLOB 21
+GETGLOB 22
+XCHG s2
+STU 256
+STU 256
+GETGLOB 10
+GETGLOB 11
+REVERSE 7, 0
+STBREF
+STBREF
+STBREF
+STBREF
+STU 256
 STU 256
 ENDC
 POP C4
@@ -1572,6 +1608,10 @@ LDU 256      ; pubkey c4
 LDU 64      ; pubkey timestamp c4
 LDU 1       ; pubkey [timestamp] constructor_flag memory
 LDREFRTOS
+LDU 256
+LDU 256
+LDU 256
+LDREFRTOS
 LDREF
 LDU 16
 LDU 16
@@ -1579,14 +1619,39 @@ LDREF
 LDMSGADDR
 PLDU 128
 TUPLE 6
-SETGLOB 10
+SETGLOB 23
 LDREFRTOS
+NIP
 LDU 160
 LDU 16
 TUPLE 3
-SETGLOB 11
-PLDU 256
+SETGLOB 24
+SETGLOB 14
+SETGLOB 13
 SETGLOB 12
+LDREFRTOS
+LDU 256
+LDU 256
+PLDU 256
+SETGLOB 17
+SETGLOB 16
+SETGLOB 15
+LDREFRTOS
+LDU 256
+LDU 256
+PLDU 256
+SETGLOB 20
+SETGLOB 19
+SETGLOB 18
+LDREFRTOS
+LDU 256
+PLDU 256
+SETGLOB 22
+SETGLOB 21
+LDU 256
+PLDU 256
+SETGLOB 11
+SETGLOB 10
 TRUE
 SETGLOB 1   ; pubkey [timestamp] constructor_flag
 SETGLOB 6   ; pubkey [timestamp]
@@ -1604,6 +1669,10 @@ PUSHCONT {
 	LDU 64      ; pubkey timestamp c4
 	LDU 1       ; pubkey [timestamp] constructor_flag memory
 	LDREFRTOS
+	LDU 256
+	LDU 256
+	LDU 256
+	LDREFRTOS
 	LDREF
 	LDU 16
 	LDU 16
@@ -1611,14 +1680,39 @@ PUSHCONT {
 	LDMSGADDR
 	PLDU 128
 	TUPLE 6
-	SETGLOB 10
+	SETGLOB 23
 	LDREFRTOS
+	NIP
 	LDU 160
 	LDU 16
 	TUPLE 3
-	SETGLOB 11
-	PLDU 256
+	SETGLOB 24
+	SETGLOB 14
+	SETGLOB 13
 	SETGLOB 12
+	LDREFRTOS
+	LDU 256
+	LDU 256
+	PLDU 256
+	SETGLOB 17
+	SETGLOB 16
+	SETGLOB 15
+	LDREFRTOS
+	LDU 256
+	LDU 256
+	PLDU 256
+	SETGLOB 20
+	SETGLOB 19
+	SETGLOB 18
+	LDREFRTOS
+	LDU 256
+	PLDU 256
+	SETGLOB 22
+	SETGLOB 21
+	LDU 256
+	PLDU 256
+	SETGLOB 11
+	SETGLOB 10
 	TRUE
 	SETGLOB 1   ; pubkey [timestamp] constructor_flag
 	SETGLOB 6   ; pubkey [timestamp]
@@ -1653,7 +1747,7 @@ PUSHCONT {
 		TUPLE 6
 	}
 	IFELSE
-	SETGLOB 10
+	SETGLOB 23
 	; init initData
 	PUSHINT 2
 	PUSH S1
@@ -1671,10 +1765,46 @@ PUSHCONT {
 		TUPLE 3
 	}
 	IFELSE
+	SETGLOB 24
+	; init KEY_IS_NOT_OWNER
+	PUSHINT 0
+	SETGLOB 10
+	; init BRIDGE_NOT_ACTIVE
+	PUSHINT 0
 	SETGLOB 11
-	; init MSG_SENDER_NOT_BRIDGE
+	; init EVENT_CONFIGURATION_NOT_ACTIVE
 	PUSHINT 0
 	SETGLOB 12
+	; init KEYS_DIFFERENT_SHAPE
+	PUSHINT 0
+	SETGLOB 13
+	; init EVENT_CONFIGURATION_NOT_EXISTS
+	PUSHINT 0
+	SETGLOB 14
+	; init EVENT_CONFIGURATION_ALREADY_EXISTS
+	PUSHINT 0
+	SETGLOB 15
+	; init EVENT_CONFIGURATION_UPDATE_NOT_EXISTS
+	PUSHINT 0
+	SETGLOB 16
+	; init EVENT_CONFIGURATION_UPDATE_ALREADY_EXISTS
+	PUSHINT 0
+	SETGLOB 17
+	; init SENDER_NOT_BRIDGE
+	PUSHINT 0
+	SETGLOB 18
+	; init EVENT_NOT_IN_PROGRESS
+	PUSHINT 0
+	SETGLOB 19
+	; init SENDER_NOT_EVENT_CONFIGURATION
+	PUSHINT 0
+	SETGLOB 20
+	; init KEY_ALREADY_CONFIRMED
+	PUSHINT 0
+	SETGLOB 21
+	; init KEY_ALREADY_REJECTED
+	PUSHINT 0
+	SETGLOB 22
 	; set contract pubkey
 	PUSHINT 0
 	SWAP
@@ -1689,9 +1819,45 @@ PUSHCONT {
 	SETGLOB 6
 	TRUE
 	SETGLOB 1
-	;; init state var: MSG_SENDER_NOT_BRIDGE
-	PUSHINT 202
+	;; init state var: KEY_IS_NOT_OWNER
+	PUSHINT 5001
+	SETGLOB 10
+	;; init state var: BRIDGE_NOT_ACTIVE
+	PUSHINT 5002
+	SETGLOB 11
+	;; init state var: EVENT_CONFIGURATION_NOT_ACTIVE
+	PUSHINT 5003
 	SETGLOB 12
+	;; init state var: KEYS_DIFFERENT_SHAPE
+	PUSHINT 5004
+	SETGLOB 13
+	;; init state var: EVENT_CONFIGURATION_NOT_EXISTS
+	PUSHINT 5005
+	SETGLOB 14
+	;; init state var: EVENT_CONFIGURATION_ALREADY_EXISTS
+	PUSHINT 5006
+	SETGLOB 15
+	;; init state var: EVENT_CONFIGURATION_UPDATE_NOT_EXISTS
+	PUSHINT 5007
+	SETGLOB 16
+	;; init state var: EVENT_CONFIGURATION_UPDATE_ALREADY_EXISTS
+	PUSHINT 5008
+	SETGLOB 17
+	;; init state var: SENDER_NOT_BRIDGE
+	PUSHINT 5101
+	SETGLOB 18
+	;; init state var: EVENT_NOT_IN_PROGRESS
+	PUSHINT 5201
+	SETGLOB 19
+	;; init state var: SENDER_NOT_EVENT_CONFIGURATION
+	PUSHINT 5202
+	SETGLOB 20
+	;; init state var: KEY_ALREADY_CONFIRMED
+	PUSHINT 5203
+	SETGLOB 21
+	;; init state var: KEY_ALREADY_REJECTED
+	PUSHINT 5204
+	SETGLOB 22
 }
 IFELSE
 

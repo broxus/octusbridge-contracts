@@ -2,13 +2,21 @@ pragma solidity >= 0.6.0;
 pragma AbiHeader expire;
 
 
-contract KeysOwnable {
+import "./ErrorCodes.sol";
+
+
+contract KeysOwnable is ErrorCodes {
     mapping(uint => bool) ownerKeys;
     mapping(uint => uint160) ownerEthereumAccounts;
 
     event OwnershipGranted(uint key);
     event OwnershipRemoved(uint key);
 
+    /*
+        Check if key is owner
+        @param key TON public key
+        @returns _status Boolean, owner or not
+    */
     function getKeyStatus(uint key) public view returns(bool _status) {
         return ownerKeys[key];
     }
@@ -25,7 +33,7 @@ contract KeysOwnable {
     }
 
     modifier onlyOwnerKey(uint key) {
-        require(ownerKeys[key] == true, 303);
+        require(ownerKeys[key] == true, KEY_IS_NOT_OWNER);
         _;
     }
 

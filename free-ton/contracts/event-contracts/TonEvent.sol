@@ -3,9 +3,10 @@ pragma AbiHeader expire;
 
 
 import "./../interfaces/IEvent.sol";
+import "../utils/ErrorCodes.sol";
 
 
-contract TonEvent is IEvent {
+contract TonEvent is IEvent, ErrorCodes {
     TonEventInitData static initData;
 
     uint[] confirmKeys;
@@ -15,12 +16,12 @@ contract TonEvent is IEvent {
     Status status;
 
     modifier eventInProcess() {
-        require(status == Status.InProcess, 16428);
+        require(status == Status.InProcess, EVENT_NOT_IN_PROGRESS);
         _;
     }
 
     modifier onlyEventConfiguration(address configuration) {
-        require(msg.sender == configuration, 12642);
+        require(msg.sender == configuration, SENDER_NOT_EVENT_CONFIGURATION);
         _;
     }
 
@@ -50,9 +51,13 @@ contract TonEvent is IEvent {
     function confirm(
         uint relayKey,
         bytes eventDataSignature
-    ) public onlyEventConfiguration(initData.tonEventConfiguration) eventInProcess {
+    )
+        public
+        onlyEventConfiguration(initData.tonEventConfiguration)
+        eventInProcess
+    {
         for (uint i=0; i<confirmKeys.length; i++) {
-            require(confirmKeys[i] != relayKey, 404);
+            require(confirmKeys[i] != relayKey, KEY_ALREADY_CONFIRMED);
         }
 
         confirmKeys.push(relayKey);
@@ -70,9 +75,15 @@ contract TonEvent is IEvent {
         @dev Should be called by TonEventConfiguration
         @param relayKey Public key of the relay, who initiated the config creation
     */
-    function reject(uint relayKey) public onlyEventConfiguration(initData.tonEventConfiguration) eventInProcess {
+    function reject(
+        uint relayKey
+    )
+        public
+        onlyEventConfiguration(initData.tonEventConfiguration)
+        eventInProcess
+    {
         for (uint i=0; i<rejectKeys.length; i++) {
-            require(rejectKeys[i] != relayKey, 404);
+            require(rejectKeys[i] != relayKey, KEY_ALREADY_REJECTED);
         }
 
         rejectKeys.push(relayKey);

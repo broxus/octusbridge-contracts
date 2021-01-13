@@ -3,16 +3,25 @@ pragma solidity ^0.6.0;
 pragma experimental ABIEncoderV2;
 
 
+import "./../interfaces/IBridge.sol";
+
+
 /**
     @notice Basic example of the Event contract
     @dev Emits StateChange(uint,address) event each time someone calls the setStateToTON method
     @dev Allows to transfer event from TON by processing the payload and
 **/
-contract EventContractSimple {
+contract ProxySimple {
     uint public state = 0;
+
+    address public bridge;
 
     event EthereumStateChange(uint state);
     event TONStateChange(uint state);
+
+    constructor(address _bridge) public {
+        bridge = _bridge;
+    }
 
     function setStateToTON(uint _state) public {
         _setState(_state);
@@ -20,12 +29,23 @@ contract EventContractSimple {
         emit EthereumStateChange(_state);
     }
 
-    function setStateFromTON(bytes memory payload, bytes[] memory signature) public {
-        // Check signatures validity and sufficiency with Bridge contract
-        require(signature.length > 0);
+    function broxusBridgeCallback(
+        bytes memory payload,
+        bytes[] memory signatures
+    ) public {
+        require(
+            IBridge(bridge).countRelaysSignatures(
+                payload,
+                signatures
+            ) >= 2,
+            'Not enough relays signed'
+        );
 
-        // Decode and update state
-        (uint _state) = abi.decode(payload, (uint));
+        (uint _state) = abi.decode(
+            payload,
+            (uint)
+        );
+
         _setState(_state);
 
         emit TONStateChange(_state);

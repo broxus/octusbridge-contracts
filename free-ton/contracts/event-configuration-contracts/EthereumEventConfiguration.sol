@@ -4,21 +4,19 @@ pragma AbiHeader expire;
 
 import './../event-contracts/EthereumEvent.sol';
 import './../utils/TransferUtils.sol';
+import './../utils/ErrorCodes.sol';
 import './../interfaces/IEvent.sol';
 import './../interfaces/IEventConfiguration.sol';
 
 /*
     Contract with Ethereum-TON configuration
 */
-contract EthereumEventConfiguration is TransferUtils, IEventConfiguration {
+contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, ErrorCodes {
     BasicConfigurationInitData static basicInitData;
     EthereumEventConfigurationInitData static initData;
 
-    // Error codes
-    uint MSG_SENDER_NOT_BRIDGE = 202;
-
     modifier onlyBridge() {
-        require(msg.sender == basicInitData.bridgeAddress, MSG_SENDER_NOT_BRIDGE);
+        require(msg.sender == basicInitData.bridgeAddress, SENDER_NOT_BRIDGE);
         _;
     }
 
@@ -38,7 +36,11 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration {
     function confirmEvent(
         IEvent.EthereumEventInitData eventInitData,
         uint relayKey
-    ) public onlyBridge transferAfter(basicInitData.bridgeAddress, msg.value) {
+    )
+        public
+        onlyBridge
+        transferAfter(basicInitData.bridgeAddress, msg.value)
+    {
         tvm.accept();
 
         eventInitData.ethereumEventConfiguration = address(this);

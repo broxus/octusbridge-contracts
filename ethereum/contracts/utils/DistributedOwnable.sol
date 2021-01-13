@@ -38,31 +38,14 @@ contract DistributedOwnable {
 
     /**
      * @dev Handy wrapper for Solidity recover function. Returns signature author address.
-     * @param receipt - payload which was signed
+     * @param payload - payload which was signed
      * @param signature - payload signature
     */
-    function recoverSignature(bytes memory receipt, bytes memory signature) public pure returns(address) {
-        return keccak256(receipt).toBytesPrefixed().recover(signature);
-    }
-
-    /**
-     * @notice Count how much signatures are made by owners.
-     * @param receipt Bytes payload, which was signed
-     * @param signatures Bytes array with payload signatures
-    */
-    function countOwnersSignatures(
-        bytes memory receipt,
-        bytes[] memory signatures
-    ) public view returns(uint) {
-        uint ownersConfirmations = 0;
-
-        for (uint i=0; i<signatures.length; i++) {
-            address signer = recoverSignature(receipt, signatures[i]);
-
-            if (isOwner(signer)) ownersConfirmations++;
-        }
-
-        return ownersConfirmations;
+    function recoverSignature(
+        bytes memory payload,
+        bytes memory signature
+    ) public pure returns(address) {
+        return keccak256(payload).toBytesPrefixed().recover(signature);
     }
 
     /**
@@ -70,6 +53,8 @@ contract DistributedOwnable {
      * @param newOwner - Account to grant ownership
     */
     function grantOwnership(address newOwner) internal {
+        require(!_owners[newOwner], 'Already owner');
+
         _owners[newOwner] = true;
         ownersAmount++;
 
@@ -81,6 +66,8 @@ contract DistributedOwnable {
      * @param ownerToRemove - Account to remove ownership
     */
     function removeOwnership(address ownerToRemove) internal {
+        require(_owners[ownerToRemove], 'Not an owner');
+
         _owners[ownerToRemove] = false;
         ownersAmount--;
 

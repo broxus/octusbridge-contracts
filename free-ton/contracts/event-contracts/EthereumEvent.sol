@@ -4,9 +4,10 @@ pragma AbiHeader expire;
 
 import "./../interfaces/IProxy.sol";
 import "./../interfaces/IEvent.sol";
+import "../utils/ErrorCodes.sol";
 
 
-contract EthereumEvent is IEvent {
+contract EthereumEvent is IEvent, ErrorCodes {
     EthereumEventInitData static initData;
 
     Status status;
@@ -16,12 +17,12 @@ contract EthereumEvent is IEvent {
 
 
     modifier eventInProcess() {
-        require(status == Status.InProcess, 16428);
+        require(status == Status.InProcess, EVENT_NOT_IN_PROGRESS);
         _;
     }
 
     modifier onlyEventConfiguration(address configuration) {
-        require(msg.sender == configuration, 12642);
+        require(msg.sender == configuration, SENDER_NOT_EVENT_CONFIGURATION);
         _;
     }
 
@@ -33,8 +34,10 @@ contract EthereumEvent is IEvent {
     constructor(
         uint relayKey
     ) public {
+        // TODO: discuss deployer set in the constructor
         tvm.accept();
 
+        initData.ethereumEventConfiguration = msg.sender;
         status = Status.InProcess;
 
         confirm(relayKey);
@@ -47,9 +50,13 @@ contract EthereumEvent is IEvent {
     */
     function confirm(
         uint relayKey
-    ) public onlyEventConfiguration(initData.ethereumEventConfiguration) eventInProcess {
+    )
+        public
+        onlyEventConfiguration(initData.ethereumEventConfiguration)
+        eventInProcess
+    {
         for (uint i=0; i<confirmKeys.length; i++) {
-            require(confirmKeys[i] != relayKey, 404);
+            require(confirmKeys[i] != relayKey, KEY_ALREADY_CONFIRMED);
         }
 
         confirmKeys.push(relayKey);
@@ -69,9 +76,13 @@ contract EthereumEvent is IEvent {
     */
     function reject(
         uint relayKey
-    ) public onlyEventConfiguration(initData.ethereumEventConfiguration) eventInProcess {
+    )
+        public
+        onlyEventConfiguration(initData.ethereumEventConfiguration)
+        eventInProcess
+    {
         for (uint i=0; i<rejectKeys.length; i++) {
-            require(rejectKeys[i] != relayKey, 404);
+            require(rejectKeys[i] != relayKey, KEY_ALREADY_REJECTED);
         }
 
         rejectKeys.push(relayKey);
