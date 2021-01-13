@@ -1,12 +1,13 @@
-import './Ownable.sol';
+pragma solidity ^0.6.0;
+pragma experimental ABIEncoderV2;
 
 
-contract RedButton is Ownable {
+contract RedButton {
     function externalCallEth(
         address payable[] memory  _to,
         bytes[] memory _data,
         uint256[] memory weiAmount
-    ) public onlyOwner payable {
+    ) public payable {
         require(_to.length == _data.length && _data.length == weiAmount.length, "Parameters should be equal length");
 
         for(uint16 i = 0; i < _to.length; i++) {
