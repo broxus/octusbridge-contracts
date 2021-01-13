@@ -4,6 +4,7 @@ pragma experimental ABIEncoderV2;
 
 
 import "./../interfaces/IBridge.sol";
+import "./../interfaces/IProxy.sol";
 
 
 /**
@@ -11,7 +12,7 @@ import "./../interfaces/IBridge.sol";
     @dev Emits StateChange(uint,address) event each time someone calls the setStateToTON method
     @dev Allows to transfer event from TON by processing the payload and
 **/
-contract ProxySimple {
+contract ProxySimple is IProxy {
     uint public state = 0;
 
     address public bridge;
@@ -41,8 +42,13 @@ contract ProxySimple {
             'Not enough relays signed'
         );
 
-        (uint _state) = abi.decode(
+        (TONEvent memory _event) = abi.decode(
             payload,
+            (TONEvent)
+        );
+
+        (uint _state) = abi.decode(
+            _event.eventData,
             (uint)
         );
 
