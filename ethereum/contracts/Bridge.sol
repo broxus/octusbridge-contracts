@@ -16,6 +16,7 @@ contract Bridge is DistributedOwnable, IBridge {
     using SafeMath for uint;
 
     // TODO: discuss atomic update or atomic event apply
+    // TODO: add nonce support
     // Currently order is not guaranteed
 
     struct BridgeConfiguration {
