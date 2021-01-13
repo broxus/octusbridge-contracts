@@ -107,7 +107,7 @@ describe('Test event configurations', function() {
           addr: EthereumEventConfigurationContracts.valid[0].address,
           _type: 0,
         }),
-        11971,
+        5006,
       );
     });
     
@@ -188,7 +188,7 @@ describe('Test event configurations', function() {
           id: 7777777,
           _type: 1,
         }, arbitraryKeyPair),
-        303
+        5001
       );
     });
   });
@@ -300,7 +300,7 @@ describe('Test event configurations', function() {
     it('Initialize already initialized update', async function() {
       await freeton.utils.catchRunFail(
         Bridge.run('initializeUpdateEventConfiguration', updateParams),
-        17777
+        5008
       );
     });
     
@@ -311,7 +311,7 @@ describe('Test event configurations', function() {
           id: 999999,
           targetID: 6,
         }),
-        17778
+        5005
       );
     });
     
@@ -323,7 +323,7 @@ describe('Test event configurations', function() {
           ...updateParams,
           id: 999999,
         }, arbitraryKeyPair),
-        303
+        5001
       );
     });
     

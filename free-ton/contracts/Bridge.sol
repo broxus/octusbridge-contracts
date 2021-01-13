@@ -53,16 +53,15 @@ contract Bridge is KeysOwnable, IBridge {
         @dev Throws an error if bridge currently inactive
     */
     modifier onlyActive() {
-        require(bridgeConfiguration.active == true, 12312);
+        require(bridgeConfiguration.active == true, BRIDGE_NOT_ACTIVE);
         _;
     }
 
     /*
         @dev Throws and error is event configuration has less confirmations than required or more rejects than allowed
     */
-    modifier onlyActiveConfiguration(uint id) {
-        require(eventConfigurations[id].status == true, 16922);
-        _;
+    function onlyActiveConfiguration(uint id) internal view {
+        require(eventConfigurations[id].status == true, EVENT_CONFIGURATION_NOT_ACTIVE);
     }
 
     /*
@@ -77,7 +76,7 @@ contract Bridge is KeysOwnable, IBridge {
         BridgeConfiguration _bridgeConfiguration
     ) public {
         require(tvm.pubkey() != 0);
-        require(_relayKeys.length == _relayEthereumAccounts.length);
+        require(_relayKeys.length == _relayEthereumAccounts.length, KEYS_DIFFERENT_SHAPE);
         tvm.accept();
 
         for (uint i=0; i < _relayKeys.length; i++) {
@@ -101,8 +100,8 @@ contract Bridge is KeysOwnable, IBridge {
         address addr,
         IEventConfiguration.EventType _type
     ) public onlyActive onlyOwnerKey(msg.pubkey()) {
-        require(!eventConfigurations.exists(id), 11971);
         tvm.accept();
+        require(!eventConfigurations.exists(id), EVENT_CONFIGURATION_ALREADY_EXISTS);
 
         uint key = msg.pubkey();
 
@@ -126,8 +125,8 @@ contract Bridge is KeysOwnable, IBridge {
         uint id,
         bool vote
     ) public onlyActive onlyOwnerKey(msg.pubkey()) {
-        require(eventConfigurations.exists(id), 11972);
         tvm.accept();
+        require(eventConfigurations.exists(id), EVENT_CONFIGURATION_NOT_EXISTS);
 
         EventConfiguration _eventConfiguration = eventConfigurations[id];
         _eventConfiguration.votes[msg.pubkey()] = vote;
@@ -215,8 +214,9 @@ contract Bridge is KeysOwnable, IBridge {
     function confirmEthereumEvent(
         IEvent.EthereumEventInitData eventInitData,
         uint configurationID
-    ) public view onlyActive onlyOwnerKey(msg.pubkey()) onlyActiveConfiguration(configurationID) {
+    ) public view onlyActive onlyOwnerKey(msg.pubkey()) {
         tvm.accept();
+        onlyActiveConfiguration(configurationID);
 
         EthereumEventConfiguration(eventConfigurations[configurationID].addr).confirmEvent{value: 1 ton}(
             eventInitData,
@@ -233,8 +233,9 @@ contract Bridge is KeysOwnable, IBridge {
     function rejectEthereumEvent(
         IEvent.EthereumEventInitData eventInitData,
         uint configurationID
-    ) public view onlyActive onlyOwnerKey(msg.pubkey()) onlyActiveConfiguration(configurationID) {
+    ) public view onlyActive onlyOwnerKey(msg.pubkey()) {
         tvm.accept();
+        onlyActiveConfiguration(configurationID);
 
         EthereumEventConfiguration(eventConfigurations[configurationID].addr).rejectEvent{value: 1 ton}(
             eventInitData,
@@ -253,8 +254,9 @@ contract Bridge is KeysOwnable, IBridge {
         IEvent.TonEventInitData eventInitData,
         bytes eventDataSignature,
         uint configurationID
-    ) public view onlyActive onlyOwnerKey(msg.pubkey()) onlyActiveConfiguration(configurationID) {
+    ) public view onlyActive onlyOwnerKey(msg.pubkey()) {
         tvm.accept();
+        onlyActiveConfiguration(configurationID);
 
         TonEventConfiguration(eventConfigurations[configurationID].addr).confirmEvent{value: 1 ton}(
             eventInitData,
@@ -273,8 +275,9 @@ contract Bridge is KeysOwnable, IBridge {
     function rejectTonEvent(
         IEvent.TonEventInitData eventInitData,
         uint configurationID
-    ) public view onlyActive onlyOwnerKey(msg.pubkey()) onlyActiveConfiguration(configurationID) {
+    ) public view onlyActive onlyOwnerKey(msg.pubkey()) {
         tvm.accept();
+        onlyActiveConfiguration(configurationID);
 
         TonEventConfiguration(eventConfigurations[configurationID].addr).rejectEvent{value: 1 ton}(
             eventInitData,
@@ -385,9 +388,9 @@ contract Bridge is KeysOwnable, IBridge {
         IEventConfiguration.EthereumEventConfigurationInitData ethereumInitData,
         IEventConfiguration.TonEventConfigurationInitData tonInitData
     ) public onlyActive onlyOwnerKey(msg.pubkey()) {
-        require(!eventConfigurationsUpdate.exists(id), 17777);
-        require(eventConfigurations.exists(targetID), 17778);
         tvm.accept();
+        require(!eventConfigurationsUpdate.exists(id), EVENT_CONFIGURATION_UPDATE_ALREADY_EXISTS);
+        require(eventConfigurations.exists(targetID), EVENT_CONFIGURATION_NOT_EXISTS);
 
         uint key = msg.pubkey();
 
@@ -416,6 +419,7 @@ contract Bridge is KeysOwnable, IBridge {
         bool vote
     ) public onlyActive onlyOwnerKey(msg.pubkey()) {
         tvm.accept();
+        require(eventConfigurationsUpdate.exists(id), EVENT_CONFIGURATION_UPDATE_NOT_EXISTS);
 
         uint key = msg.pubkey();
 

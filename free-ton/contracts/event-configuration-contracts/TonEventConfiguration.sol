@@ -6,20 +6,18 @@ import './../event-contracts/TonEvent.sol';
 import './../utils/TransferUtils.sol';
 import './../interfaces/IEvent.sol';
 import './../interfaces/IEventConfiguration.sol';
+import "../utils/ErrorCodes.sol";
 
 
 /*
     Contract with TON-Ethereum configuration
 */
-contract TonEventConfiguration is TransferUtils, IEventConfiguration {
+contract TonEventConfiguration is TransferUtils, IEventConfiguration, ErrorCodes {
     BasicConfigurationInitData static basicInitData;
     TonEventConfigurationInitData static initData;
 
-    // Error codes
-    uint MSG_SENDER_NOT_BRIDGE = 202;
-
     modifier onlyBridge() {
-        require(msg.sender == basicInitData.bridgeAddress, MSG_SENDER_NOT_BRIDGE);
+        require(msg.sender == basicInitData.bridgeAddress, SENDER_NOT_BRIDGE);
         _;
     }
 

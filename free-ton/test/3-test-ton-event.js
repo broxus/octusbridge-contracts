@@ -69,15 +69,31 @@ describe('Test TON event', async function() {
       
       const details = await TonEvent.runLocal('getDetails', {});
       
-      expect(details._initData.eventTransaction.toNumber()).to.equal(eventParams.eventInitData.eventTransaction, 'Wrong event transaction');
-      expect(details._initData.eventIndex.toNumber()).to.equal(eventParams.eventInitData.eventIndex, 'Wrong event index');
-      expect(details._initData.eventBlockNumber.toNumber()).to.equal(eventParams.eventInitData.eventBlockNumber, 'Wrong block number');
-      expect(details._initData.eventBlock.toNumber()).to.equal(eventParams.eventInitData.eventBlock, 'Wrong block');
+      expect(details._initData.eventTransaction.toNumber())
+        .to
+        .equal(eventParams.eventInitData.eventTransaction, 'Wrong event transaction');
+      expect(details._initData.eventIndex.toNumber())
+        .to
+        .equal(eventParams.eventInitData.eventIndex, 'Wrong event index');
+      expect(details._initData.eventBlockNumber.toNumber())
+        .to
+        .equal(eventParams.eventInitData.eventBlockNumber, 'Wrong block number');
+      expect(details._initData.eventBlock.toNumber())
+        .to
+        .equal(eventParams.eventInitData.eventBlock, 'Wrong block');
   
-      expect(details._status.toNumber()).to.equal(0, 'Wrong status');
-      expect(details._confirmKeys).to.have.lengthOf(1, 'Wrong amount of confirmations');
-      expect(details._eventDataSignatures).to.have.lengthOf(1, 'Wrong amount of signatures');
-      expect(details._rejectKeys).to.have.lengthOf(0, 'Wrong amount of rejects');
+      expect(details._status.toNumber())
+        .to
+        .equal(0, 'Wrong status');
+      expect(details._confirmKeys)
+        .to
+        .have.lengthOf(1, 'Wrong amount of confirmations');
+      expect(details._eventDataSignatures)
+        .to
+        .have.lengthOf(1, 'Wrong amount of signatures');
+      expect(details._rejectKeys)
+        .to
+        .have.lengthOf(0, 'Wrong amount of rejects');
     });
     
     it('Try to confirm event with non-relay key', async function() {
@@ -85,7 +101,7 @@ describe('Test TON event', async function() {
 
       await freeton.utils.catchRunFail(
         Bridge.run('confirmTonEvent', eventParams, arbitraryKeyPair),
-        303
+        5001
       );
     });
     
@@ -97,7 +113,7 @@ describe('Test TON event', async function() {
       } = await TonEvent.runLocal('getDetails');
       
       for (const keyId of _.range(1, requiredConfirmations.toNumber())) {
-        await Bridge.run('confirmTonEvent', eventParams, tonWrapper.keys[keyId]);
+        await Bridge.run('confirmTonEvent', eventParams, tonWrapper.keys[keyId]).catch(e => console.log(e));
       }
 
       const details = await TonEvent.runLocal('getDetails', {});
@@ -145,15 +161,31 @@ describe('Test TON event', async function() {
 
       const details = await TonEvent.runLocal('getDetails', {});
   
-      expect(details._initData.eventTransaction.toNumber()).to.equal(eventParams.eventInitData.eventTransaction, 'Wrong event transaction');
-      expect(details._initData.eventIndex.toNumber()).to.equal(eventParams.eventInitData.eventIndex, 'Wrong event index');
-      expect(details._initData.eventBlockNumber.toNumber()).to.equal(eventParams.eventInitData.eventBlockNumber, 'Wrong block number');
-      expect(details._initData.eventBlock.toNumber()).to.equal(eventParams.eventInitData.eventBlock, 'Wrong block');
+      expect(details._initData.eventTransaction.toNumber())
+        .to
+        .equal(eventParams.eventInitData.eventTransaction, 'Wrong event transaction');
+      expect(details._initData.eventIndex.toNumber())
+        .to
+        .equal(eventParams.eventInitData.eventIndex, 'Wrong event index');
+      expect(details._initData.eventBlockNumber.toNumber())
+        .to
+        .equal(eventParams.eventInitData.eventBlockNumber, 'Wrong block number');
+      expect(details._initData.eventBlock.toNumber())
+        .to
+        .equal(eventParams.eventInitData.eventBlock, 'Wrong block');
   
-      expect(details._status.toNumber()).to.equal(0, 'Wrong status');
-      expect(details._confirmKeys).to.have.lengthOf(1, 'Wrong amount of confirmations');
-      expect(details._eventDataSignatures).to.have.lengthOf(1, 'Wrong amount of signatures');
-      expect(details._rejectKeys).to.have.lengthOf(0, 'Wrong amount of rejects');
+      expect(details._status.toNumber())
+        .to
+        .equal(0, 'Wrong status');
+      expect(details._confirmKeys)
+        .to
+        .have.lengthOf(1, 'Wrong amount of confirmations');
+      expect(details._eventDataSignatures)
+        .to
+        .have.lengthOf(1, 'Wrong amount of signatures');
+      expect(details._rejectKeys)
+        .to
+        .have.lengthOf(0, 'Wrong amount of rejects');
     });
 
     it('Try to reject event with non-relay key', async function() {
@@ -163,7 +195,7 @@ describe('Test TON event', async function() {
       
       await freeton.utils.catchRunFail(
         Bridge.run('rejectTonEvent', eventParams, arbitraryKeyPair),
-        303
+        5001
       );
     });
 

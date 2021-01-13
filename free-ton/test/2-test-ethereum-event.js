@@ -56,7 +56,7 @@ describe('Test Ethereum event', async function() {
         configurationID: 111
       };
   
-      await Bridge.run('confirmEthereumEvent', eventParams);
+      await Bridge.run('confirmEthereumEvent', eventParams).catch(e => console.log(e));
       
       const {
         output: {
@@ -97,7 +97,7 @@ describe('Test Ethereum event', async function() {
 
       await freeton.utils.catchRunFail(
         Bridge.run('confirmEthereumEvent', eventParams, arbitraryKeyPair),
-        303
+        5001
       );
     });
     
@@ -205,7 +205,7 @@ describe('Test Ethereum event', async function() {
       
       await freeton.utils.catchRunFail(
         Bridge.run('rejectEthereumEvent', eventParams, arbitraryKeyPair),
-        303
+        5001
       );
     });
 
