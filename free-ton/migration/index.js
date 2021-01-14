@@ -102,7 +102,9 @@ const tonWrapper = new freeton.TonWrapper({
       constructorParams: {},
       initParams: {
         basicInitData: {
-          eventABI: freeton.utils.stringToBytesArray(alias),
+          eventABI: alias === 'valid'
+            ? freeton.utils.stringToBytesArray('{"name":"TONStateChange","inputs":[{"name":"state","type":"uint256"}],"outputs":[]}')
+            : freeton.utils.stringToBytesArray(alias),
           eventRequiredConfirmations: 2,
           eventRequiredRejects: 2,
           eventInitialBalance: freeton.utils.convertCrystal('10', 'nano'),
@@ -110,7 +112,7 @@ const tonWrapper = new freeton.TonWrapper({
           eventCode: EthereumEvent.code,
         },
         initData: {
-          eventAddress: 0,
+          eventAddress: new BigNumber('0xc227CE9EdCc60a725DE66A1132171a22ae62a64F'.toLowerCase()),
           eventBlocksToConfirm: 1,
           proxyAddress: eventProxyFutureAddress,
         },
@@ -134,34 +136,7 @@ const tonWrapper = new freeton.TonWrapper({
       }).catch(e => console.log(e));
     }
   }
-
-  // - Prepare TON event configuration
-  const TonEventConfiguration = await freeton
-    .requireContract(tonWrapper, 'TonEventConfiguration');
-  const TonEvent = await freeton
-    .requireContract(tonWrapper, 'TonEvent');
-
-  // -- Deploy EventConfiguration (no Proxy contract deploy needed)
-  await migration.deploy({
-    contract: TonEventConfiguration,
-    constructorParams: {},
-    initParams: {
-      basicInitData: {
-        eventABI: freeton.utils.stringToBytesArray(''),
-        eventRequiredConfirmations: 2,
-        eventRequiredRejects: 2,
-        eventInitialBalance: freeton.utils.convertCrystal('10', 'nano'),
-        bridgeAddress: Bridge.address,
-        eventCode: TonEvent.code,
-      },
-      initData: {
-        eventAddress: Bridge.address,
-        proxyAddress: 0,
-      }
-    },
-    initialBalance: freeton.utils.convertCrystal('100', 'nano')
-  }).catch(e => console.log(e));
-
+  
   // Deploy event emitter
   const EventEmitter = await freeton
     .requireContract(tonWrapper, 'EventEmitter');
@@ -174,6 +149,32 @@ const tonWrapper = new freeton.TonWrapper({
     initialBalance: freeton.utils.convertCrystal('5', 'nano'),
   });
   
+  // - Prepare TON event configuration
+  const TonEventConfiguration = await freeton
+    .requireContract(tonWrapper, 'TonEventConfiguration');
+  const TonEvent = await freeton
+    .requireContract(tonWrapper, 'TonEvent');
+
+  // -- Deploy EventConfiguration (no Proxy contract deploy needed)
+  await migration.deploy({
+    contract: TonEventConfiguration,
+    constructorParams: {},
+    initParams: {
+      basicInitData: {
+        eventABI: freeton.utils.stringToBytesArray('{ "name": "TONStateChange", "inputs": [ {"name":"state","type":"uint256"} ], "outputs": [ ] }'),
+        eventRequiredConfirmations: 2,
+        eventRequiredRejects: 2,
+        eventInitialBalance: freeton.utils.convertCrystal('10', 'nano'),
+        bridgeAddress: Bridge.address,
+        eventCode: TonEvent.code,
+      },
+      initData: {
+        eventAddress: EventEmitter.address,
+        proxyAddress: 0,
+      }
+    },
+    initialBalance: freeton.utils.convertCrystal('100', 'nano')
+  }).catch(e => console.log(e));
   
   migration.logHistory();
   
