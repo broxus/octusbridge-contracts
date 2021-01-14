@@ -66,7 +66,7 @@ contract TonEvent is IEvent, ErrorCodes {
         if (confirmKeys.length >= initData.requiredConfirmations) {
             status = Status.Confirmed;
 
-            initData.tonEventConfiguration.transfer({ value: address(this).balance - 0.0001 ton });
+            initData.tonEventConfiguration.transfer({ value: address(this).balance - 0.5 ton });
         }
     }
 
@@ -91,7 +91,7 @@ contract TonEvent is IEvent, ErrorCodes {
         if (rejectKeys.length >= initData.requiredRejects) {
             status = Status.Rejected;
 
-            initData.tonEventConfiguration.transfer({ value: address(this).balance - 0.0001 ton });
+            initData.tonEventConfiguration.transfer({ value: address(this).balance - 0.5 ton });
         }
     }
 
