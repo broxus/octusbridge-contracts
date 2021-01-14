@@ -34,13 +34,13 @@ contract ProxySimple is IProxy {
         bytes memory payload,
         bytes[] memory signatures
     ) public {
-        require(
-            IBridge(bridge).countRelaysSignatures(
-                payload,
-                signatures
-            ) >= 2,
-            'Not enough relays signed'
-        );
+//        require(
+//            IBridge(bridge).countRelaysSignatures(
+//                payload,
+//                signatures
+//            ) >= 2,
+//            'Not enough relays signed'
+//        );
 
         (TONEvent memory _event) = abi.decode(
             payload,
