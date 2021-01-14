@@ -65,7 +65,7 @@ contract EthereumEvent is IEvent, ErrorCodes {
             _executeProxyCallback();
             status = Status.Confirmed;
 
-            initData.ethereumEventConfiguration.transfer({ value: address(this).balance - 0.0001 ton });
+            initData.ethereumEventConfiguration.transfer({ value: address(this).balance - 1.5 ton });
         }
     }
 
@@ -90,7 +90,7 @@ contract EthereumEvent is IEvent, ErrorCodes {
         if (rejectKeys.length >= initData.requiredRejects) {
             status = Status.Rejected;
 
-            initData.ethereumEventConfiguration.transfer({ value: address(this).balance - 0.0001 ton });
+            initData.ethereumEventConfiguration.transfer({ value: address(this).balance - 1.5 ton });
         }
     }
 
