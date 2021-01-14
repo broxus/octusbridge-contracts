@@ -161,6 +161,19 @@ const tonWrapper = new freeton.TonWrapper({
     },
     initialBalance: freeton.utils.convertCrystal('100', 'nano')
   }).catch(e => console.log(e));
+
+  // Deploy event emitter
+  const EventEmitter = await freeton
+    .requireContract(tonWrapper, 'EventEmitter');
+  await migration.deploy({
+    contract: EventEmitter,
+    constructorParams: {},
+    initParams: {
+      _randomNonce: determineDeploy ? 1 : freeton.utils.getRandomNonce(),
+    },
+    initialBalance: freeton.utils.convertCrystal('5', 'nano'),
+  });
+  
   
   migration.logHistory();
   
