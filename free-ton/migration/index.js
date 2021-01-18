@@ -105,9 +105,9 @@ const tonWrapper = new freeton.TonWrapper({
           eventABI: alias === 'valid'
             ? freeton.utils.stringToBytesArray('{"name":"TONStateChange","inputs":[{"name":"state","type":"uint256"}],"outputs":[]}')
             : freeton.utils.stringToBytesArray(alias),
-          eventRequiredConfirmations: 2,
-          eventRequiredRejects: 2,
-          eventInitialBalance: freeton.utils.convertCrystal('10', 'nano'),
+          eventRequiredConfirmations: 3,
+          eventRequiredRejects: 3,
+          eventInitialBalance: freeton.utils.convertCrystal('1', 'nano'),
           bridgeAddress: Bridge.address,
           eventCode: EthereumEvent.code,
         },
@@ -162,9 +162,9 @@ const tonWrapper = new freeton.TonWrapper({
     initParams: {
       basicInitData: {
         eventABI: freeton.utils.stringToBytesArray('{ "name": "TONStateChange", "inputs": [ {"name":"state","type":"uint256"} ], "outputs": [ ] }'),
-        eventRequiredConfirmations: 2,
-        eventRequiredRejects: 2,
-        eventInitialBalance: freeton.utils.convertCrystal('10', 'nano'),
+        eventRequiredConfirmations: 3,
+        eventRequiredRejects: 3,
+        eventInitialBalance: freeton.utils.convertCrystal('1', 'nano'),
         bridgeAddress: Bridge.address,
         eventCode: TonEvent.code,
       },
