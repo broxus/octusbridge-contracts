@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.6.0;
+pragma solidity ^0.6.2;
 pragma experimental ABIEncoderV2;
 
-
 import "./../libraries/ECDSA.sol";
-
 
 contract DistributedOwnable {
     using ECDSA for bytes32;

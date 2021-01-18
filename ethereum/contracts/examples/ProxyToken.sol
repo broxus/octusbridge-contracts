@@ -1,11 +1,10 @@
-pragma solidity ^0.6.0;
+pragma solidity ^0.6.2;
 pragma experimental ABIEncoderV2;
 
-
-import "./../interfaces/IToken.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./../libraries/UniversalERC20.sol";
 import "./../interfaces/IBridge.sol";
 import "./../interfaces/IProxy.sol";
-
 
 /*
     This is an example of Ethereum Proxy contract, which allows to implement
@@ -16,7 +15,7 @@ contract ProxyToken is IProxy {
     address public token;
     address public bridge;
 
-    using UniversalERC20 for IToken;
+    using UniversalERC20 for IERC20;
 
     constructor(
         address _token,
@@ -26,26 +25,26 @@ contract ProxyToken is IProxy {
         bridge = _bridge;
     }
 
-    event TokenLock(uint amount, uint wid, uint addr);
+    event TokenLock(uint128 amount, uint8 wid, uint256 addr, uint256 pubkey);
 
-    function lockTokens(uint amount, uint wid, uint addr) public {
+    function lockTokens(uint128 amount, uint8 wid, uint256 addr, uint256 pubkey) public {
         require(
-            IToken(token).balanceOf(msg.sender) >= amount,
+            IERC20(token).balanceOf(msg.sender) >= amount,
             "Token balance insufficient"
         );
         require(
-            IToken(token).allowance(msg.sender, address(this)) >= amount,
+            IERC20(token).allowance(msg.sender, address(this)) >= amount,
             "Allowance insufficient"
         );
 
         // Transfer tokens from user to the
-        IToken(token).universalTransferFrom(
+        IERC20(token).universalTransferFrom(
             msg.sender,
             address(this),
             amount
         );
 
-        emit TokenLock(amount, wid, addr);
+        emit TokenLock(amount, wid, addr, pubkey);
     }
 
     function broxusBridgeCallback(
@@ -70,6 +69,6 @@ contract ProxyToken is IProxy {
             (uint, address)
         );
 
-        IToken(token).universalTransfer(addr, amount);
+        IERC20(token).universalTransfer(addr, amount);
     }
 }
