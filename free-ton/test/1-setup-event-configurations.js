@@ -267,13 +267,15 @@ describe('Test event configurations', function() {
         _initData: tonInitData
       } = await TonEventConfiguration.runLocal('getDetails');
       
+      const NEW_ABI = `{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"state","type":"uint256"}],"name":"EthereumStateChange","type":"event"}`;
+
       updateParams = {
         id: 8888,
         targetID: 111,
         addr: ValidEthereumEventConfiguration.address, // Don't change the address
         basicInitData: { // Update ABI
           ...basicInitData,
-          eventABI: freeton.utils.stringToBytesArray('updated'),
+          eventABI: freeton.utils.stringToBytesArray(NEW_ABI),
         },
         ethereumInitData,
         tonInitData,
