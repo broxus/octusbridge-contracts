@@ -14,27 +14,27 @@ const tonWrapper = new freeton.TonWrapper({
 
 describe('Test event emitter', async function() {
   this.timeout(12000000);
-  
+
   before(async function() {
     await tonWrapper.setup();
-  
+
     EventEmitter = await freeton.requireContract(tonWrapper, 'EventEmitter');
     await EventEmitter.loadMigration();
 
     logger.log(`Event emitter address: ${EventEmitter.address}`);
   });
-  
+
   it('Emit event', async function() {
     await EventEmitter.run('setState', {
       _state: 777,
     });
-  
+
     const {
-      output: {
+      value: {
         state,
       }
     } = (await EventEmitter.getEvents('TONStateChange')).pop();
-    
+
     expect(parseInt(state)).to.equal(777, 'Wrong emitted state');
   });
 });

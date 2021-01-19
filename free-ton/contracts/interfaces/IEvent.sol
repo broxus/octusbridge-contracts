@@ -23,6 +23,4 @@ interface IEvent {
         uint requiredRejects;
         address proxyAddress;
     }
-
-    enum Status { InProcess, Confirmed, Rejected }
 }

@@ -52,5 +52,5 @@ try {
     execSync(`cd build && mv ${tvcFile} ${contractNameNoFolderStructure}.tvc`);
   });
 } catch (e) {
-  console.log(e.message);
+  // console.log(e.message);
 }

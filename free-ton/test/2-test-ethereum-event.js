@@ -3,11 +3,13 @@ const { expect } = require('chai');
 const freeton = require('ton-testing-suite');
 const _ = require('underscore');
 
+const utils = require('./utils');
+
 
 let Bridge;
 let EthereumEventConfiguration;
 let EthereumEvent;
-let EventProxy;
+let EventProxySimple;
 let eventParams;
 
 
@@ -16,12 +18,19 @@ const tonWrapper = new freeton.TonWrapper({
   seed: process.env.TON_SEED,
 });
 
+const relaysManager = new utils.RelaysManager(
+  parseInt(process.env.RELAYS_AMOUNT),
+  tonWrapper,
+);
+
+
 
 describe('Test Ethereum event', async function() {
   this.timeout(12000000);
   
   before(async function() {
     await tonWrapper.setup();
+    await relaysManager.setup();
     
     Bridge = await freeton
       .requireContract(tonWrapper, 'Bridge');
@@ -31,12 +40,12 @@ describe('Test Ethereum event', async function() {
       .requireContract(tonWrapper, 'EthereumEventConfiguration');
     await EthereumEventConfiguration.loadMigration('valid');
   
-    EventProxy = await freeton.requireContract(tonWrapper, 'EventProxy');
-    await EventProxy.loadMigration();
+    EventProxySimple = await freeton.requireContract(tonWrapper, 'EventProxySimple');
+    await EventProxySimple.loadMigration();
     
     logger.log(`Bridge address: ${Bridge.address}`);
     logger.log(`Ethereum event configuration address: ${EthereumEventConfiguration.address}`);
-    logger.log(`Ethereum Proxy address: ${EventProxy.address}`);
+    logger.log(`Ethereum Proxy address: ${EventProxySimple.address}`);
   });
   
   describe('Confirm event', async function() {
@@ -56,10 +65,14 @@ describe('Test Ethereum event', async function() {
         configurationID: 111
       };
   
-      await Bridge.run('confirmEthereumEvent', eventParams).catch(e => console.log(e));
+      await relaysManager.runTarget({
+        contract: Bridge,
+        method: 'confirmEthereumEvent',
+        input: eventParams,
+      });
       
       const {
-        output: {
+        value: {
           addr: ethereumEventAddress,
         }
       } = (await EthereumEventConfiguration.getEvents('EventConfirmation')).pop();
@@ -88,18 +101,18 @@ describe('Test Ethereum event', async function() {
         .equal(eventParams.eventInitData.eventBlock, 'Wrong block');
 
       expect(details._status.toNumber()).to.equal(0, 'Wrong status');
-      expect(details._confirmKeys).to.have.lengthOf(1, 'Wrong amount of confirmations');
-      expect(details._rejectKeys).to.have.lengthOf(0, 'Wrong amount of rejects');
+      expect(details._confirmRelays).to.have.lengthOf(1, 'Wrong amount of confirmations');
+      expect(details._rejectRelays).to.have.lengthOf(0, 'Wrong amount of rejects');
     });
     
-    it('Try to confirm event with non-relay key', async function() {
-      const arbitraryKeyPair = await tonWrapper.ton.crypto.ed25519Keypair();
-
-      await freeton.utils.catchRunFail(
-        Bridge.run('confirmEthereumEvent', eventParams, arbitraryKeyPair),
-        5001
-      );
-    });
+    // it('Try to confirm event with non-relay key', async function() {
+      // const arbitraryKeyPair = await tonWrapper.ton.crypto.generate_random_sign_keys();
+      //
+      // await freeton.utils.catchRunFail(
+      //   Bridge.run('confirmEthereumEvent', eventParams, arbitraryKeyPair),
+      //   5001
+      // );
+    // });
     
     it('Confirm event enough times', async function() {
       const {
@@ -109,29 +122,48 @@ describe('Test Ethereum event', async function() {
       } = await EthereumEvent.runLocal('getDetails');
 
       for (const keyId of _.range(1, requiredConfirmations.toNumber())) {
-        await Bridge.run('confirmEthereumEvent', eventParams, tonWrapper.keys[keyId]);
+        await relaysManager.runTarget({
+          contract: Bridge,
+          method: 'confirmEthereumEvent',
+          input: eventParams,
+        }, keyId);
       }
 
       const details = await EthereumEvent.runLocal('getDetails', {});
       
-      expect(details._confirmKeys).to.have.lengthOf(requiredConfirmations.toNumber(), 'Wrong amount of confirmations');
-      expect(details._rejectKeys).to.have.lengthOf(0, 'Wrong amount of rejects');
+      expect(details._confirmRelays).to.have.lengthOf(requiredConfirmations.toNumber(), 'Wrong amount of confirmations');
+      expect(details._rejectRelays).to.have.lengthOf(0, 'Wrong amount of rejects');
       expect(details._status.toNumber()).to.equal(1, 'Wrong proxy callback executed status');
-      // expect((await tonWrapper.getBalance(EthereumEvent.address)).toNumber()).to.equal(0, 'Wrong balance');
+      expect((await tonWrapper.getBalance(EthereumEvent.address)).toNumber()).to.be.greaterThan(0, 'Wrong balance');
 
-      const proxyDetails = await EventProxy.runLocal('getDetails', {});
-
-      expect(proxyDetails._state.toNumber())
+      const proxyDetails = await EventProxySimple.runLocal('getDetails', {});
+  
+      expect(proxyDetails._callbackReceived)
         .to
-        .equal(1234567, 'Wrong decoded event data');
-
-      expect(proxyDetails._ethereumEventConfiguration)
-        .to
-        .equal(EthereumEventConfiguration.address, 'Wrong Proxy event configuration address');
+        .equal(false, 'Proxy should not receive callback');
+    });
+    
+    it('Execute event callback', async function() {
+      await relaysManager.runTarget({
+        contract: EthereumEvent,
+        method: 'executeProxyCallback',
+        input: {}
+      });
+      
+      const proxyDetails = await EventProxySimple.runLocal('getDetails', {});
 
       expect(proxyDetails._callbackReceived)
         .to
         .equal(true, 'Proxy did not receive callback');
+      expect(proxyDetails._state.toNumber())
+        .to
+        .equal(1234567, 'Wrong decoded event data');
+      expect(proxyDetails._ethereumEventConfiguration)
+        .to
+        .equal(EthereumEventConfiguration.address, 'Wrong Proxy event configuration address');
+      
+      const details = await EthereumEvent.runLocal('getDetails', {});
+  
       expect(details._initData.eventTransaction.toNumber())
         .to
         .equal(proxyDetails._eventData.eventTransaction.toNumber(), 'Wrong Proxy event transaction');
@@ -164,10 +196,14 @@ describe('Test Ethereum event', async function() {
         configurationID: 111
       };
 
-      await Bridge.run('confirmEthereumEvent', eventParams);
+      await relaysManager.runTarget({
+        contract: Bridge,
+        method: 'confirmEthereumEvent',
+        input: eventParams,
+      });
 
       const {
-        output: {
+        value: {
           addr: ethereumEventAddress,
         }
       } = (await EthereumEventConfiguration.getEvents('EventConfirmation')).pop();
@@ -196,17 +232,17 @@ describe('Test Ethereum event', async function() {
         .equal(eventParams.eventInitData.eventBlock, 'Wrong block');
 
       expect(details._status.toNumber()).to.equal(0, 'Wrong status');
-      expect(details._confirmKeys).to.have.lengthOf(1, 'Wrong amount of confirmations');
-      expect(details._rejectKeys).to.have.lengthOf(0, 'Wrong amount of rejects');
+      expect(details._confirmRelays).to.have.lengthOf(1, 'Wrong amount of confirmations');
+      expect(details._rejectRelays).to.have.lengthOf(0, 'Wrong amount of rejects');
     });
 
     it('Try to reject event with non-relay key', async function() {
-      const arbitraryKeyPair = await tonWrapper.ton.crypto.ed25519Keypair();
-      
-      await freeton.utils.catchRunFail(
-        Bridge.run('rejectEthereumEvent', eventParams, arbitraryKeyPair),
-        5001
-      );
+      // const arbitraryKeyPair = await tonWrapper.ton.crypto.generate_random_sign_keys();
+      //
+      // await freeton.utils.catchRunFail(
+      //   Bridge.run('rejectEthereumEvent', eventParams, arbitraryKeyPair),
+      //   5001
+      // );
     });
 
     it('Reject event enough times', async function() {
@@ -217,15 +253,22 @@ describe('Test Ethereum event', async function() {
       } = await EthereumEvent.runLocal('getDetails');
 
       for (const keyId of _.range(1, requiredRejects.toNumber() + 1)) {
-        await Bridge.run('rejectEthereumEvent', eventParams, tonWrapper.keys[keyId]);
+        await relaysManager.runTarget({
+          contract: Bridge,
+          method: 'rejectEthereumEvent',
+          input: eventParams,
+        }, keyId);
       }
 
       const details = await EthereumEvent.runLocal('getDetails', {});
 
-      expect(details._confirmKeys).to.have.lengthOf(1, 'Wrong amount of confirmations');
-      expect(details._rejectKeys).to.have.lengthOf(requiredRejects.toNumber(), 'Wrong amount of rejects');
-      expect(details._status.toNumber()).to.equal(2, 'Wrong status');
-      // expect((await tonWrapper.getBalance(EthereumEvent.address)).toNumber()).to.equal(0, 'Wrong balance');
+      expect(details._confirmRelays).to.have.lengthOf(1, 'Wrong amount of confirmations');
+      expect(details._rejectRelays).to.have.lengthOf(requiredRejects.toNumber(), 'Wrong amount of rejects');
+      expect(details._status.toNumber()).to.equal(3, 'Wrong status');
+      expect(
+        (await tonWrapper.getBalance(EthereumEvent.address)).toNumber() / 10 ** 9
+      ).to.be.lessThan(0.1, 'Too many tons left')
+        .to.be.greaterThan(0, 'Not enough balance to remain not-frozen');
     });
   });
 });

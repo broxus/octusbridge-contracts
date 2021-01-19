@@ -15,25 +15,29 @@ SETGLOB 6
 ;; end constructor protection
 ; Decode input parameters
 ENDS
-; constructor Target
-GETGLOB 2
-NEQINT 0
-THROWIFNOT 100
+; constructor RelayAccount
 ACCEPT
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
 ; expValue
 ; end expValue
-PUSHINT 0
 ; colValue
 SETGLOB 11
 ; end colValue
-; end constructor Target
+; end constructor RelayAccount
 CALL $c7_to_c4$
 TRUE
 SETGLOB 7
 
-.globl	setState
-.public	setState
-.type	setState, @function
+.globl	sendTransaction
+.public	sendTransaction
+.type	sendTransaction, @function
 GETGLOB 1
 ISNULL
 PUSHCONT {
@@ -41,108 +45,155 @@ PUSHCONT {
 }
 IF
 ; Decode input parameters
-; Decode newState
-LDU 256
-; Decode newAuthor
+; Decode dest
+LDMSGADDRQ
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+}
+IFNOT
+; Decode value
+LDUQ 128
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 128
+}
+IFNOT
+; Decode bounce
+LDIQ 1
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDI 1
+}
+IFNOT
+; Decode flags
+LDUQ 8
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 8
+}
+IFNOT
+; Decode payload
+;; decode TvmCell
 LDREF
 ENDS
-;; param: newState
-;; param: newAuthor
-; function setState
-; expValue
-; end expValue
-;; push identifier newState
-PUSH S1
-; colValue
-SETGLOB 11
-; end colValue
-; expValue
-; end expValue
-;; push identifier newAuthor
+;; param: dest
+;; param: value
+;; param: bounce
+;; param: flags
+;; param: payload
+; function sendTransaction
+GETGLOB 5
 DUP
-; colValue
-SETGLOB 12
-; end colValue
-DROP2
-; end function setState
-CALL $c7_to_c4$
-TRUE
-SETGLOB 7
-
-.globl	setState_internal
-.type	setState_internal, @function
-;; param: newState
-;; param: newAuthor
-; function setState
-; expValue
-; end expValue
-;; push identifier newState
-PUSH S1
-; colValue
-SETGLOB 11
-; end colValue
-; expValue
-; end expValue
-;; push identifier newAuthor
-DUP
-; colValue
-SETGLOB 12
-; end colValue
-DROP2
-; end function setState
-
-.globl	getState
-.public	getState
-.type	getState, @function
-GETGLOB 1
 ISNULL
 PUSHCONT {
-	CALL $c4_to_c7$
-}
-IF
-; Decode input parameters
-ENDS
-; function getState
-;; return
-;; push identifier state
-GETGLOB 11
-;; push identifier author
-GETGLOB 12
-;; emitting 2 value(s)
-PUSH S2
-EQINT -1
-PUSHCONT {
-	PUSH S4
-	CTOS
-	LDU 2
-	LDMSGADDR
 	DROP
-	NIP
-	NEWC
-	STSLICECONST xc
-	STSLICE
-	PUSHINT 96
-	STZEROES
-	STSLICECONST 0
-	STSLICECONST 0
-	STSLICECONST xbe3a7415
-	PUSH S2
-	STUR 256
-	PUSH S1
-	STREFR
-	ENDC
-	PUSHINT 1
-	SENDRAWMSG
+	PUSHINT 0
 }
 IF
-DROP2
-; end function getState
+;; push identifier owner
+GETGLOB 11
+;; ==
+EQUAL
+THROWIFNOT 101
+ACCEPT
+;; transfer()
+;; push identifier value
+PUSH S3
+;; push identifier dest
+PUSH S5
+;; push identifier bounce
+PUSH S4
+NEWC
+STSLICECONST x6_
+STI 1
+PUSHINT 3
+STZEROES
+STSLICE
+SWAP
+STGRAMS
+PUSHINT 105
+STZEROES
+STSLICECONST 0
+STSLICECONST 1
+;; push identifier payload
+PUSH S1
+STREFR
+ENDC
+;; push identifier flags
+PUSH S2
+SENDRAWMSG
+BLKDROP 5
+; end function sendTransaction
 PUSHCONT {
 	CALL $c7_to_c4$
 }
 IF
 TRUE
 SETGLOB 7
+
+.globl	sendTransaction_internal
+.type	sendTransaction_internal, @function
+;; param: dest
+;; param: value
+;; param: bounce
+;; param: flags
+;; param: payload
+; function sendTransaction
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+;; push identifier owner
+GETGLOB 11
+;; ==
+EQUAL
+THROWIFNOT 101
+ACCEPT
+;; transfer()
+;; push identifier value
+PUSH S3
+;; push identifier dest
+PUSH S5
+;; push identifier bounce
+PUSH S4
+NEWC
+STSLICECONST x6_
+STI 1
+PUSHINT 3
+STZEROES
+STSLICE
+SWAP
+STGRAMS
+PUSHINT 105
+STZEROES
+STSLICECONST 0
+STSLICECONST 1
+;; push identifier payload
+PUSH S1
+STREFR
+ENDC
+;; push identifier flags
+PUSH S2
+SENDRAWMSG
+BLKDROP 5
+; end function sendTransaction
 
 .globl	c7_to_c4
 .type	c7_to_c4, @function
@@ -155,11 +206,9 @@ GETGLOB 6
 STUR 1
 GETGLOB 10
 GETGLOB 11
-GETGLOB 12
-REVERSE 4, 0
+XCHG s2
+STU 16
 STU 256
-STU 256
-STREF
 ENDC
 POP C4
 
@@ -170,10 +219,8 @@ CTOS        ; c4
 LDU 256      ; pubkey c4
 LDU 64      ; pubkey timestamp c4
 LDU 1       ; pubkey [timestamp] constructor_flag memory
-LDU 256
-LDU 256
-PLDREF
-SETGLOB 12
+LDU 16
+PLDU 256
 SETGLOB 11
 SETGLOB 10
 TRUE
@@ -192,10 +239,8 @@ PUSHCONT {
 	LDU 256      ; pubkey c4
 	LDU 64      ; pubkey timestamp c4
 	LDU 1       ; pubkey [timestamp] constructor_flag memory
-	LDU 256
-	LDU 256
-	PLDREF
-	SETGLOB 12
+	LDU 16
+	PLDU 256
 	SETGLOB 11
 	SETGLOB 10
 	TRUE
@@ -212,20 +257,16 @@ PUSHCONT {
 	PUSHINT 64
 	DICTUGET
 	PUSHCONT {
-		PLDU 256
+		PLDU 16
 	}
 	PUSHCONT {
 		PUSHINT 0
 	}
 	IFELSE
 	SETGLOB 10
-	; init state
+	; init owner
 	PUSHINT 0
 	SETGLOB 11
-	; init author
-	NEWC
-	ENDC
-	SETGLOB 12
 	; set contract pubkey
 	PUSHINT 0
 	SWAP
@@ -297,12 +338,30 @@ PUSHCONT {
 	LDSLICEX ; signatureSlice msgSlice
 	DUP      ; signatureSlice msgSlice msgSlice
 	HASHSU   ; signatureSlice msgSlice hashMsgSlice
-	ROT
-	GETGLOB 2
+	SWAP  ; signatureSlice hashMsgSlice msgSlice
+	LDU 1 ; signatureSlice hashMsgSlice havePubkey msgSlice
+	SWAP  ; signatureSlice hashMsgSlice msgSlice havePubkey
+	PUSHCONT {
+		LDU 256       ; signatureSlice hashMsgSlice pubkey msgSlice
+		XCHG s3
+		SWAP
+	}
+	PUSHCONT {
+		XCHG s2
+		GETGLOB 2
+	}
+	IFELSE
+	DUP
+	SETGLOB 5
 	CHKSIGNU      ; msgSlice isSigned
 	THROWIFNOT 40 ; msgSlice
 }
-IF
+PUSHCONT {
+	LDU 1      ; havePubkey msgSlice
+	SWAP       ; msgSlice havePubkey
+	THROWIF 58 ; msgSlice
+}
+IFELSE
 LDU 64                         ; timestamp msgSlice
 SWAP                           ; msgSlice timestamp
 CALL $replay_protection_macro$ ; msgSlice

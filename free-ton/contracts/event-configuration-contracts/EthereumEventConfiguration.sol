@@ -31,11 +31,11 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Error
         EventAddress is always emitted!
         @dev Should be called only through Bridge contract
         @param initData Ethereum event init data
-        @param relayKey Relay key, who initialized the Bridge Ethereum event confirmation
+        @param relay Relay key, who initialized the Bridge Ethereum event confirmation
     **/
     function confirmEvent(
         IEvent.EthereumEventInitData eventInitData,
-        uint relayKey
+        address relay
     )
         public
         onlyBridge
@@ -56,12 +56,12 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Error
                 initData: eventInitData
             }
         }(
-            relayKey
+            relay
         );
 
-        EthereumEvent(ethereumEventAddress).confirm{value: 1 ton}(relayKey);
+        EthereumEvent(ethereumEventAddress).confirm{value: 1 ton}(relay);
 
-        emit EventConfirmation(ethereumEventAddress, relayKey);
+        emit EventConfirmation(ethereumEventAddress, relay);
     }
 
     /*
@@ -71,11 +71,11 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Error
         EventAddress is always emitted!
         @dev Should be called only through Bridge contract
         @param eventInitData Initial data for event contract
-        @param relayKey Relay key, who initialized the Bridge Ethereum event reject
+        @param relay Relay key, who initialized the Bridge Ethereum event reject
     **/
     function rejectEvent(
         IEvent.EthereumEventInitData eventInitData,
-        uint relayKey
+        address relay
     ) public onlyBridge transferAfter(basicInitData.bridgeAddress, msg.value) {
         tvm.accept();
 
@@ -92,12 +92,12 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Error
                 initData: eventInitData
             }
         }(
-            relayKey
+            relay
         );
 
-        EthereumEvent(ethereumEventAddress).reject{value: 1 ton}(relayKey);
+        EthereumEvent(ethereumEventAddress).reject{value: 1 ton}(relay);
 
-        emit EventReject(ethereumEventAddress, relayKey);
+        emit EventReject(ethereumEventAddress, relay);
     }
 
     /*

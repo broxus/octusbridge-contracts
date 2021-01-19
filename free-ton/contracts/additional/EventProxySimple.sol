@@ -8,7 +8,7 @@ import './../event-contracts/EthereumEvent.sol';
 
 
 contract EventProxySimple is IProxy {
-    uint static _randomNonce;
+    uint16 static _randomNonce;
 
     bool callbackReceived = false;
 
@@ -57,6 +57,13 @@ contract EventProxySimple is IProxy {
         callbackReceived = true;
         eventData = _eventData;
         (state) = _eventData.eventData.toSlice().decode((uint));
+    }
+
+    function broxusBridgeNotification(
+        IEvent.EthereumEventInitData _eventData
+    ) override public view {
+        // Do nothing need for handy monitoring confirmed events
+        // So someone can call them after with any gas
     }
 
     function getDetails() public view returns (

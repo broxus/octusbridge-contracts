@@ -10,27 +10,27 @@ import "./interfaces/IEvent.sol";
 import "./interfaces/IBridge.sol";
 import "./interfaces/IEventConfiguration.sol";
 
-import "./utils/KeysOwnable.sol";
+import "./utils/AccountsOwnable.sol";
+import "./utils/TransferUtils.sol";
 
-
-contract Bridge is KeysOwnable, IBridge {
-    uint static _randomNonce;
+contract Bridge is AccountsOwnable, TransferUtils, IBridge {
+    uint16 static _randomNonce;
 
     BridgeConfiguration bridgeConfiguration;
 
     struct EventConfiguration {
-        mapping(uint => bool) votes;
+        mapping(address => bool) votes;
         address addr;
         bool status;
         IEventConfiguration.EventType _type;
     }
 
     mapping(uint => EventConfiguration) eventConfigurations;
-    event EventConfigurationCreationVote(uint id, uint relayKey, bool vote);
+    event EventConfigurationCreationVote(uint id, address relay, bool vote);
     event EventConfigurationCreationEnd(uint id, bool active, address addr, IEventConfiguration.EventType _type);
 
     struct EventConfigurationUpdate {
-        mapping(uint => bool) votes;
+        mapping(address => bool) votes;
         uint targetID;
         address addr;
         IEventConfiguration.BasicConfigurationInitData basicInitData;
@@ -38,15 +38,15 @@ contract Bridge is KeysOwnable, IBridge {
         IEventConfiguration.TonEventConfigurationInitData tonInitData;
     }
     mapping(uint => EventConfigurationUpdate) eventConfigurationsUpdate;
-    event EventConfigurationUpdateVote(uint id, uint relayKey, bool vote);
+    event EventConfigurationUpdateVote(uint id, address relay, bool vote);
     event EventConfigurationUpdateEnd(uint id, bool active);
 
-    mapping(BridgeConfiguration => mapping(uint => bool)) bridgeConfigurationVotes;
-    event BridgeConfigurationUpdateVote(BridgeConfiguration _bridgeConfiguration, uint relayKey, Vote vote);
+    mapping(BridgeConfiguration => mapping(address => bool)) bridgeConfigurationVotes;
+    event BridgeConfigurationUpdateVote(BridgeConfiguration _bridgeConfiguration, address relay, Vote vote);
     event BridgeConfigurationUpdateEnd(BridgeConfiguration _bridgeConfiguration, bool status);
 
-    mapping(BridgeRelay => mapping(uint => bool)) bridgeRelayVotes;
-    event BridgeRelaysUpdateVote(BridgeRelay target, uint relayKey, Vote vote);
+    mapping(BridgeRelay => mapping(address => bool)) bridgeRelayVotes;
+    event BridgeRelaysUpdateVote(BridgeRelay target, address relay, Vote vote);
     event BridgeRelaysUpdateEnd(BridgeRelay target, bool status);
 
     /*
@@ -66,21 +66,21 @@ contract Bridge is KeysOwnable, IBridge {
 
     /*
         Basic Bridge contract
-        @param _relayKeys List of relays public keys
+        @param _relayAccounts List of relays accounts
         @param _relayEthereumAccounts List of relays Ethereum accounts
         @param _bridgeConfiguration Initial Bridge configuration
     */
     constructor(
-        uint[] _relayKeys,
+        address[] _relayAccounts,
         uint160[] _relayEthereumAccounts,
         BridgeConfiguration _bridgeConfiguration
     ) public {
         require(tvm.pubkey() != 0);
-        require(_relayKeys.length == _relayEthereumAccounts.length, KEYS_DIFFERENT_SHAPE);
+        require(_relayAccounts.length == _relayEthereumAccounts.length, KEYS_DIFFERENT_SHAPE);
         tvm.accept();
 
-        for (uint i=0; i < _relayKeys.length; i++) {
-            _grantOwnership(_relayKeys[i], _relayEthereumAccounts[i]);
+        for (uint i=0; i < _relayAccounts.length; i++) {
+            _grantOwnership(_relayAccounts[i], _relayEthereumAccounts[i]);
         }
 
         bridgeConfiguration = _bridgeConfiguration;
@@ -89,7 +89,7 @@ contract Bridge is KeysOwnable, IBridge {
 
     /*
         Vote for Event configuration (any type).
-        @dev Called only by relay. In case msg.pubkey() votes second time - nothing happens.
+        @dev Called only by relay.
         @dev Event configuration ID should not exist, revert otherwise
         @param id TON event configuration contract address
         @param addr Address of event configuration contract
@@ -99,20 +99,24 @@ contract Bridge is KeysOwnable, IBridge {
         uint id,
         address addr,
         IEventConfiguration.EventType _type
-    ) public onlyActive onlyOwnerKey(msg.pubkey()) {
-        tvm.accept();
+    )
+        public
+        onlyActive
+        onlyOwnerAddress(msg.sender)
+        transferAfterRest(msg.sender)
+    {
         require(!eventConfigurations.exists(id), EVENT_CONFIGURATION_ALREADY_EXISTS);
 
-        uint key = msg.pubkey();
+        address relay = msg.sender;
 
         EventConfiguration _eventConfiguration;
         _eventConfiguration.addr = addr;
         _eventConfiguration._type = _type;
-        _eventConfiguration.votes[key] = true;
+        _eventConfiguration.votes[relay] = true;
 
         eventConfigurations[id] = _eventConfiguration;
 
-        emit EventConfigurationCreationVote(id, key, true);
+        emit EventConfigurationCreationVote(id, relay, true);
     }
 
     /*
@@ -124,35 +128,49 @@ contract Bridge is KeysOwnable, IBridge {
     function voteForEventConfigurationCreation(
         uint id,
         bool vote
-    ) public onlyActive onlyOwnerKey(msg.pubkey()) {
-        tvm.accept();
+    )
+        public
+        onlyActive
+        onlyOwnerAddress(msg.sender)
+        transferAfterRest(msg.sender)
+    {
         require(eventConfigurations.exists(id), EVENT_CONFIGURATION_NOT_EXISTS);
 
         EventConfiguration _eventConfiguration = eventConfigurations[id];
-        _eventConfiguration.votes[msg.pubkey()] = vote;
+        _eventConfiguration.votes[msg.sender] = vote;
         eventConfigurations[id] = _eventConfiguration;
 
         // Get results results
-        (uint[] confirmKeys, uint[] rejectKeys,,) = getEventConfigurationDetails(id);
+        (address[] confirmRelays, address[] rejectRelays,,) = getEventConfigurationDetails(id);
 
         // - Check voting results and make updates if necessary
         if (
             // -- Relay voted for confirmation AND enough confirmations received AND configuration not confirmed before
             // -- Enable configuration
-            confirmKeys.length >= bridgeConfiguration.eventConfigurationRequiredConfirmations &&
+            confirmRelays.length >= bridgeConfiguration.eventConfigurationRequiredConfirmations &&
             vote == true &&
             eventConfigurations[id].status == false
         ) {
             eventConfigurations[id].status = true;
 
-            emit EventConfigurationCreationEnd(id, true, eventConfigurations[id].addr, eventConfigurations[id]._type);
+            emit EventConfigurationCreationEnd(
+                id,
+                true,
+                eventConfigurations[id].addr,
+                eventConfigurations[id]._type
+            );
         } else if (
             // -- Relay voted for reject AND enough rejects received
             // -- Remove configuration
-            rejectKeys.length >= bridgeConfiguration.eventConfigurationRequiredRejects &&
+            rejectRelays.length >= bridgeConfiguration.eventConfigurationRequiredRejects &&
             vote == false
         ) {
-            emit EventConfigurationCreationEnd(id, false, eventConfigurations[id].addr, eventConfigurations[id]._type);
+            emit EventConfigurationCreationEnd(
+                id,
+                false,
+                eventConfigurations[id].addr,
+                eventConfigurations[id]._type
+            );
 
             delete eventConfigurations[id];
         }
@@ -164,18 +182,16 @@ contract Bridge is KeysOwnable, IBridge {
     function getEventConfigurationDetails(
         uint id
     ) public view returns (
-        uint[] confirmKeys,
-        uint[] rejectKeys,
+        address[] confirmRelays,
+        address[] rejectRelays,
         address addr,
         bool status
     ) {
-        tvm.accept();
-
-        for ((uint key, bool vote): eventConfigurations[id].votes) {
+        for ((address relay, bool vote): eventConfigurations[id].votes) {
             if (vote == true) {
-                confirmKeys.push(key);
+                confirmRelays.push(relay);
             } else {
-                rejectKeys.push(key);
+                rejectRelays.push(relay);
             }
         }
 
@@ -194,7 +210,6 @@ contract Bridge is KeysOwnable, IBridge {
         address[] addrs,
         IEventConfiguration.EventType[] _types
     ) {
-        tvm.accept();
 
         for ((uint id, EventConfiguration configuration): eventConfigurations) {
             if (configuration.status) {
@@ -214,13 +229,18 @@ contract Bridge is KeysOwnable, IBridge {
     function confirmEthereumEvent(
         IEvent.EthereumEventInitData eventInitData,
         uint configurationID
-    ) public view onlyActive onlyOwnerKey(msg.pubkey()) {
-        tvm.accept();
+    )
+        public
+        view
+        onlyActive
+        onlyOwnerAddress(msg.sender)
+        transferAfterRest(msg.sender)
+    {
         onlyActiveConfiguration(configurationID);
 
         EthereumEventConfiguration(eventConfigurations[configurationID].addr).confirmEvent{value: 1 ton}(
             eventInitData,
-            msg.pubkey()
+            msg.sender
         );
     }
 
@@ -233,13 +253,18 @@ contract Bridge is KeysOwnable, IBridge {
     function rejectEthereumEvent(
         IEvent.EthereumEventInitData eventInitData,
         uint configurationID
-    ) public view onlyActive onlyOwnerKey(msg.pubkey()) {
-        tvm.accept();
+    )
+        public
+        view
+        onlyActive
+        onlyOwnerAddress(msg.sender)
+        transferAfterRest(msg.sender)
+    {
         onlyActiveConfiguration(configurationID);
 
         EthereumEventConfiguration(eventConfigurations[configurationID].addr).rejectEvent{value: 1 ton}(
             eventInitData,
-            msg.pubkey()
+            msg.sender
         );
     }
 
@@ -254,14 +279,19 @@ contract Bridge is KeysOwnable, IBridge {
         IEvent.TonEventInitData eventInitData,
         bytes eventDataSignature,
         uint configurationID
-    ) public view onlyActive onlyOwnerKey(msg.pubkey()) {
-        tvm.accept();
+    )
+        public
+        view
+        onlyActive
+        onlyOwnerAddress(msg.sender)
+        transferAfterRest(msg.sender)
+    {
         onlyActiveConfiguration(configurationID);
 
         TonEventConfiguration(eventConfigurations[configurationID].addr).confirmEvent{value: 1 ton}(
             eventInitData,
             eventDataSignature,
-            msg.pubkey()
+            msg.sender
         );
     }
 
@@ -275,13 +305,18 @@ contract Bridge is KeysOwnable, IBridge {
     function rejectTonEvent(
         IEvent.TonEventInitData eventInitData,
         uint configurationID
-    ) public view onlyActive onlyOwnerKey(msg.pubkey()) {
-        tvm.accept();
+    )
+        public
+        view
+        onlyActive
+        onlyOwnerAddress(msg.sender)
+        transferAfterRest(msg.sender)
+    {
         onlyActiveConfiguration(configurationID);
 
         TonEventConfiguration(eventConfigurations[configurationID].addr).rejectEvent{value: 1 ton}(
             eventInitData,
-            msg.pubkey()
+            msg.sender
         );
     }
 
@@ -309,21 +344,24 @@ contract Bridge is KeysOwnable, IBridge {
     function updateBridgeConfiguration(
         BridgeConfiguration _bridgeConfiguration,
         Vote _vote
-    ) public onlyOwnerKey(msg.pubkey()) {
+    )
+        public
+        onlyOwnerAddress(msg.sender)
+        transferAfterRest(msg.sender)
+    {
         // TODO: discuss replay protection in TON and Ethereum
-        tvm.accept();
 
-        emit BridgeConfigurationUpdateVote(_bridgeConfiguration, msg.pubkey(), _vote);
+        emit BridgeConfigurationUpdateVote(_bridgeConfiguration, msg.sender, _vote);
 
         bool vote = getVotingDirection(_vote);
 
-        bridgeConfigurationVotes[_bridgeConfiguration][msg.pubkey()] = vote;
+        bridgeConfigurationVotes[_bridgeConfiguration][msg.sender] = vote;
 
         // Check the results
-        (uint[] confirmKeys, uint[] rejectKeys) = getBridgeConfigurationVotes(_bridgeConfiguration);
+        (address[] confirmRelays, address[] rejectRelays) = getBridgeConfigurationVotes(_bridgeConfiguration);
 
         // - If enough confirmations received - update configuration and remove voting
-        if (confirmKeys.length == bridgeConfiguration.bridgeConfigurationUpdateRequiredConfirmations) {
+        if (confirmRelays.length == bridgeConfiguration.bridgeConfigurationUpdateRequiredConfirmations) {
             bridgeConfiguration = _bridgeConfiguration;
             _removeBridgeConfigurationVoting(_bridgeConfiguration);
 
@@ -331,7 +369,7 @@ contract Bridge is KeysOwnable, IBridge {
         }
 
         // - If enough rejects received - remove voting
-        if (rejectKeys.length == bridgeConfiguration.bridgeConfigurationUpdateRequiredRejects) {
+        if (rejectRelays.length == bridgeConfiguration.bridgeConfigurationUpdateRequiredRejects) {
             _removeBridgeConfigurationVoting(_bridgeConfiguration);
 
             emit BridgeConfigurationUpdateEnd(_bridgeConfiguration, false);
@@ -351,20 +389,20 @@ contract Bridge is KeysOwnable, IBridge {
     /*
         Get list of votes for bridge configuration update ID
         @param _bridgeConfiguration Bridge configuration
-        @returns confirmKeys List of keys who confirmed the update
-        @returns rejectKeys List of keys who rejected the update
+        @returns confirmRelays List of keys who confirmed the update
+        @returns rejectRelays List of keys who rejected the update
     */
     function getBridgeConfigurationVotes(
         BridgeConfiguration _bridgeConfiguration
     ) public view returns(
-        uint[] confirmKeys,
-        uint[] rejectKeys
+        address[] confirmRelays,
+        address[] rejectRelays
     ) {
-        for ((uint key, bool vote): bridgeConfigurationVotes[_bridgeConfiguration]) {
+        for ((address relay, bool vote): bridgeConfigurationVotes[_bridgeConfiguration]) {
             if (vote == true) {
-                confirmKeys.push(key);
+                confirmRelays.push(relay);
             } else {
-                rejectKeys.push(key);
+                rejectRelays.push(relay);
             }
         }
     }
@@ -373,7 +411,7 @@ contract Bridge is KeysOwnable, IBridge {
     /*
         Initialize event configuration update. Allows to update event configuration contract address.
         And make a call to the event configuration contract, which updates any data.
-        @dev Basic init data and init data would be send to event configuration anyway
+        @dev Basic init data and init data would be send to event configuration in case of confirmation
         @dev If you don't want to change them - just copy already existing and use them
         @dev If you want to update Ethereum event configuration, fill the tonInitData with dummy data,
         it won't be used anyway. The same works for TON configuration update.
@@ -387,12 +425,16 @@ contract Bridge is KeysOwnable, IBridge {
         IEventConfiguration.BasicConfigurationInitData basicInitData,
         IEventConfiguration.EthereumEventConfigurationInitData ethereumInitData,
         IEventConfiguration.TonEventConfigurationInitData tonInitData
-    ) public onlyActive onlyOwnerKey(msg.pubkey()) {
-        tvm.accept();
+    )
+        public
+        onlyActive
+        onlyOwnerAddress(msg.sender)
+        transferAfterRest(msg.sender)
+    {
         require(!eventConfigurationsUpdate.exists(id), EVENT_CONFIGURATION_UPDATE_ALREADY_EXISTS);
         require(eventConfigurations.exists(targetID), EVENT_CONFIGURATION_NOT_EXISTS);
 
-        uint key = msg.pubkey();
+        address relay = msg.sender;
 
         EventConfigurationUpdate update;
         update.targetID = targetID;
@@ -400,11 +442,11 @@ contract Bridge is KeysOwnable, IBridge {
         update.basicInitData = basicInitData;
         update.ethereumInitData = ethereumInitData;
         update.tonInitData = tonInitData;
-        update.votes[key] = true;
+        update.votes[relay] = true;
 
         eventConfigurationsUpdate[id] = update;
 
-        emit EventConfigurationCreationVote(id, key, true);
+        emit EventConfigurationCreationVote(id, relay, true);
     }
 
     /*
@@ -417,26 +459,31 @@ contract Bridge is KeysOwnable, IBridge {
     function voteForUpdateEventConfiguration(
         uint id,
         bool vote
-    ) public onlyActive onlyOwnerKey(msg.pubkey()) {
-        tvm.accept();
+    )
+        public
+        onlyActive
+        onlyOwnerAddress(msg.sender)
+        transferAfterRest(msg.sender)
+    {
         require(eventConfigurationsUpdate.exists(id), EVENT_CONFIGURATION_UPDATE_NOT_EXISTS);
 
-        uint key = msg.pubkey();
+        address relay = msg.sender;
 
         EventConfigurationUpdate update = eventConfigurationsUpdate[id];
-        update.votes[key] = vote;
+        update.votes[relay] = vote;
         eventConfigurationsUpdate[id] = update;
 
-        emit EventConfigurationUpdateVote(id, key, vote);
+        emit EventConfigurationUpdateVote(id, relay, vote);
 
         // Check the results
-        (uint[] confirmKeys, uint[] rejectKeys,,,,,) = getUpdateEventConfigurationDetails(id);
+        (address[] confirmRelays, address[] rejectRelays,,,,,) = getUpdateEventConfigurationDetails(id);
 
         // - Enough confirmations received, update event configuration
-        if (confirmKeys.length == bridgeConfiguration.eventConfigurationRequiredConfirmations) {
+        if (confirmRelays.length == bridgeConfiguration.eventConfigurationRequiredConfirmations) {
             // -- Update event configuration address
             eventConfigurations[update.targetID].addr = update.addr;
 
+            // -- Send new configuration to the event config contract
             if (eventConfigurations[update.targetID]._type == IEventConfiguration.EventType.Ethereum) {
                 EthereumEventConfiguration(eventConfigurations[update.targetID].addr).updateInitData{value: 1 ton}(
                     update.basicInitData,
@@ -454,7 +501,7 @@ contract Bridge is KeysOwnable, IBridge {
             _removeUpdateEventConfiguration(id);
         }
 
-        if (rejectKeys.length == bridgeConfiguration.eventConfigurationRequiredRejects) {
+        if (rejectRelays.length == bridgeConfiguration.eventConfigurationRequiredRejects) {
             emit EventConfigurationUpdateEnd(id, false);
             _removeUpdateEventConfiguration(id);
         }
@@ -463,27 +510,26 @@ contract Bridge is KeysOwnable, IBridge {
     /*
         Get details for specific configuration update
         @param id Update event configuration ID
-        @returns confirmKeys List of keys confirmed update
-        @returns rejectKeys List of keys rejected update
+        @returns confirmRelays List of keys confirmed update
+        @returns rejectRelays List of keys rejected update
     */
     function getUpdateEventConfigurationDetails(
         uint id
     ) public view returns(
-        uint[] confirmKeys,
-        uint[] rejectKeys,
+        address[] confirmRelays,
+        address[] rejectRelays,
         uint targetID,
         address addr,
         IEventConfiguration.BasicConfigurationInitData basicInitData,
         IEventConfiguration.EthereumEventConfigurationInitData ethereumInitData,
         IEventConfiguration.TonEventConfigurationInitData tonInitData
     ) {
-        tvm.accept();
 
-        for ((uint key, bool vote): eventConfigurationsUpdate[id].votes) {
+        for ((address relay, bool vote): eventConfigurationsUpdate[id].votes) {
             if (vote == true) {
-                confirmKeys.push(key);
+                confirmRelays.push(relay);
             } else {
-               rejectKeys.push(key);
+               rejectRelays.push(relay);
             }
         }
 
@@ -512,25 +558,30 @@ contract Bridge is KeysOwnable, IBridge {
     function updateBridgeRelays(
         BridgeRelay target,
         Vote _vote
-    ) public onlyOwnerKey(msg.pubkey()) {
+    )
+        public
+        onlyOwnerAddress(msg.sender)
+        transferAfterRest(msg.sender)
+    {
         // TODO: discuss usage of onlyActive
-        tvm.accept();
 
-        emit BridgeRelaysUpdateVote(target, msg.pubkey(), _vote);
+        emit BridgeRelaysUpdateVote(target, msg.sender, _vote);
 
         bool vote = getVotingDirection(_vote);
 
-        bridgeRelayVotes[target][msg.pubkey()] = vote;
+        bridgeRelayVotes[target][msg.sender] = vote;
 
         // Check the results
-        (uint[] confirmKeys, uint[] rejectKeys) = getBridgeRelayVotes(target);
+        (address[] confirmRelays, address[] rejectRelays) = getBridgeRelayVotes(target);
 
         // - If enough confirmations received - update configuration and remove voting
-        if (confirmKeys.length == bridgeConfiguration.bridgeRelayUpdateRequiredConfirmations) {
+        if (confirmRelays.length == bridgeConfiguration.bridgeRelayUpdateRequiredConfirmations) {
+            address targetAccount = address.makeAddrStd(target.wid, target.addr);
+
             if (target.action) {
-                _grantOwnership(target.key, target.ethereumAccount);
+                _grantOwnership(targetAccount, target.ethereumAccount);
             } else {
-                _removeOwnership(target.key);
+                _removeOwnership(targetAccount);
             }
 
             _removeBridgeRelayVoting(target);
@@ -539,7 +590,7 @@ contract Bridge is KeysOwnable, IBridge {
         }
 
         // - If enough rejects received - remove voting
-        if (rejectKeys.length == bridgeConfiguration.bridgeRelayUpdateRequiredRejects) {
+        if (rejectRelays.length == bridgeConfiguration.bridgeRelayUpdateRequiredRejects) {
             _removeBridgeRelayVoting(target);
 
             emit BridgeRelaysUpdateEnd(target, false);
@@ -552,14 +603,14 @@ contract Bridge is KeysOwnable, IBridge {
     function getBridgeRelayVotes(
         BridgeRelay target
     ) public view returns(
-        uint[] confirmKeys,
-        uint[] rejectKeys
+        address[] confirmRelays,
+        address[] rejectRelays
     ) {
-        for ((uint key, bool vote): bridgeRelayVotes[target]) {
+        for ((address relay, bool vote): bridgeRelayVotes[target]) {
             if (vote == true) {
-                confirmKeys.push(key);
+                confirmRelays.push(relay);
             } else {
-                rejectKeys.push(key);
+                rejectRelays.push(relay);
             }
         }
     }
