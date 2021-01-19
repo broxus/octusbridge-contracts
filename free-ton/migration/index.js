@@ -45,7 +45,7 @@ const tonWrapper = new freeton.TonWrapper({
       _randomNonce: true,
       alias: `Relay_${relayId}`,
       keyPair: tonWrapper.keys[relayId],
-    });
+    }).catch(e => console.log(e));
     
     relayAccounts.push(RelayAccount.address);
   }

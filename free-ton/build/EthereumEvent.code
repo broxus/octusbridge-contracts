@@ -796,6 +796,12 @@ PUSHINT 2
 SETGLOB 25
 ; end colValue
 ;; Remote call IProxy.broxusBridgeCallback
+;; get member value
+CALL $message_balance_macro$
+PUSHINT 100000000
+;; -
+SUB
+UFITS 128
 ;; get member proxyAddress
 ;; push identifier initData
 GETGLOB 24
@@ -803,8 +809,10 @@ INDEX 8
 NEWC
 STSLICECONST x62_
 STSLICE
-PUSHSLICE x43b9aca00000000000000000000000000004_
-STSLICER
+SWAP
+STGRAMS
+PUSHINT 105
+STZEROES
 STSLICECONST 0
 STSLICECONST 1
 NEWC
@@ -875,6 +883,12 @@ PUSHINT 2
 SETGLOB 25
 ; end colValue
 ;; Remote call IProxy.broxusBridgeCallback
+;; get member value
+CALL $message_balance_macro$
+PUSHINT 100000000
+;; -
+SUB
+UFITS 128
 ;; get member proxyAddress
 ;; push identifier initData
 GETGLOB 24
@@ -882,8 +896,10 @@ INDEX 8
 NEWC
 STSLICECONST x62_
 STSLICE
-PUSHSLICE x43b9aca00000000000000000000000000004_
-STSLICER
+SWAP
+STGRAMS
+PUSHINT 105
+STZEROES
 STSLICECONST 0
 STSLICECONST 1
 NEWC

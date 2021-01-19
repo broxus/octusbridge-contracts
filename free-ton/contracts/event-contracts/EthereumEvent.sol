@@ -112,7 +112,7 @@ contract EthereumEvent is IEvent, ErrorCodes {
     function executeProxyCallback() public eventConfirmed {
         status = Status.Executed;
 
-        IProxy(initData.proxyAddress).broxusBridgeCallback{value: 1 ton}(initData);
+        IProxy(initData.proxyAddress).broxusBridgeCallback{value: msg.value - 0.1 ton}(initData);
     }
 
     /*

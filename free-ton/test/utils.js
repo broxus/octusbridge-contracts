@@ -44,7 +44,7 @@ class RelaysManager {
   
     return this.accounts[relayId].run('sendTransaction', {
       dest: contract.address,
-      value: value === undefined ? freeton.utils.convertCrystal('1', 'nano') : value,
+      value: value === undefined ? freeton.utils.convertCrystal('2', 'nano') : value,
       bounce: true,
       flags: 0,
       payload: message.body,

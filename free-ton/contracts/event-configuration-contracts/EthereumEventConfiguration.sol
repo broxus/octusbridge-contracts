@@ -41,8 +41,6 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Error
         onlyBridge
         transferAfter(basicInitData.bridgeAddress, msg.value)
     {
-        tvm.accept();
-
         eventInitData.ethereumEventConfiguration = address(this);
         eventInitData.requiredConfirmations = basicInitData.eventRequiredConfirmations;
         eventInitData.requiredRejects = basicInitData.eventRequiredConfirmations;
@@ -77,8 +75,6 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Error
         IEvent.EthereumEventInitData eventInitData,
         address relay
     ) public onlyBridge transferAfter(basicInitData.bridgeAddress, msg.value) {
-        tvm.accept();
-
         eventInitData.ethereumEventConfiguration = address(this);
         eventInitData.requiredConfirmations = basicInitData.eventRequiredConfirmations;
         eventInitData.requiredRejects = basicInitData.eventRequiredConfirmations;

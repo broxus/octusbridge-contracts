@@ -164,7 +164,6 @@ INDEX 4
 ;; get member value
 CALL $message_balance_macro$
 ; function confirmEvent
-ACCEPT
 MYADDR
 ; expValue
 PUSH S4
@@ -388,7 +387,6 @@ INDEX 4
 ;; get member value
 CALL $message_balance_macro$
 ; function confirmEvent
-ACCEPT
 MYADDR
 ; expValue
 PUSH S4
@@ -721,7 +719,6 @@ INDEX 4
 ;; get member value
 CALL $message_balance_macro$
 ; function rejectEvent
-ACCEPT
 MYADDR
 ; expValue
 PUSH S4
@@ -942,7 +939,6 @@ INDEX 4
 ;; get member value
 CALL $message_balance_macro$
 ; function rejectEvent
-ACCEPT
 MYADDR
 ; expValue
 PUSH S4
