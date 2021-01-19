@@ -23,6 +23,6 @@ interface IEventConfiguration {
         uint160 proxyAddress;
     }
 
-    event EventConfirmation(address addr, uint relayKey);
-    event EventReject(address addr, uint relayKey);
+    event EventConfirmation(address addr, address relay);
+    event EventReject(address addr, address relay);
 }

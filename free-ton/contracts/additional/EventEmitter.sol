@@ -3,7 +3,7 @@ pragma AbiHeader expire;
 
 
 contract EventEmitter {
-    uint static _randomNonce;
+    uint16 static _randomNonce;
 
     uint state;
 

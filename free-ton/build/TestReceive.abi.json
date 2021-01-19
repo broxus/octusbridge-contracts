@@ -3,11 +3,19 @@
 	"header": ["time", "expire"],
 	"functions": [
 		{
-			"name": "setState",
+			"name": "test_call",
 			"inputs": [
 				{"name":"_state","type":"uint256"}
 			],
 			"outputs": [
+			]
+		},
+		{
+			"name": "getDetails",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"_state","type":"uint256"}
 			]
 		},
 		{
@@ -22,13 +30,5 @@
 		{"key":1,"name":"_randomNonce","type":"uint16"}
 	],
 	"events": [
-		{
-			"name": "TONStateChange",
-			"inputs": [
-				{"name":"state","type":"uint256"}
-			],
-			"outputs": [
-			]
-		}
 	]
 }

@@ -9,10 +9,11 @@ import "../utils/ErrorCodes.sol";
 contract TonEvent is IEvent, ErrorCodes {
     TonEventInitData static initData;
 
-    uint[] confirmKeys;
+    address[] confirmRelays;
     bytes[] eventDataSignatures;
-    uint[] rejectKeys;
+    address[] rejectRelays;
 
+    enum Status { InProcess, Confirmed, Rejected }
     Status status;
 
     modifier eventInProcess() {
@@ -28,42 +29,42 @@ contract TonEvent is IEvent, ErrorCodes {
     /*
         TON-Ethereum event instance. Collects confirmations and signatures.
         @dev Should be deployed only by TonEventConfiguration contract
-        @param relayKey Public key of the relay, who initiated the event creation
+        @param relay Public key of the relay, who initiated the event creation
         @param eventDataSignature Relay's signed payload for Ethereum contract
     */
     constructor(
-        uint relayKey,
+        address relay,
         bytes eventDataSignature
     ) public {
         tvm.accept();
 
         status = Status.InProcess;
 
-        confirm(relayKey, eventDataSignature);
+        confirm(relay, eventDataSignature);
     }
 
     /*
         Confirm event instance.
         @dev Should be called by TonEventConfiguration
-        @param relayKey Public key of the relay, who initiated the config creation
+        @param relay Public key of the relay, who initiated the config creation
         @param eventDataSignature Signature of the data to be passed in Ethereum (made with Ethereum public key)
     */
     function confirm(
-        uint relayKey,
+        address relay,
         bytes eventDataSignature
     )
         public
         onlyEventConfiguration(initData.tonEventConfiguration)
         eventInProcess
     {
-        for (uint i=0; i<confirmKeys.length; i++) {
-            require(confirmKeys[i] != relayKey, KEY_ALREADY_CONFIRMED);
+        for (uint i=0; i<confirmRelays.length; i++) {
+            require(confirmRelays[i] != relay, KEY_ALREADY_CONFIRMED);
         }
 
-        confirmKeys.push(relayKey);
+        confirmRelays.push(relay);
         eventDataSignatures.push(eventDataSignature);
 
-        if (confirmKeys.length >= initData.requiredConfirmations) {
+        if (confirmRelays.length >= initData.requiredConfirmations) {
             status = Status.Confirmed;
 
             initData.tonEventConfiguration.transfer({ value: address(this).balance - 0.5 ton });
@@ -73,22 +74,22 @@ contract TonEvent is IEvent, ErrorCodes {
     /*
         Reject event instance.
         @dev Should be called by TonEventConfiguration
-        @param relayKey Public key of the relay, who initiated the config creation
+        @param relay Public key of the relay, who initiated the config creation
     */
     function reject(
-        uint relayKey
+        address relay
     )
         public
         onlyEventConfiguration(initData.tonEventConfiguration)
         eventInProcess
     {
-        for (uint i=0; i<rejectKeys.length; i++) {
-            require(rejectKeys[i] != relayKey, KEY_ALREADY_REJECTED);
+        for (uint i=0; i<rejectRelays.length; i++) {
+            require(rejectRelays[i] != relay, KEY_ALREADY_REJECTED);
         }
 
-        rejectKeys.push(relayKey);
+        rejectRelays.push(relay);
 
-        if (rejectKeys.length >= initData.requiredRejects) {
+        if (rejectRelays.length >= initData.requiredRejects) {
             status = Status.Rejected;
 
             initData.tonEventConfiguration.transfer({ value: address(this).balance - 0.5 ton });
@@ -99,22 +100,22 @@ contract TonEvent is IEvent, ErrorCodes {
         Read contract details
         @return initData Initial data
         @returns _status Current event status
-        @returns _confirmKeys List of confirm keys
-        @returns _rejectKeys List of reject keys
+        @returns _confirmRelays List of confirm keys
+        @returns _rejectRelays List of reject keys
         @returns _eventDataSignatures List of relay's signatures
     */
     function getDetails() public view returns (
         TonEventInitData _initData,
         Status _status,
-        uint[] _confirmKeys,
-        uint[] _rejectKeys,
+        address[] _confirmRelays,
+        address[] _rejectRelays,
         bytes[] _eventDataSignatures
     ) {
         return (
             initData,
             status,
-            confirmKeys,
-            rejectKeys,
+            confirmRelays,
+            rejectRelays,
             eventDataSignatures
         );
     }

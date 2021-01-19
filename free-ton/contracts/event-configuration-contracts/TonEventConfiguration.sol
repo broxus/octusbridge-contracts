@@ -33,12 +33,12 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, ErrorCodes
         @dev Should be called only through Bridge contract
         @param initData
         @param eventDataSignature Relay's signed payload for Ethereum contract
-        @param relayKey Relay key, who initialized the Bridge Ethereum event confirmation
+        @param relay Relay key, who initialized the Bridge Ethereum event confirmation
     **/
     function confirmEvent(
         IEvent.TonEventInitData eventInitData,
         bytes eventDataSignature,
-        uint relayKey
+        address relay
     ) public onlyBridge transferAfter(basicInitData.bridgeAddress, msg.value) {
         eventInitData.tonEventConfiguration = address(this);
         eventInitData.requiredConfirmations = basicInitData.eventRequiredConfirmations;
@@ -52,13 +52,13 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, ErrorCodes
                 initData: eventInitData
             }
         }(
-            relayKey,
+            relay,
             eventDataSignature
         );
 
-        TonEvent(tonEventAddress).confirm{value: 1 ton}(relayKey, eventDataSignature);
+        TonEvent(tonEventAddress).confirm{value: 1 ton}(relay, eventDataSignature);
 
-        emit EventConfirmation(tonEventAddress, relayKey);
+        emit EventConfirmation(tonEventAddress, relay);
     }
 
 
@@ -68,11 +68,11 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, ErrorCodes
         Two transactions is sent (deploy and confirm) and one is always fail
         EventAddress is always emitted!
         @dev
-        @param relayKey Relay key, who initialized the Bridge Ethereum event reject
+        @param relay Relay key, who initialized the Bridge Ethereum event reject
     **/
     function rejectEvent(
         IEvent.TonEventInitData eventInitData,
-        uint relayKey
+        address relay
     ) public onlyBridge transferAfter(basicInitData.bridgeAddress, msg.value) {
         eventInitData.tonEventConfiguration = address(this);
         eventInitData.requiredConfirmations = basicInitData.eventRequiredConfirmations;
@@ -87,13 +87,13 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, ErrorCodes
                 initData: eventInitData
             }
         }(
-            relayKey,
+            relay,
             ''
         );
 
-        TonEvent(tonEventAddress).reject{value: 1 ton}(relayKey);
+        TonEvent(tonEventAddress).reject{value: 1 ton}(relay);
 
-        emit EventReject(tonEventAddress, relayKey);
+        emit EventReject(tonEventAddress, relay);
     }
 
 

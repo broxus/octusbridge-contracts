@@ -7,4 +7,9 @@ contract TransferUtils {
         _;
         receiver.transfer({ value: value });
     }
+
+    modifier transferAfterRest(address receiver) {
+        _;
+        receiver.transfer({ flag:64, value: 0 });
+    }
 }

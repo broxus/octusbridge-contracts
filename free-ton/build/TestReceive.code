@@ -19,9 +19,9 @@ CALL $c7_to_c4$
 TRUE
 SETGLOB 7
 
-.globl	setState
-.public	setState
-.type	setState, @function
+.globl	test_call
+.public	test_call
+.type	test_call, @function
 GETGLOB 1
 ISNULL
 PUSHCONT {
@@ -33,8 +33,7 @@ IF
 LDU 256
 ENDS
 ;; param: _state
-; function setState
-ACCEPT
+; function test_call
 ; expValue
 ; end expValue
 ;; push identifier _state
@@ -42,31 +41,16 @@ DUP
 ; colValue
 SETGLOB 11
 ; end colValue
-;; emit TONStateChange
-NEWC
-PUSHSLICE xc0000000000000000000000002_
-STSLICER
-STSLICECONST 0
-STSLICECONST 0
-STSLICECONST x073120b6
-;; state
-;; push identifier _state
-PUSH S1
-STUR 256
-ENDC
-PUSHINT 1
-SENDRAWMSG
 DROP
-; end function setState
+; end function test_call
 CALL $c7_to_c4$
 TRUE
 SETGLOB 7
 
-.globl	setState_internal
-.type	setState_internal, @function
+.globl	test_call_internal
+.type	test_call_internal, @function
 ;; param: _state
-; function setState
-ACCEPT
+; function test_call
 ; expValue
 ; end expValue
 ;; push identifier _state
@@ -74,22 +58,71 @@ DUP
 ; colValue
 SETGLOB 11
 ; end colValue
-;; emit TONStateChange
-NEWC
-PUSHSLICE xc0000000000000000000000002_
-STSLICER
-STSLICECONST 0
-STSLICECONST 0
-STSLICECONST x073120b6
-;; state
-;; push identifier _state
-PUSH S1
-STUR 256
-ENDC
-PUSHINT 1
-SENDRAWMSG
 DROP
-; end function setState
+; end function test_call
+
+.globl	getDetails
+.public	getDetails
+.type	getDetails, @function
+GETGLOB 1
+ISNULL
+PUSHCONT {
+	CALL $c4_to_c7$
+}
+IF
+; Decode input parameters
+ENDS
+; function getDetails
+;; ret param: _state
+PUSHINT 0
+;; return
+;; push identifier state
+GETGLOB 11
+NIP
+;; emitting 1 value(s)
+PUSH S1
+EQINT -1
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST xa062bc1a
+	PUSH S1
+	STUR 256
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+}
+IF
+DROP
+; end function getDetails
+PUSHCONT {
+	CALL $c7_to_c4$
+}
+IF
+TRUE
+SETGLOB 7
+
+.globl	getDetails_internal
+.type	getDetails_internal, @function
+; function getDetails
+;; ret param: _state
+PUSHINT 0
+;; return
+;; push identifier state
+GETGLOB 11
+NIP
+; end function getDetails
 
 .globl	c7_to_c4
 .type	c7_to_c4, @function

@@ -610,6 +610,128 @@ SETGLOB 15
 DROP
 ; end function broxusBridgeCallback
 
+.globl	broxusBridgeNotification
+.public	broxusBridgeNotification
+.type	broxusBridgeNotification, @function
+GETGLOB 1
+ISNULL
+PUSHCONT {
+	CALL $c4_to_c7$
+}
+IF
+; Decode input parameters
+; Decode _eventData
+;; decode struct EthereumEventInitData _eventData
+;; decode EthereumEventInitData.eventTransaction
+LDU 256
+;; decode EthereumEventInitData.eventIndex
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+;; decode EthereumEventInitData.eventData
+;; decode TvmCell
+DUP
+SBITREFS
+EQINT 1
+SWAP
+EQINT 0
+AND
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDREF
+;; decode EthereumEventInitData.eventBlockNumber
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+;; decode EthereumEventInitData.eventBlock
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+;; decode EthereumEventInitData.ethereumEventConfiguration
+LDMSGADDRQ
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+}
+IFNOT
+;; decode EthereumEventInitData.requiredConfirmations
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+;; decode EthereumEventInitData.requiredRejects
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+;; decode EthereumEventInitData.proxyAddress
+LDMSGADDRQ
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+}
+IFNOT
+;; build struct EthereumEventInitData ss:10
+BLKSWAP 9, 1
+TUPLE 9
+SWAP
+ENDS
+;; param: _eventData
+; function broxusBridgeNotification
+DROP
+; end function broxusBridgeNotification
+PUSHCONT {
+	CALL $c7_to_c4$
+}
+IF
+TRUE
+SETGLOB 7
+
+.globl	broxusBridgeNotification_internal
+.type	broxusBridgeNotification_internal, @function
+;; param: _eventData
+; function broxusBridgeNotification
+DROP
+; end function broxusBridgeNotification
+
 .globl	getDetails
 .public	getDetails
 .type	getDetails, @function
@@ -773,22 +895,22 @@ STUR 64
 GETGLOB 6
 STUR 1
 NEWC
-GETGLOB 14
 GETGLOB 15
-XCHG s2
-STU 256
+SWAP
 STU 256
 GETGLOB 10
 GETGLOB 11
 GETGLOB 12
 GETGLOB 13
+GETGLOB 14
 GETGLOB 16
-REVERSE 7, 0
+REVERSE 8, 0
 STBREF
-STU 256
+STU 16
 STI 1
 STSLICE
 STREF
+STU 256
 SWAP
 UNTUPLE 9
 NEWC
@@ -828,14 +950,13 @@ LDU 256      ; pubkey c4
 LDU 64      ; pubkey timestamp c4
 LDU 1       ; pubkey [timestamp] constructor_flag memory
 LDREFRTOS
-LDU 256
 PLDU 256
 SETGLOB 15
-SETGLOB 14
-LDU 256
+LDU 16
 LDI 1
 LDMSGADDR
 LDREF
+LDU 256
 LDREFRTOS
 NIP
 LDREF
@@ -854,6 +975,7 @@ CTOS
 LDU 256
 TUPLE 9
 SETGLOB 16
+SETGLOB 14
 SETGLOB 13
 SETGLOB 12
 SETGLOB 11
@@ -875,14 +997,13 @@ PUSHCONT {
 	LDU 64      ; pubkey timestamp c4
 	LDU 1       ; pubkey [timestamp] constructor_flag memory
 	LDREFRTOS
-	LDU 256
 	PLDU 256
 	SETGLOB 15
-	SETGLOB 14
-	LDU 256
+	LDU 16
 	LDI 1
 	LDMSGADDR
 	LDREF
+	LDU 256
 	LDREFRTOS
 	NIP
 	LDREF
@@ -901,6 +1022,7 @@ PUSHCONT {
 	LDU 256
 	TUPLE 9
 	SETGLOB 16
+	SETGLOB 14
 	SETGLOB 13
 	SETGLOB 12
 	SETGLOB 11
@@ -919,7 +1041,7 @@ PUSHCONT {
 	PUSHINT 64
 	DICTUGET
 	PUSHCONT {
-		PLDU 256
+		PLDU 16
 	}
 	PUSHCONT {
 		PUSHINT 0

@@ -30,6 +30,14 @@
 			]
 		},
 		{
+			"name": "broxusBridgeNotification",
+			"inputs": [
+				{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint256"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint256"},{"name":"eventBlock","type":"uint256"},{"name":"ethereumEventConfiguration","type":"address"},{"name":"requiredConfirmations","type":"uint256"},{"name":"requiredRejects","type":"uint256"},{"name":"proxyAddress","type":"address"}],"name":"_eventData","type":"tuple"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "getDetails",
 			"inputs": [
 			],
@@ -43,7 +51,7 @@
 		}
 	],
 	"data": [
-		{"key":1,"name":"_randomNonce","type":"uint256"}
+		{"key":1,"name":"_randomNonce","type":"uint16"}
 	],
 	"events": [
 	]

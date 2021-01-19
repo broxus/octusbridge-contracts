@@ -3,6 +3,7 @@ const { Wallet } = require('ethers');
 
 const BigNumber = require('bignumber.js');
 BigNumber.config({ EXPONENTIAL_AT: 257 });
+const _ = require('underscore');
 
 
 // True gives the repeatable migration
@@ -25,17 +26,36 @@ const tonWrapper = new freeton.TonWrapper({
   const relaysAmount = parseInt(process.env.RELAYS_AMOUNT);
 
   await tonWrapper.setup(relaysAmount);
-  
+
   tonWrapper.keys.map((key, i) => console.log(`Key #${i} - ${JSON.stringify(key)}`));
 
   const migration = new freeton.Migration(tonWrapper);
+  
+  // - Deploy relay personal contracts
+  const RelayAccount = await freeton
+    .requireContract(tonWrapper, 'RelayAccount');
+
+  const relayAccounts = [];
+  for (const relayId of _.range(0, relaysAmount)) {
+    await migration.deploy({
+      contract: RelayAccount,
+      constructorParams: {},
+      initParams: {},
+      initialBalance: freeton.utils.convertCrystal('50', 'nano'),
+      _randomNonce: true,
+      alias: `Relay_${relayId}`,
+      keyPair: tonWrapper.keys[relayId],
+    });
+    
+    relayAccounts.push(RelayAccount.address);
+  }
   
   const Bridge = await freeton
     .requireContract(tonWrapper, 'Bridge');
   
   // Derive Ethereum addresses
   // - Prepare paths
-  const paths = [...Array(relaysAmount).keys()].map(i => `m/44'/60'/0'/0/${i}`);
+  const paths = _.range(0, relaysAmount).map(i => `m/44'/60'/0'/0/${i}`);
   const ethereumAccounts = paths
     .map(p => Wallet.fromMnemonic(process.env.ETH_SEED, p)) // Convert path to account
     .map(a => new BigNumber(a.address.toLowerCase())); // Convert address to uint
@@ -44,15 +64,15 @@ const tonWrapper = new freeton.TonWrapper({
   await migration.deploy({
     contract: Bridge,
     constructorParams: {
-      _relayKeys: tonWrapper.keys.map((key) => `0x${key.public}`),
+      _relayAccounts: relayAccounts,
       _relayEthereumAccounts: ethereumAccounts,
       _bridgeConfiguration: {
         eventConfigurationRequiredConfirmations: 2,
         eventConfigurationRequiredRejects: 2,
         bridgeConfigurationUpdateRequiredConfirmations: 2,
         bridgeConfigurationUpdateRequiredRejects: 2,
-        bridgeRelayUpdateRequiredConfirmations: 10,
-        bridgeRelayUpdateRequiredRejects: 5,
+        bridgeRelayUpdateRequiredConfirmations: 2,
+        bridgeRelayUpdateRequiredRejects: 2,
         active: true,
       }
     },
@@ -72,14 +92,14 @@ const tonWrapper = new freeton.TonWrapper({
     .requireContract(tonWrapper, 'EthereumEventConfiguration');
   const EthereumEvent = await freeton
     .requireContract(tonWrapper, 'EthereumEvent');
-  const EventProxy = await freeton
-    .requireContract(tonWrapper, 'EventProxy');
+  const EventProxySimple = await freeton
+    .requireContract(tonWrapper, 'EventProxySimple');
 
-  // -- Fix EventProxy nonce to determine it's address
+  // -- Fix EventProxySimple nonce to determine it's address
   const eventProxyNonce = determineDeploy ? 1 : freeton.utils.getRandomNonce();
 
-  // -- Derive EventProxy future address
-  const eventProxyFutureAddress = await EventProxy.deploy(
+  // -- Derive EventProxySimple future address
+  const eventProxyFutureAddress = await EventProxySimple.deploy(
     {
       _ethereumEventConfiguration: Bridge.address,
       _ethereumEventCode: EthereumEvent.code,
@@ -105,9 +125,9 @@ const tonWrapper = new freeton.TonWrapper({
           eventABI: alias === 'valid'
             ? freeton.utils.stringToBytesArray('{"name":"TONStateChange","inputs":[{"name":"state","type":"uint256"}],"outputs":[]}')
             : freeton.utils.stringToBytesArray(alias),
-          eventRequiredConfirmations: 3,
-          eventRequiredRejects: 3,
-          eventInitialBalance: freeton.utils.convertCrystal('1', 'nano'),
+          eventRequiredConfirmations: 2,
+          eventRequiredRejects: 2,
+          eventInitialBalance: freeton.utils.convertCrystal('10', 'nano'),
           bridgeAddress: Bridge.address,
           eventCode: EthereumEvent.code,
         },
@@ -123,7 +143,7 @@ const tonWrapper = new freeton.TonWrapper({
     // --- Specify 'valid' EventConfiguration address in Proxy
     if (alias === 'valid') {
       await migration.deploy({
-        contract : EventProxy,
+        contract : EventProxySimple,
         constructorParams: {
           _ethereumEventConfiguration: EthereumEventConfiguration.address,
           _ethereumEventCode: EthereumEvent.code,
@@ -136,7 +156,7 @@ const tonWrapper = new freeton.TonWrapper({
       }).catch(e => console.log(e));
     }
   }
-  
+
   // Deploy event emitter
   const EventEmitter = await freeton
     .requireContract(tonWrapper, 'EventEmitter');
@@ -148,7 +168,7 @@ const tonWrapper = new freeton.TonWrapper({
     },
     initialBalance: freeton.utils.convertCrystal('5', 'nano'),
   });
-  
+
   // - Prepare TON event configuration
   const TonEventConfiguration = await freeton
     .requireContract(tonWrapper, 'TonEventConfiguration');
@@ -162,9 +182,9 @@ const tonWrapper = new freeton.TonWrapper({
     initParams: {
       basicInitData: {
         eventABI: freeton.utils.stringToBytesArray('{ "name": "TONStateChange", "inputs": [ {"name":"state","type":"uint256"} ], "outputs": [ ] }'),
-        eventRequiredConfirmations: 3,
-        eventRequiredRejects: 3,
-        eventInitialBalance: freeton.utils.convertCrystal('1', 'nano'),
+        eventRequiredConfirmations: 2,
+        eventRequiredRejects: 2,
+        eventInitialBalance: freeton.utils.convertCrystal('10', 'nano'),
         bridgeAddress: Bridge.address,
         eventCode: TonEvent.code,
       },
