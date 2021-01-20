@@ -24,6 +24,23 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Error
         tvm.accept();
     }
 
+    function buildEventInitData(
+        IEvent.EthereumEventVoteData eventVoteData
+    ) internal view returns(
+        IEvent.EthereumEventInitData eventInitData
+    ) {
+        eventInitData.eventTransaction = eventVoteData.eventTransaction;
+        eventInitData.eventIndex = eventVoteData.eventIndex;
+        eventInitData.eventData = eventVoteData.eventData;
+        eventInitData.eventBlockNumber = eventVoteData.eventBlockNumber;
+        eventInitData.eventBlock = eventVoteData.eventBlock;
+
+        eventInitData.ethereumEventConfiguration = address(this);
+        eventInitData.requiredConfirmations = basicInitData.eventRequiredConfirmations;
+        eventInitData.requiredRejects = basicInitData.eventRequiredConfirmations;
+        eventInitData.proxyAddress = initData.proxyAddress;
+    }
+
     /*
         Confirm Ethereum-TON event instance. Works only when configuration is active.
         @dev This function either deploy EthereumEvent or confirm it
@@ -34,17 +51,14 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Error
         @param relay Relay key, who initialized the Bridge Ethereum event confirmation
     **/
     function confirmEvent(
-        IEvent.EthereumEventInitData eventInitData,
+        IEvent.EthereumEventVoteData eventVoteData,
         address relay
     )
         public
         onlyBridge
         transferAfter(basicInitData.bridgeAddress, msg.value)
     {
-        eventInitData.ethereumEventConfiguration = address(this);
-        eventInitData.requiredConfirmations = basicInitData.eventRequiredConfirmations;
-        eventInitData.requiredRejects = basicInitData.eventRequiredConfirmations;
-        eventInitData.proxyAddress = initData.proxyAddress;
+        IEvent.EthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
 
         address ethereumEventAddress = new EthereumEvent{
             value: basicInitData.eventInitialBalance,
@@ -72,13 +86,14 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Error
         @param relay Relay key, who initialized the Bridge Ethereum event reject
     **/
     function rejectEvent(
-        IEvent.EthereumEventInitData eventInitData,
+        IEvent.EthereumEventVoteData eventVoteData,
         address relay
-    ) public onlyBridge transferAfter(basicInitData.bridgeAddress, msg.value) {
-        eventInitData.ethereumEventConfiguration = address(this);
-        eventInitData.requiredConfirmations = basicInitData.eventRequiredConfirmations;
-        eventInitData.requiredRejects = basicInitData.eventRequiredConfirmations;
-        eventInitData.proxyAddress = initData.proxyAddress;
+    )
+        public
+        onlyBridge
+        transferAfter(basicInitData.bridgeAddress, msg.value)
+    {
+        IEvent.EthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
 
         address ethereumEventAddress = new EthereumEvent{
             value: 0 ton,

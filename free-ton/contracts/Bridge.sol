@@ -60,8 +60,9 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     /*
         @dev Throws and error is event configuration has less confirmations than required or more rejects than allowed
     */
-    function onlyActiveConfiguration(uint id) internal view {
+    modifier onlyActiveConfiguration(uint id) {
         require(eventConfigurations[id].status == true, EVENT_CONFIGURATION_NOT_ACTIVE);
+        _;
     }
 
     /*
@@ -223,11 +224,11 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     /*
         Confirm Ethereum event instance.
         @dev Called only by relay
-        @param eventInitData Ethereum event init data
+        @param eventVoteData Ethereum event vote data
         @param configurationID Ethereum Event configuration ID
     */
     function confirmEthereumEvent(
-        IEvent.EthereumEventInitData eventInitData,
+        IEvent.EthereumEventVoteData eventVoteData,
         uint configurationID
     )
         public
@@ -235,11 +236,10 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
         onlyActive
         onlyOwnerAddress(msg.sender)
         transferAfterRest(msg.sender)
+        onlyActiveConfiguration(configurationID)
     {
-        onlyActiveConfiguration(configurationID);
-
         EthereumEventConfiguration(eventConfigurations[configurationID].addr).confirmEvent{value: 1 ton}(
-            eventInitData,
+            eventVoteData,
             msg.sender
         );
     }
@@ -247,11 +247,11 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     /*
         Reject Ethereum event instance.
         @dev Called only by relay. Only reject already existing EthereumEvent contract, not create it.
-        @param eventInitData Ethereum event init data
+        @param eventVoteData Ethereum event vote data
         @param configurationID Ethereum Event configuration ID
     */
     function rejectEthereumEvent(
-        IEvent.EthereumEventInitData eventInitData,
+        IEvent.EthereumEventVoteData eventVoteData,
         uint configurationID
     )
         public
@@ -259,11 +259,10 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
         onlyActive
         onlyOwnerAddress(msg.sender)
         transferAfterRest(msg.sender)
+        onlyActiveConfiguration(configurationID)
     {
-        onlyActiveConfiguration(configurationID);
-
         EthereumEventConfiguration(eventConfigurations[configurationID].addr).rejectEvent{value: 1 ton}(
-            eventInitData,
+            eventVoteData,
             msg.sender
         );
     }
@@ -271,12 +270,12 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     /*
         Confirm TON event instance.
         @dev Called only by relay
-        @param eventInitData Event contract init data
+        @param eventVoteData Ton event vote data
         @param eventDataSignature Relay's signature of the Ethereum callback
-        @param configurationID Ethereum Event configuration ID
+        @param configurationID Ton Event configuration ID
     */
     function confirmTonEvent(
-        IEvent.TonEventInitData eventInitData,
+        IEvent.TonEventVoteData eventVoteData,
         bytes eventDataSignature,
         uint configurationID
     )
@@ -285,11 +284,10 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
         onlyActive
         onlyOwnerAddress(msg.sender)
         transferAfterRest(msg.sender)
+        onlyActiveConfiguration(configurationID)
     {
-        onlyActiveConfiguration(configurationID);
-
         TonEventConfiguration(eventConfigurations[configurationID].addr).confirmEvent{value: 1 ton}(
-            eventInitData,
+            eventVoteData,
             eventDataSignature,
             msg.sender
         );
@@ -298,12 +296,11 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     /*
         Reject TON event instance.
         @dev Called only by relay. Only reject already existing TonEvent contract, not create it.
-        @param eventInitData Event contract init data
-        @param eventDataSignature Relay's signature of the Ethereum callback
-        @param configurationID Ethereum Event configuration ID
+        @param eventVoteData Ton event vote data
+        @param configurationID Ton Event configuration ID
     */
     function rejectTonEvent(
-        IEvent.TonEventInitData eventInitData,
+        IEvent.TonEventVoteData eventVoteData,
         uint configurationID
     )
         public
@@ -311,11 +308,10 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
         onlyActive
         onlyOwnerAddress(msg.sender)
         transferAfterRest(msg.sender)
+        onlyActiveConfiguration(configurationID)
     {
-        onlyActiveConfiguration(configurationID);
-
         TonEventConfiguration(eventConfigurations[configurationID].addr).rejectEvent{value: 1 ton}(
-            eventInitData,
+            eventVoteData,
             msg.sender
         );
     }

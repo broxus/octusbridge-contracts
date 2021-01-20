@@ -17,6 +17,7 @@ const giverConfig = {
 const tonWrapper = new freeton.TonWrapper({
   network: process.env.TON_NETWORK,
   seed: process.env.TON_SEED,
+  waitForTimeout: 20000,
   giverConfig,
 });
 
@@ -123,7 +124,7 @@ const tonWrapper = new freeton.TonWrapper({
       initParams: {
         basicInitData: {
           eventABI: alias === 'valid'
-            ? freeton.utils.stringToBytesArray('{"name":"TONStateChange","inputs":[{"name":"state","type":"uint256"}],"outputs":[]}')
+            ? freeton.utils.stringToBytesArray('{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"state","type":"uint256"}],"name":"EthereumStateChange","type":"event"}')
             : freeton.utils.stringToBytesArray(alias),
           eventRequiredConfirmations: 2,
           eventRequiredRejects: 2,

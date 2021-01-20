@@ -51,16 +51,12 @@ describe('Test Ethereum event', async function() {
   describe('Confirm event', async function() {
     it('Initialize event', async function() {
       eventParams = {
-        eventInitData: {
+        eventVoteData: {
           eventTransaction: 1,
           eventIndex: 1,
           eventData: 'te6ccgEBAQEAIgAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEtaH',
           eventBlockNumber: 1,
           eventBlock: 1,
-          ethereumEventConfiguration: EthereumEventConfiguration.address,
-          requiredConfirmations: 0,
-          requiredRejects: 0,
-          proxyAddress: EthereumEventConfiguration.address,
         },
         configurationID: 111
       };
@@ -89,16 +85,16 @@ describe('Test Ethereum event', async function() {
 
       expect(details._initData.eventTransaction.toNumber())
         .to
-        .equal(eventParams.eventInitData.eventTransaction, 'Wrong event transaction');
+        .equal(eventParams.eventVoteData.eventTransaction, 'Wrong event transaction');
       expect(details._initData.eventIndex.toNumber())
         .to
-        .equal(eventParams.eventInitData.eventIndex, 'Wrong event index');
+        .equal(eventParams.eventVoteData.eventIndex, 'Wrong event index');
       expect(details._initData.eventBlockNumber.toNumber())
         .to
-        .equal(eventParams.eventInitData.eventBlockNumber, 'Wrong block number');
+        .equal(eventParams.eventVoteData.eventBlockNumber, 'Wrong block number');
       expect(details._initData.eventBlock.toNumber())
         .to
-        .equal(eventParams.eventInitData.eventBlock, 'Wrong block');
+        .equal(eventParams.eventVoteData.eventBlock, 'Wrong block');
 
       expect(details._status.toNumber()).to.equal(0, 'Wrong status');
       expect(details._confirmRelays).to.have.lengthOf(1, 'Wrong amount of confirmations');
@@ -144,11 +140,13 @@ describe('Test Ethereum event', async function() {
     });
     
     it('Execute event callback', async function() {
+      console.log('balance before', (await tonWrapper.getBalance(EthereumEvent.address)).toNumber());
       await relaysManager.runTarget({
         contract: EthereumEvent,
         method: 'executeProxyCallback',
         input: {}
       });
+      console.log('balance after', (await tonWrapper.getBalance(EthereumEvent.address)).toNumber());
       
       const proxyDetails = await EventProxySimple.runLocal('getDetails', {});
 
@@ -182,16 +180,12 @@ describe('Test Ethereum event', async function() {
   describe('Reject event', async function() {
     it('Initialize event', async function() {
       eventParams = {
-        eventInitData: {
+        eventVoteData: {
           eventTransaction: 2,
           eventIndex: 1,
           eventData: '',
           eventBlockNumber: 1,
           eventBlock: 1,
-          ethereumEventConfiguration: EthereumEventConfiguration.address,
-          requiredConfirmations: 0,
-          requiredRejects: 0,
-          proxyAddress: EthereumEventConfiguration.address,
         },
         configurationID: 111
       };
@@ -220,16 +214,16 @@ describe('Test Ethereum event', async function() {
 
       expect(details._initData.eventTransaction.toNumber())
         .to
-        .equal(eventParams.eventInitData.eventTransaction, 'Wrong event transaction');
+        .equal(eventParams.eventVoteData.eventTransaction, 'Wrong event transaction');
       expect(details._initData.eventIndex.toNumber())
         .to
-        .equal(eventParams.eventInitData.eventIndex, 'Wrong event index');
+        .equal(eventParams.eventVoteData.eventIndex, 'Wrong event index');
       expect(details._initData.eventBlockNumber.toNumber())
         .to
-        .equal(eventParams.eventInitData.eventBlockNumber, 'Wrong block number');
+        .equal(eventParams.eventVoteData.eventBlockNumber, 'Wrong block number');
       expect(details._initData.eventBlock.toNumber())
         .to
-        .equal(eventParams.eventInitData.eventBlock, 'Wrong block');
+        .equal(eventParams.eventVoteData.eventBlock, 'Wrong block');
 
       expect(details._status.toNumber()).to.equal(0, 'Wrong status');
       expect(details._confirmRelays).to.have.lengthOf(1, 'Wrong amount of confirmations');

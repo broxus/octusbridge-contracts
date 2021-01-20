@@ -25,6 +25,19 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, ErrorCodes
         tvm.accept();
     }
 
+    function buildEventInitData(
+        IEvent.TonEventVoteData eventVoteData
+    ) internal view returns(IEvent.TonEventInitData eventInitData) {
+        eventInitData.eventTransaction = eventVoteData.eventTransaction;
+        eventInitData.eventTransactionLt = eventVoteData.eventTransactionLt;
+        eventInitData.eventIndex = eventVoteData.eventIndex;
+        eventInitData.eventData = eventVoteData.eventData;
+
+        eventInitData.tonEventConfiguration = address(this);
+        eventInitData.requiredConfirmations = basicInitData.eventRequiredConfirmations;
+        eventInitData.requiredRejects = basicInitData.eventRequiredConfirmations;
+    }
+
     /*
         Confirm TON-Ethereum event instance. Works only when configuration is active.
         @dev This function either deploy TonEvent or confirm it
@@ -36,13 +49,11 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, ErrorCodes
         @param relay Relay key, who initialized the Bridge Ethereum event confirmation
     **/
     function confirmEvent(
-        IEvent.TonEventInitData eventInitData,
+        IEvent.TonEventVoteData eventVoteData,
         bytes eventDataSignature,
         address relay
     ) public onlyBridge transferAfter(basicInitData.bridgeAddress, msg.value) {
-        eventInitData.tonEventConfiguration = address(this);
-        eventInitData.requiredConfirmations = basicInitData.eventRequiredConfirmations;
-        eventInitData.requiredRejects = basicInitData.eventRequiredConfirmations;
+        IEvent.TonEventInitData eventInitData = buildEventInitData(eventVoteData);
 
         address tonEventAddress = new TonEvent{
             value: basicInitData.eventInitialBalance,
@@ -71,13 +82,10 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, ErrorCodes
         @param relay Relay key, who initialized the Bridge Ethereum event reject
     **/
     function rejectEvent(
-        IEvent.TonEventInitData eventInitData,
+        IEvent.TonEventVoteData eventVoteData,
         address relay
     ) public onlyBridge transferAfter(basicInitData.bridgeAddress, msg.value) {
-        eventInitData.tonEventConfiguration = address(this);
-        eventInitData.requiredConfirmations = basicInitData.eventRequiredConfirmations;
-        eventInitData.requiredRejects = basicInitData.eventRequiredConfirmations;
-
+        IEvent.TonEventInitData eventInitData = buildEventInitData(eventVoteData);
 
         address tonEventAddress = new TonEvent{
             value: 0 ton,

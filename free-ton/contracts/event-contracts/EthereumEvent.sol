@@ -112,7 +112,11 @@ contract EthereumEvent is IEvent, ErrorCodes {
     function executeProxyCallback() public eventConfirmed {
         status = Status.Executed;
 
+        uint128 balance = address(this).balance;
+
         IProxy(initData.proxyAddress).broxusBridgeCallback{value: msg.value - 0.1 ton}(initData);
+
+//        initData.ethereumEventConfiguration.transfer({ value: balance - 0.1 ton });
     }
 
     /*
