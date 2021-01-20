@@ -304,7 +304,7 @@ describe('Test event configurations', function() {
         _initData: tonInitData
       } = await TonEventConfiguration.runLocal('getDetails');
 
-      const NEW_ABI = `{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"state","type":"uint256"}],"name":"EthereumStateChange","type":"event"}`;
+      const NEW_ABI = '{"name":"TONStateChange","inputs":[{"name":"state","type":"uint256"}],"outputs":[]}';
 
       updateParams = {
         id: 8888,
