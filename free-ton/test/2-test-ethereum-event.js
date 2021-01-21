@@ -140,13 +140,11 @@ describe('Test Ethereum event', async function() {
     });
     
     it('Execute event callback', async function() {
-      console.log('balance before', (await tonWrapper.getBalance(EthereumEvent.address)).toNumber());
       await relaysManager.runTarget({
         contract: EthereumEvent,
         method: 'executeProxyCallback',
         input: {}
       });
-      console.log('balance after', (await tonWrapper.getBalance(EthereumEvent.address)).toNumber());
       
       const proxyDetails = await EventProxySimple.runLocal('getDetails', {});
 

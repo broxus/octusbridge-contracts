@@ -17,7 +17,6 @@ const giverConfig = {
 const tonWrapper = new freeton.TonWrapper({
   network: process.env.TON_NETWORK,
   seed: process.env.TON_SEED,
-  waitForTimeout: 20000,
   giverConfig,
 });
 

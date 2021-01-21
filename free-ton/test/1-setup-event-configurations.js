@@ -29,9 +29,7 @@ const relaysManager = new utils.RelaysManager(
 
 describe('Test event configurations', function() {
   this.timeout(12000000);
-
-  const RelayAccounts = [];
-
+  
   before(async function() {
     await tonWrapper.setup();
     await relaysManager.setup();
@@ -304,20 +302,19 @@ describe('Test event configurations', function() {
         _initData: tonInitData
       } = await TonEventConfiguration.runLocal('getDetails');
 
-      const NEW_ABI = '{"name":"TONStateChange","inputs":[{"name":"state","type":"uint256"}],"outputs":[]}';
-
       updateParams = {
         id: 8888,
         targetID: 111,
         addr: ValidEthereumEventConfiguration.address, // Don't change the address
-        basicInitData: { // Update ABI
+        basicInitData: {
           ...basicInitData,
-          eventABI: freeton.utils.stringToBytesArray(NEW_ABI),
+          eventABI: basicInitData.eventABI.toString('hex'),
+          eventInitialBalance: freeton.utils.convertCrystal('9', 'nano'),
         },
         ethereumInitData,
         tonInitData,
       };
-
+      
       await relaysManager.runTarget({
         contract: Bridge,
         method: 'initializeUpdateEventConfiguration',
@@ -336,9 +333,6 @@ describe('Test event configurations', function() {
         ValidEthereumEventConfiguration.address,
         'Wrong event configuration address'
       );
-      expect(details.basicInitData.eventABI.toString('hex'))
-        .to
-        .equal(updateParams.basicInitData.eventABI, 'Wrong ABI');
     });
 
     // it('Initialize already initialized update', async function() {
@@ -404,10 +398,10 @@ describe('Test event configurations', function() {
 
       // Check the EventConfiguration contract
       const configurationDetails = await ValidEthereumEventConfiguration.runLocal('getDetails');
-
-      expect(configurationDetails._basicInitData.eventABI.toString('hex'))
+      
+      expect(configurationDetails._basicInitData.eventInitialBalance.toString())
         .to
-        .equal(updateParams.basicInitData.eventABI, 'Wrong ABI');
+        .equal(updateParams.basicInitData.eventInitialBalance, 'Wrong updated event initial balance');
     });
   });
 
