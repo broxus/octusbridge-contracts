@@ -25,9 +25,9 @@ contract ProxyToken is IProxy {
         bridge = _bridge;
     }
 
-    event TokenLock(uint128 amount, uint8 wid, uint256 addr, uint256 pubkey);
+    event TokenLock(uint128 amount, int8 wid, uint256 addr, uint256 pubkey);
 
-    function lockTokens(uint128 amount, uint8 wid, uint256 addr, uint256 pubkey) public {
+    function lockTokens(uint128 amount, int8 wid, uint256 addr, uint256 pubkey) public {
         require(
             IERC20(token).balanceOf(msg.sender) >= amount,
             "Token balance insufficient"
@@ -64,11 +64,19 @@ contract ProxyToken is IProxy {
             (TONEvent)
         );
 
-        (uint amount, address addr) = abi.decode(
+        (uint128 amount, bytes memory addr_bytes) = abi.decode(
             _event.eventData,
-            (uint, address)
+            (uint128, bytes)
         );
 
+        address addr = bytesToAddress(addr_bytes);
+
         IERC20(token).universalTransfer(addr, amount);
+    }
+
+    function bytesToAddress(bytes memory bys) private pure returns (address addr) {
+        assembly {
+            addr := mload(add(bys,20))
+        }
     }
 }
