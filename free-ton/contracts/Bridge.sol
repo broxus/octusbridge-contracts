@@ -39,7 +39,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     }
     mapping(uint => EventConfigurationUpdate) eventConfigurationsUpdate;
     event EventConfigurationUpdateVote(uint id, address relay, bool vote);
-    event EventConfigurationUpdateEnd(uint id, bool active);
+    event EventConfigurationUpdateEnd(uint id, bool active, address addr, IEventConfiguration.EventType _type);
 
     mapping(BridgeConfiguration => mapping(address => bool)) bridgeConfigurationVotes;
     event BridgeConfigurationUpdateVote(BridgeConfiguration _bridgeConfiguration, address relay, Vote vote);
@@ -492,13 +492,24 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
                 );
             }
 
-            emit EventConfigurationUpdateEnd(id, true);
+            emit EventConfigurationUpdateEnd(
+                id,
+                true,
+                eventConfigurations[update.targetID].addr,
+                eventConfigurations[update.targetID]._type
+            );
 
             _removeUpdateEventConfiguration(id);
         }
 
         if (rejectRelays.length == bridgeConfiguration.eventConfigurationRequiredRejects) {
-            emit EventConfigurationUpdateEnd(id, false);
+            emit EventConfigurationUpdateEnd(
+                id,
+                false,
+                eventConfigurations[update.targetID].addr,
+                eventConfigurations[update.targetID]._type
+            );
+
             _removeUpdateEventConfiguration(id);
         }
     }

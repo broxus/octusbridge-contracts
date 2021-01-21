@@ -115,16 +115,19 @@ describe('Test event configurations', function() {
       }
     });
     
-    // it('Initialize already initialized configuration', async function() {
-    //   await freeton.utils.catchRunFail(
-    //     Bridge.run('initializeEventConfigurationCreation', {
-    //       id: EthereumEventConfigurationContracts.valid[1],
-    //       addr: EthereumEventConfigurationContracts.valid[0].address,
-    //       _type: 0,
-    //     }),
-    //     5006,
-    //   );
-    // });
+    it('Initialize already initialized configuration', async function() {
+      // const status = await relaysManager.runTarget({
+      //   contract: Bridge,
+      //   method: 'initializeEventConfigurationCreation',
+      //   input: {
+      //     id: EthereumEventConfigurationContracts.valid[1],
+      //     addr: EthereumEventConfigurationContracts.valid[0].address,
+      //     _type: 0,
+      //   },
+      // });
+      //
+      // console.log(status);
+    });
 
     it('Reject configuration', async function() {
       const {
