@@ -48,7 +48,8 @@ contract EventProxySimple is IProxy {
     }
 
     function broxusBridgeCallback(
-        IEvent.EthereumEventInitData _eventData
+        IEvent.EthereumEventInitData _eventData,
+        address gasBackAddress
     ) override public {
         require(_eventData.ethereumEventConfiguration == ethereumEventConfiguration, 19173);
         require(_eventData.proxyAddress == address(this), 19172);
@@ -57,6 +58,12 @@ contract EventProxySimple is IProxy {
         callbackReceived = true;
         eventData = _eventData;
         (state) = _eventData.eventData.toSlice().decode((uint));
+
+        if (gasBackAddress.value != 0) {
+            gasBackAddress.transfer({ value: 0, flag: 64 });
+        } else {
+            msg.sender.transfer({ value: 0, flag: 64 });
+        }
     }
 
     function broxusBridgeNotification(
