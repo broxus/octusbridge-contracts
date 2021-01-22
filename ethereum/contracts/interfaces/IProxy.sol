@@ -8,7 +8,8 @@ interface IProxy {
         uint64 eventTransactionLt;
         uint32 eventIndex;
         bytes eventData;
-        bytes tonEventConfiguration;
+        int8 tonEventConfigurationWid;
+        uint tonEventConfigurationAddress;
         uint requiredConfirmations;
         uint requiredRejects;
     }
