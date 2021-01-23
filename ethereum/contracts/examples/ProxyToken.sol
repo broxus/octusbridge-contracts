@@ -74,9 +74,11 @@ contract ProxyToken is IProxy {
         IERC20(token).universalTransfer(addr, amount);
     }
 
-    function bytesToAddress(bytes memory bys) private pure returns (address addr) {
+    function bytesToAddress(bytes memory bys) private pure returns (address) {
+        address addr;
         assembly {
-            addr := mload(add(bys,20))
+            addr := div(mload(add(bys, 0x20)), 0x1000000000000000000000000)
         }
+        return addr;
     }
 }
