@@ -21,6 +21,7 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Error
     }
 
     constructor() public {
+        require(tvm.pubkey() == msg.pubkey(), WRONG_TVM_KEY);
         tvm.accept();
     }
 

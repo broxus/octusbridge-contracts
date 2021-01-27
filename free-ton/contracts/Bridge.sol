@@ -13,6 +13,7 @@ import "./interfaces/IEventConfiguration.sol";
 import "./utils/AccountsOwnable.sol";
 import "./utils/TransferUtils.sol";
 
+
 contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     uint16 static _randomNonce;
 
@@ -76,7 +77,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
         uint160[] _relayEthereumAccounts,
         BridgeConfiguration _bridgeConfiguration
     ) public {
-        require(tvm.pubkey() != 0);
+        require(tvm.pubkey() == msg.pubkey(), WRONG_TVM_KEY);
         require(_relayAccounts.length == _relayEthereumAccounts.length, KEYS_DIFFERENT_SHAPE);
         tvm.accept();
 
@@ -148,7 +149,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
         if (
             // -- Relay voted for confirmation AND enough confirmations received AND configuration not confirmed before
             // -- Enable configuration
-            confirmRelays.length >= bridgeConfiguration.eventConfigurationRequiredConfirmations &&
+            confirmRelays.length >= bridgeConfiguration.bridgeUpdateRequiredConfirmations &&
             vote == true &&
             eventConfigurations[id].status == false
         ) {
@@ -163,7 +164,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
         } else if (
             // -- Relay voted for reject AND enough rejects received
             // -- Remove configuration
-            rejectRelays.length >= bridgeConfiguration.eventConfigurationRequiredRejects &&
+            rejectRelays.length >= bridgeConfiguration.bridgeUpdateRequiredRejects &&
             vote == false
         ) {
             emit EventConfigurationCreationEnd(
@@ -357,7 +358,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
         (address[] confirmRelays, address[] rejectRelays) = getBridgeConfigurationVotes(_bridgeConfiguration);
 
         // - If enough confirmations received - update configuration and remove voting
-        if (confirmRelays.length == bridgeConfiguration.bridgeConfigurationUpdateRequiredConfirmations) {
+        if (confirmRelays.length == bridgeConfiguration.bridgeUpdateRequiredConfirmations) {
             bridgeConfiguration = _bridgeConfiguration;
             _removeBridgeConfigurationVoting(_bridgeConfiguration);
 
@@ -365,7 +366,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
         }
 
         // - If enough rejects received - remove voting
-        if (rejectRelays.length == bridgeConfiguration.bridgeConfigurationUpdateRequiredRejects) {
+        if (rejectRelays.length == bridgeConfiguration.bridgeUpdateRequiredRejects) {
             _removeBridgeConfigurationVoting(_bridgeConfiguration);
 
             emit BridgeConfigurationUpdateEnd(_bridgeConfiguration, false);
@@ -475,7 +476,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
         (address[] confirmRelays, address[] rejectRelays,,,,,) = getUpdateEventConfigurationDetails(id);
 
         // - Enough confirmations received, update event configuration
-        if (confirmRelays.length == bridgeConfiguration.eventConfigurationRequiredConfirmations) {
+        if (confirmRelays.length == bridgeConfiguration.bridgeUpdateRequiredConfirmations) {
             // -- Update event configuration address
             eventConfigurations[update.targetID].addr = update.addr;
 
@@ -502,7 +503,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
             _removeUpdateEventConfiguration(id);
         }
 
-        if (rejectRelays.length == bridgeConfiguration.eventConfigurationRequiredRejects) {
+        if (rejectRelays.length == bridgeConfiguration.bridgeUpdateRequiredRejects) {
             emit EventConfigurationUpdateEnd(
                 id,
                 false,
@@ -582,7 +583,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
         (address[] confirmRelays, address[] rejectRelays) = getBridgeRelayVotes(target);
 
         // - If enough confirmations received - update configuration and remove voting
-        if (confirmRelays.length == bridgeConfiguration.bridgeRelayUpdateRequiredConfirmations) {
+        if (confirmRelays.length == bridgeConfiguration.bridgeUpdateRequiredConfirmations) {
             address targetAccount = address.makeAddrStd(target.wid, target.addr);
 
             if (target.action) {
@@ -597,7 +598,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
         }
 
         // - If enough rejects received - remove voting
-        if (rejectRelays.length == bridgeConfiguration.bridgeRelayUpdateRequiredRejects) {
+        if (rejectRelays.length == bridgeConfiguration.bridgeUpdateRequiredRejects) {
             _removeBridgeRelayVoting(target);
 
             emit BridgeRelaysUpdateEnd(target, false);
@@ -644,5 +645,4 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
             bridgeConfiguration
         );
     }
-
 }

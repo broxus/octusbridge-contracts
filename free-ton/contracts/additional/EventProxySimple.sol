@@ -5,9 +5,10 @@ pragma AbiHeader expire;
 import './../interfaces/IProxy.sol';
 import './../interfaces/IEvent.sol';
 import './../event-contracts/EthereumEvent.sol';
+import "./../utils/TransferUtils.sol";
 
 
-contract EventProxySimple is IProxy {
+contract EventProxySimple is IProxy, TransferUtils {
     uint16 static _randomNonce;
 
     bool callbackReceived = false;

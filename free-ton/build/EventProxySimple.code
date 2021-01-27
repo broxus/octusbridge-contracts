@@ -85,15 +85,7 @@ LDU 32
 ;; decode TvmCell
 LDREF
 ;; decode EthereumEventInitData.eventBlockNumber
-LDUQ 256
-PUSHCONT {
-	;; load next cell
-	LDREF
-	ENDS
-	CTOS
-	LDU 256
-}
-IFNOT
+LDU 32
 ;; decode EthereumEventInitData.eventBlock
 LDUQ 256
 PUSHCONT {
@@ -115,23 +107,23 @@ PUSHCONT {
 }
 IFNOT
 ;; decode EthereumEventInitData.requiredConfirmations
-LDUQ 256
+LDUQ 16
 PUSHCONT {
 	;; load next cell
 	LDREF
 	ENDS
 	CTOS
-	LDU 256
+	LDU 16
 }
 IFNOT
 ;; decode EthereumEventInitData.requiredRejects
-LDUQ 256
+LDUQ 16
 PUSHCONT {
 	;; load next cell
 	LDREF
 	ENDS
 	CTOS
-	LDU 256
+	LDU 16
 }
 IFNOT
 ;; decode EthereumEventInitData.proxyAddress
@@ -165,14 +157,6 @@ PUSH S1
 UNTUPLE 9
 NEWC
 NEWC
-PUSH S5
-STSLICER
-PUSH S4
-STUR 256
-PUSH S3
-STUR 256
-STBREFR
-NEWC
 PUSH S2
 STSLICER
 STBREFR
@@ -183,9 +167,15 @@ STUR 32
 PUSH S7
 STREFR
 PUSH S6
-STUR 256
+STUR 32
 PUSH S5
 STUR 256
+PUSH S4
+STSLICER
+PUSH S3
+STUR 16
+PUSH S2
+STUR 16
 XCHG s9
 BLKDROP 9
 ENDC
@@ -257,7 +247,7 @@ PUSHCONT {
 	STZEROES
 	STSLICECONST 0
 	STSLICECONST 0
-	STSLICECONST xd2169a9f
+	STSLICECONST xd4e6339f
 	PUSH S1
 	STSLICER
 	ENDC
@@ -292,14 +282,6 @@ PUSH S1
 UNTUPLE 9
 NEWC
 NEWC
-PUSH S5
-STSLICER
-PUSH S4
-STUR 256
-PUSH S3
-STUR 256
-STBREFR
-NEWC
 PUSH S2
 STSLICER
 STBREFR
@@ -310,9 +292,15 @@ STUR 32
 PUSH S7
 STREFR
 PUSH S6
-STUR 256
+STUR 32
 PUSH S5
 STUR 256
+PUSH S4
+STSLICER
+PUSH S3
+STUR 16
+PUSH S2
+STUR 16
 XCHG s9
 BLKDROP 9
 ENDC
@@ -389,15 +377,7 @@ LDU 32
 ;; decode TvmCell
 LDREF
 ;; decode EthereumEventInitData.eventBlockNumber
-LDUQ 256
-PUSHCONT {
-	;; load next cell
-	LDREF
-	ENDS
-	CTOS
-	LDU 256
-}
-IFNOT
+LDU 32
 ;; decode EthereumEventInitData.eventBlock
 LDUQ 256
 PUSHCONT {
@@ -419,23 +399,23 @@ PUSHCONT {
 }
 IFNOT
 ;; decode EthereumEventInitData.requiredConfirmations
-LDUQ 256
+LDUQ 16
 PUSHCONT {
 	;; load next cell
 	LDREF
 	ENDS
 	CTOS
-	LDU 256
+	LDU 16
 }
 IFNOT
 ;; decode EthereumEventInitData.requiredRejects
-LDUQ 256
+LDUQ 16
 PUSHCONT {
 	;; load next cell
 	LDREF
 	ENDS
 	CTOS
-	LDU 256
+	LDU 16
 }
 IFNOT
 ;; decode EthereumEventInitData.proxyAddress
@@ -452,13 +432,24 @@ IFNOT
 BLKSWAP 9, 1
 TUPLE 9
 SWAP
+; Decode gasBackAddress
+LDMSGADDRQ
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+}
+IFNOT
 ENDS
 ;; param: _eventData
+;; param: gasBackAddress
 ; function broxusBridgeCallback
 PUSHINT 19173
 ;; get member ethereumEventConfiguration
 ;; push identifier _eventData
-PUSH S1
+PUSH S2
 INDEX 5
 ;; push identifier ethereumEventConfiguration
 GETGLOB 12
@@ -467,14 +458,14 @@ THROWANYIFNOT
 PUSHINT 19172
 ;; get member proxyAddress
 ;; push identifier _eventData
-PUSH S1
+PUSH S2
 INDEX 8
 MYADDR
 SDEQ
 THROWANYIFNOT
 PUSHINT 19171
 ;; push identifier _eventData
-PUSH S1
+PUSH S2
 CALL $buildEventProxyAddress_internal$
 ;; get member sender
 GETGLOB 9
@@ -489,13 +480,13 @@ SETGLOB 11
 ; expValue
 ; end expValue
 ;; push identifier _eventData
-DUP
+PUSH S1
 ; colValue
 SETGLOB 16
 ; end colValue
 ;; get member eventData
 ;; push identifier _eventData
-DUP
+PUSH S1
 INDEX 2
 CTOS
 LDU 256
@@ -506,7 +497,47 @@ DROP
 ; colValue
 SETGLOB 15
 ; end colValue
-DROP
+;; if
+;; get member value
+;; push identifier gasBackAddress
+DUP
+PARSEMSGADDR
+INDEX 3
+PLDU 256
+NEQINT 0
+PUSHCONT {
+	;; transfer()
+	;; push identifier gasBackAddress
+	DUP
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	PUSHINT 109
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	ENDC
+	PUSHINT 64
+	SENDRAWMSG
+}
+PUSHCONT {
+	;; transfer()
+	;; get member sender
+	GETGLOB 9
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	PUSHINT 109
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	ENDC
+	PUSHINT 64
+	SENDRAWMSG
+}
+IFELSE
+;; end if
+DROP2
 ; end function broxusBridgeCallback
 CALL $c7_to_c4$
 TRUE
@@ -515,11 +546,12 @@ SETGLOB 7
 .globl	broxusBridgeCallback_internal
 .type	broxusBridgeCallback_internal, @function
 ;; param: _eventData
+;; param: gasBackAddress
 ; function broxusBridgeCallback
 PUSHINT 19173
 ;; get member ethereumEventConfiguration
 ;; push identifier _eventData
-PUSH S1
+PUSH S2
 INDEX 5
 ;; push identifier ethereumEventConfiguration
 GETGLOB 12
@@ -528,14 +560,14 @@ THROWANYIFNOT
 PUSHINT 19172
 ;; get member proxyAddress
 ;; push identifier _eventData
-PUSH S1
+PUSH S2
 INDEX 8
 MYADDR
 SDEQ
 THROWANYIFNOT
 PUSHINT 19171
 ;; push identifier _eventData
-PUSH S1
+PUSH S2
 CALL $buildEventProxyAddress_internal$
 ;; get member sender
 GETGLOB 9
@@ -550,13 +582,13 @@ SETGLOB 11
 ; expValue
 ; end expValue
 ;; push identifier _eventData
-DUP
+PUSH S1
 ; colValue
 SETGLOB 16
 ; end colValue
 ;; get member eventData
 ;; push identifier _eventData
-DUP
+PUSH S1
 INDEX 2
 CTOS
 LDU 256
@@ -567,7 +599,47 @@ DROP
 ; colValue
 SETGLOB 15
 ; end colValue
-DROP
+;; if
+;; get member value
+;; push identifier gasBackAddress
+DUP
+PARSEMSGADDR
+INDEX 3
+PLDU 256
+NEQINT 0
+PUSHCONT {
+	;; transfer()
+	;; push identifier gasBackAddress
+	DUP
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	PUSHINT 109
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	ENDC
+	PUSHINT 64
+	SENDRAWMSG
+}
+PUSHCONT {
+	;; transfer()
+	;; get member sender
+	GETGLOB 9
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	PUSHINT 109
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	ENDC
+	PUSHINT 64
+	SENDRAWMSG
+}
+IFELSE
+;; end if
+DROP2
 ; end function broxusBridgeCallback
 
 .globl	broxusBridgeNotification
@@ -590,15 +662,7 @@ LDU 32
 ;; decode TvmCell
 LDREF
 ;; decode EthereumEventInitData.eventBlockNumber
-LDUQ 256
-PUSHCONT {
-	;; load next cell
-	LDREF
-	ENDS
-	CTOS
-	LDU 256
-}
-IFNOT
+LDU 32
 ;; decode EthereumEventInitData.eventBlock
 LDUQ 256
 PUSHCONT {
@@ -620,23 +684,23 @@ PUSHCONT {
 }
 IFNOT
 ;; decode EthereumEventInitData.requiredConfirmations
-LDUQ 256
+LDUQ 16
 PUSHCONT {
 	;; load next cell
 	LDREF
 	ENDS
 	CTOS
-	LDU 256
+	LDU 16
 }
 IFNOT
 ;; decode EthereumEventInitData.requiredRejects
-LDUQ 256
+LDUQ 16
 PUSHCONT {
 	;; load next cell
 	LDREF
 	ENDS
 	CTOS
-	LDU 256
+	LDU 16
 }
 IFNOT
 ;; decode EthereumEventInitData.proxyAddress
@@ -735,7 +799,7 @@ PUSHCONT {
 	STSLICECONST 0
 	STSLICECONST 1
 	NEWC
-	STSLICECONST x99b84774
+	STSLICECONST xf7753181
 	PUSH S6
 	STIR 1
 	PUSH S5
@@ -752,23 +816,21 @@ PUSHCONT {
 	PUSH S7
 	STREFR
 	PUSH S6
+	STUR 32
+	PUSH S5
 	STUR 256
 	NEWC
-	PUSH S6
-	STUR 256
 	PUSH S5
 	STSLICER
 	PUSH S4
-	STUR 256
-	NEWC
-	PUSH S4
-	STUR 256
+	STUR 16
 	PUSH S3
+	STUR 16
+	PUSH S2
 	STSLICER
-	BLKDROP2 9, 3
-	PUSH S4
+	BLKDROP2 9, 2
+	PUSH S3
 	STUR 256
-	STBREFR
 	STBREFR
 	STBREFR
 	ENDC
@@ -823,6 +885,112 @@ GETGLOB 15
 BLKDROP2 5, 5
 ; end function getDetails
 
+.globl	transferAll
+.public	transferAll
+.type	transferAll, @function
+; Decode input parameters
+; Decode receiver
+LDMSGADDR
+ENDS
+;; param: receiver
+; function transferAll
+ACCEPT
+;; transfer()
+;; push identifier receiver
+DUP
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 109
+STZEROES
+STSLICECONST 0
+STSLICECONST 0
+ENDC
+PUSHINT 128
+SENDRAWMSG
+DROP
+; end function transferAll
+PUSHCONT {
+	CALL $c7_to_c4$
+}
+IF
+TRUE
+SETGLOB 7
+
+.globl	transferAll_internal
+.type	transferAll_internal, @function
+;; param: receiver
+; function transferAll
+ACCEPT
+;; transfer()
+;; push identifier receiver
+DUP
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 109
+STZEROES
+STSLICECONST 0
+STSLICECONST 0
+ENDC
+PUSHINT 128
+SENDRAWMSG
+DROP
+; end function transferAll
+
+.globl	transfer
+.public	transfer
+.type	transfer, @function
+; Decode input parameters
+; Decode receiver
+LDMSGADDR
+ENDS
+;; param: receiver
+; function transfer
+ACCEPT
+;; transfer()
+;; push identifier receiver
+DUP
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 109
+STZEROES
+STSLICECONST 0
+STSLICECONST 0
+ENDC
+PUSHINT 128
+SENDRAWMSG
+DROP
+; end function transfer
+PUSHCONT {
+	CALL $c7_to_c4$
+}
+IF
+TRUE
+SETGLOB 7
+
+.globl	transfer_internal
+.type	transfer_internal, @function
+;; param: receiver
+; function transfer
+ACCEPT
+;; transfer()
+;; push identifier receiver
+DUP
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 109
+STZEROES
+STSLICECONST 0
+STSLICECONST 0
+ENDC
+PUSHINT 128
+SENDRAWMSG
+DROP
+; end function transfer
+
 .globl	c7_to_c4
 .type	c7_to_c4, @function
 GETGLOB 2
@@ -853,14 +1021,6 @@ SWAP
 UNTUPLE 9
 NEWC
 NEWC
-PUSH S5
-STSLICER
-PUSH S4
-STUR 256
-PUSH S3
-STUR 256
-STBREFR
-NEWC
 PUSH S2
 STSLICER
 STBREFR
@@ -871,9 +1031,15 @@ STUR 32
 PUSH S7
 STREFR
 PUSH S6
-STUR 256
+STUR 32
 PUSH S5
 STUR 256
+PUSH S4
+STSLICER
+PUSH S3
+STUR 16
+PUSH S2
+STUR 16
 XCHG s9
 BLKDROP 9
 STBREFR
@@ -898,17 +1064,14 @@ LDU 256
 LDREFRTOS
 NIP
 LDREF
-LDREF
 LDU 256
 LDU 32
 LDREF
+LDU 32
 LDU 256
-PLDU 256
-BLKSWAP 1, 6
-CTOS
 LDMSGADDR
-LDU 256
-PLDU 256
+LDU 16
+PLDU 16
 BLKSWAP 1, 8
 CTOS
 TUPLE 9
@@ -945,17 +1108,14 @@ PUSHCONT {
 	LDREFRTOS
 	NIP
 	LDREF
-	LDREF
 	LDU 256
 	LDU 32
 	LDREF
+	LDU 32
 	LDU 256
-	PLDU 256
-	BLKSWAP 1, 6
-	CTOS
 	LDMSGADDR
-	LDU 256
-	PLDU 256
+	LDU 16
+	PLDU 16
 	BLKSWAP 1, 8
 	CTOS
 	TUPLE 9

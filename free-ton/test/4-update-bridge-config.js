@@ -20,13 +20,10 @@ const relaysManager = new utils.RelaysManager(
 
 
 const newBridgeConfiguration = {
-  eventConfigurationRequiredConfirmations: 2,
-  eventConfigurationRequiredRejects: 2,
-  bridgeConfigurationUpdateRequiredConfirmations: 3,
-  bridgeConfigurationUpdateRequiredRejects: 2,
-  bridgeRelayUpdateRequiredConfirmations: 2,
-  bridgeRelayUpdateRequiredRejects: 2,
+  bridgeUpdateRequiredConfirmations: 2,
+  bridgeUpdateRequiredRejects: 3,
   active: true,
+  nonce: 2,
 };
 
 
@@ -59,10 +56,10 @@ describe('Test Bridge configuration update', async function() {
 
     it('Confirm not enough times', async function() {
       const {
-        bridgeConfigurationUpdateRequiredConfirmations,
+        bridgeUpdateRequiredConfirmations,
       } = await Bridge.runLocal('getDetails');
 
-      for (const keyId of _.range(bridgeConfigurationUpdateRequiredConfirmations.toNumber() - 1)) {
+      for (const keyId of _.range(bridgeUpdateRequiredConfirmations.toNumber() - 1)) {
         await relaysManager.runTarget({
           contract: Bridge,
           method: 'updateBridgeConfiguration',
@@ -83,7 +80,7 @@ describe('Test Bridge configuration update', async function() {
       });
 
       expect(confirmRelays).to.have.lengthOf(
-        bridgeConfigurationUpdateRequiredConfirmations.toNumber() - 1,
+        bridgeUpdateRequiredConfirmations.toNumber() - 1,
         'Non-empty confirmations'
       );
       expect(rejectRelays).to.have.lengthOf(0, 'Non-empty rejects');
@@ -92,7 +89,7 @@ describe('Test Bridge configuration update', async function() {
     it('Reject enough times', async function() {
       const bridgeConfiguration = await Bridge.runLocal('getDetails');
 
-      for (const keyId of _.range(bridgeConfiguration.bridgeConfigurationUpdateRequiredRejects.toNumber())) {
+      for (const keyId of _.range(bridgeConfiguration.bridgeUpdateRequiredRejects.toNumber())) {
         await relaysManager.runTarget({
           contract: Bridge,
           method: 'updateBridgeConfiguration',
@@ -125,7 +122,7 @@ describe('Test Bridge configuration update', async function() {
     it('Confirm enough times', async function() {
       const bridgeConfiguration = await Bridge.runLocal('getDetails');
 
-      for (const keyId of _.range(bridgeConfiguration.bridgeConfigurationUpdateRequiredConfirmations.toNumber())) {
+      for (const keyId of _.range(bridgeConfiguration.bridgeUpdateRequiredConfirmations.toNumber())) {
         await relaysManager.runTarget({
           contract: Bridge,
           method: 'updateBridgeConfiguration',
@@ -151,9 +148,9 @@ describe('Test Bridge configuration update', async function() {
       const _bridgeConfiguration = await Bridge.runLocal('getDetails');
 
       expect(bridgeConfiguration).to.not.deep.equal(_bridgeConfiguration, 'Bridge configuration not changed');
-      expect(_bridgeConfiguration.bridgeConfigurationUpdateRequiredConfirmations.toNumber())
+      expect(_bridgeConfiguration.bridgeUpdateRequiredRejects.toNumber())
         .to
-        .equal(newBridgeConfiguration.bridgeConfigurationUpdateRequiredConfirmations, 'Wrong new configuration');
+        .equal(newBridgeConfiguration.bridgeUpdateRequiredRejects, 'Wrong new configuration');
     });
   });
 });

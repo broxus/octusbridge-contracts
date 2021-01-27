@@ -3,6 +3,22 @@
 	"header": ["time", "expire"],
 	"functions": [
 		{
+			"name": "transferAll",
+			"inputs": [
+				{"name":"receiver","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "transfer",
+			"inputs": [
+				{"name":"receiver","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "constructor",
 			"inputs": [
 			],

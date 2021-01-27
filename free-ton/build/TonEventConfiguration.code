@@ -16,6 +16,27 @@ SETGLOB 6
 ; Decode input parameters
 ENDS
 ; constructor TonEventConfiguration
+;; push identifier WRONG_TVM_KEY
+GETGLOB 25
+DUP
+LESSINT 2
+PUSHCONT {
+	DROP
+	PUSHINT 100
+}
+IF
+GETGLOB 2
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+;; ==
+EQUAL
+THROWANYIFNOT
 ACCEPT
 ; end constructor TonEventConfiguration
 CALL $c7_to_c4$
@@ -94,7 +115,7 @@ DUP
 ; end expValue
 ;; get member eventRequiredConfirmations
 ;; push identifier basicInitData
-GETGLOB 24
+GETGLOB 26
 INDEX 1
 ; colValue
 SETINDEX 5
@@ -105,7 +126,7 @@ DUP
 ; end expValue
 ;; get member eventRequiredConfirmations
 ;; push identifier basicInitData
-GETGLOB 24
+GETGLOB 26
 INDEX 1
 ; colValue
 SETINDEX 6
@@ -171,14 +192,14 @@ IF
 GETGLOB 9
 ;; get member bridgeAddress
 ;; push identifier basicInitData
-GETGLOB 24
+GETGLOB 26
 INDEX 4
 SDEQ
 THROWANYIFNOT
 ; modifier transferAfter
 ;; get member bridgeAddress
 ;; push identifier basicInitData
-GETGLOB 24
+GETGLOB 26
 INDEX 4
 ;; get member value
 CALL $message_balance_macro$
@@ -199,10 +220,6 @@ DICTUSETB
 PUSH S1
 UNTUPLE 7
 NEWC
-NEWC
-PUSH S2
-STUR 256
-STBREFR
 PUSH S7
 STUR 256
 PUSH S6
@@ -214,20 +231,21 @@ STREFR
 PUSH S3
 STSLICER
 PUSH S2
-STUR 256
+STUR 16
+PUSH S1
+STUR 16
 XCHG s7
 BLKDROP 7
-ENDC
 PUSHINT 1
 ROT
 PUSHINT 64
-DICTUSETREF
+DICTUSETB
 NEWC
 STDICT
 ENDC
 ;; get member eventCode
 ;; push identifier basicInitData
-GETGLOB 24
+GETGLOB 26
 INDEX 3
 NEWC
 STSLICECONST x2_
@@ -244,7 +262,7 @@ ENDC
 CTOS
 ;; get member eventInitialBalance
 ;; push identifier basicInitData
-GETGLOB 24
+GETGLOB 26
 INDEX 5
 PUSH S1
 NEWC
@@ -359,14 +377,14 @@ IF
 GETGLOB 9
 ;; get member bridgeAddress
 ;; push identifier basicInitData
-GETGLOB 24
+GETGLOB 26
 INDEX 4
 SDEQ
 THROWANYIFNOT
 ; modifier transferAfter
 ;; get member bridgeAddress
 ;; push identifier basicInitData
-GETGLOB 24
+GETGLOB 26
 INDEX 4
 ;; get member value
 CALL $message_balance_macro$
@@ -387,10 +405,6 @@ DICTUSETB
 PUSH S1
 UNTUPLE 7
 NEWC
-NEWC
-PUSH S2
-STUR 256
-STBREFR
 PUSH S7
 STUR 256
 PUSH S6
@@ -402,20 +416,21 @@ STREFR
 PUSH S3
 STSLICER
 PUSH S2
-STUR 256
+STUR 16
+PUSH S1
+STUR 16
 XCHG s7
 BLKDROP 7
-ENDC
 PUSHINT 1
 ROT
 PUSHINT 64
-DICTUSETREF
+DICTUSETB
 NEWC
 STDICT
 ENDC
 ;; get member eventCode
 ;; push identifier basicInitData
-GETGLOB 24
+GETGLOB 26
 INDEX 3
 NEWC
 STSLICECONST x2_
@@ -432,7 +447,7 @@ ENDC
 CTOS
 ;; get member eventInitialBalance
 ;; push identifier basicInitData
-GETGLOB 24
+GETGLOB 26
 INDEX 5
 PUSH S1
 NEWC
@@ -577,14 +592,14 @@ IF
 GETGLOB 9
 ;; get member bridgeAddress
 ;; push identifier basicInitData
-GETGLOB 24
+GETGLOB 26
 INDEX 4
 SDEQ
 THROWANYIFNOT
 ; modifier transferAfter
 ;; get member bridgeAddress
 ;; push identifier basicInitData
-GETGLOB 24
+GETGLOB 26
 INDEX 4
 ;; get member value
 CALL $message_balance_macro$
@@ -605,10 +620,6 @@ DICTUSETB
 PUSH S1
 UNTUPLE 7
 NEWC
-NEWC
-PUSH S2
-STUR 256
-STBREFR
 PUSH S7
 STUR 256
 PUSH S6
@@ -620,20 +631,21 @@ STREFR
 PUSH S3
 STSLICER
 PUSH S2
-STUR 256
+STUR 16
+PUSH S1
+STUR 16
 XCHG s7
 BLKDROP 7
-ENDC
 PUSHINT 1
 ROT
 PUSHINT 64
-DICTUSETREF
+DICTUSETB
 NEWC
 STDICT
 ENDC
 ;; get member eventCode
 ;; push identifier basicInitData
-GETGLOB 24
+GETGLOB 26
 INDEX 3
 NEWC
 STSLICECONST x2_
@@ -757,14 +769,14 @@ IF
 GETGLOB 9
 ;; get member bridgeAddress
 ;; push identifier basicInitData
-GETGLOB 24
+GETGLOB 26
 INDEX 4
 SDEQ
 THROWANYIFNOT
 ; modifier transferAfter
 ;; get member bridgeAddress
 ;; push identifier basicInitData
-GETGLOB 24
+GETGLOB 26
 INDEX 4
 ;; get member value
 CALL $message_balance_macro$
@@ -785,10 +797,6 @@ DICTUSETB
 PUSH S1
 UNTUPLE 7
 NEWC
-NEWC
-PUSH S2
-STUR 256
-STBREFR
 PUSH S7
 STUR 256
 PUSH S6
@@ -800,20 +808,21 @@ STREFR
 PUSH S3
 STSLICER
 PUSH S2
-STUR 256
+STUR 16
+PUSH S1
+STUR 16
 XCHG s7
 BLKDROP 7
-ENDC
 PUSHINT 1
 ROT
 PUSHINT 64
-DICTUSETREF
+DICTUSETB
 NEWC
 STDICT
 ENDC
 ;; get member eventCode
 ;; push identifier basicInitData
-GETGLOB 24
+GETGLOB 26
 INDEX 3
 NEWC
 STSLICECONST x2_
@@ -944,9 +953,9 @@ PUSHINT 0
 TUPLE 2
 ;; return
 ;; push identifier basicInitData
-GETGLOB 24
+GETGLOB 26
 ;; push identifier initData
-GETGLOB 25
+GETGLOB 27
 BLKDROP2 2, 2
 ;; emitting 2 value(s)
 PUSH S2
@@ -1027,9 +1036,9 @@ PUSHINT 0
 TUPLE 2
 ;; return
 ;; push identifier basicInitData
-GETGLOB 24
+GETGLOB 26
 ;; push identifier initData
-GETGLOB 25
+GETGLOB 27
 BLKDROP2 2, 2
 ; end function getDetails
 
@@ -1170,7 +1179,7 @@ IF
 GETGLOB 9
 ;; get member bridgeAddress
 ;; push identifier basicInitData
-GETGLOB 24
+GETGLOB 26
 INDEX 4
 SDEQ
 THROWANYIFNOT
@@ -1180,14 +1189,14 @@ THROWANYIFNOT
 ;; push identifier _basicInitData
 PUSH S1
 ; colValue
-SETGLOB 24
+SETGLOB 26
 ; end colValue
 ; expValue
 ; end expValue
 ;; push identifier _initData
 DUP
 ; colValue
-SETGLOB 25
+SETGLOB 27
 ; end colValue
 ; end function updateInitData
 DROP2
@@ -1214,7 +1223,7 @@ IF
 GETGLOB 9
 ;; get member bridgeAddress
 ;; push identifier basicInitData
-GETGLOB 24
+GETGLOB 26
 INDEX 4
 SDEQ
 THROWANYIFNOT
@@ -1224,18 +1233,124 @@ THROWANYIFNOT
 ;; push identifier _basicInitData
 PUSH S1
 ; colValue
-SETGLOB 24
+SETGLOB 26
 ; end colValue
 ; expValue
 ; end expValue
 ;; push identifier _initData
 DUP
 ; colValue
-SETGLOB 25
+SETGLOB 27
 ; end colValue
 ; end function updateInitData
 DROP2
 ; end modifier onlyBridge
+
+.globl	transferAll
+.public	transferAll
+.type	transferAll, @function
+; Decode input parameters
+; Decode receiver
+LDMSGADDR
+ENDS
+;; param: receiver
+; function transferAll
+ACCEPT
+;; transfer()
+;; push identifier receiver
+DUP
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 109
+STZEROES
+STSLICECONST 0
+STSLICECONST 0
+ENDC
+PUSHINT 128
+SENDRAWMSG
+DROP
+; end function transferAll
+PUSHCONT {
+	CALL $c7_to_c4$
+}
+IF
+TRUE
+SETGLOB 7
+
+.globl	transferAll_internal
+.type	transferAll_internal, @function
+;; param: receiver
+; function transferAll
+ACCEPT
+;; transfer()
+;; push identifier receiver
+DUP
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 109
+STZEROES
+STSLICECONST 0
+STSLICECONST 0
+ENDC
+PUSHINT 128
+SENDRAWMSG
+DROP
+; end function transferAll
+
+.globl	transfer
+.public	transfer
+.type	transfer, @function
+; Decode input parameters
+; Decode receiver
+LDMSGADDR
+ENDS
+;; param: receiver
+; function transfer
+ACCEPT
+;; transfer()
+;; push identifier receiver
+DUP
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 109
+STZEROES
+STSLICECONST 0
+STSLICECONST 0
+ENDC
+PUSHINT 128
+SENDRAWMSG
+DROP
+; end function transfer
+PUSHCONT {
+	CALL $c7_to_c4$
+}
+IF
+TRUE
+SETGLOB 7
+
+.globl	transfer_internal
+.type	transfer_internal, @function
+;; param: receiver
+; function transfer
+ACCEPT
+;; transfer()
+;; push identifier receiver
+DUP
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 109
+STZEROES
+STSLICECONST 0
+STSLICECONST 0
+ENDC
+PUSHINT 128
+SENDRAWMSG
+DROP
+; end function transfer
 
 .globl	c7_to_c4
 .type	c7_to_c4, @function
@@ -1246,16 +1361,43 @@ GETGLOB 3
 STUR 64
 GETGLOB 6
 STUR 1
-NEWC
+GETGLOB 10
+GETGLOB 11
 GETGLOB 12
 GETGLOB 13
 GETGLOB 14
+GETGLOB 15
+GETGLOB 16
+GETGLOB 17
+GETGLOB 18
+GETGLOB 19
+GETGLOB 20
+GETGLOB 21
+GETGLOB 22
+GETGLOB 23
 GETGLOB 24
 GETGLOB 25
-REVERSE 6, 0
-STU 256
-STU 256
-STU 256
+GETGLOB 26
+GETGLOB 27
+PUSHINT 19
+PUSHINT 0
+REVX
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
 SWAP
 UNTUPLE 6
 NEWC
@@ -1284,39 +1426,6 @@ STUR 160
 NIP
 NIP
 STBREFR
-NEWC
-GETGLOB 15
-GETGLOB 16
-GETGLOB 17
-REVERSE 4, 0
-STU 256
-STU 256
-STU 256
-NEWC
-GETGLOB 18
-GETGLOB 19
-GETGLOB 20
-REVERSE 4, 0
-STU 256
-STU 256
-STU 256
-NEWC
-GETGLOB 21
-GETGLOB 22
-GETGLOB 23
-REVERSE 4, 0
-STU 256
-STU 256
-STU 256
-GETGLOB 10
-GETGLOB 11
-REVERSE 7, 0
-STBREF
-STBREF
-STBREF
-STBREF
-STU 256
-STU 256
 ENDC
 POP C4
 
@@ -1327,10 +1436,22 @@ CTOS        ; c4
 LDU 256      ; pubkey c4
 LDU 64      ; pubkey timestamp c4
 LDU 1       ; pubkey [timestamp] constructor_flag memory
-LDREFRTOS
-LDU 256
-LDU 256
-LDU 256
+LDU 16
+LDU 16
+LDU 16
+LDU 16
+LDU 16
+LDU 16
+LDU 16
+LDU 16
+LDU 16
+LDU 16
+LDU 16
+LDU 16
+LDU 16
+LDU 16
+LDU 16
+LDU 16
 LDREFRTOS
 LDREF
 LDU 16
@@ -1339,39 +1460,27 @@ LDREF
 LDMSGADDR
 PLDU 128
 TUPLE 6
-SETGLOB 24
+SETGLOB 26
 LDREFRTOS
 NIP
 LDMSGADDR
 PLDU 160
 TUPLE 2
+SETGLOB 27
 SETGLOB 25
-SETGLOB 14
-SETGLOB 13
-SETGLOB 12
-LDREFRTOS
-LDU 256
-LDU 256
-PLDU 256
-SETGLOB 17
-SETGLOB 16
-SETGLOB 15
-LDREFRTOS
-LDU 256
-LDU 256
-PLDU 256
-SETGLOB 20
-SETGLOB 19
-SETGLOB 18
-LDREFRTOS
-LDU 256
-LDU 256
-PLDU 256
+SETGLOB 24
 SETGLOB 23
 SETGLOB 22
 SETGLOB 21
-LDU 256
-PLDU 256
+SETGLOB 20
+SETGLOB 19
+SETGLOB 18
+SETGLOB 17
+SETGLOB 16
+SETGLOB 15
+SETGLOB 14
+SETGLOB 13
+SETGLOB 12
 SETGLOB 11
 SETGLOB 10
 TRUE
@@ -1390,10 +1499,22 @@ PUSHCONT {
 	LDU 256      ; pubkey c4
 	LDU 64      ; pubkey timestamp c4
 	LDU 1       ; pubkey [timestamp] constructor_flag memory
-	LDREFRTOS
-	LDU 256
-	LDU 256
-	LDU 256
+	LDU 16
+	LDU 16
+	LDU 16
+	LDU 16
+	LDU 16
+	LDU 16
+	LDU 16
+	LDU 16
+	LDU 16
+	LDU 16
+	LDU 16
+	LDU 16
+	LDU 16
+	LDU 16
+	LDU 16
+	LDU 16
 	LDREFRTOS
 	LDREF
 	LDU 16
@@ -1402,39 +1523,27 @@ PUSHCONT {
 	LDMSGADDR
 	PLDU 128
 	TUPLE 6
-	SETGLOB 24
+	SETGLOB 26
 	LDREFRTOS
 	NIP
 	LDMSGADDR
 	PLDU 160
 	TUPLE 2
+	SETGLOB 27
 	SETGLOB 25
-	SETGLOB 14
-	SETGLOB 13
-	SETGLOB 12
-	LDREFRTOS
-	LDU 256
-	LDU 256
-	PLDU 256
-	SETGLOB 17
-	SETGLOB 16
-	SETGLOB 15
-	LDREFRTOS
-	LDU 256
-	LDU 256
-	PLDU 256
-	SETGLOB 20
-	SETGLOB 19
-	SETGLOB 18
-	LDREFRTOS
-	LDU 256
-	LDU 256
-	PLDU 256
+	SETGLOB 24
 	SETGLOB 23
 	SETGLOB 22
 	SETGLOB 21
-	LDU 256
-	PLDU 256
+	SETGLOB 20
+	SETGLOB 19
+	SETGLOB 18
+	SETGLOB 17
+	SETGLOB 16
+	SETGLOB 15
+	SETGLOB 14
+	SETGLOB 13
+	SETGLOB 12
 	SETGLOB 11
 	SETGLOB 10
 	TRUE
@@ -1471,7 +1580,7 @@ PUSHCONT {
 		TUPLE 6
 	}
 	IFELSE
-	SETGLOB 24
+	SETGLOB 26
 	; init initData
 	PUSHINT 2
 	PUSH S1
@@ -1488,7 +1597,7 @@ PUSHCONT {
 		TUPLE 2
 	}
 	IFELSE
-	SETGLOB 25
+	SETGLOB 27
 	; init ADDRESS_IS_NOT_OWNER
 	PUSHINT 0
 	SETGLOB 10
@@ -1531,6 +1640,12 @@ PUSHCONT {
 	; init EVENT_NOT_CONFIRMED
 	PUSHINT 0
 	SETGLOB 23
+	; init TOO_LOW_MSG_VALUE
+	PUSHINT 0
+	SETGLOB 24
+	; init WRONG_TVM_KEY
+	PUSHINT 0
+	SETGLOB 25
 	; set contract pubkey
 	PUSHINT 0
 	SWAP
@@ -1587,6 +1702,12 @@ PUSHCONT {
 	;; init state var: EVENT_NOT_CONFIRMED
 	PUSHINT 5205
 	SETGLOB 23
+	;; init state var: TOO_LOW_MSG_VALUE
+	PUSHINT 5206
+	SETGLOB 24
+	;; init state var: WRONG_TVM_KEY
+	PUSHINT 5301
+	SETGLOB 25
 }
 IFELSE
 
@@ -1651,6 +1772,8 @@ PUSHCONT {
 	HASHSU   ; signatureSlice msgSlice hashMsgSlice
 	ROT
 	GETGLOB 2
+	DUP
+	SETGLOB 5
 	CHKSIGNU      ; msgSlice isSigned
 	THROWIFNOT 40 ; msgSlice
 }

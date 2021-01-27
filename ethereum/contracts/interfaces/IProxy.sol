@@ -10,7 +10,7 @@ interface IProxy {
         bytes eventData;
         int8 tonEventConfigurationWid;
         uint tonEventConfigurationAddress;
-        uint requiredConfirmations;
-        uint requiredRejects;
+        uint16 requiredConfirmations;
+        uint16 requiredRejects;
     }
 }

@@ -131,12 +131,12 @@ describe('Test event configurations', function() {
 
     it('Reject configuration', async function() {
       const {
-        eventConfigurationRequiredRejects,
+        bridgeUpdateRequiredRejects,
       } = await Bridge.runLocal('getDetails');
 
       const [,eventConfigurationID] = EthereumEventConfigurationContracts.invalid;
 
-      for (const keyId of _.range(eventConfigurationRequiredRejects.toString())) {
+      for (const keyId of _.range(bridgeUpdateRequiredRejects.toString())) {
         await relaysManager.runTarget({
           contract: Bridge,
           method: 'voteForEventConfigurationCreation',
@@ -168,12 +168,12 @@ describe('Test event configurations', function() {
 
     it('Confirm configuration', async function() {
       const {
-        eventConfigurationRequiredConfirmations,
+        bridgeUpdateRequiredConfirmations,
       } = await Bridge.runLocal('getDetails');
 
       const [,eventConfigurationID] = EthereumEventConfigurationContracts.valid;
 
-      for (const keyId of _.range(eventConfigurationRequiredConfirmations.toString())) {
+      for (const keyId of _.range(bridgeUpdateRequiredConfirmations.toString())) {
         await relaysManager.runTarget({
           contract: Bridge,
           method: 'voteForEventConfigurationCreation',
@@ -195,7 +195,7 @@ describe('Test event configurations', function() {
       });
 
       expect(confirmRelays).to.have.lengthOf(
-        eventConfigurationRequiredConfirmations,
+        bridgeUpdateRequiredConfirmations,
         `Wrong confirmations for ${eventConfigurationID} configuration`
       );
 
@@ -253,12 +253,12 @@ describe('Test event configurations', function() {
 
     it('Confirm configuration', async function() {
       const {
-        eventConfigurationRequiredConfirmations,
+        bridgeUpdateRequiredConfirmations,
       } = await Bridge.runLocal('getDetails');
 
       const eventConfigurationID = 333;
 
-      for (const keyId of _.range(eventConfigurationRequiredConfirmations.toString())) {
+      for (const keyId of _.range(bridgeUpdateRequiredConfirmations.toString())) {
         await relaysManager.runTarget({
           contract: Bridge,
           method: 'voteForEventConfigurationCreation',
@@ -280,7 +280,7 @@ describe('Test event configurations', function() {
       });
       
       expect(confirmRelays).to.have.lengthOf(
-        eventConfigurationRequiredConfirmations,
+        bridgeUpdateRequiredConfirmations,
         `Wrong confirmations for ${eventConfigurationID} configuration`
       );
       expect(rejectRelays).to.have.lengthOf(0, `Non-empty rejects for ${eventConfigurationID} configuration`);
@@ -376,10 +376,10 @@ describe('Test event configurations', function() {
 
     it('Confirm configuration update', async function() {
       const {
-        eventConfigurationRequiredConfirmations,
+        bridgeUpdateRequiredConfirmations,
       } = await Bridge.runLocal('getDetails');
 
-      for (const keyId of _.range(eventConfigurationRequiredConfirmations.toString())) {
+      for (const keyId of _.range(bridgeUpdateRequiredConfirmations.toString())) {
         await relaysManager.runTarget({
           contract: Bridge,
           method: 'voteForUpdateEventConfiguration',

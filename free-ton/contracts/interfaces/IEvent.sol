@@ -7,8 +7,8 @@ interface IEvent {
         uint32 eventIndex;
         TvmCell eventData;
         address tonEventConfiguration;
-        uint requiredConfirmations;
-        uint requiredRejects;
+        uint16 requiredConfirmations;
+        uint16 requiredRejects;
     }
 
     // for confirming/rejecting TON event
@@ -23,11 +23,11 @@ interface IEvent {
         uint eventTransaction;
         uint32 eventIndex;
         TvmCell eventData;
-        uint eventBlockNumber;
+        uint32 eventBlockNumber;
         uint eventBlock;
         address ethereumEventConfiguration;
-        uint requiredConfirmations;
-        uint requiredRejects;
+        uint16 requiredConfirmations;
+        uint16 requiredRejects;
         address proxyAddress;
     }
 
@@ -36,7 +36,7 @@ interface IEvent {
         uint eventTransaction;
         uint32 eventIndex;
         TvmCell eventData;
-        uint eventBlockNumber;
+        uint32 eventBlockNumber;
         uint eventBlock;
     }
 }

@@ -2,19 +2,17 @@ pragma solidity >= 0.6.0;
 
 interface IBridge {
     struct BridgeConfiguration {
-        uint16 eventConfigurationRequiredConfirmations;
-        uint16 eventConfigurationRequiredRejects;
+        uint16 nonce;
 
-        uint16 bridgeConfigurationUpdateRequiredConfirmations;
-        uint16 bridgeConfigurationUpdateRequiredRejects;
-
-        uint16 bridgeRelayUpdateRequiredConfirmations;
-        uint16 bridgeRelayUpdateRequiredRejects;
+        uint16 bridgeUpdateRequiredConfirmations;
+        uint16 bridgeUpdateRequiredRejects;
 
         bool active;
     }
 
     struct BridgeRelay {
+        uint16 nonce;
+
         int8 wid;
         uint addr;
         uint160 ethereumAccount;
