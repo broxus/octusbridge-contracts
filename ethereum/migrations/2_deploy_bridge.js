@@ -8,6 +8,7 @@ module.exports = async (deployer, network ,accounts) => {
   await deployer.deploy(
     Bridge,
     accounts,
+    accounts[0],
   );
   
   await deployer.deploy(

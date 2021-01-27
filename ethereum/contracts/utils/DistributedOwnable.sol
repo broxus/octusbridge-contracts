@@ -3,12 +3,15 @@ pragma solidity ^0.6.2;
 pragma experimental ABIEncoderV2;
 
 import "./../libraries/ECDSA.sol";
+import "./../libraries/Array.sol";
+
 
 contract DistributedOwnable {
     using ECDSA for bytes32;
+    using Array for address[];
 
     mapping (address => bool) private _owners;
-    uint public ownersAmount;
+    address[] private _ownersList;
 
     event OwnershipGranted(address indexed newOwner);
     event OwnershipRemoved(address indexed removedOwner);
@@ -35,6 +38,14 @@ contract DistributedOwnable {
     }
 
     /**
+     * @notice Get the list of owners
+     * @return List of addresses
+     */
+    function getOwners() public view returns(address[] memory) {
+        return _ownersList;
+    }
+
+    /**
      * @dev Handy wrapper for Solidity recover function. Returns signature author address.
      * @param payload - payload which was signed
      * @param signature - payload signature
@@ -54,7 +65,7 @@ contract DistributedOwnable {
         require(!_owners[newOwner], 'Already owner');
 
         _owners[newOwner] = true;
-        ownersAmount++;
+        _ownersList.push(newOwner);
 
         emit OwnershipGranted(newOwner);
     }
@@ -67,7 +78,7 @@ contract DistributedOwnable {
         require(_owners[ownerToRemove], 'Not an owner');
 
         _owners[ownerToRemove] = false;
-        ownersAmount--;
+        _ownersList.removeByValue(ownerToRemove);
 
         emit OwnershipRemoved(ownerToRemove);
     }

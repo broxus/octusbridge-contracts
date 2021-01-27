@@ -1,6 +1,10 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.6.2;
 
 
+/*
+    Handy contract for remembering already used nonces.
+*/
 contract Nonce {
     mapping(uint16 => bool) public nonce;
 
