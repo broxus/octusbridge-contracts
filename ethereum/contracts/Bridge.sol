@@ -16,18 +16,7 @@ import "./utils/RedButton.sol";
 contract Bridge is DistributedOwnable, RedButton, Nonce, IBridge {
     using SafeMath for uint;
 
-    struct BridgeConfiguration {
-        uint16 nonce;
-        uint16 bridgeUpdateRequiredConfirmations;
-    }
-
-    struct BridgeRelay {
-        uint16 nonce;
-        address account;
-        bool action;
-    }
-
-    BridgeConfiguration public bridgeConfiguration;
+    BridgeConfiguration bridgeConfiguration;
 
     /**
         @notice Bridge constructor
@@ -41,6 +30,12 @@ contract Bridge is DistributedOwnable, RedButton, Nonce, IBridge {
         setAdmin(admin);
     }
 
+    /*
+        Is address relay or not.
+        Handy wrapper around ownership functionality + Bridge specific names.
+        @param candidate Address
+        @returns Boolean is relay or not
+    */
     function isRelay(address candidate) override public view returns(bool) {
         return isOwner(candidate);
     }
@@ -119,5 +114,13 @@ contract Bridge is DistributedOwnable, RedButton, Nonce, IBridge {
         }
 
         rememberNonce(bridgeRelay.nonce);
+    }
+
+    /*
+        Get current bridge configuration
+        @return Bridge configuration structure
+    */
+    function getConfiguration() public view override returns (BridgeConfiguration memory) {
+        return bridgeConfiguration;
     }
 }

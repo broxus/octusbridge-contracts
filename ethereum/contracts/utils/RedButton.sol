@@ -2,11 +2,27 @@ pragma solidity ^0.6.2;
 pragma experimental ABIEncoderV2;
 
 
+/*
+    Naturally Red Button functionality.
+    Creates special role - admin. He's allowed to perform the list of any
+    external calls.
+*/
 contract RedButton {
-    address admin;
+    address public admin;
 
+    /**/
     function setAdmin(address _admin) internal {
         admin = _admin;
+    }
+
+    /*
+        Transfer admin ownership
+        @dev Only called by
+        @param _newAdmin New admin address
+    */
+    function transferAdmin(address _newAdmin) public onlyAdmin {
+        require(_newAdmin != 0x0, 'Cant set admin to zero address');
+        setAdmin(_newAdmin);
     }
 
     modifier onlyAdmin() {
@@ -14,18 +30,24 @@ contract RedButton {
         _;
     }
 
-    function transferAdmin(address _newAdmin) public onlyAdmin {
-        setAdmin(_newAdmin);
-    }
-
+    /*
+        Execute list of calls. Any calls allowed - transfer ETH, call any contract any function.
+        @param _to List of addresses to which make a calls
+        @param _data List of call data, may be empty for ETH transfer
+        @param weiAmount List of ETH amounts to send on each call
+        @dev All params should be same length
+    */
     function externalCallEth(
         address payable[] memory  _to,
         bytes[] memory _data,
         uint256[] memory weiAmount
     ) onlyAdmin public payable {
-        require(_to.length == _data.length && _data.length == weiAmount.length, "Parameters should be equal length");
+        require(
+            _to.length == _data.length && _data.length == weiAmount.length,
+            "Parameters should be equal length"
+        );
 
-        for(uint16 i = 0; i < _to.length; i++) {
+        for (uint16 i = 0; i < _to.length; i++) {
             _cast(_to[i], _data[i], weiAmount[i]);
         }
     }
