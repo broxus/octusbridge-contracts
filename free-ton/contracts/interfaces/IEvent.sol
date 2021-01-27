@@ -4,6 +4,7 @@ interface IEvent {
     struct TonEventInitData {
         uint eventTransaction;
         uint64 eventTransactionLt;
+        uint32 eventTimestamp;
         uint32 eventIndex;
         TvmCell eventData;
         address tonEventConfiguration;
@@ -15,6 +16,7 @@ interface IEvent {
     struct TonEventVoteData {
         uint eventTransaction;
         uint64 eventTransactionLt;
+        uint32 eventTimestamp;
         uint32 eventIndex;
         TvmCell eventData;
     }

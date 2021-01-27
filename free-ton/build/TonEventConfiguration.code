@@ -51,12 +51,13 @@ SETGLOB 7
 PUSHINT 0
 PUSHINT 0
 PUSHINT 0
+PUSHINT 0
 NEWC
 ENDC
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 PUSHINT 0
 PUSHINT 0
-TUPLE 7
+TUPLE 8
 ; expValue
 DUP
 ; end expValue
@@ -85,9 +86,9 @@ DUP
 ;; get member eventIndex
 ;; push identifier eventVoteData
 PUSH S2
-INDEX 2
+INDEX 3
 ; colValue
-SETINDEX 2
+SETINDEX 3
 NIP
 ; end colValue
 ; expValue
@@ -96,9 +97,9 @@ DUP
 ;; get member eventData
 ;; push identifier eventVoteData
 PUSH S2
-INDEX 3
+INDEX 4
 ; colValue
-SETINDEX 3
+SETINDEX 4
 NIP
 ; end colValue
 MYADDR
@@ -106,17 +107,6 @@ MYADDR
 PUSH S1
 ; end expValue
 SWAP
-; colValue
-SETINDEX 4
-NIP
-; end colValue
-; expValue
-DUP
-; end expValue
-;; get member eventRequiredConfirmations
-;; push identifier basicInitData
-GETGLOB 26
-INDEX 1
 ; colValue
 SETINDEX 5
 NIP
@@ -130,6 +120,17 @@ GETGLOB 26
 INDEX 1
 ; colValue
 SETINDEX 6
+NIP
+; end colValue
+; expValue
+DUP
+; end expValue
+;; get member eventRequiredConfirmations
+;; push identifier basicInitData
+GETGLOB 26
+INDEX 1
+; colValue
+SETINDEX 7
 NIP
 ; end colValue
 ;; returning named params
@@ -153,16 +154,47 @@ IF
 LDU 256
 ;; decode TonEventVoteData.eventTransactionLt
 LDU 64
-;; decode TonEventVoteData.eventIndex
+;; decode TonEventVoteData.eventTimestamp
 LDU 32
+;; decode TonEventVoteData.eventIndex
+LDUQ 32
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 32
+}
+IFNOT
 ;; decode TonEventVoteData.eventData
 ;; decode TvmCell
+DUP
+SREFS
+EQINT 1
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
 LDREF
-;; build struct TonEventVoteData ss:5
-BLKSWAP 4, 1
-TUPLE 4
+;; build struct TonEventVoteData ss:6
+BLKSWAP 5, 1
+TUPLE 5
 SWAP
 ; Decode eventDataSignature
+DUP
+SBITREFS
+EQINT 1
+SWAP
+EQINT 0
+AND
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
 LDREF
 ; Decode relay
 LDMSGADDRQ
@@ -218,12 +250,14 @@ PUSHINT 64
 DICTUSETB
 ;; push identifier eventInitData
 PUSH S1
-UNTUPLE 7
+UNTUPLE 8
 NEWC
-PUSH S7
+PUSH S8
 STUR 256
-PUSH S6
+PUSH S7
 STUR 64
+PUSH S6
+STUR 32
 PUSH S5
 STUR 32
 PUSH S4
@@ -234,8 +268,8 @@ PUSH S2
 STUR 16
 PUSH S1
 STUR 16
-XCHG s7
-BLKDROP 7
+XCHG s8
+BLKDROP 8
 PUSHINT 1
 ROT
 PUSHINT 64
@@ -403,12 +437,14 @@ PUSHINT 64
 DICTUSETB
 ;; push identifier eventInitData
 PUSH S1
-UNTUPLE 7
+UNTUPLE 8
 NEWC
-PUSH S7
+PUSH S8
 STUR 256
-PUSH S6
+PUSH S7
 STUR 64
+PUSH S6
+STUR 32
 PUSH S5
 STUR 32
 PUSH S4
@@ -419,8 +455,8 @@ PUSH S2
 STUR 16
 PUSH S1
 STUR 16
-XCHG s7
-BLKDROP 7
+XCHG s8
+BLKDROP 8
 PUSHINT 1
 ROT
 PUSHINT 64
@@ -556,14 +592,36 @@ IF
 LDU 256
 ;; decode TonEventVoteData.eventTransactionLt
 LDU 64
-;; decode TonEventVoteData.eventIndex
+;; decode TonEventVoteData.eventTimestamp
 LDU 32
+;; decode TonEventVoteData.eventIndex
+LDUQ 32
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 32
+}
+IFNOT
 ;; decode TonEventVoteData.eventData
 ;; decode TvmCell
+DUP
+SBITREFS
+EQINT 1
+SWAP
+EQINT 0
+AND
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
 LDREF
-;; build struct TonEventVoteData ss:5
-BLKSWAP 4, 1
-TUPLE 4
+;; build struct TonEventVoteData ss:6
+BLKSWAP 5, 1
+TUPLE 5
 SWAP
 ; Decode relay
 LDMSGADDRQ
@@ -618,12 +676,14 @@ PUSHINT 64
 DICTUSETB
 ;; push identifier eventInitData
 PUSH S1
-UNTUPLE 7
+UNTUPLE 8
 NEWC
-PUSH S7
+PUSH S8
 STUR 256
-PUSH S6
+PUSH S7
 STUR 64
+PUSH S6
+STUR 32
 PUSH S5
 STUR 32
 PUSH S4
@@ -634,8 +694,8 @@ PUSH S2
 STUR 16
 PUSH S1
 STUR 16
-XCHG s7
-BLKDROP 7
+XCHG s8
+BLKDROP 8
 PUSHINT 1
 ROT
 PUSHINT 64
@@ -795,12 +855,14 @@ PUSHINT 64
 DICTUSETB
 ;; push identifier eventInitData
 PUSH S1
-UNTUPLE 7
+UNTUPLE 8
 NEWC
-PUSH S7
+PUSH S8
 STUR 256
-PUSH S6
+PUSH S7
 STUR 64
+PUSH S6
+STUR 32
 PUSH S5
 STUR 32
 PUSH S4
@@ -811,8 +873,8 @@ PUSH S2
 STUR 16
 PUSH S1
 STUR 16
-XCHG s7
-BLKDROP 7
+XCHG s8
+BLKDROP 8
 PUSHINT 1
 ROT
 PUSHINT 64

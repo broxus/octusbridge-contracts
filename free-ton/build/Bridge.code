@@ -3280,6 +3280,16 @@ PUSHCONT {
 	LDU 64
 }
 IFNOT
+;; decode TonEventVoteData.eventTimestamp
+LDUQ 32
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 32
+}
+IFNOT
 ;; decode TonEventVoteData.eventIndex
 LDUQ 32
 PUSHCONT {
@@ -3302,9 +3312,9 @@ PUSHCONT {
 }
 IF
 LDREF
-;; build struct TonEventVoteData ss:5
-BLKSWAP 4, 1
-TUPLE 4
+;; build struct TonEventVoteData ss:6
+BLKSWAP 5, 1
+TUPLE 5
 SWAP
 ; Decode eventDataSignature
 DUP
@@ -3458,22 +3468,24 @@ STSLICER
 STSLICECONST 0
 STSLICECONST 1
 NEWC
-STSLICECONST x6f18d182
+STSLICECONST x57e967c4
 ;; eventVoteData
 ;; push identifier eventVoteData
 PUSH S7
-UNTUPLE 4
-BLKSWAP 1, 4
-PUSH S4
+UNTUPLE 5
+BLKSWAP 1, 5
+PUSH S5
 STUR 256
-PUSH S3
+PUSH S4
 STUR 64
+PUSH S3
+STUR 32
 PUSH S2
 STUR 32
 PUSH S1
 STREFR
-XCHG s4
-BLKDROP 4
+XCHG s5
+BLKDROP 5
 ;; eventDataSignature
 ;; push identifier eventDataSignature
 PUSH S6
@@ -3644,22 +3656,24 @@ STSLICER
 STSLICECONST 0
 STSLICECONST 1
 NEWC
-STSLICECONST x6f18d182
+STSLICECONST x57e967c4
 ;; eventVoteData
 ;; push identifier eventVoteData
 PUSH S7
-UNTUPLE 4
-BLKSWAP 1, 4
-PUSH S4
+UNTUPLE 5
+BLKSWAP 1, 5
+PUSH S5
 STUR 256
-PUSH S3
+PUSH S4
 STUR 64
+PUSH S3
+STUR 32
 PUSH S2
 STUR 32
 PUSH S1
 STREFR
-XCHG s4
-BLKDROP 4
+XCHG s5
+BLKDROP 5
 ;; eventDataSignature
 ;; push identifier eventDataSignature
 PUSH S6
@@ -3727,6 +3741,16 @@ PUSHCONT {
 	LDU 64
 }
 IFNOT
+;; decode TonEventVoteData.eventTimestamp
+LDUQ 32
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 32
+}
+IFNOT
 ;; decode TonEventVoteData.eventIndex
 LDUQ 32
 PUSHCONT {
@@ -3752,9 +3776,9 @@ PUSHCONT {
 }
 IF
 LDREF
-;; build struct TonEventVoteData ss:5
-BLKSWAP 4, 1
-TUPLE 4
+;; build struct TonEventVoteData ss:6
+BLKSWAP 5, 1
+TUPLE 5
 SWAP
 ; Decode configurationID
 LDUQ 256
@@ -3893,22 +3917,24 @@ STSLICER
 STSLICECONST 0
 STSLICECONST 1
 NEWC
-STSLICECONST x216f6c96
+STSLICECONST x147e4d57
 ;; eventVoteData
 ;; push identifier eventVoteData
 PUSH S6
-UNTUPLE 4
-BLKSWAP 1, 4
-PUSH S4
+UNTUPLE 5
+BLKSWAP 1, 5
+PUSH S5
 STUR 256
-PUSH S3
+PUSH S4
 STUR 64
+PUSH S3
+STUR 32
 PUSH S2
 STUR 32
 PUSH S1
 STREFR
-XCHG s4
-BLKDROP 4
+XCHG s5
+BLKDROP 5
 ;; relay
 ;; get member sender
 GETGLOB 9
@@ -4074,22 +4100,24 @@ STSLICER
 STSLICECONST 0
 STSLICECONST 1
 NEWC
-STSLICECONST x216f6c96
+STSLICECONST x147e4d57
 ;; eventVoteData
 ;; push identifier eventVoteData
 PUSH S6
-UNTUPLE 4
-BLKSWAP 1, 4
-PUSH S4
+UNTUPLE 5
+BLKSWAP 1, 5
+PUSH S5
 STUR 256
-PUSH S3
+PUSH S4
 STUR 64
+PUSH S3
+STUR 32
 PUSH S2
 STUR 32
 PUSH S1
 STREFR
-XCHG s4
-BLKDROP 4
+XCHG s5
+BLKDROP 5
 ;; relay
 ;; get member sender
 GETGLOB 9

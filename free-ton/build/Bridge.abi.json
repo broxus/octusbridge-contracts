@@ -74,7 +74,7 @@
 		{
 			"name": "confirmTonEvent",
 			"inputs": [
-				{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventTransactionLt","type":"uint64"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"}],"name":"eventVoteData","type":"tuple"},
+				{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"}],"name":"eventVoteData","type":"tuple"},
 				{"name":"eventDataSignature","type":"bytes"},
 				{"name":"configurationID","type":"uint256"}
 			],
@@ -84,7 +84,7 @@
 		{
 			"name": "rejectTonEvent",
 			"inputs": [
-				{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventTransactionLt","type":"uint64"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"}],"name":"eventVoteData","type":"tuple"},
+				{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"}],"name":"eventVoteData","type":"tuple"},
 				{"name":"configurationID","type":"uint256"}
 			],
 			"outputs": [

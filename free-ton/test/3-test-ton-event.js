@@ -49,6 +49,7 @@ describe('Test TON event', async function() {
           eventIndex: 1,
           eventData: '',
           eventTransactionLt: 1,
+          eventTimestamp: 1,
         },
         eventDataSignature: freeton.utils.stringToBytesArray(''),
         configurationID: 333
@@ -142,6 +143,7 @@ describe('Test TON event', async function() {
           eventIndex: 1,
           eventData: '',
           eventTransactionLt: 1,
+          eventTimestamp: 1,
         },
         eventDataSignature: freeton.utils.stringToBytesArray(''),
         configurationID: 333

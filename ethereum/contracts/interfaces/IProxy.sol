@@ -6,6 +6,7 @@ interface IProxy {
     struct TONEvent {
         uint eventTransaction;
         uint64 eventTransactionLt;
+        uint32 eventTimestamp;
         uint32 eventIndex;
         bytes eventData;
         int8 tonEventConfigurationWid;

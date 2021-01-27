@@ -62,7 +62,7 @@ ENDS
 ;; get member tonEventConfiguration
 ;; push identifier initData
 GETGLOB 26
-INDEX 4
+INDEX 5
 ;; push identifier SENDER_NOT_EVENT_CONFIGURATION
 GETGLOB 20
 DUP
@@ -189,7 +189,7 @@ INDEX 0
 ;; get member requiredConfirmations
 ;; push identifier initData
 GETGLOB 26
-INDEX 5
+INDEX 6
 ;; >=
 GEQ
 PUSHCONT {
@@ -204,7 +204,7 @@ PUSHCONT {
 	;; get member tonEventConfiguration
 	;; push identifier initData
 	GETGLOB 26
-	INDEX 4
+	INDEX 5
 	NEWC
 	STSLICECONST x62_
 	STSLICE
@@ -234,7 +234,7 @@ SETGLOB 7
 ;; get member tonEventConfiguration
 ;; push identifier initData
 GETGLOB 26
-INDEX 4
+INDEX 5
 ;; push identifier SENDER_NOT_EVENT_CONFIGURATION
 GETGLOB 20
 DUP
@@ -361,7 +361,7 @@ INDEX 0
 ;; get member requiredConfirmations
 ;; push identifier initData
 GETGLOB 26
-INDEX 5
+INDEX 6
 ;; >=
 GEQ
 PUSHCONT {
@@ -376,7 +376,7 @@ PUSHCONT {
 	;; get member tonEventConfiguration
 	;; push identifier initData
 	GETGLOB 26
-	INDEX 4
+	INDEX 5
 	NEWC
 	STSLICECONST x62_
 	STSLICE
@@ -413,7 +413,7 @@ ENDS
 ;; get member tonEventConfiguration
 ;; push identifier initData
 GETGLOB 26
-INDEX 4
+INDEX 5
 ;; push identifier SENDER_NOT_EVENT_CONFIGURATION
 GETGLOB 20
 DUP
@@ -521,7 +521,7 @@ INDEX 0
 ;; get member requiredRejects
 ;; push identifier initData
 GETGLOB 26
-INDEX 6
+INDEX 7
 ;; >=
 GEQ
 PUSHCONT {
@@ -536,7 +536,7 @@ PUSHCONT {
 	;; get member tonEventConfiguration
 	;; push identifier initData
 	GETGLOB 26
-	INDEX 4
+	INDEX 5
 	NEWC
 	STSLICECONST x62_
 	STSLICE
@@ -565,7 +565,7 @@ SETGLOB 7
 ;; get member tonEventConfiguration
 ;; push identifier initData
 GETGLOB 26
-INDEX 4
+INDEX 5
 ;; push identifier SENDER_NOT_EVENT_CONFIGURATION
 GETGLOB 20
 DUP
@@ -673,7 +673,7 @@ INDEX 0
 ;; get member requiredRejects
 ;; push identifier initData
 GETGLOB 26
-INDEX 6
+INDEX 7
 ;; >=
 GEQ
 PUSHCONT {
@@ -688,7 +688,7 @@ PUSHCONT {
 	;; get member tonEventConfiguration
 	;; push identifier initData
 	GETGLOB 26
-	INDEX 4
+	INDEX 5
 	NEWC
 	STSLICECONST x62_
 	STSLICE
@@ -723,12 +723,13 @@ ENDS
 PUSHINT 0
 PUSHINT 0
 PUSHINT 0
+PUSHINT 0
 NEWC
 ENDC
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 PUSHINT 0
 PUSHINT 0
-TUPLE 7
+TUPLE 8
 ;; ret param: _status
 PUSHINT 0
 ;; ret param: _confirmRelays
@@ -773,14 +774,16 @@ PUSHCONT {
 	STSLICECONST 0
 	STSLICECONST 1
 	NEWC
-	STSLICECONST xb7eef136
+	STSLICECONST xfe8ceeb0
 	PUSH S6
-	UNTUPLE 7
-	BLKSWAP 1, 7
-	PUSH S7
+	UNTUPLE 8
+	BLKSWAP 1, 8
+	PUSH S8
 	STUR 256
-	PUSH S6
+	PUSH S7
 	STUR 64
+	PUSH S6
+	STUR 32
 	PUSH S5
 	STUR 32
 	PUSH S4
@@ -791,8 +794,8 @@ PUSHCONT {
 	STUR 16
 	PUSH S1
 	STUR 16
-	XCHG s7
-	BLKDROP 7
+	XCHG s8
+	BLKDROP 8
 	PUSH S5
 	STUR 8
 	PUSH S4
@@ -834,12 +837,13 @@ SETGLOB 7
 PUSHINT 0
 PUSHINT 0
 PUSHINT 0
+PUSHINT 0
 NEWC
 ENDC
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 PUSHINT 0
 PUSHINT 0
-TUPLE 7
+TUPLE 8
 ;; ret param: _status
 PUSHINT 0
 ;; ret param: _confirmRelays
@@ -921,12 +925,14 @@ STU 16
 STU 16
 STU 16
 SWAP
-UNTUPLE 7
+UNTUPLE 8
 NEWC
-PUSH S7
+PUSH S8
 STUR 256
-PUSH S6
+PUSH S7
 STUR 64
+PUSH S6
+STUR 32
 PUSH S5
 STUR 32
 PUSH S4
@@ -937,8 +943,8 @@ PUSH S2
 STUR 16
 PUSH S1
 STUR 16
-XCHG s7
-BLKDROP 7
+XCHG s8
+BLKDROP 8
 STBREFR
 STU 32
 STDICT
@@ -977,11 +983,12 @@ LDREFRTOS
 LDU 256
 LDU 64
 LDU 32
+LDU 32
 LDREF
 LDMSGADDR
 LDU 16
 PLDU 16
-TUPLE 7
+TUPLE 8
 SETGLOB 26
 LDU 32
 LDDICT
@@ -1051,11 +1058,12 @@ PUSHCONT {
 	LDU 256
 	LDU 64
 	LDU 32
+	LDU 32
 	LDREF
 	LDMSGADDR
 	LDU 16
 	PLDU 16
-	TUPLE 7
+	TUPLE 8
 	SETGLOB 26
 	LDU 32
 	LDDICT
@@ -1106,13 +1114,15 @@ PUSHCONT {
 		LDU 256
 		LDU 64
 		LDU 32
+		LDU 32
 		LDREF
 		LDMSGADDR
 		LDU 16
 		PLDU 16
-		TUPLE 7
+		TUPLE 8
 	}
 	PUSHCONT {
+		PUSHINT 0
 		PUSHINT 0
 		PUSHINT 0
 		PUSHINT 0
@@ -1121,7 +1131,7 @@ PUSHCONT {
 		PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 		PUSHINT 0
 		PUSHINT 0
-		TUPLE 7
+		TUPLE 8
 	}
 	IFELSE
 	SETGLOB 26
