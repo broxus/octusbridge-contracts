@@ -6,25 +6,23 @@ pragma experimental ABIEncoderV2;
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "./utils/DistributedOwnable.sol";
 import "./interfaces/IBridge.sol";
-
+import "./utils/Nonce.sol";
+import "./utils/RedButton.sol";
 
 /**
     @title Basic smart contract for implementing Bridge logic.
     @dev Uses DistributedOwnable contract as identity and access management solution
 **/
-contract Bridge is DistributedOwnable, IBridge {
+contract Bridge is DistributedOwnable, RedButton, Nonce, IBridge {
     using SafeMath for uint;
 
-    // TODO: discuss atomic update or atomic event apply
-    // TODO: add nonce support
-    // Currently order is not guaranteed
-
     struct BridgeConfiguration {
-        uint16 bridgeConfigurationUpdateRequiredConfirmations;
-        uint16 bridgeRelayUpdateRequiredConfirmations;
+        uint16 nonce;
+        uint16 bridgeUpdateRequiredConfirmations;
     }
 
     struct BridgeRelay {
+        uint16 nonce;
         address account;
         bool action;
     }
@@ -34,10 +32,14 @@ contract Bridge is DistributedOwnable, IBridge {
     /**
         @notice Bridge constructor
         @param owners Initial list of owners addresses
+        @param admin Red button caller, probably multisig
     **/
     constructor(
-        address[] memory owners
-    ) DistributedOwnable(owners) public {}
+        address[] memory owners,
+        address admin
+    ) DistributedOwnable(owners) public {
+        setAdmin(admin);
+    }
 
     function isRelay(address candidate) override public view returns(bool) {
         return isOwner(candidate);
@@ -76,13 +78,17 @@ contract Bridge is DistributedOwnable, IBridge {
             countRelaysSignatures(
                 payload,
                 signatures
-            ) >= bridgeConfiguration.bridgeConfigurationUpdateRequiredConfirmations,
+            ) >= bridgeConfiguration.bridgeUpdateRequiredConfirmations,
             'Not enough confirmations'
         );
 
         (BridgeConfiguration memory _bridgeConfiguration) = abi.decode(payload, (BridgeConfiguration));
 
+        require(nonceNotUsed(_bridgeConfiguration.nonce), 'Nonce already used');
+
         bridgeConfiguration = _bridgeConfiguration;
+
+        rememberNonce(_bridgeConfiguration.nonce);
     }
 
     /*
@@ -98,16 +104,20 @@ contract Bridge is DistributedOwnable, IBridge {
             countRelaysSignatures(
                 payload,
                 signatures
-            ) >= bridgeConfiguration.bridgeRelayUpdateRequiredConfirmations,
+            ) >= bridgeConfiguration.bridgeUpdateRequiredConfirmations,
             'Not enough confirmations'
         );
 
         (BridgeRelay memory bridgeRelay) = abi.decode(payload, (BridgeRelay));
+
+        require(nonceNotUsed(bridgeRelay.nonce), 'Nonce already used');
 
         if (bridgeRelay.action) {
             grantOwnership(bridgeRelay.account);
         } else {
             removeOwnership(bridgeRelay.account);
         }
+
+        rememberNonce(bridgeRelay.nonce);
     }
 }

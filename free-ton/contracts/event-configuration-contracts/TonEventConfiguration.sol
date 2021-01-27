@@ -22,6 +22,7 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, ErrorCodes
     }
 
     constructor() public {
+        require(tvm.pubkey() == msg.pubkey(), WRONG_TVM_KEY);
         tvm.accept();
     }
 

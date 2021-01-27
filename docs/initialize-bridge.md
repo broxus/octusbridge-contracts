@@ -14,9 +14,5 @@ Ethereum Bridge requires only list of addresses of Ethereum relays. TON Bridge r
 Initial configuration parameters are available in the [IBridge.sol](./../free-ton/contracts/interfaces/IBridge.sol).
 It contains:
 
-- `bridgeConfigurationUpdateRequiredConfirmations` - How much confirmations needs to confirm the Bridge configuration update
-- `bridgeConfigurationUpdateRequiredRejects` - How much rejects needs to reject the update
-- `bridgeRelayUpdateRequiredConfirmations` - How much confirmations needs to confirm the adding / removing relay from the Bridge
-- `bridgeRelayUpdateRequiredRejects` - How much rejects needs to reject it
-- `eventConfigurationRequiredConfirmations` - How much confirmations needs to activate new event configuration or update the existing one
-- `eventConfigurationRequiredRejects` - How much rejects needs to reject the activation or update
+- `bridgeUpdateRequiredConfirmations` - How much confirmations needs to perform any action proposal
+- `bridgeUpdateRequiredRejects` - How much rejects needs to reject any action proposal

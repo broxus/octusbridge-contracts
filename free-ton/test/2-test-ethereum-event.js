@@ -130,7 +130,7 @@ describe('Test Ethereum event', async function() {
       expect(details._confirmRelays).to.have.lengthOf(requiredConfirmations.toNumber(), 'Wrong amount of confirmations');
       expect(details._rejectRelays).to.have.lengthOf(0, 'Wrong amount of rejects');
       expect(details._status.toNumber()).to.equal(1, 'Wrong proxy callback executed status');
-      expect((await tonWrapper.getBalance(EthereumEvent.address)).toNumber()).to.be.greaterThan(0, 'Wrong balance');
+      // expect((await tonWrapper.getBalance(EthereumEvent.address)).toNumber()).to.equal(0, 'Non-empty event balance');
 
       const proxyDetails = await EventProxySimple.runLocal('getDetails', {});
   
@@ -257,10 +257,7 @@ describe('Test Ethereum event', async function() {
       expect(details._confirmRelays).to.have.lengthOf(1, 'Wrong amount of confirmations');
       expect(details._rejectRelays).to.have.lengthOf(requiredRejects.toNumber(), 'Wrong amount of rejects');
       expect(details._status.toNumber()).to.equal(3, 'Wrong status');
-      expect(
-        (await tonWrapper.getBalance(EthereumEvent.address)).toNumber() / 10 ** 9
-      ).to.be.lessThan(0.1, 'Too many tons left')
-        .to.be.greaterThan(0, 'Not enough balance to remain not-frozen');
+      expect((await tonWrapper.getBalance(EthereumEvent.address)).toNumber()).to.equal(0, 'Non-empty event balance');
     });
   });
 });

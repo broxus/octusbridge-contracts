@@ -67,13 +67,10 @@ const tonWrapper = new freeton.TonWrapper({
       _relayAccounts: relayAccounts,
       _relayEthereumAccounts: ethereumAccounts,
       _bridgeConfiguration: {
-        eventConfigurationRequiredConfirmations: 2,
-        eventConfigurationRequiredRejects: 2,
-        bridgeConfigurationUpdateRequiredConfirmations: 2,
-        bridgeConfigurationUpdateRequiredRejects: 2,
-        bridgeRelayUpdateRequiredConfirmations: 2,
-        bridgeRelayUpdateRequiredRejects: 2,
+        bridgeUpdateRequiredConfirmations: 2,
+        bridgeUpdateRequiredRejects: 2,
         active: true,
+        nonce: 1,
       }
     },
     initParams: {

@@ -130,10 +130,7 @@ describe('Test TON event', async function() {
       expect(details._confirmRelays).to.have.lengthOf(requiredConfirmations.toNumber(), 'Wrong amount of confirmations');
       expect(details._eventDataSignatures).to.have.lengthOf(requiredConfirmations.toNumber(), 'Wrong amount of confirmations');
       expect(details._rejectRelays).to.have.lengthOf(0, 'Wrong amount of rejects');
-      expect(
-        (await tonWrapper.getBalance(TonEvent.address)).toNumber() / 10**9
-      ).to.be.greaterThan(0, 'Too low balance')
-        .to.be.lessThan(0.5, 'Too high balance');
+      expect((await tonWrapper.getBalance(TonEvent.address)).toNumber()).to.equal(0, 'Non-empty event balance');
     });
   });
 
@@ -228,10 +225,7 @@ describe('Test TON event', async function() {
       expect(details._confirmRelays).to.have.lengthOf(1, 'Wrong amount of confirmations');
       expect(details._eventDataSignatures).to.have.lengthOf(1, 'Wrong amount of signatures');
       expect(details._rejectRelays).to.have.lengthOf(requiredRejects.toNumber(), 'Wrong amount of rejects');
-      expect(
-        (await tonWrapper.getBalance(TonEvent.address)).toNumber() / 10**9
-      ).to.be.greaterThan(0, 'Too low balance')
-        .to.be.lessThan(0.5, 'Too high balance');
+      expect((await tonWrapper.getBalance(TonEvent.address)).toNumber()).to.equal(0, 'Non-empty event balance');
     });
   });
 });

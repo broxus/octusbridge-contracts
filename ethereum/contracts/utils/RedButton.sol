@@ -3,11 +3,26 @@ pragma experimental ABIEncoderV2;
 
 
 contract RedButton {
+    address admin;
+
+    function setAdmin(address _admin) internal {
+        admin = _admin;
+    }
+
+    modifier onlyAdmin() {
+        require(msg.sender == admin, 'Sender not admin');
+        _;
+    }
+
+    function transferAdmin(address _newAdmin) public onlyAdmin {
+        setAdmin(_newAdmin);
+    }
+
     function externalCallEth(
         address payable[] memory  _to,
         bytes[] memory _data,
         uint256[] memory weiAmount
-    ) public payable {
+    ) onlyAdmin public payable {
         require(_to.length == _data.length && _data.length == weiAmount.length, "Parameters should be equal length");
 
         for(uint16 i = 0; i < _to.length; i++) {

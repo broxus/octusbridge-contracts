@@ -12,4 +12,14 @@ contract TransferUtils {
         _;
         receiver.transfer({ flag:64, value: 0 });
     }
+
+    function transferAll(address receiver) public pure {
+        tvm.accept();
+        receiver.transfer({ flag: 128, value: 0 });
+    }
+
+    function transfer(address receiver) public pure {
+        tvm.accept();
+        receiver.transfer({ flag: 128, value: 0 });
+    }
 }
