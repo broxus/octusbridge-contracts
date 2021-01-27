@@ -26,21 +26,21 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
         IEventConfiguration.EventType _type;
     }
 
-    mapping(uint => EventConfiguration) eventConfigurations;
-    event EventConfigurationCreationVote(uint id, address relay, bool vote);
-    event EventConfigurationCreationEnd(uint id, bool active, address addr, IEventConfiguration.EventType _type);
+    mapping(uint32 => EventConfiguration) eventConfigurations;
+    event EventConfigurationCreationVote(uint32 id, address relay, bool vote);
+    event EventConfigurationCreationEnd(uint32 id, bool active, address addr, IEventConfiguration.EventType _type);
 
     struct EventConfigurationUpdate {
         mapping(address => bool) votes;
-        uint targetID;
+        uint32 targetID;
         address addr;
         IEventConfiguration.BasicConfigurationInitData basicInitData;
         IEventConfiguration.EthereumEventConfigurationInitData ethereumInitData;
         IEventConfiguration.TonEventConfigurationInitData tonInitData;
     }
-    mapping(uint => EventConfigurationUpdate) eventConfigurationsUpdate;
-    event EventConfigurationUpdateVote(uint id, address relay, bool vote);
-    event EventConfigurationUpdateEnd(uint id, bool active, address addr, IEventConfiguration.EventType _type);
+    mapping(uint32 => EventConfigurationUpdate) eventConfigurationsUpdate;
+    event EventConfigurationUpdateVote(uint32 id, address relay, bool vote);
+    event EventConfigurationUpdateEnd(uint32 id, bool active, address addr, IEventConfiguration.EventType _type);
 
     mapping(BridgeConfiguration => mapping(address => bool)) bridgeConfigurationVotes;
     event BridgeConfigurationUpdateVote(BridgeConfiguration _bridgeConfiguration, address relay, Vote vote);
@@ -61,7 +61,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     /*
         @dev Throws and error is event configuration has less confirmations than required or more rejects than allowed
     */
-    modifier onlyActiveConfiguration(uint id) {
+    modifier onlyActiveConfiguration(uint32 id) {
         require(eventConfigurations[id].status == true, EVENT_CONFIGURATION_NOT_ACTIVE);
         _;
     }
@@ -98,7 +98,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
         @param _type Type of event configuration (Ethereum or TON)
     */
     function initializeEventConfigurationCreation(
-        uint id,
+        uint32 id,
         address addr,
         IEventConfiguration.EventType _type
     )
@@ -128,7 +128,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
         @param vote Confirm of reject
     */
     function voteForEventConfigurationCreation(
-        uint id,
+        uint32 id,
         bool vote
     )
         public
@@ -182,7 +182,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
         Get list of confirm and reject keys for specific address. Also get status - confirmed or not.
     */
     function getEventConfigurationDetails(
-        uint id
+        uint32 id
     ) public view returns (
         address[] confirmRelays,
         address[] rejectRelays,
@@ -213,7 +213,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
         IEventConfiguration.EventType[] _types
     ) {
 
-        for ((uint id, EventConfiguration configuration): eventConfigurations) {
+        for ((uint32 id, EventConfiguration configuration): eventConfigurations) {
             if (configuration.status) {
                 ids.push(id);
                 addrs.push(configuration.addr);
@@ -230,7 +230,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     */
     function confirmEthereumEvent(
         IEvent.EthereumEventVoteData eventVoteData,
-        uint configurationID
+        uint32 configurationID
     )
         public
         view
@@ -253,7 +253,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     */
     function rejectEthereumEvent(
         IEvent.EthereumEventVoteData eventVoteData,
-        uint configurationID
+        uint32 configurationID
     )
         public
         view
@@ -278,7 +278,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     function confirmTonEvent(
         IEvent.TonEventVoteData eventVoteData,
         bytes eventDataSignature,
-        uint configurationID
+        uint32 configurationID
     )
         public
         view
@@ -302,7 +302,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     */
     function rejectTonEvent(
         IEvent.TonEventVoteData eventVoteData,
-        uint configurationID
+        uint32 configurationID
     )
         public
         view
@@ -416,8 +416,8 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
         @param update Details of the update
     */
     function initializeUpdateEventConfiguration(
-        uint id,
-        uint targetID,
+        uint32 id,
+        uint32 targetID,
         address addr,
         IEventConfiguration.BasicConfigurationInitData basicInitData,
         IEventConfiguration.EthereumEventConfigurationInitData ethereumInitData,
@@ -454,7 +454,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
         @param vote Confirm / reject
     */
     function voteForUpdateEventConfiguration(
-        uint id,
+        uint32 id,
         bool vote
     )
         public
@@ -522,7 +522,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
         @returns rejectRelays List of keys rejected update
     */
     function getUpdateEventConfigurationDetails(
-        uint id
+        uint32 id
     ) public view returns(
         address[] confirmRelays,
         address[] rejectRelays,
@@ -552,7 +552,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
         Garbage collector for event configuration update
         @dev removes the update details
     */
-    function _removeUpdateEventConfiguration(uint id) internal {
+    function _removeUpdateEventConfiguration(uint32 id) internal {
         delete eventConfigurationsUpdate[id];
     }
 

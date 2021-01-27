@@ -15,7 +15,7 @@
 		{
 			"name": "initializeEventConfigurationCreation",
 			"inputs": [
-				{"name":"id","type":"uint256"},
+				{"name":"id","type":"uint32"},
 				{"name":"addr","type":"address"},
 				{"name":"_type","type":"uint8"}
 			],
@@ -25,7 +25,7 @@
 		{
 			"name": "voteForEventConfigurationCreation",
 			"inputs": [
-				{"name":"id","type":"uint256"},
+				{"name":"id","type":"uint32"},
 				{"name":"vote","type":"bool"}
 			],
 			"outputs": [
@@ -34,7 +34,7 @@
 		{
 			"name": "getEventConfigurationDetails",
 			"inputs": [
-				{"name":"id","type":"uint256"}
+				{"name":"id","type":"uint32"}
 			],
 			"outputs": [
 				{"name":"confirmRelays","type":"address[]"},
@@ -57,7 +57,7 @@
 			"name": "confirmEthereumEvent",
 			"inputs": [
 				{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"}],"name":"eventVoteData","type":"tuple"},
-				{"name":"configurationID","type":"uint256"}
+				{"name":"configurationID","type":"uint32"}
 			],
 			"outputs": [
 			]
@@ -66,7 +66,7 @@
 			"name": "rejectEthereumEvent",
 			"inputs": [
 				{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"}],"name":"eventVoteData","type":"tuple"},
-				{"name":"configurationID","type":"uint256"}
+				{"name":"configurationID","type":"uint32"}
 			],
 			"outputs": [
 			]
@@ -76,7 +76,7 @@
 			"inputs": [
 				{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"}],"name":"eventVoteData","type":"tuple"},
 				{"name":"eventDataSignature","type":"bytes"},
-				{"name":"configurationID","type":"uint256"}
+				{"name":"configurationID","type":"uint32"}
 			],
 			"outputs": [
 			]
@@ -85,7 +85,7 @@
 			"name": "rejectTonEvent",
 			"inputs": [
 				{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"}],"name":"eventVoteData","type":"tuple"},
-				{"name":"configurationID","type":"uint256"}
+				{"name":"configurationID","type":"uint32"}
 			],
 			"outputs": [
 			]
@@ -121,8 +121,8 @@
 		{
 			"name": "initializeUpdateEventConfiguration",
 			"inputs": [
-				{"name":"id","type":"uint256"},
-				{"name":"targetID","type":"uint256"},
+				{"name":"id","type":"uint32"},
+				{"name":"targetID","type":"uint32"},
 				{"name":"addr","type":"address"},
 				{"components":[{"name":"eventABI","type":"bytes"},{"name":"eventRequiredConfirmations","type":"uint16"},{"name":"eventRequiredRejects","type":"uint16"},{"name":"eventCode","type":"cell"},{"name":"bridgeAddress","type":"address"},{"name":"eventInitialBalance","type":"uint128"}],"name":"basicInitData","type":"tuple"},
 				{"components":[{"name":"eventAddress","type":"uint160"},{"name":"eventBlocksToConfirm","type":"uint16"},{"name":"proxyAddress","type":"address"}],"name":"ethereumInitData","type":"tuple"},
@@ -134,7 +134,7 @@
 		{
 			"name": "voteForUpdateEventConfiguration",
 			"inputs": [
-				{"name":"id","type":"uint256"},
+				{"name":"id","type":"uint32"},
 				{"name":"vote","type":"bool"}
 			],
 			"outputs": [
@@ -143,7 +143,7 @@
 		{
 			"name": "getUpdateEventConfigurationDetails",
 			"inputs": [
-				{"name":"id","type":"uint256"}
+				{"name":"id","type":"uint32"}
 			],
 			"outputs": [
 				{"name":"confirmRelays","type":"address[]"},
@@ -233,7 +233,7 @@
 		{
 			"name": "EventConfigurationCreationVote",
 			"inputs": [
-				{"name":"id","type":"uint256"},
+				{"name":"id","type":"uint32"},
 				{"name":"relay","type":"address"},
 				{"name":"vote","type":"bool"}
 			],
@@ -243,7 +243,7 @@
 		{
 			"name": "EventConfigurationCreationEnd",
 			"inputs": [
-				{"name":"id","type":"uint256"},
+				{"name":"id","type":"uint32"},
 				{"name":"active","type":"bool"},
 				{"name":"addr","type":"address"},
 				{"name":"_type","type":"uint8"}
@@ -254,7 +254,7 @@
 		{
 			"name": "EventConfigurationUpdateVote",
 			"inputs": [
-				{"name":"id","type":"uint256"},
+				{"name":"id","type":"uint32"},
 				{"name":"relay","type":"address"},
 				{"name":"vote","type":"bool"}
 			],
@@ -264,7 +264,7 @@
 		{
 			"name": "EventConfigurationUpdateEnd",
 			"inputs": [
-				{"name":"id","type":"uint256"},
+				{"name":"id","type":"uint32"},
 				{"name":"active","type":"bool"},
 				{"name":"addr","type":"address"},
 				{"name":"_type","type":"uint8"}
