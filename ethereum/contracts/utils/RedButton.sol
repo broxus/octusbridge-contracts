@@ -21,7 +21,7 @@ contract RedButton {
         @param _newAdmin New admin address
     */
     function transferAdmin(address _newAdmin) public onlyAdmin {
-        require(_newAdmin != 0x0, 'Cant set admin to zero address');
+        require(_newAdmin != address(0), 'Cant set admin to zero address');
         setAdmin(_newAdmin);
     }
 
