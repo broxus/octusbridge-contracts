@@ -26,7 +26,11 @@ module.exports = async (deployer, network, accounts) => {
       token: TestToken.address,
       bridge: Bridge.address,
       active: true,
-      requiredConfirmations: 2
+      requiredConfirmations: 2,
+      fee: {
+        numerator: 1,
+        denominator: 100,
+      }
     },
     accounts[0]
   );

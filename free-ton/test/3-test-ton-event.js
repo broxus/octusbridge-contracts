@@ -117,6 +117,8 @@ describe('Test TON event', async function() {
         }
       } = await TonEvent.runLocal('getDetails');
 
+      logger.log(`Balance before confirm: ${(await tonWrapper.getBalance(TonEvent.address)).toNumber()}`);
+      
       for (const keyId of _.range(1, requiredConfirmations.toNumber())) {
         await relaysManager.runTarget({
           contract: Bridge,
@@ -132,6 +134,8 @@ describe('Test TON event', async function() {
       expect(details._eventDataSignatures).to.have.lengthOf(requiredConfirmations.toNumber(), 'Wrong amount of confirmations');
       expect(details._rejectRelays).to.have.lengthOf(0, 'Wrong amount of rejects');
       expect((await tonWrapper.getBalance(TonEvent.address)).toNumber()).to.equal(0, 'Non-empty event balance');
+  
+      logger.log(`Balance after confirm: ${(await tonWrapper.getBalance(TonEvent.address)).toNumber()}`);
     });
   });
 

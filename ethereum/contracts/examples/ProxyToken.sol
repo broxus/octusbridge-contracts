@@ -15,16 +15,32 @@ import "../utils/RedButton.sol";
     Token has an admin, which can do whatever he want.
 */
 contract ProxyToken is IProxy, RedButton {
+    using UniversalERC20 for IERC20;
+
+    struct Fee {
+        uint128 numerator;
+        uint128 denominator;
+    }
+
     struct Configuration {
         address token;
         address bridge;
         bool active;
         uint16 requiredConfirmations;
+        Fee fee;
     }
 
     Configuration public configuration;
 
-    using UniversalERC20 for IERC20;
+    /*
+        Calculate the fee amount
+        @dev Fee takes when calling broxusBridgeCallback
+        @param amount Input amount of tokens
+        @return Fee amount
+    */
+    function getFeeAmount(uint128 amount) public view returns(uint128) {
+        return configuration.fee.numerator * amount / configuration.fee.denominator;
+    }
 
     constructor(
         Configuration memory _configuration,
@@ -118,12 +134,16 @@ contract ProxyToken is IProxy, RedButton {
 
         address addr = bytesToAddress(addr_bytes);
 
-        IERC20(configuration.token).universalTransfer(addr, amount);
+        uint128 fee = getFeeAmount(amount);
 
-        emit TokenUnlock(amount, addr);
+        IERC20(configuration.token).universalTransfer(addr, amount - fee);
+
+        emit TokenUnlock(amount - fee, addr);
     }
 
-    function bytesToAddress(bytes memory bys) private pure returns (address) {
+    function bytesToAddress(
+        bytes memory bys
+    ) private pure returns (address) {
         address addr;
         assembly {
             addr := div(mload(add(bys, 0x20)), 0x1000000000000000000000000)
