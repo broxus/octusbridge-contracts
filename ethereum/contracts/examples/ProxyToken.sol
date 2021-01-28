@@ -30,19 +30,26 @@ contract ProxyToken is IProxy, RedButton {
         Configuration memory _configuration,
         address _admin
     ) public {
-        setConfiguration(_configuration);
+        _setConfiguration(_configuration);
         setAdmin(_admin);
+    }
+
+    function _setConfiguration(
+        Configuration memory _configuration
+    ) internal {
+        configuration = _configuration;
     }
 
     /*
         Update proxy configuration
         @dev Only admin may call
     */
-    function setConfiguration(Configuration memory _configuration) public onlyAdmin {
-        configuration = _configuration;
+    function setConfiguration(
+        Configuration memory _configuration
+    ) public onlyAdmin {
+        _setConfiguration(_configuration);
     }
 
-    // TODO: why uint128 amount?
     event TokenLock(uint128 amount, int8 wid, uint256 addr, uint256 pubkey);
     event TokenUnlock(uint128 amount, address addr);
 

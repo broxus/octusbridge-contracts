@@ -18,8 +18,4 @@ contract('Testing Ethereum bridge', async function(accounts) {
     expect((await bridge.countRelaysSignatures(receipt, [signature])).toNumber())
       .to.equal(1, "Relay signature dont work");
   });
-  
-  it('Check arbitrary signature invalid', async function() {
-  
-  });
 });
