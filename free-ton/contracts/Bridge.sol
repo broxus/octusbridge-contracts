@@ -208,7 +208,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
         @returns _types List of active event configurations types
     */
     function getActiveEventConfigurations() public view returns (
-        uint[] ids,
+        uint32[] ids,
         address[] addrs,
         IEventConfiguration.EventType[] _types
     ) {

@@ -5,40 +5,75 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./../libraries/UniversalERC20.sol";
 import "./../interfaces/IBridge.sol";
 import "./../interfaces/IProxy.sol";
+import "../utils/RedButton.sol";
+
 
 /*
     This is an example of Ethereum Proxy contract, which allows to implement
     token transfers between Ethereum and TON with Broxus bridge.
-    Each ProxyToken corresponds to a single
+    Each ProxyToken corresponds to a single token contract.
+    Token has an admin, which can do whatever he want.
 */
-contract ProxyToken is IProxy {
-    address public token;
-    address public bridge;
+contract ProxyToken is IProxy, RedButton {
+    struct Configuration {
+        address token;
+        address bridge;
+        bool active;
+        uint16 requiredConfirmations;
+    }
+
+    Configuration public configuration;
 
     using UniversalERC20 for IERC20;
 
     constructor(
-        address _token,
-        address _bridge
+        Configuration memory _configuration,
+        address _admin
     ) public {
-        token = _token;
-        bridge = _bridge;
+        setConfiguration(_configuration);
+        setAdmin(_admin);
     }
 
-    event TokenLock(uint128 amount, int8 wid, uint256 addr, uint256 pubkey);
+    /*
+        Update proxy configuration
+        @dev Only admin may call
+    */
+    function setConfiguration(Configuration memory _configuration) public onlyAdmin {
+        configuration = _configuration;
+    }
 
-    function lockTokens(uint128 amount, int8 wid, uint256 addr, uint256 pubkey) public {
+    // TODO: why uint128 amount?
+    event TokenLock(uint128 amount, int8 wid, uint256 addr, uint256 pubkey);
+    event TokenUnlock(uint128 amount, address addr);
+
+    modifier onlyActive() {
+        require(configuration.active, 'Configuration not active');
+        _;
+    }
+
+    /*
+        Lock tokens. Emit event that leads to the token minting on TON
+        @param amount AMount of tokens to lock
+        @param wid Workchain id of the receiver TON address
+        @param addr Body of the receiver TON address
+        @param pubkey TON pubkey, alternative way to receive
+    */
+    function lockTokens(
+        uint128 amount,
+        int8 wid,
+        uint256 addr,
+        uint256 pubkey
+    ) public onlyActive {
         require(
-            IERC20(token).balanceOf(msg.sender) >= amount,
-            "Token balance insufficient"
-        );
-        require(
-            IERC20(token).allowance(msg.sender, address(this)) >= amount,
+            IERC20(configuration.token).allowance(
+                msg.sender,
+                address(this)
+            ) >= amount,
             "Allowance insufficient"
         );
 
         // Transfer tokens from user to the
-        IERC20(token).universalTransferFrom(
+        IERC20(configuration.token).universalTransferFrom(
             msg.sender,
             address(this),
             amount
@@ -47,15 +82,20 @@ contract ProxyToken is IProxy {
         emit TokenLock(amount, wid, addr, pubkey);
     }
 
+    /*
+        Unlock tokens from the bridge
+        @param payload Bytes encoded TONEvent structure
+        @param signatures List of payload signatures
+    */
     function broxusBridgeCallback(
         bytes memory payload,
         bytes[] memory signatures
-    ) public {
+    ) public onlyActive {
         require(
-            IBridge(bridge).countRelaysSignatures(
+            IBridge(configuration.bridge).countRelaysSignatures(
                 payload,
                 signatures
-            ) >= 2,
+            ) >= configuration.requiredConfirmations,
             'Not enough relays signed'
         );
 
@@ -71,7 +111,9 @@ contract ProxyToken is IProxy {
 
         address addr = bytesToAddress(addr_bytes);
 
-        IERC20(token).universalTransfer(addr, amount);
+        IERC20(configuration.token).universalTransfer(addr, amount);
+
+        emit TokenUnlock(amount, addr);
     }
 
     function bytesToAddress(bytes memory bys) private pure returns (address) {

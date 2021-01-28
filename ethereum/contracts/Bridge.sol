@@ -36,7 +36,9 @@ contract Bridge is DistributedOwnable, RedButton, Nonce, IBridge {
         @param candidate Address
         @returns Boolean is relay or not
     */
-    function isRelay(address candidate) override public view returns(bool) {
+    function isRelay(
+        address candidate
+    ) override public view returns(bool) {
         return isOwner(candidate);
     }
 
