@@ -30,6 +30,7 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, ErrorCodes
         IEvent.TonEventVoteData eventVoteData
     ) internal view returns(IEvent.TonEventInitData eventInitData) {
         eventInitData.eventTransaction = eventVoteData.eventTransaction;
+        eventInitData.eventTimestamp = eventVoteData.eventTimestamp;
         eventInitData.eventTransactionLt = eventVoteData.eventTransactionLt;
         eventInitData.eventIndex = eventVoteData.eventIndex;
         eventInitData.eventData = eventVoteData.eventData;
