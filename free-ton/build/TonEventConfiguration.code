@@ -72,6 +72,17 @@ NIP
 ; expValue
 DUP
 ; end expValue
+;; get member eventTimestamp
+;; push identifier eventVoteData
+PUSH S2
+INDEX 2
+; colValue
+SETINDEX 2
+NIP
+; end colValue
+; expValue
+DUP
+; end expValue
 ;; get member eventTransactionLt
 ;; push identifier eventVoteData
 PUSH S2
