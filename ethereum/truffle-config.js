@@ -55,7 +55,7 @@ module.exports = {
       gasPrice: parseInt(process.env.ETH_ENV_NETWORK_GAS_PRICE),
     },
     development: {
-     host: 'localhost',     // Localhost (default: none)
+     host: 'ganache',     // Localhost (default: none)
      port: 8545,            // Standard Ethereum port (default: none)
      network_id: "*",       // Any network (default: none)
     },
