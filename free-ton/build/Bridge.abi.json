@@ -183,22 +183,6 @@
 			]
 		},
 		{
-			"name": "transferAll",
-			"inputs": [
-				{"name":"receiver","type":"address"}
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "transfer",
-			"inputs": [
-				{"name":"receiver","type":"address"}
-			],
-			"outputs": [
-			]
-		},
-		{
 			"name": "getAccountStatus",
 			"inputs": [
 				{"name":"addr","type":"address"}
