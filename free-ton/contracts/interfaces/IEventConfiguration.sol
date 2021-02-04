@@ -10,6 +10,7 @@ interface IEventConfiguration {
         TvmCell eventCode;
         address bridgeAddress;
         uint128 eventInitialBalance;
+        TvmCell meta;
     }
 
     struct EthereumEventConfigurationInitData {

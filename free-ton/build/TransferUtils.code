@@ -19,6 +19,26 @@ CALL $c7_to_c4$
 TRUE
 SETGLOB 7
 
+.globl	transferAll_internal
+.type	transferAll_internal, @function
+;; param: receiver
+; function transferAll
+;; transfer()
+;; push identifier receiver
+DUP
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 109
+STZEROES
+STSLICECONST 0
+STSLICECONST 0
+ENDC
+PUSHINT 128
+SENDRAWMSG
+DROP
+; end function transferAll
+
 .globl	c7_to_c4
 .type	c7_to_c4, @function
 GETGLOB 2

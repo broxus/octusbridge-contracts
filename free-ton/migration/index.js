@@ -18,6 +18,8 @@ const tonWrapper = new freeton.TonWrapper({
   network: process.env.TON_NETWORK,
   seed: process.env.TON_SEED,
   giverConfig,
+  waitForTimeout: 60000,
+  debug: Boolean(process.env.TON_WRAPPER_DEBUG),
 });
 
 
@@ -31,11 +33,25 @@ const tonWrapper = new freeton.TonWrapper({
 
   const migration = new freeton.Migration(tonWrapper);
   
+  
+  // Deploy CellEncoder
+  const CellEncoder = await freeton
+    .requireContract(tonWrapper, 'CellEncoder');
+  
+  await migration.deploy({
+    contract: CellEncoder,
+    constructorParams: {},
+    initParams: {},
+    _randomNonce: true,
+    initialBalance: freeton.utils.convertCrystal('1', 'nano'),
+  }).catch(e => console.log(e));
+  
   // - Deploy relay personal contracts
   const RelayAccount = await freeton
     .requireContract(tonWrapper, 'RelayAccount');
 
   const relayAccounts = [];
+
   for (const relayId of _.range(0, relaysAmount)) {
     await migration.deploy({
       contract: RelayAccount,
@@ -96,22 +112,23 @@ const tonWrapper = new freeton.TonWrapper({
   const eventProxyNonce = determineDeploy ? 1 : freeton.utils.getRandomNonce();
 
   // -- Derive EventProxySimple future address
-  const eventProxyFutureAddress = await EventProxySimple.deploy(
-    {
+  const eventProxyFutureAddress = await EventProxySimple.getFutureAddress({
+    constructorParams: {
       _ethereumEventConfiguration: Bridge.address,
       _ethereumEventCode: EthereumEvent.code,
       _ethereumEventPubKey: `0x${tonWrapper.keys[0].public}`,
     },
-    {
+    initParams: {
       _randomNonce: eventProxyNonce,
     },
-    freeton.utils.convertCrystal('10', 'nano'),
-    false,
-    undefined,
-    true,
-  );
+  });
+  
+  // -- Deploy EthereumEventConfiguration contracts
+  // --- Use relay account address as a "root token" in the configuration meta
+  const configurationMeta = await CellEncoder.runLocal('encodeConfigurationMeta', {
+    rootToken: relayAccounts[0],
+  });
 
-  // -- Deploy EventConfiguration contracts
   for (const alias of ['valid', 'invalid']) {
     await migration.deploy({
       alias,
@@ -127,6 +144,7 @@ const tonWrapper = new freeton.TonWrapper({
           eventInitialBalance: freeton.utils.convertCrystal('10', 'nano'),
           bridgeAddress: Bridge.address,
           eventCode: EthereumEvent.code,
+          meta: configurationMeta
         },
         initData: {
           eventAddress: new BigNumber('0xc227CE9EdCc60a725DE66A1132171a22ae62a64F'.toLowerCase()),
@@ -184,6 +202,7 @@ const tonWrapper = new freeton.TonWrapper({
         eventInitialBalance: freeton.utils.convertCrystal('10', 'nano'),
         bridgeAddress: Bridge.address,
         eventCode: TonEvent.code,
+        meta: configurationMeta,
       },
       initData: {
         eventAddress: EventEmitter.address,

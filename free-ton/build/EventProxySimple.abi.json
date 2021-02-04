@@ -15,7 +15,7 @@
 		{
 			"name": "buildEventProxyAddress",
 			"inputs": [
-				{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"},{"name":"ethereumEventConfiguration","type":"address"},{"name":"requiredConfirmations","type":"uint16"},{"name":"requiredRejects","type":"uint16"},{"name":"proxyAddress","type":"address"}],"name":"_eventData","type":"tuple"}
+				{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"},{"name":"ethereumEventConfiguration","type":"address"},{"name":"requiredConfirmations","type":"uint16"},{"name":"requiredRejects","type":"uint16"},{"name":"proxyAddress","type":"address"},{"name":"configurationMeta","type":"cell"}],"name":"_eventData","type":"tuple"}
 			],
 			"outputs": [
 				{"name":"value0","type":"address"}
@@ -24,16 +24,8 @@
 		{
 			"name": "broxusBridgeCallback",
 			"inputs": [
-				{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"},{"name":"ethereumEventConfiguration","type":"address"},{"name":"requiredConfirmations","type":"uint16"},{"name":"requiredRejects","type":"uint16"},{"name":"proxyAddress","type":"address"}],"name":"_eventData","type":"tuple"},
+				{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"},{"name":"ethereumEventConfiguration","type":"address"},{"name":"requiredConfirmations","type":"uint16"},{"name":"requiredRejects","type":"uint16"},{"name":"proxyAddress","type":"address"},{"name":"configurationMeta","type":"cell"}],"name":"_eventData","type":"tuple"},
 				{"name":"gasBackAddress","type":"address"}
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "broxusBridgeNotification",
-			"inputs": [
-				{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"},{"name":"ethereumEventConfiguration","type":"address"},{"name":"requiredConfirmations","type":"uint16"},{"name":"requiredRejects","type":"uint16"},{"name":"proxyAddress","type":"address"}],"name":"_eventData","type":"tuple"}
 			],
 			"outputs": [
 			]
@@ -43,11 +35,21 @@
 			"inputs": [
 			],
 			"outputs": [
-				{"name":"_callbackReceived","type":"bool"},
 				{"name":"_ethereumEventConfiguration","type":"address"},
 				{"name":"_ethereumEventCode","type":"cell"},
-				{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"},{"name":"ethereumEventConfiguration","type":"address"},{"name":"requiredConfirmations","type":"uint16"},{"name":"requiredRejects","type":"uint16"},{"name":"proxyAddress","type":"address"}],"name":"_eventData","type":"tuple"},
-				{"name":"_state","type":"uint256"}
+				{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"},{"name":"ethereumEventConfiguration","type":"address"},{"name":"requiredConfirmations","type":"uint16"},{"name":"requiredRejects","type":"uint16"},{"name":"proxyAddress","type":"address"},{"name":"configurationMeta","type":"cell"}],"name":"_eventData","type":"tuple"},
+				{"name":"_callbackCounter","type":"uint256"}
+			]
+		},
+		{
+			"name": "getDecodedEventData",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"tokens","type":"uint128"},
+				{"name":"wid","type":"int8"},
+				{"name":"owner_addr","type":"uint256"},
+				{"name":"owner_pubkey","type":"uint256"}
 			]
 		}
 	],

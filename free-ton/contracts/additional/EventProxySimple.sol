@@ -11,14 +11,12 @@ import "./../utils/TransferUtils.sol";
 contract EventProxySimple is IProxy, TransferUtils {
     uint16 static _randomNonce;
 
-    bool callbackReceived = false;
-
     address ethereumEventConfiguration;
     TvmCell ethereumEventCode;
     uint ethereumEventPubKey;
-    uint state;
 
     IEvent.EthereumEventInitData eventData;
+    uint callbackCounter = 0;
 
     constructor(
         address _ethereumEventConfiguration,
@@ -56,9 +54,8 @@ contract EventProxySimple is IProxy, TransferUtils {
         require(_eventData.proxyAddress == address(this), 19172);
         require(buildEventProxyAddress(_eventData) == msg.sender, 19171);
 
-        callbackReceived = true;
+        callbackCounter++;
         eventData = _eventData;
-        (state) = _eventData.eventData.toSlice().decode((uint));
 
         if (gasBackAddress.value != 0) {
             gasBackAddress.transfer({ value: 0, flag: 64 });
@@ -67,26 +64,35 @@ contract EventProxySimple is IProxy, TransferUtils {
         }
     }
 
-    function broxusBridgeNotification(
-        IEvent.EthereumEventInitData _eventData
-    ) override public view {
-        // Do nothing need for handy monitoring confirmed events
-        // So someone can call them after with any gas
-    }
-
     function getDetails() public view returns (
-        bool _callbackReceived,
         address _ethereumEventConfiguration,
         TvmCell _ethereumEventCode,
         IEvent.EthereumEventInitData _eventData,
-        uint _state
+        uint _callbackCounter
     ) {
         return (
-            callbackReceived,
             ethereumEventConfiguration,
             ethereumEventCode,
             eventData,
-            state
+            callbackCounter
         );
+    }
+
+    /*
+        Decode event data according to some encoding.
+        In this example used the same encoding as in the cross chain token-transfers
+    */
+    function getDecodedEventData() public view returns(
+        uint128 tokens,
+        int8 wid,
+        uint256 owner_addr,
+        uint256 owner_pubkey
+    ) {
+        (
+            tokens,
+            wid,
+            owner_addr,
+            owner_pubkey
+        ) = eventData.eventData.toSlice().decode(uint128, int8, uint256, uint256);
     }
 }

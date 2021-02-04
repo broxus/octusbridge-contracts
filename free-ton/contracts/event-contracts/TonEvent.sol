@@ -3,27 +3,41 @@ pragma AbiHeader expire;
 
 
 import "./../interfaces/IEvent.sol";
+import "./../interfaces/IEventNotificationReceiver.sol";
+
 import "../utils/ErrorCodes.sol";
+import "./../utils/TransferUtils.sol";
+import "./../additional/CellEncoder.sol";
 
 
-contract TonEvent is IEvent, ErrorCodes {
+contract TonEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
     TonEventInitData static initData;
 
     address[] confirmRelays;
     bytes[] eventDataSignatures;
     address[] rejectRelays;
 
-    enum Status { InProcess, Confirmed, Rejected }
-    Status status;
+    TonEventStatus status;
 
     modifier eventInProcess() {
-        require(status == Status.InProcess, EVENT_NOT_IN_PROGRESS);
+        require(status == TonEventStatus.InProcess, EVENT_NOT_IN_PROGRESS);
         _;
     }
 
     modifier onlyEventConfiguration(address configuration) {
         require(msg.sender == configuration, SENDER_NOT_EVENT_CONFIGURATION);
         _;
+    }
+
+    /*
+        Notify specific contract that event contract status has been changed
+        @dev In this example, notification receiver is derived from the configuration meta
+    */
+    function notifyEventStatusChanged() internal view {
+        (,,,,,address owner_address) = getDecodedData();
+
+        // TODO: discuss minimum value of the notification
+        IEventNotificationReceiver(owner_address).notifyTonEventStatusChanged{value: 0.0001 ton}(status);
     }
 
     /*
@@ -36,9 +50,10 @@ contract TonEvent is IEvent, ErrorCodes {
         address relay,
         bytes eventDataSignature
     ) public {
-        tvm.accept();
+        initData.tonEventConfiguration = msg.sender;
+        status = TonEventStatus.InProcess;
 
-        status = Status.InProcess;
+        notifyEventStatusChanged();
 
         confirm(relay, eventDataSignature);
     }
@@ -65,9 +80,10 @@ contract TonEvent is IEvent, ErrorCodes {
         eventDataSignatures.push(eventDataSignature);
 
         if (confirmRelays.length >= initData.requiredConfirmations) {
-            status = Status.Confirmed;
+            status = TonEventStatus.Confirmed;
 
-            initData.tonEventConfiguration.transfer({ value: 0, flag: 128 });
+            notifyEventStatusChanged();
+            transferAll(initData.tonEventConfiguration);
         }
     }
 
@@ -90,9 +106,10 @@ contract TonEvent is IEvent, ErrorCodes {
         rejectRelays.push(relay);
 
         if (rejectRelays.length >= initData.requiredRejects) {
-            status = Status.Rejected;
+            status = TonEventStatus.Rejected;
 
-            initData.tonEventConfiguration.transfer({ value: 0, flag: 128 });
+            notifyEventStatusChanged();
+            transferAll(initData.tonEventConfiguration);
         }
     }
 
@@ -106,7 +123,7 @@ contract TonEvent is IEvent, ErrorCodes {
     */
     function getDetails() public view returns (
         TonEventInitData _initData,
-        Status _status,
+        TonEventStatus _status,
         address[] _confirmRelays,
         address[] _rejectRelays,
         bytes[] _eventDataSignatures
@@ -118,5 +135,25 @@ contract TonEvent is IEvent, ErrorCodes {
             rejectRelays,
             eventDataSignatures
         );
+    }
+
+    function getDecodedData() public view returns (
+        address rootToken,
+        int8 wid,
+        uint256 addr,
+        uint128 tokens,
+        bytes ethereum_address,
+        address owner_address
+    ) {
+        (rootToken) = decodeConfigurationMeta(initData.configurationMeta);
+
+        (
+            wid,
+            addr,
+            tokens,
+            ethereum_address
+        ) = decodeTonEventData(initData.eventData);
+
+        owner_address = address.makeAddrStd(wid, addr);
     }
 }

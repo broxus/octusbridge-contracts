@@ -40,6 +40,8 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Error
         eventInitData.requiredConfirmations = basicInitData.eventRequiredConfirmations;
         eventInitData.requiredRejects = basicInitData.eventRequiredConfirmations;
         eventInitData.proxyAddress = initData.proxyAddress;
+
+        eventInitData.configurationMeta = basicInitData.meta;
     }
 
     /*

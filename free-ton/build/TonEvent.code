@@ -22,14 +22,24 @@ ENDS
 ;; param: relay
 ;; param: eventDataSignature
 ; constructor TonEvent
-ACCEPT
+; expValue
+;; fetch initData
+GETGLOB 27
+; end expValue
+;; get member sender
+GETGLOB 9
+; colValue
+SETINDEX 5
+SETGLOB 27
+; end colValue
 ; expValue
 ; end expValue
 ;; get member InProcess
 PUSHINT 0
 ; colValue
-SETGLOB 30
+SETGLOB 31
 ; end colValue
+CALL $notifyEventStatusChanged_internal$
 ;; push identifier relay
 PUSH S1
 ;; push identifier eventDataSignature
@@ -40,6 +50,32 @@ DROP2
 CALL $c7_to_c4$
 TRUE
 SETGLOB 7
+
+.globl	notifyEventStatusChanged_internal
+.type	notifyEventStatusChanged_internal, @function
+; function notifyEventStatusChanged
+CALL $getDecodedData_internal$
+;; decl: owner_address
+;; Remote call IEventNotificationReceiver.notifyTonEventStatusChanged
+;; push identifier owner_address
+DUP
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHSLICE x30186a0000000000000000000000000004_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x4867b01a
+;; status
+;; push identifier status
+GETGLOB 31
+STUR 8
+ENDC
+PUSHINT 1
+SENDRAWMSG
+BLKDROP 6
+; end function notifyEventStatusChanged
 
 .globl	confirm
 .public	confirm
@@ -61,7 +97,7 @@ ENDS
 ; modifier onlyEventConfiguration
 ;; get member tonEventConfiguration
 ;; push identifier initData
-GETGLOB 26
+GETGLOB 27
 INDEX 5
 ;; push identifier SENDER_NOT_EVENT_CONFIGURATION
 GETGLOB 20
@@ -89,7 +125,7 @@ PUSHCONT {
 }
 IF
 ;; push identifier status
-GETGLOB 30
+GETGLOB 31
 ;; get member InProcess
 PUSHINT 0
 ;; ==
@@ -104,7 +140,7 @@ PUSHCONT {
 	DUP
 	;; get member length
 	;; push identifier confirmRelays
-	GETGLOB 27
+	GETGLOB 28
 	INDEX 0
 	;; <
 	LESS
@@ -123,7 +159,7 @@ PUSHCONT {
 	;; push identifier i
 	PUSH S1
 	;; push identifier confirmRelays
-	GETGLOB 27
+	GETGLOB 28
 	INDEX 1
 	PUSHINT 32
 	DICTUGET
@@ -145,7 +181,7 @@ DROP
 ; end for
 ; expValue
 ;; fetch confirmRelays
-GETGLOB 27
+GETGLOB 28
 ; end expValue
 ;; push identifier relay
 PUSH S3
@@ -160,11 +196,11 @@ PUSHINT 32
 DICTUSET
 PAIR
 ; colValue
-SETGLOB 27
+SETGLOB 28
 ; end colValue
 ; expValue
 ;; fetch eventDataSignatures
-GETGLOB 28
+GETGLOB 29
 ; end expValue
 ;; push identifier eventDataSignature
 PUSH S2
@@ -179,16 +215,16 @@ PUSHINT 32
 DICTUSETREF
 PAIR
 ; colValue
-SETGLOB 28
+SETGLOB 29
 ; end colValue
 ;; if
 ;; get member length
 ;; push identifier confirmRelays
-GETGLOB 27
+GETGLOB 28
 INDEX 0
 ;; get member requiredConfirmations
 ;; push identifier initData
-GETGLOB 26
+GETGLOB 27
 INDEX 6
 ;; >=
 GEQ
@@ -198,23 +234,14 @@ PUSHCONT {
 	;; get member Confirmed
 	PUSHINT 1
 	; colValue
-	SETGLOB 30
+	SETGLOB 31
 	; end colValue
-	;; transfer()
+	CALL $notifyEventStatusChanged_internal$
 	;; get member tonEventConfiguration
 	;; push identifier initData
-	GETGLOB 26
+	GETGLOB 27
 	INDEX 5
-	NEWC
-	STSLICECONST x62_
-	STSLICE
-	PUSHINT 109
-	STZEROES
-	STSLICECONST 0
-	STSLICECONST 0
-	ENDC
-	PUSHINT 128
-	SENDRAWMSG
+	CALL $transferAll_internal$
 }
 IF
 ;; end if
@@ -233,7 +260,7 @@ SETGLOB 7
 ; modifier onlyEventConfiguration
 ;; get member tonEventConfiguration
 ;; push identifier initData
-GETGLOB 26
+GETGLOB 27
 INDEX 5
 ;; push identifier SENDER_NOT_EVENT_CONFIGURATION
 GETGLOB 20
@@ -261,7 +288,7 @@ PUSHCONT {
 }
 IF
 ;; push identifier status
-GETGLOB 30
+GETGLOB 31
 ;; get member InProcess
 PUSHINT 0
 ;; ==
@@ -276,7 +303,7 @@ PUSHCONT {
 	DUP
 	;; get member length
 	;; push identifier confirmRelays
-	GETGLOB 27
+	GETGLOB 28
 	INDEX 0
 	;; <
 	LESS
@@ -295,7 +322,7 @@ PUSHCONT {
 	;; push identifier i
 	PUSH S1
 	;; push identifier confirmRelays
-	GETGLOB 27
+	GETGLOB 28
 	INDEX 1
 	PUSHINT 32
 	DICTUGET
@@ -317,7 +344,7 @@ DROP
 ; end for
 ; expValue
 ;; fetch confirmRelays
-GETGLOB 27
+GETGLOB 28
 ; end expValue
 ;; push identifier relay
 PUSH S3
@@ -332,11 +359,11 @@ PUSHINT 32
 DICTUSET
 PAIR
 ; colValue
-SETGLOB 27
+SETGLOB 28
 ; end colValue
 ; expValue
 ;; fetch eventDataSignatures
-GETGLOB 28
+GETGLOB 29
 ; end expValue
 ;; push identifier eventDataSignature
 PUSH S2
@@ -351,16 +378,16 @@ PUSHINT 32
 DICTUSETREF
 PAIR
 ; colValue
-SETGLOB 28
+SETGLOB 29
 ; end colValue
 ;; if
 ;; get member length
 ;; push identifier confirmRelays
-GETGLOB 27
+GETGLOB 28
 INDEX 0
 ;; get member requiredConfirmations
 ;; push identifier initData
-GETGLOB 26
+GETGLOB 27
 INDEX 6
 ;; >=
 GEQ
@@ -370,23 +397,14 @@ PUSHCONT {
 	;; get member Confirmed
 	PUSHINT 1
 	; colValue
-	SETGLOB 30
+	SETGLOB 31
 	; end colValue
-	;; transfer()
+	CALL $notifyEventStatusChanged_internal$
 	;; get member tonEventConfiguration
 	;; push identifier initData
-	GETGLOB 26
+	GETGLOB 27
 	INDEX 5
-	NEWC
-	STSLICECONST x62_
-	STSLICE
-	PUSHINT 109
-	STZEROES
-	STSLICECONST 0
-	STSLICECONST 0
-	ENDC
-	PUSHINT 128
-	SENDRAWMSG
+	CALL $transferAll_internal$
 }
 IF
 ;; end if
@@ -412,7 +430,7 @@ ENDS
 ; modifier onlyEventConfiguration
 ;; get member tonEventConfiguration
 ;; push identifier initData
-GETGLOB 26
+GETGLOB 27
 INDEX 5
 ;; push identifier SENDER_NOT_EVENT_CONFIGURATION
 GETGLOB 20
@@ -440,7 +458,7 @@ PUSHCONT {
 }
 IF
 ;; push identifier status
-GETGLOB 30
+GETGLOB 31
 ;; get member InProcess
 PUSHINT 0
 ;; ==
@@ -455,7 +473,7 @@ PUSHCONT {
 	DUP
 	;; get member length
 	;; push identifier rejectRelays
-	GETGLOB 29
+	GETGLOB 30
 	INDEX 0
 	;; <
 	LESS
@@ -474,7 +492,7 @@ PUSHCONT {
 	;; push identifier i
 	PUSH S1
 	;; push identifier rejectRelays
-	GETGLOB 29
+	GETGLOB 30
 	INDEX 1
 	PUSHINT 32
 	DICTUGET
@@ -496,7 +514,7 @@ DROP
 ; end for
 ; expValue
 ;; fetch rejectRelays
-GETGLOB 29
+GETGLOB 30
 ; end expValue
 ;; push identifier relay
 PUSH S2
@@ -511,16 +529,16 @@ PUSHINT 32
 DICTUSET
 PAIR
 ; colValue
-SETGLOB 29
+SETGLOB 30
 ; end colValue
 ;; if
 ;; get member length
 ;; push identifier rejectRelays
-GETGLOB 29
+GETGLOB 30
 INDEX 0
 ;; get member requiredRejects
 ;; push identifier initData
-GETGLOB 26
+GETGLOB 27
 INDEX 7
 ;; >=
 GEQ
@@ -530,23 +548,14 @@ PUSHCONT {
 	;; get member Rejected
 	PUSHINT 2
 	; colValue
-	SETGLOB 30
+	SETGLOB 31
 	; end colValue
-	;; transfer()
+	CALL $notifyEventStatusChanged_internal$
 	;; get member tonEventConfiguration
 	;; push identifier initData
-	GETGLOB 26
+	GETGLOB 27
 	INDEX 5
-	NEWC
-	STSLICECONST x62_
-	STSLICE
-	PUSHINT 109
-	STZEROES
-	STSLICECONST 0
-	STSLICECONST 0
-	ENDC
-	PUSHINT 128
-	SENDRAWMSG
+	CALL $transferAll_internal$
 }
 IF
 ;; end if
@@ -564,7 +573,7 @@ SETGLOB 7
 ; modifier onlyEventConfiguration
 ;; get member tonEventConfiguration
 ;; push identifier initData
-GETGLOB 26
+GETGLOB 27
 INDEX 5
 ;; push identifier SENDER_NOT_EVENT_CONFIGURATION
 GETGLOB 20
@@ -592,7 +601,7 @@ PUSHCONT {
 }
 IF
 ;; push identifier status
-GETGLOB 30
+GETGLOB 31
 ;; get member InProcess
 PUSHINT 0
 ;; ==
@@ -607,7 +616,7 @@ PUSHCONT {
 	DUP
 	;; get member length
 	;; push identifier rejectRelays
-	GETGLOB 29
+	GETGLOB 30
 	INDEX 0
 	;; <
 	LESS
@@ -626,7 +635,7 @@ PUSHCONT {
 	;; push identifier i
 	PUSH S1
 	;; push identifier rejectRelays
-	GETGLOB 29
+	GETGLOB 30
 	INDEX 1
 	PUSHINT 32
 	DICTUGET
@@ -648,7 +657,7 @@ DROP
 ; end for
 ; expValue
 ;; fetch rejectRelays
-GETGLOB 29
+GETGLOB 30
 ; end expValue
 ;; push identifier relay
 PUSH S2
@@ -663,16 +672,16 @@ PUSHINT 32
 DICTUSET
 PAIR
 ; colValue
-SETGLOB 29
+SETGLOB 30
 ; end colValue
 ;; if
 ;; get member length
 ;; push identifier rejectRelays
-GETGLOB 29
+GETGLOB 30
 INDEX 0
 ;; get member requiredRejects
 ;; push identifier initData
-GETGLOB 26
+GETGLOB 27
 INDEX 7
 ;; >=
 GEQ
@@ -682,23 +691,14 @@ PUSHCONT {
 	;; get member Rejected
 	PUSHINT 2
 	; colValue
-	SETGLOB 30
+	SETGLOB 31
 	; end colValue
-	;; transfer()
+	CALL $notifyEventStatusChanged_internal$
 	;; get member tonEventConfiguration
 	;; push identifier initData
-	GETGLOB 26
+	GETGLOB 27
 	INDEX 5
-	NEWC
-	STSLICECONST x62_
-	STSLICE
-	PUSHINT 109
-	STZEROES
-	STSLICECONST 0
-	STSLICECONST 0
-	ENDC
-	PUSHINT 128
-	SENDRAWMSG
+	CALL $transferAll_internal$
 }
 IF
 ;; end if
@@ -729,7 +729,9 @@ ENDC
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 PUSHINT 0
 PUSHINT 0
-TUPLE 8
+NEWC
+ENDC
+TUPLE 9
 ;; ret param: _status
 PUSHINT 0
 ;; ret param: _confirmRelays
@@ -746,15 +748,15 @@ NEWDICT
 PAIR
 ;; return
 ;; push identifier initData
-GETGLOB 26
-;; push identifier status
-GETGLOB 30
-;; push identifier confirmRelays
 GETGLOB 27
-;; push identifier rejectRelays
-GETGLOB 29
-;; push identifier eventDataSignatures
+;; push identifier status
+GETGLOB 31
+;; push identifier confirmRelays
 GETGLOB 28
+;; push identifier rejectRelays
+GETGLOB 30
+;; push identifier eventDataSignatures
+GETGLOB 29
 BLKDROP2 5, 5
 ;; emitting 5 value(s)
 PUSH S5
@@ -774,28 +776,30 @@ PUSHCONT {
 	STSLICECONST 0
 	STSLICECONST 1
 	NEWC
-	STSLICECONST xfe8ceeb0
+	STSLICECONST xbe9c116d
 	PUSH S6
-	UNTUPLE 8
-	BLKSWAP 1, 8
-	PUSH S8
+	UNTUPLE 9
+	BLKSWAP 1, 9
+	PUSH S9
 	STUR 256
-	PUSH S7
+	PUSH S8
 	STUR 64
+	PUSH S7
+	STUR 32
 	PUSH S6
 	STUR 32
 	PUSH S5
-	STUR 32
-	PUSH S4
 	STREFR
-	PUSH S3
+	PUSH S4
 	STSLICER
+	PUSH S3
+	STUR 16
 	PUSH S2
 	STUR 16
 	PUSH S1
-	STUR 16
-	XCHG s8
-	BLKDROP 8
+	STREFR
+	XCHG s9
+	BLKDROP 9
 	PUSH S5
 	STUR 8
 	PUSH S4
@@ -803,12 +807,12 @@ PUSHCONT {
 	XCHG s2
 	STU 32
 	STDICT
-	PUSH S3
+	NEWC
+	PUSH S4
 	UNPAIR
 	XCHG s2
 	STU 32
 	STDICT
-	NEWC
 	PUSH S3
 	UNPAIR
 	XCHG s2
@@ -843,7 +847,9 @@ ENDC
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 PUSHINT 0
 PUSHINT 0
-TUPLE 8
+NEWC
+ENDC
+TUPLE 9
 ;; ret param: _status
 PUSHINT 0
 ;; ret param: _confirmRelays
@@ -860,17 +866,981 @@ NEWDICT
 PAIR
 ;; return
 ;; push identifier initData
-GETGLOB 26
-;; push identifier status
-GETGLOB 30
-;; push identifier confirmRelays
 GETGLOB 27
-;; push identifier rejectRelays
-GETGLOB 29
-;; push identifier eventDataSignatures
+;; push identifier status
+GETGLOB 31
+;; push identifier confirmRelays
 GETGLOB 28
+;; push identifier rejectRelays
+GETGLOB 30
+;; push identifier eventDataSignatures
+GETGLOB 29
 BLKDROP2 5, 5
 ; end function getDetails
+
+.globl	getDecodedData
+.public	getDecodedData
+.type	getDecodedData, @function
+GETGLOB 1
+ISNULL
+PUSHCONT {
+	CALL $c4_to_c7$
+}
+IF
+; Decode input parameters
+ENDS
+; function getDecodedData
+;; ret param: rootToken
+PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+;; ret param: wid
+PUSHINT 0
+;; ret param: addr
+PUSHINT 0
+;; ret param: tokens
+PUSHINT 0
+;; ret param: ethereum_address
+NEWC
+ENDC
+;; ret param: owner_address
+PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+;; get member configurationMeta
+;; push identifier initData
+GETGLOB 27
+INDEX 8
+CALL $decodeConfigurationMeta_internal$
+; expValue
+; end expValue
+; colValue
+POP S6
+; end colValue
+;; get member eventData
+;; push identifier initData
+GETGLOB 27
+INDEX 4
+CALL $decodeTonEventData_internal$
+REVERSE 4, 0
+; expValue
+; end expValue
+; colValue
+POP S8
+; end colValue
+; expValue
+; end expValue
+; colValue
+POP S6
+; end colValue
+; expValue
+; end expValue
+; colValue
+POP S4
+; end colValue
+; expValue
+; end expValue
+; colValue
+POP S2
+; end colValue
+;; address.makeAddrStd()
+;; push identifier addr
+PUSH S3
+;; push identifier wid
+PUSH S5
+NEWC
+STSLICECONST x9_
+STI 8
+STU 256
+; expValue
+; end expValue
+; colValue
+ENDC
+CTOS
+NIP
+; end colValue
+;; returning named params
+;; emitting 6 value(s)
+PUSH S6
+EQINT -1
+PUSHCONT {
+	PUSH S8
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 1
+	NEWC
+	STSLICECONST xba723ac9
+	PUSH S7
+	STSLICER
+	PUSH S6
+	STIR 8
+	PUSH S5
+	STUR 256
+	PUSH S4
+	STUR 128
+	PUSH S3
+	STREFR
+	NEWC
+	PUSH S3
+	STSLICER
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+}
+IF
+BLKDROP 6
+; end function getDecodedData
+PUSHCONT {
+	CALL $c7_to_c4$
+}
+IF
+TRUE
+SETGLOB 7
+
+.globl	getDecodedData_internal
+.type	getDecodedData_internal, @function
+; function getDecodedData
+;; ret param: rootToken
+PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+;; ret param: wid
+PUSHINT 0
+;; ret param: addr
+PUSHINT 0
+;; ret param: tokens
+PUSHINT 0
+;; ret param: ethereum_address
+NEWC
+ENDC
+;; ret param: owner_address
+PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+;; get member configurationMeta
+;; push identifier initData
+GETGLOB 27
+INDEX 8
+CALL $decodeConfigurationMeta_internal$
+; expValue
+; end expValue
+; colValue
+POP S6
+; end colValue
+;; get member eventData
+;; push identifier initData
+GETGLOB 27
+INDEX 4
+CALL $decodeTonEventData_internal$
+REVERSE 4, 0
+; expValue
+; end expValue
+; colValue
+POP S8
+; end colValue
+; expValue
+; end expValue
+; colValue
+POP S6
+; end colValue
+; expValue
+; end expValue
+; colValue
+POP S4
+; end colValue
+; expValue
+; end expValue
+; colValue
+POP S2
+; end colValue
+;; address.makeAddrStd()
+;; push identifier addr
+PUSH S3
+;; push identifier wid
+PUSH S5
+NEWC
+STSLICECONST x9_
+STI 8
+STU 256
+; expValue
+; end expValue
+; colValue
+ENDC
+CTOS
+NIP
+; end colValue
+;; returning named params
+; end function getDecodedData
+
+.globl	encodeEthereumEventData
+.public	encodeEthereumEventData
+.type	encodeEthereumEventData, @function
+; Decode input parameters
+; Decode tokens
+LDU 128
+; Decode wid
+LDI 8
+; Decode owner_addr
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+; Decode owner_pubkey
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+ENDS
+;; param: tokens
+;; param: wid
+;; param: owner_addr
+;; param: owner_pubkey
+; function encodeEthereumEventData
+;; ret param: data
+NEWC
+ENDC
+NEWC
+;; decl: builder
+; expValue
+DUP
+; end expValue
+;; push identifier tokens
+PUSH S6
+STUR 128
+;; push identifier wid
+PUSH S5
+STIR 8
+;; push identifier owner_addr
+PUSH S4
+STUR 256
+;; push identifier owner_pubkey
+PUSH S3
+STUR 256
+; colValue
+NIP
+; end colValue
+;; push identifier builder
+DUP
+ENDC
+; expValue
+; end expValue
+; colValue
+POP S2
+; end colValue
+;; returning named params
+BLKSWAP 4, 2
+BLKDROP 5
+;; emitting 1 value(s)
+PUSH S1
+EQINT -1
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST xa14ea6cf
+	PUSH S1
+	STREFR
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+}
+IF
+DROP
+; end function encodeEthereumEventData
+PUSHCONT {
+	CALL $c7_to_c4$
+}
+IF
+TRUE
+SETGLOB 7
+
+.globl	encodeEthereumEventData_internal
+.type	encodeEthereumEventData_internal, @function
+;; param: tokens
+;; param: wid
+;; param: owner_addr
+;; param: owner_pubkey
+; function encodeEthereumEventData
+;; ret param: data
+NEWC
+ENDC
+NEWC
+;; decl: builder
+; expValue
+DUP
+; end expValue
+;; push identifier tokens
+PUSH S6
+STUR 128
+;; push identifier wid
+PUSH S5
+STIR 8
+;; push identifier owner_addr
+PUSH S4
+STUR 256
+;; push identifier owner_pubkey
+PUSH S3
+STUR 256
+; colValue
+NIP
+; end colValue
+;; push identifier builder
+DUP
+ENDC
+; expValue
+; end expValue
+; colValue
+POP S2
+; end colValue
+;; returning named params
+BLKSWAP 4, 2
+BLKDROP 5
+; end function encodeEthereumEventData
+
+.globl	decodeEthereumEventData
+.public	decodeEthereumEventData
+.type	decodeEthereumEventData, @function
+; Decode input parameters
+; Decode data
+;; decode TvmCell
+LDREF
+ENDS
+;; param: data
+; function decodeEthereumEventData
+;; ret param: tokens
+PUSHINT 0
+;; ret param: wid
+PUSHINT 0
+;; ret param: owner_addr
+PUSHINT 0
+;; ret param: owner_pubkey
+PUSHINT 0
+;; push identifier data
+PUSH S4
+CTOS
+LDU 128
+LDI 8
+LDU 256
+LDU 256
+; colValue
+DROP
+REVERSE 4, 0
+; expValue
+; end expValue
+; colValue
+POP S7
+; end colValue
+; expValue
+; end expValue
+; colValue
+POP S5
+; end colValue
+; expValue
+; end expValue
+; colValue
+POP S3
+; end colValue
+; expValue
+; end expValue
+; colValue
+NIP
+; end colValue
+;; returning named params
+BLKSWAP 1, 4
+DROP
+;; emitting 4 value(s)
+PUSH S4
+EQINT -1
+PUSHCONT {
+	PUSH S6
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 1
+	NEWC
+	STSLICECONST x8e5d1e02
+	PUSH S5
+	STUR 128
+	PUSH S4
+	STIR 8
+	PUSH S3
+	STUR 256
+	PUSH S2
+	STUR 256
+	STBREFR
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+}
+IF
+BLKDROP 4
+; end function decodeEthereumEventData
+PUSHCONT {
+	CALL $c7_to_c4$
+}
+IF
+TRUE
+SETGLOB 7
+
+.globl	decodeEthereumEventData_internal
+.type	decodeEthereumEventData_internal, @function
+;; param: data
+; function decodeEthereumEventData
+;; ret param: tokens
+PUSHINT 0
+;; ret param: wid
+PUSHINT 0
+;; ret param: owner_addr
+PUSHINT 0
+;; ret param: owner_pubkey
+PUSHINT 0
+;; push identifier data
+PUSH S4
+CTOS
+LDU 128
+LDI 8
+LDU 256
+LDU 256
+; colValue
+DROP
+REVERSE 4, 0
+; expValue
+; end expValue
+; colValue
+POP S7
+; end colValue
+; expValue
+; end expValue
+; colValue
+POP S5
+; end colValue
+; expValue
+; end expValue
+; colValue
+POP S3
+; end colValue
+; expValue
+; end expValue
+; colValue
+NIP
+; end colValue
+;; returning named params
+BLKSWAP 1, 4
+DROP
+; end function decodeEthereumEventData
+
+.globl	encodeConfigurationMeta
+.public	encodeConfigurationMeta
+.type	encodeConfigurationMeta, @function
+; Decode input parameters
+; Decode rootToken
+LDMSGADDR
+ENDS
+;; param: rootToken
+; function encodeConfigurationMeta
+;; ret param: data
+NEWC
+ENDC
+NEWC
+;; decl: builder
+; expValue
+DUP
+; end expValue
+;; push identifier rootToken
+PUSH S3
+STSLICER
+; colValue
+NIP
+; end colValue
+;; push identifier builder
+DUP
+ENDC
+; expValue
+; end expValue
+; colValue
+POP S2
+; end colValue
+;; returning named params
+ROT
+DROP2
+;; emitting 1 value(s)
+PUSH S1
+EQINT -1
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST x85315ebd
+	PUSH S1
+	STREFR
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+}
+IF
+DROP
+; end function encodeConfigurationMeta
+PUSHCONT {
+	CALL $c7_to_c4$
+}
+IF
+TRUE
+SETGLOB 7
+
+.globl	encodeConfigurationMeta_internal
+.type	encodeConfigurationMeta_internal, @function
+;; param: rootToken
+; function encodeConfigurationMeta
+;; ret param: data
+NEWC
+ENDC
+NEWC
+;; decl: builder
+; expValue
+DUP
+; end expValue
+;; push identifier rootToken
+PUSH S3
+STSLICER
+; colValue
+NIP
+; end colValue
+;; push identifier builder
+DUP
+ENDC
+; expValue
+; end expValue
+; colValue
+POP S2
+; end colValue
+;; returning named params
+ROT
+DROP2
+; end function encodeConfigurationMeta
+
+.globl	decodeConfigurationMeta
+.public	decodeConfigurationMeta
+.type	decodeConfigurationMeta, @function
+; Decode input parameters
+; Decode data
+;; decode TvmCell
+LDREF
+ENDS
+;; param: data
+; function decodeConfigurationMeta
+;; ret param: rootToken
+PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+;; push identifier data
+PUSH S1
+CTOS
+;; decode address
+LDMSGADDR
+; colValue
+DROP
+; expValue
+; end expValue
+; colValue
+NIP
+; end colValue
+;; returning named params
+SWAP
+DROP
+;; emitting 1 value(s)
+PUSH S1
+EQINT -1
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST xa42a80c7
+	PUSH S1
+	STSLICER
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+}
+IF
+DROP
+; end function decodeConfigurationMeta
+PUSHCONT {
+	CALL $c7_to_c4$
+}
+IF
+TRUE
+SETGLOB 7
+
+.globl	decodeConfigurationMeta_internal
+.type	decodeConfigurationMeta_internal, @function
+;; param: data
+; function decodeConfigurationMeta
+;; ret param: rootToken
+PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+;; push identifier data
+PUSH S1
+CTOS
+;; decode address
+LDMSGADDR
+; colValue
+DROP
+; expValue
+; end expValue
+; colValue
+NIP
+; end colValue
+;; returning named params
+SWAP
+DROP
+; end function decodeConfigurationMeta
+
+.globl	encodeTonEventData
+.public	encodeTonEventData
+.type	encodeTonEventData, @function
+; Decode input parameters
+; Decode wid
+LDI 8
+; Decode addr
+LDU 256
+; Decode tokens
+LDUQ 128
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 128
+}
+IFNOT
+; Decode ethereum_address
+LDREF
+ENDS
+;; param: wid
+;; param: addr
+;; param: tokens
+;; param: ethereum_address
+; function encodeTonEventData
+;; ret param: data
+NEWC
+ENDC
+NEWC
+;; decl: builder
+; expValue
+DUP
+; end expValue
+;; push identifier wid
+PUSH S6
+STIR 8
+;; push identifier addr
+PUSH S5
+STUR 256
+;; push identifier tokens
+PUSH S4
+STUR 128
+;; push identifier ethereum_address
+PUSH S3
+STREFR
+; colValue
+NIP
+; end colValue
+;; push identifier builder
+DUP
+ENDC
+; expValue
+; end expValue
+; colValue
+POP S2
+; end colValue
+;; returning named params
+BLKSWAP 4, 2
+BLKDROP 5
+;; emitting 1 value(s)
+PUSH S1
+EQINT -1
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST xca1fecb3
+	PUSH S1
+	STREFR
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+}
+IF
+DROP
+; end function encodeTonEventData
+PUSHCONT {
+	CALL $c7_to_c4$
+}
+IF
+TRUE
+SETGLOB 7
+
+.globl	encodeTonEventData_internal
+.type	encodeTonEventData_internal, @function
+;; param: wid
+;; param: addr
+;; param: tokens
+;; param: ethereum_address
+; function encodeTonEventData
+;; ret param: data
+NEWC
+ENDC
+NEWC
+;; decl: builder
+; expValue
+DUP
+; end expValue
+;; push identifier wid
+PUSH S6
+STIR 8
+;; push identifier addr
+PUSH S5
+STUR 256
+;; push identifier tokens
+PUSH S4
+STUR 128
+;; push identifier ethereum_address
+PUSH S3
+STREFR
+; colValue
+NIP
+; end colValue
+;; push identifier builder
+DUP
+ENDC
+; expValue
+; end expValue
+; colValue
+POP S2
+; end colValue
+;; returning named params
+BLKSWAP 4, 2
+BLKDROP 5
+; end function encodeTonEventData
+
+.globl	decodeTonEventData
+.public	decodeTonEventData
+.type	decodeTonEventData, @function
+; Decode input parameters
+; Decode data
+;; decode TvmCell
+LDREF
+ENDS
+;; param: data
+; function decodeTonEventData
+;; ret param: wid
+PUSHINT 0
+;; ret param: addr
+PUSHINT 0
+;; ret param: tokens
+PUSHINT 0
+;; ret param: ethereum_address
+NEWC
+ENDC
+;; push identifier data
+PUSH S4
+CTOS
+LDI 8
+LDU 256
+LDU 128
+;; decode bytes
+LDREF
+; colValue
+DROP
+REVERSE 4, 0
+; expValue
+; end expValue
+; colValue
+POP S7
+; end colValue
+; expValue
+; end expValue
+; colValue
+POP S5
+; end colValue
+; expValue
+; end expValue
+; colValue
+POP S3
+; end colValue
+; expValue
+; end expValue
+; colValue
+NIP
+; end colValue
+;; returning named params
+BLKSWAP 1, 4
+DROP
+;; emitting 4 value(s)
+PUSH S4
+EQINT -1
+PUSHCONT {
+	PUSH S6
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST xf9530da5
+	PUSH S4
+	STIR 8
+	PUSH S3
+	STUR 256
+	PUSH S2
+	STUR 128
+	PUSH S1
+	STREFR
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+}
+IF
+BLKDROP 4
+; end function decodeTonEventData
+PUSHCONT {
+	CALL $c7_to_c4$
+}
+IF
+TRUE
+SETGLOB 7
+
+.globl	decodeTonEventData_internal
+.type	decodeTonEventData_internal, @function
+;; param: data
+; function decodeTonEventData
+;; ret param: wid
+PUSHINT 0
+;; ret param: addr
+PUSHINT 0
+;; ret param: tokens
+PUSHINT 0
+;; ret param: ethereum_address
+NEWC
+ENDC
+;; push identifier data
+PUSH S4
+CTOS
+LDI 8
+LDU 256
+LDU 128
+;; decode bytes
+LDREF
+; colValue
+DROP
+REVERSE 4, 0
+; expValue
+; end expValue
+; colValue
+POP S7
+; end colValue
+; expValue
+; end expValue
+; colValue
+POP S5
+; end colValue
+; expValue
+; end expValue
+; colValue
+POP S3
+; end colValue
+; expValue
+; end expValue
+; colValue
+NIP
+; end colValue
+;; returning named params
+BLKSWAP 1, 4
+DROP
+; end function decodeTonEventData
+
+.globl	transferAll_internal
+.type	transferAll_internal, @function
+;; param: receiver
+; function transferAll
+;; transfer()
+;; push identifier receiver
+DUP
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 109
+STZEROES
+STSLICECONST 0
+STSLICECONST 0
+ENDC
+PUSHINT 128
+SENDRAWMSG
+DROP
+; end function transferAll
 
 .globl	c7_to_c4
 .type	c7_to_c4, @function
@@ -899,13 +1869,14 @@ GETGLOB 24
 GETGLOB 25
 GETGLOB 26
 GETGLOB 27
-UNTUPLE 2
 GETGLOB 28
 UNTUPLE 2
-GETGLOB 30
 GETGLOB 29
 UNTUPLE 2
-PUSHINT 25
+GETGLOB 31
+GETGLOB 30
+UNTUPLE 2
+PUSHINT 26
 PUSHINT 0
 REVX
 STU 16
@@ -924,27 +1895,30 @@ STU 16
 STU 16
 STU 16
 STU 16
+STU 16
 SWAP
-UNTUPLE 8
+UNTUPLE 9
 NEWC
-PUSH S8
+PUSH S9
 STUR 256
-PUSH S7
+PUSH S8
 STUR 64
+PUSH S7
+STUR 32
 PUSH S6
 STUR 32
 PUSH S5
-STUR 32
-PUSH S4
 STREFR
-PUSH S3
+PUSH S4
 STSLICER
+PUSH S3
+STUR 16
 PUSH S2
 STUR 16
 PUSH S1
-STUR 16
-XCHG s8
-BLKDROP 8
+STREFR
+XCHG s9
+BLKDROP 9
 STBREFR
 STU 32
 STDICT
@@ -979,6 +1953,7 @@ LDU 16
 LDU 16
 LDU 16
 LDU 16
+LDU 16
 LDREFRTOS
 LDU 256
 LDU 64
@@ -987,25 +1962,27 @@ LDU 32
 LDREF
 LDMSGADDR
 LDU 16
-PLDU 16
-TUPLE 8
-SETGLOB 26
-LDU 32
-LDDICT
-ROTREV
-PAIR
+LDU 16
+PLDREF
+TUPLE 9
 SETGLOB 27
 LDU 32
 LDDICT
 ROTREV
 PAIR
 SETGLOB 28
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SETGLOB 29
 LDU 8
 LDU 32
 PLDDICT
 PAIR
-SETGLOB 29
 SETGLOB 30
+SETGLOB 31
+SETGLOB 26
 SETGLOB 25
 SETGLOB 24
 SETGLOB 23
@@ -1054,6 +2031,7 @@ PUSHCONT {
 	LDU 16
 	LDU 16
 	LDU 16
+	LDU 16
 	LDREFRTOS
 	LDU 256
 	LDU 64
@@ -1062,25 +2040,27 @@ PUSHCONT {
 	LDREF
 	LDMSGADDR
 	LDU 16
-	PLDU 16
-	TUPLE 8
-	SETGLOB 26
-	LDU 32
-	LDDICT
-	ROTREV
-	PAIR
+	LDU 16
+	PLDREF
+	TUPLE 9
 	SETGLOB 27
 	LDU 32
 	LDDICT
 	ROTREV
 	PAIR
 	SETGLOB 28
+	LDU 32
+	LDDICT
+	ROTREV
+	PAIR
+	SETGLOB 29
 	LDU 8
 	LDU 32
 	PLDDICT
 	PAIR
-	SETGLOB 29
 	SETGLOB 30
+	SETGLOB 31
+	SETGLOB 26
 	SETGLOB 25
 	SETGLOB 24
 	SETGLOB 23
@@ -1118,8 +2098,9 @@ PUSHCONT {
 		LDREF
 		LDMSGADDR
 		LDU 16
-		PLDU 16
-		TUPLE 8
+		LDU 16
+		PLDREF
+		TUPLE 9
 	}
 	PUSHCONT {
 		PUSHINT 0
@@ -1131,28 +2112,43 @@ PUSHCONT {
 		PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 		PUSHINT 0
 		PUSHINT 0
-		TUPLE 8
+		NEWC
+		ENDC
+		TUPLE 9
 	}
 	IFELSE
-	SETGLOB 26
+	SETGLOB 27
 	; init confirmRelays
 	PUSHINT 0
 	NEWDICT
 	PAIR
-	SETGLOB 27
+	SETGLOB 28
 	; init eventDataSignatures
 	PUSHINT 0
 	NEWDICT
 	PAIR
-	SETGLOB 28
+	SETGLOB 29
 	; init rejectRelays
 	PUSHINT 0
 	NEWDICT
 	PAIR
-	SETGLOB 29
+	SETGLOB 30
 	; init status
 	PUSHINT 0
-	SETGLOB 30
+	SETGLOB 31
+	; init _randomNonce
+	PUSHINT 2
+	PUSH S1
+	PUSHINT 64
+	DICTUGET
+	PUSHCONT {
+		PLDU 16
+	}
+	PUSHCONT {
+		PUSHINT 0
+	}
+	IFELSE
+	SETGLOB 26
 	; init ADDRESS_IS_NOT_OWNER
 	PUSHINT 0
 	SETGLOB 10
