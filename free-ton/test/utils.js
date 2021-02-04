@@ -53,6 +53,23 @@ class RelaysManager {
 }
 
 
+const getMessagesByDestination = async (tonWrapper, dst) => {
+  const {
+    result
+  } = await tonWrapper.ton.net.query_collection({
+      collection: 'messages',
+      filter: {
+        dst: { eq: dst },
+      },
+      result: 'body id src',
+    }
+  );
+  
+  return result;
+};
+
+
 module.exports = {
   RelaysManager,
+  getMessagesByDestination,
 };

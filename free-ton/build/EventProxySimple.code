@@ -43,21 +43,21 @@ ACCEPT
 ;; push identifier _ethereumEventConfiguration
 PUSH S2
 ; colValue
-SETGLOB 12
+SETGLOB 11
 ; end colValue
 ; expValue
 ; end expValue
 ;; push identifier _ethereumEventCode
 PUSH S1
 ; colValue
-SETGLOB 13
+SETGLOB 12
 ; end colValue
 ; expValue
 ; end expValue
 ;; push identifier _ethereumEventPubKey
 DUP
 ; colValue
-SETGLOB 14
+SETGLOB 13
 ; end colValue
 BLKDROP 3
 ; end constructor EventProxySimple
@@ -136,16 +136,19 @@ PUSHCONT {
 	LDMSGADDR
 }
 IFNOT
-;; build struct EthereumEventInitData ss:10
-BLKSWAP 9, 1
-TUPLE 9
+;; decode EthereumEventInitData.configurationMeta
+;; decode TvmCell
+LDREF
+;; build struct EthereumEventInitData ss:11
+BLKSWAP 10, 1
+TUPLE 10
 SWAP
 ENDS
 ;; param: _eventData
 ; function buildEventProxyAddress
 NEWDICT
 ;; push identifier ethereumEventPubKey
-GETGLOB 14
+GETGLOB 13
 NEWC
 STU 256
 PUSHINT 0
@@ -154,30 +157,32 @@ PUSHINT 64
 DICTUSETB
 ;; push identifier _eventData
 PUSH S1
-UNTUPLE 9
+UNTUPLE 10
 NEWC
 NEWC
+PUSH S3
+STSLICER
 PUSH S2
-STSLICER
-STBREFR
-PUSH S9
-STUR 256
-PUSH S8
-STUR 32
-PUSH S7
 STREFR
-PUSH S6
-STUR 32
-PUSH S5
+STBREFR
+PUSH S10
 STUR 256
-PUSH S4
+PUSH S9
+STUR 32
+PUSH S8
+STREFR
+PUSH S7
+STUR 32
+PUSH S6
+STUR 256
+PUSH S5
 STSLICER
+PUSH S4
+STUR 16
 PUSH S3
 STUR 16
-PUSH S2
-STUR 16
-XCHG s9
-BLKDROP 9
+XCHG s10
+BLKDROP 10
 ENDC
 PUSHINT 1
 ROT
@@ -187,7 +192,7 @@ NEWC
 STDICT
 ENDC
 ;; push identifier ethereumEventCode
-GETGLOB 13
+GETGLOB 12
 NEWC
 STSLICECONST x2_
 STOPTREF
@@ -247,7 +252,7 @@ PUSHCONT {
 	STZEROES
 	STSLICECONST 0
 	STSLICECONST 0
-	STSLICECONST xd4e6339f
+	STSLICECONST xa431e13f
 	PUSH S1
 	STSLICER
 	ENDC
@@ -270,7 +275,7 @@ SETGLOB 7
 ; function buildEventProxyAddress
 NEWDICT
 ;; push identifier ethereumEventPubKey
-GETGLOB 14
+GETGLOB 13
 NEWC
 STU 256
 PUSHINT 0
@@ -279,30 +284,32 @@ PUSHINT 64
 DICTUSETB
 ;; push identifier _eventData
 PUSH S1
-UNTUPLE 9
+UNTUPLE 10
 NEWC
 NEWC
+PUSH S3
+STSLICER
 PUSH S2
-STSLICER
-STBREFR
-PUSH S9
-STUR 256
-PUSH S8
-STUR 32
-PUSH S7
 STREFR
-PUSH S6
-STUR 32
-PUSH S5
+STBREFR
+PUSH S10
 STUR 256
-PUSH S4
+PUSH S9
+STUR 32
+PUSH S8
+STREFR
+PUSH S7
+STUR 32
+PUSH S6
+STUR 256
+PUSH S5
 STSLICER
+PUSH S4
+STUR 16
 PUSH S3
 STUR 16
-PUSH S2
-STUR 16
-XCHG s9
-BLKDROP 9
+XCHG s10
+BLKDROP 10
 ENDC
 PUSHINT 1
 ROT
@@ -312,7 +319,7 @@ NEWC
 STDICT
 ENDC
 ;; push identifier ethereumEventCode
-GETGLOB 13
+GETGLOB 12
 NEWC
 STSLICECONST x2_
 STOPTREF
@@ -428,9 +435,24 @@ PUSHCONT {
 	LDMSGADDR
 }
 IFNOT
-;; build struct EthereumEventInitData ss:10
-BLKSWAP 9, 1
-TUPLE 9
+;; decode EthereumEventInitData.configurationMeta
+;; decode TvmCell
+DUP
+SBITREFS
+EQINT 1
+SWAP
+EQINT 0
+AND
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDREF
+;; build struct EthereumEventInitData ss:11
+BLKSWAP 10, 1
+TUPLE 10
 SWAP
 ; Decode gasBackAddress
 LDMSGADDRQ
@@ -452,7 +474,7 @@ PUSHINT 19173
 PUSH S2
 INDEX 5
 ;; push identifier ethereumEventConfiguration
-GETGLOB 12
+GETGLOB 11
 SDEQ
 THROWANYIFNOT
 PUSHINT 19172
@@ -471,31 +493,21 @@ CALL $buildEventProxyAddress_internal$
 GETGLOB 9
 SDEQ
 THROWANYIFNOT
+;; ++
 ; expValue
+;; fetch callbackCounter
+GETGLOB 15
 ; end expValue
-TRUE
-; colValue
-SETGLOB 11
-; end colValue
-; expValue
-; end expValue
-;; push identifier _eventData
-PUSH S1
-; colValue
-SETGLOB 16
-; end colValue
-;; get member eventData
-;; push identifier _eventData
-PUSH S1
-INDEX 2
-CTOS
-LDU 256
-; colValue
-DROP
-; expValue
-; end expValue
+INC
 ; colValue
 SETGLOB 15
+; end colValue
+; expValue
+; end expValue
+;; push identifier _eventData
+PUSH S1
+; colValue
+SETGLOB 14
 ; end colValue
 ;; if
 ;; get member value
@@ -554,7 +566,7 @@ PUSHINT 19173
 PUSH S2
 INDEX 5
 ;; push identifier ethereumEventConfiguration
-GETGLOB 12
+GETGLOB 11
 SDEQ
 THROWANYIFNOT
 PUSHINT 19172
@@ -573,31 +585,21 @@ CALL $buildEventProxyAddress_internal$
 GETGLOB 9
 SDEQ
 THROWANYIFNOT
+;; ++
 ; expValue
+;; fetch callbackCounter
+GETGLOB 15
 ; end expValue
-TRUE
-; colValue
-SETGLOB 11
-; end colValue
-; expValue
-; end expValue
-;; push identifier _eventData
-PUSH S1
-; colValue
-SETGLOB 16
-; end colValue
-;; get member eventData
-;; push identifier _eventData
-PUSH S1
-INDEX 2
-CTOS
-LDU 256
-; colValue
-DROP
-; expValue
-; end expValue
+INC
 ; colValue
 SETGLOB 15
+; end colValue
+; expValue
+; end expValue
+;; push identifier _eventData
+PUSH S1
+; colValue
+SETGLOB 14
 ; end colValue
 ;; if
 ;; get member value
@@ -642,100 +644,6 @@ IFELSE
 DROP2
 ; end function broxusBridgeCallback
 
-.globl	broxusBridgeNotification
-.public	broxusBridgeNotification
-.type	broxusBridgeNotification, @function
-GETGLOB 1
-ISNULL
-PUSHCONT {
-	CALL $c4_to_c7$
-}
-IF
-; Decode input parameters
-; Decode _eventData
-;; decode struct EthereumEventInitData _eventData
-;; decode EthereumEventInitData.eventTransaction
-LDU 256
-;; decode EthereumEventInitData.eventIndex
-LDU 32
-;; decode EthereumEventInitData.eventData
-;; decode TvmCell
-LDREF
-;; decode EthereumEventInitData.eventBlockNumber
-LDU 32
-;; decode EthereumEventInitData.eventBlock
-LDUQ 256
-PUSHCONT {
-	;; load next cell
-	LDREF
-	ENDS
-	CTOS
-	LDU 256
-}
-IFNOT
-;; decode EthereumEventInitData.ethereumEventConfiguration
-LDMSGADDRQ
-PUSHCONT {
-	;; load next cell
-	LDREF
-	ENDS
-	CTOS
-	LDMSGADDR
-}
-IFNOT
-;; decode EthereumEventInitData.requiredConfirmations
-LDUQ 16
-PUSHCONT {
-	;; load next cell
-	LDREF
-	ENDS
-	CTOS
-	LDU 16
-}
-IFNOT
-;; decode EthereumEventInitData.requiredRejects
-LDUQ 16
-PUSHCONT {
-	;; load next cell
-	LDREF
-	ENDS
-	CTOS
-	LDU 16
-}
-IFNOT
-;; decode EthereumEventInitData.proxyAddress
-LDMSGADDRQ
-PUSHCONT {
-	;; load next cell
-	LDREF
-	ENDS
-	CTOS
-	LDMSGADDR
-}
-IFNOT
-;; build struct EthereumEventInitData ss:10
-BLKSWAP 9, 1
-TUPLE 9
-SWAP
-ENDS
-;; param: _eventData
-; function broxusBridgeNotification
-DROP
-; end function broxusBridgeNotification
-PUSHCONT {
-	CALL $c7_to_c4$
-}
-IF
-TRUE
-SETGLOB 7
-
-.globl	broxusBridgeNotification_internal
-.type	broxusBridgeNotification_internal, @function
-;; param: _eventData
-; function broxusBridgeNotification
-DROP
-; end function broxusBridgeNotification
-
 .globl	getDetails
 .public	getDetails
 .type	getDetails, @function
@@ -748,8 +656,6 @@ IF
 ; Decode input parameters
 ENDS
 ; function getDetails
-;; ret param: _callbackReceived
-PUSHINT 0
 ;; ret param: _ethereumEventConfiguration
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 ;; ret param: _ethereumEventCode
@@ -766,26 +672,26 @@ PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 PUSHINT 0
 PUSHINT 0
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
-TUPLE 9
-;; ret param: _state
+NEWC
+ENDC
+TUPLE 10
+;; ret param: _callbackCounter
 PUSHINT 0
 ;; return
-;; push identifier callbackReceived
-GETGLOB 11
 ;; push identifier ethereumEventConfiguration
-GETGLOB 12
+GETGLOB 11
 ;; push identifier ethereumEventCode
-GETGLOB 13
+GETGLOB 12
 ;; push identifier eventData
-GETGLOB 16
-;; push identifier state
+GETGLOB 14
+;; push identifier callbackCounter
 GETGLOB 15
-BLKDROP2 5, 5
-;; emitting 5 value(s)
-PUSH S5
+BLKDROP2 4, 4
+;; emitting 4 value(s)
+PUSH S4
 EQINT -1
 PUSHCONT {
-	PUSH S7
+	PUSH S6
 	CTOS
 	LDU 2
 	LDMSGADDR
@@ -799,36 +705,36 @@ PUSHCONT {
 	STSLICECONST 0
 	STSLICECONST 1
 	NEWC
-	STSLICECONST xf7753181
-	PUSH S6
-	STIR 1
+	STSLICECONST xf298651e
 	PUSH S5
 	STSLICER
 	PUSH S4
 	STREFR
 	PUSH S3
-	UNTUPLE 9
-	BLKSWAP 1, 9
-	PUSH S9
+	UNTUPLE 10
+	BLKSWAP 1, 10
+	PUSH S10
 	STUR 256
+	PUSH S9
+	STUR 32
 	PUSH S8
-	STUR 32
-	PUSH S7
 	STREFR
-	PUSH S6
+	PUSH S7
 	STUR 32
-	PUSH S5
+	PUSH S6
 	STUR 256
 	NEWC
-	PUSH S5
+	PUSH S6
 	STSLICER
+	PUSH S5
+	STUR 16
 	PUSH S4
 	STUR 16
 	PUSH S3
-	STUR 16
-	PUSH S2
 	STSLICER
-	BLKDROP2 9, 2
+	PUSH S2
+	STREFR
+	BLKDROP2 10, 2
 	PUSH S3
 	STUR 256
 	STBREFR
@@ -838,7 +744,7 @@ PUSHCONT {
 	SENDRAWMSG
 }
 IF
-BLKDROP 5
+BLKDROP 4
 ; end function getDetails
 PUSHCONT {
 	CALL $c7_to_c4$
@@ -850,8 +756,6 @@ SETGLOB 7
 .globl	getDetails_internal
 .type	getDetails_internal, @function
 ; function getDetails
-;; ret param: _callbackReceived
-PUSHINT 0
 ;; ret param: _ethereumEventConfiguration
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 ;; ret param: _ethereumEventCode
@@ -868,22 +772,183 @@ PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 PUSHINT 0
 PUSHINT 0
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
-TUPLE 9
-;; ret param: _state
+NEWC
+ENDC
+TUPLE 10
+;; ret param: _callbackCounter
 PUSHINT 0
 ;; return
-;; push identifier callbackReceived
-GETGLOB 11
 ;; push identifier ethereumEventConfiguration
-GETGLOB 12
+GETGLOB 11
 ;; push identifier ethereumEventCode
-GETGLOB 13
+GETGLOB 12
 ;; push identifier eventData
-GETGLOB 16
-;; push identifier state
+GETGLOB 14
+;; push identifier callbackCounter
 GETGLOB 15
-BLKDROP2 5, 5
+BLKDROP2 4, 4
 ; end function getDetails
+
+.globl	getDecodedEventData
+.public	getDecodedEventData
+.type	getDecodedEventData, @function
+GETGLOB 1
+ISNULL
+PUSHCONT {
+	CALL $c4_to_c7$
+}
+IF
+; Decode input parameters
+ENDS
+; function getDecodedEventData
+;; ret param: tokens
+PUSHINT 0
+;; ret param: wid
+PUSHINT 0
+;; ret param: owner_addr
+PUSHINT 0
+;; ret param: owner_pubkey
+PUSHINT 0
+;; get member eventData
+;; push identifier eventData
+GETGLOB 14
+INDEX 2
+CTOS
+LDU 128
+LDI 8
+LDU 256
+LDU 256
+; colValue
+DROP
+REVERSE 4, 0
+; expValue
+; end expValue
+; colValue
+POP S7
+; end colValue
+; expValue
+; end expValue
+; colValue
+POP S5
+; end colValue
+; expValue
+; end expValue
+; colValue
+POP S3
+; end colValue
+; expValue
+; end expValue
+; colValue
+NIP
+; end colValue
+;; returning named params
+;; emitting 4 value(s)
+PUSH S4
+EQINT -1
+PUSHCONT {
+	PUSH S6
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 1
+	NEWC
+	STSLICECONST xbe97064a
+	PUSH S5
+	STUR 128
+	PUSH S4
+	STIR 8
+	PUSH S3
+	STUR 256
+	PUSH S2
+	STUR 256
+	STBREFR
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+}
+IF
+BLKDROP 4
+; end function getDecodedEventData
+PUSHCONT {
+	CALL $c7_to_c4$
+}
+IF
+TRUE
+SETGLOB 7
+
+.globl	getDecodedEventData_internal
+.type	getDecodedEventData_internal, @function
+; function getDecodedEventData
+;; ret param: tokens
+PUSHINT 0
+;; ret param: wid
+PUSHINT 0
+;; ret param: owner_addr
+PUSHINT 0
+;; ret param: owner_pubkey
+PUSHINT 0
+;; get member eventData
+;; push identifier eventData
+GETGLOB 14
+INDEX 2
+CTOS
+LDU 128
+LDI 8
+LDU 256
+LDU 256
+; colValue
+DROP
+REVERSE 4, 0
+; expValue
+; end expValue
+; colValue
+POP S7
+; end colValue
+; expValue
+; end expValue
+; colValue
+POP S5
+; end colValue
+; expValue
+; end expValue
+; colValue
+POP S3
+; end colValue
+; expValue
+; end expValue
+; colValue
+NIP
+; end colValue
+;; returning named params
+; end function getDecodedEventData
+
+.globl	transferAll_internal
+.type	transferAll_internal, @function
+;; param: receiver
+; function transferAll
+;; transfer()
+;; push identifier receiver
+DUP
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 109
+STZEROES
+STSLICECONST 0
+STSLICECONST 0
+ENDC
+PUSHINT 128
+SENDRAWMSG
+DROP
+; end function transferAll
 
 .globl	c7_to_c4
 .type	c7_to_c4, @function
@@ -903,39 +968,39 @@ GETGLOB 11
 GETGLOB 12
 GETGLOB 13
 GETGLOB 14
-GETGLOB 16
-REVERSE 8, 0
+REVERSE 7, 0
 STBREF
 STU 16
-STI 1
 STSLICE
 STREF
 STU 256
 SWAP
-UNTUPLE 9
+UNTUPLE 10
 NEWC
 NEWC
+PUSH S3
+STSLICER
 PUSH S2
-STSLICER
-STBREFR
-PUSH S9
-STUR 256
-PUSH S8
-STUR 32
-PUSH S7
 STREFR
-PUSH S6
-STUR 32
-PUSH S5
+STBREFR
+PUSH S10
 STUR 256
-PUSH S4
+PUSH S9
+STUR 32
+PUSH S8
+STREFR
+PUSH S7
+STUR 32
+PUSH S6
+STUR 256
+PUSH S5
 STSLICER
+PUSH S4
+STUR 16
 PUSH S3
 STUR 16
-PUSH S2
-STUR 16
-XCHG s9
-BLKDROP 9
+XCHG s10
+BLKDROP 10
 STBREFR
 ENDC
 POP C4
@@ -951,7 +1016,6 @@ LDREFRTOS
 PLDU 256
 SETGLOB 15
 LDU 16
-LDI 1
 LDMSGADDR
 LDREF
 LDU 256
@@ -968,8 +1032,9 @@ LDU 16
 PLDU 16
 BLKSWAP 1, 8
 CTOS
-TUPLE 9
-SETGLOB 16
+LDMSGADDR
+PLDREF
+TUPLE 10
 SETGLOB 14
 SETGLOB 13
 SETGLOB 12
@@ -995,7 +1060,6 @@ PUSHCONT {
 	PLDU 256
 	SETGLOB 15
 	LDU 16
-	LDI 1
 	LDMSGADDR
 	LDREF
 	LDU 256
@@ -1012,8 +1076,9 @@ PUSHCONT {
 	PLDU 16
 	BLKSWAP 1, 8
 	CTOS
-	TUPLE 9
-	SETGLOB 16
+	LDMSGADDR
+	PLDREF
+	TUPLE 10
 	SETGLOB 14
 	SETGLOB 13
 	SETGLOB 12
@@ -1040,22 +1105,16 @@ PUSHCONT {
 	}
 	IFELSE
 	SETGLOB 10
-	; init callbackReceived
-	PUSHINT 0
-	SETGLOB 11
 	; init ethereumEventConfiguration
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
-	SETGLOB 12
+	SETGLOB 11
 	; init ethereumEventCode
 	NEWC
 	ENDC
-	SETGLOB 13
+	SETGLOB 12
 	; init ethereumEventPubKey
 	PUSHINT 0
-	SETGLOB 14
-	; init state
-	PUSHINT 0
-	SETGLOB 15
+	SETGLOB 13
 	; init eventData
 	PUSHINT 0
 	PUSHINT 0
@@ -1067,8 +1126,13 @@ PUSHCONT {
 	PUSHINT 0
 	PUSHINT 0
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
-	TUPLE 9
-	SETGLOB 16
+	NEWC
+	ENDC
+	TUPLE 10
+	SETGLOB 14
+	; init callbackCounter
+	PUSHINT 0
+	SETGLOB 15
 	; set contract pubkey
 	PUSHINT 0
 	SWAP
@@ -1083,9 +1147,9 @@ PUSHCONT {
 	SETGLOB 6
 	TRUE
 	SETGLOB 1
-	;; init state var: callbackReceived
-	FALSE
-	SETGLOB 11
+	;; init state var: callbackCounter
+	PUSHINT 0
+	SETGLOB 15
 }
 IFELSE
 

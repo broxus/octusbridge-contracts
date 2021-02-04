@@ -9,6 +9,9 @@ let EventEmitter;
 const tonWrapper = new freeton.TonWrapper({
   network: process.env.TON_NETWORK,
   seed: process.env.TON_SEED,
+  messageExpirationTimeout: 240000,
+  waitForTimeout: 60000,
+  debug: Boolean(process.env.TON_WRAPPER_DEBUG),
 });
 
 

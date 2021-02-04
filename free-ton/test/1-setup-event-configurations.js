@@ -20,6 +20,9 @@ let EthereumEventConfigurationContracts;
 const tonWrapper = new freeton.TonWrapper({
   network: process.env.TON_NETWORK,
   seed: process.env.TON_SEED,
+  waitForTimeout: 60000,
+  messageExpirationTimeout: 240000,
+  debug: Boolean(process.env.TON_WRAPPER_DEBUG),
 });
 
 const relaysManager = new utils.RelaysManager(
@@ -63,7 +66,7 @@ describe('Test event configurations', function() {
   });
   
   describe('Setup', async function() {
-    it('Check initial state', async function() {
+    it('Check configurations initial state in bridge', async function() {
       for (const eventConfigurationID of [111, 222, 333]) {
         const {
           confirmRelays,
@@ -81,6 +84,31 @@ describe('Test event configurations', function() {
           '0:0000000000000000000000000000000000000000000000000000000000000000',
           `Wrong address for ${eventConfigurationID} configuration`
         );
+      }
+    });
+    
+    it('Check initial state of the configurations', async function() {
+      const CellEncoder = await freeton
+        .requireContract(tonWrapper, 'CellEncoder');
+      await CellEncoder.loadMigration();
+
+      const meta = await CellEncoder.runLocal('encodeConfigurationMeta', {
+        rootToken: relaysManager.accounts[0].address,
+      });
+      
+      for (const configuration of [
+        ValidEthereumEventConfiguration,
+        InvalidEthereumEventConfiguration,
+        TonEventConfiguration
+      ]) {
+        const details = await configuration.runLocal('getDetails', {});
+        
+        expect(details._basicInitData.bridgeAddress)
+          .to
+          .equal(Bridge.address, 'Wrong bridge address in configuration');
+        expect(details._basicInitData.meta)
+          .to
+          .equal(meta, `Wrong configuration meta in `);
       }
     });
   });

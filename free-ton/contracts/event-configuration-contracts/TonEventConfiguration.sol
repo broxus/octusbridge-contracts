@@ -28,7 +28,9 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, ErrorCodes
 
     function buildEventInitData(
         IEvent.TonEventVoteData eventVoteData
-    ) internal view returns(IEvent.TonEventInitData eventInitData) {
+    ) internal view returns(
+        IEvent.TonEventInitData eventInitData
+    ) {
         eventInitData.eventTransaction = eventVoteData.eventTransaction;
         eventInitData.eventTimestamp = eventVoteData.eventTimestamp;
         eventInitData.eventTransactionLt = eventVoteData.eventTransactionLt;
@@ -38,6 +40,8 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, ErrorCodes
         eventInitData.tonEventConfiguration = address(this);
         eventInitData.requiredConfirmations = basicInitData.eventRequiredConfirmations;
         eventInitData.requiredRejects = basicInitData.eventRequiredConfirmations;
+
+        eventInitData.configurationMeta = basicInitData.meta;
     }
 
     /*
