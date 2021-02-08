@@ -3,7 +3,8 @@ const { expect } = require('chai');
 const freeton = require('ton-testing-suite');
 const _ = require('underscore');
 const utils = require('./utils');
-
+const BigNumber = require('bignumber.js');
+BigNumber.config({ EXPONENTIAL_AT: 257 });
 
 let Bridge;
 let CellEncoder;
