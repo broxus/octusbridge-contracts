@@ -54,7 +54,7 @@ describe('Test TON event', async function() {
       wid: 0,
       addr: freeton.utils.getRandomNonce(),
       tokens: 123,
-      ethereum_address: freeton.utils.stringToBytesArray('123'),
+      ethereum_address: new BigNumber('0x83Fb4204C0E6855Ee89B1Cf53d73da3DA6765232'.toLowerCase(), 16).toString(),
     };
 
     it('Initialize event', async function() {
@@ -146,9 +146,9 @@ describe('Test TON event', async function() {
         .equal(eventDataStructure.tokens, 'Wrong event data decoding - tokens');
 
       // TODO: find out what's wrong with decoding ethereum_address
-      // expect(decodedData.ethereum_address.toString())
+      // expect(decodedData.ethereum_address.toNumber())
       //   .to
-      //   .equal(eventDataStructure.ethereum_address, 'Wrong event data decoding - ethereum_address');
+      //   .equal(eventDataStructure.ethereum_address.toNumber(), 'Wrong event data decoding - ethereum_address');
     });
   
     it('Check owner address received message on event creation', async function() {
@@ -222,7 +222,7 @@ describe('Test TON event', async function() {
       wid: 0,
       addr: freeton.utils.getRandomNonce(),
       tokens: 123,
-      ethereum_address: freeton.utils.stringToBytesArray('123'),
+      ethereum_address: new BigNumber('0x83Fb4204C0E6855Ee89B1Cf53d73da3DA6765232'.toLowerCase(), 16).toString(),
     };
 
     it('Initialize event', async function() {

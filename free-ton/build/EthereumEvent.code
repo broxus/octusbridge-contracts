@@ -1703,7 +1703,15 @@ PUSHCONT {
 }
 IFNOT
 ; Decode ethereum_address
-LDREF
+LDUQ 160
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 160
+}
+IFNOT
 ENDS
 ;; param: wid
 ;; param: addr
@@ -1729,7 +1737,7 @@ PUSH S4
 STUR 128
 ;; push identifier ethereum_address
 PUSH S3
-STREFR
+STUR 160
 ; colValue
 NIP
 ; end colValue
@@ -1761,7 +1769,7 @@ PUSHCONT {
 	STZEROES
 	STSLICECONST 0
 	STSLICECONST 0
-	STSLICECONST xca1fecb3
+	STSLICECONST x922836c3
 	PUSH S1
 	STREFR
 	ENDC
@@ -1804,7 +1812,7 @@ PUSH S4
 STUR 128
 ;; push identifier ethereum_address
 PUSH S3
-STREFR
+STUR 160
 ; colValue
 NIP
 ; end colValue
@@ -1838,16 +1846,14 @@ PUSHINT 0
 ;; ret param: tokens
 PUSHINT 0
 ;; ret param: ethereum_address
-NEWC
-ENDC
+PUSHINT 0
 ;; push identifier data
 PUSH S4
 CTOS
 LDI 8
 LDU 256
 LDU 128
-;; decode bytes
-LDREF
+LDU 160
 ; colValue
 DROP
 REVERSE 4, 0
@@ -1891,7 +1897,7 @@ PUSHCONT {
 	STZEROES
 	STSLICECONST 0
 	STSLICECONST 0
-	STSLICECONST xf9530da5
+	STSLICECONST xd152101a
 	PUSH S4
 	STIR 8
 	PUSH S3
@@ -1899,7 +1905,7 @@ PUSHCONT {
 	PUSH S2
 	STUR 128
 	PUSH S1
-	STREFR
+	STUR 160
 	ENDC
 	PUSHINT 1
 	SENDRAWMSG
@@ -1925,16 +1931,14 @@ PUSHINT 0
 ;; ret param: tokens
 PUSHINT 0
 ;; ret param: ethereum_address
-NEWC
-ENDC
+PUSHINT 0
 ;; push identifier data
 PUSH S4
 CTOS
 LDI 8
 LDU 256
 LDU 128
-;; decode bytes
-LDREF
+LDU 160
 ; colValue
 DROP
 REVERSE 4, 0

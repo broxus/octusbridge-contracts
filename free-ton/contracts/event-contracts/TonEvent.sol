@@ -142,7 +142,7 @@ contract TonEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
         int8 wid,
         uint256 addr,
         uint128 tokens,
-        bytes ethereum_address,
+        uint160 ethereum_address,
         address owner_address
     ) {
         (rootToken) = decodeConfigurationMeta(initData.configurationMeta);

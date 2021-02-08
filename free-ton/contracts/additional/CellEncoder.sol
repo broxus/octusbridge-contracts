@@ -64,7 +64,7 @@ contract CellEncoder {
         int8 wid,
         uint addr,
         uint128 tokens,
-        bytes ethereum_address
+        uint160 ethereum_address
     ) public pure returns(
         TvmCell data
     ) {
@@ -81,13 +81,13 @@ contract CellEncoder {
         int8 wid,
         uint addr,
         uint128 tokens,
-        bytes ethereum_address
+        uint160 ethereum_address
     ) {
         (
             wid,
             addr,
             tokens,
             ethereum_address
-        ) = data.toSlice().decode(int8, uint, uint128, bytes);
+        ) = data.toSlice().decode(int8, uint, uint128, uint160);
     }
 }
