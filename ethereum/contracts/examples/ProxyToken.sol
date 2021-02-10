@@ -31,6 +31,7 @@ contract ProxyToken is IProxy, RedButton {
     }
 
     Configuration public configuration;
+    mapping(uint256 => mapping(uint64 => bool)) alreadyProcessed;
 
     /*
         Calculate the fee amount
@@ -126,6 +127,9 @@ contract ProxyToken is IProxy, RedButton {
             payload,
             (TONEvent)
         );
+
+        require(!alreadyProcessed[_event.eventTransaction][_event.eventTransactionLt], 'Already processed');
+        alreadyProcessed[_event.eventTransaction][_event.eventTransactionLt] = true;
 
         (int8 ton_wid, uint256 ton_addr, uint128 amount, uint160 addr_n) = abi.decode(
             _event.eventData,
