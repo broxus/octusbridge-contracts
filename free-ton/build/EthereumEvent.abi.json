@@ -105,7 +105,7 @@
 				{"name":"wid","type":"int8"},
 				{"name":"addr","type":"uint256"},
 				{"name":"tokens","type":"uint128"},
-				{"name":"ethereum_address","type":"bytes"}
+				{"name":"ethereum_address","type":"uint160"}
 			],
 			"outputs": [
 				{"name":"data","type":"cell"}
@@ -120,7 +120,7 @@
 				{"name":"wid","type":"int8"},
 				{"name":"addr","type":"uint256"},
 				{"name":"tokens","type":"uint128"},
-				{"name":"ethereum_address","type":"bytes"}
+				{"name":"ethereum_address","type":"uint160"}
 			]
 		}
 	],

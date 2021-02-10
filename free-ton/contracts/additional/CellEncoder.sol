@@ -64,13 +64,15 @@ contract CellEncoder {
         int8 wid,
         uint addr,
         uint128 tokens,
-        bytes ethereum_address
+        uint160 ethereum_address
     ) public pure returns(
         TvmCell data
     ) {
         TvmBuilder builder;
 
-        builder.store(wid, addr, tokens, ethereum_address);
+        uint32 zero_event_id = 0;
+
+        builder.store(zero_event_id, wid, addr, tokens, ethereum_address);
 
         data = builder.toCell();
     }
@@ -81,13 +83,14 @@ contract CellEncoder {
         int8 wid,
         uint addr,
         uint128 tokens,
-        bytes ethereum_address
+        uint160 ethereum_address
     ) {
         (
+            , // event_id
             wid,
             addr,
             tokens,
             ethereum_address
-        ) = data.toSlice().decode(int8, uint, uint128, bytes);
+        ) = data.toSlice().decode(uint32, int8, uint, uint128, uint160);
     }
 }

@@ -31,6 +31,7 @@ contract ProxyToken is IProxy, RedButton {
     }
 
     Configuration public configuration;
+    mapping(uint256 => mapping(uint64 => bool)) alreadyProcessed;
 
     /*
         Calculate the fee amount
@@ -127,27 +128,20 @@ contract ProxyToken is IProxy, RedButton {
             (TONEvent)
         );
 
-        (uint128 amount, bytes memory addr_bytes) = abi.decode(
+        require(!alreadyProcessed[_event.eventTransaction][_event.eventTransactionLt], 'Already processed');
+        alreadyProcessed[_event.eventTransaction][_event.eventTransactionLt] = true;
+
+        (int8 ton_wid, uint256 ton_addr, uint128 amount, uint160 addr_n) = abi.decode(
             _event.eventData,
-            (uint128, bytes)
+            (int8, uint256, uint128, uint160)
         );
 
-        address addr = bytesToAddress(addr_bytes);
+        address addr = address(addr_n);
 
         uint128 fee = getFeeAmount(amount);
 
         IERC20(configuration.token).universalTransfer(addr, amount - fee);
 
         emit TokenUnlock(amount - fee, addr);
-    }
-
-    function bytesToAddress(
-        bytes memory bys
-    ) private pure returns (address) {
-        address addr;
-        assembly {
-            addr := div(mload(add(bys, 0x20)), 0x1000000000000000000000000)
-        }
-        return addr;
     }
 }

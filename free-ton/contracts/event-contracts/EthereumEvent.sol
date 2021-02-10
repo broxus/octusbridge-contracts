@@ -44,7 +44,9 @@ contract EthereumEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
         (,,,,,address owner_address) = getDecodedData();
 
         // TODO: discuss minimum value of the notification
-        IEventNotificationReceiver(owner_address).notifyEthereumEventStatusChanged{value: 0.00001 ton}(status);
+        if (owner_address.value != 0) {
+            IEventNotificationReceiver(owner_address).notifyEthereumEventStatusChanged{value: 0.00001 ton}(status);
+        }
     }
 
     /*
@@ -126,7 +128,7 @@ contract EthereumEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
         status = EthereumEventStatus.Executed;
 
         notifyEventStatusChanged();
-        IProxy(initData.proxyAddress).broxusBridgeCallback{value: 0, flag: 64}(initData, msg.sender);
+        IProxy(initData.proxyAddress).broxusBridgeCallback{value: 0, flag: 128}(initData, msg.sender);
     }
 
     /*

@@ -56,24 +56,35 @@ SETGLOB 7
 ; function notifyEventStatusChanged
 CALL $getDecodedData_internal$
 ;; decl: owner_address
-;; Remote call IEventNotificationReceiver.notifyTonEventStatusChanged
+;; if
+;; get member value
 ;; push identifier owner_address
 DUP
-NEWC
-STSLICECONST x62_
-STSLICE
-PUSHSLICE x30186a0000000000000000000000000004_
-STSLICER
-STSLICECONST 0
-STSLICECONST 0
-STSLICECONST x4867b01a
-;; status
-;; push identifier status
-GETGLOB 31
-STUR 8
-ENDC
-PUSHINT 1
-SENDRAWMSG
+PARSEMSGADDR
+INDEX 3
+PLDU 256
+PUSHCONT {
+	;; Remote call IEventNotificationReceiver.notifyTonEventStatusChanged
+	;; push identifier owner_address
+	DUP
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	PUSHSLICE x30186a0000000000000000000000000004_
+	STSLICER
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST x4867b01a
+	;; status
+	;; push identifier status
+	GETGLOB 31
+	STUR 8
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+}
+IF
+;; end if
 BLKDROP 6
 ; end function notifyEventStatusChanged
 
@@ -899,8 +910,7 @@ PUSHINT 0
 ;; ret param: tokens
 PUSHINT 0
 ;; ret param: ethereum_address
-NEWC
-ENDC
+PUSHINT 0
 ;; ret param: owner_address
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 ;; get member configurationMeta
@@ -974,7 +984,7 @@ PUSHCONT {
 	STSLICECONST 0
 	STSLICECONST 1
 	NEWC
-	STSLICECONST xba723ac9
+	STSLICECONST xb82495d3
 	PUSH S7
 	STSLICER
 	PUSH S6
@@ -984,7 +994,7 @@ PUSHCONT {
 	PUSH S4
 	STUR 128
 	PUSH S3
-	STREFR
+	STUR 160
 	NEWC
 	PUSH S3
 	STSLICER
@@ -1016,8 +1026,7 @@ PUSHINT 0
 ;; ret param: tokens
 PUSHINT 0
 ;; ret param: ethereum_address
-NEWC
-ENDC
+PUSHINT 0
 ;; ret param: owner_address
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 ;; get member configurationMeta
@@ -1562,7 +1571,15 @@ PUSHCONT {
 }
 IFNOT
 ; Decode ethereum_address
-LDREF
+LDUQ 160
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 160
+}
+IFNOT
 ENDS
 ;; param: wid
 ;; param: addr
@@ -1574,35 +1591,40 @@ NEWC
 ENDC
 NEWC
 ;; decl: builder
+PUSHINT 0
+;; decl: zero_event_id
 ; expValue
-DUP
+PUSH S1
 ; end expValue
+;; push identifier zero_event_id
+PUSH S1
+STUR 32
 ;; push identifier wid
-PUSH S6
+PUSH S7
 STIR 8
 ;; push identifier addr
-PUSH S5
+PUSH S6
 STUR 256
 ;; push identifier tokens
-PUSH S4
+PUSH S5
 STUR 128
 ;; push identifier ethereum_address
-PUSH S3
-STREFR
+PUSH S4
+STUR 160
 ; colValue
-NIP
+POP S2
 ; end colValue
 ;; push identifier builder
-DUP
+PUSH S1
 ENDC
 ; expValue
 ; end expValue
 ; colValue
-POP S2
+POP S3
 ; end colValue
 ;; returning named params
-BLKSWAP 4, 2
-BLKDROP 5
+BLKSWAP 4, 3
+BLKDROP 6
 ;; emitting 1 value(s)
 PUSH S1
 EQINT -1
@@ -1620,7 +1642,7 @@ PUSHCONT {
 	STZEROES
 	STSLICECONST 0
 	STSLICECONST 0
-	STSLICECONST xca1fecb3
+	STSLICECONST x922836c3
 	PUSH S1
 	STREFR
 	ENDC
@@ -1649,35 +1671,40 @@ NEWC
 ENDC
 NEWC
 ;; decl: builder
+PUSHINT 0
+;; decl: zero_event_id
 ; expValue
-DUP
+PUSH S1
 ; end expValue
+;; push identifier zero_event_id
+PUSH S1
+STUR 32
 ;; push identifier wid
-PUSH S6
+PUSH S7
 STIR 8
 ;; push identifier addr
-PUSH S5
+PUSH S6
 STUR 256
 ;; push identifier tokens
-PUSH S4
+PUSH S5
 STUR 128
 ;; push identifier ethereum_address
-PUSH S3
-STREFR
+PUSH S4
+STUR 160
 ; colValue
-NIP
+POP S2
 ; end colValue
 ;; push identifier builder
-DUP
+PUSH S1
 ENDC
 ; expValue
 ; end expValue
 ; colValue
-POP S2
+POP S3
 ; end colValue
 ;; returning named params
-BLKSWAP 4, 2
-BLKDROP 5
+BLKSWAP 4, 3
+BLKDROP 6
 ; end function encodeTonEventData
 
 .globl	decodeTonEventData
@@ -1697,19 +1724,19 @@ PUSHINT 0
 ;; ret param: tokens
 PUSHINT 0
 ;; ret param: ethereum_address
-NEWC
-ENDC
+PUSHINT 0
 ;; push identifier data
 PUSH S4
 CTOS
+LDU 32
 LDI 8
 LDU 256
 LDU 128
-;; decode bytes
-LDREF
+LDU 160
 ; colValue
 DROP
-REVERSE 4, 0
+REVERSE 5, 0
+DROP
 ; expValue
 ; end expValue
 ; colValue
@@ -1750,7 +1777,7 @@ PUSHCONT {
 	STZEROES
 	STSLICECONST 0
 	STSLICECONST 0
-	STSLICECONST xf9530da5
+	STSLICECONST xd152101a
 	PUSH S4
 	STIR 8
 	PUSH S3
@@ -1758,7 +1785,7 @@ PUSHCONT {
 	PUSH S2
 	STUR 128
 	PUSH S1
-	STREFR
+	STUR 160
 	ENDC
 	PUSHINT 1
 	SENDRAWMSG
@@ -1784,19 +1811,19 @@ PUSHINT 0
 ;; ret param: tokens
 PUSHINT 0
 ;; ret param: ethereum_address
-NEWC
-ENDC
+PUSHINT 0
 ;; push identifier data
 PUSH S4
 CTOS
+LDU 32
 LDI 8
 LDU 256
 LDU 128
-;; decode bytes
-LDREF
+LDU 160
 ; colValue
 DROP
-REVERSE 4, 0
+REVERSE 5, 0
+DROP
 ; expValue
 ; end expValue
 ; colValue
