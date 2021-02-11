@@ -28,8 +28,10 @@ const tonWrapper = new freeton.TonWrapper({
   const relaysAmount = parseInt(process.env.RELAYS_AMOUNT);
 
   await tonWrapper.setup(relaysAmount);
-
-  tonWrapper.keys.map((key, i) => console.log(`Key #${i} - ${JSON.stringify(key)}`));
+  
+  if (Boolean(process.env.LOG_KEYS)) {
+    tonWrapper.keys.map((key, i) => console.log(`Key #${i} - ${JSON.stringify(key)}`));
+  }
 
   const migration = new freeton.Migration(tonWrapper);
   
