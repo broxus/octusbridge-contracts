@@ -1,6 +1,5 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.6.2;
-pragma experimental ABIEncoderV2;
+// SPDX-License-Identifier: Apache 2.0
+pragma solidity ^0.7.0;
 
 import "./../libraries/ECDSA.sol";
 import "./../libraries/Array.sol";
@@ -15,18 +14,6 @@ contract DistributedOwnable {
 
     event OwnershipGranted(address indexed newOwner);
     event OwnershipRemoved(address indexed removedOwner);
-
-    /**
-     * @dev Initializes the contract setting the deployer as the initial owner.
-     * @param owners - List of initial owners addresses
-     */
-    constructor(
-        address[] memory owners
-    ) public {
-        for (uint i=0; i < owners.length; i++) {
-            grantOwnership(owners[i]);
-        }
-    }
 
     /**
      * @notice Check if account has ownership

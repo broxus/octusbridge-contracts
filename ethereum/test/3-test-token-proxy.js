@@ -1,13 +1,15 @@
 const { expect } = require('chai');
 const logger = require('mocha-logger');
+const BigNumber = require('bignumber.js');
+const { deployProxy } = require('@openzeppelin/truffle-upgrades');
 const utils = require('./utils');
 
 const Bridge = artifacts.require("Bridge");
-const ProxyToken = artifacts.require("ProxyToken");
+const ProxyTokenLock = artifacts.require("ProxyTokenLock");
 const TestToken = artifacts.require("TestToken");
 
 let bridge;
-let proxyToken;
+let proxyTokenLock;
 let testToken;
 
 
@@ -16,24 +18,45 @@ const tokensToUnlock = 80000;
 
 contract('Test token proxy', async function(accounts) {
   before(async function() {
-    bridge = await Bridge.deployed();
-    proxyToken = await ProxyToken.deployed();
-    testToken = await TestToken.deployed();
+    const {
+      address: admin,
+    } = web3.eth.accounts.create();
+  
+    bridge = await deployProxy(
+      Bridge,
+      [accounts, admin],
+    );
+
+    testToken = await TestToken.new();
+
+    proxyTokenLock = await deployProxy(
+      ProxyTokenLock,
+      [{
+        token: testToken.address,
+        bridge: bridge.address,
+        active: true,
+        requiredConfirmations: 2,
+        fee: {
+          numerator: 1,
+          denominator: 100,
+        }
+      }, admin],
+    );
   });
   
   describe('Test lock tokens', async function() {
     it('Approve tokens', async function() {
-      await testToken.approve.sendTransaction(proxyToken.address, tokensToLock);
+      await testToken.approve.sendTransaction(proxyTokenLock.address, tokensToLock);
       
-      expect((await testToken.allowance.call(accounts[0], proxyToken.address)).toNumber())
+      expect((await testToken.allowance.call(accounts[0], proxyTokenLock.address)).toNumber())
         .to
         .equal(tokensToLock, 'Wrong proxy token allowance');
     });
   
     it('Lock tokens', async function() {
-      await proxyToken.lockTokens.sendTransaction(tokensToLock, 0, 123, 123);
+      await proxyTokenLock.lockTokens.sendTransaction(tokensToLock, 0, 123, 123);
       
-      expect((await testToken.balanceOf.call(proxyToken.address)).toNumber())
+      expect((await testToken.balanceOf.call(proxyTokenLock.address)).toNumber())
         .to
         .equal(tokensToLock, 'Wrong proxy token balance');
     });
@@ -43,10 +66,10 @@ contract('Test token proxy', async function(accounts) {
     it('Unlock tokens', async function() {
       const receiver = '0xdF5ba068d01701c94663504095d492CB7bf64dA1';
 
-      // Encode (uint amount, bytes receiver) event data
+      // Encode (ton address, ) event data
       const eventData = web3.eth.abi.encodeParameters(
-        ['uint128', 'bytes'],
-        [tokensToUnlock, receiver]
+        ['int8', 'uint256', 'uint128', 'uint160'],
+        [0, 123, tokensToUnlock, BigNumber(receiver.toLowerCase())],
       );
       
       logger.log(`Event data: ${eventData}`);
@@ -91,11 +114,11 @@ contract('Test token proxy', async function(accounts) {
         .to
         .equal(0, 'Receiver balance should be zero before unlock');
       
-      const feeAmount = (await proxyToken.getFeeAmount.call(tokensToUnlock)).toNumber();
+      const feeAmount = (await proxyTokenLock.getFeeAmount.call(tokensToUnlock)).toNumber();
       
       logger.log(`Fee amount: ${feeAmount} (Ratio ${feeAmount / tokensToUnlock})`);
       
-      await proxyToken.broxusBridgeCallback.sendTransaction(
+      await proxyTokenLock.broxusBridgeCallback.sendTransaction(
         tonEvent,
         signatures
       );
@@ -104,7 +127,7 @@ contract('Test token proxy', async function(accounts) {
         .to
         .equal(tokensToUnlock - feeAmount, 'Receiver balance should be zero before unlock');
       
-      expect((await testToken.balanceOf.call(proxyToken.address)).toNumber())
+      expect((await testToken.balanceOf.call(proxyTokenLock.address)).toNumber())
         .to
         .equal(tokensToLock - tokensToUnlock + feeAmount, 'Token proxy balance should be non zero because of fee');
     });

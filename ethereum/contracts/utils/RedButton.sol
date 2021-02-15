@@ -1,6 +1,6 @@
-pragma solidity ^0.6.2;
+// SPDX-License-Identifier: Apache 2.0
+pragma solidity ^0.7.0;
 pragma experimental ABIEncoderV2;
-
 
 /*
     Naturally Red Button functionality.
@@ -10,8 +10,10 @@ pragma experimental ABIEncoderV2;
 contract RedButton {
     address public admin;
 
-    /**/
-    function setAdmin(address _admin) internal {
+    /*
+        Internal function for transferring admin ownership
+    */
+    function _setAdmin(address _admin) internal {
         admin = _admin;
     }
 
@@ -22,7 +24,7 @@ contract RedButton {
     */
     function transferAdmin(address _newAdmin) public onlyAdmin {
         require(_newAdmin != address(0), 'Cant set admin to zero address');
-        setAdmin(_newAdmin);
+        _setAdmin(_newAdmin);
     }
 
     modifier onlyAdmin() {

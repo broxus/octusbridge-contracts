@@ -1,4 +1,5 @@
 const { expect } = require('chai');
+const { deployProxy } = require('@openzeppelin/truffle-upgrades');
 const utils = require('./utils');
 
 const Bridge = artifacts.require("Bridge");
@@ -8,7 +9,14 @@ let bridge;
 
 contract('Testing Ethereum bridge', async function(accounts) {
   before(async function() {
-    bridge = await Bridge.deployed();
+    const {
+      address: admin,
+    } = web3.eth.accounts.create();
+    
+    bridge = await deployProxy(
+      Bridge,
+      [accounts, admin],
+    );
   });
   
   it('Check relay signature valid', async function() {

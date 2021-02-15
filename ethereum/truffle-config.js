@@ -1,5 +1,5 @@
 const HDWalletProvider = require("@truffle/hdwallet-provider");
-require('dotenv').config({ path: './../env/ethereum.env' });
+require('dotenv').config({ path: './../settings.env' });
 
 /**
  * Use this file to configure your truffle project. It's seeded with some
@@ -47,17 +47,17 @@ module.exports = {
     //
     env: {
       provider: () => new HDWalletProvider(
-        process.env.ETH_ENV_NETWORK_PRIVATE_KEY,
-        process.env.ETH_ENV_NETWORK_RPC_HTTP
+        process.env.ETH_SEED,
+        process.env.ETH_RPC_HTTP
       ),
-      network_id: process.env.ENV_NETWORK_NETWORK_ID,
-      // gas: parseInt(process.env.ENV_NETWORK_GAS),
-      gasPrice: parseInt(process.env.ETH_ENV_NETWORK_GAS_PRICE),
+      network_id: process.env.ETH_NETWORK_ID,
+      gasPrice: parseInt(process.env.ETH_GAS_PRICE),
     },
     development: {
      host: 'ganache',     // Localhost (default: none)
      port: 8545,            // Standard Ethereum port (default: none)
      network_id: "*",       // Any network (default: none)
+     gasPrice: 100000000000,// 100 gwei
     },
     // Another network with more advanced options...
     // advanced: {
@@ -94,7 +94,7 @@ module.exports = {
   // Configure your compilers
   compilers: {
     solc: {
-      version: "0.6.2",    // Fetch exact version from solc-bin (default: truffle's version)
+      version: "0.7.0",    // Fetch exact version from solc-bin (default: truffle's version)
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
       // settings: {          // See the solidity docs for advice about optimization and evmVersion
        optimizer: {

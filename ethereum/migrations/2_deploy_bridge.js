@@ -1,37 +1,43 @@
+const {
+  deployProxy,
+} = require('@openzeppelin/truffle-upgrades');
+
+
 const Bridge = artifacts.require("Bridge");
-const ProxySimple = artifacts.require("ProxySimple");
-const ProxyToken = artifacts.require("ProxyToken");
-const TestToken = artifacts.require("TestToken");
+const ProxyTokenLock = artifacts.require("ProxyTokenLock");
 
 
 module.exports = async (deployer, network, accounts) => {
-  await deployer.deploy(
-    Bridge,
-    accounts,
-    accounts[0],
-  );
+  const owners = accounts;
+  const admin = '0x3f3F2b555F516ba67f1135269cCA62Bc6f9d07A5';
   
-  await deployer.deploy(
-    ProxySimple,
-    Bridge.address,
+  const token = '0xdac17f958d2ee523a2206206994597c13d831ec7'; // token
+  const requiredConfirmations = 2;
+  
+  await deployProxy(
+    Bridge,
+    [owners, admin],
+    {
+      deployer,
+      initializer: 'initialize'
+    },
   );
 
-  await deployer.deploy(
-    TestToken,
-  );
-  
-  await deployer.deploy(
-    ProxyToken,
-    {
-      token: TestToken.address,
+  await deployProxy(
+    ProxyTokenLock,
+    [{
+      token,
       bridge: Bridge.address,
       active: true,
-      requiredConfirmations: 2,
+      requiredConfirmations,
       fee: {
         numerator: 1,
         denominator: 100,
       }
+    }, admin],
+    {
+      deployer,
+      initializer: 'initialize'
     },
-    accounts[0]
   );
 };
