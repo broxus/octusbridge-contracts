@@ -1,33 +1,40 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.6.2;
+// SPDX-License-Identifier: Apache 2.0
+pragma solidity ^0.7.0;
 pragma experimental ABIEncoderV2;
 
 
-import "@openzeppelin/contracts/math/SafeMath.sol";
 import "./utils/DistributedOwnable.sol";
 import "./interfaces/IBridge.sol";
 import "./utils/Nonce.sol";
 import "./utils/RedButton.sol";
 
+import "@openzeppelin/contracts/proxy/Initializable.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
+
+
 /**
     @title Basic smart contract for implementing Bridge logic.
-    @dev Uses DistributedOwnable contract as identity and access management solution
+    @dev Uses DistributedOwnable contract for storing list of relays.
 **/
-contract Bridge is DistributedOwnable, RedButton, Nonce, IBridge {
+contract Bridge is Initializable, DistributedOwnable, RedButton, Nonce, IBridge {
     using SafeMath for uint;
 
     BridgeConfiguration bridgeConfiguration;
 
     /**
-        @notice Bridge constructor
+        @notice Bridge initializer
         @param owners Initial list of owners addresses
         @param admin Red button caller, probably multisig
     **/
-    constructor(
+    function initialize(
         address[] memory owners,
         address admin
-    ) DistributedOwnable(owners) public {
-        setAdmin(admin);
+    ) public initializer {
+        for (uint i=0; i < owners.length; i++) {
+            grantOwnership(owners[i]);
+        }
+
+        _setAdmin(admin);
     }
 
     /*

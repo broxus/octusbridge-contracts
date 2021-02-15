@@ -1,7 +1,10 @@
-pragma solidity ^0.6.2;
+// SPDX-License-Identifier: Apache 2.0
+pragma solidity ^0.7.0;
 pragma experimental ABIEncoderV2;
 
+import "@openzeppelin/contracts/proxy/Initializable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
 import "./../libraries/UniversalERC20.sol";
 import "./../interfaces/IBridge.sol";
 import "./../interfaces/IProxy.sol";
@@ -14,7 +17,7 @@ import "../utils/RedButton.sol";
     Each ProxyToken corresponds to a single token contract.
     Token has an admin, which can do whatever he want.
 */
-contract ProxyToken is IProxy, RedButton {
+contract ProxyTokenLock is Initializable, IProxy, RedButton {
     using UniversalERC20 for IERC20;
 
     struct Fee {
@@ -43,12 +46,12 @@ contract ProxyToken is IProxy, RedButton {
         return configuration.fee.numerator * amount / configuration.fee.denominator;
     }
 
-    constructor(
+    function initialize(
         Configuration memory _configuration,
         address _admin
-    ) public {
+    ) public initializer {
         _setConfiguration(_configuration);
-        setAdmin(_admin);
+        _setAdmin(_admin);
     }
 
     function _setConfiguration(
