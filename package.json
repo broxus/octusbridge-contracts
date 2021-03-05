@@ -14,11 +14,9 @@
     "@openzeppelin/contracts": "^3.4.0",
     "@truffle/hdwallet-provider": "^1.2.0",
     "bignumber.js": "^9.0.1",
-    "chai": "^4.2.0",
     "commander": "^6.2.1",
     "directory-tree": "^2.2.5",
     "dotenv": "^8.2.0",
-    "ethers": "^5.0.25",
     "ganache-cli": "^6.12.1",
     "minimist": "^1.2.5",
     "mocha": "^8.2.1",
@@ -30,11 +28,21 @@
     "ton-testing-suite": "^1.2.1",
     "truffle": "^5.1.51",
     "truffle-export-abi": "^1.0.1",
-    "underscore": "^1.12.0",
-    "web3": "^1.3.0"
+    "underscore": "^1.12.0"
   },
   "devDependencies": {
     "@digix/doxity": "^0.5.2",
-    "@openzeppelin/truffle-upgrades": "^1.5.0"
+    "@nomiclabs/hardhat-ethers": "^2.0.1",
+    "@nomiclabs/hardhat-etherscan": "^2.1.1",
+    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "@nomiclabs/hardhat-web3": "^2.0.0",
+    "@openzeppelin/hardhat-upgrades": "^1.6.0",
+    "@openzeppelin/truffle-upgrades": "^1.5.0",
+    "chai": "^4.3.0",
+    "ethereum-waffle": "^3.2.2",
+    "ethers": "^5.0.31",
+    "hardhat": "^2.0.10",
+    "hardhat-gas-reporter": "^1.0.4",
+    "web3": "^1.3.4"
   }
 }

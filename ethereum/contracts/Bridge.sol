@@ -8,8 +8,8 @@ import "./interfaces/IBridge.sol";
 import "./utils/Nonce.sol";
 import "./utils/RedButton.sol";
 
-import "@openzeppelin/contracts/proxy/Initializable.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/proxy/Initializable.sol";
 
 
 /**
@@ -25,16 +25,20 @@ contract Bridge is Initializable, DistributedOwnable, RedButton, Nonce, IBridge 
         @notice Bridge initializer
         @param owners Initial list of owners addresses
         @param admin Red button caller, probably multisig
+        @param _bridgeConfiguration Bridge configuration
     **/
     function initialize(
         address[] memory owners,
-        address admin
+        address admin,
+        BridgeConfiguration memory _bridgeConfiguration
     ) public initializer {
         for (uint i=0; i < owners.length; i++) {
             grantOwnership(owners[i]);
         }
 
         _setAdmin(admin);
+
+        bridgeConfiguration = _bridgeConfiguration;
     }
 
     /*

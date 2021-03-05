@@ -1,3 +1,6 @@
+const { expect } = require('chai');
+
+
 const signReceipt = async (web3, receipt, signer) => {
   const receiptHash = web3
     .utils
@@ -12,7 +15,7 @@ const signReceipt = async (web3, receipt, signer) => {
 };
 
 
-const PREFIX = "Returned error: VM Exception while processing transaction: ";
+const PREFIX = "VM Exception while processing transaction: ";
 
 async function tryCatch(promise, message) {
   try {
@@ -20,15 +23,21 @@ async function tryCatch(promise, message) {
     throw null;
   }
   catch (error) {
-    // console.log(error.message);
-    assert(error, "Expected an error but did not get one");
-    assert(error.message.startsWith(PREFIX + message), "Expected an error starting with '" + PREFIX + message + "' but got '" + error.message + "' instead");
+    if (!error) {
+      throw Error("Expected an error but did not get one");
+    }
+    
+    if (!error.message.startsWith(PREFIX + message)) {
+      throw Error("Expected an error starting with '" + PREFIX + message + "' but got '" + error.message + "' instead");
+    }
   }
 }
 
 
 module.exports = {
   signReceipt,
+  tryCatch,
+  catchRevertWithMessage : async function(promise, msg) { await tryCatch(promise, `revert ${msg}`); },
   catchRevert            : async function(promise) {await tryCatch(promise, "revert"             );},
   catchOutOfGas          : async function(promise) {await tryCatch(promise, "out of gas"         );},
   catchInvalidJump       : async function(promise) {await tryCatch(promise, "invalid JUMP"       );},
