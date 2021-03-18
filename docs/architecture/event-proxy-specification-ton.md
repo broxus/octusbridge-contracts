@@ -35,4 +35,4 @@ function broxusBridgeCallback(
 
 ## Contract example
 
-The example implementation can be found at [EventProxySimple.sol](../free-ton/contracts/additional/EventProxySimple.sol).
+The example implementation can be found at [EventProxySimple.sol](../../free-ton/contracts/additional/EventProxySimple.sol).

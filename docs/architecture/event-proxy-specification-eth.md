@@ -26,4 +26,4 @@ TODO: add callback details
 
 ## Contract example
 
-The example implementation can be found at [EventProxySimple.sol](../ethereum/contracts/examples/ProxySimple.sol).
+The example implementation can be found at [EventProxySimple.sol](../../ethereum/contracts/examples/ProxySimple.sol).
