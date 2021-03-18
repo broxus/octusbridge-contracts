@@ -14,5 +14,6 @@ interface IProxy {
         uint tonEventConfigurationAddress;
         uint16 requiredConfirmations;
         uint16 requiredRejects;
+        address proxy;
     }
 }

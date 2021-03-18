@@ -131,6 +131,7 @@ contract ProxyTokenLock is Initializable, IProxy, RedButton {
             (TONEvent)
         );
 
+        require(address(this) == _event.proxy, 'Wrong proxy');
         require(!alreadyProcessed[_event.eventTransaction], 'Already processed');
         alreadyProcessed[_event.eventTransaction] = true;
 

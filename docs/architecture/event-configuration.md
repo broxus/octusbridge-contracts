@@ -16,7 +16,7 @@ Configurations contracts live on the TON blockchain. They stores the following d
 - How much TON to send to the Event contract on deploy
 
 And some network-specific parameters.
-Detailed structure of the data can be found in [IEventConfiguration.sol](./../free-ton/contracts/interfaces/IEventConfiguration.sol).
+Detailed structure of the data can be found in [IEventConfiguration.sol](../../free-ton/contracts/interfaces/IEventConfiguration.sol).
 
 ## Initialize pipeline
 
@@ -70,4 +70,4 @@ All the event confirmations / rejects corresponded to this ID won't be accepted 
 
 ## Example
 
-[Ethereum-TON](./../free-ton/contracts/event-configuration-contracts/EthereumEventConfiguration.sol) and [TON-Ethereum](./../free-ton/contracts/event-configuration-contracts/TonEventConfiguration.sol) event configurations.
+[Ethereum-TON](../../free-ton/contracts/event-configuration-contracts/EthereumEventConfiguration.sol) and [TON-Ethereum](../../free-ton/contracts/event-configuration-contracts/TonEventConfiguration.sol) event configurations.

@@ -1,6 +1,6 @@
 # Update Bridge relay set
 
-It possible that relays want to add new relay and remove existing.
+It possible that relays want to add new relay or remove existing.
 To do this, they vote on the TON Bridge and, if update confirmed, transfer the proofs to the Ethereum Bridge.
 
 ## Pipeline
@@ -14,5 +14,3 @@ To do this, they vote on the TON Bridge and, if update confirmed, transfer the p
     1. If update collects required amount of confirmations first, the update comes into force.
     2. Than it removes from the Bridge storage
 4. Anyone can encode `target` for Ethereum Bridge, take the list of signatures and call the Ethereum Bridge
-
-TODO: add method signature
