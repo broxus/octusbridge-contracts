@@ -152,6 +152,7 @@ const tonWrapper = new freeton.TonWrapper({
           eventAddress: new BigNumber('0xc227CE9EdCc60a725DE66A1132171a22ae62a64F'.toLowerCase()),
           eventBlocksToConfirm: 1,
           proxyAddress: eventProxyFutureAddress,
+          startBlockNumber: 0,
         },
       },
       initialBalance: freeton.utils.convertCrystal('100', 'nano')
@@ -209,6 +210,7 @@ const tonWrapper = new freeton.TonWrapper({
       initData: {
         eventAddress: EventEmitter.address,
         proxyAddress: 0,
+        startTimestamp: 0,
       }
     },
     initialBalance: freeton.utils.convertCrystal('100', 'nano')

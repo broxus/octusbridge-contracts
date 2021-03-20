@@ -61,6 +61,8 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Error
         onlyBridge
         transferAfter(basicInitData.bridgeAddress, msg.value)
     {
+        require(eventVoteData.eventBlockNumber >= initData.startBlockNumber, EVENT_BLOCK_NUMBER_LESS_THAN_START);
+
         IEvent.EthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
 
         address ethereumEventAddress = new EthereumEvent{
