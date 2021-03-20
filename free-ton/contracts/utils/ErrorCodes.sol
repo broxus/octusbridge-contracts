@@ -17,6 +17,8 @@ contract ErrorCodes {
 
     // Event configuration contract
     uint16 SENDER_NOT_BRIDGE = 5101;
+    uint16 EVENT_BLOCK_NUMBER_LESS_THAN_START = 5102;
+    uint16 EVENT_TIMESTAMP_LESS_THAN_START = 5103;
 
     // Event contract
     uint16 EVENT_NOT_IN_PROGRESS = 5201;

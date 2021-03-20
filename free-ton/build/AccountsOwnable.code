@@ -41,7 +41,7 @@ PUSHINT 0
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -98,7 +98,7 @@ PUSHINT 0
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -134,7 +134,7 @@ PUSHINT 0
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerEthereumAccounts
-GETGLOB 27
+GETGLOB 29
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -191,7 +191,7 @@ PUSHINT 0
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerEthereumAccounts
-GETGLOB 27
+GETGLOB 29
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -212,7 +212,7 @@ NIP
 ; function _grantOwnership
 ; expValue
 ;; fetch ownerAccounts
-GETGLOB 26
+GETGLOB 28
 ;; push identifier addr
 PUSH S2
 SWAP
@@ -224,11 +224,11 @@ STI 1
 ROTREV
 PUSHINT 267
 DICTSETB
-SETGLOB 26
+SETGLOB 28
 ; end colValue
 ; expValue
 ;; fetch ownerEthereumAccounts
-GETGLOB 27
+GETGLOB 29
 ;; push identifier addr
 PUSH S2
 SWAP
@@ -241,7 +241,7 @@ STU 160
 ROTREV
 PUSHINT 267
 DICTSETB
-SETGLOB 27
+SETGLOB 29
 ; end colValue
 ;; emit OwnershipGranted
 NEWC
@@ -267,7 +267,7 @@ DROP2
 ;; delete
 ; expValue
 ;; fetch ownerAccounts
-GETGLOB 26
+GETGLOB 28
 ;; push identifier addr
 PUSH S1
 SWAP
@@ -279,12 +279,12 @@ DICTDEL
 DROP
 ; colValue
 NIP
-SETGLOB 26
+SETGLOB 28
 ; end colValue
 ;; delete
 ; expValue
 ;; fetch ownerEthereumAccounts
-GETGLOB 27
+GETGLOB 29
 ;; push identifier addr
 PUSH S1
 SWAP
@@ -296,7 +296,7 @@ DICTDEL
 DROP
 ; colValue
 NIP
-SETGLOB 27
+SETGLOB 29
 ; end colValue
 ;; emit OwnershipRemoved
 NEWC
@@ -336,7 +336,7 @@ PUSHINT 0
 NEWDICT
 PAIR
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 DUP
 PUSHINT 267
 DICTMIN
@@ -393,7 +393,7 @@ PUSHCONT {
 		;; push identifier addr
 		PUSH S3
 		;; push identifier ownerEthereumAccounts
-		GETGLOB 27
+		GETGLOB 29
 		PUSHINT 267
 		DICTGET
 		PUSHCONT {
@@ -504,7 +504,7 @@ PUSHINT 0
 NEWDICT
 PAIR
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 DUP
 PUSHINT 267
 DICTMIN
@@ -561,7 +561,7 @@ PUSHCONT {
 		;; push identifier addr
 		PUSH S3
 		;; push identifier ownerEthereumAccounts
-		GETGLOB 27
+		GETGLOB 29
 		PUSHINT 267
 		DICTGET
 		PUSHCONT {
@@ -647,9 +647,13 @@ GETGLOB 24
 GETGLOB 25
 GETGLOB 26
 GETGLOB 27
-PUSHINT 19
+GETGLOB 28
+GETGLOB 29
+PUSHINT 21
 PUSHINT 0
 REVX
+STU 16
+STU 16
 STU 16
 STU 16
 STU 16
@@ -694,8 +698,12 @@ LDU 16
 LDU 16
 LDU 16
 LDU 16
+LDU 16
+LDU 16
 LDDICT
 PLDDICT
+SETGLOB 29
+SETGLOB 28
 SETGLOB 27
 SETGLOB 26
 SETGLOB 25
@@ -746,8 +754,12 @@ PUSHCONT {
 	LDU 16
 	LDU 16
 	LDU 16
+	LDU 16
+	LDU 16
 	LDDICT
 	PLDDICT
+	SETGLOB 29
+	SETGLOB 28
 	SETGLOB 27
 	SETGLOB 26
 	SETGLOB 25
@@ -776,10 +788,10 @@ PUSHCONT {
 	PLDDICT   ; D
 	; init ownerAccounts
 	NEWDICT
-	SETGLOB 26
+	SETGLOB 28
 	; init ownerEthereumAccounts
 	NEWDICT
-	SETGLOB 27
+	SETGLOB 29
 	; init ADDRESS_IS_NOT_OWNER
 	PUSHINT 0
 	SETGLOB 10
@@ -807,27 +819,33 @@ PUSHCONT {
 	; init SENDER_NOT_BRIDGE
 	PUSHINT 0
 	SETGLOB 18
-	; init EVENT_NOT_IN_PROGRESS
+	; init EVENT_BLOCK_NUMBER_LESS_THAN_START
 	PUSHINT 0
 	SETGLOB 19
-	; init SENDER_NOT_EVENT_CONFIGURATION
+	; init EVENT_TIMESTAMP_LESS_THAN_START
 	PUSHINT 0
 	SETGLOB 20
-	; init KEY_ALREADY_CONFIRMED
+	; init EVENT_NOT_IN_PROGRESS
 	PUSHINT 0
 	SETGLOB 21
-	; init KEY_ALREADY_REJECTED
+	; init SENDER_NOT_EVENT_CONFIGURATION
 	PUSHINT 0
 	SETGLOB 22
-	; init EVENT_NOT_CONFIRMED
+	; init KEY_ALREADY_CONFIRMED
 	PUSHINT 0
 	SETGLOB 23
-	; init TOO_LOW_MSG_VALUE
+	; init KEY_ALREADY_REJECTED
 	PUSHINT 0
 	SETGLOB 24
-	; init WRONG_TVM_KEY
+	; init EVENT_NOT_CONFIRMED
 	PUSHINT 0
 	SETGLOB 25
+	; init TOO_LOW_MSG_VALUE
+	PUSHINT 0
+	SETGLOB 26
+	; init WRONG_TVM_KEY
+	PUSHINT 0
+	SETGLOB 27
 	; set contract pubkey
 	PUSHINT 0
 	SWAP
@@ -869,27 +887,33 @@ PUSHCONT {
 	;; init state var: SENDER_NOT_BRIDGE
 	PUSHINT 5101
 	SETGLOB 18
+	;; init state var: EVENT_BLOCK_NUMBER_LESS_THAN_START
+	PUSHINT 5102
+	SETGLOB 19
+	;; init state var: EVENT_TIMESTAMP_LESS_THAN_START
+	PUSHINT 5103
+	SETGLOB 20
 	;; init state var: EVENT_NOT_IN_PROGRESS
 	PUSHINT 5201
-	SETGLOB 19
+	SETGLOB 21
 	;; init state var: SENDER_NOT_EVENT_CONFIGURATION
 	PUSHINT 5202
-	SETGLOB 20
+	SETGLOB 22
 	;; init state var: KEY_ALREADY_CONFIRMED
 	PUSHINT 5203
-	SETGLOB 21
+	SETGLOB 23
 	;; init state var: KEY_ALREADY_REJECTED
 	PUSHINT 5204
-	SETGLOB 22
+	SETGLOB 24
 	;; init state var: EVENT_NOT_CONFIRMED
 	PUSHINT 5205
-	SETGLOB 23
+	SETGLOB 25
 	;; init state var: TOO_LOW_MSG_VALUE
 	PUSHINT 5206
-	SETGLOB 24
+	SETGLOB 26
 	;; init state var: WRONG_TVM_KEY
 	PUSHINT 5301
-	SETGLOB 25
+	SETGLOB 27
 }
 IFELSE
 

@@ -223,6 +223,27 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     }
 
     /*
+        Get all configurations.
+        @returns ids List of  event configuration ids
+        @returns addrs List of event configuration addresses
+        @returns statuses List of event configuration status
+        @returns _types List of event configurations types
+    */
+    function getEventConfigurations() public view returns (
+        uint32[] ids,
+        address[] addrs,
+        bool[] statuses,
+        IEventConfiguration.EventType[] _types
+    ) {
+        for ((uint32 id, EventConfiguration configuration): eventConfigurations) {
+            ids.push(id);
+            addrs.push(configuration.addr);
+            statuses.push(configuration.status);
+            _types.push(configuration._type);
+        }
+    }
+
+    /*
         Confirm Ethereum event instance.
         @dev Called only by relay
         @param eventVoteData Ethereum event vote data

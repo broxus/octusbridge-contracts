@@ -46,7 +46,7 @@ ENDS
 ;; param: _bridgeConfiguration
 ; constructor Bridge
 ;; push identifier WRONG_TVM_KEY
-GETGLOB 25
+GETGLOB 27
 DUP
 LESSINT 2
 PUSHCONT {
@@ -136,16 +136,16 @@ DROP
 ;; push identifier _bridgeConfiguration
 DUP
 ; colValue
-SETGLOB 29
+SETGLOB 31
 ; end colValue
 ; expValue
 ;; fetch bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 ; end expValue
 TRUE
 ; colValue
 SETINDEX 3
-SETGLOB 29
+SETGLOB 31
 ; end colValue
 BLKDROP 3
 ; end constructor Bridge
@@ -201,7 +201,7 @@ PUSHCONT {
 IF
 ;; get member active
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 3
 TRUE
 ;; ==
@@ -223,7 +223,7 @@ IF
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -255,7 +255,8 @@ IF
 ;; push identifier id
 PUSH S5
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 DUP
@@ -312,7 +313,8 @@ NIP
 ; end colValue
 ; expValue
 ;; fetch eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 ;; push identifier id
 PUSH S7
 SWAP
@@ -336,7 +338,8 @@ BLKDROP 4
 ROTREV
 PUSHINT 32
 DICTUSETB
-SETGLOB 30
+PUSHINT 32
+SETGLOBVAR
 ; end colValue
 ;; emit EventConfigurationCreationVote
 NEWC
@@ -401,7 +404,7 @@ PUSHCONT {
 IF
 ;; get member active
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 3
 TRUE
 ;; ==
@@ -423,7 +426,7 @@ IF
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -455,7 +458,8 @@ IF
 ;; push identifier id
 PUSH S5
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 DUP
@@ -512,7 +516,8 @@ NIP
 ; end colValue
 ; expValue
 ;; fetch eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 ;; push identifier id
 PUSH S7
 SWAP
@@ -536,7 +541,8 @@ BLKDROP 4
 ROTREV
 PUSHINT 32
 DICTUSETB
-SETGLOB 30
+PUSHINT 32
+SETGLOBVAR
 ; end colValue
 ;; emit EventConfigurationCreationVote
 NEWC
@@ -610,7 +616,7 @@ PUSHCONT {
 IF
 ;; get member active
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 3
 TRUE
 ;; ==
@@ -632,7 +638,7 @@ IF
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -663,7 +669,8 @@ IF
 ;; push identifier id
 PUSH S4
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 DUP
@@ -676,7 +683,8 @@ THROWANYIFNOT
 ;; push identifier id
 PUSH S3
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -716,7 +724,8 @@ NIP
 ; end colValue
 ; expValue
 ;; fetch eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 ;; push identifier id
 PUSH S5
 SWAP
@@ -740,7 +749,8 @@ BLKDROP 4
 ROTREV
 PUSHINT 32
 DICTUSETB
-SETGLOB 30
+PUSHINT 32
+SETGLOBVAR
 ; end colValue
 ;; push identifier id
 PUSH S4
@@ -754,7 +764,7 @@ PUSH S3
 INDEX 0
 ;; get member bridgeUpdateRequiredConfirmations
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 1
 ;; >=
 GEQ
@@ -776,7 +786,8 @@ PUSHCONT {
 		;; push identifier id
 		PUSH S8
 		;; push identifier eventConfigurations
-		GETGLOB 30
+		PUSHINT 32
+		GETGLOBVAR
 		PUSHINT 32
 		DICTUGET
 		PUSHCONT {
@@ -805,7 +816,8 @@ IF
 PUSHCONT {
 	; expValue
 	;; fetch eventConfigurations
-	GETGLOB 30
+	PUSHINT 32
+	GETGLOBVAR
 	;; push identifier id
 	PUSH S9
 	SWAP
@@ -841,7 +853,8 @@ PUSHCONT {
 	ROTREV
 	PUSHINT 32
 	DICTUSETB
-	SETGLOB 30
+	PUSHINT 32
+	SETGLOBVAR
 	; end colValue
 	;; emit EventConfigurationCreationEnd
 	NEWC
@@ -863,7 +876,8 @@ PUSHCONT {
 	;; push identifier id
 	PUSH S9
 	;; push identifier eventConfigurations
-	GETGLOB 30
+	PUSHINT 32
+	GETGLOBVAR
 	PUSHINT 32
 	DICTUGET
 	PUSHCONT {
@@ -888,7 +902,8 @@ PUSHCONT {
 	;; push identifier id
 	PUSH S9
 	;; push identifier eventConfigurations
-	GETGLOB 30
+	PUSHINT 32
+	GETGLOBVAR
 	PUSHINT 32
 	DICTUGET
 	PUSHCONT {
@@ -922,7 +937,7 @@ PUSHCONT {
 	INDEX 0
 	;; get member bridgeUpdateRequiredRejects
 	;; push identifier bridgeConfiguration
-	GETGLOB 29
+	GETGLOB 31
 	INDEX 2
 	;; >=
 	GEQ
@@ -958,7 +973,8 @@ PUSHCONT {
 		;; push identifier id
 		PUSH S9
 		;; push identifier eventConfigurations
-		GETGLOB 30
+		PUSHINT 32
+		GETGLOBVAR
 		PUSHINT 32
 		DICTUGET
 		PUSHCONT {
@@ -983,7 +999,8 @@ PUSHCONT {
 		;; push identifier id
 		PUSH S9
 		;; push identifier eventConfigurations
-		GETGLOB 30
+		PUSHINT 32
+		GETGLOBVAR
 		PUSHINT 32
 		DICTUGET
 		PUSHCONT {
@@ -1011,7 +1028,8 @@ PUSHCONT {
 		;; delete
 		; expValue
 		;; fetch eventConfigurations
-		GETGLOB 30
+		PUSHINT 32
+		GETGLOBVAR
 		;; push identifier id
 		PUSH S9
 		SWAP
@@ -1023,7 +1041,8 @@ PUSHCONT {
 		DROP
 		; colValue
 		NIP
-		SETGLOB 30
+		PUSHINT 32
+		SETGLOBVAR
 		; end colValue
 	}
 	IF
@@ -1072,7 +1091,7 @@ PUSHCONT {
 IF
 ;; get member active
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 3
 TRUE
 ;; ==
@@ -1094,7 +1113,7 @@ IF
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -1125,7 +1144,8 @@ IF
 ;; push identifier id
 PUSH S4
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 DUP
@@ -1138,7 +1158,8 @@ THROWANYIFNOT
 ;; push identifier id
 PUSH S3
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -1178,7 +1199,8 @@ NIP
 ; end colValue
 ; expValue
 ;; fetch eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 ;; push identifier id
 PUSH S5
 SWAP
@@ -1202,7 +1224,8 @@ BLKDROP 4
 ROTREV
 PUSHINT 32
 DICTUSETB
-SETGLOB 30
+PUSHINT 32
+SETGLOBVAR
 ; end colValue
 ;; push identifier id
 PUSH S4
@@ -1216,7 +1239,7 @@ PUSH S3
 INDEX 0
 ;; get member bridgeUpdateRequiredConfirmations
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 1
 ;; >=
 GEQ
@@ -1238,7 +1261,8 @@ PUSHCONT {
 		;; push identifier id
 		PUSH S8
 		;; push identifier eventConfigurations
-		GETGLOB 30
+		PUSHINT 32
+		GETGLOBVAR
 		PUSHINT 32
 		DICTUGET
 		PUSHCONT {
@@ -1267,7 +1291,8 @@ IF
 PUSHCONT {
 	; expValue
 	;; fetch eventConfigurations
-	GETGLOB 30
+	PUSHINT 32
+	GETGLOBVAR
 	;; push identifier id
 	PUSH S9
 	SWAP
@@ -1303,7 +1328,8 @@ PUSHCONT {
 	ROTREV
 	PUSHINT 32
 	DICTUSETB
-	SETGLOB 30
+	PUSHINT 32
+	SETGLOBVAR
 	; end colValue
 	;; emit EventConfigurationCreationEnd
 	NEWC
@@ -1325,7 +1351,8 @@ PUSHCONT {
 	;; push identifier id
 	PUSH S9
 	;; push identifier eventConfigurations
-	GETGLOB 30
+	PUSHINT 32
+	GETGLOBVAR
 	PUSHINT 32
 	DICTUGET
 	PUSHCONT {
@@ -1350,7 +1377,8 @@ PUSHCONT {
 	;; push identifier id
 	PUSH S9
 	;; push identifier eventConfigurations
-	GETGLOB 30
+	PUSHINT 32
+	GETGLOBVAR
 	PUSHINT 32
 	DICTUGET
 	PUSHCONT {
@@ -1384,7 +1412,7 @@ PUSHCONT {
 	INDEX 0
 	;; get member bridgeUpdateRequiredRejects
 	;; push identifier bridgeConfiguration
-	GETGLOB 29
+	GETGLOB 31
 	INDEX 2
 	;; >=
 	GEQ
@@ -1420,7 +1448,8 @@ PUSHCONT {
 		;; push identifier id
 		PUSH S9
 		;; push identifier eventConfigurations
-		GETGLOB 30
+		PUSHINT 32
+		GETGLOBVAR
 		PUSHINT 32
 		DICTUGET
 		PUSHCONT {
@@ -1445,7 +1474,8 @@ PUSHCONT {
 		;; push identifier id
 		PUSH S9
 		;; push identifier eventConfigurations
-		GETGLOB 30
+		PUSHINT 32
+		GETGLOBVAR
 		PUSHINT 32
 		DICTUGET
 		PUSHCONT {
@@ -1473,7 +1503,8 @@ PUSHCONT {
 		;; delete
 		; expValue
 		;; fetch eventConfigurations
-		GETGLOB 30
+		PUSHINT 32
+		GETGLOBVAR
 		;; push identifier id
 		PUSH S9
 		SWAP
@@ -1485,7 +1516,8 @@ PUSHCONT {
 		DROP
 		; colValue
 		NIP
-		SETGLOB 30
+		PUSHINT 32
+		SETGLOBVAR
 		; end colValue
 	}
 	IF
@@ -1547,7 +1579,8 @@ PUSHINT 0
 ;; push identifier id
 PUSH S4
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -1673,7 +1706,8 @@ BLKDROP 4
 ;; push identifier id
 PUSH S4
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -1701,7 +1735,8 @@ POP S2
 ;; push identifier id
 PUSH S4
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -1793,7 +1828,8 @@ PUSHINT 0
 ;; push identifier id
 PUSH S4
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -1919,7 +1955,8 @@ BLKDROP 4
 ;; push identifier id
 PUSH S4
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -1947,7 +1984,8 @@ POP S2
 ;; push identifier id
 PUSH S4
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -1999,7 +2037,8 @@ PUSHINT 0
 NEWDICT
 PAIR
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 DUP
 PUSHINT 32
 DICTUMIN
@@ -2198,7 +2237,8 @@ PUSHINT 0
 NEWDICT
 PAIR
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 DUP
 PUSHINT 32
 DICTUMIN
@@ -2336,6 +2376,413 @@ BLKDROP 4
 ;; returning named params
 ; end function getActiveEventConfigurations
 
+.globl	getEventConfigurations
+.public	getEventConfigurations
+.type	getEventConfigurations, @function
+GETGLOB 1
+ISNULL
+PUSHCONT {
+	CALL $c4_to_c7$
+}
+IF
+; Decode input parameters
+ENDS
+; function getEventConfigurations
+;; ret param: ids
+PUSHINT 0
+NEWDICT
+PAIR
+;; ret param: addrs
+PUSHINT 0
+NEWDICT
+PAIR
+;; ret param: statuses
+PUSHINT 0
+NEWDICT
+PAIR
+;; ret param: _types
+PUSHINT 0
+NEWDICT
+PAIR
+;; push identifier eventConfigurations
+PUSHINT 32
+GETGLOBVAR
+DUP
+PUSHINT 32
+DICTUMIN
+NULLSWAPIFNOT
+PUSHCONT {
+	SWAP
+	LDDICT
+	LDMSGADDR
+	LDI 1
+	PLDU 8
+	TUPLE 4
+	TUPLE 2
+}
+IF
+DUP
+ISNULL
+PUSHCONT {
+	NULL
+	NULL
+}
+PUSHCONT {
+	UNTUPLE 2
+	PUSH S1
+}
+IFELSE
+PUSHCONT {
+	DUP
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	; expValue
+	PUSH S7
+	; end expValue
+	;; push identifier id
+	PUSH S3
+	;; array.push(..)
+	NEWC
+	STU 32
+	SWAP
+	UNPAIR
+	PUSH S1
+	INC
+	XCHG s3
+	ROTREV
+	PUSHINT 32
+	DICTUSETB
+	PAIR
+	; colValue
+	POP S8
+	; end colValue
+	; expValue
+	PUSH S6
+	; end expValue
+	;; get member addr
+	;; push identifier configuration
+	PUSH S2
+	INDEX 1
+	;; array.push(..)
+	SWAP
+	UNPAIR
+	PUSH S1
+	INC
+	XCHG s3
+	ROTREV
+	PUSHINT 32
+	DICTUSET
+	PAIR
+	; colValue
+	POP S7
+	; end colValue
+	; expValue
+	PUSH S5
+	; end expValue
+	;; get member status
+	;; push identifier configuration
+	PUSH S2
+	INDEX 2
+	;; array.push(..)
+	NEWC
+	STI 1
+	SWAP
+	UNPAIR
+	PUSH S1
+	INC
+	XCHG s3
+	ROTREV
+	PUSHINT 32
+	DICTUSETB
+	PAIR
+	; colValue
+	POP S6
+	; end colValue
+	; expValue
+	PUSH S4
+	; end expValue
+	;; get member _type
+	;; push identifier configuration
+	PUSH S2
+	INDEX 3
+	;; array.push(..)
+	NEWC
+	STU 8
+	SWAP
+	UNPAIR
+	PUSH S1
+	INC
+	XCHG s3
+	ROTREV
+	PUSHINT 32
+	DICTUSETB
+	PAIR
+	; colValue
+	POP S5
+	; end colValue
+	DUP
+	PUSH S4
+	PUSHINT 32
+	DICTUGETNEXT
+	NULLSWAPIFNOT
+	PUSHCONT {
+		SWAP
+		LDDICT
+		LDMSGADDR
+		LDI 1
+		PLDU 8
+		TUPLE 4
+		TUPLE 2
+	}
+	IF
+	DUP
+	ISNULL
+	PUSHCONT {
+		POP S1
+	}
+	PUSHCONT {
+		UNTUPLE 2
+		POP S3
+		DUP
+		POP S4
+		POP S1
+	}
+	IFELSE
+}
+WHILE
+BLKDROP 4
+; end for
+;; returning named params
+;; emitting 4 value(s)
+PUSH S4
+EQINT -1
+PUSHCONT {
+	PUSH S6
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 1
+	NEWC
+	STSLICECONST xbb62ff1b
+	PUSH S5
+	UNPAIR
+	XCHG s2
+	STU 32
+	STDICT
+	PUSH S4
+	UNPAIR
+	XCHG s2
+	STU 32
+	STDICT
+	PUSH S3
+	UNPAIR
+	XCHG s2
+	STU 32
+	STDICT
+	NEWC
+	PUSH S3
+	UNPAIR
+	XCHG s2
+	STU 32
+	STDICT
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+}
+IF
+BLKDROP 4
+; end function getEventConfigurations
+PUSHCONT {
+	CALL $c7_to_c4$
+}
+IF
+TRUE
+SETGLOB 7
+
+.globl	getEventConfigurations_internal
+.type	getEventConfigurations_internal, @function
+; function getEventConfigurations
+;; ret param: ids
+PUSHINT 0
+NEWDICT
+PAIR
+;; ret param: addrs
+PUSHINT 0
+NEWDICT
+PAIR
+;; ret param: statuses
+PUSHINT 0
+NEWDICT
+PAIR
+;; ret param: _types
+PUSHINT 0
+NEWDICT
+PAIR
+;; push identifier eventConfigurations
+PUSHINT 32
+GETGLOBVAR
+DUP
+PUSHINT 32
+DICTUMIN
+NULLSWAPIFNOT
+PUSHCONT {
+	SWAP
+	LDDICT
+	LDMSGADDR
+	LDI 1
+	PLDU 8
+	TUPLE 4
+	TUPLE 2
+}
+IF
+DUP
+ISNULL
+PUSHCONT {
+	NULL
+	NULL
+}
+PUSHCONT {
+	UNTUPLE 2
+	PUSH S1
+}
+IFELSE
+PUSHCONT {
+	DUP
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	; expValue
+	PUSH S7
+	; end expValue
+	;; push identifier id
+	PUSH S3
+	;; array.push(..)
+	NEWC
+	STU 32
+	SWAP
+	UNPAIR
+	PUSH S1
+	INC
+	XCHG s3
+	ROTREV
+	PUSHINT 32
+	DICTUSETB
+	PAIR
+	; colValue
+	POP S8
+	; end colValue
+	; expValue
+	PUSH S6
+	; end expValue
+	;; get member addr
+	;; push identifier configuration
+	PUSH S2
+	INDEX 1
+	;; array.push(..)
+	SWAP
+	UNPAIR
+	PUSH S1
+	INC
+	XCHG s3
+	ROTREV
+	PUSHINT 32
+	DICTUSET
+	PAIR
+	; colValue
+	POP S7
+	; end colValue
+	; expValue
+	PUSH S5
+	; end expValue
+	;; get member status
+	;; push identifier configuration
+	PUSH S2
+	INDEX 2
+	;; array.push(..)
+	NEWC
+	STI 1
+	SWAP
+	UNPAIR
+	PUSH S1
+	INC
+	XCHG s3
+	ROTREV
+	PUSHINT 32
+	DICTUSETB
+	PAIR
+	; colValue
+	POP S6
+	; end colValue
+	; expValue
+	PUSH S4
+	; end expValue
+	;; get member _type
+	;; push identifier configuration
+	PUSH S2
+	INDEX 3
+	;; array.push(..)
+	NEWC
+	STU 8
+	SWAP
+	UNPAIR
+	PUSH S1
+	INC
+	XCHG s3
+	ROTREV
+	PUSHINT 32
+	DICTUSETB
+	PAIR
+	; colValue
+	POP S5
+	; end colValue
+	DUP
+	PUSH S4
+	PUSHINT 32
+	DICTUGETNEXT
+	NULLSWAPIFNOT
+	PUSHCONT {
+		SWAP
+		LDDICT
+		LDMSGADDR
+		LDI 1
+		PLDU 8
+		TUPLE 4
+		TUPLE 2
+	}
+	IF
+	DUP
+	ISNULL
+	PUSHCONT {
+		POP S1
+	}
+	PUSHCONT {
+		UNTUPLE 2
+		POP S3
+		DUP
+		POP S4
+		POP S1
+	}
+	IFELSE
+}
+WHILE
+BLKDROP 4
+; end for
+;; returning named params
+; end function getEventConfigurations
+
 .globl	confirmEthereumEvent
 .public	confirmEthereumEvent
 .type	confirmEthereumEvent, @function
@@ -2432,7 +2879,7 @@ PUSHCONT {
 IF
 ;; get member active
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 3
 TRUE
 ;; ==
@@ -2454,7 +2901,7 @@ IF
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -2488,7 +2935,8 @@ IF
 ;; push identifier id
 PUSH S1
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -2518,7 +2966,8 @@ THROWANYIFNOT
 ;; push identifier configurationID
 PUSH S3
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -2615,7 +3064,7 @@ PUSHCONT {
 IF
 ;; get member active
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 3
 TRUE
 ;; ==
@@ -2637,7 +3086,7 @@ IF
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -2671,7 +3120,8 @@ IF
 ;; push identifier id
 PUSH S1
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -2701,7 +3151,8 @@ THROWANYIFNOT
 ;; push identifier configurationID
 PUSH S3
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -2872,7 +3323,7 @@ PUSHCONT {
 IF
 ;; get member active
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 3
 TRUE
 ;; ==
@@ -2894,7 +3345,7 @@ IF
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -2928,7 +3379,8 @@ IF
 ;; push identifier id
 PUSH S1
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -2958,7 +3410,8 @@ THROWANYIFNOT
 ;; push identifier configurationID
 PUSH S3
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -3055,7 +3508,7 @@ PUSHCONT {
 IF
 ;; get member active
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 3
 TRUE
 ;; ==
@@ -3077,7 +3530,7 @@ IF
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -3111,7 +3564,8 @@ IF
 ;; push identifier id
 PUSH S1
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -3141,7 +3595,8 @@ THROWANYIFNOT
 ;; push identifier configurationID
 PUSH S3
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -3324,7 +3779,7 @@ PUSHCONT {
 IF
 ;; get member active
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 3
 TRUE
 ;; ==
@@ -3346,7 +3801,7 @@ IF
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -3380,7 +3835,8 @@ IF
 ;; push identifier id
 PUSH S1
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -3410,7 +3866,8 @@ THROWANYIFNOT
 ;; push identifier configurationID
 PUSH S3
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -3512,7 +3969,7 @@ PUSHCONT {
 IF
 ;; get member active
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 3
 TRUE
 ;; ==
@@ -3534,7 +3991,7 @@ IF
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -3568,7 +4025,8 @@ IF
 ;; push identifier id
 PUSH S1
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -3598,7 +4056,8 @@ THROWANYIFNOT
 ;; push identifier configurationID
 PUSH S3
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -3773,7 +4232,7 @@ PUSHCONT {
 IF
 ;; get member active
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 3
 TRUE
 ;; ==
@@ -3795,7 +4254,7 @@ IF
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -3829,7 +4288,8 @@ IF
 ;; push identifier id
 PUSH S1
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -3859,7 +4319,8 @@ THROWANYIFNOT
 ;; push identifier configurationID
 PUSH S3
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -3956,7 +4417,7 @@ PUSHCONT {
 IF
 ;; get member active
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 3
 TRUE
 ;; ==
@@ -3978,7 +4439,7 @@ IF
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -4012,7 +4473,8 @@ IF
 ;; push identifier id
 PUSH S1
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -4042,7 +4504,8 @@ THROWANYIFNOT
 ;; push identifier configurationID
 PUSH S3
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -4289,7 +4752,7 @@ IF
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -4350,7 +4813,7 @@ CALL $getVotingDirection_internal$
 ;; decl: vote
 ; expValue
 ;; fetch bridgeConfigurationVotes
-PUSHINT 32
+PUSHINT 34
 GETGLOBVAR
 ;; push identifier _bridgeConfiguration
 PUSH S5
@@ -4396,7 +4859,7 @@ STDICT
 ROTREV
 PUSHINT 49
 DICTSETB
-PUSHINT 32
+PUSHINT 34
 SETGLOBVAR
 ; end colValue
 ;; push identifier _bridgeConfiguration
@@ -4411,7 +4874,7 @@ PUSH S1
 INDEX 0
 ;; get member bridgeUpdateRequiredConfirmations
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 1
 ;; ==
 EQUAL
@@ -4421,7 +4884,7 @@ PUSHCONT {
 	;; push identifier _bridgeConfiguration
 	PUSH S6
 	; colValue
-	SETGLOB 29
+	SETGLOB 31
 	; end colValue
 	;; push identifier _bridgeConfiguration
 	PUSH S6
@@ -4464,7 +4927,7 @@ DUP
 INDEX 0
 ;; get member bridgeUpdateRequiredRejects
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 2
 ;; ==
 EQUAL
@@ -4546,7 +5009,7 @@ IF
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -4607,7 +5070,7 @@ CALL $getVotingDirection_internal$
 ;; decl: vote
 ; expValue
 ;; fetch bridgeConfigurationVotes
-PUSHINT 32
+PUSHINT 34
 GETGLOBVAR
 ;; push identifier _bridgeConfiguration
 PUSH S5
@@ -4653,7 +5116,7 @@ STDICT
 ROTREV
 PUSHINT 49
 DICTSETB
-PUSHINT 32
+PUSHINT 34
 SETGLOBVAR
 ; end colValue
 ;; push identifier _bridgeConfiguration
@@ -4668,7 +5131,7 @@ PUSH S1
 INDEX 0
 ;; get member bridgeUpdateRequiredConfirmations
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 1
 ;; ==
 EQUAL
@@ -4678,7 +5141,7 @@ PUSHCONT {
 	;; push identifier _bridgeConfiguration
 	PUSH S6
 	; colValue
-	SETGLOB 29
+	SETGLOB 31
 	; end colValue
 	;; push identifier _bridgeConfiguration
 	PUSH S6
@@ -4721,7 +5184,7 @@ DUP
 INDEX 0
 ;; get member bridgeUpdateRequiredRejects
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 2
 ;; ==
 EQUAL
@@ -4787,7 +5250,7 @@ BLKDROP 3
 ;; delete
 ; expValue
 ;; fetch bridgeConfigurationVotes
-PUSHINT 32
+PUSHINT 34
 GETGLOBVAR
 ;; push identifier _bridgeConfiguration
 PUSH S1
@@ -4814,7 +5277,7 @@ DICTDEL
 DROP
 ; colValue
 NIP
-PUSHINT 32
+PUSHINT 34
 SETGLOBVAR
 ; end colValue
 DROP
@@ -4873,7 +5336,7 @@ BLKDROP 4
 ENDC
 CTOS
 ;; push identifier bridgeConfigurationVotes
-PUSHINT 32
+PUSHINT 34
 GETGLOBVAR
 PUSHINT 49
 DICTGET
@@ -5062,7 +5525,7 @@ BLKDROP 4
 ENDC
 CTOS
 ;; push identifier bridgeConfigurationVotes
-PUSHINT 32
+PUSHINT 34
 GETGLOBVAR
 PUSHINT 49
 DICTGET
@@ -5321,9 +5784,19 @@ PUSHCONT {
 	LDMSGADDR
 }
 IFNOT
-;; build struct EthereumEventConfigurationInitData ss:8
-BLKSWAP 3, 1
-TUPLE 3
+;; decode EthereumEventConfigurationInitData.startBlockNumber
+LDUQ 32
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 32
+}
+IFNOT
+;; build struct EthereumEventConfigurationInitData ss:9
+BLKSWAP 4, 1
+TUPLE 4
 SWAP
 ; Decode tonInitData
 ;; decode struct TonEventConfigurationInitData tonInitData
@@ -5347,9 +5820,19 @@ PUSHCONT {
 	LDU 160
 }
 IFNOT
-;; build struct TonEventConfigurationInitData ss:8
-ROTREV
-TUPLE 2
+;; decode TonEventConfigurationInitData.startTimestamp
+LDUQ 32
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 32
+}
+IFNOT
+;; build struct TonEventConfigurationInitData ss:9
+BLKSWAP 3, 1
+TUPLE 3
 SWAP
 ENDS
 ;; param: id
@@ -5370,7 +5853,7 @@ PUSHCONT {
 IF
 ;; get member active
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 3
 TRUE
 ;; ==
@@ -5392,7 +5875,7 @@ IF
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -5424,7 +5907,8 @@ IF
 ;; push identifier id
 PUSH S8
 ;; push identifier eventConfigurationsUpdate
-GETGLOB 31
+PUSHINT 33
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 DUP
@@ -5447,7 +5931,8 @@ IF
 ;; push identifier targetID
 PUSH S7
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 DUP
@@ -5476,10 +5961,12 @@ TUPLE 7
 PUSHINT 0
 PUSHINT 0
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
-TUPLE 3
+PUSHINT 0
+TUPLE 4
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 PUSHINT 0
-TUPLE 2
+PUSHINT 0
+TUPLE 3
 TUPLE 6
 ;; decl: update
 ; expValue
@@ -5547,7 +6034,8 @@ NIP
 ; end colValue
 ; expValue
 ;; fetch eventConfigurationsUpdate
-GETGLOB 31
+PUSHINT 33
+GETGLOBVAR
 ;; push identifier id
 PUSH S10
 SWAP
@@ -5585,33 +6073,38 @@ XCHG s7
 BLKDROP 7
 STBREFR
 PUSH S2
+UNTUPLE 4
+NEWC
+PUSH S4
+STUR 160
+PUSH S3
+STUR 16
+PUSH S2
+STSLICER
+PUSH S1
+STUR 32
+XCHG s4
+BLKDROP 4
+STBREFR
+PUSH S1
 UNTUPLE 3
 NEWC
 PUSH S3
-STUR 160
-PUSH S2
-STUR 16
-PUSH S1
 STSLICER
+PUSH S2
+STUR 160
+PUSH S1
+STUR 32
 XCHG s3
 BLKDROP 3
-STBREFR
-PUSH S1
-UNTUPLE 2
-NEWC
-PUSH S2
-STSLICER
-PUSH S1
-STUR 160
-NIP
-NIP
 STBREFR
 XCHG s6
 BLKDROP 6
 ROTREV
 PUSHINT 32
 DICTUSETB
-SETGLOB 31
+PUSHINT 33
+SETGLOBVAR
 ; end colValue
 ;; emit EventConfigurationCreationVote
 NEWC
@@ -5679,7 +6172,7 @@ PUSHCONT {
 IF
 ;; get member active
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 3
 TRUE
 ;; ==
@@ -5701,7 +6194,7 @@ IF
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -5733,7 +6226,8 @@ IF
 ;; push identifier id
 PUSH S8
 ;; push identifier eventConfigurationsUpdate
-GETGLOB 31
+PUSHINT 33
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 DUP
@@ -5756,7 +6250,8 @@ IF
 ;; push identifier targetID
 PUSH S7
 ;; push identifier eventConfigurations
-GETGLOB 30
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 DUP
@@ -5785,10 +6280,12 @@ TUPLE 7
 PUSHINT 0
 PUSHINT 0
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
-TUPLE 3
+PUSHINT 0
+TUPLE 4
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 PUSHINT 0
-TUPLE 2
+PUSHINT 0
+TUPLE 3
 TUPLE 6
 ;; decl: update
 ; expValue
@@ -5856,7 +6353,8 @@ NIP
 ; end colValue
 ; expValue
 ;; fetch eventConfigurationsUpdate
-GETGLOB 31
+PUSHINT 33
+GETGLOBVAR
 ;; push identifier id
 PUSH S10
 SWAP
@@ -5894,33 +6392,38 @@ XCHG s7
 BLKDROP 7
 STBREFR
 PUSH S2
+UNTUPLE 4
+NEWC
+PUSH S4
+STUR 160
+PUSH S3
+STUR 16
+PUSH S2
+STSLICER
+PUSH S1
+STUR 32
+XCHG s4
+BLKDROP 4
+STBREFR
+PUSH S1
 UNTUPLE 3
 NEWC
 PUSH S3
-STUR 160
-PUSH S2
-STUR 16
-PUSH S1
 STSLICER
+PUSH S2
+STUR 160
+PUSH S1
+STUR 32
 XCHG s3
 BLKDROP 3
-STBREFR
-PUSH S1
-UNTUPLE 2
-NEWC
-PUSH S2
-STSLICER
-PUSH S1
-STUR 160
-NIP
-NIP
 STBREFR
 XCHG s6
 BLKDROP 6
 ROTREV
 PUSHINT 32
 DICTUSETB
-SETGLOB 31
+PUSHINT 33
+SETGLOBVAR
 ; end colValue
 ;; emit EventConfigurationCreationVote
 NEWC
@@ -5994,7 +6497,7 @@ PUSHCONT {
 IF
 ;; get member active
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 3
 TRUE
 ;; ==
@@ -6016,7 +6519,7 @@ IF
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -6047,7 +6550,8 @@ IF
 ;; push identifier id
 PUSH S4
 ;; push identifier eventConfigurationsUpdate
-GETGLOB 31
+PUSHINT 33
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 DUP
@@ -6063,7 +6567,8 @@ GETGLOB 9
 ;; push identifier id
 PUSH S4
 ;; push identifier eventConfigurationsUpdate
-GETGLOB 31
+PUSHINT 33
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -6083,13 +6588,16 @@ PUSHCONT {
 	LDREFRTOS
 	LDU 160
 	LDU 16
-	TUPLE 3
+	LDMSGADDR
+	PLDU 32
+	TUPLE 4
 	SWAP
 	LDREFRTOS
 	NIP
 	LDMSGADDR
-	PLDU 160
-	TUPLE 2
+	LDU 160
+	PLDU 32
+	TUPLE 3
 	TUPLE 6
 }
 PUSHCONT {
@@ -6110,10 +6618,12 @@ PUSHCONT {
 	PUSHINT 0
 	PUSHINT 0
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
-	TUPLE 3
+	PUSHINT 0
+	TUPLE 4
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	PUSHINT 0
-	TUPLE 2
+	PUSHINT 0
+	TUPLE 3
 	TUPLE 6
 }
 IFELSE
@@ -6139,7 +6649,8 @@ NIP
 ; end colValue
 ; expValue
 ;; fetch eventConfigurationsUpdate
-GETGLOB 31
+PUSHINT 33
+GETGLOBVAR
 ;; push identifier id
 PUSH S6
 SWAP
@@ -6177,33 +6688,38 @@ XCHG s7
 BLKDROP 7
 STBREFR
 PUSH S2
+UNTUPLE 4
+NEWC
+PUSH S4
+STUR 160
+PUSH S3
+STUR 16
+PUSH S2
+STSLICER
+PUSH S1
+STUR 32
+XCHG s4
+BLKDROP 4
+STBREFR
+PUSH S1
 UNTUPLE 3
 NEWC
 PUSH S3
-STUR 160
-PUSH S2
-STUR 16
-PUSH S1
 STSLICER
+PUSH S2
+STUR 160
+PUSH S1
+STUR 32
 XCHG s3
 BLKDROP 3
-STBREFR
-PUSH S1
-UNTUPLE 2
-NEWC
-PUSH S2
-STSLICER
-PUSH S1
-STUR 160
-NIP
-NIP
 STBREFR
 XCHG s6
 BLKDROP 6
 ROTREV
 PUSHINT 32
 DICTUSETB
-SETGLOB 31
+PUSHINT 33
+SETGLOBVAR
 ; end colValue
 ;; emit EventConfigurationUpdateVote
 NEWC
@@ -6239,14 +6755,15 @@ PUSH S6
 INDEX 0
 ;; get member bridgeUpdateRequiredConfirmations
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 1
 ;; ==
 EQUAL
 PUSHCONT {
 	; expValue
 	;; fetch eventConfigurations
-	GETGLOB 30
+	PUSHINT 32
+	GETGLOBVAR
 	;; get member targetID
 	;; push identifier update
 	PUSH S8
@@ -6284,7 +6801,8 @@ PUSHCONT {
 	ROTREV
 	PUSHINT 32
 	DICTUSETB
-	SETGLOB 30
+	PUSHINT 32
+	SETGLOBVAR
 	; end colValue
 	;; if
 	;; get member _type
@@ -6294,7 +6812,8 @@ PUSHCONT {
 	PUSH S7
 	INDEX 1
 	;; push identifier eventConfigurations
-	GETGLOB 30
+	PUSHINT 32
+	GETGLOBVAR
 	PUSHINT 32
 	DICTUGET
 	PUSHCONT {
@@ -6328,7 +6847,8 @@ PUSHCONT {
 		PUSH S7
 		INDEX 1
 		;; push identifier eventConfigurations
-		GETGLOB 30
+		PUSHINT 32
+		GETGLOBVAR
 		PUSHINT 32
 		DICTUGET
 		PUSHCONT {
@@ -6354,7 +6874,7 @@ PUSHCONT {
 		STSLICECONST 0
 		STSLICECONST 1
 		NEWC
-		STSLICECONST x2eb55df4
+		STSLICECONST x09f706b8
 		;; _basicInitData
 		;; get member basicInitData
 		;; push identifier update
@@ -6383,16 +6903,18 @@ PUSHCONT {
 		;; push identifier update
 		PUSH S9
 		INDEX 4
-		UNTUPLE 3
-		BLKSWAP 1, 3
-		PUSH S3
+		UNTUPLE 4
+		BLKSWAP 1, 4
+		PUSH S4
 		STUR 160
-		PUSH S2
+		PUSH S3
 		STUR 16
-		PUSH S1
+		PUSH S2
 		STSLICER
-		XCHG s3
-		BLKDROP 3
+		PUSH S1
+		STUR 32
+		XCHG s4
+		BLKDROP 4
 		STBREFR
 		ENDC
 		PUSHINT 1
@@ -6407,7 +6929,8 @@ PUSHCONT {
 		PUSH S7
 		INDEX 1
 		;; push identifier eventConfigurations
-		GETGLOB 30
+		PUSHINT 32
+		GETGLOBVAR
 		PUSHINT 32
 		DICTUGET
 		PUSHCONT {
@@ -6433,7 +6956,7 @@ PUSHCONT {
 		STSLICECONST 0
 		STSLICECONST 1
 		NEWC
-		STSLICECONST x2e9789d6
+		STSLICECONST x74b627de
 		;; _basicInitData
 		;; get member basicInitData
 		;; push identifier update
@@ -6462,14 +6985,16 @@ PUSHCONT {
 		;; push identifier update
 		PUSH S9
 		INDEX 5
-		UNTUPLE 2
-		ROT
-		PUSH S2
+		UNTUPLE 3
+		BLKSWAP 1, 3
+		PUSH S3
 		STSLICER
-		PUSH S1
+		PUSH S2
 		STUR 160
-		NIP
-		NIP
+		PUSH S1
+		STUR 32
+		XCHG s3
+		BLKDROP 3
 		STBREFR
 		ENDC
 		PUSHINT 1
@@ -6499,7 +7024,8 @@ PUSHCONT {
 	PUSH S8
 	INDEX 1
 	;; push identifier eventConfigurations
-	GETGLOB 30
+	PUSHINT 32
+	GETGLOBVAR
 	PUSHINT 32
 	DICTUGET
 	PUSHCONT {
@@ -6526,7 +7052,8 @@ PUSHCONT {
 	PUSH S8
 	INDEX 1
 	;; push identifier eventConfigurations
-	GETGLOB 30
+	PUSHINT 32
+	GETGLOBVAR
 	PUSHINT 32
 	DICTUGET
 	PUSHCONT {
@@ -6564,7 +7091,7 @@ PUSH S5
 INDEX 0
 ;; get member bridgeUpdateRequiredRejects
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 2
 ;; ==
 EQUAL
@@ -6591,7 +7118,8 @@ PUSHCONT {
 	PUSH S8
 	INDEX 1
 	;; push identifier eventConfigurations
-	GETGLOB 30
+	PUSHINT 32
+	GETGLOBVAR
 	PUSHINT 32
 	DICTUGET
 	PUSHCONT {
@@ -6618,7 +7146,8 @@ PUSHCONT {
 	PUSH S8
 	INDEX 1
 	;; push identifier eventConfigurations
-	GETGLOB 30
+	PUSHINT 32
+	GETGLOBVAR
 	PUSHINT 32
 	DICTUGET
 	PUSHCONT {
@@ -6690,7 +7219,7 @@ PUSHCONT {
 IF
 ;; get member active
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 3
 TRUE
 ;; ==
@@ -6712,7 +7241,7 @@ IF
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -6743,7 +7272,8 @@ IF
 ;; push identifier id
 PUSH S4
 ;; push identifier eventConfigurationsUpdate
-GETGLOB 31
+PUSHINT 33
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 DUP
@@ -6759,7 +7289,8 @@ GETGLOB 9
 ;; push identifier id
 PUSH S4
 ;; push identifier eventConfigurationsUpdate
-GETGLOB 31
+PUSHINT 33
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -6779,13 +7310,16 @@ PUSHCONT {
 	LDREFRTOS
 	LDU 160
 	LDU 16
-	TUPLE 3
+	LDMSGADDR
+	PLDU 32
+	TUPLE 4
 	SWAP
 	LDREFRTOS
 	NIP
 	LDMSGADDR
-	PLDU 160
-	TUPLE 2
+	LDU 160
+	PLDU 32
+	TUPLE 3
 	TUPLE 6
 }
 PUSHCONT {
@@ -6806,10 +7340,12 @@ PUSHCONT {
 	PUSHINT 0
 	PUSHINT 0
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
-	TUPLE 3
+	PUSHINT 0
+	TUPLE 4
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	PUSHINT 0
-	TUPLE 2
+	PUSHINT 0
+	TUPLE 3
 	TUPLE 6
 }
 IFELSE
@@ -6835,7 +7371,8 @@ NIP
 ; end colValue
 ; expValue
 ;; fetch eventConfigurationsUpdate
-GETGLOB 31
+PUSHINT 33
+GETGLOBVAR
 ;; push identifier id
 PUSH S6
 SWAP
@@ -6873,33 +7410,38 @@ XCHG s7
 BLKDROP 7
 STBREFR
 PUSH S2
+UNTUPLE 4
+NEWC
+PUSH S4
+STUR 160
+PUSH S3
+STUR 16
+PUSH S2
+STSLICER
+PUSH S1
+STUR 32
+XCHG s4
+BLKDROP 4
+STBREFR
+PUSH S1
 UNTUPLE 3
 NEWC
 PUSH S3
-STUR 160
-PUSH S2
-STUR 16
-PUSH S1
 STSLICER
+PUSH S2
+STUR 160
+PUSH S1
+STUR 32
 XCHG s3
 BLKDROP 3
-STBREFR
-PUSH S1
-UNTUPLE 2
-NEWC
-PUSH S2
-STSLICER
-PUSH S1
-STUR 160
-NIP
-NIP
 STBREFR
 XCHG s6
 BLKDROP 6
 ROTREV
 PUSHINT 32
 DICTUSETB
-SETGLOB 31
+PUSHINT 33
+SETGLOBVAR
 ; end colValue
 ;; emit EventConfigurationUpdateVote
 NEWC
@@ -6935,14 +7477,15 @@ PUSH S6
 INDEX 0
 ;; get member bridgeUpdateRequiredConfirmations
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 1
 ;; ==
 EQUAL
 PUSHCONT {
 	; expValue
 	;; fetch eventConfigurations
-	GETGLOB 30
+	PUSHINT 32
+	GETGLOBVAR
 	;; get member targetID
 	;; push identifier update
 	PUSH S8
@@ -6980,7 +7523,8 @@ PUSHCONT {
 	ROTREV
 	PUSHINT 32
 	DICTUSETB
-	SETGLOB 30
+	PUSHINT 32
+	SETGLOBVAR
 	; end colValue
 	;; if
 	;; get member _type
@@ -6990,7 +7534,8 @@ PUSHCONT {
 	PUSH S7
 	INDEX 1
 	;; push identifier eventConfigurations
-	GETGLOB 30
+	PUSHINT 32
+	GETGLOBVAR
 	PUSHINT 32
 	DICTUGET
 	PUSHCONT {
@@ -7024,7 +7569,8 @@ PUSHCONT {
 		PUSH S7
 		INDEX 1
 		;; push identifier eventConfigurations
-		GETGLOB 30
+		PUSHINT 32
+		GETGLOBVAR
 		PUSHINT 32
 		DICTUGET
 		PUSHCONT {
@@ -7050,7 +7596,7 @@ PUSHCONT {
 		STSLICECONST 0
 		STSLICECONST 1
 		NEWC
-		STSLICECONST x2eb55df4
+		STSLICECONST x09f706b8
 		;; _basicInitData
 		;; get member basicInitData
 		;; push identifier update
@@ -7079,16 +7625,18 @@ PUSHCONT {
 		;; push identifier update
 		PUSH S9
 		INDEX 4
-		UNTUPLE 3
-		BLKSWAP 1, 3
-		PUSH S3
+		UNTUPLE 4
+		BLKSWAP 1, 4
+		PUSH S4
 		STUR 160
-		PUSH S2
+		PUSH S3
 		STUR 16
-		PUSH S1
+		PUSH S2
 		STSLICER
-		XCHG s3
-		BLKDROP 3
+		PUSH S1
+		STUR 32
+		XCHG s4
+		BLKDROP 4
 		STBREFR
 		ENDC
 		PUSHINT 1
@@ -7103,7 +7651,8 @@ PUSHCONT {
 		PUSH S7
 		INDEX 1
 		;; push identifier eventConfigurations
-		GETGLOB 30
+		PUSHINT 32
+		GETGLOBVAR
 		PUSHINT 32
 		DICTUGET
 		PUSHCONT {
@@ -7129,7 +7678,7 @@ PUSHCONT {
 		STSLICECONST 0
 		STSLICECONST 1
 		NEWC
-		STSLICECONST x2e9789d6
+		STSLICECONST x74b627de
 		;; _basicInitData
 		;; get member basicInitData
 		;; push identifier update
@@ -7158,14 +7707,16 @@ PUSHCONT {
 		;; push identifier update
 		PUSH S9
 		INDEX 5
-		UNTUPLE 2
-		ROT
-		PUSH S2
+		UNTUPLE 3
+		BLKSWAP 1, 3
+		PUSH S3
 		STSLICER
-		PUSH S1
+		PUSH S2
 		STUR 160
-		NIP
-		NIP
+		PUSH S1
+		STUR 32
+		XCHG s3
+		BLKDROP 3
 		STBREFR
 		ENDC
 		PUSHINT 1
@@ -7195,7 +7746,8 @@ PUSHCONT {
 	PUSH S8
 	INDEX 1
 	;; push identifier eventConfigurations
-	GETGLOB 30
+	PUSHINT 32
+	GETGLOBVAR
 	PUSHINT 32
 	DICTUGET
 	PUSHCONT {
@@ -7222,7 +7774,8 @@ PUSHCONT {
 	PUSH S8
 	INDEX 1
 	;; push identifier eventConfigurations
-	GETGLOB 30
+	PUSHINT 32
+	GETGLOBVAR
 	PUSHINT 32
 	DICTUGET
 	PUSHCONT {
@@ -7260,7 +7813,7 @@ PUSH S5
 INDEX 0
 ;; get member bridgeUpdateRequiredRejects
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 2
 ;; ==
 EQUAL
@@ -7287,7 +7840,8 @@ PUSHCONT {
 	PUSH S8
 	INDEX 1
 	;; push identifier eventConfigurations
-	GETGLOB 30
+	PUSHINT 32
+	GETGLOBVAR
 	PUSHINT 32
 	DICTUGET
 	PUSHCONT {
@@ -7314,7 +7868,8 @@ PUSHCONT {
 	PUSH S8
 	INDEX 1
 	;; push identifier eventConfigurations
-	GETGLOB 30
+	PUSHINT 32
+	GETGLOBVAR
 	PUSHINT 32
 	DICTUGET
 	PUSHCONT {
@@ -7410,17 +7965,20 @@ TUPLE 7
 PUSHINT 0
 PUSHINT 0
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
-TUPLE 3
+PUSHINT 0
+TUPLE 4
 ;; ret param: tonInitData
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 PUSHINT 0
-TUPLE 2
+PUSHINT 0
+TUPLE 3
 ;; get member votes
 ;; index
 ;; push identifier id
 PUSH S7
 ;; push identifier eventConfigurationsUpdate
-GETGLOB 31
+PUSHINT 33
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -7451,11 +8009,13 @@ PUSHCONT {
 	STZEROES
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	STSLICER
+	PUSHINT 32
+	STZEROES
 	STBREFR
 	NEWC
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	STSLICER
-	PUSHINT 160
+	PUSHINT 192
 	STZEROES
 	STBREFR
 	ENDC
@@ -7573,7 +8133,8 @@ BLKDROP 4
 ;; push identifier id
 PUSH S7
 ;; push identifier eventConfigurationsUpdate
-GETGLOB 31
+PUSHINT 33
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -7604,11 +8165,13 @@ PUSHCONT {
 	STZEROES
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	STSLICER
+	PUSHINT 32
+	STZEROES
 	STBREFR
 	NEWC
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	STSLICER
-	PUSHINT 160
+	PUSHINT 192
 	STZEROES
 	STBREFR
 	ENDC
@@ -7640,7 +8203,8 @@ POP S3
 ;; push identifier id
 PUSH S7
 ;; push identifier eventConfigurationsUpdate
-GETGLOB 31
+PUSHINT 33
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -7671,11 +8235,13 @@ PUSHCONT {
 	STZEROES
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	STSLICER
+	PUSHINT 32
+	STZEROES
 	STBREFR
 	NEWC
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	STSLICER
-	PUSHINT 160
+	PUSHINT 192
 	STZEROES
 	STBREFR
 	ENDC
@@ -7693,7 +8259,9 @@ LDREFRTOS
 NIP
 LDU 160
 LDU 16
-TUPLE 3
+LDMSGADDR
+PLDU 32
+TUPLE 4
 ; colValue
 POP S2
 ; end colValue
@@ -7704,7 +8272,8 @@ POP S2
 ;; push identifier id
 PUSH S7
 ;; push identifier eventConfigurationsUpdate
-GETGLOB 31
+PUSHINT 33
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -7735,11 +8304,13 @@ PUSHCONT {
 	STZEROES
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	STSLICER
+	PUSHINT 32
+	STZEROES
 	STBREFR
 	NEWC
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	STSLICER
-	PUSHINT 160
+	PUSHINT 192
 	STZEROES
 	STBREFR
 	ENDC
@@ -7757,8 +8328,9 @@ SSKIPFIRST
 LDREFRTOS
 NIP
 LDMSGADDR
-PLDU 160
-TUPLE 2
+LDU 160
+PLDU 32
+TUPLE 3
 ; colValue
 NIP
 ; end colValue
@@ -7769,7 +8341,8 @@ NIP
 ;; push identifier id
 PUSH S7
 ;; push identifier eventConfigurationsUpdate
-GETGLOB 31
+PUSHINT 33
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -7800,11 +8373,13 @@ PUSHCONT {
 	STZEROES
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	STSLICER
+	PUSHINT 32
+	STZEROES
 	STBREFR
 	NEWC
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	STSLICER
-	PUSHINT 160
+	PUSHINT 192
 	STZEROES
 	STBREFR
 	ENDC
@@ -7823,7 +8398,8 @@ POP S5
 ;; push identifier id
 PUSH S7
 ;; push identifier eventConfigurationsUpdate
-GETGLOB 31
+PUSHINT 33
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -7854,11 +8430,13 @@ PUSHCONT {
 	STZEROES
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	STSLICER
+	PUSHINT 32
+	STZEROES
 	STBREFR
 	NEWC
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	STSLICER
-	PUSHINT 160
+	PUSHINT 192
 	STZEROES
 	STBREFR
 	ENDC
@@ -7894,7 +8472,7 @@ PUSHCONT {
 	STSLICECONST 0
 	STSLICECONST 1
 	NEWC
-	STSLICECONST xa822b329
+	STSLICECONST xe2eb6931
 	PUSH S8
 	UNPAIR
 	XCHG s2
@@ -7929,25 +8507,29 @@ PUSHCONT {
 	STREFR
 	BLKDROP2 7, 2
 	PUSH S4
+	UNTUPLE 4
+	BLKSWAP 1, 4
+	PUSH S4
+	STUR 160
+	PUSH S3
+	STUR 16
+	PUSH S2
+	STSLICER
+	PUSH S1
+	STUR 32
+	XCHG s4
+	BLKDROP 4
+	PUSH S3
 	UNTUPLE 3
 	BLKSWAP 1, 3
-	PUSH S3
-	STUR 160
-	PUSH S2
-	STUR 16
-	PUSH S1
-	STSLICER
-	XCHG s3
-	BLKDROP 3
-	PUSH S3
-	UNTUPLE 2
-	ROT
 	NEWC
-	PUSH S3
+	PUSH S4
 	STSLICER
-	PUSH S2
+	PUSH S3
 	STUR 160
-	BLKDROP2 2, 2
+	PUSH S2
+	STUR 32
+	BLKDROP2 3, 2
 	STBREFR
 	STBREFR
 	STBREFR
@@ -7997,17 +8579,20 @@ TUPLE 7
 PUSHINT 0
 PUSHINT 0
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
-TUPLE 3
+PUSHINT 0
+TUPLE 4
 ;; ret param: tonInitData
 PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 PUSHINT 0
-TUPLE 2
+PUSHINT 0
+TUPLE 3
 ;; get member votes
 ;; index
 ;; push identifier id
 PUSH S7
 ;; push identifier eventConfigurationsUpdate
-GETGLOB 31
+PUSHINT 33
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -8038,11 +8623,13 @@ PUSHCONT {
 	STZEROES
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	STSLICER
+	PUSHINT 32
+	STZEROES
 	STBREFR
 	NEWC
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	STSLICER
-	PUSHINT 160
+	PUSHINT 192
 	STZEROES
 	STBREFR
 	ENDC
@@ -8160,7 +8747,8 @@ BLKDROP 4
 ;; push identifier id
 PUSH S7
 ;; push identifier eventConfigurationsUpdate
-GETGLOB 31
+PUSHINT 33
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -8191,11 +8779,13 @@ PUSHCONT {
 	STZEROES
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	STSLICER
+	PUSHINT 32
+	STZEROES
 	STBREFR
 	NEWC
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	STSLICER
-	PUSHINT 160
+	PUSHINT 192
 	STZEROES
 	STBREFR
 	ENDC
@@ -8227,7 +8817,8 @@ POP S3
 ;; push identifier id
 PUSH S7
 ;; push identifier eventConfigurationsUpdate
-GETGLOB 31
+PUSHINT 33
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -8258,11 +8849,13 @@ PUSHCONT {
 	STZEROES
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	STSLICER
+	PUSHINT 32
+	STZEROES
 	STBREFR
 	NEWC
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	STSLICER
-	PUSHINT 160
+	PUSHINT 192
 	STZEROES
 	STBREFR
 	ENDC
@@ -8280,7 +8873,9 @@ LDREFRTOS
 NIP
 LDU 160
 LDU 16
-TUPLE 3
+LDMSGADDR
+PLDU 32
+TUPLE 4
 ; colValue
 POP S2
 ; end colValue
@@ -8291,7 +8886,8 @@ POP S2
 ;; push identifier id
 PUSH S7
 ;; push identifier eventConfigurationsUpdate
-GETGLOB 31
+PUSHINT 33
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -8322,11 +8918,13 @@ PUSHCONT {
 	STZEROES
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	STSLICER
+	PUSHINT 32
+	STZEROES
 	STBREFR
 	NEWC
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	STSLICER
-	PUSHINT 160
+	PUSHINT 192
 	STZEROES
 	STBREFR
 	ENDC
@@ -8344,8 +8942,9 @@ SSKIPFIRST
 LDREFRTOS
 NIP
 LDMSGADDR
-PLDU 160
-TUPLE 2
+LDU 160
+PLDU 32
+TUPLE 3
 ; colValue
 NIP
 ; end colValue
@@ -8356,7 +8955,8 @@ NIP
 ;; push identifier id
 PUSH S7
 ;; push identifier eventConfigurationsUpdate
-GETGLOB 31
+PUSHINT 33
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -8387,11 +8987,13 @@ PUSHCONT {
 	STZEROES
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	STSLICER
+	PUSHINT 32
+	STZEROES
 	STBREFR
 	NEWC
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	STSLICER
-	PUSHINT 160
+	PUSHINT 192
 	STZEROES
 	STBREFR
 	ENDC
@@ -8410,7 +9012,8 @@ POP S5
 ;; push identifier id
 PUSH S7
 ;; push identifier eventConfigurationsUpdate
-GETGLOB 31
+PUSHINT 33
+GETGLOBVAR
 PUSHINT 32
 DICTUGET
 PUSHCONT {
@@ -8441,11 +9044,13 @@ PUSHCONT {
 	STZEROES
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	STSLICER
+	PUSHINT 32
+	STZEROES
 	STBREFR
 	NEWC
 	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
 	STSLICER
-	PUSHINT 160
+	PUSHINT 192
 	STZEROES
 	STBREFR
 	ENDC
@@ -8472,7 +9077,8 @@ DROP
 ;; delete
 ; expValue
 ;; fetch eventConfigurationsUpdate
-GETGLOB 31
+PUSHINT 33
+GETGLOBVAR
 ;; push identifier id
 PUSH S1
 SWAP
@@ -8484,7 +9090,8 @@ DICTUDEL
 DROP
 ; colValue
 NIP
-SETGLOB 31
+PUSHINT 33
+SETGLOBVAR
 ; end colValue
 DROP
 ; end function _removeUpdateEventConfiguration
@@ -8566,7 +9173,7 @@ IF
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -8629,7 +9236,7 @@ CALL $getVotingDirection_internal$
 ;; decl: vote
 ; expValue
 ;; fetch bridgeRelayVotes
-PUSHINT 33
+PUSHINT 35
 GETGLOBVAR
 ;; push identifier target
 PUSH S5
@@ -8677,7 +9284,7 @@ STDICT
 ROTREV
 PUSHINT 441
 DICTSETB
-PUSHINT 33
+PUSHINT 35
 SETGLOBVAR
 ; end colValue
 ;; push identifier target
@@ -8692,7 +9299,7 @@ PUSH S1
 INDEX 0
 ;; get member bridgeUpdateRequiredConfirmations
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 1
 ;; ==
 EQUAL
@@ -8778,7 +9385,7 @@ DUP
 INDEX 0
 ;; get member bridgeUpdateRequiredRejects
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 2
 ;; ==
 EQUAL
@@ -8862,7 +9469,7 @@ IF
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -8925,7 +9532,7 @@ CALL $getVotingDirection_internal$
 ;; decl: vote
 ; expValue
 ;; fetch bridgeRelayVotes
-PUSHINT 33
+PUSHINT 35
 GETGLOBVAR
 ;; push identifier target
 PUSH S5
@@ -8973,7 +9580,7 @@ STDICT
 ROTREV
 PUSHINT 441
 DICTSETB
-PUSHINT 33
+PUSHINT 35
 SETGLOBVAR
 ; end colValue
 ;; push identifier target
@@ -8988,7 +9595,7 @@ PUSH S1
 INDEX 0
 ;; get member bridgeUpdateRequiredConfirmations
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 1
 ;; ==
 EQUAL
@@ -9074,7 +9681,7 @@ DUP
 INDEX 0
 ;; get member bridgeUpdateRequiredRejects
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 INDEX 2
 ;; ==
 EQUAL
@@ -9216,7 +9823,7 @@ BLKDROP 5
 ENDC
 CTOS
 ;; push identifier bridgeRelayVotes
-PUSHINT 33
+PUSHINT 35
 GETGLOBVAR
 PUSHINT 441
 DICTGET
@@ -9407,7 +10014,7 @@ BLKDROP 5
 ENDC
 CTOS
 ;; push identifier bridgeRelayVotes
-PUSHINT 33
+PUSHINT 35
 GETGLOBVAR
 PUSHINT 441
 DICTGET
@@ -9533,7 +10140,7 @@ DROP
 ;; delete
 ; expValue
 ;; fetch bridgeRelayVotes
-PUSHINT 33
+PUSHINT 35
 GETGLOBVAR
 ;; push identifier target
 PUSH S1
@@ -9562,7 +10169,7 @@ DICTDEL
 DROP
 ; colValue
 NIP
-PUSHINT 33
+PUSHINT 35
 SETGLOBVAR
 ; end colValue
 DROP
@@ -9588,7 +10195,7 @@ PUSHINT 0
 TUPLE 4
 ;; return
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 NIP
 ;; emitting 1 value(s)
 PUSH S1
@@ -9646,7 +10253,7 @@ PUSHINT 0
 TUPLE 4
 ;; return
 ;; push identifier bridgeConfiguration
-GETGLOB 29
+GETGLOB 31
 NIP
 ; end function getDetails
 
@@ -9700,7 +10307,7 @@ PUSHINT 0
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -9757,7 +10364,7 @@ PUSHINT 0
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -9801,7 +10408,7 @@ PUSHINT 0
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerEthereumAccounts
-GETGLOB 27
+GETGLOB 29
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -9858,7 +10465,7 @@ PUSHINT 0
 ;; push identifier addr
 PUSH S1
 ;; push identifier ownerEthereumAccounts
-GETGLOB 27
+GETGLOB 29
 PUSHINT 267
 DICTGET
 PUSHCONT {
@@ -9879,7 +10486,7 @@ NIP
 ; function _grantOwnership
 ; expValue
 ;; fetch ownerAccounts
-GETGLOB 26
+GETGLOB 28
 ;; push identifier addr
 PUSH S2
 SWAP
@@ -9891,11 +10498,11 @@ STI 1
 ROTREV
 PUSHINT 267
 DICTSETB
-SETGLOB 26
+SETGLOB 28
 ; end colValue
 ; expValue
 ;; fetch ownerEthereumAccounts
-GETGLOB 27
+GETGLOB 29
 ;; push identifier addr
 PUSH S2
 SWAP
@@ -9908,7 +10515,7 @@ STU 160
 ROTREV
 PUSHINT 267
 DICTSETB
-SETGLOB 27
+SETGLOB 29
 ; end colValue
 ;; emit OwnershipGranted
 NEWC
@@ -9934,7 +10541,7 @@ DROP2
 ;; delete
 ; expValue
 ;; fetch ownerAccounts
-GETGLOB 26
+GETGLOB 28
 ;; push identifier addr
 PUSH S1
 SWAP
@@ -9946,12 +10553,12 @@ DICTDEL
 DROP
 ; colValue
 NIP
-SETGLOB 26
+SETGLOB 28
 ; end colValue
 ;; delete
 ; expValue
 ;; fetch ownerEthereumAccounts
-GETGLOB 27
+GETGLOB 29
 ;; push identifier addr
 PUSH S1
 SWAP
@@ -9963,7 +10570,7 @@ DICTDEL
 DROP
 ; colValue
 NIP
-SETGLOB 27
+SETGLOB 29
 ; end colValue
 ;; emit OwnershipRemoved
 NEWC
@@ -10003,7 +10610,7 @@ PUSHINT 0
 NEWDICT
 PAIR
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 DUP
 PUSHINT 267
 DICTMIN
@@ -10060,7 +10667,7 @@ PUSHCONT {
 		;; push identifier addr
 		PUSH S3
 		;; push identifier ownerEthereumAccounts
-		GETGLOB 27
+		GETGLOB 29
 		PUSHINT 267
 		DICTGET
 		PUSHCONT {
@@ -10171,7 +10778,7 @@ PUSHINT 0
 NEWDICT
 PAIR
 ;; push identifier ownerAccounts
-GETGLOB 26
+GETGLOB 28
 DUP
 PUSHINT 267
 DICTMIN
@@ -10228,7 +10835,7 @@ PUSHCONT {
 		;; push identifier addr
 		PUSH S3
 		;; push identifier ownerEthereumAccounts
-		GETGLOB 27
+		GETGLOB 29
 		PUSHINT 267
 		DICTGET
 		PUSHCONT {
@@ -10297,10 +10904,12 @@ STUR 64
 GETGLOB 6
 STUR 1
 NEWC
-GETGLOB 29
-GETGLOB 30
 GETGLOB 31
+PUSHINT 32
+GETGLOBVAR
 PUSHINT 33
+GETGLOBVAR
+PUSHINT 35
 GETGLOBVAR
 REVERSE 5, 0
 SWAP
@@ -10339,12 +10948,16 @@ GETGLOB 25
 GETGLOB 26
 GETGLOB 27
 GETGLOB 28
-PUSHINT 32
+GETGLOB 29
+GETGLOB 30
+PUSHINT 34
 GETGLOBVAR
-PUSHINT 22
+PUSHINT 24
 PUSHINT 0
 REVX
 STBREF
+STU 16
+STU 16
 STU 16
 STU 16
 STU 16
@@ -10382,14 +10995,18 @@ LDU 16
 LDU 16
 PLDI 1
 TUPLE 4
-SETGLOB 29
+SETGLOB 31
 LDDICT
 LDDICT
 PLDDICT
+PUSHINT 35
+SETGLOBVAR
 PUSHINT 33
 SETGLOBVAR
-SETGLOB 31
-SETGLOB 30
+PUSHINT 32
+SETGLOBVAR
+LDU 16
+LDU 16
 LDU 16
 LDU 16
 LDU 16
@@ -10410,8 +11027,10 @@ LDDICT
 LDDICT
 LDU 16
 PLDDICT
-PUSHINT 32
+PUSHINT 34
 SETGLOBVAR
+SETGLOB 30
+SETGLOB 29
 SETGLOB 28
 SETGLOB 27
 SETGLOB 26
@@ -10454,14 +11073,18 @@ PUSHCONT {
 	LDU 16
 	PLDI 1
 	TUPLE 4
-	SETGLOB 29
+	SETGLOB 31
 	LDDICT
 	LDDICT
 	PLDDICT
+	PUSHINT 35
+	SETGLOBVAR
 	PUSHINT 33
 	SETGLOBVAR
-	SETGLOB 31
-	SETGLOB 30
+	PUSHINT 32
+	SETGLOBVAR
+	LDU 16
+	LDU 16
 	LDU 16
 	LDU 16
 	LDU 16
@@ -10482,8 +11105,10 @@ PUSHCONT {
 	LDDICT
 	LDU 16
 	PLDDICT
-	PUSHINT 32
+	PUSHINT 34
 	SETGLOBVAR
+	SETGLOB 30
+	SETGLOB 29
 	SETGLOB 28
 	SETGLOB 27
 	SETGLOB 26
@@ -10523,34 +11148,36 @@ PUSHCONT {
 		PUSHINT 0
 	}
 	IFELSE
-	SETGLOB 28
+	SETGLOB 30
 	; init bridgeConfiguration
 	PUSHINT 0
 	PUSHINT 0
 	PUSHINT 0
 	PUSHINT 0
 	TUPLE 4
-	SETGLOB 29
-	; init eventConfigurations
-	NEWDICT
-	SETGLOB 30
-	; init eventConfigurationsUpdate
-	NEWDICT
 	SETGLOB 31
-	; init bridgeConfigurationVotes
+	; init eventConfigurations
 	NEWDICT
 	PUSHINT 32
 	SETGLOBVAR
-	; init bridgeRelayVotes
+	; init eventConfigurationsUpdate
 	NEWDICT
 	PUSHINT 33
 	SETGLOBVAR
+	; init bridgeConfigurationVotes
+	NEWDICT
+	PUSHINT 34
+	SETGLOBVAR
+	; init bridgeRelayVotes
+	NEWDICT
+	PUSHINT 35
+	SETGLOBVAR
 	; init ownerAccounts
 	NEWDICT
-	SETGLOB 26
+	SETGLOB 28
 	; init ownerEthereumAccounts
 	NEWDICT
-	SETGLOB 27
+	SETGLOB 29
 	; init ADDRESS_IS_NOT_OWNER
 	PUSHINT 0
 	SETGLOB 10
@@ -10578,27 +11205,33 @@ PUSHCONT {
 	; init SENDER_NOT_BRIDGE
 	PUSHINT 0
 	SETGLOB 18
-	; init EVENT_NOT_IN_PROGRESS
+	; init EVENT_BLOCK_NUMBER_LESS_THAN_START
 	PUSHINT 0
 	SETGLOB 19
-	; init SENDER_NOT_EVENT_CONFIGURATION
+	; init EVENT_TIMESTAMP_LESS_THAN_START
 	PUSHINT 0
 	SETGLOB 20
-	; init KEY_ALREADY_CONFIRMED
+	; init EVENT_NOT_IN_PROGRESS
 	PUSHINT 0
 	SETGLOB 21
-	; init KEY_ALREADY_REJECTED
+	; init SENDER_NOT_EVENT_CONFIGURATION
 	PUSHINT 0
 	SETGLOB 22
-	; init EVENT_NOT_CONFIRMED
+	; init KEY_ALREADY_CONFIRMED
 	PUSHINT 0
 	SETGLOB 23
-	; init TOO_LOW_MSG_VALUE
+	; init KEY_ALREADY_REJECTED
 	PUSHINT 0
 	SETGLOB 24
-	; init WRONG_TVM_KEY
+	; init EVENT_NOT_CONFIRMED
 	PUSHINT 0
 	SETGLOB 25
+	; init TOO_LOW_MSG_VALUE
+	PUSHINT 0
+	SETGLOB 26
+	; init WRONG_TVM_KEY
+	PUSHINT 0
+	SETGLOB 27
 	; set contract pubkey
 	PUSHINT 0
 	SWAP
@@ -10640,27 +11273,33 @@ PUSHCONT {
 	;; init state var: SENDER_NOT_BRIDGE
 	PUSHINT 5101
 	SETGLOB 18
+	;; init state var: EVENT_BLOCK_NUMBER_LESS_THAN_START
+	PUSHINT 5102
+	SETGLOB 19
+	;; init state var: EVENT_TIMESTAMP_LESS_THAN_START
+	PUSHINT 5103
+	SETGLOB 20
 	;; init state var: EVENT_NOT_IN_PROGRESS
 	PUSHINT 5201
-	SETGLOB 19
+	SETGLOB 21
 	;; init state var: SENDER_NOT_EVENT_CONFIGURATION
 	PUSHINT 5202
-	SETGLOB 20
+	SETGLOB 22
 	;; init state var: KEY_ALREADY_CONFIRMED
 	PUSHINT 5203
-	SETGLOB 21
+	SETGLOB 23
 	;; init state var: KEY_ALREADY_REJECTED
 	PUSHINT 5204
-	SETGLOB 22
+	SETGLOB 24
 	;; init state var: EVENT_NOT_CONFIRMED
 	PUSHINT 5205
-	SETGLOB 23
+	SETGLOB 25
 	;; init state var: TOO_LOW_MSG_VALUE
 	PUSHINT 5206
-	SETGLOB 24
+	SETGLOB 26
 	;; init state var: WRONG_TVM_KEY
 	PUSHINT 5301
-	SETGLOB 25
+	SETGLOB 27
 }
 IFELSE
 

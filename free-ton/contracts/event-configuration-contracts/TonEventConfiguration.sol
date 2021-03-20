@@ -59,6 +59,8 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, ErrorCodes
         bytes eventDataSignature,
         address relay
     ) public onlyBridge transferAfter(basicInitData.bridgeAddress, msg.value) {
+        require(eventVoteData.eventTimestamp >= initData.startTimestamp, EVENT_TIMESTAMP_LESS_THAN_START);
+
         IEvent.TonEventInitData eventInitData = buildEventInitData(eventVoteData);
 
         address tonEventAddress = new TonEvent{

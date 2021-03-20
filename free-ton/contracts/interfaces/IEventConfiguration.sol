@@ -17,11 +17,13 @@ interface IEventConfiguration {
         uint160 eventAddress;
         uint16 eventBlocksToConfirm;
         address proxyAddress;
+        uint32 startBlockNumber;
     }
 
     struct TonEventConfigurationInitData {
         address eventAddress;
         uint160 proxyAddress;
+        uint32 startTimestamp;
     }
 
     event EventConfirmation(address addr, address relay);
