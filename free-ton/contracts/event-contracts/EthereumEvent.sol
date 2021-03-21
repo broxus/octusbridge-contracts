@@ -12,6 +12,10 @@ import "./../utils/TransferUtils.sol";
 import "./../additional/CellEncoder.sol";
 
 
+/*
+    @title Basic example of Ethereum event configuration
+    @dev This implementation is used for cross chain token transfers
+*/
 contract EthereumEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
     EthereumEventInitData static initData;
 
@@ -38,20 +42,19 @@ contract EthereumEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
     }
 
     /*
-        Notify specific contract that event contract status has been changed
+        @notice Notify owner contract that event contract status has been changed
         @dev In this example, notification receiver is derived from the configuration meta
+        @dev Used to easily collect all confirmed events by user's wallet
     */
     function notifyEventStatusChanged() internal view {
         (,,,,,address owner_address) = getDecodedData();
 
-        // TODO: discuss minimum value of the notification
         if (owner_address.value != 0) {
             IEventNotificationReceiver(owner_address).notifyEthereumEventStatusChanged{value: 0.00001 ton}(status);
         }
     }
 
     /*
-        Ethereum-TON event instance. Collects confirmations and than execute the Proxy callback.
         @dev Should be deployed only by EthereumEventConfiguration contract
         @param relay Public key of the relay, who initiated the event creation
     */
@@ -67,9 +70,10 @@ contract EthereumEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
     }
 
     /*
-        Confirm event instance.
-        @dev Should be called by Bridge -> EthereumEventConfiguration
-        @param relay Address of the relay, who initiated the config creation
+        @notice Confirm event
+        @dev Can be called only by parent event configuration
+        @dev Can be called only when event configuration is in inProcess status
+        @param relay Relay, who initialized the confirmation
     */
     function confirm(
         address relay
@@ -88,15 +92,15 @@ contract EthereumEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
             status = EthereumEventStatus.Confirmed;
 
             notifyEventStatusChanged();
-//            TODO: fix problem with freezing contract after emptying balance
             transferAll(initData.ethereumEventConfiguration);
         }
     }
 
     /*
-        Reject event instance.
-        @dev Should be called by Bridge -> EthereumEventConfiguration
-        @param relay Public key of the relay, who initiated the config creation
+        @notice Reject event
+        @dev Can be called only by parent event configuration
+        @dev Can be called only when event configuration is in inProcess status
+        @param relay Relay, who initialized the confirmation
     */
     function reject(
         address relay
@@ -120,9 +124,12 @@ contract EthereumEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
     }
 
     /*
-        Execute callback on proxy contract
-        @dev Anyone can call this in case event is in Confirmed status
+        @notice Execute callback on proxy contract
+        @dev Can be called by anyone
+        @dev Can be called only when event configuration is in Confirmed status
         @dev May be called only once, because status will be changed to Executed
+        @dev Require more than 1 TON of attached balance
+        @dev Send the attached balance to the Proxy call
     */
     function executeProxyCallback() public eventConfirmed {
         require(msg.value >= 1 ton, TOO_LOW_MSG_VALUE);
@@ -134,11 +141,11 @@ contract EthereumEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
     }
 
     /*
-        Read contract details
+        @notice Get event details
         @returns _initData Init data
         @returns _status Current event status
-        @returns _confirmRelays List of confirm keys
-        @returns _rejectRelays List of reject keys
+        @returns _confirmRelays List of relays who have confirmed event
+        @returns _confirmRelays List of relays who have rejected event
     */
     function getDetails() public view returns (
         EthereumEventInitData _initData,
@@ -154,6 +161,15 @@ contract EthereumEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
         );
     }
 
+    /*
+        @notice Get decoded event data
+        @returns rootToken Token root contract address
+        @returns tokens How much tokens to mint
+        @returns wid Tokens receiver address workchain ID
+        @returns owner_addr Token receiver address body
+        @returns owner_pubkey Token receiver public key
+        @returns owner_address Token receiver address (derived from the wid and owner_addr)
+    */
     function getDecodedData() public view returns (
         address rootToken,
         uint128 tokens,
@@ -174,6 +190,10 @@ contract EthereumEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
         owner_address = address.makeAddrStd(wid, owner_addr);
     }
 
+    /*
+        @notice Bounce handler
+        @dev Used in case something went wrong in the Proxy callback and switch status back to Confirmed
+    */
     onBounce(TvmSlice body) external {
         uint32 functionId = body.decode(uint32);
         if (functionId == tvm.functionId(IProxy.broxusBridgeCallback)) {

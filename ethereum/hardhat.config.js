@@ -29,7 +29,7 @@ module.exports = {
   networks: {
     hardhat: {},
     goerli: {
-      url: 'https://goerli.infura.io/v3/2353043c705e4e0fa25a22689906eef4',
+      url: process.env.RPC_GOERLI,
       accounts: {
         count: 10,
         initialIndex: 0,
@@ -40,7 +40,7 @@ module.exports = {
       chainId: 5,
     },
     main: {
-      url: 'https://mainnet.infura.io/v3/2353043c705e4e0fa25a22689906eef4',
+      url: process.env.RPC_MAIN,
       accounts: [process.env.ETHEREUM_ACCOUNT],
       chainId: 1,
       gas: 2000000,

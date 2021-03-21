@@ -14,6 +14,10 @@ import "./utils/AccountsOwnable.sol";
 import "./utils/TransferUtils.sol";
 
 
+/*
+    @title FT Bridge contract
+    @summary
+*/
 contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     uint16 static _randomNonce;
 
@@ -67,7 +71,6 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     }
 
     /*
-        Basic Bridge contract
         @param _relayAccounts List of relays accounts
         @param _relayEthereumAccounts List of relays Ethereum accounts
         @param _bridgeConfiguration Initial Bridge configuration
@@ -90,10 +93,10 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     }
 
     /*
-        Vote for Event configuration (any type).
+        @notice Initialize adding new event configuration
         @dev Called only by relay.
         @dev Event configuration ID should not exist, revert otherwise
-        @param id TON event configuration contract address
+        @param id Event configuration id
         @param addr Address of event configuration contract
         @param _type Type of event configuration (Ethereum or TON)
     */
@@ -122,7 +125,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     }
 
     /*
-        Vote for specific configuration.
+        @notice Vote for specific configuration.
         @dev Event configuration ID should exist, revert otherwise
         @param id Event configuration ID
         @param vote Confirm of reject
@@ -179,7 +182,12 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     }
 
     /*
-        Get list of confirm and reject keys for specific address. Also get status - confirmed or not.
+        @notice Get details about specific event configuration
+        @param id Event configuration id
+        @returns confirmRelays List of relays, who have confirmed this configuration
+        @returns rejectRelays List of relays, who have rejected this configuration
+        @returns addr Address of the event configuration contract
+        @returns status Current status of the configuration (active or not)
     */
     function getEventConfigurationDetails(
         uint32 id
@@ -202,10 +210,10 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     }
 
     /*
-        Get list of active event configuration contracts
-        @returns ids List of active event configuration ids
-        @returns addrs List of active event configuration addresses
-        @returns _types List of active event configurations types
+        @notice Get list of active event configuration contracts
+        @returns ids List of ids
+        @returns addrs List of addresses
+        @returns _types List of types
     */
     function getActiveEventConfigurations() public view returns (
         uint32[] ids,
@@ -223,11 +231,11 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     }
 
     /*
-        Get all configurations.
-        @returns ids List of  event configuration ids
-        @returns addrs List of event configuration addresses
-        @returns statuses List of event configuration status
-        @returns _types List of event configurations types
+        @notice Get all event configurations.
+        @returns ids List of ids
+        @returns addrs List of addresses
+        @returns statuses List of status
+        @returns _types List of types
     */
     function getEventConfigurations() public view returns (
         uint32[] ids,
@@ -244,7 +252,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     }
 
     /*
-        Confirm Ethereum event instance.
+        @notice Confirm Ethereum event instance.
         @dev Called only by relay
         @param eventVoteData Ethereum event vote data
         @param configurationID Ethereum Event configuration ID
@@ -267,8 +275,8 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     }
 
     /*
-        Reject Ethereum event instance.
-        @dev Called only by relay. Only reject already existing EthereumEvent contract, not create it.
+        @notice Reject Ethereum event instance.
+        @dev Called only by relay. Only rejects already existing EthereumEvent contract, not deploy it.
         @param eventVoteData Ethereum event vote data
         @param configurationID Ethereum Event configuration ID
     */
@@ -290,10 +298,10 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     }
 
     /*
-        Confirm TON event instance.
+        @notice Confirm TON event instance.
         @dev Called only by relay
         @param eventVoteData Ton event vote data
-        @param eventDataSignature Relay's signature of the Ethereum callback
+        @param eventDataSignature Relay's signature of the corresponding TonEvent structure
         @param configurationID Ton Event configuration ID
     */
     function confirmTonEvent(
@@ -316,8 +324,8 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     }
 
     /*
-        Reject TON event instance.
-        @dev Called only by relay. Only reject already existing TonEvent contract, not create it.
+        @notice Reject TON event instance.
+        @dev Called only by relay. Only reject already existing TonEvent contract, not deploy it.
         @param eventVoteData Ton event vote data
         @param configurationID Ton Event configuration ID
     */
@@ -339,11 +347,11 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     }
 
     /*
-        Convert Vote structure to the decision of voter.
+        @notice Convert Vote structure to the decision of voter.
         @dev Since signature needs to mirror voting in Ethereum bridge
-        It doesn't need if relay reject the voting
-        His vote just won't be passed to Ethereum, if voting reaches enough confirmations
-        @returns bool Yes or no
+        It should be empty if relay reject the voting
+        His vote just won't be passed to Ethereum
+        @returns vote Voting decision
     */
     function getVotingDirection(Vote _vote) public pure returns(bool vote) {
         if (_vote.signature.length == 0) {
@@ -354,7 +362,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     }
 
     /*
-        Vote for Bridge configuration update
+        @notice Vote for Bridge configuration update
         @dev Can be called only by relay
         @param _bridgeConfiguration New bridge configuration
         @param _vote Vote structure. Signature and payload are empty for reject.
@@ -367,8 +375,6 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
         onlyOwnerAddress(msg.sender)
         transferAfterRest(msg.sender)
     {
-        // TODO: discuss replay protection in TON and Ethereum
-
         emit BridgeConfigurationUpdateVote(_bridgeConfiguration, msg.sender, _vote);
 
         bool vote = getVotingDirection(_vote);
@@ -395,7 +401,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     }
 
     /*
-        Garbage collector for update configuration voting
+        @notice Garbage collector for update configuration voting
         @dev Called each time voting ends and remove it details from the storage
     */
     function _removeBridgeConfigurationVoting(
@@ -405,10 +411,10 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     }
 
     /*
-        Get list of votes for bridge configuration update ID
+        @notice Get list of votes for specific bridge configuration update
         @param _bridgeConfiguration Bridge configuration
-        @returns confirmRelays List of keys who confirmed the update
-        @returns rejectRelays List of keys who rejected the update
+        @returns confirmRelays List of relay addresses who confirmed the update
+        @returns rejectRelays List of relay addresses who rejected the update
     */
     function getBridgeConfigurationVotes(
         BridgeConfiguration _bridgeConfiguration
@@ -427,14 +433,19 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
 
 
     /*
-        Initialize event configuration update. Allows to update event configuration contract address.
-        And make a call to the event configuration contract, which updates any data.
+        @notice Initialize event configuration update. Allows to update event configuration contract address.
+        And make a call to the event configuration contract, which updates initial data.
+        @dev Update id should not be used before
         @dev Basic init data and init data would be send to event configuration in case of confirmation
         @dev If you don't want to change them - just copy already existing and use them
         @dev If you want to update Ethereum event configuration, fill the tonInitData with dummy data,
         it won't be used anyway. The same works for TON configuration update.
-        @param id ID of the update, should not be used before
-        @param update Details of the update
+        @param id Update id
+        @param targetID Id of the event configuration to update
+        @param addr New event configuration address
+        @param basicInitData New basic init data
+        @param ethereumInitData New Ethereum event configuration init data
+        @param tonInitData New TON event configuration init data
     */
     function initializeUpdateEventConfiguration(
         uint32 id,
@@ -468,9 +479,10 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     }
 
     /*
-        Vote for already existing event configuration update.
-        @dev If voting finished - update an address from the update data. And send new (basicInitData, initData)
+        @notice Vote for event configuration update.
+        @dev If voting finished successfully - update an event configuration contract address. And send new (basicInitData, initData)
         to the event configuration contract, depending of it's type
+        @dev Called only by relay
         @param id Update ID
         @param vote Confirm / reject
     */
@@ -537,10 +549,15 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     }
 
     /*
-        Get details for specific configuration update
+        @notice Get details for specific configuration update
         @param id Update event configuration ID
-        @returns confirmRelays List of keys confirmed update
-        @returns rejectRelays List of keys rejected update
+        @returns confirmRelays List of relay addresses who have confirmed update
+        @returns rejectRelays List of relay addresses who have rejected update
+        @returns targetID Target event configuration id
+        @returns addr New event configuration contract address
+        @param basicInitData New basic init data
+        @param ethereumInitData New Ethereum event configuration init data
+        @param tonInitData New TON event configuration init data
     */
     function getUpdateEventConfigurationDetails(
         uint32 id
@@ -570,7 +587,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     }
 
     /*
-        Garbage collector for event configuration update
+        @notice Garbage collector for event configuration update
         @dev removes the update details
     */
     function _removeUpdateEventConfiguration(uint32 id) internal {
@@ -579,9 +596,9 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
 
 
     /*
-        Vote for Bridge relays update
+        @notice Vote for Bridge relays update
         @dev Called only by relay
-        @param target Target relay
+        @param target Target relay structure
         @param _vote Vote structure. Signature and payload are empty for reject.
     */
     function updateBridgeRelays(
@@ -592,8 +609,6 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
         onlyOwnerAddress(msg.sender)
         transferAfterRest(msg.sender)
     {
-        // TODO: discuss usage of onlyActive
-
         emit BridgeRelaysUpdateVote(target, msg.sender, _vote);
 
         bool vote = getVotingDirection(_vote);
@@ -627,7 +642,10 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     }
 
     /*
-        Get list of keys who confirmed and rejected specific voting
+        @notice Get list of relays who voted for specific Bridge relay update
+        @param target Target relay structure
+        @returns confirmRelays List of relay addresses who confirmed the update
+        @returns rejectRelays List of relay addresses who rejected the update
     */
     function getBridgeRelayVotes(
         BridgeRelay target
@@ -646,7 +664,7 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
 
 
     /*
-        Garbage collector for update relay
+        @notice Garbage collector for bridge update relay
         @dev Called each time voting ends and remove it's details from the storage
     */
     function _removeBridgeRelayVoting(
@@ -656,8 +674,8 @@ contract Bridge is AccountsOwnable, TransferUtils, IBridge {
     }
 
     /*
-        Get Bridge details.
-        @returns _bridgeConfiguration Structure with Bridge configuration details
+        @notice Get Bridge details.
+        @returns _bridgeConfiguration Current bridge configuration
     */
     function getDetails() public view returns (
         BridgeConfiguration _bridgeConfiguration
