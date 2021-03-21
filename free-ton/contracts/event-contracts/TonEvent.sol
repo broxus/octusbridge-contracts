@@ -10,6 +10,10 @@ import "./../utils/TransferUtils.sol";
 import "./../additional/CellEncoder.sol";
 
 
+/*
+    @title Basic example of TON event configuration
+    @dev This implementation is used for cross chain token transfers
+*/
 contract TonEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
     TonEventInitData static initData;
 
@@ -30,23 +34,21 @@ contract TonEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
     }
 
     /*
-        Notify specific contract that event contract status has been changed
+        @notice Notify owner contract that event contract status has been changed
         @dev In this example, notification receiver is derived from the configuration meta
+        @dev Used to easily collect all confirmed events by user's wallet
     */
     function notifyEventStatusChanged() internal view {
         (,,,,,address owner_address) = getDecodedData();
 
-        // TODO: discuss minimum value of the notification
         if (owner_address.value != 0) {
             IEventNotificationReceiver(owner_address).notifyTonEventStatusChanged{value: 0.0001 ton}(status);
         }
     }
 
     /*
-        TON-Ethereum event instance. Collects confirmations and signatures.
         @dev Should be deployed only by TonEventConfiguration contract
         @param relay Public key of the relay, who initiated the event creation
-        @param eventDataSignature Relay's signed payload for Ethereum contract
     */
     constructor(
         address relay,
@@ -61,10 +63,11 @@ contract TonEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
     }
 
     /*
-        Confirm event instance.
-        @dev Should be called by TonEventConfiguration
-        @param relay Public key of the relay, who initiated the config creation
-        @param eventDataSignature Signature of the data to be passed in Ethereum (made with Ethereum public key)
+        @notice Confirm event
+        @dev Can be called only by parent event configuration
+        @dev Can be called only when event configuration is in inProcess status
+        @param relay Relay, who initialized the confirmation
+        @param eventDataSignature Relay's signature of the TonEvent data
     */
     function confirm(
         address relay,
@@ -89,10 +92,11 @@ contract TonEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
         }
     }
 
-    /*
-        Reject event instance.
-        @dev Should be called by TonEventConfiguration
-        @param relay Public key of the relay, who initiated the config creation
+/*
+        @notice Reject event
+        @dev Can be called only by parent event configuration
+        @dev Can be called only when event configuration is in inProcess status
+        @param relay Relay, who initialized the confirmation
     */
     function reject(
         address relay
@@ -116,12 +120,12 @@ contract TonEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
     }
 
     /*
-        Read contract details
-        @return initData Initial data
+        @notice Get event details
+        @returns _initData Init data
         @returns _status Current event status
-        @returns _confirmRelays List of confirm keys
-        @returns _rejectRelays List of reject keys
-        @returns _eventDataSignatures List of relay's signatures
+        @returns _confirmRelays List of relays who have confirmed event
+        @returns _confirmRelays List of relays who have rejected event
+        @returns _eventDataSignatures List of relay's TonEvent signatures
     */
     function getDetails() public view returns (
         TonEventInitData _initData,
@@ -139,6 +143,15 @@ contract TonEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
         );
     }
 
+    /*
+        @notice Get decoded event data
+        @returns rootToken Token root contract address
+        @returns wid Tokens sender address workchain ID
+        @returns addr Token sender address body
+        @returns tokens How much tokens to mint
+        @returns ethereum_address Token receiver Ethereum address
+        @returns owner_address Token receiver address (derived from the wid and owner_addr)
+    */
     function getDecodedData() public view returns (
         address rootToken,
         int8 wid,

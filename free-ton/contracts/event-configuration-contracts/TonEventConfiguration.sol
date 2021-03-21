@@ -10,7 +10,7 @@ import "../utils/ErrorCodes.sol";
 
 
 /*
-    Contract with TON-Ethereum configuration
+    @title Basic example of TON event configuration
 */
 contract TonEventConfiguration is TransferUtils, IEventConfiguration, ErrorCodes {
     BasicConfigurationInitData static basicInitData;
@@ -45,14 +45,13 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, ErrorCodes
     }
 
     /*
-        Confirm TON-Ethereum event instance. Works only when configuration is active.
+        @notice Confirm TON-Ethereum event
         @dev This function either deploy TonEvent or confirm it
         Two transactions is sent (deploy and confirm) and one is always fail
-        EventAddress is always emitted!
-        @dev Should be called only through Bridge contract
-        @param initData
-        @param eventDataSignature Relay's signed payload for Ethereum contract
-        @param relay Relay key, who initialized the Bridge Ethereum event confirmation
+        @dev Can be called only through Bridge contract
+        @param eventVoteData TON event init data
+        @param eventDataSignature Relay's signed payload
+        @param relay Relay, who initialized the confirmation
     **/
     function confirmEvent(
         IEvent.TonEventVoteData eventVoteData,
@@ -82,13 +81,13 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, ErrorCodes
 
 
     /*
-        Reject Ethereum-TON event instance.
+        @notice Reject TON-Ethereum event.
         @dev This function calls the reject method of the corresponding TonEvent contract
-        Two transactions is sent (deploy and confirm) and one is always fail
-        EventAddress is always emitted!
-        @dev
-        @param relay Relay key, who initialized the Bridge Ethereum event reject
-    **/
+        @dev TonEvent contract is not deployed
+        @dev Can be called only by Bridge contract
+        @param eventVoteData TON event init data
+        @param relay Relay, who initialized the rejection
+    */
     function rejectEvent(
         IEvent.TonEventVoteData eventVoteData,
         address relay
@@ -114,9 +113,9 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, ErrorCodes
 
 
     /*
-        Get configuration details.
+        @notice Get configuration details.
         @return _basicInitData Basic configuration init data
-        @return _initData Configuration init data
+        @return _initData Network specific configuration init data
     */
     function getDetails() public view returns(
         BasicConfigurationInitData _basicInitData,
@@ -130,7 +129,7 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, ErrorCodes
 
 
     /*
-        Get event configuration type
+        @notice Get event configuration type
         @return _type Configuration type - Ethereum or TON
     */
     function getType() public pure returns(EventType _type) {
@@ -139,10 +138,10 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, ErrorCodes
 
 
     /*
-        Update configuration data
-        @dev Should be called only by Bridge contract
-        @param _basicInitData New basic init data
-        @param _initData New init data
+        @notice Update configuration data
+        @dev Can be called only by Bridge contract
+        @param _basicInitData New basic configuration init data
+        @param _initData New network specific configuration init data
     */
     function updateInitData(
         BasicConfigurationInitData _basicInitData,

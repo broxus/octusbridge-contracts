@@ -9,7 +9,7 @@ import './../interfaces/IEvent.sol';
 import './../interfaces/IEventConfiguration.sol';
 
 /*
-    Contract with Ethereum-TON configuration
+    @title Basic example of Ethereum event configuration
 */
 contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, ErrorCodes {
     BasicConfigurationInitData static basicInitData;
@@ -45,13 +45,12 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Error
     }
 
     /*
-        Confirm Ethereum-TON event instance. Works only when configuration is active.
+        @notice Confirm Ethereum-TON event
         @dev This function either deploy EthereumEvent or confirm it
         Two transactions is sent (deploy and confirm) and one is always fail
-        EventAddress is always emitted!
-        @dev Should be called only through Bridge contract
-        @param initData Ethereum event init data
-        @param relay Relay key, who initialized the Bridge Ethereum event confirmation
+        @dev Can be called only by Bridge contract
+        @param eventVoteData Ethereum event init data
+        @param relay Relay, who initialized the confirmation
     **/
     function confirmEvent(
         IEvent.EthereumEventVoteData eventVoteData,
@@ -82,13 +81,12 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Error
     }
 
     /*
-        Reject Ethereum-TON event instance.
+        @notice Reject Ethereum-TON event.
         @dev This function calls the reject method of the corresponding EthereumEvent contract
-        Two transactions is sent (deploy and confirm) and one is always fail
-        EventAddress is always emitted!
-        @dev Should be called only through Bridge contract
-        @param eventInitData Initial data for event contract
-        @param relay Relay key, who initialized the Bridge Ethereum event reject
+        @dev EthereumEvent contract is not deployed
+        @dev Can be called only by Bridge contract
+        @param eventVoteData Ethereum event init data
+        @param relay Relay, who initialized the rejection
     **/
     function rejectEvent(
         IEvent.EthereumEventVoteData eventVoteData,
@@ -117,9 +115,9 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Error
     }
 
     /*
-        Get configuration details.
+        @notice Get configuration details.
         @return _basicInitData Basic configuration init data
-        @return _initData Configuration init data
+        @return _initData Network specific configuration init data
     */
     function getDetails() public view returns(
         BasicConfigurationInitData _basicInitData,
@@ -132,7 +130,7 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Error
     }
 
     /*
-        Get event configuration type
+        @notice Get event configuration type
         @return _type Configuration type - Ethereum or TON
     */
     function getType() public pure returns(EventType _type) {
@@ -140,10 +138,10 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Error
     }
 
     /*
-        Update configuration data
-        @dev Should be called only by Bridge contract
-        @param _basicInitData New basic init data
-        @param _initData New init data
+        @notice Update configuration data
+        @dev Can be called only by Bridge contract
+        @param _basicInitData New basic configuration init data
+        @param _initData New network specific configuration init data
     */
     function updateInitData(
         BasicConfigurationInitData _basicInitData,

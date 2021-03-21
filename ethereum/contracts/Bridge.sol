@@ -13,8 +13,7 @@ import "@openzeppelin/contracts/proxy/Initializable.sol";
 
 
 /**
-    @title Basic smart contract for implementing Bridge logic.
-    @dev Uses DistributedOwnable contract for storing list of relays.
+    @title Ethereum Bridge contract.
 **/
 contract Bridge is Initializable, DistributedOwnable, RedButton, Nonce, IBridge {
     using SafeMath for uint;
@@ -43,7 +42,7 @@ contract Bridge is Initializable, DistributedOwnable, RedButton, Nonce, IBridge 
 
     /*
         Is address relay or not.
-        Handy wrapper around ownership functionality + Bridge specific names.
+        Handy wrapper around ownership functionality.
         @param candidate Address
         @returns Boolean is relay or not
     */
