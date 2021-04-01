@@ -36,7 +36,7 @@ try {
     
     const [,contractFileName] = path.match(new RegExp('contracts/(.*).sol'));
     
-    const output = execSync(`cd build && solc-ton ./../${path}`);
+    const output = execSync(`cd build && solc-ton-broxus ./../${path}`);
     
     if (output.toString() === '') {
       // No code was compiled, probably interface compilation

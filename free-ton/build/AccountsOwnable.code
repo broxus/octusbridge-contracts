@@ -1,12 +1,10 @@
-.globl	constructor
-.public	constructor
-.type	constructor, @function
+.macro constructor
+DROP
 GETGLOB 1
 ISNULL
-PUSHCONT {
+IFREF {
 	CALL $c4_to_c7_with_init_storage$
 }
-IF
 ;; constructor protection
 GETGLOB 6
 THROWIF 51
@@ -15,44 +13,27 @@ SETGLOB 6
 ;; end constructor protection
 ENDS
 ACCEPT
-CALL $c7_to_c4$
+CALLREF {
+	CALL $c7_to_c4$
+}
 TRUE
 SETGLOB 7
 
-.globl	getAccountStatus
-.public	getAccountStatus
-.type	getAccountStatus, @function
+.macro getAccountStatus
+DROP
 GETGLOB 1
 ISNULL
-PUSHCONT {
+IFREF {
 	CALL $c4_to_c7$
 }
-IF
 ; Decode input parameters
 ; Decode addr
 LDMSGADDR
 ENDS
 ;; param: addr
-; function getAccountStatus
-;; ret param: _status
-PUSHINT 0
-;; return
-;; index
-;; push identifier addr
-PUSH S1
-;; push identifier ownerAccounts
-GETGLOB 28
-PUSHINT 267
-DICTGET
-PUSHCONT {
-	PLDI 1
+CALLREF {
+	CALL $getAccountStatus_internal_macro$
 }
-PUSHCONT {
-	PUSHINT 0
-}
-IFELSE
-NIP
-NIP
 ;; emitting 1 value(s)
 PUSH S1
 EQINT -1
@@ -74,25 +55,26 @@ PUSHCONT {
 	PUSH S1
 	STIR 1
 	ENDC
-	PUSHINT 1
+	PUSHINT 0
 	SENDRAWMSG
 }
 IF
 DROP
-; end function getAccountStatus
-PUSHCONT {
+IFREF {
 	CALL $c7_to_c4$
 }
-IF
 TRUE
 SETGLOB 7
 
 .globl	getAccountStatus_internal
 .type	getAccountStatus_internal, @function
+CALL $getAccountStatus_internal_macro$
+
+.macro getAccountStatus_internal_macro
 ;; param: addr
-; function getAccountStatus
 ;; ret param: _status
 PUSHINT 0
+; function getAccountStatus
 ;; return
 ;; index
 ;; push identifier addr
@@ -109,43 +91,24 @@ PUSHCONT {
 }
 IFELSE
 NIP
-NIP
 ; end function getAccountStatus
+NIP
 
-.globl	getEthereumAccount
-.public	getEthereumAccount
-.type	getEthereumAccount, @function
+.macro getEthereumAccount
+DROP
 GETGLOB 1
 ISNULL
-PUSHCONT {
+IFREF {
 	CALL $c4_to_c7$
 }
-IF
 ; Decode input parameters
 ; Decode addr
 LDMSGADDR
 ENDS
 ;; param: addr
-; function getEthereumAccount
-;; ret param: ethereumAccount
-PUSHINT 0
-;; return
-;; index
-;; push identifier addr
-PUSH S1
-;; push identifier ownerEthereumAccounts
-GETGLOB 29
-PUSHINT 267
-DICTGET
-PUSHCONT {
-	PLDU 160
+CALLREF {
+	CALL $getEthereumAccount_internal_macro$
 }
-PUSHCONT {
-	PUSHINT 0
-}
-IFELSE
-NIP
-NIP
 ;; emitting 1 value(s)
 PUSH S1
 EQINT -1
@@ -167,25 +130,26 @@ PUSHCONT {
 	PUSH S1
 	STUR 160
 	ENDC
-	PUSHINT 1
+	PUSHINT 0
 	SENDRAWMSG
 }
 IF
 DROP
-; end function getEthereumAccount
-PUSHCONT {
+IFREF {
 	CALL $c7_to_c4$
 }
-IF
 TRUE
 SETGLOB 7
 
 .globl	getEthereumAccount_internal
 .type	getEthereumAccount_internal, @function
+CALL $getEthereumAccount_internal_macro$
+
+.macro getEthereumAccount_internal_macro
 ;; param: addr
-; function getEthereumAccount
 ;; ret param: ethereumAccount
 PUSHINT 0
+; function getEthereumAccount
 ;; return
 ;; index
 ;; push identifier addr
@@ -202,11 +166,14 @@ PUSHCONT {
 }
 IFELSE
 NIP
-NIP
 ; end function getEthereumAccount
+NIP
 
 .globl	_grantOwnership_internal
 .type	_grantOwnership_internal, @function
+CALL $_grantOwnership_internal_macro$
+
+.macro _grantOwnership_internal_macro
 ;; param: addr
 ;; param: ethereumAccount
 ; function _grantOwnership
@@ -255,13 +222,16 @@ STSLICECONST x107857aa
 PUSH S2
 STSLICER
 ENDC
-PUSHINT 1
+PUSHINT 0
 SENDRAWMSG
-DROP2
 ; end function _grantOwnership
+DROP2
 
 .globl	_removeOwnership_internal
 .type	_removeOwnership_internal, @function
+CALL $_removeOwnership_internal_macro$
+
+.macro _removeOwnership_internal_macro
 ;; param: addr
 ; function _removeOwnership
 ;; delete
@@ -310,146 +280,23 @@ STSLICECONST x461ab0ce
 PUSH S1
 STSLICER
 ENDC
-PUSHINT 1
+PUSHINT 0
 SENDRAWMSG
-DROP
 ; end function _removeOwnership
+DROP
 
-.globl	getAccounts
-.public	getAccounts
-.type	getAccounts, @function
+.macro getAccounts
+DROP
 GETGLOB 1
 ISNULL
-PUSHCONT {
+IFREF {
 	CALL $c4_to_c7$
 }
-IF
 ; Decode input parameters
 ENDS
-; function getAccounts
-;; ret param: accounts
-PUSHINT 0
-NEWDICT
-PAIR
-;; ret param: ethereumAccounts
-PUSHINT 0
-NEWDICT
-PAIR
-;; push identifier ownerAccounts
-GETGLOB 28
-DUP
-PUSHINT 267
-DICTMIN
-NULLSWAPIFNOT
-PUSHCONT {
-	SWAP
-	PLDI 1
-	TUPLE 2
+CALLREF {
+	CALL $getAccounts_internal_macro$
 }
-IF
-DUP
-ISNULL
-PUSHCONT {
-	NULL
-	NULL
-}
-PUSHCONT {
-	UNTUPLE 2
-	PUSH S1
-}
-IFELSE
-PUSHCONT {
-	DUP
-	ISNULL
-	NOT
-}
-PUSHCONT {
-	;; if
-	;; push identifier status
-	PUSH S1
-	PUSHCONT {
-		; expValue
-		PUSH S5
-		; end expValue
-		;; push identifier addr
-		PUSH S3
-		;; array.push(..)
-		SWAP
-		UNPAIR
-		PUSH S1
-		INC
-		XCHG s3
-		ROTREV
-		PUSHINT 32
-		DICTUSET
-		PAIR
-		; colValue
-		POP S6
-		; end colValue
-		; expValue
-		PUSH S4
-		; end expValue
-		;; index
-		;; push identifier addr
-		PUSH S3
-		;; push identifier ownerEthereumAccounts
-		GETGLOB 29
-		PUSHINT 267
-		DICTGET
-		PUSHCONT {
-			PLDU 160
-		}
-		PUSHCONT {
-			PUSHINT 0
-		}
-		IFELSE
-		;; array.push(..)
-		NEWC
-		STU 160
-		SWAP
-		UNPAIR
-		PUSH S1
-		INC
-		XCHG s3
-		ROTREV
-		PUSHINT 32
-		DICTUSETB
-		PAIR
-		; colValue
-		POP S5
-		; end colValue
-	}
-	IF
-	;; end if
-	DUP
-	PUSH S4
-	PUSHINT 267
-	DICTGETNEXT
-	NULLSWAPIFNOT
-	PUSHCONT {
-		SWAP
-		PLDI 1
-		TUPLE 2
-	}
-	IF
-	DUP
-	ISNULL
-	PUSHCONT {
-		POP S1
-	}
-	PUSHCONT {
-		UNTUPLE 2
-		POP S3
-		DUP
-		POP S4
-		POP S1
-	}
-	IFELSE
-}
-WHILE
-BLKDROP 4
-; end for
-;; returning named params
 ;; emitting 2 value(s)
 PUSH S2
 EQINT -1
@@ -479,22 +326,22 @@ PUSHCONT {
 	STU 32
 	STDICT
 	ENDC
-	PUSHINT 1
+	PUSHINT 0
 	SENDRAWMSG
 }
 IF
 DROP2
-; end function getAccounts
-PUSHCONT {
+IFREF {
 	CALL $c7_to_c4$
 }
-IF
 TRUE
 SETGLOB 7
 
 .globl	getAccounts_internal
 .type	getAccounts_internal, @function
-; function getAccounts
+CALL $getAccounts_internal_macro$
+
+.macro getAccounts_internal_macro
 ;; ret param: accounts
 PUSHINT 0
 NEWDICT
@@ -503,6 +350,7 @@ PAIR
 PUSHINT 0
 NEWDICT
 PAIR
+; function getAccounts
 ;; push identifier ownerAccounts
 GETGLOB 28
 DUP
@@ -617,11 +465,9 @@ PUSHCONT {
 WHILE
 BLKDROP 4
 ; end for
-;; returning named params
 ; end function getAccounts
 
-.globl	c7_to_c4
-.type	c7_to_c4, @function
+.macro c7_to_c4
 GETGLOB 2
 NEWC
 STU 256
@@ -675,8 +521,7 @@ STDICT
 ENDC
 POP C4
 
-.globl	c4_to_c7
-.type	c4_to_c7, @function
+.macro c4_to_c7
 PUSHROOT
 CTOS        ; c4
 LDU 256      ; pubkey c4
@@ -786,12 +631,6 @@ PUSHCONT {
 }
 PUSHCONT {
 	PLDDICT   ; D
-	; init ownerAccounts
-	NEWDICT
-	SETGLOB 28
-	; init ownerEthereumAccounts
-	NEWDICT
-	SETGLOB 29
 	; init ADDRESS_IS_NOT_OWNER
 	PUSHINT 0
 	SETGLOB 10
@@ -846,6 +685,12 @@ PUSHCONT {
 	; init WRONG_TVM_KEY
 	PUSHINT 0
 	SETGLOB 27
+	; init ownerAccounts
+	NEWDICT
+	SETGLOB 28
+	; init ownerEthereumAccounts
+	NEWDICT
+	SETGLOB 29
 	; set contract pubkey
 	PUSHINT 0
 	SWAP
@@ -917,8 +762,8 @@ PUSHCONT {
 }
 IFELSE
 
-.internal-alias :main_internal,        0
-.internal	:main_internal
+.internal-alias :main_internal, 0
+.internal :main_internal
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Function: main_internal
 ;; param: contract_balance
@@ -938,32 +783,21 @@ PUSH S1 ; body
 LDU 32  ; funcId body'
 PUSH S1 ; funcId body' funcId
 IFNOTRET
-PUSH S1 ; funcId body' funcId
-LESSINT 3            ; funcId body' funcId<3
-PUSH S2              ; funcId body' funcId<3 funcId
-PUSHINT 4294967293   ; funcId body' funcId<3 funcId 4294967293
-GREATER              ; funcId body' funcId<3 funcId>4294967293
-OR                   ; funcId body' funcId<3||funcId>4294967293
-PUSHCONT {
-	DROP2
-	THROW 60
+SWAP
+CALLREF {
+	CALL $public_function_selector$
 }
-IFJMP
-SWAP    ; body funcId
-CALL 1
 GETGLOB 7
 ISNULL
-PUSHCONT {
-	DROP
-	THROW 60
-}
-IF
+THROWIF 60
 
-.internal-alias :main_external,        -1
-.internal	:main_external
+.internal-alias :main_external, -1
+.internal :main_external
 PUSHINT -1 ; main_external trans id
 PUSH S1
-CALL $c4_to_c7_with_init_storage$
+CALLREF {
+	CALL $c4_to_c7_with_init_storage$
+}
 LDU 1 ; haveSign msgSlice
 SWAP
 PUSHCONT {
@@ -986,24 +820,36 @@ NOW     ; msgSlice expireAt now
 GREATER ; msgSlice expireAt>now
 THROWIFNOT 57
 LDU  32 ; funcId body
-PUSH S1 ; funcId body funcId
-LESSINT 3            ; funcId body' funcId<3
-PUSH S2              ; funcId body' funcId<3 funcId
-PUSHINT 4294967293   ; funcId body' funcId<3 funcId 4294967293
-GREATER              ; funcId body' funcId<3 funcId>4294967293
-OR                   ; funcId body' funcId<3||funcId>4294967293
-PUSHCONT {
-	DROP2
-	THROW 60
-}
-IFJMP
 SWAP    ; body funcId
-CALL 1
+CALLREF {
+	CALL $public_function_selector$
+}
 GETGLOB 7
 ISNULL
-PUSHCONT {
-	DROP
-	THROW 60
-}
-IF
+THROWIF 60
 
+.macro public_function_selector
+DUP
+PUSHINT 1032382976
+EQUAL
+IFJMPREF {
+	CALL $getEthereumAccount$
+}
+DUP
+PUSHINT 1039208050
+EQUAL
+IFJMPREF {
+	CALL $getAccounts$
+}
+DUP
+PUSHINT 1214392460
+EQUAL
+IFJMPREF {
+	CALL $getAccountStatus$
+}
+DUP
+PUSHINT 1756716863
+EQUAL
+IFJMPREF {
+	CALL $constructor$
+}
