@@ -43,7 +43,7 @@ contract EventProxySimple is IProxy, TransferUtils {
             contr: EthereumEvent
         });
 
-        return tvm.deploy(stateInit, stateInit, 0, 0);
+        return address(tvm.hash(stateInit));
     }
 
     function broxusBridgeCallback(

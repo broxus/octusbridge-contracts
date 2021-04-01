@@ -236,11 +236,13 @@ describe('Test Ethereum event', async function() {
     });
     
     it('Execute event callback', async function() {
-      await relaysManager.runTarget({
+      const tx = await relaysManager.runTarget({
         contract: EthereumEvent,
         method: 'executeProxyCallback',
         input: {}
       });
+      
+      logger.log(`Execute ethereum event tx: ${tx.transaction.id}`);
       
       const proxyDetails = await EventProxySimple.runLocal('getDetails', {});
   
