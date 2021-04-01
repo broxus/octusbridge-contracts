@@ -1,4 +1,4 @@
-pragma solidity >= 0.6.0;
+pragma ton-solidity ^0.39.0;
 pragma AbiHeader expire;
 
 
@@ -14,6 +14,6 @@ contract TransferUtils {
     }
 
     function transferAll(address receiver) internal pure {
-        receiver.transfer({ flag: 128, value: 0 });
+        receiver.transfer({ flag: 129, value: 0 });
     }
 }

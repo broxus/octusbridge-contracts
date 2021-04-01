@@ -1,4 +1,4 @@
-pragma solidity >= 0.6.0;
+pragma ton-solidity ^0.39.0;
 pragma AbiHeader expire;
 
 
@@ -50,7 +50,8 @@ contract EthereumEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
         (,,,,,address owner_address) = getDecodedData();
 
         if (owner_address.value != 0) {
-            IEventNotificationReceiver(owner_address).notifyEthereumEventStatusChanged{value: 0.00001 ton}(status);
+            IEventNotificationReceiver(owner_address)
+                .notifyEthereumEventStatusChanged{flag: 0, bounce: false}(status);
         }
     }
 

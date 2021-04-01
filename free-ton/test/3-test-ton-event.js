@@ -184,28 +184,38 @@ describe('Test TON event', async function() {
           input: eventParams,
         }, keyId);
       }
+    });
+    
+    it('Check ton event confirmed', async function() {
+      const {
+        _initData: {
+          requiredConfirmations,
+        }
+      } = await TonEvent.runLocal('getDetails');
 
       const details = await TonEvent.runLocal('getDetails', {});
-
+  
       expect(details._status.toNumber())
         .to
         .equal(1, 'Wrong status');
-      
+  
       expect(details._confirmRelays)
         .to
         .have.lengthOf(requiredConfirmations.toNumber(), 'Wrong amount of confirmations');
-      
+  
       expect(details._eventDataSignatures)
         .to
         .have.lengthOf(requiredConfirmations.toNumber(), 'Wrong amount of confirmations');
-
+  
       expect(details._rejectRelays)
         .to
         .have.lengthOf(0, 'Wrong amount of rejects');
-
+    });
+  
+    it('Check ton event balance is zero after confirmation', async function() {
       expect((await tonWrapper.getBalance(TonEvent.address)).toNumber())
         .to
-        .equal(0, 'Non-empty event balance');
+        .equal(0, 'Non-empty balance for rejected ton event');
     });
   
     it('Check owner address received message on event confirmation', async function() {
@@ -324,14 +334,34 @@ describe('Test TON event', async function() {
           input: eventParams,
         }, keyId);
       }
-
+    });
+  
+    it('Check ton event rejected', async function() {
+      const {
+        _initData: {
+          requiredRejects,
+        }
+      } = await TonEvent.runLocal('getDetails');
+  
       const details = await TonEvent.runLocal('getDetails', {});
-
-      expect(details._status.toNumber()).to.equal(2, 'Wrong status');
-      expect(details._confirmRelays).to.have.lengthOf(1, 'Wrong amount of confirmations');
-      expect(details._eventDataSignatures).to.have.lengthOf(1, 'Wrong amount of signatures');
-      expect(details._rejectRelays).to.have.lengthOf(requiredRejects.toNumber(), 'Wrong amount of rejects');
-      expect((await tonWrapper.getBalance(TonEvent.address)).toNumber()).to.equal(0, 'Non-empty event balance');
+  
+      expect(details._status.toNumber())
+        .to.equal(2, 'Wrong status');
+      
+      expect(details._confirmRelays)
+        .to.have.lengthOf(1, 'Wrong amount of confirmations');
+      
+      expect(details._eventDataSignatures)
+        .to.have.lengthOf(1, 'Wrong amount of signatures');
+      
+      expect(details._rejectRelays)
+        .to.have.lengthOf(requiredRejects.toNumber(), 'Wrong amount of rejects');
+    });
+  
+    it('Check ton event balance is zero after confirmation', async function() {
+      expect((await tonWrapper.getBalance(TonEvent.address)).toNumber())
+        .to
+        .equal(0, 'Non-empty balance for rejected ton event');
     });
   
     it('Check owner address received message on event rejection', async function() {

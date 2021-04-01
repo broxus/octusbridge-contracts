@@ -19,7 +19,7 @@ const tonWrapper = new freeton.TonWrapper({
   seed: process.env.TON_SEED,
   messageExpirationTimeout: 240000,
   waitForTimeout: 60000,
-  debug: Boolean(process.env.TON_WRAPPER_DEBUG),
+  // debug: Boolean(process.env.TON_WRAPPER_DEBUG),
 });
 
 const relaysManager = new utils.RelaysManager(
@@ -180,34 +180,47 @@ describe('Test Ethereum event', async function() {
       } = await EthereumEvent.runLocal('getDetails');
 
       for (const keyId of _.range(1, requiredConfirmations.toNumber())) {
-        await relaysManager.runTarget({
+        const tx = await relaysManager.runTarget({
           contract: Bridge,
           method: 'confirmEthereumEvent',
           input: eventParams,
         }, keyId);
+        
+        logger.log(`Confirm transaction #${keyId}: ${tx.transaction.id}`);
       }
-
+    });
+    
+    it('Check ethereum event confirmed', async function() {
       const details = await EthereumEvent.runLocal('getDetails', {});
-      
+  
+      const {
+        _initData: {
+          requiredConfirmations,
+        }
+      } = await EthereumEvent.runLocal('getDetails');
+  
       expect(details._confirmRelays)
         .to
         .have.lengthOf(requiredConfirmations.toNumber(), 'Wrong amount of confirmations');
-      
+  
       expect(details._rejectRelays)
         .to
         .have.lengthOf(0, 'Wrong amount of rejects');
-      
+  
       expect(details._status.toNumber())
         .to
         .equal(1, 'Wrong proxy callback executed status');
-      
-      // TODO: fix issue with failing ethereum event callback if event contract balance is zero
+    });
+    
+    it('Check ethereum event balance is zero', async function() {
       expect((await tonWrapper.getBalance(EthereumEvent.address)).toNumber())
         .to
         .equal(0, 'Event contract balance should be 0 after confirmation');
-
+    });
+    
+    it('Check proxy received notification', async function() {
       const proxyDetails = await EventProxySimple.runLocal('getDetails', {});
-
+  
       expect(proxyDetails._callbackCounter.toNumber())
         .to
         .equal(0, 'Proxy should not receive callback');
@@ -360,15 +373,25 @@ describe('Test Ethereum event', async function() {
       } = await EthereumEvent.runLocal('getDetails');
 
       for (const keyId of _.range(1, requiredRejects.toNumber() + 1)) {
-        await relaysManager.runTarget({
+        const tx = await relaysManager.runTarget({
           contract: Bridge,
           method: 'rejectEthereumEvent',
           input: eventParams,
         }, keyId);
+        
+        logger.log(`Reject transaction #${keyId}: ${tx.transaction.id}`);
       }
+    });
+  
+    it('Check ethereum event rejected', async function() {
+      const {
+        _initData: {
+          requiredRejects,
+        }
+      } = await EthereumEvent.runLocal('getDetails');
 
       const details = await EthereumEvent.runLocal('getDetails', {});
-
+  
       expect(details._confirmRelays)
         .to
         .have.lengthOf(1, 'Wrong amount of confirmations in rejected ton event');
@@ -378,6 +401,9 @@ describe('Test Ethereum event', async function() {
       expect(details._status.toNumber())
         .to
         .equal(3, 'Wrong status for rejected ton event');
+    });
+  
+    it('Check ethereum event balance is zero after rejection', async function() {
       expect((await tonWrapper.getBalance(EthereumEvent.address)).toNumber())
         .to
         .equal(0, 'Non-empty balance for rejected ton event');
@@ -385,7 +411,8 @@ describe('Test Ethereum event', async function() {
   
     it('Check owner address received message on event rejection', async function() {
       const decodedData = await EthereumEvent.runLocal('getDecodedData', {});
-      const incomingMessages = await utils.getMessagesByDestination(tonWrapper, decodedData.owner_address);
+      const incomingMessages = await utils
+        .getMessagesByDestination(tonWrapper, decodedData.owner_address);
     
       expect(incomingMessages)
         .to

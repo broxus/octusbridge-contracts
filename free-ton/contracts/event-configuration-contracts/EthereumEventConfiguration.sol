@@ -1,4 +1,4 @@
-pragma solidity >= 0.6.0;
+pragma ton-solidity ^0.39.0;
 pragma AbiHeader expire;
 
 
@@ -100,6 +100,7 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Error
 
         address ethereumEventAddress = new EthereumEvent{
             value: 0 ton,
+            flag: 2,
             code: basicInitData.eventCode,
             pubkey: tvm.pubkey(),
             varInit: {
