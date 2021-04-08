@@ -11,8 +11,8 @@ This contracts are responsible for core bridge functionality.
 
 ## Cross chain token transfers
 
-Each supported token have a **Token lock** contract in Ethereum - ERC20 tokens are locked on it.
-And corresponding **Root token** contract, which burns and mint TIP3 tokens.
+Each supported token has a `Token lock` contract in Ethereum - ERC20 tokens are locked on it
+and a corresponding `Root token` contract, which burns and mint TIP3 tokens.
 
 ### USDT
 
