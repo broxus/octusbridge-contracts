@@ -63,10 +63,15 @@ contract Bridge is Initializable, DistributedOwnable, RedButton, Nonce, IBridge 
     ) public override view returns(uint) {
         uint ownersConfirmations = 0;
 
+        mapping(address => bool) counted_signers;
+
         for (uint i=0; i<signatures.length; i++) {
             address signer = recoverSignature(payload, signatures[i]);
 
-            if (isOwner(signer)) ownersConfirmations++;
+            if (isOwner(signer) && !counted_signers[signer]) {
+                ownersConfirmations++;
+                counted_signers[signer] = true;
+            }
         }
 
         return ownersConfirmations;
