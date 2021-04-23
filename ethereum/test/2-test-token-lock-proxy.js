@@ -1,4 +1,10 @@
-const { expect } = require('chai');
+const chai = require('chai');
+
+const chaiAsPromised = require('chai-as-promised');
+chai.use(chaiAsPromised);
+
+const { expect } = chai;
+
 const BigNumber = require('bignumber.js');
 const utils = require('./utils');
 
@@ -14,7 +20,7 @@ const tokensToUnlock = 80000;
 describe('Test token lock proxy', async function() {
   before(async function() {
     accounts = await ethers.getSigners();
-  
+    
     const Bridge = await ethers.getContractFactory("Bridge");
     bridge = await upgrades.deployProxy(
       Bridge,
@@ -63,17 +69,15 @@ describe('Test token lock proxy', async function() {
   });
 
   describe('Test unlocking tokens', async function() {
+    const receiver = '0xdF5ba068d01701c94663504095d492CB7bf64dA1';
+  
+    // Encode (ton address, ) event data
+    const eventData = web3.eth.abi.encodeParameters(
+      ['int8', 'uint256', 'uint128', 'uint160'],
+      [0, 123, tokensToUnlock, BigNumber(receiver.toLowerCase())],
+    );
+
     it('Unlock tokens', async function() {
-      const receiver = '0xdF5ba068d01701c94663504095d492CB7bf64dA1';
-
-      // Encode (ton address, ) event data
-      const eventData = web3.eth.abi.encodeParameters(
-        ['int8', 'uint256', 'uint128', 'uint160'],
-        [0, 123, tokensToUnlock, BigNumber(receiver.toLowerCase())],
-      );
-
-      // logger.log(`Event data: ${eventData}`);
-
       // Encode TONEvent structure
       const tonEvent = web3.eth.abi.encodeParameters(
         [{
@@ -87,6 +91,7 @@ describe('Test token lock proxy', async function() {
             'tonEventConfigurationAddress': 'uint',
             'requiredConfirmations': 'uint16',
             'requiredRejects': 'uint16',
+            'proxy': 'address'
           }
         }],
         [{
@@ -99,6 +104,7 @@ describe('Test token lock proxy', async function() {
           'tonEventConfigurationAddress': 0,
           'requiredConfirmations': 1,
           'requiredRejects': 1,
+          'proxy': proxyTokenLock.address,
         }]
       );
       
@@ -113,8 +119,6 @@ describe('Test token lock proxy', async function() {
       ).to.equal(0, 'Receiver balance should be zero before unlock');
 
       const feeAmount = (await proxyTokenLock.getFeeAmount(tokensToUnlock)).toNumber();
-
-      // logger.log(`Fee amount: ${feeAmount} (Ratio ${feeAmount / tokensToUnlock})`);
 
       await proxyTokenLock.broxusBridgeCallback(
         tonEvent,
@@ -134,6 +138,138 @@ describe('Test token lock proxy', async function() {
         tokensToLock - tokensToUnlock + feeAmount,
         'Token proxy balance should be non zero because of fee'
       );
+    });
+    
+    it('Unlock tokens with the same payload', async function() {
+      const tonEvent = web3.eth.abi.encodeParameters(
+        [{
+          'TONEvent': {
+            'eventTransaction': 'uint256',
+            'eventTransactionLt': 'uint64',
+            'eventTimestamp': 'uint32',
+            'eventIndex': 'uint32',
+            'eventData': 'bytes',
+            'tonEventConfigurationWid': 'int8',
+            'tonEventConfigurationAddress': 'uint',
+            'requiredConfirmations': 'uint16',
+            'requiredRejects': 'uint16',
+            'proxy': 'address'
+          }
+        }],
+        [{
+          'eventTransaction': 0,
+          'eventTransactionLt': 0,
+          'eventTimestamp': 0,
+          'eventIndex': 0,
+          'eventData': eventData,
+          'tonEventConfigurationWid': 0,
+          'tonEventConfigurationAddress': 0,
+          'requiredConfirmations': 1,
+          'requiredRejects': 1,
+          'proxy': proxyTokenLock.address,
+        }]
+      );
+  
+      // Sign ton event
+      const signatures = [
+        (await utils.signReceipt(web3, tonEvent, accounts[0].address)),
+        (await utils.signReceipt(web3, tonEvent, accounts[1].address))
+      ];
+      
+      await expect(
+        proxyTokenLock.broxusBridgeCallback(
+          tonEvent,
+          signatures
+        )
+      ).to.eventually.be.rejectedWith('Already processed');
+    });
+    
+    it('Unlock tokens with wrong proxy', async function() {
+      const tonEvent = web3.eth.abi.encodeParameters(
+        [{
+          'TONEvent': {
+            'eventTransaction': 'uint256',
+            'eventTransactionLt': 'uint64',
+            'eventTimestamp': 'uint32',
+            'eventIndex': 'uint32',
+            'eventData': 'bytes',
+            'tonEventConfigurationWid': 'int8',
+            'tonEventConfigurationAddress': 'uint',
+            'requiredConfirmations': 'uint16',
+            'requiredRejects': 'uint16',
+            'proxy': 'address'
+          }
+        }],
+        [{
+          'eventTransaction': 0,
+          'eventTransactionLt': 0,
+          'eventTimestamp': 0,
+          'eventIndex': 0,
+          'eventData': eventData,
+          'tonEventConfigurationWid': 0,
+          'tonEventConfigurationAddress': 0,
+          'requiredConfirmations': 1,
+          'requiredRejects': 1,
+          'proxy': bridge.address,
+        }]
+      );
+  
+      // Sign ton event
+      const signatures = [
+        (await utils.signReceipt(web3, tonEvent, accounts[0].address)),
+        (await utils.signReceipt(web3, tonEvent, accounts[1].address))
+      ];
+  
+      await expect(
+        proxyTokenLock.broxusBridgeCallback(
+          tonEvent,
+          signatures
+        )
+      ).to.eventually.be.rejectedWith('Wrong proxy');
+    });
+    
+    it('Unlock tokens with repeated signers', async function() {
+      const tonEvent = web3.eth.abi.encodeParameters(
+        [{
+          'TONEvent': {
+            'eventTransaction': 'uint256',
+            'eventTransactionLt': 'uint64',
+            'eventTimestamp': 'uint32',
+            'eventIndex': 'uint32',
+            'eventData': 'bytes',
+            'tonEventConfigurationWid': 'int8',
+            'tonEventConfigurationAddress': 'uint',
+            'requiredConfirmations': 'uint16',
+            'requiredRejects': 'uint16',
+            'proxy': 'address'
+          }
+        }],
+        [{
+          'eventTransaction': 0,
+          'eventTransactionLt': 0,
+          'eventTimestamp': 0,
+          'eventIndex': 0,
+          'eventData': eventData,
+          'tonEventConfigurationWid': 0,
+          'tonEventConfigurationAddress': 0,
+          'requiredConfirmations': 1,
+          'requiredRejects': 1,
+          'proxy': bridge.address,
+        }]
+      );
+  
+      // Sign ton event
+      const signatures = [
+        (await utils.signReceipt(web3, tonEvent, accounts[0].address)),
+        (await utils.signReceipt(web3, tonEvent, accounts[0].address))
+      ];
+  
+      await expect(
+        proxyTokenLock.broxusBridgeCallback(
+          tonEvent,
+          signatures
+        )
+      ).to.eventually.be.rejectedWith('Signer already seen');
     });
   });
   
@@ -181,11 +317,7 @@ describe('Test token lock proxy', async function() {
   
   describe('Test configuration update', async function() {
     it('Try to update configuration with non-owner', async function() {
-      // await utils.catchRevertWithMessage(
-      //   proxyTokenLock.connect(accounts[1]).transferAdmin(accounts[1].address),
-      //   'Sender not admin',
-      // );
-      //
+    
     });
     
     it('Update configuration', async function() {

@@ -63,14 +63,19 @@ contract Bridge is Initializable, DistributedOwnable, RedButton, Nonce, IBridge 
     ) public override view returns(uint) {
         uint ownersConfirmations = 0;
 
-        mapping(address => bool) counted_signers;
+        address[] memory signers = new address[](signatures.length);
 
         for (uint i=0; i<signatures.length; i++) {
             address signer = recoverSignature(payload, signatures[i]);
 
-            if (isOwner(signer) && !counted_signers[signer]) {
+            if (isOwner(signer)) {
+                // Check this owner is not used before
+                for (uint u=0; u<signers.length; u++) {
+                    require(signers[u] != signer, "Signer already seen");
+                }
+
                 ownersConfirmations++;
-                counted_signers[signer] = true;
+                signers[i] = signer;
             }
         }
 

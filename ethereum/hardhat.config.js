@@ -2,7 +2,7 @@ require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-web3");
 require('@openzeppelin/hardhat-upgrades');
 require("@nomiclabs/hardhat-etherscan");
-require("hardhat-gas-reporter");
+// require("hardhat-gas-reporter");
 
 
 task("accounts", "Prints the list of accounts", async () => {
@@ -28,25 +28,6 @@ module.exports = {
   },
   networks: {
     hardhat: {},
-    goerli: {
-      url: process.env.RPC_GOERLI,
-      accounts: {
-        count: 10,
-        initialIndex: 0,
-        path: "m/44'/60'/0'/0",
-        mnemonic: process.env.ETHEREUM_MNEMONIC
-      },
-      gasPrice: 100,
-      chainId: 5,
-    },
-    main: {
-      url: process.env.RPC_MAIN,
-      accounts: [process.env.ETHEREUM_ACCOUNT],
-      chainId: 1,
-      gas: 2000000,
-      gasPrice: 310000000000,
-      timeout: 10000000,
-    }
   },
   gasReporter: {
     currency: 'USD',

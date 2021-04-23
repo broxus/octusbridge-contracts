@@ -14,6 +14,7 @@
     "@openzeppelin/contracts": "^3.4.0",
     "@truffle/hdwallet-provider": "^1.2.0",
     "bignumber.js": "^9.0.1",
+    "chai-as-promised": "^7.1.1",
     "commander": "^6.2.1",
     "directory-tree": "^2.2.5",
     "dotenv": "^8.2.0",
