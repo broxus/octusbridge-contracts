@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache 2.0
-pragma solidity ^0.7.0;
+pragma solidity ^0.8.0;
 
 
 library Array {
     function indexOf(address[] storage values, address value) internal view returns(uint) {
         uint i = 0;
 
-        while (values[i] != value) {
+        while (values[i] != value && i <= values.length) {
             i++;
         }
 
