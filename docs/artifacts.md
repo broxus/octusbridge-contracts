@@ -15,26 +15,36 @@ Each supported token have a **Token lock** contract in Ethereum - ERC20 tokens a
 
 ### USDT
 
-* Root token - [0:ce7170dc3144b47c2a8217a0ab8506729f6310e1311017b20304ea0b973b160d](https://ton-explorer.com/accounts/0:ce7170dc3144b47c2a8217a0ab8506729f6310e1311017b20304ea0b973b160d)
+* Root token - [0:ce7170dc3144b47c2a8217a0ab8506729f6310e1311017b20304ea0b973b160d](https://ton-explorer.com/accounts/0:5b325f4f364366d9b3fe46cc77f622b013da7a7edf99a3d5d25e5510dca50d13)
 * Token lock - [0x41670d468d078771f31b3c1c54dd8d4e2226e669](https://etherscan.io/address/0x41670d468d078771f31b3c1c54dd8d4e2226e669)
 
 ### USDC
 
-* Root token - [0:0bacf88b63b1a8b0811a23aa74e7ffe735047a1486229730c92d0d43a9660f8d](https://ton-explorer.com/accounts/0:0bacf88b63b1a8b0811a23aa74e7ffe735047a1486229730c92d0d43a9660f8d)
+* Root token - [0:4a2c894ef8780735ae52bf8caf82d214477ceea494ad547a6832bf695d230ed1](https://ton-explorer.com/accounts/0:4a2c894ef8780735ae52bf8caf82d214477ceea494ad547a6832bf695d230ed1		)
 * Token lock - [0x9C74E75dD1E94915b30F0f20701AF9945592dbf5](https://etherscan.io/address/0x9C74E75dD1E94915b30F0f20701AF9945592dbf5)
 
 ### Dai
 
-* Root token - [0:205be6579a2dde82833986f612c2f2d45d5bdb26bf5f46ebec1ec99e72118f9b](https://ton-explorer.com/accounts/0:205be6579a2dde82833986f612c2f2d45d5bdb26bf5f46ebec1ec99e72118f9b)
+* Root token - [0:31540aa0100da4b7f6cfb47ff987be4910b27ce1b5cf228fddce82cb4bf4f518](https://ton-explorer.com/accounts/0:31540aa0100da4b7f6cfb47ff987be4910b27ce1b5cf228fddce82cb4bf4f518		)
 * Token lock - [0x60bfb1689e0a43e37f1c1140ce60f59c1d5e8401](https://etherscan.io/address/0x60bfb1689e0a43e37f1c1140ce60f59c1d5e8401)
 
 ### WBTC
 
-* Root token - [0:f6f7e95d07aef52007671cdcaccbee221839e7a20bc7125e7641f65b473efee5](https://ton-explorer.com/accounts/0:f6f7e95d07aef52007671cdcaccbee221839e7a20bc7125e7641f65b473efee5)
+* Root token - [0:382c14808ed11f735410d67407802dff46b74f935b89b65649e1841ab09fd8b4](https://ton-explorer.com/accounts/0:382c14808ed11f735410d67407802dff46b74f935b89b65649e1841ab09fd8b4		)
 * Token lock - [0xc3f5146a7f03ac79c56e50980890ad70bf4ec46c](https://etherscan.io/address/0xc3f5146a7f03ac79c56e50980890ad70bf4ec46c)
 
 ### WETH
 
-* Root token - [0:8580ffd20c6da4cc2bb6f946cb08fbec85bbe67041962ad8ed71dd1a0b0fa0b0](https://ton-explorer.com/accounts/0:8580ffd20c6da4cc2bb6f946cb08fbec85bbe67041962ad8ed71dd1a0b0fa0b0)
+* Root token - [0:9ca758fb99002a61d22c594fa2db6f0e1d8934580815565057be47f94a8e7325](https://ton-explorer.com/accounts/0:9ca758fb99002a61d22c594fa2db6f0e1d8934580815565057be47f94a8e7325		)
 * Token lock - [0x7aF9e00d74c117bC2A0063bB54c067808E615f86](https://etherscan.io/address/0x7aF9e00d74c117bC2A0063bB54c067808E615f86)
+
+### WTON
+
+* Root token - [0:eed3f331634d49a5da2b546f4652dd4889487a187c2ef9dd2203cff17b584e3d](https://ton-explorer.com/accounts/0:eed3f331634d49a5da2b546f4652dd4889487a187c2ef9dd2203cff17b584e3d		)
+* Token mint - [0xdceeae4492732c04b5224841286bf7146aa299df](https://etherscan.io/address/0xdceeae4492732c04b5224841286bf7146aa299df)
+
+### Uniswap V2 LP USDT-WTON
+
+* Root token - [0:72cad0c97cc8d84eef6837ee110f8f67c9d376cae57d684308fe30e831df734a](https://ton-explorer.com/accounts/0:72cad0c97cc8d84eef6837ee110f8f67c9d376cae57d684308fe30e831df734a		)
+* Token lock - [0x0758e8ffa90843292b19b81214d3789b19e19f38](https://etherscan.io/address/0x0758e8ffa90843292b19b81214d3789b19e19f38)
 
