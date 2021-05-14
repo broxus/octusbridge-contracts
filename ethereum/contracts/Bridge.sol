@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache 2.0
-pragma solidity ^0.7.0;
+pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
 
@@ -8,16 +8,13 @@ import "./interfaces/IBridge.sol";
 import "./utils/Nonce.sol";
 import "./utils/RedButton.sol";
 
-import "@openzeppelin/contracts/math/SafeMath.sol";
-import "@openzeppelin/contracts/proxy/Initializable.sol";
+import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 
 
 /**
     @title Ethereum Bridge contract.
 **/
 contract Bridge is Initializable, DistributedOwnable, RedButton, Nonce, IBridge {
-    using SafeMath for uint;
-
     BridgeConfiguration bridgeConfiguration;
 
     /**
@@ -63,10 +60,20 @@ contract Bridge is Initializable, DistributedOwnable, RedButton, Nonce, IBridge 
     ) public override view returns(uint) {
         uint ownersConfirmations = 0;
 
+        address[] memory signers = new address[](signatures.length);
+
         for (uint i=0; i<signatures.length; i++) {
             address signer = recoverSignature(payload, signatures[i]);
 
-            if (isOwner(signer)) ownersConfirmations++;
+            if (isOwner(signer)) {
+                // Check this owner is not used before
+                for (uint u=0; u<signers.length; u++) {
+                    require(signers[u] != signer, "Signer already seen");
+                }
+
+                ownersConfirmations++;
+                signers[i] = signer;
+            }
         }
 
         return ownersConfirmations;
