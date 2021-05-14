@@ -6,8 +6,8 @@ Here you can find the list of addresses for most important smart contracts in th
 
 This contracts are responsible for core bridge functionality.
 
-- Ethereum Bridge - [0xAA5f2fc251b1387F8b828eD66d4508215B1b6ee7](https://etherscan.io/address/0xAA5f2fc251b1387F8b828eD66d4508215B1b6ee7)
-- FreeTON Bridge - [0:fe823b5e869ab06396ae5cdf798cac3cd5eb90e2ae379a20b37ce93573b30277](https://ton-explorer.com/accounts/0:fe823b5e869ab06396ae5cdf798cac3cd5eb90e2ae379a20b37ce93573b30277)
+* Ethereum Bridge - [0xAA5f2fc251b1387F8b828eD66d4508215B1b6ee7](https://etherscan.io/address/0xAA5f2fc251b1387F8b828eD66d4508215B1b6ee7)
+* FreeTON Bridge - [0:fe823b5e869ab06396ae5cdf798cac3cd5eb90e2ae379a20b37ce93573b30277](https://ton-explorer.com/accounts/0:fe823b5e869ab06396ae5cdf798cac3cd5eb90e2ae379a20b37ce93573b30277)
 
 ## Cross chain token transfers
 

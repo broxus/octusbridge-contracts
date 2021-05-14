@@ -1,18 +1,17 @@
 # Contracts specification
 
-This doc describes the key smart contracts in the Bridge ecosystem. The exact methods specification can be found in the
-sources docstrings.
+This doc describes the key smart contracts in the Bridge ecosystem. The exact methods specification can be found in the sources docstrings.
 
 The bridge flow is based on the Ethereum and FT contracts. They are storing and handling all the viable logic
 about cross chain events transferring.
 
 There are two types of contracts taking part in the event transfer procedure:
 
-- Bridge contracts
+* Bridge contracts
 
 These contracts are part of the Bridge ecosystem. They're currently deployed and maintained by the Broxus team.
 
-- Integration contracts
+* Integration contracts
 
 To integrate your Dapp with the bridge, you need to create a set of contracts which are compatible with the Bridge contracts.
 
@@ -21,13 +20,13 @@ To integrate your Dapp with the bridge, you need to create a set of contracts wh
 In the bridge ecosystem, the term proxy is used in two different meanings.
 
 1. Bridge Ethereum contracts are deployed with Upgradeable Proxies pattern
-2. This is also the name of contracts that execute the callback logic as a result of reaching consensus on event (both in Ethereum and FT)
+2. This is also the name of contracts that execute the callback logic as a result of reaching consensus on event \(both in Ethereum and FT\)
 
 ## Bridge contracts
 
 ### Ethereum-Bridge
 
-[Source](./../ethereum/contracts/Bridge.sol)
+[Source](https://github.com/broxus/ton-eth-bridge-contracts/tree/e8de9f14d85aa7d912d5a6664cfc1fad86d157cb/ethereum/contracts/Bridge.sol)
 
 This contract is a key bridge contract in the Ethereum network.
 It stores the list of relays’ addresses so anyone can interact with it for verification purposes.
@@ -35,7 +34,7 @@ For example - check that a specific signature was made by the actual relay.
 
 ### FT-Bridge
 
-[Source](./../free-ton/contracts/Bridge.sol)
+[Source](https://github.com/broxus/ton-eth-bridge-contracts/tree/e8de9f14d85aa7d912d5a6664cfc1fad86d157cb/free-ton/contracts/Bridge.sol)
 
 This contract is an entry point for interacting with the FT bridge ecosystem.
 It stores the set of relays’ public keys.
@@ -50,7 +49,7 @@ Therefore the implementation may differ.
 
 #### Event emitter contract
 
-[Example](./../ethereum/contracts/examples/ProxyTokenLock.sol)
+[Example](https://github.com/broxus/ton-eth-bridge-contracts/tree/e8de9f14d85aa7d912d5a6664cfc1fad86d157cb/ethereum/contracts/examples/ProxyTokenLock.sol)
 
 This contract emits an event, which should be supported by the bridge.
 To support your event you need to add a new [Ethereum event configuration](#ethereum-event-configuration) FT contract.
@@ -60,11 +59,9 @@ The transaction with token locking emits a `TokenLock` event, which is supported
 
 #### Ethereum-proxy
 
-[Example](./../ethereum/contracts/examples/ProxyTokenLock.sol)
+[Example](https://github.com/broxus/ton-eth-bridge-contracts/tree/e8de9f14d85aa7d912d5a6664cfc1fad86d157cb/ethereum/contracts/examples/ProxyTokenLock.sol)
 
-This contract should execute callback logic, after the TON event has been confirmed by the relays.
-Usually, it accepts the `TonEvent` [structure](./../ethereum/contracts/interfaces/IBridge.sol) and
-the list of corresponding signatures, made by relays.
+This contract should execute callback logic, after the TON event has been confirmed by the relays. Usually, it accepts the `TonEvent` [structure](https://github.com/broxus/ton-eth-bridge-contracts/tree/e8de9f14d85aa7d912d5a6664cfc1fad86d157cb/ethereum/contracts/interfaces/IBridge.sol) and the list of corresponding signatures, made by relays.
 
 In the cross chain token lock contracts, the Ethereum proxy and the Ethereum event emitter are the same contract.
 
@@ -75,7 +72,7 @@ The example of such protection is given in the [ProxyTokenLock](./../ethereum/co
 
 #### Ethereum event configuration
 
-[Example](./../free-ton/contracts/event-configuration-contracts/EthereumEventConfiguration.sol)
+[Example](https://github.com/broxus/ton-eth-bridge-contracts/tree/e8de9f14d85aa7d912d5a6664cfc1fad86d157cb/free-ton/contracts/event-configuration-contracts/EthereumEventConfiguration.sol)
 
 To add support for a specific Ethereum event into the bridge ecosystem,
 the developer needs to create an Ethereum event configuration contract.
@@ -84,7 +81,7 @@ It also should implement methods to receive confirmation / reject messages from 
 
 #### Ethereum event proxy
 
-[Example](./../free-ton/contracts/additional/EventProxySimple.sol)
+[Example](https://github.com/broxus/ton-eth-bridge-contracts/tree/e8de9f14d85aa7d912d5a6664cfc1fad86d157cb/free-ton/contracts/additional/EventProxySimple.sol)
 
 This contract is used to implement callback logic. It should implement
 the `broxusBridgeCallback` method, which is called by the corresponding [Ethereum event contract](#ethereum-event-contract)
@@ -93,7 +90,7 @@ after relays have confirmed the event.
 
 #### TON event configuration
 
-[Example](./../free-ton/contracts/event-configuration-contracts/TonEventConfiguration.sol)
+[Example](https://github.com/broxus/ton-eth-bridge-contracts/tree/e8de9f14d85aa7d912d5a6664cfc1fad86d157cb/free-ton/contracts/event-configuration-contracts/TonEventConfiguration.sol)
 
 To add support for a specific TON event into the bridge ecosystem, the developer needs to create a TON event configuration contract.
 It stores all the details about the event and its callback logic, which is basically the address of the [Ethereum proxy](#ethereum-proxy) contract.
@@ -107,13 +104,13 @@ Event data is placed in the "initial data" section, so a new event leads to the 
 
 ##### Ethereum event contract
 
-[Example](./../free-ton/contracts/event-contracts/EthereumEvent.sol)
+[Example](https://github.com/broxus/ton-eth-bridge-contracts/tree/e8de9f14d85aa7d912d5a6664cfc1fad86d157cb/free-ton/contracts/event-contracts/EthereumEvent.sol)
 
 This contract is used to store confirmations and rejections for a specific Ethereum event.
 After enough confirmations are received, the [Ethereum event proxy](#ethereum-event-proxy) proxy callback may be called.
 
-##### TON event contract
+**TON event contract**
 
-[Example](./../free-ton/contracts/event-contracts/TonEvent.sol)
+[Example](https://github.com/broxus/ton-eth-bridge-contracts/tree/e8de9f14d85aa7d912d5a6664cfc1fad86d157cb/free-ton/contracts/event-contracts/TonEvent.sol)
 
 This contract is used to store confirmations and rejections for a specific TON event. Also it stores `TonEvent` Ethereum structure relays’ signatures.
