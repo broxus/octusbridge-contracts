@@ -1,4 +1,4 @@
-pragma ton-solidity ^0.39.0;
+pragma ton-solidity ^0.43.0;
 pragma AbiHeader expire;
 
 
@@ -14,6 +14,8 @@ import './../interfaces/IEventConfiguration.sol';
 contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, ErrorCodes {
     BasicConfigurationInitData static basicInitData;
     EthereumEventConfigurationInitData static initData;
+
+    uint8 nonce = 2;
 
     modifier onlyBridge() {
         require(msg.sender == basicInitData.bridgeAddress, SENDER_NOT_BRIDGE);
