@@ -1,6 +1,6 @@
 .macro constructor
 DROP
-GETGLOB 8
+GETGLOB 1
 ISNULL
 IFREF {
 	CALL $c4_to_c7_with_init_storage$
@@ -21,20 +21,14 @@ SETGLOB 7
 
 .macro getAccountStatus
 DROP
-GETGLOB 8
+GETGLOB 1
 ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-LDMSGADDRQ
-PUSHCONT {
-	;; load next cell
-	LDREF
-	ENDS
-	CTOS
-	LDMSGADDR
-}
-IFNOT
+; Decode input parameters
+; Decode addr
+LDMSGADDR
 ENDS
 ;; param: addr
 CALLREF {
@@ -53,8 +47,11 @@ PUSHCONT {
 	NEWC
 	STSLICECONST xc
 	STSLICE
-	PUSHSLICE x00000000000000000000000032188a232_
-	STSLICER
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST xc862288c
 	PUSH S1
 	STIR 1
 	ENDC
@@ -99,20 +96,14 @@ NIP
 
 .macro getEthereumAccount
 DROP
-GETGLOB 8
+GETGLOB 1
 ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-LDMSGADDRQ
-PUSHCONT {
-	;; load next cell
-	LDREF
-	ENDS
-	CTOS
-	LDMSGADDR
-}
-IFNOT
+; Decode input parameters
+; Decode addr
+LDMSGADDR
 ENDS
 ;; param: addr
 CALLREF {
@@ -131,8 +122,11 @@ PUSHCONT {
 	NEWC
 	STSLICECONST xc
 	STSLICE
-	PUSHSLICE x0000000000000000000000002f623a802_
-	STSLICER
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST xbd88ea00
 	PUSH S1
 	STUR 160
 	ENDC
@@ -185,9 +179,10 @@ CALL $_grantOwnership_internal_macro$
 ; function _grantOwnership
 ; expValue
 ;; fetch ownerAccounts
-;; push identifier addr
-PUSH S1
 GETGLOB 28
+;; push identifier addr
+PUSH S2
+SWAP
 ; end expValue
 TRUE
 ; colValue
@@ -200,9 +195,10 @@ SETGLOB 28
 ; end colValue
 ; expValue
 ;; fetch ownerEthereumAccounts
-;; push identifier addr
-PUSH S1
 GETGLOB 29
+;; push identifier addr
+PUSH S2
+SWAP
 ; end expValue
 ;; push identifier ethereumAccount
 PUSH S2
@@ -215,9 +211,12 @@ DICTSETB
 SETGLOB 29
 ; end colValue
 ;; emit OwnershipGranted
-PUSHSLICE xc0000000000000000000000000107857aa
 NEWC
-STSLICE
+PUSHSLICE xc0000000000000000000000002_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x107857aa
 ;; addr
 ;; push identifier addr
 PUSH S2
@@ -238,10 +237,13 @@ CALL $_removeOwnership_internal_macro$
 ;; delete
 ; expValue
 ;; fetch ownerAccounts
-;; push identifier addr
-; end expValue
-BLKPUSH 2, 0
 GETGLOB 28
+;; push identifier addr
+PUSH S1
+SWAP
+; end expValue
+PUSH S1
+SWAP
 PUSHINT 267
 DICTDEL
 DROP
@@ -252,10 +254,13 @@ SETGLOB 28
 ;; delete
 ; expValue
 ;; fetch ownerEthereumAccounts
-;; push identifier addr
-; end expValue
-BLKPUSH 2, 0
 GETGLOB 29
+;; push identifier addr
+PUSH S1
+SWAP
+; end expValue
+PUSH S1
+SWAP
 PUSHINT 267
 DICTDEL
 DROP
@@ -264,9 +269,12 @@ NIP
 SETGLOB 29
 ; end colValue
 ;; emit OwnershipRemoved
-PUSHSLICE xc0000000000000000000000000461ab0ce
 NEWC
-STSLICE
+PUSHSLICE xc0000000000000000000000002_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x461ab0ce
 ;; addr
 ;; push identifier addr
 PUSH S1
@@ -279,11 +287,12 @@ DROP
 
 .macro getAccounts
 DROP
-GETGLOB 8
+GETGLOB 1
 ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
+; Decode input parameters
 ENDS
 CALLREF {
 	CALL $getAccounts_internal_macro$
@@ -301,8 +310,11 @@ PUSHCONT {
 	NEWC
 	STSLICECONST xc
 	STSLICE
-	PUSHSLICE x0000000000000000000000002f7c439ca_
-	STSLICER
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST xbdf10e72
 	PUSH S2
 	UNPAIR
 	XCHG s2
@@ -344,32 +356,41 @@ GETGLOB 28
 DUP
 PUSHINT 267
 DICTMIN
+NULLSWAPIFNOT
 PUSHCONT {
-	DUP
-	ROT
+	SWAP
 	PLDI 1
+	TUPLE 2
+}
+IF
+DUP
+ISNULL
+PUSHCONT {
+	NULL
+	NULL
 }
 PUSHCONT {
-	NULL
-	NULL
-	NULL
+	UNTUPLE 2
+	PUSH S1
 }
 IFELSE
 PUSHCONT {
-	PUSH S2
+	DUP
 	ISNULL
 	NOT
 }
 PUSHCONT {
 	;; if
 	;; push identifier status
-	DUP
+	PUSH S1
 	PUSHCONT {
 		; expValue
+		PUSH S5
 		; end expValue
 		;; push identifier addr
+		PUSH S3
 		;; array.push(..)
-		PUSH2 S1, S5
+		SWAP
 		UNPAIR
 		PUSH S1
 		INC
@@ -382,10 +403,11 @@ PUSHCONT {
 		POP S6
 		; end colValue
 		; expValue
+		PUSH S4
 		; end expValue
 		;; index
 		;; push identifier addr
-		PUSH2 S4, S1
+		PUSH S3
 		;; push identifier ownerEthereumAccounts
 		GETGLOB 29
 		PUSHINT 267
@@ -415,21 +437,30 @@ PUSHCONT {
 	}
 	IF
 	;; end if
-	PUSH2 S2, S3
+	DUP
+	PUSH S4
 	PUSHINT 267
 	DICTGETNEXT
+	NULLSWAPIFNOT
 	PUSHCONT {
-		DUP
-		ROT
+		SWAP
 		PLDI 1
+		TUPLE 2
+	}
+	IF
+	DUP
+	ISNULL
+	PUSHCONT {
+		POP S1
 	}
 	PUSHCONT {
-		NULL
-		NULL
-		NULL
+		UNTUPLE 2
+		POP S3
+		DUP
+		POP S4
+		POP S1
 	}
 	IFELSE
-	BLKDROP2 3, 3
 }
 WHILE
 BLKDROP 4
@@ -437,54 +468,55 @@ BLKDROP 4
 ; end function getAccounts
 
 .macro c7_to_c4
-GETGLOB 6
-GETGLOB 3
 GETGLOB 2
 NEWC
 STU 256
-STU 64
-STU 1
+GETGLOB 3
+STUR 64
+GETGLOB 6
+STUR 1
 GETGLOB 10
-STUR 16
 GETGLOB 11
-STUR 16
 GETGLOB 12
-STUR 16
 GETGLOB 13
-STUR 16
 GETGLOB 14
-STUR 16
 GETGLOB 15
-STUR 16
 GETGLOB 16
-STUR 16
 GETGLOB 17
-STUR 16
 GETGLOB 18
-STUR 16
 GETGLOB 19
-STUR 16
 GETGLOB 20
-STUR 16
 GETGLOB 21
-STUR 16
 GETGLOB 22
-STUR 16
 GETGLOB 23
-STUR 16
 GETGLOB 24
-STUR 16
 GETGLOB 25
-STUR 16
 GETGLOB 26
-STUR 16
 GETGLOB 27
-STUR 16
 GETGLOB 28
-SWAP
-STDICT
 GETGLOB 29
-SWAP
+PUSHINT 21
+PUSHINT 0
+REVX
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STDICT
 STDICT
 ENDC
 POP C4
@@ -514,8 +546,7 @@ LDU 16
 LDU 16
 LDU 16
 LDDICT
-LDDICT
-ENDS
+PLDDICT
 SETGLOB 29
 SETGLOB 28
 SETGLOB 27
@@ -537,8 +568,7 @@ SETGLOB 12
 SETGLOB 11
 SETGLOB 10
 TRUE
-SETGLOB 8
-; pubkey [timestamp] constructor_flag
+SETGLOB 1   ; pubkey [timestamp] constructor_flag
 SETGLOB 6   ; pubkey [timestamp]
 SETGLOB 3   ; D
 SETGLOB 2
@@ -572,8 +602,7 @@ PUSHCONT {
 	LDU 16
 	LDU 16
 	LDDICT
-	LDDICT
-	ENDS
+	PLDDICT
 	SETGLOB 29
 	SETGLOB 28
 	SETGLOB 27
@@ -595,8 +624,7 @@ PUSHCONT {
 	SETGLOB 11
 	SETGLOB 10
 	TRUE
-	SETGLOB 8
-	; pubkey [timestamp] constructor_flag
+	SETGLOB 1   ; pubkey [timestamp] constructor_flag
 	SETGLOB 6   ; pubkey [timestamp]
 	SETGLOB 3   ; D
 	SETGLOB 2
@@ -675,8 +703,8 @@ PUSHCONT {
 	SETGLOB 3
 	PUSHINT 0 ; constructor_flag
 	SETGLOB 6
-TRUE
-SETGLOB 8
+	TRUE
+	SETGLOB 1
 	;; init state var: ADDRESS_IS_NOT_OWNER
 	PUSHINT 5001
 	SETGLOB 10
@@ -742,7 +770,7 @@ IFELSE
 ;; param: msg_balance
 ;; param: int_msg_info
 ;; param: msg_body_slice
-;; param: transaction_type
+PUSHINT 0  ; main_external trans id
 PUSH S2
 CTOS
 PLDU 4
@@ -752,8 +780,7 @@ PUSH S1    ; body
 SEMPTY     ; isEmpty
 IFRET
 PUSH S1 ; body
-LDUQ 32  ; [funcId] body' ok
-THROWIFNOT 60 ; funcId body'
+LDU 32  ; funcId body'
 PUSH S1 ; funcId body' funcId
 IFNOTRET
 SWAP
@@ -766,6 +793,7 @@ THROWIF 60
 
 .internal-alias :main_external, -1
 .internal :main_external
+PUSHINT -1 ; main_external trans id
 PUSH S1
 CALLREF {
 	CALL $c4_to_c7_with_init_storage$
