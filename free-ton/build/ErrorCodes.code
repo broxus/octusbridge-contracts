@@ -1,6 +1,6 @@
 .macro constructor
 DROP
-GETGLOB 8
+GETGLOB 1
 ISNULL
 IFREF {
 	CALL $c4_to_c7_with_init_storage$
@@ -20,49 +20,52 @@ TRUE
 SETGLOB 7
 
 .macro c7_to_c4
-GETGLOB 6
-GETGLOB 3
 GETGLOB 2
 NEWC
 STU 256
-STU 64
-STU 1
+GETGLOB 3
+STUR 64
+GETGLOB 6
+STUR 1
 GETGLOB 10
-STUR 16
 GETGLOB 11
-STUR 16
 GETGLOB 12
-STUR 16
 GETGLOB 13
-STUR 16
 GETGLOB 14
-STUR 16
 GETGLOB 15
-STUR 16
 GETGLOB 16
-STUR 16
 GETGLOB 17
-STUR 16
 GETGLOB 18
-STUR 16
 GETGLOB 19
-STUR 16
 GETGLOB 20
-STUR 16
 GETGLOB 21
-STUR 16
 GETGLOB 22
-STUR 16
 GETGLOB 23
-STUR 16
 GETGLOB 24
-STUR 16
 GETGLOB 25
-STUR 16
 GETGLOB 26
-STUR 16
 GETGLOB 27
-STUR 16
+PUSHINT 19
+PUSHINT 0
+REVX
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
+STU 16
 ENDC
 POP C4
 
@@ -89,8 +92,7 @@ LDU 16
 LDU 16
 LDU 16
 LDU 16
-LDU 16
-ENDS
+PLDU 16
 SETGLOB 27
 SETGLOB 26
 SETGLOB 25
@@ -110,8 +112,7 @@ SETGLOB 12
 SETGLOB 11
 SETGLOB 10
 TRUE
-SETGLOB 8
-; pubkey [timestamp] constructor_flag
+SETGLOB 1   ; pubkey [timestamp] constructor_flag
 SETGLOB 6   ; pubkey [timestamp]
 SETGLOB 3   ; D
 SETGLOB 2
@@ -143,8 +144,7 @@ PUSHCONT {
 	LDU 16
 	LDU 16
 	LDU 16
-	LDU 16
-	ENDS
+	PLDU 16
 	SETGLOB 27
 	SETGLOB 26
 	SETGLOB 25
@@ -164,8 +164,7 @@ PUSHCONT {
 	SETGLOB 11
 	SETGLOB 10
 	TRUE
-	SETGLOB 8
-	; pubkey [timestamp] constructor_flag
+	SETGLOB 1   ; pubkey [timestamp] constructor_flag
 	SETGLOB 6   ; pubkey [timestamp]
 	SETGLOB 3   ; D
 	SETGLOB 2
@@ -238,8 +237,8 @@ PUSHCONT {
 	SETGLOB 3
 	PUSHINT 0 ; constructor_flag
 	SETGLOB 6
-TRUE
-SETGLOB 8
+	TRUE
+	SETGLOB 1
 	;; init state var: ADDRESS_IS_NOT_OWNER
 	PUSHINT 5001
 	SETGLOB 10
@@ -305,7 +304,7 @@ IFELSE
 ;; param: msg_balance
 ;; param: int_msg_info
 ;; param: msg_body_slice
-;; param: transaction_type
+PUSHINT 0  ; main_external trans id
 PUSH S2
 CTOS
 PLDU 4
@@ -315,8 +314,7 @@ PUSH S1    ; body
 SEMPTY     ; isEmpty
 IFRET
 PUSH S1 ; body
-LDUQ 32  ; [funcId] body' ok
-THROWIFNOT 60 ; funcId body'
+LDU 32  ; funcId body'
 PUSH S1 ; funcId body' funcId
 IFNOTRET
 SWAP
@@ -329,6 +327,7 @@ THROWIF 60
 
 .internal-alias :main_external, -1
 .internal :main_external
+PUSHINT -1 ; main_external trans id
 PUSH S1
 CALLREF {
 	CALL $c4_to_c7_with_init_storage$
