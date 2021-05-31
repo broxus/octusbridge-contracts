@@ -7,8 +7,6 @@ pragma ton-solidity ^0.39.0;
     @important Not strictly connected to the ERC20<->TIP3 token transfers, just an example.
 */
 contract CellEncoder {
-    uint16 static _randomNonce;
-
     function encodeEthereumEventData(
         uint128 tokens,
         int8 wid,

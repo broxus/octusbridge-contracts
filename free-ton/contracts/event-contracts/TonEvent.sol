@@ -5,16 +5,16 @@ pragma AbiHeader expire;
 import "./../interfaces/IEvent.sol";
 import "./../interfaces/IEventNotificationReceiver.sol";
 
-import "../utils/ErrorCodes.sol";
+import "./../utils/ErrorCodes.sol";
 import "./../utils/TransferUtils.sol";
-import "./../additional/CellEncoder.sol";
+import "./../utils/CellEncoder.sol";
 
 
 /*
     @title Basic example of TON event configuration
     @dev This implementation is used for cross chain token transfers
 */
-contract TonEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
+contract TonEvent is IEvent, TransferUtils, CellEncoder {
     TonEventInitData static initData;
 
     address[] confirmRelays;
@@ -23,13 +23,13 @@ contract TonEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
 
     TonEventStatus status;
 
-    modifier eventInProcess() {
-        require(status == TonEventStatus.InProcess, EVENT_NOT_IN_PROGRESS);
+    modifier eventPending() {
+        require(status == TonEventStatus.Pending, ErrorCodes.EVENT_NOT_IN_PROGRESS);
         _;
     }
 
     modifier onlyEventConfiguration(address configuration) {
-        require(msg.sender == configuration, SENDER_NOT_EVENT_CONFIGURATION);
+        require(msg.sender == configuration, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
         _;
     }
 
@@ -58,7 +58,7 @@ contract TonEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
         bytes eventDataSignature
     ) public {
         initData.tonEventConfiguration = msg.sender;
-        status = TonEventStatus.InProcess;
+        status = TonEventStatus.Pending;
 
         notifyEventStatusChanged();
 
@@ -78,10 +78,10 @@ contract TonEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
     )
         public
         onlyEventConfiguration(initData.tonEventConfiguration)
-        eventInProcess
+        eventPending
     {
         for (uint i=0; i<confirmRelays.length; i++) {
-            require(confirmRelays[i] != relay, KEY_ALREADY_CONFIRMED);
+            require(confirmRelays[i] != relay, ErrorCodes.KEY_ALREADY_CONFIRMED);
         }
 
         confirmRelays.push(relay);
@@ -106,10 +106,10 @@ contract TonEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
     )
         public
         onlyEventConfiguration(initData.tonEventConfiguration)
-        eventInProcess
+        eventPending
     {
         for (uint i=0; i<rejectRelays.length; i++) {
-            require(rejectRelays[i] != relay, KEY_ALREADY_REJECTED);
+            require(rejectRelays[i] != relay, ErrorCodes.KEY_ALREADY_REJECTED);
         }
 
         rejectRelays.push(relay);

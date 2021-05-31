@@ -8,15 +8,14 @@ import "./../interfaces/IEventNotificationReceiver.sol";
 
 import "./../utils/ErrorCodes.sol";
 import "./../utils/TransferUtils.sol";
-
-import "./../additional/CellEncoder.sol";
+import "./../utils/CellEncoder.sol";
 
 
 /*
     @title Basic example of Ethereum event configuration
     @dev This implementation is used for cross chain token transfers
 */
-contract EthereumEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
+contract EthereumEvent is IEvent, TransferUtils, CellEncoder {
     EthereumEventInitData static initData;
 
     EthereumEventStatus status;
@@ -26,18 +25,18 @@ contract EthereumEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
 
     address executor;
 
-    modifier eventInProcess() {
-        require(status == EthereumEventStatus.InProcess, EVENT_NOT_IN_PROGRESS);
+    modifier eventPending() {
+        require(status == EthereumEventStatus.Pending, ErrorCodes.EVENT_NOT_IN_PROGRESS);
         _;
     }
 
     modifier eventConfirmed() {
-        require(status == EthereumEventStatus.Confirmed, EVENT_NOT_CONFIRMED);
+        require(status == EthereumEventStatus.Confirmed, ErrorCodes.EVENT_NOT_CONFIRMED);
         _;
     }
 
     modifier onlyEventConfiguration(address configuration) {
-        require(msg.sender == configuration, SENDER_NOT_EVENT_CONFIGURATION);
+        require(msg.sender == configuration, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
         _;
     }
 
@@ -63,7 +62,7 @@ contract EthereumEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
         address relay
     ) public {
         initData.ethereumEventConfiguration = msg.sender;
-        status = EthereumEventStatus.InProcess;
+        status = EthereumEventStatus.Pending;
 
         notifyEventStatusChanged();
 
@@ -73,7 +72,7 @@ contract EthereumEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
     /*
         @notice Confirm event
         @dev Can be called only by parent event configuration
-        @dev Can be called only when event configuration is in inProcess status
+        @dev Can be called only when event configuration is in Pending status
         @param relay Relay, who initialized the confirmation
     */
     function confirm(
@@ -81,10 +80,10 @@ contract EthereumEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
     )
         public
         onlyEventConfiguration(initData.ethereumEventConfiguration)
-        eventInProcess
+        eventPending
     {
         for (uint i=0; i<confirmRelays.length; i++) {
-            require(confirmRelays[i] != relay, KEY_ALREADY_CONFIRMED);
+            require(confirmRelays[i] != relay, ErrorCodes.KEY_ALREADY_CONFIRMED);
         }
 
         confirmRelays.push(relay);
@@ -100,7 +99,7 @@ contract EthereumEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
     /*
         @notice Reject event
         @dev Can be called only by parent event configuration
-        @dev Can be called only when event configuration is in inProcess status
+        @dev Can be called only when event configuration is in Pending status
         @param relay Relay, who initialized the confirmation
     */
     function reject(
@@ -108,10 +107,10 @@ contract EthereumEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
     )
         public
         onlyEventConfiguration(initData.ethereumEventConfiguration)
-        eventInProcess
+        eventPending
     {
         for (uint i=0; i<rejectRelays.length; i++) {
-            require(rejectRelays[i] != relay, KEY_ALREADY_REJECTED);
+            require(rejectRelays[i] != relay, ErrorCodes.KEY_ALREADY_REJECTED);
         }
 
         rejectRelays.push(relay);
@@ -133,7 +132,7 @@ contract EthereumEvent is IEvent, ErrorCodes, TransferUtils, CellEncoder {
         @dev Send the attached balance to the Proxy call
     */
     function executeProxyCallback() public eventConfirmed {
-        require(msg.value >= 1 ton, TOO_LOW_MSG_VALUE);
+        require(msg.value >= 1 ton, ErrorCodes.TOO_LOW_MSG_VALUE);
         status = EthereumEventStatus.Executed;
 
         notifyEventStatusChanged();

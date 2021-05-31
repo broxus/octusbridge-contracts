@@ -44,7 +44,7 @@ interface IEvent {
         uint eventBlock;
     }
 
-    enum EthereumEventStatus { InProcess, Confirmed, Executed, Rejected }
-    enum TonEventStatus { InProcess, Confirmed, Rejected }
+    enum EthereumEventStatus { Pending, Confirmed, Executed, Rejected }
+    enum TonEventStatus { Pending, Confirmed, Rejected }
 }
 

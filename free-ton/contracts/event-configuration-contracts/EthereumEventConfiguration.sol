@@ -2,29 +2,37 @@ pragma ton-solidity ^0.39.0;
 pragma AbiHeader expire;
 
 
-import './../event-contracts/EthereumEvent.sol';
-import './../utils/TransferUtils.sol';
-import './../utils/ErrorCodes.sol';
 import './../interfaces/IEvent.sol';
 import './../interfaces/IEventConfiguration.sol';
+
+import './../utils/TransferUtils.sol';
+import './../utils/ErrorCodes.sol';
+
+import './../event-contracts/EthereumEvent.sol';
+
+import './../../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol';
+
 
 /*
     @title Basic example of Ethereum event configuration
 */
-contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, ErrorCodes {
+contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, InternalOwner {
     BasicConfigurationInitData static basicInitData;
     EthereumEventConfigurationInitData static initData;
 
-    uint8 nonce = 2;
-
     modifier onlyBridge() {
-        require(msg.sender == basicInitData.bridgeAddress, SENDER_NOT_BRIDGE);
+        require(msg.sender == basicInitData.bridgeAddress, ErrorCodes.SENDER_NOT_BRIDGE);
         _;
     }
 
-    constructor() public {
-        require(tvm.pubkey() == msg.pubkey(), WRONG_TVM_KEY);
+    /*
+        @param _owner Event configuration owner
+    */
+    constructor(address _owner) public {
+        require(tvm.pubkey() == msg.pubkey(), ErrorCodes.WRONG_TVM_KEY);
         tvm.accept();
+
+        setOwnership(_owner);
     }
 
     function buildEventInitData(
@@ -62,7 +70,7 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Error
         onlyBridge
         transferAfter(basicInitData.bridgeAddress, msg.value)
     {
-        require(eventVoteData.eventBlockNumber >= initData.startBlockNumber, EVENT_BLOCK_NUMBER_LESS_THAN_START);
+        require(eventVoteData.eventBlockNumber >= initData.startBlockNumber, ErrorCodes.EVENT_BLOCK_NUMBER_LESS_THAN_START);
 
         IEvent.EthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
 
@@ -142,14 +150,14 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Error
 
     /*
         @notice Update configuration data
-        @dev Can be called only by Bridge contract
+        @dev Can be called only by owner
         @param _basicInitData New basic configuration init data
         @param _initData New network specific configuration init data
     */
-    function updateInitData(
+    function update(
         BasicConfigurationInitData _basicInitData,
         EthereumEventConfigurationInitData _initData
-    ) public onlyBridge transferAfter(basicInitData.bridgeAddress, msg.value) {
+    ) public onlyOwner {
         basicInitData = _basicInitData;
         initData = _initData;
     }

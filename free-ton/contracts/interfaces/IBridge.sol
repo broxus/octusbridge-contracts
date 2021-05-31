@@ -1,25 +1,21 @@
 pragma ton-solidity ^0.39.0;
 
+import './IEventConfiguration.sol';
+
 interface IBridge {
     struct BridgeConfiguration {
-        uint16 nonce;
-
-        uint16 bridgeUpdateRequiredConfirmations;
-        uint16 bridgeUpdateRequiredRejects;
-
+        address staking;
         bool active;
     }
 
-    struct BridgeRelay {
-        uint16 nonce;
-
-        int8 wid;
-        uint addr;
-        uint160 ethereumAccount;
-        bool action;
+    struct EventConfiguration {
+        address addr;
+        bool status;
+        IEventConfiguration.EventType _type;
     }
 
-    struct Vote {
-        bytes signature;
-    }
+    event EventConfigurationCreated(uint32 id, EventConfiguration eventConfiguration);
+    event EventConfigurationRemoved(uint32 id);
+    event EventConfigurationUpdated(uint32 id, EventConfiguration eventConfiguration);
+    event BridgeConfigurationUpdate(BridgeConfiguration bridgeConfiguration);
 }

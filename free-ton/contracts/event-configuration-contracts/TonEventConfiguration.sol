@@ -2,28 +2,37 @@ pragma ton-solidity ^0.39.0;
 pragma AbiHeader expire;
 
 
-import './../event-contracts/TonEvent.sol';
-import './../utils/TransferUtils.sol';
 import './../interfaces/IEvent.sol';
 import './../interfaces/IEventConfiguration.sol';
-import "../utils/ErrorCodes.sol";
+
+import './../utils/TransferUtils.sol';
+import './../utils/ErrorCodes.sol';
+
+import './../event-contracts/TonEvent.sol';
+
+import './../../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol';
 
 
 /*
     @title Basic example of TON event configuration
 */
-contract TonEventConfiguration is TransferUtils, IEventConfiguration, ErrorCodes {
+contract TonEventConfiguration is TransferUtils, IEventConfiguration, InternalOwner {
     BasicConfigurationInitData static basicInitData;
     TonEventConfigurationInitData static initData;
 
     modifier onlyBridge() {
-        require(msg.sender == basicInitData.bridgeAddress, SENDER_NOT_BRIDGE);
+        require(msg.sender == basicInitData.bridgeAddress, ErrorCodes.SENDER_NOT_BRIDGE);
         _;
     }
 
-    constructor() public {
-        require(tvm.pubkey() == msg.pubkey(), WRONG_TVM_KEY);
+    /*
+        @param _owner Event configuration owner
+    */
+    constructor(address _owner) public {
+        require(tvm.pubkey() == msg.pubkey(), ErrorCodes.WRONG_TVM_KEY);
         tvm.accept();
+
+        setOwnership(_owner);
     }
 
     function buildEventInitData(
@@ -58,7 +67,7 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, ErrorCodes
         bytes eventDataSignature,
         address relay
     ) public onlyBridge transferAfter(basicInitData.bridgeAddress, msg.value) {
-        require(eventVoteData.eventTimestamp >= initData.startTimestamp, EVENT_TIMESTAMP_LESS_THAN_START);
+        require(eventVoteData.eventTimestamp >= initData.startTimestamp, ErrorCodes.EVENT_TIMESTAMP_LESS_THAN_START);
 
         IEvent.TonEventInitData eventInitData = buildEventInitData(eventVoteData);
 
@@ -144,7 +153,7 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, ErrorCodes
         @param _basicInitData New basic configuration init data
         @param _initData New network specific configuration init data
     */
-    function updateInitData(
+    function update(
         BasicConfigurationInitData _basicInitData,
         TonEventConfigurationInitData _initData
     ) public onlyBridge {
