@@ -18,8 +18,8 @@ import './../../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.so
     @title Basic example of Ethereum event configuration
 */
 contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, InternalOwner, CheckPubKey {
-    BasicConfigurationInitData static basicInitData;
-    EthereumEventConfigurationInitData static initData;
+    BasicConfigurationInitData public static basicInitData;
+    EthereumEventConfigurationInitData public static initData;
 
     modifier onlyBridge() {
         require(msg.sender == basicInitData.bridgeAddress, ErrorCodes.SENDER_NOT_BRIDGE);
@@ -56,11 +56,33 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Inter
     }
 
     /*
+        @notice Derive the Ethereum event contract address from it's init data
+        @param eventVoteData Ethereum event vote data
+        @returns eventContract Address of the corresponding ethereum event contract
+    */
+    function deriveEventAddress(
+        IEvent.EthereumEventVoteData eventVoteData
+    ) public view returns(address eventContract) {
+        IEvent.EthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
+
+        TvmCell stateInit = tvm.buildStateInit({
+            contr: EthereumEvent,
+            varInit: {
+                initData: eventInitData
+            },
+            pubkey: 0,
+            code: basicInitData.eventCode
+        });
+
+        return address(tvm.hash(stateInit));
+    }
+
+    /*
         @notice Confirm Ethereum-TON event
         @dev This function either deploy EthereumEvent or confirm it
         Two transactions is sent (deploy and confirm) and one is always fail
         @dev Can be called only by Bridge contract
-        @param eventVoteData Ethereum event init data
+        @param eventVoteData Ethereum event vote data
         @param relay Relay, who initialized the confirmation
         @returns eventContract Address of the corresponding event contract
     **/
@@ -73,14 +95,17 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Inter
     returns (
         address eventContract
     ) {
-        require(eventVoteData.eventBlockNumber >= initData.startBlockNumber, ErrorCodes.EVENT_BLOCK_NUMBER_LESS_THAN_START);
+        require(
+            eventVoteData.eventBlockNumber >= initData.startBlockNumber,
+            ErrorCodes.EVENT_BLOCK_NUMBER_LESS_THAN_START
+        );
 
         IEvent.EthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
 
         address ethereumEventAddress = new EthereumEvent{
             value: basicInitData.eventInitialBalance,
             code: basicInitData.eventCode,
-            pubkey: tvm.pubkey(),
+            pubkey: 0,
             varInit: {
                 initData: eventInitData
             }
@@ -100,7 +125,7 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Inter
         @dev This function calls the reject method of the corresponding EthereumEvent contract
         @dev EthereumEvent contract is not deployed
         @dev Can be called only by Bridge contract
-        @param eventVoteData Ethereum event init data
+        @param eventVoteData Ethereum event vote data
         @param relay Relay, who initialized the rejection
     **/
     function rejectEvent(

@@ -10,41 +10,32 @@ import "./../utils/TransferUtils.sol";
 import "./../../../node_modules/@broxus/contracts/contracts/utils/RandomNonce.sol";
 
 
-contract EventProxySimple is IProxy, TransferUtils, RandomNonce {
+
+/*
+    @title Ethereum event proxy mockup contract.
+    Receives broxusBridgeCallback from ethereum event configuration when
+    ethereum event contract is executed.
+    In real use it could be used for example for minting tokens
+    in case of cross chain token transfers. Or execute any other custom action.
+*/
+contract ProxyMockup is IProxy, TransferUtils, RandomNonce {
     address ethereumEventConfiguration;
-    TvmCell ethereumEventCode;
-    uint ethereumEventPubKey;
 
     IEvent.EthereumEventInitData eventData;
     uint callbackCounter = 0;
 
     constructor(
-        address _ethereumEventConfiguration,
-        TvmCell _ethereumEventCode,
-        uint _ethereumEventPubKey
+        address _ethereumEventConfiguration
     ) public {
         tvm.accept();
 
         ethereumEventConfiguration = _ethereumEventConfiguration;
-        ethereumEventCode = _ethereumEventCode;
-        ethereumEventPubKey = _ethereumEventPubKey;
     }
 
-    function buildEventProxyAddress(
-        IEvent.EthereumEventInitData _eventData
-    ) public view returns(address) {
-        TvmCell stateInit = tvm.buildStateInit({
-            code: ethereumEventCode,
-            pubkey: ethereumEventPubKey,
-            varInit: {
-                initData: _eventData
-            },
-            contr: EthereumEvent
-        });
-
-        return address(tvm.hash(stateInit));
-    }
-
+    /*
+        @notice Callback on executing ethereum event contract
+        @dev Could be only called by the ethereum event contract
+    */
     function broxusBridgeCallback(
         IEvent.EthereumEventInitData _eventData,
         address gasBackAddress
@@ -62,14 +53,10 @@ contract EventProxySimple is IProxy, TransferUtils, RandomNonce {
     }
 
     function getDetails() public view returns (
-        address _ethereumEventConfiguration,
-        TvmCell _ethereumEventCode,
         IEvent.EthereumEventInitData _eventData,
         uint _callbackCounter
     ) {
         return (
-            ethereumEventConfiguration,
-            ethereumEventCode,
             eventData,
             callbackCounter
         );

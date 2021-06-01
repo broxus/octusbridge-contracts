@@ -16,17 +16,16 @@ import "./../utils/cell-encoder/CellEncoder.sol";
     @dev This implementation is used for cross chain token transfers
 */
 contract EthereumEvent is IEvent, TransferUtils, CellEncoder {
-    EthereumEventInitData static initData;
+    EthereumEventInitData static public initData;
+    EthereumEventStatus public status;
 
-    EthereumEventStatus status;
+    address[] public confirmRelays;
+    address[] public rejectRelays;
 
-    address[] confirmRelays;
-    address[] rejectRelays;
-
-    address executor;
+    address public executor;
 
     modifier eventPending() {
-        require(status == EthereumEventStatus.Pending, ErrorCodes.EVENT_NOT_IN_PROGRESS);
+        require(status == EthereumEventStatus.Pending, ErrorCodes.EVENT_NOT_PENDING);
         _;
     }
 
@@ -129,7 +128,7 @@ contract EthereumEvent is IEvent, TransferUtils, CellEncoder {
         @dev Can be called only when event configuration is in Confirmed status
         @dev May be called only once, because status will be changed to Executed
         @dev Require more than 1 TON of attached balance
-        @dev Send the attached balance to the Proxy call
+        @dev Send the attached balance to the event configuration which proxies it to the Proxy
     */
     function executeProxyCallback() public eventConfirmed {
         require(msg.value >= 1 ton, ErrorCodes.TOO_LOW_MSG_VALUE);
@@ -137,6 +136,7 @@ contract EthereumEvent is IEvent, TransferUtils, CellEncoder {
 
         notifyEventStatusChanged();
         executor = msg.sender;
+
         IProxy(initData.proxyAddress)
             .broxusBridgeCallback{
                 value: 0,

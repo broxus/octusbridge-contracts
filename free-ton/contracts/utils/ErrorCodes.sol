@@ -16,7 +16,7 @@ library ErrorCodes {
     uint16 constant EVENT_TIMESTAMP_LESS_THAN_START = 2111;
 
     // Event contract
-    uint16 constant EVENT_NOT_IN_PROGRESS = 2112;
+    uint16 constant EVENT_NOT_PENDING = 2112;
     uint16 constant SENDER_NOT_EVENT_CONFIGURATION = 2113;
     uint16 constant KEY_ALREADY_CONFIRMED = 2114;
     uint16 constant KEY_ALREADY_REJECTED = 2115;

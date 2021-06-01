@@ -12,7 +12,7 @@ describe('Test updating ethereum event configuration', async function() {
   let owner, bridge, staking, cellEncoder;
   
   it('Setup bridge', async () => {
-    [owner, bridge, staking, cellEncoder] = await setupBridge();
+    // [owner, bridge, staking, cellEncoder] = await setupBridge();
   });
   
     // it('Deploy event configuration', async () => {

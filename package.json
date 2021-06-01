@@ -41,6 +41,7 @@
     "@openzeppelin/hardhat-upgrades": "^1.6.0",
     "@openzeppelin/truffle-upgrades": "^1.5.0",
     "chai": "^4.3.0",
+    "chai-bignumber": "^3.0.0",
     "ethereum-waffle": "^3.2.2",
     "ethers": "^5.0.31",
     "hardhat": "^2.0.10",

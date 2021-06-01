@@ -24,7 +24,7 @@ contract TonEvent is IEvent, TransferUtils, CellEncoder {
     TonEventStatus status;
 
     modifier eventPending() {
-        require(status == TonEventStatus.Pending, ErrorCodes.EVENT_NOT_IN_PROGRESS);
+        require(status == TonEventStatus.Pending, ErrorCodes.EVENT_NOT_PENDING);
         _;
     }
 
@@ -68,7 +68,7 @@ contract TonEvent is IEvent, TransferUtils, CellEncoder {
     /*
         @notice Confirm event
         @dev Can be called only by parent event configuration
-        @dev Can be called only when event configuration is in inProcess status
+        @dev Can be called only when event configuration is in Pending status
         @param relay Relay, who initialized the confirmation
         @param eventDataSignature Relay's signature of the TonEvent data
     */
@@ -98,7 +98,7 @@ contract TonEvent is IEvent, TransferUtils, CellEncoder {
 /*
         @notice Reject event
         @dev Can be called only by parent event configuration
-        @dev Can be called only when event configuration is in inProcess status
+        @dev Can be called only when event configuration is in Pending status
         @param relay Relay, who initialized the confirmation
     */
     function reject(
