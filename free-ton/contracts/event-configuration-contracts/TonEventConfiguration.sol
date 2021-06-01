@@ -45,6 +45,7 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, InternalOw
         eventInitData.eventTransactionLt = eventVoteData.eventTransactionLt;
         eventInitData.eventIndex = eventVoteData.eventIndex;
         eventInitData.eventData = eventVoteData.eventData;
+        eventInitData.round = eventVoteData.round;
 
         eventInitData.tonEventConfiguration = address(this);
         eventInitData.requiredConfirmations = basicInitData.eventRequiredConfirmations;
@@ -61,12 +62,18 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, InternalOw
         @param eventVoteData TON event init data
         @param eventDataSignature Relay's signed payload
         @param relay Relay, who initialized the confirmation
+        @returns eventContract Address of the corresponding event contract
     **/
     function confirmEvent(
         IEvent.TonEventVoteData eventVoteData,
         bytes eventDataSignature,
         address relay
-    ) public onlyBridge transferAfter(basicInitData.bridgeAddress, msg.value) {
+    )
+        public
+        onlyBridge
+    returns (
+        address eventContract
+    ) {
         require(eventVoteData.eventTimestamp >= initData.startTimestamp, ErrorCodes.EVENT_TIMESTAMP_LESS_THAN_START);
 
         IEvent.TonEventInitData eventInitData = buildEventInitData(eventVoteData);
@@ -86,6 +93,8 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, InternalOw
         TonEvent(tonEventAddress).confirm{value: 1 ton}(relay, eventDataSignature);
 
         emit EventConfirmation(tonEventAddress, relay);
+
+        return tonEventAddress;
     }
 
 

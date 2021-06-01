@@ -10,6 +10,7 @@ import "./event-configuration-contracts/TonEventConfiguration.sol";
 import "./interfaces/IEvent.sol";
 import "./interfaces/IBridge.sol";
 import "./interfaces/IEventConfiguration.sol";
+import "./interfaces/IStaking.sol";
 
 import "./utils/TransferUtils.sol";
 import "./utils/ErrorCodes.sol";
@@ -35,10 +36,18 @@ contract Bridge is IBridge, InternalOwner, RandomNonce {
     }
 
     /*
-        @dev Throws and error is event configuration has less confirmations than required or more rejects than allowed
+        @dev Throws an error if event configuration currently inactive
     */
     modifier onlyActiveConfiguration(uint32 id) {
         require(eventConfigurations[id].status == true, ErrorCodes.EVENT_CONFIGURATION_NOT_ACTIVE);
+        _;
+    }
+
+    /*
+        @dev Throws an error if msg.sender not staking
+    */
+    modifier onlyStaking() {
+        require(msg.sender == bridgeConfiguration.staking, ErrorCodes.SENDER_NOT_STAKING);
         _;
     }
 
@@ -67,7 +76,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce {
     function createEventConfiguration(
         uint32 id,
         EventConfiguration eventConfiguration
-    ) public onlyOwner {
+    ) override public onlyOwner {
         require(!eventConfigurations.exists(id), ErrorCodes.EVENT_CONFIGURATION_ALREADY_EXISTS);
 
         eventConfigurations[id] = eventConfiguration;
@@ -81,7 +90,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce {
     */
     function removeEventConfiguration(
         uint32 id
-    ) public onlyOwner {
+    ) override public onlyOwner {
         require(eventConfigurations.exists(id), ErrorCodes.EVENT_CONFIGURATION_NOT_EXISTS);
 
         delete eventConfigurations[id];
@@ -97,7 +106,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce {
     function updateEventConfiguration(
         uint32 id,
         EventConfiguration eventConfiguration
-    ) public onlyOwner {
+    ) override public onlyOwner {
         require(eventConfigurations.exists(id), ErrorCodes.EVENT_CONFIGURATION_NOT_EXISTS);
 
         eventConfigurations[id] = eventConfiguration;
@@ -114,7 +123,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce {
     */
     function getEventConfigurationDetails(
         uint32 id
-    ) public view returns (
+    ) override public view returns (
         address addr,
         bool status,
         IEventConfiguration.EventType _type
@@ -130,7 +139,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce {
         @returns addrs List of event configuration addresses
         @returns _types List of event configuration types
     */
-    function getActiveEventConfigurations() public view returns (
+    function getActiveEventConfigurations() override public view returns (
         uint32[] ids,
         address[] addrs,
         IEventConfiguration.EventType[] _types
@@ -151,7 +160,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce {
         @returns statuses List of event configuration statuses
         @returns _types List of event configuration types
     */
-    function getEventConfigurations() public view returns (
+    function getEventConfigurations() override public view returns (
         uint32[] ids,
         address[] addrs,
         bool[] statuses,
@@ -167,48 +176,98 @@ contract Bridge is IBridge, InternalOwner, RandomNonce {
 
     /*
         @notice Confirm Ethereum event instance.
-        @dev Called only by relay
+        @dev Called by relay
         @param eventVoteData Ethereum event vote data
         @param configurationID Ethereum Event configuration ID
-        @param roundID Event round ID
     */
     function confirmEthereumEvent(
         IEvent.EthereumEventVoteData eventVoteData,
-        uint32 configurationID,
-        uint32 roundID
+        uint32 configurationID
     )
+        override
         public
         view
         onlyActive
         onlyActiveConfiguration(configurationID)
     {
-//        EthereumEventConfiguration(eventConfigurations[configurationID].addr).confirmEvent{value: 1 ton}(
-//            eventVoteData,
-//            msg.sender
-//        );
+        IStaking(bridgeConfiguration.staking).confirmEthereumEvent(
+            eventVoteData,
+            configurationID,
+            msg.sender
+        );
+    }
+
+    /*
+        @notice Confirm Ethereum event instance
+        @dev Called only by staking contract
+        @param eventVoteData Ethereum event vote data
+        @param configurationID Ethereum Event configuration ID
+        @param relay Relay address
+    */
+    function confirmEthereumEventCallback(
+        IEvent.EthereumEventVoteData eventVoteData,
+        uint32 configurationID,
+        address relay
+    )
+        override
+        public
+        view
+        onlyActive
+        onlyActiveConfiguration(configurationID)
+        onlyStaking
+    {
+        EthereumEventConfiguration(eventConfigurations[configurationID].addr).confirmEvent{value: 1 ton}(
+            eventVoteData,
+            relay
+        );
     }
 
     /*
         @notice Reject Ethereum event instance.
-        @dev Called only by relay. Only rejects already existing EthereumEvent contract, not deploy it.
+        @dev Called by relay
         @param eventVoteData Ethereum event vote data
         @param configurationID Ethereum Event configuration ID
-        @param roundID Event round ID
     */
     function rejectEthereumEvent(
         IEvent.EthereumEventVoteData eventVoteData,
-        uint32 configurationID,
-        uint32 roundID
+        uint32 configurationID
     )
+        override
         public
         view
         onlyActive
         onlyActiveConfiguration(configurationID)
     {
-//        EthereumEventConfiguration(eventConfigurations[configurationID].addr).rejectEvent{value: 1 ton}(
-//            eventVoteData,
-//            msg.sender
-//        );
+        IStaking(bridgeConfiguration.staking).rejectEthereumEvent(
+            eventVoteData,
+            configurationID,
+            msg.sender
+        );
+    }
+
+    /*
+        @notice Reject Ethereum event instance
+        @dev Called only by staking contract
+        @param eventVoteData Ethereum event vote data
+        @param configurationID Ethereum Event configuration ID
+        @param relay Relay address
+    */
+    function rejectEthereumEventCallback(
+        IEvent.EthereumEventVoteData eventVoteData,
+        uint32 configurationID,
+        address relay
+    )
+        override
+        public
+        view
+        onlyActive
+        onlyActiveConfiguration(configurationID)
+        onlyStaking
+    {
+        EthereumEventConfiguration(eventConfigurations[configurationID].addr).rejectEvent{value: 1 ton}(
+            eventVoteData,
+            relay
+        );
     }
 
     /*
@@ -217,24 +276,52 @@ contract Bridge is IBridge, InternalOwner, RandomNonce {
         @param eventVoteData Ton event vote data
         @param eventDataSignature Relay's signature of the corresponding TonEvent structure
         @param configurationID Ton Event configuration ID
-        @param roundID Event round ID
     */
     function confirmTonEvent(
         IEvent.TonEventVoteData eventVoteData,
         bytes eventDataSignature,
-        uint32 configurationID,
-        uint32 roundID
+        uint32 configurationID
     )
+        override
         public
         view
         onlyActive
         onlyActiveConfiguration(configurationID)
     {
-//        TonEventConfiguration(eventConfigurations[configurationID].addr).confirmEvent{value: 1 ton}(
-//            eventVoteData,
-//            eventDataSignature,
-//            msg.sender
-//        );
+        IStaking(bridgeConfiguration.staking).confirmTonEvent(
+            eventVoteData,
+            eventDataSignature,
+            configurationID,
+            msg.sender
+        );
+    }
+
+    /*
+        @notice Confirm TON event instance
+        @dev Called only by staking contract
+        @param eventVoteData Ton event vote data
+        @param eventDataSignature Relay's signature of the corresponding TonEvent structure
+        @param configurationID Ton Event configuration ID
+        @param relay Relay address
+    */
+    function confirmTonEventCallback(
+        IEvent.TonEventVoteData eventVoteData,
+        bytes eventDataSignature,
+        uint32 configurationID,
+        address relay
+    )
+        override
+        public
+        view
+        onlyActive
+        onlyActiveConfiguration(configurationID)
+        onlyStaking
+    {
+        TonEventConfiguration(eventConfigurations[configurationID].addr).confirmEvent{value: 1 ton}(
+            eventVoteData,
+            eventDataSignature,
+            relay
+        );
     }
 
     /*
@@ -246,18 +333,44 @@ contract Bridge is IBridge, InternalOwner, RandomNonce {
     */
     function rejectTonEvent(
         IEvent.TonEventVoteData eventVoteData,
-        uint32 configurationID,
-        uint32 roundID
+        uint32 configurationID
     )
+        override
         public
         view
         onlyActive
         onlyActiveConfiguration(configurationID)
     {
-//        TonEventConfiguration(eventConfigurations[configurationID].addr).rejectEvent{value: 1 ton}(
-//            eventVoteData,
-//            msg.sender
-//        );
+        IStaking(bridgeConfiguration.staking).rejectTonEvent(
+            eventVoteData,
+            configurationID,
+            msg.sender
+        );
+    }
+
+    /*
+        @notice Reject TON event instance
+        @dev Called only by staking contract
+        @param eventVoteData Ton event vote data
+        @param configurationID Ton Event configuration ID
+        @param relay Relay address
+    */
+    function rejectTonEventCallback(
+        IEvent.TonEventVoteData eventVoteData,
+        uint32 configurationID,
+        address relay
+    )
+        override
+        public
+        view
+        onlyActive
+        onlyActiveConfiguration(configurationID)
+        onlyStaking
+    {
+        TonEventConfiguration(eventConfigurations[configurationID].addr).rejectEvent{value: 1 ton}(
+            eventVoteData,
+            relay
+        );
     }
 
     /*
@@ -268,6 +381,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce {
     function updateBridgeConfiguration(
         BridgeConfiguration _bridgeConfiguration
     )
+        override
         public
         onlyOwner
     {

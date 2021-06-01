@@ -7,6 +7,7 @@ interface IEvent {
         uint32 eventTimestamp;
         uint32 eventIndex;
         TvmCell eventData;
+        uint32 round;
         address tonEventConfiguration;
         uint16 requiredConfirmations;
         uint16 requiredRejects;
@@ -20,6 +21,7 @@ interface IEvent {
         uint32 eventTimestamp;
         uint32 eventIndex;
         TvmCell eventData;
+        uint32 round;
     }
 
     struct EthereumEventInitData {
@@ -28,6 +30,7 @@ interface IEvent {
         TvmCell eventData;
         uint32 eventBlockNumber;
         uint eventBlock;
+        uint32 round;
         address ethereumEventConfiguration;
         uint16 requiredConfirmations;
         uint16 requiredRejects;
@@ -42,6 +45,7 @@ interface IEvent {
         TvmCell eventData;
         uint32 eventBlockNumber;
         uint eventBlock;
+        uint32 round;
     }
 
     enum EthereumEventStatus { Pending, Confirmed, Executed, Rejected }

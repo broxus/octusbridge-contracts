@@ -6,15 +6,8 @@ const {
 
 describe('Test ethereum event', async function() {
   this.timeout(100000);
-
-  let bridge;
-  let owner;
   
   it('Setup bridge', async () => {
-    let {
-      bridge,
-      owner
-    } = await setupBridge();
   });
   
   describe('Test event confirmation', async () => {

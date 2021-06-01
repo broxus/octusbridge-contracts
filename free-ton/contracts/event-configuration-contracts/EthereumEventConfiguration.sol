@@ -45,6 +45,7 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Inter
         eventInitData.eventData = eventVoteData.eventData;
         eventInitData.eventBlockNumber = eventVoteData.eventBlockNumber;
         eventInitData.eventBlock = eventVoteData.eventBlock;
+        eventInitData.round = eventVoteData.round;
 
         eventInitData.ethereumEventConfiguration = address(this);
         eventInitData.requiredConfirmations = basicInitData.eventRequiredConfirmations;
@@ -61,6 +62,7 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Inter
         @dev Can be called only by Bridge contract
         @param eventVoteData Ethereum event init data
         @param relay Relay, who initialized the confirmation
+        @returns eventContract Address of the corresponding event contract
     **/
     function confirmEvent(
         IEvent.EthereumEventVoteData eventVoteData,
@@ -68,8 +70,9 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Inter
     )
         public
         onlyBridge
-        transferAfter(basicInitData.bridgeAddress, msg.value)
-    {
+    returns (
+        address eventContract
+    ) {
         require(eventVoteData.eventBlockNumber >= initData.startBlockNumber, ErrorCodes.EVENT_BLOCK_NUMBER_LESS_THAN_START);
 
         IEvent.EthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
@@ -88,6 +91,8 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Inter
         EthereumEvent(ethereumEventAddress).confirm{value: 1 ton}(relay);
 
         emit EventConfirmation(ethereumEventAddress, relay);
+
+        return eventContract;
     }
 
     /*
@@ -104,7 +109,6 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Inter
     )
         public
         onlyBridge
-        transferAfter(basicInitData.bridgeAddress, msg.value)
     {
         IEvent.EthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
 

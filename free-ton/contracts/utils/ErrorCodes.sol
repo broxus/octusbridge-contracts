@@ -8,6 +8,7 @@ library ErrorCodes {
     uint16 constant EVENT_CONFIGURATION_NOT_ACTIVE = 2103;
     uint16 constant EVENT_CONFIGURATION_NOT_EXISTS = 2105;
     uint16 constant EVENT_CONFIGURATION_ALREADY_EXISTS = 2106;
+    uint16 constant SENDER_NOT_STAKING = 2107;
 
     // Event configuration contract
     uint16 constant SENDER_NOT_BRIDGE = 2109;
