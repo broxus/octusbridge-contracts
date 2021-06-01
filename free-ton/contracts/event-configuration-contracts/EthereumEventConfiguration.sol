@@ -11,12 +11,13 @@ import './../utils/ErrorCodes.sol';
 import './../event-contracts/EthereumEvent.sol';
 
 import './../../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol';
+import './../../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.sol';
 
 
 /*
     @title Basic example of Ethereum event configuration
 */
-contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, InternalOwner {
+contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, InternalOwner, CheckPubKey {
     BasicConfigurationInitData static basicInitData;
     EthereumEventConfigurationInitData static initData;
 
@@ -28,8 +29,7 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Inter
     /*
         @param _owner Event configuration owner
     */
-    constructor(address _owner) public {
-        require(tvm.pubkey() == msg.pubkey(), ErrorCodes.WRONG_TVM_KEY);
+    constructor(address _owner) public checkPubKey {
         tvm.accept();
 
         setOwnership(_owner);

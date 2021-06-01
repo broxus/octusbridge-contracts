@@ -8,7 +8,7 @@ import "./../interfaces/IEventNotificationReceiver.sol";
 
 import "./../utils/ErrorCodes.sol";
 import "./../utils/TransferUtils.sol";
-import "./../utils/CellEncoder.sol";
+import "./../utils/cell-encoder/CellEncoder.sol";
 
 
 /*

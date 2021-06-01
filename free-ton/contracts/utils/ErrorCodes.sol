@@ -22,6 +22,4 @@ library ErrorCodes {
     uint16 constant KEY_ALREADY_REJECTED = 2115;
     uint16 constant EVENT_NOT_CONFIRMED = 2116;
     uint16 constant TOO_LOW_MSG_VALUE = 2117;
-
-    uint16 constant WRONG_TVM_KEY = 2118;
 }

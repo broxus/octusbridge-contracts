@@ -17,13 +17,14 @@ import "./utils/ErrorCodes.sol";
 
 import './../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol';
 import './../../node_modules/@broxus/contracts/contracts/utils/RandomNonce.sol';
+import './../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.sol';
 
 
 /*
     @title Bridge contract
     @summary Basic contract for Broxus Ethereum - FreeTON bridge.
 */
-contract Bridge is IBridge, InternalOwner, RandomNonce {
+contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey {
     BridgeConfiguration public bridgeConfiguration;
     mapping(uint32 => EventConfiguration) eventConfigurations;
 
@@ -58,8 +59,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce {
     constructor(
         address _owner,
         BridgeConfiguration _bridgeConfiguration
-    ) public {
-        require(tvm.pubkey() == msg.pubkey(), ErrorCodes.WRONG_TVM_KEY);
+    ) public checkPubKey {
         tvm.accept();
 
         bridgeConfiguration = _bridgeConfiguration;

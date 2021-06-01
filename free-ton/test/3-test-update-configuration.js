@@ -9,23 +9,12 @@ const BigNumber = require('bignumber.js');
 describe('Test updating ethereum event configuration', async function() {
   this.timeout(100000);
 
-  let owner, bridge, cellEncoder;
+  let owner, bridge, staking, cellEncoder;
   
   it('Setup bridge', async () => {
-    [owner, bridge, cellEncoder] = await setupBridge();
-    
-    owner = _owner;
-    bridge = _bridge;
+    [owner, bridge, staking, cellEncoder] = await setupBridge();
   });
   
-  describe('Setup ethereum event configuration', async () => {
-    let ethereumEventConfiguration;
-    let eventProxy;
-
-    it('Deploy event proxy', async () => {
-    
-    });
-    
     // it('Deploy event configuration', async () => {
     //   const EthereumEventConfiguration = await locklift.factory.getContract('EthereumEventConfiguration');
     //   const EthereumEvent = await locklift.factory.getContract('EthereumEvent');
@@ -58,7 +47,6 @@ describe('Test updating ethereum event configuration', async function() {
     //
     //   logger.log(`Ethereum event configuration: ${ethereumEventConfiguration.address}`);
     // });
-  });
   
   it('Update event configuration details', async () => {
   

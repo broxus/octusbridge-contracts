@@ -1,5 +1,6 @@
 const {
-  setupBridge
+  setupBridge,
+  setupEthereumEventConfiguration,
 } = require('./utils');
 
 
@@ -7,7 +8,18 @@ const {
 describe('Test ethereum event', async function() {
   this.timeout(100000);
   
+  let bridge, bridgeOwner, staking, cellEncoder;
+  
   it('Setup bridge', async () => {
+    [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge();
+  });
+  
+  it('Setup ethereum event configuration', async () => {
+    [ethereumEventConfiguration, tokenEventProxy] = await setupEthereumEventConfiguration(
+      bridgeOwner,
+      bridge,
+      cellEncoder,
+    );
   });
   
   describe('Test event confirmation', async () => {
@@ -25,6 +37,16 @@ describe('Test ethereum event', async function() {
   });
   
   describe('Test event rejection', async () => {
+    it('Create event', async () => {
+    
+    });
   
+    it('Initialize event', async () => {
+    
+    });
+  
+    it('Reject event enough times', async () => {
+    
+    });
   });
 });
