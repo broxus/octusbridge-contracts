@@ -4,6 +4,7 @@ pragma AbiHeader expire;
 
 import './../interfaces/IEvent.sol';
 import './../interfaces/IEventConfiguration.sol';
+import './../interfaces/IProxy.sol';
 
 import './../utils/TransferUtils.sol';
 import './../utils/ErrorCodes.sol';
@@ -17,7 +18,7 @@ import './../../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.so
 /*
     @title Basic example of Ethereum event configuration
 */
-contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, InternalOwner, CheckPubKey {
+contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, IProxy, InternalOwner, CheckPubKey {
     BasicConfigurationInitData public static basicInitData;
     EthereumEventConfigurationInitData public static initData;
 
@@ -35,6 +36,11 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Inter
         setOwnership(_owner);
     }
 
+    /*
+        @notice Build initial data for event contract
+        @dev Extends event vote data with configuration params
+        @param eventVoteData Event vote data structure, passed by relay
+    */
     function buildEventInitData(
         IEvent.EthereumEventVoteData eventVoteData
     ) internal view returns(
@@ -62,7 +68,12 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Inter
     */
     function deriveEventAddress(
         IEvent.EthereumEventVoteData eventVoteData
-    ) public view returns(address eventContract) {
+    )
+        public
+        view
+    returns(
+        address eventContract
+    ) {
         IEvent.EthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
 
         TvmCell stateInit = tvm.buildStateInit({
@@ -92,9 +103,7 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Inter
     )
         public
         onlyBridge
-    returns (
-        address eventContract
-    ) {
+    {
         require(
             eventVoteData.eventBlockNumber >= initData.startBlockNumber,
             ErrorCodes.EVENT_BLOCK_NUMBER_LESS_THAN_START
@@ -102,7 +111,7 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Inter
 
         IEvent.EthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
 
-        address ethereumEventAddress = new EthereumEvent{
+        address eventAddress = new EthereumEvent{
             value: basicInitData.eventInitialBalance,
             code: basicInitData.eventCode,
             pubkey: 0,
@@ -113,11 +122,9 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Inter
             relay
         );
 
-        EthereumEvent(ethereumEventAddress).confirm{value: 1 ton}(relay);
+        EthereumEvent(eventAddress).confirm{value: 1 ton}(relay);
 
-        emit EventConfirmation(ethereumEventAddress, relay);
-
-        return eventContract;
+        emit EventConfirmation(eventAddress, relay);
     }
 
     /*
@@ -135,23 +142,11 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Inter
         public
         onlyBridge
     {
-        IEvent.EthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
+        address eventAddress = deriveEventAddress(eventVoteData);
 
-        address ethereumEventAddress = new EthereumEvent{
-            value: 0 ton,
-            flag: 2,
-            code: basicInitData.eventCode,
-            pubkey: tvm.pubkey(),
-            varInit: {
-                initData: eventInitData
-            }
-        }(
-            relay
-        );
+        EthereumEvent(eventAddress).reject{value: 1 ton}(relay);
 
-        EthereumEvent(ethereumEventAddress).reject{value: 1 ton}(relay);
-
-        emit EventReject(ethereumEventAddress, relay);
+        emit EventReject(eventAddress, relay);
     }
 
     /*
@@ -189,5 +184,47 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, Inter
     ) public onlyOwner {
         basicInitData = _basicInitData;
         initData = _initData;
+    }
+
+    /*
+        @notice Receives execute callback from ethereum event
+        and send it to the event proxy contract
+        @dev Ethereum event correctness is checked here, so
+        event proxy contract becomes more simple
+        @param eventData Ethereum event data
+        @param gasBackAddress Ad hoc param. Used in token transfers
+        TODO: think about onBounce in case of paused event proxy
+    */
+    function broxusBridgeCallback(
+        IEvent.EthereumEventInitData eventInitData,
+        address gasBackAddress
+    ) override external {
+        require(
+            eventInitData.ethereumEventConfiguration == address(this),
+            ErrorCodes.SENDER_NOT_EVENT_CONTRACT
+        );
+
+        require(
+            eventInitData.proxyAddress == initData.proxyAddress,
+            ErrorCodes.SENDER_NOT_EVENT_CONTRACT
+        );
+
+        TvmCell stateInit = tvm.buildStateInit({
+            contr: EthereumEvent,
+            varInit: {
+                initData: eventInitData
+            },
+            pubkey: 0,
+            code: basicInitData.eventCode
+        });
+
+        address eventAddress = address(tvm.hash(stateInit));
+
+        require(eventAddress == msg.sender, ErrorCodes.SENDER_NOT_EVENT_CONTRACT);
+
+        IProxy(initData.proxyAddress).broxusBridgeCallback(
+            eventInitData,
+            gasBackAddress
+        );
     }
 }

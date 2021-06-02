@@ -2,6 +2,7 @@ const {
   setupBridge,
   setupEthereumEventConfiguration,
   setupRelays,
+  logger,
 } = require('./utils');
 
 const chai = require('chai');
@@ -90,24 +91,27 @@ describe('Test ethereum event', async function() {
   
       eventConfirmParams = {
         eventVoteData: {
-          eventTransaction: 1,
-          eventIndex: 1,
+          eventTransaction: 111,
+          eventIndex: 222,
           eventData,
-          eventBlockNumber: 1,
-          eventBlock: 1,
-          round: 1,
+          eventBlockNumber: 333,
+          eventBlock: 444,
+          round: 555,
         },
         configurationID: 1,
       };
     });
     
     it('Initialize event', async () => {
-      await relays[0].runTarget({
+      const tx = await relays[0].runTarget({
         contract: bridge,
         method: 'confirmEthereumEvent',
-        params: eventConfirmParams
+        params: eventConfirmParams,
+        value: locklift.utils.convertCrystal(5, 'nano')
       });
   
+      logger.log(`Event initialization tx: ${tx.transaction.id}`);
+      
       const expectedEventAddress = await ethereumEventConfiguration.call({
         method: 'deriveEventAddress',
         params: {
@@ -115,44 +119,169 @@ describe('Test ethereum event', async function() {
         }
       });
   
+      logger.log(`Expected event address: ${expectedEventAddress}`);
+      
       eventContract = await locklift.factory.getContract('EthereumEvent');
       eventContract.setAddress(expectedEventAddress);
     });
     
-    it('Check event data', async () => {
-      const data = await eventContract.call({ method: 'getDecodedData' });
-
-      expect(data.rootToken)
-        .to.be.equal(locklift.utils.zeroAddress, 'Wrong root token');
-      
-      expect(data.tokens)
-        .to.be.bignumber.equal(100, 'Wrong amount of tokens');
-      
-      expect(data.wid)
-        .to.be.bignumber.equal(0, 'Wrong wid');
-      
-      expect(data.owner_addr)
-        .to.be.bignumber.equal(111, 'Wrong owner address');
-      
-      expect(data.owner_pubkey)
-        .to.be.bignumber.equal(222, 'Wrong owner pubkey');
-    });
     
     it('Check event initial state', async () => {
       const details = await eventContract.call({
         method: 'getDetails'
       });
+
+      expect(details._initData.eventTransaction)
+        .to.be.bignumber.equal(
+          eventConfirmParams.eventVoteData.eventTransaction,
+          'Wrong event transaction'
+        );
+  
+      expect(details._initData.eventIndex)
+        .to.be.bignumber.equal(
+          eventConfirmParams.eventVoteData.eventIndex,
+          'Wrong event index'
+        );
+  
+      expect(details._initData.eventData)
+        .to.be.equal(
+          eventConfirmParams.eventVoteData.eventData,
+          'Wrong event data'
+        );
+  
+      expect(details._initData.eventBlockNumber)
+        .to.be.bignumber.equal(
+          eventConfirmParams.eventVoteData.eventBlockNumber,
+          'Wrong event block number'
+        );
+  
+      expect(details._initData.eventBlock)
+        .to.be.bignumber.equal(
+          eventConfirmParams.eventVoteData.eventBlock,
+          'Wrong event block'
+        );
+  
+      expect(details._initData.round)
+        .to.be.bignumber.equal(
+          eventConfirmParams.eventVoteData.round,
+          'Wrong event round'
+        );
       
-      console.log(details);
+      expect(details._initData.ethereumEventConfiguration)
+        .to.be.equal(
+          ethereumEventConfiguration.address,
+        'Wrong event configuration'
+        );
+      
+      expect(details._initData.requiredConfirmations)
+        .to.be.bignumber.equal(
+          2,
+        'Wrong required confirmations'
+      );
+      
+      expect(details._initData.requiredRejects)
+        .to.be.bignumber.equal(
+          2,
+        'Wrong required rejects'
+      );
+      
+      expect(details._initData.proxyAddress)
+        .to.be.equal(
+          proxy.address,
+        'Wrong proxy'
+      );
+      
+      expect(details._status)
+        .to.be.bignumber.equal(
+        0,
+        'Wrong status'
+      );
+      
+      expect(details._confirmRelays)
+        .to.have.lengthOf(1, 'Wrong amount of relays confirmations');
+      
+      expect(details._rejectRelays)
+        .to.have.lengthOf(0, 'Wrong amount of relays rejects');
+      
+      expect(details._confirmRelays)
+        .to.include(relays[0].address,'Wrong relay initializer');
     });
-    
-    it('Confirm event enough times', async () => {
-    
-    });
-    
-    it('Check event status', async () => {
-    
-    });
+  
+    // it('Check event data', async () => {
+    //   const data = await eventContract.call({ method: 'getDecodedData' });
+    //
+    //   expect(data.rootToken)
+    //     .to.be.equal(locklift.utils.zeroAddress, 'Wrong root token');
+    //
+    //   expect(data.tokens)
+    //     .to.be.bignumber.equal(100, 'Wrong amount of tokens');
+    //
+    //   expect(data.wid)
+    //     .to.be.bignumber.equal(0, 'Wrong wid');
+    //
+    //   expect(data.owner_addr)
+    //     .to.be.bignumber.equal(111, 'Wrong owner address');
+    //
+    //   expect(data.owner_pubkey)
+    //     .to.be.bignumber.equal(222, 'Wrong owner pubkey');
+    // });
+    //
+    // it('Confirm event enough times', async () => {
+    //   const {
+    //     _initData: {
+    //       requiredConfirmations
+    //     }
+    //   } = await eventContract.call({
+    //     method: 'getDetails'
+    //   });
+    //
+    //   for (const relay of relays.slice(1, requiredConfirmations)) {
+    //     logger.log(`Confirmation from ${relay.address}`);
+    //
+    //     await relay.runTarget({
+    //       contract: bridge,
+    //       method: 'confirmEthereumEvent',
+    //       params: eventConfirmParams
+    //     });
+    //   }
+    // });
+    //
+    // it('Check event confirmed', async () => {
+    //   const details = await eventContract.call({
+    //     method: 'getDetails'
+    //   });
+    //
+    //   expect(details.balance)
+    //     .to.be.bignumber.equal(0, 'Wrong balance');
+    //
+    //   expect(details._status)
+    //     .to.be.bignumber.equal(
+    //     1,
+    //     'Wrong status'
+    //   );
+    //
+    //   expect(details._confirmRelays)
+    //     .to.have.lengthOf(2, 'Wrong amount of relays confirmations');
+    //
+    //   expect(details._rejectRelays)
+    //     .to.have.lengthOf(0, 'Wrong amount of relays rejects');
+    // });
+    //
+    // it('Execute event', async () => {
+    //   await relays[0].runTarget({
+    //     contract: eventContract,
+    //     method: 'executeProxyCallback',
+    //     value: locklift.utils.convertCrystal('1.5', 'nano')
+    //   });
+    // });
+    //
+    // it('Check execution status', async () => {
+    //   const details = await eventContract.call({
+    //     method: 'getDetails'
+    //   });
+    //
+    //   console.log(details);
+    // });
   });
   
   describe('Reject event', async () => {

@@ -18,8 +18,8 @@ import './../../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.so
     @title Basic example of TON event configuration
 */
 contract TonEventConfiguration is TransferUtils, IEventConfiguration, InternalOwner, CheckPubKey {
-    BasicConfigurationInitData static basicInitData;
-    TonEventConfigurationInitData static initData;
+    BasicConfigurationInitData public static basicInitData;
+    TonEventConfigurationInitData public static initData;
 
     modifier onlyBridge() {
         require(msg.sender == basicInitData.bridgeAddress, ErrorCodes.SENDER_NOT_BRIDGE);
@@ -35,6 +35,11 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, InternalOw
         setOwnership(_owner);
     }
 
+    /*
+        @notice Build initial data for event contract
+        @dev Extends event vote data with configuration params
+        @param eventVoteData Event vote data structure, passed by relay
+    */
     function buildEventInitData(
         IEvent.TonEventVoteData eventVoteData
     ) internal view returns(
@@ -55,6 +60,33 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, InternalOw
     }
 
     /*
+        @notice Derive the Ethereum event contract address from it's init data
+        @param eventVoteData Ethereum event vote data
+        @returns eventContract Address of the corresponding ethereum event contract
+    */
+    function deriveEventAddress(
+        IEvent.TonEventVoteData eventVoteData
+    )
+        public
+        view
+    returns (
+        address eventContract
+    ) {
+        IEvent.TonEventInitData eventInitData = buildEventInitData(eventVoteData);
+
+        TvmCell stateInit = tvm.buildStateInit({
+            contr: TonEvent,
+            varInit: {
+                initData: eventInitData
+            },
+            pubkey: 0,
+            code: basicInitData.eventCode
+        });
+
+        return address(tvm.hash(stateInit));
+    }
+
+    /*
         @notice Confirm TON-Ethereum event
         @dev This function either deploy TonEvent or confirm it
         Two transactions is sent (deploy and confirm) and one is always fail
@@ -71,17 +103,18 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, InternalOw
     )
         public
         onlyBridge
-    returns (
-        address eventContract
-    ) {
-        require(eventVoteData.eventTimestamp >= initData.startTimestamp, ErrorCodes.EVENT_TIMESTAMP_LESS_THAN_START);
+    {
+        require(
+            eventVoteData.eventTimestamp >= initData.startTimestamp,
+            ErrorCodes.EVENT_TIMESTAMP_LESS_THAN_START
+        );
 
         IEvent.TonEventInitData eventInitData = buildEventInitData(eventVoteData);
 
-        address tonEventAddress = new TonEvent{
+        address eventAddress = new TonEvent{
             value: basicInitData.eventInitialBalance,
             code: basicInitData.eventCode,
-            pubkey: tvm.pubkey(),
+            pubkey: 0,
             varInit: {
                 initData: eventInitData
             }
@@ -90,11 +123,9 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, InternalOw
             eventDataSignature
         );
 
-        TonEvent(tonEventAddress).confirm{value: 1 ton}(relay, eventDataSignature);
+        TonEvent(eventAddress).confirm{value: 1 ton}(relay, eventDataSignature);
 
-        emit EventConfirmation(tonEventAddress, relay);
-
-        return tonEventAddress;
+        emit EventConfirmation(eventAddress, relay);
     }
 
 
@@ -109,25 +140,15 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, InternalOw
     function rejectEvent(
         IEvent.TonEventVoteData eventVoteData,
         address relay
-    ) public onlyBridge transferAfter(basicInitData.bridgeAddress, msg.value) {
-        IEvent.TonEventInitData eventInitData = buildEventInitData(eventVoteData);
+    )
+        public
+        onlyBridge
+    {
+        address eventAddress = deriveEventAddress(eventVoteData);
 
-        address tonEventAddress = new TonEvent{
-            value: 0 ton,
-            flag: 2,
-            code: basicInitData.eventCode,
-            pubkey: tvm.pubkey(),
-            varInit: {
-                initData: eventInitData
-            }
-        }(
-            relay,
-            ''
-        );
+        TonEvent(eventAddress).reject{value: 1 ton}(relay);
 
-        TonEvent(tonEventAddress).reject{value: 1 ton}(relay);
-
-        emit EventReject(tonEventAddress, relay);
+        emit EventReject(eventAddress, relay);
     }
 
 
@@ -158,14 +179,14 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, InternalOw
 
     /*
         @notice Update configuration data
-        @dev Can be called only by Bridge contract
+        @dev Can be called only by owner
         @param _basicInitData New basic configuration init data
         @param _initData New network specific configuration init data
     */
     function update(
         BasicConfigurationInitData _basicInitData,
         TonEventConfigurationInitData _initData
-    ) public onlyBridge {
+    ) public onlyOwner {
         basicInitData = _basicInitData;
         initData = _initData;
     }

@@ -155,13 +155,15 @@ contract EthereumEvent is IEvent, TransferUtils, CellEncoder {
         EthereumEventInitData _initData,
         EthereumEventStatus _status,
         address[] _confirmRelays,
-        address[] _rejectRelays
+        address[] _rejectRelays,
+        uint128 balance
     ) {
         return (
             initData,
             status,
             confirmRelays,
-            rejectRelays
+            rejectRelays,
+            address(this).balance
         );
     }
 

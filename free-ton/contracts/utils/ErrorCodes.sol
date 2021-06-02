@@ -11,15 +11,16 @@ library ErrorCodes {
     uint16 constant SENDER_NOT_STAKING = 2107;
 
     // Event configuration contract
-    uint16 constant SENDER_NOT_BRIDGE = 2109;
-    uint16 constant EVENT_BLOCK_NUMBER_LESS_THAN_START = 2110;
-    uint16 constant EVENT_TIMESTAMP_LESS_THAN_START = 2111;
+    uint16 constant SENDER_NOT_BRIDGE = 2209;
+    uint16 constant EVENT_BLOCK_NUMBER_LESS_THAN_START = 2210;
+    uint16 constant EVENT_TIMESTAMP_LESS_THAN_START = 2211;
+    uint16 constant SENDER_NOT_EVENT_CONTRACT = 2212;
 
     // Event contract
-    uint16 constant EVENT_NOT_PENDING = 2112;
-    uint16 constant SENDER_NOT_EVENT_CONFIGURATION = 2113;
-    uint16 constant KEY_ALREADY_CONFIRMED = 2114;
-    uint16 constant KEY_ALREADY_REJECTED = 2115;
-    uint16 constant EVENT_NOT_CONFIRMED = 2116;
-    uint16 constant TOO_LOW_MSG_VALUE = 2117;
+    uint16 constant EVENT_NOT_PENDING = 2312;
+    uint16 constant SENDER_NOT_EVENT_CONFIGURATION = 2313;
+    uint16 constant KEY_ALREADY_CONFIRMED = 2314;
+    uint16 constant KEY_ALREADY_REJECTED = 2315;
+    uint16 constant EVENT_NOT_CONFIRMED = 2316;
+    uint16 constant TOO_LOW_MSG_VALUE = 2317;
 }
