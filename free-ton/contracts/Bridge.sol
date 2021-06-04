@@ -18,6 +18,7 @@ import "./utils/ErrorCodes.sol";
 import './../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol';
 import './../../node_modules/@broxus/contracts/contracts/utils/RandomNonce.sol';
 import './../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.sol';
+import './../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
 /*
@@ -190,7 +191,9 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey {
         onlyActive
         onlyActiveConfiguration(configurationID)
     {
-        IStaking(bridgeConfiguration.staking).confirmEthereumEvent(
+        IStaking(bridgeConfiguration.staking).confirmEthereumEvent{
+            flag: MsgFlag.REMAINING_GAS
+        }(
             eventVoteData,
             configurationID,
             msg.sender
@@ -216,7 +219,9 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey {
         onlyActiveConfiguration(configurationID)
         onlyStaking
     {
-        EthereumEventConfiguration(eventConfigurations[configurationID].addr).confirmEvent{value: 1 ton}(
+        EthereumEventConfiguration(eventConfigurations[configurationID].addr).confirmEvent{
+            flag: MsgFlag.REMAINING_GAS
+        }(
             eventVoteData,
             relay
         );
@@ -238,7 +243,9 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey {
         onlyActive
         onlyActiveConfiguration(configurationID)
     {
-        IStaking(bridgeConfiguration.staking).rejectEthereumEvent(
+        IStaking(bridgeConfiguration.staking).rejectEthereumEvent{
+            flag: MsgFlag.REMAINING_GAS
+        }(
             eventVoteData,
             configurationID,
             msg.sender
@@ -264,7 +271,9 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey {
         onlyActiveConfiguration(configurationID)
         onlyStaking
     {
-        EthereumEventConfiguration(eventConfigurations[configurationID].addr).rejectEvent{value: 1 ton}(
+        EthereumEventConfiguration(eventConfigurations[configurationID].addr).rejectEvent{
+            flag: MsgFlag.REMAINING_GAS
+        }(
             eventVoteData,
             relay
         );
@@ -288,7 +297,9 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey {
         onlyActive
         onlyActiveConfiguration(configurationID)
     {
-        IStaking(bridgeConfiguration.staking).confirmTonEvent(
+        IStaking(bridgeConfiguration.staking).confirmTonEvent{
+            flag: MsgFlag.REMAINING_GAS
+        }(
             eventVoteData,
             eventDataSignature,
             configurationID,
@@ -317,7 +328,9 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey {
         onlyActiveConfiguration(configurationID)
         onlyStaking
     {
-        TonEventConfiguration(eventConfigurations[configurationID].addr).confirmEvent{value: 1 ton}(
+        TonEventConfiguration(eventConfigurations[configurationID].addr).confirmEvent{
+            flag: MsgFlag.REMAINING_GAS
+        }(
             eventVoteData,
             eventDataSignature,
             relay
@@ -341,7 +354,9 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey {
         onlyActive
         onlyActiveConfiguration(configurationID)
     {
-        IStaking(bridgeConfiguration.staking).rejectTonEvent(
+        IStaking(bridgeConfiguration.staking).rejectTonEvent{
+            flag: MsgFlag.REMAINING_GAS
+        }(
             eventVoteData,
             configurationID,
             msg.sender
@@ -367,7 +382,9 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey {
         onlyActiveConfiguration(configurationID)
         onlyStaking
     {
-        TonEventConfiguration(eventConfigurations[configurationID].addr).rejectEvent{value: 1 ton}(
+        TonEventConfiguration(eventConfigurations[configurationID].addr).rejectEvent{
+            flag: MsgFlag.REMAINING_GAS
+        }(
             eventVoteData,
             relay
         );

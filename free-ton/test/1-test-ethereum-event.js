@@ -207,81 +207,81 @@ describe('Test ethereum event', async function() {
         .to.include(relays[0].address,'Wrong relay initializer');
     });
   
-    // it('Check event data', async () => {
-    //   const data = await eventContract.call({ method: 'getDecodedData' });
-    //
-    //   expect(data.rootToken)
-    //     .to.be.equal(locklift.utils.zeroAddress, 'Wrong root token');
-    //
-    //   expect(data.tokens)
-    //     .to.be.bignumber.equal(100, 'Wrong amount of tokens');
-    //
-    //   expect(data.wid)
-    //     .to.be.bignumber.equal(0, 'Wrong wid');
-    //
-    //   expect(data.owner_addr)
-    //     .to.be.bignumber.equal(111, 'Wrong owner address');
-    //
-    //   expect(data.owner_pubkey)
-    //     .to.be.bignumber.equal(222, 'Wrong owner pubkey');
-    // });
-    //
-    // it('Confirm event enough times', async () => {
-    //   const {
-    //     _initData: {
-    //       requiredConfirmations
-    //     }
-    //   } = await eventContract.call({
-    //     method: 'getDetails'
-    //   });
-    //
-    //   for (const relay of relays.slice(1, requiredConfirmations)) {
-    //     logger.log(`Confirmation from ${relay.address}`);
-    //
-    //     await relay.runTarget({
-    //       contract: bridge,
-    //       method: 'confirmEthereumEvent',
-    //       params: eventConfirmParams
-    //     });
-    //   }
-    // });
-    //
-    // it('Check event confirmed', async () => {
-    //   const details = await eventContract.call({
-    //     method: 'getDetails'
-    //   });
-    //
-    //   expect(details.balance)
-    //     .to.be.bignumber.equal(0, 'Wrong balance');
-    //
-    //   expect(details._status)
-    //     .to.be.bignumber.equal(
-    //     1,
-    //     'Wrong status'
-    //   );
-    //
-    //   expect(details._confirmRelays)
-    //     .to.have.lengthOf(2, 'Wrong amount of relays confirmations');
-    //
-    //   expect(details._rejectRelays)
-    //     .to.have.lengthOf(0, 'Wrong amount of relays rejects');
-    // });
-    //
-    // it('Execute event', async () => {
-    //   await relays[0].runTarget({
-    //     contract: eventContract,
-    //     method: 'executeProxyCallback',
-    //     value: locklift.utils.convertCrystal('1.5', 'nano')
-    //   });
-    // });
-    //
-    // it('Check execution status', async () => {
-    //   const details = await eventContract.call({
-    //     method: 'getDetails'
-    //   });
-    //
-    //   console.log(details);
-    // });
+    it('Check event data', async () => {
+      const data = await eventContract.call({ method: 'getDecodedData' });
+
+      expect(data.rootToken)
+        .to.be.equal(locklift.utils.zeroAddress, 'Wrong root token');
+
+      expect(data.tokens)
+        .to.be.bignumber.equal(100, 'Wrong amount of tokens');
+
+      expect(data.wid)
+        .to.be.bignumber.equal(0, 'Wrong wid');
+
+      expect(data.owner_addr)
+        .to.be.bignumber.equal(111, 'Wrong owner address');
+
+      expect(data.owner_pubkey)
+        .to.be.bignumber.equal(222, 'Wrong owner pubkey');
+    });
+
+    it('Confirm event enough times', async () => {
+      const {
+        _initData: {
+          requiredConfirmations
+        }
+      } = await eventContract.call({
+        method: 'getDetails'
+      });
+
+      for (const relay of relays.slice(1, requiredConfirmations)) {
+        logger.log(`Confirmation from ${relay.address}`);
+
+        await relay.runTarget({
+          contract: bridge,
+          method: 'confirmEthereumEvent',
+          params: eventConfirmParams
+        });
+      }
+    });
+
+    it('Check event confirmed', async () => {
+      const details = await eventContract.call({
+        method: 'getDetails'
+      });
+
+      expect(details.balance)
+        .to.be.bignumber.equal(0, 'Wrong balance');
+
+      expect(details._status)
+        .to.be.bignumber.equal(
+        1,
+        'Wrong status'
+      );
+
+      expect(details._confirmRelays)
+        .to.have.lengthOf(2, 'Wrong amount of relays confirmations');
+
+      expect(details._rejectRelays)
+        .to.have.lengthOf(0, 'Wrong amount of relays rejects');
+    });
+
+    it('Execute event', async () => {
+      await relays[0].runTarget({
+        contract: eventContract,
+        method: 'executeProxyCallback',
+        value: locklift.utils.convertCrystal('1.5', 'nano')
+      });
+    });
+
+    it('Check execution status', async () => {
+      const details = await eventContract.call({
+        method: 'getDetails'
+      });
+
+      console.log(details);
+    });
   });
   
   describe('Reject event', async () => {

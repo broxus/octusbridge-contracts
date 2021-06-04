@@ -10,6 +10,7 @@ import "./../utils/ErrorCodes.sol";
 import "./../utils/TransferUtils.sol";
 import "./../utils/cell-encoder/CellEncoder.sol";
 
+import './../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 /*
     @title Basic example of Ethereum event configuration
@@ -137,11 +138,9 @@ contract EthereumEvent is IEvent, TransferUtils, CellEncoder {
         notifyEventStatusChanged();
         executor = msg.sender;
 
-        IProxy(initData.proxyAddress)
-            .broxusBridgeCallback{
-                value: 0,
-                flag: 128
-            }(initData, executor);
+        IProxy(initData.proxyAddress).broxusBridgeCallback{
+            flag: MsgFlag.REMAINING_GAS
+        }(initData, executor);
     }
 
     /*

@@ -13,6 +13,7 @@ import './../event-contracts/EthereumEvent.sol';
 
 import './../../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol';
 import './../../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.sol';
+import './../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
 /*
@@ -122,7 +123,7 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, IProx
             relay
         );
 
-        EthereumEvent(eventAddress).confirm{value: 1 ton}(relay);
+        EthereumEvent(eventAddress).confirm{ flag: MsgFlag.REMAINING_GAS }(relay);
 
         emit EventConfirmation(eventAddress, relay);
     }

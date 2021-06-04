@@ -6,6 +6,7 @@ import "../interfaces/IBridge.sol";
 
 
 import "./../../../node_modules/@broxus/contracts/contracts/utils/RandomNonce.sol";
+import "./../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol";
 
 
 /*
@@ -26,7 +27,7 @@ contract StakingMockup is IStaking, RandomNonce {
         uint32 configurationID,
         address relay
     ) override public {
-        IBridge(bridge).confirmEthereumEventCallback(
+        IBridge(bridge).confirmEthereumEventCallback{ flag: MsgFlag.REMAINING_GAS }(
             eventVoteData,
             configurationID,
             relay
@@ -38,7 +39,7 @@ contract StakingMockup is IStaking, RandomNonce {
         uint32 configurationID,
         address relay
     ) override public {
-        IBridge(bridge).rejectEthereumEventCallback(
+        IBridge(bridge).rejectEthereumEventCallback{ flag: MsgFlag.REMAINING_GAS }(
             eventVoteData,
             configurationID,
             relay
@@ -51,7 +52,7 @@ contract StakingMockup is IStaking, RandomNonce {
         uint32 configurationID,
         address relay
     ) override public {
-        IBridge(bridge).confirmTonEventCallback(
+        IBridge(bridge).confirmTonEventCallback{ flag: MsgFlag.REMAINING_GAS }(
             eventVoteData,
             eventDataSignature,
             configurationID,
@@ -64,7 +65,7 @@ contract StakingMockup is IStaking, RandomNonce {
         uint32 configurationID,
         address relay
     ) override public {
-        IBridge(bridge).rejectTonEventCallback(
+        IBridge(bridge).rejectTonEventCallback{ flag: MsgFlag.REMAINING_GAS }(
             eventVoteData,
             configurationID,
             relay
