@@ -223,7 +223,9 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, IProx
 
         require(eventAddress == msg.sender, ErrorCodes.SENDER_NOT_EVENT_CONTRACT);
 
-        IProxy(initData.proxyAddress).broxusBridgeCallback(
+        IProxy(initData.proxyAddress).broxusBridgeCallback{
+            flag: MsgFlag.REMAINING_GAS
+        }(
             eventInitData,
             gasBackAddress
         );

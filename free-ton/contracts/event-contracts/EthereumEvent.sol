@@ -126,20 +126,24 @@ contract EthereumEvent is IEvent, TransferUtils, CellEncoder {
     /*
         @notice Execute callback on proxy contract
         @dev Can be called by anyone
-        @dev Can be called only when event configuration is in Confirmed status
-        @dev May be called only once, because status will be changed to Executed
+        @dev Can be called only when event is in Confirmed status
+        @dev May be called only once
         @dev Require more than 1 TON of attached balance
         @dev Send the attached balance to the event configuration which proxies it to the Proxy
     */
     function executeProxyCallback() public eventConfirmed {
+        // TODO: fix flags
+        // TODO: fix same relay votes for both confirm and reject
         require(msg.value >= 1 ton, ErrorCodes.TOO_LOW_MSG_VALUE);
-        status = EthereumEventStatus.Executed;
 
-        notifyEventStatusChanged();
+        status = EthereumEventStatus.Executed;
         executor = msg.sender;
 
-        IProxy(initData.proxyAddress).broxusBridgeCallback{
-            flag: MsgFlag.REMAINING_GAS
+        notifyEventStatusChanged();
+
+        IProxy(initData.ethereumEventConfiguration).broxusBridgeCallback{
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED
         }(initData, executor);
     }
 
@@ -155,14 +159,16 @@ contract EthereumEvent is IEvent, TransferUtils, CellEncoder {
         EthereumEventStatus _status,
         address[] _confirmRelays,
         address[] _rejectRelays,
-        uint128 balance
+        uint128 balance,
+        address _executor
     ) {
         return (
             initData,
             status,
             confirmRelays,
             rejectRelays,
-            address(this).balance
+            address(this).balance,
+            executor
         );
     }
 

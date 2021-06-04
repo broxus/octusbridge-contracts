@@ -3,6 +3,13 @@ const BigNumber = require('bignumber.js');
 const _ = require('underscore');
 
 
+const logContract = async (contract) => {
+  const balance = await locklift.ton.getBalance(contract.address);
+  
+  logger.log(`${contract.name} (${contract.address}) - ${locklift.utils.convertCrystal(balance, 'ton')}`);
+};
+
+
 const setupBridge = async () => {
   const Bridge = await locklift.factory.getContract('Bridge');
   const CellEncoder = await locklift.factory.getContract('CellEncoderStandalone');
@@ -22,8 +29,9 @@ const setupBridge = async () => {
   }, locklift.utils.convertCrystal(30, 'nano'));
   
   owner.setKeyPair(keyPair);
+  owner.name = 'Bridge owner';
   
-  logger.log(`Bridge owner: ${owner.address}`);
+  await logContract(owner);
   
   const StakingMockup = await locklift.factory.getContract('StakingMockup');
 
@@ -60,7 +68,8 @@ const setupBridge = async () => {
     keyPair
   }, locklift.utils.convertCrystal(10, 'nano'));
   
-  logger.log(`Bridge: ${bridge.address}`);
+
+  await logContract(bridge);
   
   const staking = await locklift.giver.deployContract({
     contract: StakingMockup,
@@ -73,14 +82,14 @@ const setupBridge = async () => {
     keyPair,
   }, locklift.utils.convertCrystal(10, 'nano'));
   
-  logger.log(`Staking: ${staking.address}`);
+  await logContract(staking);
   
   const cellEncoder = await locklift.giver.deployContract({
     contract: CellEncoder,
     keyPair,
   });
   
-  logger.log(`Cell encoder: ${cellEncoder.address}`);
+  await logContract(cellEncoder);
   
   return [bridge, owner, staking, cellEncoder];
 };
@@ -140,7 +149,7 @@ const setupEthereumEventConfiguration = async (owner, bridge, cellEncoder) => {
       keyPair
     }, locklift.utils.convertCrystal(20, 'nano'));
   
-    logger.log(`Ethereum event configuration: ${ethereumEventConfiguration.address}`);
+    await logContract(ethereumEventConfiguration);
     
     const proxy = await locklift.giver.deployContract({
       contract: ProxyMockup,
@@ -153,7 +162,7 @@ const setupEthereumEventConfiguration = async (owner, bridge, cellEncoder) => {
       keyPair
     }, locklift.utils.convertCrystal(10, 'nano'));
 
-    logger.log(`Proxy: ${proxy.address}`);
+    await logContract(proxy);
     
     return [ethereumEventConfiguration, proxy];
 };
@@ -170,11 +179,12 @@ const setupRelays = async (amount=3) => {
     const relay = await locklift.giver.deployContract({
       contract: Account,
       keyPair,
-    }, locklift.utils.convertCrystal(10, 'nano'));
+    }, locklift.utils.convertCrystal(50, 'nano'));
     
     relay.setKeyPair(keyPair);
-  
-    logger.log(`Relay ${relayId}: ${relay.address}`);
+    relay.name = `Relay #${relayId}`;
+    
+    await logContract(relay);
     
     relays.push(relay);
   }
@@ -187,5 +197,6 @@ module.exports = {
   setupBridge,
   setupEthereumEventConfiguration,
   setupRelays,
+  logContract,
   logger,
 };

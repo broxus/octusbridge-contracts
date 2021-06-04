@@ -176,6 +176,23 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey {
     }
 
     /*
+        @notice Vote for Bridge configuration update
+        @dev Can be called only by relay
+        @param _bridgeConfiguration New bridge configuration
+    */
+    function updateBridgeConfiguration(
+        BridgeConfiguration _bridgeConfiguration
+    )
+        override
+        public
+        onlyOwner
+    {
+        bridgeConfiguration = _bridgeConfiguration;
+
+        emit BridgeConfigurationUpdate(_bridgeConfiguration);
+    }
+
+    /*
         @notice Confirm Ethereum event instance.
         @dev Called by relay
         @param eventVoteData Ethereum event vote data
@@ -388,22 +405,5 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey {
             eventVoteData,
             relay
         );
-    }
-
-    /*
-        @notice Vote for Bridge configuration update
-        @dev Can be called only by relay
-        @param _bridgeConfiguration New bridge configuration
-    */
-    function updateBridgeConfiguration(
-        BridgeConfiguration _bridgeConfiguration
-    )
-        override
-        public
-        onlyOwner
-    {
-        bridgeConfiguration = _bridgeConfiguration;
-
-        emit BridgeConfigurationUpdate(_bridgeConfiguration);
     }
 }
