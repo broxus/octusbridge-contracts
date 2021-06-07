@@ -6,10 +6,8 @@ const BigNumber = require('bignumber.js');
 
 
 
-describe('Test updating ethereum event configuration', async function() {
+describe('Test updating event configuration', async function() {
   this.timeout(100000);
-
-  let owner, bridge, staking, cellEncoder;
   
   it('Setup bridge', async () => {
     // [owner, bridge, staking, cellEncoder] = await setupBridge();

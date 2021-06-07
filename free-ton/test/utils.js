@@ -236,11 +236,30 @@ const setupRelays = async (amount=3) => {
 };
 
 
+const enableEventConfiguration = async (bridgeOwner, bridge, eventConfiguration, network, id=1) => {
+  const eventType = { 'ethereum': 0, 'ton': 1 };
+  
+  return bridgeOwner.runTarget({
+    contract: bridge,
+    method: 'createEventConfiguration',
+    params: {
+      id,
+      eventConfiguration: {
+        addr: eventConfiguration.address,
+        status: true,
+        _type: eventType[network]
+      }
+    }
+  });
+};
+
+
 module.exports = {
   setupBridge,
   setupEthereumEventConfiguration,
   setupTonEventConfiguration,
   setupRelays,
   logContract,
+  enableEventConfiguration,
   logger,
 };

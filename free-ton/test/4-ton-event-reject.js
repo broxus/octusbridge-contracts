@@ -3,6 +3,7 @@ const {
   setupTonEventConfiguration,
   setupRelays,
   logContract,
+  enableEventConfiguration,
   logger,
 } = require('./utils');
 
@@ -33,18 +34,12 @@ describe('Test ton event reject', async function() {
   
   describe('Enable event configuration', async () => {
     it('Add event configuration to bridge', async () => {
-      await bridgeOwner.runTarget({
-        contract: bridge,
-        method: 'createEventConfiguration',
-        params: {
-          id: 1,
-          eventConfiguration: {
-            addr: tonEventConfiguration.address,
-            status: true,
-            _type: 1
-          }
-        }
-      });
+      await enableEventConfiguration(
+        bridgeOwner,
+        bridge,
+        tonEventConfiguration,
+        'ton'
+      );
     });
     
     it('Check active configurations', async () => {

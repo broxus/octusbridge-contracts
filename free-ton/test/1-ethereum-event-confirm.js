@@ -3,6 +3,7 @@ const {
   setupEthereumEventConfiguration,
   setupRelays,
   logContract,
+  enableEventConfiguration,
   logger,
 } = require('./utils');
 
@@ -33,18 +34,12 @@ describe('Test ethereum event confirm', async function() {
   
   describe('Enable event configuration', async () => {
     it('Add event configuration to bridge', async () => {
-      await bridgeOwner.runTarget({
-        contract: bridge,
-        method: 'createEventConfiguration',
-        params: {
-          id: 1,
-          eventConfiguration: {
-            addr: ethereumEventConfiguration.address,
-            status: true,
-            _type: 0
-          }
-        }
-      });
+      await enableEventConfiguration(
+        bridgeOwner,
+        bridge,
+        ethereumEventConfiguration,
+        'ethereum'
+      );
     });
     
     it('Check active configurations', async () => {
