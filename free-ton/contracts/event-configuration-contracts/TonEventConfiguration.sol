@@ -12,6 +12,7 @@ import './../event-contracts/TonEvent.sol';
 
 import './../../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol';
 import './../../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.sol';
+import './../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
 /*
@@ -123,7 +124,7 @@ contract TonEventConfiguration is TransferUtils, IEventConfiguration, InternalOw
             eventDataSignature
         );
 
-        TonEvent(eventAddress).confirm{value: 1 ton}(relay, eventDataSignature);
+        TonEvent(eventAddress).confirm{ flag: MsgFlag.REMAINING_GAS }(relay, eventDataSignature);
 
         emit EventConfirmation(eventAddress, relay);
     }

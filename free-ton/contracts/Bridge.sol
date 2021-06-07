@@ -25,7 +25,7 @@ import './../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
     @title Bridge contract
     @summary Basic contract for Broxus Ethereum - FreeTON bridge.
 */
-contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey {
+contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUtils {
     BridgeConfiguration public bridgeConfiguration;
     mapping(uint32 => EventConfiguration) eventConfigurations;
 
@@ -77,7 +77,12 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey {
     function createEventConfiguration(
         uint32 id,
         EventConfiguration eventConfiguration
-    ) override public onlyOwner {
+    )
+        override
+        public
+        cashBack
+        onlyOwner
+    {
         require(!eventConfigurations.exists(id), ErrorCodes.EVENT_CONFIGURATION_ALREADY_EXISTS);
 
         eventConfigurations[id] = eventConfiguration;
@@ -91,7 +96,12 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey {
     */
     function removeEventConfiguration(
         uint32 id
-    ) override public onlyOwner {
+    )
+        override
+        public
+        cashBack
+        onlyOwner
+    {
         require(eventConfigurations.exists(id), ErrorCodes.EVENT_CONFIGURATION_NOT_EXISTS);
 
         delete eventConfigurations[id];
@@ -107,7 +117,12 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey {
     function updateEventConfiguration(
         uint32 id,
         EventConfiguration eventConfiguration
-    ) override public onlyOwner {
+    )
+        override
+        public
+        cashBack
+        onlyOwner
+    {
         require(eventConfigurations.exists(id), ErrorCodes.EVENT_CONFIGURATION_NOT_EXISTS);
 
         eventConfigurations[id] = eventConfiguration;
@@ -185,6 +200,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey {
     )
         override
         public
+        cashBack
         onlyOwner
     {
         bridgeConfiguration = _bridgeConfiguration;
@@ -197,6 +213,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey {
         @dev Called by relay
         @param eventVoteData Ethereum event vote data
         @param configurationID Ethereum Event configuration ID
+        TODO: who should pay for bridge storage? it's easier to make bridge pay for itself here
     */
     function confirmEthereumEvent(
         IEvent.EthereumEventVoteData eventVoteData,

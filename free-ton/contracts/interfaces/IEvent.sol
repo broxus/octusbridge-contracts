@@ -48,6 +48,7 @@ interface IEvent {
         uint32 round;
     }
 
+    enum Vote { Empty, Confirm, Reject }
     enum EthereumEventStatus { Pending, Confirmed, Executed, Rejected }
     enum TonEventStatus { Pending, Confirmed, Rejected }
 }

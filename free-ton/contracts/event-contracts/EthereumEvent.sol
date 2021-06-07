@@ -20,8 +20,7 @@ contract EthereumEvent is IEvent, TransferUtils, CellEncoder {
     EthereumEventInitData static public initData;
     EthereumEventStatus public status;
 
-    address[] public confirmRelays;
-    address[] public rejectRelays;
+    mapping (address => Vote) votes;
 
     address public executor;
 
@@ -35,22 +34,25 @@ contract EthereumEvent is IEvent, TransferUtils, CellEncoder {
         _;
     }
 
-    modifier onlyEventConfiguration(address configuration) {
-        require(msg.sender == configuration, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
+    modifier onlyEventConfiguration() {
+        require(
+            msg.sender == initData.ethereumEventConfiguration,
+            ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION
+        );
+
         _;
     }
 
     /*
-        @notice Notify owner contract that event contract status has been changed
-        @dev In this example, notification receiver is derived from the configuration meta
-        @dev Used to easily collect all confirmed events by user's wallet
+        @notice Get voters by the vote type
+        @param vote Vote type
+        @returns voters List of voters (relays) addresses
     */
-    function notifyEventStatusChanged() internal view {
-        (,,,,,address owner_address) = getDecodedData();
-
-        if (owner_address.value != 0) {
-            IEventNotificationReceiver(owner_address)
-                .notifyEthereumEventStatusChanged{flag: 0, bounce: false}(status);
+    function getVoters(Vote vote) public view returns(address[] voters) {
+        for ((address voter, Vote vote_): votes) {
+            if (vote_ == vote) {
+                voters.push(voter);
+            }
         }
     }
 
@@ -79,16 +81,16 @@ contract EthereumEvent is IEvent, TransferUtils, CellEncoder {
         address relay
     )
         public
-        onlyEventConfiguration(initData.ethereumEventConfiguration)
+        onlyEventConfiguration
         eventPending
     {
-        for (uint i=0; i<confirmRelays.length; i++) {
-            require(confirmRelays[i] != relay, ErrorCodes.KEY_ALREADY_CONFIRMED);
-        }
+        require(votes[relay] == Vote.Empty, ErrorCodes.KEY_ALREADY_VOTED);
 
-        confirmRelays.push(relay);
+        votes[relay] = Vote.Confirm;
 
-        if (confirmRelays.length >= initData.requiredConfirmations) {
+        address[] confirms = getVoters(Vote.Confirm);
+
+        if (confirms.length >= initData.requiredConfirmations) {
             status = EthereumEventStatus.Confirmed;
 
             notifyEventStatusChanged();
@@ -106,16 +108,16 @@ contract EthereumEvent is IEvent, TransferUtils, CellEncoder {
         address relay
     )
         public
-        onlyEventConfiguration(initData.ethereumEventConfiguration)
+        onlyEventConfiguration
         eventPending
     {
-        for (uint i=0; i<rejectRelays.length; i++) {
-            require(rejectRelays[i] != relay, ErrorCodes.KEY_ALREADY_REJECTED);
-        }
+        require(votes[relay] == Vote.Empty, ErrorCodes.KEY_ALREADY_VOTED);
 
-        rejectRelays.push(relay);
+        votes[relay] = Vote.Reject;
 
-        if (rejectRelays.length >= initData.requiredRejects) {
+        address[] rejects = getVoters(Vote.Reject);
+
+        if (rejects.length >= initData.requiredRejects) {
             status = EthereumEventStatus.Rejected;
 
             notifyEventStatusChanged();
@@ -132,8 +134,6 @@ contract EthereumEvent is IEvent, TransferUtils, CellEncoder {
         @dev Send the attached balance to the event configuration which proxies it to the Proxy
     */
     function executeProxyCallback() public eventConfirmed {
-        // TODO: fix flags
-        // TODO: fix same relay votes for both confirm and reject
         require(msg.value >= 1 ton, ErrorCodes.TOO_LOW_MSG_VALUE);
 
         status = EthereumEventStatus.Executed;
@@ -157,16 +157,16 @@ contract EthereumEvent is IEvent, TransferUtils, CellEncoder {
     function getDetails() public view returns (
         EthereumEventInitData _initData,
         EthereumEventStatus _status,
-        address[] _confirmRelays,
-        address[] _rejectRelays,
+        address[] confirms,
+        address[] rejects,
         uint128 balance,
         address _executor
     ) {
         return (
             initData,
             status,
-            confirmRelays,
-            rejectRelays,
+            getVoters(Vote.Confirm),
+            getVoters(Vote.Reject),
             address(this).balance,
             executor
         );
@@ -199,6 +199,20 @@ contract EthereumEvent is IEvent, TransferUtils, CellEncoder {
         ) = decodeEthereumEventData(initData.eventData);
 
         owner_address = address.makeAddrStd(wid, owner_addr);
+    }
+
+    /*
+        @notice Notify owner contract that event contract status has been changed
+        @dev In this example, notification receiver is derived from the configuration meta
+        @dev Used to easily collect all confirmed events by user's wallet
+    */
+    function notifyEventStatusChanged() internal view {
+        (,,,,,address owner_address) = getDecodedData();
+
+        if (owner_address.value != 0) {
+            IEventNotificationReceiver(owner_address)
+                .notifyEthereumEventStatusChanged{flag: 0, bounce: false}(status);
+        }
     }
 
     /*

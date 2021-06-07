@@ -16,4 +16,16 @@ contract TransferUtils {
     function transferAll(address receiver) internal pure {
         receiver.transfer({ flag: 129, value: 0 });
     }
+
+    modifier cashBack() {
+        tvm.rawReserve(address(this).balance - msg.value, 2);
+        _;
+        msg.sender.transfer({ value: 0, flag: 129 });
+    }
+
+//    modifier cashBackTo(address receiver) {
+//        tvm.rawReserve(address(this).balance - msg.value, 2);
+//        _;
+//        receiver.transfer({ value: 0, flag: 129 });
+//    }
 }

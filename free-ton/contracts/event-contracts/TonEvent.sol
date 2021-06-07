@@ -9,6 +9,8 @@ import "./../utils/ErrorCodes.sol";
 import "./../utils/TransferUtils.sol";
 import "./../utils/cell-encoder/CellEncoder.sol";
 
+import './../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
+
 
 /*
     @title Basic example of TON event configuration
@@ -16,36 +18,35 @@ import "./../utils/cell-encoder/CellEncoder.sol";
 */
 contract TonEvent is IEvent, TransferUtils, CellEncoder {
     TonEventInitData static initData;
+    TonEventStatus public status;
 
-    address[] confirmRelays;
-    bytes[] eventDataSignatures;
-    address[] rejectRelays;
-
-    TonEventStatus status;
+    mapping (address => Vote) votes;
+    mapping (address => bytes) signatures;
 
     modifier eventPending() {
         require(status == TonEventStatus.Pending, ErrorCodes.EVENT_NOT_PENDING);
         _;
     }
 
-    modifier onlyEventConfiguration(address configuration) {
-        require(msg.sender == configuration, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
+    modifier onlyEventConfiguration() {
+        require(
+            msg.sender == initData.tonEventConfiguration,
+            ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION
+        );
+
         _;
     }
 
     /*
-        @notice Notify owner contract that event contract status has been changed
-        @dev In this example, notification receiver is derived from the configuration meta
-        @dev Used to easily collect all confirmed events by user's wallet
+        @notice Get voters by the vote type
+        @param vote Vote type
+        @returns voters List of voters (relays) addresses
     */
-    function notifyEventStatusChanged() internal view {
-        (,,,,,address owner_address) = getDecodedData();
-
-        if (owner_address.value != 0) {
-            IEventNotificationReceiver(owner_address).notifyTonEventStatusChanged{
-                flag: 0,
-                bounce: false
-            }(status);
+    function getVoters(Vote vote) public view returns(address[] voters) {
+        for ((address voter, Vote vote_): votes) {
+            if (vote_ == vote) {
+                voters.push(voter);
+            }
         }
     }
 
@@ -55,14 +56,14 @@ contract TonEvent is IEvent, TransferUtils, CellEncoder {
     */
     constructor(
         address relay,
-        bytes eventDataSignature
+        bytes signature
     ) public {
         initData.tonEventConfiguration = msg.sender;
         status = TonEventStatus.Pending;
 
         notifyEventStatusChanged();
 
-        confirm(relay, eventDataSignature);
+        confirm(relay, signature);
     }
 
     /*
@@ -74,20 +75,20 @@ contract TonEvent is IEvent, TransferUtils, CellEncoder {
     */
     function confirm(
         address relay,
-        bytes eventDataSignature
+        bytes signature
     )
         public
-        onlyEventConfiguration(initData.tonEventConfiguration)
+        onlyEventConfiguration
         eventPending
     {
-        for (uint i=0; i<confirmRelays.length; i++) {
-            require(confirmRelays[i] != relay, ErrorCodes.KEY_ALREADY_CONFIRMED);
-        }
+        require(votes[relay] == Vote.Empty, ErrorCodes.KEY_ALREADY_VOTED);
 
-        confirmRelays.push(relay);
-        eventDataSignatures.push(eventDataSignature);
+        votes[relay] = Vote.Confirm;
+        signatures[relay] = signature;
 
-        if (confirmRelays.length >= initData.requiredConfirmations) {
+        address[] confirms = getVoters(Vote.Confirm);
+
+        if (confirms.length >= initData.requiredConfirmations) {
             status = TonEventStatus.Confirmed;
 
             notifyEventStatusChanged();
@@ -105,16 +106,16 @@ contract TonEvent is IEvent, TransferUtils, CellEncoder {
         address relay
     )
         public
-        onlyEventConfiguration(initData.tonEventConfiguration)
+        onlyEventConfiguration
         eventPending
     {
-        for (uint i=0; i<rejectRelays.length; i++) {
-            require(rejectRelays[i] != relay, ErrorCodes.KEY_ALREADY_REJECTED);
-        }
+        require(votes[relay] == Vote.Empty, ErrorCodes.KEY_ALREADY_VOTED);
 
-        rejectRelays.push(relay);
+        votes[relay] = Vote.Reject;
 
-        if (rejectRelays.length >= initData.requiredRejects) {
+        address[] rejects = getVoters(Vote.Reject);
+
+        if (rejects.length >= initData.requiredRejects) {
             status = TonEventStatus.Rejected;
 
             notifyEventStatusChanged();
@@ -133,16 +134,24 @@ contract TonEvent is IEvent, TransferUtils, CellEncoder {
     function getDetails() public view returns (
         TonEventInitData _initData,
         TonEventStatus _status,
-        address[] _confirmRelays,
-        address[] _rejectRelays,
-        bytes[] _eventDataSignatures
+        address[] confirms,
+        address[] rejects,
+        bytes[] _signatures,
+        uint128 balance
     ) {
+        confirms = getVoters(Vote.Confirm);
+
+        for (address voter : confirms) {
+            _signatures.push(signatures[voter]);
+        }
+
         return (
             initData,
             status,
-            confirmRelays,
-            rejectRelays,
-            eventDataSignatures
+            confirms,
+            getVoters(Vote.Reject),
+            _signatures,
+            address(this).balance
         );
     }
 
@@ -173,5 +182,21 @@ contract TonEvent is IEvent, TransferUtils, CellEncoder {
         ) = decodeTonEventData(initData.eventData);
 
         owner_address = address.makeAddrStd(wid, addr);
+    }
+
+    /*
+        @notice Notify owner contract that event contract status has been changed
+        @dev In this example, notification receiver is derived from the configuration meta
+        @dev Used to easily collect all confirmed events by user's wallet
+    */
+    function notifyEventStatusChanged() internal view {
+        (,,,,,address owner_address) = getDecodedData();
+
+        if (owner_address.value != 0) {
+            IEventNotificationReceiver(owner_address).notifyTonEventStatusChanged{
+                flag: 0,
+                bounce: false
+            }(status);
+        }
     }
 }

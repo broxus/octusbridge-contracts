@@ -89,7 +89,7 @@ const setupBridge = async () => {
     keyPair,
   });
   
-  await logContract(cellEncoder);
+  // await logContract(cellEncoder);
   
   return [bridge, owner, staking, cellEncoder];
 };
@@ -168,6 +168,49 @@ const setupEthereumEventConfiguration = async (owner, bridge, cellEncoder) => {
 };
 
 
+const setupTonEventConfiguration = async (owner, bridge, cellEncoder) => {
+  const TonEventConfiguration = await locklift.factory.getContract('TonEventConfiguration');
+  const TonEvent = await locklift.factory.getContract('TonEvent');
+  
+  const [keyPair] = await locklift.keys.getKeyPairs();
+  
+  const configurationMeta = await cellEncoder.call({
+    method: 'encodeConfigurationMeta',
+    params: {
+      rootToken: locklift.utils.zeroAddress,
+    }
+  });
+  
+  const tonEventConfiguration = await locklift.giver.deployContract({
+    contract: TonEventConfiguration,
+    constructorParams: {
+      _owner: owner.address,
+    },
+    initParams: {
+      basicInitData: {
+        eventABI: '',
+        eventRequiredConfirmations: 2,
+        eventRequiredRejects: 2,
+        eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
+        bridgeAddress: bridge.address,
+        eventCode: TonEvent.code,
+        meta: configurationMeta
+      },
+      initData: {
+        eventAddress: locklift.utils.zeroAddress,
+        proxyAddress: new BigNumber(0),
+        startTimestamp: 0,
+      }
+    },
+    keyPair
+  }, locklift.utils.convertCrystal(20, 'nano'));
+  
+  await logContract(tonEventConfiguration);
+  
+  return [tonEventConfiguration];
+};
+
+
 const setupRelays = async (amount=3) => {
   const [keyPair] = await locklift.keys.getKeyPairs();
 
@@ -196,6 +239,7 @@ const setupRelays = async (amount=3) => {
 module.exports = {
   setupBridge,
   setupEthereumEventConfiguration,
+  setupTonEventConfiguration,
   setupRelays,
   logContract,
   logger,
