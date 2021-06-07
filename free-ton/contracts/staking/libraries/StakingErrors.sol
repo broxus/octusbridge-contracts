@@ -17,4 +17,5 @@ library StakingErrors {
     uint8 public constant NOT_ACTIVE = 114;
     uint8 public constant NOT_RELAY_ROUND = 115;
     uint8 public constant RELAY_ROUND_INITIALIZED = 116;
+    uint8 public constant ELECTION_NOT_STARTED = 117;
 }

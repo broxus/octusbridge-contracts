@@ -7,6 +7,8 @@ import "./libraries/StakingErrors.sol";
 import "./libraries/Gas.sol";
 import "./libraries/MsgFlag.sol";
 import "./interfaces/IUpgradableByRequest.sol";
+import "./libraries/PlatformTypes.sol";
+import "./utils/Platform.sol";
 
 
 contract UserData is IUserData, IUpgradableByRequest {
@@ -52,9 +54,13 @@ contract UserData is IUserData, IUpgradableByRequest {
 
     }
 
-    // TODO: может ли человек голосовать за чужой адрес ?
-    function processBecomeRelay() external override onlyRoot {
-        // TODO: add
+    function processBecomeRelay(uint128 round_num, uint128 election_start_time) external override onlyRoot {
+        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+        
+        address election_addr = getElectionAddress(round_num);
+
+
+
     }
 
     function processWithdraw(uint128 _tokens_to_withdraw, uint256 _acc_reward_per_share, address send_gas_to) external override onlyRoot {
@@ -76,6 +82,33 @@ contract UserData is IUserData, IUpgradableByRequest {
         reward_balance += new_reward;
 
         IStakingPool(msg.sender).finishWithdraw{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(user, _tokens_to_withdraw, send_gas_to);
+    }
+
+    function _buildInitData(uint8 type_id, TvmCell _initialData) private inline view returns (TvmCell) {
+        return tvm.buildStateInit({
+            contr: Platform,
+            varInit: {
+                root: address(this),
+                platformType: type_id,
+                initialData: _initialData,
+                platformCode: platform_code
+            },
+            pubkey: 0,
+            code: platform_code
+        });
+    }
+
+    function _buildElectionParams(uint128 round_num) private inline pure returns (TvmCell) {
+        TvmBuilder builder;
+        builder.store(round_num);
+        return builder.toCell();
+    }
+
+    function getElectionAddress(uint128 round_num) public view responsible returns (address) {
+        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } address(tvm.hash(_buildInitData(
+            PlatformTypes.Election,
+            _buildElectionParams(round_num)
+        )));
     }
 
     function onCodeUpgrade(TvmCell upgrade_data) private {

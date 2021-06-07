@@ -16,6 +16,7 @@ import "./libraries/PlatformTypes.sol";
 import "./libraries/StakingErrors.sol";
 import "./libraries/Gas.sol";
 import "./libraries/MsgFlag.sol";
+import "./libraries/StakingConsts.sol";
 
 
 contract StakingPool is ITokensReceivedCallback, IStakingPool {
@@ -23,6 +24,7 @@ contract StakingPool is ITokensReceivedCallback, IStakingPool {
     event Deposit(address user, uint128 amount);
     event Withdraw(address user, uint128 amount);
     event ElectionStarted(uint128 round_num);
+    event ElectionEnded(uint128 round_num);
 
     event DepositReverted(address user, uint128 amount);
 
@@ -59,16 +61,6 @@ contract StakingPool is ITokensReceivedCallback, IStakingPool {
     uint8 public constant REWARD_UP = 1;
 
     bool active;
-
-    // State vars
-    uint256 constant public rewardPerSecond = 1000;
-
-    uint128 constant public relayRoundTime = 7 days;
-
-    uint128 constant public electionTime = 2 days;
-
-    // election should start at lest after this much time before round end
-    uint128 constant public timeBeforeElection = 4 days;
 
     uint128 public currentRelayRound = 1;
 
@@ -380,13 +372,13 @@ contract StakingPool is ITokensReceivedCallback, IStakingPool {
     function becomeRelayNextRound() external override onlyActive {
         require (msg.sender.value != 0, StakingErrors.EXTERNAL_CALL);
         require (msg.value >= Gas.MIN_RELAY_REQ_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
+        require (pendingRelayRound != 0, StakingErrors.ELECTION_NOT_STARTED);
         tvm.rawReserve(_reserve(), 2);
 
         address userDataAddr = getUserDataAddress(msg.sender);
-        UserData(userDataAddr).processBecomeRelay{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}();
+        UserData(userDataAddr).processBecomeRelay{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(pendingRelayRound, currentElectionStartTime);
     }
 
-    // TODO: update
     function withdraw(uint128 amount, address send_gas_to) public onlyActive {
         require (msg.sender.value != 0, StakingErrors.EXTERNAL_CALL);
         require (amount > 0, StakingErrors.ZERO_AMOUNT_INPUT);
@@ -431,7 +423,7 @@ contract StakingPool is ITokensReceivedCallback, IStakingPool {
         uint256 _totalReward = totalReward;
         if (now > lastRewardTime && tokenBalance != 0) {
             uint256 multiplier = now - lastRewardTime;
-            uint256 tonReward = multiplier * rewardPerSecond;
+            uint256 tonReward = multiplier * StakingConsts.rewardPerSecond;
             _totalReward += tonReward;
             _accRewardPerShare += (tonReward * 1e18) / tokenBalance;
         }
@@ -444,7 +436,7 @@ contract StakingPool is ITokensReceivedCallback, IStakingPool {
         }
 
         uint256 multiplier = now - lastRewardTime;
-        uint256 new_reward = rewardPerSecond * multiplier;
+        uint256 new_reward = StakingConsts.rewardPerSecond * multiplier;
         totalReward += new_reward;
 
         if (tokenBalance == 0) {
@@ -461,7 +453,7 @@ contract StakingPool is ITokensReceivedCallback, IStakingPool {
     function startElectionOnNewRound(address send_gas_to) external override onlyActive {
         require (msg.sender.value != 0, StakingErrors.EXTERNAL_CALL);
         require (msg.value >= Gas.MIN_START_ELECTION_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
-        require (now >= (currentRelayRoundStartTime + timeBeforeElection), StakingErrors.TOO_EARLY_FOR_ELECTION);
+        require (now >= (currentRelayRoundStartTime + StakingConsts.timeBeforeElection), StakingErrors.TOO_EARLY_FOR_ELECTION);
         require (currentElectionStartTime == 0, StakingErrors.ELECTION_ALREADY_STARTED);
         tvm.rawReserve(_reserve(), 2);
 
