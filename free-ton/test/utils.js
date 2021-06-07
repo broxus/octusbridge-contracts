@@ -1,6 +1,10 @@
 const logger = require('mocha-logger');
 const BigNumber = require('bignumber.js');
 const _ = require('underscore');
+const chai = require('chai');
+chai.use(require('chai-bignumber')());
+
+const { expect } = chai;
 
 
 const logContract = async (contract) => {
@@ -262,4 +266,5 @@ module.exports = {
   logContract,
   enableEventConfiguration,
   logger,
+  expect,
 };

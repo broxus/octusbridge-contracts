@@ -5,12 +5,8 @@ const {
   logContract,
   enableEventConfiguration,
   logger,
+  expect,
 } = require('./utils');
-
-const chai = require('chai');
-chai.use(require('chai-bignumber')());
-
-const { expect } = chai;
 
 
 describe('Test ton event confirm', async function() {
