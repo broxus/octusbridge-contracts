@@ -4,22 +4,39 @@ pragma experimental ABIEncoderV2;
 
 
 interface IBridge {
-    function isRelay(address candidate) external view returns (bool);
-    function countRelaysSignatures(
+    struct BridgeConfiguration {
+        uint32 requiredSignatures;
+    }
+
+    struct TONEvent {
+        uint256 eventTransaction;
+        uint64 eventTransactionLt;
+        uint32 eventTimestamp;
+        uint32 eventIndex;
+        bytes eventData;
+        int8 tonEventConfigurationWid;
+        uint256 tonEventConfigurationAddress;
+        uint16 requiredConfirmations;
+        uint16 requiredRejects;
+        address proxy;
+        uint32 round;
+    }
+
+    function isRelay(uint32 round, address candidate) external view returns(bool);
+
+    function countRelaySignatures(
+        uint32 round,
+        bytes memory payload,
+        bytes[] memory signatures
+    ) external view returns(uint32 count);
+
+    function setRoundRelays(
         bytes calldata payload,
         bytes[] calldata signatures
-    ) external view returns(uint);
+    ) external;
 
-    struct BridgeConfiguration {
-        uint16 nonce;
-        uint16 bridgeUpdateRequiredConfirmations;
-    }
+    function setConfiguration(BridgeConfiguration calldata _configuration) external;
 
-    struct BridgeRelay {
-        uint16 nonce;
-        address account;
-        bool action;
-    }
-
-    function getConfiguration() external view returns (BridgeConfiguration memory);
+    event RoundRelays(uint32 indexed round, address[] relays);
+    event NewConfiguration(BridgeConfiguration configuration);
 }

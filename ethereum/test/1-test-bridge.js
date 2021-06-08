@@ -1,195 +1,144 @@
-const { expect } = require('chai');
+// const { expect } = require('chai');
 const utils = require('./utils');
+const _ = require('underscore');
+const logger = require('mocha-logger');
+const BigNumber = require('bignumber.js');
 
-let bridge;
+const chai = require('chai');
+const { solidity } = require("ethereum-waffle");
+
+chai.use(solidity);
+
+const { expect } = chai;
 
 
-describe('Testing Ethereum bridge', async function() {
-  before(async function() {
-    const accounts = await ethers.getSigners();
-    
-    const Bridge = await ethers.getContractFactory("Bridge");
+const sortAccounts = (accounts) => accounts
+  .sort((a, b) => b.address.toLowerCase() > a.address.toLowerCase() ? -1 : 1);
 
-    bridge = await upgrades.deployProxy(
-      Bridge,
-      [
-        accounts.map(a => a.address).slice(0,3),
-        accounts[0].address,
-        [1, 2],
-      ]
-    );
-  });
+
+describe('Test bridge', async function() {
+  let bridge, owner, initialRelays;
+
+  const configuration = {
+    requiredSignatures: 5,
+  };
   
-  describe('Check relay signature validating', async function() {
-    it('Check relay signature valid', async function() {
-      const accounts = await ethers.getSigners();
-    
-      const receipt = '0x121212';
-      const signature = await utils.signReceipt(web3, receipt, accounts[0].address);
-    
-      expect(
-        (await bridge.countRelaysSignatures(receipt, [signature])).toNumber()
-      ).to.equal(1, "Relay signature dont work");
-    });
-  
-    it('Check non-relay signature is invalid', async function() {
-      const accounts = await ethers.getSigners();
-    
-      const receipt = '0x121212';
-      const signature = await utils.signReceipt(web3, receipt, accounts[6].address);
+  describe('Setup bridge', async () => {
+    it('Deploy bridge', async () => {
+      [,owner] = await ethers.getSigners();
+
+      initialRelays = await Promise.all(
+        _.range(configuration.requiredSignatures + 1).map(async () => ethers.Wallet.createRandom())
+      );
       
-      expect(
-        (await bridge.countRelaysSignatures(receipt, [signature])).toNumber()
-      ).to.equal(0, "Non-relay signature should not work");
-    });
-  });
-  
-  describe('Update bridge configuration', async function() {
-    const newConfiguration = web3.eth.abi.encodeParameters(
-      [{
-        'BridgeConfiguration': {
-          'nonce': 'uint16',
-          'bridgeUpdateRequiredConfirmations': 'uint16',
-        }
-      }],
-      [{
-        'nonce': 11,
-        'bridgeUpdateRequiredConfirmations': 3,
-      }]
-    );
-
-    it('Validate initial configuration', async function() {
-      const configuration = await bridge.getConfiguration();
+      // Sort accounts by their address low-high
+      initialRelays = sortAccounts(initialRelays);
       
-      expect(configuration.bridgeUpdateRequiredConfirmations)
-        .to
-        .equal(2, 'Wrong initial required confirmations to update bridge');
-    });
-    
-    it('Check update fail with lack of confirmations', async function() {
-      const accounts = await ethers.getSigners();
+      const Bridge = await ethers.getContractFactory("Bridge");
   
-      const signatures = [
-        (await utils.signReceipt(web3, newConfiguration, accounts[0].address)),
-      ];
-  
-      await utils.catchRevertWithMessage(
-        bridge.updateBridgeConfiguration(newConfiguration, signatures),
-        'Not enough confirmations'
+      bridge = await upgrades.deployProxy(
+        Bridge,
+        [
+          owner.address,
+          configuration,
+          initialRelays.map(account => account.address),
+        ]
       );
+      
+      logger.log(`Bridge: ${bridge.address}`);
     });
     
-    it('Update configuration', async function() {
-      const accounts = await ethers.getSigners();
-  
-      const signatures = [
-        (await utils.signReceipt(web3, newConfiguration, accounts[0].address)),
-        (await utils.signReceipt(web3, newConfiguration, accounts[1].address)),
-      ];
-  
-      await bridge.updateBridgeConfiguration(newConfiguration, signatures);
-  
-      const configuration = await bridge.getConfiguration();
-  
-      expect(configuration.bridgeUpdateRequiredConfirmations)
-        .to
-        .equal(3, 'Wrong new required confirmations to update bridge');
+    it('Check ownership', async () => {
+      expect(await bridge.owner())
+        .to.be.equal(owner.address, 'Wrong owner');
     });
   });
   
-  describe('Check updating bridge relays', async function() {
-    const relay = '0x5a0b54d5dc17e0aadc383d2db43b0a0d3e029c4c';
+  describe('Set round relays', async () => {
+    let newRelays;
     
-    it('Add relay', async function() {
-      const addRelay = web3.eth.abi.encodeParameters(
+    it('Setup payload & signatures', async () => {
+      newRelays = await Promise.all(
+        _.range(configuration.requiredSignatures + 1).map(async () => ethers.Wallet.createRandom())
+      );
+
+      const eventData = web3.eth.abi.encodeParameters(
+        ['uint32', 'address[]'],
+        [1, newRelays.map(a => a.address)],
+      );
+  
+      const tonEvent = web3.eth.abi.encodeParameters(
         [{
-          'BridgeRelay': {
-            'nonce': 'uint16',
-            'account': 'address',
-            'action': 'bool'
+          'TONEvent': {
+            'eventTransaction': 'uint256',
+            'eventTransactionLt': 'uint64',
+            'eventTimestamp': 'uint32',
+            'eventIndex': 'uint32',
+            'eventData': 'bytes',
+            'tonEventConfigurationWid': 'int8',
+            'tonEventConfigurationAddress': 'uint256',
+            'requiredConfirmations': 'uint16',
+            'requiredRejects': 'uint16',
+            'proxy': 'address',
+            'round': 'uint32'
           }
         }],
         [{
-          'nonce': 12,
-          'account': relay,
-          'action': true
+          'eventTransaction': 0,
+          'eventTransactionLt': 0,
+          'eventTimestamp': 0,
+          'eventIndex': 0,
+          'eventData': eventData,
+          'tonEventConfigurationWid': 0,
+          'tonEventConfigurationAddress': 0,
+          'requiredConfirmations': 1,
+          'requiredRejects': 1,
+          'proxy': bridge.address,
+          'round': 0
         }]
       );
   
-      const accounts = await ethers.getSigners();
-  
-      const signatures = [
-        (await utils.signReceipt(web3, addRelay, accounts[0].address)),
-        (await utils.signReceipt(web3, addRelay, accounts[1].address)),
-        (await utils.signReceipt(web3, addRelay, accounts[2].address)),
-      ];
-  
-      expect((await bridge.isRelay(relay))).to.equal(false, 'Address should not have relay ownership');
-  
-      await bridge.updateBridgeRelay(addRelay, signatures);
-  
-      expect((await bridge.isRelay(relay))).to.equal(true, 'Address should receive relay ownership');
-    });
-  
-    it('Remove relay', async function() {
-      const removeRelay = web3.eth.abi.encodeParameters(
-        [{
-          'BridgeRelay': {
-            'nonce': 'uint16',
-            'account': 'address',
-            'action': 'bool'
-          }
-        }],
-        [{
-          'nonce': 13,
-          'account': relay,
-          'action': false
-        }]
-      );
-  
-      const accounts = await ethers.getSigners();
-  
-      const signatures = [
-        (await utils.signReceipt(web3, removeRelay, accounts[0].address)),
-        (await utils.signReceipt(web3, removeRelay, accounts[1].address)),
-        (await utils.signReceipt(web3, removeRelay, accounts[2].address)),
-      ];
-  
-      expect((await bridge.isRelay(relay))).to.equal(true, 'Address should already have relay ownership');
-  
-      await bridge.updateBridgeRelay(removeRelay, signatures);
-  
-      expect((await bridge.isRelay(relay))).to.equal(false, 'Address should loose relay ownership');
+      const signatures = await Promise.all(initialRelays
+        .map(async (account) => utils.signReceipt(web3, tonEvent, account)));
+      
+      await expect(bridge.setRoundRelays(tonEvent, signatures))
+        .to.emit(bridge, 'RoundRelays')
+        .withArgs(1, newRelays.map(a => a.address));
     });
     
-    it('Try to re-add relay with old payload and signatures', async function() {
-      const addRelay = web3.eth.abi.encodeParameters(
-        [{
-          'BridgeRelay': {
-            'nonce': 'uint16',
-            'account': 'address',
-            'action': 'bool'
-          }
-        }],
-        [{
-          'nonce': 12,
-          'account': relay,
-          'action': true
-        }]
-      );
+    it('Set relays with wrong signatures sequence', async () => {
+    
+    });
+    
+    it('Set relays with duplicating signers', async () => {
+    
+    });
+    
+    it('Set relays with not enough signatures', async () => {
+    
+    });
+  });
   
-      const accounts = await ethers.getSigners();
-  
-      const signatures = [
-        (await utils.signReceipt(web3, addRelay, accounts[0].address)),
-        (await utils.signReceipt(web3, addRelay, accounts[1].address)),
-        (await utils.signReceipt(web3, addRelay, accounts[2].address)),
-      ];
-  
-      await utils.catchRevertWithMessage(
-        bridge.updateBridgeRelay(addRelay, signatures),
-        'Nonce already used'
-      );
+  describe('Set configuration', async () => {
+    const newConfiguration = {
+      requiredSignatures: 6,
+    };
+    
+    it('Update configuration', async () => {
+      await bridge.connect(owner)
+        .setConfiguration(newConfiguration);
+    });
+    
+    it('Check new configuration', async () => {
+      const configuration = await bridge.configuration();
+
+      expect(configuration)
+        .to.be.equal(newConfiguration.requiredSignatures, 'Wrong configuration');
+    });
+    
+    it('Update configuration with non-owner', async () => {
+      await expect(bridge.setConfiguration(newConfiguration))
+        .to.be.revertedWith('Ownable: not owner');
     });
   });
 });

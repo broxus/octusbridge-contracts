@@ -2,7 +2,6 @@ require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-web3");
 require('@openzeppelin/hardhat-upgrades');
 require("@nomiclabs/hardhat-etherscan");
-// require("hardhat-gas-reporter");
 
 
 task("accounts", "Prints the list of accounts", async () => {

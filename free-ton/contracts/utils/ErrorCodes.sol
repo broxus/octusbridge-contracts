@@ -23,4 +23,5 @@ library ErrorCodes {
     uint16 constant KEY_ALREADY_REJECTED = 2315;
     uint16 constant EVENT_NOT_CONFIRMED = 2316;
     uint16 constant TOO_LOW_MSG_VALUE = 2317;
+    uint16 constant KEY_ALREADY_VOTED = 2318;
 }
