@@ -1,5 +1,6 @@
 pragma ton-solidity ^0.39.0;
 
+
 library  StakingConsts {
     // State vars
     uint256 constant public rewardPerSecond = 1000;
@@ -12,4 +13,8 @@ library  StakingConsts {
     uint128 constant public timeBeforeElection = 4 days;
 
     uint64 constant public relaysCount = 10;
+
+    // payloads for token receive callback
+    uint8 public constant STAKE_DEPOSIT = 0;
+    uint8 public constant REWARD_UP = 1;
 }

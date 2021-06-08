@@ -42,9 +42,6 @@ contract StakingPool is ITokensReceivedCallback, IStakingPool {
     event ElectionCodeUpgraded(uint32 code_version);
     event RelayRoundCodeUpgraded(uint32 code_version);
 
-//    struct TvmCell {} // TODO: delete
-//    struct TvmSlice {} // TODO: delete
-
     uint32 public static deploy_nonce; // TODO: uncomment
 
     TvmCell public platform_code;
@@ -58,11 +55,6 @@ contract StakingPool is ITokensReceivedCallback, IStakingPool {
 
     TvmCell public relay_round_code;
     uint32 public relay_round_version;
-
-
-    // payloads for token receive callback
-    uint8 public constant STAKE_DEPOSIT = 0;
-    uint8 public constant REWARD_UP = 1;
 
     bool active;
 
@@ -320,13 +312,13 @@ contract StakingPool is ITokensReceivedCallback, IStakingPool {
 
             updatePoolInfo();
 
-            if (deposit_type == STAKE_DEPOSIT) {
+            if (deposit_type == StakingConsts.STAKE_DEPOSIT) {
                 deposit_nonce += 1;
                 deposits[deposit_nonce] = PendingDeposit(sender_address, amount, original_gas_to);
 
                 address userDataAddr = getUserDataAddress(sender_address);
                 UserData(userDataAddr).processDeposit{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(deposit_nonce, amount, accRewardPerShare, user_data_version);
-            } else if (deposit_type == REWARD_UP) {
+            } else if (deposit_type == StakingConsts.REWARD_UP) {
                 rewardTokenBalance += amount;
                 original_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
             } else {
