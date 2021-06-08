@@ -3,143 +3,168 @@ pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
 
-import "./utils/DistributedOwnable.sol";
 import "./interfaces/IBridge.sol";
-import "./utils/Nonce.sol";
-import "./utils/RedButton.sol";
+import "./libraries/ECDSA.sol";
+import "./utils/Ownable.sol";
+
 
 import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 
 
 /**
     @title Ethereum Bridge contract.
+    @dev Stores relays for each round
+    // TODO: only next round relays can be set?
 **/
-contract Bridge is Initializable, DistributedOwnable, RedButton, Nonce, IBridge {
-    BridgeConfiguration bridgeConfiguration;
+contract Bridge is Initializable, Ownable, IBridge {
+    using ECDSA for bytes32;
+
+    mapping (uint32 => mapping(address => bool)) public roundRelays;
+    BridgeConfiguration public configuration;
 
     /**
-        @notice Bridge initializer
-        @param owners Initial list of owners addresses
-        @param admin Red button caller, probably multisig
-        @param _bridgeConfiguration Bridge configuration
+        @param admin Bridge admin
+        @param relays Set of relays for round 0
     **/
     function initialize(
-        address[] memory owners,
         address admin,
-        BridgeConfiguration memory _bridgeConfiguration
-    ) public initializer {
-        for (uint i=0; i < owners.length; i++) {
-            grantOwnership(owners[i]);
-        }
+        BridgeConfiguration calldata _configuration,
+        address[] calldata relays
+    ) external initializer {
+        _transferOwnership(admin);
 
-        _setAdmin(admin);
+        _setConfiguration(_configuration);
 
-        bridgeConfiguration = _bridgeConfiguration;
+        _setRoundRelays(0, relays);
     }
 
     /*
-        Is address relay or not.
-        Handy wrapper around ownership functionality.
-        @param candidate Address
-        @returns Boolean is relay or not
+        @notice Internal function for setting bridge configuration
+        @param _configuration Bridge configuration
     */
-    function isRelay(
-        address candidate
-    ) override public view returns(bool) {
-        return isOwner(candidate);
+    function _setConfiguration(
+        BridgeConfiguration memory _configuration
+    ) internal {
+        configuration = _configuration;
+
+        emit NewConfiguration(_configuration);
     }
 
-    /**
-     * @notice Count how much signatures are made by owners.
-     * @param payload Bytes payload, which was signed
-     * @param signatures Bytes array with payload signatures
+    /*
+        @notice Internal function for setting up relays for specific round
+        @param round Round id
+        @param relays Array of relay addresses
     */
-    function countRelaysSignatures(
+    function _setRoundRelays(
+        uint32 round,
+        address[] memory relays
+    ) internal {
+        for (uint i=0; i<relays.length; i++) {
+            roundRelays[round][relays[i]] = true;
+        }
+
+        emit RoundRelays(round, relays);
+    }
+
+    /*
+        @notice Answers if specific address was relay in specific round
+        @param round Round id
+        @param candidate Address to check
+    */
+    function isRelay(
+        uint32 round,
+        address candidate
+    ) override public view returns (bool) {
+        return roundRelays[round][candidate];
+    }
+
+    /*
+        @notice Count how many signatures are made by correct relays from
+        @dev Signatures should be sorted by the ascending signers
+        so it's easier to detect duplicates
+        @param round Round id
+        @param payload Bytes encoded payload
+        @param signatures Payload signatures
+\    */
+    function countRelaySignatures(
+        uint32 round,
         bytes memory payload,
         bytes[] memory signatures
-    ) public override view returns(uint) {
-        uint ownersConfirmations = 0;
-
-        address[] memory signers = new address[](signatures.length);
+    ) override public view returns (uint32 count) {
+        address lastSigner = address(0);
+        count = 0;
 
         for (uint i=0; i<signatures.length; i++) {
             address signer = recoverSignature(payload, signatures[i]);
 
-            if (isOwner(signer)) {
-                // Check this owner is not used before
-                for (uint u=0; u<signers.length; u++) {
-                    require(signers[u] != signer, "Signer already seen");
-                }
+            require(signer > lastSigner, "Bridge: signatures sequence wrong");
+            lastSigner = signer;
 
-                ownersConfirmations++;
-                signers[i] = signer;
+            if (isRelay(round, signer)) {
+                count++;
             }
         }
-
-        return ownersConfirmations;
     }
 
     /*
-        Update Bridge configuration
-        @dev Check enough owners signed and apply update
-        @param payload Bytes encoded BridgeConfiguration structure
+        @notice Recover signer from the payload and signature
+        @param payload Payload
+        @param signature Signature
     */
-    function updateBridgeConfiguration(
+    function recoverSignature(
         bytes memory payload,
-        bytes[] memory signatures
-    ) public {
+        bytes memory signature
+    ) public pure returns (address signer) {
+        signer = keccak256(payload)
+            .toBytesPrefixed()
+            .recover(signature);
+    }
+
+    /*
+        @notice Set relays for specific round
+        @dev Checks enough relay signatures are given for specified round
+        @param payload Encoded TON event
+        @param signatures Payload signatures
+    */
+    function setRoundRelays(
+        bytes calldata payload,
+        bytes[] calldata signatures
+    ) override external {
+        // Decode payload
+        (TONEvent memory tonEvent) = abi.decode(payload, (TONEvent));
+
+        // Check enough correct signatures
         require(
-            countRelaysSignatures(
-                payload,
-                signatures
-            ) >= bridgeConfiguration.bridgeUpdateRequiredConfirmations,
-            'Not enough confirmations'
+            countRelaySignatures(tonEvent.round, payload, signatures) >= configuration.requiredSignatures,
+            "Bridge: not enough relay signatures"
         );
 
-        (BridgeConfiguration memory _bridgeConfiguration) = abi.decode(payload, (BridgeConfiguration));
-
-        require(nonceNotUsed(_bridgeConfiguration.nonce), 'Nonce already used');
-
-        bridgeConfiguration = _bridgeConfiguration;
-
-        rememberNonce(_bridgeConfiguration.nonce);
-    }
-
-    /*
-        Update Bridge relay
-        @dev Check enough owners signed and apply update
-        @param payload Bytes encoded BridgeRelay structure
-    */
-    function updateBridgeRelay(
-        bytes memory payload,
-        bytes[] memory signatures
-    ) public {
         require(
-            countRelaysSignatures(
-                payload,
-                signatures
-            ) >= bridgeConfiguration.bridgeUpdateRequiredConfirmations,
-            'Not enough confirmations'
+            tonEvent.proxy == address(this),
+            "Bridge: wrong event proxy"
         );
 
-        (BridgeRelay memory bridgeRelay) = abi.decode(payload, (BridgeRelay));
+        // Decode relays and corresponding round
+        (uint32 round, address[] memory relays) = abi.decode(
+            tonEvent.eventData,
+            (uint32, address[])
+        );
 
-        require(nonceNotUsed(bridgeRelay.nonce), 'Nonce already used');
-
-        if (bridgeRelay.action) {
-            grantOwnership(bridgeRelay.account);
-        } else {
-            removeOwnership(bridgeRelay.account);
-        }
-
-        rememberNonce(bridgeRelay.nonce);
+        _setRoundRelays(round, relays);
     }
 
+//    function removeRoundRelays(
+//
+//    )
+
     /*
-        Get current bridge configuration
-        @return Bridge configuration structure
+        @notice Update bridge configuration
+        @dev Only owner
+        @param _configuration New bridge configuration
     */
-    function getConfiguration() public view override returns (BridgeConfiguration memory) {
-        return bridgeConfiguration;
+    function setConfiguration(
+        BridgeConfiguration calldata _configuration
+    ) override onlyOwner external {
+        _setConfiguration(_configuration);
     }
 }
