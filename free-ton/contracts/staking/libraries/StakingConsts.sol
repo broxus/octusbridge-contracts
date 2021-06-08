@@ -10,4 +10,6 @@ library  StakingConsts {
 
     // election should start at lest after this much time before round end
     uint128 constant public timeBeforeElection = 4 days;
+
+    uint64 constant public relaysCount = 10;
 }

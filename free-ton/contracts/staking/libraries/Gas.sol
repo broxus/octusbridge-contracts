@@ -10,6 +10,7 @@ library Gas {
 
     uint128 public constant ROOT_INITIAL_BALANCE = 1 ton;
     uint128 public constant USER_DATA_INITIAL_BALANCE = 1 ton;
+    uint128 public constant ELECTION_INITIAL_BALANCE = 1 ton;
     uint128 public constant RELAY_ROUND_INITIAL_BALANCE = 1 ton;
 
     // min values for calls
@@ -17,6 +18,8 @@ library Gas {
     uint128 public constant MIN_WITHDRAW_MSG_VALUE = 1 ton;
     uint128 public constant MIN_RELAY_REQ_MSG_VALUE = 1;
     uint128 public constant MIN_START_ELECTION_MSG_VALUE = 1.5 ton;
+    uint128 public constant MIN_END_ELECTION_MSG_VALUE = 1 ton;
+    uint128 public constant MIN_ORIGIN_ROUND_MSG_VALUE = 1 ton;
 
     uint128 public constant UPGRADE_ELECTION_MIN_VALUE = 1 ton;
     uint128 public constant UPGRADE_USER_DATA_MIN_VALUE = 1 ton;

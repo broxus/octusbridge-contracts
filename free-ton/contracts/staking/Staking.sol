@@ -7,6 +7,9 @@ import "./interfaces/ITokensReceivedCallback.sol";
 import "./interfaces/IUserData.sol";
 import "./interfaces/IUpgradableByRequest.sol";
 import "./interfaces/IStakingPool.sol";
+import "./interfaces/IRelayRound.sol";
+import "./interfaces/IElection.sol";
+
 import "./UserData.sol";
 import "./Election.sol";
 import "./utils/Platform.sol";
@@ -25,6 +28,7 @@ contract StakingPool is ITokensReceivedCallback, IStakingPool {
     event Withdraw(address user, uint128 amount);
     event ElectionStarted(uint128 round_num);
     event ElectionEnded(uint128 round_num);
+    event RelayRoundInitialized(uint128 round_num, IRelayRound.Relay[] relays);
 
     event DepositReverted(address user, uint128 amount);
 
@@ -62,7 +66,9 @@ contract StakingPool is ITokensReceivedCallback, IStakingPool {
 
     bool active;
 
-    uint128 public currentRelayRound = 1;
+    bool originRelayRoundInitialized;
+
+    uint128 public currentRelayRound;
 
     // time when current round have started
     uint128 public currentRelayRoundStartTime;
@@ -101,12 +107,6 @@ contract StakingPool is ITokensReceivedCallback, IStakingPool {
     // this is used to prevent data loss on bounced messages during deposit
     mapping (uint64 => PendingDeposit) deposits;
 
-    TvmCell public userDataCode;
-
-    TvmCell public electionCode;
-
-    TvmCell public relayRoundCode;
-
     constructor(address _owner, address _tokenRoot) public {
         tvm.accept();
 
@@ -114,7 +114,11 @@ contract StakingPool is ITokensReceivedCallback, IStakingPool {
         owner = _owner;
         setUpTokenWallets();
     }
-    
+
+    function _reserve() internal pure returns (uint128) {
+        return math.max(address(this).balance - msg.value, Gas.ROOT_INITIAL_BALANCE);
+    }
+
     function installPlatformOnce(TvmCell code, address send_gas_to) external onlyOwner {
         // can be installed only once
         require(!has_platform_code, StakingErrors.PLATFORM_CODE_NON_EMPTY);
@@ -183,14 +187,12 @@ contract StakingPool is ITokensReceivedCallback, IStakingPool {
     }
 
     // user should call this by himself
-    function upgradeUserData(
-        address user,
-        address send_gas_to
-    ) external view {
+    function upgradeUserData(address send_gas_to) external view {
         require(msg.value >= Gas.UPGRADE_USER_DATA_MIN_VALUE, StakingErrors.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
 
-        address user_data = getUserDataAddress(user);
+        emit RequestedUserDataUpgrade(msg.sender);
+        address user_data = getUserDataAddress(msg.sender);
         IUpgradableByRequest(user_data).upgrade{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
             user_data_code,
             user_data_version,
@@ -205,6 +207,7 @@ contract StakingPool is ITokensReceivedCallback, IStakingPool {
         require(msg.value >= Gas.UPGRADE_USER_DATA_MIN_VALUE, StakingErrors.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
 
+        emit RequestedUserDataUpgrade(user);
         address user_data = getUserDataAddress(user);
         IUpgradableByRequest(user_data).upgrade{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
             user_data_code,
@@ -243,8 +246,14 @@ contract StakingPool is ITokensReceivedCallback, IStakingPool {
         .upgrade{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(relay_round_code, relay_round_version, send_gas_to);
     }
 
-    function _reserve() internal view returns (uint128) {
-        return math.max(address(this).balance - msg.value, Gas.ROOT_INITIAL_BALANCE);
+    function createOriginRelayRound(IRelayRound.Relay[] relays, address send_gas_to) external onlyOwner {
+        require (msg.value >= Gas.MIN_ORIGIN_ROUND_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
+        require (!originRelayRoundInitialized, StakingErrors.ORIGIN_ROUND_ALREADY_INITIALIZED);
+
+        tvm.rawReserve(_reserve(), 2);
+
+        address relay_round = deployRelayRound(currentRelayRound, send_gas_to);
+        IRelayRound(relay_round).setRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(relays, send_gas_to);
     }
 
     /*
@@ -270,9 +279,7 @@ contract StakingPool is ITokensReceivedCallback, IStakingPool {
         @dev Only root can call with correct params
         @param wallet Farm pool's token wallet
     */
-    function receiveTokenWalletAddress(
-        address wallet
-    ) external {
+    function receiveTokenWalletAddress(address wallet) external {
         if (msg.sender == tokenRoot) {
             tokenWallet = wallet;
             ITONTokenWallet(wallet).setReceiveCallback{value: 0.05 ton}(address(this), false);
@@ -369,18 +376,20 @@ contract StakingPool is ITokensReceivedCallback, IStakingPool {
         deposit.send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 
-    function becomeRelayNextRound() external override onlyActive {
-        require (msg.sender.value != 0, StakingErrors.EXTERNAL_CALL);
+    function becomeRelayNextRound(uint256 eth_addr, address send_gas_to) external override onlyActive {
+        require (msg.sender.value != 0, StakingErrors.EXTERNAL_ADDRESS);
         require (msg.value >= Gas.MIN_RELAY_REQ_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
         require (pendingRelayRound != 0, StakingErrors.ELECTION_NOT_STARTED);
         tvm.rawReserve(_reserve(), 2);
 
         address userDataAddr = getUserDataAddress(msg.sender);
-        UserData(userDataAddr).processBecomeRelay{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(pendingRelayRound, currentElectionStartTime);
+        UserData(userDataAddr).processBecomeRelay{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+            pendingRelayRound, eth_addr, send_gas_to, user_data_version, election_version
+        );
     }
 
     function withdraw(uint128 amount, address send_gas_to) public onlyActive {
-        require (msg.sender.value != 0, StakingErrors.EXTERNAL_CALL);
+        require (msg.sender.value != 0, StakingErrors.EXTERNAL_ADDRESS);
         require (amount > 0, StakingErrors.ZERO_AMOUNT_INPUT);
         require (msg.value >= Gas.MIN_WITHDRAW_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
@@ -389,7 +398,9 @@ contract StakingPool is ITokensReceivedCallback, IStakingPool {
 
         address userDataAddr = getUserDataAddress(msg.sender);
         // we cant check if user has any balance here, delegate it to UserData
-        UserData(userDataAddr).processWithdraw{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(amount, accRewardPerShare, send_gas_to);
+        UserData(userDataAddr).processWithdraw{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+            amount, accRewardPerShare, send_gas_to, user_data_version
+        );
     }
 
     function finishWithdraw(
@@ -451,30 +462,69 @@ contract StakingPool is ITokensReceivedCallback, IStakingPool {
 
     // ---------------- RELAY STAFF -------------------
     function startElectionOnNewRound(address send_gas_to) external override onlyActive {
-        require (msg.sender.value != 0, StakingErrors.EXTERNAL_CALL);
+        require (msg.sender.value != 0, StakingErrors.EXTERNAL_ADDRESS);
         require (msg.value >= Gas.MIN_START_ELECTION_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
         require (now >= (currentRelayRoundStartTime + StakingConsts.timeBeforeElection), StakingErrors.TOO_EARLY_FOR_ELECTION);
         require (currentElectionStartTime == 0, StakingErrors.ELECTION_ALREADY_STARTED);
+        require (originRelayRoundInitialized, StakingErrors.ORIGIN_ROUND_NOT_INITIALIZED);
         tvm.rawReserve(_reserve(), 2);
 
         deployElection(currentRelayRound + 1, send_gas_to);
         send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 
-    function onElectionStarted(uint128 round_num) external override onlyElection(round_num) {
+    function endElection(address send_gas_to) external override onlyActive {
+        require (msg.sender.value != 0, StakingErrors.EXTERNAL_ADDRESS);
+        require (msg.value >= Gas.MIN_END_ELECTION_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
+        require (currentElectionStartTime != 0, StakingErrors.ELECTION_NOT_STARTED);
+        require (now >= (currentElectionStartTime + StakingConsts.electionTime), StakingErrors.CANT_END_ELECTION);
+        tvm.rawReserve(_reserve(), 2);
+
+        address election_addr = getElectionAddress(pendingRelayRound);
+        IElection(election_addr).finish{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(send_gas_to);
+    }
+
+    function onElectionStarted(uint128 round_num, address send_gas_to) external override onlyElection(round_num) {
         tvm.rawReserve(_reserve(), 2);
 
         currentElectionStartTime = now;
         pendingRelayRound = round_num;
         emit ElectionStarted(round_num);
+        send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 
-    function onElectionEnded(uint128 round_num) external override onlyElection(round_num) {
+    function onElectionEnded(
+        uint128 round_num,
+        IElection.MembershipRequest[] win_requests,
+        address send_gas_to
+    ) external override onlyElection(round_num) {
         tvm.rawReserve(_reserve(), 2);
 
         currentElectionStartTime = 0;
         pendingRelayRound = 0;
         emit ElectionEnded(round_num);
+
+        IRelayRound.Relay[] new_relays = new IRelayRound.Relay[](win_requests.length);
+        for (uint i = 0; i < win_requests.length; i++) {
+            new_relays[i] = IRelayRound.Relay(win_requests[i].ton_addr, win_requests[i].eth_addr, win_requests[i].tokens);
+        }
+
+        address relay_round = deployRelayRound(round_num, send_gas_to);
+        IRelayRound(relay_round).setRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(new_relays, send_gas_to);
+    }
+
+    function onRelayRoundInitialized(
+        uint128 round_num,
+        IRelayRound.Relay[] relays,
+        address send_gas_to
+    ) external override onlyRelayRound(round_num) {
+        tvm.rawReserve(_reserve(), 2);
+
+        currentRelayRound = round_num;
+        currentRelayRoundStartTime = now;
+
+        emit RelayRoundInitialized(round_num, relays);
+        send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 
     function _buildElectionParams(uint128 round_num) private inline pure returns (TvmCell) {
@@ -510,10 +560,8 @@ contract StakingPool is ITokensReceivedCallback, IStakingPool {
     }
 
     function deployElection(uint128 round_num, address send_gas_to) internal returns (address) {
-        require(msg.value >= Gas.DEPLOY_ELECTION_MIN_VALUE, StakingErrors.VALUE_TOO_LOW);
         require(round_num > currentRelayRound, StakingErrors.INVALID_ELECTION_ROUND);
 
-        tvm.rawReserve(_reserve(), 2);
         TvmBuilder constructor_params;
         constructor_params.store(election_version);
 
@@ -525,10 +573,8 @@ contract StakingPool is ITokensReceivedCallback, IStakingPool {
     }
 
     function deployRelayRound(uint128 round_num, address send_gas_to) internal returns (address) {
-        require(msg.value >= Gas.DEPLOY_RELAY_ROUND_MIN_VALUE, StakingErrors.VALUE_TOO_LOW);
         require(round_num > currentRelayRound, StakingErrors.INVALID_RELAY_ROUND_ROUND);
 
-        tvm.rawReserve(_reserve(), 2);
         TvmBuilder constructor_params;
         constructor_params.store(relay_round_version);
 
@@ -540,9 +586,6 @@ contract StakingPool is ITokensReceivedCallback, IStakingPool {
     }
 
     function deployUserData(address user_data_owner) internal returns (address) {
-        require(msg.value >= Gas.DEPLOY_USER_DATA_MIN_VALUE, StakingErrors.VALUE_TOO_LOW);
-
-        tvm.rawReserve(_reserve(), 2);
         TvmBuilder constructor_params;
         constructor_params.store(user_data_version);
 

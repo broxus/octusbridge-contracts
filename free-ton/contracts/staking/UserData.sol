@@ -3,23 +3,29 @@ pragma AbiHeader expire;
 
 import "./interfaces/IStakingPool.sol";
 import "./interfaces/IUserData.sol";
+import "./interfaces/IUpgradableByRequest.sol";
+import "./interfaces/IElection.sol";
+
 import "./libraries/StakingErrors.sol";
 import "./libraries/Gas.sol";
 import "./libraries/MsgFlag.sol";
-import "./interfaces/IUpgradableByRequest.sol";
 import "./libraries/PlatformTypes.sol";
+import "./libraries/StakingConsts.sol";
+
 import "./utils/Platform.sol";
 
 
 contract UserData is IUserData, IUpgradableByRequest {
     event UserDataCodeUpgraded(uint32 code_version);
+    event RelayMembershipRequested(uint128 round_num, uint128 tokens, address ton_addr, uint256 eth_addr);
 
     uint32 public current_version;
     TvmCell public platform_code;
 
-    uint256 public token_balance;
+    uint128 public token_balance;
     uint256 public reward_balance;
     uint256 public reward_debt;
+    uint128 relay_lock_until;
 
     address public root; // setup from initialData
     address public user; // setup from initialData
@@ -39,35 +45,55 @@ contract UserData is IUserData, IUpgradableByRequest {
 
         if (code_version > current_version) {
             IStakingPool(msg.sender).revertDeposit{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(nonce);
-        } else {
-            uint256 prev_token_balance = token_balance;
-            uint256 prev_reward_debt = reward_debt;
-
-            token_balance += _tokens_to_deposit;
-            reward_debt = (token_balance * _acc_reward_per_share) / 1e18;
-
-            uint256 new_reward = ((prev_token_balance * _acc_reward_per_share) / 1e18) - prev_reward_debt;
-            reward_balance += new_reward;
-
-            IStakingPool(msg.sender).finishDeposit{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(nonce);
+            return;
         }
 
+        uint256 prev_token_balance = token_balance;
+        uint256 prev_reward_debt = reward_debt;
+
+        token_balance += _tokens_to_deposit;
+        reward_debt = (token_balance * _acc_reward_per_share) / 1e18;
+
+        uint256 new_reward = ((prev_token_balance * _acc_reward_per_share) / 1e18) - prev_reward_debt;
+        reward_balance += new_reward;
+
+        IStakingPool(msg.sender).finishDeposit{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(nonce);
     }
 
-    function processBecomeRelay(uint128 round_num, uint128 election_start_time) external override onlyRoot {
+    function processBecomeRelay(
+        uint128 round_num,
+        uint256 eth_addr,
+        address send_gas_to,
+        uint32 user_data_code_version,
+        uint32 election_code_version
+    ) external override onlyRoot {
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
-        
+
+        if (user_data_code_version > current_version) {
+            send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
+            return;
+        }
+
         address election_addr = getElectionAddress(round_num);
-
-
-
+        IElection(election_addr).applyForMembership{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+            user, eth_addr, token_balance, send_gas_to, election_code_version
+        );
     }
 
-    function processWithdraw(uint128 _tokens_to_withdraw, uint256 _acc_reward_per_share, address send_gas_to) external override onlyRoot {
+    function relayMembershipRequestAccepted(uint128 round_num, uint128 tokens, uint256 eth_addr, address send_gas_to) external override onlyElection(round_num) {
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
 
-        // bad input. User does not have enough staked balance. At least we can return some gas
-        if (_tokens_to_withdraw > token_balance) {
+        // lock until end of election + round time + 2 rounds on top of it
+        relay_lock_until = now + StakingConsts.electionTime + StakingConsts.relayRoundTime * 3;
+
+        emit RelayMembershipRequested(round_num, tokens, user, eth_addr);
+        send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
+    }
+
+    function processWithdraw(uint128 _tokens_to_withdraw, uint256 _acc_reward_per_share, address send_gas_to, uint32 code_version) external override onlyRoot {
+        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+
+        if (code_version > current_version || _tokens_to_withdraw > token_balance || now < relay_lock_until) {
             send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
             return;
         }
@@ -82,6 +108,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         reward_balance += new_reward;
 
         IStakingPool(msg.sender).finishWithdraw{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(user, _tokens_to_withdraw, send_gas_to);
+
     }
 
     function _buildInitData(uint8 type_id, TvmCell _initialData) private inline view returns (TvmCell) {
@@ -130,20 +157,22 @@ contract UserData is IUserData, IUpgradableByRequest {
         send_gas_to.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
-    function upgrade(TvmCell code, uint32 code_version, address send_gas_to) external override onlyRoot {
-        if (code_version == current_version) {
-            tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+    function upgrade(TvmCell code, uint32 new_version, address send_gas_to) external override onlyRoot {
+        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+
+        if (new_version == current_version) {
             send_gas_to.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
         } else {
-            emit UserDataCodeUpgraded(code_version);
+            emit UserDataCodeUpgraded(new_version);
 
             TvmBuilder builder;
 
             builder.store(root);
             builder.store(user);
             builder.store(current_version);
-            builder.store(code_version);
+            builder.store(new_version);
             builder.store(send_gas_to);
+            builder.store(relay_lock_until);
             builder.store(token_balance);
             builder.store(reward_balance);
             builder.store(reward_debt);
@@ -161,6 +190,12 @@ contract UserData is IUserData, IUpgradableByRequest {
 
     modifier onlyRoot() {
         require(msg.sender == root, StakingErrors.NOT_ROOT);
+        _;
+    }
+
+    modifier onlyElection(uint128 round_num) {
+        address election_addr = getElectionAddress(round_num);
+        require (election_addr == msg.sender, StakingErrors.NOT_ELECTION);
         _;
     }
 }

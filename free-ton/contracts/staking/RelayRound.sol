@@ -1,16 +1,21 @@
 pragma ton-solidity ^0.39.0;
 
 import "./interfaces/IRelayRound.sol";
+import "./interfaces/IStakingPool.sol";
+
 import "./libraries/StakingErrors.sol";
 import "./libraries/Gas.sol";
 import "./libraries/MsgFlag.sol";
+import "./libraries/StakingConsts.sol";
+
 
 contract RelayRound is IRelayRound {
     event RelayRoundCodeUpgraded(uint32 code_version);
 
-    bool relays_installed;
-    uint128 round_num; // setup from initialData
-    Relay[] public relay_list; // on initialization, descending sort by staked amount
+    bool public relays_installed;
+    uint256 public relays_count;
+    uint128 public round_num; // setup from initialData
+    mapping (address => Relay) public relays; // key - ton address
 
     uint32 public current_version;
     TvmCell public platform_code;
@@ -20,28 +25,40 @@ contract RelayRound is IRelayRound {
     // Cant be deployed directly
     constructor() public { revert(); }
 
+    function getRelayByTonAddress(address relay_addr) external view responsible returns (Relay) {
+        return relays[relay_addr];
+    }
+
     function getDetails() external view responsible returns (RelayRoundDetails) {
+        Relay[] _relays_list = new Relay[](relays_count);
+        optional(address, Relay) min_relay = relays.min();
+        uint128 counter = 0;
+        while (min_relay.hasValue()) {
+            (address ton_addr, Relay _relay) = min_relay.get();
+            _relays_list[counter] = _relay;
+            counter++;
+            min_relay = relays.next(ton_addr);
+        }
+
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }RelayRoundDetails(
-            root, round_num, relay_list, relays_installed, current_version
+            root, round_num, _relays_list, relays_installed, current_version
         );
     }
 
-    function getRelayByTonAddress(address relay) public view responsible returns (Relay) {
-        for (uint i = 0; i < relay_list.length; i++) {
-            Relay _relay = relay_list[i];
-            if (_relay.ton_addr == relay) {
-                return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }_relay;
-            }
-        }
-        return Relay(address(0), 0, 0);
-    }
-
-    function setRelays(Relay[] _relay_list) external onlyRoot {
+    function setRelays(Relay[] _relay_list, address send_gas_to) external override onlyRoot {
         require (!relays_installed, StakingErrors.RELAY_ROUND_INITIALIZED);
         tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 2);
 
-        relay_list = _relay_list;
+        for (Relay _relay: _relay_list) {
+            relays[_relay.ton_addr] = _relay;
+        }
+
         relays_installed = true;
+        relays_count = _relay_list.length;
+
+        IStakingPool(root).onRelayRoundInitialized{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
+            round_num, _relay_list, send_gas_to
+        );
     }
 
     function onCodeUpgrade(TvmCell upgrade_data) private {
@@ -63,23 +80,24 @@ contract RelayRound is IRelayRound {
         send_gas_to.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
-    function upgrade(TvmCell code, uint32 code_version, address send_gas_to) external onlyRoot {
-        if (code_version == current_version) {
+    function upgrade(TvmCell code, uint32 new_version, address send_gas_to) external onlyRoot {
+        if (new_version == current_version) {
             tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 2);
             send_gas_to.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
         } else {
-            emit RelayRoundCodeUpgraded(code_version);
+            emit RelayRoundCodeUpgraded(new_version);
 
             TvmBuilder builder;
 
             builder.store(root);
             builder.store(round_num);
             builder.store(current_version);
-            builder.store(code_version);
+            builder.store(new_version);
             builder.store(send_gas_to);
 
-            builder.store(relay_list);
+            builder.store(relays);
             builder.store(relays_installed);
+            builder.store(relays_count);
 
             builder.store(platform_code);
 
