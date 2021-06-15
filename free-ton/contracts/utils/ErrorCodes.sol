@@ -2,6 +2,7 @@ pragma ton-solidity ^0.39.0;
 pragma AbiHeader expire;
 
 
+// TODO: remove unused codes before release
 library ErrorCodes {
     // Bridge
     uint16 constant BRIDGE_NOT_ACTIVE = 2102;

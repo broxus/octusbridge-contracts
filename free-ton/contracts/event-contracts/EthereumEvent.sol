@@ -37,6 +37,11 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         _;
     }
 
+    modifier onlyStaking() {
+        require(msg.sender == eventInitData.staking, ErrorCodes.SENDER_NOT_STAKING);
+        _;
+    }
+
     /*
         @notice Get voters by the vote type
         @param vote Vote type
@@ -72,16 +77,15 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         }(eventInitData.voteData.round);
     }
 
-    // TODO: only staking
-    function receiveRoundAddress(address roundContract) public pure {
+    // TODO: cant be pure, compiler lies
+    function receiveRoundAddress(address roundContract) public onlyStaking {
         IRound(roundContract).relays{
             value: 1 ton,
             callback: EthereumEvent.receiveRoundRelays
         }();
     }
 
-    // TODO: only staking
-    function receiveRoundRelays(address[] relays) public {
+    function receiveRoundRelays(address[] relays) public onlyStaking {
         requiredVotes = uint16(relays.length * 2 / 3) + 1;
 
         for (address relay: relays) {
@@ -91,7 +95,7 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
 
     /*
         @notice Confirm event
-        @dev Can be called only by parent event configuration
+        @dev Can be called only by relay
         @dev Can be called only when event configuration is in Pending status
     */
     function confirm() public eventPending {
@@ -116,7 +120,7 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
 
     /*
         @notice Reject event
-        @dev Can be called only by parent event configuration
+        @dev Can be called only by relay
         @dev Can be called only when event configuration is in Pending status
     */
     function reject() public eventPending {

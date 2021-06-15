@@ -110,22 +110,6 @@ describe('Test ethereum event reject', async function() {
   });
   
   describe('Reject event', async () => {
-    // it('Try to reuse key for confirm', async () => {
-    //   await relays[0].runTarget({
-    //     contract: bridge,
-    //     method: 'confirmEthereumEvent',
-    //     params: eventConfirmParams,
-    //     value: locklift.utils.convertCrystal(1, 'nano')
-    //   });
-    //
-    //   const details = await eventContract.call({
-    //     method: 'getDetails'
-    //   });
-    //
-    //   expect(details.confirms)
-    //     .to.have.lengthOf(1, 'Wrong amount of rejects ');
-    // });
-
     it('Reject event enough times', async () => {
       const requiredVotes = await eventContract.call({
         method: 'requiredVotes',

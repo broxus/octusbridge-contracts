@@ -38,6 +38,11 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
         _;
     }
 
+    modifier onlyStaking() {
+        require(msg.sender == eventInitData.staking, ErrorCodes.SENDER_NOT_STAKING);
+        _;
+    }
+
     /*
         @notice Get voters by the vote type
         @param vote Vote type
@@ -72,16 +77,14 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
         }(eventInitData.voteData.round);
     }
 
-    // TODO: only staking
-    function receiveRoundAddress(address roundContract) public pure {
+    function receiveRoundAddress(address roundContract) public onlyStaking {
         IRound(roundContract).relays{
             value: 1 ton,
             callback: TonEvent.receiveRoundRelays
         }();
     }
 
-    // TODO: only staking
-    function receiveRoundRelays(address[] relays) public {
+    function receiveRoundRelays(address[] relays) public onlyStaking {
         requiredVotes = uint16(relays.length * 2 / 3) + 1;
 
         for (address relay: relays) {

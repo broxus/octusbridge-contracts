@@ -160,11 +160,13 @@ describe('Test ton event confirm', async function() {
         }
       });
     
-      // expect(requiredVotes)
-      //   .to.be.bignumber.greaterThan(0, 'Too low required votes for event')
-      //   .to.be.bignumber.lessThanOrEqual(relays.length, 'Too low relays for event');
+      expect(requiredVotes)
+        .to.be.bignumber.greaterThan(0, 'Too low required votes for event');
+    
+      expect(relays.length)
+        .to.be.bignumber.greaterThanOrEqual(requiredVotes.toNumber(), 'Too many required votes for event');
     });
-  
+
     it('Check encoded event data', async () => {
       const data = await eventContract.call({ method: 'getDecodedData' });
 

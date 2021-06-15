@@ -148,23 +148,6 @@ describe('Test ton event reject', async function() {
         .to.be.equal(initializer.address, 'Wrong initializer');
     });
     
-    it('Check event round relays', async () => {
-      const requiredVotes = await eventContract.call({
-        method: 'requiredVotes',
-      });
-      
-      const relays = await eventContract.call({
-        method: 'getVoters',
-        params: {
-          vote: 0
-        }
-      });
-      
-      // expect(requiredVotes)
-      //   .to.be.bignumber.greaterThan(0, 'Too low required votes for event')
-      //   .to.be.bignumber.lessThanOrEqual(relays.length, 'Too low relays for event');
-    });
-    
     it('Check encoded event data', async () => {
       const data = await eventContract.call({ method: 'getDecodedData' });
       

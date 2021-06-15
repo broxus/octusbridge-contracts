@@ -137,8 +137,6 @@ describe('Test ethereum event confirm', async function() {
       expect(details._eventInitData.staking)
         .to.be.equal(staking.address, 'Wrong staking');
       
-      // TODO: required confirmations / rejects
-      
       expect(details._status)
         .to.be.bignumber.equal(0, 'Wrong status');
 
@@ -163,10 +161,12 @@ describe('Test ethereum event confirm', async function() {
           vote: 0
         }
       });
-  
-      // expect(requiredVotes)
-      //   .to.be.bignumber.greaterThan(0, 'Too low required votes for event')
-      //   .to.be.bignumber.lessThanOrEqual(relays.length, 'Too low relays for event');
+      
+      expect(requiredVotes)
+        .to.be.bignumber.greaterThan(0, 'Too low required votes for event');
+      
+      expect(relays.length)
+        .to.be.bignumber.greaterThanOrEqual(requiredVotes.toNumber(), 'Too many required votes for event');
     });
 
     it('Check encoded event data', async () => {
