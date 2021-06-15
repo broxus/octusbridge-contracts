@@ -1,4 +1,5 @@
 const {
+  setupRelays,
   setupBridge,
   setupEthereumEventConfiguration,
   setupTonEventConfiguration,
@@ -13,7 +14,9 @@ describe('Test updating event configuration', async function() {
   let bridge, bridgeOwner, staking, cellEncoder;
   
   it('Setup bridge', async () => {
-    [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge();
+    const relays = await setupRelays();
+
+    [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
   });
   
   describe('Ethereum event configuration', async () => {
@@ -30,17 +33,17 @@ describe('Test updating event configuration', async function() {
     it('Update configuration details', async () => {
       const details = await ethereumEventConfiguration.call({ method: 'getDetails' });
       
-      details._basicInitData.bridge = locklift.utils.zeroAddress;
-      details._initData.proxy = locklift.utils.zeroAddress;
+      details._basicConfiguration.staking = locklift.utils.zeroAddress;
+      details._networkConfiguration.proxy = locklift.utils.zeroAddress;
   
-      details._basicInitData.eventABI = details._basicInitData.eventABI.toString();
+      details._basicConfiguration.eventABI = details._basicConfiguration.eventABI.toString();
       
       await bridgeOwner.runTarget({
         contract: ethereumEventConfiguration,
         method: 'update',
         params: {
-          _basicInitData: details._basicInitData,
-          _initData: details._initData
+          _basicConfiguration: details._basicConfiguration,
+          _networkConfiguration: details._networkConfiguration
         }
       });
     });
@@ -48,10 +51,10 @@ describe('Test updating event configuration', async function() {
     it('Check updated details', async () => {
       const details = await ethereumEventConfiguration.call({ method: 'getDetails' });
 
-      expect(details._basicInitData.bridge)
+      expect(details._basicConfiguration.staking)
         .to.be.equal(locklift.utils.zeroAddress, 'Wrong bridge address');
       
-      expect(details._initData.proxy)
+      expect(details._networkConfiguration.proxy)
         .to.be.equal(locklift.utils.zeroAddress, 'Wrong proxy address');
     });
   });
@@ -70,17 +73,17 @@ describe('Test updating event configuration', async function() {
     it('Update configuration details', async () => {
       const details = await tonEventConfiguration.call({ method: 'getDetails' });
   
-      details._basicInitData.eventRequiredRejects = new BigNumber(10);
-      details._initData.startTimestamp = new BigNumber(1);
+      details._networkConfiguration.eventEmitter = locklift.utils.zeroAddress;
+      details._networkConfiguration.startTimestamp = new BigNumber(1);
   
-      details._basicInitData.eventABI = details._basicInitData.eventABI.toString();
+      details._basicConfiguration.eventABI = details._basicConfiguration.eventABI.toString();
   
       await bridgeOwner.runTarget({
         contract: tonEventConfiguration,
         method: 'update',
         params: {
-          _basicInitData: details._basicInitData,
-          _initData: details._initData
+          _basicConfiguration: details._basicConfiguration,
+          _networkConfiguration: details._networkConfiguration
         }
       });
     });
@@ -88,10 +91,10 @@ describe('Test updating event configuration', async function() {
     it('Check updated details', async () => {
       const details = await tonEventConfiguration.call({ method: 'getDetails' });
     
-      expect(details._basicInitData.eventRequiredRejects)
-        .to.be.bignumber.equal(10, 'Wrong event required rejects');
+      expect(details._networkConfiguration.eventEmitter)
+        .to.be.equal(locklift.utils.zeroAddress, 'Wrong event emitter');
     
-      expect(details._initData.startTimestamp)
+      expect(details._networkConfiguration.startTimestamp)
         .to.be.bignumber.equal(1, 'Wrong start timestamp');
     });
   });

@@ -1,5 +1,6 @@
 const {
   setupBridge,
+  setupRelays,
 } = require('./utils');
 
 const { expect } = require('chai');
@@ -11,7 +12,9 @@ describe('Test bridge update', async function() {
   let bridge, bridgeOwner, staking, cellEncoder;
   
   it('Deploy bridge', async () => {
-    [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge();
+    const relays = await setupRelays();
+
+    [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
   });
   
   it('Update bridge configuration', async () => {
