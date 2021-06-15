@@ -2,8 +2,11 @@ pragma ton-solidity ^0.39.0;
 pragma AbiHeader expire;
 
 
-import "./../interfaces/IEvent.sol";
 import "./../interfaces/IEventNotificationReceiver.sol";
+import "./../interfaces/event-contracts/ITonEvent.sol";
+
+import "./../interfaces/IStaking.sol";
+import "./../interfaces/IRound.sol";
 
 import "./../utils/ErrorCodes.sol";
 import "./../utils/TransferUtils.sol";
@@ -16,24 +19,22 @@ import './../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.so
     @title Basic example of TON event configuration
     @dev This implementation is used for cross chain token transfers
 */
-contract TonEvent is IEvent, TransferUtils, CellEncoder {
-    TonEventInitData static initData;
-    TonEventStatus public status;
-
-    mapping (address => Vote) votes;
-    mapping (address => bytes) signatures;
+contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
+    // Event data
+    TonEventInitData static eventInitData;
+    // Event contract status
+    Status public status;
+    // Relays votes
+    mapping (address => Vote) public votes;
+    // Ethereum payload signatures for confirmations
+    mapping (address => bytes) public signatures;
+    // Event contract deployer
+    address public initializer;
+    // How many votes required for confirm / reject
+    uint32 public requiredVotes;
 
     modifier eventPending() {
-        require(status == TonEventStatus.Pending, ErrorCodes.EVENT_NOT_PENDING);
-        _;
-    }
-
-    modifier onlyEventConfiguration() {
-        require(
-            msg.sender == initData.tonEventConfiguration,
-            ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION
-        );
-
+        require(status == Status.Pending, ErrorCodes.EVENT_NOT_PENDING);
         _;
     }
 
@@ -52,74 +53,82 @@ contract TonEvent is IEvent, TransferUtils, CellEncoder {
 
     /*
         @dev Should be deployed only by TonEventConfiguration contract
-        @param relay Public key of the relay, who initiated the event creation
+        @param _initializer The address who paid for contract deployment.
+        Receives all contract balance at the end of event contract lifecycle.
     */
     constructor(
-        address relay,
-        bytes signature
+        address _initializer
     ) public {
-        initData.tonEventConfiguration = msg.sender;
-        status = TonEventStatus.Pending;
+        eventInitData.configuration = msg.sender;
+
+        status = Status.Pending;
+        initializer = _initializer;
 
         notifyEventStatusChanged();
 
-        confirm(relay, signature);
+        IStaking(eventInitData.staking).deriveRoundAddress{
+            value: 1 ton,
+            callback: TonEvent.receiveRoundAddress
+        }(eventInitData.voteData.round);
+    }
+
+    // TODO: only staking
+    function receiveRoundAddress(address roundContract) public {
+        IRound(roundContract).relays{
+            value: 1 ton,
+            callback: TonEvent.receiveRoundRelays
+        }();
+    }
+
+    // TODO: only staking
+    function receiveRoundRelays(address[] relays) public {
+        requiredVotes = uint16(relays.length * 2 / 3) + 1;
+
+        for (address relay: relays) {
+            votes[relay] = Vote.Empty;
+        }
     }
 
     /*
         @notice Confirm event
         @dev Can be called only by parent event configuration
         @dev Can be called only when event configuration is in Pending status
-        @param relay Relay, who initialized the confirmation
         @param eventDataSignature Relay's signature of the TonEvent data
     */
-    function confirm(
-        address relay,
-        bytes signature
-    )
-        public
-        onlyEventConfiguration
-        eventPending
-    {
+    function confirm(bytes signature) public eventPending {
+        address relay = msg.sender;
+
         require(votes[relay] == Vote.Empty, ErrorCodes.KEY_ALREADY_VOTED);
 
         votes[relay] = Vote.Confirm;
         signatures[relay] = signature;
 
-        address[] confirms = getVoters(Vote.Confirm);
-
-        if (confirms.length >= initData.requiredConfirmations) {
-            status = TonEventStatus.Confirmed;
+        if (getVoters(Vote.Confirm).length >= requiredVotes) {
+            status = Status.Confirmed;
 
             notifyEventStatusChanged();
-            transferAll(initData.tonEventConfiguration);
+            transferAll(initializer);
         }
     }
 
-/*
+    /*
         @notice Reject event
         @dev Can be called only by parent event configuration
         @dev Can be called only when event configuration is in Pending status
-        @param relay Relay, who initialized the confirmation
     */
-    function reject(
-        address relay
-    )
-        public
-        onlyEventConfiguration
-        eventPending
-    {
+    function reject() public eventPending {
+        // TODO: how much confirm / reject costs for relay?
+        address relay = msg.sender;
+
         require(votes[relay] == Vote.Empty, ErrorCodes.KEY_ALREADY_VOTED);
 
         votes[relay] = Vote.Reject;
 
-        address[] rejects = getVoters(Vote.Reject);
-
-        if (rejects.length >= initData.requiredRejects) {
-            status = TonEventStatus.Rejected;
+        if (getVoters(Vote.Reject).length >= requiredVotes) {
+            status = Status.Rejected;
 
             notifyEventStatusChanged();
-            transferAll(initData.tonEventConfiguration);
+            transferAll(initializer);
         }
     }
 
@@ -132,12 +141,14 @@ contract TonEvent is IEvent, TransferUtils, CellEncoder {
         @returns _eventDataSignatures List of relay's TonEvent signatures
     */
     function getDetails() public view returns (
-        TonEventInitData _initData,
-        TonEventStatus _status,
+        TonEventInitData _eventInitData,
+        Status _status,
         address[] confirms,
         address[] rejects,
         bytes[] _signatures,
-        uint128 balance
+        uint128 balance,
+        address _initializer,
+        uint32 _requiredVotes
     ) {
         confirms = getVoters(Vote.Confirm);
 
@@ -146,12 +157,14 @@ contract TonEvent is IEvent, TransferUtils, CellEncoder {
         }
 
         return (
-            initData,
+            eventInitData,
             status,
             confirms,
             getVoters(Vote.Reject),
             _signatures,
-            address(this).balance
+            address(this).balance,
+            initializer,
+            requiredVotes
         );
     }
 
@@ -172,14 +185,14 @@ contract TonEvent is IEvent, TransferUtils, CellEncoder {
         uint160 ethereum_address,
         address owner_address
     ) {
-        (rootToken) = decodeConfigurationMeta(initData.configurationMeta);
+        (rootToken) = decodeConfigurationMeta(eventInitData.meta);
 
         (
             wid,
             addr,
             tokens,
             ethereum_address
-        ) = decodeTonEventData(initData.eventData);
+        ) = decodeTonEventData(eventInitData.voteData.eventData);
 
         owner_address = address.makeAddrStd(wid, addr);
     }
@@ -193,7 +206,7 @@ contract TonEvent is IEvent, TransferUtils, CellEncoder {
         (,,,,,address owner_address) = getDecodedData();
 
         if (owner_address.value != 0) {
-            IEventNotificationReceiver(owner_address).notifyTonEventStatusChanged{
+            IEventNotificationReceiver(owner_address).notifyEventStatusChanged{
                 flag: 0,
                 bounce: false
             }(status);

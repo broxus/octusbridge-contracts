@@ -14,10 +14,7 @@ const logContract = async (contract) => {
 };
 
 
-const setupBridge = async () => {
-  const Bridge = await locklift.factory.getContract('Bridge');
-  const CellEncoder = await locklift.factory.getContract('CellEncoderStandalone');
-
+const setupBridge = async (relays) => {
   const Account = await locklift.factory.getAccount('Wallet');
   const [keyPair] = await locklift.keys.getKeyPairs();
   
@@ -38,24 +35,20 @@ const setupBridge = async () => {
   await logContract(owner);
   
   const StakingMockup = await locklift.factory.getContract('StakingMockup');
-
-  // Staking requires bridge address on deployment and vice versa
-  // 1. Derive future staking address
-  // 2. Deploy bridge with derived staking address
-  // 3. Deploy staking, so it's available on the derived address
   
-  const {
-    address: stakingFutureAddress
-  } = await locklift.ton.createDeployMessage({
+  const staking = await locklift.giver.deployContract({
     contract: StakingMockup,
-    constructorParams: {
-      _bridge: locklift.utils.zeroAddress,
-    },
+    constructorParams: {},
     initParams: {
       _randomNonce,
+      __relays: relays.map(r => r.address),
     },
-    keyPair
-  });
+    keyPair,
+  }, locklift.utils.convertCrystal(10, 'nano'));
+  
+  await logContract(staking);
+  
+  const Bridge = await locklift.factory.getContract('Bridge');
   
   const bridge = await locklift.giver.deployContract({
     contract: Bridge,
@@ -63,7 +56,7 @@ const setupBridge = async () => {
       _owner: owner.address,
       _bridgeConfiguration: {
         active: true,
-        staking: stakingFutureAddress,
+        staking: staking.address,
       }
     },
     initParams: {
@@ -75,18 +68,7 @@ const setupBridge = async () => {
 
   await logContract(bridge);
   
-  const staking = await locklift.giver.deployContract({
-    contract: StakingMockup,
-    constructorParams: {
-      _bridge: bridge.address,
-    },
-    initParams: {
-      _randomNonce,
-    },
-    keyPair,
-  }, locklift.utils.convertCrystal(10, 'nano'));
-  
-  await logContract(staking);
+  const CellEncoder = await locklift.factory.getContract('CellEncoderStandalone');
   
   const cellEncoder = await locklift.giver.deployContract({
     contract: CellEncoder,
@@ -99,76 +81,91 @@ const setupBridge = async () => {
 };
 
 
-const setupEthereumEventConfiguration = async (owner, bridge, cellEncoder) => {
-    const EthereumEventConfiguration = await locklift.factory.getContract('EthereumEventConfiguration');
-    const EthereumEvent = await locklift.factory.getContract('EthereumEvent');
-    const ProxyMockup = await locklift.factory.getContract('ProxyMockup');
+const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
+  const [keyPair] = await locklift.keys.getKeyPairs();
   
-    const [keyPair] = await locklift.keys.getKeyPairs();
-    
-    const configurationMeta = await cellEncoder.call({
-      method: 'encodeConfigurationMeta',
-      params: {
-        rootToken: locklift.utils.zeroAddress,
-      }
-    });
-  
-    const _randomNonce = locklift.utils.getRandomNonce();
-    
-    const {
-      address: proxyFutureAddress
-    } = await locklift.ton.createDeployMessage({
-      contract: ProxyMockup,
-      constructorParams: {
-        _ethereumEventConfiguration: locklift.utils.zeroAddress,
-      },
-      initParams: {
-        _randomNonce,
-      },
-      keyPair
-    });
-    
-    const ethereumEventConfiguration = await locklift.giver.deployContract({
-      contract: EthereumEventConfiguration,
-      constructorParams: {
-        _owner: owner.address,
-      },
-      initParams: {
-        basicInitData: {
-          eventABI: '',
-          eventRequiredConfirmations: 2,
-          eventRequiredRejects: 2,
-          eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
-          bridgeAddress: bridge.address,
-          eventCode: EthereumEvent.code,
-          meta: configurationMeta
-        },
-        initData: {
-          eventAddress: new BigNumber(0),
-          eventBlocksToConfirm: 1,
-          proxyAddress: proxyFutureAddress,
-          startBlockNumber: 0,
-        }
-      },
-      keyPair
-    }, locklift.utils.convertCrystal(20, 'nano'));
-  
-    await logContract(ethereumEventConfiguration);
-    
-    const proxy = await locklift.giver.deployContract({
-      contract: ProxyMockup,
-      constructorParams: {
-        _ethereumEventConfiguration: ethereumEventConfiguration.address,
-      },
-      initParams: {
-        _randomNonce,
-      },
-      keyPair
-    }, locklift.utils.convertCrystal(10, 'nano'));
+  const configurationMeta = await cellEncoder.call({
+    method: 'encodeConfigurationMeta',
+    params: {
+      rootToken: locklift.utils.zeroAddress,
+    }
+  });
 
-    await logContract(proxy);
-    
-    return [ethereumEventConfiguration, proxy];
+  const _randomNonce = locklift.utils.getRandomNonce();
+  
+  const ProxyMockup = await locklift.factory.getContract('ProxyMockup');
+  
+  const {
+    address: proxyFutureAddress
+  } = await locklift.ton.createDeployMessage({
+    contract: ProxyMockup,
+    constructorParams: {
+      _configuration: locklift.utils.zeroAddress,
+    },
+    initParams: {
+      _randomNonce,
+    },
+    keyPair
+  });
+  
+  const EthereumEventConfiguration = await locklift.factory.getContract('EthereumEventConfiguration');
+  const EthereumEvent = await locklift.factory.getContract('EthereumEvent');
+  
+  const ethereumEventConfiguration = await locklift.giver.deployContract({
+    contract: EthereumEventConfiguration,
+    constructorParams: {
+      _owner: owner.address,
+    },
+    initParams: {
+      basicConfiguration: {
+        eventABI: '',
+        eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
+        staking: staking.address,
+        eventCode: EthereumEvent.code,
+        meta: configurationMeta
+      },
+      networkConfiguration: {
+        eventEmitter: new BigNumber(0),
+        eventBlocksToConfirm: 1,
+        proxy: proxyFutureAddress,
+        startBlockNumber: 0,
+      }
+    },
+    keyPair
+  }, locklift.utils.convertCrystal(20, 'nano'));
+
+  await logContract(ethereumEventConfiguration);
+  
+  const proxy = await locklift.giver.deployContract({
+    contract: ProxyMockup,
+    constructorParams: {
+      _configuration: ethereumEventConfiguration.address,
+    },
+    initParams: {
+      _randomNonce,
+    },
+    keyPair
+  }, locklift.utils.convertCrystal(10, 'nano'));
+
+  await logContract(proxy);
+  
+  const Account = await locklift.factory.getAccount('Wallet');
+  
+  const initializer = await locklift.giver.deployContract({
+    contract: Account,
+    constructorParams: {},
+    initParams: {
+      _randomNonce,
+    },
+    keyPair,
+  }, locklift.utils.convertCrystal(30, 'nano'));
+  
+  initializer.setKeyPair(keyPair);
+  initializer.name = 'Event initializer';
+  
+  await logContract(initializer);
+  
+  return [ethereumEventConfiguration, proxy, initializer];
 };
 
 
@@ -196,13 +193,13 @@ const setupTonEventConfiguration = async (owner, bridge, cellEncoder) => {
         eventRequiredConfirmations: 2,
         eventRequiredRejects: 2,
         eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
-        bridgeAddress: bridge.address,
+        bridge: bridge.address,
         eventCode: TonEvent.code,
         meta: configurationMeta
       },
       initData: {
-        eventAddress: locklift.utils.zeroAddress,
-        proxyAddress: new BigNumber(0),
+        eventEmitter: locklift.utils.zeroAddress,
+        proxy: new BigNumber(0),
         startTimestamp: 0,
       }
     },

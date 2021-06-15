@@ -1,10 +1,10 @@
 pragma ton-solidity ^0.39.0;
 
-import './IEvent.sol';
+import "./event-contracts/IEthereumEvent.sol";
 
-interface IProxy {
+interface IProxy is IEthereumEvent {
     function broxusBridgeCallback(
-        IEvent.EthereumEventInitData eventData,
+        IEthereumEvent.EthereumEventInitData eventData,
         address gasBackAddress
     ) external;
 }

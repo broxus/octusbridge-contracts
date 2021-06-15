@@ -30,8 +30,8 @@ describe('Test updating event configuration', async function() {
     it('Update configuration details', async () => {
       const details = await ethereumEventConfiguration.call({ method: 'getDetails' });
       
-      details._basicInitData.bridgeAddress = locklift.utils.zeroAddress;
-      details._initData.proxyAddress = locklift.utils.zeroAddress;
+      details._basicInitData.bridge = locklift.utils.zeroAddress;
+      details._initData.proxy = locklift.utils.zeroAddress;
   
       details._basicInitData.eventABI = details._basicInitData.eventABI.toString();
       
@@ -48,10 +48,10 @@ describe('Test updating event configuration', async function() {
     it('Check updated details', async () => {
       const details = await ethereumEventConfiguration.call({ method: 'getDetails' });
 
-      expect(details._basicInitData.bridgeAddress)
+      expect(details._basicInitData.bridge)
         .to.be.equal(locklift.utils.zeroAddress, 'Wrong bridge address');
       
-      expect(details._initData.proxyAddress)
+      expect(details._initData.proxy)
         .to.be.equal(locklift.utils.zeroAddress, 'Wrong proxy address');
     });
   });

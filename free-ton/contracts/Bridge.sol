@@ -7,10 +7,8 @@ pragma AbiHeader pubkey;
 import "./event-configuration-contracts/EthereumEventConfiguration.sol";
 import "./event-configuration-contracts/TonEventConfiguration.sol";
 
-import "./interfaces/IEvent.sol";
 import "./interfaces/IBridge.sol";
-import "./interfaces/IEventConfiguration.sol";
-import "./interfaces/IStaking.sol";
+import "./interfaces/event-configuration-contracts/IBasicEventConfiguration.sol";
 
 import "./utils/TransferUtils.sol";
 import "./utils/ErrorCodes.sol";
@@ -42,14 +40,6 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
     */
     modifier onlyActiveConfiguration(uint32 id) {
         require(eventConfigurations[id].status == true, ErrorCodes.EVENT_CONFIGURATION_NOT_ACTIVE);
-        _;
-    }
-
-    /*
-        @dev Throws an error if msg.sender not staking
-    */
-    modifier onlyStaking() {
-        require(msg.sender == bridgeConfiguration.staking, ErrorCodes.SENDER_NOT_STAKING);
         _;
     }
 
@@ -142,7 +132,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
     ) override public view returns (
         address addr,
         bool status,
-        IEventConfiguration.EventType _type
+        IBasicEventConfiguration.EventType _type
     ) {
         addr = eventConfigurations[id].addr;
         status = eventConfigurations[id].status;
@@ -158,7 +148,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
     function getActiveEventConfigurations() override public view returns (
         uint32[] ids,
         address[] addrs,
-        IEventConfiguration.EventType[] _types
+        IBasicEventConfiguration.EventType[] _types
     ) {
         for ((uint32 id, EventConfiguration eventConfiguration): eventConfigurations) {
             if (eventConfiguration.status) {
@@ -180,7 +170,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         uint32[] ids,
         address[] addrs,
         bool[] statuses,
-        IEventConfiguration.EventType[] _types
+        IBasicEventConfiguration.EventType[] _types
     ) {
         for ((uint32 id, EventConfiguration configuration): eventConfigurations) {
             ids.push(id);
@@ -206,221 +196,5 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         bridgeConfiguration = _bridgeConfiguration;
 
         emit BridgeConfigurationUpdate(_bridgeConfiguration);
-    }
-
-    /*
-        @notice Confirm Ethereum event instance.
-        @dev Called by relay
-        @param eventVoteData Ethereum event vote data
-        @param configurationID Ethereum Event configuration ID
-        TODO: who should pay for bridge storage? it's easier to make bridge pay for itself here
-    */
-    function confirmEthereumEvent(
-        IEvent.EthereumEventVoteData eventVoteData,
-        uint32 configurationID
-    )
-        override
-        public
-        view
-        onlyActive
-        onlyActiveConfiguration(configurationID)
-    {
-        IStaking(bridgeConfiguration.staking).confirmEthereumEvent{
-            flag: MsgFlag.REMAINING_GAS
-        }(
-            eventVoteData,
-            configurationID,
-            msg.sender
-        );
-    }
-
-    /*
-        @notice Confirm Ethereum event instance
-        @dev Called only by staking contract
-        @param eventVoteData Ethereum event vote data
-        @param configurationID Ethereum Event configuration ID
-        @param relay Relay address
-    */
-    function confirmEthereumEventCallback(
-        IEvent.EthereumEventVoteData eventVoteData,
-        uint32 configurationID,
-        address relay
-    )
-        override
-        public
-        view
-        onlyActive
-        onlyActiveConfiguration(configurationID)
-        onlyStaking
-    {
-        EthereumEventConfiguration(eventConfigurations[configurationID].addr).confirmEvent{
-            flag: MsgFlag.REMAINING_GAS
-        }(
-            eventVoteData,
-            relay
-        );
-    }
-
-    /*
-        @notice Reject Ethereum event instance.
-        @dev Called by relay
-        @param eventVoteData Ethereum event vote data
-        @param configurationID Ethereum Event configuration ID
-    */
-    function rejectEthereumEvent(
-        IEvent.EthereumEventVoteData eventVoteData,
-        uint32 configurationID
-    )
-        override
-        public
-        view
-        onlyActive
-        onlyActiveConfiguration(configurationID)
-    {
-        IStaking(bridgeConfiguration.staking).rejectEthereumEvent{
-            flag: MsgFlag.REMAINING_GAS
-        }(
-            eventVoteData,
-            configurationID,
-            msg.sender
-        );
-    }
-
-    /*
-        @notice Reject Ethereum event instance
-        @dev Called only by staking contract
-        @param eventVoteData Ethereum event vote data
-        @param configurationID Ethereum Event configuration ID
-        @param relay Relay address
-    */
-    function rejectEthereumEventCallback(
-        IEvent.EthereumEventVoteData eventVoteData,
-        uint32 configurationID,
-        address relay
-    )
-        override
-        public
-        view
-        onlyActive
-        onlyActiveConfiguration(configurationID)
-        onlyStaking
-    {
-        EthereumEventConfiguration(eventConfigurations[configurationID].addr).rejectEvent{
-            flag: MsgFlag.REMAINING_GAS
-        }(
-            eventVoteData,
-            relay
-        );
-    }
-
-    /*
-        @notice Confirm TON event instance.
-        @dev Called only by relay
-        @param eventVoteData Ton event vote data
-        @param eventDataSignature Relay's signature of the corresponding TonEvent structure
-        @param configurationID Ton Event configuration ID
-    */
-    function confirmTonEvent(
-        IEvent.TonEventVoteData eventVoteData,
-        bytes eventDataSignature,
-        uint32 configurationID
-    )
-        override
-        public
-        view
-        onlyActive
-        onlyActiveConfiguration(configurationID)
-    {
-        IStaking(bridgeConfiguration.staking).confirmTonEvent{
-            flag: MsgFlag.REMAINING_GAS
-        }(
-            eventVoteData,
-            eventDataSignature,
-            configurationID,
-            msg.sender
-        );
-    }
-
-    /*
-        @notice Confirm TON event instance
-        @dev Called only by staking contract
-        @param eventVoteData Ton event vote data
-        @param eventDataSignature Relay's signature of the corresponding TonEvent structure
-        @param configurationID Ton Event configuration ID
-        @param relay Relay address
-    */
-    function confirmTonEventCallback(
-        IEvent.TonEventVoteData eventVoteData,
-        bytes eventDataSignature,
-        uint32 configurationID,
-        address relay
-    )
-        override
-        public
-        view
-        onlyActive
-        onlyActiveConfiguration(configurationID)
-        onlyStaking
-    {
-        TonEventConfiguration(eventConfigurations[configurationID].addr).confirmEvent{
-            flag: MsgFlag.REMAINING_GAS
-        }(
-            eventVoteData,
-            eventDataSignature,
-            relay
-        );
-    }
-
-    /*
-        @notice Reject TON event instance.
-        @dev Called only by relay. Only reject already existing TonEvent contract, not deploy it.
-        @param eventVoteData Ton event vote data
-        @param configurationID Ton Event configuration ID
-        @param roundID Event round ID
-    */
-    function rejectTonEvent(
-        IEvent.TonEventVoteData eventVoteData,
-        uint32 configurationID
-    )
-        override
-        public
-        view
-        onlyActive
-        onlyActiveConfiguration(configurationID)
-    {
-        IStaking(bridgeConfiguration.staking).rejectTonEvent{
-            flag: MsgFlag.REMAINING_GAS
-        }(
-            eventVoteData,
-            configurationID,
-            msg.sender
-        );
-    }
-
-    /*
-        @notice Reject TON event instance
-        @dev Called only by staking contract
-        @param eventVoteData Ton event vote data
-        @param configurationID Ton Event configuration ID
-        @param relay Relay address
-    */
-    function rejectTonEventCallback(
-        IEvent.TonEventVoteData eventVoteData,
-        uint32 configurationID,
-        address relay
-    )
-        override
-        public
-        view
-        onlyActive
-        onlyActiveConfiguration(configurationID)
-        onlyStaking
-    {
-        TonEventConfiguration(eventConfigurations[configurationID].addr).rejectEvent{
-            flag: MsgFlag.REMAINING_GAS
-        }(
-            eventVoteData,
-            relay
-        );
     }
 }

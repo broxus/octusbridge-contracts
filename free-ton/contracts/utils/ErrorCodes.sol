@@ -15,6 +15,7 @@ library ErrorCodes {
     uint16 constant EVENT_BLOCK_NUMBER_LESS_THAN_START = 2210;
     uint16 constant EVENT_TIMESTAMP_LESS_THAN_START = 2211;
     uint16 constant SENDER_NOT_EVENT_CONTRACT = 2212;
+    uint16 constant TOO_LOW_DEPLOY_VALUE = 2213;
 
     // Event contract
     uint16 constant EVENT_NOT_PENDING = 2312;

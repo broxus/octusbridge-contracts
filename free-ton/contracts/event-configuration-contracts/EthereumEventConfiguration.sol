@@ -2,8 +2,8 @@ pragma ton-solidity ^0.39.0;
 pragma AbiHeader expire;
 
 
-import './../interfaces/IEvent.sol';
-import './../interfaces/IEventConfiguration.sol';
+import './../interfaces/event-contracts/IEthereumEvent.sol';
+import "./../interfaces/event-configuration-contracts/IEthereumEventConfiguration.sol";
 import './../interfaces/IProxy.sol';
 
 import './../utils/TransferUtils.sol';
@@ -19,14 +19,9 @@ import './../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.so
 /*
     @title Basic example of Ethereum event configuration
 */
-contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, IProxy, InternalOwner, CheckPubKey {
-    BasicConfigurationInitData public static basicInitData;
-    EthereumEventConfigurationInitData public static initData;
-
-    modifier onlyBridge() {
-        require(msg.sender == basicInitData.bridgeAddress, ErrorCodes.SENDER_NOT_BRIDGE);
-        _;
-    }
+contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, TransferUtils, InternalOwner, CheckPubKey {
+    BasicConfiguration public static basicConfiguration;
+    EthereumEventConfiguration public static networkConfiguration;
 
     /*
         @param _owner Event configuration owner
@@ -43,125 +38,78 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, IProx
         @param eventVoteData Event vote data structure, passed by relay
     */
     function buildEventInitData(
-        IEvent.EthereumEventVoteData eventVoteData
+        IEthereumEvent.EthereumEventVoteData eventVoteData
     ) internal view returns(
-        IEvent.EthereumEventInitData eventInitData
+        IEthereumEvent.EthereumEventInitData eventInitData
     ) {
-        eventInitData.eventTransaction = eventVoteData.eventTransaction;
-        eventInitData.eventIndex = eventVoteData.eventIndex;
-        eventInitData.eventData = eventVoteData.eventData;
-        eventInitData.eventBlockNumber = eventVoteData.eventBlockNumber;
-        eventInitData.eventBlock = eventVoteData.eventBlock;
-        eventInitData.round = eventVoteData.round;
+        eventInitData.voteData = eventVoteData;
 
-        eventInitData.ethereumEventConfiguration = address(this);
-        eventInitData.requiredConfirmations = basicInitData.eventRequiredConfirmations;
-        eventInitData.requiredRejects = basicInitData.eventRequiredConfirmations;
-        eventInitData.proxyAddress = initData.proxyAddress;
-
-        eventInitData.configurationMeta = basicInitData.meta;
+        eventInitData.configuration = address(this);
+        eventInitData.meta = basicConfiguration.meta;
+        eventInitData.staking = basicConfiguration.staking;
     }
 
+    /*
+        @notice Deploy event contract
+        @param eventVoteData Event vote data
+    */
+    function deployEvent(
+        IEthereumEvent.EthereumEventVoteData eventVoteData
+    ) external reserveBalance returns(address eventContract) {
+        require(msg.value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
+
+        IEthereumEvent.EthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
+
+        // TODO: max value or exact?
+        eventContract = new EthereumEvent{
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED,
+            code: basicConfiguration.eventCode,
+            pubkey: 0,
+            varInit: {
+                eventInitData: eventInitData
+            }
+        }(msg.sender);
+    }
     /*
         @notice Derive the Ethereum event contract address from it's init data
         @param eventVoteData Ethereum event vote data
         @returns eventContract Address of the corresponding ethereum event contract
     */
     function deriveEventAddress(
-        IEvent.EthereumEventVoteData eventVoteData
+        IEthereumEvent.EthereumEventVoteData eventVoteData
     )
         public
         view
     returns(
         address eventContract
     ) {
-        IEvent.EthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
+        IEthereumEvent.EthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
 
         TvmCell stateInit = tvm.buildStateInit({
             contr: EthereumEvent,
             varInit: {
-                initData: eventInitData
+                eventInitData: eventInitData
             },
             pubkey: 0,
-            code: basicInitData.eventCode
+            code: basicConfiguration.eventCode
         });
 
         return address(tvm.hash(stateInit));
     }
 
     /*
-        @notice Confirm Ethereum-TON event
-        @dev This function either deploy EthereumEvent or confirm it
-        Two transactions is sent (deploy and confirm) and one is always fail
-        @dev Can be called only by Bridge contract
-        @param eventVoteData Ethereum event vote data
-        @param relay Relay, who initialized the confirmation
-        @returns eventContract Address of the corresponding event contract
-    **/
-    function confirmEvent(
-        IEvent.EthereumEventVoteData eventVoteData,
-        address relay
-    )
-        public
-        onlyBridge
-    {
-        require(
-            eventVoteData.eventBlockNumber >= initData.startBlockNumber,
-            ErrorCodes.EVENT_BLOCK_NUMBER_LESS_THAN_START
-        );
-
-        IEvent.EthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
-
-        address eventAddress = new EthereumEvent{
-            value: basicInitData.eventInitialBalance,
-            code: basicInitData.eventCode,
-            pubkey: 0,
-            varInit: {
-                initData: eventInitData
-            }
-        }(
-            relay
-        );
-
-        EthereumEvent(eventAddress).confirm{ flag: MsgFlag.REMAINING_GAS }(relay);
-
-        emit EventConfirmation(eventAddress, relay);
-    }
-
-    /*
-        @notice Reject Ethereum-TON event.
-        @dev This function calls the reject method of the corresponding EthereumEvent contract
-        @dev EthereumEvent contract is not deployed
-        @dev Can be called only by Bridge contract
-        @param eventVoteData Ethereum event vote data
-        @param relay Relay, who initialized the rejection
-    **/
-    function rejectEvent(
-        IEvent.EthereumEventVoteData eventVoteData,
-        address relay
-    )
-        public
-        onlyBridge
-    {
-        address eventAddress = deriveEventAddress(eventVoteData);
-
-        EthereumEvent(eventAddress).reject{value: 1 ton}(relay);
-
-        emit EventReject(eventAddress, relay);
-    }
-
-    /*
         @notice Get configuration details.
-        @return _basicInitData Basic configuration init data
-        @return _initData Network specific configuration init data
+        @return _basicConfiguration Basic configuration init data
+        @return networkConfiguration Network specific configuration init data
     */
     function getDetails() public view returns(
-        BasicConfigurationInitData _basicInitData,
-        EthereumEventConfigurationInitData _initData
+        BasicConfiguration _basicConfiguration,
+        EthereumEventConfiguration _networkConfiguration
     ) {
         return (
-            basicInitData,
-            initData
+            basicConfiguration,
+            networkConfiguration
         );
     }
 
@@ -176,15 +124,15 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, IProx
     /*
         @notice Update configuration data
         @dev Can be called only by owner
-        @param _basicInitData New basic configuration init data
-        @param _initData New network specific configuration init data
+        @param _basicConfiguration New basic configuration init data
+        @param networkConfiguration New network specific configuration init data
     */
     function update(
-        BasicConfigurationInitData _basicInitData,
-        EthereumEventConfigurationInitData _initData
+        BasicConfiguration _basicConfiguration,
+        EthereumEventConfiguration _networkConfiguration
     ) public onlyOwner {
-        basicInitData = _basicInitData;
-        initData = _initData;
+        basicConfiguration = _basicConfiguration;
+        networkConfiguration = _networkConfiguration;
     }
 
     /*
@@ -197,37 +145,32 @@ contract EthereumEventConfiguration is TransferUtils, IEventConfiguration, IProx
         TODO: think about onBounce in case of paused event proxy
     */
     function broxusBridgeCallback(
-        IEvent.EthereumEventInitData eventInitData,
+        IEthereumEvent.EthereumEventInitData eventInitData,
         address gasBackAddress
-    ) override external {
+    ) override external reserveBalance {
         require(
-            eventInitData.ethereumEventConfiguration == address(this),
-            ErrorCodes.SENDER_NOT_EVENT_CONTRACT
-        );
-
-        require(
-            eventInitData.proxyAddress == initData.proxyAddress,
+            eventInitData.configuration == address(this),
             ErrorCodes.SENDER_NOT_EVENT_CONTRACT
         );
 
         TvmCell stateInit = tvm.buildStateInit({
             contr: EthereumEvent,
             varInit: {
-                initData: eventInitData
+                eventInitData: eventInitData
             },
             pubkey: 0,
-            code: basicInitData.eventCode
+            code: basicConfiguration.eventCode
         });
 
-        address eventAddress = address(tvm.hash(stateInit));
+        address eventContract = address(tvm.hash(stateInit));
 
-        require(eventAddress == msg.sender, ErrorCodes.SENDER_NOT_EVENT_CONTRACT);
-
-        IProxy(initData.proxyAddress).broxusBridgeCallback{
-            flag: MsgFlag.REMAINING_GAS
-        }(
-            eventInitData,
-            gasBackAddress
+        require(
+            eventContract == msg.sender,
+            ErrorCodes.SENDER_NOT_EVENT_CONTRACT
         );
+
+        IProxy(networkConfiguration.proxy).broxusBridgeCallback{
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(eventInitData, gasBackAddress);
     }
 }

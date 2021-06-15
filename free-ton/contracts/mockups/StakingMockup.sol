@@ -1,8 +1,8 @@
 pragma ton-solidity ^0.39.0;
 
 
-import "../interfaces/IStaking.sol";
-import "../interfaces/IBridge.sol";
+import "./../interfaces/IStaking.sol";
+import "./../interfaces/IRound.sol";
 
 
 import "./../../../node_modules/@broxus/contracts/contracts/utils/RandomNonce.sol";
@@ -13,62 +13,39 @@ import "./../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.so
     @title Staking contract mockup
     Simply approve each event action without any real checks
 */
-contract StakingMockup is IStaking, RandomNonce {
-    address public bridge;
+contract StakingMockup is IStaking, IRound, RandomNonce {
+    address[] public static __relays;
 
-    constructor(address _bridge) public {
-        tvm.accept();
-
-        bridge = _bridge;
+    /*
+        @notice Get round contract address by it's id
+        @param roundId Round id
+        @returns roundContract Round contract
+    */
+    function deriveRoundAddress(
+        uint32 round
+    )
+        override
+        public
+        view
+        responsible
+    returns (
+        address roundContract
+    ) {
+        return {value: 0, flag: 64} address(this);
     }
 
-    function confirmEthereumEvent(
-        IEvent.EthereumEventVoteData eventVoteData,
-        uint32 configurationID,
-        address relay
-    ) override public {
-        IBridge(bridge).confirmEthereumEventCallback{ flag: MsgFlag.REMAINING_GAS }(
-            eventVoteData,
-            configurationID,
-            relay
-        );
-    }
-
-    function rejectEthereumEvent(
-        IEvent.EthereumEventVoteData eventVoteData,
-        uint32 configurationID,
-        address relay
-    ) override public {
-        IBridge(bridge).rejectEthereumEventCallback{ flag: MsgFlag.REMAINING_GAS }(
-            eventVoteData,
-            configurationID,
-            relay
-        );
-    }
-
-    function confirmTonEvent(
-        IEvent.TonEventVoteData eventVoteData,
-        bytes eventDataSignature,
-        uint32 configurationID,
-        address relay
-    ) override public {
-        IBridge(bridge).confirmTonEventCallback{ flag: MsgFlag.REMAINING_GAS }(
-            eventVoteData,
-            eventDataSignature,
-            configurationID,
-            relay
-       );
-    }
-
-    function rejectTonEvent(
-        IEvent.TonEventVoteData eventVoteData,
-        uint32 configurationID,
-        address relay
-    ) override public {
-        IBridge(bridge).rejectTonEventCallback{ flag: MsgFlag.REMAINING_GAS }(
-            eventVoteData,
-            configurationID,
-            relay
-        );
+    /*
+        @notice Get list of round relays
+        @returns _relays List of relays TON addresses
+    */
+    function relays()
+        override
+        public
+        view
+        responsible
+    returns (
+        address[] _relays
+    ) {
+        return {value: 0, flag: 64} __relays;
     }
 }

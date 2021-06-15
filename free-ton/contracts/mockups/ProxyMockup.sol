@@ -3,8 +3,7 @@ pragma AbiHeader expire;
 
 
 import './../interfaces/IProxy.sol';
-import './../interfaces/IEvent.sol';
-import './../event-contracts/EthereumEvent.sol';
+import './../interfaces/event-contracts/IEthereumEvent.sol';
 import "./../utils/TransferUtils.sol";
 
 import "./../../../node_modules/@broxus/contracts/contracts/utils/RandomNonce.sol";
@@ -18,18 +17,18 @@ import "./../../../node_modules/@broxus/contracts/contracts/utils/RandomNonce.so
     In real use it could be used for example for minting tokens
     in case of cross chain token transfers. Or execute any other custom action.
 */
-contract ProxyMockup is IProxy, TransferUtils, RandomNonce {
-    address ethereumEventConfiguration;
+contract ProxyMockup is IProxy, RandomNonce {
+    address configuration;
 
-    IEvent.EthereumEventInitData eventData;
+    IEthereumEvent.EthereumEventInitData eventData;
     uint callbackCounter = 0;
 
     constructor(
-        address _ethereumEventConfiguration
+        address _configuration
     ) public {
         tvm.accept();
 
-        ethereumEventConfiguration = _ethereumEventConfiguration;
+        configuration = _configuration;
     }
 
     /*
@@ -37,10 +36,10 @@ contract ProxyMockup is IProxy, TransferUtils, RandomNonce {
         @dev Could be only called by the ethereum event contract
     */
     function broxusBridgeCallback(
-        IEvent.EthereumEventInitData _eventData,
+        IEthereumEvent.EthereumEventInitData _eventData,
         address gasBackAddress
     ) override public {
-        require(msg.sender == ethereumEventConfiguration);
+        require(msg.sender == configuration);
 
         callbackCounter++;
         eventData = _eventData;
@@ -53,7 +52,7 @@ contract ProxyMockup is IProxy, TransferUtils, RandomNonce {
     }
 
     function getDetails() public view returns (
-        IEvent.EthereumEventInitData _eventData,
+        IEthereumEvent.EthereumEventInitData _eventData,
         uint _callbackCounter
     ) {
         return (
@@ -77,6 +76,6 @@ contract ProxyMockup is IProxy, TransferUtils, RandomNonce {
             wid,
             owner_addr,
             owner_pubkey
-        ) = eventData.eventData.toSlice().decode(uint128, int8, uint256, uint256);
+        ) = eventData.voteData.eventData.toSlice().decode(uint128, int8, uint256, uint256);
     }
 }

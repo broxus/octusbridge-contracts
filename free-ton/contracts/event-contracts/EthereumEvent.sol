@@ -2,9 +2,12 @@ pragma ton-solidity ^0.39.0;
 pragma AbiHeader expire;
 
 
-import "./../interfaces/IProxy.sol";
-import "./../interfaces/IEvent.sol";
 import "./../interfaces/IEventNotificationReceiver.sol";
+import "./../interfaces/event-contracts/IEthereumEvent.sol";
+import "./../interfaces/IProxy.sol";
+
+import "./../interfaces/IStaking.sol";
+import "./../interfaces/IRound.sol";
 
 import "./../utils/ErrorCodes.sol";
 import "./../utils/TransferUtils.sol";
@@ -12,34 +15,25 @@ import "./../utils/cell-encoder/CellEncoder.sol";
 
 import './../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
+
 /*
     @title Basic example of Ethereum event configuration
     @dev This implementation is used for cross chain token transfers
 */
-contract EthereumEvent is IEvent, TransferUtils, CellEncoder {
-    EthereumEventInitData static public initData;
-    EthereumEventStatus public status;
-
-    mapping (address => Vote) votes;
-
-    address public executor;
+contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
+    // Event data
+    EthereumEventInitData static eventInitData;
+    // Event contract status
+    Status public status;
+    // Relays votes
+    mapping (address => Vote) public votes;
+    // Event contract deployer
+    address public initializer;
+    // How many votes required for confirm / reject
+    uint32 public requiredVotes;
 
     modifier eventPending() {
-        require(status == EthereumEventStatus.Pending, ErrorCodes.EVENT_NOT_PENDING);
-        _;
-    }
-
-    modifier eventConfirmed() {
-        require(status == EthereumEventStatus.Confirmed, ErrorCodes.EVENT_NOT_CONFIRMED);
-        _;
-    }
-
-    modifier onlyEventConfiguration() {
-        require(
-            msg.sender == initData.ethereumEventConfiguration,
-            ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION
-        );
-
+        require(status == Status.Pending, ErrorCodes.EVENT_NOT_PENDING);
         _;
     }
 
@@ -58,43 +52,65 @@ contract EthereumEvent is IEvent, TransferUtils, CellEncoder {
 
     /*
         @dev Should be deployed only by EthereumEventConfiguration contract
-        @param relay Public key of the relay, who initiated the event creation
+        @param _initializer The address who paid for contract deployment.
+        Receives all contract balance at the end of event contract lifecycle.
     */
     constructor(
-        address relay
+        address _initializer
     ) public {
-        initData.ethereumEventConfiguration = msg.sender;
-        status = EthereumEventStatus.Pending;
+        // TODO: add external method for executing confirmed event?
+        eventInitData.configuration = msg.sender;
+
+        status = Status.Pending;
+        initializer = _initializer;
 
         notifyEventStatusChanged();
 
-        confirm(relay);
+        IStaking(eventInitData.staking).deriveRoundAddress{
+            value: 1 ton,
+            callback: EthereumEvent.receiveRoundAddress
+        }(eventInitData.voteData.round);
+    }
+
+    // TODO: only staking
+    function receiveRoundAddress(address roundContract) public {
+        IRound(roundContract).relays{
+            value: 1 ton,
+            callback: EthereumEvent.receiveRoundRelays
+        }();
+    }
+
+    // TODO: only staking
+    function receiveRoundRelays(address[] relays) public {
+        requiredVotes = uint16(relays.length * 2 / 3) + 1;
+
+        for (address relay: relays) {
+            votes[relay] = Vote.Empty;
+        }
     }
 
     /*
         @notice Confirm event
         @dev Can be called only by parent event configuration
         @dev Can be called only when event configuration is in Pending status
-        @param relay Relay, who initialized the confirmation
     */
-    function confirm(
-        address relay
-    )
-        public
-        onlyEventConfiguration
-        eventPending
-    {
+    function confirm() public eventPending {
+        address relay = msg.sender;
+
         require(votes[relay] == Vote.Empty, ErrorCodes.KEY_ALREADY_VOTED);
 
         votes[relay] = Vote.Confirm;
 
-        address[] confirms = getVoters(Vote.Confirm);
+        relay.transfer({ value: msg.value });
 
-        if (confirms.length >= initData.requiredConfirmations) {
-            status = EthereumEventStatus.Confirmed;
+        if (getVoters(Vote.Confirm).length >= requiredVotes) {
+            status = Status.Confirmed;
 
             notifyEventStatusChanged();
-            transferAll(initData.ethereumEventConfiguration);
+
+            IProxy(eventInitData.configuration).broxusBridgeCallback{
+                flag: MsgFlag.ALL_NOT_RESERVED
+            }(eventInitData, initializer);
         }
     }
 
@@ -102,73 +118,48 @@ contract EthereumEvent is IEvent, TransferUtils, CellEncoder {
         @notice Reject event
         @dev Can be called only by parent event configuration
         @dev Can be called only when event configuration is in Pending status
-        @param relay Relay, who initialized the confirmation
     */
-    function reject(
-        address relay
-    )
-        public
-        onlyEventConfiguration
-        eventPending
-    {
+    function reject() public eventPending {
+        address relay = msg.sender;
+
         require(votes[relay] == Vote.Empty, ErrorCodes.KEY_ALREADY_VOTED);
 
         votes[relay] = Vote.Reject;
 
-        address[] rejects = getVoters(Vote.Reject);
+        relay.transfer({ value: msg.value });
 
-        if (rejects.length >= initData.requiredRejects) {
-            status = EthereumEventStatus.Rejected;
+        if (getVoters(Vote.Reject).length >= requiredVotes) {
+            status = Status.Rejected;
 
             notifyEventStatusChanged();
-            transferAll(initData.ethereumEventConfiguration);
+            transferAll(initializer);
         }
     }
 
     /*
-        @notice Execute callback on proxy contract
-        @dev Can be called by anyone
-        @dev Can be called only when event is in Confirmed status
-        @dev May be called only once
-        @dev Require more than 1 TON of attached balance
-        @dev Send the attached balance to the event configuration which proxies it to the Proxy
-    */
-    function executeProxyCallback() public eventConfirmed {
-        require(msg.value >= 1 ton, ErrorCodes.TOO_LOW_MSG_VALUE);
-
-        status = EthereumEventStatus.Executed;
-        executor = msg.sender;
-
-        notifyEventStatusChanged();
-
-        IProxy(initData.ethereumEventConfiguration).broxusBridgeCallback{
-            value: 0,
-            flag: MsgFlag.ALL_NOT_RESERVED
-        }(initData, executor);
-    }
-
-    /*
         @notice Get event details
-        @returns _initData Init data
+        @returns _eventInitData Init data
         @returns _status Current event status
         @returns _confirmRelays List of relays who have confirmed event
         @returns _confirmRelays List of relays who have rejected event
     */
     function getDetails() public view returns (
-        EthereumEventInitData _initData,
-        EthereumEventStatus _status,
+        EthereumEventInitData _eventInitData,
+        Status _status,
         address[] confirms,
         address[] rejects,
         uint128 balance,
-        address _executor
+        address _initializer,
+        uint32 _requiredVotes
     ) {
         return (
-            initData,
+            eventInitData,
             status,
             getVoters(Vote.Confirm),
             getVoters(Vote.Reject),
             address(this).balance,
-            executor
+            initializer,
+            requiredVotes
         );
     }
 
@@ -189,14 +180,14 @@ contract EthereumEvent is IEvent, TransferUtils, CellEncoder {
         uint256 owner_pubkey,
         address owner_address
     ) {
-        (rootToken) = decodeConfigurationMeta(initData.configurationMeta);
+        (rootToken) = decodeConfigurationMeta(eventInitData.meta);
 
         (
             tokens,
             wid,
             owner_addr,
             owner_pubkey
-        ) = decodeEthereumEventData(initData.eventData);
+        ) = decodeEthereumEventData(eventInitData.voteData.eventData);
 
         owner_address = address.makeAddrStd(wid, owner_addr);
     }
@@ -211,22 +202,7 @@ contract EthereumEvent is IEvent, TransferUtils, CellEncoder {
 
         if (owner_address.value != 0) {
             IEventNotificationReceiver(owner_address)
-                .notifyEthereumEventStatusChanged{flag: 0, bounce: false}(status);
-        }
-    }
-
-    /*
-        @notice Bounce handler
-        @dev Used in case something went wrong in the Proxy callback and switch status back to Confirmed
-    */
-    onBounce(TvmSlice body) external {
-        uint32 functionId = body.decode(uint32);
-        if (functionId == tvm.functionId(IProxy.broxusBridgeCallback)) {
-            if (msg.sender == initData.proxyAddress && status == EthereumEventStatus.Executed) {
-                status = EthereumEventStatus.Confirmed;
-                notifyEventStatusChanged();
-                executor.transfer({ flag: 128, value: 0 });
-            }
+                .notifyEventStatusChanged{flag: 0, bounce: false}(status);
         }
     }
 }

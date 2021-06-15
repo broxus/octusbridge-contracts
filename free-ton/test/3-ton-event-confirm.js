@@ -97,17 +97,17 @@ describe('Test ton event confirm', async function() {
   
       logger.log(`Event initialization tx: ${tx.transaction.id}`);
   
-      const expectedEventAddress = await tonEventConfiguration.call({
-        method: 'deriveEventAddress',
+      const expectedeventEmitter = await tonEventConfiguration.call({
+        method: 'deriveeventEmitter',
         params: {
           eventVoteData: eventConfirmParams.eventVoteData,
         }
       });
   
-      logger.log(`Expected event address: ${expectedEventAddress}`);
+      logger.log(`Expected event address: ${expectedeventEmitter}`);
   
       eventContract = await locklift.factory.getContract('TonEvent');
-      eventContract.setAddress(expectedEventAddress);
+      eventContract.setAddress(expectedeventEmitter);
     });
   
     it('Check event initial state', async () => {
