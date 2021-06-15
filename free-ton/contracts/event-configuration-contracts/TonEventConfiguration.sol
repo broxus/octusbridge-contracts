@@ -56,7 +56,7 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
     */
     function deployEvent(
         ITonEvent.TonEventVoteData eventVoteData
-    ) external reserveBalance returns(address eventEmitter) {
+    ) override external reserveBalance returns(address eventEmitter) {
         require(msg.value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
 
         ITonEvent.TonEventInitData eventInitData = buildEventInitData(eventVoteData);
@@ -80,6 +80,7 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
     function deriveEventAddress(
         ITonEvent.TonEventVoteData eventVoteData
     )
+        override
         public
         view
     returns (
@@ -104,7 +105,7 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
         @return _basicConfiguration Basic configuration init data
         @return _initData Network specific configuration init data
     */
-    function getDetails() public view returns(
+    function getDetails() override public view returns(
         BasicConfiguration _basicConfiguration,
         TonEventConfiguration _networkConfiguration
     ) {
@@ -119,7 +120,7 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
         @notice Get event configuration type
         @return _type Configuration type - Ethereum or TON
     */
-    function getType() public pure returns(EventType _type) {
+    function getType() override public pure returns(EventType _type) {
         return EventType.TON;
     }
 
@@ -133,7 +134,7 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
     function update(
         BasicConfiguration _basicConfiguration,
         TonEventConfiguration _networkConfiguration
-    ) public cashBack onlyOwner {
+    ) override public cashBack onlyOwner {
         basicConfiguration = _basicConfiguration;
         networkConfiguration = _networkConfiguration;
     }

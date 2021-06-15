@@ -1,5 +1,4 @@
 pragma ton-solidity ^0.39.0;
-pragma AbiHeader expire;
 
 
 import './../interfaces/event-contracts/IEthereumEvent.sol';
@@ -55,7 +54,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
     */
     function deployEvent(
         IEthereumEvent.EthereumEventVoteData eventVoteData
-    ) external reserveBalance returns(address eventContract) {
+    ) external override reserveBalance returns(address eventContract) {
         require(msg.value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
 
         IEthereumEvent.EthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
@@ -79,6 +78,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
     function deriveEventAddress(
         IEthereumEvent.EthereumEventVoteData eventVoteData
     )
+        override
         public
         view
     returns(
@@ -103,7 +103,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
         @return _basicConfiguration Basic configuration init data
         @return networkConfiguration Network specific configuration init data
     */
-    function getDetails() public view returns(
+    function getDetails() override public view returns(
         BasicConfiguration _basicConfiguration,
         EthereumEventConfiguration _networkConfiguration
     ) {
@@ -117,7 +117,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
         @notice Get event configuration type
         @return _type Configuration type - Ethereum or TON
     */
-    function getType() public pure returns(EventType _type) {
+    function getType() override public pure returns(EventType _type) {
         return EventType.Ethereum;
     }
 
@@ -130,7 +130,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
     function update(
         BasicConfiguration _basicConfiguration,
         EthereumEventConfiguration _networkConfiguration
-    ) public onlyOwner {
+    ) override public onlyOwner {
         basicConfiguration = _basicConfiguration;
         networkConfiguration = _networkConfiguration;
     }

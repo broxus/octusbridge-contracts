@@ -73,7 +73,7 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
     }
 
     // TODO: only staking
-    function receiveRoundAddress(address roundContract) public {
+    function receiveRoundAddress(address roundContract) public pure {
         IRound(roundContract).relays{
             value: 1 ton,
             callback: EthereumEvent.receiveRoundRelays

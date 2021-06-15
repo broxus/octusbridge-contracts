@@ -1,6 +1,7 @@
 pragma ton-solidity ^0.39.0;
 
 import "./IBasicEventConfiguration.sol";
+import "./../event-contracts/IEthereumEvent.sol";
 
 
 interface IEthereumEventConfiguration is IBasicEventConfiguration {
@@ -10,4 +11,24 @@ interface IEthereumEventConfiguration is IBasicEventConfiguration {
         address proxy;
         uint32 startBlockNumber;
     }
+
+    function deployEvent(
+        IEthereumEvent.EthereumEventVoteData eventVoteData
+    ) external returns (address eventContract);
+
+    function deriveEventAddress(
+        IEthereumEvent.EthereumEventVoteData eventVoteData
+    ) external view returns (address eventContract);
+
+    function getDetails() external view returns(
+        BasicConfiguration _basicConfiguration,
+        EthereumEventConfiguration _networkConfiguration
+    );
+
+    function getType() external pure returns(EventType _type);
+
+    function update(
+        BasicConfiguration _basicConfiguration,
+        EthereumEventConfiguration _networkConfiguration
+    ) external;
 }
