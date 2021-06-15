@@ -6,7 +6,6 @@ import "./interfaces/IStakingPool.sol";
 import "./libraries/StakingErrors.sol";
 import "./libraries/Gas.sol";
 import "./libraries/MsgFlag.sol";
-import "./libraries/StakingConsts.sol";
 
 
 contract RelayRound is IRelayRound {

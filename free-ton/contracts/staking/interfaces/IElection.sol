@@ -15,5 +15,5 @@ interface IElection {
         address send_gas_to,
         uint32 election_code_version
     ) external;
-    function finish(address send_gas_to) external;
+    function finish(uint128 relays_count, address send_gas_to) external;
 }

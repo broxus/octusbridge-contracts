@@ -8,7 +8,6 @@ import "./interfaces/IUpgradableByRequest.sol";
 import "./interfaces/IElection.sol";
 
 import "./libraries/StakingErrors.sol";
-import "./libraries/StakingConsts.sol";
 import "./libraries/Gas.sol";
 import "./libraries/MsgFlag.sol";
 import "./libraries/PlatformTypes.sol";
@@ -137,13 +136,13 @@ contract Election is IElection {
         );
     }
 
-    function finish(address send_gas_to) external override onlyRoot {
+    function finish(uint128 relays_count, address send_gas_to) external override onlyRoot {
         require (!election_ended, StakingErrors.ELECTION_ENDED);
 
         tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
         election_ended = true;
 
-        MembershipRequest[] top_requests = getRequests(StakingConsts.relaysCount);
+        MembershipRequest[] top_requests = getRequests(relays_count);
         IStakingPool(root).onElectionEnded{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num, top_requests, send_gas_to);
     }
 

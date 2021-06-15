@@ -10,7 +10,6 @@ import "./libraries/StakingErrors.sol";
 import "./libraries/Gas.sol";
 import "./libraries/MsgFlag.sol";
 import "./libraries/PlatformTypes.sol";
-import "./libraries/StakingConsts.sol";
 
 import "./utils/Platform.sol";
 
@@ -63,6 +62,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     function processBecomeRelay(
         uint128 round_num,
         uint256 eth_addr,
+        uint128 lock_time,
         address send_gas_to,
         uint32 user_data_code_version,
         uint32 election_code_version
@@ -74,6 +74,9 @@ contract UserData is IUserData, IUpgradableByRequest {
             return;
         }
 
+        // lock until end of election + round time + 2 rounds on top of it
+        relay_lock_until = now + lock_time;
+
         address election_addr = getElectionAddress(round_num);
         IElection(election_addr).applyForMembership{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
             user, eth_addr, token_balance, send_gas_to, election_code_version
@@ -82,9 +85,6 @@ contract UserData is IUserData, IUpgradableByRequest {
 
     function relayMembershipRequestAccepted(uint128 round_num, uint128 tokens, uint256 eth_addr, address send_gas_to) external override onlyElection(round_num) {
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
-
-        // lock until end of election + round time + 2 rounds on top of it
-        relay_lock_until = now + StakingConsts.electionTime + StakingConsts.relayRoundTime * 3;
 
         emit RelayMembershipRequested(round_num, tokens, user, eth_addr);
         send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);

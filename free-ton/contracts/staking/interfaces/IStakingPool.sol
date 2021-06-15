@@ -3,7 +3,6 @@ pragma AbiHeader expire;
 
 import "./IElection.sol";
 import "./IRelayRound.sol";
-import "./IEvent.sol";
 
 
 interface IStakingPool {
@@ -19,30 +18,5 @@ interface IStakingPool {
         uint128 round_num,
         IRelayRound.Relay[] relays,
         address send_gas_to
-    ) external;
-
-    function confirmEthereumEvent(
-        IEvent.EthereumEventVoteData eventVoteData,
-        uint32 configurationID,
-        address relay
-    ) external;
-
-    function rejectEthereumEvent(
-        IEvent.EthereumEventVoteData eventVoteData,
-        uint32 configurationID,
-        address relay
-    ) external;
-
-    function confirmTonEvent(
-        IEvent.TonEventVoteData eventVoteData,
-        bytes eventDataSignature,
-        uint32 configurationID,
-        address relay
-    ) external;
-
-    function rejectTonEvent(
-        IEvent.TonEventVoteData eventVoteData,
-        uint32 configurationID,
-        address relay
     ) external;
 }
