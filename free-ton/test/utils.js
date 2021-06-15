@@ -169,7 +169,7 @@ const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
 };
 
 
-const setupTonEventConfiguration = async (owner, bridge, cellEncoder) => {
+const setupTonEventConfiguration = async (owner, staking, cellEncoder) => {
   const TonEventConfiguration = await locklift.factory.getContract('TonEventConfiguration');
   const TonEvent = await locklift.factory.getContract('TonEvent');
   
@@ -188,16 +188,14 @@ const setupTonEventConfiguration = async (owner, bridge, cellEncoder) => {
       _owner: owner.address,
     },
     initParams: {
-      basicInitData: {
+      basicConfiguration: {
         eventABI: '',
-        eventRequiredConfirmations: 2,
-        eventRequiredRejects: 2,
         eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
-        bridge: bridge.address,
+        staking: staking.address,
         eventCode: TonEvent.code,
         meta: configurationMeta
       },
-      initData: {
+      networkConfiguration: {
         eventEmitter: locklift.utils.zeroAddress,
         proxy: new BigNumber(0),
         startTimestamp: 0,
@@ -208,7 +206,23 @@ const setupTonEventConfiguration = async (owner, bridge, cellEncoder) => {
   
   await logContract(tonEventConfiguration);
   
-  return [tonEventConfiguration];
+  const Account = await locklift.factory.getAccount('Wallet');
+  
+  const initializer = await locklift.giver.deployContract({
+    contract: Account,
+    keyPair,
+    constructorParams: {},
+    initParams: {
+      _randomNonce: locklift.utils.getRandomNonce(),
+    },
+  }, locklift.utils.convertCrystal(30, 'nano'));
+  
+  initializer.setKeyPair(keyPair);
+  initializer.name = 'Event initializer';
+  
+  await logContract(initializer);
+  
+  return [tonEventConfiguration, initializer];
 };
 
 
