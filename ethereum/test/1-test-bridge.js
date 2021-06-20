@@ -102,8 +102,8 @@ describe('Test bridge', async function() {
         .map(async (account) => utils.signReceipt(web3, tonEvent, account)));
       
       await expect(bridge.setRoundRelays(tonEvent, signatures))
-        .to.emit(bridge, 'RoundRelays')
-        .withArgs(1, newRelays.map(a => a.address));
+        .to.emit(bridge, 'RoundRelaysUpdate')
+        .withArgs(1, newRelays.map(a => a.address), true);
     });
     
     it('Set relays with wrong signatures sequence', async () => {

@@ -4,9 +4,10 @@ pragma experimental ABIEncoderV2;
 
 
 import "./interfaces/IBridge.sol";
-import "./libraries/ECDSA.sol";
-import "./utils/Ownable.sol";
 
+import "./libraries/ECDSA.sol";
+
+import "./utils/Ownable.sol";
 
 import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 
@@ -35,7 +36,7 @@ contract Bridge is Initializable, Ownable, IBridge {
 
         _setConfiguration(_configuration);
 
-        _setRoundRelays(0, relays);
+        _updateRoundRelays(0, relays, true);
     }
 
     /*
@@ -47,23 +48,25 @@ contract Bridge is Initializable, Ownable, IBridge {
     ) internal {
         configuration = _configuration;
 
-        emit NewConfiguration(_configuration);
+        emit ConfigurationUpdate(_configuration);
     }
 
     /*
-        @notice Internal function for setting up relays for specific round
+        @notice Internal function for updating up relays for specific round
         @param round Round id
         @param relays Array of relay addresses
+        @param status Relays statuses
     */
-    function _setRoundRelays(
+    function _updateRoundRelays(
         uint32 round,
-        address[] memory relays
+        address[] memory relays,
+        bool status
     ) internal {
         for (uint i=0; i<relays.length; i++) {
-            roundRelays[round][relays[i]] = true;
+            roundRelays[round][relays[i]] = status;
         }
 
-        emit RoundRelays(round, relays);
+        emit RoundRelaysUpdate(round, relays, status);
     }
 
     /*
@@ -81,7 +84,7 @@ contract Bridge is Initializable, Ownable, IBridge {
     /*
         @notice Count how many signatures are made by correct relays from
         @dev Signatures should be sorted by the ascending signers
-        so it's easier to detect duplicates
+        so it's cheaper to detect duplicates
         @param round Round id
         @param payload Bytes encoded payload
         @param signatures Payload signatures
@@ -121,9 +124,9 @@ contract Bridge is Initializable, Ownable, IBridge {
     }
 
     /*
-        @notice Set relays for specific round
+        @notice Grant relay permission for addresses at specific round
         @dev Checks enough relay signatures are given for specified round
-        @param payload Encoded TON event
+        @param payload Encoded TON event with event data (uint32, address[])
         @param signatures Payload signatures
     */
     function setRoundRelays(
@@ -150,12 +153,41 @@ contract Bridge is Initializable, Ownable, IBridge {
             (uint32, address[])
         );
 
-        _setRoundRelays(round, relays);
+        _updateRoundRelays(round, relays, true);
     }
 
-//    function removeRoundRelays(
-//
-//    )
+    /*
+        @notice Revoke relay permission for addresses at specific round
+        @dev Checks enough relay signatures are given for specified round
+        @param payload Encoded TON event with event data (uint32, address[])
+        @param signatures Payload signatures
+    */
+    function removeRoundRelays(
+        bytes calldata payload,
+        bytes[] calldata signatures
+    ) override external {
+        // Decode payload
+        (TONEvent memory tonEvent) = abi.decode(payload, (TONEvent));
+
+        // Check enough correct signatures
+        require(
+            countRelaySignatures(tonEvent.round, payload, signatures) >= configuration.requiredSignatures,
+            "Bridge: not enough relay signatures"
+        );
+
+        require(
+            tonEvent.proxy == address(this),
+            "Bridge: wrong event proxy"
+        );
+
+        // Decode relays and corresponding round
+        (uint32 round, address[] memory relays) = abi.decode(
+            tonEvent.eventData,
+            (uint32, address[])
+        );
+
+        _updateRoundRelays(round, relays, false);
+    }
 
     /*
         @notice Update bridge configuration

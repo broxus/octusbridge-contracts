@@ -35,8 +35,13 @@ interface IBridge {
         bytes[] calldata signatures
     ) external;
 
+    function removeRoundRelays(
+        bytes calldata payload,
+        bytes[] calldata signatures
+    ) external;
+
     function setConfiguration(BridgeConfiguration calldata _configuration) external;
 
-    event RoundRelays(uint32 indexed round, address[] relays);
-    event NewConfiguration(BridgeConfiguration configuration);
+    event RoundRelaysUpdate(uint32 indexed round, address[] relays, bool indexed status);
+    event ConfigurationUpdate(BridgeConfiguration configuration);
 }
