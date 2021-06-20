@@ -12,6 +12,32 @@ interface IUserData {
         uint32 current_version;
     }
 
+    event UserDataCodeUpgraded(uint32 code_version);
+    event RelayMembershipRequested(uint128 round_num, uint128 tokens, address ton_addr, uint256 eth_addr);
+
+    // dao
+    event VoteCast(uint32 proposal_id, bool support, uint128 votes, string reason);
+    event UnlockVotes(uint32 proposal_id, uint128 value);
+    event UnlockCastedVotes(uint32 proposal_id);
+    event ProposalCreationRejected(uint128 votes_available, uint128 threshold);
+    event ProposalCodeUpgraded(uint128 votes_available, uint128 threshold);
+
+    function lockedTokens() external view responsible returns(uint128);
+    function canWithdrawVotes() external view responsible returns (bool);
+
+    function castVote(uint32 proposal_id, bool support) external;
+    function castVoteWithReason(uint32 proposal_id, bool support, string reason) external;
+    function rejectVote(uint32 proposal_id) external;
+    function voteCasted(uint32 proposal_id) external;
+
+    function propose(TvmCell proposal_data, uint128 threshold) external;
+    function onProposalDeployed(uint32 nonce, uint32 proposal_id, uint32 answer_id) external;
+    function tryUnlockVoteTokens(uint32 proposal_id) external view;
+    function unlockVoteTokens(uint32 proposal_id, bool success) external;
+    function tryUnlockCastedVotes(uint32[] proposalIds) external view;
+    function unlockCastedVote(uint32 proposalId, bool success) external;
+
+
     function getDetails() external responsible view returns (UserDataDetails);
     function processDeposit(uint64 nonce, uint128 _amount, uint256 _accTonPerShare, uint32 code_version) external;
     function processWithdraw(uint128 _amount, uint256 _accTonPerShare, address send_gas_to, uint32 code_version) external;

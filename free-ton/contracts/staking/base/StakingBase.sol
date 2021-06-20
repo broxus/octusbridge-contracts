@@ -12,14 +12,14 @@ import "./../interfaces/IElection.sol";
 
 import "./../UserData.sol";
 import "./../Election.sol";
-import "./../utils/Platform.sol";
 import "./../RelayRound.sol";
 
 import "./../libraries/PlatformTypes.sol";
 import "./../libraries/StakingErrors.sol";
 import "./../libraries/Gas.sol";
-import "./../libraries/MsgFlag.sol";
 
+import "../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol";
+import "../../../../node_modules/@broxus/contracts/contracts/platform/Platform.sol";
 
 abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool {
     // Events
@@ -30,6 +30,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool {
     event RelayRoundInitialized(uint128 round_num, IRelayRound.Relay[] relays);
 
     event DepositReverted(address user, uint128 amount);
+
+    event DaoRootUpdated(address new_dao_root);
 
     event ActiveUpdated(bool active);
 
@@ -56,6 +58,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool {
 
     TvmCell public relay_round_code;
     uint32 public relay_round_version;
+
+    address public dao_root;
 
     bool active;
 
@@ -119,10 +123,17 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool {
         return math.max(address(this).balance - msg.value, Gas.ROOT_INITIAL_BALANCE);
     }
 
+    function setDaoRoot(address new_dao_root, address send_gas_to) external onlyOwner {
+        tvm.rawReserve(_reserve(), 2);
+        emit DaoRootUpdated(new_dao_root);
+        dao_root = new_dao_root;
+        send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
+    }
+
     // Active
     function setActive(bool new_active, address send_gas_to) external onlyOwner {
         tvm.rawReserve(_reserve(), 2);
-        if (new_active && has_platform_code && user_data_version > 0 && election_version > 0 && relay_round_version > 0) {
+        if (new_active && dao_root.value != 0 && has_platform_code && user_data_version > 0 && election_version > 0 && relay_round_version > 0) {
             active = true;
         } else {
             active = false;
@@ -181,14 +192,14 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool {
 
     // deposit occurs here
     function tokensReceivedCallback(
-        address token_wallet,
-        address token_root,
+        address /*token_wallet*/,
+        address /*token_root*/,
         uint128 amount,
-        uint256 sender_public_key,
+        uint256 /*sender_public_key*/,
         address sender_address,
         address sender_wallet,
         address original_gas_to,
-        uint128 updated_balance,
+        uint128 /*updated_balance*/,
         TvmCell payload
     ) external override {
         tvm.rawReserve(_reserve(), 2);
@@ -362,6 +373,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool {
     function deployUserData(address user_data_owner) internal returns (address) {
         TvmBuilder constructor_params;
         constructor_params.store(user_data_version);
+        constructor_params.store(dao_root);
 
         return new Platform{
             stateInit: _buildInitData(PlatformTypes.UserData, _buildUserDataParams(user_data_owner)),

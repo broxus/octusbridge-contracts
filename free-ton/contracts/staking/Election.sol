@@ -9,10 +9,10 @@ import "./interfaces/IElection.sol";
 
 import "./libraries/StakingErrors.sol";
 import "./libraries/Gas.sol";
-import "./libraries/MsgFlag.sol";
 import "./libraries/PlatformTypes.sol";
 
-import "./utils/Platform.sol";
+import "../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol";
+import "../../../node_modules/@broxus/contracts/contracts/platform/Platform.sol";
 
 
 contract Election is IElection {
