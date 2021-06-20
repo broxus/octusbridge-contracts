@@ -23,4 +23,10 @@ library StakingErrors {
     uint8 public constant ELECTION_ENDED = 120;
     uint8 public constant ORIGIN_ROUND_ALREADY_INITIALIZED = 121;
     uint8 public constant ORIGIN_ROUND_NOT_INITIALIZED = 122;
+
+    uint16 constant NOT_DAO_ROOT = 201;
+    uint16 constant NOT_PROPOSAL = 202;
+    uint16 constant WRONG_PROPOSAL_ID = 203;
+    uint16 constant ALREADY_VOTED = 204;
+    uint16 constant REASON_IS_TOO_LONG = 205;
 }

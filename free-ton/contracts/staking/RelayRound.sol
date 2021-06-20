@@ -5,7 +5,9 @@ import "./interfaces/IStakingPool.sol";
 
 import "./libraries/StakingErrors.sol";
 import "./libraries/Gas.sol";
-import "./libraries/MsgFlag.sol";
+
+import "../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol";
+
 
 
 contract RelayRound is IRelayRound {
