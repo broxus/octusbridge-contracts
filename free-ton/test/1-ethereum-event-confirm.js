@@ -2,7 +2,7 @@ const {
   setupBridge,
   setupEthereumEventConfiguration,
   setupRelays,
-  logContract,
+  MetricManager,
   enableEventConfiguration,
   logger,
   expect,
@@ -10,21 +10,44 @@ const {
 
 
 describe('Test ethereum event confirm', async function() {
-  this.timeout(100000);
+  this.timeout(1000000);
   
   let bridge, bridgeOwner, staking, cellEncoder;
   let ethereumEventConfiguration, proxy, initializer;
   let relays;
+  let metricManager;
   
+  afterEach(async function() {
+    const lastCheckPoint = metricManager.lastCheckPointName();
+    const currentName = this.currentTest.title;
+
+    await metricManager.checkPoint(currentName);
+
+    if (lastCheckPoint === undefined) return;
+    
+    const difference = await metricManager.getDifference(lastCheckPoint, currentName);
+    
+    for (const [contract, balanceDiff] of Object.entries(difference)) {
+      if (balanceDiff !== 0) {
+        logger.log(`[Balance change] ${contract} ${locklift.utils.convertCrystal(balanceDiff, 'ton').toFixed(9)} TON`);
+      }
+    }
+  });
+
   it('Setup bridge', async () => {
     relays = await setupRelays();
-  
+    
     [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
   
     [ethereumEventConfiguration, proxy, initializer] = await setupEthereumEventConfiguration(
       bridgeOwner,
       staking,
       cellEncoder,
+    );
+    
+    metricManager = new MetricManager(
+      bridge, bridgeOwner, staking,
+      ethereumEventConfiguration, proxy, initializer
     );
   });
   
@@ -92,7 +115,7 @@ describe('Test ethereum event confirm', async function() {
         },
         value: locklift.utils.convertCrystal(3, 'nano')
       });
-
+      
       logger.log(`Event initialization tx: ${tx.transaction.id}`);
 
       const expectedEventContract = await ethereumEventConfiguration.call({
@@ -196,13 +219,12 @@ describe('Test ethereum event confirm', async function() {
       });
 
       for (const relay of relays.slice(0, requiredVotes)) {
-        logger.log(`Confirm from ${relay.address}`);
-
-        await relay.runTarget({
-          contract: eventContract,
+        logger.log(`Confirm from ${relay.public}`);
+        
+        await eventContract.run({
           method: 'confirm',
           params: {},
-          value: locklift.utils.convertCrystal(1, 'nano')
+          keyPair: relay
         });
       }
     });
@@ -237,18 +259,5 @@ describe('Test ethereum event confirm', async function() {
       expect(details._callbackCounter)
         .to.be.bignumber.equal(1, 'Wrong callback counter');
     });
-  });
-
-  after(async () => {
-    for (const relay of relays) {
-      await logContract(relay);
-    }
-  
-    await logContract(bridgeOwner);
-    await logContract(bridge);
-    await logContract(staking);
-    await logContract(ethereumEventConfiguration);
-    await logContract(proxy);
-    await logContract(initializer);
   });
 });

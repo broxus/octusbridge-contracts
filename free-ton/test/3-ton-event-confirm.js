@@ -2,7 +2,7 @@ const {
   setupBridge,
   setupTonEventConfiguration,
   setupRelays,
-  logContract,
+  MetricManager,
   enableEventConfiguration,
   logger,
   expect,
@@ -15,7 +15,25 @@ describe('Test ton event confirm', async function() {
   let bridge, bridgeOwner, staking, cellEncoder;
   let tonEventConfiguration, initializer;
   let relays;
+  let metricManager;
   
+  afterEach(async function() {
+    const lastCheckPoint = metricManager.lastCheckPointName();
+    const currentName = this.currentTest.title;
+    
+    await metricManager.checkPoint(currentName);
+    
+    if (lastCheckPoint === undefined) return;
+    
+    const difference = await metricManager.getDifference(lastCheckPoint, currentName);
+    
+    for (const [contract, balanceDiff] of Object.entries(difference)) {
+      if (balanceDiff !== 0) {
+        logger.log(`[Balance change] ${contract} ${locklift.utils.convertCrystal(balanceDiff, 'ton').toFixed(9)} TON`);
+      }
+    }
+  });
+
   it('Setup bridge', async () => {
     relays = await setupRelays();
 
@@ -25,6 +43,11 @@ describe('Test ton event confirm', async function() {
       bridgeOwner,
       staking,
       cellEncoder,
+    );
+  
+    metricManager = new MetricManager(
+      bridge, bridgeOwner, staking,
+      tonEventConfiguration, initializer
     );
   });
   
@@ -194,15 +217,14 @@ describe('Test ton event confirm', async function() {
       });
 
       for (const relay of relays.slice(0, requiredVotes)) {
-        logger.log(`Confirm from ${relay.address}`);
+        logger.log(`Confirm from ${relay.public}`);
 
-        await relay.runTarget({
-          contract: eventContract,
+        await eventContract.run({
           method: 'confirm',
           params: {
             signature: '',
           },
-          value: locklift.utils.convertCrystal(1, 'nano')
+          keyPair: relay
         });
       }
     });
@@ -231,17 +253,5 @@ describe('Test ton event confirm', async function() {
       expect(details.rejects)
         .to.have.lengthOf(0, 'Wrong amount of relays rejects');
     });
-  });
-  
-  after(async () => {
-    for (const relay of relays) {
-      await logContract(relay);
-    }
-
-    await logContract(bridgeOwner);
-    await logContract(bridge);
-    await logContract(staking);
-    await logContract(tonEventConfiguration);
-    await logContract(initializer);
   });
 });

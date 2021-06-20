@@ -14,7 +14,7 @@ import "./../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.so
     Simply approve each event action without any real checks
 */
 contract StakingMockup is IStaking, IRound, RandomNonce {
-    address[] public static __relays;
+    uint[] public static __keys;
 
     /*
         @notice Get round contract address by it's id
@@ -35,17 +35,17 @@ contract StakingMockup is IStaking, IRound, RandomNonce {
     }
 
     /*
-        @notice Get list of round relays
-        @returns _relays List of relays TON addresses
+        @notice Get list of current round relays public keys
+        @returns _keys Round relays TON public keys
     */
-    function relays()
+    function relayKeys()
         override
         public
         view
         responsible
     returns (
-        address[] _relays
+        uint[] _keys
     ) {
-        return {value: 0, flag: 64} __relays;
+        return {value: 0, flag: 64} __keys;
     }
 }

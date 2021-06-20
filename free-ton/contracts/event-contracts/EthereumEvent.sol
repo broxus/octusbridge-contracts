@@ -1,5 +1,6 @@
 pragma ton-solidity ^0.39.0;
 pragma AbiHeader expire;
+pragma AbiHeader pubkey;
 
 
 import "./../interfaces/IEventNotificationReceiver.sol";
@@ -26,7 +27,7 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
     // Event contract status
     Status public status;
     // Relays votes
-    mapping (address => Vote) public votes;
+    mapping (uint => Vote) public votes;
     // Event contract deployer
     address public initializer;
     // How many votes required for confirm / reject
@@ -45,10 +46,10 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
     /*
         @notice Get voters by the vote type
         @param vote Vote type
-        @returns voters List of voters (relays) addresses
+        @returns voters List of voters (relays) public keys
     */
-    function getVoters(Vote vote) public view returns(address[] voters) {
-        for ((address voter, Vote vote_): votes) {
+    function getVoters(Vote vote) public view returns(uint[] voters) {
+        for ((uint voter, Vote vote_): votes) {
             if (vote_ == vote) {
                 voters.push(voter);
             }
@@ -71,6 +72,11 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
 
         notifyEventStatusChanged();
 
+        _requestRoundRelays();
+    }
+
+    // TODO: add refresh round relays
+    function _requestRoundRelays() internal {
         IStaking(eventInitData.staking).deriveRoundAddress{
             value: 1 ton,
             callback: EthereumEvent.receiveRoundAddress
@@ -78,18 +84,20 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
     }
 
     // TODO: cant be pure, compiler lies
-    function receiveRoundAddress(address roundContract) public onlyStaking {
-        IRound(roundContract).relays{
+    function receiveRoundAddress(
+        address roundContract
+    ) public onlyStaking {
+        IRound(roundContract).relayKeys{
             value: 1 ton,
             callback: EthereumEvent.receiveRoundRelays
         }();
     }
 
-    function receiveRoundRelays(address[] relays) public onlyStaking {
-        requiredVotes = uint16(relays.length * 2 / 3) + 1;
+    function receiveRoundRelays(uint[] keys) public onlyStaking {
+        requiredVotes = uint16(keys.length * 2 / 3) + 1;
 
-        for (address relay: relays) {
-            votes[relay] = Vote.Empty;
+        for (uint key: keys) {
+            votes[key] = Vote.Empty;
         }
     }
 
@@ -99,13 +107,13 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         @dev Can be called only when event configuration is in Pending status
     */
     function confirm() public eventPending {
-        address relay = msg.sender;
+        uint relay = msg.pubkey();
 
         require(votes[relay] == Vote.Empty, ErrorCodes.KEY_ALREADY_VOTED);
 
-        votes[relay] = Vote.Confirm;
+        tvm.accept();
 
-        relay.transfer({ value: msg.value });
+        votes[relay] = Vote.Confirm;
 
         if (getVoters(Vote.Confirm).length >= requiredVotes) {
             status = Status.Confirmed;
@@ -124,13 +132,13 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         @dev Can be called only when event configuration is in Pending status
     */
     function reject() public eventPending {
-        address relay = msg.sender;
+        uint relay = msg.pubkey();
 
         require(votes[relay] == Vote.Empty, ErrorCodes.KEY_ALREADY_VOTED);
 
-        votes[relay] = Vote.Reject;
+        tvm.accept();
 
-        relay.transfer({ value: msg.value });
+        votes[relay] = Vote.Reject;
 
         if (getVoters(Vote.Reject).length >= requiredVotes) {
             status = Status.Rejected;
@@ -150,8 +158,8 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
     function getDetails() public view returns (
         EthereumEventInitData _eventInitData,
         Status _status,
-        address[] confirms,
-        address[] rejects,
+        uint[] confirms,
+        uint[] rejects,
         uint128 balance,
         address _initializer,
         uint32 _requiredVotes

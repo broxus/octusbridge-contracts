@@ -9,9 +9,60 @@ const { expect } = chai;
 
 const logContract = async (contract) => {
   const balance = await locklift.ton.getBalance(contract.address);
-  
+
   logger.log(`${contract.name} (${contract.address}) - ${locklift.utils.convertCrystal(balance, 'ton')}`);
 };
+
+async function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// Due to the network lag, graphql may not catch wallets updates instantly
+const afterRun = async (tx) => {
+  if (locklift.network === 'dev' || locklift.network === 'main') {
+    await sleep(30000);
+  }
+};
+
+
+class MetricManager {
+  constructor(...contracts) {
+    this.contracts = contracts;
+    this.checkpoints = new Map();
+  }
+  
+  lastCheckPointName() {
+    return Array.from(this.checkpoints.keys()).pop();
+  }
+  
+  async checkPoint(name) {
+    const balances = await Promise.all(this.contracts.map(async (contract) =>
+      locklift.ton.getBalance(contract.address)));
+    
+    this.checkpoints.set(name, balances);
+  }
+  
+  getCheckPoint(name) {
+    const checkpoint = this.checkpoints.get(name);
+    
+    if (!checkpoint) throw new Error(`No checkpoint "${name}"`);
+    
+    return checkpoint;
+  }
+  
+  async getDifference(startCheckPointName, endCheckPointName) {
+    const startCheckPoint = this.getCheckPoint(startCheckPointName);
+    const endCheckPoint = this.getCheckPoint(endCheckPointName);
+    
+    const difference = {};
+    
+    for (const [startMetric, endMetric, contract] of _.zip(startCheckPoint, endCheckPoint, this.contracts)) {
+      difference[contract.name] = endMetric - startMetric;
+    }
+    
+    return difference;
+  }
+}
 
 
 const setupBridge = async (relays) => {
@@ -30,6 +81,7 @@ const setupBridge = async (relays) => {
   }, locklift.utils.convertCrystal(30, 'nano'));
   
   owner.setKeyPair(keyPair);
+  owner.afterRun = afterRun;
   owner.name = 'Bridge owner';
   
   await logContract(owner);
@@ -41,7 +93,7 @@ const setupBridge = async (relays) => {
     constructorParams: {},
     initParams: {
       _randomNonce,
-      __relays: relays.map(r => r.address),
+      __keys: relays.map(r => `0x${r.public}`),
     },
     keyPair,
   }, locklift.utils.convertCrystal(10, 'nano'));
@@ -161,6 +213,7 @@ const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
   }, locklift.utils.convertCrystal(30, 'nano'));
   
   initializer.setKeyPair(keyPair);
+  initializer.afterRun = afterRun;
   initializer.name = 'Event initializer';
   
   await logContract(initializer);
@@ -218,6 +271,7 @@ const setupTonEventConfiguration = async (owner, staking, cellEncoder) => {
   }, locklift.utils.convertCrystal(30, 'nano'));
   
   initializer.setKeyPair(keyPair);
+  initializer.afterRun = afterRun;
   initializer.name = 'Event initializer';
   
   await logContract(initializer);
@@ -227,27 +281,10 @@ const setupTonEventConfiguration = async (owner, staking, cellEncoder) => {
 
 
 const setupRelays = async (amount=3) => {
-  const [keyPair] = await locklift.keys.getKeyPairs();
-
-  const relays = [];
-  
-  for (const relayId of _.range(amount)) {
-    const Account = await locklift.factory.getAccount('Wallet');
-  
-    const relay = await locklift.giver.deployContract({
-      contract: Account,
-      keyPair,
-    }, locklift.utils.convertCrystal(50, 'nano'));
-    
-    relay.setKeyPair(keyPair);
-    relay.name = `Relay #${relayId}`;
-    
-    await logContract(relay);
-    
-    relays.push(relay);
-  }
-  
-  return relays;
+  return Promise.all(_
+    .range(amount)
+    .map(async () => locklift.ton.client.crypto.generate_random_sign_keys())
+  );
 };
 
 
@@ -275,6 +312,7 @@ module.exports = {
   setupTonEventConfiguration,
   setupRelays,
   logContract,
+  MetricManager,
   enableEventConfiguration,
   logger,
   expect,
