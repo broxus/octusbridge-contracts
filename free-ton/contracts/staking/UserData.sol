@@ -261,13 +261,15 @@ contract UserData is IUserData, IUpgradableByRequest {
         ton_pubkey_confirmed = true;
     }
 
-    function processConfirmEthAccount(uint256 eth_address) external override onlyRoot {
+    function processConfirmEthAccount(uint256 eth_address, address send_gas_to) external override onlyRoot {
         require (eth_address_confirmed == false, StakingErrors.ACCOUNT_ALREADY_CONFIRMED);
         require (eth_address == relay_eth_address, StakingErrors.ACCOUNT_NOT_LINKED);
 
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
 
         eth_address_confirmed = true;
+
+        send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 
     function processBecomeRelay(

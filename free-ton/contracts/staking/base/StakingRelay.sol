@@ -16,13 +16,13 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         );
     }
 
-    function confirmEthAccount(address staker_addr, uint256 eth_address) external onlyBridge {
+    function confirmEthAccount(address staker_addr, uint256 eth_address, address send_gas_to) external onlyBridge {
         require (msg.value >= Gas.MIN_CONFIRM_ETH_RELAY_ACC, StakingErrors.VALUE_TOO_LOW);
 
         tvm.rawReserve(_reserve(), 2);
 
         address user_data = getUserDataAddress(staker_addr);
-        IUserData(user_data).processConfirmEthAccount{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(eth_address);
+        IUserData(user_data).processConfirmEthAccount{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(eth_address, send_gas_to);
     }
 
     function createOriginRelayRound(IRelayRound.Relay[] relays, address send_gas_to) external onlyOwner {

@@ -40,7 +40,7 @@ interface IUserData {
 
     function getDetails() external responsible view returns (UserDataDetails);
     function processLinkRelayAccounts(uint256 ton_pubkey, uint256 eth_address, address send_gas_to, uint32 user_data_code_version) external;
-    function processConfirmEthAccount(uint256 eth_address) external;
+    function processConfirmEthAccount(uint256 eth_address, address send_gas_to) external;
     function processDeposit(uint64 nonce, uint128 _amount, uint256 _accTonPerShare, uint32 code_version) external;
     function processWithdraw(uint128 _amount, uint256 _accTonPerShare, address send_gas_to, uint32 code_version) external;
     function processBecomeRelay(
