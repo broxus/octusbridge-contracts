@@ -2,7 +2,7 @@ pragma ton -solidity ^0.39.0;
 
 import "./interfaces/IProposal.sol";
 import "./interfaces/IDaoRoot.sol";
-import "./interfaces/IDaoAccount.sol";
+import "./interfaces/IStakingAccount.sol";
 import "./interfaces/IUpgradableByRequest.sol";
 
 import "./libraries/DaoErrors.sol";
@@ -76,7 +76,7 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
         tvm.accept();
         executionTime = endTime + config.timeLock;
         emit Queued(executionTime);
-        IDaoAccount(expectedAccountAddress(proposer)).unlockVoteTokens{
+        IStakingAccount(expectedAccountAddress(proposer)).unlockVoteTokens{
             value: Gas.UNLOCK_VOTE_VALUE,
             flag: MsgFlag.SENDER_PAYS_FEES
         }(id, true);
@@ -97,7 +97,7 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
         require(msg.sender == proposer, DaoErrors.NOT_OWNER);
         tvm.rawReserve(Gas.PROPOSAL_INITIAL_BALANCE, 2);
         emit Canceled();
-        IDaoAccount(expectedAccountAddress(proposer)).unlockVoteTokens{
+        IStakingAccount(expectedAccountAddress(proposer)).unlockVoteTokens{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(id, true);
@@ -119,7 +119,7 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
             emit VoteCast(voter, support, votes, reason);
             voter.transfer({value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false});
         } else {
-            IDaoAccount(msg.sender).rejectVote{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(id);
+            IStakingAccount(msg.sender).rejectVote{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(id);
         }
     }
 
@@ -150,7 +150,7 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
     function unlockCastedVote(address accountOwner) override public view onlyStakingAccount(accountOwner) {
         ProposalState currentState = state();
         bool success = currentState != ProposalState.Active;
-        IDaoAccount(msg.sender).unlockCastedVote{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(id, success);
+        IStakingAccount(msg.sender).unlockCastedVote{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(id, success);
     }
 
     function unlockVoteTokens(address accountOwner) override public view onlyStakingAccount(accountOwner) {
@@ -160,7 +160,7 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
             currentState != ProposalState.Pending &&
             currentState != ProposalState.Active
         );
-        IDaoAccount(msg.sender).unlockVoteTokens{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(id, success);
+        IStakingAccount(msg.sender).unlockVoteTokens{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(id, success);
     }
 
     function calcTonActionsValue() private view inline returns (uint128 totalValue) {

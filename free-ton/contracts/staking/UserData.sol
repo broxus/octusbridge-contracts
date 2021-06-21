@@ -43,7 +43,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     mapping(uint32 /*proposal_id*/ => bool /*support*/) public casted_votes;
 
     modifier onlyDaoProposal(uint32 proposal_id) {
-        require(msg.sender == expectedProposalAddress(proposal_id), StakingErrors.NOT_PROPOSAL);
+        require(msg.sender == getProposalAddress(proposal_id), StakingErrors.NOT_PROPOSAL);
         _;
     }
 
@@ -113,7 +113,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         require(bytes(reason).length <= MAX_REASON_LENGTH, StakingErrors.REASON_IS_TOO_LONG);
         emit VoteCast(proposal_id, support, token_balance, reason);
         casted_votes[proposal_id] = support;
-        IProposal(expectedProposalAddress(proposal_id)).castVote{
+        IProposal(getProposalAddress(proposal_id)).castVote{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(proposal_id, user, token_balance, support, reason);
@@ -134,7 +134,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
         require(msg.value >= Gas.UNLOCK_LOCKED_VOTE_TOKENS_VALUE, StakingErrors.VALUE_TOO_LOW);
         require(created_proposals.exists(proposal_id), StakingErrors.WRONG_PROPOSAL_ID);
-        IProposal(expectedProposalAddress(proposal_id)).unlockVoteTokens{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(user);
+        IProposal(getProposalAddress(proposal_id)).unlockVoteTokens{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(user);
     }
 
     function unlockVoteTokens(uint32 proposal_id, bool success) override public onlyDaoProposal(proposal_id) {
@@ -152,7 +152,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
         for (uint i = 0; i < proposal_ids.length; i++) {
             if (casted_votes.exists(proposal_ids[i])) {
-                IProposal(expectedProposalAddress(proposal_ids[i])).unlockCastedVote{
+                IProposal(getProposalAddress(proposal_ids[i])).unlockCastedVote{
                     value: Gas.UNLOCK_CASTED_VOTE_VALUE,
                     flag: MsgFlag.SENDER_PAYS_FEES
                 }(user);
@@ -171,28 +171,10 @@ contract UserData is IUserData, IUpgradableByRequest {
         }
     }
 
-    function expectedProposalAddress(uint32 proposal_id) private view returns (address) {
-        return address(tvm.hash(_buildPlatformInitData(dao_root, uint8(DaoPlatformTypes.PlatformType.Proposal), _buildProposalInitialData(proposal_id))));
-    }
-
     function _buildProposalInitialData(uint32 proposal_id) private inline pure returns (TvmCell) {
         TvmBuilder builder;
         builder.store(proposal_id);
         return builder.toCell();
-    }
-
-    function _buildPlatformInitData(address platform_root, uint8 platform_type, TvmCell initial_data) private inline view returns (TvmCell) {
-        return tvm.buildStateInit({
-            contr: Platform,
-            varInit: {
-                root: platform_root,
-                platformType: platform_type,
-                initialData: initial_data,
-                platformCode: platform_code
-            },
-            pubkey: 0,
-            code: platform_code
-        });
     }
 
     function _lockedTokens() private view returns (uint128) {
@@ -212,7 +194,6 @@ contract UserData is IUserData, IUpgradableByRequest {
         }
         return locked;
     }
-
 
     function getDetails() external responsible view override returns (UserDataDetails) {
         // TODO: add new vars to Details
@@ -293,13 +274,13 @@ contract UserData is IUserData, IUpgradableByRequest {
 
     }
 
-    function _buildInitData(uint8 type_id, TvmCell _initialData) private inline view returns (TvmCell) {
+    function _buildPlatformInitData(address platform_root, uint8 platform_type, TvmCell initial_data) private inline view returns (TvmCell) {
         return tvm.buildStateInit({
             contr: Platform,
             varInit: {
-                root: address(this),
-                platformType: type_id,
-                initialData: _initialData,
+                root: platform_root,
+                platformType: platform_type,
+                initialData: initial_data,
                 platformCode: platform_code
             },
             pubkey: 0,
@@ -313,8 +294,17 @@ contract UserData is IUserData, IUpgradableByRequest {
         return builder.toCell();
     }
 
-    function getElectionAddress(uint128 round_num) public view responsible returns (address) {
-        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } address(tvm.hash(_buildInitData(
+    function getProposalAddress(uint32 proposal_id) private view returns (address) {
+        return address(tvm.hash(_buildPlatformInitData(
+            dao_root,
+            uint8(DaoPlatformTypes.PlatformType.Proposal),
+            _buildProposalInitialData(proposal_id)))
+        );
+    }
+
+    function getElectionAddress(uint128 round_num) private view returns (address) {
+        return address(tvm.hash(_buildPlatformInitData(
+            root,
             PlatformTypes.Election,
             _buildElectionParams(round_num)
         )));

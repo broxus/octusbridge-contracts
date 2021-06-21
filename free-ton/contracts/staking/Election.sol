@@ -205,22 +205,23 @@ contract Election is IElection {
         return builder.toCell();
     }
 
-    function _buildInitData(uint8 type_id, TvmCell _initialData) private inline view returns (TvmCell) {
+    function _buildPlatformInitData(address platform_root, uint8 platform_type, TvmCell initial_data) private inline view returns (TvmCell) {
         return tvm.buildStateInit({
-            contr: Platform,
-            varInit: {
-                root: address(this),
-                platformType: type_id,
-                initialData: _initialData,
-                platformCode: platform_code
-            },
-            pubkey: 0,
-            code: platform_code
+        contr: Platform,
+        varInit: {
+            root: platform_root,
+            platformType: platform_type,
+            initialData: initial_data,
+            platformCode: platform_code
+        },
+        pubkey: 0,
+        code: platform_code
         });
     }
 
     function getUserDataAddress(address user) public view responsible returns (address) {
-        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } address(tvm.hash(_buildInitData(
+        return address(tvm.hash(_buildPlatformInitData(
+            root,
             PlatformTypes.UserData,
             _buildUserDataParams(user)
         )));
