@@ -9,7 +9,7 @@ interface IStakingPool {
     function finishDeposit(uint64 _nonce) external;
     function finishWithdraw(address user, uint128 withdrawAmount, address send_gas_to) external;
     function revertDeposit(uint64 _nonce) external;
-    function becomeRelayNextRound(uint256 eth_addr, address send_gas_to) external;
+    function becomeRelayNextRound(address send_gas_to) external;
     function startElectionOnNewRound(address send_gas_to) external;
     function endElection(address send_gas_to) external;
     function onElectionStarted(uint128 round_num, address send_gas_to) external;

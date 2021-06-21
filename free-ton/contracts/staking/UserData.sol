@@ -31,6 +31,12 @@ contract UserData is IUserData, IUpgradableByRequest {
     uint256 public reward_debt;
     uint128 relay_lock_until;
 
+    uint256 public relay_eth_address;
+    bool public eth_address_confirmed;
+
+    uint256 public relay_ton_pubkey;
+    bool public ton_pubkey_confirmed;
+
     address public root; // setup from initialData
     address public user; // setup from initialData
 
@@ -107,10 +113,11 @@ contract UserData is IUserData, IUpgradableByRequest {
     }
 
     function _castVote(uint32 proposal_id, bool support, string reason) private {
-        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
         require(msg.value >= Gas.CAST_VOTE_VALUE, StakingErrors.VALUE_TOO_LOW);
         require(!casted_votes.exists(proposal_id), StakingErrors.ALREADY_VOTED);
         require(bytes(reason).length <= MAX_REASON_LENGTH, StakingErrors.REASON_IS_TOO_LONG);
+
+        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
         emit VoteCast(proposal_id, support, token_balance, reason);
         casted_votes[proposal_id] = support;
         IProposal(getProposalAddress(proposal_id)).castVote{
@@ -132,6 +139,7 @@ contract UserData is IUserData, IUpgradableByRequest {
 
     function tryUnlockVoteTokens(uint32 proposal_id) override public view onlyUser {
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+
         require(msg.value >= Gas.UNLOCK_LOCKED_VOTE_TOKENS_VALUE, StakingErrors.VALUE_TOO_LOW);
         require(created_proposals.exists(proposal_id), StakingErrors.WRONG_PROPOSAL_ID);
         IProposal(getProposalAddress(proposal_id)).unlockVoteTokens{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(user);
@@ -149,7 +157,9 @@ contract UserData is IUserData, IUpgradableByRequest {
 
     function tryUnlockCastedVotes(uint32[] proposal_ids) override public view onlyUser {
         require(msg.value >= proposal_ids.length * Gas.UNLOCK_CASTED_VOTE_VALUE + 1 ton, StakingErrors.VALUE_TOO_LOW);
+
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+
         for (uint i = 0; i < proposal_ids.length; i++) {
             if (casted_votes.exists(proposal_ids[i])) {
                 IProposal(getProposalAddress(proposal_ids[i])).unlockCastedVote{
@@ -222,14 +232,54 @@ contract UserData is IUserData, IUpgradableByRequest {
         IStakingPool(msg.sender).finishDeposit{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(nonce);
     }
 
+    function processLinkRelayAccounts(
+        uint256 ton_pubkey,
+        uint256 eth_address,
+        address send_gas_to,
+        uint32 user_data_code_version
+    ) external override onlyRoot {
+        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+
+        if (user_data_code_version > current_version) {
+            send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
+            return;
+        }
+
+        relay_ton_pubkey = ton_pubkey;
+        ton_pubkey_confirmed = false;
+
+        relay_eth_address = eth_address;
+        eth_address_confirmed = false;
+    }
+
+    function confirmTonAccount() external {
+        require (msg.pubkey() != 0, StakingErrors.INTERNAL_ADDRESS);
+        require (msg.pubkey() == relay_ton_pubkey, StakingErrors.ACCOUNT_NOT_LINKED);
+        require (ton_pubkey_confirmed == false, StakingErrors.ACCOUNT_ALREADY_CONFIRMED);
+
+        tvm.accept();
+        ton_pubkey_confirmed = true;
+    }
+
+    function processConfirmEthAccount(uint256 eth_address) external override onlyRoot {
+        require (eth_address_confirmed == false, StakingErrors.ACCOUNT_ALREADY_CONFIRMED);
+        require (eth_address == relay_eth_address, StakingErrors.ACCOUNT_NOT_LINKED);
+
+        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+
+        eth_address_confirmed = true;
+    }
+
     function processBecomeRelay(
         uint128 round_num,
-        uint256 eth_addr,
         uint128 lock_time,
         address send_gas_to,
         uint32 user_data_code_version,
         uint32 election_code_version
     ) external override onlyRoot {
+        require (eth_address_confirmed, StakingErrors.ACCOUNT_NOT_CONFIRMED);
+        require (ton_pubkey_confirmed, StakingErrors.ACCOUNT_NOT_CONFIRMED);
+
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
 
         if (user_data_code_version > current_version) {
@@ -242,14 +292,16 @@ contract UserData is IUserData, IUpgradableByRequest {
 
         address election_addr = getElectionAddress(round_num);
         IElection(election_addr).applyForMembership{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-            user, eth_addr, token_balance, send_gas_to, election_code_version
+            user, relay_ton_pubkey, relay_eth_address, token_balance, send_gas_to, election_code_version
         );
     }
 
-    function relayMembershipRequestAccepted(uint128 round_num, uint128 tokens, uint256 eth_addr, address send_gas_to) external override onlyElection(round_num) {
+    function relayMembershipRequestAccepted(
+        uint128 round_num, uint128 tokens, uint256 ton_pubkey, uint256 eth_addr, address send_gas_to
+    ) external override onlyElection(round_num) {
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
 
-        emit RelayMembershipRequested(round_num, tokens, user, eth_addr);
+        emit RelayMembershipRequested(round_num, tokens, ton_pubkey, eth_addr);
         send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 

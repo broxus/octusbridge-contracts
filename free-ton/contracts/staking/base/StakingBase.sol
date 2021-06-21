@@ -61,6 +61,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool {
 
     address public dao_root;
 
+    address public bridge;
+
     bool active;
 
     bool originRelayRoundInitialized;
@@ -279,7 +281,6 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool {
     }
 
     function withdraw(uint128 amount, address send_gas_to) public onlyActive {
-        require (msg.sender.value != 0, StakingErrors.EXTERNAL_ADDRESS);
         require (amount > 0, StakingErrors.ZERO_AMOUNT_INPUT);
         require (msg.value >= Gas.MIN_WITHDRAW_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
@@ -409,6 +410,11 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool {
 
     modifier onlyOwner() {
         require(msg.sender == owner, StakingErrors.NOT_OWNER);
+        _;
+    }
+
+    modifier onlyBridge() {
+        require (msg.sender == bridge, StakingErrors.NOT_BRIDGE);
         _;
     }
 

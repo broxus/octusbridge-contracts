@@ -20,6 +20,9 @@ library Gas {
     uint128 public constant MIN_START_ELECTION_MSG_VALUE = 1.5 ton;
     uint128 public constant MIN_END_ELECTION_MSG_VALUE = 1 ton;
     uint128 public constant MIN_ORIGIN_ROUND_MSG_VALUE = 1 ton;
+    uint128 public constant MIN_LINK_RELAY_ACCS_MSG_VALUE = 5 ton;
+    uint128 public constant MIN_CONFIRM_ETH_RELAY_ACC = 0.5 ton;
+
 
     uint128 public constant UPGRADE_ELECTION_MIN_VALUE = 1 ton;
     uint128 public constant UPGRADE_USER_DATA_MIN_VALUE = 1 ton;

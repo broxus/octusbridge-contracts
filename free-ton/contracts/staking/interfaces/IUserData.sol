@@ -13,7 +13,7 @@ interface IUserData {
     }
 
     event UserDataCodeUpgraded(uint32 code_version);
-    event RelayMembershipRequested(uint128 round_num, uint128 tokens, address ton_addr, uint256 eth_addr);
+    event RelayMembershipRequested(uint128 round_num, uint128 tokens, uint256 ton_pubkey, uint256 eth_address);
 
     // dao
     event VoteCast(uint32 proposal_id, bool support, uint128 votes, string reason);
@@ -39,15 +39,16 @@ interface IUserData {
 
 
     function getDetails() external responsible view returns (UserDataDetails);
+    function processLinkRelayAccounts(uint256 ton_pubkey, uint256 eth_address, address send_gas_to, uint32 user_data_code_version) external;
+    function processConfirmEthAccount(uint256 eth_address) external;
     function processDeposit(uint64 nonce, uint128 _amount, uint256 _accTonPerShare, uint32 code_version) external;
     function processWithdraw(uint128 _amount, uint256 _accTonPerShare, address send_gas_to, uint32 code_version) external;
     function processBecomeRelay(
         uint128 round_num,
-        uint256 eth_addr,
         uint128 lock_time,
         address send_gas_to,
         uint32 user_data_code_version,
         uint32 election_code_version
     ) external;
-    function relayMembershipRequestAccepted(uint128 round_num, uint128 tokens, uint256 eth_addr, address send_gas_to) external;
+    function relayMembershipRequestAccepted(uint128 round_num, uint128 tokens, uint256 ton_pubkey, uint256 eth_addr, address send_gas_to) external;
 }

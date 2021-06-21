@@ -37,8 +37,6 @@ contract Election is IElection {
     // sorted list starts with this idx
     uint256 public list_start_idx;
 
-    mapping (address => MembershipRequest) public requests;
-
     bool public election_ended;
 
     // Cant be deployed directly
@@ -61,14 +59,14 @@ contract Election is IElection {
     }
 
     function applyForMembership(
-        address ton_addr,
+        address staker_addr,
+        uint256 ton_pubkey,
         uint256 eth_addr,
         uint128 tokens,
         address send_gas_to,
         uint32 code_version
-    ) external override onlyUserData(ton_addr) {
+    ) external override onlyUserData(staker_addr) {
         require (tokens > 0, StakingErrors.BAD_RELAY_MEMBERSHIP_REQUEST);
-        require (ton_addr.value != 0, StakingErrors.EXTERNAL_ADDRESS);
         require (!election_ended, StakingErrors.ELECTION_ENDED);
 
         tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
@@ -78,21 +76,25 @@ contract Election is IElection {
             return;
         }
 
-        Node new_node = Node(0, 0, MembershipRequest(ton_addr, eth_addr, tokens));
-        // if there is not requests
+        for (uint i = 1; i < requests_nodes.length; i++) {
+            Node _cur_node = requests_nodes[i];
+            MembershipRequest _cur_req = _cur_node.request;
+            if (_cur_req.staker_addr == staker_addr || _cur_req.ton_pubkey == ton_pubkey || _cur_req.eth_addr == eth_addr) {
+                send_gas_to.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
+                return;
+            }
+        }
+
+        Node new_node = Node(0, 0, MembershipRequest(staker_addr, ton_pubkey, eth_addr, tokens));
+        // if there is no requests
         if (list_start_idx == 0) {
             requests_nodes.push(new_node);
             uint256 new_idx = requests_nodes.length - 1;
 
             list_start_idx = new_idx;
-            requests[ton_addr] = new_node.request;
-            send_gas_to.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
-        // this gus already applied for membership
-        } else if (requests[ton_addr].tokens != 0) {
             send_gas_to.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
         // new request, add to sorted list
         } else {
-            requests[ton_addr] = new_node.request;
             requests_nodes.push(new_node);
             uint256 new_idx = requests_nodes.length - 1;
 
@@ -132,7 +134,7 @@ contract Election is IElection {
         }
 
         IUserData(msg.sender).relayMembershipRequestAccepted{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
-            round_num, tokens, eth_addr, send_gas_to
+            round_num, tokens, ton_pubkey, eth_addr, send_gas_to
         );
     }
 
@@ -163,7 +165,6 @@ contract Election is IElection {
 
             builder.store(requests_nodes);
             builder.store(list_start_idx);
-            builder.store(requests);
             builder.store(election_ended);
 
             builder.store(platform_code);
@@ -194,7 +195,7 @@ contract Election is IElection {
         current_version = params.decode(uint32);
 
         // create origin node after contract initialization
-        requests_nodes.push(Node(0, 0, MembershipRequest(address.makeAddrNone(), 0, 0)));
+        requests_nodes.push(Node(0, 0, MembershipRequest(address.makeAddrNone(), 0, 0, 0)));
 
         IStakingPool(root).onElectionStarted{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num, send_gas_to);
     }

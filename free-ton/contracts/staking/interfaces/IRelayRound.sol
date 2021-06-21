@@ -2,7 +2,8 @@ pragma ton-solidity ^0.39.0;
 
 interface IRelayRound {
     struct Relay {
-        address ton_addr;
+        address staker_addr;
+        uint256 ton_pubkey;
         uint256 eth_addr;
         uint128 staked_tokens;
     }

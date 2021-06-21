@@ -5,7 +5,7 @@ library StakingErrors {
     uint8 public constant NOT_ROOT = 102;
     uint8 public constant NOT_TOKEN_WALLET = 103;
     uint8 public constant NOT_USER_DATA = 104;
-    uint8 public constant EXTERNAL_ADDRESS = 105;
+    uint8 public constant INTERNAL_ADDRESS = 105;
     uint8 public constant ZERO_AMOUNT_INPUT = 106;
     uint8 public constant TOO_EARLY_FOR_ELECTION = 107;
     uint8 public constant ELECTION_ALREADY_STARTED = 108;
@@ -23,6 +23,10 @@ library StakingErrors {
     uint8 public constant ELECTION_ENDED = 120;
     uint8 public constant ORIGIN_ROUND_ALREADY_INITIALIZED = 121;
     uint8 public constant ORIGIN_ROUND_NOT_INITIALIZED = 122;
+    uint8 public constant ACCOUNT_NOT_LINKED = 123;
+    uint8 public constant ACCOUNT_ALREADY_CONFIRMED = 124;
+    uint8 public constant ACCOUNT_NOT_CONFIRMED = 124;
+    uint8 public constant NOT_BRIDGE = 125;
 
     uint16 constant NOT_DAO_ROOT = 201;
     uint16 constant NOT_PROPOSAL = 202;

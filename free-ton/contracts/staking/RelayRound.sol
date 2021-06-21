@@ -16,7 +16,7 @@ contract RelayRound is IRelayRound {
     bool public relays_installed;
     uint256 public relays_count;
     uint128 public round_num; // setup from initialData
-    mapping (address => Relay) public relays; // key - ton address
+    mapping (address => Relay) relays; // key - staker address
 
     uint32 public current_version;
     TvmCell public platform_code;
@@ -26,8 +26,8 @@ contract RelayRound is IRelayRound {
     // Cant be deployed directly
     constructor() public { revert(); }
 
-    function getRelayByTonAddress(address relay_addr) external view responsible returns (Relay) {
-        return relays[relay_addr];
+    function getRelayByStakerAddress(address staker_addr) external view responsible returns (Relay) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} relays[staker_addr];
     }
 
     function getDetails() external view responsible returns (RelayRoundDetails) {
@@ -35,10 +35,10 @@ contract RelayRound is IRelayRound {
         optional(address, Relay) min_relay = relays.min();
         uint128 counter = 0;
         while (min_relay.hasValue()) {
-            (address ton_addr, Relay _relay) = min_relay.get();
+            (address staker_addr, Relay _relay) = min_relay.get();
             _relays_list[counter] = _relay;
             counter++;
-            min_relay = relays.next(ton_addr);
+            min_relay = relays.next(staker_addr);
         }
 
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }RelayRoundDetails(
@@ -51,7 +51,7 @@ contract RelayRound is IRelayRound {
         tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 2);
 
         for (Relay _relay: _relay_list) {
-            relays[_relay.ton_addr] = _relay;
+            relays[_relay.staker_addr] = _relay;
         }
 
         relays_installed = true;
