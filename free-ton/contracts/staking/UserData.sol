@@ -310,7 +310,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     function processWithdraw(uint128 _tokens_to_withdraw, uint256 _acc_reward_per_share, address send_gas_to, uint32 code_version) external override onlyRoot {
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
 
-        if (code_version > current_version || _tokens_to_withdraw > token_balance || now < relay_lock_until || _canWithdrawVotes()) {
+        if (code_version > current_version || _tokens_to_withdraw > token_balance || now < relay_lock_until || !_canWithdrawVotes()) {
             send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
             return;
         }
