@@ -24,24 +24,19 @@ interface IBridge {
 
     function isRelay(uint32 round, address candidate) external view returns(bool);
 
-    function countRelaySignatures(
+    function verifyRelaySignatures(
         uint32 round,
         bytes memory payload,
         bytes[] memory signatures
-    ) external view returns(uint32 count);
+    ) external view returns(bool);
 
     function setRoundRelays(
-        bytes calldata payload,
-        bytes[] calldata signatures
-    ) external;
-
-    function removeRoundRelays(
-        bytes calldata payload,
-        bytes[] calldata signatures
+        uint32 round,
+        address[] calldata relays
     ) external;
 
     function setConfiguration(BridgeConfiguration calldata _configuration) external;
 
-    event RoundRelaysUpdate(uint32 indexed round, address[] relays, bool indexed status);
+    event RoundRelayGranted(uint32 indexed round, address indexed relay);
     event ConfigurationUpdate(BridgeConfiguration configuration);
 }

@@ -1,4 +1,12 @@
 const ethers = require('ethers');
+const logger = require('mocha-logger');
+
+const chai = require('chai');
+const { solidity } = require("ethereum-waffle");
+
+chai.use(solidity);
+
+const { expect } = chai;
 
 
 const signReceipt = async (web3, receipt, signer) => {
@@ -13,6 +21,13 @@ const signReceipt = async (web3, receipt, signer) => {
 };
 
 
+const sortAccounts = (accounts) => accounts
+  .sort((a, b) => b.address.toLowerCase() > a.address.toLowerCase() ? -1 : 1);
+
+
 module.exports = {
   signReceipt,
+  logger,
+  expect,
+  sortAccounts
 };
