@@ -185,7 +185,7 @@ describe('Test DAO in Staking', async function () {
     })).decoded.output.value0)
     logger.log(`StakingRoot address: ${stakingRoot.address}`);
     logger.log(`StakingRoot owner address: ${stakingOwner.address}`);
-    logger.log(`StakingRoot token root address: ${stakingRoot.address}`);
+    logger.log(`StakingRoot token root address: ${stakingToken.address}`);
     logger.log(`Installing StakingRoot address for DaoRoot`);
     await stakingOwner.runTarget({
       contract: daoRoot,
@@ -418,14 +418,14 @@ describe('Test DAO in Staking', async function () {
           againstVotesBefore = await proposal.call({method: 'againstVotes'});
           logger.log(`Account0 Cast Vote for Proposal ${proposalId}, amount: ${votesToCast.toString()}, support: True`)
           logger.log(`DaoAccount0 casted vote Before: ${castedVoteBefore}`)
-          await userAccount0.runTarget({
-            contract: userDataContract0,
+          console.log(await userAccount0.runTarget({
+            contract: stakingRoot,
             method: 'castVote',
             params: {
               proposal_id: proposalId,
               support: true
             }
-          })
+          }))
         });
         it('Check votes after', async function () {
           const forVotes = await proposal.call({method: 'forVotes'});
@@ -461,7 +461,7 @@ describe('Test DAO in Staking', async function () {
           logger.log(`Account1 Cast Vote for Proposal ${proposalId}, amount: ${votesToCast.toString()}, support: False`);
           logger.log(`DaoAccount1 castedVotes Before: ${castedVotesBefore}`);
           await userAccount1.runTarget({
-            contract: userDataContract1,
+            contract: stakingRoot,
             method: 'castVote',
             params: {
               proposal_id: proposalId,
@@ -563,7 +563,7 @@ describe('Test DAO in Staking', async function () {
           canWithdrawBefore = await userDataContract0.call({method: 'canWithdrawVotes'});
           logger.log(`Casted withdraw before unlock: ${canWithdrawBefore}`);
           await userAccount0.runTarget({
-            contract: userDataContract0,
+            contract: stakingRoot,
             method: 'tryUnlockCastedVotes',
             params: {proposal_ids: castedVotesBefore},
           });

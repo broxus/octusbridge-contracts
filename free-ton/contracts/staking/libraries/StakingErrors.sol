@@ -33,4 +33,7 @@ library StakingErrors {
     uint16 constant WRONG_PROPOSAL_ID = 203;
     uint16 constant ALREADY_VOTED = 204;
     uint16 constant REASON_IS_TOO_LONG = 205;
+    uint16 constant PROPOSAL_IS_NOT_ACTIVE = 206;
+    uint16 constant OLD_VERSION = 207;
+    uint16 constant WRONG_PROPOSAL_STATE = 208;
 }

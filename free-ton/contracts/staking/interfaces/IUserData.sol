@@ -25,16 +25,15 @@ interface IUserData {
     function lockedTokens() external view responsible returns(uint128);
     function canWithdrawVotes() external view responsible returns (bool);
 
-    function castVote(uint32 proposal_id, bool support) external;
-    function castVoteWithReason(uint32 proposal_id, bool support, string reason) external;
+    function castVote(uint32 code_version, uint32 proposal_id, bool support, string reason) external;
     function rejectVote(uint32 proposal_id) external;
     function voteCasted(uint32 proposal_id) external;
 
     function propose(TvmCell proposal_data, uint128 threshold) external;
     function onProposalDeployed(uint32 nonce, uint32 proposal_id, uint32 answer_id) external;
-    function tryUnlockVoteTokens(uint32 proposal_id) external view;
+    function tryUnlockVoteTokens(uint32 code_version, uint32 proposal_id) external view;
     function unlockVoteTokens(uint32 proposal_id, bool success) external;
-    function tryUnlockCastedVotes(uint32[] proposalIds) external view;
+    function tryUnlockCastedVotes(uint32 code_version, uint32[] proposalIds) external view;
     function unlockCastedVote(uint32 proposalId, bool success) external;
 
 

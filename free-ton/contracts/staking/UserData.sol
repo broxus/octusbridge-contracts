@@ -100,24 +100,21 @@ contract UserData is IUserData, IUpgradableByRequest {
         }(answer_id, proposal_id);
     }
 
-    function castVote(uint32 proposal_id, bool support) public override onlyUser {
-        _castVote(proposal_id, support, '');
-    }
-
-    function castVoteWithReason(
-        uint32 proposal_id,
-        bool support,
-        string reason
-    ) public override onlyUser {
-        _castVote(proposal_id, support, reason);
-    }
-
-    function _castVote(uint32 proposal_id, bool support, string reason) private {
-        require(msg.value >= Gas.CAST_VOTE_VALUE, StakingErrors.VALUE_TOO_LOW);
-        require(!casted_votes.exists(proposal_id), StakingErrors.ALREADY_VOTED);
-        require(bytes(reason).length <= MAX_REASON_LENGTH, StakingErrors.REASON_IS_TOO_LONG);
-
+    function castVote(uint32 code_version, uint32 proposal_id, bool support, string reason) public override onlyRoot {
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+
+        uint16 error;
+
+        if (code_version > current_version) error = StakingErrors.OLD_VERSION;
+        if (msg.value < Gas.CAST_VOTE_VALUE) error = StakingErrors.VALUE_TOO_LOW;
+        if (casted_votes.exists(proposal_id)) error = StakingErrors.ALREADY_VOTED;
+        if (bytes(reason).length > MAX_REASON_LENGTH) error = StakingErrors.REASON_IS_TOO_LONG;
+
+        if (error != 0){
+            IVoter(user).onVoteRejected{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(proposal_id, error);
+            return;
+        }
+
         emit VoteCast(proposal_id, support, token_balance, reason);
         casted_votes[proposal_id] = support;
         IProposal(getProposalAddress(proposal_id)).castVote{
@@ -134,14 +131,26 @@ contract UserData is IUserData, IUpgradableByRequest {
         if (casted_votes.exists(proposal_id)) {
             delete casted_votes[proposal_id];
         }
-        IVoter(user).onVoteRejected{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(proposal_id);
+        IVoter(user).onVoteRejected{
+            value: 0,
+            flag: MsgFlag.REMAINING_GAS,
+            bounce: false
+        }(proposal_id, StakingErrors.PROPOSAL_IS_NOT_ACTIVE);
     }
 
-    function tryUnlockVoteTokens(uint32 proposal_id) override public view onlyUser {
+    function tryUnlockVoteTokens(uint32 code_version, uint32 proposal_id) override public view onlyRoot {
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+        uint16 error;
 
-        require(msg.value >= Gas.UNLOCK_LOCKED_VOTE_TOKENS_VALUE, StakingErrors.VALUE_TOO_LOW);
-        require(created_proposals.exists(proposal_id), StakingErrors.WRONG_PROPOSAL_ID);
+        if (code_version > current_version) error = StakingErrors.OLD_VERSION;
+        if (msg.value < Gas.UNLOCK_LOCKED_VOTE_TOKENS_VALUE) error = StakingErrors.VALUE_TOO_LOW;
+        if (!created_proposals.exists(proposal_id)) error = StakingErrors.WRONG_PROPOSAL_ID;
+
+        if (error != 0){
+            IVoter(user).onVotesNotUnlocked{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(proposal_id, error);
+            return;
+        }
+
         IProposal(getProposalAddress(proposal_id)).unlockVoteTokens{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(user);
     }
 
@@ -151,14 +160,26 @@ contract UserData is IUserData, IUpgradableByRequest {
             delete created_proposals[proposal_id];
             IVoter(user).onVotesUnlocked{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(proposal_id);
         } else {
-            IVoter(user).onVotesNotUnlocked{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(proposal_id);
+            IVoter(user).onVotesNotUnlocked{
+                value: 0,
+                flag: MsgFlag.REMAINING_GAS,
+                bounce: false
+            }(proposal_id, StakingErrors.WRONG_PROPOSAL_STATE);
         }
     }
 
-    function tryUnlockCastedVotes(uint32[] proposal_ids) override public view onlyUser {
-        require(msg.value >= proposal_ids.length * Gas.UNLOCK_CASTED_VOTE_VALUE + 1 ton, StakingErrors.VALUE_TOO_LOW);
-
+    function tryUnlockCastedVotes(uint32 code_version, uint32[] proposal_ids) override public view onlyRoot {
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+
+        uint16 error;
+
+        if (code_version > current_version) error = StakingErrors.OLD_VERSION;
+        if (msg.value < proposal_ids.length * Gas.UNLOCK_CASTED_VOTE_VALUE + 1 ton) error = StakingErrors.VALUE_TOO_LOW;
+
+        if (error != 0){
+            IVoter(user).onCastedVoteNotUnlocked{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(proposal_ids, error);
+            return;
+        }
 
         for (uint i = 0; i < proposal_ids.length; i++) {
             if (casted_votes.exists(proposal_ids[i])) {
@@ -177,7 +198,10 @@ contract UserData is IUserData, IUpgradableByRequest {
             emit UnlockCastedVotes(proposal_id);
             IVoter(user).onCastedVoteUnlocked{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(proposal_id);
         } else {
-            IVoter(user).onCastedVoteNotUnlocked{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(proposal_id);
+            IVoter(user).onCastedVoteNotUnlocked{
+                value: 0,
+                flag: MsgFlag.REMAINING_GAS, bounce: false
+            }([proposal_id], StakingErrors.WRONG_PROPOSAL_STATE);
         }
     }
 
@@ -444,11 +468,6 @@ contract UserData is IUserData, IUpgradableByRequest {
     modifier onlyElection(uint128 round_num) {
         address election_addr = getElectionAddress(round_num);
         require (election_addr == msg.sender, StakingErrors.NOT_ELECTION);
-        _;
-    }
-
-    modifier onlyUser {
-       require(msg.sender == user, StakingErrors.NOT_OWNER);
         _;
     }
 
