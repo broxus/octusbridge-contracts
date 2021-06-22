@@ -2,26 +2,26 @@
 pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
-
 import "./interfaces/IBridge.sol";
-
 import "./libraries/ECDSA.sol";
 
-import "./utils/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
-import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
-
+import "hardhat/console.sol";
 
 /**
     @title Ethereum Bridge contract.
     @dev Stores relays for each round
-    // TODO: only next round relays can be set?
+    @dev Controlled by DAO
+    @dev Implements handy functions to be used in bridge integration contracts
 **/
-contract Bridge is Initializable, Ownable, IBridge {
+contract Bridge is OwnableUpgradeable, IBridge {
     using ECDSA for bytes32;
 
     mapping (uint32 => mapping(address => bool)) public roundRelays;
+    mapping (uint32 => uint32) public roundRequiredSignatures;
     BridgeConfiguration public configuration;
+    uint public lastRound;
 
     /**
         @param admin Bridge admin
@@ -32,11 +32,13 @@ contract Bridge is Initializable, Ownable, IBridge {
         BridgeConfiguration calldata _configuration,
         address[] calldata relays
     ) external initializer {
-        _transferOwnership(admin);
+        __Ownable_init();
+        transferOwnership(admin);
 
         _setConfiguration(_configuration);
 
-        _updateRoundRelays(0, relays, true);
+        _setRoundRelays(0, relays);
+        lastRound = 0;
     }
 
     /*
@@ -55,18 +57,18 @@ contract Bridge is Initializable, Ownable, IBridge {
         @notice Internal function for updating up relays for specific round
         @param round Round id
         @param relays Array of relay addresses
-        @param status Relays statuses
     */
-    function _updateRoundRelays(
+    function _setRoundRelays(
         uint32 round,
-        address[] memory relays,
-        bool status
+        address[] memory relays
     ) internal {
-        for (uint i=0; i<relays.length; i++) {
-            roundRelays[round][relays[i]] = status;
-        }
+        roundRequiredSignatures[round] = uint32(relays.length * 2 / 3) + 1;
 
-        emit RoundRelaysUpdate(round, relays, status);
+        for (uint i=0; i<relays.length; i++) {
+            roundRelays[round][relays[i]] = true;
+
+            emit RoundRelayGranted(round, relays[i]);
+        }
     }
 
     /*
@@ -82,20 +84,26 @@ contract Bridge is Initializable, Ownable, IBridge {
     }
 
     /*
-        @notice Count how many signatures are made by correct relays from
-        @dev Signatures should be sorted by the ascending signers
-        so it's cheaper to detect duplicates
+        @notice Verify there is enough relay signatures
+        @dev Required amount of signatures is (2/3 * relays at round) + 1
+        @dev Signatures should be sorted by the ascending signers, so it's cheaper to detect duplicates
+        // TODO: discuss min amount of required signatures
         @param round Round id
         @param payload Bytes encoded payload
         @param signatures Payload signatures
-\    */
-    function countRelaySignatures(
+        @returns All checks are passed or not
+    */
+    function verifyRelaySignatures(
         uint32 round,
         bytes memory payload,
         bytes[] memory signatures
-    ) override public view returns (uint32 count) {
+    ) override public view returns (bool) {
+        require(round <= lastRound, "Bridge: too high round");
+
         address lastSigner = address(0);
-        count = 0;
+        uint32 count = 0;
+
+        uint32 requiredSignatures = roundRequiredSignatures[round];
 
         for (uint i=0; i<signatures.length; i++) {
             address signer = recoverSignature(payload, signatures[i]);
@@ -107,8 +115,11 @@ contract Bridge is Initializable, Ownable, IBridge {
                 count++;
             }
         }
+
+        return count >= requiredSignatures;
     }
 
+    // TODO: discuss removing relays
     /*
         @notice Recover signer from the payload and signature
         @param payload Payload
@@ -125,68 +136,18 @@ contract Bridge is Initializable, Ownable, IBridge {
 
     /*
         @notice Grant relay permission for addresses at specific round
-        @dev Checks enough relay signatures are given for specified round
-        @param payload Encoded TON event with event data (uint32, address[])
+        @param round Round number on which to set relays
         @param signatures Payload signatures
     */
     function setRoundRelays(
-        bytes calldata payload,
-        bytes[] calldata signatures
-    ) override external {
-        // Decode payload
-        (TONEvent memory tonEvent) = abi.decode(payload, (TONEvent));
+        uint32 round,
+        address[] calldata relays
+    ) override external onlyOwner {
+        require(round == lastRound + 1, "Bridge: wrong round");
 
-        // Check enough correct signatures
-        require(
-            countRelaySignatures(tonEvent.round, payload, signatures) >= configuration.requiredSignatures,
-            "Bridge: not enough relay signatures"
-        );
+        lastRound++;
 
-        require(
-            tonEvent.proxy == address(this),
-            "Bridge: wrong event proxy"
-        );
-
-        // Decode relays and corresponding round
-        (uint32 round, address[] memory relays) = abi.decode(
-            tonEvent.eventData,
-            (uint32, address[])
-        );
-
-        _updateRoundRelays(round, relays, true);
-    }
-
-    /*
-        @notice Revoke relay permission for addresses at specific round
-        @dev Checks enough relay signatures are given for specified round
-        @param payload Encoded TON event with event data (uint32, address[])
-        @param signatures Payload signatures
-    */
-    function removeRoundRelays(
-        bytes calldata payload,
-        bytes[] calldata signatures
-    ) override external {
-        // Decode payload
-        (TONEvent memory tonEvent) = abi.decode(payload, (TONEvent));
-
-        // Check enough correct signatures
-        require(
-            countRelaySignatures(tonEvent.round, payload, signatures) >= configuration.requiredSignatures,
-            "Bridge: not enough relay signatures"
-        );
-
-        require(
-            tonEvent.proxy == address(this),
-            "Bridge: wrong event proxy"
-        );
-
-        // Decode relays and corresponding round
-        (uint32 round, address[] memory relays) = abi.decode(
-            tonEvent.eventData,
-            (uint32, address[])
-        );
-
-        _updateRoundRelays(round, relays, false);
+        _setRoundRelays(round, relays);
     }
 
     /*
@@ -196,7 +157,7 @@ contract Bridge is Initializable, Ownable, IBridge {
     */
     function setConfiguration(
         BridgeConfiguration calldata _configuration
-    ) override onlyOwner external {
+    ) override external onlyOwner {
         _setConfiguration(_configuration);
     }
 }

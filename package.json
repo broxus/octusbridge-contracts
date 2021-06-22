@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@openzeppelin/contracts": "^4.0.0",
+    "@openzeppelin/contracts-upgradeable": "^4.1.0",
     "@truffle/hdwallet-provider": "^1.2.0",
     "bignumber.js": "^9.0.1",
     "chai-as-promised": "^7.1.1",

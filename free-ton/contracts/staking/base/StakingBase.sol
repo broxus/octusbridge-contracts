@@ -7,6 +7,7 @@ import "./../interfaces/ITokensReceivedCallback.sol";
 import "./../interfaces/IUserData.sol";
 import "./../interfaces/IUpgradableByRequest.sol";
 import "./../interfaces/IStakingPool.sol";
+import "./../interfaces/IStakingDao.sol";
 import "./../interfaces/IRelayRound.sol";
 import "./../interfaces/IElection.sol";
 
@@ -21,7 +22,7 @@ import "./../libraries/Gas.sol";
 import "../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol";
 import "../../../../node_modules/@broxus/contracts/contracts/platform/Platform.sol";
 
-abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool {
+abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, IStakingDao {
     // Events
     event RewardDeposit(uint128 amount, uint256 reward_round_num);
     event Deposit(address user, uint128 amount);
@@ -460,6 +461,44 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool {
             _buildUserDataParams(user)
         )));
     }
+
+    function castVote(uint32 proposal_id, bool support) public view override {
+        _castVote(proposal_id, support, '');
+    }
+
+    function castVoteWithReason(
+        uint32 proposal_id,
+        bool support,
+        string reason
+    ) public view override {
+        _castVote(proposal_id, support, reason);
+    }
+
+    function _castVote(uint32 proposal_id, bool support, string reason) private view {
+        tvm.rawReserve(_reserve(), 2);
+        IUserData(getUserDataAddress(msg.sender)).castVote{
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(user_data_version, proposal_id, support, reason);
+    }
+
+    function tryUnlockVoteTokens(uint32 proposal_id) public view override {
+        tvm.rawReserve(_reserve(), 2);
+        IUserData(getUserDataAddress(msg.sender)).tryUnlockVoteTokens{
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(user_data_version, proposal_id);
+
+    }
+
+    function tryUnlockCastedVotes(uint32[] proposal_ids) public view override {
+        tvm.rawReserve(_reserve(), 2);
+        IUserData(getUserDataAddress(msg.sender)).tryUnlockCastedVotes{
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(user_data_version, proposal_ids);
+    }
+
 
     onBounce(TvmSlice slice) external {
         tvm.accept();
