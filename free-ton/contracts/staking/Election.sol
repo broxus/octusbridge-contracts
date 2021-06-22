@@ -200,7 +200,7 @@ contract Election is IElection {
         IStakingPool(root).onElectionStarted{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num, send_gas_to);
     }
 
-    function _buildUserDataParams(address user) private inline pure returns (TvmCell) {
+    function _buildUserDataParams(address user) private inline view returns (TvmCell) {
         TvmBuilder builder;
         builder.store(user);
         return builder.toCell();

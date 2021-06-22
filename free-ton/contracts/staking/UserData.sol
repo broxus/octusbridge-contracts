@@ -19,6 +19,7 @@ import "../dao/interfaces/IVoter.sol";
 
 import "../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol";
 import "../../../node_modules/@broxus/contracts/contracts/platform/Platform.sol";
+import "../dao/interfaces/IStakingAccount.sol";
 
 contract UserData is IUserData, IUpgradableByRequest {
     uint16 constant public MAX_REASON_LENGTH = 2048; //todo change
@@ -27,9 +28,9 @@ contract UserData is IUserData, IUpgradableByRequest {
     TvmCell public platform_code;
 
     uint128 public token_balance;
-    uint256 public reward_balance;
-    uint256 public reward_debt;
     uint128 relay_lock_until;
+
+    RewardRoundData[] public rewardRounds;
 
     uint256 public relay_eth_address;
     bool public eth_address_confirmed;
@@ -181,7 +182,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         }
     }
 
-    function _buildProposalInitialData(uint32 proposal_id) private inline pure returns (TvmCell) {
+    function _buildProposalInitialData(uint32 proposal_id) private inline view returns (TvmCell) {
         TvmBuilder builder;
         builder.store(proposal_id);
         return builder.toCell();
@@ -208,11 +209,31 @@ contract UserData is IUserData, IUpgradableByRequest {
     function getDetails() external responsible view override returns (UserDataDetails) {
         // TODO: add new vars to Details
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }UserDataDetails(
-            token_balance, reward_debt, reward_balance, root, user, current_version
+            token_balance, rewardRounds, root, user, current_version
         );
     }
 
-    function processDeposit(uint64 nonce, uint128 _tokens_to_deposit, uint256 _acc_reward_per_share, uint32 code_version) external override onlyRoot {
+    function syncRewards(IStakingPool.RewardRound[] reward_rounds, uint256 updated_balance) internal {
+        for (uint i = rewardRounds.length - 1; i < reward_rounds.length; i++) {
+            if (i >= rewardRounds.length) {
+                rewardRounds.push(RewardRoundData(0, 0));
+            }
+
+            IStakingPool.RewardRound remote_round = reward_rounds[i];
+            RewardRoundData local_round = rewardRounds[i];
+
+            uint128 new_reward = uint128(math.muldiv(token_balance, remote_round.accRewardPerShare, 1e18) - local_round.reward_debt);
+            rewardRounds[i].reward_balance += new_reward;
+            rewardRounds[i].reward_debt = uint128(math.muldiv(updated_balance, remote_round.accRewardPerShare, 1e18));
+        }
+    }
+
+    function processDeposit(
+        uint64 nonce,
+        uint128 _tokens_to_deposit,
+        IStakingPool.RewardRound[] reward_rounds,
+        uint32 code_version
+    ) external override onlyRoot {
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
 
         if (code_version > current_version) {
@@ -220,16 +241,33 @@ contract UserData is IUserData, IUpgradableByRequest {
             return;
         }
 
-        uint256 prev_token_balance = token_balance;
-        uint256 prev_reward_debt = reward_debt;
-
+        syncRewards(reward_rounds, token_balance + _tokens_to_deposit);
         token_balance += _tokens_to_deposit;
-        reward_debt = (token_balance * _acc_reward_per_share) / 1e18;
-
-        uint256 new_reward = ((prev_token_balance * _acc_reward_per_share) / 1e18) - prev_reward_debt;
-        reward_balance += new_reward;
 
         IStakingPool(msg.sender).finishDeposit{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(nonce);
+    }
+
+    function processClaimReward(
+        IStakingPool.RewardRound[] reward_rounds,
+        address send_gas_to,
+        uint32 code_version
+    ) external override onlyRoot {
+        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+
+        if (code_version > current_version) {
+            send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
+            return;
+        }
+
+        syncRewards(reward_rounds, token_balance);
+
+        uint128[] rewards = new uint128[](rewardRounds.length);
+        for (uint i = 0; i < rewardRounds.length; i++) {
+            rewards[i] = rewardRounds[i].reward_balance;
+            rewardRounds[i].reward_balance = 0;
+        }
+
+        IStakingPool(msg.sender).finishClaimReward{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(user, rewards, send_gas_to);
     }
 
     function processLinkRelayAccounts(
@@ -307,7 +345,12 @@ contract UserData is IUserData, IUpgradableByRequest {
         send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 
-    function processWithdraw(uint128 _tokens_to_withdraw, uint256 _acc_reward_per_share, address send_gas_to, uint32 code_version) external override onlyRoot {
+    function processWithdraw(
+        uint128 _tokens_to_withdraw,
+        IStakingPool.RewardRound[] reward_rounds,
+        address send_gas_to,
+        uint32 code_version
+    ) external override onlyRoot {
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
 
         if (code_version > current_version || _tokens_to_withdraw > token_balance || now < relay_lock_until || !_canWithdrawVotes()) {
@@ -315,14 +358,8 @@ contract UserData is IUserData, IUpgradableByRequest {
             return;
         }
 
-        uint256 prev_token_balance = token_balance;
-        uint256 prev_reward_debt = reward_debt;
-
+        syncRewards(reward_rounds, token_balance - _tokens_to_withdraw);
         token_balance -= _tokens_to_withdraw;
-        reward_debt = (token_balance * _acc_reward_per_share) / 1e18;
-
-        uint256 new_reward = ((prev_token_balance * _acc_reward_per_share) / 1e18) - prev_reward_debt;
-        reward_balance += new_reward;
 
         IStakingPool(msg.sender).finishWithdraw{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(user, _tokens_to_withdraw, send_gas_to);
 
@@ -342,7 +379,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         });
     }
 
-    function _buildElectionParams(uint128 round_num) private inline pure returns (TvmCell) {
+    function _buildElectionParams(uint128 round_num) private inline view returns (TvmCell) {
         TvmBuilder builder;
         builder.store(round_num);
         return builder.toCell();
@@ -393,6 +430,8 @@ contract UserData is IUserData, IUpgradableByRequest {
         current_version = params.decode(uint32);
         dao_root = params.decode(address);
 
+        rewardRounds.push(RewardRoundData(0, 0));
+
         send_gas_to.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
@@ -409,12 +448,18 @@ contract UserData is IUserData, IUpgradableByRequest {
             builder.store(root);
             builder.store(user);
             builder.store(current_version);
+
             builder.store(new_version);
             builder.store(send_gas_to);
+
             builder.store(relay_lock_until);
             builder.store(token_balance);
-            builder.store(reward_balance);
-            builder.store(reward_debt);
+            builder.store(rewardRounds);
+
+            builder.store(relay_eth_address);
+            builder.store(eth_address_confirmed);
+            builder.store(relay_ton_pubkey);
+            builder.store(ton_pubkey_confirmed);
 
             builder.store(platform_code);
 

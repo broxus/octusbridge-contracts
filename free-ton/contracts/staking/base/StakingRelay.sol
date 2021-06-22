@@ -5,7 +5,7 @@ import "./StakingUpgradable.sol";
 
 
 abstract contract StakingPoolRelay is StakingPoolUpgradable {
-    function linkRelayAccounts(uint256 ton_pubkey, uint256 eth_address, address send_gas_to) external {
+    function linkRelayAccounts(uint256 ton_pubkey, uint256 eth_address, address send_gas_to) external view {
         require (msg.value >= Gas.MIN_LINK_RELAY_ACCS_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
 
         tvm.rawReserve(_reserve(), 2);
@@ -16,8 +16,8 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         );
     }
 
-    function confirmEthAccount(address staker_addr, uint256 eth_address, address send_gas_to) external onlyBridge {
-        require (msg.value >= Gas.MIN_CONFIRM_ETH_RELAY_ACC, StakingErrors.VALUE_TOO_LOW);
+    function confirmEthAccount(address staker_addr, uint256 eth_address, address send_gas_to) external view onlyBridge {
+        require (msg.value >= Gas.MIN_CONFIRM_ETH_RELAY_ACC_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
 
         tvm.rawReserve(_reserve(), 2);
 
@@ -132,6 +132,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
 
         TvmBuilder constructor_params;
         constructor_params.store(relay_round_version);
+        constructor_params.store(relayRoundTime);
 
         return new Platform{
             stateInit: _buildInitData(PlatformTypes.RelayRound, _buildRelayRoundParams(round_num)),

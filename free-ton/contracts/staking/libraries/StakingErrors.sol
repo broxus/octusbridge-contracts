@@ -27,6 +27,7 @@ library StakingErrors {
     uint8 public constant ACCOUNT_ALREADY_CONFIRMED = 124;
     uint8 public constant ACCOUNT_NOT_CONFIRMED = 124;
     uint8 public constant NOT_BRIDGE = 125;
+    uint8 public constant EMPTY_REWARD_ROUND = 126;
 
     uint16 constant NOT_DAO_ROOT = 201;
     uint16 constant NOT_PROPOSAL = 202;

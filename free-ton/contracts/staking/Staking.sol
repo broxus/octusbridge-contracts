@@ -8,6 +8,7 @@ contract Staking is StakingPoolRelay {
 
         tokenRoot = _tokenRoot;
         owner = _owner;
+        rewardRounds.push(RewardRound(0, 0, 0, now));
         setUpTokenWallets();
     }
 }

@@ -23,8 +23,12 @@ import "../../../../node_modules/@broxus/contracts/contracts/platform/Platform.s
 
 abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool {
     // Events
+    event RewardDeposit(uint128 amount, uint256 reward_round_num);
     event Deposit(address user, uint128 amount);
     event Withdraw(address user, uint128 amount);
+    event RewardClaimed(address user, uint256 reward_tokens);
+    event NewRewardRound(uint256 round_num);
+
     event ElectionStarted(uint128 round_num);
     event ElectionEnded(uint128 round_num);
     event RelayRoundInitialized(uint128 round_num, IRelayRound.Relay[] relays);
@@ -32,6 +36,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool {
     event DepositReverted(address user, uint128 amount);
 
     event DaoRootUpdated(address new_dao_root);
+    event BridgeUpdated(address new_bridge);
 
     event ActiveUpdated(bool active);
 
@@ -78,25 +83,21 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool {
     // 0 means no pending relay round
     uint128 public pendingRelayRound;
 
-    uint256 public accRewardPerShare;
+    RewardRound[] public rewardRounds;
 
-    uint256 public lastRewardTime;
+    uint128 public lastRewardTime;
 
     address public tokenRoot;
 
     address public tokenWallet;
 
-    uint256 public tokenBalance;
+    uint128 public tokenBalance;
 
-    uint256 public unclaimedReward;
-
-    uint256 public rewardTokenBalance;
-
-    uint256 public totalReward;
+    uint128 public rewardTokenBalance;
 
     address public owner;
 
-    uint256 public rewardPerSecond = 1000;
+    uint128 public rewardPerSecond = 1000;
 
     uint128 public relayRoundTime = 7 days;
 
@@ -121,7 +122,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool {
     // this is used to prevent data loss on bounced messages during deposit
     mapping (uint64 => PendingDeposit) deposits;
 
-    function _reserve() internal pure returns (uint128) {
+    function _reserve() internal view returns (uint128) {
         return math.max(address(this).balance - msg.value, Gas.ROOT_INITIAL_BALANCE);
     }
 
@@ -132,10 +133,17 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool {
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
+    function setBridge(address new_bridge, address send_gas_to) external onlyOwner {
+        tvm.rawReserve(_reserve(), 2);
+        emit BridgeUpdated(new_bridge);
+        bridge = new_bridge;
+        send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
+    }
+
     // Active
     function setActive(bool new_active, address send_gas_to) external onlyOwner {
         tvm.rawReserve(_reserve(), 2);
-        if (new_active && dao_root.value != 0 && has_platform_code && user_data_version > 0 && election_version > 0 && relay_round_version > 0) {
+        if (new_active && dao_root.value != 0 && bridge.value != 0 && has_platform_code && user_data_version > 0 && election_version > 0 && relay_round_version > 0) {
             active = true;
         } else {
             active = false;
@@ -192,6 +200,22 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool {
         }
     }
 
+    function startNewRewardRound(address send_gas_to) external onlyOwner {
+        if (rewardRounds.length > 0) {
+            RewardRound last_round = rewardRounds[rewardRounds.length - 1];
+            require (last_round.rewardTokens > 0, StakingErrors.EMPTY_REWARD_ROUND);
+        }
+
+        tvm.rawReserve(_reserve(), 2);
+
+        updatePoolInfo();
+
+        rewardRounds.push(RewardRound(0, 0, 0, now));
+        emit NewRewardRound(rewardRounds.length - 1);
+
+        send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
+    }
+
     // deposit occurs here
     function tokensReceivedCallback(
         address /*token_wallet*/,
@@ -231,9 +255,12 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool {
                 deposits[deposit_nonce] = PendingDeposit(sender_address, amount, original_gas_to);
 
                 address userDataAddr = getUserDataAddress(sender_address);
-                UserData(userDataAddr).processDeposit{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(deposit_nonce, amount, accRewardPerShare, user_data_version);
+                UserData(userDataAddr).processDeposit{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(deposit_nonce, amount, rewardRounds, user_data_version);
             } else if (deposit_type == REWARD_UP) {
                 rewardTokenBalance += amount;
+                rewardRounds[rewardRounds.length - 1].rewardTokens += amount;
+                emit RewardDeposit(amount, rewardRounds.length - 1);
+
                 original_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
             } else {
                 TvmCell tvmcell;
@@ -290,7 +317,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool {
         address userDataAddr = getUserDataAddress(msg.sender);
         // we cant check if user has any balance here, delegate it to UserData
         UserData(userDataAddr).processWithdraw{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-            amount, accRewardPerShare, send_gas_to, user_data_version
+            amount, rewardRounds, send_gas_to, user_data_version
         );
     }
 
@@ -310,26 +337,72 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool {
         );
     }
 
-    // TODO: update
-    //    function withdrawUnclaimed(address to) external onlyOwner {
-    //        require (now >= (farmEndTime + 24 hours), StakingErrors.FARMING_NOT_ENDED);
-    //        // minimum value that should remain on contract
-    //        tvm.rawReserve(CONTRACT_MIN_BALANCE, 2);
-    //
-    //        transferReward(to, rewardTokenBalance);
-    //    }
+    function claimReward(address send_gas_to) external {
+        require (msg.value >= Gas.MIN_CLAIM_REWARD_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
+
+        tvm.rawReserve(_reserve(), 2);
+
+        updatePoolInfo();
+        address userDataAddr = getUserDataAddress(msg.sender);
+        // we cant check if user has any balance here, delegate it to UserData
+        UserData(userDataAddr).processClaimReward{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+            rewardRounds, send_gas_to, user_data_version
+        );
+    }
+
+    function finishClaimReward(address user, uint128[] rewards, address send_gas_to) external override onlyUserData(user) {
+        tvm.rawReserve(_reserve(), 2);
+
+        uint128 user_token_reward = 0;
+        for (uint i = 0; i < rewards.length; i++) {
+            RewardRound cur_round = rewardRounds[i];
+            if (cur_round.totalReward > 0 && rewards[i] > 0) {
+                user_token_reward += math.muldiv(math.muldiv(rewards[i], 1e18, cur_round.totalReward), cur_round.rewardTokens, 1e18);
+            }
+        }
+
+        user_token_reward = math.min(user_token_reward, rewardTokenBalance);
+        rewardTokenBalance -= user_token_reward;
+
+        emit RewardClaimed(user, user_token_reward);
+
+        TvmCell _empty;
+        ITONTokenWallet(tokenWallet).transferToRecipient{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+            0, user, uint128(user_token_reward), 0, 0, send_gas_to, false, _empty
+        );
+    }
+
 
     // user_amount and user_reward_debt should be fetched from UserData at first
-    function pendingReward(uint256 user_amount, uint256 user_reward_debt) external view returns (uint256, uint256) {
-        uint256 _accRewardPerShare = accRewardPerShare;
-        uint256 _totalReward = totalReward;
+    function pendingReward(uint256 user_amount, IUserData.RewardRoundData[] user_reward_data) external view responsible returns (uint256) {
+        RewardRound[] _reward_rounds = rewardRounds;
+        // sync rewards up to this moment
         if (now > lastRewardTime && tokenBalance != 0) {
-            uint256 multiplier = now - lastRewardTime;
-            uint256 tonReward = multiplier * rewardPerSecond;
-            _totalReward += tonReward;
-            _accRewardPerShare += (tonReward * 1e18) / tokenBalance;
+            uint128 new_reward = (now - lastRewardTime) * rewardPerSecond;
+            _reward_rounds[_reward_rounds.length - 1].totalReward += new_reward;
+            _reward_rounds[_reward_rounds.length - 1].accRewardPerShare += math.muldiv(new_reward, 1e18, tokenBalance);
         }
-        return (((user_amount * _accRewardPerShare) / 1e18) - user_reward_debt, _totalReward);
+
+        uint256 user_reward_tokens = 0;
+        for (uint i = 0; i < _reward_rounds.length; i++) {
+            // for old user rounds (which synced already), just get rewards
+            if (i < user_reward_data.length - 1) {
+                uint256 user_round_share = math.muldiv(user_reward_data[i].reward_balance, 1e18, _reward_rounds[i].totalReward);
+                user_reward_tokens += math.muldiv(user_round_share, _reward_rounds[i].rewardTokens, 1e18);
+            // sync new user rounds
+            } else {
+                if (i >= user_reward_data.length) {
+                    user_reward_data.push(IUserData.RewardRoundData(0, 0));
+                }
+
+                uint256 new_reward = math.muldiv(user_amount, _reward_rounds[i].accRewardPerShare, 1e18) - user_reward_data[i].reward_debt;
+                uint256 user_round_reward = user_reward_data[i].reward_balance + new_reward;
+
+                uint256 user_round_share = math.muldiv(user_round_reward, 1e18, _reward_rounds[i].totalReward);
+                user_reward_tokens += math.muldiv(user_round_share, _reward_rounds[i].rewardTokens, 1e18);
+            }
+        }
+        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } user_reward_tokens;
     }
 
     function updatePoolInfo() internal {
@@ -337,21 +410,19 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool {
             return;
         }
 
-        uint256 multiplier = now - lastRewardTime;
-        uint256 new_reward = rewardPerSecond * multiplier;
-        totalReward += new_reward;
+        uint128 multiplier = now - lastRewardTime;
+        uint128 new_reward = rewardPerSecond * multiplier;
+        rewardRounds[rewardRounds.length - 1].totalReward += new_reward;
+        lastRewardTime = now;
 
         if (tokenBalance == 0) {
-            unclaimedReward += new_reward;
-            lastRewardTime = now;
             return;
         }
 
-        accRewardPerShare += new_reward * 1e18 / tokenBalance;
-        lastRewardTime = now;
+        rewardRounds[rewardRounds.length - 1].accRewardPerShare += math.muldiv(new_reward, 1e18, tokenBalance);
     }
 
-    function _buildUserDataParams(address user) private inline pure returns (TvmCell) {
+    function _buildUserDataParams(address user) private inline view returns (TvmCell) {
         TvmBuilder builder;
         builder.store(user);
         return builder.toCell();
@@ -403,7 +474,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool {
             address user_data_addr = deployUserData(deposit.user);
             // try again
             UserData(user_data_addr).processDeposit{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-                _deposit_nonce, deposit.amount, accRewardPerShare, user_data_version
+                _deposit_nonce, deposit.amount, rewardRounds, user_data_version
             );
         }
     }

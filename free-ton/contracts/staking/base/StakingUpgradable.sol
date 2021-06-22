@@ -106,13 +106,13 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         );
     }
 
-    function _buildElectionParams(uint128 round_num) internal inline pure returns (TvmCell) {
+    function _buildElectionParams(uint128 round_num) internal inline view returns (TvmCell) {
         TvmBuilder builder;
         builder.store(round_num);
         return builder.toCell();
     }
 
-    function _buildRelayRoundParams(uint128 round_num) internal inline pure returns (TvmCell) {
+    function _buildRelayRoundParams(uint128 round_num) internal inline view returns (TvmCell) {
         TvmBuilder builder;
         builder.store(round_num);
         return builder.toCell();

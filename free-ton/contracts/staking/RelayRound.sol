@@ -9,12 +9,14 @@ import "./libraries/Gas.sol";
 import "../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol";
 
 
-
 contract RelayRound is IRelayRound {
     event RelayRoundCodeUpgraded(uint32 code_version);
 
     bool public relays_installed;
     uint256 public relays_count;
+    uint128 public start_time;
+    uint128 public round_len;
+
     uint128 public round_num; // setup from initialData
     mapping (address => Relay) relays; // key - staker address
 
@@ -77,6 +79,8 @@ contract RelayRound is IRelayRound {
 
         TvmSlice params = s.loadRefAsSlice();
         current_version = params.decode(uint32);
+        round_len = params.decode(uint128);
+        start_time = now;
 
         send_gas_to.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
     }
