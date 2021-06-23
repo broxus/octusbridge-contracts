@@ -4,13 +4,14 @@ const {
   setupRelays,
   MetricManager,
   enableEventConfiguration,
+  afterRun,
   logger,
   expect,
 } = require('./utils');
 
 
 describe('Test ton event reject', async function() {
-  this.timeout(100000);
+  this.timeout(10000000);
   
   let bridge, bridgeOwner, staking, cellEncoder;
   let tonEventConfiguration, initializer;
@@ -127,6 +128,7 @@ describe('Test ton event reject', async function() {
       
       eventContract = await locklift.factory.getContract('TonEvent');
       eventContract.setAddress(expectedEventContract);
+      eventContract.afterRun = afterRun;
     });
     
     it('Check event initial state', async () => {

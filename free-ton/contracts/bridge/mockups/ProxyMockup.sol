@@ -4,9 +4,9 @@ pragma AbiHeader expire;
 
 import './../interfaces/IProxy.sol';
 import './../interfaces/event-contracts/IEthereumEvent.sol';
-import "./../utils/TransferUtils.sol";
+import "./../../utils/TransferUtils.sol";
 
-import "./../../../node_modules/@broxus/contracts/contracts/utils/RandomNonce.sol";
+import "./../../../../node_modules/@broxus/contracts/contracts/utils/RandomNonce.sol";
 
 
 

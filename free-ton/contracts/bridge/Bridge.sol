@@ -10,13 +10,13 @@ import "./event-configuration-contracts/TonEventConfiguration.sol";
 import "./interfaces/IBridge.sol";
 import "./interfaces/event-configuration-contracts/IBasicEventConfiguration.sol";
 
-import "./utils/TransferUtils.sol";
-import "./utils/ErrorCodes.sol";
+import "./../utils/TransferUtils.sol";
+import "./../utils/ErrorCodes.sol";
 
-import './../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol';
-import './../../node_modules/@broxus/contracts/contracts/utils/RandomNonce.sol';
-import './../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.sol';
-import './../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
+import './../../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol';
+import './../../../node_modules/@broxus/contracts/contracts/utils/RandomNonce.sol';
+import './../../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.sol';
+import './../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
 /*

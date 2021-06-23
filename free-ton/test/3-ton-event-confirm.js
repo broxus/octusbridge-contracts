@@ -4,13 +4,14 @@ const {
   setupRelays,
   MetricManager,
   enableEventConfiguration,
+  afterRun,
   logger,
   expect,
 } = require('./utils');
 
 
 describe('Test ton event confirm', async function() {
-  this.timeout(100000);
+  this.timeout(10000000);
   
   let bridge, bridgeOwner, staking, cellEncoder;
   let tonEventConfiguration, initializer;
@@ -127,6 +128,9 @@ describe('Test ton event confirm', async function() {
   
       eventContract = await locklift.factory.getContract('TonEvent');
       eventContract.setAddress(expectedEventContract);
+      eventContract.afterRun = afterRun;
+  
+      metricManager.addContract(eventContract);
     });
   
     it('Check event initial state', async () => {
@@ -222,7 +226,9 @@ describe('Test ton event confirm', async function() {
         await eventContract.run({
           method: 'confirm',
           params: {
-            signature: '',
+            signature: Buffer
+              .from(`0x${'ff'.repeat(65)}`)
+              .toString('hex'), // 132 symbols
           },
           keyPair: relay
         });

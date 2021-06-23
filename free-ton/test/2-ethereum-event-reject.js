@@ -4,13 +4,14 @@ const {
   setupRelays,
   MetricManager,
   enableEventConfiguration,
+  afterRun,
   logger,
   expect,
 } = require('./utils');
 
 
 describe('Test ethereum event reject', async function() {
-  this.timeout(100000);
+  this.timeout(10000000);
   
   let bridge, bridgeOwner, staking, cellEncoder;
   let ethereumEventConfiguration, proxy, initializer;
@@ -129,6 +130,7 @@ describe('Test ethereum event reject', async function() {
     
       eventContract = await locklift.factory.getContract('EthereumEvent');
       eventContract.setAddress(expectedEventContract);
+      eventContract.afterRun = afterRun;
     });
   });
   
