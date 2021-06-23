@@ -14,10 +14,8 @@ interface IBridge {
         uint32 eventTimestamp;
         uint32 eventIndex;
         bytes eventData;
-        int8 tonEventConfigurationWid;
-        uint256 tonEventConfigurationAddress;
-        uint16 requiredConfirmations;
-        uint16 requiredRejects;
+        int8 configurationWid;
+        uint256 configurationAddress;
         address proxy;
         uint32 round;
         uint32 chainId;
@@ -32,8 +30,8 @@ interface IBridge {
     ) external view returns(bool);
 
     function setRoundRelays(
-        uint32 round,
-        address[] calldata relays
+        bytes calldata payload,
+        bytes[] calldata signatures
     ) external;
 
     function setConfiguration(BridgeConfiguration calldata _configuration) external;

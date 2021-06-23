@@ -2,10 +2,11 @@ const {
   signReceipt,
   logger,
   expect,
-  sortAccounts
+  sortAccounts,
 } = require('./utils');
 
 const _ = require('underscore');
+const BigNumber = require('bignumber.js');
 
 
 describe('Test bridge', async function() {
@@ -62,12 +63,50 @@ describe('Test bridge', async function() {
   });
   
   describe('Set round relays', async () => {
-    it('Set next round relays', async () => {
-      await bridge.connect(owner).setRoundRelays(
-        1,
-        initialRelays.map(account => account.address),
+    let payload, signatures;
+    
+    it('Prepare payload & signatures for next round relays', async () => {
+      const roundRelaysPayload = web3.eth.abi.encodeParameters(
+        ['uint32', 'uint160[]'],
+        [1, initialRelays.map(r => (new BigNumber(r.address.toLowerCase())).toString(10))]
       );
-      
+  
+      payload = web3.eth.abi.encodeParameters(
+        [{
+          'TONEvent': {
+            'eventTransaction': 'uint256',
+            'eventTransactionLt': 'uint64',
+            'eventTimestamp': 'uint32',
+            'eventIndex': 'uint32',
+            'eventData': 'bytes',
+            'configurationWid': 'int8',
+            'configurationAddress': 'uint256',
+            'proxy': 'address',
+            'round': 'uint32',
+            'chainId': 'uint32',
+          }
+        }],
+        [{
+          'eventTransaction': 0,
+          'eventTransactionLt': 0,
+          'eventTimestamp': 0,
+          'eventIndex': 0,
+          'eventData': roundRelaysPayload,
+          'configurationWid': 0,
+          'configurationAddress': 0,
+          'proxy': bridge.address,
+          'round': 0,
+          'chainId': 1,
+        }]
+      );
+  
+      signatures = await Promise.all(initialRelays
+        .map(async (account) => signReceipt(web3, payload, account)));
+    });
+    
+    it('Check new round relays', async () => {
+      await bridge.setRoundRelays(payload, signatures);
+  
       expect(await bridge.lastRound())
         .to.be.equal(1, 'Wrong last round');
   
@@ -81,16 +120,9 @@ describe('Test bridge', async function() {
         .to.be.lessThanOrEqual(initialRelays.length, 'Too high required signatures');
     });
     
-    it('Set new round relays with non-owner', async () => {
-      expect(bridge.setRoundRelays(2,
-        initialRelays.map(account => account.address),
-      )).to.be.revertedWith('Ownable: caller is not the owner');
-    });
-    
-    it('Set relays for too far round', async () => {
-      expect(bridge.connect(owner).setRoundRelays(100,
-        initialRelays.map(account => account.address),
-      )).to.be.revertedWith('Bridge: wrong round');
+    it('Repeat already used payload & signatures', async () => {
+      expect(bridge.setRoundRelays(payload, signatures))
+        .to.be.revertedWith('Cache: payload already seen');
     });
   });
 

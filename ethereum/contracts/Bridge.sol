@@ -5,9 +5,10 @@ pragma experimental ABIEncoderV2;
 import "./interfaces/IBridge.sol";
 import "./libraries/ECDSA.sol";
 
+import "./utils/Cache.sol";
+
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
-import "hardhat/console.sol";
 
 /**
     @title Ethereum Bridge contract.
@@ -15,7 +16,7 @@ import "hardhat/console.sol";
     @dev Controlled by DAO
     @dev Implements handy functions to be used in bridge integration contracts
 **/
-contract Bridge is OwnableUpgradeable, IBridge {
+contract Bridge is OwnableUpgradeable, Cache, IBridge {
     using ECDSA for bytes32;
 
     mapping (uint32 => mapping(address => bool)) public roundRelays;
@@ -68,6 +69,24 @@ contract Bridge is OwnableUpgradeable, IBridge {
             roundRelays[round][relays[i]] = true;
 
             emit RoundRelayGranted(round, relays[i]);
+        }
+    }
+
+    /*
+        @notice Same as above, but uint160 used instead of address type
+        @param round Round id
+        @param relays Array of relay addresses
+    */
+    function _setRoundRelays(
+        uint32 round,
+        uint160[] memory relays
+    ) internal {
+        roundRequiredSignatures[round] = uint32(relays.length * 2 / 3) + 1;
+
+        for (uint i=0; i<relays.length; i++) {
+            roundRelays[round][address(relays[i])] = true;
+
+            emit RoundRelayGranted(round, address(relays[i]));
         }
     }
 
@@ -140,9 +159,35 @@ contract Bridge is OwnableUpgradeable, IBridge {
         @param signatures Payload signatures
     */
     function setRoundRelays(
-        uint32 round,
-        address[] calldata relays
-    ) override external onlyOwner {
+        bytes calldata payload,
+        bytes[] calldata signatures
+    ) override external notCached(payload) {
+        (IBridge.TONEvent memory tonEvent) = abi.decode(payload, (IBridge.TONEvent));
+
+        require(
+            verifyRelaySignatures(
+                tonEvent.round,
+                payload,
+                signatures
+            ),
+            "Bridge: signatures verification failed"
+        );
+
+        require(
+            tonEvent.proxy == address(this),
+            "Bridge: wrong event proxy"
+        );
+
+        require(
+            tonEvent.chainId == 1,
+            "Bridge: wrong chain id"
+        );
+
+        (uint32 round, uint160[] memory relays) = abi.decode(
+            tonEvent.eventData,
+            (uint32, uint160[])
+        );
+
         require(round == lastRound + 1, "Bridge: wrong round");
 
         lastRound++;
