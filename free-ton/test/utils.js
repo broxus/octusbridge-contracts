@@ -181,7 +181,8 @@ const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
         eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
         staking: staking.address,
         eventCode: EthereumEvent.code,
-        meta: configurationMeta
+        meta: configurationMeta,
+        chainId: 1,
       },
       networkConfiguration: {
         eventEmitter: new BigNumber(0),
@@ -253,7 +254,8 @@ const setupTonEventConfiguration = async (owner, staking, cellEncoder) => {
         eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
         staking: staking.address,
         eventCode: TonEvent.code,
-        meta: configurationMeta
+        meta: configurationMeta,
+        chainId: 1,
       },
       networkConfiguration: {
         eventEmitter: locklift.utils.zeroAddress,

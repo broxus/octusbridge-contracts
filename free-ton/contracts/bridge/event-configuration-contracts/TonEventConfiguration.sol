@@ -46,6 +46,7 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
         eventInitData.configuration = address(this);
         eventInitData.meta = basicConfiguration.meta;
         eventInitData.staking = basicConfiguration.staking;
+        eventInitData.chainId = basicConfiguration.chainId;
     }
 
     // TODO: add interfaces

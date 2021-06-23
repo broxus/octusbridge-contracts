@@ -110,7 +110,8 @@ describe('Test DAO', async () => {
             'requiredConfirmations': 'uint16',
             'requiredRejects': 'uint16',
             'proxy': 'address',
-            'round': 'uint32'
+            'round': 'uint32',
+            'chainId': 'uint32',
           }
         }],
         [{
@@ -124,7 +125,8 @@ describe('Test DAO', async () => {
           'requiredConfirmations': 1,
           'requiredRejects': 1,
           'proxy': dao.address,
-          'round': 0
+          'round': 0,
+          'chainId': 1,
         }]
       );
   
@@ -190,7 +192,8 @@ describe('Test DAO', async () => {
             'requiredConfirmations': 'uint16',
             'requiredRejects': 'uint16',
             'proxy': 'address',
-            'round': 'uint32'
+            'round': 'uint32',
+            'chainId': 'uint32',
           }
         }],
         [{
@@ -204,7 +207,8 @@ describe('Test DAO', async () => {
           'requiredConfirmations': 1,
           'requiredRejects': 1,
           'proxy': dao.address,
-          'round': 0
+          'round': 0,
+          'chainId': 1,
         }]
       );
   

@@ -46,6 +46,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
         eventInitData.configuration = address(this);
         eventInitData.meta = basicConfiguration.meta;
         eventInitData.staking = basicConfiguration.staking;
+        eventInitData.chainId = basicConfiguration.chainId;
     }
 
     /*

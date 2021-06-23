@@ -18,5 +18,6 @@ interface ITonEvent is IBasicEvent {
         address configuration;
         TvmCell meta;
         address staking;
+        uint32 chainId;
     }
 }

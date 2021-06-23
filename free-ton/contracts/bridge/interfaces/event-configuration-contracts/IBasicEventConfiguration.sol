@@ -10,5 +10,6 @@ interface IBasicEventConfiguration {
         uint128 eventInitialBalance;
         TvmCell eventCode;
         TvmCell meta;
+        uint32 chainId;
     }
 }

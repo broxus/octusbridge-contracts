@@ -69,6 +69,11 @@ contract DAO is OwnableUpgradeable, IDAO {
             "DAO: wrong event proxy"
         );
 
+        require(
+            tonEvent.chainId == 1,
+            "DAO: wrong chain id"
+        );
+
         (EthAction[] memory actions) = abi.decode(
             tonEvent.eventData,
             (EthAction[])

@@ -20,6 +20,7 @@ interface IBridge {
         uint16 requiredRejects;
         address proxy;
         uint32 round;
+        uint32 chainId;
     }
 
     function isRelay(uint32 round, address candidate) external view returns(bool);
