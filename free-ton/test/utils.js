@@ -315,6 +315,28 @@ const enableEventConfiguration = async (bridgeOwner, bridge, eventConfiguration,
 };
 
 
+const captureEventConfigurations = async (bridge) => {
+  const configurationEvents = _.flatten([
+    await bridge.getEvents('EventConfigurationCreated'),
+    await bridge.getEvents('EventConfigurationRemoved'),
+    await bridge.getEvents('EventConfigurationUpdated'),
+  ]).sort((a, b) => a.created_at > b.created_at ? 1 : -1);
+  
+  return configurationEvents.reduce((acc, event) => {
+    if (event.name === 'EventConfigurationCreated' || event.name === 'EventConfigurationUpdated') {
+      return {
+        ...acc,
+        [event.value.id]: event.value.eventConfiguration
+      };
+    } else {
+      delete acc[event.value.id];
+
+      return acc;
+    }
+  }, {});
+};
+
+
 module.exports = {
   setupBridge,
   setupEthereumEventConfiguration,
@@ -323,6 +345,7 @@ module.exports = {
   logContract,
   MetricManager,
   enableEventConfiguration,
+  captureEventConfigurations,
   afterRun,
   logger,
   expect,

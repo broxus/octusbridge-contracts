@@ -4,6 +4,7 @@ const {
   setupRelays,
   MetricManager,
   enableEventConfiguration,
+  captureEventConfigurations,
   afterRun,
   logger,
   expect,
@@ -61,23 +62,24 @@ describe('Test ton event confirm', async function() {
         'ton'
       );
     });
-
-    it('Check active configurations', async () => {
-      const activeConfigurations = await bridge.call({
-        method: 'getActiveEventConfigurations',
-      });
-
-      expect(activeConfigurations.ids)
-        .to.have.lengthOf(1, 'Wrong amount of active configurations');
-
-      expect(activeConfigurations.ids[0])
-        .to.be.bignumber.equal(1, 'Wrong configuration id');
-
-      expect(activeConfigurations.addrs[0])
+  
+    it('Check configuration', async () => {
+      const configurations = await captureEventConfigurations(bridge);
+    
+      expect(configurations[1])
+        .to.be.not.equal(undefined, 'Configuration not found');
+    
+      expect(Object.keys(configurations))
+        .to.have.lengthOf(1, 'Wrong amount of configurations');
+    
+      expect(configurations[1].addr)
         .to.be.equal(tonEventConfiguration.address, 'Wrong configuration address');
-
-      expect(activeConfigurations._types[0])
+    
+      expect(configurations[1]._type)
         .to.be.bignumber.equal(1, 'Wrong configuration type');
+    
+      expect(configurations[1].status)
+        .to.be.equal(true, 'Wrong configuration status');
     });
   });
   

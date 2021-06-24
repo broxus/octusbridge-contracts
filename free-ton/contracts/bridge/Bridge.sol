@@ -55,6 +55,8 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
 
         bridgeConfiguration = _bridgeConfiguration;
 
+        emit BridgeConfigurationUpdate(_bridgeConfiguration);
+
         setOwnership(_owner);
     }
 
@@ -73,10 +75,6 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         cashBack
         onlyOwner
     {
-        require(!eventConfigurations.exists(id), ErrorCodes.EVENT_CONFIGURATION_ALREADY_EXISTS);
-
-        eventConfigurations[id] = eventConfiguration;
-
         emit EventConfigurationCreated(id, eventConfiguration);
     }
 
@@ -92,10 +90,6 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         cashBack
         onlyOwner
     {
-        require(eventConfigurations.exists(id), ErrorCodes.EVENT_CONFIGURATION_NOT_EXISTS);
-
-        delete eventConfigurations[id];
-
         emit EventConfigurationRemoved(id);
     }
 
@@ -113,71 +107,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         cashBack
         onlyOwner
     {
-        require(eventConfigurations.exists(id), ErrorCodes.EVENT_CONFIGURATION_NOT_EXISTS);
-
-        eventConfigurations[id] = eventConfiguration;
-
         emit EventConfigurationUpdated(id, eventConfiguration);
-    }
-
-    /*
-        @notice Get details about specific event configuration
-        @param id Event configuration id
-        @returns addr Address of the event configuration contract
-        @returns status Current status of the configuration (active or not)
-        @returns _type Event configuration type
-    */
-    function getEventConfigurationDetails(
-        uint32 id
-    ) override public view returns (
-        address addr,
-        bool status,
-        IBasicEventConfiguration.EventType _type
-    ) {
-        addr = eventConfigurations[id].addr;
-        status = eventConfigurations[id].status;
-        _type = eventConfigurations[id]._type;
-    }
-
-    /*
-        @notice Get list of active event configuration contracts
-        @returns ids List of event configuration ids
-        @returns addrs List of event configuration addresses
-        @returns _types List of event configuration types
-    */
-    function getActiveEventConfigurations() override public view returns (
-        uint32[] ids,
-        address[] addrs,
-        IBasicEventConfiguration.EventType[] _types
-    ) {
-        for ((uint32 id, EventConfiguration eventConfiguration): eventConfigurations) {
-            if (eventConfiguration.status) {
-                ids.push(id);
-                addrs.push(eventConfiguration.addr);
-                _types.push(eventConfiguration._type);
-            }
-        }
-    }
-
-    /*
-        @notice Get all event configurations.
-        @returns ids List of event configuration ids
-        @returns addrs List of event configuration addresses
-        @returns statuses List of event configuration statuses
-        @returns _types List of event configuration types
-    */
-    function getEventConfigurations() override public view returns (
-        uint32[] ids,
-        address[] addrs,
-        bool[] statuses,
-        IBasicEventConfiguration.EventType[] _types
-    ) {
-        for ((uint32 id, EventConfiguration configuration): eventConfigurations) {
-            ids.push(id);
-            addrs.push(configuration.addr);
-            statuses.push(configuration.status);
-            _types.push(configuration._type);
-        }
     }
 
     /*
