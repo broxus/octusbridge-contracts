@@ -5,14 +5,14 @@ pragma AbiHeader expire;
 import './../interfaces/event-contracts/ITonEvent.sol';
 import "./../interfaces/event-configuration-contracts/ITonEventConfiguration.sol";
 
-import './../utils/TransferUtils.sol';
-import './../utils/ErrorCodes.sol';
-
 import './../event-contracts/TonEvent.sol';
 
-import './../../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol';
-import './../../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.sol';
-import './../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
+import './../../utils/TransferUtils.sol';
+import './../../utils/ErrorCodes.sol';
+
+import './../../../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol';
+import './../../../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.sol';
+import './../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
 /*
@@ -46,6 +46,7 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
         eventInitData.configuration = address(this);
         eventInitData.meta = basicConfiguration.meta;
         eventInitData.staking = basicConfiguration.staking;
+        eventInitData.chainId = basicConfiguration.chainId;
     }
 
     // TODO: add interfaces

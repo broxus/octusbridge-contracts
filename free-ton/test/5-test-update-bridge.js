@@ -7,7 +7,7 @@ const { expect } = require('chai');
 
 
 describe('Test bridge update', async function() {
-  this.timeout(100000);
+  this.timeout(10000000);
   
   let bridge, bridgeOwner, staking, cellEncoder;
   

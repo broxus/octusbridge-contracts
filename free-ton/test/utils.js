@@ -1,6 +1,7 @@
 const logger = require('mocha-logger');
 const BigNumber = require('bignumber.js');
 const _ = require('underscore');
+
 const chai = require('chai');
 chai.use(require('chai-bignumber')());
 
@@ -19,8 +20,8 @@ async function sleep(ms) {
 
 // Due to the network lag, graphql may not catch wallets updates instantly
 const afterRun = async (tx) => {
-  if (locklift.network === 'dev' || locklift.network === 'main') {
-    await sleep(30000);
+  if (locklift.network === 'dev' || locklift.network === 'prod') {
+    await sleep(100000);
   }
 };
 
@@ -28,22 +29,22 @@ const afterRun = async (tx) => {
 class MetricManager {
   constructor(...contracts) {
     this.contracts = contracts;
-    this.checkpoints = new Map();
+    this.checkpoints = {};
   }
   
   lastCheckPointName() {
-    return Array.from(this.checkpoints.keys()).pop();
+    return Object.keys(this.checkpoints).pop();
   }
   
   async checkPoint(name) {
     const balances = await Promise.all(this.contracts.map(async (contract) =>
       locklift.ton.getBalance(contract.address)));
     
-    this.checkpoints.set(name, balances);
+    this.checkpoints[name] = balances;
   }
   
   getCheckPoint(name) {
-    const checkpoint = this.checkpoints.get(name);
+    const checkpoint = this.checkpoints[name];
     
     if (!checkpoint) throw new Error(`No checkpoint "${name}"`);
     
@@ -62,6 +63,14 @@ class MetricManager {
     
     return difference;
   }
+  
+  addContract(contract, fill=0) {
+    this.contracts.push(contract);
+    
+    for (const checkpoint of Object.keys(this.checkpoints)) {
+      this.checkpoints[checkpoint].push(fill);
+    }
+  }
 }
 
 
@@ -78,7 +87,7 @@ const setupBridge = async (relays) => {
       _randomNonce,
     },
     keyPair,
-  }, locklift.utils.convertCrystal(30, 'nano'));
+  }, locklift.utils.convertCrystal(3, 'nano'));
   
   owner.setKeyPair(keyPair);
   owner.afterRun = afterRun;
@@ -96,7 +105,7 @@ const setupBridge = async (relays) => {
       __keys: relays.map(r => `0x${r.public}`),
     },
     keyPair,
-  }, locklift.utils.convertCrystal(10, 'nano'));
+  }, locklift.utils.convertCrystal(1, 'nano'));
   
   await logContract(staking);
   
@@ -115,7 +124,7 @@ const setupBridge = async (relays) => {
       _randomNonce: locklift.utils.getRandomNonce(),
     },
     keyPair
-  }, locklift.utils.convertCrystal(10, 'nano'));
+  }, locklift.utils.convertCrystal(1, 'nano'));
   
 
   await logContract(bridge);
@@ -125,9 +134,7 @@ const setupBridge = async (relays) => {
   const cellEncoder = await locklift.giver.deployContract({
     contract: CellEncoder,
     keyPair,
-  });
-  
-  // await logContract(cellEncoder);
+  }, locklift.utils.convertCrystal(1, 'nano'));
   
   return [bridge, owner, staking, cellEncoder];
 };
@@ -174,7 +181,8 @@ const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
         eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
         staking: staking.address,
         eventCode: EthereumEvent.code,
-        meta: configurationMeta
+        meta: configurationMeta,
+        chainId: 1,
       },
       networkConfiguration: {
         eventEmitter: new BigNumber(0),
@@ -184,7 +192,7 @@ const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
       }
     },
     keyPair
-  }, locklift.utils.convertCrystal(20, 'nano'));
+  }, locklift.utils.convertCrystal(1, 'nano'));
 
   await logContract(ethereumEventConfiguration);
   
@@ -197,7 +205,7 @@ const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
       _randomNonce,
     },
     keyPair
-  }, locklift.utils.convertCrystal(10, 'nano'));
+  }, locklift.utils.convertCrystal(1, 'nano'));
 
   await logContract(proxy);
   
@@ -210,7 +218,7 @@ const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
       _randomNonce,
     },
     keyPair,
-  }, locklift.utils.convertCrystal(30, 'nano'));
+  }, locklift.utils.convertCrystal(5, 'nano'));
   
   initializer.setKeyPair(keyPair);
   initializer.afterRun = afterRun;
@@ -246,7 +254,8 @@ const setupTonEventConfiguration = async (owner, staking, cellEncoder) => {
         eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
         staking: staking.address,
         eventCode: TonEvent.code,
-        meta: configurationMeta
+        meta: configurationMeta,
+        chainId: 1,
       },
       networkConfiguration: {
         eventEmitter: locklift.utils.zeroAddress,
@@ -255,7 +264,7 @@ const setupTonEventConfiguration = async (owner, staking, cellEncoder) => {
       }
     },
     keyPair
-  }, locklift.utils.convertCrystal(20, 'nano'));
+  }, locklift.utils.convertCrystal(1, 'nano'));
   
   await logContract(tonEventConfiguration);
   
@@ -268,7 +277,7 @@ const setupTonEventConfiguration = async (owner, staking, cellEncoder) => {
     initParams: {
       _randomNonce: locklift.utils.getRandomNonce(),
     },
-  }, locklift.utils.convertCrystal(30, 'nano'));
+  }, locklift.utils.convertCrystal(5, 'nano'));
   
   initializer.setKeyPair(keyPair);
   initializer.afterRun = afterRun;
@@ -280,7 +289,7 @@ const setupTonEventConfiguration = async (owner, staking, cellEncoder) => {
 };
 
 
-const setupRelays = async (amount=3) => {
+const setupRelays = async (amount=20) => {
   return Promise.all(_
     .range(amount)
     .map(async () => locklift.ton.client.crypto.generate_random_sign_keys())
@@ -306,6 +315,28 @@ const enableEventConfiguration = async (bridgeOwner, bridge, eventConfiguration,
 };
 
 
+const captureEventConfigurations = async (bridge) => {
+  const configurationEvents = _.flatten([
+    await bridge.getEvents('EventConfigurationCreated'),
+    await bridge.getEvents('EventConfigurationRemoved'),
+    await bridge.getEvents('EventConfigurationUpdated'),
+  ]).sort((a, b) => a.created_at > b.created_at ? 1 : -1);
+  
+  return configurationEvents.reduce((acc, event) => {
+    if (event.name === 'EventConfigurationCreated' || event.name === 'EventConfigurationUpdated') {
+      return {
+        ...acc,
+        [event.value.id]: event.value.eventConfiguration
+      };
+    } else {
+      delete acc[event.value.id];
+
+      return acc;
+    }
+  }, {});
+};
+
+
 module.exports = {
   setupBridge,
   setupEthereumEventConfiguration,
@@ -314,6 +345,8 @@ module.exports = {
   logContract,
   MetricManager,
   enableEventConfiguration,
+  captureEventConfigurations,
+  afterRun,
   logger,
   expect,
 };

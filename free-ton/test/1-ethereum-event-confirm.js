@@ -4,13 +4,15 @@ const {
   setupRelays,
   MetricManager,
   enableEventConfiguration,
+  captureEventConfigurations,
+  afterRun,
   logger,
   expect,
 } = require('./utils');
 
 
 describe('Test ethereum event confirm', async function() {
-  this.timeout(1000000);
+  this.timeout(10000000);
   
   let bridge, bridgeOwner, staking, cellEncoder;
   let ethereumEventConfiguration, proxy, initializer;
@@ -61,22 +63,23 @@ describe('Test ethereum event confirm', async function() {
       );
     });
 
-    it('Check active configurations', async () => {
-      const activeConfigurations = await bridge.call({
-        method: 'getActiveEventConfigurations',
-      });
-
-      expect(activeConfigurations.ids)
-        .to.have.lengthOf(1, 'Wrong amount of active configurations');
-
-      expect(activeConfigurations.ids[0])
-        .to.be.bignumber.equal(1, 'Wrong configuration id');
-
-      expect(activeConfigurations.addrs[0])
+    it('Check configuration', async () => {
+      const configurations = await captureEventConfigurations(bridge);
+      
+      expect(configurations[1])
+        .to.be.not.equal(undefined, 'Configuration not found');
+      
+      expect(Object.keys(configurations))
+        .to.have.lengthOf(1, 'Wrong amount of configurations');
+  
+      expect(configurations[1].addr)
         .to.be.equal(ethereumEventConfiguration.address, 'Wrong configuration address');
 
-      expect(activeConfigurations._types[0])
+      expect(configurations[1]._type)
         .to.be.bignumber.equal(0, 'Wrong configuration type');
+  
+      expect(configurations[1].status)
+        .to.be.equal(true, 'Wrong configuration status');
     });
   });
   
@@ -129,6 +132,9 @@ describe('Test ethereum event confirm', async function() {
 
       eventContract = await locklift.factory.getContract('EthereumEvent');
       eventContract.setAddress(expectedEventContract);
+      eventContract.afterRun = afterRun;
+      
+      metricManager.addContract(eventContract);
     });
 
     it('Check event initial state', async () => {

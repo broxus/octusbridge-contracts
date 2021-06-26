@@ -4,30 +4,31 @@ pragma AbiHeader pubkey;
 
 
 import "./../interfaces/IEventNotificationReceiver.sol";
-import "./../interfaces/event-contracts/IEthereumEvent.sol";
-import "./../interfaces/IProxy.sol";
+import "./../interfaces/event-contracts/ITonEvent.sol";
 
 import "./../interfaces/IStaking.sol";
 import "./../interfaces/IRound.sol";
 
-import "./../utils/ErrorCodes.sol";
-import "./../utils/TransferUtils.sol";
-import "./../utils/cell-encoder/CellEncoder.sol";
+import "./../../utils/ErrorCodes.sol";
+import "./../../utils/TransferUtils.sol";
+import "./../../utils/cell-encoder/CellEncoder.sol";
 
-import './../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
+import './../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
 /*
-    @title Basic example of Ethereum event configuration
+    @title Basic example of TON event configuration
     @dev This implementation is used for cross chain token transfers
 */
-contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
+contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
     // Event data
-    EthereumEventInitData static eventInitData;
+    TonEventInitData static eventInitData;
     // Event contract status
     Status public status;
     // Relays votes
     mapping (uint => Vote) public votes;
+    // Ethereum payload signatures for confirmations
+    mapping (uint => bytes) public signatures;
     // Event contract deployer
     address public initializer;
     // How many votes required for confirm / reject
@@ -57,14 +58,13 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
     }
 
     /*
-        @dev Should be deployed only by EthereumEventConfiguration contract
+        @dev Should be deployed only by TonEventConfiguration contract
         @param _initializer The address who paid for contract deployment.
         Receives all contract balance at the end of event contract lifecycle.
     */
     constructor(
         address _initializer
     ) public {
-        // TODO: add external method for executing confirmed event?
         eventInitData.configuration = msg.sender;
 
         status = Status.Pending;
@@ -72,24 +72,18 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
 
         notifyEventStatusChanged();
 
-        _requestRoundRelays();
-    }
-
-    // TODO: add refresh round relays
-    function _requestRoundRelays() internal {
         IStaking(eventInitData.staking).deriveRoundAddress{
             value: 1 ton,
-            callback: EthereumEvent.receiveRoundAddress
+            callback: TonEvent.receiveRoundAddress
         }(eventInitData.voteData.round);
     }
 
-    // TODO: cant be pure, compiler lies
     function receiveRoundAddress(
         address roundContract
     ) public onlyStaking {
         IRound(roundContract).relayKeys{
             value: 1 ton,
-            callback: EthereumEvent.receiveRoundRelays
+            callback: TonEvent.receiveRoundRelays
         }();
     }
 
@@ -103,10 +97,11 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
 
     /*
         @notice Confirm event
-        @dev Can be called only by relay
+        @dev Can be called only by parent event configuration
         @dev Can be called only when event configuration is in Pending status
+        @param eventDataSignature Relay's signature of the TonEvent data
     */
-    function confirm() public eventPending {
+    function confirm(bytes signature) public eventPending {
         uint relay = msg.pubkey();
 
         require(votes[relay] == Vote.Empty, ErrorCodes.KEY_ALREADY_VOTED);
@@ -114,21 +109,19 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         tvm.accept();
 
         votes[relay] = Vote.Confirm;
+        signatures[relay] = signature;
 
         if (getVoters(Vote.Confirm).length >= requiredVotes) {
             status = Status.Confirmed;
 
             notifyEventStatusChanged();
-
-            IProxy(eventInitData.configuration).broxusBridgeCallback{
-                flag: MsgFlag.ALL_NOT_RESERVED
-            }(eventInitData, initializer);
+            transferAll(initializer);
         }
     }
 
     /*
         @notice Reject event
-        @dev Can be called only by relay
+        @dev Can be called only by parent event configuration
         @dev Can be called only when event configuration is in Pending status
     */
     function reject() public eventPending {
@@ -150,25 +143,34 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
 
     /*
         @notice Get event details
-        @returns _eventInitData Init data
+        @returns _initData Init data
         @returns _status Current event status
         @returns _confirmRelays List of relays who have confirmed event
         @returns _confirmRelays List of relays who have rejected event
+        @returns _eventDataSignatures List of relay's TonEvent signatures
     */
     function getDetails() public view returns (
-        EthereumEventInitData _eventInitData,
+        TonEventInitData _eventInitData,
         Status _status,
         uint[] confirms,
         uint[] rejects,
+        bytes[] _signatures,
         uint128 balance,
         address _initializer,
         uint32 _requiredVotes
     ) {
+        confirms = getVoters(Vote.Confirm);
+
+        for (uint voter : confirms) {
+            _signatures.push(signatures[voter]);
+        }
+
         return (
             eventInitData,
             status,
-            getVoters(Vote.Confirm),
+            confirms,
             getVoters(Vote.Reject),
+            _signatures,
             address(this).balance,
             initializer,
             requiredVotes
@@ -178,30 +180,30 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
     /*
         @notice Get decoded event data
         @returns rootToken Token root contract address
+        @returns wid Tokens sender address workchain ID
+        @returns addr Token sender address body
         @returns tokens How much tokens to mint
-        @returns wid Tokens receiver address workchain ID
-        @returns owner_addr Token receiver address body
-        @returns owner_pubkey Token receiver public key
+        @returns ethereum_address Token receiver Ethereum address
         @returns owner_address Token receiver address (derived from the wid and owner_addr)
     */
     function getDecodedData() public view returns (
         address rootToken,
-        uint128 tokens,
         int8 wid,
-        uint256 owner_addr,
-        uint256 owner_pubkey,
+        uint256 addr,
+        uint128 tokens,
+        uint160 ethereum_address,
         address owner_address
     ) {
         (rootToken) = decodeConfigurationMeta(eventInitData.meta);
 
         (
-            tokens,
             wid,
-            owner_addr,
-            owner_pubkey
-        ) = decodeEthereumEventData(eventInitData.voteData.eventData);
+            addr,
+            tokens,
+            ethereum_address
+        ) = decodeTonEventData(eventInitData.voteData.eventData);
 
-        owner_address = address.makeAddrStd(wid, owner_addr);
+        owner_address = address.makeAddrStd(wid, addr);
     }
 
     /*
@@ -213,8 +215,10 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         (,,,,,address owner_address) = getDecodedData();
 
         if (owner_address.value != 0) {
-            IEventNotificationReceiver(owner_address)
-                .notifyEventStatusChanged{flag: 0, bounce: false}(status);
+            IEventNotificationReceiver(owner_address).notifyEventStatusChanged{
+                flag: 0,
+                bounce: false
+            }(status);
         }
     }
 }

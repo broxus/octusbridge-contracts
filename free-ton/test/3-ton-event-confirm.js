@@ -4,13 +4,15 @@ const {
   setupRelays,
   MetricManager,
   enableEventConfiguration,
+  captureEventConfigurations,
+  afterRun,
   logger,
   expect,
 } = require('./utils');
 
 
 describe('Test ton event confirm', async function() {
-  this.timeout(100000);
+  this.timeout(10000000);
   
   let bridge, bridgeOwner, staking, cellEncoder;
   let tonEventConfiguration, initializer;
@@ -60,23 +62,24 @@ describe('Test ton event confirm', async function() {
         'ton'
       );
     });
-
-    it('Check active configurations', async () => {
-      const activeConfigurations = await bridge.call({
-        method: 'getActiveEventConfigurations',
-      });
-
-      expect(activeConfigurations.ids)
-        .to.have.lengthOf(1, 'Wrong amount of active configurations');
-
-      expect(activeConfigurations.ids[0])
-        .to.be.bignumber.equal(1, 'Wrong configuration id');
-
-      expect(activeConfigurations.addrs[0])
+  
+    it('Check configuration', async () => {
+      const configurations = await captureEventConfigurations(bridge);
+    
+      expect(configurations[1])
+        .to.be.not.equal(undefined, 'Configuration not found');
+    
+      expect(Object.keys(configurations))
+        .to.have.lengthOf(1, 'Wrong amount of configurations');
+    
+      expect(configurations[1].addr)
         .to.be.equal(tonEventConfiguration.address, 'Wrong configuration address');
-
-      expect(activeConfigurations._types[0])
+    
+      expect(configurations[1]._type)
         .to.be.bignumber.equal(1, 'Wrong configuration type');
+    
+      expect(configurations[1].status)
+        .to.be.equal(true, 'Wrong configuration status');
     });
   });
   
@@ -127,6 +130,9 @@ describe('Test ton event confirm', async function() {
   
       eventContract = await locklift.factory.getContract('TonEvent');
       eventContract.setAddress(expectedEventContract);
+      eventContract.afterRun = afterRun;
+  
+      metricManager.addContract(eventContract);
     });
   
     it('Check event initial state', async () => {
@@ -222,7 +228,9 @@ describe('Test ton event confirm', async function() {
         await eventContract.run({
           method: 'confirm',
           params: {
-            signature: '',
+            signature: Buffer
+              .from(`0x${'ff'.repeat(65)}`)
+              .toString('hex'), // 132 symbols
           },
           keyPair: relay
         });

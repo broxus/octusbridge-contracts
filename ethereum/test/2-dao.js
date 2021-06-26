@@ -105,12 +105,11 @@ describe('Test DAO', async () => {
             'eventTimestamp': 'uint32',
             'eventIndex': 'uint32',
             'eventData': 'bytes',
-            'tonEventConfigurationWid': 'int8',
-            'tonEventConfigurationAddress': 'uint256',
-            'requiredConfirmations': 'uint16',
-            'requiredRejects': 'uint16',
+            'configurationWid': 'int8',
+            'configurationAddress': 'uint256',
             'proxy': 'address',
-            'round': 'uint32'
+            'round': 'uint32',
+            'chainId': 'uint32',
           }
         }],
         [{
@@ -119,12 +118,11 @@ describe('Test DAO', async () => {
           'eventTimestamp': 0,
           'eventIndex': 0,
           'eventData': actions,
-          'tonEventConfigurationWid': 0,
-          'tonEventConfigurationAddress': 0,
-          'requiredConfirmations': 1,
-          'requiredRejects': 1,
+          'configurationWid': 0,
+          'configurationAddress': 0,
           'proxy': dao.address,
-          'round': 0
+          'round': 0,
+          'chainId': 1,
         }]
       );
   
@@ -141,7 +139,7 @@ describe('Test DAO', async () => {
     
     it('Try to execute the same payload', async () => {
       expect(dao.execute(payload, signatures))
-        .to.be.revertedWith('DAO: already executed');
+        .to.be.revertedWith('Cache: payload already seen');
     });
   });
   
@@ -185,12 +183,11 @@ describe('Test DAO', async () => {
             'eventTimestamp': 'uint32',
             'eventIndex': 'uint32',
             'eventData': 'bytes',
-            'tonEventConfigurationWid': 'int8',
-            'tonEventConfigurationAddress': 'uint256',
-            'requiredConfirmations': 'uint16',
-            'requiredRejects': 'uint16',
+            'configurationWid': 'int8',
+            'configurationAddress': 'uint256',
             'proxy': 'address',
-            'round': 'uint32'
+            'round': 'uint32',
+            'chainId': 'uint32',
           }
         }],
         [{
@@ -199,12 +196,11 @@ describe('Test DAO', async () => {
           'eventTimestamp': 0,
           'eventIndex': 0,
           'eventData': actions,
-          'tonEventConfigurationWid': 0,
-          'tonEventConfigurationAddress': 0,
-          'requiredConfirmations': 1,
-          'requiredRejects': 1,
+          'configurationWid': 0,
+          'configurationAddress': 0,
           'proxy': dao.address,
-          'round': 0
+          'round': 0,
+          'chainId': 1,
         }]
       );
   

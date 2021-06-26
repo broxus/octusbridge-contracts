@@ -30,23 +30,4 @@ interface IBridge {
     function updateBridgeConfiguration(
         BridgeConfiguration _bridgeConfiguration
     ) external;
-
-    function getEventConfigurationDetails(uint32 id) external view returns(
-        address addr,
-        bool status,
-        IBasicEventConfiguration.EventType _type
-    );
-
-    function getActiveEventConfigurations() external view returns(
-        uint32[] ids,
-        address[] addrs,
-        IBasicEventConfiguration.EventType[] _types
-    );
-
-    function getEventConfigurations() external view returns (
-        uint32[] ids,
-        address[] addrs,
-        bool[] statuses,
-        IBasicEventConfiguration.EventType[] _types
-    );
 }

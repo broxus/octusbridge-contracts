@@ -9,8 +9,8 @@ const BigNumber = require('bignumber.js');
 
 
 describe('Test updating event configuration', async function() {
-  this.timeout(100000);
-  
+  this.timeout(10000000);
+
   let bridge, bridgeOwner, staking, cellEncoder;
   
   it('Setup bridge', async () => {
