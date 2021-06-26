@@ -338,7 +338,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         );
     }
 
-    function claimReward(address send_gas_to) external {
+    function claimReward(address send_gas_to) external onlyActive {
         require (msg.value >= Gas.MIN_CLAIM_REWARD_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
 
         tvm.rawReserve(_reserve(), 2);

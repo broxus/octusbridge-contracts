@@ -5,7 +5,7 @@ import "./StakingUpgradable.sol";
 
 
 abstract contract StakingPoolRelay is StakingPoolUpgradable {
-    function linkRelayAccounts(uint256 ton_pubkey, uint256 eth_address, address send_gas_to) external view {
+    function linkRelayAccounts(uint256 ton_pubkey, uint256 eth_address, address send_gas_to) external view onlyActive {
         require (msg.value >= Gas.MIN_LINK_RELAY_ACCS_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
 
         tvm.rawReserve(_reserve(), 2);
@@ -35,7 +35,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         IRelayRound(relay_round).setRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(relays, send_gas_to);
     }
 
-    function becomeRelayNextRound(address send_gas_to) external override onlyActive {
+    function becomeRelayNextRound(address send_gas_to) external view onlyActive {
         require (msg.value >= Gas.MIN_RELAY_REQ_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
         require (pendingRelayRound != 0, StakingErrors.ELECTION_NOT_STARTED);
         tvm.rawReserve(_reserve(), 2);
@@ -48,7 +48,18 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         );
     }
 
-    function startElectionOnNewRound(address send_gas_to) external override onlyActive {
+    function getRewardForRelayRound(uint128 round_num, address send_gas_to) external view onlyActive {
+        require (msg.value >= Gas.MIN_GET_REWARD_RELAY_ROUND_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
+
+        tvm.rawReserve(_reserve(), 2);
+
+        address userDataAddr = getUserDataAddress(msg.sender);
+        UserData(userDataAddr).processGetRelayRewardForRound{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+            rewardRounds, round_num, send_gas_to, user_data_version, relay_round_version
+        );
+    }
+
+    function startElectionOnNewRound(address send_gas_to) external onlyActive {
         require (msg.value >= Gas.MIN_START_ELECTION_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
         require (now >= (currentRelayRoundStartTime + timeBeforeElection), StakingErrors.TOO_EARLY_FOR_ELECTION);
         require (currentElectionStartTime == 0, StakingErrors.ELECTION_ALREADY_STARTED);
@@ -66,7 +77,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         tvm.rawReserve(_reserve(), 2);
 
         address election_addr = getElectionAddress(pendingRelayRound);
-        IElection(election_addr).finish{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(relaysCount, send_gas_to);
+        IElection(election_addr).finish{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(relaysCount, send_gas_to, election_version);
     }
 
     function onElectionStarted(uint128 round_num, address send_gas_to) external override onlyElection(round_num) {
@@ -92,7 +103,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         IRelayRound.Relay[] new_relays = new IRelayRound.Relay[](win_requests.length);
         for (uint i = 0; i < win_requests.length; i++) {
             new_relays[i] = IRelayRound.Relay(
-                win_requests[i].staker_addr, win_requests[i].ton_pubkey, win_requests[i].eth_addr, win_requests[i].tokens
+                win_requests[i].staker_addr, win_requests[i].ton_pubkey, win_requests[i].eth_addr, win_requests[i].tokens, false
             );
         }
 
@@ -109,6 +120,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
 
         currentRelayRound = round_num;
         currentRelayRoundStartTime = now;
+        rewardRounds[rewardRounds.length - 1].totalReward += rewardPerSecond * relayRoundTime;
 
         emit RelayRoundInitialized(round_num, relays);
         send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
@@ -133,6 +145,8 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         TvmBuilder constructor_params;
         constructor_params.store(relay_round_version);
         constructor_params.store(relayRoundTime);
+        constructor_params.store(uint128(rewardRounds.length - 1));
+        constructor_params.store(rewardPerSecond);
 
         return new Platform{
             stateInit: _buildInitData(PlatformTypes.RelayRound, _buildRelayRoundParams(round_num)),

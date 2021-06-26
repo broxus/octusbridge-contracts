@@ -2,11 +2,14 @@ pragma ton-solidity ^0.39.0;
 
 import "./interfaces/IRelayRound.sol";
 import "./interfaces/IStakingPool.sol";
+import "./interfaces/IUserData.sol";
 
 import "./libraries/StakingErrors.sol";
 import "./libraries/Gas.sol";
+import "./libraries/PlatformTypes.sol";
 
 import "../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol";
+import "../../../node_modules/@broxus/contracts/contracts/platform/Platform.sol";
 
 
 contract RelayRound is IRelayRound {
@@ -16,6 +19,9 @@ contract RelayRound is IRelayRound {
     uint256 public relays_count;
     uint128 public start_time;
     uint128 public round_len;
+    uint128 public total_tokens_staked;
+    uint128 public reward_round;
+    uint128 public round_reward;
 
     uint128 public round_num; // setup from initialData
     mapping (address => Relay) relays; // key - staker address
@@ -30,6 +36,24 @@ contract RelayRound is IRelayRound {
 
     function getRelayByStakerAddress(address staker_addr) external view responsible returns (Relay) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} relays[staker_addr];
+    }
+
+    function getRewardForRound(address staker_addr, address send_gas_to, uint32 code_version) external override onlyUserData(staker_addr) {
+        require (now >= start_time + round_len, StakingErrors.RELAY_ROUND_NOT_ENDED);
+        require (relays[staker_addr].reward_claimed == false, StakingErrors.RELAY_REWARD_CLAIMED);
+
+        tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 2);
+
+        if (code_version > current_version) {
+            send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
+            return;
+        }
+
+        relays[staker_addr].reward_claimed = true;
+        uint128 staker_reward_share = math.muldiv(relays[staker_addr].staked_tokens, 1e18, total_tokens_staked);
+        uint128 relay_reward = math.muldiv(staker_reward_share, round_reward, 1e18);
+
+        IUserData(msg.sender).receiveRewardForRelayRound(round_num, reward_round, relay_reward, send_gas_to);
     }
 
     function getDetails() external view responsible returns (RelayRoundDetails) {
@@ -54,6 +78,7 @@ contract RelayRound is IRelayRound {
 
         for (Relay _relay: _relay_list) {
             relays[_relay.staker_addr] = _relay;
+            total_tokens_staked += _relay.staked_tokens;
         }
 
         relays_installed = true;
@@ -80,6 +105,10 @@ contract RelayRound is IRelayRound {
         TvmSlice params = s.loadRefAsSlice();
         current_version = params.decode(uint32);
         round_len = params.decode(uint128);
+        reward_round = params.decode(uint128);
+        uint128 reward_per_second = params.decode(uint128);
+
+        round_reward = reward_per_second * round_len;
         start_time = now;
 
         send_gas_to.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
@@ -113,6 +142,39 @@ contract RelayRound is IRelayRound {
             tvm.setCurrentCode(code);
             onCodeUpgrade(builder.toCell());
         }
+    }
+
+    function _buildInitData(uint8 type_id, TvmCell _initialData) internal inline view returns (TvmCell) {
+        return tvm.buildStateInit({
+        contr: Platform,
+        varInit: {
+            root: root,
+            platformType: type_id,
+            initialData: _initialData,
+            platformCode: platform_code
+        },
+        pubkey: 0,
+        code: platform_code
+        });
+    }
+
+    function _buildUserDataParams(address user) private inline view returns (TvmCell) {
+        TvmBuilder builder;
+        builder.store(user);
+        return builder.toCell();
+    }
+
+    function getUserDataAddress(address user) public view responsible returns (address) {
+        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } address(tvm.hash(_buildInitData(
+            PlatformTypes.UserData,
+            _buildUserDataParams(user)
+        )));
+    }
+
+    modifier onlyUserData(address user) {
+        address expectedAddr = getUserDataAddress(user);
+        require (expectedAddr == msg.sender, StakingErrors.NOT_USER_DATA);
+        _;
     }
 
     modifier onlyRoot() {

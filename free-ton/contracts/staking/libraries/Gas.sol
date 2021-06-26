@@ -23,6 +23,7 @@ library Gas {
     uint128 public constant MIN_LINK_RELAY_ACCS_MSG_VALUE = 5 ton;
     uint128 public constant MIN_CONFIRM_ETH_RELAY_ACC_MSG_VALUE = 0.5 ton;
     uint128 public constant MIN_CLAIM_REWARD_MSG_VALUE = 0.5 ton;
+    uint128 public constant MIN_GET_REWARD_RELAY_ROUND_MSG_VALUE = 0.5 ton;
 
     uint128 public constant UPGRADE_ELECTION_MIN_VALUE = 1 ton;
     uint128 public constant UPGRADE_USER_DATA_MIN_VALUE = 1 ton;

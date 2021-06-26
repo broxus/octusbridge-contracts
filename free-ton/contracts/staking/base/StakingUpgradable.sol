@@ -51,7 +51,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
     }
 
     // user should call this by himself
-    function upgradeUserData(address send_gas_to) external view {
+    function upgradeUserData(address send_gas_to) external view onlyActive {
         require(msg.value >= Gas.UPGRADE_USER_DATA_MIN_VALUE, StakingErrors.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
 

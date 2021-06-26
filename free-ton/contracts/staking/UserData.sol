@@ -294,6 +294,37 @@ contract UserData is IUserData, IUpgradableByRequest {
         IStakingPool(msg.sender).finishClaimReward{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(user, rewards, send_gas_to);
     }
 
+    function processGetRelayRewardForRound(
+        IStakingPool.RewardRound[] reward_rounds,
+        uint128 round_num,
+        address send_gas_to,
+        uint32 code_version,
+        uint32 relay_round_code_version
+    ) external override onlyRoot {
+        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+
+        if (code_version > current_version) {
+            send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
+            return;
+        }
+
+        syncRewards(reward_rounds, token_balance);
+
+        address relay_round_addr = getRelayRoundAddress(round_num);
+        IRelayRound(relay_round_addr).getRewardForRound(user, send_gas_to, relay_round_code_version);
+    }
+
+    function receiveRewardForRelayRound(
+        uint128 relay_round_num, uint128 reward_round_num, uint128 reward, address send_gas_to
+    ) external override onlyRelayRound(relay_round_num) {
+        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+
+        rewardRounds[reward_round_num].reward_balance += reward;
+        emit RelayRoundRewardClaimed(relay_round_num, reward_round_num, reward);
+
+        send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
+    }
+
     function processLinkRelayAccounts(
         uint256 ton_pubkey,
         uint256 eth_address,
@@ -351,19 +382,19 @@ contract UserData is IUserData, IUpgradableByRequest {
             return;
         }
 
-        // lock until end of election + round time + 2 rounds on top of it
-        relay_lock_until = now + lock_time;
-
         address election_addr = getElectionAddress(round_num);
         IElection(election_addr).applyForMembership{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-            user, relay_ton_pubkey, relay_eth_address, token_balance, send_gas_to, election_code_version
+            user, relay_ton_pubkey, relay_eth_address, token_balance, lock_time, send_gas_to, election_code_version
         );
     }
 
     function relayMembershipRequestAccepted(
-        uint128 round_num, uint128 tokens, uint256 ton_pubkey, uint256 eth_addr, address send_gas_to
+        uint128 round_num, uint128 tokens, uint256 ton_pubkey, uint256 eth_addr, uint128 lock_time, address send_gas_to
     ) external override onlyElection(round_num) {
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+
+        // lock until end of election + round time + 2 rounds on top of it
+        relay_lock_until = now + lock_time;
 
         emit RelayMembershipRequested(round_num, tokens, ton_pubkey, eth_addr);
         send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
@@ -409,6 +440,12 @@ contract UserData is IUserData, IUpgradableByRequest {
         return builder.toCell();
     }
 
+    function _buildRelayRoundParams(uint128 round_num) private inline view returns (TvmCell) {
+        TvmBuilder builder;
+        builder.store(round_num);
+        return builder.toCell();
+    }
+
     function getProposalAddress(uint32 proposal_id) private view returns (address) {
         return address(tvm.hash(_buildPlatformInitData(
             dao_root,
@@ -422,6 +459,14 @@ contract UserData is IUserData, IUpgradableByRequest {
             root,
             PlatformTypes.Election,
             _buildElectionParams(round_num)
+        )));
+    }
+
+    function getRelayRoundAddress(uint128 round_num) private view returns (address) {
+        return address(tvm.hash(_buildPlatformInitData(
+            root,
+            PlatformTypes.RelayRound,
+            _buildRelayRoundParams(round_num)
         )));
     }
 
@@ -513,6 +558,12 @@ contract UserData is IUserData, IUpgradableByRequest {
     modifier onlyElection(uint128 round_num) {
         address election_addr = getElectionAddress(round_num);
         require (election_addr == msg.sender, StakingErrors.NOT_ELECTION);
+        _;
+    }
+
+    modifier onlyRelayRound(uint128 round_num) {
+        address expectedAddr = getRelayRoundAddress(round_num);
+        require (expectedAddr == msg.sender, StakingErrors.NOT_RELAY_ROUND);
         _;
     }
 

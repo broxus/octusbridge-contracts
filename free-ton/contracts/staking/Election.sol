@@ -63,6 +63,7 @@ contract Election is IElection {
         uint256 ton_pubkey,
         uint256 eth_addr,
         uint128 tokens,
+        uint128 lock_time,
         address send_gas_to,
         uint32 code_version
     ) external override onlyUserData(staker_addr) {
@@ -134,14 +135,20 @@ contract Election is IElection {
         }
 
         IUserData(msg.sender).relayMembershipRequestAccepted{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
-            round_num, tokens, ton_pubkey, eth_addr, send_gas_to
+            round_num, tokens, ton_pubkey, eth_addr, lock_time, send_gas_to
         );
     }
 
-    function finish(uint128 relays_count, address send_gas_to) external override onlyRoot {
+    function finish(uint128 relays_count, address send_gas_to, uint32 code_version) external override onlyRoot {
         require (!election_ended, StakingErrors.ELECTION_ENDED);
 
         tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
+
+        if (code_version > current_version) {
+            send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
+            return;
+        }
+
         election_ended = true;
 
         MembershipRequest[] top_requests = getRequests(relays_count);
