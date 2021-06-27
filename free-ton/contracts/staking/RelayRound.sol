@@ -56,7 +56,7 @@ contract RelayRound is IRelayRound {
         IUserData(msg.sender).receiveRewardForRelayRound(round_num, reward_round, relay_reward, send_gas_to);
     }
 
-    function getDetails() external view responsible returns (RelayRoundDetails) {
+    function _getRelayList() internal view returns (Relay[]) {
         Relay[] _relays_list = new Relay[](relays_count);
         optional(address, Relay) min_relay = relays.min();
         uint128 counter = 0;
@@ -66,9 +66,22 @@ contract RelayRound is IRelayRound {
             counter++;
             min_relay = relays.next(staker_addr);
         }
+        return _relays_list;
+    }
+
+    function getDetails() external view override responsible returns (RelayRoundDetails) {
+        Relay[] _relays_list = _getRelayList();
 
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }RelayRoundDetails(
             root, round_num, _relays_list, relays_installed, current_version
+        );
+    }
+
+    function getRelays(address send_gas_to) external override onlyRoot {
+        tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 2);
+
+        IStakingPool(msg.sender).receiveRelayRoundRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
+            round_num, _getRelayList(), send_gas_to
         );
     }
 
@@ -85,7 +98,7 @@ contract RelayRound is IRelayRound {
         relays_count = _relay_list.length;
 
         IStakingPool(root).onRelayRoundInitialized{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
-            round_num, _relay_list, send_gas_to
+            round_num, _relay_list, round_reward, send_gas_to
         );
     }
 

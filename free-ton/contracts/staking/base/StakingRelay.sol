@@ -100,6 +100,12 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         pendingRelayRound = 0;
         emit ElectionEnded(round_num);
 
+        if (win_requests.length < minRelaysCount) {
+            address relay_round = getRelayRoundAddress(round_num - 1);
+            IRelayRound(relay_round).getRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(send_gas_to);
+            return;
+        }
+
         IRelayRound.Relay[] new_relays = new IRelayRound.Relay[](win_requests.length);
         for (uint i = 0; i < win_requests.length; i++) {
             new_relays[i] = IRelayRound.Relay(
@@ -111,16 +117,28 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         IRelayRound(relay_round).setRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(new_relays, send_gas_to);
     }
 
+    function receiveRelayRoundRelays(
+        uint128 round_num,
+        IRelayRound.Relay[] _relays,
+        address send_gas_to
+    ) external override onlyRelayRound(round_num) {
+        tvm.rawReserve(_reserve(), 2);
+
+        address relay_round = deployRelayRound(round_num + 1, send_gas_to);
+        IRelayRound(relay_round).setRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(_relays, send_gas_to);
+    }
+
     function onRelayRoundInitialized(
         uint128 round_num,
         IRelayRound.Relay[] relays,
+        uint128 round_reward,
         address send_gas_to
     ) external override onlyRelayRound(round_num) {
         tvm.rawReserve(_reserve(), 2);
 
         currentRelayRound = round_num;
         currentRelayRoundStartTime = now;
-        rewardRounds[rewardRounds.length - 1].totalReward += rewardPerSecond * relayRoundTime;
+        rewardRounds[rewardRounds.length - 1].totalReward += round_reward;
 
         emit RelayRoundInitialized(round_num, relays);
         send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);

@@ -107,7 +107,9 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     // election should start at lest after this much time before round end
     uint128 public timeBeforeElection = 4 days;
 
-    uint128 public relaysCount = 10;
+    uint128 public relaysCount = 30;
+
+    uint128 public minRelaysCount = 13;
 
     // payloads for token receive callback
     uint8 public constant STAKE_DEPOSIT = 0;
@@ -158,7 +160,12 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     function setRelayConfig(
-        uint128 relay_round_time, uint128 election_time, uint128 time_before_election, uint128 relays_count, address send_gas_to
+        uint128 relay_round_time,
+        uint128 election_time,
+        uint128 time_before_election,
+        uint128 relays_count,
+        uint128 min_relays_count,
+        address send_gas_to
     ) external onlyOwner {
         tvm.rawReserve(_reserve(), 2);
 
@@ -166,6 +173,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         electionTime = election_time;
         timeBeforeElection = time_before_election;
         relaysCount = relays_count;
+        minRelaysCount = min_relays_count;
 
         emit RelayConfigUpdated(relay_round_time, election_time, time_before_election, relays_count);
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
