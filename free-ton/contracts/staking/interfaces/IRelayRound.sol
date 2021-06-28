@@ -6,6 +6,7 @@ interface IRelayRound {
         uint256 ton_pubkey;
         uint256 eth_addr;
         uint128 staked_tokens;
+        bool reward_claimed;
     }
 
     struct RelayRoundDetails {
@@ -16,5 +17,8 @@ interface IRelayRound {
         uint32 code_version;
     }
 
+    function getDetails() external view responsible returns (RelayRoundDetails);
+    function getRelays(address send_gas_to) external;
     function setRelays(Relay[] _relay_list, address send_gas_to) external;
+    function getRewardForRound(address staker_addr, address send_gas_to, uint32 code_version) external;
 }
