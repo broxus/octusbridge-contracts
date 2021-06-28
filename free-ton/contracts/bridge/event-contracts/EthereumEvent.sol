@@ -160,6 +160,7 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         Status _status,
         uint[] confirms,
         uint[] rejects,
+        uint[] empty,
         uint128 balance,
         address _initializer,
         uint32 _requiredVotes
@@ -169,6 +170,7 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
             status,
             getVoters(Vote.Confirm),
             getVoters(Vote.Reject),
+            getVoters(Vote.Empty),
             address(this).balance,
             initializer,
             requiredVotes

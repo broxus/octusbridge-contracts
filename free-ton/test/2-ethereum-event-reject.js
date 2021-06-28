@@ -141,9 +141,9 @@ describe('Test ethereum event reject', async function() {
       const requiredVotes = await eventContract.call({
         method: 'requiredVotes',
       });
-
-      for (const relay of relays.slice(0, requiredVotes)) {
-        logger.log(`Reject from ${relay.public}`);
+  
+      for (const [relayId, relay] of Object.entries(relays.slice(0, requiredVotes))) {
+        logger.log(`Reject #${relayId} from ${relay.public}`);
 
         await eventContract.run({
           method: 'reject',

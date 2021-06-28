@@ -34,11 +34,6 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
     // How many votes required for confirm / reject
     uint32 public requiredVotes;
 
-    modifier eventPending() {
-        require(status == Status.Pending, ErrorCodes.EVENT_NOT_PENDING);
-        _;
-    }
-
     modifier onlyStaking() {
         require(msg.sender == eventInitData.staking, ErrorCodes.SENDER_NOT_STAKING);
         _;
@@ -101,7 +96,7 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
         @dev Can be called only when event configuration is in Pending status
         @param eventDataSignature Relay's signature of the TonEvent data
     */
-    function confirm(bytes signature) public eventPending {
+    function confirm(bytes signature) public {
         uint relay = msg.pubkey();
 
         require(votes[relay] == Vote.Empty, ErrorCodes.KEY_ALREADY_VOTED);
@@ -110,6 +105,11 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
 
         votes[relay] = Vote.Confirm;
         signatures[relay] = signature;
+
+        // Event already confirmed
+        if (status != Status.Pending) {
+            return;
+        }
 
         if (getVoters(Vote.Confirm).length >= requiredVotes) {
             status = Status.Confirmed;
@@ -124,7 +124,7 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
         @dev Can be called only by parent event configuration
         @dev Can be called only when event configuration is in Pending status
     */
-    function reject() public eventPending {
+    function reject() public {
         uint relay = msg.pubkey();
 
         require(votes[relay] == Vote.Empty, ErrorCodes.KEY_ALREADY_VOTED);
@@ -132,6 +132,11 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
         tvm.accept();
 
         votes[relay] = Vote.Reject;
+
+        // Event already confirmed
+        if (status != Status.Pending) {
+            return;
+        }
 
         if (getVoters(Vote.Reject).length >= requiredVotes) {
             status = Status.Rejected;
@@ -154,6 +159,7 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
         Status _status,
         uint[] confirms,
         uint[] rejects,
+        uint[] empty,
         bytes[] _signatures,
         uint128 balance,
         address _initializer,
@@ -170,6 +176,7 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
             status,
             confirms,
             getVoters(Vote.Reject),
+            getVoters(Vote.Empty),
             _signatures,
             address(this).balance,
             initializer,
