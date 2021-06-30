@@ -38,7 +38,7 @@ module.exports = {
         amount: 20,
       }
     },
-    prod: {
+    main: {
       ton_client: {
         network: {
           server_address: 'https://main.ton.dev'
@@ -47,7 +47,7 @@ module.exports = {
       giver: {
         address: '0:3bcef54ea5fe3e68ac31b17799cdea8b7cffd4da75b0b1a70b93a18b5c87f723',
         abi: { "ABI version": 2, "header": ["pubkey", "time", "expire"], "functions": [ { "name": "constructor", "inputs": [ ], "outputs": [ ] }, { "name": "sendGrams", "inputs": [ {"name":"dest","type":"address"}, {"name":"amount","type":"uint64"} ], "outputs": [ ] }, { "name": "owner", "inputs": [ ], "outputs": [ {"name":"owner","type":"uint256"} ] } ], "data": [ {"key":1,"name":"owner","type":"uint256"} ], "events": [ ] },
-        key: process.env.PROD_GIVER_KEY,
+        key: process.env.MAIN_GIVER_KEY,
       },
       keys: {
         phrase: '',

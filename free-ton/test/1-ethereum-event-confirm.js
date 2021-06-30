@@ -224,8 +224,8 @@ describe('Test ethereum event confirm', async function() {
         method: 'requiredVotes',
       });
 
-      for (const relay of relays.slice(0, requiredVotes)) {
-        logger.log(`Confirm from ${relay.public}`);
+      for (const [relayId, relay] of Object.entries(relays.slice(0, requiredVotes))) {
+        logger.log(`Confirm #${relayId} from ${relay.public}`);
         
         await eventContract.run({
           method: 'confirm',
