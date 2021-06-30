@@ -33,6 +33,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     event ElectionStarted(uint128 round_num);
     event ElectionEnded(uint128 round_num);
     event RelayRoundInitialized(uint128 round_num, IRelayRound.Relay[] relays);
+    event RelaySlashed(address user, uint128 tokens_withdrawn);
 
     event DepositReverted(address user, uint128 amount);
 
@@ -533,6 +534,11 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     modifier onlyBridge() {
         require (msg.sender == bridge, StakingErrors.NOT_BRIDGE);
+        _;
+    }
+
+    modifier onlyDaoRoot {
+        require(msg.sender == dao_root, StakingErrors.NOT_DAO_ROOT);
         _;
     }
 

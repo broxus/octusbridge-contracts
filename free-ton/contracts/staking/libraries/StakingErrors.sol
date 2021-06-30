@@ -30,6 +30,7 @@ library StakingErrors {
     uint8 public constant EMPTY_REWARD_ROUND = 126;
     uint8 public constant RELAY_ROUND_NOT_ENDED = 127;
     uint8 public constant RELAY_REWARD_CLAIMED = 128;
+    uint8 public constant SLASHED = 129;
 
     uint16 constant NOT_DAO_ROOT = 201;
     uint16 constant NOT_PROPOSAL = 202;

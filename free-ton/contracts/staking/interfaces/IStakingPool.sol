@@ -20,6 +20,12 @@ interface IStakingPool {
     function endElection(address send_gas_to) external;
     function onElectionStarted(uint128 round_num, address send_gas_to) external;
     function onElectionEnded(uint128 round_num, IElection.MembershipRequest[] requests, address send_gas_to) external;
+    function confirmSlash(
+        address user,
+        uint128[] ban_rewards,
+        uint128 ban_token_balance,
+        address send_gas_to
+    ) external;
     function receiveRelayRoundRelays(
         uint128 round_num,
         IRelayRound.Relay[] _relays,

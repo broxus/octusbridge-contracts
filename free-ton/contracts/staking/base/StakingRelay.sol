@@ -25,6 +25,46 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         IUserData(user_data).processConfirmEthAccount{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(eth_address, send_gas_to);
     }
 
+    function slashRelay(address relay_staker_addr, address send_gas_to) external onlyDaoRoot {
+        require (msg.value >= Gas.MIN_CONFIRM_ETH_RELAY_ACC_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
+
+        tvm.rawReserve(_reserve(), 2);
+
+        updatePoolInfo();
+        _upgradeUserData(relay_staker_addr, Gas.USER_DATA_UPGRADE_VALUE, send_gas_to);
+
+        address user_data = getUserDataAddress(relay_staker_addr);
+        IUserData(user_data).slash{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(rewardRounds, send_gas_to);
+    }
+
+    function confirmSlash(
+        address user,
+        uint128[] ban_rewards,
+        uint128 ban_token_balance,
+        address send_gas_to
+    ) external override onlyUserData(user) {
+        tvm.rawReserve(_reserve(), 2);
+
+        uint128 _tokens_withdrawn = 0;
+        for (uint i = 0; i < ban_rewards.length; i++) {
+            uint128 _ban_tokens = math.muldiv(
+                math.muldiv(ban_rewards[i], 1e18, rewardRounds[i].totalReward),
+                rewardRounds[i].rewardTokens,
+                1e18
+            );
+            // transfer relay reward for reward round to the current reward round
+            rewardRounds[rewardRounds.length - 1].rewardTokens += _ban_tokens;
+            _tokens_withdrawn += _ban_tokens;
+        }
+        // transfer all staked tokens to current round reward balance
+        rewardRounds[rewardRounds.length - 1].rewardTokens += ban_token_balance;
+        tokenBalance -= ban_token_balance;
+        _tokens_withdrawn += ban_token_balance;
+
+        emit RelaySlashed(user, _tokens_withdrawn);
+        send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
+    }
+
     function createOriginRelayRound(IRelayRound.Relay[] relays, address send_gas_to) external onlyOwner {
         require (msg.value >= Gas.MIN_ORIGIN_ROUND_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
         require (!originRelayRoundInitialized, StakingErrors.ORIGIN_ROUND_ALREADY_INITIALIZED);

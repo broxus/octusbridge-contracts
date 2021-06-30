@@ -59,6 +59,7 @@ interface IUserData {
         uint32 code_version
     ) external;
     function processClaimReward(IStakingPool.RewardRound[] reward_rounds, address send_gas_to, uint32 code_version) external;
+    function slash(IStakingPool.RewardRound[] reward_rounds, address send_gas_to) external;
     function processBecomeRelay(
         uint128 round_num,
         uint128 lock_time,
