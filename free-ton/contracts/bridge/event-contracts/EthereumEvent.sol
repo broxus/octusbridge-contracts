@@ -72,21 +72,14 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
 
         notifyEventStatusChanged();
 
-        _requestRoundRelays();
-    }
-
-    // TODO: add refresh round relays
-    function _requestRoundRelays() internal {
         IStaking(eventInitData.staking).deriveRoundAddress{
             value: 1 ton,
             callback: EthereumEvent.receiveRoundAddress
-        }(eventInitData.voteData.round);
+        }(now);
     }
 
     // TODO: cant be pure, compiler lies
-    function receiveRoundAddress(
-        address roundContract
-    ) public onlyStaking {
+    function receiveRoundAddress(address roundContract) public onlyStaking {
         IRound(roundContract).relayKeys{
             value: 1 ton,
             callback: EthereumEvent.receiveRoundRelays
@@ -109,11 +102,13 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
     function confirm() public eventPending {
         uint relay = msg.pubkey();
 
-        require(votes[relay] == Vote.Empty, ErrorCodes.KEY_ALREADY_VOTED);
+        require(votes[relay] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
 
         tvm.accept();
 
         votes[relay] = Vote.Confirm;
+
+        emit Confirm(relay);
 
         if (getVoters(Vote.Confirm).length >= requiredVotes) {
             status = Status.Confirmed;
@@ -134,11 +129,13 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
     function reject() public eventPending {
         uint relay = msg.pubkey();
 
-        require(votes[relay] == Vote.Empty, ErrorCodes.KEY_ALREADY_VOTED);
+        require(votes[relay] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
 
         tvm.accept();
 
         votes[relay] = Vote.Reject;
+
+        emit Reject(relay);
 
         if (getVoters(Vote.Reject).length >= requiredVotes) {
             status = Status.Rejected;

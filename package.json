@@ -3,11 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "migrate-ton": "cd free-ton && node migration/index.js $npm_config_determine && cd ..",
-    "compile-ton": "cd free-ton && node compile && cd ..",
-    "test-ton": "cd free-ton && mocha test/$npm_config_test --exit && cd .."
-  },
+  "scripts": {},
   "author": "pavlovdog_ <pavlovdog.moscow@gmail.com>",
   "license": "ISC",
   "dependencies": {
@@ -21,6 +17,7 @@
     "dotenv": "^8.2.0",
     "folder-hash": "^4.0.1",
     "ganache-cli": "^6.12.1",
+    "hardhat-docgen": "^1.1.1",
     "minimist": "^1.2.5",
     "mocha": "^8.2.1",
     "mocha-logger": "^1.0.7",

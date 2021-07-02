@@ -39,6 +39,20 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
         _;
     }
 
+    modifier onlyInitializer() {
+        require(msg.sender == initializer, ErrorCodes.SENDER_NOT_INITIALIZER);
+        _;
+    }
+
+    modifier eventNotPending() {
+        require(status != Status.Pending, ErrorCodes.EVENT_PENDING);
+        _;
+    }
+
+    function close() public onlyInitializer eventNotPending {
+        transferAll(initializer);
+    }
+
     /*
         @notice Get voters by the vote type
         @param vote Vote type
@@ -70,12 +84,10 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
         IStaking(eventInitData.staking).deriveRoundAddress{
             value: 1 ton,
             callback: TonEvent.receiveRoundAddress
-        }(eventInitData.voteData.round);
+        }(now);
     }
 
-    function receiveRoundAddress(
-        address roundContract
-    ) public onlyStaking {
+    function receiveRoundAddress(address roundContract) public onlyStaking {
         IRound(roundContract).relayKeys{
             value: 1 ton,
             callback: TonEvent.receiveRoundRelays
@@ -99,12 +111,14 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
     function confirm(bytes signature) public {
         uint relay = msg.pubkey();
 
-        require(votes[relay] == Vote.Empty, ErrorCodes.KEY_ALREADY_VOTED);
+        require(votes[relay] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
 
         tvm.accept();
 
         votes[relay] = Vote.Confirm;
         signatures[relay] = signature;
+
+        emit Confirm(relay, signature);
 
         // Event already confirmed
         if (status != Status.Pending) {
@@ -115,7 +129,6 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
             status = Status.Confirmed;
 
             notifyEventStatusChanged();
-            transferAll(initializer);
         }
     }
 
@@ -127,11 +140,13 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
     function reject() public {
         uint relay = msg.pubkey();
 
-        require(votes[relay] == Vote.Empty, ErrorCodes.KEY_ALREADY_VOTED);
+        require(votes[relay] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
 
         tvm.accept();
 
         votes[relay] = Vote.Reject;
+
+        emit Reject(relay);
 
         // Event already confirmed
         if (status != Status.Pending) {
@@ -142,7 +157,6 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
             status = Status.Rejected;
 
             notifyEventStatusChanged();
-            transferAll(initializer);
         }
     }
 

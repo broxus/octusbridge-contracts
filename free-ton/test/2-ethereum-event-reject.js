@@ -105,7 +105,6 @@ describe('Test ethereum event reject', async function() {
           eventData,
           eventBlockNumber: 333,
           eventBlock: 444,
-          round: 555,
       };
     });
   

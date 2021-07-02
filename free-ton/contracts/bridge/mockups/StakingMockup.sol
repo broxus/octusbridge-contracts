@@ -18,11 +18,11 @@ contract StakingMockup is IStaking, IRound, RandomNonce {
 
     /*
         @notice Get round contract address by it's id
-        @param roundId Round id
+        @param eventTimestamp Event creation timestamp
         @returns roundContract Round contract
     */
     function deriveRoundAddress(
-        uint32 round
+        uint32 eventTimestamp
     )
         override
         public

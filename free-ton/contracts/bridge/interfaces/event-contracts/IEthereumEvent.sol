@@ -10,7 +10,6 @@ interface IEthereumEvent is IBasicEvent {
         TvmCell eventData;
         uint32 eventBlockNumber;
         uint eventBlock;
-        uint32 round;
     }
 
     struct EthereumEventInitData {
@@ -20,4 +19,6 @@ interface IEthereumEvent is IBasicEvent {
         address staking;
         uint32 chainId;
     }
+
+    event Confirm(uint relay);
 }

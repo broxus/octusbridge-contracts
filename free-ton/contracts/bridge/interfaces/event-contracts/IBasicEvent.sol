@@ -5,6 +5,6 @@ interface IBasicEvent {
     enum Vote { Empty, Confirm, Reject }
     enum Status { Pending, Confirmed, Rejected }
 
-    event Confirm(address relay);
-    event Reject(address relay);
+    event Reject(uint relay);
+    event Closed();
 }

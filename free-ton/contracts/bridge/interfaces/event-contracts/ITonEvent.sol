@@ -10,7 +10,6 @@ interface ITonEvent is IBasicEvent {
         uint32 eventTimestamp;
         uint32 eventIndex;
         TvmCell eventData;
-        uint32 round;
     }
 
     struct TonEventInitData {
@@ -20,4 +19,6 @@ interface ITonEvent is IBasicEvent {
         address staking;
         uint32 chainId;
     }
+
+    event Confirm(uint relay, bytes signature);
 }

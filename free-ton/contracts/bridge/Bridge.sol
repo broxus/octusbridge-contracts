@@ -19,15 +19,15 @@ import './../../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.so
 import './../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
-/*
+/**
     @title Bridge contract
-    @summary Basic contract for Broxus Ethereum - FreeTON bridge.
+    @author https://github.com/pavlovdog
 */
 contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUtils {
     BridgeConfiguration public bridgeConfiguration;
     mapping(uint32 => EventConfiguration) eventConfigurations;
 
-    /*
+    /**
         @dev Throws an error if bridge currently inactive
     */
     modifier onlyActive() {
@@ -35,7 +35,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         _;
     }
 
-    /*
+    /**
         @dev Throws an error if event configuration currently inactive
     */
     modifier onlyActiveConfiguration(uint32 id) {
@@ -43,7 +43,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         _;
     }
 
-    /*
+    /**
         @param _owner Owner address
         @param _bridgeConfiguration Initial Bridge configuration
     */
@@ -60,7 +60,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         setOwnership(_owner);
     }
 
-    /*
+    /**
         @notice Creates new event configuration
         @dev Event configuration id should not be used at time of execution
         @param id Event configuration id
@@ -78,7 +78,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         emit EventConfigurationCreated(id, eventConfiguration);
     }
 
-    /*
+    /**
         @notice Removes existing event configuration
         @param id Event configuration id
     */
@@ -93,7 +93,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         emit EventConfigurationRemoved(id);
     }
 
-    /*
+    /**
         @notice Updates event configuration
         @param id Event configuration id
         @param eventConfiguration Event configuration details
@@ -110,7 +110,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         emit EventConfigurationUpdated(id, eventConfiguration);
     }
 
-    /*
+    /**
         @notice Vote for Bridge configuration update
         @dev Can be called only by relay
         @param _bridgeConfiguration New bridge configuration

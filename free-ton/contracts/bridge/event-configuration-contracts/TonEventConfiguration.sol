@@ -59,6 +59,10 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
         ITonEvent.TonEventVoteData eventVoteData
     ) override external reserveBalance returns(address eventEmitter) {
         require(msg.value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
+        require(
+            eventVoteData.eventTimestamp >= networkConfiguration.startTimestamp,
+            ErrorCodes.EVENT_TIMESTAMP_LESS_THAN_START
+        );
 
         ITonEvent.TonEventInitData eventInitData = buildEventInitData(eventVoteData);
 
