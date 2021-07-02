@@ -55,13 +55,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         require(msg.value >= Gas.UPGRADE_USER_DATA_MIN_VALUE, StakingErrors.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
 
-        emit RequestedUserDataUpgrade(msg.sender);
-        address user_data = getUserDataAddress(msg.sender);
-        IUpgradableByRequest(user_data).upgrade{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
-            user_data_code,
-            user_data_version,
-            send_gas_to
-        );
+        _upgradeUserData(msg.sender, 0, send_gas_to);
     }
 
     function forceUpgradeUserData(
@@ -71,9 +65,17 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         require(msg.value >= Gas.UPGRADE_USER_DATA_MIN_VALUE, StakingErrors.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
 
+        _upgradeUserData(user, 0, send_gas_to);
+    }
+
+    function _upgradeUserData(address user, uint128 gas_value, address send_gas_to) internal view {
         emit RequestedUserDataUpgrade(user);
         address user_data = getUserDataAddress(user);
-        IUpgradableByRequest(user_data).upgrade{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
+        uint16 flag = 0;
+        if (gas_value == 0) {
+            flag = MsgFlag.ALL_NOT_RESERVED;
+        }
+        IUpgradableByRequest(user_data).upgrade{ value: gas_value, flag: flag }(
             user_data_code,
             user_data_version,
             send_gas_to

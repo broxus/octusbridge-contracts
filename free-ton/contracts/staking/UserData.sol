@@ -38,6 +38,8 @@ contract UserData is IUserData, IUpgradableByRequest {
     uint256 public relay_ton_pubkey;
     bool public ton_pubkey_confirmed;
 
+    bool public slashed;
+
     address public root; // setup from initialData
     address public user; // setup from initialData
 
@@ -252,6 +254,25 @@ contract UserData is IUserData, IUpgradableByRequest {
         }
     }
 
+    function slash(IStakingPool.RewardRound[] reward_rounds, address send_gas_to) external override onlyRoot {
+        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+
+        syncRewards(reward_rounds, token_balance);
+        slashed = true;
+
+        uint128[] ban_rewards = new uint128[](rewardRounds.length);
+        for (uint i = 0; i < rewardRounds.length; i++) {
+            ban_rewards[i] = rewardRounds[i].reward_balance;
+            rewardRounds[i].reward_balance = 0;
+        }
+        uint128 ban_token_balance = token_balance;
+        token_balance = 0;
+
+        IStakingPool(msg.sender).confirmSlash{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+            user, ban_rewards, ban_token_balance, send_gas_to
+        );
+    }
+
     function processDeposit(
         uint64 nonce,
         uint128 _tokens_to_deposit,
@@ -260,7 +281,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     ) external override onlyRoot {
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
 
-        if (code_version > current_version) {
+        if (code_version > current_version || slashed) {
             IStakingPool(msg.sender).revertDeposit{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(nonce);
             return;
         }
@@ -276,6 +297,8 @@ contract UserData is IUserData, IUpgradableByRequest {
         address send_gas_to,
         uint32 code_version
     ) external override onlyRoot {
+        require (!slashed, StakingErrors.SLASHED);
+
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
 
         if (code_version > current_version) {
@@ -301,6 +324,8 @@ contract UserData is IUserData, IUpgradableByRequest {
         uint32 code_version,
         uint32 relay_round_code_version
     ) external override onlyRoot {
+        require (!slashed, StakingErrors.SLASHED);
+
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
 
         if (code_version > current_version) {
@@ -331,6 +356,8 @@ contract UserData is IUserData, IUpgradableByRequest {
         address send_gas_to,
         uint32 user_data_code_version
     ) external override onlyRoot {
+        require (!slashed, StakingErrors.SLASHED);
+
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
 
         if (user_data_code_version > current_version) {
@@ -349,6 +376,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         require (msg.pubkey() != 0, StakingErrors.INTERNAL_ADDRESS);
         require (msg.pubkey() == relay_ton_pubkey, StakingErrors.ACCOUNT_NOT_LINKED);
         require (ton_pubkey_confirmed == false, StakingErrors.ACCOUNT_ALREADY_CONFIRMED);
+        require (!slashed, StakingErrors.SLASHED);
 
         tvm.accept();
         ton_pubkey_confirmed = true;
@@ -357,6 +385,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     function processConfirmEthAccount(uint256 eth_address, address send_gas_to) external override onlyRoot {
         require (eth_address_confirmed == false, StakingErrors.ACCOUNT_ALREADY_CONFIRMED);
         require (eth_address == relay_eth_address, StakingErrors.ACCOUNT_NOT_LINKED);
+        require (!slashed, StakingErrors.SLASHED);
 
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
 
@@ -374,6 +403,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     ) external override onlyRoot {
         require (eth_address_confirmed, StakingErrors.ACCOUNT_NOT_CONFIRMED);
         require (ton_pubkey_confirmed, StakingErrors.ACCOUNT_NOT_CONFIRMED);
+        require (!slashed, StakingErrors.SLASHED);
 
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
 
@@ -406,6 +436,8 @@ contract UserData is IUserData, IUpgradableByRequest {
         address send_gas_to,
         uint32 code_version
     ) external override onlyRoot {
+        require (!slashed, StakingErrors.SLASHED);
+
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
 
         if (code_version > current_version || _tokens_to_withdraw > token_balance || now < relay_lock_until || !_canWithdrawVotes()) {

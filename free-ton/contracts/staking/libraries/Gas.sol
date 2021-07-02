@@ -7,6 +7,7 @@ library Gas {
     uint128 public constant DEPLOY_ELECTION_MIN_VALUE = 1 ton;
     uint128 public constant DEPLOY_RELAY_ROUND_MIN_VALUE = 1 ton;
     uint128 public constant DEPLOY_USER_DATA_MIN_VALUE = 1 ton;
+    uint128 public constant USER_DATA_UPGRADE_VALUE = 0.5 ton;
 
     uint128 public constant ROOT_INITIAL_BALANCE = 1 ton;
     uint128 public constant USER_DATA_INITIAL_BALANCE = 1 ton;
@@ -24,6 +25,7 @@ library Gas {
     uint128 public constant MIN_CONFIRM_ETH_RELAY_ACC_MSG_VALUE = 0.5 ton;
     uint128 public constant MIN_CLAIM_REWARD_MSG_VALUE = 0.5 ton;
     uint128 public constant MIN_GET_REWARD_RELAY_ROUND_MSG_VALUE = 0.5 ton;
+    uint128 public constant MIN_SLASH_RELAY_MSG_VALUE = 1.5 ton;
 
     uint128 public constant UPGRADE_ELECTION_MIN_VALUE = 1 ton;
     uint128 public constant UPGRADE_USER_DATA_MIN_VALUE = 1 ton;
