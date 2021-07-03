@@ -45,7 +45,6 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
         eventInitData.voteData = eventVoteData;
 
         eventInitData.configuration = address(this);
-        eventInitData.meta = basicConfiguration.meta;
         eventInitData.staking = basicConfiguration.staking;
         eventInitData.chainId = basicConfiguration.chainId;
     }
@@ -77,7 +76,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
             varInit: {
                 eventInitData: eventInitData
             }
-        }(msg.sender);
+        }(msg.sender, basicConfiguration.meta);
     }
     /**
         @notice Derive the Ethereum event contract address from it's init data

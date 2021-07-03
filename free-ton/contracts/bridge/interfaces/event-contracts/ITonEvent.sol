@@ -15,7 +15,6 @@ interface ITonEvent is IBasicEvent {
     struct TonEventInitData {
         TonEventVoteData voteData;
         address configuration;
-        TvmCell meta;
         address staking;
         uint32 chainId;
     }

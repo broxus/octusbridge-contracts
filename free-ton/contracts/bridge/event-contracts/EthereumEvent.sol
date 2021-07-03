@@ -30,6 +30,8 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
     mapping (uint => Vote) public votes;
     // Event contract deployer
     address public initializer;
+    // Event configuration meta
+    TvmCell public meta;
     // How many votes required for confirm / reject
     uint32 public requiredVotes;
 
@@ -64,13 +66,15 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         Receives all contract balance at the end of event contract lifecycle.
     */
     constructor(
-        address _initializer
+        address _initializer,
+        TvmCell _meta
     ) public {
         // TODO: add external method for executing confirmed event?
         eventInitData.configuration = msg.sender;
 
         status = Status.Pending;
         initializer = _initializer;
+        meta = _meta;
 
         notifyEventStatusChanged();
 
@@ -162,6 +166,7 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         uint[] empty,
         uint128 balance,
         address _initializer,
+        TvmCell _meta,
         uint32 _requiredVotes
     ) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS} (
@@ -172,6 +177,7 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
             getVoters(Vote.Empty),
             address(this).balance,
             initializer,
+            meta,
             requiredVotes
         );
     }
@@ -193,7 +199,7 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         uint256 owner_pubkey,
         address owner_address
     ) {
-        (rootToken) = decodeConfigurationMeta(eventInitData.meta);
+        (rootToken) = decodeConfigurationMeta(meta);
 
         (
             tokens,

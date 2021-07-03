@@ -44,7 +44,6 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
         eventInitData.voteData = eventVoteData;
 
         eventInitData.configuration = address(this);
-        eventInitData.meta = basicConfiguration.meta;
         eventInitData.staking = basicConfiguration.staking;
         eventInitData.chainId = basicConfiguration.chainId;
     }
@@ -74,7 +73,7 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
             varInit: {
                 eventInitData: eventInitData
             }
-        }(msg.sender);
+        }(msg.sender, basicConfiguration.meta);
     }
 
     /*

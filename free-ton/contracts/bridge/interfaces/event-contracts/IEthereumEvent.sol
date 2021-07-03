@@ -15,7 +15,6 @@ interface IEthereumEvent is IBasicEvent {
     struct EthereumEventInitData {
         EthereumEventVoteData voteData;
         address configuration;
-        TvmCell meta;
         address staking;
         uint32 chainId;
     }

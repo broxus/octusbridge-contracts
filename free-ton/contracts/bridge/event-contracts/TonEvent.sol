@@ -31,6 +31,8 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
     mapping (uint => bytes) public signatures;
     // Event contract deployer
     address public initializer;
+    // Event configuration meta
+    TvmCell public meta;
     // How many votes required for confirm / reject
     uint32 public requiredVotes;
 
@@ -74,12 +76,14 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
         Receives all contract balance at the end of event contract lifecycle.
     */
     constructor(
-        address _initializer
+        address _initializer,
+        TvmCell _meta
     ) public {
         eventInitData.configuration = msg.sender;
 
         status = Status.Pending;
         initializer = _initializer;
+        meta = _meta;
 
         notifyEventStatusChanged();
 
@@ -179,6 +183,7 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
         bytes[] _signatures,
         uint128 balance,
         address _initializer,
+        TvmCell _meta,
         uint32 _requiredVotes
     ) {
         confirms = getVoters(Vote.Confirm);
@@ -196,6 +201,7 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
             _signatures,
             address(this).balance,
             initializer,
+            meta,
             requiredVotes
         );
     }
@@ -217,7 +223,7 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
         uint160 ethereum_address,
         address owner_address
     ) {
-        (rootToken) = decodeConfigurationMeta(eventInitData.meta);
+        (rootToken) = decodeConfigurationMeta(meta);
 
         (
             wid,
