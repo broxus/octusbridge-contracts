@@ -115,7 +115,7 @@ describe('Test ethereum event confirm', async function() {
         params: {
           eventVoteData,
         },
-        value: locklift.utils.convertCrystal(3, 'nano')
+        value: locklift.utils.convertCrystal(6, 'nano')
       });
       
       logger.log(`Event initialization tx: ${tx.transaction.id}`);

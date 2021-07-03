@@ -218,7 +218,7 @@ const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
       _randomNonce,
     },
     keyPair,
-  }, locklift.utils.convertCrystal(5, 'nano'));
+  }, locklift.utils.convertCrystal(10, 'nano'));
   
   initializer.setKeyPair(keyPair);
   initializer.afterRun = afterRun;

@@ -56,7 +56,11 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
     */
     function deployEvent(
         IEthereumEvent.EthereumEventVoteData eventVoteData
-    ) external override reserveBalance returns(address eventContract) {
+    )
+        external
+        override
+        reserveBalance
+    returns(address eventContract) {
         require(msg.value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
         require(
             eventVoteData.eventBlockNumber >= networkConfiguration.startBlockNumber,
@@ -86,6 +90,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
         override
         public
         view
+        responsible
     returns(
         address eventContract
     ) {
@@ -100,7 +105,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
             code: basicConfiguration.eventCode
         });
 
-        return address(tvm.hash(stateInit));
+        return {value: 0, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
     }
 
     /**
@@ -108,11 +113,11 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
         @return _basicConfiguration Basic configuration init data
         @return _networkConfiguration Network specific configuration init data
     */
-    function getDetails() override public view returns(
+    function getDetails() override public view responsible returns(
         BasicConfiguration _basicConfiguration,
         EthereumEventConfiguration _networkConfiguration
     ) {
-        return (
+        return {value: 0, flag: MsgFlag.REMAINING_GAS}(
             basicConfiguration,
             networkConfiguration
         );
@@ -122,8 +127,8 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
         @notice Get event configuration type
         @return _type Configuration type - Ethereum or TON
     */
-    function getType() override public pure returns(EventType _type) {
-        return EventType.Ethereum;
+    function getType() override public pure responsible returns(EventType _type) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS} EventType.Ethereum;
     }
 
     /**

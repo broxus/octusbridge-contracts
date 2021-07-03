@@ -88,6 +88,7 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
         override
         public
         view
+        responsible
     returns (
         address eventContract
     ) {
@@ -102,7 +103,7 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
             code: basicConfiguration.eventCode
         });
 
-        return address(tvm.hash(stateInit));
+        return {value: 0, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
     }
 
     /*
@@ -110,11 +111,11 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
         @return _basicConfiguration Basic configuration init data
         @return _initData Network specific configuration init data
     */
-    function getDetails() override public view returns(
+    function getDetails() override public view responsible returns(
         BasicConfiguration _basicConfiguration,
         TonEventConfiguration _networkConfiguration
     ) {
-        return (
+        return {value: 0, flag: MsgFlag.REMAINING_GAS}(
             basicConfiguration,
             networkConfiguration
         );
@@ -125,8 +126,8 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
         @notice Get event configuration type
         @return _type Configuration type - Ethereum or TON
     */
-    function getType() override public pure returns(EventType _type) {
-        return EventType.TON;
+    function getType() override public pure responsible returns(EventType _type) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS} EventType.TON;
     }
 
 

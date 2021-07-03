@@ -49,7 +49,7 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
         _;
     }
 
-    function close() public onlyInitializer eventNotPending {
+    function close() public view onlyInitializer eventNotPending {
         transferAll(initializer);
     }
 
@@ -58,12 +58,14 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
         @param vote Vote type
         @returns voters List of voters (relays) public keys
     */
-    function getVoters(Vote vote) public view returns(uint[] voters) {
+    function getVoters(Vote vote) public view responsible returns(uint[] voters) {
         for ((uint voter, Vote vote_): votes) {
             if (vote_ == vote) {
                 voters.push(voter);
             }
         }
+
+        return {value: 0, flag: MsgFlag.REMAINING_GAS} voters;
     }
 
     /*
@@ -168,7 +170,7 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
         @returns _confirmRelays List of relays who have rejected event
         @returns _eventDataSignatures List of relay's TonEvent signatures
     */
-    function getDetails() public view returns (
+    function getDetails() public view responsible returns (
         TonEventInitData _eventInitData,
         Status _status,
         uint[] confirms,
@@ -185,7 +187,7 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
             _signatures.push(signatures[voter]);
         }
 
-        return (
+        return {value: 0, flag: MsgFlag.REMAINING_GAS} (
             eventInitData,
             status,
             confirms,
@@ -207,7 +209,7 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
         @returns ethereum_address Token receiver Ethereum address
         @returns owner_address Token receiver address (derived from the wid and owner_addr)
     */
-    function getDecodedData() public view returns (
+    function getDecodedData() public view responsible returns (
         address rootToken,
         int8 wid,
         uint256 addr,
@@ -225,6 +227,15 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
         ) = decodeTonEventData(eventInitData.voteData.eventData);
 
         owner_address = address.makeAddrStd(wid, addr);
+
+        return {value: 0, flag: MsgFlag.REMAINING_GAS} (
+            rootToken,
+            wid,
+            addr,
+            tokens,
+            ethereum_address,
+            owner_address
+        );
     }
 
     /*

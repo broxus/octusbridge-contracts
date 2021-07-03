@@ -48,12 +48,14 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         @param vote Vote type
         @returns voters List of voters (relays) public keys
     */
-    function getVoters(Vote vote) public view returns(uint[] voters) {
+    function getVoters(Vote vote) public view responsible returns(uint[] voters) {
         for ((uint voter, Vote vote_): votes) {
             if (vote_ == vote) {
                 voters.push(voter);
             }
         }
+
+        return {value: 0, flag: MsgFlag.REMAINING_GAS} voters;
     }
 
     /*
@@ -152,7 +154,7 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         @returns _confirmRelays List of relays who have confirmed event
         @returns _confirmRelays List of relays who have rejected event
     */
-    function getDetails() public view returns (
+    function getDetails() public view responsible returns (
         EthereumEventInitData _eventInitData,
         Status _status,
         uint[] confirms,
@@ -162,7 +164,7 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         address _initializer,
         uint32 _requiredVotes
     ) {
-        return (
+        return {value: 0, flag: MsgFlag.REMAINING_GAS} (
             eventInitData,
             status,
             getVoters(Vote.Confirm),
@@ -183,7 +185,7 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         @returns owner_pubkey Token receiver public key
         @returns owner_address Token receiver address (derived from the wid and owner_addr)
     */
-    function getDecodedData() public view returns (
+    function getDecodedData() public view responsible returns (
         address rootToken,
         uint128 tokens,
         int8 wid,
@@ -201,6 +203,15 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         ) = decodeEthereumEventData(eventInitData.voteData.eventData);
 
         owner_address = address.makeAddrStd(wid, owner_addr);
+
+        return {value: 0, flag: MsgFlag.REMAINING_GAS} (
+            rootToken,
+            tokens,
+            wid,
+            owner_addr,
+            owner_pubkey,
+            owner_address
+        );
     }
 
     /*
