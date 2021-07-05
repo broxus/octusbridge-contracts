@@ -23,6 +23,7 @@ interface IBridge {
     event EventConfigurationDisabled(uint32 id);
     event EventConfigurationUpdated(uint32 id, EventConfiguration eventConfiguration);
     event BridgeConfigurationUpdate(BridgeConfiguration bridgeConfiguration);
+    event ConnectorDeployed(uint128 id, address connector, address eventConfiguration);
 
     function updateBridgeConfiguration(
         BridgeConfiguration _bridgeConfiguration
