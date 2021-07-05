@@ -8,10 +8,13 @@ import "./event-configuration-contracts/EthereumEventConfiguration.sol";
 import "./event-configuration-contracts/TonEventConfiguration.sol";
 
 import "./interfaces/IBridge.sol";
+import "./interfaces/IConnector.sol";
 import "./interfaces/event-configuration-contracts/IBasicEventConfiguration.sol";
 
 import "./../utils/TransferUtils.sol";
 import "./../utils/ErrorCodes.sol";
+
+import "./Connector.sol";
 
 import './../../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol';
 import './../../../node_modules/@broxus/contracts/contracts/utils/RandomNonce.sol';
@@ -26,22 +29,7 @@ import './../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.so
 contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUtils {
     BridgeConfiguration public bridgeConfiguration;
     mapping(uint32 => EventConfiguration) eventConfigurations;
-
-    /**
-        @dev Throws an error if bridge currently inactive
-    */
-    modifier onlyActive() {
-        require(bridgeConfiguration.active == true, ErrorCodes.BRIDGE_NOT_ACTIVE);
-        _;
-    }
-
-    /**
-        @dev Throws an error if event configuration currently inactive
-    */
-    modifier onlyActiveConfiguration(uint32 id) {
-        require(eventConfigurations[id].status == true, ErrorCodes.EVENT_CONFIGURATION_NOT_ACTIVE);
-        _;
-    }
+    uint128 public connectorCounter = 0;
 
     /**
         @param _owner Owner address
@@ -61,53 +49,54 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
     }
 
     /**
-        @notice Creates new event configuration
-        @dev Event configuration id should not be used at time of execution
-        @param id Event configuration id
-        @param eventConfiguration Event configuration details
+        @notice Derive connector address by it's id
+        @param id Connector id
     */
-    function createEventConfiguration(
-        uint32 id,
-        EventConfiguration eventConfiguration
+    function deriveConnectorAddress(
+        uint128 id
     )
         override
         public
-        cashBack
-        onlyOwner
-    {
-        emit EventConfigurationCreated(id, eventConfiguration);
+        reserveBalance
+    returns(
+        address connector
+    ) {
+        TvmCell stateInit = tvm.buildStateInit({
+            contr: Connector,
+            varInit: {
+                id: id,
+                bridge: address(this)
+            },
+            pubkey: 0,
+            code: bridgeConfiguration.connectorCode
+        });
+
+        return address(tvm.hash(stateInit));
     }
 
-    /**
-        @notice Removes existing event configuration
-        @param id Event configuration id
-    */
-    function removeEventConfiguration(
-        uint32 id
+    function deployConnector(
+        address _eventConfiguration
     )
         override
         public
-        cashBack
-        onlyOwner
-    {
-        emit EventConfigurationRemoved(id);
-    }
+        reserveBalance
+    returns(
+        address connector
+    ) {
+        require(msg.value >= bridgeConfiguration.connectorDeployValue, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
 
-    /**
-        @notice Updates event configuration
-        @param id Event configuration id
-        @param eventConfiguration Event configuration details
-    */
-    function updateEventConfiguration(
-        uint32 id,
-        EventConfiguration eventConfiguration
-    )
-        override
-        public
-        cashBack
-        onlyOwner
-    {
-        emit EventConfigurationUpdated(id, eventConfiguration);
+        connector = new Connector{
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED,
+            code: bridgeConfiguration.connectorCode,
+            pubkey: 0,
+            varInit: {
+                id: connectorCounter,
+                bridge: address(this)
+            }
+        }(_eventConfiguration, owner);
+
+        connectorCounter++;
     }
 
     /**

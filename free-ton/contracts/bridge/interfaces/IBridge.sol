@@ -9,6 +9,8 @@ interface IBridge {
     struct BridgeConfiguration {
         address staking;
         bool active;
+        TvmCell connectorCode;
+        uint128 connectorDeployValue;
     }
 
     struct EventConfiguration {
@@ -17,17 +19,15 @@ interface IBridge {
         IBasicEventConfiguration.EventType _type;
     }
 
-    event EventConfigurationCreated(uint32 id, EventConfiguration eventConfiguration);
-    event EventConfigurationRemoved(uint32 id);
+    event EventConfigurationEnabled(uint32 id, EventConfiguration eventConfiguration);
+    event EventConfigurationDisabled(uint32 id);
     event EventConfigurationUpdated(uint32 id, EventConfiguration eventConfiguration);
-
     event BridgeConfigurationUpdate(BridgeConfiguration bridgeConfiguration);
-
-    function createEventConfiguration(uint32 id, EventConfiguration eventConfiguration) external;
-    function removeEventConfiguration(uint32 id) external;
-    function updateEventConfiguration(uint32 id, EventConfiguration eventConfiguration) external;
 
     function updateBridgeConfiguration(
         BridgeConfiguration _bridgeConfiguration
     ) external;
+
+    function deriveConnectorAddress(uint128 id) external returns(address connector);
+    function deployConnector(address _eventConfiguration) external returns(address connector);
 }

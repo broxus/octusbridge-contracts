@@ -4,7 +4,7 @@ const {
   setupRelays,
   MetricManager,
   enableEventConfiguration,
-  captureEventConfigurations,
+  captureConnectors,
   afterRun,
   logger,
   expect,
@@ -59,27 +59,20 @@ describe('Test ethereum event confirm', async function() {
         bridgeOwner,
         bridge,
         ethereumEventConfiguration,
-        'ethereum'
       );
     });
 
-    it('Check configuration', async () => {
-      const configurations = await captureEventConfigurations(bridge);
-      
-      expect(configurations[1])
+    it('Check configuration enabled', async () => {
+      const configurations = await captureConnectors(bridge);
+
+      expect(configurations['0'])
         .to.be.not.equal(undefined, 'Configuration not found');
       
-      expect(Object.keys(configurations))
-        .to.have.lengthOf(1, 'Wrong amount of configurations');
-  
-      expect(configurations[1].addr)
+      expect(configurations['0']._eventConfiguration)
         .to.be.equal(ethereumEventConfiguration.address, 'Wrong configuration address');
-
-      expect(configurations[1]._type)
-        .to.be.bignumber.equal(0, 'Wrong configuration type');
-  
-      expect(configurations[1].status)
-        .to.be.equal(true, 'Wrong configuration status');
+      
+      expect(configurations['0']._enabled)
+        .to.be.equal(true, 'Wrong connector status');
     });
   });
   
@@ -98,7 +91,7 @@ describe('Test ethereum event confirm', async function() {
         method: 'encodeEthereumEventData',
         params: eventDataStructure
       });
-  
+
       eventVoteData = {
         eventTransaction: 111,
         eventIndex: 222,
@@ -117,7 +110,7 @@ describe('Test ethereum event confirm', async function() {
         },
         value: locklift.utils.convertCrystal(6, 'nano')
       });
-      
+
       logger.log(`Event initialization tx: ${tx.transaction.id}`);
 
       const expectedEventContract = await ethereumEventConfiguration.call({
@@ -132,7 +125,7 @@ describe('Test ethereum event confirm', async function() {
       eventContract = await locklift.factory.getContract('EthereumEvent');
       eventContract.setAddress(expectedEventContract);
       eventContract.afterRun = afterRun;
-      
+
       metricManager.addContract(eventContract);
     });
 
@@ -140,7 +133,7 @@ describe('Test ethereum event confirm', async function() {
       const details = await eventContract.call({
         method: 'getDetails'
       });
-      
+
       expect(details._eventInitData.voteData.eventTransaction)
         .to.be.bignumber.equal(eventVoteData.eventTransaction, 'Wrong event transaction');
 
@@ -158,10 +151,10 @@ describe('Test ethereum event confirm', async function() {
 
       expect(details._eventInitData.configuration)
         .to.be.equal(ethereumEventConfiguration.address, 'Wrong event configuration');
-      
+
       expect(details._eventInitData.staking)
         .to.be.equal(staking.address, 'Wrong staking');
-      
+
       expect(details._status)
         .to.be.bignumber.equal(0, 'Wrong status');
 
@@ -170,26 +163,26 @@ describe('Test ethereum event confirm', async function() {
 
       expect(details.rejects)
         .to.have.lengthOf(0, 'Wrong amount of relays rejects');
-   
+
       expect(details._initializer)
         .to.be.equal(initializer.address, 'Wrong initializer');
     });
-    
+
     it('Check event round relays', async () => {
       const requiredVotes = await eventContract.call({
         method: 'requiredVotes',
       });
-      
+
       const relays = await eventContract.call({
         method: 'getVoters',
         params: {
           vote: 0
         }
       });
-      
+
       expect(requiredVotes)
         .to.be.bignumber.greaterThan(0, 'Too low required votes for event');
-      
+
       expect(relays.length)
         .to.be.bignumber.greaterThanOrEqual(requiredVotes.toNumber(), 'Too many required votes for event');
     });
@@ -213,7 +206,7 @@ describe('Test ethereum event confirm', async function() {
         .to.be.bignumber.equal(eventDataStructure.owner_pubkey, 'Wrong owner pubkey');
     });
   });
-  
+
   describe('Confirm event', async () => {
     it('Confirm event enough times', async () => {
       const requiredVotes = await eventContract.call({
@@ -222,7 +215,7 @@ describe('Test ethereum event confirm', async function() {
 
       for (const [relayId, relay] of Object.entries(relays.slice(0, requiredVotes))) {
         logger.log(`Confirm #${relayId} from ${relay.public}`);
-        
+
         await eventContract.run({
           method: 'confirm',
           params: {},
@@ -235,11 +228,11 @@ describe('Test ethereum event confirm', async function() {
       const details = await eventContract.call({
         method: 'getDetails'
       });
-  
+
       const requiredVotes = await eventContract.call({
         method: 'requiredVotes',
       });
-  
+
       // expect(details.balance)
       //   .to.be.bignumber.equal(0, 'Wrong balance');
 
@@ -252,12 +245,12 @@ describe('Test ethereum event confirm', async function() {
       expect(details.rejects)
         .to.have.lengthOf(0, 'Wrong amount of relays rejects');
     });
-  
+
     it('Check event proxy received callback', async () => {
       const details = await proxy.call({
         method: 'getDetails'
       });
-      
+
       expect(details._callbackCounter)
         .to.be.bignumber.equal(1, 'Wrong callback counter');
     });
