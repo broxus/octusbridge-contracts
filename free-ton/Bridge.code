@@ -1,0 +1,1182 @@
+.macro constructor
+DROP
+GETGLOB 1
+ISNULL
+IFREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+;; constructor protection
+GETGLOB 6
+THROWIF 51
+PUSHINT 1
+SETGLOB 6
+;; end constructor protection
+; Decode input parameters
+; Decode _owner
+LDMSGADDRQ
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+}
+IFNOT
+; Decode _bridgeConfiguration
+;; decode struct BridgeConfiguration _bridgeConfiguration
+;; decode BridgeConfiguration.staking
+LDMSGADDRQ
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+}
+IFNOT
+;; decode BridgeConfiguration.active
+LDIQ 1
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDI 1
+}
+IFNOT
+;; decode BridgeConfiguration.connectorCode
+;; decode TvmCell
+DUP
+SBITREFS
+EQINT 1
+SWAP
+EQINT 0
+AND
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDREF
+;; decode BridgeConfiguration.connectorDeployValue
+LDUQ 128
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 128
+}
+IFNOT
+;; build struct BridgeConfiguration ss:6
+BLKSWAP 4, 1
+TUPLE 4
+SWAP
+ENDS
+;; param: _owner
+;; param: _bridgeConfiguration
+; modifier checkPubKey
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+;; ==
+GETGLOB 2
+EQUAL
+THROWIFNOT 1103
+; constructor Bridge
+ACCEPT
+; expValue
+; end expValue
+;; push identifier _bridgeConfiguration
+DUP
+; colValue
+SETGLOB 12
+; end colValue
+;; emit BridgeConfigurationUpdate
+NEWC
+PUSHSLICE xc0000000000000000000000002_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x547666b3
+;; bridgeConfiguration
+;; push identifier _bridgeConfiguration
+PUSH S1
+UNTUPLE 4
+BLKSWAP 1, 4
+PUSH S4
+STSLICER
+PUSH S3
+STIR 1
+PUSH S2
+STREFR
+PUSH S1
+STUR 128
+BLKDROP2 4, 1
+ENDC
+PUSHINT 0
+SENDRAWMSG
+;; push identifier _owner
+PUSH S1
+CALLREF {
+	CALL $setOwnership_internal_macro$
+}
+; end constructor Bridge
+; end modifier checkPubKey
+DROP2
+CALLREF {
+	CALL $c7_to_c4$
+}
+TRUE
+SETGLOB 7
+
+.macro deriveConnectorAddress
+DROP
+GETGLOB 1
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+; Decode input parameters
+; Decode id
+LDUQ 128
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 128
+}
+IFNOT
+ENDS
+;; param: id
+CALLREF {
+	CALL $deriveConnectorAddress_internal_macro$
+}
+;; emitting 1 value(s)
+PUSH S1
+EQINT -1
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST xa2a12b01
+	PUSH S1
+	STSLICER
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+TRUE
+SETGLOB 7
+
+.globl	deriveConnectorAddress_internal
+.type	deriveConnectorAddress_internal, @function
+CALL $deriveConnectorAddress_internal_macro$
+
+.macro deriveConnectorAddress_internal_macro
+;; param: id
+;; ret param: connector
+PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+; modifier reserveBalance
+;; get member balance
+GETPARAM 7
+INDEX 0
+;; -
+;; get member value
+CALLREF {
+	CALL $message_balance_macro$
+}
+SUB
+UFITS 128
+PUSHINT 2
+RAWRESERVE
+; function deriveConnectorAddress
+NEWDICT
+PUSHINT 0
+NEWC
+STU 256
+PUSHINT 0
+ROT
+PUSHINT 64
+DICTUSETB
+;; push identifier id
+PUSH S2
+NEWC
+STU 128
+PUSHINT 2
+ROT
+PUSHINT 64
+DICTUSETB
+MYADDR
+PUSHINT 1
+ROT
+PUSHINT 64
+DICTUSET
+NEWC
+STDICT
+ENDC
+;; get member connectorCode
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 2
+NEWC
+STSLICECONST x2_
+STOPTREF
+STOPTREF
+STZERO
+ENDC
+;; decl: stateInit
+;; return
+;; push identifier stateInit
+DUP
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+ENDC
+CTOS
+BLKDROP2 1, 2
+SWAP
+DROP
+; end function deriveConnectorAddress
+; end modifier reserveBalance
+NIP
+
+.macro deployConnector
+DROP
+GETGLOB 1
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+; Decode input parameters
+; Decode _eventConfiguration
+LDMSGADDRQ
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+}
+IFNOT
+ENDS
+;; param: _eventConfiguration
+CALLREF {
+	CALL $deployConnector_internal_macro$
+}
+;; emitting 1 value(s)
+PUSH S1
+EQINT -1
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST x87e92ca3
+	PUSH S1
+	STSLICER
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+TRUE
+SETGLOB 7
+
+.globl	deployConnector_internal
+.type	deployConnector_internal, @function
+CALL $deployConnector_internal_macro$
+
+.macro deployConnector_internal_macro
+;; param: _eventConfiguration
+;; ret param: connector
+PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+; modifier reserveBalance
+;; get member balance
+GETPARAM 7
+INDEX 0
+;; -
+;; get member value
+CALLREF {
+	CALL $message_balance_macro$
+}
+SUB
+UFITS 128
+PUSHINT 2
+RAWRESERVE
+; function deployConnector
+PUSHINT 2213
+;; get member value
+CALLREF {
+	CALL $message_balance_macro$
+}
+;; >=
+;; get member connectorDeployValue
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 3
+GEQ
+THROWANYIFNOT
+;; emit ConnectorDeployed
+NEWC
+PUSHSLICE xc0000000000000000000000002_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x6d782668
+;; id
+;; push identifier connectorCounter
+GETGLOB 13
+STUR 128
+;; connector
+;; push identifier connector
+PUSH S1
+STSLICER
+;; eventConfiguration
+;; push identifier _eventConfiguration
+PUSH S2
+STSLICER
+ENDC
+PUSHINT 0
+SENDRAWMSG
+NEWDICT
+PUSHINT 0
+NEWC
+STU 256
+PUSHINT 0
+ROT
+PUSHINT 64
+DICTUSETB
+;; push identifier connectorCounter
+GETGLOB 13
+NEWC
+STU 128
+PUSHINT 2
+ROT
+PUSHINT 64
+DICTUSETB
+MYADDR
+PUSHINT 1
+ROT
+PUSHINT 64
+DICTUSET
+NEWC
+STDICT
+ENDC
+;; get member connectorCode
+;; push identifier bridgeConfiguration
+GETGLOB 12
+INDEX 2
+NEWC
+STSLICECONST x2_
+STOPTREF
+STOPTREF
+STZERO
+ENDC
+DUP
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+ENDC
+CTOS
+PUSHINT 0
+PUSH S1
+NEWC
+STSLICECONST x62_
+STSLICE
+SWAP
+STGRAMS
+PUSHINT 105
+STZEROES
+STSLICECONST xc_
+STSLICECONST 1
+PUSH S2
+STREFR
+STSLICECONST 1
+NEWC
+STSLICECONST x49fa7cdf
+;; _eventConfiguration
+;; push identifier _eventConfiguration
+PUSH S5
+STSLICER
+;; _owner
+;; push identifier owner
+GETGLOB 10
+STSLICER
+STBREFR
+ENDC
+PUSHINT 128
+SENDRAWMSG
+NIP
+; expValue
+; end expValue
+; colValue
+NIP
+; end colValue
+;; ++
+; expValue
+;; fetch connectorCounter
+GETGLOB 13
+; end expValue
+INC
+UFITS 128
+; colValue
+SETGLOB 13
+; end colValue
+; end function deployConnector
+; end modifier reserveBalance
+NIP
+
+.macro updateBridgeConfiguration
+DROP
+GETGLOB 1
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+; Decode input parameters
+; Decode _bridgeConfiguration
+;; decode struct BridgeConfiguration _bridgeConfiguration
+;; decode BridgeConfiguration.staking
+LDMSGADDRQ
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+}
+IFNOT
+;; decode BridgeConfiguration.active
+LDIQ 1
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDI 1
+}
+IFNOT
+;; decode BridgeConfiguration.connectorCode
+;; decode TvmCell
+DUP
+SBITREFS
+EQINT 1
+SWAP
+EQINT 0
+AND
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDREF
+;; decode BridgeConfiguration.connectorDeployValue
+LDUQ 128
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 128
+}
+IFNOT
+;; build struct BridgeConfiguration ss:5
+BLKSWAP 4, 1
+TUPLE 4
+SWAP
+ENDS
+;; param: _bridgeConfiguration
+CALLREF {
+	CALL $updateBridgeConfiguration_internal_macro$
+}
+CALLREF {
+	CALL $c7_to_c4$
+}
+TRUE
+SETGLOB 7
+
+.globl	updateBridgeConfiguration_internal
+.type	updateBridgeConfiguration_internal, @function
+CALL $updateBridgeConfiguration_internal_macro$
+
+.macro updateBridgeConfiguration_internal_macro
+;; param: _bridgeConfiguration
+; modifier cashBack
+;; get member balance
+GETPARAM 7
+INDEX 0
+;; -
+;; get member value
+CALLREF {
+	CALL $message_balance_macro$
+}
+SUB
+UFITS 128
+PUSHINT 2
+RAWRESERVE
+; modifier onlyOwner
+;; get member sender
+GETGLOB 9
+;; push identifier owner
+GETGLOB 10
+SDEQ
+THROWIFNOT 1101
+; function updateBridgeConfiguration
+; expValue
+; end expValue
+;; push identifier _bridgeConfiguration
+DUP
+; colValue
+SETGLOB 12
+; end colValue
+;; emit BridgeConfigurationUpdate
+NEWC
+PUSHSLICE xc0000000000000000000000002_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x547666b3
+;; bridgeConfiguration
+;; push identifier _bridgeConfiguration
+PUSH S1
+UNTUPLE 4
+BLKSWAP 1, 4
+PUSH S4
+STSLICER
+PUSH S3
+STIR 1
+PUSH S2
+STREFR
+PUSH S1
+STUR 128
+BLKDROP2 4, 1
+ENDC
+PUSHINT 0
+SENDRAWMSG
+; end function updateBridgeConfiguration
+; end modifier onlyOwner
+;; transfer()
+;; get member sender
+GETGLOB 9
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 109
+STZEROES
+STSLICECONST 0
+STSLICECONST 0
+ENDC
+PUSHINT 129
+SENDRAWMSG
+; end modifier cashBack
+DROP
+
+.globl	transferAll_internal
+.type	transferAll_internal, @function
+CALL $transferAll_internal_macro$
+
+.macro transferAll_internal_macro
+;; param: receiver
+; function transferAll
+;; transfer()
+;; push identifier receiver
+DUP
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 109
+STZEROES
+STSLICECONST 0
+STSLICECONST 0
+ENDC
+PUSHINT 129
+SENDRAWMSG
+; end function transferAll
+DROP
+
+.globl	setOwnership_internal
+.type	setOwnership_internal, @function
+CALL $setOwnership_internal_macro$
+
+.macro setOwnership_internal_macro
+;; param: newOwner
+; function setOwnership
+;; push identifier owner
+GETGLOB 10
+;; decl: oldOwner
+; expValue
+; end expValue
+;; push identifier newOwner
+PUSH S1
+; colValue
+SETGLOB 10
+; end colValue
+;; emit OwnershipTransferred
+NEWC
+PUSHSLICE xc0000000000000000000000002_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x6115f072
+;; previousOwner
+;; push identifier oldOwner
+PUSH S1
+STSLICER
+;; newOwner
+;; push identifier newOwner
+PUSH S2
+STSLICER
+ENDC
+PUSHINT 0
+SENDRAWMSG
+DROP
+; end function setOwnership
+DROP
+
+.macro transferOwnership
+DROP
+GETGLOB 1
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+; Decode input parameters
+; Decode newOwner
+LDMSGADDRQ
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+}
+IFNOT
+ENDS
+;; param: newOwner
+; modifier onlyOwner
+;; get member sender
+GETGLOB 9
+;; push identifier owner
+GETGLOB 10
+SDEQ
+THROWIFNOT 1101
+; function transferOwnership
+;; push identifier newOwner
+DUP
+;; address.makeAddrStd()
+PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+SDEQ
+NOT
+THROWIFNOT 1102
+;; push identifier newOwner
+DUP
+CALLREF {
+	CALL $setOwnership_internal_macro$
+}
+; end function transferOwnership
+; end modifier onlyOwner
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+TRUE
+SETGLOB 7
+
+.macro renounceOwnership
+DROP
+GETGLOB 1
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+; Decode input parameters
+ENDS
+; modifier onlyOwner
+;; get member sender
+GETGLOB 9
+;; push identifier owner
+GETGLOB 10
+SDEQ
+THROWIFNOT 1101
+; function renounceOwnership
+;; address.makeAddrStd()
+PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+;; decl: newOwner
+;; push identifier newOwner
+DUP
+CALLREF {
+	CALL $setOwnership_internal_macro$
+}
+DROP
+; end function renounceOwnership
+; end modifier onlyOwner
+CALLREF {
+	CALL $c7_to_c4$
+}
+TRUE
+SETGLOB 7
+
+.macro c7_to_c4
+GETGLOB 2
+NEWC
+STU 256
+GETGLOB 3
+STUR 64
+GETGLOB 6
+STUR 1
+GETGLOB 10
+GETGLOB 11
+GETGLOB 12
+GETGLOB 13
+REVERSE 5, 0
+STSLICE
+STU 256
+SWAP
+UNTUPLE 4
+NEWC
+PUSH S4
+STSLICER
+PUSH S3
+STIR 1
+PUSH S2
+STREFR
+PUSH S1
+STUR 128
+BLKDROP2 4, 1
+STBREFR
+STU 128
+ENDC
+POP C4
+
+.macro c4_to_c7
+PUSHROOT
+CTOS        ; c4
+LDU 256      ; pubkey c4
+LDU 64      ; pubkey timestamp c4
+LDU 1       ; pubkey [timestamp] constructor_flag memory
+LDMSGADDR
+LDU 256
+LDREFRTOS
+LDMSGADDR
+LDI 1
+LDREF
+PLDU 128
+TUPLE 4
+SETGLOB 12
+PLDU 128
+SETGLOB 13
+SETGLOB 11
+SETGLOB 10
+TRUE
+SETGLOB 1   ; pubkey [timestamp] constructor_flag
+SETGLOB 6   ; pubkey [timestamp]
+SETGLOB 3   ; D
+SETGLOB 2
+
+.macro c4_to_c7_with_init_storage
+PUSHROOT
+CTOS        ; c4
+DUP        ; c4 c4
+SBITS      ; c4 bits
+GTINT 1    ; c4 bits>1
+PUSHCONT {
+	LDU 256      ; pubkey c4
+	LDU 64      ; pubkey timestamp c4
+	LDU 1       ; pubkey [timestamp] constructor_flag memory
+	LDMSGADDR
+	LDU 256
+	LDREFRTOS
+	LDMSGADDR
+	LDI 1
+	LDREF
+	PLDU 128
+	TUPLE 4
+	SETGLOB 12
+	PLDU 128
+	SETGLOB 13
+	SETGLOB 11
+	SETGLOB 10
+	TRUE
+	SETGLOB 1   ; pubkey [timestamp] constructor_flag
+	SETGLOB 6   ; pubkey [timestamp]
+	SETGLOB 3   ; D
+	SETGLOB 2
+}
+PUSHCONT {
+	PLDDICT   ; D
+	; init owner
+	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+	SETGLOB 10
+	; init _randomNonce
+	PUSHINT 1
+	PUSH S1
+	PUSHINT 64
+	DICTUGET
+	PUSHCONT {
+		PLDU 256
+	}
+	PUSHCONT {
+		PUSHINT 0
+	}
+	IFELSE
+	SETGLOB 11
+	; init bridgeConfiguration
+	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+	PUSHINT 0
+	NEWC
+	ENDC
+	PUSHINT 0
+	TUPLE 4
+	SETGLOB 12
+	; init connectorCounter
+	PUSHINT 0
+	SETGLOB 13
+	; set contract pubkey
+	PUSHINT 0
+	SWAP
+	PUSHINT 64
+	DICTUGET
+	THROWIFNOT 61
+	PLDU 256
+	SETGLOB 2
+	PUSHINT 0 ; timestamp
+	SETGLOB 3
+	PUSHINT 0 ; constructor_flag
+	SETGLOB 6
+	TRUE
+	SETGLOB 1
+	;; init state var: connectorCounter
+	PUSHINT 0
+	SETGLOB 13
+}
+IFELSE
+
+.internal-alias :main_internal, 0
+.internal :main_internal
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Function: main_internal
+;; param: contract_balance
+;; param: msg_balance
+;; param: int_msg_info
+;; param: msg_body_slice
+PUSHINT 0  ; main_external trans id
+PUSH S2
+CTOS
+LDU 4       ; bounced tail
+LDMSGADDR   ; bounced src tail
+DROP
+SETGLOB 9
+MODPOW2 1
+IFRET
+PUSH S1    ; body
+SEMPTY     ; isEmpty
+IFRET
+PUSH S1 ; body
+LDU 32  ; funcId body'
+PUSH S1 ; funcId body' funcId
+IFNOTRET
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+GETGLOB 7
+ISNULL
+THROWIF 60
+
+.internal-alias :main_external, -1
+.internal :main_external
+PUSHINT -1 ; main_external trans id
+PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+SETGLOB 9
+PUSH S1
+CALLREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+LDU 1 ; haveSign msgSlice
+SWAP
+PUSHCONT {
+	PUSHINT 512
+	LDSLICEX ; signatureSlice msgSlice
+	DUP      ; signatureSlice msgSlice msgSlice
+	HASHSU   ; signatureSlice msgSlice hashMsgSlice
+	SWAP  ; signatureSlice hashMsgSlice msgSlice
+	LDU 1 ; signatureSlice hashMsgSlice havePubkey msgSlice
+	SWAP  ; signatureSlice hashMsgSlice msgSlice havePubkey
+	PUSHCONT {
+		LDU 256       ; signatureSlice hashMsgSlice pubkey msgSlice
+		XCHG s3
+		SWAP
+	}
+	PUSHCONT {
+		XCHG s2
+		GETGLOB 2
+	}
+	IFELSE
+	DUP
+	SETGLOB 5
+	CHKSIGNU      ; msgSlice isSigned
+	THROWIFNOT 40 ; msgSlice
+}
+PUSHCONT {
+	LDU 1      ; havePubkey msgSlice
+	SWAP       ; msgSlice havePubkey
+	THROWIF 58 ; msgSlice
+}
+IFELSE
+LDU 64                         ; timestamp msgSlice
+SWAP                           ; msgSlice timestamp
+CALL $replay_protection_macro$ ; msgSlice
+LDU 32  ; expireAt msgSlice
+SWAP    ; msgSlice expireAt
+NOW     ; msgSlice expireAt now
+GREATER ; msgSlice expireAt>now
+THROWIFNOT 57
+LDU  32 ; funcId body
+SWAP    ; body funcId
+CALLREF {
+	CALL $public_function_selector$
+}
+GETGLOB 7
+ISNULL
+THROWIF 60
+
+.macro owner
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+;; emitting 1 value
+DUP
+EQINT -1
+PUSHCONT {
+	GETGLOB 10
+	NEWC
+	PUSHSLICE xc0000000000000000000000002_
+	STSLICER
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST xdf0bcfde
+	PUSH S1
+	STSLICER
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+DROP
+TRUE
+SETGLOB 7
+
+.macro _randomNonce
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+;; emitting 1 value
+DUP
+EQINT -1
+PUSHCONT {
+	GETGLOB 11
+	NEWC
+	PUSHSLICE xc0000000000000000000000002_
+	STSLICER
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST xbb53331f
+	PUSH S1
+	STUR 256
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+DROP
+TRUE
+SETGLOB 7
+
+.macro bridgeConfiguration
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+;; emitting 1 value
+DUP
+EQINT -1
+PUSHCONT {
+	GETGLOB 12
+	NEWC
+	PUSHSLICE xc0000000000000000000000002_
+	STSLICER
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST x966d1db2
+	PUSH S1
+	UNTUPLE 4
+	BLKSWAP 1, 4
+	PUSH S4
+	STSLICER
+	PUSH S3
+	STIR 1
+	PUSH S2
+	STREFR
+	PUSH S1
+	STUR 128
+	BLKDROP2 4, 1
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+DROP
+TRUE
+SETGLOB 7
+
+.macro connectorCounter
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+;; emitting 1 value
+DUP
+EQINT -1
+PUSHCONT {
+	GETGLOB 13
+	NEWC
+	PUSHSLICE xc0000000000000000000000002_
+	STSLICER
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST xfd9107a2
+	PUSH S1
+	STUR 128
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+DROP
+TRUE
+SETGLOB 7
+
+.macro public_function_selector
+DUP
+PUSHINT 376249778
+LEQ
+PUSHCONT {
+	DUP
+	PUSHINT 132721827
+	EQUAL
+	IFJMPREF {
+		CALL $deployConnector$
+	}
+	DUP
+	PUSHINT 235197086
+	EQUAL
+	IFJMPREF {
+		CALL $transferOwnership$
+	}
+	DUP
+	PUSHINT 376249778
+	EQUAL
+	IFJMPREF {
+		CALL $bridgeConfiguration$
+	}
+}
+IFJMP
+DUP
+PUSHINT 995308319
+LEQ
+PUSHCONT {
+	DUP
+	PUSHINT 520034449
+	EQUAL
+	IFJMPREF {
+		CALL $constructor$
+	}
+	DUP
+	PUSHINT 580987649
+	EQUAL
+	IFJMPREF {
+		CALL $deriveConnectorAddress$
+	}
+	DUP
+	PUSHINT 995308319
+	EQUAL
+	IFJMPREF {
+		CALL $_randomNonce$
+	}
+}
+IFJMP
+DUP
+PUSHINT 1729444094
+LEQ
+PUSHCONT {
+	DUP
+	PUSHINT 1105330205
+	EQUAL
+	IFJMPREF {
+		CALL $updateBridgeConfiguration$
+	}
+	DUP
+	PUSHINT 1594609630
+	EQUAL
+	IFJMPREF {
+		CALL $owner$
+	}
+	DUP
+	PUSHINT 1729444094
+	EQUAL
+	IFJMPREF {
+		CALL $renounceOwnership$
+	}
+}
+IFJMP
+DUP
+PUSHINT 2106656674
+EQUAL
+IFJMPREF {
+	CALL $connectorCounter$
+}

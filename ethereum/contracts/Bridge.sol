@@ -10,12 +10,9 @@ import "./utils/Cache.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 
-/**
-    @title Ethereum Bridge contract.
-    @dev Stores relays for each round
-    @dev Controlled by DAO
-    @dev Implements handy functions to be used in bridge integration contracts
-**/
+/// @title Ethereum Bridge contract
+/// @author https://github.com/pavlovdog
+/// @dev Stores relays for each round, implements slashing
 contract Bridge is OwnableUpgradeable, Cache, IBridge {
     using ECDSA for bytes32;
 
@@ -24,10 +21,10 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
     BridgeConfiguration public configuration;
     uint public lastRound;
 
-    /**
-        @param admin Bridge admin
-        @param relays Set of relays for round 0
-    **/
+    /// @dev Initializer
+    /// @param admin Bridge admin
+    /// @param _configuration Initial bridge configuration
+    /// @param relays Initial set of relays (round 0)
     function initialize(
         address admin,
         BridgeConfiguration calldata _configuration,
@@ -42,7 +39,7 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
         lastRound = 0;
     }
 
-    /*
+    /**
         @notice Internal function for setting bridge configuration
         @param _configuration Bridge configuration
     */
@@ -54,7 +51,7 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
         emit ConfigurationUpdate(_configuration);
     }
 
-    /*
+    /**
         @notice Internal function for updating up relays for specific round
         @param round Round id
         @param relays Array of relay addresses
@@ -72,7 +69,7 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
         }
     }
 
-    /*
+    /**
         @notice Same as above, but uint160 used instead of address type
         @param round Round id
         @param relays Array of relay addresses
@@ -90,7 +87,7 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
         }
     }
 
-    /*
+    /**
         @notice Answers if specific address was relay in specific round
         @param round Round id
         @param candidate Address to check
@@ -102,21 +99,21 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
         return roundRelays[round][candidate];
     }
 
-    /*
+    /**
         @notice Verify there is enough relay signatures
         @dev Required amount of signatures is (2/3 * relays at round) + 1
         @dev Signatures should be sorted by the ascending signers, so it's cheaper to detect duplicates
-        // TODO: discuss min amount of required signatures
         @param round Round id
         @param payload Bytes encoded payload
         @param signatures Payload signatures
-        @returns All checks are passed or not
+        @return All checks are passed or not
     */
     function verifyRelaySignatures(
         uint32 round,
         bytes memory payload,
         bytes[] memory signatures
     ) override public view returns (bool) {
+        // TODO: discuss min amount of required signatures
         require(round <= lastRound, "Bridge: too high round");
 
         address lastSigner = address(0);
@@ -138,8 +135,7 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
         return count >= requiredSignatures;
     }
 
-    // TODO: discuss removing relays
-    /*
+    /**
         @notice Recover signer from the payload and signature
         @param payload Payload
         @param signature Signature
@@ -153,15 +149,16 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
             .recover(signature);
     }
 
-    /*
+    /**
         @notice Grant relay permission for addresses at specific round
-        @param round Round number on which to set relays
+        @param payload Bytes encoded TONEvent structure
         @param signatures Payload signatures
     */
     function setRoundRelays(
         bytes calldata payload,
         bytes[] calldata signatures
     ) override external notCached(payload) {
+        // TODO: discuss removing relays
         (IBridge.TONEvent memory tonEvent) = abi.decode(payload, (IBridge.TONEvent));
 
         require(
@@ -195,7 +192,7 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
         _setRoundRelays(round, relays);
     }
 
-    /*
+    /**
         @notice Update bridge configuration
         @dev Only owner
         @param _configuration New bridge configuration

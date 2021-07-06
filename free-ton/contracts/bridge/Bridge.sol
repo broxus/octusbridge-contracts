@@ -28,7 +28,6 @@ import './../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.so
 */
 contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUtils {
     BridgeConfiguration public bridgeConfiguration;
-    mapping(uint32 => EventConfiguration) eventConfigurations;
     uint128 public connectorCounter = 0;
 
     /**
