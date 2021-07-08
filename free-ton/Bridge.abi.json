@@ -6,41 +6,33 @@
 			"name": "constructor",
 			"inputs": [
 				{"name":"_owner","type":"address"},
-				{"components":[{"name":"staking","type":"address"},{"name":"active","type":"bool"}],"name":"_bridgeConfiguration","type":"tuple"}
+				{"components":[{"name":"staking","type":"address"},{"name":"active","type":"bool"},{"name":"connectorCode","type":"cell"},{"name":"connectorDeployValue","type":"uint128"}],"name":"_bridgeConfiguration","type":"tuple"}
 			],
 			"outputs": [
 			]
 		},
 		{
-			"name": "createEventConfiguration",
+			"name": "deriveConnectorAddress",
 			"inputs": [
-				{"name":"id","type":"uint32"},
-				{"components":[{"name":"addr","type":"address"},{"name":"status","type":"bool"},{"name":"_type","type":"uint8"}],"name":"eventConfiguration","type":"tuple"}
+				{"name":"id","type":"uint128"}
 			],
 			"outputs": [
+				{"name":"connector","type":"address"}
 			]
 		},
 		{
-			"name": "removeEventConfiguration",
+			"name": "deployConnector",
 			"inputs": [
-				{"name":"id","type":"uint32"}
+				{"name":"_eventConfiguration","type":"address"}
 			],
 			"outputs": [
-			]
-		},
-		{
-			"name": "updateEventConfiguration",
-			"inputs": [
-				{"name":"id","type":"uint32"},
-				{"components":[{"name":"addr","type":"address"},{"name":"status","type":"bool"},{"name":"_type","type":"uint8"}],"name":"eventConfiguration","type":"tuple"}
-			],
-			"outputs": [
+				{"name":"connector","type":"address"}
 			]
 		},
 		{
 			"name": "updateBridgeConfiguration",
 			"inputs": [
-				{"components":[{"name":"staking","type":"address"},{"name":"active","type":"bool"}],"name":"_bridgeConfiguration","type":"tuple"}
+				{"components":[{"name":"staking","type":"address"},{"name":"active","type":"bool"},{"name":"connectorCode","type":"cell"},{"name":"connectorDeployValue","type":"uint128"}],"name":"_bridgeConfiguration","type":"tuple"}
 			],
 			"outputs": [
 			]
@@ -81,7 +73,15 @@
 			"inputs": [
 			],
 			"outputs": [
-				{"components":[{"name":"staking","type":"address"},{"name":"active","type":"bool"}],"name":"bridgeConfiguration","type":"tuple"}
+				{"components":[{"name":"staking","type":"address"},{"name":"active","type":"bool"},{"name":"connectorCode","type":"cell"},{"name":"connectorDeployValue","type":"uint128"}],"name":"bridgeConfiguration","type":"tuple"}
+			]
+		},
+		{
+			"name": "connectorCounter",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"connectorCounter","type":"uint128"}
 			]
 		}
 	],
@@ -99,7 +99,7 @@
 			]
 		},
 		{
-			"name": "EventConfigurationCreated",
+			"name": "EventConfigurationEnabled",
 			"inputs": [
 				{"name":"id","type":"uint32"},
 				{"components":[{"name":"addr","type":"address"},{"name":"status","type":"bool"},{"name":"_type","type":"uint8"}],"name":"eventConfiguration","type":"tuple"}
@@ -108,7 +108,7 @@
 			]
 		},
 		{
-			"name": "EventConfigurationRemoved",
+			"name": "EventConfigurationDisabled",
 			"inputs": [
 				{"name":"id","type":"uint32"}
 			],
@@ -127,7 +127,17 @@
 		{
 			"name": "BridgeConfigurationUpdate",
 			"inputs": [
-				{"components":[{"name":"staking","type":"address"},{"name":"active","type":"bool"}],"name":"bridgeConfiguration","type":"tuple"}
+				{"components":[{"name":"staking","type":"address"},{"name":"active","type":"bool"},{"name":"connectorCode","type":"cell"},{"name":"connectorDeployValue","type":"uint128"}],"name":"bridgeConfiguration","type":"tuple"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "ConnectorDeployed",
+			"inputs": [
+				{"name":"id","type":"uint128"},
+				{"name":"connector","type":"address"},
+				{"name":"eventConfiguration","type":"address"}
 			],
 			"outputs": [
 			]

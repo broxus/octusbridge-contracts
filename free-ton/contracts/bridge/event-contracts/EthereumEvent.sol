@@ -30,6 +30,8 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
     mapping (uint => Vote) public votes;
     // Event contract deployer
     address public initializer;
+    // Event configuration meta
+    TvmCell public meta;
     // How many votes required for confirm / reject
     uint32 public requiredVotes;
 
@@ -48,12 +50,14 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         @param vote Vote type
         @returns voters List of voters (relays) public keys
     */
-    function getVoters(Vote vote) public view returns(uint[] voters) {
+    function getVoters(Vote vote) public view responsible returns(uint[] voters) {
         for ((uint voter, Vote vote_): votes) {
             if (vote_ == vote) {
                 voters.push(voter);
             }
         }
+
+        return {value: 0, flag: MsgFlag.REMAINING_GAS} voters;
     }
 
     /*
@@ -62,31 +66,26 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         Receives all contract balance at the end of event contract lifecycle.
     */
     constructor(
-        address _initializer
+        address _initializer,
+        TvmCell _meta
     ) public {
         // TODO: add external method for executing confirmed event?
         eventInitData.configuration = msg.sender;
 
         status = Status.Pending;
         initializer = _initializer;
+        meta = _meta;
 
         notifyEventStatusChanged();
 
-        _requestRoundRelays();
-    }
-
-    // TODO: add refresh round relays
-    function _requestRoundRelays() internal {
         IStaking(eventInitData.staking).deriveRoundAddress{
             value: 1 ton,
             callback: EthereumEvent.receiveRoundAddress
-        }(eventInitData.voteData.round);
+        }(now);
     }
 
     // TODO: cant be pure, compiler lies
-    function receiveRoundAddress(
-        address roundContract
-    ) public onlyStaking {
+    function receiveRoundAddress(address roundContract) public onlyStaking {
         IRound(roundContract).relayKeys{
             value: 1 ton,
             callback: EthereumEvent.receiveRoundRelays
@@ -109,11 +108,13 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
     function confirm() public eventPending {
         uint relay = msg.pubkey();
 
-        require(votes[relay] == Vote.Empty, ErrorCodes.KEY_ALREADY_VOTED);
+        require(votes[relay] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
 
         tvm.accept();
 
         votes[relay] = Vote.Confirm;
+
+        emit Confirm(relay);
 
         if (getVoters(Vote.Confirm).length >= requiredVotes) {
             status = Status.Confirmed;
@@ -134,11 +135,13 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
     function reject() public eventPending {
         uint relay = msg.pubkey();
 
-        require(votes[relay] == Vote.Empty, ErrorCodes.KEY_ALREADY_VOTED);
+        require(votes[relay] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
 
         tvm.accept();
 
         votes[relay] = Vote.Reject;
+
+        emit Reject(relay);
 
         if (getVoters(Vote.Reject).length >= requiredVotes) {
             status = Status.Rejected;
@@ -155,7 +158,7 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         @returns _confirmRelays List of relays who have confirmed event
         @returns _confirmRelays List of relays who have rejected event
     */
-    function getDetails() public view returns (
+    function getDetails() public view responsible returns (
         EthereumEventInitData _eventInitData,
         Status _status,
         uint[] confirms,
@@ -163,9 +166,10 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         uint[] empty,
         uint128 balance,
         address _initializer,
+        TvmCell _meta,
         uint32 _requiredVotes
     ) {
-        return (
+        return {value: 0, flag: MsgFlag.REMAINING_GAS} (
             eventInitData,
             status,
             getVoters(Vote.Confirm),
@@ -173,6 +177,7 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
             getVoters(Vote.Empty),
             address(this).balance,
             initializer,
+            meta,
             requiredVotes
         );
     }
@@ -186,7 +191,7 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         @returns owner_pubkey Token receiver public key
         @returns owner_address Token receiver address (derived from the wid and owner_addr)
     */
-    function getDecodedData() public view returns (
+    function getDecodedData() public view responsible returns (
         address rootToken,
         uint128 tokens,
         int8 wid,
@@ -194,7 +199,7 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         uint256 owner_pubkey,
         address owner_address
     ) {
-        (rootToken) = decodeConfigurationMeta(eventInitData.meta);
+        (rootToken) = decodeConfigurationMeta(meta);
 
         (
             tokens,
@@ -204,6 +209,15 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         ) = decodeEthereumEventData(eventInitData.voteData.eventData);
 
         owner_address = address.makeAddrStd(wid, owner_addr);
+
+        return {value: 0, flag: MsgFlag.REMAINING_GAS} (
+            rootToken,
+            tokens,
+            wid,
+            owner_addr,
+            owner_pubkey,
+            owner_address
+        );
     }
 
     /*

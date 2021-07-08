@@ -4,7 +4,7 @@ const {
   setupRelays,
   MetricManager,
   enableEventConfiguration,
-  captureEventConfigurations,
+  captureConnectors,
   afterRun,
   logger,
   expect,
@@ -63,23 +63,17 @@ describe('Test ethereum event reject', async function() {
       );
     });
   
-    it('Check configuration', async () => {
-      const configurations = await captureEventConfigurations(bridge);
+    it('Check configuration enabled', async () => {
+      const configurations = await captureConnectors(bridge);
     
-      expect(configurations[1])
+      expect(configurations['0'])
         .to.be.not.equal(undefined, 'Configuration not found');
     
-      expect(Object.keys(configurations))
-        .to.have.lengthOf(1, 'Wrong amount of configurations');
-    
-      expect(configurations[1].addr)
+      expect(configurations['0']._eventConfiguration)
         .to.be.equal(ethereumEventConfiguration.address, 'Wrong configuration address');
     
-      expect(configurations[1]._type)
-        .to.be.bignumber.equal(0, 'Wrong configuration type');
-    
-      expect(configurations[1].status)
-        .to.be.equal(true, 'Wrong configuration status');
+      expect(configurations['0']._enabled)
+        .to.be.equal(true, 'Wrong connector status');
     });
   });
   
@@ -105,7 +99,6 @@ describe('Test ethereum event reject', async function() {
           eventData,
           eventBlockNumber: 333,
           eventBlock: 444,
-          round: 555,
       };
     });
   

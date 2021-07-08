@@ -15,14 +15,15 @@ import './../../../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey
 import './../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
-/*
+/**
     @title Basic example of Ethereum event configuration
+    @author Sergey Potekhin
 */
 contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, TransferUtils, InternalOwner, CheckPubKey {
     BasicConfiguration public static basicConfiguration;
     EthereumEventConfiguration public static networkConfiguration;
 
-    /*
+    /**
         @param _owner Event configuration owner
     */
     constructor(address _owner) public checkPubKey {
@@ -31,7 +32,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
         setOwnership(_owner);
     }
 
-    /*
+    /**
         @notice Build initial data for event contract
         @dev Extends event vote data with configuration params
         @param eventVoteData Event vote data structure, passed by relay
@@ -44,23 +45,29 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
         eventInitData.voteData = eventVoteData;
 
         eventInitData.configuration = address(this);
-        eventInitData.meta = basicConfiguration.meta;
         eventInitData.staking = basicConfiguration.staking;
         eventInitData.chainId = basicConfiguration.chainId;
     }
 
-    /*
+    /**
         @notice Deploy event contract
         @param eventVoteData Event vote data
     */
     function deployEvent(
         IEthereumEvent.EthereumEventVoteData eventVoteData
-    ) external override reserveBalance returns(address eventContract) {
+    )
+        external
+        override
+        reserveBalance
+    returns(address eventContract) {
         require(msg.value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
+        require(
+            eventVoteData.eventBlockNumber >= networkConfiguration.startBlockNumber,
+            ErrorCodes.EVENT_BLOCK_NUMBER_LESS_THAN_START
+        );
 
         IEthereumEvent.EthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
 
-        // TODO: max value or exact?
         eventContract = new EthereumEvent{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED,
@@ -69,12 +76,12 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
             varInit: {
                 eventInitData: eventInitData
             }
-        }(msg.sender);
+        }(msg.sender, basicConfiguration.meta);
     }
-    /*
+    /**
         @notice Derive the Ethereum event contract address from it's init data
         @param eventVoteData Ethereum event vote data
-        @returns eventContract Address of the corresponding ethereum event contract
+        @return eventContract Address of the corresponding ethereum event contract
     */
     function deriveEventAddress(
         IEthereumEvent.EthereumEventVoteData eventVoteData
@@ -82,6 +89,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
         override
         public
         view
+        responsible
     returns(
         address eventContract
     ) {
@@ -96,37 +104,37 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
             code: basicConfiguration.eventCode
         });
 
-        return address(tvm.hash(stateInit));
+        return {value: 0, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
     }
 
-    /*
+    /**
         @notice Get configuration details.
         @return _basicConfiguration Basic configuration init data
-        @return networkConfiguration Network specific configuration init data
+        @return _networkConfiguration Network specific configuration init data
     */
-    function getDetails() override public view returns(
+    function getDetails() override public view responsible returns(
         BasicConfiguration _basicConfiguration,
         EthereumEventConfiguration _networkConfiguration
     ) {
-        return (
+        return {value: 0, flag: MsgFlag.REMAINING_GAS}(
             basicConfiguration,
             networkConfiguration
         );
     }
 
-    /*
+    /**
         @notice Get event configuration type
         @return _type Configuration type - Ethereum or TON
     */
-    function getType() override public pure returns(EventType _type) {
-        return EventType.Ethereum;
+    function getType() override public pure responsible returns(EventType _type) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS} EventType.Ethereum;
     }
 
-    /*
+    /**
         @notice Update configuration data
         @dev Can be called only by owner
         @param _basicConfiguration New basic configuration init data
-        @param networkConfiguration New network specific configuration init data
+        @param _networkConfiguration New network specific configuration init data
     */
     function update(
         BasicConfiguration _basicConfiguration,
@@ -136,12 +144,12 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
         networkConfiguration = _networkConfiguration;
     }
 
-    /*
+    /**
         @notice Receives execute callback from ethereum event
         and send it to the event proxy contract
         @dev Ethereum event correctness is checked here, so
         event proxy contract becomes more simple
-        @param eventData Ethereum event data
+        @param eventInitData Ethereum event data
         @param gasBackAddress Ad hoc param. Used in token transfers
         TODO: think about onBounce in case of paused event proxy
     */

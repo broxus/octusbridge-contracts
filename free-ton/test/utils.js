@@ -87,7 +87,7 @@ const setupBridge = async (relays) => {
       _randomNonce,
     },
     keyPair,
-  }, locklift.utils.convertCrystal(3, 'nano'));
+  }, locklift.utils.convertCrystal(10, 'nano'));
   
   owner.setKeyPair(keyPair);
   owner.afterRun = afterRun;
@@ -110,6 +110,7 @@ const setupBridge = async (relays) => {
   await logContract(staking);
   
   const Bridge = await locklift.factory.getContract('Bridge');
+  const Connector = await locklift.factory.getContract('Connector');
   
   const bridge = await locklift.giver.deployContract({
     contract: Bridge,
@@ -118,6 +119,8 @@ const setupBridge = async (relays) => {
       _bridgeConfiguration: {
         active: true,
         staking: staking.address,
+        connectorCode: Connector.code,
+        connectorDeployValue: locklift.utils.convertCrystal(1, 'nano'),
       }
     },
     initParams: {
@@ -218,7 +221,7 @@ const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
       _randomNonce,
     },
     keyPair,
-  }, locklift.utils.convertCrystal(5, 'nano'));
+  }, locklift.utils.convertCrystal(10, 'nano'));
   
   initializer.setKeyPair(keyPair);
   initializer.afterRun = afterRun;
@@ -297,41 +300,63 @@ const setupRelays = async (amount=20) => {
 };
 
 
-const enableEventConfiguration = async (bridgeOwner, bridge, eventConfiguration, network, id=1) => {
-  const eventType = { 'ethereum': 0, 'ton': 1 };
-  
-  return bridgeOwner.runTarget({
+const enableEventConfiguration = async (bridgeOwner, bridge, eventConfiguration) => {
+  const connectorId = await bridge.call({
+    method: 'connectorCounter',
+  });
+
+  await bridgeOwner.runTarget({
     contract: bridge,
-    method: 'createEventConfiguration',
+    method: 'deployConnector',
     params: {
-      id,
-      eventConfiguration: {
-        addr: eventConfiguration.address,
-        status: true,
-        _type: eventType[network]
-      }
+      _eventConfiguration: eventConfiguration.address
+    },
+    value: locklift.utils.convertCrystal(4, 'nano')
+  });
+  
+  const connectorAddress = await bridge.call({
+    method: 'deriveConnectorAddress',
+    params: {
+      id: connectorId
     }
+  });
+  
+  const connector = await locklift.factory.getContract('Connector');
+  connector.setAddress(connectorAddress);
+  
+  await bridgeOwner.runTarget({
+    contract: connector,
+    method: 'enable',
+    params: {}
   });
 };
 
 
-const captureEventConfigurations = async (bridge) => {
-  const configurationEvents = _.flatten([
-    await bridge.getEvents('EventConfigurationCreated'),
-    await bridge.getEvents('EventConfigurationRemoved'),
-    await bridge.getEvents('EventConfigurationUpdated'),
-  ]).sort((a, b) => a.created_at > b.created_at ? 1 : -1);
+const captureConnectors = async (bridge) => {
+  const connectorCounter = await bridge.call({
+    method: 'connectorCounter',
+  });
   
-  return configurationEvents.reduce((acc, event) => {
-    if (event.name === 'EventConfigurationCreated' || event.name === 'EventConfigurationUpdated') {
-      return {
-        ...acc,
-        [event.value.id]: event.value.eventConfiguration
-      };
-    } else {
-      delete acc[event.value.id];
-
-      return acc;
+  const configurations = await Promise.all(_.range(connectorCounter).map(async (connectorId) => {
+    const connectorAddress = await bridge.call({
+      method: 'deriveConnectorAddress',
+      params: {
+        id: connectorId
+      }
+    });
+  
+    const connector = await locklift.factory.getContract('Connector');
+    connector.setAddress(connectorAddress);
+  
+    return await connector.call({
+      method: 'getDetails'
+    });
+  }));
+  
+  return configurations.reduce((acc, configuration) => {
+    return {
+      ...acc,
+      [configuration._id] : configuration
     }
   }, {});
 };
@@ -345,7 +370,7 @@ module.exports = {
   logContract,
   MetricManager,
   enableEventConfiguration,
-  captureEventConfigurations,
+  captureConnectors,
   afterRun,
   logger,
   expect,

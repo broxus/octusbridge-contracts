@@ -17,16 +17,17 @@ interface ITonEventConfiguration is IBasicEventConfiguration {
 
     function deriveEventAddress(
         ITonEvent.TonEventVoteData eventVoteData
-    ) external view returns (address eventContract);
+    ) external view responsible returns (address eventContract);
 
-    function getDetails() external view returns(
+    function getDetails() external view responsible returns(
         BasicConfiguration _basicConfiguration,
         TonEventConfiguration _networkConfiguration
     );
 
-    function getType() external pure returns(EventType _type);
+    function getType() external pure responsible returns(EventType _type);
 
     function update(
         BasicConfiguration _basicConfiguration,
         TonEventConfiguration _networkConfiguration
-    ) external;}
+    ) external;
+}

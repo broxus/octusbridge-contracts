@@ -31,6 +31,8 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
     mapping (uint => bytes) public signatures;
     // Event contract deployer
     address public initializer;
+    // Event configuration meta
+    TvmCell public meta;
     // How many votes required for confirm / reject
     uint32 public requiredVotes;
 
@@ -39,17 +41,33 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
         _;
     }
 
+    modifier onlyInitializer() {
+        require(msg.sender == initializer, ErrorCodes.SENDER_NOT_INITIALIZER);
+        _;
+    }
+
+    modifier eventNotPending() {
+        require(status != Status.Pending, ErrorCodes.EVENT_PENDING);
+        _;
+    }
+
+    function close() public view onlyInitializer eventNotPending {
+        transferAll(initializer);
+    }
+
     /*
         @notice Get voters by the vote type
         @param vote Vote type
         @returns voters List of voters (relays) public keys
     */
-    function getVoters(Vote vote) public view returns(uint[] voters) {
+    function getVoters(Vote vote) public view responsible returns(uint[] voters) {
         for ((uint voter, Vote vote_): votes) {
             if (vote_ == vote) {
                 voters.push(voter);
             }
         }
+
+        return {value: 0, flag: MsgFlag.REMAINING_GAS} voters;
     }
 
     /*
@@ -58,24 +76,24 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
         Receives all contract balance at the end of event contract lifecycle.
     */
     constructor(
-        address _initializer
+        address _initializer,
+        TvmCell _meta
     ) public {
         eventInitData.configuration = msg.sender;
 
         status = Status.Pending;
         initializer = _initializer;
+        meta = _meta;
 
         notifyEventStatusChanged();
 
         IStaking(eventInitData.staking).deriveRoundAddress{
             value: 1 ton,
             callback: TonEvent.receiveRoundAddress
-        }(eventInitData.voteData.round);
+        }(now);
     }
 
-    function receiveRoundAddress(
-        address roundContract
-    ) public onlyStaking {
+    function receiveRoundAddress(address roundContract) public onlyStaking {
         IRound(roundContract).relayKeys{
             value: 1 ton,
             callback: TonEvent.receiveRoundRelays
@@ -99,12 +117,14 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
     function confirm(bytes signature) public {
         uint relay = msg.pubkey();
 
-        require(votes[relay] == Vote.Empty, ErrorCodes.KEY_ALREADY_VOTED);
+        require(votes[relay] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
 
         tvm.accept();
 
         votes[relay] = Vote.Confirm;
         signatures[relay] = signature;
+
+        emit Confirm(relay, signature);
 
         // Event already confirmed
         if (status != Status.Pending) {
@@ -115,7 +135,6 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
             status = Status.Confirmed;
 
             notifyEventStatusChanged();
-            transferAll(initializer);
         }
     }
 
@@ -127,11 +146,13 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
     function reject() public {
         uint relay = msg.pubkey();
 
-        require(votes[relay] == Vote.Empty, ErrorCodes.KEY_ALREADY_VOTED);
+        require(votes[relay] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
 
         tvm.accept();
 
         votes[relay] = Vote.Reject;
+
+        emit Reject(relay);
 
         // Event already confirmed
         if (status != Status.Pending) {
@@ -142,7 +163,6 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
             status = Status.Rejected;
 
             notifyEventStatusChanged();
-            transferAll(initializer);
         }
     }
 
@@ -154,7 +174,7 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
         @returns _confirmRelays List of relays who have rejected event
         @returns _eventDataSignatures List of relay's TonEvent signatures
     */
-    function getDetails() public view returns (
+    function getDetails() public view responsible returns (
         TonEventInitData _eventInitData,
         Status _status,
         uint[] confirms,
@@ -163,6 +183,7 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
         bytes[] _signatures,
         uint128 balance,
         address _initializer,
+        TvmCell _meta,
         uint32 _requiredVotes
     ) {
         confirms = getVoters(Vote.Confirm);
@@ -171,7 +192,7 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
             _signatures.push(signatures[voter]);
         }
 
-        return (
+        return {value: 0, flag: MsgFlag.REMAINING_GAS} (
             eventInitData,
             status,
             confirms,
@@ -180,6 +201,7 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
             _signatures,
             address(this).balance,
             initializer,
+            meta,
             requiredVotes
         );
     }
@@ -193,7 +215,7 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
         @returns ethereum_address Token receiver Ethereum address
         @returns owner_address Token receiver address (derived from the wid and owner_addr)
     */
-    function getDecodedData() public view returns (
+    function getDecodedData() public view responsible returns (
         address rootToken,
         int8 wid,
         uint256 addr,
@@ -201,7 +223,7 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
         uint160 ethereum_address,
         address owner_address
     ) {
-        (rootToken) = decodeConfigurationMeta(eventInitData.meta);
+        (rootToken) = decodeConfigurationMeta(meta);
 
         (
             wid,
@@ -211,6 +233,15 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
         ) = decodeTonEventData(eventInitData.voteData.eventData);
 
         owner_address = address.makeAddrStd(wid, addr);
+
+        return {value: 0, flag: MsgFlag.REMAINING_GAS} (
+            rootToken,
+            wid,
+            addr,
+            tokens,
+            ethereum_address,
+            owner_address
+        );
     }
 
     /*
