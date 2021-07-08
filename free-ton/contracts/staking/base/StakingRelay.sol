@@ -65,7 +65,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 
-    function createOriginRelayRound(IRelayRound.Relay[] relays, address send_gas_to) external onlyOwner {
+    function createOriginRelayRound(IRelayRound.Relay[] relays, address send_gas_to) external onlyAdmin {
         require (msg.value >= Gas.MIN_ORIGIN_ROUND_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
         require (!originRelayRoundInitialized, StakingErrors.ORIGIN_ROUND_ALREADY_INITIALIZED);
 

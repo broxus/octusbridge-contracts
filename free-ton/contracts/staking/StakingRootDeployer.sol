@@ -7,7 +7,7 @@ contract StakingRootDeployer {
         tvm.accept();
     }
 
-    function deploy(TvmCell stakingCode, address _owner, address _tokenRoot) public returns(address) {
+    function deploy(TvmCell stakingCode, address _admin, address _dao_root, address _rewarder, address _tokenRoot) public returns(address) {
         tvm.accept();
         return new Staking {
             stateInit: tvm.buildStateInit({
@@ -16,6 +16,6 @@ contract StakingRootDeployer {
             }),
             value: address(this).balance - 0.2 ton,
             flag: 0
-        }(_owner, _tokenRoot);
+        }(_admin, _dao_root, _rewarder, _tokenRoot);
     }
 }

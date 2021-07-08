@@ -3,11 +3,13 @@ pragma ton-solidity ^0.39.0;
 import "./base/StakingRelay.sol";
 
 contract Staking is StakingPoolRelay {
-    constructor(address _owner, address _tokenRoot) public {
+    constructor(address _admin, address _dao_root, address _rewarder, address _tokenRoot) public {
         tvm.accept();
 
         tokenRoot = _tokenRoot;
-        owner = _owner;
+        admin = _admin;
+        dao_root = _dao_root;
+        rewarder = _rewarder;
         rewardRounds.push(RewardRound(0, 0, 0, now));
         setUpTokenWallets();
     }
