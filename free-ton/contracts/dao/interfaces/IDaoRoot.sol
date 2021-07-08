@@ -19,6 +19,11 @@ interface IDaoRoot is ActionStructure, ProposalConfigurationStructure, ProposalS
     event EthExecutorUpdated(uint160 oldExecutor, uint160 newExecutor);
     event ProposalCodeUpgraded(uint16 newVersion);
     event ProposalConfigurationUpdated(ProposalConfiguration oldConfig, ProposalConfiguration newConfig);
+    event ProposalVotingDelayUpdated(uint32 oldVotingDelay, uint32 newVotingDelay);
+    event ProposalVotingPeriodUpdated(uint32 oldVotingPeriod, uint32 newVotingPeriod);
+    event ProposalThresholdUpdated(uint128 oldThreshold, uint128 newThreshold);
+    event ProposalQuorumVotesUpdated(uint128 oldQuorumVotes, uint128 newQuorumVotes);
+    event ProposalTimeLockUpdated(uint32 oldTimeLock, uint32 newTimeLock);
     event ExecutingTonActions(uint32 proposalId, TonAction[] tonActions);
     event ExecutingEthActions(uint32 proposalId, EthAction[] ethActions, uint160 ethExecutor);
     event RootCodeUpgraded();
@@ -41,6 +46,11 @@ interface IDaoRoot is ActionStructure, ProposalConfigurationStructure, ProposalS
     function updateEthExecutor(uint160 newEthExecutor) external;
     function updateProposalCode(TvmCell code) external;
     function updateProposalConfiguration(ProposalConfiguration newConfig) external;
+    function updateVotingDelay(uint32 newVotingDelay) external;
+    function updateVotingPeriod(uint32 newVotingPeriod) external;
+    function updateTimeLock(uint32 newTimeLock) external;
+    function updateThreshold(uint128 newThreshold) external;
+    function updateQuorumVotes(uint128 newQuorumVotes) external;
 
     function requestUpgradeProposal(
         uint16 currentVersion,

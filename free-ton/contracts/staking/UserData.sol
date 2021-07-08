@@ -77,7 +77,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         TvmCell proposal_data,
         uint128 threshold
     ) override public onlyDaoRoot {
-        if (token_balance - _lockedTokens() >= threshold) {
+        if (token_balance - _lockedTokens() >= threshold && !slashed) {
             _proposal_nonce++;
             _tmp_proposals[_proposal_nonce] = threshold;
             IDaoRoot(dao_root).deployProposal{
@@ -108,6 +108,7 @@ contract UserData is IUserData, IUpgradableByRequest {
 
         uint16 error;
 
+        if (slashed) error = StakingErrors.SLASHED;
         if (code_version > current_version) error = StakingErrors.OLD_VERSION;
         if (msg.value < Gas.CAST_VOTE_VALUE) error = StakingErrors.VALUE_TOO_LOW;
         if (casted_votes.exists(proposal_id)) error = StakingErrors.ALREADY_VOTED;
