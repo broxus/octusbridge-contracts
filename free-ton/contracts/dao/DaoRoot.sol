@@ -18,6 +18,7 @@ import "../utils/Delegate.sol";
 
 contract DaoRoot is IDaoRoot, IUpgradable, Delegate {
     uint8 public constant proposalMaxOperations = 10;
+    uint16 public constant proposalMaxDescriptionLen = 2048;
 
     //todo: set correct
     uint128 public constant MIN_PROPOSAL_THRESHOLD = 0;
@@ -117,6 +118,7 @@ contract DaoRoot is IDaoRoot, IUpgradable, Delegate {
         uint actionsAmount = tonActions.length + ethActions.length;
         require(actionsAmount != 0, DaoErrors.ACTIONS_MUST_BE_PROVIDED);
         require(actionsAmount <= proposalMaxOperations, DaoErrors.TO_MANY_ACTIONS);
+        require(bytes(description).length <= proposalMaxDescriptionLen, DaoErrors.DESCRIPTION_TOO_LONG);
         uint128 tonTotalValue = calcTonActionsValue(tonActions);
         require(
             msg.value >= tonTotalValue + Gas.DEPLOY_PROPOSAL_VALUE + Gas.EXECUTE_ACTIONS_VALUE,
@@ -153,6 +155,7 @@ contract DaoRoot is IDaoRoot, IUpgradable, Delegate {
         TvmBuilder params;
         params.store(stakingRoot);
         params.store(accountOwner);
+        params.store(description);
         params.store(tonActions);
         params.store(ethActions);
         params.store(proposalConfiguration);

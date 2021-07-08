@@ -22,7 +22,7 @@ import "../../../node_modules/@broxus/contracts/contracts/platform/Platform.sol"
 import "../dao/interfaces/IStakingAccount.sol";
 
 contract UserData is IUserData, IUpgradableByRequest {
-    uint16 constant public MAX_REASON_LENGTH = 2048; //todo change
+    uint16 constant public MAX_REASON_LENGTH = 512; //todo change
 
     uint32 public current_version;
     TvmCell public platform_code;

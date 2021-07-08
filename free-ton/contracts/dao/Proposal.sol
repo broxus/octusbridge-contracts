@@ -22,6 +22,7 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
     address public stakingRoot;
 
     address public proposer;
+    string public description;
     TonAction[] public tonActions;
     EthAction[] public ethActions;
     uint16 public proposalVersion;
@@ -42,6 +43,25 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
     /*******************
     * Getter functions *
     *******************/
+
+    function getOverview() override public view responsible returns (
+        address proposer_,
+        string description_,
+        uint32 startTime_,
+        uint32 endTime_,
+        uint32 executionTime_,
+        uint128 forVotes_,
+        uint128 againstVotes_,
+        uint128 quorumVotes_,
+        ProposalState state_
+    ) {
+        return{
+            value: 0,
+            flag: MsgFlag.REMAINING_GAS,
+            bounce: false
+        }(proposer, description, startTime, endTime, executionTime, forVotes, againstVotes, config.quorumVotes, state());
+
+    }
 
     function getProposer() override public view responsible returns (address) {
         return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} proposer;
@@ -197,6 +217,7 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
     function initialParams(
         address stakingRoot_,
         address proposer_,
+        string description_,
         TonAction[] tonActions_,
         EthAction[] ethActions_,
         ProposalConfiguration config_,
@@ -214,7 +235,7 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
         id = initialData.decode(uint32);
 
         TvmSlice params = s.loadRefAsSlice();
-        (stakingRoot, proposer, tonActions, ethActions, config, proposalVersion)
+        (stakingRoot, proposer, description, tonActions, ethActions, config, proposalVersion)
             = params.decodeFunctionParams(initialParams);
         startTime = now + config.votingDelay;
         endTime = startTime + config.votingPeriod;
