@@ -85,6 +85,15 @@ contract RelayRound is IRelayRound {
         );
     }
 
+    function relayKeys() public view responsible returns (uint256[]) {
+        Relay[] _relays_list = _getRelayList();
+        uint256[] _keys = new uint256[](_relays_list.length);
+        for (uint256 i = 0; i < _keys.length; i++) {
+            _keys[i] = _relays_list[i].ton_pubkey;
+        }
+        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } _keys;
+    }
+
     function setRelays(Relay[] _relay_list, address send_gas_to) external override onlyRoot {
         require (!relays_installed, StakingErrors.RELAY_ROUND_INITIALIZED);
         tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 2);

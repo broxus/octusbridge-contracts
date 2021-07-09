@@ -134,5 +134,10 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         )));
     }
 
+    function getRelayRoundAddressFromTimestamp(uint128 time) public view responsible returns (address) {
+        uint128 round_num = time < prevRelayRoundEndTime ? currentRelayRound - 1 : currentRelayRound;
+        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } getRelayRoundAddress(round_num);
+    }
+
     // TODO: add ugprade and onUpgrade
 }

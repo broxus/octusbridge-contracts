@@ -71,7 +71,8 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
 
         tvm.rawReserve(_reserve(), 2);
 
-        address relay_round = deployRelayRound(currentRelayRound, send_gas_to);
+        // we have 0 relay rounds at the moment
+        address relay_round = deployRelayRound(currentRelayRound + 1, send_gas_to);
         IRelayRound(relay_round).setRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(relays, send_gas_to);
     }
 
@@ -175,6 +176,13 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         address send_gas_to
     ) external override onlyRelayRound(round_num) {
         tvm.rawReserve(_reserve(), 2);
+
+        // looks like we are initializing origin relay round
+        if (!originRelayRoundInitialized) {
+            originRelayRoundInitialized = true;
+        } else {
+            prevRelayRoundEndTime = currentRelayRoundStartTime + relayRoundTime;
+        }
 
         currentRelayRound = round_num;
         currentRelayRoundStartTime = now;

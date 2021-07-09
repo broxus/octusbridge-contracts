@@ -84,6 +84,9 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     // time when current election have started
     uint128 public currentElectionStartTime;
 
+    // we need this for deriving relay round from timestamp
+    uint128 public prevRelayRoundEndTime;
+
     // 0 means no pending relay round
     uint128 public pendingRelayRound;
 

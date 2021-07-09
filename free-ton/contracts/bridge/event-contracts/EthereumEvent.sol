@@ -78,7 +78,7 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
 
         notifyEventStatusChanged();
 
-        IStaking(eventInitData.staking).deriveRoundAddress{
+        IStaking(eventInitData.staking).getRelayRoundAddressFromTimestamp{
             value: 1 ton,
             callback: EthereumEvent.receiveRoundAddress
         }(now);
