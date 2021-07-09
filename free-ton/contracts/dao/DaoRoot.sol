@@ -14,13 +14,17 @@ import "./interfaces/IUpgradable.sol";
 
 import "../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol";
 import "../../../node_modules/@broxus/contracts/contracts/platform/Platform.sol";
+import "../utils/Delegate.sol";
 
-contract DaoRoot is IDaoRoot, IUpgradable {
+contract DaoRoot is IDaoRoot, IUpgradable, Delegate {
     uint8 public constant proposalMaxOperations = 10;
+    uint16 public constant proposalMaxDescriptionLen = 2048;
 
     //todo: set correct
-    uint16 public constant MIN_PROPOSAL_THRESHOLD = 0;
-    uint16 public constant MAX_PROPOSAL_THRESHOLD = 10000;
+    uint128 public constant MIN_PROPOSAL_THRESHOLD = 0;
+    uint128 public constant MAX_PROPOSAL_THRESHOLD = 10e18;
+    uint128 public constant MIN_PROPOSAL_QUORUM = 0;
+    uint128 public constant MAX_PROPOSAL_QUORUM = 10e18;
     uint32 public constant MIN_VOTING_PERIOD = 24 hours;
     uint32 public constant MAX_VOTING_PERIOD = 2 weeks;
     uint32 public constant MIN_VOTING_DELAY = 1;
@@ -45,7 +49,9 @@ contract DaoRoot is IDaoRoot, IUpgradable {
     address public pendingAdmin;
 
     modifier onlyAdmin() {
-        require(msg.sender == admin, DaoErrors.NOT_ADMIN);
+        if (msg.sender != admin) {
+            checkDelegate();
+        }
         _;
     }
 
@@ -112,6 +118,7 @@ contract DaoRoot is IDaoRoot, IUpgradable {
         uint actionsAmount = tonActions.length + ethActions.length;
         require(actionsAmount != 0, DaoErrors.ACTIONS_MUST_BE_PROVIDED);
         require(actionsAmount <= proposalMaxOperations, DaoErrors.TO_MANY_ACTIONS);
+        require(bytes(description).length <= proposalMaxDescriptionLen, DaoErrors.DESCRIPTION_TOO_LONG);
         uint128 tonTotalValue = calcTonActionsValue(tonActions);
         require(
             msg.value >= tonTotalValue + Gas.DEPLOY_PROPOSAL_VALUE + Gas.EXECUTE_ACTIONS_VALUE,
@@ -148,6 +155,7 @@ contract DaoRoot is IDaoRoot, IUpgradable {
         TvmBuilder params;
         params.store(stakingRoot);
         params.store(accountOwner);
+        params.store(description);
         params.store(tonActions);
         params.store(ethActions);
         params.store(proposalConfiguration);
@@ -291,6 +299,56 @@ contract DaoRoot is IDaoRoot, IUpgradable {
         admin.transfer({value: 0, flag: MsgFlag.REMAINING_GAS});
     }
 
+    function updateQuorumVotes(uint128 newQuorumVotes) override public onlyAdmin {
+        require(
+            newQuorumVotes >= MIN_PROPOSAL_QUORUM && newQuorumVotes <= MAX_PROPOSAL_QUORUM,
+            DaoErrors.WRONG_QUORUM
+        );
+        emit ProposalQuorumVotesUpdated(proposalConfiguration.quorumVotes, newQuorumVotes);
+        proposalConfiguration.quorumVotes = newQuorumVotes;
+        admin.transfer({value: 0, flag: MsgFlag.REMAINING_GAS});
+    }
+
+    function updateThreshold(uint128 newThreshold) override public onlyAdmin {
+        require(
+            newThreshold >= MIN_PROPOSAL_THRESHOLD && newThreshold <= MAX_PROPOSAL_THRESHOLD,
+            DaoErrors.WRONG_THRESHOLD
+        );
+        emit ProposalThresholdUpdated(proposalConfiguration.threshold, newThreshold);
+        proposalConfiguration.threshold = newThreshold;
+        admin.transfer({value: 0, flag: MsgFlag.REMAINING_GAS});
+    }
+
+    function updateTimeLock(uint32 newTimeLock) override public onlyAdmin {
+        require(
+            newTimeLock >= MIN_TIME_LOCK && newTimeLock <= MAX_TIME_LOCK,
+            DaoErrors.WRONG_TIME_LOCK
+        );
+        emit ProposalTimeLockUpdated(proposalConfiguration.timeLock, newTimeLock);
+        proposalConfiguration.timeLock = newTimeLock;
+        admin.transfer({value: 0, flag: MsgFlag.REMAINING_GAS});
+    }
+
+    function updateVotingPeriod(uint32 newVotingPeriod) override public onlyAdmin {
+        require(
+            newVotingPeriod >= MIN_VOTING_PERIOD && newVotingPeriod <= MAX_VOTING_PERIOD,
+            DaoErrors.WRONG_VOTING_PERIOD
+        );
+        emit ProposalVotingPeriodUpdated(proposalConfiguration.votingPeriod, newVotingPeriod);
+        proposalConfiguration.votingPeriod = newVotingPeriod;
+        admin.transfer({value: 0, flag: MsgFlag.REMAINING_GAS});
+    }
+
+    function updateVotingDelay(uint32 newVotingDelay) override public onlyAdmin {
+        require(
+            newVotingDelay >= MIN_VOTING_DELAY && newVotingDelay <= MAX_VOTING_DELAY,
+            DaoErrors.WRONG_VOTING_DELAY
+        );
+        emit ProposalVotingDelayUpdated(proposalConfiguration.votingDelay, newVotingDelay);
+        proposalConfiguration.votingDelay = newVotingDelay;
+        admin.transfer({value: 0, flag: MsgFlag.REMAINING_GAS});
+    }
+
     function updateProposalConfiguration(ProposalConfiguration newConfig) override public onlyAdmin {
         checkProposalConfiguration(newConfig);
         emit ProposalConfigurationUpdated(proposalConfiguration, newConfig);
@@ -315,6 +373,21 @@ contract DaoRoot is IDaoRoot, IUpgradable {
             config.threshold >= MIN_PROPOSAL_THRESHOLD && config.threshold <= MAX_PROPOSAL_THRESHOLD,
             DaoErrors.WRONG_THRESHOLD
         );
+        require(
+            config.quorumVotes >= MIN_PROPOSAL_QUORUM && config.quorumVotes <= MAX_PROPOSAL_QUORUM,
+            DaoErrors.WRONG_QUORUM
+        );
+    }
+
+    function addDelegate(address addr, uint callHash) public onlyAdmin {
+        optional(uint[]) optDelegate = delegators.fetch(addr);
+        if (optDelegate.hasValue()) {
+            uint[] delegate = optDelegate.get();
+            delegate.push(callHash);
+            delegators[addr] = delegate;
+        } else {
+            delegators[addr] = [callHash];
+        }
     }
 
     function upgrade(TvmCell code) override public onlyAdmin {

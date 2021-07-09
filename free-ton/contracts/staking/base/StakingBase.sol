@@ -21,8 +21,9 @@ import "./../libraries/Gas.sol";
 
 import "../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol";
 import "../../../../node_modules/@broxus/contracts/contracts/platform/Platform.sol";
+import "../../utils/Delegate.sol";
 
-abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, IStakingDao {
+abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, IStakingDao, Delegate {
     // Events
     event RewardDeposit(uint128 amount, uint256 reward_round_num);
     event Deposit(address user, uint128 amount);
@@ -132,6 +133,17 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     uint64 public deposit_nonce = 0;
     // this is used to prevent data loss on bounced messages during deposit
     mapping (uint64 => PendingDeposit) deposits;
+
+    function addDelegate(address addr, uint callHash) public onlyAdmin {
+        optional(uint[]) optDelegate = delegators.fetch(addr);
+        if (optDelegate.hasValue()) {
+            uint[] delegate = optDelegate.get();
+            delegate.push(callHash);
+            delegators[addr] = delegate;
+        } else {
+            delegators[addr] = [callHash];
+        }
+    }
 
     function _reserve() internal view returns (uint128) {
         return math.max(address(this).balance - msg.value, Gas.ROOT_INITIAL_BALANCE);
@@ -549,7 +561,9 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     modifier onlyAdmin() {
-        require(msg.sender == admin, StakingErrors.NOT_ADMIN);
+        if (msg.sender != admin) {
+            checkDelegate();
+        }
         _;
     }
 

@@ -23,6 +23,17 @@ interface IProposal is ActionStructure, ProposalConfigurationStructure, Proposal
         string reason
     ) external;
 
+    function getOverview() external view responsible returns (
+        address proposer,
+        string description,
+        uint32 startTime,
+        uint32 endTime,
+        uint32 executionTime,
+        uint128 forVotes,
+        uint128 againstVotes,
+        uint128 quorumVotes,
+        ProposalState state
+    );
     function getProposer() external view responsible returns (address);
     function getActions() external view responsible returns (TonAction[], EthAction[]);
     function getConfig() external view responsible returns (ProposalConfiguration);

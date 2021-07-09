@@ -1,7 +1,9 @@
 pragma ton-solidity ^0.39.0;
 
+import "../../utils/Delegate.sol";
 
-contract TestTarget {
+
+contract TestTarget is Delegate {
     uint32 static _nonce;
 
     address public daoRoot;
@@ -14,14 +16,36 @@ contract TestTarget {
         daoRoot = _daoRoot;
     }
 
-    function onProposalSuccess(uint32 newParam) public {
+    function call(uint32 newParam) public {
+        TestTarget(this).onProposalSuccess{value: 0, flag: 64}(newParam);
+    }
+
+    function addDelegate(address addr, uint callHash) public {
         require(msg.sender == daoRoot, 101);
+        optional(uint[]) optDelegate = delegators.fetch(addr);
+        if (optDelegate.hasValue()) {
+            uint[] delegate = optDelegate.get();
+            delegate.push(callHash);
+            delegators[addr] = delegate;
+        } else {
+            delegators[addr] = [callHash];
+        }
+    }
+
+    function onProposalSuccess(uint32 newParam) public onlyDelegate {
         value = msg.value;
         executed = true;
         param = newParam;
     }
 
-    function encodePayload(uint32 newParam) public pure returns (TvmCell) {
-        return tvm.encodeBody(onProposalSuccess, newParam);
+    function encodePayload(address addr, uint callHash) public pure returns (TvmCell) {
+        return tvm.encodeBody(addDelegate, addr, callHash);
+    }
+
+    function getCallHash(uint32 newParam) public pure returns (uint) {
+        TvmSlice s = tvm.encodeBody(onProposalSuccess, newParam).toSlice();
+        TvmBuilder b;
+        b.store(s);
+        return tvm.hash(b.toCell());
     }
 }
