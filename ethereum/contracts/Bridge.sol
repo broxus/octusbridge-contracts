@@ -39,10 +39,8 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
         lastRound = 0;
     }
 
-    /**
-        @notice Internal function for setting bridge configuration
-        @param _configuration Bridge configuration
-    */
+    /// @notice Internal function for setting bridge configuration
+    /// @param _configuration Bridge configuration
     function _setConfiguration(
         BridgeConfiguration memory _configuration
     ) internal {
@@ -51,11 +49,9 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
         emit ConfigurationUpdate(_configuration);
     }
 
-    /**
-        @notice Internal function for updating up relays for specific round
-        @param round Round id
-        @param relays Array of relay addresses
-    */
+    /// @notice Internal function for updating up relays for specific round
+    /// @param round Round id
+    /// @param relays Array of relay addresses
     function _setRoundRelays(
         uint32 round,
         address[] memory relays
@@ -69,11 +65,9 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
         }
     }
 
-    /**
-        @notice Same as above, but uint160 used instead of address type
-        @param round Round id
-        @param relays Array of relay addresses
-    */
+    /// @notice Same as above, but uint160 used instead of address type
+    /// @param round Round id
+    /// @param relays Array of relay addresses
     function _setRoundRelays(
         uint32 round,
         uint160[] memory relays
@@ -87,11 +81,6 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
         }
     }
 
-    /**
-        @notice Answers if specific address was relay in specific round
-        @param round Round id
-        @param candidate Address to check
-    */
     function isRelay(
         uint32 round,
         address candidate
@@ -99,15 +88,13 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
         return roundRelays[round][candidate];
     }
 
-    /**
-        @notice Verify there is enough relay signatures
-        @dev Required amount of signatures is (2/3 * relays at round) + 1
-        @dev Signatures should be sorted by the ascending signers, so it's cheaper to detect duplicates
-        @param round Round id
-        @param payload Bytes encoded payload
-        @param signatures Payload signatures
-        @return All checks are passed or not
-    */
+    /// @notice Verify there is enough relay signatures
+    /// @dev Required amount of signatures is (2/3 * relays at round) + 1
+    /// @dev Signatures should be sorted by the ascending signers, so it's cheaper to detect duplicates
+    /// @param round Round id
+    /// @param payload Bytes encoded payload
+    /// @param signatures Payload signatures
+    /// @return All checks are passed or not
     function verifyRelaySignatures(
         uint32 round,
         bytes memory payload,
@@ -135,11 +122,9 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
         return count >= requiredSignatures;
     }
 
-    /**
-        @notice Recover signer from the payload and signature
-        @param payload Payload
-        @param signature Signature
-    */
+    /// @notice Recover signer from the payload and signature
+    /// @param payload Payload
+    /// @param signature Signature
     function recoverSignature(
         bytes memory payload,
         bytes memory signature
@@ -149,11 +134,9 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
             .recover(signature);
     }
 
-    /**
-        @notice Grant relay permission for addresses at specific round
-        @param payload Bytes encoded TONEvent structure
-        @param signatures Payload signatures
-    */
+    /// @dev Grant relay permission for set of addresses at specific round
+    /// @param payload Bytes encoded TONEvent structure
+    /// @param signatures Payload signatures
     function setRoundRelays(
         bytes calldata payload,
         bytes[] calldata signatures
@@ -192,11 +175,9 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
         _setRoundRelays(round, relays);
     }
 
-    /**
-        @notice Update bridge configuration
-        @dev Only owner
-        @param _configuration New bridge configuration
-    */
+    /// @notice Set bridge configuration
+    /// @custom:only-owner
+    /// @param _configuration New bridge configuration
     function setConfiguration(
         BridgeConfiguration calldata _configuration
     ) override external onlyOwner {

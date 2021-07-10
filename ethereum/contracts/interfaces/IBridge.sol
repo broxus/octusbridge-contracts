@@ -21,8 +21,16 @@ interface IBridge {
         uint32 chainId;
     }
 
+    /// @dev Answers if specific address was relay in specific round
+    /// @param round Round id
+    /// @param candidate Address to check
     function isRelay(uint32 round, address candidate) external view returns(bool);
 
+    /// @dev Check that the provided signatures is correct.
+    /// @dev Checks that there are enough authorized signers for specified round
+    /// @param round Round id
+    /// @param payload Arbitrary payload
+    /// @param signatures Array of payload signatures
     function verifyRelaySignatures(
         uint32 round,
         bytes memory payload,
@@ -36,6 +44,12 @@ interface IBridge {
 
     function setConfiguration(BridgeConfiguration calldata _configuration) external;
 
+    /// @dev Relay permission granted
+    /// @param round Round id
+    /// @param relay Relays address
     event RoundRelayGranted(uint32 indexed round, address indexed relay);
+
+    /// @dev Configuration updated
+    /// @param configuration Bridge configuration
     event ConfigurationUpdate(BridgeConfiguration configuration);
 }
