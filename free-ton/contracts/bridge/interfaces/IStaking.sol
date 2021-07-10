@@ -2,7 +2,7 @@ pragma ton-solidity ^0.39.0;
 
 
 interface IStaking {
-    function deriveRoundAddress(
-        uint32 round
+    function getRelayRoundAddressFromTimestamp(
+        uint32 time
     ) external responsible view returns(address roundContract);
 }

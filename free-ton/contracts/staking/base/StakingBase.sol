@@ -21,8 +21,9 @@ import "./../libraries/Gas.sol";
 
 import "../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol";
 import "../../../../node_modules/@broxus/contracts/contracts/platform/Platform.sol";
+import "../../utils/Delegate.sol";
 
-abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, IStakingDao {
+abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, IStakingDao, Delegate {
     // Events
     event RewardDeposit(uint128 amount, uint256 reward_round_num);
     event Deposit(address user, uint128 amount);
@@ -39,6 +40,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     event DaoRootUpdated(address new_dao_root);
     event BridgeUpdated(address new_bridge);
+    event AdminUpdated(address new_admin);
+    event RewarderUpdated(address new_rewarder);
 
     event ActiveUpdated(bool active);
 
@@ -82,6 +85,9 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     // time when current election have started
     uint128 public currentElectionStartTime;
 
+    // we need this for deriving relay round from timestamp
+    uint128 public prevRelayRoundEndTime;
+
     // 0 means no pending relay round
     uint128 public pendingRelayRound;
 
@@ -97,7 +103,9 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     uint128 public rewardTokenBalance;
 
-    address public owner;
+    address public admin;
+
+    address public rewarder;
 
     uint128 public rewardPerSecond = 1000;
 
@@ -126,26 +134,51 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     // this is used to prevent data loss on bounced messages during deposit
     mapping (uint64 => PendingDeposit) deposits;
 
+    function addDelegate(address addr, uint callHash) public onlyAdmin {
+        optional(uint[]) optDelegate = delegators.fetch(addr);
+        if (optDelegate.hasValue()) {
+            uint[] delegate = optDelegate.get();
+            delegate.push(callHash);
+            delegators[addr] = delegate;
+        } else {
+            delegators[addr] = [callHash];
+        }
+    }
+
     function _reserve() internal view returns (uint128) {
         return math.max(address(this).balance - msg.value, Gas.ROOT_INITIAL_BALANCE);
     }
 
-    function setDaoRoot(address new_dao_root, address send_gas_to) external onlyOwner {
+    function setDaoRoot(address new_dao_root, address send_gas_to) external onlyDaoRoot {
         tvm.rawReserve(_reserve(), 2);
         emit DaoRootUpdated(new_dao_root);
         dao_root = new_dao_root;
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
-    function setBridge(address new_bridge, address send_gas_to) external onlyOwner {
+    function setBridge(address new_bridge, address send_gas_to) external onlyDaoRoot {
         tvm.rawReserve(_reserve(), 2);
         emit BridgeUpdated(new_bridge);
         bridge = new_bridge;
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
+    function setAdmin(address new_admin, address send_gas_to) external onlyDaoRoot {
+        tvm.rawReserve(_reserve(), 2);
+        emit AdminUpdated(new_admin);
+        admin = new_admin;
+        send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
+    }
+
+    function setRewarder(address new_rewarder, address send_gas_to) external onlyDaoRoot {
+        tvm.rawReserve(_reserve(), 2);
+        emit RewarderUpdated(new_rewarder);
+        rewarder = new_rewarder;
+        send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
+    }
+
     // Active
-    function setActive(bool new_active, address send_gas_to) external onlyOwner {
+    function setActive(bool new_active, address send_gas_to) external onlyAdmin {
         tvm.rawReserve(_reserve(), 2);
         if (new_active && dao_root.value != 0 && bridge.value != 0 && has_platform_code && user_data_version > 0 && election_version > 0 && relay_round_version > 0) {
             active = true;
@@ -167,7 +200,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         uint128 relays_count,
         uint128 min_relays_count,
         address send_gas_to
-    ) external onlyOwner {
+    ) external onlyDaoRoot {
         tvm.rawReserve(_reserve(), 2);
 
         relayRoundTime = relay_round_time;
@@ -210,7 +243,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         }
     }
 
-    function startNewRewardRound(address send_gas_to) external onlyOwner {
+    function startNewRewardRound(address send_gas_to) external onlyRewarder {
         if (rewardRounds.length > 0) {
             RewardRound last_round = rewardRounds[rewardRounds.length - 1];
             require (last_round.rewardTokens > 0, StakingErrors.EMPTY_REWARD_ROUND);
@@ -527,8 +560,10 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         }
     }
 
-    modifier onlyOwner() {
-        require(msg.sender == owner, StakingErrors.NOT_OWNER);
+    modifier onlyAdmin() {
+        if (msg.sender != admin) {
+            checkDelegate();
+        }
         _;
     }
 
@@ -539,6 +574,11 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     modifier onlyDaoRoot {
         require(msg.sender == dao_root, StakingErrors.NOT_DAO_ROOT);
+        _;
+    }
+
+    modifier onlyRewarder {
+        require(msg.sender == rewarder, StakingErrors.NOT_REWARDER);
         _;
     }
 

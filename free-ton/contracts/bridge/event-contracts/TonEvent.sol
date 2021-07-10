@@ -87,7 +87,7 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
 
         notifyEventStatusChanged();
 
-        IStaking(eventInitData.staking).deriveRoundAddress{
+        IStaking(eventInitData.staking).getRelayRoundAddressFromTimestamp{
             value: 1 ton,
             callback: TonEvent.receiveRoundAddress
         }(now);

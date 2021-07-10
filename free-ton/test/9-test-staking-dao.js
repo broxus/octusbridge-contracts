@@ -43,6 +43,7 @@ const proposalConfiguration = {
 
 const description = stringToBytesArray('proposal-test-1');
 
+const bridge = '0:9cc3d8668d57d387eae54c4398a1a0b478b6a8c3a0f2b5265e641a212b435231'
 
 let stakingRoot;
 let stakingOwner;
@@ -179,8 +180,11 @@ describe('Test DAO in Staking', async function () {
       method: 'deploy',
       params: {
         stakingCode: stakingRoot.code,
-        _owner: stakingOwner.address,
-        _tokenRoot: stakingToken.address
+        _admin: stakingOwner.address,
+        _tokenRoot: stakingToken.address,
+        _dao_root: daoRoot.address,
+        _rewarder: stakingOwner.address,
+        _bridge: bridge
       }
     })).decoded.output.value0)
     logger.log(`StakingRoot address: ${stakingRoot.address}`);
@@ -215,12 +219,6 @@ describe('Test DAO in Staking', async function () {
       contract: stakingRoot,
       method: 'installOrUpdateRelayRoundCode',
       params: {code: RelayRound.code, send_gas_to: stakingOwner.address},
-    });
-    logger.log(`Installing DaoRoot address`);
-    await stakingOwner.runTarget({
-      contract: stakingRoot,
-      method: 'setDaoRoot',
-      params: {new_dao_root: daoRoot.address, send_gas_to: stakingOwner.address},
     });
     logger.log(`Set staking is Active`);
     await stakingOwner.runTarget({
@@ -282,6 +280,7 @@ describe('Test DAO in Staking', async function () {
         },
         keyPair: keyPairs[0],
       }, locklift.utils.convertCrystal(0.2, 'nano'));
+      logger.log(`TestTarget: ${testTarget.address}`);
 
     })
     describe('Proposal tests', async function () {
@@ -298,10 +297,11 @@ describe('Test DAO in Staking', async function () {
         }
       ];
       before('Deploy proposal', async function () {
+        let callHash = '0x' + (await testTarget.call({method: 'getCallHash', params: {newParam}})).toString(16);
         tonActions = [{
-          value: locklift.utils.convertCrystal(2, 'nano'),
+          value: locklift.utils.convertCrystal(1, 'nano'),
           target: testTarget.address,
-          payload: await testTarget.call({method: 'encodePayload', params: {newParam}})
+          payload: await testTarget.call({method: 'encodePayload', params: {addr: testTarget.address, callHash}})
         }]
         await userAccount0.runTarget({
           contract: daoRoot,
@@ -418,14 +418,14 @@ describe('Test DAO in Staking', async function () {
           againstVotesBefore = await proposal.call({method: 'againstVotes'});
           logger.log(`Account0 Cast Vote for Proposal ${proposalId}, amount: ${votesToCast.toString()}, support: True`)
           logger.log(`DaoAccount0 casted vote Before: ${castedVoteBefore}`)
-          console.log(await userAccount0.runTarget({
+          await userAccount0.runTarget({
             contract: stakingRoot,
             method: 'castVote',
             params: {
               proposal_id: proposalId,
               support: true
             }
-          }))
+          })
         });
         it('Check votes after', async function () {
           const forVotes = await proposal.call({method: 'forVotes'});
@@ -528,16 +528,21 @@ describe('Test DAO in Staking', async function () {
           expect(ProposalState[state])
             .to
             .equal('Executed', 'Wrong state');
-
+          await userAccount1.runTarget({
+            contract: testTarget,
+            method: 'call',
+            params: {newParam},
+          })
+          await userAccount1.runTarget({
+            contract: testTarget,
+            method: 'call',
+            params: {newParam: 0},
+          })
           const targetExecuted = await testTarget.call({method: 'executed'});
-          const targetValue = await testTarget.call({method: 'value'});
           const targetParam = await testTarget.call({method: 'param'});
           expect(targetExecuted)
             .to
             .equal(true, 'Wrong executed state in target after executing');
-          expect(targetValue.toString())
-            .to
-            .equal(tonActions[0].value, 'Wrong target value after executing');
           expect(targetParam.toNumber())
             .to
             .equal(newParam, 'Wrong target new param after executing');

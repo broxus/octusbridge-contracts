@@ -5,7 +5,7 @@ import "./StakingBase.sol";
 
 
 abstract contract StakingPoolUpgradable is StakingPoolBase {
-    function installPlatformOnce(TvmCell code, address send_gas_to) external onlyOwner {
+    function installPlatformOnce(TvmCell code, address send_gas_to) external onlyAdmin {
         // can be installed only once
         require(!has_platform_code, StakingErrors.PLATFORM_CODE_NON_EMPTY);
         tvm.rawReserve(_reserve(), 2);
@@ -14,7 +14,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
-    function installOrUpdateUserDataCode(TvmCell code, address send_gas_to) external onlyOwner {
+    function installOrUpdateUserDataCode(TvmCell code, address send_gas_to) external onlyAdmin {
         tvm.rawReserve(_reserve(), 2);
         user_data_code = code;
         user_data_version++;
@@ -22,7 +22,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
-    function installOrUpdateElectionCode(TvmCell code, address send_gas_to) external onlyOwner {
+    function installOrUpdateElectionCode(TvmCell code, address send_gas_to) external onlyAdmin {
         tvm.rawReserve(_reserve(), 2);
         election_code = code;
         election_version++;
@@ -30,7 +30,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
-    function installOrUpdateRelayRoundCode(TvmCell code, address send_gas_to) external onlyOwner {
+    function installOrUpdateRelayRoundCode(TvmCell code, address send_gas_to) external onlyAdmin {
         tvm.rawReserve(_reserve(), 2);
         relay_round_code = code;
         relay_round_version++;
@@ -61,7 +61,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
     function forceUpgradeUserData(
         address user,
         address send_gas_to
-    ) external view onlyOwner {
+    ) external view onlyAdmin {
         require(msg.value >= Gas.UPGRADE_USER_DATA_MIN_VALUE, StakingErrors.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
 
@@ -85,7 +85,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
     function upgradeElection(
         uint128 round_num,
         address send_gas_to
-    ) external view onlyOwner {
+    ) external view onlyAdmin {
         require(msg.value >= Gas.UPGRADE_ELECTION_MIN_VALUE, StakingErrors.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
 
@@ -98,7 +98,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
     function upgradeRelayRound(
         uint128 round_num,
         address send_gas_to
-    ) external view onlyOwner {
+    ) external view onlyAdmin {
         require(msg.value >= Gas.UPGRADE_RELAY_ROUND_MIN_VALUE, StakingErrors.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
 
@@ -132,6 +132,11 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
             PlatformTypes.RelayRound,
             _buildRelayRoundParams(round_num)
         )));
+    }
+
+    function getRelayRoundAddressFromTimestamp(uint128 time) public view responsible returns (address) {
+        uint128 round_num = time < prevRelayRoundEndTime ? currentRelayRound - 1 : currentRelayRound;
+        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } getRelayRoundAddress(round_num);
     }
 
     // TODO: add ugprade and onUpgrade

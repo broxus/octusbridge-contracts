@@ -1,7 +1,7 @@
 pragma ton-solidity ^0.39.0;
 
 library StakingErrors {
-    uint8 public constant NOT_OWNER = 101;
+    uint8 public constant NOT_ADMIN = 101;
     uint8 public constant NOT_ROOT = 102;
     uint8 public constant NOT_TOKEN_WALLET = 103;
     uint8 public constant NOT_USER_DATA = 104;
@@ -31,6 +31,7 @@ library StakingErrors {
     uint8 public constant RELAY_ROUND_NOT_ENDED = 127;
     uint8 public constant RELAY_REWARD_CLAIMED = 128;
     uint8 public constant SLASHED = 129;
+    uint8 public constant NOT_REWARDER = 130;
 
     uint16 constant NOT_DAO_ROOT = 201;
     uint16 constant NOT_PROPOSAL = 202;
