@@ -6,7 +6,7 @@ import "./StakingUpgradable.sol";
 
 abstract contract StakingPoolRelay is StakingPoolUpgradable {
     function linkRelayAccounts(uint256 ton_pubkey, uint256 eth_address, address send_gas_to) external view onlyActive {
-        require (msg.value >= Gas.MIN_LINK_RELAY_ACCS_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
+        require (msg.value >= Gas.MIN_LINK_RELAY_ACCS_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
 
         tvm.rawReserve(_reserve(), 2);
 
@@ -17,7 +17,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
     }
 
     function confirmEthAccount(address staker_addr, uint256 eth_address, address send_gas_to) external view onlyBridge {
-        require (msg.value >= Gas.MIN_CONFIRM_ETH_RELAY_ACC_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
+        require (msg.value >= Gas.MIN_CONFIRM_ETH_RELAY_ACC_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
 
         tvm.rawReserve(_reserve(), 2);
 
@@ -26,7 +26,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
     }
 
     function slashRelay(address relay_staker_addr, address send_gas_to) external onlyDaoRoot {
-        require (msg.value >= Gas.MIN_CONFIRM_ETH_RELAY_ACC_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
+        require (msg.value >= Gas.MIN_CONFIRM_ETH_RELAY_ACC_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
 
         tvm.rawReserve(_reserve(), 2);
 
@@ -66,8 +66,8 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
     }
 
     function createOriginRelayRound(IRelayRound.Relay[] relays, address send_gas_to) external onlyAdmin {
-        require (msg.value >= Gas.MIN_ORIGIN_ROUND_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
-        require (!originRelayRoundInitialized, StakingErrors.ORIGIN_ROUND_ALREADY_INITIALIZED);
+        require (msg.value >= Gas.MIN_ORIGIN_ROUND_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (!originRelayRoundInitialized, ErrorCodes.ORIGIN_ROUND_ALREADY_INITIALIZED);
 
         tvm.rawReserve(_reserve(), 2);
 
@@ -77,8 +77,8 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
     }
 
     function becomeRelayNextRound(address send_gas_to) external view onlyActive {
-        require (msg.value >= Gas.MIN_RELAY_REQ_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
-        require (pendingRelayRound != 0, StakingErrors.ELECTION_NOT_STARTED);
+        require (msg.value >= Gas.MIN_RELAY_REQ_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (pendingRelayRound != 0, ErrorCodes.ELECTION_NOT_STARTED);
         tvm.rawReserve(_reserve(), 2);
 
         uint128 lock_time = electionTime + relayRoundTime * 3;
@@ -90,7 +90,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
     }
 
     function getRewardForRelayRound(uint128 round_num, address send_gas_to) external view onlyActive {
-        require (msg.value >= Gas.MIN_GET_REWARD_RELAY_ROUND_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
+        require (msg.value >= Gas.MIN_GET_REWARD_RELAY_ROUND_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
 
         tvm.rawReserve(_reserve(), 2);
 
@@ -101,10 +101,10 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
     }
 
     function startElectionOnNewRound(address send_gas_to) external onlyActive {
-        require (msg.value >= Gas.MIN_START_ELECTION_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
-        require (now >= (currentRelayRoundStartTime + timeBeforeElection), StakingErrors.TOO_EARLY_FOR_ELECTION);
-        require (currentElectionStartTime == 0, StakingErrors.ELECTION_ALREADY_STARTED);
-        require (originRelayRoundInitialized, StakingErrors.ORIGIN_ROUND_NOT_INITIALIZED);
+        require (msg.value >= Gas.MIN_START_ELECTION_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (now >= (currentRelayRoundStartTime + timeBeforeElection), ErrorCodes.TOO_EARLY_FOR_ELECTION);
+        require (currentElectionStartTime == 0, ErrorCodes.ELECTION_ALREADY_STARTED);
+        require (originRelayRoundInitialized, ErrorCodes.ORIGIN_ROUND_NOT_INITIALIZED);
         tvm.rawReserve(_reserve(), 2);
 
         deployElection(currentRelayRound + 1, send_gas_to);
@@ -112,9 +112,9 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
     }
 
     function endElection(address send_gas_to) external override onlyActive {
-        require (msg.value >= Gas.MIN_END_ELECTION_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
-        require (currentElectionStartTime != 0, StakingErrors.ELECTION_NOT_STARTED);
-        require (now >= (currentElectionStartTime + electionTime), StakingErrors.CANT_END_ELECTION);
+        require (msg.value >= Gas.MIN_END_ELECTION_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (currentElectionStartTime != 0, ErrorCodes.ELECTION_NOT_STARTED);
+        require (now >= (currentElectionStartTime + electionTime), ErrorCodes.CANT_END_ELECTION);
         tvm.rawReserve(_reserve(), 2);
 
         address election_addr = getElectionAddress(pendingRelayRound);
@@ -193,7 +193,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
     }
 
     function deployElection(uint128 round_num, address send_gas_to) internal returns (address) {
-        require(round_num > currentRelayRound, StakingErrors.INVALID_ELECTION_ROUND);
+        require(round_num > currentRelayRound, ErrorCodes.INVALID_ELECTION_ROUND);
 
         TvmBuilder constructor_params;
         constructor_params.store(election_version);
@@ -206,7 +206,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
     }
 
     function deployRelayRound(uint128 round_num, address send_gas_to) internal returns (address) {
-        require(round_num > currentRelayRound, StakingErrors.INVALID_RELAY_ROUND_ROUND);
+        require(round_num > currentRelayRound, ErrorCodes.INVALID_RELAY_ROUND_ROUND);
 
         TvmBuilder constructor_params;
         constructor_params.store(relay_round_version);
@@ -223,13 +223,13 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
 
     modifier onlyElection(uint128 round_num) {
         address expectedAddr = getElectionAddress(round_num);
-        require (expectedAddr == msg.sender, StakingErrors.NOT_ELECTION);
+        require (expectedAddr == msg.sender, ErrorCodes.NOT_ELECTION);
         _;
     }
 
     modifier onlyRelayRound(uint128 round_num) {
         address expectedAddr = getRelayRoundAddress(round_num);
-        require (expectedAddr == msg.sender, StakingErrors.NOT_RELAY_ROUND);
+        require (expectedAddr == msg.sender, ErrorCodes.NOT_RELAY_ROUND);
         _;
     }
 

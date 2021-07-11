@@ -4,9 +4,9 @@ import "./interfaces/IRelayRound.sol";
 import "./interfaces/IStakingPool.sol";
 import "./interfaces/IUserData.sol";
 
-import "./libraries/StakingErrors.sol";
 import "./libraries/Gas.sol";
 import "./libraries/PlatformTypes.sol";
+import "./../utils/ErrorCodes.sol";
 
 import "../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol";
 import "../../../node_modules/@broxus/contracts/contracts/platform/Platform.sol";
@@ -39,8 +39,8 @@ contract RelayRound is IRelayRound {
     }
 
     function getRewardForRound(address staker_addr, address send_gas_to, uint32 code_version) external override onlyUserData(staker_addr) {
-        require (now >= start_time + round_len, StakingErrors.RELAY_ROUND_NOT_ENDED);
-        require (relays[staker_addr].reward_claimed == false, StakingErrors.RELAY_REWARD_CLAIMED);
+        require (now >= start_time + round_len, ErrorCodes.RELAY_ROUND_NOT_ENDED);
+        require (relays[staker_addr].reward_claimed == false, ErrorCodes.RELAY_REWARD_CLAIMED);
 
         tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 2);
 
@@ -95,7 +95,7 @@ contract RelayRound is IRelayRound {
     }
 
     function setRelays(Relay[] _relay_list, address send_gas_to) external override onlyRoot {
-        require (!relays_installed, StakingErrors.RELAY_ROUND_INITIALIZED);
+        require (!relays_installed, ErrorCodes.RELAY_ROUND_INITIALIZED);
         tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 2);
 
         for (Relay _relay: _relay_list) {
@@ -195,12 +195,12 @@ contract RelayRound is IRelayRound {
 
     modifier onlyUserData(address user) {
         address expectedAddr = getUserDataAddress(user);
-        require (expectedAddr == msg.sender, StakingErrors.NOT_USER_DATA);
+        require (expectedAddr == msg.sender, ErrorCodes.NOT_USER_DATA);
         _;
     }
 
     modifier onlyRoot() {
-        require(msg.sender == root, StakingErrors.NOT_ROOT);
+        require(msg.sender == root, ErrorCodes.NOT_ROOT);
         _;
     }
 

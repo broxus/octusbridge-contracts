@@ -16,7 +16,7 @@ import "./../Election.sol";
 import "./../RelayRound.sol";
 
 import "./../libraries/PlatformTypes.sol";
-import "./../libraries/StakingErrors.sol";
+import "./../../utils/ErrorCodes.sol";
 import "./../libraries/Gas.sol";
 
 import "../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol";
@@ -246,7 +246,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     function startNewRewardRound(address send_gas_to) external onlyRewarder {
         if (rewardRounds.length > 0) {
             RewardRound last_round = rewardRounds[rewardRounds.length - 1];
-            require (last_round.rewardTokens > 0, StakingErrors.EMPTY_REWARD_ROUND);
+            require (last_round.rewardTokens > 0, ErrorCodes.EMPTY_REWARD_ROUND);
         }
 
         tvm.rawReserve(_reserve(), 2);
@@ -322,7 +322,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     function revertDeposit(uint64 _deposit_nonce) external override {
         PendingDeposit deposit = deposits[_deposit_nonce];
         address expectedAddr = getUserDataAddress(deposit.user);
-        require (expectedAddr == msg.sender, StakingErrors.NOT_USER_DATA);
+        require (expectedAddr == msg.sender, ErrorCodes.NOT_USER_DATA);
 
         tvm.rawReserve(_reserve(), 2);
 
@@ -338,7 +338,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     function finishDeposit(uint64 _deposit_nonce) external override {
         PendingDeposit deposit = deposits[_deposit_nonce];
         address expectedAddr = getUserDataAddress(deposit.user);
-        require (expectedAddr == msg.sender, StakingErrors.NOT_USER_DATA);
+        require (expectedAddr == msg.sender, ErrorCodes.NOT_USER_DATA);
 
         tvm.rawReserve(_reserve(), 2);
 
@@ -351,8 +351,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     function withdraw(uint128 amount, address send_gas_to) public onlyActive {
-        require (amount > 0, StakingErrors.ZERO_AMOUNT_INPUT);
-        require (msg.value >= Gas.MIN_WITHDRAW_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
+        require (amount > 0, ErrorCodes.ZERO_AMOUNT_INPUT);
+        require (msg.value >= Gas.MIN_WITHDRAW_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
 
         updatePoolInfo();
@@ -381,7 +381,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     function claimReward(address send_gas_to) external onlyActive {
-        require (msg.value >= Gas.MIN_CLAIM_REWARD_MSG_VALUE, StakingErrors.VALUE_TOO_LOW);
+        require (msg.value >= Gas.MIN_CLAIM_REWARD_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
 
         tvm.rawReserve(_reserve(), 2);
 
@@ -568,28 +568,28 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     modifier onlyBridge() {
-        require (msg.sender == bridge, StakingErrors.NOT_BRIDGE);
+        require (msg.sender == bridge, ErrorCodes.NOT_BRIDGE);
         _;
     }
 
     modifier onlyDaoRoot {
-        require(msg.sender == dao_root, StakingErrors.NOT_DAO_ROOT);
+        require(msg.sender == dao_root, ErrorCodes.NOT_DAO_ROOT);
         _;
     }
 
     modifier onlyRewarder {
-        require(msg.sender == rewarder, StakingErrors.NOT_REWARDER);
+        require(msg.sender == rewarder, ErrorCodes.NOT_REWARDER);
         _;
     }
 
     modifier onlyUserData(address user) {
         address expectedAddr = getUserDataAddress(user);
-        require (expectedAddr == msg.sender, StakingErrors.NOT_USER_DATA);
+        require (expectedAddr == msg.sender, ErrorCodes.NOT_USER_DATA);
         _;
     }
 
     modifier onlyActive() {
-        require(active, StakingErrors.NOT_ACTIVE);
+        require(active, ErrorCodes.NOT_ACTIVE);
         _;
     }
 

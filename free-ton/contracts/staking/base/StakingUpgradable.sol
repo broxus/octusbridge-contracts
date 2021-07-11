@@ -7,7 +7,7 @@ import "./StakingBase.sol";
 abstract contract StakingPoolUpgradable is StakingPoolBase {
     function installPlatformOnce(TvmCell code, address send_gas_to) external onlyAdmin {
         // can be installed only once
-        require(!has_platform_code, StakingErrors.PLATFORM_CODE_NON_EMPTY);
+        require(!has_platform_code, ErrorCodes.PLATFORM_CODE_NON_EMPTY);
         tvm.rawReserve(_reserve(), 2);
         platform_code = code;
         has_platform_code = true;
@@ -52,7 +52,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
 
     // user should call this by himself
     function upgradeUserData(address send_gas_to) external view onlyActive {
-        require(msg.value >= Gas.UPGRADE_USER_DATA_MIN_VALUE, StakingErrors.VALUE_TOO_LOW);
+        require(msg.value >= Gas.UPGRADE_USER_DATA_MIN_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
 
         _upgradeUserData(msg.sender, 0, send_gas_to);
@@ -62,7 +62,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         address user,
         address send_gas_to
     ) external view onlyAdmin {
-        require(msg.value >= Gas.UPGRADE_USER_DATA_MIN_VALUE, StakingErrors.VALUE_TOO_LOW);
+        require(msg.value >= Gas.UPGRADE_USER_DATA_MIN_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
 
         _upgradeUserData(user, 0, send_gas_to);
@@ -86,7 +86,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         uint128 round_num,
         address send_gas_to
     ) external view onlyAdmin {
-        require(msg.value >= Gas.UPGRADE_ELECTION_MIN_VALUE, StakingErrors.VALUE_TOO_LOW);
+        require(msg.value >= Gas.UPGRADE_ELECTION_MIN_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
 
         emit RequestedElectionUpgrade(round_num);
@@ -99,7 +99,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         uint128 round_num,
         address send_gas_to
     ) external view onlyAdmin {
-        require(msg.value >= Gas.UPGRADE_RELAY_ROUND_MIN_VALUE, StakingErrors.VALUE_TOO_LOW);
+        require(msg.value >= Gas.UPGRADE_RELAY_ROUND_MIN_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
 
         emit RequestedRelayRoundUpgrade(round_num);

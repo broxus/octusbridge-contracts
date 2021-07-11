@@ -7,8 +7,8 @@ import "./interfaces/IUserData.sol";
 import "./interfaces/IUpgradableByRequest.sol";
 import "./interfaces/IElection.sol";
 
-import "./libraries/StakingErrors.sol";
 import "./libraries/Gas.sol";
+import "./../utils/ErrorCodes.sol";
 import "./libraries/PlatformTypes.sol";
 
 import "../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol";
@@ -67,8 +67,8 @@ contract Election is IElection {
         address send_gas_to,
         uint32 code_version
     ) external override onlyUserData(staker_addr) {
-        require (tokens > 0, StakingErrors.BAD_RELAY_MEMBERSHIP_REQUEST);
-        require (!election_ended, StakingErrors.ELECTION_ENDED);
+        require (tokens > 0, ErrorCodes.BAD_RELAY_MEMBERSHIP_REQUEST);
+        require (!election_ended, ErrorCodes.ELECTION_ENDED);
 
         tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
 
@@ -140,7 +140,7 @@ contract Election is IElection {
     }
 
     function finish(uint128 relays_count, address send_gas_to, uint32 code_version) external override onlyRoot {
-        require (!election_ended, StakingErrors.ELECTION_ENDED);
+        require (!election_ended, ErrorCodes.ELECTION_ENDED);
 
         tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
 
@@ -237,12 +237,12 @@ contract Election is IElection {
 
     modifier onlyUserData(address user) {
         address expectedAddr = getUserDataAddress(user);
-        require (expectedAddr == msg.sender, StakingErrors.NOT_USER_DATA);
+        require (expectedAddr == msg.sender, ErrorCodes.NOT_USER_DATA);
         _;
     }
 
     modifier onlyRoot() {
-        require(msg.sender == root, StakingErrors.NOT_ROOT);
+        require(msg.sender == root, ErrorCodes.NOT_ROOT);
         _;
     }
 

@@ -6,7 +6,7 @@ import "./interfaces/IUserData.sol";
 import "./interfaces/IUpgradableByRequest.sol";
 import "./interfaces/IElection.sol";
 
-import "./libraries/StakingErrors.sol";
+import "./../utils/ErrorCodes.sol";
 import "./libraries/Gas.sol";
 import "./interfaces/IUpgradableByRequest.sol";
 import "./libraries/PlatformTypes.sol";
@@ -52,7 +52,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     mapping(uint32 /*proposal_id*/ => bool /*support*/) public casted_votes;
 
     modifier onlyDaoProposal(uint32 proposal_id) {
-        require(msg.sender == getProposalAddress(proposal_id), StakingErrors.NOT_PROPOSAL);
+        require(msg.sender == getProposalAddress(proposal_id), ErrorCodes.NOT_PROPOSAL);
         _;
     }
 
@@ -108,11 +108,11 @@ contract UserData is IUserData, IUpgradableByRequest {
 
         uint16 error;
 
-        if (slashed) error = StakingErrors.SLASHED;
-        if (code_version > current_version) error = StakingErrors.OLD_VERSION;
-        if (msg.value < Gas.CAST_VOTE_VALUE) error = StakingErrors.VALUE_TOO_LOW;
-        if (casted_votes.exists(proposal_id)) error = StakingErrors.ALREADY_VOTED;
-        if (bytes(reason).length > MAX_REASON_LENGTH) error = StakingErrors.REASON_IS_TOO_LONG;
+        if (slashed) error = ErrorCodes.SLASHED;
+        if (code_version > current_version) error = ErrorCodes.OLD_VERSION;
+        if (msg.value < Gas.CAST_VOTE_VALUE) error = ErrorCodes.VALUE_TOO_LOW;
+        if (casted_votes.exists(proposal_id)) error = ErrorCodes.ALREADY_VOTED;
+        if (bytes(reason).length > MAX_REASON_LENGTH) error = ErrorCodes.REASON_IS_TOO_LONG;
 
         if (error != 0){
             IVoter(user).onVoteRejected{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(proposal_id, error);
@@ -139,16 +139,16 @@ contract UserData is IUserData, IUpgradableByRequest {
             value: 0,
             flag: MsgFlag.REMAINING_GAS,
             bounce: false
-        }(proposal_id, StakingErrors.PROPOSAL_IS_NOT_ACTIVE);
+        }(proposal_id, ErrorCodes.PROPOSAL_IS_NOT_ACTIVE);
     }
 
     function tryUnlockVoteTokens(uint32 code_version, uint32 proposal_id) override public view onlyRoot {
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
         uint16 error;
 
-        if (code_version > current_version) error = StakingErrors.OLD_VERSION;
-        if (msg.value < Gas.UNLOCK_LOCKED_VOTE_TOKENS_VALUE) error = StakingErrors.VALUE_TOO_LOW;
-        if (!created_proposals.exists(proposal_id)) error = StakingErrors.WRONG_PROPOSAL_ID;
+        if (code_version > current_version) error = ErrorCodes.OLD_VERSION;
+        if (msg.value < Gas.UNLOCK_LOCKED_VOTE_TOKENS_VALUE) error = ErrorCodes.VALUE_TOO_LOW;
+        if (!created_proposals.exists(proposal_id)) error = ErrorCodes.WRONG_PROPOSAL_ID;
 
         if (error != 0){
             IVoter(user).onVotesNotUnlocked{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(proposal_id, error);
@@ -168,7 +168,7 @@ contract UserData is IUserData, IUpgradableByRequest {
                 value: 0,
                 flag: MsgFlag.REMAINING_GAS,
                 bounce: false
-            }(proposal_id, StakingErrors.WRONG_PROPOSAL_STATE);
+            }(proposal_id, ErrorCodes.WRONG_PROPOSAL_STATE);
         }
     }
 
@@ -177,8 +177,8 @@ contract UserData is IUserData, IUpgradableByRequest {
 
         uint16 error;
 
-        if (code_version > current_version) error = StakingErrors.OLD_VERSION;
-        if (msg.value < proposal_ids.length * Gas.UNLOCK_CASTED_VOTE_VALUE + 1 ton) error = StakingErrors.VALUE_TOO_LOW;
+        if (code_version > current_version) error = ErrorCodes.OLD_VERSION;
+        if (msg.value < proposal_ids.length * Gas.UNLOCK_CASTED_VOTE_VALUE + 1 ton) error = ErrorCodes.VALUE_TOO_LOW;
 
         if (error != 0){
             IVoter(user).onCastedVoteNotUnlocked{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(proposal_ids, error);
@@ -205,7 +205,7 @@ contract UserData is IUserData, IUpgradableByRequest {
             IVoter(user).onCastedVoteNotUnlocked{
                 value: 0,
                 flag: MsgFlag.REMAINING_GAS, bounce: false
-            }([proposal_id], StakingErrors.WRONG_PROPOSAL_STATE);
+            }([proposal_id], ErrorCodes.WRONG_PROPOSAL_STATE);
         }
     }
 
@@ -298,7 +298,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         address send_gas_to,
         uint32 code_version
     ) external override onlyRoot {
-        require (!slashed, StakingErrors.SLASHED);
+        require (!slashed, ErrorCodes.SLASHED);
 
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
 
@@ -325,7 +325,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         uint32 code_version,
         uint32 relay_round_code_version
     ) external override onlyRoot {
-        require (!slashed, StakingErrors.SLASHED);
+        require (!slashed, ErrorCodes.SLASHED);
 
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
 
@@ -357,7 +357,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         address send_gas_to,
         uint32 user_data_code_version
     ) external override onlyRoot {
-        require (!slashed, StakingErrors.SLASHED);
+        require (!slashed, ErrorCodes.SLASHED);
 
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
 
@@ -374,19 +374,19 @@ contract UserData is IUserData, IUpgradableByRequest {
     }
 
     function confirmTonAccount() external {
-        require (msg.pubkey() != 0, StakingErrors.INTERNAL_ADDRESS);
-        require (msg.pubkey() == relay_ton_pubkey, StakingErrors.ACCOUNT_NOT_LINKED);
-        require (ton_pubkey_confirmed == false, StakingErrors.ACCOUNT_ALREADY_CONFIRMED);
-        require (!slashed, StakingErrors.SLASHED);
+        require (msg.pubkey() != 0, ErrorCodes.INTERNAL_ADDRESS);
+        require (msg.pubkey() == relay_ton_pubkey, ErrorCodes.ACCOUNT_NOT_LINKED);
+        require (ton_pubkey_confirmed == false, ErrorCodes.ACCOUNT_ALREADY_CONFIRMED);
+        require (!slashed, ErrorCodes.SLASHED);
 
         tvm.accept();
         ton_pubkey_confirmed = true;
     }
 
     function processConfirmEthAccount(uint256 eth_address, address send_gas_to) external override onlyRoot {
-        require (eth_address_confirmed == false, StakingErrors.ACCOUNT_ALREADY_CONFIRMED);
-        require (eth_address == relay_eth_address, StakingErrors.ACCOUNT_NOT_LINKED);
-        require (!slashed, StakingErrors.SLASHED);
+        require (eth_address_confirmed == false, ErrorCodes.ACCOUNT_ALREADY_CONFIRMED);
+        require (eth_address == relay_eth_address, ErrorCodes.ACCOUNT_NOT_LINKED);
+        require (!slashed, ErrorCodes.SLASHED);
 
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
 
@@ -402,9 +402,9 @@ contract UserData is IUserData, IUpgradableByRequest {
         uint32 user_data_code_version,
         uint32 election_code_version
     ) external override onlyRoot {
-        require (eth_address_confirmed, StakingErrors.ACCOUNT_NOT_CONFIRMED);
-        require (ton_pubkey_confirmed, StakingErrors.ACCOUNT_NOT_CONFIRMED);
-        require (!slashed, StakingErrors.SLASHED);
+        require (eth_address_confirmed, ErrorCodes.ACCOUNT_NOT_CONFIRMED);
+        require (ton_pubkey_confirmed, ErrorCodes.ACCOUNT_NOT_CONFIRMED);
+        require (!slashed, ErrorCodes.SLASHED);
 
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
 
@@ -437,7 +437,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         address send_gas_to,
         uint32 code_version
     ) external override onlyRoot {
-        require (!slashed, StakingErrors.SLASHED);
+        require (!slashed, ErrorCodes.SLASHED);
 
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
 
@@ -584,24 +584,24 @@ contract UserData is IUserData, IUpgradableByRequest {
     }
 
     modifier onlyRoot() {
-        require(msg.sender == root, StakingErrors.NOT_ROOT);
+        require(msg.sender == root, ErrorCodes.NOT_ROOT);
         _;
     }
 
     modifier onlyElection(uint128 round_num) {
         address election_addr = getElectionAddress(round_num);
-        require (election_addr == msg.sender, StakingErrors.NOT_ELECTION);
+        require (election_addr == msg.sender, ErrorCodes.NOT_ELECTION);
         _;
     }
 
     modifier onlyRelayRound(uint128 round_num) {
         address expectedAddr = getRelayRoundAddress(round_num);
-        require (expectedAddr == msg.sender, StakingErrors.NOT_RELAY_ROUND);
+        require (expectedAddr == msg.sender, ErrorCodes.NOT_RELAY_ROUND);
         _;
     }
 
     modifier onlyDaoRoot {
-       require(msg.sender == dao_root, StakingErrors.NOT_DAO_ROOT);
+       require(msg.sender == dao_root, ErrorCodes.NOT_DAO_ROOT);
         _;
     }
 }
