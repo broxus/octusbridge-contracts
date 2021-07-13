@@ -7,6 +7,7 @@
   "author": "pavlovdog_ <pavlovdog.moscow@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "ton-eth-bridge-token-contracts": "git://github.com/broxus/ton-eth-bridge-token-contracts#74905260499d79cf7cb0d89a6eb572176fc1fcd5",
     "@openzeppelin/contracts": "^4.0.0",
     "@openzeppelin/contracts-upgradeable": "^4.1.0",
     "@truffle/hdwallet-provider": "^1.2.0",
