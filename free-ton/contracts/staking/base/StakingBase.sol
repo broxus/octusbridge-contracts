@@ -344,8 +344,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
         tokenBalance += deposit.amount;
 
-        delete deposits[_deposit_nonce];
         emit Deposit(deposit.user, deposit.amount);
+        delete deposits[_deposit_nonce];
 
         deposit.send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }

@@ -31,12 +31,17 @@ let stakingToken;
 let stakingWallet;
 
 let user1;
+let user1Data;
 let user2;
+let user2Data;
 let stakingOwner;
 let userTokenWallet1;
 let userTokenWallet2;
 let ownerWallet;
 let userInitialTokenBal = 10000;
+let rewardTokensBal = 10000;
+let userDeposit = 100;
+let rewardPerSec = 1000;
 
 
 describe('Test Staking Rewards', async function () {
@@ -111,6 +116,46 @@ describe('Test Staking Rewards', async function () {
         return account;
     }
 
+    const getUserTokenWallet = async function (user) {
+        const expectedWalletAddr = await stakingToken.call({
+            method: 'getWalletAddress',
+            params: {
+                wallet_public_key_: 0,
+                owner_address_: user.address
+            }
+        });
+        const userTokenWallet = await locklift.factory.getContract('TONTokenWallet', TOKEN_PATH);
+        userTokenWallet.setAddress(expectedWalletAddr);
+        return userTokenWallet;
+    }
+
+    const checkTokenBalances = async function(userTokenWallet, userAccount, pool_wallet_bal, pool_bal, pool_reward_bal, user_bal, user_data_bal) {
+        const _pool_wallet_bal = await stakingWallet.call({method: 'balance'});
+        const _pool_bal = await stakingRoot.call({method: 'tokenBalance'});
+        const _pool_reward_bal = await stakingRoot.call({method: 'rewardTokenBalance'});
+        const _user_bal = await userTokenWallet.call({method: 'balance'});
+        const _user_data_bal = await userAccount.call({method: 'token_balance'});
+
+        expect(_pool_wallet_bal.toNumber()).to.be.equal(pool_wallet_bal, 'Pool wallet balance bad');
+        expect(_pool_bal.toNumber()).to.be.equal(pool_bal, 'Pool balance bad');
+        expect(_pool_reward_bal.toNumber()).to.be.equal(pool_reward_bal, 'Pool reward balance bad');
+        expect(_user_bal.toNumber()).to.be.equal(user_bal, 'User balance bad');
+        expect(_user_data_bal.toNumber()).to.be.equal(user_data_bal, 'User data balance bad');
+    }
+
+    const checkReward = async function(userData, prevRewData, prevRewardTime, newRewardTime) {
+        const user_rew_after = await userData.call({method: 'rewardRounds'});
+        const user_rew_balance_before = prevRewData[0].reward_balance;
+        const user_rew_balance_after = user_rew_after[0].reward_balance;
+
+        const reward = user_rew_balance_after - user_rew_balance_before;
+
+        const time_passed = newRewardTime - prevRewardTime;
+        const expected_reward = rewardPerSec * time_passed;
+
+        expect(reward).to.be.equal(expected_reward, 'Bad reward');
+    }
+
     const getUserDataAccount = async function (_user) {
         const userData = await locklift.factory.getContract('UserData');
         userData.setAddress(await stakingRoot.call({
@@ -147,6 +192,18 @@ describe('Test Staking Rewards', async function () {
         });
     };
 
+    const withdrawTokens = async function(user, withdraw_amount) {
+        return await user.runTarget({
+            contract: stakingRoot,
+            method: 'withdraw',
+            params: {
+                amount: withdraw_amount,
+                send_gas_to: user.address
+            },
+            value: convertCrystal(1.5, 'nano')
+        });
+    };
+
     describe('Setup contracts', async function() {
         describe('Token', async function() {
             it('Deploy root', async function() {
@@ -159,32 +216,15 @@ describe('Test Staking Rewards', async function () {
                 let users = [];
                 for (const i of [1, 1, 1]) {
                     const [keyPair] = await locklift.keys.getKeyPairs();
-                    const Account = await locklift.factory.getAccount('Wallet');
-                    const _user = await locklift.giver.deployContract({
-                        contract: Account,
-                        constructorParams: {},
-                        initParams: {
-                            _randomNonce: getRandomNonce()
-                        },
-                        keyPair,
-                    }, convertCrystal(25, 'nano'));
-
-                    _user.afterRun = afterRun;
-
-                    _user.setKeyPair(keyPair);
-
-                    const userBalance = await locklift.ton.getBalance(_user.address);
-
-                    expect(userBalance.toNumber()).to.be.above(0, 'Bad user balance');
-
-                    logger.log(`User address: ${_user.address}`);
+                    const account = await deployAccount(keyPair, 25);
+                    logger.log(`User address: ${account.address}`);
 
                     const {
                         acc_type_name
-                    } = await locklift.ton.getAccountType(_user.address);
+                    } = await locklift.ton.getAccountType(account.address);
 
                     expect(acc_type_name).to.be.equal('Active', 'User account not active');
-                    users.push(_user);
+                    users.push(account);
                 }
                 [user1, user2, stakingOwner] = users;
             });
@@ -298,7 +338,7 @@ describe('Test Staking Rewards', async function () {
             });
 
             it('Sending reward tokens to staking', async function() {
-                const amount = userInitialTokenBal;
+                const amount = rewardTokensBal;
 
                 await depositTokens(stakingOwner, ownerWallet, amount, true);
 
@@ -311,7 +351,150 @@ describe('Test Staking Rewards', async function () {
         });
     });
 
-    describe('Scenario #1', async function () {
+    describe('Basic staking pipeline', async function () {
+        describe('1 user farming', async function () {
+            it('Deposit tokens', async function() {
+                await depositTokens(user1, userTokenWallet1, userDeposit);
+                user1Data = await getUserDataAccount(user1);
+
+                await checkTokenBalances(
+                    userTokenWallet1, user1Data, rewardTokensBal + userDeposit,
+                    userDeposit, rewardTokensBal, userInitialTokenBal - userDeposit, userDeposit
+                );
+
+                const { value: { user: _user, amount: _amount } } = (await stakingRoot.getEvents('Deposit')).pop();
+                expect(_user).to.be.equal(user1.address, 'Bad event');
+                expect(_amount).to.be.equal(userDeposit.toString(), 'Bad event');
+            });
+
+            it('Deposit 2nd time', async function() {
+                const prev_reward_time = await stakingRoot.call({method: 'lastRewardTime'});
+                const user1_rew_before = await user1Data.call({method: 'rewardRounds'});
+
+                await depositTokens(user1, userTokenWallet1, userDeposit);
+
+                await checkTokenBalances(
+                    userTokenWallet1, user1Data, rewardTokensBal + userDeposit * 2,
+                    userDeposit * 2, rewardTokensBal, userInitialTokenBal - userDeposit * 2, userDeposit * 2
+                );
+
+                const new_reward_time = await stakingRoot.call({method: 'lastRewardTime'})
+                await checkReward(user1Data, user1_rew_before, prev_reward_time, new_reward_time);
+
+                const { value: { user: _user, amount: _amount } } = (await stakingRoot.getEvents('Deposit')).pop();
+                expect(_user).to.be.equal(user1.address, 'Bad event');
+                expect(_amount).to.be.equal(userDeposit.toString(), 'Bad event');
+            });
+
+            it('User withdraw half of staked amount', async function() {
+                const prev_reward_time = await stakingRoot.call({method: 'lastRewardTime'});
+                const user1_rew_before = await user1Data.call({method: 'rewardRounds'});
+
+                await withdrawTokens(user1, userDeposit);
+                await checkTokenBalances(
+                    userTokenWallet1, user1Data, rewardTokensBal + userDeposit,
+                    userDeposit, rewardTokensBal, userInitialTokenBal - userDeposit, userDeposit
+                );
+
+                const new_reward_time = await stakingRoot.call({method: 'lastRewardTime'})
+                await checkReward(user1Data, user1_rew_before, prev_reward_time, new_reward_time);
+
+                const { value: { user: _user, amount: _amount } } = (await stakingRoot.getEvents('Withdraw')).pop();
+                expect(_user).to.be.equal(user1.address, 'Bad event');
+                expect(_amount).to.be.equal(userDeposit.toString(), 'Bad event');
+            });
+
+            it('User withdraw other half', async function() {
+                const prev_reward_time = await stakingRoot.call({method: 'lastRewardTime'});
+                const user1_rew_before = await user1Data.call({method: 'rewardRounds'});
+
+                await withdrawTokens(user1, userDeposit);
+
+                const new_reward_time = await stakingRoot.call({method: 'lastRewardTime'})
+                await checkReward(user1Data, user1_rew_before, prev_reward_time, new_reward_time);
+
+                await checkTokenBalances(
+                    userTokenWallet1, user1Data, rewardTokensBal,
+                    0, rewardTokensBal, userInitialTokenBal, 0
+                );
+                const { value: { user: _user, amount: _amount } } = (await stakingRoot.getEvents('Withdraw')).pop();
+                expect(_user).to.be.equal(user1.address, 'Bad event');
+                expect(_amount).to.be.equal(userDeposit.toString(), 'Bad event');
+            });
+        });
+
+        describe('Multiple users farming', async function() {
+            let user1_deposit_time;
+            let user2_deposit_time;
+            let user1_withdraw_time;
+            let user2_withdraw_time;
+
+            it('Users deposit tokens', async function() {
+                await depositTokens(user1, userTokenWallet1, userDeposit);
+                await checkTokenBalances(
+                    userTokenWallet1, user1Data, rewardTokensBal + userDeposit,
+                    userDeposit, rewardTokensBal, userInitialTokenBal - userDeposit, userDeposit
+                );
+                user1_deposit_time = await stakingRoot.call({method: 'lastRewardTime'});
+
+                await depositTokens(user2, userTokenWallet2, userDeposit);
+                user2Data = await getUserDataAccount(user2);
+
+                await checkTokenBalances(
+                    userTokenWallet2, user2Data, rewardTokensBal + userDeposit * 2,
+                    userDeposit * 2, rewardTokensBal, userInitialTokenBal - userDeposit, userDeposit
+                );
+                user2_deposit_time = await stakingRoot.call({method: 'lastRewardTime'});
+            });
+
+            it('Users withdraw tokens', async function() {
+                const user1_rew_before = await user1Data.call({method: 'rewardRounds'});
+                await withdrawTokens(user1, userDeposit);
+
+                user1_withdraw_time = await stakingRoot.call({method: 'lastRewardTime'});
+
+                const user1_rew_after = await user1Data.call({method: 'rewardRounds'});
+                const reward1 = user1_rew_after[0].reward_balance - user1_rew_before[0].reward_balance;
+
+                const time_passed_1 = user2_deposit_time - user1_deposit_time;
+                const expected_reward_1 = rewardPerSec * time_passed_1;
+
+                const time_passed_2 = user1_withdraw_time - user2_deposit_time;
+                const expected_reward_2 = rewardPerSec * 0.5 * time_passed_2;
+
+                const expected_reward_final = (expected_reward_1 + expected_reward_2);
+
+                expect(reward1).to.be.equal(expected_reward_final, 'Bad reward 1 user (low)');
+
+                await checkTokenBalances(
+                    userTokenWallet1, user1Data, rewardTokensBal + userDeposit,
+                    userDeposit, rewardTokensBal, userInitialTokenBal, 0
+                );
+
+                const user2_rew_before = await user2Data.call({method: 'rewardRounds'});
+                await withdrawTokens(user2, userDeposit);
+
+                const user2_rew_after = await user2Data.call({method: 'rewardRounds'});
+                user2_withdraw_time = await stakingRoot.call({method: 'lastRewardTime'});
+
+                const reward2 = user2_rew_after[0].reward_balance - user2_rew_before[0].reward_balance;
+
+                const time_passed_21 = user1_withdraw_time - user2_deposit_time;
+                const expected_reward_21 = rewardPerSec * 0.5 * time_passed_21;
+
+                const time_passed_22 = user2_withdraw_time - user1_withdraw_time;
+                const expected_reward_22 = rewardPerSec * time_passed_22;
+                const expected_reward_final_2 = (expected_reward_22 + expected_reward_21)
+
+                expect(reward2).to.be.equal(expected_reward_final_2, 'Bad reward 2 user (low)');
+
+                await checkTokenBalances(
+                    userTokenWallet2, user2Data, rewardTokensBal,
+                    0, rewardTokensBal, userInitialTokenBal, 0
+                );
+
+            });
+        });
 
     });
 })
