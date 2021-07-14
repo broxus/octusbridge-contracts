@@ -411,7 +411,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
         TvmCell _empty;
         ITONTokenWallet(tokenWallet).transferToRecipient{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-            0, user, uint128(user_token_reward), 0, 0, send_gas_to, false, _empty
+            0, user, user_token_reward, 0, 0, send_gas_to, false, _empty
         );
     }
 
@@ -453,14 +453,15 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
             return;
         }
 
+        if (tokenBalance == 0) {
+            lastRewardTime = now;
+            return;
+        }
+
         uint128 multiplier = now - lastRewardTime;
         uint128 new_reward = rewardPerSecond * multiplier;
         rewardRounds[rewardRounds.length - 1].totalReward += new_reward;
         lastRewardTime = now;
-
-        if (tokenBalance == 0) {
-            return;
-        }
 
         rewardRounds[rewardRounds.length - 1].accRewardPerShare += math.muldiv(new_reward, 1e18, tokenBalance);
     }

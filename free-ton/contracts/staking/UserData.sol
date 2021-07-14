@@ -309,8 +309,8 @@ contract UserData is IUserData, IUpgradableByRequest {
 
         syncRewards(reward_rounds, token_balance);
 
-        uint128[] rewards = new uint128[](rewardRounds.length);
-        for (uint i = 0; i < rewardRounds.length; i++) {
+        uint128[] rewards = new uint128[](rewardRounds.length - 1);
+        for (uint i = 0; i < rewardRounds.length - 1; i++) {
             rewards[i] = rewardRounds[i].reward_balance;
             rewardRounds[i].reward_balance = 0;
         }
