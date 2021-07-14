@@ -25,11 +25,11 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
     /// @dev Initializer
     /// @param admin Bridge admin
     /// @param _configuration Initial bridge configuration
-    /// @param relays Initial set of relays (round 0)
+    /// @param relays Initial set of relays (round 0). Encode addresses as uint160
     function initialize(
         address admin,
         BridgeConfiguration calldata _configuration,
-        address[] calldata relays
+        uint160[] calldata relays
     ) external initializer {
         __Ownable_init();
         transferOwnership(admin);
@@ -80,7 +80,7 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
             require(signer > lastSigner, "Bridge: signatures sequence wrong");
             lastSigner = signer;
 
-            if (isRelay(round, signer)) {
+            if (isRelay(round, signer) && !isBanned(signer)) {
                 count++;
             }
         }
@@ -161,19 +161,6 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
         _setConfiguration(_configuration);
     }
 
-    function _setRoundRelays(
-        uint32 round,
-        address[] memory relays
-    ) internal {
-        roundRequiredSignatures[round] = uint32(relays.length * 2 / 3) + 1;
-
-        for (uint i=0; i<relays.length; i++) {
-            roundRelays[round][relays[i]] = true;
-
-            emit RoundRelayGranted(round, relays[i]);
-        }
-    }
-
     function _setConfiguration(
         BridgeConfiguration memory _configuration
     ) internal {
@@ -186,7 +173,11 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
         uint32 round,
         uint160[] memory relays
     ) internal {
-        roundRequiredSignatures[round] = uint32(relays.length * 2 / 3) + 1;
+        uint32 requiredSignatures = uint32(relays.length * 2 / 3) + 1;
+
+        require(requiredSignatures >= configuration.requiredSignatures, 'Bridge: too low required signatures');
+
+        roundRequiredSignatures[round] = requiredSignatures;
 
         for (uint i=0; i<relays.length; i++) {
             roundRelays[round][address(relays[i])] = true;
