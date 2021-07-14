@@ -17,7 +17,7 @@ const stringToBytesArray = (dataString) => {
 
 const getRandomNonce = () => Math.random() * 64000 | 0;
 
-const afterRun = async (tx) => {
+const afterRun = async () => {
     await new Promise(resolve => setTimeout(resolve, 500));
 };
 
@@ -141,6 +141,22 @@ describe('Test Staking Rewards', async function () {
         expect(_pool_reward_bal.toNumber()).to.be.equal(pool_reward_bal, 'Pool reward balance bad');
         expect(_user_bal.toNumber()).to.be.equal(user_bal, 'User balance bad');
         expect(_user_data_bal.toNumber()).to.be.equal(user_data_bal, 'User data balance bad');
+    }
+
+    const checkStakingRewardRounds = async function (rewardRounds) {
+        const _reward_rounds = await stakingRoot.call({method: 'rewardRounds'});
+        console.log(_reward_rounds);
+    }
+
+    const claimReward = async function(user) {
+        return await user.runTarget({
+            contract: stakingRoot,
+            method: 'claimReward',
+            params: {
+                send_gas_to: user.address,
+            },
+            value: locklift.utils.convertCrystal(5, 'nano')
+        });
     }
 
     const checkReward = async function(userData, prevRewData, prevRewardTime, newRewardTime) {
@@ -492,8 +508,31 @@ describe('Test Staking Rewards', async function () {
                     userTokenWallet2, user2Data, rewardTokensBal,
                     0, rewardTokensBal, userInitialTokenBal, 0
                 );
-
             });
+
+            it("Claim rewards (expect fail)", async function() {
+                const user1_reward_before = await user1Data.call({method: 'rewardRounds'});
+
+                await claimReward(user1);
+                await checkTokenBalances(
+                    userTokenWallet1, user1Data, rewardTokensBal,
+                    0, rewardTokensBal, userInitialTokenBal, 0
+                );
+
+                const user1_reward_after = await user1Data.call({method: 'rewardRounds'});
+                expect(user1_reward_before[0].reward_balance).to.be.equal(user1_reward_after[0].reward_balance, "Claim reward fail");
+
+                const user2_reward_before = await user2Data.call({method: 'rewardRounds'});
+
+                await claimReward(user2);
+                await checkTokenBalances(
+                    userTokenWallet1, user2Data, rewardTokensBal,
+                    0, rewardTokensBal, userInitialTokenBal, 0
+                );
+
+                const user2_reward_after = await user2Data.call({method: 'rewardRounds'});
+                expect(user2_reward_before[0].reward_balance).to.be.equal(user2_reward_after[0].reward_balance, "Claim reward fail");
+            })
         });
 
     });
