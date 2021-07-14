@@ -4,15 +4,15 @@ pragma experimental ABIEncoderV2;
 
 
 contract Cache {
-    mapping (bytes32 => bool) public executed;
+    mapping (bytes32 => bool) public cache;
 
     modifier notCached(bytes memory payload) {
-        bytes32 payloadHash = keccak256(abi.encode(payload));
+        bytes32 hash_ = keccak256(abi.encode(payload));
 
-        require(executed[payloadHash] == false, "Cache: payload already seen");
+        require(cache[hash_] == false, "Cache: payload already seen");
 
         _;
 
-        executed[payloadHash] = true;
+        cache[hash_] = true;
     }
 }

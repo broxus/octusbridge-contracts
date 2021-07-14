@@ -19,15 +19,6 @@ library UniversalERC20 {
         IERC20 token,
         address to,
         uint256 amount
-    ) internal {
-        universalTransfer(token, to, amount, false);
-    }
-
-    function universalTransfer(
-        IERC20 token,
-        address to,
-        uint256 amount,
-        bool mayFail
     ) internal returns(bool) {
         if (amount == 0) {
             return true;
