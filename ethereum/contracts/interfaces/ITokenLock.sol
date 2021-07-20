@@ -7,9 +7,6 @@ interface ITokenLock {
         bool active;
         address bridge;
         address token;
-        uint32 lockFee;
-        uint32 unlockFee;
-        address feeReceiver;
     }
 
     struct Unlock {
@@ -25,8 +22,6 @@ interface ITokenLock {
     struct TokenManagerConfiguration {
         uint16 share;
     }
-
-    enum Operation { Lock, Unlock }
 
     function lockTokens(
         uint128 amount,

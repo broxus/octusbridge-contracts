@@ -2,6 +2,8 @@ require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-web3");
 require('@openzeppelin/hardhat-upgrades');
 require("@nomiclabs/hardhat-etherscan");
+require('hardhat-deploy-ethers');
+require('hardhat-deploy');
 
 
 task("accounts", "Prints the list of accounts", async () => {
@@ -26,7 +28,12 @@ module.exports = {
     }
   },
   networks: {
-    hardhat: {},
+    hardhat: {
+      forking: {
+        url: process.env.ETH_MAIN_ARCHIVE_HTTP,
+        blockNumber: 12859605
+      }
+    },
   },
   gasReporter: {
     currency: 'USD',
@@ -34,5 +41,19 @@ module.exports = {
   },
   etherscan: {
     apiKey: process.env.ETHERSCAN_KEY
+  },
+  namedAccounts: {
+    deployer: {
+      default: 0,
+    },
+    owner: {
+      default: 1,
+    },
+    unlockReceiver: {
+      default: 2,
+    },
+    usdtOwner: {
+      default: '0xA929022c9107643515F5c777cE9a910F0D1e490C'
+    },
   }
 };

@@ -1,5 +1,6 @@
 const ethers = require('ethers');
 const logger = require('mocha-logger');
+const BigNumber = require('bignumber.js');
 
 const chai = require('chai');
 const { solidity } = require("ethereum-waffle");
@@ -23,6 +24,9 @@ const signReceipt = async (receipt, signer) => {
 
 const sortAccounts = (accounts) => accounts
   .sort((a, b) => b.address.toLowerCase() > a.address.toLowerCase() ? -1 : 1);
+
+
+const addressToU160 = (address) => (new BigNumber(address.toLowerCase())).toString(10);
 
 
 const encodeTonEvent = (params) => {
@@ -57,10 +61,36 @@ const encodeTonEvent = (params) => {
 };
 
 
+const encodeDaoActions = (actions) => {
+  return web3.eth.abi.encodeParameters(
+    [{
+      'EthAction[]': {
+        'value': 'uint256',
+        'target': 'uint160',
+        'signature': 'string',
+        'data': 'bytes'
+      },
+    }],
+    [
+      actions.map(action => {
+        return {
+          'value': action.value || 0,
+          'target': (new BigNumber(action.target.toLowerCase())).toString(10),
+          'signature': action.signature || '',
+          'data': action.data || ''
+        };
+      })
+    ]
+  );
+};
+
+
 module.exports = {
   signReceipt,
   logger,
   expect,
   sortAccounts,
-  encodeTonEvent
+  encodeTonEvent,
+  encodeDaoActions,
+  addressToU160,
 };

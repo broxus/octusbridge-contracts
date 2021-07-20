@@ -15,18 +15,17 @@ import "./utils/Cache.sol";
 contract TokenLock is ITokenLock, Cache, OwnableUpgradeable {
     using UniversalERC20 for IERC20;
 
-    uint32 constant public feeDenominator = 100000;
-    uint32 constant public totalShares = 100000;
+    uint32 constant public shares = 100000;
 
-    Configuration public configuration;
-
-    uint16 public lockedShares = 0;
+    uint256 public lockedShares = 0;
     uint256 public lockedTokens = 0;
     uint256 public debtTokens = 0;
 
+    Configuration public configuration;
+
     mapping (address => Unlock[]) unlockOrders;
     mapping (address => TokenManagerConfiguration) tokenManagers;
-    mapping (address => uint256) tokenManagerLockedTokens;
+    mapping (address => uint256) tokenManagerBalance;
 
     modifier onlyActive() {
         require(configuration.active, 'Token lock: not active');
@@ -61,7 +60,7 @@ contract TokenLock is ITokenLock, Cache, OwnableUpgradeable {
         address manager,
         TokenManagerConfiguration calldata _configuration
     ) external override onlyOwner {
-        require(lockedShares + _configuration.share <= totalShares, 'Token lock: not enough shares');
+        require(lockedShares + _configuration.share <= shares, 'Token lock: not enough shares');
         require(tokenManagers[manager].share == 0, 'Token lock: manager already exist');
 
         tokenManagers[manager] = _configuration;
@@ -71,6 +70,9 @@ contract TokenLock is ITokenLock, Cache, OwnableUpgradeable {
         emit AddTokenManager(manager, _configuration);
     }
 
+    /// @dev Update token manager configuration
+    /// @param manager Token manager address
+    /// @param _configuration New token manager configuration
     function updateTokenManager(
         address manager,
         TokenManagerConfiguration calldata _configuration
@@ -78,6 +80,8 @@ contract TokenLock is ITokenLock, Cache, OwnableUpgradeable {
         emit UpdateTokenManager(manager, _configuration);
     }
 
+    /// @dev Remove token manager
+    /// @param manager Token manager address
     function removeTokenManager(
         address manager
     ) external override onlyOwner {
@@ -107,6 +111,7 @@ contract TokenLock is ITokenLock, Cache, OwnableUpgradeable {
     /// @param pubkey Receiver's FreeTON public key
     /// @param ids Unlock orders ids to be filled with this token lock.
     /// May produce additional reward for locker on the FreeTON side.
+    /// TODO: add syncing with actual state?
     function lockTokens(
         uint128 amount,
         int8 wid,
@@ -120,13 +125,9 @@ contract TokenLock is ITokenLock, Cache, OwnableUpgradeable {
             amount
         );
 
-        uint128 fee = getFee(amount, Operation.Lock);
+        lockedTokens += amount;
 
-        _sendFee(fee);
-
-        lockedTokens += amount - fee;
-
-        emit TokenLock(amount - fee, wid, addr, pubkey);
+        emit TokenLock(amount, wid, addr, pubkey);
 
         for (uint32 i = 0; i < ids.length; i++) {
             _fillUnlockOrder(ids[i].receiver, ids[i].orderId);
@@ -176,7 +177,6 @@ contract TokenLock is ITokenLock, Cache, OwnableUpgradeable {
             filled: false
         });
 
-        // TODO: save instantly?
         uint256 orderId = _saveUnlockOrder(receiver, order);
 
         if (amount <= status()) {
@@ -194,13 +194,15 @@ contract TokenLock is ITokenLock, Cache, OwnableUpgradeable {
     /// @param manager Token manager address
     /// @return locked How much tokens are locked on a manager at this moment
     /// @return expected How much tokens should be locked on a manager
-    function getTokenManagerTokens(
+    function getTokenManagerStatus(
         address manager
-    ) public view returns(uint256 locked, uint256 expected) {
+    ) public view returns(uint256, uint256) {
         require(isTokenManager(manager), 'Token lock: not token manager');
 
-        locked = tokenManagerLockedTokens[manager];
-        expected = lockedTokens * tokenManagers[manager].share / totalShares;
+        uint256 locked = tokenManagerBalance[manager];
+        uint256 expected = (lockedTokens - debtTokens) * tokenManagers[manager].share / shares;
+
+        return (locked, expected);
     }
 
     /// @dev Get specific unlock order by it's receiver and index
@@ -223,21 +225,6 @@ contract TokenLock is ITokenLock, Cache, OwnableUpgradeable {
         return unlockOrders[receiver];
     }
 
-    /// @dev Get fee amount according to the amount of tokens and operation type
-    /// @param amount Amount of tokens to lock / unlock
-    /// @param operation Operation type
-    /// @return fee Fee amount
-    function getFee(
-        uint128 amount,
-        Operation operation
-    ) public view returns(uint128 fee) {
-        if (operation == Operation.Lock) {
-            fee = amount * configuration.lockFee / feeDenominator;
-        } else {
-            fee = amount * configuration.unlockFee / feeDenominator;
-        }
-    }
-
     function _saveUnlockOrder(
         address receiver,
         Unlock memory order
@@ -251,10 +238,6 @@ contract TokenLock is ITokenLock, Cache, OwnableUpgradeable {
         emit UnlockOrder(receiver, orderId, order.amount);
     }
 
-    function _sendFee(uint128 fee) internal {
-        IERC20(configuration.token).transfer(configuration.feeReceiver, fee);
-    }
-
     function _fillUnlockOrder(
         address receiver,
         uint256 orderId
@@ -263,16 +246,12 @@ contract TokenLock is ITokenLock, Cache, OwnableUpgradeable {
 
         require(order.filled == false, 'Token lock: order already filled');
 
-        uint128 fee = getFee(order.amount, Operation.Unlock);
-
-        _sendFee(fee);
-
         lockedTokens -= order.amount;
         debtTokens -= order.amount;
 
-        IERC20(configuration.token).universalTransfer(receiver, order.amount - fee);
+        IERC20(configuration.token).universalTransfer(receiver, order.amount);
 
-        emit TokenUnlock(receiver, orderId, order.amount - fee);
+        emit TokenUnlock(receiver, orderId, order.amount);
 
         unlockOrders[receiver][orderId].filled = true;
     }
