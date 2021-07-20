@@ -17,6 +17,7 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
     using ECDSA for bytes32;
 
     mapping (uint32 => mapping(address => bool)) public roundRelays;
+    mapping (address => bool) relaysBlackList;
     mapping (uint32 => uint32) public roundRequiredSignatures;
     BridgeConfiguration public configuration;
     uint public lastRound;
@@ -24,11 +25,11 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
     /// @dev Initializer
     /// @param admin Bridge admin
     /// @param _configuration Initial bridge configuration
-    /// @param relays Initial set of relays (round 0)
+    /// @param relays Initial set of relays (round 0). Encode addresses as uint160
     function initialize(
         address admin,
         BridgeConfiguration calldata _configuration,
-        address[] calldata relays
+        uint160[] calldata relays
     ) external initializer {
         __Ownable_init();
         transferOwnership(admin);
@@ -39,53 +40,18 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
         lastRound = 0;
     }
 
-    /// @notice Internal function for setting bridge configuration
-    /// @param _configuration Bridge configuration
-    function _setConfiguration(
-        BridgeConfiguration memory _configuration
-    ) internal {
-        configuration = _configuration;
-
-        emit ConfigurationUpdate(_configuration);
+    function isBanned(
+        address candidate
+    ) override public view returns(bool) {
+        return relaysBlackList[candidate];
     }
 
-    /// @notice Internal function for updating up relays for specific round
-    /// @param round Round id
-    /// @param relays Array of relay addresses
-    function _setRoundRelays(
-        uint32 round,
-        address[] memory relays
-    ) internal {
-        roundRequiredSignatures[round] = uint32(relays.length * 2 / 3) + 1;
-
-        for (uint i=0; i<relays.length; i++) {
-            roundRelays[round][relays[i]] = true;
-
-            emit RoundRelayGranted(round, relays[i]);
-        }
-    }
-
-    /// @notice Same as above, but uint160 used instead of address type
-    /// @param round Round id
-    /// @param relays Array of relay addresses
-    function _setRoundRelays(
-        uint32 round,
-        uint160[] memory relays
-    ) internal {
-        roundRequiredSignatures[round] = uint32(relays.length * 2 / 3) + 1;
-
-        for (uint i=0; i<relays.length; i++) {
-            roundRelays[round][address(relays[i])] = true;
-
-            emit RoundRelayGranted(round, address(relays[i]));
-        }
-    }
-
+    /// @dev Check if some address is relay
     function isRelay(
         uint32 round,
         address candidate
     ) override public view returns (bool) {
-        return roundRelays[round][candidate];
+        return relaysBlackList[candidate] ? false : roundRelays[round][candidate];
     }
 
     /// @notice Verify there is enough relay signatures
@@ -114,7 +80,7 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
             require(signer > lastSigner, "Bridge: signatures sequence wrong");
             lastSigner = signer;
 
-            if (isRelay(round, signer)) {
+            if (isRelay(round, signer) && !isBanned(signer)) {
                 count++;
             }
         }
@@ -175,12 +141,48 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
         _setRoundRelays(round, relays);
     }
 
+    /// @dev Ban relay. Ban is global for rounds, so relay's signatures becomes invalid in all past and future rounds
+    /// @param relays List of relay addresses to ban
+    function banRelays(
+        address[] calldata relays
+    ) override external onlyOwner {
+        for (uint i=0; i<relays.length; i++) {
+            relaysBlackList[relays[i]] = true;
+
+            emit RelayBanned(relays[i]);
+        }
+    }
+
     /// @notice Set bridge configuration
-    /// @custom:only-owner
     /// @param _configuration New bridge configuration
     function setConfiguration(
         BridgeConfiguration calldata _configuration
     ) override external onlyOwner {
         _setConfiguration(_configuration);
+    }
+
+    function _setConfiguration(
+        BridgeConfiguration memory _configuration
+    ) internal {
+        configuration = _configuration;
+
+        emit ConfigurationUpdate(_configuration);
+    }
+
+    function _setRoundRelays(
+        uint32 round,
+        uint160[] memory relays
+    ) internal {
+        uint32 requiredSignatures = uint32(relays.length * 2 / 3) + 1;
+
+        require(requiredSignatures >= configuration.requiredSignatures, 'Bridge: too low required signatures');
+
+        roundRequiredSignatures[round] = requiredSignatures;
+
+        for (uint i=0; i<relays.length; i++) {
+            roundRelays[round][address(relays[i])] = true;
+
+            emit RoundRelayGranted(round, address(relays[i]));
+        }
     }
 }

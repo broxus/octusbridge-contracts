@@ -17,6 +17,8 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 contract DAO is OwnableUpgradeable, Cache, IDAO {
     address public bridge;
 
+    /// @dev Initializer
+    /// @param _bridge Bridge address
     function initialize(
         address _bridge
     ) public initializer {
@@ -26,17 +28,17 @@ contract DAO is OwnableUpgradeable, Cache, IDAO {
         transferOwnership(address(this));
     }
 
+    /// @dev Update bridge address
+    /// @param _bridge New bridge address
     function updateBridge(
         address _bridge
     ) override external onlyOwner {
         bridge = _bridge;
     }
 
-    /*
-        @notice Execute signed payload
-        @param payload Encoded TON event with payload details
-        @param signatures Payload signatures
-    */
+    /// @dev Execute signed payload
+    /// @param payload Encoded TON event with payload details
+    /// @param signatures Payload signatures
     function execute(
         bytes calldata payload,
         bytes[] calldata signatures

@@ -26,6 +26,8 @@ interface IBridge {
     /// @param candidate Address to check
     function isRelay(uint32 round, address candidate) external view returns(bool);
 
+    function isBanned(address candidate) external view returns(bool);
+
     /// @dev Check that the provided signatures is correct.
     /// @dev Checks that there are enough authorized signers for specified round
     /// @param round Round id
@@ -42,12 +44,20 @@ interface IBridge {
         bytes[] calldata signatures
     ) external;
 
+    function banRelays(
+        address[] calldata relays
+    ) external;
+
     function setConfiguration(BridgeConfiguration calldata _configuration) external;
 
     /// @dev Relay permission granted
     /// @param round Round id
-    /// @param relay Relays address
+    /// @param relay Relay address
     event RoundRelayGranted(uint32 indexed round, address indexed relay);
+
+    /// @dev Relays banned
+    /// @param relay Relay address
+    event RelayBanned(address indexed relay);
 
     /// @dev Configuration updated
     /// @param configuration Bridge configuration
