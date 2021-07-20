@@ -48,6 +48,9 @@ let user1Balance;
 let user2Balance;
 let balance_err;
 
+const RELAY_ROUND_TIME_1 = 10;
+const RELAYS_COUNT_1 = 10;
+
 
 describe('Test Staking Rewards', async function () {
     this.timeout(10000000);
@@ -188,6 +191,16 @@ describe('Test Staking Rewards', async function () {
         const expected_reward = rewardPerSec * time_passed;
 
         expect(reward).to.be.equal(expected_reward, 'Bad reward');
+    }
+
+    const getElection = async function (round_num) {
+        const addr = await stakingRoot.call({
+            method: 'getElectionAddress',
+            params: {round_num: round_num}
+        });
+        const election = await locklift.factory.getContract('Election');
+        election.setAddress(addr);
+        return election;
     }
 
     const getRelayRound = async function (round_num) {
@@ -399,10 +412,10 @@ describe('Test Staking Rewards', async function () {
                     contract: stakingRoot,
                     method: 'setRelayConfig',
                     params: {
-                        relay_round_time: 10,
+                        relay_round_time: RELAY_ROUND_TIME_1,
                         election_time: 4,
                         time_before_election: 5,
-                        relays_count: 10,
+                        relays_count: RELAYS_COUNT_1,
                         min_relays_count: 1,
                         send_gas_to: stakingOwner.address
                     },
@@ -445,42 +458,38 @@ describe('Test Staking Rewards', async function () {
                 const user1_pk = new BigNumber(user1.keyPair.public, 16);
                 const user1_eth = new BigNumber(user1_eth_addr.toLowerCase(), 16);
 
-                const relay_obj = {
-                    staker_addr: user1.address,
-                    ton_pubkey: user1_pk.toFixed(),
-                    eth_addr: user1_eth.toFixed(),
-                    staked_tokens: 1,
-                    reward_claimed: false
+                const input_params = {
+                    staker_addrs: [user1.address],
+                    ton_pubkeys: [user1_pk.toFixed()],
+                    eth_addrs: [user1_eth.toFixed()],
+                    staked_tokens: [1],
+                    send_gas_to: stakingOwner.address
                 }
 
-                const tx = await stakingOwner.runTarget({
+                const reward_rounds = await stakingRoot.call({method: 'rewardRounds'});
+
+                await stakingOwner.runTarget({
                     contract: stakingRoot,
                     method: 'createOriginRelayRound',
-                    params: {
-                        relays: [relay_obj],
-                        send_gas_to: stakingOwner.address
-                    },
-                    value: convertCrystal(5, 'nano')
+                    params: input_params,
+                    value: convertCrystal(1.6, 'nano')
                 });
 
-                const round_num = await stakingRoot.call({method: 'currentRelayRound'});
-                const out_msg = tx.transaction.out_msgs[0];
-
-                console.log(tx.transaction.id)
-                const res = await locklift.ton.client.net.query_collection({
-                    collection: "messages",
-                    filter: {
-                        id: { eq: out_msg }
-                    },
-                    result: "id,body,dst_transaction{status, in_msg, out_msgs},dst,msg_type,src,src_transaction{status, in_msg, out_msgs},status,value,bounced"
-                })
-                console.log(res.result);
-
                 const round = await getRelayRound(1);
-                console.log(stakingRoot.address);
-                console.log(round.address);
-                const round_num_1 = await round.call({method: 'reward_round_num'});
-                console.log(round_num_1.toString())
+                const total_tokens_staked = await round.call({method: 'total_tokens_staked'});
+                const round_reward = await round.call({method: 'round_reward'});
+                const relays_count = await round.call({method: 'relays_count'});
+                const reward_round_num = await round.call({method: 'reward_round_num'});
+
+                const _round_reward = RELAY_ROUND_TIME_1 * rewardPerSec;
+                expect(total_tokens_staked.toString()).to.be.equal('1', "Bad relay round");
+                expect(round_reward.toString()).to.be.equal(_round_reward.toString(), "Bad relay round");
+                expect(relays_count.toString()).to.be.equal('1', "Bad relay round");
+                expect(reward_round_num.toString()).to.be.equal('0', "Bad relay round");
+
+                const reward_rounds_new = await stakingRoot.call({method: 'rewardRounds'});
+                const expected_reward = round_reward.plus(new BigNumber(reward_rounds[0].totalReward));
+                expect(expected_reward.toString()).to.be.equal(reward_rounds_new[0].totalReward.toString(), "Bad reward after relay round init");
 
                 const { value: {
                     round_num: _round_num,
@@ -489,11 +498,43 @@ describe('Test Staking Rewards', async function () {
                     relays: _relays
                 } } = (await stakingRoot.getEvents('RelayRoundInitialized')).pop();
 
-                console.log(_round_num, _round_start_time, _round_addr, _relays);
+                expect(_round_num.toString()).to.be.equal('1', "Bad event");
+                expect(_round_addr).to.be.equal(round.address, "Bad event");
 
+                const relay = _relays[0];
+                expect(relay.staker_addr).to.be.equal(user1.address, "Relay creation fail - staker addr");
+                expect(relay.ton_pubkey).to.be.equal(`0x${user1_pk.toString(16)}`, "Relay creation fail - ton pubkey");
+                expect(relay.eth_addr).to.be.equal(user1_eth.toFixed(), "Relay creation fail - eth addr");
+                expect(relay.staked_tokens).to.be.equal('1', "Relay creation fail - staked tokens");
             });
 
+            it("Election on new round starts", async function() {
+                await wait(5000);
+
+                await user1.runTarget({
+                    contract: stakingRoot,
+                    method: 'startElectionOnNewRound',
+                    params: {send_gas_to: user1.address},
+                    value: convertCrystal(1.6, 'nano')
+                });
+
+                const election = await getElection(2);
+
+                const round_num = await election.call({method: 'round_num'});
+                expect(round_num.toString()).to.be.equal('2', "Bad election - round num");
+
+                const { value: {
+                    round_num: _round_num,
+                    election_start_time: _election_start_time,
+                    election_addr: _election_addr,
+                } } = (await stakingRoot.getEvents('ElectionStarted')).pop();
+
+                expect(_round_num.toString()).to.be.equal('2', "Bad election - round num");
+                expect(_election_addr).to.be.equal(election.address, "Bad election - address");
+            })
+
             return;
+
             it('Users withdraw tokens', async function () {
                 const user1_rew_before = await user1Data.call({method: 'rewardRounds'});
                 await withdrawTokens(user1, userDeposit);

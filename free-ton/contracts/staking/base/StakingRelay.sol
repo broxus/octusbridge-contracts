@@ -65,11 +65,25 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 
-    function createOriginRelayRound(IRelayRound.Relay[] relays, address send_gas_to) external onlyAdmin {
+    function createOriginRelayRound(
+        address[] staker_addrs,
+        uint256[] ton_pubkeys,
+        uint160[] eth_addrs,
+        uint128[] staked_tokens,
+        address send_gas_to
+    ) external onlyAdmin {
         require (msg.value >= Gas.MIN_ORIGIN_ROUND_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         require (!originRelayRoundInitialized, ErrorCodes.ORIGIN_ROUND_ALREADY_INITIALIZED);
-
+        bool correct_len = staker_addrs.length == ton_pubkeys.length;
+        bool correct_len_1 = ton_pubkeys.length == eth_addrs.length;
+        bool correct_len_2 = eth_addrs.length == staked_tokens.length;
+        require (correct_len && correct_len_1 && correct_len_2, ErrorCodes.BAD_INPUT_ARRAYS);
         tvm.rawReserve(_reserve(), 2);
+
+        IRelayRound.Relay[] relays = new IRelayRound.Relay[](staker_addrs.length);
+        for (uint i = 0; i < staker_addrs.length; i++) {
+            relays[i] = IRelayRound.Relay(staker_addrs[i], ton_pubkeys[i], eth_addrs[i], staked_tokens[i], false);
+        }
 
         // we have 0 relay rounds at the moment
         address relay_round = deployRelayRound(currentRelayRound + 1, send_gas_to);
@@ -89,10 +103,11 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         );
     }
 
-    function getRewardForRelayRound(uint128 round_num, address send_gas_to) external view onlyActive {
+    function getRewardForRelayRound(uint128 round_num, address send_gas_to) external onlyActive {
         require (msg.value >= Gas.MIN_GET_REWARD_RELAY_ROUND_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
 
         tvm.rawReserve(_reserve(), 2);
+        updatePoolInfo();
 
         address userDataAddr = getUserDataAddress(msg.sender);
         UserData(userDataAddr).processGetRelayRewardForRound{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
@@ -176,7 +191,6 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         address send_gas_to
     ) external override onlyRelayRound(round_num) {
         tvm.rawReserve(_reserve(), 2);
-        emit RelayRoundInitialized(round_num, now, msg.sender, relays);
 
         // looks like we are initializing origin relay round
         if (!originRelayRoundInitialized) {
@@ -189,6 +203,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         currentRelayRoundStartTime = now;
         rewardRounds[rewardRounds.length - 1].totalReward += round_reward;
 
+        emit RelayRoundInitialized(round_num, now, msg.sender, relays);
         send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 
