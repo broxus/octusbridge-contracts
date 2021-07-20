@@ -5,7 +5,7 @@ import "./StakingUpgradable.sol";
 
 
 abstract contract StakingPoolRelay is StakingPoolUpgradable {
-    function linkRelayAccounts(uint256 ton_pubkey, uint256 eth_address, address send_gas_to) external view onlyActive {
+    function linkRelayAccounts(uint256 ton_pubkey, uint160 eth_address, address send_gas_to) external view onlyActive {
         require (msg.value >= Gas.MIN_LINK_RELAY_ACCS_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
 
         tvm.rawReserve(_reserve(), 2);
@@ -16,7 +16,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         );
     }
 
-    function confirmEthAccount(address staker_addr, uint256 eth_address, address send_gas_to) external view onlyBridge {
+    function confirmEthAccount(address staker_addr, uint160 eth_address, address send_gas_to) external view onlyBridge {
         require (msg.value >= Gas.MIN_CONFIRM_ETH_RELAY_ACC_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
 
         tvm.rawReserve(_reserve(), 2);
@@ -81,7 +81,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         require (pendingRelayRound != 0, ErrorCodes.ELECTION_NOT_STARTED);
         tvm.rawReserve(_reserve(), 2);
 
-        uint128 lock_time = electionTime + relayRoundTime * 3;
+        uint128 lock_time = electionTime + 30 days;
 
         address userDataAddr = getUserDataAddress(msg.sender);
         UserData(userDataAddr).processBecomeRelay{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
@@ -126,7 +126,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
 
         currentElectionStartTime = now;
         pendingRelayRound = round_num;
-        emit ElectionStarted(round_num);
+        emit ElectionStarted(round_num, now, msg.sender);
         send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 
@@ -176,6 +176,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         address send_gas_to
     ) external override onlyRelayRound(round_num) {
         tvm.rawReserve(_reserve(), 2);
+        emit RelayRoundInitialized(round_num, now, msg.sender, relays);
 
         // looks like we are initializing origin relay round
         if (!originRelayRoundInitialized) {
@@ -188,7 +189,6 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         currentRelayRoundStartTime = now;
         rewardRounds[rewardRounds.length - 1].totalReward += round_reward;
 
-        emit RelayRoundInitialized(round_num, relays);
         send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 
@@ -200,7 +200,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
 
         return new Platform{
             stateInit: _buildInitData(PlatformTypes.Election, _buildElectionParams(round_num)),
-            value: Gas.PLATFORM_DEPLOY_VALUE,
+            value: Gas.DEPLOY_ELECTION_MIN_VALUE,
             flag: MsgFlag.SENDER_PAYS_FEES
         }(election_code, constructor_params.toCell(), send_gas_to);
     }
@@ -216,9 +216,9 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
 
         return new Platform{
             stateInit: _buildInitData(PlatformTypes.RelayRound, _buildRelayRoundParams(round_num)),
-            value: Gas.PLATFORM_DEPLOY_VALUE,
+            value: Gas.DEPLOY_RELAY_ROUND_MIN_VALUE,
             flag: MsgFlag.SENDER_PAYS_FEES
-        }(election_code, constructor_params.toCell(), send_gas_to);
+        }(relay_round_code, constructor_params.toCell(), send_gas_to);
     }
 
     modifier onlyElection(uint128 round_num) {

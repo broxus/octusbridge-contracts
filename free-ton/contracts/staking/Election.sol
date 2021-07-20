@@ -61,7 +61,7 @@ contract Election is IElection {
     function applyForMembership(
         address staker_addr,
         uint256 ton_pubkey,
-        uint256 eth_addr,
+        uint160 eth_addr,
         uint128 tokens,
         uint128 lock_time,
         address send_gas_to,

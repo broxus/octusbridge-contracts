@@ -18,13 +18,15 @@ const stringToBytesArray = (dataString) => {
 const getRandomNonce = () => Math.random() * 64000 | 0;
 
 const afterRun = async () => {
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise(resolve => setTimeout(resolve, 500));
 };
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 
 const bridge = '0:9cc3d8668d57d387eae54c4398a1a0b478b6a8c3a0f2b5265e641a212b435231'
+const user1_eth_addr = '0x93E05804b0A58668531F65A93AbfA1aD8F7F5B2b';
+const user2_eth_addr = '0x197216E3421D13A72Fdd79A44d8d89f121dcab6C';
 
 let stakingRoot;
 let stakingToken;
@@ -186,6 +188,16 @@ describe('Test Staking Rewards', async function () {
         const expected_reward = rewardPerSec * time_passed;
 
         expect(reward).to.be.equal(expected_reward, 'Bad reward');
+    }
+
+    const getRelayRound = async function (round_num) {
+        const addr = await stakingRoot.call({
+            method: 'getRelayRoundAddress',
+            params: {round_num: round_num}
+        });
+        const round = await locklift.factory.getContract('RelayRound');
+        round.setAddress(addr);
+        return round;
     }
 
     const getUserDataAccount = async function (_user) {
@@ -380,82 +392,30 @@ describe('Test Staking Rewards', async function () {
                 expect(staking_balance.toString()).to.be.equal(amount.toString(), 'Farm pool balance empty');
                 expect(staking_balance_stored.toString()).to.be.equal(amount.toString(), 'Farm pool balance not recognized');
             });
+
+            it("Setting relay config for testing", async function() {
+                // super minimal relay config for local testing
+                await stakingOwner.runTarget({
+                    contract: stakingRoot,
+                    method: 'setRelayConfig',
+                    params: {
+                        relay_round_time: 10,
+                        election_time: 4,
+                        time_before_election: 5,
+                        relays_count: 10,
+                        min_relays_count: 1,
+                        send_gas_to: stakingOwner.address
+                    },
+                });
+
+                const relays_count = await stakingRoot.call({method: 'relaysCount'});
+                expect(relays_count.toString()).to.be.equal('10', "Relay config not installed");
+            })
         });
     });
 
-    describe('Basic staking pipeline', async function () {
-        describe('1 user farming', async function () {
-            it('Deposit tokens', async function() {
-                await depositTokens(user1, userTokenWallet1, userDeposit);
-                user1Data = await getUserDataAccount(user1);
-
-                await checkTokenBalances(
-                    userTokenWallet1, user1Data, rewardTokensBal + userDeposit,
-                    userDeposit, rewardTokensBal, userInitialTokenBal - userDeposit, userDeposit
-                );
-
-                const { value: { user: _user, amount: _amount } } = (await stakingRoot.getEvents('Deposit')).pop();
-                expect(_user).to.be.equal(user1.address, 'Bad event');
-                expect(_amount).to.be.equal(userDeposit.toString(), 'Bad event');
-            });
-
-            it('Deposit 2nd time', async function() {
-                const prev_reward_time = await stakingRoot.call({method: 'lastRewardTime'});
-                const user1_rew_before = await user1Data.call({method: 'rewardRounds'});
-
-                await depositTokens(user1, userTokenWallet1, userDeposit);
-
-                await checkTokenBalances(
-                    userTokenWallet1, user1Data, rewardTokensBal + userDeposit * 2,
-                    userDeposit * 2, rewardTokensBal, userInitialTokenBal - userDeposit * 2, userDeposit * 2
-                );
-
-                const new_reward_time = await stakingRoot.call({method: 'lastRewardTime'})
-                await checkReward(user1Data, user1_rew_before, prev_reward_time, new_reward_time);
-
-                const { value: { user: _user, amount: _amount } } = (await stakingRoot.getEvents('Deposit')).pop();
-                expect(_user).to.be.equal(user1.address, 'Bad event');
-                expect(_amount).to.be.equal(userDeposit.toString(), 'Bad event');
-            });
-
-            it('User withdraw half of staked amount', async function() {
-                const prev_reward_time = await stakingRoot.call({method: 'lastRewardTime'});
-                const user1_rew_before = await user1Data.call({method: 'rewardRounds'});
-
-                await withdrawTokens(user1, userDeposit);
-                await checkTokenBalances(
-                    userTokenWallet1, user1Data, rewardTokensBal + userDeposit,
-                    userDeposit, rewardTokensBal, userInitialTokenBal - userDeposit, userDeposit
-                );
-
-                const new_reward_time = await stakingRoot.call({method: 'lastRewardTime'})
-                await checkReward(user1Data, user1_rew_before, prev_reward_time, new_reward_time);
-
-                const { value: { user: _user, amount: _amount } } = (await stakingRoot.getEvents('Withdraw')).pop();
-                expect(_user).to.be.equal(user1.address, 'Bad event');
-                expect(_amount).to.be.equal(userDeposit.toString(), 'Bad event');
-            });
-
-            it('User withdraw other half', async function() {
-                const prev_reward_time = await stakingRoot.call({method: 'lastRewardTime'});
-                const user1_rew_before = await user1Data.call({method: 'rewardRounds'});
-
-                await withdrawTokens(user1, userDeposit);
-
-                const new_reward_time = await stakingRoot.call({method: 'lastRewardTime'})
-                await checkReward(user1Data, user1_rew_before, prev_reward_time, new_reward_time);
-
-                await checkTokenBalances(
-                    userTokenWallet1, user1Data, rewardTokensBal,
-                    0, rewardTokensBal, userInitialTokenBal, 0
-                );
-                const { value: { user: _user, amount: _amount } } = (await stakingRoot.getEvents('Withdraw')).pop();
-                expect(_user).to.be.equal(user1.address, 'Bad event');
-                expect(_amount).to.be.equal(userDeposit.toString(), 'Bad event');
-            });
-        });
-
-        describe('Multiple users farming 1 round', async function() {
+    describe('Basic relay pipeline', async function () {
+        describe('Multiple users farming 1 round, 1 relay', async function() {
             let user1_deposit_time;
             let user2_deposit_time;
             let user1_withdraw_time;
@@ -463,6 +423,8 @@ describe('Test Staking Rewards', async function () {
 
             it('Users deposit tokens', async function () {
                 await depositTokens(user1, userTokenWallet1, userDeposit);
+                user1Data = await getUserDataAccount(user1);
+
                 await checkTokenBalances(
                     userTokenWallet1, user1Data, rewardTokensBal + userDeposit,
                     userDeposit, rewardTokensBal, userInitialTokenBal - userDeposit, userDeposit
@@ -479,6 +441,59 @@ describe('Test Staking Rewards', async function () {
                 user2_deposit_time = await stakingRoot.call({method: 'lastRewardTime'});
             });
 
+            it("Creating origin relay round", async function() {
+                const user1_pk = new BigNumber(user1.keyPair.public, 16);
+                const user1_eth = new BigNumber(user1_eth_addr.toLowerCase(), 16);
+
+                const relay_obj = {
+                    staker_addr: user1.address,
+                    ton_pubkey: user1_pk.toFixed(),
+                    eth_addr: user1_eth.toFixed(),
+                    staked_tokens: 1,
+                    reward_claimed: false
+                }
+
+                const tx = await stakingOwner.runTarget({
+                    contract: stakingRoot,
+                    method: 'createOriginRelayRound',
+                    params: {
+                        relays: [relay_obj],
+                        send_gas_to: stakingOwner.address
+                    },
+                    value: convertCrystal(5, 'nano')
+                });
+
+                const round_num = await stakingRoot.call({method: 'currentRelayRound'});
+                const out_msg = tx.transaction.out_msgs[0];
+
+                console.log(tx.transaction.id)
+                const res = await locklift.ton.client.net.query_collection({
+                    collection: "messages",
+                    filter: {
+                        id: { eq: out_msg }
+                    },
+                    result: "id,body,dst_transaction{status, in_msg, out_msgs},dst,msg_type,src,src_transaction{status, in_msg, out_msgs},status,value,bounced"
+                })
+                console.log(res.result);
+
+                const round = await getRelayRound(1);
+                console.log(stakingRoot.address);
+                console.log(round.address);
+                const round_num_1 = await round.call({method: 'reward_round_num'});
+                console.log(round_num_1.toString())
+
+                const { value: {
+                    round_num: _round_num,
+                    round_start_time: _round_start_time,
+                    round_addr: _round_addr,
+                    relays: _relays
+                } } = (await stakingRoot.getEvents('RelayRoundInitialized')).pop();
+
+                console.log(_round_num, _round_start_time, _round_addr, _relays);
+
+            });
+
+            return;
             it('Users withdraw tokens', async function () {
                 const user1_rew_before = await user1Data.call({method: 'rewardRounds'});
                 await withdrawTokens(user1, userDeposit);
@@ -601,7 +616,7 @@ describe('Test Staking Rewards', async function () {
             });
         });
 
-        describe("Multiple users farming several rounds", async function() {
+        describe.skip("Multiple users farming several rounds", async function() {
             let round2_start_time;
             let round2_user1_share;
             let round2_user2_share;

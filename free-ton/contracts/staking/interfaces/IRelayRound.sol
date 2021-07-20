@@ -4,7 +4,7 @@ interface IRelayRound {
     struct Relay {
         address staker_addr;
         uint256 ton_pubkey;
-        uint256 eth_addr;
+        uint160 eth_addr;
         uint128 staked_tokens;
         bool reward_claimed;
     }

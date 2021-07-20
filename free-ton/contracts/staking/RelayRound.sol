@@ -20,7 +20,7 @@ contract RelayRound is IRelayRound {
     uint128 public start_time;
     uint128 public round_len;
     uint128 public total_tokens_staked;
-    uint128 public reward_round;
+    uint128 public reward_round_num;
     uint128 public round_reward;
 
     uint128 public round_num; // setup from initialData
@@ -53,7 +53,7 @@ contract RelayRound is IRelayRound {
         uint128 staker_reward_share = math.muldiv(relays[staker_addr].staked_tokens, 1e18, total_tokens_staked);
         uint128 relay_reward = math.muldiv(staker_reward_share, round_reward, 1e18);
 
-        IUserData(msg.sender).receiveRewardForRelayRound(round_num, reward_round, relay_reward, send_gas_to);
+        IUserData(msg.sender).receiveRewardForRelayRound(round_num, reward_round_num, relay_reward, send_gas_to);
     }
 
     function _getRelayList() internal view returns (Relay[]) {
@@ -98,9 +98,9 @@ contract RelayRound is IRelayRound {
         require (!relays_installed, ErrorCodes.RELAY_ROUND_INITIALIZED);
         tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 2);
 
-        for (Relay _relay: _relay_list) {
-            relays[_relay.staker_addr] = _relay;
-            total_tokens_staked += _relay.staked_tokens;
+        for (uint i = 0; i < _relay_list.length; i++) {
+            relays[_relay_list[i].staker_addr] = _relay_list[i];
+            total_tokens_staked += _relay_list[i].staked_tokens;
         }
 
         relays_installed = true;
@@ -127,7 +127,7 @@ contract RelayRound is IRelayRound {
         TvmSlice params = s.loadRefAsSlice();
         current_version = params.decode(uint32);
         round_len = params.decode(uint128);
-        reward_round = params.decode(uint128);
+        reward_round_num = params.decode(uint128);
         uint128 reward_per_second = params.decode(uint128);
 
         round_reward = reward_per_second * round_len;

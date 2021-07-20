@@ -31,9 +31,9 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     event RewardClaimed(address user, uint256 reward_tokens);
     event NewRewardRound(uint256 round_num);
 
-    event ElectionStarted(uint128 round_num);
+    event ElectionStarted(uint128 round_num, uint128 election_start_time, address election_addr);
     event ElectionEnded(uint128 round_num);
-    event RelayRoundInitialized(uint128 round_num, IRelayRound.Relay[] relays);
+    event RelayRoundInitialized(uint128 round_num, uint128 round_start_time, address round_addr, IRelayRound.Relay[] relays);
     event RelaySlashed(address user, uint128 tokens_withdrawn);
 
     event DepositReverted(address user, uint128 amount);
@@ -244,6 +244,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     function startNewRewardRound(address send_gas_to) external onlyRewarder {
+        require (msg.value >= Gas.MIN_START_REWARD_ROUND_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+
         if (rewardRounds.length > 0) {
             RewardRound last_round = rewardRounds[rewardRounds.length - 1];
             require (last_round.rewardTokens > 0, ErrorCodes.EMPTY_REWARD_ROUND);
