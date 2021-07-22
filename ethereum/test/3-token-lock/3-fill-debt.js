@@ -11,7 +11,7 @@ const tokensToLock = 1000;
 const tokensToUnlock = 900;
 
 
-describe('Lock and unlock USDT', async () => {
+describe('Unlock USDT with creating debt and fill order', async () => {
   let tokenLock, usdt;
   
   it('Setup contracts', async () => {
