@@ -64,6 +64,7 @@ library ErrorCodes {
     uint16 constant RELAY_REWARD_CLAIMED = 2528;
     uint16 constant SLASHED = 2529;
     uint16 constant NOT_REWARDER = 2530;
+    uint16 constant BAD_INPUT_ARRAYS = 2531;
 
     // staking dao
     uint16 constant NOT_DAO_ROOT = 2601;

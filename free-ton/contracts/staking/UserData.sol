@@ -32,7 +32,7 @@ contract UserData is IUserData, IUpgradableByRequest {
 
     RewardRoundData[] public rewardRounds;
 
-    uint256 public relay_eth_address;
+    uint160 public relay_eth_address;
     bool public eth_address_confirmed;
 
     uint256 public relay_ton_pubkey;
@@ -353,7 +353,7 @@ contract UserData is IUserData, IUpgradableByRequest {
 
     function processLinkRelayAccounts(
         uint256 ton_pubkey,
-        uint256 eth_address,
+        uint160 eth_address,
         address send_gas_to,
         uint32 user_data_code_version
     ) external override onlyRoot {
@@ -383,7 +383,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         ton_pubkey_confirmed = true;
     }
 
-    function processConfirmEthAccount(uint256 eth_address, address send_gas_to) external override onlyRoot {
+    function processConfirmEthAccount(uint160 eth_address, address send_gas_to) external override onlyRoot {
         require (eth_address_confirmed == false, ErrorCodes.ACCOUNT_ALREADY_CONFIRMED);
         require (eth_address == relay_eth_address, ErrorCodes.ACCOUNT_NOT_LINKED);
         require (!slashed, ErrorCodes.SLASHED);
