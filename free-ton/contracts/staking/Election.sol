@@ -43,19 +43,22 @@ contract Election is IElection {
     constructor() public { revert(); }
 
     // return sorted list of requests
-    function getRequests(uint256 limit) public view responsible returns (MembershipRequest[]) {
-        limit = math.min(limit, requests_nodes.length - 1);
+    function getRequests(uint256 limit) public responsible returns (MembershipRequest[]) {
+        (MembershipRequest[] _requests, uint256 _) = _getRequestsFromIdx(limit, list_start_idx);
+        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }_requests;
+    }
+
+    function _getRequestsFromIdx(uint256 limit, uint256 start_idx) internal returns (MembershipRequest[], uint256) {
         MembershipRequest[] _requests = new MembershipRequest[](limit);
-        Node cur_node = requests_nodes[list_start_idx];
+        uint256 cur_idx = start_idx;
         uint128 counter = 0;
 
-        while (counter < limit && cur_node.request.tokens != 0) {
-            _requests[counter] = cur_node.request;
+        while (counter < limit && requests_nodes[cur_idx].request.tokens != 0) {
+            _requests[counter] = requests_nodes[cur_idx].request;
             counter++;
-            cur_node = requests_nodes[cur_node.next_node];
+            cur_idx = requests_nodes[cur_idx].next_node;
         }
-
-        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }_requests;
+        return (_requests, cur_idx);
     }
 
     function applyForMembership(
@@ -78,9 +81,11 @@ contract Election is IElection {
         }
 
         for (uint i = 1; i < requests_nodes.length; i++) {
-            Node _cur_node = requests_nodes[i];
-            MembershipRequest _cur_req = _cur_node.request;
-            if (_cur_req.staker_addr == staker_addr || _cur_req.ton_pubkey == ton_pubkey || _cur_req.eth_addr == eth_addr) {
+            if (
+                requests_nodes[i].request.staker_addr == staker_addr ||
+                requests_nodes[i].request.ton_pubkey == ton_pubkey ||
+                requests_nodes[i].request.eth_addr == eth_addr
+            ) {
                 send_gas_to.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
                 return;
             }
@@ -93,7 +98,6 @@ contract Election is IElection {
             uint256 new_idx = requests_nodes.length - 1;
 
             list_start_idx = new_idx;
-            send_gas_to.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
         // new request, add to sorted list
         } else {
             requests_nodes.push(new_node);
@@ -102,11 +106,9 @@ contract Election is IElection {
             uint256 cur_node_idx = list_start_idx;
 
             while (cur_node_idx != 0) {
-                Node cur_node = requests_nodes[cur_node_idx];
-
-                if (tokens >= cur_node.request.tokens) {
+                if (tokens >= requests_nodes[cur_node_idx].request.tokens) {
                     // current node is head
-                    if (cur_node.prev_node == 0) {
+                    if (requests_nodes[cur_node_idx].prev_node == 0) {
                         requests_nodes[new_idx].next_node = cur_node_idx;
                         requests_nodes[cur_node_idx].prev_node = new_idx;
                         list_start_idx = new_idx;
@@ -115,8 +117,8 @@ contract Election is IElection {
                         requests_nodes[new_idx].next_node = cur_node_idx;
                         requests_nodes[cur_node_idx].prev_node = new_idx;
 
-                        requests_nodes[new_idx].prev_node = cur_node.prev_node;
-                        requests_nodes[cur_node.prev_node].next_node = new_idx;
+                        requests_nodes[new_idx].prev_node = requests_nodes[cur_node_idx].prev_node;
+                        requests_nodes[requests_nodes[cur_node_idx].prev_node].next_node = new_idx;
                     }
 
                     break;
@@ -124,14 +126,13 @@ contract Election is IElection {
 
                 // we reached end of list
                 // it means this request has lowest tokens and should be added to tail
-                if (cur_node.next_node == 0) {
+                if (requests_nodes[cur_node_idx].next_node == 0) {
                     requests_nodes[cur_node_idx].next_node = new_idx;
                     requests_nodes[new_idx].prev_node = cur_node_idx;
                 }
 
-                cur_node_idx = cur_node.next_node;
+                cur_node_idx = requests_nodes[cur_node_idx].next_node;
             }
-
         }
 
         IUserData(msg.sender).relayMembershipRequestAccepted{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
@@ -154,6 +155,18 @@ contract Election is IElection {
         MembershipRequest[] top_requests = getRequests(relays_count);
         IStakingPool(root).onElectionEnded{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num, top_requests, send_gas_to);
     }
+//
+//    function chooseRelays(uint128 relays_count, address send_gas_to, uint32 code_version) external override onlyRoot {
+//        require (election_ended, ErrorCodes.ELECTION_ENDED);
+//        tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
+//
+//        if (code_version > current_version) {
+//            send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
+//            return;
+//        }
+//
+//
+//    }
 
     function upgrade(TvmCell code, uint32 new_version, address send_gas_to) external onlyRoot {
         if (new_version == current_version) {

@@ -1,5 +1,7 @@
 pragma ton-solidity ^0.39.0;
 pragma AbiHeader expire;
+pragma AbiHeader pubkey;
+
 
 import "./interfaces/IStakingPool.sol";
 import "./interfaces/IUserData.sol";
@@ -424,10 +426,10 @@ contract UserData is IUserData, IUpgradableByRequest {
     ) external override onlyElection(round_num) {
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
 
-        // lock until end of election + round time + 2 rounds on top of it
+        // lock for 30 days
         relay_lock_until = now + lock_time;
 
-        emit RelayMembershipRequested(round_num, tokens, ton_pubkey, eth_addr);
+        emit RelayMembershipRequested(round_num, tokens, ton_pubkey, eth_addr, relay_lock_until);
         send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 
