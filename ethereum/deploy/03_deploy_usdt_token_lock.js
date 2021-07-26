@@ -4,6 +4,8 @@ module.exports = async ({getNamedAccounts, deployments}) => {
   const dao = await deployments.get('DAO');
   const bridge = await deployments.get('Bridge');
   
+  const { usdt } = await getNamedAccounts();
+  
   await deployments.deploy('TokenLock', {
     from: deployer,
     log: true,
@@ -16,7 +18,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
           {
             active: true,
             bridge: bridge.address,
-            token: '0xdAC17F958D2ee523a2206206994597C13D831ec7'
+            token: usdt
           }
         ],
       }

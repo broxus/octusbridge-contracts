@@ -32,7 +32,8 @@ module.exports = {
       forking: {
         url: process.env.ETH_MAIN_ARCHIVE_HTTP,
         blockNumber: 12859605
-      }
+      },
+      chainId: 1111,
     },
   },
   gasReporter: {
@@ -51,6 +52,9 @@ module.exports = {
     },
     unlockReceiver: {
       default: 2,
+    },
+    usdt: {
+      default: '0xdAC17F958D2ee523a2206206994597C13D831ec7'
     },
     usdtOwner: {
       default: '0xA929022c9107643515F5c777cE9a910F0D1e490C'

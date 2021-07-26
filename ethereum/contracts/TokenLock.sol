@@ -6,13 +6,16 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 import "./interfaces/ITokenLock.sol";
 import "./interfaces/IBridge.sol";
+import "./interfaces/ITokenManager.sol";
 
 import "./libraries/UniversalERC20.sol";
 
 import "./utils/Cache.sol";
+import "./utils/ChainId.sol";
 
 
-contract TokenLock is ITokenLock, Cache, OwnableUpgradeable {
+// TODO: think about syncing with actual token balance
+contract TokenLock is ITokenLock, Cache, OwnableUpgradeable, ChainId {
     using UniversalERC20 for IERC20;
 
     uint32 constant public shares = 100000;
@@ -103,20 +106,39 @@ contract TokenLock is ITokenLock, Cache, OwnableUpgradeable {
         return tokenManagers[manager].share > 0;
     }
 
-    /// @dev Lock tokens on Ethereum side, so they can be transferred to FreeTON
-    /// @dev Tokens in FreeTON could be received on public key OR address, not both
-    /// @param amount Amount of tokens to lock. Should be approved
+    /// @dev Get token manager status
+    /// @param manager Token manager
+    /// @return locked How many tokens are currently locked on the manager
+    /// @return expected How many tokens are expected to be locked on the manager.
+    /// May be more or less than current `locked` in case token lock has
+    /// received / spent tokens since last sync.
+    function tokenManagerStatus(
+        address manager
+    ) public view returns(
+        uint256 locked,
+        uint256 expected
+    ) {
+        require(isTokenManager(manager), 'Token lock: not a token manager');
+
+        locked = tokenManagerBalance[manager];
+        expected = (lockedTokens - debtTokens) / shares * tokenManagers[manager].share;
+    }
+
+    /// @dev Lock tokens on Ethereum side, so they can be transferred to FreeTON.
+    /// Tokens in FreeTON could be received on public key OR address, not both
+    /// @param amount Amount of tokens to lock. Should be approved before
     /// @param wid Workchain id from receiver FreeTON address (before :)
     /// @param addr Body from receiver FreeTON address (after :)
     /// @param pubkey Receiver's FreeTON public key
+    /// @param tokenManagersToSync Token managers to sync
     /// @param ids Unlock orders ids to be filled with this token lock.
-    /// May produce additional reward for locker on the FreeTON side.
-    /// TODO: add syncing with actual state?
+    /// Each filled order increases amount minted on FreeTON with order.fee.
     function lockTokens(
         uint128 amount,
         int8 wid,
         uint256 addr,
         uint256 pubkey,
+        address[] memory tokenManagersToSync,
         UnlockId[] calldata ids
     ) external override onlyActive {
         IERC20(configuration.token).universalTransferFrom(
@@ -127,11 +149,21 @@ contract TokenLock is ITokenLock, Cache, OwnableUpgradeable {
 
         lockedTokens += amount;
 
-        emit TokenLock(amount, wid, addr, pubkey);
+        for (uint32 i = 0; i < tokenManagersToSync.length; i++) {
+            _syncTokenManager(tokenManagersToSync[i]);
+        }
+
+        uint128 fillReward = 0;
 
         for (uint32 i = 0; i < ids.length; i++) {
             _fillUnlockOrder(ids[i].receiver, ids[i].orderId);
+
+            Unlock memory order = getUnlockOrder(ids[i].receiver, ids[i].orderId);
+
+            fillReward += order.fee;
         }
+
+        emit TokenLock(amount + fillReward, wid, addr, pubkey);
     }
 
     /// @dev Unlock tokens on Ethereum side. Each payload can be used only once.
@@ -163,24 +195,47 @@ contract TokenLock is ITokenLock, Cache, OwnableUpgradeable {
         );
 
         require(address(this) == _event.proxy, 'Token lock: wrong proxy');
-        require(_event.chainId == 1, 'Token lock: Wrong chain id');
 
-        (int8 ton_wid, uint256 ton_addr, uint128 amount, uint160 addr_n) = abi.decode(
+        (int8 ton_wid, uint256 ton_addr, uint128 amount, uint128 fee, uint160 addr_n, uint32 chainId) = abi.decode(
             _event.eventData,
-            (int8, uint256, uint128, uint160)
+            (int8, uint256, uint128, uint128, uint160, uint32)
         );
+
+        require(chainId == getChainID(), 'Token lock: Wrong chain id');
 
         address receiver = address(addr_n);
 
         Unlock memory order = Unlock({
             amount: amount,
-            filled: false
+            fee: fee,
+            filled: false,
+            exist: true
         });
 
         uint256 orderId = _saveUnlockOrder(receiver, order);
 
         if (amount <= status()) {
             _fillUnlockOrder(receiver, orderId);
+        }
+    }
+
+    /// @dev Update fee size for already created unlock orders.
+    /// Only order receiver can update order's fee.
+    /// Allows to update multiple order's fees at the same time.
+    /// Fee should be less than order amount.
+    /// @param ids Unlock orders ids
+    /// @param fees New fees for each order
+    function updateUnlockFees(
+        uint256[] calldata ids,
+        uint128[] calldata fees
+    ) external {
+        require(ids.length == fees.length, 'Token lock: wrong syntax');
+
+        for (uint32 i = 0; i < ids.length; i++) {
+            require(checkOrderExists(msg.sender, ids[i]), 'Token lock: order not exists');
+            require(getUnlockOrder(msg.sender, ids[i]).amount > fees[i], 'Token lock: too high fee');
+
+            unlockOrders[msg.sender][i].fee = fees[i];
         }
     }
 
@@ -203,6 +258,19 @@ contract TokenLock is ITokenLock, Cache, OwnableUpgradeable {
         uint256 expected = (lockedTokens - debtTokens) * tokenManagers[manager].share / shares;
 
         return (locked, expected);
+    }
+
+    /// @dev Check order exists
+    /// @param receiver Order receiver
+    /// @param id Order id
+    /// @return Boolean, exists or not
+    function checkOrderExists(
+        address receiver,
+        uint256 id
+    ) public view returns(bool) {
+        Unlock memory order = getUnlockOrder(receiver, id);
+
+        return order.exist == true;
     }
 
     /// @dev Get specific unlock order by it's receiver and index
@@ -262,5 +330,11 @@ contract TokenLock is ITokenLock, Cache, OwnableUpgradeable {
         configuration = _configuration;
 
         emit ConfigurationUpdate(_configuration);
+    }
+
+    function _syncTokenManager(
+        address manager
+    ) internal {
+        ITokenManager(manager).sync();
     }
 }

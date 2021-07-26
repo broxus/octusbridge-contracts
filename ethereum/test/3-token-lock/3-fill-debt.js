@@ -34,10 +34,10 @@ describe('Unlock USDT with creating debt and fill order', async () => {
       const {
         unlockReceiver
       } = await getNamedAccounts();
-      
+  
       const eventData = web3.eth.abi.encodeParameters(
-        ['int8', 'uint256', 'uint128', 'uint160'],
-        [0, 0, tokensToUnlock, utils.addressToU160(unlockReceiver)],
+        ['int8', 'uint256', 'uint128', 'uint128','uint160', 'uint32'],
+        [0, 0, tokensToUnlock, 0, utils.addressToU160(unlockReceiver), utils.chainId],
       );
       
       payload = utils.encodeTonEvent({
@@ -93,7 +93,7 @@ describe('Unlock USDT with creating debt and fill order', async () => {
   
       await tokenLock
         .connect(locker)
-        .lockTokens(tokensToLock, 0, 0, 0, [[unlockReceiver, 0]])
+        .lockTokens(tokensToLock, 0, 0, 0, [], [[unlockReceiver, 0]])
     });
     
     it('Check user received tokens', async () => {
@@ -109,7 +109,6 @@ describe('Unlock USDT with creating debt and fill order', async () => {
       const {
         unlockReceiver
       } = await getNamedAccounts();
-  
 
       const unlockOrder = await tokenLock.getUnlockOrder(unlockReceiver, 0);
       

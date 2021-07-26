@@ -37,16 +37,23 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
         _setConfiguration(_configuration);
 
         _setRoundRelays(0, relays);
+
         lastRound = 0;
     }
 
+    /// @dev Check if relay is banned.
+    /// Ban is global. If the relay is blacklisted it means it lost
+    /// relay power in all rounds, past and future.
+    /// @param candidate Address to check
     function isBanned(
         address candidate
     ) override public view returns(bool) {
         return relaysBlackList[candidate];
     }
 
-    /// @dev Check if some address is relay
+    /// @dev Check if some address is relay at specific round
+    /// @param round Round id
+    /// @param candidate Address to check
     function isRelay(
         uint32 round,
         address candidate
@@ -54,9 +61,9 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
         return relaysBlackList[candidate] ? false : roundRelays[round][candidate];
     }
 
-    /// @notice Verify there is enough relay signatures
-    /// @dev Required amount of signatures is (2/3 * relays at round) + 1
-    /// @dev Signatures should be sorted by the ascending signers, so it's cheaper to detect duplicates
+    /// @dev Verify there is enough relay signatures
+    /// Required amount of signatures is (2/3 * relays at round) + 1.
+    /// Signatures should be sorted by the ascending signers, so it's cheaper to detect duplicates
     /// @param round Round id
     /// @param payload Bytes encoded payload
     /// @param signatures Payload signatures
@@ -122,11 +129,6 @@ contract Bridge is OwnableUpgradeable, Cache, IBridge {
         require(
             tonEvent.proxy == address(this),
             "Bridge: wrong event proxy"
-        );
-
-        require(
-            tonEvent.chainId == 1,
-            "Bridge: wrong chain id"
         );
 
         (uint32 round, uint160[] memory relays) = abi.decode(

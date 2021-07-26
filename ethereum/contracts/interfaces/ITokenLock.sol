@@ -11,7 +11,9 @@ interface ITokenLock {
 
     struct Unlock {
         uint128 amount;
+        uint128 fee;
         bool filled;
+        bool exist;
     }
 
     struct UnlockId {
@@ -28,6 +30,7 @@ interface ITokenLock {
         int8 wid,
         uint256 addr,
         uint256 pubkey,
+        address[] memory tokenManagersToSync,
         UnlockId[] calldata ids
     ) external;
 

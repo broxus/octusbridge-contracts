@@ -18,7 +18,6 @@ interface IBridge {
         uint256 configurationAddress;
         address proxy;
         uint32 round;
-        uint32 chainId;
     }
 
     /// @dev Answers if specific address was relay in specific round

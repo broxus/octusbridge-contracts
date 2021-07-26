@@ -9,6 +9,7 @@ const { legos } = require('@studydefi/money-legos');
 
 const tokensToLock = 1000;
 const tokensToUnlock = 900;
+const unlockFee = 100;
 
 
 describe('Lock and unlock USDT', async () => {
@@ -44,7 +45,7 @@ describe('Lock and unlock USDT', async () => {
     });
 
     it('Lock tokens', async () => {
-      await expect(() => tokenLock.connect(locker).lockTokens(tokensToLock, 0, 0, 0, []))
+      await expect(() => tokenLock.connect(locker).lockTokens(tokensToLock, 0, 0, 0, [], []))
         .to.changeTokenBalance(usdt, tokenLock, tokensToLock);
     });
     
@@ -65,8 +66,8 @@ describe('Lock and unlock USDT', async () => {
       } = await getNamedAccounts();
       
       const eventData = web3.eth.abi.encodeParameters(
-        ['int8', 'uint256', 'uint128', 'uint160'],
-        [0, 0, tokensToUnlock, utils.addressToU160(unlockReceiver)],
+        ['int8', 'uint256', 'uint128', 'uint128','uint160', 'uint32'],
+        [0, 0, tokensToUnlock, unlockFee, utils.addressToU160(unlockReceiver), utils.chainId],
       );
   
       payload = utils.encodeTonEvent({
