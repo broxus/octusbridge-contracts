@@ -15,10 +15,8 @@ import './../../../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey
 import './../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
-/**
-    @title Basic example of Ethereum event configuration
-    @author Sergey Potekhin
-*/
+/// @title Basic Ethereum event configuration contract.
+/// @author https://github.com/pavlovdog
 contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, TransferUtils, InternalOwner, CheckPubKey {
     BasicConfiguration public static basicConfiguration;
     EthereumEventConfiguration public static networkConfiguration;
@@ -32,11 +30,9 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
         setOwnership(_owner);
     }
 
-    /**
-        @notice Build initial data for event contract
-        @dev Extends event vote data with configuration params
-        @param eventVoteData Event vote data structure, passed by relay
-    */
+    /// @dev Build initial data for event contract
+    /// @dev Extends event vote data with configuration params
+    /// @param eventVoteData Event vote data structure, passed by relay
     function buildEventInitData(
         IEthereumEvent.EthereumEventVoteData eventVoteData
     ) internal view returns(
@@ -122,20 +118,15 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
         );
     }
 
-    /**
-        @notice Get event configuration type
-        @return _type Configuration type - Ethereum or TON
-    */
+    /// @notice Get event configuration type
+    /// @return _type Configuration type - Ethereum or TON
     function getType() override public pure responsible returns(EventType _type) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS} EventType.Ethereum;
     }
 
-    /**
-        @notice Update configuration data
-        @dev Can be called only by owner
-        @param _basicConfiguration New basic configuration init data
-        @param _networkConfiguration New network specific configuration init data
-    */
+    /// @dev Update configuration data
+    /// @param _basicConfiguration New basic configuration init data
+    /// @param _networkConfiguration New network specific configuration init data
     function update(
         BasicConfiguration _basicConfiguration,
         EthereumEventConfiguration _networkConfiguration
@@ -144,15 +135,10 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
         networkConfiguration = _networkConfiguration;
     }
 
-    /**
-        @notice Receives execute callback from ethereum event
-        and send it to the event proxy contract
-        @dev Ethereum event correctness is checked here, so
-        event proxy contract becomes more simple
-        @param eventInitData Ethereum event data
-        @param gasBackAddress Ad hoc param. Used in token transfers
-        TODO: think about onBounce in case of paused event proxy
-    */
+    /// @dev Receives execute callback from ethereum event and send it to the event proxy contract.
+    /// Ethereum event correctness is checked here, so event proxy contract becomes more simple
+    /// @param eventInitData Ethereum event data
+    /// @param gasBackAddress Ad hoc param. Used in token transfers
     function broxusBridgeCallback(
         IEthereumEvent.EthereumEventInitData eventInitData,
         address gasBackAddress

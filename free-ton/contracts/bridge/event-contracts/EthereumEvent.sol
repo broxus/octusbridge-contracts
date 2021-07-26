@@ -17,10 +17,11 @@ import "./../../utils/cell-encoder/CellEncoder.sol";
 import './../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
-/*
-    @title Basic example of Ethereum event configuration
-    @dev This implementation is used for cross chain token transfers
-*/
+/// @title Basic example of Ethereum event configuration
+/// @dev Anyone can deploy it for specific event. Relays send their
+/// rejects / confirms with external message directly into this contract.
+/// In case enough confirmations is collected - callback is executed.
+/// This implementation is used for cross chain token transfers
 contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
     // Event data
     EthereumEventInitData static eventInitData;
@@ -60,11 +61,9 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         return {value: 0, flag: MsgFlag.REMAINING_GAS} voters;
     }
 
-    /*
-        @dev Should be deployed only by EthereumEventConfiguration contract
-        @param _initializer The address who paid for contract deployment.
-        Receives all contract balance at the end of event contract lifecycle.
-    */
+    /// @dev Should be deployed only by corresponding EthereumEventConfiguration contract
+    /// @param _initializer The address who paid for contract deployment.
+    /// Receives all contract balance at the end of event contract lifecycle.
     constructor(
         address _initializer,
         TvmCell _meta
@@ -100,11 +99,8 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         }
     }
 
-    /*
-        @notice Confirm event
-        @dev Can be called only by relay
-        @dev Can be called only when event configuration is in Pending status
-    */
+    /// @dev Confirm event. Can be called only by relay which is in charge at this round.
+    /// Can be called only when event configuration is in Pending status
     function confirm() public eventPending {
         uint relay = msg.pubkey();
 
@@ -127,11 +123,9 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         }
     }
 
-    /*
-        @notice Reject event
-        @dev Can be called only by relay
-        @dev Can be called only when event configuration is in Pending status
-    */
+    /// @dev Reject event. Can be called only by relay which is in charge at this round.
+    /// Can be called only when event configuration is in Pending status. If enough rejects collected
+    /// changes status to Rejected, notifies tokens receiver and withdraw balance to initializer.
     function reject() public eventPending {
         uint relay = msg.pubkey();
 
@@ -151,13 +145,17 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         }
     }
 
-    /*
-        @notice Get event details
-        @returns _eventInitData Init data
-        @returns _status Current event status
-        @returns _confirmRelays List of relays who have confirmed event
-        @returns _confirmRelays List of relays who have rejected event
-    */
+    /// @dev Get event details
+    /// @return _eventInitData Init data
+    /// @return _status Current event status
+    /// @return confirms List of relays who have confirmed event
+    /// @return rejects List of relays who have rejected event
+    /// @return empty List of relays who have not voted
+    /// @return balance This contract's balance
+    /// @return _initializer Account who has deployed this contract
+    /// @return _meta Meta data from the corresponding event configuration
+    /// @return _requiredVotes The required amount of votes to confirm / reject event.
+    /// Basically it's 2/3 + 1 relays for this round
     function getDetails() public view responsible returns (
         EthereumEventInitData _eventInitData,
         Status _status,
