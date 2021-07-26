@@ -9,7 +9,7 @@ chai.use(solidity);
 
 const { expect } = chai;
 
-const chainId = 1111;
+const chainId_ = 1111;
 
 
 const signReceipt = async (receipt, signer) => {
@@ -61,30 +61,28 @@ const encodeTonEvent = (params) => {
 };
 
 
-const encodeDaoActions = (actions, chainId=chainId) => {
-  return web3.eth.abi.encodeParameters(
-    [
-      'uint32',
-      {
-        'EthAction[]': {
-          'value': 'uint256',
-          'target': 'uint160',
-          'signature': 'string',
-          'data': 'bytes'
-        }
+const encodeDaoActions = (actions, chainId=chainId_) => web3.eth.abi.encodeParameters(
+  [
+    'uint32',
+    {
+      'EthAction[]': {
+        'value': 'uint256',
+        'target': 'uint160',
+        'signature': 'string',
+        'data': 'bytes'
       }
-    ],
-    [
-      chainId,
-      actions.map(action => new Object({
-        'value': action.value || 0,
-        'target': (new BigNumber(action.target.toLowerCase())).toString(10),
-        'signature': action.signature || '',
-        'data': action.data || ''
-      }))
-    ]
-  );
-};
+    }
+  ],
+  [
+    chainId,
+    actions.map(action => new Object({
+      'value': action.value || 0,
+      'target': (new BigNumber(action.target.toLowerCase())).toString(10),
+      'signature': action.signature || '',
+      'data': action.data || ''
+    }))
+  ]
+);
 
 
 module.exports = {
@@ -95,5 +93,5 @@ module.exports = {
   encodeTonEvent,
   encodeDaoActions,
   addressToU160,
-  chainId,
+  chainId: chainId_,
 };

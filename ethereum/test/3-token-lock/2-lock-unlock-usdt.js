@@ -59,8 +59,6 @@ describe('Lock and unlock USDT', async () => {
     let payload, signatures;
 
     it('Prepare payload & signatures', async () => {
-      const initialRelays = utils.sortAccounts(await ethers.getSigners());
-
       const {
         unlockReceiver
       } = await getNamedAccounts();
@@ -73,9 +71,10 @@ describe('Lock and unlock USDT', async () => {
       payload = utils.encodeTonEvent({
         eventData,
         proxy: tokenLock.address,
-        chainId: 1,
       });
   
+      const initialRelays = utils.sortAccounts(await ethers.getSigners());
+      
       signatures = await Promise.all(initialRelays
         .map(async (account) => utils.signReceipt(payload, account)));
     });

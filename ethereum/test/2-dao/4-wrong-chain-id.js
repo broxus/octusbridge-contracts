@@ -20,7 +20,7 @@ describe('Use payload with wrong chain id', async () => {
     const actions = utils.encodeDaoActions([{
       target: dao.address,
       data: '0x'
-    }], 123123);
+    }], utils.chainId + 1);
   
     payload = utils.encodeTonEvent({
       eventData: actions,

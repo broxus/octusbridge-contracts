@@ -43,7 +43,6 @@ describe('Unlock USDT with creating debt and fill order', async () => {
       payload = utils.encodeTonEvent({
         eventData,
         proxy: tokenLock.address,
-        chainId: 1,
         eventTransaction: 2,
       });
       
