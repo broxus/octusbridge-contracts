@@ -22,18 +22,15 @@ import './../../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.so
 import './../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
-/**
-    @title Bridge contract
-    @author https://github.com/pavlovdog
-*/
+/// @title Bridge contract
+/// @dev Deploys connectors. Entry point for relay sync.
+/// @author https://github.com/pavlovdog
 contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUtils {
     BridgeConfiguration public bridgeConfiguration;
     uint64 public connectorCounter = 0;
 
-    /**
-        @param _owner Owner address
-        @param _bridgeConfiguration Initial Bridge configuration
-    */
+    /// @param _owner Owner address
+    /// @param _bridgeConfiguration Initial Bridge configuration
     constructor(
         address _owner,
         BridgeConfiguration _bridgeConfiguration
@@ -47,10 +44,8 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         setOwnership(_owner);
     }
 
-    /**
-        @notice Derive connector address by it's id
-        @param id Connector id
-    */
+    /// @dev Derive connector address by it's id
+    /// @param id Connector id
     function deriveConnectorAddress(
         uint128 id
     )
@@ -73,6 +68,9 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         return address(tvm.hash(stateInit));
     }
 
+    /// @dev Deploy new connector.
+    /// @param _eventConfiguration Event configuration address to connect
+    /// @return connector Expected connector address
     function deployConnector(
         address _eventConfiguration
     )
@@ -100,11 +98,8 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         connectorCounter++;
     }
 
-    /**
-        @notice Vote for Bridge configuration update
-        @dev Can be called only by relay
-        @param _bridgeConfiguration New bridge configuration
-    */
+    /// @dev Update bridge configuration
+    /// @param _bridgeConfiguration New bridge configuration
     function updateBridgeConfiguration(
         BridgeConfiguration _bridgeConfiguration
     )

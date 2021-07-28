@@ -9,6 +9,7 @@ const { legos } = require('@studydefi/money-legos');
 
 const tokensToLock = 1000;
 const tokensToUnlock = 900;
+const unlockFee = 100;
 
 
 describe('Lock and unlock USDT', async () => {
@@ -44,7 +45,7 @@ describe('Lock and unlock USDT', async () => {
     });
 
     it('Lock tokens', async () => {
-      await expect(() => tokenLock.connect(locker).lockTokens(tokensToLock, 0, 0, 0, []))
+      await expect(() => tokenLock.connect(locker).lockTokens(tokensToLock, 0, 0, 0, [], []))
         .to.changeTokenBalance(usdt, tokenLock, tokensToLock);
     });
     
@@ -58,23 +59,22 @@ describe('Lock and unlock USDT', async () => {
     let payload, signatures;
 
     it('Prepare payload & signatures', async () => {
-      const initialRelays = utils.sortAccounts(await ethers.getSigners());
-
       const {
         unlockReceiver
       } = await getNamedAccounts();
       
       const eventData = web3.eth.abi.encodeParameters(
-        ['int8', 'uint256', 'uint128', 'uint160'],
-        [0, 0, tokensToUnlock, utils.addressToU160(unlockReceiver)],
+        ['int8', 'uint256', 'uint128', 'uint128','uint160', 'uint32'],
+        [0, 0, tokensToUnlock, unlockFee, utils.addressToU160(unlockReceiver), utils.chainId],
       );
   
       payload = utils.encodeTonEvent({
         eventData,
         proxy: tokenLock.address,
-        chainId: 1,
       });
   
+      const initialRelays = utils.sortAccounts(await ethers.getSigners());
+      
       signatures = await Promise.all(initialRelays
         .map(async (account) => utils.signReceipt(payload, account)));
     });

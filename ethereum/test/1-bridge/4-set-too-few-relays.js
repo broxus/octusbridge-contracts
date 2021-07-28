@@ -38,7 +38,6 @@ describe('Set too few relays for the next round', async () => {
       payload = utils.encodeTonEvent({
         eventData: roundRelaysPayload,
         proxy: bridge.address,
-        chainId: 1,
       });
       
       const initialRelays = utils.sortAccounts(await ethers.getSigners());

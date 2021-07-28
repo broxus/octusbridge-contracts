@@ -39,7 +39,6 @@ describe('Ban relay', async () => {
       payload = utils.encodeTonEvent({
         eventData: actions,
         proxy: dao.address,
-        chainId: 1,
       });
   
       const initialRelays = utils.sortAccounts(await ethers.getSigners());

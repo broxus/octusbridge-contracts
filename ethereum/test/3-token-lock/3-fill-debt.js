@@ -11,7 +11,7 @@ const tokensToLock = 1000;
 const tokensToUnlock = 900;
 
 
-describe('Lock and unlock USDT', async () => {
+describe('Unlock USDT with creating debt and fill order', async () => {
   let tokenLock, usdt;
   
   it('Setup contracts', async () => {
@@ -34,16 +34,15 @@ describe('Lock and unlock USDT', async () => {
       const {
         unlockReceiver
       } = await getNamedAccounts();
-      
+  
       const eventData = web3.eth.abi.encodeParameters(
-        ['int8', 'uint256', 'uint128', 'uint160'],
-        [0, 0, tokensToUnlock, utils.addressToU160(unlockReceiver)],
+        ['int8', 'uint256', 'uint128', 'uint128','uint160', 'uint32'],
+        [0, 0, tokensToUnlock, 0, utils.addressToU160(unlockReceiver), utils.chainId],
       );
       
       payload = utils.encodeTonEvent({
         eventData,
         proxy: tokenLock.address,
-        chainId: 1,
         eventTransaction: 2,
       });
       
@@ -93,7 +92,7 @@ describe('Lock and unlock USDT', async () => {
   
       await tokenLock
         .connect(locker)
-        .lockTokens(tokensToLock, 0, 0, 0, [[unlockReceiver, 0]])
+        .lockTokens(tokensToLock, 0, 0, 0, [], [[unlockReceiver, 0]])
     });
     
     it('Check user received tokens', async () => {
@@ -109,7 +108,6 @@ describe('Lock and unlock USDT', async () => {
       const {
         unlockReceiver
       } = await getNamedAccounts();
-  
 
       const unlockOrder = await tokenLock.getUnlockOrder(unlockReceiver, 0);
       

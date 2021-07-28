@@ -5,16 +5,16 @@ pragma experimental ABIEncoderV2;
 import "./interfaces/IBridge.sol";
 import "./interfaces/IDAO.sol";
 
-import "./utils/Cache.sol";
-
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
+import "./utils/Cache.sol";
+import "./utils/ChainId.sol";
 
 /*
     @title DAO contract for Broxus TON-Ethereum bridge
     Executes proposals confirmed in TON DAO. Owns itself.
 */
-contract DAO is OwnableUpgradeable, Cache, IDAO {
+contract DAO is OwnableUpgradeable, Cache, ChainId, IDAO {
     address public bridge;
 
     /// @dev Initializer
@@ -44,7 +44,7 @@ contract DAO is OwnableUpgradeable, Cache, IDAO {
         bytes[] calldata signatures
     ) override external notCached(payload) returns(
         bytes[] memory responses
-    ){
+    ) {
         (IBridge.TONEvent memory tonEvent) = abi.decode(payload, (IBridge.TONEvent));
 
         require(
@@ -61,14 +61,14 @@ contract DAO is OwnableUpgradeable, Cache, IDAO {
             "DAO: wrong event proxy"
         );
 
-        require(
-            tonEvent.chainId == 1,
-            "DAO: wrong chain id"
+        (uint32 chainId, EthAction[] memory actions) = abi.decode(
+            tonEvent.eventData,
+            (uint32, EthAction[])
         );
 
-        (EthAction[] memory actions) = abi.decode(
-            tonEvent.eventData,
-            (EthAction[])
+        require(
+            chainId == getChainID(),
+            "DAO: wrong chain id"
         );
 
         responses = new bytes[](actions.length);

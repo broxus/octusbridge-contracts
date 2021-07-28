@@ -10,13 +10,11 @@ import "./../../../../node_modules/@broxus/contracts/contracts/utils/RandomNonce
 
 
 
-/*
-    @title Ethereum event proxy mockup contract.
-    Receives broxusBridgeCallback from ethereum event configuration when
-    ethereum event contract is executed.
-    In real use it could be used for example for minting tokens
-    in case of cross chain token transfers. Or execute any other custom action.
-*/
+/// @title Ethereum event proxy mockup contract.
+/// Receives broxusBridgeCallback from ethereum event configuration when
+/// ethereum event contract is executed.
+/// For example it could be used for minting tokens in case of cross chain token transfers.
+/// Or execute any other custom action.
 contract ProxyMockup is IProxy, RandomNonce {
     address configuration;
 

@@ -9,6 +9,8 @@ chai.use(solidity);
 
 const { expect } = chai;
 
+const chainId_ = 1111;
+
 
 const signReceipt = async (receipt, signer) => {
   const receiptHash = web3
@@ -42,7 +44,6 @@ const encodeTonEvent = (params) => {
         'configurationAddress': 'uint256',
         'proxy': 'address',
         'round': 'uint32',
-        'chainId': 'uint32',
       }
     }],
     [{
@@ -55,34 +56,33 @@ const encodeTonEvent = (params) => {
       'configurationAddress': params.configurationAddress || 0,
       'proxy': params.proxy || '0x0000000000000000000000000000000000000000',
       'round': params.round || 0,
-      'chainId': params.chainId || 1,
     }]
   );
 };
 
 
-const encodeDaoActions = (actions) => {
-  return web3.eth.abi.encodeParameters(
-    [{
+const encodeDaoActions = (actions, chainId=chainId_) => web3.eth.abi.encodeParameters(
+  [
+    'uint32',
+    {
       'EthAction[]': {
         'value': 'uint256',
         'target': 'uint160',
         'signature': 'string',
         'data': 'bytes'
-      },
-    }],
-    [
-      actions.map(action => {
-        return {
-          'value': action.value || 0,
-          'target': (new BigNumber(action.target.toLowerCase())).toString(10),
-          'signature': action.signature || '',
-          'data': action.data || ''
-        };
-      })
-    ]
-  );
-};
+      }
+    }
+  ],
+  [
+    chainId,
+    actions.map(action => new Object({
+      'value': action.value || 0,
+      'target': (new BigNumber(action.target.toLowerCase())).toString(10),
+      'signature': action.signature || '',
+      'data': action.data || ''
+    }))
+  ]
+);
 
 
 module.exports = {
@@ -93,4 +93,5 @@ module.exports = {
   encodeTonEvent,
   encodeDaoActions,
   addressToU160,
+  chainId: chainId_,
 };

@@ -38,7 +38,6 @@ describe('Update bridge configuration with dao', async () => {
       payload = utils.encodeTonEvent({
         eventData: actions,
         proxy: dao.address,
-        chainId: 1,
       });
   
       const initialRelays = utils.sortAccounts(await ethers.getSigners());
