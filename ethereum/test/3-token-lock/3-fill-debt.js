@@ -9,6 +9,7 @@ const { legos } = require('@studydefi/money-legos');
 
 const tokensToLock = 1000;
 const tokensToUnlock = 900;
+const unlockFee = 100;
 
 
 describe('Unlock USDT with creating debt and fill order', async () => {
@@ -37,7 +38,7 @@ describe('Unlock USDT with creating debt and fill order', async () => {
   
       const eventData = web3.eth.abi.encodeParameters(
         ['int8', 'uint256', 'uint128', 'uint128','uint160', 'uint32'],
-        [0, 0, tokensToUnlock, 0, utils.addressToU160(unlockReceiver), utils.chainId],
+        [0, 0, tokensToUnlock, unlockFee, utils.addressToU160(unlockReceiver), utils.chainId],
       );
       
       payload = utils.encodeTonEvent({
@@ -90,9 +91,10 @@ describe('Unlock USDT with creating debt and fill order', async () => {
         unlockReceiver
       } = await getNamedAccounts();
   
-      await tokenLock
+      await expect(tokenLock
         .connect(locker)
         .lockTokens(tokensToLock, 0, 0, 0, [], [[unlockReceiver, 0]])
+      ).to.emit(tokenLock, 'TokenLock').withArgs(tokensToLock + unlockFee, 0, 0, 0);
     });
     
     it('Check user received tokens', async () => {
@@ -101,7 +103,7 @@ describe('Unlock USDT with creating debt and fill order', async () => {
       } = await getNamedAccounts();
 
       expect(await usdt.balanceOf(unlockReceiver))
-        .to.be.equal(tokensToUnlock, 'Wrong unlock receiver usdt balance after filling unlock');
+        .to.be.equal(tokensToUnlock - unlockFee, 'Wrong receiver balance after filling order');
     });
     
     it('Check unlock order filled', async () => {
@@ -122,7 +124,7 @@ describe('Unlock USDT with creating debt and fill order', async () => {
     
     it('Check locked tokens', async () => {
       expect(await tokenLock.lockedTokens())
-        .to.be.equal(tokensToLock - tokensToUnlock, 'Wrong locked tokens');
+        .to.be.equal(tokensToLock - tokensToUnlock + unlockFee, 'Wrong locked tokens');
     });
   });
 });
