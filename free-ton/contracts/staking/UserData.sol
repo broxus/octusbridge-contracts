@@ -339,7 +339,9 @@ contract UserData is IUserData, IUpgradableByRequest {
         syncRewards(reward_rounds, token_balance);
 
         address relay_round_addr = getRelayRoundAddress(round_num);
-        IRelayRound(relay_round_addr).getRewardForRound(user, send_gas_to, relay_round_code_version);
+        IRelayRound(relay_round_addr).getRewardForRound{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+            user, send_gas_to, relay_round_code_version
+        );
     }
 
     function receiveRewardForRelayRound(
