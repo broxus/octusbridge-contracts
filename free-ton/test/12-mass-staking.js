@@ -3,6 +3,9 @@ const {
 } = require('./utils');
 const BigNumber = require('bignumber.js');
 const logger = require('mocha-logger');
+const Account = require("locklift/locklift/contract/account");
+const { randomBytes } = require('crypto');
+
 const {
     convertCrystal
 } = locklift.utils;
@@ -23,38 +26,37 @@ const afterRun = async () => {
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
+let USERS_NUM = 15;
 
-const bridge = '0:9cc3d8668d57d387eae54c4398a1a0b478b6a8c3a0f2b5265e641a212b435231'
-const user1_eth_addr = '0x93E05804b0A58668531F65A93AbfA1aD8F7F5B2b';
-const user2_eth_addr = '0x197216E3421D13A72Fdd79A44d8d89f121dcab6C';
-const user3_eth_addr = '0xaF2AAf6316a137bbD7D4a9d3279D06E80EE79423';
+let eth_addrs = [...Array(USERS_NUM).keys()].map(i => `0x${randomBytes(20).toString('hex')}`);
 
 let stakingRoot;
 let stakingToken;
 let stakingWallet;
 
-let user1;
-let user1Data;
-let user2;
-let user2Data;
-let user3;
-let user3Data;
+let walletFabric;
+
+let users;
+let userTokenWallets;
+let userDatas;
+
 let stakingOwner;
-let userTokenWallet1;
-let userTokenWallet2;
-let userTokenWallet3;
 let ownerWallet;
 let userInitialTokenBal = 100000;
 let rewardTokensBal = 10000;
 let userDeposit = 100;
 let rewardPerSec = 1000;
-let user1Balance;
-let user2Balance;
-let user3Balance;
-let balance_err;
 
-const RELAY_ROUND_TIME_1 = 10;
-const RELAYS_COUNT_1 = 4;
+
+const RELAY_ROUND_TIME_1 = 20;
+const ELECTION_TIME = 5;
+const TIME_BEFORE_ELECTION = 14;
+const RELAYS_COUNT_1 = 150;
+const MIN_RELAYS = 10;
+
+const PER_ACTION_WAIT = 500
+const BATCH_ACTIOIN_WAIT = 5000;
+
 
 
 describe('Test Staking Rewards', async function () {
@@ -68,8 +70,8 @@ describe('Test Staking Rewards', async function () {
         const _root = await locklift.giver.deployContract({
             contract: RootToken,
             constructorParams: {
-                root_public_key_: `0x${keyPair.public}`,
-                root_owner_address_: locklift.ton.zero_address
+                root_public_key_: 0,
+                root_owner_address_: walletFabric.address
             },
             initParams: {
                 name: stringToBytesArray(token_name),
@@ -78,41 +80,103 @@ describe('Test Staking Rewards', async function () {
                 wallet_code: TokenWallet.code,
                 _randomNonce: getRandomNonce(),
             },
-            keyPair,
+            keyPair
         }, locklift.utils.convertCrystal(15, 'nano'));
         _root.afterRun = afterRun;
-        _root.setKeyPair(keyPair);
 
         return _root;
     }
 
     const deployTokenWallets = async function(users) {
-        return await Promise.all(users.map(async (user) => {
-            await user.runTarget({
-                contract: stakingToken,
-                method: 'deployEmptyWallet',
-                params: {
-                    deploy_grams: convertCrystal(1, 'nano'),
-                    wallet_public_key_: 0,
-                    owner_address_: user.address,
-                    gas_back_address: user.address
-                },
-                value: convertCrystal(2, 'nano'),
-            });
+        const user_addrs = users.map(i => i.address);
+        const slice_len = 50;
 
-            const userTokenWalletAddress = await stakingToken.call({
-                method: 'getWalletAddress',
+        for (const i of [...Array(Math.ceil(users.length / slice_len)).keys()]) {
+            const slice = user_addrs.slice(i * slice_len, (i + 1) * slice_len);
+            await stakingOwner.runTarget({
+                contract: walletFabric,
+                method: 'deployTokenWallets',
                 params: {
-                    wallet_public_key_: 0,
-                    owner_address_: user.address
+                    token_root: stakingToken.address,
+                    owners: slice,
+                    amount: userInitialTokenBal
                 },
+                value: convertCrystal(slice.length * 2.5 + 10, 'nano')
             });
+            await wait(PER_ACTION_WAIT);
+        }
 
-            let userTokenWallet = await locklift.factory.getContract('TONTokenWallet', TOKEN_PATH);
-            userTokenWallet.setAddress(userTokenWalletAddress);
-            return userTokenWallet;
+        await wait(BATCH_ACTIOIN_WAIT);
+
+        return await Promise.all(users.map(async (_user) => {
+            const wallet = await getUserTokenWallet(_user);
+
+            const {
+                acc_type_name
+            } = await locklift.ton.getAccountType(wallet.address);
+            expect(acc_type_name).to.be.equal('Active', 'User account not active');
+
+            return wallet;
         }));
+
     };
+
+    const deployWalletFabric = async function () {
+        const [keypair] = await locklift.keys.getKeyPairs();
+        const TestWallet = await locklift.factory.getContract('TestWallet');
+        const Fabric = await locklift.factory.getAccount('TestWalletFabric');
+
+        let fabric = await locklift.giver.deployContract({
+            contract: Fabric,
+            constructorParams: {_wallet_code: TestWallet.code},
+            initParams: {
+                nonce: Math.random() * 6400 | 0,
+            },
+            keyPair: keypair
+        }, convertCrystal(100, 'nano'));
+        fabric.setKeyPair(keypair);
+        fabric.afterRun = afterRun;
+        return fabric;
+    }
+
+    const deployAccounts = async function (user, keypairs) {
+        let pubkeys = keypairs.map(keypair => `0x${keypair.public}`);
+        const slice_len = 50;
+
+        let wallets = [];
+        for (const i of [...Array(Math.ceil(keypairs.length / slice_len)).keys()]) {
+            const _pubkeys = pubkeys.slice(i * slice_len, (i + 1) * slice_len);
+            await user.runTarget({
+                contract: walletFabric,
+                method: 'deployWallets',
+                params: {owners: _pubkeys},
+                value: convertCrystal(_pubkeys.length * 10 + 5, 'nano')
+            })
+            await wait(PER_ACTION_WAIT);
+
+            const {
+                value: {wallets: _wallets}
+            } = (await walletFabric.getEvents('WalletsCreated')).pop();
+            expect(_wallets.length).to.be.eq(_pubkeys.length, 'Did not create wallets');
+
+            wallets = wallets.concat(_wallets);
+        }
+
+        return Promise.all(wallets.map(async (addr, idx) => {
+            const acc_contract = await locklift.factory.getContract('TestWallet');
+            const account = new Account({
+                locklift: locklift,
+                abi: acc_contract.abi,
+                base64: acc_contract.base64,
+                code: acc_contract.code,
+                name: acc_contract.name
+            });
+            account.setAddress(addr);
+            account.setKeyPair(keypairs[idx]);
+            account.afterRun = afterRun;
+            return account;
+        }));
+    }
 
     const deployAccount = async function (key, value) {
         const Account = await locklift.factory.getAccount('Wallet');
@@ -275,7 +339,7 @@ describe('Test Staking Rewards', async function () {
         const input_params = {
             ton_pubkey: user_pk.toFixed(),
             eth_address: user_eth.toFixed(),
-            send_gas_to: stakingOwner.address
+            send_gas_to: _user.address
         }
 
         return await _user.runTarget({
@@ -305,8 +369,6 @@ describe('Test Staking Rewards', async function () {
             payload = DEPOSIT_PAYLOAD;
         }
 
-        console.log(user, _userTokenWallet, depositAmount, reward);
-
         return await user.runTarget({
             contract: _userTokenWallet,
             method: 'transferToRecipient',
@@ -320,7 +382,7 @@ describe('Test Staking Rewards', async function () {
                 notify_receiver: true,
                 payload: payload
             },
-            value: locklift.utils.convertCrystal(2.5, 'nano')
+            value: convertCrystal(2.5, 'nano')
         });
     };
 
@@ -347,56 +409,38 @@ describe('Test Staking Rewards', async function () {
     }
 
     describe('Setup contracts', async function() {
+        describe('Users', async function() {
+            it('Deploy wallet fabric', async function() {
+                walletFabric = await deployWalletFabric();
+                logger.log(`Wallet fabric address - ${walletFabric.address}`);
+            });
+
+            it('Deploy users wallets', async function() {
+                let keys = await locklift.keys.getKeyPairs();
+                const owner_key = keys[0];
+                const user_keys = keys.slice(1, USERS_NUM + 1);
+
+                stakingOwner = await deployAccount(owner_key, 5000);
+                users = await deployAccounts(stakingOwner, user_keys);
+            });
+        });
+
         describe('Token', async function() {
             it('Deploy root', async function() {
                 stakingToken = await deployTokenRoot('Farm token', 'FT');
             });
-        });
-
-        describe('Users', async function() {
-            it('Deploy users accounts', async function() {
-                let users = [];
-                let keys = await locklift.keys.getKeyPairs();
-                for (const i of [0, 1, 2, 3]) {
-                    const keyPair = keys[i];
-                    const account = await deployAccount(keyPair, 25);
-                    logger.log(`User address: ${account.address}`);
-
-                    const {
-                        acc_type_name
-                    } = await locklift.ton.getAccountType(account.address);
-
-                    expect(acc_type_name).to.be.equal('Active', 'User account not active');
-                    users.push(account);
-                }
-                [user1, user2, user3, stakingOwner] = users;
-            });
 
             it('Deploy users token wallets', async function() {
-                [ userTokenWallet1, userTokenWallet2, userTokenWallet3, ownerWallet ] = await deployTokenWallets([user1, user2, user3, stakingOwner]);
-            });
+                [ownerWallet] = await deployTokenWallets([stakingOwner]);
+                userTokenWallets = await deployTokenWallets(users);
 
-            it('Mint tokens to users', async function() {
-                for (const i of [userTokenWallet2, userTokenWallet1, userTokenWallet3, ownerWallet]) {
-                    await stakingToken.run({
-                        method: 'mint',
-                        params: {
-                            tokens: userInitialTokenBal,
-                            to: i.address
-                        }
-                    });
-                }
+                const owner_balance = await ownerWallet.call({method: 'balance'});
+                expect(owner_balance.toString()).to.be.equal(userInitialTokenBal.toString());
 
-                const balance1 = await userTokenWallet1.call({method: 'balance'});
-                const balance2 = await userTokenWallet2.call({method: 'balance'});
-                const balance3 = await ownerWallet.call({method: 'balance'});
-                const balance4 = await userTokenWallet3.call({method: 'balance'});
-
-                expect(balance1.toNumber()).to.be.equal(userInitialTokenBal, 'User ton token wallet empty');
-                expect(balance2.toNumber()).to.be.equal(userInitialTokenBal, 'User ton token wallet empty');
-                expect(balance3.toNumber()).to.be.equal(userInitialTokenBal, 'User ton token wallet empty');
-                expect(balance4.toNumber()).to.be.equal(userInitialTokenBal, 'User ton token wallet empty');
-
+                await Promise.all(userTokenWallets.map(async (userWallet) => {
+                    const balance = await userWallet.call({method: 'balance'});
+                    expect(balance.toString()).to.be.equal(userInitialTokenBal.toString());
+                }));
             });
         });
 
@@ -485,7 +529,7 @@ describe('Test Staking Rewards', async function () {
             it('Sending reward tokens to staking', async function() {
                 const amount = rewardTokensBal;
 
-                await depositTokens(stakingOwner, ownerWallet, amount, true);
+                const tx = await depositTokens(stakingOwner, ownerWallet, amount, true);
 
                 const staking_balance = await stakingWallet.call({method: 'balance'});
                 const staking_balance_stored = await stakingRoot.call({method: 'rewardTokenBalance'});
@@ -501,10 +545,10 @@ describe('Test Staking Rewards', async function () {
                     method: 'setRelayConfig',
                     params: {
                         relay_round_time: RELAY_ROUND_TIME_1,
-                        election_time: 4,
-                        time_before_election: 5,
+                        election_time: ELECTION_TIME,
+                        time_before_election: TIME_BEFORE_ELECTION,
                         relays_count: RELAYS_COUNT_1,
-                        min_relays_count: 2,
+                        min_relays_count: MIN_RELAYS,
                         send_gas_to: stakingOwner.address
                     },
                 });
@@ -517,61 +561,55 @@ describe('Test Staking Rewards', async function () {
 
     describe('Relay pipeline testing', async function () {
         describe('Standard case', async function() {
-            let user1_deposit_time;
-            let user2_deposit_time;
-            let user1_withdraw_time;
-            let user2_withdraw_time;
-            let user3_deposit_time;
-            let user3_withdraw_time;
-
             it('Users deposit tokens', async function () {
-                await depositTokens(user1, userTokenWallet1, userDeposit);
-                user1Data = await getUserDataAccount(user1);
+                let _user_data = [];
+                for (const i of [...Array(users.length).keys()]) {
+                    const user_token_wallet = userTokenWallets[i];
+                    const user = users[i];
 
-                await checkTokenBalances(
-                    userTokenWallet1, user1Data, rewardTokensBal + userDeposit,
-                    userDeposit, rewardTokensBal, userInitialTokenBal - userDeposit, userDeposit
-                );
-                user1_deposit_time = await stakingRoot.call({method: 'lastRewardTime'});
+                    const curUserDeposit = userDeposit + i;
+                    await depositTokens(user, user_token_wallet, curUserDeposit);
+                    await wait(PER_ACTION_WAIT);
 
-                await depositTokens(user2, userTokenWallet2, userDeposit * 2);
-                user2Data = await getUserDataAccount(user2);
+                    const user_data = await getUserDataAccount(user);
 
-                await checkTokenBalances(
-                    userTokenWallet2, user2Data, rewardTokensBal + userDeposit * 3,
-                    userDeposit * 3, rewardTokensBal, userInitialTokenBal - userDeposit * 2, userDeposit * 2
-                );
-                user2_deposit_time = await stakingRoot.call({method: 'lastRewardTime'});
+                    const user_data_bal = await user_data.call({method: 'token_balance'});
+                    const user_bal = await user_token_wallet.call({method: 'balance'});
 
-                await depositTokens(user3, userTokenWallet3, userDeposit * 3);
-                user3Data = await getUserDataAccount(user3);
+                    const expected_user_bal = userInitialTokenBal - curUserDeposit;
+                    expect(user_data_bal.toString()).to.be.equal(curUserDeposit.toString(), `Bad deposit1 - user ${user.address}, idx - ${i}`);
+                    expect(user_bal.toString()).to.be.equal(expected_user_bal.toString(), `Bad deposit2 - user ${user.address}, idx - ${i}`);
+                    _user_data.push(user_data);
+                }
 
-                await checkTokenBalances(
-                    userTokenWallet3, user3Data, rewardTokensBal + userDeposit * 6,
-                    userDeposit * 6, rewardTokensBal, userInitialTokenBal - userDeposit * 3, userDeposit * 3
-                );
-                user3_deposit_time = await stakingRoot.call({method: 'lastRewardTime'});
+                userDatas = _user_data;
             });
 
             it("Creating origin relay round", async function () {
-                const user1_pk = new BigNumber(user1.keyPair.public, 16);
-                const user1_eth = new BigNumber(user1_eth_addr.toLowerCase(), 16);
+                let _ton_pubkeys = [];
+                let _eth_addrs = [];
+                [...Array(users.length).keys()].map((i) => {
+                    const user_pk = new BigNumber(users[i].keyPair.public, 16);
+                    const user_eth = new BigNumber(eth_addrs[i].toLowerCase(), 16);
+                    _ton_pubkeys.push(user_pk.toFixed(0));
+                    _eth_addrs.push(user_eth.toFixed(0));
+                });
 
                 const input_params = {
-                    staker_addrs: [user1.address],
-                    ton_pubkeys: [user1_pk.toFixed()],
-                    eth_addrs: [user1_eth.toFixed()],
-                    staked_tokens: [1],
+                    staker_addrs: users.map(i => i.address),
+                    ton_pubkeys: _ton_pubkeys,
+                    eth_addrs: _eth_addrs,
+                    staked_tokens: users.map(i => 1),
                     send_gas_to: stakingOwner.address
                 }
 
                 const reward_rounds = await stakingRoot.call({method: 'rewardRounds'});
 
-                await stakingOwner.runTarget({
+                const tx = await stakingOwner.runTarget({
                     contract: stakingRoot,
                     method: 'createOriginRelayRound',
                     params: input_params,
-                    value: convertCrystal(2.1, 'nano')
+                    value: convertCrystal(3.1, 'nano')
                 });
 
                 const round = await getRelayRound(1);
@@ -581,9 +619,9 @@ describe('Test Staking Rewards', async function () {
                 const reward_round_num = await round.call({method: 'reward_round_num'});
 
                 const _round_reward = RELAY_ROUND_TIME_1 * rewardPerSec;
-                expect(total_tokens_staked.toString()).to.be.equal('1', "Bad relay round");
+                expect(total_tokens_staked.toString()).to.be.equal(USERS_NUM.toString(), "Bad relay round");
                 expect(round_reward.toString()).to.be.equal(_round_reward.toString(), "Bad relay round");
-                expect(relays_count.toString()).to.be.equal('1', "Bad relay round");
+                expect(relays_count.toString()).to.be.equal(USERS_NUM.toString(), "Bad relay round");
                 expect(reward_round_num.toString()).to.be.equal('0', "Bad relay round");
 
                 const cur_relay_round = await stakingRoot.call({method: 'currentRelayRound'});
@@ -606,95 +644,79 @@ describe('Test Staking Rewards', async function () {
                 expect(_round_num.toString()).to.be.equal('1', "Bad event");
                 expect(_round_addr).to.be.equal(round.address, "Bad event");
 
-                expect(_relays_count.toString()).to.be.equal('1', "Relay creation fail - relays count");
+                expect(_relays_count.toString()).to.be.equal(USERS_NUM.toString(), "Relay creation fail - relays count");
                 expect(_duplicate).to.be.equal(false, "Relay creation fail - duplicate");
 
-                const relay = await round.call({
-                    method: 'getRelayByStakerAddress',
-                    params: {staker_addr: user1.address}
-                });
+                await Promise.all(users.map(async (user, idx) => {
+                    const relay = await round.call({
+                        method: 'getRelayByStakerAddress',
+                        params: {staker_addr: user.address}
+                    });
 
-                expect(relay.staker_addr).to.be.equal(user1.address, "Relay creation fail - staker addr");
-                expect(relay.ton_pubkey.toString(16)).to.be.equal(user1_pk.toString(16), "Relay creation fail - ton pubkey");
-                expect(relay.eth_addr.toString(16)).to.be.equal(user1_eth.toString(16), "Relay creation fail - eth addr");
-                expect(relay.staked_tokens.toString()).to.be.equal('1', "Relay creation fail - staked tokens");
+                    const user_pk = new BigNumber(users[idx].keyPair.public, 16);
+                    const user_eth = new BigNumber(eth_addrs[idx].toLowerCase(), 16);
+
+                    expect(relay.staker_addr).to.be.equal(user.address, "Relay creation fail - staker addr");
+                    expect(relay.ton_pubkey.toString(16)).to.be.equal(user_pk.toString(16), "Relay creation fail - ton pubkey");
+                    expect(relay.eth_addr.toString(16)).to.be.equal(user_eth.toString(16), "Relay creation fail - eth addr");
+                    expect(relay.staked_tokens.toString()).to.be.equal('1', "Relay creation fail - staked tokens");
+                }));
 
                 const origin_initialized = await stakingRoot.call({method: 'originRelayRoundInitialized'});
                 expect(origin_initialized).to.be.equal(true, "Origin round not initialized");
             });
 
             it("Users link relay accounts", async function () {
-                await linkRelayAccounts(user1, user1.keyPair.public, user1_eth_addr);
+                for (const i of [...Array(USERS_NUM).keys()]) {
+                    const user = users[i];
 
-                const user1_pk = await user1Data.call({method: 'relay_ton_pubkey'});
-                const _user1_eth_addr = await user1Data.call({method: 'relay_eth_address'});
+                    await linkRelayAccounts(user, user.keyPair.public, eth_addrs[i]);
+                    await wait(PER_ACTION_WAIT);
 
-                const user1_pk_expected = new BigNumber(user1.keyPair.public, 16);
-                const user1_eth_addr_expected = new BigNumber(user1_eth_addr.toLowerCase(), 16);
+                    const userData = userDatas[i];
+                    const _user_pk = await userData.call({method: 'relay_ton_pubkey'});
+                    const _user_eth_addr = await userData.call({method: 'relay_eth_address'});
 
-                expect(user1_pk_expected.toString(16)).to.be.equal(user1_pk.toString(16), "Bad ton pubkey installed");
-                expect(_user1_eth_addr.toString(16)).to.be.equal(user1_eth_addr_expected.toString(16), "Bad eth addr installed");
+                    const user_pk_expected = new BigNumber(user.keyPair.public, 16);
+                    const user_eth_addr_expected = new BigNumber(eth_addrs[i].toLowerCase(), 16);
 
-                await linkRelayAccounts(user2, user2.keyPair.public, user2_eth_addr);
-
-                const user2_pk = await user2Data.call({method: 'relay_ton_pubkey'});
-                const _user2_eth_addr = await user2Data.call({method: 'relay_eth_address'});
-
-                const user2_pk_expected = new BigNumber(user2.keyPair.public, 16);
-                const user2_eth_addr_expected = new BigNumber(user2_eth_addr.toLowerCase(), 16);
-
-                expect(user2_pk_expected.toString(16)).to.be.equal(user2_pk.toString(16), "Bad ton pubkey installed");
-                expect(_user2_eth_addr.toString(16)).to.be.equal(user2_eth_addr_expected.toString(16), "Bad eth addr installed");
-
-                await linkRelayAccounts(user3, user3.keyPair.public, user3_eth_addr);
-
-                const user3_pk = await user3Data.call({method: 'relay_ton_pubkey'});
-                const _user3_eth_addr = await user3Data.call({method: 'relay_eth_address'});
-
-                const user3_pk_expected = new BigNumber(user3.keyPair.public, 16);
-                const user3_eth_addr_expected = new BigNumber(user3_eth_addr.toLowerCase(), 16);
-
-                expect(user3_pk_expected.toString(16)).to.be.equal(user3_pk.toString(16), "Bad ton pubkey installed");
-                expect(_user3_eth_addr.toString(16)).to.be.equal(user3_eth_addr_expected.toString(16), "Bad eth addr installed");
+                    expect(_user_pk.toString(16)).to.be.equal(user_pk_expected.toString(16), "Bad ton pubkey installed");
+                    expect(_user_eth_addr.toString(16)).to.be.equal(user_eth_addr_expected.toString(16), "Bad eth addr installed");
+                }
             });
 
             it("Users confirm ton relay accounts", async function () {
-                await confirmTonRelayAccount(user1, user1Data);
-                await confirmTonRelayAccount(user2, user2Data);
-                await confirmTonRelayAccount(user3, user3Data);
+                for (const i of [...Array(USERS_NUM).keys()]) {
+                    const user = users[i];
+                    const userData = userDatas[i];
 
-                const confirmed_user1 = await user1Data.call({method: 'ton_pubkey_confirmed'});
-                expect(confirmed_user1).to.be.equal(true, "Ton pubkey user1 not confirmed");
+                    await confirmTonRelayAccount(user, userData);
+                    await wait(PER_ACTION_WAIT);
 
-                const confirmed_user2 = await user2Data.call({method: 'ton_pubkey_confirmed'});
-                expect(confirmed_user2).to.be.equal(true, "Ton pubkey user2 not confirmed");
-
-                const confirmed_user3 = await user3Data.call({method: 'ton_pubkey_confirmed'});
-                expect(confirmed_user3).to.be.equal(true, "Ton pubkey user3 not confirmed");
+                    const confirmed_user = await userData.call({method: 'ton_pubkey_confirmed'});
+                    expect(confirmed_user).to.be.equal(true, "Ton pubkey user not confirmed");
+                }
             })
 
             it("Users confirm eth relay accounts", async function () {
-                await confirmEthRelayAccount(user1, user1_eth_addr);
-                await confirmEthRelayAccount(user2, user2_eth_addr);
-                await confirmEthRelayAccount(user3, user3_eth_addr);
+                for (const i of [...Array(USERS_NUM).keys()]) {
+                    const user = users[i];
+                    const eth_addr = eth_addrs[i];
+                    const userData = userDatas[i];
 
-                const confirmed_user1 = await user1Data.call({method: 'eth_address_confirmed'});
-                expect(confirmed_user1).to.be.equal(true, "Eth pubkey user1 not confirmed");
+                    await confirmEthRelayAccount(user, eth_addr);
+                    await wait(PER_ACTION_WAIT);
 
-                const confirmed_user2 = await user2Data.call({method: 'eth_address_confirmed'});
-                expect(confirmed_user2).to.be.equal(true, "Eth pubkey user2 not confirmed");
-
-                const confirmed_user3 = await user3Data.call({method: 'eth_address_confirmed'});
-                expect(confirmed_user3).to.be.equal(true, "Eth pubkey user3 not confirmed");
+                    const confirmed_user = await userData.call({method: 'eth_address_confirmed'});
+                    expect(confirmed_user).to.be.equal(true, "Eth pubkey user not confirmed");
+                }
             })
 
             it("Election on new round starts", async function () {
-                await wait(5000);
-
-                await user1.runTarget({
+                await stakingOwner.runTarget({
                     contract: stakingRoot,
                     method: 'startElectionOnNewRound',
-                    params: {send_gas_to: user1.address},
+                    params: {send_gas_to: stakingOwner.address},
                     value: convertCrystal(1.6, 'nano')
                 });
 
@@ -711,121 +733,72 @@ describe('Test Staking Rewards', async function () {
                     }
                 } = (await stakingRoot.getEvents('ElectionStarted')).pop();
 
+                logger.log(`Election addr - ${_election_addr}`);
                 expect(_round_num.toString()).to.be.equal('2', "Bad election - round num");
                 expect(_election_addr).to.be.equal(election.address, "Bad election - address");
             })
 
             it("Users request relay membership", async function () {
-                const tx = await requestRelayMembership(user1);
                 const election = await getElection(2);
 
-                const {
-                    value: {
-                        round_num: _round_num1,
-                        tokens: _tokens1,
-                        ton_pubkey: _ton_pubkey1,
-                        eth_address: _eth_address1,
-                        lock_until: _lock_until1
-                    }
-                } = (await user1Data.getEvents('RelayMembershipRequested')).pop();
+                for (const i of [...Array(USERS_NUM).keys()].reverse()) {
+                    const user = users[i];
+                    const userData = userDatas[i];
 
-                const user1_token_balance = await user1Data.call({method: 'token_balance'});
+                    const user_pk = new BigNumber(user.keyPair.public, 16);
+                    const user_eth_addr = new BigNumber(eth_addrs[i].toLowerCase(), 16);
 
-                const user1_pk = new BigNumber(user1.keyPair.public, 16);
-                const expected_ton_pubkey1 = `0x${user1_pk.toString(16).padStart(64, '0')}`;
-                const user1_eth = new BigNumber(user1_eth_addr.toLowerCase(), 16);
-                const block_now = tx.transaction.now + 30 * 24 * 60 * 60;
+                    const tx = await requestRelayMembership(user);
+                    await wait(PER_ACTION_WAIT);
+                    console.log(tx.transaction.out_msgs);
 
-                const expected_eth_addr = `0x${user1_eth.toString(16).padStart(64, '0')}`
-                expect(_round_num1.toString()).to.be.equal('2', 'Bad event - round num');
-                expect(_tokens1.toString()).to.be.equal(user1_token_balance.toString(), "Bad event - tokens");
-                expect(_ton_pubkey1.toString()).to.be.equal(expected_ton_pubkey1, "Bad event - ton pubkey");
-                expect(_eth_address1.toString(16)).to.be.equal(expected_eth_addr, "Bad event - eth address");
-                expect(Number(_lock_until1)).to.be.gte(Number(block_now), "Bad event - lock");
+                    const {
+                        value: {
+                            round_num: _round_num,
+                            tokens: _tokens,
+                            ton_pubkey: _ton_pubkey,
+                            eth_address: _eth_address,
+                            lock_until: _lock_until
+                        }
+                    } = (await userData.getEvents('RelayMembershipRequested')).pop();
+                    console.log(`Requested for ${i}`);
 
-                await requestRelayMembership(user3);
+                    const user_token_balance = await userData.call({method: 'token_balance'});
 
-                const {
-                    value: {
-                        round_num: _round_num3,
-                        tokens: _tokens3,
-                        ton_pubkey: _ton_pubkey3,
-                        eth_address: _eth_address3,
-                        lock_until: _lock_until3
-                    }
-                } = (await user3Data.getEvents('RelayMembershipRequested')).pop();
+                    const expected_ton_pubkey = `0x${user_pk.toString(16).padStart(64, '0')}`;
+                    const expected_eth_addr = `0x${user_eth_addr.toString(16).padStart(64, '0')}`
+                    const block_now = tx.transaction.now + 30 * 24 * 60 * 60;
 
-                const user3_token_balance = await user3Data.call({method: 'token_balance'});
+                    expect(_round_num.toString()).to.be.equal('2', 'Bad event - round num');
+                    expect(_tokens.toString()).to.be.equal(user_token_balance.toString(), "Bad event - tokens");
+                    expect(_ton_pubkey.toString()).to.be.equal(expected_ton_pubkey, "Bad event - ton pubkey");
+                    expect(_eth_address.toString(16)).to.be.equal(expected_eth_addr, "Bad event - eth address");
+                    expect(Number(_lock_until)).to.be.gte(Number(block_now), "Bad event - lock");
+                }
 
-                const user3_pk = new BigNumber(user3.keyPair.public, 16);
-                const expected_ton_pubkey3 = `0x${user3_pk.toString(16).padStart(64, '0')}`;
-                const user3_eth = new BigNumber(user3_eth_addr.toLowerCase(), 16);
-
-                const expected_eth_addr_3 = `0x${user3_eth.toString(16).padStart(64, '0')}`
-                expect(_round_num3.toString()).to.be.equal('2', 'Bad event - round num');
-                expect(_tokens3.toString()).to.be.equal(user3_token_balance.toString(), "Bad event - tokens");
-                expect(_ton_pubkey3.toString()).to.be.equal(expected_ton_pubkey3, "Bad event - ton pubkey");
-                expect(_eth_address3.toString(16)).to.be.equal(expected_eth_addr_3, "Bad event - eth address");
-                expect(Number(_lock_until3)).to.be.gte(Number(block_now), "Bad event - lock");
-
-                // const [req11, req22] = await election.call({method: 'getRequests', params: {limit: 10}});
-                // console.log(req11, req22);
-                // console.log(await showNode(election, 1));
-                // console.log(await showNode(election, 2));
-
-                await requestRelayMembership(user2);
-
-                const {
-                    value: {
-                        round_num: _round_num2,
-                        tokens: _tokens2,
-                        ton_pubkey: _ton_pubkey2,
-                        eth_address: _eth_address2,
-                        lock_until: _lock_until2
-                    }
-                } = (await user2Data.getEvents('RelayMembershipRequested')).pop();
-
-                const user2_token_balance = await user2Data.call({method: 'token_balance'});
-
-                const user2_pk = new BigNumber(user2.keyPair.public, 16);
-                const expected_ton_pubkey2 = `0x${user2_pk.toString(16).padStart(64, '0')}`;
-                const user2_eth = new BigNumber(user2_eth_addr.toLowerCase(), 16);
-
-                const expected_eth_addr_2 = `0x${user2_eth.toString(16).padStart(64, '0')}`
-                expect(_round_num2.toString()).to.be.equal('2', 'Bad event - round num');
-                expect(_tokens2.toString()).to.be.equal(user2_token_balance.toString(), "Bad event - tokens");
-                expect(_ton_pubkey2.toString()).to.be.equal(expected_ton_pubkey2, "Bad event - ton pubkey");
-                expect(_eth_address2.toString(16)).to.be.equal(expected_eth_addr_2, "Bad event - eth address");
-                expect(Number(_lock_until2)).to.be.gte(Number(block_now), "Bad event - lock");
 
                 // now check requests sorted correctly
-                const [req1, req2, req3] = await election.call({method: 'getRequests', params: {limit: 10}});
-                // console.log(req1, req2, req3);
-                // console.log(await showNode(election, 1));
-                // console.log(await showNode(election, 2));
-                // console.log(await showNode(election, 3));
-                // console.log(user1.address, user2.address, user3.address);
+                const requests = await election.call({method: 'getRequests', params: {limit: USERS_NUM}});
+                for (const i of [...Array(USERS_NUM).keys()]) {
+                    const req = requests[i];
+                    const user = users[USERS_NUM - i - 1];
+                    const userData = userDatas[USERS_NUM - i - 1];
+                    const user_pk = new BigNumber(user.keyPair.public, 16);
 
-                expect(req1.staker_addr).to.be.equal(user3.address, "Bad request - staker addr");
-                expect(req1.staked_tokens.toString()).to.be.equal(user3_token_balance.toString(), "Bad request - token balance");
-                expect(req1.ton_pubkey).to.be.equal(expected_ton_pubkey3, "Bad request - ton pubkey");
+                    const user_token_balance = await userData.call({method: 'token_balance'});
+                    const expected_ton_pubkey = `0x${user_pk.toString(16).padStart(64, '0')}`;
 
-                expect(req2.staker_addr).to.be.equal(user2.address, "Bad request - staker addr");
-                expect(req2.staked_tokens.toString()).to.be.equal(user2_token_balance.toString(), "Bad request - token balance");
-                expect(req2.ton_pubkey).to.be.equal(expected_ton_pubkey2, "Bad request - ton pubkey");
-
-                expect(req3.staker_addr).to.be.equal(user1.address, "Bad request - staker addr");
-                expect(req3.staked_tokens.toString()).to.be.equal(user1_token_balance.toString(), "Bad request - token balance");
-                expect(req3.ton_pubkey).to.be.equal(expected_ton_pubkey1, "Bad request - ton pubkey");
+                    expect(req.staker_addr).to.be.equal(user.address, "Bad request - staker addr");
+                    expect(req.staked_tokens.toString()).to.be.equal(user_token_balance.toString(), "Bad request - token balance");
+                    expect(req.ton_pubkey).to.be.equal(expected_ton_pubkey, "Bad request - ton pubkey");
+                }
             });
 
             it("Election ends, new round initialized", async function () {
-                await wait(3000);
-
                 const reward_rounds = await stakingRoot.call({method: 'rewardRounds'});
 
                 const tx = await endElection();
-                // console.log(tx.transaction.out_msgs);
+                console.log(tx.transaction.out_msgs);
 
                 const round = await getRelayRound(2);
                 // const election = await getElection(2);
@@ -843,7 +816,7 @@ describe('Test Staking Rewards', async function () {
                 } = (await stakingRoot.getEvents('ElectionEnded')).pop();
 
                 expect(_round_num.toString()).to.be.equal('2', "Bad election event - round num");
-                expect(_relay_requests.toString()).to.be.equal('3', "Bad election event - relay requests");
+                expect(_relay_requests.toString()).to.be.equal(USERS_NUM.toString(), "Bad election event - relay requests");
                 expect(_min_relays_ok).to.be.equal(true, "Bad election event - min relays");
 
                 const {
@@ -858,28 +831,23 @@ describe('Test Staking Rewards', async function () {
 
                 expect(_round_num1.toString()).to.be.equal('2', "Bad relay init event - round num");
                 expect(_round_addr.toString()).to.be.equal(round.address, "Bad relay init event - round addr");
-                expect(_relays_count.toString()).to.be.equal('3', "Bad relay init event - relays count");
+                expect(_relays_count.toString()).to.be.equal(USERS_NUM.toString(), "Bad relay init event - relays count");
                 expect(_duplicate).to.be.equal(false, "Bad relay init event - duplicate");
 
                 const stored_round_num = await round.call({method: 'round_num'});
                 const stored_relays_count = await round.call({method: 'relays_count'});
-                const stored_total_tokens_staked = await round.call({method: 'total_tokens_staked'});
                 const stored_reward_round_num = await round.call({method: 'reward_round_num'});
                 const stored_relays_installed = await round.call({method: 'relays_installed'});
                 const stored_duplicate = await round.call({method: 'duplicate'});
 
-                const expected_staked_tokens = userDeposit * 6;
-
                 expect(stored_round_num.toString()).to.be.equal('2', "Bad round created - round num");
-                expect(stored_relays_count.toString()).to.be.equal('3', "Bad round created - relays count");
-                expect(stored_total_tokens_staked.toString(16)).to.be.equal(expected_staked_tokens.toString(16), "Bad round created - total tokens staked");
+                expect(stored_relays_count.toString()).to.be.equal(USERS_NUM.toString(), "Bad round created - relays count");
                 expect(stored_reward_round_num.toString()).to.be.equal('0', "Bad round created - reward round num");
                 expect(stored_relays_installed).to.be.equal(true, "Bad round created - relays installed");
                 expect(stored_duplicate).to.be.equal(false, "Bad round created - duplicate");
 
                 const round_reward = await round.call({method: 'round_reward'});
                 const reward_rounds_new = await stakingRoot.call({method: 'rewardRounds'});
-                // console.log(reward_rounds, reward_rounds_new, round_reward.toString());
                 const expected_reward = round_reward.plus(new BigNumber(reward_rounds[0].totalReward));
                 expect(expected_reward.toString()).to.be.equal(reward_rounds_new[0].totalReward.toString(), "Bad reward after relay round init");
 
@@ -887,50 +855,16 @@ describe('Test Staking Rewards', async function () {
                 expect(cur_relay_round.toString()).to.be.equal('2', "Bad round installed in root");
 
                 // check all relays are installed
-                const relays = await round.call({method: 'getRelayList', params: {count: 10}});
+                const relays = await round.call({method: 'getRelayList', params: {count: USERS_NUM}});
                 const rel_addrs = relays.map((elem) => elem.staker_addr);
-                expect(rel_addrs.includes(user1.address)).to.be.true;
-                expect(rel_addrs.includes(user2.address)).to.be.true;
-                expect(rel_addrs.includes(user3.address)).to.be.true;
-            });
 
-            it("User1 get reward for origin round", async function() {
-                await wait(1000);
-
-                // deposit 1 token to sync rewards
-                await depositTokens(user1, userTokenWallet1, 1);
-                const user1_rewards = await user1Data.call({method: 'rewardRounds'});
-
-                await getRewardForRelayRound(user1, 1);
-                const user1_rewards_1 = await user1Data.call({method: 'rewardRounds'});
-                const rewards = await stakingRoot.call({method: 'rewardRounds'});
-                const round_reward = rewardPerSec * RELAY_ROUND_TIME_1;
-
-                const _userDeposit = await user1Data.call({method: 'token_balance'});
-                const rew_per_share = new BigNumber(rewards[0].accRewardPerShare);
-                const new_reward = rew_per_share.times(_userDeposit).div(1e18).minus(user1_rewards[0].reward_debt).dp(0, 1);
-
-                const expected = new_reward.plus(user1_rewards[0].reward_balance).plus(round_reward);
-                expect(expected.toString()).to.be.equal(user1_rewards_1[0].reward_balance.toString(), 'Bad reward');
-
-                await getRelayRound(1);
-
-                const {
-                    value: {
-                        relay_round_num: _relay_round_num,
-                        reward_round_num: _reward_round_num,
-                        reward: _reward
-                    }
-                } = (await user1Data.getEvents('RelayRoundRewardClaimed')).pop();
-
-                const expected_reward = rewardPerSec * RELAY_ROUND_TIME_1;
-                expect(_relay_round_num.toString()).to.be.equal('1', "Bad relay round reward event - relay round");
-                expect(_reward_round_num.toString()).to.be.equal('0', "Bad relay round reward event - reward round");
-                expect(_reward.toString()).to.be.equal(expected_reward.toString(), "Bad relay round reward event - reward");
+                users.map((user) => {
+                    expect(rel_addrs.includes(user.address)).to.be.true;
+                });
             });
         });
 
-        describe("Not enough relay requests on election", async function() {
+        describe.skip("Not enough relay requests on election", async function() {
             it("New reward round starts", async function () {
                 await startNewRewardRound();
 

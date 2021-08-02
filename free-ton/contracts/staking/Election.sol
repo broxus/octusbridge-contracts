@@ -137,6 +137,7 @@ contract Election is IElection {
                 if (requests_nodes[cur_node_idx].next_node == 0) {
                     requests_nodes[cur_node_idx].next_node = new_idx;
                     requests_nodes[new_idx].prev_node = cur_node_idx;
+                    break;
                 }
 
                 cur_node_idx = requests_nodes[cur_node_idx].next_node;
