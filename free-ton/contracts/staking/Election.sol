@@ -41,7 +41,7 @@ contract Election is IElection {
     bool public election_ended;
 
     // user when sending relays to new relay round
-    uint256 relay_transfer_start_idx;
+    uint256 relay_transfer_start_idx = 0;
 
     // Cant be deployed directly
     constructor() public { revert(); }
@@ -100,17 +100,14 @@ contract Election is IElection {
         }
 
         Node new_node = Node(0, 0, IRelayRound.Relay(staker_addr, ton_pubkey, eth_addr, tokens));
+        requests_nodes.push(new_node);
+        uint256 new_idx = requests_nodes.length - 1;
+
         // if there is no requests
         if (list_start_idx == 0) {
-            requests_nodes.push(new_node);
-            uint256 new_idx = requests_nodes.length - 1;
-
             list_start_idx = new_idx;
         // new request, add to sorted list
         } else {
-            requests_nodes.push(new_node);
-            uint256 new_idx = requests_nodes.length - 1;
-
             uint256 cur_node_idx = list_start_idx;
 
             while (cur_node_idx != 0) {
@@ -170,6 +167,11 @@ contract Election is IElection {
         require (election_ended, ErrorCodes.ELECTION_ENDED);
 
         tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
+
+        if (requests_nodes[relay_transfer_start_idx].request.staked_tokens == 0) {
+            IRelayRound(relay_round_addr).setEmptyRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(send_gas_to);
+            return;
+        }
 
         (IRelayRound.Relay[] _relays, uint256 new_start_idx) = _getRequestsFromIdx(relays_count, relay_transfer_start_idx);
         relay_transfer_start_idx = new_start_idx;

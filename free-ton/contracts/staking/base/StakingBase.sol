@@ -124,7 +124,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     uint8 public constant STAKE_DEPOSIT = 0;
     uint8 public constant REWARD_UP = 1;
 
-    uint8 public constant RELAY_PACK_SIZE = 50;
+    uint8 public constant RELAY_PACK_SIZE = 10;
 
     struct PendingDeposit {
         address user;

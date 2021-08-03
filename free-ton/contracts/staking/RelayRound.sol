@@ -79,10 +79,6 @@ contract RelayRound is IRelayRound {
         uint128 counter = 0;
 
         optional(Relay) min_relay = relays.fetch(min_addr);
-        if (!min_relay.hasValue()) {
-            return (_relays_list, last_address);
-        }
-
         optional(address, Relay) cur_relay;
         cur_relay.set(min_addr, min_relay.get());
 
@@ -114,6 +110,12 @@ contract RelayRound is IRelayRound {
     function sendRelaysToRelayRound(address relay_round_addr, uint128 count, address send_gas_to) external override onlyRoot {
         tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
 
+        optional(Relay) min_relay = relays.fetch(relay_transfer_start_address);
+        if (!min_relay.hasValue()) {
+            IRelayRound(relay_round_addr).setEmptyRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(send_gas_to);
+            return;
+        }
+
         (Relay[] _relays, address _new_last_addr) = _getRelayListFromMin(relay_transfer_start_address, count);
         relay_transfer_start_address = _new_last_addr;
 
@@ -127,6 +129,16 @@ contract RelayRound is IRelayRound {
             _keys[i] = _relays_list[i].ton_pubkey;
         }
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } _keys;
+    }
+
+    function setEmptyRelays(address send_gas_to) external override {
+        require (msg.sender == election_addr || msg.sender == prev_round_addr || msg.sender == root, ErrorCodes.BAD_SENDER);
+        require (!relays_installed, ErrorCodes.RELAY_ROUND_INITIALIZED);
+
+        tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 2);
+
+        relay_packs_installed += 1;
+        _checkRelaysInstalled(send_gas_to);
     }
 
     function setRelays(Relay[] _relay_list, address send_gas_to) external override {
@@ -145,7 +157,10 @@ contract RelayRound is IRelayRound {
         }
 
         relay_packs_installed += 1;
+        _checkRelaysInstalled(send_gas_to);
+    }
 
+    function _checkRelaysInstalled(address send_gas_to) internal {
         if (relay_packs_installed == expected_packs_num) {
             relays_installed = true;
 
