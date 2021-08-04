@@ -11,7 +11,7 @@ describe('Unlock tokens with payload with wrong chain id', async () => {
   it('Setup contracts', async () => {
     await deployments.fixture();
     
-    tokenLock = await ethers.getContract('TokenLock');
+    tokenLock = await ethers.getContract('TokenLock_usdt');
   });
   
   it('Prepare payload & signatures', async () => {

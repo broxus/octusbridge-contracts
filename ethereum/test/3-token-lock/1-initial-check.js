@@ -1,7 +1,6 @@
 const {
   logger,
   expect,
-  ...utils
 } = require('../utils');
 
 
@@ -11,7 +10,7 @@ describe('Test USDT token lock initial setup', async () => {
   it('Setup contracts', async () => {
     await deployments.fixture();
     
-    tokenLock = await ethers.getContract('TokenLock');
+    tokenLock = await ethers.getContract('TokenLock_usdt');
     dao = await ethers.getContract('DAO');
   });
   

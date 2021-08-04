@@ -1,5 +1,5 @@
 module.exports = async ({getNamedAccounts, deployments}) => {
-  const { deployer, owner } = await getNamedAccounts();
+  const { deployer } = await getNamedAccounts();
 
   const relays = await ethers.getSigners();
   
@@ -11,7 +11,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
       execute: {
         methodName: 'initialize',
         args: [
-          owner,
+          deployer,
           {
             requiredSignatures: 5
           },
@@ -22,4 +22,4 @@ module.exports = async ({getNamedAccounts, deployments}) => {
   });
 };
 
-module.exports.tags = ['Bridge'];
+module.exports.tags = ['Deploy bridge'];

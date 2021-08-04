@@ -87,7 +87,7 @@ const setupBridge = async (relays) => {
       _randomNonce,
     },
     keyPair,
-  }, locklift.utils.convertCrystal(10, 'nano'));
+  }, locklift.utils.convertCrystal(1000, 'nano'));
   
   owner.setKeyPair(keyPair);
   owner.afterRun = afterRun;

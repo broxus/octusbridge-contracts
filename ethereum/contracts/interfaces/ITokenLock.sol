@@ -3,12 +3,6 @@ pragma solidity ^0.8.0;
 
 
 interface ITokenLock {
-    struct Configuration {
-        bool active;
-        address bridge;
-        address token;
-    }
-
     struct Unlock {
         uint128 amount;
         uint128 fee;
@@ -25,12 +19,16 @@ interface ITokenLock {
         uint16 share;
     }
 
+    enum TokenManagerStatus { Synced, Deficit, Proficit }
+
+    function token() external returns(address);
+    function bridge() external returns(address);
+
     function lockTokens(
         uint128 amount,
         int8 wid,
         uint256 addr,
         uint256 pubkey,
-        address[] memory tokenManagersToSync,
         UnlockId[] calldata ids
     ) external;
 
@@ -39,11 +37,14 @@ interface ITokenLock {
         bytes[] memory signatures
     ) external;
 
-    function setConfiguration(Configuration calldata _configuration) external;
-
     function addTokenManager(address manager, TokenManagerConfiguration calldata _configuration) external;
     function removeTokenManager(address manager) external;
     function updateTokenManager(address manager, TokenManagerConfiguration calldata _configuration) external;
+
+    function getTokenManagerStatus(address manager) external
+        returns (ITokenLock.TokenManagerStatus status, uint256 tokens);
+    function payDeficit(address manager, uint tokens) external;
+    function requestProficitApprove(address manager) external;
 
     event AddTokenManager(address indexed manager, TokenManagerConfiguration configuration);
     event RemoveTokenManager(address indexed manager);
@@ -52,6 +53,4 @@ interface ITokenLock {
     event TokenLock(uint128 amount, int8 wid, uint256 addr, uint256 pubkey);
     event TokenUnlock(address indexed receiver, uint256 indexed id, uint128 amount);
     event UnlockOrder(address indexed receiver, uint256 indexed id, uint128 amount);
-
-    event ConfigurationUpdate(Configuration configuration);
 }

@@ -18,4 +18,4 @@ module.exports = async ({getNamedAccounts, deployments}) => {
   });
 };
 
-module.exports.tags = ['DAO'];
+module.exports.tags = ['Deploy DAO'];
