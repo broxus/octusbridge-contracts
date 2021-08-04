@@ -48,9 +48,9 @@ let rewardPerSec = 1000;
 const RELAY_ROUND_TIME_1 = 20;
 const ELECTION_TIME = 5;
 const TIME_BEFORE_ELECTION = 14;
-const RELAYS_COUNT_1 = 20;
+const RELAYS_COUNT_1 = 150;
 const MIN_RELAYS = 2;
-const USERS_NUM = 11;
+const USERS_NUM = 110;
 
 const eth_addrs = [...Array(USERS_NUM).keys()].map(i => `0x${randomBytes(20).toString('hex')}`);
 
@@ -247,16 +247,24 @@ describe('Test Staking Rewards', async function () {
 
     const waitForStakingEvent = async function (name, timeout=60000) {
         let sleep_time = 0;
-        while (staking_events[staking_events.length - 1].name !== name && sleep_time < timeout) {
+        let id_to_del;
+        let event;
+        while (sleep_time < timeout) {
+            id_to_del = staking_events.findIndex((elem, id, arr) => elem.name === name);
+            if (id_to_del !== -1) {
+                break;
+            }
             await wait(100);
             sleep_time += 100;
         }
-        if (sleep_time >= timeout) {
+        if (id_to_del === -1) {
             logger.log(`Got timeout waiting for ${name}`);
         } else {
-            staking_events.pop();
+            const [_event] = staking_events.splice(id_to_del, 1);
+            event = _event;
             logger.log(`Event emitted - ${name}`);
         }
+        return event.value;
     }
 
     const getElection = async function (round_num) {
@@ -386,16 +394,6 @@ describe('Test Staking Rewards', async function () {
             value: convertCrystal(2.5, 'nano')
         });
     };
-
-    const showNode = async function(election, idx) {
-        const node = await election.call({method: 'getNode', params: {idx: idx}});
-        return {
-            prev_node: node.prev_node.toString(),
-            next_node: node.next_node.toString(),
-            staker_addr: node.request.staker_addr,
-            staked_tokens: node.request.staked_tokens.toString()
-        }
-    }
 
     describe('Setup contracts', async function() {
         describe('Users', async function() {
@@ -606,10 +604,12 @@ describe('Test Staking Rewards', async function () {
                     value: convertCrystal(6, 'nano')
                 });
                 console.log(tx.transaction.out_msgs);
-                await waitForStakingEvent('RelayRoundInitialized');
+                const event = await waitForStakingEvent('RelayRoundInitialized');
 
                 const round = await getRelayRound(1);
                 await waitForDeploy(round.address);
+
+                expect(event).not.to.be.eq(undefined, "Event not emitted");
 
                 const total_tokens_staked = await round.call({method: 'total_tokens_staked'});
                 const round_reward = await round.call({method: 'round_reward'});
@@ -630,14 +630,12 @@ describe('Test Staking Rewards', async function () {
                 expect(expected_reward.toString()).to.be.equal(reward_rounds_new[0].totalReward.toString(), "Bad reward after relay round init");
 
                 const {
-                    value: {
-                        round_num: _round_num,
-                        round_start_time: _round_start_time,
-                        round_addr: _round_addr,
-                        relays_count: _relays_count,
-                        duplicate: _duplicate
-                    }
-                } = (await stakingRoot.getEvents('RelayRoundInitialized')).pop();
+                    round_num: _round_num,
+                    round_start_time: _round_start_time,
+                    round_addr: _round_addr,
+                    relays_count: _relays_count,
+                    duplicate: _duplicate
+                } = event;
 
                 expect(_round_num.toString()).to.be.equal('1', "Bad event");
                 expect(_round_addr).to.be.equal(round.address, "Bad event");
@@ -713,21 +711,21 @@ describe('Test Staking Rewards', async function () {
             it("Election on new round starts", async function () {
                 const tx = await startElection();
                 console.log(tx.transaction.out_msgs);
-                await waitForStakingEvent('ElectionStarted');
+                const event = await waitForStakingEvent('ElectionStarted');
 
                 const election = await getElection(2);
                 await waitForDeploy(election.address);
+
+                expect(event).not.to.be.eq(undefined, "Event not emitted");
 
                 const round_num = await election.call({method: 'round_num'});
                 expect(round_num.toString()).to.be.equal('2', "Bad election - round num");
 
                 const {
-                    value: {
-                        round_num: _round_num,
-                        election_start_time: _election_start_time,
-                        election_addr: _election_addr,
-                    }
-                } = (await stakingRoot.getEvents('ElectionStarted')).pop();
+                    round_num: _round_num,
+                    election_start_time: _election_start_time,
+                    election_addr: _election_addr,
+                } = event;
 
                 logger.log(`Election addr - ${_election_addr}`);
                 expect(_round_num.toString()).to.be.equal('2', "Bad election - round num");
@@ -793,38 +791,32 @@ describe('Test Staking Rewards', async function () {
 
                 const tx = await endElection();
                 console.log(tx.transaction.out_msgs);
-                await waitForStakingEvent('RelayRoundInitialized');
-                await waitForStakingEvent('ElectionEnded');
+                const init_event = await waitForStakingEvent('RelayRoundInitialized');
+                const elect_event = await waitForStakingEvent('ElectionEnded');
+
+                expect(init_event).not.to.be.eq(undefined, "Event not emitted");
+                expect(elect_event).not.to.be.eq(undefined, "Event not emitted");
 
                 const round = await getRelayRound(2);
                 await waitForDeploy(round.address);
-                // const election = await getElection(2);
-
-                // console.log('root', stakingRoot.address)
-                // console.log('election', election.address);
-                // console.log('round', round.address);
 
                 const {
-                    value: {
-                        round_num: _round_num,
-                        relay_requests: _relay_requests,
-                        min_relays_ok: _min_relays_ok
-                    }
-                } = (await stakingRoot.getEvents('ElectionEnded')).pop();
+                    round_num: _round_num,
+                    relay_requests: _relay_requests,
+                    min_relays_ok: _min_relays_ok
+                } = elect_event;
 
                 expect(_round_num.toString()).to.be.equal('2', "Bad election event - round num");
                 expect(_relay_requests.toString()).to.be.equal(USERS_NUM.toString(), "Bad election event - relay requests");
                 expect(_min_relays_ok).to.be.equal(true, "Bad election event - min relays");
 
                 const {
-                    value: {
-                        round_num: _round_num1,
-                        round_start_time: _round_start_time,
-                        round_addr: _round_addr,
-                        relays_count: _relays_count,
-                        duplicate: _duplicate
-                    }
-                } = (await stakingRoot.getEvents('RelayRoundInitialized')).pop();
+                    round_num: _round_num1,
+                    round_start_time: _round_start_time,
+                    round_addr: _round_addr,
+                    relays_count: _relays_count,
+                    duplicate: _duplicate
+                } = init_event;
 
                 expect(_round_num1.toString()).to.be.equal('2', "Bad relay init event - round num");
                 expect(_round_addr.toString()).to.be.equal(round.address, "Bad relay init event - round addr");
@@ -852,7 +844,8 @@ describe('Test Staking Rewards', async function () {
                 expect(cur_relay_round.toString()).to.be.equal('2', "Bad round installed in root");
 
                 // check all relays are installed
-                const relays = await round.call({method: 'getRelayList', params: {count: USERS_NUM}});
+                const round_details = await round.call({method: 'getDetails'});
+                const relays = round_details.relays;
                 const rel_addrs = relays.map((elem) => elem.staker_addr);
 
                 users.map((user) => {
@@ -865,8 +858,9 @@ describe('Test Staking Rewards', async function () {
             it("New reward round starts", async function () {
                 await startNewRewardRound();
                 await wait(PER_ACTION_WAIT);
-                await waitForStakingEvent('NewRewardRound');
 
+                const event = await waitForStakingEvent('NewRewardRound');
+                expect(event).not.to.be.eq(undefined, "Event not emitted");
 
                 const reward_rounds = await stakingRoot.call({method: 'rewardRounds'});
                 const last_reward_time = await stakingRoot.call({method: 'lastRewardTime'});
@@ -884,20 +878,22 @@ describe('Test Staking Rewards', async function () {
 
                 const tx = await startElection();
                 console.log(tx.transaction.out_msgs);
-                await waitForStakingEvent('ElectionStarted');
+                const event = await waitForStakingEvent('ElectionStarted');
 
                 const election = await getElection(3);
                 logger.log(`New election ${election.address}`);
                 await waitForDeploy(election.address);
 
+                expect(event).not.to.be.eq(undefined, "Event not emitted");
+
                 const round_num = await election.call({method: 'round_num'});
                 expect(round_num.toString()).to.be.equal('3', "Bad election - round num");
 
-                const { value: {
+                const {
                     round_num: _round_num,
                     election_start_time: _election_start_time,
                     election_addr: _election_addr,
-                } } = (await stakingRoot.getEvents('ElectionStarted')).pop();
+                } = event;
 
                 expect(_round_num.toString()).to.be.equal('3', "Bad election - round num");
                 expect(_election_addr).to.be.equal(election.address, "Bad election - address");
@@ -912,13 +908,15 @@ describe('Test Staking Rewards', async function () {
                 const tx = await requestRelayMembership(user);
                 await wait(PER_ACTION_WAIT);
 
-                const { value: {
-                    round_num: _round_num1,
-                    tokens: _tokens1,
-                    ton_pubkey: _ton_pubkey1,
-                    eth_address: _eth_address1,
-                    lock_until: _lock_until1
-                } } = (await userData.getEvents('RelayMembershipRequested')).pop();
+                const {
+                    value: {
+                        round_num: _round_num1,
+                        tokens: _tokens1,
+                        ton_pubkey: _ton_pubkey1,
+                        eth_address: _eth_address1,
+                        lock_until: _lock_until1
+                    }
+                } = (await userData.getEvents('RelayMembershipRequested')).pop();
 
                 const user_token_balance = await userData.call({method: 'token_balance'});
 
@@ -942,29 +940,32 @@ describe('Test Staking Rewards', async function () {
 
                 const tx = await endElection();
                 console.log(tx.transaction.out_msgs);
-                await waitForStakingEvent('RelayRoundInitialized');
-                await waitForStakingEvent('ElectionEnded');
+                const init_event = await waitForStakingEvent('RelayRoundInitialized');
+                const elect_event = await waitForStakingEvent('ElectionEnded');
+
+                expect(init_event).not.to.be.eq(undefined, "Event not emitted");
+                expect(elect_event).not.to.be.eq(undefined, "Event not emitted");
 
                 const round = await getRelayRound(3);
                 await waitForDeploy(round.address);
 
-                const { value: {
+                const {
                     round_num: _round_num,
                     relay_requests: _relay_requests,
                     min_relays_ok: _min_relays_ok
-                } } = (await stakingRoot.getEvents('ElectionEnded')).pop();
+                } = elect_event;
 
                 expect(_round_num.toString()).to.be.equal('3', "Bad election event - round num");
                 expect(_relay_requests.toString()).to.be.equal('1', "Bad election event - relay requests");
                 expect(_min_relays_ok).to.be.equal(false, "Bad election event - min relays");
 
-                const { value: {
+                const {
                     round_num: _round_num1,
                     round_start_time: _round_start_time,
                     round_addr: _round_addr,
                     relays_count: _relays_count,
                     duplicate: _duplicate
-                } } = (await stakingRoot.getEvents('RelayRoundInitialized')).pop();
+                } = init_event;
 
                 expect(_round_num1.toString()).to.be.equal('3', "Bad relay init event - round num");
                 expect(_round_addr.toString()).to.be.equal(round.address, "Bad relay init event - round addr");
@@ -993,12 +994,14 @@ describe('Test Staking Rewards', async function () {
                 expect(cur_relay_round.toString()).to.be.equal('3', "Bad round installed in root");
 
                 // check all relays are installed
-                const relays = await round.call({method: 'getRelayList', params: {count: USERS_NUM}});
+                const round_details = await round.call({method: 'getDetails'});
+                const relays = round_details.relays;
                 const rel_addrs = relays.map((elem) => elem.staker_addr);
+
                 users.map((user) => {
                     expect(rel_addrs.includes(user.address)).to.be.true;
-                })
+                });
             });
         });
     });
-})
+});

@@ -28,13 +28,14 @@ contract RelayRound is IRelayRound {
     address public prev_round_addr;
 
     uint128 public round_num; // setup from initialData
-    mapping (address => Relay) relays; // key - staker address
+    Relay[] public relays;
+    mapping (address => uint256) addr_to_idx;
     mapping (address => bool) reward_claimed;
 
     uint8 public relay_packs_installed;
 
     // user when sending relays to new relay round
-    address relay_transfer_start_address;
+    uint256 public relay_transfer_start_idx = 0;
 
     uint32 public current_version;
     TvmCell public platform_code;
@@ -45,7 +46,7 @@ contract RelayRound is IRelayRound {
     constructor() public { revert(); }
 
     function getRelayByStakerAddress(address staker_addr) external view responsible returns (Relay) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} relays[staker_addr];
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} relays[addr_to_idx[staker_addr]];
     }
 
     function getRewardForRound(address staker_addr, address send_gas_to, uint32 code_version) external override onlyUserData(staker_addr) {
@@ -60,73 +61,49 @@ contract RelayRound is IRelayRound {
         }
 
         reward_claimed[staker_addr] = true;
-        uint128 staker_reward_share = math.muldiv(relays[staker_addr].staked_tokens, 1e18, total_tokens_staked);
+        uint128 staker_reward_share = math.muldiv(relays[addr_to_idx[staker_addr]].staked_tokens, 1e18, total_tokens_staked);
         uint128 relay_reward = math.muldiv(staker_reward_share, round_reward, 1e18);
 
         IUserData(msg.sender).receiveRewardForRelayRound{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num, reward_round_num, relay_reward, send_gas_to);
     }
 
-    function getRelayList(uint128 count) public view responsible returns (Relay[]) {
-        optional(address, Relay) min_relay = relays.min();
-        (address staker_addr, Relay _relay) = min_relay.get();
-        (Relay[] _relays, address _) = _getRelayListFromMin(staker_addr, count);
-        return _relays;
-    }
-
-    function _getRelayListFromMin(address min_addr, uint128 count) internal view returns (Relay[], address) {
-        Relay[] _relays_list = new Relay[](count);
-        address last_address = address.makeAddrNone();
+    function _getRelayListFromIdx(uint256 limit, uint256 start_idx) internal view returns (Relay[], uint256) {
+        Relay[] _relays_list = new Relay[](limit);
+        uint256 cur_idx = start_idx;
         uint128 counter = 0;
 
-        optional(Relay) min_relay = relays.fetch(min_addr);
-        optional(address, Relay) cur_relay;
-        cur_relay.set(min_addr, min_relay.get());
-
-        while (cur_relay.hasValue() && counter < count) {
-            (address staker_addr, Relay _relay) = cur_relay.get();
-            _relays_list[counter] = _relay;
+        while (counter < limit && cur_idx < relays.length) {
+            _relays_list[counter] = relays[cur_idx];
             counter++;
-            cur_relay = relays.next(staker_addr);
-
-            if (cur_relay.hasValue()) {
-                (address staker_addr, Relay _relay) = cur_relay.get();
-                last_address = staker_addr;
-            } else {
-                last_address = address.makeAddrNone();
-            }
+            cur_idx++;
         }
-
-        return (_relays_list, last_address);
+        return (_relays_list, cur_idx);
     }
 
     function getDetails() external view override responsible returns (RelayRoundDetails) {
-        Relay[] _relays_list = getRelayList(relays_count);
-
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }RelayRoundDetails(
-            root, round_num, _relays_list, relays_installed, current_version
+            root, round_num, relays, relays_installed, current_version
         );
     }
 
     function sendRelaysToRelayRound(address relay_round_addr, uint128 count, address send_gas_to) external override onlyRoot {
         tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
 
-        optional(Relay) min_relay = relays.fetch(relay_transfer_start_address);
-        if (!min_relay.hasValue()) {
+        if (relay_transfer_start_idx >= relays.length) {
             IRelayRound(relay_round_addr).setEmptyRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(send_gas_to);
             return;
         }
 
-        (Relay[] _relays, address _new_last_addr) = _getRelayListFromMin(relay_transfer_start_address, count);
-        relay_transfer_start_address = _new_last_addr;
+        (Relay[] _relays, uint256 _new_last_idx) = _getRelayListFromIdx(count, relay_transfer_start_idx);
+        relay_transfer_start_idx = _new_last_idx;
 
         IRelayRound(relay_round_addr).setRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(_relays, send_gas_to);
     }
 
     function relayKeys() public view responsible returns (uint256[]) {
-        Relay[] _relays_list = getRelayList(relays_count);
-        uint256[] _keys = new uint256[](_relays_list.length);
+        uint256[] _keys = new uint256[](relays.length);
         for (uint256 i = 0; i < _keys.length; i++) {
-            _keys[i] = _relays_list[i].ton_pubkey;
+            _keys[i] = relays[i].ton_pubkey;
         }
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } _keys;
     }
@@ -151,7 +128,8 @@ contract RelayRound is IRelayRound {
             if (_relay_list[i].staked_tokens == 0) {
                 break;
             }
-            relays[_relay_list[i].staker_addr] = _relay_list[i];
+            relays.push(_relay_list[i]);
+            addr_to_idx[_relay_list[i].staker_addr] = relays.length - 1;
             total_tokens_staked += _relay_list[i].staked_tokens;
             relays_count += 1;
         }
@@ -163,10 +141,6 @@ contract RelayRound is IRelayRound {
     function _checkRelaysInstalled(address send_gas_to) internal {
         if (relay_packs_installed == expected_packs_num) {
             relays_installed = true;
-
-            optional(address, Relay) min_relay = relays.min();
-            (address staker_addr, Relay _relay) = min_relay.get();
-            relay_transfer_start_address = staker_addr;
 
             IStakingPool(root).onRelayRoundInitialized{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
                 round_num, relays_count, round_reward, duplicate, send_gas_to
