@@ -156,7 +156,7 @@ contract TokenLock is ITokenLock, Cache, OwnableUpgradeable, ChainId {
         uint128 fillReward = 0;
 
         for (uint32 i = 0; i < ids.length; i++) {
-            _fillUnlockOrder(ids[i].receiver, ids[i].orderId);
+            _fillUnlockOrder(ids[i].receiver, ids[i].orderId, false);
 
             Unlock memory order = getUnlockOrder(ids[i].receiver, ids[i].orderId);
 
@@ -215,7 +215,7 @@ contract TokenLock is ITokenLock, Cache, OwnableUpgradeable, ChainId {
         uint256 orderId = _saveUnlockOrder(receiver, order);
 
         if (amount <= status()) {
-            _fillUnlockOrder(receiver, orderId);
+            _fillUnlockOrder(receiver, orderId, true);
         }
     }
 
@@ -308,18 +308,27 @@ contract TokenLock is ITokenLock, Cache, OwnableUpgradeable, ChainId {
 
     function _fillUnlockOrder(
         address receiver,
-        uint256 orderId
+        uint256 orderId,
+        bool ignoreFee
     ) internal {
         Unlock memory order = getUnlockOrder(receiver, orderId);
 
         require(order.filled == false, 'Token lock: order already filled');
 
-        lockedTokens -= order.amount;
+        uint128 fee;
+
+        if (ignoreFee) {
+            fee = 0;
+        } else {
+            fee = order.fee;
+        }
+
+        lockedTokens -= order.amount - fee;
         debtTokens -= order.amount;
 
-        IERC20(configuration.token).universalTransfer(receiver, order.amount);
+        IERC20(configuration.token).universalTransfer(receiver, order.amount - fee);
 
-        emit TokenUnlock(receiver, orderId, order.amount);
+        emit TokenUnlock(receiver, orderId, order.amount - fee);
 
         unlockOrders[receiver][orderId].filled = true;
     }

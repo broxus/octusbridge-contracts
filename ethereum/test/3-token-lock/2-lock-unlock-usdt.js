@@ -115,6 +115,9 @@ describe('Lock and unlock USDT', async () => {
       
       expect(unlockOrders[0].amount)
         .to.be.equal(tokensToUnlock, 'Wrong order amount');
+      
+      expect(unlockOrders[0].fee)
+        .to.be.equal(unlockFee, 'Wrong order fee');
     });
     
     it('Try to reuse payload', async () => {
