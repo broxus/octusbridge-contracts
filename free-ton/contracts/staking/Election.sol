@@ -6,6 +6,7 @@ import "./interfaces/IStakingPool.sol";
 import "./interfaces/IUserData.sol";
 import "./interfaces/IUpgradableByRequest.sol";
 import "./interfaces/IElection.sol";
+import "./interfaces/IRelayRound.sol";
 
 import "./libraries/Gas.sol";
 import "./../utils/ErrorCodes.sol";
@@ -27,7 +28,7 @@ contract Election is IElection {
     struct Node {
         uint256 prev_node;
         uint256 next_node;
-        MembershipRequest request;
+        IRelayRound.Relay request;
     }
 
     // this array contains 2-way linked list by request tokens
@@ -39,23 +40,33 @@ contract Election is IElection {
 
     bool public election_ended;
 
+    // user when sending relays to new relay round
+    uint256 relay_transfer_start_idx = 0;
+
     // Cant be deployed directly
     constructor() public { revert(); }
 
     // return sorted list of requests
-    function getRequests(uint256 limit) public view responsible returns (MembershipRequest[]) {
-        limit = math.min(limit, requests_nodes.length - 1);
-        MembershipRequest[] _requests = new MembershipRequest[](limit);
-        Node cur_node = requests_nodes[list_start_idx];
+    function getRequests(uint256 limit) public responsible returns (IRelayRound.Relay[]) {
+        (IRelayRound.Relay[] _requests, uint256 _) = _getRequestsFromIdx(limit, list_start_idx);
+        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }_requests;
+    }
+
+    function getNode(uint256 idx) public responsible view returns (Node) {
+        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }requests_nodes[idx];
+    }
+
+    function _getRequestsFromIdx(uint256 limit, uint256 start_idx) internal view returns (IRelayRound.Relay[], uint256) {
+        IRelayRound.Relay[] _requests = new IRelayRound.Relay[](limit);
+        uint256 cur_idx = start_idx;
         uint128 counter = 0;
 
-        while (counter < limit && cur_node.request.tokens != 0) {
-            _requests[counter] = cur_node.request;
+        while (counter < limit && requests_nodes[cur_idx].request.staked_tokens != 0) {
+            _requests[counter] = requests_nodes[cur_idx].request;
             counter++;
-            cur_node = requests_nodes[cur_node.next_node];
+            cur_idx = requests_nodes[cur_idx].next_node;
         }
-
-        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }_requests;
+        return (_requests, cur_idx);
     }
 
     function applyForMembership(
@@ -78,45 +89,41 @@ contract Election is IElection {
         }
 
         for (uint i = 1; i < requests_nodes.length; i++) {
-            Node _cur_node = requests_nodes[i];
-            MembershipRequest _cur_req = _cur_node.request;
-            if (_cur_req.staker_addr == staker_addr || _cur_req.ton_pubkey == ton_pubkey || _cur_req.eth_addr == eth_addr) {
+            if (
+                requests_nodes[i].request.staker_addr == staker_addr ||
+                requests_nodes[i].request.ton_pubkey == ton_pubkey ||
+                requests_nodes[i].request.eth_addr == eth_addr
+            ) {
                 send_gas_to.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
                 return;
             }
         }
 
-        Node new_node = Node(0, 0, MembershipRequest(staker_addr, ton_pubkey, eth_addr, tokens));
+        Node new_node = Node(0, 0, IRelayRound.Relay(staker_addr, ton_pubkey, eth_addr, tokens));
+        requests_nodes.push(new_node);
+        uint256 new_idx = requests_nodes.length - 1;
+
         // if there is no requests
         if (list_start_idx == 0) {
-            requests_nodes.push(new_node);
-            uint256 new_idx = requests_nodes.length - 1;
-
             list_start_idx = new_idx;
-            send_gas_to.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
         // new request, add to sorted list
         } else {
-            requests_nodes.push(new_node);
-            uint256 new_idx = requests_nodes.length - 1;
-
             uint256 cur_node_idx = list_start_idx;
 
             while (cur_node_idx != 0) {
-                Node cur_node = requests_nodes[cur_node_idx];
-
-                if (tokens >= cur_node.request.tokens) {
+                if (tokens >= requests_nodes[cur_node_idx].request.staked_tokens) {
                     // current node is head
-                    if (cur_node.prev_node == 0) {
+                    if (requests_nodes[cur_node_idx].prev_node == 0) {
                         requests_nodes[new_idx].next_node = cur_node_idx;
                         requests_nodes[cur_node_idx].prev_node = new_idx;
                         list_start_idx = new_idx;
                     // insert new node between cur and prev nodes
                     } else {
                         requests_nodes[new_idx].next_node = cur_node_idx;
-                        requests_nodes[cur_node_idx].prev_node = new_idx;
+                        requests_nodes[new_idx].prev_node = requests_nodes[cur_node_idx].prev_node;
 
-                        requests_nodes[new_idx].prev_node = cur_node.prev_node;
-                        requests_nodes[cur_node.prev_node].next_node = new_idx;
+                        requests_nodes[requests_nodes[cur_node_idx].prev_node].next_node = new_idx;
+                        requests_nodes[cur_node_idx].prev_node = new_idx;
                     }
 
                     break;
@@ -124,14 +131,14 @@ contract Election is IElection {
 
                 // we reached end of list
                 // it means this request has lowest tokens and should be added to tail
-                if (cur_node.next_node == 0) {
+                if (requests_nodes[cur_node_idx].next_node == 0) {
                     requests_nodes[cur_node_idx].next_node = new_idx;
                     requests_nodes[new_idx].prev_node = cur_node_idx;
+                    break;
                 }
 
-                cur_node_idx = cur_node.next_node;
+                cur_node_idx = requests_nodes[cur_node_idx].next_node;
             }
-
         }
 
         IUserData(msg.sender).relayMembershipRequestAccepted{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
@@ -139,7 +146,7 @@ contract Election is IElection {
         );
     }
 
-    function finish(uint128 relays_count, address send_gas_to, uint32 code_version) external override onlyRoot {
+    function finish(address send_gas_to, uint32 code_version) external override onlyRoot {
         require (!election_ended, ErrorCodes.ELECTION_ENDED);
 
         tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
@@ -150,9 +157,26 @@ contract Election is IElection {
         }
 
         election_ended = true;
+        relay_transfer_start_idx = list_start_idx;
+        IStakingPool(root).onElectionEnded{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
+            round_num, uint128(requests_nodes.length - 1), send_gas_to
+        );
+    }
 
-        MembershipRequest[] top_requests = getRequests(relays_count);
-        IStakingPool(root).onElectionEnded{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num, top_requests, send_gas_to);
+    function sendRelaysToRelayRound(address relay_round_addr, uint128 relays_count, address send_gas_to) external override onlyRoot {
+        require (election_ended, ErrorCodes.ELECTION_ENDED);
+
+        tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
+
+        if (requests_nodes[relay_transfer_start_idx].request.staked_tokens == 0) {
+            IRelayRound(relay_round_addr).setEmptyRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(send_gas_to);
+            return;
+        }
+
+        (IRelayRound.Relay[] _relays, uint256 new_start_idx) = _getRequestsFromIdx(relays_count, relay_transfer_start_idx);
+        relay_transfer_start_idx = new_start_idx;
+
+        IRelayRound(relay_round_addr).setRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(_relays, send_gas_to);
     }
 
     function upgrade(TvmCell code, uint32 new_version, address send_gas_to) external onlyRoot {
@@ -202,7 +226,7 @@ contract Election is IElection {
         current_version = params.decode(uint32);
 
         // create origin node after contract initialization
-        requests_nodes.push(Node(0, 0, MembershipRequest(address.makeAddrNone(), 0, 0, 0)));
+        requests_nodes.push(Node(0, 0, IRelayRound.Relay(address.makeAddrNone(), 0, 0, 0)));
 
         IStakingPool(root).onElectionStarted{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num, send_gas_to);
     }

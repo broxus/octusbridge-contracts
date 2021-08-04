@@ -19,22 +19,23 @@ interface IStakingPool {
     function revertDeposit(uint64 _nonce) external;
     function endElection(address send_gas_to) external;
     function onElectionStarted(uint128 round_num, address send_gas_to) external;
-    function onElectionEnded(uint128 round_num, IElection.MembershipRequest[] requests, address send_gas_to) external;
+    function onElectionEnded(uint128 round_num, uint128 relay_requests_count, address send_gas_to) external;
     function confirmSlash(
         address user,
         uint128[] ban_rewards,
         uint128 ban_token_balance,
         address send_gas_to
     ) external;
-    function receiveRelayRoundRelays(
+    function onRelayRoundDeployed(
         uint128 round_num,
-        IRelayRound.Relay[] _relays,
+        bool duplicate,
         address send_gas_to
     ) external;
     function onRelayRoundInitialized(
         uint128 round_num,
-        IRelayRound.Relay[] relays,
+        uint128 relays_count,
         uint128 round_reward,
+        bool duplicate,
         address send_gas_to
     ) external;
 }

@@ -32,8 +32,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     event NewRewardRound(uint256 round_num);
 
     event ElectionStarted(uint128 round_num, uint128 election_start_time, address election_addr);
-    event ElectionEnded(uint128 round_num);
-    event RelayRoundInitialized(uint128 round_num, uint128 round_start_time, address round_addr, IRelayRound.Relay[] relays);
+    event ElectionEnded(uint128 round_num, uint128 relay_requests, bool min_relays_ok);
+    event RelayRoundInitialized(uint128 round_num, uint128 round_start_time, address round_addr, uint128 relays_count, bool duplicate);
     event RelaySlashed(address user, uint128 tokens_withdrawn);
 
     event DepositReverted(address user, uint128 amount);
@@ -75,7 +75,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     bool active;
 
-    bool originRelayRoundInitialized;
+    bool public originRelayRoundInitialized;
 
     uint128 public currentRelayRound;
 
@@ -123,6 +123,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     // payloads for token receive callback
     uint8 public constant STAKE_DEPOSIT = 0;
     uint8 public constant REWARD_UP = 1;
+
+    uint8 public constant RELAY_PACK_SIZE = 50;
 
     struct PendingDeposit {
         address user;
@@ -476,15 +478,15 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     function _buildInitData(uint8 type_id, TvmCell _initialData) internal inline view returns (TvmCell) {
         return tvm.buildStateInit({
-        contr: Platform,
-        varInit: {
-            root: address(this),
-            platformType: type_id,
-            initialData: _initialData,
-            platformCode: platform_code
-        },
-        pubkey: 0,
-        code: platform_code
+            contr: Platform,
+            varInit: {
+                root: address(this),
+                platformType: type_id,
+                initialData: _initialData,
+                platformCode: platform_code
+            },
+            pubkey: 0,
+            code: platform_code
         });
     }
 
@@ -495,7 +497,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
         return new Platform{
             stateInit: _buildInitData(PlatformTypes.UserData, _buildUserDataParams(user_data_owner)),
-            value: Gas.PLATFORM_DEPLOY_VALUE,
+            value: Gas.DEPLOY_USER_DATA_MIN_VALUE,
             flag: MsgFlag.SENDER_PAYS_FEES
         }(user_data_code, constructor_params.toCell(), user_data_owner);
     }

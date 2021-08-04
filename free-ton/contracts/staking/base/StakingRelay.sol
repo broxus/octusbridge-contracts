@@ -82,11 +82,12 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
 
         IRelayRound.Relay[] relays = new IRelayRound.Relay[](staker_addrs.length);
         for (uint i = 0; i < staker_addrs.length; i++) {
-            relays[i] = IRelayRound.Relay(staker_addrs[i], ton_pubkeys[i], eth_addrs[i], staked_tokens[i], false);
+            relays[i] = IRelayRound.Relay(staker_addrs[i], ton_pubkeys[i], eth_addrs[i], staked_tokens[i]);
         }
 
         // we have 0 relay rounds at the moment
-        address relay_round = deployRelayRound(currentRelayRound + 1, send_gas_to);
+        address empty = address.makeAddrNone();
+        address relay_round = deployRelayRound(currentRelayRound + 1, false, 1, empty, empty, MsgFlag.SENDER_PAYS_FEES, send_gas_to);
         IRelayRound(relay_round).setRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(relays, send_gas_to);
     }
 
@@ -127,13 +128,15 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
     }
 
     function endElection(address send_gas_to) external override onlyActive {
-        require (msg.value >= Gas.MIN_END_ELECTION_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        uint128 min_gas = Gas.MIN_END_ELECTION_MSG_VALUE + _relaysPacksCount() * Gas.MIN_SEND_RELAYS_MSG_VALUE;
+        require (msg.value >= min_gas, ErrorCodes.VALUE_TOO_LOW);
         require (currentElectionStartTime != 0, ErrorCodes.ELECTION_NOT_STARTED);
         require (now >= (currentElectionStartTime + electionTime), ErrorCodes.CANT_END_ELECTION);
+
         tvm.rawReserve(_reserve(), 2);
 
         address election_addr = getElectionAddress(pendingRelayRound);
-        IElection(election_addr).finish{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(relaysCount, send_gas_to, election_version);
+        IElection(election_addr).finish{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(send_gas_to, election_version);
     }
 
     function onElectionStarted(uint128 round_num, address send_gas_to) external override onlyElection(round_num) {
@@ -147,47 +150,84 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
 
     function onElectionEnded(
         uint128 round_num,
-        IElection.MembershipRequest[] win_requests,
+        uint128 relay_requests_count,
         address send_gas_to
     ) external override onlyElection(round_num) {
         tvm.rawReserve(_reserve(), 2);
 
+        bool min_relays_ok = relay_requests_count >= minRelaysCount;
+
         currentElectionStartTime = 0;
         pendingRelayRound = 0;
-        emit ElectionEnded(round_num);
 
-        if (win_requests.length < minRelaysCount) {
-            address relay_round = getRelayRoundAddress(round_num - 1);
-            IRelayRound(relay_round).getRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(send_gas_to);
-            return;
-        }
+        emit ElectionEnded(round_num, relay_requests_count, min_relays_ok);
 
-        IRelayRound.Relay[] new_relays = new IRelayRound.Relay[](win_requests.length);
-        for (uint i = 0; i < win_requests.length; i++) {
-            new_relays[i] = IRelayRound.Relay(
-                win_requests[i].staker_addr, win_requests[i].ton_pubkey, win_requests[i].eth_addr, win_requests[i].tokens, false
-            );
-        }
-
-        address relay_round = deployRelayRound(round_num, send_gas_to);
-        IRelayRound(relay_round).setRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(new_relays, send_gas_to);
+        uint8 packs_num = _relaysPacksCount();
+        address election = msg.sender;
+        address prev_relay_round = getRelayRoundAddress(round_num - 1);
+        deployRelayRound(round_num, !min_relays_ok, packs_num, election, prev_relay_round, MsgFlag.ALL_NOT_RESERVED, send_gas_to);
     }
 
-    function receiveRelayRoundRelays(
+    function _relaysPacksCount() internal view returns (uint8) {
+        uint8 packs_count = uint8(relaysCount / RELAY_PACK_SIZE);
+        uint8 modulo = relaysCount % RELAY_PACK_SIZE > 0 ? 1 : 0;
+        return packs_count + modulo;
+    }
+
+    function onRelayRoundDeployed(
         uint128 round_num,
-        IRelayRound.Relay[] _relays,
+        bool duplicate,
         address send_gas_to
     ) external override onlyRelayRound(round_num) {
         tvm.rawReserve(_reserve(), 2);
 
-        address relay_round = deployRelayRound(round_num + 1, send_gas_to);
-        IRelayRound(relay_round).setRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(_relays, send_gas_to);
+        if (!originRelayRoundInitialized) {
+            // this is an origin round deployment
+            send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
+            return;
+        }
+
+        address cur_round_addr = msg.sender;
+        if (duplicate) {
+            // get relays from previous relay round
+            address relay_round_addr = getRelayRoundAddress(round_num - 1);
+            for (uint i = 0; i < _relaysPacksCount(); i++) {
+                // last pack could be smaller then other ones
+                if (i == _relaysPacksCount() - 1 && relaysCount % RELAY_PACK_SIZE > 0) {
+                    IRelayRound(relay_round_addr).sendRelaysToRelayRound{value: Gas.MIN_SEND_RELAYS_MSG_VALUE}(
+                        cur_round_addr, relaysCount % RELAY_PACK_SIZE, send_gas_to
+                    );
+                } else {
+                    IRelayRound(relay_round_addr).sendRelaysToRelayRound{value: Gas.MIN_SEND_RELAYS_MSG_VALUE}(
+                        cur_round_addr, RELAY_PACK_SIZE, send_gas_to
+                    );
+                }
+            }
+        } else {
+            // get relays from current election
+            address election_addr = getElectionAddress(round_num);
+            for (uint i = 0; i < _relaysPacksCount(); i++) {
+                // last pack could be smaller then other ones
+                if (i == _relaysPacksCount() - 1 && relaysCount % RELAY_PACK_SIZE > 0) {
+                    IElection(election_addr).sendRelaysToRelayRound{value: Gas.MIN_SEND_RELAYS_MSG_VALUE}(
+                        cur_round_addr, relaysCount % RELAY_PACK_SIZE, send_gas_to
+                    );
+                } else {
+                    IElection(election_addr).sendRelaysToRelayRound{value: Gas.MIN_SEND_RELAYS_MSG_VALUE}(
+                        cur_round_addr, RELAY_PACK_SIZE, send_gas_to
+                    );
+                }
+            }
+        }
+
+        send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 
     function onRelayRoundInitialized(
         uint128 round_num,
-        IRelayRound.Relay[] relays,
+        uint128 relays_count,
         uint128 round_reward,
+        bool duplicate,
         address send_gas_to
     ) external override onlyRelayRound(round_num) {
         tvm.rawReserve(_reserve(), 2);
@@ -203,7 +243,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         currentRelayRoundStartTime = now;
         rewardRounds[rewardRounds.length - 1].totalReward += round_reward;
 
-        emit RelayRoundInitialized(round_num, now, msg.sender, relays);
+        emit RelayRoundInitialized(round_num, now, msg.sender, relays_count, duplicate);
         send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 
@@ -220,7 +260,15 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         }(election_code, constructor_params.toCell(), send_gas_to);
     }
 
-    function deployRelayRound(uint128 round_num, address send_gas_to) internal returns (address) {
+    function deployRelayRound(
+        uint128 round_num,
+        bool duplicate,
+        uint8 packs_num,
+        address election_addr,
+        address prev_relay_round_addr,
+        uint16 msg_flag,
+        address send_gas_to
+    ) internal returns (address) {
         require(round_num > currentRelayRound, ErrorCodes.INVALID_RELAY_ROUND_ROUND);
 
         TvmBuilder constructor_params;
@@ -228,11 +276,15 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         constructor_params.store(relayRoundTime);
         constructor_params.store(uint128(rewardRounds.length - 1));
         constructor_params.store(rewardPerSecond);
+        constructor_params.store(duplicate);
+        constructor_params.store(packs_num);
+        constructor_params.store(election_addr);
+        constructor_params.store(prev_relay_round_addr);
 
         return new Platform{
             stateInit: _buildInitData(PlatformTypes.RelayRound, _buildRelayRoundParams(round_num)),
             value: Gas.DEPLOY_RELAY_ROUND_MIN_VALUE,
-            flag: MsgFlag.SENDER_PAYS_FEES
+            flag: msg_flag
         }(relay_round_code, constructor_params.toCell(), send_gas_to);
     }
 
