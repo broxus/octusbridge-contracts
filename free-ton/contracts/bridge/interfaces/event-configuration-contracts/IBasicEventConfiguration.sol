@@ -7,7 +7,7 @@ interface IBasicEventConfiguration {
     struct BasicConfiguration {
         bytes eventABI;
         address staking;
-        uint128 eventInitialBalance;
+        uint64 eventInitialBalance;
         TvmCell eventCode;
         TvmCell meta;
         uint32 chainId;

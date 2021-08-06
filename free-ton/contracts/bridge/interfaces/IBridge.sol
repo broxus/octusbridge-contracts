@@ -29,6 +29,6 @@ interface IBridge {
         BridgeConfiguration _bridgeConfiguration
     ) external;
 
-    function deriveConnectorAddress(uint128 id) external returns(address connector);
+    function deriveConnectorAddress(uint64 id) external returns(address connector);
     function deployConnector(address _eventConfiguration) external returns(address connector);
 }
