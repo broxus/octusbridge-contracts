@@ -100,7 +100,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
 
         address userDataAddr = getUserDataAddress(msg.sender);
         UserData(userDataAddr).processBecomeRelay{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-            pendingRelayRound, lock_time, send_gas_to, user_data_version, election_version
+            pendingRelayRound, lock_time, minRelayDeposit, send_gas_to, user_data_version, election_version
         );
     }
 

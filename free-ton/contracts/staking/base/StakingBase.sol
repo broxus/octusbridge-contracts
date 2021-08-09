@@ -53,7 +53,14 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     event ElectionCodeUpgraded(uint32 code_version);
     event RelayRoundCodeUpgraded(uint32 code_version);
 
-    event RelayConfigUpdated(uint128 relay_round_time, uint128 election_time, uint128 time_before_election, uint128 relays_count);
+    event RelayConfigUpdated(
+        uint128 relay_round_time,
+        uint128 election_time,
+        uint128 time_before_election,
+        uint128 relays_count,
+        uint128 min_relays_count,
+        uint128 min_relay_deposit
+    );
 
     //    uint32 public static deploy_nonce; // TODO: uncomment
 
@@ -119,6 +126,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     uint128 public relaysCount = 30;
 
     uint128 public minRelaysCount = 13;
+
+    uint128 public minRelayDeposit = 100000 * 10**9;
 
     // payloads for token receive callback
     uint8 public constant STAKE_DEPOSIT = 0;
@@ -201,6 +210,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         uint128 time_before_election,
         uint128 relays_count,
         uint128 min_relays_count,
+        uint128 min_relay_deposit,
         address send_gas_to
     ) external onlyDaoRoot {
         tvm.rawReserve(_reserve(), 2);
@@ -210,8 +220,16 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         timeBeforeElection = time_before_election;
         relaysCount = relays_count;
         minRelaysCount = min_relays_count;
+        minRelayDeposit = min_relay_deposit;
 
-        emit RelayConfigUpdated(relay_round_time, election_time, time_before_election, relays_count);
+        emit RelayConfigUpdated(
+            relay_round_time,
+            election_time,
+            time_before_election,
+            relays_count,
+            min_relays_count,
+            min_relay_deposit
+        );
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 

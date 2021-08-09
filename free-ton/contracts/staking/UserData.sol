@@ -301,13 +301,9 @@ contract UserData is IUserData, IUpgradableByRequest {
         uint32 code_version
     ) external override onlyRoot {
         require (!slashed, ErrorCodes.SLASHED);
+        require (code_version == current_version, ErrorCodes.LOW_VERSION);
 
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
-
-        if (code_version > current_version) {
-            send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
-            return;
-        }
 
         syncRewards(reward_rounds, token_balance);
 
@@ -328,13 +324,9 @@ contract UserData is IUserData, IUpgradableByRequest {
         uint32 relay_round_code_version
     ) external override onlyRoot {
         require (!slashed, ErrorCodes.SLASHED);
+        require (code_version == current_version, ErrorCodes.LOW_VERSION);
 
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
-
-        if (code_version > current_version) {
-            send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
-            return;
-        }
 
         syncRewards(reward_rounds, token_balance);
 
@@ -359,16 +351,12 @@ contract UserData is IUserData, IUpgradableByRequest {
         uint256 ton_pubkey,
         uint160 eth_address,
         address send_gas_to,
-        uint32 user_data_code_version
+        uint32 code_version
     ) external override onlyRoot {
         require (!slashed, ErrorCodes.SLASHED);
+        require (code_version == current_version, ErrorCodes.LOW_VERSION);
 
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
-
-        if (user_data_code_version > current_version) {
-            send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
-            return;
-        }
 
         relay_ton_pubkey = ton_pubkey;
         ton_pubkey_confirmed = false;
@@ -402,20 +390,18 @@ contract UserData is IUserData, IUpgradableByRequest {
     function processBecomeRelay(
         uint128 round_num,
         uint128 lock_time,
+        uint128 min_deposit,
         address send_gas_to,
-        uint32 user_data_code_version,
+        uint32 code_version,
         uint32 election_code_version
     ) external override onlyRoot {
         require (eth_address_confirmed, ErrorCodes.ACCOUNT_NOT_CONFIRMED);
         require (ton_pubkey_confirmed, ErrorCodes.ACCOUNT_NOT_CONFIRMED);
         require (!slashed, ErrorCodes.SLASHED);
+        require (token_balance >= min_deposit, ErrorCodes.LOW_RELAY_DEPOSIT);
+        require (code_version == current_version, ErrorCodes.LOW_VERSION);
 
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
-
-        if (user_data_code_version > current_version) {
-            send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
-            return;
-        }
 
         address election_addr = getElectionAddress(round_num);
         IElection(election_addr).applyForMembership{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
@@ -441,20 +427,18 @@ contract UserData is IUserData, IUpgradableByRequest {
         address send_gas_to,
         uint32 code_version
     ) external override onlyRoot {
+        require (token_balance >= _tokens_to_withdraw, ErrorCodes.LOW_TOKEN_BALANCE);
+        require (now >= relay_lock_until, ErrorCodes.RELAY_LOCK_ACTIVE);
         require (!slashed, ErrorCodes.SLASHED);
+        require (code_version == current_version, ErrorCodes.LOW_VERSION);
+        require (_canWithdrawVotes(), ErrorCodes.CANT_WITHDRAW_VOTES);
 
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
-
-        if (code_version > current_version || _tokens_to_withdraw > token_balance || now < relay_lock_until || !_canWithdrawVotes()) {
-            send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
-            return;
-        }
 
         syncRewards(reward_rounds, token_balance - _tokens_to_withdraw);
         token_balance -= _tokens_to_withdraw;
 
         IStakingPool(msg.sender).finishWithdraw{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(user, _tokens_to_withdraw, send_gas_to);
-
     }
 
     function _buildPlatformInitData(address platform_root, uint8 platform_type, TvmCell initial_data) private inline view returns (TvmCell) {

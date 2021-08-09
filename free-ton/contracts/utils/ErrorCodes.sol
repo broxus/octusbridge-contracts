@@ -66,6 +66,11 @@ library ErrorCodes {
     uint16 constant NOT_REWARDER = 2530;
     uint16 constant BAD_INPUT_ARRAYS = 2531;
     uint16 constant BAD_SENDER = 2532;
+    uint16 constant LOW_RELAY_DEPOSIT = 2533;
+    uint16 constant LOW_VERSION = 2534;
+    uint16 constant LOW_TOKEN_BALANCE = 2535;
+    uint16 constant RELAY_LOCK_ACTIVE = 2536;
+    uint16 constant CANT_WITHDRAW_VOTES = 2537;
 
     // staking dao
     uint16 constant NOT_DAO_ROOT = 2601;

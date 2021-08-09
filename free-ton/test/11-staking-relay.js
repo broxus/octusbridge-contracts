@@ -54,6 +54,7 @@ let user3Balance;
 let balance_err;
 
 
+const MIN_RELAY_DEPOSIT = 1;
 const RELAY_ROUND_TIME_1 = 10;
 const ELECTION_TIME = 4;
 const TIME_BEFORE_ELECTION = 5;
@@ -460,6 +461,7 @@ describe('Test Staking Rewards', async function () {
                         time_before_election: TIME_BEFORE_ELECTION,
                         relays_count: RELAYS_COUNT_1,
                         min_relays_count: MIN_RELAYS,
+                        min_relay_deposit: MIN_RELAY_DEPOSIT,
                         send_gas_to: stakingOwner.address
                     },
                 });

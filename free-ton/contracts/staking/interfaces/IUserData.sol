@@ -63,6 +63,7 @@ interface IUserData {
     function processBecomeRelay(
         uint128 round_num,
         uint128 lock_time,
+        uint128 min_relay_deposit,
         address send_gas_to,
         uint32 user_data_code_version,
         uint32 election_code_version
