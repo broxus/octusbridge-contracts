@@ -377,7 +377,8 @@ describe('Test Staking Rewards', async function () {
                         _tokenRoot: stakingToken.address,
                         _dao_root: stakingOwner.address,
                         _rewarder: stakingOwner.address,
-                        _bridge: stakingOwner.address
+                        _bridge: stakingOwner.address,
+                        _deploy_nonce: getRandomNonce()
                     }
                 })).decoded.output.value0)
                 logger.log(`StakingRoot address: ${stakingRoot.address}`);

@@ -517,7 +517,8 @@ contract UserData is IUserData, IUpgradableByRequest {
         user = initialData.decode(address);
 
         TvmSlice params = s.loadRefAsSlice();
-        current_version = params.decode(uint32);
+        (current_version, ) = params.decode(uint32, uint32);
+
         dao_root = params.decode(address);
 
         rewardRounds.push(RewardRoundData(0, 0));
@@ -526,41 +527,55 @@ contract UserData is IUserData, IUpgradableByRequest {
     }
 
     function upgrade(TvmCell code, uint32 new_version, address send_gas_to) external override onlyRoot {
-        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
-
         if (new_version == current_version) {
+            tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
             send_gas_to.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
         } else {
             emit UserDataCodeUpgraded(new_version);
 
+            uint8 _tmp;
             TvmBuilder builder;
+            builder.store(root); // 256
+            builder.store(_tmp); // 8
+            builder.store(send_gas_to); // 256
 
-            builder.store(root);
-            builder.store(user);
-            builder.store(current_version);
+            builder.store(platform_code); // ref1
 
-            builder.store(new_version);
-            builder.store(send_gas_to);
+            TvmBuilder initial;
+            initial.store(user);
 
-            builder.store(relay_lock_until);
-            builder.store(token_balance);
-            builder.store(rewardRounds);
+            builder.storeRef(initial); // ref2
 
-            builder.store(relay_eth_address);
-            builder.store(eth_address_confirmed);
-            builder.store(relay_ton_pubkey);
-            builder.store(ton_pubkey_confirmed);
+            TvmBuilder params;
+            params.store(new_version);
+            params.store(current_version);
+            params.store(dao_root);
 
-            builder.store(platform_code);
+            builder.storeRef(params); // ref3
+
+            TvmBuilder data_builder;
+
+            TvmBuilder builder_1;
+            builder_1.store(token_balance); // 128
+            builder_1.store(relay_lock_until); // 128
+            builder_1.store(rewardRounds); // ref1
+            builder_1.store(relay_eth_address); // 160
+            builder_1.store(eth_address_confirmed); // 1
+            builder_1.store(relay_ton_pubkey); // 256
+            builder_1.store(ton_pubkey_confirmed); // 1
+            builder_1.store(slashed); // 1
+            // TOTAL = 256 + 128 + 128 + 1 + 1 + 160 + ref1
 
             TvmBuilder dao_data;
-            dao_data.store(dao_root);
-            dao_data.store(_proposal_nonce);
-            dao_data.store(created_proposals);
-            dao_data.store(_tmp_proposals);
-            dao_data.store(casted_votes);
+            dao_data.store(_proposal_nonce); // 32
+            dao_data.store(created_proposals); // ref1
+            dao_data.store(_tmp_proposals); // ref2
+            dao_data.store(casted_votes); // ref3
 
-            builder.store(dao_data);
+            data_builder.storeRef(builder_1); // ref1
+            data_builder.storeRef(dao_data); // ref2
+
+            builder.storeRef(data_builder);
 
             // set code after complete this method
             tvm.setcode(code);
@@ -570,6 +585,44 @@ contract UserData is IUserData, IUpgradableByRequest {
             onCodeUpgrade(builder.toCell());
         }
     }
+
+    /*
+    upgrade_data
+        bits:
+            address root
+            uint8 dummy
+            address send_gas_to
+        refs:
+            1: platform_code
+            2: initial
+                bits:
+                    address user
+            3: params:
+                bits:
+                    uint32 new_version
+                    uint32 current_version
+                    address dao_root
+            4: data
+                refs:
+                    1: data_1
+                        bits:
+                            uint128 token_balance
+                            uint128 relay_lock_until
+                            uint160 relay_eth_address
+                            bool eth_address_confirmed
+                            uint256 relay_ton_pubkey
+                            bool ton_pubkey_confirmed
+                            bool slashed
+                        refs:
+                            1: rewardRounds
+                    2: dao_data
+                        bits:
+                            uint32 _proposal_nonce
+                        refs:
+                            1: created_proposals
+                            2: _tmp_proposals
+                            3: casted_votes
+    */
 
     modifier onlyRoot() {
         require(msg.sender == root, ErrorCodes.NOT_ROOT);

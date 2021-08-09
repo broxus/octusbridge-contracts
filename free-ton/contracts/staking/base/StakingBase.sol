@@ -62,7 +62,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         uint128 min_relay_deposit
     );
 
-    //    uint32 public static deploy_nonce; // TODO: uncomment
+    uint32 public static deploy_nonce;
 
     TvmCell public platform_code;
     bool public has_platform_code;
@@ -510,6 +510,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     function deployUserData(address user_data_owner) internal returns (address) {
         TvmBuilder constructor_params;
+        constructor_params.store(user_data_version);
         constructor_params.store(user_data_version);
         constructor_params.store(dao_root);
 

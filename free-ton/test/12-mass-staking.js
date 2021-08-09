@@ -56,6 +56,7 @@ const eth_addrs = [...Array(USERS_NUM).keys()].map(i => `0x${randomBytes(20).toS
 
 const PER_ACTION_WAIT = 1000
 const BATCH_ACTION_WAIT = 10000;
+const DEV_WAIT = 60000;
 let staking_events = [{name: 'dummy'}];
 
 
@@ -108,6 +109,9 @@ describe('Test Staking Rewards', async function () {
         }
 
         await wait(BATCH_ACTION_WAIT);
+        if (locklift.network === 'dev') {
+            await wait(DEV_WAIT);
+        }
 
         return await Promise.all(users.map(async (_user) => {
             const wallet = await getUserTokenWallet(_user);
@@ -154,6 +158,9 @@ describe('Test Staking Rewards', async function () {
                 value: convertCrystal(_pubkeys.length * 10 + 5, 'nano')
             })
             await wait(PER_ACTION_WAIT);
+            if (locklift.network === 'dev') {
+                await wait(DEV_WAIT);
+            }
 
             const {
                 value: {wallets: _wallets}
@@ -407,7 +414,7 @@ describe('Test Staking Rewards', async function () {
                 const owner_key = keys[0];
                 const user_keys = keys.slice(1, USERS_NUM + 1);
 
-                stakingOwner = await deployAccount(owner_key, 5000);
+                stakingOwner = await deployAccount(owner_key, 2000);
                 users = await deployAccounts(stakingOwner, user_keys);
             });
         });
@@ -442,6 +449,10 @@ describe('Test Staking Rewards', async function () {
                     keyPair: keyPair,
                 }, locklift.utils.convertCrystal(10, 'nano'));
 
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
+
                 logger.log(`Deploying stakingRoot`);
                 stakingRoot = await locklift.factory.getContract('Staking');
                 stakingRoot.setAddress((await stakingRootDeployer.run({
@@ -452,12 +463,17 @@ describe('Test Staking Rewards', async function () {
                         _tokenRoot: stakingToken.address,
                         _dao_root: stakingOwner.address,
                         _rewarder: stakingOwner.address,
-                        _bridge: stakingOwner.address
+                        _bridge: stakingOwner.address,
+                        _deploy_nonce: getRandomNonce()
                     }
                 })).decoded.output.value0)
                 logger.log(`StakingRoot address: ${stakingRoot.address}`);
                 logger.log(`StakingRoot owner address: ${stakingOwner.address}`);
                 logger.log(`StakingRoot token root address: ${stakingToken.address}`);
+
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
 
                 const staking_wallet_addr = await stakingRoot.call({method: 'tokenWallet'});
                 logger.log(`Staking token wallet: ${staking_wallet_addr}`);
@@ -508,7 +524,9 @@ describe('Test Staking Rewards', async function () {
                     method: 'setActive',
                     params: {new_active: true, send_gas_to: stakingOwner.address},
                 });
-
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
                 const active = await stakingRoot.call({method: 'isActive'});
                 expect(active).to.be.equal(true, "Staking not active");
             });
@@ -517,6 +535,10 @@ describe('Test Staking Rewards', async function () {
                 const amount = rewardTokensBal;
 
                 const tx = await depositTokens(stakingOwner, ownerWallet, amount, true);
+
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
 
                 const staking_balance = await stakingWallet.call({method: 'balance'});
                 const staking_balance_stored = await stakingRoot.call({method: 'rewardTokenBalance'});
@@ -541,6 +563,12 @@ describe('Test Staking Rewards', async function () {
                     },
                 });
 
+                await waitForStakingEvent('RelayConfigUpdated');
+
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
+
                 const relays_count = await stakingRoot.call({method: 'relaysCount'});
                 expect(relays_count.toString()).to.be.equal(RELAYS_COUNT_1.toString(), "Relay config not installed");
             })
@@ -560,6 +588,10 @@ describe('Test Staking Rewards', async function () {
                     const curUserDeposit = userDeposit + i;
                     await depositTokens(user, user_token_wallet, curUserDeposit);
                     await wait(PER_ACTION_WAIT);
+
+                    if (locklift.network === 'dev') {
+                        await wait(DEV_WAIT);
+                    }
 
                     const user_data = await getUserDataAccount(user);
 
@@ -609,6 +641,10 @@ describe('Test Staking Rewards', async function () {
 
                 const round = await getRelayRound(1);
                 await waitForDeploy(round.address);
+
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
 
                 expect(event).not.to.be.eq(undefined, "Event not emitted");
 
@@ -670,6 +706,10 @@ describe('Test Staking Rewards', async function () {
                     await linkRelayAccounts(user, user.keyPair.public, eth_addrs[i]);
                     await wait(PER_ACTION_WAIT);
 
+                    if (locklift.network === 'dev') {
+                        await wait(DEV_WAIT);
+                    }
+
                     const userData = userDatas[i];
                     const _user_pk = await userData.call({method: 'relay_ton_pubkey'});
                     const _user_eth_addr = await userData.call({method: 'relay_eth_address'});
@@ -690,6 +730,10 @@ describe('Test Staking Rewards', async function () {
                     await confirmTonRelayAccount(user, userData);
                     await wait(PER_ACTION_WAIT);
 
+                    if (locklift.network === 'dev') {
+                        await wait(DEV_WAIT);
+                    }
+
                     const confirmed_user = await userData.call({method: 'ton_pubkey_confirmed'});
                     expect(confirmed_user).to.be.equal(true, "Ton pubkey user not confirmed");
                 }
@@ -704,6 +748,10 @@ describe('Test Staking Rewards', async function () {
                     await confirmEthRelayAccount(user, eth_addr);
                     await wait(PER_ACTION_WAIT);
 
+                    if (locklift.network === 'dev') {
+                        await wait(DEV_WAIT);
+                    }
+
                     const confirmed_user = await userData.call({method: 'eth_address_confirmed'});
                     expect(confirmed_user).to.be.equal(true, "Eth pubkey user not confirmed");
                 }
@@ -716,6 +764,10 @@ describe('Test Staking Rewards', async function () {
 
                 const election = await getElection(2);
                 await waitForDeploy(election.address);
+
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
 
                 expect(event).not.to.be.eq(undefined, "Event not emitted");
 
@@ -745,6 +797,10 @@ describe('Test Staking Rewards', async function () {
 
                     const tx = await requestRelayMembership(user);
                     await wait(PER_ACTION_WAIT);
+
+                    if (locklift.network === 'dev') {
+                        await wait(DEV_WAIT);
+                    }
 
                     const {
                         value: {
@@ -800,6 +856,10 @@ describe('Test Staking Rewards', async function () {
 
                 const round = await getRelayRound(2);
                 await waitForDeploy(round.address);
+
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
 
                 const {
                     round_num: _round_num,
@@ -861,6 +921,10 @@ describe('Test Staking Rewards', async function () {
                 await wait(PER_ACTION_WAIT);
 
                 const event = await waitForStakingEvent('NewRewardRound');
+
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
                 expect(event).not.to.be.eq(undefined, "Event not emitted");
 
                 const reward_rounds = await stakingRoot.call({method: 'rewardRounds'});
@@ -885,6 +949,10 @@ describe('Test Staking Rewards', async function () {
                 logger.log(`New election ${election.address}`);
                 await waitForDeploy(election.address);
 
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
+
                 expect(event).not.to.be.eq(undefined, "Event not emitted");
 
                 const round_num = await election.call({method: 'round_num'});
@@ -908,6 +976,10 @@ describe('Test Staking Rewards', async function () {
 
                 const tx = await requestRelayMembership(user);
                 await wait(PER_ACTION_WAIT);
+
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
 
                 const {
                     value: {
@@ -943,6 +1015,10 @@ describe('Test Staking Rewards', async function () {
                 console.log(tx.transaction.out_msgs);
                 const init_event = await waitForStakingEvent('RelayRoundInitialized');
                 const elect_event = await waitForStakingEvent('ElectionEnded');
+
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
 
                 expect(init_event).not.to.be.eq(undefined, "Event not emitted");
                 expect(elect_event).not.to.be.eq(undefined, "Event not emitted");
