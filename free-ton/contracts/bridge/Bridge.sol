@@ -47,7 +47,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
     /// @dev Derive connector address by it's id
     /// @param id Connector id
     function deriveConnectorAddress(
-        uint128 id
+        uint64 id
     )
         override
         public

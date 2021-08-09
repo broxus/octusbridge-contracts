@@ -38,6 +38,22 @@ module.exports = {
         amount: 20,
       }
     },
+    fld: {
+      ton_client: {
+        network: {
+          server_address: 'https://gql.custler.net/'
+        }
+      },
+      giver: {
+        address: '0:28cbba1c9052a6552e600e53d57d17fa3a1f1a9a05ce1d1f5c8a825d5811811e',
+        abi: { "ABI version": 2, "header": ["pubkey", "time", "expire"], "functions": [ { "name": "constructor", "inputs": [ ], "outputs": [ ] }, { "name": "sendGrams", "inputs": [ {"name":"dest","type":"address"}, {"name":"amount","type":"uint64"} ], "outputs": [ ] }, { "name": "owner", "inputs": [ ], "outputs": [ {"name":"owner","type":"uint256"} ] } ], "data": [ {"key":1,"name":"owner","type":"uint256"} ], "events": [ ] },
+        key: process.env.DEV_GIVER_KEY,
+      },
+      keys: {
+        phrase: '',
+        amount: 20,
+      }
+    },
     main: {
       ton_client: {
         network: {

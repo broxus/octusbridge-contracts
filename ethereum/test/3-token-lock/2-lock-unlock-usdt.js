@@ -1,3 +1,5 @@
+const hre = require('hardhat');
+
 const {
   logger,
   expect,
@@ -5,7 +7,6 @@ const {
 } = require('../utils');
 
 const { legos } = require('@studydefi/money-legos');
-
 
 const tokensToLock = 1000;
 const tokensToUnlock = 900;
@@ -18,34 +19,36 @@ describe('Lock and unlock USDT', async () => {
   it('Setup contracts', async () => {
     await deployments.fixture();
     
-    tokenLock = await ethers.getContract('TokenLock');
+    tokenLock = await ethers.getContract('TokenLock_usdt');
 
     usdt = await ethers.getContractAt(
       legos.erc20.abi,
-      '0xdAC17F958D2ee523a2206206994597C13D831ec7'
+      (await tokenLock.token())
     );
   });
   
   describe('Lock USDT', async () => {
     it('Setup locker', async () => {
-      const { usdtOwner } = await getNamedAccounts();
+      const tokenOwner = '0xA929022c9107643515F5c777cE9a910F0D1e490C';
 
       await hre.network.provider.request({
         method: "hardhat_impersonateAccount",
-        params: [usdtOwner]
+        params: [tokenOwner]
       });
 
       locker = await ethers
         .provider
-        .getSigner(usdtOwner);
+        .getSigner(tokenOwner);
     });
 
     it('Approve tokens to token lock', async () => {
-      await usdt.connect(locker).approve(tokenLock.address, tokensToLock);
+      await usdt
+        .connect(locker)
+        .approve(tokenLock.address, tokensToLock);
     });
 
     it('Lock tokens', async () => {
-      await expect(() => tokenLock.connect(locker).lockTokens(tokensToLock, 0, 0, 0, [], []))
+      await expect(() => tokenLock.connect(locker).lockTokens(tokensToLock, 0, 0, 0, []))
         .to.changeTokenBalance(usdt, tokenLock, tokensToLock);
     });
     

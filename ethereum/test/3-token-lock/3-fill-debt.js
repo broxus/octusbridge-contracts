@@ -13,14 +13,14 @@ const unlockFee = 100;
 
 
 describe('Unlock USDT with creating debt and fill order', async () => {
-  let tokenLock, usdt;
+  let tokenLock, token;
   
   it('Setup contracts', async () => {
     await deployments.fixture();
     
-    tokenLock = await ethers.getContract('TokenLock');
+    tokenLock = await ethers.getContract('TokenLock_usdt');
     
-    usdt = await ethers.getContractAt(
+    token = await ethers.getContractAt(
       legos.erc20.abi,
       '0xdAC17F958D2ee523a2206206994597C13D831ec7'
     );
@@ -70,20 +70,20 @@ describe('Unlock USDT with creating debt and fill order', async () => {
     let locker;
 
     it('Setup locker', async () => {
-      const { usdtOwner } = await getNamedAccounts();
+      const tokenOwner = '0xA929022c9107643515F5c777cE9a910F0D1e490C';
 
       await hre.network.provider.request({
         method: "hardhat_impersonateAccount",
-        params: [usdtOwner]
+        params: [tokenOwner]
       });
 
       locker = await ethers
         .provider
-        .getSigner(usdtOwner);
+        .getSigner(tokenOwner);
     });
 
     it('Approve tokens to token lock', async () => {
-      await usdt.connect(locker).approve(tokenLock.address, tokensToLock);
+      await token.connect(locker).approve(tokenLock.address, tokensToLock);
     });
 
     it('Lock tokens with filling unlock order', async () => {
@@ -93,7 +93,7 @@ describe('Unlock USDT with creating debt and fill order', async () => {
   
       await expect(tokenLock
         .connect(locker)
-        .lockTokens(tokensToLock, 0, 0, 0, [], [[unlockReceiver, 0]])
+        .lockTokens(tokensToLock, 0, 0, 0, [[unlockReceiver, 0]])
       ).to.emit(tokenLock, 'TokenLock').withArgs(tokensToLock + unlockFee, 0, 0, 0);
     });
     
@@ -102,7 +102,7 @@ describe('Unlock USDT with creating debt and fill order', async () => {
         unlockReceiver
       } = await getNamedAccounts();
 
-      expect(await usdt.balanceOf(unlockReceiver))
+      expect(await token.balanceOf(unlockReceiver))
         .to.be.equal(tokensToUnlock - unlockFee, 'Wrong receiver balance after filling order');
     });
     

@@ -2,7 +2,9 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 
 import "./interfaces/ITokenLock.sol";
 import "./interfaces/IBridge.sol";
@@ -15,8 +17,11 @@ import "./utils/ChainId.sol";
 
 
 // TODO: think about syncing with actual token balance
-contract TokenLock is ITokenLock, Cache, OwnableUpgradeable, ChainId {
+contract TokenLock is ITokenLock, ReentrancyGuard, OwnableUpgradeable, PausableUpgradeable, Cache, ChainId {
     using UniversalERC20 for IERC20;
+
+    address public override bridge;
+    address public override token;
 
     uint32 constant public shares = 100000;
 
@@ -24,36 +29,39 @@ contract TokenLock is ITokenLock, Cache, OwnableUpgradeable, ChainId {
     uint256 public lockedTokens = 0;
     uint256 public debtTokens = 0;
 
-    Configuration public configuration;
-
     mapping (address => Unlock[]) unlockOrders;
-    mapping (address => TokenManagerConfiguration) tokenManagers;
-    mapping (address => uint256) tokenManagerBalance;
+    mapping (address => TokenManagerConfiguration) public tokenManagers;
+    mapping (address => uint256) tokenManagerLocked;
 
-    modifier onlyActive() {
-        require(configuration.active, 'Token lock: not active');
-        _;
-    }
 
     /// @dev Initializer
     /// @param admin Token lock admin
-    /// @param _configuration Initial token lock configuration
+    /// @param _token Token
+    /// @param _bridge Bridge
     function initialize(
         address admin,
-        Configuration calldata _configuration
+        address _token,
+        address _bridge
     ) external initializer {
         __Ownable_init();
+        __Pausable_init();
+
         transferOwnership(admin);
 
-        _setConfiguration(_configuration);
+        token = _token;
+        bridge = _bridge;
     }
 
-    /// @dev Set token lock configuration
-    /// @param _configuration New configuration
-    function setConfiguration(
-        Configuration calldata _configuration
-    ) override external onlyOwner {
-        _setConfiguration(_configuration);
+    /// @dev Pause contract.
+    /// Disable locking and unlocking tokens
+    function pause() onlyOwner whenNotPaused external {
+        _pause();
+    }
+
+    /// @dev Unpause contract.
+    /// Enable locking and unlocking tokens
+    function unpause() onlyOwner whenPaused external {
+        _unpause();
     }
 
     /// @dev Add new token manager
@@ -80,6 +88,10 @@ contract TokenLock is ITokenLock, Cache, OwnableUpgradeable, ChainId {
         address manager,
         TokenManagerConfiguration calldata _configuration
     ) external override onlyOwner {
+        require(tokenManagers[manager].share == 0, 'Token lock: manager already exist');
+
+        tokenManagers[manager] = _configuration;
+
         emit UpdateTokenManager(manager, _configuration);
     }
 
@@ -106,31 +118,12 @@ contract TokenLock is ITokenLock, Cache, OwnableUpgradeable, ChainId {
         return tokenManagers[manager].share > 0;
     }
 
-    /// @dev Get token manager status
-    /// @param manager Token manager
-    /// @return locked How many tokens are currently locked on the manager
-    /// @return expected How many tokens are expected to be locked on the manager.
-    /// May be more or less than current `locked` in case token lock has
-    /// received / spent tokens since last sync.
-    function tokenManagerStatus(
-        address manager
-    ) public view returns(
-        uint256 locked,
-        uint256 expected
-    ) {
-        require(isTokenManager(manager), 'Token lock: not a token manager');
-
-        locked = tokenManagerBalance[manager];
-        expected = (lockedTokens - debtTokens) / shares * tokenManagers[manager].share;
-    }
-
     /// @dev Lock tokens on Ethereum side, so they can be transferred to FreeTON.
     /// Tokens in FreeTON could be received on public key OR address, not both
     /// @param amount Amount of tokens to lock. Should be approved before
     /// @param wid Workchain id from receiver FreeTON address (before :)
     /// @param addr Body from receiver FreeTON address (after :)
     /// @param pubkey Receiver's FreeTON public key
-    /// @param tokenManagersToSync Token managers to sync
     /// @param ids Unlock orders ids to be filled with this token lock.
     /// Each filled order increases amount minted on FreeTON with order.fee.
     function lockTokens(
@@ -138,20 +131,15 @@ contract TokenLock is ITokenLock, Cache, OwnableUpgradeable, ChainId {
         int8 wid,
         uint256 addr,
         uint256 pubkey,
-        address[] memory tokenManagersToSync,
         UnlockId[] calldata ids
-    ) external override onlyActive {
-        IERC20(configuration.token).universalTransferFrom(
+    ) external override whenNotPaused {
+        IERC20(token).universalTransferFrom(
             msg.sender,
             address(this),
             amount
         );
 
         lockedTokens += amount;
-
-        for (uint32 i = 0; i < tokenManagersToSync.length; i++) {
-            _syncTokenManager(tokenManagersToSync[i]);
-        }
 
         uint128 fillReward = 0;
 
@@ -177,7 +165,7 @@ contract TokenLock is ITokenLock, Cache, OwnableUpgradeable, ChainId {
     )
         external
         override
-        onlyActive
+        whenNotPaused
         notCached(payload)
     {
         (IBridge.TONEvent memory _event) = abi.decode(
@@ -186,7 +174,7 @@ contract TokenLock is ITokenLock, Cache, OwnableUpgradeable, ChainId {
         );
 
         require(
-            IBridge(configuration.bridge).verifyRelaySignatures(
+            IBridge(bridge).verifyRelaySignatures(
                 _event.round,
                 payload,
                 signatures
@@ -214,7 +202,7 @@ contract TokenLock is ITokenLock, Cache, OwnableUpgradeable, ChainId {
 
         uint256 orderId = _saveUnlockOrder(receiver, order);
 
-        if (amount <= status()) {
+        if (amount <= balance()) {
             _fillUnlockOrder(receiver, orderId, true);
         }
     }
@@ -239,26 +227,51 @@ contract TokenLock is ITokenLock, Cache, OwnableUpgradeable, ChainId {
         }
     }
 
-    /// @dev Token lock status
-    /// @return available How many tokens are available for unlock
-    function status() public view returns (uint256 available) {
-        available = IERC20(configuration.token).balanceOf(address(this));
+    /// @dev Token lock balance
+    /// @return Token lock balance
+    function balance() public view returns (uint256) {
+        return IERC20(token).balanceOf(address(this));
     }
 
     /// @dev Get the manager token allocation
     /// @param manager Token manager address
-    /// @return locked How much tokens are locked on a manager at this moment
-    /// @return expected How much tokens should be locked on a manager
+    /// @return status How much tokens are locked on a manager at this moment
+    /// @return tokens Token lock
     function getTokenManagerStatus(
         address manager
-    ) public view returns(uint256, uint256) {
+    ) public override view returns (
+        TokenManagerStatus status,
+        uint256 tokens
+    ) {
         require(isTokenManager(manager), 'Token lock: not token manager');
 
-        uint256 locked = tokenManagerBalance[manager];
+        uint256 locked = tokenManagerLocked[manager];
         uint256 expected = (lockedTokens - debtTokens) * tokenManagers[manager].share / shares;
 
-        return (locked, expected);
+        if (locked == expected) {
+            status = TokenManagerStatus.Synced;
+            tokens = 0;
+        } else if (locked > expected) {
+            status = TokenManagerStatus.Deficit;
+            tokens = locked - expected;
+        } else {
+            status = TokenManagerStatus.Proficit;
+            tokens = expected - locked;
+        }
     }
+
+    function payDeficit(address manager, uint tokens) override external {
+
+    }
+
+    function requestProficitApprove(address manager) override external {
+        (TokenManagerStatus status, uint tokens) = getTokenManagerStatus(manager);
+
+        require(status == TokenManagerStatus.Proficit, 'Token lock: token manager should be in profit');
+
+        IERC20(token).approve(manager, tokens);
+    }
+
 
     /// @dev Check order exists
     /// @param receiver Order receiver
@@ -326,19 +339,11 @@ contract TokenLock is ITokenLock, Cache, OwnableUpgradeable, ChainId {
         lockedTokens -= order.amount - fee;
         debtTokens -= order.amount;
 
-        IERC20(configuration.token).universalTransfer(receiver, order.amount - fee);
+        IERC20(token).universalTransfer(receiver, order.amount - fee);
 
         emit TokenUnlock(receiver, orderId, order.amount - fee);
 
         unlockOrders[receiver][orderId].filled = true;
-    }
-
-    function _setConfiguration(
-        Configuration memory _configuration
-    ) internal {
-        configuration = _configuration;
-
-        emit ConfigurationUpdate(_configuration);
     }
 
     function _syncTokenManager(

@@ -5,6 +5,7 @@ pragma experimental ABIEncoderV2;
 import "./interfaces/IBridge.sol";
 import "./interfaces/IDAO.sol";
 
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 import "./utils/Cache.sol";
@@ -14,7 +15,7 @@ import "./utils/ChainId.sol";
     @title DAO contract for Broxus TON-Ethereum bridge
     Executes proposals confirmed in TON DAO. Owns itself.
 */
-contract DAO is OwnableUpgradeable, Cache, ChainId, IDAO {
+contract DAO is IDAO, ReentrancyGuard, OwnableUpgradeable, Cache, ChainId {
     address public bridge;
 
     /// @dev Initializer
@@ -42,7 +43,7 @@ contract DAO is OwnableUpgradeable, Cache, ChainId, IDAO {
     function execute(
         bytes calldata payload,
         bytes[] calldata signatures
-    ) override external notCached(payload) returns(
+    ) override external nonReentrant notCached(payload) returns(
         bytes[] memory responses
     ) {
         (IBridge.TONEvent memory tonEvent) = abi.decode(payload, (IBridge.TONEvent));

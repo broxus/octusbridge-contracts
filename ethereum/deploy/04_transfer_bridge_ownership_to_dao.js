@@ -1,12 +1,12 @@
 module.exports = async ({getNamedAccounts, deployments}) => {
-  const { owner } = await getNamedAccounts();
+  const { deployer } = await getNamedAccounts();
   
   const dao = await deployments.get('DAO');
   
   await deployments.execute(
     'Bridge',
     {
-      from: owner,
+      from: deployer,
       log: true,
     },
     'transferOwnership',

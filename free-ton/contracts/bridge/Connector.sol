@@ -11,7 +11,7 @@ import './../../../node_modules/@broxus/contracts/contracts/access/InternalOwner
 */
 contract Connector is IConnector, InternalOwner {
     address static bridge;
-    uint128 static id;
+    uint64 static id;
 
     address public eventConfiguration;
     bool public enabled;
@@ -53,7 +53,7 @@ contract Connector is IConnector, InternalOwner {
         @return _enabled Event configuration status
     */
     function getDetails() external returns(
-        uint128 _id,
+        uint64 _id,
         address _eventConfiguration,
         bool _enabled
     ) {
