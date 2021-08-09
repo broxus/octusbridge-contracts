@@ -29,6 +29,7 @@ contract RelayRound is IRelayRound {
 
     uint128 public round_num; // setup from initialData
     Relay[] public relays;
+    uint256[] public ton_keys; // flat array of ton pubkeys
     mapping (address => uint256) addr_to_idx;
     mapping (address => bool) reward_claimed;
 
@@ -101,11 +102,7 @@ contract RelayRound is IRelayRound {
     }
 
     function relayKeys() public view responsible returns (uint256[]) {
-        uint256[] _keys = new uint256[](relays.length);
-        for (uint256 i = 0; i < _keys.length; i++) {
-            _keys[i] = relays[i].ton_pubkey;
-        }
-        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } _keys;
+        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } ton_keys;
     }
 
     function setEmptyRelays(address send_gas_to) external override {
@@ -129,6 +126,7 @@ contract RelayRound is IRelayRound {
                 break;
             }
             relays.push(_relay_list[i]);
+            ton_keys.push(_relay_list[i].ton_pubkey);
             addr_to_idx[_relay_list[i].staker_addr] = relays.length - 1;
             total_tokens_staked += _relay_list[i].staked_tokens;
             relays_count += 1;
