@@ -187,18 +187,32 @@ contract Election is IElection {
             emit ElectionCodeUpgraded(new_version);
 
             TvmBuilder builder;
+            uint8 _tmp;
+            builder.store(root); // 256
+            builder.store(_tmp); // 8
+            builder.store(send_gas_to); // 256
 
-            builder.store(root);
-            builder.store(round_num);
-            builder.store(current_version);
-            builder.store(new_version);
-            builder.store(send_gas_to);
+            builder.store(platform_code); // ref1
 
-            builder.store(requests_nodes);
-            builder.store(list_start_idx);
-            builder.store(election_ended);
+            TvmBuilder initial;
+            initial.store(round_num);
 
-            builder.store(platform_code);
+            builder.storeRef(initial); // ref2
+
+            TvmBuilder params;
+            params.store(new_version);
+            params.store(current_version);
+
+            builder.storeRef(params); // ref3
+
+            TvmBuilder data_builder;
+
+            data_builder.store(requests_nodes); // ref1
+            data_builder.store(list_start_idx); // 256
+            data_builder.store(election_ended); // 1
+            data_builder.store(relay_transfer_start_idx); // 256
+
+            builder.storeRef(data_builder); // ref4
 
             // set code after complete this method
             tvm.setcode(code);
@@ -208,6 +222,31 @@ contract Election is IElection {
             onCodeUpgrade(builder.toCell());
         }
     }
+
+    /*
+    upgrade_data
+        bits:
+            address root
+            uint8 dummy
+            address send_gas_to
+        refs:
+            1: platform_code
+            2: initial
+                bits:
+                    uint128 round_num
+            3: params:
+                bits:
+                    uint32 new_version
+                    uint32 current_version
+            4: data
+                bits:
+                    uint256 list_start_idx
+                    bool election_ended
+                    uint256 relay_transfer_start_idx
+                refs:
+                    1: requests_nodes
+
+    */
 
     function onCodeUpgrade(TvmCell upgrade_data) private {
         tvm.resetStorage();
@@ -223,7 +262,7 @@ contract Election is IElection {
         round_num = initialData.decode(uint128);
 
         TvmSlice params = s.loadRefAsSlice();
-        current_version = params.decode(uint32);
+        (current_version, ) = params.decode(uint32, uint32);
 
         // create origin node after contract initialization
         requests_nodes.push(Node(0, 0, IRelayRound.Relay(address.makeAddrNone(), 0, 0, 0)));

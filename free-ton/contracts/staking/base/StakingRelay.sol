@@ -252,6 +252,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
 
         TvmBuilder constructor_params;
         constructor_params.store(election_version);
+        constructor_params.store(election_version);
 
         return new Platform{
             stateInit: _buildInitData(PlatformTypes.Election, _buildElectionParams(round_num)),
@@ -272,6 +273,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         require(round_num > currentRelayRound, ErrorCodes.INVALID_RELAY_ROUND_ROUND);
 
         TvmBuilder constructor_params;
+        constructor_params.store(relay_round_version);
         constructor_params.store(relay_round_version);
         constructor_params.store(relayRoundTime);
         constructor_params.store(uint128(rewardRounds.length - 1));

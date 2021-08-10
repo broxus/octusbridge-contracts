@@ -162,7 +162,8 @@ contract RelayRound is IRelayRound {
         round_num = initialData.decode(uint128);
 
         TvmSlice params = s.loadRefAsSlice();
-        current_version = params.decode(uint32);
+        (current_version, ) = params.decode(uint32, uint32);
+
         round_len = params.decode(uint128);
         reward_round_num = params.decode(uint128);
         uint128 reward_per_second = params.decode(uint128);
@@ -185,18 +186,52 @@ contract RelayRound is IRelayRound {
             emit RelayRoundCodeUpgraded(new_version);
 
             TvmBuilder builder;
+            uint8 _tmp;
+            builder.store(root); // 256
+            builder.store(_tmp); // 8
+            builder.store(send_gas_to); // 256
 
-            builder.store(root);
-            builder.store(round_num);
-            builder.store(current_version);
-            builder.store(new_version);
-            builder.store(send_gas_to);
+            builder.store(platform_code); // ref1
 
-            builder.store(relays);
-            builder.store(relays_installed);
-            builder.store(relays_count);
+            TvmBuilder initial;
+            initial.store(round_num);
 
-            builder.store(platform_code);
+            builder.storeRef(initial); // ref2
+
+            TvmBuilder params;
+            params.store(new_version);
+            params.store(current_version);
+
+            builder.storeRef(params); // ref3
+
+            TvmBuilder data_builder;
+
+            TvmBuilder data_builder_1;
+            data_builder_1.store(relays_installed); // 1
+            data_builder_1.store(relays_count); // 128
+            data_builder_1.store(start_time); // 128
+            data_builder_1.store(round_len); // 128
+            data_builder_1.store(total_tokens_staked); // 128
+            data_builder_1.store(reward_round_num); // 128
+            data_builder_1.store(round_reward); // 128
+            data_builder_1.store(duplicate); // 1
+            data_builder_1.store(expected_packs_num); // 8
+
+            data_builder.storeRef(data_builder_1);
+
+            TvmBuilder data_builder_2;
+            data_builder_2.store(election_addr); // 256
+            data_builder_2.store(prev_round_addr); // 256
+            data_builder_2.store(relays); // ref1
+            data_builder_2.store(ton_keys); // ref2
+            data_builder_2.store(addr_to_idx); // ref3
+            data_builder_2.store(reward_claimed); // ref4
+            data_builder_2.store(relay_packs_installed); // 8
+            data_builder_2.store(relay_transfer_start_idx); // 256
+
+            data_builder.storeRef(data_builder_2);
+
+            builder.storeRef(data_builder); // ref4
 
             // set code after complete this method
             tvm.setcode(code);
@@ -206,6 +241,47 @@ contract RelayRound is IRelayRound {
             onCodeUpgrade(builder.toCell());
         }
     }
+
+    /*
+    upgrade_data
+        bits:
+            address root
+            uint8 dummy
+            address send_gas_to
+        refs:
+            1: platform_code
+            2: initial
+                bits:
+                    uint128 round_num
+            3: params:
+                bits:
+                    uint32 new_version
+                    uint32 current_version
+            4: data
+                refs:
+                    1: data_1
+                        bits:
+                            bool relays_installed
+                            uint128 relays_count
+                            uint128 start_time
+                            uint128 round_len
+                            uint128 total_tokens_staked
+                            uint128 reward_round_num
+                            uint128 round_reward
+                            bool duplicate
+                            uint8 expected_packs_num
+                    2: data_2
+                        bits:
+                            address election_addr
+                            address prev_round_addr
+                            uint8 relay_packs_installed
+                            uint256 relay_transfer_start_idx
+                        refs:
+                            1: relays
+                            2: ton_keys
+                            3: addr_to_idx
+                            4: reward_claimed
+    */
 
     function _buildInitData(uint8 type_id, TvmCell _initialData) internal inline view returns (TvmCell) {
         return tvm.buildStateInit({
