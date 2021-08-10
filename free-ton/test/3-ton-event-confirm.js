@@ -175,7 +175,7 @@ describe('Test ton event confirm', async function() {
       const relays = await eventContract.call({
         method: 'getVoters',
         params: {
-          vote: 0
+          vote: 1
         }
       });
     
