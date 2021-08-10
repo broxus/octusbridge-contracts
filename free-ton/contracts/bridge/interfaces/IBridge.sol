@@ -10,7 +10,7 @@ interface IBridge {
         address staking;
         bool active;
         TvmCell connectorCode;
-        uint128 connectorDeployValue;
+        uint64 connectorDeployValue;
     }
 
     struct EventConfiguration {
