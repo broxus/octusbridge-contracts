@@ -23,7 +23,7 @@ contract Election is IElection {
     TvmCell public platform_code;
 
     address public root;
-    uint128 public round_num;
+    uint32 public round_num;
 
     struct Node {
         uint256 prev_node;
@@ -47,7 +47,7 @@ contract Election is IElection {
     constructor() public { revert(); }
 
     // return sorted list of requests
-    function getRequests(uint256 limit) public responsible returns (IRelayRound.Relay[]) {
+    function getRequests(uint128 limit) public responsible returns (IRelayRound.Relay[]) {
         (IRelayRound.Relay[] _requests, uint256 _) = _getRequestsFromIdx(limit, list_start_idx);
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }_requests;
     }
@@ -56,7 +56,7 @@ contract Election is IElection {
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }requests_nodes[idx];
     }
 
-    function _getRequestsFromIdx(uint256 limit, uint256 start_idx) internal view returns (IRelayRound.Relay[], uint256) {
+    function _getRequestsFromIdx(uint128 limit, uint256 start_idx) internal view returns (IRelayRound.Relay[], uint256) {
         IRelayRound.Relay[] _requests = new IRelayRound.Relay[](limit);
         uint256 cur_idx = start_idx;
         uint128 counter = 0;
@@ -74,7 +74,7 @@ contract Election is IElection {
         uint256 ton_pubkey,
         uint160 eth_addr,
         uint128 tokens,
-        uint128 lock_time,
+        uint32 lock_time,
         address send_gas_to,
         uint32 code_version
     ) external override onlyUserData(staker_addr) {
@@ -159,11 +159,11 @@ contract Election is IElection {
         election_ended = true;
         relay_transfer_start_idx = list_start_idx;
         IStakingPool(root).onElectionEnded{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
-            round_num, uint128(requests_nodes.length - 1), send_gas_to
+            round_num, uint32(requests_nodes.length - 1), send_gas_to
         );
     }
 
-    function sendRelaysToRelayRound(address relay_round_addr, uint128 relays_count, address send_gas_to) external override onlyRoot {
+    function sendRelaysToRelayRound(address relay_round_addr, uint32 relays_count, address send_gas_to) external override onlyRoot {
         require (election_ended, ErrorCodes.ELECTION_ENDED);
 
         tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
@@ -233,7 +233,7 @@ contract Election is IElection {
             1: platform_code
             2: initial
                 bits:
-                    uint128 round_num
+                    uint32 round_num
             3: params:
                 bits:
                     uint32 new_version
@@ -259,7 +259,7 @@ contract Election is IElection {
         platform_code = s.loadRef();
 
         TvmSlice initialData = s.loadRefAsSlice();
-        round_num = initialData.decode(uint128);
+        round_num = initialData.decode(uint32);
 
         TvmSlice params = s.loadRefAsSlice();
         (current_version, ) = params.decode(uint32, uint32);

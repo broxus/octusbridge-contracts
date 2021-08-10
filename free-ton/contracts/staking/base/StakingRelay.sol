@@ -96,7 +96,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         require (pendingRelayRound != 0, ErrorCodes.ELECTION_NOT_STARTED);
         tvm.rawReserve(_reserve(), 2);
 
-        uint128 lock_time = electionTime + 30 days;
+        uint32 lock_time = electionTime + 30 days;
 
         address userDataAddr = getUserDataAddress(msg.sender);
         UserData(userDataAddr).processBecomeRelay{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
@@ -104,7 +104,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         );
     }
 
-    function getRewardForRelayRound(uint128 round_num, address send_gas_to) external onlyActive {
+    function getRewardForRelayRound(uint32 round_num, address send_gas_to) external onlyActive {
         require (msg.value >= Gas.MIN_GET_REWARD_RELAY_ROUND_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
 
         tvm.rawReserve(_reserve(), 2);
@@ -139,7 +139,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         IElection(election_addr).finish{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(send_gas_to, election_version);
     }
 
-    function onElectionStarted(uint128 round_num, address send_gas_to) external override onlyElection(round_num) {
+    function onElectionStarted(uint32 round_num, address send_gas_to) external override onlyElection(round_num) {
         tvm.rawReserve(_reserve(), 2);
 
         currentElectionStartTime = now;
@@ -149,8 +149,8 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
     }
 
     function onElectionEnded(
-        uint128 round_num,
-        uint128 relay_requests_count,
+        uint32 round_num,
+        uint32 relay_requests_count,
         address send_gas_to
     ) external override onlyElection(round_num) {
         tvm.rawReserve(_reserve(), 2);
@@ -175,7 +175,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
     }
 
     function onRelayRoundDeployed(
-        uint128 round_num,
+        uint32 round_num,
         bool duplicate,
         address send_gas_to
     ) external override onlyRelayRound(round_num) {
@@ -224,8 +224,8 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
     }
 
     function onRelayRoundInitialized(
-        uint128 round_num,
-        uint128 relays_count,
+        uint32 round_num,
+        uint32 relays_count,
         uint128 round_reward,
         bool duplicate,
         address send_gas_to
@@ -247,7 +247,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 
-    function deployElection(uint128 round_num, address send_gas_to) internal returns (address) {
+    function deployElection(uint32 round_num, address send_gas_to) internal returns (address) {
         require(round_num > currentRelayRound, ErrorCodes.INVALID_ELECTION_ROUND);
 
         TvmBuilder constructor_params;
@@ -262,7 +262,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
     }
 
     function deployRelayRound(
-        uint128 round_num,
+        uint32 round_num,
         bool duplicate,
         uint8 packs_num,
         address election_addr,
@@ -276,7 +276,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         constructor_params.store(relay_round_version);
         constructor_params.store(relay_round_version);
         constructor_params.store(relayRoundTime);
-        constructor_params.store(uint128(rewardRounds.length - 1));
+        constructor_params.store(uint32(rewardRounds.length - 1));
         constructor_params.store(rewardPerSecond);
         constructor_params.store(duplicate);
         constructor_params.store(packs_num);
@@ -290,13 +290,13 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         }(relay_round_code, constructor_params.toCell(), send_gas_to);
     }
 
-    modifier onlyElection(uint128 round_num) {
+    modifier onlyElection(uint32 round_num) {
         address expectedAddr = getElectionAddress(round_num);
         require (expectedAddr == msg.sender, ErrorCodes.NOT_ELECTION);
         _;
     }
 
-    modifier onlyRelayRound(uint128 round_num) {
+    modifier onlyRelayRound(uint32 round_num) {
         address expectedAddr = getRelayRoundAddress(round_num);
         require (expectedAddr == msg.sender, ErrorCodes.NOT_RELAY_ROUND);
         _;

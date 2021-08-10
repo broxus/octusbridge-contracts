@@ -30,7 +30,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     TvmCell public platform_code;
 
     uint128 public token_balance;
-    uint128 relay_lock_until;
+    uint32 relay_lock_until;
 
     RewardRoundData[] public rewardRounds;
 
@@ -318,7 +318,7 @@ contract UserData is IUserData, IUpgradableByRequest {
 
     function processGetRelayRewardForRound(
         IStakingPool.RewardRound[] reward_rounds,
-        uint128 round_num,
+        uint32 round_num,
         address send_gas_to,
         uint32 code_version,
         uint32 relay_round_code_version
@@ -337,7 +337,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     }
 
     function receiveRewardForRelayRound(
-        uint128 relay_round_num, uint128 reward_round_num, uint128 reward, address send_gas_to
+        uint32 relay_round_num, uint32 reward_round_num, uint128 reward, address send_gas_to
     ) external override onlyRelayRound(relay_round_num) {
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
 
@@ -388,8 +388,8 @@ contract UserData is IUserData, IUpgradableByRequest {
     }
 
     function processBecomeRelay(
-        uint128 round_num,
-        uint128 lock_time,
+        uint32 round_num,
+        uint32 lock_time,
         uint128 min_deposit,
         address send_gas_to,
         uint32 code_version,
@@ -410,7 +410,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     }
 
     function relayMembershipRequestAccepted(
-        uint128 round_num, uint128 tokens, uint256 ton_pubkey, uint256 eth_addr, uint128 lock_time, address send_gas_to
+        uint32 round_num, uint128 tokens, uint256 ton_pubkey, uint256 eth_addr, uint32 lock_time, address send_gas_to
     ) external override onlyElection(round_num) {
         tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
 
@@ -455,13 +455,13 @@ contract UserData is IUserData, IUpgradableByRequest {
         });
     }
 
-    function _buildElectionParams(uint128 round_num) private inline view returns (TvmCell) {
+    function _buildElectionParams(uint32 round_num) private inline view returns (TvmCell) {
         TvmBuilder builder;
         builder.store(round_num);
         return builder.toCell();
     }
 
-    function _buildRelayRoundParams(uint128 round_num) private inline view returns (TvmCell) {
+    function _buildRelayRoundParams(uint32 round_num) private inline view returns (TvmCell) {
         TvmBuilder builder;
         builder.store(round_num);
         return builder.toCell();
@@ -475,7 +475,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         );
     }
 
-    function getElectionAddress(uint128 round_num) private view returns (address) {
+    function getElectionAddress(uint32 round_num) private view returns (address) {
         return address(tvm.hash(_buildPlatformInitData(
             root,
             PlatformTypes.Election,
@@ -483,7 +483,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         )));
     }
 
-    function getRelayRoundAddress(uint128 round_num) private view returns (address) {
+    function getRelayRoundAddress(uint32 round_num) private view returns (address) {
         return address(tvm.hash(_buildPlatformInitData(
             root,
             PlatformTypes.RelayRound,
@@ -557,14 +557,13 @@ contract UserData is IUserData, IUpgradableByRequest {
 
             TvmBuilder builder_1;
             builder_1.store(token_balance); // 128
-            builder_1.store(relay_lock_until); // 128
+            builder_1.store(relay_lock_until); // 32
             builder_1.store(rewardRounds); // ref1
             builder_1.store(relay_eth_address); // 160
             builder_1.store(eth_address_confirmed); // 1
             builder_1.store(relay_ton_pubkey); // 256
             builder_1.store(ton_pubkey_confirmed); // 1
             builder_1.store(slashed); // 1
-            // TOTAL = 256 + 128 + 128 + 1 + 1 + 160 + ref1
 
             TvmBuilder dao_data;
             dao_data.store(_proposal_nonce); // 32
@@ -607,7 +606,7 @@ contract UserData is IUserData, IUpgradableByRequest {
                     1: data_1
                         bits:
                             uint128 token_balance
-                            uint128 relay_lock_until
+                            uint32 relay_lock_until
                             uint160 relay_eth_address
                             bool eth_address_confirmed
                             uint256 relay_ton_pubkey
@@ -629,13 +628,13 @@ contract UserData is IUserData, IUpgradableByRequest {
         _;
     }
 
-    modifier onlyElection(uint128 round_num) {
+    modifier onlyElection(uint32 round_num) {
         address election_addr = getElectionAddress(round_num);
         require (election_addr == msg.sender, ErrorCodes.NOT_ELECTION);
         _;
     }
 
-    modifier onlyRelayRound(uint128 round_num) {
+    modifier onlyRelayRound(uint32 round_num) {
         address expectedAddr = getRelayRoundAddress(round_num);
         require (expectedAddr == msg.sender, ErrorCodes.NOT_RELAY_ROUND);
         _;

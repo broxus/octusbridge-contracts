@@ -25,15 +25,15 @@ import "../../utils/Delegate.sol";
 
 abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, IStakingDao, Delegate {
     // Events
-    event RewardDeposit(uint128 amount, uint256 reward_round_num);
+    event RewardDeposit(uint128 amount, uint32 reward_round_num);
     event Deposit(address user, uint128 amount);
     event Withdraw(address user, uint128 amount);
-    event RewardClaimed(address user, uint256 reward_tokens);
-    event NewRewardRound(uint256 round_num);
+    event RewardClaimed(address user, uint128 reward_tokens);
+    event NewRewardRound(uint32 round_num);
 
-    event ElectionStarted(uint128 round_num, uint128 election_start_time, address election_addr);
-    event ElectionEnded(uint128 round_num, uint128 relay_requests, bool min_relays_ok);
-    event RelayRoundInitialized(uint128 round_num, uint128 round_start_time, address round_addr, uint128 relays_count, bool duplicate);
+    event ElectionStarted(uint32 round_num, uint32 election_start_time, address election_addr);
+    event ElectionEnded(uint32 round_num, uint32 relay_requests, bool min_relays_ok);
+    event RelayRoundInitialized(uint32 round_num, uint32 round_start_time, address round_addr, uint32 relays_count, bool duplicate);
     event RelaySlashed(address user, uint128 tokens_withdrawn);
 
     event DepositReverted(address user, uint128 amount);
@@ -46,19 +46,19 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     event ActiveUpdated(bool active);
 
     event RequestedUserDataUpgrade(address user);
-    event RequestedElectionUpgrade(uint128 round_num);
-    event RequestedRelayRoundUpgrade(uint128 round_num);
+    event RequestedElectionUpgrade(uint32 round_num);
+    event RequestedRelayRoundUpgrade(uint32 round_num);
 
     event UserDataCodeUpgraded(uint32 code_version);
     event ElectionCodeUpgraded(uint32 code_version);
     event RelayRoundCodeUpgraded(uint32 code_version);
 
     event RelayConfigUpdated(
-        uint128 relay_round_time,
-        uint128 election_time,
-        uint128 time_before_election,
-        uint128 relays_count,
-        uint128 min_relays_count,
+        uint32 relay_round_time,
+        uint32 election_time,
+        uint32 time_before_election,
+        uint32 relays_count,
+        uint32 min_relays_count,
         uint128 min_relay_deposit
     );
 
@@ -84,23 +84,23 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     bool public originRelayRoundInitialized;
 
-    uint128 public currentRelayRound;
+    uint32 public currentRelayRound;
 
     // time when current round have started
-    uint128 public currentRelayRoundStartTime;
+    uint32 public currentRelayRoundStartTime;
 
     // time when current election have started
-    uint128 public currentElectionStartTime;
+    uint32 public currentElectionStartTime;
 
     // we need this for deriving relay round from timestamp
-    uint128 public prevRelayRoundEndTime;
+    uint32 public prevRelayRoundEndTime;
 
     // 0 means no pending relay round
-    uint128 public pendingRelayRound;
+    uint32 public pendingRelayRound;
 
     RewardRound[] public rewardRounds;
 
-    uint128 public lastRewardTime;
+    uint32 public lastRewardTime;
 
     address public tokenRoot;
 
@@ -116,16 +116,16 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     uint128 public rewardPerSecond = 1000;
 
-    uint128 public relayRoundTime = 7 days;
+    uint32 public relayRoundTime = 7 days;
 
-    uint128 public electionTime = 2 days;
+    uint32 public electionTime = 2 days;
 
     // election should start at lest after this much time before round end
-    uint128 public timeBeforeElection = 4 days;
+    uint32 public timeBeforeElection = 4 days;
 
-    uint128 public relaysCount = 30;
+    uint32 public relaysCount = 30;
 
-    uint128 public minRelaysCount = 13;
+    uint32 public minRelaysCount = 13;
 
     uint128 public minRelayDeposit = 100000 * 10**9;
 
@@ -201,15 +201,15 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     function isActive() external view responsible returns (bool) {
-        return{ value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } active;
+        return{ value: 0, flag: MsgFlag.REMAINING_GAS } active;
     }
 
     function setRelayConfig(
-        uint128 relay_round_time,
-        uint128 election_time,
-        uint128 time_before_election,
-        uint128 relays_count,
-        uint128 min_relays_count,
+        uint32 relay_round_time,
+        uint32 election_time,
+        uint32 time_before_election,
+        uint32 relays_count,
+        uint32 min_relays_count,
         uint128 min_relay_deposit,
         address send_gas_to
     ) external onlyDaoRoot {
@@ -276,7 +276,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         updatePoolInfo();
 
         rewardRounds.push(RewardRound(0, 0, 0, now));
-        emit NewRewardRound(rewardRounds.length - 1);
+        emit NewRewardRound(uint32(rewardRounds.length - 1));
 
         send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
@@ -324,7 +324,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
             } else if (deposit_type == REWARD_UP) {
                 rewardTokenBalance += amount;
                 rewardRounds[rewardRounds.length - 1].rewardTokens += amount;
-                emit RewardDeposit(amount, rewardRounds.length - 1);
+                emit RewardDeposit(amount, uint32(rewardRounds.length - 1));
 
                 original_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
             } else {
@@ -467,7 +467,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
                 user_reward_tokens += math.muldiv(user_round_share, _reward_rounds[i].rewardTokens, 1e18);
             }
         }
-        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } user_reward_tokens;
+        return { value: 0, flag: MsgFlag.REMAINING_GAS } user_reward_tokens;
     }
 
     function updatePoolInfo() internal {
@@ -522,7 +522,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     function getUserDataAddress(address user) public view responsible returns (address) {
-        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } address(tvm.hash(_buildInitData(
+        return { value: 0, flag: MsgFlag.REMAINING_GAS } address(tvm.hash(_buildInitData(
             PlatformTypes.UserData,
             _buildUserDataParams(user)
         )));

@@ -83,7 +83,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
     }
 
     function upgradeElection(
-        uint128 round_num,
+        uint32 round_num,
         address send_gas_to
     ) external view onlyAdmin {
         require(msg.value >= Gas.UPGRADE_ELECTION_MIN_VALUE, ErrorCodes.VALUE_TOO_LOW);
@@ -96,7 +96,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
     }
 
     function upgradeRelayRound(
-        uint128 round_num,
+        uint32 round_num,
         address send_gas_to
     ) external view onlyAdmin {
         require(msg.value >= Gas.UPGRADE_RELAY_ROUND_MIN_VALUE, ErrorCodes.VALUE_TOO_LOW);
@@ -108,34 +108,34 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         );
     }
 
-    function _buildElectionParams(uint128 round_num) internal inline view returns (TvmCell) {
+    function _buildElectionParams(uint32 round_num) internal inline view returns (TvmCell) {
         TvmBuilder builder;
         builder.store(round_num);
         return builder.toCell();
     }
 
-    function _buildRelayRoundParams(uint128 round_num) internal inline view returns (TvmCell) {
+    function _buildRelayRoundParams(uint32 round_num) internal inline view returns (TvmCell) {
         TvmBuilder builder;
         builder.store(round_num);
         return builder.toCell();
     }
 
-    function getElectionAddress(uint128 round_num) public view responsible returns (address) {
+    function getElectionAddress(uint32 round_num) public view responsible returns (address) {
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } address(tvm.hash(_buildInitData(
             PlatformTypes.Election,
             _buildElectionParams(round_num)
         )));
     }
 
-    function getRelayRoundAddress(uint128 round_num) public view responsible returns (address) {
+    function getRelayRoundAddress(uint32 round_num) public view responsible returns (address) {
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } address(tvm.hash(_buildInitData(
             PlatformTypes.RelayRound,
             _buildRelayRoundParams(round_num)
         )));
     }
 
-    function getRelayRoundAddressFromTimestamp(uint128 time) public view responsible returns (address) {
-        uint128 round_num = time < prevRelayRoundEndTime ? currentRelayRound - 1 : currentRelayRound;
+    function getRelayRoundAddressFromTimestamp(uint32 time) public view responsible returns (address) {
+        uint32 round_num = time < prevRelayRoundEndTime ? currentRelayRound - 1 : currentRelayRound;
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } getRelayRoundAddress(round_num);
     }
 
@@ -167,19 +167,17 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         data_builder_1.store(bridge); // 256
         data_builder_1.store(active); // 1
         data_builder_1.store(originRelayRoundInitialized); // 1
-        data_builder_1.store(currentRelayRound); // 128
-        data_builder_1.store(currentRelayRoundStartTime); // 128
-        data_builder_1.store(currentElectionStartTime); // 128
-        // TOTAL = 256 + 256 + 1 + 1 + 128 + 128 + 128 + 32 = 930
+        data_builder_1.store(currentRelayRound); // 32
+        data_builder_1.store(currentRelayRoundStartTime); // 32
+        data_builder_1.store(currentElectionStartTime); // 32
 
         TvmBuilder data_builder_2;
-        data_builder_2.store(prevRelayRoundEndTime); // 128
-        data_builder_2.store(pendingRelayRound); // 128
-        data_builder_2.store(lastRewardTime); // 128
+        data_builder_2.store(prevRelayRoundEndTime); // 32
+        data_builder_2.store(pendingRelayRound); // 32
+        data_builder_2.store(lastRewardTime); // 32
         data_builder_2.store(tokenRoot); // 256
         data_builder_2.store(tokenWallet); // 256
         data_builder_2.store(rewardRounds); // ref
-        // TOTAL = 128 + 128 + 128 + 256 + 256 + ref = 896 + ref
 
         TvmBuilder data_builder_3;
         data_builder_3.store(tokenBalance); // 128
@@ -187,18 +185,16 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         data_builder_3.store(admin); // 256
         data_builder_3.store(rewarder); // 256
         data_builder_3.store(rewardPerSecond); // 128
-        // TOTAL = 128 + 128 + 128 + 256 + 256 = 896
 
         TvmBuilder data_builder_4;
-        data_builder_4.store(relayRoundTime); // 128
-        data_builder_4.store(electionTime); // 128
-        data_builder_4.store(timeBeforeElection); // 128
-        data_builder_4.store(relaysCount); // 128
-        data_builder_4.store(minRelaysCount); // 128
+        data_builder_4.store(relayRoundTime); // 32
+        data_builder_4.store(electionTime); // 32
+        data_builder_4.store(timeBeforeElection); // 32
+        data_builder_4.store(relaysCount); // 32
+        data_builder_4.store(minRelaysCount); // 32
         data_builder_4.store(minRelayDeposit); // 128
         data_builder_4.store(deposit_nonce); // 64
         data_builder_4.store(deposits); // ref
-        // TOTAL = 128 * 6 + 64 + ref = 832 + ref
 
         TvmBuilder data_builder;
         data_builder.storeRef(data_builder_1);
@@ -241,14 +237,14 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
                             address bridge
                             bool active
                             bool originRelayRoundInitialized
-                            uint128 currentRelayRound
-                            uint128 currentRelayRoundStartTime
-                            uint128 currentElectionStartTime
+                            uint32 currentRelayRound
+                            uint32 currentRelayRoundStartTime
+                            uint32 currentElectionStartTime
                     2: data_2
                         bits:
-                            uint128 prevRelayRoundEndTime
-                            uint128 pendingRelayRound
-                            uint128 lastRewardTime
+                            uint32 prevRelayRoundEndTime
+                            uint32 pendingRelayRound
+                            uint32 lastRewardTime
                             address tokenRoot
                             address tokenWallet
                         refs:
@@ -262,11 +258,11 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
                             uint128 rewardPerSecond
                     4: data_4
                         bits:
-                            uint128 relayRoundTime
-                            uint128 electionTime
-                            uint128 timeBeforeElection
-                            uint128 relaysCount
-                            uint128 minRelaysCount
+                            uint32 relayRoundTime
+                            uint32 electionTime
+                            uint32 timeBeforeElection
+                            uint32 relaysCount
+                            uint32 minRelaysCount
                             uint128 minRelayDeposit
                             uint64 deposit_nonce
                         refs:

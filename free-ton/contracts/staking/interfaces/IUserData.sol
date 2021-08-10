@@ -18,8 +18,8 @@ interface IUserData {
     }
 
     event UserDataCodeUpgraded(uint32 code_version);
-    event RelayMembershipRequested(uint128 round_num, uint128 tokens, uint256 ton_pubkey, uint256 eth_address, uint128 lock_until);
-    event RelayRoundRewardClaimed(uint128 relay_round_num, uint128 reward_round_num, uint128 reward);
+    event RelayMembershipRequested(uint32 round_num, uint128 tokens, uint256 ton_pubkey, uint256 eth_address, uint32 lock_until);
+    event RelayRoundRewardClaimed(uint32 relay_round_num, uint32 reward_round_num, uint128 reward);
 
     // dao
     event VoteCast(uint32 proposal_id, bool support, uint128 votes, string reason);
@@ -61,18 +61,18 @@ interface IUserData {
     function processClaimReward(IStakingPool.RewardRound[] reward_rounds, address send_gas_to, uint32 code_version) external;
     function slash(IStakingPool.RewardRound[] reward_rounds, address send_gas_to) external;
     function processBecomeRelay(
-        uint128 round_num,
-        uint128 lock_time,
+        uint32 round_num,
+        uint32 lock_time,
         uint128 min_relay_deposit,
         address send_gas_to,
         uint32 user_data_code_version,
         uint32 election_code_version
     ) external;
-    function relayMembershipRequestAccepted(uint128 round_num, uint128 tokens, uint256 ton_pubkey, uint256 eth_addr, uint128 lock_time, address send_gas_to) external;
-    function receiveRewardForRelayRound(uint128 relay_round_num, uint128 reward_round_num, uint128 reward, address send_gas_to) external;
+    function relayMembershipRequestAccepted(uint32 round_num, uint128 tokens, uint256 ton_pubkey, uint256 eth_addr, uint32 lock_time, address send_gas_to) external;
+    function receiveRewardForRelayRound(uint32 relay_round_num, uint32 reward_round_num, uint128 reward, address send_gas_to) external;
     function processGetRelayRewardForRound(
         IStakingPool.RewardRound[] reward_rounds,
-        uint128 round_num,
+        uint32 round_num,
         address send_gas_to,
         uint32 code_version,
         uint32 relay_round_code_version

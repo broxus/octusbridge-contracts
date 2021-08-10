@@ -71,6 +71,7 @@ library ErrorCodes {
     uint16 constant LOW_TOKEN_BALANCE = 2535;
     uint16 constant RELAY_LOCK_ACTIVE = 2536;
     uint16 constant CANT_WITHDRAW_VOTES = 2537;
+    uint16 constant RELAY_NOT_EXIST = 2538;
 
     // staking dao
     uint16 constant NOT_DAO_ROOT = 2601;
