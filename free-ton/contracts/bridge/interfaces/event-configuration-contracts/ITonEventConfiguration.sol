@@ -9,6 +9,7 @@ interface ITonEventConfiguration is IBasicEventConfiguration {
         address eventEmitter;
         uint160 proxy;
         uint32 startTimestamp;
+        uint32 endTimestamp;
     }
 
     function deployEvent(
@@ -24,10 +25,5 @@ interface ITonEventConfiguration is IBasicEventConfiguration {
         TonEventConfiguration _networkConfiguration
     );
 
-    function getType() external pure responsible returns(EventType _type);
-
-    function update(
-        BasicConfiguration _basicConfiguration,
-        TonEventConfiguration _networkConfiguration
-    ) external;
+    function setEndTimestamp(uint32 endTimestamp) external;
 }

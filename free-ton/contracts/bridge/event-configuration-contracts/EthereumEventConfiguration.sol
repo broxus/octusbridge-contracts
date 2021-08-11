@@ -22,13 +22,33 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
     BasicConfiguration public static basicConfiguration;
     EthereumEventConfiguration public static networkConfiguration;
 
-    /**
-        @param _owner Event configuration owner
-    */
+    /// @param _owner Event configuration owner
     constructor(address _owner) public checkPubKey {
         tvm.accept();
 
         setOwnership(_owner);
+    }
+
+    /// @dev Set end block number. Can be set only in case current value is 0.
+    /// @param endBlockNumber End block number
+    function setEndBlockNumber(
+        uint32 endBlockNumber
+    )
+        override
+        onlyOwner
+        external
+    {
+        require(
+            networkConfiguration.endBlockNumber == 0,
+            ErrorCodes.END_BLOCK_NUMBER_ALREADY_SET
+        );
+
+        require(
+            endBlockNumber >= networkConfiguration.startBlockNumber,
+            ErrorCodes.TOO_LOW_END_BLOCK_NUMBER
+        );
+
+        networkConfiguration.endBlockNumber = endBlockNumber;
     }
 
     /// @dev Build initial data for event contract
@@ -46,10 +66,8 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
         eventInitData.chainId = basicConfiguration.chainId;
     }
 
-    /**
-        @notice Deploy event contract
-        @param eventVoteData Event vote data
-    */
+    /// @dev Deploy event contract
+    /// @param eventVoteData Event vote data
     function deployEvent(
         IEthereumEvent.EthereumEventVoteData eventVoteData
     )
@@ -63,6 +81,13 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
             ErrorCodes.EVENT_BLOCK_NUMBER_LESS_THAN_START
         );
 
+        if (networkConfiguration.endBlockNumber != 0) {
+            require(
+                eventVoteData.eventBlockNumber <= networkConfiguration.endBlockNumber,
+                ErrorCodes.EVENT_BLOCK_NUMBER_HIGHER_THAN_END
+            );
+        }
+
         IEthereumEvent.EthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
 
         eventContract = new EthereumEvent{
@@ -75,11 +100,10 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
             }
         }(msg.sender, basicConfiguration.meta);
     }
-    /**
-        @notice Derive the Ethereum event contract address from it's init data
-        @param eventVoteData Ethereum event vote data
-        @return eventContract Address of the corresponding ethereum event contract
-    */
+
+    /// @dev Derive the Ethereum event contract address from it's init data
+    /// @param eventVoteData Ethereum event vote data
+    /// @return eventContract Address of the corresponding ethereum event contract
     function deriveEventAddress(
         IEthereumEvent.EthereumEventVoteData eventVoteData
     )
@@ -105,7 +129,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
     }
 
     /**
-        @notice Get configuration details.
+        @dev Get configuration details.
         @return _basicConfiguration Basic configuration init data
         @return _networkConfiguration Network specific configuration init data
     */
@@ -119,21 +143,10 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
         );
     }
 
-    /// @notice Get event configuration type
+    /// @dev Get event configuration type
     /// @return _type Configuration type - Ethereum or TON
     function getType() override public pure responsible returns(EventType _type) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS} EventType.Ethereum;
-    }
-
-    /// @dev Update configuration data
-    /// @param _basicConfiguration New basic configuration init data
-    /// @param _networkConfiguration New network specific configuration init data
-    function update(
-        BasicConfiguration _basicConfiguration,
-        EthereumEventConfiguration _networkConfiguration
-    ) override public onlyOwner {
-        basicConfiguration = _basicConfiguration;
-        networkConfiguration = _networkConfiguration;
     }
 
     /// @dev Receives execute callback from ethereum event and send it to the event proxy contract.

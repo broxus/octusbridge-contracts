@@ -1,7 +1,7 @@
 const {
   setupBridge,
   setupRelays,
-} = require('./utils');
+} = require('../../utils');
 
 const { expect } = require('chai');
 

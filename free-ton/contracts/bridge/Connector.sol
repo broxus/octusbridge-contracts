@@ -29,7 +29,7 @@ contract Connector is IConnector, InternalOwner {
     }
 
     /**
-        @notice Enable event configuration
+        @dev Enable event configuration
     */
     function enable() external override onlyOwner {
         enabled = true;
@@ -38,16 +38,7 @@ contract Connector is IConnector, InternalOwner {
     }
 
     /**
-        @notice Disable event configuration
-    */
-    function disable() external override onlyOwner {
-        enabled = false;
-
-        emit Disabled();
-    }
-
-    /**
-        @notice Get connector details
+        @dev Get connector details
         @return _id Connector id
         @return _eventConfiguration Corresponding event configuration address
         @return _enabled Event configuration status

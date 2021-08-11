@@ -34,7 +34,7 @@ module.exports = {
         key: process.env.DEV_GIVER_KEY,
       },
       keys: {
-        phrase: '',
+        phrase: process.env.DEV_SEED,
         amount: 20,
       }
     },

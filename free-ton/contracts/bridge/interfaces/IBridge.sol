@@ -19,9 +19,6 @@ interface IBridge {
         IBasicEventConfiguration.EventType _type;
     }
 
-    event EventConfigurationEnabled(uint32 id, EventConfiguration eventConfiguration);
-    event EventConfigurationDisabled(uint32 id);
-    event EventConfigurationUpdated(uint32 id, EventConfiguration eventConfiguration);
     event BridgeConfigurationUpdate(BridgeConfiguration bridgeConfiguration);
     event ConnectorDeployed(uint64 id, address connector, address eventConfiguration);
 

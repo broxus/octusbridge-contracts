@@ -192,6 +192,7 @@ const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
         eventBlocksToConfirm: 1,
         proxy: proxyFutureAddress,
         startBlockNumber: 0,
+        endBlockNumber: 0,
       }
     },
     keyPair
@@ -264,6 +265,7 @@ const setupTonEventConfiguration = async (owner, staking, cellEncoder) => {
         eventEmitter: locklift.utils.zeroAddress,
         proxy: new BigNumber(0),
         startTimestamp: 0,
+        endTimestamp: 0,
       }
     },
     keyPair

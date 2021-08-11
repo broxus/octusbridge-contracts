@@ -14,7 +14,7 @@ const relays = [
   }
 ];
 
-const configurationsAmount = 10;
+const configurationsAmount = 1;
 
 
 const main = async () => {

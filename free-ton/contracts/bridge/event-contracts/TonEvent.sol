@@ -56,7 +56,7 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
     }
 
     /*
-        @notice Get voters by the vote type
+        @dev Get voters by the vote type
         @param vote Vote type
         @returns voters List of voters (relays) public keys
     */
@@ -109,7 +109,7 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
     }
 
     /*
-        @notice Confirm event
+        @dev Confirm event
         @dev Can be called only by parent event configuration
         @dev Can be called only when event configuration is in Pending status
         @param eventDataSignature Relay's signature of the TonEvent data
@@ -139,7 +139,7 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
     }
 
     /*
-        @notice Reject event
+        @dev Reject event
         @dev Can be called only by parent event configuration
         @dev Can be called only when event configuration is in Pending status
     */
@@ -167,7 +167,7 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
     }
 
     /*
-        @notice Get event details
+        @dev Get event details
         @returns _initData Init data
         @returns _status Current event status
         @returns _confirmRelays List of relays who have confirmed event
@@ -207,7 +207,7 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
     }
 
     /*
-        @notice Get decoded event data
+        @dev Get decoded event data
         @returns rootToken Token root contract address
         @returns wid Tokens sender address workchain ID
         @returns addr Token sender address body
@@ -245,7 +245,7 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
     }
 
     /*
-        @notice Notify owner contract that event contract status has been changed
+        @dev Notify owner contract that event contract status has been changed
         @dev In this example, notification receiver is derived from the configuration meta
         @dev Used to easily collect all confirmed events by user's wallet
     */
