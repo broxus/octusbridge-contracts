@@ -16,19 +16,20 @@ contract RelayRound is IRelayRound {
     event RelayRoundCodeUpgraded(uint32 code_version);
 
     bool public relays_installed;
-    uint128 public relays_count;
-    uint128 public start_time;
-    uint128 public round_len;
+    uint32 public relays_count;
+    uint32 public start_time;
+    uint32 public round_len;
     uint128 public total_tokens_staked;
-    uint128 public reward_round_num;
+    uint32 public reward_round_num;
     uint128 public round_reward;
     bool public duplicate;
     uint8 public expected_packs_num;
     address public election_addr;
     address public prev_round_addr;
 
-    uint128 public round_num; // setup from initialData
+    uint32 public round_num; // setup from initialData
     Relay[] public relays;
+    uint256[] public ton_keys; // flat array of ton pubkeys
     mapping (address => uint256) addr_to_idx;
     mapping (address => bool) reward_claimed;
 
@@ -46,6 +47,7 @@ contract RelayRound is IRelayRound {
     constructor() public { revert(); }
 
     function getRelayByStakerAddress(address staker_addr) external view responsible returns (Relay) {
+        require (addr_to_idx.exists(staker_addr), ErrorCodes.RELAY_NOT_EXIST);
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} relays[addr_to_idx[staker_addr]];
     }
 
@@ -67,7 +69,7 @@ contract RelayRound is IRelayRound {
         IUserData(msg.sender).receiveRewardForRelayRound{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num, reward_round_num, relay_reward, send_gas_to);
     }
 
-    function _getRelayListFromIdx(uint256 limit, uint256 start_idx) internal view returns (Relay[], uint256) {
+    function _getRelayListFromIdx(uint128 limit, uint256 start_idx) internal view returns (Relay[], uint256) {
         Relay[] _relays_list = new Relay[](limit);
         uint256 cur_idx = start_idx;
         uint128 counter = 0;
@@ -86,7 +88,7 @@ contract RelayRound is IRelayRound {
         );
     }
 
-    function sendRelaysToRelayRound(address relay_round_addr, uint128 count, address send_gas_to) external override onlyRoot {
+    function sendRelaysToRelayRound(address relay_round_addr, uint32 count, address send_gas_to) external override onlyRoot {
         tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
 
         if (relay_transfer_start_idx >= relays.length) {
@@ -101,11 +103,7 @@ contract RelayRound is IRelayRound {
     }
 
     function relayKeys() public view responsible returns (uint256[]) {
-        uint256[] _keys = new uint256[](relays.length);
-        for (uint256 i = 0; i < _keys.length; i++) {
-            _keys[i] = relays[i].ton_pubkey;
-        }
-        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } _keys;
+        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } ton_keys;
     }
 
     function setEmptyRelays(address send_gas_to) external override {
@@ -129,6 +127,7 @@ contract RelayRound is IRelayRound {
                 break;
             }
             relays.push(_relay_list[i]);
+            ton_keys.push(_relay_list[i].ton_pubkey);
             addr_to_idx[_relay_list[i].staker_addr] = relays.length - 1;
             total_tokens_staked += _relay_list[i].staked_tokens;
             relays_count += 1;
@@ -161,12 +160,13 @@ contract RelayRound is IRelayRound {
         platform_code = s.loadRef();
 
         TvmSlice initialData = s.loadRefAsSlice();
-        round_num = initialData.decode(uint128);
+        round_num = initialData.decode(uint32);
 
         TvmSlice params = s.loadRefAsSlice();
-        current_version = params.decode(uint32);
-        round_len = params.decode(uint128);
-        reward_round_num = params.decode(uint128);
+        (current_version, ) = params.decode(uint32, uint32);
+
+        round_len = params.decode(uint32);
+        reward_round_num = params.decode(uint32);
         uint128 reward_per_second = params.decode(uint128);
         duplicate = params.decode(bool);
         expected_packs_num = params.decode(uint8);
@@ -187,18 +187,52 @@ contract RelayRound is IRelayRound {
             emit RelayRoundCodeUpgraded(new_version);
 
             TvmBuilder builder;
+            uint8 _tmp;
+            builder.store(root); // 256
+            builder.store(_tmp); // 8
+            builder.store(send_gas_to); // 256
 
-            builder.store(root);
-            builder.store(round_num);
-            builder.store(current_version);
-            builder.store(new_version);
-            builder.store(send_gas_to);
+            builder.store(platform_code); // ref1
 
-            builder.store(relays);
-            builder.store(relays_installed);
-            builder.store(relays_count);
+            TvmBuilder initial;
+            initial.store(round_num);
 
-            builder.store(platform_code);
+            builder.storeRef(initial); // ref2
+
+            TvmBuilder params;
+            params.store(new_version);
+            params.store(current_version);
+
+            builder.storeRef(params); // ref3
+
+            TvmBuilder data_builder;
+
+            TvmBuilder data_builder_1;
+            data_builder_1.store(relays_installed); // 1
+            data_builder_1.store(relays_count); // 32
+            data_builder_1.store(start_time); // 32
+            data_builder_1.store(round_len); // 32
+            data_builder_1.store(total_tokens_staked); // 128
+            data_builder_1.store(reward_round_num); // 32
+            data_builder_1.store(round_reward); // 128
+            data_builder_1.store(duplicate); // 1
+            data_builder_1.store(expected_packs_num); // 8
+
+            data_builder.storeRef(data_builder_1);
+
+            TvmBuilder data_builder_2;
+            data_builder_2.store(election_addr); // 256
+            data_builder_2.store(prev_round_addr); // 256
+            data_builder_2.store(relays); // ref1
+            data_builder_2.store(ton_keys); // ref2
+            data_builder_2.store(addr_to_idx); // ref3
+            data_builder_2.store(reward_claimed); // ref4
+            data_builder_2.store(relay_packs_installed); // 8
+            data_builder_2.store(relay_transfer_start_idx); // 256
+
+            data_builder.storeRef(data_builder_2);
+
+            builder.storeRef(data_builder); // ref4
 
             // set code after complete this method
             tvm.setcode(code);
@@ -208,6 +242,47 @@ contract RelayRound is IRelayRound {
             onCodeUpgrade(builder.toCell());
         }
     }
+
+    /*
+    upgrade_data
+        bits:
+            address root
+            uint8 dummy
+            address send_gas_to
+        refs:
+            1: platform_code
+            2: initial
+                bits:
+                    uint128 round_num
+            3: params:
+                bits:
+                    uint32 new_version
+                    uint32 current_version
+            4: data
+                refs:
+                    1: data_1
+                        bits:
+                            bool relays_installed
+                            uint32 relays_count
+                            uint32 start_time
+                            uint32 round_len
+                            uint128 total_tokens_staked
+                            uint32 reward_round_num
+                            uint128 round_reward
+                            bool duplicate
+                            uint8 expected_packs_num
+                    2: data_2
+                        bits:
+                            address election_addr
+                            address prev_round_addr
+                            uint8 relay_packs_installed
+                            uint256 relay_transfer_start_idx
+                        refs:
+                            1: relays
+                            2: ton_keys
+                            3: addr_to_idx
+                            4: reward_claimed
+    */
 
     function _buildInitData(uint8 type_id, TvmCell _initialData) internal inline view returns (TvmCell) {
         return tvm.buildStateInit({

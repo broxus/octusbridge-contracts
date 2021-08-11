@@ -10,7 +10,7 @@ interface IStakingPool {
         uint256 accRewardPerShare;
         uint128 rewardTokens;
         uint128 totalReward;
-        uint128 startTime;
+        uint32 startTime;
     }
 
     function finishDeposit(uint64 _nonce) external;
@@ -18,8 +18,8 @@ interface IStakingPool {
     function finishClaimReward(address user, uint128[] rewards, address send_gas_to) external;
     function revertDeposit(uint64 _nonce) external;
     function endElection(address send_gas_to) external;
-    function onElectionStarted(uint128 round_num, address send_gas_to) external;
-    function onElectionEnded(uint128 round_num, uint128 relay_requests_count, address send_gas_to) external;
+    function onElectionStarted(uint32 round_num, address send_gas_to) external;
+    function onElectionEnded(uint32 round_num, uint32 relay_requests_count, address send_gas_to) external;
     function confirmSlash(
         address user,
         uint128[] ban_rewards,
@@ -27,13 +27,13 @@ interface IStakingPool {
         address send_gas_to
     ) external;
     function onRelayRoundDeployed(
-        uint128 round_num,
+        uint32 round_num,
         bool duplicate,
         address send_gas_to
     ) external;
     function onRelayRoundInitialized(
-        uint128 round_num,
-        uint128 relays_count,
+        uint32 round_num,
+        uint32 relays_count,
         uint128 round_reward,
         bool duplicate,
         address send_gas_to

@@ -184,7 +184,8 @@ describe('Test DAO in Staking', async function () {
         _tokenRoot: stakingToken.address,
         _dao_root: daoRoot.address,
         _rewarder: stakingOwner.address,
-        _bridge: bridge
+        _bridge: bridge,
+        _deploy_nonce: getRandomNonce()
       }
     })).decoded.output.value0)
     logger.log(`StakingRoot address: ${stakingRoot.address}`);

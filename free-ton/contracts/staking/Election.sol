@@ -23,7 +23,7 @@ contract Election is IElection {
     TvmCell public platform_code;
 
     address public root;
-    uint128 public round_num;
+    uint32 public round_num;
 
     struct Node {
         uint256 prev_node;
@@ -47,7 +47,7 @@ contract Election is IElection {
     constructor() public { revert(); }
 
     // return sorted list of requests
-    function getRequests(uint256 limit) public responsible returns (IRelayRound.Relay[]) {
+    function getRequests(uint128 limit) public responsible returns (IRelayRound.Relay[]) {
         (IRelayRound.Relay[] _requests, uint256 _) = _getRequestsFromIdx(limit, list_start_idx);
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }_requests;
     }
@@ -56,7 +56,7 @@ contract Election is IElection {
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }requests_nodes[idx];
     }
 
-    function _getRequestsFromIdx(uint256 limit, uint256 start_idx) internal view returns (IRelayRound.Relay[], uint256) {
+    function _getRequestsFromIdx(uint128 limit, uint256 start_idx) internal view returns (IRelayRound.Relay[], uint256) {
         IRelayRound.Relay[] _requests = new IRelayRound.Relay[](limit);
         uint256 cur_idx = start_idx;
         uint128 counter = 0;
@@ -74,7 +74,7 @@ contract Election is IElection {
         uint256 ton_pubkey,
         uint160 eth_addr,
         uint128 tokens,
-        uint128 lock_time,
+        uint32 lock_time,
         address send_gas_to,
         uint32 code_version
     ) external override onlyUserData(staker_addr) {
@@ -159,11 +159,11 @@ contract Election is IElection {
         election_ended = true;
         relay_transfer_start_idx = list_start_idx;
         IStakingPool(root).onElectionEnded{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
-            round_num, uint128(requests_nodes.length - 1), send_gas_to
+            round_num, uint32(requests_nodes.length - 1), send_gas_to
         );
     }
 
-    function sendRelaysToRelayRound(address relay_round_addr, uint128 relays_count, address send_gas_to) external override onlyRoot {
+    function sendRelaysToRelayRound(address relay_round_addr, uint32 relays_count, address send_gas_to) external override onlyRoot {
         require (election_ended, ErrorCodes.ELECTION_ENDED);
 
         tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
@@ -187,18 +187,32 @@ contract Election is IElection {
             emit ElectionCodeUpgraded(new_version);
 
             TvmBuilder builder;
+            uint8 _tmp;
+            builder.store(root); // 256
+            builder.store(_tmp); // 8
+            builder.store(send_gas_to); // 256
 
-            builder.store(root);
-            builder.store(round_num);
-            builder.store(current_version);
-            builder.store(new_version);
-            builder.store(send_gas_to);
+            builder.store(platform_code); // ref1
 
-            builder.store(requests_nodes);
-            builder.store(list_start_idx);
-            builder.store(election_ended);
+            TvmBuilder initial;
+            initial.store(round_num);
 
-            builder.store(platform_code);
+            builder.storeRef(initial); // ref2
+
+            TvmBuilder params;
+            params.store(new_version);
+            params.store(current_version);
+
+            builder.storeRef(params); // ref3
+
+            TvmBuilder data_builder;
+
+            data_builder.store(requests_nodes); // ref1
+            data_builder.store(list_start_idx); // 256
+            data_builder.store(election_ended); // 1
+            data_builder.store(relay_transfer_start_idx); // 256
+
+            builder.storeRef(data_builder); // ref4
 
             // set code after complete this method
             tvm.setcode(code);
@@ -208,6 +222,31 @@ contract Election is IElection {
             onCodeUpgrade(builder.toCell());
         }
     }
+
+    /*
+    upgrade_data
+        bits:
+            address root
+            uint8 dummy
+            address send_gas_to
+        refs:
+            1: platform_code
+            2: initial
+                bits:
+                    uint32 round_num
+            3: params:
+                bits:
+                    uint32 new_version
+                    uint32 current_version
+            4: data
+                bits:
+                    uint256 list_start_idx
+                    bool election_ended
+                    uint256 relay_transfer_start_idx
+                refs:
+                    1: requests_nodes
+
+    */
 
     function onCodeUpgrade(TvmCell upgrade_data) private {
         tvm.resetStorage();
@@ -220,10 +259,10 @@ contract Election is IElection {
         platform_code = s.loadRef();
 
         TvmSlice initialData = s.loadRefAsSlice();
-        round_num = initialData.decode(uint128);
+        round_num = initialData.decode(uint32);
 
         TvmSlice params = s.loadRefAsSlice();
-        current_version = params.decode(uint32);
+        (current_version, ) = params.decode(uint32, uint32);
 
         // create origin node after contract initialization
         requests_nodes.push(Node(0, 0, IRelayRound.Relay(address.makeAddrNone(), 0, 0, 0)));
