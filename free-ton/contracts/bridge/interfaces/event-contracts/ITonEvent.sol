@@ -5,7 +5,6 @@ import "./IBasicEvent.sol";
 
 interface ITonEvent is IBasicEvent {
     struct TonEventVoteData {
-        uint eventTransaction;
         uint64 eventTransactionLt;
         uint32 eventTimestamp;
         uint32 eventIndex;

@@ -94,7 +94,6 @@ describe('Test ton event confirm', async function() {
       });
 
       eventVoteData = {
-        eventTransaction: 111,
         eventTransactionLt: 222,
         eventTimestamp: 333,
         eventIndex: 444,
@@ -133,9 +132,6 @@ describe('Test ton event confirm', async function() {
         method: 'getDetails'
       });
       
-      expect(details._eventInitData.voteData.eventTransaction)
-        .to.be.bignumber.equal(eventVoteData.eventTransaction, 'Wrong event transaction');
-
       expect(details._eventInitData.voteData.eventTransactionLt)
         .to.be.bignumber.equal(eventVoteData.eventTransactionLt, 'Wrong event transaction LT');
 
