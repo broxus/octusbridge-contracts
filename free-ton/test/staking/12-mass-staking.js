@@ -1,6 +1,6 @@
 const {
     expect,
-} = require('./utils');
+} = require('../utils');
 const BigNumber = require('bignumber.js');
 const logger = require('mocha-logger');
 const Account = require("locklift/locklift/contract/account");
