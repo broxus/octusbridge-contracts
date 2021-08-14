@@ -23,7 +23,8 @@ import './../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.so
 
 
 /// @title Bridge contract
-/// @dev Deploys connectors. Entry point for relay sync.
+/// @dev Entry point for relay sync.
+/// Deploys connectors for Event Configurations.
 /// @author https://github.com/pavlovdog
 contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUtils {
     BridgeConfiguration public bridgeConfiguration;

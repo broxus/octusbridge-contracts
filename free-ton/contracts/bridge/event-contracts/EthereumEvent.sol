@@ -47,7 +47,7 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
     }
 
     /*
-        @notice Get voters by the vote type
+        @dev Get voters by the vote type
         @param vote Vote type
         @returns voters List of voters (relays) public keys
     */
@@ -181,7 +181,7 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
     }
 
     /*
-        @notice Get decoded event data
+        @dev Get decoded event data
         @returns rootToken Token root contract address
         @returns tokens How much tokens to mint
         @returns wid Tokens receiver address workchain ID
@@ -219,7 +219,7 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
     }
 
     /*
-        @notice Notify owner contract that event contract status has been changed
+        @dev Notify owner contract that event contract status has been changed
         @dev In this example, notification receiver is derived from the configuration meta
         @dev Used to easily collect all confirmed events by user's wallet
     */

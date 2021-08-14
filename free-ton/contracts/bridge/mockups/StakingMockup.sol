@@ -17,7 +17,7 @@ contract StakingMockup is IStaking, IRound, RandomNonce {
     uint[] public static __keys;
 
     /*
-        @notice Get round contract address by it's id
+        @dev Get round contract address by it's id
         @param eventTimestamp Event creation timestamp
         @returns roundContract Round contract
     */
@@ -35,7 +35,7 @@ contract StakingMockup is IStaking, IRound, RandomNonce {
     }
 
     /*
-        @notice Get list of current round relays public keys
+        @dev Get list of current round relays public keys
         @returns _keys Round relays TON public keys
     */
     function relayKeys()

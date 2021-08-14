@@ -8,7 +8,7 @@ const {
   afterRun,
   logger,
   expect,
-} = require('./utils');
+} = require('../../utils');
 
 
 describe('Test ethereum event reject', async function() {

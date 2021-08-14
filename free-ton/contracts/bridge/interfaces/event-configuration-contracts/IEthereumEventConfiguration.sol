@@ -10,6 +10,7 @@ interface IEthereumEventConfiguration is IBasicEventConfiguration {
         uint16 eventBlocksToConfirm;
         address proxy;
         uint32 startBlockNumber;
+        uint32 endBlockNumber;
     }
 
     function deployEvent(
@@ -25,10 +26,5 @@ interface IEthereumEventConfiguration is IBasicEventConfiguration {
         EthereumEventConfiguration _networkConfiguration
     );
 
-    function getType() external pure responsible returns(EventType _type);
-
-    function update(
-        BasicConfiguration _basicConfiguration,
-        EthereumEventConfiguration _networkConfiguration
-    ) external;
+    function setEndBlockNumber(uint32 endBlockNumber) external;
 }

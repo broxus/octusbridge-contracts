@@ -31,11 +31,31 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
         setOwnership(_owner);
     }
 
-    /*
-        @notice Build initial data for event contract
-        @dev Extends event vote data with configuration params
-        @param eventVoteData Event vote data structure, passed by relay
-    */
+    /// @dev Set end timestamp. Can be set only in case current value is 0.
+    /// @param endTimestamp End timestamp.
+    function setEndTimestamp(
+        uint32 endTimestamp
+    )
+        override
+        public
+        onlyOwner
+    {
+        require(
+            networkConfiguration.endTimestamp == 0,
+            ErrorCodes.END_TIMESTAMP_ALREADY_SET
+        );
+
+        require(
+            endTimestamp >= networkConfiguration.startTimestamp,
+            ErrorCodes.TOO_LOW_END_TIMESTAMP
+        );
+
+        networkConfiguration.endTimestamp = endTimestamp;
+    }
+
+    /// @dev Build initial data for event contract.
+    /// Extends event vote data with configuration params.
+    /// @param eventVoteData Event vote data structure, passed by relay
     function buildEventInitData(
         ITonEvent.TonEventVoteData eventVoteData
     ) internal view returns(
@@ -48,12 +68,8 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
         eventInitData.chainId = basicConfiguration.chainId;
     }
 
-    // TODO: add interfaces
-    // TODO: add basic contracts for configurations and events
-    /*
-        @notice Deploy event contract
-        @param eventVoteData Event vote data
-    */
+    /// @dev Deploy event contract
+    /// @param eventVoteData Event vote data
     function deployEvent(
         ITonEvent.TonEventVoteData eventVoteData
     ) override external reserveBalance returns(address eventEmitter) {
@@ -62,6 +78,14 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
             eventVoteData.eventTimestamp >= networkConfiguration.startTimestamp,
             ErrorCodes.EVENT_TIMESTAMP_LESS_THAN_START
         );
+
+        if (networkConfiguration.endTimestamp != 0) {
+            require(
+                eventVoteData.eventTimestamp <= networkConfiguration.endTimestamp,
+                ErrorCodes.EVENT_TIMESTAMP_HIGHER_THAN_END
+            );
+        }
+
 
         ITonEvent.TonEventInitData eventInitData = buildEventInitData(eventVoteData);
 
@@ -77,7 +101,7 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
     }
 
     /*
-        @notice Derive the Ethereum event contract address from it's init data
+        @dev Derive the Ethereum event contract address from it's init data
         @param eventVoteData Ethereum event vote data
         @returns eventContract Address of the corresponding ethereum event contract
     */
@@ -106,7 +130,7 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
     }
 
     /*
-        @notice Get configuration details.
+        @dev Get configuration details.
         @return _basicConfiguration Basic configuration init data
         @return _initData Network specific configuration init data
     */
@@ -122,25 +146,10 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
 
 
     /*
-        @notice Get event configuration type
+        @dev Get event configuration type
         @return _type Configuration type - Ethereum or TON
     */
     function getType() override public pure responsible returns(EventType _type) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS} EventType.TON;
-    }
-
-
-    /*
-        @notice Update configuration data
-        @dev Can be called only by owner
-        @param _basicConfiguration New basic configuration init data
-        @param _networkConfiguration New network specific configuration init data
-    */
-    function update(
-        BasicConfiguration _basicConfiguration,
-        TonEventConfiguration _networkConfiguration
-    ) override public cashBack onlyOwner {
-        basicConfiguration = _basicConfiguration;
-        networkConfiguration = _networkConfiguration;
     }
 }

@@ -30,7 +30,7 @@ contract ProxyMockup is IProxy, RandomNonce {
     }
 
     /*
-        @notice Callback on executing ethereum event contract
+        @dev Callback on executing ethereum event contract
         @dev Could be only called by the ethereum event contract
     */
     function broxusBridgeCallback(

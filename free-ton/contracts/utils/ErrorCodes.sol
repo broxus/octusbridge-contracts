@@ -17,6 +17,12 @@ library ErrorCodes {
     uint16 constant EVENT_TIMESTAMP_LESS_THAN_START = 2211;
     uint16 constant SENDER_NOT_EVENT_CONTRACT = 2212;
     uint16 constant TOO_LOW_DEPLOY_VALUE = 2213;
+    uint16 constant EVENT_BLOCK_NUMBER_HIGHER_THAN_END = 2214;
+    uint16 constant EVENT_TIMESTAMP_HIGHER_THAN_END = 2215;
+    uint16 constant TOO_LOW_END_TIMESTAMP = 2216;
+    uint16 constant TOO_LOW_END_BLOCK_NUMBER = 2217;
+    uint16 constant END_TIMESTAMP_ALREADY_SET = 2218;
+    uint16 constant END_BLOCK_NUMBER_ALREADY_SET = 2219;
 
     // Event contract
     uint16 constant EVENT_NOT_PENDING = 2312;

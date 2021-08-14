@@ -12,4 +12,6 @@ interface IBasicEventConfiguration {
         TvmCell meta;
         uint32 chainId;
     }
+
+    function getType() external pure responsible returns(EventType _type);
 }

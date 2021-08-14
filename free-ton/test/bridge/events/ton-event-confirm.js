@@ -8,10 +8,10 @@ const {
   afterRun,
   logger,
   expect,
-} = require('./utils');
+} = require('../../utils');
 
 
-describe('Test ton event reject', async function() {
+describe('Test ton event confirm', async function() {
   this.timeout(10000000);
   
   let bridge, bridgeOwner, staking, cellEncoder;
@@ -35,10 +35,10 @@ describe('Test ton event reject', async function() {
       }
     }
   });
-  
+
   it('Setup bridge', async () => {
     relays = await setupRelays();
-  
+
     [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
   
     [tonEventConfiguration, initializer] = await setupTonEventConfiguration(
@@ -86,22 +86,21 @@ describe('Test ton event reject', async function() {
       tokens: 100,
       ethereum_address: 222,
     };
-    
+  
     it('Setup event data', async () => {
       const eventData = await cellEncoder.call({
         method: 'encodeTonEventData',
         params: eventDataStructure
       });
-      
+
       eventVoteData = {
-        eventTransaction: 111,
         eventTransactionLt: 222,
         eventTimestamp: 333,
         eventIndex: 444,
         eventData,
       };
     });
-    
+  
     it('Initialize event', async () => {
       const tx = await initializer.runTarget({
         contract: tonEventConfiguration,
@@ -111,98 +110,120 @@ describe('Test ton event reject', async function() {
         },
         value: locklift.utils.convertCrystal(3, 'nano')
       });
-      
+  
       const expectedEventContract = await tonEventConfiguration.call({
         method: 'deriveEventAddress',
         params: {
           eventVoteData,
         }
       });
-      
+  
       logger.log(`Expected event address: ${expectedEventContract}`);
-      
+  
       eventContract = await locklift.factory.getContract('TonEvent');
       eventContract.setAddress(expectedEventContract);
       eventContract.afterRun = afterRun;
+  
+      metricManager.addContract(eventContract);
     });
-    
+  
     it('Check event initial state', async () => {
       const details = await eventContract.call({
         method: 'getDetails'
       });
       
-      expect(details._eventInitData.voteData.eventTransaction)
-        .to.be.bignumber.equal(eventVoteData.eventTransaction, 'Wrong event transaction');
-      
       expect(details._eventInitData.voteData.eventTransactionLt)
         .to.be.bignumber.equal(eventVoteData.eventTransactionLt, 'Wrong event transaction LT');
-      
+
       expect(details._eventInitData.voteData.eventTimestamp)
         .to.be.bignumber.equal(eventVoteData.eventTimestamp, 'Wrong event timestamp');
-      
+
       expect(details._eventInitData.voteData.eventIndex)
         .to.be.bignumber.equal(eventVoteData.eventIndex, 'Wrong event index');
-      
+
       expect(details._eventInitData.voteData.eventData)
         .to.be.equal(eventVoteData.eventData, 'Wrong event data');
-      
+
       expect(details._eventInitData.configuration)
         .to.be.equal(tonEventConfiguration.address, 'Wrong event configuration');
       
       expect(details._status)
         .to.be.bignumber.equal(0, 'Wrong status');
-      
+
       expect(details.confirms)
         .to.have.lengthOf(0, 'Wrong amount of confirmations');
-      
+
       expect(details._signatures)
         .to.have.lengthOf(0, 'Wrong amount of signatures');
-      
+
       expect(details.rejects)
         .to.have.lengthOf(0, 'Wrong amount of rejects');
-      
+  
       expect(details._initializer)
         .to.be.equal(initializer.address, 'Wrong initializer');
     });
+  
+    it('Check event round relays', async () => {
+      const requiredVotes = await eventContract.call({
+        method: 'requiredVotes',
+      });
     
+      const relays = await eventContract.call({
+        method: 'getVoters',
+        params: {
+          vote: 1
+        }
+      });
+    
+      expect(requiredVotes)
+        .to.be.bignumber.greaterThan(0, 'Too low required votes for event');
+    
+      expect(relays.length)
+        .to.be.bignumber.greaterThanOrEqual(requiredVotes.toNumber(), 'Too many required votes for event');
+    });
+
     it('Check encoded event data', async () => {
       const data = await eventContract.call({ method: 'getDecodedData' });
-      
+
       expect(data.rootToken)
         .to.be.equal(locklift.utils.zeroAddress, 'Wrong root token');
-      
+
       expect(data.wid)
         .to.be.bignumber.equal(eventDataStructure.wid, 'Wrong wid');
-      
+
       expect(data.addr)
         .to.be.bignumber.equal(eventDataStructure.addr, 'Wrong address');
-      
+
       expect(data.tokens)
         .to.be.bignumber.equal(eventDataStructure.tokens, 'Wrong amount of tokens');
-      
+
       expect(data.ethereum_address)
         .to.be.bignumber.equal(eventDataStructure.ethereum_address, 'Wrong ethereum address');
     });
   });
   
-  describe('Reject event', async () => {
-    it('Reject event enough times', async () => {
+  describe('Confirm event', async () => {
+    it('Confirm event enough times', async () => {
       const requiredVotes = await eventContract.call({
         method: 'requiredVotes',
       });
   
       for (const [relayId, relay] of Object.entries(relays.slice(0, requiredVotes))) {
-        logger.log(`Reject #${relayId} from ${relay.public}`);
-  
+        logger.log(`Confirm #${relayId} from ${relay.public}`);
+
         await eventContract.run({
-          method: 'reject',
-          params: {},
+          method: 'confirm',
+          params: {
+            signature: Buffer
+              .from(`0x${'ff'.repeat(65)}`)
+              .toString('hex'), // 132 symbols
+          },
           keyPair: relay
         });
       }
     });
-    
-    it('Check event rejected', async () => {
+
+    it('Check event confirmed', async () => {
       const details = await eventContract.call({
         method: 'getDetails'
       });
@@ -213,57 +234,61 @@ describe('Test ton event reject', async function() {
   
       expect(details.balance)
         .to.be.bignumber.greaterThan(0, 'Wrong balance');
-  
+
       expect(details._status)
-        .to.be.bignumber.equal(2, 'Wrong status');
-  
+        .to.be.bignumber.equal(1, 'Wrong status');
+
       expect(details.confirms)
-        .to.have.lengthOf(0, 'Wrong amount of relays confirmations');
-  
+        .to.have.lengthOf(requiredVotes, 'Wrong amount of relays confirmations');
+
       expect(details._signatures)
-        .to.have.lengthOf(0, 'Wrong amount of signatures');
-  
+        .to.have.lengthOf(requiredVotes, 'Wrong amount of signatures');
+
       expect(details.rejects)
-        .to.have.lengthOf(requiredVotes, 'Wrong amount of relays rejects');
+        .to.have.lengthOf(0, 'Wrong amount of relays rejects');
     });
-  
+    
     it('Send confirms from the rest of relays', async () => {
       const requiredVotes = await eventContract.call({
         method: 'requiredVotes',
       });
-    
-      for (const [relayId, relay] of Object.entries(relays.slice(requiredVotes))) {
-        logger.log(`Reject #${requiredVotes.plus(relayId)} from ${relay.public}`);
       
+      for (const [relayId, relay] of Object.entries(relays.slice(requiredVotes))) {
+        logger.log(`Confirm #${requiredVotes.plus(relayId)} from ${relay.public}`);
+    
         await eventContract.run({
-          method: 'reject',
-          params: {},
+          method: 'confirm',
+          params: {
+            signature: Buffer
+              .from(`0x${'ff'.repeat(65)}`)
+              .toString('hex'), // 132 symbols
+          },
           keyPair: relay
         });
       }
     });
-  
+    
     it('Check event details after all relays voted', async () => {
       const details = await eventContract.call({
         method: 'getDetails'
       });
-    
+  
       expect(details.balance)
         .to.be.bignumber.greaterThan(0, 'Wrong balance');
-    
-      expect(details._status)
-        .to.be.bignumber.equal(2, 'Wrong status');
-    
-      expect(details.confirms)
-        .to.have.lengthOf(0, 'Wrong amount of relays confirmations');
-    
-      expect(details._signatures)
-        .to.have.lengthOf(0, 'Wrong amount of signatures');
-    
-      expect(details.rejects)
-        .to.have.lengthOf(relays.length, 'Wrong amount of relays rejects');
-    });
   
+      expect(details._status)
+        .to.be.bignumber.equal(1, 'Wrong status');
+  
+      expect(details.confirms)
+        .to.have.lengthOf(relays.length, 'Wrong amount of relays confirmations');
+  
+      expect(details._signatures)
+        .to.have.lengthOf(relays.length, 'Wrong amount of signatures');
+  
+      expect(details.rejects)
+        .to.have.lengthOf(0, 'Wrong amount of relays rejects');
+    });
+    
     it('Close event', async () => {
       await initializer.runTarget({
         contract: eventContract,
@@ -271,11 +296,11 @@ describe('Test ton event reject', async function() {
         params: {},
         value: locklift.utils.convertCrystal(1, 'nano')
       });
-    
+  
       const details = await eventContract.call({
         method: 'getDetails'
       });
-    
+  
       expect(details.balance)
         .to.be.bignumber.equal(0, 'Wrong balance');
     });
