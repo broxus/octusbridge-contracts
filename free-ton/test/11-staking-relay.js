@@ -60,6 +60,7 @@ const ELECTION_TIME = 4;
 const TIME_BEFORE_ELECTION = 5;
 const RELAYS_COUNT_1 = 3;
 const MIN_RELAYS = 2;
+const RELAY_INITIAL_DEPOSIT = 500 * 10**9;
 
 
 describe('Test Staking Rewards', async function () {
@@ -161,16 +162,12 @@ describe('Test Staking Rewards', async function () {
         });
     }
 
-    const getRewardForRelayRound = async function(user, round_num) {
-        return await user.runTarget({
-            contract: stakingRoot,
+    const getRewardForRelayRound = async function(user, userData, round_num) {
+        return await userData.run({
             method: 'getRewardForRelayRound',
-            params: {
-                round_num: round_num,
-                send_gas_to: user.address,
-            },
-            value: locklift.utils.convertCrystal(1.5, 'nano')
-        });
+            params: {round_num: round_num},
+            keyPair: user.keyPair
+        })
     }
 
     const getElection = async function (round_num) {
@@ -193,14 +190,24 @@ describe('Test Staking Rewards', async function () {
         return round;
     }
 
-    const requestRelayMembership = async function (_user) {
-        return await _user.runTarget({
-            contract: stakingRoot,
-            method: 'becomeRelayNextRound',
-            params: {
-                send_gas_to: _user.address
+    const getBalance = async function (address) {
+        const res = await locklift.ton.client.net.wait_for_collection({
+            collection: 'accounts',
+            filter: {
+                id: { eq: address },
+                balance: { gt: `0x0` }
             },
-            value: convertCrystal(1.5, "nano")
+            result: 'balance',
+            timeout: 120000
+        });
+        return new BigNumber(res.result.balance);
+    }
+
+    const requestRelayMembership = async function (_user, _userData) {
+        return await _userData.run({
+            method: 'becomeRelayNextRound',
+            params: {},
+            keyPair: _user.keyPair
         })
     }
 
@@ -242,15 +249,14 @@ describe('Test Staking Rewards', async function () {
 
         const input_params = {
             ton_pubkey: user_pk.toFixed(),
-            eth_address: user_eth.toFixed(),
-            send_gas_to: stakingOwner.address
+            eth_address: user_eth.toFixed()
         }
 
         return await _user.runTarget({
             contract: stakingRoot,
             method: 'linkRelayAccounts',
             params: input_params,
-            value: convertCrystal(5.1, "nano")
+            value: convertCrystal(501, "nano")
         })
     }
 
@@ -291,15 +297,7 @@ describe('Test Staking Rewards', async function () {
     };
 
     const waitForDeploy = async function (address) {
-        await locklift.ton.client.net.wait_for_collection({
-            collection: 'accounts',
-            filter: {
-                id: { eq: address },
-                balance: { gt: `0x0` }
-            },
-            result: 'balance',
-            timeout: 120000
-        });
+        return await getBalance(address);
     }
 
     describe('Setup contracts', async function() {
@@ -315,7 +313,7 @@ describe('Test Staking Rewards', async function () {
                 let keys = await locklift.keys.getKeyPairs();
                 for (const i of [0, 1, 2, 3]) {
                     const keyPair = keys[i];
-                    const account = await deployAccount(keyPair, 25);
+                    const account = await deployAccount(keyPair, 525);
                     logger.log(`User address: ${account.address}`);
 
                     const {
@@ -463,6 +461,7 @@ describe('Test Staking Rewards', async function () {
                         relays_count: RELAYS_COUNT_1,
                         min_relays_count: MIN_RELAYS,
                         min_relay_deposit: MIN_RELAY_DEPOSIT,
+                        relay_initial_deposit: RELAY_INITIAL_DEPOSIT,
                         send_gas_to: stakingOwner.address
                     },
                 });
@@ -619,18 +618,32 @@ describe('Test Staking Rewards', async function () {
             });
 
             it("Users confirm ton relay accounts", async function () {
+                const bal1 = await getBalance(user1Data.address);
+                const bal2 = await getBalance(user2Data.address);
+                const bal3 = await getBalance(user3Data.address);
+
                 await confirmTonRelayAccount(user1, user1Data);
                 await confirmTonRelayAccount(user2, user2Data);
                 await confirmTonRelayAccount(user3, user3Data);
 
+                const bal1_after = await getBalance(user1Data.address);
+                const bal2_after = await getBalance(user2Data.address);
+                const bal3_after = await getBalance(user3Data.address);
+
+                console.log(bal1.toNumber(), bal1_after.toNumber());
+
                 const confirmed_user1 = await user1Data.call({method: 'ton_pubkey_confirmed'});
                 expect(confirmed_user1).to.be.equal(true, "Ton pubkey user1 not confirmed");
+                expect(bal1_after.toNumber()).to.be.gte(bal1.minus(10**9).toNumber(), "Bad gas")
 
                 const confirmed_user2 = await user2Data.call({method: 'ton_pubkey_confirmed'});
                 expect(confirmed_user2).to.be.equal(true, "Ton pubkey user2 not confirmed");
+                expect(bal2_after.toNumber()).to.be.gte(bal2.minus(10**9).toNumber(), "Bad gas")
 
                 const confirmed_user3 = await user3Data.call({method: 'ton_pubkey_confirmed'});
                 expect(confirmed_user3).to.be.equal(true, "Ton pubkey user3 not confirmed");
+                expect(bal3_after.toNumber()).to.be.gte(bal3.minus(10**9).toNumber(), "Bad gas")
+
             })
 
             it("Users confirm eth relay accounts", async function () {
@@ -676,8 +689,12 @@ describe('Test Staking Rewards', async function () {
             })
 
             it("Users request relay membership", async function () {
-                const tx = await requestRelayMembership(user1);
+                const bal1 = await getBalance(user1Data.address);
+
+                const tx = await requestRelayMembership(user1, user1Data);
                 const election = await getElection(2);
+
+                const bal1_after = await getBalance(user1Data.address);
 
                 const {
                     value: {
@@ -702,8 +719,9 @@ describe('Test Staking Rewards', async function () {
                 expect(_ton_pubkey1.toString()).to.be.equal(expected_ton_pubkey1, "Bad event - ton pubkey");
                 expect(_eth_address1.toString(16)).to.be.equal(expected_eth_addr, "Bad event - eth address");
                 expect(Number(_lock_until1)).to.be.gte(Number(block_now), "Bad event - lock");
+                expect(bal1_after.toNumber()).to.be.gte(bal1.minus(15**9).toNumber(), "Bad gas")
 
-                await requestRelayMembership(user3);
+                await requestRelayMembership(user3, user3Data);
 
                 const {
                     value: {
@@ -733,7 +751,7 @@ describe('Test Staking Rewards', async function () {
                 // console.log(await showNode(election, 1));
                 // console.log(await showNode(election, 2));
 
-                await requestRelayMembership(user2);
+                await requestRelayMembership(user2, user2Data);
 
                 const {
                     value: {
@@ -863,7 +881,9 @@ describe('Test Staking Rewards', async function () {
                 await depositTokens(user1, userTokenWallet1, 1);
                 const user1_rewards = await user1Data.call({method: 'rewardRounds'});
 
-                await getRewardForRelayRound(user1, 1);
+                const bal1 = await getBalance(user1Data.address);
+
+                await getRewardForRelayRound(user1, user1Data, 1);
                 const user1_rewards_1 = await user1Data.call({method: 'rewardRounds'});
                 const rewards = await stakingRoot.call({method: 'rewardRounds'});
                 const round_reward = rewardPerSec * RELAY_ROUND_TIME_1;
@@ -872,6 +892,8 @@ describe('Test Staking Rewards', async function () {
                 const rew_per_share = new BigNumber(rewards[0].accRewardPerShare);
                 const new_reward = rew_per_share.times(_userDeposit).div(1e18).minus(user1_rewards[0].reward_debt).dp(0, 1);
 
+                const bal1_after = await getBalance(user1Data.address);
+                expect(bal1_after.toNumber()).to.be.gte(bal1.minus(15**9).toNumber(), "Bad gas")
                 const expected = new_reward.plus(user1_rewards[0].reward_balance).plus(round_reward);
                 expect(expected.toString()).to.be.equal(user1_rewards_1[0].reward_balance.toString(), 'Bad reward');
 
@@ -934,7 +956,7 @@ describe('Test Staking Rewards', async function () {
             });
 
             it("Users request relay membership", async function() {
-                const tx = await requestRelayMembership(user1);
+                const tx = await requestRelayMembership(user1, user1Data);
 
                 const { value: {
                     round_num: _round_num1,
@@ -1056,7 +1078,7 @@ describe('Test Staking Rewards', async function () {
                     await depositTokens(_user, _userTokenWallet, 1);
                     const _user_rewards = await _userData.call({method: 'rewardRounds'});
 
-                    await getRewardForRelayRound(_user, 2);
+                    await getRewardForRelayRound(_user, _userData, 2);
                     const _user_rewards_1 = await _userData.call({method: 'rewardRounds'});
 
                     const round_reward = rewardPerSec * RELAY_ROUND_TIME_1;

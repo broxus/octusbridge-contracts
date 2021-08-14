@@ -63,6 +63,10 @@ contract UserData is IUserData, IUpgradableByRequest {
 
     // ---------------- DAO -------------------
 
+    function _reserve() internal view returns (uint128) {
+        return math.max(address(this).balance - msg.value, Gas.USER_DATA_INITIAL_BALANCE);
+    }
+
     function lockedTokens() override public view responsible returns(uint128) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} _lockedTokens();
     }
@@ -106,7 +110,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     }
 
     function castVote(uint32 code_version, uint32 proposal_id, bool support, string reason) public override onlyRoot {
-        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+        tvm.rawReserve(_reserve(), 2);
 
         uint16 error;
 
@@ -145,7 +149,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     }
 
     function tryUnlockVoteTokens(uint32 code_version, uint32 proposal_id) override public view onlyRoot {
-        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+        tvm.rawReserve(_reserve(), 2);
         uint16 error;
 
         if (code_version > current_version) error = ErrorCodes.OLD_VERSION;
@@ -175,7 +179,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     }
 
     function tryUnlockCastedVotes(uint32 code_version, uint32[] proposal_ids) override public view onlyRoot {
-        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+        tvm.rawReserve(_reserve(), 2);
 
         uint16 error;
 
@@ -258,7 +262,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     }
 
     function slash(IStakingPool.RewardRound[] reward_rounds, address send_gas_to) external override onlyRoot {
-        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+        tvm.rawReserve(_reserve(), 2);
 
         syncRewards(reward_rounds, token_balance);
         slashed = true;
@@ -282,7 +286,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         IStakingPool.RewardRound[] reward_rounds,
         uint32 code_version
     ) external override onlyRoot {
-        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+        tvm.rawReserve(_reserve(), 2);
 
         if (code_version > current_version || slashed) {
             IStakingPool(msg.sender).revertDeposit{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(nonce);
@@ -302,8 +306,9 @@ contract UserData is IUserData, IUpgradableByRequest {
     ) external override onlyRoot {
         require (!slashed, ErrorCodes.SLASHED);
         require (code_version == current_version, ErrorCodes.LOW_VERSION);
+        require (now >= relay_lock_until, ErrorCodes.RELAY_LOCK_ACTIVE);
 
-        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+        tvm.rawReserve(_reserve(), 2);
 
         syncRewards(reward_rounds, token_balance);
 
@@ -316,47 +321,46 @@ contract UserData is IUserData, IUpgradableByRequest {
         IStakingPool(msg.sender).finishClaimReward{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(user, rewards, send_gas_to);
     }
 
-    function processGetRelayRewardForRound(
+    function getRewardForRelayRound(uint32 round_num) external onlyRelay {
+        require (!slashed, ErrorCodes.SLASHED);
+        tvm.accept();
+
+        IStakingPool(root).processGetRewardForRelayRound{value: Gas.MIN_GET_REWARD_RELAY_ROUND_MSG_VALUE}(user, round_num);
+    }
+
+    function processGetRewardForRelayRound2(
         IStakingPool.RewardRound[] reward_rounds,
         uint32 round_num,
-        address send_gas_to,
         uint32 code_version,
         uint32 relay_round_code_version
     ) external override onlyRoot {
         require (!slashed, ErrorCodes.SLASHED);
         require (code_version == current_version, ErrorCodes.LOW_VERSION);
 
-        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+        tvm.rawReserve(_reserve(), 2);
 
         syncRewards(reward_rounds, token_balance);
 
         address relay_round_addr = getRelayRoundAddress(round_num);
-        IRelayRound(relay_round_addr).getRewardForRound{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-            user, send_gas_to, relay_round_code_version
-        );
+        IRelayRound(relay_round_addr).getRewardForRound{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(user, relay_round_code_version);
     }
 
     function receiveRewardForRelayRound(
-        uint32 relay_round_num, uint32 reward_round_num, uint128 reward, address send_gas_to
+        uint32 relay_round_num, uint32 reward_round_num, uint128 reward
     ) external override onlyRelayRound(relay_round_num) {
-        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+        tvm.rawReserve(_reserve(), 2);
 
         rewardRounds[reward_round_num].reward_balance += reward;
         emit RelayRoundRewardClaimed(relay_round_num, reward_round_num, reward);
-
-        send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 
     function processLinkRelayAccounts(
         uint256 ton_pubkey,
         uint160 eth_address,
-        address send_gas_to,
         uint32 code_version
     ) external override onlyRoot {
         require (!slashed, ErrorCodes.SLASHED);
         require (code_version == current_version, ErrorCodes.LOW_VERSION);
-
-        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
 
         relay_ton_pubkey = ton_pubkey;
         ton_pubkey_confirmed = false;
@@ -380,45 +384,47 @@ contract UserData is IUserData, IUpgradableByRequest {
         require (eth_address == relay_eth_address, ErrorCodes.ACCOUNT_NOT_LINKED);
         require (!slashed, ErrorCodes.SLASHED);
 
-        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+        tvm.rawReserve(_reserve(), 2);
 
         eth_address_confirmed = true;
 
         send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 
-    function processBecomeRelay(
+    function becomeRelayNextRound() external onlyRelay {
+        require (!slashed, ErrorCodes.SLASHED);
+        tvm.accept();
+
+        IStakingPool(root).processBecomeRelayNextRound{value: Gas.MIN_RELAY_REQ_MSG_VALUE}(user);
+    }
+
+    function processBecomeRelayNextRound2(
         uint32 round_num,
         uint32 lock_time,
         uint128 min_deposit,
-        address send_gas_to,
         uint32 code_version,
         uint32 election_code_version
     ) external override onlyRoot {
-        require (eth_address_confirmed, ErrorCodes.ACCOUNT_NOT_CONFIRMED);
-        require (ton_pubkey_confirmed, ErrorCodes.ACCOUNT_NOT_CONFIRMED);
-        require (!slashed, ErrorCodes.SLASHED);
         require (token_balance >= min_deposit, ErrorCodes.LOW_RELAY_DEPOSIT);
         require (code_version == current_version, ErrorCodes.LOW_VERSION);
 
-        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+        tvm.rawReserve(_reserve(), 2);
 
         address election_addr = getElectionAddress(round_num);
         IElection(election_addr).applyForMembership{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-            user, relay_ton_pubkey, relay_eth_address, token_balance, lock_time, send_gas_to, election_code_version
+            user, relay_ton_pubkey, relay_eth_address, token_balance, lock_time, election_code_version
         );
     }
 
     function relayMembershipRequestAccepted(
-        uint32 round_num, uint128 tokens, uint256 ton_pubkey, uint256 eth_addr, uint32 lock_time, address send_gas_to
+        uint32 round_num, uint128 tokens, uint256 ton_pubkey, uint256 eth_addr, uint32 lock_time
     ) external override onlyElection(round_num) {
-        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+        tvm.rawReserve(_reserve(), 2);
 
         // lock for 30 days
         relay_lock_until = now + lock_time;
 
         emit RelayMembershipRequested(round_num, tokens, ton_pubkey, eth_addr, relay_lock_until);
-        send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 
     function processWithdraw(
@@ -433,7 +439,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         require (code_version == current_version, ErrorCodes.LOW_VERSION);
         require (_canWithdrawVotes(), ErrorCodes.CANT_WITHDRAW_VOTES);
 
-        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+        tvm.rawReserve(_reserve(), 2);
 
         syncRewards(reward_rounds, token_balance - _tokens_to_withdraw);
         token_balance -= _tokens_to_withdraw;
@@ -494,7 +500,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     onBounce(TvmSlice slice) external {
         uint32 functionId = slice.decode(uint32);
         if (functionId == tvm.functionId(IProposal.castVote)) {
-            tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+            tvm.rawReserve(_reserve(), 2);
             uint32 proposal_id = slice.decode(uint32);
             if (casted_votes.exists(proposal_id)) {
                 delete casted_votes[proposal_id];
@@ -505,7 +511,7 @@ contract UserData is IUserData, IUpgradableByRequest {
 
     function onCodeUpgrade(TvmCell upgrade_data) private {
         tvm.resetStorage();
-        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+        tvm.rawReserve(_reserve(), 2);
 
         TvmSlice s = upgrade_data.toSlice();
         (address root_, , address send_gas_to) = s.decode(address, uint8, address);
@@ -528,7 +534,7 @@ contract UserData is IUserData, IUpgradableByRequest {
 
     function upgrade(TvmCell code, uint32 new_version, address send_gas_to) external override onlyRoot {
         if (new_version == current_version) {
-            tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+            tvm.rawReserve(_reserve(), 2);
             send_gas_to.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
         } else {
             emit UserDataCodeUpgraded(new_version);
@@ -642,6 +648,14 @@ contract UserData is IUserData, IUpgradableByRequest {
 
     modifier onlyDaoRoot {
        require(msg.sender == dao_root, ErrorCodes.NOT_DAO_ROOT);
+        _;
+    }
+
+    modifier onlyRelay {
+        require (msg.pubkey() != 0, ErrorCodes.INTERNAL_ADDRESS);
+        require (msg.pubkey() == relay_ton_pubkey, ErrorCodes.ACCOUNT_NOT_LINKED);
+        require (ton_pubkey_confirmed, ErrorCodes.ACCOUNT_NOT_CONFIRMED);
+        require (eth_address_confirmed, ErrorCodes.ACCOUNT_NOT_CONFIRMED);
         _;
     }
 }

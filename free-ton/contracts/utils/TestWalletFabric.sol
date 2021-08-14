@@ -18,7 +18,7 @@ contract WalletFabric {
         wallet_code = _wallet_code;
     }
 
-    function deployWallets(uint[] owners) public {
+    function deployWallets(uint[] owners, uint128 initial_balance) public {
         address[] wallets = new address[](owners.length);
 
         for (uint i = 0; i < owners.length; i++) {
@@ -30,7 +30,7 @@ contract WalletFabric {
             });
             wallets[i] = new TestWallet{
                 stateInit: _init_data,
-                value: 10 ton,
+                value: initial_balance,
                 flag: 0
             }(owners[i]);
             wallet_nonce += 1;

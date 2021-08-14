@@ -20,6 +20,8 @@ interface IStakingPool {
     function endElection(address send_gas_to) external;
     function onElectionStarted(uint32 round_num, address send_gas_to) external;
     function onElectionEnded(uint32 round_num, uint32 relay_requests_count, address send_gas_to) external;
+    function processBecomeRelayNextRound(address user) external view;
+    function processGetRewardForRelayRound(address user, uint32 round_num) external;
     function confirmSlash(
         address user,
         uint128[] ban_rewards,

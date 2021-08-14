@@ -193,6 +193,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         data_builder_4.store(relaysCount); // 32
         data_builder_4.store(minRelaysCount); // 32
         data_builder_4.store(minRelayDeposit); // 128
+        data_builder_4.store(relayInitialDeposit); // 128
         data_builder_4.store(deposit_nonce); // 64
         data_builder_4.store(deposits); // ref
 
@@ -264,6 +265,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
                             uint32 relaysCount
                             uint32 minRelaysCount
                             uint128 minRelayDeposit
+                            uint128 relayInitialDeposit
                             uint64 deposit_nonce
                         refs:
                             1: deposits

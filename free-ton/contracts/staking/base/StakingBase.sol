@@ -59,7 +59,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         uint32 time_before_election,
         uint32 relays_count,
         uint32 min_relays_count,
-        uint128 min_relay_deposit
+        uint128 min_relay_deposit,
+        uint128 relay_initial_deposit
     );
 
     uint32 public static deploy_nonce;
@@ -129,6 +130,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     uint128 public minRelayDeposit = 100000 * 10**9;
 
+    uint128 public relayInitialDeposit = 500 ton;
+
     // payloads for token receive callback
     uint8 public constant STAKE_DEPOSIT = 0;
     uint8 public constant REWARD_UP = 1;
@@ -167,7 +170,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
-    function setBridge(address new_bridge, address send_gas_to) external onlyDaoRoot {
+    function setBridge(address new_bridge, address send_gas_to) external onlyAdmin {
         tvm.rawReserve(_reserve(), 2);
         emit BridgeUpdated(new_bridge);
         bridge = new_bridge;
@@ -211,6 +214,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         uint32 relays_count,
         uint32 min_relays_count,
         uint128 min_relay_deposit,
+        uint128 relay_initial_deposit,
         address send_gas_to
     ) external onlyDaoRoot {
         tvm.rawReserve(_reserve(), 2);
@@ -221,6 +225,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         relaysCount = relays_count;
         minRelaysCount = min_relays_count;
         minRelayDeposit = min_relay_deposit;
+        relayInitialDeposit = relay_initial_deposit;
 
         emit RelayConfigUpdated(
             relay_round_time,
@@ -228,7 +233,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
             time_before_election,
             relays_count,
             min_relays_count,
-            min_relay_deposit
+            min_relay_deposit,
+            relay_initial_deposit
         );
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
