@@ -450,7 +450,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     function pendingReward(uint256 user_token_balance, IUserData.RewardRoundData[] user_reward_data) external view responsible returns (uint256) {
         RewardRound[] _reward_rounds = rewardRounds;
         // sync rewards up to this moment
-        if (now > lastRewardTime && tokenBalance != 0) {
+        if (now > lastRewardTime && tokenBalance > 0) {
+            // if token balance if empty, no need to update pool info
             uint128 new_reward = (now - lastRewardTime) * rewardPerSecond;
             _reward_rounds[_reward_rounds.length - 1].totalReward += new_reward;
             _reward_rounds[_reward_rounds.length - 1].accRewardPerShare += math.muldiv(new_reward, 1e18, tokenBalance);
@@ -460,6 +461,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         for (uint i = 0; i < _reward_rounds.length; i++) {
             // for old user rounds (which synced already), just get rewards
             if (i < user_reward_data.length - 1) {
+                // totalReward in old round cant be empty
                 uint256 user_round_share = math.muldiv(user_reward_data[i].reward_balance, 1e18, _reward_rounds[i].totalReward);
                 user_reward_tokens += math.muldiv(user_round_share, _reward_rounds[i].rewardTokens, 1e18);
             // sync new user rounds
@@ -471,8 +473,10 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
                 uint256 new_reward = math.muldiv(user_token_balance, _reward_rounds[i].accRewardPerShare, 1e18) - user_reward_data[i].reward_debt;
                 uint256 user_round_reward = user_reward_data[i].reward_balance + new_reward;
 
-                uint256 user_round_share = math.muldiv(user_round_reward, 1e18, _reward_rounds[i].totalReward);
-                user_reward_tokens += math.muldiv(user_round_share, _reward_rounds[i].rewardTokens, 1e18);
+                if (_reward_rounds[i].totalReward > 0) {
+                    uint256 user_round_share = math.muldiv(user_round_reward, 1e18, _reward_rounds[i].totalReward);
+                    user_reward_tokens += math.muldiv(user_round_share, _reward_rounds[i].rewardTokens, 1e18);
+                }
             }
         }
         return { value: 0, flag: MsgFlag.REMAINING_GAS } user_reward_tokens;

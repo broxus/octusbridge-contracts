@@ -29,7 +29,7 @@ contract StakingRootDeployer {
                     deployer: address(this)
                 }
             }),
-            value: address(this).balance - 0.2 ton,
+            value: address(this).balance - 1 ton,
             flag: 0
         }(_admin, _dao_root, _rewarder, _bridge, _tokenRoot);
     }

@@ -119,6 +119,13 @@ describe('Test Staking Rewards', async function () {
         return account;
     }
 
+    const pendingReward = async function (user_token_balance, user_reward_rounds) {
+        return await stakingRoot.call({
+            method: 'pendingReward',
+            params: {user_token_balance: user_token_balance, user_reward_data: user_reward_rounds}
+        })
+    }
+
     const getUserTokenWallet = async function (user) {
         const expectedWalletAddr = await stakingToken.call({
             method: 'getWalletAddress',
@@ -295,12 +302,13 @@ describe('Test Staking Rewards', async function () {
                 const stakingRootDeployer = await locklift.giver.deployContract({
                     contract: StakingRootDeployer,
                     constructorParams: {},
+                    initParams: {nonce: getRandomNonce()},
                     keyPair: keyPair,
                 }, locklift.utils.convertCrystal(10, 'nano'));
 
                 logger.log(`Deploying stakingRoot`);
                 stakingRoot = await locklift.factory.getContract('Staking');
-                stakingRoot.setAddress((await stakingRootDeployer.run({
+                const deploy_res = await stakingRootDeployer.run({
                     method: 'deploy',
                     params: {
                         stakingCode: stakingRoot.code,
@@ -311,7 +319,8 @@ describe('Test Staking Rewards', async function () {
                         _bridge: bridge,
                         _deploy_nonce: getRandomNonce()
                     }
-                })).decoded.output.value0)
+                });
+                stakingRoot.setAddress(deploy_res.decoded.output.value0);
                 logger.log(`StakingRoot address: ${stakingRoot.address}`);
                 logger.log(`StakingRoot owner address: ${stakingOwner.address}`);
                 logger.log(`StakingRoot token root address: ${stakingToken.address}`);
@@ -566,8 +575,8 @@ describe('Test Staking Rewards', async function () {
             });
 
             it("Claim rewards", async function () {
-                let round1_rewards_data = await stakingRoot.call({method: 'rewardRounds'});
-                round1_rewards_data = round1_rewards_data[0];
+                let rounds_rewards_data = await stakingRoot.call({method: 'rewardRounds'});
+                const round1_rewards_data = rounds_rewards_data[0];
 
                 const user1_reward_before = await user1Data.call({method: 'rewardRounds'});
                 const user2_reward_before = await user2Data.call({method: 'rewardRounds'});
@@ -578,12 +587,24 @@ describe('Test Staking Rewards', async function () {
                 const user1_token_reward = Math.floor(Math.floor(user1_reward * 1e10 / round1_rewards_data.totalReward) * round1_rewards_data.rewardTokens / 1e10);
                 const user2_token_reward = Math.floor(Math.floor(user2_reward * 1e10 / round1_rewards_data.totalReward) * round1_rewards_data.rewardTokens / 1e10);
 
+                const user1_token_balance0 = await user1Data.call({method: 'token_balance'});
+                const res0 = await pendingReward(user1_token_balance0, user1_reward_before);
+                expect(res0.toString()).to.be.eq(user1_token_reward.toString(), 'Bad pending reward');
+
+                const user2_token_balance0 = await user2Data.call({method: 'token_balance'});
+                const res20 = await pendingReward(user2_token_balance0, user2_reward_before);
+                expect(res20.toString()).to.be.eq(user2_token_reward.toString(), 'Bad pending reward');
+
                 await claimReward(user1);
                 await checkTokenBalances(
                     userTokenWallet1, user1Data, rewardTokensBal - user1_token_reward,
                     0, rewardTokensBal - user1_token_reward, userInitialTokenBal + user1_token_reward, 0
                 );
                 user1Balance = userInitialTokenBal + user1_token_reward;
+
+                const user1_token_balance = await user1Data.call({method: 'token_balance'});
+                const res = await pendingReward(user1_token_balance, user1_reward_before);
+                expect(res.toString()).to.be.eq(user1_token_reward.toString(), 'Bad pending reward');
 
                 const user1_reward_after = await user1Data.call({method: 'rewardRounds'});
                 expect(user1_reward_after[0].reward_balance).to.be.equal('0', "Claim reward fail");
@@ -596,6 +617,10 @@ describe('Test Staking Rewards', async function () {
                 );
                 user2Balance = userInitialTokenBal + user2_token_reward;
                 balance_err = remaining_balance;
+
+                const user2_token_balance = await user2Data.call({method: 'token_balance'});
+                const res1 = await pendingReward(user2_token_balance, user2_reward_before);
+                expect(res1.toString()).to.be.eq(user2_token_reward.toString(), 'Bad pending reward');
 
                 const user2_reward_after = await user2Data.call({method: 'rewardRounds'});
                 expect(user2_reward_after[0].reward_balance).to.be.equal('0', "Claim reward fail");
@@ -706,6 +731,11 @@ describe('Test Staking Rewards', async function () {
                 expect(parseInt(cur_round.accRewardPerShare, 16)).to.be.equal(0, 'Bad reward rounds share');
                 expect(cur_round.totalReward).to.be.equal('0', 'Bad reward rounds reward');
                 expect(cur_round.startTime).to.be.equal(last_reward_time.toString(), 'Bad reward rounds start time');
+
+                const user1_reward_before = await user1Data.call({method: 'rewardRounds'});
+                const user1_token_balance0 = await user1Data.call({method: 'token_balance'});
+                // just check that function dont throw overflow and etc. when userData is not synced with latest rounds
+                await pendingReward(user1_token_balance0, user1_reward_before);
             });
 
             it("Users withdraw tokens", async function () {
@@ -766,6 +796,14 @@ describe('Test Staking Rewards', async function () {
                     user1_expected_token_reward += user1_token_reward;
                     user2_expected_token_reward += user2_token_reward;
                 }
+
+                const user1_token_balance = await user1Data.call({method: 'token_balance'});
+                const res = await pendingReward(user1_token_balance, user1_reward_data);
+                expect(res.toString()).to.be.eq(user1_expected_token_reward.toString(), 'Bad pending reward');
+
+                const user2_token_balance = await user2Data.call({method: 'token_balance'});
+                const res1 = await pendingReward(user2_token_balance, user2_reward_data);
+                expect(res1.toString()).to.be.eq(user2_expected_token_reward.toString(), 'Bad pending reward');
 
                 await claimReward(user1);
                 await checkTokenBalances(
