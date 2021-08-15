@@ -291,14 +291,19 @@ describe('Test Staking Rewards', async function () {
         return election;
     }
 
-    const startElection = async function () {
-        return await stakingOwner.runTarget({
-            contract: stakingRoot,
+    const startElection = async function(_user) {
+        return await stakingRoot.run({
             method: 'startElectionOnNewRound',
-            params: {
-                send_gas_to: stakingOwner.address
-            },
-            value: convertCrystal(2, "nano")
+            params: {},
+            keyPair: _user.keyPair
+        })
+    }
+
+    const endElection = async function (_user) {
+        return await stakingRoot.run({
+            method: 'endElection',
+            params: {},
+            keyPair: _user.keyPair
         })
     }
 
@@ -317,17 +322,6 @@ describe('Test Staking Rewards', async function () {
             method: 'becomeRelayNextRound',
             params: {},
             keyPair: _user.keyPair
-        })
-    }
-
-    const endElection = async function () {
-        return await stakingOwner.runTarget({
-            contract: stakingRoot,
-            method: 'endElection',
-            params: {
-                send_gas_to: stakingOwner.address
-            },
-            value: convertCrystal(7, "nano")
         })
     }
 
@@ -449,6 +443,7 @@ describe('Test Staking Rewards', async function () {
                 const stakingRootDeployer = await locklift.giver.deployContract({
                     contract: StakingRootDeployer,
                     constructorParams: {},
+                    initParams: {nonce: getRandomNonce()},
                     keyPair: keyPair,
                 }, locklift.utils.convertCrystal(10, 'nano'));
 
@@ -763,7 +758,7 @@ describe('Test Staking Rewards', async function () {
             })
 
             it("Election on new round starts", async function () {
-                const tx = await startElection();
+                const tx = await startElection(users[0]);
                 console.log(tx.transaction.out_msgs);
                 const event = await waitForStakingEvent('ElectionStarted');
 
@@ -850,7 +845,7 @@ describe('Test Staking Rewards', async function () {
             it("Election ends, new round initialized", async function () {
                 const reward_rounds = await stakingRoot.call({method: 'rewardRounds'});
 
-                const tx = await endElection();
+                const tx = await endElection(users[3]);
                 console.log(tx.transaction.out_msgs);
                 const init_event = await waitForStakingEvent('RelayRoundInitialized');
                 const elect_event = await waitForStakingEvent('ElectionEnded');
@@ -945,7 +940,7 @@ describe('Test Staking Rewards', async function () {
             it("Election on new round starts", async function () {
                 await wait(TIME_BEFORE_ELECTION * 1000);
 
-                const tx = await startElection();
+                const tx = await startElection(users[1]);
                 console.log(tx.transaction.out_msgs);
                 const event = await waitForStakingEvent('ElectionStarted');
 
@@ -1015,7 +1010,7 @@ describe('Test Staking Rewards', async function () {
 
                 const reward_rounds = await stakingRoot.call({method: 'rewardRounds'});
 
-                const tx = await endElection();
+                const tx = await endElection(users[2]);
                 console.log(tx.transaction.out_msgs);
                 const init_event = await waitForStakingEvent('RelayRoundInitialized');
                 const elect_event = await waitForStakingEvent('ElectionEnded');

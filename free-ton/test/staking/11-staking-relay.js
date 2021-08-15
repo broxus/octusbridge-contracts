@@ -506,10 +506,6 @@ describe('Test Staking Rewards', async function () {
         describe('Standard case', async function() {
             let user1_deposit_time;
             let user2_deposit_time;
-            let user1_withdraw_time;
-            let user2_withdraw_time;
-            let user3_deposit_time;
-            let user3_withdraw_time;
 
             it('Users deposit tokens', async function () {
                 await depositTokens(user1, userTokenWallet1, userDeposit);
@@ -546,7 +542,6 @@ describe('Test Staking Rewards', async function () {
                     userTokenWallet3, user3Data, rewardTokensBal + userDeposit * 6,
                     userDeposit * 6, rewardTokensBal, userInitialTokenBal - userDeposit * 3, userDeposit * 3
                 );
-                user3_deposit_time = await stakingRoot.call({method: 'lastRewardTime'});
             });
 
             it("Creating origin relay round", async function () {
@@ -721,11 +716,16 @@ describe('Test Staking Rewards', async function () {
             it("Election on new round starts", async function () {
                 await wait(5000);
 
+                const bal1 = await getBalance(user1Data.address);
+
                 const tx = await startElection(user2);
                 const election = await getElection(2);
                 if (locklift.network === 'dev') {
                     await wait(DEV_WAIT);
                 }
+                const bal1_after = await getBalance(user1Data.address);
+
+                expect(bal1_after.toNumber()).to.be.gte(bal1.minus(15**9).toNumber(), "Bad gas")
 
                 const round_num = await election.call({method: 'round_num'});
                 expect(round_num.toString()).to.be.equal('2', "Bad election - round num");
@@ -865,6 +865,7 @@ describe('Test Staking Rewards', async function () {
 
                 const reward_rounds = await stakingRoot.call({method: 'rewardRounds'});
 
+                const bal1 = await getBalance(user1Data.address);
                 const tx = await endElection(user1);
 
                 const round = await getRelayRound(2);
@@ -872,8 +873,12 @@ describe('Test Staking Rewards', async function () {
                 if (locklift.network === 'dev') {
                     await wait(DEV_WAIT);
                 }
+
+                const bal1_after = await getBalance(user1Data.address);
                 logger.log(`Round 2 deployed - ${round.address}`)
                 // const election = await getElection(2);
+
+                expect(bal1_after.toNumber()).to.be.gte(bal1.minus(5 * 10**9).toNumber(), "Bad gas")
 
                 // console.log('root', stakingRoot.address)
                 // console.log('election', election.address);
@@ -1010,7 +1015,7 @@ describe('Test Staking Rewards', async function () {
             it("Election on new round starts", async function () {
                 await wait(5000);
 
-                const tx = await startElection(user1);
+                const tx = await startElection(user3);
                 const election = await getElection(3);
                 if (locklift.network === 'dev') {
                     await wait(DEV_WAIT);

@@ -447,7 +447,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
 
     // user_amount and user_reward_debt should be fetched from UserData at first
-    function pendingReward(uint256 user_amount, IUserData.RewardRoundData[] user_reward_data) external view responsible returns (uint256) {
+    function pendingReward(uint256 user_token_balance, IUserData.RewardRoundData[] user_reward_data) external view responsible returns (uint256) {
         RewardRound[] _reward_rounds = rewardRounds;
         // sync rewards up to this moment
         if (now > lastRewardTime && tokenBalance != 0) {
@@ -468,7 +468,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
                     user_reward_data.push(IUserData.RewardRoundData(0, 0));
                 }
 
-                uint256 new_reward = math.muldiv(user_amount, _reward_rounds[i].accRewardPerShare, 1e18) - user_reward_data[i].reward_debt;
+                uint256 new_reward = math.muldiv(user_token_balance, _reward_rounds[i].accRewardPerShare, 1e18) - user_reward_data[i].reward_debt;
                 uint256 user_round_reward = user_reward_data[i].reward_balance + new_reward;
 
                 uint256 user_round_share = math.muldiv(user_round_reward, 1e18, _reward_rounds[i].totalReward);
