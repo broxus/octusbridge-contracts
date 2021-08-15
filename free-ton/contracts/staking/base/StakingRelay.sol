@@ -1,5 +1,6 @@
 pragma ton-solidity ^0.39.0;
-
+pragma AbiHeader pubkey;
+pragma AbiHeader expire;
 
 import "./StakingUpgradable.sol";
 
@@ -115,27 +116,24 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         );
     }
 
-    function startElectionOnNewRound(address send_gas_to) external onlyActive {
-        require (msg.value >= Gas.MIN_START_ELECTION_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+    function startElectionOnNewRound() external onlyActive {
         require (now >= (currentRelayRoundStartTime + timeBeforeElection), ErrorCodes.TOO_EARLY_FOR_ELECTION);
         require (currentElectionStartTime == 0, ErrorCodes.ELECTION_ALREADY_STARTED);
         require (originRelayRoundInitialized, ErrorCodes.ORIGIN_ROUND_NOT_INITIALIZED);
-        tvm.rawReserve(_reserve(), 2);
+        tvm.accept();
 
-        deployElection(currentRelayRound + 1, send_gas_to);
-        send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
+        deployElection(currentRelayRound + 1, address(this));
     }
 
-    function endElection(address send_gas_to) external override onlyActive {
-        uint128 min_gas = Gas.MIN_END_ELECTION_MSG_VALUE + _relaysPacksCount() * Gas.MIN_SEND_RELAYS_MSG_VALUE;
-        require (msg.value >= min_gas, ErrorCodes.VALUE_TOO_LOW);
+    function endElection() external onlyActive {
         require (currentElectionStartTime != 0, ErrorCodes.ELECTION_NOT_STARTED);
         require (now >= (currentElectionStartTime + electionTime), ErrorCodes.CANT_END_ELECTION);
+        tvm.accept();
 
-        tvm.rawReserve(_reserve(), 2);
+        uint128 required_gas = Gas.MIN_END_ELECTION_MSG_VALUE + _relaysPacksCount() * Gas.MIN_SEND_RELAYS_MSG_VALUE;
 
         address election_addr = getElectionAddress(pendingRelayRound);
-        IElection(election_addr).finish{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(send_gas_to, election_version);
+        IElection(election_addr).finish{value: required_gas}(address(this), election_version);
     }
 
     function onElectionStarted(uint32 round_num, address send_gas_to) external override onlyElection(round_num) {

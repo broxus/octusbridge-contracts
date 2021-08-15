@@ -15,7 +15,7 @@ const stringToBytesArray = (dataString) => {
     return Buffer.from(dataString).toString('hex')
 };
 
-const getRandomNonce = () => Math.random() * 64000 | 0;
+const getRandomNonce = () => Math.ceil(Math.random() * 64000);
 
 const afterRun = async () => {
     await new Promise(resolve => setTimeout(resolve, 500));
@@ -53,6 +53,7 @@ let user2Balance;
 let user3Balance;
 let balance_err;
 
+const DEV_WAIT = 100000;
 
 const MIN_RELAY_DEPOSIT = 1;
 const RELAY_ROUND_TIME_1 = 10;
@@ -60,7 +61,7 @@ const ELECTION_TIME = 4;
 const TIME_BEFORE_ELECTION = 5;
 const RELAYS_COUNT_1 = 3;
 const MIN_RELAYS = 2;
-const RELAY_INITIAL_DEPOSIT = 500 * 10**9;
+const RELAY_INITIAL_DEPOSIT = 50;
 
 
 describe('Test Staking Rewards', async function () {
@@ -120,7 +121,9 @@ describe('Test Staking Rewards', async function () {
         }));
     };
 
-    const deployAccount = async function (key, value) {
+    const deployAccount = async function (key) {
+        const user_bal = RELAY_INITIAL_DEPOSIT + 10;
+
         const Account = await locklift.factory.getAccount('Wallet');
         let account = await locklift.giver.deployContract({
             contract: Account,
@@ -129,7 +132,7 @@ describe('Test Staking Rewards', async function () {
                 _randomNonce: Math.random() * 6400 | 0,
             },
             keyPair: key
-        }, locklift.utils.convertCrystal(value, 'nano'));
+        }, locklift.utils.convertCrystal(user_bal, 'nano'));
         account.setKeyPair(key);
         account.afterRun = afterRun;
         return account;
@@ -211,14 +214,19 @@ describe('Test Staking Rewards', async function () {
         })
     }
 
-    const endElection = async function () {
-        return await stakingOwner.runTarget({
-            contract: stakingRoot,
+    const startElection = async function(_user) {
+        return await stakingRoot.run({
+            method: 'startElectionOnNewRound',
+            params: {},
+            keyPair: _user.keyPair
+        })
+    }
+
+    const endElection = async function (_user) {
+        return await stakingRoot.run({
             method: 'endElection',
-            params: {
-                send_gas_to: stakingOwner.address
-            },
-            value: convertCrystal(7, "nano")
+            params: {},
+            keyPair: _user.keyPair
         })
     }
 
@@ -256,7 +264,7 @@ describe('Test Staking Rewards', async function () {
             contract: stakingRoot,
             method: 'linkRelayAccounts',
             params: input_params,
-            value: convertCrystal(501, "nano")
+            value: convertCrystal(RELAY_INITIAL_DEPOSIT + 1, "nano")
         })
     }
 
@@ -313,7 +321,7 @@ describe('Test Staking Rewards', async function () {
                 let keys = await locklift.keys.getKeyPairs();
                 for (const i of [0, 1, 2, 3]) {
                     const keyPair = keys[i];
-                    const account = await deployAccount(keyPair, 525);
+                    const account = await deployAccount(keyPair);
                     logger.log(`User address: ${account.address}`);
 
                     const {
@@ -341,6 +349,10 @@ describe('Test Staking Rewards', async function () {
                     });
                 }
 
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
+
                 const balance1 = await userTokenWallet1.call({method: 'balance'});
                 const balance2 = await userTokenWallet2.call({method: 'balance'});
                 const balance3 = await ownerWallet.call({method: 'balance'});
@@ -356,15 +368,18 @@ describe('Test Staking Rewards', async function () {
 
         describe('Staking', async function() {
             it('Deploy staking', async function () {
-                const [keyPair] = await locklift.keys.getKeyPairs();
+                const [keyPair, keyPair1] = await locklift.keys.getKeyPairs();
 
                 const StakingRootDeployer = await locklift.factory.getContract('StakingRootDeployer');
                 const stakingRootDeployer = await locklift.giver.deployContract({
                     contract: StakingRootDeployer,
                     constructorParams: {},
+                    initParams: {nonce: getRandomNonce()},
                     keyPair: keyPair,
                 }, locklift.utils.convertCrystal(10, 'nano'));
-
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
                 logger.log(`Deploying stakingRoot`);
                 stakingRoot = await locklift.factory.getContract('Staking');
                 stakingRoot.setAddress((await stakingRootDeployer.run({
@@ -378,10 +393,13 @@ describe('Test Staking Rewards', async function () {
                         _bridge: stakingOwner.address,
                         _deploy_nonce: getRandomNonce()
                     }
-                })).decoded.output.value0)
+                })).decoded.output.value0);
                 logger.log(`StakingRoot address: ${stakingRoot.address}`);
                 logger.log(`StakingRoot owner address: ${stakingOwner.address}`);
                 logger.log(`StakingRoot token root address: ${stakingToken.address}`);
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT * 2);
+                }
 
                 const staking_wallet_addr = await stakingRoot.call({method: 'tokenWallet'});
                 logger.log(`Staking token wallet: ${staking_wallet_addr}`);
@@ -433,6 +451,10 @@ describe('Test Staking Rewards', async function () {
                     params: {new_active: true, send_gas_to: stakingOwner.address},
                 });
 
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
+
                 const active = await stakingRoot.call({method: 'isActive'});
                 expect(active).to.be.equal(true, "Staking not active");
             });
@@ -441,6 +463,9 @@ describe('Test Staking Rewards', async function () {
                 const amount = rewardTokensBal;
 
                 await depositTokens(stakingOwner, ownerWallet, amount, true);
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
 
                 const staking_balance = await stakingWallet.call({method: 'balance'});
                 const staking_balance_stored = await stakingRoot.call({method: 'rewardTokenBalance'});
@@ -451,6 +476,8 @@ describe('Test Staking Rewards', async function () {
 
             it("Setting relay config for testing", async function() {
                 // super minimal relay config for local testing
+                const init_deposit = convertCrystal(RELAY_INITIAL_DEPOSIT, 'nano');
+
                 await stakingOwner.runTarget({
                     contract: stakingRoot,
                     method: 'setRelayConfig',
@@ -461,10 +488,13 @@ describe('Test Staking Rewards', async function () {
                         relays_count: RELAYS_COUNT_1,
                         min_relays_count: MIN_RELAYS,
                         min_relay_deposit: MIN_RELAY_DEPOSIT,
-                        relay_initial_deposit: RELAY_INITIAL_DEPOSIT,
+                        relay_initial_deposit: init_deposit.toString(),
                         send_gas_to: stakingOwner.address
                     },
                 });
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
 
                 const relays_count = await stakingRoot.call({method: 'relaysCount'});
                 expect(relays_count.toString()).to.be.equal(RELAYS_COUNT_1.toString(), "Relay config not installed");
@@ -484,6 +514,9 @@ describe('Test Staking Rewards', async function () {
             it('Users deposit tokens', async function () {
                 await depositTokens(user1, userTokenWallet1, userDeposit);
                 user1Data = await getUserDataAccount(user1);
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
 
                 await checkTokenBalances(
                     userTokenWallet1, user1Data, rewardTokensBal + userDeposit,
@@ -493,6 +526,9 @@ describe('Test Staking Rewards', async function () {
 
                 await depositTokens(user2, userTokenWallet2, userDeposit * 2);
                 user2Data = await getUserDataAccount(user2);
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
 
                 await checkTokenBalances(
                     userTokenWallet2, user2Data, rewardTokensBal + userDeposit * 3,
@@ -502,6 +538,9 @@ describe('Test Staking Rewards', async function () {
 
                 await depositTokens(user3, userTokenWallet3, userDeposit * 3);
                 user3Data = await getUserDataAccount(user3);
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
 
                 await checkTokenBalances(
                     userTokenWallet3, user3Data, rewardTokensBal + userDeposit * 6,
@@ -533,6 +572,9 @@ describe('Test Staking Rewards', async function () {
 
                 const round = await getRelayRound(1);
                 await waitForDeploy(round.address);
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
 
                 const total_tokens_staked = await round.call({method: 'total_tokens_staked'});
                 const round_reward = await round.call({method: 'round_reward'});
@@ -584,6 +626,9 @@ describe('Test Staking Rewards', async function () {
 
             it("Users link relay accounts", async function () {
                 await linkRelayAccounts(user1, user1.keyPair.public, user1_eth_addr);
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
 
                 const user1_pk = await user1Data.call({method: 'relay_ton_pubkey'});
                 const _user1_eth_addr = await user1Data.call({method: 'relay_eth_address'});
@@ -595,6 +640,9 @@ describe('Test Staking Rewards', async function () {
                 expect(_user1_eth_addr.toString(16)).to.be.equal(user1_eth_addr_expected.toString(16), "Bad eth addr installed");
 
                 await linkRelayAccounts(user2, user2.keyPair.public, user2_eth_addr);
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
 
                 const user2_pk = await user2Data.call({method: 'relay_ton_pubkey'});
                 const _user2_eth_addr = await user2Data.call({method: 'relay_eth_address'});
@@ -606,6 +654,9 @@ describe('Test Staking Rewards', async function () {
                 expect(_user2_eth_addr.toString(16)).to.be.equal(user2_eth_addr_expected.toString(16), "Bad eth addr installed");
 
                 await linkRelayAccounts(user3, user3.keyPair.public, user3_eth_addr);
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
 
                 const user3_pk = await user3Data.call({method: 'relay_ton_pubkey'});
                 const _user3_eth_addr = await user3Data.call({method: 'relay_eth_address'});
@@ -629,6 +680,9 @@ describe('Test Staking Rewards', async function () {
                 const bal1_after = await getBalance(user1Data.address);
                 const bal2_after = await getBalance(user2Data.address);
                 const bal3_after = await getBalance(user3Data.address);
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
 
                 console.log(bal1.toNumber(), bal1_after.toNumber());
 
@@ -650,6 +704,9 @@ describe('Test Staking Rewards', async function () {
                 await confirmEthRelayAccount(user1, user1_eth_addr);
                 await confirmEthRelayAccount(user2, user2_eth_addr);
                 await confirmEthRelayAccount(user3, user3_eth_addr);
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
 
                 const confirmed_user1 = await user1Data.call({method: 'eth_address_confirmed'});
                 expect(confirmed_user1).to.be.equal(true, "Eth pubkey user1 not confirmed");
@@ -664,14 +721,11 @@ describe('Test Staking Rewards', async function () {
             it("Election on new round starts", async function () {
                 await wait(5000);
 
-                await user1.runTarget({
-                    contract: stakingRoot,
-                    method: 'startElectionOnNewRound',
-                    params: {send_gas_to: user1.address},
-                    value: convertCrystal(1.6, 'nano')
-                });
-
+                const tx = await startElection(user2);
                 const election = await getElection(2);
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
 
                 const round_num = await election.call({method: 'round_num'});
                 expect(round_num.toString()).to.be.equal('2', "Bad election - round num");
@@ -693,6 +747,9 @@ describe('Test Staking Rewards', async function () {
 
                 const tx = await requestRelayMembership(user1, user1Data);
                 const election = await getElection(2);
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
 
                 const bal1_after = await getBalance(user1Data.address);
 
@@ -722,6 +779,9 @@ describe('Test Staking Rewards', async function () {
                 expect(bal1_after.toNumber()).to.be.gte(bal1.minus(15**9).toNumber(), "Bad gas")
 
                 await requestRelayMembership(user3, user3Data);
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
 
                 const {
                     value: {
@@ -752,6 +812,9 @@ describe('Test Staking Rewards', async function () {
                 // console.log(await showNode(election, 2));
 
                 await requestRelayMembership(user2, user2Data);
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
 
                 const {
                     value: {
@@ -802,10 +865,13 @@ describe('Test Staking Rewards', async function () {
 
                 const reward_rounds = await stakingRoot.call({method: 'rewardRounds'});
 
-                const tx = await endElection();
+                const tx = await endElection(user1);
 
                 const round = await getRelayRound(2);
                 await waitForDeploy(round.address);
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
                 logger.log(`Round 2 deployed - ${round.address}`)
                 // const election = await getElection(2);
 
@@ -879,11 +945,17 @@ describe('Test Staking Rewards', async function () {
 
                 // deposit 1 token to sync rewards
                 await depositTokens(user1, userTokenWallet1, 1);
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
                 const user1_rewards = await user1Data.call({method: 'rewardRounds'});
 
                 const bal1 = await getBalance(user1Data.address);
 
                 await getRewardForRelayRound(user1, user1Data, 1);
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
                 const user1_rewards_1 = await user1Data.call({method: 'rewardRounds'});
                 const rewards = await stakingRoot.call({method: 'rewardRounds'});
                 const round_reward = rewardPerSec * RELAY_ROUND_TIME_1;
@@ -898,6 +970,9 @@ describe('Test Staking Rewards', async function () {
                 expect(expected.toString()).to.be.equal(user1_rewards_1[0].reward_balance.toString(), 'Bad reward');
 
                 await getRelayRound(1);
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
 
                 const {
                     value: {
@@ -917,6 +992,9 @@ describe('Test Staking Rewards', async function () {
         describe("Not enough relay requests on election", async function() {
             it("New reward round starts", async function () {
                 await startNewRewardRound();
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
 
                 const reward_rounds = await stakingRoot.call({method: 'rewardRounds'});
                 const last_reward_time = await stakingRoot.call({method: 'lastRewardTime'});
@@ -932,14 +1010,11 @@ describe('Test Staking Rewards', async function () {
             it("Election on new round starts", async function () {
                 await wait(5000);
 
-                await user2.runTarget({
-                    contract: stakingRoot,
-                    method: 'startElectionOnNewRound',
-                    params: {send_gas_to: user2.address},
-                    value: convertCrystal(1.6, 'nano')
-                });
-
+                const tx = await startElection(user1);
                 const election = await getElection(3);
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
 
                 const round_num = await election.call({method: 'round_num'});
                 expect(round_num.toString()).to.be.equal('3', "Bad election - round num");
@@ -957,6 +1032,9 @@ describe('Test Staking Rewards', async function () {
 
             it("Users request relay membership", async function() {
                 const tx = await requestRelayMembership(user1, user1Data);
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
 
                 const { value: {
                     round_num: _round_num1,
@@ -990,12 +1068,14 @@ describe('Test Staking Rewards', async function () {
                 // const round_details2 = await round2.call({method: 'getDetails'});
                 // console.log(round_details2);
 
-                const tx = await endElection();
-                console.log(tx.transaction.out_msgs);
+                const tx = await endElection(user1);
 
                 const round = await getRelayRound(3);
                 await waitForDeploy(round.address);
-                logger.log(`Round 3 deployed - ${round.address}`)
+                logger.log(`Round 3 deployed - ${round.address}`);
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
                 // const election = await getElection(2);
 
                 // console.log('root', stakingRoot.address)
@@ -1076,9 +1156,15 @@ describe('Test Staking Rewards', async function () {
 
                     // deposit 1 token to sync rewards
                     await depositTokens(_user, _userTokenWallet, 1);
+                    if (locklift.network === 'dev') {
+                        await wait(DEV_WAIT);
+                    }
                     const _user_rewards = await _userData.call({method: 'rewardRounds'});
 
                     await getRewardForRelayRound(_user, _userData, 2);
+                    if (locklift.network === 'dev') {
+                        await wait(DEV_WAIT);
+                    }
                     const _user_rewards_1 = await _userData.call({method: 'rewardRounds'});
 
                     const round_reward = rewardPerSec * RELAY_ROUND_TIME_1;

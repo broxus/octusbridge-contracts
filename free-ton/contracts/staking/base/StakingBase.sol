@@ -1,5 +1,6 @@
 pragma ton-solidity ^0.39.0;
 pragma AbiHeader expire;
+pragma AbiHeader pubkey;
 
 import "./../interfaces/IRootTokenContract.sol";
 import "./../interfaces/ITONTokenWallet.sol";
@@ -64,6 +65,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     );
 
     uint32 public static deploy_nonce;
+    address public static deployer;
 
     TvmCell public platform_code;
     bool public has_platform_code;

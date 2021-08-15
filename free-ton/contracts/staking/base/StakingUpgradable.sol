@@ -163,6 +163,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         TvmBuilder data_builder_1;
         // MAIN DATA 1
         data_builder_1.store(deploy_nonce); // 32
+        data_builder_1.store(deployer); // 256
         data_builder_1.store(dao_root); // 256
         data_builder_1.store(bridge); // 256
         data_builder_1.store(active); // 1
@@ -234,6 +235,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
                     1: data_1
                         bits:
                             uint32 deploy_nonce
+                            address deployer
                             address dao_root
                             address bridge
                             bool active
