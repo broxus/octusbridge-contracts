@@ -2,12 +2,12 @@ const {
   logger,
   expect,
   ...utils
-} = require('../utils');
+} = require('./../utils');
 
 const { legos } = require('@studydefi/money-legos');
+const BigNumber = require('bignumber.js');
 
 const tokensToLock = ethers.utils.parseEther("10.0"); // 10 Dai
-const tokensToUnlock = ethers.utils.parseEther("1.0"); // 1 Dai
 
 describe('Test Comp DAI token manager', async function() {
   this.timeout(20000000);
@@ -45,17 +45,17 @@ describe('Test Comp DAI token manager', async function() {
       .getSigner(tokenOwner);
   });
   
-  describe('Sync token manager position after lock', async () => {
-    it('Lock tokens', async () => {
-      await token
-        .connect(locker)
-        .approve(tokenLock.address, tokensToLock);
-  
-      await tokenLock
-        .connect(locker)
-        .lockTokens(tokensToLock, 0, 0, 0, []);
-    });
+  it('Lock tokens', async () => {
+    await token
+      .connect(locker)
+      .approve(tokenLock.address, tokensToLock);
     
+    await tokenLock
+      .connect(locker)
+      .lockTokens(tokensToLock, 0, 0, 0, []);
+  });
+  
+  describe('Sync token manager position after lock', async () => {
     it('Check token lock locked tokens', async () => {
       const lockedTokens = await tokenLock.lockedTokens();
 
@@ -76,7 +76,7 @@ describe('Test Comp DAI token manager', async function() {
       expect(status.status)
         .to.be.equal(2, 'Wrong status');
       
-      // expect(status.tokens)
+      // expect(status.tokens.toString())
       //   .to.be.greaterThan(0, 'Too low token manager expected tokens')
       //   .to.be.lessThan(tokensToLock, 'Too high token manager expected tokens');
     });
@@ -84,36 +84,93 @@ describe('Test Comp DAI token manager', async function() {
     it('Sync token manager', async () => {
       await tokenManager.sync();
     });
-    
-    describe('Check token manager status', async () => {
-      it('Check token manager locked tokens in token lock', async () => {
-    
-      });
   
-      it('Check token manager status in token lock', async () => {
-        const status = await tokenLock.getTokenManagerStatus(tokenManager.address);
-        
-        // expect(status.status)
-        //   .to.be.equal(0, 'Wrong token manager status');
-      });
+    it('Check token manager delegated tokens in token lock', async () => {
+      const delegated = await tokenLock.tokenManagerDelegated(tokenManager.address);
+
+      expect(delegated)
+        .to.be.gte(0, 'Too low delegated tokens');
+    });
+  
+    it('Check token manager status in token lock', async () => {
+      const status = await tokenLock.getTokenManagerStatus(tokenManager.address);
+  
+      expect(status.status)
+        .to.be.equal(0, 'Wrong token manager status');
+      expect(status.tokens)
+        .to.be.equal(0, 'Wrong token manager status tokens');
+    });
+  
+    it('Check cToken balance', async () => {
+      const balance = await ctoken.balanceOf(tokenManager.address);
       
-      it('Check cToken balance', async () => {
-        const balance = await ctoken.balanceOf(tokenManager.address);
-        
-        // console.log(balance);
-        //
-        // expect(balance)
-        //   .to.be.greaterThan(0, 'Wrong ctoken token manager balance');
-      });
-      
-      it('Check Compound status', async () => {
-      
-      });
+      expect(balance)
+        .to.be.gte(0, 'Wrong ctoken token manager balance');
+    });
+  
+    it('Check Compound status', async () => {
+    
     });
   });
   
   describe('Sync token manager after instantly-filled unlock', async () => {
+    const tokensToUnlock = ethers.utils.parseEther("1.0"); // 1 Dai
+
     it('Unlock tokens', async () => {
+      const {
+        unlockReceiver
+      } = await getNamedAccounts();
+
+      const eventData = web3.eth.abi.encodeParameters(
+        ['int8', 'uint256', 'uint128', 'uint128','uint160', 'uint32'],
+        [0, 0, tokensToUnlock, 0, utils.addressToU160(unlockReceiver), utils.chainId],
+      );
+
+      const payload = utils.encodeTonEvent({
+        eventData,
+        proxy: tokenLock.address,
+      });
+
+      const initialRelays = utils.sortAccounts(await ethers.getSigners());
+
+      const signatures = await Promise.all(initialRelays
+        .map(async (account) => utils.signReceipt(payload, account)));
+
+      await tokenLock.unlockTokens(payload, signatures);
+
+      expect(await token.balanceOf(unlockReceiver))
+        .to.be.equal(tokensToUnlock, 'Receiver did not receive tokens');
+    });
+
+    it('Check token manager status in token lock', async () => {
+      const status = await tokenLock.getTokenManagerStatus(tokenManager.address);
+
+      expect(status.status)
+        .to.be.equal(1, 'Wrong token manager status');
+      
+      expect(status.tokens)
+        .to.be.gte(0, 'Wrong token manager status tokens');
+    });
+    
+    it('Sync token manager', async () => {
+      await tokenManager.sync();
+    });
+
+    it('Check token manager status', async () => {
+      const status = await tokenLock.getTokenManagerStatus(tokenManager.address);
+  
+      expect(status.status)
+        .to.be.equal(0, 'Wrong token manager status');
+  
+      expect(status.tokens)
+        .to.be.equal(0, 'Wrong token manager status tokens');
+    });
+  });
+
+  describe('Sync token manager after delayed unlock less than total locked', async () => {
+    const tokensToUnlock = ethers.utils.parseEther("8.0"); // 8 Dai
+
+    it('Unlock tokens less than locked on token lock but more than available', async () => {
       const {
         unlockReceiver
       } = await getNamedAccounts();
@@ -134,44 +191,74 @@ describe('Test Comp DAI token manager', async function() {
         .map(async (account) => utils.signReceipt(payload, account)));
   
       await tokenLock.unlockTokens(payload, signatures);
-  
-      expect(await token.balanceOf(unlockReceiver))
-        .to.be.equal(tokensToUnlock, 'Receiver did not receive tokens');
     });
-  
-    it('Check token manager status in token lock', async () => {
-      const status = await tokenLock.getTokenManagerStatus(tokenManager.address);
     
-      console.log(status);
+    it('Check unlock order exists but not filled', async () => {
+      const {
+        unlockReceiver
+      } = await getNamedAccounts();
+
+      const order = await tokenLock.getUnlockOrder(unlockReceiver, 1);
       
-      // expect(status.status)
-      //   .to.be.equal(0, 'Wrong token manager status');
+      expect(order.filled)
+        .to.be.equal(false, 'Unlock order should not be instantly filled');
     });
-  
+
+    it('Try to fill unlock order', async () => {
+      const {
+        unlockReceiver
+      } = await getNamedAccounts();
+
+      expect(tokenLock.fillUnlockOrder(unlockReceiver, 1))
+        .to.be.revertedWith('Token lock: not enough tokens for filling order');
+    });
+
+    it('Get token manager status', async () => {
+      const status = await tokenLock.getTokenManagerStatus(tokenManager.address);
+      const delegated = await tokenLock.tokenManagerDelegated(tokenManager.address);
+      
+      expect(status.status)
+        .to.be.equal(1, 'Wrong status');
+      expect(status.tokens)
+        .to.be.gt(0, 'Too low token manager status tokens');
+      expect(delegated)
+        .to.be.gt(status.tokens, 'Should be more delegated tokens than debt');
+    });
+    
     it('Sync token manager', async () => {
-    
+      await tokenManager.sync();
     });
-    
-    it('Check token manager balance', async () => {
-    
-    });
-  });
+
+    it('Check token manager status', async () => {
+      const status = await tokenLock.getTokenManagerStatus(tokenManager.address);
   
-  describe('Sync token manager after delayed unlock', async () => {
-    it('Unlock too many tokens', async () => {
-    
+      expect(status.status)
+        .to.be.equal(0, 'Wrong token manager status');
+  
+      expect(status.tokens)
+        .to.be.equal(0, 'Wrong token manager status tokens');
     });
-    
-    it('Sync token manager', async () => {
-    
-    });
-    
-    it('Check token manager balance', async () => {
-    
-    });
-    
+
     it('Fill unlock order', async () => {
-    
+      const {
+        unlockReceiver
+      } = await getNamedAccounts();
+
+      await tokenLock.fillUnlockOrder(unlockReceiver, 1);
     });
   });
+
+  // describe('Sync token manager after delayed unlock more than total locked', async () => {
+  //   it('Unlock tokens more than available', async () => {
+  //
+  //   });
+  //
+  //   it('Sync token manager', async () => {
+  //
+  //   });
+  //
+  //   it('Check token manager balance', async () => {
+  //
+  //   });
+  // });
 });

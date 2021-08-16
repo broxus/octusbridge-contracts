@@ -6,6 +6,7 @@ const chai = require('chai');
 const { solidity } = require("ethereum-waffle");
 
 chai.use(solidity);
+// chai.use(require('chai-bignumber')());
 
 const { expect } = chai;
 

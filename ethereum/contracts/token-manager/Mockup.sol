@@ -49,4 +49,8 @@ contract MockupTokenManager is ITokenManager {
     function _lock(uint256 tokens) internal virtual {
 
     }
+
+    function report() public override virtual {
+
+    }
 }

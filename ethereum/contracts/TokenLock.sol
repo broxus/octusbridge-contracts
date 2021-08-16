@@ -25,13 +25,21 @@ contract TokenLock is ITokenLock, ReentrancyGuard, OwnableUpgradeable, PausableU
 
     uint32 constant public shares = 100000;
 
+    // How much shares are distributed between token managers
     uint256 public lockedShares = 0;
+
+    // How much tokens are locked on the token lock (included delegated to token managers)
     uint256 public lockedTokens = 0;
+
+    // How much tokens are delegated to token managers
+    uint256 public delegatedTokens = 0;
+
+    // How much tokens are pending in withdrawals
     uint256 public debtTokens = 0;
 
     mapping (address => Unlock[]) unlockOrders;
     mapping (address => TokenManagerConfiguration) public tokenManagers;
-    mapping (address => uint256) tokenManagerLocked;
+    mapping (address => uint256) public tokenManagerDelegated;
 
 
     /// @dev Initializer
@@ -245,31 +253,49 @@ contract TokenLock is ITokenLock, ReentrancyGuard, OwnableUpgradeable, PausableU
     ) {
         require(isTokenManager(manager), 'Token lock: not token manager');
 
-        uint256 locked = tokenManagerLocked[manager];
+        uint256 delegated = tokenManagerDelegated[manager];
+
+        // Token lock owes more than owns, probably because of cross-chain withdraw
+        // All token managers should return everything
+        if (lockedTokens < debtTokens) {
+            return (TokenManagerStatus.Deficit, delegated);
+        }
+
         uint256 expected = (lockedTokens - debtTokens) * tokenManagers[manager].share / shares;
 
-        if (locked == expected) {
+        if (delegated == expected) {
             status = TokenManagerStatus.Synced;
             tokens = 0;
-        } else if (locked > expected) {
+        } else if (delegated > expected) {
             status = TokenManagerStatus.Deficit;
-            tokens = locked - expected;
+            tokens = delegated - expected;
         } else {
             status = TokenManagerStatus.Proficit;
-            tokens = expected - locked;
+            tokens = expected - delegated;
         }
     }
 
     function payDeficit(address manager, uint tokens) override external {
+        (TokenManagerStatus status, uint _tokens) = getTokenManagerStatus(manager);
 
+        require(status == TokenManagerStatus.Deficit, 'Token lock: token manager should be in deficit');
+        require(_tokens >= tokens, 'Token lock: token manager pays too many tokens');
+
+        IERC20(token).universalTransferFrom(manager, address(this), tokens);
+
+        delegatedTokens -= tokens;
+        tokenManagerDelegated[manager] -= tokens;
     }
 
     function requestProficitApprove(address manager) override external {
         (TokenManagerStatus status, uint tokens) = getTokenManagerStatus(manager);
 
-        require(status == TokenManagerStatus.Proficit, 'Token lock: token manager should be in profit');
+        require(status == TokenManagerStatus.Proficit, 'Token lock: token manager should be in proficit');
 
         IERC20(token).approve(manager, tokens);
+
+        delegatedTokens += tokens;
+        tokenManagerDelegated[manager] += tokens;
     }
 
 
@@ -319,6 +345,10 @@ contract TokenLock is ITokenLock, ReentrancyGuard, OwnableUpgradeable, PausableU
         emit UnlockOrder(receiver, orderId, order.amount);
     }
 
+    function fillUnlockOrder(address receiver, uint256 orderId) public {
+        _fillUnlockOrder(receiver, orderId, true);
+    }
+
     function _fillUnlockOrder(
         address receiver,
         uint256 orderId,
@@ -338,6 +368,8 @@ contract TokenLock is ITokenLock, ReentrancyGuard, OwnableUpgradeable, PausableU
 
         lockedTokens -= order.amount - fee;
         debtTokens -= order.amount;
+
+        require(balance() >= order.amount - fee, 'Token lock: not enough tokens for filling order');
 
         IERC20(token).universalTransfer(receiver, order.amount - fee);
 
