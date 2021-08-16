@@ -44,7 +44,7 @@ interface IUserData {
 
 
     function getDetails() external responsible view returns (UserDataDetails);
-    function processLinkRelayAccounts(uint256 ton_pubkey, uint160 eth_address, address send_gas_to, uint32 user_data_code_version) external;
+    function processLinkRelayAccounts(uint256 ton_pubkey, uint160 eth_address, uint32 user_data_code_version) external;
     function processConfirmEthAccount(uint160 eth_address, address send_gas_to) external;
     function processDeposit(
         uint64 nonce,
@@ -60,20 +60,18 @@ interface IUserData {
     ) external;
     function processClaimReward(IStakingPool.RewardRound[] reward_rounds, address send_gas_to, uint32 code_version) external;
     function slash(IStakingPool.RewardRound[] reward_rounds, address send_gas_to) external;
-    function processBecomeRelay(
+    function processBecomeRelayNextRound2(
         uint32 round_num,
         uint32 lock_time,
         uint128 min_relay_deposit,
-        address send_gas_to,
         uint32 user_data_code_version,
         uint32 election_code_version
     ) external;
-    function relayMembershipRequestAccepted(uint32 round_num, uint128 tokens, uint256 ton_pubkey, uint256 eth_addr, uint32 lock_time, address send_gas_to) external;
-    function receiveRewardForRelayRound(uint32 relay_round_num, uint32 reward_round_num, uint128 reward, address send_gas_to) external;
-    function processGetRelayRewardForRound(
+    function relayMembershipRequestAccepted(uint32 round_num, uint128 tokens, uint256 ton_pubkey, uint256 eth_addr, uint32 lock_time) external;
+    function receiveRewardForRelayRound(uint32 relay_round_num, uint32 reward_round_num, uint128 reward) external;
+    function processGetRewardForRelayRound2(
         IStakingPool.RewardRound[] reward_rounds,
         uint32 round_num,
-        address send_gas_to,
         uint32 code_version,
         uint32 relay_round_code_version
     ) external;

@@ -75,18 +75,13 @@ contract Election is IElection {
         uint160 eth_addr,
         uint128 tokens,
         uint32 lock_time,
-        address send_gas_to,
         uint32 code_version
     ) external override onlyUserData(staker_addr) {
         require (tokens > 0, ErrorCodes.BAD_RELAY_MEMBERSHIP_REQUEST);
         require (!election_ended, ErrorCodes.ELECTION_ENDED);
+        require (code_version == current_version, ErrorCodes.LOW_VERSION);
 
         tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
-
-        if (code_version > current_version) {
-            send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
-            return;
-        }
 
         for (uint i = 1; i < requests_nodes.length; i++) {
             if (
@@ -94,8 +89,7 @@ contract Election is IElection {
                 requests_nodes[i].request.ton_pubkey == ton_pubkey ||
                 requests_nodes[i].request.eth_addr == eth_addr
             ) {
-                send_gas_to.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
-                return;
+                revert(ErrorCodes.DUPLICATE_RELAY);
             }
         }
 
@@ -142,19 +136,15 @@ contract Election is IElection {
         }
 
         IUserData(msg.sender).relayMembershipRequestAccepted{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
-            round_num, tokens, ton_pubkey, eth_addr, lock_time, send_gas_to
+            round_num, tokens, ton_pubkey, eth_addr, lock_time
         );
     }
 
     function finish(address send_gas_to, uint32 code_version) external override onlyRoot {
         require (!election_ended, ErrorCodes.ELECTION_ENDED);
+        require (code_version == current_version, ErrorCodes.LOW_VERSION);
 
         tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
-
-        if (code_version > current_version) {
-            send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
-            return;
-        }
 
         election_ended = true;
         relay_transfer_start_idx = list_start_idx;

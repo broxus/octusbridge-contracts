@@ -51,22 +51,18 @@ contract RelayRound is IRelayRound {
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} relays[addr_to_idx[staker_addr]];
     }
 
-    function getRewardForRound(address staker_addr, address send_gas_to, uint32 code_version) external override onlyUserData(staker_addr) {
+    function getRewardForRound(address staker_addr, uint32 code_version) external override onlyUserData(staker_addr) {
         require (now >= start_time + round_len, ErrorCodes.RELAY_ROUND_NOT_ENDED);
         require (reward_claimed[staker_addr] == false, ErrorCodes.RELAY_REWARD_CLAIMED);
+        require (code_version == current_version, ErrorCodes.LOW_VERSION);
 
         tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 2);
-
-        if (code_version > current_version) {
-            send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
-            return;
-        }
 
         reward_claimed[staker_addr] = true;
         uint128 staker_reward_share = math.muldiv(relays[addr_to_idx[staker_addr]].staked_tokens, 1e18, total_tokens_staked);
         uint128 relay_reward = math.muldiv(staker_reward_share, round_reward, 1e18);
 
-        IUserData(msg.sender).receiveRewardForRelayRound{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num, reward_round_num, relay_reward, send_gas_to);
+        IUserData(msg.sender).receiveRewardForRelayRound{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num, reward_round_num, relay_reward);
     }
 
     function _getRelayListFromIdx(uint128 limit, uint256 start_idx) internal view returns (Relay[], uint256) {

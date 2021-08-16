@@ -8,7 +8,6 @@ interface IElection {
         uint160 eth_address,
         uint128 tokens,
         uint32 lock_time,
-        address send_gas_to,
         uint32 election_code_version
     ) external;
     function finish(address send_gas_to, uint32 code_version) external;

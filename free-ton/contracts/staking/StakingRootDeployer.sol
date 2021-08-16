@@ -3,6 +3,8 @@ pragma ton-solidity ^0.39.0;
 import "./Staking.sol";
 
 contract StakingRootDeployer {
+    uint256 static nonce;
+
     constructor() public {
         tvm.accept();
     }
@@ -23,10 +25,11 @@ contract StakingRootDeployer {
                 code: stakingCode,
                 contr: Staking,
                 varInit: {
-                    deploy_nonce: _deploy_nonce
+                    deploy_nonce: _deploy_nonce,
+                    deployer: address(this)
                 }
             }),
-            value: address(this).balance - 0.2 ton,
+            value: address(this).balance - 1 ton,
             flag: 0
         }(_admin, _dao_root, _rewarder, _bridge, _tokenRoot);
     }

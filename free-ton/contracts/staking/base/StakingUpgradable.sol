@@ -163,6 +163,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         TvmBuilder data_builder_1;
         // MAIN DATA 1
         data_builder_1.store(deploy_nonce); // 32
+        data_builder_1.store(deployer); // 256
         data_builder_1.store(dao_root); // 256
         data_builder_1.store(bridge); // 256
         data_builder_1.store(active); // 1
@@ -193,6 +194,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         data_builder_4.store(relaysCount); // 32
         data_builder_4.store(minRelaysCount); // 32
         data_builder_4.store(minRelayDeposit); // 128
+        data_builder_4.store(relayInitialDeposit); // 128
         data_builder_4.store(deposit_nonce); // 64
         data_builder_4.store(deposits); // ref
 
@@ -233,6 +235,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
                     1: data_1
                         bits:
                             uint32 deploy_nonce
+                            address deployer
                             address dao_root
                             address bridge
                             bool active
@@ -264,6 +267,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
                             uint32 relaysCount
                             uint32 minRelaysCount
                             uint128 minRelayDeposit
+                            uint128 relayInitialDeposit
                             uint64 deposit_nonce
                         refs:
                             1: deposits

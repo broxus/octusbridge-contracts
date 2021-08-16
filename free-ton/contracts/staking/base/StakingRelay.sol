@@ -1,18 +1,21 @@
 pragma ton-solidity ^0.39.0;
-
+pragma AbiHeader pubkey;
+pragma AbiHeader expire;
 
 import "./StakingUpgradable.sol";
 
 
 abstract contract StakingPoolRelay is StakingPoolUpgradable {
-    function linkRelayAccounts(uint256 ton_pubkey, uint160 eth_address, address send_gas_to) external view onlyActive {
-        require (msg.value >= Gas.MIN_LINK_RELAY_ACCS_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+    function linkRelayAccounts(uint256 ton_pubkey, uint160 eth_address) external view onlyActive {
+        require (msg.value >= relayInitialDeposit, ErrorCodes.VALUE_TOO_LOW);
 
         tvm.rawReserve(_reserve(), 2);
 
+        uint128 user_data_value = msg.value / 2;
+
         address user_data = getUserDataAddress(msg.sender);
-        IUserData(user_data).processLinkRelayAccounts{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
-            ton_pubkey, eth_address, send_gas_to, user_data_version
+        IUserData(user_data).processLinkRelayAccounts{ value: user_data_value }(
+            ton_pubkey, eth_address, user_data_version
         );
     }
 
@@ -45,6 +48,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
     ) external override onlyUserData(user) {
         tvm.rawReserve(_reserve(), 2);
 
+        updatePoolInfo();
         uint128 _tokens_withdrawn = 0;
         for (uint i = 0; i < ban_rewards.length; i++) {
             uint128 _ban_tokens = math.muldiv(
@@ -91,52 +95,45 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         IRelayRound(relay_round).setRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(relays, send_gas_to);
     }
 
-    function becomeRelayNextRound(address send_gas_to) external view onlyActive {
-        require (msg.value >= Gas.MIN_RELAY_REQ_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+    function processBecomeRelayNextRound(address user) external view override onlyActive onlyUserData(user) {
         require (pendingRelayRound != 0, ErrorCodes.ELECTION_NOT_STARTED);
+
         tvm.rawReserve(_reserve(), 2);
 
         uint32 lock_time = electionTime + 30 days;
 
-        address userDataAddr = getUserDataAddress(msg.sender);
-        UserData(userDataAddr).processBecomeRelay{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-            pendingRelayRound, lock_time, minRelayDeposit, send_gas_to, user_data_version, election_version
+        IUserData(msg.sender).processBecomeRelayNextRound2{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+            pendingRelayRound, lock_time, minRelayDeposit, user_data_version, election_version
         );
     }
 
-    function getRewardForRelayRound(uint32 round_num, address send_gas_to) external onlyActive {
-        require (msg.value >= Gas.MIN_GET_REWARD_RELAY_ROUND_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
-
+    function processGetRewardForRelayRound(address user, uint32 round_num) external override onlyActive onlyUserData(user) {
         tvm.rawReserve(_reserve(), 2);
         updatePoolInfo();
 
-        address userDataAddr = getUserDataAddress(msg.sender);
-        UserData(userDataAddr).processGetRelayRewardForRound{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-            rewardRounds, round_num, send_gas_to, user_data_version, relay_round_version
+        IUserData(msg.sender).processGetRewardForRelayRound2{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+            rewardRounds, round_num, user_data_version, relay_round_version
         );
     }
 
-    function startElectionOnNewRound(address send_gas_to) external onlyActive {
-        require (msg.value >= Gas.MIN_START_ELECTION_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+    function startElectionOnNewRound() external onlyActive {
         require (now >= (currentRelayRoundStartTime + timeBeforeElection), ErrorCodes.TOO_EARLY_FOR_ELECTION);
         require (currentElectionStartTime == 0, ErrorCodes.ELECTION_ALREADY_STARTED);
         require (originRelayRoundInitialized, ErrorCodes.ORIGIN_ROUND_NOT_INITIALIZED);
-        tvm.rawReserve(_reserve(), 2);
+        tvm.accept();
 
-        deployElection(currentRelayRound + 1, send_gas_to);
-        send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
+        deployElection(currentRelayRound + 1, address(this));
     }
 
-    function endElection(address send_gas_to) external override onlyActive {
-        uint128 min_gas = Gas.MIN_END_ELECTION_MSG_VALUE + _relaysPacksCount() * Gas.MIN_SEND_RELAYS_MSG_VALUE;
-        require (msg.value >= min_gas, ErrorCodes.VALUE_TOO_LOW);
+    function endElection() external onlyActive {
         require (currentElectionStartTime != 0, ErrorCodes.ELECTION_NOT_STARTED);
         require (now >= (currentElectionStartTime + electionTime), ErrorCodes.CANT_END_ELECTION);
+        tvm.accept();
 
-        tvm.rawReserve(_reserve(), 2);
+        uint128 required_gas = Gas.MIN_END_ELECTION_MSG_VALUE + _relaysPacksCount() * Gas.MIN_SEND_RELAYS_MSG_VALUE;
 
         address election_addr = getElectionAddress(pendingRelayRound);
-        IElection(election_addr).finish{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(send_gas_to, election_version);
+        IElection(election_addr).finish{value: required_gas}(address(this), election_version);
     }
 
     function onElectionStarted(uint32 round_num, address send_gas_to) external override onlyElection(round_num) {

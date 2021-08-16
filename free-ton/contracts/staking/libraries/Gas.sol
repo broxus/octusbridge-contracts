@@ -16,11 +16,10 @@ library Gas {
     // min values for calls
     uint64 constant MIN_DEPOSIT_MSG_VALUE = 2 ton;
     uint64 constant MIN_WITHDRAW_MSG_VALUE = 1 ton;
-    uint64 constant MIN_RELAY_REQ_MSG_VALUE = 1;
+    uint64 constant MIN_RELAY_REQ_MSG_VALUE = 1.5 ton;
     uint64 constant MIN_START_ELECTION_MSG_VALUE = 1.5 ton;
     uint64 constant MIN_END_ELECTION_MSG_VALUE = 2 ton;
     uint64 constant MIN_ORIGIN_ROUND_MSG_VALUE = 5 ton;
-    uint64 constant MIN_LINK_RELAY_ACCS_MSG_VALUE = 5 ton;
     uint64 constant MIN_CONFIRM_ETH_RELAY_ACC_MSG_VALUE = 0.5 ton;
     uint64 constant MIN_CLAIM_REWARD_MSG_VALUE = 0.5 ton;
     uint64 constant MIN_GET_REWARD_RELAY_ROUND_MSG_VALUE = 1 ton;

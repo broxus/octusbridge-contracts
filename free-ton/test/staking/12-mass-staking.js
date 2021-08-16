@@ -1,6 +1,6 @@
 const {
     expect,
-} = require('./utils');
+} = require('../utils');
 const BigNumber = require('bignumber.js');
 const logger = require('mocha-logger');
 const Account = require("locklift/locklift/contract/account");
@@ -50,12 +50,14 @@ const ELECTION_TIME = 5;
 const TIME_BEFORE_ELECTION = 14;
 const RELAYS_COUNT_1 = 150;
 const MIN_RELAYS = 2;
-const USERS_NUM = 110;
+const USERS_NUM = 5;
+const RELAY_INITIAL_DEPOSIT = 50;
+
 
 const eth_addrs = [...Array(USERS_NUM).keys()].map(i => `0x${randomBytes(20).toString('hex')}`);
 
 const PER_ACTION_WAIT = 1000
-const BATCH_ACTION_WAIT = 10000;
+const BATCH_ACTION_WAIT = 5000;
 const DEV_WAIT = 60000;
 let staking_events = [{name: 'dummy'}];
 
@@ -149,13 +151,14 @@ describe('Test Staking Rewards', async function () {
         const slice_len = 50;
 
         let wallets = [];
+        const user_bal = RELAY_INITIAL_DEPOSIT + 10;
         for (const i of [...Array(Math.ceil(keypairs.length / slice_len)).keys()]) {
             const _pubkeys = pubkeys.slice(i * slice_len, (i + 1) * slice_len);
             await user.runTarget({
                 contract: walletFabric,
                 method: 'deployWallets',
-                params: {owners: _pubkeys},
-                value: convertCrystal(_pubkeys.length * 10 + 5, 'nano')
+                params: {owners: _pubkeys, initial_balance: (convertCrystal((RELAY_INITIAL_DEPOSIT + 10), 'nano')).toString()},
+                value: convertCrystal(_pubkeys.length * user_bal + 5, 'nano')
             })
             await wait(PER_ACTION_WAIT);
             if (locklift.network === 'dev') {
@@ -225,8 +228,8 @@ describe('Test Staking Rewards', async function () {
         });
     }
 
-    const waitForDeploy = async function (address) {
-        await locklift.ton.client.net.wait_for_collection({
+    const getBalance = async function (address) {
+        return await locklift.ton.client.net.wait_for_collection({
             collection: 'accounts',
             filter: {
                 id: { eq: address },
@@ -235,6 +238,10 @@ describe('Test Staking Rewards', async function () {
             result: 'balance',
             timeout: 120000
         });
+    }
+
+    const waitForDeploy = async function (address) {
+        return await getBalance(address);
     }
 
     const listenStakingEvents = async function () {
@@ -284,14 +291,19 @@ describe('Test Staking Rewards', async function () {
         return election;
     }
 
-    const startElection = async function () {
-        return await stakingOwner.runTarget({
-            contract: stakingRoot,
+    const startElection = async function(_user) {
+        return await stakingRoot.run({
             method: 'startElectionOnNewRound',
-            params: {
-                send_gas_to: stakingOwner.address
-            },
-            value: convertCrystal(2, "nano")
+            params: {},
+            keyPair: _user.keyPair
+        })
+    }
+
+    const endElection = async function (_user) {
+        return await stakingRoot.run({
+            method: 'endElection',
+            params: {},
+            keyPair: _user.keyPair
         })
     }
 
@@ -305,25 +317,11 @@ describe('Test Staking Rewards', async function () {
         return round;
     }
 
-    const requestRelayMembership = async function (_user) {
-        return await _user.runTarget({
-            contract: stakingRoot,
+    const requestRelayMembership = async function (_user, _userData) {
+        return await _userData.run({
             method: 'becomeRelayNextRound',
-            params: {
-                send_gas_to: _user.address
-            },
-            value: convertCrystal(1.5, "nano")
-        })
-    }
-
-    const endElection = async function () {
-        return await stakingOwner.runTarget({
-            contract: stakingRoot,
-            method: 'endElection',
-            params: {
-                send_gas_to: stakingOwner.address
-            },
-            value: convertCrystal(7, "nano")
+            params: {},
+            keyPair: _user.keyPair
         })
     }
 
@@ -354,15 +352,14 @@ describe('Test Staking Rewards', async function () {
 
         const input_params = {
             ton_pubkey: user_pk.toFixed(),
-            eth_address: user_eth.toFixed(),
-            send_gas_to: _user.address
+            eth_address: user_eth.toFixed()
         }
 
         return await _user.runTarget({
             contract: stakingRoot,
             method: 'linkRelayAccounts',
             params: input_params,
-            value: convertCrystal(5.1, "nano")
+            value: convertCrystal(RELAY_INITIAL_DEPOSIT + 1, "nano")
         })
     }
 
@@ -414,7 +411,7 @@ describe('Test Staking Rewards', async function () {
                 const owner_key = keys[0];
                 const user_keys = keys.slice(1, USERS_NUM + 1);
 
-                stakingOwner = await deployAccount(owner_key, 2000);
+                stakingOwner = await deployAccount(owner_key, 3000);
                 users = await deployAccounts(stakingOwner, user_keys);
             });
         });
@@ -446,6 +443,7 @@ describe('Test Staking Rewards', async function () {
                 const stakingRootDeployer = await locklift.giver.deployContract({
                     contract: StakingRootDeployer,
                     constructorParams: {},
+                    initParams: {nonce: getRandomNonce()},
                     keyPair: keyPair,
                 }, locklift.utils.convertCrystal(10, 'nano'));
 
@@ -548,7 +546,9 @@ describe('Test Staking Rewards', async function () {
             });
 
             it("Setting relay config for testing", async function() {
+                await listenStakingEvents();
                 // super minimal relay config for local testing
+                const init_deposit = convertCrystal(RELAY_INITIAL_DEPOSIT, 'nano');
                 await stakingOwner.runTarget({
                     contract: stakingRoot,
                     method: 'setRelayConfig',
@@ -559,6 +559,7 @@ describe('Test Staking Rewards', async function () {
                         relays_count: RELAYS_COUNT_1,
                         min_relays_count: MIN_RELAYS,
                         min_relay_deposit: MIN_RELAY_DEPOSIT,
+                        relay_initial_deposit: init_deposit.toString(),
                         send_gas_to: stakingOwner.address
                     },
                 });
@@ -579,7 +580,6 @@ describe('Test Staking Rewards', async function () {
         describe('Standard case', async function() {
             it('Users deposit tokens', async function () {
                 let _user_data = [];
-                await listenStakingEvents();
 
                 for (const i of [...Array(users.length).keys()]) {
                     const user_token_wallet = userTokenWallets[i];
@@ -758,7 +758,7 @@ describe('Test Staking Rewards', async function () {
             })
 
             it("Election on new round starts", async function () {
-                const tx = await startElection();
+                const tx = await startElection(users[0]);
                 console.log(tx.transaction.out_msgs);
                 const event = await waitForStakingEvent('ElectionStarted');
 
@@ -795,7 +795,7 @@ describe('Test Staking Rewards', async function () {
                     const user_pk = new BigNumber(user.keyPair.public, 16);
                     const user_eth_addr = new BigNumber(eth_addrs[i].toLowerCase(), 16);
 
-                    const tx = await requestRelayMembership(user);
+                    const tx = await requestRelayMembership(user, userData);
                     await wait(PER_ACTION_WAIT);
 
                     if (locklift.network === 'dev') {
@@ -825,7 +825,6 @@ describe('Test Staking Rewards', async function () {
                     expect(Number(_lock_until)).to.be.gte(Number(block_now), "Bad event - lock");
                 }
 
-
                 // now check requests sorted correctly
                 const requests = await election.call({method: 'getRequests', params: {limit: USERS_NUM}});
                 for (const i of [...Array(USERS_NUM).keys()]) {
@@ -846,7 +845,7 @@ describe('Test Staking Rewards', async function () {
             it("Election ends, new round initialized", async function () {
                 const reward_rounds = await stakingRoot.call({method: 'rewardRounds'});
 
-                const tx = await endElection();
+                const tx = await endElection(users[3]);
                 console.log(tx.transaction.out_msgs);
                 const init_event = await waitForStakingEvent('RelayRoundInitialized');
                 const elect_event = await waitForStakingEvent('ElectionEnded');
@@ -941,7 +940,7 @@ describe('Test Staking Rewards', async function () {
             it("Election on new round starts", async function () {
                 await wait(TIME_BEFORE_ELECTION * 1000);
 
-                const tx = await startElection();
+                const tx = await startElection(users[1]);
                 console.log(tx.transaction.out_msgs);
                 const event = await waitForStakingEvent('ElectionStarted');
 
@@ -974,7 +973,7 @@ describe('Test Staking Rewards', async function () {
                 const userData = userDatas[0];
                 const user_eth_addr = eth_addrs[0];
 
-                const tx = await requestRelayMembership(user);
+                const tx = await requestRelayMembership(user, userData);
                 await wait(PER_ACTION_WAIT);
 
                 if (locklift.network === 'dev') {
@@ -1011,7 +1010,7 @@ describe('Test Staking Rewards', async function () {
 
                 const reward_rounds = await stakingRoot.call({method: 'rewardRounds'});
 
-                const tx = await endElection();
+                const tx = await endElection(users[2]);
                 console.log(tx.transaction.out_msgs);
                 const init_event = await waitForStakingEvent('RelayRoundInitialized');
                 const elect_event = await waitForStakingEvent('ElectionEnded');

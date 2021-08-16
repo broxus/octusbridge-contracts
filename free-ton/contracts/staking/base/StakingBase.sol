@@ -1,5 +1,6 @@
 pragma ton-solidity ^0.39.0;
 pragma AbiHeader expire;
+pragma AbiHeader pubkey;
 
 import "./../interfaces/IRootTokenContract.sol";
 import "./../interfaces/ITONTokenWallet.sol";
@@ -59,10 +60,12 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         uint32 time_before_election,
         uint32 relays_count,
         uint32 min_relays_count,
-        uint128 min_relay_deposit
+        uint128 min_relay_deposit,
+        uint128 relay_initial_deposit
     );
 
     uint32 public static deploy_nonce;
+    address public static deployer;
 
     TvmCell public platform_code;
     bool public has_platform_code;
@@ -129,6 +132,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     uint128 public minRelayDeposit = 100000 * 10**9;
 
+    uint128 public relayInitialDeposit = 500 ton;
+
     // payloads for token receive callback
     uint8 public constant STAKE_DEPOSIT = 0;
     uint8 public constant REWARD_UP = 1;
@@ -167,7 +172,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
-    function setBridge(address new_bridge, address send_gas_to) external onlyDaoRoot {
+    function setBridge(address new_bridge, address send_gas_to) external onlyAdmin {
         tvm.rawReserve(_reserve(), 2);
         emit BridgeUpdated(new_bridge);
         bridge = new_bridge;
@@ -211,6 +216,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         uint32 relays_count,
         uint32 min_relays_count,
         uint128 min_relay_deposit,
+        uint128 relay_initial_deposit,
         address send_gas_to
     ) external onlyDaoRoot {
         tvm.rawReserve(_reserve(), 2);
@@ -221,6 +227,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         relaysCount = relays_count;
         minRelaysCount = min_relays_count;
         minRelayDeposit = min_relay_deposit;
+        relayInitialDeposit = relay_initial_deposit;
 
         emit RelayConfigUpdated(
             relay_round_time,
@@ -228,7 +235,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
             time_before_election,
             relays_count,
             min_relays_count,
-            min_relay_deposit
+            min_relay_deposit,
+            relay_initial_deposit
         );
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
@@ -439,10 +447,11 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
 
     // user_amount and user_reward_debt should be fetched from UserData at first
-    function pendingReward(uint256 user_amount, IUserData.RewardRoundData[] user_reward_data) external view responsible returns (uint256) {
+    function pendingReward(uint256 user_token_balance, IUserData.RewardRoundData[] user_reward_data) external view responsible returns (uint256) {
         RewardRound[] _reward_rounds = rewardRounds;
         // sync rewards up to this moment
-        if (now > lastRewardTime && tokenBalance != 0) {
+        if (now > lastRewardTime && tokenBalance > 0) {
+            // if token balance if empty, no need to update pool info
             uint128 new_reward = (now - lastRewardTime) * rewardPerSecond;
             _reward_rounds[_reward_rounds.length - 1].totalReward += new_reward;
             _reward_rounds[_reward_rounds.length - 1].accRewardPerShare += math.muldiv(new_reward, 1e18, tokenBalance);
@@ -452,6 +461,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         for (uint i = 0; i < _reward_rounds.length; i++) {
             // for old user rounds (which synced already), just get rewards
             if (i < user_reward_data.length - 1) {
+                // totalReward in old round cant be empty
                 uint256 user_round_share = math.muldiv(user_reward_data[i].reward_balance, 1e18, _reward_rounds[i].totalReward);
                 user_reward_tokens += math.muldiv(user_round_share, _reward_rounds[i].rewardTokens, 1e18);
             // sync new user rounds
@@ -460,11 +470,13 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
                     user_reward_data.push(IUserData.RewardRoundData(0, 0));
                 }
 
-                uint256 new_reward = math.muldiv(user_amount, _reward_rounds[i].accRewardPerShare, 1e18) - user_reward_data[i].reward_debt;
+                uint256 new_reward = math.muldiv(user_token_balance, _reward_rounds[i].accRewardPerShare, 1e18) - user_reward_data[i].reward_debt;
                 uint256 user_round_reward = user_reward_data[i].reward_balance + new_reward;
 
-                uint256 user_round_share = math.muldiv(user_round_reward, 1e18, _reward_rounds[i].totalReward);
-                user_reward_tokens += math.muldiv(user_round_share, _reward_rounds[i].rewardTokens, 1e18);
+                if (_reward_rounds[i].totalReward > 0) {
+                    uint256 user_round_share = math.muldiv(user_round_reward, 1e18, _reward_rounds[i].totalReward);
+                    user_reward_tokens += math.muldiv(user_round_share, _reward_rounds[i].rewardTokens, 1e18);
+                }
             }
         }
         return { value: 0, flag: MsgFlag.REMAINING_GAS } user_reward_tokens;
