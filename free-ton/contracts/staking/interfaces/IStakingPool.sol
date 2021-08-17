@@ -24,6 +24,7 @@ interface IStakingPool {
     function confirmSlash(
         address user,
         uint128[] ban_rewards,
+        uint128[] reward_debts,
         uint128 ban_token_balance,
         address send_gas_to
     ) external;

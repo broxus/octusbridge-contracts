@@ -268,15 +268,17 @@ contract UserData is IUserData, IUpgradableByRequest {
         slashed = true;
 
         uint128[] ban_rewards = new uint128[](rewardRounds.length);
+        uint128[] reward_debts = new uint128[](rewardRounds.length);
         for (uint i = 0; i < rewardRounds.length; i++) {
             ban_rewards[i] = rewardRounds[i].reward_balance;
+            reward_debts[i] = rewardRounds[i].reward_debt;
             rewardRounds[i].reward_balance = 0;
         }
         uint128 ban_token_balance = token_balance;
         token_balance = 0;
 
         IStakingPool(msg.sender).confirmSlash{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-            user, ban_rewards, ban_token_balance, send_gas_to
+            user, ban_rewards, reward_debts, ban_token_balance, send_gas_to
         );
     }
 

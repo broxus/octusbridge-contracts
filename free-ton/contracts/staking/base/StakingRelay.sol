@@ -40,19 +40,38 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         IUserData(user_data).slash{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(rewardRounds, send_gas_to);
     }
 
+    function _syncUserRewardData(
+        uint128[] user_rewards,
+        uint128[] user_debts,
+        uint128 ban_token_balance
+    ) internal view returns (uint128[]) {
+        for (uint i = user_rewards.length - 1; i < rewardRounds.length; i++) {
+            if (i >= user_rewards.length) {
+                user_rewards.push(0);
+                user_debts.push(0);
+            }
+            user_rewards[i] += uint128(math.muldiv(ban_token_balance, rewardRounds[i].accRewardPerShare, 1e18) - user_debts[i]);
+        }
+        return user_rewards;
+    }
+
     function confirmSlash(
         address user,
-        uint128[] ban_rewards,
+        uint128[] user_rewards,
+        uint128[] user_debts,
         uint128 ban_token_balance,
         address send_gas_to
     ) external override onlyUserData(user) {
         tvm.rawReserve(_reserve(), 2);
 
         updatePoolInfo();
+        // sync user rewards up to this moment
+        uint128[] user_rewards_synced = _syncUserRewardData(user_rewards, user_debts, ban_token_balance);
+
         uint128 _tokens_withdrawn = 0;
-        for (uint i = 0; i < ban_rewards.length; i++) {
+        for (uint i = 0; i < user_rewards_synced.length; i++) {
             uint128 _ban_tokens = math.muldiv(
-                math.muldiv(ban_rewards[i], 1e18, rewardRounds[i].totalReward),
+                math.muldiv(user_rewards_synced[i], 1e18, rewardRounds[i].totalReward),
                 rewardRounds[i].rewardTokens,
                 1e18
             );
