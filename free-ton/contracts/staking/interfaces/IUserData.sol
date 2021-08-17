@@ -10,11 +10,17 @@ interface IUserData {
     }
 
     struct UserDataDetails {
-        uint256 token_balance;
-        RewardRoundData[] reward_rounds;
+        uint128 token_balance;
+        uint32 relay_lock_until;
+        RewardRoundData[] rewardRounds;
+        uint160 relay_eth_address;
+        bool eth_address_confirmed;
+        uint256 relay_ton_pubkey;
+        bool ton_pubkey_confirmed;
+        bool slashed;
         address root;
         address user;
-        uint32 current_version;
+        address dao_root;
     }
 
     event UserDataCodeUpgraded(uint32 code_version);

@@ -67,57 +67,57 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     uint32 static deploy_nonce;
     address static deployer;
 
-    TvmCell public platform_code;
-    bool public has_platform_code;
+    TvmCell platform_code;
+    bool has_platform_code;
 
-    TvmCell public user_data_code;
-    uint32 public user_data_version;
+    TvmCell user_data_code;
+    uint32 user_data_version;
 
-    TvmCell public election_code;
-    uint32 public election_version;
+    TvmCell election_code;
+    uint32 election_version;
 
-    TvmCell public relay_round_code;
-    uint32 public relay_round_version;
+    TvmCell relay_round_code;
+    uint32 relay_round_version;
 
-    address public dao_root;
+    address dao_root;
 
-    address public bridge;
+    address bridge;
 
     bool active;
 
-    bool public originRelayRoundInitialized;
+    bool originRelayRoundInitialized;
 
-    uint32 public currentRelayRound;
+    uint32 currentRelayRound;
 
     // time when current round have started
-    uint32 public currentRelayRoundStartTime;
+    uint32 currentRelayRoundStartTime;
 
     // time when current election have started
-    uint32 public currentElectionStartTime;
+    uint32 currentElectionStartTime;
 
     // we need this for deriving relay round from timestamp
-    uint32 public prevRelayRoundEndTime;
+    uint32 prevRelayRoundEndTime;
 
     // 0 means no pending relay round
-    uint32 public pendingRelayRound;
+    uint32 pendingRelayRound;
 
-    RewardRound[] public rewardRounds;
+    RewardRound[] rewardRounds;
 
-    uint32 public lastRewardTime;
+    uint32 lastRewardTime;
 
-    address public tokenRoot;
+    address tokenRoot;
 
-    address public tokenWallet;
+    address tokenWallet;
 
-    uint128 public tokenBalance;
+    uint128 tokenBalance;
 
-    uint128 public rewardTokenBalance;
+    uint128 rewardTokenBalance;
 
-    address public admin;
+    address admin;
 
-    address public rewarder;
+    address rewarder;
 
-    uint128 public rewardPerSecond = 1000;
+    uint128 rewardPerSecond = 1000;
 
     uint32 relayRoundTime = 7 days;
 
@@ -149,6 +149,30 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     uint64 deposit_nonce = 0;
     // this is used to prevent data loss on bounced messages during deposit
     mapping (uint64 => PendingDeposit) deposits;
+
+    function getDetails() public view responsible returns (BaseDetails) {
+        return{ value: 0, flag: MsgFlag.REMAINING_GAS }BaseDetails(
+            dao_root, bridge, tokenRoot, tokenWallet,
+            admin, rewarder, tokenBalance, rewardTokenBalance,
+            rewardPerSecond, lastRewardTime, rewardRounds
+        );
+    }
+
+    function getCodeData() public view responsible returns (CodeData) {
+        return{ value: 0, flag: MsgFlag.REMAINING_GAS }CodeData(
+            platform_code, has_platform_code,
+            user_data_code, user_data_version,
+            election_code, election_version,
+            relay_round_code, relay_round_version
+        );
+    }
+
+    function getRelayRoundsDetails() public view responsible returns (RelayRoundsDetails) {
+        return{ value: 0, flag: MsgFlag.REMAINING_GAS }RelayRoundsDetails(
+            originRelayRoundInitialized, currentRelayRound, currentRelayRoundStartTime,
+            currentElectionStartTime, prevRelayRoundEndTime, pendingRelayRound
+        );
+    }
 
     function getRelayConfig() public view responsible returns (RelayConfigDetails) {
         return{ value: 0, flag: MsgFlag.REMAINING_GAS }RelayConfigDetails(

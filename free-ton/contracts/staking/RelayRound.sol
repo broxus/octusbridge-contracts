@@ -31,7 +31,7 @@ contract RelayRound is IRelayRound {
     Relay[] public relays;
     uint256[] public ton_keys; // flat array of ton pubkeys
     mapping (address => uint256) addr_to_idx;
-    mapping (address => bool) reward_claimed;
+    mapping (address => bool) public reward_claimed;
 
     uint8 public relay_packs_installed;
 
@@ -280,7 +280,7 @@ contract RelayRound is IRelayRound {
                             4: reward_claimed
     */
 
-    function _buildInitData(uint8 type_id, TvmCell _initialData) internal inline view returns (TvmCell) {
+    function _buildInitData(uint8 type_id, TvmCell _initialData) internal view returns (TvmCell) {
         return tvm.buildStateInit({
             contr: Platform,
             varInit: {
@@ -294,7 +294,7 @@ contract RelayRound is IRelayRound {
         });
     }
 
-    function _buildUserDataParams(address user) private inline view returns (TvmCell) {
+    function _buildUserDataParams(address user) private view returns (TvmCell) {
         TvmBuilder builder;
         builder.store(user);
         return builder.toCell();

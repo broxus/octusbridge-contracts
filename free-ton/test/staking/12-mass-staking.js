@@ -659,8 +659,8 @@ describe('Test Staking Rewards', async function () {
                 expect(relays_count.toString()).to.be.equal(origin_users.length.toString(), "Bad relay round");
                 expect(reward_round_num.toString()).to.be.equal('0', "Bad relay round");
 
-                const cur_relay_round = await stakingRoot.call({method: 'currentRelayRound'});
-                expect(cur_relay_round.toString()).to.be.equal('1', "Bad round installed in root");
+                const relay_rounds_data_0 = await stakingRoot.call({method: 'getRelayRoundsDetails'});
+                expect(relay_rounds_data_0.currentRelayRound.toString()).to.be.equal('1', "Bad round installed in root");
 
                 const reward_rounds_new = await stakingRoot.call({method: 'rewardRounds'});
                 const expected_reward = round_reward.plus(new BigNumber(reward_rounds[0].totalReward));
@@ -695,8 +695,8 @@ describe('Test Staking Rewards', async function () {
                     expect(relay.staked_tokens.toString()).to.be.equal('1', "Relay creation fail - staked tokens");
                 }));
 
-                const origin_initialized = await stakingRoot.call({method: 'originRelayRoundInitialized'});
-                expect(origin_initialized).to.be.equal(true, "Origin round not initialized");
+                const relay_rounds_data = await stakingRoot.call({method: 'getRelayRoundsDetails'});
+                expect(relay_rounds_data.originRelayRoundInitialized).to.be.equal(true, "Origin round not initialized");
             });
 
             it("Users link relay accounts", async function () {
@@ -900,8 +900,8 @@ describe('Test Staking Rewards', async function () {
                 const expected_reward = round_reward.plus(new BigNumber(reward_rounds[0].totalReward));
                 expect(expected_reward.toString()).to.be.equal(reward_rounds_new[0].totalReward.toString(), "Bad reward after relay round init");
 
-                const cur_relay_round = await stakingRoot.call({method: 'currentRelayRound'});
-                expect(cur_relay_round.toString()).to.be.equal('2', "Bad round installed in root");
+                const relay_rounds_data = await stakingRoot.call({method: 'getRelayRoundsDetails'});
+                expect(relay_rounds_data.currentRelayRound.toString()).to.be.equal('2', "Bad round installed in root");
 
                 // check all relays are installed
                 const round_details = await round.call({method: 'getDetails'});
@@ -1066,8 +1066,9 @@ describe('Test Staking Rewards', async function () {
                 const expected_reward = round_reward.plus(new BigNumber(reward_rounds[1].totalReward));
                 expect(expected_reward.toString()).to.be.equal(reward_rounds_new[1].totalReward.toString(), "Bad reward after relay round init");
 
-                const cur_relay_round = await stakingRoot.call({method: 'currentRelayRound'});
-                expect(cur_relay_round.toString()).to.be.equal('3', "Bad round installed in root");
+
+                const relay_rounds_data = await stakingRoot.call({method: 'getRelayRoundsDetails'});
+                expect(relay_rounds_data.currentRelayRound.toString()).to.be.equal('3', "Bad round installed in root");
 
                 // check all relays are installed
                 const round_details = await round.call({method: 'getDetails'});

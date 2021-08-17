@@ -29,23 +29,23 @@ contract UserData is IUserData, IUpgradableByRequest {
     uint32 public current_version;
     TvmCell public platform_code;
 
-    uint128 public token_balance;
+    uint128 token_balance;
     uint32 relay_lock_until;
 
-    RewardRoundData[] public rewardRounds;
+    RewardRoundData[] rewardRounds;
 
-    uint160 public relay_eth_address;
-    bool public eth_address_confirmed;
+    uint160 relay_eth_address;
+    bool eth_address_confirmed;
 
-    uint256 public relay_ton_pubkey;
-    bool public ton_pubkey_confirmed;
+    uint256 relay_ton_pubkey;
+    bool ton_pubkey_confirmed;
 
-    bool public slashed;
+    bool slashed;
 
-    address public root; // setup from initialData
-    address public user; // setup from initialData
+    address root; // setup from initialData
+    address user; // setup from initialData
 
-    address public dao_root;
+    address dao_root;
     uint32 _proposal_nonce;
 
     mapping(uint32 /*proposal_id*/ => uint128 /*locked_value*/) public created_proposals;
@@ -75,7 +75,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} _canWithdrawVotes();
     }
 
-    function _canWithdrawVotes() private inline view returns (bool) {
+    function _canWithdrawVotes() private view returns (bool) {
         return (casted_votes.empty() && _tmp_proposals.empty() && created_proposals.empty());
     }
 
@@ -215,7 +215,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         }
     }
 
-    function _buildProposalInitialData(uint32 proposal_id) private inline view returns (TvmCell) {
+    function _buildProposalInitialData(uint32 proposal_id) private view returns (TvmCell) {
         TvmBuilder builder;
         builder.store(proposal_id);
         return builder.toCell();
@@ -240,9 +240,10 @@ contract UserData is IUserData, IUpgradableByRequest {
     }
 
     function getDetails() external responsible view override returns (UserDataDetails) {
-        // TODO: add new vars to Details
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }UserDataDetails(
-            token_balance, rewardRounds, root, user, current_version
+            token_balance, relay_lock_until, rewardRounds, relay_eth_address,
+            eth_address_confirmed, relay_ton_pubkey, ton_pubkey_confirmed, slashed,
+            root, user, dao_root
         );
     }
 
@@ -308,7 +309,6 @@ contract UserData is IUserData, IUpgradableByRequest {
     ) external override onlyRoot {
         require (!slashed, ErrorCodes.SLASHED);
         require (code_version == current_version, ErrorCodes.LOW_VERSION);
-        require (now >= relay_lock_until, ErrorCodes.RELAY_LOCK_ACTIVE);
 
         tvm.rawReserve(_reserve(), 2);
 
@@ -449,7 +449,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         IStakingPool(msg.sender).finishWithdraw{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(user, _tokens_to_withdraw, send_gas_to);
     }
 
-    function _buildPlatformInitData(address platform_root, uint8 platform_type, TvmCell initial_data) private inline view returns (TvmCell) {
+    function _buildPlatformInitData(address platform_root, uint8 platform_type, TvmCell initial_data) private view returns (TvmCell) {
         return tvm.buildStateInit({
             contr: Platform,
             varInit: {
@@ -463,13 +463,13 @@ contract UserData is IUserData, IUpgradableByRequest {
         });
     }
 
-    function _buildElectionParams(uint32 round_num) private inline view returns (TvmCell) {
+    function _buildElectionParams(uint32 round_num) private view returns (TvmCell) {
         TvmBuilder builder;
         builder.store(round_num);
         return builder.toCell();
     }
 
-    function _buildRelayRoundParams(uint32 round_num) private inline view returns (TvmCell) {
+    function _buildRelayRoundParams(uint32 round_num) private view returns (TvmCell) {
         TvmBuilder builder;
         builder.store(round_num);
         return builder.toCell();

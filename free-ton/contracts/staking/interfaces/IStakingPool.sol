@@ -13,6 +13,20 @@ interface IStakingPool {
         uint32 startTime;
     }
 
+    struct BaseDetails {
+        address dao_root;
+        address bridge;
+        address tokenRoot;
+        address tokenWallet;
+        address admin;
+        address rewarder;
+        uint128 tokenBalance;
+        uint128 rewardTokenBalance;
+        uint128 rewardPerSecond;
+        uint32 lastRewardTime;
+        RewardRound[] rewardRounds;
+    }
+
     struct RelayConfigDetails {
         uint32 relayRoundTime;
         uint32 electionTime;
@@ -21,6 +35,26 @@ interface IStakingPool {
         uint32 minRelaysCount;
         uint128 minRelayDeposit;
         uint128 relayInitialDeposit;
+    }
+
+    struct CodeData {
+        TvmCell platform_code;
+        bool has_platform_code;
+        TvmCell user_data_code;
+        uint32 user_data_version;
+        TvmCell election_code;
+        uint32 election_version;
+        TvmCell relay_round_code;
+        uint32 relay_round_version;
+    }
+
+    struct RelayRoundsDetails {
+        bool originRelayRoundInitialized;
+        uint32 currentRelayRound;
+        uint32 currentRelayRoundStartTime;
+        uint32 currentElectionStartTime;
+        uint32 prevRelayRoundEndTime;
+        uint32 pendingRelayRound;
     }
 
     function finishDeposit(uint64 _nonce) external;

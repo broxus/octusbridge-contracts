@@ -36,7 +36,7 @@ contract Election is IElection {
     // 0 position node is 'origin' and acting as a special pointer to start/end of list
     Node[] requests_nodes;
     // sorted list starts with this idx
-    uint256 public list_start_idx;
+    uint256 list_start_idx;
 
     bool public election_ended;
 
@@ -260,13 +260,13 @@ contract Election is IElection {
         IStakingPool(root).onElectionStarted{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num, send_gas_to);
     }
 
-    function _buildUserDataParams(address user) private inline view returns (TvmCell) {
+    function _buildUserDataParams(address user) private view returns (TvmCell) {
         TvmBuilder builder;
         builder.store(user);
         return builder.toCell();
     }
 
-    function _buildPlatformInitData(address platform_root, uint8 platform_type, TvmCell initial_data) private inline view returns (TvmCell) {
+    function _buildPlatformInitData(address platform_root, uint8 platform_type, TvmCell initial_data) private view returns (TvmCell) {
         return tvm.buildStateInit({
         contr: Platform,
         varInit: {
