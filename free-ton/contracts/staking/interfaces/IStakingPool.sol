@@ -13,6 +13,16 @@ interface IStakingPool {
         uint32 startTime;
     }
 
+    struct RelayConfigDetails {
+        uint32 relayRoundTime;
+        uint32 electionTime;
+        uint32 timeBeforeElection;
+        uint32 relaysCount;
+        uint32 minRelaysCount;
+        uint128 minRelayDeposit;
+        uint128 relayInitialDeposit;
+    }
+
     function finishDeposit(uint64 _nonce) external;
     function finishWithdraw(address user, uint128 withdrawAmount, address send_gas_to) external;
     function finishClaimReward(address user, uint128[] rewards, address send_gas_to) external;

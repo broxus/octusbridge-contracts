@@ -44,7 +44,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         uint128[] user_rewards,
         uint128[] user_debts,
         uint128 ban_token_balance
-    ) internal view returns (uint128[]) {
+    ) private view returns (uint128[]) {
         for (uint i = user_rewards.length - 1; i < rewardRounds.length; i++) {
             if (i >= user_rewards.length) {
                 user_rewards.push(0);
@@ -184,7 +184,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         deployRelayRound(round_num, !min_relays_ok, packs_num, election, prev_relay_round, MsgFlag.ALL_NOT_RESERVED, send_gas_to);
     }
 
-    function _relaysPacksCount() internal view returns (uint8) {
+    function _relaysPacksCount() private view returns (uint8) {
         uint8 packs_count = uint8(relaysCount / RELAY_PACK_SIZE);
         uint8 modulo = relaysCount % RELAY_PACK_SIZE > 0 ? 1 : 0;
         return packs_count + modulo;
@@ -263,7 +263,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 
-    function deployElection(uint32 round_num, address send_gas_to) internal returns (address) {
+    function deployElection(uint32 round_num, address send_gas_to) private returns (address) {
         require(round_num > currentRelayRound, ErrorCodes.INVALID_ELECTION_ROUND);
 
         TvmBuilder constructor_params;
@@ -285,7 +285,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         address prev_relay_round_addr,
         uint16 msg_flag,
         address send_gas_to
-    ) internal returns (address) {
+    ) private returns (address) {
         require(round_num > currentRelayRound, ErrorCodes.INVALID_RELAY_ROUND_ROUND);
 
         TvmBuilder constructor_params;

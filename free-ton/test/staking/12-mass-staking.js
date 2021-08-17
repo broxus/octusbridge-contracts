@@ -570,8 +570,8 @@ describe('Test Staking Rewards', async function () {
                     await wait(DEV_WAIT);
                 }
 
-                const relays_count = await stakingRoot.call({method: 'relaysCount'});
-                expect(relays_count.toString()).to.be.equal(RELAYS_COUNT_1.toString(), "Relay config not installed");
+                const relay_config = await stakingRoot.call({method: 'getRelayConfig'});
+                expect(relay_config.relaysCount.toString()).to.be.equal(RELAYS_COUNT_1.toString(), "Relay config not installed");
             })
         });
     });

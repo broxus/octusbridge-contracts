@@ -64,8 +64,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         uint128 relay_initial_deposit
     );
 
-    uint32 public static deploy_nonce;
-    address public static deployer;
+    uint32 static deploy_nonce;
+    address static deployer;
 
     TvmCell public platform_code;
     bool public has_platform_code;
@@ -119,26 +119,26 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     uint128 public rewardPerSecond = 1000;
 
-    uint32 public relayRoundTime = 7 days;
+    uint32 relayRoundTime = 7 days;
 
-    uint32 public electionTime = 2 days;
+    uint32 electionTime = 2 days;
 
     // election should start at lest after this much time before round end
-    uint32 public timeBeforeElection = 4 days;
+    uint32 timeBeforeElection = 4 days;
 
-    uint32 public relaysCount = 30;
+    uint32 relaysCount = 30;
 
-    uint32 public minRelaysCount = 13;
+    uint32 minRelaysCount = 13;
 
-    uint128 public minRelayDeposit = 100000 * 10**9;
+    uint128 minRelayDeposit = 100000 * 10**9;
 
-    uint128 public relayInitialDeposit = 500 ton;
+    uint128 relayInitialDeposit = 500 ton;
 
     // payloads for token receive callback
-    uint8 public constant STAKE_DEPOSIT = 0;
-    uint8 public constant REWARD_UP = 1;
+    uint8 constant STAKE_DEPOSIT = 0;
+    uint8 constant REWARD_UP = 1;
 
-    uint8 public constant RELAY_PACK_SIZE = 50;
+    uint8 constant RELAY_PACK_SIZE = 50;
 
     struct PendingDeposit {
         address user;
@@ -146,9 +146,16 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         address send_gas_to;
     }
 
-    uint64 public deposit_nonce = 0;
+    uint64 deposit_nonce = 0;
     // this is used to prevent data loss on bounced messages during deposit
     mapping (uint64 => PendingDeposit) deposits;
+
+    function getRelayConfig() public view responsible returns (RelayConfigDetails) {
+        return{ value: 0, flag: MsgFlag.REMAINING_GAS }RelayConfigDetails(
+            relayRoundTime, electionTime, timeBeforeElection,
+            relaysCount, minRelaysCount, minRelayDeposit, relayInitialDeposit
+        );
+    }
 
     function addDelegate(address addr, uint callHash) public onlyAdmin {
         optional(uint[]) optDelegate = delegators.fetch(addr);
@@ -470,10 +477,9 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
                     user_reward_data.push(IUserData.RewardRoundData(0, 0));
                 }
 
-                uint256 new_reward = math.muldiv(user_token_balance, _reward_rounds[i].accRewardPerShare, 1e18) - user_reward_data[i].reward_debt;
-                uint256 user_round_reward = user_reward_data[i].reward_balance + new_reward;
-
                 if (_reward_rounds[i].totalReward > 0) {
+                    uint256 new_reward = math.muldiv(user_token_balance, _reward_rounds[i].accRewardPerShare, 1e18) - user_reward_data[i].reward_debt;
+                    uint256 user_round_reward = user_reward_data[i].reward_balance + new_reward;
                     uint256 user_round_share = math.muldiv(user_round_reward, 1e18, _reward_rounds[i].totalReward);
                     user_reward_tokens += math.muldiv(user_round_share, _reward_rounds[i].rewardTokens, 1e18);
                 }
@@ -500,13 +506,13 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         rewardRounds[rewardRounds.length - 1].accRewardPerShare += math.muldiv(new_reward, 1e18, tokenBalance);
     }
 
-    function _buildUserDataParams(address user) private inline view returns (TvmCell) {
+    function _buildUserDataParams(address user) private view returns (TvmCell) {
         TvmBuilder builder;
         builder.store(user);
         return builder.toCell();
     }
 
-    function _buildInitData(uint8 type_id, TvmCell _initialData) internal inline view returns (TvmCell) {
+    function _buildInitData(uint8 type_id, TvmCell _initialData) internal view returns (TvmCell) {
         return tvm.buildStateInit({
             contr: Platform,
             varInit: {
