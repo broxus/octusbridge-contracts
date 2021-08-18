@@ -244,6 +244,18 @@ describe('Test Staking Rewards', async function () {
         })
     }
 
+    const slashUser = async function (_user) {
+        return await stakingOwner.runTarget({
+            contract: stakingRoot,
+            method: 'slashRelay',
+            params: {
+                relay_staker_addr: _user.address,
+                send_gas_to: stakingOwner.address
+            },
+            value: convertCrystal(2, "nano")
+        })
+    }
+
     const confirmTonRelayAccount = async function (_user, _userData) {
         return await _userData.run({
             method: 'confirmTonAccount',
@@ -1230,6 +1242,40 @@ describe('Test Staking Rewards', async function () {
                     expect(_reward_round_num.toString()).to.be.equal('0', "Bad relay round reward event - reward round");
                     expect(_reward.toString()).to.be.equal(expected_reward.toString(), "Bad relay round reward event - reward");
                 }
+            });
+
+            it("Slash user", async function() {
+                const staking_details = await stakingRoot.call({method: 'getDetails'});
+
+                let rounds_rewards_data = staking_details.rewardRounds;
+                const round1_rewards_data = rounds_rewards_data[0];
+
+                const user1_reward_before = await userRewardRounds(user1Data);
+                console.log(user1_reward_before, staking_details.rewardRounds);
+                const user1_reward = user1_reward_before[0].reward_balance;
+
+                const user1_token_reward = Math.floor(Math.floor(user1_reward * 1e10 / round1_rewards_data.totalReward) * round1_rewards_data.rewardTokens / 1e10);
+                const user1_token_balance0 = await userTokenBalance(user1Data);
+
+                const staking_details_before = await stakingRoot.call({method: 'getDetails'});
+
+                const tx = await slashUser(user1);
+
+                const {
+                    value: {
+                        user: _user,
+                        tokens_withdrawn: _tokens_withdraw
+                    }
+                } = (await stakingRoot.getEvents('RelaySlashed')).pop();
+
+                const expected_withdraw = user1_token_balance0.plus(new BigNumber(user1_token_reward));
+                expect(_tokens_withdraw.toString()).to.be.equal(expected_withdraw.toString(), "Bad slashed reward");
+
+                const staking_details_after = await stakingRoot.call({method: 'getDetails'});
+
+                const prev_token_balance = staking_details_before.tokenBalance;
+                const after_token_balance = staking_details_after.tokenBalance;
+                expect(prev_token_balance.minus(user1_token_balance0).toString()).to.be.equal(after_token_balance.toString(), "Bad token balance");
             });
         });
 

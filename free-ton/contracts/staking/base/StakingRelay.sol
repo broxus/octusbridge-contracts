@@ -29,7 +29,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
     }
 
     function slashRelay(address relay_staker_addr, address send_gas_to) external onlyDaoRoot {
-        require (msg.value >= Gas.MIN_CONFIRM_ETH_RELAY_ACC_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (msg.value >= Gas.MIN_SLASH_RELAY_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
 
         tvm.rawReserve(_reserve(), 2);
 
@@ -68,23 +68,25 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         // sync user rewards up to this moment
         uint128[] user_rewards_synced = _syncUserRewardData(user_rewards, user_debts, ban_token_balance);
 
-        uint128 _tokens_withdrawn = 0;
+        uint128 _tokens_withdraw_total = 0;
+        uint128 _tokens_added_to_reward = 0;
         for (uint i = 0; i < user_rewards_synced.length; i++) {
             uint128 _ban_tokens = math.muldiv(
                 math.muldiv(user_rewards_synced[i], 1e18, rewardRounds[i].totalReward),
                 rewardRounds[i].rewardTokens,
                 1e18
             );
-            // transfer relay reward for reward round to the current reward round
-            rewardRounds[rewardRounds.length - 1].rewardTokens += _ban_tokens;
-            _tokens_withdrawn += _ban_tokens;
+            _tokens_added_to_reward += _ban_tokens;
+            _tokens_withdraw_total += _ban_tokens;
         }
         // transfer all staked tokens to current round reward balance
         rewardRounds[rewardRounds.length - 1].rewardTokens += ban_token_balance;
+        rewardRounds[rewardRounds.length - 1].rewardTokens += _tokens_added_to_reward;
         tokenBalance -= ban_token_balance;
-        _tokens_withdrawn += ban_token_balance;
+        rewardTokenBalance += ban_token_balance;
+        _tokens_withdraw_total += ban_token_balance;
 
-        emit RelaySlashed(user, _tokens_withdrawn);
+        emit RelaySlashed(user, _tokens_withdraw_total);
         send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 

@@ -619,9 +619,7 @@ describe('Test Staking Rewards', async function () {
                 let rounds_rewards_data = staking_details.rewardRounds;
                 const round1_rewards_data = rounds_rewards_data[0];
 
-                const user1_data = await user1Data.call({method: 'getDetails'});
-                const user1_reward_before = user1_data.rewardRounds;
-
+                const user1_reward_before = await userRewardRounds(user1Data);
                 const user2_reward_before = await userRewardRounds(user2Data);
 
                 const user1_reward = user1_reward_before[0].reward_balance;
@@ -630,8 +628,7 @@ describe('Test Staking Rewards', async function () {
                 const user1_token_reward = Math.floor(Math.floor(user1_reward * 1e10 / round1_rewards_data.totalReward) * round1_rewards_data.rewardTokens / 1e10);
                 const user2_token_reward = Math.floor(Math.floor(user2_reward * 1e10 / round1_rewards_data.totalReward) * round1_rewards_data.rewardTokens / 1e10);
 
-                const user1_data_1 = await user1Data.call({method: 'getDetails'});
-                const user1_token_balance0 = user1_data_1.token_balance;
+                const user1_token_balance0 = await userTokenBalance(user1Data);
 
                 const res0 = await pendingReward(user1_token_balance0, user1_reward_before);
                 expect(res0.toString()).to.be.eq(user1_token_reward.toString(), 'Bad pending reward');
