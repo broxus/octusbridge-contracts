@@ -18,8 +18,10 @@ library Gas {
     uint64 constant MIN_WITHDRAW_MSG_VALUE = 1 ton;
     uint64 constant MIN_RELAY_REQ_MSG_VALUE = 1.5 ton;
     uint64 constant MIN_START_ELECTION_MSG_VALUE = 1.5 ton;
-    uint64 constant MIN_END_ELECTION_MSG_VALUE = 2 ton;
-    uint64 constant MIN_ORIGIN_ROUND_MSG_VALUE = 5 ton;
+    uint64 constant MIN_END_ELECTION_MSG_VALUE = 10 ton;
+    // this must be lower than MIN_END_ELECTION_MSG_VALUE, as it is part of call chain of 'end election' action
+    uint64 constant EVENT_DEPLOY_VALUE = 5 ton;
+    uint64 constant MIN_ORIGIN_ROUND_MSG_VALUE = 10 ton;
     uint64 constant MIN_CONFIRM_ETH_RELAY_ACC_MSG_VALUE = 0.5 ton;
     uint64 constant MIN_CLAIM_REWARD_MSG_VALUE = 0.5 ton;
     uint64 constant MIN_GET_REWARD_RELAY_ROUND_MSG_VALUE = 1 ton;

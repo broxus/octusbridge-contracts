@@ -3,6 +3,7 @@ pragma AbiHeader pubkey;
 pragma AbiHeader expire;
 
 import "./StakingUpgradable.sol";
+import "../interfaces/IEventProxy.sol";
 
 
 abstract contract StakingPoolRelay is StakingPoolUpgradable {
@@ -105,15 +106,12 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         require (correct_len && correct_len_1 && correct_len_2, ErrorCodes.BAD_INPUT_ARRAYS);
         tvm.rawReserve(_reserve(), 2);
 
-        IRelayRound.Relay[] relays = new IRelayRound.Relay[](staker_addrs.length);
-        for (uint i = 0; i < staker_addrs.length; i++) {
-            relays[i] = IRelayRound.Relay(staker_addrs[i], ton_pubkeys[i], eth_addrs[i], staked_tokens[i]);
-        }
-
         // we have 0 relay rounds at the moment
         address empty = address.makeAddrNone();
         address relay_round = deployRelayRound(currentRelayRound + 1, false, 1, empty, empty, MsgFlag.SENDER_PAYS_FEES, send_gas_to);
-        IRelayRound(relay_round).setRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(relays, send_gas_to);
+        IRelayRound(relay_round).setRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
+            ton_pubkeys, eth_addrs, staker_addrs, staked_tokens, send_gas_to
+        );
     }
 
     function processBecomeRelayNextRound(address user) external view override onlyActive onlyUserData(user) {
@@ -246,9 +244,10 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         uint32 relays_count,
         uint128 round_reward,
         bool duplicate,
+        uint160[] eth_keys,
         address send_gas_to
     ) external override onlyRelayRound(round_num) {
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve() - Gas.EVENT_DEPLOY_VALUE, 2);
 
         // looks like we are initializing origin relay round
         if (!originRelayRoundInitialized) {
@@ -261,7 +260,13 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         currentRelayRoundStartTime = now;
         rewardRounds[rewardRounds.length - 1].totalReward += round_reward;
 
-        emit RelayRoundInitialized(round_num, now, msg.sender, relays_count, duplicate);
+        TvmBuilder event_builder;
+        event_builder.store(round_num); // 128
+        event_builder.store(eth_keys); // ref
+        ITonEvent.TonEventVoteData event_data = ITonEvent.TonEventVoteData(tx.timestamp, now, 0, event_builder.toCell());
+        IEventProxy(bridge_event_proxy).deployEvent{value: Gas.EVENT_DEPLOY_VALUE}(event_data);
+
+        emit RelayRoundInitialized(round_num, now, now + relayRoundTime, msg.sender, relays_count, duplicate);
         send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 

@@ -165,7 +165,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         data_builder_1.store(deploy_nonce); // 32
         data_builder_1.store(deployer); // 256
         data_builder_1.store(dao_root); // 256
-        data_builder_1.store(bridge); // 256
+        data_builder_1.store(bridge_event_config); // 256
         data_builder_1.store(active); // 1
         data_builder_1.store(originRelayRoundInitialized); // 1
         data_builder_1.store(currentRelayRound); // 32
@@ -173,6 +173,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         data_builder_1.store(currentElectionStartTime); // 32
 
         TvmBuilder data_builder_2;
+        data_builder_2.store(bridge_event_proxy); // 256
         data_builder_2.store(prevRelayRoundEndTime); // 32
         data_builder_2.store(pendingRelayRound); // 32
         data_builder_2.store(lastRewardTime); // 32
@@ -245,7 +246,9 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
                             uint32 currentElectionStartTime
                     2: data_2
                         bits:
-                            uint32 prevRelayRoundEndTime
+                            address bridge_event_proxy
+                            uint32 prevRelayRound
+                            EndTime
                             uint32 pendingRelayRound
                             uint32 lastRewardTime
                             address tokenRoot

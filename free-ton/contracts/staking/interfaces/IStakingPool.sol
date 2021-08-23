@@ -15,7 +15,8 @@ interface IStakingPool {
 
     struct BaseDetails {
         address dao_root;
-        address bridge;
+        address bridge_event_configuration;
+        address bridge_event_proxy;
         address tokenRoot;
         address tokenWallet;
         address admin;
@@ -82,6 +83,7 @@ interface IStakingPool {
         uint32 relays_count,
         uint128 round_reward,
         bool duplicate,
+        uint160[] eth_keys,
         address send_gas_to
     ) external;
 }

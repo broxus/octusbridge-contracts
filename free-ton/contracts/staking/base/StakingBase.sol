@@ -34,13 +34,21 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     event ElectionStarted(uint32 round_num, uint32 election_start_time, address election_addr);
     event ElectionEnded(uint32 round_num, uint32 relay_requests, bool min_relays_ok);
-    event RelayRoundInitialized(uint32 round_num, uint32 round_start_time, address round_addr, uint32 relays_count, bool duplicate);
+    event RelayRoundInitialized(
+        uint32 round_num,
+        uint32 round_start_time,
+        uint32 round_end_time,
+        address round_addr,
+        uint32 relays_count,
+        bool duplicate
+    );
     event RelaySlashed(address user, uint128 tokens_withdrawn);
 
     event DepositReverted(address user, uint128 amount);
 
     event DaoRootUpdated(address new_dao_root);
-    event BridgeUpdated(address new_bridge);
+    event BridgeEventConfigUpdated(address new_bridge_event_config);
+    event BridgeEventProxyUpdated(address new_bridge_event_proxy);
     event AdminUpdated(address new_admin);
     event RewarderUpdated(address new_rewarder);
 
@@ -81,7 +89,9 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     address dao_root;
 
-    address bridge;
+    address bridge_event_config;
+
+    address bridge_event_proxy;
 
     bool active;
 
@@ -138,7 +148,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     uint8 constant STAKE_DEPOSIT = 0;
     uint8 constant REWARD_UP = 1;
 
-    uint8 constant RELAY_PACK_SIZE = 50;
+    uint8 constant RELAY_PACK_SIZE = 30;
 
     struct PendingDeposit {
         address user;
@@ -152,7 +162,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     function getDetails() public view responsible returns (BaseDetails) {
         return{ value: 0, flag: MsgFlag.REMAINING_GAS }BaseDetails(
-            dao_root, bridge, tokenRoot, tokenWallet,
+            dao_root, bridge_event_config, bridge_event_proxy, tokenRoot, tokenWallet,
             admin, rewarder, tokenBalance, rewardTokenBalance,
             rewardPerSecond, lastRewardTime, rewardRounds
         );
@@ -203,10 +213,17 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
-    function setBridge(address new_bridge, address send_gas_to) external onlyAdmin {
+    function setBridgeEventConfig(address new_bridge_event_config, address send_gas_to) external onlyAdmin {
         tvm.rawReserve(_reserve(), 2);
-        emit BridgeUpdated(new_bridge);
-        bridge = new_bridge;
+        emit BridgeEventConfigUpdated(new_bridge_event_config);
+        bridge_event_config = new_bridge_event_config;
+        send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
+    }
+
+    function setBridgeEventProxy(address new_bridge_event_proxy, address send_gas_to) external onlyAdmin {
+        tvm.rawReserve(_reserve(), 2);
+        emit BridgeEventProxyUpdated(new_bridge_event_proxy);
+        bridge_event_proxy = new_bridge_event_proxy;
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
@@ -227,7 +244,16 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     // Active
     function setActive(bool new_active, address send_gas_to) external onlyAdmin {
         tvm.rawReserve(_reserve(), 2);
-        if (new_active && dao_root.value != 0 && bridge.value != 0 && has_platform_code && user_data_version > 0 && election_version > 0 && relay_round_version > 0) {
+        if (
+            new_active
+            && dao_root.value != 0
+            && bridge_event_config.value != 0
+            && bridge_event_proxy.value != 0
+            && has_platform_code
+            && user_data_version > 0
+            && election_version > 0
+            && relay_round_version > 0
+        ) {
             active = true;
         } else {
             active = false;
@@ -634,7 +660,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     modifier onlyBridge() {
-        require (msg.sender == bridge, ErrorCodes.NOT_BRIDGE);
+        require (msg.sender == bridge_event_config, ErrorCodes.NOT_BRIDGE);
         _;
     }
 

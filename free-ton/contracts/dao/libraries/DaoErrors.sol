@@ -7,7 +7,7 @@ library DaoErrors {
     uint8 constant NOT_ACCOUNT = 106;
     uint8 constant NOT_OWNER = 108;
 
-    uint8 constant TO_MANY_ACTIONS = 110;
+    uint8 constant TOO_MANY_ACTIONS = 110;
     uint8 constant ACTIONS_MUST_BE_PROVIDED = 111;
     uint8 constant MSG_VALUE_TOO_LOW_TO_CREATE_PROPOSAL = 112;
     uint8 constant DESCRIPTION_TOO_LONG = 113;

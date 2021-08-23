@@ -117,7 +117,7 @@ contract DaoRoot is IDaoRoot, IUpgradable, Delegate {
     ) override public {
         uint actionsAmount = tonActions.length + ethActions.length;
         require(actionsAmount != 0, DaoErrors.ACTIONS_MUST_BE_PROVIDED);
-        require(actionsAmount <= proposalMaxOperations, DaoErrors.TO_MANY_ACTIONS);
+        require(actionsAmount <= proposalMaxOperations, DaoErrors.TOO_MANY_ACTIONS);
         require(bytes(description).length <= proposalMaxDescriptionLen, DaoErrors.DESCRIPTION_TOO_LONG);
         uint128 tonTotalValue = calcTonActionsValue(tonActions);
         require(
