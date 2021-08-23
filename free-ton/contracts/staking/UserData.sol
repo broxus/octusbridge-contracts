@@ -531,13 +531,13 @@ contract UserData is IUserData, IUpgradableByRequest {
 
         rewardRounds.push(RewardRoundData(0, 0));
 
-        send_gas_to.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
+        send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
     function upgrade(TvmCell code, uint32 new_version, address send_gas_to) external override onlyRoot {
         if (new_version == current_version) {
             tvm.rawReserve(_reserve(), 2);
-            send_gas_to.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
+            send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
         } else {
             emit UserDataCodeUpgraded(new_version);
 

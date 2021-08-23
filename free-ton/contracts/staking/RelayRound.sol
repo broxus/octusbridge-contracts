@@ -180,7 +180,7 @@ contract RelayRound is IRelayRound {
             );
             return;
         }
-        root.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
+        root.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
     function onCodeUpgrade(TvmCell upgrade_data) private {
@@ -216,7 +216,7 @@ contract RelayRound is IRelayRound {
     function upgrade(TvmCell code, uint32 new_version, address send_gas_to) external onlyRoot {
         if (new_version == current_version) {
             tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 2);
-            send_gas_to.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
+            send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
         } else {
             emit RelayRoundCodeUpgraded(new_version);
 

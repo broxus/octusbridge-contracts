@@ -190,7 +190,7 @@ contract Election is IElection {
 
         if (election_ended) {
             // send gas back to root
-            root.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
+            root.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
             return;
         }
 
@@ -230,7 +230,7 @@ contract Election is IElection {
     function upgrade(TvmCell code, uint32 new_version, address send_gas_to) external onlyRoot {
         if (new_version == current_version) {
             tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
-            send_gas_to.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
+            send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
         } else {
             emit ElectionCodeUpgraded(new_version);
 
