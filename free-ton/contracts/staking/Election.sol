@@ -185,26 +185,31 @@ contract Election is IElection {
         );
     }
 
-    function finish(address send_gas_to, uint32 code_version) external override onlyRoot {
-        require (!election_ended, ErrorCodes.ELECTION_ENDED);
+    function finish(uint32 code_version) external override onlyRoot {
         require (code_version == current_version, ErrorCodes.LOW_VERSION);
+
+        if (election_ended) {
+            // send gas back to root
+            root.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
+            return;
+        }
 
         tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
 
         election_ended = true;
         relay_transfer_start_idx = list_start_idx;
         IStakingPool(root).onElectionEnded{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
-            round_num, uint32(requests_nodes.length - 1), send_gas_to
+            round_num, uint32(requests_nodes.length - 1)
         );
     }
 
-    function sendRelaysToRelayRound(address relay_round_addr, uint32 relays_count, address send_gas_to) external override onlyRoot {
+    function sendRelaysToRelayRound(address relay_round_addr, uint32 relays_count) external override onlyRoot {
         require (election_ended, ErrorCodes.ELECTION_ENDED);
 
         tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
 
         if (staked_tokens[relay_transfer_start_idx] == 0) {
-            IRelayRound(relay_round_addr).setEmptyRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(send_gas_to);
+            IRelayRound(relay_round_addr).setEmptyRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }();
             return;
         }
 
@@ -218,7 +223,7 @@ contract Election is IElection {
         relay_transfer_start_idx = new_start_idx;
 
         IRelayRound(relay_round_addr).setRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
-            _ton_keys_limit, _eth_addrs_limit, _staker_addrs_limit, _staked_tokens_limit, send_gas_to
+            _ton_keys_limit, _eth_addrs_limit, _staker_addrs_limit, _staked_tokens_limit
         );
     }
 

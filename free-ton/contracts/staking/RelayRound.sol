@@ -105,11 +105,11 @@ contract RelayRound is IRelayRound {
         return (_ton_keys_limit, _eth_addrs_limit, _staker_addrs_limit, _staked_tokens_limit, cur_idx);
     }
 
-    function sendRelaysToRelayRound(address relay_round_addr, uint32 count, address send_gas_to) external override onlyRoot {
+    function sendRelaysToRelayRound(address relay_round_addr, uint32 count) external override onlyRoot {
         tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
 
         if (relay_transfer_start_idx >= ton_keys.length) {
-            IRelayRound(relay_round_addr).setEmptyRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(send_gas_to);
+            IRelayRound(relay_round_addr).setEmptyRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }();
             return;
         }
 
@@ -124,29 +124,28 @@ contract RelayRound is IRelayRound {
 
         IRelayRound(relay_round_addr)
             .setRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }
-            (_ton_keys, _eth_addrs, _staker_addrs, _staked_tokens, send_gas_to);
+            (_ton_keys, _eth_addrs, _staker_addrs, _staked_tokens);
     }
 
     function relayKeys() public view responsible returns (uint256[]) {
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } ton_keys;
     }
 
-    function setEmptyRelays(address send_gas_to) external override {
+    function setEmptyRelays() external override {
         require (msg.sender == election_addr || msg.sender == prev_round_addr || msg.sender == root, ErrorCodes.BAD_SENDER);
         require (!relays_installed, ErrorCodes.RELAY_ROUND_INITIALIZED);
 
         tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 2);
 
         relay_packs_installed += 1;
-        _checkRelaysInstalled(send_gas_to);
+        _checkRelaysInstalled();
     }
 
     function setRelays(
         uint256[] _ton_keys,
         uint160[] _eth_addrs,
         address[] _staker_addrs,
-        uint128[] _staked_tokens,
-        address send_gas_to
+        uint128[] _staked_tokens
     ) external override {
         require (msg.sender == election_addr || msg.sender == prev_round_addr || msg.sender == root, ErrorCodes.BAD_SENDER);
         require (!relays_installed, ErrorCodes.RELAY_ROUND_INITIALIZED);
@@ -168,19 +167,20 @@ contract RelayRound is IRelayRound {
         }
 
         relay_packs_installed += 1;
-        _checkRelaysInstalled(send_gas_to);
+        _checkRelaysInstalled();
     }
 
-    function _checkRelaysInstalled(address send_gas_to) internal {
+    function _checkRelaysInstalled() internal {
+        // tvm.rawReserve should be called before calling this!
         if (relay_packs_installed == expected_packs_num) {
             relays_installed = true;
 
             IStakingPool(root).onRelayRoundInitialized{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
-                round_num, relays_count, round_reward, duplicate, eth_addrs, send_gas_to
+                round_num, relays_count, round_reward, duplicate, eth_addrs
             );
             return;
         }
-        send_gas_to.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
+        root.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
     function onCodeUpgrade(TvmCell upgrade_data) private {
@@ -210,7 +210,7 @@ contract RelayRound is IRelayRound {
         round_reward = reward_per_second * round_len;
         start_time = now;
 
-        IStakingPool(root).onRelayRoundDeployed{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num, duplicate, send_gas_to);
+        IStakingPool(root).onRelayRoundDeployed{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num, duplicate);
     }
 
     function upgrade(TvmCell code, uint32 new_version, address send_gas_to) external onlyRoot {

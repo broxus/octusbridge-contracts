@@ -10,6 +10,6 @@ interface IElection {
         uint32 lock_time,
         uint32 election_code_version
     ) external;
-    function finish(address send_gas_to, uint32 code_version) external;
-    function sendRelaysToRelayRound(address relay_round_addr, uint32 relays_count, address send_gas_to) external;
+    function finish(uint32 code_version) external;
+    function sendRelaysToRelayRound(address relay_round_addr, uint32 relays_count) external;
 }

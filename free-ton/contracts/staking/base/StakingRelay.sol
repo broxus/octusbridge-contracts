@@ -108,9 +108,9 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
 
         // we have 0 relay rounds at the moment
         address empty = address.makeAddrNone();
-        address relay_round = deployRelayRound(currentRelayRound + 1, false, 1, empty, empty, MsgFlag.SENDER_PAYS_FEES, send_gas_to);
+        address relay_round = deployRelayRound(currentRelayRound + 1, false, 1, empty, empty, MsgFlag.SENDER_PAYS_FEES);
         IRelayRound(relay_round).setRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
-            ton_pubkeys, eth_addrs, staker_addrs, staked_tokens, send_gas_to
+            ton_pubkeys, eth_addrs, staker_addrs, staked_tokens
         );
     }
 
@@ -152,7 +152,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         uint128 required_gas = Gas.MIN_END_ELECTION_MSG_VALUE + _relaysPacksCount() * Gas.MIN_SEND_RELAYS_MSG_VALUE;
 
         address election_addr = getElectionAddress(pendingRelayRound);
-        IElection(election_addr).finish{value: required_gas}(address(this), election_version);
+        IElection(election_addr).finish{value: required_gas}(election_version);
     }
 
     function onElectionStarted(uint32 round_num, address send_gas_to) external override onlyElection(round_num) {
@@ -166,8 +166,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
 
     function onElectionEnded(
         uint32 round_num,
-        uint32 relay_requests_count,
-        address send_gas_to
+        uint32 relay_requests_count
     ) external override onlyElection(round_num) {
         tvm.rawReserve(_reserve(), 2);
 
@@ -181,7 +180,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         uint8 packs_num = _relaysPacksCount();
         address election = msg.sender;
         address prev_relay_round = getRelayRoundAddress(round_num - 1);
-        deployRelayRound(round_num, !min_relays_ok, packs_num, election, prev_relay_round, MsgFlag.ALL_NOT_RESERVED, send_gas_to);
+        deployRelayRound(round_num, !min_relays_ok, packs_num, election, prev_relay_round, MsgFlag.ALL_NOT_RESERVED);
     }
 
     function _relaysPacksCount() private view returns (uint8) {
@@ -192,14 +191,12 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
 
     function onRelayRoundDeployed(
         uint32 round_num,
-        bool duplicate,
-        address send_gas_to
+        bool duplicate
     ) external override onlyRelayRound(round_num) {
         tvm.rawReserve(_reserve(), 2);
 
         if (!originRelayRoundInitialized) {
             // this is an origin round deployment
-            send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
             return;
         }
 
@@ -211,11 +208,11 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
                 // last pack could be smaller then other ones
                 if (i == _relaysPacksCount() - 1 && relaysCount % RELAY_PACK_SIZE > 0) {
                     IRelayRound(relay_round_addr).sendRelaysToRelayRound{value: Gas.MIN_SEND_RELAYS_MSG_VALUE}(
-                        cur_round_addr, relaysCount % RELAY_PACK_SIZE, send_gas_to
+                        cur_round_addr, relaysCount % RELAY_PACK_SIZE
                     );
                 } else {
                     IRelayRound(relay_round_addr).sendRelaysToRelayRound{value: Gas.MIN_SEND_RELAYS_MSG_VALUE}(
-                        cur_round_addr, RELAY_PACK_SIZE, send_gas_to
+                        cur_round_addr, RELAY_PACK_SIZE
                     );
                 }
             }
@@ -226,17 +223,15 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
                 // last pack could be smaller then other ones
                 if (i == _relaysPacksCount() - 1 && relaysCount % RELAY_PACK_SIZE > 0) {
                     IElection(election_addr).sendRelaysToRelayRound{value: Gas.MIN_SEND_RELAYS_MSG_VALUE}(
-                        cur_round_addr, relaysCount % RELAY_PACK_SIZE, send_gas_to
+                        cur_round_addr, relaysCount % RELAY_PACK_SIZE
                     );
                 } else {
                     IElection(election_addr).sendRelaysToRelayRound{value: Gas.MIN_SEND_RELAYS_MSG_VALUE}(
-                        cur_round_addr, RELAY_PACK_SIZE, send_gas_to
+                        cur_round_addr, RELAY_PACK_SIZE
                     );
                 }
             }
         }
-
-        send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 
     function onRelayRoundInitialized(
@@ -244,9 +239,11 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         uint32 relays_count,
         uint128 round_reward,
         bool duplicate,
-        uint160[] eth_keys,
-        address send_gas_to
+        uint160[] eth_keys
     ) external override onlyRelayRound(round_num) {
+        // this method is called with remaining balance from setRelays call of RelayRound which is lower than we need
+        // so that we manually increase reservation
+        // we know that balance of this contract is enough, because we checked that on 'endElection' call which triggers this action
         tvm.rawReserve(_reserve() - Gas.EVENT_DEPLOY_VALUE, 2);
 
         // looks like we are initializing origin relay round
@@ -267,7 +264,6 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         IEventProxy(bridge_event_proxy).deployEvent{value: Gas.EVENT_DEPLOY_VALUE}(event_data);
 
         emit RelayRoundInitialized(round_num, now, now + relayRoundTime, msg.sender, relays_count, duplicate);
-        send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 
     function deployElection(uint32 round_num, address send_gas_to) private returns (address) {
@@ -290,8 +286,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         uint8 packs_num,
         address election_addr,
         address prev_relay_round_addr,
-        uint16 msg_flag,
-        address send_gas_to
+        uint16 msg_flag
     ) private returns (address) {
         require(round_num > currentRelayRound, ErrorCodes.INVALID_RELAY_ROUND_ROUND);
 
@@ -310,7 +305,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
             stateInit: _buildInitData(PlatformTypes.RelayRound, _buildRelayRoundParams(round_num)),
             value: Gas.DEPLOY_RELAY_ROUND_MIN_VALUE,
             flag: msg_flag
-        }(relay_round_code, constructor_params.toCell(), send_gas_to);
+        }(relay_round_code, constructor_params.toCell(), address(this));
     }
 
     modifier onlyElection(uint32 round_num) {

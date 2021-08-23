@@ -13,14 +13,13 @@ interface IRelayRound {
     }
 
     function getDetails() external view responsible returns (RelayRoundDetails);
-    function sendRelaysToRelayRound(address relay_round_addr, uint32 relays_count, address send_gas_to) external;
+    function sendRelaysToRelayRound(address relay_round_addr, uint32 relays_count) external;
     function setRelays(
         uint256[] _ton_keys,
         uint160[] _eth_addrs,
         address[] _staker_addrs,
-        uint128[] _staked_tokens,
-        address send_gas_to
+        uint128[] _staked_tokens
     ) external;
-    function setEmptyRelays(address send_gas_to) external;
+    function setEmptyRelays() external;
     function getRewardForRound(address staker_addr, uint32 code_version) external;
 }
