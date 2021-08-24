@@ -3,7 +3,7 @@ pragma ton-solidity ^0.39.0;
 
 interface IBasicEvent {
     enum Vote { Reserved, Empty, Confirm, Reject }
-    enum Status { Pending, Confirmed, Rejected }
+    enum Status { Initializing, Pending, Confirmed, Rejected }
 
     event Reject(uint relay);
     event Closed();

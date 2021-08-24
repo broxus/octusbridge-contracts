@@ -46,6 +46,11 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
         _;
     }
 
+    modifier eventInitializing() {
+        require(status == Status.Initializing, ErrorCodes.EVENT_NOT_INITIALIZING);
+        _;
+    }
+
     modifier eventNotPending() {
         require(status != Status.Pending, ErrorCodes.EVENT_PENDING);
         _;
@@ -81,7 +86,7 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
     ) public {
         eventInitData.configuration = msg.sender;
 
-        status = Status.Pending;
+        status = Status.Initializing;
         initializer = _initializer;
         meta = _meta;
 
@@ -93,19 +98,25 @@ contract TonEvent is ITonEvent, TransferUtils, CellEncoder {
         }(now);
     }
 
-    function receiveRoundAddress(address roundContract) public onlyStaking {
+    function receiveRoundAddress(
+        address roundContract
+    ) public onlyStaking eventInitializing {
         IRound(roundContract).relayKeys{
             value: 1 ton,
             callback: TonEvent.receiveRoundRelays
         }();
     }
 
-    function receiveRoundRelays(uint[] keys) public onlyStaking {
+    function receiveRoundRelays(
+        uint[] keys
+    ) public onlyStaking eventInitializing {
         requiredVotes = uint16(keys.length * 2 / 3) + 1;
 
         for (uint key: keys) {
             votes[key] = Vote.Empty;
         }
+
+        status = Status.Pending;
     }
 
     /*

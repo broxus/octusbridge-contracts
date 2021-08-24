@@ -41,6 +41,11 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         _;
     }
 
+    modifier eventInitializing() {
+        require(status == Status.Initializing, ErrorCodes.EVENT_NOT_INITIALIZING);
+        _;
+    }
+
     modifier onlyStaking() {
         require(msg.sender == eventInitData.staking, ErrorCodes.SENDER_NOT_STAKING);
         _;
@@ -71,7 +76,7 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         // TODO: add external method for executing confirmed event?
         eventInitData.configuration = msg.sender;
 
-        status = Status.Pending;
+        status = Status.Initializing;
         initializer = _initializer;
         meta = _meta;
 
@@ -84,19 +89,25 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
     }
 
     // TODO: cant be pure, compiler lies
-    function receiveRoundAddress(address roundContract) public onlyStaking {
+    function receiveRoundAddress(
+        address roundContract
+    ) public onlyStaking eventInitializing {
         IRound(roundContract).relayKeys{
             value: 1 ton,
             callback: EthereumEvent.receiveRoundRelays
         }();
     }
 
-    function receiveRoundRelays(uint[] keys) public onlyStaking {
+    function receiveRoundRelays(
+        uint[] keys
+    ) public onlyStaking eventInitializing {
         requiredVotes = uint16(keys.length * 2 / 3) + 1;
 
         for (uint key: keys) {
             votes[key] = Vote.Empty;
         }
+
+        status = Status.Pending;
     }
 
     /// @dev Confirm event. Can be called only by relay which is in charge at this round.
@@ -218,11 +229,9 @@ contract EthereumEvent is IEthereumEvent, TransferUtils, CellEncoder {
         );
     }
 
-    /*
-        @dev Notify owner contract that event contract status has been changed
-        @dev In this example, notification receiver is derived from the configuration meta
-        @dev Used to easily collect all confirmed events by user's wallet
-    */
+    /// @dev Notify owner contract that event contract status has been changed
+    /// @dev In this example, notification receiver is derived from the configuration meta
+    /// @dev Used to easily collect all confirmed events by user's wallet
     function notifyEventStatusChanged() internal view {
         (,,,,,address owner_address) = getDecodedData();
 

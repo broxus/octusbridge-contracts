@@ -146,7 +146,7 @@ describe('Test ton event reject', async function() {
         .to.be.equal(tonEventConfiguration.address, 'Wrong event configuration');
       
       expect(details._status)
-        .to.be.bignumber.equal(0, 'Wrong status');
+        .to.be.bignumber.equal(1, 'Wrong status');
       
       expect(details.confirms)
         .to.have.lengthOf(0, 'Wrong amount of confirmations');
@@ -211,7 +211,7 @@ describe('Test ton event reject', async function() {
         .to.be.bignumber.greaterThan(0, 'Wrong balance');
   
       expect(details._status)
-        .to.be.bignumber.equal(2, 'Wrong status');
+        .to.be.bignumber.equal(3, 'Wrong status');
   
       expect(details.confirms)
         .to.have.lengthOf(0, 'Wrong amount of relays confirmations');
@@ -248,7 +248,7 @@ describe('Test ton event reject', async function() {
         .to.be.bignumber.greaterThan(0, 'Wrong balance');
     
       expect(details._status)
-        .to.be.bignumber.equal(2, 'Wrong status');
+        .to.be.bignumber.equal(3, 'Wrong status');
     
       expect(details.confirms)
         .to.have.lengthOf(0, 'Wrong amount of relays confirmations');
