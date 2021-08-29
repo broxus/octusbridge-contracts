@@ -156,7 +156,7 @@ describe('Test ethereum event confirm', async function() {
         .to.be.equal(staking.address, 'Wrong staking');
 
       expect(details._status)
-        .to.be.bignumber.equal(0, 'Wrong status');
+        .to.be.bignumber.equal(1, 'Wrong status');
 
       expect(details.confirms)
         .to.have.lengthOf(0, 'Wrong amount of relays confirmations');
@@ -237,7 +237,7 @@ describe('Test ethereum event confirm', async function() {
       //   .to.be.bignumber.equal(0, 'Wrong balance');
 
       expect(details._status)
-        .to.be.bignumber.equal(1, 'Wrong status');
+        .to.be.bignumber.equal(2, 'Wrong status');
 
       expect(details.confirms)
         .to.have.lengthOf(requiredVotes, 'Wrong amount of relays confirmations');

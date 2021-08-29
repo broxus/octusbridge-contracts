@@ -159,7 +159,7 @@ describe('Test ethereum event reject', async function() {
         .to.be.bignumber.equal(0, 'Wrong balance');
 
       expect(details._status)
-        .to.be.bignumber.equal(2, 'Wrong status');
+        .to.be.bignumber.equal(3, 'Wrong status');
 
       expect(details.confirms)
         .to.have.lengthOf(0, 'Wrong amount of confirmations');

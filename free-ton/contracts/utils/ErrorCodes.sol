@@ -34,6 +34,7 @@ library ErrorCodes {
     uint16 constant KEY_VOTE_NOT_EMPTY = 2318;
     uint16 constant SENDER_NOT_INITIALIZER = 2319;
     uint16 constant EVENT_PENDING = 2320;
+    uint16 constant EVENT_NOT_INITIALIZING = 2321;
 
     // Connector
     uint16 constant DEPLOYER_NOT_BRIDGE = 2420;
