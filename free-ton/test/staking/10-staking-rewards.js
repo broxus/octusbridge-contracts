@@ -41,7 +41,7 @@ let ownerWallet;
 let userInitialTokenBal = 100000;
 let rewardTokensBal = 10000;
 let userDeposit = 100;
-let rewardPerSec = 1000;
+let rewardPerSec = 1000000;
 let user1Balance;
 let user2Balance;
 let balance_err;
@@ -311,7 +311,15 @@ describe('Test Staking Rewards', async function () {
 
         describe('Staking', async function() {
             it('Deploy staking', async function () {
-                const [keyPair] = await locklift.keys.getKeyPairs();
+                const [keyPair, keyPair1] = await locklift.keys.getKeyPairs();
+
+                const EventProxyMock = await locklift.factory.getContract('EventProxyMockup');
+                const event_proxy = await locklift.giver.deployContract({
+                    contract: EventProxyMock,
+                    constructorParams: {},
+                    initParams: {nonce: getRandomNonce()},
+                    keyPair: keyPair
+                }, locklift.utils.convertCrystal(1, 'nano'));
 
                 const StakingRootDeployer = await locklift.factory.getContract('StakingRootDeployer');
                 const stakingRootDeployer = await locklift.giver.deployContract({
@@ -320,10 +328,12 @@ describe('Test Staking Rewards', async function () {
                     initParams: {nonce: getRandomNonce()},
                     keyPair: keyPair,
                 }, locklift.utils.convertCrystal(10, 'nano'));
-
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
                 logger.log(`Deploying stakingRoot`);
                 stakingRoot = await locklift.factory.getContract('Staking');
-                const deploy_res = await stakingRootDeployer.run({
+                stakingRoot.setAddress((await stakingRootDeployer.run({
                     method: 'deploy',
                     params: {
                         stakingCode: stakingRoot.code,
@@ -331,14 +341,17 @@ describe('Test Staking Rewards', async function () {
                         _tokenRoot: stakingToken.address,
                         _dao_root: stakingOwner.address,
                         _rewarder: stakingOwner.address,
-                        _bridge: bridge,
+                        _bridge_event_config: stakingOwner.address,
+                        _bridge_event_proxy: event_proxy.address,
                         _deploy_nonce: getRandomNonce()
                     }
-                });
-                stakingRoot.setAddress(deploy_res.decoded.output.value0);
+                })).decoded.output.value0);
                 logger.log(`StakingRoot address: ${stakingRoot.address}`);
                 logger.log(`StakingRoot owner address: ${stakingOwner.address}`);
                 logger.log(`StakingRoot token root address: ${stakingToken.address}`);
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT * 2);
+                }
 
                 const staking_details = await stakingRoot.call({method: 'getDetails'});
                 logger.log(`Staking token wallet: ${staking_details.tokenWallet}`);

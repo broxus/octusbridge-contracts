@@ -127,7 +127,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     address rewarder;
 
-    uint128 rewardPerSecond = 1000;
+    uint128 rewardPerSecond = 1000000;
 
     uint32 relayRoundTime = 7 days;
 

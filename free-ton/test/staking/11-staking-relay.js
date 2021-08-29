@@ -47,7 +47,7 @@ let ownerWallet;
 let userInitialTokenBal = 100000;
 let rewardTokensBal = 10000;
 let userDeposit = 100;
-let rewardPerSec = 1000;
+let rewardPerSec = 1000000;
 let user1Balance;
 let user2Balance;
 let user3Balance;
