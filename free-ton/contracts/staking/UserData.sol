@@ -359,6 +359,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     function processLinkRelayAccounts(
         uint256 ton_pubkey,
         uint160 eth_address,
+        bool confirm,
         uint32 code_version
     ) external override onlyRoot {
         require (!slashed, ErrorCodes.SLASHED);
@@ -369,6 +370,13 @@ contract UserData is IUserData, IUpgradableByRequest {
 
         relay_eth_address = eth_address;
         eth_address_confirmed = false;
+
+        if (confirm) {
+            ton_pubkey_confirmed = true;
+            eth_address_confirmed = true;
+            emit TonPubkeyConfirmed(relay_ton_pubkey);
+            emit EthAddressConfirmed(relay_eth_address);
+        }
     }
 
     function confirmTonAccount() external {
@@ -379,6 +387,8 @@ contract UserData is IUserData, IUpgradableByRequest {
 
         tvm.accept();
         ton_pubkey_confirmed = true;
+
+        emit TonPubkeyConfirmed(relay_ton_pubkey);
     }
 
     function processConfirmEthAccount(uint160 eth_address, address send_gas_to) external override onlyRoot {
@@ -390,6 +400,7 @@ contract UserData is IUserData, IUpgradableByRequest {
 
         eth_address_confirmed = true;
 
+        emit EthAddressConfirmed(relay_eth_address);
         send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 

@@ -38,18 +38,6 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
-    function getUserDataVersion() external view responsible returns (uint32) {
-        return{ value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } user_data_version;
-    }
-
-    function getElectionVersion() external view responsible returns (uint32) {
-        return{ value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } election_version;
-    }
-
-    function getRelayRoundVersion() external view responsible returns (uint32) {
-        return{ value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } relay_round_version;
-    }
-
     // user should call this by himself
     function upgradeUserData(address send_gas_to) external view onlyActive {
         require(msg.value >= Gas.UPGRADE_USER_DATA_MIN_VALUE, ErrorCodes.VALUE_TOO_LOW);

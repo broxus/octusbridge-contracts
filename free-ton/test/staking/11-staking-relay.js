@@ -67,6 +67,13 @@ const RELAY_INITIAL_DEPOSIT = 50;
 describe('Test Staking Rewards', async function () {
     this.timeout(10000000);
 
+    const sendTons = async function (from, receiver) {
+        return await from.runTarget({
+            contract: receiver,
+            value: convertCrystal(25, 'nano')
+        });
+    }
+
     const deployTokenRoot = async function (token_name, token_symbol) {
         const RootToken = await locklift.factory.getContract('RootTokenContract', TOKEN_PATH);
         const TokenWallet = await locklift.factory.getContract('TONTokenWallet', TOKEN_PATH);
@@ -666,20 +673,8 @@ describe('Test Staking Rewards', async function () {
             });
 
             it("Users link relay accounts", async function () {
-                await linkRelayAccounts(user1, user1.keyPair.public, user1_eth_addr);
-                if (locklift.network === 'dev') {
-                    await wait(DEV_WAIT);
-                }
-
-                const user1_details = await user1Data.call({method: 'getDetails'});
-                const user1_pk = user1_details.relay_ton_pubkey;
-                const _user1_eth_addr = user1_details.relay_eth_address;
-
-                const user1_pk_expected = new BigNumber(user1.keyPair.public, 16);
-                const user1_eth_addr_expected = new BigNumber(user1_eth_addr.toLowerCase(), 16);
-
-                expect(user1_pk_expected.toString(16)).to.be.equal(user1_pk.toString(16), "Bad ton pubkey installed");
-                expect(_user1_eth_addr.toString(16)).to.be.equal(user1_eth_addr_expected.toString(16), "Bad eth addr installed");
+                // 1st user is relay already
+                await sendTons(stakingOwner, user1Data);
 
                 await linkRelayAccounts(user2, user2.keyPair.public, user2_eth_addr);
                 if (locklift.network === 'dev') {
@@ -713,15 +708,12 @@ describe('Test Staking Rewards', async function () {
             });
 
             it("Users confirm ton relay accounts", async function () {
-                const bal1 = await getBalance(user1Data.address);
                 const bal2 = await getBalance(user2Data.address);
                 const bal3 = await getBalance(user3Data.address);
 
-                await confirmTonRelayAccount(user1, user1Data);
                 await confirmTonRelayAccount(user2, user2Data);
                 await confirmTonRelayAccount(user3, user3Data);
 
-                const bal1_after = await getBalance(user1Data.address);
                 const bal2_after = await getBalance(user2Data.address);
                 const bal3_after = await getBalance(user3Data.address);
                 if (locklift.network === 'dev') {
@@ -732,7 +724,6 @@ describe('Test Staking Rewards', async function () {
                 const user1_details = await user1Data.call({method: 'getDetails'});
                 const confirmed_user1 = user1_details.ton_pubkey_confirmed;
                 expect(confirmed_user1).to.be.equal(true, "Ton pubkey user1 not confirmed");
-                expect(bal1_after.toNumber()).to.be.gte(bal1.minus(10**9).toNumber(), "Bad gas")
 
                 const user2_details = await user2Data.call({method: 'getDetails'});
                 const confirmed_user2 = user2_details.ton_pubkey_confirmed;
@@ -747,7 +738,6 @@ describe('Test Staking Rewards', async function () {
             })
 
             it("Users confirm eth relay accounts", async function () {
-                await confirmEthRelayAccount(user1, user1_eth_addr);
                 await confirmEthRelayAccount(user2, user2_eth_addr);
                 await confirmEthRelayAccount(user3, user3_eth_addr);
                 if (locklift.network === 'dev') {

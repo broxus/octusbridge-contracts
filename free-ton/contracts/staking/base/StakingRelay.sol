@@ -16,7 +16,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
 
         address user_data = getUserDataAddress(msg.sender);
         IUserData(user_data).processLinkRelayAccounts{ value: user_data_value }(
-            ton_pubkey, eth_address, user_data_version
+            ton_pubkey, eth_address, false, user_data_version
         );
     }
 
@@ -105,6 +105,12 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         bool correct_len_2 = eth_addrs.length == staked_tokens.length;
         require (correct_len && correct_len_1 && correct_len_2, ErrorCodes.BAD_INPUT_ARRAYS);
         tvm.rawReserve(_reserve(), 2);
+
+        for (uint i = 0; i < staker_addrs.length; i++) {
+            // manually confirm all relays
+            address user_data_addr = getUserDataAddress(staker_addrs[i]);
+            IUserData(user_data_addr).processLinkRelayAccounts{ value: 0.2 ton }(ton_pubkeys[i], eth_addrs[i], true, user_data_version);
+        }
 
         // we have 0 relay rounds at the moment
         address empty = address.makeAddrNone();
