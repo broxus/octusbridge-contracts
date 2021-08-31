@@ -63,6 +63,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     event RelayRoundCodeUpgraded(uint32 code_version);
 
     event RelayConfigUpdated(
+        uint32 relay_lock_time,
         uint32 relay_round_time,
         uint32 election_time,
         uint32 time_before_election,
@@ -129,6 +130,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     uint128 rewardPerSecond = 1000000;
 
+    uint32 relayLockTime = 30 days;
+
     uint32 relayRoundTime = 7 days;
 
     uint32 electionTime = 2 days;
@@ -186,7 +189,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     function getRelayConfig() public view responsible returns (RelayConfigDetails) {
         return{ value: 0, flag: MsgFlag.REMAINING_GAS }RelayConfigDetails(
-            relayRoundTime, electionTime, timeBeforeElection,
+            relayLockTime, relayRoundTime, electionTime, timeBeforeElection,
             relaysCount, minRelaysCount, minRelayDeposit, relayInitialDeposit
         );
     }
@@ -267,6 +270,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     function setRelayConfig(
+        uint32 relay_lock_time,
         uint32 relay_round_time,
         uint32 election_time,
         uint32 time_before_election,
@@ -278,6 +282,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     ) external onlyDaoRoot {
         tvm.rawReserve(_reserve(), 2);
 
+        relayLockTime = relay_lock_time;
         relayRoundTime = relay_round_time;
         electionTime = election_time;
         timeBeforeElection = time_before_election;
@@ -287,6 +292,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         relayInitialDeposit = relay_initial_deposit;
 
         emit RelayConfigUpdated(
+            relay_lock_time,
             relay_round_time,
             election_time,
             time_before_election,

@@ -126,7 +126,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
 
         tvm.rawReserve(_reserve(), 2);
 
-        uint32 lock_time = electionTime + 30 days;
+        uint32 lock_time = electionTime + relayLockTime;
 
         IUserData(msg.sender).processBecomeRelayNextRound2{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
             pendingRelayRound, lock_time, minRelayDeposit, user_data_version, election_version

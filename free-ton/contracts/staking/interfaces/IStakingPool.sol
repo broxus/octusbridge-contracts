@@ -29,6 +29,7 @@ interface IStakingPool {
     }
 
     struct RelayConfigDetails {
+        uint32 relayLockTime;
         uint32 relayRoundTime;
         uint32 electionTime;
         uint32 timeBeforeElection;

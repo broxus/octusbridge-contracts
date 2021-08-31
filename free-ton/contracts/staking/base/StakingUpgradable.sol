@@ -177,6 +177,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         data_builder_3.store(rewardPerSecond); // 128
 
         TvmBuilder data_builder_4;
+        data_builder_4.store(relayLockTime); // 32
         data_builder_4.store(relayRoundTime); // 32
         data_builder_4.store(electionTime); // 32
         data_builder_4.store(timeBeforeElection); // 32
@@ -252,6 +253,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
                             uint128 rewardPerSecond
                     4: data_4
                         bits:
+                            uint32 relayLockTime
                             uint32 relayRoundTime
                             uint32 electionTime
                             uint32 timeBeforeElection

@@ -526,6 +526,7 @@ describe('Test Staking Rewards', async function () {
                     contract: stakingRoot,
                     method: 'setRelayConfig',
                     params: {
+                        relay_lock_time: 30 * 24 * 60 * 60, // 30 days
                         relay_round_time: RELAY_ROUND_TIME_1,
                         election_time: ELECTION_TIME,
                         time_before_election: TIME_BEFORE_ELECTION,
