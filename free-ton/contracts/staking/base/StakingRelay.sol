@@ -96,9 +96,10 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         uint256[] ton_pubkeys,
         uint160[] eth_addrs,
         uint128[] staked_tokens,
+        uint128 ton_deposit,
         address send_gas_to
     ) external onlyAdmin {
-        require (msg.value >= Gas.MIN_ORIGIN_ROUND_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (msg.value >= Gas.MIN_ORIGIN_ROUND_MSG_VALUE + ton_deposit * staker_addrs.length, ErrorCodes.VALUE_TOO_LOW);
         require (!originRelayRoundInitialized, ErrorCodes.ORIGIN_ROUND_ALREADY_INITIALIZED);
         bool correct_len = staker_addrs.length == ton_pubkeys.length;
         bool correct_len_1 = ton_pubkeys.length == eth_addrs.length;
@@ -109,7 +110,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         for (uint i = 0; i < staker_addrs.length; i++) {
             // manually confirm all relays
             address user_data_addr = getUserDataAddress(staker_addrs[i]);
-            IUserData(user_data_addr).processLinkRelayAccounts{ value: 0.2 ton }(ton_pubkeys[i], eth_addrs[i], true, user_data_version);
+            IUserData(user_data_addr).processLinkRelayAccounts{ value: 0.1 ton + ton_deposit }(ton_pubkeys[i], eth_addrs[i], true, user_data_version);
         }
 
         // we have 0 relay rounds at the moment

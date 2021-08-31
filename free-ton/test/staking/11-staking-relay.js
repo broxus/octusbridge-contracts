@@ -600,6 +600,7 @@ describe('Test Staking Rewards', async function () {
                     ton_pubkeys: [user1_pk.toFixed()],
                     eth_addrs: [user1_eth.toFixed()],
                     staked_tokens: [1],
+                    ton_deposit: convertCrystal(10, 'nano'),
                     send_gas_to: stakingOwner.address
                 }
 
@@ -611,7 +612,7 @@ describe('Test Staking Rewards', async function () {
                     contract: stakingRoot,
                     method: 'createOriginRelayRound',
                     params: input_params,
-                    value: convertCrystal(11, 'nano')
+                    value: convertCrystal(21, 'nano')
                 });
                 await wait(500);
 
@@ -674,7 +675,7 @@ describe('Test Staking Rewards', async function () {
 
             it("Users link relay accounts", async function () {
                 // 1st user is relay already
-                await sendTons(stakingOwner, user1Data);
+                // await sendTons(stakingOwner, user1Data);
 
                 await linkRelayAccounts(user2, user2.keyPair.public, user2_eth_addr);
                 if (locklift.network === 'dev') {
