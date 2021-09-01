@@ -8,6 +8,7 @@ import "../utils/cell-encoder/CellEncoder.sol";
 import "../utils/TransferUtils.sol";
 
 import "./interfaces/IProxy.sol";
+import "./interfaces/IProxyTokenTransferConfigurable.sol";
 import "./interfaces/event-configuration-contracts/ITonEventConfiguration.sol";
 
 import "../token/interfaces/IPausedCallback.sol";
@@ -30,6 +31,7 @@ import "../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol"
 /// and emit TokenBurn event, which will be signed and then sent to the corresponding EVM network
 contract ProxyTokenTransfer is
     IProxy,
+    IProxyTokenTransferConfigurable,
     IPausable,
     IBurnTokensCallback,
     RandomNonce,
@@ -38,16 +40,6 @@ contract ProxyTokenTransfer is
     TransferUtils,
     CheckPubKey
 {
-    struct Configuration {
-        address tonConfiguration;
-        address[] ethereumConfigurations;
-        address[] outdatedTokenRoots;
-
-        address tokenRoot;
-        address rootTunnel;
-
-        uint128 settingsDeployWalletGrams;
-    }
 
     Configuration config;
     uint128 burnedCount;
@@ -148,7 +140,7 @@ contract ProxyTokenTransfer is
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} config.tokenRoot;
     }
 
-    function getConfiguration() public view responsible returns (Configuration) {
+    function getConfiguration() override public view responsible returns (Configuration) {
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} config;
     }
 
@@ -159,7 +151,7 @@ contract ProxyTokenTransfer is
     function setConfiguration(
         Configuration _config,
         address gasBackAddress
-    ) public onlyOwner cashBackTo(gasBackAddress) {
+    ) override public onlyOwner cashBackTo(gasBackAddress) {
         config = _config;
     }
 
