@@ -7,6 +7,7 @@ chai.use(require('chai-bignumber')());
 
 const { expect } = chai;
 
+const TOKEN_PATH = '../node_modules/ton-eth-bridge-token-contracts/free-ton/build';
 
 const logContract = async (contract) => {
   const balance = await locklift.ton.getBalance(contract.address);
@@ -154,25 +155,31 @@ const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
   });
 
   const _randomNonce = locklift.utils.getRandomNonce();
-  
-  const ProxyMockup = await locklift.factory.getContract('ProxyMockup');
-  
+
+  const Proxy = await locklift.factory.getContract('ProxyTokenTransfer');
+
   const {
     address: proxyFutureAddress
   } = await locklift.ton.createDeployMessage({
-    contract: ProxyMockup,
+    contract: Proxy,
     constructorParams: {
-      _configuration: locklift.utils.zeroAddress,
+      owner_: owner.address,
     },
     initParams: {
       _randomNonce,
     },
     keyPair
   });
-  
+
+  const [tokenRoot, wallet] = await setupTokenRootWithWallet(
+    proxyFutureAddress,
+    owner.address,
+    locklift.utils.convertCrystal('100', 'nano')
+  );
+
   const EthereumEventConfiguration = await locklift.factory.getContract('EthereumEventConfiguration');
   const EthereumEvent = await locklift.factory.getContract('EthereumEvent');
-  
+
   const ethereumEventConfiguration = await locklift.giver.deployContract({
     contract: EthereumEventConfiguration,
     constructorParams: {
@@ -199,11 +206,11 @@ const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
   }, locklift.utils.convertCrystal(1, 'nano'));
 
   await logContract(ethereumEventConfiguration);
-  
+
   const proxy = await locklift.giver.deployContract({
-    contract: ProxyMockup,
+    contract: Proxy,
     constructorParams: {
-      _configuration: ethereumEventConfiguration.address,
+      owner_: owner.address,
     },
     initParams: {
       _randomNonce,
@@ -212,9 +219,28 @@ const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
   }, locklift.utils.convertCrystal(1, 'nano'));
 
   await logContract(proxy);
-  
+
+  const proxyConfiguration = {
+    tonConfiguration:  locklift.utils.zeroAddress,
+    ethereumConfigurations: [ethereumEventConfiguration.address],
+    outdatedTokenRoots: [],
+    tokenRoot: tokenRoot.address,
+    rootTunnel: tokenRoot.address,
+    settingsDeployWalletGrams: locklift.utils.convertCrystal(0.1, 'nano')
+  }
+
+  await owner.runTarget({
+    contract: proxy,
+    method: 'setConfiguration',
+    params: {
+      _config: proxyConfiguration,
+      gasBackAddress: owner.address
+    },
+    value: locklift.utils.convertCrystal(0.5, 'nano')
+  });
+
   const Account = await locklift.factory.getAccount('Wallet');
-  
+
   const initializer = await locklift.giver.deployContract({
     contract: Account,
     constructorParams: {},
@@ -223,30 +249,116 @@ const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
     },
     keyPair,
   }, locklift.utils.convertCrystal(10, 'nano'));
-  
+
   initializer.setKeyPair(keyPair);
   initializer.afterRun = afterRun;
   initializer.name = 'Event initializer';
-  
+
   await logContract(initializer);
-  
+
   return [ethereumEventConfiguration, proxy, initializer];
 };
 
+const setupTokenRootWithWallet = async (rootOwner, walletOwner, mintAmount) => {
+  const RootToken = await locklift.factory.getContract('RootTokenContract', TOKEN_PATH);
+  const tokenWallet = await locklift.factory.getContract('TONTokenWallet', TOKEN_PATH);
+  const [keyPair] = await locklift.keys.getKeyPairs();
+
+  const root = await locklift.giver.deployContract({
+    contract: RootToken,
+    constructorParams: {
+      root_public_key_: `0x${keyPair.public}`,
+      root_owner_address_: locklift.utils.zeroAddress
+    },
+    initParams: {
+      name: Buffer.from('TKN').toString('hex'),
+      symbol: Buffer.from('TKN').toString('hex'),
+      decimals: 9,
+      wallet_code: tokenWallet.code,
+      _randomNonce: locklift.utils.getRandomNonce(),
+    },
+    keyPair,
+  }, locklift.utils.convertCrystal(2, 'nano'));
+  root.afterRun = afterRun;
+  root.setKeyPair(keyPair);
+
+  const tx = await root.run({
+    method: 'deployWallet',
+    params: {
+      deploy_grams: locklift.utils.convertCrystal(1, 'nano'),
+      wallet_public_key_: 0,
+      owner_address_: walletOwner,
+      gas_back_address: root.address,
+      tokens: mintAmount
+    },
+  });
+  tokenWallet.setAddress(tx.decoded.output.value0);
+  tokenWallet.afterRun = afterRun;
+
+  await root.run({
+    method: 'transferOwner',
+    params: {
+      root_public_key_: 0,
+      root_owner_address_: rootOwner
+    }
+  });
+
+  await logContract(root);
+
+  return [root, tokenWallet];
+}
 
 const setupTonEventConfiguration = async (owner, staking, cellEncoder) => {
   const TonEventConfiguration = await locklift.factory.getContract('TonEventConfiguration');
   const TonEvent = await locklift.factory.getContract('TonEvent');
-  
+
+  const _randomNonce = locklift.utils.getRandomNonce();
   const [keyPair] = await locklift.keys.getKeyPairs();
-  
+
+  const Proxy = await locklift.factory.getContract('ProxyTokenTransfer');
+
+  const {
+    address: proxyFutureAddress
+  } = await locklift.ton.createDeployMessage({
+    contract: Proxy,
+    constructorParams: {
+      owner_: owner.address,
+    },
+    initParams: {
+      _randomNonce,
+    },
+    keyPair
+  });
+
+  const Account = await locklift.factory.getAccount('Wallet');
+
+  const initializer = await locklift.giver.deployContract({
+    contract: Account,
+    keyPair,
+    constructorParams: {},
+    initParams: {
+      _randomNonce: locklift.utils.getRandomNonce(),
+    },
+  }, locklift.utils.convertCrystal(6, 'nano'));
+
+  initializer.setKeyPair(keyPair);
+  initializer.afterRun = afterRun;
+  initializer.name = 'Event initializer';
+
+  await logContract(initializer);
+
+  const [tokenRoot, initializerWallet] = await setupTokenRootWithWallet(
+    proxyFutureAddress,
+    initializer.address,
+    locklift.utils.convertCrystal('100', 'nano')
+  );
+
   const configurationMeta = await cellEncoder.call({
     method: 'encodeConfigurationMeta',
     params: {
-      rootToken: locklift.utils.zeroAddress,
+      rootToken: tokenRoot.address,
     }
   });
-  
   const tonEventConfiguration = await locklift.giver.deployContract({
     contract: TonEventConfiguration,
     constructorParams: {
@@ -262,7 +374,7 @@ const setupTonEventConfiguration = async (owner, staking, cellEncoder) => {
         chainId: 1,
       },
       networkConfiguration: {
-        eventEmitter: locklift.utils.zeroAddress,
+        eventEmitter: proxyFutureAddress,
         proxy: new BigNumber(0),
         startTimestamp: 0,
         endTimestamp: 0,
@@ -270,29 +382,78 @@ const setupTonEventConfiguration = async (owner, staking, cellEncoder) => {
     },
     keyPair
   }, locklift.utils.convertCrystal(1, 'nano'));
-  
+
   await logContract(tonEventConfiguration);
-  
-  const Account = await locklift.factory.getAccount('Wallet');
-  
-  const initializer = await locklift.giver.deployContract({
-    contract: Account,
-    keyPair,
-    constructorParams: {},
-    initParams: {
-      _randomNonce: locklift.utils.getRandomNonce(),
+
+  const proxy = await locklift.giver.deployContract({
+    contract: Proxy,
+    constructorParams: {
+      owner_: owner.address,
     },
-  }, locklift.utils.convertCrystal(5, 'nano'));
-  
-  initializer.setKeyPair(keyPair);
-  initializer.afterRun = afterRun;
-  initializer.name = 'Event initializer';
-  
-  await logContract(initializer);
-  
-  return [tonEventConfiguration, initializer];
+    initParams: {
+      _randomNonce,
+    },
+    keyPair
+  }, locklift.utils.convertCrystal(1, 'nano'));
+
+  await logContract(proxy);
+
+  const proxyConfiguration = {
+    tonConfiguration: tonEventConfiguration.address,
+    ethereumConfigurations: [],
+    outdatedTokenRoots: [],
+    tokenRoot: tokenRoot.address,
+    rootTunnel: tokenRoot.address,
+    settingsDeployWalletGrams: locklift.utils.convertCrystal(0.1, 'nano')
+  }
+
+  await owner.runTarget({
+    contract: proxy,
+    method: 'setConfiguration',
+    params: {
+      _config: proxyConfiguration,
+      gasBackAddress: owner.address
+    },
+    value: locklift.utils.convertCrystal(0.5, 'nano')
+  });
+
+  return [tonEventConfiguration, proxy, initializer];
 };
 
+const getTokenWalletByAddress = async (walletOwner, rootAddress) => {
+  const tokenRoot = await locklift.factory.getContract('RootTokenContract', TOKEN_PATH);
+  tokenRoot.setAddress(rootAddress);
+  const walletAddress = await tokenRoot.call({
+    method: 'getWalletAddress', params: {
+      wallet_public_key_: 0,
+      owner_address_: walletOwner
+    }
+  });
+  const tokenWallet = await locklift.factory.getContract('TONTokenWallet', TOKEN_PATH);
+  tokenWallet.setAddress(walletAddress);
+  tokenWallet.afterRun = afterRun;
+  return tokenWallet;
+}
+
+const extractTonEventAddress = async (tx) => {
+  const result = await locklift.ton.client.net.query_collection({
+    collection: 'messages',
+    filter: {
+      id: {eq: tx.transaction.out_msgs[0]},
+    },
+    result: 'dst_transaction{out_messages{' +
+      'dst_transaction{out_messages{' +
+      'dst_transaction{out_messages{' +
+      'dst_transaction{out_messages{' +
+      'id dst' +
+      '}}}}}}}}'
+  });
+  return result.result[0]
+    .dst_transaction.out_messages[0]
+    .dst_transaction.out_messages[0]
+    .dst_transaction.out_messages[0]
+    .dst_transaction.out_messages[0].dst;
+}
 
 const setupRelays = async (amount=20) => {
   return Promise.all(_
@@ -315,17 +476,17 @@ const enableEventConfiguration = async (bridgeOwner, bridge, eventConfiguration)
     },
     value: locklift.utils.convertCrystal(4, 'nano')
   });
-  
+
   const connectorAddress = await bridge.call({
     method: 'deriveConnectorAddress',
     params: {
       id: connectorId
     }
   });
-  
+
   const connector = await locklift.factory.getContract('Connector');
   connector.setAddress(connectorAddress);
-  
+
   await bridgeOwner.runTarget({
     contract: connector,
     method: 'enable',
@@ -338,7 +499,7 @@ const captureConnectors = async (bridge) => {
   const connectorCounter = await bridge.call({
     method: 'connectorCounter',
   });
-  
+
   const configurations = await Promise.all(_.range(connectorCounter).map(async (connectorId) => {
     const connectorAddress = await bridge.call({
       method: 'deriveConnectorAddress',
@@ -354,7 +515,7 @@ const captureConnectors = async (bridge) => {
       method: 'getDetails'
     });
   }));
-  
+
   return configurations.reduce((acc, configuration) => {
     return {
       ...acc,
@@ -373,7 +534,10 @@ module.exports = {
   MetricManager,
   enableEventConfiguration,
   captureConnectors,
+  getTokenWalletByAddress,
+  extractTonEventAddress,
   afterRun,
   logger,
   expect,
+  TOKEN_PATH
 };

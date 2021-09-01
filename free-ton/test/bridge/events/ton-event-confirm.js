@@ -1,3 +1,4 @@
+const BigNumber = require("bignumber.js");
 const {
   setupBridge,
   setupTonEventConfiguration,
@@ -8,6 +9,8 @@ const {
   afterRun,
   logger,
   expect,
+  getTokenWalletByAddress,
+  extractTonEventAddress,
 } = require('../../utils');
 
 
@@ -15,10 +18,11 @@ describe('Test ton event confirm', async function() {
   this.timeout(10000000);
   
   let bridge, bridgeOwner, staking, cellEncoder;
-  let tonEventConfiguration, initializer;
+  let tonEventConfiguration, proxy, initializer;
   let relays;
   let metricManager;
-  
+  let initializerTokenWallet;
+
   afterEach(async function() {
     const lastCheckPoint = metricManager.lastCheckPointName();
     const currentName = this.currentTest.title;
@@ -41,7 +45,7 @@ describe('Test ton event confirm', async function() {
 
     [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
   
-    [tonEventConfiguration, initializer] = await setupTonEventConfiguration(
+    [tonEventConfiguration, proxy, initializer] = await setupTonEventConfiguration(
       bridgeOwner,
       staking,
       cellEncoder,
@@ -77,47 +81,40 @@ describe('Test ton event confirm', async function() {
     });
   });
   
-  let eventContract, eventVoteData;
+  let eventContract, tonEventParams, tonEventValue, burnPayload;
   
   describe('Initialize event', async () => {
-    const eventDataStructure = {
-      wid: 0,
-      addr: 111,
-      tokens: 100,
-      ethereum_address: 222,
-    };
-  
-    it('Setup event data', async () => {
-      const eventData = await cellEncoder.call({
-        method: 'encodeTonEventData',
-        params: eventDataStructure
-      });
+    tonEventValue = 444;
+    tonEventParams = {
+      ethereumAddress: 222,
+      chainId: 333,
+      fillPremium: 1234
+    }
 
-      eventVoteData = {
-        eventTransactionLt: 222,
-        eventTimestamp: 333,
-        eventIndex: 444,
-        eventData,
-      };
+    it('Setup event data', async () => {
+      initializerTokenWallet = await getTokenWalletByAddress(initializer.address, await proxy.call({method: 'getTokenRoot'}));
+      initializerTokenWallet.name = 'Initializer TokenWallet'
+      burnPayload = await cellEncoder.call({
+        method: 'encodeBurnPayload',
+        params: tonEventParams
+      });
     });
   
     it('Initialize event', async () => {
       const tx = await initializer.runTarget({
-        contract: tonEventConfiguration,
-        method: 'deployEvent',
+        contract: initializerTokenWallet,
+        method: 'burnByOwner',
         params: {
-          eventVoteData,
+          tokens: tonEventValue,
+          grams: 0,
+          send_gas_to: initializer.address,
+          callback_address: proxy.address,
+          callback_payload: burnPayload
         },
-        value: locklift.utils.convertCrystal(3, 'nano')
+        value: locklift.utils.convertCrystal(4, 'nano')
       });
-  
-      const expectedEventContract = await tonEventConfiguration.call({
-        method: 'deriveEventAddress',
-        params: {
-          eventVoteData,
-        }
-      });
-  
+      const expectedEventContract = await extractTonEventAddress(tx);
+
       logger.log(`Expected event address: ${expectedEventContract}`);
   
       eventContract = await locklift.factory.getContract('TonEvent');
@@ -131,18 +128,6 @@ describe('Test ton event confirm', async function() {
       const details = await eventContract.call({
         method: 'getDetails'
       });
-      
-      expect(details._eventInitData.voteData.eventTransactionLt)
-        .to.be.bignumber.equal(eventVoteData.eventTransactionLt, 'Wrong event transaction LT');
-
-      expect(details._eventInitData.voteData.eventTimestamp)
-        .to.be.bignumber.equal(eventVoteData.eventTimestamp, 'Wrong event timestamp');
-
-      expect(details._eventInitData.voteData.eventIndex)
-        .to.be.bignumber.equal(eventVoteData.eventIndex, 'Wrong event index');
-
-      expect(details._eventInitData.voteData.eventData)
-        .to.be.equal(eventVoteData.eventData, 'Wrong event data');
 
       expect(details._eventInitData.configuration)
         .to.be.equal(tonEventConfiguration.address, 'Wrong event configuration');
@@ -150,17 +135,17 @@ describe('Test ton event confirm', async function() {
       expect(details._status)
         .to.be.bignumber.equal(1, 'Wrong status');
 
-      expect(details.confirms)
+      expect(details._confirms)
         .to.have.lengthOf(0, 'Wrong amount of confirmations');
 
       expect(details._signatures)
         .to.have.lengthOf(0, 'Wrong amount of signatures');
 
-      expect(details.rejects)
+      expect(details._rejects)
         .to.have.lengthOf(0, 'Wrong amount of rejects');
   
       expect(details._initializer)
-        .to.be.equal(initializer.address, 'Wrong initializer');
+        .to.be.equal(proxy.address, 'Wrong initializer');
     });
   
     it('Check event round relays', async () => {
@@ -186,19 +171,28 @@ describe('Test ton event confirm', async function() {
       const data = await eventContract.call({ method: 'getDecodedData' });
 
       expect(data.rootToken)
-        .to.be.equal(locklift.utils.zeroAddress, 'Wrong root token');
+        .to.be.equal(await proxy.call({method: 'getTokenRoot'}), 'Wrong root token');
+
+      expect(data.owner_address)
+        .to.be.equal(initializer.address, 'Wrong owner address');
 
       expect(data.wid)
-        .to.be.bignumber.equal(eventDataStructure.wid, 'Wrong wid');
+        .to.be.bignumber.equal(initializer.address.split(':')[0], 'Wrong wid');
 
       expect(data.addr)
-        .to.be.bignumber.equal(eventDataStructure.addr, 'Wrong address');
+        .to.be.bignumber.equal(new BigNumber(initializer.address.split(':')[1], 16), 'Wrong address');
 
       expect(data.tokens)
-        .to.be.bignumber.equal(eventDataStructure.tokens, 'Wrong amount of tokens');
+        .to.be.bignumber.equal(tonEventValue, 'Wrong amount of tokens');
 
       expect(data.ethereum_address)
-        .to.be.bignumber.equal(eventDataStructure.ethereum_address, 'Wrong ethereum address');
+        .to.be.bignumber.equal(tonEventParams.ethereumAddress, 'Wrong ethereum address');
+
+      expect(data.chainId)
+        .to.be.bignumber.equal(tonEventParams.chainId, 'Wrong chain id');
+
+      expect(data.fillPremium)
+        .to.be.bignumber.equal(tonEventParams.fillPremium, 'Wrong fill premium value');
     });
   });
   
@@ -238,13 +232,13 @@ describe('Test ton event confirm', async function() {
       expect(details._status)
         .to.be.bignumber.equal(2, 'Wrong status');
 
-      expect(details.confirms)
+      expect(details._confirms)
         .to.have.lengthOf(requiredVotes, 'Wrong amount of relays confirmations');
 
       expect(details._signatures)
         .to.have.lengthOf(requiredVotes, 'Wrong amount of signatures');
 
-      expect(details.rejects)
+      expect(details._rejects)
         .to.have.lengthOf(0, 'Wrong amount of relays rejects');
     });
     
@@ -279,13 +273,13 @@ describe('Test ton event confirm', async function() {
       expect(details._status)
         .to.be.bignumber.equal(2, 'Wrong status');
   
-      expect(details.confirms)
+      expect(details._confirms)
         .to.have.lengthOf(relays.length, 'Wrong amount of relays confirmations');
   
       expect(details._signatures)
         .to.have.lengthOf(relays.length, 'Wrong amount of signatures');
   
-      expect(details.rejects)
+      expect(details._rejects)
         .to.have.lengthOf(0, 'Wrong amount of relays rejects');
     });
     

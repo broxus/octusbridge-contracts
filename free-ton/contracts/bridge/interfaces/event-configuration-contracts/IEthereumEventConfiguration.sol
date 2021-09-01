@@ -1,4 +1,4 @@
-pragma ton-solidity ^0.39.0;
+pragma ton-solidity >= 0.39.0;
 
 import "./IBasicEventConfiguration.sol";
 import "./../event-contracts/IEthereumEvent.sol";

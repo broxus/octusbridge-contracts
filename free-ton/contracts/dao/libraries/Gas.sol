@@ -1,4 +1,4 @@
-pragma ton-solidity ^0.39.0;
+pragma ton-solidity >= 0.39.0;
 
 library Gas {
     uint128 constant DEPLOY_PROPOSAL_VALUE = 2 ton;

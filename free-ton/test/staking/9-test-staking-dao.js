@@ -167,7 +167,10 @@ describe('Test DAO in Staking', async function () {
     const stakingRootDeployer = await locklift.giver.deployContract({
       contract: StakingRootDeployer,
       constructorParams: {},
-      keyPair: keyPairs[0],
+      initParams: {
+        nonce: getRandomNonce()
+      },
+      keyPair: keyPairs[0]
     }, locklift.utils.convertCrystal(10, 'nano'));
     const UserData = await locklift.factory.getContract('UserData');
     const Election = await locklift.factory.getContract('Election');

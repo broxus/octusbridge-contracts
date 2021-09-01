@@ -1,4 +1,4 @@
-pragma ton-solidity ^0.39.0;
+pragma ton-solidity >= 0.39.0;
 pragma AbiHeader expire;
 
 
@@ -23,6 +23,7 @@ library ErrorCodes {
     uint16 constant TOO_LOW_END_BLOCK_NUMBER = 2217;
     uint16 constant END_TIMESTAMP_ALREADY_SET = 2218;
     uint16 constant END_BLOCK_NUMBER_ALREADY_SET = 2219;
+    uint16 constant SENDER_IS_NOT_EVENT_EMITTER = 2220;
 
     // Event contract
     uint16 constant EVENT_NOT_PENDING = 2312;
@@ -35,6 +36,7 @@ library ErrorCodes {
     uint16 constant SENDER_NOT_INITIALIZER = 2319;
     uint16 constant EVENT_PENDING = 2320;
     uint16 constant EVENT_NOT_INITIALIZING = 2321;
+    uint16 constant SENDER_IS_NOT_EVENT_OWNER = 2322;
 
     // Connector
     uint16 constant DEPLOYER_NOT_BRIDGE = 2420;
@@ -90,4 +92,12 @@ library ErrorCodes {
     uint16 constant PROPOSAL_IS_NOT_ACTIVE = 2606;
     uint16 constant OLD_VERSION = 2607;
     uint16 constant WRONG_PROPOSAL_STATE = 2608;
+
+    // Proxy Token Transfer
+    uint16 constant NOT_ETHEREUM_CONFIG = 2701;
+    uint16 constant PROXY_PAUSED = 2702;
+    uint16 constant PROXY_TOKEN_ROOT_IS_EMPTY = 2703;
+    uint16 constant WRONG_TOKENS_AMOUNT_IN_PAYLOAD = 2704;
+    uint16 constant WRONG_OWNER_IN_PAYLOAD = 2705;
+
 }

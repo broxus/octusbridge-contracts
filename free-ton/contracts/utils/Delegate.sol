@@ -1,4 +1,4 @@
-pragma ton-solidity ^0.39.0;
+pragma ton-solidity >= 0.39.0;
 
 abstract contract Delegate {
     uint16 constant DELEGATE_NOT_FOUND = 1201;
