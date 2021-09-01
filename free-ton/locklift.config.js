@@ -1,9 +1,9 @@
 module.exports = {
   compiler: {
-    path: '/usr/bin/solc-ton-broxus',
+    path: '/usr/bin/solc-ton-tonlabs-064c5a4',
   },
   linker: {
-    path: '/usr/bin/tvm_linker',
+    path: '/usr/bin/tvm_linker-cd1b33d',
   },
   networks: {
     local: {
