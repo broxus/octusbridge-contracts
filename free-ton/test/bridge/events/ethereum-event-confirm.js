@@ -8,6 +8,7 @@ const {
   afterRun,
   logger,
   expect,
+  getTokenWalletByAddress,
 } = require('../../utils');
 
 
@@ -18,7 +19,8 @@ describe('Test ethereum event confirm', async function() {
   let ethereumEventConfiguration, proxy, initializer;
   let relays;
   let metricManager;
-  
+  let initializerTokenWallet;
+
   afterEach(async function() {
     const lastCheckPoint = metricManager.lastCheckPointName();
     const currentName = this.currentTest.title;
@@ -46,7 +48,10 @@ describe('Test ethereum event confirm', async function() {
       staking,
       cellEncoder,
     );
-    
+
+    initializerTokenWallet = await getTokenWalletByAddress(initializer.address, await proxy.call({method: 'getTokenRoot'}));
+    initializerTokenWallet.name = 'Initializer TokenWallet'
+
     metricManager = new MetricManager(
       bridge, bridgeOwner, staking,
       ethereumEventConfiguration, proxy, initializer
@@ -76,17 +81,18 @@ describe('Test ethereum event confirm', async function() {
     });
   });
   
-  let eventContract, eventVoteData;
+  let eventContract, eventVoteData, eventDataStructure;
   
   describe('Initialize event', async () => {
-    const eventDataStructure = {
+    eventDataStructure = {
       tokens: 100,
       wid: 0,
-      owner_addr: 111,
-      owner_pubkey: 222,
+      owner_addr: 0,
+      owner_pubkey: 0,
     };
 
     it('Setup event data', async () => {
+      eventDataStructure.owner_addr = initializer.address.replace('0:', '0x');
       const eventData = await cellEncoder.call({
         method: 'encodeEthereumEventData',
         params: eventDataStructure
@@ -158,10 +164,10 @@ describe('Test ethereum event confirm', async function() {
       expect(details._status)
         .to.be.bignumber.equal(1, 'Wrong status');
 
-      expect(details.confirms)
+      expect(details._confirms)
         .to.have.lengthOf(0, 'Wrong amount of relays confirmations');
 
-      expect(details.rejects)
+      expect(details._rejects)
         .to.have.lengthOf(0, 'Wrong amount of relays rejects');
 
       expect(details._initializer)
@@ -212,16 +218,17 @@ describe('Test ethereum event confirm', async function() {
       const requiredVotes = await eventContract.call({
         method: 'requiredVotes',
       });
-
+      const confirmations = []
       for (const [relayId, relay] of Object.entries(relays.slice(0, requiredVotes))) {
         logger.log(`Confirm #${relayId} from ${relay.public}`);
 
-        await eventContract.run({
+        confirmations.push(eventContract.run({
           method: 'confirm',
           params: {},
           keyPair: relay
-        });
+        }));
       }
+      await Promise.all(confirmations);
     });
 
     it('Check event confirmed', async () => {
@@ -239,20 +246,16 @@ describe('Test ethereum event confirm', async function() {
       expect(details._status)
         .to.be.bignumber.equal(2, 'Wrong status');
 
-      expect(details.confirms)
+      expect(details._confirms)
         .to.have.lengthOf(requiredVotes, 'Wrong amount of relays confirmations');
 
-      expect(details.rejects)
+      expect(details._rejects)
         .to.have.lengthOf(0, 'Wrong amount of relays rejects');
     });
 
-    it('Check event proxy received callback', async () => {
-      const details = await proxy.call({
-        method: 'getDetails'
-      });
-
-      expect(details._callbackCounter)
-        .to.be.bignumber.equal(1, 'Wrong callback counter');
+    it('Check event proxy minted tokens', async () => {
+      expect(await initializerTokenWallet.call({method: 'balance'}))
+        .to.be.bignumber.equal(eventDataStructure.tokens, 'Wrong initializerTokenWallet balance');
     });
   });
 });

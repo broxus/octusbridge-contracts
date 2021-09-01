@@ -161,10 +161,10 @@ describe('Test ethereum event reject', async function() {
       expect(details._status)
         .to.be.bignumber.equal(3, 'Wrong status');
 
-      expect(details.confirms)
+      expect(details._confirms)
         .to.have.lengthOf(0, 'Wrong amount of confirmations');
   
-      expect(details.rejects)
+      expect(details._rejects)
         .to.have.lengthOf(requiredVotes, 'Wrong amount of relays confirmations');
     });
   });

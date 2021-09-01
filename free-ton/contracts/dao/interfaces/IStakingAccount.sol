@@ -1,4 +1,4 @@
-pragma ton-solidity ^0.39.0;
+pragma ton-solidity >= 0.39.0;
 
 interface IStakingAccount {
     function propose(TvmCell proposal_data, uint128 threshold) external;

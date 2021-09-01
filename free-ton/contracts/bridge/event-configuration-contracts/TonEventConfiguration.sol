@@ -1,4 +1,4 @@
-pragma ton-solidity ^0.39.0;
+pragma ton-solidity >= 0.39.0;
 pragma AbiHeader expire;
 
 
@@ -72,7 +72,8 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
     /// @param eventVoteData Event vote data
     function deployEvent(
         ITonEvent.TonEventVoteData eventVoteData
-    ) override external reserveBalance returns(address eventEmitter) {
+    ) override external reserveBalance returns(address eventContract) {
+        require(msg.sender == networkConfiguration.eventEmitter, ErrorCodes.SENDER_IS_NOT_EVENT_EMITTER);
         require(msg.value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
         require(
             eventVoteData.eventTimestamp >= networkConfiguration.startTimestamp,
@@ -89,7 +90,7 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
 
         ITonEvent.TonEventInitData eventInitData = buildEventInitData(eventVoteData);
 
-        eventEmitter = new TonEvent{
+        eventContract = new TonEvent{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED,
             code: basicConfiguration.eventCode,
