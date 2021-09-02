@@ -1,4 +1,4 @@
-pragma ton-solidity ^0.39.0;
+pragma ton-solidity >= 0.39.0;
 
 
 /*
@@ -62,7 +62,9 @@ contract CellEncoder {
         int8 wid,
         uint addr,
         uint128 tokens,
-        uint160 ethereum_address
+        uint160 ethereum_address,
+        uint32 chainId,
+        uint128 fillPremium
     ) public pure returns(
         TvmCell data
     ) {
@@ -70,7 +72,7 @@ contract CellEncoder {
 
         uint32 zero_event_id = 0;
 
-        builder.store(zero_event_id, wid, addr, tokens, ethereum_address);
+        builder.store(zero_event_id, wid, addr, tokens, ethereum_address, chainId, fillPremium);
 
         data = builder.toCell();
     }
@@ -81,14 +83,42 @@ contract CellEncoder {
         int8 wid,
         uint addr,
         uint128 tokens,
-        uint160 ethereum_address
+        uint160 ethereum_address,
+        uint32 chainId,
+        uint128 fillPremium
     ) {
         (
             , // event_id
             wid,
             addr,
             tokens,
-            ethereum_address
-        ) = data.toSlice().decode(uint32, int8, uint, uint128, uint160);
+            ethereum_address,
+            chainId,
+            fillPremium
+        ) = data.toSlice().decode(uint32, int8, uint, uint128, uint160, uint32, uint128);
+    }
+
+    function encodeBurnPayload(
+        uint160 ethereumAddress,
+        uint32 chainId,
+        uint128 fillPremium
+    ) public pure returns(
+        TvmCell data
+    ) {
+        TvmBuilder builder;
+
+        builder.store(ethereumAddress, chainId, fillPremium);
+
+        data = builder.toCell();
+    }
+
+    function decodeBurnPayload(
+        TvmCell data
+    ) public pure returns(
+        uint160 ethereumAddress,
+        uint32 chainId,
+        uint128 fillPremium
+    ) {
+        (ethereumAddress, chainId, fillPremium) = data.toSlice().decode(uint160, uint32, uint128);
     }
 }

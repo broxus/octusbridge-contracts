@@ -1,4 +1,4 @@
-pragma ton-solidity ^0.39.0;
+pragma ton-solidity >= 0.39.0;
 
 interface IStakingDao {
     function castVote(uint32 proposal_id, bool support) external view;

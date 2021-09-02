@@ -1,9 +1,9 @@
-pragma ton-solidity ^0.39.0;
+pragma ton-solidity >= 0.39.0;
 
 import "./IBasicEvent.sol";
 
 
-interface IEthereumEvent is IBasicEvent {
+interface IEthereumEvent {
     struct EthereumEventVoteData {
         uint eventTransaction;
         uint32 eventIndex;
