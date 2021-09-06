@@ -11,22 +11,40 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "./utils/Cache.sol";
 import "./utils/ChainId.sol";
 
-/*
-    @title DAO contract for Broxus TON-Ethereum bridge
-    Executes proposals confirmed in TON DAO. Owns itself.
-*/
+
+/// @title DAO contract for Broxus TON-Ethereum bridge
+/// @dev Executes proposals confirmed in TON DAO.
+/// Proposals are submitted in form of payloads and signatures
 contract DAO is IDAO, ReentrancyGuard, OwnableUpgradeable, Cache, ChainId {
     address public bridge;
+    IBridge.TONAddress public configuration;
 
-    /// @dev Initializer
-    /// @param _bridge Bridge address
+    /**
+        @notice
+            Initializer
+        @param _owner DAO owner. Should be used only for initial set up,
+            than ownership should be transferred to DAO itself.
+        @param _bridge Bridge address
+    */
     function initialize(
+        address _owner,
         address _bridge
     ) public initializer {
         bridge = _bridge;
 
         __Ownable_init();
-        transferOwnership(address(this));
+        transferOwnership(_owner);
+    }
+
+    /**
+        @notice
+            Update address of the TON configuration, that emits actions for this DAO
+        @param _configuration New configuration TON address
+    */
+    function updateConfiguration(
+        IBridge.TONAddress calldata _configuration
+    ) public onlyOwner {
+        configuration = _configuration;
     }
 
     /// @dev Update bridge address
@@ -37,29 +55,40 @@ contract DAO is IDAO, ReentrancyGuard, OwnableUpgradeable, Cache, ChainId {
         bridge = _bridge;
     }
 
-    /// @dev Execute signed payload
-    /// @param payload Encoded TON event with payload details
-    /// @param signatures Payload signatures
+    /**
+        @notice
+            Execute set of actions.
+        @dev
+
+        @param payload Encoded TON event with payload details
+        @param signatures Payload signatures
+        @return responses Bytes-encoded payload action responses
+    */
     function execute(
         bytes calldata payload,
         bytes[] calldata signatures
     ) override external nonReentrant notCached(payload) returns(
         bytes[] memory responses
     ) {
-        (IBridge.TONEvent memory tonEvent) = abi.decode(payload, (IBridge.TONEvent));
-
         require(
-            IBridge(bridge).verifyRelaySignatures(
-                tonEvent.round,
+            IBridge(bridge).verifySignedTonEvent(
                 payload,
                 signatures
-            ),
+            ) == 0,
             "DAO: signatures verification failed"
         );
+
+        (IBridge.TONEvent memory tonEvent) = abi.decode(payload, (IBridge.TONEvent));
 
         require(
             tonEvent.proxy == address(this),
             "DAO: wrong event proxy"
+        );
+
+        require(
+            tonEvent.configurationWid == configuration.wid &&
+            tonEvent.configurationAddress == configuration.addr,
+            "DAO: wrong event configuration"
         );
 
         (uint32 chainId, EthAction[] memory actions) = abi.decode(

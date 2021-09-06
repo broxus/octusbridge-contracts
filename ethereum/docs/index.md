@@ -85,7 +85,7 @@ No description
 - [`setConfiguration(struct IBridge.BridgeConfiguration _configuration)`](#IBridge-setConfiguration-struct-IBridge-BridgeConfiguration-)
 
 ## Events:
-- [`RoundRelayGranted(uint32 round, address relay)`](#IBridge-RoundRelayGranted-uint32-address-)
+- [`RoundRelay(uint32 round, address relay)`](#IBridge-RoundRelay-uint32-address-)
 - [`ConfigurationUpdate(struct IBridge.BridgeConfiguration configuration)`](#IBridge-ConfigurationUpdate-struct-IBridge-BridgeConfiguration-)
 
 ### Function `isRelay(uint32 round, address candidate) → bool` {#IBridge-isRelay-uint32-address-}
@@ -101,7 +101,7 @@ No description
 ### Function `setConfiguration(struct IBridge.BridgeConfiguration _configuration)` {#IBridge-setConfiguration-struct-IBridge-BridgeConfiguration-}
 No description
 
-## Event `RoundRelayGranted(uint32 round, address relay)` {#IBridge-RoundRelayGranted-uint32-address-}
+## Event `RoundRelay(uint32 round, address relay)` {#IBridge-RoundRelay-uint32-address-}
 Relay permission granted
 
 ### Parameters:
