@@ -82,6 +82,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         address connector
     ) {
         require(msg.value >= bridgeConfiguration.connectorDeployValue, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
+        require(_eventConfiguration.wid == 0, ErrorCodes.IS_NOT_BASE_CHAIN);
 
         emit ConnectorDeployed(connectorCounter, connector, _eventConfiguration);
 
