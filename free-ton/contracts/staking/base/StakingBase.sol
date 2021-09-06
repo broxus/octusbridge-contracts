@@ -47,8 +47,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     event DepositReverted(address user, uint128 amount);
 
     event DaoRootUpdated(address new_dao_root);
-    event BridgeEventConfigUpdated(address new_bridge_event_config);
-    event BridgeEventProxyUpdated(address new_bridge_event_proxy);
+    event BridgeEventEthTonConfigUpdated(address new_bridge_event_config_eth_ton);
+    event BridgeEventTonEthConfigUpdated(address new_bridge_event_config_ton_eth);
     event AdminUpdated(address new_admin);
     event RewarderUpdated(address new_rewarder);
 
@@ -92,7 +92,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     address bridge_event_config;
 
-    address bridge_event_proxy;
+    address bridge_event_config_ton_eth;
 
     bool active;
 
@@ -165,7 +165,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     function getDetails() public view responsible returns (BaseDetails) {
         return{ value: 0, flag: MsgFlag.REMAINING_GAS }BaseDetails(
-            dao_root, bridge_event_config, bridge_event_proxy, tokenRoot, tokenWallet,
+            dao_root, bridge_event_config, bridge_event_config_ton_eth, tokenRoot, tokenWallet,
             admin, rewarder, tokenBalance, rewardTokenBalance,
             rewardPerSecond, lastRewardTime, rewardRounds
         );
@@ -216,17 +216,17 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
-    function setBridgeEventConfig(address new_bridge_event_config, address send_gas_to) external onlyAdmin {
+    function setBridgeEventEthTonConfig(address new_bridge_event_config_eth_ton, address send_gas_to) external onlyAdmin {
         tvm.rawReserve(_reserve(), 2);
-        emit BridgeEventConfigUpdated(new_bridge_event_config);
-        bridge_event_config = new_bridge_event_config;
+        emit BridgeEventEthTonConfigUpdated(new_bridge_event_config_eth_ton);
+        bridge_event_config_eth_ton = new_bridge_event_config_eth_ton;
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
-    function setBridgeEventProxy(address new_bridge_event_proxy, address send_gas_to) external onlyAdmin {
+    function setBridgeEventTonEthConfig(address new_bridge_event_config_ton_eth, address send_gas_to) external onlyAdmin {
         tvm.rawReserve(_reserve(), 2);
-        emit BridgeEventProxyUpdated(new_bridge_event_proxy);
-        bridge_event_proxy = new_bridge_event_proxy;
+        emit BridgeEventTonEthConfigUpdated(new_bridge_event_config_ton_eth);
+        bridge_event_config_ton_eth = new_bridge_event_config_ton_eth;
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
@@ -251,7 +251,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
             new_active
             && dao_root.value != 0
             && bridge_event_config.value != 0
-            && bridge_event_proxy.value != 0
+            && bridge_event_config_ton_eth.value != 0
             && has_platform_code
             && user_data_version > 0
             && election_version > 0
@@ -665,8 +665,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         _;
     }
 
-    modifier onlyBridge() {
-        require (msg.sender == bridge_event_config, ErrorCodes.NOT_BRIDGE);
+    modifier onlyEthTonConfig() {
+        require (msg.sender == bridge_event_config_eth_ton, ErrorCodes.NOT_BRIDGE);
         _;
     }
 

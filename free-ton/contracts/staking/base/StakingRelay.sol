@@ -20,7 +20,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         );
     }
 
-    function confirmEthAccount(address staker_addr, uint160 eth_address, address send_gas_to) external view onlyBridge {
+    function confirmEthAccount(address staker_addr, uint160 eth_address, address send_gas_to) external view onlyEthTonConfig {
         require (msg.value >= Gas.MIN_CONFIRM_ETH_RELAY_ACC_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
 
         tvm.rawReserve(_reserve(), 2);
@@ -268,7 +268,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         event_builder.store(round_num); // 128
         event_builder.store(eth_keys); // ref
         ITonEvent.TonEventVoteData event_data = ITonEvent.TonEventVoteData(tx.timestamp, now, 0, event_builder.toCell());
-        IEventProxy(bridge_event_proxy).deployEvent{value: Gas.EVENT_DEPLOY_VALUE}(event_data);
+        IEventProxy(bridge_event_config_ton_eth).deployEvent{value: Gas.EVENT_DEPLOY_VALUE}(event_data);
 
         emit RelayRoundInitialized(round_num, now, now + relayRoundTime, msg.sender, relays_count, duplicate);
     }
