@@ -134,16 +134,17 @@ describe('Test ethereum event reject', async function() {
       const requiredVotes = await eventContract.call({
         method: 'requiredVotes',
       });
-  
+      const rejects = [];
       for (const [relayId, relay] of Object.entries(relays.slice(0, requiredVotes))) {
         logger.log(`Reject #${relayId} from ${relay.public}`);
 
-        await eventContract.run({
+        rejects.push(eventContract.run({
           method: 'reject',
           params: {},
           keyPair: relay
-        });
+        }));
       }
+      await Promise.all(rejects);
     });
 
     it('Check event rejected', async () => {
