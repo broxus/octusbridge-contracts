@@ -22,6 +22,11 @@ contract CellEncoder {
         data = builder.toCell();
     }
 
+    function decodeEthereumStakingEventData(TvmCell data) public pure returns(uint160 eth_addr, int8 wk_id, uint256 ton_addr_body) {
+        (eth_addr, wk_id, ton_addr_body) = data.toSlice().decode(uint160, int8, uint256);
+        return (eth_addr, wk_id, ton_addr_body);
+    }
+
     function decodeEthereumEventData(
         TvmCell data
     ) public pure returns(

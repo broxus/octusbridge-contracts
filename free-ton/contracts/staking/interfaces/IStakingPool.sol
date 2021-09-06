@@ -15,8 +15,8 @@ interface IStakingPool {
 
     struct BaseDetails {
         address dao_root;
-        address bridge_event_configuration;
-        address bridge_event_proxy;
+        address bridge_event_config_eth_ton;
+        address bridge_event_config_ton_eth;
         address tokenRoot;
         address tokenWallet;
         address admin;

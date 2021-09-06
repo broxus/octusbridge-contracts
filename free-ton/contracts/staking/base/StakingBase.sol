@@ -90,7 +90,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     address dao_root;
 
-    address bridge_event_config;
+    address bridge_event_config_eth_ton;
 
     address bridge_event_config_ton_eth;
 
@@ -165,7 +165,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     function getDetails() public view responsible returns (BaseDetails) {
         return{ value: 0, flag: MsgFlag.REMAINING_GAS }BaseDetails(
-            dao_root, bridge_event_config, bridge_event_config_ton_eth, tokenRoot, tokenWallet,
+            dao_root, bridge_event_config_eth_ton, bridge_event_config_ton_eth, tokenRoot, tokenWallet,
             admin, rewarder, tokenBalance, rewardTokenBalance,
             rewardPerSecond, lastRewardTime, rewardRounds
         );
@@ -250,7 +250,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         if (
             new_active
             && dao_root.value != 0
-            && bridge_event_config.value != 0
+            && bridge_event_config_eth_ton.value != 0
             && bridge_event_config_ton_eth.value != 0
             && has_platform_code
             && user_data_version > 0

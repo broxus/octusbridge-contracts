@@ -8,15 +8,15 @@ contract Staking is StakingPoolRelay {
         address _admin,
         address _dao_root,
         address _rewarder,
-        address _bridge_event_config,
-        address _bridge_event_proxy,
+        address _bridge_event_config_eth_ton,
+        address _bridge_event_config_ton_eth,
         address _tokenRoot
     ) public {
         tvm.accept();
 
         tokenRoot = _tokenRoot;
-        bridge_event_config = _bridge_event_config;
-        bridge_event_proxy = _bridge_event_proxy;
+        bridge_event_config_eth_ton = _bridge_event_config_eth_ton;
+        bridge_event_config_ton_eth = _bridge_event_config_ton_eth;
         admin = _admin;
         dao_root = _dao_root;
         rewarder = _rewarder;
