@@ -1,5 +1,5 @@
 module.exports = async ({getNamedAccounts, deployments}) => {
-  const { deployer } = await getNamedAccounts();
+  const { deployer, owner } = await getNamedAccounts();
 
   const relays = await ethers.getSigners();
   
@@ -11,15 +11,16 @@ module.exports = async ({getNamedAccounts, deployments}) => {
       execute: {
         methodName: 'initialize',
         args: [
-          deployer,
-          {
-            requiredSignatures: 5
-          },
-          relays.map(a => a.address),
+          owner,
+          5, // Minimum required signatures
+          100, // Relay TTL after round in seconds
+          0, // Initial round number
+          Math.floor(Date.now() / 1000) + 604800, // Initial round end, after 1 week
+          relays.map(a => a.address), // Initial relays
         ],
       }
     }
   });
 };
 
-module.exports.tags = ['Deploy bridge'];
+module.exports.tags = ['Deploy_Bridge'];

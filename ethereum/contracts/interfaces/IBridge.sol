@@ -4,39 +4,50 @@ pragma experimental ABIEncoderV2;
 
 
 interface IBridge {
-    struct BridgeConfiguration {
-        uint32 requiredSignatures;
-    }
-
     struct TONEvent {
-        uint256 eventTransaction;
         uint64 eventTransactionLt;
         uint32 eventTimestamp;
-        uint32 eventIndex;
         bytes eventData;
         int8 configurationWid;
         uint256 configurationAddress;
+        int8 eventContractWid;
+        uint256 eventContractAddress;
         address proxy;
         uint32 round;
     }
 
-    /// @dev Answers if specific address was relay in specific round
-    /// @param round Round id
-    /// @param candidate Address to check
-    function isRelay(uint32 round, address candidate) external view returns(bool);
+    struct Round {
+        uint32 end;
+        uint32 ttl;
+        uint32 requiredSignatures;
+    }
 
-    function isBanned(address candidate) external view returns(bool);
+    struct TONAddress {
+        int8 wid;
+        uint256 addr;
+    }
 
-    /// @dev Check that the provided signatures is correct.
-    /// @dev Checks that there are enough authorized signers for specified round
-    /// @param round Round id
-    /// @param payload Arbitrary payload
-    /// @param signatures Array of payload signatures
-    function verifyRelaySignatures(
+    function updateMinimumRequiredSignatures(uint32 _minimumRequiredSignatures) external;
+    function updateRoundRelaysConfiguration(TONAddress calldata _roundRelaysConfiguration) external;
+    function updateRoundTTL(uint32 _roundTTL) external;
+
+    function isRelay(
         uint32 round,
+        address candidate
+    ) external view returns(bool);
+
+    function isBanned(
+        address candidate
+    ) external view returns(bool);
+
+    function isRoundRotten(
+        uint32 round
+    ) external view returns(bool);
+
+    function verifySignedTonEvent(
         bytes memory payload,
         bytes[] memory signatures
-    ) external view returns(bool);
+    ) external view returns(uint32);
 
     function setRoundRelays(
         bytes calldata payload,
@@ -44,21 +55,23 @@ interface IBridge {
     ) external;
 
     function banRelays(
-        address[] calldata relays
+        address[] calldata _relays
     ) external;
 
-    function setConfiguration(BridgeConfiguration calldata _configuration) external;
+    function unbanRelays(
+        address[] calldata _relays
+    ) external;
 
-    /// @dev Relay permission granted
-    /// @param round Round id
-    /// @param relay Relay address
-    event RoundRelayGranted(uint32 indexed round, address indexed relay);
+    function pause() external;
+    function unpause() external;
 
-    /// @dev Relays banned
-    /// @param relay Relay address
-    event RelayBanned(address indexed relay);
+    event EmergencyShutdown(bool active);
 
-    /// @dev Configuration updated
-    /// @param configuration Bridge configuration
-    event ConfigurationUpdate(BridgeConfiguration configuration);
+    event UpdateMinimumRequiredSignatures(uint32 value);
+    event UpdateRoundTTL(uint32 value);
+    event UpdateRoundRelaysConfiguration(TONAddress configuration);
+
+    event NewRound(uint32 indexed round, Round meta);
+    event RoundRelay(uint32 indexed round, address indexed relay);
+    event BanRelay(address indexed relay, bool status);
 }

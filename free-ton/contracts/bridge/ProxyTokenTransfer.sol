@@ -97,16 +97,14 @@ contract ProxyTokenTransfer is
             burnedCount += tokens;
             (
                 uint160 ethereumAddress,
-                uint32 chainId,
-                uint128 fillPremium
-            ) = payload.toSlice().decode(uint160, uint32, uint128);
+                uint32 chainId
+            ) = payload.toSlice().decode(uint160, uint32);
             TvmCell eventData = encodeTonEventData(
                 sender_address.wid,
                 sender_address.value,
                 tokens,
                 ethereumAddress,
-                chainId,
-                fillPremium
+                chainId
             );
             ITonEvent.TonEventVoteData eventVoteData = ITonEvent.TonEventVoteData(tx.timestamp, now, eventData);
             ITonEventConfiguration(config.tonConfiguration).deployEvent{

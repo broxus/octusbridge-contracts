@@ -87,8 +87,7 @@ describe('Test ton event confirm', async function() {
     tonEventValue = 444;
     tonEventParams = {
       ethereumAddress: 222,
-      chainId: 333,
-      fillPremium: 1234
+      chainId: 333
     }
 
     it('Setup event data', async () => {
@@ -190,9 +189,6 @@ describe('Test ton event confirm', async function() {
 
       expect(data.chainId)
         .to.be.bignumber.equal(tonEventParams.chainId, 'Wrong chain id');
-
-      expect(data.fillPremium)
-        .to.be.bignumber.equal(tonEventParams.fillPremium, 'Wrong fill premium value');
     });
   });
   
@@ -201,11 +197,11 @@ describe('Test ton event confirm', async function() {
       const requiredVotes = await eventContract.call({
         method: 'requiredVotes',
       });
-  
+      const confirmations = [];
       for (const [relayId, relay] of Object.entries(relays.slice(0, requiredVotes))) {
         logger.log(`Confirm #${relayId} from ${relay.public}`);
 
-        await eventContract.run({
+        confirmations.push(eventContract.run({
           method: 'confirm',
           params: {
             signature: Buffer
@@ -213,7 +209,8 @@ describe('Test ton event confirm', async function() {
               .toString('hex'), // 132 symbols
           },
           keyPair: relay
-        });
+        }));
+        await Promise.all(confirmations);
       }
     });
 

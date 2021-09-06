@@ -12,6 +12,7 @@ migration-log.json
 artifacts/
 ethereum/.openzeppelin
 ethereum/cache
+ethereum/abi
 *.log
 free-ton/build
 free-ton/artifacts

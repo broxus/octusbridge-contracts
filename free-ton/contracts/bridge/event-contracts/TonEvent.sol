@@ -52,7 +52,7 @@ contract TonEvent is TonBaseEvent {
     }
 
     function getOwner() private view returns(address) {
-        (,,,,,address ownerAddress,,) = getDecodedData();
+        (,,,,,address ownerAddress,) = getDecodedData();
         return ownerAddress;
     }
 
@@ -112,8 +112,7 @@ contract TonEvent is TonBaseEvent {
         uint128 tokens,
         uint160 ethereum_address,
         address owner_address,
-        uint32 chainId,
-        uint128 fillPremium
+        uint32 chainId
     ) {
         (rootToken) = decodeConfigurationMeta(meta);
 
@@ -122,8 +121,7 @@ contract TonEvent is TonBaseEvent {
             addr,
             tokens,
             ethereum_address,
-            chainId,
-            fillPremium
+            chainId
         ) = decodeTonEventData(eventInitData.voteData.eventData);
 
         owner_address = address.makeAddrStd(wid, addr);
@@ -135,8 +133,7 @@ contract TonEvent is TonBaseEvent {
             tokens,
             ethereum_address,
             owner_address,
-            chainId,
-            fillPremium
+            chainId
         );
     }
 

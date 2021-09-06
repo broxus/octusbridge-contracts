@@ -187,7 +187,8 @@ describe('Test DAO in Staking', async function () {
         _tokenRoot: stakingToken.address,
         _dao_root: daoRoot.address,
         _rewarder: stakingOwner.address,
-        _bridge: bridge,
+        _bridge_event_config: bridge,
+        _bridge_event_proxy: bridge,
         _deploy_nonce: getRandomNonce()
       }
     })).decoded.output.value0)
@@ -295,6 +296,7 @@ describe('Test DAO in Staking', async function () {
       let ethActions = [
         {
           value: 1,
+          chainId: 2,
           target: '0x7a250d5630b4cf539739df2c5dacb4c659f2488d',
           signature: stringToBytesArray('test(uint8 a)'),
           callData: '000000000000000000000000000000000000000000000000000000000000000f'
@@ -336,10 +338,10 @@ describe('Test DAO in Staking', async function () {
           .to.be.equal(true, 'taking is not Active');
       })
       it('Check balance', async function () {
-        expect((await userDataContract0.call({method: 'token_balance'})).toString())
+        expect((await userDataContract0.call({method: 'getDetails'})).token_balance.toString())
           .to.be.equal((DEPOSIT_VALUE * 2).toString(), 'userDataContract0 wrong token_balance');
-        expect((await userDataContract1.call({method: 'token_balance'}))
-          .toString()).to.be.equal(DEPOSIT_VALUE.toString(), 'userDataContract1 wrong token_balance');
+        expect((await userDataContract1.call({method: 'getDetails'})).token_balance.toString())
+          .to.be.equal(DEPOSIT_VALUE.toString(), 'userDataContract1 wrong token_balance');
       });
       describe('Check proposal deployed correct', async function () {
         it('Check proposer', async function () {
@@ -355,7 +357,7 @@ describe('Test DAO in Staking', async function () {
           const createdProposalLockedVotes = (await userDataContract0.call({method: 'created_proposals'}))[proposalId];
           logger.log(`Current locked votes for proposal creation: ${createdProposalLockedVotes}`);
           const lockedVotes = await userDataContract0.call({method: 'lockedTokens'});
-          const totalVotes = await userDataContract0.call({method: 'token_balance'});
+          const totalVotes = (await userDataContract0.call({method: 'getDetails'})).token_balance;
           logger.log(`userDataContract0 totalVotes: ${totalVotes.toString()}`);
           logger.log(`userDataContract0 availableVotes: ${totalVotes.minus(lockedVotes).toString()}`);
           expect(createdProposalLockedVotes.toString())
@@ -394,6 +396,9 @@ describe('Test DAO in Staking', async function () {
             expect('0x' + new BigNumber(actualEthAction.target).toString(16))
               .to
               .equal(ethActions[i].target, 'Wrong EthActions target');
+           expect(actualEthAction.chainId.toString())
+              .to
+              .equal(ethActions[i].chainId.toString(), 'Wrong EthActions chainId');
             expect(actualEthAction.signature)
               .to
               .equal(ethActions[i].signature, 'Wrong EthActions signature');
@@ -417,7 +422,7 @@ describe('Test DAO in Staking', async function () {
         let castedVoteBefore;
         before('Make vote support Vote', async function () {
           castedVoteBefore = (await userDataContract0.call({method: 'casted_votes'}))[proposalId];
-          votesToCast = await userDataContract0.call({method: 'token_balance'});
+          votesToCast = (await userDataContract0.call({method: 'getDetails'})).token_balance;
           forVotesBefore = await proposal.call({method: 'forVotes'});
           againstVotesBefore = await proposal.call({method: 'againstVotes'});
           logger.log(`Account0 Cast Vote for Proposal ${proposalId}, amount: ${votesToCast.toString()}, support: True`)
@@ -458,7 +463,7 @@ describe('Test DAO in Staking', async function () {
         let againstVotesBefore;
         let castedVotesBefore;
         before('Make vote support Vote', async function () {
-          votesToCast = await userDataContract1.call({method: 'token_balance'});
+          votesToCast = (await userDataContract1.call({method: 'getDetails'})).token_balance;
           forVotesBefore = await proposal.call({method: 'forVotes'});
           againstVotesBefore = await proposal.call({method: 'againstVotes'});
           castedVotesBefore = (await userDataContract1.call({method: 'casted_votes'}))[proposalId];
@@ -555,7 +560,7 @@ describe('Test DAO in Staking', async function () {
       describe('Check unlock proposer vote tokens', async function () {
         it('Check votes amount after unlock', async function () {
           const lockedVotes = await userDataContract0.call({method: 'lockedTokens'});
-          const totalVotes = await userDataContract0.call({method: 'token_balance'});
+          const totalVotes = (await userDataContract0.call({method: 'getDetails'})).token_balance;
           logger.log(`DaoAccount0 lockedVotes: ${lockedVotes.toString()}`);
           logger.log(`DaoAccount0 totalVotes: ${totalVotes.toString()}`);
           expect(lockedVotes.toNumber())

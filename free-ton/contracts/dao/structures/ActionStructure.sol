@@ -9,6 +9,7 @@ interface ActionStructure {
 
     struct EthAction {
         uint value;
+        uint32 chainId;
         uint160 target;
         string signature;
         bytes callData;

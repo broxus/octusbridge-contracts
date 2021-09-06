@@ -17,27 +17,29 @@ describe('Test bridge update', async function() {
     [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
   });
   
-  it('Update bridge configuration', async () => {
-    const bridgeConfiguration = await bridge.call({ method: 'bridgeConfiguration' });
-
-    bridgeConfiguration.active = false;
-    bridgeConfiguration.staking = locklift.utils.zeroAddress;
-    
+  it('Update active flag', async () => {
     await bridgeOwner.runTarget({
       contract: bridge,
-      method: 'updateBridgeConfiguration',
+      method: 'updateActive',
       params: {
-        _bridgeConfiguration: bridgeConfiguration
+        _active: false
       }
     });
+    
+    expect(await bridge.call({ method: 'active' }))
+      .to.be.equal(false, 'Wrong active status');
   });
-  
-  it('Check new bridge configuration', async () => {
-    const bridgeConfiguration = await bridge.call({ method: 'bridgeConfiguration' });
 
-    expect(bridgeConfiguration.active)
-      .to.be.equal(false, 'Wrong configuration active status');
-    expect(bridgeConfiguration.staking)
-      .to.be.equal(locklift.utils.zeroAddress,'Wrong configuration staking');
+  it('Update connector deploy value', async () => {
+    await bridgeOwner.runTarget({
+      contract: bridge,
+      method: 'updateConnectorDeployValue',
+      params: {
+        _connectorDeployValue: 1
+      }
+    });
+  
+    expect(await bridge.call({ method: 'connectorDeployValue' }))
+      .to.be.bignumber.equal(1, 'Wrong connector deploy value');
   });
 });
