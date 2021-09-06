@@ -117,12 +117,9 @@ const setupBridge = async (relays) => {
     contract: Bridge,
     constructorParams: {
       _owner: owner.address,
-      _bridgeConfiguration: {
-        active: true,
-        staking: staking.address,
-        connectorCode: Connector.code,
-        connectorDeployValue: locklift.utils.convertCrystal(1, 'nano'),
-      }
+      _staking: staking.address,
+      _connectorCode: Connector.code,
+      _connectorDeployValue: locklift.utils.convertCrystal(1, 'nano'),
     },
     initParams: {
       _randomNonce: locklift.utils.getRandomNonce(),
