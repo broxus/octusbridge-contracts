@@ -27,22 +27,52 @@ import './../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.so
 /// Deploys connectors for Event Configurations.
 /// @author https://github.com/pavlovdog
 contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUtils {
-    BridgeConfiguration public bridgeConfiguration;
+    TvmCell public connectorCode;
+    uint64 public connectorDeployValue;
+    bool public active;
+    address public staking;
+
     uint64 public connectorCounter = 0;
 
     /// @param _owner Owner address
-    /// @param _bridgeConfiguration Initial Bridge configuration
+    /// @param _connectorCode Connector contract code
+    /// @param _connectorDeployValue Value in TONs, required to be attached, to deploy Connector
+    /// @param _staking Staking address
     constructor(
         address _owner,
-        BridgeConfiguration _bridgeConfiguration
+        TvmCell _connectorCode,
+        uint64 _connectorDeployValue,
+        address _staking
     ) public checkPubKey {
         tvm.accept();
 
-        bridgeConfiguration = _bridgeConfiguration;
-
-        emit BridgeConfigurationUpdate(_bridgeConfiguration);
-
         setOwnership(_owner);
+
+        connectorCode = _connectorCode;
+        connectorDeployValue = _connectorDeployValue;
+        staking = _staking;
+
+        active = true;
+    }
+
+    /**
+        @notice Update Bridge active or not
+        @param _active Active status
+    */
+    function updateActive(
+        bool _active
+    ) external override cashBack onlyOwner {
+        active = _active;
+    }
+
+    /**
+        @notice Update connector deploy value
+        @param _connectorDeployValue Value in TONs, required to be attached, to deploy Connector
+    */
+    function updateConnectorDeployValue(
+        uint64 _connectorDeployValue
+    ) external override cashBack onlyOwner {
+        connectorDeployValue = _connectorDeployValue;
     }
 
     /// @dev Derive connector address by it's id
@@ -63,7 +93,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
                 bridge: address(this)
             },
             pubkey: 0,
-            code: bridgeConfiguration.connectorCode
+            code: connectorCode
         });
 
         return address(tvm.hash(stateInit));
@@ -81,7 +111,8 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
     returns(
         address connector
     ) {
-        require(msg.value >= bridgeConfiguration.connectorDeployValue, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
+        require(active, ErrorCodes.BRIDGE_PAUSED);
+        require(msg.value >= connectorDeployValue, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
         require(_eventConfiguration.wid == 0, ErrorCodes.IS_NOT_BASE_CHAIN);
 
         emit ConnectorDeployed(connectorCounter, connector, _eventConfiguration);
@@ -89,7 +120,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         connector = new Connector{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED,
-            code: bridgeConfiguration.connectorCode,
+            code: connectorCode,
             pubkey: 0,
             varInit: {
                 id: connectorCounter,
@@ -100,18 +131,27 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         connectorCounter++;
     }
 
-    /// @dev Update bridge configuration
-    /// @param _bridgeConfiguration New bridge configuration
-    function updateBridgeConfiguration(
-        BridgeConfiguration _bridgeConfiguration
-    )
-        override
-        public
-        cashBack
-        onlyOwner
-    {
-        bridgeConfiguration = _bridgeConfiguration;
-
-        emit BridgeConfigurationUpdate(_bridgeConfiguration);
+    /**
+        @notice Get Bridge details
+        @return _connectorCode Connector contract code
+        @return _connectorDeployValue Value in TONs, required to be attached, to deploy Connector
+        @return _connectorCounter Counter of deployed connectors
+        @return _staking Staking address
+        @return _active Bridge status
+    */
+    function getDetails() external view responsible returns(
+        TvmCell _connectorCode,
+        uint64 _connectorDeployValue,
+        uint64 _connectorCounter,
+        address _staking,
+        bool _active
+    ) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS}(
+            connectorCode,
+            connectorDeployValue,
+            connectorCounter,
+            staking,
+            active
+        );
     }
 }

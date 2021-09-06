@@ -1,8 +1,8 @@
 module.exports = async ({getNamedAccounts, deployments}) => {
-  const { deployer } = await getNamedAccounts();
-  
+  const { deployer, owner } = await getNamedAccounts();
+
   const bridge = await deployments.get('Bridge');
-  
+
   await deployments.deploy('DAO', {
     from: deployer,
     log: true,
@@ -11,6 +11,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
       execute: {
         methodName: 'initialize',
         args: [
+          owner,
           bridge.address
         ],
       }
@@ -18,4 +19,4 @@ module.exports = async ({getNamedAccounts, deployments}) => {
   });
 };
 
-module.exports.tags = ['Deploy DAO'];
+module.exports.tags = ['Deploy_DAO'];

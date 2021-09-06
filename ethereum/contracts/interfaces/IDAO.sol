@@ -3,6 +3,9 @@ pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
 
+import "./IBridge.sol";
+
+
 interface IDAO {
     struct EthAction {
         uint value;
@@ -19,4 +22,7 @@ interface IDAO {
         bytes memory payload,
         bytes[] memory signatures
     ) external returns(bytes[] memory responses);
+
+    event UpdateBridge(address indexed bridge);
+    event UpdateConfiguration(IBridge.TONAddress configuration);
 }
