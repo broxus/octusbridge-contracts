@@ -8,7 +8,6 @@ interface IProxyTokenTransferConfigurable {
         address[] outdatedTokenRoots;
 
         address tokenRoot;
-        address rootTunnel;
 
         uint128 settingsDeployWalletGrams;
     }

@@ -76,7 +76,7 @@ contract ProxyTokenTransfer is
         require((owner_pubkey != 0 && owner_address.value == 0) ||
                 (owner_pubkey == 0 && owner_address.value != 0), ErrorCodes.WRONG_OWNER_IN_PAYLOAD);
 
-        IRootTokenContract(config.rootTunnel).deployWallet{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+        IRootTokenContract(config.tokenRoot).deployWallet{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
             tokens,
             config.settingsDeployWalletGrams,
             owner_pubkey,
@@ -173,7 +173,7 @@ contract ProxyTokenTransfer is
 
     function setPaused(bool value) public override onlyOwner reserveBalance {
         paused = value;
-        IPausable(config.rootTunnel).setPaused{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(paused);
+        IPausable(config.tokenRoot).setPaused{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(paused);
     }
 
     function sendPausedCallbackTo(uint64 callback_id, address callback_addr) public override reserveBalance {

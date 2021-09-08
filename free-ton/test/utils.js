@@ -222,7 +222,6 @@ const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
     ethereumConfigurations: [ethereumEventConfiguration.address],
     outdatedTokenRoots: [],
     tokenRoot: tokenRoot.address,
-    rootTunnel: tokenRoot.address,
     settingsDeployWalletGrams: locklift.utils.convertCrystal(0.1, 'nano')
   }
 
