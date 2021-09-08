@@ -16,7 +16,7 @@ contract TestTarget is Delegate {
         daoRoot = _daoRoot;
     }
 
-    function call(uint32 newParam) public {
+    function call(uint32 newParam) public pure {
         TestTarget(this).onProposalSuccess{value: 0, flag: 64}(newParam);
     }
 

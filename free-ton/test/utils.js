@@ -189,9 +189,9 @@ const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
         staking: staking.address,
         eventCode: EthereumEvent.code,
         meta: configurationMeta,
-        chainId: 1,
       },
       networkConfiguration: {
+        chainId: 1,
         eventEmitter: new BigNumber(0),
         eventBlocksToConfirm: 1,
         proxy: proxyFutureAddress,
@@ -368,7 +368,6 @@ const setupTonEventConfiguration = async (owner, staking, cellEncoder) => {
         staking: staking.address,
         eventCode: TonEvent.code,
         meta: configurationMeta,
-        chainId: 1,
       },
       networkConfiguration: {
         eventEmitter: proxyFutureAddress,

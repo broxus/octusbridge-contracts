@@ -43,7 +43,7 @@ contract Connector is IConnector, InternalOwner {
         @return _eventConfiguration Corresponding event configuration address
         @return _enabled Event configuration status
     */
-    function getDetails() external returns(
+    function getDetails() external view returns(
         uint64 _id,
         address _eventConfiguration,
         bool _enabled

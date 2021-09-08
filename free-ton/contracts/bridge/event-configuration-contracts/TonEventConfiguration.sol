@@ -65,7 +65,6 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
 
         eventInitData.configuration = address(this);
         eventInitData.staking = basicConfiguration.staking;
-        eventInitData.chainId = basicConfiguration.chainId;
     }
 
     /// @dev Deploy event contract

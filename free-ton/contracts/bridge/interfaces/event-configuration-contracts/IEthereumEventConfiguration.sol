@@ -6,6 +6,7 @@ import "./../event-contracts/IEthereumEvent.sol";
 
 interface IEthereumEventConfiguration is IBasicEventConfiguration {
     struct EthereumEventConfiguration {
+        uint32 chainId;
         uint160 eventEmitter;
         uint16 eventBlocksToConfirm;
         address proxy;

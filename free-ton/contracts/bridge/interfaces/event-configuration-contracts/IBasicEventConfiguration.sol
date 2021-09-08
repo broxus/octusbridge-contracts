@@ -10,7 +10,6 @@ interface IBasicEventConfiguration {
         uint64 eventInitialBalance;
         TvmCell eventCode;
         TvmCell meta;
-        uint32 chainId;
     }
 
     function getType() external pure responsible returns(EventType _type);

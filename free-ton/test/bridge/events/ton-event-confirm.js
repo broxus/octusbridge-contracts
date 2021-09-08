@@ -210,8 +210,8 @@ describe('Test ton event confirm', async function() {
           },
           keyPair: relay
         }));
-        await Promise.all(confirmations);
       }
+      await Promise.all(confirmations);
     });
 
     it('Check event confirmed', async () => {

@@ -14,7 +14,6 @@ interface ITonEvent is IBasicEvent {
         TonEventVoteData voteData;
         address configuration;
         address staking;
-        uint32 chainId;
     }
 
     event Confirm(uint relay, bytes signature);

@@ -185,8 +185,8 @@ describe('Test ton event reject', async function() {
           params: {},
           keyPair: relay
         }));
-        await Promise.all(rejects);
       }
+      await Promise.all(rejects);
     });
     
     it('Check event rejected', async () => {
