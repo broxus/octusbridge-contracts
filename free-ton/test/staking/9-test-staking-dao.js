@@ -126,6 +126,32 @@ describe('Test DAO in Staking', async function () {
       value: locklift.utils.convertCrystal(2.5, 'nano')
     });
   };
+  const deployEventConfiguration = async function (_owner, _dao) {
+    const [keyPair] = await locklift.keys.getKeyPairs();
+    const DaoEthereumActionEventConfiguration = await locklift.factory.getContract('TonEventConfiguration');
+    const DaoEthereumActionEvent = await locklift.factory.getContract('DaoEthereumActionEvent');
+
+    return await locklift.giver.deployContract({
+      contract: DaoEthereumActionEventConfiguration,
+      constructorParams: {_owner},
+      initParams: {
+        basicConfiguration: {
+          eventABI: '',
+          eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
+          staking: bridge,
+          eventCode: DaoEthereumActionEvent.code,
+          meta: '',
+        },
+        networkConfiguration: {
+          eventEmitter: _dao,
+          proxy: 0,
+          startTimestamp: 0,
+          endTimestamp: 0,
+        }
+      },
+      keyPair
+    }, locklift.utils.convertCrystal('1.0', 'nano'));
+  };
 
   before('Setup staking', async function () {
     const keyPairs = await locklift.keys.getKeyPairs();
@@ -156,13 +182,26 @@ describe('Test DAO in Staking', async function () {
       keyPair: keyPairs[0],
     }, locklift.utils.convertCrystal(10, 'nano'));
     logger.log(`DaoRoot address: ${daoRoot.address}`);
-    logger.log(`Installing Proposal code...`);
+    logger.log(`Installing Proposal code`);
     await stakingOwner.runTarget({
       contract: daoRoot,
       method: 'updateProposalCode',
       params: {code: Proposal.code},
     });
 
+    logger.log(`Deploy DAO ethereum action event configuration`);
+    const eventConfiguration = await deployEventConfiguration(stakingOwner.address, daoRoot.address);
+
+    logger.log(`Installing EthereumActionEventConfiguration address`);
+    logger.log(eventConfiguration.address);
+    await stakingOwner.runTarget({
+      contract: daoRoot,
+      method: 'updateEthereumActionEventConfiguration',
+      params: {
+        newConfiguration: eventConfiguration.address,
+        newDeployEventValue: locklift.utils.convertCrystal(2, 'nano')
+      },
+    });
     const StakingRootDeployer = await locklift.factory.getContract('StakingRootDeployer');
     const stakingRootDeployer = await locklift.giver.deployContract({
       contract: StakingRootDeployer,
@@ -308,7 +347,7 @@ describe('Test DAO in Staking', async function () {
           value: locklift.utils.convertCrystal(1, 'nano'),
           target: testTarget.address,
           payload: await testTarget.call({method: 'encodePayload', params: {addr: testTarget.address, callHash}})
-        }]
+        }];
         await userAccount0.runTarget({
           contract: daoRoot,
           method: 'propose',
@@ -318,7 +357,7 @@ describe('Test DAO in Staking', async function () {
             ethActions,
             description
           },
-          value: locklift.utils.convertCrystal(13, 'nano'),
+          value: locklift.utils.convertCrystal(10 + 0.5 + 0.5 + 1 + 2 + 0.1, 'nano'),
         });
         const deployedProposals = await userDataContract0.call({method: 'created_proposals'});
         proposalId = Object.keys(deployedProposals)[0];

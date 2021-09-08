@@ -1,11 +1,12 @@
 pragma ton-solidity >= 0.39.0;
 
 library Gas {
-    uint128 constant DEPLOY_PROPOSAL_VALUE = 2 ton;
+    uint128 constant DEPLOY_PROPOSAL_VALUE = 10 ton;
     uint128 constant PROPOSAL_INITIAL_BALANCE = 1 ton;
     uint128 constant ACCOUNT_INITIAL_BALANCE = 0.2 ton;
     uint128 constant DEPLOY_ACCOUNT_VALUE = 0.5 ton;
-    uint128 constant EXECUTE_ACTIONS_VALUE = 5 ton;
+    uint128 constant EXECUTE_TON_ACTION_VALUE = 0.5 ton;
+    uint128 constant EXECUTE_ETH_ACTION_VALUE = 0.5 ton;
     uint128 constant DEPLOY_EMPTY_WALLET_VALUE = 0.2 ton;
     uint128 constant DEPLOY_EMPTY_WALLET_GRAMS = 0.1 ton;
     uint128 constant SEND_EXPECTED_WALLET_VALUE = 0.1 ton;

@@ -108,8 +108,10 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
         tvm.accept();
         executed = true;
         emit Executed();
-        uint128 value = Gas.EXECUTE_ACTIONS_VALUE + calcTonActionsValue();
-        IDaoRoot(root).onProposalSucceeded{value: value, flag: MsgFlag.SENDER_PAYS_FEES}(id, tonActions, ethActions);
+        IDaoRoot(root).onProposalSucceeded{
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(id, proposer, tonActions, ethActions);
     }
 
     function cancel() override public {
@@ -144,7 +146,8 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
     }
 
     function onActionsExecuted() override public onlyRoot {
-
+        tvm.rawReserve(Gas.ACCOUNT_INITIAL_BALANCE, 2);
+        proposer.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED});
     }
 
     function state() private view returns (ProposalState) {
@@ -181,13 +184,6 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
             currentState != ProposalState.Active
         );
         IStakingAccount(msg.sender).unlockVoteTokens{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(id, success);
-    }
-
-    function calcTonActionsValue() private view inline returns (uint128 totalValue) {
-        totalValue = 0;
-        for (uint i = 0; i < tonActions.length; i++) {
-            totalValue += tonActions[i].value;
-        }
     }
 
     function expectedAccountAddress(address accountOwner) private view returns (address) {

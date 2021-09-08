@@ -15,8 +15,10 @@ import "./interfaces/IUpgradable.sol";
 import "../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol";
 import "../../../node_modules/@broxus/contracts/contracts/platform/Platform.sol";
 import "../utils/Delegate.sol";
+import "../utils/cell-encoder/CellEncoder.sol";
+import "../bridge/interfaces/event-configuration-contracts/ITonEventConfiguration.sol";
 
-contract DaoRoot is IDaoRoot, IUpgradable, Delegate {
+contract DaoRoot is CellEncoder, IDaoRoot, IUpgradable, Delegate {
     uint8 public constant proposalMaxOperations = 10;
     uint16 public constant proposalMaxDescriptionLen = 2048;
 
@@ -35,10 +37,11 @@ contract DaoRoot is IDaoRoot, IUpgradable, Delegate {
     uint32 static _nonce;
 
     address public stakingRoot;
+    address public ethereumActionEventConfiguration;
+    uint128 public deployEventValue;
 
     uint32 public proposalCount;
     ProposalConfiguration public proposalConfiguration;
-    uint160 public ethExecutor;
 
     TvmCell public proposalCode;
     TvmCell public platformCode;
@@ -96,6 +99,10 @@ contract DaoRoot is IDaoRoot, IUpgradable, Delegate {
          return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} stakingRoot;
     }
 
+    function getEthereumActionEventConfiguration() override public responsible view returns (address, uint128) {
+         return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} (ethereumActionEventConfiguration, deployEventValue);
+    }
+
     function expectedProposalAddress(uint32 proposalId) override public responsible view returns (address) {
         return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} address(tvm.hash(buildProposalStateInit(proposalId)));
     }
@@ -119,9 +126,10 @@ contract DaoRoot is IDaoRoot, IUpgradable, Delegate {
         require(actionsAmount != 0, DaoErrors.ACTIONS_MUST_BE_PROVIDED);
         require(actionsAmount <= proposalMaxOperations, DaoErrors.TOO_MANY_ACTIONS);
         require(bytes(description).length <= proposalMaxDescriptionLen, DaoErrors.DESCRIPTION_TOO_LONG);
-        uint128 tonTotalValue = calcTonActionsValue(tonActions);
+        uint128 tonTotalGasValue = calcTonActionsValue(tonActions);
+        uint128 ethTotalGasValue = calcEthActionsValue(ethActions);
         require(
-            msg.value >= tonTotalValue + Gas.DEPLOY_PROPOSAL_VALUE + Gas.EXECUTE_ACTIONS_VALUE,
+            msg.value >= ethTotalGasValue + tonTotalGasValue + Gas.DEPLOY_PROPOSAL_VALUE,
             DaoErrors.MSG_VALUE_TOO_LOW_TO_CREATE_PROPOSAL
         );
         TvmBuilder proposalData;
@@ -169,6 +177,7 @@ contract DaoRoot is IDaoRoot, IUpgradable, Delegate {
 
     function onProposalSucceeded(
         uint32 proposalId,
+        address proposer,
         TonAction[] tonActions,
         EthAction[] ethActions
     ) override public onlyProposal(proposalId) {
@@ -180,7 +189,7 @@ contract DaoRoot is IDaoRoot, IUpgradable, Delegate {
             }
         }
         if (ethActions.length > 0) {
-            emit ExecutingEthActions(proposalId, ethActions, ethExecutor);
+            executeEthActions(proposer, ethActions);
         }
         Proposal(msg.sender).onActionsExecuted{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}();
     }
@@ -194,10 +203,52 @@ contract DaoRoot is IDaoRoot, IUpgradable, Delegate {
         });
     }
 
-    function calcTonActionsValue(TonAction[] actions) private pure inline returns (uint128 totalValue) {
+    function executeEthActions(address proposer, EthAction[] actions) private view inline {
+        mapping(uint32 => EthActionStripped[]) chainActions;
+        for ((EthAction action) : actions) {
+            uint32 chainId = action.chainId;
+            EthActionStripped actionStripped = EthActionStripped(
+                action.value,
+                action.target,
+                action.signature,
+                action.callData
+            );
+            if(chainActions.exists(chainId)){
+                chainActions[chainId].push(actionStripped);
+            } else {
+                chainActions[chainId] = [actionStripped];
+            }
+        }
+        for ((uint32 chainId, EthActionStripped[] ethActions) : chainActions) {
+            TvmCell eventData = encodeDaoEthereumActionData(proposer.wid, proposer.value, chainId, ethActions);
+            ITonEvent.TonEventVoteData eventVoteData = ITonEvent.TonEventVoteData(tx.timestamp, now, eventData);
+            ITonEventConfiguration(ethereumActionEventConfiguration).deployEvent{
+                value: deployEventValue,
+                flag: MsgFlag.SENDER_PAYS_FEES,
+                bounce: false
+            }(eventVoteData);
+        }
+    }
+
+    function calcTonActionsValue(TonAction[] actions) public pure returns (uint128 totalValue) {
         totalValue = 0;
         for (uint i = 0; i < actions.length; i++) {
-            totalValue += actions[i].value;
+            totalValue += (actions[i].value + Gas.EXECUTE_TON_ACTION_VALUE);
+        }
+    }
+
+    function calcEthActionsValue(
+        EthAction[] actions
+    ) public view returns (uint128 totalValue) {
+        totalValue = 0;
+        mapping(uint32 => bool) chains;
+        for (uint i = 0; i < actions.length; i++) {
+            uint32 chainId = actions[i].chainId;
+            if(!chains.exists(chainId)){
+                totalValue += deployEventValue;
+                chains[chainId] = true;
+            }
+            totalValue += Gas.EXECUTE_ETH_ACTION_VALUE;
         }
     }
 
@@ -286,9 +337,18 @@ contract DaoRoot is IDaoRoot, IUpgradable, Delegate {
         admin.transfer({value: 0, flag: MsgFlag.REMAINING_GAS});
     }
 
-    function updateEthExecutor(uint160 newEthExecutor) override public onlyAdmin {
-        emit EthExecutorUpdated(ethExecutor, newEthExecutor);
-        ethExecutor = newEthExecutor;
+    function updateEthereumActionEventConfiguration(
+        address newConfiguration,
+        uint128 newDeployEventValue
+    ) override public onlyAdmin {
+        emit EthereumActionEventConfigurationUpdated(
+            ethereumActionEventConfiguration,
+            newConfiguration,
+            deployEventValue,
+            newDeployEventValue
+        );
+        ethereumActionEventConfiguration = newConfiguration;
+        deployEventValue = newDeployEventValue;
         admin.transfer({value: 0, flag: MsgFlag.REMAINING_GAS});
     }
 

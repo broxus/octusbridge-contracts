@@ -14,4 +14,11 @@ interface ActionStructure {
         string signature;
         bytes callData;
     }
+
+    struct EthActionStripped {
+        uint value;
+        uint160 target;
+        string signature;
+        bytes callData;
+    }
 }

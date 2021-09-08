@@ -16,7 +16,12 @@ interface IDaoRoot is ActionStructure, ProposalConfigurationStructure, ProposalS
     event StakingRootUpdated(address oldRoot, address newRoot);
     event RequestedAdminTransfer(address oldAdmin, address newAdmin);
     event AdminTransferAccepted(address oldAdmin, address newAdmin);
-    event EthExecutorUpdated(uint160 oldExecutor, uint160 newExecutor);
+    event EthereumActionEventConfigurationUpdated(
+        address oldConfiguration,
+        address newConfiguration,
+        uint128 oldDeployEventValue,
+        uint128 newDeployEventValue
+    );
     event ProposalCodeUpgraded(uint16 newVersion);
     event ProposalConfigurationUpdated(ProposalConfiguration oldConfig, ProposalConfiguration newConfig);
     event ProposalVotingDelayUpdated(uint32 oldVotingDelay, uint32 newVotingDelay);
@@ -25,25 +30,25 @@ interface IDaoRoot is ActionStructure, ProposalConfigurationStructure, ProposalS
     event ProposalQuorumVotesUpdated(uint128 oldQuorumVotes, uint128 newQuorumVotes);
     event ProposalTimeLockUpdated(uint32 oldTimeLock, uint32 newTimeLock);
     event ExecutingTonActions(uint32 proposalId, TonAction[] tonActions);
-    event ExecutingEthActions(uint32 proposalId, EthAction[] ethActions, uint160 ethExecutor);
     event RootCodeUpgraded();
 
     function getAdmin() external responsible view returns (address);
     function getPendingAdmin() external responsible view returns (address);
     function getProposalCount() external responsible view returns (uint32);
     function getStakingRoot() external responsible view returns (address);
+    function getEthereumActionEventConfiguration() external responsible view returns (address, uint128);
 
     function expectedProposalAddress(uint32 proposalId) external responsible view returns (address);
     function expectedStakingAccountAddress(address accountOwner) external responsible view returns (address);
 
     function propose(uint32 answerId, TonAction[] tonActions, EthAction[] ethActions, string description) external;
     function deployProposal(uint32 nonce, address accountOwner, TvmCell proposalData) external;
-    function onProposalSucceeded(uint32 proposalId, TonAction[] tonActions, EthAction[] ethActions) external;
+    function onProposalSucceeded(uint32 proposalId, address proposer, TonAction[] tonActions, EthAction[] ethActions) external;
 
     function setStakingRoot(address newRoot) external;
     function transferAdmin(address newAdmin) external;
     function acceptAdmin() external;
-    function updateEthExecutor(uint160 newEthExecutor) external;
+    function updateEthereumActionEventConfiguration(address ethereumActionEventConfiguration, uint128 newDeployEventValue) external;
     function updateProposalCode(TvmCell code) external;
     function updateProposalConfiguration(ProposalConfiguration newConfig) external;
     function updateVotingDelay(uint32 newVotingDelay) external;
