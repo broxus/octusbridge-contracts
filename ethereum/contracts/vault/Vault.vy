@@ -8,25 +8,31 @@
     The Vault is used as an entry point for token transfers
     between EVM-compatible networks and FreeTON, by using Broxus bridge.
 
+    Fork commit: https://github.com/yearn/yearn-vaults/tree/e20d7e61692e61b1583628f8f3f96b27f824fbb4
+
     The key differences are:
 
     - The Vault is no longer a share token. The ERC20 interface is not supported.
     No tokens are minted / burned on deposit / withdraw.
-    - The share token analogue is corresponding token in FreeTON network.
-    For example for a Dai Vault this will be the Dai token in the FreeTON network.
+    - The share token equivalent is corresponding token in FreeTON network. So if you're
+    depositing Dai in this Vault, you receives Dai in FreeTON.
     - When user deposits into Vault, he specifies his FreeTON address.
-    In the end, the locked amount of corresponded token will be transferred to this address.
+    In the end, the deposited amount of corresponding token will be transferred to this address.
     - To withdraw tokens from the Vault, user needs to provide "withdraw receipt"
     and corresponding set of relay's signatures.
-    - If there're enough tokens on the Vault balance, the withdraw will be
-    filled instantly.
-    - If not - the withdraw will be saved as a pending withdraw. User
-    can specify so called `bounty` - how much tokens he wills to pay as a reward
-    to anyone, who fills the `bountyStep` amount of tokens of his pending reward.
-    - The second way to fill pending withdraw works the same as in the original
-    Yearn Vault. The user specifies the maximum amount of loss, and the lacking
-    tokens are withdrawn from the strategies.
-
+    - If there're enough tokens on the Vault balance, the withdraw will be filled instantly
+    - If not - the withdraw will be saved as a "pending withdraw". There're multiple ways to finalize
+    pending withdrawal:
+      1. User can specify so called `bounty` - how much tokens he wills to pay as a reward
+      to anyone, who fills his pending withdrawal. Pending withdrawal can only be filled completely.
+      2. User can use `withdraw` function, which works the same as original Yearn's withdraw.
+      3. User can cancel his pending withdraw partially or entirely.
+    - Since Vyper does not support dynamic size arrays and bytes-decoding, special contract `wrapper` is used
+    for uploading withdraw receipts (`VaultWrapper.sol`).
+    - Vault has emergency strategy withdraw
+    - If total amount of pending withdrawals is more than `totalAssets()`, than strategies dont receive new
+    debt
+    - Vault may have deposit / withdraw fee
 
     ORIGINAL NOTE:
 
@@ -74,32 +80,13 @@ interface Strategy:
     def estimatedTotalAssets() -> uint256: view
     def withdraw(_amount: uint256) -> uint256: nonpayable
     def migrate(_newStrategy: address): nonpayable
-    def feeRecipient() -> TONAddress: view
 
-
-interface HealthCheck:
-    def check(strategy: address, profit: uint256, loss: uint256, debtPayment: uint256, debtOutstanding: uint256, totalDebt: uint256) -> bool: view
-    def doHealthCheck(strategy: address) -> bool: view
-    def enableCheck(strategy: address): nonpayable
-
-
-# ================= Broxus bridge interfaces =================
-
-interface Bridge:
-    def verifySignedTonEvent(
-        payload: Bytes[MAXIMUM_WITHDRAW_RECEIPT_SIZE],
-        signatures: bytes32[MAXIMUM_SIGNATURES_FOR_WITHDRAW_RECEIPT]
-    ) -> uint256: view
-
-# ================= Broxus bridge interfaces =================
 
 token: public(ERC20)
 governance: public(address)
 management: public(address)
 guardian: public(address)
 pendingGovernance: address
-
-healthCheck: public(address)
 
 
 # ================= Broxus bridge structures =================
@@ -121,6 +108,11 @@ struct TONAddress:
 struct PendingWithdrawal:
     total: uint256 # Total amount of user's tokens in withdrawal status
     bounty: uint256 # How much tokens user wills to pay as bounty for
+
+# NOTE: Vault may have non-zero deposit / withdraw fee.
+struct Fee:
+    step: uint256 # The fee is charged only on amounts exceeding this value
+    size: uint256 # Size in BPS
 
 # ================= Broxus bridge structures =================
 
@@ -157,6 +149,12 @@ event UpdateRewards:
 event UpdateStrategyRewards:
     strategy: indexed(address)
     rewards: TONAddress
+
+event UpdateDepositFee:
+    fee: Fee
+
+event UpdateWithdrawFee:
+    fee: Fee
 
 # ================= Broxus bridge events =================
 
@@ -262,9 +260,6 @@ event StrategyRemovedFromQueue:
 event StrategyAddedToQueue:
     strategy: indexed(address) # Address of the strategy that is added to the withdrawal queue
 
-event UpdateHealthCheck:
-    healthCheck: indexed(address)
-
 
 # ================= Broxus bridge variables =================
 
@@ -282,13 +277,17 @@ wrapper: public(address)
 
 # NOTE: Broxus bridge contract address. Used for validating withdrawal signatures.
 # See note on `saveWithdraw`
-bridge: public(Bridge)
+bridge: public(address)
 
 # NOTE: withdraw receipts
 configuration: public(TONAddress)
 
 # NOTE: Gov rewards are sent on the FreeTON side
 rewards: public(TONAddress)
+
+# NOTE: Vault may have non-zero fee for deposit / withdraw
+depositFee: public(Fee)
+withdrawFee: public(Fee)
 
 MAXIMUM_SIGNATURES_FOR_WITHDRAW_RECEIPT: constant(uint256) = 100
 MAXIMUM_WITHDRAW_RECEIPT_SIZE: constant(uint256) = 10000
@@ -344,7 +343,6 @@ def initialize(
     wrapper: address,
     guardian: address,
     management: address,
-    healthCheck: address,
 ):
     """
     @notice
@@ -362,8 +360,8 @@ def initialize(
     @param governance The address authorized for governance interactions.
     @param bridge The address of the Bridge contract
     @param wrapper Helper contract, need for parsing withdraw receipts
-    @param management The address of the vault manager.
     @param guardian The address authorized for guardian interactions. Defaults to caller.
+    @param management The address of the vault manager.
     """
     assert self.activation == 0  # dev: no devops199
 
@@ -375,7 +373,7 @@ def initialize(
     self.management = management
     log UpdateManagement(management)
 
-    self.bridge = Bridge(bridge)
+    self.bridge = bridge
     log UpdateBridge(bridge)
 
     self.wrapper = wrapper
@@ -389,9 +387,6 @@ def initialize(
 
     self.managementFee = 0  # 0% per year
     log UpdateManagementFee(convert(0, uint256))
-
-    self.healthCheck = healthCheck
-    log UpdateHealthCheck(healthCheck)
 
     self.lastReport = block.timestamp
     self.activation = block.timestamp
@@ -413,6 +408,34 @@ def apiVersion() -> String[28]:
     """
     return API_VERSION
 
+@external
+def setDepositFee(fee: Fee):
+    """
+    @notice
+        Set new value. Deposit fee is charged on `deposit`,
+        fee is charged on the Ethereum side.
+    @dev Use (0,0) to set zero fee.
+    @param fee New deposit fee value
+    """
+    assert msg.sender in [self.management, self.governance]
+
+    self.depositFee = fee
+
+    log UpdateDepositFee(fee)
+
+@external
+def setWithdrawFee(fee: Fee):
+    """
+    @notice
+        Set new value. Withdrawal fee is charged on `saveWithdraw`.
+    @dev Use (0,0) to set zero fee.
+    @param fee New withdraw fee value
+    """
+    assert msg.sender in [self.management, self.governance]
+
+    self.withdrawFee = fee
+
+    log UpdateWithdrawFee(fee)
 
 @external
 def setWrapper(wrapper: address):
@@ -781,6 +804,16 @@ def _transferToTon(
         recipient.addr,
     )
 
+@internal
+def _considerMovementFee(amount: uint256, fee: Fee) -> uint256:
+    if fee.size == 0 or amount < fee.step:
+        return amount
+
+    feeAmount: uint256 = amount * fee.size / MAX_BPS
+
+    self._transferToTon(feeAmount, self.rewards)
+
+    return (amount - feeAmount)
 
 @external
 @nonreentrant("withdraw")
@@ -807,18 +840,11 @@ def deposit(
     """
     assert not self.emergencyShutdown  # Deposits are locked out
 
-    amount: uint256 = _amount
+    # Ensure deposit limit is respected
+    assert self._totalAssets() + _amount <= self.depositLimit, "Vault: respect the deposit limit"
 
-    # If _amount not specified, transfer the full token balance,
-    # up to deposit limit
-    if amount == MAX_UINT256:
-        amount = min(
-            self.depositLimit - self._totalAssets(),
-            self.token.balanceOf(msg.sender),
-        )
-    else:
-        # Ensure deposit limit is respected
-        assert self._totalAssets() + amount <= self.depositLimit
+    # Consider deposit fee
+    amount: uint256 = self._considerMovementFee(_amount, self.depositFee)
 
     # Ensure we are depositing something
     assert amount > 0
@@ -851,7 +877,7 @@ def deposit(
 
     assert amount >= fillingAmount, "Vault: too low deposit for specified fillings"
 
-    self._transferToTon(amount - fillingAmount + fillingBounty, recipient)
+    self._transferToTon(amount + fillingBounty, recipient)
 
 @internal
 def _reportLoss(strategy: address, loss: uint256):
@@ -890,7 +916,7 @@ def _registerWithdraw(
 def saveWithdraw(
     id: bytes32,
     recipient: address,
-    amount: uint256,
+    _amount: uint256,
     bounty: uint256
 ):
     """
@@ -915,12 +941,14 @@ def saveWithdraw(
             Anyone can save withdraw request, but only withdraw recipient can specify bounty. Ignores otherwise.
 
         @param recipient Withdraw recipient
-        @param amount Withdraw amount
+        @param _amount Withdraw amount
         @param bounty Bounty amount
     """
     assert msg.sender == self.wrapper
 
     self._registerWithdraw(id)
+
+    amount: uint256 = self._considerMovementFee(_amount, self.withdrawFee)
 
     # Fill withdrawal instantly or save it as pending
     if amount <= self.token.balanceOf(self):
@@ -1063,21 +1091,17 @@ def withdraw(
             self.strategies[strategy].totalDebt -= withdrawn
             self.totalDebt -= withdrawn
 
-        # NOTE: We have withdrawn everything possible out of the withdrawal queue
-        #       but we still don't have enough to fully pay them back, so adjust
-        #       to the total amount we've freed up through forced withdrawals
-        vault_balance: uint256 = self.token.balanceOf(self)
-        if value > vault_balance:
-            value = vault_balance
+        assert self.token.balanceOf(self) >= value, "Vault: cant close pending withdraw even with strategies liquidation"
 
         # NOTE: This loss protection is put in place to revert if losses from
         #       withdrawing are more than what is considered acceptable.
         assert totalLoss <= maxLoss * (value + totalLoss) / MAX_BPS
 
-    # Withdraw remaining balance to _recipient (may be different to msg.sender) (minus fee)
+    # Withdraw remaining balance to recipient (may be different to msg.sender) (minus fee)
     self.erc20_safe_transfer(self.token.address, recipient, value)
 
-    self.pendingWithdrawals[msg.sender].total -= value
+    self.pendingWithdrawals[msg.sender].total = 0
+    self.pendingWithdrawalsTotal -= value
 
     self._logPendingWithdrawal(msg.sender)
 
@@ -1107,8 +1131,6 @@ def addStrategy(
     minDebtPerHarvest: uint256,
     maxDebtPerHarvest: uint256,
     performanceFee: uint256,
-    profitLimitRatio: uint256 = 100, # 1%
-    lossLimitRatio: uint256 = 1 # 0.01%
 ):
     """
     @notice
@@ -1183,7 +1205,7 @@ def updateStrategyDebtRatio(
     @param strategy The Strategy to update.
     @param debtRatio The quantity of assets `strategy` may now manage.
     """
-    assert msg.sender in [self.management, self.governance]
+    assert msg.sender == self.governance
     assert self.strategies[strategy].activation > 0
     self.debtRatio -= self.strategies[strategy].debtRatio
     self.strategies[strategy].debtRatio = debtRatio
@@ -1256,12 +1278,6 @@ def updateStrategyPerformanceFee(
     self.strategies[strategy].performanceFee = performanceFee
     log StrategyUpdatePerformanceFee(strategy, performanceFee)
 
-
-@external
-def setHealthCheck(_healthCheck: address):
-    assert msg.sender in [self.management, self.governance]
-    log UpdateHealthCheck(_healthCheck)
-    self.healthCheck = _healthCheck
 
 @internal
 def _revokeStrategy(strategy: address):
@@ -1447,7 +1463,13 @@ def _creditAvailable(strategy: address) -> uint256:
     # See note on `creditAvailable()`.
     if self.emergencyShutdown:
         return 0
+
     vault_totalAssets: uint256 = self._totalAssets()
+
+    # Cant extend Strategies debt until total amount of pending withdrawals is more than Vault's total assets
+    if self.pendingWithdrawalsTotal >= vault_totalAssets:
+        return 0
+
     vault_debtLimit: uint256 =  self.debtRatio * vault_totalAssets / MAX_BPS
     vault_totalDebt: uint256 = self.totalDebt
     strategy_debtLimit: uint256 = self.strategies[strategy].debtRatio * vault_totalAssets / MAX_BPS
@@ -1595,7 +1617,7 @@ def _assessFees(strategy: address, gain: uint256) -> uint256:
     if strategist_fee > 0:
         self._transferToTon(
             strategist_fee,
-            Strategy(strategy).feeRecipient(),
+            self.strategies[strategy].rewards,
         )
 
     if performance_fee + management_fee > 0:
@@ -1645,18 +1667,6 @@ def report(gain: uint256, loss: uint256, _debtPayment: uint256) -> uint256:
 
     # Only approved strategies can call this function
     assert self.strategies[msg.sender].activation > 0
-
-    # Check report is within healthy ranges
-    if self.healthCheck != ZERO_ADDRESS:
-        if HealthCheck(self.healthCheck).doHealthCheck(msg.sender):
-            strategy: address  = msg.sender
-            _debtOutstanding: uint256 = self._debtOutstanding(msg.sender)
-            totalDebt: uint256 = self.strategies[msg.sender].totalDebt
-
-            assert(HealthCheck(self.healthCheck).check(strategy, gain, loss, _debtPayment, _debtOutstanding, totalDebt)) #dev: fail healthcheck
-        else:
-            strategy: address  = msg.sender
-            HealthCheck(self.healthCheck).enableCheck(strategy)
 
     # No lying about total available to withdraw!
     assert self.token.balanceOf(msg.sender) >= gain + _debtPayment
@@ -1761,3 +1771,44 @@ def sweep(token: address, amount: uint256 = MAX_UINT256):
     if value == MAX_UINT256:
         value = ERC20(token).balanceOf(self)
     self.erc20_safe_transfer(token, self.governance, value)
+
+@external
+def emergencyWithdrawAndRevoke(
+    strategy: address,
+    _amountNeeded: uint256 = MAX_UINT256
+):
+    """
+        @notice
+            Withdraws all the debt from the strategy and revokes it.
+            This may only be called by governance or guardian.
+        @param strategy The Strategy to withdraw and revoke.
+        @param _amountNeeded The amount of tokens to be withdrawn. By default - strategy debt
+    """
+
+    assert msg.sender in [self.guardian, self.governance]
+
+    amountNeeded: uint256 = 0
+
+    if _amountNeeded == MAX_UINT256:
+        amountNeeded = self.strategies[strategy].totalDebt
+    else:
+        amountNeeded = _amountNeeded
+
+    assert amountNeeded > 0
+
+    assert self.strategies[strategy].activation > 0
+
+    vault_balance: uint256 = self.token.balanceOf(self)
+
+    loss: uint256 = Strategy(strategy).withdraw(amountNeeded)
+    withdrawn: uint256 = self.token.balanceOf(self) - vault_balance
+
+    if loss > 0:
+        self._reportLoss(strategy, loss)
+
+    # Reduce the Strategy's debt by the amount withdrawn ("realized returns")
+    # NOTE: This doesn't add to returns as it's not earned by "normal means"
+    self.strategies[strategy].totalDebt -= withdrawn
+    self.totalDebt -= withdrawn
+
+    self._revokeStrategy(strategy)

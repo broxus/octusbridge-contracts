@@ -51,7 +51,17 @@ describe('Try to set too few relays for the next round', async () => {
       .map(async (account) => utils.signReceipt(payload, account))
     );
     
-    await expect(bridge.setRoundRelays(payload, signatures))
-      .to.be.revertedWith("Bridge: round required signatures is less than minimum'");
+    await bridge.setRoundRelays(payload, signatures);
+  });
+  
+  it('Check new round required signatures same as minimum', async () => {
+    const minimumRequiredSignatures = await bridge.minimumRequiredSignatures();
+    
+    const {
+      requiredSignatures
+    } = await bridge.rounds(1);
+    
+    expect(requiredSignatures)
+      .to.be.equal(minimumRequiredSignatures, 'Wrong required signatures for the new round');
   });
 });
