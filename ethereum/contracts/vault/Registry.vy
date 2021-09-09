@@ -12,7 +12,6 @@ interface Vault:
         vaultWrapper: address,
         guardian: address,
         management: address,
-        healthCheck: address,
     ): nonpayable
 
 interface VaultWrapper:
@@ -195,7 +194,6 @@ def _newProxyVault(
         self.bridge,
         _vaultWrapper,
         guardian,
-        ZERO_ADDRESS,
         ZERO_ADDRESS,
     )
 

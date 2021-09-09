@@ -235,7 +235,7 @@ describe('Test Vault DAI deposit', async () => {
         )).pop();
         
         expect(depositEvent.args.amount)
-          .to.be.equal(deposit.sub(toBeWithdrawn), 'Wrong deposit amount after filling pending');
+          .to.be.equal(deposit.add(pendingWithdrawal.bounty), 'Wrong deposit amount emitted after filling pending');
       });
     });
   });

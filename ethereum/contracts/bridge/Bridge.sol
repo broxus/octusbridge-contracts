@@ -312,15 +312,10 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
     ) internal {
         uint32 requiredSignatures = uint32(_relays.length * 2 / 3) + 1;
 
-        require(
-            requiredSignatures >= minimumRequiredSignatures,
-            "Bridge: round required signatures is less than minimum"
-        );
-
         rounds[round] = Round(
             roundEnd,
             roundEnd + roundTTL,
-            requiredSignatures
+            requiredSignatures < minimumRequiredSignatures ? minimumRequiredSignatures : requiredSignatures
         );
 
         emit NewRound(round, rounds[round]);
