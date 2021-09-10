@@ -461,6 +461,17 @@
 	],
 	"events": [
 		{
+			"name": "EthActions",
+			"inputs": [
+				{"name":"gasBackWid","type":"int8"},
+				{"name":"gasBackAddress","type":"uint256"},
+				{"name":"chainId","type":"uint32"},
+				{"components":[{"name":"value","type":"uint256"},{"name":"target","type":"uint160"},{"name":"signature","type":"string"},{"name":"callData","type":"bytes"}],"name":"actions","type":"tuple[]"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "ProposalCreated",
 			"inputs": [
 				{"name":"proposalId","type":"uint32"},

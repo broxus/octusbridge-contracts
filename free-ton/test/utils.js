@@ -175,12 +175,13 @@ const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
   );
 
   const EthereumEventConfiguration = await locklift.factory.getContract('EthereumEventConfiguration');
-  const EthereumEvent = await locklift.factory.getContract('EthereumEvent');
+  const EthereumEvent = await locklift.factory.getContract('TokenTransferEthereumEvent');
 
   const ethereumEventConfiguration = await locklift.giver.deployContract({
     contract: EthereumEventConfiguration,
     constructorParams: {
       _owner: owner.address,
+      _meta: configurationMeta,
     },
     initParams: {
       basicConfiguration: {
@@ -188,7 +189,6 @@ const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
         eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
         staking: staking.address,
         eventCode: EthereumEvent.code,
-        meta: configurationMeta,
       },
       networkConfiguration: {
         chainId: 1,
@@ -306,7 +306,7 @@ const setupTokenRootWithWallet = async (rootOwner, walletOwner, mintAmount) => {
 
 const setupTonEventConfiguration = async (owner, staking, cellEncoder) => {
   const TonEventConfiguration = await locklift.factory.getContract('TonEventConfiguration');
-  const TonEvent = await locklift.factory.getContract('TonEvent');
+  const TonEvent = await locklift.factory.getContract('TokenTransferTonEvent');
 
   const _randomNonce = locklift.utils.getRandomNonce();
   const [keyPair] = await locklift.keys.getKeyPairs();
@@ -359,6 +359,7 @@ const setupTonEventConfiguration = async (owner, staking, cellEncoder) => {
     contract: TonEventConfiguration,
     constructorParams: {
       _owner: owner.address,
+      _meta: configurationMeta,
     },
     initParams: {
       basicConfiguration: {
@@ -366,7 +367,6 @@ const setupTonEventConfiguration = async (owner, staking, cellEncoder) => {
         eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
         staking: staking.address,
         eventCode: TonEvent.code,
-        meta: configurationMeta,
       },
       networkConfiguration: {
         eventEmitter: proxyFutureAddress,
@@ -520,6 +520,26 @@ const captureConnectors = async (bridge) => {
 };
 
 
+function askQuestion(query) {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+  
+  return new Promise(resolve => rl.question(query, ans => {
+    rl.close();
+    resolve(ans);
+  }))
+}
+
+const isValidTonAddress = (address) => /^(?:-1|0):[0-9a-fA-F]{64}$/.test(address);
+
+
+const stringToBytesArray = (dataString) => {
+  return Buffer.from(dataString).toString('hex')
+};
+
+
 module.exports = {
   setupBridge,
   setupEthereumEventConfiguration,
@@ -532,6 +552,8 @@ module.exports = {
   getTokenWalletByAddress,
   extractTonEventAddress,
   afterRun,
+  isValidTonAddress,
+  stringToBytesArray,
   logger,
   expect,
   TOKEN_PATH

@@ -22,7 +22,8 @@ interface ITonEventConfiguration is IBasicEventConfiguration {
 
     function getDetails() external view responsible returns(
         BasicConfiguration _basicConfiguration,
-        TonEventConfiguration _networkConfiguration
+        TonEventConfiguration _networkConfiguration,
+        TvmCell _meta
     );
 
     function setEndTimestamp(uint32 endTimestamp) external;

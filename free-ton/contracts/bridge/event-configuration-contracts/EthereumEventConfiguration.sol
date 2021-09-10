@@ -6,7 +6,7 @@ import './../interfaces/event-contracts/IEthereumEvent.sol';
 import "./../interfaces/event-configuration-contracts/IEthereumEventConfiguration.sol";
 import './../interfaces/IProxy.sol';
 
-import './../event-contracts/EthereumEvent.sol';
+import './../event-contracts/base/EthereumBaseEvent.sol';
 
 import './../../utils/TransferUtils.sol';
 import './../../utils/ErrorCodes.sol';
@@ -22,11 +22,24 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
     BasicConfiguration public static basicConfiguration;
     EthereumEventConfiguration public static networkConfiguration;
 
+    TvmCell public meta;
+
     /// @param _owner Event configuration owner
-    constructor(address _owner) public checkPubKey {
+    constructor(address _owner, TvmCell _meta) public checkPubKey {
         tvm.accept();
 
         setOwnership(_owner);
+
+        meta = _meta;
+    }
+
+    /**
+        @notice
+            Set new configuration meta.
+        @param _meta New configuration meta
+    */
+    function setMeta(TvmCell _meta) override onlyOwner cashBack external {
+        meta = _meta;
     }
 
     /// @dev Set end block number. Can be set only in case current value is 0.
@@ -90,7 +103,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
 
         IEthereumEvent.EthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
 
-        eventContract = new EthereumEvent{
+        eventContract = new EthereumBaseEvent{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED,
             code: basicConfiguration.eventCode,
@@ -98,7 +111,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
             varInit: {
                 eventInitData: eventInitData
             }
-        }(msg.sender, basicConfiguration.meta);
+        }(msg.sender, meta);
     }
 
     /// @dev Derive the Ethereum event contract address from it's init data
@@ -117,7 +130,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
         IEthereumEvent.EthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
 
         TvmCell stateInit = tvm.buildStateInit({
-            contr: EthereumEvent,
+            contr: EthereumBaseEvent,
             varInit: {
                 eventInitData: eventInitData
             },
@@ -135,11 +148,13 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
     */
     function getDetails() override public view responsible returns(
         BasicConfiguration _basicConfiguration,
-        EthereumEventConfiguration _networkConfiguration
+        EthereumEventConfiguration _networkConfiguration,
+        TvmCell _meta
     ) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS}(
             basicConfiguration,
-            networkConfiguration
+            networkConfiguration,
+            meta
         );
     }
 
@@ -163,7 +178,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
         );
 
         TvmCell stateInit = tvm.buildStateInit({
-            contr: EthereumEvent,
+            contr: EthereumBaseEvent,
             varInit: {
                 eventInitData: eventInitData
             },

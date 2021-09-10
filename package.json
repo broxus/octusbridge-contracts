@@ -23,6 +23,8 @@
     "minimist": "^1.2.5",
     "mocha": "^8.2.1",
     "mocha-logger": "^1.0.7",
+    "ora": "^3.4.0",
+    "prompts": "^2.4.1",
     "simple-node-logger": "^18.12.24",
     "solidity-docgen": "^0.5.7",
     "ton-client-js": "^0.28.1",

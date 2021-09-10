@@ -3,17 +3,17 @@ pragma AbiHeader time;
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
-import "./base/TonBaseEvent.sol";
-import "./../interfaces/IEventNotificationReceiver.sol";
-import "./../interfaces/event-contracts/ITonEvent.sol";
-import "./../../utils/ErrorCodes.sol";
-import './../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
+import "./../base/TonBaseEvent.sol";
+import "./../../interfaces/IEventNotificationReceiver.sol";
+import "./../../interfaces/event-contracts/ITonEvent.sol";
+import "./../../../utils/ErrorCodes.sol";
+import './../../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 /*
     @title Basic example of TON event configuration
     @dev This implementation is used for cross chain token transfers
 */
-contract TonEvent is TonBaseEvent {
+contract TokenTransferTonEvent is TonBaseEvent {
     uint32 constant FORCE_CLOSE_TIMEOUT = 1 days;
     uint32 public createdAt;
 
