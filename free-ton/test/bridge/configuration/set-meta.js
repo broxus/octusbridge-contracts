@@ -5,23 +5,24 @@ const {
   setupTonEventConfiguration,
   expect,
 } = require('../../utils');
-const BigNumber = require('bignumber.js');
 
 
-describe('Test updating event configuration', async function() {
+describe('Test setting configuration meta', async function() {
   this.timeout(10000000);
-
+  
   let bridge, bridgeOwner, staking, cellEncoder;
+  
+  const emptyCell = 'te6ccgEBAQEAAgAAAA==';
   
   it('Setup bridge', async () => {
     const relays = await setupRelays();
-
+    
     [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
   });
   
   describe('Ethereum event configuration', async () => {
     let ethereumEventConfiguration, proxy;
-
+    
     it('Setup event configuration', async () => {
       [ethereumEventConfiguration, proxy] = await setupEthereumEventConfiguration(
         bridgeOwner,
@@ -30,21 +31,21 @@ describe('Test updating event configuration', async function() {
       );
     });
     
-    it('Set end block', async () => {
+    it('Set meta', async () => {
       await bridgeOwner.runTarget({
         contract: ethereumEventConfiguration,
-        method: 'setEndBlockNumber',
+        method: 'setMeta',
         params: {
-          endBlockNumber: 1
+          _meta: ''
         }
       });
     });
     
-    it('Check configuration end block', async () => {
+    it('Check configuration meta', async () => {
       const details = await ethereumEventConfiguration.call({ method: 'getDetails' });
-
-      expect(details._networkConfiguration.endBlockNumber)
-        .to.be.bignumber.equal(1, 'Wrong end block number');
+      
+      expect(details._meta)
+        .to.be.equal(emptyCell, 'Wrong meta');
     });
   });
   
@@ -58,22 +59,22 @@ describe('Test updating event configuration', async function() {
         cellEncoder,
       );
     });
-    
-    it('Set end timestamp', async () => {
+
+    it('Set meta', async () => {
       await bridgeOwner.runTarget({
         contract: tonEventConfiguration,
-        method: 'setEndTimestamp',
+        method: 'setMeta',
         params: {
-          endTimestamp: 1
+          _meta: ''
         }
       });
     });
-  
-    it('Check configuration end timestamp', async () => {
+
+    it('Check configuration meta', async () => {
       const details = await tonEventConfiguration.call({ method: 'getDetails' });
 
-      expect(details._networkConfiguration.endTimestamp)
-        .to.be.bignumber.equal(1, 'Wrong end timestamps');
+      expect(details._meta)
+        .to.be.equal(emptyCell, 'Wrong meta');
     });
   });
 });

@@ -24,7 +24,8 @@ interface IEthereumEventConfiguration is IBasicEventConfiguration {
 
     function getDetails() external view responsible returns(
         BasicConfiguration _basicConfiguration,
-        EthereumEventConfiguration _networkConfiguration
+        EthereumEventConfiguration _networkConfiguration,
+        TvmCell _meta
     );
 
     function setEndBlockNumber(uint32 endBlockNumber) external;

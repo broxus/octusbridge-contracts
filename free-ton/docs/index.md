@@ -70,7 +70,7 @@
 
 
 # EthereumEvent
-**Path**: [contracts/bridge/event-contracts/EthereumEvent.sol](./../contracts/bridge/event-contracts/EthereumEvent.sol)
+**Path**: [contracts/bridge/event-contracts/EthereumEvent.sol](../contracts/bridge/event-contracts/token-transfer/TokenTransferEthereumEvent.sol)
 
 **Title**: Basic example of Ethereum event configuration
 
@@ -207,7 +207,7 @@
 
 
 # TonEvent
-**Path**: [contracts/bridge/event-contracts/TonEvent.sol](./../contracts/bridge/event-contracts/TonEvent.sol)
+**Path**: [contracts/bridge/event-contracts/TonEvent.sol](../contracts/bridge/event-contracts/token-transfer/TokenTransferTonEvent.sol)
 
 
 

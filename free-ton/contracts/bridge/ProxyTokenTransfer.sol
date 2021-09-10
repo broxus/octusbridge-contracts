@@ -40,6 +40,7 @@ contract ProxyTokenTransfer is
     TransferUtils,
     CheckPubKey
 {
+    event Withdraw(int8 wid, uint256 addr, uint128 tokens, uint160 eth_addr, uint32 chainId);
 
     Configuration config;
     uint128 burnedCount;
@@ -99,6 +100,15 @@ contract ProxyTokenTransfer is
                 uint160 ethereumAddress,
                 uint32 chainId
             ) = payload.toSlice().decode(uint160, uint32);
+
+//            emit Withdraw(
+//                sender_address.wid,
+//                sender_address.value,
+//                tokens,
+//                ethereumAddress,
+//                chainId
+//            );
+
             TvmCell eventData = encodeTonEventData(
                 sender_address.wid,
                 sender_address.value,

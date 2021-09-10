@@ -6,7 +6,7 @@ pragma AbiHeader pubkey;
 import "./BaseEvent.sol";
 import "../../interfaces/event-contracts/IEthereumEvent.sol";
 
-abstract contract EthereumBaseEvent is BaseEvent, IEthereumEvent {
+contract EthereumBaseEvent is BaseEvent, IEthereumEvent {
     // Event data
     EthereumEventInitData static eventInitData;
 
@@ -27,9 +27,9 @@ abstract contract EthereumBaseEvent is BaseEvent, IEthereumEvent {
         loadRelays();
     }
 
-    function onInit() virtual internal;
-    function onConfirm() virtual internal;
-    function onReject() virtual internal;
+    function onInit() virtual internal {}
+    function onConfirm() virtual internal {}
+    function onReject() virtual internal {}
 
 
 

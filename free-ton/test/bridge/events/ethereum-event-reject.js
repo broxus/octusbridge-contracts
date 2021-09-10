@@ -123,7 +123,7 @@ describe('Test ethereum event reject', async function() {
     
       logger.log(`Expected event address: ${expectedEventContract}`);
     
-      eventContract = await locklift.factory.getContract('EthereumEvent');
+      eventContract = await locklift.factory.getContract('TokenTransferEthereumEvent');
       eventContract.setAddress(expectedEventContract);
       eventContract.afterRun = afterRun;
     });

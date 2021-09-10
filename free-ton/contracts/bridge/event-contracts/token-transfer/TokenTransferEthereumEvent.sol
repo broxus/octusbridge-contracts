@@ -3,12 +3,12 @@ pragma AbiHeader time;
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
-import "./base/EthereumBaseEvent.sol";
-import "./../interfaces/IEventNotificationReceiver.sol";
-import "./../interfaces/event-contracts/IEthereumEvent.sol";
-import "./../interfaces/IProxy.sol";
-import "./../../utils/ErrorCodes.sol";
-import './../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
+import "./../base/EthereumBaseEvent.sol";
+import "./../../interfaces/IEventNotificationReceiver.sol";
+import "./../../interfaces/event-contracts/IEthereumEvent.sol";
+import "./../../interfaces/IProxy.sol";
+import "./../../../utils/ErrorCodes.sol";
+import './../../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
 /// @title Basic example of Ethereum event configuration
@@ -16,7 +16,7 @@ import './../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag
 /// rejects / confirms with external message directly into this contract.
 /// In case enough confirmations is collected - callback is executed.
 /// This implementation is used for cross chain token transfers
-contract EthereumEvent is EthereumBaseEvent {
+contract TokenTransferEthereumEvent is EthereumBaseEvent {
 
     constructor(address _initializer, TvmCell _meta) EthereumBaseEvent(_initializer, _meta) public {}
 

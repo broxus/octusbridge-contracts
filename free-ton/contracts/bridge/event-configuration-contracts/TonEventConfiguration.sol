@@ -5,7 +5,7 @@ pragma AbiHeader expire;
 import './../interfaces/event-contracts/ITonEvent.sol';
 import "./../interfaces/event-configuration-contracts/ITonEventConfiguration.sol";
 
-import './../event-contracts/TonEvent.sol';
+import './../event-contracts/base/TonBaseEvent.sol';
 
 import './../../utils/TransferUtils.sol';
 import './../../utils/ErrorCodes.sol';
@@ -22,13 +22,26 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
     BasicConfiguration public static basicConfiguration;
     TonEventConfiguration public static networkConfiguration;
 
+    TvmCell public meta;
+
     /*
         @param _owner Event configuration owner
     */
-    constructor(address _owner) public checkPubKey {
+    constructor(address _owner, TvmCell _meta) public checkPubKey {
         tvm.accept();
 
         setOwnership(_owner);
+
+        meta = _meta;
+    }
+
+    /**
+        @notice
+            Set new configuration meta.
+        @param _meta New configuration meta
+    */
+    function setMeta(TvmCell _meta) override onlyOwner cashBack external {
+        meta = _meta;
     }
 
     /// @dev Set end timestamp. Can be set only in case current value is 0.
@@ -89,7 +102,7 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
 
         ITonEvent.TonEventInitData eventInitData = buildEventInitData(eventVoteData);
 
-        eventContract = new TonEvent{
+        eventContract = new TonBaseEvent{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED,
             code: basicConfiguration.eventCode,
@@ -97,7 +110,7 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
             varInit: {
                 eventInitData: eventInitData
             }
-        }(msg.sender, basicConfiguration.meta);
+        }(msg.sender, meta);
     }
 
     /*
@@ -118,7 +131,7 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
         ITonEvent.TonEventInitData eventInitData = buildEventInitData(eventVoteData);
 
         TvmCell stateInit = tvm.buildStateInit({
-            contr: TonEvent,
+            contr: TonBaseEvent,
             varInit: {
                 eventInitData: eventInitData
             },
@@ -136,11 +149,13 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
     */
     function getDetails() override public view responsible returns(
         BasicConfiguration _basicConfiguration,
-        TonEventConfiguration _networkConfiguration
+        TonEventConfiguration _networkConfiguration,
+        TvmCell _meta
     ) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS}(
             basicConfiguration,
-            networkConfiguration
+            networkConfiguration,
+            meta
         );
     }
 

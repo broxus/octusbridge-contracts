@@ -3,11 +3,11 @@ pragma AbiHeader time;
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
-import "./base/TonBaseEvent.sol";
-import "./../interfaces/IEventNotificationReceiver.sol";
-import "./../interfaces/event-contracts/ITonEvent.sol";
-import "./../../utils/ErrorCodes.sol";
-import './../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
+import "./../base/TonBaseEvent.sol";
+import "./../../interfaces/IEventNotificationReceiver.sol";
+import "./../../interfaces/event-contracts/ITonEvent.sol";
+import "./../../../utils/ErrorCodes.sol";
+import './../../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 /*
     @title DAO Ethereum Action event configuration

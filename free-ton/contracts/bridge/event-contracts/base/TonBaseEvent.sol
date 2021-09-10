@@ -6,7 +6,7 @@ pragma AbiHeader pubkey;
 import "./BaseEvent.sol";
 import "../../interfaces/event-contracts/ITonEvent.sol";
 
-abstract contract TonBaseEvent is BaseEvent, ITonEvent {
+contract TonBaseEvent is BaseEvent, ITonEvent {
     // Event data
     TonEventInitData static eventInitData;
     // Ethereum payload signatures for confirmations
@@ -30,9 +30,9 @@ abstract contract TonBaseEvent is BaseEvent, ITonEvent {
         loadRelays();
     }
 
-    function onInit() virtual internal;
-    function onConfirm() virtual internal;
-    function onReject() virtual internal;
+    function onInit() virtual internal {}
+    function onConfirm() virtual internal {}
+    function onReject() virtual internal {}
 
     function getStakingAddress() override internal view returns (address) {
         return eventInitData.staking;

@@ -116,7 +116,7 @@ describe('Test ton event reject', async function() {
 
       logger.log(`Expected event address: ${expectedEventContract}`);
       
-      eventContract = await locklift.factory.getContract('TonEvent');
+      eventContract = await locklift.factory.getContract('TokenTransferTonEvent');
       eventContract.setAddress(expectedEventContract);
       eventContract.afterRun = afterRun;
     });

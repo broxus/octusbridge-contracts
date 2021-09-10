@@ -19,6 +19,13 @@ import "../utils/cell-encoder/CellEncoder.sol";
 import "../bridge/interfaces/event-configuration-contracts/ITonEventConfiguration.sol";
 
 contract DaoRoot is CellEncoder, IDaoRoot, IUpgradable, Delegate {
+    event EthActions(
+        int8 gasBackWid,
+        uint256 gasBackAddress,
+        uint32 chainId,
+        ActionStructure.EthActionStripped[] actions
+    );
+
     uint8 public constant proposalMaxOperations = 10;
     uint16 public constant proposalMaxDescriptionLen = 2048;
 

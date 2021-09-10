@@ -9,8 +9,8 @@ interface IBasicEventConfiguration {
         address staking;
         uint64 eventInitialBalance;
         TvmCell eventCode;
-        TvmCell meta;
     }
 
     function getType() external pure responsible returns(EventType _type);
+    function setMeta(TvmCell _meta) external;
 }
