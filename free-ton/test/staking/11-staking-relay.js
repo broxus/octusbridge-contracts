@@ -238,8 +238,7 @@ describe('Test Staking Rewards', async function () {
     const startElection = async function(_user) {
         return await stakingRoot.run({
             method: 'startElectionOnNewRound',
-            params: {},
-            keyPair: _user.keyPair
+            params: {}
         })
     }
 
@@ -247,7 +246,7 @@ describe('Test Staking Rewards', async function () {
         return await stakingRoot.run({
             method: 'endElection',
             params: {},
-            keyPair: _user.keyPair
+            // keyPair: _user.keyPair
         })
     }
 
@@ -762,17 +761,11 @@ describe('Test Staking Rewards', async function () {
             it("Election on new round starts", async function () {
                 await wait(5000);
 
-                const bal1 = await getBalance(user1Data.address);
-
                 const tx = await startElection(user2);
                 const election = await getElection(2);
                 if (locklift.network === 'dev') {
                     await wait(DEV_WAIT);
                 }
-                const bal1_after = await getBalance(user1Data.address);
-
-                expect(bal1_after.toNumber()).to.be.gte(bal1.minus(15**9).toNumber(), "Bad gas")
-
                 const round_num = await election.call({method: 'round_num'});
                 expect(round_num.toString()).to.be.equal('2', "Bad election - round num");
 
@@ -924,7 +917,6 @@ describe('Test Staking Rewards', async function () {
 
                 const bal1 = await getBalance(user1Data.address);
                 const tx = await endElection(user1);
-                console.log(tx.transaction.out_msgs);
 
                 const round = await getRelayRound(2);
                 await waitForDeploy(round.address);

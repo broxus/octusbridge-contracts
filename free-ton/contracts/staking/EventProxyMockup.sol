@@ -2,7 +2,7 @@ pragma ton-solidity >= 0.39.0;
 pragma AbiHeader pubkey;
 
 
-import "./interfaces/ITonEvent.sol";
+import "../bridge/interfaces/event-contracts/ITonEvent.sol";
 
 
 contract EventProxyMockup {

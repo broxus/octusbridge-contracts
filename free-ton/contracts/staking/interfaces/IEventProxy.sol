@@ -1,7 +1,7 @@
 pragma ton-solidity >= 0.39.0;
 
 
-import "./ITonEvent.sol";
+import "../../bridge/interfaces/event-contracts/ITonEvent.sol";
 
 
 interface IEventProxy {

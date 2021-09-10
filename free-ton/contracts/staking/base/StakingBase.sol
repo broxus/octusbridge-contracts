@@ -1,5 +1,5 @@
 pragma ton-solidity >= 0.39.0;
-pragma AbiHeader expire;
+//pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 import "./../interfaces/IRootTokenContract.sol";
@@ -23,6 +23,7 @@ import "./../libraries/Gas.sol";
 import "../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol";
 import "../../../../node_modules/@broxus/contracts/contracts/platform/Platform.sol";
 import "../../utils/Delegate.sol";
+
 
 abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, IStakingDao, Delegate {
     // Events

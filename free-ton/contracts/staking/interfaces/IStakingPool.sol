@@ -80,6 +80,8 @@ interface IStakingPool {
     ) external;
     function onRelayRoundInitialized(
         uint32 round_num,
+        uint32 round_start_time,
+        uint32 round_end_time,
         uint32 relays_count,
         uint128 round_reward,
         bool duplicate,

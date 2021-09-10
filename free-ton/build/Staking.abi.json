@@ -131,6 +131,8 @@
 			"name": "onRelayRoundInitialized",
 			"inputs": [
 				{"name":"round_num","type":"uint32"},
+				{"name":"round_start_time","type":"uint32"},
+				{"name":"round_end_time","type":"uint32"},
 				{"name":"relays_count","type":"uint32"},
 				{"name":"round_reward","type":"uint128"},
 				{"name":"duplicate","type":"bool"},

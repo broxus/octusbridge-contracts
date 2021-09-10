@@ -1,6 +1,6 @@
 pragma ton-solidity >= 0.39.0;
 pragma AbiHeader pubkey;
-pragma AbiHeader expire;
+//pragma AbiHeader expire;
 
 import "./StakingUpgradable.sol";
 import "../interfaces/IEventProxy.sol";
@@ -243,6 +243,8 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
 
     function onRelayRoundInitialized(
         uint32 round_num,
+        uint32 round_start_time,
+        uint32 round_end_time,
         uint32 relays_count,
         uint128 round_reward,
         bool duplicate,
@@ -261,16 +263,17 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         }
 
         currentRelayRound = round_num;
-        currentRelayRoundStartTime = now;
+        currentRelayRoundStartTime = round_start_time;
         rewardRounds[rewardRounds.length - 1].totalReward += round_reward;
 
         TvmBuilder event_builder;
         event_builder.store(round_num); // 128
         event_builder.store(eth_keys); // ref
-        ITonEvent.TonEventVoteData event_data = ITonEvent.TonEventVoteData(tx.timestamp, now, 0, event_builder.toCell());
+        event_builder.store(round_end_time);
+        ITonEvent.TonEventVoteData event_data = ITonEvent.TonEventVoteData(tx.timestamp, now, event_builder.toCell());
         IEventProxy(bridge_event_config_ton_eth).deployEvent{value: Gas.EVENT_DEPLOY_VALUE}(event_data);
 
-        emit RelayRoundInitialized(round_num, now, now + relayRoundTime, msg.sender, relays_count, duplicate);
+        emit RelayRoundInitialized(round_num, round_start_time, round_end_time, msg.sender, relays_count, duplicate);
     }
 
     function deployElection(uint32 round_num, address send_gas_to) private returns (address) {
@@ -282,8 +285,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
 
         return new Platform{
             stateInit: _buildInitData(PlatformTypes.Election, _buildElectionParams(round_num)),
-            value: Gas.DEPLOY_ELECTION_MIN_VALUE,
-            flag: MsgFlag.SENDER_PAYS_FEES
+            value: Gas.DEPLOY_ELECTION_MIN_VALUE
         }(election_code, constructor_params.toCell(), send_gas_to);
     }
 
