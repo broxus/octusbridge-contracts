@@ -91,9 +91,9 @@ contract DAO is IDAO, ReentrancyGuard, OwnableUpgradeable, Cache, ChainId {
             "DAO: wrong event configuration"
         );
 
-        (uint32 chainId, EthAction[] memory actions) = abi.decode(
+        (int8 _wid, uint256 _addr, uint32 chainId, EthAction[] memory actions) = abi.decode(
             tonEvent.eventData,
-            (uint32, EthAction[])
+            (int8, uint256, uint32, EthAction[])
         );
 
         require(
