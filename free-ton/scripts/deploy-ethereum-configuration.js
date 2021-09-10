@@ -17,18 +17,19 @@ const main = async () => {
   // Get all contracts from the build
   const build = [...new Set(fs.readdirSync('build').map(o => o.split('.')[0]))];
   
+  const events = fs.readdirSync('./../ethereum/abi');
+  
   const {
-    eventAbiPath
+    eventAbiFile
   } = await prompts({
-    type: 'text',
-    name: 'eventAbiPath',
-    message: 'Path to the ABI file, which contains target event',
-    initial: './../ethereum/abi/Vault.json',
-    validate: value => fs.existsSync(value) ? true : 'Path not exist'
+    type: 'select',
+    name: 'eventAbiFile',
+    message: 'Select Ethereum ABI, which contains target event',
+    choices: events.map(e => new Object({ title: e, value: e }))
   });
 
-  const abi = JSON.parse(fs.readFileSync(eventAbiPath));
-
+  const abi = JSON.parse(fs.readFileSync(`./../ethereum/abi/${eventAbiFile}`));
+  
   const {
     event
   } = await prompts({

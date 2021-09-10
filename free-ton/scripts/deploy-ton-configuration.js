@@ -17,17 +17,20 @@ const main = async () => {
   // Get all contracts from the build
   const build = [...new Set(fs.readdirSync('build').map(o => o.split('.')[0]))];
   
+  const events = fs.readdirSync('./build/').filter(e => e.endsWith('.abi.json'));
+  
   const {
-    eventAbiPath
+    eventAbiFile
   } = await prompts({
-    type: 'text',
-    name: 'eventAbiPath',
-    message: 'Path to the ABI file, which contains target event',
-    initial: './build/ProxyTokenTransfer.abi.json',
-    validate: value => fs.existsSync(value) ? true : 'Path not exist'
+    type: 'select',
+    name: 'eventAbiFile',
+    message: 'Select TON abi, which contains target event',
+    choices: events.map(e => new Object({ title: e, value: e }))
+    // initial: './build/ProxyTokenTransfer.abi.json',
+    // validate: value => fs.existsSync(value) ? true : 'Path not exist'
   });
   
-  const abi = JSON.parse(fs.readFileSync(eventAbiPath));
+  const abi = JSON.parse(fs.readFileSync(`./build/${eventAbiFile}`));
   
   const {
     event

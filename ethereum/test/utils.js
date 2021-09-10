@@ -79,6 +79,8 @@ const encodeTonEvent = (params) => {
 
 const encodeDaoActions = (actions, chainId=defaultChainId) => web3.eth.abi.encodeParameters(
   [
+    'int8',
+    'uint256',
     'uint32',
     {
       'EthAction[]': {
@@ -90,6 +92,8 @@ const encodeDaoActions = (actions, chainId=defaultChainId) => web3.eth.abi.encod
     }
   ],
   [
+    1,
+    2,
     chainId,
     actions.map(action => new Object({
       'value': action.value || 0,
