@@ -33,6 +33,8 @@ let stakingRoot;
 let stakingToken;
 let stakingWallet;
 
+let encoder;
+
 let user1;
 let user1Data;
 let user2;
@@ -204,6 +206,18 @@ describe('Test Staking Rewards', async function () {
         return election;
     }
 
+    const deployEncoder = async function () {
+        const Encoder = await locklift.factory.getContract('Encoder');
+        const [keyPair] = await locklift.keys.getKeyPairs();
+
+        return await locklift.giver.deployContract({
+            contract: Encoder,
+            constructorParams: {},
+            initParams: {},
+            keyPair
+        }, locklift.utils.convertCrystal(1, 'nano'));
+    }
+
     const getRelayRound = async function (round_num) {
         const addr = await stakingRoot.call({
             method: 'getRelayRoundAddress',
@@ -271,13 +285,31 @@ describe('Test Staking Rewards', async function () {
     }
 
     const confirmEthRelayAccount = async function (_user, _user_eth_addr) {
+        const event_data = await encoder.call({
+            method: 'encodeEthereumStakingEventData',
+            params: {
+                eth_addr: _user_eth_addr,
+                wk_id: 0,
+                ton_addr_body: (new BigNumber(`0x${_user.address.slice(2)}`)).toFixed(0)
+            }
+        })
         return await stakingOwner.runTarget({
             contract: stakingRoot,
-            method: 'confirmEthAccount',
+            method: 'broxusBridgeCallback',
             params: {
-                staker_addr: _user.address,
-                eth_address: _user_eth_addr,
-                send_gas_to: stakingOwner.address
+                eventData: {
+                    voteData: {
+                        eventTransaction: 0,
+                        eventIndex: 0,
+                        eventData: event_data,
+                        eventBlockNumber: 0,
+                        eventBlock: 0
+                    },
+                    configuration: _user.address,
+                    staking: _user.address,
+                    chainId: 0
+                },
+                gasBackAddress: stakingOwner.address
             },
             value: convertCrystal(0.7, "nano")
         })
@@ -345,6 +377,7 @@ describe('Test Staking Rewards', async function () {
             it('Deploy root', async function() {
                 stakingToken = await deployTokenRoot('Farm token', 'FT');
             });
+
         });
 
         describe('Users', async function() {
@@ -399,6 +432,10 @@ describe('Test Staking Rewards', async function () {
         });
 
         describe('Staking', async function() {
+            it('Deploy encoder', async function() {
+                encoder = await deployEncoder();
+            })
+
             it('Deploy staking', async function () {
                 const [keyPair, keyPair1] = await locklift.keys.getKeyPairs();
 

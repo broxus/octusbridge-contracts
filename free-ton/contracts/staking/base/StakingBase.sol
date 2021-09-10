@@ -43,6 +43,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         uint32 relays_count,
         bool duplicate
     );
+    event RelayRoundCreation(uint128 round_num, uint160[] eth_keys, uint32 round_end);
     event RelaySlashed(address user, uint128 tokens_withdrawn);
 
     event DepositReverted(address user, uint128 amount);

@@ -102,6 +102,17 @@
 			]
 		},
 		{
+			"name": "decodeTonStakingEventData",
+			"inputs": [
+				{"name":"data","type":"cell"}
+			],
+			"outputs": [
+				{"name":"round_num","type":"uint128"},
+				{"name":"eth_keys","type":"uint160[]"},
+				{"name":"round_end","type":"uint32"}
+			]
+		},
+		{
 			"name": "decodeEthereumStakingEventData",
 			"inputs": [
 				{"name":"data","type":"cell"}
@@ -110,6 +121,17 @@
 				{"name":"eth_addr","type":"uint160"},
 				{"name":"wk_id","type":"int8"},
 				{"name":"ton_addr_body","type":"uint256"}
+			]
+		},
+		{
+			"name": "encodeEthereumStakingEventData",
+			"inputs": [
+				{"name":"eth_addr","type":"uint160"},
+				{"name":"wk_id","type":"int8"},
+				{"name":"ton_addr_body","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
 			]
 		},
 		{

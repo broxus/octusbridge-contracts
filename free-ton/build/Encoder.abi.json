@@ -19,6 +19,17 @@
 			"outputs": [
 				{"name":"value0","type":"cell"}
 			]
+		},
+		{
+			"name": "encodeEthereumStakingEventData",
+			"inputs": [
+				{"name":"eth_addr","type":"uint160"},
+				{"name":"wk_id","type":"int8"},
+				{"name":"ton_addr_body","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
 		}
 	],
 	"data": [

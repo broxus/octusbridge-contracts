@@ -4,9 +4,10 @@ pragma AbiHeader pubkey;
 
 import "./StakingUpgradable.sol";
 import "../interfaces/IEventProxy.sol";
+import "../../bridge/interfaces/IProxy.sol";
 
 
-abstract contract StakingPoolRelay is StakingPoolUpgradable {
+abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
     function linkRelayAccounts(uint256 ton_pubkey, uint160 eth_address) external view onlyActive {
         require (msg.value >= relayInitialDeposit, ErrorCodes.VALUE_TOO_LOW);
 
@@ -20,11 +21,19 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable {
         );
     }
 
-    function confirmEthAccount(address staker_addr, uint160 eth_address, address send_gas_to) external view onlyEthTonConfig {
+    function broxusBridgeCallback(
+        IEthereumEvent.EthereumEventInitData eventData,
+        address gasBackAddress
+    ) external override onlyEthTonConfig {
         require (msg.value >= Gas.MIN_CONFIRM_ETH_RELAY_ACC_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
-
         tvm.rawReserve(_reserve(), 2);
 
+        (uint160 eth_addr, int8 wk_id, uint256 ton_addr_body) = eventData.voteData.eventData.toSlice().decode(uint160, int8, uint256);
+        address ton_staker_addr = address.makeAddrStd(wk_id, ton_addr_body);
+        confirmEthAccount(ton_staker_addr, eth_addr, gasBackAddress);
+    }
+
+    function confirmEthAccount(address staker_addr, uint160 eth_address, address send_gas_to) internal {
         address user_data = getUserDataAddress(staker_addr);
         IUserData(user_data).processConfirmEthAccount{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(eth_address, send_gas_to);
     }

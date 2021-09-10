@@ -26,11 +26,10 @@
 			]
 		},
 		{
-			"name": "confirmEthAccount",
+			"name": "broxusBridgeCallback",
 			"inputs": [
-				{"name":"staker_addr","type":"address"},
-				{"name":"eth_address","type":"uint160"},
-				{"name":"send_gas_to","type":"address"}
+				{"components":[{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"},{"name":"chainId","type":"uint32"}],"name":"eventData","type":"tuple"},
+				{"name":"gasBackAddress","type":"address"}
 			],
 			"outputs": [
 			]
@@ -531,6 +530,14 @@
 	],
 	"events": [
 		{
+			"name": "Confirm",
+			"inputs": [
+				{"name":"relay","type":"uint256"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "RewardDeposit",
 			"inputs": [
 				{"name":"amount","type":"uint128"},
@@ -603,6 +610,16 @@
 				{"name":"round_addr","type":"address"},
 				{"name":"relays_count","type":"uint32"},
 				{"name":"duplicate","type":"bool"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "RelayRoundCreation",
+			"inputs": [
+				{"name":"round_num","type":"uint128"},
+				{"name":"eth_keys","type":"uint160[]"},
+				{"name":"round_end","type":"uint32"}
 			],
 			"outputs": [
 			]

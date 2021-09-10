@@ -237,8 +237,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
                     2: data_2
                         bits:
                             address bridge_event_config_ton_eth
-                            uint32 prevRelayRound
-                            EndTime
+                            uint32 prevRelayRoundEndTime
                             uint32 pendingRelayRound
                             uint32 lastRewardTime
                             address tokenRoot
