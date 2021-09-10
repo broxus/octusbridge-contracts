@@ -10,6 +10,8 @@ contract EthereumBaseEvent is BaseEvent, IEthereumEvent {
     // Event data
     EthereumEventInitData static eventInitData;
 
+    event Confirm(uint relay);
+
     /// @dev Should be deployed only by corresponding EthereumEventConfiguration contract
     /// @param _initializer The address who paid for contract deployment.
     /// Receives all contract balance at the end of event contract lifecycle.

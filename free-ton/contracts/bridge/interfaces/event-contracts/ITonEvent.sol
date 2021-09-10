@@ -15,6 +15,4 @@ interface ITonEvent is IBasicEvent {
         address configuration;
         address staking;
     }
-
-    event Confirm(uint relay, bytes signature);
 }

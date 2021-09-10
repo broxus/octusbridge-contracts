@@ -18,6 +18,4 @@ interface IEthereumEvent {
         address staking;
         uint32 chainId;
     }
-
-    event Confirm(uint relay);
 }
