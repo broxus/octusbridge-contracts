@@ -12,6 +12,8 @@ contract TonBaseEvent is BaseEvent, ITonEvent {
     // Ethereum payload signatures for confirmations
     mapping (uint => bytes) public signatures;
 
+    event Confirm(uint relay, bytes signature);
+
     /*
         @dev Should be deployed only by TonEventConfiguration contract
         @param _initializer The address who paid for contract deployment.

@@ -309,14 +309,6 @@
 			],
 			"outputs": [
 			]
-		},
-		{
-			"name": "Confirm",
-			"inputs": [
-				{"name":"relay","type":"uint256"}
-			],
-			"outputs": [
-			]
 		}
 	],
 	"fields": [

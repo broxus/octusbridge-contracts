@@ -530,14 +530,6 @@
 	],
 	"events": [
 		{
-			"name": "Confirm",
-			"inputs": [
-				{"name":"relay","type":"uint256"}
-			],
-			"outputs": [
-			]
-		},
-		{
 			"name": "RewardDeposit",
 			"inputs": [
 				{"name":"amount","type":"uint128"},
