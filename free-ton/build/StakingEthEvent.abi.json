@@ -42,6 +42,18 @@
 			]
 		},
 		{
+			"name": "getEventInitData",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"}],"name":"voteData","type":"tuple"},
+				{"name":"configuration","type":"address"},
+				{"name":"staking","type":"address"},
+				{"name":"chainId","type":"uint32"}
+			]
+		},
+		{
 			"name": "confirm",
 			"inputs": [
 			],
@@ -79,6 +91,16 @@
 			],
 			"outputs": [
 				{"name":"voters","type":"uint256[]"}
+			]
+		},
+		{
+			"name": "getVote",
+			"inputs": [
+				{"name":"answerId","type":"uint32"},
+				{"name":"voter","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"vote","type":"optional(uint8)"}
 			]
 		},
 		{
