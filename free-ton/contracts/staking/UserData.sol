@@ -430,7 +430,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     }
 
     function relayMembershipRequestAccepted(
-        uint32 round_num, uint128 tokens, uint256 ton_pubkey, uint256 eth_addr, uint32 lock_time
+        uint32 round_num, uint128 tokens, uint256 ton_pubkey, uint160 eth_addr, uint32 lock_time
     ) external override onlyElection(round_num) {
         tvm.rawReserve(_reserve(), 2);
 

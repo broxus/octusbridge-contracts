@@ -276,7 +276,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         rewardRounds[rewardRounds.length - 1].totalReward += round_reward;
 
         TvmBuilder event_builder;
-        event_builder.store(round_num); // 128
+        event_builder.store(round_num); // 32
         event_builder.store(eth_keys); // ref
         event_builder.store(round_end_time);
         ITonEvent.TonEventVoteData event_data = ITonEvent.TonEventVoteData(tx.timestamp, now, event_builder.toCell());

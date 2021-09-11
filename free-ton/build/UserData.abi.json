@@ -230,7 +230,7 @@
 				{"name":"round_num","type":"uint32"},
 				{"name":"tokens","type":"uint128"},
 				{"name":"ton_pubkey","type":"uint256"},
-				{"name":"eth_addr","type":"uint256"},
+				{"name":"eth_addr","type":"uint160"},
 				{"name":"lock_time","type":"uint32"}
 			],
 			"outputs": [
@@ -331,7 +331,7 @@
 				{"name":"round_num","type":"uint32"},
 				{"name":"tokens","type":"uint128"},
 				{"name":"ton_pubkey","type":"uint256"},
-				{"name":"eth_address","type":"uint256"},
+				{"name":"eth_address","type":"uint160"},
 				{"name":"lock_until","type":"uint32"}
 			],
 			"outputs": [

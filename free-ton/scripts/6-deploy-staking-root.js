@@ -2,7 +2,7 @@ const logger = require("mocha-logger");
 const fs = require("fs");
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
-const DEV_WAIT = 60000;
+const DEV_WAIT = 30000;
 
 const getRandomNonce = () => Math.ceil(Math.random() * 64000);
 
@@ -47,6 +47,11 @@ async function main() {
   logger.log(`Deploying staking with next params:`)
   console.dir(config, {depth: null, colors: true});
 
+  const true_admin = config._admin;
+  const true_dao = config._dao_root;
+
+  config._admin = admin.address;
+  config._dao_root = admin.address;
   config.stakingCode = stakingRoot.code;
   config._deploy_nonce = getRandomNonce();
 
@@ -91,6 +96,46 @@ async function main() {
     method: 'setActive',
     params: {new_active: true, send_gas_to: admin.address},
   });
+  logger.log(`Set true admin`);
+  await admin.runTarget({
+    contract: stakingRoot,
+    method: 'setAdmin',
+    params: {new_admin: true_admin, send_gas_to: admin.address},
+  });
+  // relay lock time - 1 hour
+  // relay initial deposit - 5 tokens
+  // relay lock time - 3 hours
+  // election time - 20 min
+  // time before election - 30 min
+  // relays count - 100
+  // min relays count - 3
+  //
+  logger.log(`Set relay config`);
+  await admin.runTarget({
+    contract: stakingRoot,
+    method: 'setRelayConfig',
+    params: {
+      relay_lock_time: 3600 * 3,
+      relay_round_time: 3600,
+      election_time: 20 * 60,
+      time_before_election: 30 * 60,
+      relays_count: 100,
+      min_relays_count: 3,
+      min_relay_deposit: 5000000000,
+      relay_initial_deposit: 10000000000,
+      send_gas_to: admin.address
+    }
+  });
+
+  logger.log(`Set true dao`);
+  await admin.runTarget({
+    contract: stakingRoot,
+    method: 'setDaoRoot',
+    params: {new_dao_root: true_dao, send_gas_to: admin.address},
+  });
+
+  const details = await stakingRoot.call({method: 'getDetails'});
+  console.log(details);
 
 }
 
