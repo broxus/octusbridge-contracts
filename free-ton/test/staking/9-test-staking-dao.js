@@ -133,14 +133,13 @@ describe('Test DAO in Staking', async function () {
 
     return await locklift.giver.deployContract({
       contract: DaoEthereumActionEventConfiguration,
-      constructorParams: {_owner},
+      constructorParams: {_owner, _meta: '',},
       initParams: {
         basicConfiguration: {
           eventABI: '',
           eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
           staking: bridge,
           eventCode: DaoEthereumActionEvent.code,
-          meta: '',
         },
         networkConfiguration: {
           eventEmitter: _dao,
