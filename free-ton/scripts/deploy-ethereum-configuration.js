@@ -40,7 +40,7 @@ const main = async () => {
       .filter(o => o.type == 'event' && o.anonymous == false)
       .map(event => {
         return {
-          title: `${event.name} (${event.inputs.map(i => i.name).join(',')})`,
+          title: `${event.name} (${event.inputs.map(i => i.type.concat(' ').concat(i.name)).join(',')})`,
           value: event,
         }
       }),
@@ -114,12 +114,6 @@ const main = async () => {
       message: 'Configuration initial balance (in TONs)',
       initial: 10
     },
-    {
-      type: 'text',
-      name: 'bridge',
-      message: 'Bridge FreeTON address, used to automatically deploy connector',
-      validate: value => isValidTonAddress(value) ? true : 'Invalid TON address'
-    }
   ]);
   
   const EthereumEventConfiguration = await locklift.factory.getContract('EthereumEventConfiguration');
@@ -155,22 +149,6 @@ const main = async () => {
   spinner.stop();
   
   await logContract(ethereumEventConfiguration);
-  
-  // Deploy one-off account
-  // The balance should be enough to deploy connector
-  const Account = await locklift.factory.getAccount('Wallet');
-  const owner = await locklift.giver.deployContract({
-    contract: Account,
-    constructorParams: {},
-    initParams: {},
-    keyPair,
-  }, locklift.utils.convertCrystal(1000, 'nano'));
-  
-  owner.setKeyPair(keyPair);
-  owner.afterRun = afterRun;
-  owner.name = 'Bridge owner';
-  
-  // Deploy new connector
 };
 
 

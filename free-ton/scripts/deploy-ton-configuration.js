@@ -42,7 +42,7 @@ const main = async () => {
       .events
       .map(event => {
         return {
-          title: `${event.name} (${event.inputs.map(i => i.name).join(',')})`,
+          title: `${event.name} (${event.inputs.map(i => i.type.concat(' ').concat(i.name)).join(',')})`,
           value: event.inputs,
         }
       }),
