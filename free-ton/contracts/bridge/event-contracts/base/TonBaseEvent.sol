@@ -32,16 +32,8 @@ contract TonBaseEvent is BaseEvent, ITonEvent {
         loadRelays();
     }
 
-    function getEventInitData() public view responsible returns (
-        TonEventVoteData voteData,
-        address configuration,
-        address staking
-    ) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} (
-            eventInitData.voteData,
-            eventInitData.configuration,
-            eventInitData.staking
-        );
+    function getEventInitData() public view responsible returns (TonEventInitData) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS} eventInitData;
     }
 
     function onInit() virtual internal {}

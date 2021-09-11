@@ -29,18 +29,8 @@ contract EthereumBaseEvent is BaseEvent, IEthereumEvent {
         loadRelays();
     }
 
-    function getEventInitData() public view responsible returns (
-        EthereumEventVoteData voteData,
-        address configuration,
-        address staking,
-        uint32 chainId
-    ) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} (
-            eventInitData.voteData,
-            eventInitData.configuration,
-            eventInitData.staking,
-            eventInitData.chainId
-        );
+    function getEventInitData() public view responsible returns (EthereumEventInitData) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS} eventInitData;
     }
 
     function onInit() virtual internal {}
