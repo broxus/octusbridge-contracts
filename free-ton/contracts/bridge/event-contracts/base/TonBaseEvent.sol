@@ -32,6 +32,10 @@ contract TonBaseEvent is BaseEvent, ITonEvent {
         loadRelays();
     }
 
+    function getEventInitData() public view responsible returns (TonEventInitData) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS} eventInitData;
+    }
+
     function onInit() virtual internal {}
     function onConfirm() virtual internal {}
     function onReject() virtual internal {}

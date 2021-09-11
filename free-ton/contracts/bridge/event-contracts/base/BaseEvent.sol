@@ -92,4 +92,8 @@ abstract contract BaseEvent is IBasicEvent, CellEncoder, TransferUtils{
 
         return {value: 0, flag: MsgFlag.REMAINING_GAS} voters;
     }
+
+    function getVote(uint256 voter) public view responsible returns(optional(Vote) vote) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS} votes.fetch(voter);
+    }
 }
