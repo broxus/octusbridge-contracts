@@ -1,0 +1,462 @@
+{
+  "address": "0x9424BdAA153CA0a8dFdaa057164ae14B2bC23b2B",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "bridge",
+          "type": "address"
+        }
+      ],
+      "name": "UpdateBridge",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "int8",
+              "name": "wid",
+              "type": "int8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "addr",
+              "type": "uint256"
+            }
+          ],
+          "indexed": false,
+          "internalType": "struct IBridge.TONAddress",
+          "name": "configuration",
+          "type": "tuple"
+        }
+      ],
+      "name": "UpdateConfiguration",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "bridge",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "cache",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "configuration",
+      "outputs": [
+        {
+          "internalType": "int8",
+          "name": "wid",
+          "type": "int8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "addr",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "payload",
+          "type": "bytes"
+        },
+        {
+          "internalType": "bytes[]",
+          "name": "signatures",
+          "type": "bytes[]"
+        }
+      ],
+      "name": "execute",
+      "outputs": [
+        {
+          "internalType": "bytes[]",
+          "name": "responses",
+          "type": "bytes[]"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getChainID",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_owner",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_bridge",
+          "type": "address"
+        }
+      ],
+      "name": "initialize",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_bridge",
+          "type": "address"
+        }
+      ],
+      "name": "updateBridge",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "int8",
+              "name": "wid",
+              "type": "int8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "addr",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IBridge.TONAddress",
+          "name": "_configuration",
+          "type": "tuple"
+        }
+      ],
+      "name": "updateConfiguration",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x898f9973d8247b7e16282981f276bea5e3339f25167480514a4c71d23c2b18ab",
+  "receipt": {
+    "to": null,
+    "from": "0x18d0A2fd70e3A0c20DAd2C7dE40290BC8C2696F7",
+    "contractAddress": "0x9424BdAA153CA0a8dFdaa057164ae14B2bC23b2B",
+    "transactionIndex": 12,
+    "gasUsed": "1182829",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0xd10dd02fe4f2bd50c2d507f3f4adae5728f476f9870bad8081baed39be5343cf",
+    "transactionHash": "0x898f9973d8247b7e16282981f276bea5e3339f25167480514a4c71d23c2b18ab",
+    "logs": [],
+    "blockNumber": 5472919,
+    "cumulativeGasUsed": "2142958",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "solcInputHash": "f9fcb9efb6e7f633fac25888459f2944",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.0+commit.c7dfd78e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"bridge\",\"type\":\"address\"}],\"name\":\"UpdateBridge\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"components\":[{\"internalType\":\"int8\",\"name\":\"wid\",\"type\":\"int8\"},{\"internalType\":\"uint256\",\"name\":\"addr\",\"type\":\"uint256\"}],\"indexed\":false,\"internalType\":\"struct IBridge.TONAddress\",\"name\":\"configuration\",\"type\":\"tuple\"}],\"name\":\"UpdateConfiguration\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"bridge\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"cache\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"configuration\",\"outputs\":[{\"internalType\":\"int8\",\"name\":\"wid\",\"type\":\"int8\"},{\"internalType\":\"uint256\",\"name\":\"addr\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"payload\",\"type\":\"bytes\"},{\"internalType\":\"bytes[]\",\"name\":\"signatures\",\"type\":\"bytes[]\"}],\"name\":\"execute\",\"outputs\":[{\"internalType\":\"bytes[]\",\"name\":\"responses\",\"type\":\"bytes[]\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getChainID\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_bridge\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_bridge\",\"type\":\"address\"}],\"name\":\"updateBridge\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"int8\",\"name\":\"wid\",\"type\":\"int8\"},{\"internalType\":\"uint256\",\"name\":\"addr\",\"type\":\"uint256\"}],\"internalType\":\"struct IBridge.TONAddress\",\"name\":\"_configuration\",\"type\":\"tuple\"}],\"name\":\"updateConfiguration\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"Executes proposals confirmed in TON DAO. Proposals are submitted in form of payloads and signatures\",\"kind\":\"dev\",\"methods\":{\"execute(bytes,bytes[])\":{\"details\":\"@param payload Encoded TON event with payload details\",\"params\":{\"signatures\":\"Payload signatures\"},\"returns\":{\"responses\":\"Bytes-encoded payload action responses\"}},\"initialize(address,address)\":{\"params\":{\"_bridge\":\"Bridge address\",\"_owner\":\"DAO owner. Should be used only for initial set up, than ownership should be transferred to DAO itself.\"}},\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner.\"},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"},\"updateBridge(address)\":{\"details\":\"Update bridge address\",\"params\":{\"_bridge\":\"New bridge address\"}},\"updateConfiguration((int8,uint256))\":{\"params\":{\"_configuration\":\"New configuration TON address\"}}},\"title\":\"DAO contract for Broxus TON-Ethereum bridge\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"execute(bytes,bytes[])\":{\"notice\":\"Execute set of actions.\"},\"initialize(address,address)\":{\"notice\":\"Initializer\"},\"updateConfiguration((int8,uint256))\":{\"notice\":\"Update address of the TON configuration, that emits actions for this DAO\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/DAO.sol\":\"DAO\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.0;\\n\\nimport \\\"../utils/ContextUpgradeable.sol\\\";\\nimport \\\"../proxy/utils/Initializable.sol\\\";\\n\\n/**\\n * @dev Contract module which provides a basic access control mechanism, where\\n * there is an account (an owner) that can be granted exclusive access to\\n * specific functions.\\n *\\n * By default, the owner account will be the one that deploys the contract. This\\n * can later be changed with {transferOwnership}.\\n *\\n * This module is used through inheritance. It will make available the modifier\\n * `onlyOwner`, which can be applied to your functions to restrict their use to\\n * the owner.\\n */\\nabstract contract OwnableUpgradeable is Initializable, ContextUpgradeable {\\n    address private _owner;\\n\\n    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);\\n\\n    /**\\n     * @dev Initializes the contract setting the deployer as the initial owner.\\n     */\\n    function __Ownable_init() internal initializer {\\n        __Context_init_unchained();\\n        __Ownable_init_unchained();\\n    }\\n\\n    function __Ownable_init_unchained() internal initializer {\\n        _setOwner(_msgSender());\\n    }\\n\\n    /**\\n     * @dev Returns the address of the current owner.\\n     */\\n    function owner() public view virtual returns (address) {\\n        return _owner;\\n    }\\n\\n    /**\\n     * @dev Throws if called by any account other than the owner.\\n     */\\n    modifier onlyOwner() {\\n        require(owner() == _msgSender(), \\\"Ownable: caller is not the owner\\\");\\n        _;\\n    }\\n\\n    /**\\n     * @dev Leaves the contract without owner. It will not be possible to call\\n     * `onlyOwner` functions anymore. Can only be called by the current owner.\\n     *\\n     * NOTE: Renouncing ownership will leave the contract without an owner,\\n     * thereby removing any functionality that is only available to the owner.\\n     */\\n    function renounceOwnership() public virtual onlyOwner {\\n        _setOwner(address(0));\\n    }\\n\\n    /**\\n     * @dev Transfers ownership of the contract to a new account (`newOwner`).\\n     * Can only be called by the current owner.\\n     */\\n    function transferOwnership(address newOwner) public virtual onlyOwner {\\n        require(newOwner != address(0), \\\"Ownable: new owner is the zero address\\\");\\n        _setOwner(newOwner);\\n    }\\n\\n    function _setOwner(address newOwner) private {\\n        address oldOwner = _owner;\\n        _owner = newOwner;\\n        emit OwnershipTransferred(oldOwner, newOwner);\\n    }\\n    uint256[49] private __gap;\\n}\\n\",\"keccak256\":\"0x35b09b69aca3bc2633da8f47382a81ecf367efe57167a2114f60f9ec81988afa\",\"license\":\"MIT\"},\"@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev This is a base contract to aid in writing upgradeable contracts, or any kind of contract that will be deployed\\n * behind a proxy. Since a proxied contract can't have a constructor, it's common to move constructor logic to an\\n * external initializer function, usually called `initialize`. It then becomes necessary to protect this initializer\\n * function so it can only be called once. The {initializer} modifier provided by this contract will have this effect.\\n *\\n * TIP: To avoid leaving the proxy in an uninitialized state, the initializer function should be called as early as\\n * possible by providing the encoded function call as the `_data` argument to {ERC1967Proxy-constructor}.\\n *\\n * CAUTION: When used with inheritance, manual care must be taken to not invoke a parent initializer twice, or to ensure\\n * that all initializers are idempotent. This is not verified automatically as constructors are by Solidity.\\n */\\nabstract contract Initializable {\\n    /**\\n     * @dev Indicates that the contract has been initialized.\\n     */\\n    bool private _initialized;\\n\\n    /**\\n     * @dev Indicates that the contract is in the process of being initialized.\\n     */\\n    bool private _initializing;\\n\\n    /**\\n     * @dev Modifier to protect an initializer function from being invoked twice.\\n     */\\n    modifier initializer() {\\n        require(_initializing || !_initialized, \\\"Initializable: contract is already initialized\\\");\\n\\n        bool isTopLevelCall = !_initializing;\\n        if (isTopLevelCall) {\\n            _initializing = true;\\n            _initialized = true;\\n        }\\n\\n        _;\\n\\n        if (isTopLevelCall) {\\n            _initializing = false;\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0x8b2abd85d0ece7e866e100e9d47ca9cbec93c87cf71a8d267b2b93eb81f7d5e9\",\"license\":\"MIT\"},\"@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.0;\\nimport \\\"../proxy/utils/Initializable.sol\\\";\\n\\n/*\\n * @dev Provides information about the current execution context, including the\\n * sender of the transaction and its data. While these are generally available\\n * via msg.sender and msg.data, they should not be accessed in such a direct\\n * manner, since when dealing with meta-transactions the account sending and\\n * paying for execution may not be the actual sender (as far as an application\\n * is concerned).\\n *\\n * This contract is only required for intermediate, library-like contracts.\\n */\\nabstract contract ContextUpgradeable is Initializable {\\n    function __Context_init() internal initializer {\\n        __Context_init_unchained();\\n    }\\n\\n    function __Context_init_unchained() internal initializer {\\n    }\\n    function _msgSender() internal view virtual returns (address) {\\n        return msg.sender;\\n    }\\n\\n    function _msgData() internal view virtual returns (bytes calldata) {\\n        return msg.data;\\n    }\\n    uint256[50] private __gap;\\n}\\n\",\"keccak256\":\"0x828a6fb02c79a63dc5867427f355c0a9c65b4359fecadae73883154da550f6f8\",\"license\":\"MIT\"},\"@openzeppelin/contracts/security/ReentrancyGuard.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Contract module that helps prevent reentrant calls to a function.\\n *\\n * Inheriting from `ReentrancyGuard` will make the {nonReentrant} modifier\\n * available, which can be applied to functions to make sure there are no nested\\n * (reentrant) calls to them.\\n *\\n * Note that because there is a single `nonReentrant` guard, functions marked as\\n * `nonReentrant` may not call one another. This can be worked around by making\\n * those functions `private`, and then adding `external` `nonReentrant` entry\\n * points to them.\\n *\\n * TIP: If you would like to learn more about reentrancy and alternative ways\\n * to protect against it, check out our blog post\\n * https://blog.openzeppelin.com/reentrancy-after-istanbul/[Reentrancy After Istanbul].\\n */\\nabstract contract ReentrancyGuard {\\n    // Booleans are more expensive than uint256 or any type that takes up a full\\n    // word because each write operation emits an extra SLOAD to first read the\\n    // slot's contents, replace the bits taken up by the boolean, and then write\\n    // back. This is the compiler's defense against contract upgrades and\\n    // pointer aliasing, and it cannot be disabled.\\n\\n    // The values being non-zero value makes deployment a bit more expensive,\\n    // but in exchange the refund on every call to nonReentrant will be lower in\\n    // amount. Since refunds are capped to a percentage of the total\\n    // transaction's gas, it is best to keep them low in cases like this one, to\\n    // increase the likelihood of the full refund coming into effect.\\n    uint256 private constant _NOT_ENTERED = 1;\\n    uint256 private constant _ENTERED = 2;\\n\\n    uint256 private _status;\\n\\n    constructor() {\\n        _status = _NOT_ENTERED;\\n    }\\n\\n    /**\\n     * @dev Prevents a contract from calling itself, directly or indirectly.\\n     * Calling a `nonReentrant` function from another `nonReentrant`\\n     * function is not supported. It is possible to prevent this from happening\\n     * by making the `nonReentrant` function external, and make it call a\\n     * `private` function that does the actual work.\\n     */\\n    modifier nonReentrant() {\\n        // On the first call to nonReentrant, _notEntered will be true\\n        require(_status != _ENTERED, \\\"ReentrancyGuard: reentrant call\\\");\\n\\n        // Any calls to nonReentrant after this point will fail\\n        _status = _ENTERED;\\n\\n        _;\\n\\n        // By storing the original value once again, a refund is triggered (see\\n        // https://eips.ethereum.org/EIPS/eip-2200)\\n        _status = _NOT_ENTERED;\\n    }\\n}\\n\",\"keccak256\":\"0x842ccf9a6cd33e17b7acef8372ca42090755217b358fe0c44c98e951ea549d3a\",\"license\":\"MIT\"},\"contracts/DAO.sol\":{\"content\":\"// SPDX-License-Identifier: Apache-2.0\\npragma solidity ^0.8.0;\\npragma experimental ABIEncoderV2;\\n\\nimport \\\"./interfaces/IBridge.sol\\\";\\nimport \\\"./interfaces/IDAO.sol\\\";\\n\\nimport \\\"@openzeppelin/contracts/security/ReentrancyGuard.sol\\\";\\nimport \\\"@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol\\\";\\n\\nimport \\\"./utils/Cache.sol\\\";\\nimport \\\"./utils/ChainId.sol\\\";\\n\\n\\n/// @title DAO contract for Broxus TON-Ethereum bridge\\n/// @dev Executes proposals confirmed in TON DAO.\\n/// Proposals are submitted in form of payloads and signatures\\ncontract DAO is IDAO, ReentrancyGuard, OwnableUpgradeable, Cache, ChainId {\\n    address public bridge;\\n    IBridge.TONAddress public configuration;\\n\\n    /**\\n        @notice\\n            Initializer\\n        @param _owner DAO owner. Should be used only for initial set up,\\n            than ownership should be transferred to DAO itself.\\n        @param _bridge Bridge address\\n    */\\n    function initialize(\\n        address _owner,\\n        address _bridge\\n    ) public initializer {\\n        bridge = _bridge;\\n\\n        __Ownable_init();\\n        transferOwnership(_owner);\\n    }\\n\\n    /**\\n        @notice\\n            Update address of the TON configuration, that emits actions for this DAO\\n        @param _configuration New configuration TON address\\n    */\\n    function updateConfiguration(\\n        IBridge.TONAddress calldata _configuration\\n    ) public onlyOwner {\\n        configuration = _configuration;\\n    }\\n\\n    /// @dev Update bridge address\\n    /// @param _bridge New bridge address\\n    function updateBridge(\\n        address _bridge\\n    ) override external onlyOwner {\\n        bridge = _bridge;\\n    }\\n\\n    /**\\n        @notice\\n            Execute set of actions.\\n        @dev\\n\\n        @param payload Encoded TON event with payload details\\n        @param signatures Payload signatures\\n        @return responses Bytes-encoded payload action responses\\n    */\\n    function execute(\\n        bytes calldata payload,\\n        bytes[] calldata signatures\\n    ) override external nonReentrant notCached(payload) returns(\\n        bytes[] memory responses\\n    ) {\\n        require(\\n            IBridge(bridge).verifySignedTonEvent(\\n                payload,\\n                signatures\\n            ) == 0,\\n            \\\"DAO: signatures verification failed\\\"\\n        );\\n\\n        (IBridge.TONEvent memory tonEvent) = abi.decode(payload, (IBridge.TONEvent));\\n\\n        require(\\n            tonEvent.proxy == address(this),\\n            \\\"DAO: wrong event proxy\\\"\\n        );\\n\\n        require(\\n            tonEvent.configurationWid == configuration.wid &&\\n            tonEvent.configurationAddress == configuration.addr,\\n            \\\"DAO: wrong event configuration\\\"\\n        );\\n\\n        (int8 _wid, uint256 _addr, uint32 chainId, EthAction[] memory actions) = abi.decode(\\n            tonEvent.eventData,\\n            (int8, uint256, uint32, EthAction[])\\n        );\\n\\n        require(\\n            chainId == getChainID(),\\n            \\\"DAO: wrong chain id\\\"\\n        );\\n\\n        responses = new bytes[](actions.length);\\n\\n        for (uint i=0; i<actions.length; i++) {\\n            EthAction memory action = actions[i];\\n\\n            bytes memory callData;\\n\\n            if (bytes(action.signature).length == 0) {\\n                callData = action.data;\\n            } else {\\n                callData = abi.encodePacked(\\n                    bytes4(keccak256(bytes(action.signature))),\\n                    action.data\\n                );\\n            }\\n\\n            (bool success, bytes memory response) = address(action.target)\\n                .call{value: action.value}(callData);\\n\\n            require(success, \\\"DAO: execution fail\\\");\\n\\n            responses[i] = response;\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0x0d8ee6a0c5fa1f95bf2285c062655f9167e1d20060ea67a91bd0e59169bb7cd2\",\"license\":\"Apache-2.0\"},\"contracts/interfaces/IBridge.sol\":{\"content\":\"// SPDX-License-Identifier: Apache-2.0\\npragma solidity ^0.8.0;\\npragma experimental ABIEncoderV2;\\n\\n\\ninterface IBridge {\\n    struct TONEvent {\\n        uint64 eventTransactionLt;\\n        uint32 eventTimestamp;\\n        bytes eventData;\\n        int8 configurationWid;\\n        uint256 configurationAddress;\\n        int8 eventContractWid;\\n        uint256 eventContractAddress;\\n        address proxy;\\n        uint32 round;\\n    }\\n\\n    struct Round {\\n        uint32 end;\\n        uint32 ttl;\\n        uint32 requiredSignatures;\\n    }\\n\\n    struct TONAddress {\\n        int8 wid;\\n        uint256 addr;\\n    }\\n\\n    function updateMinimumRequiredSignatures(uint32 _minimumRequiredSignatures) external;\\n    function updateRoundRelaysConfiguration(TONAddress calldata _roundRelaysConfiguration) external;\\n    function updateRoundTTL(uint32 _roundTTL) external;\\n\\n    function isRelay(\\n        uint32 round,\\n        address candidate\\n    ) external view returns(bool);\\n\\n    function isBanned(\\n        address candidate\\n    ) external view returns(bool);\\n\\n    function isRoundRotten(\\n        uint32 round\\n    ) external view returns(bool);\\n\\n    function verifySignedTonEvent(\\n        bytes memory payload,\\n        bytes[] memory signatures\\n    ) external view returns(uint32);\\n\\n    function setRoundRelays(\\n        bytes calldata payload,\\n        bytes[] calldata signatures\\n    ) external;\\n\\n    function banRelays(\\n        address[] calldata _relays\\n    ) external;\\n\\n    function unbanRelays(\\n        address[] calldata _relays\\n    ) external;\\n\\n    function pause() external;\\n    function unpause() external;\\n\\n    event EmergencyShutdown(bool active);\\n\\n    event UpdateMinimumRequiredSignatures(uint32 value);\\n    event UpdateRoundTTL(uint32 value);\\n    event UpdateRoundRelaysConfiguration(TONAddress configuration);\\n\\n    event NewRound(uint32 indexed round, Round meta);\\n    event RoundRelay(uint32 indexed round, address indexed relay);\\n    event BanRelay(address indexed relay, bool status);\\n}\\n\",\"keccak256\":\"0xbf338191557358051b0be1dcfd83963749e5380df42eae720cf08d7aa400e602\",\"license\":\"Apache-2.0\"},\"contracts/interfaces/IDAO.sol\":{\"content\":\"// SPDX-License-Identifier: Apache-2.0\\npragma solidity ^0.8.0;\\npragma experimental ABIEncoderV2;\\n\\n\\nimport \\\"./IBridge.sol\\\";\\n\\n\\ninterface IDAO {\\n    struct EthAction {\\n        uint value;\\n        uint160 target;\\n        string signature;\\n        bytes data;\\n    }\\n\\n    function updateBridge(\\n        address _bridge\\n    ) external;\\n\\n    function execute(\\n        bytes memory payload,\\n        bytes[] memory signatures\\n    ) external returns(bytes[] memory responses);\\n\\n    event UpdateBridge(address indexed bridge);\\n    event UpdateConfiguration(IBridge.TONAddress configuration);\\n}\\n\",\"keccak256\":\"0xf756e60b633f4ed6fe4a47cfe0b85fadcf4f9d35abde287e20cca2f1523d561e\",\"license\":\"Apache-2.0\"},\"contracts/utils/Cache.sol\":{\"content\":\"// SPDX-License-Identifier: Apache-2.0\\npragma solidity ^0.8.0;\\npragma experimental ABIEncoderV2;\\n\\n\\ncontract Cache {\\n    mapping (bytes32 => bool) public cache;\\n\\n    modifier notCached(bytes memory payload) {\\n        bytes32 hash_ = keccak256(abi.encode(payload));\\n\\n        require(cache[hash_] == false, \\\"Cache: payload already seen\\\");\\n\\n        _;\\n\\n        cache[hash_] = true;\\n    }\\n}\\n\",\"keccak256\":\"0x892ab15314f50ccc98be6da2bd21b0195e01a4d6fa8f01a5539dd42a8d17e753\",\"license\":\"Apache-2.0\"},\"contracts/utils/ChainId.sol\":{\"content\":\"// SPDX-License-Identifier: Apache-2.0\\npragma solidity ^0.8.0;\\n\\n\\ncontract ChainId {\\n    function getChainID() public view returns (uint256) {\\n        uint256 id;\\n        assembly {\\n            id := chainid()\\n        }\\n        return id;\\n    }\\n}\\n\",\"keccak256\":\"0x734835d87f3f990e85b363c40721d8d3fc98a688b0e48b51cfceaec4fe010a53\",\"license\":\"Apache-2.0\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b506001600055611408806100256000396000f3fe608060405234801561001057600080fd5b50600436106100a95760003560e01c80636eb38212116100715780636eb382121461012a578063715018a61461013d5780638da5cb5b1461014557806399eb59b91461015a578063e78cea921461017a578063f2fde38b14610182576100a9565b806324856bc3146100ae57806335c042e0146100d7578063485cc955146100ec578063564b81ef146100ff5780636c70bee914610114575b600080fd5b6100c16100bc366004610b12565b610195565b6040516100ce9190610f30565b60405180910390f35b6100ea6100e5366004610d58565b6105aa565b005b6100ea6100fa366004610ac2565b6105fb565b61010761069c565b6040516100ce91906112a8565b61011c6106a0565b6040516100ce92919061105a565b6100ea610138366004610a9f565b6106b0565b6100ea610711565b61014d61075c565b6040516100ce9190610f1c565b61016d610168366004610afa565b61076b565b6040516100ce9190610f90565b61014d610780565b6100ea610190366004610a9f565b61078f565b6060600260005414156101c35760405162461bcd60e51b81526004016101ba90611271565b60405180910390fd5b6002600055604080516020601f8701819004810282018101909252858152908690869081908401838280828437600092018290525060405190935061020e9250849150602001611047565b60408051601f1981840301815291815281516020928301206000818152606690935291205490915060ff16156102565760405162461bcd60e51b81526004016101ba9061118a565b60675460405163a40b9e7360e01b81526001600160a01b039091169063a40b9e739061028c908a908a908a908a90600401610f9b565b60206040518083038186803b1580156102a457600080fd5b505afa1580156102b8573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906102dc9190610e5d565b63ffffffff16156102ff5760405162461bcd60e51b81526004016101ba90611147565b600061030d87890189610d6f565b60e08101519091506001600160a01b0316301461033c5760405162461bcd60e51b81526004016101ba90611117565b6068546060820151600091820b820b910b14801561035f57506069546080820151145b61037b5760405162461bcd60e51b81526004016101ba906110e0565b60008060008084604001518060200190518101906103999190610bd1565b93509350935093506103a961069c565b8263ffffffff16146103cd5760405162461bcd60e51b81526004016101ba9061106d565b805167ffffffffffffffff8111156103f557634e487b7160e01b600052604160045260246000fd5b60405190808252806020026020018201604052801561042857816020015b60608152602001906001900390816104135790505b50975060005b815181101561057d57600082828151811061045957634e487b7160e01b600052603260045260246000fd5b6020026020010151905060608160400151516000141561047e575060608101516104b2565b81604001518051906020012082606001516040516020016104a0929190610ecf565b60405160208183030381529060405290505b60008083602001516001600160a01b03168460000151846040516104d69190610f00565b60006040518083038185875af1925050503d8060008114610513576040519150601f19603f3d011682016040523d82523d6000602084013e610518565b606091505b50915091508161053a5760405162461bcd60e51b81526004016101ba90611244565b808d868151811061055b57634e487b7160e01b600052603260045260246000fd5b602002602001018190525050505050808061057590611333565b91505061042e565b5050506000938452505060666020525060408120805460ff19166001908117909155905550949350505050565b6105b2610800565b6001600160a01b03166105c361075c565b6001600160a01b0316146105e95760405162461bcd60e51b81526004016101ba9061120f565b8060686105f68282611370565b505050565b600154610100900460ff1680610614575060015460ff16155b6106305760405162461bcd60e51b81526004016101ba906111c1565b600154610100900460ff1615801561065a576001805460ff1961ff00199091166101001716811790555b606780546001600160a01b0319166001600160a01b03841617905561067d610804565b6106868361078f565b80156105f6576001805461ff0019169055505050565b4690565b60685460695460009190910b9082565b6106b8610800565b6001600160a01b03166106c961075c565b6001600160a01b0316146106ef5760405162461bcd60e51b81526004016101ba9061120f565b606780546001600160a01b0319166001600160a01b0392909216919091179055565b610719610800565b6001600160a01b031661072a61075c565b6001600160a01b0316146107505760405162461bcd60e51b81526004016101ba9061120f565b61075a6000610887565b565b6034546001600160a01b031690565b60666020526000908152604090205460ff1681565b6067546001600160a01b031681565b610797610800565b6001600160a01b03166107a861075c565b6001600160a01b0316146107ce5760405162461bcd60e51b81526004016101ba9061120f565b6001600160a01b0381166107f45760405162461bcd60e51b81526004016101ba9061109a565b6107fd81610887565b50565b3390565b600154610100900460ff168061081d575060015460ff16155b6108395760405162461bcd60e51b81526004016101ba906111c1565b600154610100900460ff16158015610863576001805460ff1961ff00199091166101001716811790555b61086b6108d9565b61087361094b565b80156107fd576001805461ff001916905550565b603480546001600160a01b038381166001600160a01b0319831681179093556040519116919082907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e090600090a35050565b600154610100900460ff16806108f2575060015460ff16155b61090e5760405162461bcd60e51b81526004016101ba906111c1565b600154610100900460ff16158015610873576001805460ff1961ff001990911661010017168117905580156107fd576001805461ff001916905550565b600154610100900460ff1680610964575060015460ff16155b6109805760405162461bcd60e51b81526004016101ba906111c1565b600154610100900460ff161580156109aa576001805460ff1961ff00199091166101001716811790555b6108736109b5610800565b610887565b80356109c58161139c565b919050565b600082601f8301126109da578081fd5b81356109ed6109e8826112db565b6112b1565b818152846020838601011115610a01578283fd5b816020850160208301379081016020019190915292915050565b600082601f830112610a2b578081fd5b8151610a396109e8826112db565b818152846020838601011115610a4d578283fd5b610a5e826020830160208701611303565b949350505050565b80356109c5816113b1565b80516109c58161139c565b80356109c5816113c0565b803567ffffffffffffffff811681146109c557600080fd5b600060208284031215610ab0578081fd5b8135610abb8161139c565b9392505050565b60008060408385031215610ad4578081fd5b8235610adf8161139c565b91506020830135610aef8161139c565b809150509250929050565b600060208284031215610b0b578081fd5b5035919050565b60008060008060408587031215610b27578182fd5b843567ffffffffffffffff80821115610b3e578384fd5b818701915087601f830112610b51578384fd5b813581811115610b5f578485fd5b60208981838601011115610b71578586fd5b808401975081965080890135935082841115610b8b578586fd5b838901935089601f850112610b9e578586fd5b8335915082821115610bae578586fd5b89818284028601011115610bc0578586fd5b969995985091909501955093505050565b60008060008060808587031215610be6578182fd5b8451610bf1816113b1565b602086015160408701519195509350610c09816113c0565b606086015190925067ffffffffffffffff811115610c25578182fd5b86601f8288010112610c35578182fd5b8086015167ffffffffffffffff811115610c5157610c5161135a565b610c5f6020808302016112b1565b8181526020808201919089850101855b84811015610d465781518b8701016080818e03601f19011215610c90578788fd5b60405180608082011067ffffffffffffffff60808301111715610cb557610cb561135a565b6080810160405260208201518152610ccf60408301610a71565b6020820152606082015167ffffffffffffffff811115610ced57898afd5b610cfc8f602083860101610a1b565b604083015250608082015167ffffffffffffffff811115610d1b57898afd5b610d2a8f602083860101610a1b565b6060830152508552506020938401939190910190600101610c6f565b50508094505050505092959194509250565b600060408284031215610d69578081fd5b50919050565b600060208284031215610d80578081fd5b813567ffffffffffffffff80821115610d97578283fd5b8184019150610120808387031215610dad578384fd5b610db6816112b1565b9050610dc183610a87565b8152610dcf60208401610a7c565b6020820152604083013582811115610de5578485fd5b610df1878286016109ca565b604083015250610e0360608401610a66565b606082015260808301356080820152610e1e60a08401610a66565b60a082015260c083013560c0820152610e3960e084016109ba565b60e08201526101009150610e4e828401610a7c565b91810191909152949350505050565b600060208284031215610e6e578081fd5b8151610abb816113c0565b60008284528282602086013780602084860101526020601f19601f85011685010190509392505050565b60008151808452610ebb816020860160208601611303565b601f01601f19169290920160200192915050565b6001600160e01b0319831681528151600090610ef2816004850160208701611303565b919091016004019392505050565b60008251610f12818460208701611303565b9190910192915050565b6001600160a01b0391909116815260200190565b6000602080830181845280855180835260408601915060408482028701019250838701855b82811015610f8357603f19888603018452610f71858351610ea3565b94509285019290850190600101610f55565b5092979650505050505050565b901515815260200190565b600060408252610faf604083018688610e79565b6020838203818501528185835281830190508182870284010187855b8881101561103757858303601f190184528135368b9003601e19018112610ff0578788fd5b8a01803567ffffffffffffffff811115611008578889fd5b8036038c1315611016578889fd5b6110238582898501610e79565b958701959450505090840190600101610fcb565b50909a9950505050505050505050565b600060208252610abb6020830184610ea3565b60009290920b8252602082015260400190565b602080825260139082015272111053ce881ddc9bdb99c818da185a5b881a59606a1b604082015260600190565b60208082526026908201527f4f776e61626c653a206e6577206f776e657220697320746865207a65726f206160408201526564647265737360d01b606082015260800190565b6020808252601e908201527f44414f3a2077726f6e67206576656e7420636f6e66696775726174696f6e0000604082015260600190565b60208082526016908201527544414f3a2077726f6e67206576656e742070726f787960501b604082015260600190565b60208082526023908201527f44414f3a207369676e61747572657320766572696669636174696f6e206661696040820152621b195960ea1b606082015260800190565b6020808252601b908201527f43616368653a207061796c6f616420616c7265616479207365656e0000000000604082015260600190565b6020808252602e908201527f496e697469616c697a61626c653a20636f6e747261637420697320616c72656160408201526d191e481a5b9a5d1a585b1a5e995960921b606082015260800190565b6020808252818101527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604082015260600190565b602080825260139082015272111053ce88195e1958dd5d1a5bdb8819985a5b606a1b604082015260600190565b6020808252601f908201527f5265656e7472616e637947756172643a207265656e7472616e742063616c6c00604082015260600190565b90815260200190565b60405181810167ffffffffffffffff811182821017156112d3576112d361135a565b604052919050565b600067ffffffffffffffff8211156112f5576112f561135a565b50601f01601f191660200190565b60005b8381101561131e578181015183820152602001611306565b8381111561132d576000848401525b50505050565b600060001982141561135357634e487b7160e01b81526011600452602481fd5b5060010190565b634e487b7160e01b600052604160045260246000fd5b813561137b816113b1565b60ff1982541660ff8260000b16811783555050602082013560018201555050565b6001600160a01b03811681146107fd57600080fd5b8060000b81146107fd57600080fd5b63ffffffff811681146107fd57600080fdfea264697066735822122069934bb8f0eed2a4e6319fffd6e3b660be9dc056e971e092ef03c574463138dd64736f6c63430008000033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100a95760003560e01c80636eb38212116100715780636eb382121461012a578063715018a61461013d5780638da5cb5b1461014557806399eb59b91461015a578063e78cea921461017a578063f2fde38b14610182576100a9565b806324856bc3146100ae57806335c042e0146100d7578063485cc955146100ec578063564b81ef146100ff5780636c70bee914610114575b600080fd5b6100c16100bc366004610b12565b610195565b6040516100ce9190610f30565b60405180910390f35b6100ea6100e5366004610d58565b6105aa565b005b6100ea6100fa366004610ac2565b6105fb565b61010761069c565b6040516100ce91906112a8565b61011c6106a0565b6040516100ce92919061105a565b6100ea610138366004610a9f565b6106b0565b6100ea610711565b61014d61075c565b6040516100ce9190610f1c565b61016d610168366004610afa565b61076b565b6040516100ce9190610f90565b61014d610780565b6100ea610190366004610a9f565b61078f565b6060600260005414156101c35760405162461bcd60e51b81526004016101ba90611271565b60405180910390fd5b6002600055604080516020601f8701819004810282018101909252858152908690869081908401838280828437600092018290525060405190935061020e9250849150602001611047565b60408051601f1981840301815291815281516020928301206000818152606690935291205490915060ff16156102565760405162461bcd60e51b81526004016101ba9061118a565b60675460405163a40b9e7360e01b81526001600160a01b039091169063a40b9e739061028c908a908a908a908a90600401610f9b565b60206040518083038186803b1580156102a457600080fd5b505afa1580156102b8573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906102dc9190610e5d565b63ffffffff16156102ff5760405162461bcd60e51b81526004016101ba90611147565b600061030d87890189610d6f565b60e08101519091506001600160a01b0316301461033c5760405162461bcd60e51b81526004016101ba90611117565b6068546060820151600091820b820b910b14801561035f57506069546080820151145b61037b5760405162461bcd60e51b81526004016101ba906110e0565b60008060008084604001518060200190518101906103999190610bd1565b93509350935093506103a961069c565b8263ffffffff16146103cd5760405162461bcd60e51b81526004016101ba9061106d565b805167ffffffffffffffff8111156103f557634e487b7160e01b600052604160045260246000fd5b60405190808252806020026020018201604052801561042857816020015b60608152602001906001900390816104135790505b50975060005b815181101561057d57600082828151811061045957634e487b7160e01b600052603260045260246000fd5b6020026020010151905060608160400151516000141561047e575060608101516104b2565b81604001518051906020012082606001516040516020016104a0929190610ecf565b60405160208183030381529060405290505b60008083602001516001600160a01b03168460000151846040516104d69190610f00565b60006040518083038185875af1925050503d8060008114610513576040519150601f19603f3d011682016040523d82523d6000602084013e610518565b606091505b50915091508161053a5760405162461bcd60e51b81526004016101ba90611244565b808d868151811061055b57634e487b7160e01b600052603260045260246000fd5b602002602001018190525050505050808061057590611333565b91505061042e565b5050506000938452505060666020525060408120805460ff19166001908117909155905550949350505050565b6105b2610800565b6001600160a01b03166105c361075c565b6001600160a01b0316146105e95760405162461bcd60e51b81526004016101ba9061120f565b8060686105f68282611370565b505050565b600154610100900460ff1680610614575060015460ff16155b6106305760405162461bcd60e51b81526004016101ba906111c1565b600154610100900460ff1615801561065a576001805460ff1961ff00199091166101001716811790555b606780546001600160a01b0319166001600160a01b03841617905561067d610804565b6106868361078f565b80156105f6576001805461ff0019169055505050565b4690565b60685460695460009190910b9082565b6106b8610800565b6001600160a01b03166106c961075c565b6001600160a01b0316146106ef5760405162461bcd60e51b81526004016101ba9061120f565b606780546001600160a01b0319166001600160a01b0392909216919091179055565b610719610800565b6001600160a01b031661072a61075c565b6001600160a01b0316146107505760405162461bcd60e51b81526004016101ba9061120f565b61075a6000610887565b565b6034546001600160a01b031690565b60666020526000908152604090205460ff1681565b6067546001600160a01b031681565b610797610800565b6001600160a01b03166107a861075c565b6001600160a01b0316146107ce5760405162461bcd60e51b81526004016101ba9061120f565b6001600160a01b0381166107f45760405162461bcd60e51b81526004016101ba9061109a565b6107fd81610887565b50565b3390565b600154610100900460ff168061081d575060015460ff16155b6108395760405162461bcd60e51b81526004016101ba906111c1565b600154610100900460ff16158015610863576001805460ff1961ff00199091166101001716811790555b61086b6108d9565b61087361094b565b80156107fd576001805461ff001916905550565b603480546001600160a01b038381166001600160a01b0319831681179093556040519116919082907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e090600090a35050565b600154610100900460ff16806108f2575060015460ff16155b61090e5760405162461bcd60e51b81526004016101ba906111c1565b600154610100900460ff16158015610873576001805460ff1961ff001990911661010017168117905580156107fd576001805461ff001916905550565b600154610100900460ff1680610964575060015460ff16155b6109805760405162461bcd60e51b81526004016101ba906111c1565b600154610100900460ff161580156109aa576001805460ff1961ff00199091166101001716811790555b6108736109b5610800565b610887565b80356109c58161139c565b919050565b600082601f8301126109da578081fd5b81356109ed6109e8826112db565b6112b1565b818152846020838601011115610a01578283fd5b816020850160208301379081016020019190915292915050565b600082601f830112610a2b578081fd5b8151610a396109e8826112db565b818152846020838601011115610a4d578283fd5b610a5e826020830160208701611303565b949350505050565b80356109c5816113b1565b80516109c58161139c565b80356109c5816113c0565b803567ffffffffffffffff811681146109c557600080fd5b600060208284031215610ab0578081fd5b8135610abb8161139c565b9392505050565b60008060408385031215610ad4578081fd5b8235610adf8161139c565b91506020830135610aef8161139c565b809150509250929050565b600060208284031215610b0b578081fd5b5035919050565b60008060008060408587031215610b27578182fd5b843567ffffffffffffffff80821115610b3e578384fd5b818701915087601f830112610b51578384fd5b813581811115610b5f578485fd5b60208981838601011115610b71578586fd5b808401975081965080890135935082841115610b8b578586fd5b838901935089601f850112610b9e578586fd5b8335915082821115610bae578586fd5b89818284028601011115610bc0578586fd5b969995985091909501955093505050565b60008060008060808587031215610be6578182fd5b8451610bf1816113b1565b602086015160408701519195509350610c09816113c0565b606086015190925067ffffffffffffffff811115610c25578182fd5b86601f8288010112610c35578182fd5b8086015167ffffffffffffffff811115610c5157610c5161135a565b610c5f6020808302016112b1565b8181526020808201919089850101855b84811015610d465781518b8701016080818e03601f19011215610c90578788fd5b60405180608082011067ffffffffffffffff60808301111715610cb557610cb561135a565b6080810160405260208201518152610ccf60408301610a71565b6020820152606082015167ffffffffffffffff811115610ced57898afd5b610cfc8f602083860101610a1b565b604083015250608082015167ffffffffffffffff811115610d1b57898afd5b610d2a8f602083860101610a1b565b6060830152508552506020938401939190910190600101610c6f565b50508094505050505092959194509250565b600060408284031215610d69578081fd5b50919050565b600060208284031215610d80578081fd5b813567ffffffffffffffff80821115610d97578283fd5b8184019150610120808387031215610dad578384fd5b610db6816112b1565b9050610dc183610a87565b8152610dcf60208401610a7c565b6020820152604083013582811115610de5578485fd5b610df1878286016109ca565b604083015250610e0360608401610a66565b606082015260808301356080820152610e1e60a08401610a66565b60a082015260c083013560c0820152610e3960e084016109ba565b60e08201526101009150610e4e828401610a7c565b91810191909152949350505050565b600060208284031215610e6e578081fd5b8151610abb816113c0565b60008284528282602086013780602084860101526020601f19601f85011685010190509392505050565b60008151808452610ebb816020860160208601611303565b601f01601f19169290920160200192915050565b6001600160e01b0319831681528151600090610ef2816004850160208701611303565b919091016004019392505050565b60008251610f12818460208701611303565b9190910192915050565b6001600160a01b0391909116815260200190565b6000602080830181845280855180835260408601915060408482028701019250838701855b82811015610f8357603f19888603018452610f71858351610ea3565b94509285019290850190600101610f55565b5092979650505050505050565b901515815260200190565b600060408252610faf604083018688610e79565b6020838203818501528185835281830190508182870284010187855b8881101561103757858303601f190184528135368b9003601e19018112610ff0578788fd5b8a01803567ffffffffffffffff811115611008578889fd5b8036038c1315611016578889fd5b6110238582898501610e79565b958701959450505090840190600101610fcb565b50909a9950505050505050505050565b600060208252610abb6020830184610ea3565b60009290920b8252602082015260400190565b602080825260139082015272111053ce881ddc9bdb99c818da185a5b881a59606a1b604082015260600190565b60208082526026908201527f4f776e61626c653a206e6577206f776e657220697320746865207a65726f206160408201526564647265737360d01b606082015260800190565b6020808252601e908201527f44414f3a2077726f6e67206576656e7420636f6e66696775726174696f6e0000604082015260600190565b60208082526016908201527544414f3a2077726f6e67206576656e742070726f787960501b604082015260600190565b60208082526023908201527f44414f3a207369676e61747572657320766572696669636174696f6e206661696040820152621b195960ea1b606082015260800190565b6020808252601b908201527f43616368653a207061796c6f616420616c7265616479207365656e0000000000604082015260600190565b6020808252602e908201527f496e697469616c697a61626c653a20636f6e747261637420697320616c72656160408201526d191e481a5b9a5d1a585b1a5e995960921b606082015260800190565b6020808252818101527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604082015260600190565b602080825260139082015272111053ce88195e1958dd5d1a5bdb8819985a5b606a1b604082015260600190565b6020808252601f908201527f5265656e7472616e637947756172643a207265656e7472616e742063616c6c00604082015260600190565b90815260200190565b60405181810167ffffffffffffffff811182821017156112d3576112d361135a565b604052919050565b600067ffffffffffffffff8211156112f5576112f561135a565b50601f01601f191660200190565b60005b8381101561131e578181015183820152602001611306565b8381111561132d576000848401525b50505050565b600060001982141561135357634e487b7160e01b81526011600452602481fd5b5060010190565b634e487b7160e01b600052604160045260246000fd5b813561137b816113b1565b60ff1982541660ff8260000b16811783555050602082013560018201555050565b6001600160a01b03811681146107fd57600080fd5b8060000b81146107fd57600080fd5b63ffffffff811681146107fd57600080fdfea264697066735822122069934bb8f0eed2a4e6319fffd6e3b660be9dc056e971e092ef03c574463138dd64736f6c63430008000033",
+  "devdoc": {
+    "details": "Executes proposals confirmed in TON DAO. Proposals are submitted in form of payloads and signatures",
+    "kind": "dev",
+    "methods": {
+      "execute(bytes,bytes[])": {
+        "details": "@param payload Encoded TON event with payload details",
+        "params": {
+          "signatures": "Payload signatures"
+        },
+        "returns": {
+          "responses": "Bytes-encoded payload action responses"
+        }
+      },
+      "initialize(address,address)": {
+        "params": {
+          "_bridge": "Bridge address",
+          "_owner": "DAO owner. Should be used only for initial set up, than ownership should be transferred to DAO itself."
+        }
+      },
+      "owner()": {
+        "details": "Returns the address of the current owner."
+      },
+      "renounceOwnership()": {
+        "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+      },
+      "transferOwnership(address)": {
+        "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+      },
+      "updateBridge(address)": {
+        "details": "Update bridge address",
+        "params": {
+          "_bridge": "New bridge address"
+        }
+      },
+      "updateConfiguration((int8,uint256))": {
+        "params": {
+          "_configuration": "New configuration TON address"
+        }
+      }
+    },
+    "title": "DAO contract for Broxus TON-Ethereum bridge",
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "execute(bytes,bytes[])": {
+        "notice": "Execute set of actions."
+      },
+      "initialize(address,address)": {
+        "notice": "Initializer"
+      },
+      "updateConfiguration((int8,uint256))": {
+        "notice": "Update address of the TON configuration, that emits actions for this DAO"
+      }
+    },
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 337,
+        "contract": "contracts/DAO.sol:DAO",
+        "label": "_status",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 130,
+        "contract": "contracts/DAO.sol:DAO",
+        "label": "_initialized",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_bool"
+      },
+      {
+        "astId": 133,
+        "contract": "contracts/DAO.sol:DAO",
+        "label": "_initializing",
+        "offset": 1,
+        "slot": "1",
+        "type": "t_bool"
+      },
+      {
+        "astId": 325,
+        "contract": "contracts/DAO.sol:DAO",
+        "label": "__gap",
+        "offset": 0,
+        "slot": "2",
+        "type": "t_array(t_uint256)50_storage"
+      },
+      {
+        "astId": 10,
+        "contract": "contracts/DAO.sol:DAO",
+        "label": "_owner",
+        "offset": 0,
+        "slot": "52",
+        "type": "t_address"
+      },
+      {
+        "astId": 123,
+        "contract": "contracts/DAO.sol:DAO",
+        "label": "__gap",
+        "offset": 0,
+        "slot": "53",
+        "type": "t_array(t_uint256)49_storage"
+      },
+      {
+        "astId": 1586,
+        "contract": "contracts/DAO.sol:DAO",
+        "label": "cache",
+        "offset": 0,
+        "slot": "102",
+        "type": "t_mapping(t_bytes32,t_bool)"
+      },
+      {
+        "astId": 388,
+        "contract": "contracts/DAO.sol:DAO",
+        "label": "bridge",
+        "offset": 0,
+        "slot": "103",
+        "type": "t_address"
+      },
+      {
+        "astId": 391,
+        "contract": "contracts/DAO.sol:DAO",
+        "label": "configuration",
+        "offset": 0,
+        "slot": "104",
+        "type": "t_struct(TONAddress)1343_storage"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_array(t_uint256)49_storage": {
+        "base": "t_uint256",
+        "encoding": "inplace",
+        "label": "uint256[49]",
+        "numberOfBytes": "1568"
+      },
+      "t_array(t_uint256)50_storage": {
+        "base": "t_uint256",
+        "encoding": "inplace",
+        "label": "uint256[50]",
+        "numberOfBytes": "1600"
+      },
+      "t_bool": {
+        "encoding": "inplace",
+        "label": "bool",
+        "numberOfBytes": "1"
+      },
+      "t_bytes32": {
+        "encoding": "inplace",
+        "label": "bytes32",
+        "numberOfBytes": "32"
+      },
+      "t_int8": {
+        "encoding": "inplace",
+        "label": "int8",
+        "numberOfBytes": "1"
+      },
+      "t_mapping(t_bytes32,t_bool)": {
+        "encoding": "mapping",
+        "key": "t_bytes32",
+        "label": "mapping(bytes32 => bool)",
+        "numberOfBytes": "32",
+        "value": "t_bool"
+      },
+      "t_struct(TONAddress)1343_storage": {
+        "encoding": "inplace",
+        "label": "struct IBridge.TONAddress",
+        "members": [
+          {
+            "astId": 1340,
+            "contract": "contracts/DAO.sol:DAO",
+            "label": "wid",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_int8"
+          },
+          {
+            "astId": 1342,
+            "contract": "contracts/DAO.sol:DAO",
+            "label": "addr",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint256"
+          }
+        ],
+        "numberOfBytes": "64"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    }
+  }
+}
