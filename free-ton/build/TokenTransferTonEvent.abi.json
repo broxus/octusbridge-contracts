@@ -53,6 +53,15 @@
 			]
 		},
 		{
+			"name": "getEventInitData",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"components":[{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"value0","type":"tuple"}
+			]
+		},
+		{
 			"name": "confirm",
 			"inputs": [
 				{"name":"signature","type":"bytes"}
@@ -91,6 +100,16 @@
 			],
 			"outputs": [
 				{"name":"voters","type":"uint256[]"}
+			]
+		},
+		{
+			"name": "getVote",
+			"inputs": [
+				{"name":"answerId","type":"uint32"},
+				{"name":"voter","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"vote","type":"optional(uint8)"}
 			]
 		},
 		{

@@ -6,6 +6,12 @@ import "../structures/ProposalSates.sol";
 import "../structures/PlatformTypes.sol";
 
 interface IDaoRoot is ActionStructure, ProposalConfigurationStructure, ProposalStates, DaoPlatformTypes {
+    event EthActions(
+        int8 gasBackWid,
+        uint256 gasBackAddress,
+        uint32 chainId,
+        EthActionStripped[] actions
+    );
     event ProposalCreated(
         uint32 proposalId,
         address proposer,
