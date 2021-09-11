@@ -26,7 +26,7 @@ interface IUserData {
     event TonPubkeyConfirmed(uint256 ton_pubkey);
     event EthAddressConfirmed(uint160 eth_addr);
     event UserDataCodeUpgraded(uint32 code_version);
-    event RelayMembershipRequested(uint32 round_num, uint128 tokens, uint256 ton_pubkey, uint256 eth_address, uint32 lock_until);
+    event RelayMembershipRequested(uint32 round_num, uint128 tokens, uint256 ton_pubkey, uint160 eth_address, uint32 lock_until);
     event RelayRoundRewardClaimed(uint32 relay_round_num, uint32 reward_round_num, uint128 reward);
 
     // dao
