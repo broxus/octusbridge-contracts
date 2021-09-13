@@ -48,7 +48,7 @@ contract TokenTransferEthereumEvent is EthereumBaseEvent {
     }
 
     function getOwner() private view returns(address) {
-        (,,,,,address ownerAddress) = getDecodedData();
+        (,,,address ownerAddress) = getDecodedData();
         return ownerAddress;
     }
 
@@ -89,7 +89,6 @@ contract TokenTransferEthereumEvent is EthereumBaseEvent {
 
     /*
         @dev Get decoded event data
-        @returns rootToken Token root contract address
         @returns tokens How much tokens to mint
         @returns wid Tokens receiver address workchain ID
         @returns owner_addr Token receiver address body
@@ -97,30 +96,23 @@ contract TokenTransferEthereumEvent is EthereumBaseEvent {
         @returns owner_address Token receiver address (derived from the wid and owner_addr)
     */
     function getDecodedData() public view responsible returns (
-        address rootToken,
         uint128 tokens,
         int8 wid,
         uint256 owner_addr,
-        uint256 owner_pubkey,
         address owner_address
     ) {
-        (rootToken) = decodeConfigurationMeta(meta);
-
         (
             tokens,
             wid,
-            owner_addr,
-            owner_pubkey
+            owner_addr
         ) = decodeEthereumEventData(eventInitData.voteData.eventData);
 
         owner_address = address.makeAddrStd(wid, owner_addr);
 
         return {value: 0, flag: MsgFlag.REMAINING_GAS} (
-            rootToken,
             tokens,
             wid,
             owner_addr,
-            owner_pubkey,
             owner_address
         );
     }

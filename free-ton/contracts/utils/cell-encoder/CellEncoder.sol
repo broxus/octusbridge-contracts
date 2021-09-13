@@ -8,16 +8,15 @@ import "../../dao/structures/ActionStructure.sol";
 */
 contract CellEncoder {
     function encodeEthereumEventData(
-        uint128 tokens,
-        int8 wid,
-        uint256 owner_addr,
-        uint256 owner_pubkey
+        uint256 tokens,
+        int128 wid,
+        uint256 owner_addr
     ) public pure returns(
         TvmCell data
     ) {
         TvmBuilder builder;
 
-        builder.store(tokens, wid, owner_addr, owner_pubkey);
+        builder.store(tokens, wid, owner_addr);
 
         data = builder.toCell();
     }
@@ -48,35 +47,14 @@ contract CellEncoder {
     ) public pure returns(
         uint128 tokens,
         int8 wid,
-        uint256 owner_addr,
-        uint256 owner_pubkey
+        uint256 owner_addr
     ) {
         (
-            tokens,
-            wid,
-            owner_addr,
-            owner_pubkey
-        ) = data.toSlice().decode(uint128, int8, uint256, uint256);
-    }
-
-    function encodeConfigurationMeta(
-        address rootToken
-    ) public pure returns(
-        TvmCell data
-    ) {
-        TvmBuilder builder;
-
-        builder.store(rootToken);
-
-        data = builder.toCell();
-    }
-
-    function decodeConfigurationMeta(
-        TvmCell data
-    ) public pure returns(
-        address rootToken
-    ) {
-        (rootToken) = data.toSlice().decode(address);
+            uint256 _amount,
+            int128 _wid,
+            uint256 _addr
+        ) = data.toSlice().decode(uint256, int128, uint256);
+        return (uint128(_amount), int8(_wid), _addr);
     }
 
     function encodeTonEventData(
