@@ -252,7 +252,8 @@ describe('Test Staking Rewards', async function () {
     const startElection = async function(_user) {
         return await stakingRoot.run({
             method: 'startElectionOnNewRound',
-            params: {}
+            params: {},
+            keyPair: _user.keyPair
         })
     }
 
@@ -591,11 +592,12 @@ describe('Test Staking Rewards', async function () {
             let user2_deposit_time;
 
             it('Users deposit tokens', async function () {
-                await depositTokens(user1, userTokenWallet1, userDeposit);
+                const tx = await depositTokens(user1, userTokenWallet1, userDeposit);
                 user1Data = await getUserDataAccount(user1);
                 if (locklift.network === 'dev') {
                     await wait(DEV_WAIT);
                 }
+                console.log(tx.transaction.out_msgs);
 
                 await checkTokenBalances(
                     userTokenWallet1, user1Data, rewardTokensBal + userDeposit,

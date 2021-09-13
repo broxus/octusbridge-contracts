@@ -46,6 +46,8 @@ contract RelayRound is IRelayRound {
 
     address root; // setup from initialData
 
+    uint256 constant SCALING_FACTOR = 1e18;
+
     // Cant be deployed directly
     constructor() public { revert(); }
 
@@ -71,8 +73,8 @@ contract RelayRound is IRelayRound {
         tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 2);
 
         reward_claimed[staker_addr] = true;
-        uint128 staker_reward_share = math.muldiv(staked_tokens[addr_to_idx[staker_addr]], 1e18, total_tokens_staked);
-        uint128 relay_reward = math.muldiv(staker_reward_share, round_reward, 1e18);
+        uint256 staker_reward_share = (staked_tokens[addr_to_idx[staker_addr]] * SCALING_FACTOR) / total_tokens_staked;
+        uint128 relay_reward = uint128((staker_reward_share * round_reward) / SCALING_FACTOR);
 
         IUserData(msg.sender).receiveRewardForRelayRound{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num, reward_round_num, relay_reward);
     }

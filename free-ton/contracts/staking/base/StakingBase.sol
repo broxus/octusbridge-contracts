@@ -137,6 +137,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     uint8 constant RELAY_PACK_SIZE = 30;
 
+    uint256 constant SCALING_FACTOR = 1e18;
+
     struct PendingDeposit {
         address user;
         uint128 amount;
@@ -456,7 +458,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         for (uint i = 0; i < rewards.length; i++) {
             RewardRound cur_round = rewardRounds[i];
             if (cur_round.totalReward > 0 && rewards[i] > 0) {
-                user_token_reward += math.muldiv(math.muldiv(rewards[i], 1e18, cur_round.totalReward), cur_round.rewardTokens, 1e18);
+                user_token_reward += uint128((((rewards[i] * SCALING_FACTOR) / cur_round.totalReward) * cur_round.rewardTokens) / SCALING_FACTOR);
             }
         }
 
@@ -480,7 +482,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
             // if token balance if empty, no need to update pool info
             uint128 new_reward = (now - lastRewardTime) * rewardPerSecond;
             _reward_rounds[_reward_rounds.length - 1].totalReward += new_reward;
-            _reward_rounds[_reward_rounds.length - 1].accRewardPerShare += math.muldiv(new_reward, 1e18, tokenBalance);
+            _reward_rounds[_reward_rounds.length - 1].accRewardPerShare += (new_reward * SCALING_FACTOR) / tokenBalance;
         }
 
         uint256 user_reward_tokens = 0;
@@ -488,8 +490,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
             // for old user rounds (which synced already), just get rewards
             if (i < user_reward_data.length - 1) {
                 // totalReward in old round cant be empty
-                uint256 user_round_share = math.muldiv(user_reward_data[i].reward_balance, 1e18, _reward_rounds[i].totalReward);
-                user_reward_tokens += math.muldiv(user_round_share, _reward_rounds[i].rewardTokens, 1e18);
+                uint256 user_round_share = (user_reward_data[i].reward_balance * SCALING_FACTOR) / _reward_rounds[i].totalReward;
+                user_reward_tokens += (user_round_share * _reward_rounds[i].rewardTokens) / SCALING_FACTOR;
             // sync new user rounds
             } else {
                 if (i >= user_reward_data.length) {
@@ -497,10 +499,10 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
                 }
 
                 if (_reward_rounds[i].totalReward > 0) {
-                    uint256 new_reward = math.muldiv(user_token_balance, _reward_rounds[i].accRewardPerShare, 1e18) - user_reward_data[i].reward_debt;
+                    uint256 new_reward = ((user_token_balance * _reward_rounds[i].accRewardPerShare) / SCALING_FACTOR) - user_reward_data[i].reward_debt;
                     uint256 user_round_reward = user_reward_data[i].reward_balance + new_reward;
-                    uint256 user_round_share = math.muldiv(user_round_reward, 1e18, _reward_rounds[i].totalReward);
-                    user_reward_tokens += math.muldiv(user_round_share, _reward_rounds[i].rewardTokens, 1e18);
+                    uint256 user_round_share = (user_round_reward * SCALING_FACTOR) / _reward_rounds[i].totalReward;
+                    user_reward_tokens += (user_round_share * _reward_rounds[i].rewardTokens) / SCALING_FACTOR;
                 }
             }
         }
@@ -522,7 +524,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         rewardRounds[rewardRounds.length - 1].totalReward += new_reward;
         lastRewardTime = now;
 
-        rewardRounds[rewardRounds.length - 1].accRewardPerShare += math.muldiv(new_reward, 1e18, tokenBalance);
+        rewardRounds[rewardRounds.length - 1].accRewardPerShare += (new_reward * SCALING_FACTOR) / tokenBalance;
     }
 
     function _buildUserDataParams(address user) private view returns (TvmCell) {

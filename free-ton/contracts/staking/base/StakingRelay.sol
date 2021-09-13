@@ -60,7 +60,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
                 user_rewards.push(0);
                 user_debts.push(0);
             }
-            user_rewards[i] += uint128(math.muldiv(ban_token_balance, rewardRounds[i].accRewardPerShare, 1e18) - user_debts[i]);
+            user_rewards[i] += uint128(((ban_token_balance * rewardRounds[i].accRewardPerShare) / SCALING_FACTOR) - user_debts[i]);
         }
         return user_rewards;
     }
@@ -81,11 +81,8 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         uint128 _tokens_withdraw_total = 0;
         uint128 _tokens_added_to_reward = 0;
         for (uint i = 0; i < user_rewards_synced.length; i++) {
-            uint128 _ban_tokens = math.muldiv(
-                math.muldiv(user_rewards_synced[i], 1e18, rewardRounds[i].totalReward),
-                rewardRounds[i].rewardTokens,
-                1e18
-            );
+            uint256 _share = (user_rewards_synced[i] * SCALING_FACTOR) / rewardRounds[i].totalReward;
+            uint128 _ban_tokens = uint128((_share * rewardRounds[i].rewardTokens) / SCALING_FACTOR);
             _tokens_added_to_reward += _ban_tokens;
             _tokens_withdraw_total += _ban_tokens;
         }
