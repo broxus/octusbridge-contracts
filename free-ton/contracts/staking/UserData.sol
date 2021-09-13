@@ -48,6 +48,8 @@ contract UserData is IUserData, IUpgradableByRequest {
     address dao_root;
     uint32 _proposal_nonce;
 
+    uint256 constant SCALING_FACTOR = 1e18;
+
     mapping(uint32 /*proposal_id*/ => uint128 /*locked_value*/) public created_proposals;
     mapping(uint32 /*nonce*/ => uint128 /*locked_value*/) public _tmp_proposals;
 
@@ -256,9 +258,9 @@ contract UserData is IUserData, IUpgradableByRequest {
             IStakingPool.RewardRound remote_round = reward_rounds[i];
             RewardRoundData local_round = rewardRounds[i];
 
-            uint128 new_reward = uint128(math.muldiv(token_balance, remote_round.accRewardPerShare, 1e18) - local_round.reward_debt);
+            uint128 new_reward = uint128(((token_balance * remote_round.accRewardPerShare) / SCALING_FACTOR) - local_round.reward_debt);
             rewardRounds[i].reward_balance += new_reward;
-            rewardRounds[i].reward_debt = uint128(math.muldiv(updated_balance, remote_round.accRewardPerShare, 1e18));
+            rewardRounds[i].reward_debt = uint128((updated_balance * remote_round.accRewardPerShare) / SCALING_FACTOR);
         }
     }
 

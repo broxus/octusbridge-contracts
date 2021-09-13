@@ -67,20 +67,18 @@ contract ProxyTokenTransfer is
         (
             uint128 tokens,
             int8 wid,
-            uint256 owner_addr,
-            uint256 owner_pubkey
+            uint256 owner_addr
         ) = decodeEthereumEventData(eventData.voteData.eventData);
 
         address owner_address = address.makeAddrStd(wid, owner_addr);
 
         require(tokens > 0, ErrorCodes.WRONG_TOKENS_AMOUNT_IN_PAYLOAD);
-        require((owner_pubkey != 0 && owner_address.value == 0) ||
-                (owner_pubkey == 0 && owner_address.value != 0), ErrorCodes.WRONG_OWNER_IN_PAYLOAD);
+        require(owner_address.value != 0, ErrorCodes.WRONG_OWNER_IN_PAYLOAD);
 
         IRootTokenContract(config.tokenRoot).deployWallet{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
             tokens,
             config.settingsDeployWalletGrams,
-            owner_pubkey,
+            0,
             owner_address,
             gasBackAddress
         );
@@ -136,10 +134,6 @@ contract ProxyTokenTransfer is
         }
     }
 
-    /*******************
-    * Getter functions *
-    *******************/
-
     function getDetails() public view responsible returns (Configuration, address, uint128, bool) {
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} (config, owner, burnedCount, paused);
     }
@@ -151,10 +145,6 @@ contract ProxyTokenTransfer is
     function getConfiguration() override public view responsible returns (Configuration) {
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} config;
     }
-
-    /******************
-    * Owner functions *
-    ******************/
 
     function setConfiguration(
         Configuration _config,

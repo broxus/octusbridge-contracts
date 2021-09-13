@@ -84,7 +84,6 @@ describe('Test ethereum event reject', async function() {
       tokens: 100,
       wid: 0,
       owner_addr: 111,
-      owner_pubkey: 222,
     };
   
     it('Setup event data', async () => {

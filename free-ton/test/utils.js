@@ -144,12 +144,7 @@ const setupBridge = async (relays) => {
 const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
   const [keyPair] = await locklift.keys.getKeyPairs();
   
-  const configurationMeta = await cellEncoder.call({
-    method: 'encodeConfigurationMeta',
-    params: {
-      rootToken: locklift.utils.zeroAddress,
-    }
-  });
+  const configurationMeta = '';
 
   const _randomNonce = locklift.utils.getRandomNonce();
 
@@ -349,12 +344,7 @@ const setupTonEventConfiguration = async (owner, staking, cellEncoder) => {
     locklift.utils.convertCrystal('100', 'nano')
   );
 
-  const configurationMeta = await cellEncoder.call({
-    method: 'encodeConfigurationMeta',
-    params: {
-      rootToken: tokenRoot.address,
-    }
-  });
+  const configurationMeta = '';
   const tonEventConfiguration = await locklift.giver.deployContract({
     contract: TonEventConfiguration,
     constructorParams: {
