@@ -115,8 +115,6 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         require(msg.value >= connectorDeployValue, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
         require(_eventConfiguration.wid == 0, ErrorCodes.IS_NOT_BASE_CHAIN);
 
-        emit ConnectorDeployed(connectorCounter, connector, _eventConfiguration);
-
         connector = new Connector{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED,
@@ -127,6 +125,8 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
                 bridge: address(this)
             }
         }(_eventConfiguration, owner);
+
+        emit ConnectorDeployed(connectorCounter, connector, _eventConfiguration);
 
         connectorCounter++;
     }
