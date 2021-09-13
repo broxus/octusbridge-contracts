@@ -109,7 +109,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         address send_gas_to
     ) external onlyAdmin {
         require (msg.value >= Gas.MIN_ORIGIN_ROUND_MSG_VALUE + ton_deposit * staker_addrs.length, ErrorCodes.VALUE_TOO_LOW);
-        require (!originRelayRoundInitialized, ErrorCodes.ORIGIN_ROUND_ALREADY_INITIALIZED);
+        require (currentRelayRound == 0 && currentRelayRoundStartTime == 0, ErrorCodes.ORIGIN_ROUND_ALREADY_INITIALIZED);
         bool correct_len = staker_addrs.length == ton_pubkeys.length;
         bool correct_len_1 = ton_pubkeys.length == eth_addrs.length;
         bool correct_len_2 = eth_addrs.length == staked_tokens.length;
@@ -124,21 +124,21 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
 
         // we have 0 relay rounds at the moment
         address empty = address.makeAddrNone();
-        address relay_round = deployRelayRound(currentRelayRound + 1, false, 1, empty, empty, MsgFlag.SENDER_PAYS_FEES);
+        address relay_round = deployRelayRound(0, false, 1, empty, empty, MsgFlag.SENDER_PAYS_FEES);
         IRelayRound(relay_round).setRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
             ton_pubkeys, eth_addrs, staker_addrs, staked_tokens
         );
     }
 
     function processBecomeRelayNextRound(address user) external view override onlyActive onlyUserData(user) {
-        require (pendingRelayRound != 0, ErrorCodes.ELECTION_NOT_STARTED);
+        require (currentElectionStartTime != 0, ErrorCodes.ELECTION_NOT_STARTED);
 
         tvm.rawReserve(_reserve(), 2);
 
         uint32 lock_time = electionTime + relayLockTime;
 
         IUserData(msg.sender).processBecomeRelayNextRound2{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-            pendingRelayRound, lock_time, minRelayDeposit, user_data_version, election_version
+            currentRelayRound + 1, lock_time, minRelayDeposit, user_data_version, election_version
         );
     }
 
@@ -154,7 +154,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
     function startElectionOnNewRound() external onlyActive {
         require (now >= (currentRelayRoundStartTime + timeBeforeElection), ErrorCodes.TOO_EARLY_FOR_ELECTION);
         require (currentElectionStartTime == 0, ErrorCodes.ELECTION_ALREADY_STARTED);
-        require (originRelayRoundInitialized, ErrorCodes.ORIGIN_ROUND_NOT_INITIALIZED);
+        require (currentRelayRoundStartTime > 0, ErrorCodes.ORIGIN_ROUND_NOT_INITIALIZED);
         tvm.accept();
 
         deployElection(currentRelayRound + 1, address(this));
@@ -167,7 +167,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
 
         uint128 required_gas = Gas.MIN_END_ELECTION_MSG_VALUE + _relaysPacksCount() * Gas.MIN_SEND_RELAYS_MSG_VALUE;
 
-        address election_addr = getElectionAddress(pendingRelayRound);
+        address election_addr = getElectionAddress(currentRelayRound + 1);
         IElection(election_addr).finish{value: required_gas}(election_version);
     }
 
@@ -175,8 +175,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         tvm.rawReserve(_reserve(), 2);
 
         currentElectionStartTime = now;
-        pendingRelayRound = round_num;
-        emit ElectionStarted(round_num, now, msg.sender);
+        emit ElectionStarted(round_num, now, now + electionTime, msg.sender);
         send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 
@@ -189,7 +188,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         bool min_relays_ok = relay_requests_count >= minRelaysCount;
 
         currentElectionStartTime = 0;
-        pendingRelayRound = 0;
+        currentElectionEnded = true;
 
         emit ElectionEnded(round_num, relay_requests_count, min_relays_ok);
 
@@ -211,7 +210,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
     ) external override onlyRelayRound(round_num) {
         tvm.rawReserve(_reserve(), 2);
 
-        if (!originRelayRoundInitialized) {
+        if (round_num == 0) {
             // this is an origin round deployment
             return;
         }
@@ -264,15 +263,14 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         // we know that balance of this contract is enough, because we checked that on 'endElection' call which triggers this action
         tvm.rawReserve(_reserve() - Gas.EVENT_DEPLOY_VALUE, 2);
 
-        // looks like we are initializing origin relay round
-        if (!originRelayRoundInitialized) {
-            originRelayRoundInitialized = true;
-        } else {
-            prevRelayRoundEndTime = currentRelayRoundStartTime + relayRoundTime;
+        if (round_num > 0) {
+            prevRelayRoundEndTime = currentRelayRoundEndTime;
         }
 
+        currentElectionEnded = false;
         currentRelayRound = round_num;
         currentRelayRoundStartTime = round_start_time;
+        currentRelayRoundEndTime = round_end_time;
         rewardRounds[rewardRounds.length - 1].totalReward += round_reward;
 
         TvmBuilder event_builder;
@@ -306,8 +304,6 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         address prev_relay_round_addr,
         uint16 msg_flag
     ) private returns (address) {
-        require(round_num > currentRelayRound, ErrorCodes.INVALID_RELAY_ROUND_ROUND);
-
         TvmBuilder constructor_params;
         constructor_params.store(relay_round_version);
         constructor_params.store(relay_round_version);

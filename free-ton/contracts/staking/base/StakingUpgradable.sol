@@ -156,15 +156,15 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         data_builder_1.store(dao_root); // 256
         data_builder_1.store(bridge_event_config_eth_ton); // 256
         data_builder_1.store(active); // 1
-        data_builder_1.store(originRelayRoundInitialized); // 1
         data_builder_1.store(currentRelayRound); // 32
         data_builder_1.store(currentRelayRoundStartTime); // 32
+        data_builder_1.store(currentRelayRoundEndTime); // 32
         data_builder_1.store(currentElectionStartTime); // 32
+        data_builder_1.store(currentElectionEnded); // 1
 
         TvmBuilder data_builder_2;
         data_builder_2.store(bridge_event_config_ton_eth); // 256
         data_builder_2.store(prevRelayRoundEndTime); // 32
-        data_builder_2.store(pendingRelayRound); // 32
         data_builder_2.store(lastRewardTime); // 32
         data_builder_2.store(tokenRoot); // 256
         data_builder_2.store(tokenWallet); // 256
@@ -175,17 +175,17 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         data_builder_3.store(rewardTokenBalance); // 128
         data_builder_3.store(admin); // 256
         data_builder_3.store(rewarder); // 256
-        data_builder_3.store(rewardPerSecond); // 128
 
         TvmBuilder data_builder_4;
         data_builder_4.store(relayLockTime); // 32
         data_builder_4.store(relayRoundTime); // 32
         data_builder_4.store(electionTime); // 32
         data_builder_4.store(timeBeforeElection); // 32
-        data_builder_4.store(relaysCount); // 32
-        data_builder_4.store(minRelaysCount); // 32
+        data_builder_4.store(relaysCount); // 16
+        data_builder_4.store(minRelaysCount); // 16
         data_builder_4.store(minRelayDeposit); // 128
         data_builder_4.store(relayInitialDeposit); // 128
+//        data_builder_4.store(tonEventDeployValue); // 128
         data_builder_4.store(deposit_nonce); // 64
         data_builder_4.store(deposits); // ref
 
@@ -230,15 +230,15 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
                             address dao_root
                             address bridge_event_config_eth_ton
                             bool active
-                            bool originRelayRoundInitialized
                             uint32 currentRelayRound
                             uint32 currentRelayRoundStartTime
+                            uint32 currentRelayRoundEndTime
                             uint32 currentElectionStartTime
+                            bool currentElectionEnded
                     2: data_2
                         bits:
                             address bridge_event_config_ton_eth
                             uint32 prevRelayRoundEndTime
-                            uint32 pendingRelayRound
                             uint32 lastRewardTime
                             address tokenRoot
                             address tokenWallet
@@ -250,17 +250,17 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
                             uint128 rewardTokenBalance
                             address admin
                             address rewarder
-                            uint128 rewardPerSecond
                     4: data_4
                         bits:
                             uint32 relayLockTime
                             uint32 relayRoundTime
                             uint32 electionTime
                             uint32 timeBeforeElection
-                            uint32 relaysCount
-                            uint32 minRelaysCount
+                            uint16 relaysCount
+                            uint16 minRelaysCount
                             uint128 minRelayDeposit
                             uint128 relayInitialDeposit
+                            uint128 tonEventDeployValue
                             uint64 deposit_nonce
                         refs:
                             1: deposits

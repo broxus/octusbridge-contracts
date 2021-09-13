@@ -23,7 +23,6 @@ interface IStakingPool {
         address rewarder;
         uint128 tokenBalance;
         uint128 rewardTokenBalance;
-        uint128 rewardPerSecond;
         uint32 lastRewardTime;
         RewardRound[] rewardRounds;
     }
@@ -33,8 +32,8 @@ interface IStakingPool {
         uint32 relayRoundTime;
         uint32 electionTime;
         uint32 timeBeforeElection;
-        uint32 relaysCount;
-        uint32 minRelaysCount;
+        uint16 relaysCount;
+        uint16 minRelaysCount;
         uint128 minRelayDeposit;
         uint128 relayInitialDeposit;
     }
@@ -51,12 +50,12 @@ interface IStakingPool {
     }
 
     struct RelayRoundsDetails {
-        bool originRelayRoundInitialized;
         uint32 currentRelayRound;
         uint32 currentRelayRoundStartTime;
+        uint32 currentRelayRoundEndTime;
         uint32 currentElectionStartTime;
         uint32 prevRelayRoundEndTime;
-        uint32 pendingRelayRound;
+        bool currentElectionEnded;
     }
 
     function finishDeposit(uint64 _nonce) external;

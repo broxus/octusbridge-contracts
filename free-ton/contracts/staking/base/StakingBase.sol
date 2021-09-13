@@ -33,7 +33,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     event RewardClaimed(address user, uint128 reward_tokens);
     event NewRewardRound(uint32 round_num);
 
-    event ElectionStarted(uint32 round_num, uint32 election_start_time, address election_addr);
+    event ElectionStarted(uint32 round_num, uint32 election_start_time, uint32 election_end_time, address election_addr);
     event ElectionEnded(uint32 round_num, uint32 relay_requests, bool min_relays_ok);
     event RelayRoundInitialized(
         uint32 round_num,
@@ -51,6 +51,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     event DaoRootUpdated(address new_dao_root);
     event BridgeEventEthTonConfigUpdated(address new_bridge_event_config_eth_ton);
     event BridgeEventTonEthConfigUpdated(address new_bridge_event_config_ton_eth);
+//    event TonEventDeployValueUpdated(uint128 new_value);
     event AdminUpdated(address new_admin);
     event RewarderUpdated(address new_rewarder);
 
@@ -64,16 +65,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     event ElectionCodeUpgraded(uint32 code_version);
     event RelayRoundCodeUpgraded(uint32 code_version);
 
-    event RelayConfigUpdated(
-        uint32 relay_lock_time,
-        uint32 relay_round_time,
-        uint32 election_time,
-        uint32 time_before_election,
-        uint32 relays_count,
-        uint32 min_relays_count,
-        uint128 min_relay_deposit,
-        uint128 relay_initial_deposit
-    );
+    event RelayConfigUpdated(RelayConfigDetails);
 
     uint32 static deploy_nonce;
     address static deployer;
@@ -98,21 +90,22 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     bool active;
 
-    bool originRelayRoundInitialized;
-
     uint32 currentRelayRound;
 
     // time when current round have started
     uint32 currentRelayRoundStartTime;
 
+    // time when current round should end
+    uint32 currentRelayRoundEndTime;
+
     // time when current election have started
     uint32 currentElectionStartTime;
 
+    // whether election for current relay round ended or not
+    bool currentElectionEnded;
+
     // we need this for deriving relay round from timestamp
     uint32 prevRelayRoundEndTime;
-
-    // 0 means no pending relay round
-    uint32 pendingRelayRound;
 
     RewardRound[] rewardRounds;
 
@@ -130,7 +123,9 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     address rewarder;
 
-    uint128 rewardPerSecond = 1000000;
+//    RelayConfigDetails relay_config = RelayConfigDetails(
+//        30 days, 7 days, 2 days, 4 days, 30, 13, 100000 * 10**9, 500 ton
+//    );
 
     uint32 relayLockTime = 30 days;
 
@@ -141,13 +136,17 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     // election should start at lest after this much time before round end
     uint32 timeBeforeElection = 4 days;
 
-    uint32 relaysCount = 30;
+    uint16 relaysCount = 30;
 
-    uint32 minRelaysCount = 13;
+    uint16 minRelaysCount = 13;
 
     uint128 minRelayDeposit = 100000 * 10**9;
 
     uint128 relayInitialDeposit = 500 ton;
+
+//    uint128 tonEventDeployValue = 2.5 ton;
+
+    uint128 constant rewardPerSecond = 1000000;
 
     // payloads for token receive callback
     uint8 constant STAKE_DEPOSIT = 0;
@@ -169,7 +168,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         return{ value: 0, flag: MsgFlag.REMAINING_GAS }BaseDetails(
             dao_root, bridge_event_config_eth_ton, bridge_event_config_ton_eth, tokenRoot, tokenWallet,
             admin, rewarder, tokenBalance, rewardTokenBalance,
-            rewardPerSecond, lastRewardTime, rewardRounds
+            lastRewardTime, rewardRounds
         );
     }
 
@@ -184,8 +183,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     function getRelayRoundsDetails() public view responsible returns (RelayRoundsDetails) {
         return{ value: 0, flag: MsgFlag.REMAINING_GAS }RelayRoundsDetails(
-            originRelayRoundInitialized, currentRelayRound, currentRelayRoundStartTime,
-            currentElectionStartTime, prevRelayRoundEndTime, pendingRelayRound
+            currentRelayRound, currentRelayRoundStartTime, currentRelayRoundEndTime,
+            currentElectionStartTime, prevRelayRoundEndTime, currentElectionEnded
         );
     }
 
@@ -217,6 +216,14 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         dao_root = new_dao_root;
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
+
+//    function setTonEventDeployValue(uint128 new_value, address send_gas_to) external onlyAdmin {
+//        tvm.rawReserve(_reserve(), 2);
+//
+//        emit TonEventDeployValueUpdated(new_value);
+//        tonEventDeployValue = new_value;
+//        send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
+//    }
 
     function setBridgeEventEthTonConfig(address new_bridge_event_config_eth_ton, address send_gas_to) external onlyAdmin {
         tvm.rawReserve(_reserve(), 2);
@@ -276,8 +283,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         uint32 relay_round_time,
         uint32 election_time,
         uint32 time_before_election,
-        uint32 relays_count,
-        uint32 min_relays_count,
+        uint16 relays_count,
+        uint16 min_relays_count,
         uint128 min_relay_deposit,
         uint128 relay_initial_deposit,
         address send_gas_to
@@ -293,16 +300,10 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         minRelayDeposit = min_relay_deposit;
         relayInitialDeposit = relay_initial_deposit;
 
-        emit RelayConfigUpdated(
-            relay_lock_time,
-            relay_round_time,
-            election_time,
-            time_before_election,
-            relays_count,
-            min_relays_count,
-            min_relay_deposit,
-            relay_initial_deposit
-        );
+        emit RelayConfigUpdated(RelayConfigDetails(
+            relayLockTime, relayRoundTime, electionTime, timeBeforeElection,
+            relaysCount, minRelaysCount, minRelayDeposit, relayInitialDeposit
+        ));
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
