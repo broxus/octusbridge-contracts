@@ -1,5 +1,6 @@
 pragma ton-solidity >= 0.39.0;
 pragma AbiHeader pubkey;
+pragma AbiHeader expire;
 
 import "./base/StakingRelay.sol";
 
