@@ -177,15 +177,15 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         data_builder_3.store(rewarder); // 256
 
         TvmBuilder data_builder_4;
-        data_builder_4.store(relayLockTime); // 32
-        data_builder_4.store(relayRoundTime); // 32
-        data_builder_4.store(electionTime); // 32
-        data_builder_4.store(timeBeforeElection); // 32
-        data_builder_4.store(relaysCount); // 16
-        data_builder_4.store(minRelaysCount); // 16
-        data_builder_4.store(minRelayDeposit); // 128
-        data_builder_4.store(relayInitialDeposit); // 128
-//        data_builder_4.store(tonEventDeployValue); // 128
+        data_builder_4.store(relay_config.relayLockTime); // 32
+        data_builder_4.store(relay_config.relayRoundTime); // 32
+        data_builder_4.store(relay_config.electionTime); // 32
+        data_builder_4.store(relay_config.timeBeforeElection); // 32
+        data_builder_4.store(relay_config.relaysCount); // 16
+        data_builder_4.store(relay_config.minRelaysCount); // 16
+        data_builder_4.store(relay_config.minRelayDeposit); // 128
+        data_builder_4.store(relay_config.relayInitialDeposit); // 128
+        data_builder_4.store(tonEventDeployValue); // 128
         data_builder_4.store(deposit_nonce); // 64
         data_builder_4.store(deposits); // ref
 

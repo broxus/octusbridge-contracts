@@ -51,7 +51,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     event DaoRootUpdated(address new_dao_root);
     event BridgeEventEthTonConfigUpdated(address new_bridge_event_config_eth_ton);
     event BridgeEventTonEthConfigUpdated(address new_bridge_event_config_ton_eth);
-//    event TonEventDeployValueUpdated(uint128 new_value);
+    event TonEventDeployValueUpdated(uint128 new_value);
     event AdminUpdated(address new_admin);
     event RewarderUpdated(address new_rewarder);
 
@@ -123,28 +123,11 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     address rewarder;
 
-//    RelayConfigDetails relay_config = RelayConfigDetails(
-//        30 days, 7 days, 2 days, 4 days, 30, 13, 100000 * 10**9, 500 ton
-//    );
+    RelayConfigDetails relay_config = RelayConfigDetails(
+        30 days, 7 days, 2 days, 4 days, 30, 13, 100000 * 10**9, 500 ton
+    );
 
-    uint32 relayLockTime = 30 days;
-
-    uint32 relayRoundTime = 7 days;
-
-    uint32 electionTime = 2 days;
-
-    // election should start at lest after this much time before round end
-    uint32 timeBeforeElection = 4 days;
-
-    uint16 relaysCount = 30;
-
-    uint16 minRelaysCount = 13;
-
-    uint128 minRelayDeposit = 100000 * 10**9;
-
-    uint128 relayInitialDeposit = 500 ton;
-
-//    uint128 tonEventDeployValue = 2.5 ton;
+    uint128 tonEventDeployValue = 2.5 ton;
 
     uint128 constant rewardPerSecond = 1000000;
 
@@ -189,10 +172,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     function getRelayConfig() public view responsible returns (RelayConfigDetails) {
-        return{ value: 0, flag: MsgFlag.REMAINING_GAS }RelayConfigDetails(
-            relayLockTime, relayRoundTime, electionTime, timeBeforeElection,
-            relaysCount, minRelaysCount, minRelayDeposit, relayInitialDeposit
-        );
+        return{ value: 0, flag: MsgFlag.REMAINING_GAS }relay_config;
     }
 
     function addDelegate(address addr, uint callHash) public onlyAdmin {
@@ -217,13 +197,13 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
-//    function setTonEventDeployValue(uint128 new_value, address send_gas_to) external onlyAdmin {
-//        tvm.rawReserve(_reserve(), 2);
-//
-//        emit TonEventDeployValueUpdated(new_value);
-//        tonEventDeployValue = new_value;
-//        send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
-//    }
+    function setTonEventDeployValue(uint128 new_value, address send_gas_to) external onlyAdmin {
+        tvm.rawReserve(_reserve(), 2);
+
+        emit TonEventDeployValueUpdated(new_value);
+        tonEventDeployValue = new_value;
+        send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
+    }
 
     function setBridgeEventEthTonConfig(address new_bridge_event_config_eth_ton, address send_gas_to) external onlyAdmin {
         tvm.rawReserve(_reserve(), 2);
@@ -278,32 +258,12 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         return{ value: 0, flag: MsgFlag.REMAINING_GAS } active;
     }
 
-    function setRelayConfig(
-        uint32 relay_lock_time,
-        uint32 relay_round_time,
-        uint32 election_time,
-        uint32 time_before_election,
-        uint16 relays_count,
-        uint16 min_relays_count,
-        uint128 min_relay_deposit,
-        uint128 relay_initial_deposit,
-        address send_gas_to
-    ) external onlyDaoRoot {
+    function setRelayConfig(RelayConfigDetails new_relay_config, address send_gas_to) external onlyDaoRoot {
         tvm.rawReserve(_reserve(), 2);
 
-        relayLockTime = relay_lock_time;
-        relayRoundTime = relay_round_time;
-        electionTime = election_time;
-        timeBeforeElection = time_before_election;
-        relaysCount = relays_count;
-        minRelaysCount = min_relays_count;
-        minRelayDeposit = min_relay_deposit;
-        relayInitialDeposit = relay_initial_deposit;
+        relay_config = new_relay_config;
 
-        emit RelayConfigUpdated(RelayConfigDetails(
-            relayLockTime, relayRoundTime, electionTime, timeBeforeElection,
-            relaysCount, minRelaysCount, minRelayDeposit, relayInitialDeposit
-        ));
+        emit RelayConfigUpdated(relay_config);
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 

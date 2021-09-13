@@ -305,6 +305,15 @@
 			]
 		},
 		{
+			"name": "setTonEventDeployValue",
+			"inputs": [
+				{"name":"new_value","type":"uint128"},
+				{"name":"send_gas_to","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "setBridgeEventEthTonConfig",
 			"inputs": [
 				{"name":"new_bridge_event_config_eth_ton","type":"address"},
@@ -361,14 +370,7 @@
 		{
 			"name": "setRelayConfig",
 			"inputs": [
-				{"name":"relay_lock_time","type":"uint32"},
-				{"name":"relay_round_time","type":"uint32"},
-				{"name":"election_time","type":"uint32"},
-				{"name":"time_before_election","type":"uint32"},
-				{"name":"relays_count","type":"uint16"},
-				{"name":"min_relays_count","type":"uint16"},
-				{"name":"min_relay_deposit","type":"uint128"},
-				{"name":"relay_initial_deposit","type":"uint128"},
+				{"components":[{"name":"relayLockTime","type":"uint32"},{"name":"relayRoundTime","type":"uint32"},{"name":"electionTime","type":"uint32"},{"name":"timeBeforeElection","type":"uint32"},{"name":"relaysCount","type":"uint16"},{"name":"minRelaysCount","type":"uint16"},{"name":"minRelayDeposit","type":"uint128"},{"name":"relayInitialDeposit","type":"uint128"}],"name":"new_relay_config","type":"tuple"},
 				{"name":"send_gas_to","type":"address"}
 			],
 			"outputs": [
@@ -660,6 +662,14 @@
 			]
 		},
 		{
+			"name": "TonEventDeployValueUpdated",
+			"inputs": [
+				{"name":"new_value","type":"uint128"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "AdminUpdated",
 			"inputs": [
 				{"name":"new_admin","type":"address"}
@@ -773,14 +783,8 @@
 		{"name":"rewardTokenBalance","type":"uint128"},
 		{"name":"admin","type":"address"},
 		{"name":"rewarder","type":"address"},
-		{"name":"relayLockTime","type":"uint32"},
-		{"name":"relayRoundTime","type":"uint32"},
-		{"name":"electionTime","type":"uint32"},
-		{"name":"timeBeforeElection","type":"uint32"},
-		{"name":"relaysCount","type":"uint16"},
-		{"name":"minRelaysCount","type":"uint16"},
-		{"name":"minRelayDeposit","type":"uint128"},
-		{"name":"relayInitialDeposit","type":"uint128"},
+		{"components":[{"name":"relayLockTime","type":"uint32"},{"name":"relayRoundTime","type":"uint32"},{"name":"electionTime","type":"uint32"},{"name":"timeBeforeElection","type":"uint32"},{"name":"relaysCount","type":"uint16"},{"name":"minRelaysCount","type":"uint16"},{"name":"minRelayDeposit","type":"uint128"},{"name":"relayInitialDeposit","type":"uint128"}],"name":"relay_config","type":"tuple"},
+		{"name":"tonEventDeployValue","type":"uint128"},
 		{"name":"deposit_nonce","type":"uint64"},
 		{"components":[{"name":"user","type":"address"},{"name":"amount","type":"uint128"},{"name":"send_gas_to","type":"address"}],"name":"deposits","type":"map(uint64,tuple)"}
 	]

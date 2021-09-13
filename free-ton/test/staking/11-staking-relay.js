@@ -562,14 +562,16 @@ describe('Test Staking Rewards', async function () {
                     contract: stakingRoot,
                     method: 'setRelayConfig',
                     params: {
-                        relay_lock_time: 30 * 24 * 60 * 60, // 30 days
-                        relay_round_time: RELAY_ROUND_TIME_1,
-                        election_time: ELECTION_TIME,
-                        time_before_election: TIME_BEFORE_ELECTION,
-                        relays_count: RELAYS_COUNT_1,
-                        min_relays_count: MIN_RELAYS,
-                        min_relay_deposit: MIN_RELAY_DEPOSIT,
-                        relay_initial_deposit: init_deposit.toString(),
+                        new_relay_config: {
+                            relayLockTime: 30 * 24 * 60 * 60, // 30 days
+                            relayRoundTime: RELAY_ROUND_TIME_1,
+                            electionTime: ELECTION_TIME,
+                            timeBeforeElection: TIME_BEFORE_ELECTION,
+                            relaysCount: RELAYS_COUNT_1,
+                            minRelaysCount: MIN_RELAYS,
+                            minRelayDeposit: MIN_RELAY_DEPOSIT,
+                            relayInitialDeposit: init_deposit.toString(),
+                        },
                         send_gas_to: stakingOwner.address
                     },
                 });
