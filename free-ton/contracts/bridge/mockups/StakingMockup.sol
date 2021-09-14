@@ -29,9 +29,9 @@ contract StakingMockup is IStaking, IRound, RandomNonce {
         view
         responsible
     returns (
-        address roundContract
+        address roundContract, uint32 roundNum
     ) {
-        return {value: 0, flag: 64} address(this);
+        return {value: 0, flag: 64} (address(this), roundNum);
     }
 
     /*

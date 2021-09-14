@@ -238,7 +238,8 @@
 				{"name":"time","type":"uint32"}
 			],
 			"outputs": [
-				{"name":"value0","type":"address"}
+				{"name":"value0","type":"address"},
+				{"name":"value1","type":"uint32"}
 			]
 		},
 		{

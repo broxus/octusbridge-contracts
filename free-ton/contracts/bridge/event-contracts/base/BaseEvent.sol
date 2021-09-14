@@ -68,7 +68,7 @@ abstract contract BaseEvent is IBasicEvent, CellEncoder, TransferUtils{
     }
 
     // TODO: cant be pure, compiler lies
-    function receiveRoundAddress(address roundContract) public onlyStaking eventInitializing {
+    function receiveRoundAddress(address roundContract, uint32 roundNum) public onlyStaking eventInitializing {
         relay_round = roundContract;
         IRound(roundContract).relayKeys{
             value: 1 ton,

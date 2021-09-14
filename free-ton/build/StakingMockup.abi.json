@@ -10,7 +10,8 @@
 				{"name":"eventTimestamp","type":"uint32"}
 			],
 			"outputs": [
-				{"name":"roundContract","type":"address"}
+				{"name":"roundContract","type":"address"},
+				{"name":"roundNum","type":"uint32"}
 			]
 		},
 		{

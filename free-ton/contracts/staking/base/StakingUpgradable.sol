@@ -123,9 +123,9 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         )));
     }
 
-    function getRelayRoundAddressFromTimestamp(uint32 time) public view responsible returns (address) {
+    function getRelayRoundAddressFromTimestamp(uint32 time) public view responsible returns (address, uint32) {
         uint32 round_num = time < prevRelayRoundEndTime ? currentRelayRound - 1 : currentRelayRound;
-        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } getRelayRoundAddress(round_num);
+        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } (getRelayRoundAddress(round_num), round_num);
     }
 
     function upgrade(TvmCell code, address send_gas_to) external onlyAdmin {

@@ -67,7 +67,8 @@
 		{
 			"name": "receiveRoundAddress",
 			"inputs": [
-				{"name":"roundContract","type":"address"}
+				{"name":"roundContract","type":"address"},
+				{"name":"roundNum","type":"uint32"}
 			],
 			"outputs": [
 			]
