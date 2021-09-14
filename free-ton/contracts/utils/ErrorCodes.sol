@@ -12,6 +12,7 @@ library ErrorCodes {
     uint16 constant SENDER_NOT_STAKING = 2107;
     uint16 constant BRIDGE_PAUSED = 2108;
     uint16 constant IS_NOT_BASE_CHAIN = 2109;
+    uint16 constant SENDER_NOT_RELAY_ROUND = 2110;
 
     // Event configuration contract
     uint16 constant SENDER_NOT_BRIDGE = 2209;
