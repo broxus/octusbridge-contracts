@@ -101,21 +101,22 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
 
     /// @dev Deploy new connector.
     /// @param _eventConfiguration Event configuration address to connect
-    /// @return connector Expected connector address
     function deployConnector(
         address _eventConfiguration
     )
         override
         public
         reserveBalance
-    returns(
-        address connector
-    ) {
+    {
         require(active, ErrorCodes.BRIDGE_PAUSED);
         require(msg.value >= connectorDeployValue, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
         require(_eventConfiguration.wid == 0, ErrorCodes.IS_NOT_BASE_CHAIN);
 
-        connector = new Connector{
+        address connector = deriveConnectorAddress(connectorCounter);
+
+        emit ConnectorDeployed(connectorCounter, connector, _eventConfiguration);
+
+        new Connector{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED,
             code: connectorCode,
@@ -125,8 +126,6 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
                 bridge: address(this)
             }
         }(_eventConfiguration, owner);
-
-        emit ConnectorDeployed(connectorCounter, connector, _eventConfiguration);
 
         connectorCounter++;
     }

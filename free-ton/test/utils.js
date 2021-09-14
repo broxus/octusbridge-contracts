@@ -452,14 +452,18 @@ const enableEventConfiguration = async (bridgeOwner, bridge, eventConfiguration)
   const connectorId = await bridge.call({
     method: 'connectorCounter',
   });
-
+  
+  const connectorDeployValue = await bridge.call({
+    method: 'connectorDeployValue',
+  });
+  
   await bridgeOwner.runTarget({
     contract: bridge,
     method: 'deployConnector',
     params: {
       _eventConfiguration: eventConfiguration.address
     },
-    value: locklift.utils.convertCrystal(4, 'nano')
+    value: connectorDeployValue.plus(1000000000)
   });
 
   const connectorAddress = await bridge.call({
@@ -468,7 +472,7 @@ const enableEventConfiguration = async (bridgeOwner, bridge, eventConfiguration)
       id: connectorId
     }
   });
-
+  
   const connector = await locklift.factory.getContract('Connector');
   connector.setAddress(connectorAddress);
 
@@ -509,18 +513,6 @@ const captureConnectors = async (bridge) => {
   }, {});
 };
 
-
-function askQuestion(query) {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-  
-  return new Promise(resolve => rl.question(query, ans => {
-    rl.close();
-    resolve(ans);
-  }))
-}
 
 const isValidTonAddress = (address) => /^(?:-1|0):[0-9a-fA-F]{64}$/.test(address);
 

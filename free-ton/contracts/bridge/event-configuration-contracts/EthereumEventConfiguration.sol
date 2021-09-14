@@ -103,7 +103,11 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
 
         IEthereumEvent.EthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
 
-        address eventContract = new EthereumBaseEvent{
+        address eventContract = deriveEventAddress(eventVoteData);
+
+        emit NewEventContract(eventContract);
+
+        new EthereumBaseEvent{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED,
             code: basicConfiguration.eventCode,
@@ -112,8 +116,6 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
                 eventInitData: eventInitData
             }
         }(msg.sender, meta);
-
-        emit NewEventContract(eventContract);
     }
 
     /// @dev Derive the Ethereum event contract address from it's init data

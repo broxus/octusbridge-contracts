@@ -102,7 +102,11 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
 
         ITonEvent.TonEventInitData eventInitData = buildEventInitData(eventVoteData);
 
-        address eventContract = new TonBaseEvent{
+        address eventContract = deriveEventAddress(eventVoteData);
+
+        emit NewEventContract(eventContract);
+
+        new TonBaseEvent{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED,
             code: basicConfiguration.eventCode,
@@ -111,8 +115,6 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
                 eventInitData: eventInitData
             }
         }(msg.sender, meta);
-
-        emit NewEventContract(eventContract);
     }
 
     /*

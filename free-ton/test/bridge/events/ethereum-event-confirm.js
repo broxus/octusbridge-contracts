@@ -92,6 +92,7 @@ describe('Test ethereum event confirm', async function() {
 
     it('Setup event data', async () => {
       eventDataStructure.owner_addr = initializer.address.replace('0:', '0x');
+
       const eventData = await cellEncoder.call({
         method: 'encodeEthereumEventData',
         params: eventDataStructure
