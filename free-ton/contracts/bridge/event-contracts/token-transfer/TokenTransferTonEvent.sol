@@ -52,7 +52,7 @@ contract TokenTransferTonEvent is TonBaseEvent {
     }
 
     function getOwner() private view returns(address) {
-        (,,,,,address ownerAddress,) = getDecodedData();
+        (,,,,address ownerAddress,) = getDecodedData();
         return ownerAddress;
     }
 
@@ -106,7 +106,6 @@ contract TokenTransferTonEvent is TonBaseEvent {
         @returns owner_address Token receiver address (derived from the wid and owner_addr)
     */
     function getDecodedData() public view responsible returns (
-        address rootToken,
         int8 wid,
         uint256 addr,
         uint128 tokens,
@@ -114,8 +113,6 @@ contract TokenTransferTonEvent is TonBaseEvent {
         address owner_address,
         uint32 chainId
     ) {
-        (rootToken) = decodeConfigurationMeta(meta);
-
         (
             wid,
             addr,
@@ -127,7 +124,6 @@ contract TokenTransferTonEvent is TonBaseEvent {
         owner_address = address.makeAddrStd(wid, addr);
 
         return {value: 0, flag: MsgFlag.REMAINING_GAS} (
-            rootToken,
             wid,
             addr,
             tokens,

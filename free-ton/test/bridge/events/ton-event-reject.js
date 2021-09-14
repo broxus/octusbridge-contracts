@@ -147,9 +147,6 @@ describe('Test ton event reject', async function() {
     
     it('Check encoded event data', async () => {
       const data = await eventContract.call({ method: 'getDecodedData' });
-      
-      expect(data.rootToken)
-        .to.be.equal(await proxy.call({method: 'getTokenRoot'}), 'Wrong root token');
 
       expect(data.owner_address)
         .to.be.equal(initializer.address, 'Wrong owner address');

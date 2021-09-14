@@ -43,7 +43,6 @@
 				{"name":"answerId","type":"uint32"}
 			],
 			"outputs": [
-				{"name":"rootToken","type":"address"},
 				{"name":"wid","type":"int8"},
 				{"name":"addr","type":"uint256"},
 				{"name":"tokens","type":"uint128"},
@@ -115,10 +114,9 @@
 		{
 			"name": "encodeEthereumEventData",
 			"inputs": [
-				{"name":"tokens","type":"uint128"},
-				{"name":"wid","type":"int8"},
-				{"name":"owner_addr","type":"uint256"},
-				{"name":"owner_pubkey","type":"uint256"}
+				{"name":"tokens","type":"uint256"},
+				{"name":"wid","type":"int128"},
+				{"name":"owner_addr","type":"uint256"}
 			],
 			"outputs": [
 				{"name":"data","type":"cell"}
@@ -165,26 +163,7 @@
 			"outputs": [
 				{"name":"tokens","type":"uint128"},
 				{"name":"wid","type":"int8"},
-				{"name":"owner_addr","type":"uint256"},
-				{"name":"owner_pubkey","type":"uint256"}
-			]
-		},
-		{
-			"name": "encodeConfigurationMeta",
-			"inputs": [
-				{"name":"rootToken","type":"address"}
-			],
-			"outputs": [
-				{"name":"data","type":"cell"}
-			]
-		},
-		{
-			"name": "decodeConfigurationMeta",
-			"inputs": [
-				{"name":"data","type":"cell"}
-			],
-			"outputs": [
-				{"name":"rootToken","type":"address"}
+				{"name":"owner_addr","type":"uint256"}
 			]
 		},
 		{

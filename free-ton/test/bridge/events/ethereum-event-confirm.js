@@ -88,7 +88,6 @@ describe('Test ethereum event confirm', async function() {
       tokens: 100,
       wid: 0,
       owner_addr: 0,
-      owner_pubkey: 0,
     };
 
     it('Setup event data', async () => {
@@ -196,9 +195,6 @@ describe('Test ethereum event confirm', async function() {
     it('Check encoded event data', async () => {
       const data = await eventContract.call({ method: 'getDecodedData' });
 
-      expect(data.rootToken)
-        .to.be.equal(locklift.utils.zeroAddress, 'Wrong root token');
-
       expect(data.tokens)
         .to.be.bignumber.equal(eventDataStructure.tokens, 'Wrong amount of tokens');
 
@@ -207,9 +203,6 @@ describe('Test ethereum event confirm', async function() {
 
       expect(data.owner_addr)
         .to.be.bignumber.equal(eventDataStructure.owner_addr, 'Wrong owner address');
-
-      expect(data.owner_pubkey)
-        .to.be.bignumber.equal(eventDataStructure.owner_pubkey, 'Wrong owner pubkey');
     });
   });
 
