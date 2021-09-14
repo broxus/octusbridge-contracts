@@ -6,6 +6,7 @@ pragma AbiHeader pubkey;
 import "./../base/TonBaseEvent.sol";
 import "./../../interfaces/IEventNotificationReceiver.sol";
 import "./../../interfaces/event-contracts/ITonEvent.sol";
+import "../../../utils/cell-encoder/DaoCellEncoder.sol";
 import "./../../../utils/ErrorCodes.sol";
 import './../../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
@@ -13,7 +14,7 @@ import './../../../../../node_modules/@broxus/contracts/contracts/libraries/MsgF
     @title DAO Ethereum Action event configuration
     @dev This implementation is used for executing DAO actions in EVM based networks
 */
-contract DaoEthereumActionEvent is TonBaseEvent {
+contract DaoEthereumActionEvent is TonBaseEvent, DaoCellEncoder {
 
     constructor(address _initializer, TvmCell _meta) TonBaseEvent(_initializer, _meta) public {}
 

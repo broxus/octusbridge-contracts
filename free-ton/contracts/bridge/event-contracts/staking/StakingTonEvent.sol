@@ -7,11 +7,12 @@ import "../base/TonBaseEvent.sol";
 import "../../interfaces/IEventNotificationReceiver.sol";
 import "../../interfaces/event-contracts/ITonEvent.sol";
 import "../../../utils/ErrorCodes.sol";
+import "../../../utils/cell-encoder/StakingCellEncoder.sol";
 import '../../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
 
-contract StakingTonEvent is TonBaseEvent {
+contract StakingTonEvent is TonBaseEvent, StakingCellEncoder {
 
     constructor(address _initializer, TvmCell _meta) TonBaseEvent(_initializer, _meta) public {}
 

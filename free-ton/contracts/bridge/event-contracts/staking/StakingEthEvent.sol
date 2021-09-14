@@ -8,11 +8,12 @@ import "../../interfaces/IEventNotificationReceiver.sol";
 import "../../interfaces/event-contracts/IEthereumEvent.sol";
 import "../../interfaces/IProxy.sol";
 import "../../../utils/ErrorCodes.sol";
+import "../../../utils/cell-encoder/StakingCellEncoder.sol";
 import '../../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
 
-contract StakingEthEvent is EthereumBaseEvent {
+contract StakingEthEvent is EthereumBaseEvent, StakingCellEncoder {
 
     constructor(address _initializer, TvmCell _meta) EthereumBaseEvent(_initializer, _meta) public {}
 

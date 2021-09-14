@@ -15,10 +15,10 @@ import "./interfaces/IUpgradable.sol";
 import "../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol";
 import "../../../node_modules/@broxus/contracts/contracts/platform/Platform.sol";
 import "../utils/Delegate.sol";
-import "../utils/cell-encoder/CellEncoder.sol";
+import "../utils/cell-encoder/DaoCellEncoder.sol";
 import "../bridge/interfaces/event-configuration-contracts/ITonEventConfiguration.sol";
 
-contract DaoRoot is CellEncoder, IDaoRoot, IUpgradable, Delegate {
+contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate {
 
     uint8 public constant proposalMaxOperations = 10;
     uint16 public constant proposalMaxDescriptionLen = 2048;
