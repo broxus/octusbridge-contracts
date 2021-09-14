@@ -16,7 +16,7 @@ interface IEthereumEventConfiguration is IBasicEventConfiguration {
 
     function deployEvent(
         IEthereumEvent.EthereumEventVoteData eventVoteData
-    ) external returns (address eventContract);
+    ) external;
 
     function deriveEventAddress(
         IEthereumEvent.EthereumEventVoteData eventVoteData

@@ -34,7 +34,6 @@
 				{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"name":"eventData","type":"cell"}],"name":"eventVoteData","type":"tuple"}
 			],
 			"outputs": [
-				{"name":"eventContract","type":"address"}
 			]
 		},
 		{
@@ -125,6 +124,14 @@
 			"inputs": [
 				{"name":"previousOwner","type":"address"},
 				{"name":"newOwner","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "NewEventContract",
+			"inputs": [
+				{"name":"eventContract","type":"address"}
 			],
 			"outputs": [
 			]

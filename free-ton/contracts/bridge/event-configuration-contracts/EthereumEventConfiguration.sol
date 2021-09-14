@@ -87,7 +87,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
         external
         override
         reserveBalance
-    returns(address eventContract) {
+    {
         require(msg.value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
         require(
             eventVoteData.eventBlockNumber >= networkConfiguration.startBlockNumber,
@@ -103,7 +103,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
 
         IEthereumEvent.EthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
 
-        eventContract = new EthereumBaseEvent{
+        address eventContract = new EthereumBaseEvent{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED,
             code: basicConfiguration.eventCode,

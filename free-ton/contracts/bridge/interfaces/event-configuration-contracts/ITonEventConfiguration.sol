@@ -14,7 +14,7 @@ interface ITonEventConfiguration is IBasicEventConfiguration {
 
     function deployEvent(
         ITonEvent.TonEventVoteData eventVoteData
-    ) external returns (address eventContract);
+    ) external;
 
     function deriveEventAddress(
         ITonEvent.TonEventVoteData eventVoteData
