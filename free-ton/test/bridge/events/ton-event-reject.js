@@ -112,7 +112,17 @@ describe('Test ton event reject', async function() {
         },
         value: locklift.utils.convertCrystal(4, 'nano')
       });
-      const expectedEventContract = await extractTonEventAddress(tx);
+
+      const events = await tonEventConfiguration.getEvents('NewEventContract');
+  
+      expect(events)
+        .to.have.lengthOf(1, 'TON event configuration didnt deploy event');
+  
+      const [{
+        value: {
+          eventContract: expectedEventContract
+        }
+      }] = events;
 
       logger.log(`Expected event address: ${expectedEventContract}`);
       
