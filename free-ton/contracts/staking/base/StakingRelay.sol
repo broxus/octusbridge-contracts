@@ -260,22 +260,22 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         // we know that balance of this contract is enough, because we checked that on 'endElection' call which triggers this action
         tvm.rawReserve(_reserve() - tonEventDeployValue, 2);
 
-        if (round_num > 0) {
-            prevRelayRoundEndTime = currentRelayRoundEndTime;
-        }
-
         currentElectionEnded = false;
         currentRelayRound = round_num;
         currentRelayRoundStartTime = round_start_time;
         currentRelayRoundEndTime = round_end_time;
         rewardRounds[rewardRounds.length - 1].totalReward += round_reward;
 
-        TvmBuilder event_builder;
-        event_builder.store(round_num); // 32
-        event_builder.store(eth_keys); // ref
-        event_builder.store(round_end_time);
-        ITonEvent.TonEventVoteData event_data = ITonEvent.TonEventVoteData(tx.timestamp, now, event_builder.toCell());
-        ITonEventConfiguration(bridge_event_config_ton_eth).deployEvent{value: tonEventDeployValue}(event_data);
+        if (round_num > 0) {
+            prevRelayRoundEndTime = currentRelayRoundEndTime;
+
+            TvmBuilder event_builder;
+            event_builder.store(round_num); // 32
+            event_builder.store(eth_keys); // ref
+            event_builder.store(round_end_time);
+            ITonEvent.TonEventVoteData event_data = ITonEvent.TonEventVoteData(tx.timestamp, now, event_builder.toCell());
+            ITonEventConfiguration(bridge_event_config_ton_eth).deployEvent{value: tonEventDeployValue}(event_data);
+        }
 
         emit RelayRoundInitialized(round_num, round_start_time, round_end_time, msg.sender, relays_count, duplicate);
     }
