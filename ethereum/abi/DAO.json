@@ -112,6 +112,62 @@
         "internalType": "bytes",
         "name": "payload",
         "type": "bytes"
+      }
+    ],
+    "name": "decodeEthActionsEventData",
+    "outputs": [
+      {
+        "internalType": "int8",
+        "name": "_wid",
+        "type": "int8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_addr",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint32",
+        "name": "chainId",
+        "type": "uint32"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "value",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint160",
+            "name": "target",
+            "type": "uint160"
+          },
+          {
+            "internalType": "string",
+            "name": "signature",
+            "type": "string"
+          },
+          {
+            "internalType": "bytes",
+            "name": "data",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct IDAO.EthAction[]",
+        "name": "actions",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "payload",
+        "type": "bytes"
       },
       {
         "internalType": "bytes[]",

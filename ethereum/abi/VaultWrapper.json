@@ -1,5 +1,44 @@
 [
   {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "payload",
+        "type": "bytes"
+      }
+    ],
+    "name": "decodeWithdrawEventData",
+    "outputs": [
+      {
+        "internalType": "int8",
+        "name": "sender_wid",
+        "type": "int8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "sender_addr",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint128",
+        "name": "amount",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint160",
+        "name": "_recipient",
+        "type": "uint160"
+      },
+      {
+        "internalType": "uint32",
+        "name": "chainId",
+        "type": "uint32"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "getChainID",
     "outputs": [

@@ -55,6 +55,22 @@ contract DAO is IDAO, ReentrancyGuard, OwnableUpgradeable, Cache, ChainId {
         bridge = _bridge;
     }
 
+    function decodeEthActionsEventData(
+        bytes memory payload
+    ) public pure returns(
+        int8 _wid,
+        uint256 _addr,
+        uint32 chainId,
+        EthAction[] memory actions
+    ) {
+        (IBridge.TONEvent memory tonEvent) = abi.decode(payload, (IBridge.TONEvent));
+
+        return abi.decode(
+            tonEvent.eventData,
+            (int8, uint256, uint32, EthAction[])
+        );
+    }
+
     /**
         @notice
             Execute set of actions.
@@ -91,10 +107,12 @@ contract DAO is IDAO, ReentrancyGuard, OwnableUpgradeable, Cache, ChainId {
             "DAO: wrong event configuration"
         );
 
-        (int8 _wid, uint256 _addr, uint32 chainId, EthAction[] memory actions) = abi.decode(
-            tonEvent.eventData,
-            (int8, uint256, uint32, EthAction[])
-        );
+        (
+            int8 _wid,
+            uint256 _addr,
+            uint32 chainId,
+            EthAction[] memory actions
+        ) = decodeEthActionsEventData(payload);
 
         require(
             chainId == getChainID(),

@@ -263,23 +263,13 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
             "Bridge: wrong event configuration"
         );
 
-        (uint32 round, uint160[] memory _relays, uint32 roundEnd) = decodeRoundRelaysEventData(
-            tonEvent.eventData
-        );
+        (uint32 round, uint160[] memory _relays, uint32 roundEnd) = decodeRoundRelaysEventData(payload);
 
         require(round == lastRound + 1, "Bridge: wrong round");
 
         _setRound(round, _relays, roundEnd);
 
         lastRound++;
-    }
-
-    function decodeTonEventPayload(
-        bytes memory payload
-    ) public pure override returns (
-        TONEvent memory tonEvent
-    ) {
-        (tonEvent) = abi.decode(payload, (TONEvent));
     }
 
     function decodeRoundRelaysEventData(
@@ -289,8 +279,10 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
         uint160[] memory _relays,
         uint32 roundEnd
     ) {
+        (TONEvent memory tonEvent) = abi.decode(payload, (TONEvent));
+
         (round, _relays, roundEnd) = abi.decode(
-            decodeTonEventPayload(payload).eventData,
+            tonEvent.eventData,
             (uint32, uint160[], uint32)
         );
     }

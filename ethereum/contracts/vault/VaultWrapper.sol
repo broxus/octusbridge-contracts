@@ -33,6 +33,23 @@ contract VaultWrapper is ChainId, Initializable {
         vault = _vault;
     }
 
+    function decodeWithdrawEventData(
+        bytes memory payload
+    ) public pure returns (
+        int8 sender_wid,
+        uint256 sender_addr,
+        uint128 amount,
+        uint160 _recipient,
+        uint32 chainId
+    ) {
+        (IBridge.TONEvent memory tonEvent) = abi.decode(payload, (IBridge.TONEvent));
+
+        return abi.decode(
+            tonEvent.eventData,
+            (int8, uint256, uint128, uint160, uint32)
+        );
+    }
+
     function saveWithdraw(
         bytes calldata payload,
         bytes[] calldata signatures,
@@ -77,10 +94,7 @@ contract VaultWrapper is ChainId, Initializable {
             uint128 amount,
             uint160 _recipient,
             uint32 chainId
-        ) = abi.decode(
-            tonEvent.eventData,
-            (int8, uint256, uint128, uint160, uint32)
-        );
+        ) = decodeWithdrawEventData(payload);
 
         // Check chain id
         require(chainId == getChainID(), "Vault wrapper: wrong chain id");
