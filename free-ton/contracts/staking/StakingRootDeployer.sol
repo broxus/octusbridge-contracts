@@ -14,8 +14,8 @@ contract StakingRootDeployer {
         address _admin,
         address _dao_root,
         address _rewarder,
-        address _bridge_event_config,
-        address _bridge_event_proxy,
+        address _bridge_event_config_eth_ton,
+        address _bridge_event_config_ton_eth,
         address _tokenRoot,
         uint32 _deploy_nonce
     ) public returns(address) {
@@ -32,6 +32,6 @@ contract StakingRootDeployer {
             }),
             value: address(this).balance - 1 ton,
             flag: 0
-        }(_admin, _dao_root, _rewarder, _bridge_event_config, _bridge_event_proxy, _tokenRoot);
+        }(_admin, _dao_root, _rewarder, _bridge_event_config_eth_ton, _bridge_event_config_ton_eth, _tokenRoot);
     }
 }

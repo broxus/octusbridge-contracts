@@ -440,9 +440,9 @@ describe('Test Staking Rewards', async function () {
             it('Deploy staking', async function () {
                 const [keyPair, keyPair1] = await locklift.keys.getKeyPairs();
 
-                const EventProxyMock = await locklift.factory.getContract('EventProxyMockup');
-                const event_proxy = await locklift.giver.deployContract({
-                    contract: EventProxyMock,
+                const TonConfigMockup = await locklift.factory.getContract('TonConfigMockup');
+                const ton_config_mockup = await locklift.giver.deployContract({
+                    contract: TonConfigMockup,
                     constructorParams: {},
                     initParams: {nonce: getRandomNonce()},
                     keyPair: keyPair
@@ -468,8 +468,8 @@ describe('Test Staking Rewards', async function () {
                         _tokenRoot: stakingToken.address,
                         _dao_root: stakingOwner.address,
                         _rewarder: stakingOwner.address,
-                        _bridge_event_config: stakingOwner.address,
-                        _bridge_event_proxy: event_proxy.address,
+                        _bridge_event_config_eth_ton: stakingOwner.address,
+                        _bridge_event_config_ton_eth: ton_config_mockup.address,
                         _deploy_nonce: getRandomNonce()
                     }
                 })).decoded.output.value0);

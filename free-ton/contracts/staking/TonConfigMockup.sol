@@ -5,15 +5,15 @@ pragma AbiHeader pubkey;
 import "../bridge/interfaces/event-contracts/ITonEvent.sol";
 
 
-contract EventProxyMockup {
+contract TonConfigMockup {
     uint64 static nonce;
 
     constructor() public { tvm.accept(); }
 
     function deployEvent(
         ITonEvent.TonEventVoteData eventVoteData
-    ) external returns (address eventContract) {
-        return address.makeAddrNone();
+    ) external  {
+        return;
     }
 
 }

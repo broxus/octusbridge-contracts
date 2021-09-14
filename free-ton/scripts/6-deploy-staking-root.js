@@ -115,16 +115,18 @@ async function main() {
     contract: stakingRoot,
     method: 'setRelayConfig',
     params: {
-      relay_lock_time: 3600 * 3,
-      relay_round_time: 3600,
-      election_time: 20 * 60,
-      time_before_election: 30 * 60,
-      relays_count: 100,
-      min_relays_count: 3,
-      min_relay_deposit: 5000000000,
-      relay_initial_deposit: 10000000000,
+      new_relay_config: {
+        relayLockTime: 3600 * 3,
+        relayRoundTime: 3600,
+        electionTime: 20 * 60,
+        timeBeforeElection: 30 * 60,
+        relaysCount: 100,
+        minRelaysCount: 3,
+        minRelayDeposit: 5000000000,
+        relayInitialDeposit: 10000000000,
+      },
       send_gas_to: admin.address
-    }
+    },
   });
 
   logger.log(`Set true dao`);

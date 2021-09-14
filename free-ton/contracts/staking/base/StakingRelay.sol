@@ -3,7 +3,7 @@ pragma AbiHeader pubkey;
 //pragma AbiHeader expire;
 
 import "./StakingUpgradable.sol";
-import "../interfaces/IEventProxy.sol";
+import "../../bridge/interfaces/event-configuration-contracts/ITonEventConfiguration.sol";
 import "../../bridge/interfaces/IProxy.sol";
 
 
@@ -275,7 +275,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         event_builder.store(eth_keys); // ref
         event_builder.store(round_end_time);
         ITonEvent.TonEventVoteData event_data = ITonEvent.TonEventVoteData(tx.timestamp, now, event_builder.toCell());
-        IEventProxy(bridge_event_config_ton_eth).deployEvent{value: tonEventDeployValue}(event_data);
+        ITonEventConfiguration(bridge_event_config_ton_eth).deployEvent{value: tonEventDeployValue}(event_data);
 
         emit RelayRoundInitialized(round_num, round_start_time, round_end_time, msg.sender, relays_count, duplicate);
     }
