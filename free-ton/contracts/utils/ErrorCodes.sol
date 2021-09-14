@@ -85,6 +85,7 @@ library ErrorCodes {
     uint16 constant CANT_WITHDRAW_VOTES = 2537;
     uint16 constant RELAY_NOT_EXIST = 2538;
     uint16 constant DUPLICATE_RELAY = 2539;
+    uint16 constant DUPLICATE_CALL = 2540;
 
     // staking dao
     uint16 constant NOT_DAO_ROOT = 2601;

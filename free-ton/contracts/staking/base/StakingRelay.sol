@@ -106,7 +106,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         address send_gas_to
     ) external onlyAdmin {
         require (msg.value >= Gas.MIN_ORIGIN_ROUND_MSG_VALUE + ton_deposit * staker_addrs.length, ErrorCodes.VALUE_TOO_LOW);
-        require (currentRelayRound == 0 && currentRelayRoundStartTime == 0, ErrorCodes.ORIGIN_ROUND_ALREADY_INITIALIZED);
+        require (round_details.currentRelayRound == 0 && round_details.currentRelayRoundStartTime == 0, ErrorCodes.ORIGIN_ROUND_ALREADY_INITIALIZED);
         bool correct_len = staker_addrs.length == ton_pubkeys.length;
         bool correct_len_1 = ton_pubkeys.length == eth_addrs.length;
         bool correct_len_2 = eth_addrs.length == staked_tokens.length;
@@ -128,14 +128,14 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
     }
 
     function processBecomeRelayNextRound(address user) external view override onlyActive onlyUserData(user) {
-        require (currentElectionStartTime != 0, ErrorCodes.ELECTION_NOT_STARTED);
+        require (round_details.currentElectionStartTime != 0, ErrorCodes.ELECTION_NOT_STARTED);
 
         tvm.rawReserve(_reserve(), 2);
 
         uint32 lock_time = relay_config.electionTime + relay_config.relayLockTime;
 
         IUserData(msg.sender).processBecomeRelayNextRound2{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-            currentRelayRound + 1, lock_time, relay_config.minRelayDeposit, user_data_version, election_version
+            round_details.currentRelayRound + 1, lock_time, relay_config.minRelayDeposit, user_data_version, election_version
         );
     }
 
@@ -149,29 +149,36 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
     }
 
     function startElectionOnNewRound() external onlyActive {
-        require (now >= (currentRelayRoundStartTime + relay_config.timeBeforeElection), ErrorCodes.TOO_EARLY_FOR_ELECTION);
-        require (currentElectionStartTime == 0, ErrorCodes.ELECTION_ALREADY_STARTED);
-        require (currentRelayRoundStartTime > 0, ErrorCodes.ORIGIN_ROUND_NOT_INITIALIZED);
+        require (now >= (round_details.currentRelayRoundStartTime + relay_config.timeBeforeElection), ErrorCodes.TOO_EARLY_FOR_ELECTION);
+        require (round_details.currentElectionStartTime == 0, ErrorCodes.ELECTION_ALREADY_STARTED);
+        require (round_details.currentRelayRoundStartTime > 0, ErrorCodes.ORIGIN_ROUND_NOT_INITIALIZED);
+        // ban frequent calls
+        // flags for election start are set on callback, so that ban duplicate calls to prevent contract gas leak
+        require (now >= lastExtCall + 60, ErrorCodes.DUPLICATE_CALL);
         tvm.accept();
 
-        deployElection(currentRelayRound + 1, address(this));
+        lastExtCall = now;
+        deployElection(round_details.currentRelayRound + 1, address(this));
     }
 
     function endElection() external onlyActive {
-        require (currentElectionStartTime != 0, ErrorCodes.ELECTION_NOT_STARTED);
-        require (now >= (currentElectionStartTime + relay_config.electionTime), ErrorCodes.CANT_END_ELECTION);
+        require (round_details.currentElectionStartTime != 0, ErrorCodes.ELECTION_NOT_STARTED);
+        require (now >= (round_details.currentElectionStartTime + relay_config.electionTime), ErrorCodes.CANT_END_ELECTION);
+        // flags for election end are set on callback, so that ban duplicate calls to prevent contract gas leak
+        require (now >= lastExtCall + 60, ErrorCodes.DUPLICATE_CALL);
         tvm.accept();
 
+        lastExtCall = now;
         uint128 required_gas = Gas.MIN_END_ELECTION_MSG_VALUE + _relaysPacksCount() * Gas.MIN_SEND_RELAYS_MSG_VALUE;
 
-        address election_addr = getElectionAddress(currentRelayRound + 1);
+        address election_addr = getElectionAddress(round_details.currentRelayRound + 1);
         IElection(election_addr).finish{value: required_gas}(election_version);
     }
 
     function onElectionStarted(uint32 round_num, address send_gas_to) external override onlyElection(round_num) {
         tvm.rawReserve(_reserve(), 2);
 
-        currentElectionStartTime = now;
+        round_details.currentElectionStartTime = now;
         emit ElectionStarted(round_num, now, now + relay_config.electionTime, msg.sender);
         send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
@@ -184,8 +191,8 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
 
         bool min_relays_ok = relay_requests_count >= relay_config.minRelaysCount;
 
-        currentElectionStartTime = 0;
-        currentElectionEnded = true;
+        round_details.currentElectionStartTime = 0;
+        round_details.currentElectionEnded = true;
 
         emit ElectionEnded(round_num, relay_requests_count, min_relays_ok);
 
@@ -260,14 +267,14 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         // we know that balance of this contract is enough, because we checked that on 'endElection' call which triggers this action
         tvm.rawReserve(_reserve() - tonEventDeployValue, 2);
 
-        currentElectionEnded = false;
-        currentRelayRound = round_num;
-        currentRelayRoundStartTime = round_start_time;
-        currentRelayRoundEndTime = round_end_time;
+        round_details.currentElectionEnded = false;
+        round_details.currentRelayRound = round_num;
+        round_details.currentRelayRoundStartTime = round_start_time;
+        round_details.currentRelayRoundEndTime = round_end_time;
         rewardRounds[rewardRounds.length - 1].totalReward += round_reward;
 
         if (round_num > 0) {
-            prevRelayRoundEndTime = currentRelayRoundEndTime;
+            round_details.prevRelayRoundEndTime = round_details.currentRelayRoundEndTime;
 
             TvmBuilder event_builder;
             event_builder.store(round_num); // 32
@@ -281,7 +288,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
     }
 
     function deployElection(uint32 round_num, address send_gas_to) private returns (address) {
-        require(round_num > currentRelayRound, ErrorCodes.INVALID_ELECTION_ROUND);
+        require(round_num > round_details.currentRelayRound, ErrorCodes.INVALID_ELECTION_ROUND);
 
         TvmBuilder constructor_params;
         constructor_params.store(election_version);

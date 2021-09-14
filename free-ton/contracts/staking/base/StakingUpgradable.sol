@@ -125,10 +125,10 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
 
     function getRelayRoundAddressFromTimestamp(uint32 time) public view responsible returns (address, uint32) {
         uint32 round_num;
-        if (currentRelayRound == 0) {
+        if (round_details.currentRelayRound == 0) {
             round_num = 0;
         } else {
-            round_num = time < prevRelayRoundEndTime ? currentRelayRound - 1 : currentRelayRound;
+            round_num = time < round_details.prevRelayRoundEndTime ? round_details.currentRelayRound - 1 : round_details.currentRelayRound;
         }
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } (getRelayRoundAddress(round_num), round_num);
     }
@@ -161,15 +161,16 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         data_builder_1.store(dao_root); // 256
         data_builder_1.store(bridge_event_config_eth_ton); // 256
         data_builder_1.store(active); // 1
-        data_builder_1.store(currentRelayRound); // 32
-        data_builder_1.store(currentRelayRoundStartTime); // 32
-        data_builder_1.store(currentRelayRoundEndTime); // 32
-        data_builder_1.store(currentElectionStartTime); // 32
-        data_builder_1.store(currentElectionEnded); // 1
+        data_builder_1.store(round_details.currentRelayRound); // 32
+        data_builder_1.store(round_details.currentRelayRoundStartTime); // 32
+        data_builder_1.store(round_details.currentRelayRoundEndTime); // 32
+        data_builder_1.store(round_details.currentElectionStartTime); // 32
+        data_builder_1.store(lastExtCall); // 32
+        data_builder_1.store(round_details.currentElectionEnded); // 1
 
         TvmBuilder data_builder_2;
         data_builder_2.store(bridge_event_config_ton_eth); // 256
-        data_builder_2.store(prevRelayRoundEndTime); // 32
+        data_builder_2.store(round_details.prevRelayRoundEndTime); // 32
         data_builder_2.store(lastRewardTime); // 32
         data_builder_2.store(tokenRoot); // 256
         data_builder_2.store(tokenWallet); // 256
@@ -239,6 +240,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
                             uint32 currentRelayRoundStartTime
                             uint32 currentRelayRoundEndTime
                             uint32 currentElectionStartTime
+                            uint32 lastExtCall
                             bool currentElectionEnded
                     2: data_2
                         bits:

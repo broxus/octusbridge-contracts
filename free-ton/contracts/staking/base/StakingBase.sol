@@ -90,22 +90,9 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     bool active;
 
-    uint32 currentRelayRound;
+    RelayRoundsDetails round_details;
 
-    // time when current round have started
-    uint32 currentRelayRoundStartTime;
-
-    // time when current round should end
-    uint32 currentRelayRoundEndTime;
-
-    // time when current election have started
-    uint32 currentElectionStartTime;
-
-    // whether election for current relay round ended or not
-    bool currentElectionEnded;
-
-    // we need this for deriving relay round from timestamp
-    uint32 prevRelayRoundEndTime;
+    uint32 lastExtCall;
 
     RewardRound[] rewardRounds;
 
@@ -167,10 +154,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     function getRelayRoundsDetails() public view responsible returns (RelayRoundsDetails) {
-        return{ value: 0, flag: MsgFlag.REMAINING_GAS }RelayRoundsDetails(
-            currentRelayRound, currentRelayRoundStartTime, currentRelayRoundEndTime,
-            currentElectionStartTime, prevRelayRoundEndTime, currentElectionEnded
-        );
+        return{ value: 0, flag: MsgFlag.REMAINING_GAS }round_details;
     }
 
     function getRelayConfig() public view responsible returns (RelayConfigDetails) {
