@@ -29,6 +29,8 @@ abstract contract BaseEvent is IBasicEvent, CellEncoder, TransferUtils{
     uint16 public confirms;
     // How many relays rejects event
     uint16 public rejects;
+    // address of relay round contract
+    address public relay_round;
 
     modifier onlyInitializer() {
         require(msg.sender == initializer, ErrorCodes.SENDER_NOT_INITIALIZER);
@@ -37,6 +39,11 @@ abstract contract BaseEvent is IBasicEvent, CellEncoder, TransferUtils{
 
     modifier onlyStaking() {
         require(msg.sender == getStakingAddress(), ErrorCodes.SENDER_NOT_STAKING);
+        _;
+    }
+
+    modifier onlyRelayRound() {
+        require (msg.sender == relay_round, ErrorCodes.SENDER_NOT_RELAY_ROUND);
         _;
     }
 
@@ -61,14 +68,15 @@ abstract contract BaseEvent is IBasicEvent, CellEncoder, TransferUtils{
     }
 
     // TODO: cant be pure, compiler lies
-    function receiveRoundAddress(address roundContract) public view onlyStaking eventInitializing {
+    function receiveRoundAddress(address roundContract) public onlyStaking eventInitializing {
+        relay_round = roundContract;
         IRound(roundContract).relayKeys{
             value: 1 ton,
             callback: receiveRoundRelays
         }();
     }
 
-    function receiveRoundRelays(uint[] keys) public onlyStaking eventInitializing {
+    function receiveRoundRelays(uint[] keys) public onlyRelayRound eventInitializing {
         requiredVotes = uint16(keys.length * 2 / 3) + 1;
 
         for (uint key: keys) {
