@@ -67,7 +67,7 @@ describe('Execute banning relay by DAO', async () => {
       proxy: dao.address,
     });
   
-    const initialRelays = utils.sortAccounts(await ethers.getSigners());
+    const initialRelays = utils.sortAccounts(await utils.getInitialRelays());
   
     signatures = await Promise.all(initialRelays
       .map(async (account) => utils.signReceipt(payload, account)));

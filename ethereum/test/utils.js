@@ -153,6 +153,15 @@ const issueTokens = async ({ token, owner, amount, recipient }) => {
 };
 
 
+const getInitialRelays = async () => {
+  return [
+    await ethers.getNamedSigner('relay_1'),
+    await ethers.getNamedSigner('relay_2'),
+    await ethers.getNamedSigner('relay_3'),
+  ];
+};
+
+
 module.exports = {
   signReceipt,
   logger,
@@ -169,4 +178,5 @@ module.exports = {
   getVaultByToken,
   encodeWithdrawalData,
   issueTokens,
+  getInitialRelays,
 };

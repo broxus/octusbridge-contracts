@@ -1,5 +1,6 @@
 const {
   expect,
+  getInitialRelays,
 } = require('../utils');
 
 
@@ -28,7 +29,7 @@ describe('Test bridge initial setup', async function() {
     });
 
     it('Check relays for initial round', async () => {
-      const relays = await ethers.getSigners();
+      const relays = await getInitialRelays();
 
       for (const relay of relays) {
         expect(await bridge.isRelay(0, relay.address))

@@ -45,7 +45,7 @@ describe('Set next round relays', async () => {
       proxy: bridge.address,
     });
     
-    const initialRelays = utils.sortAccounts(await ethers.getSigners());
+    const initialRelays = utils.sortAccounts(await utils.getInitialRelays());
     const { requiredSignatures } = await bridge.rounds(0);
   
     signatures = await Promise.all(

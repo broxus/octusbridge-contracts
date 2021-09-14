@@ -41,7 +41,7 @@ describe('Try to set too few relays for the next round', async () => {
       proxy: bridge.address,
     });
     
-    const initialRelays = utils.sortAccounts(await ethers.getSigners());
+    const initialRelays = utils.sortAccounts(await utils.getInitialRelays());
   
     const { requiredSignatures } = await bridge.rounds(0);
   
