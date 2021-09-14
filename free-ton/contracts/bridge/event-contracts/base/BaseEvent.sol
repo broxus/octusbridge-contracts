@@ -31,6 +31,8 @@ abstract contract BaseEvent is IBasicEvent, CellEncoder, TransferUtils{
     uint16 public rejects;
     // address of relay round contract
     address public relay_round;
+    // number of relay round
+    uint32 public round_number;
 
     modifier onlyInitializer() {
         require(msg.sender == initializer, ErrorCodes.SENDER_NOT_INITIALIZER);
@@ -70,6 +72,8 @@ abstract contract BaseEvent is IBasicEvent, CellEncoder, TransferUtils{
     // TODO: cant be pure, compiler lies
     function receiveRoundAddress(address roundContract, uint32 roundNum) public onlyStaking eventInitializing {
         relay_round = roundContract;
+        round_number = roundNum;
+
         IRound(roundContract).relayKeys{
             value: 1 ton,
             callback: receiveRoundRelays

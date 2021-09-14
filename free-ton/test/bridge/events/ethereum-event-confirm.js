@@ -193,6 +193,13 @@ describe('Test ethereum event confirm', async function() {
         .to.be.bignumber.greaterThanOrEqual(requiredVotes.toNumber(), 'Too many required votes for event');
     });
 
+    it('Check event round number', async () => {
+      const roundNumber = await eventContract.call({ method: 'round_number' });
+      
+      expect(roundNumber)
+        .to.be.bignumber.equal(0, 'Wrong round number');
+    });
+    
     it('Check encoded event data', async () => {
       const data = await eventContract.call({ method: 'getDecodedData' });
 
