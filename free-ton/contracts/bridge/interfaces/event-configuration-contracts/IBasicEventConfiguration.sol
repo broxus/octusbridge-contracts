@@ -11,6 +11,8 @@ interface IBasicEventConfiguration {
         TvmCell eventCode;
     }
 
+    event NewEventContract(address eventContract);
+
     function getType() external pure responsible returns(EventType _type);
     function setMeta(TvmCell _meta) external;
 }

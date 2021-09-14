@@ -112,6 +112,8 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
                 eventInitData: eventInitData
             }
         }(msg.sender, meta);
+
+        emit NewEventContract(eventContract);
     }
 
     /// @dev Derive the Ethereum event contract address from it's init data

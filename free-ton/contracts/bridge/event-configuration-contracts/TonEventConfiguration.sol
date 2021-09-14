@@ -111,6 +111,8 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
                 eventInitData: eventInitData
             }
         }(msg.sender, meta);
+
+        emit NewEventContract(eventContract);
     }
 
     /*
