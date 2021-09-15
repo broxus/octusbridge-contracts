@@ -539,8 +539,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
         return new Platform{
             stateInit: _buildInitData(PlatformTypes.UserData, _buildUserDataParams(user_data_owner)),
-            value: Gas.DEPLOY_USER_DATA_MIN_VALUE,
-            flag: MsgFlag.SENDER_PAYS_FEES
+            value: Gas.DEPLOY_USER_DATA_MIN_VALUE
         }(user_data_code, constructor_params.toCell(), user_data_owner);
     }
 

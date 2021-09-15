@@ -2,9 +2,9 @@ pragma ton-solidity >= 0.39.0;
 
 
 contract StakingCellEncoder {
-    function decodeTonStakingEventData(TvmCell data) public pure returns(uint128 round_num, uint160[] eth_keys, uint32 round_end) {
+    function decodeTonStakingEventData(TvmCell data) public pure returns(uint32 round_num, uint160[] eth_keys, uint32 round_end) {
         TvmSlice _slice = data.toSlice();
-        round_num = _slice.decode(uint128);
+        round_num = _slice.decode(uint32);
         eth_keys = _slice.decode(uint160[]);
         round_end = _slice.decode(uint32);
         return (round_num, eth_keys, round_end);

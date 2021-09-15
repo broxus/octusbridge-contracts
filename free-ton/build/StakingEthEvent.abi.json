@@ -47,7 +47,7 @@
 				{"name":"data","type":"cell"}
 			],
 			"outputs": [
-				{"name":"round_num","type":"uint128"},
+				{"name":"round_num","type":"uint32"},
 				{"name":"eth_keys","type":"uint160[]"},
 				{"name":"round_end","type":"uint32"}
 			]

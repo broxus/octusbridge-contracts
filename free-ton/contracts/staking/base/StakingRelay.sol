@@ -152,9 +152,12 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         require (now >= (round_details.currentRelayRoundStartTime + relay_config.timeBeforeElection), ErrorCodes.TOO_EARLY_FOR_ELECTION);
         require (round_details.currentElectionStartTime == 0, ErrorCodes.ELECTION_ALREADY_STARTED);
         require (round_details.currentRelayRoundStartTime > 0, ErrorCodes.ORIGIN_ROUND_NOT_INITIALIZED);
-        // ban frequent calls
+        // if currentElectionEnded == true, that means we are in a gap between election end and new round initialization
+//        require (round_details.currentElectionEnded == false, ErrorCodes.ELECTION_ALREADY_STARTED);
         // flags for election start are set on callback, so that ban duplicate calls to prevent contract gas leak
         require (now >= lastExtCall + 60, ErrorCodes.DUPLICATE_CALL);
+        require (address(this).balance > Gas.MIN_START_ELECTION_MSG_VALUE + Gas.ROOT_INITIAL_BALANCE, ErrorCodes.LOW_BALANCE);
+
         tvm.accept();
 
         lastExtCall = now;
@@ -166,10 +169,14 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         require (now >= (round_details.currentElectionStartTime + relay_config.electionTime), ErrorCodes.CANT_END_ELECTION);
         // flags for election end are set on callback, so that ban duplicate calls to prevent contract gas leak
         require (now >= lastExtCall + 60, ErrorCodes.DUPLICATE_CALL);
+
+        uint128 required_gas = Gas.MIN_END_ELECTION_MSG_VALUE + _relaysPacksCount() * Gas.MIN_SEND_RELAYS_MSG_VALUE;
+        uint128 min_balance = required_gas + Gas.ROOT_INITIAL_BALANCE;
+        require (address(this).balance > min_balance, ErrorCodes.LOW_BALANCE);
+
         tvm.accept();
 
         lastExtCall = now;
-        uint128 required_gas = Gas.MIN_END_ELECTION_MSG_VALUE + _relaysPacksCount() * Gas.MIN_SEND_RELAYS_MSG_VALUE;
 
         address election_addr = getElectionAddress(round_details.currentRelayRound + 1);
         IElection(election_addr).finish{value: required_gas}(election_version);

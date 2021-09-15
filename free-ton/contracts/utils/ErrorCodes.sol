@@ -86,6 +86,7 @@ library ErrorCodes {
     uint16 constant RELAY_NOT_EXIST = 2538;
     uint16 constant DUPLICATE_RELAY = 2539;
     uint16 constant DUPLICATE_CALL = 2540;
+    uint16 constant LOW_BALANCE = 2541;
 
     // staking dao
     uint16 constant NOT_DAO_ROOT = 2601;

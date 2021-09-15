@@ -327,6 +327,7 @@ contract UserData is IUserData, IUpgradableByRequest {
 
     function getRewardForRelayRound(uint32 round_num) external onlyRelay {
         require (!slashed, ErrorCodes.SLASHED);
+        require (address(this).balance > Gas.USER_DATA_INITIAL_BALANCE + Gas.MIN_GET_REWARD_RELAY_ROUND_MSG_VALUE, ErrorCodes.LOW_BALANCE);
         tvm.accept();
 
         IStakingPool(root).processGetRewardForRelayRound{value: Gas.MIN_GET_REWARD_RELAY_ROUND_MSG_VALUE}(user, round_num);
@@ -408,6 +409,7 @@ contract UserData is IUserData, IUpgradableByRequest {
 
     function becomeRelayNextRound() external onlyRelay {
         require (!slashed, ErrorCodes.SLASHED);
+        require (address(this).balance > Gas.USER_DATA_INITIAL_BALANCE + Gas.MIN_RELAY_REQ_MSG_VALUE, ErrorCodes.LOW_BALANCE);
         tvm.accept();
 
         IStakingPool(root).processBecomeRelayNextRound{value: Gas.MIN_RELAY_REQ_MSG_VALUE}(user);
