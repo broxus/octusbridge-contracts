@@ -158,8 +158,8 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         // MAIN DATA 1
         data_builder_1.store(deploy_nonce); // 32
         data_builder_1.store(deployer); // 256
-        data_builder_1.store(dao_root); // 256
-        data_builder_1.store(bridge_event_config_eth_ton); // 256
+        data_builder_1.store(base_details.dao_root); // 256
+        data_builder_1.store(base_details.bridge_event_config_eth_ton); // 256
         data_builder_1.store(active); // 1
         data_builder_1.store(round_details.currentRelayRound); // 32
         data_builder_1.store(round_details.currentRelayRoundStartTime); // 32
@@ -169,18 +169,18 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         data_builder_1.store(round_details.currentElectionEnded); // 1
 
         TvmBuilder data_builder_2;
-        data_builder_2.store(bridge_event_config_ton_eth); // 256
+        data_builder_2.store(base_details.bridge_event_config_ton_eth); // 256
         data_builder_2.store(round_details.prevRelayRoundEndTime); // 32
-        data_builder_2.store(lastRewardTime); // 32
-        data_builder_2.store(tokenRoot); // 256
-        data_builder_2.store(tokenWallet); // 256
-        data_builder_2.store(rewardRounds); // ref
+        data_builder_2.store(base_details.lastRewardTime); // 32
+        data_builder_2.store(base_details.tokenRoot); // 256
+        data_builder_2.store(base_details.tokenWallet); // 256
+        data_builder_2.store(base_details.rewardRounds); // ref
 
         TvmBuilder data_builder_3;
-        data_builder_3.store(tokenBalance); // 128
-        data_builder_3.store(rewardTokenBalance); // 128
-        data_builder_3.store(admin); // 256
-        data_builder_3.store(rewarder); // 256
+        data_builder_3.store(base_details.tokenBalance); // 128
+        data_builder_3.store(base_details.rewardTokenBalance); // 128
+        data_builder_3.store(base_details.admin); // 256
+        data_builder_3.store(base_details.rewarder); // 256
 
         TvmBuilder data_builder_4;
         data_builder_4.store(relay_config.relayLockTime); // 32

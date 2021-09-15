@@ -15,13 +15,13 @@ contract Staking is StakingPoolRelay {
     ) public {
         tvm.accept();
 
-        tokenRoot = _tokenRoot;
-        bridge_event_config_eth_ton = _bridge_event_config_eth_ton;
-        bridge_event_config_ton_eth = _bridge_event_config_ton_eth;
-        admin = _admin;
-        dao_root = _dao_root;
-        rewarder = _rewarder;
-        rewardRounds.push(RewardRound(0, 0, 0, now));
+        base_details.tokenRoot = _tokenRoot;
+        base_details.bridge_event_config_eth_ton = _bridge_event_config_eth_ton;
+        base_details.bridge_event_config_ton_eth = _bridge_event_config_ton_eth;
+        base_details.admin = _admin;
+        base_details.dao_root = _dao_root;
+        base_details.rewarder = _rewarder;
+        base_details.rewardRounds.push(RewardRound(0, 0, 0, now));
         setUpTokenWallets();
     }
 }

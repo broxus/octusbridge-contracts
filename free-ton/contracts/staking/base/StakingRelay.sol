@@ -47,7 +47,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         _upgradeUserData(relay_staker_addr, Gas.USER_DATA_UPGRADE_VALUE, send_gas_to);
 
         address user_data = getUserDataAddress(relay_staker_addr);
-        IUserData(user_data).slash{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(rewardRounds, send_gas_to);
+        IUserData(user_data).slash{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(base_details.rewardRounds, send_gas_to);
     }
 
     function _syncUserRewardData(
@@ -55,12 +55,12 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         uint128[] user_debts,
         uint128 ban_token_balance
     ) private view returns (uint128[]) {
-        for (uint i = user_rewards.length - 1; i < rewardRounds.length; i++) {
+        for (uint i = user_rewards.length - 1; i < base_details.rewardRounds.length; i++) {
             if (i >= user_rewards.length) {
                 user_rewards.push(0);
                 user_debts.push(0);
             }
-            user_rewards[i] += uint128(((ban_token_balance * rewardRounds[i].accRewardPerShare) / SCALING_FACTOR) - user_debts[i]);
+            user_rewards[i] += uint128(((ban_token_balance * base_details.rewardRounds[i].accRewardPerShare) / SCALING_FACTOR) - user_debts[i]);
         }
         return user_rewards;
     }
@@ -81,16 +81,16 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         uint128 _tokens_withdraw_total = 0;
         uint128 _tokens_added_to_reward = 0;
         for (uint i = 0; i < user_rewards_synced.length; i++) {
-            uint256 _share = (user_rewards_synced[i] * SCALING_FACTOR) / rewardRounds[i].totalReward;
-            uint128 _ban_tokens = uint128((_share * rewardRounds[i].rewardTokens) / SCALING_FACTOR);
+            uint256 _share = (user_rewards_synced[i] * SCALING_FACTOR) / base_details.rewardRounds[i].totalReward;
+            uint128 _ban_tokens = uint128((_share * base_details.rewardRounds[i].rewardTokens) / SCALING_FACTOR);
             _tokens_added_to_reward += _ban_tokens;
             _tokens_withdraw_total += _ban_tokens;
         }
         // transfer all staked tokens to current round reward balance
-        rewardRounds[rewardRounds.length - 1].rewardTokens += ban_token_balance;
-        rewardRounds[rewardRounds.length - 1].rewardTokens += _tokens_added_to_reward;
-        tokenBalance -= ban_token_balance;
-        rewardTokenBalance += ban_token_balance;
+        base_details.rewardRounds[base_details.rewardRounds.length - 1].rewardTokens += ban_token_balance;
+        base_details.rewardRounds[base_details.rewardRounds.length - 1].rewardTokens += _tokens_added_to_reward;
+        base_details.tokenBalance -= ban_token_balance;
+        base_details.rewardTokenBalance += ban_token_balance;
         _tokens_withdraw_total += ban_token_balance;
 
         emit RelaySlashed(user, _tokens_withdraw_total);
@@ -144,7 +144,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         updatePoolInfo();
 
         IUserData(msg.sender).processGetRewardForRelayRound2{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-            rewardRounds, round_num, user_data_version, relay_round_version
+            base_details.rewardRounds, round_num, user_data_version, relay_round_version
         );
     }
 
@@ -153,7 +153,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         require (round_details.currentElectionStartTime == 0, ErrorCodes.ELECTION_ALREADY_STARTED);
         require (round_details.currentRelayRoundStartTime > 0, ErrorCodes.ORIGIN_ROUND_NOT_INITIALIZED);
         // if currentElectionEnded == true, that means we are in a gap between election end and new round initialization
-//        require (round_details.currentElectionEnded == false, ErrorCodes.ELECTION_ALREADY_STARTED);
+        require (round_details.currentElectionEnded == false, ErrorCodes.ELECTION_ALREADY_STARTED);
         // flags for election start are set on callback, so that ban duplicate calls to prevent contract gas leak
         require (now >= lastExtCall + 60, ErrorCodes.DUPLICATE_CALL);
         require (address(this).balance > Gas.MIN_START_ELECTION_MSG_VALUE + Gas.ROOT_INITIAL_BALANCE, ErrorCodes.LOW_BALANCE);
@@ -278,7 +278,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         round_details.currentRelayRound = round_num;
         round_details.currentRelayRoundStartTime = round_start_time;
         round_details.currentRelayRoundEndTime = round_end_time;
-        rewardRounds[rewardRounds.length - 1].totalReward += round_reward;
+        base_details.rewardRounds[base_details.rewardRounds.length - 1].totalReward += round_reward;
 
         if (round_num > 0) {
             round_details.prevRelayRoundEndTime = round_details.currentRelayRoundEndTime;
@@ -288,7 +288,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
             event_builder.store(eth_keys); // ref
             event_builder.store(round_end_time);
             ITonEvent.TonEventVoteData event_data = ITonEvent.TonEventVoteData(tx.timestamp, now, event_builder.toCell());
-            ITonEventConfiguration(bridge_event_config_ton_eth).deployEvent{value: tonEventDeployValue}(event_data);
+            ITonEventConfiguration(base_details.bridge_event_config_ton_eth).deployEvent{value: tonEventDeployValue}(event_data);
         }
 
         emit RelayRoundInitialized(round_num, round_start_time, round_end_time, msg.sender, relays_count, duplicate);
@@ -319,7 +319,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         constructor_params.store(relay_round_version);
         constructor_params.store(relay_round_version);
         constructor_params.store(relay_config.relayRoundTime);
-        constructor_params.store(uint32(rewardRounds.length - 1));
+        constructor_params.store(uint32(base_details.rewardRounds.length - 1));
         constructor_params.store(rewardPerSecond);
         constructor_params.store(duplicate);
         constructor_params.store(packs_num);

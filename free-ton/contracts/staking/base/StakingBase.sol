@@ -82,33 +82,13 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     TvmCell relay_round_code;
     uint32 relay_round_version;
 
-    address dao_root;
-
-    address bridge_event_config_eth_ton;
-
-    address bridge_event_config_ton_eth;
-
     bool active;
-
-    RelayRoundsDetails round_details;
 
     uint32 lastExtCall;
 
-    RewardRound[] rewardRounds;
+    RelayRoundsDetails round_details;
 
-    uint32 lastRewardTime;
-
-    address tokenRoot;
-
-    address tokenWallet;
-
-    uint128 tokenBalance;
-
-    uint128 rewardTokenBalance;
-
-    address admin;
-
-    address rewarder;
+    BaseDetails base_details;
 
     RelayConfigDetails relay_config = RelayConfigDetails(
         30 days, 7 days, 2 days, 4 days, 30, 13, 100000 * 10**9, 500 ton
@@ -137,11 +117,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     mapping (uint64 => PendingDeposit) deposits;
 
     function getDetails() public view responsible returns (BaseDetails) {
-        return{ value: 0, flag: MsgFlag.REMAINING_GAS }BaseDetails(
-            dao_root, bridge_event_config_eth_ton, bridge_event_config_ton_eth, tokenRoot, tokenWallet,
-            admin, rewarder, tokenBalance, rewardTokenBalance,
-            lastRewardTime, rewardRounds
-        );
+        return{ value: 0, flag: MsgFlag.REMAINING_GAS }base_details;
     }
 
     function getCodeData() public view responsible returns (CodeData) {
@@ -179,7 +155,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     function setDaoRoot(address new_dao_root, address send_gas_to) external onlyDaoRoot {
         tvm.rawReserve(_reserve(), 2);
         emit DaoRootUpdated(new_dao_root);
-        dao_root = new_dao_root;
+        base_details.dao_root = new_dao_root;
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
@@ -194,28 +170,28 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     function setBridgeEventEthTonConfig(address new_bridge_event_config_eth_ton, address send_gas_to) external onlyAdmin {
         tvm.rawReserve(_reserve(), 2);
         emit BridgeEventEthTonConfigUpdated(new_bridge_event_config_eth_ton);
-        bridge_event_config_eth_ton = new_bridge_event_config_eth_ton;
+        base_details.bridge_event_config_eth_ton = new_bridge_event_config_eth_ton;
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
     function setBridgeEventTonEthConfig(address new_bridge_event_config_ton_eth, address send_gas_to) external onlyAdmin {
         tvm.rawReserve(_reserve(), 2);
         emit BridgeEventTonEthConfigUpdated(new_bridge_event_config_ton_eth);
-        bridge_event_config_ton_eth = new_bridge_event_config_ton_eth;
+        base_details.bridge_event_config_ton_eth = new_bridge_event_config_ton_eth;
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
     function setAdmin(address new_admin, address send_gas_to) external onlyDaoRoot {
         tvm.rawReserve(_reserve(), 2);
         emit AdminUpdated(new_admin);
-        admin = new_admin;
+        base_details.admin = new_admin;
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
     function setRewarder(address new_rewarder, address send_gas_to) external onlyDaoRoot {
         tvm.rawReserve(_reserve(), 2);
         emit RewarderUpdated(new_rewarder);
-        rewarder = new_rewarder;
+        base_details.rewarder = new_rewarder;
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
@@ -224,9 +200,9 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         tvm.rawReserve(_reserve(), 2);
         if (
             new_active
-            && dao_root.value != 0
-            && bridge_event_config_eth_ton.value != 0
-            && bridge_event_config_ton_eth.value != 0
+            && base_details.dao_root.value != 0
+            && base_details.bridge_event_config_eth_ton.value != 0
+            && base_details.bridge_event_config_ton_eth.value != 0
             && has_platform_code
             && user_data_version > 0
             && election_version > 0
@@ -258,7 +234,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     */
     function setUpTokenWallets() internal view {
         // Deploy vault's token wallet
-        IRootTokenContract(tokenRoot).deployEmptyWallet{value: Gas.TOKEN_WALLET_DEPLOY_VALUE}(
+        IRootTokenContract(base_details.tokenRoot).deployEmptyWallet{value: Gas.TOKEN_WALLET_DEPLOY_VALUE}(
             Gas.TOKEN_WALLET_DEPLOY_VALUE / 2, // deploy grams
             0, // owner pubkey
             address(this), // owner address
@@ -266,7 +242,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         );
 
         // Request for token wallet address
-        IRootTokenContract(tokenRoot).getWalletAddress{
+        IRootTokenContract(base_details.tokenRoot).getWalletAddress{
             value: Gas.GET_WALLET_ADDRESS_VALUE, callback: StakingPoolBase.receiveTokenWalletAddress
         }(0, address(this));
     }
@@ -277,8 +253,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         @param wallet Farm pool's token wallet
     */
     function receiveTokenWalletAddress(address wallet) external {
-        if (msg.sender == tokenRoot) {
-            tokenWallet = wallet;
+        if (msg.sender == base_details.tokenRoot) {
+            base_details.tokenWallet = wallet;
             ITONTokenWallet(wallet).setReceiveCallback{value: 0.05 ton}(address(this), false);
         }
     }
@@ -286,8 +262,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     function startNewRewardRound(address send_gas_to) external onlyRewarder {
         require (msg.value >= Gas.MIN_START_REWARD_ROUND_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
 
-        if (rewardRounds.length > 0) {
-            RewardRound last_round = rewardRounds[rewardRounds.length - 1];
+        if (base_details.rewardRounds.length > 0) {
+            RewardRound last_round = base_details.rewardRounds[base_details.rewardRounds.length - 1];
             require (last_round.rewardTokens > 0, ErrorCodes.EMPTY_REWARD_ROUND);
         }
 
@@ -295,8 +271,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
         updatePoolInfo();
 
-        rewardRounds.push(RewardRound(0, 0, 0, now));
-        emit NewRewardRound(uint32(rewardRounds.length - 1));
+        base_details.rewardRounds.push(RewardRound(0, 0, 0, now));
+        emit NewRewardRound(uint32(base_details.rewardRounds.length - 1));
 
         send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
@@ -318,11 +294,11 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         TvmSlice slice = payload.toSlice();
         uint8 deposit_type = slice.decode(uint8);
 
-        if (msg.sender == tokenWallet) {
+        if (msg.sender == base_details.tokenWallet) {
             if (sender_address.value == 0 || msg.value < Gas.MIN_DEPOSIT_MSG_VALUE || !active) {
                 // external owner or too low msg.value
                 TvmCell tvmcell;
-                ITONTokenWallet(tokenWallet).transfer{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+                ITONTokenWallet(base_details.tokenWallet).transfer{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
                     sender_wallet,
                     amount,
                     0,
@@ -340,16 +316,16 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
                 deposits[deposit_nonce] = PendingDeposit(sender_address, amount, original_gas_to);
 
                 address userDataAddr = getUserDataAddress(sender_address);
-                UserData(userDataAddr).processDeposit{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(deposit_nonce, amount, rewardRounds, user_data_version);
+                UserData(userDataAddr).processDeposit{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(deposit_nonce, amount, base_details.rewardRounds, user_data_version);
             } else if (deposit_type == REWARD_UP) {
-                rewardTokenBalance += amount;
-                rewardRounds[rewardRounds.length - 1].rewardTokens += amount;
-                emit RewardDeposit(amount, uint32(rewardRounds.length - 1));
+                base_details.rewardTokenBalance += amount;
+                base_details.rewardRounds[base_details.rewardRounds.length - 1].rewardTokens += amount;
+                emit RewardDeposit(amount, uint32(base_details.rewardRounds.length - 1));
 
                 original_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
             } else {
                 TvmCell tvmcell;
-                ITONTokenWallet(tokenWallet).transfer{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+                ITONTokenWallet(base_details.tokenWallet).transfer{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
                     sender_wallet,
                     amount,
                     0,
@@ -372,7 +348,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         emit DepositReverted(deposit.user, deposit.amount);
 
         TvmCell _empty;
-        ITONTokenWallet(tokenWallet).transferToRecipient{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+        ITONTokenWallet(base_details.tokenWallet).transferToRecipient{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
             0, deposit.user, deposit.amount, 0, 0, deposit.send_gas_to, false, _empty
         );
     }
@@ -384,7 +360,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
         tvm.rawReserve(_reserve(), 2);
 
-        tokenBalance += deposit.amount;
+        base_details.tokenBalance += deposit.amount;
 
         emit Deposit(deposit.user, deposit.amount);
         delete deposits[_deposit_nonce];
@@ -402,7 +378,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         address userDataAddr = getUserDataAddress(msg.sender);
         // we cant check if user has any balance here, delegate it to UserData
         UserData(userDataAddr).processWithdraw{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-            amount, rewardRounds, send_gas_to, user_data_version
+            amount, base_details.rewardRounds, send_gas_to, user_data_version
         );
     }
 
@@ -413,11 +389,11 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     ) public override onlyUserData(user) {
         tvm.rawReserve(_reserve(), 2);
 
-        tokenBalance -= withdraw_amount;
+        base_details.tokenBalance -= withdraw_amount;
 
         emit Withdraw(user, withdraw_amount);
         TvmCell tvmcell;
-        ITONTokenWallet(tokenWallet).transferToRecipient{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+        ITONTokenWallet(base_details.tokenWallet).transferToRecipient{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
             0, user, withdraw_amount, 0, 0, send_gas_to, false, tvmcell
         );
     }
@@ -431,7 +407,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         address userDataAddr = getUserDataAddress(msg.sender);
         // we cant check if user has any balance here, delegate it to UserData
         UserData(userDataAddr).processClaimReward{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-            rewardRounds, send_gas_to, user_data_version
+            base_details.rewardRounds, send_gas_to, user_data_version
         );
     }
 
@@ -440,19 +416,19 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
         uint128 user_token_reward = 0;
         for (uint i = 0; i < rewards.length; i++) {
-            RewardRound cur_round = rewardRounds[i];
+            RewardRound cur_round = base_details.rewardRounds[i];
             if (cur_round.totalReward > 0 && rewards[i] > 0) {
                 user_token_reward += uint128((((rewards[i] * SCALING_FACTOR) / cur_round.totalReward) * cur_round.rewardTokens) / SCALING_FACTOR);
             }
         }
 
-        user_token_reward = math.min(user_token_reward, rewardTokenBalance);
-        rewardTokenBalance -= user_token_reward;
+        user_token_reward = math.min(user_token_reward, base_details.rewardTokenBalance);
+        base_details.rewardTokenBalance -= user_token_reward;
 
         emit RewardClaimed(user, user_token_reward);
 
         TvmCell _empty;
-        ITONTokenWallet(tokenWallet).transferToRecipient{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+        ITONTokenWallet(base_details.tokenWallet).transferToRecipient{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
             0, user, user_token_reward, 0, 0, send_gas_to, false, _empty
         );
     }
@@ -460,13 +436,13 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     // user_amount and user_reward_debt should be fetched from UserData at first
     function pendingReward(uint256 user_token_balance, IUserData.RewardRoundData[] user_reward_data) external view responsible returns (uint256) {
-        RewardRound[] _reward_rounds = rewardRounds;
+        RewardRound[] _reward_rounds = base_details.rewardRounds;
         // sync rewards up to this moment
-        if (now > lastRewardTime && tokenBalance > 0) {
+        if (now > base_details.lastRewardTime && base_details.tokenBalance > 0) {
             // if token balance if empty, no need to update pool info
-            uint128 new_reward = (now - lastRewardTime) * rewardPerSecond;
+            uint128 new_reward = (now - base_details.lastRewardTime) * rewardPerSecond;
             _reward_rounds[_reward_rounds.length - 1].totalReward += new_reward;
-            _reward_rounds[_reward_rounds.length - 1].accRewardPerShare += (new_reward * SCALING_FACTOR) / tokenBalance;
+            _reward_rounds[_reward_rounds.length - 1].accRewardPerShare += (new_reward * SCALING_FACTOR) / base_details.tokenBalance;
         }
 
         uint256 user_reward_tokens = 0;
@@ -494,21 +470,21 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     function updatePoolInfo() internal {
-        if (now <= lastRewardTime) {
+        if (now <= base_details.lastRewardTime) {
             return;
         }
 
-        if (tokenBalance == 0) {
-            lastRewardTime = now;
+        if (base_details.tokenBalance == 0) {
+            base_details.lastRewardTime = now;
             return;
         }
 
-        uint128 multiplier = now - lastRewardTime;
+        uint128 multiplier = now - base_details.lastRewardTime;
         uint128 new_reward = rewardPerSecond * multiplier;
-        rewardRounds[rewardRounds.length - 1].totalReward += new_reward;
-        lastRewardTime = now;
+        base_details.rewardRounds[base_details.rewardRounds.length - 1].totalReward += new_reward;
+        base_details.lastRewardTime = now;
 
-        rewardRounds[rewardRounds.length - 1].accRewardPerShare += (new_reward * SCALING_FACTOR) / tokenBalance;
+        base_details.rewardRounds[base_details.rewardRounds.length - 1].accRewardPerShare += (new_reward * SCALING_FACTOR) / base_details.tokenBalance;
     }
 
     function _buildUserDataParams(address user) private view returns (TvmCell) {
@@ -535,7 +511,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         TvmBuilder constructor_params;
         constructor_params.store(user_data_version);
         constructor_params.store(user_data_version);
-        constructor_params.store(dao_root);
+        constructor_params.store(base_details.dao_root);
 
         return new Platform{
             stateInit: _buildInitData(PlatformTypes.UserData, _buildUserDataParams(user_data_owner)),
@@ -601,30 +577,30 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
             address user_data_addr = deployUserData(deposit.user);
             // try again
             UserData(user_data_addr).processDeposit{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-                _deposit_nonce, deposit.amount, rewardRounds, user_data_version
+                _deposit_nonce, deposit.amount, base_details.rewardRounds, user_data_version
             );
         }
     }
 
     modifier onlyAdmin() {
-        if (msg.sender != admin) {
+        if (msg.sender != base_details.admin) {
             checkDelegate();
         }
         _;
     }
 
     modifier onlyEthTonConfig() {
-        require (msg.sender == bridge_event_config_eth_ton, ErrorCodes.NOT_BRIDGE);
+        require (msg.sender == base_details.bridge_event_config_eth_ton, ErrorCodes.NOT_BRIDGE);
         _;
     }
 
     modifier onlyDaoRoot {
-        require(msg.sender == dao_root, ErrorCodes.NOT_DAO_ROOT);
+        require(msg.sender == base_details.dao_root, ErrorCodes.NOT_DAO_ROOT);
         _;
     }
 
     modifier onlyRewarder {
-        require(msg.sender == rewarder, ErrorCodes.NOT_REWARDER);
+        require(msg.sender == base_details.rewarder, ErrorCodes.NOT_REWARDER);
         _;
     }
 
