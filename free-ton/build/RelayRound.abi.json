@@ -1,7 +1,7 @@
 {
 	"ABI version": 2,
 	"version": "2.1",
-	"header": ["time"],
+	"header": ["pubkey", "time"],
 	"functions": [
 		{
 			"name": "constructor",
@@ -139,11 +139,11 @@
 			]
 		},
 		{
-			"name": "round_len",
+			"name": "end_time",
 			"inputs": [
 			],
 			"outputs": [
-				{"name":"round_len","type":"uint32"}
+				{"name":"end_time","type":"uint32"}
 			]
 		},
 		{
@@ -206,7 +206,7 @@
 		{"name":"relays_installed","type":"bool"},
 		{"name":"relays_count","type":"uint32"},
 		{"name":"start_time","type":"uint32"},
-		{"name":"round_len","type":"uint32"},
+		{"name":"end_time","type":"uint32"},
 		{"name":"total_tokens_staked","type":"uint128"},
 		{"name":"reward_round_num","type":"uint32"},
 		{"name":"round_reward","type":"uint128"},

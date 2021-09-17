@@ -1,4 +1,5 @@
 pragma ton-solidity >= 0.39.0;
+pragma AbiHeader pubkey;
 
 import "./interfaces/IRelayRound.sol";
 import "./interfaces/IStakingPool.sol";
@@ -18,7 +19,7 @@ contract RelayRound is IRelayRound {
     bool relays_installed;
     uint32 public relays_count;
     uint32 public start_time;
-    uint32 public round_len;
+    uint32 public end_time;
     uint128 public total_tokens_staked;
     uint32 public reward_round_num;
     uint128 public round_reward;
@@ -72,7 +73,7 @@ contract RelayRound is IRelayRound {
     }
 
     function getRewardForRound(address staker_addr, uint32 code_version) external override onlyUserData(staker_addr) {
-        require (now >= start_time + round_len, ErrorCodes.RELAY_ROUND_NOT_ENDED);
+        require (now >= end_time, ErrorCodes.RELAY_ROUND_NOT_ENDED);
         require (reward_claimed[staker_addr] == false, ErrorCodes.RELAY_REWARD_CLAIMED);
         require (code_version == current_version, ErrorCodes.LOW_VERSION);
 
@@ -184,7 +185,7 @@ contract RelayRound is IRelayRound {
             relays_installed = true;
 
             IStakingPool(root).onRelayRoundInitialized{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
-                round_num, start_time, start_time + round_len, relays_count, round_reward, duplicate, eth_addrs
+                round_num, start_time, end_time, relays_count, round_reward, duplicate, eth_addrs
             );
             return;
         }
@@ -192,7 +193,7 @@ contract RelayRound is IRelayRound {
     }
 
     function destroy() external {
-        require (now >= start_time + round_len, ErrorCodes.RELAY_ROUND_NOT_ENDED);
+        require (now >= end_time, ErrorCodes.RELAY_ROUND_NOT_ENDED);
         require (now >= lastExtCall + EXT_CALL_INTERVAL, ErrorCodes.DUPLICATE_CALL);
 
         tvm.accept();
@@ -223,7 +224,7 @@ contract RelayRound is IRelayRound {
         TvmSlice params = s.loadRefAsSlice();
         (current_version, ) = params.decode(uint32, uint32);
 
-        round_len = params.decode(uint32);
+        uint32 round_len = params.decode(uint32);
         reward_round_num = params.decode(uint32);
         uint128 reward_per_second = params.decode(uint128);
         duplicate = params.decode(bool);
@@ -233,6 +234,7 @@ contract RelayRound is IRelayRound {
 
         round_reward = reward_per_second * round_len;
         start_time = now;
+        end_time = start_time + round_len;
 
         IStakingPool(root).onRelayRoundDeployed{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num, duplicate);
     }
@@ -269,7 +271,7 @@ contract RelayRound is IRelayRound {
             data_builder_1.store(relays_installed); // 1
             data_builder_1.store(relays_count); // 32
             data_builder_1.store(start_time); // 32
-            data_builder_1.store(round_len); // 32
+            data_builder_1.store(end_time); // 32
             data_builder_1.store(total_tokens_staked); // 128
             data_builder_1.store(reward_round_num); // 32
             data_builder_1.store(round_reward); // 128
@@ -326,7 +328,7 @@ contract RelayRound is IRelayRound {
                             bool relays_installed
                             uint32 relays_count
                             uint32 start_time
-                            uint32 round_len
+                            uint32 end_time
                             uint128 total_tokens_staked
                             uint32 reward_round_num
                             uint128 round_reward
