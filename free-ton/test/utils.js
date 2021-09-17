@@ -117,6 +117,7 @@ const setupBridge = async (relays) => {
     contract: Bridge,
     constructorParams: {
       _owner: owner.address,
+      _manager: owner.address,
       _staking: staking.address,
       _connectorCode: Connector.code,
       _connectorDeployValue: locklift.utils.convertCrystal(1, 'nano'),

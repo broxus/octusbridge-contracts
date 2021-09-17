@@ -13,6 +13,7 @@ library ErrorCodes {
     uint16 constant BRIDGE_PAUSED = 2108;
     uint16 constant IS_NOT_BASE_CHAIN = 2109;
     uint16 constant SENDER_NOT_RELAY_ROUND = 2110;
+    uint16 constant SENDER_NOT_MANAGER_OR_OWNER = 2111;
 
     // Event configuration contract
     uint16 constant SENDER_NOT_BRIDGE = 2209;

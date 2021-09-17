@@ -42,4 +42,20 @@ describe('Test bridge update', async function() {
     expect(await bridge.call({ method: 'connectorDeployValue' }))
       .to.be.bignumber.equal(1, 'Wrong connector deploy value');
   });
+  
+  it('Update manager address', async () => {
+    expect(await bridge.call({ method: 'manager' }))
+      .to.be.equal(bridgeOwner.address, 'Wrong manager address');
+
+    await bridgeOwner.runTarget({
+      contract: bridge,
+      method: 'setManager',
+      params: {
+        _manager: locklift.utils.zeroAddress
+      }
+    });
+    
+    expect(await bridge.call({ method: 'manager' }))
+      .to.be.equal(locklift.utils.zeroAddress, 'Wrong manager address');
+  });
 });

@@ -7,9 +7,18 @@
 			"name": "constructor",
 			"inputs": [
 				{"name":"_owner","type":"address"},
+				{"name":"_manager","type":"address"},
 				{"name":"_connectorCode","type":"cell"},
 				{"name":"_connectorDeployValue","type":"uint64"},
 				{"name":"_staking","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setManager",
+			"inputs": [
+				{"name":"_manager","type":"address"}
 			],
 			"outputs": [
 			]
@@ -124,6 +133,14 @@
 			]
 		},
 		{
+			"name": "manager",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"manager","type":"address"}
+			]
+		},
+		{
 			"name": "connectorCounter",
 			"inputs": [
 			],
@@ -166,6 +183,7 @@
 		{"name":"connectorDeployValue","type":"uint64"},
 		{"name":"active","type":"bool"},
 		{"name":"staking","type":"address"},
+		{"name":"manager","type":"address"},
 		{"name":"connectorCounter","type":"uint64"}
 	]
 }

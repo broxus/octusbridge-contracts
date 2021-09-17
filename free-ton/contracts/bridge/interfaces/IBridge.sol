@@ -16,6 +16,7 @@ interface IBridge {
 
     function updateActive(bool _active) external;
     function updateConnectorDeployValue(uint64 _connectorDeployValue) external;
+    function setManager(address _manager) external;
 
     function deriveConnectorAddress(uint64 id) external returns(address connector);
     function deployConnector(address _eventConfiguration) external;

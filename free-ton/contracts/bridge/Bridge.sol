@@ -32,14 +32,18 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
     bool public active;
     address public staking;
 
+    address public manager;
+
     uint64 public connectorCounter = 0;
 
-    /// @param _owner Owner address
+    /// @param _owner Owner address, can pause Bridge, so new Connectors can't be deployed
+    /// @param _manager Manager role - can enable connectors
     /// @param _connectorCode Connector contract code
     /// @param _connectorDeployValue Value in TONs, required to be attached, to deploy Connector
     /// @param _staking Staking address
     constructor(
         address _owner,
+        address _manager,
         TvmCell _connectorCode,
         uint64 _connectorDeployValue,
         address _staking
@@ -48,6 +52,8 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
 
         setOwnership(_owner);
 
+        manager = _manager;
+
         connectorCode = _connectorCode;
         connectorDeployValue = _connectorDeployValue;
         staking = _staking;
@@ -55,10 +61,19 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         active = true;
     }
 
-    /**
-        @notice Update Bridge active or not
-        @param _active Active status
-    */
+    /// @notice Update manager address
+    /// @param _manager New manager address
+    function setManager(
+        address _manager
+    ) external override cashBack {
+        require(msg.sender == manager || msg.sender == owner, ErrorCodes.SENDER_NOT_MANAGER_OR_OWNER);
+
+        manager = _manager;
+    }
+
+    /// @notice Update Bridge active or not
+    /// @dev Only owner can do that
+    /// @param _active Active status
     function updateActive(
         bool _active
     ) external override cashBack onlyOwner {
@@ -125,7 +140,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
                 id: connectorCounter,
                 bridge: address(this)
             }
-        }(_eventConfiguration, owner);
+        }(_eventConfiguration, manager);
 
         connectorCounter++;
     }
