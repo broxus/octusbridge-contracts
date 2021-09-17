@@ -287,7 +287,17 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         base_details.rewardRounds[base_details.rewardRounds.length - 1].totalReward += round_reward;
 
         if (round_num > 0) {
+            // regular case
             round_details.prevRelayRoundEndTime = round_details.currentRelayRoundEndTime;
+            // we started new round too late!
+            if (round_details.prevRelayRoundEndTime <= round_details.currentRelayRoundStartTime) {
+                // extend prev round as if current round was deployed in time with minimum gap
+                round_details.prevRelayRoundEndTime = round_details.currentRelayRoundStartTime + relay_config.minRoundGapTime;
+            }
+            // gap before new round cant be too low (for case when round was deployed late, but before prev round end)
+            if (round_details.prevRelayRoundEndTime - round_details.currentRelayRoundStartTime < relay_config.minRoundGapTime) {
+                round_details.prevRelayRoundEndTime = round_details.currentRelayRoundStartTime + relay_config.minRoundGapTime;
+            }
 
             TvmBuilder event_builder;
             event_builder.store(round_num); // 32

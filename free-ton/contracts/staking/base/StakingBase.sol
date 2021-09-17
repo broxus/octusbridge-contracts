@@ -91,7 +91,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     BaseDetails base_details;
 
     RelayConfigDetails relay_config = RelayConfigDetails(
-        30 days, 7 days, 2 days, 4 days, 30, 13, 100000 * 10**9, 500 ton
+        30 days, 7 days, 2 days, 4 days, 1 hours, 30, 13, 100000 * 10**9, 500 ton
     );
 
     uint128 tonEventDeployValue = 2.5 ton;
@@ -104,7 +104,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     uint8 constant RELAY_PACK_SIZE = 30;
 
-    uint32 constant EXTERNAL_CALL_INTERVAL = 2;
+    // TODO: 60 sec for prod
+    uint32 constant EXTERNAL_CALL_INTERVAL = 60;
 
     uint256 constant SCALING_FACTOR = 1e18;
 

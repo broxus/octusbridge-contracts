@@ -192,6 +192,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         data_builder_4.store(relay_config.relayRoundTime); // 32
         data_builder_4.store(relay_config.electionTime); // 32
         data_builder_4.store(relay_config.timeBeforeElection); // 32
+        data_builder_4.store(relay_config.minRoundGapTime); // 32
         data_builder_4.store(relay_config.relaysCount); // 16
         data_builder_4.store(relay_config.minRelaysCount); // 16
         data_builder_4.store(relay_config.minRelayDeposit); // 128
@@ -268,6 +269,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
                             uint32 relayRoundTime
                             uint32 electionTime
                             uint32 timeBeforeElection
+                            uint32 minRoundGapTime
                             uint16 relaysCount
                             uint16 minRelaysCount
                             uint128 minRelayDeposit

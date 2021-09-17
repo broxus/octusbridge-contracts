@@ -24,7 +24,6 @@ const afterRun = async () => {
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 
-const bridge = '0:9cc3d8668d57d387eae54c4398a1a0b478b6a8c3a0f2b5265e641a212b435231'
 const user1_eth_addr = '0x93E05804b0A58668531F65A93AbfA1aD8F7F5B2b';
 const user2_eth_addr = '0x197216E3421D13A72Fdd79A44d8d89f121dcab6C';
 const user3_eth_addr = '0xaF2AAf6316a137bbD7D4a9d3279D06E80EE79423';
@@ -50,10 +49,6 @@ let userInitialTokenBal = 100000;
 let rewardTokensBal = 10000;
 let userDeposit = 100;
 let rewardPerSec = 1000000;
-let user1Balance;
-let user2Balance;
-let user3Balance;
-let balance_err;
 
 const DEV_WAIT = 100000;
 
@@ -61,6 +56,7 @@ const MIN_RELAY_DEPOSIT = 1;
 const RELAY_ROUND_TIME_1 = 10;
 const ELECTION_TIME = 4;
 const TIME_BEFORE_ELECTION = 5;
+const MIN_GAP_TIME = 1;
 const RELAYS_COUNT_1 = 3;
 const MIN_RELAYS = 2;
 const RELAY_INITIAL_DEPOSIT = 500;
@@ -576,6 +572,7 @@ describe('Test Staking Rewards', async function () {
                             timeBeforeElection: TIME_BEFORE_ELECTION,
                             relaysCount: RELAYS_COUNT_1,
                             minRelaysCount: MIN_RELAYS,
+                            minRoundGapTime: MIN_GAP_TIME,
                             minRelayDeposit: MIN_RELAY_DEPOSIT,
                             relayInitialDeposit: init_deposit.toString(),
                         },

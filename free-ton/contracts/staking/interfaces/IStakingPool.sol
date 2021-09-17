@@ -29,6 +29,7 @@ interface IStakingPool {
         uint32 relayRoundTime;
         uint32 electionTime;
         uint32 timeBeforeElection;
+        uint32 minRoundGapTime;
         uint16 relaysCount;
         uint16 minRelaysCount;
         uint128 minRelayDeposit;
