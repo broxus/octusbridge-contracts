@@ -32,6 +32,13 @@ const main = async () => {
       validate: value => isValidTonAddress(value) ? true : 'Invalid TON address',
       initial: '0:dcb0e44ed53e2c4395e38acd752a8e602a8bd004797fa05fa764c03989ae6f21'
     },
+    {
+      type: 'text',
+      name: 'cell_encoder',
+      message: 'TON CellEncoderStandalone',
+      validate: value => isValidTonAddress(value) ? true : 'Invalid TON address',
+      initial: '0:ff290020c10a2813107c50ba45a7859c67b2d240fe4ab4f34f9954a75aded5c3'
+    },
   ]);
 
   // Connect to the Ethereum
@@ -50,6 +57,9 @@ const main = async () => {
   const roundRelaysConfiguration = await locklift.factory.getContract('TonEventConfiguration');
   roundRelaysConfiguration.address = responses.round_relays_configuration;
 
+  const cellEncoderStandalone = await locklift.factory.getContract('CellEncoderStandalone');
+  cellEncoderStandalone.setAddress(responses.cell_encoder);
+
   const events = await roundRelaysConfiguration.getEvents('NewEventContract');
   
   console.log(`Found ${events.length} events`);
@@ -64,15 +74,57 @@ const main = async () => {
     stakingTonEvent.address = event.value.eventContract;
 
     const details = await stakingTonEvent.call({method: 'getDetails'});
+    const eventData = await cellEncoderStandalone.call({
+      method: 'decodeTonStakingEventData',
+      params: {data: details._eventInitData.voteData.eventData}
+    });
+    const eventDataEncoded = ethers.utils.defaultAbiCoder.encode(
+      ['uint32', 'uint160[]', 'uint32'],
+      [eventData.round_num.toString(), eventData.eth_keys, eventData.round_end.toString()]
+    );
     const roundNumber = await stakingTonEvent.call({ method: 'round_number' });
-    
+
+    const encodedEvent = ethers.utils.defaultAbiCoder.encode(
+      [
+        `tuple(
+          uint64 eventTransactionLt,
+          uint32 eventTimestamp,
+          bytes eventData,
+          int8 configurationWid,
+          uint256 configurationAddress,
+          int8 eventContractWid,
+          uint256 eventContractAddress,
+          address proxy,
+          uint32 round
+        )`
+      ],
+      [{
+        eventTransactionLt: details._eventInitData.voteData.eventTransactionLt.toString(),
+        eventTimestamp: details._eventInitData.voteData.eventTimestamp.toString(),
+        eventData: eventDataEncoded,
+        configurationWid: roundRelaysConfiguration.address.split(':')[0],
+        configurationAddress: '0x' + roundRelaysConfiguration.address.split(':')[1],
+        eventContractWid: event.value.eventContract.split(':')[0],
+        eventContractAddress: '0x' + event.value.eventContract.split(':')[1],
+        proxy: responses.eth_bridge,
+        round: roundNumber.toString(),
+      }]
+    );
+
     return {
       ...details,
       roundNumber,
+      encodedEvent,
+      signatures: details._signatures,
       created_at: event.created_at
     };
+
   }));
-  
+  for (let event of eventDetails) {
+    console.log(`Round Number: ${event.roundNumber}`);
+    console.log(`Signatures: \n${event.signatures.map((b) => b.toString('hex'))}`);
+    console.log(`Payload: ${event.encodedEvent}\n`);
+  }
   // Filter out rounds less than Ethereum's last round
   // Prepare Ethereum's (payload, signatures) for each round
 };
