@@ -93,7 +93,8 @@ const main = async () => {
     {
       type: 'number',
       name: 'startTimestamp',
-      message: 'Start timestamp'
+      message: 'Start timestamp',
+      initial: Math.floor(Date.now() / 1000)
     },
     {
       type: 'number',
