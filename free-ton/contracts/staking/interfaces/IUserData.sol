@@ -23,6 +23,7 @@ interface IUserData {
         address dao_root;
     }
 
+    event RelayKeysUpdated(uint256 ton_pubkey, uint160 eth_address);
     event TonPubkeyConfirmed(uint256 ton_pubkey);
     event EthAddressConfirmed(uint160 eth_addr);
     event UserDataCodeUpgraded(uint32 code_version);

@@ -302,6 +302,15 @@
 	],
 	"events": [
 		{
+			"name": "RelayKeysUpdated",
+			"inputs": [
+				{"name":"ton_pubkey","type":"uint256"},
+				{"name":"eth_address","type":"uint160"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "TonPubkeyConfirmed",
 			"inputs": [
 				{"name":"ton_pubkey","type":"uint256"}

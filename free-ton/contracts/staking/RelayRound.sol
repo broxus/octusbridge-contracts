@@ -15,7 +15,7 @@ import "../../../node_modules/@broxus/contracts/contracts/platform/Platform.sol"
 contract RelayRound is IRelayRound {
     event RelayRoundCodeUpgraded(uint32 code_version);
 
-    bool public relays_installed;
+    bool relays_installed;
     uint32 public relays_count;
     uint32 public start_time;
     uint32 public round_len;
@@ -24,8 +24,9 @@ contract RelayRound is IRelayRound {
     uint128 public round_reward;
     bool public duplicate;
     uint8 public expected_packs_num;
-    address public election_addr;
-    address public prev_round_addr;
+    address election_addr;
+    address prev_round_addr;
+    uint32 lastExtCall;
 
     uint32 round_num; // setup from initialData
     uint256[] ton_keys; // array of ton pubkeys
@@ -34,19 +35,20 @@ contract RelayRound is IRelayRound {
     uint128[] staked_tokens; // array of staked tokens
 
     mapping (address => uint256) addr_to_idx;
-    mapping (address => bool) public reward_claimed;
+    mapping (address => bool) reward_claimed;
 
-    uint8 public relay_packs_installed;
+    uint8 relay_packs_installed;
 
     // user when sending relays to new relay round
-    uint256 public relay_transfer_start_idx = 0;
+    uint256 relay_transfer_start_idx = 0;
 
-    uint32 public current_version;
-    TvmCell public platform_code;
+    uint32 current_version;
+    TvmCell platform_code;
 
     address root; // setup from initialData
 
     uint256 constant SCALING_FACTOR = 1e18;
+    uint32 constant EXT_CALL_INTERVAL = 12 hours;
 
     // Cant be deployed directly
     constructor() public { revert(); }
@@ -55,6 +57,10 @@ contract RelayRound is IRelayRound {
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }RelayRoundDetails(
             root, round_num, ton_keys, eth_addrs, staker_addrs, staked_tokens, relays_installed, current_version
         );
+    }
+
+    function hasUnclaimedReward(address _relay_staker_addr) external view responsible returns (bool has_reward) {
+        return reward_claimed[_relay_staker_addr];
     }
 
     function getRelayByStakerAddress(
@@ -185,6 +191,22 @@ contract RelayRound is IRelayRound {
         root.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
+    function destroy() external {
+        require (now >= start_time + round_len, ErrorCodes.RELAY_ROUND_NOT_ENDED);
+        require (now >= lastExtCall + EXT_CALL_INTERVAL, ErrorCodes.DUPLICATE_CALL);
+
+        tvm.accept();
+
+        lastExtCall = now;
+        IStakingPool(root).getRelayRoundsDetails{flag: MsgFlag.ALL_NOT_RESERVED, callback: IRelayRound.receiveRelayRoundsDetails}();
+    }
+
+    function receiveRelayRoundsDetails(IStakingPool.RelayRoundsDetails round_details) external override onlyRoot {
+        if (round_details.currentRelayRound > round_num + 2) {
+            root.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
+        }
+    }
+
     function onCodeUpgrade(TvmCell upgrade_data) private {
         tvm.resetStorage();
         tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 2);
@@ -253,6 +275,7 @@ contract RelayRound is IRelayRound {
             data_builder_1.store(round_reward); // 128
             data_builder_1.store(duplicate); // 1
             data_builder_1.store(expected_packs_num); // 8
+            data_builder_1.store(lastExtCall); // 32
             data_builder_1.store(eth_addrs); // ref1
             data_builder_1.store(staker_addrs); // ref2
 
@@ -309,6 +332,7 @@ contract RelayRound is IRelayRound {
                             uint128 round_reward
                             bool duplicate
                             uint8 expected_packs_num
+                            uint32 lastExtCall
                         refs:
                             1: eth_addrs
                             2: staker_addrs

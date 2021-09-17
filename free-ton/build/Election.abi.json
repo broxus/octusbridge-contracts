@@ -51,6 +51,13 @@
 			]
 		},
 		{
+			"name": "destroy",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "finish",
 			"inputs": [
 				{"name":"code_version","type":"uint32"}

@@ -7,6 +7,7 @@ import "./StakingBase.sol";
 
 abstract contract StakingPoolUpgradable is StakingPoolBase {
     function installPlatformOnce(TvmCell code, address send_gas_to) external onlyAdmin {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         // can be installed only once
         require(!has_platform_code, ErrorCodes.PLATFORM_CODE_NON_EMPTY);
         tvm.rawReserve(_reserve(), 2);
@@ -16,6 +17,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
     }
 
     function installOrUpdateUserDataCode(TvmCell code, address send_gas_to) external onlyAdmin {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
         user_data_code = code;
         user_data_version++;
@@ -24,6 +26,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
     }
 
     function installOrUpdateElectionCode(TvmCell code, address send_gas_to) external onlyAdmin {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
         election_code = code;
         election_version++;
@@ -32,6 +35,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
     }
 
     function installOrUpdateRelayRoundCode(TvmCell code, address send_gas_to) external onlyAdmin {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
         relay_round_code = code;
         relay_round_version++;
@@ -41,7 +45,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
 
     // user should call this by himself
     function upgradeUserData(address send_gas_to) external view onlyActive {
-        require(msg.value >= Gas.UPGRADE_USER_DATA_MIN_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
 
         _upgradeUserData(msg.sender, 0, send_gas_to);
@@ -51,7 +55,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         address user,
         address send_gas_to
     ) external view onlyAdmin {
-        require(msg.value >= Gas.UPGRADE_USER_DATA_MIN_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
 
         _upgradeUserData(user, 0, send_gas_to);
@@ -75,7 +79,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         uint32 round_num,
         address send_gas_to
     ) external view onlyAdmin {
-        require(msg.value >= Gas.UPGRADE_ELECTION_MIN_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
 
         emit RequestedElectionUpgrade(round_num);
@@ -88,7 +92,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         uint32 round_num,
         address send_gas_to
     ) external view onlyAdmin {
-        require(msg.value >= Gas.UPGRADE_RELAY_ROUND_MIN_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
 
         emit RequestedRelayRoundUpgrade(round_num);
@@ -134,6 +138,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
     }
 
     function upgrade(TvmCell code, address send_gas_to) external onlyAdmin {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
 
         TvmBuilder main_builder;
