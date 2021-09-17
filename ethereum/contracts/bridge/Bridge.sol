@@ -41,6 +41,9 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
     // NOTE: last round with known relays
     uint32 public lastRound;
 
+    // NOTE: special address, can set up rounds without relays's signatures
+    address public roundSubmitter;
+
     // NOTE: Broxus Bridge TON-ETH configuration address, that emits event with round relays
     TONAddress public roundRelaysConfiguration;
 
@@ -50,6 +53,7 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
         @dev
             `roundRelaysConfiguration` should be specified later.
         @param _owner Bridge owner
+        @param _roundSubmitter Round submitter
         @param _minimumRequiredSignatures Minimum required signatures per round.
         @param _roundTTL Round TTL after round ends.
         @param _initialRound Initial round number. Useful in case new EVM network is connected to the bridge.
@@ -58,6 +62,7 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
     */
     function initialize(
         address _owner,
+        address _roundSubmitter,
         uint32 _minimumRequiredSignatures,
         uint32 _roundTTL,
         uint32 _initialRound,
@@ -67,6 +72,9 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
         __Pausable_init();
         __Ownable_init();
         transferOwnership(_owner);
+
+        roundSubmitter = _roundSubmitter;
+        emit UpdateRoundSubmitter(_roundSubmitter);
 
         minimumRequiredSignatures = _minimumRequiredSignatures;
         emit UpdateMinimumRequiredSignatures(minimumRequiredSignatures);
@@ -204,15 +212,20 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
     ) {
         (TONEvent memory tonEvent) = abi.decode(payload, (TONEvent));
 
-        if (tonEvent.round < initialRound) return 1;
-        if (tonEvent.round > lastRound) return 2;
+        uint32 round = tonEvent.round;
+
+        // Check round is not less than initial round
+        if (round < initialRound) return 1;
+
+        // Check round is not more than last initialized round
+        if (round > lastRound) return 2;
 
         // Check there are enough correct signatures
-        uint32 count = _countRelaySignatures(payload, signatures, tonEvent.round);
-        if (count < rounds[tonEvent.round].requiredSignatures) return 3;
+        uint32 count = _countRelaySignatures(payload, signatures, round);
+        if (count < rounds[round].requiredSignatures) return 3;
 
         // Check round rotten
-        if (isRoundRotten(tonEvent.round)) return 4;
+        if (isRoundRotten(round)) return 4;
 
         // Check bridge has been paused
         if (paused()) return 5;
@@ -235,9 +248,41 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
             .recover(signature);
     }
 
-    /// @dev Grant relay permission for set of addresses at specific round
-    /// @param payload Bytes encoded TONEvent structure
-    /// @param signatures Payload signatures
+    /**
+        @notice Forced set of next round relays
+        @dev Can be called only by `roundSubmitter`
+        @param _relays Next round relays
+        @param roundEnd Round end
+    */
+    function forceRoundRelays(
+        uint160[] calldata _relays,
+        uint32 roundEnd
+    ) override external {
+        require(msg.sender == roundSubmitter, "Bridge: sender not round submitter");
+
+        _setRound(lastRound + 1, _relays, roundEnd);
+
+        lastRound++;
+    }
+
+    /**
+        @notice Set round submitter
+        @dev Can be called only by owner
+        @param _roundSubmitter New round submitter address
+    */
+    function setRoundSubmitter(
+        address _roundSubmitter
+    ) override external onlyOwner {
+        roundSubmitter = _roundSubmitter;
+
+        emit UpdateRoundSubmitter(roundSubmitter);
+    }
+
+    /**
+        @dev Grant relay permission for set of addresses at specific round
+        @param payload Bytes encoded TONEvent structure
+        @param signatures Payload signatures
+    */
     function setRoundRelays(
         bytes calldata payload,
         bytes[] calldata signatures

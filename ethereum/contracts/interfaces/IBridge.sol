@@ -54,6 +54,11 @@ interface IBridge {
         bytes[] calldata signatures
     ) external;
 
+    function forceRoundRelays(
+        uint160[] calldata _relays,
+        uint32 roundEnd
+    ) external;
+
     function banRelays(
         address[] calldata _relays
     ) external;
@@ -65,11 +70,14 @@ interface IBridge {
     function pause() external;
     function unpause() external;
 
+    function setRoundSubmitter(address _roundSubmitter) external;
+
     event EmergencyShutdown(bool active);
 
     event UpdateMinimumRequiredSignatures(uint32 value);
     event UpdateRoundTTL(uint32 value);
     event UpdateRoundRelaysConfiguration(TONAddress configuration);
+    event UpdateRoundSubmitter(address _roundSubmitter);
 
     event NewRound(uint32 indexed round, Round meta);
     event RoundRelay(uint32 indexed round, address indexed relay);
