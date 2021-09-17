@@ -17,6 +17,7 @@
 				{"name":"_admin","type":"address"},
 				{"name":"_dao_root","type":"address"},
 				{"name":"_rewarder","type":"address"},
+				{"name":"_rescuer","type":"address"},
 				{"name":"_bridge_event_config_eth_ton","type":"address"},
 				{"name":"_bridge_event_config_ton_eth","type":"address"},
 				{"name":"_tokenRoot","type":"address"},

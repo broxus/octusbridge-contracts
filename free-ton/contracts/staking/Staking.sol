@@ -9,6 +9,7 @@ contract Staking is StakingPoolRelay {
         address _admin,
         address _dao_root,
         address _rewarder,
+        address _rescuer,
         address _bridge_event_config_eth_ton,
         address _bridge_event_config_ton_eth,
         address _tokenRoot
@@ -20,6 +21,7 @@ contract Staking is StakingPoolRelay {
         base_details.bridge_event_config_ton_eth = _bridge_event_config_ton_eth;
         base_details.admin = _admin;
         base_details.dao_root = _dao_root;
+        base_details.rescuer = _rescuer;
         base_details.rewarder = _rewarder;
         base_details.rewardRounds.push(RewardRound(0, 0, 0, now));
         setUpTokenWallets();

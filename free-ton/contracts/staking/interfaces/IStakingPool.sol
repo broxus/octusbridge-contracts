@@ -17,11 +17,13 @@ interface IStakingPool {
         address tokenRoot;
         address tokenWallet;
         address admin;
+        address rescuer;
         address rewarder;
         uint128 tokenBalance;
         uint128 rewardTokenBalance;
         uint32 lastRewardTime;
         RewardRound[] rewardRounds;
+        bool emergency;
     }
 
     struct RelayConfigDetails {

@@ -464,6 +464,7 @@ describe('Test Staking Rewards', async function () {
                         _tokenRoot: stakingToken.address,
                         _dao_root: stakingOwner.address,
                         _rewarder: stakingOwner.address,
+                        _rescuer: stakingOwner.address,
                         _bridge_event_config_eth_ton: stakingOwner.address,
                         _bridge_event_config_ton_eth: ton_config_mockup.address,
                         _deploy_nonce: getRandomNonce()
