@@ -136,6 +136,10 @@ async function main() {
     params: {new_dao_root: true_dao, send_gas_to: admin.address},
   });
 
+  if (locklift.network === 'dev') {
+    await wait(DEV_WAIT);
+  }
+
   const details = await stakingRoot.call({method: 'getDetails'});
   console.log(details);
 
