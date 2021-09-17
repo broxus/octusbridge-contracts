@@ -818,6 +818,7 @@ def _considerMovementFee(amount: uint256, fee: Fee) -> uint256:
 @external
 @nonreentrant("withdraw")
 def deposit(
+    sender: address,
     recipient: TONAddress,
     _amount: uint256,
     pendingWithdrawalToFill: address,
@@ -833,12 +834,17 @@ def deposit(
         To receive locked tokens back, user should withdraw tokens from the FreeTON side.
         See note on `saveWithdraw`
 
+        This may only be called by wrapper.
+
+    @param sender Sender Ethereum address
     @param recipient
         The FreeTON recipient to transfer tokens to.
     @param _amount The quantity of tokens to deposit, defaults to all.
     @param pendingWithdrawalToFill Address, whose pending withdrawal will be closed by deposit.
     """
     assert not self.emergencyShutdown  # Deposits are locked out
+
+    assert msg.sender == self.wrapper
 
     # Ensure deposit limit is respected
     assert self._totalAssets() + _amount <= self.depositLimit, "Vault: respect the deposit limit"
@@ -850,7 +856,7 @@ def deposit(
     assert amount > 0
 
     # Tokens are transferred from msg.sender
-    self.erc20_safe_transferFrom(self.token.address, msg.sender, self, amount)
+    self.erc20_safe_transferFrom(self.token.address, sender, self, amount)
 
     # Fill pending withdrawal if specified
     fillingAmount: uint256 = 0
@@ -862,8 +868,8 @@ def deposit(
         # Check specified user has non-zero pending withdrawal
         assert withdrawal.total > 0, "Vault: specified pending withdrawal does not exist"
 
-        fillingAmount += withdrawal.total
-        fillingBounty += withdrawal.bounty
+        fillingAmount = withdrawal.total
+        fillingBounty = withdrawal.bounty
 
         self.erc20_safe_transfer(
             self.token.address,

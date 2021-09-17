@@ -12,4 +12,5 @@ interface IElection {
     ) external;
     function finish(uint32 code_version) external;
     function sendRelaysToRelayRound(address relay_round_addr, uint32 relays_count) external;
+    function destroy() external;
 }

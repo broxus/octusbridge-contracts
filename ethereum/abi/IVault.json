@@ -40,6 +40,46 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "int128",
+            "name": "wid",
+            "type": "int128"
+          },
+          {
+            "internalType": "uint256",
+            "name": "addr",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IVault.TONAddress",
+        "name": "recipient",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "pendingWithdrawalToFill",
+        "type": "address"
+      }
+    ],
+    "name": "deposit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "bytes32",
         "name": "id",
         "type": "bytes32"

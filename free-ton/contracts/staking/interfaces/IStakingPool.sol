@@ -1,9 +1,6 @@
 pragma ton-solidity >= 0.39.0;
 pragma AbiHeader expire;
 
-import "./IElection.sol";
-import "./IRelayRound.sol";
-
 
 interface IStakingPool {
     struct RewardRound {
@@ -32,6 +29,7 @@ interface IStakingPool {
         uint32 relayRoundTime;
         uint32 electionTime;
         uint32 timeBeforeElection;
+        uint32 minRoundGapTime;
         uint16 relaysCount;
         uint16 minRelaysCount;
         uint128 minRelayDeposit;
@@ -57,6 +55,8 @@ interface IStakingPool {
         uint32 prevRelayRoundEndTime;
         bool currentElectionEnded;
     }
+
+    function getRelayRoundsDetails() external view responsible returns (RelayRoundsDetails);
 
     function finishDeposit(uint64 _nonce) external;
     function finishWithdraw(address user, uint128 withdrawAmount, address send_gas_to) external;

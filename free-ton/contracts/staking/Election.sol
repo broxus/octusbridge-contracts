@@ -185,16 +185,24 @@ contract Election is IElection {
         );
     }
 
+    // should be called after transfer of relay data to next relay round, controlled by staking
+    function destroy() external override onlyRoot {
+        // prevent accident call
+        require (election_ended, ErrorCodes.ELECTION_ENDED);
+
+        root.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
+    }
+
     function finish(uint32 code_version) external override onlyRoot {
         require (code_version == current_version, ErrorCodes.LOW_VERSION);
+
+        tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
 
         if (election_ended) {
             // send gas back to root
             root.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
             return;
         }
-
-        tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
 
         election_ended = true;
         relay_transfer_start_idx = list_start_idx;

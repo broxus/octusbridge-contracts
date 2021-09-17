@@ -20,17 +20,55 @@ interface IVault {
         uint256 bounty
     ) external;
 
+    function deposit(
+        address sender,
+        TONAddress calldata recipient,
+        uint256 _amount,
+        address pendingWithdrawalToFill
+    ) external;
+
     function configuration() external view returns(TONAddress memory _configuration);
     function bridge() external view returns(address);
 }
 
 contract VaultWrapper is ChainId, Initializable {
+    address constant ZERO_ADDRESS = 0x0000000000000000000000000000000000000000;
+
     address public vault;
 
     function initialize(
         address _vault
     ) initializer external {
         vault = _vault;
+    }
+
+    function deposit(
+        IVault.TONAddress memory recipient,
+        uint256 amount
+    ) external {
+        IVault(vault).deposit(
+            msg.sender,
+            recipient,
+            amount,
+            ZERO_ADDRESS
+        );
+    }
+
+    function depositWithFillings(
+        IVault.TONAddress calldata recipient,
+        uint256 amount,
+        address[] calldata pendingWithdrawalsToFill
+    ) external {
+        require(pendingWithdrawalsToFill.length > 0, 'Wrapper: no pending withdrawals');
+
+        for (uint i = 0; i < pendingWithdrawalsToFill.length; i++) {
+            IVault(vault).deposit(
+                msg.sender,
+                recipient,
+                amount,
+                pendingWithdrawalsToFill[i]
+            );
+        }
     }
 
     function decodeWithdrawEventData(

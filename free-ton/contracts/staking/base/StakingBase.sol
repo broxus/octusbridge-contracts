@@ -91,7 +91,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     BaseDetails base_details;
 
     RelayConfigDetails relay_config = RelayConfigDetails(
-        30 days, 7 days, 2 days, 4 days, 30, 13, 100000 * 10**9, 500 ton
+        30 days, 7 days, 2 days, 4 days, 1 hours, 30, 13, 100000 * 10**9, 500 ton
     );
 
     uint128 tonEventDeployValue = 2.5 ton;
@@ -103,6 +103,9 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     uint8 constant REWARD_UP = 1;
 
     uint8 constant RELAY_PACK_SIZE = 30;
+
+    // TODO: 60 sec for prod
+    uint32 constant EXTERNAL_CALL_INTERVAL = 60;
 
     uint256 constant SCALING_FACTOR = 1e18;
 
@@ -120,7 +123,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         return{ value: 0, flag: MsgFlag.REMAINING_GAS }base_details;
     }
 
-    function getCodeData() public view responsible returns (CodeData) {
+    function getCodeData() external view responsible returns (CodeData) {
         return{ value: 0, flag: MsgFlag.REMAINING_GAS }CodeData(
             platform_code, has_platform_code,
             user_data_code, user_data_version,
@@ -129,11 +132,11 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         );
     }
 
-    function getRelayRoundsDetails() public view responsible returns (RelayRoundsDetails) {
+    function getRelayRoundsDetails() external override view responsible returns (RelayRoundsDetails) {
         return{ value: 0, flag: MsgFlag.REMAINING_GAS }round_details;
     }
 
-    function getRelayConfig() public view responsible returns (RelayConfigDetails) {
+    function getRelayConfig() external view responsible returns (RelayConfigDetails) {
         return{ value: 0, flag: MsgFlag.REMAINING_GAS }relay_config;
     }
 
@@ -153,6 +156,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     function setDaoRoot(address new_dao_root, address send_gas_to) external onlyDaoRoot {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
         emit DaoRootUpdated(new_dao_root);
         base_details.dao_root = new_dao_root;
@@ -160,6 +164,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     function setTonEventDeployValue(uint128 new_value, address send_gas_to) external onlyAdmin {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
 
         emit TonEventDeployValueUpdated(new_value);
@@ -168,6 +173,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     function setBridgeEventEthTonConfig(address new_bridge_event_config_eth_ton, address send_gas_to) external onlyAdmin {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
         emit BridgeEventEthTonConfigUpdated(new_bridge_event_config_eth_ton);
         base_details.bridge_event_config_eth_ton = new_bridge_event_config_eth_ton;
@@ -175,6 +181,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     function setBridgeEventTonEthConfig(address new_bridge_event_config_ton_eth, address send_gas_to) external onlyAdmin {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
         emit BridgeEventTonEthConfigUpdated(new_bridge_event_config_ton_eth);
         base_details.bridge_event_config_ton_eth = new_bridge_event_config_ton_eth;
@@ -182,6 +189,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     function setAdmin(address new_admin, address send_gas_to) external onlyDaoRoot {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
         emit AdminUpdated(new_admin);
         base_details.admin = new_admin;
@@ -189,6 +197,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     function setRewarder(address new_rewarder, address send_gas_to) external onlyDaoRoot {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
         emit RewarderUpdated(new_rewarder);
         base_details.rewarder = new_rewarder;
@@ -197,6 +206,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     // Active
     function setActive(bool new_active, address send_gas_to) external onlyAdmin {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
         if (
             new_active
@@ -221,6 +231,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     function setRelayConfig(RelayConfigDetails new_relay_config, address send_gas_to) external onlyDaoRoot {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
 
         relay_config = new_relay_config;
@@ -260,7 +271,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     function startNewRewardRound(address send_gas_to) external onlyRewarder {
-        require (msg.value >= Gas.MIN_START_REWARD_ROUND_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
 
         if (base_details.rewardRounds.length > 0) {
             RewardRound last_round = base_details.rewardRounds[base_details.rewardRounds.length - 1];
@@ -295,7 +306,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         uint8 deposit_type = slice.decode(uint8);
 
         if (msg.sender == base_details.tokenWallet) {
-            if (sender_address.value == 0 || msg.value < Gas.MIN_DEPOSIT_MSG_VALUE || !active) {
+            if (sender_address.value == 0 || msg.value < Gas.MIN_CALL_MSG_VALUE || !active) {
                 // external owner or too low msg.value
                 TvmCell tvmcell;
                 ITONTokenWallet(base_details.tokenWallet).transfer{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
@@ -370,7 +381,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     function withdraw(uint128 amount, address send_gas_to) public onlyActive {
         require (amount > 0, ErrorCodes.ZERO_AMOUNT_INPUT);
-        require (msg.value >= Gas.MIN_WITHDRAW_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
 
         updatePoolInfo();
@@ -399,7 +410,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     function claimReward(address send_gas_to) external onlyActive {
-        require (msg.value >= Gas.MIN_CLAIM_REWARD_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
 
         tvm.rawReserve(_reserve(), 2);
 
@@ -527,6 +538,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     function castVote(uint32 proposal_id, bool support) public view override {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         _castVote(proposal_id, support, '');
     }
 
@@ -535,6 +547,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         bool support,
         string reason
     ) public view override {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         _castVote(proposal_id, support, reason);
     }
 
@@ -547,6 +560,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     function tryUnlockVoteTokens(uint32 proposal_id) public view override {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
         IUserData(getUserDataAddress(msg.sender)).tryUnlockVoteTokens{
             value: 0,
@@ -556,6 +570,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     function tryUnlockCastedVotes(uint32[] proposal_ids) public view override {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
         IUserData(getUserDataAddress(msg.sender)).tryUnlockCastedVotes{
             value: 0,

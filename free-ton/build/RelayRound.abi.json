@@ -20,6 +20,16 @@
 			]
 		},
 		{
+			"name": "hasUnclaimedReward",
+			"inputs": [
+				{"name":"answerId","type":"uint32"},
+				{"name":"_relay_staker_addr","type":"address"}
+			],
+			"outputs": [
+				{"name":"has_reward","type":"bool"}
+			]
+		},
+		{
 			"name": "getRelayByStakerAddress",
 			"inputs": [
 				{"name":"answerId","type":"uint32"},
@@ -78,6 +88,21 @@
 			]
 		},
 		{
+			"name": "destroy",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "receiveRelayRoundsDetails",
+			"inputs": [
+				{"components":[{"name":"currentRelayRound","type":"uint32"},{"name":"currentRelayRoundStartTime","type":"uint32"},{"name":"currentRelayRoundEndTime","type":"uint32"},{"name":"currentElectionStartTime","type":"uint32"},{"name":"prevRelayRoundEndTime","type":"uint32"},{"name":"currentElectionEnded","type":"bool"}],"name":"round_details","type":"tuple"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "upgrade",
 			"inputs": [
 				{"name":"code","type":"cell"},
@@ -95,14 +120,6 @@
 			],
 			"outputs": [
 				{"name":"value0","type":"address"}
-			]
-		},
-		{
-			"name": "relays_installed",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"relays_installed","type":"bool"}
 			]
 		},
 		{
@@ -168,62 +185,6 @@
 			"outputs": [
 				{"name":"expected_packs_num","type":"uint8"}
 			]
-		},
-		{
-			"name": "election_addr",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"election_addr","type":"address"}
-			]
-		},
-		{
-			"name": "prev_round_addr",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"prev_round_addr","type":"address"}
-			]
-		},
-		{
-			"name": "reward_claimed",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"reward_claimed","type":"map(address,bool)"}
-			]
-		},
-		{
-			"name": "relay_packs_installed",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"relay_packs_installed","type":"uint8"}
-			]
-		},
-		{
-			"name": "relay_transfer_start_idx",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"relay_transfer_start_idx","type":"uint256"}
-			]
-		},
-		{
-			"name": "current_version",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"current_version","type":"uint32"}
-			]
-		},
-		{
-			"name": "platform_code",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"platform_code","type":"cell"}
-			]
 		}
 	],
 	"data": [
@@ -253,6 +214,7 @@
 		{"name":"expected_packs_num","type":"uint8"},
 		{"name":"election_addr","type":"address"},
 		{"name":"prev_round_addr","type":"address"},
+		{"name":"lastExtCall","type":"uint32"},
 		{"name":"round_num","type":"uint32"},
 		{"name":"ton_keys","type":"uint256[]"},
 		{"name":"eth_addrs","type":"uint160[]"},

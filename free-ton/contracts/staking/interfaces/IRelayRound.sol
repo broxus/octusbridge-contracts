@@ -1,5 +1,8 @@
 pragma ton-solidity >= 0.39.0;
 
+import "./IStakingPool.sol";
+
+
 interface IRelayRound {
     struct RelayRoundDetails {
         address root;
@@ -11,7 +14,7 @@ interface IRelayRound {
         bool relays_installed;
         uint32 code_version;
     }
-
+    function receiveRelayRoundsDetails(IStakingPool.RelayRoundsDetails round_details) external;
     function getDetails() external view responsible returns (RelayRoundDetails);
     function sendRelaysToRelayRound(address relay_round_addr, uint32 relays_count) external;
     function setRelays(

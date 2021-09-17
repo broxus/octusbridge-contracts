@@ -2,7 +2,7 @@ const utils = require('./../test/utils');
 
 
 module.exports = async ({getNamedAccounts, deployments}) => {
-  const { deployer, owner } = await getNamedAccounts();
+  const { deployer, owner, roundSubmitter } = await getNamedAccounts();
   
   const initialRelays = await utils.getInitialRelays();
   
@@ -15,6 +15,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         methodName: 'initialize',
         args: [
           owner,
+          roundSubmitter,
           3, // Minimum required signatures
           604800, // Relay TTL after round in seconds, 1 week
           0, // Initial round number

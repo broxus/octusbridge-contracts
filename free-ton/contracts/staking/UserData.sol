@@ -7,6 +7,7 @@ import "./interfaces/IStakingPool.sol";
 import "./interfaces/IUserData.sol";
 import "./interfaces/IUpgradableByRequest.sol";
 import "./interfaces/IElection.sol";
+import "./interfaces/IRelayRound.sol";
 
 import "./../utils/ErrorCodes.sol";
 import "./libraries/Gas.sol";
@@ -327,10 +328,10 @@ contract UserData is IUserData, IUpgradableByRequest {
 
     function getRewardForRelayRound(uint32 round_num) external onlyRelay {
         require (!slashed, ErrorCodes.SLASHED);
-        require (address(this).balance > Gas.USER_DATA_INITIAL_BALANCE + Gas.MIN_GET_REWARD_RELAY_ROUND_MSG_VALUE, ErrorCodes.LOW_BALANCE);
+        require (address(this).balance > Gas.USER_DATA_INITIAL_BALANCE + Gas.MIN_CALL_MSG_VALUE, ErrorCodes.LOW_BALANCE);
         tvm.accept();
 
-        IStakingPool(root).processGetRewardForRelayRound{value: Gas.MIN_GET_REWARD_RELAY_ROUND_MSG_VALUE}(user, round_num);
+        IStakingPool(root).processGetRewardForRelayRound{value: Gas.MIN_CALL_MSG_VALUE}(user, round_num);
     }
 
     function processGetRewardForRelayRound2(
@@ -374,6 +375,8 @@ contract UserData is IUserData, IUpgradableByRequest {
         relay_eth_address = eth_address;
         eth_address_confirmed = false;
 
+        emit RelayKeysUpdated(ton_pubkey, eth_address);
+
         if (confirm) {
             ton_pubkey_confirmed = true;
             eth_address_confirmed = true;
@@ -409,10 +412,10 @@ contract UserData is IUserData, IUpgradableByRequest {
 
     function becomeRelayNextRound() external onlyRelay {
         require (!slashed, ErrorCodes.SLASHED);
-        require (address(this).balance > Gas.USER_DATA_INITIAL_BALANCE + Gas.MIN_RELAY_REQ_MSG_VALUE, ErrorCodes.LOW_BALANCE);
+        require (address(this).balance > Gas.USER_DATA_INITIAL_BALANCE + Gas.MIN_CALL_MSG_VALUE, ErrorCodes.LOW_BALANCE);
         tvm.accept();
 
-        IStakingPool(root).processBecomeRelayNextRound{value: Gas.MIN_RELAY_REQ_MSG_VALUE}(user);
+        IStakingPool(root).processBecomeRelayNextRound{value: Gas.MIN_CALL_MSG_VALUE}(user);
     }
 
     function processBecomeRelayNextRound2(

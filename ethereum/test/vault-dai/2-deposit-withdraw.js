@@ -80,9 +80,9 @@ describe('Test Vault DAI deposit', async () => {
       };
       
       await expect(
-        vault
+        wrapper
           .connect(alice)
-          .deposit(recipient, amount, ethers.constants.AddressZero)
+          .deposit(recipient, amount)
       )
         .to.emit(vault, 'Deposit')
         .withArgs(amount, recipient.wid, recipient.addr);
@@ -199,12 +199,12 @@ describe('Test Vault DAI deposit', async () => {
 
         const pendingWithdrawal = await vault.pendingWithdrawals(eve);
         
-        await expect(vault
+        await expect(wrapper
           .connect(alice)
-          .deposit(
+          .depositWithFillings(
             defaultTonRecipient,
             pendingWithdrawal.total.sub(1),
-            eve
+            [eve]
           )).to.be.revertedWith("Vault: too low deposit for specified fillings");
       });
       
@@ -217,9 +217,9 @@ describe('Test Vault DAI deposit', async () => {
         const deposit = pendingWithdrawal.total.add(1); // It's possible to add some value over the deposit amount
         const toBeWithdrawn = pendingWithdrawal.total.sub(pendingWithdrawal.bounty);
         
-        await expect(() => vault
+        await expect(() => wrapper
           .connect(alice)
-          .deposit(defaultTonRecipient, deposit, eve.address))
+          .depositWithFillings(defaultTonRecipient, deposit, [eve.address]))
           .to.changeTokenBalances(
             dai,
           [eve, vault, alice],
