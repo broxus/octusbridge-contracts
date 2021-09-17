@@ -93,6 +93,10 @@ module.exports = {
       default: 7,
       goerli: 7,
     },
+    roundSubmitter: {
+      default: 8,
+      goerli: 8,
+    },
     dai_owner: {
       default: '0xA929022c9107643515F5c777cE9a910F0D1e490C',
     },

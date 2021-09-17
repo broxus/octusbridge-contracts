@@ -129,6 +129,19 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "address",
+        "name": "_roundSubmitter",
+        "type": "address"
+      }
+    ],
+    "name": "UpdateRoundSubmitter",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
         "internalType": "uint32",
         "name": "value",
         "type": "uint32"
@@ -146,6 +159,24 @@
       }
     ],
     "name": "banRelays",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint160[]",
+        "name": "_relays",
+        "type": "uint160[]"
+      },
+      {
+        "internalType": "uint32",
+        "name": "roundEnd",
+        "type": "uint32"
+      }
+    ],
+    "name": "forceRoundRelays",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -233,6 +264,19 @@
       }
     ],
     "name": "setRoundRelays",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_roundSubmitter",
+        "type": "address"
+      }
+    ],
+    "name": "setRoundSubmitter",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
