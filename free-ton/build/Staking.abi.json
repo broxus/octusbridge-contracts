@@ -9,6 +9,7 @@
 				{"name":"_admin","type":"address"},
 				{"name":"_dao_root","type":"address"},
 				{"name":"_rewarder","type":"address"},
+				{"name":"_rescuer","type":"address"},
 				{"name":"_bridge_event_config_eth_ton","type":"address"},
 				{"name":"_bridge_event_config_ton_eth","type":"address"},
 				{"name":"_tokenRoot","type":"address"}
@@ -257,7 +258,7 @@
 				{"name":"answerId","type":"uint32"}
 			],
 			"outputs": [
-				{"components":[{"name":"dao_root","type":"address"},{"name":"bridge_event_config_eth_ton","type":"address"},{"name":"bridge_event_config_ton_eth","type":"address"},{"name":"tokenRoot","type":"address"},{"name":"tokenWallet","type":"address"},{"name":"admin","type":"address"},{"name":"rewarder","type":"address"},{"name":"tokenBalance","type":"uint128"},{"name":"rewardTokenBalance","type":"uint128"},{"name":"lastRewardTime","type":"uint32"},{"components":[{"name":"accRewardPerShare","type":"uint256"},{"name":"rewardTokens","type":"uint128"},{"name":"totalReward","type":"uint128"},{"name":"startTime","type":"uint32"}],"name":"rewardRounds","type":"tuple[]"}],"name":"value0","type":"tuple"}
+				{"components":[{"name":"dao_root","type":"address"},{"name":"bridge_event_config_eth_ton","type":"address"},{"name":"bridge_event_config_ton_eth","type":"address"},{"name":"tokenRoot","type":"address"},{"name":"tokenWallet","type":"address"},{"name":"admin","type":"address"},{"name":"rescuer","type":"address"},{"name":"rewarder","type":"address"},{"name":"tokenBalance","type":"uint128"},{"name":"rewardTokenBalance","type":"uint128"},{"name":"lastRewardTime","type":"uint32"},{"components":[{"name":"accRewardPerShare","type":"uint256"},{"name":"rewardTokens","type":"uint128"},{"name":"totalReward","type":"uint128"},{"name":"startTime","type":"uint32"}],"name":"rewardRounds","type":"tuple[]"},{"name":"emergency","type":"bool"}],"name":"value0","type":"tuple"}
 			]
 		},
 		{
@@ -336,6 +337,15 @@
 			"name": "setAdmin",
 			"inputs": [
 				{"name":"new_admin","type":"address"},
+				{"name":"send_gas_to","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setRescuer",
+			"inputs": [
+				{"name":"new_rescuer","type":"address"},
 				{"name":"send_gas_to","type":"address"}
 			],
 			"outputs": [
@@ -519,6 +529,26 @@
 			]
 		},
 		{
+			"name": "withdrawTokensEmergency",
+			"inputs": [
+				{"name":"amount","type":"uint128"},
+				{"name":"receiver","type":"address"},
+				{"name":"all","type":"bool"},
+				{"name":"send_gas_to","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setEmergency",
+			"inputs": [
+				{"name":"_emergency","type":"bool"},
+				{"name":"send_gas_to","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "delegators",
 			"inputs": [
 			],
@@ -630,6 +660,14 @@
 			]
 		},
 		{
+			"name": "Emergency",
+			"inputs": [
+				{"name":"state","type":"bool"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "DepositReverted",
 			"inputs": [
 				{"name":"user","type":"address"},
@@ -682,6 +720,14 @@
 			"name": "RewarderUpdated",
 			"inputs": [
 				{"name":"new_rewarder","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "RescuerUpdated",
+			"inputs": [
+				{"name":"new_rescuer","type":"address"}
 			],
 			"outputs": [
 			]
@@ -767,9 +813,10 @@
 		{"name":"relay_round_code","type":"cell"},
 		{"name":"relay_round_version","type":"uint32"},
 		{"name":"active","type":"bool"},
+		{"name":"emergency","type":"bool"},
 		{"name":"lastExtCall","type":"uint32"},
 		{"components":[{"name":"currentRelayRound","type":"uint32"},{"name":"currentRelayRoundStartTime","type":"uint32"},{"name":"currentRelayRoundEndTime","type":"uint32"},{"name":"currentElectionStartTime","type":"uint32"},{"name":"prevRelayRoundEndTime","type":"uint32"},{"name":"currentElectionEnded","type":"bool"}],"name":"round_details","type":"tuple"},
-		{"components":[{"name":"dao_root","type":"address"},{"name":"bridge_event_config_eth_ton","type":"address"},{"name":"bridge_event_config_ton_eth","type":"address"},{"name":"tokenRoot","type":"address"},{"name":"tokenWallet","type":"address"},{"name":"admin","type":"address"},{"name":"rewarder","type":"address"},{"name":"tokenBalance","type":"uint128"},{"name":"rewardTokenBalance","type":"uint128"},{"name":"lastRewardTime","type":"uint32"},{"components":[{"name":"accRewardPerShare","type":"uint256"},{"name":"rewardTokens","type":"uint128"},{"name":"totalReward","type":"uint128"},{"name":"startTime","type":"uint32"}],"name":"rewardRounds","type":"tuple[]"}],"name":"base_details","type":"tuple"},
+		{"components":[{"name":"dao_root","type":"address"},{"name":"bridge_event_config_eth_ton","type":"address"},{"name":"bridge_event_config_ton_eth","type":"address"},{"name":"tokenRoot","type":"address"},{"name":"tokenWallet","type":"address"},{"name":"admin","type":"address"},{"name":"rescuer","type":"address"},{"name":"rewarder","type":"address"},{"name":"tokenBalance","type":"uint128"},{"name":"rewardTokenBalance","type":"uint128"},{"name":"lastRewardTime","type":"uint32"},{"components":[{"name":"accRewardPerShare","type":"uint256"},{"name":"rewardTokens","type":"uint128"},{"name":"totalReward","type":"uint128"},{"name":"startTime","type":"uint32"}],"name":"rewardRounds","type":"tuple[]"},{"name":"emergency","type":"bool"}],"name":"base_details","type":"tuple"},
 		{"components":[{"name":"relayLockTime","type":"uint32"},{"name":"relayRoundTime","type":"uint32"},{"name":"electionTime","type":"uint32"},{"name":"timeBeforeElection","type":"uint32"},{"name":"minRoundGapTime","type":"uint32"},{"name":"relaysCount","type":"uint16"},{"name":"minRelaysCount","type":"uint16"},{"name":"minRelayDeposit","type":"uint128"},{"name":"relayInitialDeposit","type":"uint128"}],"name":"relay_config","type":"tuple"},
 		{"name":"tonEventDeployValue","type":"uint128"},
 		{"name":"deposit_nonce","type":"uint64"},

@@ -45,6 +45,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     );
     event RelayRoundCreation(uint32 round_num, uint160[] eth_keys, uint32 round_end);
     event RelaySlashed(address user, uint128 tokens_withdrawn);
+    event Emergency(bool state);
 
     event DepositReverted(address user, uint128 amount);
 
@@ -54,6 +55,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     event TonEventDeployValueUpdated(uint128 new_value);
     event AdminUpdated(address new_admin);
     event RewarderUpdated(address new_rewarder);
+    event RescuerUpdated(address new_rescuer);
 
     event ActiveUpdated(bool active);
 
@@ -84,6 +86,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     bool active;
 
+    bool emergency;
+
     uint32 lastExtCall;
 
     RelayRoundsDetails round_details;
@@ -105,7 +109,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     uint8 constant RELAY_PACK_SIZE = 30;
 
     // TODO: 60 sec for prod
-    uint32 constant EXTERNAL_CALL_INTERVAL = 60;
+    uint32 constant EXTERNAL_CALL_INTERVAL = 2;
 
     uint256 constant SCALING_FACTOR = 1e18;
 
@@ -193,6 +197,14 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         tvm.rawReserve(_reserve(), 2);
         emit AdminUpdated(new_admin);
         base_details.admin = new_admin;
+        send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
+    }
+
+    function setRescuer(address new_rescuer, address send_gas_to) external onlyDaoRoot {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        tvm.rawReserve(_reserve(), 2);
+        emit RescuerUpdated(new_rescuer);
+        base_details.rescuer = new_rescuer;
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
@@ -306,8 +318,8 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         uint8 deposit_type = slice.decode(uint8);
 
         if (msg.sender == base_details.tokenWallet) {
-            if (sender_address.value == 0 || msg.value < Gas.MIN_CALL_MSG_VALUE || !active) {
-                // external owner or too low msg.value
+            if (sender_address.value == 0 || msg.value < Gas.MIN_CALL_MSG_VALUE || !active || emergency) {
+                // external owner or too low msg.value or emergency or !active
                 TvmCell tvmcell;
                 ITONTokenWallet(base_details.tokenWallet).transfer{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
                     sender_wallet,
@@ -411,6 +423,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     function claimReward(address send_gas_to) external onlyActive {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (!base_details.emergency, ErrorCodes.EMERGENCY);
 
         tvm.rawReserve(_reserve(), 2);
 
@@ -539,6 +552,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     function castVote(uint32 proposal_id, bool support) public view override {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (!base_details.emergency, ErrorCodes.EMERGENCY);
         _castVote(proposal_id, support, '');
     }
 
@@ -548,6 +562,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         string reason
     ) public view override {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (!base_details.emergency, ErrorCodes.EMERGENCY);
         _castVote(proposal_id, support, reason);
     }
 
@@ -561,7 +576,9 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     function tryUnlockVoteTokens(uint32 proposal_id) public view override {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (!base_details.emergency, ErrorCodes.EMERGENCY);
         tvm.rawReserve(_reserve(), 2);
+
         IUserData(getUserDataAddress(msg.sender)).tryUnlockVoteTokens{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
@@ -570,14 +587,40 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     function tryUnlockCastedVotes(uint32[] proposal_ids) public view override {
+        require (!base_details.emergency, ErrorCodes.EMERGENCY);
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
+
         IUserData(getUserDataAddress(msg.sender)).tryUnlockCastedVotes{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(user_data_version, proposal_ids);
     }
 
+    // amount is ignored if all==True
+    function withdrawTokensEmergency(uint128 amount, address receiver, bool all, address send_gas_to) external onlyRescuer {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (base_details.emergency, ErrorCodes.EMERGENCY);
+        tvm.rawReserve(_reserve(), 2);
+
+        if (all) {
+            amount = base_details.tokenBalance + base_details.rewardTokenBalance;
+        }
+
+        TvmCell _empty;
+        ITONTokenWallet(base_details.tokenWallet).transferToRecipient{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+            0, receiver, amount, 0, 0, send_gas_to, false, _empty
+        );
+    }
+
+    function setEmergency(bool _emergency, address send_gas_to) external onlyRescuer {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        tvm.rawReserve(_reserve(), 2);
+
+        base_details.emergency = _emergency;
+        emit Emergency(_emergency);
+        send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
+    }
 
     onBounce(TvmSlice slice) external {
         tvm.accept();
@@ -595,6 +638,11 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
                 _deposit_nonce, deposit.amount, base_details.rewardRounds, user_data_version
             );
         }
+    }
+
+    modifier onlyRescuer() {
+        require (msg.sender == base_details.rescuer, ErrorCodes.NOT_RESCUER);
+        _;
     }
 
     modifier onlyAdmin() {

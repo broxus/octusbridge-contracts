@@ -110,20 +110,32 @@ const main = async () => {
         round: roundNumber.toString(),
       }]
     );
-
+    let signatures = await Promise.all(details._signatures.map(async (sign) => {
+      return {sign, address: ethers.BigNumber.from(await bridge.recoverSignature(encodedEvent, sign))};
+    }));
+    signatures.sort((a, b) => {
+      if (a.address.eq(b.address)) {
+        return 0
+      }
+      if (a.address.gt(b.address)) {
+        return 1
+      } else {
+        return -1
+      }
+    })
     return {
       ...details,
       roundNumber,
       encodedEvent,
-      signatures: details._signatures,
+      signatures: signatures.map((d) => d.sign),
       created_at: event.created_at
     };
 
   }));
   for (let event of eventDetails) {
     console.log(`Round Number: ${event.roundNumber}`);
-    console.log(`Signatures: \n${event.signatures.map((b) => b.toString('hex'))}`);
     console.log(`Payload: ${event.encodedEvent}\n`);
+    console.log(`Signatures: \n[${event.signatures.map((b) => '0x'+b.toString('hex')).join(',')}]`);
   }
   // Filter out rounds less than Ethereum's last round
   // Prepare Ethereum's (payload, signatures) for each round

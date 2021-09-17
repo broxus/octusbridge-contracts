@@ -10,6 +10,7 @@ import "../../bridge/interfaces/IProxy.sol";
 abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
     function linkRelayAccounts(uint256 ton_pubkey, uint160 eth_address) external view onlyActive {
         require (msg.value >= relay_config.relayInitialDeposit, ErrorCodes.VALUE_TOO_LOW);
+        require (!base_details.emergency, ErrorCodes.EMERGENCY);
 
         tvm.rawReserve(_reserve(), 2);
 
@@ -153,6 +154,8 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         require (now >= (round_details.currentRelayRoundStartTime + relay_config.timeBeforeElection), ErrorCodes.TOO_EARLY_FOR_ELECTION);
         require (round_details.currentElectionStartTime == 0, ErrorCodes.ELECTION_ALREADY_STARTED);
         require (round_details.currentRelayRoundStartTime > 0, ErrorCodes.ORIGIN_ROUND_NOT_INITIALIZED);
+        require (!base_details.emergency, ErrorCodes.EMERGENCY);
+
         // if currentElectionEnded == true, that means we are in a gap between election end and new round initialization
         require (round_details.currentElectionEnded == false, ErrorCodes.ELECTION_ALREADY_STARTED);
         // flags for election start are set on callback, so that ban duplicate calls to prevent contract gas leak
@@ -167,6 +170,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
     }
 
     function endElection() external onlyActive {
+        require (!base_details.emergency, ErrorCodes.EMERGENCY);
         require (round_details.currentElectionStartTime != 0, ErrorCodes.ELECTION_NOT_STARTED);
         require (now >= (round_details.currentElectionStartTime + relay_config.electionTime), ErrorCodes.CANT_END_ELECTION);
         // flags for election end are set on callback, so that ban duplicate calls to prevent contract gas leak
