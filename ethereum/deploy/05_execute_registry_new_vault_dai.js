@@ -2,11 +2,7 @@ const { legos } = require('@studydefi/money-legos');
 
 
 module.exports = async ({getNamedAccounts, deployments}) => {
-  const {
-    dai,
-    deployer,
-    guardian,
-  } = await getNamedAccounts();
+  const { deployer, guardian } = await getNamedAccounts();
   
   await deployments.execute(
     'Registry',

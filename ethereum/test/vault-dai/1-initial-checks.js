@@ -27,6 +27,11 @@ describe('Test Vault DAI initial setup', async () => {
       .to.be.equal(bridge.address, 'Vault looks at the wrong bridge');
   });
   
+  it('Check wrapper vault', async () => {
+    expect(await wrapper.vault())
+      .to.be.equal(vault.address, 'Wrong vault at wrapper');
+  });
+  
   it('Check vault activated', async () => {
     expect(await vault.activation())
       .to.be.not.equal(0, 'Vault not activated');

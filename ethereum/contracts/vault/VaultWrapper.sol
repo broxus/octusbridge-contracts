@@ -1,44 +1,19 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.2;
 
 import "./../interfaces/IBridge.sol";
+import "./../interfaces/IVault.sol";
 import "../utils/ChainId.sol";
 
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-
-interface IVault {
-    struct TONAddress {
-        int128 wid;
-        uint256 addr;
-    }
-
-    function saveWithdraw(
-        bytes32 id,
-        address recipient,
-        uint256 amount,
-        uint256 bounty
-    ) external;
-
-    function deposit(
-        address sender,
-        TONAddress calldata recipient,
-        uint256 _amount,
-        address pendingWithdrawalToFill
-    ) external;
-
-    function configuration() external view returns(TONAddress memory _configuration);
-    function bridge() external view returns(address);
-}
-
-contract VaultWrapper is ChainId, Initializable {
+contract VaultWrapper is ChainId {
     address constant ZERO_ADDRESS = 0x0000000000000000000000000000000000000000;
 
     address public vault;
 
-    function initialize(
+    constructor(
         address _vault
-    ) initializer external {
+    ) {
         vault = _vault;
     }
 

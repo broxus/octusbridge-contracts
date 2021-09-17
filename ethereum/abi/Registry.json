@@ -1,599 +1,506 @@
 [
   {
-    "name": "NewRelease",
     "inputs": [
       {
-        "name": "release_id",
-        "type": "uint256",
-        "indexed": true
-      },
-      {
-        "name": "template",
-        "type": "address",
-        "indexed": false
-      },
-      {
-        "name": "api_version",
-        "type": "string",
-        "indexed": false
+        "internalType": "address",
+        "name": "_bridge",
+        "type": "address"
       }
     ],
-    "anonymous": false,
-    "type": "event"
+    "stateMutability": "nonpayable",
+    "type": "constructor"
   },
   {
-    "name": "NewVault",
-    "inputs": [
-      {
-        "name": "token",
-        "type": "address",
-        "indexed": true
-      },
-      {
-        "name": "vault_id",
-        "type": "uint256",
-        "indexed": true
-      },
-      {
-        "name": "vault",
-        "type": "address",
-        "indexed": false
-      },
-      {
-        "name": "api_version",
-        "type": "string",
-        "indexed": false
-      }
-    ],
     "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "NewExperimentalVault",
     "inputs": [
       {
+        "indexed": true,
+        "internalType": "address",
         "name": "token",
-        "type": "address",
-        "indexed": true
+        "type": "address"
       },
       {
+        "indexed": true,
+        "internalType": "address",
         "name": "deployer",
-        "type": "address",
-        "indexed": true
+        "type": "address"
       },
       {
+        "indexed": false,
+        "internalType": "address",
         "name": "vault",
-        "type": "address",
-        "indexed": false
+        "type": "address"
       },
       {
+        "indexed": false,
+        "internalType": "string",
         "name": "api_version",
-        "type": "string",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "NewGovernance",
-    "inputs": [
-      {
-        "name": "governance",
-        "type": "address",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "VaultTagged",
-    "inputs": [
-      {
-        "name": "vault",
-        "type": "address",
-        "indexed": false
-      },
-      {
-        "name": "tag",
-        "type": "string",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "UpdateVaultWrapper",
-    "inputs": [
-      {
-        "name": "vaultWrapper",
-        "type": "address",
-        "indexed": true
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "constructor",
-    "inputs": [
-      {
-        "name": "bridge",
-        "type": "address"
-      },
-      {
-        "name": "vaultWrapper",
-        "type": "address"
-      }
-    ],
-    "outputs": []
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "setBridge",
-    "inputs": [
-      {
-        "name": "bridge",
-        "type": "address"
-      }
-    ],
-    "outputs": [],
-    "gas": 37545
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "setVaultWrapper",
-    "inputs": [
-      {
-        "name": "vaultWrapper",
-        "type": "address"
-      }
-    ],
-    "outputs": [],
-    "gas": 37575
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "setGovernance",
-    "inputs": [
-      {
-        "name": "governance",
-        "type": "address"
-      }
-    ],
-    "outputs": [],
-    "gas": 37605
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "acceptGovernance",
-    "inputs": [],
-    "outputs": [],
-    "gas": 38877
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "latestRelease",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
         "type": "string"
       }
     ],
-    "gas": 12951
+    "name": "NewExperimentalVault",
+    "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "release_id",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "template",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "api_version",
+        "type": "string"
+      }
+    ],
+    "name": "NewRelease",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "vault_id",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "vault",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "api_version",
+        "type": "string"
+      }
+    ],
+    "name": "NewVault",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "vaultWrapper",
+        "type": "address"
+      }
+    ],
+    "name": "UpdateVaultWrapper",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "vault",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "tag",
+        "type": "string"
+      }
+    ],
+    "name": "VaultTagged",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "banksy",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
-    "type": "function",
-    "name": "latestVault",
-    "inputs": [
-      {
-        "name": "token",
-        "type": "address"
-      }
-    ],
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "bridge",
     "outputs": [
       {
+        "internalType": "address",
         "name": "",
         "type": "address"
       }
     ],
-    "gas": 5247
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "newRelease",
-    "inputs": [
+    "inputs": [],
+    "name": "decoder",
+    "outputs": [
       {
-        "name": "vault",
+        "internalType": "address",
+        "name": "",
         "type": "address"
       }
     ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "vault",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "releaseDelta",
+        "type": "uint256"
+      }
+    ],
+    "name": "endorseVault",
     "outputs": [],
-    "gas": 95528
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "isRegistered",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "latestRelease",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "api_version",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "latestVault",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "governance",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "guardian",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "releaseDelta",
+        "type": "uint256"
+      }
+    ],
+    "name": "newExperimentalVault",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "nonpayable",
-    "type": "function",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "vault",
+        "type": "address"
+      }
+    ],
+    "name": "newRelease",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "guardian",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "releaseDelta",
+        "type": "uint256"
+      }
+    ],
     "name": "newVault",
-    "inputs": [
-      {
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "name": "guardian",
-        "type": "address"
-      },
-      {
-        "name": "releaseDelta",
-        "type": "uint256"
-      }
-    ],
     "outputs": [
       {
+        "internalType": "address",
         "name": "",
         "type": "address"
       }
     ],
-    "gas": 315208
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "newExperimentalVault",
-    "inputs": [
-      {
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "name": "governance",
-        "type": "address"
-      },
-      {
-        "name": "guardian",
-        "type": "address"
-      }
-    ],
+    "inputs": [],
+    "name": "numReleases",
     "outputs": [
       {
+        "internalType": "uint256",
         "name": "",
-        "type": "address"
-      }
-    ]
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "newExperimentalVault",
-    "inputs": [
-      {
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "name": "governance",
-        "type": "address"
-      },
-      {
-        "name": "guardian",
-        "type": "address"
-      },
-      {
-        "name": "releaseDelta",
         "type": "uint256"
       }
     ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "numTokens",
     "outputs": [
       {
+        "internalType": "uint256",
         "name": "",
-        "type": "address"
-      }
-    ]
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "endorseVault",
-    "inputs": [
-      {
-        "name": "vault",
-        "type": "address"
-      }
-    ],
-    "outputs": []
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "endorseVault",
-    "inputs": [
-      {
-        "name": "vault",
-        "type": "address"
-      },
-      {
-        "name": "releaseDelta",
         "type": "uint256"
       }
     ],
-    "outputs": []
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "setBanksy",
     "inputs": [
       {
-        "name": "tagger",
+        "internalType": "address",
+        "name": "",
         "type": "address"
       }
     ],
-    "outputs": []
+    "name": "numVaults",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "setBanksy",
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "releases",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "tagger",
         "type": "address"
       },
       {
+        "internalType": "bool",
         "name": "allowed",
         "type": "bool"
       }
     ],
-    "outputs": []
+    "name": "setBanksy",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "tagVault",
     "inputs": [
       {
+        "internalType": "address",
+        "name": "_bridge",
+        "type": "address"
+      }
+    ],
+    "name": "setBridge",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "vault",
         "type": "address"
       },
       {
+        "internalType": "string",
         "name": "tag",
         "type": "string"
       }
     ],
+    "name": "tagVault",
     "outputs": [],
-    "gas": 190124
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "numReleases",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "gas": 2748
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "releases",
     "inputs": [
       {
-        "name": "arg0",
-        "type": "uint256"
-      }
-    ],
-    "outputs": [
-      {
+        "internalType": "address",
         "name": "",
         "type": "address"
       }
     ],
-    "gas": 2893
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "numVaults",
-    "inputs": [
-      {
-        "name": "arg0",
-        "type": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "gas": 3023
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "vaults",
-    "inputs": [
-      {
-        "name": "arg0",
-        "type": "address"
-      },
-      {
-        "name": "arg1",
-        "type": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "gas": 3168
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "vaultWrapper",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "gas": 2868
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "tokens",
-    "inputs": [
-      {
-        "name": "arg0",
-        "type": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "gas": 3013
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "numTokens",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "gas": 2928
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "isRegistered",
-    "inputs": [
-      {
-        "name": "arg0",
-        "type": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "gas": 3173
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "governance",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "gas": 2988
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "pendingGovernance",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "gas": 3018
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "bridge",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "gas": 3048
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "decoder",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "gas": 3078
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
     "name": "tags",
-    "inputs": [
-      {
-        "name": "arg0",
-        "type": "address"
-      }
-    ],
     "outputs": [
       {
+        "internalType": "string",
         "name": "",
         "type": "string"
       }
     ],
-    "gas": 18179
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "banksy",
     "inputs": [
       {
-        "name": "arg0",
+        "internalType": "address",
+        "name": "newOwner",
         "type": "address"
       }
     ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "gas": 3353
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   }
 ]
