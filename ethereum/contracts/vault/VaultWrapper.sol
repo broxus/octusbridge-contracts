@@ -6,14 +6,17 @@ import "./../interfaces/IVault.sol";
 import "../utils/ChainId.sol";
 
 
-contract VaultWrapper is ChainId {
+import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
+
+
+contract VaultWrapper is ChainId, Initializable {
     address constant ZERO_ADDRESS = 0x0000000000000000000000000000000000000000;
 
     address public vault;
 
-    constructor(
+    function initialize(
         address _vault
-    ) {
+    ) external initializer {
         vault = _vault;
     }
 

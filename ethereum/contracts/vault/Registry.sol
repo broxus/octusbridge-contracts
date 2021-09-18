@@ -3,12 +3,15 @@ pragma solidity ^0.8.2;
 
 import "./../interfaces/IBridge.sol";
 import "./../interfaces/IVault.sol";
-import "../interfaces/IRegistry.sol";
+import "./../interfaces/IRegistry.sol";
+import "./../interfaces/IVaultWrapper.sol";
 
 import "./VaultWrapper.sol";
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
+import "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
+import "@openzeppelin/contracts/proxy/Clones.sol";
 
 
 contract Registry is Ownable, IRegistry {
@@ -29,7 +32,8 @@ contract Registry is Ownable, IRegistry {
     mapping(address => bool) public isRegistered;
 
     address public bridge;
-    address public decoder;
+    address public proxyAdmin;
+    address public wrapper;
 
     mapping(address => string) public tags;
     mapping(address => bool) public banksy;
@@ -42,15 +46,25 @@ contract Registry is Ownable, IRegistry {
     }
 
     constructor(
-        address _bridge
+        address _bridge,
+        address _proxyAdmin,
+        address _wrapper
     ) {
         bridge = _bridge;
+        proxyAdmin = _proxyAdmin;
+        wrapper = _wrapper;
     }
 
     function setBridge(
         address _bridge
     ) external onlyOwner {
         bridge = _bridge;
+    }
+
+    function setProxyAdmin(
+        address _proxyAdmin
+    ) external onlyOwner {
+        proxyAdmin = _proxyAdmin;
     }
 
     function latestRelease()
@@ -104,22 +118,28 @@ contract Registry is Ownable, IRegistry {
 
         require(release != ZERO_ADDRESS, "Registry: release target is wrong");
 
-        // Deploy proxy admin, owned by governance
-        ProxyAdmin proxyAdmin = new ProxyAdmin();
-        proxyAdmin.transferOwnership(governance);
-
         // Deploy Vault release proxy, owned by proxy admin
-        ERC1967Proxy vaultProxy = new ERC1967Proxy(release, "");
+        TransparentUpgradeableProxy vaultProxy = new TransparentUpgradeableProxy(
+            release,
+            proxyAdmin,
+            ""
+        );
 
-        // Deploy wrapper
-        VaultWrapper vaultWrapper = new VaultWrapper(address(vaultProxy));
+        // Clone wrapper
+        address _wrapper = Clones.clone(wrapper);
+
+        // Initialize wrapper
+        IVaultWrapper(_wrapper).initialize(address(vaultProxy));
+
+        //// Deploy wrapper
+        // VaultWrapper _wrapper = new VaultWrapper(address(vaultProxy));
 
         // Initialize Vault
         IVault(address(vaultProxy)).initialize(
             token,
             governance,
             bridge,
-            address(vaultWrapper),
+            _wrapper,
             guardian,
             ZERO_ADDRESS
         );

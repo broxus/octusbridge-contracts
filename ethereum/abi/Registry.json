@@ -5,6 +5,16 @@
         "internalType": "address",
         "name": "_bridge",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_proxyAdmin",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_wrapper",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -170,19 +180,6 @@
   {
     "inputs": [],
     "name": "bridge",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "decoder",
     "outputs": [
       {
         "internalType": "address",
@@ -397,6 +394,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "proxyAdmin",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -457,6 +467,19 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "_proxyAdmin",
+        "type": "address"
+      }
+    ],
+    "name": "setProxyAdmin",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "vault",
         "type": "address"
       },
@@ -501,6 +524,19 @@
     "name": "transferOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "wrapper",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   }
 ]
