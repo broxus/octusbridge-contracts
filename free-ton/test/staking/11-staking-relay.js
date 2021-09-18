@@ -3,6 +3,7 @@ const {
 } = require('../utils');
 const BigNumber = require('bignumber.js');
 const logger = require('mocha-logger');
+const {sleep} = require("ton-testing-suite/src/utils");
 const {
     convertCrystal
 } = locklift.utils;
@@ -228,8 +229,7 @@ describe('Test Staking Rewards', async function () {
         const res = await locklift.ton.client.net.wait_for_collection({
             collection: 'accounts',
             filter: {
-                id: { eq: address },
-                balance: { gt: `0x0` }
+                id: { eq: address }
             },
             result: 'balance',
             timeout: 120000
@@ -253,6 +253,14 @@ describe('Test Staking Rewards', async function () {
         })
     }
 
+    const destroyRound = async function (_user, round) {
+        return await round.run({
+            method: 'destroy',
+            params: {},
+            keyPair: _user.keyPair
+        })
+    }
+
     const endElection = async function (_user) {
         return await stakingRoot.run({
             method: 'endElection',
@@ -271,6 +279,41 @@ describe('Test Staking Rewards', async function () {
             },
             value: convertCrystal(55, "nano")
         })
+    }
+
+    const setEmergency = async function () {
+        return await stakingOwner.runTarget({
+            contract: stakingRoot,
+            method: 'setEmergency',
+            params: {_emergency: true, send_gas_to: stakingOwner.address},
+            value: convertCrystal(55, 'nano')
+        });
+    }
+
+    const withdrawTokens = async function(user, withdraw_amount) {
+        return await user.runTarget({
+            contract: stakingRoot,
+            method: 'withdraw',
+            params: {
+                amount: withdraw_amount,
+                send_gas_to: user.address
+            },
+            value: convertCrystal(55, 'nano')
+        });
+    };
+
+    const withdrawEmergency = async function(amount, all) {
+        return await stakingOwner.runTarget({
+            contract: stakingRoot,
+            method: 'withdrawTokensEmergency',
+            params: {
+                amount: amount,
+                receiver: stakingOwner.address,
+                all: all,
+                send_gas_to: stakingOwner.address
+            },
+            value: convertCrystal(55, 'nano')
+        });
     }
 
     const confirmTonRelayAccount = async function (_user, _userData) {
@@ -602,7 +645,6 @@ describe('Test Staking Rewards', async function () {
                 if (locklift.network === 'dev') {
                     await wait(DEV_WAIT);
                 }
-                console.log(tx.transaction.out_msgs);
 
                 await checkTokenBalances(
                     userTokenWallet1, user1Data, rewardTokensBal + userDeposit,
@@ -909,7 +951,7 @@ describe('Test Staking Rewards', async function () {
                 const user2_token_balance = await userTokenBalance(user2Data);
 
                 const user2_pk = new BigNumber(user2.keyPair.public, 16);
-                const expected_ton_pubkey2 = `0x${user2_pk.toString(16).padStart(64, '0')}`;
+                const expected_ton_pubkey2 = `0x${user2_pk.toString(16)}`;
                 const user2_eth = new BigNumber(user2_eth_addr.toLowerCase(), 16);
 
                 expect(_round_num2.toString()).to.be.equal('1', 'Bad event - round num');
@@ -957,7 +999,6 @@ describe('Test Staking Rewards', async function () {
 
                 const bal1 = await getBalance(user1Data.address);
                 const tx = await endElection(user1);
-                console.log(tx.transaction.out_msgs);
 
                 const round = await getRelayRound(1);
                 await waitForDeploy(round.address);
@@ -1037,6 +1078,10 @@ describe('Test Staking Rewards', async function () {
                 expect(relays.includes(user1.address)).to.be.true;
                 expect(relays.includes(user2.address)).to.be.true;
                 expect(relays.includes(user3.address)).to.be.true;
+
+                const election = await getElection(1);
+                const bal = await getBalance(election.address);
+                expect(bal.toFixed(0)).to.be.eq('0', 'Election not destroyed');
             });
 
             it("User1 get reward for origin round", async function() {
@@ -1325,5 +1370,264 @@ describe('Test Staking Rewards', async function () {
             });
         });
 
+        describe("Destroy old relay round", async function() {
+            it("Election on new round starts", async function () {
+                await wait(5000);
+
+                const tx = await startElection(user3);
+                const election = await getElection(3);
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
+
+                const round_num = await election.call({method: 'round_num'});
+                expect(round_num.toString()).to.be.equal('3', "Bad election - round num");
+
+                const { value: {
+                    round_num: _round_num,
+                    election_start_time: _election_start_time,
+                    election_addr: _election_addr,
+                } } = (await stakingRoot.getEvents('ElectionStarted')).pop();
+
+                expect(_round_num.toString()).to.be.equal('3', "Bad election - round num");
+                expect(_election_addr).to.be.equal(election.address, "Bad election - address");
+            });
+
+            it("Election ends, not enough users participated, clone prev. round", async function() {
+                await wait(3500);
+
+                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const reward_rounds = staking_details.rewardRounds;
+                //
+                // const round2 = await getRelayRound(2);
+                // const round_details2 = await round2.call({method: 'getDetails'});
+                // console.log(round_details2);
+
+                const tx = await endElection(user1);
+
+                const round = await getRelayRound(3);
+                await waitForDeploy(round.address);
+                logger.log(`Round 4 deployed - ${round.address}`);
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
+                // const election = await getElection(2);
+
+                // console.log('root', stakingRoot.address)
+                // console.log('election', election.address);
+                // console.log('round', round.address);
+
+                const { value: {
+                    round_num: _round_num,
+                    relay_requests: _relay_requests,
+                    min_relays_ok: _min_relays_ok
+                } } = (await stakingRoot.getEvents('ElectionEnded')).pop();
+
+                expect(_round_num.toString()).to.be.equal('3', "Bad election event - round num");
+                expect(_relay_requests.toString()).to.be.equal('0', "Bad election event - relay requests");
+                expect(_min_relays_ok).to.be.equal(false, "Bad election event - min relays");
+
+                const { value: {
+                    round_num: _round_num1,
+                    round_start_time: _round_start_time,
+                    round_end_time: _round_end_time,
+                    round_addr: _round_addr,
+                    relays_count: _relays_count,
+                    duplicate: _duplicate
+                } } = (await stakingRoot.getEvents('RelayRoundInitialized')).pop();
+
+                expect(_round_num1.toString()).to.be.equal('3', "Bad relay init event - round num");
+                expect(_round_addr.toString()).to.be.equal(round.address, "Bad relay init event - round addr");
+                expect(_relays_count.toString()).to.be.equal('3', "Bad relay init event - relays count");
+                expect(_duplicate).to.be.equal(true, "Bad relay init event - duplicate");
+
+                const round_details = await round.call({method: 'getDetails'});
+
+                const stored_round_num = round_details.round_num;
+                const stored_relays_count = await round.call({method: 'relays_count'});
+                const stored_total_tokens_staked = await round.call({method: 'total_tokens_staked'});
+                const stored_reward_round_num = await round.call({method: 'reward_round_num'});
+                const stored_relays_installed = round_details.relays_installed;
+                const stored_duplicate = await round.call({method: 'duplicate'});
+
+                const expected_staked_tokens = userDeposit * 6;
+
+                expect(stored_round_num.toString()).to.be.equal('3', "Bad round created - round num");
+                expect(stored_relays_count.toString()).to.be.equal('3', "Bad round created - relays count");
+                expect(stored_total_tokens_staked.toString(16)).to.be.equal(expected_staked_tokens.toString(16), "Bad round created - total tokens staked");
+                expect(stored_reward_round_num.toString()).to.be.equal('1', "Bad round created - reward round num");
+                expect(stored_relays_installed).to.be.equal(true, "Bad round created - relays installed");
+                expect(stored_duplicate).to.be.equal(true, "Bad round created - duplicate");
+
+                const round_reward = await round.call({method: 'round_reward'});
+                const staking_details_1 = await stakingRoot.call({method: 'getDetails'});
+                const reward_rounds_new = staking_details_1.rewardRounds;
+                // console.log(reward_rounds, reward_rounds_new, round_reward.toString());
+                const expected_reward = round_reward.plus(new BigNumber(reward_rounds[1].totalReward));
+                expect(expected_reward.toString()).to.be.equal(reward_rounds_new[1].totalReward.toString(), "Bad reward after relay round init");
+
+                const relay_rounds_data = await stakingRoot.call({method: 'getRelayRoundsDetails'});
+                expect(relay_rounds_data.currentRelayRound.toString()).to.be.equal('3', "Bad round installed in root");
+
+                // check all relays are installed
+                const relays = round_details.staker_addrs;
+                expect(relays.includes(user1.address)).to.be.true;
+                expect(relays.includes(user2.address)).to.be.true;
+                expect(relays.includes(user3.address)).to.be.true;
+            });
+
+            it("Check old round destroyed (-2)", async function() {
+                const round = await getRelayRound(0);
+
+                const round_bal = await getBalance(round.address);
+
+                expect(round_bal.toFixed(0)).to.be.equal('0', 'Round not destroyed');
+            });
+        });
+
+        describe("Late round start", async function() {
+            it("Election on new round starts", async function () {
+                await wait(5000);
+
+                const tx = await startElection(user3);
+                const election = await getElection(4);
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
+
+                const round_num = await election.call({method: 'round_num'});
+                expect(round_num.toString()).to.be.equal('4', "Bad election - round num");
+
+                const { value: {
+                    round_num: _round_num,
+                    election_start_time: _election_start_time,
+                    election_addr: _election_addr,
+                } } = (await stakingRoot.getEvents('ElectionStarted')).pop();
+
+                expect(_round_num.toString()).to.be.equal('4', "Bad election - round num");
+                expect(_election_addr).to.be.equal(election.address, "Bad election - address");
+            });
+
+            it("Election ends late, not enough users participated, clone prev. round", async function() {
+                // make sure current round ends after prev round end
+                await wait(RELAY_ROUND_TIME_1 * 1000);
+
+                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const reward_rounds = staking_details.rewardRounds;
+                //
+                // const round2 = await getRelayRound(2);
+                // const round_details2 = await round2.call({method: 'getDetails'});
+                // console.log(round_details2);
+
+                const tx = await endElection(user1);
+
+                const round = await getRelayRound(4);
+                await waitForDeploy(round.address);
+                logger.log(`Round 5 deployed - ${round.address}`);
+                if (locklift.network === 'dev') {
+                    await wait(DEV_WAIT);
+                }
+                // const election = await getElection(2);
+
+                // console.log('root', stakingRoot.address)
+                // console.log('election', election.address);
+                // console.log('round', round.address);
+
+                const { value: {
+                    round_num: _round_num,
+                    relay_requests: _relay_requests,
+                    min_relays_ok: _min_relays_ok
+                } } = (await stakingRoot.getEvents('ElectionEnded')).pop();
+
+                expect(_round_num.toString()).to.be.equal('4', "Bad election event - round num");
+                expect(_relay_requests.toString()).to.be.equal('0', "Bad election event - relay requests");
+                expect(_min_relays_ok).to.be.equal(false, "Bad election event - min relays");
+
+                const { value: {
+                    round_num: _round_num1,
+                    round_start_time: _round_start_time,
+                    round_end_time: _round_end_time,
+                    round_addr: _round_addr,
+                    relays_count: _relays_count,
+                    duplicate: _duplicate
+                } } = (await stakingRoot.getEvents('RelayRoundInitialized')).pop();
+
+                expect(_round_num1.toString()).to.be.equal('4', "Bad relay init event - round num");
+                expect(_round_addr.toString()).to.be.equal(round.address, "Bad relay init event - round addr");
+                expect(_relays_count.toString()).to.be.equal('3', "Bad relay init event - relays count");
+                expect(_duplicate).to.be.equal(true, "Bad relay init event - duplicate");
+
+                const round_details = await round.call({method: 'getDetails'});
+
+                const stored_round_num = round_details.round_num;
+                const stored_relays_count = await round.call({method: 'relays_count'});
+                const stored_total_tokens_staked = await round.call({method: 'total_tokens_staked'});
+                const stored_reward_round_num = await round.call({method: 'reward_round_num'});
+                const stored_relays_installed = round_details.relays_installed;
+                const stored_duplicate = await round.call({method: 'duplicate'});
+
+                const expected_staked_tokens = userDeposit * 6;
+
+                expect(stored_round_num.toString()).to.be.equal('4', "Bad round created - round num");
+                expect(stored_relays_count.toString()).to.be.equal('3', "Bad round created - relays count");
+                expect(stored_total_tokens_staked.toString(16)).to.be.equal(expected_staked_tokens.toString(16), "Bad round created - total tokens staked");
+                expect(stored_reward_round_num.toString()).to.be.equal('1', "Bad round created - reward round num");
+                expect(stored_relays_installed).to.be.equal(true, "Bad round created - relays installed");
+                expect(stored_duplicate).to.be.equal(true, "Bad round created - duplicate");
+
+                const round_reward = await round.call({method: 'round_reward'});
+                const staking_details_1 = await stakingRoot.call({method: 'getDetails'});
+                const reward_rounds_new = staking_details_1.rewardRounds;
+                // console.log(reward_rounds, reward_rounds_new, round_reward.toString());
+                const expected_reward = round_reward.plus(new BigNumber(reward_rounds[1].totalReward));
+                expect(expected_reward.toString()).to.be.equal(reward_rounds_new[1].totalReward.toString(), "Bad reward after relay round init");
+
+                const relay_rounds_data = await stakingRoot.call({method: 'getRelayRoundsDetails'});
+                expect(relay_rounds_data.currentRelayRound.toString()).to.be.equal('4', "Bad round installed in root");
+
+                // check all relays are installed
+                const relays = round_details.staker_addrs;
+                expect(relays.includes(user1.address)).to.be.true;
+                expect(relays.includes(user2.address)).to.be.true;
+                expect(relays.includes(user3.address)).to.be.true;
+
+                const relay_config = await stakingRoot.call({method: "getRelayConfig"});
+                const root_round_details = await stakingRoot.call({method: 'getRelayRoundsDetails'});
+                const expected_end = root_round_details.currentRelayRoundStartTime.plus(relay_config.minRoundGapTime);
+                expect(root_round_details.prevRelayRoundEndTime.toFixed(0)).to.be.eq(expected_end.toFixed(0), "Bad prev round end time");
+            });
+        });
+
+        describe("Emergency situation", async function() {
+           it("Set emergency", async function() {
+                await setEmergency();
+                const details = await stakingRoot.call({method: 'getDetails'});
+                expect(details.emergency).to.be.true;
+           })
+
+            it("User withdraw tokens", async function() {
+                const prev_details = await stakingRoot.call({method: 'getDetails'});
+                const tx = await withdrawTokens(user2, userDeposit);
+                await sleep(1000);
+                const after_details = await stakingRoot.call({method: 'getDetails'});
+
+                const expected_bal = prev_details.tokenBalance.minus(userDeposit).toFixed(0);
+                expect(after_details.tokenBalance.toFixed(0)).to.be.equal(expected_bal);
+            });
+
+           it("Rescuer withdraw all tokens", async function() {
+               const prev_details = await stakingRoot.call({method: 'getDetails'});
+               await withdrawEmergency(100, false);
+               await sleep(1000);
+               const after_details = await stakingRoot.call({method: 'getDetails'});
+               expect(after_details.tokenBalance.toFixed(0)).to.be.equal(prev_details.tokenBalance.minus(100).toFixed(0));
+
+               await withdrawEmergency(0, true);
+               await sleep(1000);
+               const after_details_2 = await stakingRoot.call({method: 'getDetails'});
+               expect(after_details_2.tokenBalance.toFixed(0)).to.be.equal('0');
+               expect(after_details_2.rewardTokenBalance.toFixed(0)).to.be.equal('0');
+           });
+        });
     });
 })

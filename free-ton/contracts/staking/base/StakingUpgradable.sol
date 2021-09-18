@@ -172,7 +172,6 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         data_builder_1.store(round_details.currentElectionStartTime); // 32
         data_builder_1.store(lastExtCall); // 32
         data_builder_1.store(round_details.currentElectionEnded); // 1
-        data_builder_1.store(emergency); // 1
 
         TvmBuilder data_builder_2;
         data_builder_2.store(base_details.bridge_event_config_ton_eth); // 256
@@ -181,6 +180,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         data_builder_2.store(base_details.tokenRoot); // 256
         data_builder_2.store(base_details.tokenWallet); // 256
         data_builder_2.store(base_details.tokenBalance); // 128
+        data_builder_2.store(base_details.emergency); // 1
         data_builder_2.store(base_details.rewardRounds); // ref
 
         TvmBuilder data_builder_3;
@@ -250,7 +250,6 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
                             uint32 currentElectionStartTime
                             uint32 lastExtCall
                             bool currentElectionEnded
-                            bool emergency
                     2: data_2
                         bits:
                             address bridge_event_config_ton_eth
@@ -259,6 +258,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
                             address tokenRoot
                             address tokenWallet
                             uint128 tokenBalance
+                            bool emergency
                         refs:
                             1: rewardRounds
                     3: data_3

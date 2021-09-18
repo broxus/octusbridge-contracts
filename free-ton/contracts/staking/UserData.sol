@@ -450,14 +450,17 @@ contract UserData is IUserData, IUpgradableByRequest {
     function processWithdraw(
         uint128 _tokens_to_withdraw,
         IStakingPool.RewardRound[] reward_rounds,
+        bool emergency,
         address send_gas_to,
         uint32 code_version
     ) external override onlyRoot {
         require (token_balance >= _tokens_to_withdraw, ErrorCodes.LOW_TOKEN_BALANCE);
-        require (now >= relay_lock_until, ErrorCodes.RELAY_LOCK_ACTIVE);
+        if (!emergency) {
+            require (now >= relay_lock_until, ErrorCodes.RELAY_LOCK_ACTIVE);
+            require (_canWithdrawVotes(), ErrorCodes.CANT_WITHDRAW_VOTES);
+        }
         require (!slashed, ErrorCodes.SLASHED);
         require (code_version == current_version, ErrorCodes.LOW_VERSION);
-        require (_canWithdrawVotes(), ErrorCodes.CANT_WITHDRAW_VOTES);
 
         tvm.rawReserve(_reserve(), 2);
 

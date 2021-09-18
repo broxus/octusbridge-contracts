@@ -241,6 +241,7 @@
 			"inputs": [
 				{"name":"_tokens_to_withdraw","type":"uint128"},
 				{"components":[{"name":"accRewardPerShare","type":"uint256"},{"name":"rewardTokens","type":"uint128"},{"name":"totalReward","type":"uint128"},{"name":"startTime","type":"uint32"}],"name":"reward_rounds","type":"tuple[]"},
+				{"name":"emergency","type":"bool"},
 				{"name":"send_gas_to","type":"address"},
 				{"name":"code_version","type":"uint32"}
 			],

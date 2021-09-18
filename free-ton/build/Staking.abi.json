@@ -813,7 +813,6 @@
 		{"name":"relay_round_code","type":"cell"},
 		{"name":"relay_round_version","type":"uint32"},
 		{"name":"active","type":"bool"},
-		{"name":"emergency","type":"bool"},
 		{"name":"lastExtCall","type":"uint32"},
 		{"components":[{"name":"currentRelayRound","type":"uint32"},{"name":"currentRelayRoundStartTime","type":"uint32"},{"name":"currentRelayRoundEndTime","type":"uint32"},{"name":"currentElectionStartTime","type":"uint32"},{"name":"prevRelayRoundEndTime","type":"uint32"},{"name":"currentElectionEnded","type":"bool"}],"name":"round_details","type":"tuple"},
 		{"components":[{"name":"dao_root","type":"address"},{"name":"bridge_event_config_eth_ton","type":"address"},{"name":"bridge_event_config_ton_eth","type":"address"},{"name":"tokenRoot","type":"address"},{"name":"tokenWallet","type":"address"},{"name":"admin","type":"address"},{"name":"rescuer","type":"address"},{"name":"rewarder","type":"address"},{"name":"tokenBalance","type":"uint128"},{"name":"rewardTokenBalance","type":"uint128"},{"name":"lastRewardTime","type":"uint32"},{"components":[{"name":"accRewardPerShare","type":"uint256"},{"name":"rewardTokens","type":"uint128"},{"name":"totalReward","type":"uint128"},{"name":"startTime","type":"uint32"}],"name":"rewardRounds","type":"tuple[]"},{"name":"emergency","type":"bool"}],"name":"base_details","type":"tuple"},
