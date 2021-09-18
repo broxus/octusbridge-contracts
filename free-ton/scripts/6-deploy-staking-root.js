@@ -1,5 +1,6 @@
 const logger = require("mocha-logger");
 const fs = require("fs");
+const {convertCrystal} = require("locklift/locklift/utils");
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 const DEV_WAIT = 30000;
@@ -9,7 +10,7 @@ const getRandomNonce = () => Math.ceil(Math.random() * 64000);
 const config = JSON.parse(fs.readFileSync("scripts/staking_deploy_config.json"));
 
 const deployAccount = async function (key) {
-  const user_bal = 15;
+  const user_bal = 500;
 
   const Account = await locklift.factory.getAccount('Wallet');
   let account = await locklift.giver.deployContract({
@@ -37,7 +38,7 @@ async function main() {
     constructorParams: {},
     initParams: {nonce: getRandomNonce()},
     keyPair: keyPair,
-  }, locklift.utils.convertCrystal(10, 'nano'));
+  }, locklift.utils.convertCrystal(50, 'nano'));
   if (locklift.network === 'dev') {
     await wait(DEV_WAIT);
   }
@@ -71,62 +72,71 @@ async function main() {
     contract: stakingRoot,
     method: 'installPlatformOnce',
     params: {code: Platform.code, send_gas_to: admin.address},
+    value: convertCrystal(55, 'nano')
   });
   logger.log(`Installing UserData code`);
   await admin.runTarget({
     contract: stakingRoot,
     method: 'installOrUpdateUserDataCode',
     params: {code: UserData.code, send_gas_to: admin.address},
+    value: convertCrystal(55, 'nano')
   });
   logger.log(`Installing ElectionCode code`);
   await admin.runTarget({
     contract: stakingRoot,
     method: 'installOrUpdateElectionCode',
     params: {code: Election.code, send_gas_to: admin.address},
+    value: convertCrystal(55, 'nano')
   });
   logger.log(`Installing RelayRoundCode code`);
   await admin.runTarget({
     contract: stakingRoot,
     method: 'installOrUpdateRelayRoundCode',
     params: {code: RelayRound.code, send_gas_to: admin.address},
+    value: convertCrystal(55, 'nano')
   });
   logger.log(`Set staking to Active`);
   await admin.runTarget({
     contract: stakingRoot,
     method: 'setActive',
     params: {new_active: true, send_gas_to: admin.address},
+    value: convertCrystal(55, 'nano')
   });
   logger.log(`Set true admin`);
   await admin.runTarget({
     contract: stakingRoot,
     method: 'setAdmin',
     params: {new_admin: true_admin, send_gas_to: admin.address},
+    value: convertCrystal(55, 'nano')
   });
-  // relay lock time - 1 hour
   // relay initial deposit - 5 tokens
-  // relay lock time - 3 hours
-  // election time - 20 min
-  // time before election - 30 min
+  // relay round len - 30 min
+  // relay lock time - 1 hours
+  // election time - 10 min
+  // time before election - 15 min
+  // min round gap time - 5 min
   // relays count - 100
   // min relays count - 3
-  //
+
   logger.log(`Set relay config`);
   await admin.runTarget({
     contract: stakingRoot,
     method: 'setRelayConfig',
     params: {
       new_relay_config: {
-        relayLockTime: 3600 * 3,
-        relayRoundTime: 3600,
-        electionTime: 20 * 60,
-        timeBeforeElection: 30 * 60,
+        relayLockTime: 60 * 60,
+        relayRoundTime: 30 * 60,
+        electionTime: 10 * 60,
+        timeBeforeElection: 15 * 60,
+        minRoundGapTime: 5 * 60,
         relaysCount: 100,
         minRelaysCount: 3,
-        minRelayDeposit: 5000000000,
-        relayInitialDeposit: 10000000000,
+        minRelayDeposit: 5000000000, // min relay bridge deposit
+        relayInitialDeposit: 100000000000, // min relay ton deposit when linking
       },
       send_gas_to: admin.address
     },
+    value: convertCrystal(55, 'nano')
   });
 
   logger.log(`Set true dao`);
@@ -134,6 +144,7 @@ async function main() {
     contract: stakingRoot,
     method: 'setDaoRoot',
     params: {new_dao_root: true_dao, send_gas_to: admin.address},
+    value: convertCrystal(55, 'nano')
   });
 
   if (locklift.network === 'dev') {

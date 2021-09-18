@@ -311,8 +311,10 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         }
         round_details.currentRelayRoundEndTime = round_end_time;
 
-        address election_addr = getElectionAddress(round_num);
-        IElection(election_addr).destroy{value: Gas.DESTROY_MSG_VALUE}();
+        if (round_num > 0) {
+            address election_addr = getElectionAddress(round_num);
+            IElection(election_addr).destroy{value: Gas.DESTROY_MSG_VALUE}();
+        }
         if (round_num >= 3) {
             address old_relay_round = getRelayRoundAddress(round_num - 3);
             IRelayRound(old_relay_round).destroy{value: Gas.DESTROY_MSG_VALUE}();
