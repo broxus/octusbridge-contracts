@@ -167,6 +167,7 @@ struct StrategyParams:
     lastReport: uint256  # block.timestamp of the last time a report occured
     totalDebt: uint256  # Total outstanding debt that Strategy has
     totalGain: uint256  # Total returns that Strategy has realized for Vault
+    totalSkim: uint256 # Total amount of skimmed tokens (see note on `skim`)
     totalLoss: uint256  # Total losses that Strategy has realized for Vault
     rewardsManager: address # Address allowed to update strategy rewards receiver
     rewards: TONAddress # Strategist rewards address (see note on `_assessFees`)
@@ -185,6 +186,7 @@ event StrategyReported:
     loss: uint256
     debtPaid: uint256
     totalGain: uint256
+    totalSkim: uint256
     totalLoss: uint256
     totalDebt: uint256
     debtAdded: uint256
@@ -1184,6 +1186,7 @@ def addStrategy(
         lastReport: block.timestamp,
         totalDebt: 0,
         totalGain: 0,
+        totalSkim: 0,
         totalLoss: 0,
         rewardsManager: ZERO_ADDRESS,
         rewards: self.rewards
@@ -1332,6 +1335,7 @@ def migrateStrategy(oldVersion: address, newVersion: address):
         lastReport: strategy.lastReport,
         totalDebt: strategy.totalDebt,
         totalGain: 0,
+        totalSkim: 0,
         totalLoss: 0,
         rewardsManager: strategy.rewardsManager,
         rewards: strategy.rewards
@@ -1739,6 +1743,7 @@ def report(gain: uint256, loss: uint256, _debtPayment: uint256) -> uint256:
         loss,
         debtPayment,
         self.strategies[msg.sender].totalGain,
+        self.strategies[msg.sender].totalSkim,
         self.strategies[msg.sender].totalLoss,
         self.strategies[msg.sender].totalDebt,
         credit,
@@ -1818,3 +1823,25 @@ def emergencyWithdrawAndRevoke(
     self.totalDebt -= withdrawn
 
     self._revokeStrategy(strategy)
+
+@external
+def skim(strategy: address):
+    """
+    @notice
+        Skim strategy gain to the FreeTON side.
+
+        This may only be called by management or governance.
+    @param strategy Strategy to skim
+    """
+    # TODO: consider loss
+    assert msg.sender in [self.management, self.governance]
+
+    assert self.strategies[strategy].activation > 0
+
+    amount: uint256 = self.strategies[strategy].totalGain - self.strategies[strategy].totalSkim
+
+    assert amount > 0
+
+    self.strategies[strategy].totalSkim += amount
+
+    self._transferToTon(amount, self.rewards)

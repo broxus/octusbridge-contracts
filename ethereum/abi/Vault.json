@@ -193,6 +193,11 @@
         "indexed": false
       },
       {
+        "name": "totalSkim",
+        "type": "uint256",
+        "indexed": false
+      },
+      {
         "name": "totalLoss",
         "type": "uint256",
         "indexed": false
@@ -942,7 +947,7 @@
       }
     ],
     "outputs": [],
-    "gas": 1618387
+    "gas": 1638399
   },
   {
     "stateMutability": "nonpayable",
@@ -1027,7 +1032,7 @@
       }
     ],
     "outputs": [],
-    "gas": 1302027
+    "gas": 1324247
   },
   {
     "stateMutability": "nonpayable",
@@ -1198,7 +1203,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 657293
+    "gas": 660170
   },
   {
     "stateMutability": "nonpayable",
@@ -1257,22 +1262,22 @@
     "outputs": []
   },
   {
-    "stateMutability": "view",
+    "stateMutability": "nonpayable",
     "type": "function",
-    "name": "token",
-    "inputs": [],
-    "outputs": [
+    "name": "skim",
+    "inputs": [
       {
-        "name": "",
+        "name": "strategy",
         "type": "address"
       }
     ],
-    "gas": 3588
+    "outputs": [],
+    "gas": 59036
   },
   {
     "stateMutability": "view",
     "type": "function",
-    "name": "governance",
+    "name": "token",
     "inputs": [],
     "outputs": [
       {
@@ -1285,7 +1290,7 @@
   {
     "stateMutability": "view",
     "type": "function",
-    "name": "management",
+    "name": "governance",
     "inputs": [],
     "outputs": [
       {
@@ -1298,7 +1303,7 @@
   {
     "stateMutability": "view",
     "type": "function",
-    "name": "guardian",
+    "name": "management",
     "inputs": [],
     "outputs": [
       {
@@ -1307,6 +1312,19 @@
       }
     ],
     "gas": 3678
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "guardian",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "gas": 3708
   },
   {
     "stateMutability": "view",
@@ -1328,7 +1346,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 6457
+    "gas": 6487
   },
   {
     "stateMutability": "view",
@@ -1341,7 +1359,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 3738
+    "gas": 3768
   },
   {
     "stateMutability": "view",
@@ -1359,7 +1377,7 @@
         "type": "bool"
       }
     ],
-    "gas": 3883
+    "gas": 3913
   },
   {
     "stateMutability": "view",
@@ -1372,7 +1390,7 @@
         "type": "address"
       }
     ],
-    "gas": 3798
+    "gas": 3828
   },
   {
     "stateMutability": "view",
@@ -1385,7 +1403,7 @@
         "type": "address"
       }
     ],
-    "gas": 3828
+    "gas": 3858
   },
   {
     "stateMutability": "view",
@@ -1402,7 +1420,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 6392
+    "gas": 6422
   },
   {
     "stateMutability": "view",
@@ -1419,7 +1437,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 6422
+    "gas": 6452
   },
   {
     "stateMutability": "view",
@@ -1436,7 +1454,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 6452
+    "gas": 6482
   },
   {
     "stateMutability": "view",
@@ -1453,7 +1471,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 6482
+    "gas": 6512
   },
   {
     "stateMutability": "view",
@@ -1499,6 +1517,10 @@
         "type": "uint256"
       },
       {
+        "name": "totalSkim",
+        "type": "uint256"
+      },
+      {
         "name": "totalLoss",
         "type": "uint256"
       },
@@ -1521,7 +1543,7 @@
         ]
       }
     ],
-    "gas": 29757
+    "gas": 32070
   },
   {
     "stateMutability": "view",
@@ -1539,7 +1561,7 @@
         "type": "address"
       }
     ],
-    "gas": 4117
+    "gas": 4147
   },
   {
     "stateMutability": "view",
@@ -1552,7 +1574,7 @@
         "type": "bool"
       }
     ],
-    "gas": 4038
+    "gas": 4068
   },
   {
     "stateMutability": "view",
@@ -1565,7 +1587,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 4068
+    "gas": 4098
   },
   {
     "stateMutability": "view",
@@ -1578,7 +1600,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 4098
+    "gas": 4128
   },
   {
     "stateMutability": "view",
@@ -1591,7 +1613,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 4128
+    "gas": 4158
   },
   {
     "stateMutability": "view",
@@ -1604,7 +1626,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 4158
+    "gas": 4188
   },
   {
     "stateMutability": "view",
@@ -1617,7 +1639,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 4188
+    "gas": 4218
   },
   {
     "stateMutability": "view",
@@ -1630,7 +1652,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 4218
+    "gas": 4248
   },
   {
     "stateMutability": "view",
@@ -1643,7 +1665,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 4248
+    "gas": 4278
   },
   {
     "stateMutability": "view",
@@ -1656,7 +1678,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 4278
+    "gas": 4308
   },
   {
     "stateMutability": "view",
@@ -1669,6 +1691,6 @@
         "type": "uint256"
       }
     ],
-    "gas": 4308
+    "gas": 4338
   }
 ]
