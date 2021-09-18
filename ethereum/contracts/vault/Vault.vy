@@ -855,7 +855,7 @@ def deposit(
     # Ensure we are depositing something
     assert amount > 0
 
-    # Tokens are transferred from msg.sender
+    # Tokens are transferred from the original sender
     self.erc20_safe_transferFrom(self.token.address, sender, self, amount)
 
     # Fill pending withdrawal if specified
