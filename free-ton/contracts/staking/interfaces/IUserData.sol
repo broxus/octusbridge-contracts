@@ -64,6 +64,7 @@ interface IUserData {
     function processWithdraw(
         uint128 _tokens_to_withdraw,
         IStakingPool.RewardRound[] reward_rounds,
+        bool emergency,
         address send_gas_to,
         uint32 code_version
     ) external;

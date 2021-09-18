@@ -86,8 +86,6 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     bool active;
 
-    bool emergency;
-
     uint32 lastExtCall;
 
     RelayRoundsDetails round_details;
@@ -318,7 +316,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         uint8 deposit_type = slice.decode(uint8);
 
         if (msg.sender == base_details.tokenWallet) {
-            if (sender_address.value == 0 || msg.value < Gas.MIN_CALL_MSG_VALUE || !active || emergency) {
+            if (sender_address.value == 0 || msg.value < Gas.MIN_CALL_MSG_VALUE || !active || base_details.emergency) {
                 // external owner or too low msg.value or emergency or !active
                 TvmCell tvmcell;
                 ITONTokenWallet(base_details.tokenWallet).transfer{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
@@ -401,7 +399,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         address userDataAddr = getUserDataAddress(msg.sender);
         // we cant check if user has any balance here, delegate it to UserData
         UserData(userDataAddr).processWithdraw{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-            amount, base_details.rewardRounds, send_gas_to, user_data_version
+            amount, base_details.rewardRounds, base_details.emergency, send_gas_to, user_data_version
         );
     }
 
@@ -603,8 +601,24 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         require (base_details.emergency, ErrorCodes.EMERGENCY);
         tvm.rawReserve(_reserve(), 2);
 
+        // try sending all tokens
         if (all) {
             amount = base_details.tokenBalance + base_details.rewardTokenBalance;
+        }
+
+        uint128 remaining_amount = amount;
+        if (remaining_amount >= base_details.tokenBalance) {
+            base_details.tokenBalance = 0;
+            remaining_amount = remaining_amount - base_details.tokenBalance;
+        } else {
+            base_details.tokenBalance -= remaining_amount;
+            remaining_amount = 0;
+        }
+
+        if (remaining_amount >= base_details.rewardTokenBalance) {
+            base_details.rewardTokenBalance = 0;
+        } else {
+            base_details.rewardTokenBalance -= remaining_amount;
         }
 
         TvmCell _empty;

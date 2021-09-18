@@ -1,7 +1,7 @@
 {
 	"ABI version": 2,
 	"version": "2.1",
-	"header": ["pubkey", "time"],
+	"header": ["time"],
 	"functions": [
 		{
 			"name": "constructor",
@@ -90,14 +90,6 @@
 		{
 			"name": "destroy",
 			"inputs": [
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "receiveRelayRoundsDetails",
-			"inputs": [
-				{"components":[{"name":"currentRelayRound","type":"uint32"},{"name":"currentRelayRoundStartTime","type":"uint32"},{"name":"currentRelayRoundEndTime","type":"uint32"},{"name":"currentElectionStartTime","type":"uint32"},{"name":"prevRelayRoundEndTime","type":"uint32"},{"name":"currentElectionEnded","type":"bool"}],"name":"round_details","type":"tuple"}
 			],
 			"outputs": [
 			]
@@ -214,7 +206,6 @@
 		{"name":"expected_packs_num","type":"uint8"},
 		{"name":"election_addr","type":"address"},
 		{"name":"prev_round_addr","type":"address"},
-		{"name":"lastExtCall","type":"uint32"},
 		{"name":"round_num","type":"uint32"},
 		{"name":"ton_keys","type":"uint256[]"},
 		{"name":"eth_addrs","type":"uint160[]"},

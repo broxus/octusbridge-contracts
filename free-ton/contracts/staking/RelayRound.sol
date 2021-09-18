@@ -1,5 +1,5 @@
 pragma ton-solidity >= 0.39.0;
-pragma AbiHeader pubkey;
+
 
 import "./interfaces/IRelayRound.sol";
 import "./interfaces/IStakingPool.sol";
@@ -27,7 +27,6 @@ contract RelayRound is IRelayRound {
     uint8 public expected_packs_num;
     address election_addr;
     address prev_round_addr;
-    uint32 lastExtCall;
 
     uint32 round_num; // setup from initialData
     uint256[] ton_keys; // array of ton pubkeys
@@ -192,20 +191,12 @@ contract RelayRound is IRelayRound {
         root.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
-    function destroy() external {
+    // should be called root after +2 rounds!
+    function destroy() external override onlyRoot {
+        // small safety check
         require (now >= end_time, ErrorCodes.RELAY_ROUND_NOT_ENDED);
-        require (now >= lastExtCall + EXT_CALL_INTERVAL, ErrorCodes.DUPLICATE_CALL);
 
-        tvm.accept();
-
-        lastExtCall = now;
-        IStakingPool(root).getRelayRoundsDetails{flag: MsgFlag.ALL_NOT_RESERVED, callback: IRelayRound.receiveRelayRoundsDetails}();
-    }
-
-    function receiveRelayRoundsDetails(IStakingPool.RelayRoundsDetails round_details) external override onlyRoot {
-        if (round_details.currentRelayRound > round_num + 2) {
-            root.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
-        }
+        root.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
     function onCodeUpgrade(TvmCell upgrade_data) private {
@@ -277,7 +268,6 @@ contract RelayRound is IRelayRound {
             data_builder_1.store(round_reward); // 128
             data_builder_1.store(duplicate); // 1
             data_builder_1.store(expected_packs_num); // 8
-            data_builder_1.store(lastExtCall); // 32
             data_builder_1.store(eth_addrs); // ref1
             data_builder_1.store(staker_addrs); // ref2
 
@@ -334,7 +324,6 @@ contract RelayRound is IRelayRound {
                             uint128 round_reward
                             bool duplicate
                             uint8 expected_packs_num
-                            uint32 lastExtCall
                         refs:
                             1: eth_addrs
                             2: staker_addrs

@@ -268,8 +268,6 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
                 }
             }
         }
-        address election_addr = getElectionAddress(round_num);
-        IElection(election_addr).destroy{value: Gas.DESTROY_MSG_VALUE}();
     }
 
     function onRelayRoundInitialized(
@@ -313,6 +311,12 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         }
         round_details.currentRelayRoundEndTime = round_end_time;
 
+        address election_addr = getElectionAddress(round_num);
+        IElection(election_addr).destroy{value: Gas.DESTROY_MSG_VALUE}();
+        if (round_num >= 3) {
+            address old_relay_round = getRelayRoundAddress(round_num - 3);
+            IRelayRound(old_relay_round).destroy{value: Gas.DESTROY_MSG_VALUE}();
+        }
         emit RelayRoundInitialized(round_num, round_start_time, round_end_time, msg.sender, relays_count, duplicate);
     }
 
