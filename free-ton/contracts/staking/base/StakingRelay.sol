@@ -167,7 +167,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         tvm.accept();
 
         lastExtCall = now;
-        deployElection(round_details.currentRelayRound + 1, address(this));
+        deployElection(round_details.currentRelayRound + 1);
     }
 
     function endElection() external onlyActive {
@@ -189,12 +189,9 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         IElection(election_addr).finish{value: required_gas}(election_version);
     }
 
-    function onElectionStarted(uint32 round_num, address send_gas_to) external override onlyElection(round_num) {
-        tvm.rawReserve(_reserve(), 2);
-
+    function onElectionStarted(uint32 round_num) external override onlyElection(round_num) {
         round_details.currentElectionStartTime = now;
         emit ElectionStarted(round_num, now, now + relay_config.electionTime, msg.sender);
-        send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 
     function onElectionEnded(
@@ -322,7 +319,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         emit RelayRoundInitialized(round_num, round_start_time, round_end_time, msg.sender, relays_count, duplicate);
     }
 
-    function deployElection(uint32 round_num, address send_gas_to) private returns (address) {
+    function fdeployElection(uint32 round_num) private returns (address) {
         require(round_num > round_details.currentRelayRound, ErrorCodes.INVALID_ELECTION_ROUND);
 
         TvmBuilder constructor_params;
@@ -332,7 +329,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         return new Platform{
             stateInit: _buildInitData(PlatformTypes.Election, _buildElectionParams(round_num)),
             value: Gas.DEPLOY_ELECTION_MIN_VALUE
-        }(election_code, constructor_params.toCell(), send_gas_to);
+        }(election_code, constructor_params.toCell(), address(this));
     }
 
     function deployRelayRound(

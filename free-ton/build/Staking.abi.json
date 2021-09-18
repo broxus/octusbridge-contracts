@@ -103,8 +103,7 @@
 		{
 			"name": "onElectionStarted",
 			"inputs": [
-				{"name":"round_num","type":"uint32"},
-				{"name":"send_gas_to","type":"address"}
+				{"name":"round_num","type":"uint32"}
 			],
 			"outputs": [
 			]

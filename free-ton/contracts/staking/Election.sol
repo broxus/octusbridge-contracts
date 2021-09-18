@@ -347,7 +347,7 @@ contract Election is IElection {
         staker_addrs.push(address.makeAddrNone());
         staked_tokens.push(0);
 
-        IStakingPool(root).onElectionStarted{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num, send_gas_to);
+        IStakingPool(root).onElectionStarted{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num);
     }
 
     function _buildUserDataParams(address user) private view returns (TvmCell) {
