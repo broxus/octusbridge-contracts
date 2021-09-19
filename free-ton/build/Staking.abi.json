@@ -18,6 +18,15 @@
 			]
 		},
 		{
+			"name": "upgrade",
+			"inputs": [
+				{"name":"code","type":"cell"},
+				{"name":"send_gas_to","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "linkRelayAccounts",
 			"inputs": [
 				{"name":"ton_pubkey","type":"uint256"},
@@ -240,15 +249,6 @@
 			"outputs": [
 				{"name":"value0","type":"address"},
 				{"name":"value1","type":"uint32"}
-			]
-		},
-		{
-			"name": "upgrade",
-			"inputs": [
-				{"name":"code","type":"cell"},
-				{"name":"send_gas_to","type":"address"}
-			],
-			"outputs": [
 			]
 		},
 		{

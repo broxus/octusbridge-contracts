@@ -78,6 +78,7 @@ contract RelayRound is IRelayRound {
         require (now >= end_time, ErrorCodes.RELAY_ROUND_NOT_ENDED);
         require (reward_claimed[staker_addr] == false, ErrorCodes.RELAY_REWARD_CLAIMED);
         require (code_version == current_version, ErrorCodes.LOW_VERSION);
+        require (addr_to_idx.exists(staker_addr), ErrorCodes.RELAY_NOT_EXIST);
 
         tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 2);
 
@@ -117,7 +118,7 @@ contract RelayRound is IRelayRound {
     }
 
     function sendRelaysToRelayRound(address relay_round_addr, uint32 count) external override onlyRoot {
-        tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
+        tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 2);
 
         if (relay_transfer_start_idx >= ton_keys.length) {
             IRelayRound(relay_round_addr).setEmptyRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }();
@@ -143,7 +144,7 @@ contract RelayRound is IRelayRound {
     }
 
     function setEmptyRelays() external override {
-        require (msg.sender == election_addr || msg.sender == prev_round_addr || msg.sender == root, ErrorCodes.BAD_SENDER);
+        require (msg.sender == election_addr || msg.sender == prev_round_addr, ErrorCodes.BAD_SENDER);
         require (!relays_installed, ErrorCodes.RELAY_ROUND_INITIALIZED);
 
         tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 2);

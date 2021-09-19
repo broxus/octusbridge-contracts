@@ -132,7 +132,7 @@ async function main() {
         relaysCount: 100,
         minRelaysCount: 3,
         minRelayDeposit: 5000000000, // min relay bridge deposit
-        relayInitialDeposit: 100000000000, // min relay ton deposit when linking
+        relayInitialDeposit: 300000000000, // min relay ton deposit when linking
       },
       send_gas_to: admin.address
     },

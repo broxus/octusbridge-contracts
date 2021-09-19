@@ -289,6 +289,7 @@ contract Election is IElection {
             tvm.setCurrentCode(code);
             onCodeUpgrade(builder.toCell());
         }
+
     }
 
     /*
