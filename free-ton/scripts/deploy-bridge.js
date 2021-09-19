@@ -27,6 +27,12 @@ const main = async () => {
       validate: value => isValidTonAddress(value) ? true : 'Invalid address'
     },
     {
+      type: 'text',
+      name: 'manager',
+      message: 'Bridge initial manager',
+      validate: value => isValidTonAddress(value) ? true : 'Invalid address'
+    },
+    {
       type: 'number',
       name: 'connectorDeployValue',
       initial: 100,
@@ -46,6 +52,7 @@ const main = async () => {
     contract: Bridge,
     constructorParams: {
       _owner: response.owner,
+      _manager: response.manager,
       _staking: response.staking,
       _connectorCode: Connector.code,
       _connectorDeployValue: locklift.utils.convertCrystal(
