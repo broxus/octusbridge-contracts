@@ -62,6 +62,7 @@ interface IUserData {
         IStakingPool.RewardRound[] reward_rounds,
         uint32 code_version
     ) external;
+    function withdrawTons() external;
     function processWithdraw(
         uint128 _tokens_to_withdraw,
         IStakingPool.RewardRound[] reward_rounds,

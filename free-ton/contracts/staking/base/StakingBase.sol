@@ -594,6 +594,37 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         }(user_data_version, proposal_ids);
     }
 
+    function withdrawTonsUserEmergency() external {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (base_details.emergency, ErrorCodes.EMERGENCY);
+
+        tvm.rawReserve(_reserve(), 2);
+
+        address user_data = getUserDataAddress(msg.sender);
+        IUserData(user_data).withdrawTons{
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }();
+    }
+
+    function withdrawTonsEmergency(uint128 amount, address receiver, bool all, address send_gas_to) external onlyRescuer {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (base_details.emergency, ErrorCodes.EMERGENCY);
+        require (address(this).balance > amount, ErrorCodes.VALUE_TOO_LOW);
+
+        tvm.rawReserve(Gas.ROOT_INITIAL_BALANCE, 2);
+
+        if (all) {
+            // we assume that max ROOT_INITIAL_BALANCE was spent
+            send_gas_to.transfer({ value: Gas.MIN_CALL_MSG_VALUE - Gas.ROOT_INITIAL_BALANCE, bounce: false });
+            receiver.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
+        } else {
+            receiver.transfer({ value: amount, bounce: false });
+            // we assume that max ROOT_INITIAL_BALANCE was spent
+            send_gas_to.transfer({ value: Gas.MIN_CALL_MSG_VALUE - Gas.ROOT_INITIAL_BALANCE, bounce: false });
+        }
+    }
+
     // amount is ignored if all==True
     function withdrawTokensEmergency(uint128 amount, address receiver, bool all, address send_gas_to) external onlyRescuer {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);

@@ -528,6 +528,24 @@
 			]
 		},
 		{
+			"name": "withdrawTonsUserEmergency",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "withdrawTonsEmergency",
+			"inputs": [
+				{"name":"amount","type":"uint128"},
+				{"name":"receiver","type":"address"},
+				{"name":"all","type":"bool"},
+				{"name":"send_gas_to","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "withdrawTokensEmergency",
 			"inputs": [
 				{"name":"amount","type":"uint128"},
