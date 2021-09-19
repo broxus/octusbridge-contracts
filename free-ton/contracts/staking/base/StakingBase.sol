@@ -106,8 +106,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     uint8 constant RELAY_PACK_SIZE = 30;
 
-    // TODO: 60 sec for prod
-    uint32 constant EXTERNAL_CALL_INTERVAL = 2;
+    uint32 constant EXTERNAL_CALL_INTERVAL = 60;
 
     uint256 constant SCALING_FACTOR = 1e18;
 
@@ -609,7 +608,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         uint128 remaining_amount = amount;
         if (remaining_amount >= base_details.tokenBalance) {
             base_details.tokenBalance = 0;
-            remaining_amount = remaining_amount - base_details.tokenBalance;
+            remaining_amount -= base_details.tokenBalance;
         } else {
             base_details.tokenBalance -= remaining_amount;
             remaining_amount = 0;

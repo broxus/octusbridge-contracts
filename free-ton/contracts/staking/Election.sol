@@ -289,6 +289,7 @@ contract Election is IElection {
             tvm.setCurrentCode(code);
             onCodeUpgrade(builder.toCell());
         }
+
     }
 
     /*
@@ -347,7 +348,7 @@ contract Election is IElection {
         staker_addrs.push(address.makeAddrNone());
         staked_tokens.push(0);
 
-        IStakingPool(root).onElectionStarted{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num, send_gas_to);
+        IStakingPool(root).onElectionStarted{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num);
     }
 
     function _buildUserDataParams(address user) private view returns (TvmCell) {
@@ -371,7 +372,7 @@ contract Election is IElection {
     }
 
     function getUserDataAddress(address user) public view responsible returns (address) {
-        return address(tvm.hash(_buildPlatformInitData(
+        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }address(tvm.hash(_buildPlatformInitData(
             root,
             PlatformTypes.UserData,
             _buildUserDataParams(user)
