@@ -319,7 +319,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         emit RelayRoundInitialized(round_num, round_start_time, round_end_time, msg.sender, relays_count, duplicate);
     }
 
-    function fdeployElection(uint32 round_num) private returns (address) {
+    function deployElection(uint32 round_num) private returns (address) {
         require(round_num > round_details.currentRelayRound, ErrorCodes.INVALID_ELECTION_ROUND);
 
         TvmBuilder constructor_params;

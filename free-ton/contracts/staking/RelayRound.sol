@@ -60,7 +60,10 @@ contract RelayRound is IRelayRound {
     }
 
     function hasUnclaimedReward(address _relay_staker_addr) external view responsible returns (bool has_reward) {
-        return reward_claimed[_relay_staker_addr];
+        if (!addr_to_idx.exists(_relay_staker_addr)) {
+            return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} false;
+        }
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} !reward_claimed[_relay_staker_addr];
     }
 
     function getRelayByStakerAddress(
