@@ -358,6 +358,15 @@
 			]
 		},
 		{
+			"name": "DepositProcessed",
+			"inputs": [
+				{"name":"tokens_deposited","type":"uint128"},
+				{"name":"new_balance","type":"uint128"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "VoteCast",
 			"inputs": [
 				{"name":"proposal_id","type":"uint32"},

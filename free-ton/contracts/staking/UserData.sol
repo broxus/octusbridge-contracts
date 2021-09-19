@@ -302,6 +302,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         syncRewards(reward_rounds, token_balance + _tokens_to_deposit);
         token_balance += _tokens_to_deposit;
 
+        emit DepositProcessed(_tokens_to_deposit, token_balance);
         IStakingPool(msg.sender).finishDeposit{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(nonce);
     }
 
