@@ -126,20 +126,23 @@ contract Registry is Ownable, IRegistry {
         );
 
         // Clone wrapper
-        address _wrapper = Clones.clone(wrapper);
+        TransparentUpgradeableProxy _wrapper = new TransparentUpgradeableProxy(
+            wrapper,
+            proxyAdmin,
+            ""
+        );
 
         // Initialize wrapper
-        IVaultWrapper(_wrapper).initialize(address(vaultProxy));
-
-        //// Deploy wrapper
-        // VaultWrapper _wrapper = new VaultWrapper(address(vaultProxy));
+        IVaultWrapper(address(_wrapper)).initialize(
+            address(vaultProxy)
+        );
 
         // Initialize Vault
         IVault(address(vaultProxy)).initialize(
             token,
             governance,
             bridge,
-            _wrapper,
+            address(_wrapper),
             guardian,
             ZERO_ADDRESS
         );
