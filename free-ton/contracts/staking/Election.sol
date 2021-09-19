@@ -244,20 +244,20 @@ contract Election is IElection {
 
             TvmBuilder builder;
             uint8 _tmp;
-            builder.store(root); // 256
+            builder.store(root); // address 267
             builder.store(_tmp); // 8
-            builder.store(send_gas_to); // 256
+            builder.store(send_gas_to); // address 267
 
             builder.store(platform_code); // ref1
 
             TvmBuilder initial;
-            initial.store(round_num);
+            initial.store(round_num); // 32
 
             builder.storeRef(initial); // ref2
 
             TvmBuilder params;
-            params.store(new_version);
-            params.store(current_version);
+            params.store(new_version); // 32
+            params.store(current_version); // 32
 
             builder.storeRef(params); // ref3
 
@@ -265,17 +265,17 @@ contract Election is IElection {
 
             TvmBuilder data_builder_1;
 
-            data_builder_1.store(requests_nodes); // ref1
+            data_builder_1.store(requests_nodes); // 33 + ref1
             data_builder_1.store(list_start_idx); // 256
             data_builder_1.store(election_ended); // 1
             data_builder_1.store(relay_transfer_start_idx); // 256
 
             TvmBuilder data_builder_2;
 
-            data_builder_2.store(ton_keys); // ref1
-            data_builder_2.store(eth_addrs); // ref2
-            data_builder_2.store(staker_addrs); // ref3
-            data_builder_2.store(staked_tokens); // ref4
+            data_builder_2.store(ton_keys); // 33 + ref1
+            data_builder_2.store(eth_addrs); // 33 + ref2
+            data_builder_2.store(staker_addrs); // 33 + ref3
+            data_builder_2.store(staked_tokens); // 33 + ref4
 
             data_builder.store(data_builder_1); // ref1
             data_builder.store(data_builder_2); // ref2

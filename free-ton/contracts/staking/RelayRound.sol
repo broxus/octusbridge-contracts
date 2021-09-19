@@ -243,20 +243,20 @@ contract RelayRound is IRelayRound {
 
             TvmBuilder builder;
             uint8 _tmp;
-            builder.store(root); // 256
+            builder.store(root); // address 267
             builder.store(_tmp); // 8
-            builder.store(send_gas_to); // 256
+            builder.store(send_gas_to); // address 267
 
             builder.store(platform_code); // ref1
 
             TvmBuilder initial;
-            initial.store(round_num);
+            initial.store(round_num); // 32
 
             builder.storeRef(initial); // ref2
 
             TvmBuilder params;
-            params.store(new_version);
-            params.store(current_version);
+            params.store(new_version); // 32
+            params.store(current_version); // 32
 
             builder.storeRef(params); // ref3
 
@@ -272,20 +272,22 @@ contract RelayRound is IRelayRound {
             data_builder_1.store(round_reward); // 128
             data_builder_1.store(duplicate); // 1
             data_builder_1.store(expected_packs_num); // 8
-            data_builder_1.store(eth_addrs); // ref1
-            data_builder_1.store(staker_addrs); // ref2
+            data_builder_1.store(eth_addrs); // 33 + ref1
+            data_builder_1.store(staker_addrs); // 33 + ref2
+            // TOTAL 460
 
             data_builder.storeRef(data_builder_1);
 
             TvmBuilder data_builder_2;
-            data_builder_2.store(election_addr); // 256
-            data_builder_2.store(prev_round_addr); // 256
-            data_builder_2.store(staked_tokens); // ref1
-            data_builder_2.store(ton_keys); // ref2
-            data_builder_2.store(addr_to_idx); // ref3
-            data_builder_2.store(reward_claimed); // ref4
+            data_builder_2.store(election_addr); // address 267
+            data_builder_2.store(prev_round_addr); // address 267
+            data_builder_2.store(staked_tokens); // 33 + ref1
+            data_builder_2.store(ton_keys); // 33 + ref2
+            data_builder_2.store(addr_to_idx); // 33 + ref3
+            data_builder_2.store(reward_claimed); // 33 + ref4
             data_builder_2.store(relay_packs_installed); // 8
             data_builder_2.store(relay_transfer_start_idx); // 256
+            // TOTAL 930
 
             data_builder.storeRef(data_builder_2);
 

@@ -564,21 +564,21 @@ contract UserData is IUserData, IUpgradableByRequest {
 
             uint8 _tmp;
             TvmBuilder builder;
-            builder.store(root); // 256
+            builder.store(root); // address 267
             builder.store(_tmp); // 8
-            builder.store(send_gas_to); // 256
+            builder.store(send_gas_to); // address 267
 
             builder.store(platform_code); // ref1
 
             TvmBuilder initial;
-            initial.store(user);
+            initial.store(user); // address 267
 
             builder.storeRef(initial); // ref2
 
             TvmBuilder params;
-            params.store(new_version);
-            params.store(current_version);
-            params.store(dao_root);
+            params.store(new_version); // 32
+            params.store(current_version); // 32
+            params.store(dao_root); // address 267
 
             builder.storeRef(params); // ref3
 
@@ -587,7 +587,7 @@ contract UserData is IUserData, IUpgradableByRequest {
             TvmBuilder builder_1;
             builder_1.store(token_balance); // 128
             builder_1.store(relay_lock_until); // 32
-            builder_1.store(rewardRounds); // ref1
+            builder_1.store(rewardRounds); // 33 + ref1
             builder_1.store(relay_eth_address); // 160
             builder_1.store(eth_address_confirmed); // 1
             builder_1.store(relay_ton_pubkey); // 256
@@ -596,14 +596,14 @@ contract UserData is IUserData, IUpgradableByRequest {
 
             TvmBuilder dao_data;
             dao_data.store(_proposal_nonce); // 32
-            dao_data.store(created_proposals); // ref1
-            dao_data.store(_tmp_proposals); // ref2
-            dao_data.store(casted_votes); // ref3
+            dao_data.store(created_proposals); // 33 + ref1
+            dao_data.store(_tmp_proposals); // 33 + ref2
+            dao_data.store(casted_votes); // 33 + ref3
 
             data_builder.storeRef(builder_1); // ref1
             data_builder.storeRef(dao_data); // ref2
 
-            builder.storeRef(data_builder);
+            builder.storeRef(data_builder); // ref4
 
             // set code after complete this method
             tvm.setcode(code);
