@@ -9,37 +9,37 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
     function installPlatformOnce(TvmCell code, address send_gas_to) external onlyAdmin {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         // can be installed only once
-        require(!has_platform_code, ErrorCodes.PLATFORM_CODE_NON_EMPTY);
+        require(!code_data.has_platform_code, ErrorCodes.PLATFORM_CODE_NON_EMPTY);
         tvm.rawReserve(_reserve(), 2);
-        platform_code = code;
-        has_platform_code = true;
+        code_data.platform_code = code;
+        code_data.has_platform_code = true;
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
     function installOrUpdateUserDataCode(TvmCell code, address send_gas_to) external onlyAdmin {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
-        user_data_code = code;
-        user_data_version++;
-        emit UserDataCodeUpgraded(user_data_version);
+        code_data.user_data_code = code;
+        code_data.user_data_version++;
+        emit UserDataCodeUpgraded(code_data.user_data_version);
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
     function installOrUpdateElectionCode(TvmCell code, address send_gas_to) external onlyAdmin {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
-        election_code = code;
-        election_version++;
-        emit ElectionCodeUpgraded(election_version);
+        code_data.election_code = code;
+        code_data.election_version++;
+        emit ElectionCodeUpgraded(code_data.election_version);
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
     function installOrUpdateRelayRoundCode(TvmCell code, address send_gas_to) external onlyAdmin {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
-        relay_round_code = code;
-        relay_round_version++;
-        emit RelayRoundCodeUpgraded(relay_round_version);
+        code_data.relay_round_code = code;
+        code_data.relay_round_version++;
+        emit RelayRoundCodeUpgraded(code_data.relay_round_version);
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
@@ -69,8 +69,8 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
             flag = MsgFlag.ALL_NOT_RESERVED;
         }
         IUpgradableByRequest(user_data).upgrade{ value: gas_value, flag: flag }(
-            user_data_code,
-            user_data_version,
+            code_data.user_data_code,
+            code_data.user_data_version,
             send_gas_to
         );
     }
@@ -84,7 +84,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
 
         emit RequestedElectionUpgrade(round_num);
         IUpgradableByRequest(getElectionAddress(round_num)).upgrade{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
-            election_code, election_version, send_gas_to
+            code_data.election_code, code_data.election_version, send_gas_to
         );
     }
 
@@ -97,7 +97,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
 
         emit RequestedRelayRoundUpgrade(round_num);
         IUpgradableByRequest(getRelayRoundAddress(round_num)).upgrade{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
-            relay_round_code, relay_round_version, send_gas_to
+            code_data.relay_round_code, code_data.relay_round_version, send_gas_to
         );
     }
 

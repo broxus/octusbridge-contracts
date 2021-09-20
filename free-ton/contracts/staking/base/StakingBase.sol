@@ -72,21 +72,11 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     uint32 static deploy_nonce;
     address static deployer;
 
-    TvmCell platform_code;
-    bool has_platform_code;
-
-    TvmCell user_data_code;
-    uint32 user_data_version;
-
-    TvmCell election_code;
-    uint32 election_version;
-
-    TvmCell relay_round_code;
-    uint32 relay_round_version;
-
     bool active;
 
     uint32 lastExtCall;
+
+    CodeData code_data;
 
     RelayRoundsDetails round_details;
 
@@ -104,6 +94,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     uint8 constant RELAY_PACK_SIZE = 30;
 
+    // should be at least 60 in prod
     uint32 constant EXTERNAL_CALL_INTERVAL = 60;
 
     uint256 constant SCALING_FACTOR = 1e18;
@@ -123,12 +114,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     function getCodeData() external view responsible returns (CodeData) {
-        return{ value: 0, flag: MsgFlag.REMAINING_GAS }CodeData(
-            platform_code, has_platform_code,
-            user_data_code, user_data_version,
-            election_code, election_version,
-            relay_round_code, relay_round_version
-        );
+        return{ value: 0, flag: MsgFlag.REMAINING_GAS }code_data;
     }
 
     function getRelayRoundsDetails() external override view responsible returns (RelayRoundsDetails) {
@@ -220,10 +206,10 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
             && base_details.dao_root.value != 0
             && base_details.bridge_event_config_eth_ton.value != 0
             && base_details.bridge_event_config_ton_eth.value != 0
-            && has_platform_code
-            && user_data_version > 0
-            && election_version > 0
-            && relay_round_version > 0
+            && code_data.has_platform_code
+            && code_data.user_data_version > 0
+            && code_data.election_version > 0
+            && code_data.relay_round_version > 0
         ) {
             active = true;
         } else {
@@ -337,7 +323,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
                 deposits[deposit_nonce] = PendingDeposit(sender_address, amount, original_gas_to);
 
                 address userDataAddr = getUserDataAddress(sender_address);
-                UserData(userDataAddr).processDeposit{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(deposit_nonce, amount, base_details.rewardRounds, user_data_version);
+                UserData(userDataAddr).processDeposit{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(deposit_nonce, amount, base_details.rewardRounds, code_data.user_data_version);
             } else if (deposit_type == REWARD_UP) {
                 base_details.rewardTokenBalance += amount;
                 base_details.rewardRounds[base_details.rewardRounds.length - 1].rewardTokens += amount;
@@ -399,7 +385,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         address userDataAddr = getUserDataAddress(msg.sender);
         // we cant check if user has any balance here, delegate it to UserData
         UserData(userDataAddr).processWithdraw{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-            amount, base_details.rewardRounds, base_details.emergency, send_gas_to, user_data_version
+            amount, base_details.rewardRounds, base_details.emergency, send_gas_to, code_data.user_data_version
         );
     }
 
@@ -429,7 +415,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         address userDataAddr = getUserDataAddress(msg.sender);
         // we cant check if user has any balance here, delegate it to UserData
         UserData(userDataAddr).processClaimReward{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-            base_details.rewardRounds, send_gas_to, user_data_version
+            base_details.rewardRounds, send_gas_to, code_data.user_data_version
         );
     }
 
@@ -522,23 +508,23 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
                 root: address(this),
                 platformType: type_id,
                 initialData: _initialData,
-                platformCode: platform_code
+                platformCode: code_data.platform_code
             },
             pubkey: 0,
-            code: platform_code
+            code: code_data.platform_code
         });
     }
 
     function deployUserData(address user_data_owner) internal returns (address) {
         TvmBuilder constructor_params;
-        constructor_params.store(user_data_version);
-        constructor_params.store(user_data_version);
+        constructor_params.store(code_data.user_data_version);
+        constructor_params.store(code_data.user_data_version);
         constructor_params.store(base_details.dao_root);
 
         return new Platform{
             stateInit: _buildInitData(PlatformTypes.UserData, _buildUserDataParams(user_data_owner)),
             value: Gas.DEPLOY_USER_DATA_MIN_VALUE
-        }(user_data_code, constructor_params.toCell(), user_data_owner);
+        }(code_data.user_data_code, constructor_params.toCell(), user_data_owner);
     }
 
     function getUserDataAddress(address user) public view responsible returns (address) {
@@ -569,7 +555,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         IUserData(getUserDataAddress(msg.sender)).castVote{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
-        }(user_data_version, proposal_id, support, reason);
+        }(code_data.user_data_version, proposal_id, support, reason);
     }
 
     function tryUnlockVoteTokens(uint32 proposal_id) public view override {
@@ -580,7 +566,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         IUserData(getUserDataAddress(msg.sender)).tryUnlockVoteTokens{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
-        }(user_data_version, proposal_id);
+        }(code_data.user_data_version, proposal_id);
 
     }
 
@@ -592,7 +578,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         IUserData(getUserDataAddress(msg.sender)).tryUnlockCastedVotes{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
-        }(user_data_version, proposal_ids);
+        }(code_data.user_data_version, proposal_ids);
     }
 
     function withdrawTonsUserEmergency() external {
@@ -680,7 +666,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
             address user_data_addr = deployUserData(deposit.user);
             // try again
             UserData(user_data_addr).processDeposit{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-                _deposit_nonce, deposit.amount, base_details.rewardRounds, user_data_version
+                _deposit_nonce, deposit.amount, base_details.rewardRounds, code_data.user_data_version
             );
         }
     }

@@ -265,7 +265,7 @@ describe('Test Staking Rewards', async function () {
         return await stakingRoot.run({
             method: 'endElection',
             params: {},
-            // keyPair: _user.keyPair
+            keyPair: _user.keyPair
         })
     }
 
@@ -1342,13 +1342,16 @@ describe('Test Staking Rewards', async function () {
                 const staking_details = await stakingRoot.call({method: 'getDetails'});
 
                 let rounds_rewards_data = staking_details.rewardRounds;
+                // console.log(rounds_rewards_data);
                 const round1_rewards_data = rounds_rewards_data[0];
 
                 const user1_reward_before = await userRewardRounds(user1Data);
                 const user1_reward = user1_reward_before[0].reward_balance;
+                // console.log(user1_reward);
 
                 const user1_token_reward = Math.floor(Math.floor(user1_reward * 1e10 / round1_rewards_data.totalReward) * round1_rewards_data.rewardTokens / 1e10);
                 const user1_token_balance0 = await userTokenBalance(user1Data);
+                // console.log(user1_token_balance0.toFixed(0));
 
                 const staking_details_before = await stakingRoot.call({method: 'getDetails'});
 
