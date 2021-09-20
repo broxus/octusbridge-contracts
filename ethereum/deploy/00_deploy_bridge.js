@@ -9,6 +9,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
   await deployments.deploy('Bridge', {
     from: deployer,
     log: true,
+    // deterministicDeployment: '0xff33',
     proxy: {
       proxyContract: 'OpenZeppelinTransparentProxy',
       execute: {
@@ -19,7 +20,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
           3, // Minimum required signatures
           604800, // Relay TTL after round in seconds, 1 week
           0, // Initial round number
-          Math.floor(Date.now() / 1000) + 604800, // Initial round end, after 1 week
+          1632650158, // Initial round end, after 1 week
           initialRelays.map(a => a.address), // Initial relays
         ],
       }

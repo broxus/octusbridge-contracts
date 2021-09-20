@@ -3,8 +3,8 @@ pragma solidity ^0.8.2;
 
 import "./../interfaces/IBridge.sol";
 import "./../interfaces/IVault.sol";
-import "../interfaces/IVaultWrapper.sol";
-import "../utils/ChainId.sol";
+import "./../interfaces/IVaultWrapper.sol";
+import "./../utils/ChainId.sol";
 
 
 import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
@@ -12,7 +12,7 @@ import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 
 contract VaultWrapper is ChainId, Initializable, IVaultWrapper {
     address constant ZERO_ADDRESS = 0x0000000000000000000000000000000000000000;
-    string constant API_VERSION = "1.0.0";
+    string constant API_VERSION = "0.1.0";
 
     address public vault;
 
@@ -25,7 +25,7 @@ contract VaultWrapper is ChainId, Initializable, IVaultWrapper {
     function apiVersion()
         external
         override
-        view
+        pure
     returns (
         string memory api_version
     ) {
@@ -43,11 +43,14 @@ contract VaultWrapper is ChainId, Initializable, IVaultWrapper {
         IVault.TONAddress memory recipient,
         uint256 amount
     ) external {
+        IVault.PendingWithdrawalId memory pendingWithdrawalId = IVault.PendingWithdrawalId(ZERO_ADDRESS, 0);
+
         IVault(vault).deposit(
             msg.sender,
             recipient,
             amount,
-            ZERO_ADDRESS
+            pendingWithdrawalId,
+            true
         );
     }
 
@@ -58,24 +61,25 @@ contract VaultWrapper is ChainId, Initializable, IVaultWrapper {
             Usually allows depositor to receive additional reward (bounty) on the FreeTON side.
         @param recipient Recipient TON address
         @param amount Amount of tokens to be deposited, should be gte than sum(fillings)
-        @param pendingWithdrawalsToFill List of addresses, whose pending withdrawals will be filled with deposit
+        @param pendingWithdrawalsIdsToFill List of pending withdrawals ids
     */
     function depositWithFillings(
         IVault.TONAddress calldata recipient,
         uint256 amount,
-        address[] calldata pendingWithdrawalsToFill
+        IVault.PendingWithdrawalId[] calldata pendingWithdrawalsIdsToFill
     ) external {
         require(
-            pendingWithdrawalsToFill.length > 0,
+            pendingWithdrawalsIdsToFill.length > 0,
             'Wrapper: no pending withdrawals specified'
         );
 
-        for (uint i = 0; i < pendingWithdrawalsToFill.length; i++) {
+        for (uint i = 0; i < pendingWithdrawalsIdsToFill.length; i++) {
             IVault(vault).deposit(
                 msg.sender,
                 recipient,
                 amount,
-                pendingWithdrawalsToFill[i]
+                pendingWithdrawalsIdsToFill[i],
+                true
             );
         }
     }

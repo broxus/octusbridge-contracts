@@ -6,8 +6,6 @@ import "./../interfaces/IVault.sol";
 import "./../interfaces/IRegistry.sol";
 import "./../interfaces/IVaultWrapper.sol";
 
-import "./VaultWrapper.sol";
-
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 import "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
@@ -17,9 +15,12 @@ import "@openzeppelin/contracts/proxy/Clones.sol";
 contract Registry is Ownable, IRegistry {
     address constant ZERO_ADDRESS = 0x0000000000000000000000000000000000000000;
 
-    // len(releases)
-    uint256 public numReleases;
-    mapping(uint256 => address) public releases;
+    // len(vaultReleases)
+    uint256 public numVaultReleases;
+    mapping(uint256 => address) public vaultReleases;
+    // len(wrapperReleases)
+    uint256 public numWrapperReleases;
+    mapping(uint256 => address) public wrapperReleases;
     // Token => len(vaults)
     mapping(address => uint256) public numVaults;
     mapping(address => mapping(uint256 => address)) vaults;
@@ -33,7 +34,6 @@ contract Registry is Ownable, IRegistry {
 
     address public bridge;
     address public proxyAdmin;
-    address public wrapper;
 
     mapping(address => string) public tags;
     mapping(address => bool) public banksy;
@@ -47,12 +47,10 @@ contract Registry is Ownable, IRegistry {
 
     constructor(
         address _bridge,
-        address _proxyAdmin,
-        address _wrapper
+        address _proxyAdmin
     ) {
         bridge = _bridge;
         proxyAdmin = _proxyAdmin;
-        wrapper = _wrapper;
     }
 
     function setBridge(
@@ -67,13 +65,22 @@ contract Registry is Ownable, IRegistry {
         proxyAdmin = _proxyAdmin;
     }
 
-    function latestRelease()
+    function latestVaultRelease()
         external
         view
     returns(
         string memory api_version
     ) {
-        return IVault(releases[numReleases - 1]).apiVersion();
+        return IVault(vaultReleases[numVaultReleases - 1]).apiVersion();
+    }
+
+    function latestWrapperRelease()
+        external
+        view
+    returns (
+        string memory api_version
+    ) {
+        return IVaultWrapper(vaultReleases[numVaultReleases - 1]).apiVersion();
     }
 
     function latestVault(
@@ -87,67 +94,91 @@ contract Registry is Ownable, IRegistry {
         return vaults[token][numVaults[token] - 1];
     }
 
-    function newRelease(
+    function newVaultRelease(
         address vault
     ) external onlyOwner {
-        uint256 release_id = numReleases;
+        uint256 vault_release_id = numVaultReleases;
 
-        if (release_id > 0) {
+        if (vault_release_id > 0) {
             require(
                 !compareStrings(
-                    IVault(releases[release_id - 1]).apiVersion(),
+                    IVault(vaultReleases[vault_release_id - 1]).apiVersion(),
                     IVault(vault).apiVersion()
                 ),
-                "Registry: new release should have different api version"
+                "Registry: new vault release should have different api version"
             );
         }
 
-        releases[release_id] = vault;
-        numReleases = release_id + 1;
+        vaultReleases[vault_release_id] = vault;
+        numVaultReleases = vault_release_id + 1;
 
-        emit NewRelease(release_id, vault, IVault(vault).apiVersion());
+        emit NewVaultRelease(vault_release_id, vault, IVault(vault).apiVersion());
+    }
+
+    function newWrapperRelease(
+        address wrapper
+    ) external onlyOwner {
+        uint256 wrapper_release_id = numWrapperReleases;
+
+        if (wrapper_release_id > 0) {
+            require(
+                !compareStrings(
+                IVaultWrapper(wrapperReleases[wrapper_release_id - 1]).apiVersion(),
+                IVaultWrapper(wrapper).apiVersion()
+            ),
+                "Registry: new wrapper release should have different api version"
+            );
+        }
+
+        wrapperReleases[wrapper_release_id] = wrapper;
+        numWrapperReleases = wrapper_release_id + 1;
+
+        emit NewWrapperRelease(wrapper_release_id, wrapper, IVaultWrapper(wrapper).apiVersion());
     }
 
     function _newProxyVault(
         address token,
         address governance,
         address guardian,
-        uint256 releaseTarget
+        uint256 vault_release_target,
+        uint256 wrapper_release_target
     ) internal returns(address) {
-        address release = releases[releaseTarget];
+        address vault_release = vaultReleases[vault_release_target];
+        address wrapper_release = wrapperReleases[wrapper_release_target];
 
-        require(release != ZERO_ADDRESS, "Registry: release target is wrong");
+        require(vault_release != ZERO_ADDRESS, "Registry: vault release target is wrong");
+        require(wrapper_release != ZERO_ADDRESS, "Registry: wrapper release target is wrong");
 
         // Deploy Vault release proxy, owned by proxy admin
-        TransparentUpgradeableProxy vaultProxy = new TransparentUpgradeableProxy(
-            release,
+        TransparentUpgradeableProxy vault = new TransparentUpgradeableProxy(
+            vault_release,
             proxyAdmin,
             ""
         );
 
         // Deploy wrapper proxy
-        TransparentUpgradeableProxy _wrapper = new TransparentUpgradeableProxy(
-            wrapper,
+        TransparentUpgradeableProxy wrapper = new TransparentUpgradeableProxy(
+            wrapper_release,
             proxyAdmin,
             ""
         );
 
         // Initialize wrapper
-        IVaultWrapper(address(_wrapper)).initialize(
-            address(vaultProxy)
+        IVaultWrapper(address(wrapper)).initialize(
+            address(vault)
         );
 
         // Initialize Vault
-        IVault(address(vaultProxy)).initialize(
+        IVault(address(vault)).initialize(
             token,
             governance,
             bridge,
-            address(_wrapper),
+            address(wrapper),
             guardian,
             ZERO_ADDRESS
         );
 
-        return address(vaultProxy);
+        return address(vault);
     }
 
     function _registerVault(
@@ -181,15 +212,18 @@ contract Registry is Ownable, IRegistry {
     function newVault(
         address token,
         address guardian,
-        uint256 releaseDelta
+        uint256 vaultReleaseDelta,
+        uint256 wrapperReleaseDelta
     ) external onlyOwner returns (address) {
-        uint256 releaseTarget = numReleases - 1 - releaseDelta;
+        uint256 vault_release_target = numVaultReleases - 1 - vaultReleaseDelta;
+        uint256 wrapper_release_target = numWrapperReleases - 1 - wrapperReleaseDelta;
 
         address vault = _newProxyVault(
             token,
             msg.sender,
             guardian,
-            releaseTarget
+            vault_release_target,
+            wrapper_release_target
         );
 
         _registerVault(token, vault);
@@ -201,15 +235,18 @@ contract Registry is Ownable, IRegistry {
         address token,
         address governance,
         address guardian,
-        uint256 releaseDelta
+        uint256 vaultReleaseDelta,
+        uint256 wrapperReleaseDelta
     ) external returns(address) {
-        uint256 releaseTarget = numReleases - 1 - releaseDelta;
+        uint256 vault_release_target = numVaultReleases - 1 - vaultReleaseDelta;
+        uint256 wrapper_release_target = numWrapperReleases - 1 - wrapperReleaseDelta;
 
         address vault = _newProxyVault(
             token,
             governance,
             guardian,
-            releaseTarget
+            vault_release_target,
+            wrapper_release_target
         );
 
         emit NewExperimentalVault(
@@ -224,19 +261,30 @@ contract Registry is Ownable, IRegistry {
 
     function endorseVault(
         address vault,
-        uint256 releaseDelta
+        uint256 vaultReleaseDelta,
+        uint256 wrapperReleaseDelta
     ) external onlyOwner {
         require(
             IVault(vault).governance() == msg.sender,
             "Registry: wrong vault governance"
         );
 
-        uint256 releaseTarget = numReleases - 1 - releaseDelta;
-        string memory api_version = IVault(releases[releaseTarget]).apiVersion();
+        uint256 vault_release_target = numVaultReleases - 1 - vaultReleaseDelta;
+        string memory vault_api_version = IVault(vaultReleases[vault_release_target]).apiVersion();
 
         require(
-            compareStrings(IVault(vault).apiVersion(), api_version),
-            "Registry: vault should have same api version as release"
+            compareStrings(IVault(vault).apiVersion(), vault_api_version),
+            "Registry: vault should have same api version as specified release"
+        );
+
+        uint256 wrapper_release_target = numWrapperReleases - 1 - wrapperReleaseDelta;
+        string memory wrapper_api_version = IVaultWrapper(wrapperReleases[wrapper_release_target]).apiVersion();
+
+        address wrapper = IVault(vault).wrapper();
+
+        require(
+            compareStrings(IVaultWrapper(wrapper).apiVersion(), wrapper_api_version),
+            "Registry: wrapper should have same api version as specified release"
         );
 
         _registerVault(IVault(vault).token(), vault);
@@ -256,7 +304,7 @@ contract Registry is Ownable, IRegistry {
         if (msg.sender != owner()) {
             require(
                 banksy[msg.sender],
-                "Registry: only owner or banksy allowed to tag"
+                "Registry: only owner or banksy are allowed to tag"
             );
         }
 

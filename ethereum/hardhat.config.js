@@ -105,6 +105,7 @@ module.exports = {
     },
     roundSubmitter: {
       default: 8,
+      ropsten: 8,
       goerli: 8,
     },
     dai_owner: {
@@ -112,14 +113,17 @@ module.exports = {
     },
     relay_1: {
       default: 10,
+      ropsten: '0x59861a7db8e01daf3763468325161e41bec59821',
       goerli: '0x59861a7db8e01daf3763468325161e41bec59821',
     },
     relay_2: {
       default: 11,
+      ropsten: '0x440734bbacc1cfae9b5b16f14eb7423a1f069af0',
       goerli: '0x440734bbacc1cfae9b5b16f14eb7423a1f069af0',
     },
     relay_3: {
       default: 12,
+      ropsten: '0x0fa6339155d9dd1fa7e4fd8feba84c675b5874ff',
       goerli: '0x0fa6339155d9dd1fa7e4fd8feba84c675b5874ff',
     },
   },

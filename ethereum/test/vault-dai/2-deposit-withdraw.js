@@ -21,8 +21,21 @@ describe('Test Vault DAI deposit', async () => {
       legos.erc20.abi,
       legos.erc20.dai.address,
     );
+  });
+
+  it('Create vault', async () => {
+    const deployer = await ethers.getNamedSigner('deployer');
+    const { guardian } = await getNamedAccounts();
   
     const registry = await ethers.getContract('Registry');
+  
+    await registry.connect(deployer).newVault(
+      dai.address,
+      guardian,
+      0,
+      0,
+    );
+  
     vault = await getVaultByToken(registry, dai.address);
   
     wrapper = await ethers.getContractAt(
@@ -30,7 +43,7 @@ describe('Test Vault DAI deposit', async () => {
       (await vault.wrapper())
     );
   });
-
+  
   it('Set configuration', async () => {
     const deployer = await ethers.getNamedSigner('deployer');
     
@@ -97,13 +110,20 @@ describe('Test Vault DAI deposit', async () => {
   describe('Instantly withdraw 500 dai to Bob', async () => {
     const amount = ethers.utils.parseUnits('500', 18);
 
-    let payload, signatures, recipient;
+    let payload, signatures;
     
     it('Check Bob balance is 0', async () => {
       const { bob } = await getNamedAccounts();
 
       expect(await dai.balanceOf(bob))
         .to.be.equal(0, 'Bob should not has dai at this moment');
+    });
+    
+    it('Check Bob doesnt have pending withdrawals', async () => {
+      const { bob } = await getNamedAccounts();
+
+      expect(await vault.pendingWithdrawalsPerUser(bob))
+        .to.be.equal(0,' Bob should not has pending withdrawals');
     });
     
     it('Prepare payload & signatures', async () => {
@@ -136,13 +156,16 @@ describe('Test Vault DAI deposit', async () => {
         );
     });
     
-    it('Check recipient pending withdrawal is empty', async () => {
+    it('Check Bob didnt receive pending withdrawal', async () => {
       const { bob } = await getNamedAccounts();
-
-      const pendingWithdrawal = await vault.pendingWithdrawals(bob);
-      
-      expect(pendingWithdrawal.total)
-        .to.be.equal(0, 'Wrong total pending withdrawal');
+  
+      expect(await vault.pendingWithdrawalsPerUser(bob))
+        .to.be.equal(0,' Bob should not has pending withdrawals');
+    });
+    
+    it('Check total pending withdrawals', async () => {
+      expect(await vault.pendingWithdrawalsTotal())
+        .to.be.equal(0, 'Total pending withdrawals should be zero');
     });
     
     it('Try to reuse payload', async () => {
@@ -154,7 +177,14 @@ describe('Test Vault DAI deposit', async () => {
   describe('Create pending withdrawal to Eve', async () => {
     const amount = ethers.utils.parseUnits('600', 18);
     const bounty = ethers.utils.parseUnits('10', 18);
+  
+    it('Check Eve doesnt have pending withdrawals', async () => {
+      const { eve } = await getNamedAccounts();
     
+      expect(await vault.pendingWithdrawalsPerUser(eve))
+        .to.be.equal(0,' Eve should not has pending withdrawals');
+    });
+  
     it('Create withdrawal for 600 dai to Eve', async () => {
       const eve = await ethers.getNamedSigner('eve');
 
@@ -180,31 +210,45 @@ describe('Test Vault DAI deposit', async () => {
           [0, 0]
         );
     });
-
+    
     it('Check Eves pending withdrawal', async () => {
       const { eve } = await getNamedAccounts();
-
-      const pendingWithdrawal = await vault.pendingWithdrawals(eve);
-
-      expect(pendingWithdrawal.total)
-        .to.be.equal(amount, 'Wrong pending withdrawal total');
-      expect(pendingWithdrawal.bounty)
-        .to.be.equal(bounty, 'Wrong pending withdrawal bounty');
+      
+      expect(await vault.pendingWithdrawalsPerUser(eve))
+        .to.be.equal(1,' Eve should has pending withdrawal');
+      
+      const withdrawal = await vault.pendingWithdrawals(eve, 0);
+      
+      expect(withdrawal.open)
+        .to.be.equal(true, 'Eve pending withdrawal should be open');
+      
+      expect(withdrawal.amount)
+        .to.be.equal(amount, 'Eve pending withdrawal amount wrong');
+  
+      expect(withdrawal.bounty)
+        .to.be.equal(bounty, 'Eve pending withdrawal bounty wrong');
     });
-    
+  
+    it('Check total pending withdrawals', async () => {
+      expect(await vault.pendingWithdrawalsTotal())
+        .to.be.equal(amount, 'Total pending withdrawals wrong');
+    });
+  
     describe('Fill pending withdrawal by Alice', async () => {
       it('Try to fill partially', async () => {
         const { eve } = await getNamedAccounts();
         const alice = await ethers.getNamedSigner('alice');
 
-        const pendingWithdrawal = await vault.pendingWithdrawals(eve);
+        const pendingWithdrawal = await vault.pendingWithdrawals(eve, 0);
         
         await expect(wrapper
           .connect(alice)
           .depositWithFillings(
             defaultTonRecipient,
-            pendingWithdrawal.total.sub(1),
-            [eve]
+            pendingWithdrawal.amount.sub(1),
+            [
+              [eve, 0]
+            ]
           )).to.be.revertedWith("Vault: too low deposit for specified fillings");
       });
       
@@ -212,14 +256,20 @@ describe('Test Vault DAI deposit', async () => {
         const alice = await ethers.getNamedSigner('alice');
         const eve = await ethers.getNamedSigner('eve');
   
-        const pendingWithdrawal = await vault.pendingWithdrawals(eve.address);
+        const pendingWithdrawal = await vault.pendingWithdrawals(eve.address, 0);
   
-        const deposit = pendingWithdrawal.total.add(1); // It's possible to add some value over the deposit amount
-        const toBeWithdrawn = pendingWithdrawal.total.sub(pendingWithdrawal.bounty);
+        const deposit = pendingWithdrawal.amount.add(1); // It's possible to add some value over the deposit amount
+        const toBeWithdrawn = pendingWithdrawal.amount.sub(pendingWithdrawal.bounty);
         
         await expect(() => wrapper
           .connect(alice)
-          .depositWithFillings(defaultTonRecipient, deposit, [eve.address]))
+          .depositWithFillings(
+            defaultTonRecipient,
+            deposit,
+            [
+              [eve.address, 0]
+            ]
+          ))
           .to.changeTokenBalances(
             dai,
           [eve, vault, alice],
@@ -236,6 +286,23 @@ describe('Test Vault DAI deposit', async () => {
         
         expect(depositEvent.args.amount)
           .to.be.equal(deposit.add(pendingWithdrawal.bounty), 'Wrong deposit amount emitted after filling pending');
+      });
+  
+      it('Check Eves pending withdrawal closed', async () => {
+        const { eve } = await getNamedAccounts();
+    
+        expect(await vault.pendingWithdrawalsPerUser(eve))
+          .to.be.equal(1,' Eve should has pending withdrawal');
+    
+        const withdrawal = await vault.pendingWithdrawals(eve, 0);
+    
+        expect(withdrawal.open)
+          .to.be.equal(false, 'Eve pending withdrawal should be closed');
+      });
+  
+      it('Check total pending withdrawals', async () => {
+        expect(await vault.pendingWithdrawalsTotal())
+          .to.be.equal(0, 'Total pending withdrawals wrong');
       });
     });
   });

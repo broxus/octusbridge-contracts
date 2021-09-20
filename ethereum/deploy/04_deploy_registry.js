@@ -3,7 +3,6 @@ module.exports = async ({getNamedAccounts, deployments}) => {
   
   const bridge = await deployments.get('Bridge');
   const proxyAdmin = await deployments.get('DefaultProxyAdmin');
-  const vaultWrapper = await deployments.get('VaultWrapper');
   
   await deployments.deploy('Registry', {
     from: deployer,
@@ -11,7 +10,6 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     args: [
       bridge.address,
       proxyAdmin.address,
-      vaultWrapper.address,
     ]
   });
 };

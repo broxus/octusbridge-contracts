@@ -8,8 +8,13 @@ interface IVault {
         uint256 addr;
     }
 
+    struct PendingWithdrawalId {
+        address recipient;
+        uint256 id;
+    }
+
     function saveWithdraw(
-        bytes32 id,
+        bytes32 payloadId,
         address recipient,
         uint256 amount,
         uint256 bounty
@@ -19,7 +24,8 @@ interface IVault {
         address sender,
         TONAddress calldata recipient,
         uint256 _amount,
-        address pendingWithdrawalToFill
+        PendingWithdrawalId calldata pendingWithdrawalId,
+        bool sendTransferToTon
     ) external;
 
     function configuration() external view returns(TONAddress memory _configuration);
@@ -30,11 +36,12 @@ interface IVault {
         address _token,
         address _governance,
         address _bridge,
-        address wrapper,
+        address _wrapper,
         address guardian,
         address management
     ) external;
 
     function governance() external view returns(address);
     function token() external view returns(address);
+    function wrapper() external view returns(address);
 }

@@ -378,6 +378,7 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
         rounds[round] = Round(
             roundEnd,
             roundEnd + roundTTL,
+            uint32(_relays.length),
             requiredSignatures < minimumRequiredSignatures ? minimumRequiredSignatures : requiredSignatures
         );
 

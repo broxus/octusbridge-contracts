@@ -2,8 +2,14 @@
 pragma solidity ^0.8.2;
 
 interface IRegistry {
-    event NewRelease(
-        uint256 indexed release_id,
+    event NewVaultRelease(
+        uint256 indexed vault_release_id,
+        address template,
+        string api_version
+    );
+
+    event NewWrapperRelease(
+        uint256 indexed wrapper_release_id,
         address template,
         string api_version
     );
