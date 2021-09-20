@@ -35,7 +35,9 @@ interface IStakingPool {
         uint16 relaysCount;
         uint16 minRelaysCount;
         uint128 minRelayDeposit;
-        uint128 relayInitialDeposit;
+        uint128 relayInitialTonDeposit;
+        uint128 relayRewardPerSecond;
+        uint128 userRewardPerSecond;
     }
 
     struct CodeData {
@@ -54,7 +56,6 @@ interface IStakingPool {
         uint32 currentRelayRoundStartTime;
         uint32 currentRelayRoundEndTime;
         uint32 currentElectionStartTime;
-        uint32 prevRelayRoundEndTime;
         bool currentElectionEnded;
     }
 
@@ -85,6 +86,7 @@ interface IStakingPool {
         uint32 round_end_time,
         uint32 relays_count,
         uint128 round_reward,
+        uint32 reward_round_num,
         bool duplicate,
         uint160[] eth_keys
     ) external;

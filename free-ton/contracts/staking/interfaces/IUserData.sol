@@ -29,6 +29,7 @@ interface IUserData {
     event UserDataCodeUpgraded(uint32 code_version);
     event RelayMembershipRequested(uint32 round_num, uint128 tokens, uint256 ton_pubkey, uint160 eth_address, uint32 lock_until);
     event RelayRoundRewardClaimed(uint32 relay_round_num, uint32 reward_round_num, uint128 reward);
+    event DepositProcessed(uint128 tokens_deposited, uint128 new_balance);
 
     // dao
     event VoteCast(uint32 proposal_id, bool support, uint128 votes, string reason);
@@ -61,6 +62,7 @@ interface IUserData {
         IStakingPool.RewardRound[] reward_rounds,
         uint32 code_version
     ) external;
+    function withdrawTons() external;
     function processWithdraw(
         uint128 _tokens_to_withdraw,
         IStakingPool.RewardRound[] reward_rounds,

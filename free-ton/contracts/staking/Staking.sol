@@ -51,9 +51,9 @@ contract Staking is StakingPoolRelay {
         TvmBuilder data_builder_1;
         // MAIN DATA 1
         data_builder_1.store(deploy_nonce); // 32
-        data_builder_1.store(deployer); // 256
-        data_builder_1.store(base_details.dao_root); // 256
-        data_builder_1.store(base_details.bridge_event_config_eth_ton); // 256
+        data_builder_1.store(deployer); // address 267
+        data_builder_1.store(base_details.dao_root); // address 267
+        data_builder_1.store(base_details.bridge_event_config_eth_ton); // address 267
         data_builder_1.store(active); // 1
         data_builder_1.store(round_details.currentRelayRound); // 32
         data_builder_1.store(round_details.currentRelayRoundStartTime); // 32
@@ -61,22 +61,28 @@ contract Staking is StakingPoolRelay {
         data_builder_1.store(round_details.currentElectionStartTime); // 32
         data_builder_1.store(lastExtCall); // 32
         data_builder_1.store(round_details.currentElectionEnded); // 1
+        // TOTAL 995
 
         TvmBuilder data_builder_2;
-        data_builder_2.store(base_details.bridge_event_config_ton_eth); // 256
-        data_builder_2.store(round_details.prevRelayRoundEndTime); // 32
+        data_builder_2.store(base_details.bridge_event_config_ton_eth); // address 267
         data_builder_2.store(base_details.lastRewardTime); // 32
-        data_builder_2.store(base_details.tokenRoot); // address
-        data_builder_2.store(base_details.tokenWallet); // address
+        data_builder_2.store(base_details.tokenRoot); // address 267
+        data_builder_2.store(base_details.tokenWallet); // address 267
         data_builder_2.store(base_details.tokenBalance); // 128
         data_builder_2.store(base_details.emergency); // 1
-        data_builder_2.store(base_details.rewardRounds); // ref
+        // TOTAL 994 + ref
+
+        TvmBuilder data_builder_2_1;
+        data_builder_2_1.store(base_details.rewardRounds); // 33 + ref
+
+        data_builder_2.storeRef(data_builder_2_1); // ref
 
         TvmBuilder data_builder_3;
         data_builder_3.store(base_details.rewardTokenBalance); // 128
-        data_builder_3.store(base_details.admin); // address
-        data_builder_3.store(base_details.rewarder); // address
-        data_builder_3.store(base_details.rescuer); // address
+        data_builder_3.store(base_details.admin); // address 267
+        data_builder_3.store(base_details.rewarder); // address 267
+        data_builder_3.store(base_details.rescuer); // address 267
+        // TOTAL 929
 
         TvmBuilder data_builder_4;
         data_builder_4.store(relay_config.relayLockTime); // 32
@@ -87,10 +93,13 @@ contract Staking is StakingPoolRelay {
         data_builder_4.store(relay_config.relaysCount); // 16
         data_builder_4.store(relay_config.minRelaysCount); // 16
         data_builder_4.store(relay_config.minRelayDeposit); // 128
-        data_builder_4.store(relay_config.relayInitialDeposit); // 128
+        data_builder_4.store(relay_config.relayInitialTonDeposit); // 128
+        data_builder_4.store(relay_config.userRewardPerSecond); // 128
+        data_builder_4.store(relay_config.relayRewardPerSecond); // 128
         data_builder_4.store(tonEventDeployValue); // 128
         data_builder_4.store(deposit_nonce); // 64
-        data_builder_4.store(deposits); // mapping
+        data_builder_4.store(deposits); // 33 + ref
+        // TOTAL 929 + ref
 
         TvmBuilder data_builder;
         data_builder.storeRef(data_builder_1);
@@ -142,7 +151,6 @@ contract Staking is StakingPoolRelay {
                     2: data_2
                         bits:
                             address bridge_event_config_ton_eth
-                            uint32 prevRelayRoundEndTime
                             uint32 lastRewardTime
                             address tokenRoot
                             address tokenWallet
@@ -166,7 +174,7 @@ contract Staking is StakingPoolRelay {
                             uint16 relaysCount
                             uint16 minRelaysCount
                             uint128 minRelayDeposit
-                            uint128 relayInitialDeposit
+                            uint128 relayInitialTonDeposit
                             uint128 tonEventDeployValue
                             uint64 deposit_nonce
                         refs:

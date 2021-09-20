@@ -249,6 +249,13 @@
 			]
 		},
 		{
+			"name": "withdrawTons",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "upgrade",
 			"inputs": [
 				{"name":"code","type":"cell"},
@@ -353,6 +360,15 @@
 				{"name":"relay_round_num","type":"uint32"},
 				{"name":"reward_round_num","type":"uint32"},
 				{"name":"reward","type":"uint128"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "DepositProcessed",
+			"inputs": [
+				{"name":"tokens_deposited","type":"uint128"},
+				{"name":"new_balance","type":"uint128"}
 			],
 			"outputs": [
 			]

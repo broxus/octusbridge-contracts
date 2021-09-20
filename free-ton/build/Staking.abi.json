@@ -143,6 +143,7 @@
 				{"name":"round_end_time","type":"uint32"},
 				{"name":"relays_count","type":"uint32"},
 				{"name":"round_reward","type":"uint128"},
+				{"name":"reward_round_num","type":"uint32"},
 				{"name":"duplicate","type":"bool"},
 				{"name":"eth_keys","type":"uint160[]"}
 			],
@@ -275,7 +276,7 @@
 				{"name":"answerId","type":"uint32"}
 			],
 			"outputs": [
-				{"components":[{"name":"currentRelayRound","type":"uint32"},{"name":"currentRelayRoundStartTime","type":"uint32"},{"name":"currentRelayRoundEndTime","type":"uint32"},{"name":"currentElectionStartTime","type":"uint32"},{"name":"prevRelayRoundEndTime","type":"uint32"},{"name":"currentElectionEnded","type":"bool"}],"name":"value0","type":"tuple"}
+				{"components":[{"name":"currentRelayRound","type":"uint32"},{"name":"currentRelayRoundStartTime","type":"uint32"},{"name":"currentRelayRoundEndTime","type":"uint32"},{"name":"currentElectionStartTime","type":"uint32"},{"name":"currentElectionEnded","type":"bool"}],"name":"value0","type":"tuple"}
 			]
 		},
 		{
@@ -284,7 +285,7 @@
 				{"name":"answerId","type":"uint32"}
 			],
 			"outputs": [
-				{"components":[{"name":"relayLockTime","type":"uint32"},{"name":"relayRoundTime","type":"uint32"},{"name":"electionTime","type":"uint32"},{"name":"timeBeforeElection","type":"uint32"},{"name":"minRoundGapTime","type":"uint32"},{"name":"relaysCount","type":"uint16"},{"name":"minRelaysCount","type":"uint16"},{"name":"minRelayDeposit","type":"uint128"},{"name":"relayInitialDeposit","type":"uint128"}],"name":"value0","type":"tuple"}
+				{"components":[{"name":"relayLockTime","type":"uint32"},{"name":"relayRoundTime","type":"uint32"},{"name":"electionTime","type":"uint32"},{"name":"timeBeforeElection","type":"uint32"},{"name":"minRoundGapTime","type":"uint32"},{"name":"relaysCount","type":"uint16"},{"name":"minRelaysCount","type":"uint16"},{"name":"minRelayDeposit","type":"uint128"},{"name":"relayInitialTonDeposit","type":"uint128"},{"name":"relayRewardPerSecond","type":"uint128"},{"name":"userRewardPerSecond","type":"uint128"}],"name":"value0","type":"tuple"}
 			]
 		},
 		{
@@ -380,7 +381,7 @@
 		{
 			"name": "setRelayConfig",
 			"inputs": [
-				{"components":[{"name":"relayLockTime","type":"uint32"},{"name":"relayRoundTime","type":"uint32"},{"name":"electionTime","type":"uint32"},{"name":"timeBeforeElection","type":"uint32"},{"name":"minRoundGapTime","type":"uint32"},{"name":"relaysCount","type":"uint16"},{"name":"minRelaysCount","type":"uint16"},{"name":"minRelayDeposit","type":"uint128"},{"name":"relayInitialDeposit","type":"uint128"}],"name":"new_relay_config","type":"tuple"},
+				{"components":[{"name":"relayLockTime","type":"uint32"},{"name":"relayRoundTime","type":"uint32"},{"name":"electionTime","type":"uint32"},{"name":"timeBeforeElection","type":"uint32"},{"name":"minRoundGapTime","type":"uint32"},{"name":"relaysCount","type":"uint16"},{"name":"minRelaysCount","type":"uint16"},{"name":"minRelayDeposit","type":"uint128"},{"name":"relayInitialTonDeposit","type":"uint128"},{"name":"relayRewardPerSecond","type":"uint128"},{"name":"userRewardPerSecond","type":"uint128"}],"name":"new_relay_config","type":"tuple"},
 				{"name":"send_gas_to","type":"address"}
 			],
 			"outputs": [
@@ -523,6 +524,24 @@
 			"name": "tryUnlockCastedVotes",
 			"inputs": [
 				{"name":"proposal_ids","type":"uint32[]"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "withdrawTonsUserEmergency",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "withdrawTonsEmergency",
+			"inputs": [
+				{"name":"amount","type":"uint128"},
+				{"name":"receiver","type":"address"},
+				{"name":"all","type":"bool"},
+				{"name":"send_gas_to","type":"address"}
 			],
 			"outputs": [
 			]
@@ -790,7 +809,7 @@
 		{
 			"name": "RelayConfigUpdated",
 			"inputs": [
-				{"components":[{"name":"relayLockTime","type":"uint32"},{"name":"relayRoundTime","type":"uint32"},{"name":"electionTime","type":"uint32"},{"name":"timeBeforeElection","type":"uint32"},{"name":"minRoundGapTime","type":"uint32"},{"name":"relaysCount","type":"uint16"},{"name":"minRelaysCount","type":"uint16"},{"name":"minRelayDeposit","type":"uint128"},{"name":"relayInitialDeposit","type":"uint128"}],"name":"value0","type":"tuple"}
+				{"components":[{"name":"relayLockTime","type":"uint32"},{"name":"relayRoundTime","type":"uint32"},{"name":"electionTime","type":"uint32"},{"name":"timeBeforeElection","type":"uint32"},{"name":"minRoundGapTime","type":"uint32"},{"name":"relaysCount","type":"uint16"},{"name":"minRelaysCount","type":"uint16"},{"name":"minRelayDeposit","type":"uint128"},{"name":"relayInitialTonDeposit","type":"uint128"},{"name":"relayRewardPerSecond","type":"uint128"},{"name":"userRewardPerSecond","type":"uint128"}],"name":"value0","type":"tuple"}
 			],
 			"outputs": [
 			]
@@ -813,9 +832,9 @@
 		{"name":"relay_round_version","type":"uint32"},
 		{"name":"active","type":"bool"},
 		{"name":"lastExtCall","type":"uint32"},
-		{"components":[{"name":"currentRelayRound","type":"uint32"},{"name":"currentRelayRoundStartTime","type":"uint32"},{"name":"currentRelayRoundEndTime","type":"uint32"},{"name":"currentElectionStartTime","type":"uint32"},{"name":"prevRelayRoundEndTime","type":"uint32"},{"name":"currentElectionEnded","type":"bool"}],"name":"round_details","type":"tuple"},
+		{"components":[{"name":"currentRelayRound","type":"uint32"},{"name":"currentRelayRoundStartTime","type":"uint32"},{"name":"currentRelayRoundEndTime","type":"uint32"},{"name":"currentElectionStartTime","type":"uint32"},{"name":"currentElectionEnded","type":"bool"}],"name":"round_details","type":"tuple"},
 		{"components":[{"name":"dao_root","type":"address"},{"name":"bridge_event_config_eth_ton","type":"address"},{"name":"bridge_event_config_ton_eth","type":"address"},{"name":"tokenRoot","type":"address"},{"name":"tokenWallet","type":"address"},{"name":"admin","type":"address"},{"name":"rescuer","type":"address"},{"name":"rewarder","type":"address"},{"name":"tokenBalance","type":"uint128"},{"name":"rewardTokenBalance","type":"uint128"},{"name":"lastRewardTime","type":"uint32"},{"components":[{"name":"accRewardPerShare","type":"uint256"},{"name":"rewardTokens","type":"uint128"},{"name":"totalReward","type":"uint128"},{"name":"startTime","type":"uint32"}],"name":"rewardRounds","type":"tuple[]"},{"name":"emergency","type":"bool"}],"name":"base_details","type":"tuple"},
-		{"components":[{"name":"relayLockTime","type":"uint32"},{"name":"relayRoundTime","type":"uint32"},{"name":"electionTime","type":"uint32"},{"name":"timeBeforeElection","type":"uint32"},{"name":"minRoundGapTime","type":"uint32"},{"name":"relaysCount","type":"uint16"},{"name":"minRelaysCount","type":"uint16"},{"name":"minRelayDeposit","type":"uint128"},{"name":"relayInitialDeposit","type":"uint128"}],"name":"relay_config","type":"tuple"},
+		{"components":[{"name":"relayLockTime","type":"uint32"},{"name":"relayRoundTime","type":"uint32"},{"name":"electionTime","type":"uint32"},{"name":"timeBeforeElection","type":"uint32"},{"name":"minRoundGapTime","type":"uint32"},{"name":"relaysCount","type":"uint16"},{"name":"minRelaysCount","type":"uint16"},{"name":"minRelayDeposit","type":"uint128"},{"name":"relayInitialTonDeposit","type":"uint128"},{"name":"relayRewardPerSecond","type":"uint128"},{"name":"userRewardPerSecond","type":"uint128"}],"name":"relay_config","type":"tuple"},
 		{"name":"tonEventDeployValue","type":"uint128"},
 		{"name":"deposit_nonce","type":"uint64"},
 		{"components":[{"name":"user","type":"address"},{"name":"amount","type":"uint128"},{"name":"send_gas_to","type":"address"}],"name":"deposits","type":"map(uint64,tuple)"}
