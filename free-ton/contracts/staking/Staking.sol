@@ -65,7 +65,6 @@ contract Staking is StakingPoolRelay {
 
         TvmBuilder data_builder_2;
         data_builder_2.store(base_details.bridge_event_config_ton_eth); // address 267
-        data_builder_2.store(round_details.prevRelayRoundEndTime); // 32
         data_builder_2.store(base_details.lastRewardTime); // 32
         data_builder_2.store(base_details.tokenRoot); // address 267
         data_builder_2.store(base_details.tokenWallet); // address 267
@@ -152,7 +151,6 @@ contract Staking is StakingPoolRelay {
                     2: data_2
                         bits:
                             address bridge_event_config_ton_eth
-                            uint32 prevRelayRoundEndTime
                             uint32 lastRewardTime
                             address tokenRoot
                             address tokenWallet

@@ -42,13 +42,17 @@ contract StakingV2 is StakingPoolRelay {
 
         TvmBuilder data_builder_2;
         data_builder_2.store(base_details.bridge_event_config_ton_eth); // 256
-        data_builder_2.store(round_details.prevRelayRoundEndTime); // 32
         data_builder_2.store(base_details.lastRewardTime); // 32
         data_builder_2.store(base_details.tokenRoot); // address
         data_builder_2.store(base_details.tokenWallet); // address
         data_builder_2.store(base_details.tokenBalance); // 128
         data_builder_2.store(base_details.emergency); // 1
-        data_builder_2.store(base_details.rewardRounds); // ref
+        // TOTAL 994 + ref
+
+        TvmBuilder data_builder_2_1;
+        data_builder_2_1.store(base_details.rewardRounds); // 33 + ref
+
+        data_builder_2.storeRef(data_builder_2_1); // ref
 
         TvmBuilder data_builder_3;
         data_builder_3.store(base_details.rewardTokenBalance); // 128
@@ -65,7 +69,9 @@ contract StakingV2 is StakingPoolRelay {
         data_builder_4.store(relay_config.relaysCount); // 16
         data_builder_4.store(relay_config.minRelaysCount); // 16
         data_builder_4.store(relay_config.minRelayDeposit); // 128
-        data_builder_4.store(relay_config.relayInitialDeposit); // 128
+        data_builder_4.store(relay_config.relayInitialTonDeposit); // 128
+        data_builder_4.store(relay_config.userRewardPerSecond); // 128
+        data_builder_4.store(relay_config.relayRewardPerSecond); // 128
         data_builder_4.store(tonEventDeployValue); // 128
         data_builder_4.store(deposit_nonce); // 64
         data_builder_4.store(deposits); // mapping
@@ -84,45 +90,6 @@ contract StakingV2 is StakingPoolRelay {
         // run onCodeUpgrade from new code
         tvm.setCurrentCode(code);
         onCodeUpgrade(main_builder.toCell());
-    }
-
-    function fixBug() internal {
-        uint32 round_num = 3;
-        uint32 start_time = now;
-        uint32 end_time = now + relay_config.relayRoundTime;
-        uint32 relays_count = 3;
-        bool duplicate = false;
-        address round_addr = address.makeAddrStd(0, 0x4360eae61ced320262cbee9a3a1f0ffa3fd77e3588dad2636fa36f32537e18dd);
-
-        round_details.currentElectionEnded = false;
-        round_details.currentRelayRound = round_num;
-        base_details.rewardRounds[base_details.rewardRounds.length - 1].totalReward += 1800000000;
-
-        round_details.prevRelayRoundEndTime = start_time + relay_config.minRoundGapTime;
-
-        uint160[] _eth_keys = [
-            388372071333715408619434108176824072459686157040,
-            511090786160396539834121296594726305719996749857,
-            89341277446954992594224448302617155426158408959
-        ];
-
-        TvmBuilder event_builder;
-        event_builder.store(round_num); // 32
-        event_builder.store(_eth_keys); // ref
-        event_builder.store(end_time);
-        ITonEvent.TonEventVoteData event_data = ITonEvent.TonEventVoteData(tx.timestamp, now, event_builder.toCell());
-        ITonEventConfiguration(base_details.bridge_event_config_ton_eth).deployEvent{value: tonEventDeployValue}(event_data);
-
-        round_details.currentRelayRoundStartTime = start_time;
-        round_details.currentRelayRoundEndTime = end_time;
-
-        address election_addr = getElectionAddress(round_num);
-        IElection(election_addr).destroy{value: Gas.DESTROY_MSG_VALUE}();
-
-        address old_relay_round = getRelayRoundAddress(round_num - 3);
-        IRelayRound(old_relay_round).destroy{value: Gas.DESTROY_MSG_VALUE}();
-
-        emit RelayRoundInitialized(round_num, start_time, end_time, round_addr, relays_count, duplicate);
     }
 
     function onCodeUpgrade(TvmCell upgrade_data) private {
@@ -166,18 +133,21 @@ contract StakingV2 is StakingPoolRelay {
             uint32, address, address, address, bool, uint32, uint32, uint32, uint32, uint32, bool
         );
 
+        uint32 deprecated_prev_time;
         (
             base_details.bridge_event_config_ton_eth, // address
-            round_details.prevRelayRoundEndTime, // 32
+            deprecated_prev_time, // 32
             base_details.lastRewardTime, // 32
             base_details.tokenRoot, // address
             base_details.tokenWallet, // address
             base_details.tokenBalance, // 128
-            base_details.emergency, // 1
-            base_details.rewardRounds
+            base_details.emergency // 1
         ) = data_2.decode(
-            address, uint32, uint32, address, address, uint128, bool, RewardRound[]
+            address, uint32, uint32, address, address, uint128, bool
         );
+
+        TvmSlice rew_slice = data_2.loadRefAsSlice();
+        base_details.rewardRounds = rew_slice.decode(RewardRound[]);
 
         (
             base_details.rewardTokenBalance, // 128
@@ -197,7 +167,7 @@ contract StakingV2 is StakingPoolRelay {
             relay_config.relaysCount, // 16
             relay_config.minRelaysCount, // 16
             relay_config.minRelayDeposit, // 128
-            relay_config.relayInitialDeposit, // 128
+            relay_config.relayInitialTonDeposit, // 128
             tonEventDeployValue, // 128
             deposit_nonce, // 64
             deposits
@@ -205,6 +175,8 @@ contract StakingV2 is StakingPoolRelay {
             uint32, uint32, uint32, uint32, uint32, uint16, uint16, uint128, uint128, uint128, uint64, mapping (uint64 => PendingDeposit)
         );
 
-        fixBug();
+        relay_config.userRewardPerSecond = 1000000;
+        relay_config.relayRewardPerSecond = 1000000;
+
     }
 }
