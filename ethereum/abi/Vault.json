@@ -30,13 +30,18 @@
         "indexed": true
       },
       {
-        "name": "total",
+        "name": "amount",
         "type": "uint256",
         "indexed": false
       },
       {
         "name": "bounty",
         "type": "uint256",
+        "indexed": false
+      },
+      {
+        "name": "open",
+        "type": "bool",
         "indexed": false
       }
     ],
@@ -759,12 +764,16 @@
     "name": "setPendingWithdrawalBounty",
     "inputs": [
       {
+        "name": "id",
+        "type": "uint256"
+      },
+      {
         "name": "bounty",
         "type": "uint256"
       }
     ],
     "outputs": [],
-    "gas": 43842
+    "gas": 49722
   },
   {
     "stateMutability": "view",
@@ -807,12 +816,26 @@
         "type": "uint256"
       },
       {
-        "name": "pendingWithdrawalToFill",
-        "type": "address"
+        "name": "pendingWithdrawalId",
+        "type": "tuple",
+        "components": [
+          {
+            "name": "recipient",
+            "type": "address"
+          },
+          {
+            "name": "id",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "name": "sendTransferToTon",
+        "type": "bool"
       }
     ],
     "outputs": [],
-    "gas": 153664
+    "gas": 196701
   },
   {
     "stateMutability": "nonpayable",
@@ -820,7 +843,7 @@
     "name": "saveWithdraw",
     "inputs": [
       {
-        "name": "id",
+        "name": "payloadId",
         "type": "bytes32"
       },
       {
@@ -837,7 +860,7 @@
       }
     ],
     "outputs": [],
-    "gas": 174024
+    "gas": 246913
   },
   {
     "stateMutability": "nonpayable",
@@ -845,11 +868,7 @@
     "name": "cancelPendingWithdrawal",
     "inputs": [
       {
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "name": "bounty",
+        "name": "id",
         "type": "uint256"
       },
       {
@@ -868,13 +887,18 @@
       }
     ],
     "outputs": [],
-    "gas": 124915
+    "gas": 80444
   },
   {
     "stateMutability": "nonpayable",
     "type": "function",
     "name": "withdraw",
-    "inputs": [],
+    "inputs": [
+      {
+        "name": "id",
+        "type": "uint256"
+      }
+    ],
     "outputs": [
       {
         "name": "",
@@ -887,6 +911,10 @@
     "type": "function",
     "name": "withdraw",
     "inputs": [
+      {
+        "name": "id",
+        "type": "uint256"
+      },
       {
         "name": "recipient",
         "type": "address"
@@ -904,6 +932,10 @@
     "type": "function",
     "name": "withdraw",
     "inputs": [
+      {
+        "name": "id",
+        "type": "uint256"
+      },
       {
         "name": "recipient",
         "type": "address"
@@ -1329,7 +1361,7 @@
   {
     "stateMutability": "view",
     "type": "function",
-    "name": "pendingWithdrawals",
+    "name": "pendingWithdrawalsPerUser",
     "inputs": [
       {
         "name": "arg0",
@@ -1338,15 +1370,41 @@
     ],
     "outputs": [
       {
-        "name": "total",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "gas": 3953
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "pendingWithdrawals",
+    "inputs": [
+      {
+        "name": "arg0",
+        "type": "address"
+      },
+      {
+        "name": "arg1",
+        "type": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "amount",
         "type": "uint256"
       },
       {
         "name": "bounty",
         "type": "uint256"
+      },
+      {
+        "name": "open",
+        "type": "bool"
       }
     ],
-    "gas": 6487
+    "gas": 8914
   },
   {
     "stateMutability": "view",
@@ -1359,7 +1417,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 3768
+    "gas": 3798
   },
   {
     "stateMutability": "view",
@@ -1377,7 +1435,7 @@
         "type": "bool"
       }
     ],
-    "gas": 3913
+    "gas": 3943
   },
   {
     "stateMutability": "view",
@@ -1390,7 +1448,7 @@
         "type": "address"
       }
     ],
-    "gas": 3828
+    "gas": 3858
   },
   {
     "stateMutability": "view",
@@ -1403,7 +1461,7 @@
         "type": "address"
       }
     ],
-    "gas": 3858
+    "gas": 3888
   },
   {
     "stateMutability": "view",
@@ -1420,7 +1478,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 6422
+    "gas": 6452
   },
   {
     "stateMutability": "view",
@@ -1437,7 +1495,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 6452
+    "gas": 6482
   },
   {
     "stateMutability": "view",
@@ -1454,7 +1512,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 6482
+    "gas": 6512
   },
   {
     "stateMutability": "view",
@@ -1471,7 +1529,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 6512
+    "gas": 6542
   },
   {
     "stateMutability": "view",
@@ -1543,7 +1601,7 @@
         ]
       }
     ],
-    "gas": 32070
+    "gas": 32100
   },
   {
     "stateMutability": "view",
@@ -1561,7 +1619,7 @@
         "type": "address"
       }
     ],
-    "gas": 4147
+    "gas": 4177
   },
   {
     "stateMutability": "view",
@@ -1574,7 +1632,7 @@
         "type": "bool"
       }
     ],
-    "gas": 4068
+    "gas": 4098
   },
   {
     "stateMutability": "view",
@@ -1587,7 +1645,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 4098
+    "gas": 4128
   },
   {
     "stateMutability": "view",
@@ -1600,7 +1658,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 4128
+    "gas": 4158
   },
   {
     "stateMutability": "view",
@@ -1613,7 +1671,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 4158
+    "gas": 4188
   },
   {
     "stateMutability": "view",
@@ -1626,7 +1684,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 4188
+    "gas": 4218
   },
   {
     "stateMutability": "view",
@@ -1639,7 +1697,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 4218
+    "gas": 4248
   },
   {
     "stateMutability": "view",
@@ -1652,7 +1710,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 4248
+    "gas": 4278
   },
   {
     "stateMutability": "view",
@@ -1665,7 +1723,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 4278
+    "gas": 4308
   },
   {
     "stateMutability": "view",
@@ -1678,7 +1736,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 4308
+    "gas": 4338
   },
   {
     "stateMutability": "view",
@@ -1691,6 +1749,6 @@
         "type": "uint256"
       }
     ],
-    "gas": 4338
+    "gas": 4368
   }
 ]

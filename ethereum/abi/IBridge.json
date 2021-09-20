@@ -54,6 +54,11 @@
           },
           {
             "internalType": "uint32",
+            "name": "relays",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
             "name": "requiredSignatures",
             "type": "uint32"
           }

@@ -332,6 +332,12 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
         );
     }
 
+    function decodeTonEvent(
+        bytes memory payload
+    ) external pure returns (TONEvent memory tonEvent) {
+        (tonEvent) = abi.decode(payload, (TONEvent));
+    }
+
     /**
         @notice
             Ban relays
@@ -372,6 +378,7 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
         rounds[round] = Round(
             roundEnd,
             roundEnd + roundTTL,
+            uint32(_relays.length),
             requiredSignatures < minimumRequiredSignatures ? minimumRequiredSignatures : requiredSignatures
         );
 

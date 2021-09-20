@@ -1,7 +1,7 @@
 module.exports = async ({getNamedAccounts, deployments}) => {
   const { deployer } = await getNamedAccounts();
   
-  const vault = await deployments.get('Vault');
+  const wrapper = await deployments.get('VaultWrapper');
   
   await deployments.execute(
     'Registry',
@@ -9,9 +9,9 @@ module.exports = async ({getNamedAccounts, deployments}) => {
       from: deployer,
       log: true,
     },
-    'newRelease',
-    vault.address
+    'newWrapperRelease',
+    wrapper.address
   );
 };
 
-module.exports.tags = ['Execute_Registry_newRelease'];
+module.exports.tags = ['Execute_Registry_newWrapperRelease'];

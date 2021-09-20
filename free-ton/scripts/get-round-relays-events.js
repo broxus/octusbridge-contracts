@@ -34,6 +34,11 @@ const main = async () => {
     },
     {
       type: 'text',
+      name: 'round_submitter_seed',
+      message: 'Round Submitter Seed Phrase',
+    },
+    {
+      type: 'text',
       name: 'cell_encoder',
       message: 'TON CellEncoderStandalone',
       validate: value => isValidTonAddress(value) ? true : 'Invalid TON address',
@@ -48,7 +53,8 @@ const main = async () => {
     JSON.parse(fs.readFileSync('./../ethereum/abi/Bridge.json')),
     provider
   );
-  
+  const submitter = ethers.Wallet.fromMnemonic(responses.round_submitter_seed).connect(provider);
+
   const lastRound = await bridge.lastRound();
   
   console.log(`Last round in Ethereum bridge: ${lastRound}`);
@@ -132,10 +138,24 @@ const main = async () => {
     };
 
   }));
+  let gas_limit;
   for (let event of eventDetails) {
     console.log(`Round Number: ${event.roundNumber}`);
-    console.log(`Payload: ${event.encodedEvent}\n`);
-    console.log(`Signatures: \n[${event.signatures.map((b) => '0x'+b.toString('hex')).join(',')}]`);
+    console.log(`Payload: ${event.encodedEvent}`);
+    console.log(`Signatures: \n[${event.signatures.map((b) => '0x' + b.toString('hex')).join(',')}]`);
+    if (event.roundNumber >= lastRound) {
+      console.log(`Submitting next round: ${event.roundNumber}`)
+
+      const tx = await bridge.connect(submitter).setRoundRelays(
+        event.encodedEvent, event.signatures, {gasLimit: gas_limit}
+      );
+      if (!gas_limit) {
+        gas_limit = tx.gasLimit;
+      }
+      console.log(`Transaction: ${tx.hash}`);
+
+    }
+    console.log('');
   }
   // Filter out rounds less than Ethereum's last round
   // Prepare Ethereum's (payload, signatures) for each round

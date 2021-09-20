@@ -1,0 +1,83 @@
+{
+  "address": "0xDc38a4720e40d27564E5B7AB920246A64219A124",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint160",
+          "name": "eth_addr",
+          "type": "uint160"
+        },
+        {
+          "indexed": false,
+          "internalType": "int8",
+          "name": "workchain_id",
+          "type": "int8"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "addr_body",
+          "type": "uint256"
+        }
+      ],
+      "name": "RelayAddressVerified",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "int8",
+          "name": "workchain_id",
+          "type": "int8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "address_body",
+          "type": "uint256"
+        }
+      ],
+      "name": "verify_relay_staker_address",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0xc6bb8cf47820406f3661f412aeefff928a0e963a6288c654147fb463bb3381fc",
+  "receipt": {
+    "to": null,
+    "from": "0xD843CC69C8fe379809fB757C934c310Ec89bC63F",
+    "contractAddress": "0xDc38a4720e40d27564E5B7AB920246A64219A124",
+    "transactionIndex": 0,
+    "gasUsed": "103767",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x9a9d5be58f6db1b30ad09e226b555e7b73ae273308f3709b2a445b63573db944",
+    "transactionHash": "0xc6bb8cf47820406f3661f412aeefff928a0e963a6288c654147fb463bb3381fc",
+    "logs": [],
+    "blockNumber": 5527407,
+    "cumulativeGasUsed": "103767",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "solcInputHash": "a64a1e9e58c1a5856d1a01e92c6db6f3",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.2+commit.661d1103\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint160\",\"name\":\"eth_addr\",\"type\":\"uint160\"},{\"indexed\":false,\"internalType\":\"int8\",\"name\":\"workchain_id\",\"type\":\"int8\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"addr_body\",\"type\":\"uint256\"}],\"name\":\"RelayAddressVerified\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"int8\",\"name\":\"workchain_id\",\"type\":\"int8\"},{\"internalType\":\"uint256\",\"name\":\"address_body\",\"type\":\"uint256\"}],\"name\":\"verify_relay_staker_address\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/bridge/StakingRelayVerifier.sol\":\"StakingRelayVerifier\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"contracts/bridge/StakingRelayVerifier.sol\":{\"content\":\"// SPDX-License-Identifier: Apache-2.0\\npragma solidity ^0.8.2;\\n\\n\\ncontract StakingRelayVerifier {\\n    event RelayAddressVerified(uint160 eth_addr, int8 workchain_id, uint256 addr_body);\\n\\n    function verify_relay_staker_address(int8 workchain_id, uint256 address_body) external {\\n        emit RelayAddressVerified(uint160(msg.sender), workchain_id, address_body);\\n    }\\n}\\n\",\"keccak256\":\"0xced296151306f9284e9f84bcd45a8f94589cb438c0802deabeceba23ee8566cf\",\"license\":\"Apache-2.0\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5060e98061001f6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c80631f4b19a214602d575b600080fd5b603c60383660046086565b603e565b005b60408051338152600084900b60208201529081018290527fe2abe69c5ea3e0944ca0b28566207b4a17d3a01d5efed3ffb378a36e34c322a99060600160405180910390a15050565b600080604083850312156097578182fd5b823580830b811460a5578283fd5b94602093909301359350505056fea264697066735822122083900b4f871bcecd30e07d1cd2a6d2a1f3e3ece717e29a037d681849bd2a40fc64736f6c63430008020033",
+  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060285760003560e01c80631f4b19a214602d575b600080fd5b603c60383660046086565b603e565b005b60408051338152600084900b60208201529081018290527fe2abe69c5ea3e0944ca0b28566207b4a17d3a01d5efed3ffb378a36e34c322a99060600160405180910390a15050565b600080604083850312156097578182fd5b823580830b811460a5578283fd5b94602093909301359350505056fea264697066735822122083900b4f871bcecd30e07d1cd2a6d2a1f3e3ece717e29a037d681849bd2a40fc64736f6c63430008020033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [],
+    "types": null
+  }
+}
