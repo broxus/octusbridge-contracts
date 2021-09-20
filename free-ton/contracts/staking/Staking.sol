@@ -94,11 +94,13 @@ contract Staking is StakingPoolRelay {
         data_builder_4.store(relay_config.relaysCount); // 16
         data_builder_4.store(relay_config.minRelaysCount); // 16
         data_builder_4.store(relay_config.minRelayDeposit); // 128
-        data_builder_4.store(relay_config.relayInitialDeposit); // 128
+        data_builder_4.store(relay_config.relayInitialTonDeposit); // 128
+        data_builder_4.store(relay_config.userRewardPerSecond); // 128
+        data_builder_4.store(relay_config.relayRewardPerSecond); // 128
         data_builder_4.store(tonEventDeployValue); // 128
         data_builder_4.store(deposit_nonce); // 64
         data_builder_4.store(deposits); // 33 + ref
-        // TOTAL 673 + REF
+        // TOTAL 929 + ref
 
         TvmBuilder data_builder;
         data_builder.storeRef(data_builder_1);
@@ -174,7 +176,7 @@ contract Staking is StakingPoolRelay {
                             uint16 relaysCount
                             uint16 minRelaysCount
                             uint128 minRelayDeposit
-                            uint128 relayInitialDeposit
+                            uint128 relayInitialTonDeposit
                             uint128 tonEventDeployValue
                             uint64 deposit_nonce
                         refs:

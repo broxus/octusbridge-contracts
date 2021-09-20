@@ -35,7 +35,9 @@ interface IStakingPool {
         uint16 relaysCount;
         uint16 minRelaysCount;
         uint128 minRelayDeposit;
-        uint128 relayInitialDeposit;
+        uint128 relayInitialTonDeposit;
+        uint128 relayRewardPerSecond;
+        uint128 userRewardPerSecond;
     }
 
     struct CodeData {

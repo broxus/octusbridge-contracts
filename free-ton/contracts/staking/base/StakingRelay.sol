@@ -9,7 +9,7 @@ import "../../bridge/interfaces/IProxy.sol";
 
 abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
     function linkRelayAccounts(uint256 ton_pubkey, uint160 eth_address) external view onlyActive {
-        require (msg.value >= relay_config.relayInitialDeposit, ErrorCodes.VALUE_TOO_LOW);
+        require (msg.value >= relay_config.relayInitialTonDeposit, ErrorCodes.VALUE_TOO_LOW);
         require (!base_details.emergency, ErrorCodes.EMERGENCY);
 
         tvm.rawReserve(_reserve(), 2);
@@ -105,6 +105,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         address send_gas_to
     ) external onlyAdmin {
         require (staker_addrs.length <= RELAY_PACK_SIZE, ErrorCodes.BAD_INPUT_ARRAYS);
+        // MIN_CALL_MSG_VALUE cover deployment of relay round and setting relays
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE + ton_deposit * staker_addrs.length, ErrorCodes.VALUE_TOO_LOW);
         require (round_details.currentRelayRound == 0 && round_details.currentRelayRoundStartTime == 0, ErrorCodes.ORIGIN_ROUND_ALREADY_INITIALIZED);
         require (ton_deposit > Gas.DEPLOY_USER_DATA_MIN_VALUE + 0.2 ton, ErrorCodes.VALUE_TOO_LOW);
@@ -347,7 +348,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         constructor_params.store(relay_round_version);
         constructor_params.store(relay_config.relayRoundTime);
         constructor_params.store(uint32(base_details.rewardRounds.length - 1));
-        constructor_params.store(rewardPerSecond);
+        constructor_params.store(relay_config.relayRewardPerSecond);
         constructor_params.store(duplicate);
         constructor_params.store(packs_num);
         constructor_params.store(election_addr);
