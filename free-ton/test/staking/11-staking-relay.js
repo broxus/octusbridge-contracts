@@ -618,7 +618,9 @@ describe('Test Staking Rewards', async function () {
                             minRelaysCount: MIN_RELAYS,
                             minRoundGapTime: MIN_GAP_TIME,
                             minRelayDeposit: MIN_RELAY_DEPOSIT,
-                            relayInitialDeposit: init_deposit.toString(),
+                            relayRewardPerSecond: 1000000,
+                            userRewardPerSecond: 1000000,
+                            relayInitialTonDeposit: init_deposit.toString(),
                         },
                         send_gas_to: stakingOwner.address
                     },
@@ -1519,6 +1521,8 @@ describe('Test Staking Rewards', async function () {
                 // const round_details2 = await round2.call({method: 'getDetails'});
                 // console.log(round_details2);
 
+                const root_round_details = await stakingRoot.call({method: 'getRelayRoundsDetails'});
+
                 const tx = await endElection(user1);
 
                 const round = await getRelayRound(4);
@@ -1592,9 +1596,10 @@ describe('Test Staking Rewards', async function () {
                 expect(relays.includes(user3.address)).to.be.true;
 
                 const relay_config = await stakingRoot.call({method: "getRelayConfig"});
-                const root_round_details = await stakingRoot.call({method: 'getRelayRoundsDetails'});
-                const expected_end = root_round_details.currentRelayRoundStartTime.plus(relay_config.minRoundGapTime);
-                expect(root_round_details.prevRelayRoundEndTime.toFixed(0)).to.be.eq(expected_end.toFixed(0), "Bad prev round end time");
+                const root_round_details_1 = await stakingRoot.call({method: 'getRelayRoundsDetails'});
+                expect(
+                    root_round_details_1.currentRelayRoundStartTime.toNumber()
+                ).to.be.gt(root_round_details.currentRelayRoundEndTime.toNumber(), "Bad new round start time");
             });
         });
 

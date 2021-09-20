@@ -80,9 +80,26 @@
         "type": "uint256"
       },
       {
-        "internalType": "address",
-        "name": "pendingWithdrawalToFill",
-        "type": "address"
+        "components": [
+          {
+            "internalType": "address",
+            "name": "recipient",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IVault.PendingWithdrawalId",
+        "name": "pendingWithdrawalId",
+        "type": "tuple"
+      },
+      {
+        "internalType": "bool",
+        "name": "sendTransferToTon",
+        "type": "bool"
       }
     ],
     "name": "deposit",
@@ -122,7 +139,7 @@
       },
       {
         "internalType": "address",
-        "name": "wrapper",
+        "name": "_wrapper",
         "type": "address"
       },
       {
@@ -145,7 +162,7 @@
     "inputs": [
       {
         "internalType": "bytes32",
-        "name": "id",
+        "name": "payloadId",
         "type": "bytes32"
       },
       {
@@ -172,6 +189,19 @@
   {
     "inputs": [],
     "name": "token",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "wrapper",
     "outputs": [
       {
         "internalType": "address",

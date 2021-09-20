@@ -6,20 +6,40 @@ const {
 
 
 describe('Test Vault DAI initial setup', async () => {
-  let bridge, vault, wrapper;
+  let bridge, registry, vault, wrapper;
   
   it('Setup contracts', async () => {
     await deployments.fixture();
   
     bridge = await ethers.getContract('Bridge');
+    registry = await ethers.getContract('Registry');
+  });
+  
+  it('Create vault', async () => {
+    const deployer = await ethers.getNamedSigner('deployer');
+    const { guardian } = await getNamedAccounts();
     
-    const registry = await ethers.getContract('Registry');
+    await registry.connect(deployer).newVault(
+      legos.erc20.dai.address,
+      guardian,
+      0,
+      0,
+    );
+    
     vault = await getVaultByToken(registry, legos.erc20.dai.address);
   
     wrapper = await ethers.getContractAt(
       'VaultWrapper',
       (await vault.wrapper())
     );
+  });
+  
+  it('Check registry latest vault release', async () => {
+  
+  });
+  
+  it('Check registry latest wrapper release', async () => {
+  
   });
   
   it('Check vault bridge', async () => {

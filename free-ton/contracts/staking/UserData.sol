@@ -471,6 +471,12 @@ contract UserData is IUserData, IUpgradableByRequest {
         IStakingPool(msg.sender).finishWithdraw{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(user, _tokens_to_withdraw, send_gas_to);
     }
 
+    function withdrawTons() external override onlyRoot {
+        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+
+        user.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false});
+    }
+
     function _buildPlatformInitData(address platform_root, uint8 platform_type, TvmCell initial_data) private view returns (TvmCell) {
         return tvm.buildStateInit({
             contr: Platform,

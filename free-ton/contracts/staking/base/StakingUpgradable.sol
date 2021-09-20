@@ -127,13 +127,9 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         )));
     }
 
+    // will fall if called with on origin round with time < origin round start time (which is impossible anyway)
     function getRelayRoundAddressFromTimestamp(uint32 time) public view responsible returns (address, uint32) {
-        uint32 round_num;
-        if (round_details.currentRelayRound == 0) {
-            round_num = 0;
-        } else {
-            round_num = time < round_details.prevRelayRoundEndTime ? round_details.currentRelayRound - 1 : round_details.currentRelayRound;
-        }
+        uint32 round_num = time < round_details.currentRelayRoundStartTime ? round_details.currentRelayRound - 1 : round_details.currentRelayRound;
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } (getRelayRoundAddress(round_num), round_num);
     }
 }

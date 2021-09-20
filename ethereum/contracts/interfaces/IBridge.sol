@@ -19,6 +19,7 @@ interface IBridge {
     struct Round {
         uint32 end;
         uint32 ttl;
+        uint32 relays;
         uint32 requiredSignatures;
     }
 

@@ -9,7 +9,7 @@
         "type": "string"
       }
     ],
-    "stateMutability": "view",
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -106,9 +106,21 @@
         "type": "uint256"
       },
       {
-        "internalType": "address[]",
-        "name": "pendingWithdrawalsToFill",
-        "type": "address[]"
+        "components": [
+          {
+            "internalType": "address",
+            "name": "recipient",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IVault.PendingWithdrawalId[]",
+        "name": "pendingWithdrawalsIdsToFill",
+        "type": "tuple[]"
       }
     ],
     "name": "depositWithFillings",

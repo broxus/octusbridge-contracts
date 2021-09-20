@@ -93,12 +93,10 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     BaseDetails base_details;
 
     RelayConfigDetails relay_config = RelayConfigDetails(
-        30 days, 7 days, 2 days, 4 days, 1 hours, 30, 13, 100000 * 10**9, 500 ton
+        30 days, 7 days, 2 days, 4 days, 1 hours, 30, 13, 100000 * 10**9, 500 ton, 1000000, 1000000
     );
 
     uint128 tonEventDeployValue = 2.5 ton;
-
-    uint128 constant rewardPerSecond = 1000000;
 
     // payloads for token receive callback
     uint8 constant STAKE_DEPOSIT = 0;
@@ -242,6 +240,9 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     function setRelayConfig(RelayConfigDetails new_relay_config, address send_gas_to) external onlyDaoRoot {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 2);
+
+        // we update pool info, because reward per sec params could be updated
+        updatePoolInfo();
 
         relay_config = new_relay_config;
 
@@ -461,7 +462,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         // sync rewards up to this moment
         if (now > base_details.lastRewardTime && base_details.tokenBalance > 0) {
             // if token balance if empty, no need to update pool info
-            uint128 new_reward = (now - base_details.lastRewardTime) * rewardPerSecond;
+            uint128 new_reward = (now - base_details.lastRewardTime) * relay_config.userRewardPerSecond;
             _reward_rounds[_reward_rounds.length - 1].totalReward += new_reward;
             _reward_rounds[_reward_rounds.length - 1].accRewardPerShare += (new_reward * SCALING_FACTOR) / base_details.tokenBalance;
         }
@@ -501,7 +502,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         }
 
         uint128 multiplier = now - base_details.lastRewardTime;
-        uint128 new_reward = rewardPerSecond * multiplier;
+        uint128 new_reward = relay_config.userRewardPerSecond * multiplier;
         base_details.rewardRounds[base_details.rewardRounds.length - 1].totalReward += new_reward;
         base_details.lastRewardTime = now;
 
@@ -592,6 +593,37 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(user_data_version, proposal_ids);
+    }
+
+    function withdrawTonsUserEmergency() external {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (base_details.emergency, ErrorCodes.EMERGENCY);
+
+        tvm.rawReserve(_reserve(), 2);
+
+        address user_data = getUserDataAddress(msg.sender);
+        IUserData(user_data).withdrawTons{
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }();
+    }
+
+    function withdrawTonsEmergency(uint128 amount, address receiver, bool all, address send_gas_to) external onlyRescuer {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (base_details.emergency, ErrorCodes.EMERGENCY);
+        require (address(this).balance > amount, ErrorCodes.VALUE_TOO_LOW);
+
+        tvm.rawReserve(Gas.ROOT_INITIAL_BALANCE, 2);
+
+        if (all) {
+            // we assume that max ROOT_INITIAL_BALANCE was spent
+            send_gas_to.transfer({ value: Gas.MIN_CALL_MSG_VALUE - Gas.ROOT_INITIAL_BALANCE, bounce: false });
+            receiver.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
+        } else {
+            receiver.transfer({ value: amount, bounce: false });
+            // we assume that max ROOT_INITIAL_BALANCE was spent
+            send_gas_to.transfer({ value: Gas.MIN_CALL_MSG_VALUE - Gas.ROOT_INITIAL_BALANCE, bounce: false });
+        }
     }
 
     // amount is ignored if all==True

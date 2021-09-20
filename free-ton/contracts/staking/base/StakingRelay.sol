@@ -9,7 +9,7 @@ import "../../bridge/interfaces/IProxy.sol";
 
 abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
     function linkRelayAccounts(uint256 ton_pubkey, uint160 eth_address) external view onlyActive {
-        require (msg.value >= relay_config.relayInitialDeposit, ErrorCodes.VALUE_TOO_LOW);
+        require (msg.value >= relay_config.relayInitialTonDeposit, ErrorCodes.VALUE_TOO_LOW);
         require (!base_details.emergency, ErrorCodes.EMERGENCY);
 
         tvm.rawReserve(_reserve(), 2);
@@ -105,6 +105,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         address send_gas_to
     ) external onlyAdmin {
         require (staker_addrs.length <= RELAY_PACK_SIZE, ErrorCodes.BAD_INPUT_ARRAYS);
+        // MIN_CALL_MSG_VALUE cover deployment of relay round and setting relays
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE + ton_deposit * staker_addrs.length, ErrorCodes.VALUE_TOO_LOW);
         require (round_details.currentRelayRound == 0 && round_details.currentRelayRoundStartTime == 0, ErrorCodes.ORIGIN_ROUND_ALREADY_INITIALIZED);
         require (ton_deposit > Gas.DEPLOY_USER_DATA_MIN_VALUE + 0.2 ton, ErrorCodes.VALUE_TOO_LOW);
@@ -124,7 +125,9 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
 
         // we have 0 relay rounds at the moment
         address empty = address.makeAddrNone();
-        address relay_round = deployRelayRound(0, false, 1, empty, empty, MsgFlag.SENDER_PAYS_FEES);
+        address relay_round = deployRelayRound(
+            0, now, now + relay_config.relayRoundTime, false, 1, empty, empty, MsgFlag.SENDER_PAYS_FEES
+        );
         IRelayRound(relay_round).setRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
             ton_pubkeys, eth_addrs, staker_addrs, staked_tokens
         );
@@ -212,7 +215,22 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         uint8 packs_num = _relaysPacksCount();
         address election = msg.sender;
         address prev_relay_round = getRelayRoundAddress(round_num - 1);
-        deployRelayRound(round_num, !min_relays_ok, packs_num, election, prev_relay_round, MsgFlag.ALL_NOT_RESERVED);
+
+        uint32 start_time;
+        uint32 end_time;
+        // election ended too late, start new round later
+        if (now > round_details.currentRelayRoundEndTime - relay_config.minRoundGapTime) {
+            start_time = now + relay_config.minRoundGapTime;
+            end_time = start_time + relay_config.relayRoundTime;
+        // election ended in time, start new round right after cur round
+        } else {
+            start_time = round_details.currentRelayRoundEndTime;
+            end_time = start_time + relay_config.relayRoundTime;
+        }
+        deployRelayRound(
+            round_num, start_time, end_time, !min_relays_ok, packs_num,
+            election, prev_relay_round, MsgFlag.ALL_NOT_RESERVED
+        );
     }
 
     function _relaysPacksCount() private view returns (uint8) {
@@ -275,6 +293,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         uint32 round_end_time,
         uint32 relays_count,
         uint128 round_reward,
+        uint32 reward_round_num,
         bool duplicate,
         uint160[] eth_keys
     ) external override onlyRelayRound(round_num) {
@@ -285,21 +304,11 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
 
         round_details.currentElectionEnded = false;
         round_details.currentRelayRound = round_num;
-        base_details.rewardRounds[base_details.rewardRounds.length - 1].totalReward += round_reward;
+        round_details.currentRelayRoundEndTime = round_end_time;
+        round_details.currentRelayRoundStartTime = round_start_time;
+        base_details.rewardRounds[reward_round_num].totalReward += round_reward;
 
         if (round_num > 0) {
-            // regular case
-            round_details.prevRelayRoundEndTime = round_details.currentRelayRoundEndTime;
-            // we started new round too late!
-            if (round_details.prevRelayRoundEndTime <= round_start_time) {
-                // extend prev round as if current round was deployed in time with minimum gap
-                round_details.prevRelayRoundEndTime = round_start_time + relay_config.minRoundGapTime;
-            }
-            // gap before new round cant be too low (for case when round was deployed late, but before prev round end)
-            if (round_details.prevRelayRoundEndTime - round_start_time < relay_config.minRoundGapTime) {
-                round_details.prevRelayRoundEndTime = round_start_time + relay_config.minRoundGapTime;
-            }
-
             TvmBuilder event_builder;
             event_builder.store(round_num); // 32
             event_builder.store(eth_keys); // ref
@@ -307,8 +316,6 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
             ITonEvent.TonEventVoteData event_data = ITonEvent.TonEventVoteData(tx.timestamp, now, event_builder.toCell());
             ITonEventConfiguration(base_details.bridge_event_config_ton_eth).deployEvent{value: tonEventDeployValue}(event_data);
         }
-        round_details.currentRelayRoundEndTime = round_end_time;
-        round_details.currentRelayRoundStartTime = round_start_time;
 
         if (round_num > 0) {
             address election_addr = getElectionAddress(round_num);
@@ -336,6 +343,8 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
 
     function deployRelayRound(
         uint32 round_num,
+        uint32 start_time,
+        uint32 end_time,
         bool duplicate,
         uint8 packs_num,
         address election_addr,
@@ -345,9 +354,11 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         TvmBuilder constructor_params;
         constructor_params.store(relay_round_version);
         constructor_params.store(relay_round_version);
-        constructor_params.store(relay_config.relayRoundTime);
+        constructor_params.store(start_time);
+        constructor_params.store(end_time);
         constructor_params.store(uint32(base_details.rewardRounds.length - 1));
-        constructor_params.store(rewardPerSecond);
+        uint128 round_reward = relay_config.relayRewardPerSecond * (end_time - start_time);
+        constructor_params.store(round_reward);
         constructor_params.store(duplicate);
         constructor_params.store(packs_num);
         constructor_params.store(election_addr);

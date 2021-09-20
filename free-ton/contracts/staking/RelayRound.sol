@@ -188,7 +188,7 @@ contract RelayRound is IRelayRound {
             relays_installed = true;
 
             IStakingPool(root).onRelayRoundInitialized{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
-                round_num, start_time, end_time, relays_count, round_reward, duplicate, eth_addrs
+                round_num, start_time, end_time, relays_count, round_reward, reward_round_num, duplicate, eth_addrs
             );
             return;
         }
@@ -219,17 +219,16 @@ contract RelayRound is IRelayRound {
         TvmSlice params = s.loadRefAsSlice();
         (current_version, ) = params.decode(uint32, uint32);
 
-        uint32 round_len = params.decode(uint32);
+        start_time = params.decode(uint32);
+        end_time = params.decode(uint32);
+
         reward_round_num = params.decode(uint32);
-        uint128 reward_per_second = params.decode(uint128);
+        round_reward = params.decode(uint128);
         duplicate = params.decode(bool);
         expected_packs_num = params.decode(uint8);
         election_addr = params.decode(address);
         prev_round_addr = params.decode(address);
 
-        round_reward = reward_per_second * round_len;
-        start_time = now;
-        end_time = start_time + round_len;
 
         IStakingPool(root).onRelayRoundDeployed{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num, duplicate);
     }

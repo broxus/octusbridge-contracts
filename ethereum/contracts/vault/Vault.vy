@@ -67,7 +67,7 @@
     https://github.com/iearn-finance/yearn-vaults/blob/main/SPECIFICATION.md
 """
 
-API_VERSION: constant(String[28]) = "0.4.3"
+API_VERSION: constant(String[28]) = "0.1.0"
 
 from vyper.interfaces import ERC20
 
@@ -106,8 +106,13 @@ struct TONAddress:
     addr: uint256
 
 struct PendingWithdrawal:
-    total: uint256 # Total amount of user's tokens in withdrawal status
-    bounty: uint256 # How much tokens user wills to pay as bounty for
+    amount: uint256 # Amount of user's tokens in withdrawal status
+    bounty: uint256 # How much tokens user wills to pay as bounty
+    open: bool
+
+struct PendingWithdrawalId:
+    recipient: address
+    id: uint256
 
 # NOTE: Vault may have non-zero deposit / withdraw fee.
 struct Fee:
@@ -128,8 +133,9 @@ event Deposit:
 
 event PendingWithdrawalUpdate:
     recipient: indexed(address)
-    total: uint256
+    amount: uint256
     bounty: uint256
+    open: bool
 
 event UpdateBridge:
     bridge: indexed(address)
@@ -266,7 +272,8 @@ event StrategyAddedToQueue:
 # ================= Broxus bridge variables =================
 
 # NOTE: Track pending withdrawals
-pendingWithdrawals: public(HashMap[address, PendingWithdrawal])
+pendingWithdrawalsPerUser: public(HashMap[address, uint256])
+pendingWithdrawals: public(HashMap[address, HashMap[uint256, PendingWithdrawal]])
 
 # NOTE: Track total amount of tokens to be withdrawn
 pendingWithdrawalsTotal: public(uint256)
@@ -274,7 +281,7 @@ pendingWithdrawalsTotal: public(uint256)
 # NOTE: Track already seen withdrawal receipts to prevent double-spending
 withdrawIds: public(HashMap[bytes32, bool])
 
-# NOTE:
+# NOTE: Wrapper contract, see VaultWrapper.sol
 wrapper: public(address)
 
 # NOTE: Broxus bridge contract address. Used for validating withdrawal signatures.
@@ -699,25 +706,31 @@ def setWithdrawalQueue(queue: address[MAXIMUM_STRATEGIES]):
 
 @internal
 def _logPendingWithdrawal(
-    recipient: address
+    recipient: address,
+    id: uint256
 ):
     log PendingWithdrawalUpdate(
         recipient,
-        self.pendingWithdrawals[recipient].total,
-        self.pendingWithdrawals[recipient].bounty
+        self.pendingWithdrawals[recipient][id].amount,
+        self.pendingWithdrawals[recipient][id].bounty,
+        self.pendingWithdrawals[recipient][id].open
     )
 
 @external
 def setPendingWithdrawalBounty(
+    id: uint256,
     bounty: uint256
 ):
     """
         @notice Update pending withdraw bounty.
+        @param id Pending withdrawal id
         @param bounty New bounty value
     """
-    self.pendingWithdrawals[msg.sender].bounty = bounty
+    assert self.pendingWithdrawals[msg.sender][id].open, "Vault: pending withdrawal closed"
 
-    self._logPendingWithdrawal(msg.sender)
+    self.pendingWithdrawals[msg.sender][id].bounty = bounty
+
+    self._logPendingWithdrawal(msg.sender, id)
 
 @internal
 def erc20_safe_transfer(token: address, receiver: address, amount: uint256):
@@ -823,7 +836,8 @@ def deposit(
     sender: address,
     recipient: TONAddress,
     _amount: uint256,
-    pendingWithdrawalToFill: address,
+    pendingWithdrawalId: PendingWithdrawalId,
+    sendTransferToTon: bool
 ):
     """
     @notice
@@ -842,7 +856,8 @@ def deposit(
     @param recipient
         The FreeTON recipient to transfer tokens to.
     @param _amount The quantity of tokens to deposit, defaults to all.
-    @param pendingWithdrawalToFill Address, whose pending withdrawal will be closed by deposit.
+    @param pendingWithdrawalId Pending withdrawal id
+    @param sendTransferToTon Boolean, emit transfer to TON or not
     """
     assert not self.emergencyShutdown  # Deposits are locked out
 
@@ -864,28 +879,29 @@ def deposit(
     fillingAmount: uint256 = 0
     fillingBounty: uint256 = 0
 
-    if pendingWithdrawalToFill != ZERO_ADDRESS:
-        withdrawal: PendingWithdrawal = self.pendingWithdrawals[pendingWithdrawalToFill]
+    if pendingWithdrawalId.recipient != ZERO_ADDRESS:
+        withdrawal: PendingWithdrawal = self.pendingWithdrawals[pendingWithdrawalId.recipient][pendingWithdrawalId.id]
 
-        # Check specified user has non-zero pending withdrawal
-        assert withdrawal.total > 0, "Vault: specified pending withdrawal does not exist"
+        assert withdrawal.open, "Vault: pending withdrawal closed"
 
-        fillingAmount = withdrawal.total
+        fillingAmount = withdrawal.amount
         fillingBounty = withdrawal.bounty
 
         self.erc20_safe_transfer(
             self.token.address,
-            pendingWithdrawalToFill,
-            withdrawal.total - withdrawal.bounty
+            pendingWithdrawalId.recipient,
+            withdrawal.amount - withdrawal.bounty
         )
 
-        self.pendingWithdrawals[pendingWithdrawalToFill].total = 0
+        self.pendingWithdrawals[pendingWithdrawalId.recipient][pendingWithdrawalId.id].open = False
+        self.pendingWithdrawalsTotal -= withdrawal.amount
 
-        self._logPendingWithdrawal(pendingWithdrawalToFill)
+        self._logPendingWithdrawal(pendingWithdrawalId.recipient, pendingWithdrawalId.id)
 
     assert amount >= fillingAmount, "Vault: too low deposit for specified fillings"
 
-    self._transferToTon(amount + fillingBounty, recipient)
+    if sendTransferToTon:
+        self._transferToTon(amount + fillingBounty, recipient)
 
 @internal
 def _reportLoss(strategy: address, loss: uint256):
@@ -922,7 +938,7 @@ def _registerWithdraw(
 
 @external
 def saveWithdraw(
-    id: bytes32,
+    payloadId: bytes32,
     recipient: address,
     _amount: uint256,
     bounty: uint256
@@ -954,7 +970,7 @@ def saveWithdraw(
     """
     assert msg.sender == self.wrapper
 
-    self._registerWithdraw(id)
+    self._registerWithdraw(payloadId)
 
     amount: uint256 = self._considerMovementFee(_amount, self.withdrawFee)
 
@@ -968,44 +984,46 @@ def saveWithdraw(
     else:
         self.pendingWithdrawalsTotal += amount
 
-        self.pendingWithdrawals[recipient].total += amount
-        self.pendingWithdrawals[recipient].bounty = bounty
+        id: uint256 = self.pendingWithdrawalsPerUser[recipient]
+        self.pendingWithdrawalsPerUser[recipient] += 1
+
+        self.pendingWithdrawals[recipient][id].open = True
+        self.pendingWithdrawals[recipient][id].amount = amount
+        self.pendingWithdrawals[recipient][id].bounty = bounty
 
 @external
 def cancelPendingWithdrawal(
-    amount: uint256,
-    bounty: uint256,
+    id: uint256,
     recipient: TONAddress
 ):
     """
     @notice
-        In case user has non-zero pending withdrawal, he can cancel this withdrawal partially or completely,
-        by transferring tokens back to the FreeTON.
-    @param amount
-        How many tokens to transfer back to the FreeTON
-    @param bounty
-        New bounty amount
+        In case user has pending withdrawal, he can cancel it by transferring tokens back to the FreeTON.
+    @param id
+        Pending withdrawal id
     @param recipient
         The FreeTON address to transfer tokens to
     """
-    # Limit to only pending withdrawal sender has
-    assert amount <= self.pendingWithdrawals[msg.sender].total, "Vault: amount is too high"
+
+    withdrawal: PendingWithdrawal = self.pendingWithdrawals[msg.sender][id]
+
+    assert withdrawal.open, "Vault: pending withdrawal closed"
 
     # Ensure we are cancelling something
-    assert amount > 0
+    assert withdrawal.amount > 0
 
-    self._transferToTon(amount, recipient)
+    self._transferToTon(withdrawal.amount, recipient)
 
-    self.pendingWithdrawalsTotal -= amount
+    self.pendingWithdrawalsTotal -= withdrawal.amount
 
-    self.pendingWithdrawals[msg.sender].total -= amount
-    self.pendingWithdrawals[msg.sender].bounty = bounty
+    self.pendingWithdrawals[msg.sender][id].open = False
 
-    self._logPendingWithdrawal(msg.sender)
+    self._logPendingWithdrawal(msg.sender, id)
 
 @external
 @nonreentrant("withdraw")
 def withdraw(
+    id: uint256,
     recipient: address = msg.sender,
     maxLoss: uint256 = 1,  # 0.01% [BPS]
 ) -> uint256:
@@ -1043,6 +1061,8 @@ def withdraw(
         vault balance and the strategies in the withdrawal queue.
         Strategies not in the withdrawal queue will have to be harvested to
         rebalance the funds and make the funds available again to withdraw.
+    @param id
+        Pending withdrawal id
     @param recipient
         The address to send the redeemed tokens. Defaults to the
         caller's address.
@@ -1051,9 +1071,13 @@ def withdraw(
         If a loss is specified, up to that amount of shares may be burnt to cover losses on withdrawal.
     @return The quantity of tokens redeemed for `_shares`.
     """
-    value: uint256 = self.pendingWithdrawals[msg.sender].total
 
-    # Ensure we are withdrawing something
+    withdrawal: PendingWithdrawal = self.pendingWithdrawals[msg.sender][id]
+
+    # Ensure withdraw is open
+    assert withdrawal.open, "Vault: pending withdrawal closed"
+
+    value: uint256 = withdrawal.amount
     assert value > 0
 
     if value > self.token.balanceOf(self):
@@ -1099,7 +1123,7 @@ def withdraw(
             self.strategies[strategy].totalDebt -= withdrawn
             self.totalDebt -= withdrawn
 
-        assert self.token.balanceOf(self) >= value, "Vault: cant close pending withdraw even with strategies liquidation"
+        assert self.token.balanceOf(self) >= value, "Vault: cant close pending withdrawal even with strategies liquidation"
 
         # NOTE: This loss protection is put in place to revert if losses from
         #       withdrawing are more than what is considered acceptable.
@@ -1108,10 +1132,10 @@ def withdraw(
     # Withdraw remaining balance to recipient (may be different to msg.sender) (minus fee)
     self.erc20_safe_transfer(self.token.address, recipient, value)
 
-    self.pendingWithdrawals[msg.sender].total = 0
+    self.pendingWithdrawals[msg.sender][id].open = False
     self.pendingWithdrawalsTotal -= value
 
-    self._logPendingWithdrawal(msg.sender)
+    self._logPendingWithdrawal(msg.sender, id)
 
     return value
 

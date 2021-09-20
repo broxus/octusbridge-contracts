@@ -65,7 +65,6 @@ contract Staking is StakingPoolRelay {
 
         TvmBuilder data_builder_2;
         data_builder_2.store(base_details.bridge_event_config_ton_eth); // address 267
-        data_builder_2.store(round_details.prevRelayRoundEndTime); // 32
         data_builder_2.store(base_details.lastRewardTime); // 32
         data_builder_2.store(base_details.tokenRoot); // address 267
         data_builder_2.store(base_details.tokenWallet); // address 267
@@ -94,11 +93,13 @@ contract Staking is StakingPoolRelay {
         data_builder_4.store(relay_config.relaysCount); // 16
         data_builder_4.store(relay_config.minRelaysCount); // 16
         data_builder_4.store(relay_config.minRelayDeposit); // 128
-        data_builder_4.store(relay_config.relayInitialDeposit); // 128
+        data_builder_4.store(relay_config.relayInitialTonDeposit); // 128
+        data_builder_4.store(relay_config.userRewardPerSecond); // 128
+        data_builder_4.store(relay_config.relayRewardPerSecond); // 128
         data_builder_4.store(tonEventDeployValue); // 128
         data_builder_4.store(deposit_nonce); // 64
         data_builder_4.store(deposits); // 33 + ref
-        // TOTAL 673 + REF
+        // TOTAL 929 + ref
 
         TvmBuilder data_builder;
         data_builder.storeRef(data_builder_1);
@@ -150,7 +151,6 @@ contract Staking is StakingPoolRelay {
                     2: data_2
                         bits:
                             address bridge_event_config_ton_eth
-                            uint32 prevRelayRoundEndTime
                             uint32 lastRewardTime
                             address tokenRoot
                             address tokenWallet
@@ -174,7 +174,7 @@ contract Staking is StakingPoolRelay {
                             uint16 relaysCount
                             uint16 minRelaysCount
                             uint128 minRelayDeposit
-                            uint128 relayInitialDeposit
+                            uint128 relayInitialTonDeposit
                             uint128 tonEventDeployValue
                             uint64 deposit_nonce
                         refs:
