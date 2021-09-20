@@ -125,7 +125,7 @@ contract Registry is Ownable, IRegistry {
             ""
         );
 
-        // Clone wrapper
+        // Deploy wrapper proxy
         TransparentUpgradeableProxy _wrapper = new TransparentUpgradeableProxy(
             wrapper,
             proxyAdmin,
