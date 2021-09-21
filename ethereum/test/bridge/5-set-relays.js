@@ -26,9 +26,9 @@ describe('Set next round relays', async () => {
   let payload, signatures, relays;
   
   it('Send payload & signatures', async () => {
-    const minimumRequiredSignatures = await bridge.minimumRequiredSignatures();
+    const initialRelays = utils.sortAccounts(await utils.getInitialRelays());
     
-    relays = await generateWallets(minimumRequiredSignatures * 2);
+    relays = await generateWallets(initialRelays.length);
     
     // Next round, list of relays, round end timestamp
     const roundRelaysPayload = web3.eth.abi.encodeParameters(
@@ -45,7 +45,6 @@ describe('Set next round relays', async () => {
       proxy: bridge.address,
     });
     
-    const initialRelays = utils.sortAccounts(await utils.getInitialRelays());
     const { requiredSignatures } = await bridge.rounds(0);
   
     signatures = await Promise.all(

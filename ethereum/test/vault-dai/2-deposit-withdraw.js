@@ -24,12 +24,12 @@ describe('Test Vault DAI deposit', async () => {
   });
 
   it('Create vault', async () => {
-    const deployer = await ethers.getNamedSigner('deployer');
+    const owner = await ethers.getNamedSigner('owner');
     const { guardian } = await getNamedAccounts();
   
     const registry = await ethers.getContract('Registry');
   
-    await registry.connect(deployer).newVault(
+    await registry.connect(owner).newVault(
       dai.address,
       guardian,
       0,
@@ -45,20 +45,20 @@ describe('Test Vault DAI deposit', async () => {
   });
   
   it('Set configuration', async () => {
-    const deployer = await ethers.getNamedSigner('deployer');
+    const owner = await ethers.getNamedSigner('owner');
     
     await vault
-      .connect(deployer)
+      .connect(owner)
       .setConfiguration(defaultConfiguration);
   });
   
   it('Set deposit limit', async () => {
     const depositLimit = ethers.utils.parseUnits('10000', 18);
   
-    const deployer = await ethers.getNamedSigner('deployer');
+    const owner = await ethers.getNamedSigner('owner');
     
     await vault
-      .connect(deployer)
+      .connect(owner)
       .setDepositLimit(depositLimit);
   });
 

@@ -154,11 +154,11 @@ const issueTokens = async ({ token, owner, amount, recipient }) => {
 
 
 const getInitialRelays = async () => {
-  return [
-    await ethers.getNamedSigner('relay_1'),
-    await ethers.getNamedSigner('relay_2'),
-    await ethers.getNamedSigner('relay_3'),
-  ];
+  const relay_keys = Object
+    .keys(await getNamedAccounts())
+    .filter(x => x.startsWith('relay_'));
+
+  return Promise.all(relay_keys.map(async (k) => ethers.getNamedSigner(k)));
 };
 
 

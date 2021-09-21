@@ -19,7 +19,6 @@ contract EthereumBaseEvent is BaseEvent, IEthereumEvent {
         address _initializer,
         TvmCell _meta
     ) public {
-        // TODO: add external method for executing confirmed event?
         eventInitData.configuration = msg.sender;
 
         status = Status.Initializing;

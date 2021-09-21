@@ -6,6 +6,7 @@ require('hardhat-deploy-ethers');
 require('hardhat-deploy');
 require("@nomiclabs/hardhat-vyper");
 require('hardhat-abi-exporter');
+require("hardhat-gas-reporter");
 
 
 task("accounts", "Prints the list of accounts", async () => {
@@ -20,7 +21,7 @@ task("accounts", "Prints the list of accounts", async () => {
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
-module.exports = {
+const hardhatConfig = {
   vyper: {
     version: "0.2.12",
   },
@@ -49,9 +50,19 @@ module.exports = {
       timeout: 1000000,
       accounts: {
         mnemonic: process.env.ETH_GOERLI_MNEMONIC,
-        count: 20
+        count: 30
       },
     },
+    // main: {
+    //   url: process.env.ETH_MAIN_HTTP,
+    //   gasPrice: 90000000000,
+    //   gas: 3000000,
+    //   timeout: 1000000,
+    //   accounts: {
+    //     mnemonic: process.env.ETH_GOERLI_MNEMONIC,
+    //     count: 30
+    //   },
+    // },
     ropsten: {
       url: process.env.ETH_ROPSTEN_HTTP,
       gasPrice: 2500000007,
@@ -59,13 +70,15 @@ module.exports = {
       timeout: 1000000,
       accounts: {
         mnemonic: process.env.ETH_GOERLI_MNEMONIC,
-        count: 20
+        count: 30
       },
     }
   },
   gasReporter: {
     currency: 'USD',
-    gasPrice: 21
+    gasPrice: 80,
+    enabled: true,
+    coinmarketcap: process.env.COINMARKETCAP_API_KEY
   },
   etherscan: {
     apiKey: process.env.ETHERSCAN_KEY
@@ -86,6 +99,7 @@ module.exports = {
     owner: {
       default: 3,
       goerli: 3,
+      main: '0xe29B04B9c6712080f79B2dAc5211B18B279D5DE0',
     },
     alice: {
       default: 4,
@@ -126,6 +140,36 @@ module.exports = {
       ropsten: '0x0fa6339155d9dd1fa7e4fd8feba84c675b5874ff',
       goerli: '0x0fa6339155d9dd1fa7e4fd8feba84c675b5874ff',
     },
+    // relay_4: {
+    //   default: 13,
+    // },
+    // relay_5: {
+    //   default: 14,
+    // },
+    // relay_6: {
+    //   default: 15,
+    // },
+    // relay_7: {
+    //   default: 16,
+    // },
+    // relay_8: {
+    //   default: 17,
+    // },
+    // relay_9: {
+    //   default: 18,
+    // },
+    // relay_10: {
+    //   default: 19,
+    // },
+    // relay_11: {
+    //   default: 20,
+    // },
+    // relay_12: {
+    //   default: 21,
+    // },
+    // relay_13: {
+    //   default: 22,
+    // },
   },
   abiExporter: {
     path: 'abi',
@@ -134,3 +178,5 @@ module.exports = {
     spacing: 2
   }
 };
+
+module.exports = hardhatConfig;

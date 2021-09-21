@@ -16,10 +16,10 @@ describe('Test Vault DAI initial setup', async () => {
   });
   
   it('Create vault', async () => {
-    const deployer = await ethers.getNamedSigner('deployer');
+    const owner = await ethers.getNamedSigner('owner');
     const { guardian } = await getNamedAccounts();
     
-    await registry.connect(deployer).newVault(
+    await registry.connect(owner).newVault(
       legos.erc20.dai.address,
       guardian,
       0,
