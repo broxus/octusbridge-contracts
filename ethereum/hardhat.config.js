@@ -43,19 +43,9 @@ const hardhatConfig = {
       },
       chainId: 1111,
     },
-    goerli: {
-      url: process.env.ETH_GOERLI_HTTP,
-      gasPrice: 1500000007,
-      gas: 3000000,
-      timeout: 1000000,
-      accounts: {
-        mnemonic: process.env.ETH_GOERLI_MNEMONIC,
-        count: 30
-      },
-    },
-    // main: {
-    //   url: process.env.ETH_MAIN_HTTP,
-    //   gasPrice: 90000000000,
+    // goerli: {
+    //   url: process.env.ETH_GOERLI_HTTP,
+    //   gasPrice: 1500000007,
     //   gas: 3000000,
     //   timeout: 1000000,
     //   accounts: {
@@ -63,16 +53,26 @@ const hardhatConfig = {
     //     count: 30
     //   },
     // },
-    ropsten: {
-      url: process.env.ETH_ROPSTEN_HTTP,
-      gasPrice: 2500000007,
+    main: {
+      url: process.env.ETH_MAIN_HTTP,
+      gasPrice: 110000000000, // 110 gwei
       gas: 3000000,
       timeout: 1000000,
       accounts: {
-        mnemonic: process.env.ETH_GOERLI_MNEMONIC,
+        mnemonic: process.env.ETH_MNEMONIC,
         count: 30
       },
-    }
+    },
+    // ropsten: {
+    //   url: process.env.ETH_ROPSTEN_HTTP,
+    //   gasPrice: 2500000007,
+    //   gas: 3000000,
+    //   timeout: 1000000,
+    //   accounts: {
+    //     mnemonic: process.env.ETH_GOERLI_MNEMONIC,
+    //     count: 30
+    //   },
+    // }
   },
   gasReporter: {
     currency: 'USD',
@@ -129,47 +129,60 @@ const hardhatConfig = {
       default: 10,
       ropsten: '0x59861a7db8e01daf3763468325161e41bec59821',
       goerli: '0x59861a7db8e01daf3763468325161e41bec59821',
+      main: '0xafa0109c95bffabb215a0ea378edc96562e4b783',
     },
     relay_2: {
       default: 11,
       ropsten: '0x440734bbacc1cfae9b5b16f14eb7423a1f069af0',
       goerli: '0x440734bbacc1cfae9b5b16f14eb7423a1f069af0',
+      main: '0xec1218e93aaa54d649f3a6eb90443b6139bb9fd4',
     },
     relay_3: {
       default: 12,
       ropsten: '0x0fa6339155d9dd1fa7e4fd8feba84c675b5874ff',
       goerli: '0x0fa6339155d9dd1fa7e4fd8feba84c675b5874ff',
+      main: '0xf81ad5df888140915aaa2d636a948f5f32ae7113'
     },
-    // relay_4: {
-    //   default: 13,
-    // },
-    // relay_5: {
-    //   default: 14,
-    // },
-    // relay_6: {
-    //   default: 15,
-    // },
-    // relay_7: {
-    //   default: 16,
-    // },
-    // relay_8: {
-    //   default: 17,
-    // },
-    // relay_9: {
-    //   default: 18,
-    // },
-    // relay_10: {
-    //   default: 19,
-    // },
-    // relay_11: {
-    //   default: 20,
-    // },
-    // relay_12: {
-    //   default: 21,
-    // },
-    // relay_13: {
-    //   default: 22,
-    // },
+    relay_4: {
+      default: 13,
+      main: '0x4cf29ad4faeb5191003bafced4457091423f892b'
+    },
+    relay_5: {
+      default: 14,
+      main: '0xcc9f29245465c7941707cc206568bfd9ce3ecf49'
+    },
+    relay_6: {
+      default: 15,
+      main: '0x1a88767a059946c9ed07d5e3fccca7d46d9f8bf0'
+    },
+    relay_7: {
+      default: 16,
+      main: '0xb978ad11da94ad99d9a17b2c5a2de71aad2c8ac8'
+    },
+    relay_8: {
+      default: 17,
+      main: '0x16532b04d536fdc7e2afe75dd95b65951dee820a'
+    },
+    relay_9: {
+      default: 18,
+      main: '0x3eb41a0198fcb8fc68097ebade34c61847e8c03c'
+    },
+    relay_10: {
+      default: 19,
+      main: '0x59046ddc0cca9cacee1d1ed6362a045faf33806d'
+    },
+    relay_11: {
+      default: 20,
+      main: '0x70a0da19e5ff5feb9e55ac54b9faf433287bcc76'
+    },
+    relay_12: {
+      default: 21,
+      main: '0xc1879b6720beffbe0934a51c3ea77460a368c781',
+    },
+    relay_13: {
+      default: 22,
+      main: '0x4cb2f1140f36850161231dcf5662661c53489550'
+    },
   },
   abiExporter: {
     path: 'abi',

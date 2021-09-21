@@ -11,6 +11,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
   
   console.log(`Bridge owner: ${owner}`);
   console.log(`Round submitter: ${roundSubmitter}`);
+  console.log(`Initial relays amount: ${initialRelays.length}`);
   console.log(`Initial relays: ${initialRelays.map(a => a.address)}`);
   console.log(`Initial round end: ${new Date(initialRoundEnd * 1000)}`);
   
@@ -24,8 +25,8 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         args: [
           owner,
           roundSubmitter,
-          3, // Minimum required signatures
-          week, // Relay TTL after round in seconds, 1 week
+          9, // Minimum required signatures
+          2 * week, // Relay TTL after round in seconds, 1 week
           0, // Initial round number
           initialRoundEnd, // Initial round end, after 1 week
           initialRelays.map(a => a.address), // Initial relays
