@@ -8,6 +8,7 @@ const DEV_WAIT = 30000;
 const getRandomNonce = () => Math.ceil(Math.random() * 64000);
 
 const config = JSON.parse(fs.readFileSync("scripts/staking_deploy_config.json"));
+const relay_config = JSON.parse(fs.readFileSync("scripts/staking_relay_config.json"));
 
 const deployAccount = async function (key) {
   const user_bal = 500;
@@ -123,19 +124,7 @@ async function main() {
     contract: stakingRoot,
     method: 'setRelayConfig',
     params: {
-      new_relay_config: {
-        relayLockTime: 3 * 24 * 60 * 60,
-        relayRoundTime: 24 * 60 * 60,
-        electionTime: 4 * 60 * 60,
-        timeBeforeElection: 12 * 60 * 60,
-        minRoundGapTime: 30 * 60,
-        relaysCount: 100,
-        minRelaysCount: 3,
-        minRelayDeposit: 100000000000, // min relay bridge deposit
-        relayInitialTonDeposit: 300000000000, // min relay ton deposit when linking
-        relayRewardPerSecond: 1000000,
-        userRewardPerSecond: 1000000
-      },
+      new_relay_config: relay_config,
       send_gas_to: admin.address
     },
     value: convertCrystal(15, 'nano')
