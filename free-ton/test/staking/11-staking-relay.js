@@ -181,7 +181,7 @@ describe('Test Staking Rewards', async function () {
             params: {
                 send_gas_to: stakingOwner.address,
             },
-            value: locklift.utils.convertCrystal(55, 'nano')
+            value: locklift.utils.convertCrystal(11, 'nano')
         });
     }
 
@@ -265,7 +265,7 @@ describe('Test Staking Rewards', async function () {
         return await stakingRoot.run({
             method: 'endElection',
             params: {},
-            // keyPair: _user.keyPair
+            keyPair: _user.keyPair
         })
     }
 
@@ -277,7 +277,7 @@ describe('Test Staking Rewards', async function () {
                 relay_staker_addr: _user.address,
                 send_gas_to: stakingOwner.address
             },
-            value: convertCrystal(55, "nano")
+            value: convertCrystal(11, "nano")
         })
     }
 
@@ -286,7 +286,7 @@ describe('Test Staking Rewards', async function () {
             contract: stakingRoot,
             method: 'setEmergency',
             params: {_emergency: true, send_gas_to: stakingOwner.address},
-            value: convertCrystal(55, 'nano')
+            value: convertCrystal(11, 'nano')
         });
     }
 
@@ -298,7 +298,7 @@ describe('Test Staking Rewards', async function () {
                 amount: withdraw_amount,
                 send_gas_to: user.address
             },
-            value: convertCrystal(55, 'nano')
+            value: convertCrystal(11, 'nano')
         });
     };
 
@@ -312,7 +312,7 @@ describe('Test Staking Rewards', async function () {
                 all: all,
                 send_gas_to: stakingOwner.address
             },
-            value: convertCrystal(55, 'nano')
+            value: convertCrystal(11, 'nano')
         });
     }
 
@@ -351,7 +351,7 @@ describe('Test Staking Rewards', async function () {
                 },
                 gasBackAddress: stakingOwner.address
             },
-            value: convertCrystal(55, "nano")
+            value: convertCrystal(11, "nano")
         })
     }
 
@@ -404,7 +404,7 @@ describe('Test Staking Rewards', async function () {
                 notify_receiver: true,
                 payload: payload
             },
-            value: locklift.utils.convertCrystal(55, 'nano')
+            value: locklift.utils.convertCrystal(11, 'nano')
         });
     };
 
@@ -544,7 +544,7 @@ describe('Test Staking Rewards', async function () {
                     contract: stakingRoot,
                     method: 'installPlatformOnce',
                     params: {code: Platform.code, send_gas_to: stakingOwner.address},
-                    value: convertCrystal(55, 'nano')
+                    value: convertCrystal(11, 'nano')
 
                 });
                 logger.log(`Installing UserData code`);
@@ -552,28 +552,28 @@ describe('Test Staking Rewards', async function () {
                     contract: stakingRoot,
                     method: 'installOrUpdateUserDataCode',
                     params: {code: UserData.code, send_gas_to: stakingOwner.address},
-                    value: convertCrystal(55, 'nano')
+                    value: convertCrystal(11, 'nano')
                 });
                 logger.log(`Installing ElectionCode code`);
                 await stakingOwner.runTarget({
                     contract: stakingRoot,
                     method: 'installOrUpdateElectionCode',
                     params: {code: Election.code, send_gas_to: stakingOwner.address},
-                    value: convertCrystal(55, 'nano')
+                    value: convertCrystal(11, 'nano')
                 });
                 logger.log(`Installing RelayRoundCode code`);
                 await stakingOwner.runTarget({
                     contract: stakingRoot,
                     method: 'installOrUpdateRelayRoundCode',
                     params: {code: RelayRound.code, send_gas_to: stakingOwner.address},
-                    value: convertCrystal(55, 'nano')
+                    value: convertCrystal(11, 'nano')
                 });
                 logger.log(`Set staking to Active`);
                 await stakingOwner.runTarget({
                     contract: stakingRoot,
                     method: 'setActive',
                     params: {new_active: true, send_gas_to: stakingOwner.address},
-                    value: convertCrystal(55, 'nano')
+                    value: convertCrystal(11, 'nano')
                 });
 
                 if (locklift.network === 'dev') {
@@ -624,7 +624,7 @@ describe('Test Staking Rewards', async function () {
                         },
                         send_gas_to: stakingOwner.address
                     },
-                    value: convertCrystal(55, 'nano')
+                    value: convertCrystal(11, 'nano')
                 });
                 if (locklift.network === 'dev') {
                     await wait(DEV_WAIT);
@@ -1342,13 +1342,16 @@ describe('Test Staking Rewards', async function () {
                 const staking_details = await stakingRoot.call({method: 'getDetails'});
 
                 let rounds_rewards_data = staking_details.rewardRounds;
+                // console.log(rounds_rewards_data);
                 const round1_rewards_data = rounds_rewards_data[0];
 
                 const user1_reward_before = await userRewardRounds(user1Data);
                 const user1_reward = user1_reward_before[0].reward_balance;
+                // console.log(user1_reward);
 
                 const user1_token_reward = Math.floor(Math.floor(user1_reward * 1e10 / round1_rewards_data.totalReward) * round1_rewards_data.rewardTokens / 1e10);
                 const user1_token_balance0 = await userTokenBalance(user1Data);
+                // console.log(user1_token_balance0.toFixed(0));
 
                 const staking_details_before = await stakingRoot.call({method: 'getDetails'});
 

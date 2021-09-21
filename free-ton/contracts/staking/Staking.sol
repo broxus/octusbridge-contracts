@@ -36,15 +36,15 @@ contract Staking is StakingPoolRelay {
 
         // CODES AND RELATED DATA
         TvmBuilder codes_builder;
-        codes_builder.store(has_platform_code); // bool
-        codes_builder.store(user_data_version); // 32
-        codes_builder.store(election_version); // 32
-        codes_builder.store(relay_round_version); // 32
+        codes_builder.store(code_data.has_platform_code); // bool
+        codes_builder.store(code_data.user_data_version); // 32
+        codes_builder.store(code_data.election_version); // 32
+        codes_builder.store(code_data.relay_round_version); // 32
 
-        codes_builder.store(platform_code); // ref1
-        codes_builder.store(user_data_code); // ref2
-        codes_builder.store(election_code); // ref3
-        codes_builder.store(relay_round_code); // ref4
+        codes_builder.store(code_data.platform_code); // ref1
+        codes_builder.store(code_data.user_data_code); // ref2
+        codes_builder.store(code_data.election_code); // ref3
+        codes_builder.store(code_data.relay_round_code); // ref4
 
         main_builder.storeRef(codes_builder);
 

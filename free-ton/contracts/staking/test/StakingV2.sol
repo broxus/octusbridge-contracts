@@ -14,15 +14,15 @@ contract StakingV2 is StakingPoolRelay {
 
         // CODES AND RELATED DATA
         TvmBuilder codes_builder;
-        codes_builder.store(has_platform_code); // bool
-        codes_builder.store(user_data_version); // 32
-        codes_builder.store(election_version); // 32
-        codes_builder.store(relay_round_version); // 32
+        codes_builder.store(code_data.has_platform_code); // bool
+        codes_builder.store(code_data.user_data_version); // 32
+        codes_builder.store(code_data.election_version); // 32
+        codes_builder.store(code_data.relay_round_version); // 32
 
-        codes_builder.store(platform_code); // ref1
-        codes_builder.store(user_data_code); // ref2
-        codes_builder.store(election_code); // ref3
-        codes_builder.store(relay_round_code); // ref4
+        codes_builder.store(code_data.platform_code); // ref1
+        codes_builder.store(code_data.user_data_code); // ref2
+        codes_builder.store(code_data.election_code); // ref3
+        codes_builder.store(code_data.relay_round_code); // ref4
 
         main_builder.storeRef(codes_builder);
 
@@ -101,16 +101,16 @@ contract StakingV2 is StakingPoolRelay {
         TvmSlice main_data = main.loadRefAsSlice();
 
         (
-            has_platform_code,
-            user_data_version,
-            election_version,
-            relay_round_version
+            code_data.has_platform_code,
+            code_data.user_data_version,
+            code_data.election_version,
+            code_data.relay_round_version
         ) = codes_data.decode(bool, uint32, uint32, uint32);
 
-        platform_code = codes_data.loadRef();
-        user_data_code = codes_data.loadRef();
-        election_code = codes_data.loadRef();
-        relay_round_code = codes_data.loadRef();
+        code_data.platform_code = codes_data.loadRef();
+        code_data.user_data_code = codes_data.loadRef();
+        code_data.election_code = codes_data.loadRef();
+        code_data.relay_round_code = codes_data.loadRef();
 
         TvmSlice data_1 = main_data.loadRefAsSlice();
         TvmSlice data_2 = main_data.loadRefAsSlice();
@@ -133,17 +133,15 @@ contract StakingV2 is StakingPoolRelay {
             uint32, address, address, address, bool, uint32, uint32, uint32, uint32, uint32, bool
         );
 
-        uint32 deprecated_prev_time;
         (
             base_details.bridge_event_config_ton_eth, // address
-            deprecated_prev_time, // 32
             base_details.lastRewardTime, // 32
             base_details.tokenRoot, // address
             base_details.tokenWallet, // address
             base_details.tokenBalance, // 128
             base_details.emergency // 1
         ) = data_2.decode(
-            address, uint32, uint32, address, address, uint128, bool
+            address, uint32, address, address, uint128, bool
         );
 
         TvmSlice rew_slice = data_2.loadRefAsSlice();
@@ -168,15 +166,14 @@ contract StakingV2 is StakingPoolRelay {
             relay_config.minRelaysCount, // 16
             relay_config.minRelayDeposit, // 128
             relay_config.relayInitialTonDeposit, // 128
+            relay_config.userRewardPerSecond, // 128
+            relay_config.relayRewardPerSecond, // 128
             tonEventDeployValue, // 128
             deposit_nonce, // 64
             deposits
         ) = data_4.decode(
-            uint32, uint32, uint32, uint32, uint32, uint16, uint16, uint128, uint128, uint128, uint64, mapping (uint64 => PendingDeposit)
+            uint32, uint32, uint32, uint32, uint32, uint16, uint16, uint128, uint128, uint128, uint128, uint128, uint64, mapping (uint64 => PendingDeposit)
         );
-
-        relay_config.userRewardPerSecond = 1000000;
-        relay_config.relayRewardPerSecond = 1000000;
 
     }
 }
