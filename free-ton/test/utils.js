@@ -421,6 +421,12 @@ const getTokenWalletByAddress = async (walletOwner, rootAddress) => {
   return tokenWallet;
 }
 
+const getTokenRoot = async ( rootAddress) => {
+  const tokenRoot = await locklift.factory.getContract('RootTokenContract', TOKEN_PATH);
+  tokenRoot.setAddress(rootAddress);
+  return tokenRoot;
+}
+
 const extractTonEventAddress = async (tx) => {
   const result = await locklift.ton.client.net.query_collection({
     collection: 'messages',
@@ -532,6 +538,7 @@ module.exports = {
   MetricManager,
   enableEventConfiguration,
   captureConnectors,
+  getTokenRoot,
   getTokenWalletByAddress,
   extractTonEventAddress,
   afterRun,

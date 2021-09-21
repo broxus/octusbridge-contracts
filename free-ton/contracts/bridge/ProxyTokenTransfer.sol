@@ -156,7 +156,7 @@ contract ProxyTokenTransfer is
     function withdrawExtraGasFromTokenRoot(
         address root,
         address to
-    ) public pure onlyOwner reserveBalance {
+    ) public view onlyOwner reserveBalance {
         ISendSurplusGas(root).sendSurplusGas{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(to);
     }
 
@@ -164,7 +164,7 @@ contract ProxyTokenTransfer is
         address target,
         uint256 external_owner_pubkey_,
         address internal_owner_address_
-    ) external pure onlyOwner reserveBalance {
+    ) external view onlyOwner reserveBalance {
         ITransferOwner(target).transferOwner{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
