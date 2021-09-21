@@ -90,16 +90,13 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         connectorDeployValue = _connectorDeployValue;
     }
 
-    /// @dev Derive connector address by it's id
-    /// @param id Connector id
-    function deriveConnectorAddress(
+    function _deriveConnectorAddress(
         uint64 id
     )
-        override
-        public
-        reserveBalance
-    returns(
-        address connector
+        internal
+        view
+    returns (
+        address
     ) {
         TvmCell stateInit = tvm.buildStateInit({
             contr: Connector,
@@ -112,6 +109,19 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         });
 
         return address(tvm.hash(stateInit));
+    }
+
+    /// @dev Derive connector address by it's id
+    /// @param id Connector id
+    function deriveConnectorAddress(
+        uint64 id
+    )
+        override
+        external
+    returns(
+        address connector
+    ) {
+        connector = _deriveConnectorAddress(id);
     }
 
     /// @dev Deploy new connector.
@@ -127,7 +137,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         require(msg.value >= connectorDeployValue, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
         require(_eventConfiguration.wid == 0, ErrorCodes.IS_NOT_BASE_CHAIN);
 
-        address connector = deriveConnectorAddress(connectorCounter);
+        address connector = _deriveConnectorAddress(connectorCounter);
 
         emit ConnectorDeployed(connectorCounter, connector, _eventConfiguration);
 
