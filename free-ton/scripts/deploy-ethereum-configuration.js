@@ -82,6 +82,7 @@ const main = async () => {
       message: 'Choose network',
       choices: [
         { title: 'Goerli',  value: 5 },
+        { title: 'Ropsten',  value: 3 },
         { title: 'Ethereum',  value: 1 },
       ],
     },
