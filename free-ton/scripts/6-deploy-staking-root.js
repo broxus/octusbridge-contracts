@@ -72,42 +72,42 @@ async function main() {
     contract: stakingRoot,
     method: 'installPlatformOnce',
     params: {code: Platform.code, send_gas_to: admin.address},
-    value: convertCrystal(55, 'nano')
+    value: convertCrystal(15, 'nano')
   });
   logger.log(`Installing UserData code`);
   await admin.runTarget({
     contract: stakingRoot,
     method: 'installOrUpdateUserDataCode',
     params: {code: UserData.code, send_gas_to: admin.address},
-    value: convertCrystal(55, 'nano')
+    value: convertCrystal(15, 'nano')
   });
   logger.log(`Installing ElectionCode code`);
   await admin.runTarget({
     contract: stakingRoot,
     method: 'installOrUpdateElectionCode',
     params: {code: Election.code, send_gas_to: admin.address},
-    value: convertCrystal(55, 'nano')
+    value: convertCrystal(15, 'nano')
   });
   logger.log(`Installing RelayRoundCode code`);
   await admin.runTarget({
     contract: stakingRoot,
     method: 'installOrUpdateRelayRoundCode',
     params: {code: RelayRound.code, send_gas_to: admin.address},
-    value: convertCrystal(55, 'nano')
+    value: convertCrystal(15, 'nano')
   });
   logger.log(`Set staking to Active`);
   await admin.runTarget({
     contract: stakingRoot,
     method: 'setActive',
     params: {new_active: true, send_gas_to: admin.address},
-    value: convertCrystal(55, 'nano')
+    value: convertCrystal(15, 'nano')
   });
   logger.log(`Set true admin`);
   await admin.runTarget({
     contract: stakingRoot,
     method: 'setAdmin',
     params: {new_admin: true_admin, send_gas_to: admin.address},
-    value: convertCrystal(55, 'nano')
+    value: convertCrystal(15, 'nano')
   });
   // relay initial deposit - 5 tokens
   // relay round len - 30 min
@@ -124,19 +124,21 @@ async function main() {
     method: 'setRelayConfig',
     params: {
       new_relay_config: {
-        relayLockTime: 60 * 60,
-        relayRoundTime: 30 * 60,
-        electionTime: 10 * 60,
-        timeBeforeElection: 15 * 60,
-        minRoundGapTime: 5 * 60,
+        relayLockTime: 3 * 24 * 60 * 60,
+        relayRoundTime: 24 * 60 * 60,
+        electionTime: 4 * 60 * 60,
+        timeBeforeElection: 12 * 60 * 60,
+        minRoundGapTime: 30 * 60,
         relaysCount: 100,
         minRelaysCount: 3,
-        minRelayDeposit: 5000000000, // min relay bridge deposit
-        relayInitialDeposit: 300000000000, // min relay ton deposit when linking
+        minRelayDeposit: 100000000000, // min relay bridge deposit
+        relayInitialTonDeposit: 300000000000, // min relay ton deposit when linking
+        relayRewardPerSecond: 1000000,
+        userRewardPerSecond: 1000000
       },
       send_gas_to: admin.address
     },
-    value: convertCrystal(55, 'nano')
+    value: convertCrystal(15, 'nano')
   });
 
   logger.log(`Set true dao`);
@@ -144,7 +146,7 @@ async function main() {
     contract: stakingRoot,
     method: 'setDaoRoot',
     params: {new_dao_root: true_dao, send_gas_to: admin.address},
-    value: convertCrystal(55, 'nano')
+    value: convertCrystal(15, 'nano')
   });
 
   if (locklift.network === 'dev') {
