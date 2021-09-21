@@ -17,6 +17,7 @@ library DaoErrors {
     uint8 constant WRONG_TIME_LOCK = 122;
     uint8 constant WRONG_THRESHOLD = 123;
     uint8 constant WRONG_QUORUM = 124;
+    uint8 constant WRONG_GRACE_PERIOD = 125;
 
     uint8 constant VALUE_TOO_LOW = 130;
 

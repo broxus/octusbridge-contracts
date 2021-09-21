@@ -31,6 +31,7 @@ interface IDaoRoot is ActionStructure, ProposalConfigurationStructure, ProposalS
     event ProposalCodeUpgraded(uint16 newVersion);
     event ProposalConfigurationUpdated(ProposalConfiguration oldConfig, ProposalConfiguration newConfig);
     event ProposalVotingDelayUpdated(uint32 oldVotingDelay, uint32 newVotingDelay);
+    event ProposalGracePeriodUpdated(uint32 oldGracePeriod, uint32 newGracePeriod);
     event ProposalVotingPeriodUpdated(uint32 oldVotingPeriod, uint32 newVotingPeriod);
     event ProposalThresholdUpdated(uint128 oldThreshold, uint128 newThreshold);
     event ProposalQuorumVotesUpdated(uint128 oldQuorumVotes, uint128 newQuorumVotes);
@@ -58,6 +59,7 @@ interface IDaoRoot is ActionStructure, ProposalConfigurationStructure, ProposalS
     function updateProposalCode(TvmCell code) external;
     function updateProposalConfiguration(ProposalConfiguration newConfig) external;
     function updateVotingDelay(uint32 newVotingDelay) external;
+    function updateGracePeriod(uint32 newGracePeriod) external;
     function updateVotingPeriod(uint32 newVotingPeriod) external;
     function updateTimeLock(uint32 newTimeLock) external;
     function updateThreshold(uint128 newThreshold) external;

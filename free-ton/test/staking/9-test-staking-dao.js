@@ -41,8 +41,7 @@ const proposalConfiguration = {
 }
 
 
-const description = stringToBytesArray('proposal-test-1');
-
+const description = 'proposal-test-1';
 const bridge = '0:9cc3d8668d57d387eae54c4398a1a0b478b6a8c3a0f2b5265e641a212b435231'
 
 const CALL_VALUE = locklift.utils.convertCrystal(51, 'nano');
@@ -444,7 +443,7 @@ describe('Test DAO in Staking', async function () {
             expect('0x' + new BigNumber(actualEthAction.target).toString(16))
               .to
               .equal(ethActions[i].target, 'Wrong EthActions target');
-           expect(actualEthAction.chainId.toString())
+            expect(actualEthAction.chainId.toString())
               .to
               .equal(ethActions[i].chainId.toString(), 'Wrong EthActions chainId');
             expect(actualEthAction.signature)
@@ -649,5 +648,44 @@ describe('Test DAO in Staking', async function () {
         });
       });
     });
+    describe('Test configuration update', async function () {
+      let newConfiguration = {
+        votingDelay: 60 * 60 * 24 * 2,
+        votingPeriod: 60 * 60 * 24 * 3,
+        quorumVotes: 500000_000000000,
+        timeLock: 60 * 60 * 24 * 2,
+        threshold: 100000_000000000,
+        gracePeriod: 60 * 60 * 24 * 2
+      }
+      let currentConfiguration;
+      before('Update proposals configuration', async function () {
+        await stakingOwner.runTarget({
+          contract: daoRoot,
+          method: 'updateProposalConfiguration',
+          params: {newConfig: newConfiguration},
+        });
+        currentConfiguration = await daoRoot.call({method: 'proposalConfiguration'});
+      })
+      it('Check new configuration', async function () {
+        expect(currentConfiguration.votingDelay.toString())
+          .to
+          .equal(newConfiguration.votingDelay.toString(), 'Wrong votingDelay');
+        expect(currentConfiguration.votingPeriod.toString())
+          .to
+          .equal(newConfiguration.votingPeriod.toString(), 'Wrong votingPeriod');
+        expect(currentConfiguration.quorumVotes.toString())
+          .to
+          .equal(newConfiguration.quorumVotes.toString(), 'Wrong quorumVotes');
+        expect(currentConfiguration.timeLock.toString())
+          .to
+          .equal(newConfiguration.timeLock.toString(), 'Wrong timeLock');
+        expect(currentConfiguration.threshold.toString())
+          .to
+          .equal(newConfiguration.threshold.toString(), 'Wrong threshold');
+        expect(currentConfiguration.gracePeriod.toString())
+          .to
+          .equal(newConfiguration.gracePeriod.toString(), 'Wrong gracePeriod');
+      })
+    })
   });
 })

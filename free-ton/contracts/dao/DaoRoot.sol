@@ -21,19 +21,20 @@ import "../bridge/interfaces/event-configuration-contracts/ITonEventConfiguratio
 contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate {
 
     uint8 public constant proposalMaxOperations = 10;
-    uint16 public constant proposalMaxDescriptionLen = 2048;
+    uint16 public constant proposalMaxDescriptionLen = 4096;
 
-    //todo: set correct
-    uint128 public constant MIN_PROPOSAL_THRESHOLD = 0;
-    uint128 public constant MAX_PROPOSAL_THRESHOLD = 10e18;
-    uint128 public constant MIN_PROPOSAL_QUORUM = 0;
-    uint128 public constant MAX_PROPOSAL_QUORUM = 10e18;
+    uint128 public constant MIN_PROPOSAL_THRESHOLD = 10_000 ton;
+    uint128 public constant MAX_PROPOSAL_THRESHOLD = 7_000_000 ton;
+    uint128 public constant MIN_PROPOSAL_QUORUM = 50_000 ton;
+    uint128 public constant MAX_PROPOSAL_QUORUM = 7_000_000 ton;
     uint32 public constant MIN_VOTING_PERIOD = 24 hours;
-    uint32 public constant MAX_VOTING_PERIOD = 2 weeks;
-    uint32 public constant MIN_VOTING_DELAY = 1;
-    uint32 public constant MAX_VOTING_DELAY = 7 days;
-    uint32 public constant MIN_TIME_LOCK = 1;
-    uint32 public constant MAX_TIME_LOCK = 2 weeks;
+    uint32 public constant MAX_VOTING_PERIOD = 30 days;
+    uint32 public constant MIN_VOTING_DELAY = 24 hours;
+    uint32 public constant MAX_VOTING_DELAY = 30 days;
+    uint32 public constant MIN_TIME_LOCK = 24 hours;
+    uint32 public constant MAX_TIME_LOCK = 30 days;
+    uint32 public constant MIN_GRACE_PERIOD = 24 hours;
+    uint32 public constant MAX_GRACE_PERIOD = 30 days;
 
     uint32 static _nonce;
 
@@ -410,6 +411,16 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate {
         admin.transfer({value: 0, flag: MsgFlag.REMAINING_GAS});
     }
 
+    function updateGracePeriod(uint32 newGracePeriod) override public onlyAdmin {
+        require(
+            newGracePeriod >= MIN_GRACE_PERIOD && newGracePeriod <= MAX_GRACE_PERIOD,
+            DaoErrors.WRONG_GRACE_PERIOD
+        );
+        emit ProposalGracePeriodUpdated(proposalConfiguration.gracePeriod, newGracePeriod);
+        proposalConfiguration.gracePeriod = newGracePeriod;
+        admin.transfer({value: 0, flag: MsgFlag.REMAINING_GAS});
+    }
+
     function updateProposalConfiguration(ProposalConfiguration newConfig) override public onlyAdmin {
         checkProposalConfiguration(newConfig);
         emit ProposalConfigurationUpdated(proposalConfiguration, newConfig);
@@ -437,6 +448,10 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate {
         require(
             config.quorumVotes >= MIN_PROPOSAL_QUORUM && config.quorumVotes <= MAX_PROPOSAL_QUORUM,
             DaoErrors.WRONG_QUORUM
+        );
+        require(
+            config.gracePeriod >= MIN_GRACE_PERIOD && config.gracePeriod <= MAX_GRACE_PERIOD,
+            DaoErrors.WRONG_GRACE_PERIOD
         );
     }
 
