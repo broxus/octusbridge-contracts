@@ -18,9 +18,7 @@ abstract contract Delegate {
         uint[] delegate = optDelegate.get();
         uint delegatedCalls = delegate.length;
         require(delegatedCalls != 0, DELEGATE_HAS_EMPTY_CALLS);
-        TvmBuilder b;
-        b.store(msg.data);
-        uint callHash = tvm.hash(b.toCell());
+        uint callHash = tvm.hash(msg.data);
         if (delegatedCalls == 1) {
             require(delegate[0] == callHash, WRONG_DELEGATE_CALL_HASH);
             delete delegators[msg.sender];

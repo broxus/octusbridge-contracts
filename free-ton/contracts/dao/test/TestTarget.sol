@@ -43,9 +43,6 @@ contract TestTarget is Delegate {
     }
 
     function getCallHash(uint32 newParam) public pure returns (uint) {
-        TvmSlice s = tvm.encodeBody(onProposalSuccess, newParam).toSlice();
-        TvmBuilder b;
-        b.store(s);
-        return tvm.hash(b.toCell());
+        return tvm.hash(tvm.encodeBody(onProposalSuccess, newParam));
     }
 }
