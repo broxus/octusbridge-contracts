@@ -3,6 +3,8 @@ module.exports = async ({getNamedAccounts, deployments}) => {
 
   const bridge = await deployments.get('Bridge');
   
+  console.log(`DAO owner: ${owner}`);
+  
   await deployments.deploy('DAO', {
     from: deployer,
     log: true,
