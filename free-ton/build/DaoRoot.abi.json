@@ -220,6 +220,14 @@
 			]
 		},
 		{
+			"name": "updateGracePeriod",
+			"inputs": [
+				{"name":"newGracePeriod","type":"uint32"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "updateProposalConfiguration",
 			"inputs": [
 				{"components":[{"name":"votingDelay","type":"uint32"},{"name":"votingPeriod","type":"uint32"},{"name":"quorumVotes","type":"uint128"},{"name":"timeLock","type":"uint32"},{"name":"threshold","type":"uint128"},{"name":"gracePeriod","type":"uint32"}],"name":"newConfig","type":"tuple"}
@@ -444,6 +452,15 @@
 			"inputs": [
 				{"name":"oldVotingDelay","type":"uint32"},
 				{"name":"newVotingDelay","type":"uint32"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "ProposalGracePeriodUpdated",
+			"inputs": [
+				{"name":"oldGracePeriod","type":"uint32"},
+				{"name":"newGracePeriod","type":"uint32"}
 			],
 			"outputs": [
 			]
