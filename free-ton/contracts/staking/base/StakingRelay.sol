@@ -196,7 +196,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
 
         // MIN_CALL_MSG_VALUE should be enough to cover all storage fees of all contracts in chain
         // + deploy ton event + destroy of election and old relay round
-        uint128 required_gas = Gas.MIN_CALL_MSG_VALUE + _relaysPacksCount() * Gas.MIN_SEND_RELAYS_MSG_VALUE;
+        uint128 required_gas = Gas.MIN_END_ELECTION_MSG_VALUE + _relaysPacksCount() * Gas.MIN_SEND_RELAYS_MSG_VALUE;
         uint128 min_balance = required_gas + Gas.ROOT_INITIAL_BALANCE;
         require (address(this).balance > min_balance, ErrorCodes.LOW_BALANCE);
 
@@ -285,6 +285,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         } else {
             // get relays from current election
             address election_addr = getElectionAddress(round_num);
+            // send some value to cover possible storage fees before sending msgs
             election_addr.transfer(Gas.ELECTION_INITIAL_BALANCE, false);
             for (uint i = 0; i < _relaysPacksCount(); i++) {
                 // last pack could be smaller then other ones
