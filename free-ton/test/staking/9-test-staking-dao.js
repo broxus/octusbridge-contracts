@@ -45,6 +45,8 @@ const description = stringToBytesArray('proposal-test-1');
 
 const bridge = '0:9cc3d8668d57d387eae54c4398a1a0b478b6a8c3a0f2b5265e641a212b435231'
 
+const CALL_VALUE = locklift.utils.convertCrystal(51, 'nano');
+
 let stakingRoot;
 let stakingOwner;
 let stakingToken;
@@ -123,7 +125,7 @@ describe('Test DAO in Staking', async function () {
         notify_receiver: true,
         payload: DEPOSIT_PAYLOAD
       },
-      value: locklift.utils.convertCrystal(2.5, 'nano')
+      value: locklift.utils.convertCrystal(55, 'nano')
     });
   };
   const deployEventConfiguration = async function (_owner, _dao) {
@@ -155,7 +157,7 @@ describe('Test DAO in Staking', async function () {
   before('Setup staking', async function () {
     const keyPairs = await locklift.keys.getKeyPairs();
     logger.log(`Deploying stakingOwner`);
-    stakingOwner = await deployAccount(keyPairs[0], 10);
+    stakingOwner = await deployAccount(keyPairs[0], 500);
     logger.log(`Deploying stakingToken`);
     stakingToken = await deployTokenRoot('Staking', 'ST');
 
@@ -186,6 +188,7 @@ describe('Test DAO in Staking', async function () {
       contract: daoRoot,
       method: 'updateProposalCode',
       params: {code: Proposal.code},
+      value: CALL_VALUE,
     });
 
     logger.log(`Deploy DAO ethereum action event configuration`);
@@ -209,7 +212,7 @@ describe('Test DAO in Staking', async function () {
         nonce: getRandomNonce()
       },
       keyPair: keyPairs[0]
-    }, locklift.utils.convertCrystal(10, 'nano'));
+    }, locklift.utils.convertCrystal(55, 'nano'));
     const UserData = await locklift.factory.getContract('UserData');
     const Election = await locklift.factory.getContract('Election');
     const RelayRound = await locklift.factory.getContract('RelayRound');
@@ -225,8 +228,9 @@ describe('Test DAO in Staking', async function () {
         _tokenRoot: stakingToken.address,
         _dao_root: daoRoot.address,
         _rewarder: stakingOwner.address,
-        _bridge_event_config: bridge,
-        _bridge_event_proxy: bridge,
+        _rescuer: stakingOwner.address,
+        _bridge_event_config_eth_ton: bridge,
+        _bridge_event_config_ton_eth: bridge,
         _deploy_nonce: getRandomNonce()
       }
     })).decoded.output.value0)
@@ -238,36 +242,42 @@ describe('Test DAO in Staking', async function () {
       contract: daoRoot,
       method: 'setStakingRoot',
       params: {newStakingRoot: stakingRoot.address},
+      value: CALL_VALUE
     });
     logger.log(`Installing Platform code`);
     await stakingOwner.runTarget({
       contract: stakingRoot,
       method: 'installPlatformOnce',
       params: {code: Platform.code, send_gas_to: stakingOwner.address},
+      value: CALL_VALUE
     });
     logger.log(`Installing UserData code`);
     await stakingOwner.runTarget({
       contract: stakingRoot,
       method: 'installOrUpdateUserDataCode',
       params: {code: UserData.code, send_gas_to: stakingOwner.address},
+      value: CALL_VALUE
     });
     logger.log(`Installing ElectionCode code`);
     await stakingOwner.runTarget({
       contract: stakingRoot,
       method: 'installOrUpdateElectionCode',
       params: {code: Election.code, send_gas_to: stakingOwner.address},
+      value: CALL_VALUE
     });
     logger.log(`Installing RelayRoundCode code`);
     await stakingOwner.runTarget({
       contract: stakingRoot,
       method: 'installOrUpdateRelayRoundCode',
       params: {code: RelayRound.code, send_gas_to: stakingOwner.address},
+      value: CALL_VALUE
     });
     logger.log(`Set staking is Active`);
     await stakingOwner.runTarget({
       contract: stakingRoot,
       method: 'setActive',
       params: {new_active: true, send_gas_to: stakingOwner.address},
+      value: CALL_VALUE
     });
   })
   describe('DAO', async function () {
@@ -291,8 +301,8 @@ describe('Test DAO in Staking', async function () {
     before('Setup test accounts', async function () {
       const keyPairs = await locklift.keys.getKeyPairs();
 
-      userAccount0 = await deployAccount(keyPairs[1], 50);
-      userAccount1 = await deployAccount(keyPairs[2], 10);
+      userAccount0 = await deployAccount(keyPairs[1], 100);
+      userAccount1 = await deployAccount(keyPairs[2], 100);
       logger.log(`UserAccount0: ${userAccount0.address}`);
       logger.log(`UserAccount1: ${userAccount1.address}`);
 
@@ -471,7 +481,8 @@ describe('Test DAO in Staking', async function () {
             params: {
               proposal_id: proposalId,
               support: true
-            }
+            },
+            value: CALL_VALUE
           })
         });
         it('Check votes after', async function () {
@@ -514,6 +525,7 @@ describe('Test DAO in Staking', async function () {
               proposal_id: proposalId,
               support: false
             },
+            value: CALL_VALUE
           })
         });
         it('Check votes after', async function () {
@@ -618,6 +630,7 @@ describe('Test DAO in Staking', async function () {
             contract: stakingRoot,
             method: 'tryUnlockCastedVotes',
             params: {proposal_ids: castedVotesBefore},
+            value: CALL_VALUE
           });
         });
         it('Check casted votes before unlock', async function () {
