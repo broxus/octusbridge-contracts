@@ -97,11 +97,6 @@ contract DAO is IDAO, ReentrancyGuard, OwnableUpgradeable, Cache, ChainId {
         (IBridge.TONEvent memory tonEvent) = abi.decode(payload, (IBridge.TONEvent));
 
         require(
-            tonEvent.proxy == address(this),
-            "DAO: wrong event proxy"
-        );
-
-        require(
             tonEvent.configurationWid == configuration.wid &&
             tonEvent.configurationAddress == configuration.addr,
             "DAO: wrong event configuration"

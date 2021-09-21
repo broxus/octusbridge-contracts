@@ -298,11 +298,6 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
         (TONEvent memory tonEvent) = abi.decode(payload, (TONEvent));
 
         require(
-            tonEvent.proxy == address(this),
-            "Bridge: wrong event proxy"
-        );
-
-        require(
             tonEvent.configurationWid == roundRelaysConfiguration.wid &&
             tonEvent.configurationAddress == roundRelaysConfiguration.addr,
             "Bridge: wrong event configuration"

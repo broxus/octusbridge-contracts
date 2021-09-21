@@ -127,12 +127,6 @@ contract VaultWrapper is ChainId, Initializable, IVaultWrapper {
         // Decode TON event
         (IBridge.TONEvent memory tonEvent) = abi.decode(payload, (IBridge.TONEvent));
 
-        // Check event proxy is correct
-        require(
-            tonEvent.proxy == vault,
-            "Vault wrapper: wrong event proxy"
-        );
-
         // dev: fix stack too deep
         {
             // Check event configuration matches Vault's configuration
