@@ -42,6 +42,9 @@ const hardhatConfig = {
         blockNumber: 12859605,
       },
       chainId: 1111,
+      accounts: {
+        count: 30
+      }
     },
     // goerli: {
     //   url: process.env.ETH_GOERLI_HTTP,
