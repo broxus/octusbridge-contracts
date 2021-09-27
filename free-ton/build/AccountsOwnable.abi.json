@@ -1,0 +1,60 @@
+{
+	"ABI version": 2,
+	"header": ["time", "expire"],
+	"functions": [
+		{
+			"name": "getAccountStatus",
+			"inputs": [
+				{"name":"addr","type":"address"}
+			],
+			"outputs": [
+				{"name":"_status","type":"bool"}
+			]
+		},
+		{
+			"name": "getEthereumAccount",
+			"inputs": [
+				{"name":"addr","type":"address"}
+			],
+			"outputs": [
+				{"name":"ethereumAccount","type":"uint160"}
+			]
+		},
+		{
+			"name": "getAccounts",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"accounts","type":"address[]"},
+				{"name":"ethereumAccounts","type":"uint160[]"}
+			]
+		},
+		{
+			"name": "constructor",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		}
+	],
+	"data": [
+	],
+	"events": [
+		{
+			"name": "OwnershipGranted",
+			"inputs": [
+				{"name":"addr","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "OwnershipRemoved",
+			"inputs": [
+				{"name":"addr","type":"address"}
+			],
+			"outputs": [
+			]
+		}
+	]
+}
