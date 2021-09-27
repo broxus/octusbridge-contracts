@@ -1,0 +1,8 @@
+pragma ton-solidity >= 0.39.0;
+
+interface IStakingDao {
+    function castVote(uint32 proposal_id, bool support) external view;
+    function castVoteWithReason(uint32 proposal_id, bool support, string reason) external view;
+    function tryUnlockVoteTokens(uint32 proposal_id) external view;
+    function tryUnlockCastedVotes(uint32[] proposal_ids) external view;
+}

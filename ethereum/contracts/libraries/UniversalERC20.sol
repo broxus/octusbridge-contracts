@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: Apache 2.0
-pragma solidity ^0.8.0;
+// SPDX-License-Identifier: Apache-2.0
+pragma solidity ^0.8.2;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
@@ -19,15 +19,6 @@ library UniversalERC20 {
         IERC20 token,
         address to,
         uint256 amount
-    ) internal {
-        universalTransfer(token, to, amount, false);
-    }
-
-    function universalTransfer(
-        IERC20 token,
-        address to,
-        uint256 amount,
-        bool mayFail
     ) internal returns(bool) {
         if (amount == 0) {
             return true;
