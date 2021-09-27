@@ -1,0 +1,774 @@
+.macro constructor
+DROP
+GETGLOB 1
+ISNULL
+IFREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+;; constructor protection
+GETGLOB 6
+THROWIF 51
+PUSHINT 1
+SETGLOB 6
+;; end constructor protection
+ENDS
+ACCEPT
+CALLREF {
+	CALL $c7_to_c4$
+}
+TRUE
+SETGLOB 7
+
+.macro encodeEthereumEventData
+DROP
+; Decode input parameters
+; Decode tokens
+LDU 128
+; Decode wid
+LDI 8
+; Decode owner_addr
+LDU 256
+; Decode owner_pubkey
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+ENDS
+;; param: tokens
+;; param: wid
+;; param: owner_addr
+;; param: owner_pubkey
+CALLREF {
+	CALL $encodeEthereumEventData_internal_macro$
+}
+;; emitting 1 value(s)
+PUSH S1
+EQINT -1
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST xa14ea6cf
+	PUSH S1
+	STREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+DROP
+IFREF {
+	CALL $c7_to_c4$
+}
+TRUE
+SETGLOB 7
+
+.globl	encodeEthereumEventData_internal
+.type	encodeEthereumEventData_internal, @function
+CALL $encodeEthereumEventData_internal_macro$
+
+.macro encodeEthereumEventData_internal_macro
+;; param: tokens
+;; param: wid
+;; param: owner_addr
+;; param: owner_pubkey
+;; ret param: data
+NEWC
+ENDC
+; function encodeEthereumEventData
+NEWC
+;; decl: builder
+; expValue
+DUP
+; end expValue
+;; push identifier tokens
+PUSH S6
+STUR 128
+;; push identifier wid
+PUSH S5
+STIR 8
+;; push identifier owner_addr
+PUSH S4
+STUR 256
+;; push identifier owner_pubkey
+PUSH S3
+STUR 256
+; colValue
+NIP
+; end colValue
+;; push identifier builder
+DUP
+ENDC
+; expValue
+; end expValue
+; colValue
+POP S2
+; end colValue
+DROP
+; end function encodeEthereumEventData
+BLKDROP2 4, 1
+
+.macro decodeEthereumEventData
+DROP
+; Decode input parameters
+; Decode data
+;; decode TvmCell
+LDREF
+ENDS
+;; param: data
+CALLREF {
+	CALL $decodeEthereumEventData_internal_macro$
+}
+;; emitting 4 value(s)
+PUSH S4
+EQINT -1
+PUSHCONT {
+	PUSH S6
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 1
+	NEWC
+	STSLICECONST x8e5d1e02
+	PUSH S5
+	STUR 128
+	PUSH S4
+	STIR 8
+	PUSH S3
+	STUR 256
+	PUSH S2
+	STUR 256
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+BLKDROP 4
+IFREF {
+	CALL $c7_to_c4$
+}
+TRUE
+SETGLOB 7
+
+.globl	decodeEthereumEventData_internal
+.type	decodeEthereumEventData_internal, @function
+CALL $decodeEthereumEventData_internal_macro$
+
+.macro decodeEthereumEventData_internal_macro
+;; param: data
+;; ret param: tokens
+PUSHINT 0
+;; ret param: wid
+PUSHINT 0
+;; ret param: owner_addr
+PUSHINT 0
+;; ret param: owner_pubkey
+PUSHINT 0
+; function decodeEthereumEventData
+;; push identifier data
+PUSH S4
+CTOS
+LDU 128
+LDI 8
+LDU 256
+LDU 256
+; colValue
+DROP
+REVERSE 4, 0
+; expValue
+; end expValue
+; colValue
+POP S7
+; end colValue
+; expValue
+; end expValue
+; colValue
+POP S5
+; end colValue
+; expValue
+; end expValue
+; colValue
+POP S3
+; end colValue
+; expValue
+; end expValue
+; colValue
+NIP
+; end colValue
+; end function decodeEthereumEventData
+BLKDROP2 1, 4
+
+.macro encodeConfigurationMeta
+DROP
+; Decode input parameters
+; Decode rootToken
+LDMSGADDR
+ENDS
+;; param: rootToken
+CALLREF {
+	CALL $encodeConfigurationMeta_internal_macro$
+}
+;; emitting 1 value(s)
+PUSH S1
+EQINT -1
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST x85315ebd
+	PUSH S1
+	STREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+DROP
+IFREF {
+	CALL $c7_to_c4$
+}
+TRUE
+SETGLOB 7
+
+.globl	encodeConfigurationMeta_internal
+.type	encodeConfigurationMeta_internal, @function
+CALL $encodeConfigurationMeta_internal_macro$
+
+.macro encodeConfigurationMeta_internal_macro
+;; param: rootToken
+;; ret param: data
+NEWC
+ENDC
+; function encodeConfigurationMeta
+NEWC
+;; decl: builder
+; expValue
+DUP
+; end expValue
+;; push identifier rootToken
+PUSH S3
+STSLICER
+; colValue
+NIP
+; end colValue
+;; push identifier builder
+DUP
+ENDC
+; expValue
+; end expValue
+; colValue
+POP S2
+; end colValue
+DROP
+; end function encodeConfigurationMeta
+NIP
+
+.macro decodeConfigurationMeta
+DROP
+; Decode input parameters
+; Decode data
+;; decode TvmCell
+LDREF
+ENDS
+;; param: data
+CALLREF {
+	CALL $decodeConfigurationMeta_internal_macro$
+}
+;; emitting 1 value(s)
+PUSH S1
+EQINT -1
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST xa42a80c7
+	PUSH S1
+	STSLICER
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+DROP
+IFREF {
+	CALL $c7_to_c4$
+}
+TRUE
+SETGLOB 7
+
+.globl	decodeConfigurationMeta_internal
+.type	decodeConfigurationMeta_internal, @function
+CALL $decodeConfigurationMeta_internal_macro$
+
+.macro decodeConfigurationMeta_internal_macro
+;; param: data
+;; ret param: rootToken
+PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+; function decodeConfigurationMeta
+;; push identifier data
+PUSH S1
+CTOS
+;; decode address
+LDMSGADDR
+; colValue
+DROP
+; expValue
+; end expValue
+; colValue
+NIP
+; end colValue
+; end function decodeConfigurationMeta
+NIP
+
+.macro encodeTonEventData
+DROP
+; Decode input parameters
+; Decode wid
+LDI 8
+; Decode addr
+LDU 256
+; Decode tokens
+LDU 128
+; Decode ethereum_address
+LDUQ 160
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 160
+}
+IFNOT
+ENDS
+;; param: wid
+;; param: addr
+;; param: tokens
+;; param: ethereum_address
+CALLREF {
+	CALL $encodeTonEventData_internal_macro$
+}
+;; emitting 1 value(s)
+PUSH S1
+EQINT -1
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST x922836c3
+	PUSH S1
+	STREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+DROP
+IFREF {
+	CALL $c7_to_c4$
+}
+TRUE
+SETGLOB 7
+
+.globl	encodeTonEventData_internal
+.type	encodeTonEventData_internal, @function
+CALL $encodeTonEventData_internal_macro$
+
+.macro encodeTonEventData_internal_macro
+;; param: wid
+;; param: addr
+;; param: tokens
+;; param: ethereum_address
+;; ret param: data
+NEWC
+ENDC
+; function encodeTonEventData
+NEWC
+;; decl: builder
+PUSHINT 0
+;; decl: zero_event_id
+; expValue
+PUSH S1
+; end expValue
+;; push identifier zero_event_id
+PUSH S1
+STUR 32
+;; push identifier wid
+PUSH S7
+STIR 8
+;; push identifier addr
+PUSH S6
+STUR 256
+;; push identifier tokens
+PUSH S5
+STUR 128
+;; push identifier ethereum_address
+PUSH S4
+STUR 160
+; colValue
+POP S2
+; end colValue
+;; push identifier builder
+PUSH S1
+ENDC
+; expValue
+; end expValue
+; colValue
+POP S3
+; end colValue
+DROP2
+; end function encodeTonEventData
+BLKDROP2 4, 1
+
+.macro decodeTonEventData
+DROP
+; Decode input parameters
+; Decode data
+;; decode TvmCell
+LDREF
+ENDS
+;; param: data
+CALLREF {
+	CALL $decodeTonEventData_internal_macro$
+}
+;; emitting 4 value(s)
+PUSH S4
+EQINT -1
+PUSHCONT {
+	PUSH S6
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST xd152101a
+	PUSH S4
+	STIR 8
+	PUSH S3
+	STUR 256
+	PUSH S2
+	STUR 128
+	PUSH S1
+	STUR 160
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+BLKDROP 4
+IFREF {
+	CALL $c7_to_c4$
+}
+TRUE
+SETGLOB 7
+
+.globl	decodeTonEventData_internal
+.type	decodeTonEventData_internal, @function
+CALL $decodeTonEventData_internal_macro$
+
+.macro decodeTonEventData_internal_macro
+;; param: data
+;; ret param: wid
+PUSHINT 0
+;; ret param: addr
+PUSHINT 0
+;; ret param: tokens
+PUSHINT 0
+;; ret param: ethereum_address
+PUSHINT 0
+; function decodeTonEventData
+;; push identifier data
+PUSH S4
+CTOS
+LDU 32
+LDI 8
+LDU 256
+LDU 128
+LDU 160
+; colValue
+DROP
+REVERSE 5, 0
+DROP
+; expValue
+; end expValue
+; colValue
+POP S7
+; end colValue
+; expValue
+; end expValue
+; colValue
+POP S5
+; end colValue
+; expValue
+; end expValue
+; colValue
+POP S3
+; end colValue
+; expValue
+; end expValue
+; colValue
+NIP
+; end colValue
+; end function decodeTonEventData
+BLKDROP2 1, 4
+
+.macro c7_to_c4
+GETGLOB 2
+NEWC
+STU 256
+GETGLOB 3
+STUR 64
+GETGLOB 6
+STUR 1
+GETGLOB 10
+SWAP
+STU 16
+ENDC
+POP C4
+
+.macro c4_to_c7
+PUSHROOT
+CTOS        ; c4
+LDU 256      ; pubkey c4
+LDU 64      ; pubkey timestamp c4
+LDU 1       ; pubkey [timestamp] constructor_flag memory
+PLDU 16
+SETGLOB 10
+TRUE
+SETGLOB 1   ; pubkey [timestamp] constructor_flag
+SETGLOB 6   ; pubkey [timestamp]
+SETGLOB 3   ; D
+SETGLOB 2
+
+.macro c4_to_c7_with_init_storage
+PUSHROOT
+CTOS        ; c4
+DUP        ; c4 c4
+SBITS      ; c4 bits
+GTINT 1    ; c4 bits>1
+PUSHCONT {
+	LDU 256      ; pubkey c4
+	LDU 64      ; pubkey timestamp c4
+	LDU 1       ; pubkey [timestamp] constructor_flag memory
+	PLDU 16
+	SETGLOB 10
+	TRUE
+	SETGLOB 1   ; pubkey [timestamp] constructor_flag
+	SETGLOB 6   ; pubkey [timestamp]
+	SETGLOB 3   ; D
+	SETGLOB 2
+}
+PUSHCONT {
+	PLDDICT   ; D
+	; init _randomNonce
+	PUSHINT 1
+	PUSH S1
+	PUSHINT 64
+	DICTUGET
+	PUSHCONT {
+		PLDU 16
+	}
+	PUSHCONT {
+		PUSHINT 0
+	}
+	IFELSE
+	SETGLOB 10
+	; set contract pubkey
+	PUSHINT 0
+	SWAP
+	PUSHINT 64
+	DICTUGET
+	THROWIFNOT 61
+	PLDU 256
+	SETGLOB 2
+	PUSHINT 0 ; timestamp
+	SETGLOB 3
+	PUSHINT 0 ; constructor_flag
+	SETGLOB 6
+	TRUE
+	SETGLOB 1
+}
+IFELSE
+
+.internal-alias :main_internal, 0
+.internal :main_internal
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Function: main_internal
+;; param: contract_balance
+;; param: msg_balance
+;; param: int_msg_info
+;; param: msg_body_slice
+PUSHINT 0  ; main_external trans id
+PUSH S2
+CTOS
+PLDU 4
+MODPOW2 1
+IFRET
+PUSH S1    ; body
+SEMPTY     ; isEmpty
+IFRET
+PUSH S1 ; body
+LDU 32  ; funcId body'
+PUSH S1 ; funcId body' funcId
+IFNOTRET
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+GETGLOB 7
+ISNULL
+THROWIF 60
+
+.internal-alias :main_external, -1
+.internal :main_external
+PUSHINT -1 ; main_external trans id
+PUSH S1
+CALLREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+LDU 1 ; haveSign msgSlice
+SWAP
+PUSHCONT {
+	PUSHINT 512
+	LDSLICEX ; signatureSlice msgSlice
+	DUP      ; signatureSlice msgSlice msgSlice
+	HASHSU   ; signatureSlice msgSlice hashMsgSlice
+	ROT
+	GETGLOB 2
+	CHKSIGNU      ; msgSlice isSigned
+	THROWIFNOT 40 ; msgSlice
+}
+IF
+LDU 64                         ; timestamp msgSlice
+SWAP                           ; msgSlice timestamp
+CALL $replay_protection_macro$ ; msgSlice
+LDU  32 ; funcId body
+SWAP    ; body funcId
+CALLREF {
+	CALL $public_function_selector$
+}
+GETGLOB 7
+ISNULL
+THROWIF 60
+
+.macro public_function_selector
+DUP
+PUSHINT 240983554
+LEQ
+PUSHCONT {
+	DUP
+	PUSHINT 87121597
+	EQUAL
+	IFJMPREF {
+		CALL $encodeConfigurationMeta$
+	}
+	DUP
+	PUSHINT 240983554
+	EQUAL
+	IFJMPREF {
+		CALL $decodeEthereumEventData$
+	}
+}
+IFJMP
+DUP
+PUSHINT 558802639
+LEQ
+PUSHCONT {
+	DUP
+	PUSHINT 304625347
+	EQUAL
+	IFJMPREF {
+		CALL $encodeTonEventData$
+	}
+	DUP
+	PUSHINT 558802639
+	EQUAL
+	IFJMPREF {
+		CALL $encodeEthereumEventData$
+	}
+}
+IFJMP
+DUP
+PUSHINT 1364332570
+LEQ
+PUSHCONT {
+	DUP
+	PUSHINT 606765255
+	EQUAL
+	IFJMPREF {
+		CALL $decodeConfigurationMeta$
+	}
+	DUP
+	PUSHINT 1364332570
+	EQUAL
+	IFJMPREF {
+		CALL $decodeTonEventData$
+	}
+}
+IFJMP
+DUP
+PUSHINT 1756716863
+EQUAL
+IFJMPREF {
+	CALL $constructor$
+}

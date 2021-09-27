@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+#  migrate-ethereum-contracts:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - uses: actions/checkout@v2
+#      - uses: actions/setup-node@v2
+#        with:
+#          node-version: '14'
+#      - name: Set environment
+#        uses: allenevans/set-env@v2.0.0
+#        with:
+#          RELAYS_AMOUNT: 3
+#          ETH_SEED: ${{ secrets.ETH_SEED }}
+#          ETH_RPC_HTTP: ${{ secrets.ETH_RPC_HTTP }}
+#          ETH_NETWORK_ID: ${{ secrets.ETH_NETWORK_ID }}
+#          ETH_GAS_PRICE: ${{ secrets.ETH_GAS_PRICE }}
+#      - name: Install dependencies
+#        run: npm install
+
+
+  test-ton-contracts:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Set environment
+        uses: allenevans/set-env@v2.0.0
+        with:
+          RELAYS_AMOUNT: 3
+          ETH_SEED: ${{ secrets.ETH_SEED }}
+          TON_SEED: ${{ secrets.TON_SEED }}
+          TON_NETWORK: https://net.ton.dev
+          TON_GIVER_ABI: ${{ secrets.TON_GIVER_ABI }}
+          TON_GIVER_CONTRACT: ${{ secrets.TON_GIVER_CONTRACT }}
+          TON_WRAPPER_DEBUG: true
+          TON_AFTER_RUN_SLEEP_MS: 40000
+
+      - name: Install dependencies
+        run: npm install
+      - name: Migrate TON contracts
+        run: npm run migrate-ton
+      - name: Save migration logs
+        uses: actions/upload-artifact@v2
+        with:
+          name: migration-log
+          path: free-ton/migration-log.json
+      - name: Test TON contracts
+        run: npm run test-ton

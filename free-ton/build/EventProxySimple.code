@@ -1,0 +1,1009 @@
+.macro constructor
+DROP
+GETGLOB 1
+ISNULL
+IFREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+;; constructor protection
+GETGLOB 6
+THROWIF 51
+PUSHINT 1
+SETGLOB 6
+;; end constructor protection
+; Decode input parameters
+; Decode _ethereumEventConfiguration
+LDMSGADDR
+; Decode _ethereumEventCode
+;; decode TvmCell
+LDREF
+; Decode _ethereumEventPubKey
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+ENDS
+;; param: _ethereumEventConfiguration
+;; param: _ethereumEventCode
+;; param: _ethereumEventPubKey
+; constructor EventProxySimple
+GETGLOB 2
+NEQINT 0
+THROWIFNOT 100
+ACCEPT
+; expValue
+; end expValue
+;; push identifier _ethereumEventConfiguration
+PUSH S2
+; colValue
+SETGLOB 11
+; end colValue
+; expValue
+; end expValue
+;; push identifier _ethereumEventCode
+PUSH S1
+; colValue
+SETGLOB 12
+; end colValue
+; expValue
+; end expValue
+;; push identifier _ethereumEventPubKey
+DUP
+; colValue
+SETGLOB 13
+; end colValue
+; end constructor EventProxySimple
+BLKDROP 3
+CALLREF {
+	CALL $c7_to_c4$
+}
+TRUE
+SETGLOB 7
+
+.macro buildEventProxyAddress
+DROP
+GETGLOB 1
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+; Decode input parameters
+; Decode _eventData
+;; decode struct EthereumEventInitData _eventData
+;; decode EthereumEventInitData.eventTransaction
+LDU 256
+;; decode EthereumEventInitData.eventIndex
+LDU 32
+;; decode EthereumEventInitData.eventData
+;; decode TvmCell
+LDREF
+;; decode EthereumEventInitData.eventBlockNumber
+LDU 32
+;; decode EthereumEventInitData.eventBlock
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+;; decode EthereumEventInitData.ethereumEventConfiguration
+LDMSGADDRQ
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+}
+IFNOT
+;; decode EthereumEventInitData.requiredConfirmations
+LDUQ 16
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 16
+}
+IFNOT
+;; decode EthereumEventInitData.requiredRejects
+LDUQ 16
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 16
+}
+IFNOT
+;; decode EthereumEventInitData.proxyAddress
+LDMSGADDRQ
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+}
+IFNOT
+;; decode EthereumEventInitData.configurationMeta
+;; decode TvmCell
+LDREF
+;; build struct EthereumEventInitData ss:11
+BLKSWAP 10, 1
+TUPLE 10
+SWAP
+ENDS
+;; param: _eventData
+CALLREF {
+	CALL $buildEventProxyAddress_internal_macro$
+}
+;; emitting 1 value(s)
+PUSH S1
+EQINT -1
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	STSLICECONST xa431e13f
+	PUSH S1
+	STSLICER
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+DROP
+IFREF {
+	CALL $c7_to_c4$
+}
+TRUE
+SETGLOB 7
+
+.globl	buildEventProxyAddress_internal
+.type	buildEventProxyAddress_internal, @function
+CALL $buildEventProxyAddress_internal_macro$
+
+.macro buildEventProxyAddress_internal_macro
+;; param: _eventData
+; function buildEventProxyAddress
+NEWDICT
+;; push identifier ethereumEventPubKey
+GETGLOB 13
+NEWC
+STU 256
+PUSHINT 0
+ROT
+PUSHINT 64
+DICTUSETB
+;; push identifier _eventData
+PUSH S1
+UNTUPLE 10
+NEWC
+NEWC
+PUSH S3
+STSLICER
+PUSH S2
+STREFR
+STBREFR
+PUSH S10
+STUR 256
+PUSH S9
+STUR 32
+PUSH S8
+STREFR
+PUSH S7
+STUR 32
+PUSH S6
+STUR 256
+PUSH S5
+STSLICER
+PUSH S4
+STUR 16
+PUSH S3
+STUR 16
+BLKDROP2 10, 1
+ENDC
+PUSHINT 2
+ROT
+PUSHINT 64
+DICTUSETREF
+NEWC
+STDICT
+ENDC
+;; push identifier ethereumEventCode
+GETGLOB 12
+NEWC
+STSLICECONST x2_
+STOPTREF
+STOPTREF
+STZERO
+ENDC
+;; decl: stateInit
+;; return
+;; push identifier stateInit
+DUP
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+ENDC
+CTOS
+NIP
+; end function buildEventProxyAddress
+NIP
+
+.macro broxusBridgeCallback
+DROP
+GETGLOB 1
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+; Decode input parameters
+; Decode _eventData
+;; decode struct EthereumEventInitData _eventData
+;; decode EthereumEventInitData.eventTransaction
+LDU 256
+;; decode EthereumEventInitData.eventIndex
+LDU 32
+;; decode EthereumEventInitData.eventData
+;; decode TvmCell
+LDREF
+;; decode EthereumEventInitData.eventBlockNumber
+LDU 32
+;; decode EthereumEventInitData.eventBlock
+LDUQ 256
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+}
+IFNOT
+;; decode EthereumEventInitData.ethereumEventConfiguration
+LDMSGADDRQ
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+}
+IFNOT
+;; decode EthereumEventInitData.requiredConfirmations
+LDUQ 16
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 16
+}
+IFNOT
+;; decode EthereumEventInitData.requiredRejects
+LDUQ 16
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDU 16
+}
+IFNOT
+;; decode EthereumEventInitData.proxyAddress
+LDMSGADDRQ
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+}
+IFNOT
+;; decode EthereumEventInitData.configurationMeta
+;; decode TvmCell
+DUP
+SBITREFS
+EQINT 1
+SWAP
+EQINT 0
+AND
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDREF
+;; build struct EthereumEventInitData ss:11
+BLKSWAP 10, 1
+TUPLE 10
+SWAP
+; Decode gasBackAddress
+LDMSGADDRQ
+PUSHCONT {
+	;; load next cell
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+}
+IFNOT
+ENDS
+;; param: _eventData
+;; param: gasBackAddress
+CALLREF {
+	CALL $broxusBridgeCallback_internal_macro$
+}
+CALLREF {
+	CALL $c7_to_c4$
+}
+TRUE
+SETGLOB 7
+
+.globl	broxusBridgeCallback_internal
+.type	broxusBridgeCallback_internal, @function
+CALL $broxusBridgeCallback_internal_macro$
+
+.macro broxusBridgeCallback_internal_macro
+;; param: _eventData
+;; param: gasBackAddress
+; function broxusBridgeCallback
+PUSHINT 19173
+;; get member ethereumEventConfiguration
+;; push identifier _eventData
+PUSH S2
+INDEX 5
+;; push identifier ethereumEventConfiguration
+GETGLOB 11
+SDEQ
+THROWANYIFNOT
+PUSHINT 19172
+;; get member proxyAddress
+;; push identifier _eventData
+PUSH S2
+INDEX 8
+MYADDR
+SDEQ
+THROWANYIFNOT
+PUSHINT 19171
+;; push identifier _eventData
+PUSH S2
+CALLREF {
+	CALL $buildEventProxyAddress_internal_macro$
+}
+;; get member sender
+GETGLOB 9
+SDEQ
+THROWANYIFNOT
+;; ++
+; expValue
+;; fetch callbackCounter
+GETGLOB 15
+; end expValue
+INC
+; colValue
+SETGLOB 15
+; end colValue
+; expValue
+; end expValue
+;; push identifier _eventData
+PUSH S1
+; colValue
+SETGLOB 14
+; end colValue
+;; if
+;; get member value
+;; push identifier gasBackAddress
+DUP
+PARSEMSGADDR
+INDEX 3
+PLDU 256
+NEQINT 0
+PUSHCONT {
+	;; transfer()
+	;; push identifier gasBackAddress
+	DUP
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	PUSHINT 109
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	ENDC
+	PUSHINT 64
+	SENDRAWMSG
+}
+PUSHCONT {
+	;; transfer()
+	;; get member sender
+	GETGLOB 9
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	PUSHINT 109
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 0
+	ENDC
+	PUSHINT 64
+	SENDRAWMSG
+}
+IFELSE
+;; end if
+; end function broxusBridgeCallback
+DROP2
+
+.macro getDetails
+DROP
+GETGLOB 1
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+; Decode input parameters
+ENDS
+CALLREF {
+	CALL $getDetails_internal_macro$
+}
+;; emitting 4 value(s)
+PUSH S4
+EQINT -1
+PUSHCONT {
+	PUSH S6
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 1
+	NEWC
+	STSLICECONST xf298651e
+	PUSH S5
+	STSLICER
+	PUSH S4
+	STREFR
+	PUSH S3
+	UNTUPLE 10
+	BLKSWAP 1, 10
+	PUSH S10
+	STUR 256
+	PUSH S9
+	STUR 32
+	PUSH S8
+	STREFR
+	PUSH S7
+	STUR 32
+	PUSH S6
+	STUR 256
+	NEWC
+	PUSH S6
+	STSLICER
+	PUSH S5
+	STUR 16
+	PUSH S4
+	STUR 16
+	PUSH S3
+	STSLICER
+	PUSH S2
+	STREFR
+	BLKDROP2 10, 2
+	PUSH S3
+	STUR 256
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+BLKDROP 4
+IFREF {
+	CALL $c7_to_c4$
+}
+TRUE
+SETGLOB 7
+
+.globl	getDetails_internal
+.type	getDetails_internal, @function
+CALL $getDetails_internal_macro$
+
+.macro getDetails_internal_macro
+;; ret param: _ethereumEventConfiguration
+PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+;; ret param: _ethereumEventCode
+NEWC
+ENDC
+;; ret param: _eventData
+PUSHINT 0
+PUSHINT 0
+NEWC
+ENDC
+PUSHINT 0
+PUSHINT 0
+PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+PUSHINT 0
+PUSHINT 0
+PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+NEWC
+ENDC
+TUPLE 10
+;; ret param: _callbackCounter
+PUSHINT 0
+; function getDetails
+;; return
+;; push identifier ethereumEventConfiguration
+GETGLOB 11
+;; push identifier ethereumEventCode
+GETGLOB 12
+;; push identifier eventData
+GETGLOB 14
+;; push identifier callbackCounter
+GETGLOB 15
+BLKDROP2 4, 4
+; end function getDetails
+
+.macro getDecodedEventData
+DROP
+GETGLOB 1
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+; Decode input parameters
+ENDS
+CALLREF {
+	CALL $getDecodedEventData_internal_macro$
+}
+;; emitting 4 value(s)
+PUSH S4
+EQINT -1
+PUSHCONT {
+	PUSH S6
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 96
+	STZEROES
+	STSLICECONST 0
+	STSLICECONST 1
+	NEWC
+	STSLICECONST xbe97064a
+	PUSH S5
+	STUR 128
+	PUSH S4
+	STIR 8
+	PUSH S3
+	STUR 256
+	PUSH S2
+	STUR 256
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+BLKDROP 4
+IFREF {
+	CALL $c7_to_c4$
+}
+TRUE
+SETGLOB 7
+
+.globl	getDecodedEventData_internal
+.type	getDecodedEventData_internal, @function
+CALL $getDecodedEventData_internal_macro$
+
+.macro getDecodedEventData_internal_macro
+;; ret param: tokens
+PUSHINT 0
+;; ret param: wid
+PUSHINT 0
+;; ret param: owner_addr
+PUSHINT 0
+;; ret param: owner_pubkey
+PUSHINT 0
+; function getDecodedEventData
+;; get member eventData
+;; push identifier eventData
+GETGLOB 14
+INDEX 2
+CTOS
+LDU 128
+LDI 8
+LDU 256
+LDU 256
+; colValue
+DROP
+REVERSE 4, 0
+; expValue
+; end expValue
+; colValue
+POP S7
+; end colValue
+; expValue
+; end expValue
+; colValue
+POP S5
+; end colValue
+; expValue
+; end expValue
+; colValue
+POP S3
+; end colValue
+; expValue
+; end expValue
+; colValue
+NIP
+; end colValue
+; end function getDecodedEventData
+
+.globl	transferAll_internal
+.type	transferAll_internal, @function
+CALL $transferAll_internal_macro$
+
+.macro transferAll_internal_macro
+;; param: receiver
+; function transferAll
+;; transfer()
+;; push identifier receiver
+DUP
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 109
+STZEROES
+STSLICECONST 0
+STSLICECONST 0
+ENDC
+PUSHINT 129
+SENDRAWMSG
+; end function transferAll
+DROP
+
+.macro c7_to_c4
+GETGLOB 2
+NEWC
+STU 256
+GETGLOB 3
+STUR 64
+GETGLOB 6
+STUR 1
+NEWC
+GETGLOB 15
+SWAP
+STU 256
+GETGLOB 10
+GETGLOB 11
+GETGLOB 12
+GETGLOB 13
+GETGLOB 14
+REVERSE 7, 0
+STBREF
+STU 16
+STSLICE
+STREF
+STU 256
+SWAP
+UNTUPLE 10
+NEWC
+NEWC
+PUSH S3
+STSLICER
+PUSH S2
+STREFR
+STBREFR
+PUSH S10
+STUR 256
+PUSH S9
+STUR 32
+PUSH S8
+STREFR
+PUSH S7
+STUR 32
+PUSH S6
+STUR 256
+PUSH S5
+STSLICER
+PUSH S4
+STUR 16
+PUSH S3
+STUR 16
+BLKDROP2 10, 1
+STBREFR
+ENDC
+POP C4
+
+.macro c4_to_c7
+PUSHROOT
+CTOS        ; c4
+LDU 256      ; pubkey c4
+LDU 64      ; pubkey timestamp c4
+LDU 1       ; pubkey [timestamp] constructor_flag memory
+LDREFRTOS
+PLDU 256
+SETGLOB 15
+LDU 16
+LDMSGADDR
+LDREF
+LDU 256
+LDREFRTOS
+NIP
+LDREF
+LDU 256
+LDU 32
+LDREF
+LDU 32
+LDU 256
+LDMSGADDR
+LDU 16
+PLDU 16
+BLKSWAP 1, 8
+CTOS
+LDMSGADDR
+PLDREF
+TUPLE 10
+SETGLOB 14
+SETGLOB 13
+SETGLOB 12
+SETGLOB 11
+SETGLOB 10
+TRUE
+SETGLOB 1   ; pubkey [timestamp] constructor_flag
+SETGLOB 6   ; pubkey [timestamp]
+SETGLOB 3   ; D
+SETGLOB 2
+
+.macro c4_to_c7_with_init_storage
+PUSHROOT
+CTOS        ; c4
+DUP        ; c4 c4
+SBITS      ; c4 bits
+GTINT 1    ; c4 bits>1
+PUSHCONT {
+	LDU 256      ; pubkey c4
+	LDU 64      ; pubkey timestamp c4
+	LDU 1       ; pubkey [timestamp] constructor_flag memory
+	LDREFRTOS
+	PLDU 256
+	SETGLOB 15
+	LDU 16
+	LDMSGADDR
+	LDREF
+	LDU 256
+	LDREFRTOS
+	NIP
+	LDREF
+	LDU 256
+	LDU 32
+	LDREF
+	LDU 32
+	LDU 256
+	LDMSGADDR
+	LDU 16
+	PLDU 16
+	BLKSWAP 1, 8
+	CTOS
+	LDMSGADDR
+	PLDREF
+	TUPLE 10
+	SETGLOB 14
+	SETGLOB 13
+	SETGLOB 12
+	SETGLOB 11
+	SETGLOB 10
+	TRUE
+	SETGLOB 1   ; pubkey [timestamp] constructor_flag
+	SETGLOB 6   ; pubkey [timestamp]
+	SETGLOB 3   ; D
+	SETGLOB 2
+}
+PUSHCONT {
+	PLDDICT   ; D
+	; init _randomNonce
+	PUSHINT 1
+	PUSH S1
+	PUSHINT 64
+	DICTUGET
+	PUSHCONT {
+		PLDU 16
+	}
+	PUSHCONT {
+		PUSHINT 0
+	}
+	IFELSE
+	SETGLOB 10
+	; init ethereumEventConfiguration
+	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+	SETGLOB 11
+	; init ethereumEventCode
+	NEWC
+	ENDC
+	SETGLOB 12
+	; init ethereumEventPubKey
+	PUSHINT 0
+	SETGLOB 13
+	; init eventData
+	PUSHINT 0
+	PUSHINT 0
+	NEWC
+	ENDC
+	PUSHINT 0
+	PUSHINT 0
+	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+	PUSHINT 0
+	PUSHINT 0
+	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+	NEWC
+	ENDC
+	TUPLE 10
+	SETGLOB 14
+	; init callbackCounter
+	PUSHINT 0
+	SETGLOB 15
+	; set contract pubkey
+	PUSHINT 0
+	SWAP
+	PUSHINT 64
+	DICTUGET
+	THROWIFNOT 61
+	PLDU 256
+	SETGLOB 2
+	PUSHINT 0 ; timestamp
+	SETGLOB 3
+	PUSHINT 0 ; constructor_flag
+	SETGLOB 6
+	TRUE
+	SETGLOB 1
+	;; init state var: callbackCounter
+	PUSHINT 0
+	SETGLOB 15
+}
+IFELSE
+
+.internal-alias :main_internal, 0
+.internal :main_internal
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Function: main_internal
+;; param: contract_balance
+;; param: msg_balance
+;; param: int_msg_info
+;; param: msg_body_slice
+PUSHINT 0  ; main_external trans id
+PUSH S2
+CTOS
+LDU 4       ; bounced tail
+LDMSGADDR   ; bounced src tail
+DROP
+SETGLOB 9
+MODPOW2 1
+IFRET
+PUSH S1    ; body
+SEMPTY     ; isEmpty
+IFRET
+PUSH S1 ; body
+LDU 32  ; funcId body'
+PUSH S1 ; funcId body' funcId
+IFNOTRET
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+GETGLOB 7
+ISNULL
+THROWIF 60
+
+.internal-alias :main_external, -1
+.internal :main_external
+PUSHINT -1 ; main_external trans id
+PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+SETGLOB 9
+PUSH S1
+CALLREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+LDU 1 ; haveSign msgSlice
+SWAP
+PUSHCONT {
+	PUSHINT 512
+	LDSLICEX ; signatureSlice msgSlice
+	DUP      ; signatureSlice msgSlice msgSlice
+	HASHSU   ; signatureSlice msgSlice hashMsgSlice
+	ROT
+	GETGLOB 2
+	CHKSIGNU      ; msgSlice isSigned
+	THROWIFNOT 40 ; msgSlice
+}
+IF
+LDU 64                         ; timestamp msgSlice
+SWAP                           ; msgSlice timestamp
+CALL $replay_protection_macro$ ; msgSlice
+LDU 32  ; expireAt msgSlice
+SWAP    ; msgSlice expireAt
+NOW     ; msgSlice expireAt now
+GREATER ; msgSlice expireAt>now
+THROWIFNOT 57
+LDU  32 ; funcId body
+SWAP    ; body funcId
+CALLREF {
+	CALL $public_function_selector$
+}
+GETGLOB 7
+ISNULL
+THROWIF 60
+
+.macro public_function_selector
+DUP
+PUSHINT 1050084938
+LEQ
+PUSHCONT {
+	DUP
+	PUSHINT 607248703
+	EQUAL
+	IFJMPREF {
+		CALL $buildEventProxyAddress$
+	}
+	DUP
+	PUSHINT 1050084938
+	EQUAL
+	IFJMPREF {
+		CALL $getDecodedEventData$
+	}
+}
+IFJMP
+DUP
+PUSHINT 1750966772
+LEQ
+PUSHCONT {
+	DUP
+	PUSHINT 1214893325
+	EQUAL
+	IFJMPREF {
+		CALL $broxusBridgeCallback$
+	}
+	DUP
+	PUSHINT 1750966772
+	EQUAL
+	IFJMPREF {
+		CALL $constructor$
+	}
+}
+IFJMP
+DUP
+PUSHINT 1922589982
+EQUAL
+IFJMPREF {
+	CALL $getDetails$
+}
