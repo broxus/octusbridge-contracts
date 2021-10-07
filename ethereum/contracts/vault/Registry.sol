@@ -140,6 +140,7 @@ contract Registry is Ownable, IRegistry {
         address token,
         address governance,
         address guardian,
+        uint256 targetDecimals,
         uint256 vault_release_target,
         uint256 wrapper_release_target
     ) internal returns(address) {
@@ -175,7 +176,8 @@ contract Registry is Ownable, IRegistry {
             bridge,
             address(wrapper),
             guardian,
-            ZERO_ADDRESS
+            ZERO_ADDRESS,
+            targetDecimals
         );
 
         return address(vault);
@@ -212,6 +214,7 @@ contract Registry is Ownable, IRegistry {
     function newVault(
         address token,
         address guardian,
+        uint256 targetDecimals,
         uint256 vaultReleaseDelta,
         uint256 wrapperReleaseDelta
     ) external onlyOwner returns (address) {
@@ -222,6 +225,7 @@ contract Registry is Ownable, IRegistry {
             token,
             msg.sender,
             guardian,
+            targetDecimals,
             vault_release_target,
             wrapper_release_target
         );
@@ -235,6 +239,7 @@ contract Registry is Ownable, IRegistry {
         address token,
         address governance,
         address guardian,
+        uint256 targetDecimals,
         uint256 vaultReleaseDelta,
         uint256 wrapperReleaseDelta
     ) external returns(address) {
@@ -245,6 +250,7 @@ contract Registry is Ownable, IRegistry {
             token,
             governance,
             guardian,
+            targetDecimals,
             vault_release_target,
             wrapper_release_target
         );

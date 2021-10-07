@@ -32,6 +32,7 @@ describe('Test Vault DAI deposit', async () => {
     await registry.connect(owner).newVault(
       dai.address,
       guardian,
+      legos.erc20.dai.decimals,
       0,
       0,
     );

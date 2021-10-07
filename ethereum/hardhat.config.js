@@ -46,36 +46,36 @@ const hardhatConfig = {
         count: 30
       }
     },
-    // goerli: {
-    //   url: process.env.ETH_GOERLI_HTTP,
-    //   gasPrice: 1500000007,
-    //   gas: 3000000,
-    //   timeout: 1000000,
-    //   accounts: {
-    //     mnemonic: process.env.ETH_GOERLI_MNEMONIC,
-    //     count: 30
-    //   },
-    // },
-    main: {
-      url: process.env.ETH_MAIN_HTTP,
-      gasPrice: 110000000000, // 110 gwei
+    goerli: {
+      url: process.env.ETH_GOERLI_HTTP,
+      gasPrice: 1500000007,
       gas: 3000000,
       timeout: 1000000,
       accounts: {
-        mnemonic: process.env.ETH_MNEMONIC,
+        mnemonic: process.env.ETH_GOERLI_MNEMONIC,
         count: 30
       },
     },
-    // ropsten: {
-    //   url: process.env.ETH_ROPSTEN_HTTP,
-    //   gasPrice: 2500000007,
+    // main: {
+    //   url: process.env.ETH_MAIN_HTTP,
+    //   gasPrice: 110000000000, // 110 gwei
     //   gas: 3000000,
     //   timeout: 1000000,
     //   accounts: {
-    //     mnemonic: process.env.ETH_GOERLI_MNEMONIC,
+    //     mnemonic: process.env.ETH_MNEMONIC,
     //     count: 30
     //   },
-    // }
+    // },
+    ropsten: {
+      url: process.env.ETH_ROPSTEN_HTTP,
+      gasPrice: 2500000007,
+      gas: 3000000,
+      timeout: 1000000,
+      accounts: {
+        mnemonic: process.env.ETH_GOERLI_MNEMONIC,
+        count: 30
+      },
+    }
   },
   gasReporter: {
     currency: 'USD',

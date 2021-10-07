@@ -38,7 +38,8 @@ interface IVault {
         address _bridge,
         address _wrapper,
         address guardian,
-        address management
+        address management,
+        uint256 targetDecimals
     ) external;
 
     function governance() external view returns(address);

@@ -151,6 +151,11 @@
         "internalType": "address",
         "name": "management",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "targetDecimals",
+        "type": "uint256"
       }
     ],
     "name": "initialize",
