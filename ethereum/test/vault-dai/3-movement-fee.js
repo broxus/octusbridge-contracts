@@ -36,6 +36,7 @@ describe('Check deposit / withdraw fees', async () => {
     await registry.connect(owner).newVault(
       dai.address,
       guardian,
+      legos.erc20.dai.decimals,
       0,
       0,
     );

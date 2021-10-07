@@ -316,6 +316,11 @@
       },
       {
         "internalType": "uint256",
+        "name": "targetDecimals",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
         "name": "vaultReleaseDelta",
         "type": "uint256"
       },
@@ -347,6 +352,11 @@
         "internalType": "address",
         "name": "guardian",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "targetDecimals",
+        "type": "uint256"
       },
       {
         "internalType": "uint256",

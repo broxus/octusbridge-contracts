@@ -22,12 +22,86 @@
     "type": "event"
   },
   {
-    "name": "PendingWithdrawalUpdate",
+    "name": "NewDeposit",
+    "inputs": [
+      {
+        "name": "sender",
+        "type": "address",
+        "indexed": false
+      },
+      {
+        "name": "recipientWid",
+        "type": "int128",
+        "indexed": false
+      },
+      {
+        "name": "recipientAddr",
+        "type": "uint256",
+        "indexed": false
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "indexed": false
+      },
+      {
+        "name": "pendingWithdrawalRecipient",
+        "type": "address",
+        "indexed": false
+      },
+      {
+        "name": "pendingWithdrawalId",
+        "type": "uint256",
+        "indexed": false
+      },
+      {
+        "name": "sendTransferToTon",
+        "type": "bool",
+        "indexed": false
+      }
+    ],
+    "anonymous": false,
+    "type": "event"
+  },
+  {
+    "name": "InstantWithdrawal",
     "inputs": [
       {
         "name": "recipient",
         "type": "address",
-        "indexed": true
+        "indexed": false
+      },
+      {
+        "name": "payloadId",
+        "type": "bytes32",
+        "indexed": false
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false,
+    "type": "event"
+  },
+  {
+    "name": "CreatePendingWithdrawal",
+    "inputs": [
+      {
+        "name": "recipient",
+        "type": "address",
+        "indexed": false
+      },
+      {
+        "name": "id",
+        "type": "uint256",
+        "indexed": false
+      },
+      {
+        "name": "payloadId",
+        "type": "bytes32",
+        "indexed": false
       },
       {
         "name": "amount",
@@ -38,10 +112,88 @@
         "name": "bounty",
         "type": "uint256",
         "indexed": false
+      }
+    ],
+    "anonymous": false,
+    "type": "event"
+  },
+  {
+    "name": "UpdatePendingWithdrawalBounty",
+    "inputs": [
+      {
+        "name": "recipient",
+        "type": "address",
+        "indexed": false
       },
       {
-        "name": "open",
-        "type": "bool",
+        "name": "id",
+        "type": "uint256",
+        "indexed": false
+      },
+      {
+        "name": "bounty",
+        "type": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false,
+    "type": "event"
+  },
+  {
+    "name": "CancelPendingWithdrawal",
+    "inputs": [
+      {
+        "name": "recipient",
+        "type": "address",
+        "indexed": false
+      },
+      {
+        "name": "id",
+        "type": "uint256",
+        "indexed": false
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false,
+    "type": "event"
+  },
+  {
+    "name": "WithdrawPendingWithdrawal",
+    "inputs": [
+      {
+        "name": "recipient",
+        "type": "address",
+        "indexed": false
+      },
+      {
+        "name": "id",
+        "type": "uint256",
+        "indexed": false
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false,
+    "type": "event"
+  },
+  {
+    "name": "FillPendingWithdrawal",
+    "inputs": [
+      {
+        "name": "recipient",
+        "type": "address",
+        "indexed": false
+      },
+      {
+        "name": "id",
+        "type": "uint256",
         "indexed": false
       }
     ],
@@ -54,7 +206,7 @@
       {
         "name": "bridge",
         "type": "address",
-        "indexed": true
+        "indexed": false
       }
     ],
     "anonymous": false,
@@ -66,7 +218,7 @@
       {
         "name": "wrapper",
         "type": "address",
-        "indexed": true
+        "indexed": false
       }
     ],
     "anonymous": false,
@@ -76,8 +228,25 @@
     "name": "UpdateConfiguration",
     "inputs": [
       {
-        "name": "configuration",
-        "type": "(int128,uint256)",
+        "name": "wid",
+        "type": "int128",
+        "indexed": false
+      },
+      {
+        "name": "addr",
+        "type": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false,
+    "type": "event"
+  },
+  {
+    "name": "UpdateTargetDecimals",
+    "inputs": [
+      {
+        "name": "targetDecimals",
+        "type": "uint256",
         "indexed": false
       }
     ],
@@ -88,8 +257,13 @@
     "name": "UpdateRewards",
     "inputs": [
       {
-        "name": "rewards",
-        "type": "(int128,uint256)",
+        "name": "wid",
+        "type": "int128",
+        "indexed": false
+      },
+      {
+        "name": "addr",
+        "type": "uint256",
         "indexed": false
       }
     ],
@@ -102,11 +276,16 @@
       {
         "name": "strategy",
         "type": "address",
-        "indexed": true
+        "indexed": false
       },
       {
-        "name": "rewards",
-        "type": "(int128,uint256)",
+        "name": "wid",
+        "type": "int128",
+        "indexed": false
+      },
+      {
+        "name": "addr",
+        "type": "uint256",
         "indexed": false
       }
     ],
@@ -117,8 +296,13 @@
     "name": "UpdateDepositFee",
     "inputs": [
       {
-        "name": "fee",
-        "type": "(uint256,uint256)",
+        "name": "step",
+        "type": "uint256",
+        "indexed": false
+      },
+      {
+        "name": "size",
+        "type": "uint256",
         "indexed": false
       }
     ],
@@ -129,8 +313,13 @@
     "name": "UpdateWithdrawFee",
     "inputs": [
       {
-        "name": "fee",
-        "type": "(uint256,uint256)",
+        "name": "step",
+        "type": "uint256",
+        "indexed": false
+      },
+      {
+        "name": "size",
+        "type": "uint256",
         "indexed": false
       }
     ],
@@ -483,10 +672,14 @@
       {
         "name": "management",
         "type": "address"
+      },
+      {
+        "name": "targetDecimals",
+        "type": "uint256"
       }
     ],
     "outputs": [],
-    "gas": 367155
+    "gas": 439965
   },
   {
     "stateMutability": "pure",
@@ -500,6 +693,19 @@
       }
     ],
     "gas": 5946
+  },
+  {
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "name": "setTargetDecimals",
+    "inputs": [
+      {
+        "name": "targetDecimals",
+        "type": "uint256"
+      }
+    ],
+    "outputs": [],
+    "gas": 37505
   },
   {
     "stateMutability": "nonpayable",
@@ -522,7 +728,7 @@
       }
     ],
     "outputs": [],
-    "gas": 76514
+    "gas": 77144
   },
   {
     "stateMutability": "nonpayable",
@@ -545,7 +751,7 @@
       }
     ],
     "outputs": [],
-    "gas": 76544
+    "gas": 77174
   },
   {
     "stateMutability": "nonpayable",
@@ -558,7 +764,7 @@
       }
     ],
     "outputs": [],
-    "gas": 38805
+    "gas": 39045
   },
   {
     "stateMutability": "nonpayable",
@@ -581,7 +787,7 @@
       }
     ],
     "outputs": [],
-    "gas": 74089
+    "gas": 74719
   },
   {
     "stateMutability": "nonpayable",
@@ -594,7 +800,7 @@
       }
     ],
     "outputs": [],
-    "gas": 39071
+    "gas": 39101
   },
   {
     "stateMutability": "nonpayable",
@@ -602,7 +808,7 @@
     "name": "acceptGovernance",
     "inputs": [],
     "outputs": [],
-    "gas": 38997
+    "gas": 39027
   },
   {
     "stateMutability": "nonpayable",
@@ -615,7 +821,7 @@
       }
     ],
     "outputs": [],
-    "gas": 39135
+    "gas": 39165
   },
   {
     "stateMutability": "nonpayable",
@@ -642,7 +848,7 @@
       }
     ],
     "outputs": [],
-    "gas": 82246
+    "gas": 83083
   },
   {
     "stateMutability": "nonpayable",
@@ -665,7 +871,7 @@
       }
     ],
     "outputs": [],
-    "gas": 74239
+    "gas": 74869
   },
   {
     "stateMutability": "nonpayable",
@@ -678,7 +884,7 @@
       }
     ],
     "outputs": [],
-    "gas": 37879
+    "gas": 37909
   },
   {
     "stateMutability": "nonpayable",
@@ -691,7 +897,7 @@
       }
     ],
     "outputs": [],
-    "gas": 39155
+    "gas": 39185
   },
   {
     "stateMutability": "nonpayable",
@@ -704,7 +910,7 @@
       }
     ],
     "outputs": [],
-    "gas": 39289
+    "gas": 39319
   },
   {
     "stateMutability": "nonpayable",
@@ -717,7 +923,7 @@
       }
     ],
     "outputs": [],
-    "gas": 39319
+    "gas": 39349
   },
   {
     "stateMutability": "nonpayable",
@@ -730,7 +936,7 @@
       }
     ],
     "outputs": [],
-    "gas": 41863
+    "gas": 41893
   },
   {
     "stateMutability": "nonpayable",
@@ -743,7 +949,7 @@
       }
     ],
     "outputs": [],
-    "gas": 41934
+    "gas": 41964
   },
   {
     "stateMutability": "nonpayable",
@@ -756,7 +962,7 @@
       }
     ],
     "outputs": [],
-    "gas": 1348979
+    "gas": 1349009
   },
   {
     "stateMutability": "nonpayable",
@@ -773,7 +979,7 @@
       }
     ],
     "outputs": [],
-    "gas": 49722
+    "gas": 41166
   },
   {
     "stateMutability": "view",
@@ -786,7 +992,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 8578
+    "gas": 8638
   },
   {
     "stateMutability": "nonpayable",
@@ -835,7 +1041,7 @@
       }
     ],
     "outputs": [],
-    "gas": 196701
+    "gas": 304743
   },
   {
     "stateMutability": "nonpayable",
@@ -860,7 +1066,7 @@
       }
     ],
     "outputs": [],
-    "gas": 246913
+    "gas": 344287
   },
   {
     "stateMutability": "nonpayable",
@@ -869,6 +1075,10 @@
     "inputs": [
       {
         "name": "id",
+        "type": "uint256"
+      },
+      {
+        "name": "amount",
         "type": "uint256"
       },
       {
@@ -887,7 +1097,7 @@
       }
     ],
     "outputs": [],
-    "gas": 80444
+    "gas": 149453
   },
   {
     "stateMutability": "nonpayable",
@@ -896,6 +1106,10 @@
     "inputs": [
       {
         "name": "id",
+        "type": "uint256"
+      },
+      {
+        "name": "_value",
         "type": "uint256"
       }
     ],
@@ -913,6 +1127,10 @@
     "inputs": [
       {
         "name": "id",
+        "type": "uint256"
+      },
+      {
+        "name": "_value",
         "type": "uint256"
       },
       {
@@ -934,6 +1152,10 @@
     "inputs": [
       {
         "name": "id",
+        "type": "uint256"
+      },
+      {
+        "name": "_value",
         "type": "uint256"
       },
       {
@@ -979,7 +1201,7 @@
       }
     ],
     "outputs": [],
-    "gas": 1638399
+    "gas": 1638459
   },
   {
     "stateMutability": "nonpayable",
@@ -996,7 +1218,7 @@
       }
     ],
     "outputs": [],
-    "gas": 121685
+    "gas": 121715
   },
   {
     "stateMutability": "nonpayable",
@@ -1013,7 +1235,7 @@
       }
     ],
     "outputs": [],
-    "gas": 47551
+    "gas": 47581
   },
   {
     "stateMutability": "nonpayable",
@@ -1030,7 +1252,7 @@
       }
     ],
     "outputs": [],
-    "gas": 47581
+    "gas": 47611
   },
   {
     "stateMutability": "nonpayable",
@@ -1047,7 +1269,7 @@
       }
     ],
     "outputs": [],
-    "gas": 42794
+    "gas": 42824
   },
   {
     "stateMutability": "nonpayable",
@@ -1064,7 +1286,7 @@
       }
     ],
     "outputs": [],
-    "gas": 1324247
+    "gas": 1324307
   },
   {
     "stateMutability": "nonpayable",
@@ -1096,7 +1318,7 @@
       }
     ],
     "outputs": [],
-    "gas": 1255524
+    "gas": 1255584
   },
   {
     "stateMutability": "nonpayable",
@@ -1109,7 +1331,7 @@
       }
     ],
     "outputs": [],
-    "gas": 23635413
+    "gas": 23636043
   },
   {
     "stateMutability": "view",
@@ -1180,7 +1402,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 21201
+    "gas": 21291
   },
   {
     "stateMutability": "view",
@@ -1235,7 +1457,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 660170
+    "gas": 810204
   },
   {
     "stateMutability": "nonpayable",
@@ -1304,7 +1526,7 @@
       }
     ],
     "outputs": [],
-    "gas": 59036
+    "gas": 96492
   },
   {
     "stateMutability": "view",
@@ -1317,7 +1539,7 @@
         "type": "address"
       }
     ],
-    "gas": 3618
+    "gas": 3648
   },
   {
     "stateMutability": "view",
@@ -1330,7 +1552,7 @@
         "type": "address"
       }
     ],
-    "gas": 3648
+    "gas": 3678
   },
   {
     "stateMutability": "view",
@@ -1343,7 +1565,7 @@
         "type": "address"
       }
     ],
-    "gas": 3678
+    "gas": 3708
   },
   {
     "stateMutability": "view",
@@ -1356,7 +1578,7 @@
         "type": "address"
       }
     ],
-    "gas": 3708
+    "gas": 3738
   },
   {
     "stateMutability": "view",
@@ -1374,7 +1596,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 3953
+    "gas": 3983
   },
   {
     "stateMutability": "view",
@@ -1404,7 +1626,7 @@
         "type": "bool"
       }
     ],
-    "gas": 8914
+    "gas": 8944
   },
   {
     "stateMutability": "view",
@@ -1417,7 +1639,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 3798
+    "gas": 3828
   },
   {
     "stateMutability": "view",
@@ -1435,7 +1657,7 @@
         "type": "bool"
       }
     ],
-    "gas": 3943
+    "gas": 3973
   },
   {
     "stateMutability": "view",
@@ -1448,7 +1670,7 @@
         "type": "address"
       }
     ],
-    "gas": 3858
+    "gas": 3888
   },
   {
     "stateMutability": "view",
@@ -1461,7 +1683,7 @@
         "type": "address"
       }
     ],
-    "gas": 3888
+    "gas": 3918
   },
   {
     "stateMutability": "view",
@@ -1478,7 +1700,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 6452
+    "gas": 6482
   },
   {
     "stateMutability": "view",
@@ -1495,7 +1717,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 6482
+    "gas": 6512
   },
   {
     "stateMutability": "view",
@@ -1512,7 +1734,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 6512
+    "gas": 6542
   },
   {
     "stateMutability": "view",
@@ -1529,7 +1751,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 6542
+    "gas": 6572
   },
   {
     "stateMutability": "view",
@@ -1601,7 +1823,7 @@
         ]
       }
     ],
-    "gas": 32100
+    "gas": 32130
   },
   {
     "stateMutability": "view",
@@ -1619,7 +1841,7 @@
         "type": "address"
       }
     ],
-    "gas": 4177
+    "gas": 4207
   },
   {
     "stateMutability": "view",
@@ -1632,7 +1854,7 @@
         "type": "bool"
       }
     ],
-    "gas": 4098
+    "gas": 4128
   },
   {
     "stateMutability": "view",
@@ -1645,7 +1867,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 4128
+    "gas": 4158
   },
   {
     "stateMutability": "view",
@@ -1658,7 +1880,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 4158
+    "gas": 4188
   },
   {
     "stateMutability": "view",
@@ -1671,7 +1893,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 4188
+    "gas": 4218
   },
   {
     "stateMutability": "view",
@@ -1684,7 +1906,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 4218
+    "gas": 4248
   },
   {
     "stateMutability": "view",
@@ -1697,7 +1919,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 4248
+    "gas": 4278
   },
   {
     "stateMutability": "view",
@@ -1710,7 +1932,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 4278
+    "gas": 4308
   },
   {
     "stateMutability": "view",
@@ -1723,7 +1945,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 4308
+    "gas": 4338
   },
   {
     "stateMutability": "view",
@@ -1736,7 +1958,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 4338
+    "gas": 4368
   },
   {
     "stateMutability": "view",
@@ -1749,6 +1971,32 @@
         "type": "uint256"
       }
     ],
-    "gas": 4368
+    "gas": 4398
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "tokenDecimals",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "gas": 4428
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "targetDecimals",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "gas": 4458
   }
 ]

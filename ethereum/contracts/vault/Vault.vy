@@ -67,7 +67,7 @@
     https://github.com/iearn-finance/yearn-vaults/blob/main/SPECIFICATION.md
 """
 
-API_VERSION: constant(String[28]) = "0.1.0"
+API_VERSION: constant(String[28]) = "0.1.1"
 
 from vyper.interfaces import ERC20
 
@@ -81,6 +81,9 @@ interface Strategy:
     def withdraw(_amount: uint256) -> uint256: nonpayable
     def migrate(_newStrategy: address): nonpayable
 
+
+interface ExtendedERC20:
+    def decimals() -> uint256: view
 
 token: public(ERC20)
 governance: public(address)
@@ -100,7 +103,6 @@ struct TONEvent:
     proxy: address
     round: uint256
 
-# NOTE: used for transferring tokens to the FreeTON network
 struct TONAddress:
     wid: int128
     addr: uint256
@@ -131,36 +133,78 @@ event Deposit:
     wid: int128 # Recipient in TON, see note on `TONAddress`
     addr: uint256
 
-event PendingWithdrawalUpdate:
-    recipient: indexed(address)
+event NewDeposit:
+    sender: address
+    recipientWid: int128
+    recipientAddr: uint256
+    amount: uint256
+    pendingWithdrawalRecipient: address
+    pendingWithdrawalId: uint256
+    sendTransferToTon: bool
+
+event InstantWithdrawal:
+    recipient: address
+    payloadId: bytes32
+    amount: uint256
+
+event CreatePendingWithdrawal:
+    recipient: address
+    id: uint256
+    payloadId: bytes32
     amount: uint256
     bounty: uint256
-    open: bool
+
+event UpdatePendingWithdrawalBounty:
+    recipient: address
+    id: uint256
+    bounty: uint256
+
+event CancelPendingWithdrawal:
+    recipient: address
+    id: uint256
+    amount: uint256
+
+event WithdrawPendingWithdrawal:
+    recipient: address
+    id: uint256
+    amount: uint256
+
+event FillPendingWithdrawal:
+    recipient: address
+    id: uint256
 
 event UpdateBridge:
-    bridge: indexed(address)
+    bridge: address
 
 event UpdateWrapper:
-    wrapper: indexed(address)
+    wrapper: address
 
 event UpdateConfiguration:
-    configuration: TONAddress
+    wid: int128
+    addr: uint256
+
+event UpdateTargetDecimals:
+    targetDecimals: uint256
 
 # NOTE: unlike the original Yearn Vault,
 # fees are paid in corresponding token on the FreeTON side
 # See note on `_assessFees`
 event UpdateRewards:
-    rewards: TONAddress
+    wid: int128
+    addr: uint256
 
 event UpdateStrategyRewards:
-    strategy: indexed(address)
-    rewards: TONAddress
+    strategy: address
+    wid: int128
+    addr: uint256
 
 event UpdateDepositFee:
-    fee: Fee
+    step: uint256
+    size: uint256
 
 event UpdateWithdrawFee:
-    fee: Fee
+    step: uint256
+    size: uint256
 
 # ================= Broxus bridge events =================
 
@@ -344,6 +388,10 @@ MAX_BPS: constant(uint256) = 10_000  # 100%, or 10k basis points
 SECS_PER_YEAR: constant(uint256) = 31_556_952  # 365.2425 days
 
 
+tokenDecimals: public(uint256)
+targetDecimals: public(uint256)
+
+
 @external
 def initialize(
     token: address,
@@ -352,6 +400,7 @@ def initialize(
     wrapper: address,
     guardian: address,
     management: address,
+    targetDecimals: uint256,
 ):
     """
     @notice
@@ -371,10 +420,13 @@ def initialize(
     @param wrapper Helper contract, need for parsing withdraw receipts
     @param guardian The address authorized for guardian interactions. Defaults to caller.
     @param management The address of the vault manager.
+    @param targetDecimals Amount of decimals in the corresponding FreeTON token
     """
     assert self.activation == 0  # dev: no devops199
 
     self.token = ERC20(token)
+    self.tokenDecimals = ExtendedERC20(token).decimals()
+    self.targetDecimals = targetDecimals
 
     self.governance = governance
     log UpdateGovernance(governance)
@@ -418,6 +470,19 @@ def apiVersion() -> String[28]:
     return API_VERSION
 
 @external
+def setTargetDecimals(targetDecimals: uint256):
+    """
+    @notice
+        Set FreeTON token decimals
+    @dev May differ from the `token` decimals
+    @param targetDecimals FreeTON token decimals
+    """
+
+    assert msg.sender == self.governance
+
+    self.targetDecimals = targetDecimals
+
+@external
 def setDepositFee(fee: Fee):
     """
     @notice
@@ -430,7 +495,7 @@ def setDepositFee(fee: Fee):
 
     self.depositFee = fee
 
-    log UpdateDepositFee(fee)
+    log UpdateDepositFee(fee.step, fee.size)
 
 @external
 def setWithdrawFee(fee: Fee):
@@ -444,7 +509,7 @@ def setWithdrawFee(fee: Fee):
 
     self.withdrawFee = fee
 
-    log UpdateWithdrawFee(fee)
+    log UpdateWithdrawFee(fee.step, fee.size)
 
 @external
 def setWrapper(wrapper: address):
@@ -463,7 +528,7 @@ def setWrapper(wrapper: address):
 def setConfiguration(configuration: TONAddress):
     assert msg.sender == self.governance
 
-    log UpdateConfiguration(configuration)
+    log UpdateConfiguration(configuration.wid, configuration.addr)
 
     self.configuration = configuration
 
@@ -526,7 +591,7 @@ def setStrategyRewards(strategy: address, rewards: TONAddress):
 
     self.strategies[strategy].rewards = rewards
 
-    log UpdateStrategyRewards(strategy, rewards)
+    log UpdateStrategyRewards(strategy, rewards.wid, rewards.addr)
 
 
 @external
@@ -542,7 +607,7 @@ def setRewards(rewards: TONAddress):
 
     self.rewards = rewards
 
-    log UpdateRewards(rewards)
+    log UpdateRewards(rewards.wid, rewards.addr)
 
 
 @external
@@ -704,17 +769,6 @@ def setWithdrawalQueue(queue: address[MAXIMUM_STRATEGIES]):
 
     log UpdateWithdrawalQueue(queue)
 
-@internal
-def _logPendingWithdrawal(
-    recipient: address,
-    id: uint256
-):
-    log PendingWithdrawalUpdate(
-        recipient,
-        self.pendingWithdrawals[recipient][id].amount,
-        self.pendingWithdrawals[recipient][id].bounty,
-        self.pendingWithdrawals[recipient][id].open
-    )
 
 @external
 def setPendingWithdrawalBounty(
@@ -730,7 +784,7 @@ def setPendingWithdrawalBounty(
 
     self.pendingWithdrawals[msg.sender][id].bounty = bounty
 
-    self._logPendingWithdrawal(msg.sender, id)
+    log UpdatePendingWithdrawalBounty(msg.sender, id, bounty)
 
 @internal
 def erc20_safe_transfer(token: address, receiver: address, amount: uint256):
@@ -808,11 +862,36 @@ def _freeFunds() -> uint256:
     return self._totalAssets() - self._calculateLockedProfit()
 
 
+@view
+@internal
+def _convertToTargetDecimals(amount: uint256) -> uint256:
+    if self.targetDecimals == self.tokenDecimals:
+        return amount
+    elif self.targetDecimals > self.tokenDecimals:
+        return amount * 10 ** (self.targetDecimals - self.tokenDecimals)
+    else:
+        return amount / 10 ** (self.tokenDecimals - self.targetDecimals)
+
+
+@view
+@internal
+def _convertFromTargetDecimals(amount: uint256) -> uint256:
+    if self.targetDecimals == self.tokenDecimals:
+        return amount
+    elif self.targetDecimals > self.tokenDecimals:
+        return amount / 10 ** (self.targetDecimals - self.tokenDecimals)
+    else:
+        return amount * 10 ** (self.tokenDecimals - self.targetDecimals)
+
+
 @internal
 def _transferToTon(
-    amount: uint256,
+    _amount: uint256,
     recipient: TONAddress
 ):
+    # Convert amount to the target decimals
+    amount: uint256 = self._convertToTargetDecimals(_amount)
+
     log Deposit(
         amount,
         recipient.wid,
@@ -896,12 +975,22 @@ def deposit(
         self.pendingWithdrawals[pendingWithdrawalId.recipient][pendingWithdrawalId.id].open = False
         self.pendingWithdrawalsTotal -= withdrawal.amount
 
-        self._logPendingWithdrawal(pendingWithdrawalId.recipient, pendingWithdrawalId.id)
+        log FillPendingWithdrawal(pendingWithdrawalId.recipient, pendingWithdrawalId.id)
 
     assert amount >= fillingAmount, "Vault: too low deposit for specified fillings"
 
     if sendTransferToTon:
         self._transferToTon(amount + fillingBounty, recipient)
+
+    log NewDeposit(
+        sender,
+        recipient.wid,
+        recipient.addr,
+        amount,
+        pendingWithdrawalId.recipient,
+        pendingWithdrawalId.id,
+        sendTransferToTon
+    )
 
 @internal
 def _reportLoss(strategy: address, loss: uint256):
@@ -972,7 +1061,8 @@ def saveWithdraw(
 
     self._registerWithdraw(payloadId)
 
-    amount: uint256 = self._considerMovementFee(_amount, self.withdrawFee)
+    amount: uint256 = self._convertFromTargetDecimals(_amount)
+    amount = self._considerMovementFee(amount, self.withdrawFee)
 
     # Fill withdrawal instantly or save it as pending
     if amount <= self.token.balanceOf(self):
@@ -981,6 +1071,8 @@ def saveWithdraw(
             recipient,
             amount
         )
+
+        log InstantWithdrawal(recipient, payloadId, amount)
     else:
         self.pendingWithdrawalsTotal += amount
 
@@ -991,9 +1083,12 @@ def saveWithdraw(
         self.pendingWithdrawals[recipient][id].amount = amount
         self.pendingWithdrawals[recipient][id].bounty = bounty
 
+        log CreatePendingWithdrawal(recipient, id, payloadId, amount, bounty)
+
 @external
 def cancelPendingWithdrawal(
     id: uint256,
+    amount: uint256,
     recipient: TONAddress
 ):
     """
@@ -1009,21 +1104,26 @@ def cancelPendingWithdrawal(
 
     assert withdrawal.open, "Vault: pending withdrawal closed"
 
+    assert withdrawal.amount >= amount, "Vault: pending withdrawal too small"
+
     # Ensure we are cancelling something
     assert withdrawal.amount > 0
 
-    self._transferToTon(withdrawal.amount, recipient)
+    self._transferToTon(amount, recipient)
 
-    self.pendingWithdrawalsTotal -= withdrawal.amount
+    self.pendingWithdrawalsTotal -= amount
+    self.pendingWithdrawals[msg.sender][id].amount -= amount
 
-    self.pendingWithdrawals[msg.sender][id].open = False
+    if self.pendingWithdrawals[msg.sender][id].amount == 0:
+        self.pendingWithdrawals[msg.sender][id].open = False
 
-    self._logPendingWithdrawal(msg.sender, id)
+    log CancelPendingWithdrawal(msg.sender, id, amount)
 
 @external
 @nonreentrant("withdraw")
 def withdraw(
     id: uint256,
+    _value: uint256,
     recipient: address = msg.sender,
     maxLoss: uint256 = 1,  # 0.01% [BPS]
 ) -> uint256:
@@ -1063,6 +1163,8 @@ def withdraw(
         rebalance the funds and make the funds available again to withdraw.
     @param id
         Pending withdrawal id
+    @param _value
+        Amount of tokens to be withdrawn, should less or equal than specified withdrawal size
     @param recipient
         The address to send the redeemed tokens. Defaults to the
         caller's address.
@@ -1077,8 +1179,13 @@ def withdraw(
     # Ensure withdraw is open
     assert withdrawal.open, "Vault: pending withdrawal closed"
 
-    value: uint256 = withdrawal.amount
+    value: uint256 = _value
+
+    if value == 0:
+        value = withdrawal.amount
+
     assert value > 0
+    assert value <= withdrawal.amount
 
     if value > self.token.balanceOf(self):
         totalLoss: uint256 = 0
@@ -1132,10 +1239,14 @@ def withdraw(
     # Withdraw remaining balance to recipient (may be different to msg.sender) (minus fee)
     self.erc20_safe_transfer(self.token.address, recipient, value)
 
-    self.pendingWithdrawals[msg.sender][id].open = False
+    self.pendingWithdrawals[msg.sender][id].amount -= value
+
+    if self.pendingWithdrawals[msg.sender][id].amount == 0:
+        self.pendingWithdrawals[msg.sender][id].open = False
+
     self.pendingWithdrawalsTotal -= value
 
-    self._logPendingWithdrawal(msg.sender, id)
+    log WithdrawPendingWithdrawal(msg.sender, id, value)
 
     return value
 

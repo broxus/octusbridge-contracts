@@ -16,6 +16,7 @@ const main = async () => {
       choices: [
         { title: 'Goerli',  value: process.env.ETH_GOERLI_HTTP },
         { title: 'Ethereum',  value: process.env.ETH_MAIN_HTTP },
+        { title: 'Ropsten', value: process.env.ETH_ROPSTEN_HTTP }
       ],
     },
     {
@@ -80,6 +81,10 @@ const main = async () => {
     stakingTonEvent.address = event.value.eventContract;
 
     const details = await stakingTonEvent.call({method: 'getDetails'});
+    
+    // console.log(stakingTonEvent.address);
+    // console.log(details);
+
     const eventData = await cellEncoderStandalone.call({
       method: 'decodeTonStakingEventData',
       params: {data: details._eventInitData.voteData.eventData}

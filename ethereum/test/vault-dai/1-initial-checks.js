@@ -22,6 +22,7 @@ describe('Test Vault DAI initial setup', async () => {
     await registry.connect(owner).newVault(
       legos.erc20.dai.address,
       guardian,
+      9,
       0,
       0,
     );
@@ -35,11 +36,27 @@ describe('Test Vault DAI initial setup', async () => {
   });
   
   it('Check registry latest vault release', async () => {
-  
+    const vault = await ethers.getContract('Vault');
+    
+    expect(await registry.vaultReleases(0))
+      .to.be.equal(vault.address, 'Wrong vault release');
   });
   
   it('Check registry latest wrapper release', async () => {
+    const vaultWrapper = await ethers.getContract('VaultWrapper');
   
+    expect(await registry.wrapperReleases(0))
+      .to.be.equal(vaultWrapper.address, 'Wrong vault wrapper release');
+  });
+  
+  it('Check vault target decimals', async () => {
+    expect(await vault.targetDecimals())
+      .to.be.equal(9, 'Wrong target decimals');
+  });
+  
+  it('Check vault token decimals', async () => {
+    expect(await vault.tokenDecimals())
+      .to.be.equal(legos.erc20.dai.decimals, 'Wrong token decimals');
   });
   
   it('Check vault bridge', async () => {

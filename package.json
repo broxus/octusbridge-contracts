@@ -17,6 +17,8 @@
     "commander": "^8.0.0",
     "directory-tree": "^2.2.5",
     "dotenv": "^8.2.0",
+    "eth-sig-util": "^2.5.4",
+    "ethereumjs-util": "^7.1.1",
     "folder-hash": "^4.0.1",
     "ganache-cli": "^6.12.1",
     "hardhat-docgen": "^1.1.1",
