@@ -167,7 +167,8 @@ event CancelPendingWithdrawal:
 event WithdrawPendingWithdrawal:
     recipient: address
     id: uint256
-    amount: uint256
+    requestedAmount: uint256
+    redeemedAmount: uint256
 
 event FillPendingWithdrawal:
     recipient: address
@@ -1179,10 +1180,7 @@ def withdraw(
     # Ensure withdraw is open
     assert withdrawal.open, "Vault: pending withdrawal closed"
 
-    value: uint256 = _value
-
-    if value == 0:
-        value = withdrawal.amount
+    value: uint256 = _value > 0 ? _value : withdrawal.amount
 
     assert value > 0
     assert value <= withdrawal.amount
@@ -1239,14 +1237,16 @@ def withdraw(
     # Withdraw remaining balance to recipient (may be different to msg.sender) (minus fee)
     self.erc20_safe_transfer(self.token.address, recipient, value)
 
-    self.pendingWithdrawals[msg.sender][id].amount -= value
+    requestedAmount: uint256 = _value > 0 ? _value : withdrawal.amount
+
+    self.pendingWithdrawals[msg.sender][id].amount -= requestedAmount
 
     if self.pendingWithdrawals[msg.sender][id].amount == 0:
         self.pendingWithdrawals[msg.sender][id].open = False
 
-    self.pendingWithdrawalsTotal -= value
+    self.pendingWithdrawalsTotal -= requestedAmount
 
-    log WithdrawPendingWithdrawal(msg.sender, id, value)
+    log WithdrawPendingWithdrawal(msg.sender, id, requestedAmount, value)
 
     return value
 
