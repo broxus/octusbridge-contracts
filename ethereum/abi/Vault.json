@@ -175,7 +175,12 @@
         "indexed": false
       },
       {
-        "name": "amount",
+        "name": "requestedAmount",
+        "type": "uint256",
+        "indexed": false
+      },
+      {
+        "name": "redeemedAmount",
         "type": "uint256",
         "indexed": false
       }

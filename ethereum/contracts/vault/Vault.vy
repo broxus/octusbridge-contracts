@@ -1180,7 +1180,10 @@ def withdraw(
     # Ensure withdraw is open
     assert withdrawal.open, "Vault: pending withdrawal closed"
 
-    value: uint256 = _value > 0 ? _value : withdrawal.amount
+    value: uint256 = _value
+
+    if value == 0:
+        value = withdrawal.amount
 
     assert value > 0
     assert value <= withdrawal.amount
@@ -1237,7 +1240,9 @@ def withdraw(
     # Withdraw remaining balance to recipient (may be different to msg.sender) (minus fee)
     self.erc20_safe_transfer(self.token.address, recipient, value)
 
-    requestedAmount: uint256 = _value > 0 ? _value : withdrawal.amount
+    requestedAmount: uint256 = _value
+    if requestedAmount == 0:
+        requestedAmount = withdrawal.amount
 
     self.pendingWithdrawals[msg.sender][id].amount -= requestedAmount
 
