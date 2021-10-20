@@ -84,6 +84,9 @@ const main = async () => {
         { title: 'Goerli',  value: 5 },
         { title: 'Ropsten',  value: 3 },
         { title: 'Ethereum',  value: 1 },
+        { title: 'BSC',  value: 56 },
+        { title: 'Fantom',  value: 250 },
+        { title: 'Polygon',  value: 137 },
       ],
     },
     {
