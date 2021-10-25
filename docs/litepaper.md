@@ -97,3 +97,14 @@ Despite the fact that the creation of proposals and the voting for them takes pl
 As mentioned previously, the main function of TON Bridge V1 is to transfer tokens between FreeTON and Ethereum. In the new version, we added support for arbitrary events. This means that Bridge V2 can be used for building cross-chain Dapps of any variation. In layman’s terms, the event configuration is as follows: “(network, target event) -> (network, action)”. For example, token transfer event configurations are as follows:
 (FreeTON, withdraw Dai to Ethereum) -> (Ethereum, release Dai)(Ethereum, lock Dai) -> (FreeTON, mint Dai)
 Bridge V2 has no limitations on the types and number of connected event configurations. For example, the target event could be an update of the Chainlink rate, and the action would be a swap on a decentralized exchange in the FreeTON network. Adding a custom event occurs through a special DAO proposal and does not require updating the relay node.
+
+# Disclaimer
+
+This paper is for general information purposes only. It does not constitute investment
+advice or a recommendation or solicitation to buy or sell any investment and should not
+be used in the evaluation of the merits of making any investment decision. It should not
+be relied upon for accounting, legal or tax advice or investment recommendations. This
+paper reflects current opinions of the authors and is not made on behalf of Broxus or its
+affiliates and does not necessarily reflect the opinions of Broxus, its affiliates or individuals
+associated with Broxus. The opinions reflected herein are subject to change without being
+updated.
