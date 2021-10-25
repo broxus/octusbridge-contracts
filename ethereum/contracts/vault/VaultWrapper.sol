@@ -54,6 +54,68 @@ contract VaultWrapper is ChainId, Initializable, IVaultWrapper {
         );
     }
 
+    event FactoryDeposit(
+        uint128 amount,
+        int8 wid,
+        uint256 user,
+        uint256 creditor,
+        uint256 recipient,
+        uint128 tokenAmount,
+        uint128 tonAmount,
+        uint8 swapType,
+        uint128 slippageNumerator,
+        uint128 slippageDenominator,
+        bytes1 separator,
+        bytes level3
+    );
+
+    function depositToFactory(
+        uint128 amount,
+        int8 wid,
+        uint256 user,
+        uint256 creditor,
+        uint256 recipient,
+        uint128 tokenAmount,
+        uint128 tonAmount,
+        uint8 swapType,
+        uint128 slippageNumerator,
+        uint128 slippageDenominator,
+        bytes memory level3
+    ) external {
+        require(
+            tokenAmount <= amount &&
+            swapType < 2 &&
+            user != 0 &&
+            recipient != 0 &&
+            creditor != 0 &&
+            slippageNumerator < slippageDenominator,
+            "Wrapper: wrong args"
+        );
+
+        IVault(vault).deposit(
+            msg.sender,
+            IVault.TONAddress(0, 0),
+            amount,
+            IVault.PendingWithdrawalId(ZERO_ADDRESS, 0),
+            false
+        );
+
+        emit FactoryDeposit(
+            amount,
+            wid,
+            user,
+            creditor,
+            recipient,
+            tokenAmount,
+            tonAmount,
+            swapType,
+            slippageNumerator,
+            slippageDenominator,
+            0x07,
+            level3
+        );
+    }
+
     /**
         @notice
             Special type of deposit, which allows to fill specified
