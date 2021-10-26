@@ -1,6 +1,6 @@
 # Abstract
 
-This document is a simplified version of White Paper for TON Bridge V2. The following describes both the basic functionality of the Bridge V2 and emerging features of this product, such as Bridge* token staking; relay auction, which allows stakeholders to become relays; connection of any EVM\**-compatible blockchains; liquidity management on the EVM side with subsequent buyback of Bridge tokens and their distribution among stakeholders; Bridge V2 management using DAO, with the possibility of creating cross-chain proposals. This document is not technical and does not cover actual implementation of the product, but rather gives an idea of the capabilities of TON Bridge V2.
+This document is a simplified version of White Paper for TON bridge V2. The following describes both the basic functionality of the bridge V2 and emerging features of this product, such as Bridge* token staking; relay auction, which allows stakeholders to become relays; connection of any EVM\**-compatible blockchains; liquidity management on the EVM side with subsequent buyback of Bridge tokens and their distribution among stakeholders; bridge V2 management using DAO, with the possibility of creating cross-chain proposals. This document is not technical and does not cover actual implementation of the product, but rather gives an idea of the capabilities of TON bridge V2.
 
 \* The Bridge token is a token in the FreeTON network, and the bridge is a protocol that transfers events between EVM networks and FreeTON
 
@@ -8,9 +8,9 @@ This document is a simplified version of White Paper for TON Bridge V2. The foll
 
 # Introduction
 
-TON Bridge V1 is a bridge between Ethereum and FreeTON. The Bridge V2 token is a token in the FreeTON network, and the bridge is a protocol that transfers events between EVM networks and FreeTON. First, the bridge supports the transfer of tokens between Ethereum and FreeTON. 20 tokens are connected to TON Bridge V1, including USDT, DAI, USDC, WBTC, WETH, WTON\* etc. The TVL for all tokens exceeds $ 30.5 million.
+TON bridge V1 is a bridge between Ethereum and FreeTON. First, the bridge supports the transfer of tokens between Ethereum and FreeTON. 20 tokens are connected to TON bridge V1, including USDT, DAI, USDC, WBTC, WETH, WTON\* etc. The TVL for all tokens exceeds $ 30.5 million.
 
-The first version of the TON Bridge was significantly centralized - events were confirmed by a group of three relays. The possibility of adding external relays was especially limited in order to minimize risks in the early days of the project. All administrative functions were in the hands of a multisignature wallet, controlled by the Broxus team.
+The first version of the TON bridge was significantly centralized - events were confirmed by a group of three relays. The possibility of adding external relays was artificially limited in order to minimize risks in the early days of the project. All administrative functions were in the hands of a multisignature wallet, controlled by the Broxus team.
 
 After six months of successful operation we are now launching a new, significantly expanded version - Bridge V2.
 
@@ -94,9 +94,12 @@ Despite the fact that the creation of proposals and the voting for them takes pl
 
 ## Arbitrary events support
 
-As mentioned previously, the main function of TON Bridge V1 is to transfer tokens between FreeTON and Ethereum. In the new version, we added support for arbitrary events. This means that Bridge V2 can be used for building cross-chain Dapps of any variation. In layman’s terms, the event configuration is as follows: “(network, target event) -> (network, action)”. For example, token transfer event configurations are as follows:
-(FreeTON, withdraw Dai to Ethereum) -> (Ethereum, release Dai)(Ethereum, lock Dai) -> (FreeTON, mint Dai)
-Bridge V2 has no limitations on the types and number of connected event configurations. For example, the target event could be an update of the Chainlink rate, and the action would be a swap on a decentralized exchange in the FreeTON network. Adding a custom event occurs through a special DAO proposal and does not require updating the relay node.
+As mentioned previously, the main function of TON Bridge V1 is to transfer tokens between FreeTON and Ethereum. In the new version, we added support for arbitrary events. This means that Bridge V2 can be used for building cross-chain Dapps of any variation. In layman’s terms, the event configuration is as follows: `(network, target event) -> (network, action)`. For example, token transfer event configurations are as follows:
+
+- (FreeTON, withdraw Dai to Ethereum) -> (Ethereum, release Dai)
+- (Ethereum, lock Dai) -> (FreeTON, mint Dai)
+
+Bridge V2 has no limitations on the types and number of connected event configurations. For example, the target event could be an update of the Chainlink rate, and the action would be a swap on a decentralized exchange in the FreeTON network. Adding a custom event configuration occurs through a special DAO proposal and does not require updating the relay node.
 
 # Disclaimer
 
