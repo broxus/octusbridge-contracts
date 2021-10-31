@@ -11,7 +11,7 @@ const {
 } = require('../utils');
 
 
-describe('Check deposit / withdraw fees', async () => {
+describe('Check target decimals less than token\'s', async () => {
   let vault, wrapper, dai;
   
   it('Setup contracts', async () => {
@@ -81,38 +81,49 @@ describe('Check deposit / withdraw fees', async () => {
       .connect(alice)
       .approve(vault.address, ethers.utils.parseUnits('1000000000000', 18));
   });
-  
-  describe('Target decimals is less than actual', async () => {
-    it('Deposit', async () => {
-      const amount = ethers.utils.parseUnits('1000', 18);
-      
-      const owner = await ethers.getNamedSigner('owner');
-  
-      const alice = await ethers.getNamedSigner('alice');
-  
-      const recipient = {
-        wid: 0,
-        addr: 123123
-      };
-  
-      await expect(
+
+  it('Deposit', async () => {
+    const amount = ethers.utils.parseUnits('1000', 18);
+
+    const alice = await ethers.getNamedSigner('alice');
+
+    const recipient = {
+      wid: 0,
+      addr: 123123
+    };
+
+    await expect(
         wrapper
-          .connect(alice)
-          .deposit(recipient, amount)
-      )
+            .connect(alice)
+            .deposit(recipient, amount)
+    )
         .to.emit(vault, 'Deposit')
-        .withArgs(amount.div(10**9), recipient.wid, recipient.addr);
-    });
-  
-    it('Withdraw', async () => {
-      const owner = await ethers.getNamedSigner('owner');
-    
-    });
+        .withArgs(ethers.utils.parseUnits('1000', 9), recipient.wid, recipient.addr);
   });
-  
-  describe('Target decimals is bigger than actual', async () => {
-    it('Set target decimals', async () => {
-    
+
+  it('Withdraw', async () => {
+    const { bob } = await getNamedAccounts();
+
+    const amount = ethers.utils.parseUnits('900', 9);
+
+    const withdrawalEventData = await encodeWithdrawalData({
+      amount: amount.toString(),
+      recipient: bob
     });
+
+    const payload = encodeTonEvent({
+      eventData: withdrawalEventData,
+      proxy: vault.address
+    });
+
+    const initialRelays = utils.sortAccounts(await ethers.getSigners());
+
+    const signatures = await Promise.all(initialRelays
+        .map(async (account) => utils.signReceipt(payload, account)));
+
+    await wrapper.saveWithdraw(payload, signatures, 0);
+
+    expect(await dai.balanceOf(bob))
+        .to.be.equal(ethers.utils.parseUnits('900', 18), 'Wrong Bob balance after withdraw');
   });
 });

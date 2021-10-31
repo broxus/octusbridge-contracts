@@ -67,7 +67,7 @@
     https://github.com/iearn-finance/yearn-vaults/blob/main/SPECIFICATION.md
 """
 
-API_VERSION: constant(String[28]) = "0.1.1"
+API_VERSION: constant(String[28]) = "0.1.2"
 
 from vyper.interfaces import ERC20
 
@@ -186,6 +186,10 @@ event UpdateConfiguration:
 
 event UpdateTargetDecimals:
     targetDecimals: uint256
+
+event ForceWithdraw:
+    recipient: address
+    id: uint256
 
 # NOTE: unlike the original Yearn Vault,
 # fees are paid in corresponding token on the FreeTON side
@@ -1965,6 +1969,34 @@ def emergencyWithdrawAndRevoke(
     self._revokeStrategy(strategy)
 
 @external
+def forceWithdraw(recipient: address, id: uint256):
+    """
+    @notice
+        Force user's pending withdraw. Works only if Vault has enough
+        tokens on its balance.
+
+        This may only be called by wrapper.
+    @param recipient Address of person, who owns a pending withdrawal
+    @param id Pending withdrawal id
+    """
+
+    assert msg.sender == self.wrapper
+
+    withdrawal: PendingWithdrawal = self.pendingWithdrawals[recipient][id]
+
+    # Ensure withdraw is open
+    assert withdrawal.open, "Vault: pending withdrawal closed"
+
+    self.erc20_safe_transfer(self.token.address, recipient, withdrawal.amount)
+
+    self.pendingWithdrawalsTotal -= withdrawal.amount
+
+    self.pendingWithdrawals[recipient][id].amount = 0
+    self.pendingWithdrawals[recipient][id].open = False
+
+    log ForceWithdraw(recipient, id)
+
+@external
 def skim(strategy: address):
     """
     @notice
@@ -1973,7 +2005,6 @@ def skim(strategy: address):
         This may only be called by management or governance.
     @param strategy Strategy to skim
     """
-    # TODO: consider loss
     assert msg.sender in [self.management, self.governance]
 
     assert self.strategies[strategy].activation > 0

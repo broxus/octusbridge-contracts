@@ -271,6 +271,31 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "recipient",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IVault.PendingWithdrawalId[]",
+        "name": "pendingWithdrawalsIdsToWithdraw",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "forceWithdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "getChainID",
     "outputs": [
