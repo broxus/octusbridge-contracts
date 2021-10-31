@@ -12,7 +12,7 @@ import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 
 contract VaultWrapper is ChainId, Initializable, IVaultWrapper {
     address constant ZERO_ADDRESS = 0x0000000000000000000000000000000000000000;
-    string constant API_VERSION = "0.1.0";
+    string constant API_VERSION = "0.1.1";
 
     address public vault;
 
@@ -142,6 +142,28 @@ contract VaultWrapper is ChainId, Initializable, IVaultWrapper {
                 amount,
                 pendingWithdrawalsIdsToFill[i],
                 true
+            );
+        }
+    }
+
+    /**
+        @notice
+            Force withdraw multiple pending withdrawals. Does not close strategy positions.
+            Works only in case Vault has enough tokens to close all the pending withdrawals.
+        @param pendingWithdrawalsIdsToWithdraw List of pending withdrawals ids
+    */
+    function forceWithdraw(
+        IVault.PendingWithdrawalId[] calldata pendingWithdrawalsIdsToWithdraw
+    ) external {
+        require(
+            pendingWithdrawalsIdsToWithdraw.length > 0,
+            'Wrapper: no pending withdrawals specified'
+        );
+
+        for (uint i = 0; i < pendingWithdrawalsIdsToWithdraw.length; i++) {
+            IVault(vault).forceWithdraw(
+                pendingWithdrawalsIdsToWithdraw[i].recipient,
+                pendingWithdrawalsIdsToWithdraw[i].id
             );
         }
     }

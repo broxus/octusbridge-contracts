@@ -27,7 +27,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
           roundSubmitter,
           9, // Minimum required signatures
           2 * week, // Relay TTL after round in seconds, 1 week
-          2, // Initial round number
+          0, // Initial round number
           initialRoundEnd, // Initial round end, after 1 week
           initialRelays.map(a => a.address), // Initial relays
         ],

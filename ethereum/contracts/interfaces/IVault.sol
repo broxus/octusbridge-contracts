@@ -28,6 +28,11 @@ interface IVault {
         bool sendTransferToTon
     ) external;
 
+    function forceWithdraw(
+        address recipient,
+        uint256 id
+    ) external;
+
     function configuration() external view returns(TONAddress memory _configuration);
     function bridge() external view returns(address);
     function apiVersion() external view returns(string memory api_version);
