@@ -3,6 +3,7 @@ const {
 } = require('./../test/utils');
 
 const ethers = require('ethers');
+const BigNumber = require('bignumber.js');
 const fs = require('fs');
 
 
@@ -165,17 +166,31 @@ const main = async () => {
     if (event.roundNumber >= lastRound) {
       console.log(`Submitting round`);
 
+      console.log(`Submitter: ${submitter.address}`);
+      console.log(`Balance: ${ethers.utils.formatUnits(await provider.getBalance(submitter.address), 18)}`);
+
+
       const gasPrice = await provider.getGasPrice();
       console.log(`Gas price: ${ethers.utils.formatUnits(gasPrice, "gwei")}`);
       console.log(`Target gas price: ${ethers.utils.formatUnits(targetGasPrice, "gwei")}`);
 
-      if (gasPrice.gt(targetGasPrice)) {
-        console.log(`Gas price is too high`);
+      // Check submitter dont have any pending transactions
+      const pendingCount = await provider.getTransactionCount(submitter.address, 'pending');
+      const confirmedCount = await provider.getTransactionCount(submitter.address, 'latest');
+
+      console.log(`Submitter transactions count: pending - ${pendingCount}, confirmed - ${confirmedCount}`);
+
+      if (pendingCount > confirmedCount) {
+        console.log(`Submitter has pending transactions, exit`);
         process.exit(1);
       }
 
       const tx = await bridge.connect(submitter).setRoundRelays(
-        event.encodedEvent, event.signatures, { gasPrice }
+        event.encodedEvent,
+        event.signatures,
+        {
+          gasPrice: targetGasPrice.gt(gasPrice) ? gasPrice : targetGasPrice // Use min gas price possible
+        }
       );
 
       console.log(`Transaction: ${tx.hash}`);
