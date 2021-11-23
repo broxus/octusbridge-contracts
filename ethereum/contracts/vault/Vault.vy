@@ -67,7 +67,7 @@
     https://github.com/iearn-finance/yearn-vaults/blob/main/SPECIFICATION.md
 """
 
-API_VERSION: constant(String[28]) = "0.1.2"
+API_VERSION: constant(String[28]) = "0.1.3"
 
 from vyper.interfaces import ERC20
 
@@ -1064,6 +1064,8 @@ def saveWithdraw(
     """
     assert msg.sender == self.wrapper
 
+    assert not self.emergencyShutdown
+
     self._registerWithdraw(payloadId)
 
     amount: uint256 = self._convertFromTargetDecimals(_amount)
@@ -1104,6 +1106,7 @@ def cancelPendingWithdrawal(
     @param recipient
         The FreeTON address to transfer tokens to
     """
+    assert not self.emergencyShutdown
 
     withdrawal: PendingWithdrawal = self.pendingWithdrawals[msg.sender][id]
 
@@ -1178,6 +1181,7 @@ def withdraw(
         If a loss is specified, up to that amount of shares may be burnt to cover losses on withdrawal.
     @return The quantity of tokens redeemed for `_shares`.
     """
+    assert not self.emergencyShutdown
 
     withdrawal: PendingWithdrawal = self.pendingWithdrawals[msg.sender][id]
 
