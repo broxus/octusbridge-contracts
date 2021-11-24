@@ -148,9 +148,15 @@ Relays' gains - Gains for Relay activity
 
 ## 1. Bridge tokens staking
 
+![appendix-1](./assets/appendix-1.png)
+
 ## 2. Relay Bridge staking
 
+![appendix-2](./assets/appendix-2.png)
+
 ## 3. EVM liquidity management
+
+![appendix-3](./assets/appendix-3.png)
 
 # Disclaimer
 
