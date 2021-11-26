@@ -214,6 +214,7 @@ describe('Test ton event confirm', async function() {
             signature: Buffer
               .from(`0x${'ff'.repeat(65)}`)
               .toString('hex'), // 132 symbols
+            voteReceiver: eventContract.address
           },
           keyPair: relay
         }));
@@ -260,6 +261,7 @@ describe('Test ton event confirm', async function() {
             signature: Buffer
               .from(`0x${'ff'.repeat(65)}`)
               .toString('hex'), // 132 symbols
+            voteReceiver: eventContract.address
           },
           keyPair: relay
         });

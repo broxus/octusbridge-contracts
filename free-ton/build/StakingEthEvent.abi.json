@@ -86,6 +86,7 @@
 		{
 			"name": "confirm",
 			"inputs": [
+				{"name":"voteReceiver","type":"address"}
 			],
 			"outputs": [
 			]
@@ -93,6 +94,7 @@
 		{
 			"name": "reject",
 			"inputs": [
+				{"name":"voteReceiver","type":"address"}
 			],
 			"outputs": [
 			]

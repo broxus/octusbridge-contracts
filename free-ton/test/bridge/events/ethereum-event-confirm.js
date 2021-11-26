@@ -226,7 +226,9 @@ describe('Test ethereum event confirm', async function() {
 
         confirmations.push(eventContract.run({
           method: 'confirm',
-          params: {},
+          params: {
+            voteReceiver: eventContract.address
+          },
           keyPair: relay
         }));
       }

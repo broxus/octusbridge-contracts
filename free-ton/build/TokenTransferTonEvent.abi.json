@@ -63,7 +63,8 @@
 		{
 			"name": "confirm",
 			"inputs": [
-				{"name":"signature","type":"bytes"}
+				{"name":"signature","type":"bytes"},
+				{"name":"voteReceiver","type":"address"}
 			],
 			"outputs": [
 			]
@@ -71,6 +72,7 @@
 		{
 			"name": "reject",
 			"inputs": [
+				{"name":"voteReceiver","type":"address"}
 			],
 			"outputs": [
 			]
