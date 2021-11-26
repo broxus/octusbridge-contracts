@@ -98,6 +98,8 @@ abstract contract ConvexStable is BaseStrategy {
     function _approveBasic() internal {
         want_wrapped.approve(booster, 0);
         want_wrapped.approve(booster, type(uint256).max);
+        want_wrapped.safeApprove(curve, 0);
+        want_wrapped.safeApprove(curve, type(uint256).max);
         IERC20(dai).safeApprove(curve, 0);
         IERC20(dai).safeApprove(curve, type(uint256).max);
         IERC20(usdc).safeApprove(curve, 0);
@@ -381,6 +383,7 @@ abstract contract ConvexStable is BaseStrategy {
     function withdraw(uint256 _amountNeeded) external virtual returns (uint256 _loss) {
         require(msg.sender == address(vault), "!vault");
         // Liquidate as much as possible to `want`, up to `_amountNeeded`
+        // TODO: calculate amount with reserve to match needed amount?
         _amountNeeded = calc_wrapped_from_want(_amountNeeded);
 
         uint256 amountFreed;
