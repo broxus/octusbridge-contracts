@@ -40,6 +40,8 @@ In the FreeTON -> EVM direction, the bridge works analogously, with one exceptio
 
 Together with the release of TON bridge V2, the project now has a governance token - Bridge. Any token holder can stake it in bridge, after which they will start receiving Bridge tokens. These Bridge tokens will come from the sale of tokens earned from liquidity management on the EVM side.
 
+As an example of liquidity management on the EVM side, we can consider staking 1,000 Bridge tokens over 1 year. With a monthly distribution of gains, the yield from staking can be up to 99% per annum at the current level of the Bridge token exchange rate ([Appendix 1](#1-bridge-tokens-staking)).
+
 ## Relay auction
 
 Any stakeholder who has staked over 100,000 Bridge tokens can become a relay. To do this, a stakeholder just needs to start a relay node and apply for the next election. The elections take place every round, each round lasts one week. The duration of the round and the size of the minimum stake for becoming a relay can be changed by the DAO.
@@ -47,6 +49,8 @@ Any stakeholder who has staked over 100,000 Bridge tokens can become a relay. To
 ![Relay-auction](./assets/Broxus-Bridge-litepaper-06-oct-Round-elections.drawio.png)
 
 If the relay behaves maliciously - for example, confirms incorrect events, or does not participate in events confirmation, DAO can slash the relay. In this case, the relay's stake and reward will be distributed among the current stakeholders.
+
+The appendix considers a scenario for managing a relay with 100,000 Bridge tokens steak over 1 year ([Appendix 2](#2-relay-bridge-staking)).
 
 ## Connecting the EVM compatible blockchain
 
@@ -61,6 +65,8 @@ The number of blockchains that can be connected is unlimited. The decision to co
 As mentioned above, TVL of bridge V1, exceeded $30.5 Million. In the first version, when a user transferred the tokens from Ethereum to FreeTON, their Ethereum tokens were locked in a special contract in Ethereum. The tokens could be withdrawn from this contract only if someone made a token withdrawal from the FreeTON.
 
 TON bridge V2 introduces a procedure for managing these funds. Tokens that are locked on the EVM network can be transferred to various yield farming protocols. The capital gains will be sent to the FreeTON network through the bridge, from there it will be converted to a Bridge token and distributed between stakeholders and relays. For the first time, tokens will be distributed between stakers and relays in the ratio of 50% and 50%. This ratio can be changed by the DAO.
+
+The appendix considers a scenario with x10 TVL growth over a year, starting with $30 million in liquidity on the EVM side. A 50% liquidity management at 6% yield could yield $4.5 million to be distributed among the Bridge stackers and relay managers ([Appendix 3](#3-evm-liquidity-management)).
 
 ### The use of Yearn Vaults V2
 
@@ -105,6 +111,52 @@ Bridge V2 has no limitations on the types and number of connected event configur
 - (Ethereum, lock Dai) -> (FreeTON, mint Dai)
 
 Bridge V2 has no limitations on the types and number of connected event configurations. For example, the target event could be an update of the Chainlink rate, and the action would be a swap on a decentralized exchange in the FreeTON network. Adding a custom event configuration occurs through a special DAO proposal and does not require updating the relay node.
+
+# Appendix
+
+## Legends and assumptions
+
+'000 - thousands of units
+
+bop - beginning of period
+
+eop - end of period
+
+Locked EVM 50% funds yield - 50% of Locked EVM fund allocated in different strategies with 6% ARP
+
+EVM funds influx - Linear growth of funds
+
+Bridge distribution - Farming, Presale, Broxus, DeFi Alliance
+
+Bridge inflow - Distribution of 10% of Bridge tokens
+
+Bridge tokens staked (Relay and Users) - Equal all relays staked 100 000 each
+
+Number of relays - Starting 16 presale relays and adding 1 relay each month
+
+Bridge Stakeholders gains share - 50% of Locked EVM 50% funds yield will be distributed among BRIDGE stakeholders
+
+Bridge tokens stake - Initial stake
+
+Bridge staking gains - Gains per invested Bridge tokens
+
+Relay gains share - 50% of Locked EVM 50% funds yield will be distributed among Relays
+
+Invested stake - Initial stake of 100 000 Bridge tokens and Relay activity
+
+Relays' gains - Gains for Relay activity
+
+## 1. Bridge tokens staking
+
+![appendix-1](./assets/appendix-1.png)
+
+## 2. Relay Bridge staking
+
+![appendix-2](./assets/appendix-2.png)
+
+## 3. EVM liquidity management
+
+![appendix-3](./assets/appendix-3.png)
 
 # Disclaimer
 

@@ -44,10 +44,13 @@ interface IVault {
         address _wrapper,
         address guardian,
         address management,
-        uint256 targetDecimals
+        uint256 _targetDecimals
     ) external;
 
     function governance() external view returns(address);
     function token() external view returns(address);
     function wrapper() external view returns(address);
+
+    function tokenDecimals() external view returns(uint256);
+    function targetDecimals() external view returns(uint256);
 }

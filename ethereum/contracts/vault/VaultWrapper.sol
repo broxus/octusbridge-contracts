@@ -12,7 +12,7 @@ import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 
 contract VaultWrapper is ChainId, Initializable, IVaultWrapper {
     address constant ZERO_ADDRESS = 0x0000000000000000000000000000000000000000;
-    string constant API_VERSION = "0.1.1";
+    string constant API_VERSION = "0.1.2";
 
     address public vault;
 
@@ -69,6 +69,19 @@ contract VaultWrapper is ChainId, Initializable, IVaultWrapper {
         bytes level3
     );
 
+    function _convertToTargetDecimals(uint128 amount) internal view returns(uint128) {
+        uint256 targetDecimals = IVault(vault).targetDecimals();
+        uint256 tokenDecimals = IVault(vault).tokenDecimals();
+
+        if (targetDecimals == tokenDecimals) {
+            return amount;
+        } else if (targetDecimals > tokenDecimals) {
+            return uint128(amount * 10 ** (targetDecimals - tokenDecimals));
+        } else {
+            return uint128(amount / 10 ** (tokenDecimals - targetDecimals));
+        }
+    }
+
     function depositToFactory(
         uint128 amount,
         int8 wid,
@@ -101,7 +114,7 @@ contract VaultWrapper is ChainId, Initializable, IVaultWrapper {
         );
 
         emit FactoryDeposit(
-            amount,
+            _convertToTargetDecimals(amount),
             wid,
             user,
             creditor,

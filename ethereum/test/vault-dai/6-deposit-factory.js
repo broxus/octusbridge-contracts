@@ -32,7 +32,7 @@ describe('Check deposit to factory', async () => {
         await registry.connect(owner).newVault(
             dai.address,
             guardian,
-            9,
+            6,
             0,
             0,
         );
@@ -87,7 +87,7 @@ describe('Check deposit to factory', async () => {
             const alice = await ethers.getNamedSigner('alice');
 
             await expect(wrapper.connect(alice).depositToFactory(
-                10, // amount
+                ethers.utils.parseUnits('10', 18), // 10 dai
                 0, // wid
                 1, // user
                 2, // creditor
@@ -100,8 +100,8 @@ describe('Check deposit to factory', async () => {
                 "0x00" // level3
             ))
                 .to.emit(wrapper, 'FactoryDeposit')
+                .withArgs(ethers.utils.parseUnits('10', 6), 0, 1, 2, 3, 10, 1, 1, 1, 2, "0x07", "0x00")
                 .to.not.emit(vault, 'Deposit')
-                // .withArgs(10, 0, 1, 2, 3, 10, 1, 1, 1, 2, "0x07", "0x00")
             ;
         });
     });
