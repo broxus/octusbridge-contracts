@@ -138,6 +138,15 @@
 			]
 		},
 		{
+			"name": "getApiVersion",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"value0","type":"uint32"}
+			]
+		},
+		{
 			"name": "encodeEthereumEventData",
 			"inputs": [
 				{"name":"tokens","type":"uint256"},
