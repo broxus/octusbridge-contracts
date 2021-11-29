@@ -69,6 +69,10 @@ abstract contract BaseEvent is IBasicEvent, CellEncoder, TransferUtils{
         }(now);
     }
 
+    function _checkVoteReceiver(address voteReceiver) internal {
+        require(voteReceiver == address(this), ErrorCodes.WRONG_VOTE_RECEIVER);
+    }
+
     // TODO: cant be pure, compiler lies
     function receiveRoundAddress(address roundContract, uint32 roundNum) public onlyStaking eventInitializing {
         relay_round = roundContract;
@@ -107,5 +111,9 @@ abstract contract BaseEvent is IBasicEvent, CellEncoder, TransferUtils{
 
     function getVote(uint256 voter) public view responsible returns(optional(Vote) vote) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS} votes.fetch(voter);
+    }
+
+    function getApiVersion() public view responsible returns(uint32) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS} 2;
     }
 }
