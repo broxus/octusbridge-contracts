@@ -68,6 +68,8 @@ abstract contract ConvexStable is BaseStrategy {
     address public rewardContract;
     address public curve;
     IERC20 public want_wrapped;
+    uint public constant MAX_SLIPPAGE_FACTOR = 1000000;
+    uint public slippage_factor = 150;
 
     uint256 public curve_lp_idx;
 
@@ -96,8 +98,8 @@ abstract contract ConvexStable is BaseStrategy {
     }
 
     function _approveBasic() internal {
-        want_wrapped.approve(booster, 0);
-        want_wrapped.approve(booster, type(uint256).max);
+        want_wrapped.safeApprove(booster, 0);
+        want_wrapped.safeApprove(booster, type(uint256).max);
         want_wrapped.safeApprove(curve, 0);
         want_wrapped.safeApprove(curve, type(uint256).max);
         IERC20(dai).safeApprove(curve, 0);
@@ -129,6 +131,12 @@ abstract contract ConvexStable is BaseStrategy {
         _approveDex();
     }
 
+    function setSlippageFactor(uint256 new_factor) external onlyAuthorized {
+        require (slippage_factor < MAX_SLIPPAGE_FACTOR, 'Bad slippage factor');
+
+        slippage_factor = new_factor;
+    }
+
     function setIsClaimRewards(bool _isClaimRewards) external onlyAuthorized {
         isClaimRewards = _isClaimRewards;
     }
@@ -145,6 +153,19 @@ abstract contract ConvexStable is BaseStrategy {
         Rewards(rewardContract).withdrawAllAndUnwrap(isClaimRewards);
     }
 
+    function claimWantTokens() external onlyGovernance {
+        want.safeTransfer(governance(), balanceOfWant());
+    }
+
+    function claimWrappedWantTokens() external onlyGovernance {
+        want_wrapped.safeTransfer(governance(), balanceOfWrapped());
+    }
+
+    function claimRewardTokens() external onlyGovernance {
+        IERC20(crv).safeTransfer(governance(), IERC20(crv).balanceOf(address(this)));
+        IERC20(cvx).safeTransfer(governance(), IERC20(cvx).balanceOf(address(this)));
+    }
+
     function name() external view override returns (string memory) {
         return string(abi.encodePacked("Convex", IERC20Metadata(address(want_wrapped)).symbol()));
     }
@@ -157,6 +178,10 @@ abstract contract ConvexStable is BaseStrategy {
         uint256[] memory amounts = new uint256[](3);
         amounts[curve_lp_idx] = want_amount;
         return ICurveFi(curve).calc_token_amount(amounts, true);
+    }
+
+    function apply_slippage_factor(uint256 amount) public view returns (uint256) {
+        return (amount * (slippage_factor + MAX_SLIPPAGE_FACTOR)) / MAX_SLIPPAGE_FACTOR;
     }
 
     function unwrap(uint256 wrapped_amount) internal returns (uint256) {
@@ -383,8 +408,16 @@ abstract contract ConvexStable is BaseStrategy {
     function withdraw(uint256 _amountNeeded) external virtual returns (uint256 _loss) {
         require(msg.sender == address(vault), "!vault");
         // Liquidate as much as possible to `want`, up to `_amountNeeded`
-        // TODO: calculate amount with reserve to match needed amount?
-        _amountNeeded = calc_wrapped_from_want(_amountNeeded);
+        uint _amountNeededWrapped;
+        uint _amountNeededFirst = _amountNeeded;
+        for (uint i = 0; i < 100; i++) {
+            _amountNeeded = apply_slippage_factor(_amountNeeded);
+            _amountNeededWrapped = calc_wrapped_from_want(_amountNeeded);
+            _expectedUnwrapped = calc_want_from_wrapped(_amountNeededWrapped);
+            if (_expectedUnwrapped >= _amountNeededFirst) {
+                break;
+            }
+        }
 
         uint256 amountFreed;
         (amountFreed, _loss) = liquidatePosition(_amountNeeded);
@@ -392,6 +425,11 @@ abstract contract ConvexStable is BaseStrategy {
 
         amountFreed = unwrap(amountFreed);
         _loss = calc_want_from_wrapped(_loss);
+
+        if (amountFreed > _amountNeededFirst) {
+            // excess want token will be used on next harvest
+            amountFreed = _amountNeededFirst;
+        }
 
         want.safeTransfer(msg.sender, amountFreed);
         // NOTE: Reinvest anything leftover on next `tend`/`harvest`
@@ -414,7 +452,6 @@ abstract contract ConvexStable is BaseStrategy {
      *  should be protected from sweeping in addition to `want`.
      * @param _token The token to transfer out of this vault.
      */
-    // TODO: remove all protected tokens and set to onlyAuthorized?
     function sweep(address _token) external onlyGovernance {
         require(_token != address(want), "!want");
         require(_token != address(want_wrapped), "!want wrapped");
