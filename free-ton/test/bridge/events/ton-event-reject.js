@@ -189,7 +189,9 @@ describe('Test ton event reject', async function() {
   
         rejects.push(eventContract.run({
           method: 'reject',
-          params: {},
+          params: {
+            voteReceiver: eventContract.address
+          },
           keyPair: relay
         }));
       }
@@ -231,7 +233,9 @@ describe('Test ton event reject', async function() {
       
         await eventContract.run({
           method: 'reject',
-          params: {},
+          params: {
+            voteReceiver: eventContract.address
+          },
           keyPair: relay
         });
       }

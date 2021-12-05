@@ -53,8 +53,11 @@ contract TonBaseEvent is BaseEvent, ITonEvent {
         @dev Can be called only by parent event configuration
         @dev Can be called only when event configuration is in Pending status
         @param eventDataSignature Relay's signature of the TonEvent data
+        @param voteReceiver Should be always equal to the event contract address
     */
-    function confirm(bytes signature) public {
+    function confirm(bytes signature, address voteReceiver) public {
+        _checkVoteReceiver(voteReceiver);
+
         uint relay = msg.pubkey();
 
         require(votes[relay] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
@@ -82,8 +85,11 @@ contract TonBaseEvent is BaseEvent, ITonEvent {
         @dev Reject event
         @dev Can be called only by parent event configuration
         @dev Can be called only when event configuration is in Pending status
+        @param voteReceiver Should be always equal to the event contract address
     */
-    function reject() public {
+    function reject(address voteReceiver) public {
+        _checkVoteReceiver(voteReceiver);
+
         uint relay = msg.pubkey();
 
         require(votes[relay] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);

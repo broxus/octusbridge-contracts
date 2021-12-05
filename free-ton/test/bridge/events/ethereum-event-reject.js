@@ -139,7 +139,9 @@ describe('Test ethereum event reject', async function() {
 
         rejects.push(eventContract.run({
           method: 'reject',
-          params: {},
+          params: {
+            voteReceiver: eventContract.address
+          },
           keyPair: relay
         }));
       }

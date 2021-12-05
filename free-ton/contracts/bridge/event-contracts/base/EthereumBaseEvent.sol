@@ -48,7 +48,10 @@ contract EthereumBaseEvent is BaseEvent, IEthereumEvent {
 
     /// @dev Confirm event. Can be called only by relay which is in charge at this round.
     /// Can be called only when event configuration is in Pending status
-    function confirm() public eventPending {
+    /// @param voteReceiver Should be always equal to the event contract address
+    function confirm(address voteReceiver) public eventPending {
+        _checkVoteReceiver(voteReceiver);
+
         uint relay = msg.pubkey();
 
         require(votes[relay] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
@@ -69,7 +72,10 @@ contract EthereumBaseEvent is BaseEvent, IEthereumEvent {
     /// @dev Reject event. Can be called only by relay which is in charge at this round.
     /// Can be called only when event configuration is in Pending status. If enough rejects collected
     /// changes status to Rejected, notifies tokens receiver and withdraw balance to initializer.
-    function reject() public eventPending {
+    /// @param voteReceiver Should be always equal to the event contract address
+    function reject(address voteReceiver) public eventPending {
+        _checkVoteReceiver(voteReceiver);
+
         uint relay = msg.pubkey();
 
         require(votes[relay] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
