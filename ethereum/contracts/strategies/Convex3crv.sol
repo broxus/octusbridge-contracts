@@ -19,6 +19,7 @@ import "../libraries/Math.sol";
 import "../libraries/SafeERC20.sol";
 import "../libraries/SafeMath.sol";
 import "./BaseStrategy.sol";
+import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 
 
 
@@ -26,8 +27,6 @@ import "./BaseStrategy.sol";
 
 abstract contract ConvexStable is BaseStrategy {
     using SafeERC20 for IERC20;
-    using Address for address;
-    using SafeMath for uint256;
 
     address public constant voter = address(0xF147b8125d2ef93FB6965Db97D6746952a133934);
     address public constant booster = address(0xF403C135812408BFbE8713b5A23a04b3D48AAE31);
@@ -61,7 +60,11 @@ abstract contract ConvexStable is BaseStrategy {
     address[] public dex;
     uint256 public keepCRV;
 
-    constructor(address _vault) BaseStrategy(_vault) {
+    function _initialize(
+        address _vault
+    ) internal {
+        BaseStrategy._initialize(_vault, msg.sender, msg.sender);
+
         minReportDelay = 1 days;
         maxReportDelay = 30 days;
         profitFactor = 100000;
@@ -79,7 +82,6 @@ abstract contract ConvexStable is BaseStrategy {
         } else {
             revert("Strategy cant be applied to this vault");
         }
-
     }
 
     function _approveBasic() internal {
@@ -201,7 +203,7 @@ abstract contract ConvexStable is BaseStrategy {
     }
 
     function estimatedTotalWrappedAssets() public view returns (uint256) {
-        return balanceOfWrapped().add(balanceOfPool());
+        return balanceOfWrapped() + balanceOfPool();
     }
 
     function adjustPosition(uint256 _debtOutstanding) internal override {
@@ -220,7 +222,7 @@ abstract contract ConvexStable is BaseStrategy {
         _amount = Math.min(_amount, balanceOfPool());
         uint _before = balanceOfWrapped();
         Rewards(rewardContract).withdrawAndUnwrap(_amount, false);
-        return balanceOfWrapped().sub(_before);
+        return balanceOfWrapped() - _before;
     }
 
     // _amountNeeded - wrapped token amount must be provided
@@ -232,9 +234,9 @@ abstract contract ConvexStable is BaseStrategy {
     {
         uint256 _balance = balanceOfWrapped();
         if (_balance < _amountNeeded) {
-            _liquidatedAmount = _withdrawSome(_amountNeeded.sub(_balance));
-            _liquidatedAmount = _liquidatedAmount.add(_balance);
-            _loss = _amountNeeded.sub(_liquidatedAmount); // this should be 0. o/w there must be an error
+            _liquidatedAmount = _withdrawSome(_amountNeeded - _balance);
+            _liquidatedAmount = _liquidatedAmount + _balance;
+            _loss = _amountNeeded - _liquidatedAmount; // this should be 0. o/w there must be an error
         }
         else {
             _liquidatedAmount = _amountNeeded;
@@ -253,9 +255,9 @@ abstract contract ConvexStable is BaseStrategy {
     }
 
     function _adjustCRV(uint256 _crv) internal returns (uint256) {
-        uint256 _keepCRV = _crv.mul(keepCRV).div(DENOMINATOR);
+        uint256 _keepCRV = (_crv * keepCRV) / DENOMINATOR;
         if (_keepCRV > 0) IERC20(crv).safeTransfer(voter, _keepCRV);
-        return _crv.sub(_keepCRV);
+        return _crv - _keepCRV;
     }
 
     function _claimableBasicInETH() internal view returns (uint256) {
@@ -268,16 +270,16 @@ abstract contract ConvexStable is BaseStrategy {
         uint256 supply = IERC20(cvx).totalSupply();
         uint256 _cvx;
 
-        uint256 cliff = supply.div(reductionPerCliff);
+        uint256 cliff = supply / reductionPerCliff;
         // mint if below total cliffs
         if (cliff < totalCliffs) {
             // for reduction% take inverse of current cliff
-            uint256 reduction = totalCliffs.sub(cliff);
+            uint256 reduction = totalCliffs - cliff;
             // reduce
-            _cvx = _crv.mul(reduction).div(totalCliffs);
+            _cvx = (_crv * reduction) / totalCliffs;
 
             // supply cap check
-            uint256 amtTillMax = maxSupply.sub(supply);
+            uint256 amtTillMax = maxSupply - supply;
             if (_cvx > amtTillMax) {
                 _cvx = amtTillMax;
             }
@@ -301,7 +303,7 @@ abstract contract ConvexStable is BaseStrategy {
             cvxValue = cvxSwap[1];
         }
 
-        return crvValue.add(cvxValue);
+        return crvValue + cvxValue;
     }
 
     function _claimableInETH() internal virtual view returns (uint256 _claimable) {
@@ -314,17 +316,17 @@ abstract contract ConvexStable is BaseStrategy {
 
         if (params.activation == 0) return false;
 
-        if (block.timestamp.sub(params.lastReport) < minReportDelay) return false;
+        if ((block.timestamp - params.lastReport) < minReportDelay) return false;
 
-        if (block.timestamp.sub(params.lastReport) >= maxReportDelay) return true;
+        if ((block.timestamp - params.lastReport) >= maxReportDelay) return true;
 
         uint256 outstanding = vault.debtOutstanding();
         if (outstanding > debtThreshold) return true;
 
         uint256 total = estimatedTotalAssets();
-        if (total.add(debtThreshold) < params.totalDebt) return true;
+        if ((total + debtThreshold) < params.totalDebt) return true;
 
-        return (profitFactor.mul(callCost) < _claimableInETH());
+        return ((profitFactor * callCost) < _claimableInETH());
     }
 
     /**
@@ -357,7 +359,7 @@ abstract contract ConvexStable is BaseStrategy {
             (debtPayment, loss) = liquidatePosition(totalAssets > debtOutstanding ? totalAssets : debtOutstanding);
             // NOTE: take up any remainder here as profit
             if (debtPayment > debtOutstanding) {
-                profit = debtPayment.sub(debtOutstanding);
+                profit = debtPayment - debtOutstanding;
                 debtPayment = debtOutstanding;
             }
         } else {
@@ -451,12 +453,16 @@ abstract contract ConvexStable is BaseStrategy {
 
 // File: 3pool.sol
 
-contract Convex3StableStrategy is ConvexStable {
+contract Convex3StableStrategy is ConvexStable, Initializable {
     using SafeMath for uint256;
 
     address[] public pathTarget;
 
-    constructor(address _vault) public ConvexStable(_vault) {
+    function initialize(
+        address _vault
+    ) external initializer {
+        ConvexStable._initialize(_vault);
+
         curve = address(0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7);
         id = 9;
         isClaimRewards = true; // default is true, turn off in emergency
@@ -539,7 +545,7 @@ contract Convex3StableStrategy is ConvexStable {
         if (_dai > 0 || _usdc > 0 || _usdt > 0) {
             ICurveFi(curve).add_liquidity([_dai, _usdc, _usdt], 0);
         }
-        _profit = balanceOfWrapped().sub(before);
+        _profit = balanceOfWrapped() - before;
 
         uint _total = estimatedTotalWrappedAssets();
         uint _debt = calc_wrapped_from_want(vault.strategies(address(this)).totalDebt);
@@ -550,7 +556,7 @@ contract Convex3StableStrategy is ConvexStable {
 
         if (_debtOutstanding > 0) {
             _withdrawSome(_debtOutstanding);
-            _debtPayment = Math.min(_debtOutstanding, balanceOfWrapped().sub(_profit));
+            _debtPayment = Math.min(_debtOutstanding, balanceOfWrapped() - _profit);
         }
     }
 

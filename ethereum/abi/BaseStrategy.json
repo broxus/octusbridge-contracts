@@ -120,19 +120,6 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "rewards",
-        "type": "address"
-      }
-    ],
-    "name": "UpdatedRewards",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
         "name": "newStrategist",
         "type": "address"
       }
@@ -336,19 +323,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "rewards",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -429,19 +403,6 @@
       }
     ],
     "name": "setProfitFactor",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_rewards",
-        "type": "address"
-      }
-    ],
-    "name": "setRewards",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

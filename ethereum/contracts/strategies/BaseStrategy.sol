@@ -8,15 +8,12 @@ import "../interfaces/IERC20Metadata.sol";
 import "../interfaces/IRewards.sol";
 import "../interfaces/IUni.sol";
 import "../interfaces/IVault.sol";
-import "../libraries/Address.sol";
 import "../libraries/Math.sol";
 import "../libraries/SafeERC20.sol";
-import "../libraries/SafeMath.sol";
 
 
 
 abstract contract BaseStrategy {
-    using SafeMath for uint256;
     using SafeERC20 for IERC20;
     string public metadataURI;
 
@@ -62,7 +59,6 @@ abstract contract BaseStrategy {
 
     IVault public vault;
     address public strategist;
-    address public rewards;
     address public keeper;
 
     IERC20 public want;
@@ -73,8 +69,6 @@ abstract contract BaseStrategy {
     event UpdatedStrategist(address newStrategist);
 
     event UpdatedKeeper(address newKeeper);
-
-    event UpdatedRewards(address rewards);
 
     event UpdatedMinReportDelay(uint256 delay);
 
@@ -135,10 +129,6 @@ abstract contract BaseStrategy {
         _;
     }
 
-    constructor(address _vault) {
-        _initialize(_vault, msg.sender, msg.sender, msg.sender);
-    }
-
     /**
      * @notice
      *  Initializes the Strategy, this is called only once, when the
@@ -149,7 +139,6 @@ abstract contract BaseStrategy {
     function _initialize(
         address _vault,
         address _strategist,
-        address _rewards,
         address _keeper
     ) internal {
         require(address(want) == address(0), "Strategy already initialized");
@@ -158,7 +147,6 @@ abstract contract BaseStrategy {
         want = IERC20(vault.token());
         want.safeApprove(_vault, type(uint256).max); // Give Vault unlimited access (might save gas)
         strategist = _strategist;
-        rewards = _rewards;
         keeper = _keeper;
 
         // initialize variables
@@ -198,20 +186,6 @@ abstract contract BaseStrategy {
         require(_keeper != address(0));
         keeper = _keeper;
         emit UpdatedKeeper(_keeper);
-    }
-
-    /**
-     * @notice
-     *  Used to change `rewards`. EOA or smart contract which has the permission
-     *  to pull rewards from the vault.
-     *
-     *  This may only be called by the strategist.
-     * @param _rewards The address to use for pulling rewards.
-     */
-    function setRewards(address _rewards) external onlyStrategist {
-        require(_rewards != address(0));
-        rewards = _rewards;
-        emit UpdatedRewards(_rewards);
     }
 
     /**
@@ -474,10 +448,10 @@ abstract contract BaseStrategy {
         if (params.activation == 0) return false;
 
         // Should not trigger if we haven't waited long enough since previous harvest
-        if (block.timestamp.sub(params.lastReport) < minReportDelay) return false;
+        if ((block.timestamp - params.lastReport) < minReportDelay) return false;
 
         // Should trigger if hasn't been called in a while
-        if (block.timestamp.sub(params.lastReport) >= maxReportDelay) return true;
+        if ((block.timestamp - params.lastReport) >= maxReportDelay) return true;
 
         // If some amount is owed, pay it back
         // NOTE: Since debt is based on deposits, it makes sense to guard against large
@@ -490,15 +464,15 @@ abstract contract BaseStrategy {
         // Check for profits and losses
         uint256 total = estimatedTotalAssets();
         // Trigger if we have a loss to report
-        if (total.add(debtThreshold) < params.totalDebt) return true;
+        if ((total + debtThreshold) < params.totalDebt) return true;
 
         uint256 profit = 0;
-        if (total > params.totalDebt) profit = total.sub(params.totalDebt); // We've earned a profit!
+        if (total > params.totalDebt) profit = total - params.totalDebt; // We've earned a profit!
 
         // Otherwise, only trigger if it "makes sense" economically (gas cost
         // is <N% of value moved)
         uint256 credit = vault.creditAvailable();
-        return (profitFactor.mul(callCost) < credit.add(profit));
+        return ((profitFactor * callCost) < (credit + profit));
     }
 
     /**
@@ -530,7 +504,7 @@ abstract contract BaseStrategy {
             (debtPayment, loss) = liquidatePosition(totalAssets > debtOutstanding ? totalAssets : debtOutstanding);
             // NOTE: take up any remainder here as profit
             if (debtPayment > debtOutstanding) {
-                profit = debtPayment.sub(debtOutstanding);
+                profit = debtPayment - debtOutstanding;
                 debtPayment = debtOutstanding;
             }
         } else {
