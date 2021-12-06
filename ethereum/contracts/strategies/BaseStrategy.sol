@@ -7,11 +7,12 @@ import "../interfaces/IERC20.sol";
 import "../interfaces/IERC20Metadata.sol";
 import "../interfaces/IRewards.sol";
 import "../interfaces/IUni.sol";
-import "../interfaces/IVaultAPI.sol";
+import "../interfaces/IVault.sol";
 import "../libraries/Address.sol";
 import "../libraries/Math.sol";
 import "../libraries/SafeERC20.sol";
 import "../libraries/SafeMath.sol";
+
 
 
 abstract contract BaseStrategy {
@@ -27,7 +28,7 @@ abstract contract BaseStrategy {
      * @return A string which holds the current API version of this contract.
      */
     function apiVersion() public pure returns (string memory) {
-        return "0.3.5";
+        return "0.1.3";
     }
 
     /**
@@ -59,7 +60,7 @@ abstract contract BaseStrategy {
         return 0;
     }
 
-    VaultAPI public vault;
+    IVault public vault;
     address public strategist;
     address public rewards;
     address public keeper;
@@ -153,7 +154,7 @@ abstract contract BaseStrategy {
     ) internal {
         require(address(want) == address(0), "Strategy already initialized");
 
-        vault = VaultAPI(_vault);
+        vault = IVault(_vault);
         want = IERC20(vault.token());
         want.safeApprove(_vault, type(uint256).max); // Give Vault unlimited access (might save gas)
         strategist = _strategist;
@@ -165,8 +166,6 @@ abstract contract BaseStrategy {
         maxReportDelay = 86400;
         profitFactor = 100;
         debtThreshold = 0;
-
-        vault.approve(rewards, type(uint256).max); // Allow rewards to be pulled
     }
 
     /**
@@ -211,9 +210,7 @@ abstract contract BaseStrategy {
      */
     function setRewards(address _rewards) external onlyStrategist {
         require(_rewards != address(0));
-        vault.approve(rewards, 0);
         rewards = _rewards;
-        vault.approve(rewards, type(uint256).max);
         emit UpdatedRewards(_rewards);
     }
 
@@ -471,7 +468,7 @@ abstract contract BaseStrategy {
      * @return `true` if `harvest()` should be called, `false` otherwise.
      */
     function harvestTrigger(uint256 callCost) public virtual view returns (bool) {
-        StrategyParams memory params = vault.strategies(address(this));
+        IVault.StrategyParams memory params = vault.strategies(address(this));
 
         // Should not trigger if Strategy is not activated
         if (params.activation == 0) return false;

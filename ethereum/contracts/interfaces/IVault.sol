@@ -8,6 +8,22 @@ interface IVault {
         uint256 addr;
     }
 
+    struct StrategyParams {
+        uint256 performanceFee;
+        uint256 activation;
+        uint256 debtRatio;
+        uint256 minDebtPerHarvest;
+        uint256 maxDebtPerHarvest;
+        uint256 lastReport;
+        uint256 totalDebt;
+        uint256 totalGain;
+        uint256 totalSkim;
+        uint256 totalLoss;
+        address rewardsManager;
+        TONAddress rewards;
+    }
+
+
     struct PendingWithdrawalId {
         address recipient;
         uint256 id;
@@ -47,8 +63,17 @@ interface IVault {
         uint256 _targetDecimals
     ) external;
 
+    function debtOutstanding() external view returns (uint256);
+    function creditAvailable() external view returns (uint256);
+    function report(uint256 profit, uint256 loss, uint256 debtPayment) external returns (uint256);
+    function revokeStrategy() external;
+
+    function strategies(address strategy) external view returns (StrategyParams memory);
+
     function governance() external view returns(address);
     function token() external view returns(address);
+    function guardian() external view returns(address);
+    function management() external view returns(address);
     function wrapper() external view returns(address);
 
     function tokenDecimals() external view returns(uint256);

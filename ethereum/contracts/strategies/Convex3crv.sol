@@ -14,7 +14,6 @@ import "../interfaces/IERC20.sol";
 import "../interfaces/IERC20Metadata.sol";
 import "../interfaces/IRewards.sol";
 import "../interfaces/IUni.sol";
-import "../interfaces/IVaultAPI.sol";
 import "../libraries/Address.sol";
 import "../libraries/Math.sol";
 import "../libraries/SafeERC20.sol";
@@ -311,7 +310,7 @@ abstract contract ConvexStable is BaseStrategy {
 
     // NOTE: Can override `tendTrigger` and `harvestTrigger` if necessary
     function harvestTrigger(uint256 callCost) public override view returns (bool) {
-        StrategyParams memory params = vault.strategies(address(this));
+        IVault.StrategyParams memory params = vault.strategies(address(this));
 
         if (params.activation == 0) return false;
 
@@ -464,7 +463,7 @@ contract Convex3StableStrategy is ConvexStable {
         // isClaimExtras = true; // add this if there are extra rewards
 
         (address _lp,,,address _reward,,) = Booster(booster).poolInfo(id);
-        require(_lp == address(want), "constructor: incorrect lp token");
+        require(_lp == address(want_wrapped), "constructor: incorrect lp token");
         rewardContract = _reward;
 
         _approveBasic();
