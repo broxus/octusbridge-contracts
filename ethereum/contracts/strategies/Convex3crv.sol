@@ -4,7 +4,7 @@
 
 // SPDX-License-Identifier: AGPL-3.0
 
-pragma solidity 0.6.12;
+pragma solidity ^0.8.2;
 pragma experimental ABIEncoderV2;
 
 
@@ -22,20 +22,6 @@ import "../libraries/SafeMath.sol";
 import "./BaseStrategy.sol";
 
 
-// Global Enums and Structs
-
-
-struct StrategyParams {
-    uint256 performanceFee;
-    uint256 activation;
-    uint256 debtRatio;
-    uint256 minDebtPerHarvest;
-    uint256 maxDebtPerHarvest;
-    uint256 lastReport;
-    uint256 totalDebt;
-    uint256 totalGain;
-    uint256 totalLoss;
-}
 
 // Part: ConvexStable
 
@@ -53,7 +39,7 @@ abstract contract ConvexStable is BaseStrategy {
     address public constant dai = address(0x6B175474E89094C44Da98b954EedeAC495271d0F);
     address public constant usdc = address(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     address public constant usdt = address(0xdAC17F958D2ee523a2206206994597C13D831ec7);
-    address public constant crv3 = address(0x6c3f90f043a72fa612cbac8115ee7e52bde6e490);
+    address public constant crv3 = address(0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490);
 
     // address public constant quoter = address(0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6);
     // address public constant uniswapv3 = address(0xE592427A0AEce92De3Edee1F18E0157C05861564);
@@ -71,25 +57,25 @@ abstract contract ConvexStable is BaseStrategy {
     uint public constant MAX_SLIPPAGE_FACTOR = 1000000;
     uint public slippage_factor = 150;
 
-    uint256 public curve_lp_idx;
+    uint128 public curve_lp_idx;
 
     address[] public dex;
     uint256 public keepCRV;
 
-    constructor(address _vault) public BaseStrategy(_vault) {
+    constructor(address _vault) BaseStrategy(_vault) {
         minReportDelay = 1 days;
         maxReportDelay = 30 days;
         profitFactor = 100000;
         debtThreshold = 1e24;
         keepCRV = 1000;
         want_wrapped = IERC20(crv3);
-        want_wrapped.safeApprove(_vault, uint256(-1)); // Give Vault unlimited access (might save gas)
+        want_wrapped.safeApprove(_vault, type(uint256).max); // Give Vault unlimited access (might save gas)
 
-        if (want == dai) {
+        if (address(want) == dai) {
             curve_lp_idx = 0;
-        } else if (want == usdc) {
+        } else if (address(want) == usdc) {
             curve_lp_idx = 1;
-        } else if (want == usdt) {
+        } else if (address(want) == usdt) {
             curve_lp_idx = 2;
         } else {
             revert("Strategy cant be applied to this vault");
@@ -175,7 +161,7 @@ abstract contract ConvexStable is BaseStrategy {
     }
 
     function calc_wrapped_from_want(uint256 want_amount) public view returns (uint256) {
-        uint256[] memory amounts = new uint256[](3);
+        uint256[3] memory amounts;
         amounts[curve_lp_idx] = want_amount;
         return ICurveFi(curve).calc_token_amount(amounts, true);
     }
@@ -192,7 +178,7 @@ abstract contract ConvexStable is BaseStrategy {
 
     function wrap(uint256 want_amount) internal returns (uint256) {
         uint256 expected_return = calc_wrapped_from_want(want_amount);
-        uint256[] memory amounts = new uint256[](3);
+        uint256[3] memory amounts;
         amounts[curve_lp_idx] = want_amount;
         ICurveFi(curve).add_liquidity(amounts, 0);
         return expected_return;
@@ -212,7 +198,7 @@ abstract contract ConvexStable is BaseStrategy {
 
     function estimatedTotalAssets() public view override returns (uint256) {
         uint256 total_wrapped = estimatedTotalWrappedAssets();
-        return calc_want_from_wrapped(total_assets) + balanceOfWant();
+        return calc_want_from_wrapped(total_wrapped) + balanceOfWant();
     }
 
     function estimatedTotalWrappedAssets() public view returns (uint256) {
@@ -405,15 +391,16 @@ abstract contract ConvexStable is BaseStrategy {
      * @param _amountNeeded How much `want` to withdraw.
      * @return _loss Any realized losses
      */
-    function withdraw(uint256 _amountNeeded) external virtual returns (uint256 _loss) {
+    function withdraw(uint256 _amountNeeded) external override returns (uint256 _loss) {
         require(msg.sender == address(vault), "!vault");
         // Liquidate as much as possible to `want`, up to `_amountNeeded`
         uint _amountNeededWrapped;
         uint _amountNeededFirst = _amountNeeded;
+
         for (uint i = 0; i < 100; i++) {
             _amountNeeded = apply_slippage_factor(_amountNeeded);
             _amountNeededWrapped = calc_wrapped_from_want(_amountNeeded);
-            _expectedUnwrapped = calc_want_from_wrapped(_amountNeededWrapped);
+            uint _expectedUnwrapped = calc_want_from_wrapped(_amountNeededWrapped);
             if (_expectedUnwrapped >= _amountNeededFirst) {
                 break;
             }
@@ -452,7 +439,7 @@ abstract contract ConvexStable is BaseStrategy {
      *  should be protected from sweeping in addition to `want`.
      * @param _token The token to transfer out of this vault.
      */
-    function sweep(address _token) external onlyGovernance {
+    function sweep(address _token) external override onlyGovernance {
         require(_token != address(want), "!want");
         require(_token != address(want_wrapped), "!want wrapped");
 
@@ -465,7 +452,9 @@ abstract contract ConvexStable is BaseStrategy {
 
 // File: 3pool.sol
 
-contract Strategy is ConvexStable {
+contract Convex3StableStrategy is ConvexStable {
+    using SafeMath for uint256;
+
     address[] public pathTarget;
 
     constructor(address _vault) public ConvexStable(_vault) {
@@ -534,7 +523,7 @@ contract Strategy is ConvexStable {
             path[1] = weth;
             path[2] = pathTarget[0];
 
-            Uni(dex[0]).swapExactTokensForTokens(_crv, uint256(0), path, address(this), now);
+            Uni(dex[0]).swapExactTokensForTokens(_crv, uint256(0), path, address(this), block.timestamp);
         }
         uint256 _cvx = IERC20(cvx).balanceOf(address(this));
         if (_cvx > 0) {
@@ -543,7 +532,7 @@ contract Strategy is ConvexStable {
             path[1] = weth;
             path[2] = pathTarget[1];
 
-            Uni(dex[1]).swapExactTokensForTokens(_cvx, uint256(0), path, address(this), now);
+            Uni(dex[1]).swapExactTokensForTokens(_cvx, uint256(0), path, address(this), block.timestamp);
         }
         uint256 _dai = IERC20(dai).balanceOf(address(this));
         uint256 _usdc = IERC20(usdc).balanceOf(address(this));

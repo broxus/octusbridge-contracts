@@ -1,9 +1,23 @@
-pragma solidity 0.6.12;
+pragma solidity ^0.8.2;
 pragma experimental ABIEncoderV2;
 
 import "./IERC20.sol";
 
+struct StrategyParams {
+    uint256 performanceFee;
+    uint256 activation;
+    uint256 debtRatio;
+    uint256 minDebtPerHarvest;
+    uint256 maxDebtPerHarvest;
+    uint256 lastReport;
+    uint256 totalDebt;
+    uint256 totalGain;
+    uint256 totalLoss;
+}
+
+
 interface VaultAPI is IERC20 {
+
     function name() external view returns (string calldata);
 
     function symbol() external view returns (string calldata);

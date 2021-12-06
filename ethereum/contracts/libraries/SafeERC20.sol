@@ -1,5 +1,10 @@
-pragma solidity 0.6.12;
+pragma solidity ^0.8.2;
 pragma experimental ABIEncoderV2;
+
+
+import "./SafeMath.sol";
+import "./Address.sol";
+import "../interfaces/IERC20.sol";
 
 
 library SafeERC20 {

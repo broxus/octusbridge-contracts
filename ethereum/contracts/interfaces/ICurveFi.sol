@@ -1,4 +1,4 @@
-pragma solidity 0.6.12;
+pragma solidity ^0.8.2;
 pragma experimental ABIEncoderV2;
 
 
@@ -46,11 +46,11 @@ interface ICurveFi {
     ) external;
 
     function calc_token_amount(
-        uint256[3] tokens,
+        uint256[3] calldata tokens,
         bool is_deposit
-    ) external returns (uint256);
+    ) external view returns (uint256);
 
-    function calc_withdraw_one_coin(uint256 token_amount, int128 i) external returns (uint256);
+    function calc_withdraw_one_coin(uint256 token_amount, int128 i) external view returns (uint256);
 
     function exchange(
         int128 i,
