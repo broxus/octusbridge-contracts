@@ -137,15 +137,30 @@ const encodeWithdrawalData = (params) => web3.eth.abi.encodeParameters(
 );
 
 
-const issueTokens = async ({ token, owner, amount, recipient }) => {
+const getSignerFromAddr = async (address) => {
   await hre.network.provider.request({
     method: "hardhat_impersonateAccount",
-    params: [owner]
+    params: [address]
   });
-  
-  const locker = await ethers
-    .provider
-    .getSigner(owner);
+
+  return await ethers.provider.getSigner(address);
+}
+
+const increaseTime = async (time) => {
+  await hre.network.provider.request({
+    method: 'evm_increaseTime',
+    params: [time]
+  });
+}
+
+const mineBlocks = async (num) => {
+  for (const i of Array.from(Array(num).keys())) {
+    await hre.network.provider.request({method: 'evm_mine'});
+  }
+}
+
+const issueTokens = async ({ token, owner, amount, recipient }) => {
+  const locker = await getSignerFromAddr(owner);
   
   await token
     .connect(locker)
@@ -176,7 +191,10 @@ module.exports = {
   defaultTonRecipient,
   generateWallets,
   getVaultByToken,
+  getSignerFromAddr,
   encodeWithdrawalData,
   issueTokens,
   getInitialRelays,
+  increaseTime,
+  mineBlocks
 };

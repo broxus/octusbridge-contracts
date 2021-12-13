@@ -117,6 +117,9 @@ const hardhatConfig = {
     apiKey: process.env.ETHERSCAN_KEY
   },
   namedAccounts: {
+    dai_vault: {
+      hardhat: '0x687D0fa2c74a2DDFbdA08da2eF494b64A967b7fa'
+    },
     deployer: {
       default: 0,
       goerli: 0,
@@ -262,6 +265,7 @@ const hardhatConfig = {
       fantom: '0x4cb2f1140f36850161231dcf5662661c53489550',
     },
   },
+  mocha: {
   abiExporter: {
     path: 'abi',
     clear: true,

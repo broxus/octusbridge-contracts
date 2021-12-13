@@ -256,7 +256,7 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "expected_return",
         "type": "uint256"
       }
     ],
@@ -545,19 +545,6 @@
   },
   {
     "inputs": [],
-    "name": "keepCRV",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "keeper",
     "outputs": [
       {
@@ -702,19 +689,6 @@
       }
     ],
     "name": "setIsClaimRewards",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_keepCRV",
-        "type": "uint256"
-      }
-    ],
-    "name": "setKeepCRV",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

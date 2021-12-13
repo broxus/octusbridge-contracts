@@ -16,6 +16,7 @@ interface Rewards{
     function rewards(address) external view returns (uint256);
     function userRewardPerTokenPaid(address) external view returns (uint256);
     function stakingToken() external view returns (address);
+    function queueNewRewards(uint256 _rewards) external returns(bool);
 
     function stake(uint256) external returns (bool);
     function stakeAll() external returns (bool);
@@ -28,6 +29,8 @@ interface Rewards{
 
     function getReward() external returns(bool);
     function getReward(address _account, bool _claimExtras) external returns(bool);
+
+    function operator() external view returns (address);
 
     function donate(uint256 _amount) external returns(bool);
 }

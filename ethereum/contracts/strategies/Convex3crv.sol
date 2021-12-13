@@ -17,7 +17,6 @@ import "../interfaces/IUni.sol";
 import "../libraries/Address.sol";
 import "../libraries/Math.sol";
 import "../libraries/SafeERC20.sol";
-import "../libraries/SafeMath.sol";
 import "./BaseStrategy.sol";
 import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 
@@ -53,23 +52,22 @@ abstract contract ConvexStable is BaseStrategy {
     address public curve;
     IERC20 public want_wrapped;
     uint public constant MAX_SLIPPAGE_FACTOR = 1000000;
-    uint public slippage_factor = 150;
+    uint public slippage_factor;
 
     uint128 public curve_lp_idx;
 
     address[] public dex;
-    uint256 public keepCRV;
 
     function _initialize(
         address _vault
     ) internal {
         BaseStrategy._initialize(_vault, msg.sender, msg.sender);
 
+        slippage_factor = 150;
         minReportDelay = 1 days;
         maxReportDelay = 30 days;
         profitFactor = 100000;
         debtThreshold = 1e24;
-        keepCRV = 1000;
         want_wrapped = IERC20(crv3);
         want_wrapped.safeApprove(_vault, type(uint256).max); // Give Vault unlimited access (might save gas)
 
@@ -107,10 +105,6 @@ abstract contract ConvexStable is BaseStrategy {
     function approveAll() external onlyAuthorized {
         _approveBasic();
         _approveDex();
-    }
-
-    function setKeepCRV(uint256 _keepCRV) external onlyAuthorized {
-        keepCRV = _keepCRV;
     }
 
     function switchDex(uint256 _id, address _dex) external onlyAuthorized {
@@ -157,8 +151,10 @@ abstract contract ConvexStable is BaseStrategy {
         return string(abi.encodePacked("Convex", IERC20Metadata(address(want_wrapped)).symbol()));
     }
 
-    function calc_want_from_wrapped(uint256 wrapped_amount) public view returns (uint256) {
-        return ICurveFi(curve).calc_withdraw_one_coin(wrapped_amount, int128(curve_lp_idx));
+    function calc_want_from_wrapped(uint256 wrapped_amount) public view returns (uint256 expected_return) {
+        if (wrapped_amount > 0) {
+            expected_return = ICurveFi(curve).calc_withdraw_one_coin(wrapped_amount, int128(curve_lp_idx));
+        }
     }
 
     function calc_wrapped_from_want(uint256 want_amount) public view returns (uint256) {
@@ -171,18 +167,20 @@ abstract contract ConvexStable is BaseStrategy {
         return (amount * (slippage_factor + MAX_SLIPPAGE_FACTOR)) / MAX_SLIPPAGE_FACTOR;
     }
 
-    function unwrap(uint256 wrapped_amount) internal returns (uint256) {
-        uint256 expected_return = calc_want_from_wrapped(wrapped_amount);
-        ICurveFi(curve).remove_liquidity_one_coin(wrapped_amount, int128(curve_lp_idx), 0);
-        return expected_return;
+    function unwrap(uint256 wrapped_amount) internal returns (uint256 expected_return) {
+        if (wrapped_amount > 0) {
+            expected_return = calc_want_from_wrapped(wrapped_amount);
+            ICurveFi(curve).remove_liquidity_one_coin(wrapped_amount, int128(curve_lp_idx), 0);
+        }
     }
 
-    function wrap(uint256 want_amount) internal returns (uint256) {
-        uint256 expected_return = calc_wrapped_from_want(want_amount);
-        uint256[3] memory amounts;
-        amounts[curve_lp_idx] = want_amount;
-        ICurveFi(curve).add_liquidity(amounts, 0);
-        return expected_return;
+    function wrap(uint256 want_amount) internal returns (uint256 expected_return) {
+        if (want_amount > 0) {
+            expected_return = calc_wrapped_from_want(want_amount);
+            uint256[3] memory amounts;
+            amounts[curve_lp_idx] = want_amount;
+            ICurveFi(curve).add_liquidity(amounts, 0);
+        }
     }
 
     function balanceOfWant() public view returns (uint256) {
@@ -252,12 +250,6 @@ abstract contract ConvexStable is BaseStrategy {
     function _migrateRewards(address _newStrategy) internal virtual {
         IERC20(crv).safeTransfer(_newStrategy, IERC20(crv).balanceOf(address(this)));
         IERC20(cvx).safeTransfer(_newStrategy, IERC20(cvx).balanceOf(address(this)));
-    }
-
-    function _adjustCRV(uint256 _crv) internal returns (uint256) {
-        uint256 _keepCRV = (_crv * keepCRV) / DENOMINATOR;
-        if (_keepCRV > 0) IERC20(crv).safeTransfer(voter, _keepCRV);
-        return _crv - _keepCRV;
     }
 
     function _claimableBasicInETH() internal view returns (uint256) {
@@ -369,8 +361,8 @@ abstract contract ConvexStable is BaseStrategy {
 
         // we should be able to give profit + debtPayment to vault
         uint256 want_profit = unwrap(profit);
-        uint256 want_loss = calc_want_from_wrapped(loss);
         uint256 want_debtPayment = unwrap(debtPayment);
+        uint256 want_loss = calc_want_from_wrapped(loss);
 
         // Allow Vault to take up to the "harvested" balance of this contract,
         // which is the amount it has earned since the last time it reported to
@@ -454,8 +446,6 @@ abstract contract ConvexStable is BaseStrategy {
 // File: 3pool.sol
 
 contract Convex3StableStrategy is ConvexStable, Initializable {
-    using SafeMath for uint256;
-
     address[] public pathTarget;
 
     function initialize(
@@ -521,8 +511,6 @@ contract Convex3StableStrategy is ConvexStable, Initializable {
         Rewards(rewardContract).getReward(address(this), isClaimExtras);
         uint256 _crv = IERC20(crv).balanceOf(address(this));
         if (_crv > 0) {
-            _crv = _adjustCRV(_crv);
-
             address[] memory path = new address[](3);
             path[0] = crv;
             path[1] = weth;
