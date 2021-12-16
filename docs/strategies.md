@@ -11,7 +11,7 @@ accepts not 3crv tokens, but the underlying stablecoins.
 ### Mechanic
 Strategy's mechanic duplicates the original one, except that it accepts USDC/USDT/DAI instead of 3crv creating them on the fly.
 Strategy unwraps 3crv to underlying coins if it is needed, for example to pay debt to vault.
-Thus, the strategy can be connected to a volta using any of the USDC / USDT / DAI coins.
+Thus, the strategy can be connected to any vault using one of USDC / USDT / DAI coins.
 The strategy's earnings consist of CVX and CRV tokens, which are exchanged for stablecoins and wrapped in 3crv
 for recapitalization.
 
