@@ -6,6 +6,7 @@ const { upgrades, ethers } = require("hardhat");
 
 describe('Test Convex3stable strategy on DAI vault', async () => {
     let vault, strategy, dai, governance, booster, wrapped, rewards;
+    let snapshot;
 
     describe('Initial setup of contracts', async () => {
         it('Setup contracts', async () => {
@@ -75,6 +76,10 @@ describe('Test Convex3stable strategy on DAI vault', async () => {
 
             expect(vault_bal_after.lt(vault_bal_before)).to.be.true;
             expect(strategy_deposit_balance.gt(0)).to.be.true;
+       });
+
+       it('Snapshot', async () => {
+           snapshot = await ethers.provider.send("evm_snapshot");
        });
 
        it('Check harvestTrigger', async () => {
@@ -173,5 +178,35 @@ describe('Test Convex3stable strategy on DAI vault', async () => {
 
             expect(vault_increase.gte(expected_min_vault_bal)).to.be.true;
        })
+    });
+
+    describe('Test red buttons', async () => {
+        it('Load snapshot', async () => {
+            await ethers.provider.send("evm_revert", [snapshot]);
+        });
+
+        it('Withdraw to wrapped tokens', async () => {
+            await increaseTime(7 * 24 * 60 * 60);
+            await mineBlocks(1);
+
+            const pool_bal = await strategy.balanceOfPool();
+            await strategy.connect(governance).withdrawToWrappedTokens();
+            const wrapped_bal = await strategy.balanceOfWrapped();
+
+            expect(pool_bal.toString()).to.be.eq(wrapped_bal.toString(), 'Not withdrawed');
+        });
+
+        it('Claim tokens', async () => {
+            const str_wrapped_bal = await strategy.balanceOfWrapped();
+            const governance_addr = await vault.governance();
+
+            const gov_bal_before = await wrapped.balanceOf(governance_addr);
+            await strategy.connect(governance).claimWrappedWantTokens();
+            const gov_bal_after = await wrapped.balanceOf(governance_addr);
+
+            const delta = gov_bal_after.sub(gov_bal_before);
+            expect(delta.toString()).to.be.eq(str_wrapped_bal.toString(), 'Balance not claimed');
+        });
+
     });
 });
