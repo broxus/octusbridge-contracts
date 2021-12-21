@@ -37,7 +37,6 @@ abstract contract ConvexCrvLp is BaseStrategy {
     // address public constant uniswapv3 = address(0xE592427A0AEce92De3Edee1F18E0157C05861564);
     address public constant uniswap = address(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
     address public constant sushiswap = address(0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F);
-    uint public constant LP_COINS_NUM = 2; // should be overriden when curve lp has more coins
 
     bool public isClaimRewards;
     bool public isClaimExtras;
@@ -116,12 +115,7 @@ abstract contract ConvexCrvLp is BaseStrategy {
         }
     }
 
-
-    function calc_wrapped_from_want(uint256 want_amount) public view returns (uint256) {
-        uint256[LP_COINS_NUM] memory amounts;
-        amounts[curve_lp_idx] = want_amount;
-        return ICurveFi(curve).calc_token_amount(amounts, true);
-    }
+    function calc_wrapped_from_want(uint256 want_amount) public virtual view returns (uint256);
 
     function apply_slippage_factor(uint256 amount) public view returns (uint256) {
         return (amount * (slippage_factor + MAX_SLIPPAGE_FACTOR)) / MAX_SLIPPAGE_FACTOR;
@@ -134,14 +128,7 @@ abstract contract ConvexCrvLp is BaseStrategy {
         }
     }
 
-    function wrap(uint256 want_amount) internal returns (uint256 expected_return) {
-        if (want_amount > 0) {
-            expected_return = calc_wrapped_from_want(want_amount);
-            uint256[LP_COINS_NUM] memory amounts;
-            amounts[curve_lp_idx] = want_amount;
-            ICurveFi(curve).add_liquidity(amounts, 0);
-        }
-    }
+    function wrap(uint256 want_amount) internal virtual returns (uint256 expected_return);
 
     function balanceOfWant() public view returns (uint256) {
         return want.balanceOf(address(this));
@@ -350,7 +337,7 @@ abstract contract ConvexCrvLp is BaseStrategy {
         uint _amountNeededWrapped;
         uint _amountNeededFirst = _amountNeeded;
 
-        for (uint i = 0; i < 2; i++) {
+        for (uint i = 0; i < 3; i++) {
             _amountNeeded = apply_slippage_factor(_amountNeeded);
             _amountNeededWrapped = calc_wrapped_from_want(_amountNeeded);
             uint _expectedUnwrapped = calc_want_from_wrapped(_amountNeededWrapped);
