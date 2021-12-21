@@ -24,7 +24,7 @@ import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 
 // Part: ConvexStable
 
-abstract contract ConvexStable is BaseStrategy {
+abstract contract ConvexCrvLp is BaseStrategy {
     using SafeERC20 for IERC20;
 
     address public constant booster = address(0xF403C135812408BFbE8713b5A23a04b3D48AAE31);
@@ -32,17 +32,12 @@ abstract contract ConvexStable is BaseStrategy {
     address public constant cvx = address(0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B);
     address public constant crv = address(0xD533a949740bb3306d119CC777fa900bA034cd52);
     address public constant weth = address(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
-    address public constant dai = address(0x6B175474E89094C44Da98b954EedeAC495271d0F);
-    address public constant usdc = address(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
-    address public constant usdt = address(0xdAC17F958D2ee523a2206206994597C13D831ec7);
-    address public constant crv3 = address(0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490);
 
     // address public constant quoter = address(0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6);
     // address public constant uniswapv3 = address(0xE592427A0AEce92De3Edee1F18E0157C05861564);
     address public constant uniswap = address(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
     address public constant sushiswap = address(0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F);
-
-    uint256 public constant DENOMINATOR = 10000;
+    uint public constant LP_COINS_NUM = 2; // should be overriden when curve lp has more coins
 
     bool public isClaimRewards;
     bool public isClaimExtras;
@@ -60,47 +55,11 @@ abstract contract ConvexStable is BaseStrategy {
 
     function _initialize(
         address _vault
-    ) internal {
-        BaseStrategy._initialize(_vault, msg.sender, msg.sender);
+    ) internal virtual;
 
-        slippage_factor = 150;
-        minReportDelay = 1 days;
-        maxReportDelay = 30 days;
-        profitFactor = 100000;
-        debtThreshold = 1e24;
-        want_wrapped = IERC20(crv3);
-        want_wrapped.safeApprove(_vault, type(uint256).max); // Give Vault unlimited access (might save gas)
+    function _approveBasic() internal virtual;
 
-        if (address(want) == dai) {
-            curve_lp_idx = 0;
-        } else if (address(want) == usdc) {
-            curve_lp_idx = 1;
-        } else if (address(want) == usdt) {
-            curve_lp_idx = 2;
-        } else {
-            revert("Strategy cant be applied to this vault");
-        }
-    }
-
-    function _approveBasic() internal {
-        want_wrapped.safeApprove(booster, 0);
-        want_wrapped.safeApprove(booster, type(uint256).max);
-        want_wrapped.safeApprove(curve, 0);
-        want_wrapped.safeApprove(curve, type(uint256).max);
-        IERC20(dai).safeApprove(curve, 0);
-        IERC20(dai).safeApprove(curve, type(uint256).max);
-        IERC20(usdc).safeApprove(curve, 0);
-        IERC20(usdc).safeApprove(curve, type(uint256).max);
-        IERC20(usdt).safeApprove(curve, 0);
-        IERC20(usdt).safeApprove(curve, type(uint256).max);
-    }
-
-    function _approveDex() internal virtual {
-        IERC20(crv).safeApprove(dex[0], 0);
-        IERC20(crv).safeApprove(dex[0], type(uint256).max);
-        IERC20(cvx).safeApprove(dex[1], 0);
-        IERC20(cvx).safeApprove(dex[1], type(uint256).max);
-    }
+    function _approveDex() internal virtual;
 
     function approveAll() external onlyAuthorized {
         _approveBasic();
@@ -157,8 +116,9 @@ abstract contract ConvexStable is BaseStrategy {
         }
     }
 
+
     function calc_wrapped_from_want(uint256 want_amount) public view returns (uint256) {
-        uint256[3] memory amounts;
+        uint256[LP_COINS_NUM] memory amounts;
         amounts[curve_lp_idx] = want_amount;
         return ICurveFi(curve).calc_token_amount(amounts, true);
     }
@@ -177,7 +137,7 @@ abstract contract ConvexStable is BaseStrategy {
     function wrap(uint256 want_amount) internal returns (uint256 expected_return) {
         if (want_amount > 0) {
             expected_return = calc_wrapped_from_want(want_amount);
-            uint256[3] memory amounts;
+            uint256[LP_COINS_NUM] memory amounts;
             amounts[curve_lp_idx] = want_amount;
             ICurveFi(curve).add_liquidity(amounts, 0);
         }
@@ -390,7 +350,7 @@ abstract contract ConvexStable is BaseStrategy {
         uint _amountNeededWrapped;
         uint _amountNeededFirst = _amountNeeded;
 
-        for (uint i = 0; i < 100; i++) {
+        for (uint i = 0; i < 2; i++) {
             _amountNeeded = apply_slippage_factor(_amountNeeded);
             _amountNeededWrapped = calc_wrapped_from_want(_amountNeeded);
             uint _expectedUnwrapped = calc_want_from_wrapped(_amountNeededWrapped);
@@ -413,6 +373,18 @@ abstract contract ConvexStable is BaseStrategy {
 
         want.safeTransfer(msg.sender, amountFreed);
         // NOTE: Reinvest anything leftover on next `tend`/`harvest`
+    }
+
+    function protectedTokens()
+    internal
+    view
+    override
+    returns (address[] memory)
+    {
+        address[] memory protected = new address[](2);
+        protected[0] = crv;
+        protected[1] = cvx;
+        return protected;
     }
 
     /**
@@ -440,123 +412,5 @@ abstract contract ConvexStable is BaseStrategy {
         for (uint256 i; i < _protectedTokens.length; i++) require(_token != _protectedTokens[i], "!protected");
 
         IERC20(_token).safeTransfer(governance(), IERC20(_token).balanceOf(address(this)));
-    }
-}
-
-// File: 3pool.sol
-
-contract Convex3StableStrategy is ConvexStable, Initializable {
-    address[] public pathTarget;
-
-    function initialize(
-        address _vault
-    ) external initializer {
-        ConvexStable._initialize(_vault);
-
-        curve = address(0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7);
-        id = 9;
-        isClaimRewards = true; // default is true, turn off in emergency
-        // isClaimExtras = true; // add this if there are extra rewards
-
-        (address _lp,,,address _reward,,) = Booster(booster).poolInfo(id);
-        require(_lp == address(want_wrapped), "constructor: incorrect lp token");
-        rewardContract = _reward;
-
-        _approveBasic();
-        pathTarget = new address[](2);
-        _setPathTarget(0, 0); // crv path target
-        _setPathTarget(1, 0); // cvx path target
-
-        dex = new address[](2);
-        dex[0] = sushiswap; // crv
-        dex[1] = sushiswap; // cvx
-        _approveDex();
-    }
-
-    // >>> approve other rewards on dex
-    // function _approveDex() internal override { super._approveDex(); }
-
-    // >>> include other rewards
-    // function _migrateRewards(address _newStrategy) internal override { super._migrateRewards(_newStrategy); }
-
-    // >>> include all other rewards in eth besides _claimableBasicInETH()
-    // function _claimableInETH() internal override view returns (uint256 _claimable) { _claimable = super._claimableInETH(); }
-
-    function _setPathTarget(uint _tokenId, uint _id) internal {
-        if (_id == 0) {
-            pathTarget[_tokenId] = dai;
-        }
-        else if (_id == 1) {
-            pathTarget[_tokenId] = usdc;
-        }
-        else {
-            pathTarget[_tokenId] = usdt;
-        }
-    }
-
-    function setPathTarget(uint _tokenId, uint _id) external onlyAuthorized {
-        _setPathTarget(_tokenId, _id);
-    }
-
-    function prepareReturn(uint256 _debtOutstanding)
-    internal
-    override
-    returns (
-        uint256 _profit,
-        uint256 _loss,
-        uint256 _debtPayment
-    )
-    {
-        uint before = balanceOfWrapped();
-        Rewards(rewardContract).getReward(address(this), isClaimExtras);
-        uint256 _crv = IERC20(crv).balanceOf(address(this));
-        if (_crv > 0) {
-            address[] memory path = new address[](3);
-            path[0] = crv;
-            path[1] = weth;
-            path[2] = pathTarget[0];
-
-            Uni(dex[0]).swapExactTokensForTokens(_crv, uint256(0), path, address(this), block.timestamp);
-        }
-        uint256 _cvx = IERC20(cvx).balanceOf(address(this));
-        if (_cvx > 0) {
-            address[] memory path = new address[](3);
-            path[0] = cvx;
-            path[1] = weth;
-            path[2] = pathTarget[1];
-
-            Uni(dex[1]).swapExactTokensForTokens(_cvx, uint256(0), path, address(this), block.timestamp);
-        }
-        uint256 _dai = IERC20(dai).balanceOf(address(this));
-        uint256 _usdc = IERC20(usdc).balanceOf(address(this));
-        uint256 _usdt = IERC20(usdt).balanceOf(address(this));
-        if (_dai > 0 || _usdc > 0 || _usdt > 0) {
-            ICurveFi(curve).add_liquidity([_dai, _usdc, _usdt], 0);
-        }
-        _profit = balanceOfWrapped() - before;
-
-        uint _total = estimatedTotalWrappedAssets();
-        uint _debt = calc_wrapped_from_want(vault.strategies(address(this)).totalDebt);
-        if (_total < _debt) {
-            _loss = _debt - _total;
-            _profit = 0;
-        }
-
-        if (_debtOutstanding > 0) {
-            _withdrawSome(_debtOutstanding);
-            _debtPayment = Math.min(_debtOutstanding, balanceOfWrapped() - _profit);
-        }
-    }
-
-    function protectedTokens()
-    internal
-    view
-    override
-    returns (address[] memory)
-    {
-        address[] memory protected = new address[](2);
-        protected[0] = crv;
-        protected[1] = cvx;
-        return protected;
     }
 }

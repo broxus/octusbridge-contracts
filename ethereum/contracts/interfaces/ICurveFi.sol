@@ -50,6 +50,11 @@ interface ICurveFi {
         bool is_deposit
     ) external view returns (uint256);
 
+    function calc_token_amount(
+        uint256[2] calldata tokens,
+        bool is_deposit
+    ) external view returns (uint256);
+
     function calc_withdraw_one_coin(uint256 token_amount, int128 i) external view returns (uint256);
 
     function exchange(
