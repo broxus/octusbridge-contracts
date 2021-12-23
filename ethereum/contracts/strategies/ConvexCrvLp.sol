@@ -180,7 +180,7 @@ abstract contract ConvexCrvLp is BaseStrategy {
         uint256 _balance = balanceOfWrapped();
         if (_balance < _amountNeeded) {
             _liquidatedAmount = _withdrawSome(_amountNeeded - _balance);
-            _liquidatedAmount = _liquidatedAmount + _balance;
+            _liquidatedAmount += _balance;
             _loss = _amountNeeded - _liquidatedAmount; // this should be 0. o/w there must be an error
         }
         else {
@@ -347,7 +347,7 @@ abstract contract ConvexCrvLp is BaseStrategy {
         }
 
         uint256 amountFreed;
-        (amountFreed, _loss) = liquidatePosition(_amountNeeded);
+        (amountFreed, _loss) = liquidatePosition(_amountNeededWrapped);
         // Send it directly back (NOTE: Using `msg.sender` saves some gas here)
 
         amountFreed = unwrap(amountFreed);

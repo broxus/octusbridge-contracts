@@ -4,7 +4,7 @@ const { upgrades, ethers } = require("hardhat");
 
 
 
-describe('Test ConvexWBtc strategy on WBTC vault', async () => {
+describe('Test ConvexHWBtc strategy on WBTC vault', async () => {
     let vault, strategy, wbtc, governance, booster, wrapped, rewards;
     let snapshot;
 
@@ -22,13 +22,13 @@ describe('Test ConvexWBtc strategy on WBTC vault', async () => {
         });
 
         it('Deploy strategy', async () => {
-            const Strategy = await ethers.getContractFactory('ConvexRenWBtcStrategy');
+            const Strategy = await ethers.getContractFactory('ConvexHWBtcStrategy');
             strategy = await upgrades.deployProxy(Strategy, [vault.address]);
 
             // setup other contracts we need
             const booster_addr = await strategy.booster();
             booster = await ethers.getContractAt('Booster', booster_addr);
-            const wrapped_addr = await strategy.crvRenWBtc();
+            const wrapped_addr = await strategy.HWBtc();
             wrapped = await ethers.getContractAt(legos.erc20.abi, wrapped_addr);
             const rewards_addr = await strategy.rewardContract();
             rewards = await ethers.getContractAt('Rewards', rewards_addr);
@@ -55,14 +55,14 @@ describe('Test ConvexWBtc strategy on WBTC vault', async () => {
 
             await vault.connect(governance).addStrategy(
                 strategy.address,
-                5000, // 50%,
+                9000, // 90%,
                 0, // min debt per harvest
                 '9999999999999999999999999999999999999999999999999999999999999', // max debt per harvvest
                 1 // strategist fee
             )
 
             const params = await vault.strategies(strategy.address);
-            expect(params.debtRatio.toString()).to.be.eq('5000', 'Strategy not added');
+            expect(params.debtRatio.toString()).to.be.eq('9000', 'Strategy not added');
         });
     });
 
@@ -84,7 +84,7 @@ describe('Test ConvexWBtc strategy on WBTC vault', async () => {
 
         it('Check harvestTrigger', async () => {
             await increaseTime(24 * 60 * 60);
-            await mineBlocks(100);
+            await mineBlocks(1);
 
             let res = await strategy.harvestTrigger('50000000000000000'); // 0.05 eth call cost
             expect(res).to.be.false;
@@ -98,8 +98,8 @@ describe('Test ConvexWBtc strategy on WBTC vault', async () => {
             await increaseTime(14 * 24 * 60 * 60);
             await mineBlocks(1);
 
-            const res00 = await rewards.earned(strategy.address);
-            console.log(res00.toString());
+            // const res00 = await rewards.earned(strategy.address);
+            // console.log(res00.toString());
 
             const vault_bal_before = await wbtc.balanceOf(vault.address);
             const tx = await strategy.connect(governance).harvest();
@@ -108,16 +108,16 @@ describe('Test ConvexWBtc strategy on WBTC vault', async () => {
             const logs = res.events.filter(el => el.address === strategy.address);
 
             const harvested = logs[0];
-            console.log('Harvested:\n',harvested.args.debtOutstanding.toString())
+            // console.log('Harvested:\n',harvested.args.debtOutstanding.toString())
 
-            console.log(harvested.args.profit.toString())
-            console.log(harvested.args.loss.toString())
-            console.log(harvested.args.debtPayment.toString(), '\n')
+            // console.log(harvested.args.profit.toString())
+            // console.log(harvested.args.loss.toString())
+            // console.log(harvested.args.debtPayment.toString(), '\n')
 
             const vault_bal_after = await wbtc.balanceOf(vault.address);
 
-            console.log(vault_bal_before.toString());
-            console.log(vault_bal_after.toString());
+            // console.log(vault_bal_before.toString());
+            // console.log(vault_bal_after.toString());
 
             expect(vault_bal_after.gt(vault_bal_before)).to.be.true;
         });
@@ -177,8 +177,8 @@ describe('Test ConvexWBtc strategy on WBTC vault', async () => {
             // expect(str_balance_after.toString()).to.be.eq('0', 'Balance not withdrawn on revoke');
             expect(str_wrapped_balance_after.toString()).to.be.eq('0', 'Balance not withdrawn on revoke');
 
-            // apply 0.015% slippage because of withdrawing from 3crv pool
-            const expected_min_vault_bal = str_balance.mul(999850).div(1000000);
+            // apply 0.03% slippage because of withdrawing from h-wbtc pool
+            const expected_min_vault_bal = str_balance.mul(999700).div(1000000);
             const vault_bal = await wbtc.balanceOf(vault.address);
             const vault_increase = vault_bal.sub(vault_bal_before);
 
