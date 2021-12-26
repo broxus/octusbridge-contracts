@@ -121,7 +121,7 @@ abstract contract ConvexCrvLp is BaseStrategy {
         return (amount * (slippage_factor + MAX_SLIPPAGE_FACTOR)) / MAX_SLIPPAGE_FACTOR;
     }
 
-    function unwrap(uint256 wrapped_amount) internal returns (uint256 expected_return) {
+    function unwrap(uint256 wrapped_amount) internal virtual returns (uint256 expected_return) {
         if (wrapped_amount > 0) {
             expected_return = calc_want_from_wrapped(wrapped_amount);
             ICurveFi(curve).remove_liquidity_one_coin(wrapped_amount, int128(curve_lp_idx), 0);
