@@ -45,6 +45,10 @@ describe('Test setting configuration end', async function() {
       expect(details._networkConfiguration.endBlockNumber)
         .to.be.bignumber.equal(1, 'Wrong end block number');
     });
+
+    it('Try to deploy event after end block', async () => {
+
+    });
   });
   
   describe('Ton event configuration', async () => {
@@ -73,6 +77,10 @@ describe('Test setting configuration end', async function() {
 
       expect(details._networkConfiguration.endTimestamp)
         .to.be.bignumber.equal(1, 'Wrong end timestamps');
+    });
+
+    it('Try to deploy event after end timestamp', async () => {
+
     });
   });
 });

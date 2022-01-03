@@ -6,7 +6,7 @@ require('hardhat-deploy-ethers');
 require('hardhat-deploy');
 require("@nomiclabs/hardhat-vyper");
 require('hardhat-abi-exporter');
-require("hardhat-gas-reporter");
+// require("hardhat-gas-reporter");
 
 
 task("accounts", "Prints the list of accounts", async () => {
@@ -35,8 +35,6 @@ const hardhatConfig = {
   },
   networks: {
     hardhat: {
-      // blockGasLimit: 0x1fffffffffffff,
-      allowUnlimitedContractSize: true,
       forking: {
         url: process.env.ETH_MAIN_ARCHIVE_HTTP,
         blockNumber: 12859605,
@@ -51,61 +49,61 @@ const hardhatConfig = {
       gasPrice: 1001000000, // 1.001 gwei
       gas: 3000000,
       timeout: 1000000,
-      accounts: {
-        mnemonic: process.env.ETH_MNEMONIC,
-        count: 30
-      },
+      // accounts: {
+      //   mnemonic: process.env.ETH_MNEMONIC,
+      //   count: 30
+      // },
     },
-    bsc: {
-      url: 'https://bsc-dataseed.binance.org/',
-      gasPrice: 5000000000, // 5 gwei
-      gas: 3000000,
-      timeout: 1000000,
-      accounts: {
-        mnemonic: process.env.ETH_MNEMONIC,
-        count: 30
-      },
-    },
-    fantom: {
-      url: 'https://rpc.ftm.tools/',
-      gasPrice: 550000000000, // 550 gwei
-      gas: 3000000,
-      timeout: 1000000,
-      accounts: {
-        mnemonic: process.env.ETH_MNEMONIC,
-        count: 30
-      },
-    },
-    // goerli: {
-    //   url: process.env.ETH_GOERLI_HTTP,
-    //   gasPrice: 1500000007,
-    //   gas: 3000000,
-    //   timeout: 1000000,
-    //   accounts: {
-    //     mnemonic: process.env.ETH_GOERLI_MNEMONIC,
-    //     count: 30
-    //   },
-    // },
-    // main: {
-    //   url: process.env.ETH_MAIN_HTTP,
-    //   gasPrice: 110000000000, // 110 gwei
-    //   gas: 3000000,
-    //   timeout: 1000000,
-    //   accounts: {
-    //     mnemonic: process.env.ETH_MNEMONIC,
-    //     count: 30
-    //   },
-    // },
-    // ropsten: {
-    //   url: process.env.ETH_ROPSTEN_HTTP,
-    //   gasPrice: 2500000007,
-    //   gas: 3000000,
-    //   timeout: 1000000,
-    //   accounts: {
-    //     mnemonic: process.env.ETH_GOERLI_MNEMONIC,
-    //     count: 30
-    //   },
-    // }
+  //   bsc: {
+  //     url: 'https://bsc-dataseed.binance.org/',
+  //     gasPrice: 5000000000, // 5 gwei
+  //     gas: 3000000,
+  //     timeout: 1000000,
+  //     accounts: {
+  //       mnemonic: process.env.ETH_MNEMONIC,
+  //       count: 30
+  //     },
+  //   },
+  //   fantom: {
+  //     url: 'https://rpc.ftm.tools/',
+  //     gasPrice: 550000000000, // 550 gwei
+  //     gas: 3000000,
+  //     timeout: 1000000,
+  //     accounts: {
+  //       mnemonic: process.env.ETH_MNEMONIC,
+  //       count: 30
+  //     },
+  //   },
+  //   // goerli: {
+  //   //   url: process.env.ETH_GOERLI_HTTP,
+  //   //   gasPrice: 1500000007,
+  //   //   gas: 3000000,
+  //   //   timeout: 1000000,
+  //   //   accounts: {
+  //   //     mnemonic: process.env.ETH_GOERLI_MNEMONIC,
+  //   //     count: 30
+  //   //   },
+  //   // },
+  //   // main: {
+  //   //   url: process.env.ETH_MAIN_HTTP,
+  //   //   gasPrice: 110000000000, // 110 gwei
+  //   //   gas: 3000000,
+  //   //   timeout: 1000000,
+  //   //   accounts: {
+  //   //     mnemonic: process.env.ETH_MNEMONIC,
+  //   //     count: 30
+  //   //   },
+  //   // },
+  //   // ropsten: {
+  //   //   url: process.env.ETH_ROPSTEN_HTTP,
+  //   //   gasPrice: 2500000007,
+  //   //   gas: 3000000,
+  //   //   timeout: 1000000,
+  //   //   accounts: {
+  //   //     mnemonic: process.env.ETH_GOERLI_MNEMONIC,
+  //   //     count: 30
+  //   //   },
+  //   // }
   },
   gasReporter: {
     currency: 'USD',
@@ -264,8 +262,14 @@ const hardhatConfig = {
       bsc: '0x4cb2f1140f36850161231dcf5662661c53489550',
       fantom: '0x4cb2f1140f36850161231dcf5662661c53489550',
     },
+    withdrawGuardian: {
+      default: 23,
+      main: '0xe29B04B9c6712080f79B2dAc5211B18B279D5DE0',
+      polygon: '0xB8dD7223edc08A1681c81278D31d644576ECF0b4',
+      bsc: '0xbF13DBbf86B6B1cc02a4169Dde38E16862C77a0a',
+      fantom: '0x5B2329A2b2B5ec2f5F77afb6826F825dcec3A3Fd',
+    }
   },
-  mocha: {
   abiExporter: {
     path: 'abi',
     clear: true,

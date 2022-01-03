@@ -345,6 +345,36 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "recipient",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IVault.PendingWithdrawalId[]",
+        "name": "pendingWithdrawalsIdsToApprove",
+        "type": "tuple[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "approveStatuses",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "setPendingWithdrawApprove",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "vault",
     "outputs": [

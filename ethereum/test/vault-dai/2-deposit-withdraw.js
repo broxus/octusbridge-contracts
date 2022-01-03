@@ -63,6 +63,25 @@ describe('Test Vault DAI deposit', async () => {
       .setDepositLimit(depositLimit);
   });
 
+  it('Set withdraw guardian, withdraw period limit and undeclared withdraw limit', async () => {
+    const owner = await ethers.getNamedSigner('owner');
+    const { withdrawGuardian } = await getNamedAccounts();
+
+    const withdrawLimitPerPeriod = ethers.utils.parseUnits('10000', 18);
+    const undeclaredWithdrawLimit = ethers.utils.parseUnits('5000', 18);
+
+    await vault.connect(owner).setWithdrawGuardian(withdrawGuardian);
+    await vault.connect(owner).setWithdrawLimitPerPeriod(withdrawLimitPerPeriod);
+    await vault.connect(owner).setUndeclaredWithdrawLimit(undeclaredWithdrawLimit);
+
+    expect(await vault.withdrawGuardian())
+        .to.be.equal(withdrawGuardian, "Wrong withdraw guardian");
+    expect(await vault.withdrawLimitPerPeriod())
+        .to.be.equal(withdrawLimitPerPeriod, "Wrong withdraw limit per period");
+    expect(await vault.undeclaredWithdrawLimit())
+        .to.be.equal(undeclaredWithdrawLimit, "Wrong undeclared withdraw limit");
+  });
+
   it('Fill Alice balance with Dai', async () => {
     const { alice, dai_owner } = await getNamedAccounts();
   
@@ -137,7 +156,7 @@ describe('Test Vault DAI deposit', async () => {
       
       payload = encodeTonEvent({
         eventData: withdrawalEventData,
-        proxy: vault.address
+        proxy: vault.address,
       });
 
       const initialRelays = utils.sortAccounts(await ethers.getSigners());
@@ -159,7 +178,7 @@ describe('Test Vault DAI deposit', async () => {
     
     it('Check Bob didnt receive pending withdrawal', async () => {
       const { bob } = await getNamedAccounts();
-  
+
       expect(await vault.pendingWithdrawalsPerUser(bob))
         .to.be.equal(0,' Bob should not has pending withdrawals');
     });

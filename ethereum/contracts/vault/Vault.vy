@@ -6,7 +6,7 @@
 @notice
     Broxus Token Vault is a fork of Yearn Token Vault v2.
     The Vault is used as an entry point for token transfers
-    between EVM-compatible networks and FreeTON, by using Broxus bridge.
+    between EVM-compatible networks and Everscale, by using Broxus bridge.
 
     Fork commit: https://github.com/yearn/yearn-vaults/tree/e20d7e61692e61b1583628f8f3f96b27f824fbb4
 
@@ -14,9 +14,9 @@
 
     - The Vault is no longer a share token. The ERC20 interface is not supported.
     No tokens are minted / burned on deposit / withdraw.
-    - The share token equivalent is corresponding token in FreeTON network. So if you're
-    depositing Dai in this Vault, you receives Dai in FreeTON.
-    - When user deposits into Vault, he specifies his FreeTON address.
+    - The share token equivalent is corresponding token in Everscale network. So if you're
+    depositing Dai in this Vault, you receives Dai in Everscale.
+    - When user deposits into Vault, he specifies his Everscale address.
     In the end, the deposited amount of corresponding token will be transferred to this address.
     - To withdraw tokens from the Vault, user needs to provide "withdraw receipt"
     and corresponding set of relay's signatures.
@@ -67,7 +67,7 @@
     https://github.com/iearn-finance/yearn-vaults/blob/main/SPECIFICATION.md
 """
 
-API_VERSION: constant(String[28]) = "0.1.3"
+API_VERSION: constant(String[28]) = "0.1.4"
 
 from vyper.interfaces import ERC20
 
@@ -111,10 +111,22 @@ struct PendingWithdrawal:
     amount: uint256 # Amount of user's tokens in withdrawal status
     bounty: uint256 # How much tokens user wills to pay as bounty
     open: bool
+    approveStatus: uint256 # Approve status, see note bellow
+    _timestamp: uint256 # Event withdrawal timestamp
+
+# NOTE: on `approveStatus`
+# 0 - approve not required
+# 1 - approve required
+# 2 - approved
+# 3 - rejected
 
 struct PendingWithdrawalId:
     recipient: address
     id: uint256
+
+struct WithdrawalPeriod:
+    total: uint256 # How many tokens withdrawn in this period (includes pending)
+    considered: uint256 # How many tokens have been approved / rejected in this period
 
 # NOTE: Vault may have non-zero deposit / withdraw fee.
 struct Fee:
@@ -127,7 +139,7 @@ struct Fee:
 # ================= Broxus bridge events =================
 
 # NOTE: this relay is monitored by the Broxus bridge relays.
-# Allows to mint corresponding tokens in the FreeTON network
+# Allows to mint corresponding tokens in the Everscale network
 event Deposit:
     amount: uint256 # Amount of tokens to be minted
     wid: int128 # Recipient in TON, see note on `TONAddress`
@@ -191,8 +203,26 @@ event ForceWithdraw:
     recipient: address
     id: uint256
 
+event UpdateWithdrawGuardian:
+    withdrawGuardian: address
+
+event UpdatePendingWithdrawApprove:
+    recipient: address
+    id: uint256
+    approveStatus: uint256
+
+event WithdrawApprovedWithdrawal:
+    recipient: address
+    id: uint256
+
+event UpdateWithdrawLimitPerPeriod:
+    withdrawLimitPerPeriod: uint256
+
+event UpdateUndeclaredWithdrawLimit:
+    undeclaredWithdrawLimit: uint256
+
 # NOTE: unlike the original Yearn Vault,
-# fees are paid in corresponding token on the FreeTON side
+# fees are paid in corresponding token on the Everscale side
 # See note on `_assessFees`
 event UpdateRewards:
     wid: int128
@@ -340,7 +370,7 @@ bridge: public(address)
 # NOTE: withdraw receipts
 configuration: public(TONAddress)
 
-# NOTE: Gov rewards are sent on the FreeTON side
+# NOTE: Gov rewards are sent on the Everscale side
 rewards: public(TONAddress)
 
 # NOTE: Vault may have non-zero fee for deposit / withdraw
@@ -396,15 +426,26 @@ SECS_PER_YEAR: constant(uint256) = 31_556_952  # 365.2425 days
 tokenDecimals: public(uint256)
 targetDecimals: public(uint256)
 
+# ================= Storage update 1 =================
+
+withdrawalPeriods: public(HashMap[uint256, WithdrawalPeriod])
+# NOTE: Each period is 24 hours long.
+# In case the `withdrawLimitPerPeriod` is reached for specific period,
+# every withdraw in this period requires additional approve.
+# Each withdraw can be approved / rejected, see note on `setPendingWithdrawApprove`
+# Or bunch of withdrawals can be approved simultaneously, see note on `setWithdrawPeriodApprovedUntil`
+
+withdrawLimitPerPeriod: public(uint256) # Period withdraw limit
+undeclaredWithdrawLimit: public(uint256) # How many tokens users can withdraw without an approve at once
+withdrawGuardian: public(address) # Can approve / reject withdrawals
+
+WITHDRAW_PERIOD_DURATION_IN_SECONDS: constant(uint256) = 60 * 60 * 24 # 24 hours
 
 @external
 def initialize(
     token: address,
     governance: address,
     bridge: address,
-    wrapper: address,
-    guardian: address,
-    management: address,
     targetDecimals: uint256,
 ):
     """
@@ -422,10 +463,7 @@ def initialize(
     @param token The token that may be deposited into this Vault.
     @param governance The address authorized for governance interactions.
     @param bridge The address of the Bridge contract
-    @param wrapper Helper contract, need for parsing withdraw receipts
-    @param guardian The address authorized for guardian interactions. Defaults to caller.
-    @param management The address of the vault manager.
-    @param targetDecimals Amount of decimals in the corresponding FreeTON token
+    @param targetDecimals Amount of decimals in the corresponding Everscale token
     """
     assert self.activation == 0  # dev: no devops199
 
@@ -436,17 +474,8 @@ def initialize(
     self.governance = governance
     log UpdateGovernance(governance)
 
-    self.management = management
-    log UpdateManagement(management)
-
     self.bridge = bridge
     log UpdateBridge(bridge)
-
-    self.wrapper = wrapper
-    log UpdateWrapper(wrapper)
-
-    self.guardian = guardian
-    log UpdateGuardian(guardian)
 
     self.performanceFee = 0  # 0% of yield (per Strategy)
     log UpdatePerformanceFee(convert(0, uint256))
@@ -474,18 +503,6 @@ def apiVersion() -> String[28]:
     """
     return API_VERSION
 
-@external
-def setTargetDecimals(targetDecimals: uint256):
-    """
-    @notice
-        Set FreeTON token decimals
-    @dev May differ from the `token` decimals
-    @param targetDecimals FreeTON token decimals
-    """
-
-    assert msg.sender == self.governance
-
-    self.targetDecimals = targetDecimals
 
 @external
 def setDepositFee(fee: Fee):
@@ -537,42 +554,19 @@ def setConfiguration(configuration: TONAddress):
 
     self.configuration = configuration
 
-# 2-phase commit for a change in governance
 @external
 def setGovernance(governance: address):
     """
     @notice
         Nominate a new address to use as governance.
 
-        The change does not go into effect immediately. This function sets a
-        pending change, and the governance address is not updated until
-        the proposed governance address has accepted the responsibility.
-
         This may only be called by the current governance address.
-    @param governance The address requested to take over Vault governance.
+    @param governance The to use as new governance.
     """
     assert msg.sender == self.governance
-    log NewPendingGovernance(msg.sender)
-    self.pendingGovernance = governance
 
-
-@external
-def acceptGovernance():
-    """
-    @notice
-        Once a new governance address has been proposed using setGovernance(),
-        this function may be called by the proposed address to accept the
-        responsibility of taking over governance for this contract.
-
-        This may only be called by the proposed governance address.
-    @dev
-        setGovernance() should be called by the existing governance address,
-        prior to calling this function.
-    """
-    assert msg.sender == self.pendingGovernance
-    self.governance = msg.sender
-    log UpdateGovernance(msg.sender)
-
+    log UpdateGovernance(governance)
+    self.governance = governance
 
 @external
 def setManagement(management: address):
@@ -592,7 +586,7 @@ def setManagement(management: address):
 @external
 def setStrategyRewards(strategy: address, rewards: TONAddress):
     assert self.strategies[strategy].activation > 0
-    assert msg.sender in [self.governance, self.management, self.strategies[strategy].rewardsManager]
+    assert msg.sender in [self.governance, self.strategies[strategy].rewardsManager]
 
     self.strategies[strategy].rewards = rewards
 
@@ -603,7 +597,7 @@ def setStrategyRewards(strategy: address, rewards: TONAddress):
 def setRewards(rewards: TONAddress):
     """
     @notice
-        Rewards are distributed on the FreeTON side in corresponding token.
+        Rewards are distributed on the Everscale side in corresponding token.
 
         This may only be called by governance.
     @param rewards The address to use for collecting rewards.
@@ -692,6 +686,57 @@ def setGuardian(guardian: address):
 
 
 @external
+def setWithdrawGuardian(withdrawGuardian: address):
+    """
+    @notice
+        Used to change the address of `withdrawGuardian`.
+
+        This may only be called by governance or the existing withdraw guardian.
+    @param withdrawGuardian The new withdraw guardian address to use.
+    """
+
+    assert msg.sender in [self.withdrawGuardian, self.governance]
+
+    self.withdrawGuardian = withdrawGuardian
+
+    log UpdateWithdrawGuardian(withdrawGuardian)
+
+@external
+def setWithdrawLimitPerPeriod(withdrawLimitPerPeriod: uint256):
+    """
+    @notice
+        Used to change the value of `withdrawLimitPerPeriod`.
+        Affects all periods, including the past.
+
+        This may only be called by governance.
+    @param withdrawLimitPerPeriod The new withdraw limit per period to use.
+    """
+
+    assert msg.sender == self.governance
+
+    self.withdrawLimitPerPeriod = withdrawLimitPerPeriod
+
+    log UpdateWithdrawLimitPerPeriod(withdrawLimitPerPeriod)
+
+@external
+def setUndeclaredWithdrawLimit(undeclaredWithdrawLimit: uint256):
+    """
+    @notice
+        Used to change the value of `undeclaredWithdrawLimit`.
+        Affects all periods, including the past.
+
+        This may only be called by governance.
+    @param undeclaredWithdrawLimit The new undeclared withdraw limit.
+    """
+
+    assert msg.sender == self.governance
+
+    self.undeclaredWithdrawLimit = undeclaredWithdrawLimit
+
+    log UpdateUndeclaredWithdrawLimit(undeclaredWithdrawLimit)
+
+
+@external
 def setEmergencyShutdown(active: bool):
     """
     @notice
@@ -728,8 +773,7 @@ def setWithdrawalQueue(queue: address[MAXIMUM_STRATEGIES]):
         by `queue`.
 
         There can be fewer strategies than the maximum, as well as fewer than
-        the total number of strategies active in the vault. `withdrawalQueue`
-        will be updated in a gas-efficient manner, assuming the input is well-
+        the total number of strategies active in the vault. Assumes the input is well-
         ordered with 0x0 only at the end.
 
         This may only be called by governance or management.
@@ -747,32 +791,23 @@ def setWithdrawalQueue(queue: address[MAXIMUM_STRATEGIES]):
     """
     assert msg.sender in [self.management, self.governance]
 
-    set: address[SET_SIZE] = empty(address[SET_SIZE])
-    for i in range(MAXIMUM_STRATEGIES):
-        if queue[i] == ZERO_ADDRESS:
-            # NOTE: Cannot use this method to remove entries from the queue
-            assert self.withdrawalQueue[i] == ZERO_ADDRESS
-            break
-        # NOTE: Cannot use this method to add more entries to the queue
-        assert self.withdrawalQueue[i] != ZERO_ADDRESS
-
-        assert self.strategies[queue[i]].activation > 0
-
-        # NOTE: `key` is first `log_2(SET_SIZE)` bits of address (which is a hash)
-        key: uint256 = bitwise_and(convert(queue[i], uint256), SET_SIZE - 1)
-        # Most of the times following for loop only run once which is making it highly gas efficient
-        # but in the worst case of key collision it will run linearly and find first empty slot in the set.
-        for j in range(SET_SIZE):
-            # NOTE: we can always find space by treating set as circular (as long as `SET_SIZE >= MAXIMUM_STRATEGIES`)
-            idx: uint256 = (key + j) % SET_SIZE
-            assert set[idx] != queue[i]  # dev: duplicate in set
-            if set[idx] == ZERO_ADDRESS:
-                set[idx] = queue[i]
-                break
-
-        self.withdrawalQueue[i] = queue[i]
+    self.withdrawalQueue = queue
 
     log UpdateWithdrawalQueue(queue)
+
+
+@internal
+def _assertPendingWithdrawalApproved(
+    withdrawal: PendingWithdrawal
+):
+    assert withdrawal.approveStatus in [0, 2], "Vault: pending withdrawal not approved"
+
+
+@internal
+def _assertPendingWithdrawalOpened(
+    withdrawal: PendingWithdrawal
+):
+    assert withdrawal.open, "Vault: pending withdrawal closed"
 
 
 @external
@@ -785,7 +820,7 @@ def setPendingWithdrawalBounty(
         @param id Pending withdrawal id
         @param bounty New bounty value
     """
-    assert self.pendingWithdrawals[msg.sender][id].open, "Vault: pending withdrawal closed"
+    self._assertPendingWithdrawalOpened(self.pendingWithdrawals[msg.sender][id])
 
     self.pendingWithdrawals[msg.sender][id].bounty = bounty
 
@@ -863,12 +898,6 @@ def _calculateLockedProfit() -> uint256:
 
 @view
 @internal
-def _freeFunds() -> uint256:
-    return self._totalAssets() - self._calculateLockedProfit()
-
-
-@view
-@internal
 def _convertToTargetDecimals(amount: uint256) -> uint256:
     if self.targetDecimals == self.tokenDecimals:
         return amount
@@ -914,6 +943,14 @@ def _considerMovementFee(amount: uint256, fee: Fee) -> uint256:
 
     return (amount - feeAmount)
 
+@internal
+@view
+def _deriveWithdrawalPeriodId(
+    _timestamp: uint256
+) -> uint256:
+    return _timestamp / WITHDRAW_PERIOD_DURATION_IN_SECONDS
+
+
 @external
 @nonreentrant("withdraw")
 def deposit(
@@ -925,22 +962,22 @@ def deposit(
 ):
     """
     @notice
-        Deposits `_amount` `token` which leads to issuing token to `recipient` in the FreeTON network.
+        Deposits `_amount` `token` which leads to issuing token to `recipient` in the Everscale network.
 
         If the Vault is in Emergency Shutdown, deposits will not be accepted and this call will fail.
     @dev
         In opposite to the original Yearn vaults, this one doesn't issue shares.
-        In this case the role of share token is played by the corresponding token on the FreeTON side.
-        To receive locked tokens back, user should withdraw tokens from the FreeTON side.
+        In this case the role of share token is played by the corresponding token on the Everscale side.
+        To receive locked tokens back, user should withdraw tokens from the Everscale side.
         See note on `saveWithdraw`
 
         This may only be called by wrapper.
 
     @param sender Sender Ethereum address
     @param recipient
-        The FreeTON recipient to transfer tokens to.
+        The Everscale recipient to transfer tokens to.
     @param _amount The quantity of tokens to deposit, defaults to all.
-    @param pendingWithdrawalId Pending withdrawal id
+    @param pendingWithdrawalId Pending withdrawal id to be closed
     @param sendTransferToTon Boolean, emit transfer to TON or not
     """
     assert not self.emergencyShutdown  # Deposits are locked out
@@ -966,7 +1003,8 @@ def deposit(
     if pendingWithdrawalId.recipient != ZERO_ADDRESS:
         withdrawal: PendingWithdrawal = self.pendingWithdrawals[pendingWithdrawalId.recipient][pendingWithdrawalId.id]
 
-        assert withdrawal.open, "Vault: pending withdrawal closed"
+        self._assertPendingWithdrawalApproved(withdrawal)
+        self._assertPendingWithdrawalOpened(withdrawal)
 
         fillingAmount = withdrawal.amount
         fillingBounty = withdrawal.bounty
@@ -1035,6 +1073,7 @@ def saveWithdraw(
     payloadId: bytes32,
     recipient: address,
     _amount: uint256,
+    _timestamp: uint256,
     bounty: uint256
 ):
     """
@@ -1058,8 +1097,10 @@ def saveWithdraw(
         @dev
             Anyone can save withdraw request, but only withdraw recipient can specify bounty. Ignores otherwise.
 
+        @param payloadId Withdraw payload ID
         @param recipient Withdraw recipient
         @param _amount Withdraw amount
+        @param _timestamp Withdraw event timestamp
         @param bounty Bounty amount
     """
     assert msg.sender == self.wrapper
@@ -1071,8 +1112,29 @@ def saveWithdraw(
     amount: uint256 = self._convertFromTargetDecimals(_amount)
     amount = self._considerMovementFee(amount, self.withdrawFee)
 
-    # Fill withdrawal instantly or save it as pending
-    if amount <= self.token.balanceOf(self):
+    withdrawalPeriodId: uint256 = self._deriveWithdrawalPeriodId(_timestamp)
+
+    withdrawalPeriod: WithdrawalPeriod = self.withdrawalPeriods[withdrawalPeriodId]
+
+    # Respect period withdraw limit
+    # If there's no limitations for the withdraw - fill it instantly or save as regular pending
+    if amount + withdrawalPeriod.total - withdrawalPeriod.considered >= self.withdrawLimitPerPeriod or amount >= self.undeclaredWithdrawLimit:
+        self.pendingWithdrawalsTotal += amount
+
+        id: uint256 = self.pendingWithdrawalsPerUser[recipient]
+        self.pendingWithdrawalsPerUser[recipient] += 1
+
+        self.pendingWithdrawals[recipient][id] = PendingWithdrawal({
+            amount: amount,
+            bounty: bounty,
+            open: True,
+            approveStatus: 1,
+            _timestamp: _timestamp
+        })
+
+        log CreatePendingWithdrawal(recipient, id, payloadId, amount, bounty)
+        log UpdatePendingWithdrawApprove(recipient, id, 1)
+    elif amount <= self.token.balanceOf(self):
         self.erc20_safe_transfer(
             self.token.address,
             recipient,
@@ -1086,11 +1148,17 @@ def saveWithdraw(
         id: uint256 = self.pendingWithdrawalsPerUser[recipient]
         self.pendingWithdrawalsPerUser[recipient] += 1
 
-        self.pendingWithdrawals[recipient][id].open = True
-        self.pendingWithdrawals[recipient][id].amount = amount
-        self.pendingWithdrawals[recipient][id].bounty = bounty
+        self.pendingWithdrawals[recipient][id] = PendingWithdrawal({
+            amount: amount,
+            bounty: bounty,
+            open: True,
+            approveStatus: 0,
+            _timestamp: _timestamp
+        })
 
         log CreatePendingWithdrawal(recipient, id, payloadId, amount, bounty)
+
+    self.withdrawalPeriods[withdrawalPeriodId].total += amount
 
 @external
 def cancelPendingWithdrawal(
@@ -1100,17 +1168,19 @@ def cancelPendingWithdrawal(
 ):
     """
     @notice
-        In case user has pending withdrawal, he can cancel it by transferring tokens back to the FreeTON.
+        In case user has pending withdrawal, he can cancel it by transferring tokens back to the Everscale.
+        Works only in case withdrawal approved, see note on `_assertPendingWithdrawalApproved`
     @param id
         Pending withdrawal id
     @param recipient
-        The FreeTON address to transfer tokens to
+        The Everscale address to transfer tokens to
     """
     assert not self.emergencyShutdown
 
     withdrawal: PendingWithdrawal = self.pendingWithdrawals[msg.sender][id]
 
-    assert withdrawal.open, "Vault: pending withdrawal closed"
+    self._assertPendingWithdrawalApproved(withdrawal)
+    self._assertPendingWithdrawalOpened(withdrawal)
 
     assert withdrawal.amount >= amount, "Vault: pending withdrawal too small"
 
@@ -1185,8 +1255,10 @@ def withdraw(
 
     withdrawal: PendingWithdrawal = self.pendingWithdrawals[msg.sender][id]
 
+    self._assertPendingWithdrawalApproved(withdrawal)
+
     # Ensure withdraw is open
-    assert withdrawal.open, "Vault: pending withdrawal closed"
+    self._assertPendingWithdrawalOpened(withdrawal)
 
     value: uint256 = _value
 
@@ -1263,23 +1335,6 @@ def withdraw(
 
     return value
 
-
-@internal
-def _organizeWithdrawalQueue():
-    # Reorganize `withdrawalQueue` based on premise that if there is an
-    # empty value between two actual values, then the empty value should be
-    # replaced by the later value.
-    # NOTE: Relative ordering of non-zero values is maintained.
-    offset: uint256 = 0
-    for idx in range(MAXIMUM_STRATEGIES):
-        strategy: address = self.withdrawalQueue[idx]
-        if strategy == ZERO_ADDRESS:
-            offset += 1  # how many values we need to shift, always `<= idx`
-        elif offset > 0:
-            self.withdrawalQueue[idx - offset] = strategy
-            self.withdrawalQueue[idx] = ZERO_ADDRESS
-
-
 @external
 def addStrategy(
     strategy: address,
@@ -1343,10 +1398,6 @@ def addStrategy(
 
     # Update Vault parameters
     self.debtRatio += debtRatio
-
-    # Add strategy to the end of the withdrawal queue
-    self.withdrawalQueue[MAXIMUM_STRATEGIES - 1] = strategy
-    self._organizeWithdrawalQueue()
 
 
 @external
@@ -1526,58 +1577,6 @@ def revokeStrategy(strategy: address = msg.sender):
         return # already set to zero, nothing to do
 
     self._revokeStrategy(strategy)
-
-
-@external
-def addStrategyToQueue(strategy: address):
-    """
-    @notice
-        Adds `strategy` to `withdrawalQueue`.
-
-        This may only be called by governance or management.
-    @dev
-        The Strategy will be appended to `withdrawalQueue`, call
-        `setWithdrawalQueue` to change the order.
-    @param strategy The Strategy to add.
-    """
-    assert msg.sender in [self.management, self.governance]
-    # Must be a current Strategy
-    assert self.strategies[strategy].activation > 0
-    # Can't already be in the queue
-    last_idx: uint256 = 0
-    for s in self.withdrawalQueue:
-        if s == ZERO_ADDRESS:
-            break
-        assert s != strategy
-        last_idx += 1
-    # Check if queue is full
-    assert last_idx < MAXIMUM_STRATEGIES
-
-    self.withdrawalQueue[MAXIMUM_STRATEGIES - 1] = strategy
-    self._organizeWithdrawalQueue()
-    log StrategyAddedToQueue(strategy)
-
-
-@external
-def removeStrategyFromQueue(strategy: address):
-    """
-    @notice
-        Remove `strategy` from `withdrawalQueue`.
-
-        This may only be called by governance or management.
-    @dev
-        We don't do this with revokeStrategy because it should still
-        be possible to withdraw from the Strategy if it's unwinding.
-    @param strategy The Strategy to remove.
-    """
-    assert msg.sender in [self.management, self.governance]
-    for idx in range(MAXIMUM_STRATEGIES):
-        if self.withdrawalQueue[idx] == strategy:
-            self.withdrawalQueue[idx] = ZERO_ADDRESS
-            self._organizeWithdrawalQueue()
-            log StrategyRemovedFromQueue(strategy)
-            return  # We found the right location and cleared it
-    raise  # We didn't find the Strategy in the queue
 
 
 @view
@@ -1988,8 +1987,8 @@ def forceWithdraw(recipient: address, id: uint256):
 
     withdrawal: PendingWithdrawal = self.pendingWithdrawals[recipient][id]
 
-    # Ensure withdraw is open
-    assert withdrawal.open, "Vault: pending withdrawal closed"
+    self._assertPendingWithdrawalApproved(withdrawal)
+    self._assertPendingWithdrawalOpened(withdrawal)
 
     self.erc20_safe_transfer(self.token.address, recipient, withdrawal.amount)
 
@@ -2004,7 +2003,7 @@ def forceWithdraw(recipient: address, id: uint256):
 def skim(strategy: address):
     """
     @notice
-        Skim strategy gain to the FreeTON side.
+        Skim strategy gain to the Everscale side.
 
         This may only be called by management or governance.
     @param strategy Strategy to skim
@@ -2020,3 +2019,54 @@ def skim(strategy: address):
     self.strategies[strategy].totalSkim += amount
 
     self._transferToTon(amount, self.rewards)
+
+@external
+def setPendingWithdrawApprove(
+    recipient: address,
+    id: uint256,
+    approveStatus: uint256
+):
+    """
+        @notice
+            Set approve status to the specific pending withdrawal.
+            Once approve status has been set, it can't be changed.
+            If approve status is 2 (approved) and if vault has enough tokens - withdrawal is closed instantly.
+
+            This may only be called by wrapper.
+        @param recipient Address of person, who owns a pending withdrawal
+        @param id Pending withdrawal id
+        @param approveStatus New approve status
+    """
+
+    assert msg.sender == self.wrapper
+
+    assert approveStatus in [2,3], "Vault: approve status wrong"
+
+    pendingWithdrawal: PendingWithdrawal = self.pendingWithdrawals[recipient][id]
+
+    # Check withdrawal requires approve
+    assert pendingWithdrawal.approveStatus == 1, "Vault: withdrawal status wrong"
+
+    self.pendingWithdrawals[recipient][id].approveStatus = approveStatus
+
+    log UpdatePendingWithdrawApprove(recipient, id, approveStatus)
+
+    # Update withdraw period considered amount
+    # Works both for rejected and approved withdrawals
+    withdrawalPeriodId: uint256 = self._deriveWithdrawalPeriodId(pendingWithdrawal._timestamp)
+
+    self.withdrawalPeriods[withdrawalPeriodId].considered += pendingWithdrawal.amount
+
+    # Withdraw instantly if vault has enough tokens
+    if approveStatus == 2 and pendingWithdrawal.amount <= self.token.balanceOf(self):
+        self.pendingWithdrawals[recipient][id].open = False
+
+        self.erc20_safe_transfer(
+            self.token.address,
+            recipient,
+            pendingWithdrawal.amount
+        )
+
+        self.pendingWithdrawalsTotal -= pendingWithdrawal.amount
+
+        log WithdrawApprovedWithdrawal(recipient, id)
