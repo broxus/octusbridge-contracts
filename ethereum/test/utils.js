@@ -28,6 +28,8 @@ const defaultTonRecipient = {
   addr: 33333333,
 };
 
+const defaultEventTimestamp = 1639923130;
+
 const signReceipt = async (receipt, signer) => {
   const receiptHash = web3
     .utils
@@ -37,6 +39,11 @@ const signReceipt = async (receipt, signer) => {
   const messageHashBytes = ethers.utils.arrayify(receiptHash);
   
   return signer.signMessage(messageHashBytes);
+};
+
+
+const deriveWithdrawalPeriodId = (timestamp) => {
+  return Math.floor(timestamp / (60 * 60 * 24));
 };
 
 
@@ -64,7 +71,7 @@ const encodeTonEvent = (params) => {
     }],
     [{
       'eventTransactionLt': params.eventTransactionLt || 0,
-      'eventTimestamp': params.eventTimestamp || 0,
+      'eventTimestamp': params.eventTimestamp || defaultEventTimestamp,
       'eventData': params.eventData || '',
       'configurationWid': params.configurationWid || defaultConfiguration.wid,
       'configurationAddress': params.configurationAddress || defaultConfiguration.addr,
@@ -124,17 +131,21 @@ const getVaultByToken = async (registry, token) => {
 };
 
 
-const encodeWithdrawalData = (params) => web3.eth.abi.encodeParameters(
-  // sender wid, sender addr, amount, recipient, chainId
-  ['int8', 'uint256', 'uint128', 'uint160', 'uint32'],
-  [
-    params.sender_wid || 0,
-    params.sender_addr || 0,
-    params.amount || 0,
-    params.recipient || ethers.constants.AddressZero,
-    params.chainId || defaultChainId,
-  ]
-);
+const encodeWithdrawalData = (params) => {
+  console.log(params.chainId || defaultChainId);
+
+  return web3.eth.abi.encodeParameters(
+      // sender wid, sender addr, amount, recipient, chainId
+      ['int8', 'uint256', 'uint128', 'uint160', 'uint32'],
+      [
+        params.sender_wid || 0,
+        params.sender_addr || 0,
+        params.amount || 0,
+        params.recipient || ethers.constants.AddressZero,
+        params.chainId || defaultChainId,
+      ]
+  );
+};
 
 
 const getSignerFromAddr = async (address) => {
@@ -177,6 +188,16 @@ const getInitialRelays = async () => {
 };
 
 
+const getNetworkTime = async () => {
+  const currentBlock = await ethers.provider.getBlockNumber();
+
+  const currentTime = (await ethers.provider.getBlock(currentBlock)).timestamp;
+
+  return currentTime;
+};
+
+
+
 module.exports = {
   signReceipt,
   logger,
@@ -189,6 +210,7 @@ module.exports = {
   defaultConfiguration,
   defaultEventContract,
   defaultTonRecipient,
+  defaultEventTimestamp,
   generateWallets,
   getVaultByToken,
   getSignerFromAddr,
@@ -196,5 +218,7 @@ module.exports = {
   issueTokens,
   getInitialRelays,
   increaseTime,
-  mineBlocks
+  mineBlocks,
+  getNetworkTime,
+  deriveWithdrawalPeriodId
 };

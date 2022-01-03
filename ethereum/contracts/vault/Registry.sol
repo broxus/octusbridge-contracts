@@ -9,7 +9,6 @@ import "./../interfaces/IVaultWrapper.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 import "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
-import "@openzeppelin/contracts/proxy/Clones.sol";
 
 
 contract Registry is Ownable, IRegistry {
@@ -172,13 +171,14 @@ contract Registry is Ownable, IRegistry {
         // Initialize Vault
         IVault(address(vault)).initialize(
             token,
-            governance,
+            address(this),
             bridge,
-            address(wrapper),
-            guardian,
-            ZERO_ADDRESS,
             targetDecimals
         );
+
+        IVault(address(vault)).setWrapper(address(wrapper));
+        IVault(address(vault)).setGuardian(guardian);
+        IVault(address(vault)).setGovernance(governance);
 
         return address(vault);
     }

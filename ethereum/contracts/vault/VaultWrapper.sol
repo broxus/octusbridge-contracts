@@ -12,7 +12,7 @@ import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 
 contract VaultWrapper is ChainId, Initializable, IVaultWrapper {
     address constant ZERO_ADDRESS = 0x0000000000000000000000000000000000000000;
-    string constant API_VERSION = "0.1.2";
+    string constant API_VERSION = "0.1.3";
 
     address public vault;
 
@@ -254,7 +254,28 @@ contract VaultWrapper is ChainId, Initializable, IVaultWrapper {
             keccak256(payload),
             recipient,
             amount,
+            uint256(tonEvent.eventTimestamp),
             recipient == msg.sender ? bounty : 0
         );
+    }
+
+    function setPendingWithdrawApprove(
+        IVault.PendingWithdrawalId[] calldata pendingWithdrawalsIdsToApprove,
+        uint[] calldata approveStatuses
+    ) external {
+        require(
+            msg.sender == IVault(vault).governance() || msg.sender == IVault(vault).withdrawGuardian(),
+            "Vault wrapper: wrong sender"
+        );
+
+        require(approveStatuses.length == pendingWithdrawalsIdsToApprove.length);
+
+        for (uint i = 0; i < pendingWithdrawalsIdsToApprove.length; i++) {
+            IVault(vault).setPendingWithdrawApprove(
+                pendingWithdrawalsIdsToApprove[i].recipient,
+                pendingWithdrawalsIdsToApprove[i].id,
+                approveStatuses[i]
+            );
+        }
     }
 }

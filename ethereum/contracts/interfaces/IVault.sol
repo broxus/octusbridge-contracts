@@ -33,6 +33,7 @@ interface IVault {
         bytes32 payloadId,
         address recipient,
         uint256 amount,
+        uint256 timestamp,
         uint256 bounty
     ) external;
 
@@ -49,6 +50,12 @@ interface IVault {
         uint256 id
     ) external;
 
+    function setPendingWithdrawApprove(
+        address recipient,
+        uint256 id,
+        uint256 approveStatus
+    ) external;
+
     function configuration() external view returns(TONAddress memory _configuration);
     function bridge() external view returns(address);
     function apiVersion() external view returns(string memory api_version);
@@ -57,11 +64,13 @@ interface IVault {
         address _token,
         address _governance,
         address _bridge,
-        address _wrapper,
-        address guardian,
-        address management,
         uint256 _targetDecimals
     ) external;
+
+    function setWrapper(address _wrapper) external;
+    function setGuardian(address _guardian) external;
+    function setManagement(address _management) external;
+    function setGovernance(address _governance) external;
 
     function debtOutstanding() external view returns (uint256);
     function creditAvailable() external view returns (uint256);
@@ -73,6 +82,7 @@ interface IVault {
     function governance() external view returns(address);
     function token() external view returns(address);
     function guardian() external view returns(address);
+    function withdrawGuardian() external view returns(address);
     function management() external view returns(address);
     function wrapper() external view returns(address);
 

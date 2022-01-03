@@ -63,6 +63,18 @@ describe('Force withdraw pending', async () => {
             .setDepositLimit(depositLimit);
     });
 
+    it('Set withdraw guardian, withdraw period limit and undeclared withdraw limit', async () => {
+        const owner = await ethers.getNamedSigner('owner');
+        const { withdrawGuardian } = await getNamedAccounts();
+
+        const withdrawLimitPerPeriod = ethers.utils.parseUnits('10000', 18);
+        const undeclaredWithdrawLimit = ethers.utils.parseUnits('5000', 18);
+
+        await vault.connect(owner).setWithdrawGuardian(withdrawGuardian);
+        await vault.connect(owner).setWithdrawLimitPerPeriod(withdrawLimitPerPeriod);
+        await vault.connect(owner).setUndeclaredWithdrawLimit(undeclaredWithdrawLimit);
+    });
+
     it('Fill Alice balance with Dai', async () => {
         const { alice, dai_owner } = await getNamedAccounts();
 

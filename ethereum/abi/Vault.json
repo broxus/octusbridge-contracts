@@ -276,6 +276,81 @@
     "type": "event"
   },
   {
+    "name": "UpdateWithdrawGuardian",
+    "inputs": [
+      {
+        "name": "withdrawGuardian",
+        "type": "address",
+        "indexed": false
+      }
+    ],
+    "anonymous": false,
+    "type": "event"
+  },
+  {
+    "name": "UpdatePendingWithdrawApprove",
+    "inputs": [
+      {
+        "name": "recipient",
+        "type": "address",
+        "indexed": false
+      },
+      {
+        "name": "id",
+        "type": "uint256",
+        "indexed": false
+      },
+      {
+        "name": "approveStatus",
+        "type": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false,
+    "type": "event"
+  },
+  {
+    "name": "WithdrawApprovedWithdrawal",
+    "inputs": [
+      {
+        "name": "recipient",
+        "type": "address",
+        "indexed": false
+      },
+      {
+        "name": "id",
+        "type": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false,
+    "type": "event"
+  },
+  {
+    "name": "UpdateWithdrawLimitPerPeriod",
+    "inputs": [
+      {
+        "name": "withdrawLimitPerPeriod",
+        "type": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false,
+    "type": "event"
+  },
+  {
+    "name": "UpdateUndeclaredWithdrawLimit",
+    "inputs": [
+      {
+        "name": "undeclaredWithdrawLimit",
+        "type": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false,
+    "type": "event"
+  },
+  {
     "name": "UpdateRewards",
     "inputs": [
       {
@@ -684,24 +759,12 @@
         "type": "address"
       },
       {
-        "name": "wrapper",
-        "type": "address"
-      },
-      {
-        "name": "guardian",
-        "type": "address"
-      },
-      {
-        "name": "management",
-        "type": "address"
-      },
-      {
         "name": "targetDecimals",
         "type": "uint256"
       }
     ],
     "outputs": [],
-    "gas": 439965
+    "gas": 330597
   },
   {
     "stateMutability": "pure",
@@ -715,19 +778,6 @@
       }
     ],
     "gas": 5946
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "setTargetDecimals",
-    "inputs": [
-      {
-        "name": "targetDecimals",
-        "type": "uint256"
-      }
-    ],
-    "outputs": [],
-    "gas": 37505
   },
   {
     "stateMutability": "nonpayable",
@@ -750,7 +800,7 @@
       }
     ],
     "outputs": [],
-    "gas": 77144
+    "gas": 77114
   },
   {
     "stateMutability": "nonpayable",
@@ -773,7 +823,7 @@
       }
     ],
     "outputs": [],
-    "gas": 77174
+    "gas": 77144
   },
   {
     "stateMutability": "nonpayable",
@@ -786,7 +836,7 @@
       }
     ],
     "outputs": [],
-    "gas": 39045
+    "gas": 39015
   },
   {
     "stateMutability": "nonpayable",
@@ -809,7 +859,7 @@
       }
     ],
     "outputs": [],
-    "gas": 74719
+    "gas": 74689
   },
   {
     "stateMutability": "nonpayable",
@@ -822,15 +872,7 @@
       }
     ],
     "outputs": [],
-    "gas": 39101
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "acceptGovernance",
-    "inputs": [],
-    "outputs": [],
-    "gas": 39027
+    "gas": 39075
   },
   {
     "stateMutability": "nonpayable",
@@ -843,7 +885,7 @@
       }
     ],
     "outputs": [],
-    "gas": 39165
+    "gas": 39105
   },
   {
     "stateMutability": "nonpayable",
@@ -870,7 +912,7 @@
       }
     ],
     "outputs": [],
-    "gas": 83083
+    "gas": 80755
   },
   {
     "stateMutability": "nonpayable",
@@ -893,7 +935,7 @@
       }
     ],
     "outputs": [],
-    "gas": 74869
+    "gas": 74809
   },
   {
     "stateMutability": "nonpayable",
@@ -906,7 +948,7 @@
       }
     ],
     "outputs": [],
-    "gas": 37909
+    "gas": 37849
   },
   {
     "stateMutability": "nonpayable",
@@ -919,7 +961,7 @@
       }
     ],
     "outputs": [],
-    "gas": 39185
+    "gas": 39125
   },
   {
     "stateMutability": "nonpayable",
@@ -932,7 +974,7 @@
       }
     ],
     "outputs": [],
-    "gas": 39319
+    "gas": 39259
   },
   {
     "stateMutability": "nonpayable",
@@ -945,7 +987,7 @@
       }
     ],
     "outputs": [],
-    "gas": 39349
+    "gas": 39289
   },
   {
     "stateMutability": "nonpayable",
@@ -958,7 +1000,46 @@
       }
     ],
     "outputs": [],
-    "gas": 41893
+    "gas": 41833
+  },
+  {
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "name": "setWithdrawGuardian",
+    "inputs": [
+      {
+        "name": "withdrawGuardian",
+        "type": "address"
+      }
+    ],
+    "outputs": [],
+    "gas": 41863
+  },
+  {
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "name": "setWithdrawLimitPerPeriod",
+    "inputs": [
+      {
+        "name": "withdrawLimitPerPeriod",
+        "type": "uint256"
+      }
+    ],
+    "outputs": [],
+    "gas": 39275
+  },
+  {
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "name": "setUndeclaredWithdrawLimit",
+    "inputs": [
+      {
+        "name": "undeclaredWithdrawLimit",
+        "type": "uint256"
+      }
+    ],
+    "outputs": [],
+    "gas": 39305
   },
   {
     "stateMutability": "nonpayable",
@@ -971,7 +1052,7 @@
       }
     ],
     "outputs": [],
-    "gas": 41964
+    "gas": 41994
   },
   {
     "stateMutability": "nonpayable",
@@ -984,7 +1065,7 @@
       }
     ],
     "outputs": [],
-    "gas": 1349009
+    "gas": 718820
   },
   {
     "stateMutability": "nonpayable",
@@ -1001,7 +1082,7 @@
       }
     ],
     "outputs": [],
-    "gas": 41166
+    "gas": 51099
   },
   {
     "stateMutability": "view",
@@ -1014,7 +1095,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 8638
+    "gas": 8698
   },
   {
     "stateMutability": "nonpayable",
@@ -1063,7 +1144,7 @@
       }
     ],
     "outputs": [],
-    "gas": 304743
+    "gas": 312823
   },
   {
     "stateMutability": "nonpayable",
@@ -1083,12 +1164,16 @@
         "type": "uint256"
       },
       {
+        "name": "_timestamp",
+        "type": "uint256"
+      },
+      {
         "name": "bounty",
         "type": "uint256"
       }
     ],
     "outputs": [],
-    "gas": 346478
+    "gas": 462133
   },
   {
     "stateMutability": "nonpayable",
@@ -1119,7 +1204,7 @@
       }
     ],
     "outputs": [],
-    "gas": 151644
+    "gas": 159348
   },
   {
     "stateMutability": "nonpayable",
@@ -1223,7 +1308,7 @@
       }
     ],
     "outputs": [],
-    "gas": 1638459
+    "gas": 445557
   },
   {
     "stateMutability": "nonpayable",
@@ -1240,7 +1325,7 @@
       }
     ],
     "outputs": [],
-    "gas": 121715
+    "gas": 121745
   },
   {
     "stateMutability": "nonpayable",
@@ -1257,7 +1342,7 @@
       }
     ],
     "outputs": [],
-    "gas": 47581
+    "gas": 47611
   },
   {
     "stateMutability": "nonpayable",
@@ -1274,7 +1359,7 @@
       }
     ],
     "outputs": [],
-    "gas": 47611
+    "gas": 47641
   },
   {
     "stateMutability": "nonpayable",
@@ -1291,7 +1376,7 @@
       }
     ],
     "outputs": [],
-    "gas": 42824
+    "gas": 42854
   },
   {
     "stateMutability": "nonpayable",
@@ -1308,7 +1393,7 @@
       }
     ],
     "outputs": [],
-    "gas": 1324307
+    "gas": 1324367
   },
   {
     "stateMutability": "nonpayable",
@@ -1328,32 +1413,6 @@
       }
     ],
     "outputs": []
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "addStrategyToQueue",
-    "inputs": [
-      {
-        "name": "strategy",
-        "type": "address"
-      }
-    ],
-    "outputs": [],
-    "gas": 1255584
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "removeStrategyFromQueue",
-    "inputs": [
-      {
-        "name": "strategy",
-        "type": "address"
-      }
-    ],
-    "outputs": [],
-    "gas": 23636043
   },
   {
     "stateMutability": "view",
@@ -1424,7 +1483,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 21291
+    "gas": 21321
   },
   {
     "stateMutability": "view",
@@ -1479,7 +1538,7 @@
         "type": "uint256"
       }
     ],
-    "gas": 810204
+    "gas": 810654
   },
   {
     "stateMutability": "nonpayable",
@@ -1552,7 +1611,7 @@
       }
     ],
     "outputs": [],
-    "gas": 103515
+    "gas": 111102
   },
   {
     "stateMutability": "nonpayable",
@@ -1565,7 +1624,28 @@
       }
     ],
     "outputs": [],
-    "gas": 96522
+    "gas": 96582
+  },
+  {
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "name": "setPendingWithdrawApprove",
+    "inputs": [
+      {
+        "name": "recipient",
+        "type": "address"
+      },
+      {
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "name": "approveStatus",
+        "type": "uint256"
+      }
+    ],
+    "outputs": [],
+    "gas": 169525
   },
   {
     "stateMutability": "view",
@@ -1663,9 +1743,17 @@
       {
         "name": "open",
         "type": "bool"
+      },
+      {
+        "name": "approveStatus",
+        "type": "uint256"
+      },
+      {
+        "name": "_timestamp",
+        "type": "uint256"
       }
     ],
-    "gas": 8974
+    "gas": 13538
   },
   {
     "stateMutability": "view",
@@ -2037,5 +2125,66 @@
       }
     ],
     "gas": 4488
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "withdrawalPeriods",
+    "inputs": [
+      {
+        "name": "arg0",
+        "type": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "total",
+        "type": "uint256"
+      },
+      {
+        "name": "considered",
+        "type": "uint256"
+      }
+    ],
+    "gas": 7167
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "withdrawLimitPerPeriod",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "gas": 4548
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "undeclaredWithdrawLimit",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "gas": 4578
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "withdrawGuardian",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "gas": 4608
   }
 ]

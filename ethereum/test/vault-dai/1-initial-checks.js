@@ -85,4 +85,9 @@ describe('Test Vault DAI initial setup', async () => {
     expect(decoded.sender_addr)
       .to.be.equal(0, 'Wrong sender address');
   });
+
+  it('Check withdraw limit per period', async () => {
+    expect(await vault.withdrawLimitPerPeriod())
+        .to.be.equal(0, 'Wrong withdraw limit per period');
+  });
 });
