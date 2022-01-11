@@ -435,6 +435,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
         emit RewardClaimed(user, user_token_reward);
 
+        // TODO: dont call if 0 tokens, just send gas
         TvmCell _empty;
         ITONTokenWallet(base_details.tokenWallet).transferToRecipient{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
             0, user, user_token_reward, 0, 0, send_gas_to, false, _empty

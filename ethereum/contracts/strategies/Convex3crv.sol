@@ -113,8 +113,8 @@ contract Convex3StableStrategy is ConvexStable, Initializable {
 
         _approveBasic();
         pathTarget = new address[](2);
-        _setPathTarget(0, 0); // crv path target
-        _setPathTarget(1, 0); // cvx path target
+        _setPathTarget(0, 1); // crv path target
+        _setPathTarget(1, 1); // cvx path target
 
         dex = new address[](2);
         dex[0] = sushiswap; // crv
