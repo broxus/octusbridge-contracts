@@ -822,19 +822,6 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "new_vault",
-        "type": "address"
-      }
-    ],
-    "name": "setVault",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "slippage_factor",
     "outputs": [
