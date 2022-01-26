@@ -3,25 +3,25 @@ pragma AbiHeader time;
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
-import "../utils/ErrorCodes.sol";
-import "../utils/cell-encoder/CellEncoder.sol";
-import "../utils/TransferUtils.sol";
+import "./../../utils/ErrorCodes.sol";
+import "./../../utils/cell-encoder/CellEncoder.sol";
+import "./../../utils/TransferUtils.sol";
 
-import "./interfaces/IProxy.sol";
-import "./interfaces/IProxyTokenTransferConfigurable.sol";
-import "./interfaces/event-configuration-contracts/ITonEventConfiguration.sol";
+import "./../interfaces/IProxy.sol";
+import "./../interfaces/IProxyTokenTransferConfigurable.sol";
+import "./../interfaces/event-configuration-contracts/ITonEventConfiguration.sol";
 
-import "../token/interfaces/IPausedCallback.sol";
-import "../token/interfaces/IPausable.sol";
-import "../token/interfaces/IBurnTokensCallback.sol";
-import "../token/interfaces/IRootTokenContract.sol";
-import "../token/interfaces/ISendSurplusGas.sol";
-import "../token/interfaces/ITransferOwner.sol";
+import "./../../token/interfaces/IPausedCallback.sol";
+import "./../../token/interfaces/IPausable.sol";
+import "./../../token/interfaces/IBurnTokensCallback.sol";
+import "./../../token/interfaces/IRootTokenContract.sol";
+import "./../../token/interfaces/ISendSurplusGas.sol";
+import "./../../token/interfaces/ITransferOwner.sol";
 
-import './../../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol';
-import './../../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.sol';
-import '../../../node_modules/@broxus/contracts/contracts/utils/RandomNonce.sol';
-import "../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol";
+import './../../../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol';
+import './../../../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.sol';
+import './../../../../node_modules/@broxus/contracts/contracts/utils/RandomNonce.sol';
+import "./../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol";
 
 /// @title Proxy for cross chain token transfers
 /// @dev In case of ETH-TON token transfer, this proxy should receive
