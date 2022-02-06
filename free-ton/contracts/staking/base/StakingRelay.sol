@@ -1,4 +1,4 @@
-pragma ton-solidity >= 0.39.0;
+pragma ton-solidity >= 0.57.0;
 pragma AbiHeader pubkey;
 //pragma AbiHeader expire;
 
@@ -12,7 +12,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         require (msg.value >= relay_config.relayInitialTonDeposit, ErrorCodes.VALUE_TOO_LOW);
         require (!base_details.emergency, ErrorCodes.EMERGENCY);
 
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         uint128 user_data_value = msg.value / 2;
 
@@ -27,7 +27,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         address gasBackAddress
     ) external override onlyEthTonConfig {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         (uint160 eth_addr, int8 wk_id, uint256 ton_addr_body) = eventData.voteData.eventData.toSlice().decode(uint160, int8, uint256);
         address ton_staker_addr = address.makeAddrStd(wk_id, ton_addr_body);
@@ -42,7 +42,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
     function slashRelay(address relay_staker_addr, address send_gas_to) external onlyDaoRoot {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
 
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         updatePoolInfo();
         _upgradeUserData(relay_staker_addr, Gas.USER_DATA_UPGRADE_VALUE, send_gas_to);
@@ -73,7 +73,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         uint128 ban_token_balance,
         address send_gas_to
     ) external override onlyUserData(user) {
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         updatePoolInfo();
         // sync user rewards up to this moment
@@ -127,7 +127,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         bool correct_len_1 = ton_pubkeys.length == eth_addrs.length;
         bool correct_len_2 = eth_addrs.length == staked_tokens.length;
         require (correct_len && correct_len_1 && correct_len_2, ErrorCodes.BAD_INPUT_ARRAYS);
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         for (uint i = 0; i < staker_addrs.length; i++) {
             // manually confirm all relays
@@ -150,7 +150,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
     function processBecomeRelayNextRound(address user) external view override onlyActive onlyUserData(user) {
         require (round_details.currentElectionStartTime != 0, ErrorCodes.ELECTION_NOT_STARTED);
 
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         uint32 lock_time = relay_config.electionTime + relay_config.relayLockTime;
 
@@ -160,7 +160,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
     }
 
     function processGetRewardForRelayRound(address user, uint32 round_num) external override onlyActive onlyUserData(user) {
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
         updatePoolInfo();
 
         IUserData(msg.sender).processGetRewardForRelayRound2{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
@@ -217,7 +217,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         uint32 round_num,
         uint32 relay_requests_count
     ) external override onlyElection(round_num) {
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         bool min_relays_ok = relay_requests_count >= relay_config.minRelaysCount;
 
@@ -257,7 +257,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         uint32 round_num,
         bool duplicate
     ) external override onlyRelayRound(round_num) {
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         if (round_num == 0) {
             // this is an origin round deployment

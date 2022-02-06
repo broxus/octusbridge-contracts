@@ -1,5 +1,5 @@
 const {
-    expect,
+    expect, wait_acc_deployed, deployAccount, getTokenWalletAddr, deployTokenRoot, mintTokens, sendTokens
 } = require('../utils');
 const BigNumber = require('bignumber.js');
 const logger = require('mocha-logger');
@@ -9,22 +9,10 @@ const {
 
 const EMPTY_TVM_CELL = 'te6ccgEBAQEAAgAAAA==';
 
-const TOKEN_PATH = '../node_modules/ton-eth-bridge-token-contracts/free-ton/build';
-
-const stringToBytesArray = (dataString) => {
-    return Buffer.from(dataString).toString('hex')
-};
-
-const getRandomNonce = () => Math.random() * 64000 | 0;
-
-const afterRun = async () => {
-    await new Promise(resolve => setTimeout(resolve, 1500));
-};
+const TOKEN_PATH = '../node_modules/ton-eth-bridge-token-contracts/build';
+const DEV_WAIT = 100000;
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-
-const bridge = '0:9cc3d8668d57d387eae54c4398a1a0b478b6a8c3a0f2b5265e641a212b435231'
 
 let stakingRoot;
 let stakingToken;
@@ -50,60 +38,6 @@ let balance_err;
 describe('Test Staking Rewards', async function () {
     this.timeout(10000000);
 
-    const deployTokenRoot = async function (token_name, token_symbol) {
-        const RootToken = await locklift.factory.getContract('RootTokenContract', TOKEN_PATH);
-        const TokenWallet = await locklift.factory.getContract('TONTokenWallet', TOKEN_PATH);
-        const [keyPair] = await locklift.keys.getKeyPairs();
-
-        const _root = await locklift.giver.deployContract({
-            contract: RootToken,
-            constructorParams: {
-                root_public_key_: `0x${keyPair.public}`,
-                root_owner_address_: locklift.ton.zero_address
-            },
-            initParams: {
-                name: stringToBytesArray(token_name),
-                symbol: stringToBytesArray(token_symbol),
-                decimals: 9,
-                wallet_code: TokenWallet.code,
-                _randomNonce: getRandomNonce(),
-            },
-            keyPair,
-        }, locklift.utils.convertCrystal(15, 'nano'));
-        _root.afterRun = afterRun;
-        _root.setKeyPair(keyPair);
-
-        return _root;
-    }
-
-    const deployTokenWallets = async function(users) {
-        return await Promise.all(users.map(async (user) => {
-            await user.runTarget({
-                contract: stakingToken,
-                method: 'deployEmptyWallet',
-                params: {
-                    deploy_grams: convertCrystal(1, 'nano'),
-                    wallet_public_key_: 0,
-                    owner_address_: user.address,
-                    gas_back_address: user.address
-                },
-                value: convertCrystal(2, 'nano'),
-            });
-
-            const userTokenWalletAddress = await stakingToken.call({
-                method: 'getWalletAddress',
-                params: {
-                    wallet_public_key_: 0,
-                    owner_address_: user.address
-                },
-            });
-
-            let userTokenWallet = await locklift.factory.getContract('TONTokenWallet', TOKEN_PATH);
-            userTokenWallet.setAddress(userTokenWalletAddress);
-            return userTokenWallet;
-        }));
-    };
-
     const userRewardRounds = async function (userData) {
         const details = await userData.call({method: 'getDetails'});
         return details.rewardRounds;
@@ -114,39 +48,11 @@ describe('Test Staking Rewards', async function () {
         return details.token_balance;
     }
 
-    const deployAccount = async function (key, value) {
-        const Account = await locklift.factory.getAccount('Wallet');
-        let account = await locklift.giver.deployContract({
-            contract: Account,
-            constructorParams: {},
-            initParams: {
-                _randomNonce: Math.random() * 6400 | 0,
-            },
-            keyPair: key
-        }, locklift.utils.convertCrystal(value, 'nano'));
-        account.setKeyPair(key);
-        account.afterRun = afterRun;
-        return account;
-    }
-
     const pendingReward = async function (user_token_balance, user_reward_rounds) {
         return await stakingRoot.call({
             method: 'pendingReward',
             params: {user_token_balance: user_token_balance, user_reward_data: user_reward_rounds}
         })
-    }
-
-    const getUserTokenWallet = async function (user) {
-        const expectedWalletAddr = await stakingToken.call({
-            method: 'getWalletAddress',
-            params: {
-                wallet_public_key_: 0,
-                owner_address_: user.address
-            }
-        });
-        const userTokenWallet = await locklift.factory.getContract('TONTokenWallet', TOKEN_PATH);
-        userTokenWallet.setAddress(expectedWalletAddr);
-        return userTokenWallet;
     }
 
     const checkTokenBalances = async function(userTokenWallet, userAccount, pool_wallet_bal, pool_bal, pool_reward_bal, user_bal, user_data_bal) {
@@ -169,11 +75,6 @@ describe('Test Staking Rewards', async function () {
         expect(_user_data_bal.toNumber()).to.be.equal(user_data_bal, 'User data balance bad');
     }
 
-    const checkStakingRewardRounds = async function (rewardRounds) {
-        const _reward_rounds = await stakingRoot.call({method: 'rewardRounds'});
-        console.log(_reward_rounds);
-    }
-
     const startNewRewardRound = async function () {
         return await stakingOwner.runTarget({
             contract: stakingRoot,
@@ -181,7 +82,7 @@ describe('Test Staking Rewards', async function () {
             params: {
                 send_gas_to: stakingOwner.address,
             },
-            value: locklift.utils.convertCrystal(5, 'nano')
+            value: locklift.utils.convertCrystal(11, 'nano')
         });
     }
 
@@ -192,7 +93,7 @@ describe('Test Staking Rewards', async function () {
             params: {
                 send_gas_to: user.address,
             },
-            value: locklift.utils.convertCrystal(1, 'nano')
+            value: locklift.utils.convertCrystal(11, 'nano')
         });
     }
 
@@ -229,21 +130,7 @@ describe('Test Staking Rewards', async function () {
             payload = DEPOSIT_PAYLOAD;
         }
 
-        return await user.runTarget({
-            contract: _userTokenWallet,
-            method: 'transferToRecipient',
-            params: {
-                recipient_public_key: 0,
-                recipient_address: stakingRoot.address,
-                tokens: depositAmount,
-                deploy_grams: 0,
-                transfer_grams: 0,
-                send_gas_to: user.address,
-                notify_receiver: true,
-                payload: payload
-            },
-            value: locklift.utils.convertCrystal(2.5, 'nano')
-        });
+        return await sendTokens(user, _userTokenWallet, stakingRoot, depositAmount, payload);
     };
 
     const withdrawTokens = async function(user, withdraw_amount) {
@@ -254,21 +141,26 @@ describe('Test Staking Rewards', async function () {
                 amount: withdraw_amount,
                 send_gas_to: user.address
             },
-            value: convertCrystal(1.5, 'nano')
+            value: convertCrystal(11, 'nano')
         });
     };
 
     describe('Setup contracts', async function() {
         describe('Token', async function() {
+            it('Deploy admin', async function() {
+                const [keyPair] = await locklift.keys.getKeyPairs();
+                stakingOwner = await deployAccount(keyPair, 50);
+            });
+
             it('Deploy root', async function() {
-                stakingToken = await deployTokenRoot('Farm token', 'FT');
+                stakingToken = await deployTokenRoot('Farm token', 'FT', stakingOwner);
             });
         });
 
         describe('Users', async function() {
             it('Deploy users accounts', async function() {
                 let users = [];
-                for (const i of [1, 1, 1]) {
+                for (const i of [1, 1]) {
                     const [keyPair] = await locklift.keys.getKeyPairs();
                     const account = await deployAccount(keyPair, 25);
                     logger.log(`User address: ${account.address}`);
@@ -280,23 +172,11 @@ describe('Test Staking Rewards', async function () {
                     expect(acc_type_name).to.be.equal('Active', 'User account not active');
                     users.push(account);
                 }
-                [user1, user2, stakingOwner] = users;
+                [user1, user2] = users;
             });
 
-            it('Deploy users token wallets', async function() {
-                [ userTokenWallet1, userTokenWallet2, ownerWallet ] = await deployTokenWallets([user1, user2, stakingOwner]);
-            });
-
-            it('Mint tokens to users', async function() {
-                for (const i of [userTokenWallet2, userTokenWallet1, ownerWallet]) {
-                    await stakingToken.run({
-                        method: 'mint',
-                        params: {
-                            tokens: userInitialTokenBal,
-                            to: i.address
-                        }
-                    });
-                }
+            it('Deploy users token wallets + mint', async function() {
+                [ userTokenWallet1, userTokenWallet2, ownerWallet ] = await mintTokens(stakingOwner, [user1, user2, stakingOwner], stakingToken, userInitialTokenBal);
 
                 const balance1 = await userTokenWallet1.call({method: 'balance'});
                 const balance2 = await userTokenWallet2.call({method: 'balance'});
@@ -305,7 +185,6 @@ describe('Test Staking Rewards', async function () {
                 expect(balance1.toNumber()).to.be.equal(userInitialTokenBal, 'User ton token wallet empty');
                 expect(balance2.toNumber()).to.be.equal(userInitialTokenBal, 'User ton token wallet empty');
                 expect(balance3.toNumber()).to.be.equal(userInitialTokenBal, 'User ton token wallet empty');
-
             });
         });
 
@@ -313,11 +192,11 @@ describe('Test Staking Rewards', async function () {
             it('Deploy staking', async function () {
                 const [keyPair, keyPair1] = await locklift.keys.getKeyPairs();
 
-                const EventProxyMock = await locklift.factory.getContract('EventProxyMockup');
-                const event_proxy = await locklift.giver.deployContract({
-                    contract: EventProxyMock,
+                const TonConfigMockup = await locklift.factory.getContract('TonConfigMockup');
+                const ton_config_mockup = await locklift.giver.deployContract({
+                    contract: TonConfigMockup,
                     constructorParams: {},
-                    initParams: {nonce: getRandomNonce()},
+                    initParams: {nonce: locklift.utils.getRandomNonce()},
                     keyPair: keyPair
                 }, locklift.utils.convertCrystal(1, 'nano'));
 
@@ -325,12 +204,10 @@ describe('Test Staking Rewards', async function () {
                 const stakingRootDeployer = await locklift.giver.deployContract({
                     contract: StakingRootDeployer,
                     constructorParams: {},
-                    initParams: {nonce: getRandomNonce()},
+                    initParams: {nonce: locklift.utils.getRandomNonce()},
                     keyPair: keyPair,
-                }, locklift.utils.convertCrystal(10, 'nano'));
-                if (locklift.network === 'dev') {
-                    await wait(DEV_WAIT);
-                }
+                }, locklift.utils.convertCrystal(50, 'nano'));
+
                 logger.log(`Deploying stakingRoot`);
                 stakingRoot = await locklift.factory.getContract('Staking');
                 stakingRoot.setAddress((await stakingRootDeployer.run({
@@ -341,29 +218,28 @@ describe('Test Staking Rewards', async function () {
                         _tokenRoot: stakingToken.address,
                         _dao_root: stakingOwner.address,
                         _rewarder: stakingOwner.address,
-                        _bridge_event_config: stakingOwner.address,
-                        _bridge_event_proxy: event_proxy.address,
-                        _deploy_nonce: getRandomNonce()
+                        _rescuer: stakingOwner.address,
+                        _bridge_event_config_eth_ton: stakingOwner.address,
+                        _bridge_event_config_ton_eth: ton_config_mockup.address,
+                        _deploy_nonce: locklift.utils.getRandomNonce()
                     }
                 })).decoded.output.value0);
                 logger.log(`StakingRoot address: ${stakingRoot.address}`);
                 logger.log(`StakingRoot owner address: ${stakingOwner.address}`);
                 logger.log(`StakingRoot token root address: ${stakingToken.address}`);
-                if (locklift.network === 'dev') {
-                    await wait(DEV_WAIT * 2);
-                }
+
 
                 const staking_details = await stakingRoot.call({method: 'getDetails'});
                 logger.log(`Staking token wallet: ${staking_details.tokenWallet}`);
 
-                stakingWallet = await locklift.factory.getContract('TONTokenWallet', TOKEN_PATH);
+                stakingWallet = await locklift.factory.getContract('TokenWallet', TOKEN_PATH);
                 stakingWallet.setAddress(staking_details.tokenWallet);
 
                 // call in order to check if wallet is deployed
-                const details = await stakingWallet.call({method: 'getDetails'});
-                expect(details.owner_address).to.be.equal(stakingRoot.address, 'Wrong staking token wallet owner');
-                expect(details.receive_callback).to.be.equal(stakingRoot.address, 'Wrong staking token wallet receive callback');
-                expect(details.root_address).to.be.equal(stakingToken.address, 'Wrong staking token wallet root');
+                const owner_address = await stakingWallet.call({method: 'owner'});
+                const root_address = await stakingWallet.call({method: 'root'});
+                expect(owner_address).to.be.equal(stakingRoot.address, 'Wrong staking token wallet owner');
+                expect(root_address).to.be.equal(stakingToken.address, 'Wrong staking token wallet root');
             });
 
             it('Installing codes', async function() {
@@ -377,30 +253,35 @@ describe('Test Staking Rewards', async function () {
                     contract: stakingRoot,
                     method: 'installPlatformOnce',
                     params: {code: Platform.code, send_gas_to: stakingOwner.address},
+                    value: convertCrystal(11, 'nano')
                 });
                 logger.log(`Installing UserData code`);
                 await stakingOwner.runTarget({
                     contract: stakingRoot,
                     method: 'installOrUpdateUserDataCode',
                     params: {code: UserData.code, send_gas_to: stakingOwner.address},
+                    value: convertCrystal(11, 'nano')
                 });
                 logger.log(`Installing ElectionCode code`);
                 await stakingOwner.runTarget({
                     contract: stakingRoot,
                     method: 'installOrUpdateElectionCode',
                     params: {code: Election.code, send_gas_to: stakingOwner.address},
+                    value: convertCrystal(11, 'nano')
                 });
                 logger.log(`Installing RelayRoundCode code`);
                 await stakingOwner.runTarget({
                     contract: stakingRoot,
                     method: 'installOrUpdateRelayRoundCode',
                     params: {code: RelayRound.code, send_gas_to: stakingOwner.address},
+                    value: convertCrystal(11, 'nano')
                 });
                 logger.log(`Set staking to Active`);
                 await stakingOwner.runTarget({
                     contract: stakingRoot,
                     method: 'setActive',
                     params: {new_active: true, send_gas_to: stakingOwner.address},
+                    value: convertCrystal(11, 'nano')
                 });
 
                 const active = await stakingRoot.call({method: 'isActive'});

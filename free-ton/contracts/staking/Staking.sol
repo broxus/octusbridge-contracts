@@ -1,4 +1,4 @@
-pragma ton-solidity >= 0.39.0;
+pragma ton-solidity >= 0.57.0;
 pragma AbiHeader pubkey;
 pragma AbiHeader expire;
 
@@ -24,7 +24,7 @@ contract Staking is StakingPoolRelay {
         base_details.rescuer = _rescuer;
         base_details.rewarder = _rewarder;
         base_details.rewardRounds.push(RewardRound(0, 0, 0, now));
-        setUpTokenWallets();
+        setUpTokenWallet();
     }
 
     function upgrade(TvmCell code, address send_gas_to) external onlyAdmin {

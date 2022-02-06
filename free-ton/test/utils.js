@@ -7,7 +7,7 @@ chai.use(require('chai-bignumber')());
 
 const { expect } = chai;
 
-const TOKEN_PATH = '../node_modules/ton-eth-bridge-token-contracts/free-ton/build';
+const TOKEN_PATH = '../node_modules/ton-eth-bridge-token-contracts/build';
 
 const logContract = async (contract) => {
   const balance = await locklift.ton.getBalance(contract.address);
@@ -521,6 +521,158 @@ const captureConnectors = async (bridge) => {
 };
 
 
+const wait_acc_deployed = async function (addr) {
+  await locklift.ton.client.net.wait_for_collection({
+    collection: 'accounts',
+    filter: {
+      id: { eq: addr },
+      balance: { gt: `0x0` }
+    },
+    result: 'id'
+  });
+}
+
+const deployTokenRoot = async function (token_name, token_symbol, owner) {
+  const RootToken = await locklift.factory.getContract('TokenRoot', TOKEN_PATH);
+  const TokenWallet = await locklift.factory.getContract('TokenWallet', TOKEN_PATH);
+  const [keyPair] = await locklift.keys.getKeyPairs();
+
+  const _root = await locklift.giver.deployContract({
+    contract: RootToken,
+    constructorParams: {
+      initialSupplyTo: locklift.utils.zeroAddress,
+      initialSupply: 0,
+      deployWalletValue: 0,
+      mintDisabled: false,
+      burnByRootDisabled: false,
+      burnPaused: false,
+      remainingGasTo: owner.address
+    },
+    initParams: {
+      name_: token_name,
+      symbol_: token_symbol,
+      decimals_: 9,
+      rootOwner_: owner.address,
+      walletCode_: TokenWallet.code,
+      randomNonce_: locklift.utils.getRandomNonce(),
+      deployer_: locklift.utils.zeroAddress
+    },
+    keyPair,
+  });
+
+  _root.afterRun = afterRun;
+  _root.setKeyPair(keyPair);
+
+  return _root;
+}
+
+const deployTokenWallets = async function(users, _root) {
+  let wallets = []
+  for (const user of users) {
+    await user.runTarget({
+      contract: _root,
+      method: 'deployWallet',
+      params: {
+        answerId: 0,
+        walletOwner: user.address,
+        deployWalletValue: locklift.utils.convertCrystal(1, 'nano'),
+      },
+      value: locklift.utils.convertCrystal(2, 'nano'),
+    });
+
+    const walletAddr = await getTokenWalletAddr(_root, user);
+
+    // Wait until user token wallet is presented into the GraphQL
+    await wait_acc_deployed(walletAddr);
+
+    logger.log(`User token wallet: ${walletAddr}`);
+
+    let userTokenWallet = await locklift.factory.getContract(
+        'TokenWallet',
+        TOKEN_PATH
+    );
+
+    userTokenWallet.setAddress(walletAddr);
+    wallets.push(userTokenWallet);
+  }
+  return wallets;
+}
+
+const sendTokens = async function (user, _userTokenWallet, recipient, amount, payload) {
+  return await user.runTarget({
+    contract: _userTokenWallet,
+    method: 'transfer',
+    params: {
+      amount: amount,
+      recipient: recipient.address,
+      deployWalletValue: 0,
+      remainingGasTo: user.address,
+      notify: true,
+      payload: payload
+    },
+    value: locklift.utils.convertCrystal(11, 'nano')
+  });
+};
+
+// mint + deploy
+const mintTokens = async function(owner, users, _root, mint_amount) {
+  let wallets = [];
+  for (const user of users) {
+    await owner.runTarget({
+      contract: _root,
+      method: 'mint',
+      params: {
+        amount: mint_amount,
+        recipient: user.address,
+        deployWalletValue: locklift.utils.convertCrystal(1, 'nano'),
+        remainingGasTo: owner.address,
+        notify: false,
+        payload: ''
+      },
+      value: locklift.utils.convertCrystal(3, 'nano'),
+    });
+
+    const walletAddr = await getTokenWalletAddr(_root, user);
+
+    await wait_acc_deployed(walletAddr);
+
+    logger.log(`User token wallet: ${walletAddr}`);
+
+    let userTokenWallet = await locklift.factory.getContract(
+        'TokenWallet',
+        TOKEN_PATH
+    );
+
+    userTokenWallet.setAddress(walletAddr);
+    wallets.push(userTokenWallet);
+  }
+  return wallets;
+}
+
+const deployAccount = async function (key, value) {
+  const Account = await locklift.factory.getAccount('Wallet');
+  let account = await locklift.giver.deployContract({
+    contract: Account,
+    constructorParams: {},
+    initParams: {
+      _randomNonce: Math.random() * 6400 | 0,
+    },
+    keyPair: key
+  }, locklift.utils.convertCrystal(value, 'nano'));
+  account.setKeyPair(key);
+  account.afterRun = afterRun;
+  await wait_acc_deployed(account.address);
+  return account;
+}
+
+const getTokenWalletAddr = async function(_root, user) {
+  return await _root.call({
+    method: 'walletOf',
+    params: { walletOwner: user.address }
+  });
+}
+
+
 const isValidTonAddress = (address) => /^(?:-1|0):[0-9a-fA-F]{64}$/.test(address);
 
 
@@ -540,10 +692,17 @@ module.exports = {
   captureConnectors,
   getTokenRoot,
   getTokenWalletByAddress,
+  sendTokens,
   extractTonEventAddress,
   afterRun,
   isValidTonAddress,
+  deployTokenRoot,
+  deployTokenWallets,
   stringToBytesArray,
+  getTokenWalletAddr,
+  wait_acc_deployed,
+  mintTokens,
+  deployAccount,
   logger,
   expect,
   TOKEN_PATH

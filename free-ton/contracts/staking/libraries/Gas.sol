@@ -1,4 +1,4 @@
-pragma ton-solidity >= 0.39.0;
+pragma ton-solidity >= 0.57.0;
 
 library Gas {
     // deploy
@@ -18,8 +18,6 @@ library Gas {
     uint64 constant MIN_END_ELECTION_MSG_VALUE = 20 ton;
     uint64 constant MIN_SEND_RELAYS_MSG_VALUE = 2 ton;
     uint64 constant DESTROY_MSG_VALUE = 1 ton;
-
-    uint64 constant GET_WALLET_ADDRESS_VALUE = 0.5 ton;
 
     // DAO
     uint64 constant CAST_VOTE_VALUE = 1 ton;

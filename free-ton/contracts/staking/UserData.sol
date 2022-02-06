@@ -1,4 +1,4 @@
-pragma ton-solidity >= 0.39.0;
+pragma ton-solidity >= 0.57.0;
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
@@ -113,7 +113,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     }
 
     function castVote(uint32 code_version, uint32 proposal_id, bool support, string reason) public override onlyRoot {
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         uint16 error;
 
@@ -152,7 +152,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     }
 
     function tryUnlockVoteTokens(uint32 code_version, uint32 proposal_id) override public view onlyRoot {
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
         uint16 error;
 
         if (code_version > current_version) error = ErrorCodes.OLD_VERSION;
@@ -182,7 +182,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     }
 
     function tryUnlockCastedVotes(uint32 code_version, uint32[] proposal_ids) override public view onlyRoot {
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         uint16 error;
 
@@ -266,7 +266,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     }
 
     function slash(IStakingPool.RewardRound[] reward_rounds, address send_gas_to) external override onlyRoot {
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         syncRewards(reward_rounds, token_balance);
         slashed = true;
@@ -292,7 +292,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         IStakingPool.RewardRound[] reward_rounds,
         uint32 code_version
     ) external override onlyRoot {
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         if (code_version > current_version || slashed) {
             IStakingPool(msg.sender).revertDeposit{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(nonce);
@@ -314,7 +314,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         require (!slashed, ErrorCodes.SLASHED);
         require (code_version == current_version, ErrorCodes.LOW_VERSION);
 
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         syncRewards(reward_rounds, token_balance);
 
@@ -344,7 +344,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         require (!slashed, ErrorCodes.SLASHED);
         require (code_version == current_version, ErrorCodes.LOW_VERSION);
 
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         syncRewards(reward_rounds, token_balance);
 
@@ -355,7 +355,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     function receiveRewardForRelayRound(
         uint32 relay_round_num, uint32 reward_round_num, uint128 reward
     ) external override onlyRelayRound(relay_round_num) {
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         rewardRounds[reward_round_num].reward_balance += reward;
         emit RelayRoundRewardClaimed(relay_round_num, reward_round_num, reward);
@@ -403,7 +403,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         require (eth_address == relay_eth_address, ErrorCodes.ACCOUNT_NOT_LINKED);
         require (!slashed, ErrorCodes.SLASHED);
 
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         eth_address_confirmed = true;
 
@@ -429,7 +429,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         require (token_balance >= min_deposit, ErrorCodes.LOW_RELAY_DEPOSIT);
         require (code_version == current_version, ErrorCodes.LOW_VERSION);
 
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         address election_addr = getElectionAddress(round_num);
         IElection(election_addr).applyForMembership{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
@@ -440,7 +440,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     function relayMembershipRequestAccepted(
         uint32 round_num, uint128 tokens, uint256 ton_pubkey, uint160 eth_addr, uint32 lock_time
     ) external override onlyElection(round_num) {
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         // lock for 30 days
         relay_lock_until = now + lock_time;
@@ -463,7 +463,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         require (!slashed, ErrorCodes.SLASHED);
         require (code_version == current_version, ErrorCodes.LOW_VERSION);
 
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         syncRewards(reward_rounds, token_balance - _tokens_to_withdraw);
         token_balance -= _tokens_to_withdraw;
@@ -472,7 +472,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     }
 
     function withdrawTons() external override onlyRoot {
-        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 2);
+        tvm.rawReserve(Gas.USER_DATA_INITIAL_BALANCE, 0);
 
         user.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false});
     }
@@ -530,7 +530,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     onBounce(TvmSlice slice) external {
         uint32 functionId = slice.decode(uint32);
         if (functionId == tvm.functionId(IProposal.castVote)) {
-            tvm.rawReserve(_reserve(), 2);
+            tvm.rawReserve(_reserve(), 0);
             uint32 proposal_id = slice.decode(uint32);
             if (casted_votes.exists(proposal_id)) {
                 delete casted_votes[proposal_id];
@@ -541,7 +541,7 @@ contract UserData is IUserData, IUpgradableByRequest {
 
     function onCodeUpgrade(TvmCell upgrade_data) private {
         tvm.resetStorage();
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         TvmSlice s = upgrade_data.toSlice();
         (address root_, , address send_gas_to) = s.decode(address, uint8, address);
@@ -564,7 +564,7 @@ contract UserData is IUserData, IUpgradableByRequest {
 
     function upgrade(TvmCell code, uint32 new_version, address send_gas_to) external override onlyRoot {
         if (new_version == current_version) {
-            tvm.rawReserve(_reserve(), 2);
+            tvm.rawReserve(_reserve(), 0);
             send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
         } else {
             emit UserDataCodeUpgraded(new_version);

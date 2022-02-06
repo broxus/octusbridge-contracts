@@ -1,10 +1,11 @@
-pragma ton-solidity >= 0.39.0;
+pragma ton-solidity >= 0.57.0;
 //pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
-import "./../interfaces/IRootTokenContract.sol";
-import "./../interfaces/ITONTokenWallet.sol";
-import "./../interfaces/ITokensReceivedCallback.sol";
+import "../../../../node_modules/ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.sol";
+import "../../../../node_modules/ton-eth-bridge-token-contracts/contracts/interfaces/ITokenWallet.sol";
+import "../../../../node_modules/ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensTransferCallback.sol";
+
 import "./../interfaces/IUserData.sol";
 import "./../interfaces/IUpgradableByRequest.sol";
 import "./../interfaces/IStakingPool.sol";
@@ -25,7 +26,7 @@ import "../../../../node_modules/@broxus/contracts/contracts/platform/Platform.s
 import "../../utils/Delegate.sol";
 
 
-abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, IStakingDao, Delegate {
+abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool, IStakingDao, Delegate {
     // Events
     event RewardDeposit(uint128 amount, uint32 reward_round_num);
     event Deposit(address user, uint128 amount);
@@ -142,7 +143,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     function setDaoRoot(address new_dao_root, address send_gas_to) external onlyDaoRoot {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
         emit DaoRootUpdated(new_dao_root);
         base_details.dao_root = new_dao_root;
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
@@ -150,7 +151,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     function setTonEventDeployValue(uint128 new_value, address send_gas_to) external onlyAdmin {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         emit TonEventDeployValueUpdated(new_value);
         tonEventDeployValue = new_value;
@@ -159,7 +160,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     function setBridgeEventEthTonConfig(address new_bridge_event_config_eth_ton, address send_gas_to) external onlyAdmin {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
         emit BridgeEventEthTonConfigUpdated(new_bridge_event_config_eth_ton);
         base_details.bridge_event_config_eth_ton = new_bridge_event_config_eth_ton;
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
@@ -167,7 +168,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     function setBridgeEventTonEthConfig(address new_bridge_event_config_ton_eth, address send_gas_to) external onlyAdmin {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
         emit BridgeEventTonEthConfigUpdated(new_bridge_event_config_ton_eth);
         base_details.bridge_event_config_ton_eth = new_bridge_event_config_ton_eth;
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
@@ -175,7 +176,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     function setAdmin(address new_admin, address send_gas_to) external onlyDaoRoot {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
         emit AdminUpdated(new_admin);
         base_details.admin = new_admin;
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
@@ -183,7 +184,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     function setRescuer(address new_rescuer, address send_gas_to) external onlyDaoRoot {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
         emit RescuerUpdated(new_rescuer);
         base_details.rescuer = new_rescuer;
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
@@ -191,7 +192,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     function setRewarder(address new_rewarder, address send_gas_to) external onlyDaoRoot {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
         emit RewarderUpdated(new_rewarder);
         base_details.rewarder = new_rewarder;
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
@@ -200,7 +201,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     // Active
     function setActive(bool new_active, address send_gas_to) external onlyAdmin {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
         if (
             new_active
             && base_details.dao_root.value != 0
@@ -225,7 +226,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
     function setRelayConfig(RelayConfigDetails new_relay_config, address send_gas_to) external onlyDaoRoot {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         // we update pool info, because reward per sec params could be updated
         updatePoolInfo();
@@ -239,19 +240,11 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     /*
         @notice Creates token wallet for configured root token
     */
-    function setUpTokenWallets() internal view {
-        // Deploy vault's token wallet
-        IRootTokenContract(base_details.tokenRoot).deployEmptyWallet{value: Gas.TOKEN_WALLET_DEPLOY_VALUE}(
-            Gas.TOKEN_WALLET_DEPLOY_VALUE / 2, // deploy grams
-            0, // owner pubkey
-            address(this), // owner address
-            address(this) // gas refund address
+    function setUpTokenWallet() internal view {
+        ITokenRoot(base_details.tokenRoot).deployWallet{value: Gas.TOKEN_WALLET_DEPLOY_VALUE, callback: StakingPoolBase.receiveTokenWalletAddress }(
+            address(this), // owner
+            Gas.TOKEN_WALLET_DEPLOY_VALUE / 2 // deploy grams
         );
-
-        // Request for token wallet address
-        IRootTokenContract(base_details.tokenRoot).getWalletAddress{
-            value: Gas.GET_WALLET_ADDRESS_VALUE, callback: StakingPoolBase.receiveTokenWalletAddress
-        }(0, address(this));
     }
 
     /*
@@ -260,10 +253,10 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         @param wallet Farm pool's token wallet
     */
     function receiveTokenWalletAddress(address wallet) external {
-        if (msg.sender == base_details.tokenRoot) {
-            base_details.tokenWallet = wallet;
-            ITONTokenWallet(wallet).setReceiveCallback{value: 0.05 ton}(address(this), false);
-        }
+        require (msg.sender == base_details.tokenRoot, ErrorCodes.NOT_TOKEN_WALLET);
+
+        tvm.rawReserve(_reserve(), 0);
+        base_details.tokenWallet = wallet;
     }
 
     function startNewRewardRound(address send_gas_to) external onlyRewarder {
@@ -274,7 +267,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
             require (last_round.rewardTokens > 0, ErrorCodes.EMPTY_REWARD_ROUND);
         }
 
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         updatePoolInfo();
 
@@ -284,63 +277,70 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
     }
 
+    // try to decode deposit payload
+    function decodeDepositPayload(TvmCell payload) public view returns (uint8 deposit_type, bool correct) {
+        // check if payload assembled correctly
+        TvmSlice slice = payload.toSlice();
+        // 1 uint8
+        if (!slice.hasNBitsAndRefs(8, 0)) {
+            return (0, false);
+        }
+        deposit_type = slice.decode(uint8);
+        return (deposit_type, true);
+    }
+
     // deposit occurs here
-    function tokensReceivedCallback(
-        address /*token_wallet*/,
-        address /*token_root*/,
+    function onAcceptTokensTransfer(
+        address tokenRoot,
         uint128 amount,
-        uint256 /*sender_public_key*/,
-        address sender_address,
-        address sender_wallet,
-        address original_gas_to,
-        uint128 /*updated_balance*/,
+        address sender,
+        address senderWallet,
+        address remainingGasTo,
         TvmCell payload
     ) external override {
-        tvm.rawReserve(_reserve(), 2);
+        require (msg.sender == base_details.tokenWallet);
 
-        TvmSlice slice = payload.toSlice();
-        uint8 deposit_type = slice.decode(uint8);
+        tvm.rawReserve(_reserve(), 0);
 
-        if (msg.sender == base_details.tokenWallet) {
-            if (sender_address.value == 0 || msg.value < Gas.MIN_CALL_MSG_VALUE || !active || base_details.emergency) {
-                // external owner or too low msg.value or emergency or !active
-                TvmCell tvmcell;
-                ITONTokenWallet(base_details.tokenWallet).transfer{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-                    sender_wallet,
-                    amount,
-                    0,
-                    original_gas_to,
-                    false,
-                    tvmcell
-                );
-                return;
-            }
+        (uint8 deposit_type, bool correct) = decodeDepositPayload(payload);
 
-            updatePoolInfo();
+        if (msg.value < Gas.MIN_CALL_MSG_VALUE || !active || base_details.emergency || !correct) {
+            // too low msg.value or emergency or !active or bad payload
+            ITokenWallet(base_details.tokenWallet).transfer{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+                amount,
+                sender,
+                0,
+                remainingGasTo,
+                true,
+                payload
+            );
+            return;
+        }
 
-            if (deposit_type == STAKE_DEPOSIT) {
-                deposit_nonce += 1;
-                deposits[deposit_nonce] = PendingDeposit(sender_address, amount, original_gas_to);
+        updatePoolInfo();
 
-                address userDataAddr = getUserDataAddress(sender_address);
-                UserData(userDataAddr).processDeposit{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(deposit_nonce, amount, base_details.rewardRounds, code_data.user_data_version);
-            } else if (deposit_type == REWARD_UP) {
-                base_details.rewardTokenBalance += amount;
-                base_details.rewardRounds[base_details.rewardRounds.length - 1].rewardTokens += amount;
-                emit RewardDeposit(amount, uint32(base_details.rewardRounds.length - 1));
+        if (deposit_type == STAKE_DEPOSIT) {
+            deposit_nonce += 1;
+            deposits[deposit_nonce] = PendingDeposit(sender, amount, remainingGasTo);
 
-                original_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
-            } else {
-                TvmCell tvmcell;
-                ITONTokenWallet(base_details.tokenWallet).transfer{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-                    sender_wallet,
-                    amount,
-                    0,
-                    original_gas_to,
-                    false,
-                    tvmcell
-                );
-            }
+            address userDataAddr = getUserDataAddress(sender);
+            UserData(userDataAddr).processDeposit{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(deposit_nonce, amount, base_details.rewardRounds, code_data.user_data_version);
+        } else if (deposit_type == REWARD_UP) {
+            base_details.rewardTokenBalance += amount;
+            base_details.rewardRounds[base_details.rewardRounds.length - 1].rewardTokens += amount;
+            emit RewardDeposit(amount, uint32(base_details.rewardRounds.length - 1));
+
+            remainingGasTo.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
+        } else {
+            // unrecognized deposit type
+            ITokenWallet(base_details.tokenWallet).transfer{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+                amount,
+                sender,
+                0,
+                remainingGasTo,
+                true,
+                payload
+            );
         }
     }
 
@@ -349,14 +349,14 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         address expectedAddr = getUserDataAddress(deposit.user);
         require (expectedAddr == msg.sender, ErrorCodes.NOT_USER_DATA);
 
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         delete deposits[_deposit_nonce];
         emit DepositReverted(deposit.user, deposit.amount);
 
         TvmCell _empty;
-        ITONTokenWallet(base_details.tokenWallet).transferToRecipient{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-            0, deposit.user, deposit.amount, 0, 0, deposit.send_gas_to, false, _empty
+        ITokenWallet(base_details.tokenWallet).transfer{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+            deposit.amount, deposit.user, 0, deposit.send_gas_to, true, _empty
         );
     }
 
@@ -365,7 +365,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         address expectedAddr = getUserDataAddress(deposit.user);
         require (expectedAddr == msg.sender, ErrorCodes.NOT_USER_DATA);
 
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         base_details.tokenBalance += deposit.amount;
 
@@ -378,7 +378,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     function withdraw(uint128 amount, address send_gas_to) public onlyActive {
         require (amount > 0, ErrorCodes.ZERO_AMOUNT_INPUT);
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         updatePoolInfo();
 
@@ -394,14 +394,14 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         uint128 withdraw_amount,
         address send_gas_to
     ) public override onlyUserData(user) {
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         base_details.tokenBalance -= withdraw_amount;
 
         emit Withdraw(user, withdraw_amount);
         TvmCell tvmcell;
-        ITONTokenWallet(base_details.tokenWallet).transferToRecipient{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-            0, user, withdraw_amount, 0, 0, send_gas_to, false, tvmcell
+        ITokenWallet(base_details.tokenWallet).transfer{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+            withdraw_amount, user, 0, send_gas_to, true, tvmcell
         );
     }
 
@@ -409,7 +409,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         require (!base_details.emergency, ErrorCodes.EMERGENCY);
 
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         updatePoolInfo();
         address userDataAddr = getUserDataAddress(msg.sender);
@@ -420,7 +420,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     function finishClaimReward(address user, uint128[] rewards, address send_gas_to) external override onlyUserData(user) {
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         uint128 user_token_reward = 0;
         for (uint i = 0; i < rewards.length; i++) {
@@ -435,11 +435,14 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
 
         emit RewardClaimed(user, user_token_reward);
 
-        // TODO: dont call if 0 tokens, just send gas
-        TvmCell _empty;
-        ITONTokenWallet(base_details.tokenWallet).transferToRecipient{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-            0, user, user_token_reward, 0, 0, send_gas_to, false, _empty
-        );
+        if (user_token_reward > 0) {
+            TvmCell _empty;
+            ITokenWallet(base_details.tokenWallet).transfer{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+                user_token_reward, user, 0, send_gas_to, true, _empty
+            );
+        } else {
+            send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
+        }
     }
 
 
@@ -552,7 +555,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     }
 
     function _castVote(uint32 proposal_id, bool support, string reason) private view {
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
         IUserData(getUserDataAddress(msg.sender)).castVote{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
@@ -562,7 +565,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     function tryUnlockVoteTokens(uint32 proposal_id) public view override {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         require (!base_details.emergency, ErrorCodes.EMERGENCY);
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         IUserData(getUserDataAddress(msg.sender)).tryUnlockVoteTokens{
             value: 0,
@@ -574,7 +577,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     function tryUnlockCastedVotes(uint32[] proposal_ids) public view override {
         require (!base_details.emergency, ErrorCodes.EMERGENCY);
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         IUserData(getUserDataAddress(msg.sender)).tryUnlockCastedVotes{
             value: 0,
@@ -586,7 +589,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         require (base_details.emergency, ErrorCodes.EMERGENCY);
 
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         address user_data = getUserDataAddress(msg.sender);
         IUserData(user_data).withdrawTons{
@@ -600,7 +603,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         require (base_details.emergency, ErrorCodes.EMERGENCY);
         require (address(this).balance > amount, ErrorCodes.VALUE_TOO_LOW);
 
-        tvm.rawReserve(Gas.ROOT_INITIAL_BALANCE, 2);
+        tvm.rawReserve(Gas.ROOT_INITIAL_BALANCE, 0);
 
         if (all) {
             // we assume that max ROOT_INITIAL_BALANCE was spent
@@ -617,7 +620,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
     function withdrawTokensEmergency(uint128 amount, address receiver, bool all, address send_gas_to) external onlyRescuer {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         require (base_details.emergency, ErrorCodes.EMERGENCY);
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         // try sending all tokens
         if (all) {
@@ -640,14 +643,14 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         }
 
         TvmCell _empty;
-        ITONTokenWallet(base_details.tokenWallet).transferToRecipient{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-            0, receiver, amount, 0, 0, send_gas_to, false, _empty
+        ITokenWallet(base_details.tokenWallet).transfer{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+            amount, receiver, 0, send_gas_to, true, _empty
         );
     }
 
     function setEmergency(bool _emergency, address send_gas_to) external onlyRescuer {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         base_details.emergency = _emergency;
         emit Emergency(_emergency);
@@ -660,7 +663,7 @@ abstract contract StakingPoolBase is ITokensReceivedCallback, IStakingPool, ISta
         uint32 functionId = slice.decode(uint32);
         // if processing failed - contract was not deployed. Deploy and try again
         if (functionId == tvm.functionId(UserData.processDeposit)) {
-            tvm.rawReserve(_reserve(), 2);
+            tvm.rawReserve(_reserve(), 0);
 
             uint64 _deposit_nonce = slice.decode(uint64);
             PendingDeposit deposit = deposits[_deposit_nonce];

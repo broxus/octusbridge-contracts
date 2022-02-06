@@ -1,4 +1,4 @@
-pragma ton-solidity >= 0.39.0;
+pragma ton-solidity >= 0.57.0;
 pragma AbiHeader pubkey;
 
 
@@ -10,7 +10,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         // can be installed only once
         require(!code_data.has_platform_code, ErrorCodes.PLATFORM_CODE_NON_EMPTY);
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
         code_data.platform_code = code;
         code_data.has_platform_code = true;
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
@@ -18,7 +18,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
 
     function installOrUpdateUserDataCode(TvmCell code, address send_gas_to) external onlyAdmin {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
         code_data.user_data_code = code;
         code_data.user_data_version++;
         emit UserDataCodeUpgraded(code_data.user_data_version);
@@ -27,7 +27,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
 
     function installOrUpdateElectionCode(TvmCell code, address send_gas_to) external onlyAdmin {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
         code_data.election_code = code;
         code_data.election_version++;
         emit ElectionCodeUpgraded(code_data.election_version);
@@ -36,7 +36,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
 
     function installOrUpdateRelayRoundCode(TvmCell code, address send_gas_to) external onlyAdmin {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
         code_data.relay_round_code = code;
         code_data.relay_round_version++;
         emit RelayRoundCodeUpgraded(code_data.relay_round_version);
@@ -46,7 +46,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
     // user should call this by himself
     function upgradeUserData(address send_gas_to) external view onlyActive {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         _upgradeUserData(msg.sender, 0, send_gas_to);
     }
@@ -56,7 +56,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         address send_gas_to
     ) external view onlyAdmin {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         _upgradeUserData(user, 0, send_gas_to);
     }
@@ -80,7 +80,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         address send_gas_to
     ) external view onlyAdmin {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         emit RequestedElectionUpgrade(round_num);
         IUpgradableByRequest(getElectionAddress(round_num)).upgrade{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
@@ -93,7 +93,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         address send_gas_to
     ) external view onlyAdmin {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
-        tvm.rawReserve(_reserve(), 2);
+        tvm.rawReserve(_reserve(), 0);
 
         emit RequestedRelayRoundUpgrade(round_num);
         IUpgradableByRequest(getRelayRoundAddress(round_num)).upgrade{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(

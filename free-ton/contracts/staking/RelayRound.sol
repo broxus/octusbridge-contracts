@@ -1,4 +1,4 @@
-pragma ton-solidity >= 0.39.0;
+pragma ton-solidity >= 0.57.0;
 
 
 import "./interfaces/IRelayRound.sol";
@@ -80,7 +80,7 @@ contract RelayRound is IRelayRound {
         require (code_version == current_version, ErrorCodes.LOW_VERSION);
         require (addr_to_idx.exists(staker_addr), ErrorCodes.RELAY_NOT_EXIST);
 
-        tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 2);
+        tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 0);
 
         reward_claimed[staker_addr] = true;
         uint256 staker_reward_share = (staked_tokens[addr_to_idx[staker_addr]] * SCALING_FACTOR) / total_tokens_staked;
@@ -118,7 +118,7 @@ contract RelayRound is IRelayRound {
     }
 
     function sendRelaysToRelayRound(address relay_round_addr, uint32 count) external override onlyRoot {
-        tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 2);
+        tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 0);
 
         if (relay_transfer_start_idx >= ton_keys.length) {
             IRelayRound(relay_round_addr).setEmptyRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }();
@@ -147,7 +147,7 @@ contract RelayRound is IRelayRound {
         require (msg.sender == election_addr || msg.sender == prev_round_addr, ErrorCodes.BAD_SENDER);
         require (!relays_installed, ErrorCodes.RELAY_ROUND_INITIALIZED);
 
-        tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 2);
+        tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 0);
 
         relay_packs_installed += 1;
         _checkRelaysInstalled();
@@ -162,7 +162,7 @@ contract RelayRound is IRelayRound {
         require (msg.sender == election_addr || msg.sender == prev_round_addr || msg.sender == root, ErrorCodes.BAD_SENDER);
         require (!relays_installed, ErrorCodes.RELAY_ROUND_INITIALIZED);
 
-        tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 2);
+        tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 0);
 
         for (uint i = 0; i < _ton_keys.length; i++) {
             if (_staked_tokens[i] == 0) {
@@ -205,7 +205,7 @@ contract RelayRound is IRelayRound {
 
     function onCodeUpgrade(TvmCell upgrade_data) private {
         tvm.resetStorage();
-        tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 2);
+        tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 0);
 
         TvmSlice s = upgrade_data.toSlice();
         (address root_, , address send_gas_to) = s.decode(address, uint8, address);
@@ -235,7 +235,7 @@ contract RelayRound is IRelayRound {
 
     function upgrade(TvmCell code, uint32 new_version, address send_gas_to) external onlyRoot {
         if (new_version == current_version) {
-            tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 2);
+            tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 0);
             send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
         } else {
             emit RelayRoundCodeUpgraded(new_version);

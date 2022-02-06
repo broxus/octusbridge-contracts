@@ -1,4 +1,4 @@
-pragma ton-solidity >= 0.39.0;
+pragma ton-solidity >= 0.57.0;
 pragma AbiHeader expire;
 
 
@@ -121,7 +121,7 @@ contract Election is IElection {
         require (!election_ended, ErrorCodes.ELECTION_ENDED);
         require (code_version == current_version, ErrorCodes.LOW_VERSION);
 
-        tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
+        tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 0);
 
         for (uint i = 1; i < ton_keys.length; i++) {
             if (
@@ -196,7 +196,7 @@ contract Election is IElection {
     function finish(uint32 code_version) external override onlyRoot {
         require (code_version == current_version, ErrorCodes.LOW_VERSION);
 
-        tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
+        tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 0);
 
         if (election_ended) {
             // send gas back to root
@@ -214,7 +214,7 @@ contract Election is IElection {
     function sendRelaysToRelayRound(address relay_round_addr, uint32 relays_count) external override onlyRoot {
         require (election_ended, ErrorCodes.ELECTION_ENDED);
 
-        tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
+        tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 0);
 
         if (staked_tokens[relay_transfer_start_idx] == 0) {
             IRelayRound(relay_round_addr).setEmptyRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }();
@@ -237,7 +237,7 @@ contract Election is IElection {
 
     function upgrade(TvmCell code, uint32 new_version, address send_gas_to) external onlyRoot {
         if (new_version == current_version) {
-            tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
+            tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 0);
             send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
         } else {
             emit ElectionCodeUpgraded(new_version);
@@ -326,7 +326,7 @@ contract Election is IElection {
 
     function onCodeUpgrade(TvmCell upgrade_data) private {
         tvm.resetStorage();
-        tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 2);
+        tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 0);
 
         TvmSlice s = upgrade_data.toSlice();
         (address root_, , address send_gas_to) = s.decode(address, uint8, address);
