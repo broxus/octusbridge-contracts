@@ -1,5 +1,5 @@
 const {
-    expect, wait_acc_deployed, deployAccount, getTokenWalletAddr, deployTokenRoot, mintTokens, sendTokens
+    expect, deployAccount, deployTokenRoot, mintTokens, sendTokens
 } = require('../utils');
 const BigNumber = require('bignumber.js');
 const logger = require('mocha-logger');
