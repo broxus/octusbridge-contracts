@@ -12,7 +12,7 @@
         "type": "bytes[]"
       }
     ],
-    "name": "verifySignedTonEvent",
+    "name": "verifySignedEverscaleEvent",
     "outputs": [
       {
         "internalType": "uint32",

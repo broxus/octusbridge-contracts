@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.2;
 
-import "./../interfaces/IBridge.sol";
-import "./../interfaces/IVault.sol";
-import "./../interfaces/IRegistry.sol";
-import "./../interfaces/IVaultWrapper.sol";
+import "./interfaces/IBridge.sol";
+import "./interfaces/vault/IVault.sol";
+import "./interfaces/IRegistry.sol";
+import "./interfaces/IVaultWrapper.sol";
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
@@ -12,14 +12,9 @@ import "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.so
 
 
 contract Registry is Ownable, IRegistry {
-    address constant ZERO_ADDRESS = 0x0000000000000000000000000000000000000000;
-
     // len(vaultReleases)
     uint256 public numVaultReleases;
     mapping(uint256 => address) public vaultReleases;
-    // len(wrapperReleases)
-    uint256 public numWrapperReleases;
-    mapping(uint256 => address) public wrapperReleases;
     // Token => len(vaults)
     mapping(address => uint256) public numVaults;
     mapping(address => mapping(uint256 => address)) vaults;
@@ -114,58 +109,22 @@ contract Registry is Ownable, IRegistry {
         emit NewVaultRelease(vault_release_id, vault, IVault(vault).apiVersion());
     }
 
-    function newWrapperRelease(
-        address wrapper
-    ) external onlyOwner {
-        uint256 wrapper_release_id = numWrapperReleases;
-
-        if (wrapper_release_id > 0) {
-            require(
-                !compareStrings(
-                IVaultWrapper(wrapperReleases[wrapper_release_id - 1]).apiVersion(),
-                IVaultWrapper(wrapper).apiVersion()
-            ),
-                "Registry: new wrapper release should have different api version"
-            );
-        }
-
-        wrapperReleases[wrapper_release_id] = wrapper;
-        numWrapperReleases = wrapper_release_id + 1;
-
-        emit NewWrapperRelease(wrapper_release_id, wrapper, IVaultWrapper(wrapper).apiVersion());
-    }
-
     function _newProxyVault(
         address token,
         address governance,
         address guardian,
         uint256 targetDecimals,
-        uint256 vault_release_target,
-        uint256 wrapper_release_target
-    ) internal returns(address) {
+        uint256 vault_release_target
+    ) internal returns (address) {
         address vault_release = vaultReleases[vault_release_target];
-        address wrapper_release = wrapperReleases[wrapper_release_target];
 
-        require(vault_release != ZERO_ADDRESS, "Registry: vault release target is wrong");
-        require(wrapper_release != ZERO_ADDRESS, "Registry: wrapper release target is wrong");
+        require(vault_release != address(0), "Registry: vault release target is wrong");
 
         // Deploy Vault release proxy, owned by proxy admin
         TransparentUpgradeableProxy vault = new TransparentUpgradeableProxy(
             vault_release,
             proxyAdmin,
             ""
-        );
-
-        // Deploy wrapper proxy
-        TransparentUpgradeableProxy wrapper = new TransparentUpgradeableProxy(
-            wrapper_release,
-            proxyAdmin,
-            ""
-        );
-
-        // Initialize wrapper
-        IVaultWrapper(address(wrapper)).initialize(
-            address(vault)
         );
 
         // Initialize Vault
@@ -175,10 +134,6 @@ contract Registry is Ownable, IRegistry {
             bridge,
             targetDecimals
         );
-
-        IVault(address(vault)).setWrapper(address(wrapper));
-        IVault(address(vault)).setGuardian(guardian);
-        IVault(address(vault)).setGovernance(governance);
 
         return address(vault);
     }
@@ -215,19 +170,16 @@ contract Registry is Ownable, IRegistry {
         address token,
         address guardian,
         uint256 targetDecimals,
-        uint256 vaultReleaseDelta,
-        uint256 wrapperReleaseDelta
+        uint256 vaultReleaseDelta
     ) external onlyOwner returns (address) {
         uint256 vault_release_target = numVaultReleases - 1 - vaultReleaseDelta;
-        uint256 wrapper_release_target = numWrapperReleases - 1 - wrapperReleaseDelta;
 
         address vault = _newProxyVault(
             token,
             msg.sender,
             guardian,
             targetDecimals,
-            vault_release_target,
-            wrapper_release_target
+            vault_release_target
         );
 
         _registerVault(token, vault);
@@ -240,19 +192,16 @@ contract Registry is Ownable, IRegistry {
         address governance,
         address guardian,
         uint256 targetDecimals,
-        uint256 vaultReleaseDelta,
-        uint256 wrapperReleaseDelta
-    ) external returns(address) {
+        uint256 vaultReleaseDelta
+    ) external returns (address) {
         uint256 vault_release_target = numVaultReleases - 1 - vaultReleaseDelta;
-        uint256 wrapper_release_target = numWrapperReleases - 1 - wrapperReleaseDelta;
 
         address vault = _newProxyVault(
             token,
             governance,
             guardian,
             targetDecimals,
-            vault_release_target,
-            wrapper_release_target
+            vault_release_target
         );
 
         emit NewExperimentalVault(
@@ -267,8 +216,7 @@ contract Registry is Ownable, IRegistry {
 
     function endorseVault(
         address vault,
-        uint256 vaultReleaseDelta,
-        uint256 wrapperReleaseDelta
+        uint256 vaultReleaseDelta
     ) external onlyOwner {
         require(
             IVault(vault).governance() == msg.sender,
@@ -281,16 +229,6 @@ contract Registry is Ownable, IRegistry {
         require(
             compareStrings(IVault(vault).apiVersion(), vault_api_version),
             "Registry: vault should have same api version as specified release"
-        );
-
-        uint256 wrapper_release_target = numWrapperReleases - 1 - wrapperReleaseDelta;
-        string memory wrapper_api_version = IVaultWrapper(wrapperReleases[wrapper_release_target]).apiVersion();
-
-        address wrapper = IVault(vault).wrapper();
-
-        require(
-            compareStrings(IVaultWrapper(wrapper).apiVersion(), wrapper_api_version),
-            "Registry: wrapper should have same api version as specified release"
         );
 
         _registerVault(IVault(vault).token(), vault);

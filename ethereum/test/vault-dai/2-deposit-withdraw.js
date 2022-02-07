@@ -5,7 +5,7 @@ const {
   defaultTonRecipient,
   getVaultByToken,
   generateWallets,
-  encodeTonEvent,
+  encodeEverscaleEvent,
   encodeWithdrawalData,
   ...utils
 } = require('../utils');
@@ -154,7 +154,7 @@ describe('Test Vault DAI deposit', async () => {
         recipient: bob
       });
       
-      payload = encodeTonEvent({
+      payload = encodeEverscaleEvent({
         eventData: withdrawalEventData,
         proxy: vault.address,
       });
@@ -213,7 +213,7 @@ describe('Test Vault DAI deposit', async () => {
         recipient: eve.address
       });
   
-      const payload = encodeTonEvent({
+      const payload = encodeEverscaleEvent({
         eventData: withdrawalEventData,
         proxy: vault.address
       });

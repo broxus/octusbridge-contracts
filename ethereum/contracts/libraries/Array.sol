@@ -3,7 +3,7 @@ pragma solidity ^0.8.2;
 
 
 library Array {
-    function indexOf(address[] storage values, address value) internal view returns(uint) {
+    function indexOf(address[] storage values, address value) internal view returns (uint) {
         uint i = 0;
 
         while (values[i] != value && i <= values.length) {

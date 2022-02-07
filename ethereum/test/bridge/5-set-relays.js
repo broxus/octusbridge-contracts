@@ -40,7 +40,7 @@ describe('Set next round relays', async () => {
       ]
     );
     
-    payload = utils.encodeTonEvent({
+    payload = utils.encodeEverscaleEvent({
       eventData: roundRelaysPayload,
       proxy: bridge.address,
     });

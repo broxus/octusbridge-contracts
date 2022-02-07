@@ -5,7 +5,7 @@ const {
     defaultTonRecipient,
     getVaultByToken,
     generateWallets,
-    encodeTonEvent,
+    encodeEverscaleEvent,
     encodeWithdrawalData,
     ...utils
 } = require('../utils');
@@ -123,7 +123,7 @@ describe('Check target decimals higher than token\'s', async () => {
             recipient: bob
         });
 
-        const payload = encodeTonEvent({
+        const payload = encodeEverscaleEvent({
             eventData: withdrawalEventData,
             proxy: vault.address
         });

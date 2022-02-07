@@ -6,7 +6,7 @@ const {
     defaultEventTimestamp,
     getVaultByToken,
     generateWallets,
-    encodeTonEvent,
+    encodeEverscaleEvent,
     encodeWithdrawalData,
     getNetworkTime,
     ...utils
@@ -129,7 +129,7 @@ describe('Force withdraw pending', async () => {
                 recipient: bob
             });
 
-            const payload = encodeTonEvent({
+            const payload = encodeEverscaleEvent({
                 eventData: withdrawalEventData,
                 proxy: vault.address,
             });

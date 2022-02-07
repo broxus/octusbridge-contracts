@@ -1,21 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.2;
+
+import "./IEverscale.sol";
 pragma experimental ABIEncoderV2;
 
 
-interface IBridge {
-    struct TONEvent {
-        uint64 eventTransactionLt;
-        uint32 eventTimestamp;
-        bytes eventData;
-        int8 configurationWid;
-        uint256 configurationAddress;
-        int8 eventContractWid;
-        uint256 eventContractAddress;
-        address proxy;
-        uint32 round;
-    }
-
+interface IBridge is IEverscale {
     struct Round {
         uint32 end;
         uint32 ttl;
@@ -23,32 +13,27 @@ interface IBridge {
         uint32 requiredSignatures;
     }
 
-    struct TONAddress {
-        int8 wid;
-        uint256 addr;
-    }
-
     function updateMinimumRequiredSignatures(uint32 _minimumRequiredSignatures) external;
-    function updateRoundRelaysConfiguration(TONAddress calldata _roundRelaysConfiguration) external;
+    function updateRoundRelaysConfiguration(EverscaleAddress calldata _roundRelaysConfiguration) external;
     function updateRoundTTL(uint32 _roundTTL) external;
 
     function isRelay(
         uint32 round,
         address candidate
-    ) external view returns(bool);
+    ) external view returns (bool);
 
     function isBanned(
         address candidate
-    ) external view returns(bool);
+    ) external view returns (bool);
 
     function isRoundRotten(
         uint32 round
-    ) external view returns(bool);
+    ) external view returns (bool);
 
-    function verifySignedTonEvent(
+    function verifySignedEverscaleEvent(
         bytes memory payload,
         bytes[] memory signatures
-    ) external view returns(uint32);
+    ) external view returns (uint32);
 
     function setRoundRelays(
         bytes calldata payload,
@@ -77,7 +62,7 @@ interface IBridge {
 
     event UpdateMinimumRequiredSignatures(uint32 value);
     event UpdateRoundTTL(uint32 value);
-    event UpdateRoundRelaysConfiguration(TONAddress configuration);
+    event UpdateRoundRelaysConfiguration(EverscaleAddress configuration);
     event UpdateRoundSubmitter(address _roundSubmitter);
 
     event NewRound(uint32 indexed round, Round meta);

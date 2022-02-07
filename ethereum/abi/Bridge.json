@@ -155,9 +155,9 @@
       {
         "components": [
           {
-            "internalType": "int8",
+            "internalType": "int128",
             "name": "wid",
-            "type": "int8"
+            "type": "int128"
           },
           {
             "internalType": "uint256",
@@ -166,7 +166,7 @@
           }
         ],
         "indexed": false,
-        "internalType": "struct IBridge.TONAddress",
+        "internalType": "struct IEverscale.EverscaleAddress",
         "name": "configuration",
         "type": "tuple"
       }
@@ -259,36 +259,7 @@
         "type": "bytes"
       }
     ],
-    "name": "decodeRoundRelaysEventData",
-    "outputs": [
-      {
-        "internalType": "uint32",
-        "name": "round",
-        "type": "uint32"
-      },
-      {
-        "internalType": "uint160[]",
-        "name": "_relays",
-        "type": "uint160[]"
-      },
-      {
-        "internalType": "uint32",
-        "name": "roundEnd",
-        "type": "uint32"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes",
-        "name": "payload",
-        "type": "bytes"
-      }
-    ],
-    "name": "decodeTonEvent",
+    "name": "decodeEverscaleEvent",
     "outputs": [
       {
         "components": [
@@ -338,9 +309,38 @@
             "type": "uint32"
           }
         ],
-        "internalType": "struct IBridge.TONEvent",
-        "name": "tonEvent",
+        "internalType": "struct IEverscale.EverscaleEvent",
+        "name": "_event",
         "type": "tuple"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "payload",
+        "type": "bytes"
+      }
+    ],
+    "name": "decodeRoundRelaysEventData",
+    "outputs": [
+      {
+        "internalType": "uint32",
+        "name": "round",
+        "type": "uint32"
+      },
+      {
+        "internalType": "uint160[]",
+        "name": "_relays",
+        "type": "uint160[]"
+      },
+      {
+        "internalType": "uint32",
+        "name": "roundEnd",
+        "type": "uint32"
       }
     ],
     "stateMutability": "pure",
@@ -614,9 +614,9 @@
     "name": "roundRelaysConfiguration",
     "outputs": [
       {
-        "internalType": "int8",
+        "internalType": "int128",
         "name": "wid",
-        "type": "int8"
+        "type": "int128"
       },
       {
         "internalType": "uint256",
@@ -769,9 +769,9 @@
       {
         "components": [
           {
-            "internalType": "int8",
+            "internalType": "int128",
             "name": "wid",
-            "type": "int8"
+            "type": "int128"
           },
           {
             "internalType": "uint256",
@@ -779,7 +779,7 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct IBridge.TONAddress",
+        "internalType": "struct IEverscale.EverscaleAddress",
         "name": "_roundRelaysConfiguration",
         "type": "tuple"
       }
@@ -815,7 +815,7 @@
         "type": "bytes[]"
       }
     ],
-    "name": "verifySignedTonEvent",
+    "name": "verifySignedEverscaleEvent",
     "outputs": [
       {
         "internalType": "uint32",

@@ -3,6 +3,7 @@ pragma solidity ^0.8.2;
 pragma experimental ABIEncoderV2;
 
 import "./interfaces/IBridge.sol";
+import "./interfaces/IEverscale.sol";
 import "./interfaces/IDAO.sol";
 
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
@@ -15,13 +16,12 @@ import "./utils/ChainId.sol";
 /// @title DAO contract for Broxus TON-Ethereum bridge
 /// @dev Executes proposals confirmed in TON DAO.
 /// Proposals are submitted in form of payloads and signatures
-contract DAO is IDAO, ReentrancyGuard, OwnableUpgradeable, Cache, ChainId {
+contract DAO is IDAO, IEverscale, ReentrancyGuard, OwnableUpgradeable, Cache, ChainId {
     address public bridge;
-    IBridge.TONAddress public configuration;
+    IBridge.EverscaleAddress public configuration;
 
     /**
-        @notice
-            Initializer
+        @notice Initializer
         @param _owner DAO owner. Should be used only for initial set up,
             than ownership should be transferred to DAO itself.
         @param _bridge Bridge address
@@ -37,12 +37,11 @@ contract DAO is IDAO, ReentrancyGuard, OwnableUpgradeable, Cache, ChainId {
     }
 
     /**
-        @notice
-            Update address of the TON configuration, that emits actions for this DAO
+        @notice Update address of the TON configuration, that emits actions for this DAO
         @param _configuration New configuration TON address
     */
     function updateConfiguration(
-        IBridge.TONAddress calldata _configuration
+        IBridge.EverscaleAddress calldata _configuration
     ) public onlyOwner {
         configuration = _configuration;
     }
@@ -57,16 +56,16 @@ contract DAO is IDAO, ReentrancyGuard, OwnableUpgradeable, Cache, ChainId {
 
     function decodeEthActionsEventData(
         bytes memory payload
-    ) public pure returns(
+    ) public pure returns (
         int8 _wid,
         uint256 _addr,
         uint32 chainId,
         EthAction[] memory actions
     ) {
-        (IBridge.TONEvent memory tonEvent) = abi.decode(payload, (IBridge.TONEvent));
+        (EverscaleEvent memory _event) = abi.decode(payload, (EverscaleEvent));
 
         return abi.decode(
-            tonEvent.eventData,
+            _event.eventData,
             (int8, uint256, uint32, EthAction[])
         );
     }
@@ -83,22 +82,22 @@ contract DAO is IDAO, ReentrancyGuard, OwnableUpgradeable, Cache, ChainId {
     function execute(
         bytes calldata payload,
         bytes[] calldata signatures
-    ) override external nonReentrant notCached(payload) returns(
+    ) override external nonReentrant notCached(payload) returns (
         bytes[] memory responses
     ) {
         require(
-            IBridge(bridge).verifySignedTonEvent(
+            IBridge(bridge).verifySignedEverscaleEvent(
                 payload,
                 signatures
             ) == 0,
             "DAO: signatures verification failed"
         );
 
-        (IBridge.TONEvent memory tonEvent) = abi.decode(payload, (IBridge.TONEvent));
+        (EverscaleEvent memory _event) = abi.decode(payload, (EverscaleEvent));
 
         require(
-            tonEvent.configurationWid == configuration.wid &&
-            tonEvent.configurationAddress == configuration.addr,
+            _event.configurationWid == configuration.wid &&
+            _event.configurationAddress == configuration.addr,
             "DAO: wrong event configuration"
         );
 

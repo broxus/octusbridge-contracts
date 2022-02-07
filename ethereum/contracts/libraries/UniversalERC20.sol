@@ -19,7 +19,7 @@ library UniversalERC20 {
         IERC20 token,
         address to,
         uint256 amount
-    ) internal returns(bool) {
+    ) internal returns (bool) {
         if (amount == 0) {
             return true;
         }

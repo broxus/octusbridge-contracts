@@ -7,7 +7,7 @@ import "../interfaces/IERC20.sol";
 import "../interfaces/IERC20Metadata.sol";
 import "../interfaces/IRewards.sol";
 import "../interfaces/IUni.sol";
-import "../interfaces/IVault.sol";
+import "../interfaces/vault/IVault.sol";
 import "../libraries/Math.sol";
 import "../libraries/SafeERC20.sol";
 

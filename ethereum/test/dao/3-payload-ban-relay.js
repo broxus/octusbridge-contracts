@@ -1,7 +1,7 @@
 const {
   expect,
   encodeDaoActions,
-  encodeTonEvent,
+  encodeEverscaleEvent,
   defaultConfiguration,
   ...utils
 } = require('../utils');
@@ -62,7 +62,7 @@ describe('Execute banning relay by DAO', async () => {
       data: actionData
     }]);
   
-    payload = encodeTonEvent({
+    payload = encodeEverscaleEvent({
       eventData: actions,
       proxy: dao.address,
     });

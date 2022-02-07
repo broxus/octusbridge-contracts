@@ -54,10 +54,10 @@ const sortAccounts = (accounts) => accounts
 const addressToU160 = (address) => (new BigNumber(address.toLowerCase())).toString(10);
 
 
-const encodeTonEvent = (params) => {
+const encodeEverscaleEvent = (params) => {
   return web3.eth.abi.encodeParameters(
     [{
-      'TONEvent': {
+      'EverscaleEvent': {
         'eventTransactionLt': 'uint64',
         'eventTimestamp': 'uint32',
         'eventData': 'bytes',
@@ -203,7 +203,7 @@ module.exports = {
   logger,
   expect,
   sortAccounts,
-  encodeTonEvent,
+  encodeEverscaleEvent,
   encodeDaoActions,
   addressToU160,
   defaultChainId,

@@ -6,7 +6,7 @@ const {
     defaultEventTimestamp,
     getVaultByToken,
     generateWallets,
-    encodeTonEvent,
+    encodeEverscaleEvent,
     encodeWithdrawalData,
     getNetworkTime,
     ...utils
@@ -130,7 +130,7 @@ describe('Force withdraw pending', async () => {
                 recipient: alice.address
             });
 
-            const payload = encodeTonEvent({
+            const payload = encodeEverscaleEvent({
                 eventData: withdrawalEventData,
                 proxy: vault.address,
             });
@@ -169,7 +169,7 @@ describe('Force withdraw pending', async () => {
                 recipient: bob.address
             });
 
-            const payload = encodeTonEvent({
+            const payload = encodeEverscaleEvent({
                 eventData: withdrawalEventData,
                 proxy: vault.address,
             });
@@ -250,7 +250,7 @@ describe('Force withdraw pending', async () => {
                     recipient: eve.address
                 });
 
-                const payload = encodeTonEvent({
+                const payload = encodeEverscaleEvent({
                     eventData: withdrawalEventData,
                     proxy: vault.address,
                 });
@@ -301,7 +301,7 @@ describe('Force withdraw pending', async () => {
                     recipient: eve.address
                 });
 
-                const payload = encodeTonEvent({
+                const payload = encodeEverscaleEvent({
                     eventData: withdrawalEventData,
                     proxy: vault.address,
                 });

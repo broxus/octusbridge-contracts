@@ -21,8 +21,8 @@ interface IDAO {
     function execute(
         bytes memory payload,
         bytes[] memory signatures
-    ) external returns(bytes[] memory responses);
+    ) external returns (bytes[] memory responses);
 
     event UpdateBridge(address indexed bridge);
-    event UpdateConfiguration(IBridge.TONAddress configuration);
+    event UpdateConfiguration(IBridge.EverscaleAddress configuration);
 }

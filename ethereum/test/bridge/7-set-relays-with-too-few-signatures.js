@@ -38,7 +38,7 @@ describe('Try to set next round relays with too few signatures', async () => {
       ]
     );
     
-    const payload = utils.encodeTonEvent({
+    const payload = utils.encodeEverscaleEvent({
       eventData: roundRelaysPayload,
       proxy: bridge.address,
     });

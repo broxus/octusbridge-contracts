@@ -45,7 +45,7 @@ No description
 Grant relay permission for set of addresses at specific round
 
 #### Parameters:
-- `payload`: Bytes encoded TONEvent structure
+- `payload`: Bytes encoded EverscaleEvent structure
 
 - `signatures`: Payload signatures
 ### Function `setConfiguration(struct IBridge.BridgeConfiguration _configuration)` {#Bridge-setConfiguration-struct-IBridge-BridgeConfiguration-}

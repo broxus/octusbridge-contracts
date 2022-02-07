@@ -35,10 +35,10 @@ const hardhatConfig = {
   },
   networks: {
     hardhat: {
-      forking: {
-        url: process.env.ETH_MAIN_ARCHIVE_HTTP,
-        blockNumber: 12859605,
-      },
+      // forking: {
+      //   url: process.env.ETH_MAIN_ARCHIVE_HTTP,
+      //   blockNumber: 12859605,
+      // },
       chainId: 1111,
       accounts: {
         count: 30

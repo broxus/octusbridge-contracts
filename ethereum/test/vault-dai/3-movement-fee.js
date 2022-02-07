@@ -5,7 +5,7 @@ const {
   defaultTonRecipient,
   getVaultByToken,
   generateWallets,
-  encodeTonEvent,
+  encodeEverscaleEvent,
   encodeWithdrawalData,
   ...utils
 } = require('../utils');

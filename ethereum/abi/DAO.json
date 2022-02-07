@@ -37,9 +37,9 @@
       {
         "components": [
           {
-            "internalType": "int8",
+            "internalType": "int128",
             "name": "wid",
-            "type": "int8"
+            "type": "int128"
           },
           {
             "internalType": "uint256",
@@ -48,7 +48,7 @@
           }
         ],
         "indexed": false,
-        "internalType": "struct IBridge.TONAddress",
+        "internalType": "struct IEverscale.EverscaleAddress",
         "name": "configuration",
         "type": "tuple"
       }
@@ -93,9 +93,9 @@
     "name": "configuration",
     "outputs": [
       {
-        "internalType": "int8",
+        "internalType": "int128",
         "name": "wid",
-        "type": "int8"
+        "type": "int128"
       },
       {
         "internalType": "uint256",
@@ -268,9 +268,9 @@
       {
         "components": [
           {
-            "internalType": "int8",
+            "internalType": "int128",
             "name": "wid",
-            "type": "int8"
+            "type": "int128"
           },
           {
             "internalType": "uint256",
@@ -278,7 +278,7 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct IBridge.TONAddress",
+        "internalType": "struct IEverscale.EverscaleAddress",
         "name": "_configuration",
         "type": "tuple"
       }
