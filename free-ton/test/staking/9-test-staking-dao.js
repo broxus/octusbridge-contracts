@@ -1,16 +1,12 @@
 const {
-  expect,
+  expect, deployAccount, deployTokenWallets, deployTokenRoot, depositTokens
 } = require('../utils');
 const BigNumber = require('bignumber.js');
 const logger = require('mocha-logger');
 
 const EMPTY_TVM_CELL = 'te6ccgEBAQEAAgAAAA==';
 
-const TOKEN_PATH = '../node_modules/ton-eth-bridge-token-contracts/free-ton/build';
-
-const stringToBytesArray = (dataString) => {
-  return Buffer.from(dataString).toString('hex')
-};
+const TOKEN_PATH = '../node_modules/ton-eth-bridge-token-contracts/build';
 
 const getRandomNonce = () => Math.random() * 64000 | 0;
 
@@ -54,79 +50,6 @@ let daoRoot;
 describe('Test DAO in Staking', async function () {
   this.timeout(1000000);
 
-  const deployTokenRoot = async function (token_name, token_symbol) {
-    const RootToken = await locklift.factory.getContract('RootTokenContract', TOKEN_PATH);
-    const TokenWallet = await locklift.factory.getContract('TONTokenWallet', TOKEN_PATH);
-    const [keyPair] = await locklift.keys.getKeyPairs();
-
-    const _root = await locklift.giver.deployContract({
-      contract: RootToken,
-      constructorParams: {
-        root_public_key_: `0x${keyPair.public}`,
-        root_owner_address_: locklift.ton.zero_address
-      },
-      initParams: {
-        name: stringToBytesArray(token_name),
-        symbol: stringToBytesArray(token_symbol),
-        decimals: 9,
-        wallet_code: TokenWallet.code,
-        _randomNonce: getRandomNonce(),
-      },
-      keyPair,
-    }, locklift.utils.convertCrystal(15, 'nano'));
-    _root.afterRun = afterRun;
-    _root.setKeyPair(keyPair);
-
-    return _root;
-  }
-  const deployTokenWallets = async function (root, user) {
-    const tx = await root.run({
-      method: 'deployWallet',
-      params: {
-        deploy_grams: locklift.utils.convertCrystal(1, 'nano'),
-        wallet_public_key_: 0,
-        owner_address_: user.address,
-        gas_back_address: user.address,
-        tokens: locklift.utils.convertCrystal(10, 'nano')
-      },
-    });
-    return tx.decoded.output.value0;
-  }
-
-  const deployAccount = async function (key, value) {
-    const Account = await locklift.factory.getAccount('Wallet');
-    let account = await locklift.giver.deployContract({
-      contract: Account,
-      constructorParams: {},
-      initParams: {
-        _randomNonce: Math.random() * 6400 | 0,
-      },
-      keyPair: key
-    }, locklift.utils.convertCrystal(value, 'nano'));
-    account.setKeyPair(key);
-    account.afterRun = afterRun;
-    return account;
-  }
-
-  const depositTokens = async function (user, _userTokenWallet, depositAmount) {
-    const DEPOSIT_PAYLOAD = 'te6ccgEBAQEAAwAAAgA=';
-
-    return await user.runTarget({
-      contract: _userTokenWallet,
-      method: 'transferToRecipient',
-      params: {
-        recipient_public_key: 0,
-        recipient_address: stakingRoot.address,
-        tokens: depositAmount,
-        deploy_grams: 0,
-        transfer_grams: 0,
-        send_gas_to: user.address,
-        notify_receiver: true,
-        payload: DEPOSIT_PAYLOAD
-      },
-      value: locklift.utils.convertCrystal(55, 'nano')
-    });
-  };
   const deployEventConfiguration = async function (_owner, _dao) {
     const [keyPair] = await locklift.keys.getKeyPairs();
     const DaoEthereumActionEventConfiguration = await locklift.factory.getContract('TonEventConfiguration');
@@ -158,10 +81,9 @@ describe('Test DAO in Staking', async function () {
     logger.log(`Deploying stakingOwner`);
     stakingOwner = await deployAccount(keyPairs[0], 500);
     logger.log(`Deploying stakingToken`);
-    stakingToken = await deployTokenRoot('Staking', 'ST');
+    stakingToken = await deployTokenRoot('Staking', 'ST', stakingOwner);
 
     const Platform = await locklift.factory.getContract('Platform');
-
 
     logger.log(`Deploying DaoRoot`);
 
@@ -305,16 +227,11 @@ describe('Test DAO in Staking', async function () {
       logger.log(`UserAccount0: ${userAccount0.address}`);
       logger.log(`UserAccount1: ${userAccount1.address}`);
 
-
-      userTokenWallet0 = await locklift.factory.getContract('TONTokenWallet', TOKEN_PATH);
-      userTokenWallet0.setAddress(await deployTokenWallets(stakingToken, userAccount0));
-
-      userTokenWallet1 = await locklift.factory.getContract('TONTokenWallet', TOKEN_PATH);
-      userTokenWallet1.setAddress(await deployTokenWallets(stakingToken, userAccount1));
+      [userTokenWallet0, userTokenWallet1] = await deployTokenWallets([userAccount0, userAccount1], stakingToken);
 
       logger.log(`Depositing test tokens`);
-      await depositTokens(userAccount0, userTokenWallet0, DEPOSIT_VALUE * 2);
-      await depositTokens(userAccount1, userTokenWallet1, DEPOSIT_VALUE);
+      await depositTokens(stakingRoot, userAccount0, userTokenWallet0, DEPOSIT_VALUE * 2);
+      await depositTokens(stakingRoot, userAccount1, userTokenWallet1, DEPOSIT_VALUE);
 
       userDataContract0 = await getUserDataAccount(userAccount0);
       userDataContract1 = await getUserDataAccount(userAccount1);

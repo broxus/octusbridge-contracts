@@ -1,5 +1,5 @@
 const {
-    expect, deployAccount, deployTokenRoot, mintTokens, sendTokens
+    expect, deployAccount, deployTokenRoot, mintTokens, depositTokens
 } = require('../utils');
 const BigNumber = require('bignumber.js');
 const logger = require('mocha-logger');
@@ -119,19 +119,6 @@ describe('Test Staking Rewards', async function () {
         }));
         return userData
     }
-
-    const depositTokens = async function (user, _userTokenWallet, depositAmount, reward=false) {
-        var payload;
-        const DEPOSIT_PAYLOAD = 'te6ccgEBAQEAAwAAAgA=';
-        const REWARD_DEPOSIT_PAYLOAD = 'te6ccgEBAQEAAwAAAgE=';
-        if (reward) {
-            payload = REWARD_DEPOSIT_PAYLOAD;
-        } else {
-            payload = DEPOSIT_PAYLOAD;
-        }
-
-        return await sendTokens(user, _userTokenWallet, stakingRoot, depositAmount, payload);
-    };
 
     const withdrawTokens = async function(user, withdraw_amount) {
         return await user.runTarget({
@@ -291,7 +278,7 @@ describe('Test Staking Rewards', async function () {
             it('Sending reward tokens to staking', async function() {
                 const amount = rewardTokensBal;
 
-                await depositTokens(stakingOwner, ownerWallet, amount, true);
+                await depositTokens(stakingRoot, stakingOwner, ownerWallet, amount, true);
 
                 const staking_balance = await stakingWallet.call({method: 'balance'});
 
@@ -307,7 +294,7 @@ describe('Test Staking Rewards', async function () {
     describe('Basic staking pipeline', async function () {
         describe('1 user farming', async function () {
             it('Deposit tokens', async function() {
-                await depositTokens(user1, userTokenWallet1, userDeposit);
+                await depositTokens(stakingRoot, user1, userTokenWallet1, userDeposit);
                 user1Data = await getUserDataAccount(user1);
 
                 await checkTokenBalances(
@@ -327,7 +314,7 @@ describe('Test Staking Rewards', async function () {
                 const user1_data = await user1Data.call({method: 'getDetails'});
                 const user1_rew_before = user1_data.rewardRounds;
 
-                await depositTokens(user1, userTokenWallet1, userDeposit);
+                await depositTokens(stakingRoot, user1, userTokenWallet1, userDeposit);
 
                 await checkTokenBalances(
                     userTokenWallet1, user1Data, rewardTokensBal + userDeposit * 2,
@@ -395,7 +382,7 @@ describe('Test Staking Rewards', async function () {
             let user2_withdraw_time;
 
             it('Users deposit tokens', async function () {
-                await depositTokens(user1, userTokenWallet1, userDeposit);
+                await depositTokens(stakingRoot, user1, userTokenWallet1, userDeposit);
                 await checkTokenBalances(
                     userTokenWallet1, user1Data, rewardTokensBal + userDeposit,
                     userDeposit, rewardTokensBal, userInitialTokenBal - userDeposit, userDeposit
@@ -403,7 +390,7 @@ describe('Test Staking Rewards', async function () {
                 const staking_details = await stakingRoot.call({method: 'getDetails'});
                 user1_deposit_time = staking_details.lastRewardTime;
 
-                await depositTokens(user2, userTokenWallet2, userDeposit);
+                await depositTokens(stakingRoot, user2, userTokenWallet2, userDeposit);
                 user2Data = await getUserDataAccount(user2);
 
                 await checkTokenBalances(
@@ -573,7 +560,7 @@ describe('Test Staking Rewards', async function () {
             let round2_user2_share;
 
             it("Deposit reward", async function() {
-                await depositTokens(stakingOwner, ownerWallet, rewardTokensBal, true);
+                await depositTokens(stakingRoot, stakingOwner, ownerWallet, rewardTokensBal, true);
                 const staking_balance = await stakingWallet.call({method: 'balance'});
 
                 const staking_details = await stakingRoot.call({method: 'getDetails'});
@@ -597,7 +584,7 @@ describe('Test Staking Rewards', async function () {
             });
 
             it("User 1 deposit", async function () {
-                await depositTokens(user1, userTokenWallet1, userDeposit);
+                await depositTokens(stakingRoot, user1, userTokenWallet1, userDeposit);
                 const realRewardTokensBal = rewardTokensBal + balance_err;
                 await checkTokenBalances(
                     userTokenWallet1, user1Data, realRewardTokensBal + userDeposit,
@@ -628,7 +615,7 @@ describe('Test Staking Rewards', async function () {
                 const staking_details = await stakingRoot.call({method: 'getDetails'});
                 const last_reward_time = staking_details.lastRewardTime;
 
-                await depositTokens(stakingOwner, ownerWallet, rewardTokensBal, true);
+                await depositTokens(stakingRoot, stakingOwner, ownerWallet, rewardTokensBal, true);
                 const staking_balance = await stakingWallet.call({method: 'balance'});
 
                 const staking_details_1 = await stakingRoot.call({method: 'getDetails'});
@@ -653,7 +640,7 @@ describe('Test Staking Rewards', async function () {
             });
 
             it("User 2 deposit", async function () {
-                await depositTokens(user2, userTokenWallet2, userDeposit);
+                await depositTokens(stakingRoot, user2, userTokenWallet2, userDeposit);
                 await checkTokenBalances(
                     userTokenWallet2, user2Data, rewardTokensBal * 2 + userDeposit * 2 + balance_err,
                     userDeposit * 2, rewardTokensBal * 2 + balance_err, user2Balance - userDeposit, userDeposit

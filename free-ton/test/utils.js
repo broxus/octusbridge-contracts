@@ -614,6 +614,21 @@ const sendTokens = async function (user, _userTokenWallet, recipient, amount, pa
   });
 };
 
+
+const depositTokens = async function (stakingRoot, user, _userTokenWallet, depositAmount, reward=false) {
+  var payload;
+  const DEPOSIT_PAYLOAD = 'te6ccgEBAQEAAwAAAgA=';
+  const REWARD_DEPOSIT_PAYLOAD = 'te6ccgEBAQEAAwAAAgE=';
+  if (reward) {
+    payload = REWARD_DEPOSIT_PAYLOAD;
+  } else {
+    payload = DEPOSIT_PAYLOAD;
+  }
+
+  return await sendTokens(user, _userTokenWallet, stakingRoot, depositAmount, payload);
+};
+
+
 // mint + deploy
 const mintTokens = async function(owner, users, _root, mint_amount) {
   let wallets = [];
@@ -698,6 +713,7 @@ module.exports = {
   isValidTonAddress,
   deployTokenRoot,
   deployTokenWallets,
+  depositTokens,
   stringToBytesArray,
   getTokenWalletAddr,
   wait_acc_deployed,

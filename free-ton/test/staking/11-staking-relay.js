@@ -1,5 +1,5 @@
 const {
-    expect, deployAccount, deployTokenRoot, mintTokens, sendTokens
+    expect, deployAccount, deployTokenRoot, mintTokens, depositTokens
 } = require('../utils');
 const BigNumber = require('bignumber.js');
 const logger = require('mocha-logger');
@@ -288,19 +288,6 @@ describe('Test Staking Rewards', async function () {
         return userData
     }
 
-    const depositTokens = async function (user, _userTokenWallet, depositAmount, reward=false) {
-        var payload;
-        const DEPOSIT_PAYLOAD = 'te6ccgEBAQEAAwAAAgA=';
-        const REWARD_DEPOSIT_PAYLOAD = 'te6ccgEBAQEAAwAAAgE=';
-        if (reward) {
-            payload = REWARD_DEPOSIT_PAYLOAD;
-        } else {
-            payload = DEPOSIT_PAYLOAD;
-        }
-
-        return await sendTokens(user, _userTokenWallet, stakingRoot, depositAmount, payload);
-    };
-
     const waitForDeploy = async function (address) {
         return await getBalance(address);
     }
@@ -464,7 +451,7 @@ describe('Test Staking Rewards', async function () {
             it('Sending reward tokens to staking', async function() {
                 const amount = rewardTokensBal;
 
-                await depositTokens(stakingOwner, ownerWallet, amount, true);
+                await depositTokens(stakingRoot, stakingOwner, ownerWallet, amount, true);
                 if (locklift.network === 'dev') {
                     await wait(DEV_WAIT);
                 }
@@ -519,7 +506,7 @@ describe('Test Staking Rewards', async function () {
             let user2_deposit_time;
 
             it('Users deposit tokens', async function () {
-                const tx = await depositTokens(user1, userTokenWallet1, userDeposit);
+                const tx = await depositTokens(stakingRoot, user1, userTokenWallet1, userDeposit);
                 user1Data = await getUserDataAccount(user1);
                 if (locklift.network === 'dev') {
                     await wait(DEV_WAIT);
@@ -533,7 +520,7 @@ describe('Test Staking Rewards', async function () {
                 const staking_details = await stakingRoot.call({method: 'getDetails'});
                 user1_deposit_time = staking_details.lastRewardTime;
 
-                await depositTokens(user2, userTokenWallet2, userDeposit * 2);
+                await depositTokens(stakingRoot, user2, userTokenWallet2, userDeposit * 2);
                 user2Data = await getUserDataAccount(user2);
                 if (locklift.network === 'dev') {
                     await wait(DEV_WAIT);
@@ -546,7 +533,7 @@ describe('Test Staking Rewards', async function () {
                 const staking_details_1 = await stakingRoot.call({method: 'getDetails'});
                 user2_deposit_time = staking_details_1.lastRewardTime;
 
-                await depositTokens(user3, userTokenWallet3, userDeposit * 3);
+                await depositTokens(stakingRoot, user3, userTokenWallet3, userDeposit * 3);
                 user3Data = await getUserDataAccount(user3);
                 if (locklift.network === 'dev') {
                     await wait(DEV_WAIT);
@@ -967,7 +954,7 @@ describe('Test Staking Rewards', async function () {
                 await wait(1000);
 
                 // deposit 1 token to sync rewards
-                await depositTokens(user1, userTokenWallet1, 1);
+                await depositTokens(stakingRoot, user1, userTokenWallet1, 1);
                 if (locklift.network === 'dev') {
                     await wait(DEV_WAIT);
                 }
@@ -1181,7 +1168,7 @@ describe('Test Staking Rewards', async function () {
                     const total_tokens_staked = await relay_round.call({method: 'total_tokens_staked'});
 
                     // deposit 1 token to sync rewards
-                    await depositTokens(_user, _userTokenWallet, 1);
+                    await depositTokens(stakingRoot, _user, _userTokenWallet, 1);
                     if (locklift.network === 'dev') {
                         await wait(DEV_WAIT);
                     }
