@@ -12,8 +12,8 @@ import "./libraries/Gas.sol";
 import "./../utils/ErrorCodes.sol";
 import "./libraries/PlatformTypes.sol";
 
-import "../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol";
-import "../../../node_modules/@broxus/contracts/contracts/platform/Platform.sol";
+import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
+import "@broxus/contracts/contracts/platform/Platform.sol";
 
 
 contract Election is IElection {

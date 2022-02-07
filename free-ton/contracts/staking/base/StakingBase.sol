@@ -2,9 +2,9 @@ pragma ton-solidity >= 0.57.0;
 //pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
-import "../../../../node_modules/ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.sol";
-import "../../../../node_modules/ton-eth-bridge-token-contracts/contracts/interfaces/ITokenWallet.sol";
-import "../../../../node_modules/ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensTransferCallback.sol";
+import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.sol";
+import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenWallet.sol";
+import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensTransferCallback.sol";
 
 import "./../interfaces/IUserData.sol";
 import "./../interfaces/IUpgradableByRequest.sol";
@@ -21,8 +21,8 @@ import "./../libraries/PlatformTypes.sol";
 import "./../../utils/ErrorCodes.sol";
 import "./../libraries/Gas.sol";
 
-import "../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol";
-import "../../../../node_modules/@broxus/contracts/contracts/platform/Platform.sol";
+import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
+import "@broxus/contracts/contracts/platform/Platform.sol";
 import "../../utils/Delegate.sol";
 
 

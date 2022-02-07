@@ -9,8 +9,8 @@ import "./libraries/Gas.sol";
 import "./libraries/PlatformTypes.sol";
 import "./../utils/ErrorCodes.sol";
 
-import "../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol";
-import "../../../node_modules/@broxus/contracts/contracts/platform/Platform.sol";
+import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
+import "@broxus/contracts/contracts/platform/Platform.sol";
 
 
 contract RelayRound is IRelayRound {

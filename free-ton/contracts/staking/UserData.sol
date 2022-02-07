@@ -20,8 +20,8 @@ import "../dao/interfaces/IProposer.sol";
 import "../dao/interfaces/IProposal.sol";
 import "../dao/interfaces/IVoter.sol";
 
-import "../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol";
-import "../../../node_modules/@broxus/contracts/contracts/platform/Platform.sol";
+import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
+import "@broxus/contracts/contracts/platform/Platform.sol";
 import "../dao/interfaces/IStakingAccount.sol";
 
 contract UserData is IUserData, IUpgradableByRequest {
