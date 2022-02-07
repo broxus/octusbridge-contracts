@@ -20,7 +20,7 @@ contract Election is IElection {
     event ElectionCodeUpgraded(uint32 code_version);
 
     uint32 public current_version;
-    TvmCell public platform_code;
+    TvmCell platform_code;
 
     address public root;
     uint32 public round_num;
@@ -30,10 +30,10 @@ contract Election is IElection {
         uint256 next_node;
     }
 
-    uint256[] public ton_keys; // array of ton pubkeys
-    uint160[] public eth_addrs; // array of eth pubkeys
-    address[] public staker_addrs; // array of staker addrs
-    uint128[] public staked_tokens; // array of staked tokens
+    uint256[] ton_keys; // array of ton pubkeys
+    uint160[] eth_addrs; // array of eth pubkeys
+    address[] staker_addrs; // array of staker addrs
+    uint128[] staked_tokens; // array of staked tokens
 
     // this array contains 2-way linked list by request tokens
     // nodes are connected in descending order by tokens

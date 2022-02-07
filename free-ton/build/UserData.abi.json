@@ -116,7 +116,7 @@
 				{"name":"answerId","type":"uint32"}
 			],
 			"outputs": [
-				{"components":[{"name":"token_balance","type":"uint128"},{"name":"relay_lock_until","type":"uint32"},{"components":[{"name":"reward_balance","type":"uint128"},{"name":"reward_debt","type":"uint128"}],"name":"rewardRounds","type":"tuple[]"},{"name":"relay_eth_address","type":"uint160"},{"name":"eth_address_confirmed","type":"bool"},{"name":"relay_ton_pubkey","type":"uint256"},{"name":"ton_pubkey_confirmed","type":"bool"},{"name":"slashed","type":"bool"},{"name":"root","type":"address"},{"name":"user","type":"address"},{"name":"dao_root","type":"address"}],"name":"value0","type":"tuple"}
+				{"components":[{"name":"token_balance","type":"uint128"},{"name":"relay_lock_until","type":"uint32"},{"name":"current_version","type":"uint32"},{"components":[{"name":"reward_balance","type":"uint128"},{"name":"reward_debt","type":"uint128"}],"name":"rewardRounds","type":"tuple[]"},{"name":"relay_eth_address","type":"uint160"},{"name":"eth_address_confirmed","type":"bool"},{"name":"relay_ton_pubkey","type":"uint256"},{"name":"ton_pubkey_confirmed","type":"bool"},{"name":"slashed","type":"bool"},{"name":"root","type":"address"},{"name":"user","type":"address"},{"name":"dao_root","type":"address"}],"name":"value0","type":"tuple"}
 			]
 		},
 		{
@@ -263,22 +263,6 @@
 				{"name":"send_gas_to","type":"address"}
 			],
 			"outputs": [
-			]
-		},
-		{
-			"name": "current_version",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"current_version","type":"uint32"}
-			]
-		},
-		{
-			"name": "platform_code",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"platform_code","type":"cell"}
 			]
 		},
 		{
@@ -438,6 +422,7 @@
 		{"name":"user","type":"address"},
 		{"name":"dao_root","type":"address"},
 		{"name":"_proposal_nonce","type":"uint32"},
+		{"name":"lastExtCall","type":"uint32"},
 		{"name":"created_proposals","type":"map(uint32,uint128)"},
 		{"name":"_tmp_proposals","type":"map(uint32,uint128)"},
 		{"name":"casted_votes","type":"map(uint32,bool)"}

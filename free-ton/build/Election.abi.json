@@ -103,14 +103,6 @@
 			]
 		},
 		{
-			"name": "platform_code",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"platform_code","type":"cell"}
-			]
-		},
-		{
 			"name": "root",
 			"inputs": [
 			],
@@ -124,38 +116,6 @@
 			],
 			"outputs": [
 				{"name":"round_num","type":"uint32"}
-			]
-		},
-		{
-			"name": "ton_keys",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"ton_keys","type":"uint256[]"}
-			]
-		},
-		{
-			"name": "eth_addrs",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"eth_addrs","type":"uint160[]"}
-			]
-		},
-		{
-			"name": "staker_addrs",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"staker_addrs","type":"address[]"}
-			]
-		},
-		{
-			"name": "staked_tokens",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"staked_tokens","type":"uint128[]"}
 			]
 		},
 		{

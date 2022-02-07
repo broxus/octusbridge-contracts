@@ -12,6 +12,7 @@ interface IUserData {
     struct UserDataDetails {
         uint128 token_balance;
         uint32 relay_lock_until;
+        uint32 current_version;
         RewardRoundData[] rewardRounds;
         uint160 relay_eth_address;
         bool eth_address_confirmed;

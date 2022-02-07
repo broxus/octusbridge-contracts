@@ -27,8 +27,8 @@ import "../dao/interfaces/IStakingAccount.sol";
 contract UserData is IUserData, IUpgradableByRequest {
     uint16 constant public MAX_REASON_LENGTH = 512;
 
-    uint32 public current_version;
-    TvmCell public platform_code;
+    uint32 current_version;
+    TvmCell platform_code;
 
     uint128 token_balance;
     uint32 relay_lock_until;
@@ -49,7 +49,11 @@ contract UserData is IUserData, IUpgradableByRequest {
     address dao_root;
     uint32 _proposal_nonce;
 
+    uint32 lastExtCall;
+
     uint256 constant SCALING_FACTOR = 1e18;
+    // should be at least 60 in prod
+    uint32 constant EXTERNAL_CALL_INTERVAL = 60;
 
     mapping(uint32 /*proposal_id*/ => uint128 /*locked_value*/) public created_proposals;
     mapping(uint32 /*nonce*/ => uint128 /*locked_value*/) public _tmp_proposals;
@@ -244,7 +248,7 @@ contract UserData is IUserData, IUpgradableByRequest {
 
     function getDetails() external responsible view override returns (UserDataDetails) {
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }UserDataDetails(
-            token_balance, relay_lock_until, rewardRounds, relay_eth_address,
+            token_balance, relay_lock_until, current_version, rewardRounds, relay_eth_address,
             eth_address_confirmed, relay_ton_pubkey, ton_pubkey_confirmed, slashed,
             root, user, dao_root
         );
@@ -330,8 +334,11 @@ contract UserData is IUserData, IUpgradableByRequest {
     function getRewardForRelayRound(uint32 round_num) external onlyRelay {
         require (!slashed, ErrorCodes.SLASHED);
         require (address(this).balance > Gas.USER_DATA_INITIAL_BALANCE + Gas.MIN_CALL_MSG_VALUE, ErrorCodes.LOW_BALANCE);
+        require (now >= lastExtCall + EXTERNAL_CALL_INTERVAL, ErrorCodes.DUPLICATE_CALL);
+
         tvm.accept();
 
+        lastExtCall = now;
         IStakingPool(root).processGetRewardForRelayRound{value: Gas.MIN_CALL_MSG_VALUE}(user, round_num);
     }
 
@@ -391,9 +398,12 @@ contract UserData is IUserData, IUpgradableByRequest {
         require (msg.pubkey() == relay_ton_pubkey, ErrorCodes.ACCOUNT_NOT_LINKED);
         require (ton_pubkey_confirmed == false, ErrorCodes.ACCOUNT_ALREADY_CONFIRMED);
         require (!slashed, ErrorCodes.SLASHED);
+        require (now >= lastExtCall + EXTERNAL_CALL_INTERVAL, ErrorCodes.DUPLICATE_CALL);
 
         tvm.accept();
+
         ton_pubkey_confirmed = true;
+        lastExtCall = now;
 
         emit TonPubkeyConfirmed(relay_ton_pubkey);
     }
@@ -414,8 +424,11 @@ contract UserData is IUserData, IUpgradableByRequest {
     function becomeRelayNextRound() external onlyRelay {
         require (!slashed, ErrorCodes.SLASHED);
         require (address(this).balance > Gas.USER_DATA_INITIAL_BALANCE + Gas.MIN_CALL_MSG_VALUE, ErrorCodes.LOW_BALANCE);
+        require (now >= lastExtCall + EXTERNAL_CALL_INTERVAL, ErrorCodes.DUPLICATE_CALL);
+
         tvm.accept();
 
+        lastExtCall = now;
         IStakingPool(root).processBecomeRelayNextRound{value: Gas.MIN_CALL_MSG_VALUE}(user);
     }
 
@@ -600,6 +613,7 @@ contract UserData is IUserData, IUpgradableByRequest {
             builder_1.store(relay_ton_pubkey); // 256
             builder_1.store(ton_pubkey_confirmed); // 1
             builder_1.store(slashed); // 1
+            builder_1.store(lastExtCall); // 32
 
             TvmBuilder dao_data;
             dao_data.store(_proposal_nonce); // 32
@@ -648,6 +662,7 @@ contract UserData is IUserData, IUpgradableByRequest {
                             uint256 relay_ton_pubkey
                             bool ton_pubkey_confirmed
                             bool slashed
+                            uint32 lastExtCall
                         refs:
                             1: rewardRounds
                     2: dao_data
