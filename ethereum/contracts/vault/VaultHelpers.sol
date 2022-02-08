@@ -403,7 +403,7 @@ abstract contract VaultHelpers is VaultStorage {
     function _pendingWithdrawal(
         PendingWithdrawalId memory pendingWithdrawalId
     ) internal view returns (PendingWithdrawalParams memory) {
-        return pendingWithdrawals[pendingWithdrawalId.recipient][pendingWithdrawalId.id];
+        return pendingWithdrawals_[pendingWithdrawalId.recipient][pendingWithdrawalId.id];
     }
 
     function _pendingWithdrawalCreate(
@@ -414,7 +414,7 @@ abstract contract VaultHelpers is VaultStorage {
         pendingWithdrawalId = pendingWithdrawalsPerUser[recipient];
         pendingWithdrawalsPerUser[recipient]++;
 
-        pendingWithdrawals[recipient][pendingWithdrawalId] = PendingWithdrawalParams({
+        pendingWithdrawals_[recipient][pendingWithdrawalId] = PendingWithdrawalParams({
             amount: amount,
             timestamp: timestamp,
             bounty: 0,
@@ -430,14 +430,14 @@ abstract contract VaultHelpers is VaultStorage {
         PendingWithdrawalId memory pendingWithdrawalId,
         uint bounty
     ) internal {
-        pendingWithdrawals[pendingWithdrawalId.recipient][pendingWithdrawalId.id].bounty = bounty;
+        pendingWithdrawals_[pendingWithdrawalId.recipient][pendingWithdrawalId.id].bounty = bounty;
     }
 
     function _pendingWithdrawalAmountReduce(
         PendingWithdrawalId memory pendingWithdrawalId,
         uint amount
     ) internal {
-        pendingWithdrawals[pendingWithdrawalId.recipient][pendingWithdrawalId.id].amount -= amount;
+        pendingWithdrawals_[pendingWithdrawalId.recipient][pendingWithdrawalId.id].amount -= amount;
 
         pendingWithdrawalsTotal -= amount;
     }
@@ -446,7 +446,7 @@ abstract contract VaultHelpers is VaultStorage {
         PendingWithdrawalId memory pendingWithdrawalId,
         ApproveStatus approveStatus
     ) internal {
-        pendingWithdrawals[pendingWithdrawalId.recipient][pendingWithdrawalId.id].approveStatus = approveStatus;
+        pendingWithdrawals_[pendingWithdrawalId.recipient][pendingWithdrawalId.id].approveStatus = approveStatus;
     }
 
     //88888888ba   88888888888  88888888ba   88    ,ad8888ba,    88888888ba,
@@ -467,7 +467,7 @@ abstract contract VaultHelpers is VaultStorage {
     function _withdrawalPeriod(
         uint256 timestamp
     ) internal view returns (WithdrawalPeriodParams memory) {
-        return withdrawalPeriods[_withdrawalPeriodDeriveId(timestamp)];
+        return withdrawalPeriods_[_withdrawalPeriodDeriveId(timestamp)];
     }
 
     function _withdrawalPeriodIncreaseTotalByTimestamp(
@@ -476,7 +476,7 @@ abstract contract VaultHelpers is VaultStorage {
     ) internal {
         uint withdrawalPeriodId = _withdrawalPeriodDeriveId(timestamp);
 
-        withdrawalPeriods[withdrawalPeriodId].total += amount;
+        withdrawalPeriods_[withdrawalPeriodId].total += amount;
     }
 
     function _withdrawalPeriodIncreaseConsideredByTimestamp(
@@ -485,7 +485,15 @@ abstract contract VaultHelpers is VaultStorage {
     ) internal {
         uint withdrawalPeriodId = _withdrawalPeriodDeriveId(timestamp);
 
-        withdrawalPeriods[withdrawalPeriodId].considered += amount;
+        withdrawalPeriods_[withdrawalPeriodId].considered += amount;
+    }
+
+    function _withdrawalPeriodCheckLimitsPassed(
+        uint amount,
+        WithdrawalPeriodParams memory withdrawalPeriod
+    ) internal view returns (bool) {
+        return  amount < undeclaredWithdrawLimit &&
+        amount + withdrawalPeriod.total - withdrawalPeriod.considered < withdrawLimitPerPeriod;
     }
 
     function _getChainID() internal view returns (uint256) {
@@ -494,5 +502,27 @@ abstract contract VaultHelpers is VaultStorage {
             id := chainid()
         }
         return id;
+    }
+
+    function _decodeWithdrawalEventData(
+        bytes memory eventData
+    ) internal pure returns(WithdrawalParams memory) {
+        (
+            int8 sender_wid,
+            uint256 sender_addr,
+            uint128 amount,
+            uint160 recipient,
+            uint32 chainId
+        ) = abi.decode(
+            eventData,
+            (int8, uint256, uint128, uint160, uint32)
+        );
+
+        return WithdrawalParams({
+            sender: EverscaleAddress(sender_wid, sender_addr),
+            amount: amount,
+            recipient: address(recipient),
+            chainId: chainId
+        });
     }
 }

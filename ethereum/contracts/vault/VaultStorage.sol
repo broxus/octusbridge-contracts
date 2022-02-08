@@ -17,19 +17,47 @@ abstract contract VaultStorage is IVault, Initializable, ReentrancyGuard {
     // - Bridge address, used to verify relay's signatures. Read more on `saveWithdraw`
     address public override bridge;
     // - Bridge EVER-EVM event configuration
-    EverscaleAddress public configuration;
+    // NOTE: Some variables have "_" postfix and not declared as a "public override"
+    // Instead they have explicit corresponding getter
+    // It's a compiler issue, described here - https://github.com/ethereum/solidity/issues/11826
+    EverscaleAddress configuration_;
+
+    function configuration()
+        external
+        view
+        override
+    returns (EverscaleAddress memory) {
+        return configuration_;
+    }
+
     // - Withdrawal receipt IDs, used to prevent double spending
-    mapping(bytes32 => bool) public withdrawalIds;
+    mapping(bytes32 => bool) public override withdrawalIds;
     // - Rewards address in Everscale, receives fees, gains, etc
-    EverscaleAddress public rewards;
+    EverscaleAddress rewards_;
+
+    function rewards()
+        external
+        view
+        override
+    returns (EverscaleAddress memory) {
+        return rewards_;
+    }
 
     // Pending withdrawals
     // - Counter pending withdrawals per user
-    mapping(address => uint) public pendingWithdrawalsPerUser;
+    mapping(address => uint) public override pendingWithdrawalsPerUser;
     // - Pending withdrawal details
-    mapping(address => mapping(uint256 => PendingWithdrawalParams)) public pendingWithdrawals;
+    mapping(address => mapping(uint256 => PendingWithdrawalParams)) pendingWithdrawals_;
+
+    function pendingWithdrawals(
+        address user,
+        uint256 id
+    ) external view override returns (PendingWithdrawalParams memory) {
+        return pendingWithdrawals_[user][id];
+    }
+
     // - Total amount of `token` in pending withdrawal status
-    uint public pendingWithdrawalsTotal;
+    uint public override pendingWithdrawalsTotal;
 
     // Ownership
     // - Governance
@@ -63,9 +91,6 @@ abstract contract VaultStorage is IVault, Initializable, ReentrancyGuard {
 
     // Strategies
     // - Strategies registry
-    // NOTE: Some variables have "_" postfix and not declared "public override"
-    // Instead they are having corresponding getter
-    // It's a compiler issue, described here - https://github.com/ethereum/solidity/issues/11826
     mapping(address => StrategyParams) strategies_;
 
     function strategies(
@@ -87,31 +112,41 @@ abstract contract VaultStorage is IVault, Initializable, ReentrancyGuard {
     //      withdrawal speed of a particular Strategy.
     // The first time a zero address is encountered, it stops withdrawing
     // Maximum amount of strategies in withdrawal queue = 20
-    address[20] public withdrawalQueue;
+    address[20] withdrawalQueue_;
+
+    function withdrawalQueue() external view override returns (address[20] memory) {
+        return withdrawalQueue_;
+    }
 
     // Security
     // - Emergency shutdown, most of operations are unavailable in emergency mode
-    bool public emergencyShutdown;
+    bool public override emergencyShutdown;
     // - Withdraw limit per period
-    uint256 public withdrawLimitPerPeriod;
+    uint256 public override withdrawLimitPerPeriod;
     // - Undeclared withdraw limit
-    uint256 public undeclaredWithdrawLimit;
+    uint256 public override undeclaredWithdrawLimit;
     // - Withdrawal periods. Each period is `WITHDRAW_PERIOD_DURATION_IN_SECONDS` seconds long.
     // If some period has reached the `withdrawalLimitPerPeriod` - all the future
     // withdrawals in this period require manual approve, see note on `setPendingWithdrawalsApprove`
-    mapping(uint256 => WithdrawalPeriodParams) public withdrawalPeriods;
+    mapping(uint256 => WithdrawalPeriodParams) withdrawalPeriods_;
+
+    function withdrawalPeriods(
+        uint256 withdrawalPeriodId
+    ) external view override returns (WithdrawalPeriodParams memory) {
+        return withdrawalPeriods_[withdrawalPeriodId];
+    }
 
     // Vault
     // - Limit for `totalAssets` the Vault can hold
-    uint256 public depositLimit;
+    uint256 public override depositLimit;
     // - Debt ratio for the Vault across al strategies (<= MAX_BPS)
-    uint256 public debtRatio;
+    uint256 public override debtRatio;
     // - Amount of all tokens that all strategies have borrowed
-    uint256 public totalDebt;
+    uint256 public override totalDebt;
     // - block.timestamp of last report
-    uint256 public lastReport;
+    uint256 public override lastReport;
     // - How much profit is locked and cant be withdrawn
-    uint256 public lockedProfit;
+    uint256 public override lockedProfit;
     // - Rate per block of degradation. DEGRADATION_COEFFICIENT is 100% per block
-    uint256 public lockedProfitDegradation;
+    uint256 public override lockedProfitDegradation;
 }

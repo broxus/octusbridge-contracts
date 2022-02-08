@@ -39,4 +39,11 @@ interface IVaultTypes is IEverscale {
         uint256 total;
         uint256 considered;
     }
+
+    struct WithdrawalParams {
+        EverscaleAddress sender;
+        uint128 amount;
+        address recipient;
+        uint32 chainId;
+    }
 }

@@ -21,10 +21,11 @@ contract Vault is IVault, VaultHelpers {
     using SafeERC20 for IERC20;
 
     function initialize(
+        address _token,
         address _bridge,
         address _governance,
-        address _token,
-        uint _targetDecimals
+        uint _targetDecimals,
+        EverscaleAddress memory _rewards
     ) external override initializer {
         bridge = _bridge;
         emit UpdateBridge(bridge);
@@ -32,11 +33,20 @@ contract Vault is IVault, VaultHelpers {
         governance = _governance;
         emit UpdateGovernance(governance);
 
+        rewards_ = _rewards;
+        emit UpdateRewards(rewards_.wid, rewards_.addr);
+
         performanceFee = 0;
         emit UpdatePerformanceFee(0);
 
         managementFee = 0;
         emit UpdateManagementFee(0);
+
+        withdrawFee = 0;
+        emit UpdateWithdrawFee(0);
+
+        depositFee = 0;
+        emit UpdateDepositFee(0);
 
         token = _token;
         tokenDecimals = IERC20Metadata(token).decimals();
@@ -51,9 +61,8 @@ contract Vault is IVault, VaultHelpers {
         external
         override
         pure
-    returns (
-        string memory api_version
-    ) {
+        returns (string memory api_version)
+    {
         return API_VERSION;
     }
 
@@ -87,14 +96,14 @@ contract Vault is IVault, VaultHelpers {
         emit UpdateWithdrawFee(withdrawFee);
     }
 
-    /// @notice Set configuration address.
-    /// @param _configuration The address to use for configuration.
+    /// @notice Set configuration_ address.
+    /// @param _configuration The address to use for configuration_.
     function setConfiguration(
         EverscaleAddress memory _configuration
     ) external override onlyGovernance {
-        configuration = _configuration;
+        configuration_ = _configuration;
 
-        emit UpdateConfiguration(configuration.wid, configuration.addr);
+        emit UpdateConfiguration(configuration_.wid, configuration_.addr);
     }
 
     /// @notice Nominate new address to use as a governance.
@@ -162,8 +171,8 @@ contract Vault is IVault, VaultHelpers {
         emit UpdateWithdrawGuardian(withdrawGuardian);
     }
 
-    /// @notice Set strategy rewards recipient address.
-    /// This may only be called by the `governance` or strategy rewards manager.
+    /// @notice Set strategy rewards_ recipient address.
+    /// This may only be called by the `governance` or strategy rewards_ manager.
     /// @param strategyId Strategy address.
     /// @param _rewards Rewards recipient.
     function setStrategyRewards(
@@ -180,15 +189,15 @@ contract Vault is IVault, VaultHelpers {
         emit StrategyUpdateRewards(strategyId, _rewards.wid, _rewards.addr);
     }
 
-    /// @notice Set address to receive rewards (fees, gains, etc)
+    /// @notice Set address to receive rewards_ (fees, gains, etc)
     /// This may be called only by `governance`
     /// @param _rewards Rewards receiver in Everscale network
     function setRewards(
         EverscaleAddress memory _rewards
     ) external override onlyGovernance {
-        rewards = _rewards;
+        rewards_ = _rewards;
 
-        emit UpdateRewards(rewards.wid, rewards.addr);
+        emit UpdateRewards(rewards_.wid, rewards_.addr);
     }
 
     /// @notice Changes the locked profit degradation
@@ -291,22 +300,31 @@ contract Vault is IVault, VaultHelpers {
     function setWithdrawalQueue(
         address[20] memory queue
     ) external override onlyGovernanceOrManagement {
-        withdrawalQueue = queue;
+        withdrawalQueue_ = queue;
 
-        emit UpdateWithdrawalQueue(withdrawalQueue);
+        emit UpdateWithdrawalQueue(withdrawalQueue_);
     }
 
-    /// @notice Changes pending withdrawal bounty for specific pending withdrawal
-    /// @param id Pending withdrawal ID
-    /// @param bounty The new bounty for pending withdrawal.
+    /**
+        @notice Changes pending withdrawal bounty for specific pending withdrawal
+        @param id Pending withdrawal ID.
+        @param bounty The new value for pending withdrawal bounty.
+    */
     function setPendingWithdrawalBounty(
         uint256 id,
         uint256 bounty
     )
-        external
+        public
         override
         pendingWithdrawalOpened(PendingWithdrawalId(msg.sender, id))
     {
+        PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(PendingWithdrawalId(msg.sender, id));
+
+        require(
+            bounty >= pendingWithdrawal.amount,
+            "Vault: pending withdrawal less than bounty"
+        );
+
         _pendingWithdrawalBountyUpdate(PendingWithdrawalId(msg.sender, id), bounty);
 
         emit PendingWithdrawalUpdateBounty(msg.sender, id, bounty);
@@ -340,7 +358,7 @@ contract Vault is IVault, VaultHelpers {
 
         _transferToEverscale(recipient, amount - fee);
 
-        if (fee > 0) _transferToEverscale(rewards, fee);
+        if (fee > 0) _transferToEverscale(rewards_, fee);
     }
 
     /// @notice Same as regular `deposit`, but fills pending withdrawal.
@@ -400,19 +418,18 @@ contract Vault is IVault, VaultHelpers {
             limits, then it's executed immediately. Otherwise it's saved as a pending withdrawal.
         @param payload Withdrawal receipt. Bytes encoded `struct EverscaleEvent`.
         @param signatures List of relay's signatures. See not on `Bridge.verifySignedEverscaleEvent`.
-        @param bounty Bounty for filling pending withdrawal. Ignores is `msg.sender` is different from
-            withdrawal recipient.
+        @return instantWithdrawal Boolean, was withdrawal instantly filled or saved as a pending withdrawal.
+        @return pendingWithdrawalId Pending withdrawal ID. `(address(0), 0)` if no pending withdrawal was created.
     */
     function saveWithdrawal(
         bytes memory payload,
-        bytes[] memory signatures,
-        uint256 bounty
+        bytes[] memory signatures
     )
-        external
+        public
         override
         onlyEmergencyDisabled
         withdrawalNotSeenBefore(payload)
-        nonReentrant
+        returns (bool instantWithdrawal, PendingWithdrawalId memory pendingWithdrawalId)
     {
         require(
             IBridge(bridge).verifySignedEverscaleEvent(payload, signatures) == 0,
@@ -423,87 +440,100 @@ contract Vault is IVault, VaultHelpers {
         (EverscaleEvent memory _event) = abi.decode(payload, (EverscaleEvent));
 
         require(
-            _event.configurationWid == configuration.wid &&
-            _event.configurationAddress == configuration.addr,
-            "Vault: wrong event configuration"
+            _event.configurationWid == configuration_.wid &&
+            _event.configurationAddress == configuration_.addr,
+            "Vault: wrong event configuration_"
         );
 
-        // Decode event data
-        (
-            int8 sender_wid,
-            uint256 sender_addr,
-            uint128 _amount,
-            uint160 _recipient,
-            uint32 chainId
-        ) = abi.decode(
-            _event.eventData,
-            (int8, uint256, uint128, uint160, uint32)
-        );
-
-        require(chainId == _getChainID());
-
-        address recipient = address(_recipient);
-        uint amount = _convertFromTargetDecimals(_amount);
         bytes32 payloadId = keccak256(payload);
 
-        uint256 fee = _calculateMovementFee(amount, withdrawFee);
+        // Decode event data
+        WithdrawalParams memory withdrawal = _decodeWithdrawalEventData(_event.eventData);
 
-        if (fee > 0) _transferToEverscale(rewards, fee);
+        require(withdrawal.chainId == _getChainID());
+
+        // Ensure withdrawal fee
+        uint256 fee = _calculateMovementFee(withdrawal.amount, withdrawFee);
+
+        if (fee > 0) _transferToEverscale(rewards_, fee);
 
         // Consider withdrawal period limit
         WithdrawalPeriodParams memory withdrawalPeriod = _withdrawalPeriod(_event.eventTimestamp);
+        _withdrawalPeriodIncreaseTotalByTimestamp(_event.eventTimestamp, withdrawal.amount);
+
+        bool withdrawalLimitsPassed = _withdrawalPeriodCheckLimitsPassed(withdrawal.amount, withdrawalPeriod);
 
         // Withdrawal is less than limits and Vault's token balance is enough for instant withdrawal
-        if (
-            amount <= _vaultTokenBalance() &&
-            amount < undeclaredWithdrawLimit &&
-            amount + (withdrawalPeriod.total - withdrawalPeriod.considered) < withdrawLimitPerPeriod
-        ) {
-            IERC20(token).safeTransfer(recipient, amount - fee);
+        if (withdrawal.amount <= _vaultTokenBalance() && withdrawalLimitsPassed) {
+            IERC20(token).safeTransfer(withdrawal.recipient, withdrawal.amount - fee);
 
-            emit InstantWithdrawal(payloadId, recipient, amount - fee);
-        } else {
-            uint256 id = _pendingWithdrawalCreate(
-                recipient,
-                amount - fee,
-                _event.eventTimestamp
-            );
+            emit InstantWithdrawal(payloadId, withdrawal.recipient, withdrawal.amount - fee);
 
-            emit PendingWithdrawalCreated(recipient, id, amount - fee, payloadId);
-
-            PendingWithdrawalId memory pendingWithdrawalId = PendingWithdrawalId(recipient, id);
-
-//            {
-//                if (msg.sender == recipient && bounty != 0) {
-//                    _pendingWithdrawalBountyUpdate(pendingWithdrawalId, bounty);
-//
-//                    emit PendingWithdrawalUpdateBounty(recipient, id, bounty);
-//                }
-//            }
-
-            {
-                if (amount >= undeclaredWithdrawLimit ||
-                    amount + withdrawalPeriod.total - withdrawalPeriod.considered >= withdrawLimitPerPeriod
-                ) {
-                    _pendingWithdrawalApproveStatusUpdate(pendingWithdrawalId, ApproveStatus.Required);
-
-                    emit PendingWithdrawalUpdateApproveStatus(recipient, id, ApproveStatus.Required);
-                }
-            }
+            return (true, PendingWithdrawalId(address(0), 0));
         }
 
-        _withdrawalPeriodIncreaseTotalByTimestamp(_event.eventTimestamp, amount);
+        // Save withdrawal as a pending
+        uint256 id = _pendingWithdrawalCreate(
+            withdrawal.recipient,
+            withdrawal.amount - fee,
+            _event.eventTimestamp
+        );
+
+        emit PendingWithdrawalCreated(withdrawal.recipient, id, withdrawal.amount - fee, payloadId);
+
+        pendingWithdrawalId = PendingWithdrawalId(withdrawal.recipient, id);
+
+        if (!withdrawalLimitsPassed) {
+            _pendingWithdrawalApproveStatusUpdate(pendingWithdrawalId, ApproveStatus.Required);
+
+            emit PendingWithdrawalUpdateApproveStatus(
+                withdrawal.recipient,
+                id,
+                ApproveStatus.Required
+            );
+        }
+
+        return (false, pendingWithdrawalId);
     }
 
-    /// @notice Cancel pending withdrawal partially or completely.
-    /// This may only be called by pending withdrawal recipient.
-    /// @param id Pending withdrawal ID
-    /// @param amount Amount to cancel, should be less or equal than pending withdrawal amount
-    /// @param recipient Tokens recipient, in Everscale network
+    /**
+        @notice Save withdrawal receipt, same as `saveWithdrawal(bytes payload, bytes[] signatures)`,
+            but allows to immediately set up bounty.
+        @param payload Withdrawal receipt. Bytes encoded `struct EverscaleEvent`.
+        @param signatures List of relay's signatures. See not on `Bridge.verifySignedEverscaleEvent`.
+        @param bounty New value for pending withdrawal bounty.
+    */
+    function saveWithdrawal(
+        bytes memory payload,
+        bytes[] memory signatures,
+        uint bounty
+    )
+        external
+        override
+    {
+        (
+            bool instantWithdraw,
+            PendingWithdrawalId memory pendingWithdrawalId
+        ) = saveWithdrawal(payload, signatures);
+
+        if (!instantWithdraw) {
+            _pendingWithdrawalBountyUpdate(pendingWithdrawalId, bounty);
+        }
+    }
+
+    /**
+        @notice Cancel pending withdrawal partially or completely.
+        This may only be called by pending withdrawal recipient.
+        @param id Pending withdrawal ID
+        @param amount Amount to cancel, should be less or equal than pending withdrawal amount
+        @param recipient Tokens recipient, in Everscale network
+        @param bounty New value for bounty
+    */
     function cancelPendingWithdrawal(
         uint256 id,
         uint256 amount,
-        EverscaleAddress memory recipient
+        EverscaleAddress memory recipient,
+        uint bounty
     )
         external
         override
@@ -524,6 +554,8 @@ contract Vault is IVault, VaultHelpers {
         _pendingWithdrawalAmountReduce(pendingWithdrawalId, amount);
 
         emit PendingWithdrawalCancel(msg.sender, id, amount);
+
+        setPendingWithdrawalBounty(id, bounty);
     }
 
     /**
@@ -533,13 +565,15 @@ contract Vault is IVault, VaultHelpers {
         @param recipient The address to send the redeemed tokens.
         @param maxLoss The maximum acceptable loss to sustain on withdrawal.
             If a loss is specified, up to that amount of tokens may be burnt to cover losses on withdrawal.
+        @param bounty New value for bounty.
         @return amountAdjusted The quantity of tokens redeemed.
     */
     function withdraw(
         uint256 id,
         uint256 amountRequested,
         address recipient,
-        uint256 maxLoss
+        uint256 maxLoss,
+        uint256 bounty
     )
         external
         override
@@ -561,8 +595,8 @@ contract Vault is IVault, VaultHelpers {
         if (amountAdjusted > _vaultTokenBalance()) {
             uint256 totalLoss = 0;
 
-            for (uint i = 0; i < withdrawalQueue.length; i++) {
-                address strategyId = withdrawalQueue[i];
+            for (uint i = 0; i < withdrawalQueue_.length; i++) {
+                address strategyId = withdrawalQueue_[i];
 
                 // We're done withdrawing
                 if (strategyId == address(0)) break;
@@ -611,16 +645,20 @@ contract Vault is IVault, VaultHelpers {
 
         emit PendingWithdrawalWithdraw(msg.sender, id, amountRequested, amountAdjusted);
 
+        setPendingWithdrawalBounty(id, bounty);
+
         return amountAdjusted;
     }
 
-    /// @notice Add a Strategy to the Vault
-    /// This may only be called by `governance`
-    /// @param strategyId The address of the Strategy to add.
-    /// @param _debtRatio The share of the total assets in the `vault that the `strategy` has access to.
-    /// @param minDebtPerHarvest Lower limit on the increase of debt since last harvest.
-    /// @param maxDebtPerHarvest Upper limit on the increase of debt since last harvest.
-    /// @param _performanceFee The fee the strategist will receive based on this Vault's performance.
+    /**
+        @notice Add a Strategy to the Vault
+        This may only be called by `governance`
+        @param strategyId The address of the Strategy to add.
+        @param _debtRatio The share of the total assets in the `vault that the `strategy` has access to.
+        @param minDebtPerHarvest Lower limit on the increase of debt since last harvest.
+        @param maxDebtPerHarvest Upper limit on the increase of debt since last harvest.
+        @param _performanceFee The fee the strategist will receive based on this Vault's performance.
+    */
     function addStrategy(
         address strategyId,
         uint256 _debtRatio,
@@ -655,7 +693,7 @@ contract Vault is IVault, VaultHelpers {
             totalSkim: 0,
             totalLoss: 0,
             rewardsManager: address(0),
-            rewards: rewards
+            rewards: rewards_
         }));
 
         emit StrategyAdded(strategyId, _debtRatio, minDebtPerHarvest, maxDebtPerHarvest, _performanceFee);
@@ -879,7 +917,7 @@ contract Vault is IVault, VaultHelpers {
         }
 
         if (performance_fee + management_fee > 0) {
-            _transferToEverscale(rewards, performance_fee + management_fee);
+            _transferToEverscale(rewards_, performance_fee + management_fee);
         }
 
         return total_fee;
@@ -1002,9 +1040,11 @@ contract Vault is IVault, VaultHelpers {
         }
     }
 
-    /// @notice Skim strategy gain to the `rewards` address.
-    /// This may only be called by `governance` or `management`
-    /// @param strategyId Strategy address to skim.
+    /**
+        @notice Skim strategy gain to the `rewards_` address.
+        This may only be called by `governance` or `management`
+        @param strategyId Strategy address to skim.
+    */
     function skim(
         address strategyId
     )
@@ -1019,7 +1059,7 @@ contract Vault is IVault, VaultHelpers {
 
         strategies_[strategyId].totalSkim += amount;
 
-        _transferToEverscale(rewards, amount);
+        _transferToEverscale(rewards_, amount);
     }
 
     /**

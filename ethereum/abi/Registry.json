@@ -242,19 +242,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "latestWrapperRelease",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "api_version",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -264,11 +251,6 @@
       {
         "internalType": "address",
         "name": "governance",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "guardian",
         "type": "address"
       },
       {
@@ -298,11 +280,6 @@
       {
         "internalType": "address",
         "name": "token",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "guardian",
         "type": "address"
       },
       {
@@ -419,6 +396,24 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "rewards",
+    "outputs": [
+      {
+        "internalType": "int128",
+        "name": "wid",
+        "type": "int128"
+      },
+      {
+        "internalType": "uint256",
+        "name": "addr",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -458,6 +453,31 @@
       }
     ],
     "name": "setProxyAdmin",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "int128",
+            "name": "wid",
+            "type": "int128"
+          },
+          {
+            "internalType": "uint256",
+            "name": "addr",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IEverscale.EverscaleAddress",
+        "name": "_rewards",
+        "type": "tuple"
+      }
+    ],
+    "name": "setRewards",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

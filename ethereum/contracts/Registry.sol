@@ -5,16 +5,18 @@ import "./interfaces/IBridge.sol";
 import "./interfaces/vault/IVault.sol";
 import "./interfaces/IRegistry.sol";
 import "./interfaces/IVaultWrapper.sol";
+import "./interfaces/IEverscale.sol";
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 import "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 
 
-contract Registry is Ownable, IRegistry {
+contract Registry is Ownable, IRegistry, IEverscale {
     // len(vaultReleases)
     uint256 public numVaultReleases;
     mapping(uint256 => address) public vaultReleases;
+
     // Token => len(vaults)
     mapping(address => uint256) public numVaults;
     mapping(address => mapping(uint256 => address)) vaults;
@@ -28,6 +30,7 @@ contract Registry is Ownable, IRegistry {
 
     address public bridge;
     address public proxyAdmin;
+    EverscaleAddress public rewards;
 
     mapping(address => string) public tags;
     mapping(address => bool) public banksy;
@@ -53,6 +56,12 @@ contract Registry is Ownable, IRegistry {
         bridge = _bridge;
     }
 
+    function setRewards(
+        EverscaleAddress memory _rewards
+    ) external onlyOwner {
+        rewards = _rewards;
+    }
+
     function setProxyAdmin(
         address _proxyAdmin
     ) external onlyOwner {
@@ -66,15 +75,6 @@ contract Registry is Ownable, IRegistry {
         string memory api_version
     ) {
         return IVault(vaultReleases[numVaultReleases - 1]).apiVersion();
-    }
-
-    function latestWrapperRelease()
-        external
-        view
-    returns (
-        string memory api_version
-    ) {
-        return IVaultWrapper(vaultReleases[numVaultReleases - 1]).apiVersion();
     }
 
     function latestVault(
@@ -112,7 +112,6 @@ contract Registry is Ownable, IRegistry {
     function _newProxyVault(
         address token,
         address governance,
-        address guardian,
         uint256 targetDecimals,
         uint256 vault_release_target
     ) internal returns (address) {
@@ -130,9 +129,10 @@ contract Registry is Ownable, IRegistry {
         // Initialize Vault
         IVault(address(vault)).initialize(
             token,
-            address(this),
             bridge,
-            targetDecimals
+            governance,
+            targetDecimals,
+            rewards
         );
 
         return address(vault);
@@ -168,7 +168,6 @@ contract Registry is Ownable, IRegistry {
 
     function newVault(
         address token,
-        address guardian,
         uint256 targetDecimals,
         uint256 vaultReleaseDelta
     ) external onlyOwner returns (address) {
@@ -177,7 +176,6 @@ contract Registry is Ownable, IRegistry {
         address vault = _newProxyVault(
             token,
             msg.sender,
-            guardian,
             targetDecimals,
             vault_release_target
         );
@@ -190,7 +188,6 @@ contract Registry is Ownable, IRegistry {
     function newExperimentalVault(
         address token,
         address governance,
-        address guardian,
         uint256 targetDecimals,
         uint256 vaultReleaseDelta
     ) external returns (address) {
@@ -199,7 +196,6 @@ contract Registry is Ownable, IRegistry {
         address vault = _newProxyVault(
             token,
             governance,
-            guardian,
             targetDecimals,
             vault_release_target
         );

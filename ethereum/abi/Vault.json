@@ -864,6 +864,11 @@
         "internalType": "struct IEverscale.EverscaleAddress",
         "name": "recipient",
         "type": "tuple"
+      },
+      {
+        "internalType": "uint256",
+        "name": "bounty",
+        "type": "uint256"
       }
     ],
     "name": "cancelPendingWithdrawal",
@@ -876,14 +881,21 @@
     "name": "configuration",
     "outputs": [
       {
-        "internalType": "int128",
-        "name": "wid",
-        "type": "int128"
-      },
-      {
-        "internalType": "uint256",
-        "name": "addr",
-        "type": "uint256"
+        "components": [
+          {
+            "internalType": "int128",
+            "name": "wid",
+            "type": "int128"
+          },
+          {
+            "internalType": "uint256",
+            "name": "addr",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IEverscale.EverscaleAddress",
+        "name": "",
+        "type": "tuple"
       }
     ],
     "stateMutability": "view",
@@ -1228,6 +1240,11 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
         "name": "_bridge",
         "type": "address"
       },
@@ -1237,14 +1254,26 @@
         "type": "address"
       },
       {
-        "internalType": "address",
-        "name": "_token",
-        "type": "address"
-      },
-      {
         "internalType": "uint256",
         "name": "_targetDecimals",
         "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "int128",
+            "name": "wid",
+            "type": "int128"
+          },
+          {
+            "internalType": "uint256",
+            "name": "addr",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IEverscale.EverscaleAddress",
+        "name": "_rewards",
+        "type": "tuple"
       }
     ],
     "name": "initialize",
@@ -1339,36 +1368,43 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "user",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "id",
         "type": "uint256"
       }
     ],
     "name": "pendingWithdrawals",
     "outputs": [
       {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "bounty",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
-      },
-      {
-        "internalType": "enum IVaultTypes.ApproveStatus",
-        "name": "approveStatus",
-        "type": "uint8"
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "bounty",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "timestamp",
+            "type": "uint256"
+          },
+          {
+            "internalType": "enum IVaultTypes.ApproveStatus",
+            "name": "approveStatus",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct IVaultTypes.PendingWithdrawalParams",
+        "name": "",
+        "type": "tuple"
       }
     ],
     "stateMutability": "view",
@@ -1473,17 +1509,65 @@
     "name": "rewards",
     "outputs": [
       {
-        "internalType": "int128",
-        "name": "wid",
-        "type": "int128"
-      },
-      {
-        "internalType": "uint256",
-        "name": "addr",
-        "type": "uint256"
+        "components": [
+          {
+            "internalType": "int128",
+            "name": "wid",
+            "type": "int128"
+          },
+          {
+            "internalType": "uint256",
+            "name": "addr",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IEverscale.EverscaleAddress",
+        "name": "",
+        "type": "tuple"
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "payload",
+        "type": "bytes"
+      },
+      {
+        "internalType": "bytes[]",
+        "name": "signatures",
+        "type": "bytes[]"
+      }
+    ],
+    "name": "saveWithdrawal",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "instantWithdrawal",
+        "type": "bool"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "recipient",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IVaultTypes.PendingWithdrawalId",
+        "name": "pendingWithdrawalId",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -2139,6 +2223,11 @@
         "internalType": "uint256",
         "name": "maxLoss",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "bounty",
+        "type": "uint256"
       }
     ],
     "name": "withdraw",
@@ -2214,40 +2303,41 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "withdrawalPeriodId",
         "type": "uint256"
       }
     ],
     "name": "withdrawalPeriods",
     "outputs": [
       {
-        "internalType": "uint256",
-        "name": "total",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "considered",
-        "type": "uint256"
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "total",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "considered",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IVaultTypes.WithdrawalPeriodParams",
+        "name": "",
+        "type": "tuple"
       }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [],
     "name": "withdrawalQueue",
     "outputs": [
       {
-        "internalType": "address",
+        "internalType": "address[20]",
         "name": "",
-        "type": "address"
+        "type": "address[20]"
       }
     ],
     "stateMutability": "view",
