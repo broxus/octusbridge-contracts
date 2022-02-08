@@ -111,7 +111,9 @@ const hardhatConfig = {
     gasPrice: 100,
     enabled: true,
     coinmarketcap: process.env.COINMARKETCAP_API_KEY,
-    outputFile: 'gas-report.txt'
+    outputFile: 'gas-report.txt',
+    noColors: true,
+    // rst: true
   },
   etherscan: {
     apiKey: process.env.ETHERSCAN_KEY
