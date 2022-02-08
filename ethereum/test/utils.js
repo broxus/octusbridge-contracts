@@ -132,8 +132,6 @@ const getVaultByToken = async (registry, token) => {
 
 
 const encodeWithdrawalData = (params) => {
-  console.log(params.chainId || defaultChainId);
-
   return web3.eth.abi.encodeParameters(
       // sender wid, sender addr, amount, recipient, chainId
       ['int8', 'uint256', 'uint128', 'uint160', 'uint32'],
@@ -197,6 +195,12 @@ const getNetworkTime = async () => {
 };
 
 
+const getPayloadSignatures = async (payload) => {
+  const initialRelays = sortAccounts(await ethers.getSigners());
+
+  return Promise.all(initialRelays.map(async (account) => signReceipt(payload, account)));
+};
+
 
 module.exports = {
   signReceipt,
@@ -220,5 +224,6 @@ module.exports = {
   increaseTime,
   mineBlocks,
   getNetworkTime,
-  deriveWithdrawalPeriodId
+  deriveWithdrawalPeriodId,
+  getPayloadSignatures,
 };

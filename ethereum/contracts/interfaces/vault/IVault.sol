@@ -5,6 +5,40 @@ import "./IVaultBasic.sol";
 
 
 interface IVault is IVaultBasic {
+    enum ApproveStatus { NotRequired, Required, Approved, Rejected }
+
+    struct StrategyParams {
+        uint256 performanceFee;
+        uint256 activation;
+        uint256 debtRatio;
+        uint256 minDebtPerHarvest;
+        uint256 maxDebtPerHarvest;
+        uint256 lastReport;
+        uint256 totalDebt;
+        uint256 totalGain;
+        uint256 totalSkim;
+        uint256 totalLoss;
+        address rewardsManager;
+        EverscaleAddress rewards;
+    }
+
+    struct PendingWithdrawalParams {
+        uint256 amount;
+        uint256 bounty;
+        uint256 timestamp;
+        ApproveStatus approveStatus;
+    }
+
+    struct PendingWithdrawalId {
+        address recipient;
+        uint256 id;
+    }
+
+    struct WithdrawalPeriodParams {
+        uint256 total;
+        uint256 considered;
+    }
+
     function withdrawGuardian() external view returns (address);
     function management() external view returns (address);
 
@@ -56,12 +90,29 @@ interface IVault is IVaultBasic {
         uint256 amount,
         PendingWithdrawalId memory pendingWithdrawalId
     ) external;
-
     function deposit(
         EverscaleAddress memory recipient,
         uint256[] memory amount,
         PendingWithdrawalId[] memory pendingWithdrawalId
     ) external;
+    function depositToFactory(
+        uint128 amount,
+        int8 wid,
+        uint256 user,
+        uint256 creditor,
+        uint256 recipient,
+        uint128 tokenAmount,
+        uint128 tonAmount,
+        uint8 swapType,
+        uint128 slippageNumerator,
+        uint128 slippageDenominator,
+        bytes memory level3
+    ) external;
+
+    function saveWithdrawal(
+        bytes memory payload,
+        bytes[] memory signatures
+    ) external returns (bool instantWithdrawal, PendingWithdrawalId memory pendingWithdrawalId);
 
     function saveWithdrawal(
         bytes memory payload,
@@ -156,4 +207,88 @@ interface IVault is IVaultBasic {
         PendingWithdrawalId[] memory pendingWithdrawalId,
         ApproveStatus[] memory approveStatus
     ) external;
+
+
+    event PendingWithdrawalUpdateBounty(address recipient, uint256 id, uint256 bounty);
+    event PendingWithdrawalCancel(address recipient, uint256 id, uint256 amount);
+    event PendingWithdrawalCreated(
+        address recipient,
+        uint256 id,
+        uint256 amount,
+        bytes32 payloadId
+    );
+    event PendingWithdrawalWithdraw(
+        address recipient,
+        uint256 id,
+        uint256 requestedAmount,
+        uint256 redeemedAmount
+    );
+    event PendingWithdrawalFill(
+        address recipient,
+        uint256 id
+    );
+    event PendingWithdrawalUpdateApproveStatus(
+        address recipient,
+        uint256 id,
+        ApproveStatus approveStatus
+    );
+
+    event UpdateWithdrawLimitPerPeriod(uint256 withdrawLimitPerPeriod);
+    event UpdateUndeclaredWithdrawLimit(uint256 undeclaredWithdrawLimit);
+    event UpdateDepositLimit(uint256 depositLimit);
+
+    event UpdatePerformanceFee(uint256 performanceFee);
+    event UpdateManagementFee(uint256 managenentFee);
+
+    event UpdateManagement(address management);
+    event UpdateWithdrawGuardian(address withdrawGuardian);
+    event UpdateWithdrawalQueue(address[20] queue);
+
+    event StrategyUpdateDebtRatio(address indexed strategy, uint256 debtRatio);
+    event StrategyUpdateMinDebtPerHarvest(address indexed strategy, uint256 minDebtPerHarvest);
+    event StrategyUpdateMaxDebtPerHarvest(address indexed strategy, uint256 maxDebtPerHarvest);
+    event StrategyUpdatePerformanceFee(address indexed strategy, uint256 performanceFee);
+    event StrategyMigrated(address indexed oldVersion, address indexed newVersion);
+    event StrategyRevoked(address indexed strategy);
+    event StrategyRemovedFromQueue(address indexed strategy);
+    event StrategyAddedToQueue(address indexed strategy);
+    event StrategyReported(
+        address indexed strategy,
+        uint256 gain,
+        uint256 loss,
+        uint256 debtPaid,
+        uint256 totalGain,
+        uint256 totalSkim,
+        uint256 totalLoss,
+        uint256 totalDebt,
+        uint256 debtAdded,
+        uint256 debtRatio
+    );
+    event StrategyAdded(
+        address indexed strategy,
+        uint256 debtRatio,
+        uint256 minDebtPerHarvest,
+        uint256 maxDebtPerHarvest,
+        uint256 performanceFee
+    );
+    event StrategyUpdateRewards(
+        address strategyId,
+        int128 wid,
+        uint256 addr
+    );
+    event FactoryDeposit(
+        uint128 amount,
+        int8 wid,
+        uint256 user,
+        uint256 creditor,
+        uint256 recipient,
+        uint128 tokenAmount,
+        uint128 tonAmount,
+        uint8 swapType,
+        uint128 slippageNumerator,
+        uint128 slippageDenominator,
+        bytes1 separator,
+        bytes level3
+    );
+
 }

@@ -6,7 +6,7 @@ require('hardhat-deploy-ethers');
 require('hardhat-deploy');
 require("@nomiclabs/hardhat-vyper");
 require('hardhat-abi-exporter');
-// require("hardhat-gas-reporter");
+require("hardhat-gas-reporter");
 
 
 task("accounts", "Prints the list of accounts", async () => {
@@ -18,27 +18,28 @@ task("accounts", "Prints the list of accounts", async () => {
 });
 
 
+console.log(process.env.COINMARKETCAP_API_KEY);
+
+
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
 const hardhatConfig = {
-  vyper: {
-    version: "0.2.12",
-  },
   solidity: {
     version: '0.8.2',
     settings: {
       optimizer: {
-        enabled: true
+        enabled: true,
+        runs: 200
       }
     }
   },
   networks: {
     hardhat: {
-      // forking: {
-      //   url: process.env.ETH_MAIN_ARCHIVE_HTTP,
-      //   blockNumber: 12859605,
-      // },
+      forking: {
+        url: process.env.ETH_MAIN_ARCHIVE_HTTP,
+        blockNumber: 12859605,
+      },
       chainId: 1111,
       accounts: {
         count: 30
@@ -107,9 +108,10 @@ const hardhatConfig = {
   },
   gasReporter: {
     currency: 'USD',
-    gasPrice: 80,
+    gasPrice: 100,
     enabled: true,
-    coinmarketcap: process.env.COINMARKETCAP_API_KEY
+    coinmarketcap: process.env.COINMARKETCAP_API_KEY,
+    outputFile: 'gas-report.txt'
   },
   etherscan: {
     apiKey: process.env.ETHERSCAN_KEY
@@ -140,19 +142,15 @@ const hardhatConfig = {
     },
     alice: {
       default: 4,
-      goerli: 4,
     },
     bob: {
       default: 5,
-      goerli: 5,
     },
     eve: {
       default: 6,
-      goerli: 6,
     },
     stranger: {
       default: 7,
-      goerli: 7,
     },
     roundSubmitter: {
       default: 8,

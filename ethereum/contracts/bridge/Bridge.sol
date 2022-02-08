@@ -210,9 +210,9 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
     returns (
         uint32 errorCode
     ) {
-        (EverscaleEvent memory EverscaleEvent) = abi.decode(payload, (EverscaleEvent));
+        (EverscaleEvent memory _event) = abi.decode(payload, (EverscaleEvent));
 
-        uint32 round = EverscaleEvent.round;
+        uint32 round = _event.round;
 
         // Check round is not less than initial round
         if (round < initialRound) return 1;
@@ -279,7 +279,7 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
     }
 
     /**
-        @dev Grant relay permission for set of addresses at specific round
+        @notice Grant relay permission for set of addresses at specific round
         @param payload Bytes encoded EverscaleEvent structure
         @param signatures Payload signatures
     */
@@ -295,11 +295,11 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
             "Bridge: signatures verification failed"
         );
 
-        (EverscaleEvent memory EverscaleEvent) = abi.decode(payload, (EverscaleEvent));
+        (EverscaleEvent memory _event) = abi.decode(payload, (EverscaleEvent));
 
         require(
-            EverscaleEvent.configurationWid == roundRelaysConfiguration.wid &&
-            EverscaleEvent.configurationAddress == roundRelaysConfiguration.addr,
+            _event.configurationWid == roundRelaysConfiguration.wid &&
+            _event.configurationAddress == roundRelaysConfiguration.addr,
             "Bridge: wrong event configuration"
         );
 

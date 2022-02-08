@@ -13,6 +13,8 @@ import "../interfaces/IERC20Metadata.sol";
 
 import "./VaultHelpers.sol";
 
+import "hardhat/console.sol";
+
 
 string constant API_VERSION = '0.1.5';
 
@@ -320,10 +322,7 @@ contract Vault is IVault, VaultHelpers {
     {
         PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(PendingWithdrawalId(msg.sender, id));
 
-        require(
-            bounty >= pendingWithdrawal.amount,
-            "Vault: pending withdrawal less than bounty"
-        );
+        require(bounty >= pendingWithdrawal.amount);
 
         _pendingWithdrawalBountyUpdate(PendingWithdrawalId(msg.sender, id), bounty);
 
@@ -374,21 +373,19 @@ contract Vault is IVault, VaultHelpers {
     )
         public
         override
-        onlyEmergencyDisabled
         pendingWithdrawalApproved(pendingWithdrawalId)
         pendingWithdrawalOpened(pendingWithdrawalId)
-        nonReentrant
     {
-        IERC20(token).transferFrom(msg.sender, address(this), amount);
-
         PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(pendingWithdrawalId);
 
-        require(amount >= pendingWithdrawal.amount, "Vault: too low deposit");
+        require(amount >= pendingWithdrawal.amount);
 
-        deposit(
-            recipient,
-            amount + pendingWithdrawal.bounty
-        );
+        deposit(recipient, amount);
+
+        // Send bounty as additional transfer
+        _transferToEverscale(recipient, pendingWithdrawal.bounty);
+
+        _pendingWithdrawalAmountReduce(pendingWithdrawalId, pendingWithdrawal.amount);
 
         IERC20(token).safeTransfer(
             pendingWithdrawalId.recipient,
@@ -411,6 +408,56 @@ contract Vault is IVault, VaultHelpers {
         for (uint i = 0; i < amount.length; i++) {
             deposit(recipient, amount[i], pendingWithdrawalId[i]);
         }
+    }
+
+    function depositToFactory(
+        uint128 amount,
+        int8 wid,
+        uint256 user,
+        uint256 creditor,
+        uint256 recipient,
+        uint128 tokenAmount,
+        uint128 tonAmount,
+        uint8 swapType,
+        uint128 slippageNumerator,
+        uint128 slippageDenominator,
+        bytes memory level3
+    )
+        external
+        override
+        onlyEmergencyDisabled
+        respectDepositLimit(amount)
+    {
+        require(
+            tokenAmount <= amount &&
+            swapType < 2 &&
+            user != 0 &&
+            recipient != 0 &&
+            creditor != 0 &&
+            slippageNumerator < slippageDenominator,
+            "Wrapper: wrong args"
+        );
+
+        IERC20(token).transferFrom(msg.sender, address(this), amount);
+
+        uint256 fee = _calculateMovementFee(amount, depositFee);
+
+        if (fee > 0) _transferToEverscale(rewards_, fee);
+
+        emit FactoryDeposit(
+            uint128(convertToTargetDecimals(amount - fee)),
+            wid,
+            user,
+            creditor,
+            recipient,
+            tokenAmount,
+            tonAmount,
+            swapType,
+            slippageNumerator,
+            slippageDenominator,
+            0x07,
+            level3
+        );
     }
 
     /**
@@ -441,14 +488,13 @@ contract Vault is IVault, VaultHelpers {
 
         require(
             _event.configurationWid == configuration_.wid &&
-            _event.configurationAddress == configuration_.addr,
-            "Vault: wrong event configuration_"
+            _event.configurationAddress == configuration_.addr
         );
 
         bytes32 payloadId = keccak256(payload);
 
         // Decode event data
-        WithdrawalParams memory withdrawal = _decodeWithdrawalEventData(_event.eventData);
+        WithdrawalParams memory withdrawal = decodeWithdrawalEventData(_event.eventData);
 
         require(withdrawal.chainId == _getChainID());
 
@@ -544,10 +590,7 @@ contract Vault is IVault, VaultHelpers {
         PendingWithdrawalId memory pendingWithdrawalId = PendingWithdrawalId(msg.sender, id);
         PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(pendingWithdrawalId);
 
-        require(
-            amount > 0 && amount <= pendingWithdrawal.amount,
-            "Vault: amount is wrong"
-        );
+        require(amount > 0 && amount <= pendingWithdrawal.amount);
 
         _transferToEverscale(recipient, amount);
 
@@ -585,10 +628,7 @@ contract Vault is IVault, VaultHelpers {
         PendingWithdrawalId memory pendingWithdrawalId = PendingWithdrawalId(msg.sender, id);
         PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(pendingWithdrawalId);
 
-        require(
-            amountRequested > 0 && amountRequested <= pendingWithdrawal.amount,
-            "Vault: requested amount is wrong"
-        );
+        require(amountRequested > 0 && amountRequested <= pendingWithdrawal.amount);
 
         amountAdjusted = amountRequested;
 
@@ -632,11 +672,14 @@ contract Vault is IVault, VaultHelpers {
                 _strategyTotalDebtReduce(strategyId, withdrawn);
             }
 
-            require(_vaultTokenBalance() >= amountAdjusted, "Vault: can't close pending withdrawal");
+            require(_vaultTokenBalance() >= amountAdjusted);
 
             // This loss protection is put in place to revert if losses from
             // withdrawing are more than what is considered acceptable.
-            require(totalLoss <= maxLoss * (amountAdjusted + totalLoss) / MAX_BPS, "Vault: loss too high");
+            require(
+                totalLoss <= maxLoss * (amountAdjusted + totalLoss) / MAX_BPS,
+                "Vault: loss too high"
+            );
         }
 
         IERC20(token).safeTransfer(recipient, amountAdjusted);
@@ -1139,14 +1182,11 @@ contract Vault is IVault, VaultHelpers {
     {
         PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(pendingWithdrawalId);
 
-        require(
-            pendingWithdrawal.approveStatus == ApproveStatus.Required,
-            "Vault: pending withdrawal should require confirmation"
-        );
+        require(pendingWithdrawal.approveStatus == ApproveStatus.Required);
 
         require(
-            approveStatus == ApproveStatus.Approved || approveStatus == ApproveStatus.Rejected,
-            "Vault: current approve status is wrong"
+            approveStatus == ApproveStatus.Approved ||
+            approveStatus == ApproveStatus.Rejected
         );
 
         _pendingWithdrawalApproveStatusUpdate(pendingWithdrawalId, approveStatus);
@@ -1201,7 +1241,7 @@ contract Vault is IVault, VaultHelpers {
         EverscaleAddress memory recipient,
         uint256 _amount
     ) internal {
-        uint256 amount = _convertToTargetDecimals(_amount);
+        uint256 amount = convertToTargetDecimals(_amount);
 
         emit Deposit(amount, recipient.wid, recipient.addr);
     }

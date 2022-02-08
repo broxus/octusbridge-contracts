@@ -118,6 +118,28 @@ abstract contract VaultHelpers is VaultStorage {
         withdrawalIds[withdrawalId] = true;
     }
 
+    function decodeWithdrawalEventData(
+        bytes memory eventData
+    ) public view override returns(WithdrawalParams memory) {
+        (
+            int8 sender_wid,
+            uint256 sender_addr,
+            uint128 amount,
+            uint160 recipient,
+            uint32 chainId
+        ) = abi.decode(
+            eventData,
+            (int8, uint256, uint128, uint160, uint32)
+        );
+
+        return WithdrawalParams({
+            sender: EverscaleAddress(sender_wid, sender_addr),
+            amount: convertFromTargetDecimals(amount),
+            recipient: address(recipient),
+            chainId: chainId
+        });
+    }
+
     //8b           d8   db        88        88  88      888888888888
     //`8b         d8'  d88b       88        88  88           88
     // `8b       d8'  d8'`8b      88        88  88           88
@@ -158,9 +180,9 @@ abstract contract VaultHelpers is VaultStorage {
         }
     }
 
-    function _convertFromTargetDecimals(
+    function convertFromTargetDecimals(
         uint256 amount
-    ) internal view returns (uint256) {
+    ) public view returns (uint256) {
         if (targetDecimals == tokenDecimals) {
             return amount;
         } else if (targetDecimals > tokenDecimals) {
@@ -170,9 +192,9 @@ abstract contract VaultHelpers is VaultStorage {
         }
     }
 
-    function _convertToTargetDecimals(
+    function convertToTargetDecimals(
         uint256 amount
-    ) internal view returns (uint256) {
+    ) public view returns (uint256) {
         if (targetDecimals == tokenDecimals) {
             return amount;
         } else if (targetDecimals > tokenDecimals) {
@@ -502,27 +524,5 @@ abstract contract VaultHelpers is VaultStorage {
             id := chainid()
         }
         return id;
-    }
-
-    function _decodeWithdrawalEventData(
-        bytes memory eventData
-    ) internal pure returns(WithdrawalParams memory) {
-        (
-            int8 sender_wid,
-            uint256 sender_addr,
-            uint128 amount,
-            uint160 recipient,
-            uint32 chainId
-        ) = abi.decode(
-            eventData,
-            (int8, uint256, uint128, uint160, uint32)
-        );
-
-        return WithdrawalParams({
-            sender: EverscaleAddress(sender_wid, sender_addr),
-            amount: amount,
-            recipient: address(recipient),
-            chainId: chainId
-        });
     }
 }

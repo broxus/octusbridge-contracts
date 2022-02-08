@@ -42,6 +42,85 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "uint128",
+        "name": "amount",
+        "type": "uint128"
+      },
+      {
+        "indexed": false,
+        "internalType": "int8",
+        "name": "wid",
+        "type": "int8"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "user",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "creditor",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "recipient",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint128",
+        "name": "tokenAmount",
+        "type": "uint128"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint128",
+        "name": "tonAmount",
+        "type": "uint128"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "swapType",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint128",
+        "name": "slippageNumerator",
+        "type": "uint128"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint128",
+        "name": "slippageDenominator",
+        "type": "uint128"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes1",
+        "name": "separator",
+        "type": "bytes1"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "level3",
+        "type": "bytes"
+      }
+    ],
+    "name": "FactoryDeposit",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
         "internalType": "bytes32",
         "name": "payloadId",
         "type": "bytes32"
@@ -60,49 +139,6 @@
       }
     ],
     "name": "InstantWithdrawal",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "sender",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "int128",
-        "name": "recipientWid",
-        "type": "int128"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "recipientAddr",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "pendingWithdrawalRecipient",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "pendingWithdrawalId",
-        "type": "uint256"
-      }
-    ],
-    "name": "NewDeposit",
     "type": "event"
   },
   {
@@ -210,7 +246,7 @@
       },
       {
         "indexed": false,
-        "internalType": "enum IVaultTypes.ApproveStatus",
+        "internalType": "enum IVault.ApproveStatus",
         "name": "approveStatus",
         "type": "uint8"
       }
@@ -981,6 +1017,59 @@
   {
     "inputs": [
       {
+        "internalType": "bytes",
+        "name": "eventData",
+        "type": "bytes"
+      }
+    ],
+    "name": "decodeWithdrawalEventData",
+    "outputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "int128",
+                "name": "wid",
+                "type": "int128"
+              },
+              {
+                "internalType": "uint256",
+                "name": "addr",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct IEverscale.EverscaleAddress",
+            "name": "sender",
+            "type": "tuple"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "recipient",
+            "type": "address"
+          },
+          {
+            "internalType": "uint32",
+            "name": "chainId",
+            "type": "uint32"
+          }
+        ],
+        "internalType": "struct IVaultBasic.WithdrawalParams",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "components": [
           {
             "internalType": "int128",
@@ -1015,7 +1104,7 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct IVaultTypes.PendingWithdrawalId",
+        "internalType": "struct IVault.PendingWithdrawalId",
         "name": "pendingWithdrawalId",
         "type": "tuple"
       }
@@ -1092,7 +1181,7 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct IVaultTypes.PendingWithdrawalId[]",
+        "internalType": "struct IVault.PendingWithdrawalId[]",
         "name": "pendingWithdrawalId",
         "type": "tuple[]"
       }
@@ -1126,6 +1215,69 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "amount",
+        "type": "uint128"
+      },
+      {
+        "internalType": "int8",
+        "name": "wid",
+        "type": "int8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "user",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "creditor",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "recipient",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint128",
+        "name": "tokenAmount",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "tonAmount",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint8",
+        "name": "swapType",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint128",
+        "name": "slippageNumerator",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "slippageDenominator",
+        "type": "uint128"
+      },
+      {
+        "internalType": "bytes",
+        "name": "level3",
+        "type": "bytes"
+      }
+    ],
+    "name": "depositToFactory",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -1175,7 +1327,7 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct IVaultTypes.PendingWithdrawalId",
+        "internalType": "struct IVault.PendingWithdrawalId",
         "name": "pendingWithdrawalId",
         "type": "tuple"
       }
@@ -1200,7 +1352,7 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct IVaultTypes.PendingWithdrawalId[]",
+        "internalType": "struct IVault.PendingWithdrawalId[]",
         "name": "pendingWithdrawalId",
         "type": "tuple[]"
       }
@@ -1397,12 +1549,12 @@
             "type": "uint256"
           },
           {
-            "internalType": "enum IVaultTypes.ApproveStatus",
+            "internalType": "enum IVault.ApproveStatus",
             "name": "approveStatus",
             "type": "uint8"
           }
         ],
-        "internalType": "struct IVaultTypes.PendingWithdrawalParams",
+        "internalType": "struct IVault.PendingWithdrawalParams",
         "name": "",
         "type": "tuple"
       }
@@ -1562,7 +1714,7 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct IVaultTypes.PendingWithdrawalId",
+        "internalType": "struct IVault.PendingWithdrawalId",
         "name": "pendingWithdrawalId",
         "type": "tuple"
       }
@@ -1737,12 +1889,12 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct IVaultTypes.PendingWithdrawalId[]",
+        "internalType": "struct IVault.PendingWithdrawalId[]",
         "name": "pendingWithdrawalId",
         "type": "tuple[]"
       },
       {
-        "internalType": "enum IVaultTypes.ApproveStatus[]",
+        "internalType": "enum IVault.ApproveStatus[]",
         "name": "approveStatus",
         "type": "uint8[]"
       }
@@ -1767,12 +1919,12 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct IVaultTypes.PendingWithdrawalId",
+        "internalType": "struct IVault.PendingWithdrawalId",
         "name": "pendingWithdrawalId",
         "type": "tuple"
       },
       {
-        "internalType": "enum IVaultTypes.ApproveStatus",
+        "internalType": "enum IVault.ApproveStatus",
         "name": "approveStatus",
         "type": "uint8"
       }
@@ -2031,7 +2183,7 @@
             "type": "tuple"
           }
         ],
-        "internalType": "struct IVaultTypes.StrategyParams",
+        "internalType": "struct IVault.StrategyParams",
         "name": "",
         "type": "tuple"
       }
@@ -2322,7 +2474,7 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct IVaultTypes.WithdrawalPeriodParams",
+        "internalType": "struct IVault.WithdrawalPeriodParams",
         "name": "",
         "type": "tuple"
       }

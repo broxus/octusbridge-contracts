@@ -1,10 +1,17 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.2;
 
-import "./IVaultEvents.sol";
+import "../IEverscale.sol";
 
 
-interface IVaultBasic is IVaultEvents {
+interface IVaultBasic is IEverscale {
+    struct WithdrawalParams {
+        EverscaleAddress sender;
+        uint256 amount;
+        address recipient;
+        uint32 chainId;
+    }
+
     function bridge() external view returns (address);
     function configuration() external view returns (EverscaleAddress memory);
     function withdrawalIds(bytes32) external view returns (bool);
@@ -45,13 +52,40 @@ interface IVaultBasic is IVaultEvents {
 
     function deposit(
         EverscaleAddress memory recipient,
+
         uint256 amount
     ) external;
 
-    function saveWithdrawal(
-        bytes memory payload,
-        bytes[] memory signatures
-    ) external returns (bool instantWithdrawal, PendingWithdrawalId memory pendingWithdrawalId);
+    function decodeWithdrawalEventData(
+        bytes memory eventData
+    ) external view returns(WithdrawalParams memory);
 
     function sweep(address _token) external;
+
+    // Events
+    event Deposit(
+        uint256 amount,
+        int128 wid,
+        uint256 addr
+    );
+
+    event InstantWithdrawal(
+        bytes32 payloadId,
+        address recipient,
+        uint256 amount
+    );
+
+    event UpdateBridge(address bridge);
+    event UpdateConfiguration(int128 wid, uint256 addr);
+    event UpdateTargetDecimals(uint256 targetDecimals);
+    event UpdateRewards(int128 wid, uint256 addr);
+
+    event UpdateDepositFee(uint256 fee);
+    event UpdateWithdrawFee(uint256 fee);
+
+    event UpdateGovernance(address governance);
+    event NewPendingGovernance(address governance);
+    event UpdateGuardian(address guardian);
+
+    event EmergencyShutdown(bool active);
 }
