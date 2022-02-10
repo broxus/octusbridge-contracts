@@ -111,19 +111,19 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
     mapping (uint64 => PendingDeposit) deposits;
 
     function getDetails() public view responsible returns (BaseDetails) {
-        return{ value: 0, flag: MsgFlag.REMAINING_GAS }base_details;
+        return{ value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false }base_details;
     }
 
     function getCodeData() external view responsible returns (CodeData) {
-        return{ value: 0, flag: MsgFlag.REMAINING_GAS }code_data;
+        return{ value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false }code_data;
     }
 
     function getRelayRoundsDetails() external override view responsible returns (RelayRoundsDetails) {
-        return{ value: 0, flag: MsgFlag.REMAINING_GAS }round_details;
+        return{ value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false }round_details;
     }
 
     function getRelayConfig() external view responsible returns (RelayConfigDetails) {
-        return{ value: 0, flag: MsgFlag.REMAINING_GAS }relay_config;
+        return{ value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false }relay_config;
     }
 
     function addDelegate(address addr, uint callHash) public onlyAdmin {
@@ -221,7 +221,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
     }
 
     function isActive() external view responsible returns (bool) {
-        return{ value: 0, flag: MsgFlag.REMAINING_GAS } active;
+        return{ value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false } active;
     }
 
     function setRelayConfig(RelayConfigDetails new_relay_config, address send_gas_to) external onlyDaoRoot {
@@ -478,7 +478,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
                 }
             }
         }
-        return { value: 0, flag: MsgFlag.REMAINING_GAS } user_reward_tokens;
+        return { value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false } user_reward_tokens;
     }
 
     function updatePoolInfo() internal {
@@ -532,7 +532,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
     }
 
     function getUserDataAddress(address user) public view responsible returns (address) {
-        return { value: 0, flag: MsgFlag.REMAINING_GAS } address(tvm.hash(_buildInitData(
+        return { value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false } address(tvm.hash(_buildInitData(
             PlatformTypes.UserData,
             _buildUserDataParams(user)
         )));
