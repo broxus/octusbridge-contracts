@@ -4,7 +4,6 @@ pragma solidity ^0.8.2;
 import "./interfaces/IBridge.sol";
 import "./interfaces/vault/IVault.sol";
 import "./interfaces/IRegistry.sol";
-import "./interfaces/IVaultWrapper.sol";
 import "./interfaces/IEverscale.sol";
 
 import "@openzeppelin/contracts/access/Ownable.sol";

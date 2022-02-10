@@ -476,6 +476,7 @@ contract Vault is IVault, VaultHelpers {
         override
         onlyEmergencyDisabled
         withdrawalNotSeenBefore(payload)
+        returns (bool instantWithdrawal, PendingWithdrawalId memory pendingWithdrawalId)
     {
         require(
             IBridge(bridge).verifySignedEverscaleEvent(payload, signatures) == 0,

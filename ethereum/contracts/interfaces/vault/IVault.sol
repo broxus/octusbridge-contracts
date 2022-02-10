@@ -118,7 +118,10 @@ interface IVault is IVaultBasic {
     function saveWithdraw(
         bytes memory payload,
         bytes[] memory signatures
-    ) external;
+    ) external returns (
+        bool instantWithdrawal,
+        PendingWithdrawalId memory pendingWithdrawalId
+    );
 
     function saveWithdraw(
         bytes memory payload,
