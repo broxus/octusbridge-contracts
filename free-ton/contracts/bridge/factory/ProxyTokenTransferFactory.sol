@@ -2,7 +2,7 @@ pragma ton-solidity >= 0.39.0;
 
 
 import './../../utils/TransferUtils.sol';
-import './../../../../node_modules/@broxus/contracts/contracts/utils/RandomNonce.sol';
+import '@broxus/contracts/contracts/utils/RandomNonce.sol';
 import "./../proxy/ProxyTokenTransfer.sol";
 
 

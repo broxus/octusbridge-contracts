@@ -31,7 +31,7 @@
     "solidity-docgen": "^0.5.7",
     "ton-client-js": "^0.28.1",
     "ton-client-node-js": "^0.24.0",
-    "ton-eth-bridge-token-contracts": "github:broxus/ton-eth-bridge-token-contracts#9720279528091b730ccc47a3b39d18de67a79d57",
+    "ton-eth-bridge-token-contracts": "git://github.com/broxus/ton-eth-bridge-token-contracts#d3c1cd920c0320ffaab03b54c878dd0e06fed3c7",
     "ton-testing-suite": "^1.2.1",
     "truffle": "^5.1.51",
     "truffle-export-abi": "^1.0.1",

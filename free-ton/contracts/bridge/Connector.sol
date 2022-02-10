@@ -3,7 +3,7 @@ pragma ton-solidity >= 0.39.0;
 import "./../utils/ErrorCodes.sol";
 import "./interfaces/IConnector.sol";
 
-import './../../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol';
+import '@broxus/contracts/contracts/access/InternalOwner.sol';
 
 /**
     @title Connector contract is used for connecting event configurations to the

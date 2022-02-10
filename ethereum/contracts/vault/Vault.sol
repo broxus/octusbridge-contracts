@@ -468,7 +468,7 @@ contract Vault is IVault, VaultHelpers {
         @return instantWithdrawal Boolean, was withdrawal instantly filled or saved as a pending withdrawal.
         @return pendingWithdrawalId Pending withdrawal ID. `(address(0), 0)` if no pending withdrawal was created.
     */
-    function saveWithdrawal(
+    function saveWithdraw(
         bytes memory payload,
         bytes[] memory signatures
     )
@@ -476,7 +476,6 @@ contract Vault is IVault, VaultHelpers {
         override
         onlyEmergencyDisabled
         withdrawalNotSeenBefore(payload)
-        returns (bool instantWithdrawal, PendingWithdrawalId memory pendingWithdrawalId)
     {
         require(
             IBridge(bridge).verifySignedEverscaleEvent(payload, signatures) == 0,
@@ -543,13 +542,13 @@ contract Vault is IVault, VaultHelpers {
     }
 
     /**
-        @notice Save withdrawal receipt, same as `saveWithdrawal(bytes payload, bytes[] signatures)`,
+        @notice Save withdrawal receipt, same as `saveWithdraw(bytes payload, bytes[] signatures)`,
             but allows to immediately set up bounty.
         @param payload Withdrawal receipt. Bytes encoded `struct EverscaleEvent`.
         @param signatures List of relay's signatures. See not on `Bridge.verifySignedEverscaleEvent`.
         @param bounty New value for pending withdrawal bounty.
     */
-    function saveWithdrawal(
+    function saveWithdraw(
         bytes memory payload,
         bytes[] memory signatures,
         uint bounty
@@ -560,7 +559,7 @@ contract Vault is IVault, VaultHelpers {
         (
             bool instantWithdraw,
             PendingWithdrawalId memory pendingWithdrawalId
-        ) = saveWithdrawal(payload, signatures);
+        ) = saveWithdraw(payload, signatures);
 
         if (!instantWithdraw) {
             _pendingWithdrawalBountyUpdate(pendingWithdrawalId, bounty);

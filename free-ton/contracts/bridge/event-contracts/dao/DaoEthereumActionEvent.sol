@@ -3,20 +3,20 @@ pragma AbiHeader time;
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
-import "./../base/TonBaseEvent.sol";
+import "./../base/EverscaleBaseEvent.sol";
 import "./../../interfaces/IEventNotificationReceiver.sol";
-import "./../../interfaces/event-contracts/ITonEvent.sol";
+import "./../../interfaces/event-contracts/IEverscaleEvent.sol";
 import "../../../utils/cell-encoder/DaoCellEncoder.sol";
 import "./../../../utils/ErrorCodes.sol";
-import './../../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
+import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 /*
     @title DAO Ethereum Action event configuration
     @dev This implementation is used for executing DAO actions in EVM based networks
 */
-contract DaoEthereumActionEvent is TonBaseEvent, DaoCellEncoder {
+contract DaoEthereumActionEvent is EverscaleBaseEvent, DaoCellEncoder {
 
-    constructor(address _initializer, TvmCell _meta) TonBaseEvent(_initializer, _meta) public {}
+    constructor(address _initializer, TvmCell _meta) EverscaleBaseEvent(_initializer, _meta) public {}
 
 
     function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
@@ -44,7 +44,7 @@ contract DaoEthereumActionEvent is TonBaseEvent, DaoCellEncoder {
     function onReject() override internal {}
 
     function getDetails() public view responsible returns (
-        TonEventInitData _eventInitData,
+        EverscaleEventInitData _eventInitData,
         Status _status,
         uint[] _confirms,
         uint[] _rejects,

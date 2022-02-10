@@ -4,18 +4,18 @@ pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 import "./BaseEvent.sol";
-import "../../interfaces/event-contracts/ITonEvent.sol";
+import "../../interfaces/event-contracts/IEverscaleEvent.sol";
 
-contract TonBaseEvent is BaseEvent, ITonEvent {
+contract EverscaleBaseEvent is BaseEvent, IEverscaleEvent {
     // Event data
-    TonEventInitData static eventInitData;
+    EverscaleEventInitData static eventInitData;
     // Ethereum payload signatures for confirmations
     mapping (uint => bytes) public signatures;
 
     event Confirm(uint relay, bytes signature);
 
     /*
-        @dev Should be deployed only by TonEventConfiguration contract
+        @dev Should be deployed only by EverscaleEventConfiguration contract
         @param _initializer The address who paid for contract deployment.
         Receives all contract balance at the end of event contract lifecycle.
     */
@@ -32,7 +32,7 @@ contract TonBaseEvent is BaseEvent, ITonEvent {
         loadRelays();
     }
 
-    function getEventInitData() public view responsible returns (TonEventInitData) {
+    function getEventInitData() public view responsible returns (EverscaleEventInitData) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS} eventInitData;
     }
 

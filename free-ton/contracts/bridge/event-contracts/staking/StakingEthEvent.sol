@@ -9,7 +9,7 @@ import "../../interfaces/event-contracts/IEthereumEvent.sol";
 import "../../interfaces/IProxy.sol";
 import "../../../utils/ErrorCodes.sol";
 import "../../../utils/cell-encoder/StakingCellEncoder.sol";
-import '../../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
+import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
 
@@ -30,7 +30,7 @@ contract StakingEthEvent is EthereumBaseEvent, StakingCellEncoder {
     function onInit() override internal {}
 
     function onConfirm() override internal {
-        IProxy(eventInitData.configuration).broxusBridgeCallback{
+        IProxy(eventInitData.configuration).onEventConfirmed{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, initializer);
     }

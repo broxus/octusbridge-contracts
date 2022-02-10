@@ -52,7 +52,7 @@ describe('Test DAO in Staking', async function () {
 
   const deployEventConfiguration = async function (_owner, _dao) {
     const [keyPair] = await locklift.keys.getKeyPairs();
-    const DaoEthereumActionEventConfiguration = await locklift.factory.getContract('TonEventConfiguration');
+    const DaoEthereumActionEventConfiguration = await locklift.factory.getContract('EverscaleEventConfiguration');
     const DaoEthereumActionEvent = await locklift.factory.getContract('DaoEthereumActionEvent');
 
     return await locklift.giver.deployContract({

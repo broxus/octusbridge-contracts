@@ -83,7 +83,7 @@ describe('Test Vault DAI deposit', async () => {
     it('Save withdrawal', async () => {
       const bob = await ethers.getNamedSigner('bob');
 
-      await expect(() => vault['saveWithdrawal(bytes,bytes[])'](payload, signatures))
+      await expect(() => vault['saveWithdraw(bytes,bytes[])'](payload, signatures))
         .to.changeTokenBalances(
           dai,
           [vault, bob],
@@ -104,7 +104,7 @@ describe('Test Vault DAI deposit', async () => {
     });
 
     it('Try to reuse payload', async () => {
-      await expect(vault['saveWithdrawal(bytes,bytes[])'](payload, signatures)).to.be.reverted;
+      await expect(vault['saveWithdraw(bytes,bytes[])'](payload, signatures)).to.be.reverted;
     });
   });
 
@@ -134,7 +134,7 @@ describe('Test Vault DAI deposit', async () => {
 
       const signatures = await utils.getPayloadSignatures(payload);
 
-      await expect(() => vault['saveWithdrawal(bytes,bytes[],uint256)'](payload, signatures, bounty))
+      await expect(() => vault['saveWithdraw(bytes,bytes[],uint256)'](payload, signatures, bounty))
         .to.changeTokenBalances(
           dai,
           [vault, eve],

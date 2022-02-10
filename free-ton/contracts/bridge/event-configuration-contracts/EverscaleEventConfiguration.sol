@@ -2,25 +2,25 @@ pragma ton-solidity >= 0.39.0;
 pragma AbiHeader expire;
 
 
-import './../interfaces/event-contracts/ITonEvent.sol';
-import "./../interfaces/event-configuration-contracts/ITonEventConfiguration.sol";
+import './../interfaces/event-contracts/IEverscaleEvent.sol';
+import "./../interfaces/event-configuration-contracts/IEverscaleEventConfiguration.sol";
 
-import './../event-contracts/base/TonBaseEvent.sol';
+import './../event-contracts/base/EverscaleBaseEvent.sol';
 
 import './../../utils/TransferUtils.sol';
 import './../../utils/ErrorCodes.sol';
 
-import './../../../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol';
-import './../../../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.sol';
-import './../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
+import '@broxus/contracts/contracts/access/InternalOwner.sol';
+import '@broxus/contracts/contracts/utils/CheckPubKey.sol';
+import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
 /*
     @title Basic example of TON event configuration
 */
-contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, InternalOwner, CheckPubKey {
+contract EverscaleEventConfiguration is IEverscaleEventConfiguration, TransferUtils, InternalOwner, CheckPubKey {
     BasicConfiguration public static basicConfiguration;
-    TonEventConfiguration public static networkConfiguration;
+    EverscaleEventConfiguration public static networkConfiguration;
 
     TvmCell public meta;
 
@@ -70,9 +70,9 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
     /// Extends event vote data with configuration params.
     /// @param eventVoteData Event vote data structure, passed by relay
     function buildEventInitData(
-        ITonEvent.TonEventVoteData eventVoteData
+        IEverscaleEvent.EverscaleEventVoteData eventVoteData
     ) internal view returns(
-        ITonEvent.TonEventInitData eventInitData
+        IEverscaleEvent.EverscaleEventInitData eventInitData
     ) {
         eventInitData.voteData = eventVoteData;
 
@@ -83,7 +83,7 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
     /// @dev Deploy event contract
     /// @param eventVoteData Event vote data
     function deployEvent(
-        ITonEvent.TonEventVoteData eventVoteData
+        IEverscaleEvent.EverscaleEventVoteData eventVoteData
     ) override external reserveBalance {
         require(msg.sender == networkConfiguration.eventEmitter, ErrorCodes.SENDER_IS_NOT_EVENT_EMITTER);
         require(msg.value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
@@ -100,13 +100,13 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
         }
 
 
-        ITonEvent.TonEventInitData eventInitData = buildEventInitData(eventVoteData);
+        IEverscaleEvent.EverscaleEventInitData eventInitData = buildEventInitData(eventVoteData);
 
         address eventContract = deriveEventAddress(eventVoteData);
 
         emit NewEventContract(eventContract);
 
-        new TonBaseEvent{
+        new EverscaleBaseEvent{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED,
             code: basicConfiguration.eventCode,
@@ -123,7 +123,7 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
         @returns eventContract Address of the corresponding ethereum event contract
     */
     function deriveEventAddress(
-        ITonEvent.TonEventVoteData eventVoteData
+        IEverscaleEvent.EverscaleEventVoteData eventVoteData
     )
         override
         public
@@ -132,10 +132,10 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
     returns (
         address eventContract
     ) {
-        ITonEvent.TonEventInitData eventInitData = buildEventInitData(eventVoteData);
+        IEverscaleEvent.EverscaleEventInitData eventInitData = buildEventInitData(eventVoteData);
 
         TvmCell stateInit = tvm.buildStateInit({
-            contr: TonBaseEvent,
+            contr: EverscaleBaseEvent,
             varInit: {
                 eventInitData: eventInitData
             },
@@ -153,7 +153,7 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
     */
     function getDetails() override public view responsible returns(
         BasicConfiguration _basicConfiguration,
-        TonEventConfiguration _networkConfiguration,
+        EverscaleEventConfiguration _networkConfiguration,
         TvmCell _meta
     ) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS}(
@@ -169,6 +169,6 @@ contract TonEventConfiguration is ITonEventConfiguration, TransferUtils, Interna
         @return _type Configuration type - Ethereum or TON
     */
     function getType() override public pure responsible returns(EventType _type) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} EventType.TON;
+        return {value: 0, flag: MsgFlag.REMAINING_GAS} EventType.Everscale;
     }
 }

@@ -9,31 +9,27 @@ import "./../../utils/TransferUtils.sol";
 
 import "./../interfaces/IProxy.sol";
 import "./../interfaces/IProxyTokenTransferConfigurable.sol";
-import "./../interfaces/event-configuration-contracts/ITonEventConfiguration.sol";
+import "./../interfaces/event-configuration-contracts/IEverscaleEventConfiguration.sol";
 
-import "./../../token/interfaces/IPausedCallback.sol";
-import "./../../token/interfaces/IPausable.sol";
-import "./../../token/interfaces/IBurnTokensCallback.sol";
-import "./../../token/interfaces/IRootTokenContract.sol";
-import "./../../token/interfaces/ISendSurplusGas.sol";
-import "./../../token/interfaces/ITransferOwner.sol";
+import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.sol";
+import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensBurnCallback.sol";
+import "ton-eth-bridge-token-contracts/contracts/interfaces/ITransferableOwnership.sol";
 
-import './../../../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol';
-import './../../../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.sol';
-import './../../../../node_modules/@broxus/contracts/contracts/utils/RandomNonce.sol';
-import "./../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol";
+import '@broxus/contracts/contracts/access/InternalOwner.sol';
+import '@broxus/contracts/contracts/utils/CheckPubKey.sol';
+import '@broxus/contracts/contracts/utils/RandomNonce.sol';
+import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
 
 /// @title Proxy for cross chain token transfers
 /// @dev In case of ETH-TON token transfer, this proxy should receive
-/// callback from the corresponding EthereumEventConfiguration. After that it mints
+/// `onEventConfirmed` callback from the corresponding EthereumEventConfiguration. Then it mints
 /// the specified amount of tokens to the user.
 /// In case of TON-ETH token transfer, this proxy should receive burn callback from the token
-/// and emit TokenBurn event, which will be signed and then sent to the corresponding EVM network
+/// and deploy event. This event will be signed by relays so it can be sent to the corresponding EVM Vault.
 contract ProxyTokenTransfer is
     IProxy,
     IProxyTokenTransferConfigurable,
-    IPausable,
-    IBurnTokensCallback,
+    IAcceptTokensBurnCallback,
     RandomNonce,
     CellEncoder,
     InternalOwner,
@@ -57,7 +53,7 @@ contract ProxyTokenTransfer is
         setOwnership(owner_);
     }
 
-    function broxusBridgeCallback(
+    function onEventConfirmed(
         IEthereumEvent.EthereumEventInitData eventData,
         address gasBackAddress
     ) public override onlyEthereumConfiguration reserveBalance {
@@ -75,25 +71,28 @@ contract ProxyTokenTransfer is
         require(tokens > 0, ErrorCodes.WRONG_TOKENS_AMOUNT_IN_PAYLOAD);
         require(owner_address.value != 0, ErrorCodes.WRONG_OWNER_IN_PAYLOAD);
 
-        IRootTokenContract(config.tokenRoot).deployWallet{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+        TvmCell empty;
+
+        ITokenRoot(config.tokenRoot).mint{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
             tokens,
-            config.settingsDeployWalletGrams,
-            0,
             owner_address,
-            gasBackAddress
+            config.settingsDeployWalletGrams,
+            gasBackAddress,
+            true,
+            empty
         );
     }
 
-    function burnCallback(
+    function onAcceptTokensBurn(
         uint128 tokens,
-        TvmCell payload,
-        uint256 sender_public_key,
-        address sender_address,
-        address,
-        address send_gas_to
+        address walletOwner,
+        address wallet,
+        address remainingGasTo,
+        TvmCell payload
     ) public override reserveBalance {
         if (config.tokenRoot == msg.sender) {
             burnedCount += tokens;
+
             (
                 uint160 ethereumAddress,
                 uint32 chainId
@@ -108,41 +107,62 @@ contract ProxyTokenTransfer is
 //            );
 
             TvmCell eventData = encodeTonEventData(
-                sender_address.wid,
-                sender_address.value,
+                walletOwner.wid,
+                walletOwner.value,
                 tokens,
                 ethereumAddress,
                 chainId
             );
-            ITonEvent.TonEventVoteData eventVoteData = ITonEvent.TonEventVoteData(tx.timestamp, now, eventData);
-            ITonEventConfiguration(config.tonConfiguration).deployEvent{
+
+            IEverscaleEvent.EverscaleEventVoteData eventVoteData = IEverscaleEvent.EverscaleEventVoteData(tx.timestamp, now, eventData);
+
+            IEverscaleEventConfiguration(config.tonConfiguration).deployEvent{
                 value: 0,
                 flag: MsgFlag.ALL_NOT_RESERVED
             }(eventVoteData);
         } else {
             if (isArrayContainsAddress(config.outdatedTokenRoots, msg.sender)) {
-                IRootTokenContract(config.tokenRoot).deployWallet{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+                TvmCell empty;
+
+                ITokenRoot(config.tokenRoot).mint{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
                     tokens,
+                    walletOwner,
                     config.settingsDeployWalletGrams,
-                    sender_public_key,
-                    sender_address,
-                    send_gas_to
+                    remainingGasTo,
+                    true,
+                    empty
                 );
             } else {
-                send_gas_to.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED});
+                remainingGasTo.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED});
             }
         }
     }
 
-    function getDetails() public view responsible returns (Configuration, address, uint128, bool) {
+    function getDetails()
+        public
+        view
+        responsible
+        returns (Configuration, address, uint128, bool)
+    {
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} (config, owner, burnedCount, paused);
     }
 
-    function getTokenRoot() public view responsible returns (address) {
+    function getTokenRoot()
+        public
+        view
+        responsible
+        returns (address)
+    {
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} config.tokenRoot;
     }
 
-    function getConfiguration() override public view responsible returns (Configuration) {
+    function getConfiguration()
+        override
+        public
+        view
+        responsible
+        returns (Configuration)
+    {
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} config;
     }
 
@@ -153,34 +173,22 @@ contract ProxyTokenTransfer is
         config = _config;
     }
 
-    function withdrawExtraGasFromTokenRoot(
-        address root,
-        address to
-    ) public view onlyOwner reserveBalance {
-        ISendSurplusGas(root).sendSurplusGas{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(to);
-    }
-
     function transferTokenOwnership(
         address target,
-        uint256 external_owner_pubkey_,
-        address internal_owner_address_
+        address newOwner
     ) external view onlyOwner reserveBalance {
-        ITransferOwner(target).transferOwner{
+        mapping(address => ITransferableOwnership.CallbackParams) empty;
+
+        ITransferableOwnership(target).transferOwnership{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
-        }(external_owner_pubkey_, internal_owner_address_);
+        }(newOwner, msg.sender, empty);
     }
 
-    function setPaused(bool value) public override onlyOwner reserveBalance {
-        paused = value;
-        IPausable(config.tokenRoot).setPaused{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(paused);
-    }
-
-    function sendPausedCallbackTo(uint64 callback_id, address callback_addr) public override reserveBalance {
-        IPausedCallback(callback_addr).pausedCallback{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(callback_id, paused);
-    }
-
-    function isArrayContainsAddress(address[] array, address searchElement) private pure returns (bool){
+    function isArrayContainsAddress(
+        address[] array,
+        address searchElement
+    ) private pure returns (bool){
         for (address value: array) {
             if (searchElement == value) {
                 return true;

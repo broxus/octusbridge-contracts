@@ -73,7 +73,7 @@ const main = async () => {
   console.log(`Last round in Ethereum bridge: ${lastRound}`);
 
   // Get events from the configuration
-  const roundRelaysConfiguration = await locklift.factory.getContract('TonEventConfiguration');
+  const roundRelaysConfiguration = await locklift.factory.getContract('EverscaleEventConfiguration');
   roundRelaysConfiguration.address = configuration;
 
   const cellEncoderStandalone = await locklift.factory.getContract('CellEncoderStandalone');

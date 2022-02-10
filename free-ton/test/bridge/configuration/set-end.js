@@ -2,7 +2,7 @@ const {
   setupRelays,
   setupBridge,
   setupEthereumEventConfiguration,
-  setupTonEventConfiguration,
+  setupEverscaleEventConfiguration,
   expect,
 } = require('../../utils');
 
@@ -52,10 +52,10 @@ describe('Test setting configuration end', async function() {
   });
   
   describe('Ton event configuration', async () => {
-    let tonEventConfiguration;
+    let everscaleEventConfiguration;
 
     it('Setup event configuration', async () => {
-      [tonEventConfiguration] = await setupTonEventConfiguration(
+      [everscaleEventConfiguration] = await setupEverscaleEventConfiguration(
         bridgeOwner,
         bridge,
         cellEncoder,
@@ -64,7 +64,7 @@ describe('Test setting configuration end', async function() {
     
     it('Set end timestamp', async () => {
       await bridgeOwner.runTarget({
-        contract: tonEventConfiguration,
+        contract: everscaleEventConfiguration,
         method: 'setEndTimestamp',
         params: {
           endTimestamp: 1
@@ -73,7 +73,7 @@ describe('Test setting configuration end', async function() {
     });
   
     it('Check configuration end timestamp', async () => {
-      const details = await tonEventConfiguration.call({ method: 'getDetails' });
+      const details = await everscaleEventConfiguration.call({ method: 'getDetails' });
 
       expect(details._networkConfiguration.endTimestamp)
         .to.be.bignumber.equal(1, 'Wrong end timestamps');

@@ -57,7 +57,7 @@ describe('Check reaching undeclared withdraw limit', async () => {
 
         const signatures = await utils.getPayloadSignatures(payload);
 
-        await vault['saveWithdrawal(bytes,bytes[])'](payload, signatures);
+        await vault['saveWithdraw(bytes,bytes[])'](payload, signatures);
 
         snapshot = await ethers.provider.send("evm_snapshot");
     });

@@ -12,11 +12,11 @@ import "./interfaces/IStakingAccount.sol";
 import "./interfaces/IProposer.sol";
 import "./interfaces/IUpgradable.sol";
 
-import "../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol";
-import "../../../node_modules/@broxus/contracts/contracts/platform/Platform.sol";
+import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
+import "@broxus/contracts/contracts/platform/Platform.sol";
 import "../utils/Delegate.sol";
 import "../utils/cell-encoder/DaoCellEncoder.sol";
-import "../bridge/interfaces/event-configuration-contracts/ITonEventConfiguration.sol";
+import "../bridge/interfaces/event-configuration-contracts/IEverscaleEventConfiguration.sol";
 
 contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate {
 
@@ -223,8 +223,8 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate {
         }
         for ((uint32 chainId, EthActionStripped[] ethActions) : chainActions) {
             TvmCell eventData = encodeDaoEthereumActionData(proposer.wid, proposer.value, chainId, ethActions);
-            ITonEvent.TonEventVoteData eventVoteData = ITonEvent.TonEventVoteData(tx.timestamp, now, eventData);
-            ITonEventConfiguration(ethereumActionEventConfiguration).deployEvent{
+            IEverscaleEvent.EverscaleEventVoteData eventVoteData = IEverscaleEvent.EverscaleEventVoteData(tx.timestamp, now, eventData);
+            IEverscaleEventConfiguration(ethereumActionEventConfiguration).deployEvent{
                 value: deployEventValue,
                 flag: MsgFlag.SENDER_PAYS_FEES,
                 bounce: false

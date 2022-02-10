@@ -242,7 +242,7 @@ describe('Test Staking Rewards', async function () {
         })
         return await stakingOwner.runTarget({
             contract: stakingRoot,
-            method: 'broxusBridgeCallback',
+            method: 'onEventConfirmed',
             params: {
                 eventData: {
                     voteData: {

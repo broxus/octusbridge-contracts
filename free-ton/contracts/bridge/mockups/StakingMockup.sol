@@ -5,8 +5,8 @@ import "./../interfaces/IStaking.sol";
 import "./../interfaces/IRound.sol";
 
 
-import "./../../../../node_modules/@broxus/contracts/contracts/utils/RandomNonce.sol";
-import "./../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol";
+import "@broxus/contracts/contracts/utils/RandomNonce.sol";
+import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
 
 
 /*

@@ -113,7 +113,6 @@ const hardhatConfig = {
     coinmarketcap: process.env.COINMARKETCAP_API_KEY,
     outputFile: 'gas-report.txt',
     noColors: true,
-    // rst: true
   },
   etherscan: {
     apiKey: process.env.ETHERSCAN_KEY

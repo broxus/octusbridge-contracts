@@ -56,7 +56,7 @@ describe('Force withdraw pending', async () => {
 
         const signatures = await utils.getPayloadSignatures(payload);
 
-        await vault['saveWithdrawal(bytes,bytes[])'](payload, signatures);
+        await vault['saveWithdraw(bytes,bytes[])'](payload, signatures);
 
         expect(await vault.pendingWithdrawalsPerUser(bob))
             .to.be.equal(1, 'Wrong pending withdrawals counter');

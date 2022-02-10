@@ -11,9 +11,9 @@ import './../event-contracts/base/EthereumBaseEvent.sol';
 import './../../utils/TransferUtils.sol';
 import './../../utils/ErrorCodes.sol';
 
-import './../../../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol';
-import './../../../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.sol';
-import './../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
+import '@broxus/contracts/contracts/access/InternalOwner.sol';
+import '@broxus/contracts/contracts/utils/CheckPubKey.sol';
+import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
 /// @title Basic Ethereum event configuration contract.
@@ -172,7 +172,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
     /// Ethereum event correctness is checked here, so event proxy contract becomes more simple
     /// @param eventInitData Ethereum event data
     /// @param gasBackAddress Ad hoc param. Used in token transfers
-    function broxusBridgeCallback(
+    function onEventConfirmed(
         IEthereumEvent.EthereumEventInitData eventInitData,
         address gasBackAddress
     ) override external reserveBalance {
@@ -197,7 +197,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
             ErrorCodes.SENDER_NOT_EVENT_CONTRACT
         );
 
-        IProxy(networkConfiguration.proxy).broxusBridgeCallback{
+        IProxy(networkConfiguration.proxy).onEventConfirmed{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, gasBackAddress);
     }

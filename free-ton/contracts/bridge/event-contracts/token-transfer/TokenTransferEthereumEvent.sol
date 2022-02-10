@@ -8,7 +8,7 @@ import "./../../interfaces/IEventNotificationReceiver.sol";
 import "./../../interfaces/event-contracts/IEthereumEvent.sol";
 import "./../../interfaces/IProxy.sol";
 import "./../../../utils/ErrorCodes.sol";
-import './../../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
+import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
 /// @title Basic example of Ethereum event configuration
@@ -37,7 +37,7 @@ contract TokenTransferEthereumEvent is EthereumBaseEvent {
     function onConfirm() override internal {
         notifyEventStatusChanged();
 
-        IProxy(eventInitData.configuration).broxusBridgeCallback{
+        IProxy(eventInitData.configuration).onEventConfirmed{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, initializer);
     }

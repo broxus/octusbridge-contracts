@@ -59,7 +59,7 @@ describe('Check reaching withdraw period limit', async () => {
 
         const signatures = await utils.getPayloadSignatures(payload);
 
-        await expect(() => vault['saveWithdrawal(bytes,bytes[])'](payload, signatures))
+        await expect(() => vault['saveWithdraw(bytes,bytes[])'](payload, signatures))
             .to.changeTokenBalances(
                 dai,
                 [vault, alice],
@@ -97,7 +97,7 @@ describe('Check reaching withdraw period limit', async () => {
 
         const signatures = await utils.getPayloadSignatures(payload);
 
-        await expect(vault['saveWithdrawal(bytes,bytes[])'](payload, signatures))
+        await expect(vault['saveWithdraw(bytes,bytes[])'](payload, signatures))
             .to.emit(vault, 'PendingWithdrawalUpdateApproveStatus')
             .withArgs(bob.address, 0, 1);
 
@@ -176,7 +176,7 @@ describe('Check reaching withdraw period limit', async () => {
 
             const signatures = await utils.getPayloadSignatures(payload);
 
-            await expect(() => vault['saveWithdrawal(bytes,bytes[])'](payload, signatures))
+            await expect(() => vault['saveWithdraw(bytes,bytes[])'](payload, signatures))
                 .to.changeTokenBalances(
                     dai,
                     [vault, eve],
@@ -228,7 +228,7 @@ describe('Check reaching withdraw period limit', async () => {
 
             const signatures = await utils.getPayloadSignatures(payload);
 
-            await expect(() => vault['saveWithdrawal(bytes,bytes[])'](payload, signatures))
+            await expect(() => vault['saveWithdraw(bytes,bytes[])'](payload, signatures))
                 .to.changeTokenBalances(
                     dai,
                     [vault, eve],

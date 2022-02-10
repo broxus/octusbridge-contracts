@@ -12,7 +12,7 @@
 			]
 		},
 		{
-			"name": "broxusBridgeCallback",
+			"name": "onEventConfirmed",
 			"inputs": [
 				{"components":[{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"},{"name":"chainId","type":"uint32"}],"name":"eventData","type":"tuple"},
 				{"name":"gasBackAddress","type":"address"}
@@ -21,14 +21,13 @@
 			]
 		},
 		{
-			"name": "burnCallback",
+			"name": "onAcceptTokensBurn",
 			"inputs": [
 				{"name":"tokens","type":"uint128"},
-				{"name":"payload","type":"cell"},
-				{"name":"sender_public_key","type":"uint256"},
-				{"name":"sender_address","type":"address"},
-				{"name":"value4","type":"address"},
-				{"name":"send_gas_to","type":"address"}
+				{"name":"walletOwner","type":"address"},
+				{"name":"wallet","type":"address"},
+				{"name":"remainingGasTo","type":"address"},
+				{"name":"payload","type":"cell"}
 			],
 			"outputs": [
 			]
@@ -73,37 +72,10 @@
 			]
 		},
 		{
-			"name": "withdrawExtraGasFromTokenRoot",
-			"inputs": [
-				{"name":"root","type":"address"},
-				{"name":"to","type":"address"}
-			],
-			"outputs": [
-			]
-		},
-		{
 			"name": "transferTokenOwnership",
 			"inputs": [
 				{"name":"target","type":"address"},
-				{"name":"external_owner_pubkey_","type":"uint256"},
-				{"name":"internal_owner_address_","type":"address"}
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "setPaused",
-			"inputs": [
-				{"name":"value","type":"bool"}
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "sendPausedCallbackTo",
-			"inputs": [
-				{"name":"callback_id","type":"uint64"},
-				{"name":"callback_addr","type":"address"}
+				{"name":"newOwner","type":"address"}
 			],
 			"outputs": [
 			]

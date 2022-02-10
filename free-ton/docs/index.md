@@ -138,7 +138,7 @@
 **Author**: https://github.com/pavlovdog
 
 
-## broxusBridgeCallback(((uint256,uint32,TvmCell,uint32,uint256),address,address,uint32),address)
+## onEventConfirmed(((uint256,uint32,TvmCell,uint32,uint256),address,address,uint32),address)
 
 **Details**: Receives execute callback from ethereum event and send it to the event proxy contract. Ethereum event correctness is checked here, so event proxy contract becomes more simple
 
@@ -207,14 +207,14 @@
 
 
 # TonEvent
-**Path**: [contracts/bridge/event-contracts/TonEvent.sol](../contracts/bridge/event-contracts/token-transfer/TokenTransferTonEvent.sol)
+**Path**: [contracts/bridge/event-contracts/TonEvent.sol](../contracts/bridge/event-contracts/token-transfer/TokenTransferEverscaleEvent.sol)
 
 
 
 
 
-# TonEventConfiguration
-**Path**: [contracts/bridge/event-configuration-contracts/TonEventConfiguration.sol](./../contracts/bridge/event-configuration-contracts/TonEventConfiguration.sol)
+# EverscaleEventConfiguration
+**Path**: [contracts/bridge/event-configuration-contracts/EverscaleEventConfiguration.sol](./../contracts/bridge/event-configuration-contracts/EverscaleEventConfiguration.sol)
 
 
 

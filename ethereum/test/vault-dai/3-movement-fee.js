@@ -122,7 +122,7 @@ describe('Check deposit / withdraw fees', async () => {
 
       const fee = amount.mul(WITHDRAW_FEE).div(BPS);
 
-      await expect(() => vault['saveWithdrawal(bytes,bytes[])'](payload, signatures))
+      await expect(() => vault['saveWithdraw(bytes,bytes[])'](payload, signatures))
           .to.changeTokenBalances(
               dai,
               [vault, bob],

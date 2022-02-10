@@ -3,7 +3,7 @@ pragma AbiHeader pubkey;
 //pragma AbiHeader expire;
 
 import "./StakingUpgradable.sol";
-import "../../bridge/interfaces/event-configuration-contracts/ITonEventConfiguration.sol";
+import "../../bridge/interfaces/event-configuration-contracts/IEverscaleEventConfiguration.sol";
 import "../../bridge/interfaces/IProxy.sol";
 
 
@@ -22,7 +22,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
         );
     }
 
-    function broxusBridgeCallback(
+    function onEventConfirmed(
         IEthereumEvent.EthereumEventInitData eventData,
         address gasBackAddress
     ) external override onlyEthTonConfig {
@@ -328,8 +328,8 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
             event_builder.store(round_num); // 32
             event_builder.store(eth_keys); // ref
             event_builder.store(round_end_time);
-            ITonEvent.TonEventVoteData event_data = ITonEvent.TonEventVoteData(tx.timestamp, now, event_builder.toCell());
-            ITonEventConfiguration(base_details.bridge_event_config_ton_eth).deployEvent{value: tonEventDeployValue}(event_data);
+            IEverscaleEvent.EverscaleEventVoteData event_data = IEverscaleEvent.EverscaleEventVoteData(tx.timestamp, now, event_builder.toCell());
+            IEverscaleEventConfiguration(base_details.bridge_event_config_ton_eth).deployEvent{value: tonEventDeployValue}(event_data);
         }
 
         if (round_num > 0) {

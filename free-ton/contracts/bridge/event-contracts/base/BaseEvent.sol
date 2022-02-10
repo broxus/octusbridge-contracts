@@ -11,7 +11,7 @@ import "../../interfaces/IRound.sol";
 import "../../interfaces/IEventNotificationReceiver.sol";
 import "../../interfaces/event-contracts/IBasicEvent.sol";
 
-import '../../../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
+import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
 abstract contract BaseEvent is IBasicEvent, CellEncoder, TransferUtils{

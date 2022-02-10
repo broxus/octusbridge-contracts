@@ -2,7 +2,7 @@ pragma ton-solidity >= 0.39.0;
 
 
 interface IBasicEventConfiguration {
-    enum EventType { Ethereum, TON }
+    enum EventType { Ethereum, Everscale }
 
     struct BasicConfiguration {
         bytes eventABI;

@@ -265,22 +265,26 @@ describe('Test ethereum event confirm', async function() {
 
   describe('Test Proxy', async () => {
     it('Test Proxy token transfer ownership', async () => {
-      const token = await getTokenRoot(await proxy.call({method: 'getTokenRoot'}));
-      expect((await token.call({method: 'getDetails'})).root_owner_address)
-        .to.be.equal(proxy.address, 'Wrong initial token owner');
-      const tx = await bridgeOwner.runTarget({
+      const token = await getTokenRoot(await proxy.call({
+        method: 'getTokenRoot'
+      }));
+
+      expect(await token.call({
+        method: 'rootOwner'
+      })).to.be.equal(proxy.address, 'Wrong initial token owner');
+
+      await bridgeOwner.runTarget({
         contract: proxy,
         method: 'transferTokenOwnership',
         params: {
           target: token.address,
-          external_owner_pubkey_: 0,
-          internal_owner_address_: bridgeOwner.address
+          newOwner: bridgeOwner.address
         },
         value: locklift.utils.convertCrystal(1, 'nano')
       });
-      expect((await token.call({method: 'getDetails'})).root_owner_address)
+
+      expect(await token.call({method: 'rootOwner'}))
         .to.be.equal(bridgeOwner.address, 'Wrong token owner after transfer');
     });
   });
-
 });

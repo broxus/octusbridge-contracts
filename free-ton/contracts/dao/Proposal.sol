@@ -12,9 +12,9 @@ import "./structures/PlatformTypes.sol";
 
 import {PlatformTypes as StakingPlatformTypes} from "../staking/libraries/PlatformTypes.sol";
 
-import "../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol";
-import "../../../node_modules/@broxus/contracts/contracts/platform/Platform.sol";
-import "../../../node_modules/@broxus/contracts/contracts/platform/PlatformBase.sol";
+import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
+import "@broxus/contracts/contracts/platform/Platform.sol";
+import "@broxus/contracts/contracts/platform/PlatformBase.sol";
 
 contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformTypes {
     uint32 public /*static */ id;

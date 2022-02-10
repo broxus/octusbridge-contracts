@@ -2,7 +2,7 @@ const {
   setupRelays,
   setupBridge,
   setupEthereumEventConfiguration,
-  setupTonEventConfiguration,
+  setupEverscaleEventConfiguration,
   expect,
 } = require('../../utils');
 
@@ -50,10 +50,10 @@ describe('Test setting configuration meta', async function() {
   });
   
   describe('Ton event configuration', async () => {
-    let tonEventConfiguration;
+    let everscaleEventConfiguration;
 
     it('Setup event configuration', async () => {
-      [tonEventConfiguration] = await setupTonEventConfiguration(
+      [everscaleEventConfiguration] = await setupEverscaleEventConfiguration(
         bridgeOwner,
         bridge,
         cellEncoder,
@@ -62,7 +62,7 @@ describe('Test setting configuration meta', async function() {
 
     it('Set meta', async () => {
       await bridgeOwner.runTarget({
-        contract: tonEventConfiguration,
+        contract: everscaleEventConfiguration,
         method: 'setMeta',
         params: {
           _meta: ''
@@ -71,7 +71,7 @@ describe('Test setting configuration meta', async function() {
     });
 
     it('Check configuration meta', async () => {
-      const details = await tonEventConfiguration.call({ method: 'getDetails' });
+      const details = await everscaleEventConfiguration.call({ method: 'getDetails' });
 
       expect(details._meta)
         .to.be.equal(emptyCell, 'Wrong meta');

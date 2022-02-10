@@ -6,12 +6,12 @@ import './../interfaces/IProxy.sol';
 import './../interfaces/event-contracts/IEthereumEvent.sol';
 import "./../../utils/TransferUtils.sol";
 
-import "./../../../../node_modules/@broxus/contracts/contracts/utils/RandomNonce.sol";
+import "@broxus/contracts/contracts/utils/RandomNonce.sol";
 
 
 
 /// @title Ethereum event proxy mockup contract.
-/// Receives broxusBridgeCallback from ethereum event configuration when
+/// Receives onEventConfirmed from ethereum event configuration when
 /// ethereum event contract is executed.
 /// For example it could be used for minting tokens in case of cross chain token transfers.
 /// Or execute any other custom action.
@@ -33,7 +33,7 @@ contract ProxyMockup is IProxy, RandomNonce {
         @dev Callback on executing ethereum event contract
         @dev Could be only called by the ethereum event contract
     */
-    function broxusBridgeCallback(
+    function onEventConfirmed(
         IEthereumEvent.EthereumEventInitData _eventData,
         address gasBackAddress
     ) override public {

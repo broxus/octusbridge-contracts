@@ -130,13 +130,13 @@ const main = async () => {
     }
   ]);
   
-  const TonEventConfiguration = await locklift.factory.getContract('TonEventConfiguration');
+  const EverscaleEventConfiguration = await locklift.factory.getContract('EverscaleEventConfiguration');
   const TonEvent = await locklift.factory.getContract(response.eventContract);
   
   const spinner = ora('Deploying TON event configuration').start();
   
-  const tonEventConfiguration = await locklift.giver.deployContract({
-    contract: TonEventConfiguration,
+  const everscaleEventConfiguration = await locklift.giver.deployContract({
+    contract: EverscaleEventConfiguration,
     constructorParams: {
       _owner: response.owner,
       _meta: response.meta,
@@ -160,7 +160,7 @@ const main = async () => {
   
   spinner.stop();
   
-  await logContract(tonEventConfiguration);
+  await logContract(everscaleEventConfiguration);
 };
 
 

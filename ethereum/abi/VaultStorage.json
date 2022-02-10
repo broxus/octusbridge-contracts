@@ -1692,9 +1692,32 @@
         "internalType": "bytes[]",
         "name": "signatures",
         "type": "bytes[]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "bounty",
+        "type": "uint256"
       }
     ],
-    "name": "saveWithdrawal",
+    "name": "saveWithdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "payload",
+        "type": "bytes"
+      },
+      {
+        "internalType": "bytes[]",
+        "name": "signatures",
+        "type": "bytes[]"
+      }
+    ],
+    "name": "saveWithdraw",
     "outputs": [
       {
         "internalType": "bool",
@@ -1719,29 +1742,6 @@
         "type": "tuple"
       }
     ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes",
-        "name": "payload",
-        "type": "bytes"
-      },
-      {
-        "internalType": "bytes[]",
-        "name": "signatures",
-        "type": "bytes[]"
-      },
-      {
-        "internalType": "uint256",
-        "name": "bounty",
-        "type": "uint256"
-      }
-    ],
-    "name": "saveWithdrawal",
-    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },

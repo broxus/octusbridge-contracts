@@ -2,7 +2,7 @@ pragma ton-solidity >= 0.39.0;
 pragma AbiHeader pubkey;
 
 
-import "../bridge/interfaces/event-contracts/ITonEvent.sol";
+import "../bridge/interfaces/event-contracts/IEverscaleEvent.sol";
 
 
 contract TonConfigMockup {
@@ -11,7 +11,7 @@ contract TonConfigMockup {
     constructor() public { tvm.accept(); }
 
     function deployEvent(
-        ITonEvent.TonEventVoteData eventVoteData
+        IEverscaleEvent.EverscaleEventVoteData eventVoteData
     ) external  {
         return;
     }

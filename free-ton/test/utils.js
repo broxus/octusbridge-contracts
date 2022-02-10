@@ -252,56 +252,51 @@ const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
 };
 
 const setupTokenRootWithWallet = async (rootOwner, walletOwner, mintAmount) => {
-  const RootToken = await locklift.factory.getContract('RootTokenContract', TOKEN_PATH);
-  const tokenWallet = await locklift.factory.getContract('TONTokenWallet', TOKEN_PATH);
+  const RootToken = await locklift.factory.getContract('TokenRoot', TOKEN_PATH);
+  const tokenWallet = await locklift.factory.getContract('TokenWallet', TOKEN_PATH);
   const [keyPair] = await locklift.keys.getKeyPairs();
 
   const root = await locklift.giver.deployContract({
     contract: RootToken,
     constructorParams: {
-      root_public_key_: `0x${keyPair.public}`,
-      root_owner_address_: locklift.utils.zeroAddress
+      initialSupplyTo: rootOwner,
+      initialSupply: mintAmount,
+      deployWalletValue: locklift.utils.convertCrystal('0.1', 'nano'),
+      mintDisabled: false,
+      burnByRootDisabled: false,
+      burnPaused: false,
+      remainingGasTo: locklift.utils.zeroAddress
     },
     initParams: {
-      name: Buffer.from('TKN').toString('hex'),
-      symbol: Buffer.from('TKN').toString('hex'),
-      decimals: 9,
-      wallet_code: tokenWallet.code,
-      _randomNonce: locklift.utils.getRandomNonce(),
+      deployer_: locklift.utils.zeroAddress,
+      randomNonce_: locklift.utils.getRandomNonce(),
+      rootOwner_: rootOwner,
+      name_: Buffer.from('Token').toString('hex'),
+      symbol_: Buffer.from('TKN').toString('hex'),
+      decimals_: 9,
+      walletCode_: tokenWallet.code,
     },
     keyPair,
   }, locklift.utils.convertCrystal(2, 'nano'));
   root.afterRun = afterRun;
   root.setKeyPair(keyPair);
 
-  const tx = await root.run({
-    method: 'deployWallet',
-    params: {
-      deploy_grams: locklift.utils.convertCrystal(1, 'nano'),
-      wallet_public_key_: 0,
-      owner_address_: walletOwner,
-      gas_back_address: root.address,
-      tokens: mintAmount
-    },
-  });
-  tokenWallet.setAddress(tx.decoded.output.value0);
-  tokenWallet.afterRun = afterRun;
+  await logContract(root);
 
-  await root.run({
-    method: 'transferOwner',
+  const tokenWalletAddress = await root.call({
+    method: 'walletOf',
     params: {
-      root_public_key_: 0,
-      root_owner_address_: rootOwner
+      walletOwner: rootOwner
     }
   });
 
-  await logContract(root);
+  tokenWallet.setAddress(tokenWalletAddress);
 
   return [root, tokenWallet];
 }
 
-const setupTonEventConfiguration = async (owner, staking, cellEncoder) => {
-  const TonEventConfiguration = await locklift.factory.getContract('TonEventConfiguration');
+const setupEverscaleEventConfiguration = async (owner, staking, cellEncoder) => {
+  const EverscaleEventConfiguration = await locklift.factory.getContract('EverscaleEventConfiguration');
   const TonEvent = await locklift.factory.getContract('TokenTransferTonEvent');
 
   const _randomNonce = locklift.utils.getRandomNonce();
@@ -340,14 +335,24 @@ const setupTonEventConfiguration = async (owner, staking, cellEncoder) => {
   await logContract(initializer);
 
   const [tokenRoot, initializerWallet] = await setupTokenRootWithWallet(
-    proxyFutureAddress,
     initializer.address,
-    locklift.utils.convertCrystal('100', 'nano')
+    initializer.address,
+    locklift.utils.convertCrystal('1000', 'nano')
   );
 
+  await initializer.runTarget({
+    contract: tokenRoot,
+    method: 'transferOwnership',
+    params: {
+      newOwner: proxyFutureAddress,
+      remainingGasTo: initializer.address,
+      callbacks: {}
+    }
+  });
+
   const configurationMeta = '';
-  const tonEventConfiguration = await locklift.giver.deployContract({
-    contract: TonEventConfiguration,
+  const everscaleEventConfiguration = await locklift.giver.deployContract({
+    contract: EverscaleEventConfiguration,
     constructorParams: {
       _owner: owner.address,
       _meta: configurationMeta,
@@ -369,7 +374,7 @@ const setupTonEventConfiguration = async (owner, staking, cellEncoder) => {
     keyPair
   }, locklift.utils.convertCrystal(1, 'nano'));
 
-  await logContract(tonEventConfiguration);
+  await logContract(everscaleEventConfiguration);
 
   const proxy = await locklift.giver.deployContract({
     contract: Proxy,
@@ -385,7 +390,7 @@ const setupTonEventConfiguration = async (owner, staking, cellEncoder) => {
   await logContract(proxy);
 
   const proxyConfiguration = {
-    tonConfiguration: tonEventConfiguration.address,
+    tonConfiguration: everscaleEventConfiguration.address,
     ethereumConfigurations: [],
     outdatedTokenRoots: [],
     tokenRoot: tokenRoot.address,
@@ -403,27 +408,31 @@ const setupTonEventConfiguration = async (owner, staking, cellEncoder) => {
     value: locklift.utils.convertCrystal(0.5, 'nano')
   });
 
-  return [tonEventConfiguration, proxy, initializer];
+  return [everscaleEventConfiguration, proxy, initializer];
 };
 
 const getTokenWalletByAddress = async (walletOwner, rootAddress) => {
-  const tokenRoot = await locklift.factory.getContract('RootTokenContract', TOKEN_PATH);
+  const tokenRoot = await locklift.factory.getContract('TokenRoot', TOKEN_PATH);
   tokenRoot.setAddress(rootAddress);
+
   const walletAddress = await tokenRoot.call({
-    method: 'getWalletAddress', params: {
-      wallet_public_key_: 0,
-      owner_address_: walletOwner
+    method: 'walletOf',
+    params: {
+      walletOwner
     }
   });
-  const tokenWallet = await locklift.factory.getContract('TONTokenWallet', TOKEN_PATH);
+
+  const tokenWallet = await locklift.factory.getContract('TokenWallet', TOKEN_PATH);
   tokenWallet.setAddress(walletAddress);
   tokenWallet.afterRun = afterRun;
+
   return tokenWallet;
 }
 
 const getTokenRoot = async ( rootAddress) => {
-  const tokenRoot = await locklift.factory.getContract('RootTokenContract', TOKEN_PATH);
+  const tokenRoot = await locklift.factory.getContract('TokenRoot', TOKEN_PATH);
   tokenRoot.setAddress(rootAddress);
+
   return tokenRoot;
 }
 
@@ -699,7 +708,7 @@ const stringToBytesArray = (dataString) => {
 module.exports = {
   setupBridge,
   setupEthereumEventConfiguration,
-  setupTonEventConfiguration,
+  setupEverscaleEventConfiguration,
   setupRelays,
   logContract,
   MetricManager,

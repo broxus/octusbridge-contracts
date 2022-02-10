@@ -19,6 +19,7 @@ interface IVaultBasic is IEverscale {
 
     function governance() external view returns (address);
     function guardian() external view returns (address);
+    function management() external view returns (address);
 
     function token() external view returns (address);
     function targetDecimals() external view returns (uint256);
@@ -26,17 +27,8 @@ interface IVaultBasic is IEverscale {
 
     function depositFee() external view returns (uint256);
     function withdrawFee() external view returns (uint256);
-    function totalAssets() external view returns (uint256);
 
     function emergencyShutdown() external view returns (bool);
-
-    function initialize(
-        address _token,
-        address _bridge,
-        address _governance,
-        uint _targetDecimals,
-        EverscaleAddress memory _rewards
-    ) external;
 
     function apiVersion() external view returns (string memory api_version);
 
@@ -47,12 +39,12 @@ interface IVaultBasic is IEverscale {
     function setGovernance(address _governance) external;
     function acceptGovernance() external;
     function setGuardian(address _guardian) external;
+    function setManagement(address _management) external;
     function setRewards(EverscaleAddress memory _rewards) external;
     function setEmergencyShutdown(bool active) external;
 
     function deposit(
         EverscaleAddress memory recipient,
-
         uint256 amount
     ) external;
 
@@ -84,6 +76,7 @@ interface IVaultBasic is IEverscale {
     event UpdateWithdrawFee(uint256 fee);
 
     event UpdateGovernance(address governance);
+    event UpdateManagement(address management);
     event NewPendingGovernance(address governance);
     event UpdateGuardian(address guardian);
 

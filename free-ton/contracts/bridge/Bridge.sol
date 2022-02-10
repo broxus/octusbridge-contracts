@@ -5,7 +5,7 @@ pragma AbiHeader pubkey;
 
 
 import "./event-configuration-contracts/EthereumEventConfiguration.sol";
-import "./event-configuration-contracts/TonEventConfiguration.sol";
+import "./event-configuration-contracts/EverscaleEventConfiguration.sol";
 
 import "./interfaces/IBridge.sol";
 import "./interfaces/IConnector.sol";
@@ -16,10 +16,10 @@ import "./../utils/ErrorCodes.sol";
 
 import "./Connector.sol";
 
-import './../../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol';
-import './../../../node_modules/@broxus/contracts/contracts/utils/RandomNonce.sol';
-import './../../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.sol';
-import './../../../node_modules/@broxus/contracts/contracts/libraries/MsgFlag.sol';
+import '@broxus/contracts/contracts/access/InternalOwner.sol';
+import '@broxus/contracts/contracts/utils/RandomNonce.sol';
+import '@broxus/contracts/contracts/utils/CheckPubKey.sol';
+import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
 /// @title Bridge contract

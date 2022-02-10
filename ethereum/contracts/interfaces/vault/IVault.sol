@@ -39,8 +39,15 @@ interface IVault is IVaultBasic {
         uint256 considered;
     }
 
+    function initialize(
+        address _token,
+        address _bridge,
+        address _governance,
+        uint _targetDecimals,
+        EverscaleAddress memory _rewards
+    ) external;
+
     function withdrawGuardian() external view returns (address);
-    function management() external view returns (address);
 
     function pendingWithdrawalsPerUser(address user) external view returns (uint);
     function pendingWithdrawals(
@@ -70,7 +77,6 @@ interface IVault is IVaultBasic {
     function lockedProfit() external view returns (uint256);
     function lockedProfitDegradation() external view returns (uint256);
 
-    function setManagement(address _management) external;
     function setWithdrawGuardian(address _withdrawGuardian) external;
     function setStrategyRewards(
         address strategyId,
@@ -109,12 +115,12 @@ interface IVault is IVaultBasic {
         bytes memory level3
     ) external;
 
-    function saveWithdrawal(
+    function saveWithdraw(
         bytes memory payload,
         bytes[] memory signatures
-    ) external returns (bool instantWithdrawal, PendingWithdrawalId memory pendingWithdrawalId);
+    ) external;
 
-    function saveWithdrawal(
+    function saveWithdraw(
         bytes memory payload,
         bytes[] memory signatures,
         uint bounty
@@ -173,6 +179,8 @@ interface IVault is IVaultBasic {
     ) external;
     function revokeStrategy() external;
 
+
+    function totalAssets() external view returns (uint256);
     function debtOutstanding(address strategyId) external view returns (uint256);
     function debtOutstanding() external view returns (uint256);
 
@@ -240,7 +248,6 @@ interface IVault is IVaultBasic {
     event UpdatePerformanceFee(uint256 performanceFee);
     event UpdateManagementFee(uint256 managenentFee);
 
-    event UpdateManagement(address management);
     event UpdateWithdrawGuardian(address withdrawGuardian);
     event UpdateWithdrawalQueue(address[20] queue);
 

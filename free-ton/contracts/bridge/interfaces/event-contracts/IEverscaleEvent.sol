@@ -3,15 +3,15 @@ pragma ton-solidity >= 0.39.0;
 import "./IBasicEvent.sol";
 
 
-interface ITonEvent is IBasicEvent {
-    struct TonEventVoteData {
+interface IEverscaleEvent is IBasicEvent {
+    struct EverscaleEventVoteData {
         uint64 eventTransactionLt;
         uint32 eventTimestamp;
         TvmCell eventData;
     }
 
-    struct TonEventInitData {
-        TonEventVoteData voteData;
+    struct EverscaleEventInitData {
+        EverscaleEventVoteData voteData;
         address configuration;
         address staking;
     }
