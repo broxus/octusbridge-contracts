@@ -13,9 +13,9 @@ artifacts/
 ethereum/.openzeppelin
 ethereum/cache
 *.log
-free-ton/build/*.code
-free-ton/build/*.base64
-free-ton/build/*.tvc
+everscale/build/*.code
+everscale/build/*.base64
+everscale/build/*.tvc
 everscale/artifacts
 ethereum/deployments
 .DS_Store
