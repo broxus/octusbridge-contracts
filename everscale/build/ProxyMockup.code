@@ -1,0 +1,569 @@
+.version sol 0.57.1
+
+.macro constructor
+DROP
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+GETGLOB 6
+THROWIF 51
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+ENDS
+.loc ../contracts/bridge/mockups/ProxyMockup.sol, 27
+ACCEPT
+.loc ../contracts/bridge/mockups/ProxyMockup.sol, 29
+SETGLOB 11
+.loc ../contracts/bridge/mockups/ProxyMockup.sol, 0
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro onEventConfirmed
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/mockups/ProxyMockup.sol, 36
+OVER
+PUSHCONT {
+	LDU 256
+	LDU 32
+	LDREF
+	LDU 32
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+	ROLLREV 5
+	TUPLE 5
+	SWAP
+}
+PUSHCONT {
+	LDU 256
+	LDU 32
+	LDREF
+	LDU 32
+	LDU 256
+	ROLLREV 5
+	TUPLE 5
+	SWAP
+	LDREF
+	ENDS
+	CTOS
+}
+IFELSE
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDU 32
+ROLLREV 4
+TUPLE 4
+SWAP
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/bridge/mockups/ProxyMockup.sol, 0
+CALLREF {
+	CALL $onEventConfirmed_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	onEventConfirmed_internal
+.type	onEventConfirmed_internal, @function
+CALL $onEventConfirmed_internal_macro$
+
+.macro onEventConfirmed_internal_macro
+.loc ../contracts/bridge/mockups/ProxyMockup.sol, 40
+GETGLOB 9
+GETGLOB 11
+SDEQ
+THROWIFNOT 100
+.loc ../contracts/bridge/mockups/ProxyMockup.sol, 42
+GETGLOB 13
+INC
+SETGLOB 13
+.loc ../contracts/bridge/mockups/ProxyMockup.sol, 43
+SWAP
+SETGLOB 12
+.loc ../contracts/bridge/mockups/ProxyMockup.sol, 45
+DUP
+PARSEMSGADDR
+INDEX 3
+PLDU 256
+PUSHCONT {
+	.loc ../contracts/bridge/mockups/ProxyMockup.sol, 46
+	DUP
+}
+PUSHCONT {
+	.loc ../contracts/bridge/mockups/ProxyMockup.sol, 48
+	GETGLOB 9
+}
+IFELSE
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHINT 64
+SENDRAWMSG
+.loc ../contracts/bridge/mockups/ProxyMockup.sol, 0
+DROP
+
+.macro getDetails
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/mockups/ProxyMockup.sol, 52
+ENDS
+.loc ../contracts/bridge/mockups/ProxyMockup.sol, 0
+CALLREF {
+	CALL $getDetails_internal_macro$
+}
+PUSH S2
+PUSHCONT {
+	PUSH S4
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	XCHG S2
+	NEWC
+	STSLICECONST xd0ee2838
+	SWAP
+	UNTUPLE 4
+	REVERSE 5, 0
+	SWAP
+	UNTUPLE 5
+	REVERSE 6, 0
+	STU 256
+	STU 32
+	STREF
+	STU 32
+	STU 256
+	ROLLREV 4
+	NEWC
+	STSLICE
+	ROLLREV 3
+	NEWC
+	STSLICE
+	STU 32
+	STU 256
+	STBREFR
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+PUSHCONT {
+	DROP2
+}
+IFELSE
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	getDetails_internal
+.type	getDetails_internal, @function
+CALL $getDetails_internal_macro$
+
+.macro getDetails_internal_macro
+.loc ../contracts/bridge/mockups/ProxyMockup.sol, 56
+GETGLOB 12
+GETGLOB 13
+.loc ../contracts/bridge/mockups/ProxyMockup.sol, 0
+
+.macro getDecodedEventData
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/mockups/ProxyMockup.sol, 66
+ENDS
+.loc ../contracts/bridge/mockups/ProxyMockup.sol, 0
+CALLREF {
+	CALL $getDecodedEventData_internal_macro$
+}
+PUSH S4
+PUSHCONT {
+	PUSH S6
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	REVERSE 5, 0
+	NEWC
+	STSLICECONST xbe97064a
+	STU 128
+	STI 8
+	STU 256
+	STU 256
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+PUSHCONT {
+	BLKDROP 4
+}
+IFELSE
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	getDecodedEventData_internal
+.type	getDecodedEventData_internal, @function
+CALL $getDecodedEventData_internal_macro$
+
+.macro getDecodedEventData_internal_macro
+.loc ../contracts/bridge/mockups/ProxyMockup.sol, 66
+PUSHINT 0
+BLKPUSH 2, 0
+.loc ../contracts/bridge/mockups/ProxyMockup.sol, 72
+GETGLOB 12
+INDEX2 0, 2
+CTOS
+LDU 128
+LDI 8
+LDU 256
+LDU 256
+DROP
+REVERSE 4, 0
+POP S6
+POP S4
+POP S2
+.loc ../contracts/bridge/mockups/ProxyMockup.sol, 0
+
+.macro c4_to_c7
+PUSHROOT
+CTOS
+LDU 256 ; pubkey c4
+LDU 64 ; pubkey timestamp c4
+LDU 1 ; ctor flag
+NIP
+LDU 256
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDU 256
+LDU 32
+LDREF
+LDU 32
+LDREF
+ENDS
+CTOS
+LDU 256
+ROLLREV 5
+TUPLE 5
+SWAP
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDU 32
+ROLLREV 4
+TUPLE 4
+SWAP
+LDU 256
+ENDS
+SETGLOB 13
+SETGLOB 12
+SETGLOB 11
+SETGLOB 10
+SETGLOB 3
+SETGLOB 2
+
+.macro c4_to_c7_with_init_storage
+PUSHROOT
+CTOS
+SBITS
+GTINT 1
+PUSHCONT {
+	PUSHINT 0
+	PUSHROOT
+	CTOS
+	PLDDICT ; D
+	PUSHINT 1
+	OVER
+	PUSHINT 64
+	DICTUGET
+	PUSHCONT {
+		PLDU 256
+	}
+	PUSHCONT {
+		PUSHINT 0
+	}
+	IFELSE
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	PUSHINT 0
+	DUP
+	PUSHREF {
+	}
+	PUSHINT 0
+	DUP
+	TUPLE 5
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	DUP
+	PUSHINT 0
+	TUPLE 4
+	PUSHINT 0
+	SETGLOB 13
+	SETGLOB 12
+	SETGLOB 11
+	SETGLOB 10
+	PUSHINT 64
+	DICTUGET
+	THROWIFNOT 61
+	PLDU 256
+	SETGLOB 2
+	PUSHINT 0 ; timestamp
+	SETGLOB 3
+	PUSHINT 0
+	SETGLOB 13
+}
+IFREFELSE {
+	CALL $c4_to_c7$
+}
+
+.macro c7_to_c4
+GETGLOB 13
+GETGLOB 12
+GETGLOB 11
+GETGLOB 10
+GETGLOB 3
+GETGLOB 2
+NEWC
+STU 256
+STU 64
+STONE
+STU 256
+ROLLREV 3
+NEWC
+STSLICE
+SWAP
+UNTUPLE 4
+REVERSE 5, 0
+SWAP
+UNTUPLE 5
+REVERSE 6, 0
+STU 256
+STU 32
+STREF
+STU 32
+ROLLREV 5
+NEWC
+STU 256
+STSLICE
+ROLLREV 3
+NEWC
+STSLICE
+STU 32
+STU 256
+STBREFR
+STBREFR
+STBREFR
+ENDC
+POPROOT
+
+.macro upd_only_time_in_c4
+PUSHROOT
+CTOS
+LDU 256
+LDU 64
+NIP
+GETGLOB 3
+ROT
+NEWC
+STU 256
+STU 64
+STSLICE
+ENDC
+POPROOT
+
+.internal-alias :main_internal, 0
+.internal :main_internal
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSH S2
+CTOS
+LDU 4 ; bounced tail
+LDMSGADDR ; bounced src tail
+DROP
+SETGLOB 9
+MODPOW2 1
+IFRET
+OVER
+SEMPTY ; isEmpty
+IFJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+OVER
+LDUQ 32  ; [funcId] body' ok
+THROWIFNOT 60
+OVER
+IFNOTJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.internal-alias :main_external, -1
+.internal :main_external
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+SETGLOB 9
+OVER
+CALLREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+LDU 1 ; haveSign msgSlice
+SWAP
+PUSHCONT {
+	PUSHINT 512
+	LDSLICEX ; signatureSlice msgSlice
+	DUP
+	HASHSU ; signatureSlice msgSlice hashMsgSlice
+	ROT
+	GETGLOB 2
+	CHKSIGNU ; msgSlice isSigned
+	THROWIFNOT 40
+}
+IF
+LDU 64 ; timestamp msgSlice
+SWAP
+CALL $replay_protection_macro$
+LDU 32 ; expireAt msgSlice
+SWAP
+NOW ; msgSlice expireAt now
+GREATER ; msgSlice expireAt>now
+THROWIFNOT 57
+LDU 32 ; funcId body
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.macro _randomNonce
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 10
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000bb53331f
+	NEWC
+	STSLICE
+	STU 256
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro public_function_selector
+DUP
+PUSHINT 1196840156
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 8959777
+	EQUAL
+	IFJMPREF {
+		CALL $onEventConfirmed$
+	}
+	DUP
+	PUSHINT 995308319
+	EQUAL
+	IFJMPREF {
+		CALL $_randomNonce$
+	}
+	DUP
+	PUSHINT 1050084938
+	EQUAL
+	IFJMPREF {
+		CALL $getDecodedEventData$
+	}
+	DUP
+	PUSHINT 1196840156
+	EQUAL
+	IFJMPREF {
+		CALL $constructor$
+	}
+}
+DUP
+PUSHINT 1357785144
+EQUAL
+IFJMPREF {
+	CALL $getDetails$
+}
+

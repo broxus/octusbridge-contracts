@@ -1,0 +1,2359 @@
+.version sol 0.57.1
+
+.macro constructor
+DROP
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+GETGLOB 6
+THROWIF 51
+ENDS
+.loc ../contracts/staking/Election.sol, 51
+THROW 100
+.loc ../contracts/staking/Election.sol, 0
+
+.macro getRequests
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/Election.sol, 54
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+LDU 128
+ENDS
+.loc ../contracts/staking/Election.sol, 0
+CALLREF {
+	CALL $getRequests_internal_macro$
+}
+PUSH S4
+PUSHCONT {
+	PUSH S6
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 98
+	STZEROES
+	REVERSE 4, 1
+	STSLICECONST xedce61d3
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	PUSHINT 2
+	STZEROES
+	STI 1
+	PUSHINT 3
+	STZEROES
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 106
+	STZEROES
+	REVERSE 4, 1
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	getRequests_internal
+.type	getRequests_internal, @function
+CALL $getRequests_internal_macro$
+
+.macro getRequests_internal_macro
+.loc ../contracts/staking/Election.sol, 60
+GETGLOB 19
+CALLREF {
+	CALL $_getRequestsFromIdx_internal_macro$
+}
+.loc ../contracts/staking/Election.sol, 67
+DROP
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+FALSE
+SETINDEXQ 1
+PUSHINT 64
+SETINDEXQ 4
+SETGLOB 4
+.loc ../contracts/staking/Election.sol, 0
+
+.macro getNode
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/Election.sol, 72
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+LDU 256
+ENDS
+.loc ../contracts/staking/Election.sol, 0
+CALLREF {
+	CALL $getNode_internal_macro$
+}
+PUSH S5
+PUSHCONT {
+	PUSH S7
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	REVERSE 6, 0
+	NEWC
+	STSLICECONST xd20b3498
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 256
+	STU 256
+	STU 256
+	STU 160
+	ROTREV
+	NEWC
+	STSLICE
+	STU 128
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	PUSHINT 2
+	STZEROES
+	STI 1
+	PUSHINT 3
+	STZEROES
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	REVERSE 6, 0
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 256
+	STU 256
+	STU 256
+	STU 160
+	ROTREV
+	NEWC
+	STSLICE
+	STU 128
+	STBREFR
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	getNode_internal
+.type	getNode_internal, @function
+CALL $getNode_internal_macro$
+
+.macro getNode_internal_macro
+.loc ../contracts/staking/Election.sol, 79
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+FALSE
+SETINDEXQ 1
+PUSHINT 64
+SETINDEXQ 4
+SETGLOB 4
+DUP
+GETGLOB 18
+SECOND
+PUSHINT 32
+DICTUGET
+THROWIFNOT 50
+CALLREF {
+	LDU 256
+	LDU 256
+	ENDS
+	PAIR
+}
+OVER
+GETGLOB 14
+SECOND
+PUSHINT 32
+DICTUGET
+THROWIFNOT 50
+PLDU 256
+PUSH S2
+GETGLOB 15
+SECOND
+PUSHINT 32
+DICTUGET
+THROWIFNOT 50
+PLDU 160
+PUSH S3
+GETGLOB 16
+SECOND
+PUSHINT 32
+DICTUGET
+THROWIFNOT 50
+ROLL 4
+GETGLOB 17
+SECOND
+PUSHINT 32
+DICTUGET
+THROWIFNOT 50
+PLDU 128
+.loc ../contracts/staking/Election.sol, 0
+
+.globl	_getRequestsFromIdx_internal
+.type	_getRequestsFromIdx_internal, @function
+CALL $_getRequestsFromIdx_internal_macro$
+
+.macro _getRequestsFromIdx_internal_macro
+.loc ../contracts/staking/Election.sol, 93
+OVER
+PUSHINT 0
+NEWC
+STU 256
+PUSHINT 0
+NEWDICT
+PUSH S3
+PUSHCONT {
+	BLKPUSH 2, 2
+	INC
+	XCHG S3
+	ROT
+	PUSHINT 32
+	DICTUSETB
+}
+REPEAT
+BLKDROP2 2, 1
+PAIR
+.loc ../contracts/staking/Election.sol, 94
+PUSH S2
+PUSHINT 0
+NEWC
+STU 160
+PUSHINT 0
+NEWDICT
+PUSH S3
+PUSHCONT {
+	BLKPUSH 2, 2
+	INC
+	XCHG S3
+	ROT
+	PUSHINT 32
+	DICTUSETB
+}
+REPEAT
+BLKDROP2 2, 1
+PAIR
+.loc ../contracts/staking/Election.sol, 95
+PUSH S3
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+PUSHINT 0
+NEWDICT
+PUSH S3
+PUSHCONT {
+	BLKPUSH 2, 2
+	INC
+	XCHG S3
+	ROT
+	PUSHINT 32
+	DICTUSET
+}
+REPEAT
+BLKDROP2 2, 1
+PAIR
+.loc ../contracts/staking/Election.sol, 96
+PUSH S4
+PUSHINT 0
+NEWC
+STU 128
+PUSHINT 0
+NEWDICT
+PUSH S3
+PUSHCONT {
+	BLKPUSH 2, 2
+	INC
+	XCHG S3
+	ROT
+	PUSHINT 32
+	DICTUSETB
+}
+REPEAT
+BLKDROP2 2, 1
+PAIR
+.loc ../contracts/staking/Election.sol, 98
+ROLL 4
+.loc ../contracts/staking/Election.sol, 99
+PUSHINT 0
+.loc ../contracts/staking/Election.sol, 101
+PUSHCONT {
+	PUSH2 S0, S6
+	LESS
+	DUP
+	PUSHCONT {
+		DROP
+		OVER
+		GETGLOB 17
+		SECOND
+		PUSHINT 32
+		DICTUGET
+		THROWIFNOT 50
+		PLDU 128
+		NEQINT 0
+	}
+	IF
+}
+PUSHCONT {
+	.loc ../contracts/staking/Election.sol, 102
+	OVER
+	GETGLOB 14
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PLDU 256
+	PUSH S6
+	UNPAIR
+	PUXC S3, S-1
+	PUSH2 S1, S2
+	LESS
+	THROWIFNOT 50
+	ROLL 3
+	NEWC
+	STU 256
+	ROTREV
+	PUSHINT 32
+	DICTUSETB
+	PAIR
+	POP S6
+	.loc ../contracts/staking/Election.sol, 103
+	OVER
+	GETGLOB 15
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PLDU 160
+	PUSH S5
+	UNPAIR
+	PUXC S3, S-1
+	PUSH2 S1, S2
+	LESS
+	THROWIFNOT 50
+	ROLL 3
+	NEWC
+	STU 160
+	ROTREV
+	PUSHINT 32
+	DICTUSETB
+	PAIR
+	POP S5
+	.loc ../contracts/staking/Election.sol, 104
+	OVER
+	GETGLOB 16
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PUSH S4
+	UNPAIR
+	PUXC S3, S-1
+	PUSH2 S1, S2
+	LESS
+	THROWIFNOT 50
+	XCHG S2, S3
+	PUSHINT 32
+	DICTUSET
+	PAIR
+	POP S4
+	.loc ../contracts/staking/Election.sol, 105
+	OVER
+	GETGLOB 17
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PLDU 128
+	PUSH S3
+	UNPAIR
+	PUXC S3, S-1
+	PUSH2 S1, S2
+	LESS
+	THROWIFNOT 50
+	ROLL 3
+	NEWC
+	STU 128
+	ROTREV
+	PUSHINT 32
+	DICTUSETB
+	PAIR
+	POP S3
+	.loc ../contracts/staking/Election.sol, 106
+	INC
+	UFITS 128
+	.loc ../contracts/staking/Election.sol, 107
+	OVER
+	GETGLOB 18
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	CALLREF {
+		LDU 256
+		LDU 256
+		ENDS
+		PAIR
+	}
+	SECOND
+	POP S2
+	.loc ../contracts/staking/Election.sol, 0
+}
+WHILE
+.loc ../contracts/staking/Election.sol, 109
+DROP
+BLKDROP2 1, 5
+.loc ../contracts/staking/Election.sol, 0
+
+.macro applyForMembership
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/Election.sol, 112
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	LDU 256
+	LDU 160
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDMSGADDR
+	LDU 256
+	LDREF
+	ENDS
+	CTOS
+	LDU 160
+}
+IFELSE
+LDU 128
+LDU 32
+LDU 32
+ENDS
+.loc ../contracts/staking/Election.sol, 0
+CALLREF {
+	CALL $applyForMembership_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro applyForMembership_internal_macro
+.loc ../contracts/staking/Election.sol, 112
+PUSH2 S5, S5
+.loc ../contracts/staking/Election.sol, 383
+CALLREF {
+	CALL $getUserDataAddress_internal_macro$
+}
+.loc ../contracts/staking/Election.sol, 384
+PUSHINT 2504
+OVER
+GETGLOB 9
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/Election.sol, 385
+BLKSWAP 6, 2
+.loc ../contracts/staking/Election.sol, 120
+PUSHINT 2518
+PUSH S3
+GTINT 0
+THROWANYIFNOT
+.loc ../contracts/staking/Election.sol, 121
+PUSHINT 2520
+GETGLOB 20
+NOT
+THROWANYIFNOT
+.loc ../contracts/staking/Election.sol, 122
+PUSHINT 2534
+OVER
+GETGLOB 10
+EQUAL
+THROWANYIFNOT
+.loc ../contracts/staking/Election.sol, 124
+PUSHINT 2000000000
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/Election.sol, 126
+PUSHINT 1
+PUSHCONT {
+	DUP
+	GETGLOB 14
+	FIRST
+	LESS
+}
+PUSHCONT {
+	.loc ../contracts/staking/Election.sol, 127
+	DUP
+	GETGLOB 16
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PUSH S7
+	SDEQ
+	DUP
+	PUSHCONT {
+		DROP
+		DUP
+		GETGLOB 14
+		SECOND
+		PUSHINT 32
+		DICTUGET
+		THROWIFNOT 50
+		PLDU 256
+		PUSH S6
+		EQUAL
+		DUP
+		PUSHCONT {
+			DROP
+			DUP
+			GETGLOB 15
+			SECOND
+			PUSHINT 32
+			DICTUGET
+			THROWIFNOT 50
+			PLDU 160
+			PUSH S5
+			EQUAL
+		}
+		IFNOT
+	}
+	IFNOT
+	PUSHCONT {
+		.loc ../contracts/staking/Election.sol, 132
+		PUSHINT 2539
+		THROWANY
+		.loc ../contracts/staking/Election.sol, 0
+	}
+	IF
+	.loc ../contracts/staking/Election.sol, 126
+	INC
+	.loc ../contracts/staking/Election.sol, 0
+}
+WHILE
+DROP
+.loc ../contracts/staking/Election.sol, 136
+PUSHINT 0
+DUP
+PAIR
+.loc ../contracts/staking/Election.sol, 137
+GETGLOB 18
+OVER
+CALLREF {
+	UNPAIR
+	SWAP
+	NEWC
+	STU 256
+	STU 256
+}
+SWAP
+UNPAIR
+OVER
+INC
+ROLLREV 3
+PUSHINT 32
+DICTUSETB
+PAIR
+SETGLOB 18
+.loc ../contracts/staking/Election.sol, 138
+GETGLOB 14
+PUSH S6
+NEWC
+STU 256
+SWAP
+UNPAIR
+OVER
+INC
+ROLLREV 3
+PUSHINT 32
+DICTUSETB
+PAIR
+SETGLOB 14
+.loc ../contracts/staking/Election.sol, 139
+GETGLOB 15
+PUSH S5
+NEWC
+STU 160
+SWAP
+UNPAIR
+OVER
+INC
+ROLLREV 3
+PUSHINT 32
+DICTUSETB
+PAIR
+SETGLOB 15
+.loc ../contracts/staking/Election.sol, 140
+PUSH S6
+GETGLOB 16
+UNPAIR
+OVER
+INC
+ROLLREV 3
+PUSHINT 32
+DICTUSET
+PAIR
+SETGLOB 16
+.loc ../contracts/staking/Election.sol, 141
+GETGLOB 17
+PUSH S4
+NEWC
+STU 128
+SWAP
+UNPAIR
+OVER
+INC
+ROLLREV 3
+PUSHINT 32
+DICTUSETB
+PAIR
+SETGLOB 17
+.loc ../contracts/staking/Election.sol, 143
+GETGLOB 18
+FIRST
+DEC
+UFITS 256
+.loc ../contracts/staking/Election.sol, 146
+GETGLOB 19
+PUSHCONT {
+	.loc ../contracts/staking/Election.sol, 150
+	GETGLOB 19
+	.loc ../contracts/staking/Election.sol, 152
+	PUSHCONT {
+		DUP
+		NEQINT 0
+	}
+	PUSHCONT {
+		.loc ../contracts/staking/Election.sol, 153
+		PUSH2 S5, S0
+		GETGLOB 17
+		SECOND
+		PUSHINT 32
+		DICTUGET
+		THROWIFNOT 50
+		PLDU 128
+		GEQ
+		PUSHCONT {
+			.loc ../contracts/staking/Election.sol, 155
+			DUP
+			GETGLOB 18
+			SECOND
+			PUSHINT 32
+			DICTUGET
+			THROWIFNOT 50
+			CALLREF {
+				LDU 256
+				LDU 256
+				ENDS
+				PAIR
+			}
+			FIRST
+			PUSHCONT {
+				.loc ../contracts/staking/Election.sol, 161
+				DUP
+				GETGLOB 18
+				UNPAIR
+				PUXC S4, S-1
+				PUSH2 S1, S2
+				LESS
+				THROWIFNOT 50
+				DUP2
+				PUSHINT 32
+				DICTUGET
+				THROWIFNOT 50
+				CALLREF {
+					LDU 256
+					LDU 256
+					ENDS
+					PAIR
+				}
+				ROLL 4
+				SETINDEX 1
+				CALLREF {
+					UNPAIR
+					SWAP
+					NEWC
+					STU 256
+					STU 256
+				}
+				ROTREV
+				PUSHINT 32
+				DICTUSETB
+				PAIR
+				SETGLOB 18
+				.loc ../contracts/staking/Election.sol, 162
+				DUP
+				GETGLOB 18
+				SECOND
+				PUSHINT 32
+				DICTUGET
+				THROWIFNOT 50
+				CALLREF {
+					LDU 256
+					LDU 256
+					ENDS
+					PAIR
+				}
+				FIRST
+				GETGLOB 18
+				UNPAIR
+				PUXC S4, S-1
+				PUSH2 S1, S2
+				LESS
+				THROWIFNOT 50
+				DUP2
+				PUSHINT 32
+				DICTUGET
+				THROWIFNOT 50
+				CALLREF {
+					LDU 256
+					LDU 256
+					ENDS
+					PAIR
+				}
+				ROLL 4
+				SETINDEX 0
+				CALLREF {
+					UNPAIR
+					SWAP
+					NEWC
+					STU 256
+					STU 256
+				}
+				ROTREV
+				PUSHINT 32
+				DICTUSETB
+				PAIR
+				SETGLOB 18
+				.loc ../contracts/staking/Election.sol, 164
+				OVER
+				GETGLOB 18
+				UNPAIR
+				PUSH S3
+				GETGLOB 18
+				SECOND
+				PUSHINT 32
+				DICTUGET
+				THROWIFNOT 50
+				CALLREF {
+					LDU 256
+					LDU 256
+					ENDS
+					PAIR
+				}
+				FIRST
+				TUCK
+				PUSH S3
+				LESS
+				THROWIFNOT 50
+				DUP2
+				PUSHINT 32
+				DICTUGET
+				THROWIFNOT 50
+				CALLREF {
+					LDU 256
+					LDU 256
+					ENDS
+					PAIR
+				}
+				ROLL 4
+				SETINDEX 1
+				CALLREF {
+					UNPAIR
+					SWAP
+					NEWC
+					STU 256
+					STU 256
+				}
+				ROTREV
+				PUSHINT 32
+				DICTUSETB
+				PAIR
+				SETGLOB 18
+				.loc ../contracts/staking/Election.sol, 165
+				OVER
+				GETGLOB 18
+				UNPAIR
+				PUXC S3, S-1
+				PUSH2 S1, S2
+				LESS
+				THROWIFNOT 50
+				DUP2
+				PUSHINT 32
+				DICTUGET
+				THROWIFNOT 50
+				CALLREF {
+					LDU 256
+					LDU 256
+					ENDS
+					PAIR
+				}
+				ROLL 4
+				SETINDEX 0
+				CALLREF {
+					UNPAIR
+					SWAP
+					NEWC
+					STU 256
+					STU 256
+				}
+				ROTREV
+				PUSHINT 32
+				DICTUSETB
+				PAIR
+				SETGLOB 18
+			}
+			PUSHCONT {
+				.loc ../contracts/staking/Election.sol, 156
+				DUP
+				GETGLOB 18
+				UNPAIR
+				PUXC S4, S-1
+				PUSH2 S1, S2
+				LESS
+				THROWIFNOT 50
+				DUP2
+				PUSHINT 32
+				DICTUGET
+				THROWIFNOT 50
+				CALLREF {
+					LDU 256
+					LDU 256
+					ENDS
+					PAIR
+				}
+				ROLL 4
+				SETINDEX 1
+				CALLREF {
+					UNPAIR
+					SWAP
+					NEWC
+					STU 256
+					STU 256
+				}
+				ROTREV
+				PUSHINT 32
+				DICTUSETB
+				PAIR
+				SETGLOB 18
+				.loc ../contracts/staking/Election.sol, 157
+				OVER
+				GETGLOB 18
+				UNPAIR
+				PUXC S3, S-1
+				PUSH2 S1, S2
+				LESS
+				THROWIFNOT 50
+				DUP2
+				PUSHINT 32
+				DICTUGET
+				THROWIFNOT 50
+				CALLREF {
+					LDU 256
+					LDU 256
+					ENDS
+					PAIR
+				}
+				ROLL 4
+				SETINDEX 0
+				CALLREF {
+					UNPAIR
+					SWAP
+					NEWC
+					STU 256
+					STU 256
+				}
+				ROTREV
+				PUSHINT 32
+				DICTUSETB
+				PAIR
+				SETGLOB 18
+				.loc ../contracts/staking/Election.sol, 158
+				OVER
+				SETGLOB 19
+			}
+			IFELSE
+			.loc ../contracts/staking/Election.sol, 168
+			RETALT
+			.loc ../contracts/staking/Election.sol, 0
+		}
+		IFJMP
+		.loc ../contracts/staking/Election.sol, 173
+		DUP
+		GETGLOB 18
+		SECOND
+		PUSHINT 32
+		DICTUGET
+		THROWIFNOT 50
+		CALLREF {
+			LDU 256
+			LDU 256
+			ENDS
+			PAIR
+		}
+		SECOND
+		PUSHCONT {
+			.loc ../contracts/staking/Election.sol, 174
+			OVER
+			GETGLOB 18
+			UNPAIR
+			PUXC S3, S-1
+			PUSH2 S1, S2
+			LESS
+			THROWIFNOT 50
+			DUP2
+			PUSHINT 32
+			DICTUGET
+			THROWIFNOT 50
+			CALLREF {
+				LDU 256
+				LDU 256
+				ENDS
+				PAIR
+			}
+			ROLL 4
+			SETINDEX 1
+			CALLREF {
+				UNPAIR
+				SWAP
+				NEWC
+				STU 256
+				STU 256
+			}
+			ROTREV
+			PUSHINT 32
+			DICTUSETB
+			PAIR
+			SETGLOB 18
+			.loc ../contracts/staking/Election.sol, 175
+			DUP
+			GETGLOB 18
+			UNPAIR
+			PUXC S4, S-1
+			PUSH2 S1, S2
+			LESS
+			THROWIFNOT 50
+			DUP2
+			PUSHINT 32
+			DICTUGET
+			THROWIFNOT 50
+			CALLREF {
+				LDU 256
+				LDU 256
+				ENDS
+				PAIR
+			}
+			ROLL 4
+			SETINDEX 0
+			CALLREF {
+				UNPAIR
+				SWAP
+				NEWC
+				STU 256
+				STU 256
+			}
+			ROTREV
+			PUSHINT 32
+			DICTUSETB
+			PAIR
+			SETGLOB 18
+			.loc ../contracts/staking/Election.sol, 176
+			RETALT
+			.loc ../contracts/staking/Election.sol, 0
+		}
+		IFNOTJMP
+		.loc ../contracts/staking/Election.sol, 179
+		GETGLOB 18
+		SECOND
+		PUSHINT 32
+		DICTUGET
+		THROWIFNOT 50
+		CALLREF {
+			LDU 256
+			LDU 256
+			ENDS
+			PAIR
+		}
+		SECOND
+		.loc ../contracts/staking/Election.sol, 0
+	}
+	WHILEBRK
+	DROP
+}
+PUSHCONT {
+	.loc ../contracts/staking/Election.sol, 147
+	DUP
+	SETGLOB 19
+}
+IFELSE
+.loc ../contracts/staking/Election.sol, 183
+BLKDROP 3
+SWAP
+XCHG S1, S3
+GETGLOB 13
+GETGLOB 9
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 1
+STUR 111
+ROLLREV 5
+NEWC
+STSLICECONST x2a10ad19
+STU 32
+STU 128
+STU 256
+STU 160
+STU 32
+STBREFR
+ENDC
+PUSHINT 128
+SENDRAWMSG
+.loc ../contracts/staking/Election.sol, 0
+BLKDROP 3
+
+.macro destroy
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/Election.sol, 189
+ENDS
+.loc ../contracts/staking/Election.sol, 0
+CALLREF {
+	CALL $destroy_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro destroy_internal_macro
+.loc ../contracts/staking/Election.sol, 389
+PUSHINT 2502
+GETGLOB 9
+GETGLOB 12
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/Election.sol, 191
+PUSHINT 2520
+GETGLOB 20
+THROWANYIFNOT
+.loc ../contracts/staking/Election.sol, 193
+GETGLOB 12
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHINT 128
+SENDRAWMSG
+.loc ../contracts/staking/Election.sol, 0
+
+.macro finish
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/Election.sol, 196
+LDU 32
+ENDS
+.loc ../contracts/staking/Election.sol, 0
+CALLREF {
+	CALL $finish_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro finish_internal_macro
+.loc ../contracts/staking/Election.sol, 389
+PUSHINT 2502
+GETGLOB 9
+GETGLOB 12
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/Election.sol, 390
+PUSHCONT {
+	.loc ../contracts/staking/Election.sol, 197
+	PUSHINT 2534
+	SWAP
+	GETGLOB 10
+	EQUAL
+	THROWANYIFNOT
+	.loc ../contracts/staking/Election.sol, 199
+	PUSHINT 2000000000
+	PUSHINT 0
+	RAWRESERVE
+	.loc ../contracts/staking/Election.sol, 201
+	GETGLOB 20
+	PUSHCONT {
+		.loc ../contracts/staking/Election.sol, 203
+		GETGLOB 12
+		NEWC
+		STSLICECONST x42_
+		STSLICE
+		PUSHINT 111
+		STZEROES
+		ENDC
+		PUSHINT 128
+		SENDRAWMSG
+		.loc ../contracts/staking/Election.sol, 0
+	}
+	IFJMP
+	.loc ../contracts/staking/Election.sol, 207
+	TRUE
+	SETGLOB 20
+	.loc ../contracts/staking/Election.sol, 208
+	GETGLOB 19
+	SETGLOB 21
+	.loc ../contracts/staking/Election.sol, 209
+	GETGLOB 18
+	FIRST
+	DEC
+	UFITS 32
+	GETGLOB 13
+	GETGLOB 12
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	PUSHSLICE x0000000000000000000000000000319355bb_
+	STSLICER
+	STU 32
+	STU 32
+	ENDC
+	PUSHINT 128
+	SENDRAWMSG
+	.loc ../contracts/staking/Election.sol, 196
+}
+CALLX
+.loc ../contracts/staking/Election.sol, 0
+
+.macro sendRelaysToRelayRound
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/Election.sol, 214
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDU 32
+ENDS
+.loc ../contracts/staking/Election.sol, 0
+CALLREF {
+	CALL $sendRelaysToRelayRound_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro sendRelaysToRelayRound_internal_macro
+.loc ../contracts/staking/Election.sol, 389
+PUSHINT 2502
+GETGLOB 9
+GETGLOB 12
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/Election.sol, 390
+PUSHCONT {
+	.loc ../contracts/staking/Election.sol, 215
+	PUSHINT 2520
+	GETGLOB 20
+	THROWANYIFNOT
+	.loc ../contracts/staking/Election.sol, 217
+	PUSHINT 2000000000
+	PUSHINT 0
+	RAWRESERVE
+	.loc ../contracts/staking/Election.sol, 219
+	GETGLOB 21
+	GETGLOB 17
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PLDU 128
+	PUSHCONT {
+		.loc ../contracts/staking/Election.sol, 220
+		DROP
+		NEWC
+		STSLICECONST x62_
+		STSLICE
+		PUSHSLICE x00000000000000000000000000002a5b81fb_
+		STSLICER
+		ENDC
+		PUSHINT 128
+		SENDRAWMSG
+		.loc ../contracts/staking/Election.sol, 0
+	}
+	IFNOTJMP
+	.loc ../contracts/staking/Election.sol, 224
+	GETGLOB 21
+	CALLREF {
+		CALL $_getRequestsFromIdx_internal_macro$
+	}
+	.loc ../contracts/staking/Election.sol, 231
+	SETGLOB 21
+	.loc ../contracts/staking/Election.sol, 233
+	REVERSE 5, 0
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	PUSHSLICE x00000000000000000000000000009451c753_
+	STSLICER
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	ENDC
+	PUSHINT 128
+	SENDRAWMSG
+	.loc ../contracts/staking/Election.sol, 214
+}
+CALLX
+.loc ../contracts/staking/Election.sol, 0
+
+.macro upgrade
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/Election.sol, 238
+OVER
+PUSHCONT {
+	LDREF
+	LDU 32
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDREF
+	LDU 32
+}
+IFELSE
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/Election.sol, 0
+CALLREF {
+	CALL $upgrade_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro upgrade_internal_macro
+.loc ../contracts/staking/Election.sol, 389
+PUSHINT 2502
+GETGLOB 9
+GETGLOB 12
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/Election.sol, 239
+OVER
+GETGLOB 10
+EQUAL
+PUSHCONT {
+	.loc ../contracts/staking/Election.sol, 240
+	PUSHINT 2000000000
+	PUSHINT 0
+	RAWRESERVE
+	.loc ../contracts/staking/Election.sol, 241
+	DUP
+	NEWC
+	STSLICECONST x42_
+	STSLICE
+	PUSHINT 111
+	STZEROES
+	ENDC
+	PUSHINT 128
+	SENDRAWMSG
+}
+PUSHCONT {
+	.loc ../contracts/staking/Election.sol, 243
+	OVER
+	PUSHSLICE xc00000000000000000000000003a50c284
+	NEWC
+	STSLICE
+	STU 32
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc ../contracts/staking/Election.sol, 247
+	GETGLOB 12
+	NEWC
+	STSLICE
+	.loc ../contracts/staking/Election.sol, 248
+	PUSHINT 0
+	SWAP
+	STU 8
+	.loc ../contracts/staking/Election.sol, 249
+	PUXC S1, S-1
+	STSLICE
+	.loc ../contracts/staking/Election.sol, 251
+	GETGLOB 11
+	SWAP
+	STREF
+	.loc ../contracts/staking/Election.sol, 254
+	GETGLOB 13
+	NEWC
+	STU 32
+	.loc ../contracts/staking/Election.sol, 256
+	STBREFR
+	.loc ../contracts/staking/Election.sol, 259
+	PUSH S2
+	NEWC
+	STU 32
+	.loc ../contracts/staking/Election.sol, 260
+	GETGLOB 10
+	SWAP
+	STU 32
+	.loc ../contracts/staking/Election.sol, 262
+	STBREFR
+	.loc ../contracts/staking/Election.sol, 264
+	NEWC
+	DUP
+	GETGLOB 18
+	.loc ../contracts/staking/Election.sol, 268
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	.loc ../contracts/staking/Election.sol, 269
+	GETGLOB 19
+	SWAP
+	STU 256
+	.loc ../contracts/staking/Election.sol, 270
+	GETGLOB 20
+	SWAP
+	STI 1
+	.loc ../contracts/staking/Election.sol, 271
+	GETGLOB 21
+	SWAP
+	STU 256
+	.loc ../contracts/staking/Election.sol, 275
+	NEWC
+	GETGLOB 14
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	.loc ../contracts/staking/Election.sol, 276
+	GETGLOB 15
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	.loc ../contracts/staking/Election.sol, 277
+	GETGLOB 16
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	.loc ../contracts/staking/Election.sol, 278
+	GETGLOB 17
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	.loc ../contracts/staking/Election.sol, 280
+	PUSH S2
+	XCHG S1, S2
+	STB
+	POP S2
+	.loc ../contracts/staking/Election.sol, 281
+	SWAP
+	STB
+	.loc ../contracts/staking/Election.sol, 283
+	STBREFR
+	.loc ../contracts/staking/Election.sol, 286
+	PUSH S3
+	SETCODE
+	.loc ../contracts/staking/Election.sol, 289
+	PUSH S3
+	CTOS
+	DUP
+	PUSHSLICE x8adb35
+	SDEQ
+	PUSHCONT {
+		PLDREFIDX 1
+		CTOS
+	}
+	IF
+	PLDREF
+	CTOS
+	BLESS
+	POP C3
+	.loc ../contracts/staking/Election.sol, 290
+	ENDC
+	CALLREF {
+		CALL $:onCodeUpgrade$
+	}
+}
+IFELSE
+.loc ../contracts/staking/Election.sol, 0
+BLKDROP 3
+
+.internal-alias :onCodeUpgrade, 2
+.internal :onCodeUpgrade
+.loc ../contracts/staking/Election.sol, 328
+PUSHINT 0
+SETGLOB 10
+PUSHREF {
+}
+SETGLOB 11
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+SETGLOB 12
+PUSHINT 0
+SETGLOB 13
+PUSHINT 0
+NEWDICT
+PAIR
+SETGLOB 14
+PUSHINT 0
+NEWDICT
+PAIR
+SETGLOB 15
+PUSHINT 0
+NEWDICT
+PAIR
+SETGLOB 16
+PUSHINT 0
+NEWDICT
+PAIR
+SETGLOB 17
+PUSHINT 0
+NEWDICT
+PAIR
+SETGLOB 18
+PUSHINT 0
+SETGLOB 19
+PUSHINT 0
+SETGLOB 20
+PUSHINT 0
+SETGLOB 21
+.loc ../contracts/staking/Election.sol, 329
+PUSHINT 2000000000
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/Election.sol, 331
+CTOS
+.loc ../contracts/staking/Election.sol, 332
+DUP
+LDMSGADDR
+LDU 8
+LDMSGADDR
+POP S4
+DROP2
+.loc ../contracts/staking/Election.sol, 333
+SETGLOB 12
+.loc ../contracts/staking/Election.sol, 335
+DUP
+LDREF
+POP S2
+SETGLOB 11
+.loc ../contracts/staking/Election.sol, 337
+LDREFRTOS
+.loc ../contracts/staking/Election.sol, 338
+LDU 32
+DROP
+SETGLOB 13
+.loc ../contracts/staking/Election.sol, 340
+LDREFRTOS
+NIP
+.loc ../contracts/staking/Election.sol, 341
+LDU 32
+LDU 32
+DROP2
+SETGLOB 10
+.loc ../contracts/staking/Election.sol, 344
+GETGLOB 18
+PUSHINT 0
+DUP
+PAIR
+CALLREF {
+	UNPAIR
+	SWAP
+	NEWC
+	STU 256
+	STU 256
+}
+SWAP
+UNPAIR
+OVER
+INC
+ROLLREV 3
+PUSHINT 32
+DICTUSETB
+PAIR
+SETGLOB 18
+.loc ../contracts/staking/Election.sol, 346
+GETGLOB 14
+PUSHINT 0
+NEWC
+STU 256
+SWAP
+UNPAIR
+OVER
+INC
+ROLLREV 3
+PUSHINT 32
+DICTUSETB
+PAIR
+SETGLOB 14
+.loc ../contracts/staking/Election.sol, 347
+GETGLOB 15
+PUSHINT 0
+NEWC
+STU 160
+SWAP
+UNPAIR
+OVER
+INC
+ROLLREV 3
+PUSHINT 32
+DICTUSETB
+PAIR
+SETGLOB 15
+.loc ../contracts/staking/Election.sol, 348
+PUSHSLICE x2_
+GETGLOB 16
+UNPAIR
+OVER
+INC
+ROLLREV 3
+PUSHINT 32
+DICTUSET
+PAIR
+SETGLOB 16
+.loc ../contracts/staking/Election.sol, 349
+GETGLOB 17
+PUSHINT 0
+NEWC
+STU 128
+SWAP
+UNPAIR
+OVER
+INC
+ROLLREV 3
+PUSHINT 32
+DICTUSETB
+PAIR
+SETGLOB 17
+.loc ../contracts/staking/Election.sol, 351
+GETGLOB 13
+GETGLOB 12
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHSLICE x0000000000000000000000000000c4f7733f_
+STSLICER
+STU 32
+ENDC
+PUSHINT 128
+SENDRAWMSG
+.loc ../contracts/staking/Election.sol, 0
+CALLREF {
+	CALL $c7_to_c4$
+}
+COMMIT
+THROW 0
+
+.globl	_buildUserDataParams_internal
+.type	_buildUserDataParams_internal, @function
+CALL $_buildUserDataParams_internal_macro$
+
+.macro _buildUserDataParams_internal_macro
+.loc ../contracts/staking/Election.sol, 356
+NEWC
+STSLICE
+.loc ../contracts/staking/Election.sol, 357
+ENDC
+.loc ../contracts/staking/Election.sol, 0
+
+.globl	_buildPlatformInitData_internal
+.type	_buildPlatformInitData_internal, @function
+CALL $_buildPlatformInitData_internal_macro$
+
+.macro _buildPlatformInitData_internal_macro
+.loc ../contracts/staking/Election.sol, 361
+PUSHINT 0
+NEWC
+STU 256
+PUSHINT 0
+NEWDICT
+PUSHINT 64
+DICTUSETB
+ROLL 3
+PUSHINT 1
+ROT
+PUSHINT 64
+DICTUSET
+ROT
+NEWC
+STU 8
+PUSHINT 2
+ROT
+PUSHINT 64
+DICTUSETB
+SWAP
+PUSHINT 3
+ROT
+PUSHINT 64
+DICTUSETREF
+GETGLOB 11
+PUSHINT 4
+ROT
+PUSHINT 64
+DICTUSETREF
+NEWC
+STDICT
+ENDC
+GETGLOB 11
+NEWC
+STSLICECONST x2_
+STOPTREF
+STOPTREF
+STZERO
+ENDC
+.loc ../contracts/staking/Election.sol, 0
+
+.macro getUserDataAddress
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/Election.sol, 374
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/Election.sol, 0
+CALLREF {
+	CALL $getUserDataAddress_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	SWAP
+	NEWC
+	STSLICECONST x84270289
+	STSLICE
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	PUSHINT 2
+	STZEROES
+	STI 1
+	PUSHINT 3
+	STZEROES
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	SWAP
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STSLICE
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	getUserDataAddress_internal
+.type	getUserDataAddress_internal, @function
+CALL $getUserDataAddress_internal_macro$
+
+.macro getUserDataAddress_internal_macro
+.loc ../contracts/staking/Election.sol, 375
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+FALSE
+SETINDEXQ 1
+PUSHINT 64
+SETINDEXQ 4
+SETGLOB 4
+GETGLOB 12
+PUSHINT 100
+ROT
+CALLREF {
+	CALL $_buildUserDataParams_internal_macro$
+}
+CALLREF {
+	CALL $_buildPlatformInitData_internal_macro$
+}
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+ENDC
+CTOS
+.loc ../contracts/staking/Election.sol, 0
+
+.macro c4_to_c7
+PUSHROOT
+CTOS
+LDU 256 ; pubkey c4
+LDU 64 ; pubkey timestamp c4
+LDU 1 ; ctor flag
+NIP
+LDU 32
+LDREF
+LDMSGADDR
+LDU 32
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDREF
+ENDS
+CTOS
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 256
+LDI 1
+LDU 256
+ENDS
+SETGLOB 21
+SETGLOB 20
+SETGLOB 19
+SETGLOB 18
+SETGLOB 17
+SETGLOB 16
+SETGLOB 15
+SETGLOB 14
+SETGLOB 13
+SETGLOB 12
+SETGLOB 11
+SETGLOB 10
+SETGLOB 3
+SETGLOB 2
+
+.macro c4_to_c7_with_init_storage
+PUSHROOT
+CTOS
+SBITS
+GTINT 1
+PUSHCONT {
+	PUSHINT 0
+	PUSHROOT
+	CTOS
+	PLDDICT ; D
+	PUSHINT 0
+	PUSHREF {
+	}
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	PUSHINT 0
+	DUP
+	NEWDICT
+	PAIR
+	BLKPUSH 4, 0
+	PUSHINT 0
+	BLKPUSH 2, 0
+	SETGLOB 21
+	SETGLOB 20
+	SETGLOB 19
+	SETGLOB 18
+	SETGLOB 17
+	SETGLOB 16
+	SETGLOB 15
+	SETGLOB 14
+	SETGLOB 13
+	SETGLOB 12
+	SETGLOB 11
+	SETGLOB 10
+	PUSHINT 64
+	DICTUGET
+	THROWIFNOT 61
+	PLDU 256
+	SETGLOB 2
+	PUSHINT 0 ; timestamp
+	SETGLOB 3
+	PUSHINT 0
+	SETGLOB 21
+}
+IFREFELSE {
+	CALL $c4_to_c7$
+}
+
+.macro c7_to_c4
+GETGLOB 21
+GETGLOB 20
+GETGLOB 19
+GETGLOB 18
+GETGLOB 17
+GETGLOB 16
+GETGLOB 15
+GETGLOB 14
+GETGLOB 13
+GETGLOB 12
+GETGLOB 11
+GETGLOB 10
+GETGLOB 3
+GETGLOB 2
+NEWC
+STU 256
+STU 64
+STONE
+STU 32
+STREF
+STSLICE
+STU 32
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+ROLLREV 7
+NEWC
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+STU 256
+STI 1
+STU 256
+STBREFR
+ENDC
+POPROOT
+
+.macro upd_only_time_in_c4
+PUSHROOT
+CTOS
+LDU 256
+LDU 64
+NIP
+GETGLOB 3
+ROT
+NEWC
+STU 256
+STU 64
+STSLICE
+ENDC
+POPROOT
+
+.internal-alias :main_internal, 0
+.internal :main_internal
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSH S2
+CTOS
+LDU 4 ; bounced tail
+LDMSGADDR ; bounced src tail
+DROP
+SETGLOB 9
+MODPOW2 1
+GETGLOB 4
+TRUE
+SETINDEXQ 1
+PUSHINT 10000000
+SETINDEXQ 2
+NULL
+SETINDEXQ 3
+PUSHINT 0
+SETINDEXQ 4
+SETGLOB 4
+IFRET
+OVER
+SEMPTY ; isEmpty
+IFJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+OVER
+LDUQ 32  ; [funcId] body' ok
+THROWIFNOT 60
+OVER
+IFNOTJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.internal-alias :main_external, -1
+.internal :main_external
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+SETGLOB 9
+OVER
+CALLREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+LDU 1 ; haveSign msgSlice
+SWAP
+PUSHCONT {
+	PUSHINT 512
+	LDSLICEX ; signatureSlice msgSlice
+	DUP
+	HASHSU ; signatureSlice msgSlice hashMsgSlice
+	ROT
+	GETGLOB 2
+	CHKSIGNU ; msgSlice isSigned
+	THROWIFNOT 40
+}
+IF
+LDU 64 ; timestamp msgSlice
+SWAP
+CALL $replay_protection_macro$
+LDU 32 ; expireAt msgSlice
+SWAP
+NOW ; msgSlice expireAt now
+GREATER ; msgSlice expireAt>now
+THROWIFNOT 57
+LDU 32 ; funcId body
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.macro current_version
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 10
+OVER
+PUSHCONT {
+	PUSHSLICE xc000000000000000000000000093fa974d
+	NEWC
+	STSLICE
+	STU 32
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro root
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 12
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000b7295e20
+	NEWC
+	STSLICE
+	STSLICE
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro round_num
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 13
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000e2e1af3d
+	NEWC
+	STSLICE
+	STU 32
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro election_ended
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 20
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000b6f3a045
+	NEWC
+	STSLICE
+	STI 1
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro public_function_selector
+DUP
+PUSHINT 873605759
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 69665417
+	EQUAL
+	IFJMPREF {
+		CALL $getUserDataAddress$
+	}
+	DUP
+	PUSHINT 335189837
+	EQUAL
+	IFJMPREF {
+		CALL $current_version$
+	}
+	DUP
+	PUSHINT 629528867
+	EQUAL
+	IFJMPREF {
+		CALL $destroy$
+	}
+	DUP
+	PUSHINT 873605759
+	EQUAL
+	IFJMPREF {
+		CALL $applyForMembership$
+	}
+}
+DUP
+PUSHINT 1376466072
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 896562097
+	EQUAL
+	IFJMPREF {
+		CALL $sendRelaysToRelayRound$
+	}
+	DUP
+	PUSHINT 921935941
+	EQUAL
+	IFJMPREF {
+		CALL $election_ended$
+	}
+	DUP
+	PUSHINT 925457952
+	EQUAL
+	IFJMPREF {
+		CALL $root$
+	}
+	DUP
+	PUSHINT 1376466072
+	EQUAL
+	IFJMPREF {
+		CALL $getNode$
+	}
+}
+DUP
+PUSHINT 1756716863
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 1428940967
+	EQUAL
+	IFJMPREF {
+		CALL $finish$
+	}
+	DUP
+	PUSHINT 1658957629
+	EQUAL
+	IFJMPREF {
+		CALL $round_num$
+	}
+	DUP
+	PUSHINT 1688565960
+	EQUAL
+	IFJMPREF {
+		CALL $upgrade$
+	}
+	DUP
+	PUSHINT 1756716863
+	EQUAL
+	IFJMPREF {
+		CALL $constructor$
+	}
+}
+DUP
+PUSHINT 1842242003
+EQUAL
+IFJMPREF {
+	CALL $getRequests$
+}
+

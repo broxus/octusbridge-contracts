@@ -1,0 +1,1543 @@
+.version sol 0.57.1
+
+.macro constructor
+DROP
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+GETGLOB 6
+THROWIF 51
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDREF
+ENDS
+.loc ../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.sol, 9
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+GETGLOB 2
+EQUAL
+THROWIFNOT 1103
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 29
+ACCEPT
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 31
+SWAP
+CALLREF {
+	CALL $setOwnership_internal_macro$
+}
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 33
+SETGLOB 13
+.loc ../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.sol, 0
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setMeta
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 41
+LDREF
+ENDS
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 0
+CALLREF {
+	CALL $setMeta_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setMeta_internal_macro
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol, 15
+GETGLOB 9
+GETGLOB 10
+SDEQ
+THROWIFNOT 1101
+.loc ../contracts/utils/TransferUtils.sol, 26
+GETPARAM 7
+FIRST
+DEPTH
+ADDCONST -2
+PICK
+SUB
+UFITS 128
+PUSHINT 2
+RAWRESERVE
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 42
+SETGLOB 13
+.loc ../contracts/utils/TransferUtils.sol, 28
+GETGLOB 9
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHINT 129
+SENDRAWMSG
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 0
+
+.macro setEndBlockNumber
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 47
+LDU 32
+ENDS
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 0
+CALLREF {
+	CALL $setEndBlockNumber_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setEndBlockNumber_internal_macro
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol, 15
+GETGLOB 9
+GETGLOB 10
+SDEQ
+THROWIFNOT 1101
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 54
+PUSHINT 2219
+GETGLOB 12
+INDEX 5
+EQINT 0
+THROWANYIFNOT
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 59
+PUSHINT 2217
+OVER
+GETGLOB 12
+INDEX 4
+GEQ
+THROWANYIFNOT
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 64
+GETGLOB 12
+SWAP
+SETINDEX 5
+SETGLOB 12
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 0
+
+.globl	buildEventInitData_internal
+.type	buildEventInitData_internal, @function
+CALL $buildEventInitData_internal_macro$
+
+.macro buildEventInitData_internal_macro
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 75
+PUSHINT 0
+DUP
+PUSHREF {
+}
+PUSHINT 0
+DUP
+TUPLE 5
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+DUP
+PUSHINT 0
+TUPLE 4
+SWAP
+SETINDEX 0
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 77
+MYADDR
+SETINDEX 1
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 78
+GETGLOB 11
+SECOND
+SETINDEX 2
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 79
+GETGLOB 12
+FIRST
+SETINDEX 3
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 0
+
+.macro deployEvent
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 84
+OVER
+PUSHCONT {
+	LDU 256
+	LDU 32
+	LDREF
+	LDU 32
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDU 256
+	LDU 32
+	LDREF
+	LDU 32
+}
+IFELSE
+LDU 256
+ROLLREV 5
+TUPLE 5
+SWAP
+ENDS
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 0
+CALLREF {
+	CALL $deployEvent_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro deployEvent_internal_macro
+.loc ../contracts/utils/TransferUtils.sol, 21
+GETPARAM 7
+FIRST
+DEPTH
+ADDCONST -2
+PICK
+SUB
+UFITS 128
+PUSHINT 2
+RAWRESERVE
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 91
+PUSHINT 2213
+DEPTH
+ADDCONST -2
+PICK
+GETGLOB 11
+THIRD
+GEQ
+THROWANYIFNOT
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 92
+PUSHINT 2210
+OVER
+INDEX 3
+GETGLOB 12
+INDEX 4
+GEQ
+THROWANYIFNOT
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 97
+GETGLOB 12
+INDEX 5
+PUSHCONT {
+	.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 98
+	PUSHINT 2214
+	OVER
+	INDEX 3
+	GETGLOB 12
+	INDEX 5
+	LEQ
+	THROWANYIFNOT
+	.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 0
+}
+IF
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 104
+DUP
+CALLREF {
+	CALL $buildEventInitData_internal_macro$
+}
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 106
+SWAP
+CALLREF {
+	CALL $deriveEventAddress_internal_macro$
+}
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 108
+PUSHSLICE xc00000000000000000000000003ac1825a
+NEWC
+STSLICE
+STSLICE
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 110
+GETGLOB 13
+GETGLOB 9
+PUSHINT 0
+NEWC
+STU 256
+PUSHINT 0
+NEWDICT
+PUSHINT 64
+DICTUSETB
+ROLL 3
+CALLREF {
+	UNTUPLE 4
+	REVERSE 4, 0
+	NEWC
+	SWAP
+	UNTUPLE 5
+	REVERSE 6, 0
+	STU 256
+	STU 32
+	STREF
+	STU 32
+	STU 256
+	ROLLREV 3
+	NEWC
+	STSLICE
+	ROTREV
+	NEWC
+	STSLICE
+	STU 32
+	STBREFR
+	STBREFR
+}
+ENDC
+PUSHINT 1
+ROT
+PUSHINT 64
+DICTUSETREF
+NEWC
+STDICT
+ENDC
+GETGLOB 11
+INDEX 3
+NEWC
+STSLICECONST x2_
+STOPTREF
+STOPTREF
+STZERO
+ENDC
+DUP
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+NEWC
+STSLICECONST x62_
+STB
+PUSHSLICE x0000000000000000000000000007_
+STSLICER
+OVER
+CALLREF {
+	CTOS
+	LDI 1
+	SWAP
+	PUSHCONT {
+		LDI 5
+		NIP
+	}
+	IF
+	LDI 1
+	SWAP
+	PUSHCONT {
+		LDI 2
+		NIP
+	}
+	IF
+	LDOPTREF
+	LDOPTREF
+	LDDICT
+	ENDS
+	BLKDROP 3
+}
+STREF
+STSLICECONST 1
+ROTREV
+NEWC
+STSLICECONST x27b2cd1d
+STSLICE
+STREF
+STBREFR
+ENDC
+PUSHINT 128
+SENDRAWMSG
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 0
+
+.macro deriveEventAddress
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 124
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+OVER
+PUSHCONT {
+	LDU 256
+	LDU 32
+	LDREF
+	LDU 32
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDU 256
+	LDU 32
+	LDREF
+	LDU 32
+}
+IFELSE
+LDU 256
+ROLLREV 5
+TUPLE 5
+SWAP
+ENDS
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 0
+CALLREF {
+	CALL $deriveEventAddress_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	SWAP
+	NEWC
+	STSLICECONST x8602efa4
+	STSLICE
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	PUSHINT 2
+	STZEROES
+	STI 1
+	PUSHINT 3
+	STZEROES
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	SWAP
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STSLICE
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	deriveEventAddress_internal
+.type	deriveEventAddress_internal, @function
+CALL $deriveEventAddress_internal_macro$
+
+.macro deriveEventAddress_internal_macro
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 134
+CALLREF {
+	CALL $buildEventInitData_internal_macro$
+}
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 136
+PUSHINT 0
+NEWC
+STU 256
+PUSHINT 0
+NEWDICT
+PUSHINT 64
+DICTUSETB
+SWAP
+CALLREF {
+	UNTUPLE 4
+	REVERSE 4, 0
+	NEWC
+	SWAP
+	UNTUPLE 5
+	REVERSE 6, 0
+	STU 256
+	STU 32
+	STREF
+	STU 32
+	STU 256
+	ROLLREV 3
+	NEWC
+	STSLICE
+	ROTREV
+	NEWC
+	STSLICE
+	STU 32
+	STBREFR
+	STBREFR
+}
+ENDC
+PUSHINT 1
+ROT
+PUSHINT 64
+DICTUSETREF
+NEWC
+STDICT
+ENDC
+GETGLOB 11
+INDEX 3
+NEWC
+STSLICECONST x2_
+STOPTREF
+STOPTREF
+STZERO
+ENDC
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 145
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+SETGLOB 4
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+ENDC
+CTOS
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 0
+
+.macro getDetails
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 153
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+ENDS
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 0
+CALLREF {
+	CALL $getDetails_internal_macro$
+}
+PUSH S3
+PUSHCONT {
+	PUSH S5
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	REVERSE 4, 0
+	NEWC
+	STSLICECONST xf736ef05
+	SWAP
+	UNTUPLE 4
+	REVERSE 5, 0
+	STREF
+	STSLICE
+	STU 64
+	STREF
+	SWAP
+	UNTUPLE 6
+	REVERSE 7, 0
+	STU 32
+	STU 160
+	STU 16
+	ROLLREV 4
+	NEWC
+	STSLICE
+	STU 32
+	STU 32
+	STREF
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	PUSHINT 2
+	STZEROES
+	STI 1
+	PUSHINT 3
+	STZEROES
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	REVERSE 4, 0
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	SWAP
+	UNTUPLE 4
+	REVERSE 5, 0
+	STREF
+	STSLICE
+	STU 64
+	STREF
+	SWAP
+	UNTUPLE 6
+	REVERSE 7, 0
+	STU 32
+	STU 160
+	STU 16
+	ROLLREV 4
+	NEWC
+	STSLICE
+	STU 32
+	STU 32
+	STREF
+	STBREFR
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	getDetails_internal
+.type	getDetails_internal, @function
+CALL $getDetails_internal_macro$
+
+.macro getDetails_internal_macro
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 158
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+SETGLOB 4
+GETGLOB 11
+GETGLOB 12
+GETGLOB 13
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 0
+
+.macro getType
+DROP
+GETGLOB 6
+THROWIFNOT 76
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 167
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+ENDS
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 0
+CALLREF {
+	CALL $getType_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHSLICE x00000000000000000000000031615fb56_
+	STSLICER
+	STU 8
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	PUSHINT 2
+	STZEROES
+	STI 1
+	PUSHINT 3
+	STZEROES
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 106
+	STZEROES
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STU 8
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	getType_internal
+.type	getType_internal, @function
+CALL $getType_internal_macro$
+
+.macro getType_internal_macro
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 168
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+SETGLOB 4
+PUSHINT 0
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 0
+
+.macro onEventConfirmed
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 175
+OVER
+PUSHCONT {
+	LDU 256
+	LDU 32
+	LDREF
+	LDU 32
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+	ROLLREV 5
+	TUPLE 5
+	SWAP
+}
+PUSHCONT {
+	LDU 256
+	LDU 32
+	LDREF
+	LDU 32
+	LDU 256
+	ROLLREV 5
+	TUPLE 5
+	SWAP
+	LDREF
+	ENDS
+	CTOS
+}
+IFELSE
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDU 32
+ROLLREV 4
+TUPLE 4
+SWAP
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 0
+CALLREF {
+	CALL $onEventConfirmed_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro onEventConfirmed_internal_macro
+.loc ../contracts/utils/TransferUtils.sol, 21
+GETPARAM 7
+FIRST
+DEPTH
+ADDCONST -2
+PICK
+SUB
+UFITS 128
+PUSHINT 2
+RAWRESERVE
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 179
+PUSHINT 2212
+PUSH S2
+SECOND
+MYADDR
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 184
+PUSHINT 0
+NEWC
+STU 256
+PUSHINT 0
+NEWDICT
+PUSHINT 64
+DICTUSETB
+PUSH S2
+CALLREF {
+	UNTUPLE 4
+	REVERSE 4, 0
+	NEWC
+	SWAP
+	UNTUPLE 5
+	REVERSE 6, 0
+	STU 256
+	STU 32
+	STREF
+	STU 32
+	STU 256
+	ROLLREV 3
+	NEWC
+	STSLICE
+	ROTREV
+	NEWC
+	STSLICE
+	STU 32
+	STBREFR
+	STBREFR
+}
+ENDC
+PUSHINT 1
+ROT
+PUSHINT 64
+DICTUSETREF
+NEWC
+STDICT
+ENDC
+GETGLOB 11
+INDEX 3
+NEWC
+STSLICECONST x2_
+STOPTREF
+STOPTREF
+STZERO
+ENDC
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 193
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+ENDC
+CTOS
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 195
+PUSHINT 2212
+SWAP
+GETGLOB 9
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 200
+SWAP
+GETGLOB 12
+INDEX 3
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHSLICE x3989680000000000000000000000000003_
+STSLICER
+ROTREV
+NEWC
+STSLICECONST x0088b721
+SWAP
+UNTUPLE 4
+REVERSE 5, 0
+SWAP
+UNTUPLE 5
+REVERSE 6, 0
+STU 256
+STU 32
+STREF
+STU 32
+STU 256
+ROLLREV 4
+NEWC
+STSLICE
+ROLLREV 3
+NEWC
+STSLICE
+STU 32
+SWAP
+NEWC
+STSLICE
+STBREFR
+STBREFR
+STBREFR
+STBREFR
+ENDC
+PUSHINT 128
+SENDRAWMSG
+.loc ../contracts/bridge/event-configuration-contracts/EthereumEventConfiguration.sol, 0
+
+.globl	setOwnership_internal
+.type	setOwnership_internal, @function
+CALL $setOwnership_internal_macro$
+
+.macro setOwnership_internal_macro
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol, 24
+GETGLOB 10
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol, 26
+OVER
+SETGLOB 10
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol, 28
+PUSHSLICE xc0000000000000000000000001
+NEWC
+STSLICE
+ROTREV
+NEWC
+STSLICECONST x6115f072
+STSLICE
+SWAP
+NEWC
+STSLICE
+STBREFR
+STBREFR
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol, 0
+
+.macro transferOwnership
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol, 34
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+ENDS
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol, 0
+CALLREF {
+	CALL $transferOwnership_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro transferOwnership_internal_macro
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol, 15
+GETGLOB 9
+GETGLOB 10
+SDEQ
+THROWIFNOT 1101
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol, 37
+DUP
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+SDEQ
+THROWIF 1102
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol, 39
+CALLREF {
+	CALL $setOwnership_internal_macro$
+}
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol, 0
+
+.macro renounceOwnership
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol, 45
+ENDS
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol, 0
+CALLREF {
+	CALL $renounceOwnership_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro renounceOwnership_internal_macro
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol, 15
+GETGLOB 9
+GETGLOB 10
+SDEQ
+THROWIFNOT 1101
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol, 46
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol, 48
+CALLREF {
+	CALL $setOwnership_internal_macro$
+}
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol, 0
+
+.globl	transferAll_internal
+.type	transferAll_internal, @function
+CALL $transferAll_internal_macro$
+
+.macro transferAll_internal_macro
+.loc ../contracts/utils/TransferUtils.sol, 17
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHINT 129
+SENDRAWMSG
+.loc ../contracts/utils/TransferUtils.sol, 0
+
+.macro c4_to_c7
+PUSHROOT
+CTOS
+LDU 256 ; pubkey c4
+LDU 64 ; pubkey timestamp c4
+LDU 1 ; ctor flag
+NIP
+LDMSGADDR
+LDREF
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDU 64
+LDREF
+ROLLREV 4
+TUPLE 4
+SWAP
+LDU 32
+LDU 160
+LDU 16
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDU 32
+LDU 32
+ROLLREV 6
+TUPLE 6
+SWAP
+LDREF
+ENDS
+SETGLOB 13
+SETGLOB 12
+SETGLOB 11
+SETGLOB 10
+SETGLOB 3
+SETGLOB 2
+
+.macro c4_to_c7_with_init_storage
+PUSHROOT
+CTOS
+SBITS
+GTINT 1
+PUSHCONT {
+	PUSHINT 0
+	PUSHROOT
+	CTOS
+	PLDDICT ; D
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	PUSHINT 1
+	PUSH S2
+	PUSHINT 64
+	DICTUGET
+IFREFELSEREF
+{
+		LDREF
+		LDMSGADDR
+		LDU 64
+		LDREF
+		ENDS
+		TUPLE 4
+}
+{
+		PUSHREF {
+		}
+		PUSHREFSLICE {
+			.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+		}
+		PUSHINT 0
+		PUSHREF {
+		}
+		TUPLE 4
+}
+	PUSHINT 2
+	PUSH S3
+	PUSHINT 64
+	DICTUGET
+IFREFELSEREF
+{
+		LDU 32
+		LDU 160
+		LDU 16
+		LDMSGADDR
+		LDU 32
+		LDU 32
+		ENDS
+		TUPLE 6
+}
+{
+		PUSHINT 0
+		BLKPUSH 2, 0
+		PUSHREFSLICE {
+			.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+		}
+		PUSHINT 0
+		DUP
+		TUPLE 6
+}
+	PUSHREF {
+	}
+	SETGLOB 13
+	SETGLOB 12
+	SETGLOB 11
+	SETGLOB 10
+	PUSHINT 64
+	DICTUGET
+	THROWIFNOT 61
+	PLDU 256
+	SETGLOB 2
+	PUSHINT 0 ; timestamp
+	SETGLOB 3
+}
+IFREFELSE {
+	CALL $c4_to_c7$
+}
+
+.macro c7_to_c4
+GETGLOB 13
+GETGLOB 12
+GETGLOB 11
+GETGLOB 10
+GETGLOB 3
+GETGLOB 2
+NEWC
+STU 256
+STU 64
+STONE
+STSLICE
+SWAP
+UNTUPLE 4
+REVERSE 5, 0
+STREF
+ROLLREV 5
+NEWC
+STSLICE
+STU 64
+STREF
+SWAP
+UNTUPLE 6
+REVERSE 7, 0
+STU 32
+STU 160
+STU 16
+ROLLREV 4
+NEWC
+STSLICE
+STU 32
+STU 32
+STREF
+STBREFR
+STBREFR
+ENDC
+POPROOT
+
+.macro upd_only_time_in_c4
+PUSHROOT
+CTOS
+LDU 256
+LDU 64
+NIP
+GETGLOB 3
+ROT
+NEWC
+STU 256
+STU 64
+STSLICE
+ENDC
+POPROOT
+
+.internal-alias :main_internal, 0
+.internal :main_internal
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSH S2
+CTOS
+LDU 4 ; bounced tail
+LDMSGADDR ; bounced src tail
+DROP
+SETGLOB 9
+MODPOW2 1
+GETGLOB 4
+TRUE
+SETINDEXQ 1
+PUSHINT 10000000
+SETINDEXQ 2
+NULL
+SETINDEXQ 3
+PUSHINT 0
+SETINDEXQ 4
+SETGLOB 4
+IFRET
+OVER
+SEMPTY ; isEmpty
+IFJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+OVER
+LDUQ 32  ; [funcId] body' ok
+THROWIFNOT 60
+OVER
+IFNOTJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.internal-alias :main_external, -1
+.internal :main_external
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+SETGLOB 9
+OVER
+CALLREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+LDU 1 ; haveSign msgSlice
+SWAP
+PUSHCONT {
+	PUSHINT 512
+	LDSLICEX ; signatureSlice msgSlice
+	DUP
+	HASHSU ; signatureSlice msgSlice hashMsgSlice
+	ROT
+	GETGLOB 2
+	DUP
+	SETGLOB 5
+	CHKSIGNU ; msgSlice isSigned
+	THROWIFNOT 40
+}
+IF
+LDU 64 ; timestamp msgSlice
+SWAP
+CALL $replay_protection_macro$
+LDU 32 ; expireAt msgSlice
+SWAP
+NOW ; msgSlice expireAt now
+GREATER ; msgSlice expireAt>now
+THROWIFNOT 57
+LDU 32 ; funcId body
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.macro owner
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 10
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000df0bcfde
+	NEWC
+	STSLICE
+	STSLICE
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro basicConfiguration
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 11
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000e79519f1
+	NEWC
+	STSLICE
+	SWAP
+	UNTUPLE 4
+	REVERSE 5, 0
+	STREF
+	STSLICE
+	STU 64
+	STREF
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro networkConfiguration
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 12
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000aa79aacc
+	NEWC
+	STSLICE
+	SWAP
+	UNTUPLE 6
+	REVERSE 7, 0
+	STU 32
+	STU 160
+	STU 16
+	STSLICE
+	STU 32
+	STU 32
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro meta
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 13
+OVER
+PUSHCONT {
+	PUSHSLICE xc00000000000000000000000008419845c
+	NEWC
+	STSLICE
+	STREF
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro public_function_selector
+DUP
+PUSHINT 235197086
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 8959777
+	EQUAL
+	IFJMPREF {
+		CALL $onEventConfirmed$
+	}
+	DUP
+	PUSHINT 68781148
+	EQUAL
+	IFJMPREF {
+		CALL $meta$
+	}
+	DUP
+	PUSHINT 100855716
+	EQUAL
+	IFJMPREF {
+		CALL $deriveEventAddress$
+	}
+	DUP
+	PUSHINT 235197086
+	EQUAL
+	IFJMPREF {
+		CALL $transferOwnership$
+	}
+}
+DUP
+PUSHINT 1156088510
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 666029341
+	EQUAL
+	IFJMPREF {
+		CALL $constructor$
+	}
+	DUP
+	PUSHINT 712616652
+	EQUAL
+	IFJMPREF {
+		CALL $networkConfiguration$
+	}
+	DUP
+	PUSHINT 960689737
+	EQUAL
+	IFJMPREF {
+		CALL $setMeta$
+	}
+	DUP
+	PUSHINT 1156088510
+	EQUAL
+	IFJMPREF {
+		CALL $deployEvent$
+	}
+}
+DUP
+PUSHINT 1729444094
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 1166376661
+	EQUAL
+	IFJMPREF {
+		CALL $getType$
+	}
+	DUP
+	PUSHINT 1594609630
+	EQUAL
+	IFJMPREF {
+		CALL $owner$
+	}
+	DUP
+	PUSHINT 1674875503
+	EQUAL
+	IFJMPREF {
+		CALL $setEndBlockNumber$
+	}
+	DUP
+	PUSHINT 1729444094
+	EQUAL
+	IFJMPREF {
+		CALL $renounceOwnership$
+	}
+}
+DUP
+PUSHINT 2000088837
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 1737824753
+	EQUAL
+	IFJMPREF {
+		CALL $basicConfiguration$
+	}
+	DUP
+	PUSHINT 2000088837
+	EQUAL
+	IFJMPREF {
+		CALL $getDetails$
+	}
+}
+

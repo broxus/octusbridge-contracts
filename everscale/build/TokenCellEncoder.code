@@ -1,0 +1,268 @@
+.version sol 0.57.1
+
+.macro constructor
+DROP
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+GETGLOB 6
+THROWIF 51
+ENDS
+ACCEPT
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro encodeBurnPayload
+DROP
+GETGLOB 6
+THROWIFNOT 76
+.loc ../contracts/utils/cell-encoder/TokenCellEncoder.sol, 5
+LDU 160
+LDU 32
+ENDS
+.loc ../contracts/utils/cell-encoder/TokenCellEncoder.sol, 0
+CALLREF {
+	CALL $encodeBurnPayload_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHSLICE x00000000000000000000000033eff40fe_
+	STSLICER
+	STREF
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+PUSHCONT {
+	DROP
+}
+IFELSE
+IFREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	encodeBurnPayload_internal
+.type	encodeBurnPayload_internal, @function
+CALL $encodeBurnPayload_internal_macro$
+
+.macro encodeBurnPayload_internal_macro
+.loc ../contracts/utils/cell-encoder/TokenCellEncoder.sol, 13
+SWAP
+NEWC
+STU 160
+STU 32
+.loc ../contracts/utils/cell-encoder/TokenCellEncoder.sol, 15
+ENDC
+.loc ../contracts/utils/cell-encoder/TokenCellEncoder.sol, 0
+
+.macro decodeBurnPayload
+DROP
+GETGLOB 6
+THROWIFNOT 76
+.loc ../contracts/utils/cell-encoder/TokenCellEncoder.sol, 18
+LDREF
+ENDS
+.loc ../contracts/utils/cell-encoder/TokenCellEncoder.sol, 0
+CALLREF {
+	CALL $decodeBurnPayload_internal_macro$
+}
+PUSH S2
+PUSHCONT {
+	PUSH S4
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 98
+	STZEROES
+	REVERSE 2, 1
+	STSLICECONST xe112dfd6
+	STU 160
+	STU 32
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+PUSHCONT {
+	DROP2
+}
+IFELSE
+IFREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	decodeBurnPayload_internal
+.type	decodeBurnPayload_internal, @function
+CALL $decodeBurnPayload_internal_macro$
+
+.macro decodeBurnPayload_internal_macro
+.loc ../contracts/utils/cell-encoder/TokenCellEncoder.sol, 24
+CTOS
+LDU 160
+LDU 32
+DROP
+.loc ../contracts/utils/cell-encoder/TokenCellEncoder.sol, 0
+
+.macro c4_to_c7
+PUSHROOT
+CTOS
+LDU 256 ; pubkey c4
+LDU 64 ; pubkey timestamp c4
+LDU 1 ; ctor flag
+NIP
+ENDS
+SETGLOB 3
+SETGLOB 2
+
+.macro c4_to_c7_with_init_storage
+PUSHROOT
+CTOS
+SBITS
+GTINT 1
+PUSHCONT {
+	PUSHINT 0
+	PUSHROOT
+	CTOS
+	PLDDICT ; D
+	PUSHINT 64
+	DICTUGET
+	THROWIFNOT 61
+	PLDU 256
+	SETGLOB 2
+	PUSHINT 0 ; timestamp
+	SETGLOB 3
+}
+IFREFELSE {
+	CALL $c4_to_c7$
+}
+
+.macro c7_to_c4
+GETGLOB 3
+GETGLOB 2
+NEWC
+STU 256
+STU 64
+STONE
+ENDC
+POPROOT
+
+.macro upd_only_time_in_c4
+PUSHROOT
+CTOS
+LDU 256
+LDU 64
+NIP
+GETGLOB 3
+ROT
+NEWC
+STU 256
+STU 64
+STSLICE
+ENDC
+POPROOT
+
+.internal-alias :main_internal, 0
+.internal :main_internal
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSH S2
+CTOS
+PLDU 4
+MODPOW2 1
+IFRET
+OVER
+SEMPTY ; isEmpty
+IFJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+OVER
+LDUQ 32  ; [funcId] body' ok
+THROWIFNOT 60
+OVER
+IFNOTJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.internal-alias :main_external, -1
+.internal :main_external
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+OVER
+CALLREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+LDU 1 ; haveSign msgSlice
+SWAP
+PUSHCONT {
+	PUSHINT 512
+	LDSLICEX ; signatureSlice msgSlice
+	DUP
+	HASHSU ; signatureSlice msgSlice hashMsgSlice
+	ROT
+	GETGLOB 2
+	CHKSIGNU ; msgSlice isSigned
+	THROWIFNOT 40
+}
+IF
+LDU 64 ; timestamp msgSlice
+SWAP
+CALL $replay_protection_macro$
+LDU 32 ; funcId body
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.macro public_function_selector
+DUP
+PUSHINT 1337970751
+EQUAL
+IFJMPREF {
+	CALL $encodeBurnPayload$
+}
+DUP
+PUSHINT 1628626902
+EQUAL
+IFJMPREF {
+	CALL $decodeBurnPayload$
+}
+DUP
+PUSHINT 1756716863
+EQUAL
+IFJMPREF {
+	CALL $constructor$
+}
+

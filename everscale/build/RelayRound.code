@@ -1,0 +1,2538 @@
+.version sol 0.57.1
+
+.macro constructor
+DROP
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+GETGLOB 6
+THROWIF 51
+ENDS
+.loc ../contracts/staking/RelayRound.sol, 54
+THROW 100
+.loc ../contracts/staking/RelayRound.sol, 0
+
+.macro getDetails
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/RelayRound.sol, 56
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+ENDS
+.loc ../contracts/staking/RelayRound.sol, 0
+CALLREF {
+	CALL $getDetails_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	SWAP
+	NEWC
+	STSLICECONST x9c1cfa9e
+	SWAP
+	UNTUPLE 8
+	REVERSE 9, 0
+	STSLICE
+	STU 32
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	STI 1
+	STU 32
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	PUSHINT 2
+	STZEROES
+	STI 1
+	PUSHINT 3
+	STZEROES
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	SWAP
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	SWAP
+	UNTUPLE 8
+	REVERSE 9, 0
+	STSLICE
+	STU 32
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	STI 1
+	STU 32
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.macro getDetails_internal_macro
+.loc ../contracts/staking/RelayRound.sol, 57
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+FALSE
+SETINDEXQ 1
+PUSHINT 64
+SETINDEXQ 4
+SETGLOB 4
+PUSHINT 32
+GETGLOBVAR
+GETGLOB 21
+GETGLOB 22
+GETGLOB 23
+GETGLOB 24
+GETGLOB 25
+GETGLOB 10
+GETGLOB 30
+TUPLE 8
+.loc ../contracts/staking/RelayRound.sol, 0
+
+.macro hasUnclaimedReward
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/RelayRound.sol, 62
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/RelayRound.sol, 0
+CALLREF {
+	CALL $hasUnclaimedReward_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHSLICE x0000000000000000000000003021454c2_
+	STSLICER
+	STI 1
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	PUSHINT 2
+	STZEROES
+	STI 1
+	PUSHINT 3
+	STZEROES
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 106
+	STZEROES
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STI 1
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.macro hasUnclaimedReward_internal_macro
+.loc ../contracts/staking/RelayRound.sol, 63
+DUP
+GETGLOB 26
+PUSHINT 267
+DICTGET
+NULLSWAPIFNOT
+NIP
+PUSHCONT {
+	.loc ../contracts/staking/RelayRound.sol, 64
+	GETGLOB 4
+	PUSHINT 0
+	SETINDEXQ 2
+	PUSHINT 64
+	SETINDEXQ 4
+	FALSE
+	SETINDEXQ 1
+	SETGLOB 4
+	DROP
+	FALSE
+	.loc ../contracts/staking/RelayRound.sol, 0
+}
+IFNOTJMP
+.loc ../contracts/staking/RelayRound.sol, 66
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+FALSE
+SETINDEXQ 1
+SETGLOB 4
+GETGLOB 27
+PUSHINT 267
+DICTGET
+PUSHCONT {
+	PLDI 1
+}
+PUSHCONT {
+	PUSHINT 0
+}
+IFELSE
+NOT
+.loc ../contracts/staking/RelayRound.sol, 0
+
+.macro getRelayByStakerAddress
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/RelayRound.sol, 69
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/RelayRound.sol, 0
+CALLREF {
+	CALL $getRelayByStakerAddress_internal_macro$
+}
+PUSH S4
+PUSHCONT {
+	PUSH S6
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	REVERSE 5, 0
+	NEWC
+	STSLICECONST x8602a213
+	STU 256
+	STU 160
+	ROTREV
+	NEWC
+	STSLICE
+	STU 128
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	PUSHINT 2
+	STZEROES
+	STI 1
+	PUSHINT 3
+	STZEROES
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	REVERSE 5, 0
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STU 256
+	STU 160
+	ROTREV
+	NEWC
+	STSLICE
+	STU 128
+	STBREFR
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.macro getRelayByStakerAddress_internal_macro
+.loc ../contracts/staking/RelayRound.sol, 72
+PUSHINT 2538
+OVER
+GETGLOB 26
+PUSHINT 267
+DICTGET
+NULLSWAPIFNOT
+NIP
+THROWANYIFNOT
+.loc ../contracts/staking/RelayRound.sol, 73
+GETGLOB 26
+PUSHINT 267
+DICTGET
+PUSHCONT {
+	PLDU 256
+}
+PUSHCONT {
+	PUSHINT 0
+}
+IFELSE
+.loc ../contracts/staking/RelayRound.sol, 74
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+FALSE
+SETINDEXQ 1
+SETGLOB 4
+DUP
+GETGLOB 22
+SECOND
+PUSHINT 32
+DICTUGET
+THROWIFNOT 50
+PLDU 256
+OVER
+GETGLOB 23
+SECOND
+PUSHINT 32
+DICTUGET
+THROWIFNOT 50
+PLDU 160
+PUSH S2
+GETGLOB 24
+SECOND
+PUSHINT 32
+DICTUGET
+THROWIFNOT 50
+ROLL 3
+GETGLOB 25
+SECOND
+PUSHINT 32
+DICTUGET
+THROWIFNOT 50
+PLDU 128
+.loc ../contracts/staking/RelayRound.sol, 0
+
+.macro getRewardForRound
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/RelayRound.sol, 77
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDU 32
+ENDS
+.loc ../contracts/staking/RelayRound.sol, 0
+CALLREF {
+	CALL $getRewardForRound_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro getRewardForRound_internal_macro
+.loc ../contracts/staking/RelayRound.sol, 77
+OVER
+.loc ../contracts/staking/RelayRound.sol, 376
+CALLREF {
+	CALL $getUserDataAddress_internal_macro$
+}
+.loc ../contracts/staking/RelayRound.sol, 377
+PUSHINT 2504
+SWAP
+GETGLOB 9
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/RelayRound.sol, 78
+PUSHINT 2527
+NOW
+GETGLOB 13
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/RelayRound.sol, 79
+PUSHINT 2528
+PUSH S2
+GETGLOB 27
+PUSHINT 267
+DICTGET
+PUSHCONT {
+	PLDI 1
+}
+PUSHCONT {
+	PUSHINT 0
+}
+IFELSE
+FALSE
+EQUAL
+THROWANYIFNOT
+.loc ../contracts/staking/RelayRound.sol, 80
+PUSHINT 2534
+SWAP
+GETGLOB 30
+EQUAL
+THROWANYIFNOT
+.loc ../contracts/staking/RelayRound.sol, 81
+PUSHINT 2538
+OVER
+GETGLOB 26
+PUSHINT 267
+DICTGET
+NULLSWAPIFNOT
+NIP
+THROWANYIFNOT
+.loc ../contracts/staking/RelayRound.sol, 83
+PUSHINT 2000000000
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/RelayRound.sol, 85
+DUP
+GETGLOB 27
+NEWC
+STONE
+ROTREV
+PUSHINT 267
+DICTSETB
+SETGLOB 27
+.loc ../contracts/staking/RelayRound.sol, 86
+GETGLOB 26
+PUSHINT 267
+DICTGET
+PUSHCONT {
+	PLDU 256
+}
+PUSHCONT {
+	PUSHINT 0
+}
+IFELSE
+GETGLOB 25
+SECOND
+PUSHINT 32
+DICTUGET
+THROWIFNOT 50
+PLDU 128
+PUSHINT 1000000000000000000
+MUL
+GETGLOB 14
+DIV
+.loc ../contracts/staking/RelayRound.sol, 87
+GETGLOB 16
+MUL
+PUSHINT 1000000000000000000
+DIV
+UFITS 128
+.loc ../contracts/staking/RelayRound.sol, 89
+GETGLOB 15
+GETGLOB 21
+GETGLOB 9
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHSLICE x0000000000000000000000000000e808dd1f_
+STSLICER
+STU 32
+STU 32
+STU 128
+ENDC
+PUSHINT 128
+SENDRAWMSG
+.loc ../contracts/staking/RelayRound.sol, 0
+
+.globl	_getRelayListFromIdx_internal
+.type	_getRelayListFromIdx_internal, @function
+CALL $_getRelayListFromIdx_internal_macro$
+
+.macro _getRelayListFromIdx_internal_macro
+.loc ../contracts/staking/RelayRound.sol, 101
+OVER
+PUSHINT 0
+NEWC
+STU 256
+PUSHINT 0
+NEWDICT
+PUSH S3
+PUSHCONT {
+	BLKPUSH 2, 2
+	INC
+	XCHG S3
+	ROT
+	PUSHINT 32
+	DICTUSETB
+}
+REPEAT
+BLKDROP2 2, 1
+PAIR
+.loc ../contracts/staking/RelayRound.sol, 102
+PUSH S2
+PUSHINT 0
+NEWC
+STU 160
+PUSHINT 0
+NEWDICT
+PUSH S3
+PUSHCONT {
+	BLKPUSH 2, 2
+	INC
+	XCHG S3
+	ROT
+	PUSHINT 32
+	DICTUSETB
+}
+REPEAT
+BLKDROP2 2, 1
+PAIR
+.loc ../contracts/staking/RelayRound.sol, 103
+PUSH S3
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+PUSHINT 0
+NEWDICT
+PUSH S3
+PUSHCONT {
+	BLKPUSH 2, 2
+	INC
+	XCHG S3
+	ROT
+	PUSHINT 32
+	DICTUSET
+}
+REPEAT
+BLKDROP2 2, 1
+PAIR
+.loc ../contracts/staking/RelayRound.sol, 104
+PUSH S4
+PUSHINT 0
+NEWC
+STU 128
+PUSHINT 0
+NEWDICT
+PUSH S3
+PUSHCONT {
+	BLKPUSH 2, 2
+	INC
+	XCHG S3
+	ROT
+	PUSHINT 32
+	DICTUSETB
+}
+REPEAT
+BLKDROP2 2, 1
+PAIR
+.loc ../contracts/staking/RelayRound.sol, 106
+ROLL 4
+.loc ../contracts/staking/RelayRound.sol, 107
+PUSHINT 0
+.loc ../contracts/staking/RelayRound.sol, 109
+PUSHCONT {
+	PUSH2 S0, S6
+	LESS
+	PUSH S2
+	GETGLOB 22
+	FIRST
+	LESS
+	AND
+}
+PUSHCONT {
+	.loc ../contracts/staking/RelayRound.sol, 110
+	OVER
+	GETGLOB 22
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PLDU 256
+	PUSH S6
+	UNPAIR
+	PUXC S3, S-1
+	PUSH2 S1, S2
+	LESS
+	THROWIFNOT 50
+	ROLL 3
+	NEWC
+	STU 256
+	ROTREV
+	PUSHINT 32
+	DICTUSETB
+	PAIR
+	POP S6
+	.loc ../contracts/staking/RelayRound.sol, 111
+	OVER
+	GETGLOB 23
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PLDU 160
+	PUSH S5
+	UNPAIR
+	PUXC S3, S-1
+	PUSH2 S1, S2
+	LESS
+	THROWIFNOT 50
+	ROLL 3
+	NEWC
+	STU 160
+	ROTREV
+	PUSHINT 32
+	DICTUSETB
+	PAIR
+	POP S5
+	.loc ../contracts/staking/RelayRound.sol, 112
+	OVER
+	GETGLOB 24
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PUSH S4
+	UNPAIR
+	PUXC S3, S-1
+	PUSH2 S1, S2
+	LESS
+	THROWIFNOT 50
+	XCHG S2, S3
+	PUSHINT 32
+	DICTUSET
+	PAIR
+	POP S4
+	.loc ../contracts/staking/RelayRound.sol, 113
+	OVER
+	GETGLOB 25
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PLDU 128
+	PUSH S3
+	UNPAIR
+	PUXC S3, S-1
+	PUSH2 S1, S2
+	LESS
+	THROWIFNOT 50
+	ROLL 3
+	NEWC
+	STU 128
+	ROTREV
+	PUSHINT 32
+	DICTUSETB
+	PAIR
+	POP S3
+	.loc ../contracts/staking/RelayRound.sol, 114
+	INC
+	UFITS 128
+	.loc ../contracts/staking/RelayRound.sol, 115
+	OVER
+	INC
+	POP S2
+	.loc ../contracts/staking/RelayRound.sol, 0
+}
+WHILE
+.loc ../contracts/staking/RelayRound.sol, 117
+DROP
+BLKDROP2 1, 5
+.loc ../contracts/staking/RelayRound.sol, 0
+
+.macro sendRelaysToRelayRound
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/RelayRound.sol, 120
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDU 32
+ENDS
+.loc ../contracts/staking/RelayRound.sol, 0
+CALLREF {
+	CALL $sendRelaysToRelayRound_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro sendRelaysToRelayRound_internal_macro
+.loc ../contracts/staking/RelayRound.sol, 382
+PUSHINT 2502
+GETGLOB 9
+PUSHINT 32
+GETGLOBVAR
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/RelayRound.sol, 383
+PUSHCONT {
+	.loc ../contracts/staking/RelayRound.sol, 121
+	PUSHINT 2000000000
+	PUSHINT 0
+	RAWRESERVE
+	.loc ../contracts/staking/RelayRound.sol, 123
+	GETGLOB 29
+	GETGLOB 22
+	FIRST
+	GEQ
+	PUSHCONT {
+		.loc ../contracts/staking/RelayRound.sol, 124
+		DROP
+		NEWC
+		STSLICECONST x62_
+		STSLICE
+		PUSHSLICE x00000000000000000000000000002a5b81fb_
+		STSLICER
+		ENDC
+		PUSHINT 128
+		SENDRAWMSG
+		.loc ../contracts/staking/RelayRound.sol, 0
+	}
+	IFJMP
+	.loc ../contracts/staking/RelayRound.sol, 128
+	GETGLOB 29
+	CALLREF {
+		CALL $_getRelayListFromIdx_internal_macro$
+	}
+	.loc ../contracts/staking/RelayRound.sol, 135
+	SETGLOB 29
+	.loc ../contracts/staking/RelayRound.sol, 137
+	REVERSE 5, 0
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	PUSHSLICE x00000000000000000000000000009451c753_
+	STSLICER
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	ENDC
+	PUSHINT 128
+	SENDRAWMSG
+	.loc ../contracts/staking/RelayRound.sol, 120
+}
+CALLX
+.loc ../contracts/staking/RelayRound.sol, 0
+
+.macro relayKeys
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/RelayRound.sol, 142
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+ENDS
+.loc ../contracts/staking/RelayRound.sol, 0
+CALLREF {
+	CALL $relayKeys_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHSLICE x00000000000000000000000022e5f2b2a_
+	STSLICER
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	PUSHINT 2
+	STZEROES
+	STI 1
+	PUSHINT 3
+	STZEROES
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 106
+	STZEROES
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	relayKeys_internal
+.type	relayKeys_internal, @function
+CALL $relayKeys_internal_macro$
+
+.macro relayKeys_internal_macro
+.loc ../contracts/staking/RelayRound.sol, 143
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+FALSE
+SETINDEXQ 1
+PUSHINT 64
+SETINDEXQ 4
+SETGLOB 4
+GETGLOB 22
+.loc ../contracts/staking/RelayRound.sol, 0
+
+.macro setEmptyRelays
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/RelayRound.sol, 146
+ENDS
+.loc ../contracts/staking/RelayRound.sol, 0
+CALLREF {
+	CALL $setEmptyRelays_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setEmptyRelays_internal_macro
+.loc ../contracts/staking/RelayRound.sol, 147
+PUSHINT 2532
+GETGLOB 9
+GETGLOB 19
+SDEQ
+GETGLOB 9
+GETGLOB 20
+SDEQ
+OR
+THROWANYIFNOT
+.loc ../contracts/staking/RelayRound.sol, 148
+PUSHINT 2516
+GETGLOB 10
+NOT
+THROWANYIFNOT
+.loc ../contracts/staking/RelayRound.sol, 150
+PUSHINT 2000000000
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/RelayRound.sol, 152
+GETGLOB 28
+INC
+UFITS 8
+SETGLOB 28
+.loc ../contracts/staking/RelayRound.sol, 153
+CALLREF {
+	CALL $_checkRelaysInstalled_internal_macro$
+}
+.loc ../contracts/staking/RelayRound.sol, 0
+
+.macro setRelays
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/RelayRound.sol, 156
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+ENDS
+.loc ../contracts/staking/RelayRound.sol, 0
+CALLREF {
+	CALL $setRelays_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setRelays_internal_macro
+.loc ../contracts/staking/RelayRound.sol, 162
+PUSHINT 2532
+GETGLOB 9
+GETGLOB 19
+SDEQ
+GETGLOB 9
+GETGLOB 20
+SDEQ
+GETGLOB 9
+PUSHINT 32
+GETGLOBVAR
+SDEQ
+OR
+OR
+THROWANYIFNOT
+.loc ../contracts/staking/RelayRound.sol, 163
+PUSHINT 2516
+GETGLOB 10
+NOT
+THROWANYIFNOT
+.loc ../contracts/staking/RelayRound.sol, 165
+PUSHINT 2000000000
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/RelayRound.sol, 167
+PUSHINT 0
+PUSHCONT {
+	PUSH2 S0, S4
+	FIRST
+	LESS
+}
+PUSHCONT {
+	.loc ../contracts/staking/RelayRound.sol, 168
+	PUSH2 S0, S1
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PLDU 128
+	IFNOTRET
+	.loc ../contracts/staking/RelayRound.sol, 171
+	GETGLOB 22
+	PUSH2 S1, S5
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PLDU 256
+	NEWC
+	STU 256
+	SWAP
+	UNPAIR
+	OVER
+	INC
+	ROLLREV 3
+	PUSHINT 32
+	DICTUSETB
+	PAIR
+	SETGLOB 22
+	.loc ../contracts/staking/RelayRound.sol, 172
+	GETGLOB 23
+	PUSH2 S1, S4
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PLDU 160
+	NEWC
+	STU 160
+	SWAP
+	UNPAIR
+	OVER
+	INC
+	ROLLREV 3
+	PUSHINT 32
+	DICTUSETB
+	PAIR
+	SETGLOB 23
+	.loc ../contracts/staking/RelayRound.sol, 173
+	GETGLOB 25
+	PUSH2 S1, S2
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PLDU 128
+	NEWC
+	STU 128
+	SWAP
+	UNPAIR
+	OVER
+	INC
+	ROLLREV 3
+	PUSHINT 32
+	DICTUSETB
+	PAIR
+	SETGLOB 25
+	.loc ../contracts/staking/RelayRound.sol, 174
+	GETGLOB 24
+	PUSH2 S1, S3
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	SWAP
+	UNPAIR
+	OVER
+	INC
+	ROLLREV 3
+	PUSHINT 32
+	DICTUSET
+	PAIR
+	DUP
+	SETGLOB 24
+	.loc ../contracts/staking/RelayRound.sol, 176
+	FIRST
+	DEC
+	UFITS 256
+	GETGLOB 26
+	PUSH2 S2, S4
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	XCHG S2
+	NEWC
+	STU 256
+	ROTREV
+	PUSHINT 267
+	DICTSETB
+	SETGLOB 26
+	.loc ../contracts/staking/RelayRound.sol, 177
+	PUSH2 S0, S1
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PLDU 128
+	GETGLOB 14
+	ADD
+	UFITS 128
+	SETGLOB 14
+	.loc ../contracts/staking/RelayRound.sol, 178
+	GETGLOB 11
+	INC
+	UFITS 32
+	SETGLOB 11
+	.loc ../contracts/staking/RelayRound.sol, 167
+	INC
+	.loc ../contracts/staking/RelayRound.sol, 0
+}
+WHILEBRK
+BLKDROP 5
+.loc ../contracts/staking/RelayRound.sol, 181
+GETGLOB 28
+INC
+UFITS 8
+SETGLOB 28
+.loc ../contracts/staking/RelayRound.sol, 182
+CALLREF {
+	CALL $_checkRelaysInstalled_internal_macro$
+}
+.loc ../contracts/staking/RelayRound.sol, 0
+
+.globl	_checkRelaysInstalled_internal
+.type	_checkRelaysInstalled_internal, @function
+CALL $_checkRelaysInstalled_internal_macro$
+
+.macro _checkRelaysInstalled_internal_macro
+.loc ../contracts/staking/RelayRound.sol, 187
+GETGLOB 28
+GETGLOB 18
+EQUAL
+PUSHCONT {
+	.loc ../contracts/staking/RelayRound.sol, 188
+	TRUE
+	SETGLOB 10
+	.loc ../contracts/staking/RelayRound.sol, 190
+	GETGLOB 23
+	GETGLOB 17
+	GETGLOB 15
+	GETGLOB 16
+	GETGLOB 11
+	GETGLOB 13
+	GETGLOB 12
+	GETGLOB 21
+	PUSHINT 32
+	GETGLOBVAR
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	PUSHINT 1
+	STUR 111
+	ROLLREV 8
+	NEWC
+	STSLICECONST x386145c6
+	STU 32
+	STU 32
+	STU 32
+	STU 32
+	STU 128
+	STU 32
+	STI 1
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	STBREFR
+	ENDC
+	PUSHINT 128
+	SENDRAWMSG
+	.loc ../contracts/staking/RelayRound.sol, 0
+}
+IFJMP
+.loc ../contracts/staking/RelayRound.sol, 195
+PUSHINT 32
+GETGLOBVAR
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHINT 128
+SENDRAWMSG
+.loc ../contracts/staking/RelayRound.sol, 0
+
+.macro destroy
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/RelayRound.sol, 199
+ENDS
+.loc ../contracts/staking/RelayRound.sol, 0
+CALLREF {
+	CALL $destroy_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro destroy_internal_macro
+.loc ../contracts/staking/RelayRound.sol, 382
+PUSHINT 2502
+GETGLOB 9
+PUSHINT 32
+GETGLOBVAR
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/RelayRound.sol, 201
+PUSHINT 2527
+NOW
+GETGLOB 13
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/RelayRound.sol, 203
+PUSHINT 32
+GETGLOBVAR
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHINT 128
+SENDRAWMSG
+.loc ../contracts/staking/RelayRound.sol, 0
+
+.internal-alias :onCodeUpgrade, 2
+.internal :onCodeUpgrade
+.loc ../contracts/staking/RelayRound.sol, 207
+PUSHINT 0
+SETGLOB 10
+PUSHINT 0
+SETGLOB 11
+PUSHINT 0
+SETGLOB 12
+PUSHINT 0
+SETGLOB 13
+PUSHINT 0
+SETGLOB 14
+PUSHINT 0
+SETGLOB 15
+PUSHINT 0
+SETGLOB 16
+PUSHINT 0
+SETGLOB 17
+PUSHINT 0
+SETGLOB 18
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+SETGLOB 19
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+SETGLOB 20
+PUSHINT 0
+SETGLOB 21
+PUSHINT 0
+NEWDICT
+PAIR
+SETGLOB 22
+PUSHINT 0
+NEWDICT
+PAIR
+SETGLOB 23
+PUSHINT 0
+NEWDICT
+PAIR
+SETGLOB 24
+PUSHINT 0
+NEWDICT
+PAIR
+SETGLOB 25
+NEWDICT
+SETGLOB 26
+NEWDICT
+SETGLOB 27
+PUSHINT 0
+SETGLOB 28
+PUSHINT 0
+SETGLOB 29
+PUSHINT 0
+SETGLOB 30
+PUSHREF {
+}
+SETGLOB 31
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+PUSHINT 32
+SETGLOBVAR
+.loc ../contracts/staking/RelayRound.sol, 208
+PUSHINT 2000000000
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/RelayRound.sol, 210
+CTOS
+.loc ../contracts/staking/RelayRound.sol, 211
+DUP
+LDMSGADDR
+LDU 8
+LDMSGADDR
+POP S4
+DROP2
+.loc ../contracts/staking/RelayRound.sol, 212
+PUSHINT 32
+SETGLOBVAR
+.loc ../contracts/staking/RelayRound.sol, 214
+DUP
+LDREF
+POP S2
+SETGLOB 31
+.loc ../contracts/staking/RelayRound.sol, 216
+LDREFRTOS
+.loc ../contracts/staking/RelayRound.sol, 217
+LDU 32
+DROP
+SETGLOB 21
+.loc ../contracts/staking/RelayRound.sol, 219
+LDREFRTOS
+NIP
+.loc ../contracts/staking/RelayRound.sol, 220
+DUP
+LDU 32
+LDU 32
+POP S3
+DROP
+SETGLOB 30
+.loc ../contracts/staking/RelayRound.sol, 222
+DUP
+LDU 32
+POP S2
+SETGLOB 12
+.loc ../contracts/staking/RelayRound.sol, 223
+DUP
+LDU 32
+POP S2
+SETGLOB 13
+.loc ../contracts/staking/RelayRound.sol, 225
+DUP
+LDU 32
+POP S2
+SETGLOB 15
+.loc ../contracts/staking/RelayRound.sol, 226
+DUP
+LDU 128
+POP S2
+SETGLOB 16
+.loc ../contracts/staking/RelayRound.sol, 227
+DUP
+LDI 1
+POP S2
+SETGLOB 17
+.loc ../contracts/staking/RelayRound.sol, 228
+DUP
+LDU 8
+POP S2
+SETGLOB 18
+.loc ../contracts/staking/RelayRound.sol, 229
+DUP
+LDMSGADDR
+POP S2
+SETGLOB 19
+.loc ../contracts/staking/RelayRound.sol, 230
+LDMSGADDR
+DROP
+SETGLOB 20
+.loc ../contracts/staking/RelayRound.sol, 233
+GETGLOB 17
+GETGLOB 21
+PUSHINT 32
+GETGLOBVAR
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHSLICE x0000000000000000000000000000f3eb5519_
+STSLICER
+STU 32
+STI 1
+ENDC
+PUSHINT 128
+SENDRAWMSG
+.loc ../contracts/staking/RelayRound.sol, 0
+CALLREF {
+	CALL $c7_to_c4$
+}
+COMMIT
+THROW 0
+
+.macro upgrade
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/RelayRound.sol, 236
+OVER
+PUSHCONT {
+	LDREF
+	LDU 32
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDREF
+	LDU 32
+}
+IFELSE
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/RelayRound.sol, 0
+CALLREF {
+	CALL $upgrade_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro upgrade_internal_macro
+.loc ../contracts/staking/RelayRound.sol, 382
+PUSHINT 2502
+GETGLOB 9
+PUSHINT 32
+GETGLOBVAR
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/RelayRound.sol, 237
+OVER
+GETGLOB 30
+EQUAL
+PUSHCONT {
+	.loc ../contracts/staking/RelayRound.sol, 238
+	PUSHINT 2000000000
+	PUSHINT 0
+	RAWRESERVE
+	.loc ../contracts/staking/RelayRound.sol, 239
+	DUP
+	NEWC
+	STSLICECONST x42_
+	STSLICE
+	PUSHINT 111
+	STZEROES
+	ENDC
+	PUSHINT 128
+	SENDRAWMSG
+}
+PUSHCONT {
+	.loc ../contracts/staking/RelayRound.sol, 241
+	OVER
+	PUSHSLICE xc00000000000000000000000007b4325db
+	NEWC
+	STSLICE
+	STU 32
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc ../contracts/staking/RelayRound.sol, 245
+	PUSHINT 32
+	GETGLOBVAR
+	NEWC
+	STSLICE
+	.loc ../contracts/staking/RelayRound.sol, 246
+	PUSHINT 0
+	SWAP
+	STU 8
+	.loc ../contracts/staking/RelayRound.sol, 247
+	PUXC S1, S-1
+	STSLICE
+	.loc ../contracts/staking/RelayRound.sol, 249
+	GETGLOB 31
+	SWAP
+	STREF
+	.loc ../contracts/staking/RelayRound.sol, 252
+	GETGLOB 21
+	NEWC
+	STU 32
+	.loc ../contracts/staking/RelayRound.sol, 254
+	STBREFR
+	.loc ../contracts/staking/RelayRound.sol, 257
+	PUSH S2
+	NEWC
+	STU 32
+	.loc ../contracts/staking/RelayRound.sol, 258
+	GETGLOB 30
+	SWAP
+	STU 32
+	.loc ../contracts/staking/RelayRound.sol, 260
+	STBREFR
+	.loc ../contracts/staking/RelayRound.sol, 265
+	GETGLOB 10
+	NEWC
+	STI 1
+	.loc ../contracts/staking/RelayRound.sol, 266
+	GETGLOB 11
+	SWAP
+	STU 32
+	.loc ../contracts/staking/RelayRound.sol, 267
+	GETGLOB 12
+	SWAP
+	STU 32
+	.loc ../contracts/staking/RelayRound.sol, 268
+	GETGLOB 13
+	SWAP
+	STU 32
+	.loc ../contracts/staking/RelayRound.sol, 269
+	GETGLOB 14
+	SWAP
+	STU 128
+	.loc ../contracts/staking/RelayRound.sol, 270
+	GETGLOB 15
+	SWAP
+	STU 32
+	.loc ../contracts/staking/RelayRound.sol, 271
+	GETGLOB 16
+	SWAP
+	STU 128
+	.loc ../contracts/staking/RelayRound.sol, 272
+	GETGLOB 17
+	SWAP
+	STI 1
+	.loc ../contracts/staking/RelayRound.sol, 273
+	GETGLOB 18
+	SWAP
+	STU 8
+	.loc ../contracts/staking/RelayRound.sol, 274
+	GETGLOB 23
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	.loc ../contracts/staking/RelayRound.sol, 275
+	GETGLOB 24
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	.loc ../contracts/staking/RelayRound.sol, 278
+	NEWC
+	STBREF
+	.loc ../contracts/staking/RelayRound.sol, 281
+	GETGLOB 19
+	NEWC
+	STSLICE
+	.loc ../contracts/staking/RelayRound.sol, 282
+	GETGLOB 20
+	SWAP
+	STSLICE
+	.loc ../contracts/staking/RelayRound.sol, 283
+	GETGLOB 25
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	.loc ../contracts/staking/RelayRound.sol, 284
+	GETGLOB 22
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	.loc ../contracts/staking/RelayRound.sol, 285
+	GETGLOB 26
+	SWAP
+	STDICT
+	.loc ../contracts/staking/RelayRound.sol, 286
+	GETGLOB 27
+	SWAP
+	STDICT
+	.loc ../contracts/staking/RelayRound.sol, 287
+	GETGLOB 28
+	SWAP
+	STU 8
+	.loc ../contracts/staking/RelayRound.sol, 288
+	GETGLOB 29
+	SWAP
+	STU 256
+	.loc ../contracts/staking/RelayRound.sol, 291
+	STBREFR
+	.loc ../contracts/staking/RelayRound.sol, 293
+	STBREFR
+	.loc ../contracts/staking/RelayRound.sol, 296
+	PUSH S3
+	SETCODE
+	.loc ../contracts/staking/RelayRound.sol, 299
+	PUSH S3
+	CTOS
+	DUP
+	PUSHSLICE x8adb35
+	SDEQ
+	PUSHCONT {
+		PLDREFIDX 1
+		CTOS
+	}
+	IF
+	PLDREF
+	CTOS
+	BLESS
+	POP C3
+	.loc ../contracts/staking/RelayRound.sol, 300
+	ENDC
+	CALLREF {
+		CALL $:onCodeUpgrade$
+	}
+}
+IFELSE
+.loc ../contracts/staking/RelayRound.sol, 0
+BLKDROP 3
+
+.globl	_buildInitData_internal
+.type	_buildInitData_internal, @function
+CALL $_buildInitData_internal_macro$
+
+.macro _buildInitData_internal_macro
+.loc ../contracts/staking/RelayRound.sol, 349
+PUSHINT 0
+NEWC
+STU 256
+PUSHINT 0
+NEWDICT
+PUSHINT 64
+DICTUSETB
+PUSHINT 32
+GETGLOBVAR
+PUSHINT 1
+ROT
+PUSHINT 64
+DICTUSET
+ROT
+NEWC
+STU 8
+PUSHINT 2
+ROT
+PUSHINT 64
+DICTUSETB
+SWAP
+PUSHINT 3
+ROT
+PUSHINT 64
+DICTUSETREF
+GETGLOB 31
+PUSHINT 4
+ROT
+PUSHINT 64
+DICTUSETREF
+NEWC
+STDICT
+ENDC
+GETGLOB 31
+NEWC
+STSLICECONST x2_
+STOPTREF
+STOPTREF
+STZERO
+ENDC
+.loc ../contracts/staking/RelayRound.sol, 0
+
+.globl	_buildUserDataParams_internal
+.type	_buildUserDataParams_internal, @function
+CALL $_buildUserDataParams_internal_macro$
+
+.macro _buildUserDataParams_internal_macro
+.loc ../contracts/staking/RelayRound.sol, 364
+NEWC
+STSLICE
+.loc ../contracts/staking/RelayRound.sol, 365
+ENDC
+.loc ../contracts/staking/RelayRound.sol, 0
+
+.macro getUserDataAddress
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/RelayRound.sol, 368
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/RelayRound.sol, 0
+CALLREF {
+	CALL $getUserDataAddress_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	SWAP
+	NEWC
+	STSLICECONST x84270289
+	STSLICE
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	PUSHINT 2
+	STZEROES
+	STI 1
+	PUSHINT 3
+	STZEROES
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	SWAP
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STSLICE
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	getUserDataAddress_internal
+.type	getUserDataAddress_internal, @function
+CALL $getUserDataAddress_internal_macro$
+
+.macro getUserDataAddress_internal_macro
+.loc ../contracts/staking/RelayRound.sol, 369
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+FALSE
+SETINDEXQ 1
+PUSHINT 64
+SETINDEXQ 4
+SETGLOB 4
+PUSHINT 100
+SWAP
+CALLREF {
+	CALL $_buildUserDataParams_internal_macro$
+}
+CALLREF {
+	CALL $_buildInitData_internal_macro$
+}
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+ENDC
+CTOS
+.loc ../contracts/staking/RelayRound.sol, 0
+
+.macro c4_to_c7
+PUSHROOT
+CTOS
+LDU 256 ; pubkey c4
+LDU 64 ; pubkey timestamp c4
+LDU 1 ; ctor flag
+NIP
+LDI 1
+LDU 32
+LDU 32
+LDU 32
+LDU 128
+LDU 32
+LDU 128
+LDI 1
+LDU 8
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDU 32
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDREF
+ENDS
+CTOS
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDDICT
+LDDICT
+LDU 8
+LDU 256
+LDU 32
+LDREF
+LDMSGADDR
+ENDS
+PUSHINT 0
+GETGLOBVAR
+GETGLOB 1
+GETGLOB 2
+GETGLOB 3
+GETGLOB 4
+GETGLOB 5
+GETGLOB 6
+GETGLOB 7
+GETGLOB 8
+GETGLOB 9
+PUSHINT 23
+PUSHINT 10
+BLKSWX
+PUSHINT 33
+TUPLEVAR
+POP C7
+SETGLOB 3
+SETGLOB 2
+
+.macro c4_to_c7_with_init_storage
+PUSHROOT
+CTOS
+SBITS
+GTINT 1
+PUSHCONT {
+	PUSHINT 0
+	PUSHROOT
+	CTOS
+	PLDDICT ; D
+	PUSHINT 0
+	GETGLOBVAR
+	GETGLOB 1
+	GETGLOB 2
+	GETGLOB 3
+	GETGLOB 4
+	GETGLOB 5
+	GETGLOB 6
+	GETGLOB 7
+	GETGLOB 8
+	GETGLOB 9
+	PUSHINT 0
+	BLKPUSH 8, 0
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	DUP
+	PUSHINT 0
+	DUP
+	NEWDICT
+	PAIR
+	BLKPUSH 3, 0
+	NEWDICT
+	DUP
+	PUSHINT 0
+	BLKPUSH 2, 0
+	PUSHREF {
+	}
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	PUSHINT 33
+	TUPLEVAR
+	POP C7
+	PUSHINT 64
+	DICTUGET
+	THROWIFNOT 61
+	PLDU 256
+	SETGLOB 2
+	PUSHINT 0 ; timestamp
+	SETGLOB 3
+	PUSHINT 0
+	SETGLOB 29
+}
+IFREFELSE {
+	CALL $c4_to_c7$
+}
+
+.macro c7_to_c4
+PUSH C7
+FALSE
+PUSHINT 33
+SETINDEXVARQ
+PUSHINT 34
+UNTUPLEVAR
+DROP
+PUSHINT 33
+PUSHINT 0
+REVX
+BLKDROP 10
+GETGLOB 3
+GETGLOB 2
+NEWC
+STU 256
+STU 64
+STONE
+STI 1
+STU 32
+STU 32
+STU 32
+STU 128
+STU 32
+STU 128
+STI 1
+STU 8
+ROLLREV 14
+NEWC
+STSLICE
+ROLLREV 13
+NEWC
+STSLICE
+STU 32
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+ROLLREV 8
+NEWC
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+STDICT
+STDICT
+STU 8
+STU 256
+STU 32
+STREF
+STSLICE
+STBREFR
+STBREFR
+STBREFR
+ENDC
+POPROOT
+
+.macro upd_only_time_in_c4
+PUSHROOT
+CTOS
+LDU 256
+LDU 64
+NIP
+GETGLOB 3
+ROT
+NEWC
+STU 256
+STU 64
+STSLICE
+ENDC
+POPROOT
+
+.internal-alias :main_internal, 0
+.internal :main_internal
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSH S2
+CTOS
+LDU 4 ; bounced tail
+LDMSGADDR ; bounced src tail
+DROP
+SETGLOB 9
+MODPOW2 1
+GETGLOB 4
+TRUE
+SETINDEXQ 1
+PUSHINT 10000000
+SETINDEXQ 2
+NULL
+SETINDEXQ 3
+PUSHINT 0
+SETINDEXQ 4
+SETGLOB 4
+IFRET
+OVER
+SEMPTY ; isEmpty
+IFJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+OVER
+LDUQ 32  ; [funcId] body' ok
+THROWIFNOT 60
+OVER
+IFNOTJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.internal-alias :main_external, -1
+.internal :main_external
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+SETGLOB 9
+OVER
+CALLREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+LDU 1 ; haveSign msgSlice
+SWAP
+PUSHCONT {
+	PUSHINT 512
+	LDSLICEX ; signatureSlice msgSlice
+	DUP
+	HASHSU ; signatureSlice msgSlice hashMsgSlice
+	ROT
+	GETGLOB 2
+	CHKSIGNU ; msgSlice isSigned
+	THROWIFNOT 40
+}
+IF
+LDU 64 ; timestamp msgSlice
+SWAP
+CALL $replay_protection_macro$
+LDU 32 ; funcId body
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.macro relays_count
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 11
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000fcf93f0b
+	NEWC
+	STSLICE
+	STU 32
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro start_time
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 12
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000a99f8c5b
+	NEWC
+	STSLICE
+	STU 32
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro end_time
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 13
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000a2ceb234
+	NEWC
+	STSLICE
+	STU 32
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro total_tokens_staked
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 14
+OVER
+PUSHCONT {
+	PUSHSLICE xc00000000000000000000000009d3ad018
+	NEWC
+	STSLICE
+	STU 128
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro reward_round_num
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 15
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000ea52fc94
+	NEWC
+	STSLICE
+	STU 32
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro round_reward
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 16
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000eef1b5e8
+	NEWC
+	STSLICE
+	STU 128
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro duplicate
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 17
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000e13c2c27
+	NEWC
+	STSLICE
+	STI 1
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro expected_packs_num
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 18
+OVER
+PUSHCONT {
+	PUSHSLICE xc00000000000000000000000008fd1f8d8
+	NEWC
+	STSLICE
+	STU 8
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro public_function_selector
+DUP
+PUSHINT 1688565960
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 194497226
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 69665417
+		EQUAL
+		IFJMPREF {
+			CALL $getUserDataAddress$
+		}
+		DUP
+		PUSHINT 100835859
+		EQUAL
+		IFJMPREF {
+			CALL $getRelayByStakerAddress$
+		}
+		DUP
+		PUSHINT 184593702
+		EQUAL
+		IFJMPREF {
+			CALL $getRewardForRound$
+		}
+		DUP
+		PUSHINT 194497226
+		EQUAL
+		IFJMPREF {
+			CALL $relayKeys$
+		}
+	}
+	DUP
+	PUSHINT 490393624
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 265418968
+		EQUAL
+		IFJMPREF {
+			CALL $expected_packs_num$
+		}
+		DUP
+		PUSHINT 355320061
+		EQUAL
+		IFJMPREF {
+			CALL $setEmptyRelays$
+		}
+		DUP
+		PUSHINT 471661214
+		EQUAL
+		IFJMPREF {
+			CALL $getDetails$
+		}
+		DUP
+		PUSHINT 490393624
+		EQUAL
+		IFJMPREF {
+			CALL $total_tokens_staked$
+		}
+	}
+	DUP
+	PUSHINT 896562097
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 583971380
+		EQUAL
+		IFJMPREF {
+			CALL $end_time$
+		}
+		DUP
+		PUSHINT 629528867
+		EQUAL
+		IFJMPREF {
+			CALL $destroy$
+		}
+		DUP
+		PUSHINT 698322011
+		EQUAL
+		IFJMPREF {
+			CALL $start_time$
+		}
+		DUP
+		PUSHINT 896562097
+		EQUAL
+		IFJMPREF {
+			CALL $sendRelaysToRelayRound$
+		}
+	}
+	DUP
+	PUSHINT 1688565960
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1082463536
+		EQUAL
+		IFJMPREF {
+			CALL $hasUnclaimedReward$
+		}
+		DUP
+		PUSHINT 1244193705
+		EQUAL
+		IFJMPREF {
+			CALL $setRelays$
+		}
+		DUP
+		PUSHINT 1631333415
+		EQUAL
+		IFJMPREF {
+			CALL $duplicate$
+		}
+		DUP
+		PUSHINT 1688565960
+		EQUAL
+		IFJMPREF {
+			CALL $upgrade$
+		}
+	}
+}
+DUP
+PUSHINT 2096709387
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 1756716863
+	EQUAL
+	IFJMPREF {
+		CALL $constructor$
+	}
+	DUP
+	PUSHINT 1783823508
+	EQUAL
+	IFJMPREF {
+		CALL $reward_round_num$
+	}
+	DUP
+	PUSHINT 1861334504
+	EQUAL
+	IFJMPREF {
+		CALL $round_reward$
+	}
+	DUP
+	PUSHINT 2096709387
+	EQUAL
+	IFJMPREF {
+		CALL $relays_count$
+	}
+}
+

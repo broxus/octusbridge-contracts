@@ -1,0 +1,376 @@
+.version sol 0.57.1
+
+.macro constructor
+DROP
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+GETGLOB 6
+THROWIF 51
+ENDS
+ACCEPT
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro decodeTonStakingEventData
+DROP
+GETGLOB 6
+THROWIFNOT 76
+.loc ../contracts/utils/cell-encoder/StakingCellEncoder.sol, 5
+LDREF
+ENDS
+.loc ../contracts/utils/cell-encoder/StakingCellEncoder.sol, 0
+CALLREF {
+	CALL $decodeTonStakingEventData_internal_macro$
+}
+PUSH S3
+PUSHCONT {
+	PUSH S5
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 98
+	STZEROES
+	REVERSE 3, 1
+	STSLICECONST xc589c6b7
+	STU 32
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	STU 32
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+PUSHCONT {
+	BLKDROP 3
+}
+IFELSE
+IFREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	decodeTonStakingEventData_internal
+.type	decodeTonStakingEventData_internal, @function
+CALL $decodeTonStakingEventData_internal_macro$
+
+.macro decodeTonStakingEventData_internal_macro
+.loc ../contracts/utils/cell-encoder/StakingCellEncoder.sol, 5
+PUSHINT 0
+DUP
+NEWDICT
+PAIR
+.loc ../contracts/utils/cell-encoder/StakingCellEncoder.sol, 6
+ROT
+CTOS
+.loc ../contracts/utils/cell-encoder/StakingCellEncoder.sol, 7
+DUP
+LDU 32
+POP S2
+POP S3
+.loc ../contracts/utils/cell-encoder/StakingCellEncoder.sol, 8
+LDU 32
+LDDICT
+ROTREV
+PAIR
+POP S2
+.loc ../contracts/utils/cell-encoder/StakingCellEncoder.sol, 9
+LDU 32
+DROP
+.loc ../contracts/utils/cell-encoder/StakingCellEncoder.sol, 0
+
+.macro decodeEthereumStakingEventData
+DROP
+GETGLOB 6
+THROWIFNOT 76
+.loc ../contracts/utils/cell-encoder/StakingCellEncoder.sol, 13
+LDREF
+ENDS
+.loc ../contracts/utils/cell-encoder/StakingCellEncoder.sol, 0
+CALLREF {
+	CALL $decodeEthereumStakingEventData_internal_macro$
+}
+PUSH S3
+PUSHCONT {
+	PUSH S5
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	REVERSE 4, 0
+	NEWC
+	STSLICECONST xe65d0e07
+	STU 160
+	STI 8
+	STU 256
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+PUSHCONT {
+	BLKDROP 3
+}
+IFELSE
+IFREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	decodeEthereumStakingEventData_internal
+.type	decodeEthereumStakingEventData_internal, @function
+CALL $decodeEthereumStakingEventData_internal_macro$
+
+.macro decodeEthereumStakingEventData_internal_macro
+.loc ../contracts/utils/cell-encoder/StakingCellEncoder.sol, 13
+PUSHINT 0
+DUP
+.loc ../contracts/utils/cell-encoder/StakingCellEncoder.sol, 14
+ROT
+CTOS
+LDU 160
+LDI 8
+LDU 256
+DROP
+XCHG S2
+POP S4
+POP S2
+.loc ../contracts/utils/cell-encoder/StakingCellEncoder.sol, 0
+
+.macro encodeEthereumStakingEventData
+DROP
+GETGLOB 6
+THROWIFNOT 76
+.loc ../contracts/utils/cell-encoder/StakingCellEncoder.sol, 18
+OVER
+PUSHCONT {
+	LDU 160
+	LDI 8
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDU 160
+	LDI 8
+}
+IFELSE
+LDU 256
+ENDS
+.loc ../contracts/utils/cell-encoder/StakingCellEncoder.sol, 0
+CALLREF {
+	CALL $encodeEthereumStakingEventData_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHSLICE x0000000000000000000000002b44f3366_
+	STSLICER
+	STREF
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+PUSHCONT {
+	DROP
+}
+IFELSE
+IFREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	encodeEthereumStakingEventData_internal
+.type	encodeEthereumStakingEventData_internal, @function
+CALL $encodeEthereumStakingEventData_internal_macro$
+
+.macro encodeEthereumStakingEventData_internal_macro
+.loc ../contracts/utils/cell-encoder/StakingCellEncoder.sol, 20
+ROT
+NEWC
+STU 160
+.loc ../contracts/utils/cell-encoder/StakingCellEncoder.sol, 21
+XCHG S1, S2
+STI 8
+.loc ../contracts/utils/cell-encoder/StakingCellEncoder.sol, 22
+STU 256
+.loc ../contracts/utils/cell-encoder/StakingCellEncoder.sol, 23
+ENDC
+.loc ../contracts/utils/cell-encoder/StakingCellEncoder.sol, 0
+
+.macro c4_to_c7
+PUSHROOT
+CTOS
+LDU 256 ; pubkey c4
+LDU 64 ; pubkey timestamp c4
+LDU 1 ; ctor flag
+NIP
+ENDS
+SETGLOB 3
+SETGLOB 2
+
+.macro c4_to_c7_with_init_storage
+PUSHROOT
+CTOS
+SBITS
+GTINT 1
+PUSHCONT {
+	PUSHINT 0
+	PUSHROOT
+	CTOS
+	PLDDICT ; D
+	PUSHINT 64
+	DICTUGET
+	THROWIFNOT 61
+	PLDU 256
+	SETGLOB 2
+	PUSHINT 0 ; timestamp
+	SETGLOB 3
+}
+IFREFELSE {
+	CALL $c4_to_c7$
+}
+
+.macro c7_to_c4
+GETGLOB 3
+GETGLOB 2
+NEWC
+STU 256
+STU 64
+STONE
+ENDC
+POPROOT
+
+.macro upd_only_time_in_c4
+PUSHROOT
+CTOS
+LDU 256
+LDU 64
+NIP
+GETGLOB 3
+ROT
+NEWC
+STU 256
+STU 64
+STSLICE
+ENDC
+POPROOT
+
+.internal-alias :main_internal, 0
+.internal :main_internal
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSH S2
+CTOS
+PLDU 4
+MODPOW2 1
+IFRET
+OVER
+SEMPTY ; isEmpty
+IFJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+OVER
+LDUQ 32  ; [funcId] body' ok
+THROWIFNOT 60
+OVER
+IFNOTJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.internal-alias :main_external, -1
+.internal :main_external
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+OVER
+CALLREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+LDU 1 ; haveSign msgSlice
+SWAP
+PUSHCONT {
+	PUSHINT 512
+	LDSLICEX ; signatureSlice msgSlice
+	DUP
+	HASHSU ; signatureSlice msgSlice hashMsgSlice
+	ROT
+	GETGLOB 2
+	CHKSIGNU ; msgSlice isSigned
+	THROWIFNOT 40
+}
+IF
+LDU 64 ; timestamp msgSlice
+SWAP
+CALL $replay_protection_macro$
+LDU 32 ; funcId body
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.macro public_function_selector
+DUP
+PUSHINT 756272345
+EQUAL
+IFJMPREF {
+	CALL $encodeEthereumStakingEventData$
+}
+DUP
+PUSHINT 1166657207
+EQUAL
+IFJMPREF {
+	CALL $decodeTonStakingEventData$
+}
+DUP
+PUSHINT 1717374471
+EQUAL
+IFJMPREF {
+	CALL $decodeEthereumStakingEventData$
+}
+DUP
+PUSHINT 1756716863
+EQUAL
+IFJMPREF {
+	CALL $constructor$
+}
+

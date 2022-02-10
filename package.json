@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "free-ton-docs": "cd free-ton && locklift gendoc --config locklift.config.js --include '^Bridge|^TonEvent|^EthereumEvent'"
+    "free-ton-docs": "cd everscale && locklift gendoc --config locklift.config.js --include '^Bridge|^TonEvent|^EthereumEvent'"
   },
   "author": "pavlovdog_ <pavlovdog.moscow@gmail.com>",
   "license": "ISC",

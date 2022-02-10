@@ -1,0 +1,4219 @@
+.version sol 0.57.1
+
+.macro constructor
+DROP
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+GETGLOB 6
+THROWIF 51
+OVER
+PUSHCONT {
+	LDREF
+	LDU 32
+	LDU 32
+	LDU 128
+	LDU 32
+	LDU 128
+	LDU 32
+	ROLLREV 6
+	TUPLE 6
+	SWAP
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDREF
+	LDU 32
+	LDU 32
+	LDU 128
+	LDU 32
+	LDU 128
+	LDU 32
+	ROLLREV 6
+	TUPLE 6
+	SWAP
+}
+IFELSE
+LDMSGADDR
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 78
+ACCEPT
+.loc ../contracts/dao/DaoRoot.sol, 79
+ROT
+SETGLOB 18
+.loc ../contracts/dao/DaoRoot.sol, 80
+SWAP
+SETGLOB 16
+.loc ../contracts/dao/DaoRoot.sol, 81
+SETGLOB 20
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro getAdmin
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/dao/DaoRoot.sol, 88
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $getAdmin_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	SWAP
+	NEWC
+	STSLICECONST xae6c4e35
+	STSLICE
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	PUSHINT 2
+	STZEROES
+	STI 1
+	PUSHINT 3
+	STZEROES
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	SWAP
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STSLICE
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	getAdmin_internal
+.type	getAdmin_internal, @function
+CALL $getAdmin_internal_macro$
+
+.macro getAdmin_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 89
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+FALSE
+SETINDEXQ 1
+SETGLOB 4
+GETGLOB 20
+.loc ../contracts/dao/DaoRoot.sol, 0
+
+.macro getPendingAdmin
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/dao/DaoRoot.sol, 92
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $getPendingAdmin_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	SWAP
+	NEWC
+	STSLICECONST xb9dbae06
+	STSLICE
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	PUSHINT 2
+	STZEROES
+	STI 1
+	PUSHINT 3
+	STZEROES
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	SWAP
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STSLICE
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	getPendingAdmin_internal
+.type	getPendingAdmin_internal, @function
+CALL $getPendingAdmin_internal_macro$
+
+.macro getPendingAdmin_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 93
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+FALSE
+SETINDEXQ 1
+SETGLOB 4
+GETGLOB 21
+.loc ../contracts/dao/DaoRoot.sol, 0
+
+.macro getProposalCount
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/dao/DaoRoot.sol, 96
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $getProposalCount_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHSLICE x0000000000000000000000002c42c2af6_
+	STSLICER
+	STU 32
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	PUSHINT 2
+	STZEROES
+	STI 1
+	PUSHINT 3
+	STZEROES
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 106
+	STZEROES
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STU 32
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	getProposalCount_internal
+.type	getProposalCount_internal, @function
+CALL $getProposalCount_internal_macro$
+
+.macro getProposalCount_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 97
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+FALSE
+SETINDEXQ 1
+SETGLOB 4
+GETGLOB 15
+.loc ../contracts/dao/DaoRoot.sol, 0
+
+.macro getStakingRoot
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/dao/DaoRoot.sol, 100
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $getStakingRoot_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	SWAP
+	NEWC
+	STSLICECONST xf8448707
+	STSLICE
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	PUSHINT 2
+	STZEROES
+	STI 1
+	PUSHINT 3
+	STZEROES
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	SWAP
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STSLICE
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	getStakingRoot_internal
+.type	getStakingRoot_internal, @function
+CALL $getStakingRoot_internal_macro$
+
+.macro getStakingRoot_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 101
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+FALSE
+SETINDEXQ 1
+SETGLOB 4
+GETGLOB 12
+.loc ../contracts/dao/DaoRoot.sol, 0
+
+.macro getEthereumActionEventConfiguration
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/dao/DaoRoot.sol, 104
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $getEthereumActionEventConfiguration_internal_macro$
+}
+PUSH S2
+PUSHCONT {
+	PUSH S4
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	XCHG S2
+	NEWC
+	STSLICECONST xe9ad7809
+	STSLICE
+	STU 128
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	PUSHINT 2
+	STZEROES
+	STI 1
+	PUSHINT 3
+	STZEROES
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	XCHG S2
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STSLICE
+	STU 128
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	getEthereumActionEventConfiguration_internal
+.type	getEthereumActionEventConfiguration_internal, @function
+CALL $getEthereumActionEventConfiguration_internal_macro$
+
+.macro getEthereumActionEventConfiguration_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 105
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+FALSE
+SETINDEXQ 1
+SETGLOB 4
+GETGLOB 13
+GETGLOB 14
+.loc ../contracts/dao/DaoRoot.sol, 0
+
+.macro expectedProposalAddress
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/dao/DaoRoot.sol, 108
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+LDU 32
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $expectedProposalAddress_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	SWAP
+	NEWC
+	STSLICECONST x9b0d3fcb
+	STSLICE
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	PUSHINT 2
+	STZEROES
+	STI 1
+	PUSHINT 3
+	STZEROES
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	SWAP
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STSLICE
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	expectedProposalAddress_internal
+.type	expectedProposalAddress_internal, @function
+CALL $expectedProposalAddress_internal_macro$
+
+.macro expectedProposalAddress_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 109
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+FALSE
+SETINDEXQ 1
+SETGLOB 4
+CALLREF {
+	CALL $buildProposalStateInit_internal_macro$
+}
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+ENDC
+CTOS
+.loc ../contracts/dao/DaoRoot.sol, 0
+
+.macro expectedStakingAccountAddress
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/dao/DaoRoot.sol, 112
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $expectedStakingAccountAddress_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	SWAP
+	NEWC
+	STSLICECONST xdf61636f
+	STSLICE
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	PUSHINT 2
+	STZEROES
+	STI 1
+	PUSHINT 3
+	STZEROES
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	SWAP
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STSLICE
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	expectedStakingAccountAddress_internal
+.type	expectedStakingAccountAddress_internal, @function
+CALL $expectedStakingAccountAddress_internal_macro$
+
+.macro expectedStakingAccountAddress_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 113
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+FALSE
+SETINDEXQ 1
+SETGLOB 4
+CALLREF {
+	CALL $buildStakingAccountStateInit_internal_macro$
+}
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+ENDC
+CTOS
+.loc ../contracts/dao/DaoRoot.sol, 0
+
+.macro propose
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/dao/DaoRoot.sol, 121
+LDU 32
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDREF
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $propose_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	propose_internal
+.type	propose_internal, @function
+CALL $propose_internal_macro$
+
+.macro propose_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 127
+PUSH S2
+FIRST
+PUSH S2
+FIRST
+ADD
+.loc ../contracts/dao/DaoRoot.sol, 128
+DUP
+THROWIFNOT 111
+.loc ../contracts/dao/DaoRoot.sol, 129
+LESSINT 11
+THROWIFNOT 110
+.loc ../contracts/dao/DaoRoot.sol, 130
+DUP
+PUSHINT 4294967295
+CDATASIZE
+DROP
+NIP
+RSHIFT 3
+PUSHINT 4096
+LEQ
+THROWIFNOT 113
+.loc ../contracts/dao/DaoRoot.sol, 131
+PUSH S2
+CALLREF {
+	CALL $calcTonActionsValue_internal_macro$
+}
+.loc ../contracts/dao/DaoRoot.sol, 132
+PUSH S2
+CALLREF {
+	CALL $calcEthActionsValue_internal_macro$
+}
+.loc ../contracts/dao/DaoRoot.sol, 133
+DEPTH
+ADDCONST -2
+PICK
+XCHG S2
+ADD
+UFITS 128
+PUSHINT 10000000000
+ADD
+UFITS 128
+GEQ
+THROWIFNOT 112
+.loc ../contracts/dao/DaoRoot.sol, 138
+ROLL 3
+NEWC
+STU 32
+.loc ../contracts/dao/DaoRoot.sol, 139
+ROLL 3
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+.loc ../contracts/dao/DaoRoot.sol, 140
+ROT
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+.loc ../contracts/dao/DaoRoot.sol, 141
+STREF
+.loc ../contracts/dao/DaoRoot.sol, 142
+GETGLOB 16
+INDEX 4
+SWAP
+ENDC
+GETGLOB 9
+CALLREF {
+	CALL $expectedStakingAccountAddress_internal_macro$
+}
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHSLICE x0000000000000000000000000000427853ff_
+STSLICER
+STREF
+STU 128
+ENDC
+PUSHINT 64
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 0
+
+.macro deployProposal
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/dao/DaoRoot.sol, 148
+OVER
+PUSHCONT {
+	LDU 32
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDU 32
+}
+IFELSE
+LDMSGADDR
+LDREF
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $deployProposal_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	deployProposal_internal
+.type	deployProposal_internal, @function
+CALL $deployProposal_internal_macro$
+
+.macro deployProposal_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 148
+GETGLOB 9
+PUSH S2
+.loc ../contracts/dao/DaoRoot.sol, 69
+CALLREF {
+	CALL $expectedStakingAccountAddress_internal_macro$
+}
+SDEQ
+THROWIFNOT 106
+.loc ../contracts/dao/DaoRoot.sol, 153
+GETPARAM 7
+FIRST
+DEPTH
+ADDCONST -2
+PICK
+SUB
+UFITS 128
+PUSHINT 2
+RAWRESERVE
+.loc ../contracts/dao/DaoRoot.sol, 155
+CTOS
+LDU 32
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDREF
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 158
+GETGLOB 15
+INC
+UFITS 32
+SETGLOB 15
+.loc ../contracts/dao/DaoRoot.sol, 159
+PUSH3 S0, S1, S2
+PUSH S7
+GETGLOB 15
+PUSHSLICE xc00000000000000000000000003ad1788c
+NEWC
+STSLICE
+STU 32
+STSLICE
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+STREF
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 160
+ROLL 3
+GETGLOB 15
+ROLL 6
+GETGLOB 9
+FALSE
+NEWC
+STSLICECONST x6_
+STI 1
+PUSHINT 3
+STZEROES
+STSLICE
+PUSHSLICE x40bebc200000000000000000000000000000b932705f_
+STSLICER
+STU 32
+STU 32
+STU 32
+ENDC
+PUSHINT 1
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 166
+GETGLOB 12
+NEWC
+STSLICE
+.loc ../contracts/dao/DaoRoot.sol, 167
+PUXC S4, S-1
+STSLICE
+.loc ../contracts/dao/DaoRoot.sol, 168
+STREF
+.loc ../contracts/dao/DaoRoot.sol, 169
+ROT
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+.loc ../contracts/dao/DaoRoot.sol, 170
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+.loc ../contracts/dao/DaoRoot.sol, 171
+GETGLOB 16
+UNTUPLE 6
+REVERSE 7, 0
+STU 32
+STU 32
+STU 128
+STU 32
+STU 128
+STU 32
+.loc ../contracts/dao/DaoRoot.sol, 172
+GETGLOB 19
+SWAP
+STU 16
+.loc ../contracts/dao/DaoRoot.sol, 173
+ENDC
+GETGLOB 17
+GETGLOB 15
+CALLREF {
+	CALL $buildProposalStateInit_internal_macro$
+}
+DUP
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+NEWC
+STSLICECONST x62_
+STB
+PUSHSLICE x502540be400000000000000000000000000007_
+STSLICER
+OVER
+CALLREF {
+	CTOS
+	LDI 1
+	SWAP
+	PUSHCONT {
+		LDI 5
+		NIP
+	}
+	IF
+	LDI 1
+	SWAP
+	PUSHCONT {
+		LDI 2
+		NIP
+	}
+	IF
+	LDOPTREF
+	LDOPTREF
+	LDDICT
+	ENDS
+	BLKDROP 3
+}
+STREF
+STSLICECONST 1
+ROLLREV 3
+NEWC
+STSLICECONST x3f61459c
+STREF
+STREF
+STSLICE
+STBREFR
+ENDC
+PUSHINT 128
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 0
+
+.macro onProposalSucceeded
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/dao/DaoRoot.sol, 180
+OVER
+PUSHCONT {
+	LDU 32
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDU 32
+}
+IFELSE
+LDMSGADDR
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $onProposalSucceeded_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	onProposalSucceeded_internal
+.type	onProposalSucceeded_internal, @function
+CALL $onProposalSucceeded_internal_macro$
+
+.macro onProposalSucceeded_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 180
+GETGLOB 9
+PUSH S4
+.loc ../contracts/dao/DaoRoot.sol, 64
+CALLREF {
+	CALL $expectedProposalAddress_internal_macro$
+}
+SDEQ
+THROWIFNOT 105
+.loc ../contracts/dao/DaoRoot.sol, 186
+GETPARAM 7
+FIRST
+DEPTH
+ADDCONST -2
+PICK
+SUB
+UFITS 128
+PUSHINT 2
+RAWRESERVE
+.loc ../contracts/dao/DaoRoot.sol, 187
+OVER
+FIRST
+GTINT 0
+PUSHCONT {
+	.loc ../contracts/dao/DaoRoot.sol, 188
+	PUSH2 S1, S3
+	PUSHSLICE xc00000000000000000000000007e7c50fb
+	NEWC
+	STSLICE
+	STU 32
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc ../contracts/dao/DaoRoot.sol, 189
+	PUSHINT 0
+	PUSHCONT {
+		PUSH2 S0, S2
+		FIRST
+		LESS
+	}
+	PUSHCONT {
+		.loc ../contracts/dao/DaoRoot.sol, 190
+		PUSH2 S0, S2
+		SECOND
+		PUSHINT 32
+		DICTUGET
+		THROWIFNOT 50
+		CALLREF {
+			LDU 128
+			LDMSGADDR
+			LDREF
+			ENDS
+			TRIPLE
+		}
+		.loc ../contracts/dao/DaoRoot.sol, 200
+		DUP
+		FIRST
+		OVER
+		SECOND
+		NEWC
+		STSLICECONST x42_
+		STSLICE
+		SWAP
+		STGRAMS
+		PUSHINT 1
+		STUR 107
+		SWAP
+		THIRD
+		STREFR
+		ENDC
+		PUSHINT 1
+		SENDRAWMSG
+		.loc ../contracts/dao/DaoRoot.sol, 189
+		INC
+		.loc ../contracts/dao/DaoRoot.sol, 0
+	}
+	WHILE
+	DROP
+	.loc ../contracts/dao/DaoRoot.sol, 0
+}
+IF
+.loc ../contracts/dao/DaoRoot.sol, 193
+DUP
+FIRST
+GTINT 0
+PUSHCONT {
+	.loc ../contracts/dao/DaoRoot.sol, 194
+	PUSH S2
+	NEWDICT
+	PUSH S2
+	.loc ../contracts/dao/DaoRoot.sol, 210
+	SECOND
+	PUSHINT 0
+	NULL
+	PUSHCONT {
+		PUSH2 S1, S2
+		PUSHINT 32
+		DICTUGET
+		NULLSWAPIFNOT
+		IFREF {
+			LDU 256
+			LDU 32
+			LDU 160
+			LDREF
+			LDREF
+			ENDS
+			TUPLE 5
+		}
+		DUP
+		POP S2
+		ISNULL
+		NOT
+	}
+	PUSHCONT {
+		.loc ../contracts/dao/DaoRoot.sol, 211
+		DUP
+		SECOND
+		.loc ../contracts/dao/DaoRoot.sol, 212
+		OVER
+		FIRST
+		PUSH S2
+		THIRD
+		PUSH S3
+		INDEX 3
+		PUSH S4
+		INDEX 4
+		TUPLE 4
+		.loc ../contracts/dao/DaoRoot.sol, 218
+		PUSH2 S1, S5
+		PUSHINT 32
+		DICTUGET
+		NULLSWAPIFNOT
+		NIP
+		PUSHCONT {
+			.loc ../contracts/dao/DaoRoot.sol, 219
+			PUSH3 S1, S5, S1
+			OVER
+			PUSHINT 32
+			DICTUGET
+			PUSHCONT {
+				LDU 32
+				PLDDICT
+			}
+			PUSHCONT {
+				PUSHINT 0
+				NEWDICT
+			}
+			IFELSE
+			PAIR
+			PUSH S3
+			CALLREF {
+				UNTUPLE 4
+				REVERSE 4, 0
+				NEWC
+				STU 256
+				STU 160
+				STREF
+				STREF
+			}
+			SWAP
+			UNPAIR
+			OVER
+			INC
+			ROLLREV 3
+			PUSHINT 32
+			DICTUSETB
+			PAIR
+			NEWC
+			SWAP
+		}
+		PUSHCONT {
+			.loc ../contracts/dao/DaoRoot.sol, 221
+			DUP
+			PUSHINT 0
+			NEWDICT
+			PUSHINT 1
+			PUSHCONT {
+				ROT
+				CALLREF {
+					UNTUPLE 4
+					REVERSE 4, 0
+					NEWC
+					STU 256
+					STU 160
+					STREF
+					STREF
+				}
+				PUSH S2
+				INC
+				XCHG S3
+				ROT
+				PUSHINT 32
+				DICTUSETB
+			}
+			REPEAT
+			PAIR
+			PUSH2 S2, S6
+			NEWC
+			ROLL 3
+		}
+		IFELSE
+		UNPAIR
+		XCHG S2
+		STU 32
+		STDICT
+		ROTREV
+		PUSHINT 32
+		DICTUSETB
+		POP S6
+		.loc ../contracts/dao/DaoRoot.sol, 0
+		DROP2
+		OVER
+		INC
+		POP S2
+	}
+	WHILE
+	BLKDROP 3
+	.loc ../contracts/dao/DaoRoot.sol, 224
+	DUP
+	PUSHINT 32
+	DICTUMIN
+	PUSHCONT {
+		DUP
+		ROT
+		LDU 32
+		PLDDICT
+		PAIR
+	}
+	PUSHCONT {
+		NULL
+		BLKPUSH 2, 0
+	}
+	IFELSE
+	PUSHCONT {
+		PUSH S2
+		ISNULL
+		NOT
+	}
+	PUSHCONT {
+		.loc ../contracts/dao/DaoRoot.sol, 225
+		PUSH S4
+		PARSEMSGADDR
+		THIRD
+		PUSH S5
+		PARSEMSGADDR
+		INDEX 3
+		PLDU 256
+		OVER2
+		CALLREF {
+			CALL $encodeDaoEthereumActionData_internal_macro$
+		}
+		.loc ../contracts/dao/DaoRoot.sol, 226
+		LTIME
+		NOW
+		ROT
+		TRIPLE
+		.loc ../contracts/dao/DaoRoot.sol, 227
+		GETGLOB 14
+		GETGLOB 13
+		FALSE
+		NEWC
+		STSLICECONST x6_
+		STI 1
+		PUSHINT 3
+		STZEROES
+		STSLICE
+		SWAP
+		STGRAMS
+		PUSHSLICE x000000000000000000000000000414a01af_
+		STSLICER
+		SWAP
+		UNTRIPLE
+		REVERSE 4, 0
+		STU 64
+		STU 32
+		STREF
+		ENDC
+		PUSHINT 1
+		SENDRAWMSG
+		.loc ../contracts/dao/DaoRoot.sol, 0
+		PUSH2 S2, S3
+		PUSHINT 32
+		DICTUGETNEXT
+		PUSHCONT {
+			DUP
+			ROT
+			LDU 32
+			PLDDICT
+			PAIR
+		}
+		PUSHCONT {
+			NULL
+			BLKPUSH 2, 0
+		}
+		IFELSE
+		BLKDROP2 3, 3
+	}
+	WHILE
+	BLKDROP 5
+	.loc ../contracts/dao/DaoRoot.sol, 0
+}
+IF
+.loc ../contracts/dao/DaoRoot.sol, 196
+BLKDROP 4
+GETGLOB 9
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHSLICE x0000000000000000000000000000b5080059_
+STSLICER
+ENDC
+PUSHINT 128
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 0
+
+.macro calcTonActionsValue
+DROP
+GETGLOB 6
+THROWIFNOT 76
+.loc ../contracts/dao/DaoRoot.sol, 235
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $calcTonActionsValue_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHSLICE x0000000000000000000000002e6841b1e_
+	STSLICER
+	STU 128
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+PUSHCONT {
+	DROP
+}
+IFELSE
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	calcTonActionsValue_internal
+.type	calcTonActionsValue_internal, @function
+CALL $calcTonActionsValue_internal_macro$
+
+.macro calcTonActionsValue_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 236
+PUSHINT 0
+DUP
+.loc ../contracts/dao/DaoRoot.sol, 237
+PUSHCONT {
+	PUSH2 S0, S2
+	FIRST
+	LESS
+}
+PUSHCONT {
+	.loc ../contracts/dao/DaoRoot.sol, 238
+	PUSH2 S0, S2
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	CALLREF {
+		LDU 128
+		LDMSGADDR
+		LDREF
+		ENDS
+		TRIPLE
+	}
+	FIRST
+	PUSHINT 500000000
+	ADD
+	UFITS 128
+	PUSH S2
+	ADD
+	UFITS 128
+	POP S2
+	.loc ../contracts/dao/DaoRoot.sol, 237
+	INC
+	.loc ../contracts/dao/DaoRoot.sol, 0
+}
+WHILE
+DROP
+NIP
+.loc ../contracts/dao/DaoRoot.sol, 0
+
+.macro calcEthActionsValue
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/dao/DaoRoot.sol, 242
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $calcEthActionsValue_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHSLICE x0000000000000000000000002c534bf22_
+	STSLICER
+	STU 128
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+PUSHCONT {
+	DROP
+}
+IFELSE
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	calcEthActionsValue_internal
+.type	calcEthActionsValue_internal, @function
+CALL $calcEthActionsValue_internal_macro$
+
+.macro calcEthActionsValue_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 245
+PUSHINT 0
+.loc ../contracts/dao/DaoRoot.sol, 246
+NEWDICT
+.loc ../contracts/dao/DaoRoot.sol, 247
+PUSHINT 0
+PUSHCONT {
+	PUSH2 S0, S3
+	FIRST
+	LESS
+}
+PUSHCONT {
+	.loc ../contracts/dao/DaoRoot.sol, 248
+	PUSH2 S0, S3
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	CALLREF {
+		LDU 256
+		LDU 32
+		LDU 160
+		LDREF
+		LDREF
+		ENDS
+		TUPLE 5
+	}
+	SECOND
+	.loc ../contracts/dao/DaoRoot.sol, 249
+	PUSH2 S0, S2
+	PUSHINT 32
+	DICTUGET
+	NULLSWAPIFNOT
+	NIP
+	PUSHCONT {
+		.loc ../contracts/dao/DaoRoot.sol, 250
+		PUSH S3
+		GETGLOB 14
+		ADD
+		UFITS 128
+		POP S4
+		.loc ../contracts/dao/DaoRoot.sol, 251
+		PUSH2 S0, S2
+		NEWC
+		STONE
+		ROTREV
+		PUSHINT 32
+		DICTUSETB
+		POP S3
+		.loc ../contracts/dao/DaoRoot.sol, 0
+	}
+	IFNOT
+	.loc ../contracts/dao/DaoRoot.sol, 253
+	DROP
+	PUSH S2
+	PUSHINT 500000000
+	ADD
+	UFITS 128
+	POP S3
+	.loc ../contracts/dao/DaoRoot.sol, 247
+	INC
+	.loc ../contracts/dao/DaoRoot.sol, 0
+}
+WHILE
+DROP2
+NIP
+.loc ../contracts/dao/DaoRoot.sol, 0
+
+.globl	buildProposalStateInit_internal
+.type	buildProposalStateInit_internal, @function
+CALL $buildProposalStateInit_internal_macro$
+
+.macro buildProposalStateInit_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 258
+PUSHINT 1
+SWAP
+.loc ../contracts/dao/DaoRoot.sol, 297
+NEWC
+STU 32
+.loc ../contracts/dao/DaoRoot.sol, 298
+ENDC
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $_buildInitData_internal_macro$
+}
+
+.globl	buildStakingAccountStateInit_internal
+.type	buildStakingAccountStateInit_internal, @function
+CALL $buildStakingAccountStateInit_internal_macro$
+
+.macro buildStakingAccountStateInit_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 262
+PUSHINT 0
+NEWC
+STU 256
+PUSHINT 0
+NEWDICT
+PUSHINT 64
+DICTUSETB
+GETGLOB 12
+PUSHINT 1
+ROT
+PUSHINT 64
+DICTUSET
+NEWC
+STSLICECONST x64
+PUSHINT 2
+ROT
+PUSHINT 64
+DICTUSETB
+SWAP
+.loc ../contracts/dao/DaoRoot.sol, 291
+NEWC
+STSLICE
+.loc ../contracts/dao/DaoRoot.sol, 292
+ENDC
+.loc ../contracts/dao/DaoRoot.sol, 0
+PUSHINT 3
+ROT
+PUSHINT 64
+DICTUSETREF
+GETGLOB 18
+PUSHINT 4
+ROT
+PUSHINT 64
+DICTUSETREF
+NEWC
+STDICT
+ENDC
+GETGLOB 18
+NEWC
+STSLICECONST x2_
+STOPTREF
+STOPTREF
+STZERO
+ENDC
+
+.globl	_buildInitData_internal
+.type	_buildInitData_internal, @function
+CALL $_buildInitData_internal_macro$
+
+.macro _buildInitData_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 276
+PUSHINT 0
+NEWC
+STU 256
+PUSHINT 0
+NEWDICT
+PUSHINT 64
+DICTUSETB
+MYADDR
+PUSHINT 1
+ROT
+PUSHINT 64
+DICTUSET
+ROT
+NEWC
+STU 8
+PUSHINT 2
+ROT
+PUSHINT 64
+DICTUSETB
+SWAP
+PUSHINT 3
+ROT
+PUSHINT 64
+DICTUSETREF
+GETGLOB 18
+PUSHINT 4
+ROT
+PUSHINT 64
+DICTUSETREF
+NEWC
+STDICT
+ENDC
+GETGLOB 18
+NEWC
+STSLICECONST x2_
+STOPTREF
+STOPTREF
+STZERO
+ENDC
+.loc ../contracts/dao/DaoRoot.sol, 0
+
+.macro requestUpgradeProposal
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/dao/DaoRoot.sol, 301
+OVER
+PUSHCONT {
+	LDU 16
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDU 16
+}
+IFELSE
+LDMSGADDR
+LDU 32
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $requestUpgradeProposal_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	requestUpgradeProposal_internal
+.type	requestUpgradeProposal_internal, @function
+CALL $requestUpgradeProposal_internal_macro$
+
+.macro requestUpgradeProposal_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 64
+GETGLOB 9
+SWAP
+CALLREF {
+	CALL $expectedProposalAddress_internal_macro$
+}
+SDEQ
+THROWIFNOT 105
+.loc ../contracts/dao/DaoRoot.sol, 306
+GETPARAM 7
+FIRST
+DEPTH
+ADDCONST -2
+PICK
+SUB
+UFITS 128
+PUSHINT 2
+RAWRESERVE
+.loc ../contracts/dao/DaoRoot.sol, 307
+SWAP
+GETGLOB 19
+EQUAL
+PUSHCONT {
+	.loc ../contracts/dao/DaoRoot.sol, 308
+	DUP
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	PUSHINT 111
+	STZEROES
+}
+PUSHCONT {
+	.loc ../contracts/dao/DaoRoot.sol, 310
+	DUP
+	GETGLOB 19
+	GETGLOB 17
+	GETGLOB 9
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	PUSHINT 1
+	STUR 111
+	ROLLREV 3
+	NEWC
+	STSLICECONST x3d9bf172
+	STREF
+	STU 16
+	STSLICE
+	STBREFR
+}
+IFELSE
+ENDC
+PUSHINT 128
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 0
+DROP
+
+.macro setStakingRoot
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/dao/DaoRoot.sol, 322
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $setStakingRoot_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	setStakingRoot_internal
+.type	setStakingRoot_internal, @function
+CALL $setStakingRoot_internal_macro$
+
+.macro setStakingRoot_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 57
+GETGLOB 9
+GETGLOB 20
+SDEQ
+PUSHCONT {
+	.loc ../contracts/dao/DaoRoot.sol, 58
+	CALLREF {
+		CALL $checkDelegate_internal_macro$
+	}
+	.loc ../contracts/dao/DaoRoot.sol, 0
+}
+IFNOT
+.loc ../contracts/dao/DaoRoot.sol, 323
+DUP
+GETGLOB 12
+PUSHSLICE xc0000000000000000000000001
+NEWC
+STSLICE
+ROTREV
+NEWC
+STSLICECONST x0f12d8dc
+STSLICE
+SWAP
+NEWC
+STSLICE
+STBREFR
+STBREFR
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 324
+SETGLOB 12
+.loc ../contracts/dao/DaoRoot.sol, 325
+GETGLOB 20
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHINT 64
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 0
+
+.macro transferAdmin
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/dao/DaoRoot.sol, 328
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $transferAdmin_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	transferAdmin_internal
+.type	transferAdmin_internal, @function
+CALL $transferAdmin_internal_macro$
+
+.macro transferAdmin_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 57
+GETGLOB 9
+GETGLOB 20
+SDEQ
+PUSHCONT {
+	.loc ../contracts/dao/DaoRoot.sol, 58
+	CALLREF {
+		CALL $checkDelegate_internal_macro$
+	}
+	.loc ../contracts/dao/DaoRoot.sol, 0
+}
+IFNOT
+.loc ../contracts/dao/DaoRoot.sol, 329
+DUP
+GETGLOB 20
+PUSHSLICE xc0000000000000000000000001
+NEWC
+STSLICE
+ROTREV
+NEWC
+STSLICECONST x40afb912
+STSLICE
+SWAP
+NEWC
+STSLICE
+STBREFR
+STBREFR
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 330
+SETGLOB 21
+.loc ../contracts/dao/DaoRoot.sol, 331
+GETGLOB 20
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHINT 64
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 0
+
+.macro acceptAdmin
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/dao/DaoRoot.sol, 334
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $acceptAdmin_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	acceptAdmin_internal
+.type	acceptAdmin_internal, @function
+CALL $acceptAdmin_internal_macro$
+
+.macro acceptAdmin_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 335
+GETGLOB 21
+PARSEMSGADDR
+INDEX 3
+PLDU 256
+NEQINT 0
+GETGLOB 9
+GETGLOB 21
+SDEQ
+AND
+THROWIFNOT 102
+.loc ../contracts/dao/DaoRoot.sol, 336
+GETGLOB 21
+GETGLOB 20
+PUSHSLICE xc0000000000000000000000001
+NEWC
+STSLICE
+ROTREV
+NEWC
+STSLICECONST x433670aa
+STSLICE
+SWAP
+NEWC
+STSLICE
+STBREFR
+STBREFR
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 337
+GETGLOB 21
+SETGLOB 20
+.loc ../contracts/dao/DaoRoot.sol, 338
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+SETGLOB 21
+.loc ../contracts/dao/DaoRoot.sol, 339
+GETGLOB 20
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHINT 64
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 0
+
+.macro updateEthereumActionEventConfiguration
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/dao/DaoRoot.sol, 342
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDU 128
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $updateEthereumActionEventConfiguration_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	updateEthereumActionEventConfiguration_internal
+.type	updateEthereumActionEventConfiguration_internal, @function
+CALL $updateEthereumActionEventConfiguration_internal_macro$
+
+.macro updateEthereumActionEventConfiguration_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 57
+GETGLOB 9
+GETGLOB 20
+SDEQ
+PUSHCONT {
+	.loc ../contracts/dao/DaoRoot.sol, 58
+	CALLREF {
+		CALL $checkDelegate_internal_macro$
+	}
+	.loc ../contracts/dao/DaoRoot.sol, 0
+}
+IFNOT
+.loc ../contracts/dao/DaoRoot.sol, 346
+DUP
+GETGLOB 14
+PUSH S3
+GETGLOB 13
+PUSHSLICE xc0000000000000000000000001
+NEWC
+STSLICE
+ROLLREV 4
+NEWC
+STSLICECONST x6c80e20e
+STSLICE
+ROLLREV 3
+NEWC
+STSLICE
+STU 128
+STU 128
+STBREFR
+STBREFR
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 352
+SWAP
+SETGLOB 13
+.loc ../contracts/dao/DaoRoot.sol, 353
+SETGLOB 14
+.loc ../contracts/dao/DaoRoot.sol, 354
+GETGLOB 20
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHINT 64
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 0
+
+.macro updateProposalCode
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/dao/DaoRoot.sol, 357
+LDREF
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $updateProposalCode_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	updateProposalCode_internal
+.type	updateProposalCode_internal, @function
+CALL $updateProposalCode_internal_macro$
+
+.macro updateProposalCode_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 57
+GETGLOB 9
+GETGLOB 20
+SDEQ
+PUSHCONT {
+	.loc ../contracts/dao/DaoRoot.sol, 58
+	CALLREF {
+		CALL $checkDelegate_internal_macro$
+	}
+	.loc ../contracts/dao/DaoRoot.sol, 0
+}
+IFNOT
+.loc ../contracts/dao/DaoRoot.sol, 358
+SETGLOB 17
+.loc ../contracts/dao/DaoRoot.sol, 359
+GETGLOB 19
+INC
+UFITS 16
+DUP
+SETGLOB 19
+.loc ../contracts/dao/DaoRoot.sol, 360
+PUSHSLICE xc00000000000000000000000005726404d
+NEWC
+STSLICE
+STU 16
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 361
+GETGLOB 20
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHINT 64
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 0
+
+.macro updateQuorumVotes
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/dao/DaoRoot.sol, 364
+LDU 128
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $updateQuorumVotes_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	updateQuorumVotes_internal
+.type	updateQuorumVotes_internal, @function
+CALL $updateQuorumVotes_internal_macro$
+
+.macro updateQuorumVotes_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 57
+GETGLOB 9
+GETGLOB 20
+SDEQ
+PUSHCONT {
+	.loc ../contracts/dao/DaoRoot.sol, 58
+	CALLREF {
+		CALL $checkDelegate_internal_macro$
+	}
+	.loc ../contracts/dao/DaoRoot.sol, 0
+}
+IFNOT
+.loc ../contracts/dao/DaoRoot.sol, 365
+DUP
+PUSHINT 50000000000000
+GEQ
+OVER
+PUSHINT 7000000000000000
+LEQ
+AND
+THROWIFNOT 124
+.loc ../contracts/dao/DaoRoot.sol, 369
+DUP
+GETGLOB 16
+THIRD
+PUSHSLICE xc00000000000000000000000001f177198
+NEWC
+STSLICE
+STU 128
+STU 128
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 370
+GETGLOB 16
+SWAP
+SETINDEX 2
+SETGLOB 16
+.loc ../contracts/dao/DaoRoot.sol, 371
+GETGLOB 20
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHINT 64
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 0
+
+.macro updateThreshold
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/dao/DaoRoot.sol, 374
+LDU 128
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $updateThreshold_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	updateThreshold_internal
+.type	updateThreshold_internal, @function
+CALL $updateThreshold_internal_macro$
+
+.macro updateThreshold_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 57
+GETGLOB 9
+GETGLOB 20
+SDEQ
+PUSHCONT {
+	.loc ../contracts/dao/DaoRoot.sol, 58
+	CALLREF {
+		CALL $checkDelegate_internal_macro$
+	}
+	.loc ../contracts/dao/DaoRoot.sol, 0
+}
+IFNOT
+.loc ../contracts/dao/DaoRoot.sol, 375
+DUP
+PUSHINT 10000000000000
+GEQ
+OVER
+PUSHINT 7000000000000000
+LEQ
+AND
+THROWIFNOT 123
+.loc ../contracts/dao/DaoRoot.sol, 379
+DUP
+GETGLOB 16
+INDEX 4
+PUSHSLICE xc00000000000000000000000001d750b0b
+NEWC
+STSLICE
+STU 128
+STU 128
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 380
+GETGLOB 16
+SWAP
+SETINDEX 4
+SETGLOB 16
+.loc ../contracts/dao/DaoRoot.sol, 381
+GETGLOB 20
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHINT 64
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 0
+
+.macro updateTimeLock
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/dao/DaoRoot.sol, 384
+LDU 32
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $updateTimeLock_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	updateTimeLock_internal
+.type	updateTimeLock_internal, @function
+CALL $updateTimeLock_internal_macro$
+
+.macro updateTimeLock_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 57
+GETGLOB 9
+GETGLOB 20
+SDEQ
+PUSHCONT {
+	.loc ../contracts/dao/DaoRoot.sol, 58
+	CALLREF {
+		CALL $checkDelegate_internal_macro$
+	}
+	.loc ../contracts/dao/DaoRoot.sol, 0
+}
+IFNOT
+.loc ../contracts/dao/DaoRoot.sol, 385
+DUP
+PUSHINT 86400
+GEQ
+OVER
+PUSHINT 2592000
+LEQ
+AND
+THROWIFNOT 122
+.loc ../contracts/dao/DaoRoot.sol, 389
+DUP
+GETGLOB 16
+INDEX 3
+PUSHSLICE xc00000000000000000000000004af70181
+NEWC
+STSLICE
+STU 32
+STU 32
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 390
+GETGLOB 16
+SWAP
+SETINDEX 3
+SETGLOB 16
+.loc ../contracts/dao/DaoRoot.sol, 391
+GETGLOB 20
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHINT 64
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 0
+
+.macro updateVotingPeriod
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/dao/DaoRoot.sol, 394
+LDU 32
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $updateVotingPeriod_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	updateVotingPeriod_internal
+.type	updateVotingPeriod_internal, @function
+CALL $updateVotingPeriod_internal_macro$
+
+.macro updateVotingPeriod_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 57
+GETGLOB 9
+GETGLOB 20
+SDEQ
+PUSHCONT {
+	.loc ../contracts/dao/DaoRoot.sol, 58
+	CALLREF {
+		CALL $checkDelegate_internal_macro$
+	}
+	.loc ../contracts/dao/DaoRoot.sol, 0
+}
+IFNOT
+.loc ../contracts/dao/DaoRoot.sol, 395
+DUP
+PUSHINT 86400
+GEQ
+OVER
+PUSHINT 2592000
+LEQ
+AND
+THROWIFNOT 120
+.loc ../contracts/dao/DaoRoot.sol, 399
+DUP
+GETGLOB 16
+SECOND
+PUSHSLICE xc00000000000000000000000007970ab95
+NEWC
+STSLICE
+STU 32
+STU 32
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 400
+GETGLOB 16
+SWAP
+SETINDEX 1
+SETGLOB 16
+.loc ../contracts/dao/DaoRoot.sol, 401
+GETGLOB 20
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHINT 64
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 0
+
+.macro updateVotingDelay
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/dao/DaoRoot.sol, 404
+LDU 32
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $updateVotingDelay_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	updateVotingDelay_internal
+.type	updateVotingDelay_internal, @function
+CALL $updateVotingDelay_internal_macro$
+
+.macro updateVotingDelay_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 57
+GETGLOB 9
+GETGLOB 20
+SDEQ
+PUSHCONT {
+	.loc ../contracts/dao/DaoRoot.sol, 58
+	CALLREF {
+		CALL $checkDelegate_internal_macro$
+	}
+	.loc ../contracts/dao/DaoRoot.sol, 0
+}
+IFNOT
+.loc ../contracts/dao/DaoRoot.sol, 405
+DUP
+PUSHINT 86400
+GEQ
+OVER
+PUSHINT 2592000
+LEQ
+AND
+THROWIFNOT 121
+.loc ../contracts/dao/DaoRoot.sol, 409
+DUP
+GETGLOB 16
+FIRST
+PUSHSLICE xc00000000000000000000000005e1bd64c
+NEWC
+STSLICE
+STU 32
+STU 32
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 410
+GETGLOB 16
+SWAP
+SETINDEX 0
+SETGLOB 16
+.loc ../contracts/dao/DaoRoot.sol, 411
+GETGLOB 20
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHINT 64
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 0
+
+.macro updateGracePeriod
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/dao/DaoRoot.sol, 414
+LDU 32
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $updateGracePeriod_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	updateGracePeriod_internal
+.type	updateGracePeriod_internal, @function
+CALL $updateGracePeriod_internal_macro$
+
+.macro updateGracePeriod_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 57
+GETGLOB 9
+GETGLOB 20
+SDEQ
+PUSHCONT {
+	.loc ../contracts/dao/DaoRoot.sol, 58
+	CALLREF {
+		CALL $checkDelegate_internal_macro$
+	}
+	.loc ../contracts/dao/DaoRoot.sol, 0
+}
+IFNOT
+.loc ../contracts/dao/DaoRoot.sol, 415
+DUP
+PUSHINT 86400
+GEQ
+OVER
+PUSHINT 2592000
+LEQ
+AND
+THROWIFNOT 125
+.loc ../contracts/dao/DaoRoot.sol, 419
+DUP
+GETGLOB 16
+INDEX 5
+PUSHSLICE xc00000000000000000000000003de34a7e
+NEWC
+STSLICE
+STU 32
+STU 32
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 420
+GETGLOB 16
+SWAP
+SETINDEX 5
+SETGLOB 16
+.loc ../contracts/dao/DaoRoot.sol, 421
+GETGLOB 20
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHINT 64
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 0
+
+.macro updateProposalConfiguration
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/dao/DaoRoot.sol, 424
+LDU 32
+LDU 32
+LDU 128
+LDU 32
+LDU 128
+LDU 32
+ROLLREV 6
+TUPLE 6
+SWAP
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $updateProposalConfiguration_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	updateProposalConfiguration_internal
+.type	updateProposalConfiguration_internal, @function
+CALL $updateProposalConfiguration_internal_macro$
+
+.macro updateProposalConfiguration_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 57
+GETGLOB 9
+GETGLOB 20
+SDEQ
+PUSHCONT {
+	.loc ../contracts/dao/DaoRoot.sol, 58
+	CALLREF {
+		CALL $checkDelegate_internal_macro$
+	}
+	.loc ../contracts/dao/DaoRoot.sol, 0
+}
+IFNOT
+.loc ../contracts/dao/DaoRoot.sol, 425
+BLKPUSH 2, 0
+.loc ../contracts/dao/DaoRoot.sol, 432
+SECOND
+PUSHINT 86400
+GEQ
+OVER
+SECOND
+PUSHINT 2592000
+LEQ
+AND
+THROWIFNOT 120
+.loc ../contracts/dao/DaoRoot.sol, 436
+DUP
+FIRST
+PUSHINT 86400
+GEQ
+OVER
+FIRST
+PUSHINT 2592000
+LEQ
+AND
+THROWIFNOT 121
+.loc ../contracts/dao/DaoRoot.sol, 440
+DUP
+INDEX 3
+PUSHINT 86400
+GEQ
+OVER
+INDEX 3
+PUSHINT 2592000
+LEQ
+AND
+THROWIFNOT 122
+.loc ../contracts/dao/DaoRoot.sol, 444
+DUP
+INDEX 4
+PUSHINT 10000000000000
+GEQ
+OVER
+INDEX 4
+PUSHINT 7000000000000000
+LEQ
+AND
+THROWIFNOT 123
+.loc ../contracts/dao/DaoRoot.sol, 448
+DUP
+THIRD
+PUSHINT 50000000000000
+GEQ
+OVER
+THIRD
+PUSHINT 7000000000000000
+LEQ
+AND
+THROWIFNOT 124
+.loc ../contracts/dao/DaoRoot.sol, 452
+DUP
+INDEX 5
+PUSHINT 86400
+GEQ
+SWAP
+INDEX 5
+PUSHINT 2592000
+LEQ
+AND
+THROWIFNOT 125
+.loc ../contracts/dao/DaoRoot.sol, 426
+DUP
+GETGLOB 16
+PUSHSLICE xc00000000000000000000000002a14fc86
+NEWC
+STSLICE
+SWAP
+UNTUPLE 6
+REVERSE 7, 0
+STU 32
+STU 32
+STU 128
+STU 32
+STU 128
+STU 32
+SWAP
+UNTUPLE 6
+REVERSE 7, 0
+STU 32
+STU 32
+STU 128
+STU 32
+STU 128
+STU 32
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 427
+SETGLOB 16
+.loc ../contracts/dao/DaoRoot.sol, 428
+GETGLOB 20
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHINT 64
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 0
+
+.macro addDelegate
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/dao/DaoRoot.sol, 458
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDU 256
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $addDelegate_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	addDelegate_internal
+.type	addDelegate_internal, @function
+CALL $addDelegate_internal_macro$
+
+.macro addDelegate_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 57
+GETGLOB 9
+GETGLOB 20
+SDEQ
+PUSHCONT {
+	.loc ../contracts/dao/DaoRoot.sol, 58
+	CALLREF {
+		CALL $checkDelegate_internal_macro$
+	}
+	.loc ../contracts/dao/DaoRoot.sol, 0
+}
+IFNOT
+.loc ../contracts/dao/DaoRoot.sol, 459
+OVER
+GETGLOB 10
+PUSHINT 267
+DICTGET
+NULLSWAPIFNOT
+PUSHCONT {
+	LDU 32
+	PLDDICT
+	PAIR
+}
+IF
+.loc ../contracts/dao/DaoRoot.sol, 460
+DUP
+ISNULL
+PUSHCONT {
+	.loc ../contracts/dao/DaoRoot.sol, 465
+	OVER
+	PUSHINT 0
+	NEWDICT
+	PUSHINT 1
+	PUSHCONT {
+		ROT
+		NEWC
+		STU 256
+		PUSH S2
+		INC
+		XCHG S3
+		ROT
+		PUSHINT 32
+		DICTUSETB
+	}
+	REPEAT
+	PAIR
+}
+PUSHCONT {
+	.loc ../contracts/dao/DaoRoot.sol, 461
+	BLKPUSH 2, 0
+	ISNULL
+	THROWIF 63
+	.loc ../contracts/dao/DaoRoot.sol, 462
+	PUSH S2
+	NEWC
+	STU 256
+	SWAP
+	UNPAIR
+	OVER
+	INC
+	ROLLREV 3
+	PUSHINT 32
+	DICTUSETB
+	PAIR
+	.loc ../contracts/dao/DaoRoot.sol, 463
+}
+IFELSE
+PUSH S3
+GETGLOB 10
+NEWC
+ROLL 3
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+ROTREV
+PUSHINT 267
+DICTSETB
+SETGLOB 10
+.loc ../contracts/dao/DaoRoot.sol, 0
+BLKDROP 3
+
+.macro upgrade
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/dao/DaoRoot.sol, 469
+LDREF
+ENDS
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $upgrade_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	upgrade_internal
+.type	upgrade_internal, @function
+CALL $upgrade_internal_macro$
+
+.macro upgrade_internal_macro
+.loc ../contracts/dao/DaoRoot.sol, 57
+GETGLOB 9
+GETGLOB 20
+SDEQ
+PUSHCONT {
+	.loc ../contracts/dao/DaoRoot.sol, 58
+	CALLREF {
+		CALL $checkDelegate_internal_macro$
+	}
+	.loc ../contracts/dao/DaoRoot.sol, 0
+}
+IFNOT
+.loc ../contracts/dao/DaoRoot.sol, 470
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 2000000000
+GREATER
+THROWIFNOT 130
+.loc ../contracts/dao/DaoRoot.sol, 471
+GETPARAM 7
+FIRST
+DEPTH
+ADDCONST -2
+PICK
+SUB
+UFITS 128
+PUSHINT 2
+RAWRESERVE
+.loc ../contracts/dao/DaoRoot.sol, 473
+PUSHREF {
+	.blob xc00000000000000000000000005c131a68
+}
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/dao/DaoRoot.sol, 475
+NEWC
+.loc ../contracts/dao/DaoRoot.sol, 477
+GETGLOB 20
+NEWC
+STSLICE
+.loc ../contracts/dao/DaoRoot.sol, 478
+GETGLOB 21
+SWAP
+STSLICE
+.loc ../contracts/dao/DaoRoot.sol, 480
+GETGLOB 12
+PUSH S2
+STSLICE
+POP S2
+.loc ../contracts/dao/DaoRoot.sol, 482
+GETGLOB 15
+PUSH S2
+STU 32
+POP S2
+.loc ../contracts/dao/DaoRoot.sol, 483
+GETGLOB 19
+PUSH S2
+STU 16
+POP S2
+.loc ../contracts/dao/DaoRoot.sol, 484
+OVER
+GETGLOB 16
+UNTUPLE 6
+REVERSE 7, 0
+STU 32
+STU 32
+STU 128
+STU 32
+STU 128
+STU 32
+POP S2
+.loc ../contracts/dao/DaoRoot.sol, 486
+ENDC
+SWAP
+STREF
+.loc ../contracts/dao/DaoRoot.sol, 487
+GETGLOB 17
+SWAP
+STREF
+.loc ../contracts/dao/DaoRoot.sol, 488
+GETGLOB 18
+SWAP
+STREF
+.loc ../contracts/dao/DaoRoot.sol, 490
+OVER
+SETCODE
+.loc ../contracts/dao/DaoRoot.sol, 491
+SWAP
+CTOS
+DUP
+PUSHSLICE x8adb35
+SDEQ
+PUSHCONT {
+	PLDREFIDX 1
+	CTOS
+}
+IF
+PLDREF
+CTOS
+BLESS
+POP C3
+.loc ../contracts/dao/DaoRoot.sol, 493
+ENDC
+CALLREF {
+	CALL $:onCodeUpgrade$
+}
+.loc ../contracts/dao/DaoRoot.sol, 0
+
+.internal-alias :onCodeUpgrade, 2
+.internal :onCodeUpgrade
+DROP
+.loc ../contracts/dao/DaoRoot.sol, 0
+CALLREF {
+	CALL $c7_to_c4$
+}
+COMMIT
+THROW 0
+
+.globl	checkDelegate_internal
+.type	checkDelegate_internal, @function
+CALL $checkDelegate_internal_macro$
+
+.macro checkDelegate_internal_macro
+.loc ../contracts/utils/Delegate.sol, 16
+GETGLOB 9
+GETGLOB 10
+PUSHINT 267
+DICTGET
+NULLSWAPIFNOT
+PUSHCONT {
+	LDU 32
+	PLDDICT
+	PAIR
+}
+IF
+.loc ../contracts/utils/Delegate.sol, 17
+DUP
+ISNULL
+THROWIF 1201
+.loc ../contracts/utils/Delegate.sol, 18
+DUP
+ISNULL
+THROWIF 63
+.loc ../contracts/utils/Delegate.sol, 19
+DUP
+FIRST
+.loc ../contracts/utils/Delegate.sol, 20
+DUP
+THROWIFNOT 1202
+.loc ../contracts/utils/Delegate.sol, 21
+DEPTH
+ADDCONST -4
+PICK
+HASHSU
+.loc ../contracts/utils/Delegate.sol, 22
+OVER
+EQINT 1
+PUSHCONT {
+	.loc ../contracts/utils/Delegate.sol, 23
+	PUSHINT 0
+	PUSH S3
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PLDU 256
+	OVER
+	EQUAL
+	THROWIFNOT 1203
+	.loc ../contracts/utils/Delegate.sol, 24
+	GETGLOB 9
+	GETGLOB 10
+	PUSHINT 267
+	DICTDEL
+	DROP
+}
+PUSHCONT {
+	.loc ../contracts/utils/Delegate.sol, 26
+	FALSE
+	DUP
+	.loc ../contracts/utils/Delegate.sol, 27
+	NEWDICT
+	PAIR
+	.loc ../contracts/utils/Delegate.sol, 28
+	PUSHINT 0
+	PUSHCONT {
+		PUSH2 S0, S4
+		LESS
+	}
+	PUSHCONT {
+		.loc ../contracts/utils/Delegate.sol, 29
+		PUSH2 S0, S5
+		SECOND
+		PUSHINT 32
+		DICTUGET
+		THROWIFNOT 50
+		PLDU 256
+		PUSH S4
+		EQUAL
+		PUSH S3
+		NOT
+		AND
+		PUSHCONT {
+			.loc ../contracts/utils/Delegate.sol, 30
+			TRUE
+			POP S3
+		}
+		PUSHCONT {
+			.loc ../contracts/utils/Delegate.sol, 32
+			DUP2
+			PUSH S7
+			SECOND
+			PUSHINT 32
+			DICTUGET
+			THROWIFNOT 50
+			PLDU 256
+			NEWC
+			STU 256
+			SWAP
+			UNPAIR
+			OVER
+			INC
+			ROLLREV 3
+			PUSHINT 32
+			DICTUSETB
+			PAIR
+			POP S2
+		}
+		IFELSE
+		.loc ../contracts/utils/Delegate.sol, 28
+		INC
+		.loc ../contracts/utils/Delegate.sol, 0
+	}
+	WHILE
+	DROP
+	.loc ../contracts/utils/Delegate.sol, 35
+	SWAP
+	THROWIFNOT 1203
+	.loc ../contracts/utils/Delegate.sol, 36
+	GETGLOB 9
+	GETGLOB 10
+	NEWC
+	ROLL 3
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	ROTREV
+	PUSHINT 267
+	DICTSETB
+}
+IFELSE
+SETGLOB 10
+.loc ../contracts/utils/Delegate.sol, 0
+BLKDROP 3
+
+.macro encodeDaoEthereumActionData
+DROP
+GETGLOB 6
+THROWIFNOT 76
+.loc ../contracts/utils/cell-encoder/DaoCellEncoder.sol, 6
+LDI 8
+LDU 256
+LDU 32
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+ENDS
+.loc ../contracts/utils/cell-encoder/DaoCellEncoder.sol, 0
+CALLREF {
+	CALL $encodeDaoEthereumActionData_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHSLICE x0000000000000000000000002e39e41be_
+	STSLICER
+	STREF
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+PUSHCONT {
+	DROP
+}
+IFELSE
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	encodeDaoEthereumActionData_internal
+.type	encodeDaoEthereumActionData_internal, @function
+CALL $encodeDaoEthereumActionData_internal_macro$
+
+.macro encodeDaoEthereumActionData_internal_macro
+.loc ../contracts/utils/cell-encoder/DaoCellEncoder.sol, 15
+REVERSE 4, 0
+NEWC
+STI 8
+STU 256
+STU 32
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+.loc ../contracts/utils/cell-encoder/DaoCellEncoder.sol, 16
+ENDC
+.loc ../contracts/utils/cell-encoder/DaoCellEncoder.sol, 0
+
+.macro decodeDaoEthereumActionData
+DROP
+GETGLOB 6
+THROWIFNOT 76
+.loc ../contracts/utils/cell-encoder/DaoCellEncoder.sol, 19
+LDREF
+ENDS
+.loc ../contracts/utils/cell-encoder/DaoCellEncoder.sol, 0
+CALLREF {
+	CALL $decodeDaoEthereumActionData_internal_macro$
+}
+PUSH S4
+PUSHCONT {
+	PUSH S6
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	REVERSE 5, 0
+	NEWC
+	STSLICECONST xf3ccfd6e
+	STI 8
+	STU 256
+	STU 32
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+PUSHCONT {
+	BLKDROP 4
+}
+IFELSE
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	decodeDaoEthereumActionData_internal
+.type	decodeDaoEthereumActionData_internal, @function
+CALL $decodeDaoEthereumActionData_internal_macro$
+
+.macro decodeDaoEthereumActionData_internal_macro
+.loc ../contracts/utils/cell-encoder/DaoCellEncoder.sol, 19
+PUSHINT 0
+BLKPUSH 2, 0
+.loc ../contracts/utils/cell-encoder/DaoCellEncoder.sol, 27
+ROLL 3
+CTOS
+LDI 8
+LDU 256
+LDU 32
+LDU 32
+LDDICT
+DROP
+PAIR
+REVERSE 4, 0
+POP S6
+POP S4
+POP S2
+.loc ../contracts/utils/cell-encoder/DaoCellEncoder.sol, 0
+
+.macro c4_to_c7
+PUSHROOT
+CTOS
+LDU 256 ; pubkey c4
+LDU 64 ; pubkey timestamp c4
+LDU 1 ; ctor flag
+NIP
+LDDICT
+LDU 32
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDU 128
+LDU 32
+LDU 32
+LDU 32
+LDU 128
+LDU 32
+LDREF
+ENDS
+CTOS
+LDU 128
+LDU 32
+ROLLREV 6
+TUPLE 6
+SWAP
+LDREF
+LDREF
+LDU 16
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+SETGLOB 21
+SETGLOB 20
+SETGLOB 19
+SETGLOB 18
+SETGLOB 17
+SETGLOB 16
+SETGLOB 15
+SETGLOB 14
+SETGLOB 13
+SETGLOB 12
+SETGLOB 11
+SETGLOB 10
+SETGLOB 3
+SETGLOB 2
+
+.macro c4_to_c7_with_init_storage
+PUSHROOT
+CTOS
+SBITS
+GTINT 1
+PUSHCONT {
+	PUSHINT 0
+	PUSHROOT
+	CTOS
+	PLDDICT ; D
+	NEWDICT
+	PUSHINT 1
+	PUSH S2
+	PUSHINT 64
+	DICTUGET
+	PUSHCONT {
+		PLDU 32
+	}
+	PUSHCONT {
+		PUSHINT 0
+	}
+	IFELSE
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	DUP
+	PUSHINT 0
+	BLKPUSH 7, 0
+	TUPLE 6
+	PUSHREF {
+	}
+	DUP
+	PUSHINT 0
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	DUP
+	SETGLOB 21
+	SETGLOB 20
+	SETGLOB 19
+	SETGLOB 18
+	SETGLOB 17
+	SETGLOB 16
+	SETGLOB 15
+	SETGLOB 14
+	SETGLOB 13
+	SETGLOB 12
+	SETGLOB 11
+	SETGLOB 10
+	PUSHINT 64
+	DICTUGET
+	THROWIFNOT 61
+	PLDU 256
+	SETGLOB 2
+	PUSHINT 0 ; timestamp
+	SETGLOB 3
+}
+IFREFELSE {
+	CALL $c4_to_c7$
+}
+
+.macro c7_to_c4
+GETGLOB 21
+GETGLOB 20
+GETGLOB 19
+GETGLOB 18
+GETGLOB 17
+GETGLOB 16
+GETGLOB 15
+GETGLOB 14
+GETGLOB 13
+GETGLOB 12
+GETGLOB 11
+GETGLOB 10
+GETGLOB 3
+GETGLOB 2
+NEWC
+STU 256
+STU 64
+STONE
+STDICT
+STU 32
+STSLICE
+ROLLREV 9
+NEWC
+STSLICE
+STU 128
+STU 32
+SWAP
+UNTUPLE 6
+REVERSE 7, 0
+STU 32
+STU 32
+STU 128
+STU 32
+ROLLREV 7
+NEWC
+STU 128
+STU 32
+STREF
+STREF
+STU 16
+STSLICE
+SWAP
+NEWC
+STSLICE
+STBREFR
+STBREFR
+STBREFR
+ENDC
+POPROOT
+
+.macro upd_only_time_in_c4
+PUSHROOT
+CTOS
+LDU 256
+LDU 64
+NIP
+GETGLOB 3
+ROT
+NEWC
+STU 256
+STU 64
+STSLICE
+ENDC
+POPROOT
+
+.internal-alias :main_internal, 0
+.internal :main_internal
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSH S2
+CTOS
+LDU 4 ; bounced tail
+LDMSGADDR ; bounced src tail
+DROP
+SETGLOB 9
+MODPOW2 1
+GETGLOB 4
+TRUE
+SETINDEXQ 1
+PUSHINT 10000000
+SETINDEXQ 2
+NULL
+SETINDEXQ 3
+PUSHINT 0
+SETINDEXQ 4
+SETGLOB 4
+IFRET
+OVER
+SEMPTY ; isEmpty
+IFJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+OVER
+LDUQ 32  ; [funcId] body' ok
+THROWIFNOT 60
+OVER
+IFNOTJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.internal-alias :main_external, -1
+.internal :main_external
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+SETGLOB 9
+OVER
+CALLREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+LDU 1 ; haveSign msgSlice
+SWAP
+PUSHCONT {
+	PUSHINT 512
+	LDSLICEX ; signatureSlice msgSlice
+	DUP
+	HASHSU ; signatureSlice msgSlice hashMsgSlice
+	ROT
+	GETGLOB 2
+	CHKSIGNU ; msgSlice isSigned
+	THROWIFNOT 40
+}
+IF
+LDU 64 ; timestamp msgSlice
+SWAP
+CALL $replay_protection_macro$
+LDU 32 ; funcId body
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.macro delegators
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 10
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000cfaf03fd
+	NEWC
+	STSLICE
+	STDICT
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro stakingRoot
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 12
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000d42a1d6d
+	NEWC
+	STSLICE
+	STSLICE
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro ethereumActionEventConfiguration
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 13
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000920f3f37
+	NEWC
+	STSLICE
+	STSLICE
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro deployEventValue
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 14
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000a21f41f2
+	NEWC
+	STSLICE
+	STU 128
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro proposalCount
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 15
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000dbe2de36
+	NEWC
+	STSLICE
+	STU 32
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro proposalConfiguration
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 16
+OVER
+PUSHCONT {
+	PUSHSLICE xc000000000000000000000000090afffda
+	NEWC
+	STSLICE
+	SWAP
+	UNTUPLE 6
+	REVERSE 7, 0
+	STU 32
+	STU 32
+	STU 128
+	STU 32
+	STU 128
+	STU 32
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro proposalCode
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 17
+OVER
+PUSHCONT {
+	PUSHSLICE xc000000000000000000000000080da14e0
+	NEWC
+	STSLICE
+	STREF
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro platformCode
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 18
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000abd1d9db
+	NEWC
+	STSLICE
+	STREF
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro proposalVersion
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 19
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000ac1959dd
+	NEWC
+	STSLICE
+	STU 16
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro admin
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 20
+OVER
+PUSHCONT {
+	PUSHSLICE xc000000000000000000000000086b0bd64
+	NEWC
+	STSLICE
+	STSLICE
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro pendingAdmin
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 21
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000dfd854de
+	NEWC
+	STSLICE
+	STSLICE
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro public_function_selector
+DUP
+PUSHINT 822807229
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 249544914
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 14292192
+		EQUAL
+		IFJMPREF {
+			CALL $proposalCode$
+		}
+		DUP
+		PUSHINT 112246116
+		EQUAL
+		IFJMPREF {
+			CALL $admin$
+		}
+		DUP
+		PUSHINT 202601395
+		EQUAL
+		IFJMPREF {
+			CALL $deployProposal$
+		}
+		DUP
+		PUSHINT 249544914
+		EQUAL
+		IFJMPREF {
+			CALL $updateVotingPeriod$
+		}
+	}
+	DUP
+	PUSHINT 382803821
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 279969754
+		EQUAL
+		IFJMPREF {
+			CALL $proposalConfiguration$
+		}
+		DUP
+		PUSHINT 288020642
+		EQUAL
+		IFJMPREF {
+			CALL $propose$
+		}
+		DUP
+		PUSHINT 302989111
+		EQUAL
+		IFJMPREF {
+			CALL $ethereumActionEventConfiguration$
+		}
+		DUP
+		PUSHINT 382803821
+		EQUAL
+		IFJMPREF {
+			CALL $requestUpgradeProposal$
+		}
+	}
+	DUP
+	PUSHINT 735173083
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 388172858
+		EQUAL
+		IFJMPREF {
+			CALL $upgrade$
+		}
+		DUP
+		PUSHINT 453853131
+		EQUAL
+		IFJMPREF {
+			CALL $expectedProposalAddress$
+		}
+		DUP
+		PUSHINT 572473842
+		EQUAL
+		IFJMPREF {
+			CALL $deployEventValue$
+		}
+		DUP
+		PUSHINT 735173083
+		EQUAL
+		IFJMPREF {
+			CALL $platformCode$
+		}
+	}
+	DUP
+	PUSHINT 822807229
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 739858909
+		EQUAL
+		IFJMPREF {
+			CALL $proposalVersion$
+		}
+		DUP
+		PUSHINT 778849845
+		EQUAL
+		IFJMPREF {
+			CALL $getAdmin$
+		}
+		DUP
+		PUSHINT 819125903
+		EQUAL
+		IFJMPREF {
+			CALL $updateProposalConfiguration$
+		}
+		DUP
+		PUSHINT 822807229
+		EQUAL
+		IFJMPREF {
+			CALL $getProposalCount$
+		}
+	}
+}
+DUP
+PUSHINT 1618104074
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 966854343
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 827142088
+		EQUAL
+		IFJMPREF {
+			CALL $calcEthActionsValue$
+		}
+		DUP
+		PUSHINT 840506227
+		EQUAL
+		IFJMPREF {
+			CALL $onProposalSucceeded$
+		}
+		DUP
+		PUSHINT 954699887
+		EQUAL
+		IFJMPREF {
+			CALL $encodeDaoEthereumActionData$
+		}
+		DUP
+		PUSHINT 966854343
+		EQUAL
+		IFJMPREF {
+			CALL $calcTonActionsValue$
+		}
+	}
+	DUP
+	PUSHINT 1133217191
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 970698246
+		EQUAL
+		IFJMPREF {
+			CALL $getPendingAdmin$
+		}
+		DUP
+		PUSHINT 1032201722
+		EQUAL
+		IFJMPREF {
+			CALL $updateThreshold$
+		}
+		DUP
+		PUSHINT 1038183693
+		EQUAL
+		IFJMPREF {
+			CALL $acceptAdmin$
+		}
+		DUP
+		PUSHINT 1133217191
+		EQUAL
+		IFJMPREF {
+			CALL $addDelegate$
+		}
+	}
+	DUP
+	PUSHINT 1412046189
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1168421845
+		EQUAL
+		IFJMPREF {
+			CALL $updateVotingDelay$
+		}
+		DUP
+		PUSHINT 1184079567
+		EQUAL
+		IFJMPREF {
+			CALL $updateProposalCode$
+		}
+		DUP
+		PUSHINT 1336869885
+		EQUAL
+		IFJMPREF {
+			CALL $delegators$
+		}
+		DUP
+		PUSHINT 1412046189
+		EQUAL
+		IFJMPREF {
+			CALL $stakingRoot$
+		}
+	}
+	DUP
+	PUSHINT 1618104074
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1541594678
+		EQUAL
+		IFJMPREF {
+			CALL $proposalCount$
+		}
+		DUP
+		PUSHINT 1600217967
+		EQUAL
+		IFJMPREF {
+			CALL $expectedStakingAccountAddress$
+		}
+		DUP
+		PUSHINT 1608013022
+		EQUAL
+		IFJMPREF {
+			CALL $pendingAdmin$
+		}
+		DUP
+		PUSHINT 1618104074
+		EQUAL
+		IFJMPREF {
+			CALL $updateQuorumVotes$
+		}
+	}
+}
+DUP
+PUSHINT 2141673462
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 1810052191
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1691451098
+		EQUAL
+		IFJMPREF {
+			CALL $updateTimeLock$
+		}
+		DUP
+		PUSHINT 1772976137
+		EQUAL
+		IFJMPREF {
+			CALL $getEthereumActionEventConfiguration$
+		}
+		DUP
+		PUSHINT 1780519218
+		EQUAL
+		IFJMPREF {
+			CALL $updateGracePeriod$
+		}
+		DUP
+		PUSHINT 1810052191
+		EQUAL
+		IFJMPREF {
+			CALL $updateEthereumActionEventConfiguration$
+		}
+	}
+	DUP
+	PUSHINT 2128554114
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1942814062
+		EQUAL
+		IFJMPREF {
+			CALL $decodeDaoEthereumActionData$
+		}
+		DUP
+		PUSHINT 1959446028
+		EQUAL
+		IFJMPREF {
+			CALL $constructor$
+		}
+		DUP
+		PUSHINT 2017756935
+		EQUAL
+		IFJMPREF {
+			CALL $getStakingRoot$
+		}
+		DUP
+		PUSHINT 2128554114
+		EQUAL
+		IFJMPREF {
+			CALL $setStakingRoot$
+		}
+	}
+	DUP
+	PUSHINT 2141673462
+	EQUAL
+	IFJMPREF {
+		CALL $transferAdmin$
+	}
+}
+
