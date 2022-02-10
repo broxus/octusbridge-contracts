@@ -20,7 +20,7 @@ describe('Try to set next round relays with too few signatures', async () => {
   
     await bridge
       .connect(owner)
-      .updateRoundRelaysConfiguration(defaultConfiguration);
+      .setConfiguration(defaultConfiguration);
   });
   
   it('Send payload & signatures', async () => {

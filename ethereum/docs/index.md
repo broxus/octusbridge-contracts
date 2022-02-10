@@ -61,13 +61,13 @@ No description
 
 ## Functions:
 - [`initialize(address _bridge)`](#DAO-initialize-address-)
-- [`updateBridge(address _bridge)`](#DAO-updateBridge-address-)
+- [`setBridge(address _bridge)`](#DAO-setBridge-address-)
 - [`execute(bytes payload, bytes[] signatures)`](#DAO-execute-bytes-bytes---)
 
 
 ### Function `initialize(address _bridge)` {#DAO-initialize-address-}
 No description
-### Function `updateBridge(address _bridge)` {#DAO-updateBridge-address-}
+### Function `setBridge(address _bridge)` {#DAO-setBridge-address-}
 No description
 ### Function `execute(bytes payload, bytes[] signatures) → bytes[] responses` {#DAO-execute-bytes-bytes---}
 No description
@@ -120,11 +120,11 @@ Configuration updated
 
 
 ## Functions:
-- [`updateBridge(address _bridge)`](#IDAO-updateBridge-address-)
+- [`setBridge(address _bridge)`](#IDAO-setBridge-address-)
 - [`execute(bytes payload, bytes[] signatures)`](#IDAO-execute-bytes-bytes---)
 
 
-### Function `updateBridge(address _bridge)` {#IDAO-updateBridge-address-}
+### Function `setBridge(address _bridge)` {#IDAO-setBridge-address-}
 No description
 ### Function `execute(bytes payload, bytes[] signatures) → bytes[] responses` {#IDAO-execute-bytes-bytes---}
 No description

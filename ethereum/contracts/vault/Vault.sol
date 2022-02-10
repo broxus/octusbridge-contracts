@@ -628,7 +628,13 @@ contract Vault is IVault, VaultHelpers {
         PendingWithdrawalId memory pendingWithdrawalId = PendingWithdrawalId(msg.sender, id);
         PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(pendingWithdrawalId);
 
-        require(amountRequested > 0 && amountRequested <= pendingWithdrawal.amount);
+        require(
+            amountRequested > 0 &&
+            amountRequested <= pendingWithdrawal.amount &&
+            bounty <= pendingWithdrawal.amount - amountRequested
+        );
+
+        _pendingWithdrawalBountyUpdate(pendingWithdrawalId, bounty);
 
         amountAdjusted = amountRequested;
 
@@ -687,8 +693,6 @@ contract Vault is IVault, VaultHelpers {
         _pendingWithdrawalAmountReduce(pendingWithdrawalId, amountRequested);
 
         emit PendingWithdrawalWithdraw(msg.sender, id, amountRequested, amountAdjusted);
-
-        setPendingWithdrawalBounty(id, bounty);
 
         return amountAdjusted;
     }

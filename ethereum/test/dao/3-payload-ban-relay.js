@@ -22,7 +22,7 @@ describe('Execute banning relay by DAO', async () => {
 
     await dao
       .connect(owner)
-      .updateConfiguration(defaultConfiguration);
+      .setConfiguration(defaultConfiguration);
   });
   
   it('Transfer Bridge ownership to DAO', async () => {

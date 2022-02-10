@@ -40,7 +40,7 @@ contract DAO is IDAO, IEverscale, ReentrancyGuard, OwnableUpgradeable, Cache, Ch
         @notice Update address of the TON configuration, that emits actions for this DAO
         @param _configuration New configuration TON address
     */
-    function updateConfiguration(
+    function setConfiguration(
         IBridge.EverscaleAddress calldata _configuration
     ) public onlyOwner {
         configuration = _configuration;
@@ -48,7 +48,7 @@ contract DAO is IDAO, IEverscale, ReentrancyGuard, OwnableUpgradeable, Cache, Ch
 
     /// @dev Update bridge address
     /// @param _bridge New bridge address
-    function updateBridge(
+    function setBridge(
         address _bridge
     ) override external onlyOwner {
         bridge = _bridge;

@@ -258,6 +258,31 @@
   {
     "inputs": [
       {
+        "components": [
+          {
+            "internalType": "int128",
+            "name": "wid",
+            "type": "int128"
+          },
+          {
+            "internalType": "uint256",
+            "name": "addr",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IEverscale.EverscaleAddress",
+        "name": "_roundRelaysConfiguration",
+        "type": "tuple"
+      }
+    ],
+    "name": "setConfiguration",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "bytes",
         "name": "payload",
         "type": "bytes"
@@ -315,31 +340,6 @@
       }
     ],
     "name": "updateMinimumRequiredSignatures",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "int128",
-            "name": "wid",
-            "type": "int128"
-          },
-          {
-            "internalType": "uint256",
-            "name": "addr",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct IEverscale.EverscaleAddress",
-        "name": "_roundRelaysConfiguration",
-        "type": "tuple"
-      }
-    ],
-    "name": "updateRoundRelaysConfiguration",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

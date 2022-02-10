@@ -14,7 +14,7 @@ interface IBridge is IEverscale {
     }
 
     function updateMinimumRequiredSignatures(uint32 _minimumRequiredSignatures) external;
-    function updateRoundRelaysConfiguration(EverscaleAddress calldata _roundRelaysConfiguration) external;
+    function setConfiguration(EverscaleAddress calldata _roundRelaysConfiguration) external;
     function updateRoundTTL(uint32 _roundTTL) external;
 
     function isRelay(

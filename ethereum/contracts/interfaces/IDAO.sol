@@ -14,7 +14,7 @@ interface IDAO {
         bytes data;
     }
 
-    function updateBridge(
+    function setBridge(
         address _bridge
     ) external;
 

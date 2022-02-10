@@ -20,7 +20,7 @@ describe('Use payload with wrong chain id', async () => {
 
     await dao
       .connect(owner)
-      .updateConfiguration(defaultConfiguration);
+      .setConfiguration(defaultConfiguration);
   });
   
   it('Prepare payload & signatures with wrong chain id', async () => {

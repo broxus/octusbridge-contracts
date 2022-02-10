@@ -98,7 +98,7 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
             Update address of configuration, that emits event with next round relays.
         @param _roundRelaysConfiguration TON address of configuration
     */
-    function updateRoundRelaysConfiguration(
+    function setConfiguration(
         EverscaleAddress calldata _roundRelaysConfiguration
     ) external override onlyOwner {
         emit UpdateRoundRelaysConfiguration(_roundRelaysConfiguration);
