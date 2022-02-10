@@ -6,7 +6,7 @@ const { upgrades, ethers } = require("hardhat");
 const USDT_ADDR = '0xdAC17F958D2ee523a2206206994597C13D831ec7';
 
 
-describe('Test Convex3stable strategy on DAI vault', async () => {
+describe.skip('Test Convex3stable strategy on DAI vault', async () => {
     let vault, strategy, usdt, governance, booster, wrapped, rewards;
     let snapshot;
 
