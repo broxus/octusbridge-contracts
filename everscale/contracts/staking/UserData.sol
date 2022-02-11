@@ -102,7 +102,7 @@ contract UserData is IUserData, IUpgradableByRequest {
                 value: 0,
                 flag: MsgFlag.REMAINING_GAS,
                 bounce: false
-            }(proposal_data.toSlice().decode(uint64));
+            }(proposal_data.toSlice().decode(uint32));
         }
     }
 

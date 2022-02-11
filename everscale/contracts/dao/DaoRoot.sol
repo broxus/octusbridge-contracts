@@ -162,19 +162,17 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate {
             flag: MsgFlag.SENDER_PAYS_FEES,
             bounce: false
         }(nonce, proposalCount, answerId);
-        TvmBuilder params;
-        params.store(stakingRoot);
-        params.store(accountOwner);
-        params.store(description);
-        params.store(tonActions);
-        params.store(ethActions);
-        params.store(proposalConfiguration);
-        params.store(proposalVersion);
+        TvmCell params = abi.encode(
+            stakingRoot, accountOwner,
+            description, tonActions,
+            ethActions, proposalConfiguration,
+            proposalVersion
+        );
         new Platform{
             stateInit: buildProposalStateInit(proposalCount),
-            value: Gas.DEPLOY_PROPOSAL_VALUE,
+            value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
-        }(proposalCode, params.toCell(), accountOwner);
+        }(proposalCode, params, accountOwner);
     }
 
     function onProposalSucceeded(
@@ -472,25 +470,18 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate {
 
         emit RootCodeUpgraded();
 
-        TvmBuilder builder;
-        TvmBuilder builderAdminData;
-        builderAdminData.store(/*address*/ admin);
-        builderAdminData.store(/*address*/ pendingAdmin);
-
-        builder.store(/*address*/ stakingRoot);
-
-        builder.store(/*uint32*/ proposalCount);
-        builder.store(/*uint16*/ proposalVersion);
-        builder.store(/*ProposalConfiguration*/ proposalConfiguration);
-
-        builder.store(builderAdminData.toCell()); //ref 1
-        builder.store(proposalCode);              //ref 2
-        builder.store(platformCode);              //ref 3
+        TvmCell data = abi.encode(
+            admin, pendingAdmin,
+            stakingRoot, ethereumActionEventConfiguration, deployEventValue,
+            proposalCount, proposalVersion, proposalConfiguration,
+            proposalCode, platformCode,
+            delegators
+        );
 
         tvm.setcode(code);
         tvm.setCurrentCode(code);
 
-        onCodeUpgrade(builder.toCell());
+        onCodeUpgrade(data);
     }
 
     function onCodeUpgrade(TvmCell data) private {}

@@ -2,7 +2,6 @@ pragma ton-solidity >= 0.39.0;
 
 import "./interfaces/IProposal.sol";
 import "./interfaces/IDaoRoot.sol";
-import "./interfaces/IStakingAccount.sol";
 import "./interfaces/IUpgradableByRequest.sol";
 
 import "./libraries/DaoErrors.sol";
@@ -10,6 +9,7 @@ import "./libraries/Gas.sol";
 
 import "./structures/PlatformTypes.sol";
 
+import "../staking/interfaces/IUserData.sol";
 import {PlatformTypes as StakingPlatformTypes} from "../staking/libraries/PlatformTypes.sol";
 
 import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
@@ -96,7 +96,7 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
         tvm.accept();
         executionTime = endTime + config.timeLock;
         emit Queued(executionTime);
-        IStakingAccount(expectedAccountAddress(proposer)).unlockVoteTokens{
+        IUserData(expectedAccountAddress(proposer)).unlockVoteTokens{
             value: Gas.UNLOCK_VOTE_VALUE,
             flag: MsgFlag.SENDER_PAYS_FEES
         }(id, true);
@@ -118,8 +118,9 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
         require(!executed, DaoErrors.PROPOSAL_IS_EXECUTED);
         require(msg.sender == proposer, DaoErrors.NOT_OWNER);
         tvm.rawReserve(Gas.PROPOSAL_INITIAL_BALANCE, 2);
+        canceled = true;
         emit Canceled();
-        IStakingAccount(expectedAccountAddress(proposer)).unlockVoteTokens{
+        IUserData(expectedAccountAddress(proposer)).unlockVoteTokens{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(id, true);
@@ -139,9 +140,9 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
                 againstVotes += votes;
             }
             emit VoteCast(voter, support, votes, reason);
-            voter.transfer({value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false});
+            IUserData(msg.sender).voteCasted{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(id);
         } else {
-            IStakingAccount(msg.sender).rejectVote{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(id);
+            IUserData(msg.sender).rejectVote{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(id);
         }
     }
 
@@ -173,7 +174,7 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
     function unlockCastedVote(address accountOwner) override public view onlyStakingAccount(accountOwner) {
         ProposalState currentState = state();
         bool success = currentState != ProposalState.Active;
-        IStakingAccount(msg.sender).unlockCastedVote{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(id, success);
+        IUserData(msg.sender).unlockCastedVote{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(id, success);
     }
 
     function unlockVoteTokens(address accountOwner) override public view onlyStakingAccount(accountOwner) {
@@ -183,7 +184,7 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
             currentState != ProposalState.Pending &&
             currentState != ProposalState.Active
         );
-        IStakingAccount(msg.sender).unlockVoteTokens{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(id, success);
+        IUserData(msg.sender).unlockVoteTokens{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(id, success);
     }
 
     function expectedAccountAddress(address accountOwner) private view returns (address) {
@@ -210,16 +211,6 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
         });
     }
 
-    function initialParams(
-        address stakingRoot_,
-        address proposer_,
-        string description_,
-        TonAction[] tonActions_,
-        EthAction[] ethActions_,
-        ProposalConfiguration config_,
-        uint16 proposalVersion_
-    ) public pure {}
-
     function onCodeUpgrade(TvmCell data) private {
         tvm.resetStorage();
         TvmSlice s = data.toSlice();
@@ -230,9 +221,9 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
         TvmSlice initialData = s.loadRefAsSlice();
         id = initialData.decode(uint32);
 
-        TvmSlice params = s.loadRefAsSlice();
+        TvmCell params = s.loadRef();
         (stakingRoot, proposer, description, tonActions, ethActions, config, proposalVersion)
-            = params.decodeFunctionParams(initialParams);
+            = abi.decode(params, (address, address, string, TonAction[], EthAction[], ProposalConfiguration, uint16));
         startTime = now + config.votingDelay;
         endTime = startTime + config.votingPeriod;
     }
@@ -254,31 +245,20 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
             sendGasTo.transfer({value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false});
         } else {
             emit ProposalCodeUpgraded(newVersion);
-
-            TvmBuilder mainData;
-
-            mainData.store(/*address*/ root);
-            mainData.store(/*address*/ proposer);
-            mainData.store(/*uint32*/ id);
-
-            mainData.store(/*TonAction[]*/ tonActions); // ref1
-            mainData.store(/*EthAction[]*/ ethActions); // ref2
-
-            TvmBuilder stateData;
-            stateData.store(/*ProposalConfiguration*/ config);
-            stateData.store(/*uint32*/ startTime);
-            stateData.store(/*endTime*/ endTime);
-            stateData.store(/*executionTime*/ executionTime);
-            stateData.store(/*bool*/ canceled);
-            stateData.store(/*bool*/ executed);
-            stateData.store(/*uint128*/ forVotes);
-            stateData.store(/*uint128*/ againstVotes);
-
-            mainData.storeRef(stateData);
+            TvmCell data = abi.encode(
+                root, proposer, stakingRoot,
+                id, description, config,
+                tonActions, ethActions,
+                startTime, endTime, executionTime,
+                canceled, executed,
+                forVotes, againstVotes,
+                proposalVersion, newVersion,
+                platformCode
+            );
 
             tvm.setcode(code);
 
             tvm.setCurrentCode(code);
-            onCodeUpgrade(mainData.toCell());
+            onCodeUpgrade(data);
         }}
 }

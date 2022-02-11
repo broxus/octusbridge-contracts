@@ -3,6 +3,8 @@ const {
 } = require('../utils');
 const BigNumber = require('bignumber.js');
 const logger = require('mocha-logger');
+const {mintTokens} = require("../utils");
+const {stringToBytesArray} = require("../utils");
 
 const EMPTY_TVM_CELL = 'te6ccgEBAQEAAgAAAA==';
 
@@ -228,6 +230,7 @@ describe('Test DAO in Staking', async function () {
       logger.log(`UserAccount1: ${userAccount1.address}`);
 
       [userTokenWallet0, userTokenWallet1] = await deployTokenWallets([userAccount0, userAccount1], stakingToken);
+      await mintTokens(stakingOwner, [userAccount0, userAccount1], stakingToken, DEPOSIT_VALUE * 2);
 
       logger.log(`Depositing test tokens`);
       await depositTokens(stakingRoot, userAccount0, userTokenWallet0, DEPOSIT_VALUE * 2);
@@ -602,6 +605,30 @@ describe('Test DAO in Staking', async function () {
         expect(currentConfiguration.gracePeriod.toString())
           .to
           .equal(newConfiguration.gracePeriod.toString(), 'Wrong gracePeriod');
+      })
+    })
+    describe('Test DAO root upgrade', async function () {
+      let TestUpgrade;
+      let newDaoRoot;
+      before('Run update function', async function () {
+        TestUpgrade = await locklift.factory.getContract('TestUpgrade');
+        await stakingOwner.runTarget({
+          contract: daoRoot,
+          method: 'upgrade',
+          params: {code: TestUpgrade.code},
+          value: locklift.utils.convertCrystal(3, 'nano')
+        });
+        newDaoRoot = TestUpgrade;
+        newDaoRoot.setAddress(daoRoot.address);
+      })
+      it('Check new DAO Root contract', async function () {
+        expect(await newDaoRoot.call({method: 'storedData'}))
+          .to
+          .not
+          .equal(null, 'Emtpy data after upgrade');
+        expect(await newDaoRoot.call({method: 'isUpgraded'}))
+          .to
+          .equal(true, 'Wrong votingPeriod');
       })
     })
   });
