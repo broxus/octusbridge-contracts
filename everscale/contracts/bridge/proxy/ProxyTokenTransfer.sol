@@ -31,7 +31,6 @@ import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
 contract ProxyTokenTransfer is
     IProxy,
     IProxyTokenTransferConfigurable,
-    ILegacyBurnTokensCallback,
     IAcceptTokensBurnCallback,
     RandomNonce,
     CellEncoder,
@@ -87,14 +86,17 @@ contract ProxyTokenTransfer is
     }
 
     // Legacy token migration
-    function burnCallback(
-        uint128 tokens,
-        TvmCell,
-        uint256,
-        address sender_address,
-        address,
-        address send_gas_to
-    ) public override reserveBalance {
+    fallback() external {
+        tvm.rawReserve(address(this).balance - msg.value, 2);
+        TvmSlice bodySlice = msg.data;
+        uint32 functionId = bodySlice.decode(uint32);
+        require(functionId == tvm.functionId(ILegacyBurnTokensCallback.burnCallback), ErrorCodes.NOT_LEGACY_BURN);
+        (uint128 tokens, uint256 sender_public_key, address sender_address, address wallet_address)
+            = bodySlice.decode(uint128, uint256, address, address);
+        TvmCell payload = bodySlice.loadRef();
+        bodySlice = bodySlice.loadRefAsSlice();
+        address send_gas_to = bodySlice.decode(address);
+
         if (isArrayContainsAddress(config.outdatedTokenRoots, msg.sender)) {
             TvmCell empty;
 
