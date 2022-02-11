@@ -1045,12 +1045,15 @@ PUSHINT 1000000000
 PUSHINT 2
 RAWRESERVE
 .loc ../contracts/dao/Proposal.sol, 121
+TRUE
+SETGLOB 23
+.loc ../contracts/dao/Proposal.sol, 122
 PUSHREF {
 	.blob xc00000000000000000000000005bb64056
 }
 PUSHINT 0
 SENDRAWMSG
-.loc ../contracts/dao/Proposal.sol, 122
+.loc ../contracts/dao/Proposal.sol, 123
 TRUE
 GETGLOB 12
 GETGLOB 14
@@ -1078,7 +1081,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/dao/Proposal.sol, 128
+.loc ../contracts/dao/Proposal.sol, 129
 OVER
 PUSHCONT {
 	LDU 32
@@ -1110,7 +1113,7 @@ THROW 0
 CALL $castVote_internal_macro$
 
 .macro castVote_internal_macro
-.loc ../contracts/dao/Proposal.sol, 128
+.loc ../contracts/dao/Proposal.sol, 129
 GETGLOB 9
 PUSH S4
 .loc ../contracts/dao/Proposal.sol, 40
@@ -1119,16 +1122,16 @@ CALLREF {
 }
 SDEQ
 THROWIFNOT 106
-.loc ../contracts/dao/Proposal.sol, 135
+.loc ../contracts/dao/Proposal.sol, 136
 CALLREF {
 	CALL $state_internal_macro$
 }
 EQINT 1
 PUSHCONT {
-	.loc ../contracts/dao/Proposal.sol, 136
+	.loc ../contracts/dao/Proposal.sol, 137
 	OVER
 	PUSHCONT {
-		.loc ../contracts/dao/Proposal.sol, 137
+		.loc ../contracts/dao/Proposal.sol, 138
 		GETGLOB 25
 		PUSH S3
 		ADD
@@ -1136,7 +1139,7 @@ PUSHCONT {
 		SETGLOB 25
 	}
 	PUSHCONT {
-		.loc ../contracts/dao/Proposal.sol, 139
+		.loc ../contracts/dao/Proposal.sol, 140
 		GETGLOB 26
 		PUSH S3
 		ADD
@@ -1144,7 +1147,7 @@ PUSHCONT {
 		SETGLOB 26
 	}
 	IFELSE
-	.loc ../contracts/dao/Proposal.sol, 141
+	.loc ../contracts/dao/Proposal.sol, 142
 	PUSH3 S0, S2, S1
 	PUSH S6
 	PUSHSLICE xc00000000000000000000000003ef61dfc
@@ -1157,16 +1160,20 @@ PUSHCONT {
 	ENDC
 	PUSHINT 0
 	SENDRAWMSG
-	.loc ../contracts/dao/Proposal.sol, 142
-	PUSH S3
+	.loc ../contracts/dao/Proposal.sol, 143
+	GETGLOB 12
+	GETGLOB 9
+	FALSE
 	NEWC
-	STSLICECONST x42_
-	STSLICE
-	PUSHINT 111
+	STSLICECONST x6_
+	STI 1
+	PUSHINT 3
 	STZEROES
+	STSLICE
+	PUSHSLICE x0000000000000000000000000000c6087c09_
 }
 PUSHCONT {
-	.loc ../contracts/dao/Proposal.sol, 144
+	.loc ../contracts/dao/Proposal.sol, 145
 	GETGLOB 12
 	GETGLOB 9
 	FALSE
@@ -1177,10 +1184,10 @@ PUSHCONT {
 	STZEROES
 	STSLICE
 	PUSHSLICE x0000000000000000000000000000ea8b6c87_
-	STSLICER
-	STU 32
 }
 IFELSE
+STSLICER
+STU 32
 ENDC
 PUSHINT 64
 SENDRAWMSG
@@ -1196,7 +1203,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/dao/Proposal.sol, 148
+.loc ../contracts/dao/Proposal.sol, 149
 ENDS
 .loc ../contracts/dao/Proposal.sol, 0
 CALLREF {
@@ -1218,11 +1225,11 @@ GETGLOB 9
 GETGLOB 10
 SDEQ
 THROWIFNOT 101
-.loc ../contracts/dao/Proposal.sol, 149
+.loc ../contracts/dao/Proposal.sol, 150
 PUSHINT 200000000
 PUSHINT 2
 RAWRESERVE
-.loc ../contracts/dao/Proposal.sol, 150
+.loc ../contracts/dao/Proposal.sol, 151
 GETGLOB 14
 NEWC
 STSLICECONST x62_
@@ -1239,12 +1246,12 @@ SENDRAWMSG
 CALL $state_internal_macro$
 
 .macro state_internal_macro
-.loc ../contracts/dao/Proposal.sol, 153
-PUSHINT 0
 .loc ../contracts/dao/Proposal.sol, 154
+PUSHINT 0
+.loc ../contracts/dao/Proposal.sol, 155
 GETGLOB 23
 PUSHCONT {
-	.loc ../contracts/dao/Proposal.sol, 155
+	.loc ../contracts/dao/Proposal.sol, 156
 	DROP
 	PUSHINT 2
 	.loc ../contracts/dao/Proposal.sol, 0
@@ -1252,7 +1259,7 @@ PUSHCONT {
 PUSHCONT {
 	GETGLOB 24
 	PUSHCONT {
-		.loc ../contracts/dao/Proposal.sol, 157
+		.loc ../contracts/dao/Proposal.sol, 158
 		DROP
 		PUSHINT 7
 		.loc ../contracts/dao/Proposal.sol, 0
@@ -1262,7 +1269,7 @@ PUSHCONT {
 		GETGLOB 20
 		LEQ
 		PUSHCONT {
-			.loc ../contracts/dao/Proposal.sol, 159
+			.loc ../contracts/dao/Proposal.sol, 160
 			DROP
 			PUSHINT 0
 			.loc ../contracts/dao/Proposal.sol, 0
@@ -1272,7 +1279,7 @@ PUSHCONT {
 			GETGLOB 21
 			LEQ
 			PUSHCONT {
-				.loc ../contracts/dao/Proposal.sol, 161
+				.loc ../contracts/dao/Proposal.sol, 162
 				DROP
 				PUSHINT 1
 				.loc ../contracts/dao/Proposal.sol, 0
@@ -1287,7 +1294,7 @@ PUSHCONT {
 				LESS
 				OR
 				PUSHCONT {
-					.loc ../contracts/dao/Proposal.sol, 163
+					.loc ../contracts/dao/Proposal.sol, 164
 					DROP
 					PUSHINT 3
 					.loc ../contracts/dao/Proposal.sol, 0
@@ -1303,13 +1310,13 @@ PUSHCONT {
 						UFITS 32
 						GREATER
 						PUSHCONT {
-							.loc ../contracts/dao/Proposal.sol, 167
+							.loc ../contracts/dao/Proposal.sol, 168
 							DROP
 							PUSHINT 5
 							.loc ../contracts/dao/Proposal.sol, 0
 						}
 						PUSHCONT {
-							.loc ../contracts/dao/Proposal.sol, 169
+							.loc ../contracts/dao/Proposal.sol, 170
 							DROP
 							PUSHINT 6
 							.loc ../contracts/dao/Proposal.sol, 0
@@ -1317,7 +1324,7 @@ PUSHCONT {
 						IFELSE
 					}
 					PUSHCONT {
-						.loc ../contracts/dao/Proposal.sol, 165
+						.loc ../contracts/dao/Proposal.sol, 166
 						DROP
 						PUSHINT 4
 						.loc ../contracts/dao/Proposal.sol, 0
@@ -1344,7 +1351,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/dao/Proposal.sol, 173
+.loc ../contracts/dao/Proposal.sol, 174
 OVER
 PUSHCONT {
 	LDREF
@@ -1376,13 +1383,13 @@ CALLREF {
 }
 SDEQ
 THROWIFNOT 106
-.loc ../contracts/dao/Proposal.sol, 174
+.loc ../contracts/dao/Proposal.sol, 175
 CALLREF {
 	CALL $state_internal_macro$
 }
-.loc ../contracts/dao/Proposal.sol, 175
-NEQINT 1
 .loc ../contracts/dao/Proposal.sol, 176
+NEQINT 1
+.loc ../contracts/dao/Proposal.sol, 177
 GETGLOB 12
 GETGLOB 9
 FALSE
@@ -1410,7 +1417,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/dao/Proposal.sol, 179
+.loc ../contracts/dao/Proposal.sol, 180
 OVER
 PUSHCONT {
 	LDREF
@@ -1434,7 +1441,7 @@ THROW 0
 CALL $unlockVoteTokens_internal_macro$
 
 .macro unlockVoteTokens_internal_macro
-.loc ../contracts/dao/Proposal.sol, 179
+.loc ../contracts/dao/Proposal.sol, 180
 GETGLOB 9
 OVER
 .loc ../contracts/dao/Proposal.sol, 40
@@ -1443,11 +1450,11 @@ CALLREF {
 }
 SDEQ
 THROWIFNOT 106
-.loc ../contracts/dao/Proposal.sol, 180
+.loc ../contracts/dao/Proposal.sol, 181
 CALLREF {
 	CALL $state_internal_macro$
 }
-.loc ../contracts/dao/Proposal.sol, 181
+.loc ../contracts/dao/Proposal.sol, 182
 SWAP
 GETGLOB 14
 SDEQ
@@ -1457,7 +1464,7 @@ ROT
 NEQINT 1
 AND
 AND
-.loc ../contracts/dao/Proposal.sol, 186
+.loc ../contracts/dao/Proposal.sol, 187
 GETGLOB 12
 GETGLOB 9
 FALSE
@@ -1481,12 +1488,12 @@ SENDRAWMSG
 CALL $expectedAccountAddress_internal_macro$
 
 .macro expectedAccountAddress_internal_macro
-.loc ../contracts/dao/Proposal.sol, 195
+.loc ../contracts/dao/Proposal.sol, 196
 NEWC
 STSLICE
-.loc ../contracts/dao/Proposal.sol, 196
+.loc ../contracts/dao/Proposal.sol, 197
 ENDC
-.loc ../contracts/dao/Proposal.sol, 200
+.loc ../contracts/dao/Proposal.sol, 201
 PUSHINT 0
 NEWC
 STU 256
@@ -1533,69 +1540,9 @@ STU 256
 ENDC
 CTOS
 
-.macro initialParams
-DROP
-GETGLOB 6
-THROWIFNOT 76
-.loc ../contracts/dao/Proposal.sol, 213
-OVER
-PUSHCONT {
-	LDREF
-	ENDS
-	CTOS
-}
-IF
-LDMSGADDR
-LDREF
-ENDS
-CTOS
-LDMSGADDR
-LDREF
-LDU 32
-LDDICT
-ROTREV
-PAIR
-SWAP
-LDU 32
-LDDICT
-ROTREV
-PAIR
-SWAP
-LDU 32
-LDU 32
-LDU 128
-LDU 32
-LDU 128
-LDREF
-ENDS
-CTOS
-LDU 32
-ROLLREV 6
-TUPLE 6
-SWAP
-LDU 16
-ENDS
-.loc ../contracts/dao/Proposal.sol, 0
-CALLREF {
-	CALL $initialParams_internal_macro$
-}
-IFREF {
-	CALL $upd_only_time_in_c4$
-}
-THROW 0
-
-.globl	initialParams_internal
-.type	initialParams_internal, @function
-CALL $initialParams_internal_macro$
-
-.macro initialParams_internal_macro
-.loc ../contracts/dao/Proposal.sol, 213
-BLKDROP 7
-.loc ../contracts/dao/Proposal.sol, 0
-
 .internal-alias :onCodeUpgrade, 2
 .internal :onCodeUpgrade
-.loc ../contracts/dao/Proposal.sol, 224
+.loc ../contracts/dao/Proposal.sol, 215
 PUSHREFSLICE {
 	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
 }
@@ -1644,9 +1591,9 @@ PUSHINT 0
 SETGLOB 25
 PUSHINT 0
 SETGLOB 26
-.loc ../contracts/dao/Proposal.sol, 225
+.loc ../contracts/dao/Proposal.sol, 216
 CTOS
-.loc ../contracts/dao/Proposal.sol, 226
+.loc ../contracts/dao/Proposal.sol, 217
 DUP
 LDMSGADDR
 LDU 8
@@ -1655,21 +1602,22 @@ POP S4
 XCHG S2
 SETGLOB 10
 DROP2
-.loc ../contracts/dao/Proposal.sol, 228
+.loc ../contracts/dao/Proposal.sol, 219
 DUP
 LDREF
 POP S2
 SETGLOB 11
-.loc ../contracts/dao/Proposal.sol, 230
+.loc ../contracts/dao/Proposal.sol, 221
 LDREFRTOS
-.loc ../contracts/dao/Proposal.sol, 231
+.loc ../contracts/dao/Proposal.sol, 222
 LDU 32
 DROP
 SETGLOB 12
-.loc ../contracts/dao/Proposal.sol, 233
-LDREFRTOS
-NIP
-.loc ../contracts/dao/Proposal.sol, 234
+.loc ../contracts/dao/Proposal.sol, 224
+LDREF
+DROP
+.loc ../contracts/dao/Proposal.sol, 225
+CTOS
 LDMSGADDR
 LDREF
 ENDS
@@ -1708,7 +1656,7 @@ SETGLOB 16
 SETGLOB 17
 SETGLOB 19
 SETGLOB 18
-.loc ../contracts/dao/Proposal.sol, 236
+.loc ../contracts/dao/Proposal.sol, 227
 NOW
 GETGLOB 19
 FIRST
@@ -1716,7 +1664,7 @@ ADD
 UFITS 32
 DUP
 SETGLOB 20
-.loc ../contracts/dao/Proposal.sol, 237
+.loc ../contracts/dao/Proposal.sol, 228
 GETGLOB 19
 SECOND
 ADD
@@ -1738,7 +1686,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/dao/Proposal.sol, 244
+.loc ../contracts/dao/Proposal.sol, 235
 OVER
 PUSHCONT {
 	LDREF
@@ -1762,23 +1710,23 @@ THROW 0
 CALL $requestUpgrade_internal_macro$
 
 .macro requestUpgrade_internal_macro
-.loc ../contracts/dao/Proposal.sol, 245
+.loc ../contracts/dao/Proposal.sol, 236
 GETGLOB 9
 GETGLOB 14
 SDEQ
 THROWIFNOT 108
-.loc ../contracts/dao/Proposal.sol, 246
+.loc ../contracts/dao/Proposal.sol, 237
 DEPTH
 ADDCONST -2
 PICK
 PUSHINT 2000000000
 GEQ
 THROWIFNOT 130
-.loc ../contracts/dao/Proposal.sol, 247
+.loc ../contracts/dao/Proposal.sol, 238
 PUSHINT 200000000
 PUSHINT 2
 RAWRESERVE
-.loc ../contracts/dao/Proposal.sol, 248
+.loc ../contracts/dao/Proposal.sol, 239
 GETGLOB 18
 PUSHSLICE xc000000000000000000000000032be5008
 NEWC
@@ -1787,7 +1735,7 @@ STU 16
 ENDC
 PUSHINT 0
 SENDRAWMSG
-.loc ../contracts/dao/Proposal.sol, 249
+.loc ../contracts/dao/Proposal.sol, 240
 GETGLOB 12
 SWAP
 GETGLOB 18
@@ -1818,7 +1766,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/dao/Proposal.sol, 252
+.loc ../contracts/dao/Proposal.sol, 243
 OVER
 PUSHCONT {
 	LDREF
@@ -1854,12 +1802,12 @@ GETGLOB 9
 GETGLOB 10
 SDEQ
 THROWIFNOT 101
-.loc ../contracts/dao/Proposal.sol, 253
+.loc ../contracts/dao/Proposal.sol, 244
 GETGLOB 18
 PUSH S2
 EQUAL
 PUSHCONT {
-	.loc ../contracts/dao/Proposal.sol, 254
+	.loc ../contracts/dao/Proposal.sol, 245
 	DUP
 	NEWC
 	STSLICECONST x42_
@@ -1871,7 +1819,7 @@ PUSHCONT {
 	SENDRAWMSG
 }
 PUSHCONT {
-	.loc ../contracts/dao/Proposal.sol, 256
+	.loc ../contracts/dao/Proposal.sol, 247
 	OVER
 	PUSHSLICE xc00000000000000000000000005726404d
 	NEWC
@@ -1880,33 +1828,37 @@ PUSHCONT {
 	ENDC
 	PUSHINT 0
 	SENDRAWMSG
-	.loc ../contracts/dao/Proposal.sol, 260
+	.loc ../contracts/dao/Proposal.sol, 248
+	GETGLOB 11
+	PUSH S2
+	GETGLOB 18
+	GETGLOB 26
+	GETGLOB 25
+	GETGLOB 24
+	GETGLOB 23
+	GETGLOB 22
+	GETGLOB 21
+	GETGLOB 20
+	GETGLOB 17
+	GETGLOB 16
+	GETGLOB 19
+	GETGLOB 15
+	GETGLOB 12
+	GETGLOB 13
+	GETGLOB 14
 	GETGLOB 10
 	NEWC
 	STSLICE
-	.loc ../contracts/dao/Proposal.sol, 261
-	GETGLOB 14
-	SWAP
-	STSLICE
-	.loc ../contracts/dao/Proposal.sol, 262
-	GETGLOB 12
-	SWAP
-	STU 32
-	.loc ../contracts/dao/Proposal.sol, 264
-	GETGLOB 16
-	UNPAIR
-	XCHG S2
-	STU 32
-	STDICT
-	.loc ../contracts/dao/Proposal.sol, 265
-	GETGLOB 17
-	UNPAIR
-	XCHG S2
-	STU 32
-	STDICT
-	.loc ../contracts/dao/Proposal.sol, 268
+	PUSHINT 17
+	ROLLREVX
 	NEWC
-	GETGLOB 19
+	STSLICE
+	ROLLREV 16
+	NEWC
+	STSLICE
+	STU 32
+	STREF
+	SWAP
 	UNTUPLE 6
 	REVERSE 7, 0
 	STU 32
@@ -1915,40 +1867,36 @@ PUSHCONT {
 	STU 32
 	STU 128
 	STU 32
-	.loc ../contracts/dao/Proposal.sol, 269
-	GETGLOB 20
+	ROLLREV 12
+	NEWC
 	SWAP
+	UNPAIR
+	XCHG S2
 	STU 32
-	.loc ../contracts/dao/Proposal.sol, 270
-	GETGLOB 21
+	STDICT
 	SWAP
+	UNPAIR
+	XCHG S2
 	STU 32
-	.loc ../contracts/dao/Proposal.sol, 271
-	GETGLOB 22
-	SWAP
+	STDICT
 	STU 32
-	.loc ../contracts/dao/Proposal.sol, 272
-	GETGLOB 23
-	SWAP
+	STU 32
+	STU 32
 	STI 1
-	.loc ../contracts/dao/Proposal.sol, 273
-	GETGLOB 24
-	SWAP
 	STI 1
-	.loc ../contracts/dao/Proposal.sol, 274
-	GETGLOB 25
-	SWAP
 	STU 128
-	.loc ../contracts/dao/Proposal.sol, 275
-	GETGLOB 26
-	SWAP
 	STU 128
-	.loc ../contracts/dao/Proposal.sol, 277
+	STU 16
+	STU 16
+	STREF
 	STBREFR
-	.loc ../contracts/dao/Proposal.sol, 279
+	STBREFR
+	STBREFR
+	ENDC
+	.loc ../contracts/dao/Proposal.sol, 259
 	PUSH S3
 	SETCODE
-	.loc ../contracts/dao/Proposal.sol, 281
+	.loc ../contracts/dao/Proposal.sol, 261
 	PUSH S3
 	CTOS
 	DUP
@@ -1963,8 +1911,7 @@ PUSHCONT {
 	CTOS
 	BLESS
 	POP C3
-	.loc ../contracts/dao/Proposal.sol, 282
-	ENDC
+	.loc ../contracts/dao/Proposal.sol, 262
 	CALLREF {
 		CALL $:onCodeUpgrade$
 	}
@@ -2741,7 +2688,7 @@ IFJMPREF {
 	}
 }
 DUP
-PUSHINT 1781288325
+PUSHINT 1842827146
 LEQ
 IFJMPREF {
 	DUP
@@ -2832,7 +2779,7 @@ IFJMPREF {
 		}
 	}
 	DUP
-	PUSHINT 1781288325
+	PUSHINT 1842827146
 	LEQ
 	IFJMPREF {
 		DUP
@@ -2840,12 +2787,6 @@ IFJMPREF {
 		EQUAL
 		IFJMPREF {
 			CALL $executionTime$
-		}
-		DUP
-		PUSHINT 1727714341
-		EQUAL
-		IFJMPREF {
-			CALL $initialParams$
 		}
 		DUP
 		PUSHINT 1756716863
@@ -2859,18 +2800,18 @@ IFJMPREF {
 		IFJMPREF {
 			CALL $execute$
 		}
+		DUP
+		PUSHINT 1842827146
+		EQUAL
+		IFJMPREF {
+			CALL $endTime$
+		}
 	}
 }
 DUP
 PUSHINT 2092438896
 LEQ
 IFJMPREF {
-	DUP
-	PUSHINT 1842827146
-	EQUAL
-	IFJMPREF {
-		CALL $endTime$
-	}
 	DUP
 	PUSHINT 1860355842
 	EQUAL

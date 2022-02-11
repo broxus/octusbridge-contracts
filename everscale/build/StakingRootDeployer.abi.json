@@ -13,7 +13,6 @@
 		{
 			"name": "deploy",
 			"inputs": [
-				{"name":"stakingCode","type":"cell"},
 				{"name":"_admin","type":"address"},
 				{"name":"_dao_root","type":"address"},
 				{"name":"_rewarder","type":"address"},
@@ -29,7 +28,8 @@
 		}
 	],
 	"data": [
-		{"key":1,"name":"nonce","type":"uint256"}
+		{"key":1,"name":"nonce","type":"uint256"},
+		{"key":2,"name":"stakingCode","type":"cell"}
 	],
 	"events": [
 	],
@@ -37,6 +37,7 @@
 		{"name":"_pubkey","type":"uint256"},
 		{"name":"_timestamp","type":"uint64"},
 		{"name":"_constructorFlag","type":"bool"},
-		{"name":"nonce","type":"uint256"}
+		{"name":"nonce","type":"uint256"},
+		{"name":"stakingCode","type":"cell"}
 	]
 }

@@ -10,7 +10,19 @@ IFREF {
 GETGLOB 6
 THROWIF 51
 ENDS
-.loc ../contracts/staking/StakingRootDeployer.sol, 9
+.loc ../contracts/staking/StakingRootDeployer.sol, 12
+GETGLOB 2
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+EQUAL
+THROWIFNOT 101
+.loc ../contracts/staking/StakingRootDeployer.sol, 13
 ACCEPT
 .loc ../contracts/staking/StakingRootDeployer.sol, 0
 CALLREF {
@@ -27,18 +39,14 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/staking/StakingRootDeployer.sol, 12
+.loc ../contracts/staking/StakingRootDeployer.sol, 16
 OVER
 PUSHCONT {
-	LDREF
 	LDREF
 	ENDS
 	CTOS
 }
-PUSHCONT {
-	LDREF
-}
-IFELSE
+IF
 LDMSGADDR
 LDREF
 ENDS
@@ -85,7 +93,7 @@ PUSHCONT {
 	STUR 98
 	SWAP
 	NEWC
-	STSLICECONST xfc7ea744
+	STSLICECONST xd753115d
 	STSLICE
 	STBREFR
 	ENDC
@@ -107,9 +115,9 @@ THROW 0
 CALL $deploy_internal_macro$
 
 .macro deploy_internal_macro
-.loc ../contracts/staking/StakingRootDeployer.sol, 23
+.loc ../contracts/staking/StakingRootDeployer.sol, 26
 ACCEPT
-.loc ../contracts/staking/StakingRootDeployer.sol, 24
+.loc ../contracts/staking/StakingRootDeployer.sol, 27
 REVERSE 8, 0
 GETGLOB 2
 NEWC
@@ -133,7 +141,7 @@ DICTUSET
 NEWC
 STDICT
 ENDC
-ROLL 8
+GETGLOB 11
 NEWC
 STSLICECONST x2_
 STOPTREF
@@ -148,18 +156,11 @@ STU 256
 ENDC
 CTOS
 ROLLREV 8
-GETPARAM 7
-FIRST
-PUSHINT 1000000000
-SUB
-UFITS 128
-PUSH S9
+PUSH S8
 NEWC
 STSLICECONST x62_
 STSLICE
-SWAP
-STGRAMS
-PUSHSLICE x000000000000000000000000007_
+PUSHSLICE x0000000000000000000000000007_
 STSLICER
 OVER
 CALLREF {
@@ -216,7 +217,7 @@ STBREFR
 STBREFR
 STBREFR
 ENDC
-PUSHINT 0
+PUSHINT 128
 SENDRAWMSG
 .loc ../contracts/staking/StakingRootDeployer.sol, 0
 
@@ -228,7 +229,9 @@ LDU 64 ; pubkey timestamp c4
 LDU 1 ; ctor flag
 NIP
 LDU 256
+LDREF
 ENDS
+SETGLOB 11
 SETGLOB 10
 SETGLOB 3
 SETGLOB 2
@@ -254,6 +257,16 @@ PUSHCONT {
 		PUSHINT 0
 	}
 	IFELSE
+	PUSHINT 2
+	PUSH S2
+	PUSHINT 64
+	DICTUGETREF
+	PUSHCONT {
+		PUSHREF {
+		}
+	}
+	IFNOT
+	SETGLOB 11
 	SETGLOB 10
 	PUSHINT 64
 	DICTUGET
@@ -268,6 +281,7 @@ IFREFELSE {
 }
 
 .macro c7_to_c4
+GETGLOB 11
 GETGLOB 10
 GETGLOB 3
 GETGLOB 2
@@ -276,6 +290,7 @@ STU 256
 STU 64
 STONE
 STU 256
+STREF
 ENDC
 POPROOT
 
@@ -346,6 +361,8 @@ PUSHCONT {
 	HASHSU ; signatureSlice msgSlice hashMsgSlice
 	ROT
 	GETGLOB 2
+	DUP
+	SETGLOB 5
 	CHKSIGNU ; msgSlice isSigned
 	THROWIFNOT 40
 }
@@ -362,15 +379,15 @@ THROW 60
 
 .macro public_function_selector
 DUP
+PUSHINT 1465061725
+EQUAL
+IFJMPREF {
+	CALL $deploy$
+}
+DUP
 PUSHINT 1756716863
 EQUAL
 IFJMPREF {
 	CALL $constructor$
-}
-DUP
-PUSHINT 2088675140
-EQUAL
-IFJMPREF {
-	CALL $deploy$
 }
 

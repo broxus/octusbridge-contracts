@@ -146,20 +146,6 @@
 			]
 		},
 		{
-			"name": "initialParams",
-			"inputs": [
-				{"name":"stakingRoot_","type":"address"},
-				{"name":"proposer_","type":"address"},
-				{"name":"description_","type":"string"},
-				{"components":[{"name":"value","type":"uint128"},{"name":"target","type":"address"},{"name":"payload","type":"cell"}],"name":"tonActions_","type":"tuple[]"},
-				{"components":[{"name":"value","type":"uint256"},{"name":"chainId","type":"uint32"},{"name":"target","type":"uint160"},{"name":"signature","type":"string"},{"name":"callData","type":"bytes"}],"name":"ethActions_","type":"tuple[]"},
-				{"components":[{"name":"votingDelay","type":"uint32"},{"name":"votingPeriod","type":"uint32"},{"name":"quorumVotes","type":"uint128"},{"name":"timeLock","type":"uint32"},{"name":"threshold","type":"uint128"},{"name":"gracePeriod","type":"uint32"}],"name":"config_","type":"tuple"},
-				{"name":"proposalVersion_","type":"uint16"}
-			],
-			"outputs": [
-			]
-		},
-		{
 			"name": "requestUpgrade",
 			"inputs": [
 				{"name":"sendGasTo","type":"address"}

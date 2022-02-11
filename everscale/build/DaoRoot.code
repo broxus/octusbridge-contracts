@@ -998,29 +998,30 @@ STU 32
 ENDC
 PUSHINT 1
 SENDRAWMSG
-.loc ../contracts/dao/DaoRoot.sol, 166
+.loc ../contracts/dao/DaoRoot.sol, 165
+GETGLOB 19
+GETGLOB 16
+ROLL 3
+BLKSWAP 2, 3
+PUSH S5
 GETGLOB 12
 NEWC
 STSLICE
-.loc ../contracts/dao/DaoRoot.sol, 167
-PUXC S4, S-1
+ROLLREV 6
+NEWC
 STSLICE
-.loc ../contracts/dao/DaoRoot.sol, 168
 STREF
-.loc ../contracts/dao/DaoRoot.sol, 169
-ROT
-UNPAIR
-XCHG S2
-STU 32
-STDICT
-.loc ../contracts/dao/DaoRoot.sol, 170
 SWAP
 UNPAIR
 XCHG S2
 STU 32
 STDICT
-.loc ../contracts/dao/DaoRoot.sol, 171
-GETGLOB 16
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
 UNTUPLE 6
 REVERSE 7, 0
 STU 32
@@ -1028,13 +1029,14 @@ STU 32
 STU 128
 STU 32
 STU 128
+ROTREV
+NEWC
 STU 32
-.loc ../contracts/dao/DaoRoot.sol, 172
-GETGLOB 19
-SWAP
 STU 16
-.loc ../contracts/dao/DaoRoot.sol, 173
+STBREFR
+STBREFR
 ENDC
+.loc ../contracts/dao/DaoRoot.sol, 171
 GETGLOB 17
 GETGLOB 15
 CALLREF {
@@ -1048,7 +1050,7 @@ STU 256
 NEWC
 STSLICECONST x62_
 STB
-PUSHSLICE x502540be400000000000000000000000000007_
+PUSHSLICE x0000000000000000000000000007_
 STSLICER
 OVER
 CALLREF {
@@ -1096,7 +1098,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/dao/DaoRoot.sol, 180
+.loc ../contracts/dao/DaoRoot.sol, 178
 OVER
 PUSHCONT {
 	LDU 32
@@ -1135,7 +1137,7 @@ THROW 0
 CALL $onProposalSucceeded_internal_macro$
 
 .macro onProposalSucceeded_internal_macro
-.loc ../contracts/dao/DaoRoot.sol, 180
+.loc ../contracts/dao/DaoRoot.sol, 178
 GETGLOB 9
 PUSH S4
 .loc ../contracts/dao/DaoRoot.sol, 64
@@ -1144,7 +1146,7 @@ CALLREF {
 }
 SDEQ
 THROWIFNOT 105
-.loc ../contracts/dao/DaoRoot.sol, 186
+.loc ../contracts/dao/DaoRoot.sol, 184
 GETPARAM 7
 FIRST
 DEPTH
@@ -1154,12 +1156,12 @@ SUB
 UFITS 128
 PUSHINT 2
 RAWRESERVE
-.loc ../contracts/dao/DaoRoot.sol, 187
+.loc ../contracts/dao/DaoRoot.sol, 185
 OVER
 FIRST
 GTINT 0
 PUSHCONT {
-	.loc ../contracts/dao/DaoRoot.sol, 188
+	.loc ../contracts/dao/DaoRoot.sol, 186
 	PUSH2 S1, S3
 	PUSHSLICE xc00000000000000000000000007e7c50fb
 	NEWC
@@ -1173,7 +1175,7 @@ PUSHCONT {
 	ENDC
 	PUSHINT 0
 	SENDRAWMSG
-	.loc ../contracts/dao/DaoRoot.sol, 189
+	.loc ../contracts/dao/DaoRoot.sol, 187
 	PUSHINT 0
 	PUSHCONT {
 		PUSH2 S0, S2
@@ -1181,7 +1183,7 @@ PUSHCONT {
 		LESS
 	}
 	PUSHCONT {
-		.loc ../contracts/dao/DaoRoot.sol, 190
+		.loc ../contracts/dao/DaoRoot.sol, 188
 		PUSH2 S0, S2
 		SECOND
 		PUSHINT 32
@@ -1194,7 +1196,7 @@ PUSHCONT {
 			ENDS
 			TRIPLE
 		}
-		.loc ../contracts/dao/DaoRoot.sol, 200
+		.loc ../contracts/dao/DaoRoot.sol, 198
 		DUP
 		FIRST
 		OVER
@@ -1212,7 +1214,7 @@ PUSHCONT {
 		ENDC
 		PUSHINT 1
 		SENDRAWMSG
-		.loc ../contracts/dao/DaoRoot.sol, 189
+		.loc ../contracts/dao/DaoRoot.sol, 187
 		INC
 		.loc ../contracts/dao/DaoRoot.sol, 0
 	}
@@ -1221,16 +1223,16 @@ PUSHCONT {
 	.loc ../contracts/dao/DaoRoot.sol, 0
 }
 IF
-.loc ../contracts/dao/DaoRoot.sol, 193
+.loc ../contracts/dao/DaoRoot.sol, 191
 DUP
 FIRST
 GTINT 0
 PUSHCONT {
-	.loc ../contracts/dao/DaoRoot.sol, 194
+	.loc ../contracts/dao/DaoRoot.sol, 192
 	PUSH S2
 	NEWDICT
 	PUSH S2
-	.loc ../contracts/dao/DaoRoot.sol, 210
+	.loc ../contracts/dao/DaoRoot.sol, 208
 	SECOND
 	PUSHINT 0
 	NULL
@@ -1254,10 +1256,10 @@ PUSHCONT {
 		NOT
 	}
 	PUSHCONT {
-		.loc ../contracts/dao/DaoRoot.sol, 211
+		.loc ../contracts/dao/DaoRoot.sol, 209
 		DUP
 		SECOND
-		.loc ../contracts/dao/DaoRoot.sol, 212
+		.loc ../contracts/dao/DaoRoot.sol, 210
 		OVER
 		FIRST
 		PUSH S2
@@ -1267,14 +1269,14 @@ PUSHCONT {
 		PUSH S4
 		INDEX 4
 		TUPLE 4
-		.loc ../contracts/dao/DaoRoot.sol, 218
+		.loc ../contracts/dao/DaoRoot.sol, 216
 		PUSH2 S1, S5
 		PUSHINT 32
 		DICTUGET
 		NULLSWAPIFNOT
 		NIP
 		PUSHCONT {
-			.loc ../contracts/dao/DaoRoot.sol, 219
+			.loc ../contracts/dao/DaoRoot.sol, 217
 			PUSH3 S1, S5, S1
 			OVER
 			PUSHINT 32
@@ -1311,7 +1313,7 @@ PUSHCONT {
 			SWAP
 		}
 		PUSHCONT {
-			.loc ../contracts/dao/DaoRoot.sol, 221
+			.loc ../contracts/dao/DaoRoot.sol, 219
 			DUP
 			PUSHINT 0
 			NEWDICT
@@ -1357,7 +1359,7 @@ PUSHCONT {
 	}
 	WHILE
 	BLKDROP 3
-	.loc ../contracts/dao/DaoRoot.sol, 224
+	.loc ../contracts/dao/DaoRoot.sol, 222
 	DUP
 	PUSHINT 32
 	DICTUMIN
@@ -1379,7 +1381,7 @@ PUSHCONT {
 		NOT
 	}
 	PUSHCONT {
-		.loc ../contracts/dao/DaoRoot.sol, 225
+		.loc ../contracts/dao/DaoRoot.sol, 223
 		PUSH S4
 		PARSEMSGADDR
 		THIRD
@@ -1391,12 +1393,12 @@ PUSHCONT {
 		CALLREF {
 			CALL $encodeDaoEthereumActionData_internal_macro$
 		}
-		.loc ../contracts/dao/DaoRoot.sol, 226
+		.loc ../contracts/dao/DaoRoot.sol, 224
 		LTIME
 		NOW
 		ROT
 		TRIPLE
-		.loc ../contracts/dao/DaoRoot.sol, 227
+		.loc ../contracts/dao/DaoRoot.sol, 225
 		GETGLOB 14
 		GETGLOB 13
 		FALSE
@@ -1442,7 +1444,7 @@ PUSHCONT {
 	.loc ../contracts/dao/DaoRoot.sol, 0
 }
 IF
-.loc ../contracts/dao/DaoRoot.sol, 196
+.loc ../contracts/dao/DaoRoot.sol, 194
 BLKDROP 4
 GETGLOB 9
 NEWC
@@ -1459,7 +1461,7 @@ SENDRAWMSG
 DROP
 GETGLOB 6
 THROWIFNOT 76
-.loc ../contracts/dao/DaoRoot.sol, 235
+.loc ../contracts/dao/DaoRoot.sol, 233
 LDU 32
 LDDICT
 ROTREV
@@ -1502,17 +1504,17 @@ THROW 0
 CALL $calcTonActionsValue_internal_macro$
 
 .macro calcTonActionsValue_internal_macro
-.loc ../contracts/dao/DaoRoot.sol, 236
+.loc ../contracts/dao/DaoRoot.sol, 234
 PUSHINT 0
 DUP
-.loc ../contracts/dao/DaoRoot.sol, 237
+.loc ../contracts/dao/DaoRoot.sol, 235
 PUSHCONT {
 	PUSH2 S0, S2
 	FIRST
 	LESS
 }
 PUSHCONT {
-	.loc ../contracts/dao/DaoRoot.sol, 238
+	.loc ../contracts/dao/DaoRoot.sol, 236
 	PUSH2 S0, S2
 	SECOND
 	PUSHINT 32
@@ -1533,7 +1535,7 @@ PUSHCONT {
 	ADD
 	UFITS 128
 	POP S2
-	.loc ../contracts/dao/DaoRoot.sol, 237
+	.loc ../contracts/dao/DaoRoot.sol, 235
 	INC
 	.loc ../contracts/dao/DaoRoot.sol, 0
 }
@@ -1551,7 +1553,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/dao/DaoRoot.sol, 242
+.loc ../contracts/dao/DaoRoot.sol, 240
 LDU 32
 LDDICT
 ROTREV
@@ -1594,11 +1596,11 @@ THROW 0
 CALL $calcEthActionsValue_internal_macro$
 
 .macro calcEthActionsValue_internal_macro
-.loc ../contracts/dao/DaoRoot.sol, 245
+.loc ../contracts/dao/DaoRoot.sol, 243
 PUSHINT 0
-.loc ../contracts/dao/DaoRoot.sol, 246
+.loc ../contracts/dao/DaoRoot.sol, 244
 NEWDICT
-.loc ../contracts/dao/DaoRoot.sol, 247
+.loc ../contracts/dao/DaoRoot.sol, 245
 PUSHINT 0
 PUSHCONT {
 	PUSH2 S0, S3
@@ -1606,7 +1608,7 @@ PUSHCONT {
 	LESS
 }
 PUSHCONT {
-	.loc ../contracts/dao/DaoRoot.sol, 248
+	.loc ../contracts/dao/DaoRoot.sol, 246
 	PUSH2 S0, S3
 	SECOND
 	PUSHINT 32
@@ -1622,20 +1624,20 @@ PUSHCONT {
 		TUPLE 5
 	}
 	SECOND
-	.loc ../contracts/dao/DaoRoot.sol, 249
+	.loc ../contracts/dao/DaoRoot.sol, 247
 	PUSH2 S0, S2
 	PUSHINT 32
 	DICTUGET
 	NULLSWAPIFNOT
 	NIP
 	PUSHCONT {
-		.loc ../contracts/dao/DaoRoot.sol, 250
+		.loc ../contracts/dao/DaoRoot.sol, 248
 		PUSH S3
 		GETGLOB 14
 		ADD
 		UFITS 128
 		POP S4
-		.loc ../contracts/dao/DaoRoot.sol, 251
+		.loc ../contracts/dao/DaoRoot.sol, 249
 		PUSH2 S0, S2
 		NEWC
 		STONE
@@ -1646,14 +1648,14 @@ PUSHCONT {
 		.loc ../contracts/dao/DaoRoot.sol, 0
 	}
 	IFNOT
-	.loc ../contracts/dao/DaoRoot.sol, 253
+	.loc ../contracts/dao/DaoRoot.sol, 251
 	DROP
 	PUSH S2
 	PUSHINT 500000000
 	ADD
 	UFITS 128
 	POP S3
-	.loc ../contracts/dao/DaoRoot.sol, 247
+	.loc ../contracts/dao/DaoRoot.sol, 245
 	INC
 	.loc ../contracts/dao/DaoRoot.sol, 0
 }
@@ -1667,13 +1669,13 @@ NIP
 CALL $buildProposalStateInit_internal_macro$
 
 .macro buildProposalStateInit_internal_macro
-.loc ../contracts/dao/DaoRoot.sol, 258
+.loc ../contracts/dao/DaoRoot.sol, 256
 PUSHINT 1
 SWAP
-.loc ../contracts/dao/DaoRoot.sol, 297
+.loc ../contracts/dao/DaoRoot.sol, 295
 NEWC
 STU 32
-.loc ../contracts/dao/DaoRoot.sol, 298
+.loc ../contracts/dao/DaoRoot.sol, 296
 ENDC
 .loc ../contracts/dao/DaoRoot.sol, 0
 CALLREF {
@@ -1685,7 +1687,7 @@ CALLREF {
 CALL $buildStakingAccountStateInit_internal_macro$
 
 .macro buildStakingAccountStateInit_internal_macro
-.loc ../contracts/dao/DaoRoot.sol, 262
+.loc ../contracts/dao/DaoRoot.sol, 260
 PUSHINT 0
 NEWC
 STU 256
@@ -1705,10 +1707,10 @@ ROT
 PUSHINT 64
 DICTUSETB
 SWAP
-.loc ../contracts/dao/DaoRoot.sol, 291
+.loc ../contracts/dao/DaoRoot.sol, 289
 NEWC
 STSLICE
-.loc ../contracts/dao/DaoRoot.sol, 292
+.loc ../contracts/dao/DaoRoot.sol, 290
 ENDC
 .loc ../contracts/dao/DaoRoot.sol, 0
 PUSHINT 3
@@ -1736,7 +1738,7 @@ ENDC
 CALL $_buildInitData_internal_macro$
 
 .macro _buildInitData_internal_macro
-.loc ../contracts/dao/DaoRoot.sol, 276
+.loc ../contracts/dao/DaoRoot.sol, 274
 PUSHINT 0
 NEWC
 STU 256
@@ -1787,7 +1789,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/dao/DaoRoot.sol, 301
+.loc ../contracts/dao/DaoRoot.sol, 299
 OVER
 PUSHCONT {
 	LDU 16
@@ -1825,7 +1827,7 @@ CALLREF {
 }
 SDEQ
 THROWIFNOT 105
-.loc ../contracts/dao/DaoRoot.sol, 306
+.loc ../contracts/dao/DaoRoot.sol, 304
 GETPARAM 7
 FIRST
 DEPTH
@@ -1835,12 +1837,12 @@ SUB
 UFITS 128
 PUSHINT 2
 RAWRESERVE
-.loc ../contracts/dao/DaoRoot.sol, 307
+.loc ../contracts/dao/DaoRoot.sol, 305
 SWAP
 GETGLOB 19
 EQUAL
 PUSHCONT {
-	.loc ../contracts/dao/DaoRoot.sol, 308
+	.loc ../contracts/dao/DaoRoot.sol, 306
 	DUP
 	NEWC
 	STSLICECONST x62_
@@ -1849,7 +1851,7 @@ PUSHCONT {
 	STZEROES
 }
 PUSHCONT {
-	.loc ../contracts/dao/DaoRoot.sol, 310
+	.loc ../contracts/dao/DaoRoot.sol, 308
 	DUP
 	GETGLOB 19
 	GETGLOB 17
@@ -1883,7 +1885,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/dao/DaoRoot.sol, 322
+.loc ../contracts/dao/DaoRoot.sol, 320
 OVER
 PUSHCONT {
 	LDREF
@@ -1920,7 +1922,7 @@ PUSHCONT {
 	.loc ../contracts/dao/DaoRoot.sol, 0
 }
 IFNOT
-.loc ../contracts/dao/DaoRoot.sol, 323
+.loc ../contracts/dao/DaoRoot.sol, 321
 DUP
 GETGLOB 12
 PUSHSLICE xc0000000000000000000000001
@@ -1938,9 +1940,9 @@ STBREFR
 ENDC
 PUSHINT 0
 SENDRAWMSG
-.loc ../contracts/dao/DaoRoot.sol, 324
+.loc ../contracts/dao/DaoRoot.sol, 322
 SETGLOB 12
-.loc ../contracts/dao/DaoRoot.sol, 325
+.loc ../contracts/dao/DaoRoot.sol, 323
 GETGLOB 20
 NEWC
 STSLICECONST x62_
@@ -1961,7 +1963,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/dao/DaoRoot.sol, 328
+.loc ../contracts/dao/DaoRoot.sol, 326
 OVER
 PUSHCONT {
 	LDREF
@@ -1998,7 +2000,7 @@ PUSHCONT {
 	.loc ../contracts/dao/DaoRoot.sol, 0
 }
 IFNOT
-.loc ../contracts/dao/DaoRoot.sol, 329
+.loc ../contracts/dao/DaoRoot.sol, 327
 DUP
 GETGLOB 20
 PUSHSLICE xc0000000000000000000000001
@@ -2016,9 +2018,9 @@ STBREFR
 ENDC
 PUSHINT 0
 SENDRAWMSG
-.loc ../contracts/dao/DaoRoot.sol, 330
+.loc ../contracts/dao/DaoRoot.sol, 328
 SETGLOB 21
-.loc ../contracts/dao/DaoRoot.sol, 331
+.loc ../contracts/dao/DaoRoot.sol, 329
 GETGLOB 20
 NEWC
 STSLICECONST x62_
@@ -2039,7 +2041,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/dao/DaoRoot.sol, 334
+.loc ../contracts/dao/DaoRoot.sol, 332
 ENDS
 .loc ../contracts/dao/DaoRoot.sol, 0
 CALLREF {
@@ -2056,7 +2058,7 @@ THROW 0
 CALL $acceptAdmin_internal_macro$
 
 .macro acceptAdmin_internal_macro
-.loc ../contracts/dao/DaoRoot.sol, 335
+.loc ../contracts/dao/DaoRoot.sol, 333
 GETGLOB 21
 PARSEMSGADDR
 INDEX 3
@@ -2067,7 +2069,7 @@ GETGLOB 21
 SDEQ
 AND
 THROWIFNOT 102
-.loc ../contracts/dao/DaoRoot.sol, 336
+.loc ../contracts/dao/DaoRoot.sol, 334
 GETGLOB 21
 GETGLOB 20
 PUSHSLICE xc0000000000000000000000001
@@ -2085,15 +2087,15 @@ STBREFR
 ENDC
 PUSHINT 0
 SENDRAWMSG
-.loc ../contracts/dao/DaoRoot.sol, 337
+.loc ../contracts/dao/DaoRoot.sol, 335
 GETGLOB 21
 SETGLOB 20
-.loc ../contracts/dao/DaoRoot.sol, 338
+.loc ../contracts/dao/DaoRoot.sol, 336
 PUSHREFSLICE {
 	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
 }
 SETGLOB 21
-.loc ../contracts/dao/DaoRoot.sol, 339
+.loc ../contracts/dao/DaoRoot.sol, 337
 GETGLOB 20
 NEWC
 STSLICECONST x62_
@@ -2114,7 +2116,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/dao/DaoRoot.sol, 342
+.loc ../contracts/dao/DaoRoot.sol, 340
 OVER
 PUSHCONT {
 	LDREF
@@ -2152,7 +2154,7 @@ PUSHCONT {
 	.loc ../contracts/dao/DaoRoot.sol, 0
 }
 IFNOT
-.loc ../contracts/dao/DaoRoot.sol, 346
+.loc ../contracts/dao/DaoRoot.sol, 344
 DUP
 GETGLOB 14
 PUSH S3
@@ -2174,12 +2176,12 @@ STBREFR
 ENDC
 PUSHINT 0
 SENDRAWMSG
-.loc ../contracts/dao/DaoRoot.sol, 352
+.loc ../contracts/dao/DaoRoot.sol, 350
 SWAP
 SETGLOB 13
-.loc ../contracts/dao/DaoRoot.sol, 353
+.loc ../contracts/dao/DaoRoot.sol, 351
 SETGLOB 14
-.loc ../contracts/dao/DaoRoot.sol, 354
+.loc ../contracts/dao/DaoRoot.sol, 352
 GETGLOB 20
 NEWC
 STSLICECONST x62_
@@ -2200,7 +2202,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/dao/DaoRoot.sol, 357
+.loc ../contracts/dao/DaoRoot.sol, 355
 LDREF
 ENDS
 .loc ../contracts/dao/DaoRoot.sol, 0
@@ -2230,15 +2232,15 @@ PUSHCONT {
 	.loc ../contracts/dao/DaoRoot.sol, 0
 }
 IFNOT
-.loc ../contracts/dao/DaoRoot.sol, 358
+.loc ../contracts/dao/DaoRoot.sol, 356
 SETGLOB 17
-.loc ../contracts/dao/DaoRoot.sol, 359
+.loc ../contracts/dao/DaoRoot.sol, 357
 GETGLOB 19
 INC
 UFITS 16
 DUP
 SETGLOB 19
-.loc ../contracts/dao/DaoRoot.sol, 360
+.loc ../contracts/dao/DaoRoot.sol, 358
 PUSHSLICE xc00000000000000000000000005726404d
 NEWC
 STSLICE
@@ -2246,7 +2248,7 @@ STU 16
 ENDC
 PUSHINT 0
 SENDRAWMSG
-.loc ../contracts/dao/DaoRoot.sol, 361
+.loc ../contracts/dao/DaoRoot.sol, 359
 GETGLOB 20
 NEWC
 STSLICECONST x62_
@@ -2267,7 +2269,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/dao/DaoRoot.sol, 364
+.loc ../contracts/dao/DaoRoot.sol, 362
 LDU 128
 ENDS
 .loc ../contracts/dao/DaoRoot.sol, 0
@@ -2297,7 +2299,7 @@ PUSHCONT {
 	.loc ../contracts/dao/DaoRoot.sol, 0
 }
 IFNOT
-.loc ../contracts/dao/DaoRoot.sol, 365
+.loc ../contracts/dao/DaoRoot.sol, 363
 DUP
 PUSHINT 50000000000000
 GEQ
@@ -2306,7 +2308,7 @@ PUSHINT 7000000000000000
 LEQ
 AND
 THROWIFNOT 124
-.loc ../contracts/dao/DaoRoot.sol, 369
+.loc ../contracts/dao/DaoRoot.sol, 367
 DUP
 GETGLOB 16
 THIRD
@@ -2318,12 +2320,12 @@ STU 128
 ENDC
 PUSHINT 0
 SENDRAWMSG
-.loc ../contracts/dao/DaoRoot.sol, 370
+.loc ../contracts/dao/DaoRoot.sol, 368
 GETGLOB 16
 SWAP
 SETINDEX 2
 SETGLOB 16
-.loc ../contracts/dao/DaoRoot.sol, 371
+.loc ../contracts/dao/DaoRoot.sol, 369
 GETGLOB 20
 NEWC
 STSLICECONST x62_
@@ -2344,7 +2346,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/dao/DaoRoot.sol, 374
+.loc ../contracts/dao/DaoRoot.sol, 372
 LDU 128
 ENDS
 .loc ../contracts/dao/DaoRoot.sol, 0
@@ -2374,7 +2376,7 @@ PUSHCONT {
 	.loc ../contracts/dao/DaoRoot.sol, 0
 }
 IFNOT
-.loc ../contracts/dao/DaoRoot.sol, 375
+.loc ../contracts/dao/DaoRoot.sol, 373
 DUP
 PUSHINT 10000000000000
 GEQ
@@ -2383,7 +2385,7 @@ PUSHINT 7000000000000000
 LEQ
 AND
 THROWIFNOT 123
-.loc ../contracts/dao/DaoRoot.sol, 379
+.loc ../contracts/dao/DaoRoot.sol, 377
 DUP
 GETGLOB 16
 INDEX 4
@@ -2395,12 +2397,12 @@ STU 128
 ENDC
 PUSHINT 0
 SENDRAWMSG
-.loc ../contracts/dao/DaoRoot.sol, 380
+.loc ../contracts/dao/DaoRoot.sol, 378
 GETGLOB 16
 SWAP
 SETINDEX 4
 SETGLOB 16
-.loc ../contracts/dao/DaoRoot.sol, 381
+.loc ../contracts/dao/DaoRoot.sol, 379
 GETGLOB 20
 NEWC
 STSLICECONST x62_
@@ -2421,7 +2423,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/dao/DaoRoot.sol, 384
+.loc ../contracts/dao/DaoRoot.sol, 382
 LDU 32
 ENDS
 .loc ../contracts/dao/DaoRoot.sol, 0
@@ -2451,7 +2453,7 @@ PUSHCONT {
 	.loc ../contracts/dao/DaoRoot.sol, 0
 }
 IFNOT
-.loc ../contracts/dao/DaoRoot.sol, 385
+.loc ../contracts/dao/DaoRoot.sol, 383
 DUP
 PUSHINT 86400
 GEQ
@@ -2460,7 +2462,7 @@ PUSHINT 2592000
 LEQ
 AND
 THROWIFNOT 122
-.loc ../contracts/dao/DaoRoot.sol, 389
+.loc ../contracts/dao/DaoRoot.sol, 387
 DUP
 GETGLOB 16
 INDEX 3
@@ -2472,12 +2474,12 @@ STU 32
 ENDC
 PUSHINT 0
 SENDRAWMSG
-.loc ../contracts/dao/DaoRoot.sol, 390
+.loc ../contracts/dao/DaoRoot.sol, 388
 GETGLOB 16
 SWAP
 SETINDEX 3
 SETGLOB 16
-.loc ../contracts/dao/DaoRoot.sol, 391
+.loc ../contracts/dao/DaoRoot.sol, 389
 GETGLOB 20
 NEWC
 STSLICECONST x62_
@@ -2498,7 +2500,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/dao/DaoRoot.sol, 394
+.loc ../contracts/dao/DaoRoot.sol, 392
 LDU 32
 ENDS
 .loc ../contracts/dao/DaoRoot.sol, 0
@@ -2528,7 +2530,7 @@ PUSHCONT {
 	.loc ../contracts/dao/DaoRoot.sol, 0
 }
 IFNOT
-.loc ../contracts/dao/DaoRoot.sol, 395
+.loc ../contracts/dao/DaoRoot.sol, 393
 DUP
 PUSHINT 86400
 GEQ
@@ -2537,7 +2539,7 @@ PUSHINT 2592000
 LEQ
 AND
 THROWIFNOT 120
-.loc ../contracts/dao/DaoRoot.sol, 399
+.loc ../contracts/dao/DaoRoot.sol, 397
 DUP
 GETGLOB 16
 SECOND
@@ -2549,12 +2551,12 @@ STU 32
 ENDC
 PUSHINT 0
 SENDRAWMSG
-.loc ../contracts/dao/DaoRoot.sol, 400
+.loc ../contracts/dao/DaoRoot.sol, 398
 GETGLOB 16
 SWAP
 SETINDEX 1
 SETGLOB 16
-.loc ../contracts/dao/DaoRoot.sol, 401
+.loc ../contracts/dao/DaoRoot.sol, 399
 GETGLOB 20
 NEWC
 STSLICECONST x62_
@@ -2575,7 +2577,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/dao/DaoRoot.sol, 404
+.loc ../contracts/dao/DaoRoot.sol, 402
 LDU 32
 ENDS
 .loc ../contracts/dao/DaoRoot.sol, 0
@@ -2605,7 +2607,7 @@ PUSHCONT {
 	.loc ../contracts/dao/DaoRoot.sol, 0
 }
 IFNOT
-.loc ../contracts/dao/DaoRoot.sol, 405
+.loc ../contracts/dao/DaoRoot.sol, 403
 DUP
 PUSHINT 86400
 GEQ
@@ -2614,7 +2616,7 @@ PUSHINT 2592000
 LEQ
 AND
 THROWIFNOT 121
-.loc ../contracts/dao/DaoRoot.sol, 409
+.loc ../contracts/dao/DaoRoot.sol, 407
 DUP
 GETGLOB 16
 FIRST
@@ -2626,12 +2628,12 @@ STU 32
 ENDC
 PUSHINT 0
 SENDRAWMSG
-.loc ../contracts/dao/DaoRoot.sol, 410
+.loc ../contracts/dao/DaoRoot.sol, 408
 GETGLOB 16
 SWAP
 SETINDEX 0
 SETGLOB 16
-.loc ../contracts/dao/DaoRoot.sol, 411
+.loc ../contracts/dao/DaoRoot.sol, 409
 GETGLOB 20
 NEWC
 STSLICECONST x62_
@@ -2652,7 +2654,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/dao/DaoRoot.sol, 414
+.loc ../contracts/dao/DaoRoot.sol, 412
 LDU 32
 ENDS
 .loc ../contracts/dao/DaoRoot.sol, 0
@@ -2682,7 +2684,7 @@ PUSHCONT {
 	.loc ../contracts/dao/DaoRoot.sol, 0
 }
 IFNOT
-.loc ../contracts/dao/DaoRoot.sol, 415
+.loc ../contracts/dao/DaoRoot.sol, 413
 DUP
 PUSHINT 86400
 GEQ
@@ -2691,7 +2693,7 @@ PUSHINT 2592000
 LEQ
 AND
 THROWIFNOT 125
-.loc ../contracts/dao/DaoRoot.sol, 419
+.loc ../contracts/dao/DaoRoot.sol, 417
 DUP
 GETGLOB 16
 INDEX 5
@@ -2703,12 +2705,12 @@ STU 32
 ENDC
 PUSHINT 0
 SENDRAWMSG
-.loc ../contracts/dao/DaoRoot.sol, 420
+.loc ../contracts/dao/DaoRoot.sol, 418
 GETGLOB 16
 SWAP
 SETINDEX 5
 SETGLOB 16
-.loc ../contracts/dao/DaoRoot.sol, 421
+.loc ../contracts/dao/DaoRoot.sol, 419
 GETGLOB 20
 NEWC
 STSLICECONST x62_
@@ -2729,7 +2731,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/dao/DaoRoot.sol, 424
+.loc ../contracts/dao/DaoRoot.sol, 422
 LDU 32
 LDU 32
 LDU 128
@@ -2767,9 +2769,9 @@ PUSHCONT {
 	.loc ../contracts/dao/DaoRoot.sol, 0
 }
 IFNOT
-.loc ../contracts/dao/DaoRoot.sol, 425
+.loc ../contracts/dao/DaoRoot.sol, 423
 BLKPUSH 2, 0
-.loc ../contracts/dao/DaoRoot.sol, 432
+.loc ../contracts/dao/DaoRoot.sol, 430
 SECOND
 PUSHINT 86400
 GEQ
@@ -2779,7 +2781,7 @@ PUSHINT 2592000
 LEQ
 AND
 THROWIFNOT 120
-.loc ../contracts/dao/DaoRoot.sol, 436
+.loc ../contracts/dao/DaoRoot.sol, 434
 DUP
 FIRST
 PUSHINT 86400
@@ -2790,7 +2792,7 @@ PUSHINT 2592000
 LEQ
 AND
 THROWIFNOT 121
-.loc ../contracts/dao/DaoRoot.sol, 440
+.loc ../contracts/dao/DaoRoot.sol, 438
 DUP
 INDEX 3
 PUSHINT 86400
@@ -2801,7 +2803,7 @@ PUSHINT 2592000
 LEQ
 AND
 THROWIFNOT 122
-.loc ../contracts/dao/DaoRoot.sol, 444
+.loc ../contracts/dao/DaoRoot.sol, 442
 DUP
 INDEX 4
 PUSHINT 10000000000000
@@ -2812,7 +2814,7 @@ PUSHINT 7000000000000000
 LEQ
 AND
 THROWIFNOT 123
-.loc ../contracts/dao/DaoRoot.sol, 448
+.loc ../contracts/dao/DaoRoot.sol, 446
 DUP
 THIRD
 PUSHINT 50000000000000
@@ -2823,7 +2825,7 @@ PUSHINT 7000000000000000
 LEQ
 AND
 THROWIFNOT 124
-.loc ../contracts/dao/DaoRoot.sol, 452
+.loc ../contracts/dao/DaoRoot.sol, 450
 DUP
 INDEX 5
 PUSHINT 86400
@@ -2834,7 +2836,7 @@ PUSHINT 2592000
 LEQ
 AND
 THROWIFNOT 125
-.loc ../contracts/dao/DaoRoot.sol, 426
+.loc ../contracts/dao/DaoRoot.sol, 424
 DUP
 GETGLOB 16
 PUSHSLICE xc00000000000000000000000002a14fc86
@@ -2861,9 +2863,9 @@ STU 32
 ENDC
 PUSHINT 0
 SENDRAWMSG
-.loc ../contracts/dao/DaoRoot.sol, 427
+.loc ../contracts/dao/DaoRoot.sol, 425
 SETGLOB 16
-.loc ../contracts/dao/DaoRoot.sol, 428
+.loc ../contracts/dao/DaoRoot.sol, 426
 GETGLOB 20
 NEWC
 STSLICECONST x62_
@@ -2884,7 +2886,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/dao/DaoRoot.sol, 458
+.loc ../contracts/dao/DaoRoot.sol, 456
 OVER
 PUSHCONT {
 	LDREF
@@ -2922,7 +2924,7 @@ PUSHCONT {
 	.loc ../contracts/dao/DaoRoot.sol, 0
 }
 IFNOT
-.loc ../contracts/dao/DaoRoot.sol, 459
+.loc ../contracts/dao/DaoRoot.sol, 457
 OVER
 GETGLOB 10
 PUSHINT 267
@@ -2934,11 +2936,11 @@ PUSHCONT {
 	PAIR
 }
 IF
-.loc ../contracts/dao/DaoRoot.sol, 460
+.loc ../contracts/dao/DaoRoot.sol, 458
 DUP
 ISNULL
 PUSHCONT {
-	.loc ../contracts/dao/DaoRoot.sol, 465
+	.loc ../contracts/dao/DaoRoot.sol, 463
 	OVER
 	PUSHINT 0
 	NEWDICT
@@ -2958,11 +2960,11 @@ PUSHCONT {
 	PAIR
 }
 PUSHCONT {
-	.loc ../contracts/dao/DaoRoot.sol, 461
+	.loc ../contracts/dao/DaoRoot.sol, 459
 	BLKPUSH 2, 0
 	ISNULL
 	THROWIF 63
-	.loc ../contracts/dao/DaoRoot.sol, 462
+	.loc ../contracts/dao/DaoRoot.sol, 460
 	PUSH S2
 	NEWC
 	STU 256
@@ -2974,7 +2976,7 @@ PUSHCONT {
 	PUSHINT 32
 	DICTUSETB
 	PAIR
-	.loc ../contracts/dao/DaoRoot.sol, 463
+	.loc ../contracts/dao/DaoRoot.sol, 461
 }
 IFELSE
 PUSH S3
@@ -3001,7 +3003,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/dao/DaoRoot.sol, 469
+.loc ../contracts/dao/DaoRoot.sol, 467
 LDREF
 ENDS
 .loc ../contracts/dao/DaoRoot.sol, 0
@@ -3031,14 +3033,14 @@ PUSHCONT {
 	.loc ../contracts/dao/DaoRoot.sol, 0
 }
 IFNOT
-.loc ../contracts/dao/DaoRoot.sol, 470
+.loc ../contracts/dao/DaoRoot.sol, 468
 DEPTH
 ADDCONST -2
 PICK
 PUSHINT 2000000000
 GREATER
 THROWIFNOT 130
-.loc ../contracts/dao/DaoRoot.sol, 471
+.loc ../contracts/dao/DaoRoot.sol, 469
 GETPARAM 7
 FIRST
 DEPTH
@@ -3048,65 +3050,61 @@ SUB
 UFITS 128
 PUSHINT 2
 RAWRESERVE
-.loc ../contracts/dao/DaoRoot.sol, 473
+.loc ../contracts/dao/DaoRoot.sol, 471
 PUSHREF {
 	.blob xc00000000000000000000000005c131a68
 }
 PUSHINT 0
 SENDRAWMSG
-.loc ../contracts/dao/DaoRoot.sol, 475
-NEWC
-.loc ../contracts/dao/DaoRoot.sol, 477
+.loc ../contracts/dao/DaoRoot.sol, 473
+GETGLOB 10
+GETGLOB 18
+GETGLOB 17
+GETGLOB 16
+GETGLOB 19
+GETGLOB 15
+GETGLOB 14
+GETGLOB 13
+GETGLOB 12
+GETGLOB 21
 GETGLOB 20
 NEWC
 STSLICE
-.loc ../contracts/dao/DaoRoot.sol, 478
-GETGLOB 21
-SWAP
+ROLLREV 10
+NEWC
 STSLICE
-.loc ../contracts/dao/DaoRoot.sol, 480
-GETGLOB 12
-PUSH S2
+ROLLREV 9
+NEWC
 STSLICE
-POP S2
-.loc ../contracts/dao/DaoRoot.sol, 482
-GETGLOB 15
-PUSH S2
+ROLLREV 8
+NEWC
+STSLICE
+STU 128
 STU 32
-POP S2
-.loc ../contracts/dao/DaoRoot.sol, 483
-GETGLOB 19
-PUSH S2
 STU 16
-POP S2
-.loc ../contracts/dao/DaoRoot.sol, 484
-OVER
-GETGLOB 16
+SWAP
 UNTUPLE 6
 REVERSE 7, 0
 STU 32
 STU 32
 STU 128
 STU 32
+ROLLREV 5
+NEWC
 STU 128
 STU 32
-POP S2
-.loc ../contracts/dao/DaoRoot.sol, 486
+STREF
+STREF
+STDICT
+STBREFR
+STBREFR
+STBREFR
+STBREFR
 ENDC
-SWAP
-STREF
-.loc ../contracts/dao/DaoRoot.sol, 487
-GETGLOB 17
-SWAP
-STREF
-.loc ../contracts/dao/DaoRoot.sol, 488
-GETGLOB 18
-SWAP
-STREF
-.loc ../contracts/dao/DaoRoot.sol, 490
+.loc ../contracts/dao/DaoRoot.sol, 481
 OVER
 SETCODE
-.loc ../contracts/dao/DaoRoot.sol, 491
+.loc ../contracts/dao/DaoRoot.sol, 482
 SWAP
 CTOS
 DUP
@@ -3121,8 +3119,7 @@ PLDREF
 CTOS
 BLESS
 POP C3
-.loc ../contracts/dao/DaoRoot.sol, 493
-ENDC
+.loc ../contracts/dao/DaoRoot.sol, 484
 CALLREF {
 	CALL $:onCodeUpgrade$
 }

@@ -4,13 +4,16 @@ import "./Staking.sol";
 
 contract StakingRootDeployer {
     uint256 static nonce;
+    TvmCell static stakingCode;
+
+    uint8 constant WRONG_PUBKEY = 101;
 
     constructor() public {
+        require (tvm.pubkey() == msg.pubkey(), WRONG_PUBKEY);
         tvm.accept();
     }
 
     function deploy(
-        TvmCell stakingCode,
         address _admin,
         address _dao_root,
         address _rewarder,
@@ -31,8 +34,8 @@ contract StakingRootDeployer {
                     deployer: address(this)
                 }
             }),
-            value: address(this).balance - 1 ton,
-            flag: 0
+            value: 0,
+            flag: 128
         }(_admin, _dao_root, _rewarder, _rescuer, _bridge_event_config_eth_ton, _bridge_event_config_ton_eth, _tokenRoot);
     }
 }
