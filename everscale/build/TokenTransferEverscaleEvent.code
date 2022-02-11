@@ -19,24 +19,26 @@ IF
 LDMSGADDR
 LDREF
 ENDS
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 26
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 29
+PUSHINT 2313
 GETGLOB 19
+SECOND
 GETGLOB 9
-SETINDEX 1
-SETGLOB 19
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 28
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 31
 PUSHINT 0
 SETGLOB 10
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 29
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 32
 SWAP
 SETGLOB 12
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 30
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 33
 SETGLOB 13
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 31
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 34
 CALLREF {
 	CALL $onInit_internal_macro$
 }
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 32
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 35
 CALLREF {
 	CALL $loadRelays_internal_macro$
 }
@@ -580,7 +582,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 35
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 38
 LDU 32
 GETGLOB 4
 ROT
@@ -682,7 +684,7 @@ THROW 0
 CALL $getEventInitData_internal_macro$
 
 .macro getEventInitData_internal_macro
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 36
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 39
 GETGLOB 4
 PUSHINT 0
 SETINDEXQ 2
@@ -718,7 +720,7 @@ CALL $EverscaleBaseEvent_onReject_macro$
 CALL $getStakingAddress_internal_macro$
 
 .macro getStakingAddress_internal_macro
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 44
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 47
 GETGLOB 19
 THIRD
 .loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 0
@@ -728,7 +730,7 @@ THIRD
 CALL $isExternalVoteCall_internal_macro$
 
 .macro isExternalVoteCall_internal_macro
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 48
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 51
 DUP
 PUSHINT 1447845380
 EQUAL
@@ -747,7 +749,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 58
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 61
 OVER
 PUSHCONT {
 	LDREF
@@ -776,11 +778,11 @@ THROW 0
 CALL $confirm_internal_macro$
 
 .macro confirm_internal_macro
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 59
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 62
 CALLREF {
 	CALL $_checkVoteReceiver_internal_macro$
 }
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 61
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 64
 GETGLOB 5
 DUP
 ISNULL
@@ -789,7 +791,7 @@ PUSHCONT {
 	PUSHINT 0
 }
 IF
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 63
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 66
 PUSHINT 2318
 OVER
 GETGLOB 11
@@ -804,9 +806,9 @@ PUSHCONT {
 IFELSE
 EQINT 1
 THROWANYIFNOT
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 65
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 68
 ACCEPT
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 67
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 70
 DUP
 GETGLOB 11
 NEWC
@@ -815,13 +817,13 @@ ROTREV
 PUSHINT 256
 DICTUSETB
 SETGLOB 11
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 68
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 71
 DUP2
 GETGLOB 20
 PUSHINT 256
 DICTUSETREF
 SETGLOB 20
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 70
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 73
 PUSHSLICE xc000000000000000000000000039509bd2
 NEWC
 STSLICE
@@ -830,24 +832,24 @@ STREF
 ENDC
 PUSHINT 0
 SENDRAWMSG
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 71
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 74
 GETGLOB 15
 INC
 UFITS 16
 SETGLOB 15
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 74
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 77
 GETGLOB 10
 NEQINT 1
 IFRET
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 78
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 81
 GETGLOB 15
 GETGLOB 14
 GEQ
 PUSHCONT {
-	.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 79
+	.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 82
 	PUSHINT 2
 	SETGLOB 10
-	.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 80
+	.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 83
 	CALLREF {
 		CALL $onConfirm_internal_macro$
 	}
@@ -865,7 +867,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 90
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 93
 OVER
 PUSHCONT {
 	LDREF
@@ -890,11 +892,11 @@ THROW 0
 CALL $reject_internal_macro$
 
 .macro reject_internal_macro
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 91
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 94
 CALLREF {
 	CALL $_checkVoteReceiver_internal_macro$
 }
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 93
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 96
 GETGLOB 5
 DUP
 ISNULL
@@ -903,7 +905,7 @@ PUSHCONT {
 	PUSHINT 0
 }
 IF
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 95
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 98
 PUSHINT 2318
 OVER
 GETGLOB 11
@@ -918,9 +920,9 @@ PUSHCONT {
 IFELSE
 EQINT 1
 THROWANYIFNOT
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 97
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 100
 ACCEPT
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 99
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 102
 DUP
 GETGLOB 11
 NEWC
@@ -929,7 +931,7 @@ ROTREV
 PUSHINT 256
 DICTUSETB
 SETGLOB 11
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 101
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 104
 PUSHSLICE xc000000000000000000000000028f67645
 NEWC
 STSLICE
@@ -937,24 +939,24 @@ STU 256
 ENDC
 PUSHINT 0
 SENDRAWMSG
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 102
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 105
 GETGLOB 16
 INC
 UFITS 16
 SETGLOB 16
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 105
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 108
 GETGLOB 10
 NEQINT 1
 IFRET
-.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 109
+.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 112
 GETGLOB 16
 GETGLOB 14
 GEQ
 PUSHCONT {
-	.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 110
+	.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 113
 	PUSHINT 3
 	SETGLOB 10
-	.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 111
+	.loc ../contracts/bridge/event-contracts/base/EverscaleBaseEvent.sol, 114
 	CALLREF {
 		CALL $onReject_internal_macro$
 	}

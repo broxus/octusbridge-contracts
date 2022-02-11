@@ -19,24 +19,26 @@ IF
 LDMSGADDR
 LDREF
 ENDS
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 22
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 25
+PUSHINT 2313
 GETGLOB 19
+SECOND
 GETGLOB 9
-SETINDEX 1
-SETGLOB 19
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 24
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 27
 PUSHINT 0
 SETGLOB 10
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 25
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 28
 SWAP
 SETGLOB 12
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 26
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 29
 SETGLOB 13
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 27
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 30
 CALLREF {
 	CALL $onInit_internal_macro$
 }
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 28
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 31
 CALLREF {
 	CALL $loadRelays_internal_macro$
 }
@@ -498,7 +500,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 31
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 34
 LDU 32
 GETGLOB 4
 ROT
@@ -612,7 +614,7 @@ THROW 0
 CALL $getEventInitData_internal_macro$
 
 .macro getEventInitData_internal_macro
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 32
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 35
 GETGLOB 4
 PUSHINT 0
 SETINDEXQ 2
@@ -648,7 +650,7 @@ CALL $EthereumBaseEvent_onReject_macro$
 CALL $getStakingAddress_internal_macro$
 
 .macro getStakingAddress_internal_macro
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 42
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 45
 GETGLOB 19
 THIRD
 .loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 0
@@ -658,7 +660,7 @@ THIRD
 CALL $isExternalVoteCall_internal_macro$
 
 .macro isExternalVoteCall_internal_macro
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 46
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 49
 DUP
 PUSHINT 2039135592
 EQUAL
@@ -677,7 +679,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 52
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 55
 OVER
 PUSHCONT {
 	LDREF
@@ -707,11 +709,11 @@ PUSHINT 2312
 GETGLOB 10
 EQINT 1
 THROWANYIFNOT
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 53
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 56
 CALLREF {
 	CALL $_checkVoteReceiver_internal_macro$
 }
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 55
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 58
 GETGLOB 5
 DUP
 ISNULL
@@ -720,7 +722,7 @@ PUSHCONT {
 	PUSHINT 0
 }
 IF
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 57
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 60
 PUSHINT 2318
 OVER
 GETGLOB 11
@@ -735,9 +737,9 @@ PUSHCONT {
 IFELSE
 EQINT 1
 THROWANYIFNOT
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 59
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 62
 ACCEPT
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 61
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 64
 DUP
 GETGLOB 11
 NEWC
@@ -746,12 +748,12 @@ ROTREV
 PUSHINT 256
 DICTUSETB
 SETGLOB 11
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 62
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 65
 GETGLOB 15
 INC
 UFITS 16
 SETGLOB 15
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 64
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 67
 PUSHSLICE xc000000000000000000000000006b00699
 NEWC
 STSLICE
@@ -759,15 +761,15 @@ STU 256
 ENDC
 PUSHINT 0
 SENDRAWMSG
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 66
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 69
 GETGLOB 15
 GETGLOB 14
 GEQ
 PUSHCONT {
-	.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 67
+	.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 70
 	PUSHINT 2
 	SETGLOB 10
-	.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 68
+	.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 71
 	CALLREF {
 		CALL $onConfirm_internal_macro$
 	}
@@ -785,7 +787,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 76
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 79
 OVER
 PUSHCONT {
 	LDREF
@@ -815,11 +817,11 @@ PUSHINT 2312
 GETGLOB 10
 EQINT 1
 THROWANYIFNOT
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 77
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 80
 CALLREF {
 	CALL $_checkVoteReceiver_internal_macro$
 }
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 79
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 82
 GETGLOB 5
 DUP
 ISNULL
@@ -828,7 +830,7 @@ PUSHCONT {
 	PUSHINT 0
 }
 IF
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 81
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 84
 PUSHINT 2318
 OVER
 GETGLOB 11
@@ -843,9 +845,9 @@ PUSHCONT {
 IFELSE
 EQINT 1
 THROWANYIFNOT
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 83
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 86
 ACCEPT
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 85
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 88
 DUP
 GETGLOB 11
 NEWC
@@ -854,12 +856,12 @@ ROTREV
 PUSHINT 256
 DICTUSETB
 SETGLOB 11
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 86
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 89
 GETGLOB 16
 INC
 UFITS 16
 SETGLOB 16
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 88
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 91
 PUSHSLICE xc000000000000000000000000028f67645
 NEWC
 STSLICE
@@ -867,15 +869,15 @@ STU 256
 ENDC
 PUSHINT 0
 SENDRAWMSG
-.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 90
+.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 93
 GETGLOB 16
 GETGLOB 14
 GEQ
 PUSHCONT {
-	.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 91
+	.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 94
 	PUSHINT 3
 	SETGLOB 10
-	.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 92
+	.loc ../contracts/bridge/event-contracts/base/EthereumBaseEvent.sol, 95
 	CALLREF {
 		CALL $onReject_internal_macro$
 	}

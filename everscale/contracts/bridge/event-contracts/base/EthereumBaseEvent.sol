@@ -6,6 +6,9 @@ pragma AbiHeader pubkey;
 import "./BaseEvent.sol";
 import "../../interfaces/event-contracts/IEthereumEvent.sol";
 
+import "./../../../utils/ErrorCodes.sol";
+
+
 contract EthereumBaseEvent is BaseEvent, IEthereumEvent {
     // Event data
     EthereumEventInitData static eventInitData;
@@ -19,7 +22,7 @@ contract EthereumBaseEvent is BaseEvent, IEthereumEvent {
         address _initializer,
         TvmCell _meta
     ) public {
-        eventInitData.configuration = msg.sender;
+        require(eventInitData.configuration == msg.sender, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
 
         status = Status.Initializing;
         initializer = _initializer;

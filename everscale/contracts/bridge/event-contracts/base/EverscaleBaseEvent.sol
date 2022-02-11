@@ -6,6 +6,9 @@ pragma AbiHeader pubkey;
 import "./BaseEvent.sol";
 import "../../interfaces/event-contracts/IEverscaleEvent.sol";
 
+import "./../../../utils/ErrorCodes.sol";
+
+
 contract EverscaleBaseEvent is BaseEvent, IEverscaleEvent {
     // Event data
     EverscaleEventInitData static eventInitData;
@@ -23,7 +26,7 @@ contract EverscaleBaseEvent is BaseEvent, IEverscaleEvent {
         address _initializer,
         TvmCell _meta
     ) public {
-        eventInitData.configuration = msg.sender;
+        require(eventInitData.configuration == msg.sender, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
 
         status = Status.Initializing;
         initializer = _initializer;

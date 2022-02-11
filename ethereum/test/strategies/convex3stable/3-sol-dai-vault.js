@@ -7,7 +7,9 @@ const { upgrades, ethers } = require("hardhat");
 
 
 
-describe('Test Convex3stable strategy on DAI vault', async () => {
+describe('Test Convex3stable strategy on DAI vault', async function () {
+    this.timeout(100000);
+
     let vault, strategy, dai, governance, booster, wrapped, rewards;
     let snapshot;
 
