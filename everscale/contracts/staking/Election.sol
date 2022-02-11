@@ -30,9 +30,9 @@ contract Election is IElection {
         uint256 next_node;
     }
 
-    uint256[] ton_keys; // array of ton pubkeys
-    uint160[] eth_addrs; // array of eth pubkeys
-    address[] staker_addrs; // array of staker addrs
+    uint256[] public ton_keys; // array of ton pubkeys
+    uint160[] public eth_addrs; // array of eth pubkeys
+    address[] public staker_addrs; // array of staker addrs
     uint128[] staked_tokens; // array of staked tokens
 
     // this array contains 2-way linked list by request tokens

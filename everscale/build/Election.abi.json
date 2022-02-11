@@ -119,6 +119,30 @@
 			]
 		},
 		{
+			"name": "ton_keys",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"ton_keys","type":"uint256[]"}
+			]
+		},
+		{
+			"name": "eth_addrs",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"eth_addrs","type":"uint160[]"}
+			]
+		},
+		{
+			"name": "staker_addrs",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"staker_addrs","type":"address[]"}
+			]
+		},
+		{
 			"name": "election_ended",
 			"inputs": [
 			],
