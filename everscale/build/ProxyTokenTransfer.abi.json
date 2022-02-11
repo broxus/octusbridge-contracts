@@ -21,6 +21,19 @@
 			]
 		},
 		{
+			"name": "burnCallback",
+			"inputs": [
+				{"name":"tokens","type":"uint128"},
+				{"name":"value1","type":"cell"},
+				{"name":"value2","type":"uint256"},
+				{"name":"sender_address","type":"address"},
+				{"name":"value4","type":"address"},
+				{"name":"send_gas_to","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "onAcceptTokensBurn",
 			"inputs": [
 				{"name":"tokens","type":"uint128"},

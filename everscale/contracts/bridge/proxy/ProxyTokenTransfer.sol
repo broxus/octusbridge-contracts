@@ -9,6 +9,7 @@ import "./../../utils/TransferUtils.sol";
 
 import "./../interfaces/IProxy.sol";
 import "./../interfaces/IProxyTokenTransferConfigurable.sol";
+import "./../interfaces/ILegacyBurnTokensCallback.sol";
 import "./../interfaces/event-configuration-contracts/IEverscaleEventConfiguration.sol";
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.sol";
@@ -29,6 +30,7 @@ import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
 contract ProxyTokenTransfer is
     IProxy,
     IProxyTokenTransferConfigurable,
+    ILegacyBurnTokensCallback,
     IAcceptTokensBurnCallback,
     RandomNonce,
     CellEncoder,
@@ -81,6 +83,31 @@ contract ProxyTokenTransfer is
             true,
             empty
         );
+    }
+
+    // Legacy token migration
+    function burnCallback(
+        uint128 tokens,
+        TvmCell,
+        uint256,
+        address sender_address,
+        address,
+        address send_gas_to
+    ) public override reserveBalance {
+        if (isArrayContainsAddress(config.outdatedTokenRoots, msg.sender)) {
+            TvmCell empty;
+
+            ITokenRoot(config.tokenRoot).mint{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+                tokens,
+                sender_address,
+                config.settingsDeployWalletGrams,
+                send_gas_to,
+                true,
+                empty
+            );
+        } else {
+            send_gas_to.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED});
+        }
     }
 
     function onAcceptTokensBurn(

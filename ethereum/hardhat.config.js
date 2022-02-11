@@ -18,9 +18,6 @@ task("accounts", "Prints the list of accounts", async () => {
 });
 
 
-console.log(process.env.COINMARKETCAP_API_KEY);
-
-
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
