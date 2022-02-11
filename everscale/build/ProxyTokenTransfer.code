@@ -30,9 +30,9 @@ IF
 GETGLOB 2
 EQUAL
 THROWIFNOT 1103
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 53
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 54
 ACCEPT
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 55
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 56
 CALLREF {
 	CALL $setOwnership_internal_macro$
 }
@@ -51,7 +51,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 58
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 59
 OVER
 PUSHCONT {
 	LDREF
@@ -99,7 +99,7 @@ THROW 0
 CALL $onEventConfirmed_internal_macro$
 
 .macro onEventConfirmed_internal_macro
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 48
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 49
 PUSHINT 2701
 GETGLOB 12
 SECOND
@@ -118,12 +118,12 @@ SUB
 UFITS 128
 PUSHINT 2
 RAWRESERVE
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 62
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 63
 PUSHINT 2702
 GETGLOB 14
 NOT
 THROWANYIFNOT
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 63
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 64
 PUSHINT 2703
 GETGLOB 12
 INDEX 3
@@ -132,13 +132,13 @@ INDEX 3
 PLDU 256
 NEQINT 0
 THROWANYIFNOT
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 65
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 66
 SWAP
 INDEX2 0, 2
 CALLREF {
 	CALL $decodeEthereumEventData_internal_macro$
 }
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 71
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 72
 SWAP
 NEWC
 STSLICECONST x9_
@@ -146,12 +146,12 @@ STI 8
 STU 256
 ENDC
 CTOS
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 73
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 74
 PUSHINT 2704
 PUSH S2
 GTINT 0
 THROWANYIFNOT
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 74
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 75
 PUSHINT 2705
 OVER
 PARSEMSGADDR
@@ -159,10 +159,10 @@ INDEX 3
 PLDU 256
 NEQINT 0
 THROWANYIFNOT
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 76
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 77
 PUSHREF {
 }
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 78
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 79
 TRUE
 ROLL 4
 GETGLOB 12
@@ -203,7 +203,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 89
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 90
 OVER
 PUSHCONT {
 	LDREF
@@ -249,7 +249,7 @@ SUB
 UFITS 128
 PUSHINT 2
 RAWRESERVE
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 97
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 98
 GETGLOB 12
 THIRD
 GETGLOB 9
@@ -257,10 +257,10 @@ CALLREF {
 	CALL $isArrayContainsAddress_internal_macro$
 }
 PUSHCONT {
-	.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 98
+	.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 99
 	PUSHREF {
 	}
-	.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 100
+	.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 101
 	TRUE
 	PUSH S2
 	GETGLOB 12
@@ -288,7 +288,7 @@ PUSHCONT {
 	STBREFR
 }
 PUSHCONT {
-	.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 109
+	.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 110
 	DUP
 	NEWC
 	STSLICECONST x62_
@@ -312,7 +312,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 113
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 114
 OVER
 PUSHCONT {
 	LDREF
@@ -357,25 +357,25 @@ SUB
 UFITS 128
 PUSHINT 2
 RAWRESERVE
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 120
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 121
 GETGLOB 12
 INDEX 3
 GETGLOB 9
 SDEQ
 PUSHCONT {
-	.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 121
+	.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 122
 	GETGLOB 13
 	PUSH S5
 	ADD
 	UFITS 128
 	SETGLOB 13
-	.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 123
+	.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 124
 	DUP
 	CTOS
 	LDU 160
 	LDU 32
 	DROP
-	.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 136
+	.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 137
 	PUSH S5
 	PARSEMSGADDR
 	THIRD
@@ -388,12 +388,12 @@ PUSHCONT {
 	CALLREF {
 		CALL $encodeTonEventData_internal_macro$
 	}
-	.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 144
+	.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 145
 	LTIME
 	NOW
 	ROT
 	TRIPLE
-	.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 146
+	.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 147
 	GETGLOB 12
 	FIRST
 	NEWC
@@ -412,7 +412,7 @@ PUSHCONT {
 	SENDRAWMSG
 }
 PUSHCONT {
-	.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 151
+	.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 152
 	GETGLOB 12
 	THIRD
 	GETGLOB 9
@@ -420,10 +420,10 @@ PUSHCONT {
 		CALL $isArrayContainsAddress_internal_macro$
 	}
 	PUSHCONT {
-		.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 152
+		.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 153
 		PUSHREF {
 		}
-		.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 154
+		.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 155
 		TRUE
 		PUSH S3
 		GETGLOB 12
@@ -451,7 +451,7 @@ PUSHCONT {
 		STBREFR
 	}
 	PUSHCONT {
-		.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 163
+		.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 164
 		OVER
 		NEWC
 		STSLICECONST x62_
@@ -478,7 +478,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 168
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 169
 LDU 32
 GETGLOB 4
 ROT
@@ -602,7 +602,7 @@ THROW 0
 CALL $getDetails_internal_macro$
 
 .macro getDetails_internal_macro
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 174
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 175
 GETGLOB 4
 PUSHINT 0
 SETINDEXQ 2
@@ -626,7 +626,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 177
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 178
 LDU 32
 GETGLOB 4
 ROT
@@ -702,7 +702,7 @@ THROW 0
 CALL $getTokenRoot_internal_macro$
 
 .macro getTokenRoot_internal_macro
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 183
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 184
 GETGLOB 4
 PUSHINT 0
 SETINDEXQ 2
@@ -724,7 +724,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 186
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 187
 LDU 32
 GETGLOB 4
 ROT
@@ -836,7 +836,7 @@ THROW 0
 CALL $getConfiguration_internal_macro$
 
 .macro getConfiguration_internal_macro
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 193
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 194
 GETGLOB 4
 PUSHINT 0
 SETINDEXQ 2
@@ -857,7 +857,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 196
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 197
 OVER
 PUSHCONT {
 	LDREF
@@ -923,7 +923,7 @@ PUSHINT 2
 RAWRESERVE
 .loc ../contracts/utils/TransferUtils.sol, 33
 ROTREV
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 200
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 201
 DROP
 SETGLOB 12
 .loc ../contracts/utils/TransferUtils.sol, 34
@@ -946,7 +946,7 @@ ISNULL
 IFREF {
 	CALL $c4_to_c7$
 }
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 203
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 204
 OVER
 PUSHCONT {
 	LDREF
@@ -985,9 +985,9 @@ SUB
 UFITS 128
 PUSHINT 2
 RAWRESERVE
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 207
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 208
 NEWDICT
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 209
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 210
 GETGLOB 9
 SWAP2
 SWAP
@@ -1011,12 +1011,79 @@ PUSHINT 128
 SENDRAWMSG
 .loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 0
 
+.macro legacyTransferTokenOwnership
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 216
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 0
+CALLREF {
+	CALL $legacyTransferTokenOwnership_internal_macro$
+}
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.macro legacyTransferTokenOwnership_internal_macro
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.sol, 15
+GETGLOB 9
+GETGLOB 11
+SDEQ
+THROWIFNOT 1101
+.loc ../contracts/utils/TransferUtils.sol, 21
+GETPARAM 7
+FIRST
+DEPTH
+ADDCONST -2
+PICK
+SUB
+UFITS 128
+PUSHINT 2
+RAWRESERVE
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 220
+PUSHINT 0
+ROT
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 1
+STUR 111
+ROTREV
+NEWC
+STSLICECONST x3828261a
+STU 256
+STSLICE
+STBREFR
+ENDC
+PUSHINT 128
+SENDRAWMSG
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 0
+
 .globl	isArrayContainsAddress_internal
 .type	isArrayContainsAddress_internal, @function
 CALL $isArrayContainsAddress_internal_macro$
 
 .macro isArrayContainsAddress_internal_macro
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 219
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 230
 SWAP
 SECOND
 PUSHINT 0
@@ -1034,11 +1101,11 @@ PUSHCONT {
 	NOT
 }
 PUSHCONT {
-	.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 220
+	.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 231
 	PUSH2 S4, S1
 	SDEQ
 	PUSHCONT {
-		.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 221
+		.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 232
 		BLKDROP 5
 		TRUE
 		PUSHINT 4
@@ -1054,7 +1121,7 @@ PUSHCONT {
 WHILEBRK
 IFRET
 BLKDROP 4
-.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 224
+.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 235
 FALSE
 .loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 0
 
@@ -1758,7 +1825,7 @@ THROW 0
 
 .macro public_function_selector
 DUP
-PUSHINT 1911324437
+PUSHINT 1816154505
 LEQ
 IFJMPREF {
 	DUP
@@ -1820,7 +1887,7 @@ IFJMPREF {
 		}
 	}
 	DUP
-	PUSHINT 1594609630
+	PUSHINT 1529867823
 	LEQ
 	IFJMPREF {
 		DUP
@@ -1842,16 +1909,22 @@ IFJMPREF {
 			CALL $decodeEthereumEventData$
 		}
 		DUP
+		PUSHINT 1529867823
+		EQUAL
+		IFJMPREF {
+			CALL $legacyTransferTokenOwnership$
+		}
+	}
+	DUP
+	PUSHINT 1816154505
+	LEQ
+	IFJMPREF {
+		DUP
 		PUSHINT 1594609630
 		EQUAL
 		IFJMPREF {
 			CALL $owner$
 		}
-	}
-	DUP
-	PUSHINT 1911324437
-	LEQ
-	IFJMPREF {
 		DUP
 		PUSHINT 1729444094
 		EQUAL
@@ -1870,18 +1943,23 @@ IFJMPREF {
 		IFJMPREF {
 			CALL $transferTokenOwnership$
 		}
-		DUP
-		PUSHINT 1911324437
-		EQUAL
-		IFJMPREF {
-			CALL $setConfiguration$
-		}
 	}
 }
 DUP
 PUSHINT 1981601104
-EQUAL
+LEQ
 IFJMPREF {
-	CALL $encodeTonEventData$
+	DUP
+	PUSHINT 1911324437
+	EQUAL
+	IFJMPREF {
+		CALL $setConfiguration$
+	}
+	DUP
+	PUSHINT 1981601104
+	EQUAL
+	IFJMPREF {
+		CALL $encodeTonEventData$
+	}
 }
 

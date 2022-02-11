@@ -9,8 +9,9 @@ import "./../../utils/TransferUtils.sol";
 
 import "./../interfaces/IProxy.sol";
 import "./../interfaces/IProxyTokenTransferConfigurable.sol";
-import "./../interfaces/ILegacyBurnTokensCallback.sol";
 import "./../interfaces/event-configuration-contracts/IEverscaleEventConfiguration.sol";
+import "./../interfaces/legacy/ILegacyBurnTokensCallback.sol";
+import "./../interfaces/legacy/ILegacyTransferOwner.sol";
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.sol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensBurnCallback.sol";
@@ -210,6 +211,16 @@ contract ProxyTokenTransfer is
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(newOwner, msg.sender, empty);
+    }
+
+    function legacyTransferTokenOwnership(
+        address target,
+        address newOwner
+    ) external view onlyOwner reserveBalance {
+        ILegacyTransferOwner(target).transferOwner{
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(0, newOwner);
     }
 
     function isArrayContainsAddress(
