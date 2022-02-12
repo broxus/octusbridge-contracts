@@ -46,7 +46,7 @@ async function main() {
     {
       type: 'text',
       name: 'rescuer',
-      message: 'Staking rescuer (can set emergency and withdraw tons/bridges)',
+      message: 'Staking rescuer (can set emergency and withdraw evers/bridges)',
       initial: prev => prev,
       validate: value => isValidTonAddress(value) ? true : 'Invalid address'
     },
@@ -61,14 +61,14 @@ async function main() {
       type: 'text',
       name: 'ethTonEventConfig',
       initial: '0:0000000000000000000000000000000000000000000000000000000000000001',
-      message: 'Eth->Ton event configuration (broadcast relay verify event from ethereum). Could be omitted',
+      message: 'Eth->Ever event configuration (broadcast relay verify event from ethereum). Could be omitted',
       validate: value => isValidTonAddress(value) ? true : 'Invalid address'
     },
     {
       type: 'text',
       name: 'tonEthEventConfig',
       initial: '0:0000000000000000000000000000000000000000000000000000000000000001',
-      message: 'Ton->Eth event configuration (broadcast RelayRoundCreation event with eth keys from staking). Could be omitted',
+      message: 'Ever->Eth event configuration (broadcast RelayRoundCreation event with eth keys from staking). Could be omitted',
       validate: value => isValidTonAddress(value) ? true : 'Invalid address'
     }
   ]);
@@ -125,7 +125,7 @@ async function main() {
     {
       type: 'number',
       name: 'relayInitialTonDeposit',
-      message: 'Relay initial ton deposit (with decimals)',
+      message: 'Relay initial ever deposit (with decimals)',
       initial: 1500000000000
     },
     {
@@ -154,12 +154,12 @@ async function main() {
     constructorParams: {},
     initParams: {nonce: getRandomNonce(), stakingCode: stakingRoot.code},
     keyPair: keyPair,
-  }, locklift.utils.convertCrystal(50, 'nano'));
+  }, locklift.utils.convertCrystal(30, 'nano'));
   await wait_acc_deployed(stakingRootDeployer.address);
   spinner.succeed(`Staking deployer address: ${stakingRootDeployer.address}`);
 
   spinner.start('Deploying temporary dao/admin for initial setup...');
-  const admin = await deployAccount(keyPair, 150);
+  const admin = await deployAccount(keyPair, 100);
   admin.afterRun = afterRun;
   await wait_acc_deployed(admin.address);
   spinner.succeed(`Temporary admin/dao address: ${admin.address}`);
