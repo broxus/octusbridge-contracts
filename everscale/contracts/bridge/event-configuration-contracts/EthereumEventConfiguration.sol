@@ -163,7 +163,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
     }
 
     /// @dev Get event configuration type
-    /// @return _type Configuration type - Ethereum or TON
+    /// @return _type Configuration type - Ethereum or Everscale
     function getType() override public pure responsible returns(EventType _type) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS} EventType.Ethereum;
     }

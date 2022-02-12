@@ -1,6 +1,6 @@
-# Welcome to the TON bridge
+# Welcome to the Everscale bridge
 
-This document is a starting point about the TON bridge between EVM networks and FreeTON.
+This document is a starting point about the Everscale bridge between EVM networks and FreeTON.
 
 ## Getting started
 

@@ -10,7 +10,7 @@ import "./../../../utils/ErrorCodes.sol";
 import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 /*
-    @title Basic example of TON event configuration
+    @title Basic example of Everscale event configuration
     @dev This implementation is used for cross chain token transfers
 */
 contract TokenTransferTonEvent is EverscaleBaseEvent {

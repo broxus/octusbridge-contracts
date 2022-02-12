@@ -1,12 +1,14 @@
 pragma ton-solidity >= 0.39.0;
 
 
+import '@broxus/contracts/contracts/utils/RandomNonce.sol';
+
 import './../../utils/TransferUtils.sol';
 import "./../event-configuration-contracts/EverscaleEventConfiguration.sol";
 import "./../interfaces/event-configuration-contracts/IEverscaleEventConfiguration.sol";
 
 
-contract EverscaleEventConfigurationFactory is TransferUtils {
+contract EverscaleEventConfigurationFactory is TransferUtils, RandomNonce {
     TvmCell public configurationCode;
 
     constructor(TvmCell _configurationCode) public {

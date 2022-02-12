@@ -36,7 +36,7 @@ contract StakingMockup is IStaking, IRound, RandomNonce {
 
     /*
         @dev Get list of current round relays public keys
-        @returns _keys Round relays TON public keys
+        @returns _keys Round relays Everscale public keys
     */
     function relayKeys()
         override

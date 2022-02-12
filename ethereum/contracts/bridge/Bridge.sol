@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: AGPLv3
 pragma solidity ^0.8.2;
 pragma experimental ABIEncoderV2;
 
@@ -13,7 +13,7 @@ import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 
 /// @title Ethereum Bridge contract
 /// @author https://github.com/broxus
-/// @dev Stores relays for each round, implements slashing, helps in validating TON-ETH events
+/// @dev Stores relays for each round, implements slashing, helps in validating Everscale-ETH events
 contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
     using ECDSA for bytes32;
 
@@ -44,7 +44,7 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
     // NOTE: special address, can set up rounds without relays's signatures
     address public roundSubmitter;
 
-    // NOTE: Broxus Bridge TON-ETH configuration address, that emits event with round relays
+    // NOTE: Broxus Bridge Everscale-ETH configuration address, that emits event with round relays
     EverscaleAddress public roundRelaysConfiguration;
 
     /**
@@ -96,7 +96,7 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
     /**
         @notice
             Update address of configuration, that emits event with next round relays.
-        @param _roundRelaysConfiguration TON address of configuration
+        @param _roundRelaysConfiguration Everscale address of configuration
     */
     function setConfiguration(
         EverscaleAddress calldata _roundRelaysConfiguration

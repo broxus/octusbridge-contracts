@@ -23,10 +23,10 @@ import '@broxus/contracts/contracts/utils/RandomNonce.sol';
 import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
 
 /// @title Proxy for cross chain token transfers
-/// @dev In case of ETH-TON token transfer, this proxy should receive
+/// @dev In case of ETH-Everscale token transfer, this proxy should receive
 /// `onEventConfirmed` callback from the corresponding EthereumEventConfiguration. Then it mints
 /// the specified amount of tokens to the user.
-/// In case of TON-ETH token transfer, this proxy should receive burn callback from the token
+/// In case of Everscale-ETH token transfer, this proxy should receive burn callback from the token
 /// and deploy event. This event will be signed by relays so it can be sent to the corresponding EVM Vault.
 contract ProxyTokenTransfer is
     IProxy,
@@ -106,7 +106,7 @@ contract ProxyTokenTransfer is
                 config.settingsDeployWalletGrams,
                 send_gas_to,
                 true,
-                empty
+                payload
             );
         } else {
             send_gas_to.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED});
@@ -129,16 +129,16 @@ contract ProxyTokenTransfer is
             ) = payload.toSlice().decode(uint160, uint32);
 
 //            emit Withdraw(
-//                sender_address.wid,
-//                sender_address.value,
+//                remainingGasTo.wid,
+//                remainingGasTo.value,
 //                tokens,
 //                ethereumAddress,
 //                chainId
 //            );
 
             TvmCell eventData = encodeTonEventData(
-                walletOwner.wid,
-                walletOwner.value,
+                remainingGasTo.wid,
+                remainingGasTo.value,
                 tokens,
                 ethereumAddress,
                 chainId

@@ -16,7 +16,7 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
 /*
-    @title Basic example of TON event configuration
+    @title Basic example of Everscale event configuration
 */
 contract EverscaleEventConfiguration is IEverscaleEventConfiguration, TransferUtils, InternalOwner, CheckPubKey {
     BasicConfiguration public static basicConfiguration;
@@ -166,7 +166,7 @@ contract EverscaleEventConfiguration is IEverscaleEventConfiguration, TransferUt
 
     /*
         @dev Get event configuration type
-        @return _type Configuration type - Ethereum or TON
+        @return _type Configuration type - Ethereum or Everscale
     */
     function getType() override public pure responsible returns(EventType _type) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS} EventType.Everscale;

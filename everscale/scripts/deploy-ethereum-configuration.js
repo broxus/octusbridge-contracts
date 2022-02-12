@@ -83,14 +83,14 @@ const main = async () => {
       type: 'text',
       name: 'owner',
       message: 'Initial configuration owner',
-      validate: value => isValidTonAddress(value) ? true : 'Invalid TON address',
+      validate: value => isValidTonAddress(value) ? true : 'Invalid Everscale address',
       initial: options.owner
     },
     {
       type: 'text',
       name: 'staking',
       message: 'Staking contract',
-      validate: value => isValidTonAddress(value) ? true : 'Invalid TON address',
+      validate: value => isValidTonAddress(value) ? true : 'Invalid Everscale address',
       initial: options.staking
     },
     {
@@ -136,7 +136,7 @@ const main = async () => {
       type: 'text',
       name: 'proxy',
       message: 'Target address in FreeTON (proxy)',
-      validate: value => isValidTonAddress(value) ? true : 'Invalid TON address',
+      validate: value => isValidTonAddress(value) ? true : 'Invalid Everscale address',
       initial: options.proxy
     },
     {

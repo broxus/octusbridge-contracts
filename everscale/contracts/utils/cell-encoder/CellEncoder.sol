@@ -2,7 +2,7 @@ pragma ton-solidity >= 0.39.0;
 
 /*
     Ad hoc contract, used to perform encode / decode TvmCell.
-    Not implemented in the TON-SDK at the moment of creation.
+    Not implemented in the Everscale-SDK at the moment of creation.
     @important Not strictly connected to the ERC20<->TIP3 token transfers, just an example.
 */
 contract CellEncoder {

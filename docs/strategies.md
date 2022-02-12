@@ -1,11 +1,11 @@
-# TON bridge strategies
+# Everscale bridge strategies
 
 Here you can find information about all strategies used by bridge vaults.
 
 ## Convex3crv
 ### Intro
 This strategy is a modified version of the yearn strategy that manages 3crv tokens
-for use in the convex protocol. Main difference is that the TON bridge version
+for use in the convex protocol. Main difference is that the Everscale bridge version
 accepts not 3crv tokens, but the underlying stablecoins.
 
 ### Mechanic

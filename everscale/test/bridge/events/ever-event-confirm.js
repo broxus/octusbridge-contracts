@@ -35,7 +35,7 @@ describe('Test ton event confirm', async function() {
     
     for (const [contract, balanceDiff] of Object.entries(difference)) {
       if (balanceDiff !== 0) {
-        logger.log(`[Balance change] ${contract} ${locklift.utils.convertCrystal(balanceDiff, 'ton').toFixed(9)} TON`);
+        logger.log(`[Balance change] ${contract} ${locklift.utils.convertCrystal(balanceDiff, 'ton').toFixed(9)} Everscale`);
       }
     }
   });
@@ -123,7 +123,7 @@ describe('Test ton event confirm', async function() {
       const events = await everscaleEventConfiguration.getEvents('NewEventContract');
 
       expect(events)
-        .to.have.lengthOf(1, 'TON event configuration didnt deploy event');
+        .to.have.lengthOf(1, 'Everscale event configuration didnt deploy event');
       
       const [{
         value: {

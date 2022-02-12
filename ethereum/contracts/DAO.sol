@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: AGPLv3
 pragma solidity ^0.8.2;
 pragma experimental ABIEncoderV2;
 
@@ -13,12 +13,12 @@ import "./utils/Cache.sol";
 import "./utils/ChainId.sol";
 
 
-/// @title DAO contract for Broxus TON-Ethereum bridge
-/// @dev Executes proposals confirmed in TON DAO.
+/// @title DAO contract for Everscale-EVM bridge
+/// @dev Executes proposals confirmed in Everscale Bridge DAO.
 /// Proposals are submitted in form of payloads and signatures
 contract DAO is IDAO, IEverscale, ReentrancyGuard, OwnableUpgradeable, Cache, ChainId {
     address public bridge;
-    IBridge.EverscaleAddress public configuration;
+    EverscaleAddress public configuration;
 
     /**
         @notice Initializer
@@ -37,11 +37,11 @@ contract DAO is IDAO, IEverscale, ReentrancyGuard, OwnableUpgradeable, Cache, Ch
     }
 
     /**
-        @notice Update address of the TON configuration, that emits actions for this DAO
-        @param _configuration New configuration TON address
+        @notice Update address of the Everscale configuration, that emits actions for this DAO
+        @param _configuration New configuration Everscale address
     */
     function setConfiguration(
-        IBridge.EverscaleAddress calldata _configuration
+        EverscaleAddress calldata _configuration
     ) public onlyOwner {
         configuration = _configuration;
     }
@@ -75,7 +75,7 @@ contract DAO is IDAO, IEverscale, ReentrancyGuard, OwnableUpgradeable, Cache, Ch
             Execute set of actions.
         @dev
 
-        @param payload Encoded TON event with payload details
+        @param payload Encoded Everscale event with payload details
         @param signatures Payload signatures
         @return responses Bytes-encoded payload action responses
     */

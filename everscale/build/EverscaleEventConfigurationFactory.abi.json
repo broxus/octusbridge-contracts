@@ -32,6 +32,14 @@
 			]
 		},
 		{
+			"name": "_randomNonce",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"_randomNonce","type":"uint256"}
+			]
+		},
+		{
 			"name": "configurationCode",
 			"inputs": [
 			],
@@ -41,6 +49,7 @@
 		}
 	],
 	"data": [
+		{"key":1,"name":"_randomNonce","type":"uint256"}
 	],
 	"events": [
 	],
@@ -48,6 +57,7 @@
 		{"name":"_pubkey","type":"uint256"},
 		{"name":"_timestamp","type":"uint64"},
 		{"name":"_constructorFlag","type":"bool"},
+		{"name":"_randomNonce","type":"uint256"},
 		{"name":"configurationCode","type":"cell"}
 	]
 }

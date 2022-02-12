@@ -45,7 +45,7 @@ const main = async () => {
   } = await prompts({
     type: 'select',
     name: 'eventAbiFile',
-    message: 'Select TON abi, which contains target event',
+    message: 'Select Everscale abi, which contains target event',
     choices: events.map(e => new Object({ title: e, value: e })),
     initial: events.indexOf(options.eventAbiFile) >= 0 ? events.indexOf(options.eventAbiFile) : 0
   });
@@ -57,7 +57,7 @@ const main = async () => {
   } = await prompts({
     type: 'select',
     name: 'event',
-    message: 'Choose TON event',
+    message: 'Choose Everscale event',
     choices: abi
       .events
       .map(event => {
@@ -73,14 +73,14 @@ const main = async () => {
       type: 'text',
       name: 'owner',
       message: 'Initial configuration owner',
-      validate: value => isValidTonAddress(value) ? true : 'Invalid TON address',
+      validate: value => isValidTonAddress(value) ? true : 'Invalid Everscale address',
       initial: options.owner
     },
     {
       type: 'text',
       name: 'staking',
       message: 'Staking contract',
-      validate: value => isValidTonAddress(value) ? true : 'Invalid TON address',
+      validate: value => isValidTonAddress(value) ? true : 'Invalid Everscale address',
       initial: options.staking
     },
     {
@@ -105,8 +105,8 @@ const main = async () => {
     {
       type: 'text',
       name: 'eventEmitter',
-      message: 'Contract address, which emits event (TON)',
-      validate: value => isValidTonAddress(value) ? true : 'Invalid TON address',
+      message: 'Contract address, which emits event (Everscale)',
+      validate: value => isValidTonAddress(value) ? true : 'Invalid Everscale address',
       initial: options.eventEmitter
     },
     {
@@ -133,7 +133,7 @@ const main = async () => {
   const EverscaleEventConfiguration = await locklift.factory.getContract('EverscaleEventConfiguration');
   const TonEvent = await locklift.factory.getContract(response.eventContract);
   
-  const spinner = ora('Deploying TON event configuration').start();
+  const spinner = ora('Deploying Everscale event configuration').start();
   
   const everscaleEventConfiguration = await locklift.giver.deployContract({
     contract: EverscaleEventConfiguration,

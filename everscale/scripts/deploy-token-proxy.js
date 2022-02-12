@@ -16,7 +16,7 @@ const main = async () => {
       type: 'text',
       name: 'owner',
       message: 'Initial proxy owner',
-      validate: value => isValidTonAddress(value) ? true : 'Invalid TON address'
+      validate: value => isValidTonAddress(value) ? true : 'Invalid Everscale address'
     },
     {
       type: 'number',

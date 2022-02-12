@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: AGPLv3
 pragma solidity ^0.8.2;
 
 import "./IVaultBasic.sol";
