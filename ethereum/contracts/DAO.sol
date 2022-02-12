@@ -71,10 +71,7 @@ contract DAO is IDAO, IEverscale, ReentrancyGuard, OwnableUpgradeable, Cache, Ch
     }
 
     /**
-        @notice
-            Execute set of actions.
-        @dev
-
+        @notice Execute set of actions.
         @param payload Encoded Everscale event with payload details
         @param signatures Payload signatures
         @return responses Bytes-encoded payload action responses
@@ -82,7 +79,12 @@ contract DAO is IDAO, IEverscale, ReentrancyGuard, OwnableUpgradeable, Cache, Ch
     function execute(
         bytes calldata payload,
         bytes[] calldata signatures
-    ) override external nonReentrant notCached(payload) returns (
+    )
+        override
+        external
+        nonReentrant
+        notCached(payload)
+    returns (
         bytes[] memory responses
     ) {
         require(

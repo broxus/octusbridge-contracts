@@ -239,13 +239,12 @@ PUSH S3
 LDREF
 POP S5
 .loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 97
-DROP
-PUSH S3
+PUSH S4
 LDREFRTOS
 NIP
-POP S4
+POP S5
 .loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 98
-ROLL 3
+ROLL 4
 LDMSGADDR
 DROP
 .loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 100
@@ -256,15 +255,13 @@ CALLREF {
 	CALL $isArrayContainsAddress_internal_macro$
 }
 PUSHCONT {
-	.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 101
-	PUSHREF {
-	}
 	.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 103
+	OVER
 	TRUE
 	PUSH S2
 	GETGLOB 12
 	INDEX 4
-	PUSH2 S5, S7
+	PUSH2 S6, S8
 	GETGLOB 12
 	INDEX 3
 	NEWC
@@ -300,7 +297,7 @@ ENDC
 PUSHINT 128
 SENDRAWMSG
 .loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 0
-BLKDROP 4
+BLKDROP 5
 CALLREF {
 	CALL $c7_to_c4$
 }
@@ -378,10 +375,10 @@ PUSHCONT {
 	LDU 32
 	DROP
 	.loc ../contracts/bridge/proxy/ProxyTokenTransfer.sol, 139
-	PUSH S5
+	PUSH S3
 	PARSEMSGADDR
 	THIRD
-	PUSH S6
+	PUSH S4
 	PARSEMSGADDR
 	INDEX 3
 	PLDU 256

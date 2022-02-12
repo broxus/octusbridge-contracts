@@ -1,4 +1,4 @@
-module.exports = async ({getNamedAccounts, deployments}) => {s
+module.exports = async ({getNamedAccounts, deployments}) => {
     const { deployer, owner } = await getNamedAccounts();
 
     await deployments.deploy('Token', {

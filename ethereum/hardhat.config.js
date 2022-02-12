@@ -47,7 +47,7 @@ const hardhatConfig = {
       },
       chainId: 1111,
       accounts: {
-        count: 30
+        count: 50
       }
     },
     main: {
@@ -57,7 +57,7 @@ const hardhatConfig = {
       timeout: 1000000,
       accounts: {
         mnemonic: process.env.ETH_MNEMONIC,
-        count: 30
+        count: 50
       },
     },
     polygon: {
@@ -67,7 +67,7 @@ const hardhatConfig = {
       timeout: 1000000,
       accounts: {
         mnemonic: process.env.ETH_MNEMONIC,
-        count: 30
+        count: 50
       },
     },
     bsc: {
@@ -77,7 +77,7 @@ const hardhatConfig = {
       timeout: 1000000,
       accounts: {
         mnemonic: process.env.ETH_MNEMONIC,
-        count: 30
+        count: 50
       },
     },
     fantom: {
@@ -87,17 +87,17 @@ const hardhatConfig = {
       timeout: 1000000,
       accounts: {
         mnemonic: process.env.ETH_MNEMONIC,
-        count: 30
+        count: 50
       },
     },
     goerli: {
-      url: process.env.ETH_GOERLI_HTTP,
+      url: 'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
       gasPrice: 1500000007,
       gas: 3000000,
       timeout: 1000000,
       accounts: {
-        mnemonic: process.env.ETH_GOERLI_MNEMONIC,
-        count: 30
+        mnemonic: process.env.ETH_MNEMONIC,
+        count: 50
       },
     },
   },
