@@ -51,7 +51,7 @@ const hardhatConfig = {
       }
     },
     main: {
-      url: 'https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
+      url: 'https://mainnet.infura.io/v3/f3ca4333bf4a41308d0a277ae1c09336',
       gasPrice: 100000000000, // 100 gwei
       gas: 3000000,
       timeout: 1000000,
@@ -100,6 +100,16 @@ const hardhatConfig = {
         count: 50
       },
     },
+    ropsten: {
+      url: 'https://ropsten.infura.io/v3/f3ca4333bf4a41308d0a277ae1c09336',
+      gasPrice: 1500000007,
+      gas: 3000000,
+      timeout: 1000000,
+      accounts: {
+        mnemonic: process.env.ETH_MNEMONIC,
+        count: 50
+      },
+    }
   },
   gasReporter: {
     currency: 'USD',
@@ -118,19 +128,15 @@ const hardhatConfig = {
     },
     deployer: {
       default: 0,
-      goerli: 0,
     },
     guardian: {
       default: 1,
-      goerli: 1,
     },
     management: {
       default: 2,
-      goerli: 2,
     },
     owner: {
       default: 3,
-      goerli: 3,
       main: multisig.main,
       polygon: multisig.polygon,
       bsc: multisig.bsc,
