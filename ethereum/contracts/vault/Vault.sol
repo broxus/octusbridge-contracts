@@ -351,7 +351,7 @@ contract Vault is IVault, VaultHelpers {
         respectDepositLimit(amount)
         nonReentrant
     {
-        IERC20(token).transferFrom(msg.sender, address(this), amount);
+        IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
 
         uint256 fee = _calculateMovementFee(amount, depositFee);
 
@@ -438,7 +438,7 @@ contract Vault is IVault, VaultHelpers {
             "Wrapper: wrong args"
         );
 
-        IERC20(token).transferFrom(msg.sender, address(this), amount);
+        IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
 
         uint256 fee = _calculateMovementFee(amount, depositFee);
 
