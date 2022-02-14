@@ -434,8 +434,7 @@ contract Vault is IVault, VaultHelpers {
             user != 0 &&
             recipient != 0 &&
             creditor != 0 &&
-            slippageNumerator < slippageDenominator,
-            "Wrapper: wrong args"
+            slippageNumerator < slippageDenominator
         );
 
         IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
