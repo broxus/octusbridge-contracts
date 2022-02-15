@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.2;
 pragma experimental ABIEncoderV2;
 
@@ -13,7 +13,7 @@ import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 
 /// @title Ethereum Bridge contract
 /// @author https://github.com/broxus
-/// @dev Stores relays for each round, implements slashing, helps in validating TON-ETH events
+/// @dev Stores relays for each round, implements slashing, helps in validating Everscale-ETH events
 contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
     using ECDSA for bytes32;
 
@@ -44,8 +44,8 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
     // NOTE: special address, can set up rounds without relays's signatures
     address public roundSubmitter;
 
-    // NOTE: Broxus Bridge TON-ETH configuration address, that emits event with round relays
-    TONAddress public roundRelaysConfiguration;
+    // NOTE: Broxus Bridge Everscale-ETH configuration address, that emits event with round relays
+    EverscaleAddress public roundRelaysConfiguration;
 
     /**
         @notice
@@ -96,10 +96,10 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
     /**
         @notice
             Update address of configuration, that emits event with next round relays.
-        @param _roundRelaysConfiguration TON address of configuration
+        @param _roundRelaysConfiguration Everscale address of configuration
     */
-    function updateRoundRelaysConfiguration(
-        TONAddress calldata _roundRelaysConfiguration
+    function setConfiguration(
+        EverscaleAddress calldata _roundRelaysConfiguration
     ) external override onlyOwner {
         emit UpdateRoundRelaysConfiguration(_roundRelaysConfiguration);
 
@@ -159,7 +159,7 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
     /// @param candidate Address to check
     function isBanned(
         address candidate
-    ) override public view returns(bool) {
+    ) override public view returns (bool) {
         return blacklist[candidate];
     }
 
@@ -196,11 +196,11 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
                 4. Round is rotten.
                 5. Everything is correct, but bridge is in "paused" state
 
-        @param payload Bytes encoded TONEvent structure
+        @param payload Bytes encoded EverscaleEvent structure
         @param signatures Payload signatures
         @return errorCode Error code
     */
-    function verifySignedTonEvent(
+    function verifySignedEverscaleEvent(
         bytes memory payload,
         bytes[] memory signatures
     )
@@ -210,9 +210,9 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
     returns (
         uint32 errorCode
     ) {
-        (TONEvent memory tonEvent) = abi.decode(payload, (TONEvent));
+        (EverscaleEvent memory _event) = abi.decode(payload, (EverscaleEvent));
 
-        uint32 round = tonEvent.round;
+        uint32 round = _event.round;
 
         // Check round is not less than initial round
         if (round < initialRound) return 1;
@@ -279,8 +279,8 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
     }
 
     /**
-        @dev Grant relay permission for set of addresses at specific round
-        @param payload Bytes encoded TONEvent structure
+        @notice Grant relay permission for set of addresses at specific round
+        @param payload Bytes encoded EverscaleEvent structure
         @param signatures Payload signatures
     */
     function setRoundRelays(
@@ -288,18 +288,18 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
         bytes[] calldata signatures
     ) override external notCached(payload) {
         require(
-            verifySignedTonEvent(
+            verifySignedEverscaleEvent(
                 payload,
                 signatures
             ) == 0,
             "Bridge: signatures verification failed"
         );
 
-        (TONEvent memory tonEvent) = abi.decode(payload, (TONEvent));
+        (EverscaleEvent memory _event) = abi.decode(payload, (EverscaleEvent));
 
         require(
-            tonEvent.configurationWid == roundRelaysConfiguration.wid &&
-            tonEvent.configurationAddress == roundRelaysConfiguration.addr,
+            _event.configurationWid == roundRelaysConfiguration.wid &&
+            _event.configurationAddress == roundRelaysConfiguration.addr,
             "Bridge: wrong event configuration"
         );
 
@@ -314,23 +314,23 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
 
     function decodeRoundRelaysEventData(
         bytes memory payload
-    ) public pure returns(
+    ) public pure returns (
         uint32 round,
         uint160[] memory _relays,
         uint32 roundEnd
     ) {
-        (TONEvent memory tonEvent) = abi.decode(payload, (TONEvent));
+        (EverscaleEvent memory EverscaleEvent) = abi.decode(payload, (EverscaleEvent));
 
         (round, _relays, roundEnd) = abi.decode(
-            tonEvent.eventData,
+            EverscaleEvent.eventData,
             (uint32, uint160[], uint32)
         );
     }
 
-    function decodeTonEvent(
+    function decodeEverscaleEvent(
         bytes memory payload
-    ) external pure returns (TONEvent memory tonEvent) {
-        (tonEvent) = abi.decode(payload, (TONEvent));
+    ) external pure returns (EverscaleEvent memory _event) {
+        (_event) = abi.decode(payload, (EverscaleEvent));
     }
 
     /**

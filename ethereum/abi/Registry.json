@@ -107,31 +107,6 @@
     "inputs": [
       {
         "indexed": true,
-        "internalType": "uint256",
-        "name": "wrapper_release_id",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "template",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "api_version",
-        "type": "string"
-      }
-    ],
-    "name": "NewWrapperRelease",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
         "internalType": "address",
         "name": "previousOwner",
         "type": "address"
@@ -144,19 +119,6 @@
       }
     ],
     "name": "OwnershipTransferred",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "vaultWrapper",
-        "type": "address"
-      }
-    ],
-    "name": "UpdateVaultWrapper",
     "type": "event"
   },
   {
@@ -221,11 +183,6 @@
         "internalType": "uint256",
         "name": "vaultReleaseDelta",
         "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "wrapperReleaseDelta",
-        "type": "uint256"
       }
     ],
     "name": "endorseVault",
@@ -285,19 +242,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "latestWrapperRelease",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "api_version",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -310,11 +254,6 @@
         "type": "address"
       },
       {
-        "internalType": "address",
-        "name": "guardian",
-        "type": "address"
-      },
-      {
         "internalType": "uint256",
         "name": "targetDecimals",
         "type": "uint256"
@@ -322,11 +261,6 @@
       {
         "internalType": "uint256",
         "name": "vaultReleaseDelta",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "wrapperReleaseDelta",
         "type": "uint256"
       }
     ],
@@ -349,11 +283,6 @@
         "type": "address"
       },
       {
-        "internalType": "address",
-        "name": "guardian",
-        "type": "address"
-      },
-      {
         "internalType": "uint256",
         "name": "targetDecimals",
         "type": "uint256"
@@ -361,11 +290,6 @@
       {
         "internalType": "uint256",
         "name": "vaultReleaseDelta",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "wrapperReleaseDelta",
         "type": "uint256"
       }
     ],
@@ -389,19 +313,6 @@
       }
     ],
     "name": "newVaultRelease",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "wrapper",
-        "type": "address"
-      }
-    ],
-    "name": "newWrapperRelease",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -453,19 +364,6 @@
   },
   {
     "inputs": [],
-    "name": "numWrapperReleases",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "owner",
     "outputs": [
       {
@@ -495,6 +393,24 @@
     "name": "renounceOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "rewards",
+    "outputs": [
+      {
+        "internalType": "int128",
+        "name": "wid",
+        "type": "int128"
+      },
+      {
+        "internalType": "uint256",
+        "name": "addr",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -537,6 +453,31 @@
       }
     ],
     "name": "setProxyAdmin",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "int128",
+            "name": "wid",
+            "type": "int128"
+          },
+          {
+            "internalType": "uint256",
+            "name": "addr",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IEverscale.EverscaleAddress",
+        "name": "_rewards",
+        "type": "tuple"
+      }
+    ],
+    "name": "setRewards",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -600,25 +541,6 @@
       }
     ],
     "name": "vaultReleases",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "wrapperReleases",
     "outputs": [
       {
         "internalType": "address",

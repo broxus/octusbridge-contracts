@@ -1,0 +1,385 @@
+{
+	"ABI version": 2,
+	"version": "2.2",
+	"header": ["time"],
+	"functions": [
+		{
+			"name": "getOverview",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"proposer_","type":"address"},
+				{"name":"description_","type":"string"},
+				{"name":"startTime_","type":"uint32"},
+				{"name":"endTime_","type":"uint32"},
+				{"name":"executionTime_","type":"uint32"},
+				{"name":"forVotes_","type":"uint128"},
+				{"name":"againstVotes_","type":"uint128"},
+				{"name":"quorumVotes_","type":"uint128"},
+				{"name":"state_","type":"uint8"}
+			]
+		},
+		{
+			"name": "getProposer",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
+			]
+		},
+		{
+			"name": "getActions",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"components":[{"name":"value","type":"uint128"},{"name":"target","type":"address"},{"name":"payload","type":"cell"}],"name":"value0","type":"tuple[]"},
+				{"components":[{"name":"value","type":"uint256"},{"name":"chainId","type":"uint32"},{"name":"target","type":"uint160"},{"name":"signature","type":"string"},{"name":"callData","type":"bytes"}],"name":"value1","type":"tuple[]"}
+			]
+		},
+		{
+			"name": "getConfig",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"components":[{"name":"votingDelay","type":"uint32"},{"name":"votingPeriod","type":"uint32"},{"name":"quorumVotes","type":"uint128"},{"name":"timeLock","type":"uint32"},{"name":"threshold","type":"uint128"},{"name":"gracePeriod","type":"uint32"}],"name":"value0","type":"tuple"}
+			]
+		},
+		{
+			"name": "getTimings",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"value0","type":"uint32"},
+				{"name":"value1","type":"uint32"},
+				{"name":"value2","type":"uint32"}
+			]
+		},
+		{
+			"name": "getVotes",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"value0","type":"uint128"},
+				{"name":"value1","type":"uint128"},
+				{"name":"value2","type":"uint128"}
+			]
+		},
+		{
+			"name": "getStatuses",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"value0","type":"bool"},
+				{"name":"value1","type":"bool"}
+			]
+		},
+		{
+			"name": "getState",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"value0","type":"uint8"}
+			]
+		},
+		{
+			"name": "queue",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "execute",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "cancel",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "castVote",
+			"inputs": [
+				{"name":"value0","type":"uint32"},
+				{"name":"voter","type":"address"},
+				{"name":"votes","type":"uint128"},
+				{"name":"support","type":"bool"},
+				{"name":"reason","type":"string"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "onActionsExecuted",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "unlockCastedVote",
+			"inputs": [
+				{"name":"accountOwner","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "unlockVoteTokens",
+			"inputs": [
+				{"name":"accountOwner","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "requestUpgrade",
+			"inputs": [
+				{"name":"sendGasTo","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "upgrade",
+			"inputs": [
+				{"name":"code","type":"cell"},
+				{"name":"newVersion","type":"uint16"},
+				{"name":"sendGasTo","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "constructor",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "root",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"root","type":"address"}
+			]
+		},
+		{
+			"name": "platformCode",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"platformCode","type":"cell"}
+			]
+		},
+		{
+			"name": "id",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"id","type":"uint32"}
+			]
+		},
+		{
+			"name": "stakingRoot",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"stakingRoot","type":"address"}
+			]
+		},
+		{
+			"name": "proposer",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"proposer","type":"address"}
+			]
+		},
+		{
+			"name": "description",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"description","type":"string"}
+			]
+		},
+		{
+			"name": "tonActions",
+			"inputs": [
+			],
+			"outputs": [
+				{"components":[{"name":"value","type":"uint128"},{"name":"target","type":"address"},{"name":"payload","type":"cell"}],"name":"tonActions","type":"tuple[]"}
+			]
+		},
+		{
+			"name": "ethActions",
+			"inputs": [
+			],
+			"outputs": [
+				{"components":[{"name":"value","type":"uint256"},{"name":"chainId","type":"uint32"},{"name":"target","type":"uint160"},{"name":"signature","type":"string"},{"name":"callData","type":"bytes"}],"name":"ethActions","type":"tuple[]"}
+			]
+		},
+		{
+			"name": "proposalVersion",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"proposalVersion","type":"uint16"}
+			]
+		},
+		{
+			"name": "config",
+			"inputs": [
+			],
+			"outputs": [
+				{"components":[{"name":"votingDelay","type":"uint32"},{"name":"votingPeriod","type":"uint32"},{"name":"quorumVotes","type":"uint128"},{"name":"timeLock","type":"uint32"},{"name":"threshold","type":"uint128"},{"name":"gracePeriod","type":"uint32"}],"name":"config","type":"tuple"}
+			]
+		},
+		{
+			"name": "startTime",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"startTime","type":"uint32"}
+			]
+		},
+		{
+			"name": "endTime",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"endTime","type":"uint32"}
+			]
+		},
+		{
+			"name": "executionTime",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"executionTime","type":"uint32"}
+			]
+		},
+		{
+			"name": "canceled",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"canceled","type":"bool"}
+			]
+		},
+		{
+			"name": "executed",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"executed","type":"bool"}
+			]
+		},
+		{
+			"name": "forVotes",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"forVotes","type":"uint128"}
+			]
+		},
+		{
+			"name": "againstVotes",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"againstVotes","type":"uint128"}
+			]
+		}
+	],
+	"data": [
+	],
+	"events": [
+		{
+			"name": "VoteCast",
+			"inputs": [
+				{"name":"voter","type":"address"},
+				{"name":"support","type":"bool"},
+				{"name":"votes","type":"uint128"},
+				{"name":"reason","type":"string"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "Queued",
+			"inputs": [
+				{"name":"executionTime","type":"uint32"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "Executed",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "Canceled",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "CodeUpgradeRequested",
+			"inputs": [
+				{"name":"currentVersion","type":"uint16"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "ProposalCodeUpgraded",
+			"inputs": [
+				{"name":"newVersion","type":"uint16"}
+			],
+			"outputs": [
+			]
+		}
+	],
+	"fields": [
+		{"name":"_pubkey","type":"uint256"},
+		{"name":"_timestamp","type":"uint64"},
+		{"name":"_constructorFlag","type":"bool"},
+		{"name":"root","type":"address"},
+		{"name":"platformCode","type":"cell"},
+		{"name":"id","type":"uint32"},
+		{"name":"stakingRoot","type":"address"},
+		{"name":"proposer","type":"address"},
+		{"name":"description","type":"string"},
+		{"components":[{"name":"value","type":"uint128"},{"name":"target","type":"address"},{"name":"payload","type":"cell"}],"name":"tonActions","type":"tuple[]"},
+		{"components":[{"name":"value","type":"uint256"},{"name":"chainId","type":"uint32"},{"name":"target","type":"uint160"},{"name":"signature","type":"string"},{"name":"callData","type":"bytes"}],"name":"ethActions","type":"tuple[]"},
+		{"name":"proposalVersion","type":"uint16"},
+		{"components":[{"name":"votingDelay","type":"uint32"},{"name":"votingPeriod","type":"uint32"},{"name":"quorumVotes","type":"uint128"},{"name":"timeLock","type":"uint32"},{"name":"threshold","type":"uint128"},{"name":"gracePeriod","type":"uint32"}],"name":"config","type":"tuple"},
+		{"name":"startTime","type":"uint32"},
+		{"name":"endTime","type":"uint32"},
+		{"name":"executionTime","type":"uint32"},
+		{"name":"canceled","type":"bool"},
+		{"name":"executed","type":"bool"},
+		{"name":"forVotes","type":"uint128"},
+		{"name":"againstVotes","type":"uint128"}
+	]
+}

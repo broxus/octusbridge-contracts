@@ -1,7 +1,7 @@
 // const {
 //     getSignerFromAddr,
 //     expect,
-//     getVaultByToken, encodeWithdrawalData, encodeTonEvent
+//     getVaultByToken, encodeWithdrawalData, encodeEverscaleEvent
 // } = require("../utils");
 // const {legos} = require("@studydefi/money-legos");
 // const logger = require('mocha-logger');

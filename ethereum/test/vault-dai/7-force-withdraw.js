@@ -5,14 +5,14 @@ const {
     defaultTonRecipient,
     getVaultByToken,
     generateWallets,
-    encodeTonEvent,
+    encodeEverscaleEvent,
     encodeWithdrawalData,
     ...utils
 } = require('../utils');
 
 
 describe('Force withdraw pending', async () => {
-    let vault, wrapper, dai;
+    let vault, dai;
 
     it('Setup contracts', async () => {
         await deployments.fixture();
@@ -21,81 +21,11 @@ describe('Force withdraw pending', async () => {
             legos.erc20.abi,
             legos.erc20.dai.address,
         );
+        vault = await ethers.getContract('VaultDai');
     });
 
-    it('Create vault', async () => {
-        const owner = await ethers.getNamedSigner('owner');
-        const { guardian } = await getNamedAccounts();
-
-        const registry = await ethers.getContract('Registry');
-
-        await registry.connect(owner).newVault(
-            dai.address,
-            guardian,
-            18,
-            0,
-            0,
-        );
-
-        vault = await getVaultByToken(registry, dai.address);
-
-        wrapper = await ethers.getContractAt(
-            'VaultWrapper',
-            (await vault.wrapper())
-        );
-    });
-
-    it('Set configuration', async () => {
-        const owner = await ethers.getNamedSigner('owner');
-
-        await vault
-            .connect(owner)
-            .setConfiguration(defaultConfiguration);
-    });
-
-    it('Set deposit limit', async () => {
-        const depositLimit = ethers.utils.parseUnits('10000', 18);
-
-        const owner = await ethers.getNamedSigner('owner');
-
-        await vault
-            .connect(owner)
-            .setDepositLimit(depositLimit);
-    });
-
-    it('Set withdraw guardian, withdraw period limit and undeclared withdraw limit', async () => {
-        const owner = await ethers.getNamedSigner('owner');
-        const { withdrawGuardian } = await getNamedAccounts();
-
-        const withdrawLimitPerPeriod = ethers.utils.parseUnits('10000', 18);
-        const undeclaredWithdrawLimit = ethers.utils.parseUnits('5000', 18);
-
-        await vault.connect(owner).setWithdrawGuardian(withdrawGuardian);
-        await vault.connect(owner).setWithdrawLimitPerPeriod(withdrawLimitPerPeriod);
-        await vault.connect(owner).setUndeclaredWithdrawLimit(undeclaredWithdrawLimit);
-    });
-
-    it('Fill Alice balance with Dai', async () => {
-        const { alice, dai_owner } = await getNamedAccounts();
-
-        await utils.issueTokens({
-            token: dai,
-            owner: dai_owner,
-            recipient: alice,
-            amount: ethers.utils.parseUnits('100000', 18)
-        });
-    });
-
-    it('Alice infinite approve on vault', async () => {
-        const alice = await ethers.getNamedSigner('alice');
-
-        await dai
-            .connect(alice)
-            .approve(vault.address, ethers.utils.parseUnits('1000000000000', 18));
-    });
-
-    it('Deposit', async () => {
-        const amount = ethers.utils.parseUnits('1000', 18);
+    it('Alice deposits 1000 Dai', async () => {
+        const amount = ethers.utils.parseUnits('100', 18);
 
         const alice = await ethers.getNamedSigner('alice');
 
@@ -104,36 +34,29 @@ describe('Force withdraw pending', async () => {
             addr: 123123
         };
 
-        await expect(
-            wrapper
-                .connect(alice)
-                .deposit(recipient, amount)
-        )
-            .to.emit(vault, 'Deposit')
-            .withArgs(ethers.utils.parseUnits('1000', 18), recipient.wid, recipient.addr);
+        await vault
+            .connect(alice)
+            ['deposit((int128,uint256),uint256)'](recipient, amount);
     });
 
-    it('Create pending withdraw', async () => {
+    it('Save withdrawal for 2000 Dai to Bob', async () => {
         const { bob } = await getNamedAccounts();
 
-        const amount = ethers.utils.parseUnits('2000', 18);
+        const amount = ethers.utils.parseUnits('500', 18);
 
         const withdrawalEventData = await encodeWithdrawalData({
-            amount: amount.toString(),
+            amount: await vault.convertToTargetDecimals(amount),
             recipient: bob
         });
 
-        const payload = encodeTonEvent({
+        const payload = encodeEverscaleEvent({
             eventData: withdrawalEventData,
             proxy: vault.address
         });
 
-        const initialRelays = utils.sortAccounts(await ethers.getSigners());
+        const signatures = await utils.getPayloadSignatures(payload);
 
-        const signatures = await Promise.all(initialRelays
-            .map(async (account) => utils.signReceipt(payload, account)));
-
-        await wrapper.saveWithdraw(payload, signatures, 0);
+        await vault['saveWithdraw(bytes,bytes[])'](payload, signatures);
 
         expect(await vault.pendingWithdrawalsPerUser(bob))
             .to.be.equal(1, 'Wrong pending withdrawals counter');
@@ -144,8 +67,6 @@ describe('Force withdraw pending', async () => {
             .to.be.equal(amount, 'Wrong pending withdrawal amount');
         expect(withdrawal.bounty)
             .to.be.equal(0, 'Wrong pending withdrawal bounty');
-        expect(withdrawal.open)
-            .to.be.equal(true, 'Wrong pending withdrawal status');
 
         expect(await vault.pendingWithdrawalsTotal())
             .to.be.equal(amount, 'Wrong total pending');
@@ -154,17 +75,17 @@ describe('Force withdraw pending', async () => {
     it('Try to force withdraw with shortage of tokens', async () => {
         const { bob } = await getNamedAccounts();
 
-        await expect(wrapper.forceWithdraw([[bob, 0]])).to.be.reverted;
+        await expect(vault['forceWithdraw((address,uint256))']([bob, 0])).to.be.reverted;
     });
 
     it('Fill vault with additional tokens', async () => {
         const alice = await ethers.getNamedSigner('alice');
 
-        const amount = ethers.utils.parseUnits('1001', 18);
+        const amount = ethers.utils.parseUnits('400', 18);
 
-        await wrapper
+        await vault
             .connect(alice)
-            .deposit(defaultTonRecipient, amount);
+            ['deposit((int128,uint256),uint256)'](defaultTonRecipient, amount);
     });
 
     it('Force withdraw', async () => {
@@ -172,11 +93,14 @@ describe('Force withdraw pending', async () => {
 
         const withdrawal = await vault.pendingWithdrawals(bob.address, 0);
 
-        await expect(() => wrapper.forceWithdraw([[bob.address, 0]]))
+        await expect(() => vault['forceWithdraw((address,uint256))']([bob.address, 0]))
             .to.changeTokenBalances(
                 dai,
                 [vault, bob],
-                [ethers.BigNumber.from(0).sub(withdrawal.amount), withdrawal.amount]
+                [
+                    ethers.BigNumber.from(0).sub(withdrawal.amount),
+                    withdrawal.amount
+                ]
             );
     });
 
@@ -185,8 +109,6 @@ describe('Force withdraw pending', async () => {
 
         const withdrawal = await vault.pendingWithdrawals(bob, 0);
 
-        expect(withdrawal.open)
-            .to.be.equal(false, 'Wrong pending withdrawal status');
         expect(withdrawal.amount)
             .to.be.equal(0, 'Wrong pending withdrawal amount');
 

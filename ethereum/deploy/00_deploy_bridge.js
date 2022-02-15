@@ -23,10 +23,10 @@ module.exports = async ({getNamedAccounts, deployments}) => {
       execute: {
         methodName: 'initialize',
         args: [
-          owner,
-          roundSubmitter,
-          9, // Minimum required signatures
-          2 * week, // Relay TTL after round in seconds, 1 week
+          owner, // Bridge owner
+          roundSubmitter, // Round submitter
+          13, // Minimum required signatures
+          week * 2, // Initial round end, 2 weeks
           0, // Initial round number
           initialRoundEnd, // Initial round end, after 1 week
           initialRelays.map(a => a.address), // Initial relays

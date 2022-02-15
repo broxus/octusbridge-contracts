@@ -20,7 +20,7 @@ describe('Use payload with wrong chain id', async () => {
 
     await dao
       .connect(owner)
-      .updateConfiguration(defaultConfiguration);
+      .setConfiguration(defaultConfiguration);
   });
   
   it('Prepare payload & signatures with wrong chain id', async () => {
@@ -29,7 +29,7 @@ describe('Use payload with wrong chain id', async () => {
       data: '0x'
     }], utils.defaultChainId + 1);
   
-    payload = utils.encodeTonEvent({
+    payload = utils.encodeEverscaleEvent({
       eventData: actions,
       proxy: dao.address,
     });

@@ -23,7 +23,7 @@ describe('Test updating relays round configuration', async () => {
   
     await bridge
       .connect(owner)
-      .updateRoundRelaysConfiguration(defaultConfiguration);
+      .setConfiguration(defaultConfiguration);
   
     const configuration = await bridge.roundRelaysConfiguration();
   

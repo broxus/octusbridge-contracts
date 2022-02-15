@@ -1,15 +1,9 @@
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.2;
 
 interface IRegistry {
     event NewVaultRelease(
         uint256 indexed vault_release_id,
-        address template,
-        string api_version
-    );
-
-    event NewWrapperRelease(
-        uint256 indexed wrapper_release_id,
         address template,
         string api_version
     );
@@ -29,6 +23,4 @@ interface IRegistry {
     );
 
     event VaultTagged(address vault, string tag);
-
-    event UpdateVaultWrapper(address indexed vaultWrapper);
 }

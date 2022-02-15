@@ -110,9 +110,9 @@
       {
         "components": [
           {
-            "internalType": "int8",
+            "internalType": "int128",
             "name": "wid",
-            "type": "int8"
+            "type": "int128"
           },
           {
             "internalType": "uint256",
@@ -121,7 +121,7 @@
           }
         ],
         "indexed": false,
-        "internalType": "struct IBridge.TONAddress",
+        "internalType": "struct IEverscale.EverscaleAddress",
         "name": "configuration",
         "type": "tuple"
       }
@@ -258,6 +258,31 @@
   {
     "inputs": [
       {
+        "components": [
+          {
+            "internalType": "int128",
+            "name": "wid",
+            "type": "int128"
+          },
+          {
+            "internalType": "uint256",
+            "name": "addr",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IEverscale.EverscaleAddress",
+        "name": "_roundRelaysConfiguration",
+        "type": "tuple"
+      }
+    ],
+    "name": "setConfiguration",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "bytes",
         "name": "payload",
         "type": "bytes"
@@ -322,31 +347,6 @@
   {
     "inputs": [
       {
-        "components": [
-          {
-            "internalType": "int8",
-            "name": "wid",
-            "type": "int8"
-          },
-          {
-            "internalType": "uint256",
-            "name": "addr",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct IBridge.TONAddress",
-        "name": "_roundRelaysConfiguration",
-        "type": "tuple"
-      }
-    ],
-    "name": "updateRoundRelaysConfiguration",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "uint32",
         "name": "_roundTTL",
         "type": "uint32"
@@ -370,7 +370,7 @@
         "type": "bytes[]"
       }
     ],
-    "name": "verifySignedTonEvent",
+    "name": "verifySignedEverscaleEvent",
     "outputs": [
       {
         "internalType": "uint32",

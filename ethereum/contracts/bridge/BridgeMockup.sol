@@ -1,12 +1,12 @@
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.2;
 
 
 contract BridgeMockup {
-    function verifySignedTonEvent(
+    function verifySignedEverscaleEvent(
         bytes memory payload,
         bytes[] memory signatures
-    ) external view returns(uint32) {
+    ) external view returns (uint32) {
         return 0;
     }
 }

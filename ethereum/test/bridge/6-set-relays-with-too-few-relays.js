@@ -20,7 +20,7 @@ describe('Try to set too few relays for the next round', async () => {
     
     await bridge
       .connect(owner)
-      .updateRoundRelaysConfiguration(defaultConfiguration);
+      .setConfiguration(defaultConfiguration);
   });
   
   it('Send payload & signatures', async () => {
@@ -36,7 +36,7 @@ describe('Try to set too few relays for the next round', async () => {
       ]
     );
     
-    const payload = utils.encodeTonEvent({
+    const payload = utils.encodeEverscaleEvent({
       eventData: roundRelaysPayload,
       proxy: bridge.address,
     });

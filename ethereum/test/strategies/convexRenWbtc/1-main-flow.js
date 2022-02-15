@@ -4,7 +4,7 @@ const { upgrades, ethers } = require("hardhat");
 
 
 
-describe('Test ConvexRenWBtc strategy on WBTC vault', async () => {
+describe.skip('Test ConvexRenWBtc strategy on WBTC vault', async () => {
     let vault, strategy, wbtc, governance, booster, wrapped, rewards;
     let snapshot;
 

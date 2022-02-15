@@ -18,9 +18,9 @@
       {
         "components": [
           {
-            "internalType": "int8",
+            "internalType": "int128",
             "name": "wid",
-            "type": "int8"
+            "type": "int128"
           },
           {
             "internalType": "uint256",
@@ -29,7 +29,7 @@
           }
         ],
         "indexed": false,
-        "internalType": "struct IBridge.TONAddress",
+        "internalType": "struct IEverscale.EverscaleAddress",
         "name": "configuration",
         "type": "tuple"
       }
@@ -69,7 +69,7 @@
         "type": "address"
       }
     ],
-    "name": "updateBridge",
+    "name": "setBridge",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

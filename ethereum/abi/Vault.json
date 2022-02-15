@@ -1,2190 +1,2536 @@
 [
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "int128",
+        "name": "wid",
+        "type": "int128"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "addr",
+        "type": "uint256"
+      }
+    ],
     "name": "Deposit",
-    "inputs": [
-      {
-        "name": "amount",
-        "type": "uint256",
-        "indexed": false
-      },
-      {
-        "name": "wid",
-        "type": "int128",
-        "indexed": false
-      },
-      {
-        "name": "addr",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
     "type": "event"
   },
   {
-    "name": "NewDeposit",
-    "inputs": [
-      {
-        "name": "sender",
-        "type": "address",
-        "indexed": false
-      },
-      {
-        "name": "recipientWid",
-        "type": "int128",
-        "indexed": false
-      },
-      {
-        "name": "recipientAddr",
-        "type": "uint256",
-        "indexed": false
-      },
-      {
-        "name": "amount",
-        "type": "uint256",
-        "indexed": false
-      },
-      {
-        "name": "pendingWithdrawalRecipient",
-        "type": "address",
-        "indexed": false
-      },
-      {
-        "name": "pendingWithdrawalId",
-        "type": "uint256",
-        "indexed": false
-      },
-      {
-        "name": "sendTransferToTon",
-        "type": "bool",
-        "indexed": false
-      }
-    ],
     "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "InstantWithdrawal",
     "inputs": [
       {
-        "name": "recipient",
-        "type": "address",
-        "indexed": false
-      },
-      {
-        "name": "payloadId",
-        "type": "bytes32",
-        "indexed": false
-      },
-      {
-        "name": "amount",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "CreatePendingWithdrawal",
-    "inputs": [
-      {
-        "name": "recipient",
-        "type": "address",
-        "indexed": false
-      },
-      {
-        "name": "id",
-        "type": "uint256",
-        "indexed": false
-      },
-      {
-        "name": "payloadId",
-        "type": "bytes32",
-        "indexed": false
-      },
-      {
-        "name": "amount",
-        "type": "uint256",
-        "indexed": false
-      },
-      {
-        "name": "bounty",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "UpdatePendingWithdrawalBounty",
-    "inputs": [
-      {
-        "name": "recipient",
-        "type": "address",
-        "indexed": false
-      },
-      {
-        "name": "id",
-        "type": "uint256",
-        "indexed": false
-      },
-      {
-        "name": "bounty",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "CancelPendingWithdrawal",
-    "inputs": [
-      {
-        "name": "recipient",
-        "type": "address",
-        "indexed": false
-      },
-      {
-        "name": "id",
-        "type": "uint256",
-        "indexed": false
-      },
-      {
-        "name": "amount",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "WithdrawPendingWithdrawal",
-    "inputs": [
-      {
-        "name": "recipient",
-        "type": "address",
-        "indexed": false
-      },
-      {
-        "name": "id",
-        "type": "uint256",
-        "indexed": false
-      },
-      {
-        "name": "requestedAmount",
-        "type": "uint256",
-        "indexed": false
-      },
-      {
-        "name": "redeemedAmount",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "FillPendingWithdrawal",
-    "inputs": [
-      {
-        "name": "recipient",
-        "type": "address",
-        "indexed": false
-      },
-      {
-        "name": "id",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "UpdateBridge",
-    "inputs": [
-      {
-        "name": "bridge",
-        "type": "address",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "UpdateWrapper",
-    "inputs": [
-      {
-        "name": "wrapper",
-        "type": "address",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "UpdateConfiguration",
-    "inputs": [
-      {
-        "name": "wid",
-        "type": "int128",
-        "indexed": false
-      },
-      {
-        "name": "addr",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "UpdateTargetDecimals",
-    "inputs": [
-      {
-        "name": "targetDecimals",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "ForceWithdraw",
-    "inputs": [
-      {
-        "name": "recipient",
-        "type": "address",
-        "indexed": false
-      },
-      {
-        "name": "id",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "UpdateWithdrawGuardian",
-    "inputs": [
-      {
-        "name": "withdrawGuardian",
-        "type": "address",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "UpdatePendingWithdrawApprove",
-    "inputs": [
-      {
-        "name": "recipient",
-        "type": "address",
-        "indexed": false
-      },
-      {
-        "name": "id",
-        "type": "uint256",
-        "indexed": false
-      },
-      {
-        "name": "approveStatus",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "WithdrawApprovedWithdrawal",
-    "inputs": [
-      {
-        "name": "recipient",
-        "type": "address",
-        "indexed": false
-      },
-      {
-        "name": "id",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "UpdateWithdrawLimitPerPeriod",
-    "inputs": [
-      {
-        "name": "withdrawLimitPerPeriod",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "UpdateUndeclaredWithdrawLimit",
-    "inputs": [
-      {
-        "name": "undeclaredWithdrawLimit",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "UpdateRewards",
-    "inputs": [
-      {
-        "name": "wid",
-        "type": "int128",
-        "indexed": false
-      },
-      {
-        "name": "addr",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "UpdateStrategyRewards",
-    "inputs": [
-      {
-        "name": "strategy",
-        "type": "address",
-        "indexed": false
-      },
-      {
-        "name": "wid",
-        "type": "int128",
-        "indexed": false
-      },
-      {
-        "name": "addr",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "UpdateDepositFee",
-    "inputs": [
-      {
-        "name": "step",
-        "type": "uint256",
-        "indexed": false
-      },
-      {
-        "name": "size",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "UpdateWithdrawFee",
-    "inputs": [
-      {
-        "name": "step",
-        "type": "uint256",
-        "indexed": false
-      },
-      {
-        "name": "size",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "StrategyAdded",
-    "inputs": [
-      {
-        "name": "strategy",
-        "type": "address",
-        "indexed": true
-      },
-      {
-        "name": "debtRatio",
-        "type": "uint256",
-        "indexed": false
-      },
-      {
-        "name": "minDebtPerHarvest",
-        "type": "uint256",
-        "indexed": false
-      },
-      {
-        "name": "maxDebtPerHarvest",
-        "type": "uint256",
-        "indexed": false
-      },
-      {
-        "name": "performanceFee",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "StrategyReported",
-    "inputs": [
-      {
-        "name": "strategy",
-        "type": "address",
-        "indexed": true
-      },
-      {
-        "name": "gain",
-        "type": "uint256",
-        "indexed": false
-      },
-      {
-        "name": "loss",
-        "type": "uint256",
-        "indexed": false
-      },
-      {
-        "name": "debtPaid",
-        "type": "uint256",
-        "indexed": false
-      },
-      {
-        "name": "totalGain",
-        "type": "uint256",
-        "indexed": false
-      },
-      {
-        "name": "totalSkim",
-        "type": "uint256",
-        "indexed": false
-      },
-      {
-        "name": "totalLoss",
-        "type": "uint256",
-        "indexed": false
-      },
-      {
-        "name": "totalDebt",
-        "type": "uint256",
-        "indexed": false
-      },
-      {
-        "name": "debtAdded",
-        "type": "uint256",
-        "indexed": false
-      },
-      {
-        "name": "debtRatio",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "UpdateGovernance",
-    "inputs": [
-      {
-        "name": "governance",
-        "type": "address",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "NewPendingGovernance",
-    "inputs": [
-      {
-        "name": "governance",
-        "type": "address",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "UpdateManagement",
-    "inputs": [
-      {
-        "name": "management",
-        "type": "address",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "UpdateDepositLimit",
-    "inputs": [
-      {
-        "name": "depositLimit",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "UpdatePerformanceFee",
-    "inputs": [
-      {
-        "name": "performanceFee",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "UpdateManagementFee",
-    "inputs": [
-      {
-        "name": "managementFee",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "UpdateGuardian",
-    "inputs": [
-      {
-        "name": "guardian",
-        "type": "address",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "EmergencyShutdown",
-    "inputs": [
-      {
-        "name": "active",
-        "type": "bool",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "UpdateWithdrawalQueue",
-    "inputs": [
-      {
-        "name": "queue",
-        "type": "address[20]",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "StrategyUpdateDebtRatio",
-    "inputs": [
-      {
-        "name": "strategy",
-        "type": "address",
-        "indexed": true
-      },
-      {
-        "name": "debtRatio",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "StrategyUpdateMinDebtPerHarvest",
-    "inputs": [
-      {
-        "name": "strategy",
-        "type": "address",
-        "indexed": true
-      },
-      {
-        "name": "minDebtPerHarvest",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "StrategyUpdateMaxDebtPerHarvest",
-    "inputs": [
-      {
-        "name": "strategy",
-        "type": "address",
-        "indexed": true
-      },
-      {
-        "name": "maxDebtPerHarvest",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "StrategyUpdatePerformanceFee",
-    "inputs": [
-      {
-        "name": "strategy",
-        "type": "address",
-        "indexed": true
-      },
-      {
-        "name": "performanceFee",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "StrategyMigrated",
-    "inputs": [
-      {
-        "name": "oldVersion",
-        "type": "address",
-        "indexed": true
-      },
-      {
-        "name": "newVersion",
-        "type": "address",
-        "indexed": true
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "StrategyRevoked",
-    "inputs": [
-      {
-        "name": "strategy",
-        "type": "address",
-        "indexed": true
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "StrategyRemovedFromQueue",
-    "inputs": [
-      {
-        "name": "strategy",
-        "type": "address",
-        "indexed": true
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "name": "StrategyAddedToQueue",
-    "inputs": [
-      {
-        "name": "strategy",
-        "type": "address",
-        "indexed": true
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "initialize",
-    "inputs": [
-      {
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "name": "governance",
-        "type": "address"
-      },
-      {
-        "name": "bridge",
-        "type": "address"
-      },
-      {
-        "name": "targetDecimals",
-        "type": "uint256"
-      }
-    ],
-    "outputs": [],
-    "gas": 330597
-  },
-  {
-    "stateMutability": "pure",
-    "type": "function",
-    "name": "apiVersion",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "gas": 5946
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "setDepositFee",
-    "inputs": [
-      {
-        "name": "fee",
-        "type": "tuple",
-        "components": [
-          {
-            "name": "step",
-            "type": "uint256"
-          },
-          {
-            "name": "size",
-            "type": "uint256"
-          }
-        ]
-      }
-    ],
-    "outputs": [],
-    "gas": 77114
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "setWithdrawFee",
-    "inputs": [
-      {
-        "name": "fee",
-        "type": "tuple",
-        "components": [
-          {
-            "name": "step",
-            "type": "uint256"
-          },
-          {
-            "name": "size",
-            "type": "uint256"
-          }
-        ]
-      }
-    ],
-    "outputs": [],
-    "gas": 77144
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "setWrapper",
-    "inputs": [
-      {
-        "name": "wrapper",
-        "type": "address"
-      }
-    ],
-    "outputs": [],
-    "gas": 39015
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "setConfiguration",
-    "inputs": [
-      {
-        "name": "configuration",
-        "type": "tuple",
-        "components": [
-          {
-            "name": "wid",
-            "type": "int128"
-          },
-          {
-            "name": "addr",
-            "type": "uint256"
-          }
-        ]
-      }
-    ],
-    "outputs": [],
-    "gas": 74689
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "setGovernance",
-    "inputs": [
-      {
-        "name": "governance",
-        "type": "address"
-      }
-    ],
-    "outputs": [],
-    "gas": 39075
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "setManagement",
-    "inputs": [
-      {
-        "name": "management",
-        "type": "address"
-      }
-    ],
-    "outputs": [],
-    "gas": 39105
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "setStrategyRewards",
-    "inputs": [
-      {
-        "name": "strategy",
-        "type": "address"
-      },
-      {
-        "name": "rewards",
-        "type": "tuple",
-        "components": [
-          {
-            "name": "wid",
-            "type": "int128"
-          },
-          {
-            "name": "addr",
-            "type": "uint256"
-          }
-        ]
-      }
-    ],
-    "outputs": [],
-    "gas": 80755
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "setRewards",
-    "inputs": [
-      {
-        "name": "rewards",
-        "type": "tuple",
-        "components": [
-          {
-            "name": "wid",
-            "type": "int128"
-          },
-          {
-            "name": "addr",
-            "type": "uint256"
-          }
-        ]
-      }
-    ],
-    "outputs": [],
-    "gas": 74809
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "setLockedProfitDegradation",
-    "inputs": [
-      {
-        "name": "degradation",
-        "type": "uint256"
-      }
-    ],
-    "outputs": [],
-    "gas": 37849
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "setDepositLimit",
-    "inputs": [
-      {
-        "name": "limit",
-        "type": "uint256"
-      }
-    ],
-    "outputs": [],
-    "gas": 39125
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "setPerformanceFee",
-    "inputs": [
-      {
-        "name": "fee",
-        "type": "uint256"
-      }
-    ],
-    "outputs": [],
-    "gas": 39259
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "setManagementFee",
-    "inputs": [
-      {
-        "name": "fee",
-        "type": "uint256"
-      }
-    ],
-    "outputs": [],
-    "gas": 39289
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "setGuardian",
-    "inputs": [
-      {
-        "name": "guardian",
-        "type": "address"
-      }
-    ],
-    "outputs": [],
-    "gas": 41833
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "setWithdrawGuardian",
-    "inputs": [
-      {
-        "name": "withdrawGuardian",
-        "type": "address"
-      }
-    ],
-    "outputs": [],
-    "gas": 41863
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "setWithdrawLimitPerPeriod",
-    "inputs": [
-      {
-        "name": "withdrawLimitPerPeriod",
-        "type": "uint256"
-      }
-    ],
-    "outputs": [],
-    "gas": 39275
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "setUndeclaredWithdrawLimit",
-    "inputs": [
-      {
-        "name": "undeclaredWithdrawLimit",
-        "type": "uint256"
-      }
-    ],
-    "outputs": [],
-    "gas": 39305
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "setEmergencyShutdown",
-    "inputs": [
-      {
+        "indexed": false,
+        "internalType": "bool",
         "name": "active",
         "type": "bool"
       }
     ],
-    "outputs": [],
-    "gas": 41994
+    "name": "EmergencyShutdown",
+    "type": "event"
   },
   {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "setWithdrawalQueue",
+    "anonymous": false,
     "inputs": [
       {
+        "indexed": false,
+        "internalType": "uint128",
+        "name": "amount",
+        "type": "uint128"
+      },
+      {
+        "indexed": false,
+        "internalType": "int8",
+        "name": "wid",
+        "type": "int8"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "user",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "creditor",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "recipient",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint128",
+        "name": "tokenAmount",
+        "type": "uint128"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint128",
+        "name": "tonAmount",
+        "type": "uint128"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "swapType",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint128",
+        "name": "slippageNumerator",
+        "type": "uint128"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint128",
+        "name": "slippageDenominator",
+        "type": "uint128"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes1",
+        "name": "separator",
+        "type": "bytes1"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "level3",
+        "type": "bytes"
+      }
+    ],
+    "name": "FactoryDeposit",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "payloadId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "InstantWithdrawal",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "governance",
+        "type": "address"
+      }
+    ],
+    "name": "NewPendingGovernance",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "PendingWithdrawalCancel",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "payloadId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "PendingWithdrawalCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      }
+    ],
+    "name": "PendingWithdrawalFill",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum IVault.ApproveStatus",
+        "name": "approveStatus",
+        "type": "uint8"
+      }
+    ],
+    "name": "PendingWithdrawalUpdateApproveStatus",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "bounty",
+        "type": "uint256"
+      }
+    ],
+    "name": "PendingWithdrawalUpdateBounty",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "requestedAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "redeemedAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "PendingWithdrawalWithdraw",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "strategy",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "debtRatio",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "minDebtPerHarvest",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "maxDebtPerHarvest",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "performanceFee",
+        "type": "uint256"
+      }
+    ],
+    "name": "StrategyAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "strategy",
+        "type": "address"
+      }
+    ],
+    "name": "StrategyAddedToQueue",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "oldVersion",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newVersion",
+        "type": "address"
+      }
+    ],
+    "name": "StrategyMigrated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "strategy",
+        "type": "address"
+      }
+    ],
+    "name": "StrategyRemovedFromQueue",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "strategy",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "gain",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "loss",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "debtPaid",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "totalGain",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "totalSkim",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "totalLoss",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "totalDebt",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "debtAdded",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "debtRatio",
+        "type": "uint256"
+      }
+    ],
+    "name": "StrategyReported",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "strategy",
+        "type": "address"
+      }
+    ],
+    "name": "StrategyRevoked",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "strategy",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "debtRatio",
+        "type": "uint256"
+      }
+    ],
+    "name": "StrategyUpdateDebtRatio",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "strategy",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "maxDebtPerHarvest",
+        "type": "uint256"
+      }
+    ],
+    "name": "StrategyUpdateMaxDebtPerHarvest",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "strategy",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "minDebtPerHarvest",
+        "type": "uint256"
+      }
+    ],
+    "name": "StrategyUpdateMinDebtPerHarvest",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "strategy",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "performanceFee",
+        "type": "uint256"
+      }
+    ],
+    "name": "StrategyUpdatePerformanceFee",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "strategyId",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "int128",
+        "name": "wid",
+        "type": "int128"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "addr",
+        "type": "uint256"
+      }
+    ],
+    "name": "StrategyUpdateRewards",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "bridge",
+        "type": "address"
+      }
+    ],
+    "name": "UpdateBridge",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "int128",
+        "name": "wid",
+        "type": "int128"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "addr",
+        "type": "uint256"
+      }
+    ],
+    "name": "UpdateConfiguration",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "fee",
+        "type": "uint256"
+      }
+    ],
+    "name": "UpdateDepositFee",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "depositLimit",
+        "type": "uint256"
+      }
+    ],
+    "name": "UpdateDepositLimit",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "governance",
+        "type": "address"
+      }
+    ],
+    "name": "UpdateGovernance",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "guardian",
+        "type": "address"
+      }
+    ],
+    "name": "UpdateGuardian",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "management",
+        "type": "address"
+      }
+    ],
+    "name": "UpdateManagement",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "managenentFee",
+        "type": "uint256"
+      }
+    ],
+    "name": "UpdateManagementFee",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "performanceFee",
+        "type": "uint256"
+      }
+    ],
+    "name": "UpdatePerformanceFee",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "int128",
+        "name": "wid",
+        "type": "int128"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "addr",
+        "type": "uint256"
+      }
+    ],
+    "name": "UpdateRewards",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "targetDecimals",
+        "type": "uint256"
+      }
+    ],
+    "name": "UpdateTargetDecimals",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "undeclaredWithdrawLimit",
+        "type": "uint256"
+      }
+    ],
+    "name": "UpdateUndeclaredWithdrawLimit",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "fee",
+        "type": "uint256"
+      }
+    ],
+    "name": "UpdateWithdrawFee",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "withdrawGuardian",
+        "type": "address"
+      }
+    ],
+    "name": "UpdateWithdrawGuardian",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "withdrawLimitPerPeriod",
+        "type": "uint256"
+      }
+    ],
+    "name": "UpdateWithdrawLimitPerPeriod",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address[20]",
         "name": "queue",
         "type": "address[20]"
       }
     ],
-    "outputs": [],
-    "gas": 718820
+    "name": "UpdateWithdrawalQueue",
+    "type": "event"
   },
   {
+    "inputs": [],
+    "name": "acceptGovernance",
+    "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "setPendingWithdrawalBounty",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
-        "name": "id",
+        "internalType": "address",
+        "name": "strategyId",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_debtRatio",
         "type": "uint256"
       },
       {
-        "name": "bounty",
+        "internalType": "uint256",
+        "name": "minDebtPerHarvest",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxDebtPerHarvest",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_performanceFee",
         "type": "uint256"
       }
     ],
+    "name": "addStrategy",
     "outputs": [],
-    "gas": 51099
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "totalAssets",
     "inputs": [],
+    "name": "apiVersion",
     "outputs": [
       {
+        "internalType": "string",
+        "name": "api_version",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "availableDepositLimit",
+    "outputs": [
+      {
+        "internalType": "uint256",
         "name": "",
         "type": "uint256"
       }
     ],
-    "gas": 8698
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "deposit",
+    "inputs": [],
+    "name": "bridge",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
-        "name": "sender",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
       },
       {
-        "name": "recipient",
-        "type": "tuple",
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
         "components": [
           {
+            "internalType": "int128",
             "name": "wid",
             "type": "int128"
           },
           {
+            "internalType": "uint256",
             "name": "addr",
             "type": "uint256"
           }
-        ]
+        ],
+        "internalType": "struct IEverscale.EverscaleAddress",
+        "name": "recipient",
+        "type": "tuple"
       },
       {
-        "name": "_amount",
+        "internalType": "uint256",
+        "name": "bounty",
         "type": "uint256"
-      },
+      }
+    ],
+    "name": "cancelPendingWithdrawal",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "configuration",
+    "outputs": [
       {
-        "name": "pendingWithdrawalId",
-        "type": "tuple",
         "components": [
           {
+            "internalType": "int128",
+            "name": "wid",
+            "type": "int128"
+          },
+          {
+            "internalType": "uint256",
+            "name": "addr",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IEverscale.EverscaleAddress",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "convertFromTargetDecimals",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "convertToTargetDecimals",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "creditAvailable",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "strategyId",
+        "type": "address"
+      }
+    ],
+    "name": "creditAvailable",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "strategyId",
+        "type": "address"
+      }
+    ],
+    "name": "debtOutstanding",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "debtOutstanding",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "debtRatio",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "eventData",
+        "type": "bytes"
+      }
+    ],
+    "name": "decodeWithdrawalEventData",
+    "outputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "int128",
+                "name": "wid",
+                "type": "int128"
+              },
+              {
+                "internalType": "uint256",
+                "name": "addr",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct IEverscale.EverscaleAddress",
+            "name": "sender",
+            "type": "tuple"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
             "name": "recipient",
             "type": "address"
           },
           {
-            "name": "id",
-            "type": "uint256"
+            "internalType": "uint32",
+            "name": "chainId",
+            "type": "uint32"
           }
-        ]
-      },
-      {
-        "name": "sendTransferToTon",
-        "type": "bool"
+        ],
+        "internalType": "struct IVaultBasic.WithdrawalParams",
+        "name": "",
+        "type": "tuple"
       }
     ],
-    "outputs": [],
-    "gas": 312823
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "saveWithdraw",
     "inputs": [
       {
-        "name": "payloadId",
-        "type": "bytes32"
-      },
-      {
-        "name": "recipient",
-        "type": "address"
-      },
-      {
-        "name": "_amount",
-        "type": "uint256"
-      },
-      {
-        "name": "_timestamp",
-        "type": "uint256"
-      },
-      {
-        "name": "bounty",
-        "type": "uint256"
-      }
-    ],
-    "outputs": [],
-    "gas": 462133
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "cancelPendingWithdrawal",
-    "inputs": [
-      {
-        "name": "id",
-        "type": "uint256"
-      },
-      {
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "name": "recipient",
-        "type": "tuple",
         "components": [
           {
+            "internalType": "int128",
             "name": "wid",
             "type": "int128"
           },
           {
+            "internalType": "uint256",
             "name": "addr",
             "type": "uint256"
           }
-        ]
-      }
-    ],
-    "outputs": [],
-    "gas": 159348
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "withdraw",
-    "inputs": [
-      {
-        "name": "id",
-        "type": "uint256"
-      },
-      {
-        "name": "_value",
-        "type": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ]
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "withdraw",
-    "inputs": [
-      {
-        "name": "id",
-        "type": "uint256"
-      },
-      {
-        "name": "_value",
-        "type": "uint256"
-      },
-      {
+        ],
+        "internalType": "struct IEverscale.EverscaleAddress",
         "name": "recipient",
-        "type": "address"
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "recipient",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IVault.PendingWithdrawalId",
+        "name": "pendingWithdrawalId",
+        "type": "tuple"
       }
     ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ]
+    "name": "deposit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "withdraw",
     "inputs": [
       {
-        "name": "id",
-        "type": "uint256"
-      },
-      {
-        "name": "_value",
-        "type": "uint256"
-      },
-      {
+        "components": [
+          {
+            "internalType": "int128",
+            "name": "wid",
+            "type": "int128"
+          },
+          {
+            "internalType": "uint256",
+            "name": "addr",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IEverscale.EverscaleAddress",
         "name": "recipient",
-        "type": "address"
+        "type": "tuple"
       },
       {
-        "name": "maxLoss",
+        "internalType": "uint256",
+        "name": "amount",
         "type": "uint256"
       }
     ],
+    "name": "deposit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "int128",
+            "name": "wid",
+            "type": "int128"
+          },
+          {
+            "internalType": "uint256",
+            "name": "addr",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IEverscale.EverscaleAddress",
+        "name": "recipient",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "amount",
+        "type": "uint256[]"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "recipient",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IVault.PendingWithdrawalId[]",
+        "name": "pendingWithdrawalId",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "deposit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "depositFee",
     "outputs": [
       {
+        "internalType": "uint256",
         "name": "",
         "type": "uint256"
       }
-    ]
+    ],
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "addStrategy",
-    "inputs": [
+    "inputs": [],
+    "name": "depositLimit",
+    "outputs": [
       {
-        "name": "strategy",
-        "type": "address"
-      },
-      {
-        "name": "debtRatio",
-        "type": "uint256"
-      },
-      {
-        "name": "minDebtPerHarvest",
-        "type": "uint256"
-      },
-      {
-        "name": "maxDebtPerHarvest",
-        "type": "uint256"
-      },
-      {
-        "name": "performanceFee",
+        "internalType": "uint256",
+        "name": "",
         "type": "uint256"
       }
     ],
-    "outputs": [],
-    "gas": 445557
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "updateStrategyDebtRatio",
     "inputs": [
       {
-        "name": "strategy",
-        "type": "address"
+        "internalType": "uint128",
+        "name": "amount",
+        "type": "uint128"
       },
       {
-        "name": "debtRatio",
+        "internalType": "int8",
+        "name": "wid",
+        "type": "int8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "user",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "creditor",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "recipient",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint128",
+        "name": "tokenAmount",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "tonAmount",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint8",
+        "name": "swapType",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint128",
+        "name": "slippageNumerator",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "slippageDenominator",
+        "type": "uint128"
+      },
+      {
+        "internalType": "bytes",
+        "name": "level3",
+        "type": "bytes"
+      }
+    ],
+    "name": "depositToFactory",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "emergencyShutdown",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "strategyId",
+        "type": "address"
+      }
+    ],
+    "name": "expectedReturn",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
         "type": "uint256"
       }
     ],
-    "outputs": [],
-    "gas": 121745
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "updateStrategyMinDebtPerHarvest",
     "inputs": [
       {
-        "name": "strategy",
+        "components": [
+          {
+            "internalType": "address",
+            "name": "recipient",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IVault.PendingWithdrawalId",
+        "name": "pendingWithdrawalId",
+        "type": "tuple"
+      }
+    ],
+    "name": "forceWithdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "recipient",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IVault.PendingWithdrawalId[]",
+        "name": "pendingWithdrawalId",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "forceWithdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "governance",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "guardian",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
         "type": "address"
       },
       {
-        "name": "minDebtPerHarvest",
-        "type": "uint256"
-      }
-    ],
-    "outputs": [],
-    "gas": 47611
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "updateStrategyMaxDebtPerHarvest",
-    "inputs": [
-      {
-        "name": "strategy",
+        "internalType": "address",
+        "name": "_bridge",
         "type": "address"
       },
       {
-        "name": "maxDebtPerHarvest",
-        "type": "uint256"
-      }
-    ],
-    "outputs": [],
-    "gas": 47641
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "updateStrategyPerformanceFee",
-    "inputs": [
-      {
-        "name": "strategy",
+        "internalType": "address",
+        "name": "_governance",
         "type": "address"
       },
       {
-        "name": "performanceFee",
+        "internalType": "uint256",
+        "name": "_targetDecimals",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "int128",
+            "name": "wid",
+            "type": "int128"
+          },
+          {
+            "internalType": "uint256",
+            "name": "addr",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IEverscale.EverscaleAddress",
+        "name": "_rewards",
+        "type": "tuple"
+      }
+    ],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "lastReport",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
         "type": "uint256"
       }
     ],
-    "outputs": [],
-    "gas": 42854
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "migrateStrategy",
+    "inputs": [],
+    "name": "lockedProfit",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "lockedProfitDegradation",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "management",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "managementFee",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
+        "internalType": "address",
         "name": "oldVersion",
         "type": "address"
       },
       {
+        "internalType": "address",
         "name": "newVersion",
         "type": "address"
       }
     ],
+    "name": "migrateStrategy",
     "outputs": [],
-    "gas": 1324367
-  },
-  {
     "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "revokeStrategy",
-    "inputs": [],
-    "outputs": []
+    "type": "function"
   },
   {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "revokeStrategy",
     "inputs": [
       {
-        "name": "strategy",
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      }
+    ],
+    "name": "pendingWithdrawals",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "bounty",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "timestamp",
+            "type": "uint256"
+          },
+          {
+            "internalType": "enum IVault.ApproveStatus",
+            "name": "approveStatus",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct IVault.PendingWithdrawalParams",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
         "type": "address"
       }
     ],
-    "outputs": []
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "debtOutstanding",
-    "inputs": [],
+    "name": "pendingWithdrawalsPerUser",
     "outputs": [
       {
-        "name": "",
-        "type": "uint256"
-      }
-    ]
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "debtOutstanding",
-    "inputs": [
-      {
-        "name": "strategy",
-        "type": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ]
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "creditAvailable",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ]
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "creditAvailable",
-    "inputs": [
-      {
-        "name": "strategy",
-        "type": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ]
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "availableDepositLimit",
-    "inputs": [],
-    "outputs": [
-      {
+        "internalType": "uint256",
         "name": "",
         "type": "uint256"
       }
     ],
-    "gas": 21321
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "expectedReturn",
     "inputs": [],
+    "name": "pendingWithdrawalsTotal",
     "outputs": [
       {
+        "internalType": "uint256",
         "name": "",
         "type": "uint256"
-      }
-    ]
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "expectedReturn",
-    "inputs": [
-      {
-        "name": "strategy",
-        "type": "address"
       }
     ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "performanceFee",
     "outputs": [
       {
+        "internalType": "uint256",
         "name": "",
         "type": "uint256"
       }
-    ]
+    ],
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "report",
     "inputs": [
       {
+        "internalType": "uint256",
         "name": "gain",
         "type": "uint256"
       },
       {
+        "internalType": "uint256",
         "name": "loss",
         "type": "uint256"
       },
       {
+        "internalType": "uint256",
         "name": "_debtPayment",
         "type": "uint256"
       }
     ],
+    "name": "report",
     "outputs": [
       {
+        "internalType": "uint256",
         "name": "",
         "type": "uint256"
       }
     ],
-    "gas": 810654
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "sweep",
-    "inputs": [
-      {
-        "name": "token",
-        "type": "address"
-      }
-    ],
-    "outputs": []
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "sweep",
-    "inputs": [
-      {
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "outputs": []
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "emergencyWithdrawAndRevoke",
-    "inputs": [
-      {
-        "name": "strategy",
-        "type": "address"
-      }
-    ],
-    "outputs": []
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "emergencyWithdrawAndRevoke",
-    "inputs": [
-      {
-        "name": "strategy",
-        "type": "address"
-      },
-      {
-        "name": "_amountNeeded",
-        "type": "uint256"
-      }
-    ],
-    "outputs": []
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "forceWithdraw",
-    "inputs": [
-      {
-        "name": "recipient",
-        "type": "address"
-      },
-      {
-        "name": "id",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [],
+    "name": "revokeStrategy",
     "outputs": [],
-    "gas": 111102
-  },
-  {
     "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "skim",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
-        "name": "strategy",
+        "internalType": "address",
+        "name": "strategyId",
         "type": "address"
       }
     ],
+    "name": "revokeStrategy",
     "outputs": [],
-    "gas": 96582
-  },
-  {
     "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "setPendingWithdrawApprove",
-    "inputs": [
-      {
-        "name": "recipient",
-        "type": "address"
-      },
-      {
-        "name": "id",
-        "type": "uint256"
-      },
-      {
-        "name": "approveStatus",
-        "type": "uint256"
-      }
-    ],
-    "outputs": [],
-    "gas": 169525
+    "type": "function"
   },
   {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "token",
     "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "gas": 3678
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "governance",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "gas": 3708
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "management",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "gas": 3738
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "guardian",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "gas": 3768
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "pendingWithdrawalsPerUser",
-    "inputs": [
-      {
-        "name": "arg0",
-        "type": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "gas": 4013
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "pendingWithdrawals",
-    "inputs": [
-      {
-        "name": "arg0",
-        "type": "address"
-      },
-      {
-        "name": "arg1",
-        "type": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "name": "bounty",
-        "type": "uint256"
-      },
-      {
-        "name": "open",
-        "type": "bool"
-      },
-      {
-        "name": "approveStatus",
-        "type": "uint256"
-      },
-      {
-        "name": "_timestamp",
-        "type": "uint256"
-      }
-    ],
-    "gas": 13538
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "pendingWithdrawalsTotal",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "gas": 3858
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "withdrawIds",
-    "inputs": [
-      {
-        "name": "arg0",
-        "type": "bytes32"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "gas": 4003
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "wrapper",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "gas": 3918
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "bridge",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "gas": 3948
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "configuration",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "wid",
-        "type": "int128"
-      },
-      {
-        "name": "addr",
-        "type": "uint256"
-      }
-    ],
-    "gas": 6512
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
     "name": "rewards",
-    "inputs": [],
     "outputs": [
       {
-        "name": "wid",
-        "type": "int128"
-      },
-      {
-        "name": "addr",
-        "type": "uint256"
-      }
-    ],
-    "gas": 6542
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "depositFee",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "step",
-        "type": "uint256"
-      },
-      {
-        "name": "size",
-        "type": "uint256"
-      }
-    ],
-    "gas": 6572
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "withdrawFee",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "step",
-        "type": "uint256"
-      },
-      {
-        "name": "size",
-        "type": "uint256"
-      }
-    ],
-    "gas": 6602
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "strategies",
-    "inputs": [
-      {
-        "name": "arg0",
-        "type": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "performanceFee",
-        "type": "uint256"
-      },
-      {
-        "name": "activation",
-        "type": "uint256"
-      },
-      {
-        "name": "debtRatio",
-        "type": "uint256"
-      },
-      {
-        "name": "minDebtPerHarvest",
-        "type": "uint256"
-      },
-      {
-        "name": "maxDebtPerHarvest",
-        "type": "uint256"
-      },
-      {
-        "name": "lastReport",
-        "type": "uint256"
-      },
-      {
-        "name": "totalDebt",
-        "type": "uint256"
-      },
-      {
-        "name": "totalGain",
-        "type": "uint256"
-      },
-      {
-        "name": "totalSkim",
-        "type": "uint256"
-      },
-      {
-        "name": "totalLoss",
-        "type": "uint256"
-      },
-      {
-        "name": "rewardsManager",
-        "type": "address"
-      },
-      {
-        "name": "rewards",
-        "type": "tuple",
         "components": [
           {
+            "internalType": "int128",
             "name": "wid",
             "type": "int128"
           },
           {
+            "internalType": "uint256",
             "name": "addr",
             "type": "uint256"
           }
-        ]
+        ],
+        "internalType": "struct IEverscale.EverscaleAddress",
+        "name": "",
+        "type": "tuple"
       }
     ],
-    "gas": 32160
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "withdrawalQueue",
     "inputs": [
       {
-        "name": "arg0",
+        "internalType": "bytes",
+        "name": "payload",
+        "type": "bytes"
+      },
+      {
+        "internalType": "bytes[]",
+        "name": "signatures",
+        "type": "bytes[]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "bounty",
         "type": "uint256"
       }
     ],
+    "name": "saveWithdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "payload",
+        "type": "bytes"
+      },
+      {
+        "internalType": "bytes[]",
+        "name": "signatures",
+        "type": "bytes[]"
+      }
+    ],
+    "name": "saveWithdraw",
     "outputs": [
       {
+        "internalType": "bool",
+        "name": "instantWithdrawal",
+        "type": "bool"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "recipient",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IVault.PendingWithdrawalId",
+        "name": "pendingWithdrawalId",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "int128",
+            "name": "wid",
+            "type": "int128"
+          },
+          {
+            "internalType": "uint256",
+            "name": "addr",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IEverscale.EverscaleAddress",
+        "name": "_configuration",
+        "type": "tuple"
+      }
+    ],
+    "name": "setConfiguration",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_depositFee",
+        "type": "uint256"
+      }
+    ],
+    "name": "setDepositFee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "limit",
+        "type": "uint256"
+      }
+    ],
+    "name": "setDepositLimit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "active",
+        "type": "bool"
+      }
+    ],
+    "name": "setEmergencyShutdown",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_governance",
+        "type": "address"
+      }
+    ],
+    "name": "setGovernance",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_guardian",
+        "type": "address"
+      }
+    ],
+    "name": "setGuardian",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "degradation",
+        "type": "uint256"
+      }
+    ],
+    "name": "setLockedProfitDegradation",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_management",
+        "type": "address"
+      }
+    ],
+    "name": "setManagement",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "fee",
+        "type": "uint256"
+      }
+    ],
+    "name": "setManagementFee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "recipient",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IVault.PendingWithdrawalId[]",
+        "name": "pendingWithdrawalId",
+        "type": "tuple[]"
+      },
+      {
+        "internalType": "enum IVault.ApproveStatus[]",
+        "name": "approveStatus",
+        "type": "uint8[]"
+      }
+    ],
+    "name": "setPendingWithdrawalApprove",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "recipient",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IVault.PendingWithdrawalId",
+        "name": "pendingWithdrawalId",
+        "type": "tuple"
+      },
+      {
+        "internalType": "enum IVault.ApproveStatus",
+        "name": "approveStatus",
+        "type": "uint8"
+      }
+    ],
+    "name": "setPendingWithdrawalApprove",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "bounty",
+        "type": "uint256"
+      }
+    ],
+    "name": "setPendingWithdrawalBounty",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "fee",
+        "type": "uint256"
+      }
+    ],
+    "name": "setPerformanceFee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "int128",
+            "name": "wid",
+            "type": "int128"
+          },
+          {
+            "internalType": "uint256",
+            "name": "addr",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IEverscale.EverscaleAddress",
+        "name": "_rewards",
+        "type": "tuple"
+      }
+    ],
+    "name": "setRewards",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "strategyId",
+        "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "int128",
+            "name": "wid",
+            "type": "int128"
+          },
+          {
+            "internalType": "uint256",
+            "name": "addr",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IEverscale.EverscaleAddress",
+        "name": "_rewards",
+        "type": "tuple"
+      }
+    ],
+    "name": "setStrategyRewards",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_undeclaredWithdrawLimit",
+        "type": "uint256"
+      }
+    ],
+    "name": "setUndeclaredWithdrawLimit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_withdrawFee",
+        "type": "uint256"
+      }
+    ],
+    "name": "setWithdrawFee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_withdrawGuardian",
+        "type": "address"
+      }
+    ],
+    "name": "setWithdrawGuardian",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_withdrawLimitPerPeriod",
+        "type": "uint256"
+      }
+    ],
+    "name": "setWithdrawLimitPerPeriod",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[20]",
+        "name": "queue",
+        "type": "address[20]"
+      }
+    ],
+    "name": "setWithdrawalQueue",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "strategyId",
+        "type": "address"
+      }
+    ],
+    "name": "skim",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "strategyId",
+        "type": "address"
+      }
+    ],
+    "name": "strategies",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "performanceFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "activation",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "debtRatio",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minDebtPerHarvest",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maxDebtPerHarvest",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastReport",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalDebt",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalGain",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalSkim",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalLoss",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "rewardsManager",
+            "type": "address"
+          },
+          {
+            "components": [
+              {
+                "internalType": "int128",
+                "name": "wid",
+                "type": "int128"
+              },
+              {
+                "internalType": "uint256",
+                "name": "addr",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct IEverscale.EverscaleAddress",
+            "name": "rewards",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct IVault.StrategyParams",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      }
+    ],
+    "name": "sweep",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "targetDecimals",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "token",
+    "outputs": [
+      {
+        "internalType": "address",
         "name": "",
         "type": "address"
       }
     ],
-    "gas": 4237
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "emergencyShutdown",
     "inputs": [],
+    "name": "tokenDecimals",
     "outputs": [
       {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "totalAssets",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "totalDebt",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "undeclaredWithdrawLimit",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "strategyId",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_debtRatio",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateStrategyDebtRatio",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "strategyId",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxDebtPerHarvest",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateStrategyMaxDebtPerHarvest",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "strategyId",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "minDebtPerHarvest",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateStrategyMinDebtPerHarvest",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "strategyId",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_performanceFee",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateStrategyPerformanceFee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amountRequested",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxLoss",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "bounty",
+        "type": "uint256"
+      }
+    ],
+    "name": "withdraw",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "amountAdjusted",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "withdrawFee",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "withdrawGuardian",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "withdrawLimitPerPeriod",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "name": "withdrawalIds",
+    "outputs": [
+      {
+        "internalType": "bool",
         "name": "",
         "type": "bool"
       }
     ],
-    "gas": 4158
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "depositLimit",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "gas": 4188
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "debtRatio",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "gas": 4218
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "totalDebt",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "gas": 4248
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "lastReport",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "gas": 4278
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "activation",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "gas": 4308
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "lockedProfit",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "gas": 4338
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "lockedProfitDegradation",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "gas": 4368
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "managementFee",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "gas": 4398
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "performanceFee",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "gas": 4428
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "tokenDecimals",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "gas": 4458
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "targetDecimals",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "gas": 4488
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "withdrawalPeriods",
     "inputs": [
       {
-        "name": "arg0",
+        "internalType": "uint256",
+        "name": "withdrawalPeriodId",
         "type": "uint256"
       }
     ],
+    "name": "withdrawalPeriods",
     "outputs": [
       {
-        "name": "total",
-        "type": "uint256"
-      },
-      {
-        "name": "considered",
-        "type": "uint256"
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "total",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "considered",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IVault.WithdrawalPeriodParams",
+        "name": "",
+        "type": "tuple"
       }
     ],
-    "gas": 7167
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "withdrawLimitPerPeriod",
     "inputs": [],
+    "name": "withdrawalQueue",
     "outputs": [
       {
+        "internalType": "address[20]",
         "name": "",
-        "type": "uint256"
+        "type": "address[20]"
       }
     ],
-    "gas": 4548
-  },
-  {
     "stateMutability": "view",
-    "type": "function",
-    "name": "undeclaredWithdrawLimit",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "gas": 4578
-  },
-  {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "withdrawGuardian",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "gas": 4608
+    "type": "function"
   }
 ]

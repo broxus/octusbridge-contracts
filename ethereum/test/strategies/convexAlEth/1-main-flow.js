@@ -4,7 +4,7 @@ const { upgrades, ethers } = require("hardhat");
 
 
 
-describe('Test ConvexCrvAlEth strategy on WETH vault', async () => {
+describe.skip('Test ConvexCrvAlEth strategy on WETH vault', async () => {
     let vault, strategy, weth, governance, booster, wrapped, rewards;
     let snapshot;
 

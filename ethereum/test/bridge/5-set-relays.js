@@ -20,7 +20,7 @@ describe('Set next round relays', async () => {
     
     await bridge
       .connect(owner)
-      .updateRoundRelaysConfiguration(defaultConfiguration);
+      .setConfiguration(defaultConfiguration);
   });
   
   let payload, signatures, relays;
@@ -40,7 +40,7 @@ describe('Set next round relays', async () => {
       ]
     );
     
-    payload = utils.encodeTonEvent({
+    payload = utils.encodeEverscaleEvent({
       eventData: roundRelaysPayload,
       proxy: bridge.address,
     });

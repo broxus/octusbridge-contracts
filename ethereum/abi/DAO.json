@@ -37,9 +37,9 @@
       {
         "components": [
           {
-            "internalType": "int8",
+            "internalType": "int128",
             "name": "wid",
-            "type": "int8"
+            "type": "int128"
           },
           {
             "internalType": "uint256",
@@ -48,7 +48,7 @@
           }
         ],
         "indexed": false,
-        "internalType": "struct IBridge.TONAddress",
+        "internalType": "struct IEverscale.EverscaleAddress",
         "name": "configuration",
         "type": "tuple"
       }
@@ -93,9 +93,9 @@
     "name": "configuration",
     "outputs": [
       {
-        "internalType": "int8",
+        "internalType": "int128",
         "name": "wid",
-        "type": "int8"
+        "type": "int128"
       },
       {
         "internalType": "uint256",
@@ -241,24 +241,11 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
-    ],
-    "name": "transferOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
         "name": "_bridge",
         "type": "address"
       }
     ],
-    "name": "updateBridge",
+    "name": "setBridge",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -268,9 +255,9 @@
       {
         "components": [
           {
-            "internalType": "int8",
+            "internalType": "int128",
             "name": "wid",
-            "type": "int8"
+            "type": "int128"
           },
           {
             "internalType": "uint256",
@@ -278,12 +265,25 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct IBridge.TONAddress",
+        "internalType": "struct IEverscale.EverscaleAddress",
         "name": "_configuration",
         "type": "tuple"
       }
     ],
-    "name": "updateConfiguration",
+    "name": "setConfiguration",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

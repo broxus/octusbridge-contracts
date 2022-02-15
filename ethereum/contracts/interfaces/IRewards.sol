@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.2;
 pragma experimental ABIEncoderV2;
 
@@ -16,7 +17,7 @@ interface Rewards{
     function rewards(address) external view returns (uint256);
     function userRewardPerTokenPaid(address) external view returns (uint256);
     function stakingToken() external view returns (address);
-    function queueNewRewards(uint256 _rewards) external returns(bool);
+    function queueNewRewards(uint256 _rewards) external returns (bool);
 
     function stake(uint256) external returns (bool);
     function stakeAll() external returns (bool);
@@ -24,13 +25,13 @@ interface Rewards{
 
     function withdraw(uint256 amount, bool claim) external returns (bool);
     function withdrawAll(bool claim) external returns (bool);
-    function withdrawAndUnwrap(uint256 amount, bool claim) external returns(bool);
+    function withdrawAndUnwrap(uint256 amount, bool claim) external returns (bool);
     function withdrawAllAndUnwrap(bool claim) external;
 
-    function getReward() external returns(bool);
-    function getReward(address _account, bool _claimExtras) external returns(bool);
+    function getReward() external returns (bool);
+    function getReward(address _account, bool _claimExtras) external returns (bool);
 
     function operator() external view returns (address);
 
-    function donate(uint256 _amount) external returns(bool);
+    function donate(uint256 _amount) external returns (bool);
 }

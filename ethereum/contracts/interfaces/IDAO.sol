@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.2;
 pragma experimental ABIEncoderV2;
 
@@ -14,15 +14,15 @@ interface IDAO {
         bytes data;
     }
 
-    function updateBridge(
+    function setBridge(
         address _bridge
     ) external;
 
     function execute(
         bytes memory payload,
         bytes[] memory signatures
-    ) external returns(bytes[] memory responses);
+    ) external returns (bytes[] memory responses);
 
     event UpdateBridge(address indexed bridge);
-    event UpdateConfiguration(IBridge.TONAddress configuration);
+    event UpdateConfiguration(IBridge.EverscaleAddress configuration);
 }
