@@ -25,7 +25,7 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 /// @title Bridge contract
 /// @dev Entry point for relay sync.
 /// Deploys connectors for Event Configurations.
-/// @author https://github.com/pavlovdog
+/// @author https://github.com/broxus
 contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUtils {
     TvmCell public connectorCode;
     uint64 public connectorDeployValue;

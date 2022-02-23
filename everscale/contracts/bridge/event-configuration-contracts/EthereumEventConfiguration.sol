@@ -17,7 +17,7 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
 /// @title Basic Ethereum event configuration contract.
-/// @author https://github.com/pavlovdog
+/// @author https://github.com/broxus
 contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, TransferUtils, InternalOwner, CheckPubKey {
     BasicConfiguration public static basicConfiguration;
     EthereumEventConfiguration public static networkConfiguration;
