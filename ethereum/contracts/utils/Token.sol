@@ -7,7 +7,7 @@ contract Token is ERC20 {
     constructor(
         uint256 initialSupply,
         address receiver
-    ) ERC20("`Test USDT`", "TESTUSDT") {
+    ) ERC20("Test USDT", "TESTUSDT") {
         _mint(receiver, initialSupply);
     }
 }
