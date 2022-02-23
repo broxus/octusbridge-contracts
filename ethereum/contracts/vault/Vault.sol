@@ -327,8 +327,6 @@ contract Vault is IVault, VaultHelpers {
         require(bounty >= pendingWithdrawal.amount);
 
         _pendingWithdrawalBountyUpdate(PendingWithdrawalId(msg.sender, id), bounty);
-
-        emit PendingWithdrawalUpdateBounty(msg.sender, id, bounty);
     }
 
     /// @notice Returns the total quantity of all assets under control of this
@@ -387,11 +385,17 @@ contract Vault is IVault, VaultHelpers {
         // Send bounty as additional transfer
         _transferToEverscale(recipient, pendingWithdrawal.bounty);
 
-        _pendingWithdrawalAmountReduce(pendingWithdrawalId, pendingWithdrawal.amount);
+        uint redeemedAmount = pendingWithdrawal.amount - pendingWithdrawal.bounty;
+
+        _pendingWithdrawalAmountReduce(
+            pendingWithdrawalId,
+            pendingWithdrawal.amount,
+            redeemedAmount
+        );
 
         IERC20(token).safeTransfer(
             pendingWithdrawalId.recipient,
-            pendingWithdrawal.amount - pendingWithdrawal.bounty
+            redeemedAmount
         );
     }
 
@@ -532,12 +536,6 @@ contract Vault is IVault, VaultHelpers {
 
         if (!withdrawalLimitsPassed) {
             _pendingWithdrawalApproveStatusUpdate(pendingWithdrawalId, ApproveStatus.Required);
-
-            emit PendingWithdrawalUpdateApproveStatus(
-                withdrawal.recipient,
-                id,
-                ApproveStatus.Required
-            );
         }
 
         return (false, pendingWithdrawalId);
@@ -691,9 +689,7 @@ contract Vault is IVault, VaultHelpers {
 
         IERC20(token).safeTransfer(recipient, amountAdjusted);
 
-        _pendingWithdrawalAmountReduce(pendingWithdrawalId, amountRequested);
-
-        emit PendingWithdrawalWithdraw(msg.sender, id, amountRequested, amountAdjusted);
+        _pendingWithdrawalAmountReduce(pendingWithdrawalId, amountRequested, amountAdjusted);
 
         return amountAdjusted;
     }
@@ -1196,25 +1192,12 @@ contract Vault is IVault, VaultHelpers {
 
         _pendingWithdrawalApproveStatusUpdate(pendingWithdrawalId, approveStatus);
 
-        emit PendingWithdrawalUpdateApproveStatus(
-            pendingWithdrawalId.recipient,
-            pendingWithdrawalId.id,
-            approveStatus
-        );
-
         // Fill approved withdrawal
         if (approveStatus == ApproveStatus.Approved && pendingWithdrawal.amount <= _vaultTokenBalance()) {
             _pendingWithdrawalAmountReduce(pendingWithdrawalId, pendingWithdrawal.amount);
 
             IERC20(token).safeTransfer(
                 pendingWithdrawalId.recipient,
-                pendingWithdrawal.amount
-            );
-
-            emit PendingWithdrawalWithdraw(
-                pendingWithdrawalId.recipient,
-                pendingWithdrawalId.id,
-                pendingWithdrawal.amount,
                 pendingWithdrawal.amount
             );
         }

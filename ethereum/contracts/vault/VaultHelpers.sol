@@ -453,15 +453,32 @@ abstract contract VaultHelpers is VaultStorage {
         uint bounty
     ) internal {
         pendingWithdrawals_[pendingWithdrawalId.recipient][pendingWithdrawalId.id].bounty = bounty;
+
+        emit PendingWithdrawalUpdateBounty(pendingWithdrawalId.recipient, pendingWithdrawalId.id, bounty);
     }
 
     function _pendingWithdrawalAmountReduce(
         PendingWithdrawalId memory pendingWithdrawalId,
         uint amount
     ) internal {
-        pendingWithdrawals_[pendingWithdrawalId.recipient][pendingWithdrawalId.id].amount -= amount;
+        _pendingWithdrawalAmountReduce(pendingWithdrawalId, amount, amount);
+    }
 
-        pendingWithdrawalsTotal -= amount;
+    function _pendingWithdrawalAmountReduce(
+        PendingWithdrawalId memory pendingWithdrawalId,
+        uint requestedAmount,
+        uint redeemedAmount
+    ) internal {
+        pendingWithdrawals_[pendingWithdrawalId.recipient][pendingWithdrawalId.id].amount -= requestedAmount;
+
+        pendingWithdrawalsTotal -= requestedAmount;
+
+        emit PendingWithdrawalWithdraw(
+            pendingWithdrawalId.recipient,
+            pendingWithdrawalId.id,
+            requestedAmount,
+            redeemedAmount
+        );
     }
 
     function _pendingWithdrawalApproveStatusUpdate(
@@ -469,6 +486,12 @@ abstract contract VaultHelpers is VaultStorage {
         ApproveStatus approveStatus
     ) internal {
         pendingWithdrawals_[pendingWithdrawalId.recipient][pendingWithdrawalId.id].approveStatus = approveStatus;
+
+        emit PendingWithdrawalUpdateApproveStatus(
+            pendingWithdrawalId.recipient,
+            pendingWithdrawalId.id,
+            approveStatus
+        );
     }
 
     //88888888ba   88888888888  88888888ba   88    ,ad8888ba,    88888888ba,
