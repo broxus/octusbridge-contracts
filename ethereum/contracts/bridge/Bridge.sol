@@ -11,9 +11,9 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 
 
-/// @title Ethereum Bridge contract
+/// @title EVM Bridge contract
 /// @author https://github.com/broxus
-/// @dev Stores relays for each round, implements slashing, helps in validating Everscale-ETH events
+/// @notice Stores relays for each round, implements relay slashing, helps in validating Everscale-EVM events
 contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
     using ECDSA for bytes32;
 
@@ -48,17 +48,16 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
     EverscaleAddress public roundRelaysConfiguration;
 
     /**
-        @notice
-            Bridge initializer
-        @dev
-            `roundRelaysConfiguration` should be specified later.
+        @notice Bridge initializer
+        @dev `roundRelaysConfiguration` should be specified after deploy, since it's an Everscale contract,
+        which needs EVM Bridge address to be deployed.
         @param _owner Bridge owner
         @param _roundSubmitter Round submitter
         @param _minimumRequiredSignatures Minimum required signatures per round.
-        @param _roundTTL Round TTL after round ends.
+        @param _roundTTL Round TTL after round end.
         @param _initialRound Initial round number. Useful in case new EVM network is connected to the bridge.
         @param _initialRoundEnd Initial round end timestamp.
-        @param _relays Initial set of relays. Encode addresses as uint160
+        @param _relays Initial (genesis) set of relays. Encode addresses as uint160.
     */
     function initialize(
         address _owner,
@@ -94,9 +93,8 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
     }
 
     /**
-        @notice
-            Update address of configuration, that emits event with next round relays.
-        @param _roundRelaysConfiguration Everscale address of configuration
+        @notice Update address of configuration, that emits event with relays for next round.
+        @param _roundRelaysConfiguration Everscale address of configuration contract
     */
     function setConfiguration(
         EverscaleAddress calldata _roundRelaysConfiguration
@@ -107,26 +105,24 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
     }
 
     /**
-        @notice
-            Pause Bridge contract.
-        @dev
-            When Bridge paused, signature verification fails.
+        @notice Pause Bridge contract.
+        Can be called only by `owner`.
+        @dev When Bridge paused, any signature verification Everscale-EVM event fails.
     */
     function pause() external override onlyOwner {
         _pause();
     }
 
     /**
-        @notice
-            Unpause Bridge contract.
+        @notice Unpause Bridge contract.
     */
     function unpause() external override onlyOwner {
         _unpause();
     }
 
     /**
-        @notice
-            Update minimum amount of required signatures per round
+        @notice Update minimum amount of required signatures per round
+        This parameter limits the minimum amount of signatures to be required for Everscale-EVM event.
         @param _minimumRequiredSignatures New value
     */
     function updateMinimumRequiredSignatures(
@@ -138,11 +134,8 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
     }
 
     /**
-        @notice
-            Update round TTL
-        @dev
-            This affects only future rounds. Rounds, that were already set,
-            keep their current TTL.
+        @notice Update round TTL
+        @dev This affects only future rounds. Rounds, that were already set, keep their current TTL.
         @param _roundTTL New TTL value
     */
     function updateRoundTTL(
@@ -153,9 +146,8 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
         emit UpdateRoundTTL(_roundTTL);
     }
 
-    /// @dev Check if relay is banned.
-    /// Ban is global. If the relay is banned it means it lost
-    /// relay power in all rounds, past and future.
+    /// @notice Check if relay is banned.
+    /// Ban is global. If the relay is banned it means it lost relay power in all rounds, past and future.
     /// @param candidate Address to check
     function isBanned(
         address candidate
@@ -163,7 +155,8 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
         return blacklist[candidate];
     }
 
-    /// @dev Check if some address is relay at specific round
+    /// @notice Check if some address is relay at specific round
+    /// @dev Even if relay was banned, this method still returns `true`.
     /// @param round Round id
     /// @param candidate Address to check
     function isRelay(
@@ -181,25 +174,21 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
         return block.timestamp > rounds[round].ttl;
     }
 
-    /**
-        @notice
-            Verify payload signatures.
-        @dev
-            Signatures should be sorted by the ascending signers.
-            Error codes:
-                0. Verification passed (no error)
-                1. Specified round is less than `initialRound`
-                2. Specified round is more than `lastRound`
-                3. Not enough correct signatures. Possible reasons:
-                    - Some of the signers are not relays at the specified round
-                    - Some of the signers are banned
-                4. Round is rotten.
-                5. Everything is correct, but bridge is in "paused" state
 
-        @param payload Bytes encoded EverscaleEvent structure
-        @param signatures Payload signatures
-        @return errorCode Error code
-    */
+    /// @notice Verify `EverscaleEvent` signatures.
+    /// @dev Signatures should be sorted by the ascending signers.
+    /// Error codes:
+    /// 0. Verification passed (no error)
+    /// 1. Specified round is less than initial round
+    /// 2. Specified round is greater than last round
+    /// 3. Not enough correct signatures. Possible reasons:
+    /// - Some of the signers are not relays at the specified round
+    /// - Some of the signers are banned
+    /// 4. Round is rotten.
+    /// 5. Verification passed, but bridge is in "paused" mode
+    /// @param payload Bytes encoded `EverscaleEvent` structure
+    /// @param signatures Payload signatures
+    /// @return errorCode Error code
     function verifySignedEverscaleEvent(
         bytes memory payload,
         bytes[] memory signatures
@@ -214,10 +203,10 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
 
         uint32 round = _event.round;
 
-        // Check round is not less than initial round
+        // Check round is greater than initial round
         if (round < initialRound) return 1;
 
-        // Check round is not more than last initialized round
+        // Check round is less than last initialized round
         if (round > lastRound) return 2;
 
         // Check there are enough correct signatures

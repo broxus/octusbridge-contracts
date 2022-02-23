@@ -4,9 +4,9 @@ require('@openzeppelin/hardhat-upgrades');
 require("@nomiclabs/hardhat-etherscan");
 require('hardhat-deploy-ethers');
 require('hardhat-deploy');
-require("@nomiclabs/hardhat-vyper");
 require('hardhat-abi-exporter');
 require("hardhat-gas-reporter");
+require('@primitivefi/hardhat-dodoc');
 
 
 task("accounts", "Prints the list of accounts", async () => {
@@ -30,6 +30,11 @@ const multisig = {
  * @type import('hardhat/config').HardhatUserConfig
  */
 const hardhatConfig = {
+  dodoc: {
+    runOnCompile: true,
+    outputDir: './../docs/evm-specification',
+    include: ['Bridge', 'Vault', 'DAO', 'Registry', 'StakingRelayVerifier'],
+  },
   solidity: {
     version: '0.8.2',
     settings: {
