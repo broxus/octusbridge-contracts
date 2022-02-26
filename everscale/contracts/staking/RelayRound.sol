@@ -165,17 +165,18 @@ contract RelayRound is IRelayRound {
         tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 0);
 
         for (uint i = 0; i < _ton_keys.length; i++) {
-            if (_staked_tokens[i] == 0) {
+            if (_staked_tokens[i] > 0) {
+                ton_keys.push(_ton_keys[i]);
+                eth_addrs.push(_eth_addrs[i]);
+                staked_tokens.push(_staked_tokens[i]);
+                staker_addrs.push(_staker_addrs[i]);
+
+                addr_to_idx[_staker_addrs[i]] = staker_addrs.length - 1;
+                total_tokens_staked += _staked_tokens[i];
+                relays_count += 1;
+            } else {
                 break;
             }
-            ton_keys.push(_ton_keys[i]);
-            eth_addrs.push(_eth_addrs[i]);
-            staked_tokens.push(_staked_tokens[i]);
-            staker_addrs.push(_staker_addrs[i]);
-
-            addr_to_idx[_staker_addrs[i]] = staker_addrs.length - 1;
-            total_tokens_staked += _staked_tokens[i];
-            relays_count += 1;
         }
 
         relay_packs_installed += 1;
