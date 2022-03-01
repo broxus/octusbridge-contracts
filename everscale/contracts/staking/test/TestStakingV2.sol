@@ -4,7 +4,7 @@ pragma AbiHeader expire;
 
 import "./../base/StakingRelay.sol";
 
-contract StakingV2 is StakingPoolRelay {
+contract TestStakingV2 is StakingPoolRelay {
     function upgrade(TvmCell code, address send_gas_to) external onlyAdmin {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
 

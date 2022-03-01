@@ -1,0 +1,58 @@
+{
+	"ABI version": 2,
+	"version": "2.2",
+	"header": ["time"],
+	"functions": [
+		{
+			"name": "constructor",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setRelays",
+			"inputs": [
+				{"name":"_ton_keys","type":"uint256[]"},
+				{"name":"_eth_addrs","type":"uint160[]"},
+				{"name":"_staker_addrs","type":"address[]"},
+				{"name":"_staked_tokens","type":"uint128[]"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "total_tokens_staked",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"total_tokens_staked","type":"uint128"}
+			]
+		},
+		{
+			"name": "relays_count",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"relays_count","type":"uint32"}
+			]
+		}
+	],
+	"data": [
+	],
+	"events": [
+	],
+	"fields": [
+		{"name":"_pubkey","type":"uint256"},
+		{"name":"_timestamp","type":"uint64"},
+		{"name":"_constructorFlag","type":"bool"},
+		{"name":"ton_keys","type":"uint256[]"},
+		{"name":"eth_addrs","type":"uint160[]"},
+		{"name":"staker_addrs","type":"address[]"},
+		{"name":"staked_tokens","type":"uint128[]"},
+		{"name":"addr_to_idx","type":"map(address,uint256)"},
+		{"name":"total_tokens_staked","type":"uint128"},
+		{"name":"relays_count","type":"uint32"},
+		{"name":"min_gas","type":"uint128"}
+	]
+}
