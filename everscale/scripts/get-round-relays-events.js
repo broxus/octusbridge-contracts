@@ -135,6 +135,7 @@ const main = async () => {
     let signatures = await Promise.all(details._signatures.map(async (sign) => {
       return {sign, address: ethers.BigNumber.from(await bridge.recoverSignature(encodedEvent, sign))};
     }));
+
     signatures.sort((a, b) => {
       if (a.address.eq(b.address)) {
         return 0
@@ -145,6 +146,7 @@ const main = async () => {
         return -1
       }
     })
+
     return {
       ...details,
       roundNumber,
@@ -163,7 +165,8 @@ const main = async () => {
     console.log(`Payload: ${event.encodedEvent}`);
     console.log(`Signatures: \n[${event.signatures.map((b) => '0x' + b.toString('hex')).join(',')}]`);
 
-    if (event.roundNumber >= lastRound) {
+
+    if (event.eventData.round_num > lastRound) {
       console.log(`Submitting round`);
 
       console.log(`Submitter: ${submitter.address}`);
