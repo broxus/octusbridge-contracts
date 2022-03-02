@@ -222,6 +222,7 @@ interface IVault is IVaultBasic {
 
     event PendingWithdrawalUpdateBounty(address recipient, uint256 id, uint256 bounty);
     event PendingWithdrawalCancel(address recipient, uint256 id, uint256 amount);
+    event PendingWithdrawalForce(address recipient, uint256 id);
     event PendingWithdrawalCreated(
         address recipient,
         uint256 id,
@@ -233,10 +234,6 @@ interface IVault is IVaultBasic {
         uint256 id,
         uint256 requestedAmount,
         uint256 redeemedAmount
-    );
-    event PendingWithdrawalFill(
-        address recipient,
-        uint256 id
     );
     event PendingWithdrawalUpdateApproveStatus(
         address recipient,
@@ -274,6 +271,7 @@ interface IVault is IVaultBasic {
         uint256 debtAdded,
         uint256 debtRatio
     );
+
     event StrategyAdded(
         address indexed strategy,
         uint256 debtRatio,
@@ -285,6 +283,14 @@ interface IVault is IVaultBasic {
         address strategyId,
         int128 wid,
         uint256 addr
+    );
+    event UserDeposit(
+        int128 recipientWid,
+        uint256 recipientAddr,
+        uint256 amount,
+        address withdrawalRecipient,
+        uint256 withdrawalId,
+        uint256 bounty
     );
     event FactoryDeposit(
         uint128 amount,

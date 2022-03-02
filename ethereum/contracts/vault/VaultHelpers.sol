@@ -461,24 +461,8 @@ abstract contract VaultHelpers is VaultStorage {
         PendingWithdrawalId memory pendingWithdrawalId,
         uint amount
     ) internal {
-        _pendingWithdrawalAmountReduce(pendingWithdrawalId, amount, amount);
-    }
-
-    function _pendingWithdrawalAmountReduce(
-        PendingWithdrawalId memory pendingWithdrawalId,
-        uint requestedAmount,
-        uint redeemedAmount
-    ) internal {
         pendingWithdrawals_[pendingWithdrawalId.recipient][pendingWithdrawalId.id].amount -= requestedAmount;
-
         pendingWithdrawalsTotal -= requestedAmount;
-
-        emit PendingWithdrawalWithdraw(
-            pendingWithdrawalId.recipient,
-            pendingWithdrawalId.id,
-            requestedAmount,
-            redeemedAmount
-        );
     }
 
     function _pendingWithdrawalApproveStatusUpdate(

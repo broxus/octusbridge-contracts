@@ -337,6 +337,19 @@ contract Vault is IVault, VaultHelpers {
         return _totalAssets();
     }
 
+    function _deposit(
+        EverscaleAddress memory recipient,
+        uint256 amount
+    ) internal {
+        IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
+
+        uint256 fee = _calculateMovementFee(amount, depositFee);
+
+        _transferToEverscale(recipient, amount - fee);
+
+        if (fee > 0) _transferToEverscale(rewards_, fee);
+    }
+
     /// @notice Deposits `token` into the Vault, leads to producing corresponding token
     /// on the Everscale side.
     /// @param recipient Recipient in the Everscale network
@@ -351,13 +364,9 @@ contract Vault is IVault, VaultHelpers {
         respectDepositLimit(amount)
         nonReentrant
     {
-        IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
+        _deposit(recipient, amount);
 
-        uint256 fee = _calculateMovementFee(amount, depositFee);
-
-        _transferToEverscale(recipient, amount - fee);
-
-        if (fee > 0) _transferToEverscale(rewards_, fee);
+        emit UserDeposit(recipient.wid, recipient.addr, amount, address(0), 0, 0);
     }
 
     /// @notice Same as regular `deposit`, but fills pending withdrawal.
@@ -373,6 +382,9 @@ contract Vault is IVault, VaultHelpers {
     )
         public
         override
+        onlyEmergencyDisabled
+        respectDepositLimit(amount)
+        nonReentrant
         pendingWithdrawalApproved(pendingWithdrawalId)
         pendingWithdrawalOpened(pendingWithdrawalId)
     {
@@ -380,7 +392,7 @@ contract Vault is IVault, VaultHelpers {
 
         require(amount >= pendingWithdrawal.amount);
 
-        deposit(recipient, amount);
+        _deposit(recipient, amount);
 
         // Send bounty as additional transfer
         _transferToEverscale(recipient, pendingWithdrawal.bounty);
@@ -389,13 +401,21 @@ contract Vault is IVault, VaultHelpers {
 
         _pendingWithdrawalAmountReduce(
             pendingWithdrawalId,
-            pendingWithdrawal.amount,
-            redeemedAmount
+            pendingWithdrawal.amount
         );
 
         IERC20(token).safeTransfer(
             pendingWithdrawalId.recipient,
             redeemedAmount
+        );
+
+        emit UserDeposit(
+            recipient.wid,
+            recipient.addr,
+            amount,
+            pendingWithdrawalId.recipient,
+            pendingWithdrawalId.id,
+            pendingWithdrawal.bounty
         );
     }
 
@@ -689,7 +709,14 @@ contract Vault is IVault, VaultHelpers {
 
         IERC20(token).safeTransfer(recipient, amountAdjusted);
 
-        _pendingWithdrawalAmountReduce(pendingWithdrawalId, amountRequested, amountAdjusted);
+        _pendingWithdrawalAmountReduce(pendingWithdrawalId, amountRequested);
+
+        emit PendingWithdrawalWithdraw(
+            pendingWithdrawalId.recipient,
+            pendingWithdrawalId.id,
+            amountRequested,
+            amountAdjusted
+        );
 
         return amountAdjusted;
     }
@@ -1150,6 +1177,8 @@ contract Vault is IVault, VaultHelpers {
         IERC20(token).safeTransfer(pendingWithdrawalId.recipient, pendingWithdrawal.amount);
 
         _pendingWithdrawalAmountReduce(pendingWithdrawalId, pendingWithdrawal.amount);
+
+        emit PendingWithdrawalForce(pendingWithdrawalId.recipient, pendingWithdrawalId.id);
     }
 
     /**
@@ -1198,6 +1227,13 @@ contract Vault is IVault, VaultHelpers {
 
             IERC20(token).safeTransfer(
                 pendingWithdrawalId.recipient,
+                pendingWithdrawal.amount
+            );
+
+            emit PendingWithdrawalWithdraw(
+                pendingWithdrawalId.recipient,
+                pendingWithdrawalId.id,
+                pendingWithdrawal.amount,
                 pendingWithdrawal.amount
             );
         }
