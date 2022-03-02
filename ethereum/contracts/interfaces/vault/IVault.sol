@@ -285,6 +285,7 @@ interface IVault is IVaultBasic {
         uint256 addr
     );
     event UserDeposit(
+        address sender,
         int128 recipientWid,
         uint256 recipientAddr,
         uint256 amount,

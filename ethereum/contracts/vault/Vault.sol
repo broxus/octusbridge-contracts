@@ -366,7 +366,7 @@ contract Vault is IVault, VaultHelpers {
     {
         _deposit(recipient, amount);
 
-        emit UserDeposit(recipient.wid, recipient.addr, amount, address(0), 0, 0);
+        emit UserDeposit(msg.sender, recipient.wid, recipient.addr, amount, address(0), 0, 0);
     }
 
     /// @notice Same as regular `deposit`, but fills pending withdrawal.
@@ -410,6 +410,7 @@ contract Vault is IVault, VaultHelpers {
         );
 
         emit UserDeposit(
+            msg.sender,
             recipient.wid,
             recipient.addr,
             amount,

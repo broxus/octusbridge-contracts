@@ -2033,7 +2033,7 @@ event UpdateWithdrawalQueue(address[20] queue)
 ### UserDeposit
 
 ```solidity
-event UserDeposit(int128 recipientWid, uint256 recipientAddr, uint256 amount, address withdrawalRecipient, uint256 withdrawalId, uint256 bounty)
+event UserDeposit(address sender, int128 recipientWid, uint256 recipientAddr, uint256 amount, address withdrawalRecipient, uint256 withdrawalId, uint256 bounty)
 ```
 
 
@@ -2044,6 +2044,7 @@ event UserDeposit(int128 recipientWid, uint256 recipientAddr, uint256 amount, ad
 
 | Name | Type | Description |
 |---|---|---|
+| sender  | address | undefined |
 | recipientWid  | int128 | undefined |
 | recipientAddr  | uint256 | undefined |
 | amount  | uint256 | undefined |
