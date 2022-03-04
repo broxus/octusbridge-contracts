@@ -35,7 +35,7 @@ abstract contract ConvexStable is ConvexCrvLp {
     function _initialize(
         address _vault
     ) internal override {
-        BaseStrategy._initialize(_vault, msg.sender, msg.sender);
+        BaseStrategy._initialize(_vault);
 
         slippage_factor = 150;
         minReportDelay = 1 days;
