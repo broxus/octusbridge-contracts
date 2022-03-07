@@ -98,13 +98,13 @@ contract ConvexFraxStrategy is ConvexCrvLp, Initializable {
 
     function calc_want_from_wrapped(uint256 wrapped_amount) public view override returns (uint256 expected_return) {
         if (wrapped_amount > 0) {
-            expected_return = ICurveFi(zapCurve).calc_withdraw_one_coin(curve, wrapped_amount, int128(curve_lp_idx));
+            expected_return = ICurveFi(zapCurve).calc_withdraw_one_coin(curve, wrapped_amount, int128(curve_lp_idx) + 1);
         }
     }
 
     function calc_wrapped_from_want(uint256 want_amount) public view override returns (uint256) {
         uint256[4] memory amounts;
-        amounts[curve_lp_idx] = want_amount;
+        amounts[curve_lp_idx + 1] = want_amount;
         return ICurveFi(zapCurve).calc_token_amount(curve, amounts, true);
     }
 
@@ -112,7 +112,7 @@ contract ConvexFraxStrategy is ConvexCrvLp, Initializable {
         if (want_amount > 0) {
             expected_return = calc_wrapped_from_want(want_amount);
             uint256[4] memory amounts;
-            amounts[curve_lp_idx] = want_amount;
+            amounts[curve_lp_idx + 1] = want_amount;
             ICurveFi(zapCurve).add_liquidity(curve, amounts, 0);
         }
     }
@@ -120,7 +120,7 @@ contract ConvexFraxStrategy is ConvexCrvLp, Initializable {
     function unwrap(uint256 wrapped_amount) internal override returns (uint256 expected_return) {
         if (wrapped_amount > 0) {
             expected_return = calc_want_from_wrapped(wrapped_amount);
-            ICurveFi(zapCurve).remove_liquidity_one_coin(curve, wrapped_amount, int128(curve_lp_idx), 0);
+            ICurveFi(zapCurve).remove_liquidity_one_coin(curve, wrapped_amount, int128(curve_lp_idx) + 1, 0);
         }
     }
 
