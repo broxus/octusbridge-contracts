@@ -186,7 +186,7 @@ contract ConvexFraxStrategy is ConvexCrvLp, Initializable {
         uint256 _usdc = IERC20(usdc).balanceOf(address(this));
         uint256 _usdt = IERC20(usdt).balanceOf(address(this));
         if (_dai > 0 || _usdc > 0 || _usdt > 0) {
-            ICurveFi(curve).add_liquidity([_dai, _usdc, _usdt], 0);
+            ICurveFi(zapCurve).add_liquidity(curve, [0, _dai, _usdc, _usdt], 0);
         }
         _profit = balanceOfWrapped() - before;
 
