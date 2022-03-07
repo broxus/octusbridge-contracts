@@ -52,10 +52,6 @@ abstract contract ConvexCrvLp is BaseStrategy {
 
     address[] public dex;
 
-    function _initialize(
-        address _vault
-    ) internal virtual;
-
     function _approveBasic() internal virtual;
 
     function _approveDex() internal virtual;
@@ -109,7 +105,7 @@ abstract contract ConvexCrvLp is BaseStrategy {
         return string(abi.encodePacked("Convex", IERC20Metadata(address(want_wrapped)).symbol()));
     }
 
-    function calc_want_from_wrapped(uint256 wrapped_amount) public view returns (uint256 expected_return) {
+    function calc_want_from_wrapped(uint256 wrapped_amount) public virtual view returns (uint256 expected_return) {
         if (wrapped_amount > 0) {
             expected_return = ICurveFi(curve).calc_withdraw_one_coin(wrapped_amount, int128(curve_lp_idx));
         }

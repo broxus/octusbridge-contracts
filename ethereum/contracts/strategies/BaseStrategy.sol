@@ -138,7 +138,7 @@ abstract contract BaseStrategy {
      */
     function _initialize(
         address _vault
-    ) internal {
+    ) internal virtual {
         require(address(want) == address(0), "Strategy already initialized");
 
         vault = IVault(_vault);

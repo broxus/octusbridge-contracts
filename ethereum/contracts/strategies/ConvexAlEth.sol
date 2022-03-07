@@ -29,7 +29,7 @@ abstract contract ConvexWEth is ConvexCrvLp {
     function _initialize(
         address _vault
     ) internal override {
-        BaseStrategy._initialize(_vault, msg.sender, msg.sender);
+        BaseStrategy._initialize(_vault);
 
         slippage_factor = 300;
         minReportDelay = 1 days;

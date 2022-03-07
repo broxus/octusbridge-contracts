@@ -12,6 +12,8 @@ interface ICurveFi {
 
     function remove_liquidity_one_coin(uint256 token_amount, int128 i, uint256 min_amount) external;
 
+    function remove_liquidity_one_coin(address pool, uint256 token_amount, int128 i, uint256 min_amount) external;
+
     function add_liquidity(
         uint256[3] calldata amounts,
         uint256 min_mint_amount,
@@ -56,7 +58,17 @@ interface ICurveFi {
         bool is_deposit
     ) external view returns (uint256);
 
+    // 3Crv Metapools
+    function calc_token_amount(
+        address _pool,
+        uint256[4] calldata _amounts,
+        bool _is_deposit
+    ) external view returns (uint256);
+
     function calc_withdraw_one_coin(uint256 token_amount, int128 i) external view returns (uint256);
+
+    function calc_withdraw_one_coin(address pool, uint256 token_amount, int128 i) external view returns (uint256);
+
 
     function exchange(
         int128 i,
