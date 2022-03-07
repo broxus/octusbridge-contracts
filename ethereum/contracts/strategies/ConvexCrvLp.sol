@@ -154,6 +154,14 @@ abstract contract ConvexCrvLp is BaseStrategy {
     function adjustPosition(uint256 _debtOutstanding) internal override {
         // _debtOutstanding - unwrapped token
         if (emergencyExit) return;
+
+        // dont waste gas on reinvesting small sums
+        uint256 total_available = balanceOfWant() + calc_want_from_wrapped(balanceOfWrapped());
+        IVault.StrategyParams memory params = vault.strategies(address(this));
+        if (total_available < params.minDebtPerHarvest) {
+            return;
+        }
+
         wrap(balanceOfWant());
 
         uint256 _wrapped = balanceOfWrapped();
@@ -245,7 +253,7 @@ abstract contract ConvexCrvLp is BaseStrategy {
         return crvValue + cvxValue;
     }
 
-    function _claimableInETH() internal virtual view returns (uint256 _claimable) {
+    function _claimableInETH() public virtual view returns (uint256 _claimable) {
         _claimable = _claimableBasicInETH();
     }
 
@@ -307,8 +315,11 @@ abstract contract ConvexCrvLp is BaseStrategy {
         }
 
         // we should be able to give profit + debtPayment to vault
-        uint256 want_profit = unwrap(profit);
-        uint256 want_debtPayment = unwrap(debtPayment);
+        uint256 want_profit = calc_want_from_wrapped(profit);
+        uint256 want_profit_plus_debtPayment = unwrap(profit + debtPayment);
+        // we know that want_profit_plus_debtPayment >= want_profit
+        uint256 want_debtPayment = want_profit_plus_debtPayment - want_profit;
+
         uint256 want_loss = calc_want_from_wrapped(loss);
 
         // Allow Vault to take up to the "harvested" balance of this contract,
@@ -316,7 +327,7 @@ abstract contract ConvexCrvLp is BaseStrategy {
         // the Vault.
         debtOutstanding = vault.report(want_profit, want_loss, want_debtPayment);
 
-        // Check if free returns are left, and re-invest them
+        // wrap and reinvest if threshold is reached
         adjustPosition(debtOutstanding);
 
         emit Harvested(want_profit, want_loss, want_debtPayment, debtOutstanding);

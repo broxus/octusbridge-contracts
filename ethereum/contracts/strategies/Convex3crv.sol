@@ -156,7 +156,10 @@ contract Convex3StableStrategy is ConvexStable, Initializable {
         uint256 _debtPayment
     )
     {
-        uint before = balanceOfWrapped();
+        // here some 'want' token could be free
+        // we dont want it to be taken into account as profit
+        uint before = balanceOfWrapped() + calc_wrapped_from_want(balanceOfWant());
+
         Rewards(rewardContract).getReward(address(this), isClaimExtras);
         uint256 _crv = IERC20(crv).balanceOf(address(this));
         if (_crv > 0) {
