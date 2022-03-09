@@ -16,7 +16,7 @@ import "./VaultHelpers.sol";
 import "hardhat/console.sol";
 
 
-string constant API_VERSION = '0.1.5';
+string constant API_VERSION = '0.1.6';
 
 /// @title Vault contract. Entry point for the Octus bridge cross chain token transfers.
 /// @dev Fork of the Yearn Vault V2 contract, rewritten in Solidity.
