@@ -39,6 +39,39 @@ describe('Test Convex3Frax strategy on DAI vault', async function () {
             rewards = await ethers.getContractAt('Rewards', rewards_addr);
         });
 
+        it('Set bridge mockup', async () => {
+            const governance_addr = await vault.governance();
+            governance = await getSignerFromAddr(governance_addr);
+
+            const BridgeMockup = await ethers.getContractFactory('BridgeMockup');
+            const mockup = await BridgeMockup.deploy();
+
+            const alice = await ethers.getNamedSigner('alice');
+            await alice.sendTransaction({
+                to: governance_addr,
+                value: ethers.utils.parseEther("1.0")
+            });
+
+            const proxy_admin = await ethers.getNamedSigner('proxy_admin');
+            const bridge = await ethers.getNamedSigner('bridge');
+            const proxyAdmin = await ethers.getContractAt('ProxyAdmin', proxy_admin.address);
+
+            await proxyAdmin.connect(governance).upgrade(bridge.address, mockup.address);
+        });
+
+        it("Set vault mockup", async () => {
+            const governance_addr = await vault.governance();
+            governance = await getSignerFromAddr(governance_addr);
+
+            const VaultMockup = await ethers.getContractFactory('TestVault');
+            const mockup = await VaultMockup.deploy();
+
+            const proxy_admin = await ethers.getNamedSigner('proxy_admin');
+            const proxyAdmin = await ethers.getContractAt('ProxyAdmin', proxy_admin.address);
+
+            await proxyAdmin.connect(governance).upgrade(vault.address, mockup.address);
+        });
+
         it('Check strategy connected to vault', async () => {
             const vault_token = await vault.token();
             const strategy_token = await strategy.want();
@@ -50,7 +83,6 @@ describe('Test Convex3Frax strategy on DAI vault', async function () {
 
         it("Add strategy to vault", async () => {
             const governance_addr = await vault.governance();
-            governance = await getSignerFromAddr(governance_addr);
 
             const [owner] = await ethers.getSigners();
             await owner.sendTransaction({
@@ -78,6 +110,8 @@ describe('Test Convex3Frax strategy on DAI vault', async function () {
             const vault_bal_after = await dai.balanceOf(vault.address);
 
             const strategy_deposit_balance = await strategy.balanceOfPool();
+
+            console.log(vault_bal_before.toString(), vault_bal_after.toString())
 
             expect(vault_bal_after.lt(vault_bal_before)).to.be.true;
             expect(strategy_deposit_balance.gt(0)).to.be.true;
@@ -139,19 +173,25 @@ describe('Test Convex3Frax strategy on DAI vault', async function () {
             // ask 1000 more dai than vault has
             const withdraw_asked = vault_bal.add('200000000000000').div('1000000000').mul('1000000000')
 
+            const configuration = await vault.configuration();
+
             const withdrawalEventData = await encodeWithdrawalData({
                 amount: await vault.convertToTargetDecimals(withdraw_asked.toString()),
-                recipient: alice.address
+                recipient: alice.address,
+                chainId: 1111
             });
 
             const payload = encodeEverscaleEvent({
                 eventData: withdrawalEventData,
                 proxy: vault.address,
+                configurationAddress: configuration.addr.toString(),
+                configurationWid: configuration.wid.toString()
             });
 
             const signatures = await getPayloadSignatures(payload);
 
             await vault.connect(alice)['saveWithdraw(bytes,bytes[])'](payload, signatures);
+            console.log('Save withdrawed');
 
             const res = await vault.pendingWithdrawals(alice.address, 0);
             // expect(res.approveStatus).to.be.eq(1, 'Bad approve status');
