@@ -324,7 +324,7 @@ contract Vault is IVault, VaultHelpers {
     {
         PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(PendingWithdrawalId(msg.sender, id));
 
-        require(bounty >= pendingWithdrawal.amount);
+        require(bounty <= pendingWithdrawal.amount);
 
         _pendingWithdrawalBountyUpdate(PendingWithdrawalId(msg.sender, id), bounty);
     }
@@ -583,6 +583,9 @@ contract Vault is IVault, VaultHelpers {
         ) = saveWithdraw(payload, signatures);
 
         if (!instantWithdraw) {
+            PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(pendingWithdrawalId);
+            require (bounty <= pendingWithdrawal.amount);
+
             _pendingWithdrawalBountyUpdate(pendingWithdrawalId, bounty);
         }
     }
