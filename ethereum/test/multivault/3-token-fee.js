@@ -17,6 +17,18 @@ describe('Test MultiVault deposit-withdrawal', async () => {
         token = await ethers.getContract('Token');
     });
 
+    it('Set token deposit and withdraw fee greater than default', async () => {
+        const owner = await ethers.getNamedSigner('owner');
+
+        await multivault
+            .connect(owner)
+            .setTokenDepositFee(token.address, 1000);
+
+        await multivault
+            .connect(owner)
+            .setTokenWithdrawFee(token.address, 1000);
+    });
+
     describe('Deposit', async () => {
         const amount = ethers.utils.parseUnits('1000', 18);
 

@@ -31,17 +31,22 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         utils.defaultConfiguration
     );
 
-    const token = await deployments.get('Token');
+    await deployments.execute('MultiVault',
+        {
+            from: owner,
+            log: true
+        },
+        'setDefaultDepositFee',
+        100
+    );
 
     await deployments.execute('MultiVault',
         {
             from: owner,
-            log: true,
+            log: true
         },
-        'enableToken',
-        token.address,
-        0,
-        0
+        'setDefaultWithdrawFee',
+        200
     );
 };
 

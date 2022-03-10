@@ -6,28 +6,38 @@ import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/proxy/Clones.sol";
 
 import "./../interfaces/multivault/IMultiVault.sol";
-import "./../interfaces/IERC20Metadata.sol";
+import "./../interfaces/multivault/IMultiVaultToken.sol";
 import "./../interfaces/IBridge.sol";
+import "./../interfaces/vault/IVault.sol";
 
+import "./../libraries/MultiVaultLibrary.sol";
+
+import "./MultiVaultToken.sol";
 import "./../utils/ChainId.sol";
 
 
 uint constant MAX_BPS = 10_000;
+uint constant FEE_LIMIT = MAX_BPS / 2;
+address constant ZERO_ADDRESS = address(0);
 
 
 string constant API_VERSION = '0.1.0';
 
 
+/// @notice Octus bridge Vault for multiple tokens.
+/// Inspired by Yearn Vault V2.
 contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
     using SafeERC20 for IERC20;
 
-    mapping (address => TokenMeta) tokenMeta;
+    mapping (address => Token) public tokens;
 
-    mapping (address => bool) public override whitelist;
-    mapping (address => uint) public override depositFee;
-    mapping (address => uint) public override withdrawFee;
+    uint public override defaultDepositFee;
+    uint public override defaultWithdrawFee;
+
+    bool public override emergencyShutdown;
 
     address public override bridge;
     mapping(bytes32 => bool) public override withdrawalIds;
@@ -39,7 +49,8 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
     address public override guardian;
     address public override management;
 
-
+    /// @notice Rewards address
+    /// @return Everscale address, used for collecting rewards.
     function rewards()
         external
         view
@@ -48,6 +59,8 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         return rewards_;
     }
 
+    /// @notice Configuration address
+    /// @return Everscale address, used for verifying `saveWithdraw` payloads
     function configuration()
         external
         view
@@ -56,10 +69,28 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         return configuration_;
     }
 
-    bool public override emergencyShutdown;
+    modifier tokenNotBlacklisted(address token) {
+        require(!tokens[token].blacklisted);
 
-    modifier onlyTokenWhitelisted(address token) {
-        require(whitelist[token]);
+        _;
+    }
+
+    modifier initializeToken(address token) {
+        if (tokens[token].activation == 0) {
+            // Non-activated tokens are always native
+            TokenSource memory source = TokenSource(
+                TokenType.EVM,
+                MultiVaultLibrary.encodeEvmTokenSourceMeta(getChainID(), token)
+            );
+
+            TokenMeta memory meta = TokenMeta(
+                IERC20Metadata(token).name(),
+                IERC20Metadata(token).symbol(),
+                IERC20Metadata(token).decimals()
+            );
+
+            _activateToken(token, source, meta);
+        }
 
         _;
     }
@@ -104,10 +135,14 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         withdrawalIds[withdrawalId] = true;
     }
 
-    /**
-        @notice Vault API version. Used to track the deployed version of this contract.
-        @return api_version Current API version
-    */
+    modifier respectFeeLimit(uint fee) {
+        require(fee <= FEE_LIMIT);
+
+        _;
+    }
+
+    /// @notice Vault API version. Used to track the deployed version of this contract.
+    //  @return api_version Current API version
     function apiVersion()
         external
         override
@@ -117,6 +152,10 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         return API_VERSION;
     }
 
+    /// @notice MultiVault initializer
+    /// @param _bridge Bridge address
+    /// @param _governance Governance address
+    /// @param _rewards Everscale address for receiving rewards
     function initialize(
         address _bridge,
         address _governance,
@@ -132,36 +171,41 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         emit UpdateRewards(rewards_.wid, rewards_.addr);
     }
 
-    function enableToken(
-        address token,
-        uint _depositFee,
-        uint _withdrawFee
-    ) external override onlyGovernanceOrManagement {
-        require(!whitelist[token]);
-
-        whitelist[token] = true;
-
-        emit WhitelistTokenEnabled(token);
-
-        setDepositFee(token, _depositFee);
-        setWithdrawFee(token, _withdrawFee);
-
-        tokenMeta[token] = TokenMeta({
-            name: IERC20Metadata(token).name(),
-            symbol: IERC20Metadata(token).symbol(),
-            decimals: IERC20Metadata(token).decimals()
-        });
-    }
-
-    function disableToken(
+    /// @notice Add token to blacklist. Only native token can be blacklisted.
+    /// Blacklisted tokens cant be deposited or withdrawn.
+    /// @param token Token address
+    function blacklistAddToken(
         address token
-    ) public override onlyGovernanceOrManagement onlyTokenWhitelisted(token) {
-        whitelist[token] = false;
+    ) public override onlyGovernance tokenNotBlacklisted(token) {
+        tokens[token].blacklisted = true;
 
-        emit WhitelistTokenDisabled(token);
+        emit BlacklistTokenAdded(token);
     }
 
-    /// @notice Set address to receive rewards_ (fees, gains, etc)
+    /// @notice Remove token from blacklist.
+    /// @param token Token address
+    function blacklistRemoveToken(
+        address token
+    ) external override onlyGovernance {
+        require(tokens[token].blacklisted);
+
+        tokens[token].blacklisted = false;
+
+        emit BlacklistTokenRemoved(token);
+    }
+
+    /// @notice Set bridge address.
+    /// This may be called only by `governance`
+    /// @param _bridge Bridge address
+    function setBridge(
+        address _bridge
+    ) external override onlyGovernance {
+        bridge = _bridge;
+
+        emit UpdateBridge(bridge);
+    }
+
+    /// @notice Set address to receive fees.
     /// This may be called only by `governance`
     /// @param _rewards Rewards receiver in Everscale network
     function setRewards(
@@ -172,42 +216,76 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         emit UpdateRewards(rewards_.wid, rewards_.addr);
     }
 
-    /**
-        @notice Set deposit fee for specific token. Must be less than `MAX_BPS / 2`.
-        This may be called only by `owner` or `management`.
-        @param token Token address, must be enabled
-        @param _depositFee Deposit fee, must be less than `MAX_BPS / 2`.
-    */
-    function setDepositFee(
+    /// @notice Set default deposit fee.
+    /// @param _defaultDepositFee Default deposit fee, should be less than FEE_LIMIT
+    function setDefaultDepositFee(
+        uint _defaultDepositFee
+    )
+        external
+        override
+        onlyGovernanceOrManagement
+        respectFeeLimit(_defaultDepositFee)
+    {
+        defaultDepositFee = _defaultDepositFee;
+
+        emit UpdateDefaultDepositFee(defaultDepositFee);
+    }
+
+    /// @notice Set default withdraw fee.
+    /// @param _defaultWithdrawFee Default withdraw fee, should be less than FEE_LIMIT
+    function setDefaultWithdrawFee(
+        uint _defaultWithdrawFee
+    )
+        external
+        override
+        onlyGovernanceOrManagement
+        respectFeeLimit(_defaultWithdrawFee)
+    {
+        defaultWithdrawFee = _defaultWithdrawFee;
+
+        emit UpdateDefaultWithdrawFee(defaultWithdrawFee);
+    }
+
+    /// @notice Set deposit fee for specific token.
+    /// This may be called only by `owner` or `management`.
+    /// @param token Token address
+    /// @param _depositFee Deposit fee, must be less than FEE_LIMIT.
+    function setTokenDepositFee(
         address token,
         uint _depositFee
-    ) public override onlyGovernanceOrManagement onlyTokenWhitelisted(token) {
-        require(_depositFee <= MAX_BPS / 2);
+    )
+        public
+        override
+        onlyGovernanceOrManagement
+        tokenNotBlacklisted(token)
+        respectFeeLimit(_depositFee)
+    {
+        tokens[token].depositFee = _depositFee;
 
-        depositFee[token] = _depositFee;
-
-        emit UpdateDepositFee(token, _depositFee);
+        emit UpdateTokenDepositFee(token, _depositFee);
     }
 
-    /**
-        @notice Set withdraw fee for specific token. Must be less than `MAX_BPS / 2`.
-        This may be called only by `governance` or `management`
-        @param token Token address, must be enabled
-        @param _withdrawFee Withdraw fee, must be less than `MAX_BPS / 2`.
-    */
-    function setWithdrawFee(
+    /// @notice Set withdraw fee for specific token.
+    /// This may be called only by `governance` or `management`
+    /// @param token Token address, must be enabled
+    /// @param _withdrawFee Withdraw fee, must be less than FEE_LIMIT.
+    function setTokenWithdrawFee(
         address token,
         uint _withdrawFee
-    ) public override onlyGovernanceOrManagement onlyTokenWhitelisted(token) {
-        require(_withdrawFee <= MAX_BPS / 2);
+    )
+        public
+        override
+        onlyGovernanceOrManagement
+        tokenNotBlacklisted(token)
+        respectFeeLimit(_withdrawFee)
+    {
+        tokens[token].withdrawFee = _withdrawFee;
 
-        withdrawFee[token] = _withdrawFee;
-
-        emit UpdateWithdrawFee(token, _withdrawFee);
+        emit UpdateTokenWithdrawFee(token, _withdrawFee);
     }
 
-    /// @notice Set configuration_ address.
-    /// @param _configuration The address to use for configuration_.
+    /// @notice Set configuration address.
+    /// @param _configuration The address to use for configuration.
     function setConfiguration(
         EverscaleAddress memory _configuration
     ) external override onlyGovernance {
@@ -264,20 +342,22 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
     /// @param _guardian The new guardian address to use.
     function setGuardian(
         address _guardian
-    ) external override onlyGovernanceOrGuardian {
+    )
+        external
+        override
+        onlyGovernanceOrGuardian
+    {
         guardian = _guardian;
 
         emit UpdateGuardian(guardian);
     }
 
-    /// @notice Activates or deactivates Vault emergency mode, where all Strategies go into full withdrawal.
+    /// @notice Activates or deactivates MultiVault emergency shutdown.
     ///     During emergency shutdown:
     ///     - Deposits are disabled
-    ///     - Withdrawals are disabled (all types of withdrawals)
-    ///     - Each Strategy must pay back their debt as quickly as reasonable to minimally affect their position
-    ///     - Only `governance` may undo Emergency Shutdown
+    ///     - Withdrawals are disabled
     /// This may only be called by `governance` or `guardian`.
-    /// @param active If `true`, the Vault goes into Emergency Shutdown. If `false`, the Vault goes back into
+    /// @param active If `true`, the MultiVault goes into Emergency Shutdown. If `false`, the MultiVault goes back into
     ///     Normal Operation.
     function setEmergencyShutdown(
         bool active
@@ -293,26 +373,51 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         emit EmergencyShutdown(active);
     }
 
+    /// @notice Transfer tokens to the Everscale.
+    /// @param recipient Everscale recipient.
+    /// @param token Native token address, should not be blacklisted.
+    /// @param amount Amount of tokens to transfer.
+    /// @param depositType Deposit type.
     function deposit(
         EverscaleAddress memory recipient,
         address token,
-        uint amount
+        uint amount,
+        DepositType depositType
     )
         external
         override
         nonReentrant
-        onlyTokenWhitelisted(token)
+        tokenNotBlacklisted(token)
+        initializeToken(token)
         onlyEmergencyDisabled
     {
-        uint fee = _calculateMovementFee(amount, depositFee[token]);
+        if (depositType == DepositType.Burn) {
+            require(tokens[token].activation > 0);
+        }
 
-        if (fee > 0) _transferToEverscale(token, rewards_, fee);
+        uint fee = calculateMovementFee(amount, token, Fee.Deposit);
 
-        IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
+        if (depositType == DepositType.Store) {
+            IERC20(token).safeTransferFrom(
+                msg.sender,
+                address(this),
+                amount
+            );
+        } else {
+            IMultiVaultToken(token).burn(
+                msg.sender,
+                amount
+            );
+        }
 
-        _transferToEverscale(token, recipient, amount - fee);
+        _transferToEverscale(token, recipient, amount - fee, depositType);
+
+        if (fee > 0) _transferToEverscale(token, rewards_, fee, depositType);
     }
 
+    /// @notice Save withdraw
+    /// @param payload Withdraw payload
+    /// @param signatures Payload signatures
     function saveWithdraw(
         bytes memory payload,
         bytes[] memory signatures
@@ -339,39 +444,51 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         bytes32 payloadId = keccak256(payload);
 
         // Decode event data
-        WithdrawalParams memory withdrawal = decodeWithdrawalEventData(_event.eventData);
+        WithdrawalParams memory withdrawal = MultiVaultLibrary.decodeWithdrawalEventData(_event.eventData);
 
-        uint256 fee = _calculateMovementFee(withdrawal.amount, withdrawFee[withdrawal.token]);
-
-        if (fee > 0) _transferToEverscale(withdrawal.token, rewards_, fee);
-
+        // Ensure chain id is correct
         require(withdrawal.chainId == getChainID());
 
-        IERC20(withdrawal.token).safeTransfer(withdrawal.recipient, withdrawal.amount - fee);
-    }
+        // Derive token address
+        // Depends on the withdrawn token source
+        address token = _deriveWithdrawalToken(withdrawal);
 
-    function decodeWithdrawalEventData(
-        bytes memory eventData
-    ) public view override returns (WithdrawalParams memory) {
-        (
-            uint160 token,
-            int8 sender_wid,
-            uint256 sender_addr,
-            uint128 amount,
-            uint160 recipient,
-            uint32 chainId
-        ) = abi.decode(
-            eventData,
-            (uint160, int8, uint256, uint128, uint160, uint32)
+        if (withdrawal.depositType == DepositType.Burn) {
+            require(tokens[token].activation > 0);
+        }
+
+        // Ensure token is not blacklisted
+        require(!tokens[token].blacklisted);
+
+        // Consider movement fee and send it to `rewards_`
+        uint256 fee = calculateMovementFee(
+            withdrawal.amount,
+            token,
+            Fee.Withdraw
         );
 
-        return WithdrawalParams({
-            sender: EverscaleAddress(sender_wid, sender_addr),
-            amount: amount,
-            recipient: address(recipient),
-            token: address(token),
-            chainId: chainId
-        });
+        // If token was burned on the Everscale side, than the EVM token need
+        // to be transferred.
+        if (withdrawal.depositType == DepositType.Burn) {
+            IERC20(token).safeTransfer(
+                withdrawal.recipient,
+                withdrawal.amount - fee
+            );
+        } else {
+            IMultiVaultToken(token).mint(
+                withdrawal.recipient,
+                withdrawal.amount - fee
+            );
+        }
+
+        if (fee > 0) {
+            _transferToEverscale(
+                token,
+                rewards_,
+                fee,
+                withdrawal.depositType == DepositType.Burn ? DepositType.Store : DepositType.Burn
+            );
+        }
     }
 
     function migrateTokenToVault(
@@ -381,39 +498,133 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         external
         override
         onlyGovernance
-        onlyTokenWhitelisted(token)
     {
-        disableToken(token);
+        require(IVault(vault).token() == token);
+        require(IVault(token).governance() == governance);
 
-        IERC20(token).safeTransfer(vault, IERC20(token).balanceOf(address(this)));
+        tokens[token].blacklisted = true;
 
-        emit TokenMigrated(vault, token);
+        IERC20(token).safeTransfer(
+            vault,
+            IERC20(token).balanceOf(address(this))
+        );
+
+        emit TokenMigrated(token, vault);
     }
 
-    function _calculateMovementFee(
+    /// @notice Calculates fee for deposit or withdrawal.
+    /// @param amount Amount of tokens.
+    /// @param _token Token address.
+    /// @param fee Fee type (Deposit = 0, Withdraw = 1).
+    function calculateMovementFee(
         uint256 amount,
-        uint256 fee
-    ) internal pure returns (uint256) {
-        if (fee == 0) return 0;
+        address _token,
+        Fee fee
+    ) public view returns (uint256) {
+        Token memory token = tokens[_token];
 
-        return amount * fee / MAX_BPS;
+        uint tokenFee = fee == Fee.Deposit ? token.depositFee : token.withdrawFee;
+
+        return tokenFee * amount / MAX_BPS;
+    }
+
+    function _activateToken(
+        address token,
+        TokenSource memory source,
+        TokenMeta memory meta
+    ) internal {
+        tokens[token].activation = block.number;
+        tokens[token].blacklisted = false;
+        tokens[token].source = source;
+        tokens[token].meta = meta;
+        tokens[token].depositFee = defaultDepositFee;
+        tokens[token].withdrawFee = defaultWithdrawFee;
+
+        emit TokenInitialized(
+            token,
+            block.number,
+            source._type,
+            source.meta,
+            meta.name,
+            meta.symbol,
+            meta.decimals,
+            defaultDepositFee,
+            defaultWithdrawFee
+        );
     }
 
     function _transferToEverscale(
-        address token,
+        address _token,
         EverscaleAddress memory recipient,
-        uint _amount
+        uint amount,
+        DepositType depositType
     ) internal {
-        TokenMeta memory meta = tokenMeta[token];
+        Token memory token = tokens[_token];
 
         emit Deposit(
-            uint160(token),
-            meta.symbol,
-            meta.name,
-            meta.decimals,
-            _amount,
+            depositType,
+            token.source._type,
+            token.source.meta,
+            token.meta.symbol,
+            token.meta.name,
+            token.meta.decimals,
+            amount,
             recipient.wid,
             recipient.addr
+        );
+    }
+
+    function _deriveWithdrawalToken(
+        WithdrawalParams memory withdrawal
+    ) internal returns (address token) {
+        // Check source token is native to the current network
+        if (withdrawal.source._type == TokenType.EVM) {
+            (
+                uint256 chainId,
+                address _token
+            ) = MultiVaultLibrary.decodeEvmTokenSourceMeta(
+                withdrawal.source.meta
+            );
+
+            if (chainId == getChainID()) return _token;
+        }
+
+        token = MultiVaultLibrary.tokenFor(
+            withdrawal.source._type,
+            withdrawal.source.meta
+        );
+
+        if (tokens[token].activation == 0) {
+            _deployToken(withdrawal.source, withdrawal.meta);
+            _activateToken(token, withdrawal.source, withdrawal.meta);
+        }
+    }
+
+    function _deployToken(
+        TokenSource memory source,
+        TokenMeta memory meta
+    ) internal returns (address token) {
+        bytes memory bytecode = type(MultiVaultToken).creationCode;
+
+        bytes32 salt = keccak256(abi.encodePacked(source._type, source.meta));
+
+        assembly {
+            token := create2(0, add(bytecode, 32), mload(bytecode), salt)
+        }
+
+        IMultiVaultToken(token).initialize(
+            meta.name,
+            meta.symbol,
+            meta.decimals
+        );
+
+        emit TokenCreated(
+            token,
+            source._type,
+            source.meta,
+            meta.name,
+            meta.symbol,
+            meta.decimals
         );
     }
 }
