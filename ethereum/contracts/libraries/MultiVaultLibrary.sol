@@ -68,7 +68,7 @@ library MultiVaultLibrary {
         uint256 chainId,
         address token
     ) internal pure returns (bytes memory meta) {
-        meta = abi.encodePacked(chainId, token);
+        meta = abi.encode(chainId, token);
     }
 
     /// @notice Calculates the CREATE2 address for token, based on it's source type and meta
@@ -78,12 +78,12 @@ library MultiVaultLibrary {
     function tokenFor(
         IMultiVault.TokenType _type,
         bytes memory meta
-    ) public returns (address token) {
+    ) internal view returns (address token) {
         token = address(uint160(uint(keccak256(abi.encodePacked(
-                hex'ff',
-                address(this),
-                keccak256(abi.encodePacked(_type, meta)),
-                hex'96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f' // MultiVaultToken init code hash
-            )))));
+            hex'ff',
+            address(this),
+            keccak256(abi.encodePacked(_type, meta)),
+            hex'5ae84bdc4f10bd94dda6e6c258ff4133478a78c800ece6c093389bffe687e46f' // MultiVaultToken init code hash
+        )))));
     }
 }

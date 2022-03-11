@@ -32,6 +32,11 @@ string constant API_VERSION = '0.1.0';
 contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
     using SafeERC20 for IERC20;
 
+//    function getInitHash() public pure returns(bytes32){
+//        bytes memory bytecode = type(MultiVaultToken).creationCode;
+//        return keccak256(abi.encodePacked(bytecode));
+//    }
+//
     mapping (address => Token) public tokens;
 
     uint public override defaultDepositFee;
@@ -528,6 +533,13 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         return tokenFee * amount / MAX_BPS;
     }
 
+    function tokenFor(
+        TokenType _type,
+        bytes memory meta
+    ) external view returns (address token) {
+        token = MultiVaultLibrary.tokenFor(_type, meta);
+    }
+
     function _activateToken(
         address token,
         TokenSource memory source,
@@ -565,8 +577,8 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
             depositType,
             token.source._type,
             token.source.meta,
-            token.meta.symbol,
             token.meta.name,
+            token.meta.symbol,
             token.meta.decimals,
             amount,
             recipient.wid,
@@ -613,8 +625,8 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         }
 
         IMultiVaultToken(token).initialize(
-            meta.name,
-            meta.symbol,
+            string(abi.encodePacked(meta.name, ' (Octus)')),
+            string(abi.encodePacked(meta.symbol, '_OCTUS')),
             meta.decimals
         );
 

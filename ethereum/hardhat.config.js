@@ -145,6 +145,13 @@ const hardhatConfig = {
     management: {
       default: 2,
     },
+    bridge: {
+      default: '0x0000000000000000000000000000000000000000', // BridgeMockup will be used for tests
+      main: '0x5889d26Ad270540E315B028Dd39Ae0ECB3De6179',
+      polygon: '0x9f6898d5D36e2a4b9A0c6e58A0e86525475f58d7',
+      bsc: '0xa3CbceE67325bCa03aCCcD06b9121955CCF224C3',
+      fantom: '0x6dF42fdE8BC7AF2596a450b9af306EA2060Ec8dc'
+    },
     owner: {
       default: 3,
       main: multisig.main,

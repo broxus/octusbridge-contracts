@@ -2,9 +2,7 @@ const utils = require('./../test/utils');
 
 
 module.exports = async ({getNamedAccounts, deployments}) => {
-    const { deployer, owner } = await getNamedAccounts();
-
-    const bridge = await deployments.get('Bridge');
+    const { deployer, owner, bridge } = await getNamedAccounts();
 
     await deployments.deploy('MultiVault', {
         from: deployer,
@@ -14,7 +12,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
             execute: {
                 methodName: 'initialize',
                 args: [
-                    bridge.address,
+                    bridge,
                     owner,
                     utils.defaultTonRecipient
                 ],

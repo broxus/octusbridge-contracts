@@ -49,13 +49,13 @@
       {
         "indexed": false,
         "internalType": "string",
-        "name": "symbol",
+        "name": "name",
         "type": "string"
       },
       {
         "indexed": false,
         "internalType": "string",
-        "name": "name",
+        "name": "symbol",
         "type": "string"
       },
       {
@@ -940,6 +940,30 @@
     "name": "setTokenWithdrawFee",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum IMultiVault.TokenType",
+        "name": "_type",
+        "type": "uint8"
+      },
+      {
+        "internalType": "bytes",
+        "name": "meta",
+        "type": "bytes"
+      }
+    ],
+    "name": "tokenFor",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {

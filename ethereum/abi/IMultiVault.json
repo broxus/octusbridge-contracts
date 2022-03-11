@@ -49,13 +49,13 @@
       {
         "indexed": false,
         "internalType": "string",
-        "name": "symbol",
+        "name": "name",
         "type": "string"
       },
       {
         "indexed": false,
         "internalType": "string",
-        "name": "name",
+        "name": "symbol",
         "type": "string"
       },
       {

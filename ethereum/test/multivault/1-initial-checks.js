@@ -24,4 +24,14 @@ describe('Test MultiVault initial setup', async () => {
     expect(await multivault.governance())
         .to.be.equal(owner, 'MultiVault: wrong governance');
   });
+
+  it('Check default deposit fee', async () => {
+    expect(await multivault.defaultDepositFee())
+        .to.be.not.equal(0, 'Default multivault deposit fee is zero');
+  });
+
+  it('Check default withdraw fee', async () => {
+    expect(await multivault.defaultDepositFee())
+        .to.be.not.equal(0, 'Default multivault deposit fee is zero');
+  });
 });
