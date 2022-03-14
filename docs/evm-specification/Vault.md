@@ -1504,10 +1504,10 @@ event PendingWithdrawalCreated(address recipient, uint256 id, uint256 amount, by
 | amount  | uint256 | undefined |
 | payloadId  | bytes32 | undefined |
 
-### PendingWithdrawalFill
+### PendingWithdrawalForce
 
 ```solidity
-event PendingWithdrawalFill(address recipient, uint256 id)
+event PendingWithdrawalForce(address recipient, uint256 id)
 ```
 
 
@@ -2029,6 +2029,28 @@ event UpdateWithdrawalQueue(address[20] queue)
 | Name | Type | Description |
 |---|---|---|
 | queue  | address[20] | undefined |
+
+### UserDeposit
+
+```solidity
+event UserDeposit(address sender, int128 recipientWid, uint256 recipientAddr, uint256 amount, address withdrawalRecipient, uint256 withdrawalId, uint256 bounty)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| sender  | address | undefined |
+| recipientWid  | int128 | undefined |
+| recipientAddr  | uint256 | undefined |
+| amount  | uint256 | undefined |
+| withdrawalRecipient  | address | undefined |
+| withdrawalId  | uint256 | undefined |
+| bounty  | uint256 | undefined |
 
 
 

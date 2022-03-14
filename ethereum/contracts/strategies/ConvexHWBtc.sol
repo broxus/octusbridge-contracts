@@ -1,3 +1,5 @@
+
+// SPDX-License-Identifier: AGPL-3.0
 /**
  *Submitted for verification at Etherscan.io on 2021-05-28
 */

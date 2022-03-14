@@ -13,10 +13,8 @@ import "../interfaces/IERC20Metadata.sol";
 
 import "./VaultHelpers.sol";
 
-import "hardhat/console.sol";
 
-
-string constant API_VERSION = '0.1.5';
+string constant API_VERSION = '0.1.7';
 
 /// @title Vault contract. Entry point for the Octus bridge cross chain token transfers.
 /// @dev Fork of the Yearn Vault V2 contract, rewritten in Solidity.
@@ -324,11 +322,9 @@ contract Vault is IVault, VaultHelpers {
     {
         PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(PendingWithdrawalId(msg.sender, id));
 
-        require(bounty >= pendingWithdrawal.amount);
+        require(bounty <= pendingWithdrawal.amount);
 
         _pendingWithdrawalBountyUpdate(PendingWithdrawalId(msg.sender, id), bounty);
-
-        emit PendingWithdrawalUpdateBounty(msg.sender, id, bounty);
     }
 
     /// @notice Returns the total quantity of all assets under control of this
@@ -337,6 +333,19 @@ contract Vault is IVault, VaultHelpers {
     /// @return The total assets under control of this Vault.
     function totalAssets() external view override returns (uint256) {
         return _totalAssets();
+    }
+
+    function _deposit(
+        EverscaleAddress memory recipient,
+        uint256 amount
+    ) internal {
+        IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
+
+        uint256 fee = _calculateMovementFee(amount, depositFee);
+
+        _transferToEverscale(recipient, amount - fee);
+
+        if (fee > 0) _transferToEverscale(rewards_, fee);
     }
 
     /// @notice Deposits `token` into the Vault, leads to producing corresponding token
@@ -353,13 +362,9 @@ contract Vault is IVault, VaultHelpers {
         respectDepositLimit(amount)
         nonReentrant
     {
-        IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
+        _deposit(recipient, amount);
 
-        uint256 fee = _calculateMovementFee(amount, depositFee);
-
-        _transferToEverscale(recipient, amount - fee);
-
-        if (fee > 0) _transferToEverscale(rewards_, fee);
+        emit UserDeposit(msg.sender, recipient.wid, recipient.addr, amount, address(0), 0, 0);
     }
 
     /// @notice Same as regular `deposit`, but fills pending withdrawal.
@@ -375,6 +380,9 @@ contract Vault is IVault, VaultHelpers {
     )
         public
         override
+        onlyEmergencyDisabled
+        respectDepositLimit(amount)
+        nonReentrant
         pendingWithdrawalApproved(pendingWithdrawalId)
         pendingWithdrawalOpened(pendingWithdrawalId)
     {
@@ -382,16 +390,31 @@ contract Vault is IVault, VaultHelpers {
 
         require(amount >= pendingWithdrawal.amount);
 
-        deposit(recipient, amount);
+        _deposit(recipient, amount);
 
         // Send bounty as additional transfer
         _transferToEverscale(recipient, pendingWithdrawal.bounty);
 
-        _pendingWithdrawalAmountReduce(pendingWithdrawalId, pendingWithdrawal.amount);
+        uint redeemedAmount = pendingWithdrawal.amount - pendingWithdrawal.bounty;
+
+        _pendingWithdrawalAmountReduce(
+            pendingWithdrawalId,
+            pendingWithdrawal.amount
+        );
 
         IERC20(token).safeTransfer(
             pendingWithdrawalId.recipient,
-            pendingWithdrawal.amount - pendingWithdrawal.bounty
+            redeemedAmount
+        );
+
+        emit UserDeposit(
+            msg.sender,
+            recipient.wid,
+            recipient.addr,
+            amount,
+            pendingWithdrawalId.recipient,
+            pendingWithdrawalId.id,
+            pendingWithdrawal.bounty
         );
     }
 
@@ -532,12 +555,6 @@ contract Vault is IVault, VaultHelpers {
 
         if (!withdrawalLimitsPassed) {
             _pendingWithdrawalApproveStatusUpdate(pendingWithdrawalId, ApproveStatus.Required);
-
-            emit PendingWithdrawalUpdateApproveStatus(
-                withdrawal.recipient,
-                id,
-                ApproveStatus.Required
-            );
         }
 
         return (false, pendingWithdrawalId);
@@ -564,6 +581,9 @@ contract Vault is IVault, VaultHelpers {
         ) = saveWithdraw(payload, signatures);
 
         if (!instantWithdraw) {
+            PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(pendingWithdrawalId);
+            require (bounty <= pendingWithdrawal.amount);
+
             _pendingWithdrawalBountyUpdate(pendingWithdrawalId, bounty);
         }
     }
@@ -693,7 +713,12 @@ contract Vault is IVault, VaultHelpers {
 
         _pendingWithdrawalAmountReduce(pendingWithdrawalId, amountRequested);
 
-        emit PendingWithdrawalWithdraw(msg.sender, id, amountRequested, amountAdjusted);
+        emit PendingWithdrawalWithdraw(
+            pendingWithdrawalId.recipient,
+            pendingWithdrawalId.id,
+            amountRequested,
+            amountAdjusted
+        );
 
         return amountAdjusted;
     }
@@ -1154,6 +1179,8 @@ contract Vault is IVault, VaultHelpers {
         IERC20(token).safeTransfer(pendingWithdrawalId.recipient, pendingWithdrawal.amount);
 
         _pendingWithdrawalAmountReduce(pendingWithdrawalId, pendingWithdrawal.amount);
+
+        emit PendingWithdrawalForce(pendingWithdrawalId.recipient, pendingWithdrawalId.id);
     }
 
     /**
@@ -1195,12 +1222,6 @@ contract Vault is IVault, VaultHelpers {
         );
 
         _pendingWithdrawalApproveStatusUpdate(pendingWithdrawalId, approveStatus);
-
-        emit PendingWithdrawalUpdateApproveStatus(
-            pendingWithdrawalId.recipient,
-            pendingWithdrawalId.id,
-            approveStatus
-        );
 
         // Fill approved withdrawal
         if (approveStatus == ApproveStatus.Approved && pendingWithdrawal.amount <= _vaultTokenBalance()) {

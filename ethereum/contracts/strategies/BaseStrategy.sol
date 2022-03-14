@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0
+
 pragma solidity ^0.8.2;
 pragma experimental ABIEncoderV2;
 
@@ -387,10 +389,9 @@ abstract contract BaseStrategy {
      *
      *  This call and `harvestTrigger()` should never return `true` at the same
      *  time.
-     * @param callCost The keeper's estimated cast cost to call `tend()`.
      * @return `true` if `tend()` should be called, `false` otherwise.
      */
-    function tendTrigger(uint256 callCost) public virtual view returns (bool) {
+    function tendTrigger(uint256 /*callCost*/) public virtual view returns (bool) {
         // We usually don't need tend, but if there are positions that need
         // active maintainence, overriding this function is how you would
         // signal for that.

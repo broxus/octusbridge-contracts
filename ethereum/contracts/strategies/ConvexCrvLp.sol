@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0
+
 /**
  *Submitted for verification at Etherscan.io on 2021-05-30
 */
@@ -151,7 +153,7 @@ abstract contract ConvexCrvLp is BaseStrategy {
         return balanceOfWrapped() + balanceOfPool();
     }
 
-    function adjustPosition(uint256 _debtOutstanding) internal override {
+    function adjustPosition(uint256 /*_debtOutstanding*/) internal override {
         // _debtOutstanding - unwrapped token
         if (emergencyExit) return;
         wrap(balanceOfWant());
@@ -364,7 +366,7 @@ abstract contract ConvexCrvLp is BaseStrategy {
 
     function protectedTokens()
     internal
-    view
+    pure
     override
     returns (address[] memory)
     {
