@@ -21,20 +21,21 @@ import "./ConvexCrvLp.sol";
 import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 
 
-
-// Part: ConvexStable
-
-abstract contract ConvexStable is ConvexCrvLp {
+contract ConvexFraxStrategy is ConvexCrvLp, Initializable {
     using SafeERC20 for IERC20;
 
     address public constant dai = address(0x6B175474E89094C44Da98b954EedeAC495271d0F);
     address public constant usdc = address(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     address public constant usdt = address(0xdAC17F958D2ee523a2206206994597C13D831ec7);
     address public constant crv3 = address(0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490);
+    address public constant frax3crv = address(0xd632f22692FaC7611d2AA1C0D552930D43CAEd3B);
+    address public constant zapCurve = address(0xA79828DF1850E8a3A3064576f380D90aECDD3359);
 
-    function _initialize(
+    address[] public pathTarget;
+
+    function initialize(
         address _vault
-    ) internal override {
+    ) external initializer {
         BaseStrategy._initialize(_vault);
 
         slippage_factor = 150;
@@ -42,7 +43,7 @@ abstract contract ConvexStable is ConvexCrvLp {
         maxReportDelay = 30 days;
         profitFactor = 100000;
         debtThreshold = 1e24;
-        want_wrapped = IERC20(crv3);
+        want_wrapped = IERC20(frax3crv);
         want_wrapped.safeApprove(_vault, type(uint256).max); // Give Vault unlimited access (might save gas)
 
         if (address(want) == dai) {
@@ -54,56 +55,9 @@ abstract contract ConvexStable is ConvexCrvLp {
         } else {
             revert("Strategy cant be applied to this vault");
         }
-    }
 
-    function _approveBasic() internal override {
-        want_wrapped.safeApprove(booster, 0);
-        want_wrapped.safeApprove(booster, type(uint256).max);
-        want_wrapped.safeApprove(curve, 0);
-        want_wrapped.safeApprove(curve, type(uint256).max);
-        IERC20(dai).safeApprove(curve, 0);
-        IERC20(dai).safeApprove(curve, type(uint256).max);
-        IERC20(usdc).safeApprove(curve, 0);
-        IERC20(usdc).safeApprove(curve, type(uint256).max);
-        IERC20(usdt).safeApprove(curve, 0);
-        IERC20(usdt).safeApprove(curve, type(uint256).max);
-    }
-
-    function _approveDex() internal override {
-        IERC20(crv).safeApprove(dex[0], 0);
-        IERC20(crv).safeApprove(dex[0], type(uint256).max);
-        IERC20(cvx).safeApprove(dex[1], 0);
-        IERC20(cvx).safeApprove(dex[1], type(uint256).max);
-    }
-
-    function calc_wrapped_from_want(uint256 want_amount) public view override returns (uint256) {
-        uint256[3] memory amounts;
-        amounts[curve_lp_idx] = want_amount;
-        return ICurveFi(curve).calc_token_amount(amounts, true);
-    }
-
-    function wrap(uint256 want_amount) internal override returns (uint256 expected_return) {
-        if (want_amount > 0) {
-            expected_return = calc_wrapped_from_want(want_amount);
-            uint256[3] memory amounts;
-            amounts[curve_lp_idx] = want_amount;
-            ICurveFi(curve).add_liquidity(amounts, 0);
-        }
-    }
-}
-
-// File: 3pool.sol
-
-contract Convex3StableStrategy is ConvexStable, Initializable {
-    address[] public pathTarget;
-
-    function initialize(
-        address _vault
-    ) external initializer {
-        ConvexStable._initialize(_vault);
-
-        curve = address(0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7);
-        id = 9;
+        curve = frax3crv;
+        id = 32;
         isClaimRewards = true; // default is true, turn off in emergency
         // isClaimExtras = true; // add this if there are extra rewards
 
@@ -121,6 +75,55 @@ contract Convex3StableStrategy is ConvexStable, Initializable {
         dex[1] = sushiswap; // cvx
         _approveDex();
     }
+
+    function _approveBasic() internal override {
+        want_wrapped.safeApprove(booster, 0);
+        want_wrapped.safeApprove(booster, type(uint256).max);
+        want_wrapped.safeApprove(zapCurve, 0);
+        want_wrapped.safeApprove(zapCurve, type(uint256).max);
+        IERC20(dai).safeApprove(zapCurve, 0);
+        IERC20(dai).safeApprove(zapCurve, type(uint256).max);
+        IERC20(usdc).safeApprove(zapCurve, 0);
+        IERC20(usdc).safeApprove(zapCurve, type(uint256).max);
+        IERC20(usdt).safeApprove(zapCurve, 0);
+        IERC20(usdt).safeApprove(zapCurve, type(uint256).max);
+    }
+
+    function _approveDex() internal override {
+        IERC20(crv).safeApprove(dex[0], 0);
+        IERC20(crv).safeApprove(dex[0], type(uint256).max);
+        IERC20(cvx).safeApprove(dex[1], 0);
+        IERC20(cvx).safeApprove(dex[1], type(uint256).max);
+    }
+
+    function calc_want_from_wrapped(uint256 wrapped_amount) public view override returns (uint256 expected_return) {
+        if (wrapped_amount > 0) {
+            expected_return = ICurveFi(zapCurve).calc_withdraw_one_coin(curve, wrapped_amount, int128(curve_lp_idx) + 1);
+        }
+    }
+
+    function calc_wrapped_from_want(uint256 want_amount) public view override returns (uint256) {
+        uint256[4] memory amounts;
+        amounts[curve_lp_idx + 1] = want_amount;
+        return ICurveFi(zapCurve).calc_token_amount(curve, amounts, true);
+    }
+
+    function wrap(uint256 want_amount) internal override returns (uint256 expected_return) {
+        if (want_amount > 0) {
+            expected_return = calc_wrapped_from_want(want_amount);
+            uint256[4] memory amounts;
+            amounts[curve_lp_idx + 1] = want_amount;
+            ICurveFi(zapCurve).add_liquidity(curve, amounts, 0);
+        }
+    }
+
+    function unwrap(uint256 wrapped_amount) internal override returns (uint256 expected_return) {
+        if (wrapped_amount > 0) {
+            expected_return = calc_want_from_wrapped(wrapped_amount);
+            ICurveFi(zapCurve).remove_liquidity_one_coin(curve, wrapped_amount, int128(curve_lp_idx) + 1, 0);
+        }
+    }
+
 
     // >>> approve other rewards on dex
     // function _approveDex() internal override { super._approveDex(); }
@@ -183,7 +186,7 @@ contract Convex3StableStrategy is ConvexStable, Initializable {
         uint256 _usdc = IERC20(usdc).balanceOf(address(this));
         uint256 _usdt = IERC20(usdt).balanceOf(address(this));
         if (_dai > 0 || _usdc > 0 || _usdt > 0) {
-            ICurveFi(curve).add_liquidity([_dai, _usdc, _usdt], 0);
+            ICurveFi(zapCurve).add_liquidity(curve, [0, _dai, _usdc, _usdt], 0);
         }
         _profit = balanceOfWrapped() - before;
 

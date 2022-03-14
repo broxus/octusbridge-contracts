@@ -139,17 +139,15 @@ abstract contract BaseStrategy {
      * @param _vault The address of the Vault responsible for this Strategy.
      */
     function _initialize(
-        address _vault,
-        address _strategist,
-        address _keeper
-    ) internal {
+        address _vault
+    ) internal virtual {
         require(address(want) == address(0), "Strategy already initialized");
 
         vault = IVault(_vault);
         want = IERC20(vault.token());
         want.safeApprove(_vault, type(uint256).max); // Give Vault unlimited access (might save gas)
-        strategist = _strategist;
-        keeper = _keeper;
+        strategist = vault.governance();
+        keeper = strategist;
 
         // initialize variables
         minReportDelay = 0;
