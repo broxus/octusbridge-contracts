@@ -4,6 +4,7 @@ pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 import "./../base/EthereumBaseEvent.sol";
+import "./../../../utils/cell-encoder/ProxyTokenTransferCellEncoder.sol";
 import "./../../interfaces/IEventNotificationReceiver.sol";
 import "./../../interfaces/event-contracts/IEthereumEvent.sol";
 import "./../../interfaces/IProxy.sol";
@@ -16,7 +17,7 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 /// rejects / confirms with external message directly into this contract.
 /// In case enough confirmations is collected - callback is executed.
 /// This implementation is used for cross chain token transfers
-contract TokenTransferEthereumEvent is EthereumBaseEvent {
+contract TokenTransferEthereumEvent is EthereumBaseEvent, ProxyTokenTransferCellEncoder {
 
     constructor(address _initializer, TvmCell _meta) EthereumBaseEvent(_initializer, _meta) public {}
 
@@ -32,6 +33,7 @@ contract TokenTransferEthereumEvent is EthereumBaseEvent {
 
     function onInit() override internal {
         notifyEventStatusChanged();
+        loadRelays();
     }
 
     function onConfirm() override internal {

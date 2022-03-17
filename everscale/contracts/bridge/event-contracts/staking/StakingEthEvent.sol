@@ -27,7 +27,9 @@ contract StakingEthEvent is EthereumBaseEvent, StakingCellEncoder {
         return bodyCopy;
     }
 
-    function onInit() override internal {}
+    function onInit() override internal {
+        loadRelays();
+    }
 
     function onConfirm() override internal {
         IProxy(eventInitData.configuration).onEventConfirmed{

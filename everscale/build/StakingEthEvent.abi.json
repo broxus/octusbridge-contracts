@@ -146,54 +146,6 @@
 			]
 		},
 		{
-			"name": "encodeEthereumEventData",
-			"inputs": [
-				{"name":"tokens","type":"uint256"},
-				{"name":"wid","type":"int128"},
-				{"name":"owner_addr","type":"uint256"}
-			],
-			"outputs": [
-				{"name":"data","type":"cell"}
-			]
-		},
-		{
-			"name": "decodeEthereumEventData",
-			"inputs": [
-				{"name":"data","type":"cell"}
-			],
-			"outputs": [
-				{"name":"tokens","type":"uint128"},
-				{"name":"wid","type":"int8"},
-				{"name":"owner_addr","type":"uint256"}
-			]
-		},
-		{
-			"name": "encodeTonEventData",
-			"inputs": [
-				{"name":"wid","type":"int8"},
-				{"name":"addr","type":"uint256"},
-				{"name":"tokens","type":"uint128"},
-				{"name":"ethereum_address","type":"uint160"},
-				{"name":"chainId","type":"uint32"}
-			],
-			"outputs": [
-				{"name":"data","type":"cell"}
-			]
-		},
-		{
-			"name": "decodeTonEventData",
-			"inputs": [
-				{"name":"data","type":"cell"}
-			],
-			"outputs": [
-				{"name":"wid","type":"int8"},
-				{"name":"addr","type":"uint256"},
-				{"name":"tokens","type":"uint128"},
-				{"name":"ethereum_address","type":"uint160"},
-				{"name":"chainId","type":"uint32"}
-			]
-		},
-		{
 			"name": "status",
 			"inputs": [
 			],

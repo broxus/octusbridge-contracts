@@ -1,0 +1,129 @@
+pragma ton-solidity >= 0.39.0;
+pragma AbiHeader pubkey;
+pragma AbiHeader time;
+
+
+import "./../../interfaces/multivault/IMultiVaultEVMEventAlien.sol";
+import "./../../interfaces/event-configuration-contracts/IEthereumEventConfiguration.sol";
+import "./../../interfaces/IProxy.sol";
+import "./../../interfaces/multivault/IProxyMultiVaultAlien.sol";
+
+import "./../base/EthereumBaseEvent.sol";
+
+
+contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien {
+    uint256 base_chainId;
+    uint160 base_token;
+    string name;
+    string symbol;
+    uint8 decimals;
+    uint128 amount;
+    address recipient;
+
+    address proxy;
+    address token;
+
+    constructor(
+        address _initializer,
+        TvmCell _meta
+    ) EthereumBaseEvent(_initializer, _meta) public {}
+
+    function onInit() override internal {
+        int8 recipient_wid;
+        uint256 recipient_addr;
+
+        (
+            base_chainId,
+            base_token,
+            name,
+            symbol,
+            decimals,
+            amount,
+            recipient_wid,
+            recipient_addr
+        ) = abi.decode(
+            eventInitData.voteData.eventData,
+            (uint256, uint160, string, string, uint8, uint128, int8, uint256)
+        );
+
+        recipient = address.makeAddrStd(recipient_wid, recipient_addr);
+
+        IEthereumEventConfiguration(eventInitData.configuration).getDetails{
+            value: 1 ton,
+            callback: MultiVaultEVMEventAlien.receiveConfigurationDetails
+        }();
+    }
+
+    function receiveConfigurationDetails(
+        IEthereumEventConfiguration.BasicConfiguration,
+        IEthereumEventConfiguration.EthereumEventConfiguration _networkConfiguration,
+        TvmCell
+    ) external override {
+        require(msg.sender == eventInitData.configuration);
+
+        proxy = _networkConfiguration.proxy;
+
+        IProxyMultiVaultAlien(proxy).deriveAlienTokenRoot{
+            value: 1 ton,
+            callback: MultiVaultEVMEventAlien.receiveAlienTokenRoot
+        }(
+            base_chainId,
+            base_token,
+            name,
+            symbol,
+            decimals
+        );
+    }
+
+    function receiveAlienTokenRoot(
+        address token_
+    ) external override {
+        require(msg.sender == proxy);
+
+        token = token_;
+
+        status = Status.Pending;
+
+        loadRelays();
+    }
+
+    function getDecodedData() external override responsible returns(
+        uint256 base_chainId_,
+        uint160 base_token_,
+        string name_,
+        string symbol_,
+        uint8 decimals_,
+        uint128 amount_,
+        address recipient_,
+        address proxy_,
+        address token_
+    ) {
+        return (
+            base_chainId,
+            base_token,
+            name,
+            symbol,
+            decimals,
+            amount,
+            recipient,
+            proxy,
+            token
+        );
+    }
+
+    function onConfirm() internal override {
+        _updateEventData();
+
+        IProxy(eventInitData.configuration).onEventConfirmed{
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(eventInitData, initializer);
+    }
+
+    function _updateEventData() internal {
+        eventInitData.voteData.eventData = abi.encode(
+            token,
+            amount,
+            recipient
+        );
+    }
+}

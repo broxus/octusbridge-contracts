@@ -37,7 +37,9 @@ contract DaoEthereumActionEvent is EverscaleBaseEvent, DaoCellEncoder {
         transferAll(gasBackAddress);
     }
 
-    function onInit() override internal {}
+    function onInit() override internal {
+        loadRelays();
+    }
 
     function onConfirm() override internal {}
 

@@ -5,7 +5,7 @@ pragma ton-solidity >= 0.39.0;
     Not implemented in the Everscale-SDK at the moment of creation.
     @important Not strictly connected to the ERC20<->TIP3 token transfers, just an example.
 */
-contract CellEncoder {
+contract ProxyTokenTransferCellEncoder {
     function encodeEthereumEventData(
         uint256 tokens,
         int128 wid,
@@ -35,7 +35,7 @@ contract CellEncoder {
         return (uint128(_amount), int8(_wid), _addr);
     }
 
-    function encodeTonEventData(
+    function encodeEverscaleEventData(
         int8 wid,
         uint addr,
         uint128 tokens,
@@ -51,7 +51,7 @@ contract CellEncoder {
         data = builder.toCell();
     }
 
-    function decodeTonEventData(
+    function decodeEverscaleEventData(
         TvmCell data
     ) public pure returns(
         int8 wid,

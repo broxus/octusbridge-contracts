@@ -103,7 +103,7 @@
 			]
 		},
 		{
-			"name": "encodeTonEventData",
+			"name": "encodeEverscaleEventData",
 			"inputs": [
 				{"name":"wid","type":"int8"},
 				{"name":"addr","type":"uint256"},
@@ -116,7 +116,7 @@
 			]
 		},
 		{
-			"name": "decodeTonEventData",
+			"name": "decodeEverscaleEventData",
 			"inputs": [
 				{"name":"data","type":"cell"}
 			],

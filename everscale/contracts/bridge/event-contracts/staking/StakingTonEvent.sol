@@ -26,7 +26,9 @@ contract StakingTonEvent is EverscaleBaseEvent, StakingCellEncoder {
         return bodyCopy;
     }
     
-    function onInit() override internal {}
+    function onInit() override internal {
+        loadRelays();
+    }
 
     function onConfirm() override internal {}
 

@@ -22,7 +22,7 @@ contract StakingMockup is IStaking, IRound, RandomNonce {
         @returns roundContract Round contract
     */
     function getRelayRoundAddressFromTimestamp(
-        uint32 eventTimestamp
+        uint32
     )
         override
         public

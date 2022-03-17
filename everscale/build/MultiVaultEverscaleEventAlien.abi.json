@@ -1,7 +1,7 @@
 {
 	"ABI version": 2,
 	"version": "2.2",
-	"header": ["pubkey", "time", "expire"],
+	"header": ["pubkey", "time"],
 	"functions": [
 		{
 			"name": "constructor",
@@ -13,21 +13,23 @@
 			]
 		},
 		{
-			"name": "getDetails",
+			"name": "receiveTokenMeta",
 			"inputs": [
-				{"name":"answerId","type":"uint32"}
+				{"name":"base_chainId","type":"uint256"},
+				{"name":"base_token","type":"uint160"},
+				{"name":"name","type":"string"},
+				{"name":"symbol","type":"string"},
+				{"name":"decimals","type":"uint8"}
 			],
 			"outputs": [
-				{"components":[{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"_eventInitData","type":"tuple"},
-				{"name":"_status","type":"uint8"},
-				{"name":"_confirms","type":"uint256[]"},
-				{"name":"_rejects","type":"uint256[]"},
-				{"name":"empty","type":"uint256[]"},
-				{"name":"_signatures","type":"bytes[]"},
-				{"name":"balance","type":"uint128"},
-				{"name":"_initializer","type":"address"},
-				{"name":"_meta","type":"cell"},
-				{"name":"_requiredVotes","type":"uint32"}
+			]
+		},
+		{
+			"name": "receiveAlienTokenRoot",
+			"inputs": [
+				{"name":"token_","type":"address"}
+			],
+			"outputs": [
 			]
 		},
 		{
@@ -36,42 +38,13 @@
 				{"name":"answerId","type":"uint32"}
 			],
 			"outputs": [
-				{"name":"round_num","type":"uint128"},
-				{"name":"eth_keys","type":"uint160[]"},
-				{"name":"round_end","type":"uint32"}
-			]
-		},
-		{
-			"name": "decodeTonStakingEventData",
-			"inputs": [
-				{"name":"data","type":"cell"}
-			],
-			"outputs": [
-				{"name":"round_num","type":"uint32"},
-				{"name":"eth_keys","type":"uint160[]"},
-				{"name":"round_end","type":"uint32"}
-			]
-		},
-		{
-			"name": "decodeEthereumStakingEventData",
-			"inputs": [
-				{"name":"data","type":"cell"}
-			],
-			"outputs": [
-				{"name":"eth_addr","type":"uint160"},
-				{"name":"wk_id","type":"int8"},
-				{"name":"ton_addr_body","type":"uint256"}
-			]
-		},
-		{
-			"name": "encodeEthereumStakingEventData",
-			"inputs": [
-				{"name":"eth_addr","type":"uint160"},
-				{"name":"wk_id","type":"int8"},
-				{"name":"ton_addr_body","type":"uint256"}
-			],
-			"outputs": [
-				{"name":"data","type":"cell"}
+				{"name":"proxy_","type":"address"},
+				{"name":"token_","type":"address"},
+				{"name":"remainingGasTo_","type":"address"},
+				{"name":"amount_","type":"uint128"},
+				{"name":"recipient_","type":"uint160"},
+				{"name":"base_chainId_","type":"uint256"},
+				{"name":"base_token_","type":"uint160"}
 			]
 		},
 		{
@@ -258,6 +231,7 @@
 	],
 	"fields": [
 		{"name":"_pubkey","type":"uint256"},
+		{"name":"_timestamp","type":"uint64"},
 		{"name":"_constructorFlag","type":"bool"},
 		{"name":"status","type":"uint8"},
 		{"name":"votes","type":"map(uint256,uint8)"},
@@ -269,6 +243,13 @@
 		{"name":"relay_round","type":"address"},
 		{"name":"round_number","type":"uint32"},
 		{"components":[{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"eventInitData","type":"tuple"},
-		{"name":"signatures","type":"map(uint256,bytes)"}
+		{"name":"signatures","type":"map(uint256,bytes)"},
+		{"name":"proxy","type":"address"},
+		{"name":"token","type":"address"},
+		{"name":"remainingGasTo","type":"address"},
+		{"name":"amount","type":"uint128"},
+		{"name":"recipient","type":"uint160"},
+		{"name":"base_chainId","type":"uint256"},
+		{"name":"base_token","type":"uint160"}
 	]
 }

@@ -5,7 +5,6 @@ pragma AbiHeader pubkey;
 
 import "../../../utils/ErrorCodes.sol";
 import "../../../utils/TransferUtils.sol";
-import "../../../utils/cell-encoder/CellEncoder.sol";
 import "../../interfaces/IStaking.sol";
 import "../../interfaces/IRound.sol";
 import "../../interfaces/IEventNotificationReceiver.sol";
@@ -14,7 +13,7 @@ import "../../interfaces/event-contracts/IBasicEvent.sol";
 import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
-abstract contract BaseEvent is IBasicEvent, CellEncoder, TransferUtils{
+abstract contract BaseEvent is IBasicEvent, TransferUtils{
     // Event contract status
     Status public status;
     // Relays votes

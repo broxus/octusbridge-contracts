@@ -28,14 +28,15 @@ contract EthereumBaseEvent is BaseEvent, IEthereumEvent {
         initializer = _initializer;
         meta = _meta;
         onInit();
-        loadRelays();
     }
 
     function getEventInitData() public view responsible returns (EthereumEventInitData) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS} eventInitData;
     }
 
-    function onInit() virtual internal {}
+    function onInit() virtual internal {
+        loadRelays();
+    }
     function onConfirm() virtual internal {}
     function onReject() virtual internal {}
 

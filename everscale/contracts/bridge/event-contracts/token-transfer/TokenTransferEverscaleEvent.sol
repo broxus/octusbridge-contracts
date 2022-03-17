@@ -4,6 +4,7 @@ pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 import "./../base/EverscaleBaseEvent.sol";
+import "./../../../utils/cell-encoder/ProxyTokenTransferCellEncoder.sol";
 import "./../../interfaces/IEventNotificationReceiver.sol";
 import "./../../interfaces/event-contracts/IEverscaleEvent.sol";
 import "./../../../utils/ErrorCodes.sol";
@@ -13,7 +14,7 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
     @title Basic example of Everscale event configuration
     @dev This implementation is used for cross chain token transfers
 */
-contract TokenTransferTonEvent is EverscaleBaseEvent {
+contract TokenTransferTonEvent is EverscaleBaseEvent, ProxyTokenTransferCellEncoder {
     uint32 constant FORCE_CLOSE_TIMEOUT = 1 days;
     uint32 public createdAt;
 
@@ -41,6 +42,7 @@ contract TokenTransferTonEvent is EverscaleBaseEvent {
     function onInit() override internal {
         createdAt = now;
         notifyEventStatusChanged();
+        loadRelays();
     }
 
     function onConfirm() override internal {
@@ -119,7 +121,7 @@ contract TokenTransferTonEvent is EverscaleBaseEvent {
             tokens,
             ethereum_address,
             chainId
-        ) = decodeTonEventData(eventInitData.voteData.eventData);
+        ) = decodeEverscaleEventData(eventInitData.voteData.eventData);
 
         owner_address = address.makeAddrStd(wid, addr);
 

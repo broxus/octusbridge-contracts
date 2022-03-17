@@ -4,7 +4,7 @@ pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 import "./../../utils/ErrorCodes.sol";
-import "./../../utils/cell-encoder/CellEncoder.sol";
+import "./../../utils/cell-encoder/ProxyTokenTransferCellEncoder.sol";
 import "./../../utils/TransferUtils.sol";
 
 import "./../interfaces/IProxy.sol";
@@ -33,7 +33,7 @@ contract ProxyTokenTransfer is
     IProxyTokenTransferConfigurable,
     IAcceptTokensBurnCallback,
     RandomNonce,
-    CellEncoder,
+    ProxyTokenTransferCellEncoder,
     InternalOwner,
     TransferUtils,
     CheckPubKey
@@ -136,7 +136,7 @@ contract ProxyTokenTransfer is
 //                chainId
 //            );
 
-            TvmCell eventData = encodeTonEventData(
+            TvmCell eventData = encodeEverscaleEventData(
                 remainingGasTo.wid,
                 remainingGasTo.value,
                 tokens,
