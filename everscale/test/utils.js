@@ -411,6 +411,244 @@ const setupEverscaleEventConfiguration = async (owner, staking, cellEncoder) => 
   return [everscaleEventConfiguration, proxy, initializer];
 };
 
+
+const setupAlienMultiVault = async (owner, staking, cellEncoder) => {
+  const _randomNonce = locklift.utils.getRandomNonce();
+  const [keyPair] = await locklift.keys.getKeyPairs();
+
+  // Deploy initializer account
+  const Account = await locklift.factory.getAccount('Wallet');
+  const initializer = await locklift.giver.deployContract({
+    contract: Account,
+    constructorParams: {},
+    initParams: {
+      _randomNonce,
+    },
+    keyPair,
+  }, locklift.utils.convertCrystal(20, 'nano'));
+
+  initializer.setKeyPair(keyPair);
+  initializer.afterRun = afterRun;
+  initializer.name = 'Event initializer';
+
+  await logContract(initializer);
+
+  // Deploy proxy
+  const Proxy = await locklift.factory.getContract('ProxyMultiVaultAlien');
+  const proxy = await locklift.giver.deployContract({
+    contract: Proxy,
+    constructorParams: {
+      owner_: owner.address,
+    },
+    initParams: {
+      _randomNonce,
+    },
+    keyPair
+  }, locklift.utils.convertCrystal(1, 'nano'));
+
+  await logContract(proxy);
+
+  // Deploy EVM configuration
+  const EthereumEventConfiguration = await locklift.factory.getContract('EthereumEventConfiguration');
+  const EthereumEvent = await locklift.factory.getContract('MultiVaultEVMEventAlien');
+
+  const evmEventConfiguration = await locklift.giver.deployContract({
+    contract: EthereumEventConfiguration,
+    constructorParams: {
+      _owner: owner.address,
+      _meta: '',
+    },
+    initParams: {
+      basicConfiguration: {
+        eventABI: '',
+        eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
+        staking: staking.address,
+        eventCode: EthereumEvent.code,
+      },
+      networkConfiguration: {
+        chainId: 1,
+        eventEmitter: new BigNumber(0),
+        eventBlocksToConfirm: 1,
+        proxy: proxy.address,
+        startBlockNumber: 0,
+        endBlockNumber: 0,
+      }
+    },
+    keyPair
+  }, locklift.utils.convertCrystal(1, 'nano'));
+
+  await logContract(evmEventConfiguration);
+
+  // Deploy Everscale configuration
+  const EverscaleEventConfiguration = await locklift.factory.getContract('EverscaleEventConfiguration');
+  const EverscaleEvent = await locklift.factory.getContract('MultiVaultEverscaleEventAlien');
+
+  const everscaleEventConfiguration = await locklift.giver.deployContract({
+    contract: EverscaleEventConfiguration,
+    constructorParams: {
+      _owner: owner.address,
+      _meta: '',
+    },
+    initParams: {
+      basicConfiguration: {
+        eventABI: '',
+        eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
+        staking: staking.address,
+        eventCode: EverscaleEvent.code,
+      },
+      networkConfiguration: {
+        eventEmitter: proxy.address,
+        proxy: new BigNumber(0),
+        startTimestamp: 0,
+        endTimestamp: 0,
+      }
+    },
+    keyPair
+  }, locklift.utils.convertCrystal(1, 'nano'));
+
+  await logContract(everscaleEventConfiguration);
+
+  // Set proxy configuration
+  const AlienTokenRoot = await locklift.factory.getContract('TokenRootAlienEVM');
+  const AlienTokenWalletUpgradeable = await locklift.factory.getContract('AlienTokenWalletUpgradeable');
+  const AlienTokenWalletPlatform = await locklift.factory.getContract('AlienTokenWalletPlatform');
+
+  await owner.runTarget({
+    contract: proxy,
+    method: 'setConfiguration',
+    params: {
+      _config: {
+        everscaleConfiguration: everscaleEventConfiguration.address,
+        evmConfigurations: [evmEventConfiguration.address],
+        deployWalletValue: locklift.utils.convertCrystal(1, 'nano'),
+        alienTokenRootCode: AlienTokenRoot.code,
+        alienTokenWalletCode: AlienTokenWalletUpgradeable.code,
+        alienTokenWalletPlatformCode: AlienTokenWalletPlatform.code,
+      },
+      remainingGasTo: owner.address
+    },
+    value: locklift.utils.convertCrystal(0.5, 'nano')
+  });
+
+  return [evmEventConfiguration, everscaleEventConfiguration, proxy, initializer];
+};
+
+
+const setupNativeMultiVault = async (owner, staking) => {
+  const _randomNonce = locklift.utils.getRandomNonce();
+  const [keyPair] = await locklift.keys.getKeyPairs();
+
+  // Deploy initializer account
+  const Account = await locklift.factory.getAccount('Wallet');
+  const initializer = await locklift.giver.deployContract({
+    contract: Account,
+    constructorParams: {},
+    initParams: {
+      _randomNonce,
+    },
+    keyPair,
+  }, locklift.utils.convertCrystal(20, 'nano'));
+
+  initializer.setKeyPair(keyPair);
+  initializer.afterRun = afterRun;
+  initializer.name = 'Event initializer';
+
+  await logContract(initializer);
+
+  // Deploy proxy
+  const Proxy = await locklift.factory.getContract('ProxyMultiVaultNative');
+  const proxy = await locklift.giver.deployContract({
+    contract: Proxy,
+    constructorParams: {
+      owner_: owner.address,
+    },
+    initParams: {
+      _randomNonce,
+    },
+    keyPair
+  }, locklift.utils.convertCrystal(1, 'nano'));
+
+  await logContract(proxy);
+
+  // Deploy EVM configuration
+  const EthereumEventConfiguration = await locklift.factory.getContract('EthereumEventConfiguration');
+  const EthereumEvent = await locklift.factory.getContract('MultiVaultEVMEventNative');
+
+  const evmEventConfiguration = await locklift.giver.deployContract({
+    contract: EthereumEventConfiguration,
+    constructorParams: {
+      _owner: owner.address,
+      _meta: '',
+    },
+    initParams: {
+      basicConfiguration: {
+        eventABI: '',
+        eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
+        staking: staking.address,
+        eventCode: EthereumEvent.code,
+      },
+      networkConfiguration: {
+        chainId: 1,
+        eventEmitter: new BigNumber(0),
+        eventBlocksToConfirm: 1,
+        proxy: proxy.address,
+        startBlockNumber: 0,
+        endBlockNumber: 0,
+      }
+    },
+    keyPair
+  }, locklift.utils.convertCrystal(1, 'nano'));
+
+  await logContract(evmEventConfiguration);
+
+  // Deploy Everscale configuration
+  const EverscaleEventConfiguration = await locklift.factory.getContract('EverscaleEventConfiguration');
+  const EverscaleEvent = await locklift.factory.getContract('MultiVaultEverscaleEventNative');
+
+  const everscaleEventConfiguration = await locklift.giver.deployContract({
+    contract: EverscaleEventConfiguration,
+    constructorParams: {
+      _owner: owner.address,
+      _meta: '',
+    },
+    initParams: {
+      basicConfiguration: {
+        eventABI: '',
+        eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
+        staking: staking.address,
+        eventCode: EverscaleEvent.code,
+      },
+      networkConfiguration: {
+        eventEmitter: proxy.address,
+        proxy: new BigNumber(0),
+        startTimestamp: 0,
+        endTimestamp: 0,
+      }
+    },
+    keyPair
+  }, locklift.utils.convertCrystal(1, 'nano'));
+
+  await logContract(everscaleEventConfiguration);
+
+  // Set proxy configuration
+  await owner.runTarget({
+    contract: proxy,
+    method: 'setConfiguration',
+    params: {
+      _config: {
+        everscaleConfiguration: everscaleEventConfiguration.address,
+        evmConfigurations: [evmEventConfiguration.address],
+        deployWalletValue: locklift.utils.convertCrystal(1, 'nano'),
+      },
+      remainingGasTo: owner.address
+    },
+    value: locklift.utils.convertCrystal(0.5, 'nano')
+  });
+
+  return [evmEventConfiguration, everscaleEventConfiguration, proxy, initializer];
+};
+
+
 const getTokenWalletByAddress = async (walletOwner, rootAddress) => {
   const tokenRoot = await locklift.factory.getContract('TokenRoot', TOKEN_PATH);
   tokenRoot.setAddress(rootAddress);
@@ -709,7 +947,10 @@ module.exports = {
   setupBridge,
   setupEthereumEventConfiguration,
   setupEverscaleEventConfiguration,
+  setupTokenRootWithWallet,
   setupRelays,
+  setupAlienMultiVault,
+  setupNativeMultiVault,
   logContract,
   MetricManager,
   enableEventConfiguration,

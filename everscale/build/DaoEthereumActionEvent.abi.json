@@ -20,24 +20,6 @@
 			]
 		},
 		{
-			"name": "getDetails",
-			"inputs": [
-				{"name":"answerId","type":"uint32"}
-			],
-			"outputs": [
-				{"components":[{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"_eventInitData","type":"tuple"},
-				{"name":"_status","type":"uint8"},
-				{"name":"_confirms","type":"uint256[]"},
-				{"name":"_rejects","type":"uint256[]"},
-				{"name":"empty","type":"uint256[]"},
-				{"name":"_signatures","type":"bytes[]"},
-				{"name":"balance","type":"uint128"},
-				{"name":"_initializer","type":"address"},
-				{"name":"_meta","type":"cell"},
-				{"name":"_requiredVotes","type":"uint32"}
-			]
-		},
-		{
 			"name": "getDecodedData",
 			"inputs": [
 				{"name":"answerId","type":"uint32"}
@@ -96,6 +78,24 @@
 				{"name":"voteReceiver","type":"address"}
 			],
 			"outputs": [
+			]
+		},
+		{
+			"name": "getDetails",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"components":[{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"_eventInitData","type":"tuple"},
+				{"name":"_status","type":"uint8"},
+				{"name":"_confirms","type":"uint256[]"},
+				{"name":"_rejects","type":"uint256[]"},
+				{"name":"empty","type":"uint256[]"},
+				{"name":"_signatures","type":"bytes[]"},
+				{"name":"balance","type":"uint128"},
+				{"name":"_initializer","type":"address"},
+				{"name":"_meta","type":"cell"},
+				{"name":"_requiredVotes","type":"uint32"}
 			]
 		},
 		{

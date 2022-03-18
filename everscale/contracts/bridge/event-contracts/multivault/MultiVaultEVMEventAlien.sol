@@ -1,6 +1,7 @@
 pragma ton-solidity >= 0.39.0;
-pragma AbiHeader pubkey;
 pragma AbiHeader time;
+pragma AbiHeader expire;
+pragma AbiHeader pubkey;
 
 
 import "./../../interfaces/multivault/IMultiVaultEVMEventAlien.sol";
@@ -9,6 +10,7 @@ import "./../../interfaces/IProxy.sol";
 import "./../../interfaces/multivault/IProxyMultiVaultAlien.sol";
 
 import "./../base/EthereumBaseEvent.sol";
+import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
 contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien {
@@ -27,6 +29,21 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
         address _initializer,
         TvmCell _meta
     ) EthereumBaseEvent(_initializer, _meta) public {}
+
+    function afterSignatureCheck(
+        TvmSlice body,
+        TvmCell
+    ) private inline view returns (TvmSlice) {
+        body.decode(uint64, uint32);
+        TvmSlice bodyCopy = body;
+        uint32 functionId = body.decode(uint32);
+
+        if (isExternalVoteCall(functionId)){
+            require(votes[msg.pubkey()] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
+        }
+
+        return bodyCopy;
+    }
 
     function onInit() override internal {
         int8 recipient_wid;
@@ -87,6 +104,18 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
         loadRelays();
     }
 
+    function onConfirm() internal override {
+        TvmCell meta = abi.encode(
+            token,
+            amount,
+            recipient
+        );
+
+        IProxy(eventInitData.configuration).onEventConfirmed{
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(eventInitData, meta, initializer);
+    }
+
     function getDecodedData() external override responsible returns(
         uint256 base_chainId_,
         uint160 base_token_,
@@ -98,7 +127,7 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
         address proxy_,
         address token_
     ) {
-        return (
+        return {value: 0, flag: MsgFlag.REMAINING_GAS}(
             base_chainId,
             base_token,
             name,
@@ -108,22 +137,6 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
             recipient,
             proxy,
             token
-        );
-    }
-
-    function onConfirm() internal override {
-        _updateEventData();
-
-        IProxy(eventInitData.configuration).onEventConfirmed{
-            flag: MsgFlag.ALL_NOT_RESERVED
-        }(eventInitData, initializer);
-    }
-
-    function _updateEventData() internal {
-        eventInitData.voteData.eventData = abi.encode(
-            token,
-            amount,
-            recipient
         );
     }
 }

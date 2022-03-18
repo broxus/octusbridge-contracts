@@ -79,10 +79,10 @@ contract ProxyMultiVaultAlien is
 
     /// @notice Handles alien token transfer from EVM. Token address is derived automatically and MUST
     /// be deployed before. See note on `deployAlienToken`
-    /// @param eventData Event data (IEthereumEvent.EthereumEventInitData)
     /// @param remainingGasTo Gas back address
     function onEventConfirmed(
-        IEthereumEvent.EthereumEventInitData eventData,
+        IEthereumEvent.EthereumEventInitData,
+        TvmCell meta,
         address remainingGasTo
     ) external override reserveBalance {
         require(!paused, ErrorCodes.PROXY_PAUSED);
@@ -93,7 +93,7 @@ contract ProxyMultiVaultAlien is
             uint128 amount,
             address recipient
         ) = abi.decode(
-            eventData.voteData.eventData,
+            meta,
             (address, uint128, address)
         );
 
@@ -130,7 +130,8 @@ contract ProxyMultiVaultAlien is
             decimals
         );
 
-        return address(tvm.hash(stateInit));
+        // TODO: check all responsible returns
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
     }
 
     /// @notice Deploys Everscale token for any EVM token

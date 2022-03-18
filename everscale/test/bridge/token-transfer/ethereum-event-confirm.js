@@ -175,7 +175,7 @@ describe('Test ethereum event confirm', async function() {
         .to.be.equal(initializer.address, 'Wrong initializer');
     });
 
-    it('Check event round relays', async () => {
+    it('Check event required votes', async () => {
       const requiredVotes = await eventContract.call({
         method: 'requiredVotes',
       });

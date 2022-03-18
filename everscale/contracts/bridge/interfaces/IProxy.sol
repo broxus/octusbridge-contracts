@@ -5,6 +5,7 @@ import "./event-contracts/IEthereumEvent.sol";
 interface IProxy is IEthereumEvent {
     function onEventConfirmed(
         IEthereumEvent.EthereumEventInitData eventData,
+        TvmCell meta,
         address gasBackAddress
     ) external;
 }

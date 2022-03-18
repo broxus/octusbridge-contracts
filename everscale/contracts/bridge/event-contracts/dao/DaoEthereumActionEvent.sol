@@ -45,38 +45,6 @@ contract DaoEthereumActionEvent is EverscaleBaseEvent, DaoCellEncoder {
 
     function onReject() override internal {}
 
-    function getDetails() public view responsible returns (
-        EverscaleEventInitData _eventInitData,
-        Status _status,
-        uint[] _confirms,
-        uint[] _rejects,
-        uint[] empty,
-        bytes[] _signatures,
-        uint128 balance,
-        address _initializer,
-        TvmCell _meta,
-        uint32 _requiredVotes
-    ) {
-        _confirms = getVoters(Vote.Confirm);
-
-        for (uint voter : _confirms) {
-            _signatures.push(signatures[voter]);
-        }
-
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} (
-            eventInitData,
-            status,
-            _confirms,
-            getVoters(Vote.Reject),
-            getVoters(Vote.Empty),
-            _signatures,
-            address(this).balance,
-            initializer,
-            meta,
-            requiredVotes
-        );
-    }
-
     function getDecodedData() public view responsible returns (
         address gasBackAddress,
         uint32 chainId,

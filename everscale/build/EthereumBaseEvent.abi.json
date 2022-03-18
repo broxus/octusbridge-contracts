@@ -38,6 +38,23 @@
 			]
 		},
 		{
+			"name": "getDetails",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"components":[{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"},{"name":"chainId","type":"uint32"}],"name":"_eventInitData","type":"tuple"},
+				{"name":"_status","type":"uint8"},
+				{"name":"_confirms","type":"uint256[]"},
+				{"name":"_rejects","type":"uint256[]"},
+				{"name":"empty","type":"uint256[]"},
+				{"name":"balance","type":"uint128"},
+				{"name":"_initializer","type":"address"},
+				{"name":"_meta","type":"cell"},
+				{"name":"_requiredVotes","type":"uint32"}
+			]
+		},
+		{
 			"name": "receiveRoundAddress",
 			"inputs": [
 				{"name":"roundContract","type":"address"},

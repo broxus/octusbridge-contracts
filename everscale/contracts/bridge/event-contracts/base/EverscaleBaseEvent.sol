@@ -115,4 +115,44 @@ contract EverscaleBaseEvent is BaseEvent, IEverscaleEvent {
             onReject();
         }
     }
+
+    /*
+        @dev Get event details
+        @returns _initData Init data
+        @returns _status Current event status
+        @returns _confirmRelays List of relays who have confirmed event
+        @returns _confirmRelays List of relays who have rejected event
+        @returns _eventDataSignatures List of relay's TonEvent signatures
+    */
+    function getDetails() external view responsible returns (
+        EverscaleEventInitData _eventInitData,
+        Status _status,
+        uint[] _confirms,
+        uint[] _rejects,
+        uint[] empty,
+        bytes[] _signatures,
+        uint128 balance,
+        address _initializer,
+        TvmCell _meta,
+        uint32 _requiredVotes
+    ) {
+        _confirms = getVoters(Vote.Confirm);
+
+        for (uint voter : _confirms) {
+            _signatures.push(signatures[voter]);
+        }
+
+        return {value: 0, flag: MsgFlag.REMAINING_GAS} (
+            eventInitData,
+            status,
+            _confirms,
+            getVoters(Vote.Reject),
+            getVoters(Vote.Empty),
+            _signatures,
+            address(this).balance,
+            initializer,
+            meta,
+            requiredVotes
+        );
+    }
 }

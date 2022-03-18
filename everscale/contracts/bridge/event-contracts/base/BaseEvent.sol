@@ -64,7 +64,7 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils{
     function loadRelays() internal view {
         IStaking(getStakingAddress()).getRelayRoundAddressFromTimestamp{
             value: 1 ton,
-            callback: receiveRoundAddress
+            callback: BaseEvent.receiveRoundAddress
         }(now);
     }
 
@@ -73,24 +73,27 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils{
     }
 
     // TODO: cant be pure, compiler lies
-    function receiveRoundAddress(address roundContract, uint32 roundNum) public onlyStaking eventInitializing {
+    function receiveRoundAddress(
+        address roundContract,
+        uint32 roundNum
+    ) external onlyStaking {
         relay_round = roundContract;
         round_number = roundNum;
 
         IRound(roundContract).relayKeys{
             value: 1 ton,
-            callback: receiveRoundRelays
+            callback: BaseEvent.receiveRoundRelays
         }();
     }
 
-    function receiveRoundRelays(uint[] keys) public onlyRelayRound eventInitializing {
+    function receiveRoundRelays(
+        uint[] keys
+    ) external onlyRelayRound {
         requiredVotes = uint16(keys.length * 2 / 3) + 1;
 
         for (uint key: keys) {
             votes[key] = Vote.Empty;
         }
-
-        status = Status.Pending;
     }
 
     /*

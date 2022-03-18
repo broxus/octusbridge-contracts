@@ -97,6 +97,38 @@ contract EthereumBaseEvent is BaseEvent, IEthereumEvent {
         }
     }
 
-
-
+    /// @dev Get event details
+    /// @return _eventInitData Init data
+    /// @return _status Current event status
+    /// @return _confirms List of relays who have confirmed event
+    /// @return _rejects List of relays who have rejected event
+    /// @return empty List of relays who have not voted
+    /// @return balance This contract's balance
+    /// @return _initializer Account who has deployed this contract
+    /// @return _meta Meta data from the corresponding event configuration
+    /// @return _requiredVotes The required amount of votes to confirm / reject event.
+    /// Basically it's 2/3 + 1 relays for this round
+    function getDetails() external view responsible returns (
+        EthereumEventInitData _eventInitData,
+        Status _status,
+        uint[] _confirms,
+        uint[] _rejects,
+        uint[] empty,
+        uint128 balance,
+        address _initializer,
+        TvmCell _meta,
+        uint32 _requiredVotes
+    ) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS} (
+            eventInitData,
+            status,
+            getVoters(Vote.Confirm),
+            getVoters(Vote.Reject),
+            getVoters(Vote.Empty),
+            address(this).balance,
+            initializer,
+            meta,
+            requiredVotes
+        );
+    }
 }

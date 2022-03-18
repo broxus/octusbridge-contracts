@@ -102,7 +102,7 @@ describe('Test ton event confirm', async function() {
       initializerTokenWallet.name = 'Initializer TokenWallet';
 
       burnPayload = await cellEncoder.call({
-        method: 'encodeBurnPayload',
+        method: 'encodeBurnAlienPayload',
         params: tonEventParams
       });
     });
@@ -164,7 +164,7 @@ describe('Test ton event confirm', async function() {
         .to.be.equal(proxy.address, 'Wrong initializer');
     });
 
-    it('Check event round relays', async () => {
+    it('Check event required votes', async () => {
       const requiredVotes = await eventContract.call({
         method: 'requiredVotes',
       });

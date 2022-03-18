@@ -1,6 +1,7 @@
 pragma ton-solidity >= 0.39.0;
-pragma AbiHeader pubkey;
 pragma AbiHeader time;
+pragma AbiHeader expire;
+pragma AbiHeader pubkey;
 
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.sol";
@@ -24,6 +25,16 @@ contract MultiVaultEVMEventNative is EthereumBaseEvent, IMultiVaultEVMEventNativ
         address _initializer,
         TvmCell _meta
     ) EthereumBaseEvent(_initializer, _meta) public {}
+
+    function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
+        body.decode(uint64, uint32);
+        TvmSlice bodyCopy = body;
+        uint32 functionId = body.decode(uint32);
+        if (isExternalVoteCall(functionId)){
+            require(votes[msg.pubkey()] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
+        }
+        return bodyCopy;
+    }
 
     function onInit() override internal {
         int8 token_wid;
@@ -100,18 +111,14 @@ contract MultiVaultEVMEventNative is EthereumBaseEvent, IMultiVaultEVMEventNativ
     }
 
     function onConfirm() internal override {
-        _updateEventData();
-
-        IProxy(eventInitData.configuration).onEventConfirmed{
-            flag: MsgFlag.ALL_NOT_RESERVED
-        }(eventInitData, initializer);
-    }
-
-    function _updateEventData() internal {
-        eventInitData.voteData.eventData = abi.encode(
+        TvmCell meta = abi.encode(
             tokenWallet,
             amount,
             recipient
         );
+
+        IProxy(eventInitData.configuration).onEventConfirmed{
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(eventInitData, meta, initializer);
     }
 }

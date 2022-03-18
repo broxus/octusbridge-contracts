@@ -39,7 +39,7 @@ contract TokenRootAlienEVM is TokenRootUpgradeable, ITokenRootAlienEVM {
         string symbol,
         uint8 decimals
     ) {
-        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS}(
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS}(
             base_chainId_,
             base_token_,
             name_,

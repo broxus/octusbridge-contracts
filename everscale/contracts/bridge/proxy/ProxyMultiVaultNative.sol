@@ -60,6 +60,7 @@ contract ProxyMultiVaultNative is
         (uint160 recipient, uint256 chainId) = abi.decode(payload, (uint160, uint256));
 
         TvmCell eventData = abi.encode(
+            address(this), // Proxy address
             msg.sender, // Token wallet address, must be validated in the event contract
             tokenRoot, // Token root
             remainingGasTo, // Remaining gas to
@@ -82,10 +83,10 @@ contract ProxyMultiVaultNative is
 
     /// @notice Handles native token transfer from EVM.
     /// Releases token from the Proxy balance.
-    /// @param eventData Event data (IEthereumEvent.EthereumEventInitData)
     /// @param remainingGasTo Gas back address
     function onEventConfirmed(
-        IEthereumEvent.EthereumEventInitData eventData,
+        IEthereumEvent.EthereumEventInitData,
+        TvmCell meta,
         address remainingGasTo
     ) external override reserveBalance {
         require(!paused, ErrorCodes.PROXY_PAUSED);
@@ -96,7 +97,7 @@ contract ProxyMultiVaultNative is
             uint128 amount,
             address recipient
         ) = abi.decode(
-            eventData.voteData.eventData,
+            meta,
             (address, uint128, address)
         );
 

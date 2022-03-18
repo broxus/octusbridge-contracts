@@ -1,6 +1,7 @@
 pragma ton-solidity >= 0.39.0;
-pragma AbiHeader pubkey;
 pragma AbiHeader time;
+pragma AbiHeader expire;
+pragma AbiHeader pubkey;
 
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.sol";
@@ -33,8 +34,19 @@ contract MultiVaultEverscaleEventNative is EverscaleBaseEvent, IMultiVaultEversc
         TvmCell _meta
     ) EverscaleBaseEvent(_initializer, _meta) public {}
 
+    function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
+        body.decode(uint64, uint32);
+        TvmSlice bodyCopy = body;
+        uint32 functionId = body.decode(uint32);
+        if (isExternalVoteCall(functionId)){
+            require(votes[msg.pubkey()] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
+        }
+        return bodyCopy;
+    }
+
     function onInit() override internal {
         (
+            proxy,
             tokenWallet,
             token,
             remainingGasTo,
@@ -43,7 +55,7 @@ contract MultiVaultEverscaleEventNative is EverscaleBaseEvent, IMultiVaultEversc
             chainId
         ) = abi.decode(
             eventInitData.voteData.eventData,
-            (address, address, address, uint128, uint160, uint256)
+            (address, address, address, address, uint128, uint160, uint256)
         );
 
         ITokenRoot(token).name{

@@ -24,6 +24,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
 
     function onEventConfirmed(
         IEthereumEvent.EthereumEventInitData eventData,
+        TvmCell,
         address gasBackAddress
     ) external override onlyEthTonConfig {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);

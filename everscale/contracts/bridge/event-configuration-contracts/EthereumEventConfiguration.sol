@@ -171,9 +171,11 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
     /// @dev Receives execute callback from ethereum event and send it to the event proxy contract.
     /// Ethereum event correctness is checked here, so event proxy contract becomes more simple
     /// @param eventInitData Ethereum event data
+    /// @param meta Arbitrary TvmCell, usually used to pass additional data, that was produced by the event contract
     /// @param gasBackAddress Ad hoc param. Used in token transfers
     function onEventConfirmed(
         IEthereumEvent.EthereumEventInitData eventInitData,
+        TvmCell meta,
         address gasBackAddress
     ) override external reserveBalance {
         require(
@@ -199,6 +201,6 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
 
         IProxy(networkConfiguration.proxy).onEventConfirmed{
             flag: MsgFlag.ALL_NOT_RESERVED
-        }(eventInitData, gasBackAddress);
+        }(eventInitData, meta, gasBackAddress);
     }
 }
