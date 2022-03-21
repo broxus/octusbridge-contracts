@@ -10,11 +10,6 @@ interface IMultiVault is IEverscale {
 
     enum TokenType { EVM, Solana }
 
-    struct TokenSource {
-        TokenType _type;
-        bytes meta;
-    }
-
     struct TokenMeta {
         string name;
         string symbol;
@@ -24,17 +19,21 @@ interface IMultiVault is IEverscale {
     struct Token {
         uint activation;
         bool blacklisted;
-        TokenSource source;
-        TokenMeta meta;
         uint depositFee;
         uint withdrawFee;
+        bool isNative;
     }
 
-    struct WithdrawalParams {
-        DepositType depositType;
-        TokenSource source;
+    struct NativeWithdrawalParams {
+        EverscaleAddress native;
         TokenMeta meta;
-        EverscaleAddress sender;
+        uint256 amount;
+        address recipient;
+        uint256 chainId;
+    }
+
+    struct AlienWithdrawalParams {
+        address token;
         uint256 amount;
         address recipient;
         uint256 chainId;
@@ -50,6 +49,9 @@ interface IMultiVault is IEverscale {
         address _governance,
         EverscaleAddress memory _rewards
     ) external;
+
+    function tokens(address _token) external view returns (Token memory);
+    function natives(address _token) external view returns (EverscaleAddress memory);
 
     function blacklistAddToken(address token) external;
     function blacklistRemoveToken(address token) external;
@@ -78,21 +80,24 @@ interface IMultiVault is IEverscale {
     function setGuardian(address _guardian) external;
     function setManagement(address _management) external;
     function setRewards(EverscaleAddress memory _rewards) external;
-    function setBridge(address _bridge) external;
 
     function deposit(
         EverscaleAddress memory recipient,
         address token,
-        uint amount,
-        DepositType depositType
+        uint amount
     ) external;
 
-    function saveWithdraw(
+    function saveWithdrawNative(
         bytes memory payload,
         bytes[] memory signatures
     ) external;
 
-    function migrateTokenToVault(
+    function saveWithdrawAlien(
+        bytes memory payload,
+        bytes[] memory signatures
+    ) external;
+
+    function migrateAlienTokenToVault(
         address token,
         address vault
     ) external;
@@ -118,35 +123,40 @@ interface IMultiVault is IEverscale {
     event EmergencyShutdown(bool active);
 
     event TokenMigrated(address token, address vault);
-    event TokenInitialized(
+
+    event TokenActivated(
         address token,
         uint activation,
-        TokenType _type,
-        bytes meta,
-        string name,
-        string symbol,
-        uint8 decimals,
+        bool isNative,
         uint depositFee,
         uint withdrawFee
     );
+
     event TokenCreated(
         address token,
-        TokenType _type,
-        bytes meta,
+        int8 native_wid,
+        uint256 native_addr,
         string name,
         string symbol,
         uint8 decimals
     );
 
-    event Deposit(
-        DepositType depositType,
-        TokenType _type,
-        bytes meta,
+    event AlienTransfer(
+        uint256 base_chainId,
+        uint160 base_token,
         string name,
         string symbol,
         uint8 decimals,
         uint256 amount,
-        int128 wid,
-        uint256 addr
+        int8 recipient_wid,
+        uint256 recipient_addr
+    );
+
+    event NativeTransfer(
+        int8 native_wid,
+        uint256 native_addr,
+        uint256 amount,
+        int8 recipient_wid,
+        uint256 recipient_addr
     );
 }

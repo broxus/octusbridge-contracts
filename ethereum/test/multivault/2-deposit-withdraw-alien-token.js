@@ -8,7 +8,7 @@ const {
 } = require('../utils');
 
 
-describe('Test deposit-withdraw for native token', async () => {
+describe('Test deposit-withdraw for alien token', async () => {
     let multivault, token;
 
     it('Setup contracts', async () => {
@@ -37,14 +37,11 @@ describe('Test deposit-withdraw for native token', async () => {
                 .connect(alice)
                 .approve(multivault.address, ethers.utils.parseUnits('1000000000000', 18));
 
-            const tokenSourceMeta = encodeEvmTokenSourceMeta(utils.defaultChainId, token.address);
-
-            await expect(multivault.connect(alice).deposit(recipient, token.address, amount, 0))
-                .to.emit(multivault, 'Deposit')
+            await expect(multivault.connect(alice).deposit(recipient, token.address, amount))
+                .to.emit(multivault, 'AlienTransfer')
                 .withArgs(
-                    0,
-                    0,
-                    tokenSourceMeta,
+                    utils.defaultChainId,
+                    token.address,
                     await token.name(),
                     await token.symbol(),
                     await token.decimals(),
@@ -57,9 +54,8 @@ describe('Test deposit-withdraw for native token', async () => {
         it('Check token details', async () => {
             const tokenDetails = await multivault.tokens(token.address);
 
-            expect(tokenDetails.meta.name)
-                .to.be.equal(await token.name(), 'Wrong token name');
-
+            expect(tokenDetails.isNative)
+                .to.be.equal(false, 'Wrong token native flag');
             expect(tokenDetails.depositFee)
                 .to.be.equal(await multivault.defaultDepositFee(), 'Wrong token deposit fee');
             expect(tokenDetails.withdrawFee)
@@ -80,15 +76,11 @@ describe('Test deposit-withdraw for native token', async () => {
         it('Prepare payload & signatures', async () => {
             const { bob } = await getNamedAccounts();
 
-            const withdrawalEventData = utils.encodeMultiTokenWithdrawalData({
-                depositType: 1,
-                source_meta: encodeEvmTokenSourceMeta(utils.defaultChainId, token.address),
-                name: await token.name(),
-                symbol: await token.symbol(),
-                decimals: await token.decimals(),
+            const withdrawalEventData = utils.encodeMultiTokenAlienWithdrawalData({
+                token: token.address,
                 amount: amount,
-                sender: utils.defaultTonRecipient,
-                recipient: bob
+                recipient: bob,
+                chainId: utils.defaultChainId
             });
 
             payload = encodeEverscaleEvent({
@@ -106,7 +98,7 @@ describe('Test deposit-withdraw for native token', async () => {
 
             const fee = defaultWithdrawFee.mul(amount).div(10000);
 
-            await expect(() => multivault.saveWithdraw(payload, signatures))
+            await expect(() => multivault.saveWithdrawAlien(payload, signatures))
                 .to.changeTokenBalances(
                     token,
                     [multivault, bob],

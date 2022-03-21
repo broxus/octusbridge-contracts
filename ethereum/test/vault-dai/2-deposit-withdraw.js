@@ -32,7 +32,7 @@ describe('Test Vault DAI deposit', async () => {
         addr: 123123
       };
 
-      await expect(vault.connect(alice)['deposit((int128,uint256),uint256)'](recipient, amount))
+      await expect(vault.connect(alice)['deposit((int8,uint256),uint256)'](recipient, amount))
         .to.emit(vault, 'Deposit')
         .withArgs(
             await vault.convertToTargetDecimals(amount),
@@ -174,7 +174,7 @@ describe('Test Vault DAI deposit', async () => {
 
         await expect(vault
           .connect(alice)
-          ['deposit((int128,uint256),uint256,(address,uint256))'](
+          ['deposit((int8,uint256),uint256,(address,uint256))'](
             defaultTonRecipient,
             pendingWithdrawal.amount.sub(1),
             [eve, 0]
@@ -192,7 +192,7 @@ describe('Test Vault DAI deposit', async () => {
 
         await expect(() => vault
           .connect(alice)
-          ['deposit((int128,uint256),uint256,(address,uint256))'](
+          ['deposit((int8,uint256),uint256,(address,uint256))'](
             defaultTonRecipient,
             deposit,
             [eve.address, 0]

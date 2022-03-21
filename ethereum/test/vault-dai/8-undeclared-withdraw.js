@@ -35,7 +35,7 @@ describe('Check reaching undeclared withdraw limit', async () => {
 
         await vault
             .connect(alice)
-            ['deposit((int128,uint256),uint256)'](recipient, amount);
+            ['deposit((int8,uint256),uint256)'](recipient, amount);
     });
 
     const amount = ethers.utils.parseUnits('6000', 18);

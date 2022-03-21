@@ -253,7 +253,7 @@ function decodeWithdrawalEventData(bytes eventData) external view returns (struc
 ### deposit
 
 ```solidity
-function deposit(IEverscale.EverscaleAddress recipient, uint256[] amount, IVault.PendingWithdrawalId[] pendingWithdrawalId) external nonpayable
+function deposit(IEverscale.EverscaleAddress recipient, uint256 amount, IVault.PendingWithdrawalId pendingWithdrawalId) external nonpayable
 ```
 
 Multicall for `deposit`. Fills multiple pending withdrawals at once.
@@ -265,8 +265,8 @@ Multicall for `deposit`. Fills multiple pending withdrawals at once.
 | Name | Type | Description |
 |---|---|---|
 | recipient | IEverscale.EverscaleAddress | Deposit recipient in the Everscale network.
-| amount | uint256[] | List of amount
-| pendingWithdrawalId | IVault.PendingWithdrawalId[] | Pending withdrawal ID to fill.
+| amount | uint256 | List of amount
+| pendingWithdrawalId | IVault.PendingWithdrawalId | Pending withdrawal ID to fill.
 
 ### depositFee
 

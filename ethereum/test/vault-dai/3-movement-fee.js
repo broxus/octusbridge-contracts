@@ -53,7 +53,7 @@ describe('Check deposit / withdraw fees', async () => {
 
       await vault
           .connect(alice)
-          ['deposit((int128,uint256),uint256)'](recipient, amount);
+          ['deposit((int8,uint256),uint256)'](recipient, amount);
 
       // Calculate expected fee amount
       const fee = amount.mul(DEPOSIT_FEE).div(BPS);

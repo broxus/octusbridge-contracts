@@ -4,47 +4,15 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      }
-    ],
-    "name": "BlacklistTokenAdded",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      }
-    ],
-    "name": "BlacklistTokenRemoved",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "enum IMultiVault.DepositType",
-        "name": "depositType",
-        "type": "uint8"
+        "internalType": "uint256",
+        "name": "base_chainId",
+        "type": "uint256"
       },
       {
         "indexed": false,
-        "internalType": "enum IMultiVault.TokenType",
-        "name": "_type",
-        "type": "uint8"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes",
-        "name": "meta",
-        "type": "bytes"
+        "internalType": "uint160",
+        "name": "base_token",
+        "type": "uint160"
       },
       {
         "indexed": false,
@@ -72,18 +40,44 @@
       },
       {
         "indexed": false,
-        "internalType": "int128",
-        "name": "wid",
-        "type": "int128"
+        "internalType": "int8",
+        "name": "recipient_wid",
+        "type": "int8"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "addr",
+        "name": "recipient_addr",
         "type": "uint256"
       }
     ],
-    "name": "Deposit",
+    "name": "AlienTransfer",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "BlacklistTokenAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "BlacklistTokenRemoved",
     "type": "event"
   },
   {
@@ -97,6 +91,43 @@
       }
     ],
     "name": "EmergencyShutdown",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "int8",
+        "name": "native_wid",
+        "type": "int8"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "native_addr",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "int8",
+        "name": "recipient_wid",
+        "type": "int8"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "recipient_addr",
+        "type": "uint256"
+      }
+    ],
+    "name": "NativeTransfer",
     "type": "event"
   },
   {
@@ -123,15 +154,52 @@
       },
       {
         "indexed": false,
-        "internalType": "enum IMultiVault.TokenType",
-        "name": "_type",
-        "type": "uint8"
+        "internalType": "uint256",
+        "name": "activation",
+        "type": "uint256"
       },
       {
         "indexed": false,
-        "internalType": "bytes",
-        "name": "meta",
-        "type": "bytes"
+        "internalType": "bool",
+        "name": "isNative",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "depositFee",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "withdrawFee",
+        "type": "uint256"
+      }
+    ],
+    "name": "TokenActivated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "int8",
+        "name": "native_wid",
+        "type": "int8"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "native_addr",
+        "type": "uint256"
       },
       {
         "indexed": false,
@@ -153,67 +221,6 @@
       }
     ],
     "name": "TokenCreated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "activation",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "enum IMultiVault.TokenType",
-        "name": "_type",
-        "type": "uint8"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes",
-        "name": "meta",
-        "type": "bytes"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "symbol",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint8",
-        "name": "decimals",
-        "type": "uint8"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "depositFee",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "withdrawFee",
-        "type": "uint256"
-      }
-    ],
-    "name": "TokenInitialized",
     "type": "event"
   },
   {
@@ -484,9 +491,9 @@
       {
         "components": [
           {
-            "internalType": "int128",
+            "internalType": "int8",
             "name": "wid",
-            "type": "int128"
+            "type": "int8"
           },
           {
             "internalType": "uint256",
@@ -497,24 +504,6 @@
         "internalType": "struct IEverscale.EverscaleAddress",
         "name": "",
         "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "configuration_",
-    "outputs": [
-      {
-        "internalType": "int128",
-        "name": "wid",
-        "type": "int128"
-      },
-      {
-        "internalType": "uint256",
-        "name": "addr",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -551,9 +540,9 @@
       {
         "components": [
           {
-            "internalType": "int128",
+            "internalType": "int8",
             "name": "wid",
-            "type": "int128"
+            "type": "int8"
           },
           {
             "internalType": "uint256",
@@ -574,11 +563,6 @@
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
-      },
-      {
-        "internalType": "enum IMultiVault.DepositType",
-        "name": "depositType",
-        "type": "uint8"
       }
     ],
     "name": "deposit",
@@ -607,6 +591,30 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int8",
+        "name": "native_wid",
+        "type": "int8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "native_addr",
+        "type": "uint256"
+      }
+    ],
+    "name": "getNativeToken",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -653,9 +661,9 @@
       {
         "components": [
           {
-            "internalType": "int128",
+            "internalType": "int8",
             "name": "wid",
-            "type": "int128"
+            "type": "int8"
           },
           {
             "internalType": "uint256",
@@ -699,21 +707,27 @@
         "type": "address"
       }
     ],
-    "name": "migrateTokenToVault",
+    "name": "migrateAlienTokenToVault",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "rewards",
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      }
+    ],
+    "name": "natives",
     "outputs": [
       {
         "components": [
           {
-            "internalType": "int128",
+            "internalType": "int8",
             "name": "wid",
-            "type": "int128"
+            "type": "int8"
           },
           {
             "internalType": "uint256",
@@ -731,17 +745,24 @@
   },
   {
     "inputs": [],
-    "name": "rewards_",
+    "name": "rewards",
     "outputs": [
       {
-        "internalType": "int128",
-        "name": "wid",
-        "type": "int128"
-      },
-      {
-        "internalType": "uint256",
-        "name": "addr",
-        "type": "uint256"
+        "components": [
+          {
+            "internalType": "int8",
+            "name": "wid",
+            "type": "int8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "addr",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IEverscale.EverscaleAddress",
+        "name": "",
+        "type": "tuple"
       }
     ],
     "stateMutability": "view",
@@ -760,7 +781,7 @@
         "type": "bytes[]"
       }
     ],
-    "name": "saveWithdraw",
+    "name": "saveWithdrawAlien",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -768,12 +789,17 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_bridge",
-        "type": "address"
+        "internalType": "bytes",
+        "name": "payload",
+        "type": "bytes"
+      },
+      {
+        "internalType": "bytes[]",
+        "name": "signatures",
+        "type": "bytes[]"
       }
     ],
-    "name": "setBridge",
+    "name": "saveWithdrawNative",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -783,9 +809,9 @@
       {
         "components": [
           {
-            "internalType": "int128",
+            "internalType": "int8",
             "name": "wid",
-            "type": "int128"
+            "type": "int8"
           },
           {
             "internalType": "uint256",
@@ -886,9 +912,9 @@
       {
         "components": [
           {
-            "internalType": "int128",
+            "internalType": "int8",
             "name": "wid",
-            "type": "int128"
+            "type": "int8"
           },
           {
             "internalType": "uint256",
@@ -945,95 +971,44 @@
   {
     "inputs": [
       {
-        "internalType": "enum IMultiVault.TokenType",
-        "name": "_type",
-        "type": "uint8"
-      },
-      {
-        "internalType": "bytes",
-        "name": "meta",
-        "type": "bytes"
-      }
-    ],
-    "name": "tokenFor",
-    "outputs": [
-      {
         "internalType": "address",
-        "name": "token",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
+        "name": "_token",
         "type": "address"
       }
     ],
     "name": "tokens",
     "outputs": [
       {
-        "internalType": "uint256",
-        "name": "activation",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "blacklisted",
-        "type": "bool"
-      },
-      {
         "components": [
           {
-            "internalType": "enum IMultiVault.TokenType",
-            "name": "_type",
-            "type": "uint8"
+            "internalType": "uint256",
+            "name": "activation",
+            "type": "uint256"
           },
           {
-            "internalType": "bytes",
-            "name": "meta",
-            "type": "bytes"
+            "internalType": "bool",
+            "name": "blacklisted",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "depositFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "withdrawFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "isNative",
+            "type": "bool"
           }
         ],
-        "internalType": "struct IMultiVault.TokenSource",
-        "name": "source",
+        "internalType": "struct IMultiVault.Token",
+        "name": "",
         "type": "tuple"
-      },
-      {
-        "components": [
-          {
-            "internalType": "string",
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "symbol",
-            "type": "string"
-          },
-          {
-            "internalType": "uint8",
-            "name": "decimals",
-            "type": "uint8"
-          }
-        ],
-        "internalType": "struct IMultiVault.TokenMeta",
-        "name": "meta",
-        "type": "tuple"
-      },
-      {
-        "internalType": "uint256",
-        "name": "depositFee",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "withdrawFee",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",

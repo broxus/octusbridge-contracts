@@ -131,23 +131,13 @@ const getVaultByToken = async (registry, token) => {
 };
 
 
-const encodeMultiTokenWithdrawalData = (params) => {
+const encodeMultiTokenAlienWithdrawalData = (params) => {
   return web3.eth.abi.encodeParameters(
       [
-        'uint8', 'uint8', 'bytes',
-        'string', 'string', 'uint8',
-        'int8', 'uint256',
-        'uint128', 'uint160', 'uint256'
+        'uint160', 'uint128', 'uint160', 'uint256'
       ],
       [
-        params.depositType || 0,
-        params.source_type || 0,
-        params.source_meta,
-        params.name,
-        params.symbol,
-        params.decimals,
-        params.sender.wid,
-        params.sender.addr,
+        params.token,
         params.amount,
         params.recipient,
         params.chainId || defaultChainId
@@ -156,10 +146,25 @@ const encodeMultiTokenWithdrawalData = (params) => {
 };
 
 
-const encodeEvmTokenSourceMeta = (chainId, token) => {
+const encodeMultiTokenNativeWithdrawalData = (params) => {
   return web3.eth.abi.encodeParameters(
-      ['uint256', 'address'],
-      [chainId, token]
+      [
+          'int8', 'uint256',
+          'string', 'string', 'uint8',
+          'uint128', 'uint160', 'uint256'
+      ],
+      [
+          params.native.wid,
+          params.native.addr,
+
+          params.name,
+          params.symbol,
+          params.decimals,
+
+          params.amount,
+          params.recipient,
+          params.chainId || defaultChainId
+      ]
   );
 }
 
@@ -259,6 +264,6 @@ module.exports = {
   getNetworkTime,
   deriveWithdrawalPeriodId,
   getPayloadSignatures,
-  encodeMultiTokenWithdrawalData,
-  encodeEvmTokenSourceMeta,
+  encodeMultiTokenAlienWithdrawalData,
+  encodeMultiTokenNativeWithdrawalData,
 };

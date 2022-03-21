@@ -36,7 +36,7 @@ describe('Force withdraw pending', async () => {
 
         await vault
             .connect(alice)
-            ['deposit((int128,uint256),uint256)'](recipient, amount);
+            ['deposit((int8,uint256),uint256)'](recipient, amount);
     });
 
     it('Save withdrawal for 2000 Dai to Bob', async () => {
@@ -85,7 +85,7 @@ describe('Force withdraw pending', async () => {
 
         await vault
             .connect(alice)
-            ['deposit((int128,uint256),uint256)'](defaultTonRecipient, amount);
+            ['deposit((int8,uint256),uint256)'](defaultTonRecipient, amount);
     });
 
     it('Force withdraw', async () => {

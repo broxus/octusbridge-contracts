@@ -6,8 +6,19 @@ const { legos } = require('@studydefi/money-legos');
 const {encodeEvmTokenSourceMeta, encodeEverscaleEvent} = require("../utils");
 
 
-describe('Test deposit-withdraw for alien token', async () => {
+describe('Test deposit-withdraw for native token', async () => {
     let multivault, token;
+
+    const native = {
+        wid: -1,
+        addr: 444
+    };
+
+    const meta = {
+        name: 'Wrapped EVER',
+        symbol: 'WEVER',
+        decimals: 9
+    };
 
     it('Setup contracts', async () => {
         await deployments.fixture();
@@ -15,24 +26,24 @@ describe('Test deposit-withdraw for alien token', async () => {
         multivault = await ethers.getContract('MultiVault');
     });
 
-    describe('Withdraw Dai from different EVM chain', async () => {
+    describe('Withdraw WEVER Token', async () => {
         let payload, signatures;
 
-        const sourceMeta = utils.encodeEvmTokenSourceMeta(8811, legos.erc20.dai.address);
         const amount = ethers.utils.parseUnits('500', 18);
 
         it('Save withdraw', async () => {
             const bob = await ethers.getNamedSigner('bob');
 
-            const withdrawalEventData = utils.encodeMultiTokenWithdrawalData({
-                depositType: 0,
-                source_meta: sourceMeta,
-                name: 'Dai',
-                symbol: legos.erc20.dai.symbol,
-                decimals: legos.erc20.dai.decimals,
+            const withdrawalEventData = utils.encodeMultiTokenNativeWithdrawalData({
+                native,
+
+                name: meta.name,
+                symbol: meta.symbol,
+                decimals: meta.decimals,
+
                 amount,
-                sender: utils.defaultTonRecipient,
-                recipient: bob.address
+                recipient: bob.address,
+                chainId: utils.defaultChainId
             });
 
             payload = encodeEverscaleEvent({
@@ -44,20 +55,33 @@ describe('Test deposit-withdraw for alien token', async () => {
 
             await multivault
                 .connect(bob)
-                .saveWithdraw(payload, signatures);
+                .saveWithdrawNative(payload, signatures);
         });
 
-        it('Check token meta', async () => {
-            const tokenAddress = await multivault.tokenFor(0, sourceMeta);
+        it('Check EVM token meta', async () => {
+            const tokenAddress = await multivault.getNativeToken(native.wid, native.addr);
 
             token = await ethers.getContractAt('MultiVaultToken', tokenAddress);
 
             expect(await token.name())
-                .to.be.equal('Dai (Octus)', 'Wrong token name');
+                .to.be.equal(`${meta.name} (Octus)`, 'Wrong token name');
             expect(await token.symbol())
-                .to.be.equal('DAI_OCTUS', 'Wrong token symbol');
+                .to.be.equal(`${meta.symbol}_OCTUS`, 'Wrong token symbol');
             expect(await token.decimals())
-                .to.be.equal(legos.erc20.dai.decimals, 'Wrong token decimals');
+                .to.be.equal(meta.decimals, 'Wrong token decimals');
+        });
+
+        it('Check native token status', async () => {
+            const tokenAddress = await multivault.getNativeToken(native.wid, native.addr);
+
+            const tokenDetails = await multivault.tokens(tokenAddress);
+
+            expect(tokenDetails.isNative)
+                .to.be.equal(true, 'Wrong token native flag');
+            expect(tokenDetails.depositFee)
+                .to.be.equal(await multivault.defaultDepositFee(), 'Wrong token deposit fee');
+            expect(tokenDetails.withdrawFee)
+                .to.be.equal(await multivault.defaultWithdrawFee(), 'Wrong token withdraw fee');
         });
 
         it('Check recipient balance and total supply', async () => {
@@ -82,7 +106,7 @@ describe('Test deposit-withdraw for alien token', async () => {
 
         let fee;
 
-        it('Bob deposits 300 Octus Dai (deposit type = Burn)', async () => {
+        it('Bob deposits 300 WEVER', async () => {
             const bob = await ethers.getNamedSigner('bob');
 
             const recipient = {
@@ -94,15 +118,11 @@ describe('Test deposit-withdraw for alien token', async () => {
 
             fee = tokenDetails.depositFee.mul(amount).div(10000);
 
-            await expect(multivault.connect(bob).deposit(recipient, token.address, amount, 1)) // deposit type = Burn
-                .to.emit(multivault, 'Deposit')
+            await expect(multivault.connect(bob).deposit(recipient, token.address, amount))
+                .to.emit(multivault, 'NativeTransfer')
                 .withArgs(
-                    1,
-                    0,
-                    tokenDetails.source.meta,
-                    tokenDetails.meta.name,
-                    tokenDetails.meta.symbol,
-                    tokenDetails.meta.decimals,
+                    native.wid,
+                    native.addr,
                     amount.sub(fee),
                     recipient.wid,
                     recipient.addr

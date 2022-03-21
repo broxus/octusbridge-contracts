@@ -4,7 +4,7 @@ pragma solidity ^0.8.2;
 
 interface IEverscale {
     struct EverscaleAddress {
-        int128 wid;
+        int8 wid;
         uint256 addr;
     }
 

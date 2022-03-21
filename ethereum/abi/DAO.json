@@ -37,9 +37,9 @@
       {
         "components": [
           {
-            "internalType": "int128",
+            "internalType": "int8",
             "name": "wid",
-            "type": "int128"
+            "type": "int8"
           },
           {
             "internalType": "uint256",
@@ -93,9 +93,9 @@
     "name": "configuration",
     "outputs": [
       {
-        "internalType": "int128",
+        "internalType": "int8",
         "name": "wid",
-        "type": "int128"
+        "type": "int8"
       },
       {
         "internalType": "uint256",
@@ -255,9 +255,9 @@
       {
         "components": [
           {
-            "internalType": "int128",
+            "internalType": "int8",
             "name": "wid",
-            "type": "int128"
+            "type": "int8"
           },
           {
             "internalType": "uint256",

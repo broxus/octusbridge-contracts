@@ -52,7 +52,7 @@ function cache(bytes32) external view returns (bool)
 ### configuration
 
 ```solidity
-function configuration() external view returns (int128 wid, uint256 addr)
+function configuration() external view returns (int8 wid, uint256 addr)
 ```
 
 
@@ -64,7 +64,7 @@ function configuration() external view returns (int128 wid, uint256 addr)
 
 | Name | Type | Description |
 |---|---|---|
-| wid | int128 | undefined
+| wid | int8 | undefined
 | addr | uint256 | undefined
 
 ### decodeEthActionsEventData
