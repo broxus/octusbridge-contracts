@@ -23,7 +23,6 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
     EthereumEventConfiguration public static networkConfiguration;
 
     TvmCell public meta;
-    uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
 
     /// @param _owner Event configuration owner
     constructor(address _owner, TvmCell _meta) public checkPubKey {
@@ -87,7 +86,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
     )
         external
         override
-        reserveBalance(MIN_CONTRACT_BALANCE)
+        reserveBalance
     {
         require(msg.value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
         require(
@@ -178,7 +177,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
         IEthereumEvent.EthereumEventInitData eventInitData,
         TvmCell meta,
         address gasBackAddress
-    ) override external reserveBalance(MIN_CONTRACT_BALANCE) {
+    ) override external reserveBalance {
         require(
             eventInitData.configuration == address(this),
             ErrorCodes.SENDER_NOT_EVENT_CONTRACT

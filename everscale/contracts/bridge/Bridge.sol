@@ -35,7 +35,6 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
     address public manager;
 
     uint64 public connectorCounter = 0;
-    uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
 
     /// @param _owner Owner address, can pause Bridge, so new Connectors can't be deployed
     /// @param _manager Manager role - can enable connectors
@@ -132,7 +131,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
     )
         override
         public
-        reserveBalance(MIN_CONTRACT_BALANCE)
+        reserveBalance
     {
         require(active, ErrorCodes.BRIDGE_PAUSED);
         require(msg.value >= connectorDeployValue, ErrorCodes.TOO_LOW_DEPLOY_VALUE);

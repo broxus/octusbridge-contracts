@@ -17,8 +17,8 @@ contract TransferUtils {
         receiver.transfer({ flag: 129, value: 0 });
     }
 
-    modifier reserveBalance(uint128 min_balance) {
-        tvm.rawReserve(math.max(address(this).balance - msg.value, min_balance), 2);
+    modifier reserveBalance() {
+        tvm.rawReserve(address(this).balance - msg.value, 2);
         _;
     }
 
