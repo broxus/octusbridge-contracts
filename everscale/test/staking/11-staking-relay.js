@@ -355,20 +355,19 @@ describe('Test Staking Rewards', async function () {
                     keyPair: keyPair
                 }, locklift.utils.convertCrystal(1, 'nano'));
 
+                stakingRoot = await locklift.factory.getContract('Staking');
                 const StakingRootDeployer = await locklift.factory.getContract('StakingRootDeployer');
                 const stakingRootDeployer = await locklift.giver.deployContract({
                     contract: StakingRootDeployer,
                     constructorParams: {},
-                    initParams: {nonce: locklift.utils.getRandomNonce()},
+                    initParams: {nonce: locklift.utils.getRandomNonce(), stakingCode: stakingRoot.code},
                     keyPair: keyPair,
                 }, locklift.utils.convertCrystal(50, 'nano'));
 
                 logger.log(`Deploying stakingRoot`);
-                stakingRoot = await locklift.factory.getContract('Staking');
                 stakingRoot.setAddress((await stakingRootDeployer.run({
                     method: 'deploy',
                     params: {
-                        stakingCode: stakingRoot.code,
                         _admin: stakingOwner.address,
                         _tokenRoot: stakingToken.address,
                         _dao_root: stakingOwner.address,
