@@ -27,10 +27,6 @@ contract StakingEthEvent is EthereumBaseEvent, StakingCellEncoder {
         return bodyCopy;
     }
 
-    function onInit() override internal {
-        loadRelays();
-    }
-
     function onConfirm() override internal {
         TvmCell meta;
 

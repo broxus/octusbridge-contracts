@@ -14,7 +14,7 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
     @title Basic example of Everscale event configuration
     @dev This implementation is used for cross chain token transfers
 */
-contract TokenTransferTonEvent is EverscaleBaseEvent, ProxyTokenTransferCellEncoder {
+contract TokenTransferEverscaleEvent is EverscaleBaseEvent, ProxyTokenTransferCellEncoder {
     uint32 constant FORCE_CLOSE_TIMEOUT = 1 days;
     uint32 public createdAt;
 
@@ -42,6 +42,9 @@ contract TokenTransferTonEvent is EverscaleBaseEvent, ProxyTokenTransferCellEnco
     function onInit() override internal {
         createdAt = now;
         notifyEventStatusChanged();
+
+        status = Status.Pending;
+
         loadRelays();
     }
 

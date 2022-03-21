@@ -35,6 +35,8 @@ contract EthereumBaseEvent is BaseEvent, IEthereumEvent {
     }
 
     function onInit() virtual internal {
+        status = Status.Pending;
+
         loadRelays();
     }
     function onConfirm() virtual internal {}

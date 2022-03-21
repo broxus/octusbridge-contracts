@@ -19,7 +19,6 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 /// In case enough confirmations is collected - callback is executed.
 /// This implementation is used for cross chain token transfers
 contract TokenTransferEthereumEvent is EthereumBaseEvent, ProxyTokenTransferCellEncoder {
-
     constructor(
         address _initializer,
         TvmCell _meta
@@ -37,6 +36,9 @@ contract TokenTransferEthereumEvent is EthereumBaseEvent, ProxyTokenTransferCell
 
     function onInit() override internal {
         notifyEventStatusChanged();
+
+        status = Status.Pending;
+
         loadRelays();
     }
 

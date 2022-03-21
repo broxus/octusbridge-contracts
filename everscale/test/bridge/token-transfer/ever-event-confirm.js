@@ -102,7 +102,7 @@ describe('Test ton event confirm', async function() {
       initializerTokenWallet.name = 'Initializer TokenWallet';
 
       burnPayload = await cellEncoder.call({
-        method: 'encodeBurnAlienPayload',
+        method: 'encodeBurnPayload',
         params: tonEventParams
       });
     });
@@ -133,7 +133,7 @@ describe('Test ton event confirm', async function() {
       
       logger.log(`Expected event address: ${expectedEventContract}`);
 
-      eventContract = await locklift.factory.getContract('TokenTransferTonEvent');
+      eventContract = await locklift.factory.getContract('TokenTransferEverscaleEvent');
       eventContract.setAddress(expectedEventContract);
       eventContract.afterRun = afterRun;
 

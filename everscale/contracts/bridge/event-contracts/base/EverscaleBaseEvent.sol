@@ -39,6 +39,8 @@ contract EverscaleBaseEvent is BaseEvent, IEverscaleEvent {
     }
 
     function onInit() virtual internal {
+        status = Status.Pending;
+
         loadRelays();
     }
     function onConfirm() virtual internal {}

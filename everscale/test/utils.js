@@ -297,7 +297,7 @@ const setupTokenRootWithWallet = async (rootOwner, walletOwner, mintAmount) => {
 
 const setupEverscaleEventConfiguration = async (owner, staking, cellEncoder) => {
   const EverscaleEventConfiguration = await locklift.factory.getContract('EverscaleEventConfiguration');
-  const TonEvent = await locklift.factory.getContract('TokenTransferTonEvent');
+  const TonEvent = await locklift.factory.getContract('TokenTransferEverscaleEvent');
 
   const _randomNonce = locklift.utils.getRandomNonce();
   const [keyPair] = await locklift.keys.getKeyPairs();
