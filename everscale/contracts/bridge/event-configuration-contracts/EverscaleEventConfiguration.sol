@@ -23,6 +23,7 @@ contract EverscaleEventConfiguration is IEverscaleEventConfiguration, TransferUt
     EverscaleEventConfiguration public static networkConfiguration;
 
     TvmCell public meta;
+    uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
 
     /*
         @param _owner Event configuration owner
@@ -84,7 +85,7 @@ contract EverscaleEventConfiguration is IEverscaleEventConfiguration, TransferUt
     /// @param eventVoteData Event vote data
     function deployEvent(
         IEverscaleEvent.EverscaleEventVoteData eventVoteData
-    ) override external reserveBalance {
+    ) override external reserveBalance(MIN_CONTRACT_BALANCE) {
         require(msg.sender == networkConfiguration.eventEmitter, ErrorCodes.SENDER_IS_NOT_EVENT_EMITTER);
         require(msg.value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
         require(
