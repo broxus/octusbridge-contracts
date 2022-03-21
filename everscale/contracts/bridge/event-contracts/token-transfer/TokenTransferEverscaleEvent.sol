@@ -15,10 +15,10 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
     @dev This implementation is used for cross chain token transfers
 */
 contract TokenTransferEverscaleEvent is EverscaleBaseEvent, ProxyTokenTransferCellEncoder {
-    uint32 constant FORCE_CLOSE_TIMEOUT = 1 days;
-    uint32 public createdAt;
-
-    constructor(address _initializer, TvmCell _meta) EverscaleBaseEvent(_initializer, _meta) public {}
+    constructor(
+        address _initializer,
+        TvmCell _meta
+    ) EverscaleBaseEvent(_initializer, _meta) public {}
 
 
     function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
@@ -40,7 +40,6 @@ contract TokenTransferEverscaleEvent is EverscaleBaseEvent, ProxyTokenTransferCe
     }
 
     function onInit() override internal {
-        createdAt = now;
         notifyEventStatusChanged();
 
         status = Status.Pending;

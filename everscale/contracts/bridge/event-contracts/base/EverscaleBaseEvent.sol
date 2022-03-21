@@ -10,6 +10,9 @@ import "./../../../utils/ErrorCodes.sol";
 
 
 contract EverscaleBaseEvent is BaseEvent, IEverscaleEvent {
+    uint32 constant FORCE_CLOSE_TIMEOUT = 1 days;
+    uint32 public createdAt;
+
     // Event data
     EverscaleEventInitData static eventInitData;
     // Ethereum payload signatures for confirmations
@@ -28,6 +31,7 @@ contract EverscaleBaseEvent is BaseEvent, IEverscaleEvent {
     ) public {
         require(eventInitData.configuration == msg.sender, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
 
+        createdAt = now;
         status = Status.Initializing;
         initializer = _initializer;
         meta = _meta;

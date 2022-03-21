@@ -40,6 +40,16 @@ contract MultiVaultEverscaleEventAlien is EverscaleBaseEvent, IMultiVaultEversca
         return bodyCopy;
     }
 
+    function close() external view {
+        require(
+            status != Status.Pending || now > createdAt + FORCE_CLOSE_TIMEOUT,
+            ErrorCodes.EVENT_PENDING
+        );
+
+        require(msg.sender == remainingGasTo, ErrorCodes.SENDER_IS_NOT_EVENT_OWNER);
+        transferAll(remainingGasTo);
+    }
+
     function onInit() override internal {
         (proxy, token, remainingGasTo, amount, recipient) = abi.decode(
             eventInitData.voteData.eventData,

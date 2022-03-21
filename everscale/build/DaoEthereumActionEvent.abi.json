@@ -217,6 +217,14 @@
 			]
 		},
 		{
+			"name": "createdAt",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"createdAt","type":"uint32"}
+			]
+		},
+		{
 			"name": "signatures",
 			"inputs": [
 			],
@@ -266,6 +274,7 @@
 		{"name":"rejects","type":"uint16"},
 		{"name":"relay_round","type":"address"},
 		{"name":"round_number","type":"uint32"},
+		{"name":"createdAt","type":"uint32"},
 		{"components":[{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"eventInitData","type":"tuple"},
 		{"name":"signatures","type":"map(uint256,bytes)"}
 	]
