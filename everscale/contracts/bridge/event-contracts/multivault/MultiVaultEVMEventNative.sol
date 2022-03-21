@@ -101,7 +101,7 @@ contract MultiVaultEVMEventNative is EthereumBaseEvent, IMultiVaultEVMEventNativ
         address proxy_,
         address tokenWallet_
     ) {
-        return (
+        return {value: 0, flag: MsgFlag.REMAINING_GAS}(
             token,
             amount,
             recipient,

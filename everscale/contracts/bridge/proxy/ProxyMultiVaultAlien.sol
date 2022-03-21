@@ -45,14 +45,12 @@ contract ProxyMultiVaultAlien is
     /// @notice Handles token burn.
     /// Initializes alien transfer (eg BSC CAKE or ETH AAVE).
     /// @param amount Tokens amount
-    /// @param walletOwner Token wallet owner address
-    /// @param wallet Token wallet address
     /// @param remainingGasTo Address to send remaining gas to
     /// @param payload TvmCell encoded (uint160 recipient)
     function onAcceptTokensBurn(
         uint128 amount,
-        address walletOwner,
-        address wallet,
+        address,
+        address,
         address remainingGasTo,
         TvmCell payload
     ) public override reserveMinBalance(MIN_CONTRACT_BALANCE) {

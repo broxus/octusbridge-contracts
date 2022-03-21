@@ -5,6 +5,7 @@ pragma AbiHeader pubkey;
 
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.sol";
+import "ton-eth-bridge-token-contracts/contracts/interfaces/TIP3TokenRoot.sol";
 
 import "./../base/EverscaleBaseEvent.sol";
 import "./../../interfaces/multivault/IMultiVaultEverscaleEventNative.sol";
@@ -139,7 +140,7 @@ contract MultiVaultEverscaleEventNative is EverscaleBaseEvent, IMultiVaultEversc
         string symbol_,
         uint8 decimals_
     ) {
-        return (
+        return {value: 0, flag: MsgFlag.REMAINING_GAS}(
             proxy,
             tokenWallet,
             token,
@@ -166,5 +167,20 @@ contract MultiVaultEverscaleEventNative is EverscaleBaseEvent, IMultiVaultEversc
             recipient,
             chainId
         );
+    }
+
+    onBounce(TvmSlice slice) external {
+        uint32 selector = slice.decode(uint32);
+
+        if (
+            selector == tvm.functionId(TIP3TokenRoot.name) ||
+            selector == tvm.functionId(TIP3TokenRoot.symbol) ||
+            selector == tvm.functionId(TIP3TokenRoot.decimals) ||
+            selector == tvm.functionId(ITokenRoot.walletOf)
+        ) {
+            status = Status.Rejected;
+
+            loadRelays();
+        }
     }
 }

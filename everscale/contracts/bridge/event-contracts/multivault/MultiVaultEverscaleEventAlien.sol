@@ -56,7 +56,6 @@ contract MultiVaultEverscaleEventAlien is EverscaleBaseEvent, IMultiVaultEversca
             (address, address, address, uint128, uint160)
         );
 
-        // TODO: safe value?
         ITokenRootAlienEVM(token).meta{
             value: 1 ton,
             callback: MultiVaultEverscaleEventAlien.receiveTokenMeta
@@ -132,5 +131,18 @@ contract MultiVaultEverscaleEventAlien is EverscaleBaseEvent, IMultiVaultEversca
             base_chainId,
             base_token
         );
+    }
+
+    onBounce(TvmSlice slice) external {
+        uint32 selector = slice.decode(uint32);
+
+        if (
+            selector == tvm.functionId(ITokenRootAlienEVM.meta) ||
+            selector == tvm.functionId(IProxyMultiVaultAlien.deriveAlienTokenRoot)
+        ) {
+            status = Status.Rejected;
+
+            loadRelays();
+        }
     }
 }
