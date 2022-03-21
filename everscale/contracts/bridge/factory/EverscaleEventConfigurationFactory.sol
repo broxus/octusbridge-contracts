@@ -10,6 +10,7 @@ import "./../interfaces/event-configuration-contracts/IEverscaleEventConfigurati
 
 contract EverscaleEventConfigurationFactory is TransferUtils, RandomNonce {
     TvmCell public configurationCode;
+    uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
 
     constructor(TvmCell _configurationCode) public {
         tvm.accept();
@@ -21,7 +22,7 @@ contract EverscaleEventConfigurationFactory is TransferUtils, RandomNonce {
         address _owner,
         IEverscaleEventConfiguration.BasicConfiguration basicConfiguration,
         IEverscaleEventConfiguration.EverscaleEventConfiguration networkConfiguration
-    ) external reserveBalance {
+    ) external reserveMinBalance(MIN_CONTRACT_BALANCE) {
         TvmCell _meta;
 
         new EverscaleEventConfiguration{

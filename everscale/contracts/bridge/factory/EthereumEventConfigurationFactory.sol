@@ -9,6 +9,7 @@ import "./../interfaces/event-configuration-contracts/IEthereumEventConfiguratio
 
 contract EthereumEventConfigurationFactory is TransferUtils, RandomNonce {
     TvmCell public configurationCode;
+    uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
 
     constructor(TvmCell _configurationCode) public {
         tvm.accept();
@@ -20,7 +21,7 @@ contract EthereumEventConfigurationFactory is TransferUtils, RandomNonce {
         address _owner,
         IEthereumEventConfiguration.BasicConfiguration basicConfiguration,
         IEthereumEventConfiguration.EthereumEventConfiguration networkConfiguration
-    ) external reserveBalance {
+    ) external reserveMinBalance(MIN_CONTRACT_BALANCE) {
         TvmCell _meta;
 
         new EthereumEventConfiguration{

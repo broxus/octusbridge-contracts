@@ -32,6 +32,7 @@ contract ProxyMultiVaultAlien is
 {
     Configuration config;
     bool paused = false;
+    uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
 
     constructor(
         address owner_
@@ -54,7 +55,7 @@ contract ProxyMultiVaultAlien is
         address wallet,
         address remainingGasTo,
         TvmCell payload
-    ) public override reserveBalance {
+    ) public override reserveMinBalance(MIN_CONTRACT_BALANCE) {
         (uint160 recipient) = abi.decode(payload, (uint160));
 
         TvmCell eventData = abi.encode(
@@ -84,7 +85,7 @@ contract ProxyMultiVaultAlien is
         IEthereumEvent.EthereumEventInitData,
         TvmCell meta,
         address remainingGasTo
-    ) external override reserveBalance {
+    ) external override reserveMinBalance(MIN_CONTRACT_BALANCE) {
         require(!paused, ErrorCodes.PROXY_PAUSED);
         require(_isArrayContainsAddress(config.evmConfigurations, msg.sender));
 
@@ -148,7 +149,7 @@ contract ProxyMultiVaultAlien is
         string symbol,
         uint8 decimals,
         address remainingGasTo
-    ) external override reserveBalance {
+    ) external override reserveMinBalance(MIN_CONTRACT_BALANCE) {
         TvmCell stateInit = _buildAlienTokenRootInitState(
             chainId,
             token,
@@ -180,7 +181,7 @@ contract ProxyMultiVaultAlien is
     function sendMessage(
         address recipient,
         TvmCell message
-    ) external override onlyOwner reserveBalance {
+    ) external override onlyOwner reserveMinBalance(MIN_CONTRACT_BALANCE) {
         TvmBuilder payload;
         payload.store(msg.data);
 
