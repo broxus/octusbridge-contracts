@@ -49,7 +49,7 @@ const MIN_RELAYS = 2;
 const RELAY_INITIAL_DEPOSIT = 500;
 
 
-describe('Test Staking Rewards', async function () {
+describe.skip('Test Staking Relay mechanic', async function () {
     this.timeout(10000000);
 
     const sendTons = async function (from, receiver) {
@@ -256,6 +256,7 @@ describe('Test Staking Rewards', async function () {
                     staking: _user.address,
                     chainId: 0
                 },
+                'value1': '',
                 gasBackAddress: stakingOwner.address
             },
             value: convertCrystal(11, "nano")
