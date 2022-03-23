@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: AGPL-3.0
-
 /**
  *Submitted for verification at Etherscan.io on 2021-05-30
 */
@@ -12,19 +10,22 @@ pragma experimental ABIEncoderV2;
 
 import "../interfaces/IBooster.sol";
 import "../interfaces/ICurveFi.sol";
+import "../interfaces/IERC20.sol";
+import "../interfaces/IERC20Metadata.sol";
 import "../interfaces/IRewards.sol";
 import "../interfaces/IUni.sol";
+import "../libraries/Address.sol";
 import "../libraries/Math.sol";
+import "../libraries/SafeERC20.sol";
 import "./BaseStrategy.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
+import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
+
 
 
 // Part: ConvexStable
 
 abstract contract ConvexCrvLp is BaseStrategy {
-    using SafeERC20Upgradeable for IERC20Upgradeable;
+    using SafeERC20 for IERC20;
 
     address public constant booster = address(0xF403C135812408BFbE8713b5A23a04b3D48AAE31);
 
@@ -43,13 +44,17 @@ abstract contract ConvexCrvLp is BaseStrategy {
     address public rewardContract;
     address public curve;
 
-    IERC20Upgradeable public want_wrapped;
+    IERC20 public want_wrapped;
     uint public constant MAX_SLIPPAGE_FACTOR = 1000000;
     uint public slippage_factor;
 
     uint128 public curve_lp_idx;
 
     address[] public dex;
+
+    function _initialize(
+        address _vault
+    ) internal virtual;
 
     function _approveBasic() internal virtual;
 
@@ -96,15 +101,15 @@ abstract contract ConvexCrvLp is BaseStrategy {
     }
 
     function claimRewardTokens() external onlyGovernance {
-        IERC20Upgradeable(crv).safeTransfer(governance(), IERC20Upgradeable(crv).balanceOf(address(this)));
-        IERC20Upgradeable(cvx).safeTransfer(governance(), IERC20Upgradeable(cvx).balanceOf(address(this)));
+        IERC20(crv).safeTransfer(governance(), IERC20(crv).balanceOf(address(this)));
+        IERC20(cvx).safeTransfer(governance(), IERC20(cvx).balanceOf(address(this)));
     }
 
     function name() external view override returns (string memory) {
-        return string(abi.encodePacked("Convex", IERC20MetadataUpgradeable(address(want_wrapped)).symbol()));
+        return string(abi.encodePacked("Convex", IERC20Metadata(address(want_wrapped)).symbol()));
     }
 
-    function calc_want_from_wrapped(uint256 wrapped_amount) public virtual view returns (uint256 expected_return) {
+    function calc_want_from_wrapped(uint256 wrapped_amount) public view returns (uint256 expected_return) {
         if (wrapped_amount > 0) {
             expected_return = ICurveFi(curve).calc_withdraw_one_coin(wrapped_amount, int128(curve_lp_idx));
         }
@@ -146,17 +151,9 @@ abstract contract ConvexCrvLp is BaseStrategy {
         return balanceOfWrapped() + balanceOfPool();
     }
 
-    function adjustPosition(uint256 /*_debtOutstanding*/) internal override {
+    function adjustPosition(uint256 _debtOutstanding) internal override {
         // _debtOutstanding - unwrapped token
         if (emergencyExit) return;
-
-        // dont waste gas on reinvesting small sums
-        uint256 total_available = balanceOfWant() + calc_want_from_wrapped(balanceOfWrapped());
-        IVault.StrategyParams memory params = vault.strategies(address(this));
-        if (total_available < params.minDebtPerHarvest) {
-            return;
-        }
-
         wrap(balanceOfWant());
 
         uint256 _wrapped = balanceOfWrapped();
@@ -198,8 +195,8 @@ abstract contract ConvexCrvLp is BaseStrategy {
     }
 
     function _migrateRewards(address _newStrategy) internal virtual {
-        IERC20Upgradeable(crv).safeTransfer(_newStrategy, IERC20Upgradeable(crv).balanceOf(address(this)));
-        IERC20Upgradeable(cvx).safeTransfer(_newStrategy, IERC20Upgradeable(cvx).balanceOf(address(this)));
+        IERC20(crv).safeTransfer(_newStrategy, IERC20(crv).balanceOf(address(this)));
+        IERC20(cvx).safeTransfer(_newStrategy, IERC20(cvx).balanceOf(address(this)));
     }
 
     function _claimableBasicInETH() internal view returns (uint256) {
@@ -209,7 +206,7 @@ abstract contract ConvexCrvLp is BaseStrategy {
         uint256 totalCliffs = 1000;
         uint256 maxSupply = 1e8 * 1e18; // 100m
         uint256 reductionPerCliff = 1e5 * 1e18; // 100k
-        uint256 supply = IERC20Upgradeable(cvx).totalSupply();
+        uint256 supply = IERC20(cvx).totalSupply();
         uint256 _cvx;
 
         uint256 cliff = supply / reductionPerCliff;
@@ -248,7 +245,7 @@ abstract contract ConvexCrvLp is BaseStrategy {
         return crvValue + cvxValue;
     }
 
-    function claimableInETH() public virtual view returns (uint256 _claimable) {
+    function _claimableInETH() internal virtual view returns (uint256 _claimable) {
         _claimable = _claimableBasicInETH();
     }
 
@@ -268,7 +265,7 @@ abstract contract ConvexCrvLp is BaseStrategy {
         uint256 total = estimatedTotalAssets();
         if ((total + debtThreshold) < params.totalDebt) return true;
 
-        return ((profitFactor * callCost) < claimableInETH());
+        return ((profitFactor * callCost) < _claimableInETH());
     }
 
     /**
@@ -310,11 +307,8 @@ abstract contract ConvexCrvLp is BaseStrategy {
         }
 
         // we should be able to give profit + debtPayment to vault
-        uint256 want_profit = calc_want_from_wrapped(profit);
-        uint256 want_profit_plus_debtPayment = unwrap(profit + debtPayment);
-        // we know that want_profit_plus_debtPayment >= want_profit
-        uint256 want_debtPayment = want_profit_plus_debtPayment - want_profit;
-
+        uint256 want_profit = unwrap(profit);
+        uint256 want_debtPayment = unwrap(debtPayment);
         uint256 want_loss = calc_want_from_wrapped(loss);
 
         // Allow Vault to take up to the "harvested" balance of this contract,
@@ -322,7 +316,7 @@ abstract contract ConvexCrvLp is BaseStrategy {
         // the Vault.
         debtOutstanding = vault.report(want_profit, want_loss, want_debtPayment);
 
-        // wrap and reinvest if threshold is reached
+        // Check if free returns are left, and re-invest them
         adjustPosition(debtOutstanding);
 
         emit Harvested(want_profit, want_loss, want_debtPayment, debtOutstanding);
@@ -370,7 +364,7 @@ abstract contract ConvexCrvLp is BaseStrategy {
 
     function protectedTokens()
     internal
-    pure
+    view
     override
     returns (address[] memory)
     {
@@ -404,6 +398,6 @@ abstract contract ConvexCrvLp is BaseStrategy {
         address[] memory _protectedTokens = protectedTokens();
         for (uint256 i; i < _protectedTokens.length; i++) require(_token != _protectedTokens[i], "!protected");
 
-        IERC20Upgradeable(_token).safeTransfer(governance(), IERC20Upgradeable(_token).balanceOf(address(this)));
+        IERC20(_token).safeTransfer(governance(), IERC20(_token).balanceOf(address(this)));
     }
 }

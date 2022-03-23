@@ -1,21 +1,20 @@
-// SPDX-License-Identifier: AGPL-3.0
-
 pragma solidity ^0.8.2;
 pragma experimental ABIEncoderV2;
 
 import "../interfaces/IBooster.sol";
 import "../interfaces/ICurveFi.sol";
+import "../interfaces/IERC20.sol";
+import "../interfaces/IERC20Metadata.sol";
 import "../interfaces/IRewards.sol";
 import "../interfaces/IUni.sol";
 import "../interfaces/vault/IVault.sol";
 import "../libraries/Math.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import "../libraries/SafeERC20.sol";
 
 
 
 abstract contract BaseStrategy {
-    using SafeERC20Upgradeable for IERC20Upgradeable;
+    using SafeERC20 for IERC20;
     string public metadataURI;
 
     /**
@@ -26,7 +25,7 @@ abstract contract BaseStrategy {
      * @return A string which holds the current API version of this contract.
      */
     function apiVersion() public pure returns (string memory) {
-        return "0.1.7";
+        return "0.1.4";
     }
 
     /**
@@ -62,7 +61,7 @@ abstract contract BaseStrategy {
     address public strategist;
     address public keeper;
 
-    IERC20Upgradeable public want;
+    IERC20 public want;
 
     // So indexers can keep track of this
     event Harvested(uint256 profit, uint256 loss, uint256 debtPayment, uint256 debtOutstanding);
@@ -138,15 +137,17 @@ abstract contract BaseStrategy {
      * @param _vault The address of the Vault responsible for this Strategy.
      */
     function _initialize(
-        address _vault
-    ) internal virtual {
+        address _vault,
+        address _strategist,
+        address _keeper
+    ) internal {
         require(address(want) == address(0), "Strategy already initialized");
 
         vault = IVault(_vault);
-        want = IERC20Upgradeable(vault.token());
+        want = IERC20(vault.token());
         want.safeApprove(_vault, type(uint256).max); // Give Vault unlimited access (might save gas)
-        strategist = vault.governance();
-        keeper = strategist;
+        strategist = _strategist;
+        keeper = _keeper;
 
         // initialize variables
         minReportDelay = 0;
@@ -386,9 +387,10 @@ abstract contract BaseStrategy {
      *
      *  This call and `harvestTrigger()` should never return `true` at the same
      *  time.
+     * @param callCost The keeper's estimated cast cost to call `tend()`.
      * @return `true` if `tend()` should be called, `false` otherwise.
      */
-    function tendTrigger(uint256 /*callCost*/) public virtual view returns (bool) {
+    function tendTrigger(uint256 callCost) public virtual view returns (bool) {
         // We usually don't need tend, but if there are positions that need
         // active maintainence, overriding this function is how you would
         // signal for that.
@@ -622,6 +624,6 @@ abstract contract BaseStrategy {
         address[] memory _protectedTokens = protectedTokens();
         for (uint256 i; i < _protectedTokens.length; i++) require(_token != _protectedTokens[i], "!protected");
 
-        IERC20Upgradeable(_token).safeTransfer(governance(), IERC20Upgradeable(_token).balanceOf(address(this)));
+        IERC20(_token).safeTransfer(governance(), IERC20(_token).balanceOf(address(this)));
     }
 }

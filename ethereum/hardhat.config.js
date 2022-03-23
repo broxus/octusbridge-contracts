@@ -21,14 +21,14 @@ const multisig = {
   main: '0xe29B04B9c6712080f79B2dAc5211B18B279D5DE0',
   polygon: '0xB8dD7223edc08A1681c81278D31d644576ECF0b4',
   bsc: '0xbF13DBbf86B6B1cc02a4169Dde38E16862C77a0a',
-  fantom: '0x5B2329A2b2B5ec2f5F77afb6826F825dcec3A3Fd'
+  fantom: '0x5B2329A2b2B5ec2f5F77afb6826F825dcec3A3Fd',
 };
 
 const bridge = {
   main: '0xF4404070f63a7E19Be0b1dd89A5fb88E12c0173A',
   polygon: '0x62AE18A40Fa81697Fc7d0fe58402af5cAF795e68',
   bsc: '0x9f6898d5D36e2a4b9A0c6e58A0e86525475f58d7',
-  fantom: '0xc25CA21377C5bbC860F0bF48dF685D744A411489'
+  fantom: '0xc25CA21377C5bbC860F0bF48dF685D744A411489',
 };
 
 
@@ -158,10 +158,7 @@ const hardhatConfig = {
     },
     owner: {
       default: 3,
-      main: multisig.main,
-      polygon: multisig.polygon,
-      bsc: multisig.bsc,
-      fantom: multisig.fantom,
+      ...multisig
     },
     alice: {
       default: 4,
@@ -179,10 +176,7 @@ const hardhatConfig = {
       default: 8,
       ropsten: 8,
       goerli: 8,
-      main: multisig.main,
-      polygon: multisig.polygon,
-      bsc: multisig.bsc,
-      fantom: multisig.fantom,
+      ...multisig
     },
     dai_owner: {
       default: '0xA929022c9107643515F5c777cE9a910F0D1e490C',
