@@ -29,33 +29,6 @@ module.exports = async ({getNamedAccounts, deployments}) => {
             }
         }
     });
-
-    await deployments.execute('MultiVault',
-        {
-            from: owner,
-            log: true,
-        },
-        'setConfiguration',
-        utils.defaultConfiguration
-    );
-
-    await deployments.execute('MultiVault',
-        {
-            from: owner,
-            log: true
-        },
-        'setDefaultDepositFee',
-        100
-    );
-
-    await deployments.execute('MultiVault',
-        {
-            from: owner,
-            log: true
-        },
-        'setDefaultWithdrawFee',
-        200
-    );
 };
 
 module.exports.tags = ['Deploy_MultiVault'];
