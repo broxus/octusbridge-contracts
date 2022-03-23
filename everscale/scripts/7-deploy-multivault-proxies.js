@@ -75,7 +75,7 @@ const main = async () => {
     const proxyMultiVaultAlien = await locklift.giver.deployContract({
         contract: ProxyMultiVaultAlien,
         constructorParams: {
-            owner_: response.owner,
+            owner_: user.address,
         },
         initParams: {},
         keyPair
