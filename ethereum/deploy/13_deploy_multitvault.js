@@ -17,6 +17,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     await deployments.deploy('MultiVault', {
         from: deployer,
         log: true,
+        deterministicDeployment: ['multivault-1'],
         proxy: {
             proxyContract: 'OpenZeppelinTransparentProxy',
             execute: {
