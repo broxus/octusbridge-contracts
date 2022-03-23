@@ -64,9 +64,9 @@ describe('Test deposit-withdraw for native token', async () => {
             token = await ethers.getContractAt('MultiVaultToken', tokenAddress);
 
             expect(await token.name())
-                .to.be.equal(`${meta.name} (Octus)`, 'Wrong token name');
+                .to.be.equal(`Octus ${meta.name}`, 'Wrong token name');
             expect(await token.symbol())
-                .to.be.equal(`${meta.symbol}_OCTUS`, 'Wrong token symbol');
+                .to.be.equal(`OCTUS_${meta.symbol}`, 'Wrong token symbol');
             expect(await token.decimals())
                 .to.be.equal(meta.decimals, 'Wrong token decimals');
         });

@@ -666,8 +666,8 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         }
 
         IMultiVaultToken(token).initialize(
-            string(abi.encodePacked(meta.name, ' (Octus)')),
-            string(abi.encodePacked(meta.symbol, '_OCTUS')),
+            string(abi.encodePacked('Octus ', meta.name)),
+            string(abi.encodePacked('OCTUS_', meta.symbol)),
             meta.decimals
         );
 
