@@ -8,6 +8,8 @@ interface IProxyMultiVaultNative {
         uint128 deployWalletValue;
     }
 
+    function apiVersion() external view responsible returns(uint8);
+
     function getConfiguration() external view responsible returns (Configuration);
     function setConfiguration(Configuration _config, address gasBackAddress) external;
 

@@ -31,15 +31,23 @@ contract ProxyMultiVaultNative is
     IAcceptTokensTransferCallback
 {
     Configuration config;
-    bool paused = false;
     uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
+    uint8 api_version = 0;
 
     constructor(
         address owner_
     ) public checkPubKey {
         tvm.accept();
 
+        api_version = 1;
         setOwnership(owner_);
+    }
+
+    /// @notice Get current contract API version.
+    /// Each time contract is upgraded, API version is incremented.
+    /// @return Current API version
+    function apiVersion() external override view responsible returns(uint8) {
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} api_version;
     }
 
     /// @notice Handles incoming token transfer
@@ -90,7 +98,6 @@ contract ProxyMultiVaultNative is
         TvmCell meta,
         address remainingGasTo
     ) external override reserveMinBalance(MIN_CONTRACT_BALANCE) {
-        require(!paused, ErrorCodes.PROXY_PAUSED);
         require(_isArrayContainsAddress(config.evmConfigurations, msg.sender));
 
         (
@@ -142,5 +149,31 @@ contract ProxyMultiVaultNative is
         }
 
         return false;
+    }
+
+    function upgrade(
+        TvmCell code
+    ) external onlyOwner cashBack {
+        TvmCell data = abi.encode(
+            config,
+            api_version,
+            _randomNonce
+        );
+
+        tvm.setcode(code);
+        tvm.setCurrentCode(code);
+
+        onCodeUpgrade(data);
+    }
+
+    function onCodeUpgrade(TvmCell data) private {
+        (Configuration config_, uint8 api_version_, uint _randomNonce_) = abi.decode(
+            data,
+            (Configuration, uint8, uint)
+        );
+
+        config = config_;
+        api_version = api_version_ + 1;
+        _randomNonce = _randomNonce_;
     }
 }
