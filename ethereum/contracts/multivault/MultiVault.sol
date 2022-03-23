@@ -425,6 +425,16 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
 
             if (fee > 0) _transferToEverscaleAlien(token, rewards_, fee);
         }
+
+        emit Deposit(
+            isNative ? TokenType.Native : TokenType.Alien,
+            msg.sender,
+            token,
+            recipient.wid,
+            recipient.addr,
+            amount,
+            fee
+        );
     }
 
     /// @notice Save withdrawal for native token
@@ -442,8 +452,7 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
     {
         EverscaleEvent memory _event = _processWithdrawEvent(payload, signatures);
 
-        // TODO: fix events
-//        bytes32 payloadId = keccak256(payload);
+        bytes32 payloadId = keccak256(payload);
 
         // Decode event data
         NativeWithdrawalParams memory withdrawal = MultiVaultLibrary.decodeNativeWithdrawalEventData(_event.eventData);
@@ -471,6 +480,15 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         );
 
         if (fee > 0) _transferToEverscaleNative(token, rewards_, fee);
+
+        emit Withdraw(
+            TokenType.Native,
+            payloadId,
+            token,
+            withdrawal.recipient,
+            withdrawal.amount,
+            fee
+        );
     }
 
     function saveWithdrawAlien(
@@ -484,6 +502,8 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         onlyEmergencyDisabled
     {
         EverscaleEvent memory _event = _processWithdrawEvent(payload, signatures);
+
+        bytes32 payloadId = keccak256(payload);
 
         // Decode event data
         AlienWithdrawalParams memory withdrawal = MultiVaultLibrary.decodeAlienWithdrawalEventData(_event.eventData);
@@ -507,6 +527,15 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         );
 
         if (fee > 0) _transferToEverscaleAlien(withdrawal.token, rewards_, fee);
+
+        emit Withdraw(
+            TokenType.Alien,
+            payloadId,
+            withdrawal.token,
+            withdrawal.recipient,
+            withdrawal.amount,
+            fee
+        );
     }
 
     function migrateAlienTokenToVault(
@@ -517,6 +546,9 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         override
         onlyGovernance
     {
+        require(tokens_[token].activation > 0);
+        require(!tokens_[token].isNative);
+
         require(IVault(vault).token() == token);
         require(IVault(token).governance() == governance);
 

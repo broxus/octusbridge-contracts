@@ -6,9 +6,7 @@ import "../IEverscale.sol";
 
 interface IMultiVault is IEverscale {
     enum Fee { Deposit, Withdraw }
-    enum DepositType { Store, Burn }
-
-    enum TokenType { EVM, Solana }
+    enum TokenType { Native, Alien }
 
     struct TokenMeta {
         string name;
@@ -158,5 +156,24 @@ interface IMultiVault is IEverscale {
         uint256 amount,
         int8 recipient_wid,
         uint256 recipient_addr
+    );
+
+    event Deposit(
+        TokenType _type,
+        address sender,
+        address token,
+        int8 recipient_wid,
+        uint256 recipient_addr,
+        uint256 amount,
+        uint256 fee
+    );
+
+    event Withdraw(
+        TokenType _type,
+        bytes32 payloadId,
+        address token,
+        address recipient,
+        uint256 amunt,
+        uint256 fee
     );
 }
