@@ -61,10 +61,6 @@ contract MultiVaultEVMEventNative is EthereumBaseEvent, IMultiVaultEVMEventNativ
             value: 1 ton,
             callback: MultiVaultEVMEventNative.receiveConfigurationDetails
         }();
-
-        status = Status.Pending;
-
-        loadRelays();
     }
 
     function receiveConfigurationDetails(
