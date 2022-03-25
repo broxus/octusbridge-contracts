@@ -58,7 +58,6 @@ contract ProxyTokenTransfer is
 
     function onEventConfirmed(
         IEthereumEvent.EthereumEventInitData eventData,
-        TvmCell meta,
         address gasBackAddress
     ) public override onlyEthereumConfiguration reserveMinBalance(MIN_CONTRACT_BALANCE) {
         require(!paused, ErrorCodes.PROXY_PAUSED);

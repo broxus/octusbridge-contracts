@@ -4,7 +4,9 @@ pragma AbiHeader expire;
 
 import './../interfaces/event-contracts/IEthereumEvent.sol';
 import "./../interfaces/event-configuration-contracts/IEthereumEventConfiguration.sol";
+
 import './../interfaces/IProxy.sol';
+import './../interfaces/IProxyV2.sol';
 
 import './../event-contracts/base/EthereumBaseEvent.sol';
 
@@ -18,7 +20,7 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 /// @title Basic Ethereum event configuration contract.
 /// @author https://github.com/broxus
-contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, TransferUtils, InternalOwner, CheckPubKey {
+contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IProxyV2, TransferUtils, InternalOwner, CheckPubKey {
     BasicConfiguration public static basicConfiguration;
     EthereumEventConfiguration public static networkConfiguration;
 
@@ -169,21 +171,64 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
         return {value: 0, flag: MsgFlag.REMAINING_GAS} EventType.Ethereum;
     }
 
-    /// @dev Receives execute callback from ethereum event and send it to the event proxy contract.
-    /// Ethereum event correctness is checked here, so event proxy contract becomes more simple
+    /// @dev Proxy V1 callback.
+    /// Receives "confirm" callback from the event contract and checks event contract correctness.
+    /// If it's correct, then sends the callback to the proxy with the same signature.
     /// @param eventInitData Ethereum event data
-    /// @param meta Arbitrary TvmCell, usually used to pass additional data, that was produced by the event contract
-    /// @param gasBackAddress Ad hoc param. Used in token transfers
+    /// @param gasBackAddress Gas back address
     function onEventConfirmed(
         IEthereumEvent.EthereumEventInitData eventInitData,
-        TvmCell meta,
         address gasBackAddress
-    ) override external reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    ) external override reserveMinBalance(MIN_CONTRACT_BALANCE) {
         require(
             eventInitData.configuration == address(this),
             ErrorCodes.SENDER_NOT_EVENT_CONTRACT
         );
 
+        address eventContract = _deriveEventAddress(eventInitData);
+
+        require(
+            eventContract == msg.sender,
+            ErrorCodes.SENDER_NOT_EVENT_CONTRACT
+        );
+
+        IProxy(networkConfiguration.proxy).onEventConfirmed{
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(eventInitData, gasBackAddress);
+
+    }
+
+    /// @dev Proxy V2 callback. Receives additional cell.
+    /// Receives "confirm" callback from the event contract and checks event contract correctness.
+    /// If it's correct, then sends the callback to the proxy with the same signature.
+    /// @param eventInitData Ethereum event data
+    /// @param _meta Arbitrary meta cell
+    /// @param gasBackAddress Gas back address
+    function onEventConfirmedExtended(
+        IEthereumEvent.EthereumEventInitData eventInitData,
+        TvmCell _meta,
+        address gasBackAddress
+    ) external override reserveMinBalance(MIN_CONTRACT_BALANCE) {
+        require(
+            eventInitData.configuration == address(this),
+            ErrorCodes.SENDER_NOT_EVENT_CONTRACT
+        );
+
+        address eventContract = _deriveEventAddress(eventInitData);
+
+        require(
+            eventContract == msg.sender,
+            ErrorCodes.SENDER_NOT_EVENT_CONTRACT
+        );
+
+        IProxyV2(networkConfiguration.proxy).onEventConfirmedExtended{
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(eventInitData, _meta, gasBackAddress);
+    }
+
+    function _deriveEventAddress(
+        IEthereumEvent.EthereumEventInitData eventInitData
+    ) internal view returns (address _event) {
         TvmCell stateInit = tvm.buildStateInit({
             contr: EthereumBaseEvent,
             varInit: {
@@ -193,15 +238,6 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, Tran
             code: basicConfiguration.eventCode
         });
 
-        address eventContract = address(tvm.hash(stateInit));
-
-        require(
-            eventContract == msg.sender,
-            ErrorCodes.SENDER_NOT_EVENT_CONTRACT
-        );
-
-        IProxy(networkConfiguration.proxy).onEventConfirmed{
-            flag: MsgFlag.ALL_NOT_RESERVED
-        }(eventInitData, meta, gasBackAddress);
+        _event = address(tvm.hash(stateInit));
     }
 }

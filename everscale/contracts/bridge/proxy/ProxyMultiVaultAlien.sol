@@ -4,7 +4,7 @@ pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 
-import "./../interfaces/IProxy.sol";
+import "./../interfaces/IProxyV2.sol";
 import "./../interfaces/multivault/IProxyMultiVaultAlien.sol";
 import "./../interfaces/event-configuration-contracts/IEverscaleEventConfiguration.sol";
 
@@ -27,7 +27,7 @@ contract ProxyMultiVaultAlienTestUpgrade is
     CheckPubKey,
     RandomNonce,
     IAcceptTokensBurnCallback,
-    IProxy,
+    IProxyV2,
     IProxyMultiVaultAlien
 {
     Configuration config;
@@ -87,7 +87,7 @@ contract ProxyMultiVaultAlienTestUpgrade is
     /// @notice Handles alien token transfer from EVM. Token address is derived automatically and MUST
     /// be deployed before. See note on `deployAlienToken`
     /// @param remainingGasTo Gas back address
-    function onEventConfirmed(
+    function onEventConfirmedExtended(
         IEthereumEvent.EthereumEventInitData,
         TvmCell meta,
         address remainingGasTo
@@ -188,7 +188,7 @@ contract ProxyMultiVaultAlienTestUpgrade is
         TvmCell message
     ) external override onlyOwner reserveMinBalance(MIN_CONTRACT_BALANCE) {
         TvmBuilder payload;
-        payload.store(msg.data);
+        payload.store(message);
 
         recipient.transfer({
             value: 0,
@@ -220,7 +220,7 @@ contract ProxyMultiVaultAlienTestUpgrade is
         string name,
         string symbol,
         uint8 decimals
-    ) internal returns (TvmCell) {
+    ) internal view returns (TvmCell) {
         return tvm.buildStateInit({
             contr: TokenRootAlienEVM,
             varInit: {

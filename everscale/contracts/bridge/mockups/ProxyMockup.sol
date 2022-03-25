@@ -35,7 +35,6 @@ contract ProxyMockup is IProxy, RandomNonce {
     */
     function onEventConfirmed(
         IEthereumEvent.EthereumEventInitData _eventData,
-        TvmCell,
         address gasBackAddress
     ) override public {
         require(msg.sender == configuration);

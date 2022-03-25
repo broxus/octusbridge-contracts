@@ -45,11 +45,9 @@ contract TokenTransferEthereumEvent is EthereumBaseEvent, ProxyTokenTransferCell
     function onConfirm() override internal {
         notifyEventStatusChanged();
 
-        TvmCell meta;
-
         IProxy(eventInitData.configuration).onEventConfirmed{
             flag: MsgFlag.ALL_NOT_RESERVED
-        }(eventInitData, meta, initializer);
+        }(eventInitData, initializer);
     }
 
     function onReject() override internal {

@@ -28,11 +28,9 @@ contract StakingEthEvent is EthereumBaseEvent, StakingCellEncoder {
     }
 
     function onConfirm() override internal {
-        TvmCell meta;
-
         IProxy(eventInitData.configuration).onEventConfirmed{
             flag: MsgFlag.ALL_NOT_RESERVED
-        }(eventInitData, meta, initializer);
+        }(eventInitData, initializer);
     }
 
     function onReject() override internal {
