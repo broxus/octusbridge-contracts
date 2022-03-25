@@ -41,6 +41,13 @@ const hardhatConfig = {
     outputDir: './../docs/evm-specification',
     include: ['Bridge', 'Vault', 'DAO', 'Registry', 'StakingRelayVerifier'],
   },
+  abiExporter: {
+    path: 'abi',
+    clear: true,
+    // flat: true,
+    spacing: 2,
+    runOnCompile: true,
+  },
   solidity: {
     version: '0.8.2',
     settings: {
@@ -393,12 +400,6 @@ const hardhatConfig = {
       ...multisig
     }
   },
-  abiExporter: {
-    path: 'abi',
-    clear: true,
-    flat: true,
-    spacing: 2
-  }
 };
 
 module.exports = hardhatConfig;

@@ -34,9 +34,9 @@
       },
       {
         "indexed": false,
-        "internalType": "uint256",
+        "internalType": "uint128",
         "name": "amount",
-        "type": "uint256"
+        "type": "uint128"
       },
       {
         "indexed": false,
@@ -159,9 +159,9 @@
       },
       {
         "indexed": false,
-        "internalType": "uint256",
+        "internalType": "uint128",
         "name": "amount",
-        "type": "uint256"
+        "type": "uint128"
       },
       {
         "indexed": false,
@@ -307,6 +307,12 @@
   {
     "anonymous": false,
     "inputs": [
+      {
+        "indexed": false,
+        "internalType": "enum IMultiVault.TokenType",
+        "name": "_type",
+        "type": "uint8"
+      },
       {
         "indexed": false,
         "internalType": "int128",
@@ -549,7 +555,32 @@
   },
   {
     "inputs": [],
-    "name": "configuration",
+    "name": "configurationAlien",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "int8",
+            "name": "wid",
+            "type": "int8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "addr",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IEverscale.EverscaleAddress",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "configurationNative",
     "outputs": [
       {
         "components": [
@@ -850,7 +881,32 @@
         "type": "tuple"
       }
     ],
-    "name": "setConfiguration",
+    "name": "setConfigurationAlien",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "int8",
+            "name": "wid",
+            "type": "int8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "addr",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IEverscale.EverscaleAddress",
+        "name": "_configuration",
+        "type": "tuple"
+      }
+    ],
+    "name": "setConfigurationNative",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
