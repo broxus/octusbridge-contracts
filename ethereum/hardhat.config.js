@@ -390,10 +390,7 @@ const hardhatConfig = {
     },
     withdrawGuardian: {
       default: 23,
-      main: multisig.main,
-      polygon: multisig.polygon,
-      bsc: multisig.bsc,
-      fantom: multisig.fantom,
+      ...multisig
     }
   },
   abiExporter: {

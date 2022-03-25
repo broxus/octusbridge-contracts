@@ -24,13 +24,13 @@ function banksy(address) external view returns (bool)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | address | undefined
+| _0 | address | undefined |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | bool | undefined
+| _0 | bool | undefined |
 
 ### bridge
 
@@ -47,7 +47,7 @@ function bridge() external view returns (address)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | address | undefined
+| _0 | address | undefined |
 
 ### endorseVault
 
@@ -63,8 +63,8 @@ function endorseVault(address vault, uint256 vaultReleaseDelta) external nonpaya
 
 | Name | Type | Description |
 |---|---|---|
-| vault | address | undefined
-| vaultReleaseDelta | uint256 | undefined
+| vault | address | undefined |
+| vaultReleaseDelta | uint256 | undefined |
 
 ### isRegistered
 
@@ -80,13 +80,13 @@ function isRegistered(address) external view returns (bool)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | address | undefined
+| _0 | address | undefined |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | bool | undefined
+| _0 | bool | undefined |
 
 ### latestVault
 
@@ -102,13 +102,13 @@ function latestVault(address token) external view returns (address)
 
 | Name | Type | Description |
 |---|---|---|
-| token | address | undefined
+| token | address | undefined |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | address | undefined
+| _0 | address | undefined |
 
 ### latestVaultRelease
 
@@ -125,7 +125,7 @@ function latestVaultRelease() external view returns (string api_version)
 
 | Name | Type | Description |
 |---|---|---|
-| api_version | string | undefined
+| api_version | string | undefined |
 
 ### newExperimentalVault
 
@@ -141,16 +141,16 @@ function newExperimentalVault(address token, address governance, uint256 targetD
 
 | Name | Type | Description |
 |---|---|---|
-| token | address | undefined
-| governance | address | undefined
-| targetDecimals | uint256 | undefined
-| vaultReleaseDelta | uint256 | undefined
+| token | address | undefined |
+| governance | address | undefined |
+| targetDecimals | uint256 | undefined |
+| vaultReleaseDelta | uint256 | undefined |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | address | undefined
+| _0 | address | undefined |
 
 ### newVault
 
@@ -166,15 +166,15 @@ function newVault(address token, uint256 targetDecimals, uint256 vaultReleaseDel
 
 | Name | Type | Description |
 |---|---|---|
-| token | address | undefined
-| targetDecimals | uint256 | undefined
-| vaultReleaseDelta | uint256 | undefined
+| token | address | undefined |
+| targetDecimals | uint256 | undefined |
+| vaultReleaseDelta | uint256 | undefined |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | address | undefined
+| _0 | address | undefined |
 
 ### newVaultRelease
 
@@ -190,7 +190,7 @@ function newVaultRelease(address vault) external nonpayable
 
 | Name | Type | Description |
 |---|---|---|
-| vault | address | undefined
+| vault | address | undefined |
 
 ### numTokens
 
@@ -207,7 +207,7 @@ function numTokens() external view returns (uint256)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined
+| _0 | uint256 | undefined |
 
 ### numVaultReleases
 
@@ -224,7 +224,7 @@ function numVaultReleases() external view returns (uint256)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined
+| _0 | uint256 | undefined |
 
 ### numVaults
 
@@ -240,13 +240,13 @@ function numVaults(address) external view returns (uint256)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | address | undefined
+| _0 | address | undefined |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined
+| _0 | uint256 | undefined |
 
 ### owner
 
@@ -263,7 +263,7 @@ function owner() external view returns (address)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | address | undefined
+| _0 | address | undefined |
 
 ### proxyAdmin
 
@@ -280,7 +280,7 @@ function proxyAdmin() external view returns (address)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | address | undefined
+| _0 | address | undefined |
 
 ### renounceOwnership
 
@@ -308,8 +308,8 @@ function rewards() external view returns (int8 wid, uint256 addr)
 
 | Name | Type | Description |
 |---|---|---|
-| wid | int8 | undefined
-| addr | uint256 | undefined
+| wid | int8 | undefined |
+| addr | uint256 | undefined |
 
 ### setBanksy
 
@@ -325,8 +325,8 @@ function setBanksy(address tagger, bool allowed) external nonpayable
 
 | Name | Type | Description |
 |---|---|---|
-| tagger | address | undefined
-| allowed | bool | undefined
+| tagger | address | undefined |
+| allowed | bool | undefined |
 
 ### setBridge
 
@@ -342,7 +342,7 @@ function setBridge(address _bridge) external nonpayable
 
 | Name | Type | Description |
 |---|---|---|
-| _bridge | address | undefined
+| _bridge | address | undefined |
 
 ### setProxyAdmin
 
@@ -358,7 +358,7 @@ function setProxyAdmin(address _proxyAdmin) external nonpayable
 
 | Name | Type | Description |
 |---|---|---|
-| _proxyAdmin | address | undefined
+| _proxyAdmin | address | undefined |
 
 ### setRewards
 
@@ -374,7 +374,7 @@ function setRewards(IEverscale.EverscaleAddress _rewards) external nonpayable
 
 | Name | Type | Description |
 |---|---|---|
-| _rewards | IEverscale.EverscaleAddress | undefined
+| _rewards | IEverscale.EverscaleAddress | undefined |
 
 ### tagVault
 
@@ -390,8 +390,8 @@ function tagVault(address vault, string tag) external nonpayable
 
 | Name | Type | Description |
 |---|---|---|
-| vault | address | undefined
-| tag | string | undefined
+| vault | address | undefined |
+| tag | string | undefined |
 
 ### tags
 
@@ -407,13 +407,13 @@ function tags(address) external view returns (string)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | address | undefined
+| _0 | address | undefined |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | string | undefined
+| _0 | string | undefined |
 
 ### transferOwnership
 
@@ -429,7 +429,7 @@ function transferOwnership(address newOwner) external nonpayable
 
 | Name | Type | Description |
 |---|---|---|
-| newOwner | address | undefined
+| newOwner | address | undefined |
 
 ### vaultReleases
 
@@ -445,13 +445,13 @@ function vaultReleases(uint256) external view returns (address)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined
+| _0 | uint256 | undefined |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | address | undefined
+| _0 | address | undefined |
 
 
 

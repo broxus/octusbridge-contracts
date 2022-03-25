@@ -9,7 +9,16 @@ module.exports = async ({getNamedAccounts, deployments}) => {
             from: owner,
             log: true,
         },
-        'setConfiguration',
+        'setConfigurationAlien',
+        utils.defaultConfiguration
+    );
+
+    await deployments.execute('MultiVault',
+        {
+            from: owner,
+            log: true,
+        },
+        'setConfigurationNative',
         utils.defaultConfiguration
     );
 

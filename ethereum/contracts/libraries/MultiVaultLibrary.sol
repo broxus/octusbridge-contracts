@@ -72,7 +72,7 @@ library MultiVaultLibrary {
             hex'ff',
             address(this),
             keccak256(abi.encodePacked(native_wid, native_addr)),
-            hex'5ae84bdc4f10bd94dda6e6c258ff4133478a78c800ece6c093389bffe687e46f' // MultiVaultToken init code hash
+            hex'f906ad1ce83ab732d793f0a6616e037f193f2bb624880b305bf4af30b8ab228e' // MultiVaultToken init code hash
         )))));
     }
 }

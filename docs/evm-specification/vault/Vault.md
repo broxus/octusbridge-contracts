@@ -35,11 +35,11 @@ Add a Strategy to the Vault This may only be called by `governance`
 
 | Name | Type | Description |
 |---|---|---|
-| strategyId | address | The address of the Strategy to add.
-| _debtRatio | uint256 | The share of the total assets in the `vault that the `strategy` has access to.
-| minDebtPerHarvest | uint256 | Lower limit on the increase of debt since last harvest.
-| maxDebtPerHarvest | uint256 | Upper limit on the increase of debt since last harvest.
-| _performanceFee | uint256 | The fee the strategist will receive based on this Vault&#39;s performance.
+| strategyId | address | The address of the Strategy to add. |
+| _debtRatio | uint256 | The share of the total assets in the `vault that the `strategy` has access to. |
+| minDebtPerHarvest | uint256 | Lower limit on the increase of debt since last harvest. |
+| maxDebtPerHarvest | uint256 | Upper limit on the increase of debt since last harvest. |
+| _performanceFee | uint256 | The fee the strategist will receive based on this Vault&#39;s performance. |
 
 ### apiVersion
 
@@ -56,7 +56,7 @@ Vault API version. Used to track the deployed version of this contract.
 
 | Name | Type | Description |
 |---|---|---|
-| api_version | string | Current API version
+| api_version | string | Current API version |
 
 ### availableDepositLimit
 
@@ -73,7 +73,7 @@ function availableDepositLimit() external view returns (uint256)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined
+| _0 | uint256 | undefined |
 
 ### bridge
 
@@ -90,7 +90,7 @@ function bridge() external view returns (address)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | address | undefined
+| _0 | address | undefined |
 
 ### cancelPendingWithdrawal
 
@@ -98,7 +98,7 @@ function bridge() external view returns (address)
 function cancelPendingWithdrawal(uint256 id, uint256 amount, IEverscale.EverscaleAddress recipient, uint256 bounty) external nonpayable
 ```
 
-Cancel pending withdrawal partially or completely. This may only be called by pending withdrawal recipient.
+
 
 
 
@@ -106,10 +106,10 @@ Cancel pending withdrawal partially or completely. This may only be called by pe
 
 | Name | Type | Description |
 |---|---|---|
-| id | uint256 | Pending withdrawal ID
-| amount | uint256 | Amount to cancel, should be less or equal than pending withdrawal amount
-| recipient | IEverscale.EverscaleAddress | Tokens recipient, in Everscale network
-| bounty | uint256 | New value for bounty
+| id | uint256 | undefined |
+| amount | uint256 | undefined |
+| recipient | IEverscale.EverscaleAddress | undefined |
+| bounty | uint256 | undefined |
 
 ### configuration
 
@@ -126,7 +126,7 @@ function configuration() external view returns (struct IEverscale.EverscaleAddre
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | IEverscale.EverscaleAddress | undefined
+| _0 | IEverscale.EverscaleAddress | undefined |
 
 ### convertFromTargetDecimals
 
@@ -142,13 +142,13 @@ function convertFromTargetDecimals(uint256 amount) external view returns (uint25
 
 | Name | Type | Description |
 |---|---|---|
-| amount | uint256 | undefined
+| amount | uint256 | undefined |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined
+| _0 | uint256 | undefined |
 
 ### convertToTargetDecimals
 
@@ -164,13 +164,30 @@ function convertToTargetDecimals(uint256 amount) external view returns (uint256)
 
 | Name | Type | Description |
 |---|---|---|
-| amount | uint256 | undefined
+| amount | uint256 | undefined |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined
+| _0 | uint256 | undefined |
+
+### creditAvailable
+
+```solidity
+function creditAvailable() external view returns (uint256)
+```
+
+
+
+
+
+
+#### Returns
+
+| Name | Type | Description |
+|---|---|---|
+| _0 | uint256 | undefined |
 
 ### creditAvailable
 
@@ -186,13 +203,35 @@ function creditAvailable(address strategyId) external view returns (uint256)
 
 | Name | Type | Description |
 |---|---|---|
-| strategyId | address | undefined
+| strategyId | address | undefined |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined
+| _0 | uint256 | undefined |
+
+### debtOutstanding
+
+```solidity
+function debtOutstanding(address strategyId) external view returns (uint256)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| strategyId | address | undefined |
+
+#### Returns
+
+| Name | Type | Description |
+|---|---|---|
+| _0 | uint256 | undefined |
 
 ### debtOutstanding
 
@@ -209,7 +248,7 @@ function debtOutstanding() external view returns (uint256)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined
+| _0 | uint256 | undefined |
 
 ### debtRatio
 
@@ -226,7 +265,7 @@ function debtRatio() external view returns (uint256)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined
+| _0 | uint256 | undefined |
 
 ### decodeWithdrawalEventData
 
@@ -242,21 +281,21 @@ function decodeWithdrawalEventData(bytes eventData) external view returns (struc
 
 | Name | Type | Description |
 |---|---|---|
-| eventData | bytes | undefined
+| eventData | bytes | undefined |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | IVaultBasic.WithdrawalParams | undefined
+| _0 | IVaultBasic.WithdrawalParams | undefined |
 
 ### deposit
 
 ```solidity
-function deposit(IEverscale.EverscaleAddress recipient, uint256 amount, IVault.PendingWithdrawalId pendingWithdrawalId) external nonpayable
+function deposit(IEverscale.EverscaleAddress recipient, uint256[] amount, IVault.PendingWithdrawalId[] pendingWithdrawalId) external nonpayable
 ```
 
-Multicall for `deposit`. Fills multiple pending withdrawals at once.
+
 
 
 
@@ -264,9 +303,44 @@ Multicall for `deposit`. Fills multiple pending withdrawals at once.
 
 | Name | Type | Description |
 |---|---|---|
-| recipient | IEverscale.EverscaleAddress | Deposit recipient in the Everscale network.
-| amount | uint256 | List of amount
-| pendingWithdrawalId | IVault.PendingWithdrawalId | Pending withdrawal ID to fill.
+| recipient | IEverscale.EverscaleAddress | undefined |
+| amount | uint256[] | undefined |
+| pendingWithdrawalId | IVault.PendingWithdrawalId[] | undefined |
+
+### deposit
+
+```solidity
+function deposit(IEverscale.EverscaleAddress recipient, uint256 amount) external nonpayable
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| recipient | IEverscale.EverscaleAddress | undefined |
+| amount | uint256 | undefined |
+
+### deposit
+
+```solidity
+function deposit(IEverscale.EverscaleAddress recipient, uint256 amount, IVault.PendingWithdrawalId pendingWithdrawalId) external nonpayable
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| recipient | IEverscale.EverscaleAddress | undefined |
+| amount | uint256 | undefined |
+| pendingWithdrawalId | IVault.PendingWithdrawalId | undefined |
 
 ### depositFee
 
@@ -283,7 +357,7 @@ function depositFee() external view returns (uint256)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined
+| _0 | uint256 | undefined |
 
 ### depositLimit
 
@@ -300,7 +374,7 @@ function depositLimit() external view returns (uint256)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined
+| _0 | uint256 | undefined |
 
 ### depositToFactory
 
@@ -316,17 +390,17 @@ function depositToFactory(uint128 amount, int8 wid, uint256 user, uint256 credit
 
 | Name | Type | Description |
 |---|---|---|
-| amount | uint128 | undefined
-| wid | int8 | undefined
-| user | uint256 | undefined
-| creditor | uint256 | undefined
-| recipient | uint256 | undefined
-| tokenAmount | uint128 | undefined
-| tonAmount | uint128 | undefined
-| swapType | uint8 | undefined
-| slippageNumerator | uint128 | undefined
-| slippageDenominator | uint128 | undefined
-| level3 | bytes | undefined
+| amount | uint128 | undefined |
+| wid | int8 | undefined |
+| user | uint256 | undefined |
+| creditor | uint256 | undefined |
+| recipient | uint256 | undefined |
+| tokenAmount | uint128 | undefined |
+| tonAmount | uint128 | undefined |
+| swapType | uint8 | undefined |
+| slippageNumerator | uint128 | undefined |
+| slippageDenominator | uint128 | undefined |
+| level3 | bytes | undefined |
 
 ### emergencyShutdown
 
@@ -343,7 +417,7 @@ function emergencyShutdown() external view returns (bool)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | bool | undefined
+| _0 | bool | undefined |
 
 ### expectedReturn
 
@@ -359,21 +433,21 @@ function expectedReturn(address strategyId) external view returns (uint256)
 
 | Name | Type | Description |
 |---|---|---|
-| strategyId | address | undefined
+| strategyId | address | undefined |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined
+| _0 | uint256 | undefined |
 
 ### forceWithdraw
 
 ```solidity
-function forceWithdraw(IVault.PendingWithdrawalId[] pendingWithdrawalId) external nonpayable
+function forceWithdraw(IVault.PendingWithdrawalId pendingWithdrawalId) external nonpayable
 ```
 
-Multicall for `forceWithdraw`
+
 
 
 
@@ -381,7 +455,23 @@ Multicall for `forceWithdraw`
 
 | Name | Type | Description |
 |---|---|---|
-| pendingWithdrawalId | IVault.PendingWithdrawalId[] | List of pending withdrawal IDs
+| pendingWithdrawalId | IVault.PendingWithdrawalId | undefined |
+
+### forceWithdraw
+
+```solidity
+function forceWithdraw(IVault.PendingWithdrawalId[] pendingWithdrawalId) external nonpayable
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| pendingWithdrawalId | IVault.PendingWithdrawalId[] | undefined |
 
 ### governance
 
@@ -398,7 +488,7 @@ function governance() external view returns (address)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | address | undefined
+| _0 | address | undefined |
 
 ### guardian
 
@@ -415,7 +505,7 @@ function guardian() external view returns (address)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | address | undefined
+| _0 | address | undefined |
 
 ### initialize
 
@@ -431,11 +521,11 @@ function initialize(address _token, address _bridge, address _governance, uint25
 
 | Name | Type | Description |
 |---|---|---|
-| _token | address | undefined
-| _bridge | address | undefined
-| _governance | address | undefined
-| _targetDecimals | uint256 | undefined
-| _rewards | IEverscale.EverscaleAddress | undefined
+| _token | address | undefined |
+| _bridge | address | undefined |
+| _governance | address | undefined |
+| _targetDecimals | uint256 | undefined |
+| _rewards | IEverscale.EverscaleAddress | undefined |
 
 ### lastReport
 
@@ -452,7 +542,7 @@ function lastReport() external view returns (uint256)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined
+| _0 | uint256 | undefined |
 
 ### lockedProfit
 
@@ -469,7 +559,7 @@ function lockedProfit() external view returns (uint256)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined
+| _0 | uint256 | undefined |
 
 ### lockedProfitDegradation
 
@@ -486,7 +576,7 @@ function lockedProfitDegradation() external view returns (uint256)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined
+| _0 | uint256 | undefined |
 
 ### management
 
@@ -503,7 +593,7 @@ function management() external view returns (address)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | address | undefined
+| _0 | address | undefined |
 
 ### managementFee
 
@@ -520,7 +610,7 @@ function managementFee() external view returns (uint256)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined
+| _0 | uint256 | undefined |
 
 ### migrateStrategy
 
@@ -536,8 +626,8 @@ function migrateStrategy(address oldVersion, address newVersion) external nonpay
 
 | Name | Type | Description |
 |---|---|---|
-| oldVersion | address | undefined
-| newVersion | address | undefined
+| oldVersion | address | undefined |
+| newVersion | address | undefined |
 
 ### pendingWithdrawals
 
@@ -553,14 +643,14 @@ function pendingWithdrawals(address user, uint256 id) external view returns (str
 
 | Name | Type | Description |
 |---|---|---|
-| user | address | undefined
-| id | uint256 | undefined
+| user | address | undefined |
+| id | uint256 | undefined |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | IVault.PendingWithdrawalParams | undefined
+| _0 | IVault.PendingWithdrawalParams | undefined |
 
 ### pendingWithdrawalsPerUser
 
@@ -576,13 +666,13 @@ function pendingWithdrawalsPerUser(address) external view returns (uint256)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | address | undefined
+| _0 | address | undefined |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined
+| _0 | uint256 | undefined |
 
 ### pendingWithdrawalsTotal
 
@@ -599,7 +689,7 @@ function pendingWithdrawalsTotal() external view returns (uint256)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined
+| _0 | uint256 | undefined |
 
 ### performanceFee
 
@@ -616,7 +706,7 @@ function performanceFee() external view returns (uint256)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined
+| _0 | uint256 | undefined |
 
 ### report
 
@@ -632,15 +722,26 @@ Reports the amount of assets the calling Strategy has free (usually in terms of 
 
 | Name | Type | Description |
 |---|---|---|
-| gain | uint256 | Amount Strategy has realized as a gain on it&#39;s investment since its last report, and is free to be given back to Vault as earnings
-| loss | uint256 | Amount Strategy has realized as a loss on it&#39;s investment since its last report, and should be accounted for on the Vault&#39;s balance sheet. The loss will reduce the debtRatio. The next time the strategy will harvest, it will pay back the debt in an attempt to adjust to the new debt limit.
-| _debtPayment | uint256 | Amount Strategy has made available to cover outstanding debt
+| gain | uint256 | Amount Strategy has realized as a gain on it&#39;s investment since its last report, and is free to be given back to Vault as earnings |
+| loss | uint256 | Amount Strategy has realized as a loss on it&#39;s investment since its last report, and should be accounted for on the Vault&#39;s balance sheet. The loss will reduce the debtRatio. The next time the strategy will harvest, it will pay back the debt in an attempt to adjust to the new debt limit. |
+| _debtPayment | uint256 | Amount Strategy has made available to cover outstanding debt |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | Amount of debt outstanding (if totalDebt &gt; debtLimit or emergency shutdown).
+| _0 | uint256 | Amount of debt outstanding (if totalDebt &gt; debtLimit or emergency shutdown). |
+
+### revokeStrategy
+
+```solidity
+function revokeStrategy() external nonpayable
+```
+
+
+
+
+
 
 ### revokeStrategy
 
@@ -656,7 +757,7 @@ function revokeStrategy(address strategyId) external nonpayable
 
 | Name | Type | Description |
 |---|---|---|
-| strategyId | address | undefined
+| strategyId | address | undefined |
 
 ### rewards
 
@@ -673,12 +774,12 @@ function rewards() external view returns (struct IEverscale.EverscaleAddress)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | IEverscale.EverscaleAddress | undefined
+| _0 | IEverscale.EverscaleAddress | undefined |
 
 ### saveWithdraw
 
 ```solidity
-function saveWithdraw(bytes payload, bytes[] signatures) external nonpayable returns (bool instantWithdrawal, struct IVault.PendingWithdrawalId pendingWithdrawalId)
+function saveWithdraw(bytes payload, bytes[] signatures, uint256 bounty) external nonpayable
 ```
 
 Save withdrawal receipt, same as `saveWithdraw(bytes payload, bytes[] signatures)`, but allows to immediately set up bounty.
@@ -689,23 +790,17 @@ Save withdrawal receipt, same as `saveWithdraw(bytes payload, bytes[] signatures
 
 | Name | Type | Description |
 |---|---|---|
-| payload | bytes | Withdrawal receipt. Bytes encoded `struct EverscaleEvent`.
-| signatures | bytes[] | List of relay&#39;s signatures. See not on `Bridge.verifySignedEverscaleEvent`.
+| payload | bytes | Withdrawal receipt. Bytes encoded `struct EverscaleEvent`. |
+| signatures | bytes[] | List of relay&#39;s signatures. See not on `Bridge.verifySignedEverscaleEvent`. |
+| bounty | uint256 | New value for pending withdrawal bounty. |
 
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| instantWithdrawal | bool | Boolean, was withdrawal instantly filled or saved as a pending withdrawal.
-| pendingWithdrawalId | IVault.PendingWithdrawalId | Pending withdrawal ID. `(address(0), 0)` if no pending withdrawal was created.
-
-### setConfiguration
+### saveWithdraw
 
 ```solidity
-function setConfiguration(IEverscale.EverscaleAddress _configuration) external nonpayable
+function saveWithdraw(bytes payload, bytes[] signatures) external nonpayable returns (bool instantWithdrawal, struct IVault.PendingWithdrawalId pendingWithdrawalId)
 ```
 
-Set configuration_ address.
+Save withdrawal receipt. If Vault has enough tokens and withdrawal passes the limits, then it&#39;s executed immediately. Otherwise it&#39;s saved as a pending withdrawal.
 
 
 
@@ -713,7 +808,31 @@ Set configuration_ address.
 
 | Name | Type | Description |
 |---|---|---|
-| _configuration | IEverscale.EverscaleAddress | The address to use for configuration_.
+| payload | bytes | Withdrawal receipt. Bytes encoded `struct EverscaleEvent`. |
+| signatures | bytes[] | List of relay&#39;s signatures. See not on `Bridge.verifySignedEverscaleEvent`. |
+
+#### Returns
+
+| Name | Type | Description |
+|---|---|---|
+| instantWithdrawal | bool | Boolean, was withdrawal instantly filled or saved as a pending withdrawal. |
+| pendingWithdrawalId | IVault.PendingWithdrawalId | Pending withdrawal ID. `(address(0), 0)` if no pending withdrawal was created. |
+
+### setConfiguration
+
+```solidity
+function setConfiguration(IEverscale.EverscaleAddress _configuration) external nonpayable
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| _configuration | IEverscale.EverscaleAddress | undefined |
 
 ### setDepositFee
 
@@ -729,7 +848,7 @@ Set deposit fee. Must be less than `MAX_BPS`. This may be called only by `govern
 
 | Name | Type | Description |
 |---|---|---|
-| _depositFee | uint256 | Deposit fee, must be less than `MAX_BPS / 2`.
+| _depositFee | uint256 | Deposit fee, must be less than `MAX_BPS / 2`. |
 
 ### setDepositLimit
 
@@ -745,7 +864,7 @@ Changes the maximum amount of `token` that can be deposited in this Vault Note, 
 
 | Name | Type | Description |
 |---|---|---|
-| limit | uint256 | The new deposit limit to use.
+| limit | uint256 | The new deposit limit to use. |
 
 ### setEmergencyShutdown
 
@@ -761,7 +880,7 @@ Activates or deactivates Vault emergency mode, where all Strategies go into full
 
 | Name | Type | Description |
 |---|---|---|
-| active | bool | If `true`, the Vault goes into Emergency Shutdown. If `false`, the Vault goes back into     Normal Operation.
+| active | bool | If `true`, the Vault goes into Emergency Shutdown. If `false`, the Vault goes back into     Normal Operation. |
 
 ### setGovernance
 
@@ -777,7 +896,7 @@ Nominate new address to use as a governance. The change does not go into effect 
 
 | Name | Type | Description |
 |---|---|---|
-| _governance | address | The address requested to take over Vault governance.
+| _governance | address | The address requested to take over Vault governance. |
 
 ### setGuardian
 
@@ -793,7 +912,7 @@ Changes the address of `guardian`. This may only be called by `governance` or `g
 
 | Name | Type | Description |
 |---|---|---|
-| _guardian | address | The new guardian address to use.
+| _guardian | address | The new guardian address to use. |
 
 ### setLockedProfitDegradation
 
@@ -809,7 +928,7 @@ Changes the locked profit degradation
 
 | Name | Type | Description |
 |---|---|---|
-| degradation | uint256 | The rate of degradation in percent per second scaled to 1e18
+| degradation | uint256 | The rate of degradation in percent per second scaled to 1e18 |
 
 ### setManagement
 
@@ -825,7 +944,7 @@ Changes the management address. This may only be called by `governance`
 
 | Name | Type | Description |
 |---|---|---|
-| _management | address | The address to use for management.
+| _management | address | The address to use for management. |
 
 ### setManagementFee
 
@@ -841,15 +960,15 @@ Changes the value of `managementFee`. This may only be called by `governance`.
 
 | Name | Type | Description |
 |---|---|---|
-| fee | uint256 | The new management fee to use.
+| fee | uint256 | The new management fee to use. |
 
 ### setPendingWithdrawalApprove
 
 ```solidity
-function setPendingWithdrawalApprove(IVault.PendingWithdrawalId pendingWithdrawalId, enum IVault.ApproveStatus approveStatus) external nonpayable
+function setPendingWithdrawalApprove(IVault.PendingWithdrawalId[] pendingWithdrawalId, enum IVault.ApproveStatus[] approveStatus) external nonpayable
 ```
 
-Multicall for `setPendingWithdrawalApprove`.
+
 
 
 
@@ -857,8 +976,25 @@ Multicall for `setPendingWithdrawalApprove`.
 
 | Name | Type | Description |
 |---|---|---|
-| pendingWithdrawalId | IVault.PendingWithdrawalId | List of pending withdrawals IDs.
-| approveStatus | enum IVault.ApproveStatus | List of approve statuses.
+| pendingWithdrawalId | IVault.PendingWithdrawalId[] | undefined |
+| approveStatus | enum IVault.ApproveStatus[] | undefined |
+
+### setPendingWithdrawalApprove
+
+```solidity
+function setPendingWithdrawalApprove(IVault.PendingWithdrawalId pendingWithdrawalId, enum IVault.ApproveStatus approveStatus) external nonpayable
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| pendingWithdrawalId | IVault.PendingWithdrawalId | undefined |
+| approveStatus | enum IVault.ApproveStatus | undefined |
 
 ### setPendingWithdrawalBounty
 
@@ -874,8 +1010,8 @@ Changes pending withdrawal bounty for specific pending withdrawal
 
 | Name | Type | Description |
 |---|---|---|
-| id | uint256 | Pending withdrawal ID.
-| bounty | uint256 | The new value for pending withdrawal bounty.
+| id | uint256 | Pending withdrawal ID. |
+| bounty | uint256 | The new value for pending withdrawal bounty. |
 
 ### setPerformanceFee
 
@@ -891,7 +1027,7 @@ Changes the value of `performanceFee`. Should set this value below the maximum s
 
 | Name | Type | Description |
 |---|---|---|
-| fee | uint256 | The new performance fee to use.
+| fee | uint256 | The new performance fee to use. |
 
 ### setRewards
 
@@ -899,7 +1035,7 @@ Changes the value of `performanceFee`. Should set this value below the maximum s
 function setRewards(IEverscale.EverscaleAddress _rewards) external nonpayable
 ```
 
-Set address to receive rewards_ (fees, gains, etc) This may be called only by `governance`
+
 
 
 
@@ -907,7 +1043,7 @@ Set address to receive rewards_ (fees, gains, etc) This may be called only by `g
 
 | Name | Type | Description |
 |---|---|---|
-| _rewards | IEverscale.EverscaleAddress | Rewards receiver in Everscale network
+| _rewards | IEverscale.EverscaleAddress | undefined |
 
 ### setStrategyRewards
 
@@ -915,7 +1051,7 @@ Set address to receive rewards_ (fees, gains, etc) This may be called only by `g
 function setStrategyRewards(address strategyId, IEverscale.EverscaleAddress _rewards) external nonpayable
 ```
 
-Set strategy rewards_ recipient address. This may only be called by the `governance` or strategy rewards_ manager.
+
 
 
 
@@ -923,8 +1059,8 @@ Set strategy rewards_ recipient address. This may only be called by the `governa
 
 | Name | Type | Description |
 |---|---|---|
-| strategyId | address | Strategy address.
-| _rewards | IEverscale.EverscaleAddress | Rewards recipient.
+| strategyId | address | undefined |
+| _rewards | IEverscale.EverscaleAddress | undefined |
 
 ### setUndeclaredWithdrawLimit
 
@@ -940,7 +1076,7 @@ Changes the value of `undeclaredWithdrawLimit` This may only be called by `gover
 
 | Name | Type | Description |
 |---|---|---|
-| _undeclaredWithdrawLimit | uint256 | The new undeclared withdraw limit to use.
+| _undeclaredWithdrawLimit | uint256 | The new undeclared withdraw limit to use. |
 
 ### setWithdrawFee
 
@@ -956,7 +1092,7 @@ Set withdraw fee. Must be less than `MAX_BPS`. This may be called only by `gover
 
 | Name | Type | Description |
 |---|---|---|
-| _withdrawFee | uint256 | Withdraw fee, must be less than `MAX_BPS / 2`.
+| _withdrawFee | uint256 | Withdraw fee, must be less than `MAX_BPS / 2`. |
 
 ### setWithdrawGuardian
 
@@ -972,7 +1108,7 @@ Changes the address of `withdrawGuardian`. This may only be called by `governanc
 
 | Name | Type | Description |
 |---|---|---|
-| _withdrawGuardian | address | The new withdraw guardian address to use.
+| _withdrawGuardian | address | The new withdraw guardian address to use. |
 
 ### setWithdrawLimitPerPeriod
 
@@ -988,7 +1124,7 @@ Changes the value of `withdrawLimitPerPeriod` This may only be called by `govern
 
 | Name | Type | Description |
 |---|---|---|
-| _withdrawLimitPerPeriod | uint256 | The new withdraw limit per period to use.
+| _withdrawLimitPerPeriod | uint256 | The new withdraw limit per period to use. |
 
 ### setWithdrawalQueue
 
@@ -1004,7 +1140,7 @@ Changes `withdrawalQueue` This may only be called by `governance`
 
 | Name | Type | Description |
 |---|---|---|
-| queue | address[20] | undefined
+| queue | address[20] | undefined |
 
 ### skim
 
@@ -1020,7 +1156,7 @@ Skim strategy gain to the `rewards_` address. This may only be called by `govern
 
 | Name | Type | Description |
 |---|---|---|
-| strategyId | address | Strategy address to skim.
+| strategyId | address | Strategy address to skim. |
 
 ### strategies
 
@@ -1036,13 +1172,13 @@ function strategies(address strategyId) external view returns (struct IVault.Str
 
 | Name | Type | Description |
 |---|---|---|
-| strategyId | address | undefined
+| strategyId | address | undefined |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | IVault.StrategyParams | undefined
+| _0 | IVault.StrategyParams | undefined |
 
 ### sweep
 
@@ -1058,7 +1194,7 @@ Removes tokens from this Vault that are not the type of token managed by this Va
 
 | Name | Type | Description |
 |---|---|---|
-| _token | address | The token to transfer out of this vault.
+| _token | address | The token to transfer out of this vault. |
 
 ### targetDecimals
 
@@ -1075,7 +1211,7 @@ function targetDecimals() external view returns (uint256)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined
+| _0 | uint256 | undefined |
 
 ### token
 
@@ -1092,7 +1228,7 @@ function token() external view returns (address)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | address | undefined
+| _0 | address | undefined |
 
 ### tokenDecimals
 
@@ -1109,7 +1245,7 @@ function tokenDecimals() external view returns (uint256)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined
+| _0 | uint256 | undefined |
 
 ### totalAssets
 
@@ -1126,7 +1262,7 @@ Returns the total quantity of all assets under control of this Vault, whether th
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | The total assets under control of this Vault.
+| _0 | uint256 | The total assets under control of this Vault. |
 
 ### totalDebt
 
@@ -1143,7 +1279,7 @@ function totalDebt() external view returns (uint256)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined
+| _0 | uint256 | undefined |
 
 ### undeclaredWithdrawLimit
 
@@ -1160,7 +1296,7 @@ function undeclaredWithdrawLimit() external view returns (uint256)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined
+| _0 | uint256 | undefined |
 
 ### updateStrategyDebtRatio
 
@@ -1176,8 +1312,8 @@ Change the quantity of assets `strategy` may manage. This may be called by `gove
 
 | Name | Type | Description |
 |---|---|---|
-| strategyId | address | The Strategy to update.
-| _debtRatio | uint256 | The quantity of assets `strategy` may now manage.
+| strategyId | address | The Strategy to update. |
+| _debtRatio | uint256 | The quantity of assets `strategy` may now manage. |
 
 ### updateStrategyMaxDebtPerHarvest
 
@@ -1193,8 +1329,8 @@ function updateStrategyMaxDebtPerHarvest(address strategyId, uint256 maxDebtPerH
 
 | Name | Type | Description |
 |---|---|---|
-| strategyId | address | undefined
-| maxDebtPerHarvest | uint256 | undefined
+| strategyId | address | undefined |
+| maxDebtPerHarvest | uint256 | undefined |
 
 ### updateStrategyMinDebtPerHarvest
 
@@ -1210,8 +1346,8 @@ function updateStrategyMinDebtPerHarvest(address strategyId, uint256 minDebtPerH
 
 | Name | Type | Description |
 |---|---|---|
-| strategyId | address | undefined
-| minDebtPerHarvest | uint256 | undefined
+| strategyId | address | undefined |
+| minDebtPerHarvest | uint256 | undefined |
 
 ### updateStrategyPerformanceFee
 
@@ -1227,8 +1363,8 @@ function updateStrategyPerformanceFee(address strategyId, uint256 _performanceFe
 
 | Name | Type | Description |
 |---|---|---|
-| strategyId | address | undefined
-| _performanceFee | uint256 | undefined
+| strategyId | address | undefined |
+| _performanceFee | uint256 | undefined |
 
 ### withdraw
 
@@ -1244,17 +1380,17 @@ Withdraws the calling account&#39;s pending withdrawal from this Vault.
 
 | Name | Type | Description |
 |---|---|---|
-| id | uint256 | Pending withdrawal ID.
-| amountRequested | uint256 | Amount of tokens to be withdrawn.
-| recipient | address | The address to send the redeemed tokens.
-| maxLoss | uint256 | The maximum acceptable loss to sustain on withdrawal. If a loss is specified, up to that amount of tokens may be burnt to cover losses on withdrawal.
-| bounty | uint256 | New value for bounty.
+| id | uint256 | Pending withdrawal ID. |
+| amountRequested | uint256 | Amount of tokens to be withdrawn. |
+| recipient | address | The address to send the redeemed tokens. |
+| maxLoss | uint256 | The maximum acceptable loss to sustain on withdrawal. If a loss is specified, up to that amount of tokens may be burnt to cover losses on withdrawal. |
+| bounty | uint256 | New value for bounty. |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| amountAdjusted | uint256 | The quantity of tokens redeemed.
+| amountAdjusted | uint256 | The quantity of tokens redeemed. |
 
 ### withdrawFee
 
@@ -1271,7 +1407,7 @@ function withdrawFee() external view returns (uint256)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined
+| _0 | uint256 | undefined |
 
 ### withdrawGuardian
 
@@ -1288,7 +1424,7 @@ function withdrawGuardian() external view returns (address)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | address | undefined
+| _0 | address | undefined |
 
 ### withdrawLimitPerPeriod
 
@@ -1305,7 +1441,7 @@ function withdrawLimitPerPeriod() external view returns (uint256)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined
+| _0 | uint256 | undefined |
 
 ### withdrawalIds
 
@@ -1321,13 +1457,13 @@ function withdrawalIds(bytes32) external view returns (bool)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | bytes32 | undefined
+| _0 | bytes32 | undefined |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | bool | undefined
+| _0 | bool | undefined |
 
 ### withdrawalPeriods
 
@@ -1343,13 +1479,13 @@ function withdrawalPeriods(uint256 withdrawalPeriodId) external view returns (st
 
 | Name | Type | Description |
 |---|---|---|
-| withdrawalPeriodId | uint256 | undefined
+| withdrawalPeriodId | uint256 | undefined |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | IVault.WithdrawalPeriodParams | undefined
+| _0 | IVault.WithdrawalPeriodParams | undefined |
 
 ### withdrawalQueue
 
@@ -1366,7 +1502,7 @@ function withdrawalQueue() external view returns (address[20])
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | address[20] | undefined
+| _0 | address[20] | undefined |
 
 
 

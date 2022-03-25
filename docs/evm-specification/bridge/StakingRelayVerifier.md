@@ -24,8 +24,8 @@ function verify_relay_staker_address(int8 workchain_id, uint256 address_body) ex
 
 | Name | Type | Description |
 |---|---|---|
-| workchain_id | int8 | undefined
-| address_body | uint256 | undefined
+| workchain_id | int8 | undefined |
+| address_body | uint256 | undefined |
 
 
 
