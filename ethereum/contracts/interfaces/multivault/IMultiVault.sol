@@ -61,7 +61,10 @@ interface IMultiVault is IEverscale {
     function setDefaultWithdrawFee(uint _defaultWithdrawFee) external;
 
     function rewards() external view returns (EverscaleAddress memory);
-    function configuration() external view returns (EverscaleAddress memory);
+
+    function configurationAlien() external view returns (EverscaleAddress memory);
+    function configurationNative() external view returns (EverscaleAddress memory);
+
     function withdrawalIds(bytes32) external view returns (bool);
     function bridge() external view returns(address);
 
@@ -72,7 +75,9 @@ interface IMultiVault is IEverscale {
     function emergencyShutdown() external view returns (bool);
     function setEmergencyShutdown(bool active) external;
 
-    function setConfiguration(EverscaleAddress memory _configuration) external;
+    function setConfigurationAlien(EverscaleAddress memory _configuration) external;
+    function setConfigurationNative(EverscaleAddress memory _configuration) external;
+
     function setGovernance(address _governance) external;
     function acceptGovernance() external;
     function setGuardian(address _guardian) external;
@@ -107,7 +112,7 @@ interface IMultiVault is IEverscale {
     event UpdateDefaultWithdrawFee(uint fee);
 
     event UpdateBridge(address bridge);
-    event UpdateConfiguration(int128 wid, uint256 addr);
+    event UpdateConfiguration(TokenType _type, int128 wid, uint256 addr);
     event UpdateRewards(int128 wid, uint256 addr);
 
     event UpdateTokenDepositFee(address token, uint256 fee);

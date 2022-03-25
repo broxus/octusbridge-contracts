@@ -28,7 +28,7 @@ uint256 constant SYMBOL_LENGTH_LIMIT = 32;
 uint256 constant NAME_LENGTH_LIMIT = 32;
 
 
-string constant API_VERSION = '0.1.0';
+string constant API_VERSION = '0.1.1';
 
 
 /// @notice Vault, based on Octus Bridge. Allows to transfer arbitrary tokens from Everscale
@@ -54,12 +54,15 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
     address public override bridge;
     mapping(bytes32 => bool) public override withdrawalIds;
     EverscaleAddress rewards_;
-    EverscaleAddress configuration_;
+    EverscaleAddress configurationNative_;
 
     address public override governance;
     address pendingGovernance;
     address public override guardian;
     address public override management;
+
+    // STORAGE UPDATE 1
+    EverscaleAddress configurationAlien_;
 
     /// @notice Get token information
     /// @param _token Token address
@@ -87,14 +90,24 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         return rewards_;
     }
 
-    /// @notice Configuration address
-    /// @return Everscale address, used for verifying `saveWithdraw` payloads
-    function configuration()
+    /// @notice Native configuration address
+    /// @return Everscale address, used for verifying native withdrawals
+    function configurationNative()
         external
         view
         override
     returns (EverscaleAddress memory) {
-        return configuration_;
+        return configurationNative_;
+    }
+
+    /// @notice Alien configuration address
+    /// @return Everscale address, used for verifying alien withdrawals
+    function configurationAlien()
+        external
+        view
+        override
+    returns (EverscaleAddress memory) {
+        return configurationAlien_;
     }
 
     modifier tokenNotBlacklisted(address token) {
@@ -295,14 +308,32 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         emit UpdateTokenWithdrawFee(token, _withdrawFee);
     }
 
-    /// @notice Set configuration address.
-    /// @param _configuration The address to use for configuration.
-    function setConfiguration(
+    /// @notice Set alien configuration address.
+    /// @param _configuration The address to use for alien configuration.
+    function setConfigurationAlien(
         EverscaleAddress memory _configuration
     ) external override onlyGovernance {
-        configuration_ = _configuration;
+        configurationAlien_ = _configuration;
 
-        emit UpdateConfiguration(configuration_.wid, configuration_.addr);
+        emit UpdateConfiguration(
+            TokenType.Alien,
+            _configuration.wid,
+            _configuration.addr
+        );
+    }
+
+    /// @notice Set native configuration address.
+    /// @param _configuration The address to use for native configuration.
+    function setConfigurationNative(
+        EverscaleAddress memory _configuration
+    ) external override onlyGovernance {
+        configurationNative_ = _configuration;
+
+        emit UpdateConfiguration(
+            TokenType.Native,
+            _configuration.wid,
+            _configuration.addr
+        );
     }
 
     /// @notice Nominate new address to use as a governance.
@@ -450,7 +481,11 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         withdrawalNotSeenBefore(payload)
         onlyEmergencyDisabled
     {
-        EverscaleEvent memory _event = _processWithdrawEvent(payload, signatures);
+        EverscaleEvent memory _event = _processWithdrawEvent(
+            payload,
+            signatures,
+            configurationNative_
+        );
 
         bytes32 payloadId = keccak256(payload);
 
@@ -501,7 +536,11 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         withdrawalNotSeenBefore(payload)
         onlyEmergencyDisabled
     {
-        EverscaleEvent memory _event = _processWithdrawEvent(payload, signatures);
+        EverscaleEvent memory _event = _processWithdrawEvent(
+            payload,
+            signatures,
+            configurationAlien_
+        );
 
         bytes32 payloadId = keccak256(payload);
 
@@ -683,7 +722,8 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
 
     function _processWithdrawEvent(
         bytes memory payload,
-        bytes[] memory signatures
+        bytes[] memory signatures,
+        EverscaleAddress memory configuration
     ) internal returns (EverscaleEvent memory) {
         require(
             IBridge(bridge).verifySignedEverscaleEvent(payload, signatures) == 0,
@@ -694,8 +734,8 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         (EverscaleEvent memory _event) = abi.decode(payload, (EverscaleEvent));
 
         require(
-            _event.configurationWid == configuration_.wid &&
-            _event.configurationAddress == configuration_.addr
+            _event.configurationWid == configuration.wid &&
+            _event.configurationAddress == configuration.addr
         );
 
         return _event;
