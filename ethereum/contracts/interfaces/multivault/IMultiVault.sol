@@ -150,7 +150,7 @@ interface IMultiVault is IEverscale {
         string name,
         string symbol,
         uint8 decimals,
-        uint256 amount,
+        uint128 amount,
         int8 recipient_wid,
         uint256 recipient_addr
     );
@@ -158,7 +158,7 @@ interface IMultiVault is IEverscale {
     event NativeTransfer(
         int8 native_wid,
         uint256 native_addr,
-        uint256 amount,
+        uint128 amount,
         int8 recipient_wid,
         uint256 recipient_addr
     );

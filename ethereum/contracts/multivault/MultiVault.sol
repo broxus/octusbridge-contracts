@@ -653,7 +653,7 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         emit NativeTransfer(
             native.wid,
             native.addr,
-            amount,
+            uint128(amount),
             recipient.wid,
             recipient.addr
         );
@@ -670,7 +670,7 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
             IERC20Metadata(_token).name(),
             IERC20Metadata(_token).symbol(),
             IERC20Metadata(_token).decimals(),
-            amount,
+            uint128(amount),
             recipient.wid,
             recipient.addr
         );

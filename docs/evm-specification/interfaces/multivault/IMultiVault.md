@@ -578,7 +578,7 @@ function withdrawalIds(bytes32) external view returns (bool)
 ### AlienTransfer
 
 ```solidity
-event AlienTransfer(uint256 base_chainId, uint160 base_token, string name, string symbol, uint8 decimals, uint256 amount, int8 recipient_wid, uint256 recipient_addr)
+event AlienTransfer(uint256 base_chainId, uint160 base_token, string name, string symbol, uint8 decimals, uint128 amount, int8 recipient_wid, uint256 recipient_addr)
 ```
 
 
@@ -594,7 +594,7 @@ event AlienTransfer(uint256 base_chainId, uint160 base_token, string name, strin
 | name  | string | undefined |
 | symbol  | string | undefined |
 | decimals  | uint8 | undefined |
-| amount  | uint256 | undefined |
+| amount  | uint128 | undefined |
 | recipient_wid  | int8 | undefined |
 | recipient_addr  | uint256 | undefined |
 
@@ -671,7 +671,7 @@ event EmergencyShutdown(bool active)
 ### NativeTransfer
 
 ```solidity
-event NativeTransfer(int8 native_wid, uint256 native_addr, uint256 amount, int8 recipient_wid, uint256 recipient_addr)
+event NativeTransfer(int8 native_wid, uint256 native_addr, uint128 amount, int8 recipient_wid, uint256 recipient_addr)
 ```
 
 
@@ -684,7 +684,7 @@ event NativeTransfer(int8 native_wid, uint256 native_addr, uint256 amount, int8 
 |---|---|---|
 | native_wid  | int8 | undefined |
 | native_addr  | uint256 | undefined |
-| amount  | uint256 | undefined |
+| amount  | uint128 | undefined |
 | recipient_wid  | int8 | undefined |
 | recipient_addr  | uint256 | undefined |
 
