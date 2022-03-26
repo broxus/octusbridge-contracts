@@ -21,7 +21,7 @@ import '@broxus/contracts/contracts/utils/RandomNonce.sol';
 import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
 
 
-contract ProxyMultiVaultAlienTestUpgrade is
+contract ProxyMultiVaultAlien is
     InternalOwner,
     TransferUtils,
     CheckPubKey,
