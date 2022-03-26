@@ -4,7 +4,7 @@ const fs = require("fs");
 
 const bridgeAddress = '0xc25CA21377C5bbC860F0bF48dF685D744A411489';
 const rpc = 'https://bsc-dataseed.binance.org/';
-const eventContract = '0:70ef19e3a823f166058983b4450925e911240fee5c775f41adad3be664a757a0';
+const eventContract = '0:da8ad5d6be01eb2bbbd8cbfce01951516ff6fc9870a10889b23ec706f3f11ede';
 
 
 const main = async () => {
@@ -22,8 +22,6 @@ const main = async () => {
     const roundNumber = await event.call({ method: 'round_number' });
 
     const eventDataDecoded = await event.call({ method: 'getDecodedData' });
-
-    console.log(eventDataDecoded);
 
     const eventDataEncoded = ethers.utils.defaultAbiCoder.encode(
         ['int8', 'uint256', 'string', 'string', 'uint8', 'uint128', 'uint160', 'uint256'],
@@ -74,7 +72,6 @@ const main = async () => {
             round: roundNumber.toString(),
         }]
     );
-
 
     let signatures = await Promise.all(details._signatures.map(async (sign) => {
         return {

@@ -8,7 +8,7 @@ import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.sol";
 
 import "./../../interfaces/multivault/IMultiVaultEVMEventNative.sol";
 import "./../../interfaces/event-configuration-contracts/IEthereumEventConfiguration.sol";
-import "./../../interfaces/IProxyV2.sol";
+import "./../../interfaces/IProxyExtended.sol";
 
 import "./../base/EthereumBaseEvent.sol";
 
@@ -113,7 +113,7 @@ contract MultiVaultEVMEventNative is EthereumBaseEvent, IMultiVaultEVMEventNativ
             recipient
         );
 
-        IProxyV2(eventInitData.configuration).onEventConfirmedExtended{
+        IProxyExtended(eventInitData.configuration).onEventConfirmedExtended{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, meta, initializer);
     }

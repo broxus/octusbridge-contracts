@@ -4,7 +4,7 @@ pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 
-import "./../interfaces/IProxyV2.sol";
+import "./../interfaces/IProxyExtended.sol";
 import "./../interfaces/multivault/IProxyMultiVaultNative.sol";
 import "./../interfaces/event-configuration-contracts/IEverscaleEventConfiguration.sol";
 
@@ -26,7 +26,7 @@ contract ProxyMultiVaultNative is
     TransferUtils,
     CheckPubKey,
     RandomNonce,
-    IProxyV2,
+    IProxyExtended,
     IProxyMultiVaultNative,
     IAcceptTokensTransferCallback
 {
@@ -92,6 +92,7 @@ contract ProxyMultiVaultNative is
 
     /// @notice Handles native token transfer from EVM.
     /// Releases token from the Proxy balance.
+    /// @param meta Cell encoded (address token_wallet, uint128 amount, address recipient)
     /// @param remainingGasTo Gas back address
     function onEventConfirmedExtended(
         IEthereumEvent.EthereumEventInitData,

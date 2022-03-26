@@ -6,7 +6,7 @@ import './../interfaces/event-contracts/IEthereumEvent.sol';
 import "./../interfaces/event-configuration-contracts/IEthereumEventConfiguration.sol";
 
 import './../interfaces/IProxy.sol';
-import './../interfaces/IProxyV2.sol';
+import './../interfaces/IProxyExtended.sol';
 
 import './../event-contracts/base/EthereumBaseEvent.sol';
 
@@ -20,7 +20,7 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 /// @title Basic Ethereum event configuration contract.
 /// @author https://github.com/broxus
-contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IProxyV2, TransferUtils, InternalOwner, CheckPubKey {
+contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IProxyExtended, TransferUtils, InternalOwner, CheckPubKey {
     BasicConfiguration public static basicConfiguration;
     EthereumEventConfiguration public static networkConfiguration;
 
@@ -221,7 +221,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IPro
             ErrorCodes.SENDER_NOT_EVENT_CONTRACT
         );
 
-        IProxyV2(networkConfiguration.proxy).onEventConfirmedExtended{
+        IProxyExtended(networkConfiguration.proxy).onEventConfirmedExtended{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, _meta, gasBackAddress);
     }

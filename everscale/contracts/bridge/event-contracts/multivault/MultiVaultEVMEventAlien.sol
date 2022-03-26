@@ -6,7 +6,7 @@ pragma AbiHeader pubkey;
 
 import "./../../interfaces/multivault/IMultiVaultEVMEventAlien.sol";
 import "./../../interfaces/event-configuration-contracts/IEthereumEventConfiguration.sol";
-import "./../../interfaces/IProxyV2.sol";
+import "./../../interfaces/IProxyExtended.sol";
 import "./../../interfaces/multivault/IProxyMultiVaultAlien.sol";
 
 import "./../base/EthereumBaseEvent.sol";
@@ -111,7 +111,7 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
             recipient
         );
 
-        IProxyV2(eventInitData.configuration).onEventConfirmedExtended{
+        IProxyExtended(eventInitData.configuration).onEventConfirmedExtended{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, meta, initializer);
     }

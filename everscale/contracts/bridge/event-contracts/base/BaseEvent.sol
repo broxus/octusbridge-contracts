@@ -68,7 +68,7 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils{
         }(now);
     }
 
-    function _checkVoteReceiver(address voteReceiver) internal {
+    function _checkVoteReceiver(address voteReceiver) internal pure {
         require(voteReceiver == address(this), ErrorCodes.WRONG_VOTE_RECEIVER);
     }
 
@@ -115,7 +115,7 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils{
         return {value: 0, flag: MsgFlag.REMAINING_GAS} votes.fetch(voter);
     }
 
-    function getApiVersion() public view responsible returns(uint32) {
+    function getApiVersion() external pure responsible returns(uint32) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS} 2;
     }
 }

@@ -971,5 +971,6 @@ module.exports = {
   deployAccount,
   logger,
   expect,
+  sleep,
   TOKEN_PATH
 };

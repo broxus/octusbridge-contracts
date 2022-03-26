@@ -4,7 +4,7 @@ pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 
-import "./../interfaces/IProxyV2.sol";
+import "./../interfaces/IProxyExtended.sol";
 import "./../interfaces/multivault/IProxyMultiVaultAlien.sol";
 import "./../interfaces/event-configuration-contracts/IEverscaleEventConfiguration.sol";
 
@@ -27,7 +27,7 @@ contract ProxyMultiVaultAlienTestUpgrade is
     CheckPubKey,
     RandomNonce,
     IAcceptTokensBurnCallback,
-    IProxyV2,
+    IProxyExtended,
     IProxyMultiVaultAlien
 {
     Configuration config;

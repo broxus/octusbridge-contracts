@@ -1,9 +1,8 @@
 const {
-    expect, deployAccount, deployTokenRoot, mintTokens, depositTokens
+    expect, sleep, deployAccount, deployTokenRoot, mintTokens, depositTokens
 } = require('../utils');
 const BigNumber = require('bignumber.js');
 const logger = require('mocha-logger');
-const {sleep} = require("ton-testing-suite/src/utils");
 const {
     convertCrystal
 } = locklift.utils;

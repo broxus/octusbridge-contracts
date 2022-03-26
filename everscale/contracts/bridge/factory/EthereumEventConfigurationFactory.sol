@@ -21,7 +21,7 @@ contract EthereumEventConfigurationFactory is TransferUtils, RandomNonce {
         address _owner,
         IEthereumEventConfiguration.BasicConfiguration basicConfiguration,
         IEthereumEventConfiguration.EthereumEventConfiguration networkConfiguration
-    ) external reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    ) external view reserveMinBalance(MIN_CONTRACT_BALANCE) {
         TvmCell _meta;
 
         new EthereumEventConfiguration{
