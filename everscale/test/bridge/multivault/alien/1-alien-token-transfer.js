@@ -520,6 +520,13 @@ describe('Test EVM alien multivault pipeline', async function() {
                 expect(details._rejects)
                     .to.have.lengthOf(0, 'Wrong amount of relays rejects');
             });
+
+            it('Close event', async () => {
+                await initializer.runTarget({
+                    contract: eventContract,
+                    method: 'close'
+                });
+            });
         });
     });
 });
