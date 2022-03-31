@@ -10,7 +10,7 @@ require('@primitivefi/hardhat-dodoc');
 
 task("accounts", "Prints the list of accounts", async () => {
   const accounts = await ethers.getSigners();
-  
+
   for (const account of accounts) {
     console.log(account.address);
   }
@@ -44,7 +44,7 @@ const hardhatConfig = {
   abiExporter: {
     path: 'abi',
     clear: true,
-    // flat: true,
+    flat: true,
     spacing: 2,
     runOnCompile: true,
   },
