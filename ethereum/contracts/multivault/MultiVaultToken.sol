@@ -3,10 +3,17 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
-import "@openzeppelin/contracts/utils/Context.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+//import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+//import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+//import "@openzeppelin/contracts/utils/Context.sol";
+//import "@openzeppelin/contracts/access/Ownable.sol";
+
+
+import "../libraries/Context.sol";
+import "../libraries/Ownable.sol";
+import "../libraries/Address.sol";
+import "../interfaces/IERC20.sol";
+import "../interfaces/IERC20Metadata.sol";
 
 
 import "../interfaces/multivault/IMultiVaultToken.sol";
