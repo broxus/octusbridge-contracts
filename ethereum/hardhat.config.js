@@ -3,9 +3,9 @@ require("@nomiclabs/hardhat-web3");
 require("@nomiclabs/hardhat-etherscan");
 require('hardhat-deploy-ethers');
 require('hardhat-deploy');
-require('hardhat-abi-exporter');
-require("hardhat-gas-reporter");
-require('@primitivefi/hardhat-dodoc');
+// require('hardhat-abi-exporter');
+// require("hardhat-gas-reporter");
+// require('@primitivefi/hardhat-dodoc');
 
 
 task("accounts", "Prints the list of accounts", async () => {
@@ -36,18 +36,18 @@ const bridge = {
  * @type import('hardhat/config').HardhatUserConfig
  */
 const hardhatConfig = {
-  dodoc: {
-    runOnCompile: true,
-    outputDir: './../docs/evm-specification',
-    include: ['Bridge', 'Vault', 'DAO', 'Registry', 'StakingRelayVerifier'],
-  },
-  abiExporter: {
-    path: 'abi',
-    clear: true,
-    flat: true,
-    spacing: 2,
-    runOnCompile: true,
-  },
+  // dodoc: {
+  //   runOnCompile: true,
+  //   outputDir: './../docs/evm-specification',
+  //   include: ['Bridge', 'Vault', 'DAO', 'Registry', 'StakingRelayVerifier'],
+  // },
+  // abiExporter: {
+  //   path: 'abi',
+  //   clear: true,
+  //   flat: true,
+  //   spacing: 2,
+  //   runOnCompile: true,
+  // },
   solidity: {
     version: '0.8.2',
     settings: {
