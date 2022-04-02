@@ -2,22 +2,20 @@
 pragma solidity ^0.8.2;
 
 
-import "../libraries/SafeERC20.sol";
-import "../interfaces/IERC20.sol";
-import "../utils/Initializable.sol";
-import "../libraries/Clones.sol";
-import "../utils/ReentrancyGuard.sol";
-
-
+import "./../interfaces/IERC20.sol";
 import "./../interfaces/multivault/IMultiVault.sol";
 import "./../interfaces/multivault/IMultiVaultToken.sol";
 import "./../interfaces/IBridge.sol";
 import "./../interfaces/vault/IVault.sol";
 
+import "./../libraries/SafeERC20.sol";
 import "./../libraries/MultiVaultLibrary.sol";
 
-import "./MultiVaultToken.sol";
+import "./../utils/Initializable.sol";
+import "./../utils/ReentrancyGuard.sol";
 import "./../utils/ChainId.sol";
+
+import "./MultiVaultToken.sol";
 
 
 uint constant MAX_BPS = 10_000;
@@ -29,7 +27,7 @@ uint256 constant SYMBOL_LENGTH_LIMIT = 32;
 uint256 constant NAME_LENGTH_LIMIT = 32;
 
 
-string constant API_VERSION = '0.1.1';
+string constant API_VERSION = '0.1.2';
 
 
 /// @notice Vault, based on Octus Bridge. Allows to transfer arbitrary tokens from Everscale
@@ -64,6 +62,20 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
 
     // STORAGE UPDATE 1
     EverscaleAddress configurationAlien_;
+
+    // STORAGE UPDATE 2
+    mapping (address => TokenPrefix) prefixes_;
+    mapping (address => uint) fees;
+
+    /// @notice Get token prefix
+    /// @dev Used to set up in advance prefix for the ERC20 native token
+    /// @param _token Token address
+    /// @return Name and symbol prefix
+    function prefixes(
+        address _token
+    ) external view override returns (TokenPrefix memory) {
+        return prefixes_[_token];
+    }
 
     /// @notice Get token information
     /// @param _token Token address
@@ -207,6 +219,27 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
 
         rewards_ = _rewards;
         emit UpdateRewards(rewards_.wid, rewards_.addr);
+    }
+
+    /// @notice Set prefix for native token
+    /// @param token Expected native token address, see note on `getNative`
+    function setPrefix(
+        address token,
+        string memory name_prefix,
+        string memory symbol_prefix
+    ) external override onlyGovernanceOrManagement {
+        TokenPrefix memory prefix = prefixes_[token];
+
+        if (prefix.activation == 0) {
+            prefix.activation = block.number;
+        }
+
+        prefix.name = name_prefix;
+        prefix.symbol = symbol_prefix;
+
+        prefixes_[token] = prefix;
+
+        emit UpdateTokenPrefix(token, name_prefix, symbol_prefix);
     }
 
     /// @notice Add token to blacklist. Only native token can be blacklisted.
@@ -444,8 +477,6 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
             );
 
             _transferToEverscaleNative(token, recipient, amount - fee);
-
-            if (fee > 0) _transferToEverscaleNative(token, rewards_, fee);
         } else {
             IERC20(token).safeTransferFrom(
                 msg.sender,
@@ -454,9 +485,9 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
             );
 
             _transferToEverscaleAlien(token, recipient, amount - fee);
-
-            if (fee > 0) _transferToEverscaleAlien(token, rewards_, fee);
         }
+
+        _increaseTokenFee(token, fee);
 
         emit Deposit(
             isNative ? TokenType.Native : TokenType.Alien,
@@ -515,7 +546,7 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
             withdrawal.amount - fee
         );
 
-        if (fee > 0) _transferToEverscaleNative(token, rewards_, fee);
+        _increaseTokenFee(token, fee);
 
         emit Withdraw(
             TokenType.Native,
@@ -566,7 +597,7 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
             withdrawal.amount - fee
         );
 
-        if (fee > 0) _transferToEverscaleAlien(withdrawal.token, rewards_, fee);
+        _increaseTokenFee(withdrawal.token, fee);
 
         emit Withdraw(
             TokenType.Alien,
@@ -576,6 +607,44 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
             withdrawal.amount,
             fee
         );
+    }
+
+    /// @notice Skim multivault fees for specific token
+    /// @dev If `skim_to_everscale` is true, than fees will be sent to Everscale.
+    /// Token type will be derived automatically and transferred with correct pipeline to the `rewards`.
+    /// Otherwise, tokens will be transferred to the `governance` address.
+    ///
+    /// Can be called only by governance or management.
+    /// @param token Token address, can be both native or alien
+    /// @param skim_to_everscale Skim fees to Everscale or not
+    function skim(
+        address token,
+        bool skim_to_everscale
+    ) external override nonReentrant onlyGovernanceOrManagement {
+        uint fee = fees[token];
+
+        require(fee > 0);
+
+        fees[token] = 0;
+
+        // Find out token type
+        bool isNative = tokens_[token].isNative;
+
+        if (skim_to_everscale) {
+            if (isNative) {
+                _transferToEverscaleNative(token, rewards_, fee);
+            } else {
+                _transferToEverscaleAlien(token, rewards_, fee);
+            }
+        } else {
+            if (isNative) {
+                IMultiVaultToken(token).mint(governance, fee);
+            } else {
+                IERC20(token).safeTransfer(governance, fee);
+            }
+        }
+
+        emit SkimFee(token, skim_to_everscale, fee);
     }
 
     function migrateAlienTokenToVault(
@@ -623,6 +692,13 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         uint256 native_addr
     ) external view returns (address) {
         return MultiVaultLibrary.getNativeToken(native_wid, native_addr);
+    }
+
+    function _increaseTokenFee(
+        address token,
+        uint amount
+    ) internal {
+        if (amount > 0) fees[token] += amount;
     }
 
     function _activateToken(

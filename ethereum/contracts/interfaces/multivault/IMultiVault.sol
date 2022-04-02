@@ -8,6 +8,12 @@ interface IMultiVault is IEverscale {
     enum Fee { Deposit, Withdraw }
     enum TokenType { Native, Alien }
 
+    struct TokenPrefix {
+        uint activation;
+        string name;
+        string symbol;
+    }
+
     struct TokenMeta {
         string name;
         string symbol;
@@ -48,9 +54,15 @@ interface IMultiVault is IEverscale {
         EverscaleAddress memory _rewards
     ) external;
 
+    function prefixes(address _token) external view returns (TokenPrefix memory);
     function tokens(address _token) external view returns (Token memory);
     function natives(address _token) external view returns (EverscaleAddress memory);
 
+    function setPrefix(
+        address token,
+        string memory name_prefix,
+        string memory symbol_prefix
+    ) external;
     function blacklistAddToken(address token) external;
     function blacklistRemoveToken(address token) external;
 
@@ -98,6 +110,11 @@ interface IMultiVault is IEverscale {
     function saveWithdrawAlien(
         bytes memory payload,
         bytes[] memory signatures
+    ) external;
+
+    function skim(
+        address token,
+        bool skim_to_everscale
     ) external;
 
     function migrateAlienTokenToVault(
@@ -180,5 +197,17 @@ interface IMultiVault is IEverscale {
         address recipient,
         uint256 amunt,
         uint256 fee
+    );
+
+    event UpdateTokenPrefix(
+        address token,
+        string name_prefix,
+        string symbol_prefix
+    );
+
+    event SkimFee(
+        address token,
+        bool skim_to_everscale,
+        uint256 amount
     );
 }

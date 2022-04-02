@@ -203,6 +203,31 @@
       },
       {
         "indexed": false,
+        "internalType": "bool",
+        "name": "skim_to_everscale",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "SkimFee",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "uint256",
         "name": "activation",
         "type": "uint256"
@@ -430,6 +455,31 @@
       }
     ],
     "name": "UpdateTokenDepositFee",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "name_prefix",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "symbol_prefix",
+        "type": "string"
+      }
+    ],
+    "name": "UpdateTokenPrefix",
     "type": "event"
   },
   {
@@ -867,6 +917,42 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      }
+    ],
+    "name": "prefixes",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "activation",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "symbol",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct IMultiVault.TokenPrefix",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "rewards",
     "outputs": [
@@ -1058,6 +1144,29 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "name_prefix",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "symbol_prefix",
+        "type": "string"
+      }
+    ],
+    "name": "setPrefix",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "components": [
           {
             "internalType": "int8",
@@ -1112,6 +1221,24 @@
       }
     ],
     "name": "setTokenWithdrawFee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "skim_to_everscale",
+        "type": "bool"
+      }
+    ],
+    "name": "skim",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
