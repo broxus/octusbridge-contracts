@@ -251,7 +251,7 @@ abstract contract ConvexCrvLp is BaseStrategy {
         return crvValue + cvxValue;
     }
 
-    function _claimableInETH() public virtual view returns (uint256 _claimable) {
+    function claimableInETH() public virtual view returns (uint256 _claimable) {
         _claimable = _claimableBasicInETH();
     }
 
