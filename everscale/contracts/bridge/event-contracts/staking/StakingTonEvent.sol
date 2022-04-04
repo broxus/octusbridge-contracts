@@ -14,7 +14,10 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 contract StakingTonEvent is EverscaleBaseEvent, StakingCellEncoder {
 
-    constructor(address _initializer, TvmCell _meta) EverscaleBaseEvent(_initializer, _meta) public {}
+    constructor(
+        address _initializer,
+        TvmCell _meta
+    ) EverscaleBaseEvent(_initializer, _meta) public {}
 
     function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
         body.decode(uint64, uint32);

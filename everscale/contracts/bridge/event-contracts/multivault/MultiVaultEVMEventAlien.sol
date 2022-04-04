@@ -99,8 +99,6 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
 
         token = token_;
 
-        status = Status.Pending;
-
         loadRelays();
     }
 

@@ -301,6 +301,7 @@
 		{"name":"chainId","type":"uint256"},
 		{"name":"name","type":"string"},
 		{"name":"symbol","type":"string"},
-		{"name":"decimals","type":"uint8"}
+		{"name":"decimals","type":"uint8"},
+		{"name":"expectedTokenWallet","type":"address"}
 	]
 }

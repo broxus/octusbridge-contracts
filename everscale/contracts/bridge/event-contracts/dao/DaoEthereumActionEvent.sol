@@ -16,7 +16,10 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 */
 contract DaoEthereumActionEvent is EverscaleBaseEvent, DaoCellEncoder {
 
-    constructor(address _initializer, TvmCell _meta) EverscaleBaseEvent(_initializer, _meta) public {}
+    constructor(
+        address _initializer,
+        TvmCell _meta
+    ) EverscaleBaseEvent(_initializer, _meta) public {}
 
 
     function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
@@ -36,14 +39,6 @@ contract DaoEthereumActionEvent is EverscaleBaseEvent, DaoCellEncoder {
         require(msg.sender == gasBackAddress, ErrorCodes.SENDER_IS_NOT_EVENT_OWNER);
         transferAll(gasBackAddress);
     }
-
-    function onInit() override internal {
-        loadRelays();
-    }
-
-    function onConfirm() override internal {}
-
-    function onReject() override internal {}
 
     function getDecodedData() public view responsible returns (
         address gasBackAddress,

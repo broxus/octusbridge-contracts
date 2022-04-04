@@ -283,6 +283,7 @@
 		{"name":"amount","type":"uint128"},
 		{"name":"recipient","type":"uint160"},
 		{"name":"base_chainId","type":"uint256"},
-		{"name":"base_token","type":"uint160"}
+		{"name":"base_token","type":"uint160"},
+		{"name":"expectedToken","type":"address"}
 	]
 }

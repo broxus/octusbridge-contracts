@@ -42,14 +42,6 @@ contract EverscaleBaseEvent is BaseEvent, IEverscaleEvent {
         return {value: 0, flag: MsgFlag.REMAINING_GAS} eventInitData;
     }
 
-    function onInit() virtual internal {
-        status = Status.Pending;
-
-        loadRelays();
-    }
-    function onConfirm() virtual internal {}
-    function onReject() virtual internal {}
-
     function getStakingAddress() override internal view returns (address) {
         return eventInitData.staking;
     }

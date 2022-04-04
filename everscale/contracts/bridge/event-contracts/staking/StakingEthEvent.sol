@@ -15,7 +15,10 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 contract StakingEthEvent is EthereumBaseEvent, StakingCellEncoder {
 
-    constructor(address _initializer, TvmCell _meta) EthereumBaseEvent(_initializer, _meta) public {}
+    constructor(
+        address _initializer,
+        TvmCell _meta
+    ) EthereumBaseEvent(_initializer, _meta) public {}
 
     function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
         body.decode(uint64, uint32);

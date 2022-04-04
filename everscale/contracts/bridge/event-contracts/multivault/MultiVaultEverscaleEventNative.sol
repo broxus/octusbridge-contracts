@@ -29,6 +29,7 @@ contract MultiVaultEverscaleEventNative is EverscaleBaseEvent, IMultiVaultEversc
     string name;
     string symbol;
     uint8 decimals;
+    address expectedTokenWallet;
 
     constructor(
         address _initializer,
@@ -114,18 +115,24 @@ contract MultiVaultEverscaleEventNative is EverscaleBaseEvent, IMultiVaultEversc
         decimals = decimals_;
     }
 
-    function receiveProxyTokenWallet(address tokenWallet_) external override {
+    function receiveProxyTokenWallet(
+        address tokenWallet_
+    ) external override {
         require(msg.sender == token);
 
-        if (tokenWallet_ != tokenWallet) {
-            status = Status.Rejected;
-        } else {
+        expectedTokenWallet = tokenWallet_;
+
+        loadRelays();
+    }
+
+    function onRelaysLoaded() override internal {
+        if (tokenWallet == expectedTokenWallet) {
             _updateEventData();
 
             status = Status.Pending;
+        } else {
+            status = Status.Rejected;
         }
-
-        loadRelays();
     }
 
     function getDecodedData() external override responsible returns(

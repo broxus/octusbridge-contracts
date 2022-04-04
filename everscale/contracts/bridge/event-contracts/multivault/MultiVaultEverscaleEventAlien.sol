@@ -24,6 +24,7 @@ contract MultiVaultEverscaleEventAlien is EverscaleBaseEvent, IMultiVaultEversca
 
     uint256 base_chainId;
     uint160 base_token;
+    address expectedToken;
 
     constructor(
         address _initializer,
@@ -89,18 +90,21 @@ contract MultiVaultEverscaleEventAlien is EverscaleBaseEvent, IMultiVaultEversca
     function receiveAlienTokenRoot(
         address token_
     ) external override {
-        // TODO: add error codes all over the multivault contracts
         require(msg.sender == proxy);
 
-        if (token_ != token) {
-            status = Status.Rejected;
-        } else {
+        expectedToken = token_;
+
+        loadRelays();
+    }
+
+    function onRelaysLoaded() override internal {
+        if (token == expectedToken) {
             _updateEventData();
 
             status = Status.Pending;
+        } else {
+            status = Status.Rejected;
         }
-
-        loadRelays();
     }
 
     function _updateEventData() internal {

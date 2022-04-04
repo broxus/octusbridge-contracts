@@ -33,6 +33,17 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils{
     // number of relay round
     uint32 public round_number;
 
+    function onInit() virtual internal {
+        loadRelays();
+    }
+
+    function onRelaysLoaded() virtual internal {
+        status = Status.Pending;
+    }
+
+    function onConfirm() virtual internal {}
+    function onReject() virtual internal {}
+
     modifier onlyInitializer() {
         require(msg.sender == initializer, ErrorCodes.SENDER_NOT_INITIALIZER);
         _;
@@ -94,6 +105,8 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils{
         for (uint key: keys) {
             votes[key] = Vote.Empty;
         }
+
+        onRelaysLoaded();
     }
 
     /*

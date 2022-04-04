@@ -37,8 +37,6 @@ contract TokenTransferEthereumEvent is EthereumBaseEvent, ProxyTokenTransferCell
     function onInit() override internal {
         notifyEventStatusChanged();
 
-        status = Status.Pending;
-
         loadRelays();
     }
 
