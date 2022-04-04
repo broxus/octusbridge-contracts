@@ -10,19 +10,17 @@ pragma experimental ABIEncoderV2;
 
 import "../interfaces/IBooster.sol";
 import "../interfaces/ICurveFi.sol";
-import "../interfaces/IERC20.sol";
-import "../interfaces/IERC20Metadata.sol";
 import "../interfaces/IRewards.sol";
 import "../interfaces/IUni.sol";
-import "../libraries/Address.sol";
 import "../libraries/Math.sol";
-import "../libraries/SafeERC20.sol";
 import "./ConvexCrvLp.sol";
-import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 
 
 contract ConvexFraxStrategy is ConvexCrvLp, Initializable {
-    using SafeERC20 for IERC20;
+    using SafeERC20Upgradeable for IERC20Upgradeable;
 
     address public constant dai = address(0x6B175474E89094C44Da98b954EedeAC495271d0F);
     address public constant usdc = address(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
@@ -43,7 +41,7 @@ contract ConvexFraxStrategy is ConvexCrvLp, Initializable {
         maxReportDelay = 30 days;
         profitFactor = 100000;
         debtThreshold = 1e24;
-        want_wrapped = IERC20(frax3crv);
+        want_wrapped = IERC20Upgradeable(frax3crv);
         want_wrapped.safeApprove(_vault, type(uint256).max); // Give Vault unlimited access (might save gas)
 
         if (address(want) == dai) {
@@ -81,19 +79,19 @@ contract ConvexFraxStrategy is ConvexCrvLp, Initializable {
         want_wrapped.safeApprove(booster, type(uint256).max);
         want_wrapped.safeApprove(zapCurve, 0);
         want_wrapped.safeApprove(zapCurve, type(uint256).max);
-        IERC20(dai).safeApprove(zapCurve, 0);
-        IERC20(dai).safeApprove(zapCurve, type(uint256).max);
-        IERC20(usdc).safeApprove(zapCurve, 0);
-        IERC20(usdc).safeApprove(zapCurve, type(uint256).max);
-        IERC20(usdt).safeApprove(zapCurve, 0);
-        IERC20(usdt).safeApprove(zapCurve, type(uint256).max);
+        IERC20Upgradeable(dai).safeApprove(zapCurve, 0);
+        IERC20Upgradeable(dai).safeApprove(zapCurve, type(uint256).max);
+        IERC20Upgradeable(usdc).safeApprove(zapCurve, 0);
+        IERC20Upgradeable(usdc).safeApprove(zapCurve, type(uint256).max);
+        IERC20Upgradeable(usdt).safeApprove(zapCurve, 0);
+        IERC20Upgradeable(usdt).safeApprove(zapCurve, type(uint256).max);
     }
 
     function _approveDex() internal override {
-        IERC20(crv).safeApprove(dex[0], 0);
-        IERC20(crv).safeApprove(dex[0], type(uint256).max);
-        IERC20(cvx).safeApprove(dex[1], 0);
-        IERC20(cvx).safeApprove(dex[1], type(uint256).max);
+        IERC20Upgradeable(crv).safeApprove(dex[0], 0);
+        IERC20Upgradeable(crv).safeApprove(dex[0], type(uint256).max);
+        IERC20Upgradeable(cvx).safeApprove(dex[1], 0);
+        IERC20Upgradeable(cvx).safeApprove(dex[1], type(uint256).max);
     }
 
     function calc_want_from_wrapped(uint256 wrapped_amount) public view override returns (uint256 expected_return) {
@@ -164,7 +162,7 @@ contract ConvexFraxStrategy is ConvexCrvLp, Initializable {
         uint before = balanceOfWrapped() + calc_wrapped_from_want(balanceOfWant());
 
         Rewards(rewardContract).getReward(address(this), isClaimExtras);
-        uint256 _crv = IERC20(crv).balanceOf(address(this));
+        uint256 _crv = IERC20Upgradeable(crv).balanceOf(address(this));
         if (_crv > 0) {
             address[] memory path = new address[](3);
             path[0] = crv;
@@ -173,7 +171,7 @@ contract ConvexFraxStrategy is ConvexCrvLp, Initializable {
 
             Uni(dex[0]).swapExactTokensForTokens(_crv, uint256(0), path, address(this), block.timestamp);
         }
-        uint256 _cvx = IERC20(cvx).balanceOf(address(this));
+        uint256 _cvx = IERC20Upgradeable(cvx).balanceOf(address(this));
         if (_cvx > 0) {
             address[] memory path = new address[](3);
             path[0] = cvx;
@@ -182,9 +180,9 @@ contract ConvexFraxStrategy is ConvexCrvLp, Initializable {
 
             Uni(dex[1]).swapExactTokensForTokens(_cvx, uint256(0), path, address(this), block.timestamp);
         }
-        uint256 _dai = IERC20(dai).balanceOf(address(this));
-        uint256 _usdc = IERC20(usdc).balanceOf(address(this));
-        uint256 _usdt = IERC20(usdt).balanceOf(address(this));
+        uint256 _dai = IERC20Upgradeable(dai).balanceOf(address(this));
+        uint256 _usdc = IERC20Upgradeable(usdc).balanceOf(address(this));
+        uint256 _usdt = IERC20Upgradeable(usdt).balanceOf(address(this));
         if (_dai > 0 || _usdc > 0 || _usdt > 0) {
             ICurveFi(zapCurve).add_liquidity(curve, [0, _dai, _usdc, _usdt], 0);
         }

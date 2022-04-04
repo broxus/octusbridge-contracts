@@ -3,7 +3,7 @@ const { expect, getSignerFromAddr, mineBlocks,
     increaseTime, encodeWithdrawalData, encodeEverscaleEvent,
     getPayloadSignatures
 } = require('../../utils');
-const { upgrades, ethers } = require("hardhat");
+const { ethers, deployments} = require("hardhat");
 
 
 
@@ -27,8 +27,8 @@ describe('Test Convex3Frax strategy on DAI vault', async function () {
         });
 
         it('Deploy strategy', async () => {
-            const Strategy = await ethers.getContractFactory('ConvexFraxStrategy');
-            strategy = await upgrades.deployProxy(Strategy, [vault.address]);
+            await deployments.fixture(['Deploy_DAI_Convex_Frax']);
+            strategy = await ethers.getContract('ConvexFraxStrategy');
 
             // setup other contracts we need
             const booster_addr = await strategy.booster();
@@ -49,7 +49,7 @@ describe('Test Convex3Frax strategy on DAI vault', async function () {
             const alice = await ethers.getNamedSigner('alice');
             await alice.sendTransaction({
                 to: governance_addr,
-                value: ethers.utils.parseEther("1.0")
+                value: ethers.utils.parseEther("5.0")
             });
 
             const proxy_admin = await ethers.getNamedSigner('proxy_admin');
@@ -59,7 +59,7 @@ describe('Test Convex3Frax strategy on DAI vault', async function () {
             await proxyAdmin.connect(governance).upgrade(bridge.address, mockup.address);
         });
 
-        it("Set vault mockup", async () => {
+        it.skip("Set vault mockup", async () => {
             const governance_addr = await vault.governance();
             governance = await getSignerFromAddr(governance_addr);
 
@@ -111,7 +111,7 @@ describe('Test Convex3Frax strategy on DAI vault', async function () {
 
             const strategy_deposit_balance = await strategy.balanceOfPool();
 
-            console.log(vault_bal_before.toString(), vault_bal_after.toString())
+            // console.log(vault_bal_before.toString(), vault_bal_after.toString())
 
             expect(vault_bal_after.lt(vault_bal_before)).to.be.true;
             expect(strategy_deposit_balance.gt(0)).to.be.true;

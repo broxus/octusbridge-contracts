@@ -5,18 +5,17 @@ pragma experimental ABIEncoderV2;
 
 import "../interfaces/IBooster.sol";
 import "../interfaces/ICurveFi.sol";
-import "../interfaces/IERC20.sol";
-import "../interfaces/IERC20Metadata.sol";
 import "../interfaces/IRewards.sol";
 import "../interfaces/IUni.sol";
 import "../interfaces/vault/IVault.sol";
 import "../libraries/Math.sol";
-import "../libraries/SafeERC20.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 
 
 
 abstract contract BaseStrategy {
-    using SafeERC20 for IERC20;
+    using SafeERC20Upgradeable for IERC20Upgradeable;
     string public metadataURI;
 
     /**
@@ -63,7 +62,7 @@ abstract contract BaseStrategy {
     address public strategist;
     address public keeper;
 
-    IERC20 public want;
+    IERC20Upgradeable public want;
 
     // So indexers can keep track of this
     event Harvested(uint256 profit, uint256 loss, uint256 debtPayment, uint256 debtOutstanding);
@@ -144,7 +143,7 @@ abstract contract BaseStrategy {
         require(address(want) == address(0), "Strategy already initialized");
 
         vault = IVault(_vault);
-        want = IERC20(vault.token());
+        want = IERC20Upgradeable(vault.token());
         want.safeApprove(_vault, type(uint256).max); // Give Vault unlimited access (might save gas)
         strategist = vault.governance();
         keeper = strategist;
@@ -623,6 +622,6 @@ abstract contract BaseStrategy {
         address[] memory _protectedTokens = protectedTokens();
         for (uint256 i; i < _protectedTokens.length; i++) require(_token != _protectedTokens[i], "!protected");
 
-        IERC20(_token).safeTransfer(governance(), IERC20(_token).balanceOf(address(this)));
+        IERC20Upgradeable(_token).safeTransfer(governance(), IERC20Upgradeable(_token).balanceOf(address(this)));
     }
 }

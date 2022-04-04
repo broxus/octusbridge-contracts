@@ -1,4 +1,4 @@
-const USDC_VAULT_ADDR = '0xf8a0d53ddc6c92c3c59824f380c0f3d2a3cf521c';
+const DAI_VAULT_ADDR = '0x032d06b4cc8a914b85615acd0131c3e0a7330968';
 
 
 module.exports = async ({getNamedAccounts, deployments}) => {
@@ -12,11 +12,11 @@ module.exports = async ({getNamedAccounts, deployments}) => {
             execute: {
                 methodName: 'initialize',
                 args: [
-                    USDC_VAULT_ADDR
+                    DAI_VAULT_ADDR
                 ],
             }
         }
     });
 };
 
-module.exports.tags = ['Deploy_USDC_Convex_Frax'];
+module.exports.tags = ['Deploy_DAI_Convex_Frax'];
