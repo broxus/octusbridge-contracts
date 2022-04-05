@@ -27,8 +27,8 @@ describe('Test Convex3Frax strategy on DAI vault', async function () {
         });
 
         it('Deploy strategy', async () => {
-            await deployments.fixture(['Deploy_DAI_Convex_Frax']);
-            strategy = await ethers.getContract('ConvexFraxStrategy');
+            await deployments.fixture('Deploy_DAI_Convex_Frax');
+            strategy = await ethers.getContract('ConvexFraxStrategyDAI');
 
             // setup other contracts we need
             const booster_addr = await strategy.booster();
@@ -77,7 +77,7 @@ describe('Test Convex3Frax strategy on DAI vault', async function () {
             const strategy_token = await strategy.want();
             const strategy_vault = await strategy.vault();
 
-            expect(vault_token).to.be.eq(strategy_token, "Bad token set in strategy");
+            expect(strategy_token).to.be.eq(vault_token, "Bad token set in strategy");
             expect(vault.address).to.be.eq(strategy_vault, "Bad vault address in strategy");
         });
 
