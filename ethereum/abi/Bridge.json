@@ -155,9 +155,9 @@
       {
         "components": [
           {
-            "internalType": "int8",
+            "internalType": "int128",
             "name": "wid",
-            "type": "int8"
+            "type": "int128"
           },
           {
             "internalType": "uint256",
@@ -614,9 +614,9 @@
     "name": "roundRelaysConfiguration",
     "outputs": [
       {
-        "internalType": "int8",
+        "internalType": "int128",
         "name": "wid",
-        "type": "int8"
+        "type": "int128"
       },
       {
         "internalType": "uint256",
@@ -692,9 +692,9 @@
       {
         "components": [
           {
-            "internalType": "int8",
+            "internalType": "int128",
             "name": "wid",
-            "type": "int8"
+            "type": "int128"
           },
           {
             "internalType": "uint256",

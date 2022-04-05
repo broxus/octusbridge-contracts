@@ -35,7 +35,7 @@ describe('Check reaching withdraw period limit', async () => {
 
         await vault
             .connect(alice)
-            ['deposit((int8,uint256),uint256)'](recipient, amount);
+            ['deposit((int128,uint256),uint256)'](recipient, amount);
     });
 
     const aliceAmount = ethers.utils.parseUnits('900', 18);

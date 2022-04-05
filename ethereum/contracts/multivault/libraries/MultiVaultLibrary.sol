@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0
-pragma solidity ^0.8.2;
+pragma solidity 0.8.0;
 
 
-import "./../interfaces/multivault/IMultiVault.sol";
+import "./../interfaces/IMultiVault.sol";
 import "./../interfaces/IEverscale.sol";
 
 
@@ -72,7 +72,7 @@ library MultiVaultLibrary {
             hex'ff',
             address(this),
             keccak256(abi.encodePacked(native_wid, native_addr)),
-            hex'f906ad1ce83ab732d793f0a6616e037f193f2bb624880b305bf4af30b8ab228e' // MultiVaultToken init code hash
+            hex'192c19818bebb5c6c95f5dcb3c3257379fc46fb654780cb06f3211ee77e1a360' // MultiVaultToken init code hash
         )))));
     }
 }

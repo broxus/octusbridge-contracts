@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0
-pragma solidity ^0.8.2;
+pragma solidity 0.8.0;
 
 
 interface IEverscale {
     struct EverscaleAddress {
-        int128 wid;
+        int8 wid;
         uint256 addr;
     }
 

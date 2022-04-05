@@ -5,10 +5,10 @@ const {
 
 describe('Test MultiVault initial setup', async () => {
   let bridge, multivault;
-  
+
   it('Setup contracts', async () => {
     await deployments.fixture();
-  
+
     bridge = await ethers.getContract('Bridge');
     multivault = await ethers.getContract('MultiVault');
   });
@@ -25,13 +25,23 @@ describe('Test MultiVault initial setup', async () => {
         .to.be.equal(owner, 'MultiVault: wrong governance');
   });
 
-  it('Check default deposit fee', async () => {
-    expect(await multivault.defaultDepositFee())
-        .to.be.not.equal(0, 'Default multivault deposit fee is zero');
+  it('Check alien default deposit fee', async () => {
+    expect(await multivault.defaultAlienDepositFee())
+        .to.be.not.equal(0, 'Default multivault alien deposit fee is zero');
   });
 
-  it('Check default withdraw fee', async () => {
-    expect(await multivault.defaultDepositFee())
-        .to.be.not.equal(0, 'Default multivault deposit fee is zero');
+  it('Check alien default withdraw fee', async () => {
+    expect(await multivault.defaultAlienWithdrawFee())
+        .to.be.not.equal(0, 'Default multivault alien withdraw fee is zero');
+  });
+
+  it('Check native default deposit fee', async () => {
+    expect(await multivault.defaultNativeDepositFee())
+        .to.be.not.equal(0, 'Default multivault native deposit fee is zero');
+  });
+
+  it('Check native default withdraw fee', async () => {
+    expect(await multivault.defaultNativeWithdrawFee())
+        .to.be.not.equal(0, 'Default multivault native withdraw fee is zero');
   });
 });

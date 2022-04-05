@@ -1,4 +1,3 @@
-const { legos } = require('@studydefi/money-legos');
 const {
     expect,
     encodeWithdrawalData,
@@ -29,7 +28,7 @@ describe('Test deposit-withdraw for alien token', async () => {
                 addr: 123123
             };
 
-            const defaultDepositFee = await multivault.defaultDepositFee();
+            const defaultDepositFee = await multivault.defaultAlienDepositFee();
 
             const fee = defaultDepositFee.mul(amount).div(10000);
 
@@ -57,14 +56,30 @@ describe('Test deposit-withdraw for alien token', async () => {
             expect(tokenDetails.isNative)
                 .to.be.equal(false, 'Wrong token native flag');
             expect(tokenDetails.depositFee)
-                .to.be.equal(await multivault.defaultDepositFee(), 'Wrong token deposit fee');
+                .to.be.equal(await multivault.defaultAlienDepositFee(), 'Wrong token deposit fee');
             expect(tokenDetails.withdrawFee)
-                .to.be.equal(await multivault.defaultWithdrawFee(), 'Wrong token withdraw fee');
+                .to.be.equal(await multivault.defaultAlienWithdrawFee(), 'Wrong token withdraw fee');
         });
 
         it('Check MultiVault balance', async () => {
             expect(await token.balanceOf(multivault.address))
                 .to.be.equal(amount, 'Wrong MultiVault token balance after deposit');
+        });
+
+        it('Skim alien fees to Everscale', async () => {
+            const owner = await ethers.getNamedSigner('owner');
+
+            const fee = await multivault.fees(token.address);
+
+            await expect(() => multivault.connect(owner).skim(token.address, false))
+                .to.changeTokenBalances(
+                    token,
+                    [multivault, owner],
+                    [ethers.BigNumber.from(0).sub(fee), fee]
+                );
+
+            expect(await multivault.fees(token.address))
+                .to.be.equal(0);
         });
     });
 
@@ -94,15 +109,37 @@ describe('Test deposit-withdraw for alien token', async () => {
         it('Save withdrawal', async () => {
             const bob = await ethers.getNamedSigner('bob');
 
-            const defaultWithdrawFee = await multivault.defaultWithdrawFee();
+            const {
+                withdrawFee
+            } = await multivault.tokens(token.address);
 
-            const fee = defaultWithdrawFee.mul(amount).div(10000);
+            const fee = withdrawFee.mul(amount).div(10000);
 
             await expect(() => multivault.saveWithdrawAlien(payload, signatures))
                 .to.changeTokenBalances(
                     token,
                     [multivault, bob],
                     [ethers.BigNumber.from(0).sub(amount.sub(fee)), amount.sub(fee)]
+                );
+        });
+
+        it('Skim Alien fees to Everscale', async () => {
+            const owner = await ethers.getNamedSigner('owner');
+            const rewards = await multivault.rewards();
+
+            const fee = await multivault.fees(token.address);
+
+            await expect(multivault.connect(owner).skim(token.address, true))
+                .to.emit(multivault, 'AlienTransfer')
+                .withArgs(
+                    utils.defaultChainId,
+                    token.address,
+                    await token.name(),
+                    await token.symbol(),
+                    await token.decimals(),
+                    fee,
+                    rewards.wid,
+                    rewards.addr
                 );
         });
     });

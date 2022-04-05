@@ -1,21 +1,21 @@
 // SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts (last updated v4.5.0) (token/ERC20/ERC20.sol)
-
-pragma solidity ^0.8.0;
-
-
-import "../libraries/Context.sol";
-import "../libraries/Ownable.sol";
-import "../libraries/Address.sol";
-import "../interfaces/IERC20.sol";
-import "../interfaces/IERC20Metadata.sol";
+pragma solidity 0.8.0;
 
 
-import "../interfaces/multivault/IMultiVaultToken.sol";
+import "./interfaces/IERC20.sol";
+import "./interfaces/IERC20Metadata.sol";
+import "./interfaces/IMultiVaultToken.sol";
+
+import "./libraries/Address.sol";
+
+import "./utils/Ownable.sol";
 
 
 contract MultiVaultToken is IMultiVaultToken, Context, IERC20, IERC20Metadata, Ownable {
     uint activation;
+
+    constructor() Ownable(_msgSender()) {}
 
     mapping(address => uint256) private _balances;
 

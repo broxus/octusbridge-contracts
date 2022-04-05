@@ -7,6 +7,15 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     await deployments.execute('MultiVault',
         {
             from: owner,
+            log: true
+        },
+        'setRewards',
+        utils.defaultTonRecipient
+    );
+
+    await deployments.execute('MultiVault',
+        {
+            from: owner,
             log: true,
         },
         'setConfigurationAlien',
@@ -27,7 +36,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
             from: owner,
             log: true
         },
-        'setDefaultDepositFee',
+        'setDefaultNativeDepositFee',
         100
     );
 
@@ -36,8 +45,26 @@ module.exports = async ({getNamedAccounts, deployments}) => {
             from: owner,
             log: true
         },
-        'setDefaultWithdrawFee',
+        'setDefaultNativeWithdrawFee',
         200
+    );
+
+    await deployments.execute('MultiVault',
+        {
+            from: owner,
+            log: true
+        },
+        'setDefaultAlienDepositFee',
+        300
+    );
+
+    await deployments.execute('MultiVault',
+        {
+            from: owner,
+            log: true
+        },
+        'setDefaultAlienWithdrawFee',
+        400
     );
 }
 

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0
-pragma solidity ^0.8.2;
+pragma solidity 0.8.0;
 
-import "../IEverscale.sol";
+import "./IEverscale.sol";
 
 
 interface IMultiVault is IEverscale {
@@ -43,17 +43,19 @@ interface IMultiVault is IEverscale {
         uint256 chainId;
     }
 
-    function defaultDepositFee() external view returns (uint);
-    function defaultWithdrawFee() external view returns (uint);
+    function defaultNativeDepositFee() external view returns (uint);
+    function defaultNativeWithdrawFee() external view returns (uint);
+    function defaultAlienDepositFee() external view returns (uint);
+    function defaultAlienWithdrawFee() external view returns (uint);
 
     function apiVersion() external view returns (string memory api_version);
 
     function initialize(
         address _bridge,
-        address _governance,
-        EverscaleAddress memory _rewards
+        address _governance
     ) external;
 
+    function fees(address token) external view returns (uint);
     function prefixes(address _token) external view returns (TokenPrefix memory);
     function tokens(address _token) external view returns (Token memory);
     function natives(address _token) external view returns (EverscaleAddress memory);
@@ -69,8 +71,10 @@ interface IMultiVault is IEverscale {
     function setTokenDepositFee(address token, uint _depositFee) external;
     function setTokenWithdrawFee(address token, uint _withdrawFee) external;
 
-    function setDefaultDepositFee(uint _defaultDepositFee) external;
-    function setDefaultWithdrawFee(uint _defaultWithdrawFee) external;
+    function setDefaultNativeDepositFee(uint fee) external;
+    function setDefaultNativeWithdrawFee(uint fee) external;
+    function setDefaultAlienDepositFee(uint fee) external;
+    function setDefaultAlienWithdrawFee(uint fee) external;
 
     function rewards() external view returns (EverscaleAddress memory);
 
@@ -125,8 +129,10 @@ interface IMultiVault is IEverscale {
     event BlacklistTokenAdded(address token);
     event BlacklistTokenRemoved(address token);
 
-    event UpdateDefaultDepositFee(uint fee);
-    event UpdateDefaultWithdrawFee(uint fee);
+    event UpdateDefaultNativeDepositFee(uint fee);
+    event UpdateDefaultNativeWithdrawFee(uint fee);
+    event UpdateDefaultAlienDepositFee(uint fee);
+    event UpdateDefaultAlienWithdrawFee(uint fee);
 
     event UpdateBridge(address bridge);
     event UpdateConfiguration(TokenType _type, int128 wid, uint256 addr);
@@ -156,6 +162,8 @@ interface IMultiVault is IEverscale {
         address token,
         int8 native_wid,
         uint256 native_addr,
+        string name_prefix,
+        string symbol_prefix,
         string name,
         string symbol,
         uint8 decimals
@@ -195,7 +203,7 @@ interface IMultiVault is IEverscale {
         bytes32 payloadId,
         address token,
         address recipient,
-        uint256 amunt,
+        uint256 amount,
         uint256 fee
     );
 

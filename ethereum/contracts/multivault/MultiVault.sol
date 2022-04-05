@@ -1,30 +1,31 @@
 // SPDX-License-Identifier: AGPL-3.0
-pragma solidity ^0.8.2;
+pragma solidity 0.8.0;
 
 
-import "./../interfaces/IERC20.sol";
-import "./../interfaces/multivault/IMultiVault.sol";
-import "./../interfaces/multivault/IMultiVaultToken.sol";
-import "./../interfaces/IBridge.sol";
-import "./../interfaces/vault/IVault.sol";
+import "./interfaces/IERC20.sol";
+import "./interfaces/IMultiVault.sol";
+import "./interfaces/IMultiVaultToken.sol";
+import "./interfaces/IBridge.sol";
 
-import "./../libraries/SafeERC20.sol";
-import "./../libraries/MultiVaultLibrary.sol";
+import "./libraries/SafeERC20.sol";
+import "./libraries/MultiVaultLibrary.sol";
 
-import "./../utils/Initializable.sol";
-import "./../utils/ReentrancyGuard.sol";
-import "./../utils/ChainId.sol";
+import "./utils/Initializable.sol";
+import "./utils/ReentrancyGuard.sol";
+import "./utils/ChainId.sol";
 
 import "./MultiVaultToken.sol";
 
 
 uint constant MAX_BPS = 10_000;
 uint constant FEE_LIMIT = MAX_BPS / 2;
-address constant ZERO_ADDRESS = address(0);
 
 uint8 constant DECIMALS_LIMIT = 18;
 uint256 constant SYMBOL_LENGTH_LIMIT = 32;
 uint256 constant NAME_LENGTH_LIMIT = 32;
+
+string constant DEFAULT_NAME_PREFIX = 'Octus ';
+string constant DEFAULT_SYMBOL_PREFIX = 'oct';
 
 
 string constant API_VERSION = '0.1.2';
@@ -37,16 +38,18 @@ string constant API_VERSION = '0.1.2';
 contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
     using SafeERC20 for IERC20;
 
-//    function getInitHash() public pure returns(bytes32){
-//        bytes memory bytecode = type(MultiVaultToken).creationCode;
-//        return keccak256(abi.encodePacked(bytecode));
-//    }
+    function getInitHash() public pure returns(bytes32) {
+        bytes memory bytecode = type(MultiVaultToken).creationCode;
+        return keccak256(abi.encodePacked(bytecode));
+    }
 
     mapping (address => Token) tokens_;
     mapping (address => EverscaleAddress) natives_;
 
-    uint public override defaultDepositFee;
-    uint public override defaultWithdrawFee;
+    uint public override defaultNativeDepositFee;
+    uint public override defaultNativeWithdrawFee;
+    uint public override defaultAlienDepositFee;
+    uint public override defaultAlienWithdrawFee;
 
     bool public override emergencyShutdown;
 
@@ -54,74 +57,15 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
     mapping(bytes32 => bool) public override withdrawalIds;
     EverscaleAddress rewards_;
     EverscaleAddress configurationNative_;
+    EverscaleAddress configurationAlien_;
 
     address public override governance;
     address pendingGovernance;
     address public override guardian;
     address public override management;
 
-    // STORAGE UPDATE 1
-    EverscaleAddress configurationAlien_;
-
-    // STORAGE UPDATE 2
     mapping (address => TokenPrefix) prefixes_;
-    mapping (address => uint) fees;
-
-    /// @notice Get token prefix
-    /// @dev Used to set up in advance prefix for the ERC20 native token
-    /// @param _token Token address
-    /// @return Name and symbol prefix
-    function prefixes(
-        address _token
-    ) external view override returns (TokenPrefix memory) {
-        return prefixes_[_token];
-    }
-
-    /// @notice Get token information
-    /// @param _token Token address
-    function tokens(
-        address _token
-    ) external view override returns (Token memory) {
-        return tokens_[_token];
-    }
-
-    /// @notice Get native Everscale token address for EVM token
-    /// @param _token Token address
-    function natives(
-        address _token
-    ) external view override returns (EverscaleAddress memory) {
-        return natives_[_token];
-    }
-
-    /// @notice Rewards address
-    /// @return Everscale address, used for collecting rewards.
-    function rewards()
-        external
-        view
-        override
-    returns (EverscaleAddress memory) {
-        return rewards_;
-    }
-
-    /// @notice Native configuration address
-    /// @return Everscale address, used for verifying native withdrawals
-    function configurationNative()
-        external
-        view
-        override
-    returns (EverscaleAddress memory) {
-        return configurationNative_;
-    }
-
-    /// @notice Alien configuration address
-    /// @return Everscale address, used for verifying alien withdrawals
-    function configurationAlien()
-        external
-        view
-        override
-    returns (EverscaleAddress memory) {
-        return configurationAlien_;
-    }
+    mapping (address => uint) public override fees;
 
     modifier tokenNotBlacklisted(address token) {
         require(!tokens_[token].blacklisted);
@@ -131,7 +75,7 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
 
     modifier initializeToken(address token) {
         if (tokens_[token].activation == 0) {
-            // Non-activated tokens are always aliens
+            // Non-activated tokens are always aliens, native tokens are activate on the first `saveWithdrawNative`
 
             require(
                 IERC20Metadata(token).decimals() <= DECIMALS_LIMIT &&
@@ -191,6 +135,62 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         _;
     }
 
+    /// @notice Get token prefix
+    /// @dev Used to set up in advance prefix for the ERC20 native token
+    /// @param _token Token address
+    /// @return Name and symbol prefix
+    function prefixes(
+        address _token
+    ) external view override returns (TokenPrefix memory) {
+        return prefixes_[_token];
+    }
+
+    /// @notice Get token information
+    /// @param _token Token address
+    function tokens(
+        address _token
+    ) external view override returns (Token memory) {
+        return tokens_[_token];
+    }
+
+    /// @notice Get native Everscale token address for EVM token
+    /// @param _token Token address
+    function natives(
+        address _token
+    ) external view override returns (EverscaleAddress memory) {
+        return natives_[_token];
+    }
+
+    /// @notice Rewards address
+    /// @return Everscale address, used for collecting rewards.
+    function rewards()
+        external
+        view
+        override
+    returns (EverscaleAddress memory) {
+        return rewards_;
+    }
+
+    /// @notice Native configuration address
+    /// @return Everscale address, used for verifying native withdrawals
+    function configurationNative()
+        external
+        view
+        override
+    returns (EverscaleAddress memory) {
+        return configurationNative_;
+    }
+
+    /// @notice Alien configuration address
+    /// @return Everscale address, used for verifying alien withdrawals
+    function configurationAlien()
+        external
+        view
+        override
+    returns (EverscaleAddress memory) {
+        return configurationAlien_;
+    }
+
     /// @notice Vault API version. Used to track the deployed version of this contract.
     //  @return api_version Current API version
     function apiVersion()
@@ -205,24 +205,21 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
     /// @notice MultiVault initializer
     /// @param _bridge Bridge address
     /// @param _governance Governance address
-    /// @param _rewards Everscale address for receiving rewards
     function initialize(
         address _bridge,
-        address _governance,
-        EverscaleAddress memory _rewards
+        address _governance
     ) external override initializer {
         bridge = _bridge;
         emit UpdateBridge(bridge);
 
         governance = _governance;
         emit UpdateGovernance(governance);
-
-        rewards_ = _rewards;
-        emit UpdateRewards(rewards_.wid, rewards_.addr);
     }
 
     /// @notice Set prefix for native token
     /// @param token Expected native token address, see note on `getNative`
+    /// @param name_prefix Name prefix, leave empty for no-prefix
+    /// @param symbol_prefix Symbol prefix, leave empty for no-prefix
     function setPrefix(
         address token,
         string memory name_prefix,
@@ -276,34 +273,68 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         emit UpdateRewards(rewards_.wid, rewards_.addr);
     }
 
-    /// @notice Set default deposit fee.
-    /// @param _defaultDepositFee Default deposit fee, should be less than FEE_LIMIT
-    function setDefaultDepositFee(
-        uint _defaultDepositFee
+    /// @notice Set default deposit fee for native tokens.
+    /// Charged on the `deposit`.
+    /// @param fee Fee amount, should be less than FEE_LIMIT
+    function setDefaultNativeDepositFee(
+        uint fee
     )
         external
         override
         onlyGovernanceOrManagement
-        respectFeeLimit(_defaultDepositFee)
+        respectFeeLimit(fee)
     {
-        defaultDepositFee = _defaultDepositFee;
+        defaultNativeDepositFee = fee;
 
-        emit UpdateDefaultDepositFee(defaultDepositFee);
+        emit UpdateDefaultNativeDepositFee(fee);
     }
 
-    /// @notice Set default withdraw fee.
-    /// @param _defaultWithdrawFee Default withdraw fee, should be less than FEE_LIMIT
-    function setDefaultWithdrawFee(
-        uint _defaultWithdrawFee
+    /// @notice Set default withdraw fee for native tokens.
+    /// Charged on the `saveWithdrawNative`.
+    /// @param fee Fee amount, should be less than FEE_LIMIT
+    function setDefaultNativeWithdrawFee(
+        uint fee
     )
         external
         override
         onlyGovernanceOrManagement
-        respectFeeLimit(_defaultWithdrawFee)
+        respectFeeLimit(fee)
     {
-        defaultWithdrawFee = _defaultWithdrawFee;
+        defaultNativeWithdrawFee = fee;
 
-        emit UpdateDefaultWithdrawFee(defaultWithdrawFee);
+        emit UpdateDefaultNativeWithdrawFee(fee);
+    }
+
+    /// @notice Set default deposit fee for alien tokens.
+    /// Charged on the `deposit`.
+    /// @param fee Fee amount, should be less than FEE_LIMIT
+    function setDefaultAlienDepositFee(
+        uint fee
+    )
+        external
+        override
+        onlyGovernanceOrManagement
+        respectFeeLimit(fee)
+    {
+        defaultAlienDepositFee = fee;
+
+        emit UpdateDefaultAlienDepositFee(fee);
+    }
+
+    /// @notice Set default withdraw fee for alien tokens.
+    /// Charged on the `saveWithdrawAlien`.
+    /// @param fee Fee amount, should be less than FEE_LIMIT
+    function setDefaultAlienWithdrawFee(
+        uint fee
+    )
+        external
+        override
+        onlyGovernanceOrManagement
+        respectFeeLimit(fee)
+    {
+        defaultAlienWithdrawFee = fee;
+
+        emit UpdateDefaultAlienWithdrawFee(fee);
     }
 
     /// @notice Set deposit fee for specific token.
@@ -658,9 +689,6 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         require(tokens_[token].activation > 0);
         require(!tokens_[token].isNative);
 
-        require(IVault(vault).token() == token);
-        require(IVault(token).governance() == governance);
-
         tokens_[token].blacklisted = true;
 
         IERC20(token).safeTransfer(
@@ -705,18 +733,23 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         address token,
         bool isNative
     ) internal {
-        tokens_[token].activation = block.number;
-        tokens_[token].blacklisted = false;
-        tokens_[token].isNative = isNative;
-        tokens_[token].depositFee = defaultDepositFee;
-        tokens_[token].withdrawFee = defaultWithdrawFee;
+        uint depositFee = isNative ? defaultNativeDepositFee : defaultAlienDepositFee;
+        uint withdrawFee = isNative ? defaultNativeWithdrawFee : defaultAlienWithdrawFee;
+
+        tokens_[token] = Token({
+            activation: block.number,
+            blacklisted: false,
+            isNative: isNative,
+            depositFee: depositFee,
+            withdrawFee: withdrawFee
+        });
 
         emit TokenActivated(
             token,
             block.number,
             isNative,
-            defaultDepositFee,
-            defaultWithdrawFee
+            depositFee,
+            withdrawFee
         );
     }
 
@@ -781,9 +814,15 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
             token := create2(0, add(bytecode, 32), mload(bytecode), salt)
         }
 
+        // Check custom prefix available
+        TokenPrefix memory prefix = prefixes_[token];
+
+        string memory name_prefix = prefix.activation == 0 ? DEFAULT_NAME_PREFIX : prefix.name;
+        string memory symbol_prefix = prefix.activation == 0 ? DEFAULT_SYMBOL_PREFIX : prefix.symbol;
+
         IMultiVaultToken(token).initialize(
-            string(abi.encodePacked('Octus ', meta.name)),
-            string(abi.encodePacked('oct', meta.symbol)),
+            string(abi.encodePacked(name_prefix, meta.name)),
+            string(abi.encodePacked(symbol_prefix, meta.symbol)),
             meta.decimals
         );
 
@@ -791,6 +830,8 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
             token,
             native.wid,
             native.addr,
+            name_prefix,
+            symbol_prefix,
             meta.name,
             meta.symbol,
             meta.decimals
@@ -801,7 +842,7 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         bytes memory payload,
         bytes[] memory signatures,
         EverscaleAddress memory configuration
-    ) internal returns (EverscaleEvent memory) {
+    ) internal view returns (EverscaleEvent memory) {
         require(
             IBridge(bridge).verifySignedEverscaleEvent(payload, signatures) == 0,
             "Vault: signatures verification failed"
