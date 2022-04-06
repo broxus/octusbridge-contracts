@@ -10,7 +10,7 @@ module.exports = async ({getNamedAccounts, deployments, getChainId}) => {
         strategy_deployer = owner;
     }
 
-    await deployments.deploy('ConvexFraxStrategyUSDT', {
+    const frax = await deployments.deploy('ConvexFraxStrategyUSDT', {
         contract: 'ConvexFraxStrategy',
         from: strategy_deployer,
         log: true,
@@ -25,10 +25,9 @@ module.exports = async ({getNamedAccounts, deployments, getChainId}) => {
         }
     });
 
-    const frax = (await deployments.get('ConvexFraxStrategyUSDT'));
-    await deployments.save('ConvexFraxStrategyImplementation', {
+    await deployments.save('ConvexFraxStrategy', {
         abi: frax.abi,
-        address: frax.address
+        address: frax.implementation
     });
 };
 

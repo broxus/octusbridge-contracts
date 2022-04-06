@@ -10,19 +10,27 @@ module.exports = async ({getNamedAccounts, deployments, getChainId}) => {
         strategy_deployer = owner;
     }
 
-    const artifact = await deployments.get('ConvexFraxStrategyImplementation');
-    const proxy_admmin = await deployments.get('DefaultProxyAdmin');
+    const frax_strategy = await deployments.get('ConvexFraxStrategy');
+    const proxy_admin = await deployments.get('DefaultProxyAdmin');
 
+    const ABI = ["function initialize(address _vault)"];
+    const encoder = new ethers.utils.Interface(ABI);
+    const encoded = encoder.encodeFunctionData("initialize", [USDC_VAULT_ADDR]);
 
-    await deployments.deploy('ConvexFraxStrategyUSDC', {
-        contract: 'ConvexFraxStrategy',
+    const usdc = await deployments.deploy('ConvexFraxStrategyUSDC_Proxy', {
+        contract: 'TransparentUpgradeableProxy',
         from: strategy_deployer,
         log: true,
         args: [
-            artifact.address,
-            proxy_admmin.address,
-            '0x'
+            frax_strategy.address,
+            proxy_admin.address,
+            encoded
         ]
+    });
+
+    await deployments.save('ConvexFraxStrategyUSDC', {
+        abi: frax_strategy.abi,
+        address: usdc.address
     });
 };
 

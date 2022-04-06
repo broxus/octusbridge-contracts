@@ -10,19 +10,27 @@ module.exports = async ({getNamedAccounts, deployments, getChainId}) => {
         strategy_deployer = owner;
     }
 
-    await deployments.deploy('ConvexFraxStrategyDAI', {
-        contract: 'ConvexFraxStrategy',
+    const frax_strategy = await deployments.get('ConvexFraxStrategy');
+    const proxy_admin = await deployments.get('DefaultProxyAdmin');
+
+    const ABI = ["function initialize(address _vault)"];
+    const encoder = new ethers.utils.Interface(ABI);
+    const encoded = encoder.encodeFunctionData("initialize", [DAI_VAULT_ADDR]);
+
+    const dai = await deployments.deploy('ConvexFraxStrategyDAI_Proxy', {
+        contract: 'TransparentUpgradeableProxy',
         from: strategy_deployer,
         log: true,
-        proxy: {
-            proxyContract: 'OpenZeppelinTransparentProxy',
-            execute: {
-                methodName: 'initialize',
-                args: [
-                    DAI_VAULT_ADDR
-                ],
-            }
-        }
+        args: [
+            frax_strategy.address,
+            proxy_admin.address,
+            encoded
+        ]
+    });
+
+    await deployments.save('ConvexFraxStrategyDAI', {
+        abi: frax_strategy.abi,
+        address: dai.address
     });
 };
 
