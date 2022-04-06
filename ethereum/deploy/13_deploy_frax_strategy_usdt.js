@@ -24,6 +24,12 @@ module.exports = async ({getNamedAccounts, deployments, getChainId}) => {
             }
         }
     });
+
+    const frax = (await deployments.get('ConvexFraxStrategyUSDT'));
+    await deployments.save('ConvexFraxStrategyImplementation', {
+        abi: frax.abi,
+        address: frax.address
+    });
 };
 
 module.exports.tags = ['Deploy_USDT_Convex_Frax'];

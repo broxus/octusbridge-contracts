@@ -10,19 +10,19 @@ module.exports = async ({getNamedAccounts, deployments, getChainId}) => {
         strategy_deployer = owner;
     }
 
+    const artifact = await deployments.get('ConvexFraxStrategyImplementation');
+    const proxy_admmin = await deployments.get('DefaultProxyAdmin');
+
+
     await deployments.deploy('ConvexFraxStrategyUSDC', {
         contract: 'ConvexFraxStrategy',
         from: strategy_deployer,
         log: true,
-        proxy: {
-            proxyContract: 'OpenZeppelinTransparentProxy',
-            execute: {
-                methodName: 'initialize',
-                args: [
-                    USDC_VAULT_ADDR
-                ],
-            }
-        }
+        args: [
+            artifact.address,
+            proxy_admmin.address,
+            '0x'
+        ]
     });
 };
 
