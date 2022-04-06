@@ -85,8 +85,6 @@ contract MultiVaultEVMEventNative is EthereumBaseEvent, IMultiVaultEVMEventNativ
 
         tokenWallet = tokenWallet_;
 
-        status = Status.Pending;
-
         loadRelays();
     }
 
