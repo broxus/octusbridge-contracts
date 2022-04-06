@@ -27,7 +27,7 @@ describe('Test Convex3Frax strategy on DAI vault', async function () {
         });
 
         it('Deploy strategy', async () => {
-            await deployments.fixture('Deploy_DAI_Convex_Frax');
+            await deployments.fixture(['Deploy_USDT_Convex_Frax', 'Deploy_DAI_Convex_Frax']);
             strategy = await ethers.getContract('ConvexFraxStrategyDAI');
 
             // setup other contracts we need
