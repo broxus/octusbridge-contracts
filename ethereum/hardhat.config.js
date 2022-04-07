@@ -108,7 +108,7 @@ const hardhatConfig = {
     hardhat: {
       forking: {
         url: process.env.ETH_MAIN_ARCHIVE_HTTP,
-        blockNumber: 12859605,
+        blockNumber: 14522000,
       },
       chainId: 1111,
       accounts: {
@@ -190,9 +190,6 @@ const hardhatConfig = {
   namedAccounts: {
     dai_vault: {
       hardhat: '0x032d06b4cc8a914b85615acd0131c3e0a7330968'
-    },
-    bridge: {
-      hardhat: '0xF4404070f63a7E19Be0b1dd89A5fb88E12c0173A'
     },
     proxy_admin: {
       hardhat: '0x5889d26Ad270540E315B028Dd39Ae0ECB3De6179'

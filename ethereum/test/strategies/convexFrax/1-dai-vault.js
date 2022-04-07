@@ -53,10 +53,15 @@ describe('Test Convex3Frax strategy on DAI vault', async function () {
             });
 
             const proxy_admin = await ethers.getNamedSigner('proxy_admin');
-            const bridge = await ethers.getNamedSigner('bridge');
-            const proxyAdmin = await ethers.getContractAt('ProxyAdmin', proxy_admin.address);
+            const proxyAdmin = await ethers.getContractAt(
+                '@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol:ProxyAdmin',
+                proxy_admin.address
+            );
 
-            await proxyAdmin.connect(governance).upgrade(bridge.address, mockup.address);
+            await proxyAdmin.connect(governance).upgrade(
+                '0xF4404070f63a7E19Be0b1dd89A5fb88E12c0173A',
+                mockup.address
+            );
         });
 
         it.skip("Set vault mockup", async () => {
@@ -67,7 +72,10 @@ describe('Test Convex3Frax strategy on DAI vault', async function () {
             const mockup = await VaultMockup.deploy();
 
             const proxy_admin = await ethers.getNamedSigner('proxy_admin');
-            const proxyAdmin = await ethers.getContractAt('ProxyAdmin', proxy_admin.address);
+            const proxyAdmin = await ethers.getContractAt(
+                '@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol:ProxyAdmin',
+                proxy_admin.address
+            );
 
             await proxyAdmin.connect(governance).upgrade(vault.address, mockup.address);
         });

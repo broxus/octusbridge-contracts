@@ -12,7 +12,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     const encoded = encoder.encodeFunctionData("initialize", [DAI_VAULT_ADDR]);
 
     const dai = await deployments.deploy('ConvexFraxStrategyDAI_Proxy', {
-        contract: 'TransparentUpgradeableProxy',
+        contract: '@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol:TransparentUpgradeableProxy',
         from: deployer,
         log: true,
         args: [
