@@ -1,14 +1,8 @@
 const USDC_VAULT_ADDR = '0xf8a0d53ddc6c92c3c59824f380c0f3d2a3cf521c';
 
 
-module.exports = async ({getNamedAccounts, deployments, getChainId}) => {
-    const { deployer, owner } = await getNamedAccounts();
-
-    const chainId = await getChainId();
-    let strategy_deployer = deployer;
-    if (chainId.toString() === '1111') {
-        strategy_deployer = owner;
-    }
+module.exports = async ({getNamedAccounts, deployments}) => {
+    const { deployer } = await getNamedAccounts();
 
     const frax_strategy = await deployments.get('ConvexFraxStrategy');
     const proxy_admin = await deployments.get('DefaultProxyAdmin');
@@ -19,7 +13,7 @@ module.exports = async ({getNamedAccounts, deployments, getChainId}) => {
 
     const usdc = await deployments.deploy('ConvexFraxStrategyUSDC_Proxy', {
         contract: 'TransparentUpgradeableProxy',
-        from: strategy_deployer,
+        from: deployer,
         log: true,
         args: [
             frax_strategy.address,

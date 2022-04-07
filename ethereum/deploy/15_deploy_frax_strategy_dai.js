@@ -1,14 +1,8 @@
 const DAI_VAULT_ADDR = '0x032d06b4cc8a914b85615acd0131c3e0a7330968';
 
 
-module.exports = async ({getNamedAccounts, deployments, getChainId}) => {
-    const { deployer, owner } = await getNamedAccounts();
-
-    const chainId = await getChainId();
-    let strategy_deployer = deployer;
-    if (chainId.toString() === '1111') {
-        strategy_deployer = owner;
-    }
+module.exports = async ({getNamedAccounts, deployments}) => {
+    const { deployer } = await getNamedAccounts();
 
     const frax_strategy = await deployments.get('ConvexFraxStrategy');
     const proxy_admin = await deployments.get('DefaultProxyAdmin');
@@ -19,7 +13,7 @@ module.exports = async ({getNamedAccounts, deployments, getChainId}) => {
 
     const dai = await deployments.deploy('ConvexFraxStrategyDAI_Proxy', {
         contract: 'TransparentUpgradeableProxy',
-        from: strategy_deployer,
+        from: deployer,
         log: true,
         args: [
             frax_strategy.address,
