@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0
+
 /**
  *Submitted for verification at Etherscan.io on 2021-05-28
 */
@@ -8,35 +10,33 @@ pragma experimental ABIEncoderV2;
 
 import "../interfaces/IBooster.sol";
 import "../interfaces/ICurveFi.sol";
-import "../interfaces/IERC20.sol";
-import "../interfaces/IERC20Metadata.sol";
 import "../interfaces/IRewards.sol";
 import "../interfaces/IUni.sol";
-import "../libraries/Address.sol";
 import "../libraries/Math.sol";
-import "../libraries/SafeERC20.sol";
 import "../interfaces/IWeth.sol";
 import "./ConvexCrvLp.sol";
-import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
-
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 
 
 abstract contract ConvexWEth is ConvexCrvLp {
-    using SafeERC20 for IERC20;
+    using SafeERC20Upgradeable for IERC20Upgradeable;
 
     address public constant CrvAlEth = address(0xC4C319E2D4d66CcA4464C0c2B32c9Bd23ebe784e);
 
     function _initialize(
         address _vault
     ) internal override {
-        BaseStrategy._initialize(_vault, msg.sender, msg.sender);
+        BaseStrategy._initialize(_vault);
 
         slippage_factor = 300;
         minReportDelay = 1 days;
         maxReportDelay = 30 days;
         profitFactor = 100000;
         debtThreshold = 1e21;
-        want_wrapped = IERC20(CrvAlEth);
+        want_wrapped = IERC20Upgradeable(CrvAlEth);
         want_wrapped.safeApprove(_vault, type(uint256).max); // Give Vault unlimited access (might save gas)
 
         curve_lp_idx = 0;
@@ -45,15 +45,15 @@ abstract contract ConvexWEth is ConvexCrvLp {
     function _approveBasic() internal override {
         want_wrapped.safeApprove(booster, 0);
         want_wrapped.safeApprove(booster, type(uint256).max);
-        IERC20(weth).safeApprove(curve, 0);
-        IERC20(weth).safeApprove(curve, type(uint256).max);
+        IERC20Upgradeable(weth).safeApprove(curve, 0);
+        IERC20Upgradeable(weth).safeApprove(curve, type(uint256).max);
     }
 
     function _approveDex() internal override {
-        IERC20(crv).safeApprove(dex[0], 0);
-        IERC20(crv).safeApprove(dex[0], type(uint256).max);
-        IERC20(cvx).safeApprove(dex[1], 0);
-        IERC20(cvx).safeApprove(dex[1], type(uint256).max);
+        IERC20Upgradeable(crv).safeApprove(dex[0], 0);
+        IERC20Upgradeable(crv).safeApprove(dex[0], type(uint256).max);
+        IERC20Upgradeable(cvx).safeApprove(dex[1], 0);
+        IERC20Upgradeable(cvx).safeApprove(dex[1], type(uint256).max);
     }
 
     function calc_wrapped_from_want(uint256 want_amount) public view override returns (uint256) {
@@ -126,7 +126,7 @@ contract ConvexCrvAlEthStrategy is ConvexWEth, Initializable {
     {
         uint before = balanceOfWrapped();
         Rewards(rewardContract).getReward(address(this), isClaimExtras);
-        uint256 _crv = IERC20(crv).balanceOf(address(this));
+        uint256 _crv = IERC20Upgradeable(crv).balanceOf(address(this));
         if (_crv > 0) {
             address[] memory path = new address[](2);
             path[0] = crv;
@@ -134,7 +134,7 @@ contract ConvexCrvAlEthStrategy is ConvexWEth, Initializable {
 
             Uni(dex[0]).swapExactTokensForETH(_crv, uint256(0), path, address(this), block.timestamp);
         }
-        uint256 _cvx = IERC20(cvx).balanceOf(address(this));
+        uint256 _cvx = IERC20Upgradeable(cvx).balanceOf(address(this));
         if (_cvx > 0) {
             address[] memory path = new address[](2);
             path[0] = cvx;
