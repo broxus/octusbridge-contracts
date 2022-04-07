@@ -292,7 +292,7 @@ function decodeWithdrawalEventData(bytes eventData) external view returns (struc
 ### deposit
 
 ```solidity
-function deposit(IEverscale.EverscaleAddress recipient, uint256[] amount, IVault.PendingWithdrawalId[] pendingWithdrawalId) external nonpayable
+function deposit(IEverscale.EverscaleAddress recipient, uint256 amount, IVault.PendingWithdrawalId pendingWithdrawalId) external nonpayable
 ```
 
 
@@ -304,8 +304,8 @@ function deposit(IEverscale.EverscaleAddress recipient, uint256[] amount, IVault
 | Name | Type | Description |
 |---|---|---|
 | recipient | IEverscale.EverscaleAddress | undefined |
-| amount | uint256[] | undefined |
-| pendingWithdrawalId | IVault.PendingWithdrawalId[] | undefined |
+| amount | uint256 | undefined |
+| pendingWithdrawalId | IVault.PendingWithdrawalId | undefined |
 
 ### deposit
 
@@ -327,7 +327,7 @@ function deposit(IEverscale.EverscaleAddress recipient, uint256 amount) external
 ### deposit
 
 ```solidity
-function deposit(IEverscale.EverscaleAddress recipient, uint256 amount, IVault.PendingWithdrawalId pendingWithdrawalId) external nonpayable
+function deposit(IEverscale.EverscaleAddress recipient, uint256[] amount, IVault.PendingWithdrawalId[] pendingWithdrawalId) external nonpayable
 ```
 
 
@@ -339,8 +339,8 @@ function deposit(IEverscale.EverscaleAddress recipient, uint256 amount, IVault.P
 | Name | Type | Description |
 |---|---|---|
 | recipient | IEverscale.EverscaleAddress | undefined |
-| amount | uint256 | undefined |
-| pendingWithdrawalId | IVault.PendingWithdrawalId | undefined |
+| amount | uint256[] | undefined |
+| pendingWithdrawalId | IVault.PendingWithdrawalId[] | undefined |
 
 ### depositFee
 

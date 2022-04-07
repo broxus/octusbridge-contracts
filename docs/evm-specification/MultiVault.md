@@ -145,10 +145,10 @@ Native configuration address
 |---|---|---|
 | _0 | IEverscale.EverscaleAddress | Everscale address, used for verifying native withdrawals |
 
-### defaultDepositFee
+### defaultAlienDepositFee
 
 ```solidity
-function defaultDepositFee() external view returns (uint256)
+function defaultAlienDepositFee() external view returns (uint256)
 ```
 
 
@@ -162,10 +162,44 @@ function defaultDepositFee() external view returns (uint256)
 |---|---|---|
 | _0 | uint256 | undefined |
 
-### defaultWithdrawFee
+### defaultAlienWithdrawFee
 
 ```solidity
-function defaultWithdrawFee() external view returns (uint256)
+function defaultAlienWithdrawFee() external view returns (uint256)
+```
+
+
+
+
+
+
+#### Returns
+
+| Name | Type | Description |
+|---|---|---|
+| _0 | uint256 | undefined |
+
+### defaultNativeDepositFee
+
+```solidity
+function defaultNativeDepositFee() external view returns (uint256)
+```
+
+
+
+
+
+
+#### Returns
+
+| Name | Type | Description |
+|---|---|---|
+| _0 | uint256 | undefined |
+
+### defaultNativeWithdrawFee
+
+```solidity
+function defaultNativeWithdrawFee() external view returns (uint256)
 ```
 
 
@@ -214,6 +248,28 @@ function emergencyShutdown() external view returns (bool)
 |---|---|---|
 | _0 | bool | undefined |
 
+### fees
+
+```solidity
+function fees(address) external view returns (uint256)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| _0 | address | undefined |
+
+#### Returns
+
+| Name | Type | Description |
+|---|---|---|
+| _0 | uint256 | undefined |
+
 ### getChainID
 
 ```solidity
@@ -230,6 +286,23 @@ function getChainID() external view returns (uint256)
 | Name | Type | Description |
 |---|---|---|
 | _0 | uint256 | undefined |
+
+### getInitHash
+
+```solidity
+function getInitHash() external pure returns (bytes32)
+```
+
+
+
+
+
+
+#### Returns
+
+| Name | Type | Description |
+|---|---|---|
+| _0 | bytes32 | undefined |
 
 ### getNativeToken
 
@@ -291,10 +364,10 @@ function guardian() external view returns (address)
 ### initialize
 
 ```solidity
-function initialize(address _bridge, address _governance, IEverscale.EverscaleAddress _rewards) external nonpayable
+function initialize(address _bridge, address _governance) external nonpayable
 ```
 
-
+MultiVault initializer
 
 
 
@@ -302,9 +375,8 @@ function initialize(address _bridge, address _governance, IEverscale.EverscaleAd
 
 | Name | Type | Description |
 |---|---|---|
-| _bridge | address | undefined |
-| _governance | address | undefined |
-| _rewards | IEverscale.EverscaleAddress | undefined |
+| _bridge | address | Bridge address |
+| _governance | address | Governance address |
 
 ### management
 
@@ -361,6 +433,28 @@ Get native Everscale token address for EVM token
 | Name | Type | Description |
 |---|---|---|
 | _0 | IEverscale.EverscaleAddress | undefined |
+
+### prefixes
+
+```solidity
+function prefixes(address _token) external view returns (struct IMultiVault.TokenPrefix)
+```
+
+Get token prefix
+
+*Used to set up in advance prefix for the ERC20 native token*
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| _token | address | Token address |
+
+#### Returns
+
+| Name | Type | Description |
+|---|---|---|
+| _0 | IMultiVault.TokenPrefix | Name and symbol prefix |
 
 ### rewards
 
@@ -445,13 +539,13 @@ function setConfigurationNative(IEverscale.EverscaleAddress _configuration) exte
 |---|---|---|
 | _configuration | IEverscale.EverscaleAddress | undefined |
 
-### setDefaultDepositFee
+### setDefaultAlienDepositFee
 
 ```solidity
-function setDefaultDepositFee(uint256 _defaultDepositFee) external nonpayable
+function setDefaultAlienDepositFee(uint256 fee) external nonpayable
 ```
 
-Set default deposit fee.
+Set default deposit fee for alien tokens. Charged on the `deposit`.
 
 
 
@@ -459,15 +553,15 @@ Set default deposit fee.
 
 | Name | Type | Description |
 |---|---|---|
-| _defaultDepositFee | uint256 | Default deposit fee, should be less than FEE_LIMIT |
+| fee | uint256 | Fee amount, should be less than FEE_LIMIT |
 
-### setDefaultWithdrawFee
+### setDefaultAlienWithdrawFee
 
 ```solidity
-function setDefaultWithdrawFee(uint256 _defaultWithdrawFee) external nonpayable
+function setDefaultAlienWithdrawFee(uint256 fee) external nonpayable
 ```
 
-Set default withdraw fee.
+Set default withdraw fee for alien tokens. Charged on the `saveWithdrawAlien`.
 
 
 
@@ -475,7 +569,39 @@ Set default withdraw fee.
 
 | Name | Type | Description |
 |---|---|---|
-| _defaultWithdrawFee | uint256 | Default withdraw fee, should be less than FEE_LIMIT |
+| fee | uint256 | Fee amount, should be less than FEE_LIMIT |
+
+### setDefaultNativeDepositFee
+
+```solidity
+function setDefaultNativeDepositFee(uint256 fee) external nonpayable
+```
+
+Set default deposit fee for native tokens. Charged on the `deposit`.
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| fee | uint256 | Fee amount, should be less than FEE_LIMIT |
+
+### setDefaultNativeWithdrawFee
+
+```solidity
+function setDefaultNativeWithdrawFee(uint256 fee) external nonpayable
+```
+
+Set default withdraw fee for native tokens. Charged on the `saveWithdrawNative`.
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| fee | uint256 | Fee amount, should be less than FEE_LIMIT |
 
 ### setEmergencyShutdown
 
@@ -541,6 +667,24 @@ Changes the management address. This may only be called by `governance`
 |---|---|---|
 | _management | address | The address to use for management. |
 
+### setPrefix
+
+```solidity
+function setPrefix(address token, string name_prefix, string symbol_prefix) external nonpayable
+```
+
+Set prefix for native token
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| token | address | Expected native token address, see note on `getNative` |
+| name_prefix | string | Name prefix, leave empty for no-prefix |
+| symbol_prefix | string | Symbol prefix, leave empty for no-prefix |
+
 ### setRewards
 
 ```solidity
@@ -590,6 +734,23 @@ Set withdraw fee for specific token. This may be called only by `governance` or 
 |---|---|---|
 | token | address | Token address, must be enabled |
 | _withdrawFee | uint256 | Withdraw fee, must be less than FEE_LIMIT. |
+
+### skim
+
+```solidity
+function skim(address token, bool skim_to_everscale) external nonpayable
+```
+
+Skim multivault fees for specific token
+
+*If `skim_to_everscale` is true, than fees will be sent to Everscale. Token type will be derived automatically and transferred with correct pipeline to the `rewards`. Otherwise, tokens will be transferred to the `governance` address. Can be called only by governance or management.*
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| token | address | Token address, can be both native or alien |
+| skim_to_everscale | bool | Skim fees to Everscale or not |
 
 ### tokens
 
@@ -768,6 +929,24 @@ event NewPendingGovernance(address governance)
 |---|---|---|
 | governance  | address | undefined |
 
+### SkimFee
+
+```solidity
+event SkimFee(address token, bool skim_to_everscale, uint256 amount)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| token  | address | undefined |
+| skim_to_everscale  | bool | undefined |
+| amount  | uint256 | undefined |
+
 ### TokenActivated
 
 ```solidity
@@ -791,7 +970,7 @@ event TokenActivated(address token, uint256 activation, bool isNative, uint256 d
 ### TokenCreated
 
 ```solidity
-event TokenCreated(address token, int8 native_wid, uint256 native_addr, string name, string symbol, uint8 decimals)
+event TokenCreated(address token, int8 native_wid, uint256 native_addr, string name_prefix, string symbol_prefix, string name, string symbol, uint8 decimals)
 ```
 
 
@@ -805,6 +984,8 @@ event TokenCreated(address token, int8 native_wid, uint256 native_addr, string n
 | token  | address | undefined |
 | native_wid  | int8 | undefined |
 | native_addr  | uint256 | undefined |
+| name_prefix  | string | undefined |
+| symbol_prefix  | string | undefined |
 | name  | string | undefined |
 | symbol  | string | undefined |
 | decimals  | uint8 | undefined |
@@ -860,10 +1041,10 @@ event UpdateConfiguration(enum IMultiVault.TokenType _type, int128 wid, uint256 
 | wid  | int128 | undefined |
 | addr  | uint256 | undefined |
 
-### UpdateDefaultDepositFee
+### UpdateDefaultAlienDepositFee
 
 ```solidity
-event UpdateDefaultDepositFee(uint256 fee)
+event UpdateDefaultAlienDepositFee(uint256 fee)
 ```
 
 
@@ -876,10 +1057,42 @@ event UpdateDefaultDepositFee(uint256 fee)
 |---|---|---|
 | fee  | uint256 | undefined |
 
-### UpdateDefaultWithdrawFee
+### UpdateDefaultAlienWithdrawFee
 
 ```solidity
-event UpdateDefaultWithdrawFee(uint256 fee)
+event UpdateDefaultAlienWithdrawFee(uint256 fee)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| fee  | uint256 | undefined |
+
+### UpdateDefaultNativeDepositFee
+
+```solidity
+event UpdateDefaultNativeDepositFee(uint256 fee)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| fee  | uint256 | undefined |
+
+### UpdateDefaultNativeWithdrawFee
+
+```solidity
+event UpdateDefaultNativeWithdrawFee(uint256 fee)
 ```
 
 
@@ -974,6 +1187,24 @@ event UpdateTokenDepositFee(address token, uint256 fee)
 | token  | address | undefined |
 | fee  | uint256 | undefined |
 
+### UpdateTokenPrefix
+
+```solidity
+event UpdateTokenPrefix(address token, string name_prefix, string symbol_prefix)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| token  | address | undefined |
+| name_prefix  | string | undefined |
+| symbol_prefix  | string | undefined |
+
 ### UpdateTokenWithdrawFee
 
 ```solidity
@@ -994,7 +1225,7 @@ event UpdateTokenWithdrawFee(address token, uint256 fee)
 ### Withdraw
 
 ```solidity
-event Withdraw(enum IMultiVault.TokenType _type, bytes32 payloadId, address token, address recipient, uint256 amunt, uint256 fee)
+event Withdraw(enum IMultiVault.TokenType _type, bytes32 payloadId, address token, address recipient, uint256 amount, uint256 fee)
 ```
 
 
@@ -1009,7 +1240,7 @@ event Withdraw(enum IMultiVault.TokenType _type, bytes32 payloadId, address toke
 | payloadId  | bytes32 | undefined |
 | token  | address | undefined |
 | recipient  | address | undefined |
-| amunt  | uint256 | undefined |
+| amount  | uint256 | undefined |
 | fee  | uint256 | undefined |
 
 

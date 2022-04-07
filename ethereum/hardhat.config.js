@@ -5,7 +5,7 @@ require('hardhat-deploy-ethers');
 require('hardhat-deploy');
 require('hardhat-abi-exporter');
 require("hardhat-gas-reporter");
-// require('@primitivefi/hardhat-dodoc');
+require('@primitivefi/hardhat-dodoc');
 
 
 task("accounts", "Prints the list of accounts", async () => {
@@ -36,6 +36,13 @@ const bridge = {
  * @type import('hardhat/config').HardhatUserConfig
  */
 const hardhatConfig = {
+  dodoc: {
+    runOnCompile: true,
+    outputDir: './../docs/evm-specification',
+    include: ['bridge/Bridge.sol', 'vault/Vault.sol', 'DAO.sol', 'multivault/MultiVault.sol'],
+    freshOutput: true,
+    keepFileStructure: false
+  },
   abiExporter: {
     path: 'abi',
     clear: true,

@@ -395,7 +395,7 @@ function renounceOwnership() external nonpayable
 ### roundRelaysConfiguration
 
 ```solidity
-function roundRelaysConfiguration() external view returns (int8 wid, uint256 addr)
+function roundRelaysConfiguration() external view returns (int128 wid, uint256 addr)
 ```
 
 
@@ -407,7 +407,7 @@ function roundRelaysConfiguration() external view returns (int8 wid, uint256 add
 
 | Name | Type | Description |
 |---|---|---|
-| wid | int8 | undefined |
+| wid | int128 | undefined |
 | addr | uint256 | undefined |
 
 ### roundSubmitter
