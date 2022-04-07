@@ -12,7 +12,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     const encoded = encoder.encodeFunctionData("initialize", [USDC_VAULT_ADDR]);
 
     const usdc = await deployments.deploy('ConvexFraxStrategyUSDC_Proxy', {
-        contract: 'TransparentUpgradeableProxy',
+        contract: '@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol:TransparentUpgradeableProxy',
         from: deployer,
         log: true,
         args: [

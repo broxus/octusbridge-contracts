@@ -22,7 +22,7 @@ contract StakingMockup is IStaking, IRound, RandomNonce {
         @returns roundContract Round contract
     */
     function getRelayRoundAddressFromTimestamp(
-        uint32 eventTimestamp
+        uint32
     )
         override
         public
@@ -31,7 +31,7 @@ contract StakingMockup is IStaking, IRound, RandomNonce {
     returns (
         address roundContract, uint32 roundNum
     ) {
-        return {value: 0, flag: 64} (address(this), roundNum);
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} (address(this), roundNum);
     }
 
     /*
@@ -46,6 +46,6 @@ contract StakingMockup is IStaking, IRound, RandomNonce {
     returns (
         uint[] _keys
     ) {
-        return {value: 0, flag: 64} __keys;
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} __keys;
     }
 }

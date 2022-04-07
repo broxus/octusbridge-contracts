@@ -63,7 +63,7 @@ let staking_events = [{name: 'dummy'}];
 
 
 
-describe('Test Staking Rewards', async function () {
+describe.skip('Staking highload relay test', async function () {
     this.timeout(10000000);
 
     const deployTokenRoot = async function (token_name, token_symbol) {

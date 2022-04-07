@@ -24,7 +24,7 @@ Ban relays
 
 | Name | Type | Description |
 |---|---|---|
-| _relays | address[] | List of relay addresses to ban
+| _relays | address[] | List of relay addresses to ban |
 
 ### blacklist
 
@@ -40,13 +40,13 @@ function blacklist(address) external view returns (bool)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | address | undefined
+| _0 | address | undefined |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | bool | undefined
+| _0 | bool | undefined |
 
 ### cache
 
@@ -62,13 +62,13 @@ function cache(bytes32) external view returns (bool)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | bytes32 | undefined
+| _0 | bytes32 | undefined |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | bool | undefined
+| _0 | bool | undefined |
 
 ### decodeEverscaleEvent
 
@@ -84,13 +84,13 @@ function decodeEverscaleEvent(bytes payload) external pure returns (struct IEver
 
 | Name | Type | Description |
 |---|---|---|
-| payload | bytes | undefined
+| payload | bytes | undefined |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _event | IEverscale.EverscaleEvent | undefined
+| _event | IEverscale.EverscaleEvent | undefined |
 
 ### decodeRoundRelaysEventData
 
@@ -106,15 +106,15 @@ function decodeRoundRelaysEventData(bytes payload) external pure returns (uint32
 
 | Name | Type | Description |
 |---|---|---|
-| payload | bytes | undefined
+| payload | bytes | undefined |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| round | uint32 | undefined
-| _relays | uint160[] | undefined
-| roundEnd | uint32 | undefined
+| round | uint32 | undefined |
+| _relays | uint160[] | undefined |
+| roundEnd | uint32 | undefined |
 
 ### emergencyShutdown
 
@@ -131,7 +131,7 @@ function emergencyShutdown() external view returns (bool)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | bool | undefined
+| _0 | bool | undefined |
 
 ### forceRoundRelays
 
@@ -147,8 +147,8 @@ Forced set of next round relays
 
 | Name | Type | Description |
 |---|---|---|
-| _relays | uint160[] | Next round relays
-| roundEnd | uint32 | Round end
+| _relays | uint160[] | Next round relays |
+| roundEnd | uint32 | Round end |
 
 ### initialRound
 
@@ -165,7 +165,7 @@ function initialRound() external view returns (uint32)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint32 | undefined
+| _0 | uint32 | undefined |
 
 ### initialize
 
@@ -181,13 +181,13 @@ Bridge initializer
 
 | Name | Type | Description |
 |---|---|---|
-| _owner | address | Bridge owner
-| _roundSubmitter | address | Round submitter
-| _minimumRequiredSignatures | uint32 | Minimum required signatures per round.
-| _roundTTL | uint32 | Round TTL after round end.
-| _initialRound | uint32 | Initial round number. Useful in case new EVM network is connected to the bridge.
-| _initialRoundEnd | uint32 | Initial round end timestamp.
-| _relays | uint160[] | Initial (genesis) set of relays. Encode addresses as uint160.
+| _owner | address | Bridge owner |
+| _roundSubmitter | address | Round submitter |
+| _minimumRequiredSignatures | uint32 | Minimum required signatures per round. |
+| _roundTTL | uint32 | Round TTL after round end. |
+| _initialRound | uint32 | Initial round number. Useful in case new EVM network is connected to the bridge. |
+| _initialRoundEnd | uint32 | Initial round end timestamp. |
+| _relays | uint160[] | Initial (genesis) set of relays. Encode addresses as uint160. |
 
 ### isBanned
 
@@ -203,13 +203,13 @@ Check if relay is banned. Ban is global. If the relay is banned it means it lost
 
 | Name | Type | Description |
 |---|---|---|
-| candidate | address | Address to check
+| candidate | address | Address to check |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | bool | undefined
+| _0 | bool | undefined |
 
 ### isRelay
 
@@ -225,14 +225,14 @@ Check if some address is relay at specific round
 
 | Name | Type | Description |
 |---|---|---|
-| round | uint32 | Round id
-| candidate | address | Address to check
+| round | uint32 | Round id |
+| candidate | address | Address to check |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | bool | undefined
+| _0 | bool | undefined |
 
 ### isRoundRotten
 
@@ -248,13 +248,13 @@ function isRoundRotten(uint32 round) external view returns (bool)
 
 | Name | Type | Description |
 |---|---|---|
-| round | uint32 | Round id
+| round | uint32 | Round id |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | bool | undefined
+| _0 | bool | undefined |
 
 ### lastRound
 
@@ -271,7 +271,7 @@ function lastRound() external view returns (uint32)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint32 | undefined
+| _0 | uint32 | undefined |
 
 ### minimumRequiredSignatures
 
@@ -288,7 +288,7 @@ function minimumRequiredSignatures() external view returns (uint32)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint32 | undefined
+| _0 | uint32 | undefined |
 
 ### owner
 
@@ -305,7 +305,7 @@ function owner() external view returns (address)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | address | undefined
+| _0 | address | undefined |
 
 ### pause
 
@@ -333,7 +333,7 @@ function paused() external view returns (bool)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | bool | undefined
+| _0 | bool | undefined |
 
 ### recoverSignature
 
@@ -349,14 +349,14 @@ Recover signer from the payload and signature
 
 | Name | Type | Description |
 |---|---|---|
-| payload | bytes | Payload
-| signature | bytes | Signature
+| payload | bytes | Payload |
+| signature | bytes | Signature |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| signer | address | undefined
+| signer | address | undefined |
 
 ### relays
 
@@ -372,14 +372,14 @@ function relays(uint32, address) external view returns (bool)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint32 | undefined
-| _1 | address | undefined
+| _0 | uint32 | undefined |
+| _1 | address | undefined |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | bool | undefined
+| _0 | bool | undefined |
 
 ### renounceOwnership
 
@@ -407,8 +407,8 @@ function roundRelaysConfiguration() external view returns (int128 wid, uint256 a
 
 | Name | Type | Description |
 |---|---|---|
-| wid | int128 | undefined
-| addr | uint256 | undefined
+| wid | int128 | undefined |
+| addr | uint256 | undefined |
 
 ### roundSubmitter
 
@@ -425,7 +425,7 @@ function roundSubmitter() external view returns (address)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | address | undefined
+| _0 | address | undefined |
 
 ### roundTTL
 
@@ -442,7 +442,7 @@ function roundTTL() external view returns (uint32)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint32 | undefined
+| _0 | uint32 | undefined |
 
 ### rounds
 
@@ -458,16 +458,16 @@ function rounds(uint32) external view returns (uint32 end, uint32 ttl, uint32 re
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint32 | undefined
+| _0 | uint32 | undefined |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| end | uint32 | undefined
-| ttl | uint32 | undefined
-| relays | uint32 | undefined
-| requiredSignatures | uint32 | undefined
+| end | uint32 | undefined |
+| ttl | uint32 | undefined |
+| relays | uint32 | undefined |
+| requiredSignatures | uint32 | undefined |
 
 ### setConfiguration
 
@@ -475,7 +475,7 @@ function rounds(uint32) external view returns (uint32 end, uint32 ttl, uint32 re
 function setConfiguration(IEverscale.EverscaleAddress _roundRelaysConfiguration) external nonpayable
 ```
 
-Update address of configuration, that emits event with relays for next round.
+
 
 
 
@@ -483,7 +483,7 @@ Update address of configuration, that emits event with relays for next round.
 
 | Name | Type | Description |
 |---|---|---|
-| _roundRelaysConfiguration | IEverscale.EverscaleAddress | Everscale address of configuration contract
+| _roundRelaysConfiguration | IEverscale.EverscaleAddress | undefined |
 
 ### setRoundRelays
 
@@ -499,8 +499,8 @@ Grant relay permission for set of addresses at specific round
 
 | Name | Type | Description |
 |---|---|---|
-| payload | bytes | Bytes encoded EverscaleEvent structure
-| signatures | bytes[] | Payload signatures
+| payload | bytes | Bytes encoded EverscaleEvent structure |
+| signatures | bytes[] | Payload signatures |
 
 ### setRoundSubmitter
 
@@ -516,7 +516,7 @@ Set round submitter
 
 | Name | Type | Description |
 |---|---|---|
-| _roundSubmitter | address | New round submitter address
+| _roundSubmitter | address | New round submitter address |
 
 ### transferOwnership
 
@@ -532,7 +532,7 @@ function transferOwnership(address newOwner) external nonpayable
 
 | Name | Type | Description |
 |---|---|---|
-| newOwner | address | undefined
+| newOwner | address | undefined |
 
 ### unbanRelays
 
@@ -548,7 +548,7 @@ Unban relays
 
 | Name | Type | Description |
 |---|---|---|
-| _relays | address[] | List of relay addresses to unban
+| _relays | address[] | List of relay addresses to unban |
 
 ### unpause
 
@@ -575,7 +575,7 @@ Update minimum amount of required signatures per round This parameter limits the
 
 | Name | Type | Description |
 |---|---|---|
-| _minimumRequiredSignatures | uint32 | New value
+| _minimumRequiredSignatures | uint32 | New value |
 
 ### updateRoundTTL
 
@@ -591,7 +591,7 @@ Update round TTL
 
 | Name | Type | Description |
 |---|---|---|
-| _roundTTL | uint32 | New TTL value
+| _roundTTL | uint32 | New TTL value |
 
 ### verifySignedEverscaleEvent
 
@@ -607,14 +607,14 @@ Verify `EverscaleEvent` signatures.
 
 | Name | Type | Description |
 |---|---|---|
-| payload | bytes | Bytes encoded `EverscaleEvent` structure
-| signatures | bytes[] | Payload signatures
+| payload | bytes | Bytes encoded `EverscaleEvent` structure |
+| signatures | bytes[] | Payload signatures |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| errorCode | uint32 | Error code
+| errorCode | uint32 | Error code |
 
 
 

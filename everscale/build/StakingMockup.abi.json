@@ -7,7 +7,7 @@
 			"name": "getRelayRoundAddressFromTimestamp",
 			"inputs": [
 				{"name":"answerId","type":"uint32"},
-				{"name":"eventTimestamp","type":"uint32"}
+				{"name":"value0","type":"uint32"}
 			],
 			"outputs": [
 				{"name":"roundContract","type":"address"},

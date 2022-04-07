@@ -81,6 +81,82 @@
 			]
 		},
 		{
+			"name": "encodeMultiVaultAlienEVM",
+			"inputs": [
+				{"name":"base_chainId","type":"uint256"},
+				{"name":"base_token","type":"uint160"},
+				{"name":"name","type":"string"},
+				{"name":"symbol","type":"string"},
+				{"name":"decimals","type":"uint8"},
+				{"name":"amount","type":"uint128"},
+				{"name":"recipient_wid","type":"int8"},
+				{"name":"recipient_addr","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
+			]
+		},
+		{
+			"name": "encodeMultiVaultNativeEVM",
+			"inputs": [
+				{"name":"token_wid","type":"int8"},
+				{"name":"token_addr","type":"uint256"},
+				{"name":"amount","type":"uint128"},
+				{"name":"recipient_wid","type":"int8"},
+				{"name":"recipient_addr","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
+			]
+		},
+		{
+			"name": "encodeAlienBurnPayload",
+			"inputs": [
+				{"name":"recipient","type":"uint160"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
+			]
+		},
+		{
+			"name": "encodeNativeTransferPayload",
+			"inputs": [
+				{"name":"recipient","type":"uint160"},
+				{"name":"chainId","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
+			]
+		},
+		{
+			"name": "decodeMultiVaultAlienEverscale",
+			"inputs": [
+				{"name":"data","type":"cell"}
+			],
+			"outputs": [
+				{"name":"base_token","type":"uint160"},
+				{"name":"amount","type":"uint128"},
+				{"name":"recipient","type":"uint160"},
+				{"name":"base_chainId","type":"uint256"}
+			]
+		},
+		{
+			"name": "decodeMultiVaultNativeEverscale",
+			"inputs": [
+				{"name":"data","type":"cell"}
+			],
+			"outputs": [
+				{"name":"token_wid","type":"int8"},
+				{"name":"token_addr","type":"uint256"},
+				{"name":"name","type":"string"},
+				{"name":"symbol","type":"string"},
+				{"name":"decimals","type":"uint8"},
+				{"name":"amount","type":"uint128"},
+				{"name":"recipient","type":"uint160"},
+				{"name":"chainId","type":"uint256"}
+			]
+		},
+		{
 			"name": "encodeEthereumEventData",
 			"inputs": [
 				{"name":"tokens","type":"uint256"},
@@ -103,7 +179,7 @@
 			]
 		},
 		{
-			"name": "encodeTonEventData",
+			"name": "encodeEverscaleEventData",
 			"inputs": [
 				{"name":"wid","type":"int8"},
 				{"name":"addr","type":"uint256"},
@@ -116,7 +192,7 @@
 			]
 		},
 		{
-			"name": "decodeTonEventData",
+			"name": "decodeEverscaleEventData",
 			"inputs": [
 				{"name":"data","type":"cell"}
 			],

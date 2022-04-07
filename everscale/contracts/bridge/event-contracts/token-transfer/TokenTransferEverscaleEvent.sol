@@ -4,6 +4,7 @@ pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 import "./../base/EverscaleBaseEvent.sol";
+import "./../../../utils/cell-encoder/ProxyTokenTransferCellEncoder.sol";
 import "./../../interfaces/IEventNotificationReceiver.sol";
 import "./../../interfaces/event-contracts/IEverscaleEvent.sol";
 import "./../../../utils/ErrorCodes.sol";
@@ -13,11 +14,11 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
     @title Basic example of Everscale event configuration
     @dev This implementation is used for cross chain token transfers
 */
-contract TokenTransferTonEvent is EverscaleBaseEvent {
-    uint32 constant FORCE_CLOSE_TIMEOUT = 1 days;
-    uint32 public createdAt;
-
-    constructor(address _initializer, TvmCell _meta) EverscaleBaseEvent(_initializer, _meta) public {}
+contract TokenTransferEverscaleEvent is EverscaleBaseEvent, ProxyTokenTransferCellEncoder {
+    constructor(
+        address _initializer,
+        TvmCell _meta
+    ) EverscaleBaseEvent(_initializer, _meta) public {}
 
 
     function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
@@ -39,8 +40,9 @@ contract TokenTransferTonEvent is EverscaleBaseEvent {
     }
 
     function onInit() override internal {
-        createdAt = now;
         notifyEventStatusChanged();
+
+        loadRelays();
     }
 
     function onConfirm() override internal {
@@ -54,46 +56,6 @@ contract TokenTransferTonEvent is EverscaleBaseEvent {
     function getOwner() private view returns(address) {
         (,,,,address ownerAddress,) = getDecodedData();
         return ownerAddress;
-    }
-
-    /*
-        @dev Get event details
-        @returns _initData Init data
-        @returns _status Current event status
-        @returns _confirmRelays List of relays who have confirmed event
-        @returns _confirmRelays List of relays who have rejected event
-        @returns _eventDataSignatures List of relay's TonEvent signatures
-    */
-    function getDetails() public view responsible returns (
-        EverscaleEventInitData _eventInitData,
-        Status _status,
-        uint[] _confirms,
-        uint[] _rejects,
-        uint[] empty,
-        bytes[] _signatures,
-        uint128 balance,
-        address _initializer,
-        TvmCell _meta,
-        uint32 _requiredVotes
-    ) {
-        _confirms = getVoters(Vote.Confirm);
-
-        for (uint voter : _confirms) {
-            _signatures.push(signatures[voter]);
-        }
-
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} (
-            eventInitData,
-            status,
-            _confirms,
-            getVoters(Vote.Reject),
-            getVoters(Vote.Empty),
-            _signatures,
-            address(this).balance,
-            initializer,
-            meta,
-            requiredVotes
-        );
     }
 
     /*
@@ -119,7 +81,7 @@ contract TokenTransferTonEvent is EverscaleBaseEvent {
             tokens,
             ethereum_address,
             chainId
-        ) = decodeTonEventData(eventInitData.voteData.eventData);
+        ) = decodeEverscaleEventData(eventInitData.voteData.eventData);
 
         owner_address = address.makeAddrStd(wid, addr);
 

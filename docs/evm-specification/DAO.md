@@ -25,7 +25,7 @@ function bridge() external view returns (address)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | address | undefined
+| _0 | address | undefined |
 
 ### cache
 
@@ -41,13 +41,13 @@ function cache(bytes32) external view returns (bool)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | bytes32 | undefined
+| _0 | bytes32 | undefined |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | bool | undefined
+| _0 | bool | undefined |
 
 ### configuration
 
@@ -64,8 +64,8 @@ function configuration() external view returns (int128 wid, uint256 addr)
 
 | Name | Type | Description |
 |---|---|---|
-| wid | int128 | undefined
-| addr | uint256 | undefined
+| wid | int128 | undefined |
+| addr | uint256 | undefined |
 
 ### decodeEthActionsEventData
 
@@ -81,16 +81,16 @@ function decodeEthActionsEventData(bytes payload) external pure returns (int8 _w
 
 | Name | Type | Description |
 |---|---|---|
-| payload | bytes | undefined
+| payload | bytes | undefined |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _wid | int8 | undefined
-| _addr | uint256 | undefined
-| chainId | uint32 | undefined
-| actions | IDAO.EthAction[] | undefined
+| _wid | int8 | undefined |
+| _addr | uint256 | undefined |
+| chainId | uint32 | undefined |
+| actions | IDAO.EthAction[] | undefined |
 
 ### execute
 
@@ -106,14 +106,14 @@ Execute set of actions.
 
 | Name | Type | Description |
 |---|---|---|
-| payload | bytes | Encoded Everscale event with payload details
-| signatures | bytes[] | Payload signatures
+| payload | bytes | Encoded Everscale event with payload details |
+| signatures | bytes[] | Payload signatures |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| responses | bytes[] | Bytes-encoded payload action responses
+| responses | bytes[] | Bytes-encoded payload action responses |
 
 ### getChainID
 
@@ -130,7 +130,7 @@ function getChainID() external view returns (uint256)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined
+| _0 | uint256 | undefined |
 
 ### initialize
 
@@ -146,8 +146,8 @@ Initializer
 
 | Name | Type | Description |
 |---|---|---|
-| _owner | address | DAO owner. Should be used only for initial set up, than ownership should be transferred to DAO itself.
-| _bridge | address | Bridge address
+| _owner | address | DAO owner. Should be used only for initial set up, than ownership should be transferred to DAO itself. |
+| _bridge | address | Bridge address |
 
 ### owner
 
@@ -164,7 +164,7 @@ function owner() external view returns (address)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | address | undefined
+| _0 | address | undefined |
 
 ### renounceOwnership
 
@@ -191,7 +191,7 @@ function setBridge(address _bridge) external nonpayable
 
 | Name | Type | Description |
 |---|---|---|
-| _bridge | address | New bridge address
+| _bridge | address | New bridge address |
 
 ### setConfiguration
 
@@ -199,7 +199,7 @@ function setBridge(address _bridge) external nonpayable
 function setConfiguration(IEverscale.EverscaleAddress _configuration) external nonpayable
 ```
 
-Update address of the Everscale configuration, that emits actions for this DAO
+
 
 
 
@@ -207,7 +207,7 @@ Update address of the Everscale configuration, that emits actions for this DAO
 
 | Name | Type | Description |
 |---|---|---|
-| _configuration | IEverscale.EverscaleAddress | New configuration Everscale address
+| _configuration | IEverscale.EverscaleAddress | undefined |
 
 ### transferOwnership
 
@@ -223,7 +223,7 @@ function transferOwnership(address newOwner) external nonpayable
 
 | Name | Type | Description |
 |---|---|---|
-| newOwner | address | undefined
+| newOwner | address | undefined |
 
 
 

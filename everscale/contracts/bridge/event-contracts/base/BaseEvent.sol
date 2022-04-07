@@ -5,7 +5,6 @@ pragma AbiHeader pubkey;
 
 import "../../../utils/ErrorCodes.sol";
 import "../../../utils/TransferUtils.sol";
-import "../../../utils/cell-encoder/CellEncoder.sol";
 import "../../interfaces/IStaking.sol";
 import "../../interfaces/IRound.sol";
 import "../../interfaces/IEventNotificationReceiver.sol";
@@ -14,7 +13,7 @@ import "../../interfaces/event-contracts/IBasicEvent.sol";
 import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
-abstract contract BaseEvent is IBasicEvent, CellEncoder, TransferUtils{
+abstract contract BaseEvent is IBasicEvent, TransferUtils{
     // Event contract status
     Status public status;
     // Relays votes
@@ -33,6 +32,17 @@ abstract contract BaseEvent is IBasicEvent, CellEncoder, TransferUtils{
     address public relay_round;
     // number of relay round
     uint32 public round_number;
+
+    function onInit() virtual internal {
+        loadRelays();
+    }
+
+    function onRelaysLoaded() virtual internal {
+        status = Status.Pending;
+    }
+
+    function onConfirm() virtual internal {}
+    function onReject() virtual internal {}
 
     modifier onlyInitializer() {
         require(msg.sender == initializer, ErrorCodes.SENDER_NOT_INITIALIZER);
@@ -65,33 +75,38 @@ abstract contract BaseEvent is IBasicEvent, CellEncoder, TransferUtils{
     function loadRelays() internal view {
         IStaking(getStakingAddress()).getRelayRoundAddressFromTimestamp{
             value: 1 ton,
-            callback: receiveRoundAddress
+            callback: BaseEvent.receiveRoundAddress
         }(now);
     }
 
-    function _checkVoteReceiver(address voteReceiver) internal {
+    function _checkVoteReceiver(address voteReceiver) internal pure {
         require(voteReceiver == address(this), ErrorCodes.WRONG_VOTE_RECEIVER);
     }
 
     // TODO: cant be pure, compiler lies
-    function receiveRoundAddress(address roundContract, uint32 roundNum) public onlyStaking eventInitializing {
+    function receiveRoundAddress(
+        address roundContract,
+        uint32 roundNum
+    ) external onlyStaking {
         relay_round = roundContract;
         round_number = roundNum;
 
         IRound(roundContract).relayKeys{
             value: 1 ton,
-            callback: receiveRoundRelays
+            callback: BaseEvent.receiveRoundRelays
         }();
     }
 
-    function receiveRoundRelays(uint[] keys) public onlyRelayRound eventInitializing {
+    function receiveRoundRelays(
+        uint[] keys
+    ) external onlyRelayRound {
         requiredVotes = uint16(keys.length * 2 / 3) + 1;
 
         for (uint key: keys) {
             votes[key] = Vote.Empty;
         }
 
-        status = Status.Pending;
+        onRelaysLoaded();
     }
 
     /*
@@ -113,7 +128,7 @@ abstract contract BaseEvent is IBasicEvent, CellEncoder, TransferUtils{
         return {value: 0, flag: MsgFlag.REMAINING_GAS} votes.fetch(voter);
     }
 
-    function getApiVersion() public view responsible returns(uint32) {
+    function getApiVersion() external pure responsible returns(uint32) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS} 2;
     }
 }

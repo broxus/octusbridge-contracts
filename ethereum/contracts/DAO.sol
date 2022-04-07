@@ -104,8 +104,7 @@ contract DAO is IDAO, IEverscale, ReentrancyGuard, OwnableUpgradeable, Cache, Ch
         );
 
         (
-            int8 _wid,
-            uint256 _addr,
+            ,,
             uint32 chainId,
             EthAction[] memory actions
         ) = decodeEthActionsEventData(payload);

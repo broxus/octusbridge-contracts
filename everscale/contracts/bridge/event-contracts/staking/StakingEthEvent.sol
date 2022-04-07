@@ -15,7 +15,10 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 contract StakingEthEvent is EthereumBaseEvent, StakingCellEncoder {
 
-    constructor(address _initializer, TvmCell _meta) EthereumBaseEvent(_initializer, _meta) public {}
+    constructor(
+        address _initializer,
+        TvmCell _meta
+    ) EthereumBaseEvent(_initializer, _meta) public {}
 
     function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
         body.decode(uint64, uint32);
@@ -27,8 +30,6 @@ contract StakingEthEvent is EthereumBaseEvent, StakingCellEncoder {
         return bodyCopy;
     }
 
-    function onInit() override internal {}
-
     function onConfirm() override internal {
         IProxy(eventInitData.configuration).onEventConfirmed{
             flag: MsgFlag.ALL_NOT_RESERVED
@@ -38,43 +39,6 @@ contract StakingEthEvent is EthereumBaseEvent, StakingCellEncoder {
     function onReject() override internal {
         transferAll(initializer);
     }
-
-
-    /// @dev Get event details
-    /// @return _eventInitData Init data
-    /// @return _status Current event status
-    /// @return _confirms List of relays who have confirmed event
-    /// @return _rejects List of relays who have rejected event
-    /// @return empty List of relays who have not voted
-    /// @return balance This contract's balance
-    /// @return _initializer Account who has deployed this contract
-    /// @return _meta Meta data from the corresponding event configuration
-    /// @return _requiredVotes The required amount of votes to confirm / reject event.
-    /// Basically it's 2/3 + 1 relays for this round
-    function getDetails() public view responsible returns (
-        EthereumEventInitData _eventInitData,
-        Status _status,
-        uint[] _confirms,
-        uint[] _rejects,
-        uint[] empty,
-        uint128 balance,
-        address _initializer,
-        TvmCell _meta,
-        uint32 _requiredVotes
-    ) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} (
-            eventInitData,
-            status,
-            getVoters(Vote.Confirm),
-            getVoters(Vote.Reject),
-            getVoters(Vote.Empty),
-            address(this).balance,
-            initializer,
-            meta,
-            requiredVotes
-        );
-    }
-
 
     function getDecodedData() public view responsible returns (
         uint160 eth_addr,

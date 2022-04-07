@@ -10,7 +10,7 @@ require('@primitivefi/hardhat-dodoc');
 
 task("accounts", "Prints the list of accounts", async () => {
   const accounts = await ethers.getSigners();
-  
+
   for (const account of accounts) {
     console.log(account.address);
   }
@@ -21,7 +21,14 @@ const multisig = {
   main: '0xe29B04B9c6712080f79B2dAc5211B18B279D5DE0',
   polygon: '0xB8dD7223edc08A1681c81278D31d644576ECF0b4',
   bsc: '0xbF13DBbf86B6B1cc02a4169Dde38E16862C77a0a',
-  fantom: '0x5B2329A2b2B5ec2f5F77afb6826F825dcec3A3Fd'
+  fantom: '0x5B2329A2b2B5ec2f5F77afb6826F825dcec3A3Fd',
+};
+
+const bridge = {
+  main: '0xF4404070f63a7E19Be0b1dd89A5fb88E12c0173A',
+  polygon: '0x62AE18A40Fa81697Fc7d0fe58402af5cAF795e68',
+  bsc: '0xc25CA21377C5bbC860F0bF48dF685D744A411489',
+  fantom: '0x9f6898d5D36e2a4b9A0c6e58A0e86525475f58d7',
 };
 
 
@@ -32,22 +39,83 @@ const hardhatConfig = {
   dodoc: {
     runOnCompile: true,
     outputDir: './../docs/evm-specification',
-    include: ['Bridge', 'Vault', 'DAO', 'Registry', 'StakingRelayVerifier'],
+    include: ['bridge/Bridge.sol', 'vault/Vault.sol', 'DAO.sol', 'multivault/MultiVault.sol'],
+    freshOutput: true,
+    keepFileStructure: false
+  },
+  abiExporter: {
+    path: 'abi',
+    clear: true,
+    flat: true,
+    spacing: 2,
+    runOnCompile: true,
+    only: [':Vault$', ':Bridge$', ':DAO$', ':MultiVault$']
   },
   solidity: {
-    version: '0.8.2',
-    settings: {
-      optimizer: {
-        enabled: true,
-        runs: 200
-      }
+    compilers: [
+      {
+        version: '0.8.0',
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200
+          }
+        }
+      },
+      {
+        version: '0.8.2',
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200
+          }
+        }
+      },
+    ]
+  },
+  deterministicDeployment: {
+    "5": {
+      factory: "0x2E1C8f0a898f7C839489b3CEf82dB5509208c109",
+      deployer: "0x3b15820c35cC402Aac26687c62fA15A8267a9527",
+      funding: "1000000000000000",
+      signedTx: "0xf8a5808502540be400830186a08080b853604580600e600039806000f350fe7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf32ea0cda55714569101ddcae9fa0ebf3aa3ba24e0fdc2c28b084af6d870eb415dbd9fa00ddb09d74974cc66e809b1f317de690a4f0f6c72a0fcaded884c0afda51654bc",
+    },
+    "3": {
+      factory: "0x2E1C8f0a898f7C839489b3CEf82dB5509208c109",
+      deployer: "0x3b15820c35cC402Aac26687c62fA15A8267a9527",
+      funding: "1000000000000000",
+      signedTx: "0xf8a5808502540be400830186a08080b853604580600e600039806000f350fe7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf329a0b8b0134dfce102adb832b595305f9e84c9d7824af5aad82c80499d9915944a2aa00f9bbd1a582aded7e09f2be38924dd495d9bb0168ccba88701af415a21ef0e0c",
+    },
+    "1": {
+      factory: "0xcD04370a052CC2EeA4feC3f96Dc5D5c6e2129c69",
+      deployer: "0xdD54d5Fca0Df238f92A0421B31Ca766A20f70F6d",
+      funding: "10000000000000000",
+      signedTx: "0xf8a58085174876e800830186a08080b853604580600e600039806000f350fe7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf326a06be8767d0148bd0b97867a6ef2e7eb5c64f5924e9d1abaadf308caf65a590f28a01cf563db1c904a068702a0aa859f610706c928be59dec07eb86730a132c7ea82",
+    },
+    "56": {
+      factory: "0xcD04370a052CC2EeA4feC3f96Dc5D5c6e2129c69",
+      deployer: "0xdD54d5Fca0Df238f92A0421B31Ca766A20f70F6d",
+      funding: "500000000000000",
+      signedTx: "0xf8a68085012a05f200830186a08080b853604580600e600039806000f350fe7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf38194a0cf5862bba33f3ce680f9a8070a11c45899b300bacafdfb193784fc64ceba79d8a062c53832b83e65d8488186d6d6b508e8793658a06912c8b4ba3ac98a8eb28217",
+    },
+    "137": {
+      factory: "0xcD04370a052CC2EeA4feC3f96Dc5D5c6e2129c69",
+      deployer: "0xdD54d5Fca0Df238f92A0421B31Ca766A20f70F6d",
+      funding: "20000000000000000",
+      signedTx: "0xf8a780852e90edd000830186a08080b853604580600e600039806000f350fe7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf3820136a05f4e192f944f4d708e916a7ad829c348eaa5a8b5413ea8dfe2d4d98d5b030141a04809c69bfcc5e0876adad0d5cdad928ea41d24b26ae9dfa159a75ed217e6fe90",
+    },
+    "250": {
+      factory: "0xcD04370a052CC2EeA4feC3f96Dc5D5c6e2129c69",
+      deployer: "0xdD54d5Fca0Df238f92A0421B31Ca766A20f70F6d",
+      funding: "50000000000000000",
+      signedTx: "0xf8a78085746a528800830186a08080b853604580600e600039806000f350fe7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf3820217a06c337d22bed572141f530759e3d6390be456630218a5084f7fd06e9f0734a8e1a00c474f88289644b0f4bfd7c6bde7b55e043027ee03e4cd65a533a756698c2d33",
     }
   },
   networks: {
     hardhat: {
       forking: {
         url: process.env.ETH_MAIN_ARCHIVE_HTTP,
-        blockNumber: 12859605,
+        blockNumber: 14522000,
       },
       chainId: 1111,
       accounts: {
@@ -130,9 +198,6 @@ const hardhatConfig = {
     dai_vault: {
       hardhat: '0x032d06b4cc8a914b85615acd0131c3e0a7330968'
     },
-    bridge: {
-      hardhat: '0xF4404070f63a7E19Be0b1dd89A5fb88E12c0173A'
-    },
     proxy_admin: {
       hardhat: '0x5889d26Ad270540E315B028Dd39Ae0ECB3De6179'
     },
@@ -145,12 +210,13 @@ const hardhatConfig = {
     management: {
       default: 2,
     },
+    bridge: {
+      default: '0x0000000000000000000000000000000000000000',
+      ...bridge
+    },
     owner: {
       default: 3,
-      main: multisig.main,
-      polygon: multisig.polygon,
-      bsc: multisig.bsc,
-      fantom: multisig.fantom,
+      ...multisig
     },
     alice: {
       default: 4,
@@ -168,10 +234,7 @@ const hardhatConfig = {
       default: 8,
       ropsten: 8,
       goerli: 8,
-      main: multisig.main,
-      polygon: multisig.polygon,
-      bsc: multisig.bsc,
-      fantom: multisig.fantom,
+      ...multisig
     },
     dai_owner: {
       default: '0xA929022c9107643515F5c777cE9a910F0D1e490C',
@@ -385,18 +448,9 @@ const hardhatConfig = {
     },
     withdrawGuardian: {
       default: 23,
-      main: multisig.main,
-      polygon: multisig.polygon,
-      bsc: multisig.bsc,
-      fantom: multisig.fantom,
+      ...multisig
     }
   },
-  abiExporter: {
-    path: 'abi',
-    clear: true,
-    flat: true,
-    spacing: 2
-  }
 };
 
 module.exports = hardhatConfig;
