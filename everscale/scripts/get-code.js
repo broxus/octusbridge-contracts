@@ -17,16 +17,16 @@ async function main() {
     console.log(DaoEthereumActionEvent.code);
     console.log('');
 
-    const StakingEthEvent = await locklift.factory.getContract('StakingEthEvent');
-    console.log('StakingEthEvent');
+    const StakingEthereumEverscaleEvent = await locklift.factory.getContract('StakingEthereumEverscaleEvent');
+    console.log('StakingEthereumEverscaleEvent');
     console.log('');
-    console.log(StakingEthEvent.code);
+    console.log(StakingEthereumEverscaleEvent.code);
     console.log('');
 
-    const StakingTonEvent = await locklift.factory.getContract('StakingTonEvent');
-    console.log('StakingTonEvent');
+    const StakingEverscaleEthereumEvent = await locklift.factory.getContract('StakingEverscaleEthereumEvent');
+    console.log('StakingEverscaleEthereumEvent');
     console.log('');
-    console.log(StakingTonEvent.code);
+    console.log(StakingEverscaleEthereumEvent.code);
     console.log('');
 }
 

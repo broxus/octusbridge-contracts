@@ -13,7 +13,7 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
 
-contract StakingEthEvent is EthereumEverscaleBaseEvent, StakingCellEncoder {
+contract StakingEthereumEverscaleEvent is EthereumEverscaleBaseEvent, StakingCellEncoder {
 
     constructor(
         address _initializer,
@@ -46,7 +46,7 @@ contract StakingEthEvent is EthereumEverscaleBaseEvent, StakingCellEncoder {
         uint256 ton_addr_body,
         address ton_staker_addr
     ) {
-        (eth_addr, wk_id, ton_addr_body) = decodeEthereumStakingEventData(eventInitData.voteData.eventData);
+        (eth_addr, wk_id, ton_addr_body) = decodeEthereumEverscaleStakingEventData(eventInitData.voteData.eventData);
 
         ton_staker_addr = address.makeAddrStd(wk_id, ton_addr_body);
 

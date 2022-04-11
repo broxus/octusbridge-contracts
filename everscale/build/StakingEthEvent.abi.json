@@ -25,7 +25,7 @@
 			]
 		},
 		{
-			"name": "decodeTonStakingEventData",
+			"name": "decodeEverscaleEthereumStakingEventData",
 			"inputs": [
 				{"name":"data","type":"cell"}
 			],
@@ -36,7 +36,7 @@
 			]
 		},
 		{
-			"name": "decodeEthereumStakingEventData",
+			"name": "decodeEthereumEverscaleStakingEventData",
 			"inputs": [
 				{"name":"data","type":"cell"}
 			],
@@ -47,7 +47,7 @@
 			]
 		},
 		{
-			"name": "encodeEthereumStakingEventData",
+			"name": "encodeEthereumEverscaleStakingEventData",
 			"inputs": [
 				{"name":"eth_addr","type":"uint160"},
 				{"name":"wk_id","type":"int8"},

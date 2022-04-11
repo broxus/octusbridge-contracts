@@ -12,7 +12,7 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
 
-contract StakingTonEvent is EverscaleEthereumBaseEvent, StakingCellEncoder {
+contract StakingEverscaleEthereumEvent is EverscaleEthereumBaseEvent, StakingCellEncoder {
 
     constructor(
         address _initializer,
@@ -34,7 +34,7 @@ contract StakingTonEvent is EverscaleEthereumBaseEvent, StakingCellEncoder {
     function onReject() override internal {}
 
     function getDecodedData() public view responsible returns (uint128 round_num, uint160[] eth_keys, uint32 round_end) {
-        (round_num, eth_keys, round_end) = decodeTonStakingEventData(eventInitData.voteData.eventData);
+        (round_num, eth_keys, round_end) = decodeEverscaleEthereumStakingEventData(eventInitData.voteData.eventData);
 
         return {value: 0, flag: MsgFlag.REMAINING_GAS} (round_num, eth_keys, round_end);
     }

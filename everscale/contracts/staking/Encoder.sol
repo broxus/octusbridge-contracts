@@ -11,7 +11,7 @@ contract Encoder {
         return builder.toCell();
     }
 
-    function encodeEthereumStakingEventData(uint160 eth_addr, int8 wk_id, uint256 ton_addr_body) public pure returns (TvmCell data) {
+    function encodeEthereumEverscaleStakingEventData(uint160 eth_addr, int8 wk_id, uint256 ton_addr_body) public pure returns (TvmCell data) {
         TvmBuilder builder;
         builder.store(eth_addr);
         builder.store(wk_id);

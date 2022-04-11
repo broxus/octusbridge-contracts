@@ -88,7 +88,7 @@ const main = async () => {
 
   // Get event details
   const eventDetails = await Promise.all(events.map(async (event) => {
-    const stakingTonEvent = await locklift.factory.getContract('StakingTonEvent');
+    const stakingTonEvent = await locklift.factory.getContract('StakingEverscaleEthereumEvent');
     stakingTonEvent.address = event.value.eventContract;
 
     const details = await stakingTonEvent.call({method: 'getDetails'});
@@ -97,7 +97,7 @@ const main = async () => {
     // console.log(details);
 
     const eventData = await cellEncoderStandalone.call({
-      method: 'decodeTonStakingEventData',
+      method: 'decodeEverscaleEthereumStakingEventData',
       params: {data: details._eventInitData.voteData.eventData}
     });
     const eventDataEncoded = ethers.utils.defaultAbiCoder.encode(

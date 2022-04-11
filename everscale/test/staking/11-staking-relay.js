@@ -232,7 +232,7 @@ describe.skip('Test Staking Relay mechanic', async function () {
 
     const confirmEthRelayAccount = async function (_user, _user_eth_addr) {
         const event_data = await encoder.call({
-            method: 'encodeEthereumStakingEventData',
+            method: 'encodeEthereumEverscaleStakingEventData',
             params: {
                 eth_addr: _user_eth_addr,
                 wk_id: 0,

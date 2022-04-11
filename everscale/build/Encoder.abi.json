@@ -21,7 +21,7 @@
 			]
 		},
 		{
-			"name": "encodeEthereumStakingEventData",
+			"name": "encodeEthereumEverscaleStakingEventData",
 			"inputs": [
 				{"name":"eth_addr","type":"uint160"},
 				{"name":"wk_id","type":"int8"},
