@@ -21,10 +21,10 @@ describe('Test setting configuration meta', async function() {
   });
   
   describe('Ethereum event configuration', async () => {
-    let ethereumEventConfiguration, proxy;
+    let ethereumEverscaleEventConfiguration, proxy;
     
     it('Setup event configuration', async () => {
-      [ethereumEventConfiguration, proxy] = await setupEthereumEventConfiguration(
+      [ethereumEverscaleEventConfiguration, proxy] = await setupEthereumEventConfiguration(
         bridgeOwner,
         bridge,
         cellEncoder,
@@ -33,7 +33,7 @@ describe('Test setting configuration meta', async function() {
     
     it('Set meta', async () => {
       await bridgeOwner.runTarget({
-        contract: ethereumEventConfiguration,
+        contract: ethereumEverscaleEventConfiguration,
         method: 'setMeta',
         params: {
           _meta: ''
@@ -42,7 +42,7 @@ describe('Test setting configuration meta', async function() {
     });
     
     it('Check configuration meta', async () => {
-      const details = await ethereumEventConfiguration.call({ method: 'getDetails' });
+      const details = await ethereumEverscaleEventConfiguration.call({ method: 'getDetails' });
       
       expect(details._meta)
         .to.be.equal(emptyCell, 'Wrong meta');
@@ -50,10 +50,10 @@ describe('Test setting configuration meta', async function() {
   });
   
   describe('Ton event configuration', async () => {
-    let everscaleEventConfiguration;
+    let everscaleEthereumEventConfiguration;
 
     it('Setup event configuration', async () => {
-      [everscaleEventConfiguration] = await setupEverscaleEventConfiguration(
+      [everscaleEthereumEventConfiguration] = await setupEverscaleEventConfiguration(
         bridgeOwner,
         bridge,
         cellEncoder,
@@ -62,7 +62,7 @@ describe('Test setting configuration meta', async function() {
 
     it('Set meta', async () => {
       await bridgeOwner.runTarget({
-        contract: everscaleEventConfiguration,
+        contract: everscaleEthereumEventConfiguration,
         method: 'setMeta',
         params: {
           _meta: ''
@@ -71,7 +71,7 @@ describe('Test setting configuration meta', async function() {
     });
 
     it('Check configuration meta', async () => {
-      const details = await everscaleEventConfiguration.call({ method: 'getDetails' });
+      const details = await everscaleEthereumEventConfiguration.call({ method: 'getDetails' });
 
       expect(details._meta)
         .to.be.equal(emptyCell, 'Wrong meta');

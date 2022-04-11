@@ -6,7 +6,7 @@ pragma ton-solidity >= 0.39.0;
     @important Not strictly connected to the ERC20<->TIP3 token transfers, just an example.
 */
 contract ProxyTokenTransferCellEncoder {
-    function encodeEthereumEventData(
+    function encodeEthereumEverscaleEventData(
         uint256 tokens,
         int128 wid,
         uint256 owner_addr
@@ -20,7 +20,7 @@ contract ProxyTokenTransferCellEncoder {
         data = builder.toCell();
     }
 
-    function decodeEthereumEventData(
+    function decodeEthereumEverscaleEventData(
         TvmCell data
     ) public pure returns(
         uint128 tokens,
@@ -35,7 +35,7 @@ contract ProxyTokenTransferCellEncoder {
         return (uint128(_amount), int8(_wid), _addr);
     }
 
-    function encodeEverscaleEventData(
+    function encodeEverscaleEthereumEventData(
         int8 wid,
         uint addr,
         uint128 tokens,
@@ -51,7 +51,7 @@ contract ProxyTokenTransferCellEncoder {
         data = builder.toCell();
     }
 
-    function decodeEverscaleEventData(
+    function decodeEverscaleEthereumEventData(
         TvmCell data
     ) public pure returns(
         int8 wid,

@@ -1,14 +1,14 @@
 async function main() {
-    const TokenTransferEthereumEvent = await locklift.factory.getContract('TokenTransferEthereumEvent');
-    console.log('TokenTransferEthereumEvent');
+    const TokenTransferEthereumEverscaleEvent = await locklift.factory.getContract('TokenTransferEthereumEverscaleEvent');
+    console.log('TokenTransferEthereumEverscaleEvent');
     console.log('');
-    console.log(TokenTransferEthereumEvent.code);
+    console.log(TokenTransferEthereumEverscaleEvent.code);
     console.log('');
 
-    const TokenTransferEverscaleEvent = await locklift.factory.getContract('TokenTransferEverscaleEvent');
-    console.log('TokenTransferEverscaleEvent');
+    const TokenTransferEverscaleEthereumEvent = await locklift.factory.getContract('TokenTransferEverscaleEthereumEvent');
+    console.log('TokenTransferEverscaleEthereumEvent');
     console.log('');
-    console.log(TokenTransferEverscaleEvent.code);
+    console.log(TokenTransferEverscaleEthereumEvent.code);
     console.log('');
 
     const DaoEthereumActionEvent = await locklift.factory.getContract('DaoEthereumActionEvent');

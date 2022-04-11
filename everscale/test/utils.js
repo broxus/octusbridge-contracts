@@ -170,11 +170,11 @@ const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
     locklift.utils.convertCrystal('100', 'nano')
   );
 
-  const EthereumEventConfiguration = await locklift.factory.getContract('EthereumEventConfiguration');
-  const EthereumEvent = await locklift.factory.getContract('TokenTransferEthereumEvent');
+  const EthereumEverscaleEventConfiguration = await locklift.factory.getContract('EthereumEverscaleEventConfiguration');
+  const EthereumEvent = await locklift.factory.getContract('TokenTransferEthereumEverscaleEvent');
 
-  const ethereumEventConfiguration = await locklift.giver.deployContract({
-    contract: EthereumEventConfiguration,
+  const ethereumEverscaleEventConfiguration = await locklift.giver.deployContract({
+    contract: EthereumEverscaleEventConfiguration,
     constructorParams: {
       _owner: owner.address,
       _meta: configurationMeta,
@@ -198,7 +198,7 @@ const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
     keyPair
   }, locklift.utils.convertCrystal(1, 'nano'));
 
-  await logContract(ethereumEventConfiguration);
+  await logContract(ethereumEverscaleEventConfiguration);
 
   const proxy = await locklift.giver.deployContract({
     contract: Proxy,
@@ -215,7 +215,7 @@ const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
 
   const proxyConfiguration = {
     tonConfiguration:  locklift.utils.zeroAddress,
-    ethereumConfigurations: [ethereumEventConfiguration.address],
+    ethereumConfigurations: [ethereumEverscaleEventConfiguration.address],
     outdatedTokenRoots: [],
     tokenRoot: tokenRoot.address,
     settingsDeployWalletGrams: locklift.utils.convertCrystal(0.1, 'nano')
@@ -248,7 +248,7 @@ const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
 
   await logContract(initializer);
 
-  return [ethereumEventConfiguration, proxy, initializer];
+  return [ethereumEverscaleEventConfiguration, proxy, initializer];
 };
 
 const setupTokenRootWithWallet = async (rootOwner, walletOwner, mintAmount) => {
@@ -296,8 +296,8 @@ const setupTokenRootWithWallet = async (rootOwner, walletOwner, mintAmount) => {
 }
 
 const setupEverscaleEventConfiguration = async (owner, staking, cellEncoder) => {
-  const EverscaleEventConfiguration = await locklift.factory.getContract('EverscaleEventConfiguration');
-  const TonEvent = await locklift.factory.getContract('TokenTransferEverscaleEvent');
+  const EverscaleEthereumEventConfiguration = await locklift.factory.getContract('EverscaleEthereumEventConfiguration');
+  const TonEvent = await locklift.factory.getContract('TokenTransferEverscaleEthereumEvent');
 
   const _randomNonce = locklift.utils.getRandomNonce();
   const [keyPair] = await locklift.keys.getKeyPairs();
@@ -351,8 +351,8 @@ const setupEverscaleEventConfiguration = async (owner, staking, cellEncoder) => 
   });
 
   const configurationMeta = '';
-  const everscaleEventConfiguration = await locklift.giver.deployContract({
-    contract: EverscaleEventConfiguration,
+  const everscaleEthereumEventConfiguration = await locklift.giver.deployContract({
+    contract: EverscaleEthereumEventConfiguration,
     constructorParams: {
       _owner: owner.address,
       _meta: configurationMeta,
@@ -374,7 +374,7 @@ const setupEverscaleEventConfiguration = async (owner, staking, cellEncoder) => 
     keyPair
   }, locklift.utils.convertCrystal(1, 'nano'));
 
-  await logContract(everscaleEventConfiguration);
+  await logContract(everscaleEthereumEventConfiguration);
 
   const proxy = await locklift.giver.deployContract({
     contract: Proxy,
@@ -390,7 +390,7 @@ const setupEverscaleEventConfiguration = async (owner, staking, cellEncoder) => 
   await logContract(proxy);
 
   const proxyConfiguration = {
-    tonConfiguration: everscaleEventConfiguration.address,
+    tonConfiguration: everscaleEthereumEventConfiguration.address,
     ethereumConfigurations: [],
     outdatedTokenRoots: [],
     tokenRoot: tokenRoot.address,
@@ -408,7 +408,7 @@ const setupEverscaleEventConfiguration = async (owner, staking, cellEncoder) => 
     value: locklift.utils.convertCrystal(0.5, 'nano')
   });
 
-  return [everscaleEventConfiguration, proxy, initializer];
+  return [everscaleEthereumEventConfiguration, proxy, initializer];
 };
 
 
@@ -449,11 +449,11 @@ const setupAlienMultiVault = async (owner, staking, cellEncoder) => {
   await logContract(proxy);
 
   // Deploy EVM configuration
-  const EthereumEventConfiguration = await locklift.factory.getContract('EthereumEventConfiguration');
-  const EthereumEvent = await locklift.factory.getContract('MultiVaultEVMEventAlien');
+  const EthereumEverscaleEventConfiguration = await locklift.factory.getContract('EthereumEverscaleEventConfiguration');
+  const EthereumEvent = await locklift.factory.getContract('MultiVaultEVMEverscaleEventAlien');
 
   const evmEventConfiguration = await locklift.giver.deployContract({
-    contract: EthereumEventConfiguration,
+    contract: EthereumEverscaleEventConfiguration,
     constructorParams: {
       _owner: owner.address,
       _meta: '',
@@ -480,11 +480,11 @@ const setupAlienMultiVault = async (owner, staking, cellEncoder) => {
   await logContract(evmEventConfiguration);
 
   // Deploy Everscale configuration
-  const EverscaleEventConfiguration = await locklift.factory.getContract('EverscaleEventConfiguration');
-  const EverscaleEvent = await locklift.factory.getContract('MultiVaultEverscaleEventAlien');
+  const EverscaleEthereumEventConfiguration = await locklift.factory.getContract('EverscaleEthereumEventConfiguration');
+  const EverscaleEvent = await locklift.factory.getContract('MultiVaultEverscaleEVMEventAlien');
 
-  const everscaleEventConfiguration = await locklift.giver.deployContract({
-    contract: EverscaleEventConfiguration,
+  const everscaleEthereumEventConfiguration = await locklift.giver.deployContract({
+    contract: EverscaleEthereumEventConfiguration,
     constructorParams: {
       _owner: owner.address,
       _meta: '',
@@ -506,7 +506,7 @@ const setupAlienMultiVault = async (owner, staking, cellEncoder) => {
     keyPair
   }, locklift.utils.convertCrystal(1, 'nano'));
 
-  await logContract(everscaleEventConfiguration);
+  await logContract(everscaleEthereumEventConfiguration);
 
   // Set proxy configuration
   const AlienTokenRoot = await locklift.factory.getContract('TokenRootAlienEVM');
@@ -518,7 +518,7 @@ const setupAlienMultiVault = async (owner, staking, cellEncoder) => {
     method: 'setConfiguration',
     params: {
       _config: {
-        everscaleConfiguration: everscaleEventConfiguration.address,
+        everscaleConfiguration: everscaleEthereumEventConfiguration.address,
         evmConfigurations: [evmEventConfiguration.address],
         deployWalletValue: locklift.utils.convertCrystal(1, 'nano'),
         alienTokenRootCode: AlienTokenRoot.code,
@@ -530,7 +530,7 @@ const setupAlienMultiVault = async (owner, staking, cellEncoder) => {
     value: locklift.utils.convertCrystal(0.5, 'nano')
   });
 
-  return [evmEventConfiguration, everscaleEventConfiguration, proxy, initializer];
+  return [evmEventConfiguration, everscaleEthereumEventConfiguration, proxy, initializer];
 };
 
 
@@ -571,11 +571,11 @@ const setupNativeMultiVault = async (owner, staking) => {
   await logContract(proxy);
 
   // Deploy EVM configuration
-  const EthereumEventConfiguration = await locklift.factory.getContract('EthereumEventConfiguration');
-  const EthereumEvent = await locklift.factory.getContract('MultiVaultEVMEventNative');
+  const EthereumEverscaleEventConfiguration = await locklift.factory.getContract('EthereumEverscaleEventConfiguration');
+  const EthereumEvent = await locklift.factory.getContract('MultiVaultEVMEverscaleEventNative');
 
   const evmEventConfiguration = await locklift.giver.deployContract({
-    contract: EthereumEventConfiguration,
+    contract: EthereumEverscaleEventConfiguration,
     constructorParams: {
       _owner: owner.address,
       _meta: '',
@@ -602,11 +602,11 @@ const setupNativeMultiVault = async (owner, staking) => {
   await logContract(evmEventConfiguration);
 
   // Deploy Everscale configuration
-  const EverscaleEventConfiguration = await locklift.factory.getContract('EverscaleEventConfiguration');
-  const EverscaleEvent = await locklift.factory.getContract('MultiVaultEverscaleEventNative');
+  const EverscaleEthereumEventConfiguration = await locklift.factory.getContract('EverscaleEthereumEventConfiguration');
+  const EverscaleEvent = await locklift.factory.getContract('MultiVaultEverscaleEVMEventNative');
 
-  const everscaleEventConfiguration = await locklift.giver.deployContract({
-    contract: EverscaleEventConfiguration,
+  const everscaleEthereumEventConfiguration = await locklift.giver.deployContract({
+    contract: EverscaleEthereumEventConfiguration,
     constructorParams: {
       _owner: owner.address,
       _meta: '',
@@ -628,7 +628,7 @@ const setupNativeMultiVault = async (owner, staking) => {
     keyPair
   }, locklift.utils.convertCrystal(1, 'nano'));
 
-  await logContract(everscaleEventConfiguration);
+  await logContract(everscaleEthereumEventConfiguration);
 
   // Set proxy configuration
   await owner.runTarget({
@@ -636,7 +636,7 @@ const setupNativeMultiVault = async (owner, staking) => {
     method: 'setConfiguration',
     params: {
       _config: {
-        everscaleConfiguration: everscaleEventConfiguration.address,
+        everscaleConfiguration: everscaleEthereumEventConfiguration.address,
         evmConfigurations: [evmEventConfiguration.address],
         deployWalletValue: locklift.utils.convertCrystal(1, 'nano'),
       },
@@ -645,7 +645,7 @@ const setupNativeMultiVault = async (owner, staking) => {
     value: locklift.utils.convertCrystal(0.5, 'nano')
   });
 
-  return [evmEventConfiguration, everscaleEventConfiguration, proxy, initializer];
+  return [evmEventConfiguration, everscaleEthereumEventConfiguration, proxy, initializer];
 };
 
 

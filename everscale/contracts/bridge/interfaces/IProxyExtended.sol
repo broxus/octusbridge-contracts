@@ -1,10 +1,10 @@
 pragma ton-solidity >= 0.39.0;
 
-import "./event-contracts/IEthereumEvent.sol";
+import "./event-contracts/IEthereumEverscaleEvent.sol";
 
-interface IProxyExtended is IEthereumEvent {
+interface IProxyExtended is IEthereumEverscaleEvent {
     function onEventConfirmedExtended(
-        IEthereumEvent.EthereumEventInitData eventData,
+        IEthereumEverscaleEvent.EthereumEverscaleEventInitData eventData,
         TvmCell meta,
         address gasBackAddress
     ) external;

@@ -34,7 +34,7 @@
 			]
 		},
 		{
-			"name": "encodeEthereumEventData",
+			"name": "encodeEthereumEverscaleEventData",
 			"inputs": [
 				{"name":"tokens","type":"uint256"},
 				{"name":"wid","type":"int128"},
@@ -45,7 +45,7 @@
 			]
 		},
 		{
-			"name": "decodeEthereumEventData",
+			"name": "decodeEthereumEverscaleEventData",
 			"inputs": [
 				{"name":"data","type":"cell"}
 			],
@@ -56,7 +56,7 @@
 			]
 		},
 		{
-			"name": "encodeEverscaleEventData",
+			"name": "encodeEverscaleEthereumEventData",
 			"inputs": [
 				{"name":"wid","type":"int8"},
 				{"name":"addr","type":"uint256"},
@@ -69,7 +69,7 @@
 			]
 		},
 		{
-			"name": "decodeEverscaleEventData",
+			"name": "decodeEverscaleEthereumEventData",
 			"inputs": [
 				{"name":"data","type":"cell"}
 			],

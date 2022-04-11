@@ -3,10 +3,10 @@ pragma AbiHeader time;
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
-import "./../base/EverscaleBaseEvent.sol";
+import "./../base/EverscaleEthereumBaseEvent.sol";
 import "./../../../utils/cell-encoder/ProxyTokenTransferCellEncoder.sol";
 import "./../../interfaces/IEventNotificationReceiver.sol";
-import "./../../interfaces/event-contracts/IEverscaleEvent.sol";
+import "./../../interfaces/event-contracts/IEverscaleEthereumEvent.sol";
 import "./../../../utils/ErrorCodes.sol";
 import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
@@ -14,11 +14,11 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
     @title Basic example of Everscale event configuration
     @dev This implementation is used for cross chain token transfers
 */
-contract TokenTransferEverscaleEvent is EverscaleBaseEvent, ProxyTokenTransferCellEncoder {
+contract TokenTransferEverscaleEthereumEvent is EverscaleEthereumBaseEvent, ProxyTokenTransferCellEncoder {
     constructor(
         address _initializer,
         TvmCell _meta
-    ) EverscaleBaseEvent(_initializer, _meta) public {}
+    ) EverscaleEthereumBaseEvent(_initializer, _meta) public {}
 
 
     function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
@@ -81,7 +81,7 @@ contract TokenTransferEverscaleEvent is EverscaleBaseEvent, ProxyTokenTransferCe
             tokens,
             ethereum_address,
             chainId
-        ) = decodeEverscaleEventData(eventInitData.voteData.eventData);
+        ) = decodeEverscaleEthereumEventData(eventInitData.voteData.eventData);
 
         owner_address = address.makeAddrStd(wid, addr);
 

@@ -22,8 +22,8 @@ describe('Test configuration factory', async function() {
         let factory;
 
         it('Setup Ethereum event configuration factory', async () => {
-            const Factory = await locklift.factory.getContract('EthereumEventConfigurationFactory');
-            const Configuration = await locklift.factory.getContract('EthereumEventConfiguration');
+            const Factory = await locklift.factory.getContract('EthereumEverscaleEventConfigurationFactory');
+            const Configuration = await locklift.factory.getContract('EthereumEverscaleEventConfiguration');
 
             const _randomNonce = locklift.utils.getRandomNonce();
 
@@ -43,7 +43,7 @@ describe('Test configuration factory', async function() {
         let configuration;
 
         it('Deploy configuration', async () => {
-            const EthereumEvent = await locklift.factory.getContract('TokenTransferEthereumEvent');
+            const EthereumEvent = await locklift.factory.getContract('TokenTransferEthereumEverscaleEvent');
 
             const basicConfiguration = {
                 eventABI: '',
@@ -71,7 +71,7 @@ describe('Test configuration factory', async function() {
                 }
             });
 
-            configuration = await locklift.factory.getContract('EthereumEventConfiguration');
+            configuration = await locklift.factory.getContract('EthereumEverscaleEventConfiguration');
             configuration.address = (await factory.call({
                 method: 'deriveConfigurationAddress',
                 params: {

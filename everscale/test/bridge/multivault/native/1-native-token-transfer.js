@@ -107,7 +107,7 @@ describe('Test EVM native multivault pipeline', async function() {
 
             logger.log(`Expected event address: ${expectedEventContract}`);
 
-            eventContract = await locklift.factory.getContract('MultiVaultEverscaleEventNative');
+            eventContract = await locklift.factory.getContract('MultiVaultEverscaleEVMEventNative');
             eventContract.setAddress(expectedEventContract);
             eventContract.afterRun = afterRun;
 
@@ -372,7 +372,7 @@ describe('Test EVM native multivault pipeline', async function() {
 
             logger.log(`Expected event address: ${expectedEventContract}`);
 
-            eventContract = await locklift.factory.getContract('MultiVaultEVMEventNative');
+            eventContract = await locklift.factory.getContract('MultiVaultEVMEverscaleEventNative');
             eventContract.setAddress(expectedEventContract);
             eventContract.afterRun = afterRun;
 

@@ -3,8 +3,8 @@ pragma ton-solidity >= 0.39.0;
 import "./IBasicEvent.sol";
 
 
-interface IEthereumEvent {
-    struct EthereumEventVoteData {
+interface IEthereumEverscaleEvent {
+    struct EthereumEverscaleEventVoteData {
         uint eventTransaction;
         uint32 eventIndex;
         TvmCell eventData;
@@ -12,8 +12,8 @@ interface IEthereumEvent {
         uint eventBlock;
     }
 
-    struct EthereumEventInitData {
-        EthereumEventVoteData voteData;
+    struct EthereumEverscaleEventInitData {
+        EthereumEverscaleEventVoteData voteData;
         address configuration;
         address staking;
         uint32 chainId;

@@ -9,7 +9,7 @@ import "./../../utils/TransferUtils.sol";
 
 import "./../interfaces/IProxy.sol";
 import "./../interfaces/IProxyTokenTransferConfigurable.sol";
-import "./../interfaces/event-configuration-contracts/IEverscaleEventConfiguration.sol";
+import "./../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.sol";
 import "./../interfaces/legacy/ILegacyBurnTokensCallback.sol";
 import "./../interfaces/legacy/ILegacyTransferOwner.sol";
 
@@ -24,7 +24,7 @@ import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
 
 /// @title Proxy for cross chain token transfers
 /// @dev In case of ETH-Everscale token transfer, this proxy should receive
-/// `onEventConfirmed` callback from the corresponding EthereumEventConfiguration. Then it mints
+/// `onEventConfirmed` callback from the corresponding EthereumEverscaleEventConfiguration. Then it mints
 /// the specified amount of tokens to the user.
 /// In case of Everscale-ETH token transfer, this proxy should receive burn callback from the token
 /// and deploy event. This event will be signed by relays so it can be sent to the corresponding EVM Vault.
@@ -57,7 +57,7 @@ contract ProxyTokenTransfer is
     }
 
     function onEventConfirmed(
-        IEthereumEvent.EthereumEventInitData eventData,
+        IEthereumEverscaleEvent.EthereumEverscaleEventInitData eventData,
         address gasBackAddress
     ) public override onlyEthereumConfiguration reserveMinBalance(MIN_CONTRACT_BALANCE) {
         require(!paused, ErrorCodes.PROXY_PAUSED);
@@ -67,7 +67,7 @@ contract ProxyTokenTransfer is
             uint128 tokens,
             int8 wid,
             uint256 owner_addr
-        ) = decodeEthereumEventData(eventData.voteData.eventData);
+        ) = decodeEthereumEverscaleEventData(eventData.voteData.eventData);
 
         address owner_address = address.makeAddrStd(wid, owner_addr);
 
@@ -137,7 +137,7 @@ contract ProxyTokenTransfer is
 //                chainId
 //            );
 
-            TvmCell eventData = encodeEverscaleEventData(
+            TvmCell eventData = encodeEverscaleEthereumEventData(
                 remainingGasTo.wid,
                 remainingGasTo.value,
                 tokens,
@@ -145,9 +145,9 @@ contract ProxyTokenTransfer is
                 chainId
             );
 
-            IEverscaleEvent.EverscaleEventVoteData eventVoteData = IEverscaleEvent.EverscaleEventVoteData(tx.timestamp, now, eventData);
+            IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData = IEverscaleEthereumEvent.EverscaleEthereumEventVoteData(tx.timestamp, now, eventData);
 
-            IEverscaleEventConfiguration(config.tonConfiguration).deployEvent{
+            IEverscaleEthereumEventConfiguration(config.tonConfiguration).deployEvent{
                 value: 0,
                 flag: MsgFlag.ALL_NOT_RESERVED
             }(eventVoteData);

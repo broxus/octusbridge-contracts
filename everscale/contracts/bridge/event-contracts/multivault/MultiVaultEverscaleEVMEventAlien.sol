@@ -4,18 +4,18 @@ pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 
-import "./../../interfaces/multivault/IMultiVaultEverscaleEventAlien.sol";
+import "./../../interfaces/multivault/IMultiVaultEverscaleEVMEventAlien.sol";
 import "./../../interfaces/multivault/IProxyMultiVaultAlien.sol";
 import "./../../interfaces/ITokenRootAlienEVM.sol";
 
-import "./../base/EverscaleBaseEvent.sol";
+import "./../base/EverscaleEthereumBaseEvent.sol";
 
 
 /// @notice Everscale-EVM event for MultiVault alien token transfer.
 /// Before switching into the `Pending` status, event contract must perform
 /// the following actions:
 /// - Obtain the `token` token source.
-contract MultiVaultEverscaleEventAlien is EverscaleBaseEvent, IMultiVaultEverscaleEventAlien {
+contract MultiVaultEverscaleEVMEventAlien is EverscaleEthereumBaseEvent, IMultiVaultEverscaleEVMEventAlien {
     address proxy;
     address token;
     address remainingGasTo;
@@ -29,7 +29,7 @@ contract MultiVaultEverscaleEventAlien is EverscaleBaseEvent, IMultiVaultEversca
     constructor(
         address _initializer,
         TvmCell _meta
-    ) EverscaleBaseEvent(_initializer, _meta) public {}
+    ) EverscaleEthereumBaseEvent(_initializer, _meta) public {}
 
     function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
         body.decode(uint64, uint32);
@@ -59,7 +59,7 @@ contract MultiVaultEverscaleEventAlien is EverscaleBaseEvent, IMultiVaultEversca
 
         ITokenRootAlienEVM(token).meta{
             value: 1 ton,
-            callback: MultiVaultEverscaleEventAlien.receiveTokenMeta
+            callback: MultiVaultEverscaleEVMEventAlien.receiveTokenMeta
         }();
     }
 
@@ -77,7 +77,7 @@ contract MultiVaultEverscaleEventAlien is EverscaleBaseEvent, IMultiVaultEversca
 
         IProxyMultiVaultAlien(proxy).deriveAlienTokenRoot{
             value: 1 ton,
-            callback: MultiVaultEverscaleEventAlien.receiveAlienTokenRoot
+            callback: MultiVaultEverscaleEVMEventAlien.receiveAlienTokenRoot
         }(
             base_chainId,
             base_token,

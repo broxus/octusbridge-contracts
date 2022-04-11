@@ -4,18 +4,18 @@ pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 import "./BaseEvent.sol";
-import "../../interfaces/event-contracts/IEthereumEvent.sol";
+import "../../interfaces/event-contracts/IEthereumEverscaleEvent.sol";
 
 import "./../../../utils/ErrorCodes.sol";
 
 
-contract EthereumBaseEvent is BaseEvent, IEthereumEvent {
+contract EthereumEverscaleBaseEvent is BaseEvent, IEthereumEverscaleEvent {
     // Event data
-    EthereumEventInitData static eventInitData;
+    EthereumEverscaleEventInitData static eventInitData;
 
     event Confirm(uint relay);
 
-    /// @dev Should be deployed only by corresponding EthereumEventConfiguration contract
+    /// @dev Should be deployed only by corresponding EthereumEverscaleEventConfiguration contract
     /// @param _initializer The address who paid for contract deployment.
     /// Receives all contract balance at the end of event contract lifecycle.
     constructor(
@@ -30,7 +30,7 @@ contract EthereumBaseEvent is BaseEvent, IEthereumEvent {
         onInit();
     }
 
-    function getEventInitData() public view responsible returns (EthereumEventInitData) {
+    function getEventInitData() public view responsible returns (EthereumEverscaleEventInitData) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS} eventInitData;
     }
 
@@ -101,7 +101,7 @@ contract EthereumBaseEvent is BaseEvent, IEthereumEvent {
     /// @return _requiredVotes The required amount of votes to confirm / reject event.
     /// Basically it's 2/3 + 1 relays for this round
     function getDetails() external view responsible returns (
-        EthereumEventInitData _eventInitData,
+        EthereumEverscaleEventInitData _eventInitData,
         Status _status,
         uint[] _confirms,
         uint[] _rejects,

@@ -3,7 +3,7 @@ pragma AbiHeader expire;
 
 
 import './../interfaces/IProxy.sol';
-import './../interfaces/event-contracts/IEthereumEvent.sol';
+import './../interfaces/event-contracts/IEthereumEverscaleEvent.sol';
 import "./../../utils/TransferUtils.sol";
 
 import "@broxus/contracts/contracts/utils/RandomNonce.sol";
@@ -18,7 +18,7 @@ import "@broxus/contracts/contracts/utils/RandomNonce.sol";
 contract ProxyMockup is IProxy, RandomNonce {
     address configuration;
 
-    IEthereumEvent.EthereumEventInitData eventData;
+    IEthereumEverscaleEvent.EthereumEverscaleEventInitData eventData;
     uint callbackCounter = 0;
 
     constructor(
@@ -34,7 +34,7 @@ contract ProxyMockup is IProxy, RandomNonce {
         @dev Could be only called by the ethereum event contract
     */
     function onEventConfirmed(
-        IEthereumEvent.EthereumEventInitData _eventData,
+        IEthereumEverscaleEvent.EthereumEverscaleEventInitData _eventData,
         address gasBackAddress
     ) override public {
         require(msg.sender == configuration);
@@ -50,7 +50,7 @@ contract ProxyMockup is IProxy, RandomNonce {
     }
 
     function getDetails() public view returns (
-        IEthereumEvent.EthereumEventInitData _eventData,
+        IEthereumEverscaleEvent.EthereumEverscaleEventInitData _eventData,
         uint _callbackCounter
     ) {
         return (

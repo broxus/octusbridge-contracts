@@ -15,7 +15,7 @@ const main = async () => {
         provider
     );
 
-    const event = await locklift.factory.getContract('MultiVaultEverscaleEventNative');
+    const event = await locklift.factory.getContract('MultiVaultEverscaleEVMEventNative');
     event.setAddress(eventContract);
 
     const details = await event.call({ method: 'getDetails' });
@@ -39,7 +39,7 @@ const main = async () => {
         ]
     );
 
-    const configuration = await locklift.factory.getContract('EverscaleEventConfiguration');
+    const configuration = await locklift.factory.getContract('EverscaleEthereumEventConfiguration');
     configuration.setAddress(details._eventInitData.configuration);
 
     // console.log(details);

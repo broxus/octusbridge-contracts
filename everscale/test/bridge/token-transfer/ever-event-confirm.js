@@ -18,7 +18,7 @@ describe('Test ton event confirm', async function() {
   this.timeout(10000000);
   
   let bridge, bridgeOwner, staking, cellEncoder;
-  let everscaleEventConfiguration, proxy, initializer;
+  let everscaleEthereumEventConfiguration, proxy, initializer;
   let relays;
   let metricManager;
   let initializerTokenWallet;
@@ -45,7 +45,7 @@ describe('Test ton event confirm', async function() {
 
     [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
   
-    [everscaleEventConfiguration, proxy, initializer] = await setupEverscaleEventConfiguration(
+    [everscaleEthereumEventConfiguration, proxy, initializer] = await setupEverscaleEventConfiguration(
       bridgeOwner,
       staking,
       cellEncoder,
@@ -53,7 +53,7 @@ describe('Test ton event confirm', async function() {
   
     metricManager = new MetricManager(
       bridge, bridgeOwner, staking,
-      everscaleEventConfiguration, initializer
+      everscaleEthereumEventConfiguration, initializer
     );
   });
   
@@ -62,7 +62,7 @@ describe('Test ton event confirm', async function() {
       await enableEventConfiguration(
         bridgeOwner,
         bridge,
-        everscaleEventConfiguration,
+        everscaleEthereumEventConfiguration,
         'ton'
       );
     });
@@ -74,7 +74,7 @@ describe('Test ton event confirm', async function() {
         .to.be.not.equal(undefined, 'Configuration not found');
     
       expect(configurations['0']._eventConfiguration)
-        .to.be.equal(everscaleEventConfiguration.address, 'Wrong configuration address');
+        .to.be.equal(everscaleEthereumEventConfiguration.address, 'Wrong configuration address');
     
       expect(configurations['0']._enabled)
         .to.be.equal(true, 'Wrong connector status');
@@ -120,7 +120,7 @@ describe('Test ton event confirm', async function() {
         value: locklift.utils.convertCrystal(4, 'nano')
       });
 
-      const events = await everscaleEventConfiguration.getEvents('NewEventContract');
+      const events = await everscaleEthereumEventConfiguration.getEvents('NewEventContract');
 
       expect(events)
         .to.have.lengthOf(1, 'Everscale event configuration didnt deploy event');
@@ -133,7 +133,7 @@ describe('Test ton event confirm', async function() {
       
       logger.log(`Expected event address: ${expectedEventContract}`);
 
-      eventContract = await locklift.factory.getContract('TokenTransferEverscaleEvent');
+      eventContract = await locklift.factory.getContract('TokenTransferEverscaleEthereumEvent');
       eventContract.setAddress(expectedEventContract);
       eventContract.afterRun = afterRun;
 
@@ -146,7 +146,7 @@ describe('Test ton event confirm', async function() {
       });
 
       expect(details._eventInitData.configuration)
-        .to.be.equal(everscaleEventConfiguration.address, 'Wrong event configuration');
+        .to.be.equal(everscaleEthereumEventConfiguration.address, 'Wrong event configuration');
 
       expect(details._status)
         .to.be.bignumber.equal(1, 'Wrong status');

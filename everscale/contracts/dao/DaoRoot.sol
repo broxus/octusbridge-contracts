@@ -16,7 +16,7 @@ import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
 import "@broxus/contracts/contracts/platform/Platform.sol";
 import "../utils/Delegate.sol";
 import "../utils/cell-encoder/DaoCellEncoder.sol";
-import "../bridge/interfaces/event-configuration-contracts/IEverscaleEventConfiguration.sol";
+import "../bridge/interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.sol";
 
 contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate {
 
@@ -221,8 +221,8 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate {
         }
         for ((uint32 chainId, EthActionStripped[] ethActions) : chainActions) {
             TvmCell eventData = encodeDaoEthereumActionData(proposer.wid, proposer.value, chainId, ethActions);
-            IEverscaleEvent.EverscaleEventVoteData eventVoteData = IEverscaleEvent.EverscaleEventVoteData(tx.timestamp, now, eventData);
-            IEverscaleEventConfiguration(ethereumActionEventConfiguration).deployEvent{
+            IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData = IEverscaleEthereumEvent.EverscaleEthereumEventVoteData(tx.timestamp, now, eventData);
+            IEverscaleEthereumEventConfiguration(ethereumActionEventConfiguration).deployEvent{
                 value: deployEventValue,
                 flag: MsgFlag.SENDER_PAYS_FEES,
                 bounce: false

@@ -4,8 +4,8 @@ pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 
-import "./event-configuration-contracts/EthereumEventConfiguration.sol";
-import "./event-configuration-contracts/EverscaleEventConfiguration.sol";
+import "./event-configuration-contracts/EthereumEverscaleEventConfiguration.sol";
+import "./event-configuration-contracts/EverscaleEthereumEventConfiguration.sol";
 
 import "./interfaces/IBridge.sol";
 import "./interfaces/IConnector.sol";

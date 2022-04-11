@@ -2,10 +2,10 @@ pragma ton-solidity >= 0.39.0;
 pragma AbiHeader expire;
 
 
-import './../interfaces/event-contracts/IEverscaleEvent.sol';
-import "./../interfaces/event-configuration-contracts/IEverscaleEventConfiguration.sol";
+import './../interfaces/event-contracts/IEverscaleEthereumEvent.sol';
+import "./../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.sol";
 
-import './../event-contracts/base/EverscaleBaseEvent.sol';
+import './../event-contracts/base/EverscaleEthereumBaseEvent.sol';
 
 import './../../utils/TransferUtils.sol';
 import './../../utils/ErrorCodes.sol';
@@ -18,9 +18,9 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 /*
     @title Basic example of Everscale event configuration
 */
-contract EverscaleEventConfiguration is IEverscaleEventConfiguration, TransferUtils, InternalOwner, CheckPubKey {
+contract EverscaleEthereumEventConfiguration is IEverscaleEthereumEventConfiguration, TransferUtils, InternalOwner, CheckPubKey {
     BasicConfiguration public static basicConfiguration;
-    EverscaleEventConfiguration public static networkConfiguration;
+    EverscaleEthereumEventConfiguration public static networkConfiguration;
 
     TvmCell public meta;
     uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
@@ -71,9 +71,9 @@ contract EverscaleEventConfiguration is IEverscaleEventConfiguration, TransferUt
     /// Extends event vote data with configuration params.
     /// @param eventVoteData Event vote data structure, passed by relay
     function buildEventInitData(
-        IEverscaleEvent.EverscaleEventVoteData eventVoteData
+        IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData
     ) internal view returns(
-        IEverscaleEvent.EverscaleEventInitData eventInitData
+        IEverscaleEthereumEvent.EverscaleEthereumEventInitData eventInitData
     ) {
         eventInitData.voteData = eventVoteData;
 
@@ -84,7 +84,7 @@ contract EverscaleEventConfiguration is IEverscaleEventConfiguration, TransferUt
     /// @dev Deploy event contract
     /// @param eventVoteData Event vote data
     function deployEvent(
-        IEverscaleEvent.EverscaleEventVoteData eventVoteData
+        IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData
     ) override external reserveMinBalance(MIN_CONTRACT_BALANCE) {
         require(msg.sender == networkConfiguration.eventEmitter, ErrorCodes.SENDER_IS_NOT_EVENT_EMITTER);
         require(msg.value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
@@ -101,13 +101,13 @@ contract EverscaleEventConfiguration is IEverscaleEventConfiguration, TransferUt
         }
 
 
-        IEverscaleEvent.EverscaleEventInitData eventInitData = buildEventInitData(eventVoteData);
+        IEverscaleEthereumEvent.EverscaleEthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
 
         address eventContract = deriveEventAddress(eventVoteData);
 
         emit NewEventContract(eventContract);
 
-        new EverscaleBaseEvent{
+        new EverscaleEthereumBaseEvent{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED,
             code: basicConfiguration.eventCode,
@@ -124,7 +124,7 @@ contract EverscaleEventConfiguration is IEverscaleEventConfiguration, TransferUt
         @returns eventContract Address of the corresponding ethereum event contract
     */
     function deriveEventAddress(
-        IEverscaleEvent.EverscaleEventVoteData eventVoteData
+        IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData
     )
         override
         public
@@ -133,10 +133,10 @@ contract EverscaleEventConfiguration is IEverscaleEventConfiguration, TransferUt
     returns (
         address eventContract
     ) {
-        IEverscaleEvent.EverscaleEventInitData eventInitData = buildEventInitData(eventVoteData);
+        IEverscaleEthereumEvent.EverscaleEthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
 
         TvmCell stateInit = tvm.buildStateInit({
-            contr: EverscaleBaseEvent,
+            contr: EverscaleEthereumBaseEvent,
             varInit: {
                 eventInitData: eventInitData
             },
@@ -154,7 +154,7 @@ contract EverscaleEventConfiguration is IEverscaleEventConfiguration, TransferUt
     */
     function getDetails() override public view responsible returns(
         BasicConfiguration _basicConfiguration,
-        EverscaleEventConfiguration _networkConfiguration,
+        EverscaleEthereumEventConfiguration _networkConfiguration,
         TvmCell _meta
     ) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS}(

@@ -6,7 +6,7 @@ pragma AbiHeader pubkey;
 
 import "./../interfaces/IProxyExtended.sol";
 import "./../interfaces/multivault/IProxyMultiVaultNative.sol";
-import "./../interfaces/event-configuration-contracts/IEverscaleEventConfiguration.sol";
+import "./../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.sol";
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensTransferCallback.sol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenWallet.sol";
@@ -78,13 +78,13 @@ contract ProxyMultiVaultNative is
             chainId // EVM network chain ID
         );
 
-        IEverscaleEvent.EverscaleEventVoteData eventVoteData = IEverscaleEvent.EverscaleEventVoteData(
+        IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData = IEverscaleEthereumEvent.EverscaleEthereumEventVoteData(
             tx.timestamp,
             now,
             eventData
         );
 
-        IEverscaleEventConfiguration(config.everscaleConfiguration).deployEvent{
+        IEverscaleEthereumEventConfiguration(config.everscaleConfiguration).deployEvent{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventVoteData);
@@ -95,7 +95,7 @@ contract ProxyMultiVaultNative is
     /// @param meta Cell encoded (address token_wallet, uint128 amount, address recipient)
     /// @param remainingGasTo Gas back address
     function onEventConfirmedExtended(
-        IEthereumEvent.EthereumEventInitData,
+        IEthereumEverscaleEvent.EthereumEverscaleEventInitData,
         TvmCell meta,
         address remainingGasTo
     ) external override reserveMinBalance(MIN_CONTRACT_BALANCE) {

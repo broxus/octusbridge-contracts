@@ -3,9 +3,9 @@ pragma AbiHeader time;
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
-import "./../base/EverscaleBaseEvent.sol";
+import "./../base/EverscaleEthereumBaseEvent.sol";
 import "./../../interfaces/IEventNotificationReceiver.sol";
-import "./../../interfaces/event-contracts/IEverscaleEvent.sol";
+import "./../../interfaces/event-contracts/IEverscaleEthereumEvent.sol";
 import "../../../utils/cell-encoder/DaoCellEncoder.sol";
 import "./../../../utils/ErrorCodes.sol";
 import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
@@ -14,12 +14,12 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
     @title DAO Ethereum Action event configuration
     @dev This implementation is used for executing DAO actions in EVM based networks
 */
-contract DaoEthereumActionEvent is EverscaleBaseEvent, DaoCellEncoder {
+contract DaoEthereumActionEvent is EverscaleEthereumBaseEvent, DaoCellEncoder {
 
     constructor(
         address _initializer,
         TvmCell _meta
-    ) EverscaleBaseEvent(_initializer, _meta) public {}
+    ) EverscaleEthereumBaseEvent(_initializer, _meta) public {}
 
 
     function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {

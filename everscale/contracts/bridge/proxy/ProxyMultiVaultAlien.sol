@@ -6,7 +6,7 @@ pragma AbiHeader pubkey;
 
 import "./../interfaces/IProxyExtended.sol";
 import "./../interfaces/multivault/IProxyMultiVaultAlien.sol";
-import "./../interfaces/event-configuration-contracts/IEverscaleEventConfiguration.sol";
+import "./../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.sol";
 
 import "./../../utils/ErrorCodes.sol";
 import "./../../utils/TransferUtils.sol";
@@ -72,13 +72,13 @@ contract ProxyMultiVaultAlien is
             recipient // Recipient address in EVM network
         );
 
-        IEverscaleEvent.EverscaleEventVoteData eventVoteData = IEverscaleEvent.EverscaleEventVoteData(
+        IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData = IEverscaleEthereumEvent.EverscaleEthereumEventVoteData(
             tx.timestamp,
             now,
             eventData
         );
 
-        IEverscaleEventConfiguration(config.everscaleConfiguration).deployEvent{
+        IEverscaleEthereumEventConfiguration(config.everscaleConfiguration).deployEvent{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventVoteData);
@@ -88,7 +88,7 @@ contract ProxyMultiVaultAlien is
     /// be deployed before. See note on `deployAlienToken`
     /// @param remainingGasTo Gas back address
     function onEventConfirmedExtended(
-        IEthereumEvent.EthereumEventInitData,
+        IEthereumEverscaleEvent.EthereumEverscaleEventInitData,
         TvmCell meta,
         address remainingGasTo
     ) external override reserveMinBalance(MIN_CONTRACT_BALANCE) {

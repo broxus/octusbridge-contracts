@@ -1,11 +1,11 @@
 pragma ton-solidity >= 0.39.0;
 
 import "./IBasicEventConfiguration.sol";
-import "./../event-contracts/IEverscaleEvent.sol";
+import "./../event-contracts/IEverscaleEthereumEvent.sol";
 
 
-interface IEverscaleEventConfiguration is IBasicEventConfiguration {
-    struct EverscaleEventConfiguration {
+interface IEverscaleEthereumEventConfiguration is IBasicEventConfiguration {
+    struct EverscaleEthereumEventConfiguration {
         address eventEmitter;
         uint160 proxy;
         uint32 startTimestamp;
@@ -13,16 +13,16 @@ interface IEverscaleEventConfiguration is IBasicEventConfiguration {
     }
 
     function deployEvent(
-        IEverscaleEvent.EverscaleEventVoteData eventVoteData
+        IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData
     ) external;
 
     function deriveEventAddress(
-        IEverscaleEvent.EverscaleEventVoteData eventVoteData
+        IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData
     ) external view responsible returns (address eventContract);
 
     function getDetails() external view responsible returns(
         BasicConfiguration _basicConfiguration,
-        EverscaleEventConfiguration _networkConfiguration,
+        EverscaleEthereumEventConfiguration _networkConfiguration,
         TvmCell _meta
     );
 

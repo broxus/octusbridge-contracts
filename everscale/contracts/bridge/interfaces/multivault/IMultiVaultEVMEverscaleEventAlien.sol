@@ -1,13 +1,13 @@
 pragma ton-solidity >= 0.39.0;
 
 
-import "./../event-configuration-contracts/IEthereumEventConfiguration.sol";
+import "./../event-configuration-contracts/IEthereumEverscaleEventConfiguration.sol";
 
 
-interface IMultiVaultEVMEventAlien {
+interface IMultiVaultEVMEverscaleEventAlien {
     function receiveConfigurationDetails(
-        IEthereumEventConfiguration.BasicConfiguration,
-        IEthereumEventConfiguration.EthereumEventConfiguration _networkConfiguration,
+        IEthereumEverscaleEventConfiguration.BasicConfiguration,
+        IEthereumEverscaleEventConfiguration.EthereumEverscaleEventConfiguration _networkConfiguration,
         TvmCell
     ) external;
 

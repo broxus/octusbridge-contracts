@@ -4,11 +4,11 @@ pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 import "./../../interfaces/IEventNotificationReceiver.sol";
-import "./../../interfaces/event-contracts/IEthereumEvent.sol";
+import "./../../interfaces/event-contracts/IEthereumEverscaleEvent.sol";
 import "./../../interfaces/IProxy.sol";
 import "./../../../utils/ErrorCodes.sol";
 
-import "./../base/EthereumBaseEvent.sol";
+import "./../base/EthereumEverscaleBaseEvent.sol";
 import "./../../../utils/cell-encoder/ProxyTokenTransferCellEncoder.sol";
 import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
@@ -18,11 +18,11 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 /// rejects / confirms with external message directly into this contract.
 /// In case enough confirmations is collected - callback is executed.
 /// This implementation is used for cross chain token transfers
-contract TokenTransferEthereumEvent is EthereumBaseEvent, ProxyTokenTransferCellEncoder {
+contract TokenTransferEthereumEverscaleEvent is EthereumEverscaleBaseEvent, ProxyTokenTransferCellEncoder {
     constructor(
         address _initializer,
         TvmCell _meta
-    ) EthereumBaseEvent(_initializer, _meta) public {}
+    ) EthereumEverscaleBaseEvent(_initializer, _meta) public {}
 
     function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
         body.decode(uint64, uint32);
@@ -76,7 +76,7 @@ contract TokenTransferEthereumEvent is EthereumBaseEvent, ProxyTokenTransferCell
             tokens,
             wid,
             owner_addr
-        ) = decodeEthereumEventData(eventInitData.voteData.eventData);
+        ) = decodeEthereumEverscaleEventData(eventInitData.voteData.eventData);
 
         owner_address = address.makeAddrStd(wid, owner_addr);
 

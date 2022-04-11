@@ -1,11 +1,11 @@
 pragma ton-solidity >= 0.39.0;
 
 import "./IBasicEventConfiguration.sol";
-import "./../event-contracts/IEthereumEvent.sol";
+import "./../event-contracts/IEthereumEverscaleEvent.sol";
 
 
-interface IEthereumEventConfiguration is IBasicEventConfiguration {
-    struct EthereumEventConfiguration {
+interface IEthereumEverscaleEventConfiguration is IBasicEventConfiguration {
+    struct EthereumEverscaleEventConfiguration {
         uint32 chainId;
         uint160 eventEmitter;
         uint16 eventBlocksToConfirm;
@@ -15,16 +15,16 @@ interface IEthereumEventConfiguration is IBasicEventConfiguration {
     }
 
     function deployEvent(
-        IEthereumEvent.EthereumEventVoteData eventVoteData
+        IEthereumEverscaleEvent.EthereumEverscaleEventVoteData eventVoteData
     ) external;
 
     function deriveEventAddress(
-        IEthereumEvent.EthereumEventVoteData eventVoteData
+        IEthereumEverscaleEvent.EthereumEverscaleEventVoteData eventVoteData
     ) external view responsible returns (address eventContract);
 
     function getDetails() external view responsible returns(
         BasicConfiguration _basicConfiguration,
-        EthereumEventConfiguration _networkConfiguration,
+        EthereumEverscaleEventConfiguration _networkConfiguration,
         TvmCell _meta
     );
 

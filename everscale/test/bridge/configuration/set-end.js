@@ -19,10 +19,10 @@ describe('Test setting configuration end', async function() {
   });
   
   describe('Ethereum event configuration', async () => {
-    let ethereumEventConfiguration, proxy;
+    let ethereumEverscaleEventConfiguration, proxy;
 
     it('Setup event configuration', async () => {
-      [ethereumEventConfiguration, proxy] = await setupEthereumEventConfiguration(
+      [ethereumEverscaleEventConfiguration, proxy] = await setupEthereumEventConfiguration(
         bridgeOwner,
         bridge,
         cellEncoder,
@@ -31,7 +31,7 @@ describe('Test setting configuration end', async function() {
     
     it('Set end block', async () => {
       await bridgeOwner.runTarget({
-        contract: ethereumEventConfiguration,
+        contract: ethereumEverscaleEventConfiguration,
         method: 'setEndBlockNumber',
         params: {
           endBlockNumber: 1
@@ -40,7 +40,7 @@ describe('Test setting configuration end', async function() {
     });
     
     it('Check configuration end block', async () => {
-      const details = await ethereumEventConfiguration.call({ method: 'getDetails' });
+      const details = await ethereumEverscaleEventConfiguration.call({ method: 'getDetails' });
 
       expect(details._networkConfiguration.endBlockNumber)
         .to.be.bignumber.equal(1, 'Wrong end block number');
@@ -52,10 +52,10 @@ describe('Test setting configuration end', async function() {
   });
   
   describe('Ton event configuration', async () => {
-    let everscaleEventConfiguration;
+    let everscaleEthereumEventConfiguration;
 
     it('Setup event configuration', async () => {
-      [everscaleEventConfiguration] = await setupEverscaleEventConfiguration(
+      [everscaleEthereumEventConfiguration] = await setupEverscaleEventConfiguration(
         bridgeOwner,
         bridge,
         cellEncoder,
@@ -64,7 +64,7 @@ describe('Test setting configuration end', async function() {
     
     it('Set end timestamp', async () => {
       await bridgeOwner.runTarget({
-        contract: everscaleEventConfiguration,
+        contract: everscaleEthereumEventConfiguration,
         method: 'setEndTimestamp',
         params: {
           endTimestamp: 1
@@ -73,7 +73,7 @@ describe('Test setting configuration end', async function() {
     });
   
     it('Check configuration end timestamp', async () => {
-      const details = await everscaleEventConfiguration.call({ method: 'getDetails' });
+      const details = await everscaleEthereumEventConfiguration.call({ method: 'getDetails' });
 
       expect(details._networkConfiguration.endTimestamp)
         .to.be.bignumber.equal(1, 'Wrong end timestamps');

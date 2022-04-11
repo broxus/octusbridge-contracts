@@ -1,13 +1,14 @@
 pragma ton-solidity >= 0.39.0;
 
 
-import './../../utils/TransferUtils.sol';
 import '@broxus/contracts/contracts/utils/RandomNonce.sol';
-import "./../event-configuration-contracts/EthereumEventConfiguration.sol";
-import "./../interfaces/event-configuration-contracts/IEthereumEventConfiguration.sol";
+
+import './../../utils/TransferUtils.sol';
+import "./../event-configuration-contracts/EverscaleEthereumEventConfiguration.sol";
+import "./../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.sol";
 
 
-contract EthereumEventConfigurationFactory is TransferUtils, RandomNonce {
+contract EverscaleEthereumEventConfigurationFactory is TransferUtils, RandomNonce {
     TvmCell public configurationCode;
     uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
 
@@ -19,12 +20,12 @@ contract EthereumEventConfigurationFactory is TransferUtils, RandomNonce {
 
     function deploy(
         address _owner,
-        IEthereumEventConfiguration.BasicConfiguration basicConfiguration,
-        IEthereumEventConfiguration.EthereumEventConfiguration networkConfiguration
+        IEverscaleEthereumEventConfiguration.BasicConfiguration basicConfiguration,
+        IEverscaleEthereumEventConfiguration.EverscaleEthereumEventConfiguration networkConfiguration
     ) external view reserveMinBalance(MIN_CONTRACT_BALANCE) {
         TvmCell _meta;
 
-        new EthereumEventConfiguration{
+        new EverscaleEthereumEventConfiguration{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED,
             code: configurationCode,
@@ -37,11 +38,11 @@ contract EthereumEventConfigurationFactory is TransferUtils, RandomNonce {
     }
 
     function deriveConfigurationAddress(
-        IEthereumEventConfiguration.BasicConfiguration basicConfiguration,
-        IEthereumEventConfiguration.EthereumEventConfiguration networkConfiguration
+        IEverscaleEthereumEventConfiguration.BasicConfiguration basicConfiguration,
+        IEverscaleEthereumEventConfiguration.EverscaleEthereumEventConfiguration networkConfiguration
     ) external view returns(address) {
         TvmCell stateInit = tvm.buildStateInit({
-            contr: EthereumEventConfiguration,
+            contr: EverscaleEthereumEventConfiguration,
             varInit: {
                 basicConfiguration: basicConfiguration,
                 networkConfiguration: networkConfiguration

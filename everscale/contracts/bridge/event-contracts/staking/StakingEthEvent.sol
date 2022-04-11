@@ -3,9 +3,9 @@ pragma AbiHeader time;
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
-import "../base/EthereumBaseEvent.sol";
+import "../base/EthereumEverscaleBaseEvent.sol";
 import "../../interfaces/IEventNotificationReceiver.sol";
-import "../../interfaces/event-contracts/IEthereumEvent.sol";
+import "../../interfaces/event-contracts/IEthereumEverscaleEvent.sol";
 import "../../interfaces/IProxy.sol";
 import "../../../utils/ErrorCodes.sol";
 import "../../../utils/cell-encoder/StakingCellEncoder.sol";
@@ -13,12 +13,12 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
 
-contract StakingEthEvent is EthereumBaseEvent, StakingCellEncoder {
+contract StakingEthEvent is EthereumEverscaleBaseEvent, StakingCellEncoder {
 
     constructor(
         address _initializer,
         TvmCell _meta
-    ) EthereumBaseEvent(_initializer, _meta) public {}
+    ) EthereumEverscaleBaseEvent(_initializer, _meta) public {}
 
     function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
         body.decode(uint64, uint32);

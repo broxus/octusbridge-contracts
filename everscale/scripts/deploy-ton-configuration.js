@@ -130,13 +130,13 @@ const main = async () => {
     }
   ]);
   
-  const EverscaleEventConfiguration = await locklift.factory.getContract('EverscaleEventConfiguration');
+  const EverscaleEthereumEventConfiguration = await locklift.factory.getContract('EverscaleEthereumEventConfiguration');
   const TonEvent = await locklift.factory.getContract(response.eventContract);
   
   const spinner = ora('Deploying Everscale event configuration').start();
   
-  const everscaleEventConfiguration = await locklift.giver.deployContract({
-    contract: EverscaleEventConfiguration,
+  const everscaleEthereumEventConfiguration = await locklift.giver.deployContract({
+    contract: EverscaleEthereumEventConfiguration,
     constructorParams: {
       _owner: response.owner,
       _meta: response.meta,
@@ -160,7 +160,7 @@ const main = async () => {
   
   spinner.stop();
   
-  await logContract(everscaleEventConfiguration);
+  await logContract(everscaleEthereumEventConfiguration);
 };
 
 

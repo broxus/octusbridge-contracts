@@ -6,14 +6,14 @@ pragma AbiHeader pubkey;
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.sol";
 
-import "./../../interfaces/multivault/IMultiVaultEVMEventNative.sol";
-import "./../../interfaces/event-configuration-contracts/IEthereumEventConfiguration.sol";
+import "./../../interfaces/multivault/IMultiVaultEVMEverscaleEventNative.sol";
+import "./../../interfaces/event-configuration-contracts/IEthereumEverscaleEventConfiguration.sol";
 import "./../../interfaces/IProxyExtended.sol";
 
-import "./../base/EthereumBaseEvent.sol";
+import "./../base/EthereumEverscaleBaseEvent.sol";
 
 
-contract MultiVaultEVMEventNative is EthereumBaseEvent, IMultiVaultEVMEventNative {
+contract MultiVaultEVMEverscaleEventNative is EthereumEverscaleBaseEvent, IMultiVaultEVMEverscaleEventNative {
     address token;
     uint128 amount;
     address recipient;
@@ -24,7 +24,7 @@ contract MultiVaultEVMEventNative is EthereumBaseEvent, IMultiVaultEVMEventNativ
     constructor(
         address _initializer,
         TvmCell _meta
-    ) EthereumBaseEvent(_initializer, _meta) public {}
+    ) EthereumEverscaleBaseEvent(_initializer, _meta) public {}
 
     function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
         body.decode(uint64, uint32);
@@ -57,15 +57,15 @@ contract MultiVaultEVMEventNative is EthereumBaseEvent, IMultiVaultEVMEventNativ
         token = address.makeAddrStd(token_wid, token_addr);
         recipient = address.makeAddrStd(recipient_wid, recipient_addr);
 
-        IEthereumEventConfiguration(eventInitData.configuration).getDetails{
+        IEthereumEverscaleEventConfiguration(eventInitData.configuration).getDetails{
             value: 1 ton,
-            callback: MultiVaultEVMEventNative.receiveConfigurationDetails
+            callback: MultiVaultEVMEverscaleEventNative.receiveConfigurationDetails
         }();
     }
 
     function receiveConfigurationDetails(
-        IEthereumEventConfiguration.BasicConfiguration,
-        IEthereumEventConfiguration.EthereumEventConfiguration _networkConfiguration,
+        IEthereumEverscaleEventConfiguration.BasicConfiguration,
+        IEthereumEverscaleEventConfiguration.EthereumEverscaleEventConfiguration _networkConfiguration,
         TvmCell
     ) external override {
         require(msg.sender == eventInitData.configuration);
@@ -74,7 +74,7 @@ contract MultiVaultEVMEventNative is EthereumBaseEvent, IMultiVaultEVMEventNativ
 
         ITokenRoot(token).walletOf{
             value: 0.1 ton,
-            callback: MultiVaultEVMEventNative.receiveProxyTokenWallet
+            callback: MultiVaultEVMEverscaleEventNative.receiveProxyTokenWallet
         }(proxy);
     }
 

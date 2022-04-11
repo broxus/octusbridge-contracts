@@ -107,7 +107,7 @@ describe('Test EVM alien multivault pipeline', async function() {
 
             logger.log(`Expected event address: ${expectedEventContract}`);
 
-            eventContract = await locklift.factory.getContract('MultiVaultEVMEventAlien');
+            eventContract = await locklift.factory.getContract('MultiVaultEVMEverscaleEventAlien');
             eventContract.setAddress(expectedEventContract);
             eventContract.afterRun = afterRun;
 
@@ -370,7 +370,7 @@ describe('Test EVM alien multivault pipeline', async function() {
 
             logger.log(`Expected event address: ${expectedEventContract}`);
 
-            eventContract = await locklift.factory.getContract('MultiVaultEverscaleEventAlien');
+            eventContract = await locklift.factory.getContract('MultiVaultEverscaleEVMEventAlien');
             eventContract.setAddress(expectedEventContract);
             eventContract.afterRun = afterRun;
 

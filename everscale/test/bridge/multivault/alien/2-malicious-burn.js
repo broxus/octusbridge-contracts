@@ -68,7 +68,7 @@ describe('Test event contract behaviour when Alien token is incorrect', async fu
 
             logger.log(`Expected event address: ${expectedEventContract}`);
 
-            eventContract = await locklift.factory.getContract('MultiVaultEverscaleEventAlien');
+            eventContract = await locklift.factory.getContract('MultiVaultEverscaleEVMEventAlien');
             eventContract.setAddress(expectedEventContract);
             eventContract.afterRun = afterRun;
         });

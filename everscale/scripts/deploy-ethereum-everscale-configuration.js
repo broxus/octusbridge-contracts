@@ -153,13 +153,13 @@ const main = async () => {
     },
   ]);
   
-  const EthereumEventConfiguration = await locklift.factory.getContract('EthereumEventConfiguration');
+  const EthereumEverscaleEventConfiguration = await locklift.factory.getContract('EthereumEverscaleEventConfiguration');
   const EthereumEvent = await locklift.factory.getContract(response.eventContract);
   
   const spinner = ora('Deploying Ethereum event configuration').start();
   
-  const ethereumEventConfiguration = await locklift.giver.deployContract({
-    contract: EthereumEventConfiguration,
+  const ethereumEverscaleEventConfiguration = await locklift.giver.deployContract({
+    contract: EthereumEverscaleEventConfiguration,
     constructorParams: {
       _owner: response.owner,
       _meta: response.meta,
@@ -185,7 +185,7 @@ const main = async () => {
   
   spinner.stop();
   
-  await logContract(ethereumEventConfiguration);
+  await logContract(ethereumEverscaleEventConfiguration);
 };
 
 

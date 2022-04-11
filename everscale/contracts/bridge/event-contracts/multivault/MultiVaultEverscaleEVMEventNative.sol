@@ -7,8 +7,8 @@ pragma AbiHeader pubkey;
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.sol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/TIP3TokenRoot.sol";
 
-import "./../base/EverscaleBaseEvent.sol";
-import "./../../interfaces/multivault/IMultiVaultEverscaleEventNative.sol";
+import "./../base/EverscaleEthereumBaseEvent.sol";
+import "./../../interfaces/multivault/IMultiVaultEverscaleEVMEventNative.sol";
 
 
 /// @notice Everscale-EVM event for MultiVault native token transfer.
@@ -17,7 +17,7 @@ import "./../../interfaces/multivault/IMultiVaultEverscaleEventNative.sol";
 /// - Verify that the `tokenWallet` is a correct token wallet for `token`, owned by the proxy
 /// - Obtain the `token` metadata (name, symbol, decimals)
 /// - Rewrite the `eventData` with the correct value
-contract MultiVaultEverscaleEventNative is EverscaleBaseEvent, IMultiVaultEverscaleEventNative {
+contract MultiVaultEverscaleEVMEventNative is EverscaleEthereumBaseEvent, IMultiVaultEverscaleEVMEventNative {
     address proxy;
     address tokenWallet;
     address token;
@@ -34,7 +34,7 @@ contract MultiVaultEverscaleEventNative is EverscaleBaseEvent, IMultiVaultEversc
     constructor(
         address _initializer,
         TvmCell _meta
-    ) EverscaleBaseEvent(_initializer, _meta) public {}
+    ) EverscaleEthereumBaseEvent(_initializer, _meta) public {}
 
     function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
         body.decode(uint64, uint32);
@@ -72,22 +72,22 @@ contract MultiVaultEverscaleEventNative is EverscaleBaseEvent, IMultiVaultEversc
 
         ITokenRoot(token).name{
             value: 0.1 ton,
-            callback: MultiVaultEverscaleEventNative.receiveTokenName
+            callback: MultiVaultEverscaleEVMEventNative.receiveTokenName
         }();
 
         ITokenRoot(token).symbol{
             value: 0.1 ton,
-            callback: MultiVaultEverscaleEventNative.receiveTokenSymbol
+            callback: MultiVaultEverscaleEVMEventNative.receiveTokenSymbol
         }();
 
         ITokenRoot(token).decimals{
             value: 0.1 ton,
-            callback: MultiVaultEverscaleEventNative.receiveTokenDecimals
+            callback: MultiVaultEverscaleEVMEventNative.receiveTokenDecimals
         }();
 
         ITokenRoot(token).walletOf{
             value: 0.1 ton,
-            callback: MultiVaultEverscaleEventNative.receiveProxyTokenWallet
+            callback: MultiVaultEverscaleEVMEventNative.receiveProxyTokenWallet
         }(proxy);
     }
 

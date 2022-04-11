@@ -15,7 +15,7 @@ describe('Test ethereum event reject', async function() {
   this.timeout(10000000);
   
   let bridge, bridgeOwner, staking, cellEncoder;
-  let ethereumEventConfiguration, proxy, initializer;
+  let ethereumEverscaleEventConfiguration, proxy, initializer;
   let relays;
   let metricManager;
   
@@ -41,7 +41,7 @@ describe('Test ethereum event reject', async function() {
   
     [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
   
-    [ethereumEventConfiguration, proxy, initializer] = await setupEthereumEventConfiguration(
+    [ethereumEverscaleEventConfiguration, proxy, initializer] = await setupEthereumEventConfiguration(
       bridgeOwner,
       staking,
       cellEncoder,
@@ -49,7 +49,7 @@ describe('Test ethereum event reject', async function() {
     
     metricManager = new MetricManager(
       bridge, bridgeOwner, staking,
-      ethereumEventConfiguration, proxy, initializer
+      ethereumEverscaleEventConfiguration, proxy, initializer
     );
   });
   
@@ -58,7 +58,7 @@ describe('Test ethereum event reject', async function() {
       await enableEventConfiguration(
         bridgeOwner,
         bridge,
-        ethereumEventConfiguration,
+        ethereumEverscaleEventConfiguration,
         'ethereum'
       );
     });
@@ -70,7 +70,7 @@ describe('Test ethereum event reject', async function() {
         .to.be.not.equal(undefined, 'Configuration not found');
     
       expect(configurations['0']._eventConfiguration)
-        .to.be.equal(ethereumEventConfiguration.address, 'Wrong configuration address');
+        .to.be.equal(ethereumEverscaleEventConfiguration.address, 'Wrong configuration address');
     
       expect(configurations['0']._enabled)
         .to.be.equal(true, 'Wrong connector status');
@@ -88,7 +88,7 @@ describe('Test ethereum event reject', async function() {
   
     it('Setup event data', async () => {
       const eventData = await cellEncoder.call({
-        method: 'encodeEthereumEventData',
+        method: 'encodeEthereumEverscaleEventData',
         params: eventDataStructure
       });
   
@@ -103,7 +103,7 @@ describe('Test ethereum event reject', async function() {
   
     it('Initialize event', async () => {
       const tx = await initializer.runTarget({
-        contract: ethereumEventConfiguration,
+        contract: ethereumEverscaleEventConfiguration,
         method: 'deployEvent',
         params: {
           eventVoteData,
@@ -113,7 +113,7 @@ describe('Test ethereum event reject', async function() {
     
       logger.log(`Event initialization tx: ${tx.transaction.id}`);
   
-      const expectedEventContract = await ethereumEventConfiguration.call({
+      const expectedEventContract = await ethereumEverscaleEventConfiguration.call({
         method: 'deriveEventAddress',
         params: {
           eventVoteData,
@@ -122,7 +122,7 @@ describe('Test ethereum event reject', async function() {
     
       logger.log(`Expected event address: ${expectedEventContract}`);
     
-      eventContract = await locklift.factory.getContract('TokenTransferEthereumEvent');
+      eventContract = await locklift.factory.getContract('TokenTransferEthereumEverscaleEvent');
       eventContract.setAddress(expectedEventContract);
       eventContract.afterRun = afterRun;
     });

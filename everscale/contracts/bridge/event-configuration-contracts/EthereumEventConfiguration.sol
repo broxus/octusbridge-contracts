@@ -2,13 +2,13 @@ pragma ton-solidity >= 0.39.0;
 pragma AbiHeader expire;
 
 
-import './../interfaces/event-contracts/IEthereumEvent.sol';
-import "./../interfaces/event-configuration-contracts/IEthereumEventConfiguration.sol";
+import './../interfaces/event-contracts/IEthereumEverscaleEvent.sol';
+import "./../interfaces/event-configuration-contracts/IEthereumEverscaleEventConfiguration.sol";
 
 import './../interfaces/IProxy.sol';
 import './../interfaces/IProxyExtended.sol';
 
-import './../event-contracts/base/EthereumBaseEvent.sol';
+import './../event-contracts/base/EthereumEverscaleBaseEvent.sol';
 
 import './../../utils/TransferUtils.sol';
 import './../../utils/ErrorCodes.sol';
@@ -20,9 +20,9 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 /// @title Basic Ethereum event configuration contract.
 /// @author https://github.com/broxus
-contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IProxyExtended, TransferUtils, InternalOwner, CheckPubKey {
+contract EthereumEverscaleEventConfiguration is IEthereumEverscaleEventConfiguration, IProxy, IProxyExtended, TransferUtils, InternalOwner, CheckPubKey {
     BasicConfiguration public static basicConfiguration;
-    EthereumEventConfiguration public static networkConfiguration;
+    EthereumEverscaleEventConfiguration public static networkConfiguration;
 
     TvmCell public meta;
     uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
@@ -71,9 +71,9 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IPro
     /// @dev Extends event vote data with configuration params
     /// @param eventVoteData Event vote data structure, passed by relay
     function buildEventInitData(
-        IEthereumEvent.EthereumEventVoteData eventVoteData
+        IEthereumEverscaleEvent.EthereumEverscaleEventVoteData eventVoteData
     ) internal view returns(
-        IEthereumEvent.EthereumEventInitData eventInitData
+        IEthereumEverscaleEvent.EthereumEverscaleEventInitData eventInitData
     ) {
         eventInitData.voteData = eventVoteData;
 
@@ -85,7 +85,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IPro
     /// @dev Deploy event contract
     /// @param eventVoteData Event vote data
     function deployEvent(
-        IEthereumEvent.EthereumEventVoteData eventVoteData
+        IEthereumEverscaleEvent.EthereumEverscaleEventVoteData eventVoteData
     )
         external
         override
@@ -104,13 +104,13 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IPro
             );
         }
 
-        IEthereumEvent.EthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
+        IEthereumEverscaleEvent.EthereumEverscaleEventInitData eventInitData = buildEventInitData(eventVoteData);
 
         address eventContract = deriveEventAddress(eventVoteData);
 
         emit NewEventContract(eventContract);
 
-        new EthereumBaseEvent{
+        new EthereumEverscaleBaseEvent{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED,
             code: basicConfiguration.eventCode,
@@ -125,7 +125,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IPro
     /// @param eventVoteData Ethereum event vote data
     /// @return eventContract Address of the corresponding ethereum event contract
     function deriveEventAddress(
-        IEthereumEvent.EthereumEventVoteData eventVoteData
+        IEthereumEverscaleEvent.EthereumEverscaleEventVoteData eventVoteData
     )
         override
         public
@@ -134,10 +134,10 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IPro
     returns(
         address eventContract
     ) {
-        IEthereumEvent.EthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
+        IEthereumEverscaleEvent.EthereumEverscaleEventInitData eventInitData = buildEventInitData(eventVoteData);
 
         TvmCell stateInit = tvm.buildStateInit({
-            contr: EthereumBaseEvent,
+            contr: EthereumEverscaleBaseEvent,
             varInit: {
                 eventInitData: eventInitData
             },
@@ -155,7 +155,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IPro
     */
     function getDetails() override public view responsible returns(
         BasicConfiguration _basicConfiguration,
-        EthereumEventConfiguration _networkConfiguration,
+        EthereumEverscaleEventConfiguration _networkConfiguration,
         TvmCell _meta
     ) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS}(
@@ -177,7 +177,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IPro
     /// @param eventInitData Ethereum event data
     /// @param gasBackAddress Gas back address
     function onEventConfirmed(
-        IEthereumEvent.EthereumEventInitData eventInitData,
+        IEthereumEverscaleEvent.EthereumEverscaleEventInitData eventInitData,
         address gasBackAddress
     ) external override reserveMinBalance(MIN_CONTRACT_BALANCE) {
         require(
@@ -205,7 +205,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IPro
     /// @param _meta Arbitrary meta cell
     /// @param gasBackAddress Gas back address
     function onEventConfirmedExtended(
-        IEthereumEvent.EthereumEventInitData eventInitData,
+        IEthereumEverscaleEvent.EthereumEverscaleEventInitData eventInitData,
         TvmCell _meta,
         address gasBackAddress
     ) external override reserveMinBalance(MIN_CONTRACT_BALANCE) {
@@ -227,10 +227,10 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IPro
     }
 
     function _deriveEventAddress(
-        IEthereumEvent.EthereumEventInitData eventInitData
+        IEthereumEverscaleEvent.EthereumEverscaleEventInitData eventInitData
     ) internal view returns (address _event) {
         TvmCell stateInit = tvm.buildStateInit({
-            contr: EthereumBaseEvent,
+            contr: EthereumEverscaleBaseEvent,
             varInit: {
                 eventInitData: eventInitData
             },

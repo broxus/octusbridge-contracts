@@ -11,13 +11,13 @@ async function main() {
 
     spinner.start('Deploying Ethereum event configuration factory');
 
-    const EthereumEventConfigurationFactory = await locklift.factory.getContract('EthereumEventConfigurationFactory');
-    const EthereumEventConfiguration = await locklift.factory.getContract('EthereumEventConfiguration');
+    const EthereumEverscaleEventConfigurationFactory = await locklift.factory.getContract('EthereumEverscaleEventConfigurationFactory');
+    const EthereumEverscaleEventConfiguration = await locklift.factory.getContract('EthereumEverscaleEventConfiguration');
 
-    const ethereumEventConfigurationFactory = await locklift.giver.deployContract({
-        contract: EthereumEventConfigurationFactory,
+    const ethereumEverscaleEventConfigurationFactory = await locklift.giver.deployContract({
+        contract: EthereumEverscaleEventConfigurationFactory,
         constructorParams: {
-            _configurationCode: EthereumEventConfiguration.code
+            _configurationCode: EthereumEverscaleEventConfiguration.code
         },
         initParams: {
             _randomNonce,
@@ -26,19 +26,19 @@ async function main() {
 
     spinner.stop();
 
-    await logContract(ethereumEventConfigurationFactory);
+    await logContract(ethereumEverscaleEventConfigurationFactory);
 
 
     // Everscale configuration factory
-    const EverscaleEventConfigurationFactory = await locklift.factory.getContract('EverscaleEventConfigurationFactory');
-    const EverscaleEventConfiguration = await locklift.factory.getContract('EverscaleEventConfiguration');
+    const EverscaleEthereumEventConfigurationFactory = await locklift.factory.getContract('EverscaleEthereumEventConfigurationFactory');
+    const EverscaleEthereumEventConfiguration = await locklift.factory.getContract('EverscaleEthereumEventConfiguration');
 
     spinner.start('Deploying Everscale event configuration factory');
 
-    const everscaleEventConfigurationFactory = await locklift.giver.deployContract({
-        contract: EverscaleEventConfigurationFactory,
+    const everscaleEthereumEventConfigurationFactory = await locklift.giver.deployContract({
+        contract: EverscaleEthereumEventConfigurationFactory,
         constructorParams: {
-            _configurationCode: EverscaleEventConfiguration.code
+            _configurationCode: EverscaleEthereumEventConfiguration.code
         },
         initParams: {
             _randomNonce,
@@ -47,7 +47,7 @@ async function main() {
 
     spinner.stop();
 
-    await logContract(everscaleEventConfigurationFactory);
+    await logContract(everscaleEthereumEventConfigurationFactory);
 
     // Proxy token transfer factory
     const ProxyTokenTransferFactory = await locklift.factory.getContract('ProxyTokenTransferFactory');

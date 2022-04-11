@@ -1,7 +1,7 @@
 pragma ton-solidity >= 0.39.0;
 
 
-interface IMultiVaultEverscaleEventNative {
+interface IMultiVaultEverscaleEVMEventNative {
     function receiveTokenName(string name_) external;
     function receiveTokenSymbol(string symbol_) external;
     function receiveTokenDecimals(uint8 decimals_) external;

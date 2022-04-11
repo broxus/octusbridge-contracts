@@ -4,24 +4,24 @@ pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 import "./BaseEvent.sol";
-import "../../interfaces/event-contracts/IEverscaleEvent.sol";
+import "../../interfaces/event-contracts/IEverscaleEthereumEvent.sol";
 
 import "./../../../utils/ErrorCodes.sol";
 
 
-contract EverscaleBaseEvent is BaseEvent, IEverscaleEvent {
+contract EverscaleEthereumBaseEvent is BaseEvent, IEverscaleEthereumEvent {
     uint32 constant FORCE_CLOSE_TIMEOUT = 1 days;
     uint32 public createdAt;
 
     // Event data
-    EverscaleEventInitData static eventInitData;
+    EverscaleEthereumEventInitData static eventInitData;
     // Ethereum payload signatures for confirmations
     mapping (uint => bytes) public signatures;
 
     event Confirm(uint relay, bytes signature);
 
     /*
-        @dev Should be deployed only by EverscaleEventConfiguration contract
+        @dev Should be deployed only by EverscaleEthereumEventConfiguration contract
         @param _initializer The address who paid for contract deployment.
         Receives all contract balance at the end of event contract lifecycle.
     */
@@ -38,7 +38,7 @@ contract EverscaleBaseEvent is BaseEvent, IEverscaleEvent {
         onInit();
     }
 
-    function getEventInitData() public view responsible returns (EverscaleEventInitData) {
+    function getEventInitData() public view responsible returns (EverscaleEthereumEventInitData) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS} eventInitData;
     }
 
@@ -123,7 +123,7 @@ contract EverscaleBaseEvent is BaseEvent, IEverscaleEvent {
         @returns _eventDataSignatures List of relay's TonEvent signatures
     */
     function getDetails() external view responsible returns (
-        EverscaleEventInitData _eventInitData,
+        EverscaleEthereumEventInitData _eventInitData,
         Status _status,
         uint[] _confirms,
         uint[] _rejects,
