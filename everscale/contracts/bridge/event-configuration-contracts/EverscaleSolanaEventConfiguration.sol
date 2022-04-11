@@ -2,10 +2,10 @@ pragma ton-solidity >= 0.39.0;
 pragma AbiHeader expire;
 
 
-import './../interfaces/event-contracts/IEverscaleEthereumEvent.sol';
-import "./../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.sol";
+import './../interfaces/event-contracts/IEverscaleSolanaEvent.sol';
+import "./../interfaces/event-configuration-contracts/IEverscaleSolanaEventConfiguration.sol";
 
-import './../event-contracts/base/EverscaleEthereumBaseEvent.sol';
+import './../event-contracts/base/EverscaleSolanaBaseEvent.sol';
 
 import './../../utils/TransferUtils.sol';
 import './../../utils/ErrorCodes.sol';
@@ -18,9 +18,9 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 /*
     @title Basic example of Everscale event configuration
 */
-contract EverscaleEthereumEventConfiguration is IEverscaleEthereumEventConfiguration, TransferUtils, InternalOwner, CheckPubKey {
+contract EverscaleSolanaEventConfiguration is IEverscaleSolanaEventConfiguration, TransferUtils, InternalOwner, CheckPubKey {
     BasicConfiguration public static basicConfiguration;
-    EverscaleEthereumEventConfiguration public static networkConfiguration;
+    EverscaleSolanaEventConfiguration public static networkConfiguration;
 
     TvmCell public meta;
     uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
@@ -71,9 +71,9 @@ contract EverscaleEthereumEventConfiguration is IEverscaleEthereumEventConfigura
     /// Extends event vote data with configuration params.
     /// @param eventVoteData Event vote data structure, passed by relay
     function buildEventInitData(
-        IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData
+        IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData
     ) internal view returns(
-        IEverscaleEthereumEvent.EverscaleEthereumEventInitData eventInitData
+        IEverscaleSolanaEvent.EverscaleSolanaEventInitData eventInitData
     ) {
         eventInitData.voteData = eventVoteData;
 
@@ -84,7 +84,7 @@ contract EverscaleEthereumEventConfiguration is IEverscaleEthereumEventConfigura
     /// @dev Deploy event contract
     /// @param eventVoteData Event vote data
     function deployEvent(
-        IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData
+        IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData
     ) override external reserveMinBalance(MIN_CONTRACT_BALANCE) {
         require(msg.sender == networkConfiguration.eventEmitter, ErrorCodes.SENDER_IS_NOT_EVENT_EMITTER);
         require(msg.value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
@@ -101,13 +101,13 @@ contract EverscaleEthereumEventConfiguration is IEverscaleEthereumEventConfigura
         }
 
 
-        IEverscaleEthereumEvent.EverscaleEthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
+        IEverscaleSolanaEvent.EverscaleSolanaEventInitData eventInitData = buildEventInitData(eventVoteData);
 
         address eventContract = deriveEventAddress(eventVoteData);
 
         emit NewEventContract(eventContract);
 
-        new EverscaleEthereumBaseEvent{
+        new EverscaleSolanaBaseEvent{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED,
             code: basicConfiguration.eventCode,
@@ -119,12 +119,12 @@ contract EverscaleEthereumEventConfiguration is IEverscaleEthereumEventConfigura
     }
 
     /*
-        @dev Derive the Ethereum event contract address from it's init data
-        @param eventVoteData Ethereum event vote data
-        @returns eventContract Address of the corresponding ethereum event contract
+        @dev Derive the Solana event contract address from it's init data
+        @param eventVoteData Solana event vote data
+        @returns eventContract Address of the corresponding Solana event contract
     */
     function deriveEventAddress(
-        IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData
+        IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData
     )
         override
         public
@@ -133,10 +133,10 @@ contract EverscaleEthereumEventConfiguration is IEverscaleEthereumEventConfigura
     returns (
         address eventContract
     ) {
-        IEverscaleEthereumEvent.EverscaleEthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
+        IEverscaleSolanaEvent.EverscaleSolanaEventInitData eventInitData = buildEventInitData(eventVoteData);
 
         TvmCell stateInit = tvm.buildStateInit({
-            contr: EverscaleEthereumBaseEvent,
+            contr: EverscaleSolanaBaseEvent,
             varInit: {
                 eventInitData: eventInitData
             },
@@ -154,7 +154,7 @@ contract EverscaleEthereumEventConfiguration is IEverscaleEthereumEventConfigura
     */
     function getDetails() override public view responsible returns(
         BasicConfiguration _basicConfiguration,
-        EverscaleEthereumEventConfiguration _networkConfiguration,
+        EverscaleSolanaEventConfiguration _networkConfiguration,
         TvmCell _meta
     ) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS}(
@@ -167,9 +167,9 @@ contract EverscaleEthereumEventConfiguration is IEverscaleEthereumEventConfigura
 
     /*
         @dev Get event configuration type
-        @return _type Configuration type - Ethereum or Everscale
+        @return _type Configuration type - Solana or Everscale
     */
     function getType() override public pure responsible returns(EventType _type) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} EventType.Everscale;
+        return {value: 0, flag: MsgFlag.REMAINING_GAS} EventType.EverscaleSolana;
     }
 }

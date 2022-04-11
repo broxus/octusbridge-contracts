@@ -1,8 +1,10 @@
 const {
   setupRelays,
   setupBridge,
-  setupEthereumEventConfiguration,
-  setupEverscaleEventConfiguration,
+  setupEthereumEverscaleEventConfiguration,
+  setupSolanaEverscaleEventConfiguration,
+  setupEverscaleEthereumEventConfiguration,
+  setupEverscaleSolanaEventConfiguration,
   expect,
 } = require('../../utils');
 
@@ -24,7 +26,7 @@ describe('Test setting configuration meta', async function() {
     let ethereumEverscaleEventConfiguration, proxy;
     
     it('Setup event configuration', async () => {
-      [ethereumEverscaleEventConfiguration, proxy] = await setupEthereumEventConfiguration(
+      [ethereumEverscaleEventConfiguration, proxy] = await setupEthereumEverscaleEventConfiguration(
         bridgeOwner,
         bridge,
         cellEncoder,
@@ -49,11 +51,11 @@ describe('Test setting configuration meta', async function() {
     });
   });
   
-  describe('Ton event configuration', async () => {
+  describe('Everscale event configuration', async () => {
     let everscaleEthereumEventConfiguration;
 
     it('Setup event configuration', async () => {
-      [everscaleEthereumEventConfiguration] = await setupEverscaleEventConfiguration(
+      [everscaleEthereumEventConfiguration] = await setupEverscaleEthereumEventConfiguration(
         bridgeOwner,
         bridge,
         cellEncoder,
@@ -72,6 +74,64 @@ describe('Test setting configuration meta', async function() {
 
     it('Check configuration meta', async () => {
       const details = await everscaleEthereumEventConfiguration.call({ method: 'getDetails' });
+
+      expect(details._meta)
+        .to.be.equal(emptyCell, 'Wrong meta');
+    });
+  });
+
+  describe('Solana event configuration', async () => {
+    let solanaEverscaleEventConfiguration, proxy;
+
+    it('Setup event configuration', async () => {
+      [solanaEverscaleEventConfiguration, proxy] = await setupSolanaEverscaleEventConfiguration(
+        bridgeOwner,
+        bridge,
+        cellEncoder,
+      );
+    });
+
+    it('Set meta', async () => {
+      await bridgeOwner.runTarget({
+        contract: solanaEverscaleEventConfiguration,
+        method: 'setMeta',
+        params: {
+          _meta: ''
+        }
+      });
+    });
+
+    it('Check configuration meta', async () => {
+      const details = await solanaEverscaleEventConfiguration.call({ method: 'getDetails' });
+
+      expect(details._meta)
+        .to.be.equal(emptyCell, 'Wrong meta');
+    });
+  });
+
+  describe('Everscale event configuration', async () => {
+    let everscaleSolanaEventConfiguration;
+
+    it('Setup event configuration', async () => {
+      [everscaleSolanaEventConfiguration] = await setupEverscaleSolanaEventConfiguration(
+        bridgeOwner,
+        bridge,
+        cellEncoder,
+      );
+    });
+
+    it('Set meta', async () => {
+      await bridgeOwner.runTarget({
+        contract: everscaleSolanaEventConfiguration,
+        method: 'setMeta',
+        params: {
+          _meta: ''
+        }
+      });
+    });
+
+    it('Check configuration meta', async () => {
+      const details = await everscaleSolanaEventConfiguration.call({ method: 'getDetails' });
 
       expect(details._meta)
         .to.be.equal(emptyCell, 'Wrong meta');

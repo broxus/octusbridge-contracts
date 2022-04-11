@@ -142,7 +142,7 @@ const setupBridge = async (relays) => {
 };
 
 
-const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
+const setupEthereumEverscaleEventConfiguration = async (owner, staking, cellEncoder) => {
   const [keyPair] = await locklift.keys.getKeyPairs();
   
   const configurationMeta = '';
@@ -251,6 +251,112 @@ const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
   return [ethereumEverscaleEventConfiguration, proxy, initializer];
 };
 
+const setupSolanaEverscaleEventConfiguration = async (owner, staking, cellEncoder) => {
+  const [keyPair] = await locklift.keys.getKeyPairs();
+
+  const configurationMeta = '';
+
+  const _randomNonce = locklift.utils.getRandomNonce();
+
+  const Proxy = await locklift.factory.getContract('ProxyTokenTransfer');
+
+  const {
+    address: proxyFutureAddress
+  } = await locklift.ton.createDeployMessage({
+    contract: Proxy,
+    constructorParams: {
+      owner_: owner.address,
+    },
+    initParams: {
+      _randomNonce,
+    },
+    keyPair
+  });
+
+  const [tokenRoot, wallet] = await setupTokenRootWithWallet(
+    proxyFutureAddress,
+    owner.address,
+    locklift.utils.convertCrystal('100', 'nano')
+  );
+
+  const SolanaEverscaleEventConfiguration = await locklift.factory.getContract('SolanaEverscaleEventConfiguration');
+  const SolanaEvent = await locklift.factory.getContract('TokenTransferSolanaEverscaleEvent');
+
+  const solanaEverscaleEventConfiguration = await locklift.giver.deployContract({
+    contract: SolanaEverscaleEventConfiguration,
+    constructorParams: {
+      _owner: owner.address,
+      _meta: configurationMeta,
+    },
+    initParams: {
+      basicConfiguration: {
+        eventABI: '',
+        eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
+        staking: staking.address,
+        eventCode: SolanaEvent.code,
+      },
+      networkConfiguration: {
+        eventEmitter: locklift.utils.zeroAddress,
+        proxy: proxyFutureAddress,
+        endTimestamp: 0,
+      }
+    },
+    keyPair
+  }, locklift.utils.convertCrystal(1, 'nano'));
+
+  await logContract(solanaEverscaleEventConfiguration);
+
+  const proxy = await locklift.giver.deployContract({
+    contract: Proxy,
+    constructorParams: {
+      owner_: owner.address,
+    },
+    initParams: {
+      _randomNonce,
+    },
+    keyPair
+  }, locklift.utils.convertCrystal(1, 'nano'));
+
+  await logContract(proxy);
+
+  const proxyConfiguration = {
+    tonConfiguration:  locklift.utils.zeroAddress,
+    ethereumConfigurations: [solanaEverscaleEventConfiguration.address],
+    outdatedTokenRoots: [],
+    tokenRoot: tokenRoot.address,
+    settingsDeployWalletGrams: locklift.utils.convertCrystal(0.1, 'nano')
+  }
+
+  await owner.runTarget({
+    contract: proxy,
+    method: 'setConfiguration',
+    params: {
+      _config: proxyConfiguration,
+      gasBackAddress: owner.address
+    },
+    value: locklift.utils.convertCrystal(0.5, 'nano')
+  });
+
+  const Account = await locklift.factory.getAccount('Wallet');
+
+  const initializer = await locklift.giver.deployContract({
+    contract: Account,
+    constructorParams: {},
+    initParams: {
+      _randomNonce,
+    },
+    keyPair,
+  }, locklift.utils.convertCrystal(10, 'nano'));
+
+  initializer.setKeyPair(keyPair);
+  initializer.afterRun = afterRun;
+  initializer.name = 'Event initializer';
+
+  await logContract(initializer);
+
+  return [solanaEverscaleEventConfiguration, proxy, initializer];
+};
+
 const setupTokenRootWithWallet = async (rootOwner, walletOwner, mintAmount) => {
   const RootToken = await locklift.factory.getContract('TokenRoot', TOKEN_PATH);
   const tokenWallet = await locklift.factory.getContract('TokenWallet', TOKEN_PATH);
@@ -295,7 +401,7 @@ const setupTokenRootWithWallet = async (rootOwner, walletOwner, mintAmount) => {
   return [root, tokenWallet];
 }
 
-const setupEverscaleEventConfiguration = async (owner, staking, cellEncoder) => {
+const setupEverscaleEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
   const EverscaleEthereumEventConfiguration = await locklift.factory.getContract('EverscaleEthereumEventConfiguration');
   const TonEvent = await locklift.factory.getContract('TokenTransferEverscaleEthereumEvent');
 
@@ -409,6 +515,122 @@ const setupEverscaleEventConfiguration = async (owner, staking, cellEncoder) => 
   });
 
   return [everscaleEthereumEventConfiguration, proxy, initializer];
+};
+
+const setupEverscaleSolanaEventConfiguration = async (owner, staking, cellEncoder) => {
+  const EverscaleSolanaEventConfiguration = await locklift.factory.getContract('EverscaleSolanaEventConfiguration');
+  const TonEvent = await locklift.factory.getContract('TokenTransferEverscaleSolanaEvent');
+
+  const _randomNonce = locklift.utils.getRandomNonce();
+  const [keyPair] = await locklift.keys.getKeyPairs();
+
+  const Proxy = await locklift.factory.getContract('ProxyTokenTransfer');
+
+  const {
+    address: proxyFutureAddress
+  } = await locklift.ton.createDeployMessage({
+    contract: Proxy,
+    constructorParams: {
+      owner_: owner.address,
+    },
+    initParams: {
+      _randomNonce,
+    },
+    keyPair
+  });
+
+  const Account = await locklift.factory.getAccount('Wallet');
+
+  const initializer = await locklift.giver.deployContract({
+    contract: Account,
+    keyPair,
+    constructorParams: {},
+    initParams: {
+      _randomNonce: locklift.utils.getRandomNonce(),
+    },
+  }, locklift.utils.convertCrystal(6, 'nano'));
+
+  initializer.setKeyPair(keyPair);
+  initializer.afterRun = afterRun;
+  initializer.name = 'Event initializer';
+
+  await logContract(initializer);
+
+  const [tokenRoot, initializerWallet] = await setupTokenRootWithWallet(
+    initializer.address,
+    initializer.address,
+    locklift.utils.convertCrystal('1000', 'nano')
+  );
+
+  await initializer.runTarget({
+    contract: tokenRoot,
+    method: 'transferOwnership',
+    params: {
+      newOwner: proxyFutureAddress,
+      remainingGasTo: initializer.address,
+      callbacks: {}
+    }
+  });
+
+  const configurationMeta = '';
+  const everscaleSolanaEventConfiguration = await locklift.giver.deployContract({
+    contract: EverscaleSolanaEventConfiguration,
+    constructorParams: {
+      _owner: owner.address,
+      _meta: configurationMeta,
+    },
+    initParams: {
+      basicConfiguration: {
+        eventABI: '',
+        eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
+        staking: staking.address,
+        eventCode: TonEvent.code,
+      },
+      networkConfiguration: {
+        eventEmitter: proxyFutureAddress,
+        proxy: locklift.utils.zeroAddress,
+        startTimestamp: 0,
+        endTimestamp: 0,
+      }
+    },
+    keyPair
+  }, locklift.utils.convertCrystal(1, 'nano'));
+
+  await logContract(everscaleSolanaEventConfiguration);
+
+  const proxy = await locklift.giver.deployContract({
+    contract: Proxy,
+    constructorParams: {
+      owner_: owner.address,
+    },
+    initParams: {
+      _randomNonce,
+    },
+    keyPair
+  }, locklift.utils.convertCrystal(1, 'nano'));
+
+  await logContract(proxy);
+
+  const proxyConfiguration = {
+    tonConfiguration: everscaleSolanaEventConfiguration.address,
+    ethereumConfigurations: [],
+    outdatedTokenRoots: [],
+    tokenRoot: tokenRoot.address,
+    rootTunnel: tokenRoot.address,
+    settingsDeployWalletGrams: locklift.utils.convertCrystal(0.1, 'nano')
+  }
+
+  await owner.runTarget({
+    contract: proxy,
+    method: 'setConfiguration',
+    params: {
+      _config: proxyConfiguration,
+      gasBackAddress: owner.address
+    },
+    value: locklift.utils.convertCrystal(0.5, 'nano')
+  });
+
+  return [everscaleSolanaEventConfiguration, proxy, initializer];
 };
 
 
@@ -945,8 +1167,10 @@ const stringToBytesArray = (dataString) => {
 
 module.exports = {
   setupBridge,
-  setupEthereumEventConfiguration,
-  setupEverscaleEventConfiguration,
+  setupEthereumEverscaleEventConfiguration,
+  setupSolanaEverscaleEventConfiguration,
+  setupEverscaleEthereumEventConfiguration,
+  setupEverscaleSolanaEventConfiguration,
   setupTokenRootWithWallet,
   setupRelays,
   setupAlienMultiVault,

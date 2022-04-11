@@ -1,6 +1,6 @@
 const {
   setupBridge,
-  setupEthereumEventConfiguration,
+  setupSolanaEverscaleEventConfiguration,
   setupRelays,
   MetricManager,
   enableEventConfiguration,
@@ -11,11 +11,11 @@ const {
 } = require('../../utils');
 
 
-describe('Test ethereum event reject', async function() {
+describe('Test solana event reject', async function() {
   this.timeout(10000000);
   
   let bridge, bridgeOwner, staking, cellEncoder;
-  let ethereumEverscaleEventConfiguration, proxy, initializer;
+  let solanaEverscaleEventConfiguration, proxy, initializer;
   let relays;
   let metricManager;
   
@@ -41,7 +41,7 @@ describe('Test ethereum event reject', async function() {
   
     [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
   
-    [ethereumEverscaleEventConfiguration, proxy, initializer] = await setupEthereumEventConfiguration(
+    [solanaEverscaleEventConfiguration, proxy, initializer] = await setupSolanaEverscaleEventConfiguration(
       bridgeOwner,
       staking,
       cellEncoder,
@@ -49,7 +49,7 @@ describe('Test ethereum event reject', async function() {
     
     metricManager = new MetricManager(
       bridge, bridgeOwner, staking,
-      ethereumEverscaleEventConfiguration, proxy, initializer
+      solanaEverscaleEventConfiguration, proxy, initializer
     );
   });
   
@@ -58,8 +58,8 @@ describe('Test ethereum event reject', async function() {
       await enableEventConfiguration(
         bridgeOwner,
         bridge,
-        ethereumEverscaleEventConfiguration,
-        'ethereum'
+        solanaEverscaleEventConfiguration,
+        'solana'
       );
     });
   
@@ -70,7 +70,7 @@ describe('Test ethereum event reject', async function() {
         .to.be.not.equal(undefined, 'Configuration not found');
     
       expect(configurations['0']._eventConfiguration)
-        .to.be.equal(ethereumEverscaleEventConfiguration.address, 'Wrong configuration address');
+        .to.be.equal(solanaEverscaleEventConfiguration.address, 'Wrong configuration address');
     
       expect(configurations['0']._enabled)
         .to.be.equal(true, 'Wrong connector status');
@@ -88,22 +88,19 @@ describe('Test ethereum event reject', async function() {
   
     it('Setup event data', async () => {
       const eventData = await cellEncoder.call({
-        method: 'encodeEthereumEverscaleEventData',
+        method: 'encodeSolanaEverscaleEventData',
         params: eventDataStructure
       });
   
       eventVoteData = {
-        eventTransaction: 111,
-          eventIndex: 222,
+          accountSeed: 111,
           eventData,
-          eventBlockNumber: 333,
-          eventBlock: 444,
       };
     });
   
     it('Initialize event', async () => {
       const tx = await initializer.runTarget({
-        contract: ethereumEverscaleEventConfiguration,
+        contract: solanaEverscaleEventConfiguration,
         method: 'deployEvent',
         params: {
           eventVoteData,
@@ -113,7 +110,7 @@ describe('Test ethereum event reject', async function() {
     
       logger.log(`Event initialization tx: ${tx.transaction.id}`);
   
-      const expectedEventContract = await ethereumEverscaleEventConfiguration.call({
+      const expectedEventContract = await solanaEverscaleEventConfiguration.call({
         method: 'deriveEventAddress',
         params: {
           eventVoteData,
@@ -122,7 +119,7 @@ describe('Test ethereum event reject', async function() {
     
       logger.log(`Expected event address: ${expectedEventContract}`);
     
-      eventContract = await locklift.factory.getContract('TokenTransferEthereumEverscaleEvent');
+      eventContract = await locklift.factory.getContract('TokenTransferSolanaEverscaleEvent');
       eventContract.setAddress(expectedEventContract);
       eventContract.afterRun = afterRun;
     });

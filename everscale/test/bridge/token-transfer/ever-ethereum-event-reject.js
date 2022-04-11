@@ -1,7 +1,7 @@
 const BigNumber = require("bignumber.js");
 const {
   setupBridge,
-  setupEverscaleEventConfiguration,
+  setupEverscaleEthereumEventConfiguration,
   setupRelays,
   MetricManager,
   enableEventConfiguration,
@@ -45,7 +45,7 @@ describe('Test ton event reject', async function() {
   
     [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
   
-    [everscaleEthereumEventConfiguration, proxy, initializer] = await setupEverscaleEventConfiguration(
+    [everscaleEthereumEventConfiguration, proxy, initializer] = await setupEverscaleEthereumEventConfiguration(
       bridgeOwner,
       staking,
       cellEncoder,

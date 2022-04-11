@@ -1,6 +1,6 @@
 const {
   setupBridge,
-  setupEthereumEventConfiguration,
+  setupSolanaEverscaleEventConfiguration,
   setupRelays,
   MetricManager,
   enableEventConfiguration,
@@ -13,11 +13,11 @@ const {
 } = require('../../utils');
 
 
-describe('Test ethereum event confirm', async function() {
+describe('Test solana event confirm', async function() {
   this.timeout(10000000);
   
   let bridge, bridgeOwner, staking, cellEncoder;
-  let ethereumEverscaleEventConfiguration, proxy, initializer;
+  let solanaEverscaleEventConfiguration, proxy, initializer;
   let relays;
   let metricManager;
   let initializerTokenWallet;
@@ -44,7 +44,7 @@ describe('Test ethereum event confirm', async function() {
     
     [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
   
-    [ethereumEverscaleEventConfiguration, proxy, initializer] = await setupEthereumEventConfiguration(
+    [solanaEverscaleEventConfiguration, proxy, initializer] = await setupSolanaEverscaleEventConfiguration(
       bridgeOwner,
       staking,
       cellEncoder,
@@ -55,7 +55,7 @@ describe('Test ethereum event confirm', async function() {
 
     metricManager = new MetricManager(
       bridge, bridgeOwner, staking,
-      ethereumEverscaleEventConfiguration, proxy, initializer
+      solanaEverscaleEventConfiguration, proxy, initializer
     );
   });
   
@@ -64,7 +64,7 @@ describe('Test ethereum event confirm', async function() {
       await enableEventConfiguration(
         bridgeOwner,
         bridge,
-        ethereumEverscaleEventConfiguration,
+        solanaEverscaleEventConfiguration,
       );
     });
 
@@ -75,7 +75,7 @@ describe('Test ethereum event confirm', async function() {
         .to.be.not.equal(undefined, 'Configuration not found');
       
       expect(configurations['0']._eventConfiguration)
-        .to.be.equal(ethereumEverscaleEventConfiguration.address, 'Wrong configuration address');
+        .to.be.equal(solanaEverscaleEventConfiguration.address, 'Wrong configuration address');
       
       expect(configurations['0']._enabled)
         .to.be.equal(true, 'Wrong connector status');
@@ -95,22 +95,19 @@ describe('Test ethereum event confirm', async function() {
       eventDataStructure.owner_addr = initializer.address.replace('0:', '0x');
 
       const eventData = await cellEncoder.call({
-        method: 'encodeEthereumEverscaleEventData',
+        method: 'encodeSolanaEverscaleEventData',
         params: eventDataStructure
       });
 
       eventVoteData = {
-        eventTransaction: 111,
-        eventIndex: 222,
+        accountSeed: 111,
         eventData,
-        eventBlockNumber: 333,
-        eventBlock: 444,
       };
     });
 
     it('Initialize event', async () => {
       const tx = await initializer.runTarget({
-        contract: ethereumEverscaleEventConfiguration,
+        contract: solanaEverscaleEventConfiguration,
         method: 'deployEvent',
         params: {
           eventVoteData,
@@ -120,7 +117,7 @@ describe('Test ethereum event confirm', async function() {
 
       logger.log(`Event initialization tx: ${tx.transaction.id}`);
 
-      const expectedEventContract = await ethereumEverscaleEventConfiguration.call({
+      const expectedEventContract = await solanaEverscaleEventConfiguration.call({
         method: 'deriveEventAddress',
         params: {
           eventVoteData,
@@ -129,7 +126,7 @@ describe('Test ethereum event confirm', async function() {
 
       logger.log(`Expected event address: ${expectedEventContract}`);
 
-      eventContract = await locklift.factory.getContract('TokenTransferEthereumEverscaleEvent');
+      eventContract = await locklift.factory.getContract('TokenTransferSolanaEverscaleEvent');
       eventContract.setAddress(expectedEventContract);
       eventContract.afterRun = afterRun;
 
@@ -141,23 +138,14 @@ describe('Test ethereum event confirm', async function() {
         method: 'getDetails'
       });
 
-      expect(details._eventInitData.voteData.eventTransaction)
-        .to.be.bignumber.equal(eventVoteData.eventTransaction, 'Wrong event transaction');
-
-      expect(details._eventInitData.voteData.eventIndex)
-        .to.be.bignumber.equal(eventVoteData.eventIndex, 'Wrong event index');
+      expect(details._eventInitData.voteData.accountSeed)
+        .to.be.bignumber.equal(eventVoteData.accountSeed, 'Wrong accountSeed');
 
       expect(details._eventInitData.voteData.eventData)
         .to.be.equal(eventVoteData.eventData, 'Wrong event data');
 
-      expect(details._eventInitData.voteData.eventBlockNumber)
-        .to.be.bignumber.equal(eventVoteData.eventBlockNumber, 'Wrong event block number');
-
-      expect(details._eventInitData.voteData.eventBlock)
-        .to.be.bignumber.equal(eventVoteData.eventBlock, 'Wrong event block');
-
       expect(details._eventInitData.configuration)
-        .to.be.equal(ethereumEverscaleEventConfiguration.address, 'Wrong event configuration');
+        .to.be.equal(solanaEverscaleEventConfiguration.address, 'Wrong event configuration');
 
       expect(details._eventInitData.staking)
         .to.be.equal(staking.address, 'Wrong staking');

@@ -1,15 +1,15 @@
 module.exports = {
   compiler: {
-    path: '/usr/local/bin/solc-ton-tonlabs-bbbbeca',
+    path: '/usr/local/bin/solc-a222452',
   },
   linker: {
-    path: '/usr/local/bin/tvm_linker-80e31a5',
+    path: '/usr/local/bin/tvm_linker-48e815a',
   },
   networks: {
     local: {
       ton_client: {
         network: {
-          server_address: 'http://localhost/',
+          server_address: 'http://localhost:5000',
         },
       },
       giver: {
@@ -18,7 +18,7 @@ module.exports = {
         key: '',
       },
       keys: {
-        phrase: '',
+        phrase: 'major disagree vapor ozone exotic notice slide spice flash grab patrol credit',
         amount: 20,
       }
     },
