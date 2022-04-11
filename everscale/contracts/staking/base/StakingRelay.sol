@@ -4,10 +4,10 @@ pragma AbiHeader pubkey;
 
 import "./StakingUpgradable.sol";
 import "../../bridge/interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.sol";
-import "../../bridge/interfaces/IProxy.sol";
+import "../../bridge/interfaces/IEthereumEverscaleProxy.sol";
 
 
-abstract contract StakingPoolRelay is StakingPoolUpgradable, IProxy {
+abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleProxy {
     function linkRelayAccounts(uint256 ton_pubkey, uint160 eth_address) external view onlyActive {
         require (msg.value >= relay_config.relayInitialTonDeposit, ErrorCodes.VALUE_TOO_LOW);
         require (!base_details.emergency, ErrorCodes.EMERGENCY);

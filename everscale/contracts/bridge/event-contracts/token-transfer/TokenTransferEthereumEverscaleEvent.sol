@@ -5,7 +5,7 @@ pragma AbiHeader pubkey;
 
 import "./../../interfaces/IEventNotificationReceiver.sol";
 import "./../../interfaces/event-contracts/IEthereumEverscaleEvent.sol";
-import "./../../interfaces/IProxy.sol";
+import "./../../interfaces/IEthereumEverscaleProxy.sol";
 import "./../../../utils/ErrorCodes.sol";
 
 import "./../base/EthereumEverscaleBaseEvent.sol";
@@ -43,7 +43,7 @@ contract TokenTransferEthereumEverscaleEvent is EthereumEverscaleBaseEvent, Prox
     function onConfirm() override internal {
         notifyEventStatusChanged();
 
-        IProxy(eventInitData.configuration).onEventConfirmed{
+        IEthereumEverscaleProxy(eventInitData.configuration).onEventConfirmed{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, initializer);
     }

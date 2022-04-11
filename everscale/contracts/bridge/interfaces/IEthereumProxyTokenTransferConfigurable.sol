@@ -1,7 +1,7 @@
 pragma ton-solidity >= 0.39.0;
 
 
-interface IProxyTokenTransferConfigurable {
+interface IEthereumProxyTokenTransferConfigurable {
     struct Configuration {
         address tonConfiguration;
         address[] ethereumConfigurations;

@@ -197,7 +197,7 @@ describe('Test EVM alien multivault pipeline', async function() {
                 }
             });
 
-            alienTokenRoot = await locklift.factory.getContract('TokenRootAlienEVM');
+            alienTokenRoot = await locklift.factory.getContract('TokenRootAlienEVMEverscale');
             alienTokenRoot.setAddress(tokenAddress);
             alienTokenRoot.afterRun = afterRun;
 

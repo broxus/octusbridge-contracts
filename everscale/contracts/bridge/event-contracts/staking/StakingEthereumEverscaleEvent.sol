@@ -6,7 +6,7 @@ pragma AbiHeader pubkey;
 import "../base/EthereumEverscaleBaseEvent.sol";
 import "../../interfaces/IEventNotificationReceiver.sol";
 import "../../interfaces/event-contracts/IEthereumEverscaleEvent.sol";
-import "../../interfaces/IProxy.sol";
+import "../../interfaces/IEthereumEverscaleProxy.sol";
 import "../../../utils/ErrorCodes.sol";
 import "../../../utils/cell-encoder/StakingCellEncoder.sol";
 import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
@@ -31,7 +31,7 @@ contract StakingEthereumEverscaleEvent is EthereumEverscaleBaseEvent, StakingCel
     }
 
     function onConfirm() override internal {
-        IProxy(eventInitData.configuration).onEventConfirmed{
+        IEthereumEverscaleProxy(eventInitData.configuration).onEventConfirmed{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, initializer);
     }

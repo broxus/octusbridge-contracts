@@ -32,7 +32,7 @@ const main = async () => {
     const Account = await locklift.factory.getAccount('Wallet');
     const ProxyMultiVaultNative = await locklift.factory.getContract('ProxyMultiVaultNative');
     const ProxyMultiVaultAlien = await locklift.factory.getContract('ProxyMultiVaultAlien');
-    const AlienTokenRoot = await locklift.factory.getContract('TokenRootAlienEVM');
+    const AlienTokenRoot = await locklift.factory.getContract('TokenRootAlienEVMEverscale');
     const AlienTokenWalletUpgradeable = await locklift.factory.getContract('AlienTokenWalletUpgradeable');
     const AlienTokenWalletPlatform = await locklift.factory.getContract('AlienTokenWalletPlatform');
 

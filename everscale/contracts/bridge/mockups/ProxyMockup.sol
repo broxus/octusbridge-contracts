@@ -2,7 +2,7 @@ pragma ton-solidity >= 0.39.0;
 pragma AbiHeader expire;
 
 
-import './../interfaces/IProxy.sol';
+import './../interfaces/IEthereumEverscaleProxy.sol';
 import './../interfaces/event-contracts/IEthereumEverscaleEvent.sol';
 import "./../../utils/TransferUtils.sol";
 
@@ -15,7 +15,7 @@ import "@broxus/contracts/contracts/utils/RandomNonce.sol";
 /// ethereum event contract is executed.
 /// For example it could be used for minting tokens in case of cross chain token transfers.
 /// Or execute any other custom action.
-contract ProxyMockup is IProxy, RandomNonce {
+contract ProxyMockup is IEthereumEverscaleProxy, RandomNonce {
     address configuration;
 
     IEthereumEverscaleEvent.EthereumEverscaleEventInitData eventData;

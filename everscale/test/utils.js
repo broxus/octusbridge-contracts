@@ -149,7 +149,7 @@ const setupEthereumEverscaleEventConfiguration = async (owner, staking, cellEnco
 
   const _randomNonce = locklift.utils.getRandomNonce();
 
-  const Proxy = await locklift.factory.getContract('ProxyTokenTransfer');
+  const Proxy = await locklift.factory.getContract('EthereumProxyTokenTransfer');
 
   const {
     address: proxyFutureAddress
@@ -258,7 +258,7 @@ const setupSolanaEverscaleEventConfiguration = async (owner, staking, cellEncode
 
   const _randomNonce = locklift.utils.getRandomNonce();
 
-  const Proxy = await locklift.factory.getContract('ProxyTokenTransfer');
+  const Proxy = await locklift.factory.getContract('EthereumProxyTokenTransfer');
 
   const {
     address: proxyFutureAddress
@@ -408,7 +408,7 @@ const setupEverscaleEthereumEventConfiguration = async (owner, staking, cellEnco
   const _randomNonce = locklift.utils.getRandomNonce();
   const [keyPair] = await locklift.keys.getKeyPairs();
 
-  const Proxy = await locklift.factory.getContract('ProxyTokenTransfer');
+  const Proxy = await locklift.factory.getContract('EthereumProxyTokenTransfer');
 
   const {
     address: proxyFutureAddress
@@ -524,7 +524,7 @@ const setupEverscaleSolanaEventConfiguration = async (owner, staking, cellEncode
   const _randomNonce = locklift.utils.getRandomNonce();
   const [keyPair] = await locklift.keys.getKeyPairs();
 
-  const Proxy = await locklift.factory.getContract('ProxyTokenTransfer');
+  const Proxy = await locklift.factory.getContract('EthereumProxyTokenTransfer');
 
   const {
     address: proxyFutureAddress
@@ -731,7 +731,7 @@ const setupAlienMultiVault = async (owner, staking, cellEncoder) => {
   await logContract(everscaleEthereumEventConfiguration);
 
   // Set proxy configuration
-  const AlienTokenRoot = await locklift.factory.getContract('TokenRootAlienEVM');
+  const AlienTokenRoot = await locklift.factory.getContract('TokenRootAlienEVMEverscale');
   const AlienTokenWalletUpgradeable = await locklift.factory.getContract('AlienTokenWalletUpgradeable');
   const AlienTokenWalletPlatform = await locklift.factory.getContract('AlienTokenWalletPlatform');
 

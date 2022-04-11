@@ -4,7 +4,7 @@ pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 
-import "./../interfaces/IProxyExtended.sol";
+import "./../interfaces/IEthereumEverscaleProxyExtended.sol";
 import "./../interfaces/multivault/IProxyMultiVaultNative.sol";
 import "./../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.sol";
 
@@ -26,7 +26,7 @@ contract ProxyMultiVaultNative is
     TransferUtils,
     CheckPubKey,
     RandomNonce,
-    IProxyExtended,
+    IEthereumEverscaleProxyExtended,
     IProxyMultiVaultNative,
     IAcceptTokensTransferCallback
 {

@@ -4,14 +4,13 @@ pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 
-import "./../interfaces/ITokenRootAlienEVM.sol";
+import "./../interfaces/ITokenRootAlienSolanaEverscale.sol";
 
 import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 import "ton-eth-bridge-token-contracts/contracts/TokenRootUpgradeable.sol";
 
 
-contract TokenRootAlienEVM is TokenRootUpgradeable, ITokenRootAlienEVM {
-    uint256 static base_chainId_;
+contract TokenRootAlienSolanaEverscale is TokenRootUpgradeable, ITokenRootAlienSolanaEverscale {
     uint160 static base_token_;
 
     constructor(
@@ -33,14 +32,12 @@ contract TokenRootAlienEVM is TokenRootUpgradeable, ITokenRootAlienEVM {
     ) {}
 
     function meta() external override responsible returns (
-        uint256 base_chainId,
-        uint160 base_token,
+        uint256 base_token,
         string name,
         string symbol,
         uint8 decimals
     ) {
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS}(
-            base_chainId_,
             base_token_,
             name_,
             symbol_,

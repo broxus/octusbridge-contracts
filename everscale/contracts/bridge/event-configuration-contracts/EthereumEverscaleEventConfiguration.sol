@@ -5,8 +5,8 @@ pragma AbiHeader expire;
 import './../interfaces/event-contracts/IEthereumEverscaleEvent.sol';
 import "./../interfaces/event-configuration-contracts/IEthereumEverscaleEventConfiguration.sol";
 
-import './../interfaces/IProxy.sol';
-import './../interfaces/IProxyExtended.sol';
+import './../interfaces/IEthereumEverscaleProxy.sol';
+import './../interfaces/IEthereumEverscaleProxyExtended.sol';
 
 import './../event-contracts/base/EthereumEverscaleBaseEvent.sol';
 
@@ -20,7 +20,7 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 /// @title Basic Ethereum event configuration contract.
 /// @author https://github.com/broxus
-contract EthereumEverscaleEventConfiguration is IEthereumEverscaleEventConfiguration, IProxy, IProxyExtended, TransferUtils, InternalOwner, CheckPubKey {
+contract EthereumEverscaleEventConfiguration is IEthereumEverscaleEventConfiguration, IEthereumEverscaleProxy, IEthereumEverscaleProxyExtended, TransferUtils, InternalOwner, CheckPubKey {
     BasicConfiguration public static basicConfiguration;
     EthereumEverscaleEventConfiguration public static networkConfiguration;
 
@@ -192,7 +192,7 @@ contract EthereumEverscaleEventConfiguration is IEthereumEverscaleEventConfigura
             ErrorCodes.SENDER_NOT_EVENT_CONTRACT
         );
 
-        IProxy(networkConfiguration.proxy).onEventConfirmed{
+        IEthereumEverscaleProxy(networkConfiguration.proxy).onEventConfirmed{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, gasBackAddress);
 
@@ -221,7 +221,7 @@ contract EthereumEverscaleEventConfiguration is IEthereumEverscaleEventConfigura
             ErrorCodes.SENDER_NOT_EVENT_CONTRACT
         );
 
-        IProxyExtended(networkConfiguration.proxy).onEventConfirmedExtended{
+        IEthereumEverscaleProxyExtended(networkConfiguration.proxy).onEventConfirmedExtended{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, _meta, gasBackAddress);
     }

@@ -6,7 +6,7 @@ pragma AbiHeader pubkey;
 import "../base/SolanaEverscaleBaseEvent.sol";
 import "../../interfaces/IEventNotificationReceiver.sol";
 import "../../interfaces/event-contracts/ISolanaEverscaleEvent.sol";
-import "../../interfaces/IProxy.sol";
+import "../../interfaces/ISolanaEverscaleProxy.sol";
 import "../../../utils/ErrorCodes.sol";
 import "../../../utils/cell-encoder/StakingCellEncoder.sol";
 import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
@@ -31,7 +31,7 @@ contract StakingSolanaEverscaleEvent is SolanaEverscaleBaseEvent, StakingCellEnc
     }
 
     function onConfirm() override internal {
-        IProxy(eventInitData.configuration).onEventConfirmed{
+        ISolanaEverscaleProxy(eventInitData.configuration).onEventConfirmed{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, initializer);
     }

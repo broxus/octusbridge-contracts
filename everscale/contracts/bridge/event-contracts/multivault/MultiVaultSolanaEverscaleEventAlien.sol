@@ -6,7 +6,7 @@ pragma AbiHeader pubkey;
 
 import "./../../interfaces/multivault/IMultiVaultSolanaEverscaleEventAlien.sol";
 import "./../../interfaces/event-configuration-contracts/ISolanaEverscaleEventConfiguration.sol";
-import "./../../interfaces/IProxyExtended.sol";
+import "./../../interfaces/IEthereumEverscaleProxyExtended.sol";
 import "./../../interfaces/multivault/IProxyMultiVaultAlien.sol";
 
 import "./../base/SolanaEverscaleBaseEvent.sol";
@@ -109,7 +109,7 @@ contract MultiVaultSolanaEverscaleEventAlien is SolanaEverscaleBaseEvent, IMulti
             recipient
         );
 
-        IProxyExtended(eventInitData.configuration).onEventConfirmedExtended{
+        IEthereumEverscaleProxyExtended(eventInitData.configuration).onEventConfirmedExtended{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, meta, initializer);
     }

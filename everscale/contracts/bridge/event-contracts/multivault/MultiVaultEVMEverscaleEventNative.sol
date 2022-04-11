@@ -8,7 +8,7 @@ import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.sol";
 
 import "./../../interfaces/multivault/IMultiVaultEVMEverscaleEventNative.sol";
 import "./../../interfaces/event-configuration-contracts/IEthereumEverscaleEventConfiguration.sol";
-import "./../../interfaces/IProxyExtended.sol";
+import "./../../interfaces/IEthereumEverscaleProxyExtended.sol";
 
 import "./../base/EthereumEverscaleBaseEvent.sol";
 
@@ -111,7 +111,7 @@ contract MultiVaultEVMEverscaleEventNative is EthereumEverscaleBaseEvent, IMulti
             recipient
         );
 
-        IProxyExtended(eventInitData.configuration).onEventConfirmedExtended{
+        IEthereumEverscaleProxyExtended(eventInitData.configuration).onEventConfirmedExtended{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, meta, initializer);
     }

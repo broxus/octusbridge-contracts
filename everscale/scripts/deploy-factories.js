@@ -91,14 +91,14 @@ async function main() {
 
     // Proxy token transfer factory
     const ProxyTokenTransferFactory = await locklift.factory.getContract('ProxyTokenTransferFactory');
-    const ProxyTokenTransfer = await locklift.factory.getContract('ProxyTokenTransfer');
+    const EthereumProxyTokenTransfer = await locklift.factory.getContract('EthereumProxyTokenTransfer');
 
     spinner.start('Deploying proxy token transfer factory');
 
     const proxyTokenTransferFactory = await locklift.giver.deployContract({
         contract: ProxyTokenTransferFactory,
         constructorParams: {
-            _proxyCode: ProxyTokenTransfer.code
+            _proxyCode: EthereumProxyTokenTransfer.code
         },
         initParams: {
             _randomNonce,

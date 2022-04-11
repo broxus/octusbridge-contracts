@@ -7,9 +7,9 @@ import "./../../utils/ErrorCodes.sol";
 import "./../../utils/cell-encoder/ProxyTokenTransferCellEncoder.sol";
 import "./../../utils/TransferUtils.sol";
 
-import "./../interfaces/IProxy.sol";
-import "./../interfaces/IProxyTokenTransferConfigurable.sol";
-import "./../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.sol";
+import "./../interfaces/ISolanaEverscaleProxy.sol";
+import "./../interfaces/ISolanaProxyTokenTransferConfigurable.sol";
+import "./../interfaces/event-configuration-contracts/IEverscaleSolanaEventConfiguration.sol";
 import "./../interfaces/legacy/ILegacyBurnTokensCallback.sol";
 import "./../interfaces/legacy/ILegacyTransferOwner.sol";
 
@@ -23,14 +23,14 @@ import '@broxus/contracts/contracts/utils/RandomNonce.sol';
 import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
 
 /// @title Proxy for cross chain token transfers
-/// @dev In case of ETH-Everscale token transfer, this proxy should receive
-/// `onEventConfirmed` callback from the corresponding EthereumEverscaleEventConfiguration. Then it mints
+/// @dev In case of Solana-Everscale token transfer, this proxy should receive
+/// `onEventConfirmed` callback from the corresponding SolanaEverscaleEventConfiguration. Then it mints
 /// the specified amount of tokens to the user.
-/// In case of Everscale-ETH token transfer, this proxy should receive burn callback from the token
+/// In case of Everscale-Solana token transfer, this proxy should receive burn callback from the token
 /// and deploy event. This event will be signed by relays so it can be sent to the corresponding EVM Vault.
-contract ProxyTokenTransfer is
-    IProxy,
-    IProxyTokenTransferConfigurable,
+contract SolanaProxyTokenTransfer is
+    ISolanaEverscaleProxy,
+ISolanaProxyTokenTransferConfigurable,
     IAcceptTokensBurnCallback,
     RandomNonce,
     ProxyTokenTransferCellEncoder,
@@ -38,15 +38,15 @@ contract ProxyTokenTransfer is
     TransferUtils,
     CheckPubKey
 {
-    event Withdraw(int8 wid, uint256 addr, uint128 tokens, uint160 eth_addr, uint32 chainId);
+    event Withdraw(int8 wid, uint256 addr, uint128 tokens, uint256 solana_addr);
     uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
 
     Configuration config;
     uint128 burnedCount;
     bool paused = false;
 
-    modifier onlyEthereumConfiguration() {
-        require(isArrayContainsAddress(config.ethereumConfigurations, msg.sender), ErrorCodes.NOT_ETHEREUM_CONFIG);
+    modifier onlySolanaConfiguration() {
+        require(isArrayContainsAddress(config.solanaConfigurations, msg.sender), ErrorCodes.NOT_SOLANA_CONFIG);
         _;
     }
 
@@ -57,9 +57,9 @@ contract ProxyTokenTransfer is
     }
 
     function onEventConfirmed(
-        IEthereumEverscaleEvent.EthereumEverscaleEventInitData eventData,
+        ISolanaEverscaleEvent.SolanaEverscaleEventInitData eventData,
         address gasBackAddress
-    ) public override onlyEthereumConfiguration reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    ) public override onlySolanaConfiguration reserveMinBalance(MIN_CONTRACT_BALANCE) {
         require(!paused, ErrorCodes.PROXY_PAUSED);
         require(config.tokenRoot.value != 0, ErrorCodes.PROXY_TOKEN_ROOT_IS_EMPTY);
 
@@ -67,7 +67,7 @@ contract ProxyTokenTransfer is
             uint128 tokens,
             int8 wid,
             uint256 owner_addr
-        ) = decodeEthereumEverscaleEventData(eventData.voteData.eventData);
+        ) = decodeSolanaEverscaleEventData(eventData.voteData.eventData);
 
         address owner_address = address.makeAddrStd(wid, owner_addr);
 
@@ -125,29 +125,27 @@ contract ProxyTokenTransfer is
             burnedCount += tokens;
 
             (
-                uint160 ethereumAddress,
-                uint32 chainId
-            ) = payload.toSlice().decode(uint160, uint32);
+                uint256 solanaAddress,
+            ) = payload.toSlice().decode(uint256);
 
 //            emit Withdraw(
 //                remainingGasTo.wid,
 //                remainingGasTo.value,
 //                tokens,
-//                ethereumAddress,
+//                solanaAddress,
 //                chainId
 //            );
 
-            TvmCell eventData = encodeEverscaleEthereumEventData(
+            TvmCell eventData = encodeEverscaleSolanaEventData(
                 remainingGasTo.wid,
                 remainingGasTo.value,
                 tokens,
-                ethereumAddress,
-                chainId
+                solanaAddress,
             );
 
-            IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData = IEverscaleEthereumEvent.EverscaleEthereumEventVoteData(tx.timestamp, now, eventData);
+            IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(tx.timestamp, eventData);
 
-            IEverscaleEthereumEventConfiguration(config.tonConfiguration).deployEvent{
+            IEverscaleSolanaEventConfiguration(config.tonConfiguration).deployEvent{
                 value: 0,
                 flag: MsgFlag.ALL_NOT_RESERVED
             }(eventVoteData);

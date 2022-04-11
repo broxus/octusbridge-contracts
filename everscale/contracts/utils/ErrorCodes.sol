@@ -109,5 +109,6 @@ library ErrorCodes {
     uint16 constant WRONG_TOKENS_AMOUNT_IN_PAYLOAD = 2704;
     uint16 constant WRONG_OWNER_IN_PAYLOAD = 2705;
     uint16 constant NOT_LEGACY_BURN = 2706;
+    uint16 constant NOT_SOLANA_CONFIG = 2707;
 
 }

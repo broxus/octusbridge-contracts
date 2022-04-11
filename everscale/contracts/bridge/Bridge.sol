@@ -6,6 +6,8 @@ pragma AbiHeader pubkey;
 
 import "./event-configuration-contracts/EthereumEverscaleEventConfiguration.sol";
 import "./event-configuration-contracts/EverscaleEthereumEventConfiguration.sol";
+import "./event-configuration-contracts/SolanaEverscaleEventConfiguration.sol";
+import "./event-configuration-contracts/EverscaleSolanaEventConfiguration.sol";
 
 import "./interfaces/IBridge.sol";
 import "./interfaces/IConnector.sol";

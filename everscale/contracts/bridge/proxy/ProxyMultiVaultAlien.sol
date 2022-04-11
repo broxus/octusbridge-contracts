@@ -4,14 +4,14 @@ pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 
-import "./../interfaces/IProxyExtended.sol";
+import "./../interfaces/IEthereumEverscaleProxyExtended.sol";
 import "./../interfaces/multivault/IProxyMultiVaultAlien.sol";
 import "./../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.sol";
 
 import "./../../utils/ErrorCodes.sol";
 import "./../../utils/TransferUtils.sol";
 
-import "./../alien-token/TokenRootAlienEVM.sol";
+import "./../alien-token/TokenRootAlienEVMEverscale.sol";
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensBurnCallback.sol";
 
@@ -27,7 +27,7 @@ contract ProxyMultiVaultAlien is
     CheckPubKey,
     RandomNonce,
     IAcceptTokensBurnCallback,
-    IProxyExtended,
+    IEthereumEverscaleProxyExtended,
     IProxyMultiVaultAlien
 {
     Configuration config;
@@ -163,7 +163,7 @@ contract ProxyMultiVaultAlien is
             decimals
         );
 
-        new TokenRootAlienEVM {
+        new TokenRootAlienEVMEverscale {
             stateInit: stateInit,
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
@@ -222,7 +222,7 @@ contract ProxyMultiVaultAlien is
         uint8 decimals
     ) internal view returns (TvmCell) {
         return tvm.buildStateInit({
-            contr: TokenRootAlienEVM,
+            contr: TokenRootAlienEVMEverscale,
             varInit: {
                 randomNonce_: 0,
                 deployer_: address(this),

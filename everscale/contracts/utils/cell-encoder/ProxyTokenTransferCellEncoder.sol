@@ -84,7 +84,7 @@ contract ProxyTokenTransferCellEncoder {
         int8 wid,
         uint addr,
         uint128 tokens,
-        address solana_address
+        uint256 solana_address
     ) public pure returns(
         TvmCell data
     ) {
@@ -119,13 +119,13 @@ contract ProxyTokenTransferCellEncoder {
         int8 wid,
         uint addr,
         uint128 tokens,
-        uint160 solana_address
+        uint256 solana_address
     ) {
         (
             wid,
             addr,
             tokens,
             ethereum_address
-        ) = data.toSlice().decode(int8, uint, uint128, address);
+        ) = data.toSlice().decode(int8, uint, uint128, uint256);
     }
 }

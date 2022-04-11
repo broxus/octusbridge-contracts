@@ -5,8 +5,8 @@ pragma AbiHeader expire;
 import './../interfaces/event-contracts/ISolanaEverscaleEvent.sol';
 import "./../interfaces/event-configuration-contracts/ISolanaEverscaleEventConfiguration.sol";
 
-import './../interfaces/IProxy.sol';
-import './../interfaces/IProxyExtended.sol';
+import './../interfaces/ISolanaEverscaleProxy.sol';
+import './../interfaces/ISolanaEverscaleProxyExtended.sol';
 
 import './../event-contracts/base/SolanaEverscaleBaseEvent.sol';
 
@@ -20,7 +20,7 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 /// @title Basic Solana event configuration contract.
 /// @author https://github.com/broxus
-contract SolanaEverscaleEventConfiguration is ISolanaEverscaleEventConfiguration, IProxy, IProxyExtended, TransferUtils, InternalOwner, CheckPubKey {
+contract SolanaEverscaleEventConfiguration is ISolanaEverscaleEventConfiguration, ISolanaEverscaleProxy, ISolanaEverscaleProxyExtended, TransferUtils, InternalOwner, CheckPubKey {
     BasicConfiguration public static basicConfiguration;
     SolanaEverscaleEventConfiguration public static networkConfiguration;
 
@@ -192,7 +192,7 @@ contract SolanaEverscaleEventConfiguration is ISolanaEverscaleEventConfiguration
             ErrorCodes.SENDER_NOT_EVENT_CONTRACT
         );
 
-        IProxy(networkConfiguration.proxy).onEventConfirmed{
+        ISolanaEverscaleProxy(networkConfiguration.proxy).onEventConfirmed{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, gasBackAddress);
 
@@ -221,7 +221,7 @@ contract SolanaEverscaleEventConfiguration is ISolanaEverscaleEventConfiguration
             ErrorCodes.SENDER_NOT_EVENT_CONTRACT
         );
 
-        IProxyExtended(networkConfiguration.proxy).onEventConfirmedExtended{
+        ISolanaEverscaleProxyExtended(networkConfiguration.proxy).onEventConfirmedExtended{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, _meta, gasBackAddress);
     }

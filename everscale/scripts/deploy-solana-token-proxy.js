@@ -26,12 +26,12 @@ const main = async () => {
     }
   ]);
   
-  const ProxyTokenTransfer = await locklift.factory.getContract('ProxyTokenTransfer');
+  const SolanaProxyTokenTransfer = await locklift.factory.getContract('SolanaProxyTokenTransfer');
   
-  const spinner = ora('Deploying token transfer proxy').start();
+  const spinner = ora('Deploying solana token transfer proxy').start();
   
   const proxy = await locklift.giver.deployContract({
-    contract: ProxyTokenTransfer,
+    contract: SolanaProxyTokenTransfer,
     constructorParams: {
       owner_: response.owner,
     },
