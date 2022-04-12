@@ -25,5 +25,5 @@ interface ISolanaEverscaleEventConfiguration is IBasicEventConfiguration {
         TvmCell _meta
     );
 
-    function setEndBlockNumber(uint32 endBlockNumber) external;
+    function setEndTimestamp(uint32 endTimestamp) external;
 }

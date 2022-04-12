@@ -97,12 +97,12 @@ describe('Test setting configuration end', async function() {
       );
     });
 
-    it('Set Solana Everscale end block', async () => {
+    it('Set Solana Everscale end timestamp', async () => {
       await bridgeOwner.runTarget({
         contract: solanaEverscaleEventConfiguration,
-        method: 'setEndBlockNumber',
+        method: 'setEndTimestamp',
         params: {
-          endBlockNumber: 1
+          endTimestamp: 1
         }
       });
     });
@@ -110,8 +110,8 @@ describe('Test setting configuration end', async function() {
     it('Check Solana Everscale configuration end block', async () => {
       const details = await solanaEverscaleEventConfiguration.call({ method: 'getDetails' });
 
-      expect(details._networkConfiguration.endBlockNumber)
-        .to.be.bignumber.equal(1, 'Wrong end block number');
+      expect(details._networkConfiguration.endTimestamp)
+        .to.be.bignumber.equal(1, 'Wrong end timestamp');
     });
 
     it('Try to deploy event after end block', async () => {

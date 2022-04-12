@@ -45,26 +45,26 @@ contract SolanaEverscaleEventConfiguration is ISolanaEverscaleEventConfiguration
         meta = _meta;
     }
 
-    /// @dev Set end block number. Can be set only in case current value is 0.
-    /// @param endBlockNumber End block number
-    function setEndBlockNumber(
-        uint32 endBlockNumber
+    //// @dev Set end timestamp. Can be set only in case current value is 0.
+    /// @param endTimestamp End timestamp.
+    function setEndTimestamp(
+        uint32 endTimestamp
     )
         override
+        public
         onlyOwner
-        external
     {
         require(
-            networkConfiguration.endBlockNumber == 0,
-            ErrorCodes.END_BLOCK_NUMBER_ALREADY_SET
+            networkConfiguration.endTimestamp == 0,
+            ErrorCodes.END_TIMESTAMP_ALREADY_SET
         );
 
         require(
-            endBlockNumber >= networkConfiguration.startBlockNumber,
-            ErrorCodes.TOO_LOW_END_BLOCK_NUMBER
+            endTimestamp >= networkConfiguration.startTimestamp,
+            ErrorCodes.TOO_LOW_END_TIMESTAMP
         );
 
-        networkConfiguration.endBlockNumber = endBlockNumber;
+        networkConfiguration.endTimestamp = endTimestamp;
     }
 
     /// @dev Build initial data for event contract
@@ -97,9 +97,9 @@ contract SolanaEverscaleEventConfiguration is ISolanaEverscaleEventConfiguration
             ErrorCodes.EVENT_BLOCK_NUMBER_LESS_THAN_START
         );
 
-        if (networkConfiguration.endBlockNumber != 0) {
+        if (networkConfiguration.endTimestamp != 0) {
             require(
-                eventVoteData.eventBlockNumber <= networkConfiguration.endBlockNumber,
+                eventVoteData.eventTimestamp <= networkConfiguration.endTimestamp,
                 ErrorCodes.EVENT_BLOCK_NUMBER_HIGHER_THAN_END
             );
         }
