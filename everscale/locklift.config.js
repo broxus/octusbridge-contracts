@@ -18,7 +18,7 @@ module.exports = {
         key: '',
       },
       keys: {
-        phrase: 'major disagree vapor ozone exotic notice slide spice flash grab patrol credit',
+        phrase: '',
         amount: 20,
       }
     },
