@@ -3,7 +3,6 @@ const {
 } = require('../utils');
 const BigNumber = require('bignumber.js');
 const logger = require('mocha-logger');
-const {sleep} = require("ton-testing-suite/src/utils");
 const {
     convertCrystal
 } = locklift.utils;

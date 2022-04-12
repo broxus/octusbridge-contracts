@@ -296,7 +296,7 @@ const setupSolanaEverscaleEventConfiguration = async (owner, staking, cellEncode
         eventCode: SolanaEvent.code,
       },
       networkConfiguration: {
-        eventEmitter: locklift.utils.zeroAddress,
+        eventEmitter: new BigNumber(0),
         proxy: proxyFutureAddress,
         endTimestamp: 0,
       }
@@ -613,7 +613,7 @@ const setupEverscaleSolanaEventConfiguration = async (owner, staking, cellEncode
 
   const proxyConfiguration = {
     tonConfiguration: everscaleSolanaEventConfiguration.address,
-    solanaConfiguration: new BigNumber(0),
+    solanaConfiguration: locklift.utils.zeroAddress,
     outdatedTokenRoots: [],
     tokenRoot: tokenRoot.address,
     rootTunnel: tokenRoot.address,

@@ -53,7 +53,7 @@
 			],
 			"outputs": [
 				{"components":[{"name":"eventABI","type":"bytes"},{"name":"staking","type":"address"},{"name":"eventInitialBalance","type":"uint64"},{"name":"eventCode","type":"cell"}],"name":"_basicConfiguration","type":"tuple"},
-				{"components":[{"name":"eventEmitter","type":"address"},{"name":"proxy","type":"address"},{"name":"startTimestamp","type":"uint32"},{"name":"endTimestamp","type":"uint32"}],"name":"_networkConfiguration","type":"tuple"},
+				{"components":[{"name":"eventEmitter","type":"address"},{"name":"proxy","type":"uint256"},{"name":"startTimestamp","type":"uint32"},{"name":"endTimestamp","type":"uint32"}],"name":"_networkConfiguration","type":"tuple"},
 				{"name":"_meta","type":"cell"}
 			]
 		},
@@ -102,7 +102,7 @@
 			"inputs": [
 			],
 			"outputs": [
-				{"components":[{"name":"eventEmitter","type":"address"},{"name":"proxy","type":"address"},{"name":"startTimestamp","type":"uint32"},{"name":"endTimestamp","type":"uint32"}],"name":"networkConfiguration","type":"tuple"}
+				{"components":[{"name":"eventEmitter","type":"address"},{"name":"proxy","type":"uint256"},{"name":"startTimestamp","type":"uint32"},{"name":"endTimestamp","type":"uint32"}],"name":"networkConfiguration","type":"tuple"}
 			]
 		},
 		{
@@ -116,7 +116,7 @@
 	],
 	"data": [
 		{"components":[{"name":"eventABI","type":"bytes"},{"name":"staking","type":"address"},{"name":"eventInitialBalance","type":"uint64"},{"name":"eventCode","type":"cell"}],"key":1,"name":"basicConfiguration","type":"tuple"},
-		{"components":[{"name":"eventEmitter","type":"address"},{"name":"proxy","type":"address"},{"name":"startTimestamp","type":"uint32"},{"name":"endTimestamp","type":"uint32"}],"key":2,"name":"networkConfiguration","type":"tuple"}
+		{"components":[{"name":"eventEmitter","type":"address"},{"name":"proxy","type":"uint256"},{"name":"startTimestamp","type":"uint32"},{"name":"endTimestamp","type":"uint32"}],"key":2,"name":"networkConfiguration","type":"tuple"}
 	],
 	"events": [
 		{
@@ -143,7 +143,7 @@
 		{"name":"_constructorFlag","type":"bool"},
 		{"name":"owner","type":"address"},
 		{"components":[{"name":"eventABI","type":"bytes"},{"name":"staking","type":"address"},{"name":"eventInitialBalance","type":"uint64"},{"name":"eventCode","type":"cell"}],"name":"basicConfiguration","type":"tuple"},
-		{"components":[{"name":"eventEmitter","type":"address"},{"name":"proxy","type":"address"},{"name":"startTimestamp","type":"uint32"},{"name":"endTimestamp","type":"uint32"}],"name":"networkConfiguration","type":"tuple"},
+		{"components":[{"name":"eventEmitter","type":"address"},{"name":"proxy","type":"uint256"},{"name":"startTimestamp","type":"uint32"},{"name":"endTimestamp","type":"uint32"}],"name":"networkConfiguration","type":"tuple"},
 		{"name":"meta","type":"cell"}
 	]
 }

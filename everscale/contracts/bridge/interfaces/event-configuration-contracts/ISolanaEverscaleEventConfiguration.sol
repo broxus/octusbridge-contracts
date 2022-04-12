@@ -6,7 +6,7 @@ import "./../event-contracts/ISolanaEverscaleEvent.sol";
 
 interface ISolanaEverscaleEventConfiguration is IBasicEventConfiguration {
     struct SolanaEverscaleEventConfiguration {
-        address eventEmitter;
+        uint256 eventEmitter;
         address proxy;
         uint32 endTimestamp;
     }
