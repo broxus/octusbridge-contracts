@@ -130,7 +130,7 @@ describe('Test configuration factory', async function() {
             const networkConfiguration = {
                 eventEmitter: new BigNumber(0),
                 proxy: locklift.utils.zeroAddress,
-                endBlockNumber: 0,
+                endTimestamp: 0,
             };
 
             await bridgeOwner.runTarget({
@@ -160,8 +160,6 @@ describe('Test configuration factory', async function() {
 
             expect(details._basicConfiguration.staking)
                 .to.be.equal(staking.address, 'Wrong staking');
-            expect(details._networkConfiguration.chainId)
-                .to.be.bignumber.equal(12, 'Wrong chain ID');
         });
     });
 });
