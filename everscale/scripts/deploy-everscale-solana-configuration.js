@@ -22,6 +22,7 @@ program
     .option('--meta <meta>', 'Configuration meta')
     .option('--eventEmitter <eventEmitter>', 'Event emitter address')
     .option('--proxy <proxy>', 'Target proxy address')
+    .option('--startTimestamp <startTimestamp>', 'Start timestamp')
     .option('--initialBalance <initialBalance>', 'Configuration initial balance')
     .allowUnknownOption();
 
@@ -30,42 +31,43 @@ program.parse(process.argv);
 
 const options = program.opts();
 
+
 const main = async () => {
   const [keyPair] = await locklift.keys.getKeyPairs();
-
+  
   // Get all contracts from the build
   const build = [...new Set(fs.readdirSync('build').map(o => o.split('.')[0]))];
   
-  const events = fs.readdirSync('./../solana/abi');
+  const events = fs.readdirSync('./build/').filter(e => e.endsWith('.abi.json'));
   
   const {
     eventAbiFile
   } = await prompts({
     type: 'select',
     name: 'eventAbiFile',
-    message: 'Select Solana ABI, which contains target event',
+    message: 'Select Everscale abi, which contains target event',
     choices: events.map(e => new Object({ title: e, value: e })),
     initial: events.indexOf(options.eventAbiFile) >= 0 ? events.indexOf(options.eventAbiFile) : 0
   });
-
-  const abi = JSON.parse(fs.readFileSync(`./../solana/abi/${eventAbiFile}`));
+  
+  const abi = JSON.parse(fs.readFileSync(`./build/${eventAbiFile}`));
   
   const {
     event
   } = await prompts({
     type: 'select',
     name: 'event',
-    message: 'Choose Solana event',
+    message: 'Choose Everscale event',
     choices: abi
-      .filter(o => o.type == 'event' && o.anonymous == false)
+      .events
       .map(event => {
         return {
           title: `${event.name} (${event.inputs.map(i => i.type.concat(' ').concat(i.name)).join(',')})`,
-          value: event,
+          value: event.inputs,
         }
       }),
   });
-
+  
   const response = await prompts([
     {
       type: 'text',
@@ -85,7 +87,7 @@ const main = async () => {
       type: 'number',
       name: 'eventInitialBalance',
       message: 'Event initial balance (in TONs)',
-      initial: options.eventInitialBalance || 2
+      initial: options.eventInitialBalance || 2,
     },
     {
       type: 'select',
@@ -103,32 +105,38 @@ const main = async () => {
     {
       type: 'text',
       name: 'eventEmitter',
-      message: 'Contract address, which emits event (Solana)',
-      validate: value => ethers.utils.isAddress(value) ? true : 'Invalid Solana address',
+      message: 'Contract address, which emits event (Everscale)',
+      validate: value => isValidTonAddress(value) ? true : 'Invalid Everscale address',
       initial: options.eventEmitter
     },
     {
       type: 'text',
       name: 'proxy',
-      message: 'Target address in Everscale (proxy)',
-      validate: value => isValidTonAddress(value) ? true : 'Invalid Everscale address',
+      message: 'Target address in Solana (proxy)',
+      validate: value => ethers.utils.isAddress(value) ? true : 'Invalid Solana address',
       initial: options.proxy
+    },
+    {
+      type: 'number',
+      name: 'startTimestamp',
+      message: 'Start timestamp',
+      initial: options.startTimestamp || Math.floor(Date.now() / 1000)
     },
     {
       type: 'number',
       name: 'value',
       message: 'Configuration initial balance (in TONs)',
       initial: options.initialBalance || 10,
-    },
+    }
   ]);
   
-  const SolanaEverscaleEventConfiguration = await locklift.factory.getContract('SolanaEverscaleEventConfiguration');
-  const SolanaEvent = await locklift.factory.getContract(response.eventContract);
+  const EverscaleSolanaEventConfiguration = await locklift.factory.getContract('EverscaleSolanaEventConfiguration');
+  const TonEvent = await locklift.factory.getContract(response.eventContract);
   
-  const spinner = ora('Deploying Solana event configuration').start();
+  const spinner = ora('Deploying Everscale event configuration').start();
   
-  const solanaEverscaleEventConfiguration = await locklift.giver.deployContract({
-    contract: SolanaEverscaleEventConfiguration,
+  const everscaleSolanaEventConfiguration = await locklift.giver.deployContract({
+    contract: EverscaleSolanaEventConfiguration,
     constructorParams: {
       _owner: response.owner,
       _meta: response.meta,
@@ -138,11 +146,12 @@ const main = async () => {
         eventABI: stringToBytesArray(JSON.stringify(event)),
         eventInitialBalance: locklift.utils.convertCrystal(response.eventInitialBalance, 'nano'),
         staking: response.staking,
-        eventCode: SolanaEvent.code,
+        eventCode: TonEvent.code,
       },
       networkConfiguration: {
-        eventEmitter: new BigNumber(response.eventEmitter.toLowerCase()).toFixed(),
-        proxy: response.proxy,
+        eventEmitter: response.eventEmitter,
+        proxy: new BigNumber(response.proxy.toLowerCase()).toFixed(),
+        startTimestamp: response.startTimestamp,
         endTimestamp: 0,
       }
     },
@@ -151,7 +160,7 @@ const main = async () => {
   
   spinner.stop();
   
-  await logContract(solanaEverscaleEventConfiguration);
+  await logContract(everscaleSolanaEventConfiguration);
 };
 
 
@@ -161,3 +170,4 @@ main()
     console.log(e);
     process.exit(1);
   });
+

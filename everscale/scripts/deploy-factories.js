@@ -93,9 +93,9 @@ async function main() {
     const ProxyTokenTransferFactory = await locklift.factory.getContract('ProxyTokenTransferFactory');
     const EthereumProxyTokenTransfer = await locklift.factory.getContract('EthereumProxyTokenTransfer');
 
-    spinner.start('Deploying proxy token transfer factory');
+    spinner.start('Deploying ethereum proxy token transfer factory');
 
-    const proxyTokenTransferFactory = await locklift.giver.deployContract({
+    const ethereumProxyTokenTransferFactory = await locklift.giver.deployContract({
         contract: ProxyTokenTransferFactory,
         constructorParams: {
             _proxyCode: EthereumProxyTokenTransfer.code
@@ -107,7 +107,26 @@ async function main() {
 
     spinner.stop();
 
-    await logContract(proxyTokenTransferFactory);
+    await logContract(ethereumProxyTokenTransferFactory);
+
+    // Proxy token transfer factory
+    const SolanaProxyTokenTransfer = await locklift.factory.getContract('SolanaProxyTokenTransfer');
+
+    spinner.start('Deploying solana proxy token transfer factory');
+
+    const solanaProxyTokenTransferFactory = await locklift.giver.deployContract({
+        contract: ProxyTokenTransferFactory,
+        constructorParams: {
+            _proxyCode: SolanaProxyTokenTransfer.code
+        },
+        initParams: {
+            _randomNonce,
+        },
+    });
+
+    spinner.stop();
+
+    await logContract(solanaProxyTokenTransferFactory);
 }
 
 
