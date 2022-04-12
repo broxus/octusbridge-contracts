@@ -20,10 +20,10 @@ describe('Test setting configuration end', async function() {
     [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
   });
   
-  describe('Ethereum event configuration', async () => {
+  describe('Ethereum Everscale event configuration', async () => {
     let ethereumEverscaleEventConfiguration, proxy;
 
-    it('Setup event configuration', async () => {
+    it('Setup Ethereum Everscale event configuration', async () => {
       [ethereumEverscaleEventConfiguration, proxy] = await setupEthereumEverscaleEventConfiguration(
         bridgeOwner,
         bridge,
@@ -31,7 +31,7 @@ describe('Test setting configuration end', async function() {
       );
     });
     
-    it('Set end block', async () => {
+    it('Set Ethereum Everscale end block', async () => {
       await bridgeOwner.runTarget({
         contract: ethereumEverscaleEventConfiguration,
         method: 'setEndBlockNumber',
@@ -41,7 +41,7 @@ describe('Test setting configuration end', async function() {
       });
     });
     
-    it('Check configuration end block', async () => {
+    it('Check Ethereum Everscale configuration end block', async () => {
       const details = await ethereumEverscaleEventConfiguration.call({ method: 'getDetails' });
 
       expect(details._networkConfiguration.endBlockNumber)
@@ -53,10 +53,10 @@ describe('Test setting configuration end', async function() {
     });
   });
   
-  describe('Everscale event configuration', async () => {
+  describe('Everscale Ethereum event configuration', async () => {
     let everscaleEthereumEventConfiguration;
 
-    it('Setup event configuration', async () => {
+    it('Setup Everscale Ethereum event configuration', async () => {
       [everscaleEthereumEventConfiguration] = await setupEverscaleEthereumEventConfiguration(
         bridgeOwner,
         bridge,
@@ -64,7 +64,7 @@ describe('Test setting configuration end', async function() {
       );
     });
     
-    it('Set end timestamp', async () => {
+    it('Set Everscale Ethereum end timestamp', async () => {
       await bridgeOwner.runTarget({
         contract: everscaleEthereumEventConfiguration,
         method: 'setEndTimestamp',
@@ -74,7 +74,7 @@ describe('Test setting configuration end', async function() {
       });
     });
   
-    it('Check configuration end timestamp', async () => {
+    it('Check Everscale Ethereum configuration end timestamp', async () => {
       const details = await everscaleEthereumEventConfiguration.call({ method: 'getDetails' });
 
       expect(details._networkConfiguration.endTimestamp)
@@ -86,10 +86,10 @@ describe('Test setting configuration end', async function() {
     });
   });
 
-  describe('Solana event configuration', async () => {
+  describe('Solana Everscale event configuration', async () => {
     let solanaEverscaleEventConfiguration, proxy;
 
-    it('Setup event configuration', async () => {
+    it('Setup Solana Everscale event configuration', async () => {
       [solanaEverscaleEventConfiguration, proxy] = await setupSolanaEverscaleEventConfiguration(
         bridgeOwner,
         bridge,
@@ -97,7 +97,7 @@ describe('Test setting configuration end', async function() {
       );
     });
 
-    it('Set end block', async () => {
+    it('Set Solana Everscale end block', async () => {
       await bridgeOwner.runTarget({
         contract: solanaEverscaleEventConfiguration,
         method: 'setEndBlockNumber',
@@ -107,7 +107,7 @@ describe('Test setting configuration end', async function() {
       });
     });
 
-    it('Check configuration end block', async () => {
+    it('Check Solana Everscale configuration end block', async () => {
       const details = await solanaEverscaleEventConfiguration.call({ method: 'getDetails' });
 
       expect(details._networkConfiguration.endBlockNumber)
@@ -119,10 +119,10 @@ describe('Test setting configuration end', async function() {
     });
   });
 
-  describe('Everscale event configuration', async () => {
+  describe('Everscale Solana event configuration', async () => {
     let everscaleSolanaEventConfiguration;
 
-    it('Setup event configuration', async () => {
+    it('Setup Everscale Solana event configuration', async () => {
       [everscaleSolanaEventConfiguration] = await setupEverscaleSolanaEventConfiguration(
         bridgeOwner,
         bridge,
@@ -130,7 +130,7 @@ describe('Test setting configuration end', async function() {
       );
     });
 
-    it('Set end timestamp', async () => {
+    it('Set Everscale Solana end timestamp', async () => {
       await bridgeOwner.runTarget({
         contract: everscaleSolanaEventConfiguration,
         method: 'setEndTimestamp',
@@ -140,7 +140,7 @@ describe('Test setting configuration end', async function() {
       });
     });
 
-    it('Check configuration end timestamp', async () => {
+    it('Check Everscale Solana configuration end timestamp', async () => {
       const details = await everscaleSolanaEventConfiguration.call({ method: 'getDetails' });
 
       expect(details._networkConfiguration.endTimestamp)

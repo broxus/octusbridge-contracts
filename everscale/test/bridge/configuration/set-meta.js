@@ -22,10 +22,10 @@ describe('Test setting configuration meta', async function() {
     [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
   });
   
-  describe('Ethereum event configuration', async () => {
+  describe('Ethereum Everscale event configuration', async () => {
     let ethereumEverscaleEventConfiguration, proxy;
     
-    it('Setup event configuration', async () => {
+    it('Setup Ethereum Everscale event configuration', async () => {
       [ethereumEverscaleEventConfiguration, proxy] = await setupEthereumEverscaleEventConfiguration(
         bridgeOwner,
         bridge,
@@ -33,7 +33,7 @@ describe('Test setting configuration meta', async function() {
       );
     });
     
-    it('Set meta', async () => {
+    it('Set Ethereum Everscale meta', async () => {
       await bridgeOwner.runTarget({
         contract: ethereumEverscaleEventConfiguration,
         method: 'setMeta',
@@ -43,7 +43,7 @@ describe('Test setting configuration meta', async function() {
       });
     });
     
-    it('Check configuration meta', async () => {
+    it('Check Ethereum Everscale configuration meta', async () => {
       const details = await ethereumEverscaleEventConfiguration.call({ method: 'getDetails' });
       
       expect(details._meta)
@@ -51,7 +51,7 @@ describe('Test setting configuration meta', async function() {
     });
   });
   
-  describe('Everscale event configuration', async () => {
+  describe('Everscale Ethereum event configuration', async () => {
     let everscaleEthereumEventConfiguration;
 
     it('Setup event configuration', async () => {
@@ -62,7 +62,7 @@ describe('Test setting configuration meta', async function() {
       );
     });
 
-    it('Set meta', async () => {
+    it('Set Everscale Ethereum meta', async () => {
       await bridgeOwner.runTarget({
         contract: everscaleEthereumEventConfiguration,
         method: 'setMeta',
@@ -72,7 +72,7 @@ describe('Test setting configuration meta', async function() {
       });
     });
 
-    it('Check configuration meta', async () => {
+    it('Check Everscale Ethereum configuration meta', async () => {
       const details = await everscaleEthereumEventConfiguration.call({ method: 'getDetails' });
 
       expect(details._meta)
@@ -80,10 +80,10 @@ describe('Test setting configuration meta', async function() {
     });
   });
 
-  describe('Solana event configuration', async () => {
+  describe('Solana Everscale event configuration', async () => {
     let solanaEverscaleEventConfiguration, proxy;
 
-    it('Setup event configuration', async () => {
+    it('Setup Solana Everscale event configuration', async () => {
       [solanaEverscaleEventConfiguration, proxy] = await setupSolanaEverscaleEventConfiguration(
         bridgeOwner,
         bridge,
@@ -91,7 +91,7 @@ describe('Test setting configuration meta', async function() {
       );
     });
 
-    it('Set meta', async () => {
+    it('Set Solana Everscale meta', async () => {
       await bridgeOwner.runTarget({
         contract: solanaEverscaleEventConfiguration,
         method: 'setMeta',
@@ -101,7 +101,7 @@ describe('Test setting configuration meta', async function() {
       });
     });
 
-    it('Check configuration meta', async () => {
+    it('Check Solana Everscale configuration meta', async () => {
       const details = await solanaEverscaleEventConfiguration.call({ method: 'getDetails' });
 
       expect(details._meta)
@@ -109,10 +109,10 @@ describe('Test setting configuration meta', async function() {
     });
   });
 
-  describe('Everscale event configuration', async () => {
+  describe('Everscale Solana event configuration', async () => {
     let everscaleSolanaEventConfiguration;
 
-    it('Setup event configuration', async () => {
+    it('Setup Everscale Solana event configuration', async () => {
       [everscaleSolanaEventConfiguration] = await setupEverscaleSolanaEventConfiguration(
         bridgeOwner,
         bridge,
@@ -120,7 +120,7 @@ describe('Test setting configuration meta', async function() {
       );
     });
 
-    it('Set meta', async () => {
+    it('Set Everscale Solana meta', async () => {
       await bridgeOwner.runTarget({
         contract: everscaleSolanaEventConfiguration,
         method: 'setMeta',
@@ -130,7 +130,7 @@ describe('Test setting configuration meta', async function() {
       });
     });
 
-    it('Check configuration meta', async () => {
+    it('Check Everscale Solana configuration meta', async () => {
       const details = await everscaleSolanaEventConfiguration.call({ method: 'getDetails' });
 
       expect(details._meta)
