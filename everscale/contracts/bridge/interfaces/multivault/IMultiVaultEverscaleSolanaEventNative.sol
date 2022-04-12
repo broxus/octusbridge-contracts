@@ -13,8 +13,7 @@ interface IMultiVaultEverscaleSolanaEventNative {
         address token_,
         address remainingGasTo_,
         uint128 amount_,
-        uint160 recipient_,
-        uint256 chainId_,
+        uint256 recipient_,
         string name_,
         string symbol_,
         uint8 decimals_

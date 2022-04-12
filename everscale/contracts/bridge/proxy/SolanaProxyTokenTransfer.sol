@@ -46,7 +46,7 @@ ISolanaProxyTokenTransferConfigurable,
     bool paused = false;
 
     modifier onlySolanaConfiguration() {
-        require(isArrayContainsAddress(config.solanaConfigurations, msg.sender), ErrorCodes.NOT_SOLANA_CONFIG);
+        require(config.solanaConfiguration == msg.sender, ErrorCodes.NOT_SOLANA_CONFIG);
         _;
     }
 
@@ -124,9 +124,7 @@ ISolanaProxyTokenTransferConfigurable,
         if (config.tokenRoot == msg.sender) {
             burnedCount += tokens;
 
-            (
-                uint256 solanaAddress,
-            ) = payload.toSlice().decode(uint256);
+            uint256 solanaAddress = payload.toSlice().decode(uint256);
 
 //            emit Withdraw(
 //                remainingGasTo.wid,
@@ -140,7 +138,7 @@ ISolanaProxyTokenTransferConfigurable,
                 remainingGasTo.wid,
                 remainingGasTo.value,
                 tokens,
-                solanaAddress,
+                solanaAddress
             );
 
             IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(tx.timestamp, eventData);

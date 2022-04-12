@@ -54,7 +54,7 @@ contract TokenTransferEverscaleSolanaEvent is EverscaleSolanaBaseEvent, ProxyTok
     }
 
     function getOwner() private view returns(address) {
-        (,,,,address ownerAddress,) = getDecodedData();
+        (,,,,address ownerAddress) = getDecodedData();
         return ownerAddress;
     }
 
@@ -71,16 +71,14 @@ contract TokenTransferEverscaleSolanaEvent is EverscaleSolanaBaseEvent, ProxyTok
         int8 wid,
         uint256 addr,
         uint128 tokens,
-        uint160 Solana_address,
-        address owner_address,
-        uint32 chainId
+        uint256 solana_address,
+        address owner_address
     ) {
         (
             wid,
             addr,
             tokens,
-            Solana_address,
-            chainId
+            solana_address
         ) = decodeEverscaleSolanaEventData(eventInitData.voteData.eventData);
 
         owner_address = address.makeAddrStd(wid, addr);
@@ -89,9 +87,8 @@ contract TokenTransferEverscaleSolanaEvent is EverscaleSolanaBaseEvent, ProxyTok
             wid,
             addr,
             tokens,
-            Solana_address,
-            owner_address,
-            chainId
+            solana_address,
+            owner_address
         );
     }
 

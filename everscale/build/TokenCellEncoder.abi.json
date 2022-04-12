@@ -24,6 +24,24 @@
 			]
 		},
 		{
+			"name": "encodeSolanaBurnPayload",
+			"inputs": [
+				{"name":"solanaAddress","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
+		},
+		{
+			"name": "decodeSolanaBurnPayload",
+			"inputs": [
+				{"name":"data","type":"cell"}
+			],
+			"outputs": [
+				{"name":"solanaAddress","type":"uint256"}
+			]
+		},
+		{
 			"name": "constructor",
 			"inputs": [
 			],

@@ -7,7 +7,7 @@ pragma AbiHeader pubkey;
 import "./../../interfaces/multivault/IMultiVaultEVMEverscaleEventAlien.sol";
 import "./../../interfaces/event-configuration-contracts/IEthereumEverscaleEventConfiguration.sol";
 import "./../../interfaces/IEthereumEverscaleProxyExtended.sol";
-import "./../../interfaces/multivault/IProxyMultiVaultAlien.sol";
+import "./../../interfaces/multivault/IProxyMultiVaultEthereumAlien.sol";
 
 import "./../base/EthereumEverscaleBaseEvent.sol";
 import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
@@ -80,7 +80,7 @@ contract MultiVaultEVMEverscaleEventAlien is EthereumEverscaleBaseEvent, IMultiV
 
         proxy = _networkConfiguration.proxy;
 
-        IProxyMultiVaultAlien(proxy).deriveAlienTokenRoot{
+        IProxyMultiVaultEthereumAlien(proxy).deriveAlienTokenRoot{
             value: 1 ton,
             callback: MultiVaultEVMEverscaleEventAlien.receiveAlienTokenRoot
         }(

@@ -5,7 +5,7 @@ pragma AbiHeader pubkey;
 
 
 import "./../interfaces/IEthereumEverscaleProxyExtended.sol";
-import "./../interfaces/multivault/IProxyMultiVaultAlien.sol";
+import "./../interfaces/multivault/IProxyMultiVaultEthereumAlien.sol";
 import "./../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.sol";
 
 import "./../../utils/ErrorCodes.sol";
@@ -28,7 +28,7 @@ contract ProxyMultiVaultAlien is
     RandomNonce,
     IAcceptTokensBurnCallback,
     IEthereumEverscaleProxyExtended,
-    IProxyMultiVaultAlien
+    IProxyMultiVaultEthereumAlien
 {
     Configuration config;
     uint128 constant MIN_CONTRACT_BALANCE = 1 ton;

@@ -3,8 +3,7 @@ pragma ton-solidity >= 0.39.0;
 
 interface IMultiVaultEverscaleSolanaEventAlien {
     function receiveTokenMeta(
-        uint256 base_chainId,
-        uint160 base_token,
+        uint256 base_token,
         string name,
         string symbol,
         uint8 decimals
@@ -19,8 +18,7 @@ interface IMultiVaultEverscaleSolanaEventAlien {
         address token_,
         address remainingGasTo_,
         uint128 amount_,
-        uint160 recipient_,
-        uint256 base_chainId_,
-        uint160 base_token_
+        uint256 recipient_,
+        uint256 base_token_
     );
 }

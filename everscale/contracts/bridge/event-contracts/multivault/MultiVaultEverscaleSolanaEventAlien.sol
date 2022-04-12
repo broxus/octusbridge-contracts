@@ -5,8 +5,8 @@ pragma AbiHeader pubkey;
 
 
 import "./../../interfaces/multivault/IMultiVaultEverscaleSolanaEventAlien.sol";
-import "./../../interfaces/multivault/IProxyMultiVaultAlien.sol";
-import "./../../interfaces/ITokenRootAlienSolana.sol";
+import "./../../interfaces/multivault/IProxyMultiVaultSolanaAlien.sol";
+import "./../../interfaces/ITokenRootAlienSolanaEverscale.sol";
 
 import "./../base/EverscaleSolanaBaseEvent.sol";
 
@@ -20,10 +20,9 @@ contract MultiVaultEverscaleSolanaEventAlien is EverscaleSolanaBaseEvent, IMulti
     address token;
     address remainingGasTo;
     uint128 amount;
-    uint160 recipient;
+    uint256 recipient;
 
-    uint256 base_chainId;
-    uint160 base_token;
+    uint256 base_token;
     address expectedToken;
 
     constructor(
@@ -54,32 +53,29 @@ contract MultiVaultEverscaleSolanaEventAlien is EverscaleSolanaBaseEvent, IMulti
     function onInit() override internal {
         (proxy, token, remainingGasTo, amount, recipient) = abi.decode(
             eventInitData.voteData.eventData,
-            (address, address, address, uint128, uint160)
+            (address, address, address, uint128, uint256)
         );
 
-        ITokenRootAlienSolana(token).meta{
+        ITokenRootAlienSolanaEverscale(token).meta{
             value: 1 ton,
             callback: MultiVaultEverscaleSolanaEventAlien.receiveTokenMeta
         }();
     }
 
     function receiveTokenMeta(
-        uint256 base_chainId_,
-        uint160 base_token_,
+        uint256 base_token_,
         string name,
         string symbol,
         uint8 decimals
     ) external override {
         require(msg.sender == token);
 
-        base_chainId = base_chainId_;
         base_token = base_token_;
 
-        IProxyMultiVaultAlien(proxy).deriveAlienTokenRoot{
+        IProxyMultiVaultSolanaAlien(proxy).deriveAlienTokenRoot{
             value: 1 ton,
             callback: MultiVaultEverscaleSolanaEventAlien.receiveAlienTokenRoot
         }(
-            base_chainId,
             base_token,
             name,
             symbol,
@@ -111,8 +107,7 @@ contract MultiVaultEverscaleSolanaEventAlien is EverscaleSolanaBaseEvent, IMulti
         eventInitData.voteData.eventData = abi.encode(
             base_token,
             amount,
-            recipient,
-            base_chainId
+            recipient
         );
     }
 
@@ -122,9 +117,8 @@ contract MultiVaultEverscaleSolanaEventAlien is EverscaleSolanaBaseEvent, IMulti
         address token_,
         address remainingGasTo_,
         uint128 amount_,
-        uint160 recipient_,
-        uint256 base_chainId_,
-        uint160 base_token_
+        uint256 recipient_,
+        uint256 base_token_
     ) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS}(
             proxy,
@@ -132,7 +126,6 @@ contract MultiVaultEverscaleSolanaEventAlien is EverscaleSolanaBaseEvent, IMulti
             remainingGasTo,
             amount,
             recipient,
-            base_chainId,
             base_token
         );
     }
@@ -141,8 +134,8 @@ contract MultiVaultEverscaleSolanaEventAlien is EverscaleSolanaBaseEvent, IMulti
         uint32 selector = slice.decode(uint32);
 
         if (
-            selector == tvm.functionId(ITokenRootAlienSolana.meta) ||
-            selector == tvm.functionId(IProxyMultiVaultAlien.deriveAlienTokenRoot)
+            selector == tvm.functionId(ITokenRootAlienSolanaEverscale.meta) ||
+            selector == tvm.functionId(IProxyMultiVaultSolanaAlien.deriveAlienTokenRoot)
         ) {
             status = Status.Rejected;
 

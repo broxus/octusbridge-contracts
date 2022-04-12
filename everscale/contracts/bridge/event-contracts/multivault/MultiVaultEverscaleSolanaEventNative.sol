@@ -23,8 +23,7 @@ contract MultiVaultEverscaleSolanaEventNative is EverscaleSolanaBaseEvent, IMult
     address token;
     address remainingGasTo;
     uint128 amount;
-    uint160 recipient;
-    uint256 chainId;
+    uint256 recipient;
 
     string name;
     string symbol;
@@ -63,11 +62,10 @@ contract MultiVaultEverscaleSolanaEventNative is EverscaleSolanaBaseEvent, IMult
             token,
             remainingGasTo,
             amount,
-            recipient,
-            chainId
+            recipient
         ) = abi.decode(
             eventInitData.voteData.eventData,
-            (address, address, address, address, uint128, uint160, uint256)
+            (address, address, address, address, uint128, uint256)
         );
 
         ITokenRoot(token).name{
@@ -141,8 +139,7 @@ contract MultiVaultEverscaleSolanaEventNative is EverscaleSolanaBaseEvent, IMult
         address token_,
         address remainingGasTo_,
         uint128 amount_,
-        uint160 recipient_,
-        uint256 chainId_,
+        uint256 recipient_,
         string name_,
         string symbol_,
         uint8 decimals_
@@ -154,7 +151,6 @@ contract MultiVaultEverscaleSolanaEventNative is EverscaleSolanaBaseEvent, IMult
             remainingGasTo,
             amount,
             recipient,
-            chainId,
             name,
             symbol,
             decimals
@@ -171,8 +167,7 @@ contract MultiVaultEverscaleSolanaEventNative is EverscaleSolanaBaseEvent, IMult
             decimals,
 
             amount,
-            recipient,
-            chainId
+            recipient
         );
     }
 

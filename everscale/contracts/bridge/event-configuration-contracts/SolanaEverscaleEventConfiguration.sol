@@ -59,11 +59,6 @@ contract SolanaEverscaleEventConfiguration is ISolanaEverscaleEventConfiguration
             ErrorCodes.END_TIMESTAMP_ALREADY_SET
         );
 
-        require(
-            endTimestamp >= networkConfiguration.startTimestamp,
-            ErrorCodes.TOO_LOW_END_TIMESTAMP
-        );
-
         networkConfiguration.endTimestamp = endTimestamp;
     }
 
@@ -79,7 +74,6 @@ contract SolanaEverscaleEventConfiguration is ISolanaEverscaleEventConfiguration
 
         eventInitData.configuration = address(this);
         eventInitData.staking = basicConfiguration.staking;
-        eventInitData.chainId = networkConfiguration.chainId;
     }
 
     /// @dev Deploy event contract
@@ -92,17 +86,6 @@ contract SolanaEverscaleEventConfiguration is ISolanaEverscaleEventConfiguration
         reserveMinBalance(MIN_CONTRACT_BALANCE)
     {
         require(msg.value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
-        require(
-            eventVoteData.eventBlockNumber >= networkConfiguration.startBlockNumber,
-            ErrorCodes.EVENT_BLOCK_NUMBER_LESS_THAN_START
-        );
-
-        if (networkConfiguration.endTimestamp != 0) {
-            require(
-                eventVoteData.eventTimestamp <= networkConfiguration.endTimestamp,
-                ErrorCodes.EVENT_BLOCK_NUMBER_HIGHER_THAN_END
-            );
-        }
 
         ISolanaEverscaleEvent.SolanaEverscaleEventInitData eventInitData = buildEventInitData(eventVoteData);
 

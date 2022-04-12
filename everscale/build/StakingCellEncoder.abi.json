@@ -37,6 +37,39 @@
 			]
 		},
 		{
+			"name": "decodeEverscaleSolanaStakingEventData",
+			"inputs": [
+				{"name":"data","type":"cell"}
+			],
+			"outputs": [
+				{"name":"round_num","type":"uint32"},
+				{"name":"sol_keys","type":"uint256[]"},
+				{"name":"round_end","type":"uint32"}
+			]
+		},
+		{
+			"name": "decodeSolanaEverscaleStakingEventData",
+			"inputs": [
+				{"name":"data","type":"cell"}
+			],
+			"outputs": [
+				{"name":"sol_addr","type":"uint256"},
+				{"name":"wk_id","type":"int8"},
+				{"name":"ever_addr_body","type":"uint256"}
+			]
+		},
+		{
+			"name": "encodeSolanaEverscaleStakingEventData",
+			"inputs": [
+				{"name":"sol_addr","type":"uint256"},
+				{"name":"wk_id","type":"int8"},
+				{"name":"ever_addr_body","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
+		},
+		{
 			"name": "constructor",
 			"inputs": [
 			],

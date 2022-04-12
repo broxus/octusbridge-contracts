@@ -1,13 +1,13 @@
 pragma ton-solidity >= 0.39.0;
 
 
-import "./../event-configuration-contracts/IEthereumEverscaleEventConfiguration.sol";
+import "./../event-configuration-contracts/ISolanaEverscaleEventConfiguration.sol";
 
 
 interface IMultiVaultSolanaEverscaleEventAlien {
     function receiveConfigurationDetails(
-        IEthereumEverscaleEventConfiguration.BasicConfiguration,
-        IEthereumEverscaleEventConfiguration.EthereumEverscaleEventConfiguration _networkConfiguration,
+        ISolanaEverscaleEventConfiguration.BasicConfiguration,
+        ISolanaEverscaleEventConfiguration.SolanaEverscaleEventConfiguration _networkConfiguration,
         TvmCell
     ) external;
 
@@ -16,8 +16,7 @@ interface IMultiVaultSolanaEverscaleEventAlien {
     ) external;
 
     function getDecodedData() external responsible returns(
-        uint256 base_chainId_,
-        uint160 base_token_,
+        uint256 base_token_,
         string name_,
         string symbol_,
         uint8 decimals_,

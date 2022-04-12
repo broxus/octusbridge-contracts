@@ -125,7 +125,7 @@ contract ProxyTokenTransferCellEncoder {
             wid,
             addr,
             tokens,
-            ethereum_address
+            solana_address
         ) = data.toSlice().decode(int8, uint, uint128, uint256);
     }
 }

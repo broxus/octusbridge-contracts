@@ -1,0 +1,149 @@
+{
+	"ABI version": 2,
+	"version": "2.2",
+	"header": ["time", "expire"],
+	"functions": [
+		{
+			"name": "constructor",
+			"inputs": [
+				{"name":"_owner","type":"address"},
+				{"name":"_meta","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setMeta",
+			"inputs": [
+				{"name":"_meta","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setEndTimestamp",
+			"inputs": [
+				{"name":"endTimestamp","type":"uint32"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "deployEvent",
+			"inputs": [
+				{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"name":"eventData","type":"cell"}],"name":"eventVoteData","type":"tuple"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "deriveEventAddress",
+			"inputs": [
+				{"name":"answerId","type":"uint32"},
+				{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"name":"eventData","type":"cell"}],"name":"eventVoteData","type":"tuple"}
+			],
+			"outputs": [
+				{"name":"eventContract","type":"address"}
+			]
+		},
+		{
+			"name": "getDetails",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"components":[{"name":"eventABI","type":"bytes"},{"name":"staking","type":"address"},{"name":"eventInitialBalance","type":"uint64"},{"name":"eventCode","type":"cell"}],"name":"_basicConfiguration","type":"tuple"},
+				{"components":[{"name":"eventEmitter","type":"address"},{"name":"proxy","type":"uint160"},{"name":"startTimestamp","type":"uint32"},{"name":"endTimestamp","type":"uint32"}],"name":"_networkConfiguration","type":"tuple"},
+				{"name":"_meta","type":"cell"}
+			]
+		},
+		{
+			"name": "getType",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"_type","type":"uint8"}
+			]
+		},
+		{
+			"name": "transferOwnership",
+			"inputs": [
+				{"name":"newOwner","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "renounceOwnership",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "owner",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"owner","type":"address"}
+			]
+		},
+		{
+			"name": "basicConfiguration",
+			"inputs": [
+			],
+			"outputs": [
+				{"components":[{"name":"eventABI","type":"bytes"},{"name":"staking","type":"address"},{"name":"eventInitialBalance","type":"uint64"},{"name":"eventCode","type":"cell"}],"name":"basicConfiguration","type":"tuple"}
+			]
+		},
+		{
+			"name": "networkConfiguration",
+			"inputs": [
+			],
+			"outputs": [
+				{"components":[{"name":"eventEmitter","type":"address"},{"name":"proxy","type":"uint160"},{"name":"startTimestamp","type":"uint32"},{"name":"endTimestamp","type":"uint32"}],"name":"networkConfiguration","type":"tuple"}
+			]
+		},
+		{
+			"name": "meta",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"meta","type":"cell"}
+			]
+		}
+	],
+	"data": [
+		{"components":[{"name":"eventABI","type":"bytes"},{"name":"staking","type":"address"},{"name":"eventInitialBalance","type":"uint64"},{"name":"eventCode","type":"cell"}],"key":1,"name":"basicConfiguration","type":"tuple"},
+		{"components":[{"name":"eventEmitter","type":"address"},{"name":"proxy","type":"uint160"},{"name":"startTimestamp","type":"uint32"},{"name":"endTimestamp","type":"uint32"}],"key":2,"name":"networkConfiguration","type":"tuple"}
+	],
+	"events": [
+		{
+			"name": "OwnershipTransferred",
+			"inputs": [
+				{"name":"previousOwner","type":"address"},
+				{"name":"newOwner","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "NewEventContract",
+			"inputs": [
+				{"name":"eventContract","type":"address"}
+			],
+			"outputs": [
+			]
+		}
+	],
+	"fields": [
+		{"name":"_pubkey","type":"uint256"},
+		{"name":"_timestamp","type":"uint64"},
+		{"name":"_constructorFlag","type":"bool"},
+		{"name":"owner","type":"address"},
+		{"components":[{"name":"eventABI","type":"bytes"},{"name":"staking","type":"address"},{"name":"eventInitialBalance","type":"uint64"},{"name":"eventCode","type":"cell"}],"name":"basicConfiguration","type":"tuple"},
+		{"components":[{"name":"eventEmitter","type":"address"},{"name":"proxy","type":"uint160"},{"name":"startTimestamp","type":"uint32"},{"name":"endTimestamp","type":"uint32"}],"name":"networkConfiguration","type":"tuple"},
+		{"name":"meta","type":"cell"}
+	]
+}

@@ -5,7 +5,7 @@ pragma AbiHeader pubkey;
 
 
 import "./../../interfaces/multivault/IMultiVaultEverscaleEVMEventAlien.sol";
-import "./../../interfaces/multivault/IProxyMultiVaultAlien.sol";
+import "./../../interfaces/multivault/IProxyMultiVaultEthereumAlien.sol";
 import "./../../interfaces/ITokenRootAlienEVMEverscale.sol";
 
 import "./../base/EverscaleEthereumBaseEvent.sol";
@@ -75,7 +75,7 @@ contract MultiVaultEverscaleEVMEventAlien is EverscaleEthereumBaseEvent, IMultiV
         base_chainId = base_chainId_;
         base_token = base_token_;
 
-        IProxyMultiVaultAlien(proxy).deriveAlienTokenRoot{
+        IProxyMultiVaultEthereumAlien(proxy).deriveAlienTokenRoot{
             value: 1 ton,
             callback: MultiVaultEverscaleEVMEventAlien.receiveAlienTokenRoot
         }(
@@ -142,7 +142,7 @@ contract MultiVaultEverscaleEVMEventAlien is EverscaleEthereumBaseEvent, IMultiV
 
         if (
             selector == tvm.functionId(ITokenRootAlienEVMEverscale.meta) ||
-            selector == tvm.functionId(IProxyMultiVaultAlien.deriveAlienTokenRoot)
+            selector == tvm.functionId(IProxyMultiVaultEthereumAlien.deriveAlienTokenRoot)
         ) {
             status = Status.Rejected;
 

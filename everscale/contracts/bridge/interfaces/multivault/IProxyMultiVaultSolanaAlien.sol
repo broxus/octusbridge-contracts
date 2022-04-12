@@ -1,10 +1,10 @@
 pragma ton-solidity >= 0.39.0;
 
 
-interface IProxyMultiVaultAlien {
+interface IProxyMultiVaultSolanaAlien {
     struct Configuration {
         address everscaleConfiguration;
-        address[] evmConfigurations;
+        address solanaConfiguration;
         uint128 deployWalletValue;
 
         TvmCell alienTokenRootCode;
@@ -18,16 +18,14 @@ interface IProxyMultiVaultAlien {
     function setConfiguration(Configuration _config, address gasBackAddress) external;
 
     function deriveAlienTokenRoot(
-        uint256 base_chainId,
-        uint160 base_token,
+        uint256 base_token,
         string name,
         string symbol,
         uint8 decimals
     ) external responsible returns (address);
 
     function deployAlienToken(
-        uint256 chainId,
-        uint160 token,
+        uint256 token,
         string name,
         string symbol,
         uint8 decimals,
@@ -40,9 +38,8 @@ interface IProxyMultiVaultAlien {
     ) external;
 
     event AlienTransfer(
-        uint160 token,
+        uint256 token,
         uint128 amount,
-        uint160 recipient,
-        uint256 chainId
+        uint160 recipient
     );
 }

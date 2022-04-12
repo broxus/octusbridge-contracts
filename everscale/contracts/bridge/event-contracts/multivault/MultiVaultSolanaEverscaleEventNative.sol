@@ -8,7 +8,7 @@ import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.sol";
 
 import "./../../interfaces/multivault/IMultiVaultSolanaEverscaleEventNative.sol";
 import "./../../interfaces/event-configuration-contracts/ISolanaEverscaleEventConfiguration.sol";
-import "./../../interfaces/IEthereumEverscaleProxyExtended.sol";
+import "./../../interfaces/ISolanaEverscaleProxyExtended.sol";
 
 import "./../base/SolanaEverscaleBaseEvent.sol";
 
@@ -111,7 +111,7 @@ contract MultiVaultSolanaEverscaleEventNative is SolanaEverscaleBaseEvent, IMult
             recipient
         );
 
-        IEthereumEverscaleProxyExtended(eventInitData.configuration).onEventConfirmedExtended{
+        ISolanaEverscaleProxyExtended(eventInitData.configuration).onEventConfirmedExtended{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, meta, initializer);
     }

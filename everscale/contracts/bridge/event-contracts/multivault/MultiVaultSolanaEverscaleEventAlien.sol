@@ -6,16 +6,15 @@ pragma AbiHeader pubkey;
 
 import "./../../interfaces/multivault/IMultiVaultSolanaEverscaleEventAlien.sol";
 import "./../../interfaces/event-configuration-contracts/ISolanaEverscaleEventConfiguration.sol";
-import "./../../interfaces/IEthereumEverscaleProxyExtended.sol";
-import "./../../interfaces/multivault/IProxyMultiVaultAlien.sol";
+import "./../../interfaces/ISolanaEverscaleProxyExtended.sol";
+import "./../../interfaces/multivault/IProxyMultiVaultSolanaAlien.sol";
 
 import "./../base/SolanaEverscaleBaseEvent.sol";
 import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
 contract MultiVaultSolanaEverscaleEventAlien is SolanaEverscaleBaseEvent, IMultiVaultSolanaEverscaleEventAlien {
-    uint256 base_chainId;
-    uint160 base_token;
+    uint256 base_token;
     string name;
     string symbol;
     uint8 decimals;
@@ -50,7 +49,6 @@ contract MultiVaultSolanaEverscaleEventAlien is SolanaEverscaleBaseEvent, IMulti
         uint256 recipient_addr;
 
         (
-            base_chainId,
             base_token,
             name,
             symbol,
@@ -60,7 +58,7 @@ contract MultiVaultSolanaEverscaleEventAlien is SolanaEverscaleBaseEvent, IMulti
             recipient_addr
         ) = abi.decode(
             eventInitData.voteData.eventData,
-            (uint256, uint160, string, string, uint8, uint128, int8, uint256)
+            (uint256, string, string, uint8, uint128, int8, uint256)
         );
 
         recipient = address.makeAddrStd(recipient_wid, recipient_addr);
@@ -80,11 +78,10 @@ contract MultiVaultSolanaEverscaleEventAlien is SolanaEverscaleBaseEvent, IMulti
 
         proxy = _networkConfiguration.proxy;
 
-        IProxyMultiVaultAlien(proxy).deriveAlienTokenRoot{
+        IProxyMultiVaultSolanaAlien(proxy).deriveAlienTokenRoot{
             value: 1 ton,
             callback: MultiVaultSolanaEverscaleEventAlien.receiveAlienTokenRoot
         }(
-            base_chainId,
             base_token,
             name,
             symbol,
@@ -109,14 +106,13 @@ contract MultiVaultSolanaEverscaleEventAlien is SolanaEverscaleBaseEvent, IMulti
             recipient
         );
 
-        IEthereumEverscaleProxyExtended(eventInitData.configuration).onEventConfirmedExtended{
+        ISolanaEverscaleProxyExtended(eventInitData.configuration).onEventConfirmedExtended{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, meta, initializer);
     }
 
     function getDecodedData() external override responsible returns(
-        uint256 base_chainId_,
-        uint160 base_token_,
+        uint256 base_token_,
         string name_,
         string symbol_,
         uint8 decimals_,
@@ -126,7 +122,6 @@ contract MultiVaultSolanaEverscaleEventAlien is SolanaEverscaleBaseEvent, IMulti
         address token_
     ) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS}(
-            base_chainId,
             base_token,
             name,
             symbol,

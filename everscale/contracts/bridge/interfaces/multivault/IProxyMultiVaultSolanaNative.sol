@@ -1,10 +1,10 @@
 pragma ton-solidity >= 0.39.0;
 
 
-interface IProxyMultiVaultNative {
+interface IProxyMultiVaultSolanaNative {
     struct Configuration {
         address everscaleConfiguration;
-        address[] evmConfigurations;
+        address solanaConfiguration;
         uint128 deployWalletValue;
     }
 
@@ -20,7 +20,6 @@ interface IProxyMultiVaultNative {
         string symbol,
         uint8 decimals,
         uint128 amount,
-        uint160 recipient,
-        uint256 chainId
+        uint256 recipient
     );
 }

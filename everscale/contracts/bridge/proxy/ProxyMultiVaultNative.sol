@@ -5,7 +5,7 @@ pragma AbiHeader pubkey;
 
 
 import "./../interfaces/IEthereumEverscaleProxyExtended.sol";
-import "./../interfaces/multivault/IProxyMultiVaultNative.sol";
+import "./../interfaces/multivault/IProxyMultiVaultEthereumNative.sol";
 import "./../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.sol";
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensTransferCallback.sol";
@@ -27,7 +27,7 @@ contract ProxyMultiVaultNative is
     CheckPubKey,
     RandomNonce,
     IEthereumEverscaleProxyExtended,
-    IProxyMultiVaultNative,
+    IProxyMultiVaultEthereumNative,
     IAcceptTokensTransferCallback
 {
     Configuration config;

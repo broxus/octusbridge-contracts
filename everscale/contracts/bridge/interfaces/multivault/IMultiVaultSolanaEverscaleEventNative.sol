@@ -1,13 +1,13 @@
 pragma ton-solidity >= 0.39.0;
 
 
-import "./../event-configuration-contracts/IEthereumEverscaleEventConfiguration.sol";
+import "./../event-configuration-contracts/ISolanaEverscaleEventConfiguration.sol";
 
 
 interface IMultiVaultSolanaEverscaleEventNative {
     function receiveConfigurationDetails(
-        IEthereumEverscaleEventConfiguration.BasicConfiguration,
-        IEthereumEverscaleEventConfiguration.EthereumEverscaleEventConfiguration _networkConfiguration,
+        ISolanaEverscaleEventConfiguration.BasicConfiguration,
+        ISolanaEverscaleEventConfiguration.SolanaEverscaleEventConfiguration _networkConfiguration,
         TvmCell
     ) external;
 
