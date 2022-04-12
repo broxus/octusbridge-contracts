@@ -102,7 +102,7 @@ describe('Test ton event confirm', async function() {
       initializerTokenWallet.name = 'Initializer TokenWallet';
 
       burnPayload = await cellEncoder.call({
-        method: 'encodeBurnPayload',
+        method: 'encodeEthereumBurnPayload',
         params: tonEventParams
       });
     });

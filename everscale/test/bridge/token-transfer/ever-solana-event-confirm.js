@@ -81,14 +81,13 @@ describe('Test ton event confirm', async function() {
     });
   });
   
-  let eventContract, tonEventParams, tonEventValue, burnPayload;
+  let eventContract, everEventParams, everEventValue, burnPayload;
   
   describe('Initialize event', async () => {
-    tonEventValue = 444;
+    everEventValue = 444;
 
-    tonEventParams = {
-      ethereumAddress: 222,
-      chainId: 333
+    everEventParams = {
+      solanaAddress: 222
     };
 
     it('Setup event data', async () => {
@@ -102,8 +101,8 @@ describe('Test ton event confirm', async function() {
       initializerTokenWallet.name = 'Initializer TokenWallet';
 
       burnPayload = await cellEncoder.call({
-        method: 'encodeBurnPayload',
-        params: tonEventParams
+        method: 'encodeSolanaBurnPayload',
+        params: everEventParams
       });
     });
 
@@ -112,7 +111,7 @@ describe('Test ton event confirm', async function() {
         contract: initializerTokenWallet,
         method: 'burn',
         params: {
-          amount: tonEventValue,
+          amount: everEventValue,
           remainingGasTo: initializer.address,
           callbackTo: proxy.address,
           payload: burnPayload,
@@ -196,10 +195,10 @@ describe('Test ton event confirm', async function() {
         .to.be.bignumber.equal(new BigNumber(initializer.address.split(':')[1], 16), 'Wrong address');
 
       expect(data.tokens)
-        .to.be.bignumber.equal(tonEventValue, 'Wrong amount of tokens');
+        .to.be.bignumber.equal(everEventValue, 'Wrong amount of tokens');
 
       expect(data.solana_address)
-        .to.be.bignumber.equal(tonEventParams.solanaAddress, 'Wrong solana address');
+        .to.be.bignumber.equal(everEventParams.solanaAddress, 'Wrong solana address');
 
     });
   });

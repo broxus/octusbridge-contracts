@@ -4,7 +4,7 @@
 	"header": ["time"],
 	"functions": [
 		{
-			"name": "encodeBurnPayload",
+			"name": "encodeEthereumBurnPayload",
 			"inputs": [
 				{"name":"ethereumAddress","type":"uint160"},
 				{"name":"chainId","type":"uint32"}
@@ -14,7 +14,7 @@
 			]
 		},
 		{
-			"name": "decodeBurnPayload",
+			"name": "decodeEthereumBurnPayload",
 			"inputs": [
 				{"name":"data","type":"cell"}
 			],
