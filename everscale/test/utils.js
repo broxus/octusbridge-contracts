@@ -591,6 +591,7 @@ const setupEverscaleSolanaEventConfiguration = async (owner, staking, cellEncode
         proxy:  new BigNumber(0),
         startTimestamp: 0,
         endTimestamp: 0,
+        manualDeploy: false,
       }
     },
     keyPair

@@ -22,6 +22,7 @@ program
     .option('--meta <meta>', 'Configuration meta')
     .option('--eventEmitter <eventEmitter>', 'Event emitter address')
     .option('--proxy <proxy>', 'Target proxy address')
+    .option('--manualDeploy <manualDeploy>', 'Manual event deploy')
     .option('--startTimestamp <startTimestamp>', 'Start timestamp')
     .option('--initialBalance <initialBalance>', 'Configuration initial balance')
     .allowUnknownOption();
@@ -123,6 +124,12 @@ const main = async () => {
       initial: options.startTimestamp || Math.floor(Date.now() / 1000)
     },
     {
+      type: 'bool',
+      name: 'manualDeploy',
+      message: 'Manual deploy',
+      initial: options.manualDeploy || false
+    },
+    {
       type: 'number',
       name: 'value',
       message: 'Configuration initial balance (in TONs)',
@@ -153,6 +160,7 @@ const main = async () => {
         proxy: new BigNumber(response.proxy.toLowerCase()).toFixed(),
         startTimestamp: response.startTimestamp,
         endTimestamp: 0,
+        manualDeploy: response.manualDeploy,
       }
     },
     keyPair
