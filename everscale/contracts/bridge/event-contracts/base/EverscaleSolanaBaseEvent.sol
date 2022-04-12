@@ -52,7 +52,6 @@ contract EverscaleSolanaBaseEvent is BaseEvent, IEverscaleSolanaEvent {
 
     /*
         @dev Confirm event
-        @dev Can be called only by parent event configuration
         @dev Can be called only when event configuration is in Pending status
         @param eventDataSignature Relay's signature of the TonEvent data
         @param voteReceiver Should be always equal to the event contract address
@@ -85,7 +84,6 @@ contract EverscaleSolanaBaseEvent is BaseEvent, IEverscaleSolanaEvent {
 
     /*
         @dev Reject event
-        @dev Can be called only by parent event configuration
         @dev Can be called only when event configuration is in Pending status
         @param voteReceiver Should be always equal to the event contract address
     */
