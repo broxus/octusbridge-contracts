@@ -2,22 +2,22 @@ const {
     setupRelays,
     setupBridge,
     setupTokenRootWithWallet,
-    setupNativeMultiVault,
+    setupSolanaNativeMultiVault,
     getTokenWalletByAddress,
     expect,
     logger,
     afterRun,
     logContract,
     ...utils
-} = require("./../../../utils");
+} = require("./../../../../utils");
 
 
-describe('Test EVM native multivault pipeline', async function() {
+describe('Test Solana native multivault pipeline', async function() {
     this.timeout(10000000);
 
     let relays, bridge, bridgeOwner, staking, cellEncoder;
     let root;
-    let evmConfiguration, everscaleConfiguration, proxy, initializer;
+    let solanaConfiguration, everscaleConfiguration, proxy, initializer;
     let initializerTokenWallet;
     let metricManager;
 
@@ -41,7 +41,7 @@ describe('Test EVM native multivault pipeline', async function() {
     it('Setup bridge', async () => {
         relays = await setupRelays();
         [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
-        [evmConfiguration, everscaleConfiguration, proxy, initializer] = await setupNativeMultiVault(
+        [solanaConfiguration, everscaleConfiguration, proxy, initializer] = await setupSolanaNativeMultiVault(
             bridgeOwner,
             staking
         );
@@ -56,25 +56,23 @@ describe('Test EVM native multivault pipeline', async function() {
 
         metricManager = new utils.MetricManager(
             bridge, bridgeOwner, staking,
-            evmConfiguration, everscaleConfiguration, proxy, initializer,
+            solanaConfiguration, everscaleConfiguration, proxy, initializer,
             root, initializerTokenWallet
         );
     });
 
-    describe('Transfer native token from Everscale to EVM', async () => {
+    describe('Transfer native token from Everscale to Solana', async () => {
         const amount = 500;
 
         const recipient = 111;
-        const chainId = 222;
 
         let eventContract;
 
         it('Transfer tokens to the Native Proxy', async () => {
             const payload = await cellEncoder.call({
-                method: 'encodeNativeTransferPayload',
+                method: 'encodeNativeTransferPayloadSolana',
                 params: {
-                    recipient,
-                    chainId
+                    recipient
                 }
             });
 
@@ -107,7 +105,7 @@ describe('Test EVM native multivault pipeline', async function() {
 
             logger.log(`Expected event address: ${expectedEventContract}`);
 
-            eventContract = await locklift.factory.getContract('MultiVaultEverscaleEVMEventNative');
+            eventContract = await locklift.factory.getContract('MultiVaultEverscaleSolanaEventNative');
             eventContract.setAddress(expectedEventContract);
             eventContract.afterRun = afterRun;
 
@@ -194,9 +192,6 @@ describe('Test EVM native multivault pipeline', async function() {
             expect(decodedData.recipient_)
                 .to.be.bignumber.equal(recipient, 'Wrong event decoded recipient');
 
-            expect(decodedData.chainId_)
-                .to.be.bignumber.equal(chainId, 'Wrong event decoded amount');
-
             const name = await root.call({ method: 'name' });
             const symbol = await root.call({ method: 'symbol' });
             const decimals = await root.call({ method: 'decimals' });
@@ -215,7 +210,7 @@ describe('Test EVM native multivault pipeline', async function() {
             });
 
             const decodedData = await cellEncoder.call({
-                method: 'decodeMultiVaultNativeEverscale',
+                method: 'decodeMultiVaultNativeEverscaleSolana',
                 params: {
                     data: eventInitData.voteData.eventData
                 }
@@ -231,9 +226,6 @@ describe('Test EVM native multivault pipeline', async function() {
 
             expect(decodedData.recipient)
                 .to.be.bignumber.equal(recipient, 'Wrong event data recipient');
-
-            expect(decodedData.chainId)
-                .to.be.bignumber.equal(chainId, 'Wrong event data amount');
 
             const name = await root.call({ method: 'name' });
             const symbol = await root.call({ method: 'symbol' });
@@ -322,7 +314,7 @@ describe('Test EVM native multivault pipeline', async function() {
         });
     });
 
-    describe('Transfer native token from EVM to Everscale', async () => {
+    describe('Transfer native token from Solana to Everscale', async () => {
         let eventDataStructure;
         let eventDataEncoded;
         let eventVoteData;
@@ -340,20 +332,17 @@ describe('Test EVM native multivault pipeline', async function() {
             };
 
             eventDataEncoded =  await cellEncoder.call({
-                method: 'encodeMultiVaultNativeEVM',
+                method: 'encodeMultiVaultNativeSolanaEverscale',
                 params: eventDataStructure
             });
 
             eventVoteData = {
-                eventTransaction: 111,
-                eventIndex: 222,
-                eventData: eventDataEncoded,
-                eventBlockNumber: 333,
-                eventBlock: 444,
+                accountSeed: 111,
+                eventData: eventDataEncoded
             };
 
             const tx = await initializer.runTarget({
-                contract: evmConfiguration,
+                contract: solanaConfiguration,
                 method: 'deployEvent',
                 params: {
                     eventVoteData,
@@ -363,7 +352,7 @@ describe('Test EVM native multivault pipeline', async function() {
 
             logger.log(`Event initialization tx: ${tx.transaction.id}`);
 
-            const expectedEventContract = await evmConfiguration.call({
+            const expectedEventContract = await solanaConfiguration.call({
                 method: 'deriveEventAddress',
                 params: {
                     eventVoteData
@@ -372,7 +361,7 @@ describe('Test EVM native multivault pipeline', async function() {
 
             logger.log(`Expected event address: ${expectedEventContract}`);
 
-            eventContract = await locklift.factory.getContract('MultiVaultEVMEverscaleEventNative');
+            eventContract = await locklift.factory.getContract('MultiVaultSolanaEverscaleEventNative');
             eventContract.setAddress(expectedEventContract);
             eventContract.afterRun = afterRun;
 
@@ -389,23 +378,14 @@ describe('Test EVM native multivault pipeline', async function() {
                 method: 'getDetails',
             });
 
-            expect(details._eventInitData.voteData.eventTransaction)
-                .to.be.bignumber.equal(eventVoteData.eventTransaction, 'Wrong event transaction');
-
-            expect(details._eventInitData.voteData.eventIndex)
-                .to.be.bignumber.equal(eventVoteData.eventIndex, 'Wrong event index');
+            expect(details._eventInitData.voteData.accountSeed)
+                .to.be.bignumber.equal(eventVoteData.accountSeed, 'Wrong account seed');
 
             expect(details._eventInitData.voteData.eventData)
                 .to.be.equal(eventVoteData.eventData, 'Wrong event data');
 
-            expect(details._eventInitData.voteData.eventBlockNumber)
-                .to.be.bignumber.equal(eventVoteData.eventBlockNumber, 'Wrong event block number');
-
-            expect(details._eventInitData.voteData.eventBlock)
-                .to.be.bignumber.equal(eventVoteData.eventBlock, 'Wrong event block');
-
             expect(details._eventInitData.configuration)
-                .to.be.equal(evmConfiguration.address, 'Wrong event configuration');
+                .to.be.equal(solanaConfiguration.address, 'Wrong event configuration');
 
             expect(details._eventInitData.staking)
                 .to.be.equal(staking.address, 'Wrong staking');

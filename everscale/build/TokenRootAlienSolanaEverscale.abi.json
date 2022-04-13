@@ -279,7 +279,7 @@
 		{"key":6,"name":"randomNonce_","type":"uint256"},
 		{"key":7,"name":"deployer_","type":"address"},
 		{"key":8,"name":"platformCode_","type":"cell"},
-		{"key":9,"name":"base_token_","type":"uint160"}
+		{"key":9,"name":"base_token_","type":"uint256"}
 	],
 	"events": [
 	],
@@ -300,6 +300,6 @@
 		{"name":"deployer_","type":"address"},
 		{"name":"platformCode_","type":"cell"},
 		{"name":"walletVersion_","type":"uint32"},
-		{"name":"base_token_","type":"uint160"}
+		{"name":"base_token_","type":"uint256"}
 	]
 }

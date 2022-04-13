@@ -1,23 +1,22 @@
 const {
     setupRelays,
     setupBridge,
-    setupAlienMultiVault,
+    setupSolanaAlienMultiVault,
     logger,
     afterRun,
     expect,
     ...utils
-} = require('./../../../utils');
+} = require('./../../../../utils');
 
 
-describe('Test EVM alien multivault pipeline', async function() {
+describe('Test Solana alien multivault pipeline', async function() {
     this.timeout(10000000);
 
     let metricManager;
     let relays, bridge, bridgeOwner, staking, cellEncoder;
-    let evmConfiguration, everscaleConfiguration, proxy, initializer;
+    let solanaConfiguration, everscaleConfiguration, proxy, initializer;
 
     const alienTokenBase = {
-        chainId: 111,
         token: 222,
     };
 
@@ -44,7 +43,7 @@ describe('Test EVM alien multivault pipeline', async function() {
         relays = await setupRelays();
         [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
 
-        [evmConfiguration, everscaleConfiguration, proxy, initializer] = await setupAlienMultiVault(
+        [solanaConfiguration, everscaleConfiguration, proxy, initializer] = await setupSolanaAlienMultiVault(
             bridgeOwner,
             staking,
             cellEncoder
@@ -52,11 +51,11 @@ describe('Test EVM alien multivault pipeline', async function() {
 
         metricManager = new utils.MetricManager(
             bridge, bridgeOwner, staking,
-            evmConfiguration, everscaleConfiguration, proxy, initializer
+            solanaConfiguration, everscaleConfiguration, proxy, initializer
         );
     });
 
-    describe('Transfer alien token from EVM to Everscale', async () => {
+    describe('Transfer alien token from Solana to Everscale', async () => {
         let eventDataStructure;
         let eventDataEncoded;
         let eventVoteData;
@@ -64,7 +63,6 @@ describe('Test EVM alien multivault pipeline', async function() {
 
         it('Initialize event', async () => {
             eventDataStructure = {
-                base_chainId: alienTokenBase.chainId,
                 base_token: alienTokenBase.token,
                 name: 'Giga Chad',
                 symbol: 'GIGA_CHAD',
@@ -75,20 +73,17 @@ describe('Test EVM alien multivault pipeline', async function() {
             };
 
             eventDataEncoded =  await cellEncoder.call({
-                method: 'encodeMultiVaultAlienEVM',
+                method: 'encodeMultiVaultAlienSolanaEverscale',
                 params: eventDataStructure
             });
 
             eventVoteData = {
-                eventTransaction: 111,
-                eventIndex: 222,
-                eventData: eventDataEncoded,
-                eventBlockNumber: 333,
-                eventBlock: 444,
+                accountSeed: 111,
+                eventData: eventDataEncoded
             };
 
             const tx = await initializer.runTarget({
-                contract: evmConfiguration,
+                contract: solanaConfiguration,
                 method: 'deployEvent',
                 params: {
                     eventVoteData,
@@ -98,7 +93,7 @@ describe('Test EVM alien multivault pipeline', async function() {
 
             logger.log(`Event initialization tx: ${tx.transaction.id}`);
 
-            const expectedEventContract = await evmConfiguration.call({
+            const expectedEventContract = await solanaConfiguration.call({
                 method: 'deriveEventAddress',
                 params: {
                     eventVoteData
@@ -107,7 +102,7 @@ describe('Test EVM alien multivault pipeline', async function() {
 
             logger.log(`Expected event address: ${expectedEventContract}`);
 
-            eventContract = await locklift.factory.getContract('MultiVaultEVMEverscaleEventAlien');
+            eventContract = await locklift.factory.getContract('MultiVaultSolanaEverscaleEventAlien');
             eventContract.setAddress(expectedEventContract);
             eventContract.afterRun = afterRun;
 
@@ -124,23 +119,14 @@ describe('Test EVM alien multivault pipeline', async function() {
                 method: 'getDetails',
             });
 
-            expect(details._eventInitData.voteData.eventTransaction)
-                .to.be.bignumber.equal(eventVoteData.eventTransaction, 'Wrong event transaction');
-
-            expect(details._eventInitData.voteData.eventIndex)
-                .to.be.bignumber.equal(eventVoteData.eventIndex, 'Wrong event index');
+            expect(details._eventInitData.voteData.accountSeed)
+                .to.be.bignumber.equal(eventVoteData.accountSeed, 'Wrong accountSeed');
 
             expect(details._eventInitData.voteData.eventData)
                 .to.be.equal(eventVoteData.eventData, 'Wrong event data');
 
-            expect(details._eventInitData.voteData.eventBlockNumber)
-                .to.be.bignumber.equal(eventVoteData.eventBlockNumber, 'Wrong event block number');
-
-            expect(details._eventInitData.voteData.eventBlock)
-                .to.be.bignumber.equal(eventVoteData.eventBlock, 'Wrong event block');
-
             expect(details._eventInitData.configuration)
-                .to.be.equal(evmConfiguration.address, 'Wrong event configuration');
+                .to.be.equal(solanaConfiguration.address, 'Wrong event configuration');
 
             expect(details._eventInitData.staking)
                 .to.be.equal(staking.address, 'Wrong staking');
@@ -174,7 +160,6 @@ describe('Test EVM alien multivault pipeline', async function() {
                 contract: proxy,
                 method: 'deployAlienToken',
                 params: {
-                    chainId: eventDataStructure.base_chainId,
                     token: eventDataStructure.base_token,
                     name: eventDataStructure.name,
                     symbol: eventDataStructure.symbol,
@@ -189,7 +174,6 @@ describe('Test EVM alien multivault pipeline', async function() {
             const tokenAddress = await proxy.call({
                 method: 'deriveAlienTokenRoot',
                 params: {
-                    chainId: eventDataStructure.base_chainId,
                     token: eventDataStructure.base_token,
                     name: eventDataStructure.name,
                     symbol: eventDataStructure.symbol,
@@ -197,7 +181,7 @@ describe('Test EVM alien multivault pipeline', async function() {
                 }
             });
 
-            alienTokenRoot = await locklift.factory.getContract('TokenRootAlienEVMEverscale');
+            alienTokenRoot = await locklift.factory.getContract('TokenRootAlienSolanaEverscale');
             alienTokenRoot.setAddress(tokenAddress);
             alienTokenRoot.afterRun = afterRun;
 
@@ -241,8 +225,6 @@ describe('Test EVM alien multivault pipeline', async function() {
                 method: 'meta',
             });
 
-            expect(meta.base_chainId)
-                .to.be.bignumber.equal(eventDataStructure.base_chainId, 'Wrong alien token base chain id');
             expect(meta.base_token)
                 .to.be.bignumber.equal(eventDataStructure.base_token, 'Wrong alien token base token');
             expect(meta.name)
@@ -329,7 +311,7 @@ describe('Test EVM alien multivault pipeline', async function() {
         });
     });
 
-    describe('Transfer alien token from Everscale to EVM', async () => {
+    describe('Transfer alien token from Everscale to Solana', async () => {
         let eventContract;
 
         const amount = 333;
@@ -337,7 +319,7 @@ describe('Test EVM alien multivault pipeline', async function() {
 
         it('Burn tokens in favor of Alien Proxy', async () => {
             const burnPayload = await cellEncoder.call({
-                method: 'encodeAlienBurnPayload',
+                method: 'encodeAlienBurnPayloadSolana',
                 params: {
                     recipient
                 }
@@ -370,7 +352,7 @@ describe('Test EVM alien multivault pipeline', async function() {
 
             logger.log(`Expected event address: ${expectedEventContract}`);
 
-            eventContract = await locklift.factory.getContract('MultiVaultEverscaleEVMEventAlien');
+            eventContract = await locklift.factory.getContract('MultiVaultEverscaleSolanaEventAlien');
             eventContract.setAddress(expectedEventContract);
             eventContract.afterRun = afterRun;
 
@@ -429,8 +411,6 @@ describe('Test EVM alien multivault pipeline', async function() {
                 method: 'getDecodedData'
             });
 
-            expect(decodedData.base_chainId_)
-                .to.be.bignumber.equal(alienTokenBase.chainId, 'Wrong alien base chain ID');
             expect(decodedData.base_token_)
                 .to.be.bignumber.equal(alienTokenBase.token, 'Wrong alien base token');
 
@@ -439,7 +419,7 @@ describe('Test EVM alien multivault pipeline', async function() {
             });
 
             const decodedEventData = await cellEncoder.call({
-                method: 'decodeMultiVaultAlienEverscale',
+                method: 'decodeMultiVaultAlienEverscaleSolana',
                 params: {
                     data: eventInitData.voteData.eventData
                 }
@@ -447,8 +427,6 @@ describe('Test EVM alien multivault pipeline', async function() {
 
             expect(decodedEventData.base_token)
                 .to.be.bignumber.equal(alienTokenBase.token, 'Wrong event data base token');
-            expect(decodedEventData.base_chainId)
-                .to.be.bignumber.equal(alienTokenBase.chainId, 'Wrong event data base chain id');
             expect(decodedEventData.amount)
                 .to.be.bignumber.equal(amount, 'Wrong event data amount');
             expect(decodedEventData.recipient)

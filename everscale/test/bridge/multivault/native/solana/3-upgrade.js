@@ -1,23 +1,23 @@
 const {
     setupRelays,
     setupBridge,
-    setupNativeMultiVault,
+    setupSolanaNativeMultiVault,
     expect,
     logger,
-} = require("./../../../utils");
+} = require("./../../../../utils");
 
 
-describe('Test Native proxy upgrade', async function() {
+describe('Test Solana Native proxy upgrade', async function() {
     this.timeout(10000000);
 
     let relays, bridge, bridgeOwner, staking, cellEncoder;
-    let evmConfiguration, everscaleConfiguration, proxy, initializer;
+    let solanaConfiguration, everscaleConfiguration, proxy, initializer;
 
     it('Setup bridge', async () => {
         relays = await setupRelays();
         [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
 
-        [evmConfiguration, everscaleConfiguration, proxy, initializer] = await setupNativeMultiVault(
+        [solanaConfiguration, everscaleConfiguration, proxy, initializer] = await setupSolanaNativeMultiVault(
             bridgeOwner,
             staking
         );
@@ -31,7 +31,7 @@ describe('Test Native proxy upgrade', async function() {
     it('Upgrade proxy to itself and check storage', async () => {
         const _configuration = await proxy.call({ method: 'getConfiguration' });
 
-        const Proxy = await locklift.factory.getContract('ProxyMultiVaultNative');
+        const Proxy = await locklift.factory.getContract('ProxyMultiVaultSolanaNative');
 
         const tx = await bridgeOwner.runTarget({
             contract: proxy,
@@ -47,8 +47,8 @@ describe('Test Native proxy upgrade', async function() {
 
         expect(configuration.everscaleConfiguration)
             .to.be.equal(_configuration.everscaleConfiguration, 'Wrong everscale configuration');
-        expect(configuration.evmConfigurations)
-            .to.be.eql(_configuration.evmConfigurations, 'Wrong evm configurations');
+        expect(configuration.solanaConfiguration)
+            .to.be.eql(_configuration.solanaConfiguration, 'Wrong solana configuration');
         expect(configuration.deployWalletValue)
             .to.be.bignumber.equal(_configuration.deployWalletValue, 'Wrong deploy wallet value');
     });

@@ -4,7 +4,7 @@
 	"header": ["time"],
 	"functions": [
 		{
-			"name": "encodeMultiVaultAlienEVM",
+			"name": "encodeMultiVaultAlienEVMEverscale",
 			"inputs": [
 				{"name":"base_chainId","type":"uint256"},
 				{"name":"base_token","type":"uint160"},
@@ -20,7 +20,7 @@
 			]
 		},
 		{
-			"name": "encodeMultiVaultNativeEVM",
+			"name": "encodeMultiVaultNativeEVMEverscale",
 			"inputs": [
 				{"name":"token_wid","type":"int8"},
 				{"name":"token_addr","type":"uint256"},
@@ -33,7 +33,7 @@
 			]
 		},
 		{
-			"name": "encodeAlienBurnPayload",
+			"name": "encodeAlienBurnPayloadEthereum",
 			"inputs": [
 				{"name":"recipient","type":"uint160"}
 			],
@@ -42,7 +42,7 @@
 			]
 		},
 		{
-			"name": "encodeNativeTransferPayload",
+			"name": "encodeNativeTransferPayloadEthereum",
 			"inputs": [
 				{"name":"recipient","type":"uint160"},
 				{"name":"chainId","type":"uint256"}
@@ -52,7 +52,7 @@
 			]
 		},
 		{
-			"name": "decodeMultiVaultAlienEverscale",
+			"name": "decodeMultiVaultAlienEverscaleEthereum",
 			"inputs": [
 				{"name":"data","type":"cell"}
 			],
@@ -64,7 +64,7 @@
 			]
 		},
 		{
-			"name": "decodeMultiVaultNativeEverscale",
+			"name": "decodeMultiVaultNativeEverscaleEthereum",
 			"inputs": [
 				{"name":"data","type":"cell"}
 			],
@@ -77,6 +77,78 @@
 				{"name":"amount","type":"uint128"},
 				{"name":"recipient","type":"uint160"},
 				{"name":"chainId","type":"uint256"}
+			]
+		},
+		{
+			"name": "encodeMultiVaultAlienSolanaEverscale",
+			"inputs": [
+				{"name":"base_token","type":"uint256"},
+				{"name":"name","type":"string"},
+				{"name":"symbol","type":"string"},
+				{"name":"decimals","type":"uint8"},
+				{"name":"amount","type":"uint128"},
+				{"name":"recipient_wid","type":"int8"},
+				{"name":"recipient_addr","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
+			]
+		},
+		{
+			"name": "encodeMultiVaultNativeSolanaEverscale",
+			"inputs": [
+				{"name":"token_wid","type":"int8"},
+				{"name":"token_addr","type":"uint256"},
+				{"name":"amount","type":"uint128"},
+				{"name":"recipient_wid","type":"int8"},
+				{"name":"recipient_addr","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
+			]
+		},
+		{
+			"name": "encodeAlienBurnPayloadSolana",
+			"inputs": [
+				{"name":"recipient","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
+			]
+		},
+		{
+			"name": "encodeNativeTransferPayloadSolana",
+			"inputs": [
+				{"name":"recipient","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
+			]
+		},
+		{
+			"name": "decodeMultiVaultAlienEverscaleSolana",
+			"inputs": [
+				{"name":"data","type":"cell"}
+			],
+			"outputs": [
+				{"name":"base_token","type":"uint256"},
+				{"name":"amount","type":"uint128"},
+				{"name":"recipient","type":"uint256"}
+			]
+		},
+		{
+			"name": "decodeMultiVaultNativeEverscaleSolana",
+			"inputs": [
+				{"name":"data","type":"cell"}
+			],
+			"outputs": [
+				{"name":"token_wid","type":"int8"},
+				{"name":"token_addr","type":"uint256"},
+				{"name":"name","type":"string"},
+				{"name":"symbol","type":"string"},
+				{"name":"decimals","type":"uint8"},
+				{"name":"amount","type":"uint128"},
+				{"name":"recipient","type":"uint256"}
 			]
 		},
 		{

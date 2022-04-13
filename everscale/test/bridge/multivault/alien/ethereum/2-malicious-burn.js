@@ -2,11 +2,11 @@ const {
     logger,
     setupRelays,
     setupBridge,
-    setupAlienMultiVault,
+    setupEthereumAlienMultiVault,
     expect,
     afterRun,
     ...utils
-} = require("./../../../utils");
+} = require("./../../../../utils");
 
 
 describe('Test event contract behaviour when Alien token is incorrect', async function() {
@@ -19,7 +19,7 @@ describe('Test event contract behaviour when Alien token is incorrect', async fu
         relays = await setupRelays();
         [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
 
-        [evmConfiguration, everscaleConfiguration, proxy, initializer] = await setupAlienMultiVault(
+        [evmConfiguration, everscaleConfiguration, proxy, initializer] = await setupEthereumAlienMultiVault(
             bridgeOwner,
             staking,
             cellEncoder
@@ -34,7 +34,7 @@ describe('Test event contract behaviour when Alien token is incorrect', async fu
 
         it('Call burn callback on proxy', async () => {
             const burnPayload = await cellEncoder.call({
-                method: 'encodeAlienBurnPayload',
+                method: 'encodeAlienBurnPayloadEthereum',
                 params: {
                     recipient
                 }

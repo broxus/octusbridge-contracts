@@ -11,7 +11,7 @@ import "ton-eth-bridge-token-contracts/contracts/TokenRootUpgradeable.sol";
 
 
 contract TokenRootAlienSolanaEverscale is TokenRootUpgradeable, ITokenRootAlienSolanaEverscale {
-    uint160 static base_token_;
+    uint256 static base_token_;
 
     constructor(
         address initialSupplyTo,

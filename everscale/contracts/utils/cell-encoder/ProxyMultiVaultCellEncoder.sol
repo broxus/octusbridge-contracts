@@ -2,7 +2,7 @@ pragma ton-solidity >= 0.39.0;
 
 
 contract ProxyMultiVaultCellEncoder {
-    function encodeMultiVaultAlienEVM(
+    function encodeMultiVaultAlienEVMEverscale(
         uint256 base_chainId,
         uint160 base_token,
         string name,
@@ -15,7 +15,7 @@ contract ProxyMultiVaultCellEncoder {
         return abi.encode(base_chainId, base_token, name, symbol, decimals, amount, recipient_wid, recipient_addr);
     }
 
-    function encodeMultiVaultNativeEVM(
+    function encodeMultiVaultNativeEVMEverscale(
         int8 token_wid,
         uint256 token_addr,
         uint128 amount,
@@ -25,20 +25,20 @@ contract ProxyMultiVaultCellEncoder {
         return abi.encode(token_wid, token_addr, amount, recipient_wid, recipient_addr);
     }
 
-    function encodeAlienBurnPayload(
+    function encodeAlienBurnPayloadEthereum(
         uint160 recipient
     ) external pure returns(TvmCell) {
         return abi.encode(recipient);
     }
 
-    function encodeNativeTransferPayload(
+    function encodeNativeTransferPayloadEthereum(
         uint160 recipient,
         uint256 chainId
     ) external pure returns (TvmCell) {
         return abi.encode(recipient, chainId);
     }
 
-    function decodeMultiVaultAlienEverscale(
+    function decodeMultiVaultAlienEverscaleEthereum(
         TvmCell data
     ) external pure returns (
         uint160 base_token,
@@ -52,7 +52,7 @@ contract ProxyMultiVaultCellEncoder {
         );
     }
 
-    function decodeMultiVaultNativeEverscale(
+    function decodeMultiVaultNativeEverscaleEthereum(
         TvmCell data
     ) external pure returns(
         int8 token_wid,
@@ -67,6 +67,70 @@ contract ProxyMultiVaultCellEncoder {
         (token_wid, token_addr, name, symbol, decimals, amount, recipient, chainId) = abi.decode(
             data,
             (int8, uint256, string, string, uint8, uint128, uint160, uint256)
+        );
+    }
+
+    function encodeMultiVaultAlienSolanaEverscale(
+        uint256 base_token,
+        string name,
+        string symbol,
+        uint8 decimals,
+        uint128 amount,
+        int8 recipient_wid,
+        uint256 recipient_addr
+    ) external pure returns (TvmCell) {
+        return abi.encode( base_token, name, symbol, decimals, amount, recipient_wid, recipient_addr);
+    }
+
+    function encodeMultiVaultNativeSolanaEverscale(
+        int8 token_wid,
+        uint256 token_addr,
+        uint128 amount,
+        int8 recipient_wid,
+        uint256 recipient_addr
+    ) external pure returns (TvmCell) {
+        return abi.encode(token_wid, token_addr, amount, recipient_wid, recipient_addr);
+    }
+
+    function encodeAlienBurnPayloadSolana(
+        uint256 recipient
+    ) external pure returns(TvmCell) {
+        return abi.encode(recipient);
+    }
+
+    function encodeNativeTransferPayloadSolana(
+        uint256 recipient
+    ) external pure returns (TvmCell) {
+        return abi.encode(recipient);
+    }
+
+    function decodeMultiVaultAlienEverscaleSolana(
+        TvmCell data
+    ) external pure returns (
+        uint256 base_token,
+        uint128 amount,
+        uint256 recipient
+    ) {
+        (base_token, amount, recipient) = abi.decode(
+            data,
+            (uint256, uint128, uint256)
+        );
+    }
+
+    function decodeMultiVaultNativeEverscaleSolana(
+        TvmCell data
+    ) external pure returns(
+        int8 token_wid,
+        uint256 token_addr,
+        string name,
+        string symbol,
+        uint8 decimals,
+        uint128 amount,
+        uint256 recipient
+    ) {
+        (token_wid, token_addr, name, symbol, decimals, amount, recipient) = abi.decode(
+            data,
+            (int8, uint256, string, string, uint8, uint128, uint256)
         );
     }
 }

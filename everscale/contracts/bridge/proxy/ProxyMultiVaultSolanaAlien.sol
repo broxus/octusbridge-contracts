@@ -4,14 +4,14 @@ pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 
-import "./../interfaces/IEthereumEverscaleProxyExtended.sol";
-import "./../interfaces/multivault/IProxyMultiVaultEthereumAlien.sol";
-import "./../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.sol";
+import "./../interfaces/ISolanaEverscaleProxyExtended.sol";
+import "./../interfaces/multivault/IProxyMultiVaultSolanaAlien.sol";
+import "./../interfaces/event-configuration-contracts/IEverscaleSolanaEventConfiguration.sol";
 
 import "./../../utils/ErrorCodes.sol";
 import "./../../utils/TransferUtils.sol";
 
-import "./../alien-token/TokenRootAlienEVMEverscale.sol";
+import "./../alien-token/TokenRootAlienSolanaEverscale.sol";
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensBurnCallback.sol";
 
@@ -21,14 +21,14 @@ import '@broxus/contracts/contracts/utils/RandomNonce.sol';
 import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
 
 
-contract ProxyMultiVaultAlien is
+contract ProxyMultiVaultSolanaAlien is
     InternalOwner,
     TransferUtils,
     CheckPubKey,
     RandomNonce,
     IAcceptTokensBurnCallback,
-    IEthereumEverscaleProxyExtended,
-    IProxyMultiVaultEthereumAlien
+    ISolanaEverscaleProxyExtended,
+    IProxyMultiVaultSolanaAlien
 {
     Configuration config;
     uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
@@ -62,37 +62,36 @@ contract ProxyMultiVaultAlien is
         address remainingGasTo,
         TvmCell payload
     ) public override reserveMinBalance(MIN_CONTRACT_BALANCE) {
-        (uint160 recipient) = abi.decode(payload, (uint160));
+        (uint256 recipient) = abi.decode(payload, (uint256));
 
         TvmCell eventData = abi.encode(
             address(this), // Proxy address, used in event contract for validating token root
             msg.sender, // Everscale token root address
             remainingGasTo, // Remaining gas receiver (on event contract destroy)
             amount, // Amount of tokens to withdraw
-            recipient // Recipient address in EVM network
+            recipient // Recipient address in Solana network
         );
 
-        IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData = IEverscaleEthereumEvent.EverscaleEthereumEventVoteData(
+        IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(
             tx.timestamp,
-            now,
             eventData
         );
 
-        IEverscaleEthereumEventConfiguration(config.everscaleConfiguration).deployEvent{
+        IEverscaleSolanaEventConfiguration(config.everscaleConfiguration).deployEvent{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventVoteData);
     }
 
-    /// @notice Handles alien token transfer from EVM. Token address is derived automatically and MUST
+    /// @notice Handles alien token transfer from Solana. Token address is derived automatically and MUST
     /// be deployed before. See note on `deployAlienToken`
     /// @param remainingGasTo Gas back address
     function onEventConfirmedExtended(
-        IEthereumEverscaleEvent.EthereumEverscaleEventInitData,
+        ISolanaEverscaleEvent.SolanaEverscaleEventInitData,
         TvmCell meta,
         address remainingGasTo
     ) external override reserveMinBalance(MIN_CONTRACT_BALANCE) {
-        require(_isArrayContainsAddress(config.evmConfigurations, msg.sender));
+        require(config.solanaConfiguration == msg.sender);
 
         (
             address token,
@@ -116,20 +115,17 @@ contract ProxyMultiVaultAlien is
     }
 
     /// @notice Derives root address for alien token, without deploying it
-    /// @param chainId EVM network chain ID
-    /// @param token EVM token address
+    /// @param token Solana token address
     /// @param name Token name
     /// @param symbol Token symbol
     /// @param decimals Token decimals
     function deriveAlienTokenRoot(
-        uint256 chainId,
-        uint160 token,
+        uint256 token,
         string name,
         string symbol,
         uint8 decimals
     ) public override responsible returns (address) {
         TvmCell stateInit = _buildAlienTokenRootInitState(
-            chainId,
             token,
             name,
             symbol,
@@ -140,30 +136,27 @@ contract ProxyMultiVaultAlien is
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
     }
 
-    /// @notice Deploys Everscale token for any EVM token
-    /// @param chainId EVM network chain ID
-    /// @param token EVM token address
+    /// @notice Deploys Everscale token for any Solana token
+    /// @param token Solana token address
     /// @param name Token name
     /// @param symbol Token symbol
     /// @param decimals Token decimals
     /// @param remainingGasTo Remaining gas to
     function deployAlienToken(
-        uint256 chainId,
-        uint160 token,
+        uint256 token,
         string name,
         string symbol,
         uint8 decimals,
         address remainingGasTo
     ) external override reserveMinBalance(MIN_CONTRACT_BALANCE) {
         TvmCell stateInit = _buildAlienTokenRootInitState(
-            chainId,
             token,
             name,
             symbol,
             decimals
         );
 
-        new TokenRootAlienEVMEverscale {
+        new TokenRootAlienSolanaEverscale {
             stateInit: stateInit,
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
@@ -215,20 +208,18 @@ contract ProxyMultiVaultAlien is
     }
 
     function _buildAlienTokenRootInitState(
-        uint256 chainId,
-        uint160 token,
+        uint256 token,
         string name,
         string symbol,
         uint8 decimals
     ) internal view returns (TvmCell) {
         return tvm.buildStateInit({
-            contr: TokenRootAlienEVMEverscale,
+            contr: TokenRootAlienSolanaEverscale,
             varInit: {
                 randomNonce_: 0,
                 deployer_: address(this),
                 rootOwner_: address(this),
 
-                base_chainId_: chainId,
                 base_token_: token,
 
                 name_: name,

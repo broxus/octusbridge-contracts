@@ -1,10 +1,10 @@
 const {
     setupRelays,
     setupBridge,
-    setupAlienMultiVault,
+    setupEthereumAlienMultiVault,
     expect,
     logger
-} = require("./../../../utils");
+} = require("./../../../../utils");
 
 
 describe('Test Alien proxy upgrade', async function() {
@@ -17,7 +17,7 @@ describe('Test Alien proxy upgrade', async function() {
         relays = await setupRelays();
         [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
 
-        [evmConfiguration, everscaleConfiguration, proxy, initializer] = await setupAlienMultiVault(
+        [evmConfiguration, everscaleConfiguration, proxy, initializer] = await setupEthereumAlienMultiVault(
             bridgeOwner,
             staking,
             cellEncoder
@@ -32,7 +32,7 @@ describe('Test Alien proxy upgrade', async function() {
     it('Upgrade proxy to itself and check storage', async () => {
         const _configuration = await proxy.call({ method: 'getConfiguration' });
 
-        const Proxy = await locklift.factory.getContract('ProxyMultiVaultAlien');
+        const Proxy = await locklift.factory.getContract('ProxyMultiVaultEthereumAlien');
 
         const tx = await bridgeOwner.runTarget({
             contract: proxy,

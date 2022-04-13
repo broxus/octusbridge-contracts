@@ -30,9 +30,9 @@ const main = async () => {
     const [keyPair] = await locklift.keys.getKeyPairs();
 
     const Account = await locklift.factory.getAccount('Wallet');
-    const ProxyMultiVaultNative = await locklift.factory.getContract('ProxyMultiVaultNative');
-    const ProxyMultiVaultAlien = await locklift.factory.getContract('ProxyMultiVaultAlien');
-    const AlienTokenRoot = await locklift.factory.getContract('TokenRootAlienEVMEverscale');
+    const ProxyMultiVaultSolanaNative = await locklift.factory.getContract('ProxyMultiVaultSolanaNative');
+    const ProxyMultiVaultSolanaAlien = await locklift.factory.getContract('ProxyMultiVaultSolanaAlien');
+    const AlienTokenRoot = await locklift.factory.getContract('TokenRootAlienSolanaEverscale');
     const AlienTokenWalletUpgradeable = await locklift.factory.getContract('AlienTokenWalletUpgradeable');
     const AlienTokenWalletPlatform = await locklift.factory.getContract('AlienTokenWalletPlatform');
 
@@ -40,7 +40,7 @@ const main = async () => {
     const spinner = ora('Deploying native proxy').start();
 
     const proxyMultiVaultNative = await locklift.giver.deployContract({
-        contract: ProxyMultiVaultNative,
+        contract: ProxyMultiVaultSolanaNative,
         constructorParams: {
             owner_: response.owner,
         },
@@ -73,7 +73,7 @@ const main = async () => {
     spinner.start('Deploying alien proxy');
 
     const proxyMultiVaultAlien = await locklift.giver.deployContract({
-        contract: ProxyMultiVaultAlien,
+        contract: ProxyMultiVaultSolanaAlien,
         constructorParams: {
             owner_: user.address,
         },
@@ -93,7 +93,7 @@ const main = async () => {
        params: {
            _config: {
                everscaleConfiguration: locklift.utils.zeroAddress,
-               evmConfigurations: [],
+               solanaConfiguration: locklift.utils.zeroAddress,
                deployWalletValue: locklift.utils.convertCrystal(0.1, 'nano'),
                alienTokenRootCode: AlienTokenRoot.code,
                alienTokenWalletCode: AlienTokenWalletUpgradeable.code,

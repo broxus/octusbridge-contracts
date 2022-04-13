@@ -4,9 +4,9 @@ pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 
-import "./../interfaces/IEthereumEverscaleProxyExtended.sol";
-import "./../interfaces/multivault/IProxyMultiVaultEthereumNative.sol";
-import "./../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.sol";
+import "./../interfaces/ISolanaEverscaleProxyExtended.sol";
+import "./../interfaces/multivault/IProxyMultiVaultSolanaNative.sol";
+import "./../interfaces/event-configuration-contracts/IEverscaleSolanaEventConfiguration.sol";
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensTransferCallback.sol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenWallet.sol";
@@ -21,13 +21,13 @@ import '@broxus/contracts/contracts/utils/RandomNonce.sol';
 import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
 
 
-contract ProxyMultiVaultNative is
+contract ProxyMultiVaultSolanaNative is
     InternalOwner,
     TransferUtils,
     CheckPubKey,
     RandomNonce,
-    IEthereumEverscaleProxyExtended,
-    IProxyMultiVaultEthereumNative,
+    ISolanaEverscaleProxyExtended,
+    IProxyMultiVaultSolanaNative,
     IAcceptTokensTransferCallback
 {
     Configuration config;
@@ -66,7 +66,7 @@ contract ProxyMultiVaultNative is
         address remainingGasTo,
         TvmCell payload
     ) override external reserveMinBalance(MIN_CONTRACT_BALANCE) {
-        (uint160 recipient, uint256 chainId) = abi.decode(payload, (uint160, uint256));
+        (uint256 recipient) = abi.decode(payload, (uint256));
 
         TvmCell eventData = abi.encode(
             address(this), // Proxy address
@@ -74,32 +74,30 @@ contract ProxyMultiVaultNative is
             tokenRoot, // Token root
             remainingGasTo, // Remaining gas to
             amount, // Amount of tokens to withdraw
-            recipient, // EVM recipient address
-            chainId // EVM network chain ID
+            recipient // Solana recipient address
         );
 
-        IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData = IEverscaleEthereumEvent.EverscaleEthereumEventVoteData(
+        IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(
             tx.timestamp,
-            now,
             eventData
         );
 
-        IEverscaleEthereumEventConfiguration(config.everscaleConfiguration).deployEvent{
+        IEverscaleSolanaEventConfiguration(config.everscaleConfiguration).deployEvent{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventVoteData);
     }
 
-    /// @notice Handles native token transfer from EVM.
+    /// @notice Handles native token transfer from Solana.
     /// Releases token from the Proxy balance.
     /// @param meta Cell encoded (address token_wallet, uint128 amount, address recipient)
     /// @param remainingGasTo Gas back address
     function onEventConfirmedExtended(
-        IEthereumEverscaleEvent.EthereumEverscaleEventInitData,
+        ISolanaEverscaleEvent.SolanaEverscaleEventInitData,
         TvmCell meta,
         address remainingGasTo
     ) external override reserveMinBalance(MIN_CONTRACT_BALANCE) {
-        require(_isArrayContainsAddress(config.evmConfigurations, msg.sender));
+        require(config.solanaConfiguration == msg.sender);
 
         (
             address token_wallet,
