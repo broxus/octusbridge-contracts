@@ -13,7 +13,7 @@ const {
 } = require('../../utils');
 
 
-describe('Test ton event reject', async function() {
+describe('Test everscale solana event reject', async function() {
   this.timeout(10000000);
   
   let bridge, bridgeOwner, staking, cellEncoder;
