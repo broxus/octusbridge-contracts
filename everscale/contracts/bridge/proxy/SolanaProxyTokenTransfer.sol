@@ -143,7 +143,7 @@ ISolanaProxyTokenTransferConfigurable,
 
             IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(tx.timestamp, eventData);
 
-            IEverscaleSolanaEventConfiguration(config.tonConfiguration).deployEvent{
+            IEverscaleSolanaEventConfiguration(config.everConfiguration).deployEvent{
                 value: 0,
                 flag: MsgFlag.ALL_NOT_RESERVED
             }(eventVoteData);

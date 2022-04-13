@@ -214,7 +214,7 @@ const setupEthereumEverscaleEventConfiguration = async (owner, staking, cellEnco
   await logContract(proxy);
 
   const proxyConfiguration = {
-    tonConfiguration:  locklift.utils.zeroAddress,
+    everConfiguration:  locklift.utils.zeroAddress,
     ethereumConfigurations: [ethereumEverscaleEventConfiguration.address],
     outdatedTokenRoots: [],
     tokenRoot: tokenRoot.address,
@@ -320,7 +320,7 @@ const setupSolanaEverscaleEventConfiguration = async (owner, staking, cellEncode
   await logContract(proxy);
 
   const proxyConfiguration = {
-    tonConfiguration:  locklift.utils.zeroAddress,
+    everConfiguration:  locklift.utils.zeroAddress,
     solanaConfiguration: solanaEverscaleEventConfiguration.address,
     outdatedTokenRoots: [],
     tokenRoot: tokenRoot.address,
@@ -496,7 +496,7 @@ const setupEverscaleEthereumEventConfiguration = async (owner, staking, cellEnco
   await logContract(proxy);
 
   const proxyConfiguration = {
-    tonConfiguration: everscaleEthereumEventConfiguration.address,
+    everConfiguration: everscaleEthereumEventConfiguration.address,
     ethereumConfigurations: [],
     outdatedTokenRoots: [],
     tokenRoot: tokenRoot.address,
@@ -519,7 +519,7 @@ const setupEverscaleEthereumEventConfiguration = async (owner, staking, cellEnco
 
 const setupEverscaleSolanaEventConfiguration = async (owner, staking, cellEncoder) => {
   const EverscaleSolanaEventConfiguration = await locklift.factory.getContract('EverscaleSolanaEventConfiguration');
-  const TonEvent = await locklift.factory.getContract('TokenTransferEverscaleSolanaEvent');
+  const EverEvent = await locklift.factory.getContract('TokenTransferEverscaleSolanaEvent');
 
   const _randomNonce = locklift.utils.getRandomNonce();
   const [keyPair] = await locklift.keys.getKeyPairs();
@@ -584,7 +584,7 @@ const setupEverscaleSolanaEventConfiguration = async (owner, staking, cellEncode
         eventABI: '',
         eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
         staking: staking.address,
-        eventCode: TonEvent.code,
+        eventCode: EverEvent.code,
       },
       networkConfiguration: {
         eventEmitter: proxyFutureAddress,
@@ -613,7 +613,7 @@ const setupEverscaleSolanaEventConfiguration = async (owner, staking, cellEncode
   await logContract(proxy);
 
   const proxyConfiguration = {
-    tonConfiguration: everscaleSolanaEventConfiguration.address,
+    everConfiguration: everscaleSolanaEventConfiguration.address,
     solanaConfiguration: locklift.utils.zeroAddress,
     outdatedTokenRoots: [],
     tokenRoot: tokenRoot.address,

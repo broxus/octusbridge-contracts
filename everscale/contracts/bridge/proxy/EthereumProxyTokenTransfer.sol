@@ -147,7 +147,7 @@ IEthereumProxyTokenTransferConfigurable,
 
             IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData = IEverscaleEthereumEvent.EverscaleEthereumEventVoteData(tx.timestamp, now, eventData);
 
-            IEverscaleEthereumEventConfiguration(config.tonConfiguration).deployEvent{
+            IEverscaleEthereumEventConfiguration(config.everConfiguration).deployEvent{
                 value: 0,
                 flag: MsgFlag.ALL_NOT_RESERVED
             }(eventVoteData);

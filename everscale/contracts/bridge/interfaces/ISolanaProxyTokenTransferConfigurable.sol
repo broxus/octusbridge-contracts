@@ -3,7 +3,7 @@ pragma ton-solidity >= 0.39.0;
 
 interface ISolanaProxyTokenTransferConfigurable {
     struct Configuration {
-        address tonConfiguration;
+        address everConfiguration;
         address solanaConfiguration;
         address[] outdatedTokenRoots;
 
