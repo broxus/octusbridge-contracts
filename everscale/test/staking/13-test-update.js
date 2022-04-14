@@ -226,20 +226,6 @@ describe('Test Staking Rewards', async function () {
     });
 
     describe('Testing staking upgrade', async function () {
-        let rr;
-
-        it('Relay round mock deploy', async function() {
-            const [keyPair] = await locklift.keys.getKeyPairs();
-
-            const TestRelayRound = await locklift.factory.getContract('TestRelayRound');
-            const tx = await locklift.giver.deployContract({
-                contract: TestRelayRound,
-                constructorParams: {},
-                initParams: {},
-                keyPair: keyPair
-            }, locklift.utils.convertCrystal(2, 'nano'));
-        });
-
         it('Calling upgrade', async function () {
             const new_code = await locklift.factory.getContract('StakingV1_1');
            const tx = await stakingOwner.runTarget({
@@ -250,13 +236,11 @@ describe('Test Staking Rewards', async function () {
            });
 
             new_code.setAddress(stakingRoot.address);
-            const q = (await new_code.getEvents('StakingUpdated')).pop();
-            console.log(q);
+            (await new_code.getEvents('StakingUpdated')).pop();
         });
 
         it('Test storage', async function() {
-            const res = await stakingRoot.call({method: 'getDetails'});
-            console.log(res);
+            await stakingRoot.call({method: 'getDetails'});
         })
     });
 })
