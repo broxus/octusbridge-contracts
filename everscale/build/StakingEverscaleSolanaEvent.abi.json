@@ -18,7 +18,7 @@
 				{"name":"answerId","type":"uint32"}
 			],
 			"outputs": [
-				{"name":"round_num","type":"uint128"},
+				{"name":"round_num","type":"uint32"},
 				{"name":"sol_keys","type":"uint256[]"},
 				{"name":"round_end","type":"uint32"}
 			]

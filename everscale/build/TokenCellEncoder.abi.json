@@ -26,7 +26,8 @@
 		{
 			"name": "encodeSolanaBurnPayload",
 			"inputs": [
-				{"name":"solanaAddress","type":"uint256"}
+				{"name":"solanaOwnerAddress","type":"uint256"},
+				{"name":"solanaTokenWalletAddress","type":"uint256"}
 			],
 			"outputs": [
 				{"name":"data","type":"cell"}
@@ -38,7 +39,8 @@
 				{"name":"data","type":"cell"}
 			],
 			"outputs": [
-				{"name":"solanaAddress","type":"uint256"}
+				{"name":"solanaOwnerAddress","type":"uint256"},
+				{"name":"solanaTokenWalletAddress","type":"uint256"}
 			]
 		},
 		{

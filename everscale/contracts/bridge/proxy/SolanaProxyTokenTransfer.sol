@@ -64,21 +64,18 @@ ISolanaProxyTokenTransferConfigurable,
         require(config.tokenRoot.value != 0, ErrorCodes.PROXY_TOKEN_ROOT_IS_EMPTY);
 
         (
-            uint128 tokens,
-            int8 wid,
-            uint256 owner_addr
+            uint64 tokens,
+            address owner_addr
         ) = decodeSolanaEverscaleEventData(eventData.voteData.eventData);
 
-        address owner_address = address.makeAddrStd(wid, owner_addr);
-
         require(tokens > 0, ErrorCodes.WRONG_TOKENS_AMOUNT_IN_PAYLOAD);
-        require(owner_address.value != 0, ErrorCodes.WRONG_OWNER_IN_PAYLOAD);
+        require(owner_addr.value != 0, ErrorCodes.WRONG_OWNER_IN_PAYLOAD);
 
         TvmCell empty;
 
         ITokenRoot(config.tokenRoot).mint{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-            tokens,
-            owner_address,
+            uint128(tokens),
+            owner_addr,
             config.settingsDeployWalletGrams,
             gasBackAddress,
             true,
@@ -124,21 +121,18 @@ ISolanaProxyTokenTransferConfigurable,
         if (config.tokenRoot == msg.sender) {
             burnedCount += tokens;
 
-            uint256 solanaAddress = payload.toSlice().decode(uint256);
+            (
+            uint256 solanaOwnerAddress,
+            uint256 solanaTokenWalletAddress
+            ) = payload.toSlice().decode(uint256, uint256);
 
-//            emit Withdraw(
-//                remainingGasTo.wid,
-//                remainingGasTo.value,
-//                tokens,
-//                solanaAddress,
-//                chainId
-//            );
+            address senderAddress = address.makeAddrStd(remainingGasTo.wid, remainingGasTo.value);
 
             TvmCell eventData = encodeEverscaleSolanaEventData(
-                remainingGasTo.wid,
-                remainingGasTo.value,
-                tokens,
-                solanaAddress
+                senderAddress,
+                uint64(tokens),
+                solanaOwnerAddress,
+                solanaTokenWalletAddress
             );
 
             IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(tx.timestamp, eventData);

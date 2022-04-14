@@ -25,13 +25,14 @@ contract TokenCellEncoder {
     }
 
     function encodeSolanaBurnPayload(
-        uint256 solanaAddress
+        uint256 solanaOwnerAddress,
+        uint256 solanaTokenWalletAddress
     ) public pure returns(
         TvmCell data
     ) {
         TvmBuilder builder;
 
-        builder.store(solanaAddress);
+        builder.store(solanaOwnerAddress, solanaTokenWalletAddress);
 
         data = builder.toCell();
     }
@@ -39,8 +40,9 @@ contract TokenCellEncoder {
     function decodeSolanaBurnPayload(
         TvmCell data
     ) public pure returns(
-        uint256 solanaAddress
+        uint256 solanaOwnerAddress,
+        uint256 solanaTokenWalletAddress
     ) {
-        (solanaAddress) = data.toSlice().decode(uint160);
+        (solanaOwnerAddress, solanaTokenWalletAddress) = data.toSlice().decode(uint256, uint256);
     }
 }

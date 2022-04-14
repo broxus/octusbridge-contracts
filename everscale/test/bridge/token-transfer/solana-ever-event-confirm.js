@@ -87,12 +87,11 @@ describe('Test solana everscale event confirm', async function() {
   describe('Initialize event', async () => {
     eventDataStructure = {
       tokens: 100,
-      wid: 0,
-      owner_addr: 0,
+      owner_addr: locklift.utils.zeroAddress,
     };
 
     it('Setup event data', async () => {
-      eventDataStructure.owner_addr = initializer.address.replace('0:', '0x');
+      eventDataStructure.owner_addr = initializer.address;
 
       const eventData = await cellEncoder.call({
         method: 'encodeSolanaEverscaleEventData',
@@ -195,11 +194,8 @@ describe('Test solana everscale event confirm', async function() {
       expect(data.tokens)
         .to.be.bignumber.equal(eventDataStructure.tokens, 'Wrong amount of tokens');
 
-      expect(data.wid)
-        .to.be.bignumber.equal(eventDataStructure.wid, 'Wrong wid');
-
       expect(data.owner_addr)
-        .to.be.bignumber.equal(eventDataStructure.owner_addr, 'Wrong owner address');
+        .to.be.equal(eventDataStructure.owner_addr, 'Wrong owner address');
     });
   });
 

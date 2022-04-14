@@ -82,8 +82,7 @@ describe('Test solana everscale event reject', async function() {
   describe('Initialize event', async () => {
     const eventDataStructure = {
       tokens: 100,
-      wid: 0,
-      owner_addr: 111,
+      owner_addr: locklift.utils.zeroAddress,
     };
   
     it('Setup event data', async () => {

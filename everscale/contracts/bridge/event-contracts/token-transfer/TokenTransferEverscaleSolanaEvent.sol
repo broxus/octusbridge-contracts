@@ -54,41 +54,35 @@ contract TokenTransferEverscaleSolanaEvent is EverscaleSolanaBaseEvent, ProxyTok
     }
 
     function getOwner() private view returns(address) {
-        (,,,,address ownerAddress) = getDecodedData();
+        (address ownerAddress,,,) = getDecodedData();
         return ownerAddress;
     }
 
     /*
         @dev Get decoded event data
-        @returns rootToken Token root contract address
-        @returns wid Tokens sender address workchain ID
-        @returns addr Token sender address body
-        @returns tokens How much tokens to mint
-        @returns solana_address Token receiver solana address
-        @returns owner_address Token receiver address (derived from the wid and owner_addr)
+        @returns senderAddress Tokens sender address
+        @returns tokens How much tokens to burn
+        @returns solanaOwnerAddress Receiver solana address
+        @returns solanaTokenWalletAddress Receiver token wallet solana address
     */
     function getDecodedData() public view responsible returns (
-        int8 wid,
-        uint256 addr,
-        uint128 tokens,
-        uint256 solana_address,
-        address owner_address
+        address senderAddress,
+        uint64 tokens,
+        uint256 solanaOwnerAddress,
+        uint256 solanaTokenWalletAddress
     ) {
         (
-            wid,
-            addr,
+            senderAddress,
             tokens,
-            solana_address
+            solanaOwnerAddress,
+            solanaTokenWalletAddress
         ) = decodeEverscaleSolanaEventData(eventInitData.voteData.eventData);
 
-        owner_address = address.makeAddrStd(wid, addr);
-
         return {value: 0, flag: MsgFlag.REMAINING_GAS} (
-            wid,
-            addr,
+            senderAddress,
             tokens,
-            solana_address,
-            owner_address
+            solanaOwnerAddress,
+            solanaTokenWalletAddress
         );
     }
 
