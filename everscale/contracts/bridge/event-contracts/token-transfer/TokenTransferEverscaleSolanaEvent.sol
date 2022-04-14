@@ -11,7 +11,7 @@ import "./../../../utils/ErrorCodes.sol";
 import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 /*
-    @title Basic example of Everscale event configuration
+    @title Everscale Solana event
     @dev This implementation is used for cross chain token transfers
 */
 contract TokenTransferEverscaleSolanaEvent is EverscaleSolanaBaseEvent, ProxyTokenTransferCellEncoder {
@@ -64,7 +64,7 @@ contract TokenTransferEverscaleSolanaEvent is EverscaleSolanaBaseEvent, ProxyTok
         @returns wid Tokens sender address workchain ID
         @returns addr Token sender address body
         @returns tokens How much tokens to mint
-        @returns Solana_address Token receiver Solana address
+        @returns solana_address Token receiver solana address
         @returns owner_address Token receiver address (derived from the wid and owner_addr)
     */
     function getDecodedData() public view responsible returns (

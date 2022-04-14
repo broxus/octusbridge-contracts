@@ -33,7 +33,7 @@ contract StakingEverscaleSolanaEvent is EverscaleSolanaBaseEvent, StakingCellEnc
 
     function onReject() override internal {}
 
-    function getDecodedData() public view responsible returns (uint128 round_num, uint256[] sol_keys, uint32 round_end) {
+    function getDecodedData() public view responsible returns (uint32 round_num, uint256[] sol_keys, uint32 round_end) {
         (round_num, sol_keys, round_end) = decodeEverscaleSolanaStakingEventData(eventInitData.voteData.eventData);
 
         return {value: 0, flag: MsgFlag.REMAINING_GAS} (round_num, sol_keys, round_end);

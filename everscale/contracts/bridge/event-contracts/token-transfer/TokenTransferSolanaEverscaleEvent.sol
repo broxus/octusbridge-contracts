@@ -13,11 +13,8 @@ import "./../../../utils/cell-encoder/ProxyTokenTransferCellEncoder.sol";
 import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
-/// @title Basic example of Solana event configuration
-/// @dev Anyone can deploy it for specific event. Relays send their
-/// rejects / confirms with external message directly into this contract.
-/// In case enough confirmations is collected - callback is executed.
-/// This implementation is used for cross chain token transfers
+/// @title Solana Everscale event
+/// @dev This implementation is used for cross chain token transfers
 contract TokenTransferSolanaEverscaleEvent is SolanaEverscaleBaseEvent, ProxyTokenTransferCellEncoder {
     constructor(
         address _initializer,
