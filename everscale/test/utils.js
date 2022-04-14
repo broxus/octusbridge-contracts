@@ -588,7 +588,8 @@ const setupEverscaleSolanaEventConfiguration = async (owner, staking, cellEncode
       },
       networkConfiguration: {
         eventEmitter: proxyFutureAddress,
-        proxy:  new BigNumber(0),
+        program:  new BigNumber(0),
+        instruction: 0,
         startTimestamp: 0,
         endTimestamp: 0,
         manualDeploy: false,
@@ -955,7 +956,8 @@ const setupSolanaAlienMultiVault = async (owner, staking, cellEncoder) => {
       },
       networkConfiguration: {
         eventEmitter: proxy.address,
-        proxy: new BigNumber(0),
+        program:  new BigNumber(0),
+        instruction: 0,
         startTimestamp: 0,
         endTimestamp: 0,
         manualDeploy: false,
@@ -1075,7 +1077,8 @@ const setupSolanaNativeMultiVault = async (owner, staking) => {
       },
       networkConfiguration: {
         eventEmitter: proxy.address,
-        proxy: new BigNumber(0),
+        program:  new BigNumber(0),
+        instruction: 0,
         startTimestamp: 0,
         endTimestamp: 0,
         manualDeploy: false,

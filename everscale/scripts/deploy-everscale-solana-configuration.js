@@ -21,8 +21,9 @@ program
     .option('--eventContract <eventContract>', 'Event contract')
     .option('--meta <meta>', 'Configuration meta')
     .option('--eventEmitter <eventEmitter>', 'Event emitter address')
-    .option('--proxy <proxy>', 'Target proxy address')
+    .option('--program <program>', 'Target program address')
     .option('--manualDeploy <manualDeploy>', 'Manual event deploy')
+    .option('--instruction <instruction>', 'instruction number')
     .option('--startTimestamp <startTimestamp>', 'Start timestamp')
     .option('--initialBalance <initialBalance>', 'Configuration initial balance')
     .allowUnknownOption();
@@ -112,16 +113,22 @@ const main = async () => {
     },
     {
       type: 'text',
-      name: 'proxy',
-      message: 'Target address in Solana (proxy)',
+      name: 'program',
+      message: 'Target address in Solana (program)',
       validate: value => ethers.utils.isAddress(value) ? true : 'Invalid Solana address',
-      initial: options.proxy
+      initial: options.program
     },
     {
       type: 'number',
       name: 'startTimestamp',
       message: 'Start timestamp',
       initial: options.startTimestamp || Math.floor(Date.now() / 1000)
+    },
+    {
+      type: 'number',
+      name: 'instruction',
+      message: 'Solana instruction number',
+      initial: options.instruction || 0
     },
     {
       type: 'bool',
@@ -157,10 +164,11 @@ const main = async () => {
       },
       networkConfiguration: {
         eventEmitter: response.eventEmitter,
-        proxy: new BigNumber(response.proxy.toLowerCase()).toFixed(),
+        program: new BigNumber(response.program.toLowerCase()).toFixed(),
         startTimestamp: response.startTimestamp,
         endTimestamp: 0,
         manualDeploy: response.manualDeploy,
+        instruction: response.instruction,
       }
     },
     keyPair
