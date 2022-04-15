@@ -51,27 +51,31 @@ contract TokenTransferSolanaEverscaleEvent is SolanaEverscaleBaseEvent, ProxyTok
     }
 
     function getOwner() private view returns(address) {
-        (,address ownerAddress) = getDecodedData();
+        (,,address ownerAddress) = getDecodedData();
         return ownerAddress;
     }
 
     /*
         @dev Get decoded event data
+        @returns sender_addr Token sender address
         @returns tokens How much tokens to mint
-        @returns owner_addr Token receiver address
+        @returns receiver_addr Token receiver address
     */
     function getDecodedData() public view responsible returns (
+        uint256 sender_addr,
         uint64 tokens,
-        address owner_addr
+        address receiver_addr
     ) {
         (
+            sender_addr,
             tokens,
-            owner_addr
+            receiver_addr
         ) = decodeSolanaEverscaleEventData(eventInitData.voteData.eventData);
 
         return {value: 0, flag: MsgFlag.REMAINING_GAS} (
+            sender_addr,
             tokens,
-            owner_addr
+            receiver_addr
         );
     }
 

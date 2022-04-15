@@ -21,14 +21,15 @@ contract ProxyTokenTransferCellEncoder {
     }
 
     function encodeSolanaEverscaleEventData(
+        uint256 sender_addr,
         uint64 tokens,
-        address owner_addr
+        address receiver_addr
     ) public pure returns(
         TvmCell data
     ) {
         TvmBuilder builder;
 
-        builder.store(tokens, owner_addr);
+        builder.store(sender_addr, tokens, receiver_addr);
 
         data = builder.toCell();
     }
@@ -51,13 +52,15 @@ contract ProxyTokenTransferCellEncoder {
     function decodeSolanaEverscaleEventData(
         TvmCell data
     ) public pure returns(
+        uint256 sender_addr,
         uint64 tokens,
-        address owner_addr
+        address receiver_addr
     ) {
         (
+            sender_addr,
             tokens,
-            owner_addr
-        ) = data.toSlice().decode(uint64, address);
+            receiver_addr
+        ) = data.toSlice().decode(uint256, uint64, address);
     }
 
     function encodeEverscaleEthereumEventData(

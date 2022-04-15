@@ -64,12 +64,13 @@ contract SolanaProxyTokenTransfer is
         require(config.tokenRoot.value != 0, ErrorCodes.PROXY_TOKEN_ROOT_IS_EMPTY);
 
         (
+            uint256 sender_addr,
             uint64 tokens_solana,
-            address owner_addr
+            address receiver_addr
         ) = decodeSolanaEverscaleEventData(eventData.voteData.eventData);
 
         require(tokens_solana > 0, ErrorCodes.WRONG_TOKENS_AMOUNT_IN_PAYLOAD);
-        require(owner_addr.value != 0, ErrorCodes.WRONG_OWNER_IN_PAYLOAD);
+        require(receiver_addr.value != 0, ErrorCodes.WRONG_OWNER_IN_PAYLOAD);
 
         TvmCell empty;
 
@@ -85,7 +86,7 @@ contract SolanaProxyTokenTransfer is
 
         ITokenRoot(config.tokenRoot).mint{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
             tokens,
-            owner_addr,
+            receiver_addr,
             config.settingsDeployWalletGrams,
             gasBackAddress,
             true,
@@ -115,11 +116,11 @@ contract SolanaProxyTokenTransfer is
                 tokens = tokens / mul10;
             }
 
-            uint64 tokens = uint64(tokens);
+            uint64 tokens_solana = uint64(tokens);
 
             TvmCell eventData = encodeEverscaleSolanaEventData(
                 senderAddress,
-                tokens,
+                tokens_solana,
                 solanaOwnerAddress,
                 config.solanaTokenSymbol
             );

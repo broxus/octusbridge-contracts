@@ -118,8 +118,9 @@
 		{
 			"name": "encodeSolanaEverscaleEventData",
 			"inputs": [
+				{"name":"sender_addr","type":"uint256"},
 				{"name":"tokens","type":"uint64"},
-				{"name":"owner_addr","type":"address"}
+				{"name":"receiver_addr","type":"address"}
 			],
 			"outputs": [
 				{"name":"data","type":"cell"}
@@ -142,8 +143,9 @@
 				{"name":"data","type":"cell"}
 			],
 			"outputs": [
+				{"name":"sender_addr","type":"uint256"},
 				{"name":"tokens","type":"uint64"},
-				{"name":"owner_addr","type":"address"}
+				{"name":"receiver_addr","type":"address"}
 			]
 		},
 		{
