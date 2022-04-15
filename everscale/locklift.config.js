@@ -1,9 +1,9 @@
 module.exports = {
   compiler: {
-    path: '/usr/local/bin/solc-a222452',
+    path: '/usr/local/bin/solc-bbbbeca6',
   },
   linker: {
-    path: '/usr/local/bin/tvm_linker-48e815a',
+    path: '/usr/local/bin/tvm_linker-80e31a5',
   },
   networks: {
     local: {
