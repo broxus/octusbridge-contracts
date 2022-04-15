@@ -7,6 +7,8 @@ interface ISolanaProxyTokenTransferConfigurable {
         address solanaConfiguration;
 
         address tokenRoot;
+        uint8 solanaDecimals;
+        uint8 everscaleDecimals;
 
         uint128 settingsDeployWalletGrams;
     }

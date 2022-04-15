@@ -41,7 +41,7 @@ describe('Test Ethereum Native proxy upgrade', async function() {
             }
         });
 
-        logger.log(`Upgrade tx: ${tx.transaction.id}`);
+        logger.log(`Upgrade tx: ${tx.id}`);
 
         const configuration = await proxy.call({ method: 'getConfiguration' });
 

@@ -46,8 +46,7 @@ describe('Test everscale solana event confirm', async function() {
   
     [everscaleSolanaEventConfiguration, proxy, initializer] = await setupEverscaleSolanaEventConfiguration(
       bridgeOwner,
-      staking,
-      cellEncoder,
+      staking
     );
   
     metricManager = new MetricManager(

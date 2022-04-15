@@ -64,17 +64,27 @@ contract SolanaProxyTokenTransfer is
         require(config.tokenRoot.value != 0, ErrorCodes.PROXY_TOKEN_ROOT_IS_EMPTY);
 
         (
-            uint64 tokens,
+            uint64 tokens_solana,
             address owner_addr
         ) = decodeSolanaEverscaleEventData(eventData.voteData.eventData);
 
-        require(tokens > 0, ErrorCodes.WRONG_TOKENS_AMOUNT_IN_PAYLOAD);
+        require(tokens_solana > 0, ErrorCodes.WRONG_TOKENS_AMOUNT_IN_PAYLOAD);
         require(owner_addr.value != 0, ErrorCodes.WRONG_OWNER_IN_PAYLOAD);
 
         TvmCell empty;
 
+        uint128 tokens = uint128(tokens_solana);
+
+        if (config.solanaDecimals > config.everscaleDecimals) {
+            uint128 mul10 = uint128(10) ** uint128(config.solanaDecimals - config.everscaleDecimals);
+            tokens = tokens / mul10;
+        } else {
+            uint128 mul10 = uint128(10) ** uint128(config.everscaleDecimals - config.solanaDecimals);
+            tokens = tokens * mul10;
+        }
+
         ITokenRoot(config.tokenRoot).mint{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-            uint128(tokens),
+            tokens,
             owner_addr,
             config.settingsDeployWalletGrams,
             gasBackAddress,
@@ -100,9 +110,19 @@ contract SolanaProxyTokenTransfer is
 
             address senderAddress = address.makeAddrStd(remainingGasTo.wid, remainingGasTo.value);
 
+            if (config.solanaDecimals > config.everscaleDecimals) {
+                uint128 mul10 = uint128(10) ** uint128(config.solanaDecimals - config.everscaleDecimals);
+                tokens = tokens * mul10;
+            } else {
+                uint128 mul10 = uint128(10) ** uint128(config.everscaleDecimals - config.solanaDecimals);
+                tokens = tokens / mul10;
+            }
+
+            uint64 tokens = uint64(tokens);
+
             TvmCell eventData = encodeEverscaleSolanaEventData(
                 senderAddress,
-                uint64(tokens),
+                tokens,
                 solanaOwnerAddress,
                 solanaTokenWalletAddress
             );

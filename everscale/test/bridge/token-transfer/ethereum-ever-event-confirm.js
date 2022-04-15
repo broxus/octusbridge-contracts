@@ -118,7 +118,7 @@ describe('Test ethereum everscale event confirm', async function() {
         value: locklift.utils.convertCrystal(6, 'nano')
       });
 
-      logger.log(`Event initialization tx: ${tx.transaction.id}`);
+      logger.log(`Event initialization tx: ${tx.id}`);
 
       const expectedEventContract = await ethereumEverscaleEventConfiguration.call({
         method: 'deriveEventAddress',

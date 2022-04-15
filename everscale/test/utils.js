@@ -251,7 +251,7 @@ const setupEthereumEverscaleEventConfiguration = async (owner, staking, cellEnco
   return [ethereumEverscaleEventConfiguration, proxy, initializer];
 };
 
-const setupSolanaEverscaleEventConfiguration = async (owner, staking, cellEncoder) => {
+const setupSolanaEverscaleEventConfiguration = async (owner, staking, solanaDecimals = 9, everscaleDecimals = 9) => {
   const [keyPair] = await locklift.keys.getKeyPairs();
 
   const configurationMeta = '';
@@ -276,7 +276,8 @@ const setupSolanaEverscaleEventConfiguration = async (owner, staking, cellEncode
   const [tokenRoot, wallet] = await setupTokenRootWithWallet(
     proxyFutureAddress,
     owner.address,
-    locklift.utils.convertCrystal('100', 'nano')
+    locklift.utils.convertCrystal('100', 'nano'),
+    everscaleDecimals
   );
 
   const SolanaEverscaleEventConfiguration = await locklift.factory.getContract('SolanaEverscaleEventConfiguration');
@@ -322,6 +323,8 @@ const setupSolanaEverscaleEventConfiguration = async (owner, staking, cellEncode
   const proxyConfiguration = {
     everConfiguration:  locklift.utils.zeroAddress,
     solanaConfiguration: solanaEverscaleEventConfiguration.address,
+    solanaDecimals: solanaDecimals,
+    everscaleDecimals: everscaleDecimals,
     tokenRoot: tokenRoot.address,
     settingsDeployWalletGrams: locklift.utils.convertCrystal(0.1, 'nano')
   }
@@ -356,7 +359,7 @@ const setupSolanaEverscaleEventConfiguration = async (owner, staking, cellEncode
   return [solanaEverscaleEventConfiguration, proxy, initializer];
 };
 
-const setupTokenRootWithWallet = async (rootOwner, walletOwner, mintAmount) => {
+const setupTokenRootWithWallet = async (rootOwner, walletOwner, mintAmount, decimals = 9) => {
   const RootToken = await locklift.factory.getContract('TokenRoot', TOKEN_PATH);
   const tokenWallet = await locklift.factory.getContract('TokenWallet', TOKEN_PATH);
   const [keyPair] = await locklift.keys.getKeyPairs();
@@ -378,7 +381,7 @@ const setupTokenRootWithWallet = async (rootOwner, walletOwner, mintAmount) => {
       rootOwner_: rootOwner,
       name_: Buffer.from('Token').toString('hex'),
       symbol_: Buffer.from('TKN').toString('hex'),
-      decimals_: 9,
+      decimals_: decimals,
       walletCode_: tokenWallet.code,
     },
     keyPair,
@@ -516,7 +519,7 @@ const setupEverscaleEthereumEventConfiguration = async (owner, staking, cellEnco
   return [everscaleEthereumEventConfiguration, proxy, initializer];
 };
 
-const setupEverscaleSolanaEventConfiguration = async (owner, staking, cellEncoder) => {
+const setupEverscaleSolanaEventConfiguration = async (owner, staking, solanaDecimals = 9, everscaleDecimals = 9) => {
   const EverscaleSolanaEventConfiguration = await locklift.factory.getContract('EverscaleSolanaEventConfiguration');
   const EverEvent = await locklift.factory.getContract('TokenTransferEverscaleSolanaEvent');
 
@@ -558,7 +561,8 @@ const setupEverscaleSolanaEventConfiguration = async (owner, staking, cellEncode
   const [tokenRoot, initializerWallet] = await setupTokenRootWithWallet(
     initializer.address,
     initializer.address,
-    locklift.utils.convertCrystal('1000', 'nano')
+    locklift.utils.convertCrystal('1000', 'nano'),
+    everscaleDecimals
   );
 
   await initializer.runTarget({
@@ -615,6 +619,8 @@ const setupEverscaleSolanaEventConfiguration = async (owner, staking, cellEncode
   const proxyConfiguration = {
     everConfiguration: everscaleSolanaEventConfiguration.address,
     solanaConfiguration: locklift.utils.zeroAddress,
+    solanaDecimals: solanaDecimals,
+    everscaleDecimals: everscaleDecimals,
     tokenRoot: tokenRoot.address,
     rootTunnel: tokenRoot.address,
     settingsDeployWalletGrams: locklift.utils.convertCrystal(0.1, 'nano')
@@ -1135,7 +1141,7 @@ const extractTonEventAddress = async (tx) => {
   const result = await locklift.ton.client.net.query_collection({
     collection: 'messages',
     filter: {
-      id: {eq: tx.transaction.out_msgs[0]},
+      id: {eq: tx.out_msgs[0]},
     },
     result: 'dst_transaction{out_messages{' +
       'dst_transaction{out_messages{' +

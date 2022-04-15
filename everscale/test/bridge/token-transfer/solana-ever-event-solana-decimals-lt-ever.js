@@ -13,7 +13,7 @@ const {
 } = require('../../utils');
 
 
-describe('Test solana everscale event confirm', async function() {
+describe('Test solana everscale event solana decimals lt ever', async function() {
   this.timeout(10000000);
   
   let bridge, bridgeOwner, staking, cellEncoder;
@@ -46,7 +46,9 @@ describe('Test solana everscale event confirm', async function() {
   
     [solanaEverscaleEventConfiguration, proxy, initializer] = await setupSolanaEverscaleEventConfiguration(
       bridgeOwner,
-      staking
+      staking,
+        3,
+        9
     );
 
     initializerTokenWallet = await getTokenWalletByAddress(initializer.address, await proxy.call({method: 'getTokenRoot'}));
@@ -85,7 +87,7 @@ describe('Test solana everscale event confirm', async function() {
   
   describe('Initialize event', async () => {
     eventDataStructure = {
-      tokens: 100,
+      tokens: 100000000,
       owner_addr: locklift.utils.zeroAddress,
     };
 
@@ -243,7 +245,7 @@ describe('Test solana everscale event confirm', async function() {
 
     it('Check event proxy minted tokens', async () => {
       expect(await initializerTokenWallet.call({method: 'balance'}))
-        .to.be.bignumber.equal(eventDataStructure.tokens, 'Wrong initializerTokenWallet balance');
+        .to.be.bignumber.equal(eventDataStructure.tokens / 1000000, 'Wrong initializerTokenWallet balance');
     });
   });
 

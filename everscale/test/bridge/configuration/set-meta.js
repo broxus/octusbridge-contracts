@@ -86,8 +86,7 @@ describe('Test setting configuration meta', async function() {
     it('Setup Solana Everscale event configuration', async () => {
       [solanaEverscaleEventConfiguration, proxy] = await setupSolanaEverscaleEventConfiguration(
         bridgeOwner,
-        bridge,
-        cellEncoder,
+        bridge
       );
     });
 
@@ -116,7 +115,6 @@ describe('Test setting configuration meta', async function() {
       [everscaleSolanaEventConfiguration] = await setupEverscaleSolanaEventConfiguration(
         bridgeOwner,
         bridge,
-        cellEncoder,
       );
     });
 

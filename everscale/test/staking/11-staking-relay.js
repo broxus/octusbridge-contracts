@@ -757,7 +757,7 @@ describe.skip('Test Staking Relay mechanic', async function () {
                 const user1_pk = new BigNumber(user1.keyPair.public, 16);
                 const expected_ton_pubkey1 = `0x${user1_pk.toString(16)}`;
                 const user1_eth = new BigNumber(user1_eth_addr.toLowerCase(), 16);
-                const block_now = tx.transaction.now + 30 * 24 * 60 * 60;
+                const block_now = tx.now + 30 * 24 * 60 * 60;
 
                 expect(_round_num1.toString()).to.be.equal('1', 'Bad event - round num');
                 expect(_tokens1.toString()).to.be.equal(user1_token_balance.toString(), "Bad event - tokens");
@@ -1059,7 +1059,7 @@ describe.skip('Test Staking Relay mechanic', async function () {
                 const user1_pk = new BigNumber(user1.keyPair.public, 16);
                 const expected_ton_pubkey1 = `0x${user1_pk.toString(16).padStart(64, '0')}`;
                 const user1_eth = new BigNumber(user1_eth_addr.toLowerCase(), 16);
-                const block_now = tx.transaction.now + 30 * 24 * 60 * 60;
+                const block_now = tx.now + 30 * 24 * 60 * 60;
 
                 expect(_round_num1.toString()).to.be.equal('2', 'Bad event - round num');
                 expect(_tokens1.toString()).to.be.equal(user1_token_balance.toString(), "Bad event - tokens");

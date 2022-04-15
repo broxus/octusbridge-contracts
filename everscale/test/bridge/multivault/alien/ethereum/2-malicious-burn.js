@@ -53,7 +53,7 @@ describe('Test event contract behaviour when Alien token is incorrect', async fu
                 value: locklift.utils.convertCrystal(10, 'nano')
             });
 
-            logger.log(`Burn tx: ${tx.transaction.id}`);
+            logger.log(`Burn tx: ${tx.id}`);
 
             const events = await everscaleConfiguration.getEvents('NewEventContract');
 

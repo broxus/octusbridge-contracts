@@ -13,7 +13,7 @@ const {
 } = require('../../utils');
 
 
-describe('Test solana everscale event confirm', async function() {
+describe('Test solana everscale event solana decimals gt ever', async function() {
   this.timeout(10000000);
   
   let bridge, bridgeOwner, staking, cellEncoder;
@@ -46,7 +46,9 @@ describe('Test solana everscale event confirm', async function() {
   
     [solanaEverscaleEventConfiguration, proxy, initializer] = await setupSolanaEverscaleEventConfiguration(
       bridgeOwner,
-      staking
+      staking,
+        9,
+        3
     );
 
     initializerTokenWallet = await getTokenWalletByAddress(initializer.address, await proxy.call({method: 'getTokenRoot'}));
@@ -228,9 +230,6 @@ describe('Test solana everscale event confirm', async function() {
         method: 'requiredVotes',
       });
 
-      // expect(details.balance)
-      //   .to.be.bignumber.equal(0, 'Wrong balance');
-
       expect(details._status)
         .to.be.bignumber.equal(2, 'Wrong status');
 
@@ -242,8 +241,10 @@ describe('Test solana everscale event confirm', async function() {
     });
 
     it('Check event proxy minted tokens', async () => {
-      expect(await initializerTokenWallet.call({method: 'balance'}))
-        .to.be.bignumber.equal(eventDataStructure.tokens, 'Wrong initializerTokenWallet balance');
+      let balance = await initializerTokenWallet.call({method: 'balance'});
+      console.log(balance);
+      expect(balance)
+        .to.be.bignumber.equal(eventDataStructure.tokens * 1000000, 'Wrong initializerTokenWallet balance');
     });
   });
 

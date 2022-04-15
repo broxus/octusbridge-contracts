@@ -43,8 +43,7 @@ describe('Test solana everscale event reject', async function() {
   
     [solanaEverscaleEventConfiguration, proxy, initializer] = await setupSolanaEverscaleEventConfiguration(
       bridgeOwner,
-      staking,
-      cellEncoder,
+      staking
     );
     
     metricManager = new MetricManager(
@@ -107,7 +106,7 @@ describe('Test solana everscale event reject', async function() {
         value: locklift.utils.convertCrystal(3, 'nano')
       });
     
-      logger.log(`Event initialization tx: ${tx.transaction.id}`);
+      logger.log(`Event initialization tx: ${tx.id}`);
   
       const expectedEventContract = await solanaEverscaleEventConfiguration.call({
         method: 'deriveEventAddress',

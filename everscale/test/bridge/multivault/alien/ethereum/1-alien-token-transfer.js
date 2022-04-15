@@ -96,7 +96,7 @@ describe('Test EVM alien multivault pipeline', async function() {
                 value: locklift.utils.convertCrystal(6, 'nano')
             });
 
-            logger.log(`Event initialization tx: ${tx.transaction.id}`);
+            logger.log(`Event initialization tx: ${tx.id}`);
 
             const expectedEventContract = await evmConfiguration.call({
                 method: 'deriveEventAddress',
@@ -184,7 +184,7 @@ describe('Test EVM alien multivault pipeline', async function() {
                 value: locklift.utils.convertCrystal(6, 'nano')
             });
 
-            logger.log(`Token deployment tx: ${tx.transaction.id}`);
+            logger.log(`Token deployment tx: ${tx.id}`);
 
             const tokenAddress = await proxy.call({
                 method: 'deriveAlienTokenRoot',
@@ -355,7 +355,7 @@ describe('Test EVM alien multivault pipeline', async function() {
                 value: locklift.utils.convertCrystal(10, 'nano')
             });
 
-            logger.log(`Event initialization tx: ${tx.transaction.id}`);
+            logger.log(`Event initialization tx: ${tx.id}`);
 
             const events = await everscaleConfiguration.getEvents('NewEventContract');
 

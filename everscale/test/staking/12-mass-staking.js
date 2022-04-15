@@ -636,7 +636,7 @@ describe.skip('Staking highload relay test', async function () {
                     params: input_params,
                     value: convertCrystal(6, 'nano')
                 });
-                console.log(tx.transaction.out_msgs);
+                console.log(tx.out_msgs);
                 const event = await waitForStakingEvent('RelayRoundInitialized');
 
                 const round = await getRelayRound(1);
@@ -759,7 +759,7 @@ describe.skip('Staking highload relay test', async function () {
 
             it("Election on new round starts", async function () {
                 const tx = await startElection(users[0]);
-                console.log(tx.transaction.out_msgs);
+                console.log(tx.out_msgs);
                 const event = await waitForStakingEvent('ElectionStarted');
 
                 const election = await getElection(2);
@@ -816,7 +816,7 @@ describe.skip('Staking highload relay test', async function () {
 
                     const expected_ton_pubkey = `0x${user_pk.toString(16).padStart(64, '0')}`;
                     const expected_eth_addr = `0x${user_eth_addr.toString(16).padStart(64, '0')}`
-                    const block_now = tx.transaction.now + 30 * 24 * 60 * 60;
+                    const block_now = tx.now + 30 * 24 * 60 * 60;
 
                     expect(_round_num.toString()).to.be.equal('2', 'Bad event - round num');
                     expect(_tokens.toString()).to.be.equal(user_token_balance.toString(), "Bad event - tokens");
@@ -846,7 +846,7 @@ describe.skip('Staking highload relay test', async function () {
                 const reward_rounds = await stakingRoot.call({method: 'rewardRounds'});
 
                 const tx = await endElection(users[3]);
-                console.log(tx.transaction.out_msgs);
+                console.log(tx.out_msgs);
                 const init_event = await waitForStakingEvent('RelayRoundInitialized');
                 const elect_event = await waitForStakingEvent('ElectionEnded');
 
@@ -941,7 +941,7 @@ describe.skip('Staking highload relay test', async function () {
                 await wait(TIME_BEFORE_ELECTION * 1000);
 
                 const tx = await startElection(users[1]);
-                console.log(tx.transaction.out_msgs);
+                console.log(tx.out_msgs);
                 const event = await waitForStakingEvent('ElectionStarted');
 
                 const election = await getElection(3);
@@ -995,7 +995,7 @@ describe.skip('Staking highload relay test', async function () {
                 const user_pk = new BigNumber(user.keyPair.public, 16);
                 const expected_ton_pubkey1 = `0x${user_pk.toString(16).padStart(64, '0')}`;
                 const user_eth = new BigNumber(user_eth_addr.toLowerCase(), 16);
-                const block_now = tx.transaction.now + 30 * 24 * 60 * 60;
+                const block_now = tx.now + 30 * 24 * 60 * 60;
 
                 const expected_eth_addr = `0x${user_eth.toString(16).padStart(64, '0')}`
                 expect(_round_num1.toString()).to.be.equal('3', 'Bad event - round num');
@@ -1011,7 +1011,7 @@ describe.skip('Staking highload relay test', async function () {
                 const reward_rounds = await stakingRoot.call({method: 'rewardRounds'});
 
                 const tx = await endElection(users[2]);
-                console.log(tx.transaction.out_msgs);
+                console.log(tx.out_msgs);
                 const init_event = await waitForStakingEvent('RelayRoundInitialized');
                 const elect_event = await waitForStakingEvent('ElectionEnded');
 
