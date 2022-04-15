@@ -27,10 +27,10 @@ import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
 /// `onEventConfirmed` callback from the corresponding SolanaEverscaleEventConfiguration. Then it mints
 /// the specified amount of tokens to the user.
 /// In case of Everscale-Solana token transfer, this proxy should receive burn callback from the token
-/// and deploy event. This event will be signed by relays so it can be sent to the corresponding EVM Vault.
+/// and deploy event. This event will be signed by relays so it can be sent to the corresponding Solana Program.
 contract SolanaProxyTokenTransfer is
     ISolanaEverscaleProxy,
-ISolanaProxyTokenTransferConfigurable,
+    ISolanaProxyTokenTransferConfigurable,
     IAcceptTokensBurnCallback,
     RandomNonce,
     ProxyTokenTransferCellEncoder,
@@ -83,34 +83,6 @@ ISolanaProxyTokenTransferConfigurable,
         );
     }
 
-    // Legacy token migration
-    fallback() external {
-        tvm.rawReserve(address(this).balance - msg.value, 2);
-        TvmSlice bodySlice = msg.data;
-        uint32 functionId = bodySlice.decode(uint32);
-        require(functionId == tvm.functionId(ILegacyBurnTokensCallback.burnCallback), ErrorCodes.NOT_LEGACY_BURN);
-        (uint128 tokens, uint256 sender_public_key, address sender_address, address wallet_address)
-            = bodySlice.decode(uint128, uint256, address, address);
-        TvmCell payload = bodySlice.loadRef();
-        bodySlice = bodySlice.loadRefAsSlice();
-        address send_gas_to = bodySlice.decode(address);
-
-        if (isArrayContainsAddress(config.outdatedTokenRoots, msg.sender)) {
-            TvmCell empty;
-
-            ITokenRoot(config.tokenRoot).mint{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-                tokens,
-                sender_address,
-                config.settingsDeployWalletGrams,
-                send_gas_to,
-                true,
-                payload
-            );
-        } else {
-            send_gas_to.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED});
-        }
-    }
-
     function onAcceptTokensBurn(
         uint128 tokens,
         address walletOwner,
@@ -142,20 +114,7 @@ ISolanaProxyTokenTransferConfigurable,
                 flag: MsgFlag.ALL_NOT_RESERVED
             }(eventVoteData);
         } else {
-            if (isArrayContainsAddress(config.outdatedTokenRoots, msg.sender)) {
-                TvmCell empty;
-
-                ITokenRoot(config.tokenRoot).mint{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
-                    tokens,
-                    walletOwner,
-                    config.settingsDeployWalletGrams,
-                    remainingGasTo,
-                    true,
-                    empty
-                );
-            } else {
-                remainingGasTo.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED});
-            }
+            remainingGasTo.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED});
         }
     }
 

@@ -5,7 +5,6 @@ interface ISolanaProxyTokenTransferConfigurable {
     struct Configuration {
         address everConfiguration;
         address solanaConfiguration;
-        address[] outdatedTokenRoots;
 
         address tokenRoot;
 

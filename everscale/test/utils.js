@@ -322,7 +322,6 @@ const setupSolanaEverscaleEventConfiguration = async (owner, staking, cellEncode
   const proxyConfiguration = {
     everConfiguration:  locklift.utils.zeroAddress,
     solanaConfiguration: solanaEverscaleEventConfiguration.address,
-    outdatedTokenRoots: [],
     tokenRoot: tokenRoot.address,
     settingsDeployWalletGrams: locklift.utils.convertCrystal(0.1, 'nano')
   }
@@ -616,7 +615,6 @@ const setupEverscaleSolanaEventConfiguration = async (owner, staking, cellEncode
   const proxyConfiguration = {
     everConfiguration: everscaleSolanaEventConfiguration.address,
     solanaConfiguration: locklift.utils.zeroAddress,
-    outdatedTokenRoots: [],
     tokenRoot: tokenRoot.address,
     rootTunnel: tokenRoot.address,
     settingsDeployWalletGrams: locklift.utils.convertCrystal(0.1, 'nano')
