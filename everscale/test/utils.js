@@ -326,6 +326,7 @@ const setupSolanaEverscaleEventConfiguration = async (owner, staking, solanaDeci
     solanaDecimals: solanaDecimals,
     everscaleDecimals: everscaleDecimals,
     tokenRoot: tokenRoot.address,
+    solanaTokenSymbol: 'TKN',
     settingsDeployWalletGrams: locklift.utils.convertCrystal(0.1, 'nano')
   }
 
@@ -622,6 +623,7 @@ const setupEverscaleSolanaEventConfiguration = async (owner, staking, solanaDeci
     solanaDecimals: solanaDecimals,
     everscaleDecimals: everscaleDecimals,
     tokenRoot: tokenRoot.address,
+    solanaTokenSymbol: 'TKN',
     rootTunnel: tokenRoot.address,
     settingsDeployWalletGrams: locklift.utils.convertCrystal(0.1, 'nano')
   }

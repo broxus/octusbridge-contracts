@@ -7,6 +7,7 @@ interface ISolanaProxyTokenTransferConfigurable {
         address solanaConfiguration;
 
         address tokenRoot;
+        string solanaTokenSymbol;
         uint8 solanaDecimals;
         uint8 everscaleDecimals;
 

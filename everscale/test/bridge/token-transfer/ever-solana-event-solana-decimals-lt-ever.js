@@ -87,8 +87,7 @@ describe('Test everscale solana event solana decimals lt ever', async function()
     everEventValue = 444000000;
 
     everEventParams = {
-      solanaOwnerAddress: 222,
-      solanaTokenSymbol: 'TKN',
+      solanaOwnerAddress: 222
     };
 
     it('Setup event data', async () => {
@@ -194,9 +193,6 @@ describe('Test everscale solana event solana decimals lt ever', async function()
 
       expect(data.solanaOwnerAddress)
         .to.be.bignumber.equal(everEventParams.solanaOwnerAddress, 'Wrong solana owner address');
-
-      expect(data.solanaTokenSymbol)
-        .to.be.equal(everEventParams.solanaTokenSymbol, 'Wrong solana token symbol');
 
     });
   });
