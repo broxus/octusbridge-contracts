@@ -86,7 +86,7 @@ describe('Test everscale solana event confirm', async function() {
 
     everEventParams = {
       solanaOwnerAddress: 222,
-      solanaTokenWalletAddress: 333,
+      solanaTokenSymbol: 'TKN',
     };
 
     it('Setup event data', async () => {
@@ -193,8 +193,8 @@ describe('Test everscale solana event confirm', async function() {
       expect(data.solanaOwnerAddress)
         .to.be.bignumber.equal(everEventParams.solanaOwnerAddress, 'Wrong solana owner address');
 
-      expect(data.solanaTokenWalletAddress)
-        .to.be.bignumber.equal(everEventParams.solanaTokenWalletAddress, 'Wrong solana token wallet address');
+      expect(data.solanaTokenSymbol)
+        .to.be.equal(everEventParams.solanaTokenSymbol, 'Wrong solana token symbol');
 
     });
   });

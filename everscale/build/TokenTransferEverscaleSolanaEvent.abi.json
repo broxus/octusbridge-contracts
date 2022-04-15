@@ -28,7 +28,7 @@
 				{"name":"senderAddress","type":"address"},
 				{"name":"tokens","type":"uint64"},
 				{"name":"solanaOwnerAddress","type":"uint256"},
-				{"name":"solanaTokenWalletAddress","type":"uint256"}
+				{"name":"solanaTokenSymbol","type":"string"}
 			]
 		},
 		{
@@ -92,7 +92,7 @@
 				{"name":"senderAddress","type":"address"},
 				{"name":"tokens","type":"uint64"},
 				{"name":"solanaOwnerAddress","type":"uint256"},
-				{"name":"solanaTokenWalletAddress","type":"uint256"}
+				{"name":"solanaTokenSymbol","type":"string"}
 			],
 			"outputs": [
 				{"name":"data","type":"cell"}
@@ -120,7 +120,7 @@
 				{"name":"senderAddress","type":"address"},
 				{"name":"tokens","type":"uint64"},
 				{"name":"solanaOwnerAddress","type":"uint256"},
-				{"name":"solanaTokenWalletAddress","type":"uint256"}
+				{"name":"solanaTokenSymbol","type":"string"}
 			]
 		},
 		{

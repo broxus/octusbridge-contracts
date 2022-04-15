@@ -80,13 +80,13 @@ contract ProxyTokenTransferCellEncoder {
         address senderAddress,
         uint64 tokens,
         uint256 solanaOwnerAddress,
-        uint256 solanaTokenWalletAddress
+        string solanaTokenSymbol
     ) public pure returns(
         TvmCell data
     ) {
         TvmBuilder builder;
 
-        builder.store(senderAddress, tokens, solanaOwnerAddress, solanaTokenWalletAddress);
+        builder.store(senderAddress, tokens, solanaOwnerAddress, solanaTokenSymbol);
 
         data = builder.toCell();
     }
@@ -115,13 +115,13 @@ contract ProxyTokenTransferCellEncoder {
         address senderAddress,
         uint64 tokens,
         uint256 solanaOwnerAddress,
-        uint256 solanaTokenWalletAddress
+        string solanaTokenSymbol
     ) {
         (
             senderAddress,
             tokens,
             solanaOwnerAddress,
-            solanaTokenWalletAddress
-        ) = data.toSlice().decode(address, uint64, uint256, uint256);
+            solanaTokenSymbol
+        ) = data.toSlice().decode(address, uint64, uint256, string);
     }
 }

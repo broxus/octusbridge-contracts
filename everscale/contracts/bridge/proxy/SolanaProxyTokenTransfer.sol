@@ -105,8 +105,8 @@ contract SolanaProxyTokenTransfer is
 
             (
             uint256 solanaOwnerAddress,
-            uint256 solanaTokenWalletAddress
-            ) = payload.toSlice().decode(uint256, uint256);
+            string solanaTokenSymbol
+            ) = payload.toSlice().decode(uint256, string);
 
             address senderAddress = address.makeAddrStd(remainingGasTo.wid, remainingGasTo.value);
 
@@ -124,7 +124,7 @@ contract SolanaProxyTokenTransfer is
                 senderAddress,
                 tokens,
                 solanaOwnerAddress,
-                solanaTokenWalletAddress
+                solanaTokenSymbol
             );
 
             IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(tx.timestamp, eventData);

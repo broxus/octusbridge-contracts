@@ -63,26 +63,26 @@ contract TokenTransferEverscaleSolanaEvent is EverscaleSolanaBaseEvent, ProxyTok
         @returns senderAddress Tokens sender address
         @returns tokens How much tokens to burn
         @returns solanaOwnerAddress Receiver solana address
-        @returns solanaTokenWalletAddress Receiver token wallet solana address
+        @returns solanaTokenSymbol Receiver solana token symbol
     */
     function getDecodedData() public view responsible returns (
         address senderAddress,
         uint64 tokens,
         uint256 solanaOwnerAddress,
-        uint256 solanaTokenWalletAddress
+        string solanaTokenSymbol
     ) {
         (
             senderAddress,
             tokens,
             solanaOwnerAddress,
-            solanaTokenWalletAddress
+            solanaTokenSymbol
         ) = decodeEverscaleSolanaEventData(eventInitData.voteData.eventData);
 
         return {value: 0, flag: MsgFlag.REMAINING_GAS} (
             senderAddress,
             tokens,
             solanaOwnerAddress,
-            solanaTokenWalletAddress
+            solanaTokenSymbol
         );
     }
 
