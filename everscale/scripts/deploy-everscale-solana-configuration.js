@@ -22,7 +22,6 @@ program
     .option('--meta <meta>', 'Configuration meta')
     .option('--eventEmitter <eventEmitter>', 'Event emitter address')
     .option('--program <program>', 'Target program address')
-    .option('--manualDeploy <manualDeploy>', 'Manual event deploy')
     .option('--instruction <instruction>', 'instruction number')
     .option('--startTimestamp <startTimestamp>', 'Start timestamp')
     .option('--initialBalance <initialBalance>', 'Configuration initial balance')
@@ -131,12 +130,6 @@ const main = async () => {
       initial: options.instruction || 0
     },
     {
-      type: 'bool',
-      name: 'manualDeploy',
-      message: 'Manual deploy',
-      initial: options.manualDeploy || false
-    },
-    {
       type: 'number',
       name: 'value',
       message: 'Configuration initial balance (in TONs)',
@@ -167,7 +160,6 @@ const main = async () => {
         program: new BigNumber(response.program.toLowerCase()).toFixed(),
         startTimestamp: response.startTimestamp,
         endTimestamp: 0,
-        manualDeploy: response.manualDeploy,
         instruction: response.instruction,
       }
     },

@@ -596,7 +596,6 @@ const setupEverscaleSolanaEventConfiguration = async (owner, staking, solanaDeci
         instruction: 0,
         startTimestamp: 0,
         endTimestamp: 0,
-        manualDeploy: false,
       }
     },
     keyPair
@@ -966,7 +965,6 @@ const setupSolanaAlienMultiVault = async (owner, staking, cellEncoder) => {
         instruction: 0,
         startTimestamp: 0,
         endTimestamp: 0,
-        manualDeploy: false,
       }
     },
     keyPair
@@ -1087,7 +1085,6 @@ const setupSolanaNativeMultiVault = async (owner, staking) => {
         instruction: 0,
         startTimestamp: 0,
         endTimestamp: 0,
-        manualDeploy: false,
       }
     },
     keyPair

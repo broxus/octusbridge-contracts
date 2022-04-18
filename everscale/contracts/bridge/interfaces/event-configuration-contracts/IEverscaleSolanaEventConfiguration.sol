@@ -11,7 +11,6 @@ interface IEverscaleSolanaEventConfiguration is IBasicEventConfiguration {
         uint32 instruction;
         uint32 startTimestamp;
         uint32 endTimestamp;
-        bool manualDeploy;
     }
 
     function deployEvent(
