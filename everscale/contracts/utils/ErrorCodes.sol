@@ -110,5 +110,6 @@ library ErrorCodes {
     uint16 constant WRONG_OWNER_IN_PAYLOAD = 2705;
     uint16 constant NOT_LEGACY_BURN = 2706;
     uint16 constant NOT_SOLANA_CONFIG = 2707;
+    uint16 constant WRONG_TOKEN_ROOT = 2708;
 
 }

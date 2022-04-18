@@ -7,7 +7,7 @@ const {
   captureConnectors,
   afterRun,
   logger,
-  expect,
+  expect, getTokenRoot,
 } = require('../../utils');
 
 
@@ -77,15 +77,23 @@ describe('Test solana everscale event reject', async function() {
   });
   
   let eventContract, eventVoteData;
-  
+
   describe('Initialize event', async () => {
-    const eventDataStructure = {
-      sender_addr: 123,
-      tokens: 100,
-      receiver_addr: locklift.utils.zeroAddress,
-    };
-  
     it('Setup event data', async () => {
+      token_root = await getTokenRoot(await proxy.call({
+        method: 'getTokenRoot'
+      }));
+    });
+
+    it('Setup event data', async () => {
+
+      eventDataStructure = {
+        sender_addr: 123,
+        tokens: 100,
+        receiver_addr: initializer.address,
+        token_root: token_root.address,
+      };
+
       const eventData = await cellEncoder.call({
         method: 'encodeSolanaEverscaleEventData',
         params: eventDataStructure

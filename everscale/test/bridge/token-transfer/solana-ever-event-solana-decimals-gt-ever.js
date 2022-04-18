@@ -86,14 +86,21 @@ describe('Test solana everscale event solana decimals gt ever', async function()
   let eventContract, eventVoteData, eventDataStructure;
   
   describe('Initialize event', async () => {
-    eventDataStructure = {
-      sender_addr: 123,
-      tokens: 100,
-      receiver_addr: locklift.utils.zeroAddress,
-    };
+    it('Setup event data', async () => {
+      token_root = await getTokenRoot(await proxy.call({
+        method: 'getTokenRoot'
+      }));
+    });
 
     it('Setup event data', async () => {
-      eventDataStructure.receiver_addr = initializer.address;
+
+      eventDataStructure = {
+        sender_addr: 123,
+        tokens: 100,
+        receiver_addr: initializer.address,
+        token_root: token_root.address,
+      };
+
 
       const eventData = await cellEncoder.call({
         method: 'encodeSolanaEverscaleEventData',

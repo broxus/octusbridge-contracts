@@ -21,6 +21,7 @@ describe('Test solana everscale event confirm', async function() {
   let relays;
   let metricManager;
   let initializerTokenWallet;
+  let token_root;
 
   afterEach(async function() {
     const lastCheckPoint = metricManager.lastCheckPointName();
@@ -84,14 +85,20 @@ describe('Test solana everscale event confirm', async function() {
   let eventContract, eventVoteData, eventDataStructure;
   
   describe('Initialize event', async () => {
-    eventDataStructure = {
-      sender_addr: 123,
-      tokens: 100,
-      receiver_addr: locklift.utils.zeroAddress,
-    };
+    it('Setup event data', async () => {
+      token_root = await getTokenRoot(await proxy.call({
+        method: 'getTokenRoot'
+      }));
+    });
 
     it('Setup event data', async () => {
-      eventDataStructure.receiver_addr = initializer.address;
+
+      eventDataStructure = {
+        sender_addr: 123,
+        tokens: 100,
+        receiver_addr: initializer.address,
+        token_root: token_root.address,
+      };
 
       const eventData = await cellEncoder.call({
         method: 'encodeSolanaEverscaleEventData',
@@ -245,31 +252,6 @@ describe('Test solana everscale event confirm', async function() {
     it('Check event proxy minted tokens', async () => {
       expect(await initializerTokenWallet.call({method: 'balance'}))
         .to.be.bignumber.equal(eventDataStructure.tokens, 'Wrong initializerTokenWallet balance');
-    });
-  });
-
-  describe('Test Proxy', async () => {
-    it('Test Proxy token transfer ownership', async () => {
-      const token = await getTokenRoot(await proxy.call({
-        method: 'getTokenRoot'
-      }));
-
-      expect(await token.call({
-        method: 'rootOwner'
-      })).to.be.equal(proxy.address, 'Wrong initial token owner');
-
-      await bridgeOwner.runTarget({
-        contract: proxy,
-        method: 'transferTokenOwnership',
-        params: {
-          target: token.address,
-          newOwner: bridgeOwner.address
-        },
-        value: locklift.utils.convertCrystal(1, 'nano')
-      });
-
-      expect(await token.call({method: 'rootOwner'}))
-        .to.be.equal(bridgeOwner.address, 'Wrong token owner after transfer');
     });
   });
 });

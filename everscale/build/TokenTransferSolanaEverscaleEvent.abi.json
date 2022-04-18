@@ -20,7 +20,8 @@
 			"outputs": [
 				{"name":"sender_addr","type":"uint256"},
 				{"name":"tokens","type":"uint64"},
-				{"name":"receiver_addr","type":"address"}
+				{"name":"receiver_addr","type":"address"},
+				{"name":"configuration","type":"address"}
 			]
 		},
 		{
@@ -39,7 +40,8 @@
 			"inputs": [
 				{"name":"sender_addr","type":"uint256"},
 				{"name":"tokens","type":"uint64"},
-				{"name":"receiver_addr","type":"address"}
+				{"name":"receiver_addr","type":"address"},
+				{"name":"token_root","type":"address"}
 			],
 			"outputs": [
 				{"name":"data","type":"cell"}
@@ -64,7 +66,8 @@
 			"outputs": [
 				{"name":"sender_addr","type":"uint256"},
 				{"name":"tokens","type":"uint64"},
-				{"name":"receiver_addr","type":"address"}
+				{"name":"receiver_addr","type":"address"},
+				{"name":"token_root","type":"address"}
 			]
 		},
 		{
