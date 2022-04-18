@@ -8,7 +8,7 @@ interface IEverscaleSolanaEventConfiguration is IBasicEventConfiguration {
     struct EverscaleSolanaEventConfiguration {
         address eventEmitter;
         uint256 program;
-        uint32 instruction;
+        uint8 instruction;
         uint32 startTimestamp;
         uint32 endTimestamp;
     }
