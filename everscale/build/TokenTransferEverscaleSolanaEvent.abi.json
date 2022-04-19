@@ -27,8 +27,7 @@
 			"outputs": [
 				{"name":"senderAddress","type":"address"},
 				{"name":"tokens","type":"uint64"},
-				{"name":"solanaOwnerAddress","type":"uint256"},
-				{"name":"solanaTokenSymbol","type":"string"}
+				{"name":"solanaOwnerAddress","type":"uint256"}
 			]
 		},
 		{
@@ -47,8 +46,7 @@
 			"inputs": [
 				{"name":"sender_addr","type":"uint256"},
 				{"name":"tokens","type":"uint64"},
-				{"name":"receiver_addr","type":"address"},
-				{"name":"token_root","type":"address"}
+				{"name":"receiver_addr","type":"address"}
 			],
 			"outputs": [
 				{"name":"data","type":"cell"}
@@ -73,8 +71,7 @@
 			"outputs": [
 				{"name":"sender_addr","type":"uint256"},
 				{"name":"tokens","type":"uint64"},
-				{"name":"receiver_addr","type":"address"},
-				{"name":"token_root","type":"address"}
+				{"name":"receiver_addr","type":"address"}
 			]
 		},
 		{
@@ -95,8 +92,7 @@
 			"inputs": [
 				{"name":"senderAddress","type":"address"},
 				{"name":"tokens","type":"uint64"},
-				{"name":"solanaOwnerAddress","type":"uint256"},
-				{"name":"solanaTokenSymbol","type":"string"}
+				{"name":"solanaOwnerAddress","type":"uint256"}
 			],
 			"outputs": [
 				{"name":"data","type":"cell"}
@@ -123,8 +119,7 @@
 			"outputs": [
 				{"name":"senderAddress","type":"address"},
 				{"name":"tokens","type":"uint64"},
-				{"name":"solanaOwnerAddress","type":"uint256"},
-				{"name":"solanaTokenSymbol","type":"string"}
+				{"name":"solanaOwnerAddress","type":"uint256"}
 			]
 		},
 		{
@@ -133,7 +128,7 @@
 				{"name":"answerId","type":"uint32"}
 			],
 			"outputs": [
-				{"components":[{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"value0","type":"tuple"}
+				{"components":[{"components":[{"name":"accountSeed","type":"uint64"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"value0","type":"tuple"}
 			]
 		},
 		{
@@ -159,7 +154,7 @@
 				{"name":"answerId","type":"uint32"}
 			],
 			"outputs": [
-				{"components":[{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"_eventInitData","type":"tuple"},
+				{"components":[{"components":[{"name":"accountSeed","type":"uint64"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"_eventInitData","type":"tuple"},
 				{"name":"_status","type":"uint8"},
 				{"name":"_confirms","type":"uint256[]"},
 				{"name":"_rejects","type":"uint256[]"},
@@ -307,7 +302,7 @@
 		}
 	],
 	"data": [
-		{"components":[{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"key":1,"name":"eventInitData","type":"tuple"}
+		{"components":[{"components":[{"name":"accountSeed","type":"uint64"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"key":1,"name":"eventInitData","type":"tuple"}
 	],
 	"events": [
 		{
@@ -348,7 +343,7 @@
 		{"name":"relay_round","type":"address"},
 		{"name":"round_number","type":"uint32"},
 		{"name":"createdAt","type":"uint32"},
-		{"components":[{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"eventInitData","type":"tuple"},
+		{"components":[{"components":[{"name":"accountSeed","type":"uint64"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"eventInitData","type":"tuple"},
 		{"name":"signatures","type":"map(uint256,bytes)"}
 	]
 }

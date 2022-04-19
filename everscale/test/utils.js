@@ -297,7 +297,7 @@ const setupSolanaEverscaleEventConfiguration = async (owner, staking, solanaDeci
         eventCode: SolanaEvent.code,
       },
       networkConfiguration: {
-        eventEmitter: new BigNumber(0),
+        settings: new BigNumber(0),
         proxy: proxyFutureAddress,
         endTimestamp: 0,
       }
@@ -326,7 +326,6 @@ const setupSolanaEverscaleEventConfiguration = async (owner, staking, solanaDeci
     solanaDecimals: solanaDecimals,
     everscaleDecimals: everscaleDecimals,
     tokenRoot: tokenRoot.address,
-    solanaTokenSymbol: 'TKN',
     settingsDeployWalletGrams: locklift.utils.convertCrystal(0.1, 'nano')
   }
 
@@ -591,8 +590,9 @@ const setupEverscaleSolanaEventConfiguration = async (owner, staking, solanaDeci
         eventCode: EverEvent.code,
       },
       networkConfiguration: {
-        eventEmitter: proxyFutureAddress,
         program:  new BigNumber(0),
+        eventEmitter: proxyFutureAddress,
+        settings: new BigNumber(0),
         instruction: 0,
         startTimestamp: 0,
         endTimestamp: 0,
@@ -622,7 +622,6 @@ const setupEverscaleSolanaEventConfiguration = async (owner, staking, solanaDeci
     solanaDecimals: solanaDecimals,
     everscaleDecimals: everscaleDecimals,
     tokenRoot: tokenRoot.address,
-    solanaTokenSymbol: 'TKN',
     rootTunnel: tokenRoot.address,
     settingsDeployWalletGrams: locklift.utils.convertCrystal(0.1, 'nano')
   }
@@ -932,7 +931,7 @@ const setupSolanaAlienMultiVault = async (owner, staking, cellEncoder) => {
         eventCode: SolanaEvent.code,
       },
       networkConfiguration: {
-        eventEmitter: new BigNumber(0),
+        settings: new BigNumber(0),
         proxy: proxy.address,
         endTimestamp: 0,
       }
@@ -963,6 +962,7 @@ const setupSolanaAlienMultiVault = async (owner, staking, cellEncoder) => {
         eventEmitter: proxy.address,
         program:  new BigNumber(0),
         instruction: 0,
+        settings:  new BigNumber(0),
         startTimestamp: 0,
         endTimestamp: 0,
       }
@@ -1052,7 +1052,7 @@ const setupSolanaNativeMultiVault = async (owner, staking) => {
         eventCode: SolanaEvent.code,
       },
       networkConfiguration: {
-        eventEmitter: new BigNumber(0),
+        settings: new BigNumber(0),
         proxy: proxy.address,
         endTimestamp: 0,
       }
@@ -1083,6 +1083,7 @@ const setupSolanaNativeMultiVault = async (owner, staking) => {
         eventEmitter: proxy.address,
         program:  new BigNumber(0),
         instruction: 0,
+        settings:  new BigNumber(0),
         startTimestamp: 0,
         endTimestamp: 0,
       }

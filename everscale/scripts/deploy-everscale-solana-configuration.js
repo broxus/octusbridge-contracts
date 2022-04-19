@@ -22,6 +22,7 @@ program
     .option('--meta <meta>', 'Configuration meta')
     .option('--eventEmitter <eventEmitter>', 'Event emitter address')
     .option('--program <program>', 'Target program address')
+    .option('--settings <settings>', 'Target settings address')
     .option('--instruction <instruction>', 'instruction number')
     .option('--startTimestamp <startTimestamp>', 'Start timestamp')
     .option('--initialBalance <initialBalance>', 'Configuration initial balance')
@@ -114,8 +115,13 @@ const main = async () => {
       type: 'text',
       name: 'program',
       message: 'Target address in Solana (program)',
-      validate: value => ethers.utils.isAddress(value) ? true : 'Invalid Solana address',
       initial: options.program
+    },
+    {
+      type: 'text',
+      name: 'settings',
+      message: 'Settings address in Solana (Settings)',
+      initial: options.settings
     },
     {
       type: 'number',
@@ -158,9 +164,10 @@ const main = async () => {
       networkConfiguration: {
         eventEmitter: response.eventEmitter,
         program: new BigNumber(response.program.toLowerCase()).toFixed(),
+        instruction: response.instruction,
+        settings: new BigNumber(response.settings.toLowerCase()).toFixed(),
         startTimestamp: response.startTimestamp,
         endTimestamp: 0,
-        instruction: response.instruction,
       }
     },
     keyPair

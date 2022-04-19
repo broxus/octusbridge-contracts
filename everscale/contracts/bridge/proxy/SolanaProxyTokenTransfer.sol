@@ -66,13 +66,11 @@ contract SolanaProxyTokenTransfer is
         (
             uint256 sender_addr,
             uint64 tokens_solana,
-            address receiver_addr,
-            address token_root
+            address receiver_addr
         ) = decodeSolanaEverscaleEventData(eventData.voteData.eventData);
 
         require(tokens_solana > 0, ErrorCodes.WRONG_TOKENS_AMOUNT_IN_PAYLOAD);
         require(receiver_addr.value != 0, ErrorCodes.WRONG_OWNER_IN_PAYLOAD);
-        require(token_root == config.tokenRoot, ErrorCodes.WRONG_TOKEN_ROOT);
 
         TvmCell empty;
 
@@ -123,8 +121,7 @@ contract SolanaProxyTokenTransfer is
             TvmCell eventData = encodeEverscaleSolanaEventData(
                 senderAddress,
                 tokens_solana,
-                solanaOwnerAddress,
-                config.solanaTokenSymbol
+                solanaOwnerAddress
             );
 
             IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(tx.timestamp, eventData);

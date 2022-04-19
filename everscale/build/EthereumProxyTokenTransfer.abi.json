@@ -120,8 +120,7 @@
 			"inputs": [
 				{"name":"sender_addr","type":"uint256"},
 				{"name":"tokens","type":"uint64"},
-				{"name":"receiver_addr","type":"address"},
-				{"name":"token_root","type":"address"}
+				{"name":"receiver_addr","type":"address"}
 			],
 			"outputs": [
 				{"name":"data","type":"cell"}
@@ -146,8 +145,7 @@
 			"outputs": [
 				{"name":"sender_addr","type":"uint256"},
 				{"name":"tokens","type":"uint64"},
-				{"name":"receiver_addr","type":"address"},
-				{"name":"token_root","type":"address"}
+				{"name":"receiver_addr","type":"address"}
 			]
 		},
 		{
@@ -168,8 +166,7 @@
 			"inputs": [
 				{"name":"senderAddress","type":"address"},
 				{"name":"tokens","type":"uint64"},
-				{"name":"solanaOwnerAddress","type":"uint256"},
-				{"name":"solanaTokenSymbol","type":"string"}
+				{"name":"solanaOwnerAddress","type":"uint256"}
 			],
 			"outputs": [
 				{"name":"data","type":"cell"}
@@ -196,8 +193,7 @@
 			"outputs": [
 				{"name":"senderAddress","type":"address"},
 				{"name":"tokens","type":"uint64"},
-				{"name":"solanaOwnerAddress","type":"uint256"},
-				{"name":"solanaTokenSymbol","type":"string"}
+				{"name":"solanaOwnerAddress","type":"uint256"}
 			]
 		},
 		{

@@ -20,7 +20,7 @@ program
     .option('--eventInitialBalance <eventInitialBalance>', 'Event initial balance')
     .option('--eventContract <eventContract>', 'Event contract')
     .option('--meta <meta>', 'Configuration meta')
-    .option('--eventEmitter <eventEmitter>', 'Event emitter address')
+    .option('--settings <settings>', 'Settings address in Solana')
     .option('--proxy <proxy>', 'Target proxy address')
     .option('--initialBalance <initialBalance>', 'Configuration initial balance')
     .allowUnknownOption();
@@ -102,10 +102,9 @@ const main = async () => {
     },
     {
       type: 'text',
-      name: 'eventEmitter',
-      message: 'Contract address, which emits event (Solana)',
-      validate: value => ethers.utils.isAddress(value) ? true : 'Invalid Solana address',
-      initial: options.eventEmitter
+      name: 'settings',
+      message: 'Settings address (Solana)',
+      initial: options.settings
     },
     {
       type: 'text',
@@ -141,7 +140,7 @@ const main = async () => {
         eventCode: SolanaEvent.code,
       },
       networkConfiguration: {
-        eventEmitter: new BigNumber(response.eventEmitter.toLowerCase()).toFixed(),
+        settings: new BigNumber(response.settings.toLowerCase()).toFixed(),
         proxy: response.proxy,
         endTimestamp: 0,
       }

@@ -16,7 +16,7 @@
 			"name": "receiveConfigurationDetails",
 			"inputs": [
 				{"components":[{"name":"eventABI","type":"bytes"},{"name":"staking","type":"address"},{"name":"eventInitialBalance","type":"uint64"},{"name":"eventCode","type":"cell"}],"name":"value0","type":"tuple"},
-				{"components":[{"name":"eventEmitter","type":"uint256"},{"name":"proxy","type":"address"},{"name":"endTimestamp","type":"uint32"}],"name":"_networkConfiguration","type":"tuple"},
+				{"components":[{"name":"settings","type":"uint256"},{"name":"proxy","type":"address"},{"name":"endTimestamp","type":"uint32"}],"name":"_networkConfiguration","type":"tuple"},
 				{"name":"value2","type":"cell"}
 			],
 			"outputs": [

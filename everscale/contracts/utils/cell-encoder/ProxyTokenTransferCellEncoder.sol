@@ -23,14 +23,13 @@ contract ProxyTokenTransferCellEncoder {
     function encodeSolanaEverscaleEventData(
         uint256 sender_addr,
         uint64 tokens,
-        address receiver_addr,
-        address token_root
+        address receiver_addr
     ) public pure returns(
         TvmCell data
     ) {
         TvmBuilder builder;
 
-        builder.store(sender_addr, tokens, receiver_addr, token_root);
+        builder.store(sender_addr, tokens, receiver_addr);
 
         data = builder.toCell();
     }
@@ -55,15 +54,13 @@ contract ProxyTokenTransferCellEncoder {
     ) public pure returns(
         uint256 sender_addr,
         uint64 tokens,
-        address receiver_addr,
-        address token_root
+        address receiver_addr
     ) {
         (
             sender_addr,
             tokens,
-            receiver_addr,
-            token_root
-        ) = data.toSlice().decode(uint256, uint64, address, address);
+            receiver_addr
+        ) = data.toSlice().decode(uint256, uint64, address);
     }
 
     function encodeEverscaleEthereumEventData(
@@ -85,14 +82,13 @@ contract ProxyTokenTransferCellEncoder {
     function encodeEverscaleSolanaEventData(
         address senderAddress,
         uint64 tokens,
-        uint256 solanaOwnerAddress,
-        string solanaTokenSymbol
+        uint256 solanaOwnerAddress
     ) public pure returns(
         TvmCell data
     ) {
         TvmBuilder builder;
 
-        builder.store(senderAddress, tokens, solanaOwnerAddress, solanaTokenSymbol);
+        builder.store(senderAddress, tokens, solanaOwnerAddress);
 
         data = builder.toCell();
     }
@@ -120,14 +116,12 @@ contract ProxyTokenTransferCellEncoder {
     ) public pure returns(
         address senderAddress,
         uint64 tokens,
-        uint256 solanaOwnerAddress,
-        string solanaTokenSymbol
+        uint256 solanaOwnerAddress
     ) {
         (
             senderAddress,
             tokens,
-            solanaOwnerAddress,
-            solanaTokenSymbol
-        ) = data.toSlice().decode(address, uint64, uint256, string);
+            solanaOwnerAddress
+        ) = data.toSlice().decode(address, uint64, uint256);
     }
 }

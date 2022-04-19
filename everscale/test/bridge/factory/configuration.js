@@ -128,7 +128,7 @@ describe('Test configuration factory', async function() {
             };
 
             const networkConfiguration = {
-                eventEmitter: new BigNumber(0),
+                settings: new BigNumber(0),
                 proxy: locklift.utils.zeroAddress,
                 endTimestamp: 0,
             };
