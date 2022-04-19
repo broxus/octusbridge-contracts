@@ -17,7 +17,7 @@ interface IMultiVaultSolanaEverscaleEventNative {
 
     function getDecodedData() external responsible returns(
         address token_,
-        uint128 amount_,
+        uint64 amount_,
         address recipient_,
         address proxy_,
         address tokenWallet_

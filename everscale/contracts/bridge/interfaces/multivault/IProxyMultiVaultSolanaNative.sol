@@ -19,7 +19,7 @@ interface IProxyMultiVaultSolanaNative {
         string name,
         string symbol,
         uint8 decimals,
-        uint128 amount,
+        uint64 amount,
         uint256 recipient
     );
 }
