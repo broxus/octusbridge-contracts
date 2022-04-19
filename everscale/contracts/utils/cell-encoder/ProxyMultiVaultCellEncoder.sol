@@ -75,7 +75,7 @@ contract ProxyMultiVaultCellEncoder {
         string name,
         string symbol,
         uint8 decimals,
-        uint128 amount,
+        uint64 amount,
         int8 recipient_wid,
         uint256 recipient_addr
     ) external pure returns (TvmCell) {
@@ -108,12 +108,12 @@ contract ProxyMultiVaultCellEncoder {
         TvmCell data
     ) external pure returns (
         uint256 base_token,
-        uint128 amount,
+        uint64 amount,
         uint256 recipient
     ) {
         (base_token, amount, recipient) = abi.decode(
             data,
-            (uint256, uint128, uint256)
+            (uint256, uint64, uint256)
         );
     }
 

@@ -19,7 +19,7 @@ contract MultiVaultEverscaleSolanaEventAlien is EverscaleSolanaBaseEvent, IMulti
     address proxy;
     address token;
     address remainingGasTo;
-    uint128 amount;
+    uint64 amount;
     uint256 recipient;
 
     uint256 base_token;
@@ -53,7 +53,7 @@ contract MultiVaultEverscaleSolanaEventAlien is EverscaleSolanaBaseEvent, IMulti
     function onInit() override internal {
         (proxy, token, remainingGasTo, amount, recipient) = abi.decode(
             eventInitData.voteData.eventData,
-            (address, address, address, uint128, uint256)
+            (address, address, address, uint64, uint256)
         );
 
         ITokenRootAlienSolanaEverscale(token).meta{
@@ -116,7 +116,7 @@ contract MultiVaultEverscaleSolanaEventAlien is EverscaleSolanaBaseEvent, IMulti
         address proxy_,
         address token_,
         address remainingGasTo_,
-        uint128 amount_,
+        uint64 amount_,
         uint256 recipient_,
         uint256 base_token_
     ) {

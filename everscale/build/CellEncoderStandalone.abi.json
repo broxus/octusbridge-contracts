@@ -214,7 +214,7 @@
 				{"name":"name","type":"string"},
 				{"name":"symbol","type":"string"},
 				{"name":"decimals","type":"uint8"},
-				{"name":"amount","type":"uint128"},
+				{"name":"amount","type":"uint64"},
 				{"name":"recipient_wid","type":"int8"},
 				{"name":"recipient_addr","type":"uint256"}
 			],
@@ -260,7 +260,7 @@
 			],
 			"outputs": [
 				{"name":"base_token","type":"uint256"},
-				{"name":"amount","type":"uint128"},
+				{"name":"amount","type":"uint64"},
 				{"name":"recipient","type":"uint256"}
 			]
 		},

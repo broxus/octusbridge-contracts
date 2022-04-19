@@ -18,7 +18,7 @@ contract MultiVaultSolanaEverscaleEventAlien is SolanaEverscaleBaseEvent, IMulti
     string name;
     string symbol;
     uint8 decimals;
-    uint128 amount;
+    uint64 amount;
     address recipient;
 
     address proxy;
@@ -58,7 +58,7 @@ contract MultiVaultSolanaEverscaleEventAlien is SolanaEverscaleBaseEvent, IMulti
             recipient_addr
         ) = abi.decode(
             eventInitData.voteData.eventData,
-            (uint256, string, string, uint8, uint128, int8, uint256)
+            (uint256, string, string, uint8, uint64, int8, uint256)
         );
 
         recipient = address.makeAddrStd(recipient_wid, recipient_addr);
@@ -116,7 +116,7 @@ contract MultiVaultSolanaEverscaleEventAlien is SolanaEverscaleBaseEvent, IMulti
         string name_,
         string symbol_,
         uint8 decimals_,
-        uint128 amount_,
+        uint64 amount_,
         address recipient_,
         address proxy_,
         address token_

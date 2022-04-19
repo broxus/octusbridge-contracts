@@ -47,7 +47,7 @@
 				{"name":"proxy_","type":"address"},
 				{"name":"token_","type":"address"},
 				{"name":"remainingGasTo_","type":"address"},
-				{"name":"amount_","type":"uint128"},
+				{"name":"amount_","type":"uint64"},
 				{"name":"recipient_","type":"uint256"},
 				{"name":"base_token_","type":"uint256"}
 			]
@@ -278,7 +278,7 @@
 		{"name":"proxy","type":"address"},
 		{"name":"token","type":"address"},
 		{"name":"remainingGasTo","type":"address"},
-		{"name":"amount","type":"uint128"},
+		{"name":"amount","type":"uint64"},
 		{"name":"recipient","type":"uint256"},
 		{"name":"base_token","type":"uint256"},
 		{"name":"expectedToken","type":"address"}
