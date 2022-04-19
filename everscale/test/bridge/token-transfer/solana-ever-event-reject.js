@@ -79,7 +79,7 @@ describe('Test solana everscale event reject', async function() {
   let eventContract, eventVoteData;
 
   describe('Initialize event', async () => {
-    it('Setup event data', async () => {
+    it('Get Token Root', async () => {
       token_root = await getTokenRoot(await proxy.call({
         method: 'getTokenRoot'
       }));
