@@ -297,6 +297,7 @@ const setupSolanaEverscaleEventConfiguration = async (owner, staking, solanaDeci
         eventCode: SolanaEvent.code,
       },
       networkConfiguration: {
+        program: new BigNumber(0),
         settings: new BigNumber(0),
         proxy: proxyFutureAddress,
         endTimestamp: 0,
@@ -591,8 +592,8 @@ const setupEverscaleSolanaEventConfiguration = async (owner, staking, solanaDeci
       },
       networkConfiguration: {
         program:  new BigNumber(0),
-        eventEmitter: proxyFutureAddress,
         settings: new BigNumber(0),
+        eventEmitter: proxyFutureAddress,
         instruction: 0,
         startTimestamp: 0,
         endTimestamp: 0,
@@ -931,6 +932,7 @@ const setupSolanaAlienMultiVault = async (owner, staking, cellEncoder) => {
         eventCode: SolanaEvent.code,
       },
       networkConfiguration: {
+        program: new BigNumber(0),
         settings: new BigNumber(0),
         proxy: proxy.address,
         endTimestamp: 0,
@@ -959,10 +961,10 @@ const setupSolanaAlienMultiVault = async (owner, staking, cellEncoder) => {
         eventCode: EverscaleEvent.code,
       },
       networkConfiguration: {
-        eventEmitter: proxy.address,
         program:  new BigNumber(0),
-        instruction: 0,
         settings:  new BigNumber(0),
+        eventEmitter: proxy.address,
+        instruction: 0,
         startTimestamp: 0,
         endTimestamp: 0,
       }
@@ -1052,6 +1054,7 @@ const setupSolanaNativeMultiVault = async (owner, staking) => {
         eventCode: SolanaEvent.code,
       },
       networkConfiguration: {
+        program: new BigNumber(0),
         settings: new BigNumber(0),
         proxy: proxy.address,
         endTimestamp: 0,
@@ -1080,10 +1083,10 @@ const setupSolanaNativeMultiVault = async (owner, staking) => {
         eventCode: EverscaleEvent.code,
       },
       networkConfiguration: {
-        eventEmitter: proxy.address,
         program:  new BigNumber(0),
-        instruction: 0,
         settings:  new BigNumber(0),
+        eventEmitter: proxy.address,
+        instruction: 0,
         startTimestamp: 0,
         endTimestamp: 0,
       }

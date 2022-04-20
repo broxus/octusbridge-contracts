@@ -20,6 +20,7 @@ program
     .option('--eventInitialBalance <eventInitialBalance>', 'Event initial balance')
     .option('--eventContract <eventContract>', 'Event contract')
     .option('--meta <meta>', 'Configuration meta')
+    .option('--program <program>', 'Target program address')
     .option('--settings <settings>', 'Settings address in Solana')
     .option('--proxy <proxy>', 'Target proxy address')
     .option('--initialBalance <initialBalance>', 'Configuration initial balance')
@@ -102,6 +103,12 @@ const main = async () => {
     },
     {
       type: 'text',
+      name: 'program',
+      message: 'Target address in Solana (program)',
+      initial: options.program
+    },
+    {
+      type: 'text',
       name: 'settings',
       message: 'Settings address (Solana)',
       initial: options.settings
@@ -140,6 +147,7 @@ const main = async () => {
         eventCode: SolanaEvent.code,
       },
       networkConfiguration: {
+        program: new BigNumber(response.program.toLowerCase()).toFixed(),
         settings: new BigNumber(response.settings.toLowerCase()).toFixed(),
         proxy: response.proxy,
         endTimestamp: 0,

@@ -7,11 +7,11 @@ import "./../event-contracts/IEverscaleSolanaEvent.sol";
 interface IEverscaleSolanaEventConfiguration is IBasicEventConfiguration {
     struct EverscaleSolanaEventConfiguration {
         uint256 program;
+        uint256 settings;
         address eventEmitter;
         uint8 instruction;
         uint32 startTimestamp;
         uint32 endTimestamp;
-        uint256 settings;
     }
 
     function deployEvent(
