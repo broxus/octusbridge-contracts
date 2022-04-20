@@ -14,13 +14,18 @@ const BPS = 10_000;
 const DEPOSIT_FEE = 100; // 1%
 const WITHDRAW_FEE = 200; // 2%
 
+const depositAmount = ethers.utils.parseUnits('100', 18);
+const withdrawAmount = ethers.utils.parseUnits('50', 18);
+const depositFee = depositAmount.mul(DEPOSIT_FEE).div(BPS);
+const withdrawFee = withdrawAmount.mul(WITHDRAW_FEE).div(BPS);
+
 
 describe('Check deposit / withdraw fees', async () => {
   let vault, dai;
-  
+
   it('Setup contracts', async () => {
     await deployments.fixture();
-    
+
     dai = await ethers.getContractAt(
       legos.erc20.abi,
       legos.erc20.dai.address,
@@ -44,7 +49,6 @@ describe('Check deposit / withdraw fees', async () => {
 
     it('Alice deposits 100 dai', async () => {
       const alice = await ethers.getNamedSigner('alice');
-      const amount = ethers.utils.parseUnits('100', 18);
 
       const recipient = {
         wid: 0,
@@ -53,10 +57,7 @@ describe('Check deposit / withdraw fees', async () => {
 
       await vault
           .connect(alice)
-          ['deposit((int128,uint256),uint256)'](recipient, amount);
-
-      // Calculate expected fee amount
-      const fee = amount.mul(DEPOSIT_FEE).div(BPS);
+          ['deposit((int128,uint256),uint256)'](recipient, depositAmount);
 
       // Check deposit amount and deposit fee events
       const events = await vault.queryFilter(
@@ -64,34 +65,24 @@ describe('Check deposit / withdraw fees', async () => {
       );
 
       expect(events)
-          .to.have.lengthOf(2, 'Only 2 Deposit events should be emitted');
+          .to.have.lengthOf(1, 'Only 2 Deposit events should be emitted');
 
-      const [depositEvent, depositFeeEvent] = events;
+      const [depositEvent] = events;
 
       // - Check deposit event
       expect(depositEvent.args.amount)
-          .to.be.equal(await vault.convertToTargetDecimals(amount.sub(fee)), 'Wrong deposit amount');
+          .to.be.equal(await vault.convertToTargetDecimals(depositAmount.sub(depositFee)), 'Wrong deposit amount');
       expect(depositEvent.args.wid)
           .to.be.equal(recipient.wid, 'Wrong deposit wid recipient');
       expect(depositEvent.args.addr)
           .to.be.equal(recipient.addr, 'Wrong deposit addr recipient');
 
-      // - Check fee deposit event
-      const rewards = await vault.rewards();
-
-      expect(depositFeeEvent.args.amount)
-          .to.be.equal(await vault.convertToTargetDecimals(fee), 'Wrong fee amount');
-      expect(depositFeeEvent.args.wid)
-          .to.be.equal(rewards.wid, 'Wrong rewards wid');
-      expect(depositFeeEvent.args.addr)
-          .to.be.equal(rewards.addr, 'Wrong rewards addr');
+      expect(await vault.fees())
+          .to.be.equal(depositFee, 'Wrong fees amount after deposit');
     });
   });
-  
-  describe('Check withdraw fee', async () => {
-    const amount = ethers.utils.parseUnits('50', 18);
-    const fee = amount.mul(WITHDRAW_FEE).div(BPS);
 
+  describe('Check withdraw fee', async () => {
     it('Set non-zero withdraw fee', async () => {
       const owner = await ethers.getNamedSigner('owner');
 
@@ -99,17 +90,17 @@ describe('Check deposit / withdraw fees', async () => {
           .connect(owner)
           .setWithdrawFee(WITHDRAW_FEE);
     });
-    
+
     it('Check withdraw fee', async () => {
       expect(await vault.withdrawFee())
           .to.be.equal(WITHDRAW_FEE, 'Wrong withdraw fee');
     });
-    
+
     it('Withdraw 50 dai to Bob and check withdraw fee considered', async () => {
       const bob = await ethers.getNamedSigner('bob');
 
       const withdrawalEventData = encodeWithdrawalData({
-        amount: await vault.convertToTargetDecimals(amount),
+        amount: await vault.convertToTargetDecimals(withdrawAmount),
         recipient: bob.address
       });
 
@@ -120,34 +111,51 @@ describe('Check deposit / withdraw fees', async () => {
 
       const signatures = await utils.getPayloadSignatures(payload);
 
-      const fee = amount.mul(WITHDRAW_FEE).div(BPS);
-
       await expect(() => vault['saveWithdraw(bytes,bytes[])'](payload, signatures))
           .to.changeTokenBalances(
               dai,
               [vault, bob],
-              [ethers.BigNumber.from(0, 10).sub(amount).add(fee), amount.sub(fee)]
+              [
+                ethers.BigNumber.from(0, 10).sub(withdrawAmount).add(withdrawFee),
+                withdrawAmount.sub(withdrawFee)
+              ]
           );
     });
 
-    it('Check withdraw fee considered', async () => {
+    it('Check no new Deposit events emitted', async () => {
       const events = (await vault.queryFilter(
           vault.filters.Deposit(), 0, "latest"
       ));
 
       expect(events)
-          .to.have.lengthOf(3, 'Only 1 Deposit event should be emitted');
+          .to.have.lengthOf(1, 'No new deposits should be emitted');
+    });
 
-      const [,,withdrawFeeEvent] = events;
+    it('Check fees increased', async () => {
+      expect(await vault.fees())
+          .to.be.equal(depositFee.add(withdrawFee), 'Wrong fees after deposit');
+    });
+  });
 
+  describe('Skim fees', async () => {
+    it('Skim fees', async () => {
+      const fees = await vault.fees();
       const rewards = await vault.rewards();
 
-      expect(withdrawFeeEvent.args.amount)
-          .to.be.equal(await vault.convertToTargetDecimals(fee), 'Wrong fee amount');
-      expect(withdrawFeeEvent.args.wid)
-          .to.be.equal(rewards.wid, 'Wrong rewards wid');
-      expect(withdrawFeeEvent.args.addr)
-          .to.be.equal(rewards.addr, 'Wrong rewards addr');
+      const owner = await ethers.getNamedSigner('owner');
+
+      await expect(vault.connect(owner).skimFees(true))
+          .to.emit(vault, 'Deposit')
+          .withArgs(
+              await vault.convertToTargetDecimals(fees),
+              rewards.wid,
+              rewards.addr
+          );
+    });
+
+    it('Check fees equals to zero after skim', async () => {
+      expect(await vault.fees())
+          .to.be.equal(0, 'Fees are non-zero after skim');
     });
   });
 });

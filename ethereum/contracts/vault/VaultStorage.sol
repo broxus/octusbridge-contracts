@@ -149,4 +149,7 @@ abstract contract VaultStorage is IVault, Initializable, ReentrancyGuard {
     uint256 public override lockedProfit;
     // - Rate per block of degradation. DEGRADATION_COEFFICIENT is 100% per block
     uint256 public override lockedProfitDegradation;
+
+    // STORAGE UPDATE 1
+    uint256 public override fees;
 }

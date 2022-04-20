@@ -292,24 +292,6 @@ function decodeWithdrawalEventData(bytes eventData) external view returns (struc
 ### deposit
 
 ```solidity
-function deposit(IEverscale.EverscaleAddress recipient, uint256 amount, IVault.PendingWithdrawalId pendingWithdrawalId) external nonpayable
-```
-
-
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| recipient | IEverscale.EverscaleAddress | undefined |
-| amount | uint256 | undefined |
-| pendingWithdrawalId | IVault.PendingWithdrawalId | undefined |
-
-### deposit
-
-```solidity
 function deposit(IEverscale.EverscaleAddress recipient, uint256 amount) external nonpayable
 ```
 
@@ -327,7 +309,7 @@ function deposit(IEverscale.EverscaleAddress recipient, uint256 amount) external
 ### deposit
 
 ```solidity
-function deposit(IEverscale.EverscaleAddress recipient, uint256[] amount, IVault.PendingWithdrawalId[] pendingWithdrawalId) external nonpayable
+function deposit(IEverscale.EverscaleAddress recipient, uint256 amount, uint256 expectedMinBounty, IVault.PendingWithdrawalId[] pendingWithdrawalIds) external nonpayable
 ```
 
 
@@ -339,8 +321,9 @@ function deposit(IEverscale.EverscaleAddress recipient, uint256[] amount, IVault
 | Name | Type | Description |
 |---|---|---|
 | recipient | IEverscale.EverscaleAddress | undefined |
-| amount | uint256[] | undefined |
-| pendingWithdrawalId | IVault.PendingWithdrawalId[] | undefined |
+| amount | uint256 | undefined |
+| expectedMinBounty | uint256 | undefined |
+| pendingWithdrawalIds | IVault.PendingWithdrawalId[] | undefined |
 
 ### depositFee
 
@@ -434,6 +417,23 @@ function expectedReturn(address strategyId) external view returns (uint256)
 | Name | Type | Description |
 |---|---|---|
 | strategyId | address | undefined |
+
+#### Returns
+
+| Name | Type | Description |
+|---|---|---|
+| _0 | uint256 | undefined |
+
+### fees
+
+```solidity
+function fees() external view returns (uint256)
+```
+
+
+
+
+
 
 #### Returns
 
@@ -1157,6 +1157,22 @@ Skim strategy gain to the `rewards_` address. This may only be called by `govern
 | Name | Type | Description |
 |---|---|---|
 | strategyId | address | Strategy address to skim. |
+
+### skimFees
+
+```solidity
+function skimFees(bool skim_to_everscale) external nonpayable
+```
+
+Skim Vault fees to the `rewards_` address This may only be called by `governance` or `management`
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| skim_to_everscale | bool | Skim fees to Everscale or not |
 
 ### strategies
 

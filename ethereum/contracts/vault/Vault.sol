@@ -14,7 +14,7 @@ import "../interfaces/IStrategy.sol";
 import "./VaultHelpers.sol";
 
 
-string constant API_VERSION = '0.1.7';
+string constant API_VERSION = '0.1.8';
 
 /// @title Vault contract. Entry point for the Octus bridge cross chain token transfers.
 /// @dev Fork of the Yearn Vault V2 contract, rewritten in Solidity.
@@ -335,19 +335,6 @@ contract Vault is IVault, VaultHelpers {
         return _totalAssets();
     }
 
-    function _deposit(
-        EverscaleAddress memory recipient,
-        uint256 amount
-    ) internal {
-        IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
-
-        uint256 fee = _calculateMovementFee(amount, depositFee);
-
-        _transferToEverscale(recipient, amount - fee);
-
-        if (fee > 0) _transferToEverscale(rewards_, fee);
-    }
-
     /// @notice Deposits `token` into the Vault, leads to producing corresponding token
     /// on the Everscale side.
     /// @param recipient Recipient in the Everscale network
@@ -362,77 +349,84 @@ contract Vault is IVault, VaultHelpers {
         respectDepositLimit(amount)
         nonReentrant
     {
-        _deposit(recipient, amount);
+        IERC20(token).safeTransferFrom(
+            msg.sender,
+            address(this),
+            amount
+        );
+
+        uint256 fee = _calculateMovementFee(amount, depositFee);
+
+        _transferToEverscale(recipient, amount - fee);
+
+        if (fee > 0) fees += fee;
 
         emit UserDeposit(msg.sender, recipient.wid, recipient.addr, amount, address(0), 0, 0);
     }
 
-    /// @notice Same as regular `deposit`, but fills pending withdrawal.
-    /// Pending withdrawal recipient receives `pendingWithdrawal.amount - pendingWithdrawal.bounty`.
-    /// Deposit author receives `amount + pendingWithdrawal.bounty`.
-    /// @param recipient Deposit recipient in the Everscale network.
-    /// @param amount Amount of tokens to deposit.
-    /// @param pendingWithdrawalId Pending withdrawal ID to fill.
-    function deposit(
-        EverscaleAddress memory recipient,
-        uint256 amount,
-        PendingWithdrawalId memory pendingWithdrawalId
-    )
-        public
-        override
-        onlyEmergencyDisabled
-        respectDepositLimit(amount)
-        nonReentrant
-        pendingWithdrawalApproved(pendingWithdrawalId)
-        pendingWithdrawalOpened(pendingWithdrawalId)
-    {
-        PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(pendingWithdrawalId);
-
-        require(amount >= pendingWithdrawal.amount);
-
-        _deposit(recipient, amount);
-
-        // Send bounty as additional transfer
-        _transferToEverscale(recipient, pendingWithdrawal.bounty);
-
-        uint redeemedAmount = pendingWithdrawal.amount - pendingWithdrawal.bounty;
-
-        _pendingWithdrawalAmountReduce(
-            pendingWithdrawalId,
-            pendingWithdrawal.amount
-        );
-
-        IERC20(token).safeTransfer(
-            pendingWithdrawalId.recipient,
-            redeemedAmount
-        );
-
-        emit UserDeposit(
-            msg.sender,
-            recipient.wid,
-            recipient.addr,
-            amount,
-            pendingWithdrawalId.recipient,
-            pendingWithdrawalId.id,
-            pendingWithdrawal.bounty
-        );
-    }
-
     /**
-        @notice Multicall for `deposit`. Fills multiple pending withdrawals at once.
+        @notice Same as regular `deposit`, but fill multiple pending withdrawals.
         @param recipient Deposit recipient in the Everscale network.
-        @param amount List of amount
+        @param amount Deposit amount
+        @param expectedMinBounty Expected min bounty amount, frontrun protection
+        @param pendingWithdrawalIds List of pending withdrawals to close.
     */
     function deposit(
         EverscaleAddress memory recipient,
-        uint256[] memory amount,
-        PendingWithdrawalId[] memory pendingWithdrawalId
+        uint256 amount,
+        uint256 expectedMinBounty,
+        PendingWithdrawalId[] memory pendingWithdrawalIds
     ) external override {
-        require(amount.length == pendingWithdrawalId.length);
+        uint amountLeft = amount;
+        uint amountPlusBounty = amount;
 
-        for (uint i = 0; i < amount.length; i++) {
-            deposit(recipient, amount[i], pendingWithdrawalId[i]);
+        IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
+
+        for (uint i = 0; i < pendingWithdrawalIds.length; i++) {
+            PendingWithdrawalId memory pendingWithdrawalId = pendingWithdrawalIds[i];
+            PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(pendingWithdrawalId);
+
+            require(pendingWithdrawal.amount > 0);
+            require(
+                pendingWithdrawal.approveStatus == ApproveStatus.NotRequired ||
+                pendingWithdrawal.approveStatus == ApproveStatus.Approved
+            );
+
+            amountLeft -= pendingWithdrawal.amount;
+            amountPlusBounty += pendingWithdrawal.bounty;
+
+            _pendingWithdrawalAmountReduce(
+                pendingWithdrawalId,
+                pendingWithdrawal.amount
+            );
+
+            IERC20(token).safeTransfer(
+                pendingWithdrawalId.recipient,
+                pendingWithdrawal.amount - pendingWithdrawal.bounty
+            );
+
+            emit UserDeposit(
+                msg.sender,
+                recipient.wid,
+                recipient.addr,
+                pendingWithdrawal.amount,
+                pendingWithdrawalId.recipient,
+                pendingWithdrawalId.id,
+                pendingWithdrawal.bounty
+            );
         }
+
+        require(amountPlusBounty - amount >= expectedMinBounty);
+
+        uint256 fee = _calculateMovementFee(amountPlusBounty, depositFee);
+
+        _transferToEverscale(recipient, amountPlusBounty - fee);
+
+        if (amountLeft > 0) {
+            emit UserDeposit(msg.sender, recipient.wid, recipient.addr, amountLeft, address(0), 0, 0);
+        }
+
+        if (fee > 0) fees += fee;
     }
 
     function depositToFactory(
@@ -466,7 +460,7 @@ contract Vault is IVault, VaultHelpers {
 
         uint256 fee = _calculateMovementFee(amount, depositFee);
 
-        if (fee > 0) _transferToEverscale(rewards_, fee);
+        if (fee > 0) fees += fee;
 
         emit FactoryDeposit(
             uint128(convertToTargetDecimals(amount - fee)),
@@ -525,7 +519,7 @@ contract Vault is IVault, VaultHelpers {
         // Ensure withdrawal fee
         uint256 fee = _calculateMovementFee(withdrawal.amount, withdrawFee);
 
-        if (fee > 0) _transferToEverscale(rewards_, fee);
+        if (fee > 0) fees += fee;
 
         // Consider withdrawal period limit
         WithdrawalPeriodParams memory withdrawalPeriod = _withdrawalPeriod(_event.eventTimestamp);
@@ -580,9 +574,9 @@ contract Vault is IVault, VaultHelpers {
             PendingWithdrawalId memory pendingWithdrawalId
         ) = saveWithdraw(payload, signatures);
 
-        if (!instantWithdraw) {
+        if (!instantWithdraw && msg.sender == pendingWithdrawalId.recipient) {
             PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(pendingWithdrawalId);
-            require (bounty <= pendingWithdrawal.amount);
+            require(bounty <= pendingWithdrawal.amount);
 
             _pendingWithdrawalBountyUpdate(pendingWithdrawalId, bounty);
         }
@@ -703,10 +697,7 @@ contract Vault is IVault, VaultHelpers {
 
             // This loss protection is put in place to revert if losses from
             // withdrawing are more than what is considered acceptable.
-            require(
-                totalLoss <= maxLoss * (amountAdjusted + totalLoss) / MAX_BPS,
-                "Vault: loss too high"
-            );
+            require(totalLoss <= maxLoss * (amountAdjusted + totalLoss) / MAX_BPS);
         }
 
         IERC20(token).safeTransfer(recipient, amountAdjusted);
@@ -985,12 +976,12 @@ contract Vault is IVault, VaultHelpers {
             total_fee = gain;
         }
 
-        if (strategist_fee > 0) {
+        if (strategist_fee > 0) { // Strategy rewards are paid instantly
             _transferToEverscale(strategy.rewards, strategist_fee);
         }
 
         if (performance_fee + management_fee > 0) {
-            _transferToEverscale(rewards_, performance_fee + management_fee);
+            fees += performance_fee + management_fee;
         }
 
         return total_fee;
@@ -1133,6 +1124,23 @@ contract Vault is IVault, VaultHelpers {
         strategies_[strategyId].totalSkim += amount;
 
         _transferToEverscale(rewards_, amount);
+    }
+
+    /// @notice Skim Vault fees to the `rewards_` address
+    /// This may only be called by `governance` or `management`
+    /// @param skim_to_everscale Skim fees to Everscale or not
+    function skimFees(
+        bool skim_to_everscale
+    ) external override onlyGovernanceOrManagement {
+        require(fees > 0);
+
+        if (skim_to_everscale) {
+            _transferToEverscale(rewards_, fees);
+        } else {
+            IERC20(token).safeTransfer(governance, fees);
+        }
+
+        fees = 0;
     }
 
     /**

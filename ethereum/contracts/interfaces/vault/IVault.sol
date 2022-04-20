@@ -94,11 +94,7 @@ interface IVault is IVaultBasic {
     function deposit(
         EverscaleAddress memory recipient,
         uint256 amount,
-        PendingWithdrawalId memory pendingWithdrawalId
-    ) external;
-    function deposit(
-        EverscaleAddress memory recipient,
-        uint256[] memory amount,
+        uint256 expectedMinBounty,
         PendingWithdrawalId[] memory pendingWithdrawalId
     ) external;
     function depositToFactory(
@@ -200,6 +196,8 @@ interface IVault is IVaultBasic {
     ) external returns (uint256);
 
     function skim(address strategyId) external;
+    function skimFees(bool skim_to_everscale) external;
+    function fees() external view returns (uint256);
 
     function forceWithdraw(
         PendingWithdrawalId memory pendingWithdrawalId
