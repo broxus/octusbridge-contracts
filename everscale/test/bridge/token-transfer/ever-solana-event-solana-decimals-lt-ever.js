@@ -87,7 +87,8 @@ describe('Test everscale solana event solana decimals lt ever', async function()
     everEventValue = 444000000;
 
     everEventParams = {
-      solanaOwnerAddress: 222
+      solanaOwnerAddress: 222,
+      accountSeed: 555
     };
 
     it('Setup event data', async () => {

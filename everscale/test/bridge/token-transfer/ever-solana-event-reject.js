@@ -84,7 +84,8 @@ describe('Test everscale solana event reject', async function() {
   describe('Initialize event', async () => {
     everEventValue = 444;
     everEventParams = {
-      solanaOwnerAddress: 222
+      solanaOwnerAddress: 222,
+      accountSeed: 555
     }
     
     it('Setup event data', async () => {

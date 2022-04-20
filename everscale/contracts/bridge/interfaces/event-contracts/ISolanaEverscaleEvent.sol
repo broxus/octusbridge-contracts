@@ -5,7 +5,7 @@ import "./IBasicEvent.sol";
 
 interface ISolanaEverscaleEvent {
     struct SolanaEverscaleEventVoteData {
-        uint accountSeed;
+        uint128 accountSeed;
         TvmCell eventData;
     }
 

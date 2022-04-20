@@ -49,7 +49,7 @@
 				{"name":"answerId","type":"uint32"}
 			],
 			"outputs": [
-				{"components":[{"components":[{"name":"accountSeed","type":"uint256"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"value0","type":"tuple"}
+				{"components":[{"components":[{"name":"accountSeed","type":"uint128"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"value0","type":"tuple"}
 			]
 		},
 		{
@@ -74,7 +74,7 @@
 				{"name":"answerId","type":"uint32"}
 			],
 			"outputs": [
-				{"components":[{"components":[{"name":"accountSeed","type":"uint256"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"_eventInitData","type":"tuple"},
+				{"components":[{"components":[{"name":"accountSeed","type":"uint128"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"_eventInitData","type":"tuple"},
 				{"name":"_status","type":"uint8"},
 				{"name":"_confirms","type":"uint256[]"},
 				{"name":"_rejects","type":"uint256[]"},
@@ -205,7 +205,7 @@
 		}
 	],
 	"data": [
-		{"components":[{"components":[{"name":"accountSeed","type":"uint256"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"key":1,"name":"eventInitData","type":"tuple"}
+		{"components":[{"components":[{"name":"accountSeed","type":"uint128"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"key":1,"name":"eventInitData","type":"tuple"}
 	],
 	"events": [
 		{
@@ -244,7 +244,7 @@
 		{"name":"rejects","type":"uint16"},
 		{"name":"relay_round","type":"address"},
 		{"name":"round_number","type":"uint32"},
-		{"components":[{"components":[{"name":"accountSeed","type":"uint256"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"eventInitData","type":"tuple"},
+		{"components":[{"components":[{"name":"accountSeed","type":"uint128"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"eventInitData","type":"tuple"},
 		{"name":"token","type":"address"},
 		{"name":"amount","type":"uint64"},
 		{"name":"recipient","type":"address"},

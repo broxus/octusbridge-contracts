@@ -31,7 +31,7 @@
 		{
 			"name": "deployEvent",
 			"inputs": [
-				{"components":[{"name":"accountSeed","type":"uint64"},{"name":"eventData","type":"cell"}],"name":"eventVoteData","type":"tuple"}
+				{"components":[{"name":"accountSeed","type":"uint128"},{"name":"eventData","type":"cell"}],"name":"eventVoteData","type":"tuple"}
 			],
 			"outputs": [
 			]
@@ -40,7 +40,7 @@
 			"name": "deriveEventAddress",
 			"inputs": [
 				{"name":"answerId","type":"uint32"},
-				{"components":[{"name":"accountSeed","type":"uint64"},{"name":"eventData","type":"cell"}],"name":"eventVoteData","type":"tuple"}
+				{"components":[{"name":"accountSeed","type":"uint128"},{"name":"eventData","type":"cell"}],"name":"eventVoteData","type":"tuple"}
 			],
 			"outputs": [
 				{"name":"eventContract","type":"address"}

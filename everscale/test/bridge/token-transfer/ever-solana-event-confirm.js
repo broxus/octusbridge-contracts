@@ -85,7 +85,8 @@ describe('Test everscale solana event confirm', async function() {
     everEventValue = 444;
 
     everEventParams = {
-      solanaOwnerAddress: 222
+      solanaOwnerAddress: 222,
+      accountSeed: 555
     };
 
     it('Setup event data', async () => {
