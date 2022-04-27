@@ -254,8 +254,6 @@ const setupEthereumEverscaleEventConfiguration = async (owner, staking, cellEnco
 const setupSolanaEverscaleEventConfiguration = async (owner, staking, solanaDecimals = 9, everscaleDecimals = 9) => {
   const [keyPair] = await locklift.keys.getKeyPairs();
 
-  const configurationMeta = '';
-
   const _randomNonce = locklift.utils.getRandomNonce();
 
   const Proxy = await locklift.factory.getContract('SolanaProxyTokenTransfer');
@@ -280,31 +278,54 @@ const setupSolanaEverscaleEventConfiguration = async (owner, staking, solanaDeci
     everscaleDecimals
   );
 
+  const Factory = await locklift.factory.getContract('SolanaEverscaleEventConfigurationFactory');
   const SolanaEverscaleEventConfiguration = await locklift.factory.getContract('SolanaEverscaleEventConfiguration');
   const SolanaEvent = await locklift.factory.getContract('TokenTransferSolanaEverscaleEvent');
 
-  const solanaEverscaleEventConfiguration = await locklift.giver.deployContract({
-    contract: SolanaEverscaleEventConfiguration,
+  const factory = await locklift.giver.deployContract({
+    contract: Factory,
     constructorParams: {
-      _owner: owner.address,
-      _meta: configurationMeta,
+      _configurationCode: SolanaEverscaleEventConfiguration.code
     },
     initParams: {
-      basicConfiguration: {
-        eventABI: '',
-        eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
-        staking: staking.address,
-        eventCode: SolanaEvent.code,
-      },
-      networkConfiguration: {
-        program: new BigNumber(0),
-        settings: new BigNumber(0),
-        proxy: proxyFutureAddress,
-        endTimestamp: 0,
-      }
+      _randomNonce: locklift.utils.getRandomNonce(),
     },
-    keyPair
-  }, locklift.utils.convertCrystal(1, 'nano'));
+  });
+
+  await logContract(factory);
+
+  const basicConfiguration = {
+    eventABI: '',
+    eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
+    staking: staking.address,
+    eventCode: SolanaEvent.code,
+  };
+
+  const networkConfiguration = {
+    program: new BigNumber(0),
+    settings: new BigNumber(0),
+    proxy: proxyFutureAddress,
+    endTimestamp: 0,
+  };
+
+  await owner.runTarget({
+    contract: factory,
+    method: 'deploy',
+    params: {
+      _owner: owner.address,
+      basicConfiguration,
+      networkConfiguration
+    }
+  });
+
+  let solanaEverscaleEventConfiguration = await locklift.factory.getContract('SolanaEverscaleEventConfiguration');
+  solanaEverscaleEventConfiguration.address = (await factory.call({
+    method: 'deriveConfigurationAddress',
+    params: {
+      basicConfiguration,
+      networkConfiguration
+    }
+  }));
 
   await logContract(solanaEverscaleEventConfiguration);
 
@@ -521,9 +542,6 @@ const setupEverscaleEthereumEventConfiguration = async (owner, staking, cellEnco
 };
 
 const setupEverscaleSolanaEventConfiguration = async (owner, staking, solanaDecimals = 9, everscaleDecimals = 9) => {
-  const EverscaleSolanaEventConfiguration = await locklift.factory.getContract('EverscaleSolanaEventConfiguration');
-  const EverEvent = await locklift.factory.getContract('TokenTransferEverscaleSolanaEvent');
-
   const _randomNonce = locklift.utils.getRandomNonce();
   const [keyPair] = await locklift.keys.getKeyPairs();
 
@@ -576,31 +594,57 @@ const setupEverscaleSolanaEventConfiguration = async (owner, staking, solanaDeci
     }
   });
 
-  const configurationMeta = '';
-  const everscaleSolanaEventConfiguration = await locklift.giver.deployContract({
-    contract: EverscaleSolanaEventConfiguration,
+  const Factory = await locklift.factory.getContract('EverscaleSolanaEventConfigurationFactory');
+  const EverscaleSolanaEventConfiguration = await locklift.factory.getContract('EverscaleSolanaEventConfiguration');
+
+  const factory = await locklift.giver.deployContract({
+    contract: Factory,
     constructorParams: {
-      _owner: owner.address,
-      _meta: configurationMeta,
+      _configurationCode: EverscaleSolanaEventConfiguration.code
     },
     initParams: {
-      basicConfiguration: {
-        eventABI: '',
-        eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
-        staking: staking.address,
-        eventCode: EverEvent.code,
-      },
-      networkConfiguration: {
-        program:  new BigNumber(0),
-        settings: new BigNumber(0),
-        eventEmitter: proxyFutureAddress,
-        instruction: 0,
-        startTimestamp: 0,
-        endTimestamp: 0,
-      }
+      _randomNonce: locklift.utils.getRandomNonce(),
     },
-    keyPair
-  }, locklift.utils.convertCrystal(1, 'nano'));
+  });
+
+  await logContract(factory);
+
+  const EverEvent = await locklift.factory.getContract('TokenTransferEverscaleSolanaEvent');
+
+  const basicConfiguration = {
+    eventABI: '',
+    eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
+    staking: staking.address,
+    eventCode: EverEvent.code,
+  };
+
+  const networkConfiguration = {
+    program:  new BigNumber(0),
+    settings: new BigNumber(0),
+    eventEmitter: proxyFutureAddress,
+    instruction: 0,
+    startTimestamp: 0,
+    endTimestamp: 0,
+  };
+
+  await owner.runTarget({
+    contract: factory,
+    method: 'deploy',
+    params: {
+      _owner: owner.address,
+      basicConfiguration,
+      networkConfiguration
+    }
+  });
+
+  let everscaleSolanaEventConfiguration = await locklift.factory.getContract('EverscaleSolanaEventConfiguration');
+  everscaleSolanaEventConfiguration.address = (await factory.call({
+    method: 'deriveConfigurationAddress',
+    params: {
+      basicConfiguration,
+      networkConfiguration
+    }
+  }));
 
   await logContract(everscaleSolanaEventConfiguration);
 
