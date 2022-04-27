@@ -31,7 +31,7 @@
 		{
 			"name": "deployEvent",
 			"inputs": [
-				{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"name":"payer","type":"uint256"},{"name":"eventData","type":"cell"}],"name":"eventVoteData","type":"tuple"}
+				{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"name":"author","type":"uint256"},{"name":"eventData","type":"cell"}],"name":"eventVoteData","type":"tuple"}
 			],
 			"outputs": [
 			]
@@ -40,7 +40,7 @@
 			"name": "deriveEventAddress",
 			"inputs": [
 				{"name":"answerId","type":"uint32"},
-				{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"name":"payer","type":"uint256"},{"name":"eventData","type":"cell"}],"name":"eventVoteData","type":"tuple"}
+				{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"name":"author","type":"uint256"},{"name":"eventData","type":"cell"}],"name":"eventVoteData","type":"tuple"}
 			],
 			"outputs": [
 				{"name":"eventContract","type":"address"}

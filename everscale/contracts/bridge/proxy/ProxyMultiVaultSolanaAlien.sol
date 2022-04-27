@@ -62,7 +62,7 @@ contract ProxyMultiVaultSolanaAlien is
         address remainingGasTo,
         TvmCell payload
     ) public override reserveMinBalance(MIN_CONTRACT_BALANCE) {
-        (uint256 recipient, uint256 payer) = abi.decode(payload, (uint256, uint256));
+        (uint256 recipient) = abi.decode(payload, (uint256));
 
         uint64 amount_solana = uint64(amount);
 
@@ -78,7 +78,7 @@ contract ProxyMultiVaultSolanaAlien is
         IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(
             tx.timestamp,
             now,
-            payer,
+            recipient,
             eventData
         );
 
