@@ -5,7 +5,9 @@ import "./IBasicEvent.sol";
 
 interface IEverscaleSolanaEvent is IBasicEvent {
     struct EverscaleSolanaEventVoteData {
-        uint128 accountSeed;
+        uint64 eventTransactionLt;
+        uint32 eventTimestamp;
+        uint256 payer;
         TvmCell eventData;
     }
 

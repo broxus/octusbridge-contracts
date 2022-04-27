@@ -93,7 +93,7 @@
 			"name": "encodeSolanaBurnPayload",
 			"inputs": [
 				{"name":"solanaOwnerAddress","type":"uint256"},
-				{"name":"accountSeed","type":"uint128"}
+				{"name":"solanaPayer","type":"uint256"}
 			],
 			"outputs": [
 				{"name":"data","type":"cell"}
@@ -106,7 +106,7 @@
 			],
 			"outputs": [
 				{"name":"solanaOwnerAddress","type":"uint256"},
-				{"name":"accountSeed","type":"uint128"}
+				{"name":"solanaPayer","type":"uint256"}
 			]
 		},
 		{
