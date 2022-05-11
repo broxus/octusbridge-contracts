@@ -8,4 +8,5 @@ interface IBasicEvent {
 
     event Reject(uint relay);
     event Closed();
+    event Rejected(uint32 reason);
 }

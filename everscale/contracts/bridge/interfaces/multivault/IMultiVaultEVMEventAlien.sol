@@ -15,6 +15,28 @@ interface IMultiVaultEVMEventAlien {
         address token_
     ) external;
 
+
+    function receiveTokenMeta(
+        uint256 base_chainId_,
+        uint160 base_token_,
+        string name,
+        string symbol,
+        uint8 decimals
+    ) external;
+
+    function receiveMergeRouter(
+        address router_
+    ) external;
+
+    function receiveMergeRouterPool(
+        address pool_
+    ) external;
+
+    function receiveMergePoolCanon(
+        address canon_,
+        uint8 canon_decimals
+    ) external;
+
     function getDecodedData() external responsible returns(
         uint256 base_chainId_,
         uint160 base_token_,
@@ -24,6 +46,11 @@ interface IMultiVaultEVMEventAlien {
         uint128 amount_,
         address recipient_,
         address proxy_,
-        address token_
+        address token_,
+        address router_,
+        address pool_,
+        address canon_,
+        address target_token_,
+        uint128 target_amount_
     );
 }

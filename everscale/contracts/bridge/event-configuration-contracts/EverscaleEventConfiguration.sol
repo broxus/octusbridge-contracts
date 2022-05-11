@@ -31,9 +31,17 @@ contract EverscaleEventConfiguration is IEverscaleEventConfiguration, TransferUt
     constructor(address _owner, TvmCell _meta) public checkPubKey {
         tvm.accept();
 
+        tvm.rawReserve(MIN_CONTRACT_BALANCE, 0);
+
         setOwnership(_owner);
 
         meta = _meta;
+
+        _owner.transfer({
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        });
     }
 
     /**
@@ -144,7 +152,7 @@ contract EverscaleEventConfiguration is IEverscaleEventConfiguration, TransferUt
             code: basicConfiguration.eventCode
         });
 
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} address(tvm.hash(stateInit));
     }
 
     /*
@@ -157,7 +165,7 @@ contract EverscaleEventConfiguration is IEverscaleEventConfiguration, TransferUt
         EverscaleEventConfiguration _networkConfiguration,
         TvmCell _meta
     ) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS}(
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(
             basicConfiguration,
             networkConfiguration,
             meta
@@ -170,6 +178,6 @@ contract EverscaleEventConfiguration is IEverscaleEventConfiguration, TransferUt
         @return _type Configuration type - Ethereum or Everscale
     */
     function getType() override public pure responsible returns(EventType _type) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} EventType.Everscale;
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} EventType.Everscale;
     }
 }

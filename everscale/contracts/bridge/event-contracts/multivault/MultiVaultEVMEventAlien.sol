@@ -4,16 +4,28 @@ pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 
+import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
+
+
 import "./../../interfaces/multivault/IMultiVaultEVMEventAlien.sol";
 import "./../../interfaces/event-configuration-contracts/IEthereumEventConfiguration.sol";
 import "./../../interfaces/IProxyExtended.sol";
 import "./../../interfaces/multivault/IProxyMultiVaultAlien.sol";
+import "./../../interfaces/ITokenRootAlienEVM.sol";
+import "./../../interfaces/alien-token-merge/IMergePool.sol";
+import "./../../interfaces/alien-token-merge/IMergeRouter.sol";
 
 import "./../base/EthereumBaseEvent.sol";
-import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
+/// @title Alien event EVM -> Everscale
+/// @notice Leads to minting some TIP3 representation of ERC20 token
+/// Multiple scenarios are implemented
+/// - Corresponding TIP3 token is not deployed
+/// - Merge router is not deployed
 contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien {
+    uint128 POWER_BASE = 10;
+
     uint256 base_chainId;
     uint160 base_token;
     string name;
@@ -24,6 +36,13 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
 
     address proxy;
     address token;
+
+    address router;
+    address pool;
+    address canon;
+
+    address target_token;
+    uint128 target_amount;
 
     constructor(
         address _initializer,
@@ -38,7 +57,7 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
         TvmSlice bodyCopy = body;
         uint32 functionId = body.decode(uint32);
 
-        if (isExternalVoteCall(functionId)){
+        if (isExternalVoteCall(functionId)) {
             require(votes[msg.pubkey()] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
         }
 
@@ -92,6 +111,10 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
         );
     }
 
+    /// @notice Receives the alien token root address
+    /// Can be called only by `proxy`
+    /// @dev Sends the request to token to ensure it's already deployed
+    /// In case it's not - bounced message will be received, see `onBounce`
     function receiveAlienTokenRoot(
         address token_
     ) external override {
@@ -99,13 +122,114 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
 
         token = token_;
 
-        loadRelays();
+        ITokenRootAlienEVM(token).meta{
+            value: 1 ton,
+            bounce: true,
+            callback: MultiVaultEVMEventAlien.receiveTokenMeta
+        }();
+    }
+
+    /// @notice Receives token meta from the token, to ensure it's already deployed
+    /// Can be called only by `token`
+    /// @dev Sends request to the proxy to receive merge router address
+    function receiveTokenMeta(
+        uint256, // base_chainId_
+        uint160, // base_token_
+        string, // name
+        string, // symbol
+        uint8 // decimals
+    ) external override {
+        require(msg.sender == token);
+
+        _requestMergeRouter();
+    }
+
+    function _requestMergeRouter() internal {
+        // Token exists, no need to deploy
+        // Ask the router address
+        IProxyMultiVaultAlien(proxy).deriveMergeRouter{
+            value: 1 ton,
+            bounce: false,
+            callback: MultiVaultEVMEventAlien.receiveMergeRouter
+        }(token);
+    }
+
+    /// @notice Receives merge router address
+    /// Can be called only by `proxy`
+    /// @dev Sends request to the merge router to receive pool address
+    /// In case merge router is not deployed yet - the onBounce message will be received
+    /// @param router_ Router address
+    function receiveMergeRouter(
+        address router_
+    ) external override {
+        require(msg.sender == proxy);
+
+        router = router_;
+
+        // Request merge router pool
+        IMergeRouter(router).getPool{
+            value: 1 ton,
+            bounce: true,
+            callback: MultiVaultEVMEventAlien.receiveMergeRouterPool
+        }();
+    }
+
+    /// @notice Receives merge pool address
+    /// Can be called only by `router`
+    /// @dev In case pool is zero address - then finish transfer with `token` and `amount`
+    /// Otherwise - request canon token from the pool
+    /// @param pool_ Pool address
+    function receiveMergeRouterPool(
+        address pool_
+    ) external override {
+        require(msg.sender == router);
+
+        pool = pool_;
+
+        if (pool.value == 0) {
+            _finishSetup(token, amount);
+        } else {
+            IMergePool(pool).getCanon{
+                value: 1 ton,
+                bounce: false,
+                callback: MultiVaultEVMEventAlien.receiveMergePoolCanon
+            }();
+        }
+    }
+
+    /// @notice Receives merge pool canon
+    /// @param canon_ Canon token address
+    /// @param canon_decimals Canon token decimals
+    function receiveMergePoolCanon(
+        address canon_,
+        uint8 canon_decimals
+    ) external override {
+        require(msg.sender == pool);
+
+        canon = canon_;
+
+        uint128 canon_amount = amount;
+
+        if (decimals > canon_decimals) {
+            canon_amount = amount / (POWER_BASE**(decimals - canon_decimals));
+        } else if (decimals < canon_decimals) {
+            canon_amount = amount * (POWER_BASE**(canon_decimals - decimals));
+        }
+
+        // In case the token decimals is more than canon decimals
+        // And the transferred amount is too low
+        // The canon_amount may be equal to zero. In this case - mints user the original token
+        if (canon_amount == 0) {
+            _finishSetup(token, amount);
+        } else {
+            _finishSetup(canon, canon_amount);
+        }
     }
 
     function onConfirm() internal override {
         TvmCell meta = abi.encode(
-            token,
-            amount,
+            target_token,
+            target_amount,
             recipient
         );
 
@@ -114,6 +238,7 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
         }(eventInitData, meta, initializer);
     }
 
+    // TODO: legacy decoded data?
     function getDecodedData() external override responsible returns(
         uint256 base_chainId_,
         uint160 base_token_,
@@ -123,9 +248,14 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
         uint128 amount_,
         address recipient_,
         address proxy_,
-        address token_
+        address token_,
+        address router_,
+        address pool_,
+        address canon_,
+        address target_token_,
+        uint128 target_amount_
     ) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS}(
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS}(
             base_chainId,
             base_token,
             name,
@@ -134,7 +264,59 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
             amount,
             recipient,
             proxy,
-            token
+            token,
+            router,
+            pool,
+            canon,
+            target_token,
+            target_amount
         );
+    }
+
+    onBounce(TvmSlice slice) external {
+        uint32 selector = slice.decode(uint32);
+
+        if (
+            selector == tvm.functionId(ITokenRootAlienEVM.meta) &&
+            msg.sender == token
+        ) {
+            // Failed to request token meta
+            // Seems like corresponding token root not deployed so deploy it
+            IProxyMultiVaultAlien(proxy).deployAlienToken{
+                value: 2 ton,
+                bounce: false
+            }(
+                base_chainId,
+                base_token,
+                name,
+                symbol,
+                decimals,
+                recipient // TODO: recipient or event contracts
+            );
+
+            _requestMergeRouter();
+        } else if (
+            selector == tvm.functionId(IMergeRouter.getPool) &&
+            msg.sender == router
+        ) {
+            // Failed to request router's pool
+            // Seems like corresponding router not deployed so deploy it
+            IProxyMultiVaultAlien(proxy).deployMergeRouter{
+                value: 1 ton,
+                bounce: false
+            }(token);
+
+            _finishSetup(token, amount);
+        }
+    }
+
+    function _finishSetup(
+        address _target_token,
+        uint128 _target_amount
+    ) internal {
+        target_token = _target_token;
+        target_amount = _target_amount;
+
+        loadRelays();
     }
 }

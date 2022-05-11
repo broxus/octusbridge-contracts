@@ -31,6 +31,43 @@
 			]
 		},
 		{
+			"name": "receiveTokenMeta",
+			"inputs": [
+				{"name":"value0","type":"uint256"},
+				{"name":"value1","type":"uint160"},
+				{"name":"value2","type":"string"},
+				{"name":"value3","type":"string"},
+				{"name":"value4","type":"uint8"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "receiveMergeRouter",
+			"inputs": [
+				{"name":"router_","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "receiveMergeRouterPool",
+			"inputs": [
+				{"name":"pool_","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "receiveMergePoolCanon",
+			"inputs": [
+				{"name":"canon_","type":"address"},
+				{"name":"canon_decimals","type":"uint8"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "getDecodedData",
 			"inputs": [
 				{"name":"answerId","type":"uint32"}
@@ -44,7 +81,12 @@
 				{"name":"amount_","type":"uint128"},
 				{"name":"recipient_","type":"address"},
 				{"name":"proxy_","type":"address"},
-				{"name":"token_","type":"address"}
+				{"name":"token_","type":"address"},
+				{"name":"router_","type":"address"},
+				{"name":"pool_","type":"address"},
+				{"name":"canon_","type":"address"},
+				{"name":"target_token_","type":"address"},
+				{"name":"target_amount_","type":"uint128"}
 			]
 		},
 		{
@@ -234,6 +276,14 @@
 			],
 			"outputs": [
 			]
+		},
+		{
+			"name": "Rejected",
+			"inputs": [
+				{"name":"reason","type":"uint32"}
+			],
+			"outputs": [
+			]
 		}
 	],
 	"fields": [
@@ -249,6 +299,7 @@
 		{"name":"relay_round","type":"address"},
 		{"name":"round_number","type":"uint32"},
 		{"components":[{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"},{"name":"chainId","type":"uint32"}],"name":"eventInitData","type":"tuple"},
+		{"name":"POWER_BASE","type":"uint128"},
 		{"name":"base_chainId","type":"uint256"},
 		{"name":"base_token","type":"uint160"},
 		{"name":"name","type":"string"},
@@ -257,6 +308,11 @@
 		{"name":"amount","type":"uint128"},
 		{"name":"recipient","type":"address"},
 		{"name":"proxy","type":"address"},
-		{"name":"token","type":"address"}
+		{"name":"token","type":"address"},
+		{"name":"router","type":"address"},
+		{"name":"pool","type":"address"},
+		{"name":"canon","type":"address"},
+		{"name":"target_token","type":"address"},
+		{"name":"target_amount","type":"uint128"}
 	]
 }

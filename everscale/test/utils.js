@@ -32,42 +32,42 @@ class MetricManager {
     this.contracts = contracts;
     this.checkpoints = {};
   }
-  
+
   lastCheckPointName() {
     return Object.keys(this.checkpoints).pop();
   }
-  
+
   async checkPoint(name) {
     const balances = await Promise.all(this.contracts.map(async (contract) =>
       locklift.ton.getBalance(contract.address)));
-    
+
     this.checkpoints[name] = balances;
   }
-  
+
   getCheckPoint(name) {
     const checkpoint = this.checkpoints[name];
-    
+
     if (!checkpoint) throw new Error(`No checkpoint "${name}"`);
-    
+
     return checkpoint;
   }
-  
+
   async getDifference(startCheckPointName, endCheckPointName) {
     const startCheckPoint = this.getCheckPoint(startCheckPointName);
     const endCheckPoint = this.getCheckPoint(endCheckPointName);
-    
+
     const difference = {};
-    
+
     for (const [startMetric, endMetric, contract] of _.zip(startCheckPoint, endCheckPoint, this.contracts)) {
       difference[contract.name] = endMetric - startMetric;
     }
-    
+
     return difference;
   }
-  
+
   addContract(contract, fill=0) {
     this.contracts.push(contract);
-    
+
     for (const checkpoint of Object.keys(this.checkpoints)) {
       this.checkpoints[checkpoint].push(fill);
     }
@@ -78,9 +78,9 @@ class MetricManager {
 const setupBridge = async (relays) => {
   const Account = await locklift.factory.getAccount('Wallet');
   const [keyPair] = await locklift.keys.getKeyPairs();
-  
+
   const _randomNonce = locklift.utils.getRandomNonce();
-  
+
   const owner = await locklift.giver.deployContract({
     contract: Account,
     constructorParams: {},
@@ -89,15 +89,15 @@ const setupBridge = async (relays) => {
     },
     keyPair,
   }, locklift.utils.convertCrystal(1000, 'nano'));
-  
+
   owner.setKeyPair(keyPair);
   owner.afterRun = afterRun;
   owner.name = 'Bridge owner';
-  
+
   await logContract(owner);
-  
+
   const StakingMockup = await locklift.factory.getContract('StakingMockup');
-  
+
   const staking = await locklift.giver.deployContract({
     contract: StakingMockup,
     constructorParams: {},
@@ -107,12 +107,12 @@ const setupBridge = async (relays) => {
     },
     keyPair,
   }, locklift.utils.convertCrystal(1, 'nano'));
-  
+
   await logContract(staking);
-  
+
   const Bridge = await locklift.factory.getContract('Bridge');
   const Connector = await locklift.factory.getContract('Connector');
-  
+
   const bridge = await locklift.giver.deployContract({
     contract: Bridge,
     constructorParams: {
@@ -127,24 +127,24 @@ const setupBridge = async (relays) => {
     },
     keyPair
   }, locklift.utils.convertCrystal(1, 'nano'));
-  
+
 
   await logContract(bridge);
-  
+
   const CellEncoder = await locklift.factory.getContract('CellEncoderStandalone');
-  
+
   const cellEncoder = await locklift.giver.deployContract({
     contract: CellEncoder,
     keyPair,
   }, locklift.utils.convertCrystal(1, 'nano'));
-  
+
   return [bridge, owner, staking, cellEncoder];
 };
 
 
 const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
   const [keyPair] = await locklift.keys.getKeyPairs();
-  
+
   const configurationMeta = '';
 
   const _randomNonce = locklift.utils.getRandomNonce();
@@ -196,7 +196,7 @@ const setupEthereumEventConfiguration = async (owner, staking, cellEncoder) => {
       }
     },
     keyPair
-  }, locklift.utils.convertCrystal(1, 'nano'));
+  }, locklift.utils.convertCrystal(2, 'nano'));
 
   await logContract(ethereumEventConfiguration);
 
@@ -372,7 +372,7 @@ const setupEverscaleEventConfiguration = async (owner, staking, cellEncoder) => 
       }
     },
     keyPair
-  }, locklift.utils.convertCrystal(1, 'nano'));
+  }, locklift.utils.convertCrystal(2, 'nano'));
 
   await logContract(everscaleEventConfiguration);
 
@@ -444,7 +444,7 @@ const setupAlienMultiVault = async (owner, staking, cellEncoder) => {
       _randomNonce,
     },
     keyPair
-  }, locklift.utils.convertCrystal(1, 'nano'));
+  }, locklift.utils.convertCrystal(2, 'nano'));
 
   await logContract(proxy);
 
@@ -475,7 +475,7 @@ const setupAlienMultiVault = async (owner, staking, cellEncoder) => {
       }
     },
     keyPair
-  }, locklift.utils.convertCrystal(1, 'nano'));
+  }, locklift.utils.convertCrystal(2, 'nano'));
 
   await logContract(evmEventConfiguration);
 
@@ -504,7 +504,7 @@ const setupAlienMultiVault = async (owner, staking, cellEncoder) => {
       }
     },
     keyPair
-  }, locklift.utils.convertCrystal(1, 'nano'));
+  }, locklift.utils.convertCrystal(2, 'nano'));
 
   await logContract(everscaleEventConfiguration);
 
@@ -512,6 +512,8 @@ const setupAlienMultiVault = async (owner, staking, cellEncoder) => {
   const AlienTokenRoot = await locklift.factory.getContract('TokenRootAlienEVM');
   const AlienTokenWalletUpgradeable = await locklift.factory.getContract('AlienTokenWalletUpgradeable');
   const AlienTokenWalletPlatform = await locklift.factory.getContract('AlienTokenWalletPlatform');
+  const MergeRouter = await locklift.factory.getContract('MergeRouter');
+  const MergePool = await locklift.factory.getContract('MergePool');
 
   await owner.runTarget({
     contract: proxy,
@@ -524,6 +526,8 @@ const setupAlienMultiVault = async (owner, staking, cellEncoder) => {
         alienTokenRootCode: AlienTokenRoot.code,
         alienTokenWalletCode: AlienTokenWalletUpgradeable.code,
         alienTokenWalletPlatformCode: AlienTokenWalletPlatform.code,
+        mergeRouter: MergeRouter.code,
+        mergePool: MergePool.code,
       },
       remainingGasTo: owner.address
     },
@@ -597,7 +601,7 @@ const setupNativeMultiVault = async (owner, staking) => {
       }
     },
     keyPair
-  }, locklift.utils.convertCrystal(1, 'nano'));
+  }, locklift.utils.convertCrystal(2, 'nano'));
 
   await logContract(evmEventConfiguration);
 
@@ -626,7 +630,7 @@ const setupNativeMultiVault = async (owner, staking) => {
       }
     },
     keyPair
-  }, locklift.utils.convertCrystal(1, 'nano'));
+  }, locklift.utils.convertCrystal(2, 'nano'));
 
   await logContract(everscaleEventConfiguration);
 
@@ -706,11 +710,11 @@ const enableEventConfiguration = async (bridgeOwner, bridge, eventConfiguration)
   const connectorId = await bridge.call({
     method: 'connectorCounter',
   });
-  
+
   const connectorDeployValue = await bridge.call({
     method: 'connectorDeployValue',
   });
-  
+
   await bridgeOwner.runTarget({
     contract: bridge,
     method: 'deployConnector',
@@ -726,7 +730,7 @@ const enableEventConfiguration = async (bridgeOwner, bridge, eventConfiguration)
       id: connectorId
     }
   });
-  
+
   const connector = await locklift.factory.getContract('Connector');
   connector.setAddress(connectorAddress);
 
@@ -750,10 +754,10 @@ const captureConnectors = async (bridge) => {
         id: connectorId
       }
     });
-  
+
     const connector = await locklift.factory.getContract('Connector');
     connector.setAddress(connectorAddress);
-  
+
     return await connector.call({
       method: 'getDetails'
     });

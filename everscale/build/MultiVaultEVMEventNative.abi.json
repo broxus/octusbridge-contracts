@@ -230,6 +230,14 @@
 			],
 			"outputs": [
 			]
+		},
+		{
+			"name": "Rejected",
+			"inputs": [
+				{"name":"reason","type":"uint32"}
+			],
+			"outputs": [
+			]
 		}
 	],
 	"fields": [

@@ -12,6 +12,8 @@ import "./../../utils/ErrorCodes.sol";
 import "./../../utils/TransferUtils.sol";
 
 import "./../alien-token/TokenRootAlienEVM.sol";
+import "./../alien-token-merge/MergePool.sol";
+import "./../alien-token-merge/MergeRouter.sol";
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensBurnCallback.sol";
 
@@ -30,17 +32,33 @@ contract ProxyMultiVaultAlien is
     IProxyExtended,
     IProxyMultiVaultAlien
 {
-    Configuration config;
     uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
-    uint8 api_version = 0;
+
+    Configuration config;
+    uint8 api_version = 2;
+
+    address public manager;
 
     constructor(
         address owner_
     ) public checkPubKey {
         tvm.accept();
 
+        tvm.rawReserve(MIN_CONTRACT_BALANCE, 0);
+
         setOwnership(owner_);
-        api_version = 1;
+
+        owner_.transfer({
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        });
+    }
+
+    modifier onlyMergePool(uint nonce) {
+        require(deriveMergePool(nonce) == msg.sender);
+
+        _;
     }
 
     /// @notice Get current contract API version.
@@ -80,6 +98,7 @@ contract ProxyMultiVaultAlien is
 
         IEverscaleEventConfiguration(config.everscaleConfiguration).deployEvent{
             value: 0,
+            bounce: false,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventVoteData);
     }
@@ -103,9 +122,45 @@ contract ProxyMultiVaultAlien is
             (address, uint128, address)
         );
 
+        _mintTokens(
+            token,
+            amount,
+            recipient,
+            remainingGasTo
+        );
+    }
+
+    /// @notice Handles mint request from merge pool
+    /// Mints `amount` in `token` to `recipient`
+    /// @param nonce Merge pool nonce
+    /// @param token Token address
+    /// @param amount Amount to mint
+    /// @param recipient Token recipient
+    /// @param remainingGasTo Remaining gas to
+    function mintTokensByMergePool(
+        uint nonce,
+        address token,
+        uint128 amount,
+        address recipient,
+        address remainingGasTo
+    ) external override onlyMergePool(nonce) reserveMinBalance(MIN_CONTRACT_BALANCE) {
+        _mintTokens(
+            token,
+            amount,
+            recipient,
+            remainingGasTo
+        );
+    }
+
+    function _mintTokens(
+        address token,
+        uint128 amount,
+        address recipient,
+        address remainingGasTo
+    ) internal {
         TvmCell empty;
 
-        ITokenRoot(token).mint{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+        ITokenRoot(token).mint{value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false}(
             amount,
             recipient,
             config.deployWalletValue,
@@ -178,6 +233,52 @@ contract ProxyMultiVaultAlien is
         );
     }
 
+    function deriveMergeRouter(
+        address token
+    ) external override responsible returns (address router) {
+        TvmCell stateInit = _buildMergeRouterInitState(token);
+
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
+    }
+
+    function deployMergeRouter(
+        address token
+    ) external override reserveMinBalance(MIN_CONTRACT_BALANCE) {
+        TvmCell stateInit = _buildMergeRouterInitState(token);
+
+        new MergeRouter{
+            stateInit: stateInit,
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(owner, manager);
+    }
+
+    function deriveMergePool(
+        uint256 nonce
+    ) public override responsible returns (address pool) {
+        TvmCell stateInit = _buildMergePoolInitState(nonce);
+
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
+    }
+
+    function deployMergePool(
+        uint256 nonce,
+        address[] tokens,
+        uint256 canonId
+    ) external override reserveMinBalance(MIN_CONTRACT_BALANCE) {
+        require(msg.sender == owner || msg.sender == manager);
+
+        TvmCell stateInit = _buildMergePoolInitState(nonce);
+
+        new MergePool{
+            stateInit: stateInit,
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(tokens, canonId, owner, manager);
+    }
+
     /// @notice Proxies arbitrary message to any contract.
     /// Should be used for interacting with `onlyOwner` alien token root methods.
     /// This can be called only by `owner`.
@@ -187,13 +288,10 @@ contract ProxyMultiVaultAlien is
         address recipient,
         TvmCell message
     ) external override onlyOwner reserveMinBalance(MIN_CONTRACT_BALANCE) {
-        TvmBuilder payload;
-        payload.store(message);
-
         recipient.transfer({
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED,
-            body: payload.toCell()
+            body: message
         });
     }
 
@@ -243,6 +341,87 @@ contract ProxyMultiVaultAlien is
         });
     }
 
+    function _buildMergeRouterInitState(
+        address token
+    ) internal view returns (TvmCell) {
+        return tvm.buildStateInit({
+            contr: MergeRouter,
+            varInit: {
+                token: token,
+                proxy: address(this)
+            },
+            pubkey: 0,
+            code: config.mergeRouter
+        });
+    }
+
+    function _buildMergePoolInitState(
+        uint256 nonce
+    ) internal view returns (TvmCell) {
+        return tvm.buildStateInit({
+            contr: MergePool,
+            varInit: {
+                proxy: address(this),
+                _randomNonce: nonce
+            },
+            pubkey: 0,
+            code: config.mergePool
+        });
+    }
+
+    /// @notice Set merge manager
+    /// Can be called only by `owner`
+    /// @param _manager Manager address
+    function setManager(
+        address _manager
+    ) external override onlyOwner cashBack {
+        manager = _manager;
+    }
+
+    function mint(
+        address token,
+        uint128 amount,
+        address recipient
+    ) external override onlyOwner reserveMinBalance(MIN_CONTRACT_BALANCE) {
+        _mintTokens(
+            token,
+            amount,
+            recipient,
+            msg.sender
+        );
+    }
+
+    function burn(
+        address token,
+        uint128 amount,
+        address walletOwner
+    ) external override onlyOwner reserveMinBalance(MIN_CONTRACT_BALANCE) {
+        TvmCell empty;
+
+        IBurnableByRootTokenRoot(token).burnTokens{
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED,
+            bounce: false
+        }(
+            amount,
+            walletOwner,
+            msg.sender,
+            msg.sender,
+            empty
+        );
+    }
+
+    function setMergeRouterCode(
+        TvmCell code
+    ) external override onlyOwner cashBack {
+        config.mergeRouter = code;
+    }
+
+    function setMergePoolCode(
+        TvmCell code
+    ) external override onlyOwner cashBack {
+        config.mergePool = code;
+    }
 
     function _isArrayContainsAddress(
         address[] array,

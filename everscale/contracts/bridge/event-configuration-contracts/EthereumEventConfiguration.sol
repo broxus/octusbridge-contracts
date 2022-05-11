@@ -28,12 +28,23 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IPro
     uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
 
     /// @param _owner Event configuration owner
-    constructor(address _owner, TvmCell _meta) public checkPubKey {
+    constructor(
+        address _owner,
+        TvmCell _meta
+    ) public checkPubKey {
         tvm.accept();
+
+        tvm.rawReserve(MIN_CONTRACT_BALANCE, 0);
 
         setOwnership(_owner);
 
         meta = _meta;
+
+        _owner.transfer({
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        });
     }
 
     /**
@@ -145,7 +156,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IPro
             code: basicConfiguration.eventCode
         });
 
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} address(tvm.hash(stateInit));
     }
 
     /**
@@ -158,7 +169,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IPro
         EthereumEventConfiguration _networkConfiguration,
         TvmCell _meta
     ) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS}(
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(
             basicConfiguration,
             networkConfiguration,
             meta
@@ -168,7 +179,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IPro
     /// @dev Get event configuration type
     /// @return _type Configuration type - Ethereum or Everscale
     function getType() override public pure responsible returns(EventType _type) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} EventType.Ethereum;
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} EventType.Ethereum;
     }
 
     /// @dev Proxy V1 callback.
