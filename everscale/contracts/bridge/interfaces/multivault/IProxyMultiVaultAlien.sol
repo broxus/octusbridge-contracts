@@ -28,6 +28,14 @@ interface IProxyMultiVaultAlien {
         address remainingGasTo
     ) external;
 
+    function withdrawTokensByMergePool(
+        uint nonce,
+        address token,
+        uint128 amount,
+        uint160 recipient,
+        address remainingGasTo
+    ) external;
+
     function deriveAlienTokenRoot(
         uint256 base_chainId,
         uint160 base_token,

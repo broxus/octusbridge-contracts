@@ -2,6 +2,8 @@ pragma ton-solidity >= 0.39.0;
 
 
 interface IMergePool {
+    enum BurnType { Withdraw, Swap }
+
     function receiveTokenDecimals(
         uint8 decimals
     ) external;

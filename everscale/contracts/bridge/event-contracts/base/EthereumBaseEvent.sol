@@ -31,7 +31,7 @@ contract EthereumBaseEvent is BaseEvent, IEthereumEvent {
     }
 
     function getEventInitData() public view responsible returns (EthereumEventInitData) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} eventInitData;
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} eventInitData;
     }
 
     function getStakingAddress() override internal view returns (address) {

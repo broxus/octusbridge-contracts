@@ -127,22 +127,53 @@ contract MergePool is
         address remainingGasTo,
         TvmCell payload
     ) external override tokenExists(msg.sender) reserveBalance {
-        (address targetToken) = abi.decode(payload, (address));
+        (
+            BurnType burnType,
+            address targetToken,
+            TvmCell operationPayload
+        ) = abi.decode(payload, (BurnType, address, TvmCell));
 
-        uint128 amount = _convertDecimals(_amount, msg.sender, targetToken);
+        require(tokens.exists(targetToken));
 
-        IProxyMultiVaultAlien(proxy).mintTokensByMergePool(
-            _randomNonce,
-            targetToken,
-            amount,
-            walletOwner,
-            remainingGasTo
+        uint128 amount = _convertDecimals(
+            _amount,
+            msg.sender,
+            targetToken
         );
+
+        if (burnType == BurnType.Swap) {
+            IProxyMultiVaultAlien(proxy).mintTokensByMergePool{
+                bounce: false,
+                value: 0,
+                flag: MsgFlag.ALL_NOT_RESERVED
+            }(
+                _randomNonce,
+                targetToken,
+                amount,
+                walletOwner,
+                remainingGasTo
+            );
+        } else {
+            (uint160 recipient) = abi.decode(operationPayload, (uint160));
+
+            IProxyMultiVaultAlien(proxy).withdrawTokensByMergePool{
+                bounce: false,
+                value: 0,
+                flag: MsgFlag.ALL_NOT_RESERVED
+            }(
+                _randomNonce,
+                targetToken,
+                amount,
+                recipient,
+                remainingGasTo
+            );
+        }
     }
 
     function _requestTokenDecimals(address token) internal view {
         ITokenRoot(token).decimals{
             value: 0.3 ton,
+            bounce: false,
             callback: MergePool.receiveTokenDecimals
         }();
     }

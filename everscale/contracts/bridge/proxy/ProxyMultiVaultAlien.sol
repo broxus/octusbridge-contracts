@@ -82,25 +82,27 @@ contract ProxyMultiVaultAlien is
     ) public override reserveMinBalance(MIN_CONTRACT_BALANCE) {
         (uint160 recipient) = abi.decode(payload, (uint160));
 
-        TvmCell eventData = abi.encode(
-            address(this), // Proxy address, used in event contract for validating token root
-            msg.sender, // Everscale token root address
-            remainingGasTo, // Remaining gas receiver (on event contract destroy)
-            amount, // Amount of tokens to withdraw
-            recipient // Recipient address in EVM network
+        _deployEvent(
+            msg.sender,
+            amount,
+            recipient,
+            remainingGasTo
         );
+    }
 
-        IEverscaleEvent.EverscaleEventVoteData eventVoteData = IEverscaleEvent.EverscaleEventVoteData(
-            tx.timestamp,
-            now,
-            eventData
+    function withdrawTokensByMergePool(
+        uint nonce,
+        address token,
+        uint128 amount,
+        uint160 recipient,
+        address remainingGasTo
+    ) external override onlyMergePool(nonce) reserveMinBalance(MIN_CONTRACT_BALANCE) {
+        _deployEvent(
+            token,
+            amount,
+            recipient,
+            remainingGasTo
         );
-
-        IEverscaleEventConfiguration(config.everscaleConfiguration).deployEvent{
-            value: 0,
-            bounce: false,
-            flag: MsgFlag.ALL_NOT_RESERVED
-        }(eventVoteData);
     }
 
     /// @notice Handles alien token transfer from EVM. Token address is derived automatically and MUST
@@ -168,6 +170,33 @@ contract ProxyMultiVaultAlien is
             true,
             empty
         );
+    }
+
+    function _deployEvent(
+        address token,
+        uint128 amount,
+        uint160 recipient,
+        address remainingGasTo
+    ) internal {
+        TvmCell eventData = abi.encode(
+            address(this), // Proxy address, used in event contract for validating token root
+            token, // Everscale token root address
+            remainingGasTo, // Remaining gas receiver (on event contract destroy)
+            amount, // Amount of tokens to withdraw
+            recipient // Recipient address in EVM network
+        );
+
+        IEverscaleEvent.EverscaleEventVoteData eventVoteData = IEverscaleEvent.EverscaleEventVoteData(
+            tx.timestamp,
+            now,
+            eventData
+        );
+
+        IEverscaleEventConfiguration(config.everscaleConfiguration).deployEvent{
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(eventVoteData);
     }
 
     /// @notice Derives root address for alien token, without deploying it

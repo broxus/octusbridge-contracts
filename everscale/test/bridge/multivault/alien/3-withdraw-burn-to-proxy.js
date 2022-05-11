@@ -9,7 +9,7 @@ const {
 } = require('./../../../utils');
 
 
-describe('Transfer alien token from Everscale to EVM', async function() {
+describe('Withdraw tokens by burning in favor of proxy', async function() {
     this.timeout(10000000);
 
     let eventContract;
@@ -18,10 +18,19 @@ describe('Transfer alien token from Everscale to EVM', async function() {
     let relays, bridge, bridgeOwner, staking, cellEncoder;
     let evmConfiguration, everscaleConfiguration, proxy, initializer;
 
+    const mintAmount = 1000;
     const amount = 333;
     const recipient = 888;
 
     let alienTokenRoot, initializerAlienTokenWallet;
+
+    const alienTokenMeta = {
+        chainId: 111,
+        token: 222,
+        name: 'Giga Chad',
+        symbol: 'GIGA_CHAD',
+        decimals: 6,
+    };
 
     afterEach(async function() {
         const lastCheckPoint = metricManager.lastCheckPointName();
@@ -56,12 +65,99 @@ describe('Transfer alien token from Everscale to EVM', async function() {
         );
     });
 
-    it('Pre-deploy Alien token root', async () => {
+    it('Deploy alien token root', async () => {
+        const tx = await initializer.runTarget({
+            contract: proxy,
+            method: 'deployAlienToken',
+            params: {
+                ...alienTokenMeta,
+                remainingGasTo: initializer.address
+            },
+            value: locklift.utils.convertCrystal(6, 'nano')
+        });
 
+        logger.log(`Alien token deployment tx: ${tx.transaction.id}`);
+
+        const alienTokenRootAddress = await proxy.call({
+            method: 'deriveAlienTokenRoot',
+            params: {
+                ...alienTokenMeta,
+                remainingGasTo: initializer.address
+            }
+        });
+
+        alienTokenRoot = await locklift.factory.getContract('TokenRootAlienEVM');
+        alienTokenRoot.setAddress(alienTokenRootAddress);
+        alienTokenRoot.afterRun = afterRun;
+
+        await utils.logContract(alienTokenRoot);
+
+        metricManager.addContract(alienTokenRoot);
+    });
+    it('Mint tokens to initializer', async () => {
+        // Build mint message
+        const {
+            body: message
+        } = await locklift.ton.client.abi.encode_message_body({
+            address: alienTokenRoot.address,
+            abi: {
+                type: "Contract",
+                value: alienTokenRoot.abi,
+            },
+            call_set: {
+                function_name: 'mint',
+                input: {
+                    amount: mintAmount,
+                    recipient: initializer.address,
+                    deployWalletValue: locklift.utils.convertCrystal(0.1, 'nano'),
+                    remainingGasTo: bridgeOwner.address,
+                    notify: false,
+                    payload: ''
+                },
+            },
+            signer: {
+                type: 'None',
+            },
+            is_internal: true,
+        });
+
+        // Send message through proxy
+        await bridgeOwner.runTarget({
+            contract: proxy,
+            method: 'sendMessage',
+            params: {
+                message,
+                recipient: alienTokenRoot.address
+            }
+        });
     });
 
-    it('Mint tokens to initializer', async () => {
+    it('Check initializer token wallet exists', async () => {
+        const walletAddress = await alienTokenRoot.call({
+            method: 'walletOf',
+            params: {
+                walletOwner: initializer.address
+            }
+        });
 
+        initializerAlienTokenWallet = await locklift.factory.getContract('AlienTokenWalletUpgradeable');
+        initializerAlienTokenWallet.name = 'Initializer alien token wallet';
+        initializerAlienTokenWallet.setAddress(walletAddress);
+        initializerAlienTokenWallet.afterRun = afterRun;
+
+        expect(await locklift.ton.getBalance(walletAddress))
+            .to.be.bignumber.greaterThan(0, 'Initializer token wallet balance is zero');
+
+        metricManager.addContract(initializerAlienTokenWallet);
+    });
+
+    it('Check initializer token balance', async () => {
+        const balance = await initializerAlienTokenWallet.call({
+            method: 'balance'
+        });
+
+        expect(balance)
+            .to.be.bignumber.equal(mintAmount, 'Wrong initializer token balance after mint');
     });
 
     it('Burn tokens in favor of Alien Proxy', async () => {
@@ -117,16 +213,16 @@ describe('Transfer alien token from Everscale to EVM', async function() {
         });
 
         expect(totalSupply)
-            .to.be.bignumber.equal(0, 'Wrong total supply');
+            .to.be.bignumber.equal(mintAmount - amount, 'Wrong total supply');
     });
 
-    it('Check initializer token wallet balance is zero', async () => {
+    it('Check initializer token wallet balance', async () => {
         const balance = await initializerAlienTokenWallet.call({
             method: 'balance'
         });
 
         expect(balance)
-            .to.be.bignumber.equal(0, 'Initializer failed to burn tokens');
+            .to.be.bignumber.equal(mintAmount - amount, 'Initializer failed to burn tokens');
     });
 
     it('Check event state before confirmation', async () => {
@@ -159,9 +255,9 @@ describe('Transfer alien token from Everscale to EVM', async function() {
         });
 
         expect(decodedData.base_chainId_)
-            .to.be.bignumber.equal(alienTokenBase.chainId, 'Wrong alien base chain ID');
+            .to.be.bignumber.equal(alienTokenMeta.chainId, 'Wrong alien base chain ID');
         expect(decodedData.base_token_)
-            .to.be.bignumber.equal(alienTokenBase.token, 'Wrong alien base token');
+            .to.be.bignumber.equal(alienTokenMeta.token, 'Wrong alien base token');
 
         const eventInitData = await eventContract.call({
             method: 'getEventInitData'
@@ -175,9 +271,9 @@ describe('Transfer alien token from Everscale to EVM', async function() {
         });
 
         expect(decodedEventData.base_token)
-            .to.be.bignumber.equal(alienTokenBase.token, 'Wrong event data base token');
+            .to.be.bignumber.equal(alienTokenMeta.token, 'Wrong event data base token');
         expect(decodedEventData.base_chainId)
-            .to.be.bignumber.equal(alienTokenBase.chainId, 'Wrong event data base chain id');
+            .to.be.bignumber.equal(alienTokenMeta.chainId, 'Wrong event data base chain id');
         expect(decodedEventData.amount)
             .to.be.bignumber.equal(amount, 'Wrong event data amount');
         expect(decodedEventData.recipient)
