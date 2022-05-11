@@ -13,7 +13,7 @@ import "../../interfaces/event-contracts/IBasicEvent.sol";
 import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
-abstract contract BaseEvent is IBasicEvent, TransferUtils{
+abstract contract BaseEvent is IBasicEvent, TransferUtils {
     // Event contract status
     Status public status;
     // Relays votes

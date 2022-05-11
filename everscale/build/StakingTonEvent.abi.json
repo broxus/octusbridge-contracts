@@ -264,6 +264,13 @@
 			]
 		},
 		{
+			"name": "Confirmed",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "Rejected",
 			"inputs": [
 				{"name":"reason","type":"uint32"}

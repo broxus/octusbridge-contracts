@@ -35,7 +35,7 @@ contract ProxyMultiVaultAlien is
     uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
 
     Configuration config;
-    uint8 api_version = 2;
+    uint8 api_version = 1;
 
     address public manager;
 

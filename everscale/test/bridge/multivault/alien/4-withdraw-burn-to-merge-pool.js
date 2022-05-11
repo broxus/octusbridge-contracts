@@ -77,6 +77,32 @@ describe('Withdraw tokens by burning in favor of merge pool', async function() {
         );
     });
 
+    it('Deploy proxy manager', async () => {
+        const [,keyPair] = await locklift.keys.getKeyPairs();
+
+        proxyManager = await utils.deployAccount(
+            keyPair,
+            50,
+        );
+
+        proxyManager.name = 'Proxy manager';
+
+        metricManager.addContract(proxyManager);
+    });
+
+    it('Set proxy manager', async () => {
+        await bridgeOwner.runTarget({
+            contract: proxy,
+            method: 'setManager',
+            params: {
+                _manager: proxyManager.address
+            }
+        });
+
+        expect(await proxy.call({ method: 'manager' }))
+            .to.be.equal(proxyManager.address, 'Wrong manager in alien proxy');
+    });
+
     it('Deploy alien token root', async () => {
         const tx = await initializer.runTarget({
             contract: proxy,
@@ -107,39 +133,13 @@ describe('Withdraw tokens by burning in favor of merge pool', async function() {
         metricManager.addContract(alienTokenRoot);
     });
     it('Mint tokens to initializer', async () => {
-        // Build mint message
-        const {
-            body: message
-        } = await locklift.ton.client.abi.encode_message_body({
-            address: alienTokenRoot.address,
-            abi: {
-                type: "Contract",
-                value: alienTokenRoot.abi,
-            },
-            call_set: {
-                function_name: 'mint',
-                input: {
-                    amount: mintAmount,
-                    recipient: initializer.address,
-                    deployWalletValue: locklift.utils.convertCrystal(0.1, 'nano'),
-                    remainingGasTo: bridgeOwner.address,
-                    notify: false,
-                    payload: ''
-                },
-            },
-            signer: {
-                type: 'None',
-            },
-            is_internal: true,
-        });
-
-        // Send message through proxy
         await bridgeOwner.runTarget({
             contract: proxy,
-            method: 'sendMessage',
+            method: 'mint',
             params: {
-                message,
-                recipient: alienTokenRoot.address
+                amount: mintAmount,
+                token: alienTokenRoot.address,
+                recipient: initializer.address
             }
         });
     });
@@ -172,10 +172,83 @@ describe('Withdraw tokens by burning in favor of merge pool', async function() {
             .to.be.bignumber.equal(mintAmount, 'Wrong initializer token balance after mint');
     });
 
+    it('Deploy canon token root', async () => {
+        const tx = await initializer.runTarget({
+            contract: proxy,
+            method: 'deployAlienToken',
+            params: {
+                ...canonTokenMeta,
+                remainingGasTo: initializer.address
+            },
+            value: locklift.utils.convertCrystal(6, 'nano')
+        });
+
+        logger.log(`Canon token deployment tx: ${tx.transaction.id}`);
+
+        const alienTokenRootAddress = await proxy.call({
+            method: 'deriveAlienTokenRoot',
+            params: {
+                ...canonTokenMeta,
+                remainingGasTo: initializer.address
+            }
+        });
+
+        canonTokenRoot = await locklift.factory.getContract('TokenRootAlienEVM');
+        canonTokenRoot.setAddress(alienTokenRootAddress);
+        canonTokenRoot.afterRun = afterRun;
+        canonTokenRoot.name = 'Canon token root';
+
+        await utils.logContract(alienTokenRoot);
+
+        metricManager.addContract(alienTokenRoot);
+    });
+
+    it('Deploy merge pool', async () => {
+        const nonce = locklift.utils.getRandomNonce();
+
+        await proxyManager.runTarget({
+            contract: proxy,
+            method: 'deployMergePool',
+            params: {
+                nonce,
+                tokens: [alienTokenRoot.address, canonTokenRoot.address],
+                canonId: 1
+            }
+        });
+
+        const mergePoolAddress = await proxy.call({
+            method: 'deriveMergePool',
+            params: {
+                nonce
+            }
+        });
+
+        mergePool = await locklift.factory.getContract('MergePool');
+        mergePool.setAddress(mergePoolAddress);
+        mergePool.afterRun = afterRun;
+
+        await utils.logContract(mergePool);
+
+        metricManager.addContract(mergePool);
+    });
+
+    it('Check merge pool', async () => {
+        const tokens = await mergePool.call({ method: 'getTokens' });
+
+        expect(tokens._canon)
+            .to.be.equal(canonTokenRoot.address, 'Wrong canon token in merge pool');
+
+        expect(tokens._tokens[alienTokenRoot.address])
+            .to.be.bignumber.equal(alienTokenMeta.decimals, 'Wrong alien decimals in merge pool');
+        expect(tokens._tokens[canonTokenRoot.address])
+            .to.be.bignumber.equal(canonTokenMeta.decimals, 'Wrong canon decimals in merge pool');
+    });
+
     it('Burn tokens in favor of Alien Proxy', async () => {
         const burnPayload = await cellEncoder.call({
-            method: 'encodeAlienBurnPayload',
+            method: 'encodeMergePoolBurnWithdrawPayload',
             params: {
+                targetToken: canonTokenRoot.address,
                 recipient
             }
         });
@@ -186,7 +259,7 @@ describe('Withdraw tokens by burning in favor of merge pool', async function() {
             params: {
                 amount,
                 remainingGasTo: initializer.address,
-                callbackTo: proxy.address,
+                callbackTo: mergePool.address,
                 payload: burnPayload,
             },
             value: locklift.utils.convertCrystal(10, 'nano')
@@ -267,9 +340,9 @@ describe('Withdraw tokens by burning in favor of merge pool', async function() {
         });
 
         expect(decodedData.base_chainId_)
-            .to.be.bignumber.equal(alienTokenMeta.chainId, 'Wrong alien base chain ID');
+            .to.be.bignumber.equal(canonTokenMeta.chainId, 'Wrong alien base chain ID');
         expect(decodedData.base_token_)
-            .to.be.bignumber.equal(alienTokenMeta.token, 'Wrong alien base token');
+            .to.be.bignumber.equal(canonTokenMeta.token, 'Wrong alien base token');
 
         const eventInitData = await eventContract.call({
             method: 'getEventInitData'
@@ -283,11 +356,11 @@ describe('Withdraw tokens by burning in favor of merge pool', async function() {
         });
 
         expect(decodedEventData.base_token)
-            .to.be.bignumber.equal(alienTokenMeta.token, 'Wrong event data base token');
+            .to.be.bignumber.equal(canonTokenMeta.token, 'Wrong event data base token');
         expect(decodedEventData.base_chainId)
-            .to.be.bignumber.equal(alienTokenMeta.chainId, 'Wrong event data base chain id');
+            .to.be.bignumber.equal(canonTokenMeta.chainId, 'Wrong event data base chain id');
         expect(decodedEventData.amount)
-            .to.be.bignumber.equal(amount, 'Wrong event data amount');
+            .to.be.bignumber.equal(33, 'Wrong event data amount');
         expect(decodedEventData.recipient)
             .to.be.bignumber.equal(recipient, 'Wrong event data recipient');
     });
