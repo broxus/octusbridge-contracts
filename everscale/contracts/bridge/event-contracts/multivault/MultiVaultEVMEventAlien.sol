@@ -65,6 +65,8 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
     }
 
     function onInit() override internal {
+        setStatusInitializing();
+
         int8 recipient_wid;
         uint256 recipient_addr;
 
@@ -144,7 +146,7 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
         _requestMergeRouter();
     }
 
-    function _requestMergeRouter() internal {
+    function _requestMergeRouter() internal view {
         // Token exists, no need to deploy
         // Ask the router address
         IProxyMultiVaultAlien(proxy).deriveMergeRouter{
@@ -227,7 +229,7 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
     }
 
     function onConfirm() internal override {
-        TvmCell meta = abi.encode(
+        TvmCell metaData = abi.encode(
             target_token,
             target_amount,
             recipient
@@ -235,7 +237,7 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
 
         IProxyExtended(eventInitData.configuration).onEventConfirmedExtended{
             flag: MsgFlag.ALL_NOT_RESERVED
-        }(eventInitData, meta, initializer);
+        }(eventInitData, metaData, initializer);
     }
 
     // TODO: legacy decoded data?

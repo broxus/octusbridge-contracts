@@ -28,7 +28,7 @@ contract EverscaleBaseEvent is BaseEvent, IEverscaleEvent {
     constructor(
         address _initializer,
         TvmCell _meta
-    ) public BaseEvent() {
+    ) public {
         require(
             eventInitData.configuration == msg.sender,
             ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION

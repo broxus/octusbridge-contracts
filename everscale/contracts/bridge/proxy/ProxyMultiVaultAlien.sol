@@ -159,7 +159,7 @@ contract ProxyMultiVaultAlien is
         uint128 amount,
         address recipient,
         address remainingGasTo
-    ) internal {
+    ) internal view {
         TvmCell empty;
 
         ITokenRoot(token).mint{value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false}(
@@ -177,7 +177,7 @@ contract ProxyMultiVaultAlien is
         uint128 amount,
         uint160 recipient,
         address remainingGasTo
-    ) internal {
+    ) internal view {
         TvmCell eventData = abi.encode(
             address(this), // Proxy address, used in event contract for validating token root
             token, // Everscale token root address

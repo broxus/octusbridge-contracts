@@ -21,7 +21,7 @@ contract EthereumBaseEvent is BaseEvent, IEthereumEvent {
     constructor(
         address _initializer,
         TvmCell _meta
-    ) public BaseEvent() {
+    ) public {
         require(
             eventInitData.configuration == msg.sender,
             ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION

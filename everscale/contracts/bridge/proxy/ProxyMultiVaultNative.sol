@@ -54,15 +54,13 @@ contract ProxyMultiVaultNative is
     /// Initializes native token withdraw (eg WEVER or BRIDGE)
     /// @param tokenRoot Transferred token root address.
     /// @param amount Tokens amount
-    /// @param sender Sender address
-    /// @param senderWallet Sender token wallet address
     /// @param remainingGasTo Address to send remaining gas to
     /// @param payload TvmCell encoded (uint160 recipient, uint256 chainId)
     function onAcceptTokensTransfer(
         address tokenRoot,
         uint128 amount,
-        address sender,
-        address senderWallet,
+        address,
+        address,
         address remainingGasTo,
         TvmCell payload
     ) override external reserveMinBalance(MIN_CONTRACT_BALANCE) {

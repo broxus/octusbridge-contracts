@@ -47,6 +47,8 @@ contract MultiVaultEverscaleEventNative is EverscaleBaseEvent, IMultiVaultEversc
     }
 
     function onInit() override internal {
+        setStatusInitializing();
+
         (
             proxy,
             tokenWallet,

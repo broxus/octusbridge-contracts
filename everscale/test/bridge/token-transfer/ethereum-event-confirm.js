@@ -13,7 +13,7 @@ const {
 } = require('../../utils');
 
 
-describe('Test ethereum event confirm', async function() {
+describe('Test EVM token transfer confirmation', async function() {
   this.timeout(10000000);
 
   let bridge, bridgeOwner, staking, cellEncoder;

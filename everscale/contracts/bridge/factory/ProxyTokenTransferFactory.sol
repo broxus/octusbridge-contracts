@@ -16,7 +16,7 @@ contract ProxyTokenTransferFactory is TransferUtils, RandomNonce {
         proxyCode = _proxyCode;
     }
 
-    function deploy(address _owner, uint _randomNonce) external reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    function deploy(address _owner, uint _randomNonce) external view reserveMinBalance(MIN_CONTRACT_BALANCE) {
         new ProxyTokenTransfer{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED,

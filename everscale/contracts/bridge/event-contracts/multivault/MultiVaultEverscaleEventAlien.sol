@@ -42,6 +42,8 @@ contract MultiVaultEverscaleEventAlien is EverscaleBaseEvent, IMultiVaultEversca
     }
 
     function onInit() override internal {
+        setStatusInitializing();
+
         (proxy, token, remainingGasTo, amount, recipient) = abi.decode(
             eventInitData.voteData.eventData,
             (address, address, address, uint128, uint160)

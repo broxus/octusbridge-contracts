@@ -32,6 +32,8 @@ contract TokenTransferEverscaleEvent is EverscaleBaseEvent, ProxyTokenTransferCe
     }
 
     function onInit() override internal {
+        setStatusInitializing();
+
         notifyEventStatusChanged();
 
         loadRelays();

@@ -37,6 +37,8 @@ contract MultiVaultEVMEventNative is EthereumBaseEvent, IMultiVaultEVMEventNativ
     }
 
     function onInit() override internal {
+        setStatusInitializing();
+
         int8 token_wid;
         uint256 token_addr;
 
@@ -105,7 +107,7 @@ contract MultiVaultEVMEventNative is EthereumBaseEvent, IMultiVaultEVMEventNativ
     }
 
     function onConfirm() internal override {
-        TvmCell meta = abi.encode(
+        TvmCell metaData = abi.encode(
             tokenWallet,
             amount,
             recipient
@@ -113,6 +115,6 @@ contract MultiVaultEVMEventNative is EthereumBaseEvent, IMultiVaultEVMEventNativ
 
         IProxyExtended(eventInitData.configuration).onEventConfirmedExtended{
             flag: MsgFlag.ALL_NOT_RESERVED
-        }(eventInitData, meta, initializer);
+        }(eventInitData, metaData, initializer);
     }
 }

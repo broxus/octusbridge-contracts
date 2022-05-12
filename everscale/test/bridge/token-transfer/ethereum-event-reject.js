@@ -11,7 +11,7 @@ const {
 } = require('../../utils');
 
 
-describe('Test ethereum event reject', async function() {
+describe('Test EVM Token transfer reject', async function() {
   this.timeout(10000000);
 
   let bridge, bridgeOwner, staking, cellEncoder;

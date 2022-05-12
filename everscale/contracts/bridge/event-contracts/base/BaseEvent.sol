@@ -33,15 +33,13 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
     // number of relay round
     uint32 public round_number;
 
-    constructor() public {
-        _status = Status.Initializing;
-    }
-
     function status() public view returns (Status) {
         return _status;
     }
 
     function onInit() virtual internal {
+        setStatusInitializing();
+
         loadRelays();
     }
 
@@ -134,6 +132,12 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
         _status = Status.Rejected;
 
         emit Rejected(reason);
+    }
+
+    function setStatusInitializing() internal {
+        require(_status == Status.Initializing, ErrorCodes.WRONG_STATUS);
+
+        _status = Status.Initializing;
     }
 
     function _checkVoteReceiver(address voteReceiver) internal pure {
