@@ -134,6 +134,13 @@ describe('Deposit Alien token from EVM to Everscale with no merging', async func
             .to.be.bignumber.greaterThan(0, 'Event contract balance is zero');
     });
 
+    it('Check event status', async () => {
+        const status = await eventContract.call({ method: 'status' });
+
+        expect(status)
+            .to.be.bignumber.equal(1, 'Wrong status');
+    });
+
     it('Check event state before confirmation', async () => {
         const details = await eventContract.call({
             method: 'getDetails',

@@ -6,7 +6,7 @@
   "scripts": {
     "free-ton-docs": "cd everscale && locklift gendoc --config locklift.config.js --include '^Bridge|^TonEvent|^EthereumEvent'"
   },
-  "author": "pavlovdog_ <pavlovdog.moscow@gmail.com>",
+  "author": "broxus",
   "license": "ISC",
   "dependencies": {
     "@broxus/contracts": "^1.0.4",
