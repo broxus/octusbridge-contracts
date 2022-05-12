@@ -436,6 +436,9 @@ describe('Withdraw tokens by burning in favor of merge pool', async function() {
                 contract: eventContract,
                 method: 'close'
             });
+
+            expect(await locklift.ton.getBalance(eventContract.address))
+                .to.be.bignumber.equal(0, 'Event balance should be zero after close');
         });
     });
 });

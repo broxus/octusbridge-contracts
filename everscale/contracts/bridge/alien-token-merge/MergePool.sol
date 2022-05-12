@@ -170,7 +170,7 @@ contract MergePool is
         }
     }
 
-    function _requestTokenDecimals(address token) internal view {
+    function _requestTokenDecimals(address token) internal pure {
         ITokenRoot(token).decimals{
             value: 0.3 ton,
             bounce: false,

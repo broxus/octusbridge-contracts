@@ -171,7 +171,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         address _staking,
         bool _active
     ) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS}(
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS}(
             connectorCode,
             connectorDeployValue,
             connectorCounter,

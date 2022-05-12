@@ -28,18 +28,21 @@ contract EverscaleBaseEvent is BaseEvent, IEverscaleEvent {
     constructor(
         address _initializer,
         TvmCell _meta
-    ) public {
-        require(eventInitData.configuration == msg.sender, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
+    ) public BaseEvent() {
+        require(
+            eventInitData.configuration == msg.sender,
+            ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION
+        );
 
         createdAt = now;
-        status = Status.Initializing;
         initializer = _initializer;
         meta = _meta;
+
         onInit();
     }
 
     function getEventInitData() public view responsible returns (EverscaleEventInitData) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} eventInitData;
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} eventInitData;
     }
 
     function getStakingAddress() override internal view returns (address) {
@@ -73,12 +76,13 @@ contract EverscaleBaseEvent is BaseEvent, IEverscaleEvent {
         confirms++;
 
         // Event already confirmed
-        if (status != Status.Pending) {
+        if (status() != Status.Pending) {
             return;
         }
 
         if (confirms >= requiredVotes) {
-            status = Status.Confirmed;
+            setStatusConfirmed();
+
             onConfirm();
         }
     }
@@ -104,23 +108,49 @@ contract EverscaleBaseEvent is BaseEvent, IEverscaleEvent {
         rejects++;
 
         // Event already confirmed
-        if (status != Status.Pending) {
+        if (status() != Status.Pending) {
             return;
         }
 
         if (rejects >= requiredVotes) {
-            status = Status.Rejected;
+            setStatusRejected(0);
+
             onReject();
         }
     }
 
-    /*
-        @dev Get event details
-        @returns _initData Init data
-        @returns _status Current event status
-        @returns _confirmRelays List of relays who have confirmed event
-        @returns _confirmRelays List of relays who have rejected event
-        @returns _eventDataSignatures List of relay's TonEvent signatures
+    function gasBackAddress() internal virtual view returns(address) {
+        return initializer;
+    }
+
+    function close() public virtual view {
+        require(
+            status() != Status.Pending || now > createdAt + FORCE_CLOSE_TIMEOUT,
+            ErrorCodes.WRONG_STATUS
+        );
+
+        address gasBackAddress_ = gasBackAddress();
+
+        require(
+            msg.sender == gasBackAddress_,
+            ErrorCodes.SENDER_IS_NOT_EVENT_OWNER
+        );
+
+        transferAll(gasBackAddress_);
+    }
+
+    /**
+        @notice Get event details
+        @return _eventInitData Init data
+        @return _status Current event status
+        @return _confirms List of relays who have confirmed event
+        @return _rejects List of relays who have rejected event
+        @return empty List of relays who have not voted yet
+        @return _signatures List of signatures, made by relays who confirmed event
+        @return balance Event contract balance in EVERs
+        @return _initializer Initializer address
+        @return _meta Configuration meta
+        @return _requiredVotes Required amount of confirmations to confirm event
     */
     function getDetails() external view responsible returns (
         EverscaleEventInitData _eventInitData,
@@ -140,9 +170,9 @@ contract EverscaleBaseEvent is BaseEvent, IEverscaleEvent {
             _signatures.push(signatures[voter]);
         }
 
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} (
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} (
             eventInitData,
-            status,
+            status(),
             _confirms,
             getVoters(Vote.Reject),
             getVoters(Vote.Empty),

@@ -41,16 +41,6 @@ contract MultiVaultEverscaleEventAlien is EverscaleBaseEvent, IMultiVaultEversca
         return bodyCopy;
     }
 
-    function close() external view {
-        require(
-            status != Status.Pending || now > createdAt + FORCE_CLOSE_TIMEOUT,
-            ErrorCodes.EVENT_PENDING
-        );
-
-        require(msg.sender == remainingGasTo, ErrorCodes.SENDER_IS_NOT_EVENT_OWNER);
-        transferAll(remainingGasTo);
-    }
-
     function onInit() override internal {
         (proxy, token, remainingGasTo, amount, recipient) = abi.decode(
             eventInitData.voteData.eventData,
@@ -59,6 +49,7 @@ contract MultiVaultEverscaleEventAlien is EverscaleBaseEvent, IMultiVaultEversca
 
         ITokenRootAlienEVM(token).meta{
             value: 1 ton,
+            bounce: true,
             callback: MultiVaultEverscaleEventAlien.receiveTokenMeta
         }();
     }
@@ -94,16 +85,12 @@ contract MultiVaultEverscaleEventAlien is EverscaleBaseEvent, IMultiVaultEversca
 
         expectedToken = token_;
 
-        loadRelays();
-    }
-
-    function onRelaysLoaded() override internal {
-        if (token == expectedToken) {
+        if (expectedToken == token) {
             _updateEventData();
 
-            status = Status.Pending;
+            loadRelays();
         } else {
-            status = Status.Rejected;
+            setStatusRejected(1);
         }
     }
 
@@ -126,7 +113,7 @@ contract MultiVaultEverscaleEventAlien is EverscaleBaseEvent, IMultiVaultEversca
         uint256 base_chainId_,
         uint160 base_token_
     ) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS}(
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS}(
             proxy,
             token,
             remainingGasTo,
@@ -137,6 +124,10 @@ contract MultiVaultEverscaleEventAlien is EverscaleBaseEvent, IMultiVaultEversca
         );
     }
 
+    function gasBackAddress() internal override view returns(address) {
+        return remainingGasTo;
+    }
+
     onBounce(TvmSlice slice) external {
         uint32 selector = slice.decode(uint32);
 
@@ -144,9 +135,7 @@ contract MultiVaultEverscaleEventAlien is EverscaleBaseEvent, IMultiVaultEversca
             selector == tvm.functionId(ITokenRootAlienEVM.meta) ||
             selector == tvm.functionId(IProxyMultiVaultAlien.deriveAlienTokenRoot)
         ) {
-            status = Status.Rejected;
-
-            loadRelays();
+            setStatusRejected(2);
         }
     }
 }

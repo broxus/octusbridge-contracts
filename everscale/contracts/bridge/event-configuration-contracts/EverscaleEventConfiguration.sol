@@ -129,7 +129,7 @@ contract EverscaleEventConfiguration is IEverscaleEventConfiguration, TransferUt
     /*
         @dev Derive the Ethereum event contract address from it's init data
         @param eventVoteData Ethereum event vote data
-        @returns eventContract Address of the corresponding ethereum event contract
+        @return eventContract Address of the corresponding ethereum event contract
     */
     function deriveEventAddress(
         IEverscaleEvent.EverscaleEventVoteData eventVoteData

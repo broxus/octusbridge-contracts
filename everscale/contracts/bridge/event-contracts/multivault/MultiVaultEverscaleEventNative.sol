@@ -46,16 +46,6 @@ contract MultiVaultEverscaleEventNative is EverscaleBaseEvent, IMultiVaultEversc
         return bodyCopy;
     }
 
-    function close() external view {
-        require(
-            status != Status.Pending || now > createdAt + FORCE_CLOSE_TIMEOUT,
-            ErrorCodes.EVENT_PENDING
-        );
-
-        require(msg.sender == remainingGasTo, ErrorCodes.SENDER_IS_NOT_EVENT_OWNER);
-        transferAll(remainingGasTo);
-    }
-
     function onInit() override internal {
         (
             proxy,
@@ -72,21 +62,25 @@ contract MultiVaultEverscaleEventNative is EverscaleBaseEvent, IMultiVaultEversc
 
         ITokenRoot(token).name{
             value: 0.1 ton,
+            bounce: true,
             callback: MultiVaultEverscaleEventNative.receiveTokenName
         }();
 
         ITokenRoot(token).symbol{
             value: 0.1 ton,
+            bounce: true,
             callback: MultiVaultEverscaleEventNative.receiveTokenSymbol
         }();
 
         ITokenRoot(token).decimals{
             value: 0.1 ton,
+            bounce: true,
             callback: MultiVaultEverscaleEventNative.receiveTokenDecimals
         }();
 
         ITokenRoot(token).walletOf{
             value: 0.1 ton,
+            bounce: true,
             callback: MultiVaultEverscaleEventNative.receiveProxyTokenWallet
         }(proxy);
     }
@@ -122,16 +116,12 @@ contract MultiVaultEverscaleEventNative is EverscaleBaseEvent, IMultiVaultEversc
 
         expectedTokenWallet = tokenWallet_;
 
-        loadRelays();
-    }
-
-    function onRelaysLoaded() override internal {
         if (tokenWallet == expectedTokenWallet) {
             _updateEventData();
 
-            status = Status.Pending;
+            loadRelays();
         } else {
-            status = Status.Rejected;
+            setStatusRejected(1);
         }
     }
 
@@ -147,7 +137,7 @@ contract MultiVaultEverscaleEventNative is EverscaleBaseEvent, IMultiVaultEversc
         string symbol_,
         uint8 decimals_
     ) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS}(
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS}(
             proxy,
             tokenWallet,
             token,
@@ -176,18 +166,20 @@ contract MultiVaultEverscaleEventNative is EverscaleBaseEvent, IMultiVaultEversc
         );
     }
 
+    function gasBackAddress() internal override view returns(address) {
+        return remainingGasTo;
+    }
+
     onBounce(TvmSlice slice) external {
         uint32 selector = slice.decode(uint32);
 
         if (
-            selector == tvm.functionId(TIP3TokenRoot.name) ||
-            selector == tvm.functionId(TIP3TokenRoot.symbol) ||
-            selector == tvm.functionId(TIP3TokenRoot.decimals) ||
-            selector == tvm.functionId(ITokenRoot.walletOf)
+            (selector == tvm.functionId(TIP3TokenRoot.name) && msg.sender == token )||
+            (selector == tvm.functionId(TIP3TokenRoot.symbol) && msg.sender == token) ||
+            (selector == tvm.functionId(TIP3TokenRoot.decimals) && msg.sender == token) ||
+            (selector == tvm.functionId(ITokenRoot.walletOf) && msg.sender == token)
         ) {
-            status = Status.Rejected;
-
-            loadRelays();
+            setStatusRejected(2);
         }
     }
 }

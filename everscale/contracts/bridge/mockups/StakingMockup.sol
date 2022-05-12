@@ -19,7 +19,7 @@ contract StakingMockup is IStaking, IRound, RandomNonce {
     /*
         @dev Get round contract address by it's id
         @param eventTimestamp Event creation timestamp
-        @returns roundContract Round contract
+        @return roundContract Round contract
     */
     function getRelayRoundAddressFromTimestamp(
         uint32
@@ -36,7 +36,7 @@ contract StakingMockup is IStaking, IRound, RandomNonce {
 
     /*
         @dev Get list of current round relays public keys
-        @returns _keys Round relays Everscale public keys
+        @return _keys Round relays Everscale public keys
     */
     function relayKeys()
         override
