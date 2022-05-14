@@ -238,13 +238,28 @@ describe('Withdraw tokens by burning in favor of merge pool', async function() {
         expect(tokens._canon)
             .to.be.equal(canonTokenRoot.address, 'Wrong canon token in merge pool');
 
-        expect(tokens._tokens[alienTokenRoot.address])
+        expect(tokens._tokens[alienTokenRoot.address].decimals)
             .to.be.bignumber.equal(alienTokenMeta.decimals, 'Wrong alien decimals in merge pool');
-        expect(tokens._tokens[canonTokenRoot.address])
+        expect(tokens._tokens[canonTokenRoot.address].decimals)
             .to.be.bignumber.equal(canonTokenMeta.decimals, 'Wrong canon decimals in merge pool');
     });
 
-    it('Burn tokens in favor of Alien Proxy', async () => {
+    it('Enable merge pool tokens', async () => {
+        await proxyManager.runTarget({
+            contract: mergePool,
+            method: 'enableAll',
+            params: {}
+        });
+
+        const tokens = await mergePool.call({ method: 'getTokens' });
+
+        expect(tokens._tokens[alienTokenRoot.address].enabled)
+            .to.be.equal(true, 'Wrong alien status in merge pool');
+        expect(tokens._tokens[canonTokenRoot.address].enabled)
+            .to.be.equal(true, 'Wrong canon status in merge pool');
+    });
+
+    it('Burn tokens in favor of merge pool', async () => {
         const burnPayload = await cellEncoder.call({
             method: 'encodeMergePoolBurnWithdrawPayload',
             params: {
@@ -360,7 +375,7 @@ describe('Withdraw tokens by burning in favor of merge pool', async function() {
         expect(decodedEventData.base_chainId)
             .to.be.bignumber.equal(canonTokenMeta.chainId, 'Wrong event data base chain id');
         expect(decodedEventData.amount)
-            .to.be.bignumber.equal(33, 'Wrong event data amount');
+            .to.be.bignumber.equal(amount * 10, 'Wrong event data amount');
         expect(decodedEventData.recipient)
             .to.be.bignumber.equal(recipient, 'Wrong event data recipient');
     });
@@ -439,6 +454,72 @@ describe('Withdraw tokens by burning in favor of merge pool', async function() {
 
             expect(await locklift.ton.getBalance(eventContract.address))
                 .to.be.bignumber.equal(0, 'Event balance should be zero after close');
+        });
+    });
+
+    describe('Withdraw with disabled merge pool', async () => {
+        it('Disable canon token in the merge pool', async () => {
+            await proxyManager.runTarget({
+                contract: mergePool,
+                method: 'disableToken',
+                params: {
+                    token: canonTokenRoot.address
+                }
+            });
+
+            const tokens = await mergePool.call({ method: 'getTokens' });
+
+            expect(tokens._tokens[alienTokenRoot.address].enabled)
+                .to.be.equal(true, 'Wrong alien status in merge pool');
+            expect(tokens._tokens[canonTokenRoot.address].enabled)
+                .to.be.equal(false, 'Wrong canon status in merge pool');
+        });
+
+        it('Burn tokens in favor of merge pool', async () => {
+            const burnPayload = await cellEncoder.call({
+                method: 'encodeMergePoolBurnWithdrawPayload',
+                params: {
+                    targetToken: canonTokenRoot.address,
+                    recipient
+                }
+            });
+
+            const tx = await initializer.runTarget({
+                contract: initializerAlienTokenWallet,
+                method: 'burn',
+                params: {
+                    amount,
+                    remainingGasTo: initializer.address,
+                    callbackTo: mergePool.address,
+                    payload: burnPayload,
+                },
+                value: locklift.utils.convertCrystal(10, 'nano')
+            });
+
+            logger.log(`Burn tx: ${tx.transaction.id}`);
+
+            const events = await everscaleConfiguration.getEvents('NewEventContract');
+
+            expect(events)
+                .to.have.lengthOf(1, 'Everscale event configuration should not deploy event');
+        });
+
+        it('Check total supply remains the same', async () => {
+            const totalSupply = await alienTokenRoot.call({
+                method: 'totalSupply'
+            });
+
+            expect(totalSupply)
+                .to.be.bignumber.equal(mintAmount - amount, 'Wrong total supply');
+        });
+
+        it('Check initializer token balance remains the same', async () => {
+            const balance = await initializerAlienTokenWallet.call({
+                method: 'balance'
+            });
+
+            expect(balance)
+                .to.be.bignumber.equal(mintAmount - amount, 'Wrong initializer token balance after mint');
         });
     });
 });

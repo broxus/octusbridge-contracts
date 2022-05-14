@@ -8,7 +8,6 @@ import "./../proxy/ProxyTokenTransfer.sol";
 
 contract ProxyTokenTransferFactory is TransferUtils, RandomNonce {
     TvmCell public proxyCode;
-    uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
 
     constructor(TvmCell _proxyCode) public {
         tvm.accept();
@@ -16,7 +15,7 @@ contract ProxyTokenTransferFactory is TransferUtils, RandomNonce {
         proxyCode = _proxyCode;
     }
 
-    function deploy(address _owner, uint _randomNonce) external view reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    function deploy(address _owner, uint _randomNonce) external view reserveAtLeastTargetBalance {
         new ProxyTokenTransfer{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED,

@@ -43,6 +43,17 @@ interface IMultiVault is IEverscale {
         uint256 chainId;
     }
 
+    struct PendingWithdrawalParams {
+        address token;
+        uint256 amount;
+        uint256 bounty;
+    }
+
+    struct PendingWithdrawalId {
+        address recipient;
+        uint256 id;
+    }
+
     function defaultNativeDepositFee() external view returns (uint);
     function defaultNativeWithdrawFee() external view returns (uint);
     function defaultAlienDepositFee() external view returns (uint);
@@ -100,10 +111,43 @@ interface IMultiVault is IEverscale {
     function setManagement(address _management) external;
     function setRewards(EverscaleAddress memory _rewards) external;
 
+    function pendingWithdrawalsPerUser(address user) external view returns (uint);
+
+    function pendingWithdrawalsTotal(address token) external view returns (uint);
+
+    function pendingWithdrawals(
+        address user,
+        uint256 id
+    ) external view returns (PendingWithdrawalParams memory);
+
+    function setPendingWithdrawalBounty(
+        uint256 id,
+        uint256 bounty
+    ) external;
+
+    function cancelPendingWithdrawal(
+        uint256 id,
+        uint256 amount,
+        EverscaleAddress memory recipient,
+        uint bounty
+    ) external;
+
+    function forceWithdraw(
+        PendingWithdrawalId[] memory pendingWithdrawalIds
+    ) external;
+
     function deposit(
         EverscaleAddress memory recipient,
         address token,
         uint amount
+    ) external;
+
+    function deposit(
+        EverscaleAddress memory recipient,
+        address token,
+        uint256 amount,
+        uint256 expectedMinBounty,
+        PendingWithdrawalId[] memory pendingWithdrawalIds
     ) external;
 
     function saveWithdrawNative(
@@ -116,6 +160,12 @@ interface IMultiVault is IEverscale {
         bytes[] memory signatures
     ) external;
 
+    function saveWithdrawAlien(
+        bytes memory payload,
+        bytes[] memory signatures,
+        uint bounty
+    ) external;
+
     function skim(
         address token,
         bool skim_to_everscale
@@ -125,6 +175,32 @@ interface IMultiVault is IEverscale {
         address token,
         address vault
     ) external;
+
+    event PendingWithdrawalCancel(
+        address recipient,
+        uint256 id,
+        uint256 amount
+    );
+
+    event PendingWithdrawalUpdateBounty(
+        address recipient,
+        uint256 id,
+        uint256 bounty
+    );
+
+    event PendingWithdrawalCreated(
+        address recipient,
+        uint256 id,
+        address token,
+        uint256 amount,
+        bytes32 payloadId
+    );
+
+    event PendingWithdrawalWithdraw(
+        address recipient,
+        uint256 id,
+        uint256 amount
+    );
 
     event BlacklistTokenAdded(address token);
     event BlacklistTokenRemoved(address token);

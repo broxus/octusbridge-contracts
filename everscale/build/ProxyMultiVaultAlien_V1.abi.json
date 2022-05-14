@@ -33,34 +33,10 @@
 			]
 		},
 		{
-			"name": "withdrawTokensByMergePool",
-			"inputs": [
-				{"name":"nonce","type":"uint256"},
-				{"name":"token","type":"address"},
-				{"name":"amount","type":"uint128"},
-				{"name":"recipient","type":"uint160"},
-				{"name":"remainingGasTo","type":"address"}
-			],
-			"outputs": [
-			]
-		},
-		{
 			"name": "onEventConfirmedExtended",
 			"inputs": [
 				{"components":[{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"},{"name":"chainId","type":"uint32"}],"name":"value0","type":"tuple"},
 				{"name":"meta","type":"cell"},
-				{"name":"remainingGasTo","type":"address"}
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "mintTokensByMergePool",
-			"inputs": [
-				{"name":"nonce","type":"uint256"},
-				{"name":"token","type":"address"},
-				{"name":"amount","type":"uint128"},
-				{"name":"recipient","type":"address"},
 				{"name":"remainingGasTo","type":"address"}
 			],
 			"outputs": [
@@ -94,44 +70,6 @@
 			]
 		},
 		{
-			"name": "deriveMergeRouter",
-			"inputs": [
-				{"name":"answerId","type":"uint32"},
-				{"name":"token","type":"address"}
-			],
-			"outputs": [
-				{"name":"router","type":"address"}
-			]
-		},
-		{
-			"name": "deployMergeRouter",
-			"inputs": [
-				{"name":"token","type":"address"}
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "deriveMergePool",
-			"inputs": [
-				{"name":"answerId","type":"uint32"},
-				{"name":"nonce","type":"uint256"}
-			],
-			"outputs": [
-				{"name":"pool","type":"address"}
-			]
-		},
-		{
-			"name": "deployMergePool",
-			"inputs": [
-				{"name":"nonce","type":"uint256"},
-				{"name":"tokens","type":"address[]"},
-				{"name":"canonId","type":"uint256"}
-			],
-			"outputs": [
-			]
-		},
-		{
 			"name": "sendMessage",
 			"inputs": [
 				{"name":"recipient","type":"address"},
@@ -154,50 +92,6 @@
 			"inputs": [
 				{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"evmConfigurations","type":"address[]"},{"name":"deployWalletValue","type":"uint128"},{"name":"alienTokenRootCode","type":"cell"},{"name":"alienTokenWalletCode","type":"cell"},{"name":"alienTokenWalletPlatformCode","type":"cell"}],"name":"_config","type":"tuple"},
 				{"name":"remainingGasTo","type":"address"}
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "setManager",
-			"inputs": [
-				{"name":"_manager","type":"address"}
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "setMergePool",
-			"inputs": [
-				{"name":"_mergePool","type":"cell"}
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "setMergeRouter",
-			"inputs": [
-				{"name":"_mergeRouter","type":"cell"}
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "mint",
-			"inputs": [
-				{"name":"token","type":"address"},
-				{"name":"amount","type":"uint128"},
-				{"name":"recipient","type":"address"}
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "burn",
-			"inputs": [
-				{"name":"token","type":"address"},
-				{"name":"amount","type":"uint128"},
-				{"name":"walletOwner","type":"address"}
 			],
 			"outputs": [
 			]
@@ -240,14 +134,6 @@
 			"outputs": [
 				{"name":"_randomNonce","type":"uint256"}
 			]
-		},
-		{
-			"name": "manager",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"manager","type":"address"}
-			]
 		}
 	],
 	"data": [
@@ -282,9 +168,6 @@
 		{"name":"owner","type":"address"},
 		{"name":"_randomNonce","type":"uint256"},
 		{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"evmConfigurations","type":"address[]"},{"name":"deployWalletValue","type":"uint128"},{"name":"alienTokenRootCode","type":"cell"},{"name":"alienTokenWalletCode","type":"cell"},{"name":"alienTokenWalletPlatformCode","type":"cell"}],"name":"config","type":"tuple"},
-		{"name":"api_version","type":"uint8"},
-		{"name":"manager","type":"address"},
-		{"name":"mergeRouter","type":"cell"},
-		{"name":"mergePool","type":"cell"}
+		{"name":"api_version","type":"uint8"}
 	]
 }

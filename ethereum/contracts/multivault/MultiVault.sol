@@ -67,6 +67,24 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
     mapping (address => TokenPrefix) prefixes_;
     mapping (address => uint) public override fees;
 
+    // STORAGE UPDATE 1
+    // Pending withdrawals
+    // - Counter pending withdrawals per user
+    mapping(address => uint) public override pendingWithdrawalsPerUser;
+    // - Pending withdrawal details
+    mapping(address => mapping(uint256 => PendingWithdrawalParams)) pendingWithdrawals_;
+
+    function pendingWithdrawals(
+        address user,
+        uint256 id
+    ) external view override returns (PendingWithdrawalParams memory) {
+        return pendingWithdrawals_[user][id];
+    }
+
+    // - Total amount of pending withdrawals per token
+    mapping(address => uint) public override pendingWithdrawalsTotal;
+
+
     modifier tokenNotBlacklisted(address token) {
         require(!tokens_[token].blacklisted);
 
@@ -480,6 +498,75 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         emit EmergencyShutdown(active);
     }
 
+    /// @notice Changes pending withdrawal bounty for specific pending withdrawal
+    /// @param id Pending withdrawal ID.
+    /// @param bounty The new value for pending withdrawal bounty.
+    function setPendingWithdrawalBounty(
+        uint256 id,
+        uint256 bounty
+    )
+        public
+        override
+    {
+        PendingWithdrawalParams memory pendingWithdrawal = pendingWithdrawals_[msg.sender][id];
+
+        require(bounty <= pendingWithdrawal.amount);
+
+        pendingWithdrawals_[msg.sender][id].bounty = bounty;
+
+        emit PendingWithdrawalUpdateBounty(
+            msg.sender,
+            id,
+            bounty
+        );
+    }
+
+    function forceWithdraw(
+        PendingWithdrawalId[] memory pendingWithdrawalIds
+    ) external override {
+        for (uint i = 0; i < pendingWithdrawalIds.length; i++) {
+            PendingWithdrawalId memory pendingWithdrawalId = pendingWithdrawalIds[i];
+
+            PendingWithdrawalParams memory pendingWithdrawal = pendingWithdrawals_[pendingWithdrawalId.recipient][pendingWithdrawalId.id];
+
+            pendingWithdrawals_[pendingWithdrawalId.recipient][pendingWithdrawalId.id].amount = 0;
+
+            IERC20(pendingWithdrawal.token).safeTransfer(
+                pendingWithdrawalId.recipient,
+                pendingWithdrawal.amount
+            );
+        }
+    }
+
+    /// @notice Cancel pending withdrawal partially or completely.
+    /// This may only be called by pending withdrawal recipient.
+    /// @param id Pending withdrawal ID
+    /// @param amount Amount to cancel, should be less or equal than pending withdrawal amount
+    /// @param recipient Tokens recipient, in Everscale network
+    /// @param bounty New value for bounty
+    function cancelPendingWithdrawal(
+        uint256 id,
+        uint256 amount,
+        EverscaleAddress memory recipient,
+        uint bounty
+    )
+        external
+        override
+        onlyEmergencyDisabled
+    {
+        PendingWithdrawalParams memory pendingWithdrawal = pendingWithdrawals_[msg.sender][id];
+
+        require(amount > 0 && amount <= pendingWithdrawal.amount);
+
+        pendingWithdrawals_[msg.sender][id].amount -= amount;
+
+        _transferToEverscaleAlien(pendingWithdrawal.token, recipient, amount);
+
+        emit PendingWithdrawalCancel(msg.sender, id, amount);
+
+        setPendingWithdrawalBounty(id, bounty);
+    }
+
     /// @notice Transfer tokens to the Everscale. Works both for native and alien tokens.
     /// Approve is required only for alien tokens deposit.
     /// @param recipient Everscale recipient.
@@ -529,6 +616,49 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
             amount,
             fee
         );
+    }
+
+    function deposit(
+        EverscaleAddress memory recipient,
+        address token,
+        uint256 amount,
+        uint256 expectedMinBounty,
+        PendingWithdrawalId[] memory pendingWithdrawalIds
+    ) external override nonReentrant {
+        uint amountLeft = amount;
+        uint amountPlusBounty = amount;
+
+        IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
+
+        for (uint i = 0; i < pendingWithdrawalIds.length; i++) {
+            PendingWithdrawalId memory pendingWithdrawalId = pendingWithdrawalIds[i];
+            PendingWithdrawalParams memory pendingWithdrawal = pendingWithdrawals_[pendingWithdrawalId.recipient][pendingWithdrawalId.id];
+
+            require(pendingWithdrawal.amount > 0);
+            require(pendingWithdrawal.token == token);
+
+            amountLeft -= pendingWithdrawal.amount;
+            amountPlusBounty += pendingWithdrawal.bounty;
+
+            pendingWithdrawals_[pendingWithdrawalId.recipient][pendingWithdrawalId.id].amount = 0;
+
+            IERC20(pendingWithdrawal.token).safeTransfer(
+                pendingWithdrawalId.recipient,
+                pendingWithdrawal.amount - pendingWithdrawal.bounty
+            );
+        }
+
+        require(amountPlusBounty - amount >= expectedMinBounty);
+
+        uint fee = calculateMovementFee(amount, token, Fee.Deposit);
+
+        _transferToEverscaleAlien(
+            token,
+            recipient,
+            amountPlusBounty - fee
+        );
+
+        _increaseTokenFee(token, fee);
     }
 
     /// @notice Save withdrawal for native token
@@ -589,11 +719,13 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         );
     }
 
+    /// @notice Save withdrawal of alien token
     function saveWithdrawAlien(
         bytes memory payload,
-        bytes[] memory signatures
+        bytes[] memory signatures,
+        uint bounty
     )
-        external
+        public
         override
         nonReentrant
         withdrawalNotSeenBefore(payload)
@@ -623,21 +755,58 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
             Fee.Withdraw
         );
 
-        IERC20(withdrawal.token).safeTransfer(
-            withdrawal.recipient,
-            withdrawal.amount - fee
-        );
-
         _increaseTokenFee(withdrawal.token, fee);
 
-        emit Withdraw(
-            TokenType.Alien,
-            payloadId,
-            withdrawal.token,
-            withdrawal.recipient,
-            withdrawal.amount,
-            fee
-        );
+        uint withdrawAmount = withdrawal.amount - fee;
+
+        // Check that token balance is sufficient
+        if (IERC20(withdrawal.token).balanceOf(address(this)) < withdrawAmount) {
+            uint pendingWithdrawalId = pendingWithdrawalsPerUser[withdrawal.recipient];
+
+            pendingWithdrawalsPerUser[withdrawal.recipient]++;
+
+            pendingWithdrawalsTotal[withdrawal.token] += withdrawAmount;
+
+            // - Save withdrawal as pending
+            pendingWithdrawals_[withdrawal.recipient][pendingWithdrawalId] = PendingWithdrawalParams({
+                token: withdrawal.token,
+                amount: withdrawAmount,
+                bounty: msg.sender == withdrawal.recipient ? bounty : 0
+            });
+
+            emit PendingWithdrawalCreated(
+                withdrawal.recipient,
+                pendingWithdrawalId,
+                withdrawal.token,
+                withdrawAmount,
+                payloadId
+            );
+        } else {
+            IERC20(withdrawal.token).safeTransfer(
+                withdrawal.recipient,
+                withdrawAmount
+            );
+
+            emit Withdraw(
+                TokenType.Alien,
+                payloadId,
+                withdrawal.token,
+                withdrawal.recipient,
+                withdrawal.amount,
+                fee
+            );
+        }
+    }
+
+    /// @notice Save withdrawal of alien token
+    function saveWithdrawAlien(
+        bytes memory payload,
+        bytes[] memory signatures
+    )
+        external
+        override
+    {
+        saveWithdrawAlien(payload, signatures, 0);
     }
 
     /// @notice Skim multivault fees for specific token

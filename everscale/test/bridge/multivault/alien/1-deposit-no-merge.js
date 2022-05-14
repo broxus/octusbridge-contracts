@@ -268,7 +268,7 @@ describe('Deposit Alien token from EVM to Everscale with no merging', async func
 
     it('Check event initialization pipeline passed', async () => {
         const decodedData = await eventContract.call({
-            method: 'getDecodedData',
+            method: 'getDecodedDataExtended',
         });
 
         expect(decodedData.proxy_)

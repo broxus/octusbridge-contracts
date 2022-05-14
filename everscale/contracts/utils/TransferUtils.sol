@@ -22,9 +22,31 @@ contract TransferUtils {
         _;
     }
 
-    modifier reserveMinBalance(uint128 min_balance) {
-        tvm.rawReserve(math.max(address(this).balance - msg.value, _targetBalance()), 2);
+    modifier reserveAtLeastTargetBalance() {
+        tvm.rawReserve(
+            math.max(address(this).balance - msg.value, _targetBalance()),
+            2
+        );
+
         _;
+    }
+
+    modifier reserveTargetBalance() {
+        tvm.rawReserve(
+            _targetBalance(),
+            2
+        );
+
+        _;
+    }
+
+    modifier reserveMinBalance(uint128 min_balance) {
+        tvm.rawReserve(math.max(address(this).balance - msg.value, min_balance), 2);
+        _;
+    }
+
+    function _reserveTargetBalance() internal view {
+        tvm.rawReserve(_targetBalance(), 0);
     }
 
     modifier cashBack() {

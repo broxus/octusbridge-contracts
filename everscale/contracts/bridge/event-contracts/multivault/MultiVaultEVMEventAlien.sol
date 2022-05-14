@@ -10,7 +10,7 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 import "./../../interfaces/multivault/IMultiVaultEVMEventAlien.sol";
 import "./../../interfaces/event-configuration-contracts/IEthereumEventConfiguration.sol";
 import "./../../interfaces/IProxyExtended.sol";
-import "./../../interfaces/multivault/IProxyMultiVaultAlien.sol";
+import "./../../interfaces/multivault/IProxyMultiVaultAlien_V3.sol";
 import "./../../interfaces/ITokenRootAlienEVM.sol";
 import "./../../interfaces/alien-token-merge/IMergePool.sol";
 import "./../../interfaces/alien-token-merge/IMergeRouter.sol";
@@ -101,7 +101,7 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
 
         proxy = _networkConfiguration.proxy;
 
-        IProxyMultiVaultAlien(proxy).deriveAlienTokenRoot{
+        IProxyMultiVaultAlien_V3(proxy).deriveAlienTokenRoot{
             value: 1 ton,
             callback: MultiVaultEVMEventAlien.receiveAlienTokenRoot
         }(
@@ -149,7 +149,7 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
     function _requestMergeRouter() internal view {
         // Token exists, no need to deploy
         // Ask the router address
-        IProxyMultiVaultAlien(proxy).deriveMergeRouter{
+        IProxyMultiVaultAlien_V3(proxy).deriveMergeRouter{
             value: 1 ton,
             bounce: false,
             callback: MultiVaultEVMEventAlien.receiveMergeRouter
@@ -200,31 +200,41 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
     }
 
     /// @notice Receives merge pool canon
+    /// @dev Canon token can be disabled, in this case user receives `token`
     /// @param canon_ Canon token address
-    /// @param canon_decimals Canon token decimals
+    /// @param canonToken_ Canon token
     function receiveMergePoolCanon(
         address canon_,
-        uint8 canon_decimals
+        IMergePool.Token canonToken_
     ) external override {
         require(msg.sender == pool);
 
         canon = canon_;
 
-        uint128 canon_amount = amount;
+        if (canonToken_.enabled == false) {
+            // Canon token specified but not enabled
+            // fallback to the `token`
 
-        if (decimals > canon_decimals) {
-            canon_amount = amount / (POWER_BASE**(decimals - canon_decimals));
-        } else if (decimals < canon_decimals) {
-            canon_amount = amount * (POWER_BASE**(canon_decimals - decimals));
-        }
-
-        // In case the token decimals is more than canon decimals
-        // And the transferred amount is too low
-        // The canon_amount may be equal to zero. In this case - mints user the original token
-        if (canon_amount == 0) {
             _finishSetup(token, amount);
         } else {
-            _finishSetup(canon, canon_amount);
+            // Canon token specified and enabled
+
+            uint128 canon_amount;
+
+            if (decimals > canonToken_.decimals) {
+                canon_amount = amount / (POWER_BASE**(decimals - canonToken_.decimals));
+            } else if (decimals < canonToken_.decimals) {
+                canon_amount = amount * (POWER_BASE**(canonToken_.decimals - decimals));
+            }
+
+            // In case the token decimals is more than canon decimals
+            // And the transferred amount is too low
+            // The canon_amount may be equal to zero. In this case - mints user the original token
+            if (canon_amount == 0) {
+                _finishSetup(token, amount);
+            } else {
+                _finishSetup(canon, canon_amount);
+            }
         }
     }
 
@@ -240,8 +250,32 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
         }(eventInitData, metaData, initializer);
     }
 
-    // TODO: legacy decoded data?
     function getDecodedData() external override responsible returns(
+        uint256 base_chainId_,
+        uint160 base_token_,
+        string name_,
+        string symbol_,
+        uint8 decimals_,
+        uint128 amount_,
+        address recipient_,
+        address proxy_,
+        address token_
+    ) {
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS}(
+            base_chainId,
+            base_token,
+            name,
+            symbol,
+            decimals,
+            amount,
+            recipient,
+            proxy,
+            token
+        );
+    }
+
+    // TODO: legacy decoded data?
+    function getDecodedDataExtended() external override responsible returns(
         uint256 base_chainId_,
         uint160 base_token_,
         string name_,
@@ -284,7 +318,7 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
         ) {
             // Failed to request token meta
             // Seems like corresponding token root not deployed so deploy it
-            IProxyMultiVaultAlien(proxy).deployAlienToken{
+            IProxyMultiVaultAlien_V3(proxy).deployAlienToken{
                 value: 2 ton,
                 bounce: false
             }(
@@ -303,7 +337,7 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
         ) {
             // Failed to request router's pool
             // Seems like corresponding router not deployed so deploy it
-            IProxyMultiVaultAlien(proxy).deployMergeRouter{
+            IProxyMultiVaultAlien_V3(proxy).deployMergeRouter{
                 value: 1 ton,
                 bounce: false
             }(token);

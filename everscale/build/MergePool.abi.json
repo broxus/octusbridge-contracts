@@ -23,6 +23,14 @@
 			]
 		},
 		{
+			"name": "setManager",
+			"inputs": [
+				{"name":"_manager","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "removeToken",
 			"inputs": [
 				{"name":"token","type":"address"}
@@ -47,13 +55,43 @@
 			]
 		},
 		{
+			"name": "enableToken",
+			"inputs": [
+				{"name":"token","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "enableAll",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "disableToken",
+			"inputs": [
+				{"name":"token","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "disableAll",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "getCanon",
 			"inputs": [
 				{"name":"answerId","type":"uint32"}
 			],
 			"outputs": [
 				{"name":"value0","type":"address"},
-				{"name":"value1","type":"uint8"}
+				{"components":[{"name":"decimals","type":"uint8"},{"name":"enabled","type":"bool"}],"name":"value1","type":"tuple"}
 			]
 		},
 		{
@@ -62,7 +100,7 @@
 				{"name":"answerId","type":"uint32"}
 			],
 			"outputs": [
-				{"name":"_tokens","type":"map(address,uint8)"},
+				{"components":[{"name":"decimals","type":"uint8"},{"name":"enabled","type":"bool"}],"name":"_tokens","type":"map(address,tuple)"},
 				{"name":"_canon","type":"address"}
 			]
 		},
@@ -140,7 +178,7 @@
 		{"name":"owner","type":"address"},
 		{"name":"_randomNonce","type":"uint256"},
 		{"name":"proxy","type":"address"},
-		{"name":"tokens","type":"map(address,uint8)"},
+		{"components":[{"name":"decimals","type":"uint8"},{"name":"enabled","type":"bool"}],"name":"tokens","type":"map(address,tuple)"},
 		{"name":"manager","type":"address"},
 		{"name":"canon","type":"address"}
 	]

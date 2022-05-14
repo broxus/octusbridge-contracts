@@ -12,18 +12,14 @@ const {
 describe('Swap tokens by burning in favor of merge pool', async function() {
     this.timeout(10000000);
 
-    let eventContract;
-
     let metricManager;
     let relays, bridge, bridgeOwner, staking, cellEncoder;
     let evmConfiguration, everscaleConfiguration, proxy, initializer;
 
     const mintAmount = 1000;
     const amount = 333;
-    const recipient = 888;
 
     let alienTokenRoot, initializerAlienTokenWallet;
-    let mergeRouter;
     let canonTokenRoot, mergePool, initializerCanonTokenWallet;
 
     let proxyManager;
@@ -132,6 +128,7 @@ describe('Swap tokens by burning in favor of merge pool', async function() {
 
         metricManager.addContract(alienTokenRoot);
     });
+
     it('Mint tokens to initializer', async () => {
         await bridgeOwner.runTarget({
             contract: proxy,
@@ -238,10 +235,25 @@ describe('Swap tokens by burning in favor of merge pool', async function() {
         expect(tokens._canon)
             .to.be.equal(canonTokenRoot.address, 'Wrong canon token in merge pool');
 
-        expect(tokens._tokens[alienTokenRoot.address])
+        expect(tokens._tokens[alienTokenRoot.address].decimals)
             .to.be.bignumber.equal(alienTokenMeta.decimals, 'Wrong alien decimals in merge pool');
-        expect(tokens._tokens[canonTokenRoot.address])
+        expect(tokens._tokens[canonTokenRoot.address].decimals)
             .to.be.bignumber.equal(canonTokenMeta.decimals, 'Wrong canon decimals in merge pool');
+    });
+
+    it('Enable merge pool tokens', async () => {
+        await proxyManager.runTarget({
+            contract: mergePool,
+            method: 'enableAll',
+            params: {}
+        });
+
+        const tokens = await mergePool.call({ method: 'getTokens' });
+
+        expect(tokens._tokens[alienTokenRoot.address].enabled)
+            .to.be.equal(true, 'Wrong alien status in merge pool');
+        expect(tokens._tokens[canonTokenRoot.address].enabled)
+            .to.be.equal(true, 'Wrong canon status in merge pool');
     });
 
     it('Burn tokens in favor of Alien Proxy', async () => {
@@ -292,6 +304,12 @@ describe('Swap tokens by burning in favor of merge pool', async function() {
         });
 
         expect(balance)
-            .to.be.bignumber.equal(33, 'Wrong initializer token balance swap');
+            .to.be.bignumber.equal(amount * 10, 'Wrong initializer token balance swap');
+    });
+
+    describe('Swap to disabled token', async () => {
+        it('Disable alien token root', async () => {
+
+        });
     });
 });

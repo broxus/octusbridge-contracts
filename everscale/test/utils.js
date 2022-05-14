@@ -526,12 +526,28 @@ const setupAlienMultiVault = async (owner, staking, cellEncoder) => {
         alienTokenRootCode: AlienTokenRoot.code,
         alienTokenWalletCode: AlienTokenWalletUpgradeable.code,
         alienTokenWalletPlatformCode: AlienTokenWalletPlatform.code,
-        mergeRouter: MergeRouter.code,
-        mergePool: MergePool.code,
+        // mergeRouter: MergeRouter.code,
+        // mergePool: MergePool.code,
       },
       remainingGasTo: owner.address
     },
     value: locklift.utils.convertCrystal(0.5, 'nano')
+  });
+
+  await owner.runTarget({
+    contract: proxy,
+    method: 'setMergePool',
+    params: {
+      _mergePool: MergePool.code
+    }
+  });
+
+  await owner.runTarget({
+    contract: proxy,
+    method: 'setMergeRouter',
+    params: {
+      _mergeRouter: MergeRouter.code
+    }
   });
 
   return [evmEventConfiguration, everscaleEventConfiguration, proxy, initializer];

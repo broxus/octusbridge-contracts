@@ -62,13 +62,30 @@
 			"name": "receiveMergePoolCanon",
 			"inputs": [
 				{"name":"canon_","type":"address"},
-				{"name":"canon_decimals","type":"uint8"}
+				{"components":[{"name":"decimals","type":"uint8"},{"name":"enabled","type":"bool"}],"name":"canonToken_","type":"tuple"}
 			],
 			"outputs": [
 			]
 		},
 		{
 			"name": "getDecodedData",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"base_chainId_","type":"uint256"},
+				{"name":"base_token_","type":"uint160"},
+				{"name":"name_","type":"string"},
+				{"name":"symbol_","type":"string"},
+				{"name":"decimals_","type":"uint8"},
+				{"name":"amount_","type":"uint128"},
+				{"name":"recipient_","type":"address"},
+				{"name":"proxy_","type":"address"},
+				{"name":"token_","type":"address"}
+			]
+		},
+		{
+			"name": "getDecodedDataExtended",
 			"inputs": [
 				{"name":"answerId","type":"uint32"}
 			],

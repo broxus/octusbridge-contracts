@@ -132,7 +132,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
     )
         override
         public
-        reserveMinBalance(MIN_CONTRACT_BALANCE)
+        reserveAtLeastTargetBalance()
     {
         require(active, ErrorCodes.BRIDGE_PAUSED);
         require(msg.value >= connectorDeployValue, ErrorCodes.TOO_LOW_DEPLOY_VALUE);

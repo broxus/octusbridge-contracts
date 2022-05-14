@@ -93,7 +93,11 @@ contract EverscaleEventConfiguration is IEverscaleEventConfiguration, TransferUt
     /// @param eventVoteData Event vote data
     function deployEvent(
         IEverscaleEvent.EverscaleEventVoteData eventVoteData
-    ) override external reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    )
+        override
+        external
+        reserveAtLeastTargetBalance()
+    {
         require(msg.sender == networkConfiguration.eventEmitter, ErrorCodes.SENDER_IS_NOT_EVENT_EMITTER);
         require(msg.value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
         require(

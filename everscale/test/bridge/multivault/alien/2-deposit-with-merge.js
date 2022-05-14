@@ -16,7 +16,7 @@ describe('Deposit non-canon token from EVM to Everscale with merging', async fun
     let relays, bridge, bridgeOwner, staking, cellEncoder;
     let evmConfiguration, everscaleConfiguration, proxy, initializer;
 
-    let alienTokenRoot, mergeRouter;
+    let alienTokenRoot, mergeRouter, initializerAlienTokenWallet;
     let canonTokenRoot, mergePool, initializerCanonTokenWallet;
 
     let proxyManager;
@@ -41,6 +41,8 @@ describe('Deposit non-canon token from EVM to Everscale with merging', async fun
         symbol: 'GIGA_CHAD',
         decimals: 7,
     };
+
+    const amount = 333;
 
     afterEach(async function() {
         const lastCheckPoint = metricManager.lastCheckPointName();
@@ -243,10 +245,31 @@ describe('Deposit non-canon token from EVM to Everscale with merging', async fun
         expect(tokens._canon)
             .to.be.equal(canonTokenRoot.address, 'Wrong canon token in merge pool');
 
-        expect(tokens._tokens[alienTokenRoot.address])
+        expect(tokens._tokens[alienTokenRoot.address].decimals)
             .to.be.bignumber.equal(alienTokenMeta.decimals, 'Wrong alien decimals in merge pool');
-        expect(tokens._tokens[canonTokenRoot.address])
+        expect(tokens._tokens[canonTokenRoot.address].decimals)
             .to.be.bignumber.equal(canonTokenMeta.decimals, 'Wrong canon decimals in merge pool');
+
+
+        expect(tokens._tokens[alienTokenRoot.address].enabled)
+            .to.be.equal(false, 'Wrong alien status in merge pool');
+        expect(tokens._tokens[canonTokenRoot.address].enabled)
+            .to.be.equal(false, 'Wrong canon status in merge pool');
+    });
+
+    it('Enable merge pool tokens', async () => {
+        await proxyManager.runTarget({
+            contract: mergePool,
+            method: 'enableAll',
+            params: {}
+        });
+
+        const tokens = await mergePool.call({ method: 'getTokens' });
+
+        expect(tokens._tokens[alienTokenRoot.address].enabled)
+            .to.be.equal(true, 'Wrong alien status in merge pool');
+        expect(tokens._tokens[canonTokenRoot.address].enabled)
+            .to.be.equal(true, 'Wrong canon status in merge pool');
     });
 
     it('Set pool in alien merge router', async () => {
@@ -271,7 +294,7 @@ describe('Deposit non-canon token from EVM to Everscale with merging', async fun
             name: alienTokenMeta.name,
             symbol: alienTokenMeta.symbol,
             decimals: alienTokenMeta.decimals,
-            amount: 333,
+            amount,
             recipient_wid: initializer.address.split(':')[0],
             recipient_addr: `0x${initializer.address.split(':')[1]}`,
         };
@@ -362,7 +385,7 @@ describe('Deposit non-canon token from EVM to Everscale with merging', async fun
 
     it('Check event initialization pipeline passed', async () => {
         const decodedData = await eventContract.call({
-            method: 'getDecodedData',
+            method: 'getDecodedDataExtended',
         });
 
         expect(decodedData.proxy_)
@@ -490,6 +513,145 @@ describe('Deposit non-canon token from EVM to Everscale with merging', async fun
 
             expect(balance)
                 .to.be.bignumber.equal(3330, 'Initializer failed to receive tokens');
+        });
+    });
+
+    describe('Deposit with disabled tokens', async () => {
+        it('Disable canon token in the merge pool', async () => {
+            await proxyManager.runTarget({
+                contract: mergePool,
+                method: 'disableToken',
+                params: {
+                    token: canonTokenRoot.address
+                }
+            });
+
+            const tokens = await mergePool.call({ method: 'getTokens' });
+
+            expect(tokens._tokens[alienTokenRoot.address].enabled)
+                .to.be.equal(true, 'Wrong alien status in merge pool');
+            expect(tokens._tokens[canonTokenRoot.address].enabled)
+                .to.be.equal(false, 'Wrong canon status in merge pool');
+        });
+
+        it('Deposit tokens', async () => {
+            const tx = await initializer.runTarget({
+                contract: evmConfiguration,
+                method: 'deployEvent',
+                params: {
+                    eventVoteData: {
+                        ...eventVoteData,
+                        eventTransaction: eventVoteData.eventTransaction + 1
+                    },
+                },
+                value: locklift.utils.convertCrystal(6, 'nano')
+            });
+
+            logger.log(`Event initialization tx: ${tx.transaction.id}`);
+
+            const expectedEventContract = await evmConfiguration.call({
+                method: 'deriveEventAddress',
+                params: {
+                    eventVoteData: {
+                        ...eventVoteData,
+                        eventTransaction: eventVoteData.eventTransaction + 1
+                    },
+                }
+            });
+
+            logger.log(`Expected event address: ${expectedEventContract}`);
+
+            eventContract = await locklift.factory.getContract('MultiVaultEVMEventAlien');
+            eventContract.setAddress(expectedEventContract);
+            eventContract.afterRun = afterRun;
+
+            metricManager.addContract(eventContract);
+        });
+
+        it('Confirm event enough times', async () => {
+            const requiredVotes = await eventContract.call({
+                method: 'requiredVotes',
+            });
+            const confirmations = [];
+            for (const [relayId, relay] of Object.entries(relays.slice(0, requiredVotes))) {
+                logger.log(`Confirm #${relayId} from ${relay.public}`);
+
+                confirmations.push(eventContract.run({
+                    method: 'confirm',
+                    params: {
+                        voteReceiver: eventContract.address
+                    },
+                    keyPair: relay
+                }));
+            }
+            await Promise.all(confirmations);
+        });
+
+        it('Check event confirmed', async () => {
+            const details = await eventContract.call({
+                method: 'getDetails'
+            });
+
+            const requiredVotes = await eventContract.call({
+                method: 'requiredVotes',
+            });
+
+            expect(details._status)
+                .to.be.bignumber.equal(2, 'Wrong status');
+
+            expect(details._confirms)
+                .to.have.lengthOf(requiredVotes, 'Wrong amount of relays confirmations');
+
+            expect(details._rejects)
+                .to.have.lengthOf(0, 'Wrong amount of relays rejects');
+        });
+
+        it('Check event decoded data', async () => {
+            const decodedData = await eventContract.call({
+                method: 'getDecodedDataExtended',
+            });
+
+            expect(decodedData.proxy_)
+                .to.be.equal(proxy.address, 'Event contract failed to fetch the proxy');
+            expect(decodedData.token_)
+                .to.be.equal(alienTokenRoot.address, 'Event contract failed to fetch the token');
+            expect(decodedData.router_)
+                .to.be.equal(mergeRouter.address, 'Merge router address invalid');
+
+            expect(decodedData.pool_)
+                .to.be.equal(mergePool.address, 'Wrong merge pool');
+            expect(decodedData.canon_)
+                .to.be.equal(canonTokenRoot.address, 'Wrong canon token');
+            expect(decodedData.target_token_)
+                .to.be.equal(alienTokenRoot.address, 'Target token should be canon');
+            expect(decodedData.target_amount_)
+                .to.be.bignumber.equal(amount, 'Target amount should be normalized by canon decimals');
+        });
+
+        it('Check user received alien tokens instead of canon', async () => {
+            const walletAddress = await alienTokenRoot.call({
+                method: 'walletOf',
+                params: {
+                    walletOwner: initializer.address
+                }
+            });
+
+            initializerAlienTokenWallet = await locklift.factory.getContract('AlienTokenWalletUpgradeable');
+            initializerAlienTokenWallet.name = 'Initializer alien token wallet';
+            initializerAlienTokenWallet.setAddress(walletAddress);
+            initializerAlienTokenWallet.afterRun = afterRun;
+
+            expect(await locklift.ton.getBalance(walletAddress))
+                .to.be.bignumber.greaterThan(0, 'Initializer token wallet balance is zero');
+
+            metricManager.addContract(initializerAlienTokenWallet);
+
+            const balance = await initializerAlienTokenWallet.call({
+                method: 'balance'
+            });
+
+            expect(balance)
+                .to.be.bignumber.equal(amount, 'Initializer failed to receive alien tokens');
         });
     });
 });

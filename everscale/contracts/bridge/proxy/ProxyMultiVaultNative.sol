@@ -63,7 +63,7 @@ contract ProxyMultiVaultNative is
         address,
         address remainingGasTo,
         TvmCell payload
-    ) override external reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    ) override external reserveAtLeastTargetBalance {
         (uint160 recipient, uint256 chainId) = abi.decode(payload, (uint160, uint256));
 
         TvmCell eventData = abi.encode(
@@ -96,7 +96,7 @@ contract ProxyMultiVaultNative is
         IEthereumEvent.EthereumEventInitData,
         TvmCell meta,
         address remainingGasTo
-    ) external override reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    ) external override reserveAtLeastTargetBalance {
         require(_isArrayContainsAddress(config.evmConfigurations, msg.sender));
 
         (

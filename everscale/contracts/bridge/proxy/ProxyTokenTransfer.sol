@@ -39,7 +39,6 @@ contract ProxyTokenTransfer is
     CheckPubKey
 {
     event Withdraw(int8 wid, uint256 addr, uint128 tokens, uint160 eth_addr, uint32 chainId);
-    uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
 
     Configuration config;
     uint128 burnedCount;
@@ -59,7 +58,7 @@ contract ProxyTokenTransfer is
     function onEventConfirmed(
         IEthereumEvent.EthereumEventInitData eventData,
         address gasBackAddress
-    ) public override onlyEthereumConfiguration reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    ) public override onlyEthereumConfiguration reserveAtLeastTargetBalance {
         require(!paused, ErrorCodes.PROXY_PAUSED);
         require(config.tokenRoot.value != 0, ErrorCodes.PROXY_TOKEN_ROOT_IS_EMPTY);
 
@@ -118,7 +117,7 @@ contract ProxyTokenTransfer is
         address,
         address remainingGasTo,
         TvmCell payload
-    ) public override reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    ) public override reserveAtLeastTargetBalance {
         if (config.tokenRoot == msg.sender) {
             burnedCount += tokens;
 
@@ -206,7 +205,7 @@ contract ProxyTokenTransfer is
     function transferTokenOwnership(
         address target,
         address newOwner
-    ) external view onlyOwner reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    ) external view onlyOwner reserveAtLeastTargetBalance {
         mapping(address => ITransferableOwnership.CallbackParams) empty;
 
         ITransferableOwnership(target).transferOwnership{
@@ -220,7 +219,7 @@ contract ProxyTokenTransfer is
     function legacyTransferTokenOwnership(
         address target,
         address newOwner
-    ) external view onlyOwner reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    ) external view onlyOwner reserveAtLeastTargetBalance {
         ILegacyTransferOwner(target).transferOwner{
             value: 0,
             bounce: false,

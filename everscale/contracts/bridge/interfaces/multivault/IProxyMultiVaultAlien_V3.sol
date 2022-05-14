@@ -1,25 +1,9 @@
 pragma ton-solidity >= 0.39.0;
 
+import "./IProxyMultiVaultAlien_V1.sol";
 
-interface IProxyMultiVaultAlien {
-    struct Configuration {
-        address everscaleConfiguration;
-        address[] evmConfigurations;
-        uint128 deployWalletValue;
 
-        TvmCell alienTokenRootCode;
-        TvmCell alienTokenWalletCode;
-        TvmCell alienTokenWalletPlatformCode;
-
-        TvmCell mergeRouter;
-        TvmCell mergePool;
-    }
-
-    function apiVersion() external view responsible returns(uint8);
-
-    function getConfiguration() external view responsible returns (Configuration);
-    function setConfiguration(Configuration _config, address gasBackAddress) external;
-
+interface IProxyMultiVaultAlien_V3 is IProxyMultiVaultAlien_V1 {
     function mintTokensByMergePool(
         uint nonce,
         address token,
@@ -33,23 +17,6 @@ interface IProxyMultiVaultAlien {
         address token,
         uint128 amount,
         uint160 recipient,
-        address remainingGasTo
-    ) external;
-
-    function deriveAlienTokenRoot(
-        uint256 base_chainId,
-        uint160 base_token,
-        string name,
-        string symbol,
-        uint8 decimals
-    ) external responsible returns (address);
-
-    function deployAlienToken(
-        uint256 chainId,
-        uint160 token,
-        string name,
-        string symbol,
-        uint8 decimals,
         address remainingGasTo
     ) external;
 
@@ -75,9 +42,12 @@ interface IProxyMultiVaultAlien {
         address _manager
     ) external;
 
-    function sendMessage(
-        address recipient,
-        TvmCell message
+    function setMergePool(
+        TvmCell _mergePool
+    ) external;
+
+    function setMergeRouter(
+        TvmCell _mergeRouter
     ) external;
 
     function mint(
@@ -90,14 +60,6 @@ interface IProxyMultiVaultAlien {
         address token,
         uint128 amount,
         address walletOwner
-    ) external;
-
-    function setMergeRouterCode(
-        TvmCell code
-    ) external;
-
-    function setMergePoolCode(
-        TvmCell code
     ) external;
 
     event AlienTransfer(
