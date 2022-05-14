@@ -11,6 +11,7 @@ const {
   getTokenWalletByAddress,
   getTokenRoot
 } = require('../../utils');
+const BigNumber = require("bignumber.js");
 
 
 describe('Test solana everscale event confirm', async function() {
@@ -88,7 +89,7 @@ describe('Test solana everscale event confirm', async function() {
     it('Setup event data', async () => {
 
       eventDataStructure = {
-        sender_addr: 123,
+        sender_addr: new BigNumber('42383474428106489994084969139012277140818210945614381322072008626484785752705').toFixed(),
         tokens: 100,
         receiver_addr: initializer.address
       };

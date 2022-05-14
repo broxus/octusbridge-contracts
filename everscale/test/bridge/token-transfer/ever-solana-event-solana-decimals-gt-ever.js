@@ -154,9 +154,6 @@ describe('Test everscale solana event solana decimals gt ever', async function()
       expect(details._confirms)
         .to.have.lengthOf(0, 'Wrong amount of confirmations');
 
-      expect(details._signatures)
-        .to.have.lengthOf(0, 'Wrong amount of signatures');
-
       expect(details._rejects)
         .to.have.lengthOf(0, 'Wrong amount of rejects');
 
@@ -210,9 +207,6 @@ describe('Test everscale solana event solana decimals gt ever', async function()
         confirmations.push(eventContract.run({
           method: 'confirm',
           params: {
-            signature: Buffer
-              .from(`0x${'ff'.repeat(65)}`)
-              .toString('hex'), // 132 symbols
             voteReceiver: eventContract.address
           },
           keyPair: relay
@@ -239,9 +233,6 @@ describe('Test everscale solana event solana decimals gt ever', async function()
       expect(details._confirms)
         .to.have.lengthOf(requiredVotes, 'Wrong amount of relays confirmations');
 
-      expect(details._signatures)
-        .to.have.lengthOf(requiredVotes, 'Wrong amount of signatures');
-
       expect(details._rejects)
         .to.have.lengthOf(0, 'Wrong amount of relays rejects');
     });
@@ -257,9 +248,6 @@ describe('Test everscale solana event solana decimals gt ever', async function()
         await eventContract.run({
           method: 'confirm',
           params: {
-            signature: Buffer
-              .from(`0x${'ff'.repeat(65)}`)
-              .toString('hex'), // 132 symbols
             voteReceiver: eventContract.address
           },
           keyPair: relay
@@ -280,9 +268,6 @@ describe('Test everscale solana event solana decimals gt ever', async function()
 
       expect(details._confirms)
         .to.have.lengthOf(relays.length, 'Wrong amount of relays confirmations');
-
-      expect(details._signatures)
-        .to.have.lengthOf(relays.length, 'Wrong amount of signatures');
 
       expect(details._rejects)
         .to.have.lengthOf(0, 'Wrong amount of relays rejects');

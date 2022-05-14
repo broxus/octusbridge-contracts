@@ -15,10 +15,8 @@ contract EverscaleSolanaBaseEvent is BaseEvent, IEverscaleSolanaEvent {
 
     // Event data
     EverscaleSolanaEventInitData static eventInitData;
-    // Solana payload signatures for confirmations
-    mapping (uint => bytes) public signatures;
 
-    event Confirm(uint relay, bytes signature);
+    event Confirm(uint relay);
 
     /*
         @dev Should be deployed only by EverscaleSolanaEventConfiguration contract
@@ -56,7 +54,7 @@ contract EverscaleSolanaBaseEvent is BaseEvent, IEverscaleSolanaEvent {
         @param eventDataSignature Relay's signature of the TonEvent data
         @param voteReceiver Should be always equal to the event contract address
     */
-    function confirm(bytes signature, address voteReceiver) public {
+    function confirm(address voteReceiver) public {
         _checkVoteReceiver(voteReceiver);
 
         uint relay = msg.pubkey();
@@ -66,9 +64,8 @@ contract EverscaleSolanaBaseEvent is BaseEvent, IEverscaleSolanaEvent {
         tvm.accept();
 
         votes[relay] = Vote.Confirm;
-        signatures[relay] = signature;
 
-        emit Confirm(relay, signature);
+        emit Confirm(relay);
         confirms++;
 
         // Event already confirmed
@@ -118,7 +115,6 @@ contract EverscaleSolanaBaseEvent is BaseEvent, IEverscaleSolanaEvent {
         @returns _status Current event status
         @returns _confirmRelays List of relays who have confirmed event
         @returns _confirmRelays List of relays who have rejected event
-        @returns _eventDataSignatures List of relay's TonEvent signatures
     */
     function getDetails() external view responsible returns (
         EverscaleSolanaEventInitData _eventInitData,
@@ -126,7 +122,6 @@ contract EverscaleSolanaBaseEvent is BaseEvent, IEverscaleSolanaEvent {
         uint[] _confirms,
         uint[] _rejects,
         uint[] empty,
-        bytes[] _signatures,
         uint128 balance,
         address _initializer,
         TvmCell _meta,
@@ -134,9 +129,6 @@ contract EverscaleSolanaBaseEvent is BaseEvent, IEverscaleSolanaEvent {
     ) {
         _confirms = getVoters(Vote.Confirm);
 
-        for (uint voter : _confirms) {
-            _signatures.push(signatures[voter]);
-        }
 
         return {value: 0, flag: MsgFlag.REMAINING_GAS} (
             eventInitData,
@@ -144,7 +136,6 @@ contract EverscaleSolanaBaseEvent is BaseEvent, IEverscaleSolanaEvent {
             _confirms,
             getVoters(Vote.Reject),
             getVoters(Vote.Empty),
-            _signatures,
             address(this).balance,
             initializer,
             meta,

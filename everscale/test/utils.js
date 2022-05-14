@@ -88,7 +88,7 @@ const setupBridge = async (relays) => {
       _randomNonce,
     },
     keyPair,
-  }, locklift.utils.convertCrystal(1000, 'nano'));
+  }, locklift.utils.convertCrystal(20, 'nano'));
   
   owner.setKeyPair(keyPair);
   owner.afterRun = afterRun;
@@ -126,7 +126,7 @@ const setupBridge = async (relays) => {
       _randomNonce: locklift.utils.getRandomNonce(),
     },
     keyPair
-  }, locklift.utils.convertCrystal(1, 'nano'));
+  }, locklift.utils.convertCrystal(2, 'nano'));
   
 
   await logContract(bridge);
@@ -1210,7 +1210,6 @@ const setupRelays = async (amount=20) => {
     .map(async () => locklift.ton.client.crypto.generate_random_sign_keys())
   );
 };
-
 
 const enableEventConfiguration = async (bridgeOwner, bridge, eventConfiguration) => {
   const connectorId = await bridge.call({

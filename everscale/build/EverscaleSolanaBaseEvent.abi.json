@@ -24,7 +24,6 @@
 		{
 			"name": "confirm",
 			"inputs": [
-				{"name":"signature","type":"bytes"},
 				{"name":"voteReceiver","type":"address"}
 			],
 			"outputs": [
@@ -49,7 +48,6 @@
 				{"name":"_confirms","type":"uint256[]"},
 				{"name":"_rejects","type":"uint256[]"},
 				{"name":"empty","type":"uint256[]"},
-				{"name":"_signatures","type":"bytes[]"},
 				{"name":"balance","type":"uint128"},
 				{"name":"_initializer","type":"address"},
 				{"name":"_meta","type":"cell"},
@@ -181,14 +179,6 @@
 			"outputs": [
 				{"name":"createdAt","type":"uint32"}
 			]
-		},
-		{
-			"name": "signatures",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"signatures","type":"map(uint256,bytes)"}
-			]
 		}
 	],
 	"data": [
@@ -198,8 +188,7 @@
 		{
 			"name": "Confirm",
 			"inputs": [
-				{"name":"relay","type":"uint256"},
-				{"name":"signature","type":"bytes"}
+				{"name":"relay","type":"uint256"}
 			],
 			"outputs": [
 			]
@@ -234,7 +223,6 @@
 		{"name":"relay_round","type":"address"},
 		{"name":"round_number","type":"uint32"},
 		{"name":"createdAt","type":"uint32"},
-		{"components":[{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"name":"author","type":"uint256"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"eventInitData","type":"tuple"},
-		{"name":"signatures","type":"map(uint256,bytes)"}
+		{"components":[{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"name":"author","type":"uint256"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"eventInitData","type":"tuple"}
 	]
 }
