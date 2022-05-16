@@ -157,5 +157,7 @@ describe('Test Alien proxy upgrade', async function() {
 
         expect(await proxy.call({ method: 'manager' }))
             .to.be.equal(owner.address, 'Wrong manager');
+
+        await logContract(proxy);
     });
 });

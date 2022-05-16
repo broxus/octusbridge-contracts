@@ -323,7 +323,6 @@
 		{"name":"relay_round","type":"address"},
 		{"name":"round_number","type":"uint32"},
 		{"components":[{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"},{"name":"chainId","type":"uint32"}],"name":"eventInitData","type":"tuple"},
-		{"name":"POWER_BASE","type":"uint128"},
 		{"name":"base_chainId","type":"uint256"},
 		{"name":"base_token","type":"uint160"},
 		{"name":"name","type":"string"},

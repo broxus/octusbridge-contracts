@@ -469,12 +469,15 @@ contract ProxyMultiVaultAlien_V3 is
 
     function upgrade(
         TvmCell code
-    ) external onlyOwner cashBack {
+    ) external onlyOwner {
         TvmCell data = abi.encode(
             config,
             api_version,
             _randomNonce,
-            owner
+            owner,
+            manager,
+            mergeRouter,
+            mergePool
         );
 
         tvm.setcode(code);
@@ -486,7 +489,12 @@ contract ProxyMultiVaultAlien_V3 is
     function onCodeUpgrade(TvmCell data) private {
         tvm.resetStorage();
 
-        (Configuration config_, uint8 api_version_, uint _randomNonce_, address owner_) = abi.decode(
+        (
+            Configuration config_,
+            uint8 api_version_,
+            uint _randomNonce_,
+            address owner_
+        ) = abi.decode(
             data,
             (Configuration, uint8, uint, address)
         );

@@ -259,7 +259,7 @@ contract ProxyMultiVaultAlien_V2 is
 
     function upgrade(
         TvmCell code
-    ) external virtual onlyOwner cashBack {
+    ) external onlyOwner {
         TvmCell data = abi.encode(
             config,
             api_version,

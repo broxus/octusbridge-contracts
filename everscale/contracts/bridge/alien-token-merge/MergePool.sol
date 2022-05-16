@@ -197,8 +197,9 @@ contract MergePool is
             targetToken
         );
 
-        if (tokens[targetToken].enabled == false) {
-            // Token exists in the merge pool but not enabled yet
+        if (tokens[targetToken].enabled == false || tokens[msg.sender].enabled == false) {
+            // Target token exists in the merge pool but not enabled yet
+            // Or burned token is disabled
             // Mint back burned tokens
             _mintTokens(msg.sender, _amount, walletOwner, remainingGasTo);
         } else if (amount == 0) {

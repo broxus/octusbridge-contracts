@@ -23,8 +23,9 @@ import "./../base/EthereumBaseEvent.sol";
 /// Multiple scenarios are implemented
 /// - Corresponding TIP3 token is not deployed
 /// - Merge router is not deployed
+/// - Merge router corresponds to some merge pool
 contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien {
-    uint128 POWER_BASE = 10;
+    uint128 constant POWER_BASE = 10;
 
     uint256 base_chainId;
     uint160 base_token;
@@ -225,6 +226,8 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
                 canon_amount = amount / (POWER_BASE**(decimals - canonToken_.decimals));
             } else if (decimals < canonToken_.decimals) {
                 canon_amount = amount * (POWER_BASE**(canonToken_.decimals - decimals));
+            } else {
+                canon_amount = amount;
             }
 
             // In case the token decimals is more than canon decimals
