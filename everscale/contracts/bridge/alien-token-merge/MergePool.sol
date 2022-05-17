@@ -24,7 +24,12 @@ contract MergePool is
     TransferUtils,
     IAcceptTokensBurnCallback
 {
+    uint128 constant ATTACH_TO_DECIMALS_REQUEST = 0.3 ton;
+    uint128 constant SAFE_GAP = 0.2 ton;
+
     address static proxy;
+
+    uint8 public version;
 
     mapping (address => Token) tokens;
     address public manager;
@@ -42,12 +47,60 @@ contract MergePool is
         _;
     }
 
-    constructor(
-        address[] tokens_,
-        uint256 canonId,
-        address owner_,
-        address manager_
-    ) public {
+    modifier onlyProxy() {
+        require(msg.sender == proxy);
+
+        _;
+    }
+
+    constructor() public {
+        revert();
+    }
+
+    function acceptUpgrade(
+        TvmCell code,
+        uint8 newVersion
+    ) external override onlyProxy {
+        if (version == newVersion) return;
+
+        TvmCell data = abi.encode(
+            proxy,
+            _randomNonce,
+            newVersion,
+            tokens,
+            canon,
+            owner,
+            manager
+        );
+
+        tvm.setcode(code);
+        tvm.setCurrentCode(code);
+
+        onCodeUpgrade(data);
+    }
+
+    function onCodeUpgrade(
+        TvmCell data
+    ) private {
+        tvm.resetStorage();
+
+        (
+            address proxy_,
+            uint256 _randomNonce_,
+            uint8 version_,
+            address[] tokens_,
+            uint256 canonId,
+            address owner_,
+            address manager_
+        ) = abi.decode(
+            data,
+            (address, uint256, uint8, address[], uint256, address, address)
+        );
+
+        proxy = proxy_;
+        _randomNonce = _randomNonce_;
+        version = version_;
+
         require(tokens_.length > 0);
         require(msg.sender == proxy);
         require(canonId <= tokens_.length - 1);
@@ -231,7 +284,7 @@ contract MergePool is
 
     function _requestTokenDecimals(address token) internal pure {
         ITokenRoot(token).decimals{
-            value: 0.3 ton,
+            value: ATTACH_TO_DECIMALS_REQUEST,
             bounce: false,
             callback: MergePool.receiveTokenDecimals
         }();

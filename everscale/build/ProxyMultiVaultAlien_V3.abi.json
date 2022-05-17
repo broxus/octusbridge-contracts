@@ -122,6 +122,14 @@
 			]
 		},
 		{
+			"name": "upgradeMergePool",
+			"inputs": [
+				{"name":"pool","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "deployMergePool",
 			"inputs": [
 				{"name":"nonce","type":"uint256"},
@@ -178,6 +186,14 @@
 			"name": "setMergeRouter",
 			"inputs": [
 				{"name":"_mergeRouter","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setMergePoolPlatform",
+			"inputs": [
+				{"name":"_mergePoolPlatform","type":"cell"}
 			],
 			"outputs": [
 			]
@@ -285,6 +301,8 @@
 		{"name":"api_version","type":"uint8"},
 		{"name":"manager","type":"address"},
 		{"name":"mergeRouter","type":"cell"},
-		{"name":"mergePool","type":"cell"}
+		{"name":"mergePool","type":"cell"},
+		{"name":"mergePoolPlatform","type":"cell"},
+		{"name":"mergePoolVersion","type":"uint8"}
 	]
 }

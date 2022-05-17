@@ -434,7 +434,7 @@ const setupAlienMultiVault = async (owner, staking, cellEncoder) => {
   await logContract(initializer);
 
   // Deploy proxy
-  const Proxy = await locklift.factory.getContract('ProxyMultiVaultAlien');
+  const Proxy = await locklift.factory.getContract('ProxyMultiVaultAlien_V3');
   const proxy = await locklift.giver.deployContract({
     contract: Proxy,
     constructorParams: {
@@ -514,6 +514,7 @@ const setupAlienMultiVault = async (owner, staking, cellEncoder) => {
   const AlienTokenWalletPlatform = await locklift.factory.getContract('AlienTokenWalletPlatform');
   const MergeRouter = await locklift.factory.getContract('MergeRouter');
   const MergePool = await locklift.factory.getContract('MergePool');
+  const MergePoolPlatform = await locklift.factory.getContract('MergePoolPlatform');
 
   await owner.runTarget({
     contract: proxy,
@@ -526,8 +527,6 @@ const setupAlienMultiVault = async (owner, staking, cellEncoder) => {
         alienTokenRootCode: AlienTokenRoot.code,
         alienTokenWalletCode: AlienTokenWalletUpgradeable.code,
         alienTokenWalletPlatformCode: AlienTokenWalletPlatform.code,
-        // mergeRouter: MergeRouter.code,
-        // mergePool: MergePool.code,
       },
       remainingGasTo: owner.address
     },
@@ -539,6 +538,14 @@ const setupAlienMultiVault = async (owner, staking, cellEncoder) => {
     method: 'setMergePool',
     params: {
       _mergePool: MergePool.code
+    }
+  });
+
+  await owner.runTarget({
+    contract: proxy,
+    method: 'setMergePoolPlatform',
+    params: {
+      _mergePoolPlatform: MergePoolPlatform.code
     }
   });
 

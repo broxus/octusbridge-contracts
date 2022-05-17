@@ -14,6 +14,7 @@ import "./../../../utils/TransferUtils.sol";
 import "./../../alien-token/TokenRootAlienEVM.sol";
 import "./../../alien-token-merge/MergePool.sol";
 import "./../../alien-token-merge/MergeRouter.sol";
+import "./../../alien-token-merge/MergePoolPlatform.sol";
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensBurnCallback.sol";
 
@@ -32,14 +33,15 @@ contract ProxyMultiVaultAlien_V3 is
     IProxyExtended,
     IProxyMultiVaultAlien_V3
 {
-    uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
-
     Configuration config;
     uint8 api_version = 0;
 
     address public manager;
     TvmCell mergeRouter;
     TvmCell mergePool;
+    TvmCell mergePoolPlatform;
+
+    uint8 mergePoolVersion;
 
     constructor(
         address owner_
@@ -288,11 +290,29 @@ contract ProxyMultiVaultAlien_V3 is
     function deriveMergePool(
         uint256 nonce
     ) public override responsible returns (address pool) {
-        TvmCell stateInit = _buildMergePoolInitState(nonce);
+        TvmCell stateInit = _buildMergePoolPlatformInitState(nonce);
 
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
     }
 
+    /// @notice Upgrade merge pool code
+    /// Can be called only by owner
+    /// @param pool Merge pool address
+    function upgradeMergePool(
+        address pool
+    ) external override onlyOwner reserveAtLeastTargetBalance {
+        IMergePool(pool).acceptUpgrade{
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED,
+            bounce: false
+        }(mergePool, mergePoolVersion);
+    }
+
+    /// @notice Deploy merge pool
+    /// Can be called only by `owner`
+    /// @param nonce Unique nonce
+    /// @param tokens List of tokens, connected in the merge pool
+    /// @param canonId Index of token from `tokens`, used as default in case of EVM-EVER transfer
     function deployMergePool(
         uint256 nonce,
         address[] tokens,
@@ -300,14 +320,21 @@ contract ProxyMultiVaultAlien_V3 is
     ) external override reserveAtLeastTargetBalance {
         require(msg.sender == owner || msg.sender == manager);
 
-        TvmCell stateInit = _buildMergePoolInitState(nonce);
+        TvmCell stateInit = _buildMergePoolPlatformInitState(nonce);
 
-        new MergePool{
+        new MergePoolPlatform{
             stateInit: stateInit,
             value: 0,
             bounce: false,
             flag: MsgFlag.ALL_NOT_RESERVED
-        }(tokens, canonId, owner, manager);
+        }(
+            mergePool,
+            mergePoolVersion,
+            tokens,
+            canonId,
+            owner,
+            manager
+        );
     }
 
     /// @notice Proxies arbitrary message to any contract.
@@ -386,17 +413,17 @@ contract ProxyMultiVaultAlien_V3 is
         });
     }
 
-    function _buildMergePoolInitState(
+    function _buildMergePoolPlatformInitState(
         uint256 nonce
     ) internal view returns (TvmCell) {
         return tvm.buildStateInit({
-            contr: MergePool,
+            contr: MergePoolPlatform,
             varInit: {
                 proxy: address(this),
                 _randomNonce: nonce
             },
             pubkey: 0,
-            code: mergePool
+            code: mergePoolPlatform
         });
     }
 
@@ -409,16 +436,34 @@ contract ProxyMultiVaultAlien_V3 is
         manager = _manager;
     }
 
+    /// @notice Set merge pool
+    /// Can be called only by `owner`
+    /// @dev Increments `mergePoolVersion`
+    /// @param _mergePool New merge pool code
     function setMergePool(
         TvmCell _mergePool
     ) external override onlyOwner cashBack {
         mergePool = _mergePool;
+
+        mergePoolVersion++;
     }
 
+    /// @notice Set merge router code
+    /// Can be called only by `owner`
+    /// @param _mergeRouter New merge router code
     function setMergeRouter(
         TvmCell _mergeRouter
     ) external override onlyOwner cashBack {
         mergeRouter = _mergeRouter;
+    }
+
+    /// @notice Set merge pool platform code
+    /// Can be called only by `owner`
+    /// @param _mergePoolPlatform New merge pool platform code
+    function setMergePoolPlatform(
+        TvmCell _mergePoolPlatform
+    ) external override onlyOwner cashBack {
+        mergePoolPlatform = _mergePoolPlatform;
     }
 
     function mint(
@@ -477,7 +522,8 @@ contract ProxyMultiVaultAlien_V3 is
             owner,
             manager,
             mergeRouter,
-            mergePool
+            mergePool,
+            mergePoolPlatform
         );
 
         tvm.setcode(code);

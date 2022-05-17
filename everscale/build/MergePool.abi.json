@@ -6,10 +6,15 @@
 		{
 			"name": "constructor",
 			"inputs": [
-				{"name":"tokens_","type":"address[]"},
-				{"name":"canonId","type":"uint256"},
-				{"name":"owner_","type":"address"},
-				{"name":"manager_","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "acceptUpgrade",
+			"inputs": [
+				{"name":"code","type":"cell"},
+				{"name":"newVersion","type":"uint8"}
 			],
 			"outputs": [
 			]
@@ -148,6 +153,14 @@
 			]
 		},
 		{
+			"name": "version",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"version","type":"uint8"}
+			]
+		},
+		{
 			"name": "manager",
 			"inputs": [
 			],
@@ -178,6 +191,7 @@
 		{"name":"owner","type":"address"},
 		{"name":"_randomNonce","type":"uint256"},
 		{"name":"proxy","type":"address"},
+		{"name":"version","type":"uint8"},
 		{"components":[{"name":"decimals","type":"uint8"},{"name":"enabled","type":"bool"}],"name":"tokens","type":"map(address,tuple)"},
 		{"name":"manager","type":"address"},
 		{"name":"canon","type":"address"}

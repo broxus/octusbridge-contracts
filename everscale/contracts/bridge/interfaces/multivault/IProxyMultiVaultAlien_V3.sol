@@ -50,6 +50,10 @@ interface IProxyMultiVaultAlien_V3 is IProxyMultiVaultAlien_V1 {
         TvmCell _mergeRouter
     ) external;
 
+    function setMergePoolPlatform(
+        TvmCell _mergePoolPlatform
+    ) external;
+
     function mint(
         address token,
         uint128 amount,
@@ -60,6 +64,10 @@ interface IProxyMultiVaultAlien_V3 is IProxyMultiVaultAlien_V1 {
         address token,
         uint128 amount,
         address walletOwner
+    ) external;
+
+    function upgradeMergePool(
+        address pool
     ) external;
 
     event AlienTransfer(

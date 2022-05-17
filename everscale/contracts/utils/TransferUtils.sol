@@ -22,11 +22,15 @@ contract TransferUtils {
         _;
     }
 
-    modifier reserveAtLeastTargetBalance() {
+    function _reserveAtLeastTargetBalance() internal view {
         tvm.rawReserve(
             math.max(address(this).balance - msg.value, _targetBalance()),
             2
         );
+    }
+
+    modifier reserveAtLeastTargetBalance() {
+        _reserveAtLeastTargetBalance();
 
         _;
     }

@@ -213,7 +213,7 @@ describe('Deposit non-canon token from EVM to Everscale with merging', async fun
     it('Deploy merge pool', async () => {
         const nonce = locklift.utils.getRandomNonce();
 
-        await proxyManager.runTarget({
+        const tx = await proxyManager.runTarget({
             contract: proxy,
             method: 'deployMergePool',
             params: {
@@ -222,6 +222,8 @@ describe('Deposit non-canon token from EVM to Everscale with merging', async fun
                 canonId: 1
             }
         });
+
+        logger.log(`Merge pool deployment tx: ${tx.transaction.id}`);
 
         const mergePoolAddress = await proxy.call({
             method: 'deriveMergePool',
@@ -239,7 +241,16 @@ describe('Deposit non-canon token from EVM to Everscale with merging', async fun
         metricManager.addContract(mergePool);
     });
 
-    it('Check merge pool', async () => {
+    it('Check merge pool settings', async () => {
+        expect(await mergePool.call({ method: 'owner' }))
+            .to.be.equal(bridgeOwner.address, 'Wrong merge pool owner');
+        expect(await mergePool.call({ method: 'manager' }))
+            .to.be.equal(proxyManager.address, 'Wrong merge pool manager');
+        expect(await mergePool.call({ method: 'version' }))
+            .to.be.bignumber.equal(1, 'Wrong merge pool version');
+    });
+
+    it('Check merge pool tokens', async () => {
         const tokens = await mergePool.call({ method: 'getTokens' });
 
         expect(tokens._canon)

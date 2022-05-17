@@ -41,6 +41,11 @@ interface IMergePool {
         address token
     ) external;
 
+    function acceptUpgrade(
+        TvmCell code,
+        uint8 version
+    ) external;
+
     function getCanon() external responsible returns (address, Token);
 
     function getTokens() external responsible returns(
