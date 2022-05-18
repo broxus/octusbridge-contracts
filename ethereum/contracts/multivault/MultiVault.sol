@@ -28,7 +28,7 @@ string constant DEFAULT_NAME_PREFIX = 'Octus ';
 string constant DEFAULT_SYMBOL_PREFIX = 'oct';
 
 
-string constant API_VERSION = '0.1.2';
+string constant API_VERSION = '0.1.3';
 
 
 /// @notice Vault, based on Octus Bridge. Allows to transfer arbitrary tokens from Everscale

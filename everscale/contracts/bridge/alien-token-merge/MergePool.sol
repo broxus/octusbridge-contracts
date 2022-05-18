@@ -25,7 +25,6 @@ contract MergePool is
     IAcceptTokensBurnCallback
 {
     uint128 constant ATTACH_TO_DECIMALS_REQUEST = 0.3 ton;
-    uint128 constant SAFE_GAP = 0.2 ton;
 
     address static proxy;
 
