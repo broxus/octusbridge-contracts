@@ -101,6 +101,9 @@ describe('Test solana everscale event confirm', async function() {
 
       eventVoteData = {
         accountSeed: 111,
+        slot: 0,
+        blockTime: 0,
+        txSignature: '',
         eventData,
       };
     });

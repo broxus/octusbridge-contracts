@@ -31,7 +31,7 @@
 		{
 			"name": "deployEvent",
 			"inputs": [
-				{"components":[{"name":"accountSeed","type":"uint128"},{"name":"eventData","type":"cell"}],"name":"eventVoteData","type":"tuple"}
+				{"components":[{"name":"accountSeed","type":"uint128"},{"name":"slot","type":"uint64"},{"name":"blockTime","type":"uint64"},{"name":"txSignature","type":"string"},{"name":"eventData","type":"cell"}],"name":"eventVoteData","type":"tuple"}
 			],
 			"outputs": [
 			]
@@ -40,7 +40,7 @@
 			"name": "deriveEventAddress",
 			"inputs": [
 				{"name":"answerId","type":"uint32"},
-				{"components":[{"name":"accountSeed","type":"uint128"},{"name":"eventData","type":"cell"}],"name":"eventVoteData","type":"tuple"}
+				{"components":[{"name":"accountSeed","type":"uint128"},{"name":"slot","type":"uint64"},{"name":"blockTime","type":"uint64"},{"name":"txSignature","type":"string"},{"name":"eventData","type":"cell"}],"name":"eventVoteData","type":"tuple"}
 			],
 			"outputs": [
 				{"name":"eventContract","type":"address"}
@@ -69,7 +69,7 @@
 		{
 			"name": "onEventConfirmed",
 			"inputs": [
-				{"components":[{"components":[{"name":"accountSeed","type":"uint128"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"eventInitData","type":"tuple"},
+				{"components":[{"components":[{"name":"accountSeed","type":"uint128"},{"name":"slot","type":"uint64"},{"name":"blockTime","type":"uint64"},{"name":"txSignature","type":"string"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"eventInitData","type":"tuple"},
 				{"name":"gasBackAddress","type":"address"}
 			],
 			"outputs": [
@@ -78,7 +78,7 @@
 		{
 			"name": "onEventConfirmedExtended",
 			"inputs": [
-				{"components":[{"components":[{"name":"accountSeed","type":"uint128"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"eventInitData","type":"tuple"},
+				{"components":[{"components":[{"name":"accountSeed","type":"uint128"},{"name":"slot","type":"uint64"},{"name":"blockTime","type":"uint64"},{"name":"txSignature","type":"string"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"eventInitData","type":"tuple"},
 				{"name":"_meta","type":"cell"},
 				{"name":"gasBackAddress","type":"address"}
 			],

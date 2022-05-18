@@ -338,6 +338,9 @@ describe('Test Solana native multivault pipeline', async function() {
 
             eventVoteData = {
                 accountSeed: 111,
+                slot: 0,
+                blockTime: 0,
+                txSignature: '',
                 eventData: eventDataEncoded
             };
 

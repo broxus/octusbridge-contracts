@@ -36,7 +36,7 @@
 		{
 			"name": "onEventConfirmedExtended",
 			"inputs": [
-				{"components":[{"components":[{"name":"accountSeed","type":"uint128"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"value0","type":"tuple"},
+				{"components":[{"components":[{"name":"accountSeed","type":"uint128"},{"name":"slot","type":"uint64"},{"name":"blockTime","type":"uint64"},{"name":"txSignature","type":"string"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"value0","type":"tuple"},
 				{"name":"meta","type":"cell"},
 				{"name":"remainingGasTo","type":"address"}
 			],
