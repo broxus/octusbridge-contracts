@@ -82,7 +82,7 @@ contract TokenTransferEthereumEvent is EthereumBaseEvent, ProxyTokenTransferCell
 
         owner_address = address.makeAddrStd(wid, owner_addr);
 
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} (
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} (
             tokens,
             wid,
             owner_addr,

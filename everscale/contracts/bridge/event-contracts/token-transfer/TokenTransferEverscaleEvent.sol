@@ -83,7 +83,7 @@ contract TokenTransferEverscaleEvent is EverscaleBaseEvent, ProxyTokenTransferCe
 
         owner_address = address.makeAddrStd(wid, addr);
 
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} (
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} (
             wid,
             addr,
             tokens,

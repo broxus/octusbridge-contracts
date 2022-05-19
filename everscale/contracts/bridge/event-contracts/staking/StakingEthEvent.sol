@@ -50,6 +50,6 @@ contract StakingEthEvent is EthereumBaseEvent, StakingCellEncoder {
 
         ton_staker_addr = address.makeAddrStd(wk_id, ton_addr_body);
 
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} (eth_addr, wk_id, ton_addr_body, ton_staker_addr);
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} (eth_addr, wk_id, ton_addr_body, ton_staker_addr);
     }
 }
