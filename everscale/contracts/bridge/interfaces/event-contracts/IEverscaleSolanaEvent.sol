@@ -7,7 +7,6 @@ interface IEverscaleSolanaEvent is IBasicEvent {
     struct EverscaleSolanaEventVoteData {
         uint64 eventTransactionLt;
         uint32 eventTimestamp;
-        uint256 author;
         TvmCell eventData;
     }
 

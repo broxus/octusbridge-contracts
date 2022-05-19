@@ -78,7 +78,6 @@ contract ProxyMultiVaultSolanaAlien is
         IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(
             tx.timestamp,
             now,
-            recipient,
             eventData
         );
 

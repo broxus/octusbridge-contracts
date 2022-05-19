@@ -127,7 +127,6 @@ contract SolanaProxyTokenTransfer is
             IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(
             tx.timestamp,
             now,
-            solanaOwnerAddress,
             eventData);
 
             IEverscaleSolanaEventConfiguration(config.everConfiguration).deployEvent{
