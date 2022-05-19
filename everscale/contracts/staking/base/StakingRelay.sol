@@ -4,6 +4,7 @@ pragma AbiHeader pubkey;
 
 import "./StakingUpgradable.sol";
 import "../../bridge/interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.sol";
+import "../../bridge/interfaces/event-configuration-contracts/IEverscaleSolanaEventConfiguration.sol";
 import "../../bridge/interfaces/IEthereumEverscaleProxy.sol";
 
 
@@ -310,7 +311,8 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
         uint128 round_reward,
         uint32 reward_round_num,
         bool duplicate,
-        uint160[] eth_keys
+        uint160[] eth_keys,
+        uint256[] ton_keys
     ) external override onlyRelayRound(round_num) {
         // this method is called with remaining balance from setRelays call of RelayRound which is lower than we need
         // so that we manually increase reservation
@@ -328,8 +330,15 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
             event_builder.store(round_num); // 32
             event_builder.store(eth_keys); // ref
             event_builder.store(round_end_time);
-            IEverscaleEthereumEvent.EverscaleEthereumEventVoteData event_data = IEverscaleEthereumEvent.EverscaleEthereumEventVoteData(tx.timestamp, now, event_builder.toCell());
-            IEverscaleEthereumEventConfiguration(base_details.bridge_event_config_ton_eth).deployEvent{value: tonEventDeployValue}(event_data);
+            IEverscaleEthereumEvent.EverscaleEthereumEventVoteData event_data_eth = IEverscaleEthereumEvent.EverscaleEthereumEventVoteData(tx.timestamp, now, event_builder.toCell());
+            IEverscaleEthereumEventConfiguration(base_details.bridge_event_config_ton_eth).deployEvent{value: tonEventDeployValue}(event_data_eth);
+
+            TvmBuilder event_builder2;
+            event_builder2.store(round_num);
+            event_builder2.store(ton_keys);
+            event_builder2.store(round_end_time);
+            IEverscaleSolanaEvent.EverscaleSolanaEventVoteData event_data_sol = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(tx.timestamp, now, event_builder2.toCell());
+            IEverscaleSolanaEventConfiguration(base_details.bridge_event_config_ton_sol).deployEvent{value: tonEventDeployValue}(event_data_sol);
         }
 
         if (round_num > 0) {

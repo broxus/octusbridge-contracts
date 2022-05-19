@@ -14,6 +14,7 @@ interface IStakingPool {
         address dao_root;
         address bridge_event_config_eth_ton;
         address bridge_event_config_ton_eth;
+        address bridge_event_config_ton_sol;
         address tokenRoot;
         address tokenWallet;
         address admin;
@@ -88,6 +89,7 @@ interface IStakingPool {
         uint128 round_reward,
         uint32 reward_round_num,
         bool duplicate,
-        uint160[] eth_keys
+        uint160[] eth_keys,
+        uint256[] ton_keys
     ) external;
 }
