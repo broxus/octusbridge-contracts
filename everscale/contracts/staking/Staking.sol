@@ -12,7 +12,6 @@ contract Staking is StakingPoolRelay {
         address _rescuer,
         address _bridge_event_config_eth_ton,
         address _bridge_event_config_ton_eth,
-        address _bridge_event_config_ton_sol,
         address _tokenRoot
     ) public {
         tvm.accept();
@@ -20,7 +19,6 @@ contract Staking is StakingPoolRelay {
         base_details.tokenRoot = _tokenRoot;
         base_details.bridge_event_config_eth_ton = _bridge_event_config_eth_ton;
         base_details.bridge_event_config_ton_eth = _bridge_event_config_ton_eth;
-        base_details.bridge_event_config_ton_sol = _bridge_event_config_ton_sol;
         base_details.admin = _admin;
         base_details.dao_root = _dao_root;
         base_details.rescuer = _rescuer;

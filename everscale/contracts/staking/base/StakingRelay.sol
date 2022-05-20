@@ -317,7 +317,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
         // this method is called with remaining balance from setRelays call of RelayRound which is lower than we need
         // so that we manually increase reservation
         // we know that balance of this contract is enough, because we checked that on 'endElection' call which triggers this action
-        tvm.rawReserve(_reserve() - tonEventDeployValue - Gas.DESTROY_MSG_VALUE * 2, 2);
+        tvm.rawReserve(_reserve() - tonEventDeployValue - solEventDeployValue - Gas.DESTROY_MSG_VALUE * 2, 2);
 
         round_details.currentElectionEnded = false;
         round_details.currentRelayRound = round_num;
@@ -338,7 +338,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
             event_builder2.store(ton_keys);
             event_builder2.store(round_end_time);
             IEverscaleSolanaEvent.EverscaleSolanaEventVoteData event_data_sol = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(tx.timestamp, now, event_builder2.toCell());
-            IEverscaleSolanaEventConfiguration(base_details.bridge_event_config_ton_sol).deployEvent{value: tonEventDeployValue}(event_data_sol);
+            IEverscaleSolanaEventConfiguration(base_details.bridge_event_config_ton_sol).deployEvent{value: solEventDeployValue}(event_data_sol);
         }
 
         if (round_num > 0) {

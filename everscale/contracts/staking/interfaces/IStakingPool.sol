@@ -14,7 +14,6 @@ interface IStakingPool {
         address dao_root;
         address bridge_event_config_eth_ton;
         address bridge_event_config_ton_eth;
-        address bridge_event_config_ton_sol;
         address tokenRoot;
         address tokenWallet;
         address admin;
