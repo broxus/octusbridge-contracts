@@ -145,7 +145,8 @@ contract StakingV1_2 is StakingPoolRelay {
             deposit_nonce, // 64
             deposits
         ) = abi.decode(
-            address,
+            upgrade_data,
+            (address,
             bool,
             uint32,
             uint32,
@@ -189,7 +190,7 @@ contract StakingV1_2 is StakingPoolRelay {
             uint128,
             uint128,
             uint64,
-            mapping (uint64 => PendingDeposit)
+            mapping (uint64 => PendingDeposit))
         );
 
         emit StakingUpdated();

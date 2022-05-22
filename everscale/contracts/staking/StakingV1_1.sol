@@ -53,7 +53,7 @@ contract StakingV1_1 is StakingPoolRelay {
             relay_config.relayInitialTonDeposit, // 128
             relay_config.userRewardPerSecond, // 128
             relay_config.relayRewardPerSecond, // 128
-            tonEventDeployValue, // 128
+            tonEthEventDeployValue, // 128
             deposit_nonce, // 64
             deposits // mapping
         );

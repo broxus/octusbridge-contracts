@@ -44,7 +44,7 @@ const MIN_RELAYS = 2;
 const RELAY_INITIAL_DEPOSIT = 500;
 
 
-describe('Test Staking Rewards', async function () {
+describe('Test Staking Upgrade', async function () {
     this.timeout(10000000);
 
     const getBalance = async function (address) {
@@ -130,7 +130,15 @@ describe('Test Staking Rewards', async function () {
                     keyPair: keyPair
                 }, locklift.utils.convertCrystal(1, 'nano'));
 
-                stakingRoot = await locklift.factory.getContract('Staking');
+                const SolConfigMockup = await locklift.factory.getContract('SolConfigMockup');
+                const sol_config_mockup = await locklift.giver.deployContract({
+                    contract: SolConfigMockup,
+                    constructorParams: {},
+                    initParams: {nonce: locklift.utils.getRandomNonce()},
+                    keyPair: keyPair
+                }, locklift.utils.convertCrystal(1, 'nano'));
+
+                stakingRoot = await locklift.factory.getContract('StakingV1_2');
                 const StakingRootDeployer = await locklift.factory.getContract('StakingRootDeployer');
                 const stakingRootDeployer = await locklift.giver.deployContract({
                     contract: StakingRootDeployer,
@@ -151,6 +159,7 @@ describe('Test Staking Rewards', async function () {
                         _rescuer: stakingOwner.address,
                         _bridge_event_config_eth_ton: stakingOwner.address,
                         _bridge_event_config_ton_eth: ton_config_mockup.address,
+                        _bridge_event_config_ton_sol: sol_config_mockup.address,
                         _deploy_nonce: locklift.utils.getRandomNonce()
                     }
                 })).decoded.output.value0);
@@ -226,7 +235,7 @@ describe('Test Staking Rewards', async function () {
     });
 
     describe('Testing staking upgrade', async function () {
-        it('Calling upgrade', async function () {
+        it('Calling upgrade from V1 to V1_1', async function () {
             const new_code = await locklift.factory.getContract('StakingV1_1');
            const tx = await stakingOwner.runTarget({
                contract: stakingRoot,
@@ -239,8 +248,22 @@ describe('Test Staking Rewards', async function () {
             (await new_code.getEvents('StakingUpdated')).pop();
         });
 
+        it('Calling upgrade from V1_1 to V1_2', async function () {
+            const new_code = await locklift.factory.getContract('StakingV1_2');
+            const tx = await stakingOwner.runTarget({
+                contract: stakingRoot,
+                method: 'upgrade',
+                params: {code: new_code.code, send_gas_to: stakingOwner.address},
+                value: locklift.utils.convertCrystal(11, 'nano')
+            });
+
+            new_code.setAddress(stakingRoot.address);
+            (await new_code.getEvents('StakingUpdated')).pop();
+        });
+
         it('Test storage', async function() {
-            await stakingRoot.call({method: 'getDetails'});
+            const res = await stakingRoot.call({method: 'getDetails'});
+            console.log(res);
         })
     });
 })

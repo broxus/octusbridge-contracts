@@ -72,7 +72,7 @@ contract TestStakingV2 is StakingPoolRelay {
         data_builder_4.store(relay_config.relayInitialTonDeposit); // 128
         data_builder_4.store(relay_config.userRewardPerSecond); // 128
         data_builder_4.store(relay_config.relayRewardPerSecond); // 128
-        data_builder_4.store(tonEventDeployValue); // 128
+        data_builder_4.store(tonEthEventDeployValue); // 128
         data_builder_4.store(deposit_nonce); // 64
         data_builder_4.store(deposits); // mapping
 
@@ -168,7 +168,7 @@ contract TestStakingV2 is StakingPoolRelay {
             relay_config.relayInitialTonDeposit, // 128
             relay_config.userRewardPerSecond, // 128
             relay_config.relayRewardPerSecond, // 128
-            tonEventDeployValue, // 128
+            tonEthEventDeployValue, // 128
             deposit_nonce, // 64
             deposits
         ) = data_4.decode(

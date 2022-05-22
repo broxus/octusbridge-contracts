@@ -1,6 +1,6 @@
 pragma ton-solidity >= 0.39.0;
 
-import "./Staking.sol";
+import "./StakingV1_2.sol";
 
 contract StakingRootDeployer {
     uint256 static nonce;
@@ -20,15 +20,16 @@ contract StakingRootDeployer {
         address _rescuer,
         address _bridge_event_config_eth_ton,
         address _bridge_event_config_ton_eth,
+        address _bridge_event_config_ton_sol,
         address _tokenRoot,
         uint32 _deploy_nonce
     ) public returns(address) {
         tvm.accept();
-        return new Staking {
+        return new StakingV1_2 {
             stateInit: tvm.buildStateInit({
                 pubkey: tvm.pubkey(),
                 code: stakingCode,
-                contr: Staking,
+                contr: StakingV1_2,
                 varInit: {
                     deploy_nonce: _deploy_nonce,
                     deployer: address(this)
@@ -36,6 +37,6 @@ contract StakingRootDeployer {
             }),
             value: 0,
             flag: 128
-        }(_admin, _dao_root, _rewarder, _rescuer, _bridge_event_config_eth_ton, _bridge_event_config_ton_eth, _tokenRoot);
+        }(_admin, _dao_root, _rewarder, _rescuer, _bridge_event_config_eth_ton, _bridge_event_config_ton_eth, _bridge_event_config_ton_sol, _tokenRoot);
     }
 }

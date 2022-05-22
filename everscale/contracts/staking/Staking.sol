@@ -96,7 +96,7 @@ contract Staking is StakingPoolRelay {
         data_builder_4.store(relay_config.relayInitialTonDeposit); // 128
         data_builder_4.store(relay_config.userRewardPerSecond); // 128
         data_builder_4.store(relay_config.relayRewardPerSecond); // 128
-        data_builder_4.store(tonEventDeployValue); // 128
+        data_builder_4.store(tonEthEventDeployValue); // 128
         data_builder_4.store(deposit_nonce); // 64
         data_builder_4.store(deposits); // 33 + ref
         // TOTAL 929 + ref

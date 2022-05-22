@@ -103,7 +103,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
     uint8 constant RELAY_PACK_SIZE = 30;
 
     // should be at least 60 in prod
-    uint32 constant EXTERNAL_CALL_INTERVAL = 0;
+    uint32 constant EXTERNAL_CALL_INTERVAL = 60;
 
     uint256 constant SCALING_FACTOR = 1e18;
 
@@ -156,7 +156,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
-    function setEventDeployValues(uint128 ton_eth_event_value, uint128 ton_sol_event_value address send_gas_to) external onlyAdmin {
+    function setEventDeployValues(uint128 ton_eth_event_value, uint128 ton_sol_event_value, address send_gas_to) external onlyAdmin {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 0);
 
@@ -188,7 +188,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
     function setBridgeEventTonSolConfig(address new_bridge_event_config_ton_sol, address send_gas_to) external onlyAdmin {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 0);
-        emit BridgeEventTonSolConfigUpdated(new_bridge_event_config_ton_eth);
+        emit BridgeEventTonSolConfigUpdated(new_bridge_event_config_ton_sol);
         bridge_event_config_ton_sol = new_bridge_event_config_ton_sol;
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
