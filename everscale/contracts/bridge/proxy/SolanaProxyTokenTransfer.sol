@@ -38,7 +38,7 @@ contract SolanaProxyTokenTransfer is
     TransferUtils,
     CheckPubKey
 {
-    event Withdraw(address addr, uint128 tokens, uint256 solana_addr);
+    event Withdraw(address addr, uint64 tokens, uint256 solana_addr);
     uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
 
     Configuration config;
