@@ -87,7 +87,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
 
     BaseDetails base_details;
 
-    address bridge_event_config_ton_sol;
+    address public bridge_event_config_ton_sol;
 
     RelayConfigDetails relay_config = RelayConfigDetails(
         30 days, 7 days, 2 days, 4 days, 1 hours, 30, 13, 100000 * 10**9, 500 ton, 1000000, 1000000
