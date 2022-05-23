@@ -38,7 +38,7 @@ contract SolanaProxyTokenTransfer is
     TransferUtils,
     CheckPubKey
 {
-    event Withdraw(int8 wid, uint256 addr, uint128 tokens, uint256 solana_addr);
+    event Withdraw(address addr, uint128 tokens, uint256 solana_addr);
     uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
 
     Configuration config;
@@ -78,10 +78,10 @@ contract SolanaProxyTokenTransfer is
 
         if (config.solanaDecimals > config.everscaleDecimals) {
             uint128 mul10 = uint128(10) ** uint128(config.solanaDecimals - config.everscaleDecimals);
-            tokens = tokens * mul10;
+            tokens = tokens / mul10;
         } else {
             uint128 mul10 = uint128(10) ** uint128(config.everscaleDecimals - config.solanaDecimals);
-            tokens = tokens / mul10;
+            tokens = tokens * mul10;
         }
 
         ITokenRoot(config.tokenRoot).mint{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(

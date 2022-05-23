@@ -220,8 +220,7 @@
 		{
 			"name": "Withdraw",
 			"inputs": [
-				{"name":"wid","type":"int8"},
-				{"name":"addr","type":"uint256"},
+				{"name":"addr","type":"address"},
 				{"name":"tokens","type":"uint128"},
 				{"name":"solana_addr","type":"uint256"}
 			],

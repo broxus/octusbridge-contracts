@@ -68,6 +68,17 @@
 			]
 		},
 		{
+			"name": "encodeEverscaleSolanaStakingEventData",
+			"inputs": [
+				{"name":"round_num","type":"uint32"},
+				{"name":"sol_keys","type":"uint256[]"},
+				{"name":"round_end","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
+		},
+		{
 			"name": "decodeSolanaEverscaleStakingEventData",
 			"inputs": [
 				{"name":"data","type":"cell"}

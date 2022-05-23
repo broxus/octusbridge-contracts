@@ -90,7 +90,7 @@ describe('Test solana everscale event solana decimals lt ever', async function()
 
       eventDataStructure = {
         sender_addr: 123,
-        tokens: 100000000,
+        tokens: 100,
         receiver_addr: initializer.address
       };
 
@@ -101,6 +101,9 @@ describe('Test solana everscale event solana decimals lt ever', async function()
 
       eventVoteData = {
         accountSeed: 111,
+        slot: 0,
+        blockTime: 0,
+        txSignature: '',
         eventData,
       };
     });
@@ -245,7 +248,7 @@ describe('Test solana everscale event solana decimals lt ever', async function()
 
     it('Check event proxy minted tokens', async () => {
       expect(await initializerTokenWallet.call({method: 'balance'}))
-        .to.be.bignumber.equal(eventDataStructure.tokens / 1000000, 'Wrong initializerTokenWallet balance');
+        .to.be.bignumber.equal(eventDataStructure.tokens * 1000000, 'Wrong initializerTokenWallet balance');
     });
   });
 

@@ -31,6 +31,14 @@ contract StakingCellEncoder {
         return (round_num, sol_keys, round_end);
     }
 
+    function encodeEverscaleSolanaStakingEventData(uint32 round_num, uint256[] sol_keys, uint32 round_end) public pure returns(TvmCell data) {
+        TvmBuilder builder;
+        builder.store(round_num);
+        builder.store(sol_keys);
+        builder.store(round_end);
+        return builder.toCell();
+    }
+
     function decodeSolanaEverscaleStakingEventData(TvmCell data) public pure returns(uint256 sol_addr, int8 wk_id, uint256 ever_addr_body) {
         (sol_addr, wk_id, ever_addr_body) = data.toSlice().decode(uint256, int8, uint256);
         return (sol_addr, wk_id, ever_addr_body);

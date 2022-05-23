@@ -91,7 +91,7 @@ describe('Test solana everscale event solana decimals gt ever', async function()
 
       eventDataStructure = {
         sender_addr: 123,
-        tokens: 100,
+        tokens: 100000000,
         receiver_addr: initializer.address
       };
 
@@ -103,6 +103,9 @@ describe('Test solana everscale event solana decimals gt ever', async function()
 
       eventVoteData = {
         accountSeed: 111,
+        slot: 0,
+        blockTime: 0,
+        txSignature: '',
         eventData,
       };
     });
@@ -246,7 +249,7 @@ describe('Test solana everscale event solana decimals gt ever', async function()
       let balance = await initializerTokenWallet.call({method: 'balance'});
       console.log(balance);
       expect(balance)
-        .to.be.bignumber.equal(eventDataStructure.tokens * 1000000, 'Wrong initializerTokenWallet balance');
+        .to.be.bignumber.equal(eventDataStructure.tokens / 1000000, 'Wrong initializerTokenWallet balance');
     });
   });
 
