@@ -70,6 +70,13 @@ async function main() {
       initial: '0:0000000000000000000000000000000000000000000000000000000000000001',
       message: 'Ever->Eth event configuration (broadcast RelayRoundCreation event with eth keys from staking). Could be omitted',
       validate: value => isValidTonAddress(value) ? true : 'Invalid address'
+    },
+    {
+      type: 'text',
+      name: 'tonSolEventConfig',
+      initial: '0:0000000000000000000000000000000000000000000000000000000000000001',
+      message: 'Ever->Sol event configuration (broadcast RelayRoundCreation event with ton keys from staking). Could be omitted',
+      validate: value => isValidTonAddress(value) ? true : 'Invalid address'
     }
   ]);
   console.log('\x1b[1m', '\n\nNow setting relay configs:')
@@ -147,7 +154,7 @@ async function main() {
 
   const spinner = ora('Deploying staking deployer...').start();
 
-  const stakingRoot = await locklift.factory.getContract('Staking');
+  const stakingRoot = await locklift.factory.getContract('StakingV1_2');
   const StakingRootDeployer = await locklift.factory.getContract('StakingRootDeployer');
   const stakingRootDeployer = await locklift.giver.deployContract({
     contract: StakingRootDeployer,
@@ -174,6 +181,7 @@ async function main() {
       _rescuer: deploy_params.rescuer,
       _bridge_event_config_eth_ton: deploy_params.ethTonEventConfig,
       _bridge_event_config_ton_eth: deploy_params.tonEthEventConfig,
+      _bridge_event_config_ton_sol: deploy_params.tonSolEventConfig,
       _tokenRoot: deploy_params.tokenRoot,
       _deploy_nonce: getRandomNonce()
     }
