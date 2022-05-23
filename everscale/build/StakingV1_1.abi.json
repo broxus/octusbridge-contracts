@@ -596,6 +596,14 @@
 			"outputs": [
 				{"name":"delegators","type":"map(address,uint256[])"}
 			]
+		},
+		{
+			"name": "bridge_event_config_ton_sol",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"bridge_event_config_ton_sol","type":"address"}
+			]
 		}
 	],
 	"data": [
@@ -693,6 +701,16 @@
 			"inputs": [
 				{"name":"round_num","type":"uint32"},
 				{"name":"eth_keys","type":"uint160[]"},
+				{"name":"round_end","type":"uint32"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "RelayRoundCreationSol",
+			"inputs": [
+				{"name":"round_num","type":"uint32"},
+				{"name":"ton_pubkeys","type":"uint256[]"},
 				{"name":"round_end","type":"uint32"}
 			],
 			"outputs": [

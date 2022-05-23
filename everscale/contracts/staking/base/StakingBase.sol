@@ -45,6 +45,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
         bool duplicate
     );
     event RelayRoundCreation(uint32 round_num, uint160[] eth_keys, uint32 round_end);
+    event RelayRoundCreationSol(uint32 round_num, uint256[] ton_pubkeys, uint32 round_end);
     event RelaySlashed(address user, uint128 tokens_withdrawn);
     event Emergency(bool state);
 
