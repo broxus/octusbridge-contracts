@@ -88,7 +88,7 @@ const setupBridge = async (relays) => {
       _randomNonce,
     },
     keyPair,
-  }, locklift.utils.convertCrystal(20, 'nano'));
+  }, locklift.utils.convertCrystal(30, 'nano'));
   
   owner.setKeyPair(keyPair);
   owner.afterRun = afterRun;
@@ -305,6 +305,7 @@ const setupSolanaEverscaleEventConfiguration = async (owner, staking, solanaDeci
     program: new BigNumber(0),
     settings: new BigNumber(0),
     proxy: proxyFutureAddress,
+    startTimestamp: 0,
     endTimestamp: 0,
   };
 
@@ -435,6 +436,7 @@ const setupSolanaEverscaleEventConfigurationReal = async (owner, staking, solana
     program: new BigNumber('64325431755338481809989759803115734914716347278988009080185460755052753533847').toFixed(),
     settings: new BigNumber('57841592085658898909210956009470529174855388447817017254133095023581205672081').toFixed(),
     proxy: proxyFutureAddress,
+    startTimestamp: 0,
     endTimestamp: 0,
   };
 
@@ -1163,6 +1165,7 @@ const setupSolanaAlienMultiVault = async (owner, staking, cellEncoder) => {
         program: new BigNumber(0),
         settings: new BigNumber(0),
         proxy: proxy.address,
+        startTimestamp: 0,
         endTimestamp: 0,
       }
     },
@@ -1285,6 +1288,7 @@ const setupSolanaNativeMultiVault = async (owner, staking) => {
         program: new BigNumber(0),
         settings: new BigNumber(0),
         proxy: proxy.address,
+        startTimestamp: 0,
         endTimestamp: 0,
       }
     },

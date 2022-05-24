@@ -9,7 +9,8 @@ interface ISolanaEverscaleEventConfiguration is IBasicEventConfiguration {
         uint256 program;
         uint256 settings;
         address proxy;
-        uint32 endTimestamp;
+        uint64 startTimestamp;
+        uint64 endTimestamp;
     }
 
     function deployEvent(
@@ -26,5 +27,5 @@ interface ISolanaEverscaleEventConfiguration is IBasicEventConfiguration {
         TvmCell _meta
     );
 
-    function setEndTimestamp(uint32 endTimestamp) external;
+    function setEndTimestamp(uint64 endTimestamp) external;
 }

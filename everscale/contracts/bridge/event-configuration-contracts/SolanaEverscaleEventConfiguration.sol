@@ -48,7 +48,7 @@ contract SolanaEverscaleEventConfiguration is ISolanaEverscaleEventConfiguration
     //// @dev Set end timestamp. Can be set only in case current value is 0.
     /// @param endTimestamp End timestamp.
     function setEndTimestamp(
-        uint32 endTimestamp
+        uint64 endTimestamp
     )
         override
         public
@@ -86,7 +86,17 @@ contract SolanaEverscaleEventConfiguration is ISolanaEverscaleEventConfiguration
         reserveMinBalance(MIN_CONTRACT_BALANCE)
     {
         require(msg.value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
+        require(
+            eventVoteData.blockTime >= networkConfiguration.startTimestamp,
+            ErrorCodes.EVENT_TIMESTAMP_LESS_THAN_START
+        );
 
+        if (networkConfiguration.endTimestamp != 0) {
+            require(
+                eventVoteData.blockTime <= networkConfiguration.endTimestamp,
+                ErrorCodes.EVENT_TIMESTAMP_HIGHER_THAN_END
+            );
+        }
         ISolanaEverscaleEvent.SolanaEverscaleEventInitData eventInitData = buildEventInitData(eventVoteData);
 
         address eventContract = deriveEventAddress(eventVoteData);

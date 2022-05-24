@@ -131,6 +131,7 @@ describe('Test configuration factory', async function() {
                 program: new BigNumber(0),
                 settings: new BigNumber(0),
                 proxy: locklift.utils.zeroAddress,
+                startTimestamp: 0,
                 endTimestamp: 0,
             };
 

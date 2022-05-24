@@ -150,6 +150,7 @@ const main = async () => {
         program: new BigNumber(response.program.toLowerCase()).toFixed(),
         settings: new BigNumber(response.settings.toLowerCase()).toFixed(),
         proxy: response.proxy,
+        startTimestamp: 0,
         endTimestamp: 0,
       }
     },

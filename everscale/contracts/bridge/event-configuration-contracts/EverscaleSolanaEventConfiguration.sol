@@ -88,7 +88,17 @@ contract EverscaleSolanaEventConfiguration is IEverscaleSolanaEventConfiguration
     ) override external reserveMinBalance(MIN_CONTRACT_BALANCE) {
         require(msg.sender == networkConfiguration.eventEmitter, ErrorCodes.SENDER_IS_NOT_EVENT_EMITTER);
         require(msg.value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
+        require(
+            eventVoteData.eventTimestamp >= networkConfiguration.startTimestamp,
+            ErrorCodes.EVENT_TIMESTAMP_LESS_THAN_START
+        );
 
+        if (networkConfiguration.endTimestamp != 0) {
+            require(
+                eventVoteData.eventTimestamp <= networkConfiguration.endTimestamp,
+                ErrorCodes.EVENT_TIMESTAMP_HIGHER_THAN_END
+            );
+        }
         IEverscaleSolanaEvent.EverscaleSolanaEventInitData eventInitData = buildEventInitData(eventVoteData);
 
         address eventContract = deriveEventAddress(eventVoteData);
