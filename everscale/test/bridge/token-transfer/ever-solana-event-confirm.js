@@ -86,6 +86,33 @@ describe('Test everscale solana event confirm', async function() {
 
     everEventParams = {
       solanaOwnerAddress: new BigNumber('42383474428106489994084969139012277140818210945614381322072008626484785752705').toFixed(),
+      executeAccounts: [
+          {
+          account: new BigNumber('42383474428106489994084969139012277140818210945614381322072008626484785752705').toFixed(),
+          readOnly: true,
+          isSigner: true
+      }, {
+          account: new BigNumber('42383474428106489994084969139012277140818210945614381322072008626484785752705').toFixed(),
+          readOnly: false,
+          isSigner: false
+      },{
+          account: new BigNumber('42383474428106489994084969139012277140818210945614381322072008626484785752705').toFixed(),
+          readOnly: false,
+          isSigner: false
+      }, {
+          account: new BigNumber('42383474428106489994084969139012277140818210945614381322072008626484785752705').toFixed(),
+          readOnly: false,
+          isSigner: false
+      },{
+          account: new BigNumber('42383474428106489994084969139012277140818210945614381322072008626484785752705').toFixed(),
+          readOnly: false,
+          isSigner: false
+      }, {
+          account: new BigNumber('42383474428106489994084969139012277140818210945614381322072008626484785752705').toFixed(),
+          readOnly: false,
+          isSigner: false
+      }
+      ],
     };
 
     it('Setup event data', async () => {

@@ -7,6 +7,7 @@ interface IEverscaleSolanaEvent is IBasicEvent {
     struct EverscaleSolanaEventVoteData {
         uint64 eventTransactionLt;
         uint32 eventTimestamp;
+        EverscaleSolanaExecuteAccount[] executeAccounts;
         TvmCell eventData;
     }
 
@@ -14,5 +15,11 @@ interface IEverscaleSolanaEvent is IBasicEvent {
         EverscaleSolanaEventVoteData voteData;
         address configuration;
         address staking;
+    }
+
+    struct EverscaleSolanaExecuteAccount {
+        uint256 account;
+        bool readOnly;
+        bool isSigner;
     }
 }

@@ -1,5 +1,6 @@
 pragma ton-solidity >= 0.39.0;
 
+import "../../bridge/interfaces/event-contracts/IEverscaleSolanaEvent.sol";
 
 contract TokenCellEncoder {
     function encodeEthereumBurnPayload(
@@ -25,13 +26,15 @@ contract TokenCellEncoder {
     }
 
     function encodeSolanaBurnPayload(
-        uint256 solanaOwnerAddress
+        uint256 solanaOwnerAddress,
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
     ) public pure returns(
         TvmCell data
     ) {
         TvmBuilder builder;
 
         builder.store(solanaOwnerAddress);
+        builder.store(executeAccounts);
 
         data = builder.toCell();
     }
@@ -39,8 +42,9 @@ contract TokenCellEncoder {
     function decodeSolanaBurnPayload(
         TvmCell data
     ) public pure returns(
-        uint256 solanaOwnerAddress
+        uint256 solanaOwnerAddress,
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
     ) {
-        (solanaOwnerAddress) = data.toSlice().decode(uint256);
+        (solanaOwnerAddress, executeAccounts) = data.toSlice().decode(uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[]);
     }
 }

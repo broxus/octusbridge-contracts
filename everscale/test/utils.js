@@ -490,6 +490,8 @@ const setupSolanaEverscaleEventConfigurationReal = async (owner, staking, solana
     settings: new BigNumber('57841592085658898909210956009470529174855388447817017254133095023581205672081').toFixed(),
     eventEmitter: proxyFutureAddress,
     instruction: 0,
+    executeInstruction: 0,
+    executeNeeded: false,
     startTimestamp: 0,
     endTimestamp: 1672365744,
   };
@@ -809,6 +811,8 @@ const setupEverscaleSolanaEventConfiguration = async (owner, staking, solanaDeci
     settings: new BigNumber(0),
     eventEmitter: proxyFutureAddress,
     instruction: 0,
+    executeInstruction: 0,
+    executeNeeded: false,
     startTimestamp: 0,
     endTimestamp: 0,
   };
@@ -1196,6 +1200,8 @@ const setupSolanaAlienMultiVault = async (owner, staking, cellEncoder) => {
         settings:  new BigNumber(0),
         eventEmitter: proxy.address,
         instruction: 0,
+        executeInstruction: 0,
+        executeNeeded: false,
         startTimestamp: 0,
         endTimestamp: 0,
       }
@@ -1319,6 +1325,8 @@ const setupSolanaNativeMultiVault = async (owner, staking) => {
         settings:  new BigNumber(0),
         eventEmitter: proxy.address,
         instruction: 0,
+        executeInstruction: 0,
+        executeNeeded: false,
         startTimestamp: 0,
         endTimestamp: 0,
       }

@@ -13,6 +13,8 @@ import "./../interfaces/event-configuration-contracts/IEverscaleSolanaEventConfi
 import "./../interfaces/legacy/ILegacyBurnTokensCallback.sol";
 import "./../interfaces/legacy/ILegacyTransferOwner.sol";
 
+import "../../bridge/interfaces/event-contracts/IEverscaleSolanaEvent.sol";
+
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.sol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensBurnCallback.sol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITransferableOwnership.sol";
@@ -104,7 +106,7 @@ contract SolanaProxyTokenTransfer is
         if (config.tokenRoot == msg.sender) {
             burnedCount += tokens;
 
-            (uint256 solanaOwnerAddress) = abi.decode(payload, (uint256));
+            (uint256 solanaOwnerAddress,  IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts) = abi.decode(payload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[]));
 
             address senderAddress = address.makeAddrStd(remainingGasTo.wid, remainingGasTo.value);
 
@@ -127,6 +129,7 @@ contract SolanaProxyTokenTransfer is
             IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(
             tx.timestamp,
             now,
+            executeAccounts,
             eventData);
 
             IEverscaleSolanaEventConfiguration(config.everConfiguration).deployEvent{

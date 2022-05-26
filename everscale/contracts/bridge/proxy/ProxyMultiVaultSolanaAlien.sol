@@ -12,6 +12,7 @@ import "./../../utils/ErrorCodes.sol";
 import "./../../utils/TransferUtils.sol";
 
 import "./../alien-token/TokenRootAlienSolanaEverscale.sol";
+import "../../bridge/interfaces/event-contracts/IEverscaleSolanaEvent.sol";
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensBurnCallback.sol";
 
@@ -62,7 +63,7 @@ contract ProxyMultiVaultSolanaAlien is
         address remainingGasTo,
         TvmCell payload
     ) public override reserveMinBalance(MIN_CONTRACT_BALANCE) {
-        (uint256 recipient) = abi.decode(payload, (uint256));
+        (uint256 recipient,  IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts) = abi.decode(payload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[]));
 
         uint64 amount_solana = uint64(amount);
 
@@ -78,6 +79,7 @@ contract ProxyMultiVaultSolanaAlien is
         IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(
             tx.timestamp,
             now,
+            executeAccounts,
             eventData
         );
 

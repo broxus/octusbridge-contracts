@@ -26,7 +26,8 @@
 		{
 			"name": "encodeSolanaBurnPayload",
 			"inputs": [
-				{"name":"solanaOwnerAddress","type":"uint256"}
+				{"name":"solanaOwnerAddress","type":"uint256"},
+				{"components":[{"name":"account","type":"uint256"},{"name":"readOnly","type":"bool"},{"name":"isSigner","type":"bool"}],"name":"executeAccounts","type":"tuple[]"}
 			],
 			"outputs": [
 				{"name":"data","type":"cell"}
@@ -38,7 +39,8 @@
 				{"name":"data","type":"cell"}
 			],
 			"outputs": [
-				{"name":"solanaOwnerAddress","type":"uint256"}
+				{"name":"solanaOwnerAddress","type":"uint256"},
+				{"components":[{"name":"account","type":"uint256"},{"name":"readOnly","type":"bool"},{"name":"isSigner","type":"bool"}],"name":"executeAccounts","type":"tuple[]"}
 			]
 		},
 		{

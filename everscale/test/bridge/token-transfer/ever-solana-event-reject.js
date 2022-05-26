@@ -85,7 +85,15 @@ describe('Test everscale solana event reject', async function() {
     everEventValue = 444;
     everEventParams = {
       solanaOwnerAddress: 222,
-      solanaPayer: 222,
+      executeAccounts: [ {
+        account: new BigNumber('42383474428106489994084969139012277140818210945614381322072008626484785752705').toFixed(),
+        readOnly: true,
+        isSigner: true
+      }, {
+        account: new BigNumber('42383474428106489994084969139012277140818210945614381322072008626484785752705').toFixed(),
+        readOnly: false,
+        isSigner: false
+      }],
     }
     
     it('Setup event data', async () => {

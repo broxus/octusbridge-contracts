@@ -46,7 +46,7 @@ describe('Test solana everscale event real relay', async function() {
 
     [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
 
-    [solanaEverscaleEventConfiguration, everscaleSolanaEventConfiguration, stakingEverscaleSolanaEventConfiguration, proxy, initializer] = await setupSolanaEverscaleEventConfigurationReal(
+    [solanaEverscaleEventConfiguration, everscaleSolanaEventConfiguration, proxy, initializer] = await setupSolanaEverscaleEventConfigurationReal(
       bridgeOwner,
       staking
     );
@@ -107,19 +107,6 @@ describe('Test solana everscale event real relay', async function() {
         bridge,
         stakingEverscaleSolanaEventConfiguration,
       );
-    });
-
-    it('Check stacking configuration enabled', async () => {
-      const configurations = await captureConnectors(bridge);
-
-      expect(configurations['2'])
-        .to.be.not.equal(undefined, 'Configuration not found');
-
-      expect(configurations['2']._eventConfiguration)
-        .to.be.equal(stakingEverscaleSolanaEventConfiguration.address, 'Wrong configuration address');
-
-      expect(configurations['2']._enabled)
-        .to.be.equal(true, 'Wrong connector status');
     });
   });
 

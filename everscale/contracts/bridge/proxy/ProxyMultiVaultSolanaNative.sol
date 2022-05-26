@@ -13,6 +13,7 @@ import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenWallet.sol";
 
 import "./../../utils/ErrorCodes.sol";
 import "./../../utils/TransferUtils.sol";
+import "../../bridge/interfaces/event-contracts/IEverscaleSolanaEvent.sol";
 
 
 import '@broxus/contracts/contracts/access/InternalOwner.sol';
@@ -67,7 +68,7 @@ contract ProxyMultiVaultSolanaNative is
         TvmCell payload
     ) override external reserveMinBalance(MIN_CONTRACT_BALANCE) {
 
-        (uint256 recipient) = abi.decode(payload, (uint256));
+        (uint256 recipient,  IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts) = abi.decode(payload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[]));
 
         uint64 amount_solana = uint64(amount);
 
@@ -83,6 +84,7 @@ contract ProxyMultiVaultSolanaNative is
         IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(
             tx.timestamp,
             now,
+            executeAccounts,
             eventData
         );
 

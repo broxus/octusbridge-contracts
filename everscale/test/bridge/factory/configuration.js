@@ -204,6 +204,8 @@ describe('Test configuration factory', async function() {
                 settings: new BigNumber(0),
                 eventEmitter: locklift.utils.zeroAddress,
                 instruction: 0,
+                executeInstruction: 0,
+                executeNeeded: false,
                 startTimestamp: 0,
                 endTimestamp: 0,
             };

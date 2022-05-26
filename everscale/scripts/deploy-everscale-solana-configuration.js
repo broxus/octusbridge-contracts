@@ -23,7 +23,9 @@ program
     .option('--eventEmitter <eventEmitter>', 'Event emitter address')
     .option('--program <program>', 'Target program address')
     .option('--settings <settings>', 'Target settings address')
-    .option('--instruction <instruction>', 'instruction number')
+    .option('--instruction <instruction>', 'Instruction number')
+    .option('--executeInstruction <executeInstruction>', 'Execute instruction number')
+    .option('--executeNeeded <executeNeeded>', 'Execute needed by relay')
     .option('--startTimestamp <startTimestamp>', 'Start timestamp')
     .option('--initialBalance <initialBalance>', 'Configuration initial balance')
     .allowUnknownOption();
@@ -137,6 +139,18 @@ const main = async () => {
     },
     {
       type: 'number',
+      name: 'executeInstruction',
+      message: 'Solana execute instruction number',
+      initial: options.executeInstruction || 0
+    },
+    {
+      type: 'bool',
+      name: 'executeNeeded',
+      message: 'Relays execute needed',
+      initial: options.executeNeeded || false
+    },
+    {
+      type: 'number',
       name: 'value',
       message: 'Configuration initial balance (in TONs)',
       initial: options.initialBalance || 10,
@@ -165,6 +179,8 @@ const main = async () => {
         eventEmitter: response.eventEmitter,
         program: new BigNumber(response.program.toLowerCase()).toFixed(),
         instruction: response.instruction,
+        executeInstruction: response.executeInstruction,
+        executeNeeded: response.executeNeeded,
         settings: new BigNumber(response.settings.toLowerCase()).toFixed(),
         startTimestamp: response.startTimestamp,
         endTimestamp: 0,
