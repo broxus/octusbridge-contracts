@@ -45,6 +45,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
         bool duplicate
     );
     event RelayRoundCreation(uint32 round_num, uint160[] eth_keys, uint32 round_end);
+    event RelayRoundCreationSol(uint32 round_num, uint256[] ton_pubkeys, uint32 round_end);
     event RelaySlashed(address user, uint128 tokens_withdrawn);
     event Emergency(bool state);
 
@@ -53,7 +54,11 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
     event DaoRootUpdated(address new_dao_root);
     event BridgeEventEthTonConfigUpdated(address new_bridge_event_config_eth_ton);
     event BridgeEventTonEthConfigUpdated(address new_bridge_event_config_ton_eth);
-    event TonEventDeployValueUpdated(uint128 new_value);
+    event BridgeEventTonSolConfigUpdated(address new_bridge_event_config_ton_sol);
+
+    event TonEthEventDeployValueUpdated(uint128 new_value);
+    event TonSolEventDeployValueUpdated(uint128 new_value);
+
     event AdminUpdated(address new_admin);
     event RewarderUpdated(address new_rewarder);
     event RescuerUpdated(address new_rescuer);
@@ -83,11 +88,14 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
 
     BaseDetails base_details;
 
+    address public bridge_event_config_ton_sol;
+
     RelayConfigDetails relay_config = RelayConfigDetails(
         30 days, 7 days, 2 days, 4 days, 1 hours, 30, 13, 100000 * 10**9, 500 ton, 1000000, 1000000
     );
 
-    uint128 tonEventDeployValue = 2.5 ton;
+    uint128 tonEthEventDeployValue = 2.5 ton;
+    uint128 tonSolEventDeployValue = 2.5 ton;
 
     // payloads for token receive callback
     uint8 constant STAKE_DEPOSIT = 0;
@@ -149,12 +157,16 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
-    function setTonEventDeployValue(uint128 new_value, address send_gas_to) external onlyAdmin {
+    function setEventDeployValues(uint128 ton_eth_event_value, uint128 ton_sol_event_value, address send_gas_to) external onlyAdmin {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 0);
 
-        emit TonEventDeployValueUpdated(new_value);
-        tonEventDeployValue = new_value;
+        emit TonEthEventDeployValueUpdated(ton_eth_event_value);
+        emit TonSolEventDeployValueUpdated(ton_sol_event_value);
+
+        tonEthEventDeployValue = ton_eth_event_value;
+        tonSolEventDeployValue = ton_sol_event_value;
+
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
@@ -171,6 +183,14 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
         tvm.rawReserve(_reserve(), 0);
         emit BridgeEventTonEthConfigUpdated(new_bridge_event_config_ton_eth);
         base_details.bridge_event_config_ton_eth = new_bridge_event_config_ton_eth;
+        send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
+    }
+
+    function setBridgeEventTonSolConfig(address new_bridge_event_config_ton_sol, address send_gas_to) external onlyAdmin {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        tvm.rawReserve(_reserve(), 0);
+        emit BridgeEventTonSolConfigUpdated(new_bridge_event_config_ton_sol);
+        bridge_event_config_ton_sol = new_bridge_event_config_ton_sol;
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 

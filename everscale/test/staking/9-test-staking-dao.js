@@ -127,7 +127,7 @@ describe('Test DAO in Staking', async function () {
         newDeployEventValue: locklift.utils.convertCrystal(2, 'nano')
       },
     });
-    stakingRoot = await locklift.factory.getContract('Staking');
+    stakingRoot = await locklift.factory.getContract('StakingV1_2');
     const StakingRootDeployer = await locklift.factory.getContract('StakingRootDeployer');
     const stakingRootDeployer = await locklift.giver.deployContract({
       contract: StakingRootDeployer,
@@ -154,6 +154,7 @@ describe('Test DAO in Staking', async function () {
         _rescuer: stakingOwner.address,
         _bridge_event_config_eth_ton: bridge,
         _bridge_event_config_ton_eth: bridge,
+        _bridge_event_config_ton_sol: bridge,
         _deploy_nonce: getRandomNonce()
       }
     })).decoded.output.value0)

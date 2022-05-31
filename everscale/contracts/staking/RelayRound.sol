@@ -189,7 +189,7 @@ contract RelayRound is IRelayRound {
             relays_installed = true;
 
             IStakingPool(root).onRelayRoundInitialized{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
-                round_num, start_time, end_time, relays_count, round_reward, reward_round_num, duplicate, eth_addrs
+                round_num, start_time, end_time, relays_count, round_reward, reward_round_num, duplicate, eth_addrs, ton_keys
             );
             return;
         }

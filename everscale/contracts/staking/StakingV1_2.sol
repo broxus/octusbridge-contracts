@@ -1,0 +1,198 @@
+pragma ton-solidity >= 0.57.0;
+pragma AbiHeader pubkey;
+pragma AbiHeader expire;
+
+import "./base/StakingRelay.sol";
+
+
+contract StakingV1_2 is StakingPoolRelay {
+    event StakingUpdated();
+
+    constructor(
+        address _admin,
+        address _dao_root,
+        address _rewarder,
+        address _rescuer,
+        address _bridge_event_config_eth_ton,
+        address _bridge_event_config_ton_eth,
+        address _bridge_event_config_ton_sol,
+        address _tokenRoot
+    ) public {
+        tvm.accept();
+
+        base_details.tokenRoot = _tokenRoot;
+        base_details.bridge_event_config_eth_ton = _bridge_event_config_eth_ton;
+        base_details.bridge_event_config_ton_eth = _bridge_event_config_ton_eth;
+        base_details.admin = _admin;
+        base_details.dao_root = _dao_root;
+        base_details.rescuer = _rescuer;
+        base_details.rewarder = _rewarder;
+        bridge_event_config_ton_sol = _bridge_event_config_ton_sol;
+        base_details.rewardRounds.push(RewardRound(0, 0, 0, now));
+        setUpTokenWallet();
+    }
+
+    function upgrade(TvmCell code, address send_gas_to) external onlyAdmin {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+
+        TvmCell data = abi.encode(
+            send_gas_to, // address
+            code_data.has_platform_code, // bool
+            code_data.user_data_version, // 32
+            code_data.election_version, // 32
+            code_data.relay_round_version, // 32
+            code_data.platform_code, // ref1
+            code_data.user_data_code, // ref2
+            code_data.election_code, // ref3
+            code_data.relay_round_code, // ref4
+            deploy_nonce, // 32
+            deployer, // address 267
+            base_details.dao_root, // address 267
+            base_details.bridge_event_config_eth_ton, // address 267
+            active, // 1
+            round_details.currentRelayRound, // 32
+            round_details.currentRelayRoundStartTime, // 32
+            round_details.currentRelayRoundEndTime, // 32
+            round_details.currentElectionStartTime, // 32
+            lastExtCall, // 32
+            round_details.currentElectionEnded, // 1
+            base_details.bridge_event_config_ton_eth, // address 267
+            base_details.lastRewardTime, // 32
+            base_details.tokenRoot, // address 267
+            base_details.tokenWallet, // address 267
+            base_details.tokenBalance, // 128
+            base_details.emergency, // 1
+            base_details.rewardRounds,
+            base_details.rewardTokenBalance, // 128
+            base_details.admin, // address 267
+            base_details.rewarder, // address 267
+            base_details.rescuer, // address 267
+            relay_config.relayLockTime, // 32
+            relay_config.relayRoundTime, // 32
+            relay_config.electionTime, // 32
+            relay_config.timeBeforeElection, // 32
+            relay_config.minRoundGapTime, // 32
+            relay_config.relaysCount, // 16
+            relay_config.minRelaysCount, // 16
+            relay_config.minRelayDeposit, // 128
+            relay_config.relayInitialTonDeposit, // 128
+            relay_config.userRewardPerSecond, // 128
+            relay_config.relayRewardPerSecond, // 128
+            tonEthEventDeployValue, // 128
+            tonSolEventDeployValue, // 128
+            bridge_event_config_ton_sol,
+            deposit_nonce, // 64
+            deposits // mapping
+        );
+
+        // set code after complete this method
+        tvm.setcode(code);
+
+        // run onCodeUpgrade from new code
+        tvm.setCurrentCode(code);
+        onCodeUpgrade(data);
+    }
+
+    function onCodeUpgrade(TvmCell upgrade_data) private {
+        tvm.resetStorage();
+
+        address send_gas_to;
+
+        (
+            send_gas_to, // address
+            code_data.has_platform_code, // bool
+            code_data.user_data_version, // 32
+            code_data.election_version, // 32
+            code_data.relay_round_version, // 32
+            code_data.platform_code, // ref1
+            code_data.user_data_code, // ref2
+            code_data.election_code, // ref3
+            code_data.relay_round_code, // ref4
+            deploy_nonce, // 32
+            deployer, // address 267
+            base_details.dao_root, // address 267
+            base_details.bridge_event_config_eth_ton, // address 267
+            active, // 1
+            round_details.currentRelayRound, // 32
+            round_details.currentRelayRoundStartTime, // 32
+            round_details.currentRelayRoundEndTime, // 32
+            round_details.currentElectionStartTime, // 32
+            lastExtCall, // 32
+            round_details.currentElectionEnded, // 1
+            base_details.bridge_event_config_ton_eth, // address 267
+            base_details.lastRewardTime, // 32
+            base_details.tokenRoot, // address 267
+            base_details.tokenWallet, // address 267
+            base_details.tokenBalance, // 128
+            base_details.emergency, // 1
+            base_details.rewardRounds,
+            base_details.rewardTokenBalance, // 128
+            base_details.admin, // address 267
+            base_details.rewarder, // address 267
+            base_details.rescuer, // address 267
+            relay_config.relayLockTime, // 32
+            relay_config.relayRoundTime, // 32
+            relay_config.electionTime, // 32
+            relay_config.timeBeforeElection, // 32
+            relay_config.minRoundGapTime, // 32
+            relay_config.relaysCount, // 16
+            relay_config.minRelaysCount, // 16
+            relay_config.minRelayDeposit, // 128
+            relay_config.relayInitialTonDeposit, // 128
+            relay_config.userRewardPerSecond, // 128
+            relay_config.relayRewardPerSecond, // 128
+            tonEthEventDeployValue, // 128
+            deposit_nonce, // 64
+            deposits
+        ) = abi.decode(
+            upgrade_data,
+            (address,
+            bool,
+            uint32,
+            uint32,
+            uint32,
+            TvmCell,
+            TvmCell,
+            TvmCell,
+            TvmCell,
+            uint32,
+            address,
+            address,
+            address,
+            bool,
+            uint32,
+            uint32,
+            uint32,
+            uint32,
+            uint32,
+            bool,
+            address,
+            uint32,
+            address,
+            address,
+            uint128,
+            bool,
+            RewardRound[],
+            uint128,
+            address,
+            address,
+            address,
+            uint32,
+            uint32,
+            uint32,
+            uint32,
+            uint32,
+            uint16,
+            uint16,
+            uint128,
+            uint128,
+            uint128,
+            uint128,
+            uint128,
+            uint64,
+            mapping (uint64 => PendingDeposit))
+        );
+
+        emit StakingUpdated();
+    }
+}

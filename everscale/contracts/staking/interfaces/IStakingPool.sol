@@ -88,6 +88,7 @@ interface IStakingPool {
         uint128 round_reward,
         uint32 reward_round_num,
         bool duplicate,
-        uint160[] eth_keys
+        uint160[] eth_keys,
+        uint256[] ton_keys
     ) external;
 }

@@ -187,7 +187,15 @@ describe('Test Staking Rewards', async function () {
                     keyPair: keyPair
                 }, locklift.utils.convertCrystal(1, 'nano'));
 
-                stakingRoot = await locklift.factory.getContract('Staking');
+                const SolConfigMockup = await locklift.factory.getContract('SolConfigMockup');
+                const sol_config_mockup = await locklift.giver.deployContract({
+                    contract: SolConfigMockup,
+                    constructorParams: {},
+                    initParams: {nonce: locklift.utils.getRandomNonce()},
+                    keyPair: keyPair
+                }, locklift.utils.convertCrystal(1, 'nano'));
+
+                stakingRoot = await locklift.factory.getContract('StakingV1_2');
                 const StakingRootDeployer = await locklift.factory.getContract('StakingRootDeployer');
                 const stakingRootDeployer = await locklift.giver.deployContract({
                     contract: StakingRootDeployer,
@@ -207,6 +215,7 @@ describe('Test Staking Rewards', async function () {
                         _rescuer: stakingOwner.address,
                         _bridge_event_config_eth_ton: stakingOwner.address,
                         _bridge_event_config_ton_eth: ton_config_mockup.address,
+                        _bridge_event_config_ton_sol: sol_config_mockup.address,
                         _deploy_nonce: locklift.utils.getRandomNonce()
                     }
                 })).decoded.output.value0);
