@@ -422,7 +422,7 @@ const setupSolanaEverscaleEventConfigurationReal = async (owner, staking) => {
   await logContract(factory);
 
   const basicConfiguration = {
-    eventABI: stringToBytesArray(JSON.stringify([{"name":"sender_addr","type":"uint256"},{"name":"tokens","type":"uint64"},{"name":"receiver_addr","type":"address"}])) ,
+    eventABI: stringToBytesArray(JSON.stringify([{"name":"sender_addr","type":"uint256"},{"name":"tokens","type":"uint128"},{"name":"receiver_addr","type":"address"}])) ,
     eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
     staking: staking.address,
     eventCode: SolanaEvent.code,
@@ -475,7 +475,7 @@ const setupSolanaEverscaleEventConfigurationReal = async (owner, staking) => {
   const EverEvent = await locklift.factory.getContract('TokenTransferEverscaleSolanaEvent');
 
   const everBasicConfiguration = {
-    eventABI: stringToBytesArray(JSON.stringify([{"name":"sender_addr","type":"address"},{"name":"tokens","type":"uint64"},{"name":"receiver_addr","type":"uint256"}])) ,
+    eventABI: stringToBytesArray(JSON.stringify([{"name":"sender_addr","type":"address"},{"name":"tokens","type":"uint128"},{"name":"receiver_addr","type":"uint256"}])) ,
     eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
     staking: staking.address,
     eventCode: EverEvent.code,
