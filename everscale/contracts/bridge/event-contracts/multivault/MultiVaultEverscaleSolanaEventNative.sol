@@ -22,7 +22,7 @@ contract MultiVaultEverscaleSolanaEventNative is EverscaleSolanaBaseEvent, IMult
     address tokenWallet;
     address token;
     address remainingGasTo;
-    uint64 amount;
+    uint128 amount;
     uint256 recipient;
 
     string name;
@@ -138,7 +138,7 @@ contract MultiVaultEverscaleSolanaEventNative is EverscaleSolanaBaseEvent, IMult
         address tokenWallet_,
         address token_,
         address remainingGasTo_,
-        uint64 amount_,
+        uint128 amount_,
         uint256 recipient_,
         string name_,
         string symbol_,

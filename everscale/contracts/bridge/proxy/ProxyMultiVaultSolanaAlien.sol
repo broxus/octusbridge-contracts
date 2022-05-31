@@ -65,13 +65,11 @@ contract ProxyMultiVaultSolanaAlien is
     ) public override reserveMinBalance(MIN_CONTRACT_BALANCE) {
         (uint256 recipient,  IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts) = abi.decode(payload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[]));
 
-        uint64 amount_solana = uint64(amount);
-
         TvmCell eventData = abi.encode(
             address(this), // Proxy address, used in event contract for validating token root
             msg.sender, // Everscale token root address
             remainingGasTo, // Remaining gas receiver (on event contract destroy)
-            amount_solana, // Amount of tokens to withdraw
+            amount, // Amount of tokens to withdraw
             recipient // Recipient address in Solana network
         );
 
@@ -101,14 +99,12 @@ contract ProxyMultiVaultSolanaAlien is
 
         (
             address token,
-            uint64 amount_solana,
+            uint128 amount,
             address recipient
         ) = abi.decode(
             meta,
-            (address, uint64, address)
+            (address, uint128, address)
         );
-
-        uint128 amount = uint128(amount_solana);
 
         TvmCell empty;
 

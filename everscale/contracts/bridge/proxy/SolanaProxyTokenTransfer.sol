@@ -40,7 +40,7 @@ contract SolanaProxyTokenTransfer is
     TransferUtils,
     CheckPubKey
 {
-    event Withdraw(address addr, uint64 tokens, uint256 solana_addr);
+    event Withdraw(address addr, uint128 tokens, uint256 solana_addr);
     uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
 
     Configuration config;
@@ -67,24 +67,14 @@ contract SolanaProxyTokenTransfer is
 
         (
             uint256 sender_addr,
-            uint64 tokens_solana,
+            uint128 tokens,
             address receiver_addr
         ) = decodeSolanaEverscaleEventData(eventData.voteData.eventData);
 
-        require(tokens_solana > 0, ErrorCodes.WRONG_TOKENS_AMOUNT_IN_PAYLOAD);
+        require(tokens > 0, ErrorCodes.WRONG_TOKENS_AMOUNT_IN_PAYLOAD);
         require(receiver_addr.value != 0, ErrorCodes.WRONG_OWNER_IN_PAYLOAD);
 
         TvmCell empty;
-
-        uint128 tokens = uint128(tokens_solana);
-
-        if (config.solanaDecimals > config.everscaleDecimals) {
-            uint128 mul10 = uint128(10) ** uint128(config.solanaDecimals - config.everscaleDecimals);
-            tokens = tokens / mul10;
-        } else {
-            uint128 mul10 = uint128(10) ** uint128(config.everscaleDecimals - config.solanaDecimals);
-            tokens = tokens * mul10;
-        }
 
         ITokenRoot(config.tokenRoot).mint{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
             tokens,
@@ -110,19 +100,9 @@ contract SolanaProxyTokenTransfer is
 
             address senderAddress = address.makeAddrStd(remainingGasTo.wid, remainingGasTo.value);
 
-            if (config.solanaDecimals > config.everscaleDecimals) {
-                uint128 mul10 = uint128(10) ** uint128(config.solanaDecimals - config.everscaleDecimals);
-                tokens = tokens * mul10;
-            } else {
-                uint128 mul10 = uint128(10) ** uint128(config.everscaleDecimals - config.solanaDecimals);
-                tokens = tokens / mul10;
-            }
-
-            uint64 tokens_solana = uint64(tokens);
-
             TvmCell eventData = encodeEverscaleSolanaEventData(
                 senderAddress,
-                tokens_solana,
+                tokens,
                 solanaOwnerAddress
             );
 

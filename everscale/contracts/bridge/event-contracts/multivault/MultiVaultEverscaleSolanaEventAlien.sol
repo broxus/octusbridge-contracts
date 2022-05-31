@@ -19,7 +19,7 @@ contract MultiVaultEverscaleSolanaEventAlien is EverscaleSolanaBaseEvent, IMulti
     address proxy;
     address token;
     address remainingGasTo;
-    uint64 amount;
+    uint128 amount;
     uint256 recipient;
 
     uint256 base_token;
@@ -116,7 +116,7 @@ contract MultiVaultEverscaleSolanaEventAlien is EverscaleSolanaBaseEvent, IMulti
         address proxy_,
         address token_,
         address remainingGasTo_,
-        uint64 amount_,
+        uint128 amount_,
         uint256 recipient_,
         uint256 base_token_
     ) {

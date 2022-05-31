@@ -70,14 +70,12 @@ contract ProxyMultiVaultSolanaNative is
 
         (uint256 recipient,  IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts) = abi.decode(payload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[]));
 
-        uint64 amount_solana = uint64(amount);
-
         TvmCell eventData = abi.encode(
             address(this), // Proxy address
             msg.sender, // Token wallet address, must be validated in the event contract
             tokenRoot, // Token root
             remainingGasTo, // Remaining gas to
-            amount_solana, // Amount of tokens to withdraw
+            amount, // Amount of tokens to withdraw
             recipient // Solana recipient address
         );
 
@@ -107,14 +105,12 @@ contract ProxyMultiVaultSolanaNative is
 
         (
             address token_wallet,
-            uint64 amount_solana,
+            uint128 amount,
             address recipient
         ) = abi.decode(
             meta,
-            (address, uint64, address)
+            (address, uint128, address)
         );
-
-        uint128 amount = uint128(amount_solana);
 
         TvmCell empty;
 

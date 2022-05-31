@@ -66,7 +66,7 @@ contract TokenTransferEverscaleSolanaEvent is EverscaleSolanaBaseEvent, ProxyTok
     */
     function getDecodedData() public view responsible returns (
         address senderAddress,
-        uint64 tokens,
+        uint128 tokens,
         uint256 solanaOwnerAddress
     ) {
         (

@@ -18,7 +18,7 @@ contract MultiVaultSolanaEverscaleEventAlien is SolanaEverscaleBaseEvent, IMulti
     string name;
     string symbol;
     uint8 decimals;
-    uint64 amount;
+    uint128 amount;
     address recipient;
 
     address proxy;
@@ -116,7 +116,7 @@ contract MultiVaultSolanaEverscaleEventAlien is SolanaEverscaleBaseEvent, IMulti
         string name_,
         string symbol_,
         uint8 decimals_,
-        uint64 amount_,
+        uint128 amount_,
         address recipient_,
         address proxy_,
         address token_

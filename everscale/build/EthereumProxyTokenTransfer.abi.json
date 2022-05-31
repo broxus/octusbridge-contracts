@@ -119,7 +119,7 @@
 			"name": "encodeSolanaEverscaleEventData",
 			"inputs": [
 				{"name":"sender_addr","type":"uint256"},
-				{"name":"tokens","type":"uint64"},
+				{"name":"tokens","type":"uint128"},
 				{"name":"receiver_addr","type":"address"}
 			],
 			"outputs": [
@@ -144,7 +144,7 @@
 			],
 			"outputs": [
 				{"name":"sender_addr","type":"uint256"},
-				{"name":"tokens","type":"uint64"},
+				{"name":"tokens","type":"uint128"},
 				{"name":"receiver_addr","type":"address"}
 			]
 		},
@@ -165,7 +165,7 @@
 			"name": "encodeEverscaleSolanaEventData",
 			"inputs": [
 				{"name":"senderAddress","type":"address"},
-				{"name":"tokens","type":"uint64"},
+				{"name":"tokens","type":"uint128"},
 				{"name":"solanaOwnerAddress","type":"uint256"}
 			],
 			"outputs": [
@@ -192,7 +192,7 @@
 			],
 			"outputs": [
 				{"name":"senderAddress","type":"address"},
-				{"name":"tokens","type":"uint64"},
+				{"name":"tokens","type":"uint128"},
 				{"name":"solanaOwnerAddress","type":"uint256"}
 			]
 		},

@@ -39,7 +39,7 @@ interface IProxyMultiVaultSolanaAlien {
 
     event AlienTransfer(
         uint256 token,
-        uint64 amount,
+        uint128 amount,
         uint256 recipient
     );
 }

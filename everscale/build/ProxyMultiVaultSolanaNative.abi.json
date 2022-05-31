@@ -113,7 +113,7 @@
 				{"name":"name","type":"string"},
 				{"name":"symbol","type":"string"},
 				{"name":"decimals","type":"uint8"},
-				{"name":"amount","type":"uint64"},
+				{"name":"amount","type":"uint128"},
 				{"name":"recipient","type":"uint256"}
 			],
 			"outputs": [

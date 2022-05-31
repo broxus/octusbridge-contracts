@@ -40,7 +40,7 @@
 				{"name":"name_","type":"string"},
 				{"name":"symbol_","type":"string"},
 				{"name":"decimals_","type":"uint8"},
-				{"name":"amount_","type":"uint64"},
+				{"name":"amount_","type":"uint128"},
 				{"name":"recipient_","type":"address"},
 				{"name":"proxy_","type":"address"},
 				{"name":"token_","type":"address"}
@@ -252,7 +252,7 @@
 		{"name":"name","type":"string"},
 		{"name":"symbol","type":"string"},
 		{"name":"decimals","type":"uint8"},
-		{"name":"amount","type":"uint64"},
+		{"name":"amount","type":"uint128"},
 		{"name":"recipient","type":"address"},
 		{"name":"proxy","type":"address"},
 		{"name":"token","type":"address"}

@@ -251,7 +251,7 @@ const setupEthereumEverscaleEventConfiguration = async (owner, staking, cellEnco
   return [ethereumEverscaleEventConfiguration, proxy, initializer];
 };
 
-const setupSolanaEverscaleEventConfiguration = async (owner, staking, solanaDecimals = 9, everscaleDecimals = 9) => {
+const setupSolanaEverscaleEventConfiguration = async (owner, staking) => {
   const [keyPair] = await locklift.keys.getKeyPairs();
 
   const _randomNonce = locklift.utils.getRandomNonce();
@@ -274,8 +274,7 @@ const setupSolanaEverscaleEventConfiguration = async (owner, staking, solanaDeci
   const [tokenRoot, wallet] = await setupTokenRootWithWallet(
     proxyFutureAddress,
     owner.address,
-    locklift.utils.convertCrystal('100', 'nano'),
-    everscaleDecimals
+    locklift.utils.convertCrystal('100', 'nano')
   );
 
   const Factory = await locklift.factory.getContract('SolanaEverscaleEventConfigurationFactory');
@@ -346,8 +345,6 @@ const setupSolanaEverscaleEventConfiguration = async (owner, staking, solanaDeci
   const proxyConfiguration = {
     everConfiguration:  locklift.utils.zeroAddress,
     solanaConfiguration: solanaEverscaleEventConfiguration.address,
-    solanaDecimals: solanaDecimals,
-    everscaleDecimals: everscaleDecimals,
     tokenRoot: tokenRoot.address,
     settingsDeployWalletGrams: locklift.utils.convertCrystal(0.1, 'nano')
   }
@@ -382,7 +379,7 @@ const setupSolanaEverscaleEventConfiguration = async (owner, staking, solanaDeci
   return [solanaEverscaleEventConfiguration, proxy, initializer];
 };
 
-const setupSolanaEverscaleEventConfigurationReal = async (owner, staking, solanaDecimals = 9, everscaleDecimals = 9) => {
+const setupSolanaEverscaleEventConfigurationReal = async (owner, staking) => {
   const [keyPair] = await locklift.keys.getKeyPairs();
 
   const _randomNonce = locklift.utils.getRandomNonce();
@@ -405,8 +402,7 @@ const setupSolanaEverscaleEventConfigurationReal = async (owner, staking, solana
   const [tokenRoot, wallet] = await setupTokenRootWithWallet(
     proxyFutureAddress,
     owner.address,
-    locklift.utils.convertCrystal('100', 'nano'),
-    everscaleDecimals
+    locklift.utils.convertCrystal('100', 'nano')
   );
 
   const Factory = await locklift.factory.getContract('SolanaEverscaleEventConfigurationFactory');
@@ -533,8 +529,6 @@ const setupSolanaEverscaleEventConfigurationReal = async (owner, staking, solana
   const proxyConfiguration = {
     everConfiguration:  everscaleSolanaEventConfiguration.address,
     solanaConfiguration: solanaEverscaleEventConfiguration.address,
-    solanaDecimals: solanaDecimals,
-    everscaleDecimals: everscaleDecimals,
     tokenRoot: tokenRoot.address,
     settingsDeployWalletGrams: locklift.utils.convertCrystal(0.1, 'nano')
   }
@@ -729,7 +723,7 @@ const setupEverscaleEthereumEventConfiguration = async (owner, staking, cellEnco
   return [everscaleEthereumEventConfiguration, proxy, initializer];
 };
 
-const setupEverscaleSolanaEventConfiguration = async (owner, staking, solanaDecimals = 9, everscaleDecimals = 9) => {
+const setupEverscaleSolanaEventConfiguration = async (owner, staking) => {
   const _randomNonce = locklift.utils.getRandomNonce();
   const [keyPair] = await locklift.keys.getKeyPairs();
 
@@ -768,8 +762,7 @@ const setupEverscaleSolanaEventConfiguration = async (owner, staking, solanaDeci
   const [tokenRoot, initializerWallet] = await setupTokenRootWithWallet(
     initializer.address,
     initializer.address,
-    locklift.utils.convertCrystal('1000', 'nano'),
-    everscaleDecimals
+    locklift.utils.convertCrystal('1000', 'nano')
   );
 
   await initializer.runTarget({
@@ -854,8 +847,6 @@ const setupEverscaleSolanaEventConfiguration = async (owner, staking, solanaDeci
   const proxyConfiguration = {
     everConfiguration: everscaleSolanaEventConfiguration.address,
     solanaConfiguration: locklift.utils.zeroAddress,
-    solanaDecimals: solanaDecimals,
-    everscaleDecimals: everscaleDecimals,
     tokenRoot: tokenRoot.address,
     rootTunnel: tokenRoot.address,
     settingsDeployWalletGrams: locklift.utils.convertCrystal(0.1, 'nano')

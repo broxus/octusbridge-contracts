@@ -15,7 +15,7 @@ import "./../base/SolanaEverscaleBaseEvent.sol";
 
 contract MultiVaultSolanaEverscaleEventNative is SolanaEverscaleBaseEvent, IMultiVaultSolanaEverscaleEventNative {
     address token;
-    uint64 amount;
+    uint128 amount;
     address recipient;
 
     address proxy;
@@ -90,7 +90,7 @@ contract MultiVaultSolanaEverscaleEventNative is SolanaEverscaleBaseEvent, IMult
 
     function getDecodedData() external override responsible returns(
         address token_,
-        uint64 amount_,
+        uint128 amount_,
         address recipient_,
         address proxy_,
         address tokenWallet_
