@@ -337,7 +337,8 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
             event_builder2.store(round_num);
             event_builder2.store(ton_keys);
             event_builder2.store(round_end_time);
-            IEverscaleSolanaEvent.EverscaleSolanaEventVoteData event_data_sol = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(tx.timestamp, now, event_builder2.toCell());
+            IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] _empty;
+            IEverscaleSolanaEvent.EverscaleSolanaEventVoteData event_data_sol = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(tx.timestamp, now, _empty, event_builder2.toCell());
             IEverscaleSolanaEventConfiguration(bridge_event_config_ton_sol).deployEvent{value: tonSolEventDeployValue}(event_data_sol);
         }
 
