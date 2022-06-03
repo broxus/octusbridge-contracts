@@ -136,8 +136,8 @@ contract MultiVaultEverscaleEventAlien is EverscaleBaseEvent, IMultiVaultEversca
         uint32 selector = slice.decode(uint32);
 
         if (
-            selector == tvm.functionId(ITokenRootAlienEVM.meta) ||
-            selector == tvm.functionId(IProxyMultiVaultAlien_V1.deriveAlienTokenRoot)
+            (selector == tvm.functionId(ITokenRootAlienEVM.meta) && msg.sender == token) ||
+            (selector == tvm.functionId(IProxyMultiVaultAlien_V1.deriveAlienTokenRoot) && msg.sender == proxy)
         ) {
             setStatusRejected(2);
         }

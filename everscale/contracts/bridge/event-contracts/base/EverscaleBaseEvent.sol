@@ -60,7 +60,7 @@ contract EverscaleBaseEvent is BaseEvent, IEverscaleEvent {
         @param eventDataSignature Relay's signature of the TonEvent data
         @param voteReceiver Should be always equal to the event contract address
     */
-    function confirm(bytes signature, address voteReceiver) public {
+    function confirm(bytes signature, address voteReceiver) public eventNotRejected {
         _checkVoteReceiver(voteReceiver);
 
         uint relay = msg.pubkey();

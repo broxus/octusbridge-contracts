@@ -53,6 +53,12 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
         _;
     }
 
+    modifier eventNotRejected() {
+        require(_status != Status.Rejected, ErrorCodes.WRONG_STATUS);
+
+        _;
+    }
+
     modifier onlyStaking() {
         require(msg.sender == getStakingAddress(), ErrorCodes.SENDER_NOT_STAKING);
         _;
