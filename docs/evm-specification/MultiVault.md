@@ -1124,6 +1124,23 @@ event PendingWithdrawalCreated(address recipient, uint256 id, address token, uin
 | amount  | uint256 | undefined |
 | payloadId  | bytes32 | undefined |
 
+### PendingWithdrawalFill
+
+```solidity
+event PendingWithdrawalFill(address recipient, uint256 id)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| recipient  | address | undefined |
+| id  | uint256 | undefined |
+
 ### PendingWithdrawalUpdateBounty
 
 ```solidity
