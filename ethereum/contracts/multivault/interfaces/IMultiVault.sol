@@ -202,6 +202,11 @@ interface IMultiVault is IEverscale {
         uint256 amount
     );
 
+    event PendingWithdrawalFill(
+        address recipient,
+        uint256 id
+    );
+
     event BlacklistTokenAdded(address token);
     event BlacklistTokenRemoved(address token);
 

@@ -642,6 +642,8 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
 
             pendingWithdrawals_[pendingWithdrawalId.recipient][pendingWithdrawalId.id].amount = 0;
 
+            emit PendingWithdrawalFill(pendingWithdrawalId.recipient, pendingWithdrawalId.id);
+
             IERC20(pendingWithdrawal.token).safeTransfer(
                 pendingWithdrawalId.recipient,
                 pendingWithdrawal.amount - pendingWithdrawal.bounty
