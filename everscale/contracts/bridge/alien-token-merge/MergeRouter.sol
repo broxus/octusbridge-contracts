@@ -43,6 +43,12 @@ contract MergeRouter is IMergeRouter, InternalOwner, TransferUtils {
         pool = pool_;
     }
 
+    function setManager(
+        address _manager
+    ) external override cashBack onlyOwner {
+        manager = _manager;
+    }
+
     /// @notice Set pool address to zero address
     /// Can be called only by `owner` or `manager`
     function disablePool() external override cashBack onlyOwnerOrManager {

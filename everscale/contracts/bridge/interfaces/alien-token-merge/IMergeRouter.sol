@@ -5,6 +5,9 @@ interface IMergeRouter {
     function setPool(
         address pool_
     ) external;
+    function setManager(
+        address _manager
+    ) external;
 
     function disablePool() external;
 
