@@ -1141,6 +1141,23 @@ event PendingWithdrawalFill(address recipient, uint256 id)
 | recipient  | address | undefined |
 | id  | uint256 | undefined |
 
+### PendingWithdrawalForce
+
+```solidity
+event PendingWithdrawalForce(address recipient, uint256 id)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| recipient  | address | undefined |
+| id  | uint256 | undefined |
+
 ### PendingWithdrawalUpdateBounty
 
 ```solidity
