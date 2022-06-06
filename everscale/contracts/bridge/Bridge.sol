@@ -132,7 +132,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
     )
         override
         public
-        reserveMinBalance(MIN_CONTRACT_BALANCE)
+        reserveAtLeastTargetBalance()
     {
         require(active, ErrorCodes.BRIDGE_PAUSED);
         require(msg.value >= connectorDeployValue, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
@@ -171,7 +171,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         address _staking,
         bool _active
     ) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS}(
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS}(
             connectorCode,
             connectorDeployValue,
             connectorCounter,

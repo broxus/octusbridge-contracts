@@ -22,7 +22,7 @@ contract EverscaleEventConfigurationFactory is TransferUtils, RandomNonce {
         address _owner,
         IEverscaleEventConfiguration.BasicConfiguration basicConfiguration,
         IEverscaleEventConfiguration.EverscaleEventConfiguration networkConfiguration
-    ) external view reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    ) external view reserveAtLeastTargetBalance {
         TvmCell _meta;
 
         new EverscaleEventConfiguration{

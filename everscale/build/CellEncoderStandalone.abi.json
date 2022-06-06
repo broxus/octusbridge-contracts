@@ -4,6 +4,25 @@
 	"header": ["time"],
 	"functions": [
 		{
+			"name": "encodeMergePoolBurnSwapPayload",
+			"inputs": [
+				{"name":"targetToken","type":"address"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
+			]
+		},
+		{
+			"name": "encodeMergePoolBurnWithdrawPayload",
+			"inputs": [
+				{"name":"targetToken","type":"address"},
+				{"name":"recipient","type":"uint160"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
+			]
+		},
+		{
 			"name": "decodeTonStakingEventData",
 			"inputs": [
 				{"name":"data","type":"cell"}

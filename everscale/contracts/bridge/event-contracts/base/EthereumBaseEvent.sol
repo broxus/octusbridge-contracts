@@ -22,16 +22,19 @@ contract EthereumBaseEvent is BaseEvent, IEthereumEvent {
         address _initializer,
         TvmCell _meta
     ) public {
-        require(eventInitData.configuration == msg.sender, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
+        require(
+            eventInitData.configuration == msg.sender,
+            ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION
+        );
 
-        status = Status.Initializing;
         initializer = _initializer;
         meta = _meta;
+
         onInit();
     }
 
     function getEventInitData() public view responsible returns (EthereumEventInitData) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} eventInitData;
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} eventInitData;
     }
 
     function getStakingAddress() override internal view returns (address) {
@@ -60,7 +63,8 @@ contract EthereumBaseEvent is BaseEvent, IEthereumEvent {
         emit Confirm(relay);
 
         if (confirms >= requiredVotes) {
-            status = Status.Confirmed;
+            setStatusConfirmed();
+
             onConfirm();
         }
     }
@@ -84,22 +88,24 @@ contract EthereumBaseEvent is BaseEvent, IEthereumEvent {
         emit Reject(relay);
 
         if (rejects >= requiredVotes) {
-            status = Status.Rejected;
+            setStatusRejected(0);
+
             onReject();
         }
     }
 
-    /// @dev Get event details
-    /// @return _eventInitData Init data
-    /// @return _status Current event status
-    /// @return _confirms List of relays who have confirmed event
-    /// @return _rejects List of relays who have rejected event
-    /// @return empty List of relays who have not voted
-    /// @return balance This contract's balance
-    /// @return _initializer Account who has deployed this contract
-    /// @return _meta Meta data from the corresponding event configuration
-    /// @return _requiredVotes The required amount of votes to confirm / reject event.
-    /// Basically it's 2/3 + 1 relays for this round
+    /**
+        @notice Get event details
+        @return _eventInitData Init data
+        @return _status Current event status
+        @return _confirms List of relays who have confirmed event
+        @return _rejects List of relays who have rejected event
+        @return empty List of relays who have not voted yet
+        @return balance Event contract balance in EVERs
+        @return _initializer Initializer address
+        @return _meta Configuration meta
+        @return _requiredVotes Required amount of confirmations to confirm event
+    */
     function getDetails() external view responsible returns (
         EthereumEventInitData _eventInitData,
         Status _status,
@@ -111,9 +117,9 @@ contract EthereumBaseEvent is BaseEvent, IEthereumEvent {
         TvmCell _meta,
         uint32 _requiredVotes
     ) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} (
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} (
             eventInitData,
-            status,
+            status(),
             getVoters(Vote.Confirm),
             getVoters(Vote.Reject),
             getVoters(Vote.Empty),

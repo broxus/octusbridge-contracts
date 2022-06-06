@@ -31,15 +31,9 @@ contract TokenTransferEverscaleEvent is EverscaleBaseEvent, ProxyTokenTransferCe
         return bodyCopy;
     }
 
-    function close() public view {
-        require(status != Status.Pending || now > createdAt + FORCE_CLOSE_TIMEOUT, ErrorCodes.EVENT_PENDING);
-        address ownerAddress = getOwner();
-
-        require(msg.sender == ownerAddress, ErrorCodes.SENDER_IS_NOT_EVENT_OWNER);
-        transferAll(ownerAddress);
-    }
-
     function onInit() override internal {
+        setStatusInitializing();
+
         notifyEventStatusChanged();
 
         loadRelays();
@@ -58,14 +52,18 @@ contract TokenTransferEverscaleEvent is EverscaleBaseEvent, ProxyTokenTransferCe
         return ownerAddress;
     }
 
+    function gasBackAddress() internal override view returns(address) {
+        return getOwner();
+    }
+
     /*
         @dev Get decoded event data
-        @returns rootToken Token root contract address
-        @returns wid Tokens sender address workchain ID
-        @returns addr Token sender address body
-        @returns tokens How much tokens to mint
-        @returns ethereum_address Token receiver Ethereum address
-        @returns owner_address Token receiver address (derived from the wid and owner_addr)
+        @return rootToken Token root contract address
+        @return wid Tokens sender address workchain ID
+        @return addr Token sender address body
+        @return tokens How much tokens to mint
+        @return ethereum_address Token receiver Ethereum address
+        @return owner_address Token receiver address (derived from the wid and owner_addr)
     */
     function getDecodedData() public view responsible returns (
         int8 wid,
@@ -85,7 +83,7 @@ contract TokenTransferEverscaleEvent is EverscaleBaseEvent, ProxyTokenTransferCe
 
         owner_address = address.makeAddrStd(wid, addr);
 
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} (
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} (
             wid,
             addr,
             tokens,
@@ -104,7 +102,7 @@ contract TokenTransferEverscaleEvent is EverscaleBaseEvent, ProxyTokenTransferCe
         address owner = getOwner();
 
         if (owner.value != 0) {
-            IEventNotificationReceiver(owner).notifyEventStatusChanged{flag: 0, bounce: false}(status);
+            IEventNotificationReceiver(owner).notifyEventStatusChanged{flag: 0, bounce: false}(status());
         }
     }
 }

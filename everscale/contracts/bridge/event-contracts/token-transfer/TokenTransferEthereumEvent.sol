@@ -35,6 +35,8 @@ contract TokenTransferEthereumEvent is EthereumBaseEvent, ProxyTokenTransferCell
     }
 
     function onInit() override internal {
+        setStatusInitializing();
+
         notifyEventStatusChanged();
 
         loadRelays();
@@ -60,11 +62,11 @@ contract TokenTransferEthereumEvent is EthereumBaseEvent, ProxyTokenTransferCell
 
     /*
         @dev Get decoded event data
-        @returns tokens How much tokens to mint
-        @returns wid Tokens receiver address workchain ID
-        @returns owner_addr Token receiver address body
-        @returns owner_pubkey Token receiver public key
-        @returns owner_address Token receiver address (derived from the wid and owner_addr)
+        @return tokens How much tokens to mint
+        @return wid Tokens receiver address workchain ID
+        @return owner_addr Token receiver address body
+        @return owner_pubkey Token receiver public key
+        @return owner_address Token receiver address (derived from the wid and owner_addr)
     */
     function getDecodedData() public view responsible returns (
         uint128 tokens,
@@ -80,7 +82,7 @@ contract TokenTransferEthereumEvent is EthereumBaseEvent, ProxyTokenTransferCell
 
         owner_address = address.makeAddrStd(wid, owner_addr);
 
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} (
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} (
             tokens,
             wid,
             owner_addr,
@@ -95,7 +97,7 @@ contract TokenTransferEthereumEvent is EthereumBaseEvent, ProxyTokenTransferCell
         address owner = getOwner();
 
         if (owner.value != 0) {
-            IEventNotificationReceiver(owner).notifyEventStatusChanged{flag: 0, bounce: false}(status);
+            IEventNotificationReceiver(owner).notifyEventStatusChanged{flag: 0, bounce: false}(status());
         }
     }
 }

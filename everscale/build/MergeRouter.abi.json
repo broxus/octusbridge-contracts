@@ -1,0 +1,115 @@
+{
+	"ABI version": 2,
+	"version": "2.2",
+	"header": ["pubkey", "time"],
+	"functions": [
+		{
+			"name": "constructor",
+			"inputs": [
+				{"name":"_owner","type":"address"},
+				{"name":"_manager","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setPool",
+			"inputs": [
+				{"name":"pool_","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setManager",
+			"inputs": [
+				{"name":"_manager","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "disablePool",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "getPool",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
+			]
+		},
+		{
+			"name": "getDetails",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"_proxy","type":"address"},
+				{"name":"_token","type":"address"},
+				{"name":"_pool","type":"address"}
+			]
+		},
+		{
+			"name": "transferOwnership",
+			"inputs": [
+				{"name":"newOwner","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "renounceOwnership",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "owner",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"owner","type":"address"}
+			]
+		},
+		{
+			"name": "manager",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"manager","type":"address"}
+			]
+		}
+	],
+	"data": [
+		{"key":1,"name":"proxy","type":"address"},
+		{"key":2,"name":"token","type":"address"}
+	],
+	"events": [
+		{
+			"name": "OwnershipTransferred",
+			"inputs": [
+				{"name":"previousOwner","type":"address"},
+				{"name":"newOwner","type":"address"}
+			],
+			"outputs": [
+			]
+		}
+	],
+	"fields": [
+		{"name":"_pubkey","type":"uint256"},
+		{"name":"_timestamp","type":"uint64"},
+		{"name":"_constructorFlag","type":"bool"},
+		{"name":"owner","type":"address"},
+		{"name":"proxy","type":"address"},
+		{"name":"token","type":"address"},
+		{"name":"pool","type":"address"},
+		{"name":"manager","type":"address"}
+	]
+}

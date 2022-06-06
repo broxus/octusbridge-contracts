@@ -5,6 +5,7 @@ const {
     encodeEvmTokenSourceMeta,
     ...utils
 } = require('../utils');
+const {ethers} = require("hardhat");
 
 
 describe('Test deposit-withdraw for alien token', async () => {
@@ -36,7 +37,7 @@ describe('Test deposit-withdraw for alien token', async () => {
                 .connect(alice)
                 .approve(multivault.address, ethers.utils.parseUnits('1000000000000', 18));
 
-            await expect(multivault.connect(alice).deposit(recipient, token.address, amount))
+            await expect(multivault.connect(alice)['deposit((int8,uint256),address,uint256)'](recipient, token.address, amount))
                 .to.emit(multivault, 'AlienTransfer')
                 .withArgs(
                     utils.defaultChainId,
@@ -115,7 +116,7 @@ describe('Test deposit-withdraw for alien token', async () => {
 
             const fee = withdrawFee.mul(amount).div(10000);
 
-            await expect(() => multivault.saveWithdrawAlien(payload, signatures))
+            await expect(() => multivault['saveWithdrawAlien(bytes,bytes[])'](payload, signatures))
                 .to.changeTokenBalances(
                     token,
                     [multivault, bob],

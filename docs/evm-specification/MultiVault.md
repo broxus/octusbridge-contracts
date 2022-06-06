@@ -111,6 +111,25 @@ Calculates fee for deposit or withdrawal.
 |---|---|---|
 | _0 | uint256 | undefined |
 
+### cancelPendingWithdrawal
+
+```solidity
+function cancelPendingWithdrawal(uint256 id, uint256 amount, IEverscale.EverscaleAddress recipient, uint256 bounty) external nonpayable
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| id | uint256 | undefined |
+| amount | uint256 | undefined |
+| recipient | IEverscale.EverscaleAddress | undefined |
+| bounty | uint256 | undefined |
+
 ### configurationAlien
 
 ```solidity
@@ -231,6 +250,26 @@ function deposit(IEverscale.EverscaleAddress recipient, address token, uint256 a
 | token | address | undefined |
 | amount | uint256 | undefined |
 
+### deposit
+
+```solidity
+function deposit(IEverscale.EverscaleAddress recipient, address token, uint256 amount, uint256 expectedMinBounty, IMultiVault.PendingWithdrawalId[] pendingWithdrawalIds) external nonpayable
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| recipient | IEverscale.EverscaleAddress | undefined |
+| token | address | undefined |
+| amount | uint256 | undefined |
+| expectedMinBounty | uint256 | undefined |
+| pendingWithdrawalIds | IMultiVault.PendingWithdrawalId[] | undefined |
+
 ### emergencyShutdown
 
 ```solidity
@@ -269,6 +308,22 @@ function fees(address) external view returns (uint256)
 | Name | Type | Description |
 |---|---|---|
 | _0 | uint256 | undefined |
+
+### forceWithdraw
+
+```solidity
+function forceWithdraw(IMultiVault.PendingWithdrawalId[] pendingWithdrawalIds) external nonpayable
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| pendingWithdrawalIds | IMultiVault.PendingWithdrawalId[] | undefined |
 
 ### getChainID
 
@@ -434,6 +489,73 @@ Get native Everscale token address for EVM token
 |---|---|---|
 | _0 | IEverscale.EverscaleAddress | undefined |
 
+### pendingWithdrawals
+
+```solidity
+function pendingWithdrawals(address user, uint256 id) external view returns (struct IMultiVault.PendingWithdrawalParams)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| user | address | undefined |
+| id | uint256 | undefined |
+
+#### Returns
+
+| Name | Type | Description |
+|---|---|---|
+| _0 | IMultiVault.PendingWithdrawalParams | undefined |
+
+### pendingWithdrawalsPerUser
+
+```solidity
+function pendingWithdrawalsPerUser(address) external view returns (uint256)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| _0 | address | undefined |
+
+#### Returns
+
+| Name | Type | Description |
+|---|---|---|
+| _0 | uint256 | undefined |
+
+### pendingWithdrawalsTotal
+
+```solidity
+function pendingWithdrawalsTotal(address) external view returns (uint256)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| _0 | address | undefined |
+
+#### Returns
+
+| Name | Type | Description |
+|---|---|---|
+| _0 | uint256 | undefined |
+
 ### prefixes
 
 ```solidity
@@ -479,7 +601,7 @@ Rewards address
 function saveWithdrawAlien(bytes payload, bytes[] signatures) external nonpayable
 ```
 
-
+Save withdrawal of alien token
 
 
 
@@ -489,6 +611,24 @@ function saveWithdrawAlien(bytes payload, bytes[] signatures) external nonpayabl
 |---|---|---|
 | payload | bytes | undefined |
 | signatures | bytes[] | undefined |
+
+### saveWithdrawAlien
+
+```solidity
+function saveWithdrawAlien(bytes payload, bytes[] signatures, uint256 bounty) external nonpayable
+```
+
+Save withdrawal of alien token
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| payload | bytes | undefined |
+| signatures | bytes[] | undefined |
+| bounty | uint256 | undefined |
 
 ### saveWithdrawNative
 
@@ -666,6 +806,23 @@ Changes the management address. This may only be called by `governance`
 | Name | Type | Description |
 |---|---|---|
 | _management | address | The address to use for management. |
+
+### setPendingWithdrawalBounty
+
+```solidity
+function setPendingWithdrawalBounty(uint256 id, uint256 bounty) external nonpayable
+```
+
+Changes pending withdrawal bounty for specific pending withdrawal
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| id | uint256 | Pending withdrawal ID. |
+| bounty | uint256 | The new value for pending withdrawal bounty. |
 
 ### setPrefix
 
@@ -928,6 +1085,114 @@ event NewPendingGovernance(address governance)
 | Name | Type | Description |
 |---|---|---|
 | governance  | address | undefined |
+
+### PendingWithdrawalCancel
+
+```solidity
+event PendingWithdrawalCancel(address recipient, uint256 id, uint256 amount)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| recipient  | address | undefined |
+| id  | uint256 | undefined |
+| amount  | uint256 | undefined |
+
+### PendingWithdrawalCreated
+
+```solidity
+event PendingWithdrawalCreated(address recipient, uint256 id, address token, uint256 amount, bytes32 payloadId)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| recipient  | address | undefined |
+| id  | uint256 | undefined |
+| token  | address | undefined |
+| amount  | uint256 | undefined |
+| payloadId  | bytes32 | undefined |
+
+### PendingWithdrawalFill
+
+```solidity
+event PendingWithdrawalFill(address recipient, uint256 id)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| recipient  | address | undefined |
+| id  | uint256 | undefined |
+
+### PendingWithdrawalForce
+
+```solidity
+event PendingWithdrawalForce(address recipient, uint256 id)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| recipient  | address | undefined |
+| id  | uint256 | undefined |
+
+### PendingWithdrawalUpdateBounty
+
+```solidity
+event PendingWithdrawalUpdateBounty(address recipient, uint256 id, uint256 bounty)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| recipient  | address | undefined |
+| id  | uint256 | undefined |
+| bounty  | uint256 | undefined |
+
+### PendingWithdrawalWithdraw
+
+```solidity
+event PendingWithdrawalWithdraw(address recipient, uint256 id, uint256 amount)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| recipient  | address | undefined |
+| id  | uint256 | undefined |
+| amount  | uint256 | undefined |
 
 ### SkimFee
 

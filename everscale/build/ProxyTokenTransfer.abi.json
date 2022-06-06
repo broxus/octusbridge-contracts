@@ -25,7 +25,7 @@
 			"inputs": [
 				{"name":"tokens","type":"uint128"},
 				{"name":"walletOwner","type":"address"},
-				{"name":"wallet","type":"address"},
+				{"name":"value2","type":"address"},
 				{"name":"remainingGasTo","type":"address"},
 				{"name":"payload","type":"cell"}
 			],

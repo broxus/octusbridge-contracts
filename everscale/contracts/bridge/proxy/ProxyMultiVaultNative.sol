@@ -54,18 +54,16 @@ contract ProxyMultiVaultNative is
     /// Initializes native token withdraw (eg WEVER or BRIDGE)
     /// @param tokenRoot Transferred token root address.
     /// @param amount Tokens amount
-    /// @param sender Sender address
-    /// @param senderWallet Sender token wallet address
     /// @param remainingGasTo Address to send remaining gas to
     /// @param payload TvmCell encoded (uint160 recipient, uint256 chainId)
     function onAcceptTokensTransfer(
         address tokenRoot,
         uint128 amount,
-        address sender,
-        address senderWallet,
+        address,
+        address,
         address remainingGasTo,
         TvmCell payload
-    ) override external reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    ) override external reserveAtLeastTargetBalance {
         (uint160 recipient, uint256 chainId) = abi.decode(payload, (uint160, uint256));
 
         TvmCell eventData = abi.encode(
@@ -98,7 +96,7 @@ contract ProxyMultiVaultNative is
         IEthereumEvent.EthereumEventInitData,
         TvmCell meta,
         address remainingGasTo
-    ) external override reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    ) external override reserveAtLeastTargetBalance {
         require(_isArrayContainsAddress(config.evmConfigurations, msg.sender));
 
         (

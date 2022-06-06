@@ -13,9 +13,9 @@ const {
 } = require('../../utils');
 
 
-describe('Test ethereum event confirm', async function() {
+describe('Test EVM token transfer confirmation', async function() {
   this.timeout(10000000);
-  
+
   let bridge, bridgeOwner, staking, cellEncoder;
   let ethereumEventConfiguration, proxy, initializer;
   let relays;
@@ -29,9 +29,9 @@ describe('Test ethereum event confirm', async function() {
     await metricManager.checkPoint(currentName);
 
     if (lastCheckPoint === undefined) return;
-    
+
     const difference = await metricManager.getDifference(lastCheckPoint, currentName);
-    
+
     for (const [contract, balanceDiff] of Object.entries(difference)) {
       if (balanceDiff !== 0) {
         logger.log(`[Balance change] ${contract} ${locklift.utils.convertCrystal(balanceDiff, 'ton').toFixed(9)} Everscale`);
@@ -41,9 +41,9 @@ describe('Test ethereum event confirm', async function() {
 
   it('Setup bridge', async () => {
     relays = await setupRelays();
-    
+
     [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
-  
+
     [ethereumEventConfiguration, proxy, initializer] = await setupEthereumEventConfiguration(
       bridgeOwner,
       staking,
@@ -58,7 +58,7 @@ describe('Test ethereum event confirm', async function() {
       ethereumEventConfiguration, proxy, initializer
     );
   });
-  
+
   describe('Enable event configuration', async () => {
     it('Add event configuration to bridge', async () => {
       await enableEventConfiguration(
@@ -73,17 +73,17 @@ describe('Test ethereum event confirm', async function() {
 
       expect(configurations['0'])
         .to.be.not.equal(undefined, 'Configuration not found');
-      
+
       expect(configurations['0']._eventConfiguration)
         .to.be.equal(ethereumEventConfiguration.address, 'Wrong configuration address');
-      
+
       expect(configurations['0']._enabled)
         .to.be.equal(true, 'Wrong connector status');
     });
   });
-  
+
   let eventContract, eventVoteData, eventDataStructure;
-  
+
   describe('Initialize event', async () => {
     eventDataStructure = {
       tokens: 100,
@@ -196,11 +196,11 @@ describe('Test ethereum event confirm', async function() {
 
     it('Check event round number', async () => {
       const roundNumber = await eventContract.call({ method: 'round_number' });
-      
+
       expect(roundNumber)
         .to.be.bignumber.equal(0, 'Wrong round number');
     });
-    
+
     it('Check encoded event data', async () => {
       const data = await eventContract.call({ method: 'getDecodedData' });
 
@@ -245,9 +245,6 @@ describe('Test ethereum event confirm', async function() {
         method: 'requiredVotes',
       });
 
-      // expect(details.balance)
-      //   .to.be.bignumber.equal(0, 'Wrong balance');
-
       expect(details._status)
         .to.be.bignumber.equal(2, 'Wrong status');
 
@@ -256,6 +253,13 @@ describe('Test ethereum event confirm', async function() {
 
       expect(details._rejects)
         .to.have.lengthOf(0, 'Wrong amount of relays rejects');
+    });
+
+    it('Check event status', async () => {
+      const status = await eventContract.call({ method: 'status' });
+
+      expect(status)
+          .to.be.bignumber.equal(2, 'Wrong status');
     });
 
     it('Check event proxy minted tokens', async () => {

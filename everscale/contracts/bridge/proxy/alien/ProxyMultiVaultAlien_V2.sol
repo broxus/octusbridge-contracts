@@ -4,14 +4,14 @@ pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 
-import "./../interfaces/IProxyExtended.sol";
-import "./../interfaces/multivault/IProxyMultiVaultAlien.sol";
-import "./../interfaces/event-configuration-contracts/IEverscaleEventConfiguration.sol";
+import "./../../interfaces/IProxyExtended.sol";
+import "./../../interfaces/multivault/IProxyMultiVaultAlien_V1.sol";
+import "./../../interfaces/event-configuration-contracts/IEverscaleEventConfiguration.sol";
 
-import "./../../utils/ErrorCodes.sol";
-import "./../../utils/TransferUtils.sol";
+import "./../../../utils/ErrorCodes.sol";
+import "./../../../utils/TransferUtils.sol";
 
-import "./../alien-token/TokenRootAlienEVM.sol";
+import "./../../alien-token/TokenRootAlienEVM.sol";
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensBurnCallback.sol";
 
@@ -21,14 +21,14 @@ import '@broxus/contracts/contracts/utils/RandomNonce.sol';
 import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
 
 
-contract ProxyMultiVaultAlien is
+contract ProxyMultiVaultAlien_V2 is
     InternalOwner,
     TransferUtils,
     CheckPubKey,
     RandomNonce,
     IAcceptTokensBurnCallback,
     IProxyExtended,
-    IProxyMultiVaultAlien
+    IProxyMultiVaultAlien_V1
 {
     Configuration config;
     uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
@@ -65,12 +65,12 @@ contract ProxyMultiVaultAlien is
         (uint160 recipient) = abi.decode(payload, (uint160));
 
         TvmCell eventData = abi.encode(
-            address(this), // Proxy address, used in event contract for validating token root
-            msg.sender, // Everscale token root address
-            remainingGasTo, // Remaining gas receiver (on event contract destroy)
-            amount, // Amount of tokens to withdraw
-            recipient // Recipient address in EVM network
-        );
+        address(this), // Proxy address, used in event contract for validating token root
+        msg.sender, // Everscale token root address
+        remainingGasTo, // Remaining gas receiver (on event contract destroy)
+        amount, // Amount of tokens to withdraw
+        recipient // Recipient address in EVM network
+    );
 
         IEverscaleEvent.EverscaleEventVoteData eventVoteData = IEverscaleEvent.EverscaleEventVoteData(
             tx.timestamp,
@@ -202,7 +202,7 @@ contract ProxyMultiVaultAlien is
         external
         view
         responsible
-        returns (Configuration)
+    returns (Configuration)
     {
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} config;
     }
@@ -259,11 +259,12 @@ contract ProxyMultiVaultAlien is
 
     function upgrade(
         TvmCell code
-    ) external onlyOwner cashBack {
+    ) external onlyOwner {
         TvmCell data = abi.encode(
             config,
             api_version,
-            _randomNonce
+            _randomNonce,
+            owner
         );
 
         tvm.setcode(code);

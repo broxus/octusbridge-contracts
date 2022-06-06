@@ -39,7 +39,6 @@ contract ProxyTokenTransfer is
     CheckPubKey
 {
     event Withdraw(int8 wid, uint256 addr, uint128 tokens, uint160 eth_addr, uint32 chainId);
-    uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
 
     Configuration config;
     uint128 burnedCount;
@@ -59,7 +58,7 @@ contract ProxyTokenTransfer is
     function onEventConfirmed(
         IEthereumEvent.EthereumEventInitData eventData,
         address gasBackAddress
-    ) public override onlyEthereumConfiguration reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    ) public override onlyEthereumConfiguration reserveAtLeastTargetBalance {
         require(!paused, ErrorCodes.PROXY_PAUSED);
         require(config.tokenRoot.value != 0, ErrorCodes.PROXY_TOKEN_ROOT_IS_EMPTY);
 
@@ -87,20 +86,18 @@ contract ProxyTokenTransfer is
     }
 
     // Legacy token migration
-    fallback() external {
+    fallback() external view {
         tvm.rawReserve(address(this).balance - msg.value, 2);
         TvmSlice bodySlice = msg.data;
         uint32 functionId = bodySlice.decode(uint32);
         require(functionId == tvm.functionId(ILegacyBurnTokensCallback.burnCallback), ErrorCodes.NOT_LEGACY_BURN);
-        (uint128 tokens, uint256 sender_public_key, address sender_address, address wallet_address)
+        (uint128 tokens,, address sender_address,)
             = bodySlice.decode(uint128, uint256, address, address);
         TvmCell payload = bodySlice.loadRef();
         bodySlice = bodySlice.loadRefAsSlice();
         address send_gas_to = bodySlice.decode(address);
 
         if (isArrayContainsAddress(config.outdatedTokenRoots, msg.sender)) {
-            TvmCell empty;
-
             ITokenRoot(config.tokenRoot).mint{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
                 tokens,
                 sender_address,
@@ -117,10 +114,10 @@ contract ProxyTokenTransfer is
     function onAcceptTokensBurn(
         uint128 tokens,
         address walletOwner,
-        address wallet,
+        address,
         address remainingGasTo,
         TvmCell payload
-    ) public override reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    ) public override reserveAtLeastTargetBalance {
         if (config.tokenRoot == msg.sender) {
             burnedCount += tokens;
 
@@ -204,24 +201,28 @@ contract ProxyTokenTransfer is
         config = _config;
     }
 
+    /// @dev Compiler lies, cant be pure
     function transferTokenOwnership(
         address target,
         address newOwner
-    ) external view onlyOwner reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    ) external view onlyOwner reserveAtLeastTargetBalance {
         mapping(address => ITransferableOwnership.CallbackParams) empty;
 
         ITransferableOwnership(target).transferOwnership{
             value: 0,
+            bounce: false,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(newOwner, msg.sender, empty);
     }
 
+    /// @dev Compiler lies cant be pure
     function legacyTransferTokenOwnership(
         address target,
         address newOwner
-    ) external view onlyOwner reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    ) external view onlyOwner reserveAtLeastTargetBalance {
         ILegacyTransferOwner(target).transferOwner{
             value: 0,
+            bounce: false,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(0, newOwner);
     }

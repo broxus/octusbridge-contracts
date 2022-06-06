@@ -81,7 +81,7 @@ describe('Test event contract behaviour when Alien token is incorrect', async fu
             expect(details._status)
                 .to.be.bignumber.equal(3, 'Event contract should be Rejected');
             expect(details._requiredVotes)
-                .to.be.bignumber.not.equal(0, 'Event contract failed to load relays');
+                .to.be.bignumber.equal(0, 'Event contract failed to load relays');
         });
     });
 });

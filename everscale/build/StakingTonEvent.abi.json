@@ -83,6 +83,13 @@
 			]
 		},
 		{
+			"name": "close",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "getDetails",
 			"inputs": [
 				{"name":"answerId","type":"uint32"}
@@ -98,6 +105,14 @@
 				{"name":"_initializer","type":"address"},
 				{"name":"_meta","type":"cell"},
 				{"name":"_requiredVotes","type":"uint32"}
+			]
+		},
+		{
+			"name": "status",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"uint8"}
 			]
 		},
 		{
@@ -144,14 +159,6 @@
 			],
 			"outputs": [
 				{"name":"value0","type":"uint32"}
-			]
-		},
-		{
-			"name": "status",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"status","type":"uint8"}
 			]
 		},
 		{
@@ -262,12 +269,27 @@
 			],
 			"outputs": [
 			]
+		},
+		{
+			"name": "Confirmed",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "Rejected",
+			"inputs": [
+				{"name":"reason","type":"uint32"}
+			],
+			"outputs": [
+			]
 		}
 	],
 	"fields": [
 		{"name":"_pubkey","type":"uint256"},
 		{"name":"_constructorFlag","type":"bool"},
-		{"name":"status","type":"uint8"},
+		{"name":"_status","type":"uint8"},
 		{"name":"votes","type":"map(uint256,uint8)"},
 		{"name":"initializer","type":"address"},
 		{"name":"meta","type":"cell"},

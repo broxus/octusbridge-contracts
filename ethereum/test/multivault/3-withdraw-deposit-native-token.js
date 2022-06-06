@@ -141,7 +141,7 @@ describe('Test deposit-withdraw for native token', async () => {
 
             fee = tokenDetails.depositFee.mul(amount).div(10000);
 
-            await expect(multivault.connect(bob).deposit(recipient, token.address, amount))
+            await expect(multivault.connect(bob)['deposit((int8,uint256),address,uint256)'](recipient, token.address, amount))
                 .to.emit(multivault, 'NativeTransfer')
                 .withArgs(
                     native.wid,
