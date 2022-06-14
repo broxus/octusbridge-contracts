@@ -7,36 +7,34 @@ const { ethers, deployments} = require("hardhat");
 
 
 
-describe('Test Convex3Frax strategy on DAI vault', async function () {
+describe('Test Convex3BUSD strategy on USDT vault', async function () {
     this.timeout(100000);
 
-    let vault, strategy, dai, governance, booster, wrapped, rewards;
+    let vault, strategy, usdt, governance, wrapped;
     let snapshot;
 
     describe('Initial setup of contracts', async () => {
         it('Setup contracts', async () => {
-            const dai_vault = await ethers.getNamedSigner('dai_vault');
-            vault = await ethers.getContractAt('Vault', dai_vault.address);
-            dai = await ethers.getContractAt(
+            const usdt_vault = await ethers.getNamedSigner('usdt_vault');
+            vault = await ethers.getContractAt('Vault', usdt_vault.address);
+            const { usdt: usdt_addr } = await getNamedAccounts();
+            // console.lo
+            usdt = await ethers.getContractAt(
                 legos.erc20.abi,
-                legos.erc20.dai.address,
+                usdt_addr,
             );
 
             const vault_token = await vault.token();
-            expect(dai.address).to.be.eq(vault_token, 'Bad vault token');
+            expect(usdt.address).to.be.eq(vault_token, 'Bad vault token');
         });
 
         it('Deploy strategy', async () => {
-            await deployments.fixture(['Deploy_USDT_Convex_Frax', 'Deploy_DAI_Convex_Frax']);
-            strategy = await ethers.getContract('ConvexFraxStrategyDAI');
+            await deployments.fixture(['Deploy_USDT_Convex_BUSD']);
+            strategy = await ethers.getContract('ConvexBUSDStrategyUSDT');
 
             // setup other contracts we need
-            const booster_addr = await strategy.booster();
-            booster = await ethers.getContractAt('Booster', booster_addr);
-            const wrapped_addr = await strategy.frax3crv();
+            const wrapped_addr = await strategy.busd3crv();
             wrapped = await ethers.getContractAt(legos.erc20.abi, wrapped_addr);
-            const rewards_addr = await strategy.rewardContract();
-            rewards = await ethers.getContractAt('Rewards', rewards_addr);
         });
 
         it('Set bridge mockup', async () => {
@@ -58,6 +56,7 @@ describe('Test Convex3Frax strategy on DAI vault', async function () {
                 proxy_admin.address
             );
 
+            // mainnet bridge address
             await proxyAdmin.connect(governance).upgrade(
                 '0xF4404070f63a7E19Be0b1dd89A5fb88E12c0173A',
                 mockup.address
@@ -113,9 +112,9 @@ describe('Test Convex3Frax strategy on DAI vault', async function () {
 
     describe('Test strategy main functionality', async () => {
         it('1st harvest', async () => {
-            const vault_bal_before = await dai.balanceOf(vault.address);
+            const vault_bal_before = await usdt.balanceOf(vault.address);
             await strategy.connect(governance).harvest();
-            const vault_bal_after = await dai.balanceOf(vault.address);
+            const vault_bal_after = await usdt.balanceOf(vault.address);
 
             const strategy_deposit_balance = await strategy.balanceOfPool();
 
@@ -145,7 +144,7 @@ describe('Test Convex3Frax strategy on DAI vault', async function () {
             await increaseTime(7 * 24 * 60 * 60);
             await mineBlocks(1);
 
-            const vault_bal_before = await dai.balanceOf(vault.address);
+            const vault_bal_before = await usdt.balanceOf(vault.address);
             const tx = await strategy.connect(governance).harvest();
 
             const res = await tx.wait();
@@ -158,7 +157,7 @@ describe('Test Convex3Frax strategy on DAI vault', async function () {
             // console.log(harvested.args.loss.toString())
             // console.log(harvested.args.debtPayment.toString(), '\n')
 
-            const vault_bal_after = await dai.balanceOf(vault.address);
+            const vault_bal_after = await usdt.balanceOf(vault.address);
 
             if (harvested.args.loss > 0) {
                 expect(vault_bal_before.gt(vault_bal_after)).to.be.true;
@@ -174,12 +173,12 @@ describe('Test Convex3Frax strategy on DAI vault', async function () {
         })
 
         it('Vault withdraw from strategy', async () => {
-            const vault_bal = await dai.balanceOf(vault.address);
+            const vault_bal = await usdt.balanceOf(vault.address);
             const alice = await ethers.getNamedSigner('alice');
             const bob = await ethers.getNamedSigner('bob');
 
-            // ask 1000 more dai than vault has
-            const withdraw_asked = vault_bal.add('200000000000000').div('1000000000').mul('1000000000')
+            // ask 1000 more usdt than vault has (6 decimals usdt)
+            const withdraw_asked = vault_bal.add('1000000000');
 
             const configuration = await vault.configuration();
 
@@ -206,29 +205,29 @@ describe('Test Convex3Frax strategy on DAI vault', async function () {
             // expect(res.amount.toString()).to.be.eq(withdraw_asked.toString(), 'Bad withdraw amount saved');
 
             // approve
-            const vault_bal_0 = await dai.balanceOf(vault.address);
+            const vault_bal_0 = await usdt.balanceOf(vault.address);
             // console.log('Vault before', vault_bal_0.toString());
 
-            const before = await dai.balanceOf(alice.address);
+            const before = await usdt.balanceOf(alice.address);
             await vault.connect(governance)['setPendingWithdrawalApprove((address,uint256),uint8)']([alice.address, 0], 2);
 
-            const after = await dai.balanceOf(alice.address);
+            const after = await usdt.balanceOf(alice.address);
             const res2 = await vault.pendingWithdrawals(alice.address, 0);
             // console.log('Res2', res2.amount.toString());
             // console.log('Res2', res2.approveStatus);
 
-            const vault_bal_1 = await dai.balanceOf(vault.address);
+            const vault_bal_1 = await usdt.balanceOf(vault.address);
             // console.log('Vault after', vault_bal_1.toString());
             // console.log('Alice before', before.toString());
             // console.log('Alice after', after.toString());
 
-            const alice_bal_before = await dai.balanceOf(alice.address);
+            const alice_bal_before = await usdt.balanceOf(alice.address);
             // execute with possible loss
             await vault.connect(alice).withdraw(
                 0, withdraw_asked.toString(), alice.address, 0, 0
             );
-            const alice_bal_after = await dai.balanceOf(alice.address);
-            const vault_bal_after = await dai.balanceOf(vault.address);
+            const alice_bal_after = await usdt.balanceOf(alice.address);
+            const vault_bal_after = await usdt.balanceOf(vault.address);
 
             const delta_alice = alice_bal_after.sub(alice_bal_before);
 
@@ -242,7 +241,7 @@ describe('Test Convex3Frax strategy on DAI vault', async function () {
 
             expect(res).to.be.true;
 
-            const vault_bal_before = await dai.balanceOf(vault.address);
+            const vault_bal_before = await usdt.balanceOf(vault.address);
 
             const params = await vault.strategies(strategy.address);
             expect(params.debtRatio.toString()).to.be.eq('0', 'Strategy not revoked');
@@ -259,7 +258,7 @@ describe('Test Convex3Frax strategy on DAI vault', async function () {
 
             // apply 0.015% slippage because of withdrawing from 3crv pool
             const expected_min_vault_bal = str_balance.mul(999850).div(1000000);
-            const vault_bal = await dai.balanceOf(vault.address);
+            const vault_bal = await usdt.balanceOf(vault.address);
             const vault_increase = vault_bal.sub(vault_bal_before);
 
             expect(vault_increase.gte(expected_min_vault_bal)).to.be.true;

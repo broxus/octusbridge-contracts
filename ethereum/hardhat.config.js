@@ -115,7 +115,7 @@ const hardhatConfig = {
     hardhat: {
       forking: {
         url: process.env.ETH_MAIN_ARCHIVE_HTTP,
-        blockNumber: 14522000,
+        blockNumber: 14958000,
       },
       chainId: 1111,
       accounts: {
@@ -196,7 +196,20 @@ const hardhatConfig = {
   },
   namedAccounts: {
     dai_vault: {
-      hardhat: '0x032d06b4cc8a914b85615acd0131c3e0a7330968'
+      hardhat: '0x032d06b4cc8a914b85615acd0131c3e0a7330968',
+      0: '0x032d06b4cc8a914b85615acd0131c3e0a7330968'
+    },
+    usdt_vault: {
+      hardhat: '0x81598d5362eac63310e5719315497c5b8980c579',
+      0: '0x81598d5362eac63310e5719315497c5b8980c579'
+    },
+    usdc_vault: {
+      hardhat: '0xf8a0d53ddc6c92c3c59824f380c0f3d2a3cf521c',
+      0: '0xf8a0d53ddc6c92c3c59824f380c0f3d2a3cf521c'
+    },
+    usdt: {
+      hardhat: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+      0: '0xdAC17F958D2ee523a2206206994597C13D831ec7'
     },
     proxy_admin: {
       hardhat: '0x5889d26Ad270540E315B028Dd39Ae0ECB3De6179'
