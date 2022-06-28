@@ -26,8 +26,9 @@ contract ConvexGUSDStrategy is ConvexCrvLp, Initializable {
     address public constant usdc = address(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     address public constant usdt = address(0xdAC17F958D2ee523a2206206994597C13D831ec7);
     address public constant crv3 = address(0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490);
-    address public constant gusd3crv = address(0x4f062658EaAF2C1ccf8C8e36D6824CDf41167956);
-    address public constant zapCurve = address(0xA79828DF1850E8a3A3064576f380D90aECDD3359);
+    address public constant gusd3crv = address(0xD2967f45c4f384DEEa880F807Be904762a3DeA07);
+    address public constant gusd3crv_pool = address(0x4f062658EaAF2C1ccf8C8e36D6824CDf41167956);
+    address public constant zapCurve = address(0x64448B78561690B70E17CBE8029a3e5c1bB7136e);
 
     address[] public pathTarget;
 
@@ -54,8 +55,8 @@ contract ConvexGUSDStrategy is ConvexCrvLp, Initializable {
             revert("Strategy cant be applied to this vault");
         }
 
-        curve = gusd3crv;
-        id = 34;
+        curve = gusd3crv_pool;
+        id = 10;
         isClaimRewards = true; // default is true, turn off in emergency
         // isClaimExtras = true; // add this if there are extra rewards
 
@@ -96,14 +97,14 @@ contract ConvexGUSDStrategy is ConvexCrvLp, Initializable {
 
     function calc_want_from_wrapped(uint256 wrapped_amount) public view override returns (uint256 expected_return) {
         if (wrapped_amount > 0) {
-            expected_return = ICurveFi(zapCurve).calc_withdraw_one_coin(curve, wrapped_amount, int128(curve_lp_idx) + 1);
+            expected_return = ICurveFi(zapCurve).calc_withdraw_one_coin(wrapped_amount, int128(curve_lp_idx) + 1);
         }
     }
 
     function calc_wrapped_from_want(uint256 want_amount) public view override returns (uint256) {
         uint256[4] memory amounts;
         amounts[curve_lp_idx + 1] = want_amount;
-        return ICurveFi(zapCurve).calc_token_amount(curve, amounts, true);
+        return ICurveFi(zapCurve).calc_token_amount(amounts, true);
     }
 
     function wrap(uint256 want_amount) internal override returns (uint256 expected_return) {
@@ -111,14 +112,14 @@ contract ConvexGUSDStrategy is ConvexCrvLp, Initializable {
             expected_return = calc_wrapped_from_want(want_amount);
             uint256[4] memory amounts;
             amounts[curve_lp_idx + 1] = want_amount;
-            ICurveFi(zapCurve).add_liquidity(curve, amounts, 0);
+            ICurveFi(zapCurve).add_liquidity(amounts, 0);
         }
     }
 
     function unwrap(uint256 wrapped_amount) internal override returns (uint256 expected_return) {
         if (wrapped_amount > 0) {
             expected_return = calc_want_from_wrapped(wrapped_amount);
-            ICurveFi(zapCurve).remove_liquidity_one_coin(curve, wrapped_amount, int128(curve_lp_idx) + 1, 0);
+            ICurveFi(zapCurve).remove_liquidity_one_coin(wrapped_amount, int128(curve_lp_idx) + 1, 0);
         }
     }
 
@@ -184,7 +185,7 @@ contract ConvexGUSDStrategy is ConvexCrvLp, Initializable {
         uint256 _usdc = IERC20Upgradeable(usdc).balanceOf(address(this));
         uint256 _usdt = IERC20Upgradeable(usdt).balanceOf(address(this));
         if (_dai > 0 || _usdc > 0 || _usdt > 0) {
-            ICurveFi(zapCurve).add_liquidity(curve, [0, _dai, _usdc, _usdt], 0);
+            ICurveFi(zapCurve).add_liquidity([0, _dai, _usdc, _usdt], 0);
         }
         _profit = balanceOfWrapped() - before;
 
