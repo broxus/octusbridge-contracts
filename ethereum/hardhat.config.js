@@ -58,7 +58,7 @@ const hardhatConfig = {
         settings: {
           optimizer: {
             enabled: true,
-            runs: 0
+            runs: 200
           }
         }
       },
@@ -113,6 +113,7 @@ const hardhatConfig = {
   },
   networks: {
     hardhat: {
+      allowUnlimitedContractSize: true,
       forking: {
         url: process.env.ETH_MAIN_ARCHIVE_HTTP,
         blockNumber: 14958000,

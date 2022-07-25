@@ -67,9 +67,9 @@ module.exports = async ({getNamedAccounts, deployments}) => {
 
 
     // - dev: get init token code hash
-    const tokenInitCodeHash = await deployments.read('MultiVault', 'getInitHash');
-
-    console.log(`MultiVaultToken init code hash: ${tokenInitCodeHash}`);
+    // const tokenInitCodeHash = await deployments.read('MultiVault', 'getInitHash');
+    //
+    // console.log(`MultiVaultToken init code hash: ${tokenInitCodeHash}`);
 
     // Initialize proxy
     let bridge_address;

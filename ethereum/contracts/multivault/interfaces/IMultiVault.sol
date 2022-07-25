@@ -7,6 +7,7 @@ import "./IEverscale.sol";
 interface IMultiVault is IEverscale {
     enum Fee { Deposit, Withdraw }
     enum TokenType { Native, Alien }
+    enum ApproveStatus { NotRequired, Required, Approved, Rejected }
 
     struct WithdrawalLimits {
         uint undeclared;
@@ -53,6 +54,8 @@ interface IMultiVault is IEverscale {
         address token;
         uint256 amount;
         uint256 bounty;
+        uint256 timestamp;
+        ApproveStatus approveStatus;
     }
 
     struct PendingWithdrawalId {
@@ -87,16 +90,24 @@ interface IMultiVault is IEverscale {
         string memory name_prefix,
         string memory symbol_prefix
     ) external;
-    function blacklistAddToken(address token) external;
-    function blacklistRemoveToken(address token) external;
 
-    function setTokenDepositFee(address token, uint _depositFee) external;
-    function setTokenWithdrawFee(address token, uint _withdrawFee) external;
+    function setTokenBlacklist(
+        address token,
+        bool blacklisted
+    ) external;
 
-    function setDefaultNativeDepositFee(uint fee) external;
-    function setDefaultNativeWithdrawFee(uint fee) external;
-    function setDefaultAlienDepositFee(uint fee) external;
-    function setDefaultAlienWithdrawFee(uint fee) external;
+    function setTokenFees(
+        address token,
+        uint _depositFee,
+        uint _withdrawFee
+    ) external;
+
+    function setDefaultFees(
+        uint _defaultNativeDepositFee,
+        uint _defaultNativeWithdrawFee,
+        uint _defaultAlienDepositFee,
+        uint _defaultAlienWithdrawFee
+    ) external;
 
     function rewards() external view returns (EverscaleAddress memory);
 
@@ -109,15 +120,17 @@ interface IMultiVault is IEverscale {
     function governance() external view returns (address);
     function guardian() external view returns (address);
     function management() external view returns (address);
+    function withdrawGuardian() external view returns (address);
 
     function emergencyShutdown() external view returns (bool);
     function setEmergencyShutdown(bool active) external;
 
-    function setConfigurationAlien(EverscaleAddress memory _configuration) external;
-    function setConfigurationNative(EverscaleAddress memory _configuration) external;
+    function setConfigurations(
+        EverscaleAddress memory alien,
+        EverscaleAddress memory native
+    ) external;
 
     function setGovernance(address _governance) external;
-    function acceptGovernance() external;
     function setGuardian(address _guardian) external;
     function setManagement(address _management) external;
     function setRewards(EverscaleAddress memory _rewards) external;
@@ -141,6 +154,16 @@ interface IMultiVault is IEverscale {
         uint256 amount,
         EverscaleAddress memory recipient,
         uint bounty
+    ) external;
+
+    function setPendingWithdrawalApprove(
+        PendingWithdrawalId memory pendingWithdrawalId,
+        ApproveStatus approveStatus
+    ) external;
+
+    function setPendingWithdrawalApprove(
+        PendingWithdrawalId[] memory pendingWithdrawalId,
+        ApproveStatus[] memory approveStatus
     ) external;
 
     function forceWithdraw(
@@ -180,11 +203,6 @@ interface IMultiVault is IEverscale {
     function skim(
         address token,
         bool skim_to_everscale
-    ) external;
-
-    function migrateAlienTokenToVault(
-        address token,
-        address vault
     ) external;
 
     function withdrawalLimits(
@@ -240,6 +258,12 @@ interface IMultiVault is IEverscale {
     event PendingWithdrawalForce(
         address recipient,
         uint256 id
+    );
+
+    event PendingWithdrawalUpdateApproveStatus(
+        address recipient,
+        uint256 id,
+        ApproveStatus approveStatus
     );
 
     event BlacklistTokenAdded(address token);

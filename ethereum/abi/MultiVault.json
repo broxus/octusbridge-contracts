@@ -309,6 +309,31 @@
       },
       {
         "indexed": false,
+        "internalType": "enum IMultiVault.ApproveStatus",
+        "name": "approveStatus",
+        "type": "uint8"
+      }
+    ],
+    "name": "PendingWithdrawalUpdateApproveStatus",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
         "internalType": "uint256",
         "name": "bounty",
         "type": "uint256"
@@ -734,13 +759,6 @@
   },
   {
     "inputs": [],
-    "name": "acceptGovernance",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "apiVersion",
     "outputs": [
       {
@@ -750,32 +768,6 @@
       }
     ],
     "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      }
-    ],
-    "name": "blacklistAddToken",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      }
-    ],
-    "name": "blacklistRemoveToken",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -1161,16 +1153,27 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "getInitHash",
-    "outputs": [
+    "inputs": [
       {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
+        "internalType": "int8",
+        "name": "native_wid",
+        "type": "int8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "native_addr",
+        "type": "uint256"
       }
     ],
-    "stateMutability": "pure",
+    "name": "getNativeToken",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -1228,24 +1231,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "vault",
-        "type": "address"
-      }
-    ],
-    "name": "migrateAlienTokenToVault",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -1310,6 +1295,16 @@
             "internalType": "uint256",
             "name": "bounty",
             "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "timestamp",
+            "type": "uint256"
+          },
+          {
+            "internalType": "enum IMultiVault.ApproveStatus",
+            "name": "approveStatus",
+            "type": "uint8"
           }
         ],
         "internalType": "struct IMultiVault.PendingWithdrawalParams",
@@ -1494,17 +1489,9 @@
           }
         ],
         "internalType": "struct IEverscale.EverscaleAddress",
-        "name": "_configuration",
+        "name": "alien",
         "type": "tuple"
-      }
-    ],
-    "name": "setConfigurationAlien",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
+      },
       {
         "components": [
           {
@@ -1519,11 +1506,11 @@
           }
         ],
         "internalType": "struct IEverscale.EverscaleAddress",
-        "name": "_configuration",
+        "name": "native",
         "type": "tuple"
       }
     ],
-    "name": "setConfigurationNative",
+    "name": "setConfigurations",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1532,50 +1519,26 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "fee",
+        "name": "_defaultNativeDepositFee",
         "type": "uint256"
-      }
-    ],
-    "name": "setDefaultAlienDepositFee",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
+      },
       {
         "internalType": "uint256",
-        "name": "fee",
+        "name": "_defaultNativeWithdrawFee",
         "type": "uint256"
-      }
-    ],
-    "name": "setDefaultAlienWithdrawFee",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
+      },
       {
         "internalType": "uint256",
-        "name": "fee",
+        "name": "_defaultAlienDepositFee",
         "type": "uint256"
-      }
-    ],
-    "name": "setDefaultNativeDepositFee",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
+      },
       {
         "internalType": "uint256",
-        "name": "fee",
+        "name": "_defaultAlienWithdrawFee",
         "type": "uint256"
       }
     ],
-    "name": "setDefaultNativeWithdrawFee",
+    "name": "setDefaultFees",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1628,6 +1591,66 @@
       }
     ],
     "name": "setManagement",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "recipient",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IMultiVault.PendingWithdrawalId[]",
+        "name": "pendingWithdrawalId",
+        "type": "tuple[]"
+      },
+      {
+        "internalType": "enum IMultiVault.ApproveStatus[]",
+        "name": "approveStatus",
+        "type": "uint8[]"
+      }
+    ],
+    "name": "setPendingWithdrawalApprove",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "recipient",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IMultiVault.PendingWithdrawalId",
+        "name": "pendingWithdrawalId",
+        "type": "tuple"
+      },
+      {
+        "internalType": "enum IMultiVault.ApproveStatus",
+        "name": "approveStatus",
+        "type": "uint8"
+      }
+    ],
+    "name": "setPendingWithdrawalApprove",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1706,12 +1729,12 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
-        "name": "_depositFee",
-        "type": "uint256"
+        "internalType": "bool",
+        "name": "blacklisted",
+        "type": "bool"
       }
     ],
-    "name": "setTokenDepositFee",
+    "name": "setTokenBlacklist",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1725,11 +1748,16 @@
       },
       {
         "internalType": "uint256",
+        "name": "_depositFee",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
         "name": "_withdrawFee",
         "type": "uint256"
       }
     ],
-    "name": "setTokenWithdrawFee",
+    "name": "setTokenFees",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1793,6 +1821,19 @@
         "internalType": "struct IMultiVault.Token",
         "name": "",
         "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "withdrawGuardian",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",

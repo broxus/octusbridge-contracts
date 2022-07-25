@@ -10,17 +10,6 @@ Vault, based on Octus Bridge. Allows to transfer arbitrary tokens from Everscale
 
 ## Methods
 
-### acceptGovernance
-
-```solidity
-function acceptGovernance() external nonpayable
-```
-
-Once a new governance address has been proposed using `setGovernance`, this function may be called by the proposed address to accept the responsibility of taking over governance for this contract. This may only be called by the `pendingGovernance`.
-
-
-
-
 ### apiVersion
 
 ```solidity
@@ -37,38 +26,6 @@ Vault API version. Used to track the deployed version of this contract.
 | Name | Type | Description |
 |---|---|---|
 | api_version | string | undefined |
-
-### blacklistAddToken
-
-```solidity
-function blacklistAddToken(address token) external nonpayable
-```
-
-Add token to blacklist. Only native token can be blacklisted. Blacklisted tokens cant be deposited or withdrawn.
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| token | address | Token address |
-
-### blacklistRemoveToken
-
-```solidity
-function blacklistRemoveToken(address token) external nonpayable
-```
-
-Remove token from blacklist.
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| token | address | Token address |
 
 ### bridge
 
@@ -376,22 +333,28 @@ function getChainID() external view returns (uint256)
 |---|---|---|
 | _0 | uint256 | undefined |
 
-### getInitHash
+### getNativeToken
 
 ```solidity
-function getInitHash() external pure returns (bytes32)
+function getNativeToken(int8 native_wid, uint256 native_addr) external view returns (address token)
 ```
 
+Calculates the CREATE2 address for token, based on the Everscale sig
 
 
 
+#### Parameters
 
+| Name | Type | Description |
+|---|---|---|
+| native_wid | int8 | Everscale token workchain ID |
+| native_addr | uint256 | Everscale token address body |
 
 #### Returns
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | bytes32 | undefined |
+| token | address | Token address |
 
 ### governance
 
@@ -460,23 +423,6 @@ function management() external view returns (address)
 | Name | Type | Description |
 |---|---|---|
 | _0 | address | undefined |
-
-### migrateAlienTokenToVault
-
-```solidity
-function migrateAlienTokenToVault(address token, address vault) external nonpayable
-```
-
-
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| token | address | undefined |
-| vault | address | undefined |
 
 ### natives
 
@@ -658,10 +604,10 @@ Save withdrawal for native token
 | payload | bytes | Withdraw payload |
 | signatures | bytes[] | Payload signatures |
 
-### setConfigurationAlien
+### setConfigurations
 
 ```solidity
-function setConfigurationAlien(IEverscale.EverscaleAddress _configuration) external nonpayable
+function setConfigurations(IEverscale.EverscaleAddress alien, IEverscale.EverscaleAddress native) external nonpayable
 ```
 
 
@@ -672,12 +618,13 @@ function setConfigurationAlien(IEverscale.EverscaleAddress _configuration) exter
 
 | Name | Type | Description |
 |---|---|---|
-| _configuration | IEverscale.EverscaleAddress | undefined |
+| alien | IEverscale.EverscaleAddress | undefined |
+| native | IEverscale.EverscaleAddress | undefined |
 
-### setConfigurationNative
+### setDefaultFees
 
 ```solidity
-function setConfigurationNative(IEverscale.EverscaleAddress _configuration) external nonpayable
+function setDefaultFees(uint256 _defaultNativeDepositFee, uint256 _defaultNativeWithdrawFee, uint256 _defaultAlienDepositFee, uint256 _defaultAlienWithdrawFee) external nonpayable
 ```
 
 
@@ -688,71 +635,10 @@ function setConfigurationNative(IEverscale.EverscaleAddress _configuration) exte
 
 | Name | Type | Description |
 |---|---|---|
-| _configuration | IEverscale.EverscaleAddress | undefined |
-
-### setDefaultAlienDepositFee
-
-```solidity
-function setDefaultAlienDepositFee(uint256 fee) external nonpayable
-```
-
-Set default deposit fee for alien tokens. Charged on the `deposit`.
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| fee | uint256 | Fee amount, should be less than FEE_LIMIT |
-
-### setDefaultAlienWithdrawFee
-
-```solidity
-function setDefaultAlienWithdrawFee(uint256 fee) external nonpayable
-```
-
-Set default withdraw fee for alien tokens. Charged on the `saveWithdrawAlien`.
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| fee | uint256 | Fee amount, should be less than FEE_LIMIT |
-
-### setDefaultNativeDepositFee
-
-```solidity
-function setDefaultNativeDepositFee(uint256 fee) external nonpayable
-```
-
-Set default deposit fee for native tokens. Charged on the `deposit`.
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| fee | uint256 | Fee amount, should be less than FEE_LIMIT |
-
-### setDefaultNativeWithdrawFee
-
-```solidity
-function setDefaultNativeWithdrawFee(uint256 fee) external nonpayable
-```
-
-Set default withdraw fee for native tokens. Charged on the `saveWithdrawNative`.
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| fee | uint256 | Fee amount, should be less than FEE_LIMIT |
+| _defaultNativeDepositFee | uint256 | undefined |
+| _defaultNativeWithdrawFee | uint256 | undefined |
+| _defaultAlienDepositFee | uint256 | undefined |
+| _defaultAlienWithdrawFee | uint256 | undefined |
 
 ### setEmergencyShutdown
 
@@ -818,6 +704,40 @@ Changes the management address. This may only be called by `governance`
 |---|---|---|
 | _management | address | The address to use for management. |
 
+### setPendingWithdrawalApprove
+
+```solidity
+function setPendingWithdrawalApprove(IMultiVault.PendingWithdrawalId[] pendingWithdrawalId, enum IMultiVault.ApproveStatus[] approveStatus) external nonpayable
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| pendingWithdrawalId | IMultiVault.PendingWithdrawalId[] | undefined |
+| approveStatus | enum IMultiVault.ApproveStatus[] | undefined |
+
+### setPendingWithdrawalApprove
+
+```solidity
+function setPendingWithdrawalApprove(IMultiVault.PendingWithdrawalId pendingWithdrawalId, enum IMultiVault.ApproveStatus approveStatus) external nonpayable
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| pendingWithdrawalId | IMultiVault.PendingWithdrawalId | undefined |
+| approveStatus | enum IMultiVault.ApproveStatus | undefined |
+
 ### setPendingWithdrawalBounty
 
 ```solidity
@@ -869,10 +789,27 @@ function setRewards(IEverscale.EverscaleAddress _rewards) external nonpayable
 |---|---|---|
 | _rewards | IEverscale.EverscaleAddress | undefined |
 
-### setTokenDepositFee
+### setTokenBlacklist
 
 ```solidity
-function setTokenDepositFee(address token, uint256 _depositFee) external nonpayable
+function setTokenBlacklist(address token, bool blacklisted) external nonpayable
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| token | address | undefined |
+| blacklisted | bool | undefined |
+
+### setTokenFees
+
+```solidity
+function setTokenFees(address token, uint256 _depositFee, uint256 _withdrawFee) external nonpayable
 ```
 
 Set deposit fee for specific token. This may be called only by `owner` or `management`.
@@ -885,23 +822,7 @@ Set deposit fee for specific token. This may be called only by `owner` or `manag
 |---|---|---|
 | token | address | Token address |
 | _depositFee | uint256 | Deposit fee, must be less than FEE_LIMIT. |
-
-### setTokenWithdrawFee
-
-```solidity
-function setTokenWithdrawFee(address token, uint256 _withdrawFee) external nonpayable
-```
-
-Set withdraw fee for specific token. This may be called only by `governance` or `management`
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| token | address | Token address, must be enabled |
-| _withdrawFee | uint256 | Withdraw fee, must be less than FEE_LIMIT. |
+| _withdrawFee | uint256 | undefined |
 
 ### skim
 
@@ -941,6 +862,23 @@ Get token information
 | Name | Type | Description |
 |---|---|---|
 | _0 | IMultiVault.Token | undefined |
+
+### withdrawGuardian
+
+```solidity
+function withdrawGuardian() external view returns (address)
+```
+
+
+
+
+
+
+#### Returns
+
+| Name | Type | Description |
+|---|---|---|
+| _0 | address | undefined |
 
 ### withdrawalIds
 
@@ -1213,6 +1151,24 @@ event PendingWithdrawalForce(address recipient, uint256 id)
 |---|---|---|
 | recipient  | address | undefined |
 | id  | uint256 | undefined |
+
+### PendingWithdrawalUpdateApproveStatus
+
+```solidity
+event PendingWithdrawalUpdateApproveStatus(address recipient, uint256 id, enum IMultiVault.ApproveStatus approveStatus)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| recipient  | address | undefined |
+| id  | uint256 | undefined |
+| approveStatus  | enum IMultiVault.ApproveStatus | undefined |
 
 ### PendingWithdrawalUpdateBounty
 

@@ -37,10 +37,10 @@ string constant API_VERSION = '0.1.4';
 contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
     using SafeERC20 for IERC20;
 
-    function getInitHash() public pure returns(bytes32) {
-        bytes memory bytecode = type(MultiVaultToken).creationCode;
-        return keccak256(abi.encodePacked(bytecode));
-    }
+//    function getInitHash() public pure returns(bytes32) {
+//        bytes memory bytecode = type(MultiVaultToken).creationCode;
+//        return keccak256(abi.encodePacked(bytecode));
+//    }
 
     mapping (address => Token) tokens_;
     mapping (address => EverscaleAddress) natives_;
@@ -105,6 +105,10 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         return withdrawalPeriods_[token][withdrawalPeriodId];
     }
 
+    address public override withdrawGuardian;
+
+    // === STORAGE END
+
     modifier tokenNotBlacklisted(address token) {
         require(!tokens_[token].blacklisted);
 
@@ -128,7 +132,7 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
     }
 
     modifier onlyEmergencyDisabled() {
-        require(!emergencyShutdown, "Vault: emergency mode enabled");
+        require(!emergencyShutdown);
 
         _;
     }
@@ -151,8 +155,18 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         _;
     }
 
-    modifier onlyGovernanceOrGuardian() {
-        require(msg.sender == governance || msg.sender == guardian);
+    modifier onlyGovernanceOrWithdrawGuardian() {
+        require(msg.sender == governance || msg.sender == withdrawGuardian);
+
+        _;
+    }
+
+    modifier pendingWithdrawalOpened(
+        PendingWithdrawalId memory pendingWithdrawalId
+    ) {
+        PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(pendingWithdrawalId);
+
+        require(pendingWithdrawal.amount > 0);
 
         _;
     }
@@ -160,7 +174,7 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
     modifier withdrawalNotSeenBefore(bytes memory payload) {
         bytes32 withdrawalId = keccak256(payload);
 
-        require(!withdrawalIds[withdrawalId], "Vault: withdraw payload already seen");
+        require(!withdrawalIds[withdrawalId]);
 
         _;
 
@@ -248,10 +262,7 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         address _governance
     ) external override initializer {
         bridge = _bridge;
-        emit UpdateBridge(bridge);
-
         governance = _governance;
-        emit UpdateGovernance(governance);
     }
 
     /// @notice Set prefix for native token
@@ -273,31 +284,13 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         prefix.symbol = symbol_prefix;
 
         prefixes_[token] = prefix;
-
-        emit UpdateTokenPrefix(token, name_prefix, symbol_prefix);
     }
 
-    /// @notice Add token to blacklist. Only native token can be blacklisted.
-    /// Blacklisted tokens cant be deposited or withdrawn.
-    /// @param token Token address
-    function blacklistAddToken(
-        address token
-    ) public override onlyGovernance tokenNotBlacklisted(token) {
-        tokens_[token].blacklisted = true;
-
-        emit BlacklistTokenAdded(token);
-    }
-
-    /// @notice Remove token from blacklist.
-    /// @param token Token address
-    function blacklistRemoveToken(
-        address token
+    function setTokenBlacklist(
+        address token,
+        bool blacklisted
     ) external override onlyGovernance {
-        require(tokens_[token].blacklisted);
-
-        tokens_[token].blacklisted = false;
-
-        emit BlacklistTokenRemoved(token);
+        tokens_[token].blacklisted = blacklisted;
     }
 
     /// @notice Set address to receive fees.
@@ -307,108 +300,36 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         EverscaleAddress memory _rewards
     ) external override onlyGovernance {
         rewards_ = _rewards;
-
-        emit UpdateRewards(rewards_.wid, rewards_.addr);
     }
 
-    /// @notice Set default deposit fee for native tokens.
-    /// Charged on the `deposit`.
-    /// @param fee Fee amount, should be less than FEE_LIMIT
-    function setDefaultNativeDepositFee(
-        uint fee
-    )
-        external
-        override
-        onlyGovernanceOrManagement
-        respectFeeLimit(fee)
-    {
-        defaultNativeDepositFee = fee;
-
-        emit UpdateDefaultNativeDepositFee(fee);
-    }
-
-    /// @notice Set default withdraw fee for native tokens.
-    /// Charged on the `saveWithdrawNative`.
-    /// @param fee Fee amount, should be less than FEE_LIMIT
-    function setDefaultNativeWithdrawFee(
-        uint fee
-    )
-        external
-        override
-        onlyGovernanceOrManagement
-        respectFeeLimit(fee)
-    {
-        defaultNativeWithdrawFee = fee;
-
-        emit UpdateDefaultNativeWithdrawFee(fee);
-    }
-
-    /// @notice Set default deposit fee for alien tokens.
-    /// Charged on the `deposit`.
-    /// @param fee Fee amount, should be less than FEE_LIMIT
-    function setDefaultAlienDepositFee(
-        uint fee
-    )
-        external
-        override
-        onlyGovernanceOrManagement
-        respectFeeLimit(fee)
-    {
-        defaultAlienDepositFee = fee;
-
-        emit UpdateDefaultAlienDepositFee(fee);
-    }
-
-    /// @notice Set default withdraw fee for alien tokens.
-    /// Charged on the `saveWithdrawAlien`.
-    /// @param fee Fee amount, should be less than FEE_LIMIT
-    function setDefaultAlienWithdrawFee(
-        uint fee
-    )
-        external
-        override
-        onlyGovernanceOrManagement
-        respectFeeLimit(fee)
-    {
-        defaultAlienWithdrawFee = fee;
-
-        emit UpdateDefaultAlienWithdrawFee(fee);
+    function setDefaultFees(
+        uint _defaultNativeDepositFee,
+        uint _defaultNativeWithdrawFee,
+        uint _defaultAlienDepositFee,
+        uint _defaultAlienWithdrawFee
+    ) external override onlyGovernanceOrManagement {
+        defaultNativeDepositFee = _defaultNativeDepositFee;
+        defaultNativeWithdrawFee = _defaultNativeWithdrawFee;
+        defaultAlienDepositFee = _defaultAlienDepositFee;
+        defaultAlienWithdrawFee = _defaultAlienWithdrawFee;
     }
 
     /// @notice Set deposit fee for specific token.
     /// This may be called only by `owner` or `management`.
     /// @param token Token address
     /// @param _depositFee Deposit fee, must be less than FEE_LIMIT.
-    function setTokenDepositFee(
+    function setTokenFees(
         address token,
-        uint _depositFee
+        uint _depositFee,
+        uint _withdrawFee
     )
-        public
+        external
         override
         onlyGovernanceOrManagement
         respectFeeLimit(_depositFee)
     {
         tokens_[token].depositFee = _depositFee;
-
-        emit UpdateTokenDepositFee(token, _depositFee);
-    }
-
-    /// @notice Set withdraw fee for specific token.
-    /// This may be called only by `governance` or `management`
-    /// @param token Token address, must be enabled
-    /// @param _withdrawFee Withdraw fee, must be less than FEE_LIMIT.
-    function setTokenWithdrawFee(
-        address token,
-        uint _withdrawFee
-    )
-        public
-        override
-        onlyGovernanceOrManagement
-        respectFeeLimit(_withdrawFee)
-    {
         tokens_[token].withdrawFee = _withdrawFee;
-
-        emit UpdateTokenWithdrawFee(token, _withdrawFee);
     }
 
     /// @notice Enable or upgrade withdrawal limits for specific token
@@ -440,31 +361,14 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
     }
 
     /// @notice Set alien configuration address.
-    /// @param _configuration The address to use for alien configuration.
-    function setConfigurationAlien(
-        EverscaleAddress memory _configuration
+    /// @param alien Everscale address of the alien configuration
+    /// @param native Everscale address of the native configuration
+    function setConfigurations(
+        EverscaleAddress memory alien,
+        EverscaleAddress memory native
     ) external override onlyGovernance {
-        configurationAlien_ = _configuration;
-
-        emit UpdateConfiguration(
-            TokenType.Alien,
-            _configuration.wid,
-            _configuration.addr
-        );
-    }
-
-    /// @notice Set native configuration address.
-    /// @param _configuration The address to use for native configuration.
-    function setConfigurationNative(
-        EverscaleAddress memory _configuration
-    ) external override onlyGovernance {
-        configurationNative_ = _configuration;
-
-        emit UpdateConfiguration(
-            TokenType.Native,
-            _configuration.wid,
-            _configuration.addr
-        );
+        configurationAlien_ = alien;
+        configurationNative_ = native;
     }
 
     /// @notice Nominate new address to use as a governance.
@@ -476,23 +380,7 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
     function setGovernance(
         address _governance
     ) external override onlyGovernance {
-        pendingGovernance = _governance;
-
-        emit NewPendingGovernance(pendingGovernance);
-    }
-
-    /// @notice Once a new governance address has been proposed using `setGovernance`,
-    /// this function may be called by the proposed address to accept the
-    /// responsibility of taking over governance for this contract.
-    /// This may only be called by the `pendingGovernance`.
-    function acceptGovernance()
-        external
-        override
-        onlyPendingGovernance
-    {
-        governance = pendingGovernance;
-
-        emit UpdateGovernance(governance);
+        governance = _governance;
     }
 
     /// @notice Changes the management address.
@@ -506,8 +394,6 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         onlyGovernance
     {
         management = _management;
-
-        emit UpdateManagement(management);
     }
 
     /// @notice Changes the address of `guardian`.
@@ -521,8 +407,6 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         onlyGovernance
     {
         guardian = _guardian;
-
-        emit UpdateGuardian(guardian);
     }
 
     /// @notice Activates or deactivates MultiVault emergency shutdown.
@@ -542,8 +426,6 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         }
 
         emergencyShutdown = active;
-
-        emit EmergencyShutdown(active);
     }
 
     /// @notice Changes pending withdrawal bounty for specific pending withdrawal
@@ -584,7 +466,10 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
                 pendingWithdrawal.amount
             );
 
-            emit PendingWithdrawalForce(pendingWithdrawalId.recipient, pendingWithdrawalId.id);
+            emit PendingWithdrawalForce(
+                pendingWithdrawalId.recipient,
+                pendingWithdrawalId.id
+            );
         }
     }
 
@@ -674,7 +559,7 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         uint256 amount,
         uint256 expectedMinBounty,
         PendingWithdrawalId[] memory pendingWithdrawalIds
-    ) external override nonReentrant {
+    ) external override tokenNotBlacklisted(token) nonReentrant {
         uint amountLeft = amount;
         uint amountPlusBounty = amount;
 
@@ -692,7 +577,10 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
 
             pendingWithdrawals_[pendingWithdrawalId.recipient][pendingWithdrawalId.id].amount = 0;
 
-            emit PendingWithdrawalFill(pendingWithdrawalId.recipient, pendingWithdrawalId.id);
+            emit PendingWithdrawalFill(
+                pendingWithdrawalId.recipient,
+                pendingWithdrawalId.id
+            );
 
             IERC20(pendingWithdrawal.token).safeTransfer(
                 pendingWithdrawalId.recipient,
@@ -817,7 +705,11 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
             _event.eventTimestamp
         );
 
-        _withdrawalPeriodIncreaseTotalByTimestamp(withdrawal.token, _event.eventTimestamp, withdrawal.amount);
+        _withdrawalPeriodIncreaseTotalByTimestamp(
+            withdrawal.token,
+            _event.eventTimestamp,
+            withdrawal.amount
+        );
 
         bool withdrawalLimitsPassed = _withdrawalPeriodCheckLimitsPassed(
             withdrawal.token,
@@ -855,7 +747,9 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         pendingWithdrawals_[withdrawal.recipient][pendingWithdrawalId] = PendingWithdrawalParams({
             token: withdrawal.token,
             amount: withdrawAmount,
-            bounty: msg.sender == withdrawal.recipient ? bounty : 0
+            bounty: msg.sender == withdrawal.recipient ? bounty : 0,
+            timestamp: _event.eventTimestamp,
+            approveStatus: ApproveStatus.NotRequired
         });
 
         emit PendingWithdrawalCreated(
@@ -865,6 +759,13 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
             withdrawAmount,
             payloadId
         );
+
+        if (!withdrawalLimitsPassed) {
+            _pendingWithdrawalApproveStatusUpdate(
+                PendingWithdrawalId(withdrawal.recipient, pendingWithdrawalId),
+                ApproveStatus.Required
+            );
+        }
     }
 
     /// @notice Save withdrawal of alien token
@@ -914,27 +815,6 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         }
 
         emit SkimFee(token, skim_to_everscale, fee);
-    }
-
-    function migrateAlienTokenToVault(
-        address token,
-        address vault
-    )
-        external
-        override
-        onlyGovernance
-    {
-        require(tokens_[token].activation > 0);
-        require(!tokens_[token].isNative);
-
-        tokens_[token].blacklisted = true;
-
-        IERC20(token).safeTransfer(
-            vault,
-            IERC20(token).balanceOf(address(this))
-        );
-
-        emit TokenMigrated(token, vault);
     }
 
     /// @notice Calculates fee for deposit or withdrawal.
@@ -1075,8 +955,7 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         EverscaleAddress memory configuration
     ) internal view returns (EverscaleEvent memory) {
         require(
-            IBridge(bridge).verifySignedEverscaleEvent(payload, signatures) == 0,
-            "Vault: signatures verification failed"
+            IBridge(bridge).verifySignedEverscaleEvent(payload, signatures) == 0
         );
 
         // Decode Everscale event
@@ -1126,39 +1005,79 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         amount + withdrawalPeriod.total - withdrawalPeriod.considered < withdrawalLimit.daily;
     }
 
-    function _vaultTokenBalance(address token) internal view returns (uint256) {
+    function _withdrawalPeriodIncreaseConsideredByTimestamp(
+        address token,
+        uint256 timestamp,
+        uint256 amount
+    ) internal {
+        uint withdrawalPeriodId = _withdrawalPeriodDeriveId(timestamp);
+
+        withdrawalPeriods_[token][withdrawalPeriodId].considered += amount;
+    }
+
+    function _vaultTokenBalance(
+        address token
+    ) internal view returns (uint256) {
         return IERC20(token).balanceOf(address(this));
+    }
+
+    function _pendingWithdrawal(
+        PendingWithdrawalId memory pendingWithdrawalId
+    ) internal view returns (PendingWithdrawalParams memory) {
+        return pendingWithdrawals_[pendingWithdrawalId.recipient][pendingWithdrawalId.id];
+    }
+
+    function _pendingWithdrawalApproveStatusUpdate(
+        PendingWithdrawalId memory pendingWithdrawalId,
+        ApproveStatus approveStatus
+    ) internal {
+        pendingWithdrawals_[pendingWithdrawalId.recipient][pendingWithdrawalId.id].approveStatus = approveStatus;
+
+        emit PendingWithdrawalUpdateApproveStatus(
+            pendingWithdrawalId.recipient,
+            pendingWithdrawalId.id,
+            approveStatus
+        );
+    }
+
+    function _pendingWithdrawalAmountReduce(
+        address token,
+        PendingWithdrawalId memory pendingWithdrawalId,
+        uint amount
+    ) internal {
+        pendingWithdrawals_[pendingWithdrawalId.recipient][pendingWithdrawalId.id].amount -= amount;
+        pendingWithdrawalsTotal[token] -= amount;
     }
 
     function decodeNativeWithdrawalEventData(
         bytes memory eventData
     ) internal pure returns (IMultiVault.NativeWithdrawalParams memory) {
         (
-        int8 native_wid,
-        uint256 native_addr,
+            int8 native_wid,
+            uint256 native_addr,
 
-        string memory name,
-        string memory symbol,
-        uint8 decimals,
+            string memory name,
+            string memory symbol,
+            uint8 decimals,
 
-        uint128 amount,
-        uint160 recipient,
-        uint256 chainId
+            uint128 amount,
+            uint160 recipient,
+            uint256 chainId
         ) = abi.decode(
             eventData,
             (
-            int8, uint256,
-            string, string, uint8,
-            uint128, uint160, uint256
+                int8, uint256,
+                string, string, uint8,
+                uint128, uint160, uint256
             )
         );
 
         return IMultiVault.NativeWithdrawalParams({
-        native: IEverscale.EverscaleAddress(native_wid, native_addr),
-        meta: IMultiVault.TokenMeta(name, symbol, decimals),
-        amount: amount,
-        recipient: address(recipient),
-        chainId: chainId
+            native: IEverscale.EverscaleAddress(native_wid, native_addr),
+            meta: IMultiVault.TokenMeta(name, symbol, decimals),
+            amount: amount,
+            recipient: address(recipient),
+            chainId: chainId
         });
     }
 
@@ -1166,20 +1085,20 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         bytes memory eventData
     ) internal pure returns (IMultiVault.AlienWithdrawalParams memory) {
         (
-        uint160 token,
-        uint128 amount,
-        uint160 recipient,
-        uint256 chainId
+            uint160 token,
+            uint128 amount,
+            uint160 recipient,
+            uint256 chainId
         ) = abi.decode(
             eventData,
             (uint160, uint128, uint160, uint256)
         );
 
         return IMultiVault.AlienWithdrawalParams({
-        token: address(token),
-        amount: uint256(amount),
-        recipient: address(recipient),
-        chainId: chainId
+            token: address(token),
+            amount: uint256(amount),
+            recipient: address(recipient),
+            chainId: chainId
         });
     }
 
@@ -1190,12 +1109,84 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
     function getNativeToken(
         int8 native_wid,
         uint256 native_addr
-    ) internal view returns (address token) {
+    ) public view returns (address token) {
         token = address(uint160(uint(keccak256(abi.encodePacked(
-                hex'ff',
-                address(this),
-                keccak256(abi.encodePacked(native_wid, native_addr)),
-                hex'192c19818bebb5c6c95f5dcb3c3257379fc46fb654780cb06f3211ee77e1a360' // MultiVaultToken init code hash
-            )))));
+            hex'ff',
+            address(this),
+            keccak256(abi.encodePacked(native_wid, native_addr)),
+            hex'192c19818bebb5c6c95f5dcb3c3257379fc46fb654780cb06f3211ee77e1a360' // MultiVaultToken init code hash
+        )))));
+    }
+
+    /**
+        @notice Set approve status for pending withdrawal.
+            Pending withdrawal must be in `Required` (1) approve status, so approve status can be set only once.
+            If Vault has enough tokens on its balance - withdrawal will be filled immediately.
+            This may only be called by `governance` or `withdrawGuardian`.
+        @param pendingWithdrawalId Pending withdrawal ID.
+        @param approveStatus Approve status. Must be `Approved` (2) or `Rejected` (3).
+    */
+    function setPendingWithdrawalApprove(
+        PendingWithdrawalId memory pendingWithdrawalId,
+        ApproveStatus approveStatus
+    )
+        public
+        override
+        onlyGovernanceOrWithdrawGuardian
+        pendingWithdrawalOpened(pendingWithdrawalId)
+    {
+        PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(pendingWithdrawalId);
+
+        require(pendingWithdrawal.approveStatus == ApproveStatus.Required);
+
+        require(
+            approveStatus == ApproveStatus.Approved ||
+            approveStatus == ApproveStatus.Rejected
+        );
+
+        _pendingWithdrawalApproveStatusUpdate(pendingWithdrawalId, approveStatus);
+
+        // Fill approved withdrawal
+        if (approveStatus == ApproveStatus.Approved && pendingWithdrawal.amount <= _vaultTokenBalance(pendingWithdrawal.token)) {
+            _pendingWithdrawalAmountReduce(
+                pendingWithdrawal.token,
+                pendingWithdrawalId,
+                pendingWithdrawal.amount
+            );
+
+            IERC20(pendingWithdrawal.token).safeTransfer(
+                pendingWithdrawalId.recipient,
+                pendingWithdrawal.amount
+            );
+
+            emit PendingWithdrawalWithdraw(
+                pendingWithdrawalId.recipient,
+                pendingWithdrawalId.id,
+                pendingWithdrawal.amount
+            );
+        }
+
+        // Update withdrawal period considered amount
+        _withdrawalPeriodIncreaseConsideredByTimestamp(
+            pendingWithdrawal.token,
+            pendingWithdrawal.timestamp,
+            pendingWithdrawal.amount
+        );
+    }
+
+    /**
+        @notice Multicall for `setPendingWithdrawalApprove`.
+        @param pendingWithdrawalId List of pending withdrawals IDs.
+        @param approveStatus List of approve statuses.
+    */
+    function setPendingWithdrawalApprove(
+        PendingWithdrawalId[] memory pendingWithdrawalId,
+        ApproveStatus[] memory approveStatus
+    ) external override {
+        require(pendingWithdrawalId.length == approveStatus.length);
+
+        for (uint i = 0; i < pendingWithdrawalId.length; i++) {
+            setPendingWithdrawalApprove(pendingWithdrawalId[i], approveStatus[i]);
+        }
     }
 }
