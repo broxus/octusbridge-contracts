@@ -270,6 +270,22 @@ function deposit(IEverscale.EverscaleAddress recipient, address token, uint256 a
 | expectedMinBounty | uint256 | undefined |
 | pendingWithdrawalIds | IMultiVault.PendingWithdrawalId[] | undefined |
 
+### disableWithdrawalLimits
+
+```solidity
+function disableWithdrawalLimits(address token) external nonpayable
+```
+
+Disable withdrawal limits for specific token Can be called only by governance
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| token | address | Token address |
+
 ### emergencyShutdown
 
 ```solidity
@@ -286,6 +302,24 @@ function emergencyShutdown() external view returns (bool)
 | Name | Type | Description |
 |---|---|---|
 | _0 | bool | undefined |
+
+### enableWithdrawalLimits
+
+```solidity
+function enableWithdrawalLimits(address token, uint256 undeclared, uint256 daily) external nonpayable
+```
+
+Enable or upgrade withdrawal limits for specific token Can be called only by governance
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| token | address | Token address |
+| undeclared | uint256 | Undeclared withdrawal amount limit |
+| daily | uint256 | Daily withdrawal amount limit |
 
 ### fees
 
@@ -358,29 +392,6 @@ function getInitHash() external pure returns (bytes32)
 | Name | Type | Description |
 |---|---|---|
 | _0 | bytes32 | undefined |
-
-### getNativeToken
-
-```solidity
-function getNativeToken(int8 native_wid, uint256 native_addr) external view returns (address)
-```
-
-
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| native_wid | int8 | undefined |
-| native_addr | uint256 | undefined |
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | address | undefined |
 
 ### governance
 
@@ -952,6 +963,51 @@ function withdrawalIds(bytes32) external view returns (bool)
 | Name | Type | Description |
 |---|---|---|
 | _0 | bool | undefined |
+
+### withdrawalLimits
+
+```solidity
+function withdrawalLimits(address token) external view returns (struct IMultiVault.WithdrawalLimits)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| token | address | undefined |
+
+#### Returns
+
+| Name | Type | Description |
+|---|---|---|
+| _0 | IMultiVault.WithdrawalLimits | undefined |
+
+### withdrawalPeriods
+
+```solidity
+function withdrawalPeriods(address token, uint256 withdrawalPeriodId) external view returns (struct IMultiVault.WithdrawalPeriodParams)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| token | address | undefined |
+| withdrawalPeriodId | uint256 | undefined |
+
+#### Returns
+
+| Name | Type | Description |
+|---|---|---|
+| _0 | IMultiVault.WithdrawalPeriodParams | undefined |
 
 
 

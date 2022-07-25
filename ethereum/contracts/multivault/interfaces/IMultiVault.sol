@@ -8,6 +8,12 @@ interface IMultiVault is IEverscale {
     enum Fee { Deposit, Withdraw }
     enum TokenType { Native, Alien }
 
+    struct WithdrawalLimits {
+        uint undeclared;
+        uint daily;
+        bool enabled;
+    }
+
     struct TokenPrefix {
         uint activation;
         string name;
@@ -52,6 +58,11 @@ interface IMultiVault is IEverscale {
     struct PendingWithdrawalId {
         address recipient;
         uint256 id;
+    }
+
+    struct WithdrawalPeriodParams {
+        uint256 total;
+        uint256 considered;
     }
 
     function defaultNativeDepositFee() external view returns (uint);
@@ -174,6 +185,25 @@ interface IMultiVault is IEverscale {
     function migrateAlienTokenToVault(
         address token,
         address vault
+    ) external;
+
+    function withdrawalLimits(
+        address token
+    ) external view returns(WithdrawalLimits memory);
+
+    function withdrawalPeriods(
+        address token,
+        uint256 withdrawalPeriodId
+    ) external view returns (WithdrawalPeriodParams memory);
+
+    function enableWithdrawalLimits(
+        address token,
+        uint undeclared,
+        uint daily
+    ) external;
+
+    function disableWithdrawalLimits(
+        address token
     ) external;
 
     event PendingWithdrawalCancel(

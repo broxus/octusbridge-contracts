@@ -8,7 +8,6 @@ import "./interfaces/IMultiVaultToken.sol";
 import "./interfaces/IBridge.sol";
 
 import "./libraries/SafeERC20.sol";
-import "./libraries/MultiVaultLibrary.sol";
 
 import "./utils/Initializable.sol";
 import "./utils/ReentrancyGuard.sol";
@@ -26,9 +25,9 @@ uint256 constant NAME_LENGTH_LIMIT = 32;
 
 string constant DEFAULT_NAME_PREFIX = 'Octus ';
 string constant DEFAULT_SYMBOL_PREFIX = 'oct';
+uint256 constant WITHDRAW_PERIOD_DURATION_IN_SECONDS = 60 * 60 * 24; // 24 hours
 
-
-string constant API_VERSION = '0.1.3';
+string constant API_VERSION = '0.1.4';
 
 
 /// @notice Vault, based on Octus Bridge. Allows to transfer arbitrary tokens from Everscale
@@ -84,6 +83,27 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
     // - Total amount of pending withdrawals per token
     mapping(address => uint) public override pendingWithdrawalsTotal;
 
+    // STORAGE UPDATE 2
+    // Withdrawal limits per token
+    mapping(address => WithdrawalLimits) withdrawalLimits_;
+
+    function withdrawalLimits(
+        address token
+    ) external view override returns(WithdrawalLimits memory) {
+        return withdrawalLimits_[token];
+    }
+
+    // - Withdrawal periods. Each period is `WITHDRAW_PERIOD_DURATION_IN_SECONDS` seconds long.
+    // If some period has reached the `withdrawalLimitPerPeriod` - all the future
+    // withdrawals in this period require manual approve, see note on `setPendingWithdrawalsApprove`
+    mapping(address => mapping(uint256 => WithdrawalPeriodParams)) withdrawalPeriods_;
+
+    function withdrawalPeriods(
+        address token,
+        uint256 withdrawalPeriodId
+    ) external view override returns (WithdrawalPeriodParams memory) {
+        return withdrawalPeriods_[token][withdrawalPeriodId];
+    }
 
     modifier tokenNotBlacklisted(address token) {
         require(!tokens_[token].blacklisted);
@@ -391,6 +411,34 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         emit UpdateTokenWithdrawFee(token, _withdrawFee);
     }
 
+    /// @notice Enable or upgrade withdrawal limits for specific token
+    /// Can be called only by governance
+    /// @param token Token address
+    /// @param undeclared Undeclared withdrawal amount limit
+    /// @param daily Daily withdrawal amount limit
+    function enableWithdrawalLimits(
+        address token,
+        uint undeclared,
+        uint daily
+    ) external override onlyGovernance {
+        require(daily >= undeclared);
+
+        withdrawalLimits_[token] = WithdrawalLimits({
+            enabled: true,
+            daily: daily,
+            undeclared: undeclared
+        });
+    }
+
+    /// @notice Disable withdrawal limits for specific token
+    /// Can be called only by governance
+    /// @param token Token address
+    function disableWithdrawalLimits(
+        address token
+    ) external override onlyGovernance {
+        withdrawalLimits_[token].enabled = false;
+    }
+
     /// @notice Set alien configuration address.
     /// @param _configuration The address to use for alien configuration.
     function setConfigurationAlien(
@@ -687,7 +735,7 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         bytes32 payloadId = keccak256(payload);
 
         // Decode event data
-        NativeWithdrawalParams memory withdrawal = MultiVaultLibrary.decodeNativeWithdrawalEventData(_event.eventData);
+        NativeWithdrawalParams memory withdrawal = decodeNativeWithdrawalEventData(_event.eventData);
 
         // Ensure chain id is correct
         require(withdrawal.chainId == getChainID());
@@ -744,7 +792,7 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         bytes32 payloadId = keccak256(payload);
 
         // Decode event data
-        AlienWithdrawalParams memory withdrawal = MultiVaultLibrary.decodeAlienWithdrawalEventData(_event.eventData);
+        AlienWithdrawalParams memory withdrawal = decodeAlienWithdrawalEventData(_event.eventData);
 
         // Ensure chain id is correct
         require(withdrawal.chainId == getChainID());
@@ -763,29 +811,22 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
 
         uint withdrawAmount = withdrawal.amount - fee;
 
-        // Check that token balance is sufficient
-        if (IERC20(withdrawal.token).balanceOf(address(this)) < withdrawAmount) {
-            uint pendingWithdrawalId = pendingWithdrawalsPerUser[withdrawal.recipient];
+        // Consider withdrawal period limit
+        WithdrawalPeriodParams memory withdrawalPeriod = _withdrawalPeriod(
+            withdrawal.token,
+            _event.eventTimestamp
+        );
 
-            pendingWithdrawalsPerUser[withdrawal.recipient]++;
+        _withdrawalPeriodIncreaseTotalByTimestamp(withdrawal.token, _event.eventTimestamp, withdrawal.amount);
 
-            pendingWithdrawalsTotal[withdrawal.token] += withdrawAmount;
+        bool withdrawalLimitsPassed = _withdrawalPeriodCheckLimitsPassed(
+            withdrawal.token,
+            withdrawal.amount,
+            withdrawalPeriod
+        );
 
-            // - Save withdrawal as pending
-            pendingWithdrawals_[withdrawal.recipient][pendingWithdrawalId] = PendingWithdrawalParams({
-                token: withdrawal.token,
-                amount: withdrawAmount,
-                bounty: msg.sender == withdrawal.recipient ? bounty : 0
-            });
-
-            emit PendingWithdrawalCreated(
-                withdrawal.recipient,
-                pendingWithdrawalId,
-                withdrawal.token,
-                withdrawAmount,
-                payloadId
-            );
-        } else {
+        // Token balance sufficient and none of the limits are violated
+        if (withdrawal.amount <= _vaultTokenBalance(withdrawal.token) && withdrawalLimitsPassed) {
             IERC20(withdrawal.token).safeTransfer(
                 withdrawal.recipient,
                 withdrawAmount
@@ -799,7 +840,31 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
                 withdrawal.amount,
                 fee
             );
+
+            return;
         }
+
+        // Create pending withdrawal
+        uint pendingWithdrawalId = pendingWithdrawalsPerUser[withdrawal.recipient];
+
+        pendingWithdrawalsPerUser[withdrawal.recipient]++;
+
+        pendingWithdrawalsTotal[withdrawal.token] += withdrawAmount;
+
+        // - Save withdrawal as pending
+        pendingWithdrawals_[withdrawal.recipient][pendingWithdrawalId] = PendingWithdrawalParams({
+            token: withdrawal.token,
+            amount: withdrawAmount,
+            bounty: msg.sender == withdrawal.recipient ? bounty : 0
+        });
+
+        emit PendingWithdrawalCreated(
+            withdrawal.recipient,
+            pendingWithdrawalId,
+            withdrawal.token,
+            withdrawAmount,
+            payloadId
+        );
     }
 
     /// @notice Save withdrawal of alien token
@@ -888,13 +953,6 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         return tokenFee * amount / MAX_BPS;
     }
 
-    function getNativeToken(
-        int8 native_wid,
-        uint256 native_addr
-    ) external view returns (address) {
-        return MultiVaultLibrary.getNativeToken(native_wid, native_addr);
-    }
-
     function _increaseTokenFee(
         address token,
         uint amount
@@ -962,7 +1020,7 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
     function _getNativeWithdrawalToken(
         NativeWithdrawalParams memory withdrawal
     ) internal returns (address token) {
-        token = MultiVaultLibrary.getNativeToken(
+        token = getNativeToken(
             withdrawal.native.wid,
             withdrawal.native.addr
         );
@@ -1031,4 +1089,113 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
 
         return _event;
      }
+
+    function _withdrawalPeriod(
+        address token,
+        uint256 timestamp)
+    internal view returns(WithdrawalPeriodParams memory) {
+        return withdrawalPeriods_[token][_withdrawalPeriodDeriveId(timestamp)];
+    }
+
+    function _withdrawalPeriodDeriveId(
+        uint256 timestamp
+    ) internal pure returns (uint256) {
+        return timestamp / WITHDRAW_PERIOD_DURATION_IN_SECONDS;
+    }
+
+    function _withdrawalPeriodIncreaseTotalByTimestamp(
+        address token,
+        uint256 timestamp,
+        uint256 amount
+    ) internal {
+        uint withdrawalPeriodId = _withdrawalPeriodDeriveId(timestamp);
+
+        withdrawalPeriods_[token][withdrawalPeriodId].total += amount;
+    }
+
+    function _withdrawalPeriodCheckLimitsPassed(
+        address token,
+        uint amount,
+        WithdrawalPeriodParams memory withdrawalPeriod
+    ) internal view returns (bool) {
+        WithdrawalLimits memory withdrawalLimit = withdrawalLimits_[token];
+
+        if (!withdrawalLimit.enabled) return true;
+
+        return  amount < withdrawalLimit.undeclared &&
+        amount + withdrawalPeriod.total - withdrawalPeriod.considered < withdrawalLimit.daily;
+    }
+
+    function _vaultTokenBalance(address token) internal view returns (uint256) {
+        return IERC20(token).balanceOf(address(this));
+    }
+
+    function decodeNativeWithdrawalEventData(
+        bytes memory eventData
+    ) internal pure returns (IMultiVault.NativeWithdrawalParams memory) {
+        (
+        int8 native_wid,
+        uint256 native_addr,
+
+        string memory name,
+        string memory symbol,
+        uint8 decimals,
+
+        uint128 amount,
+        uint160 recipient,
+        uint256 chainId
+        ) = abi.decode(
+            eventData,
+            (
+            int8, uint256,
+            string, string, uint8,
+            uint128, uint160, uint256
+            )
+        );
+
+        return IMultiVault.NativeWithdrawalParams({
+        native: IEverscale.EverscaleAddress(native_wid, native_addr),
+        meta: IMultiVault.TokenMeta(name, symbol, decimals),
+        amount: amount,
+        recipient: address(recipient),
+        chainId: chainId
+        });
+    }
+
+    function decodeAlienWithdrawalEventData(
+        bytes memory eventData
+    ) internal pure returns (IMultiVault.AlienWithdrawalParams memory) {
+        (
+        uint160 token,
+        uint128 amount,
+        uint160 recipient,
+        uint256 chainId
+        ) = abi.decode(
+            eventData,
+            (uint160, uint128, uint160, uint256)
+        );
+
+        return IMultiVault.AlienWithdrawalParams({
+        token: address(token),
+        amount: uint256(amount),
+        recipient: address(recipient),
+        chainId: chainId
+        });
+    }
+
+    /// @notice Calculates the CREATE2 address for token, based on the Everscale sig
+    /// @param native_wid Everscale token workchain ID
+    /// @param native_addr Everscale token address body
+    /// @return token Token address
+    function getNativeToken(
+        int8 native_wid,
+        uint256 native_addr
+    ) internal view returns (address token) {
+        token = address(uint160(uint(keccak256(abi.encodePacked(
+                hex'ff',
+                address(this),
+                keccak256(abi.encodePacked(native_wid, native_addr)),
+                hex'192c19818bebb5c6c95f5dcb3c3257379fc46fb654780cb06f3211ee77e1a360' // MultiVaultToken init code hash
+            )))));
+    }
 }

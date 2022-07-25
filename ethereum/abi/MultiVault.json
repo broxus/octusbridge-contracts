@@ -1055,6 +1055,19 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "disableWithdrawalLimits",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "emergencyShutdown",
     "outputs": [
@@ -1065,6 +1078,29 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "undeclared",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "daily",
+        "type": "uint256"
+      }
+    ],
+    "name": "enableWithdrawalLimits",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -1135,30 +1171,6 @@
       }
     ],
     "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "int8",
-        "name": "native_wid",
-        "type": "int8"
-      },
-      {
-        "internalType": "uint256",
-        "name": "native_addr",
-        "type": "uint256"
-      }
-    ],
-    "name": "getNativeToken",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -1800,6 +1812,78 @@
         "internalType": "bool",
         "name": "",
         "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "withdrawalLimits",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "undeclared",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "daily",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "enabled",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct IMultiVault.WithdrawalLimits",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "withdrawalPeriodId",
+        "type": "uint256"
+      }
+    ],
+    "name": "withdrawalPeriods",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "total",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "considered",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IMultiVault.WithdrawalPeriodParams",
+        "name": "",
+        "type": "tuple"
       }
     ],
     "stateMutability": "view",

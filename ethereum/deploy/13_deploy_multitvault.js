@@ -31,6 +31,9 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     });
 
     // Deploy implementation
+    const artifact = await deployments.getExtendedArtifact('MultiVault');
+    console.log(artifact.bytecode.length / 2);
+
     await deployments.deploy('MultiVaultImplementation', {
         contract: 'MultiVault',
         from: deployer,
