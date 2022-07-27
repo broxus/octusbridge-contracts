@@ -681,31 +681,6 @@
       },
       {
         "indexed": false,
-        "internalType": "string",
-        "name": "name_prefix",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "symbol_prefix",
-        "type": "string"
-      }
-    ],
-    "name": "UpdateTokenPrefix",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "indexed": false,
         "internalType": "uint256",
         "name": "fee",
         "type": "uint256"
@@ -759,54 +734,12 @@
   },
   {
     "inputs": [],
-    "name": "apiVersion",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "api_version",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "bridge",
     "outputs": [
       {
         "internalType": "address",
         "name": "",
         "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "_token",
-        "type": "address"
-      },
-      {
-        "internalType": "enum IMultiVault.Fee",
-        "name": "fee",
-        "type": "uint8"
-      }
-    ],
-    "name": "calculateMovementFee",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -900,6 +833,85 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_defaultNativeDepositFee",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_defaultNativeWithdrawFee",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_defaultAlienDepositFee",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_defaultAlienWithdrawFee",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "int8",
+            "name": "wid",
+            "type": "int8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "addr",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IEverscale.EverscaleAddress",
+        "name": "_rewards",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "int8",
+            "name": "wid",
+            "type": "int8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "addr",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IEverscale.EverscaleAddress",
+        "name": "alien",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "int8",
+            "name": "wid",
+            "type": "int8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "addr",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IEverscale.EverscaleAddress",
+        "name": "native",
+        "type": "tuple"
+      }
+    ],
+    "name": "configure",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -1476,76 +1488,6 @@
   {
     "inputs": [
       {
-        "components": [
-          {
-            "internalType": "int8",
-            "name": "wid",
-            "type": "int8"
-          },
-          {
-            "internalType": "uint256",
-            "name": "addr",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct IEverscale.EverscaleAddress",
-        "name": "alien",
-        "type": "tuple"
-      },
-      {
-        "components": [
-          {
-            "internalType": "int8",
-            "name": "wid",
-            "type": "int8"
-          },
-          {
-            "internalType": "uint256",
-            "name": "addr",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct IEverscale.EverscaleAddress",
-        "name": "native",
-        "type": "tuple"
-      }
-    ],
-    "name": "setConfigurations",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_defaultNativeDepositFee",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_defaultNativeWithdrawFee",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_defaultAlienDepositFee",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_defaultAlienWithdrawFee",
-        "type": "uint256"
-      }
-    ],
-    "name": "setDefaultFees",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "bool",
         "name": "active",
         "type": "bool"
@@ -1565,32 +1507,6 @@
       }
     ],
     "name": "setGovernance",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_guardian",
-        "type": "address"
-      }
-    ],
-    "name": "setGuardian",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_management",
-        "type": "address"
-      }
-    ],
-    "name": "setManagement",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1699,24 +1615,22 @@
   {
     "inputs": [
       {
-        "components": [
-          {
-            "internalType": "int8",
-            "name": "wid",
-            "type": "int8"
-          },
-          {
-            "internalType": "uint256",
-            "name": "addr",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct IEverscale.EverscaleAddress",
-        "name": "_rewards",
-        "type": "tuple"
+        "internalType": "address",
+        "name": "_management",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_guardian",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_withdrawGuardian",
+        "type": "address"
       }
     ],
-    "name": "setRewards",
+    "name": "setRoles",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

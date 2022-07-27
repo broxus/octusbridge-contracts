@@ -9,32 +9,38 @@ module.exports = async ({getNamedAccounts, deployments}) => {
             from: owner,
             log: true
         },
-        'setRewards',
-        utils.defaultTonRecipient
-    );
-
-    await deployments.execute('MultiVault',
-        {
-            from: owner,
-            log: true,
-        },
-        'setConfigurations',
+        'configure',
+        100,
+        200,
+        300,
+        400,
+        utils.defaultTonRecipient,
         utils.defaultConfiguration,
         utils.defaultConfiguration
     );
 
+    // await deployments.execute('MultiVault',
+    //     {
+    //         from: owner,
+    //         log: true,
+    //     },
+    //     'setConfigurations',
+    //     utils.defaultConfiguration,
+    //     utils.defaultConfiguration
+    // );
 
-    await deployments.execute('MultiVault',
-        {
-            from: owner,
-            log: true
-        },
-        'setDefaultFees',
-        100,
-        200,
-        300,
-        400
-    );
+
+    // await deployments.execute('MultiVault',
+    //     {
+    //         from: owner,
+    //         log: true
+    //     },
+    //     'setDefaultFees',
+    //     100,
+    //     200,
+    //     300,
+    //     400
+    // );
 }
 
 

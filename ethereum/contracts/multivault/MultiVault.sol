@@ -27,7 +27,7 @@ string constant DEFAULT_NAME_PREFIX = 'Octus ';
 string constant DEFAULT_SYMBOL_PREFIX = 'oct';
 uint256 constant WITHDRAW_PERIOD_DURATION_IN_SECONDS = 60 * 60 * 24; // 24 hours
 
-string constant API_VERSION = '0.1.4';
+//string constant API_VERSION = '0.1.4';
 
 
 /// @notice Vault, based on Octus Bridge. Allows to transfer arbitrary tokens from Everscale
@@ -143,12 +143,6 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         _;
     }
 
-    modifier onlyPendingGovernance() {
-        require(msg.sender == pendingGovernance);
-
-        _;
-    }
-
     modifier onlyGovernanceOrManagement() {
         require(msg.sender == governance || msg.sender == management);
 
@@ -243,16 +237,16 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         return configurationAlien_;
     }
 
-    /// @notice Vault API version. Used to track the deployed version of this contract.
-    //  @return api_version Current API version
-    function apiVersion()
-        external
-        override
-        pure
-        returns (string memory api_version)
-    {
-        return API_VERSION;
-    }
+//    /// @notice Vault API version. Used to track the deployed version of this contract.
+//    //  @return api_version Current API version
+//    function apiVersion()
+//        external
+//        override
+//        pure
+//        returns (string memory api_version)
+//    {
+//        return API_VERSION;
+//    }
 
     /// @notice MultiVault initializer
     /// @param _bridge Bridge address
@@ -293,25 +287,33 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         tokens_[token].blacklisted = blacklisted;
     }
 
-    /// @notice Set address to receive fees.
-    /// This may be called only by `governance`
-    /// @param _rewards Rewards receiver in Everscale network
-    function setRewards(
-        EverscaleAddress memory _rewards
-    ) external override onlyGovernance {
-        rewards_ = _rewards;
-    }
+//    /// @notice Set address to receive fees.
+//    /// This may be called only by `governance`
+//    /// @param _rewards Rewards receiver in Everscale network
+//    function setRewards(
+//        EverscaleAddress memory _rewards
+//    ) external override onlyGovernance {
+//        rewards_ = _rewards;
+//    }
 
-    function setDefaultFees(
+    function configure(
         uint _defaultNativeDepositFee,
         uint _defaultNativeWithdrawFee,
         uint _defaultAlienDepositFee,
-        uint _defaultAlienWithdrawFee
+        uint _defaultAlienWithdrawFee,
+
+        EverscaleAddress memory _rewards,
+        EverscaleAddress memory alien,
+        EverscaleAddress memory native
     ) external override onlyGovernanceOrManagement {
         defaultNativeDepositFee = _defaultNativeDepositFee;
         defaultNativeWithdrawFee = _defaultNativeWithdrawFee;
         defaultAlienDepositFee = _defaultAlienDepositFee;
         defaultAlienWithdrawFee = _defaultAlienWithdrawFee;
+
+        rewards_ = _rewards;
+        configurationAlien_ = alien;
+        configurationNative_ = native;
     }
 
     /// @notice Set deposit fee for specific token.
@@ -360,16 +362,16 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         withdrawalLimits_[token].enabled = false;
     }
 
-    /// @notice Set alien configuration address.
-    /// @param alien Everscale address of the alien configuration
-    /// @param native Everscale address of the native configuration
-    function setConfigurations(
-        EverscaleAddress memory alien,
-        EverscaleAddress memory native
-    ) external override onlyGovernance {
-        configurationAlien_ = alien;
-        configurationNative_ = native;
-    }
+//    /// @notice Set alien configuration address.
+//    /// @param alien Everscale address of the alien configuration
+//    /// @param native Everscale address of the native configuration
+//    function setConfigurations(
+//        EverscaleAddress memory alien,
+//        EverscaleAddress memory native
+//    ) external override onlyGovernance {
+//        configurationAlien_ = alien;
+//        configurationNative_ = native;
+//    }
 
     /// @notice Nominate new address to use as a governance.
     /// The change does not go into effect immediately. This function sets a
@@ -383,30 +385,14 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         governance = _governance;
     }
 
-    /// @notice Changes the management address.
-    /// This may only be called by `governance`
-    /// @param _management The address to use for management.
-    function setManagement(
-        address _management
-    )
-        external
-        override
-        onlyGovernance
-    {
+    function setRoles(
+        address _management,
+        address _guardian,
+        address _withdrawGuardian
+    ) external override onlyGovernance {
         management = _management;
-    }
-
-    /// @notice Changes the address of `guardian`.
-    /// This may only be called by `governance`.
-    /// @param _guardian The new guardian address to use.
-    function setGuardian(
-        address _guardian
-    )
-        external
-        override
-        onlyGovernance
-    {
         guardian = _guardian;
+        withdrawGuardian = _withdrawGuardian;
     }
 
     /// @notice Activates or deactivates MultiVault emergency shutdown.
@@ -642,19 +628,38 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
             Fee.Withdraw
         );
 
-        IMultiVaultToken(token).mint(
-            withdrawal.recipient,
-            withdrawal.amount - fee
-        );
-
         _increaseTokenFee(token, fee);
 
-        emit Withdraw(
-            TokenType.Native,
-            payloadId,
-            token,
+        _withdraw(
             withdrawal.recipient,
             withdrawal.amount,
+            fee,
+            TokenType.Native,
+            payloadId,
+            token
+        );
+    }
+
+    function _withdraw(
+        address recipient,
+        uint amount,
+        uint fee,
+        TokenType tokenType,
+        bytes32 payloadId,
+        address token
+    ) internal {
+        if (tokenType == TokenType.Native) {
+            IMultiVaultToken(token).mint(recipient, amount - fee);
+        } else {
+            IERC20(token).safeTransfer(recipient, amount - fee);
+        }
+
+        emit Withdraw(
+            tokenType,
+            payloadId,
+            token,
+            recipient,
+            amount,
             fee
         );
     }
@@ -719,18 +724,13 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
 
         // Token balance sufficient and none of the limits are violated
         if (withdrawal.amount <= _vaultTokenBalance(withdrawal.token) && withdrawalLimitsPassed) {
-            IERC20(withdrawal.token).safeTransfer(
-                withdrawal.recipient,
-                withdrawAmount
-            );
-
-            emit Withdraw(
-                TokenType.Alien,
-                payloadId,
-                withdrawal.token,
+            _withdraw(
                 withdrawal.recipient,
                 withdrawal.amount,
-                fee
+                fee,
+                TokenType.Alien,
+                payloadId,
+                withdrawal.token
             );
 
             return;
@@ -825,7 +825,7 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         uint256 amount,
         address _token,
         Fee fee
-    ) public view returns (uint256) {
+    ) internal view returns (uint256) {
         Token memory token = tokens_[_token];
 
         uint tokenFee = fee == Fee.Deposit ? token.depositFee : token.withdrawFee;
@@ -971,8 +971,8 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
 
     function _withdrawalPeriod(
         address token,
-        uint256 timestamp)
-    internal view returns(WithdrawalPeriodParams memory) {
+        uint256 timestamp
+    ) internal view returns (WithdrawalPeriodParams memory) {
         return withdrawalPeriods_[token][_withdrawalPeriodDeriveId(timestamp)];
     }
 
@@ -1001,18 +1001,8 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
 
         if (!withdrawalLimit.enabled) return true;
 
-        return  amount < withdrawalLimit.undeclared &&
-        amount + withdrawalPeriod.total - withdrawalPeriod.considered < withdrawalLimit.daily;
-    }
-
-    function _withdrawalPeriodIncreaseConsideredByTimestamp(
-        address token,
-        uint256 timestamp,
-        uint256 amount
-    ) internal {
-        uint withdrawalPeriodId = _withdrawalPeriodDeriveId(timestamp);
-
-        withdrawalPeriods_[token][withdrawalPeriodId].considered += amount;
+        return (amount < withdrawalLimit.undeclared) &&
+            (amount + withdrawalPeriod.total - withdrawalPeriod.considered < withdrawalLimit.daily);
     }
 
     function _vaultTokenBalance(
@@ -1072,7 +1062,7 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
             )
         );
 
-        return IMultiVault.NativeWithdrawalParams({
+        return NativeWithdrawalParams({
             native: IEverscale.EverscaleAddress(native_wid, native_addr),
             meta: IMultiVault.TokenMeta(name, symbol, decimals),
             amount: amount,
@@ -1094,7 +1084,7 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
             (uint160, uint128, uint160, uint256)
         );
 
-        return IMultiVault.AlienWithdrawalParams({
+        return AlienWithdrawalParams({
             token: address(token),
             amount: uint256(amount),
             recipient: address(recipient),
@@ -1167,11 +1157,9 @@ contract MultiVault is IMultiVault, ReentrancyGuard, Initializable, ChainId {
         }
 
         // Update withdrawal period considered amount
-        _withdrawalPeriodIncreaseConsideredByTimestamp(
-            pendingWithdrawal.token,
-            pendingWithdrawal.timestamp,
-            pendingWithdrawal.amount
-        );
+        uint withdrawalPeriodId = _withdrawalPeriodDeriveId(pendingWithdrawal.timestamp);
+
+        withdrawalPeriods_[pendingWithdrawal.token][withdrawalPeriodId].considered += pendingWithdrawal.amount;
     }
 
     /**

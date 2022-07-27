@@ -73,7 +73,7 @@ interface IMultiVault is IEverscale {
     function defaultAlienDepositFee() external view returns (uint);
     function defaultAlienWithdrawFee() external view returns (uint);
 
-    function apiVersion() external view returns (string memory api_version);
+//    function apiVersion() external view returns (string memory api_version);
 
     function initialize(
         address _bridge,
@@ -102,11 +102,21 @@ interface IMultiVault is IEverscale {
         uint _withdrawFee
     ) external;
 
-    function setDefaultFees(
+//    function setDefaultFees(
+//        uint _defaultNativeDepositFee,
+//        uint _defaultNativeWithdrawFee,
+//        uint _defaultAlienDepositFee,
+//        uint _defaultAlienWithdrawFee
+//    ) external;
+
+    function configure(
         uint _defaultNativeDepositFee,
         uint _defaultNativeWithdrawFee,
         uint _defaultAlienDepositFee,
-        uint _defaultAlienWithdrawFee
+        uint _defaultAlienWithdrawFee,
+        EverscaleAddress memory _rewards,
+        EverscaleAddress memory alien,
+        EverscaleAddress memory native
     ) external;
 
     function rewards() external view returns (EverscaleAddress memory);
@@ -125,18 +135,20 @@ interface IMultiVault is IEverscale {
     function emergencyShutdown() external view returns (bool);
     function setEmergencyShutdown(bool active) external;
 
-    function setConfigurations(
-        EverscaleAddress memory alien,
-        EverscaleAddress memory native
-    ) external;
+//    function setConfigurations(
+//        EverscaleAddress memory alien,
+//        EverscaleAddress memory native
+//    ) external;
 
     function setGovernance(address _governance) external;
-    function setGuardian(address _guardian) external;
-    function setManagement(address _management) external;
-    function setRewards(EverscaleAddress memory _rewards) external;
+    function setRoles(
+        address _management,
+        address _guardian,
+        address _withdrawGuardian
+    ) external;
+//    function setRewards(EverscaleAddress memory _rewards) external;
 
     function pendingWithdrawalsPerUser(address user) external view returns (uint);
-
     function pendingWithdrawalsTotal(address token) external view returns (uint);
 
     function pendingWithdrawals(
@@ -345,12 +357,6 @@ interface IMultiVault is IEverscale {
         address recipient,
         uint256 amount,
         uint256 fee
-    );
-
-    event UpdateTokenPrefix(
-        address token,
-        string name_prefix,
-        string symbol_prefix
     );
 
     event SkimFee(

@@ -10,23 +10,6 @@ Vault, based on Octus Bridge. Allows to transfer arbitrary tokens from Everscale
 
 ## Methods
 
-### apiVersion
-
-```solidity
-function apiVersion() external pure returns (string api_version)
-```
-
-Vault API version. Used to track the deployed version of this contract.
-
-
-
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| api_version | string | undefined |
-
 ### bridge
 
 ```solidity
@@ -43,30 +26,6 @@ function bridge() external view returns (address)
 | Name | Type | Description |
 |---|---|---|
 | _0 | address | undefined |
-
-### calculateMovementFee
-
-```solidity
-function calculateMovementFee(uint256 amount, address _token, enum IMultiVault.Fee fee) external view returns (uint256)
-```
-
-Calculates fee for deposit or withdrawal.
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| amount | uint256 | Amount of tokens. |
-| _token | address | Token address. |
-| fee | enum IMultiVault.Fee | Fee type (Deposit = 0, Withdraw = 1). |
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | uint256 | undefined |
 
 ### cancelPendingWithdrawal
 
@@ -120,6 +79,28 @@ Native configuration address
 | Name | Type | Description |
 |---|---|---|
 | _0 | IEverscale.EverscaleAddress | Everscale address, used for verifying native withdrawals |
+
+### configure
+
+```solidity
+function configure(uint256 _defaultNativeDepositFee, uint256 _defaultNativeWithdrawFee, uint256 _defaultAlienDepositFee, uint256 _defaultAlienWithdrawFee, IEverscale.EverscaleAddress _rewards, IEverscale.EverscaleAddress alien, IEverscale.EverscaleAddress native) external nonpayable
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| _defaultNativeDepositFee | uint256 | undefined |
+| _defaultNativeWithdrawFee | uint256 | undefined |
+| _defaultAlienDepositFee | uint256 | undefined |
+| _defaultAlienWithdrawFee | uint256 | undefined |
+| _rewards | IEverscale.EverscaleAddress | undefined |
+| alien | IEverscale.EverscaleAddress | undefined |
+| native | IEverscale.EverscaleAddress | undefined |
 
 ### defaultAlienDepositFee
 
@@ -604,42 +585,6 @@ Save withdrawal for native token
 | payload | bytes | Withdraw payload |
 | signatures | bytes[] | Payload signatures |
 
-### setConfigurations
-
-```solidity
-function setConfigurations(IEverscale.EverscaleAddress alien, IEverscale.EverscaleAddress native) external nonpayable
-```
-
-
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| alien | IEverscale.EverscaleAddress | undefined |
-| native | IEverscale.EverscaleAddress | undefined |
-
-### setDefaultFees
-
-```solidity
-function setDefaultFees(uint256 _defaultNativeDepositFee, uint256 _defaultNativeWithdrawFee, uint256 _defaultAlienDepositFee, uint256 _defaultAlienWithdrawFee) external nonpayable
-```
-
-
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| _defaultNativeDepositFee | uint256 | undefined |
-| _defaultNativeWithdrawFee | uint256 | undefined |
-| _defaultAlienDepositFee | uint256 | undefined |
-| _defaultAlienWithdrawFee | uint256 | undefined |
-
 ### setEmergencyShutdown
 
 ```solidity
@@ -671,38 +616,6 @@ Nominate new address to use as a governance. The change does not go into effect 
 | Name | Type | Description |
 |---|---|---|
 | _governance | address | The address requested to take over Vault governance. |
-
-### setGuardian
-
-```solidity
-function setGuardian(address _guardian) external nonpayable
-```
-
-Changes the address of `guardian`. This may only be called by `governance`.
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| _guardian | address | The new guardian address to use. |
-
-### setManagement
-
-```solidity
-function setManagement(address _management) external nonpayable
-```
-
-Changes the management address. This may only be called by `governance`
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| _management | address | The address to use for management. |
 
 ### setPendingWithdrawalApprove
 
@@ -773,10 +686,10 @@ Set prefix for native token
 | name_prefix | string | Name prefix, leave empty for no-prefix |
 | symbol_prefix | string | Symbol prefix, leave empty for no-prefix |
 
-### setRewards
+### setRoles
 
 ```solidity
-function setRewards(IEverscale.EverscaleAddress _rewards) external nonpayable
+function setRoles(address _management, address _guardian, address _withdrawGuardian) external nonpayable
 ```
 
 
@@ -787,7 +700,9 @@ function setRewards(IEverscale.EverscaleAddress _rewards) external nonpayable
 
 | Name | Type | Description |
 |---|---|---|
-| _rewards | IEverscale.EverscaleAddress | undefined |
+| _management | address | undefined |
+| _guardian | address | undefined |
+| _withdrawGuardian | address | undefined |
 
 ### setTokenBlacklist
 
@@ -1463,24 +1378,6 @@ event UpdateTokenDepositFee(address token, uint256 fee)
 |---|---|---|
 | token  | address | undefined |
 | fee  | uint256 | undefined |
-
-### UpdateTokenPrefix
-
-```solidity
-event UpdateTokenPrefix(address token, string name_prefix, string symbol_prefix)
-```
-
-
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| token  | address | undefined |
-| name_prefix  | string | undefined |
-| symbol_prefix  | string | undefined |
 
 ### UpdateTokenWithdrawFee
 
