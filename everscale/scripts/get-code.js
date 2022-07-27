@@ -28,6 +28,24 @@ async function main() {
     console.log('');
     console.log(StakingEverscaleEthereumEvent.code);
     console.log('');
+
+    const StakingEverscaleSolanaEvent = await locklift.factory.getContract('StakingEverscaleSolanaEvent');
+    console.log('StakingEverscaleSolanaEvent');
+    console.log('');
+    console.log(StakingEverscaleSolanaEvent.code);
+    console.log('');
+
+    const TokenTransferEverscaleSolanaEvent = await locklift.factory.getContract('TokenTransferEverscaleSolanaEvent');
+    console.log('TokenTransferEverscaleSolanaEvent');
+    console.log('');
+    console.log(TokenTransferEverscaleSolanaEvent.code);
+    console.log('');
+
+    const TokenTransferSolanaEverscaleEvent = await locklift.factory.getContract('TokenTransferSolanaEverscaleEvent');
+    console.log('TokenTransferSolanaEverscaleEvent');
+    console.log('');
+    console.log(TokenTransferSolanaEverscaleEvent.code);
+    console.log('');
 }
 
 

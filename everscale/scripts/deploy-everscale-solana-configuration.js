@@ -38,12 +38,12 @@ const options = program.opts();
 
 const main = async () => {
   const [keyPair] = await locklift.keys.getKeyPairs();
-  
+
   // Get all contracts from the build
   const build = [...new Set(fs.readdirSync('build').map(o => o.split('.')[0]))];
-  
+
   const events = fs.readdirSync('./build/').filter(e => e.endsWith('.abi.json'));
-  
+
   const {
     eventAbiFile
   } = await prompts({
@@ -53,9 +53,9 @@ const main = async () => {
     choices: events.map(e => new Object({ title: e, value: e })),
     initial: events.indexOf(options.eventAbiFile) >= 0 ? events.indexOf(options.eventAbiFile) : 0
   });
-  
+
   const abi = JSON.parse(fs.readFileSync(`./build/${eventAbiFile}`));
-  
+
   const {
     event
   } = await prompts({
@@ -71,7 +71,9 @@ const main = async () => {
         }
       }),
   });
-  
+
+  console.log(stringToBytesArray(JSON.stringify(event)));
+
   const response = await prompts([
     {
       type: 'text',
@@ -156,12 +158,12 @@ const main = async () => {
       initial: options.initialBalance || 10,
     }
   ]);
-  
+
   const EverscaleSolanaEventConfiguration = await locklift.factory.getContract('EverscaleSolanaEventConfiguration');
   const TonEvent = await locklift.factory.getContract(response.eventContract);
-  
+
   const spinner = ora('Deploying Everscale event configuration').start();
-  
+
   const everscaleSolanaEventConfiguration = await locklift.giver.deployContract({
     contract: EverscaleSolanaEventConfiguration,
     constructorParams: {
@@ -188,9 +190,9 @@ const main = async () => {
     },
     keyPair
   }, locklift.utils.convertCrystal(response.value, 'nano'));
-  
+
   spinner.stop();
-  
+
   await logContract(everscaleSolanaEventConfiguration);
 };
 
