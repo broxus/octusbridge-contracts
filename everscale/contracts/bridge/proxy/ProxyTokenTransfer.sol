@@ -79,7 +79,7 @@ contract ProxyTokenTransfer is
     /// Can be called only by Solana-Everscale configuration
     /// @param eventData Solana-Everscale event data
     /// @param gasBackAddress Gas recipient
-    function onEventConfirmed(
+    function onSolanaEventConfirmed(
         ISolanaEverscaleEvent.SolanaEverscaleEventInitData eventData,
         address gasBackAddress
     ) external override onlySolanaConfiguration reserveMinBalance(MIN_CONTRACT_BALANCE) {
@@ -150,7 +150,7 @@ contract ProxyTokenTransfer is
     /// @param payload Cell-encoded (BurnType burnType, TvmCell burnPayload)
     function onAcceptTokensBurn(
         uint128 tokens,
-        address,
+        address walletOwner,
         address,
         address remainingGasTo,
         TvmCell payload
@@ -209,7 +209,20 @@ contract ProxyTokenTransfer is
                 }(eventVoteData);
             }
         } else {
-            remainingGasTo.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED});
+            if (isArrayContainsAddress(config.outdatedTokenRoots, msg.sender)) {
+                TvmCell empty;
+
+                ITokenRoot(config.tokenRoot).mint{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+                    tokens,
+                    walletOwner,
+                    config.settingsDeployWalletGrams,
+                    remainingGasTo,
+                    true,
+                    empty
+                );
+            } else {
+                remainingGasTo.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED});
+            }
         }
     }
 
@@ -248,27 +261,27 @@ contract ProxyTokenTransfer is
         config = _config;
     }
 
-//    function transferTokenOwnership(
-//        address target,
-//        address newOwner
-//    ) external view onlyOwner reserveMinBalance(MIN_CONTRACT_BALANCE) {
-//        mapping(address => ITransferableOwnership.CallbackParams) empty;
-//
-//        ITransferableOwnership(target).transferOwnership{
-//            value: 0,
-//            flag: MsgFlag.ALL_NOT_RESERVED
-//        }(newOwner, msg.sender, empty);
-//    }
-//
-//    function legacyTransferTokenOwnership(
-//        address target,
-//        address newOwner
-//    ) external view onlyOwner reserveMinBalance(MIN_CONTRACT_BALANCE) {
-//        ILegacyTransferOwner(target).transferOwner{
-//            value: 0,
-//            flag: MsgFlag.ALL_NOT_RESERVED
-//        }(0, newOwner);
-//    }
+    function transferTokenOwnership(
+        address target,
+        address newOwner
+    ) external view onlyOwner reserveMinBalance(MIN_CONTRACT_BALANCE) {
+        mapping(address => ITransferableOwnership.CallbackParams) empty;
+
+        ITransferableOwnership(target).transferOwnership{
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(newOwner, msg.sender, empty);
+    }
+
+    function legacyTransferTokenOwnership(
+        address target,
+        address newOwner
+    ) external view onlyOwner reserveMinBalance(MIN_CONTRACT_BALANCE) {
+        ILegacyTransferOwner(target).transferOwner{
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(0, newOwner);
+    }
 
     function isArrayContainsAddress(
         address[] array,

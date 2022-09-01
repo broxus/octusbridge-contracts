@@ -31,7 +31,7 @@ contract StakingSolanaEverscaleEvent is SolanaEverscaleBaseEvent, StakingCellEnc
     }
 
     function onConfirm() override internal {
-        ISolanaEverscaleProxy(eventInitData.configuration).onEventConfirmed{
+        ISolanaEverscaleProxy(eventInitData.configuration).onSolanaEventConfirmed{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, initializer);
     }

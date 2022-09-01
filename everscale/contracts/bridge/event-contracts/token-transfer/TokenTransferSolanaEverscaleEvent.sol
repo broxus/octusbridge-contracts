@@ -40,7 +40,7 @@ contract TokenTransferSolanaEverscaleEvent is SolanaEverscaleBaseEvent, ProxyTok
     function onConfirm() override internal {
         notifyEventStatusChanged();
 
-        ISolanaEverscaleProxy(eventInitData.configuration).onEventConfirmed{
+        ISolanaEverscaleProxy(eventInitData.configuration).onSolanaEventConfirmed{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, initializer);
     }

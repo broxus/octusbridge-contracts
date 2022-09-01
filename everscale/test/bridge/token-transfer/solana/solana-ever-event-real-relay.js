@@ -1,7 +1,6 @@
 const {
   setupBridge,
-  setupSolanaEverscaleEventConfiguration,
-  setupRelays,
+  setupSolanaEverscaleEventConfigurationReal,
   MetricManager,
   enableEventConfiguration,
   captureConnectors,
@@ -10,15 +9,15 @@ const {
   expect,
   getTokenWalletByAddress,
   getTokenRoot
-} = require('../../utils');
+} = require('../../../utils');
 const BigNumber = require("bignumber.js");
 
 
-describe('Test solana everscale event confirm', async function() {
+describe('Test solana everscale event real relay', async function() {
   this.timeout(10000000);
-  
+
   let bridge, bridgeOwner, staking, cellEncoder;
-  let solanaEverscaleEventConfiguration, proxy, initializer;
+  let solanaEverscaleEventConfiguration, everscaleSolanaEventConfiguration, stakingEverscaleSolanaEventConfiguration, proxy, initializer;
   let relays;
   let metricManager;
   let initializerTokenWallet;
@@ -30,9 +29,9 @@ describe('Test solana everscale event confirm', async function() {
     await metricManager.checkPoint(currentName);
 
     if (lastCheckPoint === undefined) return;
-    
+
     const difference = await metricManager.getDifference(lastCheckPoint, currentName);
-    
+
     for (const [contract, balanceDiff] of Object.entries(difference)) {
       if (balanceDiff !== 0) {
         logger.log(`[Balance change] ${contract} ${locklift.utils.convertCrystal(balanceDiff, 'ton').toFixed(9)} Everscale`);
@@ -41,11 +40,13 @@ describe('Test solana everscale event confirm', async function() {
   });
 
   it('Setup bridge', async () => {
-    relays = await setupRelays();
-    
+    relays = [{
+      "public": "16cc3e34e53f6618bd7e054c124542983004c0021bb01c131cabdb2c933b1ece"
+    }];
+
     [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
-  
-    [solanaEverscaleEventConfiguration, proxy, initializer] = await setupSolanaEverscaleEventConfiguration(
+
+    [solanaEverscaleEventConfiguration, everscaleSolanaEventConfiguration, proxy, initializer] = await setupSolanaEverscaleEventConfigurationReal(
       bridgeOwner,
       staking
     );
@@ -58,9 +59,9 @@ describe('Test solana everscale event confirm', async function() {
       solanaEverscaleEventConfiguration, proxy, initializer
     );
   });
-  
-  describe('Enable event configuration', async () => {
-    it('Add event configuration to bridge', async () => {
+
+  describe('Enable events configuration', async () => {
+    it('Add sol event configuration to bridge', async () => {
       await enableEventConfiguration(
         bridgeOwner,
         bridge,
@@ -68,30 +69,57 @@ describe('Test solana everscale event confirm', async function() {
       );
     });
 
-    it('Check configuration enabled', async () => {
+    it('Check sol configuration enabled', async () => {
       const configurations = await captureConnectors(bridge);
 
       expect(configurations['0'])
         .to.be.not.equal(undefined, 'Configuration not found');
-      
+
       expect(configurations['0']._eventConfiguration)
         .to.be.equal(solanaEverscaleEventConfiguration.address, 'Wrong configuration address');
-      
+
       expect(configurations['0']._enabled)
         .to.be.equal(true, 'Wrong connector status');
     });
+    it('Add ever event configuration to bridge', async () => {
+      await enableEventConfiguration(
+        bridgeOwner,
+        bridge,
+        everscaleSolanaEventConfiguration,
+      );
+    });
+
+    it('Check ever configuration enabled', async () => {
+      const configurations = await captureConnectors(bridge);
+
+      expect(configurations['1'])
+        .to.be.not.equal(undefined, 'Configuration not found');
+
+      expect(configurations['1']._eventConfiguration)
+        .to.be.equal(everscaleSolanaEventConfiguration.address, 'Wrong configuration address');
+
+      expect(configurations['1']._enabled)
+        .to.be.equal(true, 'Wrong connector status');
+    });
+  // it('Add stacking event configuration to bridge', async () => {
+  //     await enableEventConfiguration(
+  //       bridgeOwner,
+  //       bridge,
+  //       stakingEverscaleSolanaEventConfiguration,
+  //     );
+  //   });
   });
-  
-  let eventContract, eventVoteData, eventDataStructure;
-  
+
+let eventContract, eventVoteData, eventDataStructure;
+
   describe('Initialize event', async () => {
 
     it('Setup event data', async () => {
 
       eventDataStructure = {
-        sender_addr: new BigNumber('42383474428106489994084969139012277140818210945614381322072008626484785752705').toFixed(),
+        sender_addr: new BigNumber('98776471968569566109529530756793112178692127562903192221493626843708983308791').toFixed(),
         tokens: 100,
-        receiver_addr: initializer.address
+        receiver_addr: '0:99f0fb098badc6ff5b974cb56b55e661f4a83dd4170a9b2be97766252e0a70e3'
       };
 
       const eventData = await cellEncoder.call({
@@ -100,7 +128,7 @@ describe('Test solana everscale event confirm', async function() {
       });
 
       eventVoteData = {
-        accountSeed: 111,
+        accountSeed: 111234567,
         slot: 0,
         blockTime: 0,
         txSignature: '',
@@ -187,11 +215,11 @@ describe('Test solana everscale event confirm', async function() {
 
     it('Check event round number', async () => {
       const roundNumber = await eventContract.call({ method: 'round_number' });
-      
+
       expect(roundNumber)
         .to.be.bignumber.equal(0, 'Wrong round number');
     });
-    
+
     it('Check encoded event data', async () => {
       const data = await eventContract.call({ method: 'getDecodedData' });
 
@@ -203,52 +231,4 @@ describe('Test solana everscale event confirm', async function() {
     });
   });
 
-  describe('Confirm event', async () => {
-    it('Confirm event enough times', async () => {
-      const requiredVotes = await eventContract.call({
-        method: 'requiredVotes',
-      });
-
-      const confirmations = [];
-      for (const [relayId, relay] of Object.entries(relays.slice(0, requiredVotes))) {
-        logger.log(`Confirm #${relayId} from ${relay.public}`);
-
-        confirmations.push(eventContract.run({
-          method: 'confirm',
-          params: {
-            voteReceiver: eventContract.address
-          },
-          keyPair: relay
-        }));
-      }
-      await Promise.all(confirmations);
-    });
-
-    it('Check event confirmed', async () => {
-      const details = await eventContract.call({
-        method: 'getDetails'
-      });
-
-      const requiredVotes = await eventContract.call({
-        method: 'requiredVotes',
-      });
-
-      // expect(details.balance)
-      //   .to.be.bignumber.equal(0, 'Wrong balance');
-
-      expect(details._status)
-        .to.be.bignumber.equal(2, 'Wrong status');
-
-      expect(details._confirms)
-        .to.have.lengthOf(requiredVotes, 'Wrong amount of relays confirmations');
-
-      expect(details._rejects)
-        .to.have.lengthOf(0, 'Wrong amount of relays rejects');
-    });
-
-    it('Check event proxy minted tokens', async () => {
-      expect(await initializerTokenWallet.call({method: 'balance'}))
-        .to.be.bignumber.equal(eventDataStructure.tokens, 'Wrong initializerTokenWallet balance');
-    });
-  });
 });

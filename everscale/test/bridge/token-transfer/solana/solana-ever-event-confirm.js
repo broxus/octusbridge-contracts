@@ -1,6 +1,6 @@
 const {
   setupBridge,
-  setupEthereumEverscaleEventConfiguration,
+  setupSolanaEverscaleEventConfiguration,
   setupRelays,
   MetricManager,
   enableEventConfiguration,
@@ -10,14 +10,15 @@ const {
   expect,
   getTokenWalletByAddress,
   getTokenRoot
-} = require('../../utils');
+} = require('../../../utils');
+const BigNumber = require("bignumber.js");
 
 
-describe('Test ethereum everscale event confirm', async function() {
+describe('Test solana everscale event confirm', async function() {
   this.timeout(10000000);
-  
+
   let bridge, bridgeOwner, staking, cellEncoder;
-  let ethereumEverscaleEventConfiguration, proxy, initializer;
+  let solanaEverscaleEventConfiguration, proxy, initializer;
   let relays;
   let metricManager;
   let initializerTokenWallet;
@@ -29,9 +30,9 @@ describe('Test ethereum everscale event confirm', async function() {
     await metricManager.checkPoint(currentName);
 
     if (lastCheckPoint === undefined) return;
-    
+
     const difference = await metricManager.getDifference(lastCheckPoint, currentName);
-    
+
     for (const [contract, balanceDiff] of Object.entries(difference)) {
       if (balanceDiff !== 0) {
         logger.log(`[Balance change] ${contract} ${locklift.utils.convertCrystal(balanceDiff, 'ton').toFixed(9)} Everscale`);
@@ -41,13 +42,12 @@ describe('Test ethereum everscale event confirm', async function() {
 
   it('Setup bridge', async () => {
     relays = await setupRelays();
-    
+
     [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
-  
-    [ethereumEverscaleEventConfiguration, proxy, initializer] = await setupEthereumEverscaleEventConfiguration(
+
+    [solanaEverscaleEventConfiguration, proxy, initializer] = await setupSolanaEverscaleEventConfiguration(
       bridgeOwner,
-      staking,
-      cellEncoder,
+      staking
     );
 
     initializerTokenWallet = await getTokenWalletByAddress(initializer.address, await proxy.call({method: 'getTokenRoot'}));
@@ -55,16 +55,16 @@ describe('Test ethereum everscale event confirm', async function() {
 
     metricManager = new MetricManager(
       bridge, bridgeOwner, staking,
-      ethereumEverscaleEventConfiguration, proxy, initializer
+      solanaEverscaleEventConfiguration, proxy, initializer
     );
   });
-  
+
   describe('Enable event configuration', async () => {
     it('Add event configuration to bridge', async () => {
       await enableEventConfiguration(
         bridgeOwner,
         bridge,
-        ethereumEverscaleEventConfiguration,
+        solanaEverscaleEventConfiguration,
       );
     });
 
@@ -73,44 +73,44 @@ describe('Test ethereum everscale event confirm', async function() {
 
       expect(configurations['0'])
         .to.be.not.equal(undefined, 'Configuration not found');
-      
+
       expect(configurations['0']._eventConfiguration)
-        .to.be.equal(ethereumEverscaleEventConfiguration.address, 'Wrong configuration address');
-      
+        .to.be.equal(solanaEverscaleEventConfiguration.address, 'Wrong configuration address');
+
       expect(configurations['0']._enabled)
         .to.be.equal(true, 'Wrong connector status');
     });
   });
-  
+
   let eventContract, eventVoteData, eventDataStructure;
-  
+
   describe('Initialize event', async () => {
-    eventDataStructure = {
-      tokens: 100,
-      wid: 0,
-      owner_addr: 0,
-    };
 
     it('Setup event data', async () => {
-      eventDataStructure.owner_addr = initializer.address.replace('0:', '0x');
+
+      eventDataStructure = {
+        sender_addr: new BigNumber('42383474428106489994084969139012277140818210945614381322072008626484785752705').toFixed(),
+        tokens: 100,
+        receiver_addr: initializer.address
+      };
 
       const eventData = await cellEncoder.call({
-        method: 'encodeEthereumEverscaleEventData',
+        method: 'encodeSolanaEverscaleEventData',
         params: eventDataStructure
       });
 
       eventVoteData = {
-        eventTransaction: 111,
-        eventIndex: 222,
+        accountSeed: 111,
+        slot: 0,
+        blockTime: 0,
+        txSignature: '',
         eventData,
-        eventBlockNumber: 333,
-        eventBlock: 444,
       };
     });
 
     it('Initialize event', async () => {
       const tx = await initializer.runTarget({
-        contract: ethereumEverscaleEventConfiguration,
+        contract: solanaEverscaleEventConfiguration,
         method: 'deployEvent',
         params: {
           eventVoteData,
@@ -120,7 +120,7 @@ describe('Test ethereum everscale event confirm', async function() {
 
       logger.log(`Event initialization tx: ${tx.id}`);
 
-      const expectedEventContract = await ethereumEverscaleEventConfiguration.call({
+      const expectedEventContract = await solanaEverscaleEventConfiguration.call({
         method: 'deriveEventAddress',
         params: {
           eventVoteData,
@@ -129,7 +129,7 @@ describe('Test ethereum everscale event confirm', async function() {
 
       logger.log(`Expected event address: ${expectedEventContract}`);
 
-      eventContract = await locklift.factory.getContract('TokenTransferEthereumEverscaleEvent');
+      eventContract = await locklift.factory.getContract('TokenTransferSolanaEverscaleEvent');
       eventContract.setAddress(expectedEventContract);
       eventContract.afterRun = afterRun;
 
@@ -141,23 +141,14 @@ describe('Test ethereum everscale event confirm', async function() {
         method: 'getDetails'
       });
 
-      expect(details._eventInitData.voteData.eventTransaction)
-        .to.be.bignumber.equal(eventVoteData.eventTransaction, 'Wrong event transaction');
-
-      expect(details._eventInitData.voteData.eventIndex)
-        .to.be.bignumber.equal(eventVoteData.eventIndex, 'Wrong event index');
+      expect(details._eventInitData.voteData.accountSeed)
+        .to.be.bignumber.equal(eventVoteData.accountSeed, 'Wrong accountSeed');
 
       expect(details._eventInitData.voteData.eventData)
         .to.be.equal(eventVoteData.eventData, 'Wrong event data');
 
-      expect(details._eventInitData.voteData.eventBlockNumber)
-        .to.be.bignumber.equal(eventVoteData.eventBlockNumber, 'Wrong event block number');
-
-      expect(details._eventInitData.voteData.eventBlock)
-        .to.be.bignumber.equal(eventVoteData.eventBlock, 'Wrong event block');
-
       expect(details._eventInitData.configuration)
-        .to.be.equal(ethereumEverscaleEventConfiguration.address, 'Wrong event configuration');
+        .to.be.equal(solanaEverscaleEventConfiguration.address, 'Wrong event configuration');
 
       expect(details._eventInitData.staking)
         .to.be.equal(staking.address, 'Wrong staking');
@@ -196,22 +187,19 @@ describe('Test ethereum everscale event confirm', async function() {
 
     it('Check event round number', async () => {
       const roundNumber = await eventContract.call({ method: 'round_number' });
-      
+
       expect(roundNumber)
         .to.be.bignumber.equal(0, 'Wrong round number');
     });
-    
+
     it('Check encoded event data', async () => {
       const data = await eventContract.call({ method: 'getDecodedData' });
 
       expect(data.tokens)
         .to.be.bignumber.equal(eventDataStructure.tokens, 'Wrong amount of tokens');
 
-      expect(data.wid)
-        .to.be.bignumber.equal(eventDataStructure.wid, 'Wrong wid');
-
-      expect(data.owner_addr)
-        .to.be.bignumber.equal(eventDataStructure.owner_addr, 'Wrong owner address');
+      expect(data.receiver_addr)
+        .to.be.equal(eventDataStructure.receiver_addr, 'Wrong receiver address');
     });
   });
 
@@ -261,31 +249,6 @@ describe('Test ethereum everscale event confirm', async function() {
     it('Check event proxy minted tokens', async () => {
       expect(await initializerTokenWallet.call({method: 'balance'}))
         .to.be.bignumber.equal(eventDataStructure.tokens, 'Wrong initializerTokenWallet balance');
-    });
-  });
-
-  describe('Test Proxy', async () => {
-    it('Test Proxy token transfer ownership', async () => {
-      const token = await getTokenRoot(await proxy.call({
-        method: 'getTokenRoot'
-      }));
-
-      expect(await token.call({
-        method: 'rootOwner'
-      })).to.be.equal(proxy.address, 'Wrong initial token owner');
-
-      await bridgeOwner.runTarget({
-        contract: proxy,
-        method: 'transferTokenOwnership',
-        params: {
-          target: token.address,
-          newOwner: bridgeOwner.address
-        },
-        value: locklift.utils.convertCrystal(1, 'nano')
-      });
-
-      expect(await token.call({method: 'rootOwner'}))
-        .to.be.equal(bridgeOwner.address, 'Wrong token owner after transfer');
     });
   });
 });

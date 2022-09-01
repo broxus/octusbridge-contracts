@@ -5,13 +5,14 @@ interface IProxyTokenTransfer {
     enum BurnType { EVM, Solana }
 
     struct Configuration {
-        address everscaleSolanaConfiguration;
         address everscaleEthereumConfiguration;
-
         address[] ethereumEverscaleConfigurations;
+
+        address everscaleSolanaConfiguration;
         address solanaEverscaleConfiguration;
 
         address tokenRoot;
+        address[] outdatedTokenRoots;
 
         uint128 settingsDeployWalletGrams;
     }

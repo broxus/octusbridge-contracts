@@ -1,6 +1,6 @@
 const {
   logger,
-} = require('../../utils');
+} = require('../../../utils');
 
 
 describe('Cell encoder', async function() {

@@ -169,7 +169,7 @@ contract SolanaEverscaleEventConfiguration is ISolanaEverscaleEventConfiguration
     /// If it's correct, then sends the callback to the proxy with the same signature.
     /// @param eventInitData Solana event data
     /// @param gasBackAddress Gas back address
-    function onEventConfirmed(
+    function onSolanaEventConfirmed(
         ISolanaEverscaleEvent.SolanaEverscaleEventInitData eventInitData,
         address gasBackAddress
     ) external override reserveMinBalance(MIN_CONTRACT_BALANCE) {
@@ -185,7 +185,7 @@ contract SolanaEverscaleEventConfiguration is ISolanaEverscaleEventConfiguration
             ErrorCodes.SENDER_NOT_EVENT_CONTRACT
         );
 
-        ISolanaEverscaleProxy(networkConfiguration.proxy).onEventConfirmed{
+        ISolanaEverscaleProxy(networkConfiguration.proxy).onSolanaEventConfirmed{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, gasBackAddress);
 
