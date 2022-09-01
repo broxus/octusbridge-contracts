@@ -6,6 +6,7 @@ pragma AbiHeader pubkey;
 import "./../../utils/ErrorCodes.sol";
 import "./../../utils/cell-encoder/ProxyTokenTransferCellEncoder.sol";
 import "./../../utils/TransferUtils.sol";
+import "./../libraries/BurnType.sol";
 
 import "./../interfaces/ISolanaEverscaleProxy.sol";
 import "./../interfaces/IEthereumEverscaleProxy.sol";
@@ -158,7 +159,7 @@ contract ProxyTokenTransfer is
         if (config.tokenRoot == msg.sender) {
             burnedCount += tokens;
 
-            (BurnType burnType, TvmCell burnPayload) = abi.decode(payload, (BurnType, TvmCell));
+            (uint8 burnType, TvmCell burnPayload) = abi.decode(payload, (uint8, TvmCell));
 
             if (burnType == BurnType.Solana) {
                 (

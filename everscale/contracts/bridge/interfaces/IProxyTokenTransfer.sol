@@ -2,7 +2,7 @@ pragma ton-solidity >= 0.39.0;
 
 
 interface IProxyTokenTransfer {
-    enum BurnType { EVM, Solana }
+//    enum BurnType { EVM, Solana }
 
     struct Configuration {
         address everscaleEthereumConfiguration;

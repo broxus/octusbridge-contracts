@@ -1,7 +1,8 @@
 pragma ton-solidity >= 0.39.0;
 
 import "./../../bridge/interfaces/event-contracts/IEverscaleSolanaEvent.sol";
-import "./../../bridge/interfaces/IProxyTokenTransfer.sol";
+//import "./../../bridge/interfaces/IProxyTokenTransfer.sol";
+import "./../../bridge/libraries/BurnType.sol";
 
 contract TokenCellEncoder {
     function encodeEthereumBurnPayload(
@@ -12,7 +13,7 @@ contract TokenCellEncoder {
     ) {
         TvmCell burnPayload = abi.encode(ethereumAddress, chainId);
 
-        data = abi.encode(IProxyTokenTransfer.BurnType.EVM, burnPayload);
+        data = abi.encode(BurnType.EVM, burnPayload);
     }
 
     function decodeEthereumBurnPayload(
@@ -32,7 +33,7 @@ contract TokenCellEncoder {
     ) {
         TvmCell burnPayload = abi.encode(solanaOwnerAddress, executeAccounts);
 
-        data = abi.encode(IProxyTokenTransfer.BurnType.Solana, burnPayload);
+        data = abi.encode(BurnType.Solana, burnPayload);
     }
 
     function decodeSolanaBurnPayload(
