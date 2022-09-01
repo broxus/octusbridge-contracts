@@ -91,14 +91,14 @@ async function main() {
 
     // Proxy token transfer factory
     const ProxyTokenTransferFactory = await locklift.factory.getContract('ProxyTokenTransferFactory');
-    const EthereumProxyTokenTransfer = await locklift.factory.getContract('EthereumProxyTokenTransfer');
+    const ProxyTokenTransfer = await locklift.factory.getContract('ProxyTokenTransfer');
 
-    spinner.start('Deploying ethereum proxy token transfer factory');
+    spinner.start('Deploying proxy token transfer factory');
 
-    const ethereumProxyTokenTransferFactory = await locklift.giver.deployContract({
+    const proxyTokenTransferFactory = await locklift.giver.deployContract({
         contract: ProxyTokenTransferFactory,
         constructorParams: {
-            _proxyCode: EthereumProxyTokenTransfer.code
+            _proxyCode: ProxyTokenTransfer.code
         },
         initParams: {
             _randomNonce,
@@ -107,26 +107,26 @@ async function main() {
 
     spinner.stop();
 
-    await logContract(ethereumProxyTokenTransferFactory);
+    await logContract(proxyTokenTransferFactory);
 
-    // Proxy token transfer factory
-    const SolanaProxyTokenTransfer = await locklift.factory.getContract('SolanaProxyTokenTransfer');
-
-    spinner.start('Deploying solana proxy token transfer factory');
-
-    const solanaProxyTokenTransferFactory = await locklift.giver.deployContract({
-        contract: ProxyTokenTransferFactory,
-        constructorParams: {
-            _proxyCode: SolanaProxyTokenTransfer.code
-        },
-        initParams: {
-            _randomNonce,
-        },
-    });
-
-    spinner.stop();
-
-    await logContract(solanaProxyTokenTransferFactory);
+    // // Proxy token transfer factory
+    // const SolanaProxyTokenTransfer = await locklift.factory.getContract('ProxyTokenTransfer');
+    //
+    // spinner.start('Deploying solana proxy token transfer factory');
+    //
+    // const solanaProxyTokenTransferFactory = await locklift.giver.deployContract({
+    //     contract: ProxyTokenTransferFactory,
+    //     constructorParams: {
+    //         _proxyCode: SolanaProxyTokenTransfer.code
+    //     },
+    //     initParams: {
+    //         _randomNonce,
+    //     },
+    // });
+    //
+    // spinner.stop();
+    //
+    // await logContract(solanaProxyTokenTransferFactory);
 }
 
 
