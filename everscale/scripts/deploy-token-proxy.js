@@ -10,7 +10,7 @@ const ora = require('ora');
 
 const main = async () => {
   const [keyPair] = await locklift.keys.getKeyPairs();
-  
+
   const response = await prompts([
     {
       type: 'text',
@@ -25,22 +25,22 @@ const main = async () => {
       initial: 10
     }
   ]);
-  
-  const SolanaProxyTokenTransfer = await locklift.factory.getContract('SolanaProxyTokenTransfer');
-  
-  const spinner = ora('Deploying solana token transfer proxy').start();
-  
+
+  const ProxyTokenTransfer = await locklift.factory.getContract('ProxyTokenTransfer');
+
+  const spinner = ora('Deploying token transfer proxy').start();
+
   const proxy = await locklift.giver.deployContract({
-    contract: SolanaProxyTokenTransfer,
+    contract: ProxyTokenTransfer,
     constructorParams: {
       owner_: response.owner,
     },
     initParams: {},
     keyPair
   }, locklift.utils.convertCrystal(response.value, 'nano'));
-  
+
   spinner.stop();
-  
+
   await logContract(proxy);
 };
 
