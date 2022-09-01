@@ -54,7 +54,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
     function forceUpgradeUserData(
         address user,
         address send_gas_to
-    ) external view onlyAdmin {
+    ) external onlyAdmin {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 0);
 
@@ -78,7 +78,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
     function upgradeElection(
         uint32 round_num,
         address send_gas_to
-    ) external view onlyAdmin {
+    ) external onlyAdmin {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 0);
 
@@ -91,7 +91,7 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
     function upgradeRelayRound(
         uint32 round_num,
         address send_gas_to
-    ) external view onlyAdmin {
+    ) external onlyAdmin {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 0);
 

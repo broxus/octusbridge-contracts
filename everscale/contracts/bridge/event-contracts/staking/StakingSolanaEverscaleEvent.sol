@@ -50,6 +50,6 @@ contract StakingSolanaEverscaleEvent is SolanaEverscaleBaseEvent, StakingCellEnc
 
         ever_staker_addr = address.makeAddrStd(wk_id, ever_addr_body);
 
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} (sol_addr, wk_id, ever_addr_body, ever_staker_addr);
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} (sol_addr, wk_id, ever_addr_body, ever_staker_addr);
     }
 }

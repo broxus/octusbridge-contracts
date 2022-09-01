@@ -1,15 +1,15 @@
 module.exports = {
   compiler: {
-    path: '/usr/local/bin/solc-bbbbeca6',
+    path: '/usr/local/bin/solc-8ef1c39',
   },
   linker: {
-    path: '/usr/local/bin/tvm_linker-80e31a5',
+    path: '/usr/local/bin/tvm_linker-2a896430',
   },
   networks: {
     local: {
       ton_client: {
         network: {
-          server_address: 'http://localhost:5000',
+          server_address: 'http://localhost',
         },
       },
       giver: {

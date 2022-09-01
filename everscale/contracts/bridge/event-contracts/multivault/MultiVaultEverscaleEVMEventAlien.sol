@@ -126,7 +126,7 @@ contract MultiVaultEverscaleEVMEventAlien is EverscaleEthereumBaseEvent, IMultiV
         uint256 base_chainId_,
         uint160 base_token_
     ) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS}(
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(
             proxy,
             token,
             remainingGasTo,

@@ -3,7 +3,7 @@ pragma ton-solidity >= 0.39.0;
 
 import './../../utils/TransferUtils.sol';
 import '@broxus/contracts/contracts/utils/RandomNonce.sol';
-import "./../proxy/EthereumProxyTokenTransfer.sol";
+import "./../proxy/ProxyTokenTransfer.sol";
 
 
 contract ProxyTokenTransferFactory is TransferUtils, RandomNonce {
@@ -17,7 +17,7 @@ contract ProxyTokenTransferFactory is TransferUtils, RandomNonce {
     }
 
     function deploy(address _owner, uint _randomNonce) external reserveMinBalance(MIN_CONTRACT_BALANCE) {
-        new EthereumProxyTokenTransfer{
+        new ProxyTokenTransfer{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED,
             code: proxyCode,
@@ -32,7 +32,7 @@ contract ProxyTokenTransferFactory is TransferUtils, RandomNonce {
         uint _randomNonce
     ) external view returns(address) {
         TvmCell stateInit = tvm.buildStateInit({
-            contr: EthereumProxyTokenTransfer,
+            contr: ProxyTokenTransfer,
             varInit: {
                 _randomNonce: _randomNonce
             },

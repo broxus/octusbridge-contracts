@@ -95,7 +95,7 @@ contract MultiVaultSolanaEverscaleEventNative is SolanaEverscaleBaseEvent, IMult
         address proxy_,
         address tokenWallet_
     ) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS}(
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(
             token,
             amount,
             recipient,

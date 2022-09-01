@@ -54,7 +54,7 @@ contract DaoEthereumActionEvent is EverscaleEthereumBaseEvent, DaoCellEncoder {
 
         gasBackAddress = address.makeAddrStd(gasBackAddressWid, gasBackAddressValue);
 
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} (gasBackAddress, _chainId, _actions);
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} (gasBackAddress, _chainId, _actions);
     }
 
     function getGasBackAddress() private view returns(address) {

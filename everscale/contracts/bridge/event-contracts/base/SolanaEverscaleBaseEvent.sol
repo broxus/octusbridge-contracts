@@ -31,7 +31,7 @@ contract SolanaEverscaleBaseEvent is BaseEvent, ISolanaEverscaleEvent {
     }
 
     function getEventInitData() public view responsible returns (SolanaEverscaleEventInitData) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} eventInitData;
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} eventInitData;
     }
 
     function getStakingAddress() override internal view returns (address) {
@@ -111,7 +111,7 @@ contract SolanaEverscaleBaseEvent is BaseEvent, ISolanaEverscaleEvent {
         TvmCell _meta,
         uint32 _requiredVotes
     ) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} (
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} (
             eventInitData,
             status,
             getVoters(Vote.Confirm),

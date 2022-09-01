@@ -50,6 +50,6 @@ contract StakingEthereumEverscaleEvent is EthereumEverscaleBaseEvent, StakingCel
 
         ton_staker_addr = address.makeAddrStd(wk_id, ton_addr_body);
 
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} (eth_addr, wk_id, ton_addr_body, ton_staker_addr);
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} (eth_addr, wk_id, ton_addr_body, ton_staker_addr);
     }
 }

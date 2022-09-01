@@ -121,14 +121,14 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils{
             }
         }
 
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} voters;
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} voters;
     }
 
     function getVote(uint256 voter) public view responsible returns(optional(Vote) vote) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} votes.fetch(voter);
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} votes.fetch(voter);
     }
 
     function getApiVersion() external pure responsible returns(uint32) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} 2;
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} 2;
     }
 }

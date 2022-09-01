@@ -80,7 +80,7 @@ contract TokenTransferEthereumEverscaleEvent is EthereumEverscaleBaseEvent, Prox
 
         owner_address = address.makeAddrStd(wid, owner_addr);
 
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} (
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} (
             tokens,
             wid,
             owner_addr,

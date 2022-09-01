@@ -36,6 +36,6 @@ contract StakingEverscaleEthereumEvent is EverscaleEthereumBaseEvent, StakingCel
     function getDecodedData() public view responsible returns (uint128 round_num, uint160[] eth_keys, uint32 round_end) {
         (round_num, eth_keys, round_end) = decodeEverscaleEthereumStakingEventData(eventInitData.voteData.eventData);
 
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} (round_num, eth_keys, round_end);
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} (round_num, eth_keys, round_end);
     }
 }

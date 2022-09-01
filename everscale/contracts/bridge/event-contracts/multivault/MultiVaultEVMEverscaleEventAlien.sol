@@ -125,7 +125,7 @@ contract MultiVaultEVMEverscaleEventAlien is EthereumEverscaleBaseEvent, IMultiV
         address proxy_,
         address token_
     ) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS}(
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(
             base_chainId,
             base_token,
             name,

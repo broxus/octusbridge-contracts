@@ -39,7 +39,7 @@ contract EverscaleEthereumBaseEvent is BaseEvent, IEverscaleEthereumEvent {
     }
 
     function getEventInitData() public view responsible returns (EverscaleEthereumEventInitData) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} eventInitData;
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} eventInitData;
     }
 
     function getStakingAddress() override internal view returns (address) {
@@ -138,7 +138,7 @@ contract EverscaleEthereumBaseEvent is BaseEvent, IEverscaleEthereumEvent {
             _signatures.push(signatures[voter]);
         }
 
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} (
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} (
             eventInitData,
             status,
             _confirms,

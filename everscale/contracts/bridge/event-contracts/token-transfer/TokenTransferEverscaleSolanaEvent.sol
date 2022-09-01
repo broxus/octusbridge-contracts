@@ -75,7 +75,7 @@ contract TokenTransferEverscaleSolanaEvent is EverscaleSolanaBaseEvent, ProxyTok
             solanaOwnerAddress
         ) = decodeEverscaleSolanaEventData(eventInitData.voteData.eventData);
 
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} (
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} (
             senderAddress,
             tokens,
             solanaOwnerAddress

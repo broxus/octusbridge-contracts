@@ -142,7 +142,7 @@ contract EverscaleSolanaEventConfiguration is IEverscaleSolanaEventConfiguration
             code: basicConfiguration.eventCode
         });
 
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} address(tvm.hash(stateInit));
     }
 
     /*
@@ -155,7 +155,7 @@ contract EverscaleSolanaEventConfiguration is IEverscaleSolanaEventConfiguration
         EverscaleSolanaEventConfiguration _networkConfiguration,
         TvmCell _meta
     ) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS}(
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(
             basicConfiguration,
             networkConfiguration,
             meta
@@ -168,6 +168,6 @@ contract EverscaleSolanaEventConfiguration is IEverscaleSolanaEventConfiguration
         @return _type Configuration type - Solana or Everscale
     */
     function getType() override public pure responsible returns(EventType _type) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} EventType.EverscaleSolana;
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} EventType.EverscaleSolana;
     }
 }

@@ -144,7 +144,7 @@ contract MultiVaultEverscaleSolanaEventNative is EverscaleSolanaBaseEvent, IMult
         string symbol_,
         uint8 decimals_
     ) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS}(
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(
             proxy,
             tokenWallet,
             token,

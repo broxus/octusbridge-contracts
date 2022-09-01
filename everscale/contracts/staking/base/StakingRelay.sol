@@ -353,7 +353,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
         emit RelayRoundInitialized(round_num, round_start_time, round_end_time, msg.sender, relays_count, duplicate);
     }
 
-    function deployElection(uint32 round_num) private returns (address) {
+    function deployElection(uint32 round_num) private view returns (address) {
         require(round_num > round_details.currentRelayRound, ErrorCodes.INVALID_ELECTION_ROUND);
 
         TvmBuilder constructor_params;
@@ -375,7 +375,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
         address election_addr,
         address prev_relay_round_addr,
         uint16 msg_flag
-    ) private returns (address) {
+    ) private view returns (address) {
         TvmBuilder constructor_params;
         constructor_params.store(code_data.relay_round_version);
         constructor_params.store(code_data.relay_round_version);

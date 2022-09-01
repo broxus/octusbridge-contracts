@@ -144,7 +144,7 @@ contract EverscaleEthereumEventConfiguration is IEverscaleEthereumEventConfigura
             code: basicConfiguration.eventCode
         });
 
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} address(tvm.hash(stateInit));
     }
 
     /*
@@ -157,7 +157,7 @@ contract EverscaleEthereumEventConfiguration is IEverscaleEthereumEventConfigura
         EverscaleEthereumEventConfiguration _networkConfiguration,
         TvmCell _meta
     ) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS}(
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(
             basicConfiguration,
             networkConfiguration,
             meta
@@ -170,6 +170,6 @@ contract EverscaleEthereumEventConfiguration is IEverscaleEthereumEventConfigura
         @return _type Configuration type - Ethereum or Everscale
     */
     function getType() override public pure responsible returns(EventType _type) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS} EventType.EverscaleEthereum;
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} EventType.EverscaleEthereum;
     }
 }
