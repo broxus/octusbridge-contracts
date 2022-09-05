@@ -247,7 +247,7 @@
 			"name": "WithdrawSolana",
 			"inputs": [
 				{"name":"addr","type":"address"},
-				{"name":"tokens","type":"uint64"},
+				{"name":"tokens","type":"uint128"},
 				{"name":"solana_addr","type":"uint256"}
 			],
 			"outputs": [
