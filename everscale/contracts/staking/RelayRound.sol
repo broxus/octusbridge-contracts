@@ -196,6 +196,7 @@ contract RelayRound is IRelayRound {
         root.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
+
     // should be called root after +2 rounds!
     function destroy() external override onlyRoot {
         // small safety check
@@ -205,33 +206,45 @@ contract RelayRound is IRelayRound {
     }
 
     function onCodeUpgrade(TvmCell upgrade_data) private {
-        tvm.resetStorage();
-        tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 0);
-
         TvmSlice s = upgrade_data.toSlice();
-        (address root_, , address send_gas_to) = s.decode(address, uint8, address);
-        root = root_;
+        (address _root, , address send_gas_to) = s.decode(address, uint8, address);
 
-        platform_code = s.loadRef();
+        TvmCell _platform_code = s.loadRef();
 
         TvmSlice initialData = s.loadRefAsSlice();
-        round_num = initialData.decode(uint32);
+        uint32 _round_num = initialData.decode(uint32);
 
         TvmSlice params = s.loadRefAsSlice();
-        (current_version, ) = params.decode(uint32, uint32);
+        (uint32 _current_version, uint32 _prev_version) = params.decode(uint32, uint32);
+        // DEPLOY
+        if (_current_version == _prev_version) {
+            tvm.resetStorage();
+            tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 0);
 
-        start_time = params.decode(uint32);
-        end_time = params.decode(uint32);
+            root = _root;
+            platform_code = _platform_code;
+            round_num = _round_num;
+            current_version = _current_version;
 
-        reward_round_num = params.decode(uint32);
-        round_reward = params.decode(uint128);
-        duplicate = params.decode(bool);
-        expected_packs_num = params.decode(uint8);
-        election_addr = params.decode(address);
-        prev_round_addr = params.decode(address);
+            start_time = params.decode(uint32);
+            end_time = params.decode(uint32);
 
+            reward_round_num = params.decode(uint32);
+            round_reward = params.decode(uint128);
+            duplicate = params.decode(bool);
+            expected_packs_num = params.decode(uint8);
+            election_addr = params.decode(address);
+            prev_round_addr = params.decode(address);
 
-        IStakingPool(root).onRelayRoundDeployed{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num, duplicate);
+            IStakingPool(root).onRelayRoundDeployed{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num, duplicate);
+        } else {
+            // UPGRADE from broken version
+            tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 0);
+
+            IStakingPool(root).onRelayRoundInitialized{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
+                round_num, start_time, end_time, relays_count, round_reward, reward_round_num, duplicate, eth_addrs, ton_keys
+            );
+        }
     }
 
     function upgrade(TvmCell code, uint32 new_version, address send_gas_to) external onlyRoot {
