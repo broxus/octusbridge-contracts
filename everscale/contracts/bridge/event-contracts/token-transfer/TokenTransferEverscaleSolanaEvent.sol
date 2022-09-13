@@ -31,14 +31,6 @@ contract TokenTransferEverscaleSolanaEvent is EverscaleSolanaBaseEvent, ProxyTok
         return bodyCopy;
     }
 
-    function close() public view {
-        require(status != Status.Pending || now > createdAt + FORCE_CLOSE_TIMEOUT, ErrorCodes.EVENT_PENDING);
-        address ownerAddress = getOwner();
-
-        require(msg.sender == ownerAddress, ErrorCodes.SENDER_IS_NOT_EVENT_OWNER);
-        transferAll(ownerAddress);
-    }
-
     function onInit() override internal {
         notifyEventStatusChanged();
 
@@ -47,10 +39,14 @@ contract TokenTransferEverscaleSolanaEvent is EverscaleSolanaBaseEvent, ProxyTok
 
     function onConfirm() override internal {
         notifyEventStatusChanged();
+
+        transferAll(getOwner());
     }
 
     function onReject() override internal {
         notifyEventStatusChanged();
+
+        transferAll(getOwner());
     }
 
     function getOwner() private view returns(address) {

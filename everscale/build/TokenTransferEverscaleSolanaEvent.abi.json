@@ -13,13 +13,6 @@
 			]
 		},
 		{
-			"name": "close",
-			"inputs": [
-			],
-			"outputs": [
-			]
-		},
-		{
 			"name": "getDecodedData",
 			"inputs": [
 				{"name":"answerId","type":"uint32"}
