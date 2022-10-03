@@ -21,6 +21,9 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20Metadat
 import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 
 
+import "./../interfaces/vault/IVaultFacetStrategies.sol";
+
+
 // Part: ConvexStable
 
 abstract contract ConvexCrvLp is BaseStrategy {
@@ -152,7 +155,7 @@ abstract contract ConvexCrvLp is BaseStrategy {
 
         // dont waste gas on reinvesting small sums
         uint256 total_available = balanceOfWant() + calc_want_from_wrapped(balanceOfWrapped());
-        IVault.StrategyParams memory params = vault.strategies(address(this));
+        IVaultFacetStrategies.StrategyParams memory params = vault.strategies(address(this));
         if (total_available < params.minDebtPerHarvest) {
             return;
         }
@@ -254,7 +257,7 @@ abstract contract ConvexCrvLp is BaseStrategy {
 
     // NOTE: Can override `tendTrigger` and `harvestTrigger` if necessary
     function harvestTrigger(uint256 callCost) public override view returns (bool) {
-        IVault.StrategyParams memory params = vault.strategies(address(this));
+        IVaultFacetStrategies.StrategyParams memory params = vault.strategies(address(this));
 
         if (params.activation == 0) return false;
 

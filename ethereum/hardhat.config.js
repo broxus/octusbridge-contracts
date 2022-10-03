@@ -6,6 +6,7 @@ require('hardhat-deploy');
 require('hardhat-abi-exporter');
 require("hardhat-gas-reporter");
 require('@primitivefi/hardhat-dodoc');
+require('hardhat-contract-sizer');
 
 
 task("accounts", "Prints the list of accounts", async () => {
@@ -50,6 +51,13 @@ const hardhatConfig = {
     spacing: 2,
     runOnCompile: true,
     only: [':Vault$', ':Bridge$', ':DAO$', ':MultiVault$']
+  },
+  contractSizer: {
+    alphaSort: true,
+    disambiguatePaths: false,
+    runOnCompile: true,
+    strict: true,
+    only: [':VaultFacet'],
   },
   solidity: {
     compilers: [

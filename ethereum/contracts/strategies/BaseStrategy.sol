@@ -440,7 +440,7 @@ abstract contract BaseStrategy {
      * @return `true` if `harvest()` should be called, `false` otherwise.
      */
     function harvestTrigger(uint256 callCost) public virtual view returns (bool) {
-        IVault.StrategyParams memory params = vault.strategies(address(this));
+        IVaultFacetStrategies.StrategyParams memory params = vault.strategies(address(this));
 
         // Should not trigger if Strategy is not activated
         if (params.activation == 0) return false;
