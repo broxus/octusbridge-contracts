@@ -7,27 +7,65 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     await deployments.execute('MultiVault',
         {
             from: owner,
-            log: true
+            log: true,
         },
-        'configure',
+        'setDefaultNativeDepositFee',
         100,
-        200,
-        300,
-        400,
-        utils.defaultTonRecipient,
-        utils.defaultConfiguration,
-        utils.defaultConfiguration
     );
 
-    // await deployments.execute('MultiVault',
-    //     {
-    //         from: owner,
-    //         log: true,
-    //     },
-    //     'setConfigurations',
-    //     utils.defaultConfiguration,
-    //     utils.defaultConfiguration
-    // );
+    await deployments.execute('MultiVault',
+        {
+            from: owner,
+            log: true,
+        },
+        'setDefaultNativeWithdrawFee',
+        200,
+    );
+
+    await deployments.execute('MultiVault',
+        {
+            from: owner,
+            log: true,
+        },
+        'setDefaultAlienDepositFee',
+        300,
+    );
+
+    await deployments.execute('MultiVault',
+        {
+            from: owner,
+            log: true,
+        },
+        'setDefaultAlienWithdrawFee',
+        400,
+    );
+
+    await deployments.execute('MultiVault',
+        {
+            from: owner,
+            log: true,
+        },
+        'setConfigurationAlien',
+        utils.defaultConfiguration,
+    );
+
+    await deployments.execute('MultiVault',
+        {
+            from: owner,
+            log: true,
+        },
+        'setConfigurationNative',
+        utils.defaultConfiguration,
+    );
+
+    await deployments.execute('MultiVault',
+        {
+            from: owner,
+            log: true,
+        },
+        'setRewards',
+        utils.defaultTonRecipient,
+    );
 
 
     // await deployments.execute('MultiVault',

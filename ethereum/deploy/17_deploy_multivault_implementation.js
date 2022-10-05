@@ -1,12 +1,12 @@
 module.exports = async ({getNamedAccounts, deployments}) => {
-    const { deployer } = await getNamedAccounts();
-
-
-    await deployments.deploy('MultiVaultImplementation', {
-        contract: 'MultiVault',
-        from: deployer,
-        log: true,
-    });
+    // const { deployer } = await getNamedAccounts();
+    //
+    //
+    // await deployments.deploy('MultiVaultImplementation', {
+    //     contract: 'MultiVault',
+    //     from: deployer,
+    //     log: true,
+    // });
 }
 
 

@@ -30,47 +30,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         ]
     });
 
-    // Deploy implementation
-    const artifact = await deployments.getExtendedArtifact('MultiVault');
-    console.log(artifact.bytecode.length / 2);
-
-    await deployments.deploy('MultiVaultImplementation', {
-        contract: 'MultiVault',
-        from: deployer,
-        log: true,
-        deterministicDeployment,
-    });
-
-    // Set new implementation
-    const multiVaultProxy = await deployments.get('MultiVaultProxy');
-    const multiVaultImplementation = await deployments.get('MultiVaultImplementation');
-
-    await deployments.execute('MultiVaultProxyAdmin',
-        {
-            from: deployer,
-            log: true,
-        },
-        'upgrade',
-        multiVaultProxy.address,
-        multiVaultImplementation.address
-    );
-
-    // - dev: save actual MultiVault
-    const {
-        abi: multiVaultAbi
-    } = await deployments.getExtendedArtifact('MultiVault');
-
-    await deployments.save('MultiVault', {
-        abi: multiVaultAbi,
-        address: multiVaultProxy.address,
-    });
-
-
-    // - dev: get init token code hash
-    // const tokenInitCodeHash = await deployments.read('MultiVault', 'getInitHash');
-    //
-    // console.log(`MultiVaultToken init code hash: ${tokenInitCodeHash}`);
-
+    // Deploy diamond
     // Initialize proxy
     let bridge_address;
 
@@ -82,25 +42,83 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         bridge_address = bridge_;
     }
 
-    await deployments.execute('MultiVault',
-        {
-            from: deployer,
-            log: true
-        },
-        'initialize',
-        bridge_address,
-        owner
-    );
+    await deployments.diamond.deploy('MultiVault', {
+        from: deployer,
+        owner: owner,
+        facets: [
+            'MultiVaultFacetDeposit',
+            'MultiVaultFacetFees',
+            'MultiVaultFacetPendingWithdrawals',
+            'MultiVaultFacetSettings',
+            'MultiVaultFacetTokens',
+            'MultiVaultFacetWithdraw'
+        ],
+        execute: {
+            methodName: 'initialize',
+            args: [bridge_address, owner]
+        }
+    });
 
-    // Transfer proxy admin ownership
-    await deployments.execute('MultiVaultProxyAdmin',
-        {
-            from: deployer,
-            log: true
-        },
-        'transferOwnership',
-        owner
-    );
+    // // Deploy implementation
+    // const artifact = await deployments.getExtendedArtifact('MultiVault');
+    // console.log(artifact.bytecode.length / 2);
+    //
+    // await deployments.deploy('MultiVaultImplementation', {
+    //     contract: 'MultiVault',
+    //     from: deployer,
+    //     log: true,
+    //     deterministicDeployment,
+    // });
+    //
+    // // Set new implementation
+    // const multiVaultProxy = await deployments.get('MultiVaultProxy');
+    // const multiVaultImplementation = await deployments.get('MultiVaultImplementation');
+    //
+    // await deployments.execute('MultiVaultProxyAdmin',
+    //     {
+    //         from: deployer,
+    //         log: true,
+    //     },
+    //     'upgrade',
+    //     multiVaultProxy.address,
+    //     multiVaultImplementation.address
+    // );
+    //
+    // // - dev: save actual MultiVault
+    // const {
+    //     abi: multiVaultAbi
+    // } = await deployments.getExtendedArtifact('MultiVault');
+    //
+    // await deployments.save('MultiVault', {
+    //     abi: multiVaultAbi,
+    //     address: multiVaultProxy.address,
+    // });
+    //
+    //
+    // // - dev: get init token code hash
+    // // const tokenInitCodeHash = await deployments.read('MultiVault', 'getInitHash');
+    // //
+    // // console.log(`MultiVaultToken init code hash: ${tokenInitCodeHash}`);
+    //
+    // await deployments.execute('MultiVault',
+    //     {
+    //         from: deployer,
+    //         log: true
+    //     },
+    //     'initialize',
+    //     bridge_address,
+    //     owner
+    // );
+    //
+    // // Transfer proxy admin ownership
+    // await deployments.execute('MultiVaultProxyAdmin',
+    //     {
+    //         from: deployer,
+    //         log: true
+    //     },
+    //     'transferOwnership',
+    //     owner
+    // );
 };
 
 module.exports.tags = ['Deploy_MultiVault'];

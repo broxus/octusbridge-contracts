@@ -40,10 +40,18 @@ describe('Test alien withdrawal limits', async () => {
     it('Set limits for token', async () => {
         const owner = await ethers.getNamedSigner('owner');
 
-        await multivault.connect(owner).enableWithdrawalLimits(
+        await multivault.connect(owner).setDailyWithdrawalLimits(
+            token.address,
+            daily,
+        );
+
+        await multivault.connect(owner).setUndeclaredWithdrawalLimits(
             token.address,
             undeclared,
-            daily,
+        );
+
+        await multivault.connect(owner).enableWithdrawalLimits(
+            token.address,
         );
 
         const limits = await multivault.withdrawalLimits(token.address);

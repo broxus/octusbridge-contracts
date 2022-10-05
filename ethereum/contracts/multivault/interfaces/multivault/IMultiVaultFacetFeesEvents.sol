@@ -1,0 +1,19 @@
+// SPDX-License-Identifier: AGPL-3.0
+pragma solidity 0.8.0;
+
+
+interface IMultiVaultFacetFeesEvents {
+    event UpdateDefaultNativeDepositFee(uint fee);
+    event UpdateDefaultNativeWithdrawFee(uint fee);
+    event UpdateDefaultAlienDepositFee(uint fee);
+    event UpdateDefaultAlienWithdrawFee(uint fee);
+
+    event UpdateTokenDepositFee(address token, uint256 fee);
+    event UpdateTokenWithdrawFee(address token, uint256 fee);
+
+    event SkimFee(
+        address token,
+        bool skim_to_everscale,
+        uint256 amount
+    );
+}

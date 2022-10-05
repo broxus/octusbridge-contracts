@@ -57,7 +57,7 @@ const hardhatConfig = {
     disambiguatePaths: false,
     runOnCompile: true,
     strict: true,
-    only: [':VaultFacet'],
+    only: [':VaultFacet', ':MultiVaultFacet'],
   },
   solidity: {
     compilers: [
