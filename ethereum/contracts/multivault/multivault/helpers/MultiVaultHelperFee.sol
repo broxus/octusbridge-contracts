@@ -4,11 +4,14 @@ pragma solidity 0.8.0;
 
 import "../../interfaces/multivault/IMultiVaultFacetFees.sol";
 import "../../interfaces/multivault/IMultiVaultFacetTokens.sol";
+import "../../interfaces/multivault/IMultiVaultFacetLiquidity.sol";
+import "../../interfaces/multivault/IMultiVaultFacetFeesEvents.sol";
 
 import "../storage/MultiVaultStorage.sol";
+import "./MultiVaultHelperLiquidity.sol";
 
 
-abstract contract MultiVaultHelperFee {
+abstract contract MultiVaultHelperFee is MultiVaultHelperLiquidity, IMultiVaultFacetFeesEvents {
     modifier respectFeeLimit(uint fee) {
         require(fee <= MultiVaultStorage.FEE_LIMIT);
 
@@ -35,10 +38,28 @@ abstract contract MultiVaultHelperFee {
 
     function _increaseTokenFee(
         address token,
-        uint amount
+        uint _amount
     ) internal {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
-        if (amount > 0) s.fees[token] += amount;
+        if (_amount == 0) return;
+
+        IMultiVaultFacetLiquidity.Liquidity memory liquidity = s.liquidity[token];
+
+        uint amount;
+
+        if (s.liquidity[token].activation == 0) {
+            amount = _amount;
+        } else {
+            uint liquidity_fee = amount * liquidity.interest / MultiVaultStorage.MAX_BPS;
+            amount = _amount - liquidity_fee;
+
+            _increaseTokenCash(token, liquidity_fee);
+        }
+
+        if (amount == 0) return;
+
+        s.fees[token] += amount;
+        emit EarnTokenFee(token, amount);
     }
 }

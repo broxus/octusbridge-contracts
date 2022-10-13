@@ -11,6 +11,8 @@ interface IMultiVaultFacetFeesEvents {
     event UpdateTokenDepositFee(address token, uint256 fee);
     event UpdateTokenWithdrawFee(address token, uint256 fee);
 
+    event EarnTokenFee(address token, uint amount);
+
     event SkimFee(
         address token,
         bool skim_to_everscale,

@@ -86,6 +86,15 @@ abstract contract MultiVaultHelperTokens is
         }
     }
 
+    function _increaseCash(
+        address token,
+        uint amount
+    ) internal {
+        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
+
+        s.liquidity[token].cash += amount;
+    }
+
     /// @notice Calculates the CREATE2 address for token, based on the Everscale sig
     /// @param native_wid Everscale token workchain ID
     /// @param native_addr Everscale token address body
@@ -95,11 +104,11 @@ abstract contract MultiVaultHelperTokens is
         uint256 native_addr
     ) internal view returns (address token) {
         token = address(uint160(uint(keccak256(abi.encodePacked(
-                hex'ff',
-                address(this),
-                keccak256(abi.encodePacked(native_wid, native_addr)),
-                hex'192c19818bebb5c6c95f5dcb3c3257379fc46fb654780cb06f3211ee77e1a360' // MultiVaultToken init code hash
-            )))));
+            hex'ff',
+            address(this),
+            keccak256(abi.encodePacked(native_wid, native_addr)),
+            hex'192c19818bebb5c6c95f5dcb3c3257379fc46fb654780cb06f3211ee77e1a360' // MultiVaultToken init code hash
+        )))));
     }
 
     function _deployTokenForNative(

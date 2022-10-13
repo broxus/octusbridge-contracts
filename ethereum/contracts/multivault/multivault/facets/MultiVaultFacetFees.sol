@@ -2,7 +2,6 @@
 pragma solidity 0.8.0;
 
 import "../../interfaces/multivault/IMultiVaultFacetFees.sol";
-import "../../interfaces/multivault/IMultiVaultFacetFeesEvents.sol";
 import "../../interfaces/IERC20.sol";
 import "../../interfaces/IMultiVaultToken.sol";
 
@@ -21,8 +20,7 @@ contract MultiVaultFacetFees is
     MultiVaultHelperEverscale,
     MultiVaultHelperFee,
     MultiVaultHelperReentrancyGuard,
-    IMultiVaultFacetFees,
-    IMultiVaultFacetFeesEvents
+    IMultiVaultFacetFees
 {
     using SafeERC20 for IERC20;
 

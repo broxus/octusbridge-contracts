@@ -5,6 +5,7 @@ pragma solidity 0.8.0;
 import "../../interfaces/IEverscale.sol";
 import "../../interfaces/multivault/IMultiVaultFacetTokens.sol";
 import "../../interfaces/multivault/IMultiVaultFacetPendingWithdrawals.sol";
+import "../../interfaces/multivault/IMultiVaultFacetLiquidity.sol";
 
 
 library MultiVaultStorage {
@@ -17,6 +18,10 @@ library MultiVaultStorage {
 
     string constant DEFAULT_NAME_PREFIX = 'Octus ';
     string constant DEFAULT_SYMBOL_PREFIX = 'oct';
+
+    string constant DEFAULT_NAME_LP_PREFIX = 'Octus LP';
+    string constant DEFAULT_SYMBOL_LP_PREFIX = 'octLP'; // TODO: prevent collisions
+
     uint256 constant WITHDRAW_PERIOD_DURATION_IN_SECONDS = 60 * 60 * 24; // 24 hours
 
     // Previous version of the Vault contract was built with Upgradable Proxy Pattern
@@ -67,6 +72,10 @@ library MultiVaultStorage {
         mapping(address => mapping(uint256 => IMultiVaultFacetPendingWithdrawals.WithdrawalPeriodParams)) withdrawalPeriods_;
 
         address withdrawGuardian;
+
+        // STORAGE UPDATE 3
+        mapping (address => IMultiVaultFacetLiquidity.Liquidity) liquidity;
+        uint defaultInterest;
     }
 
     function _storage() internal pure returns (Storage storage s) {
