@@ -80,7 +80,7 @@ contract MultiVaultFacetLiquidity is
 
         emit RedeemLiquidity(msg.sender, token, amount, underlying_amount);
 
-        IERC20(token).safeTransfer(receiver, amount);
+        IERC20(token).safeTransfer(receiver, underlying_amount);
     }
 
     /// @notice Each LP token is convertible into an ever increasing quantity of the underlying asset,
@@ -129,5 +129,27 @@ contract MultiVaultFacetLiquidity is
         s.defaultInterest = interest;
 
         emit UpdateDefaultLiquidityInterest(interest);
+    }
+
+    function liquidity(
+        address token
+    ) external view override returns (Liquidity memory) {
+        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
+
+        return s.liquidity[token];
+    }
+
+    function convertLPToUnderlying(
+        address token,
+        uint amount
+    ) external view override returns(uint) {
+        return _convertLPToUnderlying(token, amount);
+    }
+
+    function convertUnderlyingToLP(
+        address token,
+        uint amount
+    ) external view override returns (uint) {
+        return _convertUnderlyingToLP(token, amount);
     }
 }

@@ -19,13 +19,15 @@ library MultiVaultStorage {
     string constant DEFAULT_NAME_PREFIX = 'Octus ';
     string constant DEFAULT_SYMBOL_PREFIX = 'oct';
 
-    string constant DEFAULT_NAME_LP_PREFIX = 'Octus LP';
+    string constant DEFAULT_NAME_LP_PREFIX = 'Octus LP ';
     string constant DEFAULT_SYMBOL_LP_PREFIX = 'octLP'; // TODO: prevent collisions
 
     uint256 constant WITHDRAW_PERIOD_DURATION_IN_SECONDS = 60 * 60 * 24; // 24 hours
 
     // Previous version of the Vault contract was built with Upgradable Proxy Pattern
     bytes32 constant MULTIVAULT_LEGACY_STORAGE_POSITION = 0x0000000000000000000000000000000000000000000000000000000000000002;
+
+    uint constant LP_EXCHANGE_RATE_BPS = 10_000_000_000;
 
     struct Storage {
         mapping (address => IMultiVaultFacetTokens.Token) tokens_;

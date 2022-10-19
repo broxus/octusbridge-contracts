@@ -42,4 +42,18 @@ interface IMultiVaultFacetLiquidity {
     function setDefaultInterest(
         uint interest
     ) external;
+
+    function liquidity(
+        address token
+    ) external view returns (Liquidity memory);
+
+    function convertLPToUnderlying(
+        address token,
+        uint amount
+    ) external view returns (uint);
+
+    function convertUnderlyingToLP(
+        address token,
+        uint amount
+    ) external view returns (uint);
 }

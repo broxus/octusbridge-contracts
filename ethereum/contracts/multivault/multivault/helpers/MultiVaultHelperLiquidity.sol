@@ -37,9 +37,9 @@ abstract contract MultiVaultHelperLiquidity is IMultiVaultFacetLiquidityEvents {
 
         IMultiVaultFacetLiquidity.Liquidity memory liquidity = s.liquidity[token];
 
-        if (liquidity.supply == 0 || liquidity.activation == 0) return 0;
+        if (liquidity.supply == 0 || liquidity.activation == 0) return MultiVaultStorage.LP_EXCHANGE_RATE_BPS;
 
-        return MultiVaultStorage.MAX_BPS * liquidity.cash / liquidity.supply; // TODO: precision
+        return MultiVaultStorage.LP_EXCHANGE_RATE_BPS * liquidity.cash / liquidity.supply; // TODO: precision
     }
 
     function _getCash(
@@ -56,14 +56,14 @@ abstract contract MultiVaultHelperLiquidity is IMultiVaultFacetLiquidityEvents {
         address token,
         uint amount
     ) internal view returns (uint) {
-        return amount * MultiVaultStorage.MAX_BPS / _exchangeRateCurrent(token);
+        return _exchangeRateCurrent(token) * amount / MultiVaultStorage.LP_EXCHANGE_RATE_BPS;
     }
 
     function _convertUnderlyingToLP(
         address token,
         uint amount
     ) internal view returns (uint) {
-        return amount * _exchangeRateCurrent(token) / MultiVaultStorage.MAX_BPS;
+        return MultiVaultStorage.LP_EXCHANGE_RATE_BPS / _exchangeRateCurrent(token) * amount;
     }
 
     function _deployLPToken(
@@ -86,7 +86,7 @@ abstract contract MultiVaultHelperLiquidity is IMultiVaultFacetLiquidityEvents {
 
         string memory name = IERC20Metadata(token).name();
         string memory symbol = IERC20Metadata(token).symbol();
-        uint8 decimals = IERC20Metadata(token).decimals();
+        uint8 decimals = IERC20Metadata(token).decimals(); // TODO: think again?
 
         IMultiVaultToken(lp).initialize(
             string(abi.encodePacked(MultiVaultStorage.DEFAULT_NAME_LP_PREFIX, name)),

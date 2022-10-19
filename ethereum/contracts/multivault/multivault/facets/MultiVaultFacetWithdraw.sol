@@ -111,7 +111,7 @@ contract MultiVaultFacetWithdraw is
         AlienWithdrawalParams memory withdrawal = decodeAlienWithdrawalEventData(_event.eventData);
 
         // Ensure chain id is correct
-        require(withdrawal.chainId == block.chainid);
+        require(withdrawal.chainId == block.chainid); // TODO: add errors
 
         // Ensure token is not blacklisted
         require(!s.tokens_[withdrawal.token].blacklisted);

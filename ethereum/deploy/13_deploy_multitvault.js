@@ -51,7 +51,8 @@ module.exports = async ({getNamedAccounts, deployments}) => {
             'MultiVaultFacetPendingWithdrawals',
             'MultiVaultFacetSettings',
             'MultiVaultFacetTokens',
-            'MultiVaultFacetWithdraw'
+            'MultiVaultFacetWithdraw',
+            'MultiVaultFacetLiquidity'
         ],
         execute: {
             methodName: 'initialize',
