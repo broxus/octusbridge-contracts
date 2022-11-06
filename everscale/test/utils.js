@@ -3,6 +3,7 @@ const BigNumber = require('bignumber.js');
 const _ = require('underscore');
 
 const chai = require('chai');
+const {zeroAddress} = require("locklift");
 chai.use(require('chai-bignumber')());
 
 const { expect } = chai;
@@ -10,9 +11,9 @@ const { expect } = chai;
 const TOKEN_PATH = '../node_modules/ton-eth-bridge-token-contracts/build';
 
 const logContract = async (contract) => {
-  const balance = await locklift.ton.getBalance(contract.address);
+  const balance = await locklift.provider.getBalance(contract.address);
 
-  logger.log(`${contract.name} (${contract.address}) - ${locklift.utils.convertCrystal(balance, 'ton')}`);
+  logger.log(`${contract.name} (${contract.address}) - ${locklift.utils.fromNano(balance)}`);
 };
 
 async function sleep(ms) {
@@ -21,7 +22,7 @@ async function sleep(ms) {
 
 // Due to the network lag, graphql may not catch wallets updates instantly
 const afterRun = async (tx) => {
-  if (locklift.network === 'dev' || locklift.network === 'prod') {
+  if (locklift.context.network.name === 'dev' || locklift.context.network.name === 'mainnet') {
     await sleep(100000);
   }
 };
@@ -39,7 +40,7 @@ class MetricManager {
 
   async checkPoint(name) {
     const balances = await Promise.all(this.contracts.map(async (contract) =>
-      locklift.ton.getBalance(contract.address)));
+      locklift.provider.getBalance(contract.address)));
 
     this.checkpoints[name] = balances;
   }
@@ -76,67 +77,74 @@ class MetricManager {
 
 
 const setupBridge = async (relays) => {
-  const Account = await locklift.factory.getAccount('Wallet');
-  const [keyPair] = await locklift.keys.getKeyPairs();
+  // const Account = await locklift.factory.getAccount('Wallet');
+  // const [keyPair] = await locklift.keys.getKeyPairs();
+  const signer = await locklift.keystore.getSigner("0");
 
   const _randomNonce = locklift.utils.getRandomNonce();
 
-  const owner = await locklift.giver.deployContract({
-    contract: Account,
+  const { owner } = await locklift.factory.deployContract({
+    contract: 'Wallet',
     constructorParams: {},
     initParams: {
       _randomNonce,
     },
-    keyPair,
-  }, locklift.utils.convertCrystal(30, 'nano'));
+    publicKey: signer.publicKey,
+    value: locklift.utils.toNano(30),
+  });
 
-  owner.setKeyPair(keyPair);
+  // owner.setKeyPair(keyPair);
   owner.afterRun = afterRun;
   owner.name = 'Bridge owner';
 
   await logContract(owner);
 
-  const StakingMockup = await locklift.factory.getContract('StakingMockup');
+  // const StakingMockup = await locklift.factory.getContract('StakingMockup');
 
-  const staking = await locklift.giver.deployContract({
-    contract: StakingMockup,
+  const { staking } = await locklift.factory.deployContract({
+    contract: 'StakingMockup',
     constructorParams: {},
     initParams: {
       _randomNonce,
       __keys: relays.map(r => `0x${r.public}`),
     },
-    keyPair,
-  }, locklift.utils.convertCrystal(1, 'nano'));
+    publicKey: signer.publicKey,
+    value: locklift.utils.toNano(1),
+  });
 
   await logContract(staking);
 
-  const Bridge = await locklift.factory.getContract('Bridge');
-  const Connector = await locklift.factory.getContract('Connector');
+  // const Bridge = await locklift.factory.getContract('Bridge');
+  // const Connector = await locklift.factory.getContract('Connector');
+  const connectorData = await locklift.factory.getContractArtifacts("Connector");
 
-  const bridge = await locklift.giver.deployContract({
-    contract: Bridge,
+  const { bridge } = await locklift.factory.deployContract({
+    contract: 'Bridge',
     constructorParams: {
       _owner: owner.address,
       _manager: owner.address,
       _staking: staking.address,
-      _connectorCode: Connector.code,
-      _connectorDeployValue: locklift.utils.convertCrystal(1, 'nano'),
+      _connectorCode: connectorData.code,
+      _connectorDeployValue: locklift.utils.toNano(1),
     },
     initParams: {
       _randomNonce: locklift.utils.getRandomNonce(),
     },
-    keyPair
-  }, locklift.utils.convertCrystal(2, 'nano'));
-
+    publicKey: signer.publicKey,
+    value: locklift.utils.toNano(2),
+  });
 
   await logContract(bridge);
 
-  const CellEncoder = await locklift.factory.getContract('CellEncoderStandalone');
+  // const CellEncoder = await locklift.factory.getContract('CellEncoderStandalone');
 
-  const cellEncoder = await locklift.giver.deployContract({
-    contract: CellEncoder,
-    keyPair,
-  }, locklift.utils.convertCrystal(1, 'nano'));
+  const { cellEncoder } = await locklift.factory.deployContract({
+    contract: 'CellEncoderStandalone',
+    publicKey: signer.publicKey,
+    value: locklift.utils.toNano(1),
+  });
+
+  await logContract(cellEncoder);
 
   return [bridge, owner, staking, cellEncoder];
 };
@@ -165,16 +173,16 @@ const setupEthereumEverscaleEventConfiguration = async (owner, staking, cellEnco
   });
 
   const [tokenRoot, wallet] = await setupTokenRootWithWallet(
-    proxyFutureAddress,
-    owner.address,
-    locklift.utils.convertCrystal('100', 'nano')
+      proxyFutureAddress,
+      owner.address,
+      locklift.utils.toNano(100)
   );
 
-  const EthereumEverscaleEventConfiguration = await locklift.factory.getContract('EthereumEverscaleEventConfiguration');
-  const EthereumEvent = await locklift.factory.getContract('TokenTransferEthereumEverscaleEvent');
+  // const EthereumEverscaleEventConfiguration = await locklift.factory.getContract('EthereumEverscaleEventConfiguration');
+  const ethereumEventData = await locklift.factory.getContractArtifacts('TokenTransferEthereumEverscaleEvent');
 
-  const ethereumEverscaleEventConfiguration = await locklift.giver.deployContract({
-    contract: EthereumEverscaleEventConfiguration,
+  const { ethereumEverscaleEventConfiguration } = await locklift.factory.deployContract({
+    contract: 'EthereumEverscaleEventConfiguration',
     constructorParams: {
       _owner: owner.address,
       _meta: configurationMeta,
@@ -182,9 +190,9 @@ const setupEthereumEverscaleEventConfiguration = async (owner, staking, cellEnco
     initParams: {
       basicConfiguration: {
         eventABI: '',
-        eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
+        eventInitialBalance: locklift.utils.toNano(2),
         staking: staking.address,
-        eventCode: EthereumEvent.code,
+        eventCode: ethereumEventData.code,
       },
       networkConfiguration: {
         chainId: 1,
@@ -195,13 +203,14 @@ const setupEthereumEverscaleEventConfiguration = async (owner, staking, cellEnco
         endBlockNumber: 0,
       }
     },
-    keyPair
-  }, locklift.utils.convertCrystal(1, 'nano'));
+    publicKey: signer.publicKey,
+    value: locklift.utils.toNano(1)
+  });
 
   await logContract(ethereumEverscaleEventConfiguration);
 
-  const proxy = await locklift.giver.deployContract({
-    contract: Proxy,
+  const proxy = await locklift.factory.deployContract({
+    contract: 'ProxyTokenTransfer',
     constructorParams: {
       owner_: owner.address,
     },
@@ -214,14 +223,18 @@ const setupEthereumEverscaleEventConfiguration = async (owner, staking, cellEnco
   await logContract(proxy);
 
   const proxyConfiguration = {
-    everscaleEthereumConfiguration:  locklift.utils.zeroAddress,
+    everscaleEthereumConfiguration:  zeroAddress,
     ethereumEverscaleConfigurations: [ethereumEverscaleEventConfiguration.address],
-    everscaleSolanaConfiguration: locklift.utils.zeroAddress,
-    solanaEverscaleConfiguration: locklift.utils.zeroAddress,
+    everscaleSolanaConfiguration: zeroAddress,
+    solanaEverscaleConfiguration: zeroAddress,
     outdatedTokenRoots: [],
     tokenRoot: tokenRoot.address,
-    settingsDeployWalletGrams: locklift.utils.convertCrystal(0.1, 'nano')
+    settingsDeployWalletGrams: locklift.utils.toNano(0.1)
   }
+
+  await owner.methods.setConfiguration({ _
+    _config: proxyConfiguration,
+    gasBackAddress: owner.address }).sendExternal({ publicKey: signer.publicKey });
 
   await owner.runTarget({
     contract: proxy,
@@ -345,9 +358,9 @@ const setupSolanaEverscaleEventConfiguration = async (owner, staking) => {
   await logContract(proxy);
 
   const proxyConfiguration = {
-    everscaleEthereumConfiguration:  locklift.utils.zeroAddress,
+    everscaleEthereumConfiguration:  zeroAddress,
     ethereumEverscaleConfigurations: [],
-    everscaleSolanaConfiguration: locklift.utils.zeroAddress,
+    everscaleSolanaConfiguration: zeroAddress,
     solanaEverscaleConfiguration: solanaEverscaleEventConfiguration.address,
     outdatedTokenRoots: [],
     tokenRoot: tokenRoot.address,
@@ -532,7 +545,7 @@ const setupSolanaEverscaleEventConfigurationReal = async (owner, staking) => {
   await logContract(proxy);
 
   const proxyConfiguration = {
-    everscaleEthereumConfiguration:  locklift.utils.zeroAddress,
+    everscaleEthereumConfiguration:  zeroAddress,
     ethereumEverscaleConfigurations: [],
     everscaleSolanaConfiguration: everscaleSolanaEventConfiguration.address,
     solanaEverscaleConfiguration: solanaEverscaleEventConfiguration.address,
@@ -585,10 +598,10 @@ const setupTokenRootWithWallet = async (rootOwner, walletOwner, mintAmount, deci
       mintDisabled: false,
       burnByRootDisabled: false,
       burnPaused: false,
-      remainingGasTo: locklift.utils.zeroAddress
+      remainingGasTo: zeroAddress
     },
     initParams: {
-      deployer_: locklift.utils.zeroAddress,
+      deployer_: zeroAddress,
       randomNonce_: locklift.utils.getRandomNonce(),
       rootOwner_: rootOwner,
       name_: Buffer.from('Token').toString('hex'),
@@ -712,8 +725,8 @@ const setupEverscaleEthereumEventConfiguration = async (owner, staking, cellEnco
   const proxyConfiguration = {
     everscaleEthereumConfiguration:  everscaleEthereumEventConfiguration.address,
     ethereumEverscaleConfigurations: [],
-    everscaleSolanaConfiguration: locklift.utils.zeroAddress,
-    solanaEverscaleConfiguration: locklift.utils.zeroAddress,
+    everscaleSolanaConfiguration: zeroAddress,
+    solanaEverscaleConfiguration: zeroAddress,
     outdatedTokenRoots: [],
     tokenRoot: tokenRoot.address,
     settingsDeployWalletGrams: locklift.utils.convertCrystal(0.1, 'nano')
@@ -854,10 +867,10 @@ const setupEverscaleSolanaEventConfiguration = async (owner, staking) => {
   await logContract(proxy);
 
   const proxyConfiguration = {
-    everscaleEthereumConfiguration:  locklift.utils.zeroAddress,
-    ethereumEverscaleConfigurations: [locklift.utils.zeroAddress],
+    everscaleEthereumConfiguration:  zeroAddress,
+    ethereumEverscaleConfigurations: [zeroAddress],
     everscaleSolanaConfiguration: everscaleSolanaEventConfiguration.address,
-    solanaEverscaleConfiguration: locklift.utils.zeroAddress,
+    solanaEverscaleConfiguration: zeroAddress,
     outdatedTokenRoots: [],
     tokenRoot: tokenRoot.address,
     settingsDeployWalletGrams: locklift.utils.convertCrystal(0.1, 'nano')
@@ -865,7 +878,7 @@ const setupEverscaleSolanaEventConfiguration = async (owner, staking) => {
 
   // const proxyConfiguration = {
   //   everConfiguration: everscaleSolanaEventConfiguration.address,
-  //   solanaConfiguration: locklift.utils.zeroAddress,
+  //   solanaConfiguration: zeroAddress,
   //   tokenRoot: tokenRoot.address,
   //   rootTunnel: tokenRoot.address,
   //   settingsDeployWalletGrams: locklift.utils.convertCrystal(0.1, 'nano')
@@ -1502,7 +1515,7 @@ const deployTokenRoot = async function (token_name, token_symbol, owner) {
   const _root = await locklift.giver.deployContract({
     contract: RootToken,
     constructorParams: {
-      initialSupplyTo: locklift.utils.zeroAddress,
+      initialSupplyTo: zeroAddress,
       initialSupply: 0,
       deployWalletValue: 0,
       mintDisabled: false,
@@ -1517,7 +1530,7 @@ const deployTokenRoot = async function (token_name, token_symbol, owner) {
       rootOwner_: owner.address,
       walletCode_: TokenWallet.code,
       randomNonce_: locklift.utils.getRandomNonce(),
-      deployer_: locklift.utils.zeroAddress
+      deployer_: zeroAddress
     },
     keyPair,
   });

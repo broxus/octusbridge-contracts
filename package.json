@@ -38,7 +38,6 @@
     "hardhat-deploy-ethers": "^0.3.0-beta.10",
     "hardhat-docgen": "^1.1.1",
     "hardhat-gas-reporter": "^1.0.4",
-    "locklift": "github:broxus/ton-locklift#cf4088a3b82261eaf2410d134d7eeeea766fcd65",
     "minimist": "^1.2.5",
     "mocha": "^8.2.1",
     "mocha-logger": "^1.0.7",
@@ -51,5 +50,8 @@
     "ton-eth-bridge-token-contracts": "https://github.com/broxus/ton-eth-bridge-token-contracts#d3c1cd920c0320ffaab03b54c878dd0e06fed3c7",
     "underscore": "^1.12.0",
     "web3": "^1.3.4"
+  },
+  "devDependencies": {
+    "locklift": "^2.4.4"
   }
 }
