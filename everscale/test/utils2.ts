@@ -2,6 +2,7 @@ import {Address, Contract, Signer, WalletTypes} from "locklift";
 import {FactorySource} from "../build/factorySource";
 import {Account} from "everscale-standalone-client/nodejs";
 import {ed25519_generateKeyPair} from "nekoton-wasm";
+import {Ed25519KeyPair} from "everscale-standalone-client";
 
 const logger = require('mocha-logger');
 const BigNumber = require('bignumber.js');
@@ -1358,13 +1359,13 @@ const wait_acc_deployed = async function (addr) {
     });
 }
 
-const deployTokenRoot = async function (token_name, token_symbol, owner) {
-    const RootToken = await locklift.factory.getContract('TokenRoot', TOKEN_PATH);
-    const TokenWallet = await locklift.factory.getContract('TokenWallet', TOKEN_PATH);
+const deployTokenRoot = async function (token_name: string, token_symbol: string, owner: Account) {
     const signer = (await locklift.keystore.getSigner("2"))!;
 
-    const _root = await locklift.factory.deployContract({
-        contract: RootToken,
+    const TokenWallet = await locklift.factory.getContractArtifacts('TokenWallet');
+
+    const {contract: _root}  = await locklift.factory.deployContract({
+        contract: 'TokenRoot',
         constructorParams: {
             initialSupplyTo: zeroAddress,
             initialSupply: 0,
@@ -1383,27 +1384,24 @@ const deployTokenRoot = async function (token_name, token_symbol, owner) {
             randomNonce_: locklift.utils.getRandomNonce(),
             deployer_: zeroAddress
         },
-        keyPair,
+        publicKey: signer.publicKey,
+        value: locklift.utils.toNano(1)
     });
-
-    _root.afterRun = afterRun;
-    _root.setKeyPair(keyPair);
 
     return _root;
 }
 
-const deployTokenWallets = async function (users, _root) {
+const deployTokenWallets = async function (users: Account[], _root: Contract<FactorySource["TokenRoot"]>) {
     let wallets = []
     for (const user of users) {
-        await user.runTarget({
-            contract: _root,
-            method: 'deployWallet',
-            params: {
-                answerId: 0,
-                walletOwner: user.address,
-                deployWalletValue: locklift.utils.toNano(1, 'nano'),
-            },
-            value: locklift.utils.toNano(2, 'nano'),
+
+        await _root.methods.deployWallet({
+            answerId: 0,
+            walletOwner: user.address,
+            deployWalletValue: locklift.utils.toNano(1),
+        }).send({
+            from: user.address,
+            amount: locklift.utils.toNano(2),
         });
 
         const walletAddr = await getTokenWalletAddr(_root, user);
@@ -1413,35 +1411,31 @@ const deployTokenWallets = async function (users, _root) {
 
         logger.log(`User token wallet: ${walletAddr}`);
 
-        let userTokenWallet = await locklift.factory.getContract(
+        let userTokenWallet = await locklift.factory.getDeployedContract(
             'TokenWallet',
-            TOKEN_PATH
+            walletAddr.value0
         );
 
-        userTokenWallet.setAddress(walletAddr);
         wallets.push(userTokenWallet);
     }
     return wallets;
 }
 
-const sendTokens = async function (user, _userTokenWallet, recipient, amount, payload) {
-    return await user.runTarget({
-        contract: _userTokenWallet,
-        method: 'transfer',
-        params: {
-            amount: amount,
-            recipient: recipient.address,
-            deployWalletValue: 0,
-            remainingGasTo: user.address,
-            notify: true,
-            payload: payload
-        },
-        value: locklift.utils.toNano(11)
+const sendTokens = async function (user: Account, _userTokenWallet: Contract<FactorySource["TokenWallet"]>, recipient: Account, amount: number, payload: any) {
+    return await _userTokenWallet.methods.transfer({
+        amount: amount,
+        recipient: recipient.address,
+        deployWalletValue: 0,
+        remainingGasTo: user.address,
+        notify: true,
+        payload: payload
+    }).send({
+        from: user.address,
+        amount: locklift.utils.toNano(11),
     });
 };
 
-
-const depositTokens = async function (stakingRoot, user, _userTokenWallet, depositAmount, reward = false) {
+const depositTokens = async function (stakingRoot: Account, user: Account, _userTokenWallet: Contract<FactorySource["TokenWallet"]>, depositAmount: number, reward = false) {
     var payload;
     const DEPOSIT_PAYLOAD = 'te6ccgEBAQEAAwAAAgA=';
     const REWARD_DEPOSIT_PAYLOAD = 'te6ccgEBAQEAAwAAAgE=';
@@ -1454,23 +1448,20 @@ const depositTokens = async function (stakingRoot, user, _userTokenWallet, depos
     return await sendTokens(user, _userTokenWallet, stakingRoot, depositAmount, payload);
 };
 
-
 // mint + deploy
-const mintTokens = async function (owner, users, _root, mint_amount) {
+const mintTokens = async function (owner: Account, users: Account[], _root: Contract<FactorySource["TokenRoot"]>, mint_amount: number) {
     let wallets = [];
     for (const user of users) {
-        await owner.runTarget({
-            contract: _root,
-            method: 'mint',
-            params: {
-                amount: mint_amount,
-                recipient: user.address,
-                deployWalletValue: locklift.utils.toNano(1, 'nano'),
-                remainingGasTo: owner.address,
-                notify: false,
-                payload: ''
-            },
-            value: locklift.utils.toNano(3, 'nano'),
+        await _root.methods.mint({
+            amount: mint_amount,
+            recipient: user.address,
+            deployWalletValue: locklift.utils.toNano(1),
+            remainingGasTo: owner.address,
+            notify: false,
+            payload: ''
+        }).send({
+            from: owner.address,
+            amount: locklift.utils.toNano(3),
         });
 
         const walletAddr = await getTokenWalletAddr(_root, user);
@@ -1479,45 +1470,39 @@ const mintTokens = async function (owner, users, _root, mint_amount) {
 
         logger.log(`User token wallet: ${walletAddr}`);
 
-        let userTokenWallet = await locklift.factory.getContract(
+        let userTokenWallet = await locklift.factory.getDeployedContract(
             'TokenWallet',
-            TOKEN_PATH
+            walletAddr.value0
         );
 
-        userTokenWallet.setAddress(walletAddr);
         wallets.push(userTokenWallet);
     }
     return wallets;
 }
 
-const deployAccount = async function (key, value) {
-    const Account = await locklift.factory.getAccount('Wallet');
-    let account = await locklift.factory.deployContract({
-        contract: Account,
-        constructorParams: {},
-        initParams: {
-            _randomNonce: Math.random() * 6400 | 0,
-        },
-        keyPair: key
-    }, locklift.utils.toNano(value, 'nano'));
-    account.setKeyPair(key);
-    account.afterRun = afterRun;
-    await wait_acc_deployed(account.address);
-    return account;
-}
-
-const getTokenWalletAddr = async function (_root, user) {
-    return await _root.call({
-        method: 'walletOf',
-        params: {walletOwner: user.address}
+const deployAccount = async function (key: Ed25519KeyPair, value: number) {
+    const account = await locklift.factory.accounts.addNewAccount({
+        type: WalletTypes.WalletV3, // or WalletTypes.HighLoadWallet,
+        //Value which will send to the new account from a giver
+        value: locklift.utils.toNano(value),
+        //owner publicKey
+        publicKey: key.publicKey,
     });
+
+
+    await wait_acc_deployed(account.account.address);
+    return account.account;
+}
+
+const getTokenWalletAddr = async function (_root: Contract<FactorySource["TokenRoot"]>, user: Account) {
+    return await _root.methods.walletOf({answerId: 0, walletOwner: user.address}).call();
 }
 
 
-const isValidTonAddress = (address) => /^(?:-1|0):[0-9a-fA-F]{64}$/.test(address);
+const isValidTonAddress = (address: string) => /^(?:-1|0):[0-9a-fA-F]{64}$/.test(address);
 
 
-const stringToBytesArray = (dataString) => {
+const stringToBytesArray = (dataString: string) => {
     return Buffer.from(dataString).toString('hex')
 };
 
@@ -1542,7 +1527,6 @@ module.exports = {
     getTokenRoot,
     getTokenWalletByAddress,
     sendTokens,
-    extractTonEventAddress,
     isValidTonAddress,
     deployTokenRoot,
     deployTokenWallets,
