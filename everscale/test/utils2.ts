@@ -1347,18 +1347,6 @@ const captureConnectors = async (bridge: Contract<FactorySource["Bridge"]>) => {
     }, {});
 };
 
-
-const wait_acc_deployed = async function (addr) {
-    await locklift.ton.client.net.wait_for_collection({
-        collection: 'accounts',
-        filter: {
-            id: {eq: addr},
-            balance: {gt: `0x0`}
-        },
-        result: 'id'
-    });
-}
-
 const deployTokenRoot = async function (token_name: string, token_symbol: string, owner: Account) {
     const signer = (await locklift.keystore.getSigner("2"))!;
 
@@ -1395,19 +1383,16 @@ const deployTokenWallets = async function (users: Account[], _root: Contract<Fac
     let wallets = []
     for (const user of users) {
 
-        await _root.methods.deployWallet({
+        await locklift.transactions.waitFinalized(_root.methods.deployWallet({
             answerId: 0,
             walletOwner: user.address,
             deployWalletValue: locklift.utils.toNano(1),
         }).send({
             from: user.address,
             amount: locklift.utils.toNano(2),
-        });
+        }));
 
         const walletAddr = await getTokenWalletAddr(_root, user);
-
-        // Wait until user token wallet is presented into the GraphQL
-        await wait_acc_deployed(walletAddr);
 
         logger.log(`User token wallet: ${walletAddr}`);
 
@@ -1452,7 +1437,7 @@ const depositTokens = async function (stakingRoot: Account, user: Account, _user
 const mintTokens = async function (owner: Account, users: Account[], _root: Contract<FactorySource["TokenRoot"]>, mint_amount: number) {
     let wallets = [];
     for (const user of users) {
-        await _root.methods.mint({
+        await locklift.transactions.waitFinalized(_root.methods.mint({
             amount: mint_amount,
             recipient: user.address,
             deployWalletValue: locklift.utils.toNano(1),
@@ -1462,11 +1447,9 @@ const mintTokens = async function (owner: Account, users: Account[], _root: Cont
         }).send({
             from: owner.address,
             amount: locklift.utils.toNano(3),
-        });
+        }));
 
         const walletAddr = await getTokenWalletAddr(_root, user);
-
-        await wait_acc_deployed(walletAddr);
 
         logger.log(`User token wallet: ${walletAddr}`);
 
@@ -1481,16 +1464,14 @@ const mintTokens = async function (owner: Account, users: Account[], _root: Cont
 }
 
 const deployAccount = async function (key: Ed25519KeyPair, value: number) {
-    const account = await locklift.factory.accounts.addNewAccount({
+    const account = await locklift.transactions.waitFinalized(locklift.factory.accounts.addNewAccount({
         type: WalletTypes.WalletV3, // or WalletTypes.HighLoadWallet,
         //Value which will send to the new account from a giver
         value: locklift.utils.toNano(value),
         //owner publicKey
         publicKey: key.publicKey,
-    });
+    }));
 
-
-    await wait_acc_deployed(account.account.address);
     return account.account;
 }
 
@@ -1533,7 +1514,6 @@ module.exports = {
     depositTokens,
     stringToBytesArray,
     getTokenWalletAddr,
-    wait_acc_deployed,
     mintTokens,
     deployAccount,
     logger,
