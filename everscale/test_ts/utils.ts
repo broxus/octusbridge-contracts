@@ -10,12 +10,6 @@ const _ = require('underscore');
 
 const {zeroAddress} = require("locklift");
 
-chai.use(require('chai-bignumber')());
-
-const {expect} = chai;
-
-const TOKEN_PATH = '../node_modules/ton-eth-bridge-token-contracts/build';
-
 const logContract = async (name: string, address: Address) => {
 
     const balance = await locklift.provider.getBalance(address);
@@ -26,7 +20,6 @@ const logContract = async (name: string, address: Address) => {
 async function sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-
 
 class MetricManager {
     contracts: [{ name: string, address: Address }];
@@ -1463,13 +1456,16 @@ const mintTokens = async function (owner: Account, users: Account[], _root: Cont
     return wallets;
 }
 
-const deployAccount = async function (key: Ed25519KeyPair, value: number) {
+const deployAccount = async function (signer: Signer, value: number) {
     const account = await locklift.transactions.waitFinalized(locklift.factory.accounts.addNewAccount({
-        type: WalletTypes.WalletV3, // or WalletTypes.HighLoadWallet,
-        //Value which will send to the new account from a giver
+        type: WalletTypes.MsigAccount,
+        contract: "Wallet",
         value: locklift.utils.toNano(value),
-        //owner publicKey
-        publicKey: key.publicKey,
+        publicKey: signer.publicKey,
+        constructorParams: {},
+        initParams: {
+            _randomNonce: locklift.utils.getRandomNonce(),
+        },
     }));
 
     return account.account;
@@ -1517,6 +1513,4 @@ module.exports = {
     mintTokens,
     deployAccount,
     logger,
-    expect,
-    TOKEN_PATH
 };
