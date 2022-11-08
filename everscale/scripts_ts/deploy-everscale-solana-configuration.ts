@@ -1,12 +1,13 @@
+export {};
+
 const {
   logContract,
   isValidTonAddress,
   stringToBytesArray,
-} = require('../test/utils2');
+} = require('../test/utils');
 
 const prompts = require('prompts');
 const fs = require('fs');
-const ethers = require('ethers');
 const ora = require('ora');
 const BigNumber = require('bignumber.js');
 
@@ -37,12 +38,13 @@ const options = program.opts();
 
 
 const main = async () => {
-  const [keyPair] = await locklift.keys.getKeyPairs();
+  const signer = (await locklift.keystore.getSigner("0"))!;
 
   // Get all contracts from the build
+  // @ts-ignore
   const build = [...new Set(fs.readdirSync('build').map(o => o.split('.')[0]))];
 
-  const events = fs.readdirSync('./build/').filter(e => e.endsWith('.abi.json'));
+  const events = fs.readdirSync('./build/').filter((e: any) => e.endsWith('.abi.json'));
 
   const {
     eventAbiFile
@@ -50,7 +52,7 @@ const main = async () => {
     type: 'select',
     name: 'eventAbiFile',
     message: 'Select Everscale abi, which contains target event',
-    choices: events.map(e => new Object({ title: e, value: e })),
+    choices: events.map((e: any) => new Object({ title: e, value: e })),
     initial: events.indexOf(options.eventAbiFile) >= 0 ? events.indexOf(options.eventAbiFile) : 0
   });
 
@@ -64,9 +66,9 @@ const main = async () => {
     message: 'Choose Everscale event',
     choices: abi
       .events
-      .map(event => {
+      .map((event: any) => {
         return {
-          title: `${event.name} (${event.inputs.map(i => i.type.concat(' ').concat(i.name)).join(',')})`,
+          title: `${event.name} (${event.inputs.map((i: any) => i.type.concat(' ').concat(i.name)).join(',')})`,
           value: event.inputs,
         }
       }),
@@ -79,14 +81,14 @@ const main = async () => {
       type: 'text',
       name: 'owner',
       message: 'Initial configuration owner',
-      validate: value => isValidTonAddress(value) ? true : 'Invalid Everscale address',
+      validate: (value: any) => isValidTonAddress(value) ? true : 'Invalid Everscale address',
       initial: options.owner
     },
     {
       type: 'text',
       name: 'staking',
       message: 'Staking contract',
-      validate: value => isValidTonAddress(value) ? true : 'Invalid Everscale address',
+      validate: (value: any) => isValidTonAddress(value) ? true : 'Invalid Everscale address',
       initial: options.staking
     },
     {
@@ -112,7 +114,7 @@ const main = async () => {
       type: 'text',
       name: 'eventEmitter',
       message: 'Contract address, which emits event (Everscale)',
-      validate: value => isValidTonAddress(value) ? true : 'Invalid Everscale address',
+      validate: (value: any) => isValidTonAddress(value) ? true : 'Invalid Everscale address',
       initial: options.eventEmitter
     },
     {
@@ -159,13 +161,12 @@ const main = async () => {
     }
   ]);
 
-  const EverscaleSolanaEventConfiguration = await locklift.factory.getContract('EverscaleSolanaEventConfiguration');
-  const TonEvent = await locklift.factory.getContract(response.eventContract);
+  const TonEvent = await locklift.factory.getContractArtifacts(response.eventContract);
 
   const spinner = ora('Deploying Everscale event configuration').start();
 
-  const everscaleSolanaEventConfiguration = await locklift.giver.deployContract({
-    contract: EverscaleSolanaEventConfiguration,
+  const {contract: everscaleSolanaEventConfiguration}  = await locklift.factory.deployContract({
+    contract: 'EverscaleSolanaEventConfiguration',
     constructorParams: {
       _owner: response.owner,
       _meta: response.meta,
@@ -173,7 +174,7 @@ const main = async () => {
     initParams: {
       basicConfiguration: {
         eventABI: stringToBytesArray(JSON.stringify(event)),
-        eventInitialBalance: locklift.utils.convertCrystal(response.eventInitialBalance, 'nano'),
+        eventInitialBalance: locklift.utils.toNano(response.eventInitialBalance),
         staking: response.staking,
         eventCode: TonEvent.code,
       },
@@ -188,12 +189,13 @@ const main = async () => {
         endTimestamp: 0,
       }
     },
-    keyPair
-  }, locklift.utils.convertCrystal(response.value, 'nano'));
+    publicKey: signer.publicKey,
+    value: locklift.utils.toNano(response.value)
+  });
 
   spinner.stop();
 
-  await logContract(everscaleSolanaEventConfiguration);
+  await logContract("everscaleSolanaEventConfiguration address" , everscaleSolanaEventConfiguration.address);
 };
 
 

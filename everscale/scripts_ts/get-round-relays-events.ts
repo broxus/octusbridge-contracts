@@ -1,55 +1,19 @@
-const {
-  isValidTonAddress,
-} = require('../test/utils2');
+export {};
+
+import {Address} from "locklift";
 
 const ethers = require('ethers');
-const BigNumber = require('bignumber.js');
 const fs = require('fs');
 
-
-const requireEnv = (name, _default) => {
+const requireEnv = (name: string) => {
   const value = process.env[name];
 
-  if (value === undefined && _default === undefined) {
+  if (value === undefined ) {
     throw new Error(`Missing env at ${name}`);
   }
 
-  return value || _default;
+  return value;
 };
-
-
-const getEvents = async (configuration, ge_created_at=0) => {
-  const {
-    result
-  } = (await locklift.ton.client.net.query_collection({
-        collection: 'messages',
-        filter: {
-          src: {
-            eq: configuration.address
-          },
-          msg_type: {
-            eq: 2
-          },
-          created_at: {
-            gt: ge_created_at
-          }
-        },
-        result: 'body id src created_at',
-      }
-  ));
-
-  const events = (await configuration.decodeMessages(result, true, 'output'))
-      .filter(m => m.name === 'NewEventContract');
-
-  if (events.length === 0) return [];
-
-  return [
-    ...events,
-    ...(await getEvents(configuration, events[events.length - 1].created_at))
-  ];
-};
-
-
 
 const main = async () => {
   const rpc = requireEnv('EVM_RPC');
@@ -73,38 +37,33 @@ const main = async () => {
   console.log(`Last round in Ethereum bridge: ${lastRound}`);
 
   // Get events from the configuration
-  const roundRelaysConfiguration = await locklift.factory.getContract('EverscaleEthereumEventConfiguration');
-  roundRelaysConfiguration.address = configuration;
+  const roundRelaysConfiguration = await locklift.factory.getDeployedContract('EverscaleEthereumEventConfiguration', new Address(configuration));
 
-  const cellEncoderStandalone = await locklift.factory.getContract('CellEncoderStandalone');
-  cellEncoderStandalone.setAddress(cellEncoder);
+  const cellEncoderStandalone = await locklift.factory.getDeployedContract('CellEncoderStandalone', new Address(cellEncoder));
 
   // const events = await roundRelaysConfiguration.getEvents('NewEventContract');
-  const events = await getEvents(roundRelaysConfiguration);
 
-  const roundRelaysConfigurationDetails = await roundRelaysConfiguration.call({ method: 'getDetails' });
+  const events = await roundRelaysConfiguration.getPastEvents({}).then((e) => e.events);
+
+  const roundRelaysConfigurationDetails = await roundRelaysConfiguration.methods.getDetails({answerId: 0}).call();
 
   console.log(`Found ${events.length} events`);
 
   // Get event details
-  const eventDetails = await Promise.all(events.map(async (event) => {
-    const stakingTonEvent = await locklift.factory.getContract('StakingEverscaleEthereumEvent');
-    stakingTonEvent.address = event.value.eventContract;
+  const eventDetails = await Promise.all(events.map(async (event: any) => {
+    const stakingTonEvent = await locklift.factory.getDeployedContract('StakingEverscaleEthereumEvent', event.value.eventContract);
 
-    const details = await stakingTonEvent.call({method: 'getDetails'});
+    const details = await stakingTonEvent.methods.getDetails({answerId: 0}).call();
 
     // console.log(stakingTonEvent.address);
     // console.log(details);
 
-    const eventData = await cellEncoderStandalone.call({
-      method: 'decodeEverscaleEthereumStakingEventData',
-      params: {data: details._eventInitData.voteData.eventData}
-    });
+    const eventData = await cellEncoderStandalone.methods.decodeEverscaleEthereumStakingEventData({data: details._eventInitData.voteData.eventData}).call();
     const eventDataEncoded = ethers.utils.defaultAbiCoder.encode(
       ['uint32', 'uint160[]', 'uint32'],
       [eventData.round_num.toString(), eventData.eth_keys, eventData.round_end.toString()]
     );
-    const roundNumber = await stakingTonEvent.call({ method: 'round_number' });
+    const roundNumber = await stakingTonEvent.methods.round_number().call();
 
     const encodedEvent = ethers.utils.defaultAbiCoder.encode(
       [
@@ -124,19 +83,19 @@ const main = async () => {
         eventTransactionLt: details._eventInitData.voteData.eventTransactionLt.toString(),
         eventTimestamp: details._eventInitData.voteData.eventTimestamp.toString(),
         eventData: eventDataEncoded,
-        configurationWid: roundRelaysConfiguration.address.split(':')[0],
-        configurationAddress: '0x' + roundRelaysConfiguration.address.split(':')[1],
+        configurationWid: roundRelaysConfiguration.address.toString().split(':')[0],
+        configurationAddress: '0x' + roundRelaysConfiguration.address.toString().split(':')[1],
         eventContractWid: event.value.eventContract.split(':')[0],
         eventContractAddress: '0x' + event.value.eventContract.split(':')[1],
-        proxy: `0x${roundRelaysConfigurationDetails._networkConfiguration.proxy.toString(16)}`,
+        proxy: `0x${roundRelaysConfigurationDetails._networkConfiguration.proxy}`,
         round: roundNumber.toString(),
       }]
     );
-    let signatures = await Promise.all(details._signatures.map(async (sign) => {
+    let signatures = await Promise.all(details._signatures.map(async (sign: any) => {
       return {sign, address: ethers.BigNumber.from(await bridge.recoverSignature(encodedEvent, sign))};
     }));
 
-    signatures.sort((a, b) => {
+    signatures.sort((a: any, b: any) => {
       if (a.address.eq(b.address)) {
         return 0
       }
@@ -153,7 +112,7 @@ const main = async () => {
       encodedEvent,
       eventData,
       eventContract: event.value.eventContract,
-      signatures: signatures.map((d) => d.sign),
+      signatures: signatures.map((d: any) => d.sign),
       created_at: event.created_at
     };
 
@@ -163,7 +122,7 @@ const main = async () => {
     console.log(`Round Number: ${event.eventData.round_num}`);
     console.log(`Event contract: ${event.eventContract}`);
     console.log(`Payload: ${event.encodedEvent}`);
-    console.log(`Signatures: \n[${event.signatures.map((b) => '0x' + b.toString('hex')).join(',')}]`);
+    console.log(`Signatures: \n[${event.signatures.map((b: any) => '0x' + b.toString('hex')).join(',')}]`);
 
 
     if (event.eventData.round_num > lastRound) {

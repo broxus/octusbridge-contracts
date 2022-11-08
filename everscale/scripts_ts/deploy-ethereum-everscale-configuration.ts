@@ -1,8 +1,10 @@
+export {};
+
 const {
   logContract,
   isValidTonAddress,
   stringToBytesArray,
-} = require('../test/utils2');
+} = require('../test/utils');
 
 const prompts = require('prompts');
 const fs = require('fs');
@@ -43,9 +45,10 @@ program.parse(process.argv);
 const options = program.opts();
 
 const main = async () => {
-  const [keyPair] = await locklift.keys.getKeyPairs();
+  const signer = (await locklift.keystore.getSigner("0"))!;
 
   // Get all contracts from the build
+  // @ts-ignore
   const build = [...new Set(fs.readdirSync('build').map(o => o.split('.')[0]))];
   
   const events = fs.readdirSync('./../ethereum/abi');
@@ -56,7 +59,7 @@ const main = async () => {
     type: 'select',
     name: 'eventAbiFile',
     message: 'Select Ethereum ABI, which contains target event',
-    choices: events.map(e => new Object({ title: e, value: e })),
+    choices: events.map((e: any) => new Object({ title: e, value: e })),
     initial: events.indexOf(options.eventAbiFile) >= 0 ? events.indexOf(options.eventAbiFile) : 0
   });
 
@@ -69,10 +72,10 @@ const main = async () => {
     name: 'event',
     message: 'Choose Ethereum event',
     choices: abi
-      .filter(o => o.type == 'event' && o.anonymous == false)
-      .map(event => {
+      .filter((o: any) => o.type == 'event' && o.anonymous == false)
+      .map((event: any) => {
         return {
-          title: `${event.name} (${event.inputs.map(i => i.type.concat(' ').concat(i.name)).join(',')})`,
+          title: `${event.name} (${event.inputs.map((i: any) => i.type.concat(' ').concat(i.name)).join(',')})`,
           value: event,
         }
       }),
@@ -83,14 +86,14 @@ const main = async () => {
       type: 'text',
       name: 'owner',
       message: 'Initial configuration owner',
-      validate: value => isValidTonAddress(value) ? true : 'Invalid Everscale address',
+      validate: (value: any) => isValidTonAddress(value) ? true : 'Invalid Everscale address',
       initial: options.owner
     },
     {
       type: 'text',
       name: 'staking',
       message: 'Staking contract',
-      validate: value => isValidTonAddress(value) ? true : 'Invalid Everscale address',
+      validate: (value: any) => isValidTonAddress(value) ? true : 'Invalid Everscale address',
       initial: options.staking
     },
     {
@@ -123,7 +126,7 @@ const main = async () => {
       type: 'text',
       name: 'eventEmitter',
       message: 'Contract address, which emits event (Ethereum)',
-      validate: value => ethers.utils.isAddress(value) ? true : 'Invalid Ethereum address',
+      validate: (value: any) => ethers.utils.isAddress(value) ? true : 'Invalid Ethereum address',
       initial: options.eventEmitter
     },
     {
@@ -136,7 +139,7 @@ const main = async () => {
       type: 'text',
       name: 'proxy',
       message: 'Target address in FreeTON (proxy)',
-      validate: value => isValidTonAddress(value) ? true : 'Invalid Everscale address',
+      validate: (value: any) => isValidTonAddress(value) ? true : 'Invalid Everscale address',
       initial: options.proxy
     },
     {
@@ -153,13 +156,12 @@ const main = async () => {
     },
   ]);
   
-  const EthereumEverscaleEventConfiguration = await locklift.factory.getContract('EthereumEverscaleEventConfiguration');
-  const EthereumEvent = await locklift.factory.getContract(response.eventContract);
+  const EthereumEvent = await locklift.factory.getContractArtifacts(response.eventContract);
   
   const spinner = ora('Deploying Ethereum event configuration').start();
-  
-  const ethereumEverscaleEventConfiguration = await locklift.giver.deployContract({
-    contract: EthereumEverscaleEventConfiguration,
+
+  const {contract: ethereumEverscaleEventConfiguration}  = await locklift.factory.deployContract({
+    contract: 'EthereumEverscaleEventConfiguration',
     constructorParams: {
       _owner: response.owner,
       _meta: response.meta,
@@ -167,7 +169,7 @@ const main = async () => {
     initParams: {
       basicConfiguration: {
         eventABI: stringToBytesArray(JSON.stringify(event)),
-        eventInitialBalance: locklift.utils.convertCrystal(response.eventInitialBalance, 'nano'),
+        eventInitialBalance: locklift.utils.toNano(response.eventInitialBalance),
         staking: response.staking,
         eventCode: EthereumEvent.code,
       },
@@ -180,12 +182,13 @@ const main = async () => {
         endBlockNumber: 0,
       }
     },
-    keyPair
-  }, locklift.utils.convertCrystal(response.value, 'nano'));
-  
+    publicKey: signer.publicKey,
+    value: locklift.utils.toNano(response.value)
+  });
+
   spinner.stop();
-  
-  await logContract(ethereumEverscaleEventConfiguration);
+
+  await logContract("ethereumEverscaleEventConfiguration address" , ethereumEverscaleEventConfiguration.address);
 };
 
 

@@ -1,13 +1,14 @@
+export {};
 const ora = require('ora');
 const prompts = require('prompts');
 
+const {zeroAddress} = require("locklift");
 const {
     logContract,
     isValidTonAddress,
-    afterRun,
+    deployAccount,
     logger
-} = require("../test/utils2");
-
+} = require('./../test_ts/utils');
 
 
 const main = async () => {
@@ -16,7 +17,7 @@ const main = async () => {
             type: 'text',
             name: 'owner',
             message: 'Initial proxy owner',
-            validate: value => isValidTonAddress(value) ? true : 'Invalid Everscale address',
+            validate: (value: any) => isValidTonAddress(value) ? true : 'Invalid Everscale address',
         },
         {
             type: 'number',
@@ -26,100 +27,87 @@ const main = async () => {
         }
     ]);
 
-
-    const [keyPair] = await locklift.keys.getKeyPairs();
-
-    const Account = await locklift.factory.getAccount('Wallet');
-    const ProxyMultiVaultEthereumNative = await locklift.factory.getContract('ProxyMultiVaultEthereumNative');
-    const ProxyMultiVaultEthereumAlien = await locklift.factory.getContract('ProxyMultiVaultEthereumAlien');
-    const AlienTokenRoot = await locklift.factory.getContract('TokenRootAlienEVMEverscale');
-    const AlienTokenWalletUpgradeable = await locklift.factory.getContract('AlienTokenWalletUpgradeable');
-    const AlienTokenWalletPlatform = await locklift.factory.getContract('AlienTokenWalletPlatform');
-
+    const signer = (await locklift.keystore.getSigner("0"))!;
 
     const spinner = ora('Deploying native proxy').start();
 
-    const proxyMultiVaultNative = await locklift.giver.deployContract({
-        contract: ProxyMultiVaultEthereumNative,
+    const {contract: proxyMultiVaultNative} = await locklift.factory.deployContract({
+        contract: 'ProxyMultiVaultEthereumNative',
         constructorParams: {
             owner_: response.owner,
         },
-        initParams: {},
-        keyPair
-    }, locklift.utils.convertCrystal(response.value, 'nano'));
+        initParams: {_randomNonce: locklift.utils.getRandomNonce()},
+        publicKey: signer.publicKey,
+        value: locklift.utils.toNano(response.value)
+    });
 
     spinner.stop();
 
-    await logContract(proxyMultiVaultNative);
+    await logContract("proxyMultiVaultNative address" , proxyMultiVaultNative.address);
 
     // Deploy alien proxy
     // - Deploy temporary admin
     spinner.start('Deploying temporary owner for alien proxy');
 
-    const user = await locklift.giver.deployContract({
-        contract: Account,
-        constructorParams: {},
-        initParams: {},
-        keyPair,
-    }, locklift.utils.convertCrystal(30, 'nano'));
-
-    user.afterRun = afterRun;
-    user.setKeyPair(keyPair);
+    const user = await deployAccount(signer, 30);
 
     spinner.stop();
 
-    await logContract(user);
+    await logContract("user address" , user.address);
 
     spinner.start('Deploying alien proxy');
 
-    const proxyMultiVaultAlien = await locklift.giver.deployContract({
-        contract: ProxyMultiVaultEthereumAlien,
+    const {contract: proxyMultiVaultAlien}  = await locklift.factory.deployContract({
+        contract: 'ProxyMultiVaultEthereumAlien',
         constructorParams: {
             owner_: user.address,
         },
-        initParams: {},
-        keyPair
-    }, locklift.utils.convertCrystal(response.value, 'nano'));
+        initParams: {_randomNonce: locklift.utils.getRandomNonce()},
+        publicKey: signer.publicKey,
+        value: locklift.utils.toNano(response.value)
+    });
 
     spinner.stop();
 
-    await logContract(proxyMultiVaultAlien);
+    await logContract("proxyMultiVaultAlien address" , proxyMultiVaultAlien.address);
 
     spinner.start('Setting token code at alien proxy');
 
-    const setConfigurationTx = await user.runTarget({
-       contract: proxyMultiVaultAlien,
-       method: 'setConfiguration',
-       params: {
-           _config: {
-               everscaleConfiguration: locklift.utils.zeroAddress,
-               evmConfigurations: [],
-               deployWalletValue: locklift.utils.convertCrystal(0.1, 'nano'),
-               alienTokenRootCode: AlienTokenRoot.code,
-               alienTokenWalletCode: AlienTokenWalletUpgradeable.code,
-               alienTokenWalletPlatformCode: AlienTokenWalletPlatform.code,
-           },
-           remainingGasTo: response.owner
-       }
+    const AlienTokenRoot = await locklift.factory.getContractArtifacts('TokenRootAlienSolanaEverscale');
+    const AlienTokenWalletUpgradeable = await locklift.factory.getContractArtifacts('AlienTokenWalletUpgradeable');
+    const AlienTokenWalletPlatform = await locklift.factory.getContractArtifacts('AlienTokenWalletPlatform');
+
+    const setConfigurationTx = await proxyMultiVaultAlien.methods.setConfiguration({
+        _config: {
+            everscaleConfiguration: zeroAddress,
+            evmConfigurations: [],
+            deployWalletValue: locklift.utils.toNano(0.1),
+            alienTokenRootCode: AlienTokenRoot.code,
+            alienTokenWalletCode: AlienTokenWalletUpgradeable.code,
+            alienTokenWalletPlatformCode: AlienTokenWalletPlatform.code,
+        },
+        remainingGasTo: response.owner
+    }).send({
+        from: user.address,
+        amount: locklift.utils.toNano(0.5),
     });
 
     spinner.stop();
 
-    logger.log(`Set configuration tx: ${setConfigurationTx.transaction.id}`);
+    logger.log(`Set configuration tx: ${setConfigurationTx.id}`);
 
     spinner.start('Transferring ownership at alien proxy');
 
-    const transferOwnershipTx = await user.runTarget({
-        contract: proxyMultiVaultAlien,
-        method: 'transferOwnership',
-        params: {
-            newOwner: response.owner,
-        },
+    const transferOwnershipTx = await proxyMultiVaultAlien.methods.transferOwnership({
+        newOwner: response.owner,
+    }).send({
+        from: user.address,
+        amount: locklift.utils.toNano(1),
     });
 
     spinner.stop();
 
-    logger.log(`Transfer ownership tx: ${transferOwnershipTx.transaction.id}`);
+    logger.log(`Transfer ownership tx: ${transferOwnershipTx.id}`);
 };
 
 

@@ -7,8 +7,6 @@ const {
   deployAccount
 } = require('./../test_ts/utils');
 
-const getRandomNonce = () => Math.ceil(Math.random() * 64000);
-
 async function main() {
   // bright
   console.log('\x1b[1m', '\n\nSetting staking deployment params:')
@@ -146,7 +144,7 @@ async function main() {
   const {contract: stakingRootDeployer}  = await locklift.transactions.waitFinalized(locklift.factory.deployContract({
     contract: 'StakingRootDeployer',
     constructorParams: {},
-    initParams: {nonce: getRandomNonce(), stakingCode: stakingRootData.code},
+    initParams: {nonce: locklift.utils.getRandomNonce(), stakingCode: stakingRootData.code},
     publicKey: signer.publicKey,
     value: locklift.utils.toNano(30)
   }));
@@ -169,7 +167,7 @@ async function main() {
     _bridge_event_config_ton_eth: deploy_params.tonEthEventConfig,
     _bridge_event_config_ton_sol: deploy_params.tonSolEventConfig,
     _tokenRoot: deploy_params.tokenRoot,
-    _deploy_nonce: getRandomNonce()
+    _deploy_nonce: locklift.utils.getRandomNonce()
   }).sendExternal({
     publicKey: admin.address,
   });

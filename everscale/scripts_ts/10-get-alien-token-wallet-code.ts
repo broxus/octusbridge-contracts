@@ -1,5 +1,7 @@
+export {};
+
 const main = async () => {
-    const AlienTokenWalletUpgradeable = await locklift.factory.getContract('AlienTokenWalletUpgradeable');
+    const AlienTokenWalletUpgradeable = await locklift.factory.getContractArtifacts('AlienTokenWalletUpgradeable');
 
     console.log(AlienTokenWalletUpgradeable.code);
 };

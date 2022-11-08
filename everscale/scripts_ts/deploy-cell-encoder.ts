@@ -1,23 +1,21 @@
+export {};
+
 const {
   logContract,
-} = require('../test/utils2');
-
-
-
+} = require('../test/utils');
 
 const main = async () => {
-  const [keyPair] = await locklift.keys.getKeyPairs();
+  const signer = (await locklift.keystore.getSigner("0"))!;
 
-  const CellEncoderStandalone = await locklift.factory.getContract('CellEncoderStandalone');
-
-  const cellEncoderStandalone = await locklift.giver.deployContract({
-    contract: CellEncoderStandalone,
+  const {contract: cellEncoderStandalone} = await locklift.factory.deployContract({
+    contract: 'CellEncoderStandalone',
     constructorParams: {},
-    initParams: {},
-    keyPair
-  }, locklift.utils.convertCrystal(0.5, 'nano'));
+    initParams: {_randomNonce: locklift.utils.getRandomNonce()},
+    publicKey: signer.publicKey,
+    value: locklift.utils.toNano(0.5)
+  });
 
-  await logContract(cellEncoderStandalone);
+  await logContract("cellEncoderStandalone address" , cellEncoderStandalone.address);
 };
 
 

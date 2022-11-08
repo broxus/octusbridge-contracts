@@ -1,3 +1,7 @@
+export {};
+
+import {Address} from "locklift";
+
 const ethers = require('ethers');
 const fs = require("fs");
 
@@ -15,36 +19,33 @@ const main = async () => {
         provider
     );
 
-    const event = await locklift.factory.getContract('MultiVaultEverscaleEVMEventNative');
-    event.setAddress(eventContract);
+    const event = await locklift.factory.getDeployedContract('MultiVaultEverscaleEVMEventNative', new Address(eventContract));
 
-    const details = await event.call({ method: 'getDetails' });
-    const roundNumber = await event.call({ method: 'round_number' });
-
-    const eventDataDecoded = await event.call({ method: 'getDecodedData' });
+    const details = await event.methods.getDetails({ answerId: 0}).call();
+    const roundNumber = await event.methods.round_number({}).call();
+    const eventDataDecoded = await event.methods.getDecodedData({answerId: 0}).call();
 
     const eventDataEncoded = ethers.utils.defaultAbiCoder.encode(
         ['int8', 'uint256', 'string', 'string', 'uint8', 'uint128', 'uint160', 'uint256'],
         [
-            eventDataDecoded.token_.split(':')[0],
-            `0x${eventDataDecoded.token_.split(':')[1]}`,
+            eventDataDecoded.token_.toString().split(':')[0],
+            `0x${eventDataDecoded.token_.toString().split(':')[1]}`,
 
             eventDataDecoded.name_,
             eventDataDecoded.symbol_,
-            eventDataDecoded.decimals_.toFixed(),
+            eventDataDecoded.decimals_,
 
             eventDataDecoded.amount_.toString(),
-            eventDataDecoded.recipient_.toFixed(),
+            eventDataDecoded.recipient_,
             eventDataDecoded.chainId_.toString(),
         ]
     );
 
-    const configuration = await locklift.factory.getContract('EverscaleEthereumEventConfiguration');
-    configuration.setAddress(details._eventInitData.configuration);
+    const configuration = await locklift.factory.getDeployedContract('EverscaleEthereumEventConfiguration', details._eventInitData.configuration);
 
     // console.log(details);
 
-    const configurationDetails = await configuration.call({ method: 'getDetails' });
+    const configurationDetails = await configuration.methods.getDetails({ answerId: 0}).call();
 
     const encodedEvent = ethers.utils.defaultAbiCoder.encode(
         [
@@ -64,11 +65,11 @@ const main = async () => {
             eventTransactionLt: details._eventInitData.voteData.eventTransactionLt.toString(),
             eventTimestamp: details._eventInitData.voteData.eventTimestamp.toString(),
             eventData: eventDataEncoded,
-            configurationWid: details._eventInitData.configuration.split(':')[0],
-            configurationAddress: '0x' + details._eventInitData.configuration.split(':')[1],
+            configurationWid: details._eventInitData.configuration.toString().split(':')[0],
+            configurationAddress: '0x' + details._eventInitData.configuration.toString().split(':')[1],
             eventContractWid: eventContract.split(':')[0],
             eventContractAddress: '0x' + eventContract.split(':')[1],
-            proxy: `0x${configurationDetails._networkConfiguration.proxy.toString(16)}`,
+            proxy: `0x${configurationDetails._networkConfiguration.proxy}`,
             round: roundNumber.toString(),
         }]
     );
@@ -94,7 +95,7 @@ const main = async () => {
     // console.log(signatures);
 
     console.log(encodedEvent);
-    console.log(`[${signatures.map((b) => '0x' + b.sign.toString('hex')).join(',')}]`);
+    console.log(`[${signatures.map((b) => '0x' + b.sign).join(',')}]`);
 };
 
 

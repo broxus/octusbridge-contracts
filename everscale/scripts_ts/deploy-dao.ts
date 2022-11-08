@@ -1,7 +1,11 @@
+export {};
+
 const {
   logContract,
   isValidTonAddress,
-} = require('../test/utils2');
+  deployAccount,
+  logger
+} = require('../test/utils');
 
 
 const prompts = require('prompts');
@@ -9,14 +13,14 @@ const ora = require('ora');
 
 
 const main = async () => {
-  const [keyPair] = await locklift.keys.getKeyPairs();
+  const signer = (await locklift.keystore.getSigner("0"))!;
 
   const response = await prompts([
     {
       type: 'text',
       name: 'owner',
       message: 'Initial DAO owner',
-      validate: value => isValidTonAddress(value) ? true : 'Invalid Everscale address'
+      validate: (value: any) => isValidTonAddress(value) ? true : 'Invalid Everscale address'
     },
     {
       type: 'number',
@@ -70,56 +74,51 @@ const main = async () => {
     threshold: response.threshold,
     gracePeriod: response.gracePeriod
   }
-  const Account = await locklift.factory.getAccount('Wallet');
 
-  let tempAdmin = await locklift.giver.deployContract({
-    contract: Account,
-    constructorParams: {},
-    initParams: {
-      randomNonce: locklift.utils.getRandomNonce(),
-    },
-    keyPair
-  }, locklift.utils.convertCrystal(5, 'nano'));
-  tempAdmin.setKeyPair(keyPair);
+  const tempAdmin = await deployAccount(signer, 5);
 
-  const Platform = await locklift.factory.getContract('Platform');
-  const DaoRoot = await locklift.factory.getContract('DaoRoot');
-  const Proposal = await locklift.factory.getContract('Proposal');
+  const Platform = await locklift.factory.getContractArtifacts('Platform');
+  const Proposal = await locklift.factory.getContractArtifacts('Proposal');
 
   const spinner = ora('Deploying DAO Root').start();
 
-  const daoRoot = await locklift.giver.deployContract({
-    contract: DaoRoot,
+  const {contract: daoRoot} = await locklift.factory.deployContract({
+    contract: 'DaoRoot',
     constructorParams: {
       platformCode_: Platform.code,
       proposalConfiguration_: proposalConfiguration,
       admin_: tempAdmin.address
     },
-    initParams: {
-      _nonce: locklift.utils.getRandomNonce(),
-    },
-    keyPair: keyPair,
-  }, locklift.utils.convertCrystal(response.value, 'nano'));
+    initParams: {_nonce: locklift.utils.getRandomNonce()},
+    publicKey: signer.publicKey,
+    value: locklift.utils.toNano(response.value)
+  });
 
   spinner.text = 'Installing proposal code';
 
-  await tempAdmin.runTarget({
-    contract: daoRoot,
-    method: 'updateProposalCode',
-    params: {code: Proposal.code},
-    value: locklift.utils.convertCrystal(1, 'nano')
+  const updateProposalCodeTx = await daoRoot.methods.updateProposalCode({
+    code: Proposal.code,
+  }).send({
+    from: tempAdmin.address,
+    amount: locklift.utils.toNano(1),
   });
+
+  logger.log(`update Proposal Code tx: ${updateProposalCodeTx.id}`);
+
   spinner.text = 'Transfer admin';
-  await tempAdmin.runTarget({
-    contract: daoRoot,
-    method: 'transferAdmin',
-    params: {newAdmin: response.owner},
-    value: locklift.utils.convertCrystal(1, 'nano')
+
+  const transferAdminTx = await daoRoot.methods.transferAdmin({
+    newAdmin: response.owner,
+  }).send({
+    from: tempAdmin.address,
+    amount: locklift.utils.toNano(1),
   });
+
+  logger.log(`transfer Admin tx: ${transferAdminTx.id}`);
+
   spinner.stop();
 
-
-  await logContract(daoRoot);
+  await logContract("daoRoot address" , daoRoot.address);
 };
 main()
   .then(() => process.exit(0))

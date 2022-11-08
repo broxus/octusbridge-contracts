@@ -1,36 +1,35 @@
+export {};
+
 const {
   logContract,
   isValidTonAddress,
-} = require('../test/utils2');
+} = require('../test/utils');
 
 const prompts = require('prompts');
 const ora = require('ora');
 
 
 const main = async () => {
-  const [keyPair] = await locklift.keys.getKeyPairs();
-  
-  const Bridge = await locklift.factory.getContract('Bridge');
-  const Connector = await locklift.factory.getContract('Connector');
-  
+  const signer = (await locklift.keystore.getSigner("0"))!;
+
   const response = await prompts([
     {
       type: 'text',
       name: 'owner',
       message: 'Bridge initial owner (can be changed later)',
-      validate: value => isValidTonAddress(value) ? true : 'Invalid address'
+      validate: (value: any) => isValidTonAddress(value) ? true : 'Invalid address'
     },
     {
       type: 'text',
       name: 'staking',
       message: 'Staking contract',
-      validate: value => isValidTonAddress(value) ? true : 'Invalid address'
+      validate: (value: any) => isValidTonAddress(value) ? true : 'Invalid address'
     },
     {
       type: 'text',
       name: 'manager',
       message: 'Bridge initial manager',
-      validate: value => isValidTonAddress(value) ? true : 'Invalid address'
+      validate: (value: any) => isValidTonAddress(value) ? true : 'Invalid address'
     },
     {
       type: 'number',
@@ -47,28 +46,28 @@ const main = async () => {
   ]);
   
   const spinner = ora('Deploying bridge').start();
-  
-  const bridge = await locklift.giver.deployContract({
-    contract: Bridge,
+
+  const Connector = await locklift.factory.getContractArtifacts('Connector');
+
+  const {contract: bridge} = await locklift.factory.deployContract({
+    contract: 'Bridge',
     constructorParams: {
       _owner: response.owner,
       _manager: response.manager,
       _staking: response.staking,
       _connectorCode: Connector.code,
-      _connectorDeployValue: locklift.utils.convertCrystal(
-        response.connectorDeployValue,
-        'nano'
+      _connectorDeployValue: locklift.utils.toNano(
+          response.connectorDeployValue,
       ),
     },
-    initParams: {
-      _randomNonce: locklift.utils.getRandomNonce(),
-    },
-    keyPair
-  }, locklift.utils.convertCrystal(response.value, 'nano'));
-  
+    initParams: {_randomNonce: locklift.utils.getRandomNonce()},
+    publicKey: signer.publicKey,
+    value: locklift.utils.toNano(response.value)
+  });
+
   spinner.stop();
-  
-  await logContract(bridge);
+
+  await logContract("bridge address" , bridge.address);
 };
 
 

@@ -1,6 +1,7 @@
+export {};
 
 const main = async () => {
-    const Election = await locklift.factory.getContract('Election');
+    const Election = await locklift.factory.getContractArtifacts('Election');
     console.log('Election code:\n')
     console.log(Election.code);
 };

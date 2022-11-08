@@ -1,12 +1,13 @@
-const main = async () => {
-    const MultiVaultEVMEverscaleEventNative = await locklift.factory.getContract('MultiVaultEVMEverscaleEventNative');
-    const MultiVaultEverscaleEVMEventNative = await locklift.factory.getContract('MultiVaultEverscaleEVMEventNative');
+export {};
 
-    const MultiVaultEVMEverscaleEventAlien = await locklift.factory.getContract('MultiVaultEVMEverscaleEventAlien');
-    const MultiVaultEverscaleEVMEventAlien = await locklift.factory.getContract('MultiVaultEverscaleEVMEventAlien');
+const main = async () => {
+    const MultiVaultEVMEverscaleEventNative = await locklift.factory.getContractArtifacts('MultiVaultEVMEverscaleEventNative');
+    const MultiVaultEverscaleEVMEventNative = await locklift.factory.getContractArtifacts('MultiVaultEverscaleEVMEventNative');
+
+    const MultiVaultEVMEverscaleEventAlien = await locklift.factory.getContractArtifacts('MultiVaultEVMEverscaleEventAlien');
+    const MultiVaultEverscaleEVMEventAlien = await locklift.factory.getContractArtifacts('MultiVaultEverscaleEVMEventAlien');
 
     for (const event of [MultiVaultEVMEverscaleEventNative, MultiVaultEverscaleEVMEventNative, MultiVaultEVMEverscaleEventAlien, MultiVaultEverscaleEVMEventAlien]) {
-        console.log(event.name);
         console.log(event.code);
         console.log('');
     }
