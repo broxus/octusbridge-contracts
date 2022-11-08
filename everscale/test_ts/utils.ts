@@ -52,7 +52,7 @@ class MetricManager {
         const startCheckPoint = this.getCheckPoint(startCheckPointName);
         const endCheckPoint = this.getCheckPoint(endCheckPointName);
 
-        const difference: { [key: string]: number } = {};
+        let difference: { [key: string]: number } = {};
 
         for (const [startMetric, endMetric, contract] of _.zip(startCheckPoint, endCheckPoint, this.contracts)) {
             difference[contract.name] = endMetric - startMetric;
