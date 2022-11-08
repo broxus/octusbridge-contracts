@@ -2,7 +2,6 @@ import {Address, Contract, Signer, WalletTypes} from "locklift";
 import {FactorySource} from "../build/factorySource";
 import {Account} from "everscale-standalone-client/nodejs";
 import {ed25519_generateKeyPair} from "nekoton-wasm";
-import {Ed25519KeyPair} from "everscale-standalone-client";
 
 const logger = require('mocha-logger');
 const BigNumber = require('bignumber.js');

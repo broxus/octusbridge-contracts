@@ -5,14 +5,21 @@ const {
   setupSolanaEverscaleEventConfiguration,
   setupEverscaleEthereumEventConfiguration,
   setupEverscaleSolanaEventConfiguration,
-  expect,
 } = require('../../utils');
+
+import { expect } from "chai";
+import { Contract } from "locklift";
+import { FactorySource } from "../../../build/factorySource";
+import {Account} from "everscale-standalone-client/nodejs";
+
+let bridge: Contract<FactorySource["Bridge"]>;
+let cellEncoder: Contract<FactorySource["CellEncoderStandalone"]>;
+let staking: Contract<FactorySource["StakingMockup"]>;
+let bridgeOwner: Account;
 
 
 describe('Test setting configuration meta', async function() {
   this.timeout(10000000);
-  
-  let bridge, bridgeOwner, staking, cellEncoder;
   
   const emptyCell = 'te6ccgEBAQEAAgAAAA==';
   
@@ -23,7 +30,8 @@ describe('Test setting configuration meta', async function() {
   });
   
   describe('Ethereum Everscale event configuration', async () => {
-    let ethereumEverscaleEventConfiguration, proxy;
+    let ethereumEverscaleEventConfiguration: Contract<FactorySource["EthereumEverscaleEventConfiguration"]>;
+    let proxy;
     
     it('Setup Ethereum Everscale event configuration', async () => {
       [ethereumEverscaleEventConfiguration, proxy] = await setupEthereumEverscaleEventConfiguration(
@@ -34,17 +42,16 @@ describe('Test setting configuration meta', async function() {
     });
     
     it('Set Ethereum Everscale meta', async () => {
-      await bridgeOwner.runTarget({
-        contract: ethereumEverscaleEventConfiguration,
-        method: 'setMeta',
-        params: {
-          _meta: ''
-        }
+      await ethereumEverscaleEventConfiguration.methods.setMeta({
+        _meta: ''
+      }).send({
+        from: bridgeOwner.address,
+        amount: locklift.utils.toNano(1),
       });
     });
     
     it('Check Ethereum Everscale configuration meta', async () => {
-      const details = await ethereumEverscaleEventConfiguration.call({ method: 'getDetails' });
+      const details = await ethereumEverscaleEventConfiguration.methods.getDetails({answerId: 0}).call();
       
       expect(details._meta)
         .to.be.equal(emptyCell, 'Wrong meta');
@@ -52,7 +59,7 @@ describe('Test setting configuration meta', async function() {
   });
   
   describe('Everscale Ethereum event configuration', async () => {
-    let everscaleEthereumEventConfiguration;
+    let everscaleEthereumEventConfiguration: Contract<FactorySource["EverscaleEthereumEventConfiguration"]>;
 
     it('Setup event configuration', async () => {
       [everscaleEthereumEventConfiguration] = await setupEverscaleEthereumEventConfiguration(
@@ -63,17 +70,16 @@ describe('Test setting configuration meta', async function() {
     });
 
     it('Set Everscale Ethereum meta', async () => {
-      await bridgeOwner.runTarget({
-        contract: everscaleEthereumEventConfiguration,
-        method: 'setMeta',
-        params: {
-          _meta: ''
-        }
+      await everscaleEthereumEventConfiguration.methods.setMeta({
+        _meta: ''
+      }).send({
+        from: bridgeOwner.address,
+        amount: locklift.utils.toNano(1),
       });
     });
 
     it('Check Everscale Ethereum configuration meta', async () => {
-      const details = await everscaleEthereumEventConfiguration.call({ method: 'getDetails' });
+      const details = await everscaleEthereumEventConfiguration.methods.getDetails({answerId: 0}).call();
 
       expect(details._meta)
         .to.be.equal(emptyCell, 'Wrong meta');
@@ -81,7 +87,8 @@ describe('Test setting configuration meta', async function() {
   });
 
   describe('Solana Everscale event configuration', async () => {
-    let solanaEverscaleEventConfiguration, proxy;
+    let solanaEverscaleEventConfiguration: Contract<FactorySource["SolanaEverscaleEventConfiguration"]>;
+    let proxy;
 
     it('Setup Solana Everscale event configuration', async () => {
       [solanaEverscaleEventConfiguration, proxy] = await setupSolanaEverscaleEventConfiguration(
@@ -91,17 +98,16 @@ describe('Test setting configuration meta', async function() {
     });
 
     it('Set Solana Everscale meta', async () => {
-      await bridgeOwner.runTarget({
-        contract: solanaEverscaleEventConfiguration,
-        method: 'setMeta',
-        params: {
-          _meta: ''
-        }
+      await solanaEverscaleEventConfiguration.methods.setMeta({
+        _meta: ''
+      }).send({
+        from: bridgeOwner.address,
+        amount: locklift.utils.toNano(1),
       });
     });
 
     it('Check Solana Everscale configuration meta', async () => {
-      const details = await solanaEverscaleEventConfiguration.call({ method: 'getDetails' });
+      const details = await solanaEverscaleEventConfiguration.methods.getDetails({answerId: 0}).call();
 
       expect(details._meta)
         .to.be.equal(emptyCell, 'Wrong meta');
@@ -109,7 +115,7 @@ describe('Test setting configuration meta', async function() {
   });
 
   describe('Everscale Solana event configuration', async () => {
-    let everscaleSolanaEventConfiguration;
+    let everscaleSolanaEventConfiguration: Contract<FactorySource["EverscaleSolanaEventConfiguration"]>;
 
     it('Setup Everscale Solana event configuration', async () => {
       [everscaleSolanaEventConfiguration] = await setupEverscaleSolanaEventConfiguration(
@@ -119,17 +125,16 @@ describe('Test setting configuration meta', async function() {
     });
 
     it('Set Everscale Solana meta', async () => {
-      await bridgeOwner.runTarget({
-        contract: everscaleSolanaEventConfiguration,
-        method: 'setMeta',
-        params: {
-          _meta: ''
-        }
+      await everscaleSolanaEventConfiguration.methods.setMeta({
+        _meta: ''
+      }).send({
+        from: bridgeOwner.address,
+        amount: locklift.utils.toNano(1),
       });
     });
 
     it('Check Everscale Solana configuration meta', async () => {
-      const details = await everscaleSolanaEventConfiguration.call({ method: 'getDetails' });
+      const details = await everscaleSolanaEventConfiguration.methods.getDetails({answerId: 0}).call();
 
       expect(details._meta)
         .to.be.equal(emptyCell, 'Wrong meta');
