@@ -1,3 +1,5 @@
+import {Ed25519KeyPair} from "nekoton-wasm";
+
 const {
   setupBridge,
   setupSolanaEverscaleEventConfiguration,
@@ -5,23 +7,30 @@ const {
   MetricManager,
   enableEventConfiguration,
   captureConnectors,
-  afterRun,
   logger,
-  expect, getTokenRoot,
 } = require('../../../utils');
 
+import { expect } from "chai";
+import { Contract } from "locklift";
+import { FactorySource } from "../../../../build/factorySource";
+import {Account} from "everscale-standalone-client/nodejs";
+
+let bridge: Contract<FactorySource["Bridge"]>;
+let cellEncoder: Contract<FactorySource["CellEncoderStandalone"]>;
+let staking: Contract<FactorySource["StakingMockup"]>;
+let bridgeOwner: Account;
+let metricManager: InstanceType<typeof MetricManager>;
+let relays: Ed25519KeyPair[];
+let solanaEverscaleEventConfiguration: Contract<FactorySource["SolanaEverscaleEventConfiguration"]>;
+let proxy: Contract<FactorySource["ProxyTokenTransfer"]>;
+let initializer: Account;
 
 describe('Test solana everscale event reject', async function() {
   this.timeout(10000000);
 
-  let bridge, bridgeOwner, staking, cellEncoder;
-  let solanaEverscaleEventConfiguration, proxy, initializer;
-  let relays;
-  let metricManager;
-
   afterEach(async function() {
     const lastCheckPoint = metricManager.lastCheckPointName();
-    const currentName = this.currentTest.title;
+    const currentName = this.currentTest?.title;
 
     await metricManager.checkPoint(currentName);
 
@@ -76,7 +85,9 @@ describe('Test solana everscale event reject', async function() {
     });
   });
 
-  let eventContract, eventVoteData;
+  let eventVoteData: any;
+  let eventDataStructure: any;
+  let eventContract: Contract<FactorySource["TokenTransferSolanaEverscaleEvent"]>;
 
   describe('Initialize event', async () => {
 
@@ -88,10 +99,7 @@ describe('Test solana everscale event reject', async function() {
         receiver_addr: initializer.address
       };
 
-      const eventData = await cellEncoder.call({
-        method: 'encodeSolanaEverscaleEventData',
-        params: eventDataStructure
-      });
+      const eventData = await cellEncoder.methods.encodeSolanaEverscaleEventData(eventDataStructure).call().then(t => t.data);
 
       eventVoteData = {
           accountSeed: 111,
@@ -103,29 +111,20 @@ describe('Test solana everscale event reject', async function() {
     });
 
     it('Initialize event', async () => {
-      const tx = await initializer.runTarget({
-        contract: solanaEverscaleEventConfiguration,
-        method: 'deployEvent',
-        params: {
-          eventVoteData,
-        },
-        value: locklift.utils.convertCrystal(3, 'nano')
+      const tx = await solanaEverscaleEventConfiguration.methods.deployEvent({
+        eventVoteData,
+      }).send({
+        from: initializer.address,
+        amount: locklift.utils.toNano(3),
       });
 
       logger.log(`Event initialization tx: ${tx.id}`);
 
-      const expectedEventContract = await solanaEverscaleEventConfiguration.call({
-        method: 'deriveEventAddress',
-        params: {
-          eventVoteData,
-        }
-      });
+      const expectedEventContract = await solanaEverscaleEventConfiguration.methods.deriveEventAddress(eventVoteData).call();
 
-      logger.log(`Expected event address: ${expectedEventContract}`);
+      logger.log(`Expected event address: ${expectedEventContract.eventContract}`);
 
-      eventContract = await locklift.factory.getContract('TokenTransferSolanaEverscaleEvent');
-      eventContract.setAddress(expectedEventContract);
-      eventContract.afterRun = afterRun;
+      eventContract = await locklift.factory.getDeployedContract('TokenTransferSolanaEverscaleEvent', expectedEventContract.eventContract);
     });
   });
 
@@ -134,15 +133,15 @@ describe('Test solana everscale event reject', async function() {
       const requiredVotes = await eventContract.methods.requiredVotes().call();
 
       const rejects = [];
-      for (const [relayId, relay] of Object.entries(relays.slice(0, requiredVotes))) {
-        logger.log(`Reject #${relayId} from ${relay.public}`);
+      for (const [relayId, relay] of Object.entries(relays.slice(0, parseInt(requiredVotes.requiredVotes, 10)))) {
+        logger.log(`Reject #${relayId} from ${relay.publicKey}`);
 
-        rejects.push(eventContract.run({
-          method: 'reject',
-          params: {
-            voteReceiver: eventContract.address
-          },
-          keyPair: relay
+        locklift.keystore.addKeyPair(relay);
+
+        rejects.push(eventContract.methods.reject({
+          voteReceiver: eventContract.address,
+        }).sendExternal({
+          publicKey: relay.publicKey,
         }));
       }
       await Promise.all(rejects);
@@ -155,16 +154,16 @@ describe('Test solana everscale event reject', async function() {
 
 
       expect(details.balance)
-        .to.be.bignumber.equal(0, 'Wrong balance');
+        .to.be.equal(0, 'Wrong balance');
 
       expect(details._status)
-        .to.be.bignumber.equal(3, 'Wrong status');
+        .to.be.equal(3, 'Wrong status');
 
       expect(details._confirms)
         .to.have.lengthOf(0, 'Wrong amount of confirmations');
 
       expect(details._rejects)
-        .to.have.lengthOf(requiredVotes, 'Wrong amount of relays confirmations');
+        .to.have.lengthOf(parseInt(requiredVotes.requiredVotes, 10), 'Wrong amount of relays confirmations');
     });
   });
 });

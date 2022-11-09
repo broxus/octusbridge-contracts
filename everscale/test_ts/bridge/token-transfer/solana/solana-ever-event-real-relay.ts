@@ -1,30 +1,39 @@
+import {Ed25519KeyPair} from "nekoton-wasm";
 const {
   setupBridge,
   setupSolanaEverscaleEventConfigurationReal,
   MetricManager,
   enableEventConfiguration,
   captureConnectors,
-  afterRun,
   logger,
-  expect,
   getTokenWalletByAddress,
-  getTokenRoot
 } = require('../../../utils');
-const BigNumber = require("bignumber.js");
+const BigNumber = require("js");
+
+import { expect } from "chai";
+import { Contract } from "locklift";
+import { FactorySource } from "../../../../build/factorySource";
+import {Account} from "everscale-standalone-client/nodejs";
+
+let bridge: Contract<FactorySource["Bridge"]>;
+let cellEncoder: Contract<FactorySource["CellEncoderStandalone"]>;
+let staking: Contract<FactorySource["StakingMockup"]>;
+let bridgeOwner: Account;
+let metricManager: InstanceType<typeof MetricManager>;
+let relays: Ed25519KeyPair[];
+let solanaEverscaleEventConfiguration: Contract<FactorySource["SolanaEverscaleEventConfiguration"]>;
+let everscaleSolanaEventConfiguration: Contract<FactorySource["EverscaleSolanaEventConfiguration"]>;
+let proxy: Contract<FactorySource["ProxyTokenTransfer"]>;
+let initializer: Account;
+let initializerTokenWallet: Contract<FactorySource["TokenWallet"]>;
 
 
 describe('Test solana everscale event real relay', async function() {
   this.timeout(10000000);
 
-  let bridge, bridgeOwner, staking, cellEncoder;
-  let solanaEverscaleEventConfiguration, everscaleSolanaEventConfiguration, stakingEverscaleSolanaEventConfiguration, proxy, initializer;
-  let relays;
-  let metricManager;
-  let initializerTokenWallet;
-
   afterEach(async function() {
     const lastCheckPoint = metricManager.lastCheckPointName();
-    const currentName = this.currentTest.title;
+    const currentName = this.currentTest?.title;
 
     await metricManager.checkPoint(currentName);
 
@@ -41,7 +50,8 @@ describe('Test solana everscale event real relay', async function() {
 
   it('Setup bridge', async () => {
     relays = [{
-      "public": "16cc3e34e53f6618bd7e054c124542983004c0021bb01c131cabdb2c933b1ece"
+      "publicKey": "16cc3e34e53f6618bd7e054c124542983004c0021bb01c131cabdb2c933b1ece",
+      "secretKey": "16cc3e34e53f6618bd7e054c124542983004c0021bb01c131cabdb2c933b1ece",
     }];
 
     [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
@@ -51,8 +61,7 @@ describe('Test solana everscale event real relay', async function() {
       staking
     );
 
-    initializerTokenWallet = await getTokenWalletByAddress(initializer.address, await proxy.call({method: 'getTokenRoot'}));
-    initializerTokenWallet.name = 'Initializer TokenWallet'
+    initializerTokenWallet = await getTokenWalletByAddress(initializer.address, await proxy.methods.getTokenRoot({answerId: 0}).call());
 
     metricManager = new MetricManager(
       bridge, bridgeOwner, staking,
@@ -110,7 +119,9 @@ describe('Test solana everscale event real relay', async function() {
   //   });
   });
 
-let eventContract, eventVoteData, eventDataStructure;
+  let eventVoteData: any;
+  let eventDataStructure: any;
+  let eventContract: Contract<FactorySource["TokenTransferSolanaEverscaleEvent"]>;
 
   describe('Initialize event', async () => {
 
@@ -122,10 +133,7 @@ let eventContract, eventVoteData, eventDataStructure;
         receiver_addr: '0:99f0fb098badc6ff5b974cb56b55e661f4a83dd4170a9b2be97766252e0a70e3'
       };
 
-      const eventData = await cellEncoder.call({
-        method: 'encodeSolanaEverscaleEventData',
-        params: eventDataStructure
-      });
+      const eventData = await cellEncoder.methods.encodeSolanaEverscaleEventData(eventDataStructure).call().then(t => t.data);
 
       eventVoteData = {
         accountSeed: 111234567,
@@ -137,29 +145,20 @@ let eventContract, eventVoteData, eventDataStructure;
     });
 
     it('Initialize event', async () => {
-      const tx = await initializer.runTarget({
-        contract: solanaEverscaleEventConfiguration,
-        method: 'deployEvent',
-        params: {
-          eventVoteData,
-        },
-        value: locklift.utils.convertCrystal(6, 'nano')
+      const tx = await solanaEverscaleEventConfiguration.methods.deployEvent({
+        eventVoteData,
+      }).send({
+        from: initializer.address,
+        amount: locklift.utils.toNano(6),
       });
 
       logger.log(`Event initialization tx: ${tx.id}`);
 
-      const expectedEventContract = await solanaEverscaleEventConfiguration.call({
-        method: 'deriveEventAddress',
-        params: {
-          eventVoteData,
-        }
-      });
+      const expectedEventContract = await solanaEverscaleEventConfiguration.methods.deriveEventAddress(eventVoteData).call();
 
       logger.log(`Expected event address: ${expectedEventContract}`);
 
-      eventContract = await locklift.factory.getContract('TokenTransferSolanaEverscaleEvent');
-      eventContract.setAddress(expectedEventContract);
-      eventContract.afterRun = afterRun;
+      eventContract = await locklift.factory.getDeployedContract('TokenTransferSolanaEverscaleEvent', expectedEventContract.eventContract);
 
       metricManager.addContract(eventContract);
     });
@@ -168,7 +167,7 @@ let eventContract, eventVoteData, eventDataStructure;
       const details = await eventContract.methods.getDetails({answerId: 0}).call();
 
       expect(details._eventInitData.voteData.accountSeed)
-        .to.be.bignumber.equal(eventVoteData.accountSeed, 'Wrong accountSeed');
+        .to.be.equal(eventVoteData.accountSeed, 'Wrong accountSeed');
 
       expect(details._eventInitData.voteData.eventData)
         .to.be.equal(eventVoteData.eventData, 'Wrong event data');
@@ -180,7 +179,7 @@ let eventContract, eventVoteData, eventDataStructure;
         .to.be.equal(staking.address, 'Wrong staking');
 
       expect(details._status)
-        .to.be.bignumber.equal(1, 'Wrong status');
+        .to.be.equal(1, 'Wrong status');
 
       expect(details._confirms)
         .to.have.lengthOf(0, 'Wrong amount of relays confirmations');
@@ -202,24 +201,24 @@ let eventContract, eventVoteData, eventDataStructure;
             }).call();
 
       expect(requiredVotes)
-        .to.be.bignumber.greaterThan(0, 'Too low required votes for event');
+        .to.be.greaterThan(0, 'Too low required votes for event');
 
-      expect(relays.length)
-        .to.be.bignumber.greaterThanOrEqual(parseInt(requiredVotes.requiredVotes, 10), 'Too many required votes for event');
+      expect(relays.voters.length)
+        .to.be.greaterThanOrEqual(parseInt(requiredVotes.requiredVotes, 10), 'Too many required votes for event');
     });
 
     it('Check event round number', async () => {
       const roundNumber = await eventContract.methods.round_number({}).call();
 
       expect(roundNumber)
-        .to.be.bignumber.equal(0, 'Wrong round number');
+        .to.be.equal(0, 'Wrong round number');
     });
 
     it('Check encoded event data', async () => {
       const data = await eventContract.methods.getDecodedData({answerId: 0}).call();
 
       expect(data.tokens)
-        .to.be.bignumber.equal(eventDataStructure.tokens, 'Wrong amount of tokens');
+        .to.be.equal(eventDataStructure.tokens, 'Wrong amount of tokens');
 
       expect(data.receiver_addr)
         .to.be.equal(eventDataStructure.receiver_addr, 'Wrong receiver address');

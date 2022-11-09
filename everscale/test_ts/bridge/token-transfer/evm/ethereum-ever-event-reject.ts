@@ -7,7 +7,6 @@ const {
   MetricManager,
   enableEventConfiguration,
   captureConnectors,
-  afterRun,
   logger,
 } = require('../../../utils');
 
