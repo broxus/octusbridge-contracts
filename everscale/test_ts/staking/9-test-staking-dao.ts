@@ -1,22 +1,18 @@
-const {
-  expect, deployAccount, deployTokenWallets, deployTokenRoot, depositTokens
-} = require('../utils');
+import {FactorySource} from "../../build/factorySource";
+
+export {}
+
+import {Address, Contract} from "locklift";
+import {Account} from "everscale-standalone-client/nodejs";
 const BigNumber = require('bignumber.js');
-const logger = require('mocha-logger');
-const {mintTokens} = require("../utils");
-const {stringToBytesArray} = require("../utils");
+const {
+  expect, deployAccount, deployTokenWallets, deployTokenRoot, depositTokens,
+  logger, mintTokens, stringToBytesArray, getRandomNonce, wait
+} = require('../utils');
 
 const EMPTY_TVM_CELL = 'te6ccgEBAQEAAgAAAA==';
 
 const TOKEN_PATH = '../node_modules/ton-eth-bridge-token-contracts/build';
-
-const getRandomNonce = () => Math.random() * 64000 | 0;
-
-const afterRun = async (tx) => {
-  await new Promise(resolve => setTimeout(resolve, 2000));
-};
-
-const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const ProposalState = [
   'Pending',
@@ -42,29 +38,29 @@ const proposalConfiguration = {
 const description = 'proposal-test-1';
 const bridge = '0:9cc3d8668d57d387eae54c4398a1a0b478b6a8c3a0f2b5265e641a212b435231'
 
-const CALL_VALUE = locklift.utils.convertCrystal(51, 'nano');
+const CALL_VALUE = locklift.utils.toNano(51);
 
-let stakingRoot;
-let stakingOwner;
-let stakingToken;
-let daoRoot;
+let stakingRoot: Contract<FactorySource["StakingV1_2"]>;
+let stakingOwner: Account;
+let stakingToken: Contract<FactorySource["TokenRoot"]>;
+let daoRoot : Contract<FactorySource["DaoRoot"]>;
 
 describe('Test DAO in Staking', async function () {
   this.timeout(1000000);
 
-  const deployEventConfiguration = async function (_owner, _dao) {
-    const [keyPair] = await locklift.keys.getKeyPairs();
-    const DaoEthereumActionEventConfiguration = await locklift.factory.getContract('EverscaleEthereumEventConfiguration');
-    const DaoEthereumActionEvent = await locklift.factory.getContract('DaoEthereumActionEvent');
+  const deployEventConfiguration = async function (_owner: Address, _dao: Address) {
+    const signer = (await locklift.keystore.getSigner("0"))!;
 
-    return await locklift.giver.deployContract({
-      contract: DaoEthereumActionEventConfiguration,
+    const DaoEthereumActionEvent = await locklift.factory.getContractArtifacts('DaoEthereumActionEvent');
+
+    const {contract: eventConfig} = await locklift.factory.deployContract({
+      contract: 'EverscaleEthereumEventConfiguration',
       constructorParams: {_owner, _meta: '',},
       initParams: {
         basicConfiguration: {
           eventABI: '',
-          eventInitialBalance: locklift.utils.convertCrystal('2', 'nano'),
-          staking: bridge,
+          eventInitialBalance: locklift.utils.toNano(2),
+          staking: new Address(bridge),
           eventCode: DaoEthereumActionEvent.code,
         },
         networkConfiguration: {
@@ -74,27 +70,30 @@ describe('Test DAO in Staking', async function () {
           endTimestamp: 0,
         }
       },
-      keyPair
-    }, locklift.utils.convertCrystal('1.0', 'nano'));
+      publicKey: signer.publicKey,
+      value: locklift.utils.toNano(1),
+    });
+
+    return eventConfig;
   };
 
   before('Setup staking', async function () {
-    const keyPairs = await locklift.keys.getKeyPairs();
+    const signer = (await locklift.keystore.getSigner("0"))!;
+
     logger.log(`Deploying stakingOwner`);
-    stakingOwner = await deployAccount(keyPairs[0], 500);
+    stakingOwner = await deployAccount(signer, 500);
     logger.log(`Deploying stakingToken`);
     stakingToken = await deployTokenRoot('Staking', 'ST', stakingOwner);
 
-    const Platform = await locklift.factory.getContract('Platform');
+    const Platform = await locklift.factory.getContractArtifacts('Platform');
 
     logger.log(`Deploying DaoRoot`);
 
-    const DaoRoot = await locklift.factory.getContract('DaoRoot');
-    const Proposal = await locklift.factory.getContract('Proposal');
+    const Proposal = await locklift.factory.getContractArtifacts('Proposal');
 
     logger.log(`Configuration: ${JSON.stringify(proposalConfiguration, null, 4)}`);
-    daoRoot = await locklift.giver.deployContract({
-      contract: DaoRoot,
+    const {contract: daoRoot}  = await locklift.factory.deployContract({
+      contract: 'DaoRoot',
       constructorParams: {
         platformCode_: Platform.code,
         proposalConfiguration_: proposalConfiguration,
@@ -103,65 +102,73 @@ describe('Test DAO in Staking', async function () {
       initParams: {
         _nonce: getRandomNonce(),
       },
-      keyPair: keyPairs[0],
-    }, locklift.utils.convertCrystal(10, 'nano'));
+      publicKey: signer.publicKey,
+      value: locklift.utils.toNano(10),
+    });
     logger.log(`DaoRoot address: ${daoRoot.address}`);
     logger.log(`Installing Proposal code`);
-    await stakingOwner.runTarget({
-      contract: daoRoot,
-      method: 'updateProposalCode',
-      params: {code: Proposal.code},
-      value: CALL_VALUE,
-    });
+    await locklift.transactions.waitFinalized(daoRoot.methods.updateProposalCode({
+      code: Proposal.code
+    }).send({
+      from: stakingOwner.address,
+      amount: locklift.utils.toNano(2),
+    }));
 
     logger.log(`Deploy DAO ethereum action event configuration`);
     const eventConfiguration = await deployEventConfiguration(stakingOwner.address, daoRoot.address);
 
     logger.log(`Installing EthereumActionEventConfiguration address`);
     logger.log(eventConfiguration.address);
-    await stakingOwner.runTarget({
-      contract: daoRoot,
-      method: 'updateEthereumActionEventConfiguration',
-      params: {
-        newConfiguration: eventConfiguration.address,
-        newDeployEventValue: locklift.utils.convertCrystal(2, 'nano')
-      },
-    });
-    stakingRoot = await locklift.factory.getContract('StakingV1_2');
-    const StakingRootDeployer = await locklift.factory.getContract('StakingRootDeployer');
-    const stakingRootDeployer = await locklift.giver.deployContract({
-      contract: StakingRootDeployer,
+
+    await locklift.transactions.waitFinalized(daoRoot.methods.updateEthereumActionEventConfiguration({
+      newConfiguration: eventConfiguration.address,
+      newDeployEventValue: locklift.utils.toNano(2)
+    }).send({
+      from: stakingOwner.address,
+      amount: locklift.utils.toNano(2),
+    }));
+
+    const stakingRootData = await locklift.factory.getContractArtifacts('StakingV1_2');
+    const {contract: stakingRootDeployer} = await locklift.factory.deployContract({
+      contract: 'StakingRootDeployer',
       constructorParams: {},
       initParams: {
         nonce: getRandomNonce(),
-        stakingCode: stakingRoot.code
+        stakingCode: stakingRootData.code
 
       },
-      keyPair: keyPairs[0]
-    }, locklift.utils.convertCrystal(55, 'nano'));
-    const UserData = await locklift.factory.getContract('UserData');
-    const Election = await locklift.factory.getContract('Election');
-    const RelayRound = await locklift.factory.getContract('RelayRound');
+      publicKey: signer.publicKey,
+      value: locklift.utils.toNano(55),
+    });
+
+    const UserData = await locklift.factory.getContractArtifacts('UserData');
+    const Election = await locklift.factory.getContractArtifacts('Election');
+    const RelayRound = await locklift.factory.getContractArtifacts('RelayRound');
 
     logger.log(`Deploying stakingRoot`);
-    stakingRoot.setAddress((await stakingRootDeployer.run({
-      method: 'deploy',
-      params: {
-        _admin: stakingOwner.address,
-        _tokenRoot: stakingToken.address,
-        _dao_root: daoRoot.address,
-        _rewarder: stakingOwner.address,
-        _rescuer: stakingOwner.address,
-        _bridge_event_config_eth_ton: bridge,
-        _bridge_event_config_ton_eth: bridge,
-        _bridge_event_config_ton_sol: bridge,
-        _deploy_nonce: getRandomNonce()
-      }
-    })).decoded.output.value0)
+
+
+    let {output: address} = await stakingRootDeployer.methods.deploy({
+      _admin: stakingOwner.address,
+      _tokenRoot: stakingToken.address,
+      _dao_root: daoRoot.address,
+      _rewarder: stakingOwner.address,
+      _rescuer: stakingOwner.address,
+      _bridge_event_config_eth_ton: new Address(bridge),
+      _bridge_event_config_ton_eth: new Address(bridge),
+      _bridge_event_config_ton_sol: new Address(bridge),
+      _deploy_nonce: getRandomNonce()
+    }).sendExternal({
+      publicKey: signer.publicKey,
+    });
+
+    stakingRoot = await locklift.factory.getDeployedContract('StakingV1_2', address?.value0!);
+
     logger.log(`StakingRoot address: ${stakingRoot.address}`);
     logger.log(`StakingRoot owner address: ${stakingOwner.address}`);
     logger.log(`StakingRoot token root address: ${stakingToken.address}`);
     logger.log(`Installing StakingRoot address for DaoRoot`);
+
     await stakingOwner.runTarget({
       contract: daoRoot,
       method: 'setStakingRoot',
