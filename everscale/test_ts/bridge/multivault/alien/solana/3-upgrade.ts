@@ -1,17 +1,30 @@
+import {Ed25519KeyPair} from "nekoton-wasm";
+
 const {
     setupRelays,
     setupBridge,
     setupSolanaAlienMultiVault,
-    expect,
     logger
 } = require("../../../../utils");
 
+import { Contract } from "locklift";
+import { FactorySource } from "../../../../../build/factorySource";
+import {Account} from "everscale-standalone-client/nodejs";
+import { expect } from "chai";
+
+let bridge: Contract<FactorySource["Bridge"]>;
+let cellEncoder: Contract<FactorySource["CellEncoderStandalone"]>;
+let staking: Contract<FactorySource["StakingMockup"]>;
+let bridgeOwner: Account;
+let relays: Ed25519KeyPair[];
+let solanaConfiguration: Contract<FactorySource["SolanaEverscaleEventConfiguration"]>;
+let everscaleConfiguration: Contract<FactorySource["EverscaleSolanaEventConfiguration"]>;
+let proxy: Contract<FactorySource["ProxyMultiVaultSolanaAlien"]>;
+let initializer: Account;
 
 describe('Test Solana Alien proxy upgrade', async function() {
     this.timeout(10000000);
 
-    let relays, bridge, bridgeOwner, staking, cellEncoder;
-    let solanaConfiguration, everscaleConfiguration, proxy, initializer;
 
     it('Setup bridge', async () => {
         relays = await setupRelays();
@@ -25,33 +38,32 @@ describe('Test Solana Alien proxy upgrade', async function() {
     });
 
     it('Check initial api version', async () => {
-        expect(await proxy.call({ method: 'apiVersion' }))
-            .to.be.bignumber.equal(1, 'Wrong api version');
+        expect(await proxy.methods.apiVersion({answerId: 0}).call())
+            .to.be.equal(1, 'Wrong api version');
     });
 
     it('Upgrade proxy to itself and check storage', async () => {
-        const _configuration = await proxy.call({ method: 'getConfiguration' });
+        const _configuration = await proxy.methods.getConfiguration({answerId: 0}).call().then(c => c.value0);
 
-        const Proxy = await locklift.factory.getContract('ProxyMultiVaultSolanaAlien');
+        const Proxy = await locklift.factory.getContractArtifacts('ProxyMultiVaultSolanaAlien');
 
-        const tx = await bridgeOwner.runTarget({
-            contract: proxy,
-            method: 'upgrade',
-            params: {
-                code: Proxy.code
-            }
+        const tx = await proxy.methods.upgrade({
+            code: Proxy.code
+        }).send({
+            from: bridgeOwner.address,
+            amount: locklift.utils.toNano(10),
         });
 
         logger.log(`Upgrade tx: ${tx.id}`);
 
-        const configuration = await proxy.call({ method: 'getConfiguration' });
+        const configuration = await proxy.methods.getConfiguration({answerId: 0}).call().then(c => c.value0);
 
         expect(configuration.everscaleConfiguration)
             .to.be.equal(_configuration.everscaleConfiguration, 'Wrong everscale configuration');
         expect(configuration.solanaConfiguration)
             .to.be.eql(_configuration.solanaConfiguration, 'Wrong solana configuration');
         expect(configuration.deployWalletValue)
-            .to.be.bignumber.equal(_configuration.deployWalletValue, 'Wrong deploy wallet value');
+            .to.be.equal(_configuration.deployWalletValue, 'Wrong deploy wallet value');
 
         expect(configuration.alienTokenRootCode)
             .to.be.equal(_configuration.alienTokenRootCode, 'Wrong alien token root code');
@@ -62,7 +74,7 @@ describe('Test Solana Alien proxy upgrade', async function() {
     });
 
     it('Check api version after upgrade', async () => {
-        expect(await proxy.call({ method: 'apiVersion' }))
-            .to.be.bignumber.equal(2, 'Wrong api version');
+        expect(await proxy.methods.apiVersion({answerId: 0}).call())
+            .to.be.equal(2, 'Wrong api version');
     });
 });

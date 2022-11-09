@@ -138,14 +138,12 @@ describe('Test EVM native multivault pipeline', async function() {
         });
 
         it('Check event contract exists', async () => {
-            expect(await locklift.ton.getBalance(eventContract.address))
+            expect(await locklift.provider.getBalance(eventContract.address))
                 .to.be.bignumber.greaterThan(0, 'Event contract balance is zero');
         });
 
         it('Check event state before confirmation', async () => {
-            const details = await eventContract.call({
-                method: 'getDetails',
-            });
+            const details = await eventContract.methods.getDetails({answerId: 0}).call();
 
             expect(details._eventInitData.configuration)
                 .to.be.equal(everscaleConfiguration.address, 'Wrong event configuration');
@@ -248,16 +246,13 @@ describe('Test EVM native multivault pipeline', async function() {
         });
 
         it('Check event required votes', async () => {
-            const requiredVotes = await eventContract.call({
-                method: 'requiredVotes',
-            });
+            const requiredVotes = await eventContract.methods.requiredVotes().call();
 
-            const relays = await eventContract.call({
-                method: 'getVoters',
-                params: {
-                    vote: 1
-                }
-            });
+
+            const relays = await eventContract.methods.getVoters({
+                vote: 1,
+                answerId: 0
+            }).call();
 
             expect(requiredVotes)
                 .to.be.bignumber.greaterThan(0, 'Too low required votes for event');
@@ -267,9 +262,7 @@ describe('Test EVM native multivault pipeline', async function() {
 
         describe('Confirm event', async () => {
             it('Confirm event enough times', async () => {
-                const requiredVotes = await eventContract.call({
-                    method: 'requiredVotes',
-                });
+                const requiredVotes = await eventContract.methods.requiredVotes().call();
                 const confirmations = [];
                 for (const [relayId, relay] of Object.entries(relays.slice(0, requiredVotes))) {
                     logger.log(`Confirm #${relayId} from ${relay.public}`);
@@ -289,13 +282,9 @@ describe('Test EVM native multivault pipeline', async function() {
             });
 
             it('Check event confirmed', async () => {
-                const details = await eventContract.call({
-                    method: 'getDetails'
-                });
+                const details = await eventContract.methods.getDetails({answerId: 0}).call();
 
-                const requiredVotes = await eventContract.call({
-                    method: 'requiredVotes',
-                });
+                const requiredVotes = await eventContract.methods.requiredVotes().call();
 
                 expect(details.balance)
                     .to.be.bignumber.greaterThan(0, 'Wrong balance');
@@ -380,14 +369,12 @@ describe('Test EVM native multivault pipeline', async function() {
         });
 
         it('Check event contract exists', async () => {
-            expect(await locklift.ton.getBalance(eventContract.address))
+            expect(await locklift.provider.getBalance(eventContract.address))
                 .to.be.bignumber.greaterThan(0, 'Event contract balance is zero');
         });
 
         it('Check event state before confirmation', async () => {
-            const details = await eventContract.call({
-                method: 'getDetails',
-            });
+            const details = await eventContract.methods.getDetails({answerId: 0}).call();
 
             expect(details._eventInitData.voteData.eventTransaction)
                 .to.be.bignumber.equal(eventVoteData.eventTransaction, 'Wrong event transaction');
@@ -447,16 +434,13 @@ describe('Test EVM native multivault pipeline', async function() {
         });
 
         it('Check event required votes', async () => {
-            const requiredVotes = await eventContract.call({
-                method: 'requiredVotes',
-            });
+            const requiredVotes = await eventContract.methods.requiredVotes().call();
 
-            const relays = await eventContract.call({
-                method: 'getVoters',
-                params: {
-                    vote: 1
-                }
-            });
+
+            const relays = await eventContract.methods.getVoters({
+                vote: 1,
+                answerId: 0
+            }).call();
 
             expect(requiredVotes)
                 .to.be.bignumber.greaterThan(0, 'Too low required votes for event');
@@ -465,7 +449,7 @@ describe('Test EVM native multivault pipeline', async function() {
         });
 
         it('Check event round number', async () => {
-            const roundNumber = await eventContract.call({ method: 'round_number' });
+            const roundNumber = await eventContract.methods.round_number({}).call();
 
             expect(roundNumber)
                 .to.be.bignumber.equal(0, 'Wrong round number');
@@ -473,9 +457,7 @@ describe('Test EVM native multivault pipeline', async function() {
 
         describe('Confirm event', async () => {
             it('Confirm event enough times', async () => {
-                const requiredVotes = await eventContract.call({
-                    method: 'requiredVotes',
-                });
+                const requiredVotes = await eventContract.methods.requiredVotes().call();
                 const confirmations = [];
                 for (const [relayId, relay] of Object.entries(relays.slice(0, requiredVotes))) {
                     logger.log(`Confirm #${relayId} from ${relay.public}`);
@@ -492,13 +474,9 @@ describe('Test EVM native multivault pipeline', async function() {
             });
 
             it('Check event confirmed', async () => {
-                const details = await eventContract.call({
-                    method: 'getDetails'
-                });
+                const details = await eventContract.methods.getDetails({answerId: 0}).call();
 
-                const requiredVotes = await eventContract.call({
-                    method: 'requiredVotes',
-                });
+                const requiredVotes = await eventContract.methods.requiredVotes().call();
 
                 expect(details._status)
                     .to.be.bignumber.equal(2, 'Wrong status');

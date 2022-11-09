@@ -186,7 +186,7 @@ describe('Test solana everscale event confirm', async function() {
     });
 
     it('Check event round number', async () => {
-      const roundNumber = await eventContract.call({ method: 'round_number' });
+      const roundNumber = await eventContract.methods.round_number({}).call();
 
       expect(roundNumber)
         .to.be.bignumber.equal(0, 'Wrong round number');
