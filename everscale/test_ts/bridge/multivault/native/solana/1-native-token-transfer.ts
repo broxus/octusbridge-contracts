@@ -25,7 +25,7 @@ let bridgeOwner: Account;
 let metricManager: InstanceType<typeof MetricManager>;
 let relays: Ed25519KeyPair[];
 let solanaConfiguration: Contract<FactorySource["SolanaEverscaleEventConfiguration"]>;
-let everscaleConfiguration: Contract<FactorySource["EverscaleEthereumEventConfiguration"]>;
+let everscaleConfiguration: Contract<FactorySource["EverscaleSolanaEventConfiguration"]>;
 let proxy: Contract<FactorySource["ProxyMultiVaultEthereumAlien"]>;
 let initializer: Account;
 

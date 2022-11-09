@@ -31,7 +31,7 @@ describe('Test solana everscale event reject', async function() {
 
     for (const [contract, balanceDiff] of Object.entries(difference)) {
       if (balanceDiff !== 0) {
-        logger.log(`[Balance change] ${contract} ${locklift.utils.convertCrystal(balanceDiff, 'ton').toFixed(9)} Everscale`);
+        logger.log(`[Balance change] ${contract} ${locklift.utils.fromNano(balanceDiff as number)} Everscale`);
       }
     }
   });
@@ -131,9 +131,8 @@ describe('Test solana everscale event reject', async function() {
 
   describe('Reject event', async () => {
     it('Reject event enough times', async () => {
-      const requiredVotes = await eventContract.call({
-        method: 'requiredVotes',
-      });
+      const requiredVotes = await eventContract.methods.requiredVotes().call();
+
       const rejects = [];
       for (const [relayId, relay] of Object.entries(relays.slice(0, requiredVotes))) {
         logger.log(`Reject #${relayId} from ${relay.public}`);
@@ -150,13 +149,10 @@ describe('Test solana everscale event reject', async function() {
     });
 
     it('Check event rejected', async () => {
-      const details = await eventContract.call({
-        method: 'getDetails'
-      });
+      const details = await eventContract.methods.getDetails({answerId: 0}).call();
 
-      const requiredVotes = await eventContract.call({
-        method: 'requiredVotes',
-      });
+      const requiredVotes = await eventContract.methods.requiredVotes().call();
+
 
       expect(details.balance)
         .to.be.bignumber.equal(0, 'Wrong balance');

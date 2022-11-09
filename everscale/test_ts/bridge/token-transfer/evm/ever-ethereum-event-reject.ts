@@ -10,11 +10,11 @@ const {
   logger,
   expect,
   getTokenWalletByAddress,
-  extractTonEventAddress,
+  extractTonEventAddress
 } = require('../../../utils');
 
 
-describe('Test everscale ethereum event confirm', async function() {
+describe('Test everscale ethereum event reject', async function() {
   this.timeout(10000000);
 
   let bridge, bridgeOwner, staking, cellEncoder;
@@ -35,7 +35,7 @@ describe('Test everscale ethereum event confirm', async function() {
 
     for (const [contract, balanceDiff] of Object.entries(difference)) {
       if (balanceDiff !== 0) {
-        logger.log(`[Balance change] ${contract} ${locklift.utils.convertCrystal(balanceDiff, 'ton').toFixed(9)} Everscale`);
+        logger.log(`[Balance change] ${contract} ${locklift.utils.fromNano(balanceDiff as number)} Everscale`);
       }
     }
   });
@@ -85,22 +85,15 @@ describe('Test everscale ethereum event confirm', async function() {
 
   describe('Initialize event', async () => {
     tonEventValue = 444;
-
     tonEventParams = {
       ethereumAddress: 222,
       chainId: 333
-    };
+    }
 
     it('Setup event data', async () => {
-      initializerTokenWallet = await getTokenWalletByAddress(
-          initializer.address,
-          await proxy.call({
-            method: 'getTokenRoot'
-          })
-      );
+      initializerTokenWallet = await getTokenWalletByAddress(initializer.address, await proxy.call({method: 'getTokenRoot'}));
 
-      initializerTokenWallet.name = 'Initializer TokenWallet';
-
+      initializerTokenWallet.name = 'Initializer TokenWallet'
       burnPayload = await cellEncoder.call({
         method: 'encodeEthereumBurnPayload',
         params: tonEventParams
@@ -136,14 +129,10 @@ describe('Test everscale ethereum event confirm', async function() {
       eventContract = await locklift.factory.getContract('TokenTransferEverscaleEthereumEvent');
       eventContract.setAddress(expectedEventContract);
       eventContract.afterRun = afterRun;
-
-      metricManager.addContract(eventContract);
     });
 
     it('Check event initial state', async () => {
-      const details = await eventContract.call({
-        method: 'getDetails'
-      });
+      const details = await eventContract.methods.getDetails({answerId: 0}).call();
 
       expect(details._eventInitData.configuration)
         .to.be.equal(everscaleEthereumEventConfiguration.address, 'Wrong event configuration');
@@ -164,27 +153,8 @@ describe('Test everscale ethereum event confirm', async function() {
         .to.be.equal(proxy.address, 'Wrong initializer');
     });
 
-    it('Check event required votes', async () => {
-      const requiredVotes = await eventContract.call({
-        method: 'requiredVotes',
-      });
-
-      const relays = await eventContract.call({
-        method: 'getVoters',
-        params: {
-          vote: 1
-        }
-      });
-
-      expect(requiredVotes)
-        .to.be.bignumber.greaterThan(0, 'Too low required votes for event');
-
-      expect(relays.length)
-        .to.be.bignumber.greaterThanOrEqual(requiredVotes.toNumber(), 'Too many required votes for event');
-    });
-
     it('Check encoded event data', async () => {
-      const data = await eventContract.call({ method: 'getDecodedData' });
+      const data = await eventContract.methods.getDecodedData({answerId: 0}).call();
 
       expect(data.owner_address)
         .to.be.equal(initializer.address, 'Wrong owner address');
@@ -206,68 +176,57 @@ describe('Test everscale ethereum event confirm', async function() {
     });
   });
 
-  describe('Confirm event', async () => {
-    it('Confirm event enough times', async () => {
-      const requiredVotes = await eventContract.call({
-        method: 'requiredVotes',
-      });
-      const confirmations = [];
-      for (const [relayId, relay] of Object.entries(relays.slice(0, requiredVotes))) {
-        logger.log(`Confirm #${relayId} from ${relay.public}`);
+  describe('Reject event', async () => {
+    it('Reject event enough times', async () => {
+      const requiredVotes = await eventContract.methods.requiredVotes().call();
 
-        confirmations.push(eventContract.run({
-          method: 'confirm',
+      const rejects = [];
+      for (const [relayId, relay] of Object.entries(relays.slice(0, requiredVotes))) {
+        logger.log(`Reject #${relayId} from ${relay.public}`);
+
+        rejects.push(eventContract.run({
+          method: 'reject',
           params: {
-            signature: Buffer
-              .from(`0x${'ff'.repeat(65)}`)
-              .toString('hex'), // 132 symbols
             voteReceiver: eventContract.address
           },
           keyPair: relay
         }));
       }
-      await Promise.all(confirmations);
+      await Promise.all(rejects);
     });
 
-    it('Check event confirmed', async () => {
-      const details = await eventContract.call({
-        method: 'getDetails'
-      });
+    it('Check event rejected', async () => {
+      const details = await eventContract.methods.getDetails({answerId: 0}).call();
 
-      const requiredVotes = await eventContract.call({
-        method: 'requiredVotes',
-      });
+      const requiredVotes = await eventContract.methods.requiredVotes().call();
+
 
       expect(details.balance)
         .to.be.bignumber.greaterThan(0, 'Wrong balance');
 
       expect(details._status)
-        .to.be.bignumber.equal(2, 'Wrong status');
+        .to.be.bignumber.equal(3, 'Wrong status');
 
       expect(details._confirms)
-        .to.have.lengthOf(requiredVotes, 'Wrong amount of relays confirmations');
+        .to.have.lengthOf(0, 'Wrong amount of relays confirmations');
 
       expect(details._signatures)
-        .to.have.lengthOf(requiredVotes, 'Wrong amount of signatures');
+        .to.have.lengthOf(0, 'Wrong amount of signatures');
 
       expect(details._rejects)
-        .to.have.lengthOf(0, 'Wrong amount of relays rejects');
+        .to.have.lengthOf(requiredVotes, 'Wrong amount of relays rejects');
     });
 
     it('Send confirms from the rest of relays', async () => {
-      const requiredVotes = await eventContract.call({
-        method: 'requiredVotes',
-      });
+      const requiredVotes = await eventContract.methods.requiredVotes().call();
+
 
       for (const [relayId, relay] of Object.entries(relays.slice(requiredVotes))) {
-        logger.log(`Confirm #${requiredVotes.plus(relayId)} from ${relay.public}`);
+        logger.log(`Reject #${requiredVotes.plus(relayId)} from ${relay.public}`);
 
         await eventContract.run({
-          method: 'confirm',
+          method: 'reject',
           params: {
-            signature: Buffer
-              .from(`0x${'ff'.repeat(65)}`)
-              .toString('hex'), // 132 symbols
             voteReceiver: eventContract.address
           },
           keyPair: relay
@@ -276,24 +235,22 @@ describe('Test everscale ethereum event confirm', async function() {
     });
 
     it('Check event details after all relays voted', async () => {
-      const details = await eventContract.call({
-        method: 'getDetails'
-      });
+      const details = await eventContract.methods.getDetails({answerId: 0}).call();
 
       expect(details.balance)
         .to.be.bignumber.greaterThan(0, 'Wrong balance');
 
       expect(details._status)
-        .to.be.bignumber.equal(2, 'Wrong status');
+        .to.be.bignumber.equal(3, 'Wrong status');
 
       expect(details._confirms)
-        .to.have.lengthOf(relays.length, 'Wrong amount of relays confirmations');
+        .to.have.lengthOf(0, 'Wrong amount of relays confirmations');
 
       expect(details._signatures)
-        .to.have.lengthOf(relays.length, 'Wrong amount of signatures');
+        .to.have.lengthOf(0, 'Wrong amount of signatures');
 
       expect(details._rejects)
-        .to.have.lengthOf(0, 'Wrong amount of relays rejects');
+        .to.have.lengthOf(relays.length, 'Wrong amount of relays rejects');
     });
 
     it('Close event', async () => {
@@ -304,9 +261,7 @@ describe('Test everscale ethereum event confirm', async function() {
         value: locklift.utils.convertCrystal(1, 'nano')
       });
 
-      const details = await eventContract.call({
-        method: 'getDetails'
-      });
+      const details = await eventContract.methods.getDetails({answerId: 0}).call();
 
       expect(details.balance)
         .to.be.bignumber.equal(0, 'Wrong balance');

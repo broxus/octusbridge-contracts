@@ -1,3 +1,5 @@
+import {Ed25519KeyPair} from "nekoton-wasm";
+
 const {
   setupBridge,
   setupEthereumEverscaleEventConfiguration,
@@ -7,21 +9,30 @@ const {
   captureConnectors,
   afterRun,
   logger,
-  expect,
 } = require('../../../utils');
 
+import { expect } from "chai";
+import { Contract } from "locklift";
+import { FactorySource } from "../../../../build/factorySource";
+import {Account} from "everscale-standalone-client/nodejs";
+
+let bridge: Contract<FactorySource["Bridge"]>;
+let cellEncoder: Contract<FactorySource["CellEncoderStandalone"]>;
+let staking: Contract<FactorySource["StakingMockup"]>;
+let bridgeOwner: Account;
+let metricManager: InstanceType<typeof MetricManager>;
+let relays: Ed25519KeyPair[];
+let ethereumEverscaleEventConfiguration: Contract<FactorySource["EthereumEverscaleEventConfiguration"]>;
+let proxy: Contract<FactorySource["ProxyTokenTransfer"]>;
+let initializer: Account;
+let initializerTokenWallet: Contract<FactorySource["TokenWallet"]>;
 
 describe('Test ethereum everscale event reject', async function() {
   this.timeout(10000000);
 
-  let bridge, bridgeOwner, staking, cellEncoder;
-  let ethereumEverscaleEventConfiguration, proxy, initializer;
-  let relays;
-  let metricManager;
-
   afterEach(async function() {
     const lastCheckPoint = metricManager.lastCheckPointName();
-    const currentName = this.currentTest.title;
+    const currentName = this.currentTest?.title;
 
     await metricManager.checkPoint(currentName);
 
@@ -31,7 +42,7 @@ describe('Test ethereum everscale event reject', async function() {
 
     for (const [contract, balanceDiff] of Object.entries(difference)) {
       if (balanceDiff !== 0) {
-        logger.log(`[Balance change] ${contract} ${locklift.utils.convertCrystal(balanceDiff, 'ton').toFixed(9)} Everscale`);
+        logger.log(`[Balance change] ${contract} ${locklift.utils.fromNano(balanceDiff as number)} Everscale`);
       }
     }
   });
@@ -77,7 +88,9 @@ describe('Test ethereum everscale event reject', async function() {
     });
   });
 
-  let eventContract, eventVoteData;
+  let eventVoteData: any;
+  let eventContract: Contract<FactorySource["TokenTransferEthereumEverscaleEvent"]>;
+
 
   describe('Initialize event', async () => {
     const eventDataStructure = {
@@ -87,10 +100,7 @@ describe('Test ethereum everscale event reject', async function() {
     };
 
     it('Setup event data', async () => {
-      const eventData = await cellEncoder.call({
-        method: 'encodeEthereumEverscaleEventData',
-        params: eventDataStructure
-      });
+      const eventData = await cellEncoder.methods.encodeEthereumEverscaleEventData(eventDataStructure).call().then(t => t.data);
 
       eventVoteData = {
         eventTransaction: 111,
@@ -102,72 +112,60 @@ describe('Test ethereum everscale event reject', async function() {
     });
 
     it('Initialize event', async () => {
-      const tx = await initializer.runTarget({
-        contract: ethereumEverscaleEventConfiguration,
-        method: 'deployEvent',
-        params: {
-          eventVoteData,
-        },
-        value: locklift.utils.convertCrystal(3, 'nano')
+      const tx = await ethereumEverscaleEventConfiguration.methods.deployEvent({
+        eventVoteData,
+      }).send({
+        from: initializer.address,
+        amount: locklift.utils.toNano(6),
       });
 
       logger.log(`Event initialization tx: ${tx.id}`);
 
-      const expectedEventContract = await ethereumEverscaleEventConfiguration.call({
-        method: 'deriveEventAddress',
-        params: {
-          eventVoteData,
-        }
-      });
+      const expectedEventContract = await ethereumEverscaleEventConfiguration.methods.deriveEventAddress(eventVoteData).call();
 
       logger.log(`Expected event address: ${expectedEventContract}`);
 
-      eventContract = await locklift.factory.getContract('TokenTransferEthereumEverscaleEvent');
-      eventContract.setAddress(expectedEventContract);
-      eventContract.afterRun = afterRun;
+      eventContract = await locklift.factory.getDeployedContract('TokenTransferEthereumEverscaleEvent', expectedEventContract.eventContract);
     });
   });
 
   describe('Reject event', async () => {
     it('Reject event enough times', async () => {
-      const requiredVotes = await eventContract.call({
-        method: 'requiredVotes',
-      });
-      const rejects = [];
-      for (const [relayId, relay] of Object.entries(relays.slice(0, requiredVotes))) {
-        logger.log(`Reject #${relayId} from ${relay.public}`);
+      const requiredVotes = await eventContract.methods.requiredVotes().call();
 
-        rejects.push(eventContract.run({
-          method: 'reject',
-          params: {
-            voteReceiver: eventContract.address
-          },
-          keyPair: relay
+      const rejects = [];
+      for (const [relayId, relay] of Object.entries(relays.slice(0, parseInt(requiredVotes.requiredVotes, 10)))) {
+        logger.log(`Reject #${relayId} from ${relay.publicKey}`);
+
+        locklift.keystore.addKeyPair(relay);
+
+        rejects.push(eventContract.methods.reject({
+          voteReceiver: eventContract.address,
+        }).sendExternal({
+          publicKey: relay.publicKey,
         }));
+
       }
       await Promise.all(rejects);
     });
 
     it('Check event rejected', async () => {
-      const details = await eventContract.call({
-        method: 'getDetails'
-      });
+      const details = await eventContract.methods.getDetails({answerId: 0}).call();
 
-      const requiredVotes = await eventContract.call({
-        method: 'requiredVotes',
-      });
+      const requiredVotes = await eventContract.methods.requiredVotes().call();
+
 
       expect(details.balance)
-        .to.be.bignumber.equal(0, 'Wrong balance');
+        .to.be.equal(0, 'Wrong balance');
 
       expect(details._status)
-        .to.be.bignumber.equal(3, 'Wrong status');
+        .to.be.equal(3, 'Wrong status');
 
       expect(details._confirms)
         .to.have.lengthOf(0, 'Wrong amount of confirmations');
 
       expect(details._rejects)
-        .to.have.lengthOf(requiredVotes, 'Wrong amount of relays confirmations');
+        .to.have.lengthOf(parseInt(requiredVotes.requiredVotes, 10), 'Wrong amount of relays confirmations');
     });
   });
 });
