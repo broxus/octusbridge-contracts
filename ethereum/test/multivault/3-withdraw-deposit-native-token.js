@@ -3,7 +3,7 @@ const {
     encodeEverscaleEvent,
     ...utils
 } = require('./../utils');
-const {getNamedAccounts} = require("hardhat");
+const {getNamedAccounts, ethers} = require("hardhat");
 
 
 describe('Test deposit-withdraw for native token', async () => {
@@ -107,12 +107,12 @@ describe('Test deposit-withdraw for native token', async () => {
             await token.connect(bob).transfer(alice, ethers.utils.parseUnits('100', 18));
         });
 
-        it('Skim native fees to EVM', async () => {
+        it('Skim native fees', async () => {
             const owner = await ethers.getNamedSigner('owner');
 
             const fee = await multivault.fees(token.address);
 
-            await expect(() => multivault.connect(owner).skim(token.address, false))
+            await expect(() => multivault.connect(owner).skim(token.address))
                 .to.changeTokenBalances(
                     token,
                     [multivault, owner],
@@ -141,40 +141,37 @@ describe('Test deposit-withdraw for native token', async () => {
 
             fee = tokenDetails.depositFee.mul(amount).div(10000);
 
-            await expect(multivault.connect(bob)['deposit((int8,uint256),address,uint256)'](recipient, token.address, amount))
+            const deposit = multivault
+                .connect(bob)
+                ['deposit(((int8,uint256),address,uint256,uint256,bytes))'];
+
+            const deposit_value = ethers.utils.parseEther("0.1");
+            const deposit_expected_evers = 33;
+            const deposit_payload = "0x001122";
+
+            await expect(deposit({
+                recipient,
+                token: token.address,
+                amount,
+                expected_evers: deposit_expected_evers,
+                payload: deposit_payload
+            }, { value: deposit_value }))
                 .to.emit(multivault, 'NativeTransfer')
                 .withArgs(
                     native.wid,
                     native.addr,
                     amount.sub(fee),
                     recipient.wid,
-                    recipient.addr
+                    recipient.addr,
+                    deposit_value,
+                    deposit_expected_evers,
+                    deposit_payload
                 );
         });
 
         it('Check MultiVault balance', async () => {
             expect(await token.balanceOf(multivault.address))
                 .to.be.equal(0, 'MultiVault balance should be zero');
-        });
-
-        it('Skim native fees to Everscale', async () => {
-            const owner = await ethers.getNamedSigner('owner');
-
-            const rewards = await multivault.rewards();
-            const fee = await multivault.fees(token.address);
-
-            await expect(multivault.connect(owner).skim(token.address, true))
-                .to.emit(multivault, 'NativeTransfer')
-                .withArgs(
-                    native.wid,
-                    native.addr,
-                    fee,
-                    rewards.wid,
-                    rewards.addr
-                );
-
-            expect(await multivault.fees(token.address))
-                .to.be.equal(0);
         });
     });
 

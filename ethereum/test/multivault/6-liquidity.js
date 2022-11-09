@@ -16,7 +16,7 @@ const LP_BPS = ethers.BigNumber.from(10_000_000_000);
 describe('Test multivault liquidity supply', async () => {
     let multivault, token, lp_token;
 
-    const deposit = ethers.utils.parseUnits('20000', 18);
+    const deposit_amount = ethers.utils.parseUnits('20000', 18);
     const liquidity_deposit = ethers.utils.parseUnits('100000', 18);
     const interest = 100; // 1%
 
@@ -38,11 +38,23 @@ describe('Test multivault liquidity supply', async () => {
 
         await token
             .connect(alice)
-            .approve(multivault.address, deposit);
+            .approve(multivault.address, deposit_amount);
 
-        await multivault
+        const deposit = multivault
             .connect(alice)
-            ['deposit((int8,uint256),address,uint256)'](recipient, token.address, deposit);
+            ['deposit(((int8,uint256),address,uint256,uint256,bytes))'];
+
+        const deposit_value = ethers.utils.parseEther("0.1");
+        const deposit_expected_evers = 33;
+        const deposit_payload = "0x001122";
+
+        await deposit({
+            recipient,
+            token: token.address,
+            amount: deposit_amount,
+            expected_evers: deposit_expected_evers,
+            payload: deposit_payload
+        }, { value: deposit_value });
     });
 
     describe('Bob supplies liquidity', async () => {
@@ -65,11 +77,6 @@ describe('Test multivault liquidity supply', async () => {
 
         it('Check LP token intialized', async () => {
             const liquidity = await multivault.liquidity(token.address);
-
-            // console.log(`${liquidity.cash}`);
-            // console.log(`${liquidity.supply}`);
-
-            // console.log(liquidity);
 
             expect(liquidity.interest)
                 .to.be.equal(interest, 'Wrong token liquidity interest');

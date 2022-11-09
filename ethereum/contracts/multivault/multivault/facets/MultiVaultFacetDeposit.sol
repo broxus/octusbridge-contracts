@@ -34,77 +34,78 @@ contract MultiVaultFacetDeposit is
 
     /// @notice Transfer tokens to the Everscale. Works both for native and alien tokens.
     /// Approve is required only for alien tokens deposit.
-    /// @param recipient Everscale recipient.
-    /// @param token EVM token address, should not be blacklisted.
-    /// @param amount Amount of tokens to transfer.
+    /// @param d Deposit parameters
     function deposit(
-        IEverscale.EverscaleAddress memory recipient,
-        address token,
-        uint amount
+        DepositParams memory d
     )
         external
+        payable
         override
         nonReentrant
-        tokenNotBlacklisted(token)
-        initializeToken(token)
+        tokenNotBlacklisted(d.token)
+        initializeToken(d.token)
         onlyEmergencyDisabled
     {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
-        uint fee = _calculateMovementFee(amount, token, IMultiVaultFacetFees.Fee.Deposit);
+        uint fee = _calculateMovementFee(
+            d.amount,
+            d.token,
+            IMultiVaultFacetFees.Fee.Deposit
+        );
 
-        bool isNative = s.tokens_[token].isNative;
+        bool isNative = s.tokens_[d.token].isNative;
 
         if (isNative) {
-            IMultiVaultToken(token).burn(
+            IMultiVaultToken(d.token).burn(
                 msg.sender,
-                amount
+                d.amount
             );
 
-            _transferToEverscaleNative(token, recipient, amount - fee);
+            d.amount -= fee;
+
+            _transferToEverscaleNative(d, msg.value);
         } else {
-            IERC20(token).safeTransferFrom(
+            IERC20(d.token).safeTransferFrom(
                 msg.sender,
                 address(this),
-                amount
+                d.amount
             );
 
-            _transferToEverscaleAlien(token, recipient, amount - fee);
+            d.amount -= fee;
+
+            _transferToEverscaleAlien(d, msg.value);
         }
 
-        _increaseTokenFee(token, fee);
+        _increaseTokenFee(d.token, fee);
 
         emit Deposit(
-            isNative ? IMultiVaultFacetTokens.TokenType.Native : IMultiVaultFacetTokens.TokenType.Alien,
             msg.sender,
-            token,
-            recipient.wid,
-            recipient.addr,
-            amount,
-            fee
+            d.token,
+            d.recipient.wid,
+            d.recipient.addr,
+            d.amount
         );
     }
 
     function deposit(
-        IEverscale.EverscaleAddress memory recipient,
-        address token,
-        uint256 amount,
+        DepositParams memory d,
         uint256 expectedMinBounty,
         IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId[] memory pendingWithdrawalIds
-    ) external override tokenNotBlacklisted(token) nonReentrant {
+    ) external payable override tokenNotBlacklisted(d.token) nonReentrant {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
-        uint amountLeft = amount;
-        uint amountPlusBounty = amount;
+        uint amountLeft = d.amount;
+        uint amountPlusBounty = d.amount;
 
-        IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
+        IERC20(d.token).safeTransferFrom(msg.sender, address(this), d.amount);
 
         for (uint i = 0; i < pendingWithdrawalIds.length; i++) {
             IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId memory pendingWithdrawalId = pendingWithdrawalIds[i];
             IMultiVaultFacetPendingWithdrawals.PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(pendingWithdrawalId);
 
             require(pendingWithdrawal.amount > 0);
-            require(pendingWithdrawal.token == token);
+            require(pendingWithdrawal.token == d.token);
 
             amountLeft -= pendingWithdrawal.amount;
             amountPlusBounty += pendingWithdrawal.bounty;
@@ -122,16 +123,17 @@ contract MultiVaultFacetDeposit is
             );
         }
 
-        require(amountPlusBounty - amount >= expectedMinBounty);
+        require(amountPlusBounty - d.amount >= expectedMinBounty);
 
-        uint fee = _calculateMovementFee(amount, token, IMultiVaultFacetFees.Fee.Deposit);
+        uint fee = _calculateMovementFee(d.amount, d.token, IMultiVaultFacetFees.Fee.Deposit);
+
+        d.amount = amountPlusBounty - fee;
 
         _transferToEverscaleAlien(
-            token,
-            recipient,
-            amountPlusBounty - fee
+            d,
+            msg.value
         );
 
-        _increaseTokenFee(token, fee);
+        _increaseTokenFee(d.token, fee);
     }
 }

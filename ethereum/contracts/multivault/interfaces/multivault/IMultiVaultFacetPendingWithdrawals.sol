@@ -49,8 +49,10 @@ interface IMultiVaultFacetPendingWithdrawals {
         uint256 id,
         uint256 amount,
         IEverscale.EverscaleAddress memory recipient,
+        uint expected_evers,
+        bytes memory payload,
         uint bounty
-    ) external;
+    ) external payable;
 
     function setPendingWithdrawalApprove(
         PendingWithdrawalId memory pendingWithdrawalId,

@@ -11,7 +11,10 @@ interface IMultiVaultFacetDepositEvents {
         uint256 native_addr,
         uint128 amount,
         int8 recipient_wid,
-        uint256 recipient_addr
+        uint256 recipient_addr,
+        uint value,
+        uint expected_evers,
+        bytes payload
     );
 
     event AlienTransfer(
@@ -22,16 +25,17 @@ interface IMultiVaultFacetDepositEvents {
         uint8 decimals,
         uint128 amount,
         int8 recipient_wid,
-        uint256 recipient_addr
+        uint256 recipient_addr,
+        uint value,
+        uint expected_evers,
+        bytes payload
     );
 
     event Deposit(
-        IMultiVaultFacetTokens.TokenType _type,
         address sender,
         address token,
         int8 recipient_wid,
         uint256 recipient_addr,
-        uint256 amount,
-        uint256 fee
+        uint256 amount
     );
 }

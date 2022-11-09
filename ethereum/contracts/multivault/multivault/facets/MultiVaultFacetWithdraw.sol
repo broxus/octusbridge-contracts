@@ -18,6 +18,7 @@ import "../helpers/MultiVaultHelperTokens.sol";
 import "../helpers/MultiVaultHelperPendingWithdrawal.sol";
 import "../helpers/MultiVaultHelperTokenBalance.sol";
 
+import "hardhat/console.sol";
 
 contract MultiVaultFacetWithdraw is
     MultiVaultHelperFee,
@@ -147,6 +148,7 @@ contract MultiVaultFacetWithdraw is
 
         // Token balance sufficient and none of the limits are violated
         if (withdrawal.amount <= _vaultTokenBalance(withdrawal.token) && withdrawalLimitsPassed) {
+
             _withdraw(
                 withdrawal.recipient,
                 withdrawal.amount,

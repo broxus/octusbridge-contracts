@@ -7,17 +7,21 @@ import "./IMultiVaultFacetPendingWithdrawals.sol";
 
 
 interface IMultiVaultFacetDeposit {
-    function deposit(
-        IEverscale.EverscaleAddress memory recipient,
-        address token,
-        uint amount
-    ) external;
+    struct DepositParams {
+        IEverscale.EverscaleAddress recipient;
+        address token;
+        uint amount;
+        uint expected_evers;
+        bytes payload;
+    }
 
     function deposit(
-        IEverscale.EverscaleAddress memory recipient,
-        address token,
-        uint256 amount,
+        DepositParams memory d
+    ) external payable;
+
+    function deposit(
+        DepositParams memory d,
         uint256 expectedMinBounty,
         IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId[] memory pendingWithdrawalIds
-    ) external;
+    ) external payable;
 }

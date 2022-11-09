@@ -50,7 +50,7 @@ const hardhatConfig = {
     flat: true,
     spacing: 2,
     runOnCompile: true,
-    only: [':Vault$', ':Bridge$', ':DAO$', ':MultiVault$']
+    only: [':Vault$', ':Bridge$', ':DAO$', ':MultiVaultFacet']
   },
   contractSizer: {
     alphaSort: true,

@@ -13,9 +13,8 @@ interface IMultiVaultFacetFees {
     function fees(address token) external view returns (uint);
 
     function skim(
-        address token,
-        bool skim_to_everscale
-    ) external;
+        address token
+    ) external payable;
 
     function setDefaultAlienWithdrawFee(uint fee) external;
     function setDefaultAlienDepositFee(uint fee) external;

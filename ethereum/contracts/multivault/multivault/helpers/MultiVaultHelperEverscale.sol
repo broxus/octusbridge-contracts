@@ -5,43 +5,50 @@ pragma solidity 0.8.0;
 import "../../interfaces/IEverscale.sol";
 import "../../interfaces/IERC20Metadata.sol";
 import "../../interfaces/multivault/IMultiVaultFacetDepositEvents.sol";
+import "../../interfaces/multivault/IMultiVaultFacetDeposit.sol";
 
 import "../storage/MultiVaultStorage.sol";
 
 
 abstract contract MultiVaultHelperEverscale is IMultiVaultFacetDepositEvents {
     function _transferToEverscaleNative(
-        address _token,
-        IEverscale.EverscaleAddress memory recipient,
-        uint amount
+        IMultiVaultFacetDeposit.DepositParams memory deposit,
+        uint value
     ) internal {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
-        IEverscale.EverscaleAddress memory native = s.natives_[_token];
+        IEverscale.EverscaleAddress memory native = s.natives_[deposit.token];
 
         emit NativeTransfer(
             native.wid,
             native.addr,
-            uint128(amount),
-            recipient.wid,
-            recipient.addr
+
+            uint128(deposit.amount),
+            deposit.recipient.wid,
+            deposit.recipient.addr,
+            value,
+            deposit.expected_evers,
+            deposit.payload
         );
     }
 
     function _transferToEverscaleAlien(
-        address _token,
-        IEverscale.EverscaleAddress memory recipient,
-        uint amount
+        IMultiVaultFacetDeposit.DepositParams memory deposit,
+        uint value
     ) internal {
         emit AlienTransfer(
             block.chainid,
-            uint160(_token),
-            IERC20Metadata(_token).name(),
-            IERC20Metadata(_token).symbol(),
-            IERC20Metadata(_token).decimals(),
-            uint128(amount),
-            recipient.wid,
-            recipient.addr
+            uint160(deposit.token),
+            IERC20Metadata(deposit.token).name(),
+            IERC20Metadata(deposit.token).symbol(),
+            IERC20Metadata(deposit.token).decimals(),
+
+            uint128(deposit.amount),
+            deposit.recipient.wid,
+            deposit.recipient.addr,
+            value,
+            deposit.expected_evers,
+            deposit.payload
         );
     }
 }

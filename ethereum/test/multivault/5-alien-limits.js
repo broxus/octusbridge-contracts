@@ -3,13 +3,14 @@ const {
     expect,
     ...utils
 } = require("../utils");
+const {ethers} = require("hardhat");
 
 
 describe('Test alien withdrawal limits', async () => {
     let multivault, token;
     let snapshot;
 
-    const deposit = ethers.utils.parseUnits('1000', 18);
+    const deposit_amount = ethers.utils.parseUnits('1000', 18);
     const undeclared = ethers.utils.parseUnits('500', 18);
     const daily = ethers.utils.parseUnits('700', 18);
 
@@ -30,11 +31,23 @@ describe('Test alien withdrawal limits', async () => {
 
         await token
             .connect(alice)
-            .approve(multivault.address, deposit);
+            .approve(multivault.address, deposit_amount);
 
-        await multivault
+        const deposit = multivault
             .connect(alice)
-            ['deposit((int8,uint256),address,uint256)'](recipient, token.address, deposit);
+            ['deposit(((int8,uint256),address,uint256,uint256,bytes))'];
+
+        const deposit_value = ethers.utils.parseEther("0.1");
+        const deposit_expected_evers = 33;
+        const deposit_payload = "0x001122";
+
+        await deposit({
+            recipient,
+            token: token.address,
+            amount: deposit_amount,
+            expected_evers: deposit_expected_evers,
+            payload: deposit_payload
+        }, { value: deposit_value });
     });
 
     it('Set limits for token', async () => {

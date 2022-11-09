@@ -65,17 +65,11 @@ contract MultiVaultFacetFees is
     }
 
     /// @notice Skim multivault fees for specific token
-    /// @dev If `skim_to_everscale` is true, than fees will be sent to Everscale.
-    /// Token type will be derived automatically and transferred with correct pipeline to the `rewards`.
-    /// Otherwise, tokens will be transferred to the `governance` address.
-    ///
     /// Can be called only by governance or management.
     /// @param token Token address, can be both native or alien
-    /// @param skim_to_everscale Skim fees to Everscale or not
     function skim(
-        address token,
-        bool skim_to_everscale
-    ) external override nonReentrant onlyGovernanceOrManagement {
+        address token
+    ) external payable override nonReentrant onlyGovernanceOrManagement {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         uint fee = s.fees[token];
@@ -87,21 +81,13 @@ contract MultiVaultFacetFees is
         // Find out token type
         bool isNative = s.tokens_[token].isNative;
 
-        if (skim_to_everscale) {
-            if (isNative) {
-                _transferToEverscaleNative(token, s.rewards_, fee);
-            } else {
-                _transferToEverscaleAlien(token, s.rewards_, fee);
-            }
+        if (isNative) {
+            IMultiVaultToken(token).mint(s.governance, fee);
         } else {
-            if (isNative) {
-                IMultiVaultToken(token).mint(s.governance, fee);
-            } else {
-                IERC20(token).safeTransfer(s.governance, fee);
-            }
+            IERC20(token).safeTransfer(s.governance, fee);
         }
 
-        emit SkimFee(token, skim_to_everscale, fee);
+        emit SkimFee(token, false, fee);
     }
 
     /// @notice Set default deposit fee for native tokens.

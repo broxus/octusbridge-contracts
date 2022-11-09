@@ -111,9 +111,12 @@ contract MultiVaultFacetPendingWithdrawals is
         uint256 id,
         uint256 amount,
         IEverscale.EverscaleAddress memory recipient,
+        uint expected_evers,
+        bytes memory payload,
         uint bounty
     )
         external
+        payable
         override
         onlyEmergencyDisabled
     {
@@ -124,7 +127,15 @@ contract MultiVaultFacetPendingWithdrawals is
 
         s.pendingWithdrawals_[msg.sender][id].amount -= amount;
 
-        _transferToEverscaleAlien(pendingWithdrawal.token, recipient, amount);
+        IMultiVaultFacetDeposit.DepositParams memory deposit = IMultiVaultFacetDeposit.DepositParams({
+            recipient: recipient,
+            token: pendingWithdrawal.token,
+            amount: amount,
+            expected_evers: expected_evers,
+            payload: payload
+        });
+
+        _transferToEverscaleAlien(deposit, msg.value);
 
         emit PendingWithdrawalCancel(msg.sender, id, amount);
 
