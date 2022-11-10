@@ -1,36 +1,36 @@
-const {
-    expect, sleep, deployAccount, deployTokenRoot, mintTokens, depositTokens
-} = require('../utils');
-const BigNumber = require('bignumber.js');
-const logger = require('mocha-logger');
-const {
-    convertCrystal
-} = locklift.utils;
+export {}
 
-const TOKEN_PATH = '../node_modules/ton-eth-bridge-token-contracts/build';
-const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+import {FactorySource} from "../../build/factorySource";
+import {Address, Contract, Signer} from "locklift";
+import {Account} from "everscale-standalone-client/nodejs";
+const {
+    expect, deployAccount, deployTokenWallets, deployTokenRoot, depositTokens,
+    logger, mintTokens, stringToBytesArray, getRandomNonce, wait
+} = require('../utils');
+
+const BigNumber = require('bignumber.js');
 
 const user1_eth_addr = '0x93E05804b0A58668531F65A93AbfA1aD8F7F5B2b';
 const user2_eth_addr = '0x197216E3421D13A72Fdd79A44d8d89f121dcab6C';
 const user3_eth_addr = '0xaF2AAf6316a137bbD7D4a9d3279D06E80EE79423';
 
-let stakingRoot;
-let stakingToken;
-let stakingWallet;
+let stakingRoot: Contract<FactorySource["StakingV1_2"]>;
+let stakingToken: Contract<FactorySource["TokenRoot"]>;
+let stakingWallet: Contract<FactorySource["TokenWallet"]>;
 
-let encoder;
+let encoder: Contract<FactorySource["CellEncoderStandalone"]>;
 
-let user1;
-let user1Data;
-let user2;
-let user2Data;
-let user3;
-let user3Data;
-let stakingOwner;
-let userTokenWallet1;
-let userTokenWallet2;
-let userTokenWallet3;
-let ownerWallet;
+let user1: Account;
+let user1Data: Contract<FactorySource["UserData"]>;
+let user2: Account;
+let user2Data: Contract<FactorySource["UserData"]>;
+let user3: Account;
+let user3Data: Contract<FactorySource["UserData"]>;
+let stakingOwner: Account;
+let userTokenWallet1: Contract<FactorySource["TokenWallet"]>;
+let userTokenWallet2: Contract<FactorySource["TokenWallet"]>;
+let userTokenWallet3: Contract<FactorySource["TokenWallet"]>;
+let ownerWallet: Contract<FactorySource["TokenWallet"]>;
 let userInitialTokenBal = 100000;
 let rewardTokensBal = 10000;
 let userDeposit = 100;
@@ -51,218 +51,189 @@ const RELAY_INITIAL_DEPOSIT = 500;
 describe('Test Staking Relay mechanic', async function () {
     this.timeout(10000000);
 
-    const sendTons = async function (from, receiver) {
-        return await from.runTarget({
-            contract: receiver,
-            value: convertCrystal(25, 'nano')
-        });
-    }
-
-    const userRewardRounds = async function (userData) {
+    const userRewardRounds = async function (userData: Contract<FactorySource["UserData"]>) {
         const details = await userData.methods.getDetails({answerId: 0}).call().then(v => v.value0);
         return details.rewardRounds;
     }
 
-    const userTokenBalance = async function (userData) {
+    const userTokenBalance = async function (userData: Contract<FactorySource["UserData"]>) {
         const details = await userData.methods.getDetails({answerId: 0}).call().then(v => v.value0);
         return details.token_balance;
     }
 
-    const checkTokenBalances = async function(userTokenWallet, userAccount, pool_wallet_bal, pool_bal, pool_reward_bal, user_bal, user_data_bal) {
-        const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
+    const checkTokenBalances = async function(
+        userTokenWallet: Contract<FactorySource["TokenWallet"]>,
+        userAccount: Contract<FactorySource["UserData"]>,
+        pool_wallet_bal: string,
+        pool_bal: string,
+        pool_reward_bal: string,
+        user_bal: string,
+        user_data_bal: string
+    ) {
+        const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
 
-        const _pool_wallet_bal = await stakingWallet.methods.balance().call();
+        const _pool_wallet_bal = await stakingWallet.methods.balance({answerId: 0}).call().then(v => v.value0);
         const _pool_bal = staking_details.tokenBalance;
         const _pool_reward_bal = staking_details.rewardTokenBalance;
 
-        const _user_bal = await userTokenWallet.methods.balance().call();
-        const user_data = await userAccount.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
-        const _user_data_bal = user_data.token_balance;
+        const _user_bal = await userTokenWallet.methods.balance({answerId: 0}).call();
+        const user_data = await userAccount.methods.getDetails({answerId: 0}).call();
+        const _user_data_bal = user_data.value0.token_balance;
 
         // console.log(_pool_wallet_bal.toString(), _pool_bal.toString(), _pool_reward_bal.toString(), _user_bal.toString(), _user_data_bal.toString());
 
-        expect(_pool_wallet_bal.toNumber()).to.be.equal(pool_wallet_bal, 'Pool wallet balance bad');
-        expect(_pool_bal.toNumber()).to.be.equal(pool_bal, 'Pool balance bad');
-        expect(_pool_reward_bal.toNumber()).to.be.equal(pool_reward_bal, 'Pool reward balance bad');
-        expect(_user_bal.toNumber()).to.be.equal(user_bal, 'User balance bad');
-        expect(_user_data_bal.toNumber()).to.be.equal(user_data_bal, 'User data balance bad');
+        expect(_pool_wallet_bal).to.be.equal(pool_wallet_bal, 'Pool wallet balance bad');
+        expect(_pool_bal).to.be.equal(pool_bal, 'Pool balance bad');
+        expect(_pool_reward_bal).to.be.equal(pool_reward_bal, 'Pool reward balance bad');
+        expect(_user_bal).to.be.equal(user_bal, 'User balance bad');
+        expect(_user_data_bal).to.be.equal(user_data_bal, 'User data balance bad');
     }
 
     const startNewRewardRound = async function () {
-        return await stakingOwner.runTarget({
-            contract: stakingRoot,
-            method: 'startNewRewardRound',
-            params: {
-                send_gas_to: stakingOwner.address,
-            },
-            value: locklift.utils.convertCrystal(11, 'nano')
-        });
+        return await locklift.transactions.waitFinalized(stakingRoot.methods.startNewRewardRound({
+            send_gas_to: stakingOwner.address,
+        }).send({
+            from: stakingOwner.address,
+            amount: locklift.utils.toNano(11),
+        }));
     }
 
-    const getRewardForRelayRound = async function(user, userData, round_num) {
-        return await userData.run({
-            method: 'getRewardForRelayRound',
-            params: {round_num: round_num},
-            keyPair: user.keyPair
+    const getRewardForRelayRound = async function(user: Signer, userData: Contract<FactorySource["UserData"]>, round_num: number) {
+        return await userData.methods.getRewardForRelayRound({
+            round_num: round_num
         })
+        .sendExternal({publicKey: user.publicKey})
     }
 
-    const getElection = async function (round_num) {
-        const addr = await stakingRoot.call({
-            method: 'getElectionAddress',
-            params: {round_num: round_num}
-        });
-        const election = await locklift.factory.getContract('Election');
-        election.setAddress(addr);
+    const getElection = async function (round_num: number) {
+        const addr = await stakingRoot.methods.getElectionAddress({
+            round_num: round_num, answerId: 0
+        }).call();
+        const election = await locklift.factory.getDeployedContract('Election', addr.value0);
         return election;
     }
 
     const deployEncoder = async function () {
-        const Encoder = await locklift.factory.getContract('Encoder');
-        const [keyPair] = await locklift.keys.getKeyPairs();
+        const signer = (await locklift.keystore.getSigner("0"))!;
 
-        return await locklift.giver.deployContract({
-            contract: Encoder,
+         let {contract: enc} = await locklift.factory.deployContract({
+            contract: 'CellEncoderStandalone',
             constructorParams: {},
-            initParams: {},
-            keyPair
-        }, locklift.utils.convertCrystal(1, 'nano'));
+            initParams: {
+                _randomNonce: locklift.utils.getRandomNonce(),
+            },
+            publicKey: signer.publicKey,
+            value: locklift.utils.toNano(1),
+        });
+        return enc;
     }
 
-    const getRelayRound = async function (round_num) {
-        const addr = await stakingRoot.call({
-            method: 'getRelayRoundAddress',
-            params: {round_num: round_num}
-        });
-        const round = await locklift.factory.getContract('RelayRound');
-        round.setAddress(addr);
+    const getRelayRound = async function (round_num: number) {
+        const addr = await stakingRoot.methods.getRelayRoundAddress({
+            round_num: round_num, answerId: 0
+        }).call();
+        const round = await locklift.factory.getDeployedContract('RelayRound', addr.value0);
         return round;
     }
 
-    const getBalance = async function (address) {
-        const res = await locklift.ton.client.net.wait_for_collection({
-            collection: 'accounts',
-            filter: {
-                id: { eq: address }
-            },
-            result: 'balance',
-            timeout: 120000
+    const getBalance = async function (address: Address) {
+        const res = await locklift.provider.getBalance(address);
+        return new BigNumber(res);
+    }
+
+    const requestRelayMembership = async function (_user: Signer, _userData: Contract<FactorySource["UserData"]>) {
+        return await _userData.methods.becomeRelayNextRound({})
+            .sendExternal({publicKey: _user.publicKey})
+    }
+
+    const startElection = async function(_user: Signer) {
+        return await stakingRoot.methods.startElectionOnNewRound({
+
+            })
+            .sendExternal({publicKey: _user.publicKey})
+    }
+
+    const endElection = async function (_user: Signer) {
+        return await stakingRoot.methods.endElection({
+
+            })
+            .sendExternal({publicKey: _user.publicKey})
+    }
+
+    const slashUser = async function (_user: Account) {
+        return await stakingRoot.methods.slashRelay({
+            relay_staker_addr: _user.address,
+            send_gas_to: stakingOwner.address
+        }).send({
+            from: stakingOwner.address,
+            amount: locklift.utils.toNano(11),
         });
-        return new BigNumber(res.result.balance);
-    }
-
-    const requestRelayMembership = async function (_user, _userData) {
-        return await _userData.run({
-            method: 'becomeRelayNextRound',
-            params: {},
-            keyPair: _user.keyPair
-        })
-    }
-
-    const startElection = async function(_user) {
-        return await stakingRoot.run({
-            method: 'startElectionOnNewRound',
-            params: {},
-            keyPair: _user.keyPair
-        })
-    }
-
-    const endElection = async function (_user) {
-        return await stakingRoot.run({
-            method: 'endElection',
-            params: {},
-            keyPair: _user.keyPair
-        })
-    }
-
-    const slashUser = async function (_user) {
-        return await stakingOwner.runTarget({
-            contract: stakingRoot,
-            method: 'slashRelay',
-            params: {
-                relay_staker_addr: _user.address,
-                send_gas_to: stakingOwner.address
-            },
-            value: convertCrystal(11, "nano")
-        })
     }
 
     const setEmergency = async function () {
-        return await stakingOwner.runTarget({
-            contract: stakingRoot,
-            method: 'setEmergency',
-            params: {_emergency: true, send_gas_to: stakingOwner.address},
-            value: convertCrystal(11, 'nano')
+        return await stakingRoot.methods.setEmergency({
+            _emergency: true, send_gas_to: stakingOwner.address
+        }).send({
+            from: stakingOwner.address,
+            amount: locklift.utils.toNano(11),
         });
     }
 
-    const withdrawTokens = async function(user, withdraw_amount) {
-        return await user.runTarget({
-            contract: stakingRoot,
-            method: 'withdraw',
-            params: {
-                amount: withdraw_amount,
-                send_gas_to: user.address
-            },
-            value: convertCrystal(11, 'nano')
+    const withdrawTokens = async function(user: Account, withdraw_amount: number) {
+        return await stakingRoot.methods.withdraw({
+            amount: withdraw_amount,
+            send_gas_to: user.address
+        }).send({
+            from: user.address,
+            amount: locklift.utils.toNano(11),
         });
     };
 
-    const withdrawEmergency = async function(amount, all) {
-        return await stakingOwner.runTarget({
-            contract: stakingRoot,
-            method: 'withdrawTokensEmergency',
-            params: {
-                amount: amount,
-                receiver: stakingOwner.address,
-                all: all,
-                send_gas_to: stakingOwner.address
-            },
-            value: convertCrystal(11, 'nano')
+    const withdrawEmergency = async function(amount: number, all: any) {
+        return await stakingRoot.methods.withdrawTokensEmergency({
+            amount: amount,
+            receiver: stakingOwner.address,
+            all: all,
+            send_gas_to: stakingOwner.address
+        }).send({
+            from: stakingOwner.address,
+            amount: locklift.utils.toNano(11),
         });
     }
 
-    const confirmTonRelayAccount = async function (_user, _userData) {
-        return await _userData.run({
-            method: 'confirmTonAccount',
-            params: {},
-            keyPair: _user.keyPair
-        })
+    const confirmTonRelayAccount = async function (_user: Signer, _userData: Contract<FactorySource["UserData"]>) {
+        return await _userData.methods.confirmTonAccount({})
+            .sendExternal({publicKey: _user.publicKey})
     }
 
-    const confirmEthRelayAccount = async function (_user, _user_eth_addr) {
-        const event_data = await encoder.call({
-            method: 'encodeEthereumEverscaleStakingEventData',
-            params: {
-                eth_addr: _user_eth_addr,
-                wk_id: 0,
-                ton_addr_body: (new BigNumber(`0x${_user.address.slice(2)}`)).toFixed(0)
-            }
-        })
-        return await stakingOwner.runTarget({
-            contract: stakingRoot,
-            method: 'onEventConfirmed',
-            params: {
-                eventData: {
-                    voteData: {
-                        eventTransaction: 0,
-                        eventIndex: 0,
-                        eventData: event_data,
-                        eventBlockNumber: 0,
-                        eventBlock: 0
-                    },
-                    configuration: _user.address,
-                    staking: _user.address,
-                    chainId: 0
+    const confirmEthRelayAccount = async function (_user: Account, _user_eth_addr: string) {
+        const event_data = await encoder.methods.encodeEthereumEverscaleStakingEventData({
+            eth_addr: _user_eth_addr,
+            wk_id: 0,
+            ton_addr_body: (new BigNumber(`0x${_user.address.toString().slice(2)}`)).toFixed(0)
+        }).call();
+
+        return await stakingRoot.methods.onEventConfirmed({
+            eventData: {
+                voteData: {
+                    eventTransaction: 0,
+                    eventIndex: 0,
+                    eventData: event_data.data,
+                    eventBlockNumber: 0,
+                    eventBlock: 0
                 },
-                'value1': '',
-                gasBackAddress: stakingOwner.address
+                configuration: _user.address,
+                staking: _user.address,
+                chainId: 0
             },
-            value: convertCrystal(11, "nano")
-        })
+            gasBackAddress: stakingOwner.address
+        }).send({
+            from: stakingOwner.address,
+            amount: locklift.utils.toNano(11),
+        });
     }
 
-    const linkRelayAccounts = async function (_user, ton_pk, eth_addr) {
+    const linkRelayAccounts = async function (_user: Account, ton_pk: string, eth_addr: string) {
         const user_pk = new BigNumber(ton_pk, 16);
         const user_eth = new BigNumber(eth_addr.toLowerCase(), 16);
 
@@ -271,24 +242,21 @@ describe('Test Staking Relay mechanic', async function () {
             eth_address: user_eth.toFixed()
         }
 
-        return await _user.runTarget({
-            contract: stakingRoot,
-            method: 'linkRelayAccounts',
-            params: input_params,
-            value: convertCrystal(RELAY_INITIAL_DEPOSIT + 1, "nano")
-        })
+        return await stakingRoot.methods.linkRelayAccounts(input_params).send({
+            from: _user.address,
+            amount: locklift.utils.toNano(RELAY_INITIAL_DEPOSIT + 1),
+        });
     }
 
-    const getUserDataAccount = async function (_user) {
-        const userData = await locklift.factory.getContract('UserData');
-        userData.setAddress(await stakingRoot.call({
-            method: 'getUserDataAddress',
-            params: {user: _user.address}
-        }));
+    const getUserDataAccount = async function (_user: Account) {
+        const userData = await locklift.factory.getDeployedContract('UserData',
+        await stakingRoot.methods.getUserDataAddress({
+            user: _user.address, answerId: 0
+            }).call().then(t => t.value0));
         return userData
     }
 
-    const waitForDeploy = async function (address) {
+    const waitForDeploy = async function (address: Address) {
         return await getBalance(address);
     }
 
@@ -420,33 +388,33 @@ describe('Test Staking Relay mechanic', async function () {
 
                 });
                 logger.log(`Installing UserData code`);
-                await stakingOwner.runTarget({
-                    contract: stakingRoot,
-                    method: 'installOrUpdateUserDataCode',
-                    params: {code: UserData.code, send_gas_to: stakingOwner.address},
-                    value: convertCrystal(11, 'nano')
-                });
+                await stakingRoot.methods.installOrUpdateUserDataCode({
+code: UserData.code, send_gas_to: stakingOwner.address
+    }).send({
+      from: stakingOwner.address,
+      amount: convertCrystal(11, 'nano'),
+    });
                 logger.log(`Installing ElectionCode code`);
-                await stakingOwner.runTarget({
-                    contract: stakingRoot,
-                    method: 'installOrUpdateElectionCode',
-                    params: {code: Election.code, send_gas_to: stakingOwner.address},
-                    value: convertCrystal(11, 'nano')
-                });
+                await stakingRoot.methods.installOrUpdateElectionCode({
+code: Election.code, send_gas_to: stakingOwner.address
+    }).send({
+      from: stakingOwner.address,
+      amount: convertCrystal(11, 'nano'),
+    });
                 logger.log(`Installing RelayRoundCode code`);
-                await stakingOwner.runTarget({
-                    contract: stakingRoot,
-                    method: 'installOrUpdateRelayRoundCode',
-                    params: {code: RelayRound.code, send_gas_to: stakingOwner.address},
-                    value: convertCrystal(11, 'nano')
-                });
+                await stakingRoot.methods.installOrUpdateRelayRoundCode({
+code: RelayRound.code, send_gas_to: stakingOwner.address
+    }).send({
+      from: stakingOwner.address,
+      amount: convertCrystal(11, 'nano'),
+    });
                 logger.log(`Set staking to Active`);
-                await stakingOwner.runTarget({
-                    contract: stakingRoot,
-                    method: 'setActive',
-                    params: {new_active: true, send_gas_to: stakingOwner.address},
-                    value: convertCrystal(11, 'nano')
-                });
+                await stakingRoot.methods.setActive({
+new_active: true, send_gas_to: stakingOwner.address
+    }).send({
+      from: stakingOwner.address,
+      amount: convertCrystal(11, 'nano'),
+    });
 
                 if (locklift.network === 'dev') {
                     await wait(DEV_WAIT);
