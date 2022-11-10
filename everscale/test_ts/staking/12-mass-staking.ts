@@ -425,11 +425,11 @@ describe.skip('Staking highload relay test', async function () {
                 [ownerWallet] = await deployTokenWallets([stakingOwner]);
                 userTokenWallets = await deployTokenWallets(users);
 
-                const owner_balance = await ownerWallet.call({method: 'balance'});
+                const owner_balance = await ownerWallet.methods.balance().call();
                 expect(owner_balance.toString()).to.be.equal(userInitialTokenBal.toString());
 
                 await Promise.all(userTokenWallets.map(async (userWallet) => {
-                    const balance = await userWallet.call({method: 'balance'});
+                    const balance = await userWallet.methods.balance().call();
                     expect(balance.toString()).to.be.equal(userInitialTokenBal.toString());
                 }));
             });
@@ -480,7 +480,7 @@ describe.skip('Staking highload relay test', async function () {
                 stakingWallet.setAddress(staking_wallet_addr);
 
                 // call in order to check if wallet is deployed
-                const details = await stakingWallet.call({method: 'getDetails'});
+                const details = await stakingWallet.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 expect(details.owner_address).to.be.equal(stakingRoot.address, 'Wrong staking token wallet owner');
                 expect(details.receive_callback).to.be.equal(stakingRoot.address, 'Wrong staking token wallet receive callback');
                 expect(details.root_address).to.be.equal(stakingToken.address, 'Wrong staking token wallet root');
@@ -538,7 +538,7 @@ describe.skip('Staking highload relay test', async function () {
                     await wait(DEV_WAIT);
                 }
 
-                const staking_balance = await stakingWallet.call({method: 'balance'});
+                const staking_balance = await stakingWallet.methods.balance().call();
                 const staking_balance_stored = await stakingRoot.call({method: 'rewardTokenBalance'});
 
                 expect(staking_balance.toString()).to.be.equal(amount.toString(), 'Farm pool balance empty');
@@ -596,7 +596,7 @@ describe.skip('Staking highload relay test', async function () {
                     const user_data = await getUserDataAccount(user);
 
                     const user_data_bal = await user_data.call({method: 'token_balance'});
-                    const user_bal = await user_token_wallet.call({method: 'balance'});
+                    const user_bal = await user_token_wallet.methods.balance().call();
 
                     const expected_user_bal = userInitialTokenBal - curUserDeposit;
                     expect(user_data_bal.toFixed(0)).to.be.equal(curUserDeposit.toFixed(0), `Bad deposit1 - user ${user.address}, idx - ${i}`);
@@ -904,7 +904,7 @@ describe.skip('Staking highload relay test', async function () {
                 expect(relay_rounds_data.currentRelayRound.toString()).to.be.equal('2', "Bad round installed in root");
 
                 // check all relays are installed
-                const round_details = await round.call({method: 'getDetails'});
+                const round_details = await round.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 const relays = round_details.relays;
                 const rel_addrs = relays.map((elem) => elem.staker_addr);
 
@@ -1071,7 +1071,7 @@ describe.skip('Staking highload relay test', async function () {
                 expect(relay_rounds_data.currentRelayRound.toString()).to.be.equal('3', "Bad round installed in root");
 
                 // check all relays are installed
-                const round_details = await round.call({method: 'getDetails'});
+                const round_details = await round.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 const relays = round_details.relays;
                 const rel_addrs = relays.map((elem) => elem.staker_addr);
 

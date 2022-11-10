@@ -1,107 +1,105 @@
+export {}
+
+import {FactorySource} from "../../build/factorySource";
+import {Address, Contract} from "locklift";
+import {Account} from "everscale-standalone-client/nodejs";
 const {
-    expect, deployAccount, deployTokenRoot, mintTokens, depositTokens
+    expect, deployAccount, deployTokenWallets, deployTokenRoot, depositTokens,
+    logger, mintTokens, stringToBytesArray, getRandomNonce, wait
 } = require('../utils');
-const BigNumber = require('bignumber.js');
-const logger = require('mocha-logger');
-const {
-    convertCrystal
-} = locklift.utils;
 
-const EMPTY_TVM_CELL = 'te6ccgEBAQEAAgAAAA==';
+let stakingRoot: Contract<FactorySource["StakingV1_2"]>;
+let stakingToken: Contract<FactorySource["TokenRoot"]>;
+let stakingWallet: Contract<FactorySource["TokenWallet"]>;
 
-const TOKEN_PATH = '../node_modules/ton-eth-bridge-token-contracts/build';
-const DEV_WAIT = 100000;
-
-const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-let stakingRoot;
-let stakingToken;
-let stakingWallet;
-
-let user1;
-let user1Data;
-let user2;
-let user2Data;
-let stakingOwner;
-let userTokenWallet1;
-let userTokenWallet2;
-let ownerWallet;
+let user1: Account;
+let user1Data: Contract<FactorySource["UserData"]>;
+let user2: Account;
+let user2Data: Contract<FactorySource["UserData"]>;
+let stakingOwner: Account;
+let userTokenWallet1: Contract<FactorySource["TokenWallet"]>;
+let userTokenWallet2: Contract<FactorySource["TokenWallet"]>;
+let ownerWallet: Contract<FactorySource["TokenWallet"]>;
 let userInitialTokenBal = 100000;
 let rewardTokensBal = 10000;
 let userDeposit = 100;
 let rewardPerSec = 1000000;
-let user1Balance;
-let user2Balance;
-let balance_err;
+let user1Balance: string;
+let user2Balance: string;
+let balance_err: string;
 
 
 describe('Test Staking Rewards', async function () {
     this.timeout(10000000);
 
-    const userRewardRounds = async function (userData) {
-        const details = await userData.call({method: 'getDetails'});
-        return details.rewardRounds;
+    const userRewardRounds = async function (userData: Contract<FactorySource["UserData"]>) {
+        return await userData.methods.getDetails({answerId: 0}).call().then(v => v.value0.rewardRounds.toString());
     }
 
-    const userTokenBalance = async function (userData) {
-        const details = await userData.call({method: 'getDetails'});
-        return details.token_balance;
+    const userTokenBalance = async function (userData: Contract<FactorySource["UserData"]>) {
+        return await userData.methods.getDetails({answerId: 0}).call().then(v => v.value0.token_balance.toString());
     }
 
-    const pendingReward = async function (user_token_balance, user_reward_rounds) {
-        return await stakingRoot.call({
-            method: 'pendingReward',
-            params: {user_token_balance: user_token_balance, user_reward_data: user_reward_rounds}
-        })
+    const pendingReward = async function (user_token_balance: string, user_reward_rounds: any) {
+        return await stakingRoot.methods.pendingReward({user_token_balance: user_token_balance, user_reward_data: user_reward_rounds, answerId: 0}).call().then(v => v.value0);
     }
 
-    const checkTokenBalances = async function(userTokenWallet, userAccount, pool_wallet_bal, pool_bal, pool_reward_bal, user_bal, user_data_bal) {
-        const staking_details = await stakingRoot.call({method: 'getDetails'});
+    const checkTokenBalances = async function(
+        userTokenWallet: Contract<FactorySource["TokenWallet"]>,
+        userAccount: Contract<FactorySource["UserData"]>,
+        pool_wallet_bal: string,
+        pool_bal: string,
+        pool_reward_bal: string,
+        user_bal: string,
+        user_data_bal: string
+    ) {
+        const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
 
-        const _pool_wallet_bal = await stakingWallet.call({method: 'balance'});
+        const _pool_wallet_bal = await stakingWallet.methods.balance({answerId: 0}).call().then(v => v.value0);
         const _pool_bal = staking_details.tokenBalance;
         const _pool_reward_bal = staking_details.rewardTokenBalance;
 
-        const _user_bal = await userTokenWallet.call({method: 'balance'});
-        const user_data = await userAccount.call({method: 'getDetails'});
-        const _user_data_bal = user_data.token_balance;
+        const _user_bal = await userTokenWallet.methods.balance({answerId: 0}).call();
+        const user_data = await userAccount.methods.getDetails({answerId: 0}).call();
+        const _user_data_bal = user_data.value0.token_balance;
 
         // console.log(_pool_wallet_bal.toString(), _pool_bal.toString(), _pool_reward_bal.toString(), _user_bal.toString(), _user_data_bal.toString());
 
-        expect(_pool_wallet_bal.toNumber()).to.be.equal(pool_wallet_bal, 'Pool wallet balance bad');
-        expect(_pool_bal.toNumber()).to.be.equal(pool_bal, 'Pool balance bad');
-        expect(_pool_reward_bal.toNumber()).to.be.equal(pool_reward_bal, 'Pool reward balance bad');
-        expect(_user_bal.toNumber()).to.be.equal(user_bal, 'User balance bad');
-        expect(_user_data_bal.toNumber()).to.be.equal(user_data_bal, 'User data balance bad');
+        expect(_pool_wallet_bal).to.be.equal(pool_wallet_bal, 'Pool wallet balance bad');
+        expect(_pool_bal).to.be.equal(pool_bal, 'Pool balance bad');
+        expect(_pool_reward_bal).to.be.equal(pool_reward_bal, 'Pool reward balance bad');
+        expect(_user_bal).to.be.equal(user_bal, 'User balance bad');
+        expect(_user_data_bal).to.be.equal(user_data_bal, 'User data balance bad');
     }
 
     const startNewRewardRound = async function () {
-        return await stakingOwner.runTarget({
-            contract: stakingRoot,
-            method: 'startNewRewardRound',
-            params: {
-                send_gas_to: stakingOwner.address,
-            },
-            value: locklift.utils.convertCrystal(11, 'nano')
-        });
+        return await locklift.transactions.waitFinalized(stakingRoot.methods.startNewRewardRound({
+            send_gas_to: stakingOwner.address,
+        }).send({
+            from: stakingOwner.address,
+            amount: locklift.utils.toNano(11),
+        }));
     }
 
-    const claimReward = async function(user) {
-        return await user.runTarget({
-            contract: stakingRoot,
-            method: 'claimReward',
-            params: {
-                send_gas_to: user.address,
-            },
-            value: locklift.utils.convertCrystal(11, 'nano')
-        });
+    const claimReward = async function(user: Account) {
+        await locklift.transactions.waitFinalized(stakingRoot.methods.claimReward({
+            send_gas_to: user.address,
+        }).send({
+            from: user.address,
+            amount: locklift.utils.toNano(11),
+        }));
     }
 
-    const checkReward = async function(userData, prevRewData, prevRewardTime, newRewardTime) {
-        const user_data = await userData.call({method: 'getDetails'});
+    const checkReward = async function(
+        userData: Contract<FactorySource["UserData"]>,
+        prevRewData: any,
+        prevRewardTime: number,
+        newRewardTime: number
+    ) {
+        const user_data = await userData.methods.getDetails({answerId: 0}).call().then(v => v.value0);
         const user_rew_after = user_data.rewardRounds;
         const user_rew_balance_before = prevRewData[0].reward_balance;
-        const user_rew_balance_after = user_rew_after[0].reward_balance;
+        const user_rew_balance_after = parseInt(user_rew_after[0].reward_balance, 10);
 
         const reward = user_rew_balance_after - user_rew_balance_before;
 
@@ -111,32 +109,28 @@ describe('Test Staking Rewards', async function () {
         expect(reward).to.be.equal(expected_reward, 'Bad reward');
     }
 
-    const getUserDataAccount = async function (_user) {
-        const userData = await locklift.factory.getContract('UserData');
-        userData.setAddress(await stakingRoot.call({
-            method: 'getUserDataAddress',
-            params: {user: _user.address}
-        }));
+    const getUserDataAccount = async function (_user: Account) {
+        const userData = await locklift.factory.getDeployedContract('UserData',
+            await stakingRoot.methods.getUserDataAddress({user: _user.address, answerId: 0}).call().then(t => t.value0)
+        );
         return userData
     }
 
-    const withdrawTokens = async function(user, withdraw_amount) {
-        return await user.runTarget({
-            contract: stakingRoot,
-            method: 'withdraw',
-            params: {
-                amount: withdraw_amount,
-                send_gas_to: user.address
-            },
-            value: convertCrystal(11, 'nano')
-        });
+    const withdrawTokens = async function(user: Account, withdraw_amount: number) {
+        return await locklift.transactions.waitFinalized(stakingRoot.methods.withdraw({
+            amount: withdraw_amount,
+            send_gas_to: user.address
+        }).send({
+            from: user.address,
+            amount: locklift.utils.toNano(11),
+        }));
     };
 
     describe('Setup contracts', async function() {
         describe('Token', async function() {
             it('Deploy admin', async function() {
-                const [keyPair] = await locklift.keys.getKeyPairs();
-                stakingOwner = await deployAccount(keyPair, 50);
+                const signer0 = (await locklift.keystore.getSigner("0"))!;
+                stakingOwner = await deployAccount(signer0, 50);
             });
 
             it('Deploy root', async function() {
@@ -148,15 +142,13 @@ describe('Test Staking Rewards', async function () {
             it('Deploy users accounts', async function() {
                 let users = [];
                 for (const i of [1, 1]) {
-                    const [keyPair] = await locklift.keys.getKeyPairs();
-                    const account = await deployAccount(keyPair, 25);
+                    const signer = (await locklift.keystore.getSigner("0"))!;
+                    const account = await deployAccount(signer, 25);
                     logger.log(`User address: ${account.address}`);
 
-                    const {
-                        acc_type_name
-                    } = await locklift.ton.getAccountType(account.address);
+                    const isDeployed = await locklift.provider.getFullContractState({ address: account.address }).then(res => res.state?.isDeployed);
 
-                    expect(acc_type_name).to.be.equal('Active', 'User account not active');
+                    expect(isDeployed).to.be.true;
                     users.push(account);
                 }
                 [user1, user2] = users;
@@ -165,121 +157,127 @@ describe('Test Staking Rewards', async function () {
             it('Deploy users token wallets + mint', async function() {
                 [ userTokenWallet1, userTokenWallet2, ownerWallet ] = await mintTokens(stakingOwner, [user1, user2, stakingOwner], stakingToken, userInitialTokenBal);
 
-                const balance1 = await userTokenWallet1.call({method: 'balance'});
-                const balance2 = await userTokenWallet2.call({method: 'balance'});
-                const balance3 = await ownerWallet.call({method: 'balance'});
 
-                expect(balance1.toNumber()).to.be.equal(userInitialTokenBal, 'User ton token wallet empty');
-                expect(balance2.toNumber()).to.be.equal(userInitialTokenBal, 'User ton token wallet empty');
-                expect(balance3.toNumber()).to.be.equal(userInitialTokenBal, 'User ton token wallet empty');
+                const balance1 = await userTokenWallet1.methods.balance({answerId:0}).call();
+                const balance2 = await userTokenWallet2.methods.balance({answerId:0}).call();
+                const balance3 = await ownerWallet.methods.balance({answerId:0}).call();
+
+                expect(balance1).to.be.equal(userInitialTokenBal, 'User ton token wallet empty');
+                expect(balance2).to.be.equal(userInitialTokenBal, 'User ton token wallet empty');
+                expect(balance3).to.be.equal(userInitialTokenBal, 'User ton token wallet empty');
             });
         });
 
         describe('Staking', async function() {
             it('Deploy staking', async function () {
-                const [keyPair, keyPair1] = await locklift.keys.getKeyPairs();
+                const signer = (await locklift.keystore.getSigner("0"))!;
 
-                const TonConfigMockup = await locklift.factory.getContract('TonConfigMockup');
-                const ton_config_mockup = await locklift.giver.deployContract({
-                    contract: TonConfigMockup,
+                const {contract: ton_config_mockup}  = await locklift.factory.deployContract({
+                    contract: 'TonConfigMockup',
                     constructorParams: {},
                     initParams: {nonce: locklift.utils.getRandomNonce()},
-                    keyPair: keyPair
-                }, locklift.utils.convertCrystal(1, 'nano'));
+                    publicKey: signer.publicKey,
+                    value: locklift.utils.toNano(1),
+                });
 
-                const SolConfigMockup = await locklift.factory.getContract('SolConfigMockup');
-                const sol_config_mockup = await locklift.giver.deployContract({
-                    contract: SolConfigMockup,
+                const {contract: sol_config_mockup} = await locklift.factory.deployContract({
+                    contract: 'SolConfigMockup',
                     constructorParams: {},
                     initParams: {nonce: locklift.utils.getRandomNonce()},
-                    keyPair: keyPair
-                }, locklift.utils.convertCrystal(1, 'nano'));
+                    publicKey: signer.publicKey,
+                    value: locklift.utils.toNano(1),
+                });
 
-                stakingRoot = await locklift.factory.getContract('StakingV1_2');
-                const StakingRootDeployer = await locklift.factory.getContract('StakingRootDeployer');
-                const stakingRootDeployer = await locklift.giver.deployContract({
-                    contract: StakingRootDeployer,
+                const stakingRootData = await locklift.factory.getContractArtifacts('StakingV1_2');
+                const {contract: stakingRootDeployer} = await locklift.transactions.waitFinalized( locklift.factory.deployContract({
+                    contract: 'StakingRootDeployer',
                     constructorParams: {},
-                    initParams: {nonce: locklift.utils.getRandomNonce(), stakingCode: stakingRoot.code},
-                    keyPair: keyPair,
-                }, locklift.utils.convertCrystal(50, 'nano'));
+                    initParams: {
+                        nonce: getRandomNonce(),
+                        stakingCode: stakingRootData.code
+
+                    },
+                    publicKey: signer.publicKey,
+                    value: locklift.utils.toNano(55),
+                }));
 
                 logger.log(`Deploying stakingRoot`);
-                stakingRoot.setAddress((await stakingRootDeployer.run({
-                    method: 'deploy',
-                    params: {
-                        _admin: stakingOwner.address,
-                        _tokenRoot: stakingToken.address,
-                        _dao_root: stakingOwner.address,
-                        _rewarder: stakingOwner.address,
-                        _rescuer: stakingOwner.address,
-                        _bridge_event_config_eth_ton: stakingOwner.address,
-                        _bridge_event_config_ton_eth: ton_config_mockup.address,
-                        _bridge_event_config_ton_sol: sol_config_mockup.address,
-                        _deploy_nonce: locklift.utils.getRandomNonce()
-                    }
-                })).decoded.output.value0);
+                let {output: address} = await stakingRootDeployer.methods.deploy({
+                    _admin: stakingOwner.address,
+                    _tokenRoot: stakingToken.address,
+                    _dao_root: stakingOwner.address,
+                    _rewarder: stakingOwner.address,
+                    _rescuer: stakingOwner.address,
+                    _bridge_event_config_eth_ton: stakingOwner.address,
+                    _bridge_event_config_ton_eth: ton_config_mockup.address,
+                    _bridge_event_config_ton_sol: sol_config_mockup.address,
+                    _deploy_nonce: locklift.utils.getRandomNonce()
+                }).sendExternal({
+                    publicKey: signer.publicKey,
+                });
+
+                stakingRoot = await locklift.factory.getDeployedContract('StakingV1_2', address?.value0!);
+
                 logger.log(`StakingRoot address: ${stakingRoot.address}`);
                 logger.log(`StakingRoot owner address: ${stakingOwner.address}`);
                 logger.log(`StakingRoot token root address: ${stakingToken.address}`);
 
 
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 logger.log(`Staking token wallet: ${staking_details.tokenWallet}`);
 
-                stakingWallet = await locklift.factory.getContract('TokenWallet', TOKEN_PATH);
-                stakingWallet.setAddress(staking_details.tokenWallet);
+                stakingWallet = await locklift.factory.getDeployedContract('TokenWallet', staking_details.tokenWallet);
 
                 // call in order to check if wallet is deployed
-                const owner_address = await stakingWallet.call({method: 'owner'});
-                const root_address = await stakingWallet.call({method: 'root'});
+                const owner_address = await stakingWallet.methods.owner({answerId: 0}).call();
+                const root_address = await stakingWallet.methods.root({answerId: 0}).call();
                 expect(owner_address).to.be.equal(stakingRoot.address, 'Wrong staking token wallet owner');
                 expect(root_address).to.be.equal(stakingToken.address, 'Wrong staking token wallet root');
             });
 
             it('Installing codes', async function() {
-                const UserData = await locklift.factory.getContract('UserData');
-                const Election = await locklift.factory.getContract('Election');
-                const RelayRound = await locklift.factory.getContract('RelayRound');
-                const Platform = await locklift.factory.getContract('Platform');
+                const UserData = await locklift.factory.getContractArtifacts('UserData');
+                const Election = await locklift.factory.getContractArtifacts('Election');
+                const RelayRound = await locklift.factory.getContractArtifacts('RelayRound');
+                const Platform = await locklift.factory.getContractArtifacts('Platform');
 
                 logger.log(`Installing Platform code`);
-                await stakingOwner.runTarget({
-                    contract: stakingRoot,
-                    method: 'installPlatformOnce',
-                    params: {code: Platform.code, send_gas_to: stakingOwner.address},
-                    value: convertCrystal(11, 'nano')
+                await stakingRoot.methods.installPlatformOnce({
+                    code: Platform.code, send_gas_to: stakingOwner.address
+                }).send({
+                  from: stakingOwner.address,
+                  amount: locklift.utils.toNano(11),
                 });
                 logger.log(`Installing UserData code`);
-                await stakingOwner.runTarget({
-                    contract: stakingRoot,
-                    method: 'installOrUpdateUserDataCode',
-                    params: {code: UserData.code, send_gas_to: stakingOwner.address},
-                    value: convertCrystal(11, 'nano')
+                await stakingRoot.methods.installOrUpdateUserDataCode({
+                    code: UserData.code, send_gas_to: stakingOwner.address
+                }).send({
+                  from: stakingOwner.address,
+                  amount: locklift.utils.toNano(11),
                 });
                 logger.log(`Installing ElectionCode code`);
-                await stakingOwner.runTarget({
-                    contract: stakingRoot,
-                    method: 'installOrUpdateElectionCode',
-                    params: {code: Election.code, send_gas_to: stakingOwner.address},
-                    value: convertCrystal(11, 'nano')
+                await stakingRoot.methods.installOrUpdateElectionCode({
+                    code: Election.code, send_gas_to: stakingOwner.address
+                }).send({
+                  from: stakingOwner.address,
+                  amount: locklift.utils.toNano(11),
                 });
                 logger.log(`Installing RelayRoundCode code`);
-                await stakingOwner.runTarget({
-                    contract: stakingRoot,
-                    method: 'installOrUpdateRelayRoundCode',
-                    params: {code: RelayRound.code, send_gas_to: stakingOwner.address},
-                    value: convertCrystal(11, 'nano')
+                await stakingRoot.methods.installOrUpdateRelayRoundCode({
+                    code: RelayRound.code, send_gas_to: stakingOwner.address
+                }).send({
+                  from: stakingOwner.address,
+                  amount: locklift.utils.toNano(11),
                 });
                 logger.log(`Set staking to Active`);
-                await stakingOwner.runTarget({
-                    contract: stakingRoot,
-                    method: 'setActive',
-                    params: {new_active: true, send_gas_to: stakingOwner.address},
-                    value: convertCrystal(11, 'nano')
+                await stakingRoot.methods.setActive({
+                    new_active: true, send_gas_to: stakingOwner.address
+                }).send({
+                  from: stakingOwner.address,
+                  amount: locklift.utils.toNano(11),
                 });
 
-                const active = await stakingRoot.call({method: 'isActive'});
+                const active = await stakingRoot.methods.isActive({answerId: 0}).call();
                 expect(active).to.be.equal(true, "Staking not active");
             });
 
@@ -288,9 +286,9 @@ describe('Test Staking Rewards', async function () {
 
                 await depositTokens(stakingRoot, stakingOwner, ownerWallet, amount, true);
 
-                const staking_balance = await stakingWallet.call({method: 'balance'});
+                const staking_balance = await stakingWallet.methods.balance({answerId: 0}).call();
 
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const staking_balance_stored = staking_details.rewardTokenBalance;
 
                 expect(staking_balance.toString()).to.be.equal(amount.toString(), 'Farm pool balance empty');
@@ -306,125 +304,138 @@ describe('Test Staking Rewards', async function () {
                 user1Data = await getUserDataAccount(user1);
 
                 await checkTokenBalances(
-                    userTokenWallet1, user1Data, rewardTokensBal + userDeposit,
-                    userDeposit, rewardTokensBal, userInitialTokenBal - userDeposit, userDeposit
+                    userTokenWallet1, user1Data, (rewardTokensBal + userDeposit).toString(),
+                    userDeposit.toString(), rewardTokensBal.toString(), (userInitialTokenBal - userDeposit).toString(), userDeposit.toString()
                 );
 
-                const { value: { user: _user, amount: _amount } } = (await stakingRoot.getEvents('Deposit')).pop();
+                const events = await stakingRoot.getPastEvents({filter: 'Deposit'}).then((e) => e.events);
+                const [{
+                    data: { user: _user, amount: _amount }
+                }] = events;
+
                 expect(_user).to.be.equal(user1.address, 'Bad event');
                 expect(_amount).to.be.equal(userDeposit.toString(), 'Bad event');
             });
 
             it('Deposit 2nd time', async function() {
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const prev_reward_time = staking_details.lastRewardTime;
 
-                const user1_data = await user1Data.call({method: 'getDetails'});
+                const user1_data = await user1Data.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const user1_rew_before = user1_data.rewardRounds;
 
                 await depositTokens(stakingRoot, user1, userTokenWallet1, userDeposit);
 
                 await checkTokenBalances(
-                    userTokenWallet1, user1Data, rewardTokensBal + userDeposit * 2,
-                    userDeposit * 2, rewardTokensBal, userInitialTokenBal - userDeposit * 2, userDeposit * 2
+                    userTokenWallet1, user1Data, (rewardTokensBal + userDeposit * 2).toString(),
+                    (userDeposit * 2).toString(), rewardTokensBal.toString(), (userInitialTokenBal - userDeposit * 2).toString(), (userDeposit * 2).toString()
                 );
 
-                const staking_details_1 = await stakingRoot.call({method: 'getDetails'});
+                const staking_details_1 = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const new_reward_time = staking_details_1.lastRewardTime;
-                await checkReward(user1Data, user1_rew_before, prev_reward_time, new_reward_time);
+                await checkReward(user1Data, user1_rew_before, parseInt(prev_reward_time, 10), parseInt(new_reward_time, 10) );
 
-                const { value: { user: _user, amount: _amount } } = (await stakingRoot.getEvents('Deposit')).pop();
+                const events = await stakingRoot.getPastEvents({filter: 'Deposit'}).then((e) => e.events);
+                const [{
+                    data: { user: _user, amount: _amount }
+                }] = events;
                 expect(_user).to.be.equal(user1.address, 'Bad event');
                 expect(_amount).to.be.equal(userDeposit.toString(), 'Bad event');
             });
 
             it('User withdraw half of staked amount', async function() {
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const prev_reward_time = staking_details.lastRewardTime;
 
-                const user1_data = await user1Data.call({method: 'getDetails'});
+                const user1_data = await user1Data.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const user1_rew_before = user1_data.rewardRounds;
 
                 await withdrawTokens(user1, userDeposit);
                 await checkTokenBalances(
-                    userTokenWallet1, user1Data, rewardTokensBal + userDeposit,
-                    userDeposit, rewardTokensBal, userInitialTokenBal - userDeposit, userDeposit
+                    userTokenWallet1, user1Data, (rewardTokensBal + userDeposit).toString(),
+                    userDeposit.toString(), rewardTokensBal.toString(), (userInitialTokenBal - userDeposit).toString(), userDeposit.toString()
                 );
 
-                const staking_details_1 = await stakingRoot.call({method: 'getDetails'});
+                const staking_details_1 = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const new_reward_time = staking_details_1.lastRewardTime;
-                await checkReward(user1Data, user1_rew_before, prev_reward_time, new_reward_time);
+                await checkReward(user1Data, user1_rew_before, parseInt(prev_reward_time, 10), parseInt(new_reward_time, 10));
 
-                const { value: { user: _user, amount: _amount } } = (await stakingRoot.getEvents('Withdraw')).pop();
+                const events = await stakingRoot.getPastEvents({filter: 'Withdraw'}).then((e) => e.events);
+                const [{
+                    data: { user: _user, amount: _amount }
+                }] = events;
                 expect(_user).to.be.equal(user1.address, 'Bad event');
                 expect(_amount).to.be.equal(userDeposit.toString(), 'Bad event');
             });
 
             it('User withdraw other half', async function() {
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const prev_reward_time = staking_details.lastRewardTime;
 
-                const user1_data = await user1Data.call({method: 'getDetails'});
+                const user1_data = await user1Data.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const user1_rew_before = user1_data.rewardRounds;
 
                 await withdrawTokens(user1, userDeposit);
 
-                const staking_details_1 = await stakingRoot.call({method: 'getDetails'});
+                const staking_details_1 = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const new_reward_time = staking_details_1.lastRewardTime;
-                await checkReward(user1Data, user1_rew_before, prev_reward_time, new_reward_time);
+                await checkReward(user1Data, user1_rew_before, parseInt(prev_reward_time, 10), parseInt(new_reward_time, 10));
 
                 await checkTokenBalances(
-                    userTokenWallet1, user1Data, rewardTokensBal,
-                    0, rewardTokensBal, userInitialTokenBal, 0
+                    userTokenWallet1, user1Data, rewardTokensBal.toString(),
+                    "0", rewardTokensBal.toString(), userInitialTokenBal.toString(), "0"
                 );
-                const { value: { user: _user, amount: _amount } } = (await stakingRoot.getEvents('Withdraw')).pop();
+                const events = await stakingRoot.getPastEvents({filter: 'Withdraw'}).then((e) => e.events);
+                const [{
+                    data: { user: _user, amount: _amount }
+                }] = events;
                 expect(_user).to.be.equal(user1.address, 'Bad event');
                 expect(_amount).to.be.equal(userDeposit.toString(), 'Bad event');
             });
         });
 
         describe('Multiple users farming 1 round', async function() {
-            let user1_deposit_time;
-            let user2_deposit_time;
-            let user1_withdraw_time;
-            let user2_withdraw_time;
+            let user1_deposit_time: string;
+            let user2_deposit_time: string;
+            let user1_withdraw_time: string;
+            let user2_withdraw_time: string;
 
             it('Users deposit tokens', async function () {
                 await depositTokens(stakingRoot, user1, userTokenWallet1, userDeposit);
                 await checkTokenBalances(
-                    userTokenWallet1, user1Data, rewardTokensBal + userDeposit,
-                    userDeposit, rewardTokensBal, userInitialTokenBal - userDeposit, userDeposit
+                    userTokenWallet1, user1Data, (rewardTokensBal + userDeposit).toString(),
+                    userDeposit.toString(), rewardTokensBal.toString(), (userInitialTokenBal - userDeposit).toString(), userDeposit.toString()
                 );
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 user1_deposit_time = staking_details.lastRewardTime;
 
                 await depositTokens(stakingRoot, user2, userTokenWallet2, userDeposit);
                 user2Data = await getUserDataAccount(user2);
 
                 await checkTokenBalances(
-                    userTokenWallet2, user2Data, rewardTokensBal + userDeposit * 2,
-                    userDeposit * 2, rewardTokensBal, userInitialTokenBal - userDeposit, userDeposit
+                    userTokenWallet2, user2Data, (rewardTokensBal + userDeposit * 2).toString(),
+                    (userDeposit * 2).toString(), rewardTokensBal.toString(), (userInitialTokenBal - userDeposit * 2).toString(), (userDeposit * 2).toString()
                 );
-                const staking_details_1 = await stakingRoot.call({method: 'getDetails'});
+                const staking_details_1 = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 user2_deposit_time = staking_details_1.lastRewardTime;
             });
 
             it('Users withdraw tokens', async function () {
-                const user1_data = await user1Data.call({method: 'getDetails'});
+                const user1_data = await user1Data.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const user1_rew_before = user1_data.rewardRounds;
                 await withdrawTokens(user1, userDeposit);
 
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 user1_withdraw_time = staking_details.lastRewardTime;
 
-                const user1_data_1 = await user1Data.call({method: 'getDetails'});
+                const user1_data_1 = await user1Data.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const user1_rew_after = user1_data_1.rewardRounds;
-                const reward1 = user1_rew_after[0].reward_balance - user1_rew_before[0].reward_balance;
+                const reward1 = parseInt(user1_rew_after[0].reward_balance, 10) - parseInt(user1_rew_before[0].reward_balance, 10);
 
-                const time_passed_1 = user2_deposit_time - user1_deposit_time;
+                const time_passed_1 = parseInt(user2_deposit_time, 10) - parseInt(user1_deposit_time, 10);
                 const expected_reward_1 = rewardPerSec * time_passed_1;
 
-                const time_passed_2 = user1_withdraw_time - user2_deposit_time;
+                const time_passed_2 = parseInt(user1_withdraw_time, 10)  - parseInt(user2_deposit_time, 10);
                 const expected_reward_2 = rewardPerSec * 0.5 * time_passed_2;
 
                 const expected_reward_final = (expected_reward_1 + expected_reward_2);
@@ -432,45 +443,45 @@ describe('Test Staking Rewards', async function () {
                 expect(reward1).to.be.equal(expected_reward_final, 'Bad reward 1 user (low)');
 
                 await checkTokenBalances(
-                    userTokenWallet1, user1Data, rewardTokensBal + userDeposit,
-                    userDeposit, rewardTokensBal, userInitialTokenBal, 0
+                    userTokenWallet1, user1Data, (rewardTokensBal + userDeposit).toString(),
+                    userDeposit.toString(), rewardTokensBal.toString(), (userInitialTokenBal - userDeposit).toString(), "0"
                 );
 
                 const user2_rew_before = await userRewardRounds(user2Data);
                 await withdrawTokens(user2, userDeposit);
 
                 const user2_rew_after = await userRewardRounds(user2Data);
-                const staking_details_1 = await stakingRoot.call({method: 'getDetails'});
+                const staking_details_1 = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 user2_withdraw_time = staking_details_1.lastRewardTime;
 
-                const reward2 = user2_rew_after[0].reward_balance - user2_rew_before[0].reward_balance;
+                const reward2 = parseInt(user2_rew_after[0], 10) - parseInt(user2_rew_before[0], 10);
 
-                const time_passed_21 = user1_withdraw_time - user2_deposit_time;
+                const time_passed_21 = parseInt(user1_withdraw_time, 10)  - parseInt(user2_deposit_time, 10);
                 const expected_reward_21 = rewardPerSec * 0.5 * time_passed_21;
 
-                const time_passed_22 = user2_withdraw_time - user1_withdraw_time;
+                const time_passed_22 = parseInt(user2_withdraw_time, 10)  - parseInt(user1_withdraw_time, 10) ;
                 const expected_reward_22 = rewardPerSec * time_passed_22;
                 const expected_reward_final_2 = (expected_reward_22 + expected_reward_21)
 
                 expect(reward2).to.be.equal(expected_reward_final_2, 'Bad reward 2 user (low)');
 
                 await checkTokenBalances(
-                    userTokenWallet2, user2Data, rewardTokensBal,
-                    0, rewardTokensBal, userInitialTokenBal, 0
+                    userTokenWallet2, user2Data, rewardTokensBal.toString(),
+                    "0", rewardTokensBal.toString(), userInitialTokenBal.toString(),"0"
                 );
             });
 
             it("Claim rewards (expect fail)", async function () {
-                const user1_data = await user1Data.call({method: 'getDetails'});
+                const user1_data = await user1Data.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const user1_reward_before = user1_data.rewardRounds;
 
                 await claimReward(user1);
                 await checkTokenBalances(
-                    userTokenWallet1, user1Data, rewardTokensBal,
-                    0, rewardTokensBal, userInitialTokenBal, 0
+                    userTokenWallet1, user1Data, rewardTokensBal.toString(),
+                    "0", rewardTokensBal.toString(), userInitialTokenBal.toString(),"0"
                 );
 
-                const user1_data_1 = await user1Data.call({method: 'getDetails'});
+                const user1_data_1 = await user1Data.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const user1_reward_after = user1_data_1.rewardRounds;
                 expect(user1_reward_before[0].reward_balance).to.be.equal(user1_reward_after[0].reward_balance, "Claim reward fail");
 
@@ -478,32 +489,32 @@ describe('Test Staking Rewards', async function () {
 
                 await claimReward(user2);
                 await checkTokenBalances(
-                    userTokenWallet1, user2Data, rewardTokensBal,
-                    0, rewardTokensBal, userInitialTokenBal, 0
+                    userTokenWallet1, user2Data, rewardTokensBal.toString(),
+                    "0", rewardTokensBal.toString(), userInitialTokenBal.toString(),"0"
                 );
 
                 const user2_reward_after = await userRewardRounds(user2Data);
-                expect(user2_reward_before[0].reward_balance).to.be.equal(user2_reward_after[0].reward_balance, "Claim reward fail");
+                expect(user2_reward_before[0]).to.be.equal(user2_reward_after[0], "Claim reward fail");
             })
 
             it("New reward round starts", async function () {
                 await startNewRewardRound();
 
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
 
                 const reward_rounds = staking_details.rewardRounds;
                 const last_reward_time = staking_details.lastRewardTime;
                 const cur_round = reward_rounds[1];
 
                 expect(reward_rounds.length).to.be.equal(2, "Bad reward rounds");
-                expect(cur_round.rewardTokens).to.be.equal('0', 'Bad reward rounds balance');
+                expect(cur_round.rewardTokens).to.be.equal("0", 'Bad reward rounds balance');
                 expect(parseInt(cur_round.accRewardPerShare, 16)).to.be.equal(0, 'Bad reward rounds share');
-                expect(cur_round.totalReward).to.be.equal('0', 'Bad reward rounds reward');
+                expect(cur_round.totalReward).to.be.equal("0", 'Bad reward rounds reward');
                 expect(cur_round.startTime).to.be.equal(last_reward_time.toString(), 'Bad reward rounds start time');
             });
 
             it("Claim rewards", async function () {
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
 
                 let rounds_rewards_data = staking_details.rewardRounds;
                 const round1_rewards_data = rounds_rewards_data[0];
@@ -511,8 +522,8 @@ describe('Test Staking Rewards', async function () {
                 const user1_reward_before = await userRewardRounds(user1Data);
                 const user2_reward_before = await userRewardRounds(user2Data);
 
-                const user1_reward = user1_reward_before[0].reward_balance;
-                const user2_reward = user2_reward_before[0].reward_balance;
+                const user1_reward = user1_reward_before[0];
+                const user2_reward = user2_reward_before[0];
 
                 const user1_token_reward = Math.floor(Math.floor(user1_reward * 1e10 / round1_rewards_data.totalReward) * round1_rewards_data.rewardTokens / 1e10);
                 const user2_token_reward = Math.floor(Math.floor(user2_reward * 1e10 / round1_rewards_data.totalReward) * round1_rewards_data.rewardTokens / 1e10);
@@ -533,16 +544,16 @@ describe('Test Staking Rewards', async function () {
                 );
                 user1Balance = userInitialTokenBal + user1_token_reward;
 
-                const user1_data_2 = await user1Data.call({method: 'getDetails'});
+                const user1_data_2 = await user1Data.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const user1_token_balance = user1_data_2.token_balance;
 
                 const res = await pendingReward(user1_token_balance, user1_reward_before);
                 expect(res.toString()).to.be.eq(user1_token_reward.toString(), 'Bad pending reward');
 
-                const user1_data_3 = await user1Data.call({method: 'getDetails'});
+                const user1_data_3 = await user1Data.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const user1_reward_after = user1_data_3.rewardRounds;
 
-                expect(user1_reward_after[0].reward_balance).to.be.equal('0', "Claim reward fail");
+                expect(user1_reward_after[0].reward_balance).to.be.equal("0", "Claim reward fail");
 
                 const remaining_balance = rewardTokensBal - user1_token_reward - user2_token_reward;
                 await claimReward(user2);
@@ -558,7 +569,7 @@ describe('Test Staking Rewards', async function () {
                 expect(res1.toString()).to.be.eq(user2_token_reward.toString(), 'Bad pending reward');
 
                 const user2_reward_after = await userRewardRounds(user2Data);
-                expect(user2_reward_after[0].reward_balance).to.be.equal('0', "Claim reward fail");
+                expect(user2_reward_after[0].reward_balance).to.be.equal("0", "Claim reward fail");
             });
         });
 
@@ -569,9 +580,9 @@ describe('Test Staking Rewards', async function () {
 
             it("Deposit reward", async function() {
                 await depositTokens(stakingRoot, stakingOwner, ownerWallet, rewardTokensBal, true);
-                const staking_balance = await stakingWallet.call({method: 'balance'});
+                const staking_balance = await stakingWallet.methods.balance().call();
 
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
 
                 const staking_reward_balance_stored = staking_details.rewardTokenBalance;
                 const staking_balance_stored = staking_details.tokenBalance;
@@ -581,14 +592,14 @@ describe('Test Staking Rewards', async function () {
                 const realRewardTokensBal = rewardTokensBal + balance_err;
                 expect(staking_balance.toString()).to.be.equal(realRewardTokensBal.toString(), 'Farm pool balance empty');
                 expect(staking_reward_balance_stored.toString()).to.be.equal(realRewardTokensBal.toString(), 'Farm pool reward balance not recognized');
-                expect(staking_balance_stored.toString()).to.be.equal('0', 'Farm pool reward balance not recognized');
+                expect(staking_balance_stored.toString()).to.be.equal("0", 'Farm pool reward balance not recognized');
 
-                const staking_details_1 = await stakingRoot.call({method: 'getDetails'});
+                const staking_details_1 = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const reward_rounds = staking_details_1.rewardRounds;
                 const cur_round = reward_rounds[1];
 
                 expect(cur_round.rewardTokens).to.be.equal(rewardTokensBal.toString(), 'Bad reward rounds balance');
-                expect(cur_round.totalReward).to.be.equal('0', 'Bad reward rounds reward');
+                expect(cur_round.totalReward).to.be.equal("0", 'Bad reward rounds reward');
             });
 
             it("User 1 deposit", async function () {
@@ -604,7 +615,7 @@ describe('Test Staking Rewards', async function () {
             it("New reward round starts", async function () {
                 await startNewRewardRound();
 
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
 
                 const reward_rounds = staking_details.rewardRounds;
                 const last_reward_time = staking_details.lastRewardTime;
@@ -613,20 +624,20 @@ describe('Test Staking Rewards', async function () {
                 round2_start_time = last_reward_time;
 
                 expect(reward_rounds.length).to.be.equal(3, "Bad reward rounds");
-                expect(cur_round.rewardTokens).to.be.equal('0', 'Bad reward rounds balance');
+                expect(cur_round.rewardTokens).to.be.equal("0", 'Bad reward rounds balance');
                 expect(parseInt(cur_round.accRewardPerShare, 16)).to.be.equal(0, 'Bad reward rounds share');
-                expect(cur_round.totalReward).to.be.equal('0', 'Bad reward rounds reward');
+                expect(cur_round.totalReward).to.be.equal("0", 'Bad reward rounds reward');
                 expect(cur_round.startTime).to.be.equal(last_reward_time.toString(), 'Bad reward rounds start time');
             });
 
             it("Deposit reward", async function() {
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const last_reward_time = staking_details.lastRewardTime;
 
                 await depositTokens(stakingRoot, stakingOwner, ownerWallet, rewardTokensBal, true);
-                const staking_balance = await stakingWallet.call({method: 'balance'});
+                const staking_balance = await stakingWallet.methods.balance().call();
 
-                const staking_details_1 = await stakingRoot.call({method: 'getDetails'});
+                const staking_details_1 = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const staking_reward_balance_stored = staking_details_1.rewardTokenBalance;
                 const staking_balance_stored = staking_details_1.tokenBalance;
 
@@ -636,11 +647,11 @@ describe('Test Staking Rewards', async function () {
                 expect(staking_reward_balance_stored.toString()).to.be.equal(expected_reward_balance.toString(), 'Farm pool reward balance not recognized');
                 expect(staking_balance_stored.toString()).to.be.equal(userDeposit.toString(), 'Farm pool reward balance not recognized');
 
-                const staking_details_2 = await stakingRoot.call({method: 'getDetails'});
+                const staking_details_2 = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const reward_rounds = staking_details_2.rewardRounds;
                 const cur_round = reward_rounds[2];
 
-                const staking_details_3 = await stakingRoot.call({method: 'getDetails'});
+                const staking_details_3 = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const last_reward_time_2 = staking_details_3.lastRewardTime;
                 const expected_reward = (last_reward_time_2 - last_reward_time) * rewardPerSec;
                 expect(cur_round.rewardTokens).to.be.equal(rewardTokensBal.toString(), 'Bad reward rounds balance');
@@ -655,18 +666,18 @@ describe('Test Staking Rewards', async function () {
                 );
                 user2Balance = user2Balance - userDeposit;
 
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const last_reward_time = staking_details.lastRewardTime;
                 const time_passed = last_reward_time - round2_start_time;
                 round2_user1_share = time_passed * rewardPerSec;
             });
 
             it("New reward round starts", async function () {
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const prev_reward_time = staking_details.lastRewardTime;
                 await startNewRewardRound();
 
-                const staking_details_1 = await stakingRoot.call({method: 'getDetails'});
+                const staking_details_1 = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const reward_rounds = staking_details_1.rewardRounds;
                 const last_reward_time = staking_details_1.lastRewardTime;
                 const cur_round = reward_rounds[3];
@@ -676,12 +687,12 @@ describe('Test Staking Rewards', async function () {
                 round2_user2_share = time_passed * (rewardPerSec / 2);
 
                 expect(reward_rounds.length).to.be.equal(4, "Bad reward rounds");
-                expect(cur_round.rewardTokens).to.be.equal('0', 'Bad reward rounds balance');
+                expect(cur_round.rewardTokens).to.be.equal("0", 'Bad reward rounds balance');
                 expect(parseInt(cur_round.accRewardPerShare, 16)).to.be.equal(0, 'Bad reward rounds share');
-                expect(cur_round.totalReward).to.be.equal('0', 'Bad reward rounds reward');
+                expect(cur_round.totalReward).to.be.equal("0", 'Bad reward rounds reward');
                 expect(cur_round.startTime).to.be.equal(last_reward_time.toString(), 'Bad reward rounds start time');
 
-                const user1_data = await user1Data.call({method: 'getDetails'});
+                const user1_data = await user1Data.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const user1_reward_before = user1_data.rewardRounds;
                 const user1_token_balance0 = user1_data.token_balance;
                 // just check that function dont throw overflow and etc. when userData is not synced with latest rounds
@@ -689,10 +700,10 @@ describe('Test Staking Rewards', async function () {
             });
 
             it("Users withdraw tokens", async function () {
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const reward_rounds = staking_details.rewardRounds;
 
-                const user1_details = await user1Data.call({method: 'getDetails'});
+                const user1_details = await user1Data.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 var user1_data = user1_details.rewardRounds;
 
                 var user2_data = await userRewardRounds(user2Data);
@@ -700,8 +711,8 @@ describe('Test Staking Rewards', async function () {
                 expect(user1_data.length).to.be.equal(2, "Bad user1 data length");
                 expect(user2_data.length).to.be.equal(3, "Bad user2 data length");
 
-                expect(user1_data[1].reward_balance).to.be.equal('0', "Bad user1 round reward");
-                expect(user2_data[2].reward_balance).to.be.equal('0', "Bad user2 round reward");
+                expect(user1_data[1].reward_balance).to.be.equal("0", "Bad user1 round reward");
+                expect(user2_data[2].reward_balance).to.be.equal("0", "Bad user2 round reward");
 
                 await withdrawTokens(user1, userDeposit);
                 await checkTokenBalances(
@@ -717,7 +728,7 @@ describe('Test Staking Rewards', async function () {
                 );
                 user2Balance = user2Balance + userDeposit;
 
-                const user1_details_1 = await user1Data.call({method: 'getDetails'});
+                const user1_details_1 = await user1Data.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 user1_data = user1_details_1.rewardRounds;
 
                 user2_data = await userRewardRounds(user2Data);
@@ -728,17 +739,17 @@ describe('Test Staking Rewards', async function () {
                 const round1_reward = reward_rounds[1].totalReward;
 
                 expect(user1_data[1].reward_balance).to.be.equal(round1_reward.toString(), "Bad user1 round reward");
-                expect(user2_data[1].reward_balance).to.be.equal('0', "Bad user2 round reward");
+                expect(user2_data[1].reward_balance).to.be.equal("0", "Bad user2 round reward");
 
                 expect(user1_data[2].reward_balance).to.be.equal(round2_user1_share.toString(), "Bad user1 round reward");
                 expect(user2_data[2].reward_balance).to.be.equal(round2_user2_share.toString(), "Bad user2 round reward");
             });
 
             it("Users claim tokens", async function() {
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 let reward_rounds = staking_details.rewardRounds;
 
-                const user1_data = await user1Data.call({method: 'getDetails'});
+                const user1_data = await user1Data.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const user1_reward_data = user1_data.rewardRounds;
 
                 const user2_reward_data = await userRewardRounds(user2Data);
@@ -755,7 +766,7 @@ describe('Test Staking Rewards', async function () {
                     user2_expected_token_reward += user2_token_reward;
                 }
 
-                const user1_data_1 = await user1Data.call({method: 'getDetails'});
+                const user1_data_1 = await user1Data.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const user1_token_balance = user1_data_1.token_balance;
 
                 const res = await pendingReward(user1_token_balance, user1_reward_data);

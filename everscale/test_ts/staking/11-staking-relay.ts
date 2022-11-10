@@ -59,24 +59,24 @@ describe('Test Staking Relay mechanic', async function () {
     }
 
     const userRewardRounds = async function (userData) {
-        const details = await userData.call({method: 'getDetails'});
+        const details = await userData.methods.getDetails({answerId: 0}).call().then(v => v.value0);
         return details.rewardRounds;
     }
 
     const userTokenBalance = async function (userData) {
-        const details = await userData.call({method: 'getDetails'});
+        const details = await userData.methods.getDetails({answerId: 0}).call().then(v => v.value0);
         return details.token_balance;
     }
 
     const checkTokenBalances = async function(userTokenWallet, userAccount, pool_wallet_bal, pool_bal, pool_reward_bal, user_bal, user_data_bal) {
-        const staking_details = await stakingRoot.call({method: 'getDetails'});
+        const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
 
-        const _pool_wallet_bal = await stakingWallet.call({method: 'balance'});
+        const _pool_wallet_bal = await stakingWallet.methods.balance().call();
         const _pool_bal = staking_details.tokenBalance;
         const _pool_reward_bal = staking_details.rewardTokenBalance;
 
-        const _user_bal = await userTokenWallet.call({method: 'balance'});
-        const user_data = await userAccount.call({method: 'getDetails'});
+        const _user_bal = await userTokenWallet.methods.balance().call();
+        const user_data = await userAccount.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
         const _user_data_bal = user_data.token_balance;
 
         // console.log(_pool_wallet_bal.toString(), _pool_bal.toString(), _pool_reward_bal.toString(), _user_bal.toString(), _user_data_bal.toString());
@@ -327,10 +327,10 @@ describe('Test Staking Relay mechanic', async function () {
             it('Deploy users token wallets + mint', async function() {
                 [ userTokenWallet1, userTokenWallet2, userTokenWallet3, ownerWallet ] = await mintTokens(stakingOwner, [user1, user2, user3, stakingOwner], stakingToken, userInitialTokenBal);
 
-                const balance1 = await userTokenWallet1.call({method: 'balance'});
-                const balance2 = await userTokenWallet2.call({method: 'balance'});
-                const balance3 = await userTokenWallet3.call({method: 'balance'});
-                const balance4 = await ownerWallet.call({method: 'balance'});
+                const balance1 = await userTokenWallet1.methods.balance().call();
+                const balance2 = await userTokenWallet2.methods.balance().call();
+                const balance3 = await userTokenWallet3.methods.balance().call();
+                const balance4 = await ownerWallet.methods.balance().call();
 
                 expect(balance1.toNumber()).to.be.equal(userInitialTokenBal, 'User ton token wallet empty');
                 expect(balance2.toNumber()).to.be.equal(userInitialTokenBal, 'User ton token wallet empty');
@@ -392,7 +392,7 @@ describe('Test Staking Relay mechanic', async function () {
                 logger.log(`StakingRoot token root address: ${stakingToken.address}`);
 
 
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 logger.log(`Staking token wallet: ${staking_details.tokenWallet}`);
 
                 stakingWallet = await locklift.factory.getContract('TokenWallet', TOKEN_PATH);
@@ -464,9 +464,9 @@ describe('Test Staking Relay mechanic', async function () {
                     await wait(DEV_WAIT);
                 }
 
-                const staking_balance = await stakingWallet.call({method: 'balance'});
+                const staking_balance = await stakingWallet.methods.balance().call();
 
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 const staking_balance_stored = staking_details.rewardTokenBalance;
 
                 expect(staking_balance.toString()).to.be.equal(amount.toString(), 'Farm pool balance empty');
@@ -525,7 +525,7 @@ describe('Test Staking Relay mechanic', async function () {
                     userDeposit, rewardTokensBal, userInitialTokenBal - userDeposit, userDeposit
                 );
 
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 user1_deposit_time = staking_details.lastRewardTime;
 
                 await depositTokens(stakingRoot, user2, userTokenWallet2, userDeposit * 2);
@@ -538,7 +538,7 @@ describe('Test Staking Relay mechanic', async function () {
                     userTokenWallet2, user2Data, rewardTokensBal + userDeposit * 3,
                     userDeposit * 3, rewardTokensBal, userInitialTokenBal - userDeposit * 2, userDeposit * 2
                 );
-                const staking_details_1 = await stakingRoot.call({method: 'getDetails'});
+                const staking_details_1 = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 user2_deposit_time = staking_details_1.lastRewardTime;
 
                 await depositTokens(stakingRoot, user3, userTokenWallet3, userDeposit * 3);
@@ -567,7 +567,7 @@ describe('Test Staking Relay mechanic', async function () {
                 }
 
 
-                const staking_details_0 = await stakingRoot.call({method: 'getDetails'});
+                const staking_details_0 = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 const reward_rounds = staking_details_0.rewardRounds;
 
                 const tx = await stakingOwner.runTarget({
@@ -598,7 +598,7 @@ describe('Test Staking Relay mechanic', async function () {
                 const relay_rounds_data = await stakingRoot.call({method: 'getRelayRoundsDetails'});
                 expect(relay_rounds_data.currentRelayRound.toString()).to.be.equal('0', "Bad round installed in root");
 
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 const reward_rounds_new = staking_details.rewardRounds;
 
                 const expected_reward = round_reward.plus(new BigNumber(reward_rounds[0].totalReward));
@@ -641,7 +641,7 @@ describe('Test Staking Relay mechanic', async function () {
                     await wait(DEV_WAIT);
                 }
 
-                const user2_details = await user2Data.call({method: 'getDetails'});
+                const user2_details = await user2Data.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 const user2_pk = user2_details.relay_ton_pubkey;
                 const _user2_eth_addr = user2_details.relay_eth_address;
 
@@ -656,7 +656,7 @@ describe('Test Staking Relay mechanic', async function () {
                     await wait(DEV_WAIT);
                 }
 
-                const user3_details = await user3Data.call({method: 'getDetails'});
+                const user3_details = await user3Data.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 const user3_pk = user3_details.relay_ton_pubkey;
                 const _user3_eth_addr = user3_details.relay_eth_address;
 
@@ -681,16 +681,16 @@ describe('Test Staking Relay mechanic', async function () {
                 }
 
 
-                const user1_details = await user1Data.call({method: 'getDetails'});
+                const user1_details = await user1Data.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 const confirmed_user1 = user1_details.ton_pubkey_confirmed;
                 expect(confirmed_user1).to.be.equal(true, "Ton pubkey user1 not confirmed");
 
-                const user2_details = await user2Data.call({method: 'getDetails'});
+                const user2_details = await user2Data.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 const confirmed_user2 = user2_details.ton_pubkey_confirmed;
                 expect(confirmed_user2).to.be.equal(true, "Ton pubkey user2 not confirmed");
                 expect(bal2_after.toNumber()).to.be.gte(bal2.minus(10**9).toNumber(), "Bad gas")
 
-                const user3_details = await user3Data.call({method: 'getDetails'});
+                const user3_details = await user3Data.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 const confirmed_user3 = user3_details.ton_pubkey_confirmed;
                 expect(confirmed_user3).to.be.equal(true, "Ton pubkey user3 not confirmed");
                 expect(bal3_after.toNumber()).to.be.gte(bal3.minus(10**9).toNumber(), "Bad gas")
@@ -704,15 +704,15 @@ describe('Test Staking Relay mechanic', async function () {
                     await wait(DEV_WAIT);
                 }
 
-                const user1_details = await user1Data.call({method: 'getDetails'});
+                const user1_details = await user1Data.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 const confirmed_user1 = user1_details.eth_address_confirmed;
                 expect(confirmed_user1).to.be.equal(true, "Eth pubkey user1 not confirmed");
 
-                const user2_details = await user2Data.call({method: 'getDetails'});
+                const user2_details = await user2Data.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 const confirmed_user2 = user2_details.eth_address_confirmed;
                 expect(confirmed_user2).to.be.equal(true, "Eth pubkey user2 not confirmed");
 
-                const user3_details = await user3Data.call({method: 'getDetails'});
+                const user3_details = await user3Data.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 const confirmed_user3 = user3_details.eth_address_confirmed;
                 expect(confirmed_user3).to.be.equal(true, "Eth pubkey user3 not confirmed");
             })
@@ -870,7 +870,7 @@ describe('Test Staking Relay mechanic', async function () {
             it("Election ends, new round initialized", async function () {
                 await wait(3000);
 
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 const reward_rounds = staking_details.rewardRounds;
 
                 const bal1 = await getBalance(user1Data.address);
@@ -920,7 +920,7 @@ describe('Test Staking Relay mechanic', async function () {
                 expect(_relays_count.toString()).to.be.equal('3', "Bad relay init event - relays count");
                 expect(_duplicate).to.be.equal(false, "Bad relay init event - duplicate");
 
-                const round_details = await round.call({method: 'getDetails'});
+                const round_details = await round.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
 
                 const stored_round_num = round_details.round_num;
                 const stored_relays_count = await round.call({method: 'relays_count'});
@@ -940,7 +940,7 @@ describe('Test Staking Relay mechanic', async function () {
 
                 const round_reward = await round.call({method: 'round_reward'});
 
-                const staking_details_1 = await stakingRoot.call({method: 'getDetails'});
+                const staking_details_1 = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 const reward_rounds_new = staking_details_1.rewardRounds;
                 // console.log(reward_rounds, reward_rounds_new, round_reward.toString());
                 const expected_reward = round_reward.plus(new BigNumber(reward_rounds[0].totalReward));
@@ -977,7 +977,7 @@ describe('Test Staking Relay mechanic', async function () {
                     await wait(DEV_WAIT);
                 }
                 const user1_rewards_1 = await userRewardRounds(user1Data);
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 const rewards = staking_details.rewardRounds;
                 const round_reward = rewardPerSec * RELAY_ROUND_TIME_1;
 
@@ -1016,7 +1016,7 @@ describe('Test Staking Relay mechanic', async function () {
                     await wait(DEV_WAIT);
                 }
 
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 const reward_rounds = staking_details.rewardRounds;
                 const last_reward_time = staking_details.lastRewardTime;
                 const cur_round = reward_rounds[1];
@@ -1082,11 +1082,11 @@ describe('Test Staking Relay mechanic', async function () {
             it("Election ends, not enough users participated, clone prev. round", async function() {
                 await wait(3500);
 
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 const reward_rounds = staking_details.rewardRounds;
                 //
                 // const round2 = await getRelayRound(2);
-                // const round_details2 = await round2.call({method: 'getDetails'});
+                // const round_details2 = await round2.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 // console.log(round_details2);
 
                 const tx = await endElection(user1);
@@ -1127,7 +1127,7 @@ describe('Test Staking Relay mechanic', async function () {
                 expect(_relays_count.toString()).to.be.equal('3', "Bad relay init event - relays count");
                 expect(_duplicate).to.be.equal(true, "Bad relay init event - duplicate");
 
-                const round_details = await round.call({method: 'getDetails'});
+                const round_details = await round.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
 
                 const stored_round_num = round_details.round_num;
                 const stored_relays_count = await round.call({method: 'relays_count'});
@@ -1146,7 +1146,7 @@ describe('Test Staking Relay mechanic', async function () {
                 expect(stored_duplicate).to.be.equal(true, "Bad round created - duplicate");
 
                 const round_reward = await round.call({method: 'round_reward'});
-                const staking_details_1 = await stakingRoot.call({method: 'getDetails'});
+                const staking_details_1 = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 const reward_rounds_new = staking_details_1.rewardRounds;
                 // console.log(reward_rounds, reward_rounds_new, round_reward.toString());
                 const expected_reward = round_reward.plus(new BigNumber(reward_rounds[1].totalReward));
@@ -1213,7 +1213,7 @@ describe('Test Staking Relay mechanic', async function () {
             });
 
             it("Slash user", async function() {
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
 
                 let rounds_rewards_data = staking_details.rewardRounds;
                 // console.log(rounds_rewards_data);
@@ -1227,7 +1227,7 @@ describe('Test Staking Relay mechanic', async function () {
                 const user1_token_balance0 = await userTokenBalance(user1Data);
                 // console.log(user1_token_balance0.toFixed(0));
 
-                const staking_details_before = await stakingRoot.call({method: 'getDetails'});
+                const staking_details_before = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
 
                 const tx = await slashUser(user1);
 
@@ -1241,7 +1241,7 @@ describe('Test Staking Relay mechanic', async function () {
                 const expected_withdraw = user1_token_balance0.plus(new BigNumber(user1_token_reward));
                 expect(_tokens_withdraw.toString()).to.be.equal(expected_withdraw.toString(), "Bad slashed reward");
 
-                const staking_details_after = await stakingRoot.call({method: 'getDetails'});
+                const staking_details_after = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
 
                 const prev_token_balance = staking_details_before.tokenBalance;
                 const after_token_balance = staking_details_after.tokenBalance;
@@ -1275,11 +1275,11 @@ describe('Test Staking Relay mechanic', async function () {
             it("Election ends, not enough users participated, clone prev. round", async function() {
                 await wait(3500);
 
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 const reward_rounds = staking_details.rewardRounds;
                 //
                 // const round2 = await getRelayRound(2);
-                // const round_details2 = await round2.call({method: 'getDetails'});
+                // const round_details2 = await round2.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 // console.log(round_details2);
 
                 const tx = await endElection(user1);
@@ -1320,7 +1320,7 @@ describe('Test Staking Relay mechanic', async function () {
                 expect(_relays_count.toString()).to.be.equal('3', "Bad relay init event - relays count");
                 expect(_duplicate).to.be.equal(true, "Bad relay init event - duplicate");
 
-                const round_details = await round.call({method: 'getDetails'});
+                const round_details = await round.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
 
                 const stored_round_num = round_details.round_num;
                 const stored_relays_count = await round.call({method: 'relays_count'});
@@ -1339,7 +1339,7 @@ describe('Test Staking Relay mechanic', async function () {
                 expect(stored_duplicate).to.be.equal(true, "Bad round created - duplicate");
 
                 const round_reward = await round.call({method: 'round_reward'});
-                const staking_details_1 = await stakingRoot.call({method: 'getDetails'});
+                const staking_details_1 = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 const reward_rounds_new = staking_details_1.rewardRounds;
                 // console.log(reward_rounds, reward_rounds_new, round_reward.toString());
                 const expected_reward = round_reward.plus(new BigNumber(reward_rounds[1].totalReward));
@@ -1391,11 +1391,11 @@ describe('Test Staking Relay mechanic', async function () {
                 // make sure current round ends after prev round end
                 await wait(RELAY_ROUND_TIME_1 * 1000);
 
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 const reward_rounds = staking_details.rewardRounds;
                 //
                 // const round2 = await getRelayRound(2);
-                // const round_details2 = await round2.call({method: 'getDetails'});
+                // const round_details2 = await round2.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 // console.log(round_details2);
 
                 const root_round_details = await stakingRoot.call({method: 'getRelayRoundsDetails'});
@@ -1438,7 +1438,7 @@ describe('Test Staking Relay mechanic', async function () {
                 expect(_relays_count.toString()).to.be.equal('3', "Bad relay init event - relays count");
                 expect(_duplicate).to.be.equal(true, "Bad relay init event - duplicate");
 
-                const round_details = await round.call({method: 'getDetails'});
+                const round_details = await round.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
 
                 const stored_round_num = round_details.round_num;
                 const stored_relays_count = await round.call({method: 'relays_count'});
@@ -1457,7 +1457,7 @@ describe('Test Staking Relay mechanic', async function () {
                 expect(stored_duplicate).to.be.equal(true, "Bad round created - duplicate");
 
                 const round_reward = await round.call({method: 'round_reward'});
-                const staking_details_1 = await stakingRoot.call({method: 'getDetails'});
+                const staking_details_1 = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 const reward_rounds_new = staking_details_1.rewardRounds;
                 // console.log(reward_rounds, reward_rounds_new, round_reward.toString());
                 const expected_reward = round_reward.plus(new BigNumber(reward_rounds[1].totalReward));
@@ -1483,30 +1483,30 @@ describe('Test Staking Relay mechanic', async function () {
         describe("Emergency situation", async function() {
            it("Set emergency", async function() {
                 await setEmergency();
-                const details = await stakingRoot.call({method: 'getDetails'});
+                const details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 expect(details.emergency).to.be.true;
            })
 
             it("User withdraw tokens", async function() {
-                const prev_details = await stakingRoot.call({method: 'getDetails'});
+                const prev_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 const tx = await withdrawTokens(user2, userDeposit);
                 await sleep(1000);
-                const after_details = await stakingRoot.call({method: 'getDetails'});
+                const after_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
 
                 const expected_bal = prev_details.tokenBalance.minus(userDeposit).toFixed(0);
                 expect(after_details.tokenBalance.toFixed(0)).to.be.equal(expected_bal);
             });
 
            it("Rescuer withdraw all tokens", async function() {
-               const prev_details = await stakingRoot.call({method: 'getDetails'});
+               const prev_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                await withdrawEmergency(100, false);
                await sleep(1000);
-               const after_details = await stakingRoot.call({method: 'getDetails'});
+               const after_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                expect(after_details.tokenBalance.toFixed(0)).to.be.equal(prev_details.tokenBalance.minus(100).toFixed(0));
 
                await withdrawEmergency(0, true);
                await sleep(1000);
-               const after_details_2 = await stakingRoot.call({method: 'getDetails'});
+               const after_details_2 = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                expect(after_details_2.tokenBalance.toFixed(0)).to.be.equal('0');
                expect(after_details_2.rewardTokenBalance.toFixed(0)).to.be.equal('0');
            });

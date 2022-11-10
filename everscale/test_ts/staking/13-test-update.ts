@@ -106,10 +106,10 @@ describe('Test Staking Upgrade', async function () {
             it('Deploy users token wallets + mint', async function() {
                 [ userTokenWallet1, userTokenWallet2, userTokenWallet3, ownerWallet ] = await mintTokens(stakingOwner, [user1, user2, user3, stakingOwner], stakingToken, userInitialTokenBal);
 
-                const balance1 = await userTokenWallet1.call({method: 'balance'});
-                const balance2 = await userTokenWallet2.call({method: 'balance'});
-                const balance3 = await userTokenWallet3.call({method: 'balance'});
-                const balance4 = await ownerWallet.call({method: 'balance'});
+                const balance1 = await userTokenWallet1.methods.balance().call();
+                const balance2 = await userTokenWallet2.methods.balance().call();
+                const balance3 = await userTokenWallet3.methods.balance().call();
+                const balance4 = await ownerWallet.methods.balance().call();
 
                 expect(balance1.toNumber()).to.be.equal(userInitialTokenBal, 'User ton token wallet empty');
                 expect(balance2.toNumber()).to.be.equal(userInitialTokenBal, 'User ton token wallet empty');
@@ -168,7 +168,7 @@ describe('Test Staking Upgrade', async function () {
                 logger.log(`StakingRoot token root address: ${stakingToken.address}`);
 
 
-                const staking_details = await stakingRoot.call({method: 'getDetails'});
+                const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
                 logger.log(`Staking token wallet: ${staking_details.tokenWallet}`);
 
                 stakingWallet = await locklift.factory.getContract('TokenWallet', TOKEN_PATH);
@@ -262,7 +262,7 @@ describe('Test Staking Upgrade', async function () {
         });
 
         it('Test storage', async function() {
-            const res = await stakingRoot.call({method: 'getDetails'});
+            const res = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);;
             console.log(res);
         })
     });
