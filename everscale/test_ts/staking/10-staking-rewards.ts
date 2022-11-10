@@ -24,9 +24,9 @@ let userInitialTokenBal = 100000;
 let rewardTokensBal = 10000;
 let userDeposit = 100;
 let rewardPerSec = 1000000;
-let user1Balance: string;
-let user2Balance: string;
-let balance_err: string;
+let user1Balance: number;
+let user2Balance: number;
+let balance_err: number;
 
 
 describe('Test Staking Rewards', async function () {
@@ -525,8 +525,8 @@ describe('Test Staking Rewards', async function () {
                 const user1_reward = user1_reward_before[0];
                 const user2_reward = user2_reward_before[0];
 
-                const user1_token_reward = Math.floor(Math.floor(user1_reward * 1e10 / round1_rewards_data.totalReward) * round1_rewards_data.rewardTokens / 1e10);
-                const user2_token_reward = Math.floor(Math.floor(user2_reward * 1e10 / round1_rewards_data.totalReward) * round1_rewards_data.rewardTokens / 1e10);
+                const user1_token_reward = Math.floor(Math.floor(parseInt(user1_reward, 10) * 1e10 / parseInt(round1_rewards_data.totalReward, 10)) * parseInt(round1_rewards_data.rewardTokens, 10) / 1e10);
+                const user2_token_reward = Math.floor(Math.floor(parseInt(user2_reward, 10) * 1e10 / parseInt(round1_rewards_data.totalReward, 10)) * parseInt(round1_rewards_data.rewardTokens, 10) / 1e10);
 
                 const user1_token_balance0 = await userTokenBalance(user1Data);
 
@@ -539,8 +539,8 @@ describe('Test Staking Rewards', async function () {
 
                 await claimReward(user1);
                 await checkTokenBalances(
-                    userTokenWallet1, user1Data, rewardTokensBal - user1_token_reward,
-                    0, rewardTokensBal - user1_token_reward, userInitialTokenBal + user1_token_reward, 0
+                    userTokenWallet1, user1Data, (rewardTokensBal - user1_token_reward).toString(),
+                    "0", (rewardTokensBal - user1_token_reward).toString(), (userInitialTokenBal + user1_token_reward).toString(), "0"
                 );
                 user1Balance = userInitialTokenBal + user1_token_reward;
 
@@ -558,8 +558,8 @@ describe('Test Staking Rewards', async function () {
                 const remaining_balance = rewardTokensBal - user1_token_reward - user2_token_reward;
                 await claimReward(user2);
                 await checkTokenBalances(
-                    userTokenWallet2, user2Data, remaining_balance,
-                    0, remaining_balance, userInitialTokenBal + user2_token_reward, 0
+                    userTokenWallet2, user2Data, remaining_balance.toString(),
+                    "0", remaining_balance.toString(), (userInitialTokenBal + user2_token_reward).toString(), "0"
                 );
                 user2Balance = userInitialTokenBal + user2_token_reward;
                 balance_err = remaining_balance;
@@ -569,18 +569,18 @@ describe('Test Staking Rewards', async function () {
                 expect(res1.toString()).to.be.eq(user2_token_reward.toString(), 'Bad pending reward');
 
                 const user2_reward_after = await userRewardRounds(user2Data);
-                expect(user2_reward_after[0].reward_balance).to.be.equal("0", "Claim reward fail");
+                expect(user2_reward_after[0]).to.be.equal("0", "Claim reward fail");
             });
         });
 
         describe("Multiple users farming several rounds", async function() {
-            let round2_start_time;
-            let round2_user1_share;
-            let round2_user2_share;
+            let round2_start_time: string;
+            let round2_user1_share: number;
+            let round2_user2_share: number;
 
             it("Deposit reward", async function() {
                 await depositTokens(stakingRoot, stakingOwner, ownerWallet, rewardTokensBal, true);
-                const staking_balance = await stakingWallet.methods.balance().call();
+                const staking_balance = await stakingWallet.methods.balance({answerId: 0}).call();
 
                 const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
 
@@ -606,8 +606,8 @@ describe('Test Staking Rewards', async function () {
                 await depositTokens(stakingRoot, user1, userTokenWallet1, userDeposit);
                 const realRewardTokensBal = rewardTokensBal + balance_err;
                 await checkTokenBalances(
-                    userTokenWallet1, user1Data, realRewardTokensBal + userDeposit,
-                    userDeposit, realRewardTokensBal, user1Balance - userDeposit, userDeposit
+                    userTokenWallet1, user1Data, (realRewardTokensBal + userDeposit).toString(),
+                    userDeposit.toString(), realRewardTokensBal.toString(), (user1Balance - userDeposit).toString(), userDeposit.toString()
                 );
                 user1Balance -= userDeposit;
             });
@@ -635,7 +635,7 @@ describe('Test Staking Rewards', async function () {
                 const last_reward_time = staking_details.lastRewardTime;
 
                 await depositTokens(stakingRoot, stakingOwner, ownerWallet, rewardTokensBal, true);
-                const staking_balance = await stakingWallet.methods.balance().call();
+                const staking_balance = await stakingWallet.methods.balance({answerId: 0}).call();
 
                 const staking_details_1 = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const staking_reward_balance_stored = staking_details_1.rewardTokenBalance;
@@ -653,7 +653,7 @@ describe('Test Staking Rewards', async function () {
 
                 const staking_details_3 = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const last_reward_time_2 = staking_details_3.lastRewardTime;
-                const expected_reward = (last_reward_time_2 - last_reward_time) * rewardPerSec;
+                const expected_reward = (parseInt(last_reward_time_2, 10) - parseInt(last_reward_time, 10)) * rewardPerSec;
                 expect(cur_round.rewardTokens).to.be.equal(rewardTokensBal.toString(), 'Bad reward rounds balance');
                 expect(cur_round.totalReward).to.be.equal(expected_reward.toString(), 'Bad reward rounds reward');
             });
@@ -661,14 +661,14 @@ describe('Test Staking Rewards', async function () {
             it("User 2 deposit", async function () {
                 await depositTokens(stakingRoot, user2, userTokenWallet2, userDeposit);
                 await checkTokenBalances(
-                    userTokenWallet2, user2Data, rewardTokensBal * 2 + userDeposit * 2 + balance_err,
-                    userDeposit * 2, rewardTokensBal * 2 + balance_err, user2Balance - userDeposit, userDeposit
+                    userTokenWallet2, user2Data, (rewardTokensBal * 2 + userDeposit * 2 + balance_err).toString(),
+                    (userDeposit * 2).toString(), (rewardTokensBal * 2 + balance_err).toString(), (user2Balance - userDeposit).toString(), userDeposit.toString()
                 );
                 user2Balance = user2Balance - userDeposit;
 
                 const staking_details = await stakingRoot.methods.getDetails({answerId: 0}).call().then(v => v.value0);
                 const last_reward_time = staking_details.lastRewardTime;
-                const time_passed = last_reward_time - round2_start_time;
+                const time_passed = parseInt(last_reward_time, 10) - parseInt(round2_start_time, 10) ;
                 round2_user1_share = time_passed * rewardPerSec;
             });
 
@@ -682,7 +682,7 @@ describe('Test Staking Rewards', async function () {
                 const last_reward_time = staking_details_1.lastRewardTime;
                 const cur_round = reward_rounds[3];
 
-                const time_passed = last_reward_time - prev_reward_time;
+                const time_passed = parseInt(last_reward_time, 10) - parseInt(prev_reward_time, 10);
                 round2_user1_share += time_passed * (rewardPerSec / 2);
                 round2_user2_share = time_passed * (rewardPerSec / 2);
 
@@ -712,19 +712,19 @@ describe('Test Staking Rewards', async function () {
                 expect(user2_data.length).to.be.equal(3, "Bad user2 data length");
 
                 expect(user1_data[1].reward_balance).to.be.equal("0", "Bad user1 round reward");
-                expect(user2_data[2].reward_balance).to.be.equal("0", "Bad user2 round reward");
+                expect(user2_data[2]).to.be.equal("0", "Bad user2 round reward");
 
                 await withdrawTokens(user1, userDeposit);
                 await checkTokenBalances(
-                    userTokenWallet1, user1Data, rewardTokensBal * 2 + userDeposit + balance_err,
-                    userDeposit, rewardTokensBal * 2 + balance_err, user1Balance + userDeposit, 0
+                    userTokenWallet1, user1Data, (rewardTokensBal * 2 + userDeposit + balance_err).toString(),
+                    userDeposit.toString(), (rewardTokensBal * 2 + balance_err).toString(), (user1Balance + userDeposit).toString(), "0"
                 );
                 user1Balance += userDeposit;
 
                 await withdrawTokens(user2, userDeposit);
                 await checkTokenBalances(
-                    userTokenWallet2, user2Data, rewardTokensBal * 2 + balance_err,
-                    0, rewardTokensBal * 2 + balance_err, user2Balance + userDeposit, 0
+                    userTokenWallet2, user2Data, (rewardTokensBal * 2 + balance_err).toString(),
+                    "0", (rewardTokensBal * 2 + balance_err).toString(), (user2Balance + userDeposit).toString(), "0"
                 );
                 user2Balance = user2Balance + userDeposit;
 
@@ -739,10 +739,10 @@ describe('Test Staking Rewards', async function () {
                 const round1_reward = reward_rounds[1].totalReward;
 
                 expect(user1_data[1].reward_balance).to.be.equal(round1_reward.toString(), "Bad user1 round reward");
-                expect(user2_data[1].reward_balance).to.be.equal("0", "Bad user2 round reward");
+                expect(user2_data[1]).to.be.equal("0", "Bad user2 round reward");
 
                 expect(user1_data[2].reward_balance).to.be.equal(round2_user1_share.toString(), "Bad user1 round reward");
-                expect(user2_data[2].reward_balance).to.be.equal(round2_user2_share.toString(), "Bad user2 round reward");
+                expect(user2_data[2]).to.be.equal(round2_user2_share.toString(), "Bad user2 round reward");
             });
 
             it("Users claim tokens", async function() {
@@ -756,11 +756,11 @@ describe('Test Staking Rewards', async function () {
 
                 var user1_expected_token_reward = 0, user2_expected_token_reward = 0;
                 for (const i of [...Array(reward_rounds.length).keys()]) {
-                    const user1_round_reward = user1_reward_data[i].reward_balance;
-                    const user2_round_reward = user2_reward_data[i].reward_balance;
+                    const user1_round_reward = parseInt(user1_reward_data[i].reward_balance, 10);
+                    const user2_round_reward = parseInt(user2_reward_data[i], 10);
 
-                    const user1_token_reward = Math.floor(Math.floor(user1_round_reward * 1e10 / reward_rounds[i].totalReward) * reward_rounds[i].rewardTokens / 1e10);
-                    const user2_token_reward = Math.floor(Math.floor(user2_round_reward * 1e10 / reward_rounds[i].totalReward) * reward_rounds[i].rewardTokens / 1e10);
+                    const user1_token_reward = Math.floor(Math.floor(user1_round_reward * 1e10 / parseInt(reward_rounds[i].totalReward, 10) ) * parseInt(reward_rounds[i].rewardTokens, 10)  / 1e10);
+                    const user2_token_reward = Math.floor(Math.floor(user2_round_reward * 1e10 / parseInt(reward_rounds[i].totalReward, 10) ) * parseInt(reward_rounds[i].rewardTokens, 10)  / 1e10);
 
                     user1_expected_token_reward += user1_token_reward;
                     user2_expected_token_reward += user2_token_reward;
@@ -778,17 +778,17 @@ describe('Test Staking Rewards', async function () {
 
                 await claimReward(user1);
                 await checkTokenBalances(
-                    userTokenWallet1, user1Data, rewardTokensBal * 2 - user1_expected_token_reward + balance_err,
-                    0, rewardTokensBal * 2 - user1_expected_token_reward + balance_err,
-                    user1Balance + user1_expected_token_reward, 0
+                    userTokenWallet1, user1Data, (rewardTokensBal * 2 - user1_expected_token_reward + balance_err).toString(),
+                    "0", (rewardTokensBal * 2 - user1_expected_token_reward + balance_err).toString(),
+                    (user1Balance + user1_expected_token_reward).toString(), "0"
                 );
                 user1Balance += user1_expected_token_reward;
 
                 const remaining_balance = rewardTokensBal * 2 + balance_err - user1_expected_token_reward - user2_expected_token_reward;
                 await claimReward(user2);
                 await checkTokenBalances(
-                    userTokenWallet2, user2Data, remaining_balance,
-                    0, remaining_balance, user2Balance + user2_expected_token_reward, 0
+                    userTokenWallet2, user2Data, remaining_balance.toString(),
+                    "0", remaining_balance.toString(), (user2Balance + user2_expected_token_reward).toString(), "0"
                 );
                 user2Balance += user2_expected_token_reward;
                 balance_err = remaining_balance;
