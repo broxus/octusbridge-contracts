@@ -263,8 +263,8 @@ describe('Test Staking Relay mechanic', async function () {
     describe('Setup contracts', async function() {
         describe('Token', async function() {
             it('Deploy admin', async function() {
-                let keys = await locklift.keys.getKeyPairs();
-                stakingOwner = await deployAccount(keys[3], RELAY_INITIAL_DEPOSIT + 100);
+                const signer = (await locklift.keystore.getSigner("3"))!;
+                stakingOwner = await deployAccount(signer, RELAY_INITIAL_DEPOSIT + 100);
             });
 
             it('Deploy root', async function() {
@@ -276,17 +276,14 @@ describe('Test Staking Relay mechanic', async function () {
         describe('Users', async function() {
             it('Deploy users accounts', async function() {
                 let users = [];
-                let keys = await locklift.keys.getKeyPairs();
                 for (const i of [0, 1, 2]) {
-                    const keyPair = keys[i];
+                    const keyPair = await locklift.keystore.getSigner(i.toString());
                     const account = await deployAccount(keyPair, RELAY_INITIAL_DEPOSIT + 50);
                     logger.log(`User address: ${account.address}`);
 
-                    const {
-                        acc_type_name
-                    } = await locklift.ton.getAccountType(account.address);
+                    const isDeployed = await locklift.provider.getFullContractState({ address: account.address }).then(res => res.state?.isDeployed);
 
-                    expect(acc_type_name).to.be.equal('Active', 'User account not active');
+                    expect(isDeployed).to.be.true;
                     users.push(account);
                 }
                 [user1, user2, user3] = users;
@@ -295,15 +292,15 @@ describe('Test Staking Relay mechanic', async function () {
             it('Deploy users token wallets + mint', async function() {
                 [ userTokenWallet1, userTokenWallet2, userTokenWallet3, ownerWallet ] = await mintTokens(stakingOwner, [user1, user2, user3, stakingOwner], stakingToken, userInitialTokenBal);
 
-                const balance1 = await userTokenWallet1.methods.balance().call();
-                const balance2 = await userTokenWallet2.methods.balance().call();
-                const balance3 = await userTokenWallet3.methods.balance().call();
-                const balance4 = await ownerWallet.methods.balance().call();
+                const balance1 = await userTokenWallet1.methods.balance({answerId: 0}).call();
+                const balance2 = await userTokenWallet2.methods.balance({answerId: 0}).call();
+                const balance3 = await userTokenWallet3.methods.balance({answerId: 0}).call();
+                const balance4 = await ownerWallet.methods.balance({answerId: 0}).call();
 
-                expect(balance1.toNumber()).to.be.equal(userInitialTokenBal, 'User ton token wallet empty');
-                expect(balance2.toNumber()).to.be.equal(userInitialTokenBal, 'User ton token wallet empty');
-                expect(balance3.toNumber()).to.be.equal(userInitialTokenBal, 'User ton token wallet empty');
-                expect(balance4.toNumber()).to.be.equal(userInitialTokenBal, 'User ton token wallet empty');
+                expect(balance1.value0).to.be.equal(userInitialTokenBal, 'User ton token wallet empty');
+                expect(balance2.value0).to.be.equal(userInitialTokenBal, 'User ton token wallet empty');
+                expect(balance3.value0).to.be.equal(userInitialTokenBal, 'User ton token wallet empty');
+                expect(balance4.value0).to.be.equal(userInitialTokenBal, 'User ton token wallet empty');
             });
         });
 
@@ -313,48 +310,49 @@ describe('Test Staking Relay mechanic', async function () {
             })
 
             it('Deploy staking', async function () {
-                const [keyPair, keyPair1] = await locklift.keys.getKeyPairs();
+                const signer = (await locklift.keystore.getSigner("0"))!;
 
-                const TonConfigMockup = await locklift.factory.getContract('TonConfigMockup');
-                const ton_config_mockup = await locklift.giver.deployContract({
-                    contract: TonConfigMockup,
+                const {contract: ton_config_mockup}  = await locklift.factory.deployContract({
+                    contract: 'TonConfigMockup',
                     constructorParams: {},
                     initParams: {nonce: locklift.utils.getRandomNonce()},
-                    keyPair: keyPair
-                }, locklift.utils.convertCrystal(1, 'nano'));
+                    publicKey: signer.publicKey,
+                    value: locklift.utils.toNano(1),
+                });
 
-                const SolConfigMockup = await locklift.factory.getContract('SolConfigMockup');
-                const sol_config_mockup = await locklift.giver.deployContract({
-                    contract: SolConfigMockup,
+
+                const {contract: sol_config_mockup}  = await locklift.factory.deployContract({
+                    contract: 'SolConfigMockup',
                     constructorParams: {},
                     initParams: {nonce: locklift.utils.getRandomNonce()},
-                    keyPair: keyPair
-                }, locklift.utils.convertCrystal(1, 'nano'));
+                    publicKey: signer.publicKey,
+                    value: locklift.utils.toNano(1),
+                });
 
-                stakingRoot = await locklift.factory.getContract('StakingV1_2');
-                const StakingRootDeployer = await locklift.factory.getContract('StakingRootDeployer');
-                const stakingRootDeployer = await locklift.giver.deployContract({
-                    contract: StakingRootDeployer,
+                const stakingRootData = await locklift.factory.getContractArtifacts('StakingV1_2');
+                const {contract: stakingRootDeployer} = await locklift.factory.deployContract({
+                    contract: 'StakingRootDeployer',
                     constructorParams: {},
-                    initParams: {nonce: locklift.utils.getRandomNonce(), stakingCode: stakingRoot.code},
-                    keyPair: keyPair,
-                }, locklift.utils.convertCrystal(50, 'nano'));
+                    initParams: {nonce: locklift.utils.getRandomNonce(), stakingCode: stakingRootData.code},
+                    publicKey: signer.publicKey,
+                    value: locklift.utils.toNano(50),
+                });
 
                 logger.log(`Deploying stakingRoot`);
-                stakingRoot.setAddress((await stakingRootDeployer.run({
-                    method: 'deploy',
-                    params: {
-                        _admin: stakingOwner.address,
-                        _tokenRoot: stakingToken.address,
-                        _dao_root: stakingOwner.address,
-                        _rewarder: stakingOwner.address,
-                        _rescuer: stakingOwner.address,
-                        _bridge_event_config_eth_ton: stakingOwner.address,
-                        _bridge_event_config_ton_eth: ton_config_mockup.address,
-                        _bridge_event_config_ton_sol: sol_config_mockup.address,
-                        _deploy_nonce: locklift.utils.getRandomNonce()
-                    }
-                })).decoded.output.value0);
+                const addr = (await stakingRootDeployer.methods.deploy({
+                    _admin: stakingOwner.address,
+                    _tokenRoot: stakingToken.address,
+                    _dao_root: stakingOwner.address,
+                    _rewarder: stakingOwner.address,
+                    _rescuer: stakingOwner.address,
+                    _bridge_event_config_eth_ton: stakingOwner.address,
+                    _bridge_event_config_ton_eth: ton_config_mockup.address,
+                    _bridge_event_config_ton_sol: sol_config_mockup.address,
+                    _deploy_nonce: locklift.utils.getRandomNonce()
+                }).sendExternal({
+                    publicKey: signer.publicKey
+                }));
+                stakingRoot = await locklift.factory.getDeployedContract('StakingV1_2', addr.output?.value0!);
                 logger.log(`StakingRoot address: ${stakingRoot.address}`);
                 logger.log(`StakingRoot owner address: ${stakingOwner.address}`);
                 logger.log(`StakingRoot token root address: ${stakingToken.address}`);
