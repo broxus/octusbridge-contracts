@@ -1,18 +1,15 @@
-const {
-  logger,
-} = require('../../../utils');
+export {}
+const { logger } = require("../../../utils");
 
-
-describe('Cell encoder', async function() {
+describe("Cell encoder", async function () {
   this.timeout(10000000);
 
-  describe('Cell encoder', async () => {
-
-    it('Cell encoder', async () => {
+  describe("Cell encoder", async () => {
+    it("Cell encoder", async () => {
       const signer = (await locklift.keystore.getSigner("0"))!;
 
-      const {contract: cellEncoder} = await locklift.factory.deployContract({
-        contract: 'CellEncoderStandalone',
+      const { contract: cellEncoder } = await locklift.factory.deployContract({
+        contract: "CellEncoderStandalone",
         constructorParams: {},
         initParams: {
           _randomNonce: locklift.utils.getRandomNonce(),
@@ -22,9 +19,6 @@ describe('Cell encoder', async function() {
       });
 
       logger.log(cellEncoder.address);
-
     });
-
   });
-
 });
