@@ -10,7 +10,7 @@ const {
   logger,
   getTokenWalletByAddress,
 } = require("../../../utils");
-const BigNumber = require("js");
+import BigNumber from "bignumber.js";
 
 import { expect } from "chai";
 import { Contract } from "locklift";

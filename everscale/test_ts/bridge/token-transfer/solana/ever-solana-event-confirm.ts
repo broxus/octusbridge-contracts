@@ -1,5 +1,5 @@
 import { Ed25519KeyPair } from "nekoton-wasm";
-const BigNumber = require("js");
+import BigNumber from "bignumber.js";
 const {
   setupBridge,
   setupEverscaleSolanaEventConfiguration,

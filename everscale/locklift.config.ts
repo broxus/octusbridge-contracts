@@ -18,7 +18,7 @@ const config: LockliftConfig = {
     // Specify config for extarnal contracts as in exapmple
     // This filed for generating types only
     externalContracts: {
-      "node_modules/ton-eth-bridge-token-contracts/build": ['TokenRoot', 'TokenWallet']
+      "../node_modules/ton-eth-bridge-token-contracts/build": ['TokenRoot', 'TokenWallet']
     }
   },
   linker: {

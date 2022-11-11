@@ -1,7 +1,7 @@
 import { Address, Contract, Signer, WalletTypes } from "locklift";
 import { FactorySource } from "../build/factorySource";
 import { Account } from "everscale-standalone-client/nodejs";
-import { ed25519_generateKeyPair } from "nekoton-wasm";
+import {ed25519_generateKeyPair, Ed25519KeyPair} from "nekoton-wasm";
 
 const logger = require("mocha-logger");
 const BigNumber = require("bignumber.js");
@@ -76,7 +76,7 @@ class MetricManager {
   }
 }
 
-const setupBridge = async (relays: any[]) => {
+const setupBridge = async (relays: Ed25519KeyPair[]) => {
   const signer = (await locklift.keystore.getSigner("0"))!;
 
   const _randomNonce = locklift.utils.getRandomNonce();
@@ -96,7 +96,7 @@ const setupBridge = async (relays: any[]) => {
     constructorParams: {},
     initParams: {
       _randomNonce,
-      __keys: relays.map((r) => `0x${r.public}`),
+      __keys: relays.map((r) => `0x${r.publicKey}`),
     },
     publicKey: signer.publicKey,
     value: locklift.utils.toNano(1),
