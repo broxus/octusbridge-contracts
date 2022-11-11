@@ -2,29 +2,8 @@ const {
     expect,
 } = require('../utils');
 const BigNumber = require('bignumber.js');
-const logger = require('mocha-logger');
 const Account = require("locklift/locklift/contract/account");
 const { randomBytes } = require('crypto');
-
-const {
-    convertCrystal
-} = locklift.utils;
-
-const EMPTY_TVM_CELL = 'te6ccgEBAQEAAgAAAA==';
-
-const TOKEN_PATH = '../node_modules/ton-eth-bridge-token-contracts/free-ton/build';
-
-const stringToBytesArray = (dataString) => {
-    return Buffer.from(dataString).toString('hex')
-};
-
-const getRandomNonce = () => Math.random() * 64000 | 0;
-
-const afterRun = async () => {
-    await new Promise(resolve => setTimeout(resolve, 1));
-};
-
-const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 
 let stakingRoot;
