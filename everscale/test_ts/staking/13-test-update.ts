@@ -328,26 +328,26 @@ describe("Test Staking Upgrade", async function () {
 
     it("Calling upgrade from V1_1 to V1_2", async function () {
       const new_code = await locklift.factory.getContractArtifacts(
-          "StakingV1_2"
+        "StakingV1_2"
       );
       await stakingRoot.methods
-          .upgrade({
-            code: new_code.code,
-            send_gas_to: stakingOwner.address,
-          })
-          .send({
-            from: stakingOwner.address,
-            amount: locklift.utils.toNano(11),
-          });
+        .upgrade({
+          code: new_code.code,
+          send_gas_to: stakingOwner.address,
+        })
+        .send({
+          from: stakingOwner.address,
+          amount: locklift.utils.toNano(11),
+        });
 
       let new_staking = locklift.factory.getDeployedContract(
-          "StakingV1_1",
-          stakingRoot.address
+        "StakingV1_1",
+        stakingRoot.address
       );
 
       const events = await new_staking
-          .getPastEvents({ filter: "StakingUpdated" })
-          .then((e) => e.events);
+        .getPastEvents({ filter: "StakingUpdated" })
+        .then((e) => e.events);
       const [
         {
           data: {},
