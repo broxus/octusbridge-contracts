@@ -319,8 +319,8 @@ const setupSolanaEverscaleEventConfiguration = async (
   };
 
   const networkConfiguration = {
-    program: new BigNumber(0),
-    settings: new BigNumber(0),
+    program: 0,
+    settings: 0,
     proxy: proxyFutureAddress,
     startTimestamp: 0,
     endTimestamp: 0,
