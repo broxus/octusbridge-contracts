@@ -582,7 +582,7 @@ describe("Test Staking Relay mechanic", async function () {
           });
 
         if (locklift.context.network.name === "dev") {
-          await wait(DEV_WAIT);
+          await sleep(DEV_WAIT);
         }
 
         const active = await stakingRoot.methods
@@ -602,7 +602,7 @@ describe("Test Staking Relay mechanic", async function () {
           true
         );
         if (locklift.context.network.name === "dev") {
-          await wait(DEV_WAIT);
+          await sleep(DEV_WAIT);
         }
 
         const staking_balance = await stakingWallet.methods
@@ -652,7 +652,7 @@ describe("Test Staking Relay mechanic", async function () {
           });
 
         if (locklift.context.network.name === "dev") {
-          await wait(DEV_WAIT);
+          await sleep(DEV_WAIT);
         }
 
         const relay_config = await stakingRoot.methods
@@ -681,7 +681,7 @@ describe("Test Staking Relay mechanic", async function () {
         );
         user1Data = await getUserDataAccount(user1);
         if (locklift.context.network.name === "dev") {
-          await wait(DEV_WAIT);
+          await sleep(DEV_WAIT);
         }
 
         await checkTokenBalances(
@@ -708,7 +708,7 @@ describe("Test Staking Relay mechanic", async function () {
         );
         user2Data = await getUserDataAccount(user2);
         if (locklift.context.network.name === "dev") {
-          await wait(DEV_WAIT);
+          await sleep(DEV_WAIT);
         }
 
         await checkTokenBalances(
@@ -734,7 +734,7 @@ describe("Test Staking Relay mechanic", async function () {
         );
         user3Data = await getUserDataAccount(user3);
         if (locklift.context.network.name === "dev") {
-          await wait(DEV_WAIT);
+          await sleep(DEV_WAIT);
         }
 
         await checkTokenBalances(
@@ -775,12 +775,12 @@ describe("Test Staking Relay mechanic", async function () {
           amount: locklift.utils.toNano(200),
         });
 
-        await wait(500);
+        await sleep(500);
 
         const round = await getRelayRound(0);
         await waitForDeploy(round.address);
         if (locklift.context.network.name === "dev") {
-          await wait(DEV_WAIT);
+          await sleep(DEV_WAIT);
         }
 
         const total_tokens_staked = await round.methods
@@ -887,7 +887,7 @@ describe("Test Staking Relay mechanic", async function () {
           user2_eth_addr
         );
         if (locklift.context.network.name === "dev") {
-          await wait(DEV_WAIT);
+          await sleep(DEV_WAIT);
         }
 
         const user2_details = await user2Data.methods
@@ -921,7 +921,7 @@ describe("Test Staking Relay mechanic", async function () {
           user3_eth_addr
         );
         if (locklift.context.network.name === "dev") {
-          await wait(DEV_WAIT);
+          await sleep(DEV_WAIT);
         }
 
         const user3_details = await user3Data.methods
@@ -966,7 +966,7 @@ describe("Test Staking Relay mechanic", async function () {
         const bal2_after = await getBalance(user2Data.address);
         const bal3_after = await getBalance(user3Data.address);
         if (locklift.context.network.name === "dev") {
-          await wait(DEV_WAIT);
+          await sleep(DEV_WAIT);
         }
 
         const user1_details = await user1Data.methods
@@ -1012,7 +1012,7 @@ describe("Test Staking Relay mechanic", async function () {
         await confirmEthRelayAccount(user2, user2_eth_addr);
         await confirmEthRelayAccount(user3, user3_eth_addr);
         if (locklift.context.network.name === "dev") {
-          await wait(DEV_WAIT);
+          await sleep(DEV_WAIT);
         }
 
         const user1_details = await user1Data.methods
@@ -1047,14 +1047,14 @@ describe("Test Staking Relay mechanic", async function () {
       });
 
       it("Election on new round starts", async function () {
-        await wait(5000);
+        await sleep(5000);
 
         const tx = await startElection(
           (await locklift.keystore.getSigner("1"))!
         );
         const election = await getElection(1);
         if (locklift.context.network.name === "dev") {
-          await wait(DEV_WAIT);
+          await sleep(DEV_WAIT);
         }
         const round_num = await election.methods.round_num().call();
         expect(round_num.toString()).to.be.equal(
@@ -1094,7 +1094,7 @@ describe("Test Staking Relay mechanic", async function () {
         );
         const election = await getElection(1);
         if (locklift.context.network.name === "dev") {
-          await wait(DEV_WAIT);
+          await sleep(DEV_WAIT);
         }
 
         const bal1_after = await getBalance(user1Data.address);
@@ -1152,7 +1152,7 @@ describe("Test Staking Relay mechanic", async function () {
           user3Data
         );
         if (locklift.context.network.name === "dev") {
-          await wait(DEV_WAIT);
+          await sleep(DEV_WAIT);
         }
 
         const events3 = await user3Data
@@ -1207,7 +1207,7 @@ describe("Test Staking Relay mechanic", async function () {
           user2Data
         );
         if (locklift.context.network.name === "dev") {
-          await wait(DEV_WAIT);
+          await sleep(DEV_WAIT);
         }
 
         const events2 = await user3Data
@@ -1323,7 +1323,7 @@ describe("Test Staking Relay mechanic", async function () {
       });
 
       it("Election ends, new round initialized", async function () {
-        await wait(3000);
+        await sleep(3000);
 
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
@@ -1337,7 +1337,7 @@ describe("Test Staking Relay mechanic", async function () {
         const round = await getRelayRound(1);
         await waitForDeploy(round.address);
         if (locklift.context.network.name === "dev") {
-          await wait(DEV_WAIT);
+          await sleep(DEV_WAIT);
         }
 
         const bal1_after = await getBalance(user1Data.address);
@@ -1491,12 +1491,12 @@ describe("Test Staking Relay mechanic", async function () {
       });
 
       it("User1 get reward for origin round", async function () {
-        await wait(1000);
+        await sleep(1000);
 
         // deposit 1 token to sync rewards
         await depositTokens(stakingRoot, user1, userTokenWallet1, 1);
         if (locklift.context.network.name === "dev") {
-          await wait(DEV_WAIT);
+          await sleep(DEV_WAIT);
         }
         const user1_rewards = await userRewardRounds(user1Data);
 
@@ -1508,7 +1508,7 @@ describe("Test Staking Relay mechanic", async function () {
           0
         );
         if (locklift.context.network.name === "dev") {
-          await wait(DEV_WAIT);
+          await sleep(DEV_WAIT);
         }
         const user1_rewards_1 = await userRewardRounds(user1Data);
         const staking_details = await stakingRoot.methods
@@ -1540,7 +1540,7 @@ describe("Test Staking Relay mechanic", async function () {
         );
 
         if (locklift.context.network.name === "dev") {
-          await wait(DEV_WAIT);
+          await sleep(DEV_WAIT);
         }
 
         const events1 = await user1Data
@@ -1576,7 +1576,7 @@ describe("Test Staking Relay mechanic", async function () {
       it("New reward round starts", async function () {
         await startNewRewardRound();
         if (locklift.context.network.name === "dev") {
-          await wait(DEV_WAIT);
+          await sleep(DEV_WAIT);
         }
 
         const staking_details = await stakingRoot.methods
@@ -1607,14 +1607,14 @@ describe("Test Staking Relay mechanic", async function () {
       });
 
       it("Election on new round starts", async function () {
-        await wait(5000);
+        await sleep(5000);
 
         const tx = await startElection(
           (await locklift.keystore.getSigner("2"))!
         );
         const election = await getElection(2);
         if (locklift.context.network.name === "dev") {
-          await wait(DEV_WAIT);
+          await sleep(DEV_WAIT);
         }
 
         const round_num = await election.methods.round_num().call();
@@ -1652,7 +1652,7 @@ describe("Test Staking Relay mechanic", async function () {
           user1Data
         );
         if (locklift.context.network.name === "dev") {
-          await wait(DEV_WAIT);
+          await sleep(DEV_WAIT);
         }
 
         const events1 = await user1Data
@@ -1705,7 +1705,7 @@ describe("Test Staking Relay mechanic", async function () {
       });
 
       it("Election ends, not enough users participated, clone prev. round", async function () {
-        await wait(3500);
+        await sleep(3500);
 
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
@@ -1723,7 +1723,7 @@ describe("Test Staking Relay mechanic", async function () {
         await waitForDeploy(round.address);
         logger.log(`Round 3 deployed - ${round.address}`);
         if (locklift.context.network.name === "dev") {
-          await wait(DEV_WAIT);
+          await sleep(DEV_WAIT);
         }
         // const election = await getElection(2);
 
@@ -1864,7 +1864,7 @@ describe("Test Staking Relay mechanic", async function () {
       });
 
       it("Users get reward for prev relay round", async function () {
-        await wait(1000);
+        await sleep(1000);
 
         for (const i of [
           [user1, userTokenWallet1, user1Data],
@@ -1890,7 +1890,7 @@ describe("Test Staking Relay mechanic", async function () {
           // deposit 1 token to sync rewards
           await depositTokens(stakingRoot, _user, _userTokenWallet, 1);
           if (locklift.context.network.name === "dev") {
-            await wait(DEV_WAIT);
+            await sleep(DEV_WAIT);
           }
           const _user_rewards = await userRewardRounds(_userData);
 
@@ -1900,7 +1900,7 @@ describe("Test Staking Relay mechanic", async function () {
             1
           );
           if (locklift.context.network.name === "dev") {
-            await wait(DEV_WAIT);
+            await sleep(DEV_WAIT);
           }
           const _user_rewards_1 = await userRewardRounds(_userData);
 
@@ -2015,14 +2015,14 @@ describe("Test Staking Relay mechanic", async function () {
 
     describe("Destroy old relay round", async function () {
       it("Election on new round starts", async function () {
-        await wait(5000);
+        await sleep(5000);
 
         const tx = await startElection(
           (await locklift.keystore.getSigner("2"))!
         );
         const election = await getElection(3);
         if (locklift.context.network.name === "dev") {
-          await wait(DEV_WAIT);
+          await sleep(DEV_WAIT);
         }
 
         const round_num = await election.methods.round_num().call();
@@ -2055,7 +2055,7 @@ describe("Test Staking Relay mechanic", async function () {
       });
 
       it("Election ends, not enough users participated, clone prev. round", async function () {
-        await wait(3500);
+        await sleep(3500);
 
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
@@ -2073,7 +2073,7 @@ describe("Test Staking Relay mechanic", async function () {
         await waitForDeploy(round.address);
         logger.log(`Round 4 deployed - ${round.address}`);
         if (locklift.context.network.name === "dev") {
-          await wait(DEV_WAIT);
+          await sleep(DEV_WAIT);
         }
         // const election = await getElection(2);
 
@@ -2224,14 +2224,14 @@ describe("Test Staking Relay mechanic", async function () {
 
     describe("Late round start", async function () {
       it("Election on new round starts", async function () {
-        await wait(5000);
+        await sleep(5000);
 
         const tx = await startElection(
           (await locklift.keystore.getSigner("2"))!
         );
         const election = await getElection(4);
         if (locklift.context.network.name === "dev") {
-          await wait(DEV_WAIT);
+          await sleep(DEV_WAIT);
         }
 
         const round_num = await election.methods.round_num().call();
@@ -2265,7 +2265,7 @@ describe("Test Staking Relay mechanic", async function () {
 
       it("Election ends late, not enough users participated, clone prev. round", async function () {
         // make sure current round ends after prev round end
-        await wait(RELAY_ROUND_TIME_1 * 1000);
+        await sleep(RELAY_ROUND_TIME_1 * 1000);
 
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
@@ -2288,7 +2288,7 @@ describe("Test Staking Relay mechanic", async function () {
         await waitForDeploy(round.address);
         logger.log(`Round 5 deployed - ${round.address}`);
         if (locklift.context.network.name === "dev") {
-          await wait(DEV_WAIT);
+          await sleep(DEV_WAIT);
         }
         // const election = await getElection(2);
 

@@ -1,34 +1,36 @@
+export {};
+
+import { FactorySource } from "../../build/factorySource";
+import { Address, Contract, Signer } from "locklift";
+import { Account } from "everscale-standalone-client/nodejs";
+
 const {
   expect,
   deployAccount,
   deployTokenRoot,
   mintTokens,
-  depositTokens,
+  logger,
+  sleep,
 } = require("../utils");
 const BigNumber = require("bignumber.js");
-const logger = require("mocha-logger");
-const { convertCrystal } = locklift.utils;
 
-const TOKEN_PATH = "../node_modules/ton-eth-bridge-token-contracts/build";
-const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+let stakingRoot: Contract<FactorySource["StakingV1_2"]>;
+let stakingToken: Contract<FactorySource["TokenRoot"]>;
+let stakingWallet: Contract<FactorySource["TokenWallet"]>;
 
-let stakingRoot;
-let stakingToken;
-let stakingWallet;
+let encoder: Contract<FactorySource["CellEncoderStandalone"]>;
 
-let encoder;
-
-let user1;
-let user1Data;
-let user2;
-let user2Data;
-let user3;
-let user3Data;
-let stakingOwner;
-let userTokenWallet1;
-let userTokenWallet2;
-let userTokenWallet3;
-let ownerWallet;
+let user1: Account;
+let user1Data: Contract<FactorySource["UserData"]>;
+let user2: Account;
+let user2Data: Contract<FactorySource["UserData"]>;
+let user3: Account;
+let user3Data: Contract<FactorySource["UserData"]>;
+let stakingOwner: Account;
+let userTokenWallet1: Contract<FactorySource["TokenWallet"]>;
+let userTokenWallet2: Contract<FactorySource["TokenWallet"]>;
+let userTokenWallet3: Contract<FactorySource["TokenWallet"]>;
+let ownerWallet: Contract<FactorySource["TokenWallet"]>;
 let userInitialTokenBal = 100000;
 let rewardTokensBal = 10000;
 let userDeposit = 100;
@@ -48,41 +50,16 @@ const RELAY_INITIAL_DEPOSIT = 500;
 describe("Test Staking Upgrade", async function () {
   this.timeout(10000000);
 
-  const getBalance = async function (address) {
-    const res = await locklift.ton.client.net.wait_for_collection({
-      collection: "accounts",
-      filter: {
-        id: { eq: address },
-      },
-      result: "balance",
-      timeout: 120000,
-    });
-    return new BigNumber(res.result.balance);
-  };
-
-  const getUserDataAccount = async function (_user) {
-    const userData = await locklift.factory.getContract("UserData");
-    userData.setAddress(
-      await stakingRoot.call({
-        method: "getUserDataAddress",
-        params: { user: _user.address },
-      })
-    );
-    return userData;
-  };
-
-  const waitForDeploy = async function (address) {
-    return await getBalance(address);
+  const getBalance = async function (address: Address) {
+    const res = await locklift.provider.getBalance(address);
+    return new BigNumber(res);
   };
 
   describe("Setup contracts", async function () {
     describe("Token", async function () {
       it("Deploy admin", async function () {
-        let keys = await locklift.keys.getKeyPairs();
-        stakingOwner = await deployAccount(
-          keys[3],
-          RELAY_INITIAL_DEPOSIT + 100
-        );
+        const signer = (await locklift.keystore.getSigner("3"))!;
+        stakingOwner = await deployAccount(signer, RELAY_INITIAL_DEPOSIT + 100);
       });
 
       it("Deploy root", async function () {
@@ -93,23 +70,19 @@ describe("Test Staking Upgrade", async function () {
     describe("Users", async function () {
       it("Deploy users accounts", async function () {
         let users = [];
-        let keys = await locklift.keys.getKeyPairs();
         for (const i of [0, 1, 2]) {
-          const keyPair = keys[i];
+          const keyPair = await locklift.keystore.getSigner(i.toString());
           const account = await deployAccount(
             keyPair,
             RELAY_INITIAL_DEPOSIT + 50
           );
           logger.log(`User address: ${account.address}`);
 
-          const { acc_type_name } = await locklift.ton.getAccountType(
-            account.address
-          );
+          const isDeployed = await locklift.provider
+            .getFullContractState({ address: account.address })
+            .then((res) => res.state?.isDeployed);
 
-          expect(acc_type_name).to.be.equal(
-            "Active",
-            "User account not active"
-          );
+          expect(isDeployed).to.be.true;
           users.push(account);
         }
         [user1, user2, user3] = users;
@@ -124,24 +97,32 @@ describe("Test Staking Upgrade", async function () {
             userInitialTokenBal
           );
 
-        const balance1 = await userTokenWallet1.methods.balance().call();
-        const balance2 = await userTokenWallet2.methods.balance().call();
-        const balance3 = await userTokenWallet3.methods.balance().call();
-        const balance4 = await ownerWallet.methods.balance().call();
+        const balance1 = await userTokenWallet1.methods
+          .balance({ answerId: 0 })
+          .call();
+        const balance2 = await userTokenWallet2.methods
+          .balance({ answerId: 0 })
+          .call();
+        const balance3 = await userTokenWallet3.methods
+          .balance({ answerId: 0 })
+          .call();
+        const balance4 = await ownerWallet.methods
+          .balance({ answerId: 0 })
+          .call();
 
-        expect(balance1.toNumber()).to.be.equal(
+        expect(balance1.value0).to.be.equal(
           userInitialTokenBal,
           "User ton token wallet empty"
         );
-        expect(balance2.toNumber()).to.be.equal(
+        expect(balance2.value0).to.be.equal(
           userInitialTokenBal,
           "User ton token wallet empty"
         );
-        expect(balance3.toNumber()).to.be.equal(
+        expect(balance3.value0).to.be.equal(
           userInitialTokenBal,
           "User ton token wallet empty"
         );
-        expect(balance4.toNumber()).to.be.equal(
+        expect(balance4.value0).to.be.equal(
           userInitialTokenBal,
           "User ton token wallet empty"
         );
@@ -150,70 +131,60 @@ describe("Test Staking Upgrade", async function () {
 
     describe("Staking", async function () {
       it("Deploy staking", async function () {
-        const [keyPair, keyPair1] = await locklift.keys.getKeyPairs();
+        const signer = (await locklift.keystore.getSigner("0"))!;
 
-        const TonConfigMockup = await locklift.factory.getContract(
-          "TonConfigMockup"
-        );
-        const ton_config_mockup = await locklift.giver.deployContract(
-          {
-            contract: TonConfigMockup,
+        const { contract: ton_config_mockup } =
+          await locklift.factory.deployContract({
+            contract: "TonConfigMockup",
             constructorParams: {},
             initParams: { nonce: locklift.utils.getRandomNonce() },
-            keyPair: keyPair,
-          },
-          locklift.utils.convertCrystal(1, "nano")
-        );
+            publicKey: signer.publicKey,
+            value: locklift.utils.toNano(1),
+          });
 
-        const SolConfigMockup = await locklift.factory.getContract(
-          "SolConfigMockup"
-        );
-        const sol_config_mockup = await locklift.giver.deployContract(
-          {
-            contract: SolConfigMockup,
+        const { contract: sol_config_mockup } =
+          await locklift.factory.deployContract({
+            contract: "SolConfigMockup",
             constructorParams: {},
             initParams: { nonce: locklift.utils.getRandomNonce() },
-            keyPair: keyPair,
-          },
-          locklift.utils.convertCrystal(1, "nano")
-        );
+            publicKey: signer.publicKey,
+            value: locklift.utils.toNano(1),
+          });
 
-        stakingRoot = await locklift.factory.getContract("StakingV1_2");
-        const StakingRootDeployer = await locklift.factory.getContract(
-          "StakingRootDeployer"
+        const stakingRootData = await locklift.factory.getContractArtifacts(
+          "StakingV1_2"
         );
-        const stakingRootDeployer = await locklift.giver.deployContract(
-          {
-            contract: StakingRootDeployer,
+        const { contract: stakingRootDeployer } =
+          await locklift.factory.deployContract({
+            contract: "StakingRootDeployer",
             constructorParams: {},
             initParams: {
               nonce: locklift.utils.getRandomNonce(),
-              stakingCode: stakingRoot.code,
+              stakingCode: stakingRootData.code,
             },
-            keyPair: keyPair,
-          },
-          locklift.utils.convertCrystal(50, "nano")
-        );
+            publicKey: signer.publicKey,
+            value: locklift.utils.toNano(50),
+          });
 
         logger.log(`Deploying stakingRoot`);
-        stakingRoot.setAddress(
-          (
-            await stakingRootDeployer.run({
-              method: "deploy",
-              params: {
-                stakingCode: stakingRoot.code,
-                _admin: stakingOwner.address,
-                _tokenRoot: stakingToken.address,
-                _dao_root: stakingOwner.address,
-                _rewarder: stakingOwner.address,
-                _rescuer: stakingOwner.address,
-                _bridge_event_config_eth_ton: stakingOwner.address,
-                _bridge_event_config_ton_eth: ton_config_mockup.address,
-                _bridge_event_config_ton_sol: sol_config_mockup.address,
-                _deploy_nonce: locklift.utils.getRandomNonce(),
-              },
-            })
-          ).decoded.output.value0
+        const addr = await stakingRootDeployer.methods
+          .deploy({
+            _admin: stakingOwner.address,
+            _tokenRoot: stakingToken.address,
+            _dao_root: stakingOwner.address,
+            _rewarder: stakingOwner.address,
+            _rescuer: stakingOwner.address,
+            _bridge_event_config_eth_ton: stakingOwner.address,
+            _bridge_event_config_ton_eth: ton_config_mockup.address,
+            _bridge_event_config_ton_sol: sol_config_mockup.address,
+            _deploy_nonce: locklift.utils.getRandomNonce(),
+          })
+          .sendExternal({
+            publicKey: signer.publicKey,
+          });
+        stakingRoot = await locklift.factory.getDeployedContract(
+          "StakingV1_2",
+          addr.output?.value0!
         );
         logger.log(`StakingRoot address: ${stakingRoot.address}`);
         logger.log(`StakingRoot owner address: ${stakingOwner.address}`);
@@ -225,15 +196,18 @@ describe("Test Staking Upgrade", async function () {
           .then((v) => v.value0);
         logger.log(`Staking token wallet: ${staking_details.tokenWallet}`);
 
-        stakingWallet = await locklift.factory.getContract(
+        stakingWallet = await locklift.factory.getDeployedContract(
           "TokenWallet",
-          TOKEN_PATH
+          staking_details.tokenWallet
         );
-        stakingWallet.setAddress(staking_details.tokenWallet);
 
         // call in order to check if wallet is deployed
-        const owner_address = await stakingWallet.call({ method: "owner" });
-        const root_address = await stakingWallet.call({ method: "root" });
+        const owner_address = await stakingWallet.methods
+          .owner({ answerId: 0 })
+          .call();
+        const root_address = await stakingWallet.methods
+          .root({ answerId: 0 })
+          .call();
         expect(owner_address).to.be.equal(
           stakingRoot.address,
           "Wrong staking token wallet owner"
@@ -245,52 +219,78 @@ describe("Test Staking Upgrade", async function () {
       });
 
       it("Installing codes", async function () {
-        const UserData = await locklift.factory.getContract("UserData");
-        const Election = await locklift.factory.getContract("Election");
-        const RelayRound = await locklift.factory.getContract("RelayRound");
-        const Platform = await locklift.factory.getContract("Platform");
+        const UserData = await locklift.factory.getContractArtifacts(
+          "UserData"
+        );
+        const Election = await locklift.factory.getContractArtifacts(
+          "Election"
+        );
+        const RelayRound = await locklift.factory.getContractArtifacts(
+          "RelayRound"
+        );
+        const Platform = await locklift.factory.getContractArtifacts(
+          "Platform"
+        );
 
         logger.log(`Installing Platform code`);
-        await stakingOwner.runTarget({
-          contract: stakingRoot,
-          method: "installPlatformOnce",
-          params: { code: Platform.code, send_gas_to: stakingOwner.address },
-          value: convertCrystal(11, "nano"),
-        });
-        logger.log(`Installing UserData code`);
-        await stakingOwner.runTarget({
-          contract: stakingRoot,
-          method: "installOrUpdateUserDataCode",
-          params: { code: UserData.code, send_gas_to: stakingOwner.address },
-          value: convertCrystal(11, "nano"),
-        });
-        logger.log(`Installing ElectionCode code`);
-        await stakingOwner.runTarget({
-          contract: stakingRoot,
-          method: "installOrUpdateElectionCode",
-          params: { code: Election.code, send_gas_to: stakingOwner.address },
-          value: convertCrystal(11, "nano"),
-        });
-        logger.log(`Installing RelayRoundCode code`);
-        await stakingOwner.runTarget({
-          contract: stakingRoot,
-          method: "installOrUpdateRelayRoundCode",
-          params: { code: RelayRound.code, send_gas_to: stakingOwner.address },
-          value: convertCrystal(11, "nano"),
-        });
-        logger.log(`Set staking to Active`);
-        await stakingOwner.runTarget({
-          contract: stakingRoot,
-          method: "setActive",
-          params: { new_active: true, send_gas_to: stakingOwner.address },
-          value: convertCrystal(11, "nano"),
-        });
+        await stakingRoot.methods
+          .installPlatformOnce({
+            code: Platform.code,
+            send_gas_to: stakingOwner.address,
+          })
+          .send({
+            from: stakingOwner.address,
+            amount: locklift.utils.toNano(11),
+          });
 
-        if (locklift.network === "dev") {
-          await wait(DEV_WAIT);
+        logger.log(`Installing UserData code`);
+        await stakingRoot.methods
+          .installOrUpdateUserDataCode({
+            code: UserData.code,
+            send_gas_to: stakingOwner.address,
+          })
+          .send({
+            from: stakingOwner.address,
+            amount: locklift.utils.toNano(11),
+          });
+        logger.log(`Installing ElectionCode code`);
+        await stakingRoot.methods
+          .installOrUpdateElectionCode({
+            code: Election.code,
+            send_gas_to: stakingOwner.address,
+          })
+          .send({
+            from: stakingOwner.address,
+            amount: locklift.utils.toNano(11),
+          });
+        logger.log(`Installing RelayRoundCode code`);
+        await stakingRoot.methods
+          .installOrUpdateRelayRoundCode({
+            code: RelayRound.code,
+            send_gas_to: stakingOwner.address,
+          })
+          .send({
+            from: stakingOwner.address,
+            amount: locklift.utils.toNano(11),
+          });
+        logger.log(`Set staking to Active`);
+        await stakingRoot.methods
+          .setActive({
+            new_active: true,
+            send_gas_to: stakingOwner.address,
+          })
+          .send({
+            from: stakingOwner.address,
+            amount: locklift.utils.toNano(11),
+          });
+
+        if (locklift.context.network.name === "dev") {
+          await sleep(DEV_WAIT);
         }
 
-        const active = await stakingRoot.call({ method: "isActive" });
+        const active = await stakingRoot.methods
+          .isActive({ answerId: 0 })
+          .call();
         expect(active).to.be.equal(true, "Staking not active");
       });
     });
@@ -298,29 +298,61 @@ describe("Test Staking Upgrade", async function () {
 
   describe("Testing staking upgrade", async function () {
     it("Calling upgrade from V1 to V1_1", async function () {
-      const new_code = await locklift.factory.getContract("StakingV1_1");
-      const tx = await stakingOwner.runTarget({
-        contract: stakingRoot,
-        method: "upgrade",
-        params: { code: new_code.code, send_gas_to: stakingOwner.address },
-        value: locklift.utils.convertCrystal(11, "nano"),
-      });
+      const new_code = await locklift.factory.getContractArtifacts(
+        "StakingV1_1"
+      );
+      await stakingRoot.methods
+        .upgrade({
+          code: new_code.code,
+          send_gas_to: stakingOwner.address,
+        })
+        .send({
+          from: stakingOwner.address,
+          amount: locklift.utils.toNano(11),
+        });
 
-      new_code.setAddress(stakingRoot.address);
-      (await new_code.getEvents("StakingUpdated")).pop();
+      let new_staking = locklift.factory.getDeployedContract(
+        "StakingV1_1",
+        stakingRoot.address
+      );
+
+      const events = await new_staking
+        .getPastEvents({ filter: "StakingUpdated" })
+        .then((e) => e.events);
+      const [
+        {
+          data: {},
+        },
+      ] = events;
     });
 
     it("Calling upgrade from V1_1 to V1_2", async function () {
-      const new_code = await locklift.factory.getContract("StakingV1_2");
-      const tx = await stakingOwner.runTarget({
-        contract: stakingRoot,
-        method: "upgrade",
-        params: { code: new_code.code, send_gas_to: stakingOwner.address },
-        value: locklift.utils.convertCrystal(11, "nano"),
-      });
+      const new_code = await locklift.factory.getContractArtifacts(
+          "StakingV1_2"
+      );
+      await stakingRoot.methods
+          .upgrade({
+            code: new_code.code,
+            send_gas_to: stakingOwner.address,
+          })
+          .send({
+            from: stakingOwner.address,
+            amount: locklift.utils.toNano(11),
+          });
 
-      new_code.setAddress(stakingRoot.address);
-      (await new_code.getEvents("StakingUpdated")).pop();
+      let new_staking = locklift.factory.getDeployedContract(
+          "StakingV1_1",
+          stakingRoot.address
+      );
+
+      const events = await new_staking
+          .getPastEvents({ filter: "StakingUpdated" })
+          .then((e) => e.events);
+      const [
+        {
+          data: {},
+        },
+      ] = events;
     });
 
     it("Test storage", async function () {
