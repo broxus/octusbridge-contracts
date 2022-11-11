@@ -14,7 +14,11 @@ import BigNumber from "bignumber.js";
 
 import { expect } from "chai";
 import { Contract } from "locklift";
-import { FactorySource } from "../../../../build/factorySource";
+import {
+  CellEncoderStandaloneAbi,
+  FactorySource,
+  SolanaEverscaleEventConfigurationAbi,
+} from "../../../../build/factorySource";
 import { Account } from "everscale-standalone-client/nodejs";
 
 let bridge: Contract<FactorySource["Bridge"]>;
@@ -112,8 +116,15 @@ describe("Test solana everscale event confirm", async function () {
     });
   });
 
-  let eventVoteData: any;
-  let eventDataStructure: any;
+  type EncodeSolanaEverscaleEventDataParam = Parameters<
+    Contract<CellEncoderStandaloneAbi>["methods"]["encodeSolanaEverscaleEventData"]
+  >[0];
+  type EventVoteDataParam = Parameters<
+    Contract<SolanaEverscaleEventConfigurationAbi>["methods"]["deployEvent"]
+  >[0]["eventVoteData"];
+
+  let eventVoteData: EventVoteDataParam;
+  let eventDataStructure: EncodeSolanaEverscaleEventDataParam;
   let eventContract: Contract<
     FactorySource["TokenTransferSolanaEverscaleEvent"]
   >;
@@ -218,7 +229,10 @@ describe("Test solana everscale event confirm", async function () {
     });
 
     it("Check event required votes", async () => {
-      const requiredVotes = await eventContract.methods.requiredVotes().call().then(t => parseInt(t.requiredVotes, 10));
+      const requiredVotes = await eventContract.methods
+        .requiredVotes()
+        .call()
+        .then((t) => parseInt(t.requiredVotes, 10));
 
       const relays = await eventContract.methods
         .getVoters({
@@ -239,7 +253,10 @@ describe("Test solana everscale event confirm", async function () {
     });
 
     it("Check event round number", async () => {
-      const roundNumber = await eventContract.methods.round_number({}).call().then(t => parseInt(t.round_number, 10));
+      const roundNumber = await eventContract.methods
+        .round_number({})
+        .call()
+        .then((t) => parseInt(t.round_number, 10));
 
       expect(roundNumber).to.be.equal(0, "Wrong round number");
     });
@@ -263,7 +280,10 @@ describe("Test solana everscale event confirm", async function () {
 
   describe("Confirm event", async () => {
     it("Confirm event enough times", async () => {
-      const requiredVotes = await eventContract.methods.requiredVotes().call().then(t => parseInt(t.requiredVotes, 10));
+      const requiredVotes = await eventContract.methods
+        .requiredVotes()
+        .call()
+        .then((t) => parseInt(t.requiredVotes, 10));
 
       const confirmations = [];
       for (const [relayId, relay] of Object.entries(
@@ -291,7 +311,10 @@ describe("Test solana everscale event confirm", async function () {
         .getDetails({ answerId: 0 })
         .call();
 
-      const requiredVotes = await eventContract.methods.requiredVotes().call().then(t => parseInt(t.requiredVotes, 10));
+      const requiredVotes = await eventContract.methods
+        .requiredVotes()
+        .call()
+        .then((t) => parseInt(t.requiredVotes, 10));
 
       // expect(details.balance)
       //   .to.be.equal(0, 'Wrong balance');
@@ -311,7 +334,10 @@ describe("Test solana everscale event confirm", async function () {
 
     it("Check event proxy minted tokens", async () => {
       expect(
-        await initializerTokenWallet.methods.balance({ answerId: 0 }).call().then(t => parseInt(t.value0, 10))
+        await initializerTokenWallet.methods
+          .balance({ answerId: 0 })
+          .call()
+          .then((t) => parseInt(t.value0, 10))
       ).to.be.equal(
         eventDataStructure.tokens,
         "Wrong initializerTokenWallet balance"
