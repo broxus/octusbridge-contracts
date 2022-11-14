@@ -12,7 +12,11 @@ const {
 
 import { expect } from "chai";
 import { Contract } from "locklift";
-import { FactorySource } from "../../../../build/factorySource";
+import {
+  CellEncoderStandaloneAbi,
+  FactorySource,
+  SolanaEverscaleEventConfigurationAbi,
+} from "../../../../build/factorySource";
 import { Account } from "everscale-standalone-client/nodejs";
 
 let bridge: Contract<FactorySource["Bridge"]>;
@@ -77,7 +81,7 @@ describe("Test solana everscale event reject", async function () {
       await enableEventConfiguration(
         bridgeOwner,
         bridge,
-        solanaEverscaleEventConfiguration,
+        solanaEverscaleEventConfiguration.address,
         "solana"
       );
     });
@@ -90,8 +94,8 @@ describe("Test solana everscale event reject", async function () {
         "Configuration not found"
       );
 
-      expect(configurations["0"]._eventConfiguration).to.be.equal(
-        solanaEverscaleEventConfiguration.address,
+      expect(configurations["0"]._eventConfiguration.toString()).to.be.equal(
+        solanaEverscaleEventConfiguration.address.toString(),
         "Wrong configuration address"
       );
 
@@ -102,8 +106,15 @@ describe("Test solana everscale event reject", async function () {
     });
   });
 
-  let eventVoteData: any;
-  let eventDataStructure: any;
+  type EncodeSolanaEverscaleEventDataParam = Parameters<
+    Contract<CellEncoderStandaloneAbi>["methods"]["encodeSolanaEverscaleEventData"]
+  >[0];
+  type EventVoteDataParam = Parameters<
+    Contract<SolanaEverscaleEventConfigurationAbi>["methods"]["deployEvent"]
+  >[0]["eventVoteData"];
+
+  let eventVoteData: EventVoteDataParam;
+  let eventDataStructure: EncodeSolanaEverscaleEventDataParam;
   let eventContract: Contract<
     FactorySource["TokenTransferSolanaEverscaleEvent"]
   >;
@@ -133,7 +144,7 @@ describe("Test solana everscale event reject", async function () {
     it("Initialize event", async () => {
       const tx = await solanaEverscaleEventConfiguration.methods
         .deployEvent({
-          eventVoteData,
+          eventVoteData: eventVoteData,
         })
         .send({
           from: initializer.address,
@@ -144,7 +155,10 @@ describe("Test solana everscale event reject", async function () {
 
       const expectedEventContract =
         await solanaEverscaleEventConfiguration.methods
-          .deriveEventAddress(eventVoteData)
+          .deriveEventAddress({
+            eventVoteData: eventVoteData,
+            answerId: 0,
+          })
           .call();
 
       logger.log(
@@ -188,11 +202,14 @@ describe("Test solana everscale event reject", async function () {
         .getDetails({ answerId: 0 })
         .call();
 
-      const requiredVotes = await eventContract.methods.requiredVotes().call();
+      const requiredVotes = await eventContract.methods
+        .requiredVotes()
+        .call()
+        .then((t) => parseInt(t.requiredVotes, 10));
 
-      expect(details.balance).to.be.equal(0, "Wrong balance");
+      expect(details.balance).to.be.equal("0", "Wrong balance");
 
-      expect(details._status).to.be.equal(3, "Wrong status");
+      expect(details._status).to.be.equal("3", "Wrong status");
 
       expect(details._confirms).to.have.lengthOf(
         0,
@@ -200,7 +217,7 @@ describe("Test solana everscale event reject", async function () {
       );
 
       expect(details._rejects).to.have.lengthOf(
-        parseInt(requiredVotes.requiredVotes, 10),
+        requiredVotes,
         "Wrong amount of relays confirmations"
       );
     });
