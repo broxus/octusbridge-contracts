@@ -8,14 +8,17 @@ const {
   MetricManager,
   enableEventConfiguration,
   captureConnectors,
-  afterRun,
   logger,
   getTokenWalletByAddress,
 } = require("../../../utils");
 
 import { expect } from "chai";
 import { Contract } from "locklift";
-import { FactorySource } from "../../../../build/factorySource";
+import {
+  CellEncoderStandaloneAbi,
+  FactorySource,
+  TokenWalletAbi,
+} from "../../../../build/factorySource";
 import { Account } from "everscale-standalone-client/nodejs";
 
 let bridge: Contract<FactorySource["Bridge"]>;
@@ -80,7 +83,7 @@ describe("Test everscale solana event reject", async function () {
       await enableEventConfiguration(
         bridgeOwner,
         bridge,
-        everscaleSolanaEventConfiguration,
+        everscaleSolanaEventConfiguration.address,
         "ton"
       );
     });
@@ -93,8 +96,8 @@ describe("Test everscale solana event reject", async function () {
         "Configuration not found"
       );
 
-      expect(configurations["0"]._eventConfiguration).to.be.equal(
-        everscaleSolanaEventConfiguration.address,
+      expect(configurations["0"]._eventConfiguration.toString()).to.be.equal(
+        everscaleSolanaEventConfiguration.address.toString(),
         "Wrong configuration address"
       );
 
@@ -105,9 +108,16 @@ describe("Test everscale solana event reject", async function () {
     });
   });
 
-  let everEventParams: any;
-  let everEventValue: any;
-  let burnPayload: any;
+  type EncodeSolanaBurnPayloadParam = Parameters<
+    Contract<CellEncoderStandaloneAbi>["methods"]["encodeSolanaBurnPayload"]
+  >[0];
+  type BurnPayloadParam = Parameters<
+    Contract<TokenWalletAbi>["methods"]["burn"]
+  >[0]["payload"];
+
+  let everEventParams: EncodeSolanaBurnPayloadParam;
+  let everEventValue: number;
+  let burnPayload: BurnPayloadParam;
   let eventContract: Contract<
     FactorySource["TokenTransferEverscaleSolanaEvent"]
   >;
@@ -137,7 +147,10 @@ describe("Test everscale solana event reject", async function () {
     it("Setup event data", async () => {
       initializerTokenWallet = await getTokenWalletByAddress(
         initializer.address,
-        await proxy.methods.getTokenRoot({ answerId: 0 }).call()
+        await proxy.methods
+          .getTokenRoot({ answerId: 0 })
+          .call()
+          .then((t) => t.value0)
       );
 
       burnPayload = await cellEncoder.methods
@@ -187,12 +200,12 @@ describe("Test everscale solana event reject", async function () {
         .getDetails({ answerId: 0 })
         .call();
 
-      expect(details._eventInitData.configuration).to.be.equal(
-        everscaleSolanaEventConfiguration.address,
+      expect(details._eventInitData.configuration.toString()).to.be.equal(
+        everscaleSolanaEventConfiguration.address.toString(),
         "Wrong event configuration"
       );
 
-      expect(details._status).to.be.equal(1, "Wrong status");
+      expect(details._status).to.be.equal("1", "Wrong status");
 
       expect(details._confirms).to.have.lengthOf(
         0,
@@ -201,8 +214,8 @@ describe("Test everscale solana event reject", async function () {
 
       expect(details._rejects).to.have.lengthOf(0, "Wrong amount of rejects");
 
-      expect(details._initializer).to.be.equal(
-        proxy.address,
+      expect(details._initializer.toString()).to.be.equal(
+        proxy.address.toString(),
         "Wrong initializer"
       );
     });
@@ -212,15 +225,18 @@ describe("Test everscale solana event reject", async function () {
         .getDecodedData({ answerId: 0 })
         .call();
 
-      expect(data.senderAddress).to.be.equal(
-        initializer.address,
+      expect(data.senderAddress.toString()).to.be.equal(
+        initializer.address.toString(),
         "Wrong owner address"
       );
 
-      expect(data.tokens).to.be.equal(everEventValue, "Wrong amount of tokens");
+      expect(data.tokens.toString()).to.be.equal(
+        everEventValue.toString(),
+        "Wrong amount of tokens"
+      );
 
-      expect(data.solanaOwnerAddress).to.be.equal(
-        everEventParams.solanaOwnerAddress,
+      expect(data.solanaOwnerAddress.toString()).to.be.equal(
+        everEventParams.solanaOwnerAddress.toString(),
         "Wrong solana owner address"
       );
     });
@@ -228,13 +244,18 @@ describe("Test everscale solana event reject", async function () {
 
   describe("Reject event", async () => {
     it("Reject event enough times", async () => {
-      const requiredVotes = await eventContract.methods.requiredVotes().call();
+      const requiredVotes = await eventContract.methods
+        .requiredVotes()
+        .call()
+        .then((t) => parseInt(t.requiredVotes, 10));
 
       const rejects = [];
       for (const [relayId, relay] of Object.entries(
-        relays.slice(0, parseInt(requiredVotes.requiredVotes, 10))
+        relays.slice(0, requiredVotes)
       )) {
         logger.log(`Reject #${relayId} from ${relay.publicKey}`);
+
+        locklift.keystore.addKeyPair(relay);
 
         rejects.push(
           eventContract.methods
@@ -254,11 +275,14 @@ describe("Test everscale solana event reject", async function () {
         .getDetails({ answerId: 0 })
         .call();
 
-      const requiredVotes = await eventContract.methods.requiredVotes().call();
+      const requiredVotes = await eventContract.methods
+        .requiredVotes()
+        .call()
+        .then((t) => parseInt(t.requiredVotes, 10));
 
-      expect(details.balance).to.be.equal(0, "Wrong balance");
+      expect(details.balance).to.be.equal("0", "Wrong balance");
 
-      expect(details._status).to.be.equal(3, "Wrong status");
+      expect(details._status).to.be.equal("3", "Wrong status");
 
       expect(details._confirms).to.have.lengthOf(
         0,
@@ -266,61 +290,9 @@ describe("Test everscale solana event reject", async function () {
       );
 
       expect(details._rejects).to.have.lengthOf(
-        parseInt(requiredVotes.requiredVotes, 10),
+        requiredVotes,
         "Wrong amount of relays rejects"
       );
     });
-
-    // it('Send confirms from the rest of relays', async () => {
-    //   const requiredVotes = await eventContract.call({
-    //     method: 'requiredVotes',
-    //   });
-    //
-    //   for (const [relayId, relay] of Object.entries(relays.slice(requiredVotes))) {
-    //     logger.log(`Reject #${requiredVotes.plus(relayId)} from ${relay.public}`);
-    //
-    //     await eventContract.run({
-    //       method: 'reject',
-    //       params: {
-    //         voteReceiver: eventContract.address
-    //       },
-    //       keyPair: relay
-    //     });
-    //   }
-    // });
-
-    // it('Check event details after all relays voted', async () => {
-    //   const details = await eventContract.call({
-    //     method: 'getDetails'
-    //   });
-    //
-    //   expect(details.balance)
-    //     .to.be.greaterThan(0, 'Wrong balance');
-    //
-    //   expect(details._status)
-    //     .to.be.equal(3, 'Wrong status');
-    //
-    //   expect(details._confirms)
-    //     .to.have.lengthOf(0, 'Wrong amount of relays confirmations');
-    //
-    //   expect(details._rejects)
-    //     .to.have.lengthOf(relays.length, 'Wrong amount of relays rejects');
-    // });
-
-    // it('Close event', async () => {
-    //   await initializer.runTarget({
-    //     contract: eventContract,
-    //     method: 'close',
-    //     params: {},
-    //     value: locklift.utils.convertCrystal(1, 'nano')
-    //   });
-    //
-    //   const details = await eventContract.call({
-    //     method: 'getDetails'
-    //   });
-    //
-    //   expect(details.balance)
-    //     .to.be.equal(0, 'Wrong balance');
-    // });
   });
 });

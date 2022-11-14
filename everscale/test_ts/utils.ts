@@ -192,7 +192,7 @@ const setupEthereumEverscaleEventConfiguration = async (
         },
         networkConfiguration: {
           chainId: 1,
-          eventEmitter: new BigNumber(0),
+          eventEmitter: 0,
           eventBlocksToConfirm: 1,
           proxy: proxyFutureAddress,
           startBlockNumber: 0,
@@ -695,7 +695,7 @@ const setupEverscaleEthereumEventConfiguration = async (
   owner: Account,
   staking: Contract<FactorySource["StakingMockup"]>
 ) => {
-  const signer = (await locklift.keystore.getSigner("2"))!;
+  const signer = (await locklift.keystore.getSigner("1"))!;
 
   const _randomNonce = locklift.utils.getRandomNonce();
 
@@ -763,7 +763,7 @@ const setupEverscaleEthereumEventConfiguration = async (
         },
         networkConfiguration: {
           eventEmitter: proxyFutureAddress,
-          proxy: new BigNumber(0),
+          proxy: 0,
           startTimestamp: 0,
           endTimestamp: 0,
         },
@@ -811,14 +811,14 @@ const setupEverscaleEthereumEventConfiguration = async (
       amount: locklift.utils.toNano(0.5),
     });
 
-  return [everscaleEthereumEventConfiguration, proxy, initializer];
+  return [everscaleEthereumEventConfiguration, proxy, initializer.account];
 };
 
 const setupEverscaleSolanaEventConfiguration = async (
   owner: Account,
   staking: Contract<FactorySource["StakingMockup"]>
 ) => {
-  const signer = (await locklift.keystore.getSigner("2"))!;
+  const signer = (await locklift.keystore.getSigner("1"))!;
 
   const _randomNonce = locklift.utils.getRandomNonce();
 
@@ -971,7 +971,7 @@ const setupEverscaleSolanaEventConfiguration = async (
       amount: locklift.utils.toNano(0.5),
     });
 
-  return [everscaleSolanaEventConfiguration, proxy, initializer];
+  return [everscaleSolanaEventConfiguration, proxy, initializer.account];
 };
 
 const setupEthereumAlienMultiVault = async (

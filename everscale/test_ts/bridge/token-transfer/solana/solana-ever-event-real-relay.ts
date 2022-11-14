@@ -11,8 +11,12 @@ const {
 import BigNumber from "bignumber.js";
 
 import { expect } from "chai";
-import { Contract } from "locklift";
-import { FactorySource } from "../../../../build/factorySource";
+import {Address, Contract} from "locklift";
+import {
+  CellEncoderStandaloneAbi,
+  FactorySource,
+  SolanaEverscaleEventConfigurationAbi
+} from "../../../../build/factorySource";
 import { Account } from "everscale-standalone-client/nodejs";
 
 let bridge: Contract<FactorySource["Bridge"]>;
@@ -79,7 +83,10 @@ describe("Test solana everscale event real relay", async function () {
 
     initializerTokenWallet = await getTokenWalletByAddress(
       initializer.address,
-      await proxy.methods.getTokenRoot({ answerId: 0 }).call()
+        await proxy.methods
+            .getTokenRoot({ answerId: 0 })
+            .call()
+            .then((t) => t.value0)
     );
 
     metricManager = new MetricManager(
@@ -97,7 +104,7 @@ describe("Test solana everscale event real relay", async function () {
       await enableEventConfiguration(
         bridgeOwner,
         bridge,
-        solanaEverscaleEventConfiguration
+        solanaEverscaleEventConfiguration.address
       );
     });
 
@@ -109,8 +116,8 @@ describe("Test solana everscale event real relay", async function () {
         "Configuration not found"
       );
 
-      expect(configurations["0"]._eventConfiguration).to.be.equal(
-        solanaEverscaleEventConfiguration.address,
+      expect(configurations["0"]._eventConfiguration.toString()).to.be.equal(
+        solanaEverscaleEventConfiguration.address.toString(),
         "Wrong configuration address"
       );
 
@@ -123,7 +130,7 @@ describe("Test solana everscale event real relay", async function () {
       await enableEventConfiguration(
         bridgeOwner,
         bridge,
-        everscaleSolanaEventConfiguration
+        everscaleSolanaEventConfiguration.address
       );
     });
 
@@ -135,8 +142,8 @@ describe("Test solana everscale event real relay", async function () {
         "Configuration not found"
       );
 
-      expect(configurations["1"]._eventConfiguration).to.be.equal(
-        everscaleSolanaEventConfiguration.address,
+      expect(configurations["1"]._eventConfiguration.toString()).to.be.equal(
+        everscaleSolanaEventConfiguration.address.toString(),
         "Wrong configuration address"
       );
 
@@ -145,20 +152,20 @@ describe("Test solana everscale event real relay", async function () {
         "Wrong connector status"
       );
     });
-    // it('Add stacking event configuration to bridge', async () => {
-    //     await enableEventConfiguration(
-    //       bridgeOwner,
-    //       bridge,
-    //       stakingEverscaleSolanaEventConfiguration,
-    //     );
-    //   });
   });
 
-  let eventVoteData: any;
-  let eventDataStructure: any;
+  type EncodeSolanaEverscaleEventDataParam = Parameters<
+      Contract<CellEncoderStandaloneAbi>["methods"]["encodeSolanaEverscaleEventData"]
+      >[0];
+  type EventVoteDataParam = Parameters<
+      Contract<SolanaEverscaleEventConfigurationAbi>["methods"]["deployEvent"]
+      >[0]["eventVoteData"];
+
+  let eventVoteData: EventVoteDataParam;
+  let eventDataStructure: EncodeSolanaEverscaleEventDataParam;
   let eventContract: Contract<
-    FactorySource["TokenTransferSolanaEverscaleEvent"]
-  >;
+      FactorySource["TokenTransferSolanaEverscaleEvent"]
+      >;
 
   describe("Initialize event", async () => {
     it("Setup event data", async () => {
@@ -168,7 +175,7 @@ describe("Test solana everscale event real relay", async function () {
         ).toFixed(),
         tokens: 100,
         receiver_addr:
-          "0:99f0fb098badc6ff5b974cb56b55e661f4a83dd4170a9b2be97766252e0a70e3",
+          new Address("0:99f0fb098badc6ff5b974cb56b55e661f4a83dd4170a9b2be97766252e0a70e3"),
       };
 
       const eventData = await cellEncoder.methods
@@ -199,7 +206,10 @@ describe("Test solana everscale event real relay", async function () {
 
       const expectedEventContract =
         await solanaEverscaleEventConfiguration.methods
-          .deriveEventAddress(eventVoteData)
+          .deriveEventAddress({
+            eventVoteData: eventVoteData,
+            answerId: 0,
+          })
           .call();
 
       logger.log(`Expected event address: ${expectedEventContract}`);
@@ -217,8 +227,8 @@ describe("Test solana everscale event real relay", async function () {
         .getDetails({ answerId: 0 })
         .call();
 
-      expect(details._eventInitData.voteData.accountSeed).to.be.equal(
-        eventVoteData.accountSeed,
+      expect(details._eventInitData.voteData.accountSeed.toString()).to.be.equal(
+        eventVoteData.accountSeed.toString(),
         "Wrong accountSeed"
       );
 
@@ -227,17 +237,17 @@ describe("Test solana everscale event real relay", async function () {
         "Wrong event data"
       );
 
-      expect(details._eventInitData.configuration).to.be.equal(
-        solanaEverscaleEventConfiguration.address,
+      expect(details._eventInitData.configuration.toString()).to.be.equal(
+        solanaEverscaleEventConfiguration.address.toString(),
         "Wrong event configuration"
       );
 
-      expect(details._eventInitData.staking).to.be.equal(
-        staking.address,
+      expect(details._eventInitData.staking.toString()).to.be.equal(
+        staking.address.toString(),
         "Wrong staking"
       );
 
-      expect(details._status).to.be.equal(1, "Wrong status");
+      expect(details._status).to.be.equal("1", "Wrong status");
 
       expect(details._confirms).to.have.lengthOf(
         0,
@@ -249,14 +259,17 @@ describe("Test solana everscale event real relay", async function () {
         "Wrong amount of relays rejects"
       );
 
-      expect(details._initializer).to.be.equal(
-        initializer.address,
+      expect(details._initializer.toString()).to.be.equal(
+        initializer.address.toString(),
         "Wrong initializer"
       );
     });
 
     it("Check event required votes", async () => {
-      const requiredVotes = await eventContract.methods.requiredVotes().call();
+      const requiredVotes = await eventContract.methods
+        .requiredVotes()
+        .call()
+        .then((t) => parseInt(t.requiredVotes, 10));
 
       const relays = await eventContract.methods
         .getVoters({
@@ -271,15 +284,15 @@ describe("Test solana everscale event real relay", async function () {
       );
 
       expect(relays.voters.length).to.be.greaterThanOrEqual(
-        parseInt(requiredVotes.requiredVotes, 10),
+        requiredVotes,
         "Too many required votes for event"
       );
     });
 
     it("Check event round number", async () => {
-      const roundNumber = await eventContract.methods.round_number({}).call();
+      const roundNumber = await eventContract.methods.round_number({}).call().then(t => t.round_number);
 
-      expect(roundNumber).to.be.equal(0, "Wrong round number");
+      expect(roundNumber).to.be.equal("0", "Wrong round number");
     });
 
     it("Check encoded event data", async () => {
@@ -287,13 +300,13 @@ describe("Test solana everscale event real relay", async function () {
         .getDecodedData({ answerId: 0 })
         .call();
 
-      expect(data.tokens).to.be.equal(
-        eventDataStructure.tokens,
+      expect(data.tokens.toString()).to.be.equal(
+        eventDataStructure.tokens.toString(),
         "Wrong amount of tokens"
       );
 
-      expect(data.receiver_addr).to.be.equal(
-        eventDataStructure.receiver_addr,
+      expect(data.receiver_addr.toString()).to.be.equal(
+        eventDataStructure.receiver_addr.toString(),
         "Wrong receiver address"
       );
     });

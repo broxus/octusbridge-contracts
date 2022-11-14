@@ -174,11 +174,14 @@ describe("Test solana everscale event reject", async function () {
 
   describe("Reject event", async () => {
     it("Reject event enough times", async () => {
-      const requiredVotes = await eventContract.methods.requiredVotes().call();
+      const requiredVotes = await eventContract.methods
+        .requiredVotes()
+        .call()
+        .then((t) => parseInt(t.requiredVotes, 10));
 
       const rejects = [];
       for (const [relayId, relay] of Object.entries(
-        relays.slice(0, parseInt(requiredVotes.requiredVotes, 10))
+        relays.slice(0, requiredVotes)
       )) {
         logger.log(`Reject #${relayId} from ${relay.publicKey}`);
 

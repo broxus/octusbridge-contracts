@@ -14,8 +14,13 @@ const {
 
 import { expect } from "chai";
 import { Contract } from "locklift";
-import { FactorySource } from "../../../../build/factorySource";
+import {
+  CellEncoderStandaloneAbi,
+  EthereumEverscaleEventConfigurationAbi,
+  FactorySource,
+} from "../../../../build/factorySource";
 import { Account } from "everscale-standalone-client/nodejs";
+import BigNumber from "bignumber.js";
 
 let bridge: Contract<FactorySource["Bridge"]>;
 let cellEncoder: Contract<FactorySource["CellEncoderStandalone"]>;
@@ -71,7 +76,10 @@ describe("Test ethereum everscale event confirm", async function () {
 
     initializerTokenWallet = await getTokenWalletByAddress(
       initializer.address,
-      await proxy.methods.getTokenRoot({ answerId: 0 }).call()
+      await proxy.methods
+        .getTokenRoot({ answerId: 0 })
+        .call()
+        .then((t) => t.value0)
     );
 
     metricManager = new MetricManager(
@@ -89,7 +97,7 @@ describe("Test ethereum everscale event confirm", async function () {
       await enableEventConfiguration(
         bridgeOwner,
         bridge,
-        ethereumEverscaleEventConfiguration
+        ethereumEverscaleEventConfiguration.address
       );
     });
 
@@ -101,8 +109,8 @@ describe("Test ethereum everscale event confirm", async function () {
         "Configuration not found"
       );
 
-      expect(configurations["0"]._eventConfiguration).to.be.equal(
-        ethereumEverscaleEventConfiguration.address,
+      expect(configurations["0"]._eventConfiguration.toString()).to.be.equal(
+        ethereumEverscaleEventConfiguration.address.toString(),
         "Wrong configuration address"
       );
 
@@ -113,8 +121,15 @@ describe("Test ethereum everscale event confirm", async function () {
     });
   });
 
-  let eventVoteData: any;
-  let eventDataStructure: any;
+  type EncodeEthereumEverscaleEventDataParam = Parameters<
+    Contract<CellEncoderStandaloneAbi>["methods"]["encodeEthereumEverscaleEventData"]
+  >[0];
+  type EventVoteDataParam = Parameters<
+    Contract<EthereumEverscaleEventConfigurationAbi>["methods"]["deployEvent"]
+  >[0]["eventVoteData"];
+
+  let eventVoteData: EventVoteDataParam;
+  let eventDataStructure: EncodeEthereumEverscaleEventDataParam;
   let eventContract: Contract<
     FactorySource["TokenTransferEthereumEverscaleEvent"]
   >;
@@ -159,7 +174,10 @@ describe("Test ethereum everscale event confirm", async function () {
 
       const expectedEventContract =
         await ethereumEverscaleEventConfiguration.methods
-          .deriveEventAddress(eventVoteData)
+          .deriveEventAddress({
+            eventVoteData: eventVoteData,
+            answerId: 0,
+          })
           .call();
 
       logger.log(
@@ -179,13 +197,15 @@ describe("Test ethereum everscale event confirm", async function () {
         .getDetails({ answerId: 0 })
         .call();
 
-      expect(details._eventInitData.voteData.eventTransaction).to.be.equal(
-        eventVoteData.eventTransaction,
+      expect(
+        details._eventInitData.voteData.eventTransaction.toString()
+      ).to.be.equal(
+        eventVoteData.eventTransaction.toString(),
         "Wrong event transaction"
       );
 
-      expect(details._eventInitData.voteData.eventIndex).to.be.equal(
-        eventVoteData.eventIndex,
+      expect(details._eventInitData.voteData.eventIndex.toString()).to.be.equal(
+        eventVoteData.eventIndex.toString(),
         "Wrong event index"
       );
 
@@ -194,27 +214,29 @@ describe("Test ethereum everscale event confirm", async function () {
         "Wrong event data"
       );
 
-      expect(details._eventInitData.voteData.eventBlockNumber).to.be.equal(
-        eventVoteData.eventBlockNumber,
+      expect(
+        details._eventInitData.voteData.eventBlockNumber.toString()
+      ).to.be.equal(
+        eventVoteData.eventBlockNumber.toString(),
         "Wrong event block number"
       );
 
-      expect(details._eventInitData.voteData.eventBlock).to.be.equal(
-        eventVoteData.eventBlock,
+      expect(details._eventInitData.voteData.eventBlock.toString()).to.be.equal(
+        eventVoteData.eventBlock.toString(),
         "Wrong event block"
       );
 
-      expect(details._eventInitData.configuration).to.be.equal(
-        ethereumEverscaleEventConfiguration.address,
+      expect(details._eventInitData.configuration.toString()).to.be.equal(
+        ethereumEverscaleEventConfiguration.address.toString(),
         "Wrong event configuration"
       );
 
-      expect(details._eventInitData.staking).to.be.equal(
-        staking.address,
+      expect(details._eventInitData.staking.toString()).to.be.equal(
+        staking.address.toString(),
         "Wrong staking"
       );
 
-      expect(details._status).to.be.equal(1, "Wrong status");
+      expect(details._status).to.be.equal("1", "Wrong status");
 
       expect(details._confirms).to.have.lengthOf(
         0,
@@ -226,14 +248,17 @@ describe("Test ethereum everscale event confirm", async function () {
         "Wrong amount of relays rejects"
       );
 
-      expect(details._initializer).to.be.equal(
-        initializer.address,
+      expect(details._initializer.toString()).to.be.equal(
+        initializer.address.toString(),
         "Wrong initializer"
       );
     });
 
     it("Check event required votes", async () => {
-      const requiredVotes = await eventContract.methods.requiredVotes().call();
+      const requiredVotes = await eventContract.methods
+        .requiredVotes()
+        .call()
+        .then((t) => parseInt(t.requiredVotes, 10));
 
       const relays = await eventContract.methods
         .getVoters({
@@ -248,15 +273,18 @@ describe("Test ethereum everscale event confirm", async function () {
       );
 
       expect(relays.voters.length).to.be.greaterThanOrEqual(
-        parseInt(requiredVotes.requiredVotes, 10),
+        requiredVotes,
         "Too many required votes for event"
       );
     });
 
     it("Check event round number", async () => {
-      const roundNumber = await eventContract.methods.round_number({}).call();
+      const roundNumber = await eventContract.methods
+        .round_number({})
+        .call()
+        .then((t) => t.round_number);
 
-      expect(roundNumber).to.be.equal(0, "Wrong round number");
+      expect(roundNumber).to.be.equal("0", "Wrong round number");
     });
 
     it("Check encoded event data", async () => {
@@ -264,15 +292,18 @@ describe("Test ethereum everscale event confirm", async function () {
         .getDecodedData({ answerId: 0 })
         .call();
 
-      expect(data.tokens).to.be.equal(
-        eventDataStructure.tokens,
+      expect(data.tokens.toString()).to.be.equal(
+        eventDataStructure.tokens.toString(),
         "Wrong amount of tokens"
       );
 
-      expect(data.wid).to.be.equal(eventDataStructure.wid, "Wrong wid");
+      expect(data.wid.toString()).to.be.equal(
+        eventDataStructure.wid.toString(),
+        "Wrong wid"
+      );
 
-      expect(data.owner_addr).to.be.equal(
-        eventDataStructure.owner_addr,
+      expect("0x" + new BigNumber(data.owner_addr).toString(16)).to.be.equal(
+        eventDataStructure.owner_addr.toString(),
         "Wrong owner address"
       );
     });
@@ -280,11 +311,14 @@ describe("Test ethereum everscale event confirm", async function () {
 
   describe("Confirm event", async () => {
     it("Confirm event enough times", async () => {
-      const requiredVotes = await eventContract.methods.requiredVotes().call();
+      const requiredVotes = await eventContract.methods
+        .requiredVotes()
+        .call()
+        .then((t) => parseInt(t.requiredVotes, 10));
 
       const confirmations = [];
       for (const [relayId, relay] of Object.entries(
-        relays.slice(0, parseInt(requiredVotes.requiredVotes, 10))
+        relays.slice(0, requiredVotes)
       )) {
         logger.log(`Confirm #${relayId} from ${relay.publicKey}`);
 
@@ -308,12 +342,15 @@ describe("Test ethereum everscale event confirm", async function () {
         .getDetails({ answerId: 0 })
         .call();
 
-      const requiredVotes = await eventContract.methods.requiredVotes().call();
+      const requiredVotes = await eventContract.methods
+        .requiredVotes()
+        .call()
+        .then((t) => parseInt(t.requiredVotes, 10));
 
-      expect(details._status).to.be.equal(2, "Wrong status");
+      expect(details._status).to.be.equal("2", "Wrong status");
 
       expect(details._confirms).to.have.lengthOf(
-        parseInt(requiredVotes.requiredVotes, 10),
+        requiredVotes,
         "Wrong amount of relays confirmations"
       );
 
@@ -325,7 +362,10 @@ describe("Test ethereum everscale event confirm", async function () {
 
     it("Check event proxy minted tokens", async () => {
       expect(
-        await initializerTokenWallet.methods.balance({ answerId: 0 }).call()
+        await initializerTokenWallet.methods
+          .balance({ answerId: 0 })
+          .call()
+          .then((t) => parseInt(t.value0, 10))
       ).to.be.equal(
         eventDataStructure.tokens,
         "Wrong initializerTokenWallet balance"
@@ -335,12 +375,21 @@ describe("Test ethereum everscale event confirm", async function () {
 
   describe("Test Proxy", async () => {
     it("Test Proxy token transfer ownership", async () => {
-      const token: Contract<FactorySource["TokenRoot"]> = await getTokenRoot(
-        proxy.methods.getTokenRoot({ answerId: 0 }).call()
-      );
+      let addr = await proxy.methods
+        .getTokenRoot({ answerId: 0 })
+        .call()
+        .then((t) => t.value0);
+      console.log(addr);
 
-      expect(await token.methods.rootOwner({ answerId: 0 }).call()).to.be.equal(
-        proxy.address,
+      const token = await getTokenRoot(addr);
+
+      let root = await token.methods
+        .rootOwner({ answerId: 0 })
+        .call()
+        .then((t: any) => t.value0.toString());
+
+      expect(root).to.be.equal(
+        proxy.address.toString(),
         "Wrong initial token owner"
       );
 
@@ -350,12 +399,16 @@ describe("Test ethereum everscale event confirm", async function () {
           newOwner: bridgeOwner.address,
         })
         .send({
-          from: token.address,
+          from: bridgeOwner.address,
           amount: locklift.utils.toNano(1),
         });
+      root = await token.methods
+        .rootOwner({ answerId: 0 })
+        .call()
+        .then((t: any) => t.value0.toString());
 
-      expect(await token.methods.rootOwner({ answerId: 0 }).call()).to.be.equal(
-        bridgeOwner.address,
+      expect(root).to.be.equal(
+        bridgeOwner.address.toString(),
         "Wrong token owner after transfer"
       );
     });

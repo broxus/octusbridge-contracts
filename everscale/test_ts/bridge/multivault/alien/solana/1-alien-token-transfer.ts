@@ -246,7 +246,10 @@ describe("Test Solana alien multivault pipeline", async function () {
     });
 
     it("Check event required votes", async () => {
-      const requiredVotes = await eventContract.methods.requiredVotes().call();
+      const requiredVotes = await eventContract.methods
+        .requiredVotes()
+        .call()
+        .then((t) => parseInt(t.requiredVotes, 10));
 
       const relays = await eventContract.methods
         .getVoters({
@@ -260,7 +263,7 @@ describe("Test Solana alien multivault pipeline", async function () {
         "Too low required votes for event"
       );
       expect(relays.voters.length).to.be.greaterThanOrEqual(
-        parseInt(requiredVotes.requiredVotes, 10),
+        requiredVotes,
         "Too many required votes for event"
       );
     });
@@ -299,7 +302,7 @@ describe("Test Solana alien multivault pipeline", async function () {
           .call();
         const confirmations = [];
         for (const [relayId, relay] of Object.entries(
-          relays.slice(0, parseInt(requiredVotes.requiredVotes, 10))
+          relays.slice(0, requiredVotes)
         )) {
           logger.log(`Confirm #${relayId} from ${relay.publicKey}`);
 
@@ -330,7 +333,7 @@ describe("Test Solana alien multivault pipeline", async function () {
         expect(details._status).to.be.equal(2, "Wrong status");
 
         expect(details._confirms).to.have.lengthOf(
-          parseInt(requiredVotes.requiredVotes, 10),
+          requiredVotes,
           "Wrong amount of relays confirmations"
         );
 
@@ -517,7 +520,10 @@ describe("Test Solana alien multivault pipeline", async function () {
     });
 
     it("Check event required votes", async () => {
-      const requiredVotes = await eventContract.methods.requiredVotes().call();
+      const requiredVotes = await eventContract.methods
+        .requiredVotes()
+        .call()
+        .then((t) => parseInt(t.requiredVotes, 10));
 
       const relays = await eventContract.methods
         .getVoters({
@@ -531,7 +537,7 @@ describe("Test Solana alien multivault pipeline", async function () {
         "Too low required votes for event"
       );
       expect(relays.voters.length).to.be.greaterThanOrEqual(
-        parseInt(requiredVotes.requiredVotes, 10),
+        requiredVotes,
         "Too many required votes for event"
       );
     });
@@ -543,7 +549,7 @@ describe("Test Solana alien multivault pipeline", async function () {
           .call();
         const confirmations = [];
         for (const [relayId, relay] of Object.entries(
-          relays.slice(0, parseInt(requiredVotes.requiredVotes, 10))
+          relays.slice(0, requiredVotes)
         )) {
           logger.log(`Confirm #${relayId} from ${relay.publicKey}`);
 
@@ -576,7 +582,7 @@ describe("Test Solana alien multivault pipeline", async function () {
         expect(details._status).to.be.equal(2, "Wrong status");
 
         expect(details._confirms).to.have.lengthOf(
-          parseInt(requiredVotes.requiredVotes, 10),
+          requiredVotes,
           "Wrong amount of relays confirmations"
         );
 

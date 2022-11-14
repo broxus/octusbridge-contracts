@@ -12,7 +12,11 @@ const {
 
 import { expect } from "chai";
 import { Contract } from "locklift";
-import { FactorySource } from "../../../../build/factorySource";
+import {
+  CellEncoderStandaloneAbi,
+  EthereumEverscaleEventConfigurationAbi,
+  FactorySource
+} from "../../../../build/factorySource";
 import { Account } from "everscale-standalone-client/nodejs";
 
 let bridge: Contract<FactorySource["Bridge"]>;
@@ -82,7 +86,7 @@ describe("Test ethereum everscale event reject", async function () {
       await enableEventConfiguration(
         bridgeOwner,
         bridge,
-        ethereumEverscaleEventConfiguration,
+        ethereumEverscaleEventConfiguration.address,
         "ethereum"
       );
     });
@@ -95,8 +99,8 @@ describe("Test ethereum everscale event reject", async function () {
         "Configuration not found"
       );
 
-      expect(configurations["0"]._eventConfiguration).to.be.equal(
-        ethereumEverscaleEventConfiguration.address,
+      expect(configurations["0"]._eventConfiguration.toString()).to.be.equal(
+        ethereumEverscaleEventConfiguration.address.toString(),
         "Wrong configuration address"
       );
 
@@ -107,13 +111,21 @@ describe("Test ethereum everscale event reject", async function () {
     });
   });
 
-  let eventVoteData: any;
+  type EncodeEthereumEverscaleEventDataParam = Parameters<
+      Contract<CellEncoderStandaloneAbi>["methods"]["encodeEthereumEverscaleEventData"]
+      >[0];
+  type EventVoteDataParam = Parameters<
+      Contract<EthereumEverscaleEventConfigurationAbi>["methods"]["deployEvent"]
+      >[0]["eventVoteData"];
+
+  let eventVoteData: EventVoteDataParam;
+  let eventDataStructure: EncodeEthereumEverscaleEventDataParam;
   let eventContract: Contract<
-    FactorySource["TokenTransferEthereumEverscaleEvent"]
-  >;
+      FactorySource["TokenTransferEthereumEverscaleEvent"]
+      >;
 
   describe("Initialize event", async () => {
-    const eventDataStructure = {
+    eventDataStructure = {
       tokens: 100,
       wid: 0,
       owner_addr: 111,
@@ -148,10 +160,13 @@ describe("Test ethereum everscale event reject", async function () {
 
       const expectedEventContract =
         await ethereumEverscaleEventConfiguration.methods
-          .deriveEventAddress(eventVoteData)
+          .deriveEventAddress({
+            eventVoteData: eventVoteData,
+            answerId: 0,
+          })
           .call();
 
-      logger.log(`Expected event address: ${expectedEventContract}`);
+      logger.log(`Expected event address: ${expectedEventContract.eventContract}`);
 
       eventContract = await locklift.factory.getDeployedContract(
         "TokenTransferEthereumEverscaleEvent",
@@ -162,11 +177,14 @@ describe("Test ethereum everscale event reject", async function () {
 
   describe("Reject event", async () => {
     it("Reject event enough times", async () => {
-      const requiredVotes = await eventContract.methods.requiredVotes().call();
+      const requiredVotes = await eventContract.methods
+        .requiredVotes()
+        .call()
+        .then((t) => parseInt(t.requiredVotes, 10));
 
       const rejects = [];
       for (const [relayId, relay] of Object.entries(
-        relays.slice(0, parseInt(requiredVotes.requiredVotes, 10))
+        relays.slice(0, requiredVotes)
       )) {
         logger.log(`Reject #${relayId} from ${relay.publicKey}`);
 
@@ -190,11 +208,14 @@ describe("Test ethereum everscale event reject", async function () {
         .getDetails({ answerId: 0 })
         .call();
 
-      const requiredVotes = await eventContract.methods.requiredVotes().call();
+      const requiredVotes = await eventContract.methods
+        .requiredVotes()
+        .call()
+        .then((t) => parseInt(t.requiredVotes, 10));
 
-      expect(details.balance).to.be.equal(0, "Wrong balance");
+      expect(details.balance).to.be.equal("0", "Wrong balance");
 
-      expect(details._status).to.be.equal(3, "Wrong status");
+      expect(details._status).to.be.equal("3", "Wrong status");
 
       expect(details._confirms).to.have.lengthOf(
         0,
@@ -202,7 +223,7 @@ describe("Test ethereum everscale event reject", async function () {
       );
 
       expect(details._rejects).to.have.lengthOf(
-        parseInt(requiredVotes.requiredVotes, 10),
+        requiredVotes,
         "Wrong amount of relays confirmations"
       );
     });
