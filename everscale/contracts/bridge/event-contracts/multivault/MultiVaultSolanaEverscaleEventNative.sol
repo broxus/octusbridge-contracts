@@ -51,7 +51,7 @@ contract MultiVaultSolanaEverscaleEventNative is SolanaEverscaleBaseEvent, IMult
             recipient_addr
         ) = abi.decode(
             eventInitData.voteData.eventData,
-            (int8, uint256, uint64, int8, uint256)
+            (int8, uint256, uint128, int8, uint256)
         );
 
         token = address.makeAddrStd(token_wid, token_addr);

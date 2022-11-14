@@ -65,7 +65,7 @@ contract MultiVaultEverscaleSolanaEventNative is EverscaleSolanaBaseEvent, IMult
             recipient
         ) = abi.decode(
             eventInitData.voteData.eventData,
-            (address, address, address, address, uint64, uint256)
+            (address, address, address, address, uint128, uint256)
         );
 
         ITokenRoot(token).name{

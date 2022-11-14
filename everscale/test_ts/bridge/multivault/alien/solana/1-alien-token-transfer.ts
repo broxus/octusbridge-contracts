@@ -5,13 +5,18 @@ const {
   setupBridge,
   setupSolanaAlienMultiVault,
   MetricManager,
+  logContract,
   logger,
-  ...utils
 } = require("../../../../utils");
 
 import { expect } from "chai";
 import { Contract } from "locklift";
-import { FactorySource } from "../../../../../build/factorySource";
+import {
+  CellEncoderStandaloneAbi,
+  EthereumEverscaleEventConfigurationAbi,
+  FactorySource,
+  SolanaEverscaleEventConfigurationAbi,
+} from "../../../../../build/factorySource";
 import { Account } from "everscale-standalone-client/nodejs";
 const { zeroAddress } = require("locklift");
 
@@ -72,7 +77,7 @@ describe("Test Solana alien multivault pipeline", async function () {
     [solanaConfiguration, everscaleConfiguration, proxy, initializer] =
       await setupSolanaAlienMultiVault(bridgeOwner, staking, cellEncoder);
 
-    metricManager = new utils.MetricManager(
+    metricManager = new MetricManager(
       bridge,
       bridgeOwner,
       staking,
@@ -84,9 +89,16 @@ describe("Test Solana alien multivault pipeline", async function () {
   });
 
   describe("Transfer alien token from Solana to Everscale", async () => {
-    let eventDataStructure: any;
+    type EncodeMultiVaultAlienSolanaEverscaleParam = Parameters<
+      Contract<CellEncoderStandaloneAbi>["methods"]["encodeMultiVaultAlienSolanaEverscale"]
+    >[0];
+    type EventVoteDataParam = Parameters<
+      Contract<SolanaEverscaleEventConfigurationAbi>["methods"]["deployEvent"]
+    >[0]["eventVoteData"];
+
+    let eventVoteData: EventVoteDataParam;
+    let eventDataStructure: EncodeMultiVaultAlienSolanaEverscaleParam;
     let eventDataEncoded;
-    let eventVoteData: any;
     let eventContract: Contract<
       FactorySource["MultiVaultSolanaEverscaleEventAlien"]
     >;
@@ -104,7 +116,8 @@ describe("Test Solana alien multivault pipeline", async function () {
 
       eventDataEncoded = await cellEncoder.methods
         .encodeMultiVaultAlienSolanaEverscale(eventDataStructure)
-        .call();
+        .call()
+        .then((t) => t.value0);
 
       eventVoteData = {
         accountSeed: 111,
@@ -123,13 +136,18 @@ describe("Test Solana alien multivault pipeline", async function () {
           amount: locklift.utils.toNano(6),
         });
 
-      logger.log(`Event initialization tx: ${tx.id}`);
+      logger.log(`Event initialization tx: ${tx.id.hash}`);
 
       const expectedEventContract = await solanaConfiguration.methods
-        .deriveEventAddress(eventVoteData)
+        .deriveEventAddress({
+          eventVoteData: eventVoteData,
+          answerId: 0,
+        })
         .call();
 
-      logger.log(`Expected event address: ${expectedEventContract}`);
+      logger.log(
+        `Expected event address: ${expectedEventContract.eventContract}`
+      );
 
       eventContract = await locklift.factory.getDeployedContract(
         "MultiVaultSolanaEverscaleEventAlien",
@@ -141,7 +159,7 @@ describe("Test Solana alien multivault pipeline", async function () {
 
     it("Check event contract exists", async () => {
       expect(
-        await locklift.provider.getBalance(eventContract.address)
+        Number(await locklift.provider.getBalance(eventContract.address))
       ).to.be.greaterThan(0, "Event contract balance is zero");
     });
 
@@ -150,27 +168,26 @@ describe("Test Solana alien multivault pipeline", async function () {
         .getDetails({ answerId: 0 })
         .call();
 
-      expect(details._eventInitData.voteData.accountSeed).to.be.equal(
-        eventVoteData.accountSeed,
-        "Wrong accountSeed"
-      );
+      expect(
+        details._eventInitData.voteData.accountSeed.toString()
+      ).to.be.equal(eventVoteData.accountSeed.toString(), "Wrong accountSeed");
 
       expect(details._eventInitData.voteData.eventData).to.be.equal(
         eventVoteData.eventData,
         "Wrong event data"
       );
 
-      expect(details._eventInitData.configuration).to.be.equal(
-        solanaConfiguration.address,
+      expect(details._eventInitData.configuration.toString()).to.be.equal(
+        solanaConfiguration.address.toString(),
         "Wrong event configuration"
       );
 
-      expect(details._eventInitData.staking).to.be.equal(
-        staking.address,
+      expect(details._eventInitData.staking.toString()).to.be.equal(
+        staking.address.toString(),
         "Wrong staking"
       );
 
-      expect(details._status).to.be.equal(1, "Wrong status");
+      expect(details._status).to.be.equal("1", "Wrong status");
 
       expect(details._confirms).to.have.lengthOf(
         0,
@@ -182,8 +199,8 @@ describe("Test Solana alien multivault pipeline", async function () {
         "Wrong amount of relays rejects"
       );
 
-      expect(details._initializer).to.be.equal(
-        initializer.address,
+      expect(details._initializer.toString()).to.be.equal(
+        initializer.address.toString(),
         "Wrong initializer"
       );
     });
@@ -194,11 +211,11 @@ describe("Test Solana alien multivault pipeline", async function () {
         .call();
 
       expect(decodedData.proxy_).to.not.be.equal(
-        zeroAddress,
+        zeroAddress.toString(),
         "Event contract failed to fetch the proxy"
       );
       expect(decodedData.token_).to.not.be.equal(
-        zeroAddress,
+        zeroAddress.toString(),
         "Event contract failed to fetch the token"
       );
     });
@@ -227,21 +244,22 @@ describe("Test Solana alien multivault pipeline", async function () {
           decimals: eventDataStructure.decimals,
           answerId: 0,
         })
-        .call();
+        .call()
+        .then((t) => t.value0);
 
       alienTokenRoot = await locklift.factory.getDeployedContract(
         "TokenRootAlienSolanaEverscale",
-        tokenAddress.value0
+        tokenAddress
       );
 
-      await utils.logContract(alienTokenRoot);
+      await logContract("alienTokenRoot address", alienTokenRoot.address);
 
       metricManager.addContract(alienTokenRoot);
     });
 
     it("Check alien token root exists", async () => {
       expect(
-        await locklift.provider.getBalance(alienTokenRoot.address)
+        Number(await locklift.provider.getBalance(alienTokenRoot.address))
       ).to.be.greaterThan(0, "Alien token root balance is zero");
     });
 
@@ -258,7 +276,7 @@ describe("Test Solana alien multivault pipeline", async function () {
         })
         .call();
 
-      expect(requiredVotes.requiredVotes).to.be.greaterThan(
+      expect(requiredVotes).to.be.greaterThan(
         0,
         "Too low required votes for event"
       );
@@ -271,14 +289,14 @@ describe("Test Solana alien multivault pipeline", async function () {
     it("Check event round number", async () => {
       const roundNumber = await eventContract.methods.round_number({}).call();
 
-      expect(roundNumber.round_number).to.be.equal(0, "Wrong round number");
+      expect(roundNumber.round_number).to.be.equal("0", "Wrong round number");
     });
 
     it("Check alien token root meta", async () => {
       const meta = await alienTokenRoot.methods.meta({ answerId: 0 }).call();
 
       expect(meta.base_token).to.be.equal(
-        eventDataStructure.base_token,
+        eventDataStructure.base_token.toString(),
         "Wrong alien token base token"
       );
       expect(meta.name).to.be.equal(
@@ -290,7 +308,7 @@ describe("Test Solana alien multivault pipeline", async function () {
         "Wrong alien token symbol"
       );
       expect(meta.decimals).to.be.equal(
-        eventDataStructure.decimals,
+        eventDataStructure.decimals.toString(),
         "Wrong alien token decimals"
       );
     });
@@ -299,7 +317,8 @@ describe("Test Solana alien multivault pipeline", async function () {
       it("Confirm event enough times", async () => {
         const requiredVotes = await eventContract.methods
           .requiredVotes()
-          .call();
+          .call()
+          .then((t) => parseInt(t.requiredVotes, 10));
         const confirmations = [];
         for (const [relayId, relay] of Object.entries(
           relays.slice(0, requiredVotes)
@@ -328,9 +347,10 @@ describe("Test Solana alien multivault pipeline", async function () {
 
         const requiredVotes = await eventContract.methods
           .requiredVotes()
-          .call();
+          .call()
+          .then((t) => parseInt(t.requiredVotes, 10));
 
-        expect(details._status).to.be.equal(2, "Wrong status");
+        expect(details._status).to.be.equal("2", "Wrong status");
 
         expect(details._confirms).to.have.lengthOf(
           requiredVotes,
@@ -349,7 +369,7 @@ describe("Test Solana alien multivault pipeline", async function () {
           .call();
 
         expect(totalSupply.value0).to.be.equal(
-          eventDataStructure.amount,
+          eventDataStructure.amount.toString(),
           "Wrong total supply"
         );
       });
@@ -366,7 +386,7 @@ describe("Test Solana alien multivault pipeline", async function () {
           );
 
         expect(
-          await locklift.provider.getBalance(walletAddress.value0)
+          Number(await locklift.provider.getBalance(walletAddress.value0))
         ).to.be.greaterThan(0, "Initializer token wallet balance is zero");
       });
 
@@ -393,7 +413,7 @@ describe("Test Solana alien multivault pipeline", async function () {
 
     it("Burn tokens in favor of Alien Proxy", async () => {
       const burnPayload = await cellEncoder.methods
-        .encodeAlienBurnPayloadSolana({ recipient })
+        .encodeAlienBurnPayloadSolana({ recipient, executeAccounts: [] })
         .call();
 
       const tx = await initializerAlienTokenWallet.methods
@@ -408,7 +428,7 @@ describe("Test Solana alien multivault pipeline", async function () {
           amount: locklift.utils.toNano(10),
         });
 
-      logger.log(`Event initialization tx: ${tx.id}`);
+      logger.log(`Event initialization tx: ${tx.id.hash}`);
 
       const events = await everscaleConfiguration
         .getPastEvents({ filter: "NewEventContract" })
@@ -437,7 +457,7 @@ describe("Test Solana alien multivault pipeline", async function () {
 
     it("Check event contract exists", async () => {
       expect(
-        await locklift.provider.getBalance(eventContract.address)
+        Number(await locklift.provider.getBalance(eventContract.address))
       ).to.be.greaterThan(0, "Event contract balance is zero");
     });
 
@@ -446,7 +466,7 @@ describe("Test Solana alien multivault pipeline", async function () {
         .totalSupply({ answerId: 0 })
         .call();
 
-      expect(totalSupply.value0).to.be.equal(0, "Wrong total supply");
+      expect(totalSupply.value0).to.be.equal("0", "Wrong total supply");
     });
 
     it("Check initializer token wallet balance is zero", async () => {
@@ -455,7 +475,7 @@ describe("Test Solana alien multivault pipeline", async function () {
         .call();
 
       expect(balance.value0).to.be.equal(
-        0,
+        "0",
         "Initializer failed to burn tokens"
       );
     });
@@ -465,12 +485,12 @@ describe("Test Solana alien multivault pipeline", async function () {
         .getDetails({ answerId: 0 })
         .call();
 
-      expect(details._eventInitData.configuration).to.be.equal(
-        everscaleConfiguration.address,
+      expect(details._eventInitData.configuration.toString()).to.be.equal(
+        everscaleConfiguration.address.toString(),
         "Wrong event configuration"
       );
 
-      expect(details._status).to.be.equal(1, "Wrong status");
+      expect(details._status).to.be.equal("1", "Wrong status");
 
       expect(details._confirms).to.have.lengthOf(
         0,
@@ -479,8 +499,8 @@ describe("Test Solana alien multivault pipeline", async function () {
 
       expect(details._rejects).to.have.lengthOf(0, "Wrong amount of rejects");
 
-      expect(details._initializer).to.be.equal(
-        proxy.address,
+      expect(details._initializer.toString()).to.be.equal(
+        proxy.address.toString(),
         "Wrong initializer"
       );
     });
@@ -491,7 +511,7 @@ describe("Test Solana alien multivault pipeline", async function () {
         .call();
 
       expect(decodedData.base_token_).to.be.equal(
-        alienTokenBase.token,
+        alienTokenBase.token.toString(),
         "Wrong alien base token"
       );
 
@@ -506,15 +526,15 @@ describe("Test Solana alien multivault pipeline", async function () {
         .call();
 
       expect(decodedEventData.base_token).to.be.equal(
-        alienTokenBase.token,
+        alienTokenBase.token.toString(),
         "Wrong event data base token"
       );
       expect(decodedEventData.amount).to.be.equal(
-        amount,
+        amount.toString(),
         "Wrong event data amount"
       );
-      expect(decodedEventData.recipient).to.be.equal(
-        recipient,
+      expect(decodedEventData.recipient.toString()).to.be.equal(
+        recipient.toString(),
         "Wrong event data recipient"
       );
     });
@@ -546,7 +566,8 @@ describe("Test Solana alien multivault pipeline", async function () {
       it("Confirm event enough times", async () => {
         const requiredVotes = await eventContract.methods
           .requiredVotes()
-          .call();
+          .call()
+          .then((t) => parseInt(t.requiredVotes, 10));
         const confirmations = [];
         for (const [relayId, relay] of Object.entries(
           relays.slice(0, requiredVotes)
@@ -575,11 +596,12 @@ describe("Test Solana alien multivault pipeline", async function () {
 
         const requiredVotes = await eventContract.methods
           .requiredVotes()
-          .call();
+          .call()
+          .then((t) => parseInt(t.requiredVotes, 10));
 
-        expect(details.balance).to.be.greaterThan(0, "Wrong balance");
+        expect(Number(details.balance)).to.be.greaterThan(0, "Wrong balance");
 
-        expect(details._status).to.be.equal(2, "Wrong status");
+        expect(details._status).to.be.equal("2", "Wrong status");
 
         expect(details._confirms).to.have.lengthOf(
           requiredVotes,

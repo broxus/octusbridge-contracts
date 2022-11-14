@@ -49,6 +49,7 @@ describe("Test Solana event contract behaviour when Alien token is incorrect", a
       const burnPayload = await cellEncoder.methods
         .encodeAlienBurnPayloadSolana({
           recipient,
+          executeAccounts: [],
         })
         .call();
 
@@ -65,7 +66,7 @@ describe("Test Solana event contract behaviour when Alien token is incorrect", a
           amount: locklift.utils.toNano(10),
         });
 
-      logger.log(`Burn tx: ${tx.id}`);
+      logger.log(`Burn tx: ${tx.id.hash}`);
 
       const events = await everscaleConfiguration
         .getPastEvents({ filter: "NewEventContract" })
@@ -96,7 +97,7 @@ describe("Test Solana event contract behaviour when Alien token is incorrect", a
         .call();
 
       expect(details._status).to.be.equal(
-        3,
+        "3",
         "Event contract should be Rejected"
       );
       expect(details._requiredVotes).to.be.not.equal(

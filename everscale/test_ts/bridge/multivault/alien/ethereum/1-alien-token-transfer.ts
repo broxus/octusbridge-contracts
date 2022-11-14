@@ -12,7 +12,11 @@ const {
 
 import { expect } from "chai";
 import { Contract } from "locklift";
-import { FactorySource } from "../../../../../build/factorySource";
+import {
+  CellEncoderStandaloneAbi,
+  EthereumEverscaleEventConfigurationAbi,
+  FactorySource,
+} from "../../../../../build/factorySource";
 import { Account } from "everscale-standalone-client/nodejs";
 const { zeroAddress } = require("locklift");
 
@@ -74,7 +78,7 @@ describe("Test EVM alien multivault pipeline", async function () {
     [evmConfiguration, everscaleConfiguration, proxy, initializer] =
       await setupEthereumAlienMultiVault(bridgeOwner, staking, cellEncoder);
 
-    metricManager = new utils.MetricManager(
+    metricManager = new MetricManager(
       bridge,
       bridgeOwner,
       staking,
@@ -86,9 +90,16 @@ describe("Test EVM alien multivault pipeline", async function () {
   });
 
   describe("Transfer alien token from EVM to Everscale", async () => {
-    let eventDataStructure: any;
+    type EncodeMultiVaultAlienEVMEverscaleParam = Parameters<
+      Contract<CellEncoderStandaloneAbi>["methods"]["encodeMultiVaultAlienEVMEverscale"]
+    >[0];
+    type EventVoteDataParam = Parameters<
+      Contract<EthereumEverscaleEventConfigurationAbi>["methods"]["deployEvent"]
+    >[0]["eventVoteData"];
+
+    let eventVoteData: EventVoteDataParam;
+    let eventDataStructure: EncodeMultiVaultAlienEVMEverscaleParam;
     let eventDataEncoded;
-    let eventVoteData: any;
     let eventContract: Contract<
       FactorySource["MultiVaultEVMEverscaleEventAlien"]
     >;
@@ -107,7 +118,8 @@ describe("Test EVM alien multivault pipeline", async function () {
 
       eventDataEncoded = await cellEncoder.methods
         .encodeMultiVaultAlienEVMEverscale(eventDataStructure)
-        .call();
+        .call()
+        .then((t) => t.value0);
 
       eventVoteData = {
         eventTransaction: 111,
@@ -129,10 +141,15 @@ describe("Test EVM alien multivault pipeline", async function () {
       logger.log(`Event initialization tx: ${tx.id}`);
 
       const expectedEventContract = await evmConfiguration.methods
-        .deriveEventAddress(eventVoteData)
+        .deriveEventAddress({
+          eventVoteData: eventVoteData,
+          answerId: 0,
+        })
         .call();
 
-      logger.log(`Expected event address: ${expectedEventContract}`);
+      logger.log(
+        `Expected event address: ${expectedEventContract.eventContract}`
+      );
 
       eventContract = await locklift.factory.getDeployedContract(
         "MultiVaultEVMEverscaleEventAlien",
@@ -144,7 +161,7 @@ describe("Test EVM alien multivault pipeline", async function () {
 
     it("Check event contract exists", async () => {
       expect(
-        await locklift.provider.getBalance(eventContract.address)
+        Number(await locklift.provider.getBalance(eventContract.address))
       ).to.be.greaterThan(0, "Event contract balance is zero");
     });
 
@@ -153,13 +170,15 @@ describe("Test EVM alien multivault pipeline", async function () {
         .getDetails({ answerId: 0 })
         .call();
 
-      expect(details._eventInitData.voteData.eventTransaction).to.be.equal(
-        eventVoteData.eventTransaction,
+      expect(
+        details._eventInitData.voteData.eventTransaction.toString()
+      ).to.be.equal(
+        eventVoteData.eventTransaction.toString(),
         "Wrong event transaction"
       );
 
-      expect(details._eventInitData.voteData.eventIndex).to.be.equal(
-        eventVoteData.eventIndex,
+      expect(details._eventInitData.voteData.eventIndex.toString()).to.be.equal(
+        eventVoteData.eventIndex.toString(),
         "Wrong event index"
       );
 
@@ -168,27 +187,29 @@ describe("Test EVM alien multivault pipeline", async function () {
         "Wrong event data"
       );
 
-      expect(details._eventInitData.voteData.eventBlockNumber).to.be.equal(
-        eventVoteData.eventBlockNumber,
+      expect(
+        details._eventInitData.voteData.eventBlockNumber.toString()
+      ).to.be.equal(
+        eventVoteData.eventBlockNumber.toString(),
         "Wrong event block number"
       );
 
-      expect(details._eventInitData.voteData.eventBlock).to.be.equal(
-        eventVoteData.eventBlock,
+      expect(details._eventInitData.voteData.eventBlock.toString()).to.be.equal(
+        eventVoteData.eventBlock.toString(),
         "Wrong event block"
       );
 
-      expect(details._eventInitData.configuration).to.be.equal(
-        evmConfiguration.address,
+      expect(details._eventInitData.configuration.toString()).to.be.equal(
+        evmConfiguration.address.toString(),
         "Wrong event configuration"
       );
 
-      expect(details._eventInitData.staking).to.be.equal(
-        staking.address,
+      expect(details._eventInitData.staking.toString()).to.be.equal(
+        staking.address.toString(),
         "Wrong staking"
       );
 
-      expect(details._status).to.be.equal(1, "Wrong status");
+      expect(details._status).to.be.equal("1", "Wrong status");
 
       expect(details._confirms).to.have.lengthOf(
         0,
@@ -200,8 +221,8 @@ describe("Test EVM alien multivault pipeline", async function () {
         "Wrong amount of relays rejects"
       );
 
-      expect(details._initializer).to.be.equal(
-        initializer.address,
+      expect(details._initializer.toString()).to.be.equal(
+        initializer.address.toString(),
         "Wrong initializer"
       );
     });
@@ -212,11 +233,11 @@ describe("Test EVM alien multivault pipeline", async function () {
         .call();
 
       expect(decodedData.proxy_).to.not.be.equal(
-        zeroAddress,
+        zeroAddress.toString(),
         "Event contract failed to fetch the proxy"
       );
       expect(decodedData.token_).to.not.be.equal(
-        zeroAddress,
+        zeroAddress.toString(),
         "Event contract failed to fetch the token"
       );
     });
@@ -247,21 +268,22 @@ describe("Test EVM alien multivault pipeline", async function () {
           decimals: eventDataStructure.decimals,
           answerId: 0,
         })
-        .call();
+        .call()
+        .then((t) => t.value0);
 
       alienTokenRoot = await locklift.factory.getDeployedContract(
         "TokenRootAlienEVMEverscale",
-        tokenAddress.value0
+        tokenAddress
       );
 
-      await logContract(alienTokenRoot);
+      await logContract("alienTokenRoot address", alienTokenRoot.address);
 
       metricManager.addContract(alienTokenRoot);
     });
 
     it("Check alien token root exists", async () => {
       expect(
-        await locklift.provider.getBalance(alienTokenRoot.address)
+        Number(await locklift.provider.getBalance(alienTokenRoot.address))
       ).to.be.greaterThan(0, "Alien token root balance is zero");
     });
 
@@ -278,7 +300,7 @@ describe("Test EVM alien multivault pipeline", async function () {
         })
         .call();
 
-      expect(requiredVotes.requiredVotes).to.be.greaterThan(
+      expect(requiredVotes).to.be.greaterThan(
         0,
         "Too low required votes for event"
       );
@@ -301,11 +323,11 @@ describe("Test EVM alien multivault pipeline", async function () {
       const meta = await alienTokenRoot.methods.meta({ answerId: 0 }).call();
 
       expect(meta.base_chainId).to.be.equal(
-        eventDataStructure.base_chainId,
+        eventDataStructure.base_chainId.toString(),
         "Wrong alien token base chain id"
       );
       expect(meta.base_token).to.be.equal(
-        eventDataStructure.base_token,
+        eventDataStructure.base_token.toString(),
         "Wrong alien token base token"
       );
       expect(meta.name).to.be.equal(
@@ -317,7 +339,7 @@ describe("Test EVM alien multivault pipeline", async function () {
         "Wrong alien token symbol"
       );
       expect(meta.decimals).to.be.equal(
-        eventDataStructure.decimals,
+        eventDataStructure.decimals.toString(),
         "Wrong alien token decimals"
       );
     });
@@ -326,7 +348,8 @@ describe("Test EVM alien multivault pipeline", async function () {
       it("Confirm event enough times", async () => {
         const requiredVotes = await eventContract.methods
           .requiredVotes()
-          .call();
+          .call()
+          .then((t) => parseInt(t.requiredVotes, 10));
         const confirmations = [];
         for (const [relayId, relay] of Object.entries(
           relays.slice(0, requiredVotes)
@@ -355,9 +378,10 @@ describe("Test EVM alien multivault pipeline", async function () {
 
         const requiredVotes = await eventContract.methods
           .requiredVotes()
-          .call();
+          .call()
+          .then((t) => parseInt(t.requiredVotes, 10));
 
-        expect(details._status).to.be.equal(2, "Wrong status");
+        expect(details._status).to.be.equal("2", "Wrong status");
 
         expect(details._confirms).to.have.lengthOf(
           requiredVotes,
@@ -393,7 +417,7 @@ describe("Test EVM alien multivault pipeline", async function () {
           );
 
         expect(
-          await locklift.provider.getBalance(walletAddress.value0)
+          Number(await locklift.provider.getBalance(walletAddress.value0))
         ).to.be.greaterThan(0, "Initializer token wallet balance is zero");
       });
 
@@ -464,7 +488,7 @@ describe("Test EVM alien multivault pipeline", async function () {
 
     it("Check event contract exists", async () => {
       expect(
-        await locklift.provider.getBalance(eventContract.address)
+        Number(await locklift.provider.getBalance(eventContract.address))
       ).to.be.greaterThan(0, "Event contract balance is zero");
     });
 
@@ -473,7 +497,7 @@ describe("Test EVM alien multivault pipeline", async function () {
         .totalSupply({ answerId: 0 })
         .call();
 
-      expect(totalSupply.value0).to.be.equal(0, "Wrong total supply");
+      expect(totalSupply.value0).to.be.equal("0", "Wrong total supply");
     });
 
     it("Check initializer token wallet balance is zero", async () => {
@@ -482,7 +506,7 @@ describe("Test EVM alien multivault pipeline", async function () {
         .call();
 
       expect(balance.value0).to.be.equal(
-        0,
+        "0",
         "Initializer failed to burn tokens"
       );
     });
@@ -492,12 +516,12 @@ describe("Test EVM alien multivault pipeline", async function () {
         .getDetails({ answerId: 0 })
         .call();
 
-      expect(details._eventInitData.configuration).to.be.equal(
-        everscaleConfiguration.address,
+      expect(details._eventInitData.configuration.toString()).to.be.equal(
+        everscaleConfiguration.address.toString(),
         "Wrong event configuration"
       );
 
-      expect(details._status).to.be.equal(1, "Wrong status");
+      expect(details._status).to.be.equal("1", "Wrong status");
 
       expect(details._confirms).to.have.lengthOf(
         0,
@@ -511,8 +535,8 @@ describe("Test EVM alien multivault pipeline", async function () {
 
       expect(details._rejects).to.have.lengthOf(0, "Wrong amount of rejects");
 
-      expect(details._initializer).to.be.equal(
-        proxy.address,
+      expect(details._initializer.toString()).to.be.equal(
+        proxy.address.toString(),
         "Wrong initializer"
       );
     });
@@ -523,11 +547,11 @@ describe("Test EVM alien multivault pipeline", async function () {
         .call();
 
       expect(decodedData.base_chainId_).to.be.equal(
-        alienTokenBase.chainId,
+        alienTokenBase.chainId.toString(),
         "Wrong alien base chain ID"
       );
       expect(decodedData.base_token_).to.be.equal(
-        alienTokenBase.token,
+        alienTokenBase.token.toString(),
         "Wrong alien base token"
       );
 
@@ -542,19 +566,19 @@ describe("Test EVM alien multivault pipeline", async function () {
         .call();
 
       expect(decodedEventData.base_token).to.be.equal(
-        alienTokenBase.token,
+        alienTokenBase.token.toString(),
         "Wrong event data base token"
       );
       expect(decodedEventData.base_chainId).to.be.equal(
-        alienTokenBase.chainId,
+        alienTokenBase.chainId.toString(),
         "Wrong event data base chain id"
       );
-      expect(decodedEventData.amount).to.be.equal(
-        amount,
+      expect(decodedEventData.amount.toString()).to.be.equal(
+        amount.toString(),
         "Wrong event data amount"
       );
-      expect(decodedEventData.recipient).to.be.equal(
-        recipient,
+      expect(decodedEventData.recipient.toString()).to.be.equal(
+        recipient.toString(),
         "Wrong event data recipient"
       );
     });
@@ -586,7 +610,8 @@ describe("Test EVM alien multivault pipeline", async function () {
       it("Confirm event enough times", async () => {
         const requiredVotes = await eventContract.methods
           .requiredVotes()
-          .call();
+          .call()
+          .then((t) => parseInt(t.requiredVotes, 10));
 
         const confirmations = [];
         for (const [relayId, relay] of Object.entries(
@@ -618,11 +643,12 @@ describe("Test EVM alien multivault pipeline", async function () {
 
         const requiredVotes = await eventContract.methods
           .requiredVotes()
-          .call();
+          .call()
+          .then((t) => parseInt(t.requiredVotes, 10));
 
-        expect(details.balance).to.be.greaterThan(0, "Wrong balance");
+        expect(Number(details.balance)).to.be.greaterThan(0, "Wrong balance");
 
-        expect(details._status).to.be.equal(2, "Wrong status");
+        expect(details._status).to.be.equal("2", "Wrong status");
 
         expect(details._confirms).to.have.lengthOf(
           requiredVotes,

@@ -1,5 +1,7 @@
 pragma ton-solidity >= 0.39.0;
 
+import "./../../bridge/interfaces/event-contracts/IEverscaleSolanaEvent.sol";
+
 
 contract ProxyMultiVaultCellEncoder {
     function encodeMultiVaultAlienEVMEverscale(
@@ -93,9 +95,10 @@ contract ProxyMultiVaultCellEncoder {
     }
 
     function encodeAlienBurnPayloadSolana(
-        uint256 recipient
+        uint256 recipient,
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
     ) external pure returns(TvmCell) {
-        return abi.encode(recipient);
+        return abi.encode(recipient, executeAccounts);
     }
 
     function encodeNativeTransferPayloadSolana(

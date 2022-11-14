@@ -110,7 +110,8 @@
 		{
 			"name": "encodeAlienBurnPayloadSolana",
 			"inputs": [
-				{"name":"recipient","type":"uint256"}
+				{"name":"recipient","type":"uint256"},
+				{"components":[{"name":"account","type":"uint256"},{"name":"readOnly","type":"bool"},{"name":"isSigner","type":"bool"}],"name":"executeAccounts","type":"tuple[]"}
 			],
 			"outputs": [
 				{"name":"value0","type":"cell"}

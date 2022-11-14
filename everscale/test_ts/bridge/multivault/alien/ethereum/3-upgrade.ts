@@ -38,8 +38,8 @@ describe("Test Alien proxy upgrade", async function () {
   });
 
   it("Check initial api version", async () => {
-    expect(await proxy.methods.apiVersion({ answerId: 0 }).call()).to.be.equal(
-      1,
+    expect(await proxy.methods.apiVersion({ answerId: 0 }).call().then(t => t.value0)).to.be.equal(
+      "1",
       "Wrong api version"
     );
   });
@@ -70,12 +70,12 @@ describe("Test Alien proxy upgrade", async function () {
       .call()
       .then((c) => c.value0);
 
-    expect(configuration.everscaleConfiguration).to.be.equal(
-      _configuration.everscaleConfiguration,
+    expect(configuration.everscaleConfiguration.toString()).to.be.equal(
+      _configuration.everscaleConfiguration.toString(),
       "Wrong everscale configuration"
     );
-    expect(configuration.evmConfigurations).to.be.eql(
-      _configuration.evmConfigurations,
+    expect(configuration.evmConfigurations.toString()).to.be.eql(
+      _configuration.evmConfigurations.toString(),
       "Wrong evm configurations"
     );
     expect(configuration.deployWalletValue).to.be.equal(
@@ -98,8 +98,8 @@ describe("Test Alien proxy upgrade", async function () {
   });
 
   it("Check api version after upgrade", async () => {
-    expect(await proxy.methods.apiVersion({ answerId: 0 }).call()).to.be.equal(
-      2,
+    expect(await proxy.methods.apiVersion({ answerId: 0 }).call().then(t => t.value0)).to.be.equal(
+      "2",
       "Wrong api version"
     );
   });
