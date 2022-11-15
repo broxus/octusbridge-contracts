@@ -38,9 +38,9 @@ describe("Test Solana Native proxy upgrade", async function () {
   });
 
   it("Check initial api version", async () => {
-    expect(await proxy.methods.apiVersion({ answerId: 0 }).call()).to.be.equal(
-      1,
-      "Wrong api version"
+    expect(await proxy.methods.apiVersion({ answerId: 0 }).call().then(t => t.value0)).to.be.equal(
+        "1",
+        "Wrong api version"
     );
   });
 
@@ -70,24 +70,24 @@ describe("Test Solana Native proxy upgrade", async function () {
       .call()
       .then((c) => c.value0);
 
-    expect(configuration.everscaleConfiguration).to.be.equal(
-      _configuration.everscaleConfiguration,
+    expect(configuration.everscaleConfiguration.toString()).to.be.equal(
+      _configuration.everscaleConfiguration.toString(),
       "Wrong everscale configuration"
     );
-    expect(configuration.solanaConfiguration).to.be.eql(
-      _configuration.solanaConfiguration,
+    expect(configuration.solanaConfiguration.toString()).to.be.eql(
+      _configuration.solanaConfiguration.toString(),
       "Wrong solana configuration"
     );
-    expect(configuration.deployWalletValue).to.be.equal(
-      _configuration.deployWalletValue,
+    expect(configuration.deployWalletValue.toString()).to.be.equal(
+      _configuration.deployWalletValue.toString(),
       "Wrong deploy wallet value"
     );
   });
 
   it("Check api version after upgrade", async () => {
-    expect(await proxy.methods.apiVersion({ answerId: 0 }).call()).to.be.equal(
-      2,
-      "Wrong api version"
+    expect(await proxy.methods.apiVersion({ answerId: 0 }).call().then(t => t.value0)).to.be.equal(
+        "2",
+        "Wrong api version"
     );
   });
 });

@@ -102,9 +102,10 @@ contract ProxyMultiVaultCellEncoder {
     }
 
     function encodeNativeTransferPayloadSolana(
-        uint256 recipient
+        uint256 recipient,
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
     ) external pure returns (TvmCell) {
-        return abi.encode(recipient);
+        return abi.encode(recipient, executeAccounts);
     }
 
     function decodeMultiVaultAlienEverscaleSolana(

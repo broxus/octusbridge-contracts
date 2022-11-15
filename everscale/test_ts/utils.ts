@@ -1124,7 +1124,7 @@ const setupEthereumNativeMultiVault = async (
   const initializer = await locklift.factory.accounts.addNewAccount({
     type: WalletTypes.WalletV3, // or WalletTypes.HighLoadWallet,
     //Value which will send to the new account from a giver
-    value: locklift.utils.toNano(10),
+    value: locklift.utils.toNano(30),
     //owner publicKey
     publicKey: signer.publicKey,
   });
@@ -1167,7 +1167,7 @@ const setupEthereumNativeMultiVault = async (
         },
         networkConfiguration: {
           chainId: 1,
-          eventEmitter: new BigNumber(0),
+          eventEmitter: 0,
           eventBlocksToConfirm: 1,
           proxy: proxy.address,
           startBlockNumber: 0,
@@ -1204,7 +1204,7 @@ const setupEthereumNativeMultiVault = async (
         },
         networkConfiguration: {
           eventEmitter: proxy.address,
-          proxy: new BigNumber(0),
+          proxy: 0,
           startTimestamp: 0,
           endTimestamp: 0,
         },
@@ -1464,7 +1464,7 @@ const setupSolanaNativeMultiVault = async (
   const initializer = await locklift.factory.accounts.addNewAccount({
     type: WalletTypes.WalletV3, // or WalletTypes.HighLoadWallet,
     //Value which will send to the new account from a giver
-    value: locklift.utils.toNano(10),
+    value: locklift.utils.toNano(30),
     //owner publicKey
     publicKey: signer.publicKey,
   });
@@ -1490,32 +1490,65 @@ const setupSolanaNativeMultiVault = async (
   const SolanaEvent = await locklift.factory.getContractArtifacts(
     "MultiVaultSolanaEverscaleEventNative"
   );
+  const solanaEverscaleEventConfigurationData =
+    await locklift.factory.getContractArtifacts(
+      "SolanaEverscaleEventConfiguration"
+    );
 
-  const { contract: solanaEventConfiguration } =
-    await locklift.factory.deployContract({
-      contract: "SolanaEverscaleEventConfiguration",
-      constructorParams: {
-        _owner: owner.address,
-        _meta: "",
-      },
-      initParams: {
-        basicConfiguration: {
-          eventABI: "",
-          eventInitialBalance: locklift.utils.toNano("2"),
-          staking: staking.address,
-          eventCode: SolanaEvent.code,
-        },
-        networkConfiguration: {
-          program: new BigNumber(0),
-          settings: new BigNumber(0),
-          proxy: proxy.address,
-          startTimestamp: 0,
-          endTimestamp: 0,
-        },
-      },
-      publicKey: signer.publicKey,
-      value: locklift.utils.toNano(1),
+  const { contract: factory } = await locklift.factory.deployContract({
+    contract: "SolanaEverscaleEventConfigurationFactory",
+    constructorParams: {
+      _configurationCode: solanaEverscaleEventConfigurationData.code,
+    },
+    initParams: {
+      _randomNonce: locklift.utils.getRandomNonce(),
+    },
+    publicKey: signer.publicKey,
+    value: locklift.utils.toNano(1),
+  });
+
+  await logContract(
+    "SolanaEverscaleEventConfigurationFactory address",
+    factory.address
+  );
+
+  const basicConfiguration = {
+    eventABI: "",
+    eventInitialBalance: locklift.utils.toNano("2"),
+    staking: staking.address,
+    eventCode: SolanaEvent.code,
+  };
+
+  const networkConfiguration = {
+    program: 0,
+    settings: 0,
+    proxy: proxy.address,
+    startTimestamp: 0,
+    endTimestamp: 0,
+  };
+
+  await factory.methods
+    .deploy({
+      _owner: owner.address,
+      basicConfiguration,
+      networkConfiguration,
+    })
+    .send({
+      from: owner.address,
+      amount: locklift.utils.toNano(0.5),
     });
+
+  let solanaEverscaleEventConfigurationAddress = await factory.methods
+    .deriveConfigurationAddress({
+      basicConfiguration,
+      networkConfiguration,
+    })
+    .call();
+
+  const solanaEventConfiguration = locklift.factory.getDeployedContract(
+    "SolanaEverscaleEventConfiguration",
+    solanaEverscaleEventConfigurationAddress.value0
+  );
 
   await logContract(
     "solanaEventConfiguration address",
@@ -1527,34 +1560,69 @@ const setupSolanaNativeMultiVault = async (
     "MultiVaultEverscaleSolanaEventNative"
   );
 
-  const { contract: everscaleSolanaEventConfiguration } =
-    await locklift.factory.deployContract({
-      contract: "EverscaleSolanaEventConfiguration",
-      constructorParams: {
-        _owner: owner.address,
-        _meta: "",
-      },
-      initParams: {
-        basicConfiguration: {
-          eventABI: "",
-          eventInitialBalance: locklift.utils.toNano("2"),
-          staking: staking.address,
-          eventCode: EverscaleEvent.code,
-        },
-        networkConfiguration: {
-          program: new BigNumber(0),
-          settings: new BigNumber(0),
-          eventEmitter: proxy.address,
-          instruction: 0,
-          executeInstruction: 0,
-          executeNeeded: false,
-          startTimestamp: 0,
-          endTimestamp: 0,
-        },
-      },
-      publicKey: signer.publicKey,
-      value: locklift.utils.toNano(1),
+  const everscaleSolanaEventConfigurationData =
+    await locklift.factory.getContractArtifacts(
+      "EverscaleSolanaEventConfiguration"
+    );
+
+  const { contract: everFactory } = await locklift.factory.deployContract({
+    contract: "EverscaleSolanaEventConfigurationFactory",
+    constructorParams: {
+      _configurationCode: everscaleSolanaEventConfigurationData.code,
+    },
+    initParams: {
+      _randomNonce: locklift.utils.getRandomNonce(),
+    },
+    publicKey: signer.publicKey,
+    value: locklift.utils.toNano(1),
+  });
+
+  await logContract(
+    "EverscaleSolanaEventConfigurationFactory address",
+    everFactory.address
+  );
+
+  const everBasicConfiguration = {
+    eventABI: "",
+    eventInitialBalance: locklift.utils.toNano("2"),
+    staking: staking.address,
+    eventCode: EverscaleEvent.code,
+  };
+
+  const everNetworkConfiguration = {
+    program: 0,
+    settings: 0,
+    eventEmitter: proxy.address,
+    instruction: 0,
+    executeInstruction: 0,
+    executeNeeded: false,
+    startTimestamp: 0,
+    endTimestamp: 0,
+  };
+
+  await everFactory.methods
+    .deploy({
+      _owner: owner.address,
+      basicConfiguration: everBasicConfiguration,
+      networkConfiguration: everNetworkConfiguration,
+    })
+    .send({
+      from: owner.address,
+      amount: locklift.utils.toNano(0.5),
     });
+
+  let everscaleSolanaEventConfigurationAddress = await everFactory.methods
+    .deriveConfigurationAddress({
+      basicConfiguration: everBasicConfiguration,
+      networkConfiguration: everNetworkConfiguration,
+    })
+    .call();
+
+  const everscaleSolanaEventConfiguration =
+    locklift.factory.getDeployedContract(
+      "EverscaleSolanaEventConfiguration",
+      everscaleSolanaEventConfigurationAddress.value0
+    );
 
   await logContract(
     "everscaleSolanaEventConfiguration address",
