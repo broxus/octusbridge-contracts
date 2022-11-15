@@ -11,8 +11,6 @@ let cellEncoder: Contract<FactorySource["CellEncoderStandalone"]>;
 let staking: Contract<FactorySource["StakingMockup"]>;
 let bridgeOwner: Account;
 
-const BigNumber = require("bignumber.js");
-
 describe("Test configuration factory", async function () {
   this.timeout(10000000);
 
@@ -35,7 +33,7 @@ describe("Test configuration factory", async function () {
 
       const _randomNonce = locklift.utils.getRandomNonce();
 
-      const { contract: factory } = await locklift.factory.deployContract({
+      const { contract: factory_ } = await locklift.factory.deployContract({
         contract: "EthereumEverscaleEventConfigurationFactory",
         constructorParams: {
           _configurationCode: Configuration.code,
@@ -47,7 +45,9 @@ describe("Test configuration factory", async function () {
         value: locklift.utils.toNano(1),
       });
 
-      await logContract("factory address", factory.address);
+      await logContract("factory address", factory_.address);
+
+      factory = factory_;
     });
 
     let configuration: Contract<
@@ -68,7 +68,7 @@ describe("Test configuration factory", async function () {
 
       const networkConfiguration = {
         chainId: 12,
-        eventEmitter: new BigNumber(0),
+        eventEmitter: 0,
         eventBlocksToConfirm: 1,
         proxy: zeroAddress,
         startBlockNumber: 0,
@@ -106,12 +106,12 @@ describe("Test configuration factory", async function () {
         .getDetails({ answerId: 0 })
         .call();
 
-      expect(details._basicConfiguration.staking).to.be.equal(
-        staking.address,
+      expect(details._basicConfiguration.staking.toString()).to.be.equal(
+        staking.address.toString(),
         "Wrong staking"
       );
-      expect(details._networkConfiguration.chainId).to.be.equal(
-        12,
+      expect(details._networkConfiguration.chainId.toString()).to.be.equal(
+        "12",
         "Wrong chain ID"
       );
     });
@@ -130,7 +130,7 @@ describe("Test configuration factory", async function () {
 
       const _randomNonce = locklift.utils.getRandomNonce();
 
-      const { contract: factory } = await locklift.factory.deployContract({
+      const { contract: factory_ } = await locklift.factory.deployContract({
         contract: "SolanaEverscaleEventConfigurationFactory",
         constructorParams: {
           _configurationCode: Configuration.code,
@@ -142,7 +142,9 @@ describe("Test configuration factory", async function () {
         value: locklift.utils.toNano(1),
       });
 
-      await logContract("factory address", factory.address);
+      await logContract("factory address", factory_.address);
+
+      factory = factory_;
     });
 
     let configuration: Contract<
@@ -162,8 +164,8 @@ describe("Test configuration factory", async function () {
       };
 
       const networkConfiguration = {
-        program: new BigNumber(0),
-        settings: new BigNumber(0),
+        program: 0,
+        settings: 0,
         proxy: zeroAddress,
         startTimestamp: 0,
         endTimestamp: 0,
@@ -200,8 +202,8 @@ describe("Test configuration factory", async function () {
         .getDetails({ answerId: 0 })
         .call();
 
-      expect(details._basicConfiguration.staking).to.be.equal(
-        staking.address,
+      expect(details._basicConfiguration.staking.toString()).to.be.equal(
+        staking.address.toString(),
         "Wrong staking"
       );
     });
@@ -220,7 +222,7 @@ describe("Test configuration factory", async function () {
 
       const _randomNonce = locklift.utils.getRandomNonce();
 
-      const { contract: factory } = await locklift.factory.deployContract({
+      const { contract: factory_ } = await locklift.factory.deployContract({
         contract: "EverscaleSolanaEventConfigurationFactory",
         constructorParams: {
           _configurationCode: Configuration.code,
@@ -232,7 +234,9 @@ describe("Test configuration factory", async function () {
         value: locklift.utils.toNano(1),
       });
 
-      await logContract("factory address", factory.address);
+      await logContract("factory address", factory_.address);
+
+      factory = factory_;
     });
 
     let configuration: Contract<
@@ -252,8 +256,8 @@ describe("Test configuration factory", async function () {
       };
 
       const networkConfiguration = {
-        program: new BigNumber(0),
-        settings: new BigNumber(0),
+        program: 0,
+        settings: 0,
         eventEmitter: zeroAddress,
         instruction: 0,
         executeInstruction: 0,
@@ -293,8 +297,8 @@ describe("Test configuration factory", async function () {
         .getDetails({ answerId: 0 })
         .call();
 
-      expect(details._basicConfiguration.staking).to.be.equal(
-        staking.address,
+      expect(details._basicConfiguration.staking.toString()).to.be.equal(
+        staking.address.toString(),
         "Wrong staking"
       );
     });

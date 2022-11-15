@@ -898,14 +898,14 @@ const setupEverscaleSolanaEventConfiguration = async (
   };
 
   const everNetworkConfiguration = {
-    program: new BigNumber(0).toFixed(),
-    settings: new BigNumber(0).toFixed(),
+    program: 0,
+    settings: 0,
     eventEmitter: proxyFutureAddress,
     instruction: 0,
     executeInstruction: 0,
     executeNeeded: false,
     startTimestamp: 0,
-    endTimestamp: 1672365744,
+    endTimestamp: 0,
   };
 
   await everFactory.methods

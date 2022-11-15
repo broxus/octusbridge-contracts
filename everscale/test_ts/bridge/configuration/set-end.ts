@@ -30,7 +30,8 @@ describe("Test setting configuration end", async function () {
     let ethereumEverscaleEventConfiguration: Contract<
       FactorySource["EthereumEverscaleEventConfiguration"]
     >;
-    let proxy;
+
+    let proxy: Contract<FactorySource["ProxyTokenTransfer"]>;
 
     it("Setup Ethereum Everscale event configuration", async () => {
       [ethereumEverscaleEventConfiguration, proxy] =
@@ -53,17 +54,19 @@ describe("Test setting configuration end", async function () {
     });
 
     it("Check Ethereum Everscale configuration end block", async () => {
-      expect(await bridge.methods.active().call()).to.be.equal(
-        false,
-        "Wrong active status"
-      );
+      expect(
+        await bridge.methods
+          .active()
+          .call()
+          .then((t) => t.active)
+      ).to.be.equal(true, "Wrong active status");
 
       const details = await ethereumEverscaleEventConfiguration.methods
         .getDetails({ answerId: 0 })
         .call();
 
       expect(details._networkConfiguration.endBlockNumber).to.be.equal(
-        1,
+        "1",
         "Wrong end block number"
       );
     });
@@ -102,7 +105,7 @@ describe("Test setting configuration end", async function () {
         .call();
 
       expect(details._networkConfiguration.endTimestamp).to.be.equal(
-        1,
+        "1",
         "Wrong end timestamps"
       );
     });
@@ -138,7 +141,7 @@ describe("Test setting configuration end", async function () {
         .call();
 
       expect(details._networkConfiguration.endTimestamp).to.be.equal(
-        1,
+        "1",
         "Wrong end timestamp"
       );
     });
@@ -173,7 +176,7 @@ describe("Test setting configuration end", async function () {
         .call();
 
       expect(details._networkConfiguration.endTimestamp).to.be.equal(
-        1,
+        "1",
         "Wrong end timestamps"
       );
     });

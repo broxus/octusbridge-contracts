@@ -59,7 +59,7 @@ describe("Test setting configuration meta", async function () {
         .getDetails({ answerId: 0 })
         .call();
 
-      expect(details._meta).to.be.equal(emptyCell, "Wrong meta");
+      expect(details._meta.toString()).to.be.equal(emptyCell, "Wrong meta");
     });
   });
 
@@ -93,7 +93,7 @@ describe("Test setting configuration meta", async function () {
         .getDetails({ answerId: 0 })
         .call();
 
-      expect(details._meta).to.be.equal(emptyCell, "Wrong meta");
+      expect(details._meta.toString()).to.be.equal(emptyCell, "Wrong meta");
     });
   });
 
@@ -124,7 +124,7 @@ describe("Test setting configuration meta", async function () {
         .getDetails({ answerId: 0 })
         .call();
 
-      expect(details._meta).to.be.equal(emptyCell, "Wrong meta");
+      expect(details._meta.toString()).to.be.equal(emptyCell, "Wrong meta");
     });
   });
 
@@ -154,7 +154,7 @@ describe("Test setting configuration meta", async function () {
         .getDetails({ answerId: 0 })
         .call();
 
-      expect(details._meta).to.be.equal(emptyCell, "Wrong meta");
+      expect(details._meta.toString()).to.be.equal(emptyCell, "Wrong meta");
     });
   });
 });
