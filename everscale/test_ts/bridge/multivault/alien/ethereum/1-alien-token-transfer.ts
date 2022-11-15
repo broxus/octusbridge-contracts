@@ -7,7 +7,6 @@ const {
   logContract,
   MetricManager,
   logger,
-  ...utils
 } = require("../../../../utils");
 
 import { expect } from "chai";

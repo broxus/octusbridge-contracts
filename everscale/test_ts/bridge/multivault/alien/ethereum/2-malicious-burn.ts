@@ -5,6 +5,7 @@ const {
   setupRelays,
   setupBridge,
   setupEthereumAlienMultiVault,
+  sleep,
 } = require("../../../../utils");
 
 import { Contract } from "locklift";
@@ -47,9 +48,7 @@ describe("Test event contract behaviour when Alien token is incorrect", async fu
 
     it("Call burn callback on proxy", async () => {
       const burnPayload = await cellEncoder.methods
-        .encodeAlienBurnPayloadEthereum({
-          recipient,
-        })
+        .encodeAlienBurnPayloadEthereum({ recipient })
         .call();
 
       const tx = await proxy.methods
@@ -65,7 +64,7 @@ describe("Test event contract behaviour when Alien token is incorrect", async fu
           amount: locklift.utils.toNano(10),
         });
 
-      logger.log(`Burn tx: ${tx.id}`);
+      logger.log(`Burn tx: ${tx.id.hash}`);
 
       const events = await everscaleConfiguration
         .getPastEvents({ filter: "NewEventContract" })
@@ -96,7 +95,7 @@ describe("Test event contract behaviour when Alien token is incorrect", async fu
         .call();
 
       expect(details._status).to.be.equal(
-        "3",
+        "0",
         "Event contract should be Rejected"
       );
       expect(details._requiredVotes).to.be.not.equal(

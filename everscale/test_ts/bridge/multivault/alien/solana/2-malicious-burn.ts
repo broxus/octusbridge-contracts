@@ -97,7 +97,7 @@ describe("Test Solana event contract behaviour when Alien token is incorrect", a
         .call();
 
       expect(details._status).to.be.equal(
-        "3",
+        "0",
         "Event contract should be Rejected"
       );
       expect(details._requiredVotes).to.be.not.equal(

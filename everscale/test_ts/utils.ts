@@ -985,7 +985,7 @@ const setupEthereumAlienMultiVault = async (
   const initializer = await locklift.factory.accounts.addNewAccount({
     type: WalletTypes.WalletV3, // or WalletTypes.HighLoadWallet,
     //Value which will send to the new account from a giver
-    value: locklift.utils.toNano(20),
+    value: locklift.utils.toNano(30),
     //owner publicKey
     publicKey: signer.publicKey,
   });
@@ -1977,4 +1977,5 @@ module.exports = {
   mintTokens,
   deployAccount,
   logger,
+  sleep,
 };
