@@ -5,7 +5,6 @@ import { Address, Contract } from "locklift";
 import { Account } from "everscale-standalone-client/nodejs";
 const BigNumber = require("bignumber.js");
 const {
-  expect,
   deployAccount,
   deployTokenWallets,
   deployTokenRoot,
@@ -13,9 +12,10 @@ const {
   logger,
   mintTokens,
   stringToBytesArray,
-  getRandomNonce,
-  wait,
+  sleep,
 } = require("../utils");
+
+import { expect } from "chai";
 
 const ProposalState = [
   "Pending",
@@ -92,17 +92,15 @@ describe("Test DAO in Staking", async function () {
     stakingOwner = await deployAccount(signer, 500);
     logger.log(`Deploying stakingToken`);
     stakingToken = await deployTokenRoot("Staking", "ST", stakingOwner);
-
-    const Platform = await locklift.factory.getContractArtifacts("Platform");
-
     logger.log(`Deploying DaoRoot`);
 
+    const Platform = await locklift.factory.getContractArtifacts("Platform");
     const Proposal = await locklift.factory.getContractArtifacts("Proposal");
 
     logger.log(
       `Configuration: ${JSON.stringify(proposalConfiguration, null, 4)}`
     );
-    const { contract: daoRoot } = await locklift.factory.deployContract({
+    const { contract: daoRoot_ } = await locklift.factory.deployContract({
       contract: "DaoRoot",
       constructorParams: {
         platformCode_: Platform.code,
@@ -110,12 +108,13 @@ describe("Test DAO in Staking", async function () {
         admin_: stakingOwner.address,
       },
       initParams: {
-        _nonce: getRandomNonce(),
+        _nonce: locklift.utils.getRandomNonce(),
       },
       publicKey: signer.publicKey,
       value: locklift.utils.toNano(10),
     });
-    logger.log(`DaoRoot address: ${daoRoot.address}`);
+    logger.log(`DaoRoot address: ${daoRoot_.address}`);
+    daoRoot = daoRoot_;
     logger.log(`Installing Proposal code`);
     await locklift.transactions.waitFinalized(
       daoRoot.methods
@@ -157,7 +156,7 @@ describe("Test DAO in Staking", async function () {
         contract: "StakingRootDeployer",
         constructorParams: {},
         initParams: {
-          nonce: getRandomNonce(),
+          nonce: locklift.utils.getRandomNonce(),
           stakingCode: stakingRootData.code,
         },
         publicKey: signer.publicKey,
@@ -182,7 +181,7 @@ describe("Test DAO in Staking", async function () {
         _bridge_event_config_eth_ton: new Address(bridge),
         _bridge_event_config_ton_eth: new Address(bridge),
         _bridge_event_config_ton_sol: new Address(bridge),
-        _deploy_nonce: getRandomNonce(),
+        _deploy_nonce: locklift.utils.getRandomNonce(),
       })
       .sendExternal({
         publicKey: signer.publicKey,
@@ -300,10 +299,12 @@ describe("Test DAO in Staking", async function () {
       logger.log(`UserAccount0: ${userAccount0.address}`);
       logger.log(`UserAccount1: ${userAccount1.address}`);
 
+      logger.log(`Deploy Token Wallets`);
       [userTokenWallet0, userTokenWallet1] = await deployTokenWallets(
         [userAccount0, userAccount1],
         stakingToken
       );
+      logger.log(`Mint tokens`);
       await mintTokens(
         stakingOwner,
         [userAccount0, userAccount1],
@@ -311,13 +312,14 @@ describe("Test DAO in Staking", async function () {
         DEPOSIT_VALUE * 2
       );
 
-      logger.log(`Depositing test tokens`);
+      logger.log(`Depositing test tokens 0 `);
       await depositTokens(
         stakingRoot,
         userAccount0,
         userTokenWallet0,
         DEPOSIT_VALUE * 2
       );
+      logger.log(`Depositing test tokens 1 `);
       await depositTokens(
         stakingRoot,
         userAccount1,
@@ -330,19 +332,20 @@ describe("Test DAO in Staking", async function () {
       logger.log(`UserDataContract0: ${userDataContract0.address}`);
       logger.log(`UserDataContract1: ${userDataContract1.address}`);
 
-      const { contract: testTarget } = await locklift.factory.deployContract({
+      const { contract: testTarget_ } = await locklift.factory.deployContract({
         contract: "TestTarget",
         constructorParams: {
           _daoRoot: daoRoot.address,
         },
         initParams: {
-          _nonce: getRandomNonce(),
+          _nonce: locklift.utils.getRandomNonce(),
         },
         publicKey: signer0.publicKey,
         value: locklift.utils.toNano(0.2),
       });
 
-      logger.log(`TestTarget: ${testTarget.address}`);
+      logger.log(`TestTarget: ${testTarget_.address}`);
+      testTarget = testTarget_;
     });
     describe("Proposal tests", async function () {
       let proposal: Contract<FactorySource["Proposal"]>;
@@ -360,18 +363,18 @@ describe("Test DAO in Staking", async function () {
         },
       ];
       before("Deploy proposal", async function () {
-        let callHash =
-          "0x" +
-          (
-            await testTarget.methods.getCallHash({ newParam }).call()
-          ).toString();
+        let callHash = await testTarget.methods
+          .getCallHash({ newParam })
+          .call()
+          .then((t) => t.value0);
         tonActions = [
           {
             value: locklift.utils.toNano(1),
             target: testTarget.address,
             payload: await testTarget.methods
               .encodePayload({ addr: testTarget.address, callHash })
-              .call(),
+              .call()
+              .then((t) => t.value0),
           },
         ];
 
@@ -694,7 +697,7 @@ describe("Test DAO in Staking", async function () {
           timeLeft =
             parseInt(voteEndTime.endTime, 10) - Math.floor(Date.now() / 1000);
           logger.log(`Time left to vote end: ${timeLeft}`);
-          await wait((timeLeft + 5) * 1000);
+          await sleep((timeLeft + 5) * 1000);
         });
         it("Check status after vote end", async function () {
           let state = await proposal.methods.getState({ answerId: 0 }).call();
@@ -865,7 +868,7 @@ describe("Test DAO in Staking", async function () {
             .updateProposalConfiguration({ newConfig: newConfiguration })
             .send({
               from: stakingOwner.address,
-              amount: locklift.utils.toNano(1),
+              amount: locklift.utils.toNano(2),
             })
         );
         currentConfiguration = await daoRoot.methods
@@ -874,6 +877,8 @@ describe("Test DAO in Staking", async function () {
           .then((t) => t.proposalConfiguration);
       });
       it("Check new configuration", async function () {
+        logger.log(JSON.stringify(currentConfiguration))
+        logger.log(JSON.stringify(newConfiguration))
         expect(currentConfiguration.votingDelay.toString()).to.equal(
           newConfiguration.votingDelay.toString(),
           "Wrong votingDelay"

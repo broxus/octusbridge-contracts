@@ -1763,7 +1763,7 @@ const deployTokenRoot = async function (
   token_symbol: string,
   owner: Account
 ) {
-  const signer = (await locklift.keystore.getSigner("2"))!;
+  const signer = (await locklift.keystore.getSigner("0"))!;
 
   const TokenWallet = await locklift.factory.getContractArtifacts(
     "TokenWallet"
@@ -1790,7 +1790,7 @@ const deployTokenRoot = async function (
       deployer_: zeroAddress,
     },
     publicKey: signer.publicKey,
-    value: locklift.utils.toNano(1),
+    value: locklift.utils.toNano(2),
   });
 
   return _root;
@@ -1821,7 +1821,7 @@ const deployTokenWallets = async function (
 
     let userTokenWallet = await locklift.factory.getDeployedContract(
       "TokenWallet",
-      walletAddr.value0
+      walletAddr
     );
 
     wallets.push(userTokenWallet);
@@ -1836,19 +1836,22 @@ const sendTokens = async function (
   amount: number,
   payload: any
 ) {
-  return await _userTokenWallet.methods
-    .transfer({
-      amount: amount,
-      recipient: recipient.address,
-      deployWalletValue: 0,
-      remainingGasTo: user.address,
-      notify: true,
-      payload: payload,
-    })
-    .send({
-      from: user.address,
-      amount: locklift.utils.toNano(11),
-    });
+  const { traceTree } = await locklift.tracing.trace(
+    _userTokenWallet.methods
+      .transfer({
+        amount: amount,
+        recipient: recipient.address,
+        deployWalletValue: 0,
+        remainingGasTo: user.address,
+        notify: true,
+        payload: payload,
+      })
+      .send({
+        from: user.address,
+        amount: locklift.utils.toNano(11),
+      })
+  );
+  await traceTree?.beautyPrint();
 };
 
 const depositTokens = async function (
@@ -1907,7 +1910,7 @@ const mintTokens = async function (
 
     let userTokenWallet = await locklift.factory.getDeployedContract(
       "TokenWallet",
-      walletAddr.value0
+      walletAddr
     );
 
     wallets.push(userTokenWallet);
@@ -1938,7 +1941,8 @@ const getTokenWalletAddr = async function (
 ) {
   return await _root.methods
     .walletOf({ answerId: 0, walletOwner: user.address })
-    .call();
+    .call()
+    .then((t) => t.value0);
 };
 
 const isValidTonAddress = (address: string) =>
