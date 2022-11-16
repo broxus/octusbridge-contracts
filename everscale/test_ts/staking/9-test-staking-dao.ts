@@ -378,7 +378,7 @@ describe("Test DAO in Staking", async function () {
           },
         ];
 
-        await locklift.transactions.waitFinalized(
+        const { traceTree } = await locklift.tracing.trace(
           daoRoot.methods
             .propose({
               answerId: 0,
@@ -389,28 +389,42 @@ describe("Test DAO in Staking", async function () {
             .send({
               from: userAccount0.address,
               amount: locklift.utils.toNano(10 + 0.5 + 0.5 + 1 + 2 + 0.1),
-            })
+            }),
+          {
+            allowedCodes: {
+              compute: [null, 60],
+            },
+          }
         );
+        await traceTree?.beautyPrint();
         const deployedProposals = await userDataContract0.methods
           .created_proposals()
-          .call();
-        proposalId = Object.keys(deployedProposals)[0];
+          .call()
+          .then((t) => t.created_proposals);
+
+        proposalId = deployedProposals[0][0];
+        logger.log(JSON.stringify(proposalId));
+        logger.log(JSON.stringify(deployedProposals));
         const expectedProposalAddress = await daoRoot.methods
           .expectedProposalAddress({ proposalId: proposalId, answerId: 0 })
-          .call();
+          .call()
+          .then((t) => t.value0);
         proposal = await locklift.factory.getDeployedContract(
           "Proposal",
-          expectedProposalAddress.value0
+          expectedProposalAddress
         );
         logger.log(
-          `Deployed Proposal #${proposalId}: ${expectedProposalAddress.value0}`
+          `Deployed Proposal #${proposalId}: ${expectedProposalAddress}`
         );
         logger.log(`TonActions: \n${JSON.stringify(tonActions, null, 4)}`);
         logger.log(`EthActions: \n${JSON.stringify(ethActions, null, 4)}`);
       });
       it("Check is staking is Active", async function () {
         expect(
-          await stakingRoot.methods.isActive({ answerId: 0 }).call()
+          await stakingRoot.methods
+            .isActive({ answerId: 0 })
+            .call()
+            .then((t) => t.value0)
         ).to.be.equal(true, "taking is not Active");
       });
       it("Check balance", async function () {
@@ -436,8 +450,8 @@ describe("Test DAO in Staking", async function () {
       describe("Check proposal deployed correct", async function () {
         it("Check proposer", async function () {
           const proposer = await proposal.methods.proposer().call();
-          expect(proposer.proposer).to.equal(
-            userAccount0.address,
+          expect(proposer.proposer.toString()).to.equal(
+            userAccount0.address.toString(),
             "Wrong proposal proposer"
           );
         });
@@ -445,26 +459,31 @@ describe("Test DAO in Staking", async function () {
           const proposalId = await proposal.methods.id().call();
           const expectedThreshold = proposalConfiguration.threshold.toString();
           logger.log(`Expected threshold: ${expectedThreshold.toString()}`);
-          const createdProposalLockedVotes = (
-            await userDataContract0.methods
-              .created_proposals()
-              .call()
-              .then((t) => t.created_proposals)
-          )[parseInt(proposalId.id, 10)];
+          const createdProposalLockedVotes = await userDataContract0.methods
+            .created_proposals()
+            .call()
+            .then(
+              (t) =>
+                t.created_proposals
+                  .filter(([key, _]) => key == proposalId.id)
+                  .map(([key, value]) => value)[0]
+            );
+
           logger.log(
             `Current locked votes for proposal creation: ${createdProposalLockedVotes}`
           );
           const lockedVotes = await userDataContract0.methods
             .lockedTokens({ answerId: 0 })
-            .call();
+            .call()
+            .then((t) => parseInt(t.value0, 10));
           const totalVotes = await userDataContract0.methods
             .getDetails({ answerId: 0 })
             .call()
-            .then((v) => v.value0.token_balance);
+            .then((v) => parseInt(v.value0.token_balance, 10));
           logger.log(`userDataContract0 totalVotes: ${totalVotes.toString()}`);
           logger.log(
             `userDataContract0 availableVotes: ${(
-              parseInt(totalVotes, 10) - parseInt(lockedVotes.value0, 10)
+              totalVotes - lockedVotes
             ).toString()}`
           );
           expect(createdProposalLockedVotes.toString()).to.equal(
@@ -481,6 +500,9 @@ describe("Test DAO in Staking", async function () {
             .tonActions()
             .call()
             .then((t) => t.tonActions);
+
+          console.log(JSON.stringify(actualTonActions));
+
           expect(actualTonActions.length).to.equal(
             tonActions.length,
             "Wrong TonActions amount"
@@ -490,12 +512,12 @@ describe("Test DAO in Staking", async function () {
               tonActions[i].value,
               "Wrong TonAction value"
             );
-            expect(actualTonAction.target).to.equal(
-              tonActions[i].target,
+            expect(actualTonAction.target.toString()).to.equal(
+              tonActions[i].target.toString(),
               "Wrong TonAction target"
             );
-            expect(actualTonAction.payload).to.equal(
-              tonActions[i].payload,
+            expect(actualTonAction.payload.toString()).to.equal(
+              tonActions[i].payload.toString(),
               "Wrong TonAction payload"
             );
           }
@@ -547,14 +569,17 @@ describe("Test DAO in Staking", async function () {
         let votesToCast: string;
         let forVotesBefore: string;
         let againstVotesBefore: string;
-        let castedVoteBefore: readonly [string, boolean];
+        let castedVoteBefore: boolean;
         before("Make vote support Vote", async function () {
-          castedVoteBefore = (
-            await userDataContract0.methods
+          castedVoteBefore = await userDataContract0.methods
               .casted_votes()
               .call()
-              .then((t) => t.casted_votes)
-          )[parseInt(proposalId, 10)];
+              .then(
+                  (t) =>
+                      t.casted_votes
+                          .filter(([key, _]) => key == proposalId)
+                          .map(([key, value]) => value)[0]
+              );
           votesToCast = await userDataContract0.methods
             .getDetails({ answerId: 0 })
             .call()
@@ -593,12 +618,15 @@ describe("Test DAO in Staking", async function () {
             .againstVotes({})
             .call()
             .then((t) => t.againstVotes);
-          const castedVote = (
-            await userDataContract0.methods
+          const castedVote = await userDataContract0.methods
               .casted_votes()
               .call()
-              .then((t) => t.casted_votes)
-          )[parseInt(proposalId, 10)];
+              .then(
+                  (t) =>
+                      t.casted_votes
+                          .filter(([key, _]) => key == proposalId)
+                          .map(([key, value]) => value)[0]
+              );
           logger.log(`Proposal ForVotes: ${forVotes.toString()}`);
           logger.log(`Proposal againstVotes: ${againstVotes.toString()}`);
           logger.log(`DaoAccount0 castedVote: ${castedVote}`);
@@ -622,15 +650,19 @@ describe("Test DAO in Staking", async function () {
         let votesToCast: string;
         let forVotesBefore: string;
         let againstVotesBefore: string;
-        let castedVotesBefore: readonly [string, boolean];
+        let castedVotesBefore: boolean;
         before("Make vote support Vote", async function () {
-          castedVotesBefore = (
-            await userDataContract0.methods
-              .casted_votes()
-              .call()
-              .then((t) => t.casted_votes)
-          )[parseInt(proposalId, 10)];
-          votesToCast = await userDataContract0.methods
+          castedVotesBefore = await userDataContract1.methods
+            .casted_votes()
+            .call()
+            .then(
+              (t) =>
+                t.casted_votes
+                  .filter(([key, _]) => key == proposalId)
+                  .map(([key, value]) => value)[0]
+            );
+
+          votesToCast = await userDataContract1.methods
             .getDetails({ answerId: 0 })
             .call()
             .then((v) => v.value0.token_balance);
@@ -668,12 +700,15 @@ describe("Test DAO in Staking", async function () {
             .againstVotes({})
             .call()
             .then((t) => t.againstVotes);
-          const castedVote = (
-            await userDataContract0.methods
+          const castedVote = await userDataContract1.methods
               .casted_votes()
               .call()
-              .then((t) => t.casted_votes)
-          )[parseInt(proposalId, 10)];
+              .then(
+                  (t) =>
+                      t.casted_votes
+                          .filter(([key, _]) => key == proposalId)
+                          .map(([key, value]) => value)[0]
+              );
           logger.log(`Proposal ForVotes: ${forVotes.toString()}`);
           logger.log(`Proposal againstVotes: ${againstVotes.toString()}`);
           logger.log(`DaoAccount1 castedVote: ${castedVote}`);
@@ -877,8 +912,8 @@ describe("Test DAO in Staking", async function () {
           .then((t) => t.proposalConfiguration);
       });
       it("Check new configuration", async function () {
-        logger.log(JSON.stringify(currentConfiguration))
-        logger.log(JSON.stringify(newConfiguration))
+        logger.log(JSON.stringify(currentConfiguration));
+        logger.log(JSON.stringify(newConfiguration));
         expect(currentConfiguration.votingDelay.toString()).to.equal(
           newConfiguration.votingDelay.toString(),
           "Wrong votingDelay"
