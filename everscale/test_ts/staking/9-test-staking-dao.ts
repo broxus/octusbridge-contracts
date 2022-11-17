@@ -378,7 +378,7 @@ describe("Test DAO in Staking", async function () {
           },
         ];
 
-        const { traceTree } = await locklift.tracing.trace(
+        await locklift.transactions.waitFinalized(
           daoRoot.methods
             .propose({
               answerId: 0,
@@ -389,22 +389,14 @@ describe("Test DAO in Staking", async function () {
             .send({
               from: userAccount0.address,
               amount: locklift.utils.toNano(10 + 0.5 + 0.5 + 1 + 2 + 0.1),
-            }),
-          {
-            allowedCodes: {
-              compute: [null, 60],
-            },
-          }
+            })
         );
-        await traceTree?.beautyPrint();
         const deployedProposals = await userDataContract0.methods
           .created_proposals()
           .call()
           .then((t) => t.created_proposals);
 
         proposalId = deployedProposals[0][0];
-        logger.log(JSON.stringify(proposalId));
-        logger.log(JSON.stringify(deployedProposals));
         const expectedProposalAddress = await daoRoot.methods
           .expectedProposalAddress({ proposalId: proposalId, answerId: 0 })
           .call()
@@ -425,7 +417,7 @@ describe("Test DAO in Staking", async function () {
             .isActive({ answerId: 0 })
             .call()
             .then((t) => t.value0)
-        ).to.be.equal(true, "taking is not Active");
+        ).to.be.equal(true, "staking is not Active");
       });
       it("Check balance", async function () {
         expect(
@@ -501,8 +493,6 @@ describe("Test DAO in Staking", async function () {
             .call()
             .then((t) => t.tonActions);
 
-          console.log(JSON.stringify(actualTonActions));
-
           expect(actualTonActions.length).to.equal(
             tonActions.length,
             "Wrong TonActions amount"
@@ -571,15 +561,16 @@ describe("Test DAO in Staking", async function () {
         let againstVotesBefore: string;
         let castedVoteBefore: boolean;
         before("Make vote support Vote", async function () {
+          await sleep(1000);
           castedVoteBefore = await userDataContract0.methods
-              .casted_votes()
-              .call()
-              .then(
-                  (t) =>
-                      t.casted_votes
-                          .filter(([key, _]) => key == proposalId)
-                          .map(([key, value]) => value)[0]
-              );
+            .casted_votes()
+            .call()
+            .then(
+              (t) =>
+                t.casted_votes
+                  .filter(([key, _]) => key == proposalId)
+                  .map(([key, value]) => value)[0]
+            );
           votesToCast = await userDataContract0.methods
             .getDetails({ answerId: 0 })
             .call()
@@ -619,14 +610,14 @@ describe("Test DAO in Staking", async function () {
             .call()
             .then((t) => t.againstVotes);
           const castedVote = await userDataContract0.methods
-              .casted_votes()
-              .call()
-              .then(
-                  (t) =>
-                      t.casted_votes
-                          .filter(([key, _]) => key == proposalId)
-                          .map(([key, value]) => value)[0]
-              );
+            .casted_votes()
+            .call()
+            .then(
+              (t) =>
+                t.casted_votes
+                  .filter(([key, _]) => key == proposalId)
+                  .map(([key, value]) => value)[0]
+            );
           logger.log(`Proposal ForVotes: ${forVotes.toString()}`);
           logger.log(`Proposal againstVotes: ${againstVotes.toString()}`);
           logger.log(`DaoAccount0 castedVote: ${castedVote}`);
@@ -701,14 +692,14 @@ describe("Test DAO in Staking", async function () {
             .call()
             .then((t) => t.againstVotes);
           const castedVote = await userDataContract1.methods
-              .casted_votes()
-              .call()
-              .then(
-                  (t) =>
-                      t.casted_votes
-                          .filter(([key, _]) => key == proposalId)
-                          .map(([key, value]) => value)[0]
-              );
+            .casted_votes()
+            .call()
+            .then(
+              (t) =>
+                t.casted_votes
+                  .filter(([key, _]) => key == proposalId)
+                  .map(([key, value]) => value)[0]
+            );
           logger.log(`Proposal ForVotes: ${forVotes.toString()}`);
           logger.log(`Proposal againstVotes: ${againstVotes.toString()}`);
           logger.log(`DaoAccount1 castedVote: ${castedVote}`);
@@ -732,7 +723,8 @@ describe("Test DAO in Staking", async function () {
           timeLeft =
             parseInt(voteEndTime.endTime, 10) - Math.floor(Date.now() / 1000);
           logger.log(`Time left to vote end: ${timeLeft}`);
-          await sleep((timeLeft + 5) * 1000);
+          // await sleep((timeLeft + 5) * 1000);
+          await locklift.testing.increaseTime(timeLeft + 5);
         });
         it("Check status after vote end", async function () {
           let state = await proposal.methods.getState({ answerId: 0 }).call();
@@ -747,9 +739,13 @@ describe("Test DAO in Staking", async function () {
         it("Check proposal Queue", async function () {
           logger.log("Queue proposal");
           const signer0 = (await locklift.keystore.getSigner("0"))!;
-          await proposal.methods.queue().sendExternal({
-            publicKey: signer0.publicKey,
-          });
+          await locklift.transactions.waitFinalized(
+            proposal.methods.queue().sendExternal({
+              publicKey: signer0.publicKey,
+              withoutSignature: true,
+            })
+          );
+
           let state = await proposal.methods.getState({ answerId: 0 }).call();
           logger.log(
             `Current state: ${ProposalState[parseInt(state.value0, 10)]}`
@@ -774,6 +770,7 @@ describe("Test DAO in Staking", async function () {
           const signer0 = (await locklift.keystore.getSigner("0"))!;
           await proposal.methods.execute().sendExternal({
             publicKey: signer0.publicKey,
+            withoutSignature: true,
           });
           let state = await proposal.methods.getState({ answerId: 0 }).call();
           logger.log(
@@ -827,7 +824,7 @@ describe("Test DAO in Staking", async function () {
             .getDetails({ answerId: 0 })
             .call()
             .then((v) => v.value0.token_balance);
-          logger.log(`DaoAccount0 lockedVotes: ${lockedVotes.toString()}`);
+          logger.log(`DaoAccount0 lockedVotes: ${lockedVotes.value0.toString()}`);
           logger.log(`DaoAccount0 totalVotes: ${totalVotes.toString()}`);
           expect(parseInt(lockedVotes.value0, 10)).to.equal(
             0,
@@ -839,12 +836,15 @@ describe("Test DAO in Staking", async function () {
         let castedVotesBefore: string[];
         let canWithdrawBefore: boolean;
         before("Unlock casted votes", async function () {
-          castedVotesBefore = Object.keys(
-            await userDataContract0.methods
-              .casted_votes()
-              .call()
-              .then((t) => t.casted_votes)
-          );
+          castedVotesBefore = await userDataContract0.methods
+            .casted_votes()
+            .call()
+            .then((t) =>
+              t.casted_votes
+                .filter(([key, _]) => key == proposalId)
+                .map(([key, value]) => key)
+            );
+
           logger.log(
             `Casted votes before unlock: ${JSON.stringify(castedVotesBefore)}`
           );
@@ -912,8 +912,6 @@ describe("Test DAO in Staking", async function () {
           .then((t) => t.proposalConfiguration);
       });
       it("Check new configuration", async function () {
-        logger.log(JSON.stringify(currentConfiguration));
-        logger.log(JSON.stringify(newConfiguration));
         expect(currentConfiguration.votingDelay.toString()).to.equal(
           newConfiguration.votingDelay.toString(),
           "Wrong votingDelay"

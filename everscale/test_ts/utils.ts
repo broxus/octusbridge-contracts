@@ -1922,19 +1922,13 @@ const mintTokens = async function (
 
 const deployAccount = async function (signer: Signer, value: number) {
   const { account: account } = await locklift.factory.accounts.addNewAccount({
-    type: WalletTypes.MsigAccount,
-    contract: "Wallet",
+    type: WalletTypes.WalletV3, // or WalletTypes.HighLoadWallet,
+    //Value which will send to the new account from a giver
     value: locklift.utils.toNano(value),
+    //owner publicKey
     publicKey: signer.publicKey,
-    constructorParams: {},
-    initParams: {
-      _randomNonce: locklift.utils.getRandomNonce(),
-    },
   });
-  const oldAbi = JSON.parse(account.abi);
-  oldAbi.header = ["time"];
-  oldAbi.version = "2.2";
-  account.abi = JSON.stringify(oldAbi, null, 4);
+
   return account;
 };
 
