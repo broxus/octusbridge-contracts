@@ -1,7 +1,7 @@
 export {};
 
-import { FactorySource } from "../../build/factorySource";
-import { Address, Contract } from "locklift";
+import { FactorySource, StakingV1_2Abi } from "../../build/factorySource";
+import { Contract } from "locklift";
 import { Account } from "everscale-standalone-client/nodejs";
 const {
   deployAccount,
@@ -33,6 +33,10 @@ let user1Balance: number;
 let user2Balance: number;
 let balance_err: number;
 
+type UserRewardDataParam = Parameters<
+  Contract<StakingV1_2Abi>["methods"]["pendingReward"]
+>[0]["user_reward_data"];
+
 describe("Test Staking Rewards", async function () {
   this.timeout(10000000);
 
@@ -56,7 +60,7 @@ describe("Test Staking Rewards", async function () {
 
   const pendingReward = async function (
     user_token_balance: string,
-    user_reward_rounds: any
+    user_reward_rounds: UserRewardDataParam
   ) {
     return await stakingRoot.methods
       .pendingReward({
@@ -711,8 +715,6 @@ describe("Test Staking Rewards", async function () {
           .then((v) => v.value0);
         const user1_rew_before = user1_data.rewardRounds;
 
-        console.log(JSON.stringify(user1_rew_before));
-
         await withdrawTokens(user1, userDeposit);
 
         const staking_details = await stakingRoot.methods
@@ -726,7 +728,6 @@ describe("Test Staking Rewards", async function () {
           .call()
           .then((v) => v.value0);
         const user1_rew_after = user1_data_1.rewardRounds;
-        console.log(JSON.stringify(user1_rew_after));
 
         const reward1 =
           parseInt(user1_rew_after[0].reward_balance, 10) -
@@ -735,18 +736,10 @@ describe("Test Staking Rewards", async function () {
         const time_passed_1 =
           parseInt(user2_deposit_time, 10) - parseInt(user1_deposit_time, 10);
         const expected_reward_1 = rewardPerSec * time_passed_1;
-        console.log(JSON.stringify(user1_deposit_time));
-        console.log(JSON.stringify(user2_deposit_time));
-        console.log(JSON.stringify(time_passed_1));
-        console.log(JSON.stringify(expected_reward_1));
 
         const time_passed_2 =
           parseInt(user1_withdraw_time, 10) - parseInt(user2_deposit_time, 10);
         const expected_reward_2 = rewardPerSec * 0.5 * time_passed_2;
-        console.log(JSON.stringify(user1_withdraw_time));
-        console.log(JSON.stringify(user2_deposit_time));
-        console.log(JSON.stringify(time_passed_2));
-        console.log(JSON.stringify(expected_reward_2));
 
         const expected_reward_final = expected_reward_1 + expected_reward_2;
 
@@ -1394,6 +1387,7 @@ describe("Test Staking Rewards", async function () {
 
         logger.log(JSON.stringify(user1_reward_data));
         logger.log(JSON.stringify(user1_token_balance));
+
         const res = await pendingReward(user1_token_balance, user1_reward_data);
         expect(res.toString()).to.be.eq(
           user1_expected_token_reward.toString(),
