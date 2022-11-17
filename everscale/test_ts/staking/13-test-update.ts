@@ -5,55 +5,38 @@ import { Address, Contract, Signer } from "locklift";
 import { Account } from "everscale-standalone-client/nodejs";
 
 const {
-  expect,
   deployAccount,
   deployTokenRoot,
   mintTokens,
   logger,
   sleep,
 } = require("../utils");
+
+import { expect } from "chai";
+
 const BigNumber = require("bignumber.js");
 
 let stakingRoot: Contract<FactorySource["StakingV1_2"]>;
 let stakingToken: Contract<FactorySource["TokenRoot"]>;
 let stakingWallet: Contract<FactorySource["TokenWallet"]>;
 
-let encoder: Contract<FactorySource["CellEncoderStandalone"]>;
 
 let user1: Account;
-let user1Data: Contract<FactorySource["UserData"]>;
 let user2: Account;
-let user2Data: Contract<FactorySource["UserData"]>;
 let user3: Account;
-let user3Data: Contract<FactorySource["UserData"]>;
 let stakingOwner: Account;
 let userTokenWallet1: Contract<FactorySource["TokenWallet"]>;
 let userTokenWallet2: Contract<FactorySource["TokenWallet"]>;
 let userTokenWallet3: Contract<FactorySource["TokenWallet"]>;
 let ownerWallet: Contract<FactorySource["TokenWallet"]>;
 let userInitialTokenBal = 100000;
-let rewardTokensBal = 10000;
-let userDeposit = 100;
-let rewardPerSec = 1000000;
 
 const DEV_WAIT = 100000;
 
-const MIN_RELAY_DEPOSIT = 1;
-const RELAY_ROUND_TIME_1 = 10;
-const ELECTION_TIME = 4;
-const TIME_BEFORE_ELECTION = 5;
-const MIN_GAP_TIME = 1;
-const RELAYS_COUNT_1 = 3;
-const MIN_RELAYS = 2;
 const RELAY_INITIAL_DEPOSIT = 500;
 
 describe("Test Staking Upgrade", async function () {
   this.timeout(10000000);
-
-  const getBalance = async function (address: Address) {
-    const res = await locklift.provider.getBalance(address);
-    return new BigNumber(res);
-  };
 
   describe("Setup contracts", async function () {
     describe("Token", async function () {
@@ -78,11 +61,6 @@ describe("Test Staking Upgrade", async function () {
           );
           logger.log(`User address: ${account.address}`);
 
-          const isDeployed = await locklift.provider
-            .getFullContractState({ address: account.address })
-            .then((res) => res.state?.isDeployed);
-
-          expect(isDeployed).to.be.true;
           users.push(account);
         }
         [user1, user2, user3] = users;
@@ -99,32 +77,36 @@ describe("Test Staking Upgrade", async function () {
 
         const balance1 = await userTokenWallet1.methods
           .balance({ answerId: 0 })
-          .call();
+          .call()
+          .then((t) => parseInt(t.value0, 10));
         const balance2 = await userTokenWallet2.methods
           .balance({ answerId: 0 })
-          .call();
+          .call()
+          .then((t) => parseInt(t.value0, 10));
         const balance3 = await userTokenWallet3.methods
           .balance({ answerId: 0 })
-          .call();
+          .call()
+          .then((t) => parseInt(t.value0, 10));
         const balance4 = await ownerWallet.methods
           .balance({ answerId: 0 })
-          .call();
+          .call()
+          .then((t) => parseInt(t.value0, 10));
 
-        expect(balance1.value0).to.be.equal(
+        expect(balance1).to.be.equal(
           userInitialTokenBal,
-          "User ton token wallet empty"
+          "User  token wallet empty"
         );
-        expect(balance2.value0).to.be.equal(
+        expect(balance2).to.be.equal(
           userInitialTokenBal,
-          "User ton token wallet empty"
+          "User  token wallet empty"
         );
-        expect(balance3.value0).to.be.equal(
+        expect(balance3).to.be.equal(
           userInitialTokenBal,
-          "User ton token wallet empty"
+          "User  token wallet empty"
         );
-        expect(balance4.value0).to.be.equal(
+        expect(balance4).to.be.equal(
           userInitialTokenBal,
-          "User ton token wallet empty"
+          "User  token wallet empty"
         );
       });
     });
@@ -204,16 +186,18 @@ describe("Test Staking Upgrade", async function () {
         // call in order to check if wallet is deployed
         const owner_address = await stakingWallet.methods
           .owner({ answerId: 0 })
-          .call();
+          .call()
+          .then((t) => t.value0);
         const root_address = await stakingWallet.methods
           .root({ answerId: 0 })
-          .call();
-        expect(owner_address).to.be.equal(
-          stakingRoot.address,
+          .call()
+          .then((t) => t.value0);
+        expect(owner_address.toString()).to.be.equal(
+          stakingRoot.address.toString(),
           "Wrong staking token wallet owner"
         );
-        expect(root_address).to.be.equal(
-          stakingToken.address,
+        expect(root_address.toString()).to.be.equal(
+          stakingToken.address.toString(),
           "Wrong staking token wallet root"
         );
       });
@@ -290,7 +274,8 @@ describe("Test Staking Upgrade", async function () {
 
         const active = await stakingRoot.methods
           .isActive({ answerId: 0 })
-          .call();
+          .call()
+          .then((t) => t.value0);
         expect(active).to.be.equal(true, "Staking not active");
       });
     });
