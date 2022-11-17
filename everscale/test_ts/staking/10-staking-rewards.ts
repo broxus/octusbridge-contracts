@@ -4,17 +4,14 @@ import { FactorySource } from "../../build/factorySource";
 import { Address, Contract } from "locklift";
 import { Account } from "everscale-standalone-client/nodejs";
 const {
-  expect,
   deployAccount,
-  deployTokenWallets,
   deployTokenRoot,
   depositTokens,
   logger,
   mintTokens,
-  stringToBytesArray,
-  getRandomNonce,
-  wait,
 } = require("../utils");
+
+import { expect } from "chai";
 
 let stakingRoot: Contract<FactorySource["StakingV1_2"]>;
 let stakingToken: Contract<FactorySource["TokenRoot"]>;
@@ -94,25 +91,33 @@ describe("Test Staking Rewards", async function () {
 
     const _user_bal = await userTokenWallet.methods
       .balance({ answerId: 0 })
-      .call();
+      .call()
+      .then((t) => t.value0);
     const user_data = await userAccount.methods
       .getDetails({ answerId: 0 })
       .call();
     const _user_data_bal = user_data.value0.token_balance;
 
-    // console.log(_pool_wallet_bal.toString(), _pool_bal.toString(), _pool_reward_bal.toString(), _user_bal.toString(), _user_data_bal.toString());
-
     expect(_pool_wallet_bal).to.be.equal(
-      pool_wallet_bal,
+      pool_wallet_bal.toString(),
       "Pool wallet balance bad"
     );
-    expect(_pool_bal).to.be.equal(pool_bal, "Pool balance bad");
-    expect(_pool_reward_bal).to.be.equal(
-      pool_reward_bal,
+    expect(_pool_bal.toString()).to.be.equal(
+      pool_bal.toString(),
+      "Pool balance bad"
+    );
+    expect(_pool_reward_bal.toString()).to.be.equal(
+      pool_reward_bal.toString(),
       "Pool reward balance bad"
     );
-    expect(_user_bal).to.be.equal(user_bal, "User balance bad");
-    expect(_user_data_bal).to.be.equal(user_data_bal, "User data balance bad");
+    expect(_user_bal.toString()).to.be.equal(
+      user_bal.toString(),
+      "User balance bad"
+    );
+    expect(_user_data_bal.toString()).to.be.equal(
+      user_data_bal.toString(),
+      "User data balance bad"
+    );
   };
 
   const startNewRewardRound = async function () {
@@ -209,16 +214,16 @@ describe("Test Staking Rewards", async function () {
     describe("Users", async function () {
       it("Deploy users accounts", async function () {
         let users = [];
-        for (const i of [1, 1]) {
-          const signer = (await locklift.keystore.getSigner("0"))!;
+        for (const i of [1, 2]) {
+          const signer = (await locklift.keystore.getSigner(i.toString()))!;
           const account = await deployAccount(signer, 25);
           logger.log(`User address: ${account.address}`);
 
-          const isDeployed = await locklift.provider
-            .getFullContractState({ address: account.address })
-            .then((res) => res.state?.isDeployed);
-
-          expect(isDeployed).to.be.true;
+          // const isDeployed = await locklift.provider
+          //   .getFullContractState({ address: account.address })
+          //   .then((res) => res.state?.isDeployed);
+          //
+          // expect(isDeployed).to.be.true;
           users.push(account);
         }
         [user1, user2] = users;
@@ -234,13 +239,16 @@ describe("Test Staking Rewards", async function () {
 
         const balance1 = await userTokenWallet1.methods
           .balance({ answerId: 0 })
-          .call();
+          .call()
+          .then((t) => parseInt(t.value0, 10));
         const balance2 = await userTokenWallet2.methods
           .balance({ answerId: 0 })
-          .call();
+          .call()
+          .then((t) => parseInt(t.value0, 10));
         const balance3 = await ownerWallet.methods
           .balance({ answerId: 0 })
-          .call();
+          .call()
+          .then((t) => parseInt(t.value0, 10));
 
         expect(balance1).to.be.equal(
           userInitialTokenBal,
@@ -288,7 +296,7 @@ describe("Test Staking Rewards", async function () {
               contract: "StakingRootDeployer",
               constructorParams: {},
               initParams: {
-                nonce: getRandomNonce(),
+                nonce: locklift.utils.getRandomNonce(),
                 stakingCode: stakingRootData.code,
               },
               publicKey: signer.publicKey,
@@ -340,12 +348,12 @@ describe("Test Staking Rewards", async function () {
         const root_address = await stakingWallet.methods
           .root({ answerId: 0 })
           .call();
-        expect(owner_address).to.be.equal(
-          stakingRoot.address,
+        expect(owner_address.value0.toString()).to.be.equal(
+          stakingRoot.address.toString(),
           "Wrong staking token wallet owner"
         );
-        expect(root_address).to.be.equal(
-          stakingToken.address,
+        expect(root_address.value0.toString()).to.be.equal(
+          stakingToken.address.toString(),
           "Wrong staking token wallet root"
         );
       });
@@ -417,7 +425,8 @@ describe("Test Staking Rewards", async function () {
 
         const active = await stakingRoot.methods
           .isActive({ answerId: 0 })
-          .call();
+          .call()
+          .then((t) => t.value0);
         expect(active).to.be.equal(true, "Staking not active");
       });
 
@@ -434,7 +443,8 @@ describe("Test Staking Rewards", async function () {
 
         const staking_balance = await stakingWallet.methods
           .balance({ answerId: 0 })
-          .call();
+          .call()
+          .then((t) => t.value0);
 
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
@@ -442,7 +452,7 @@ describe("Test Staking Rewards", async function () {
           .then((v) => v.value0);
         const staking_balance_stored = staking_details.rewardTokenBalance;
 
-        expect(staking_balance.toString()).to.be.equal(
+        expect(staking_balance).to.be.equal(
           amount.toString(),
           "Farm pool balance empty"
         );
@@ -479,8 +489,11 @@ describe("Test Staking Rewards", async function () {
           },
         ] = events;
 
-        expect(_user).to.be.equal(user1.address, "Bad event");
-        expect(_amount).to.be.equal(userDeposit, "Bad event");
+        expect(_user.toString()).to.be.equal(
+          user1.address.toString(),
+          "Bad event"
+        );
+        expect(_amount).to.be.equal(userDeposit.toString(), "Bad event");
       });
 
       it("Deposit 2nd time", async function () {
@@ -528,8 +541,14 @@ describe("Test Staking Rewards", async function () {
             data: { user: _user, amount: _amount },
           },
         ] = events;
-        expect(_user).to.be.equal(user1.address, "Bad event");
-        expect(_amount).to.be.equal(userDeposit, "Bad event");
+        expect(_user.toString()).to.be.equal(
+          user1.address.toString(),
+          "Bad event"
+        );
+        expect(_amount.toString()).to.be.equal(
+          userDeposit.toString(),
+          "Bad event"
+        );
       });
 
       it("User withdraw half of staked amount", async function () {
@@ -576,8 +595,14 @@ describe("Test Staking Rewards", async function () {
             data: { user: _user, amount: _amount },
           },
         ] = events;
-        expect(_user).to.be.equal(user1.address, "Bad event");
-        expect(_amount).to.be.equal(userDeposit, "Bad event");
+        expect(_user.toString()).to.be.equal(
+          user1.address.toString(),
+          "Bad event"
+        );
+        expect(_amount.toString()).to.be.equal(
+          userDeposit.toString(),
+          "Bad event"
+        );
       });
 
       it("User withdraw other half", async function () {
@@ -624,8 +649,14 @@ describe("Test Staking Rewards", async function () {
             data: { user: _user, amount: _amount },
           },
         ] = events;
-        expect(_user).to.be.equal(user1.address, "Bad event");
-        expect(_amount).to.be.equal(userDeposit, "Bad event");
+        expect(_user.toString()).to.be.equal(
+          user1.address.toString(),
+          "Bad event"
+        );
+        expect(_amount.toString()).to.be.equal(
+          userDeposit.toString(),
+          "Bad event"
+        );
       });
     });
 
@@ -677,6 +708,9 @@ describe("Test Staking Rewards", async function () {
           .call()
           .then((v) => v.value0);
         const user1_rew_before = user1_data.rewardRounds;
+
+        console.log(JSON.stringify(user1_rew_before));
+
         await withdrawTokens(user1, userDeposit);
 
         const staking_details = await stakingRoot.methods
@@ -690,6 +724,8 @@ describe("Test Staking Rewards", async function () {
           .call()
           .then((v) => v.value0);
         const user1_rew_after = user1_data_1.rewardRounds;
+        console.log(JSON.stringify(user1_rew_after));
+
         const reward1 =
           parseInt(user1_rew_after[0].reward_balance, 10) -
           parseInt(user1_rew_before[0].reward_balance, 10);
@@ -697,10 +733,18 @@ describe("Test Staking Rewards", async function () {
         const time_passed_1 =
           parseInt(user2_deposit_time, 10) - parseInt(user1_deposit_time, 10);
         const expected_reward_1 = rewardPerSec * time_passed_1;
+        console.log(JSON.stringify(user1_deposit_time));
+        console.log(JSON.stringify(user2_deposit_time));
+        console.log(JSON.stringify(time_passed_1));
+        console.log(JSON.stringify(expected_reward_1));
 
         const time_passed_2 =
           parseInt(user1_withdraw_time, 10) - parseInt(user2_deposit_time, 10);
         const expected_reward_2 = rewardPerSec * 0.5 * time_passed_2;
+        console.log(JSON.stringify(user1_withdraw_time));
+        console.log(JSON.stringify(user2_deposit_time));
+        console.log(JSON.stringify(time_passed_2));
+        console.log(JSON.stringify(expected_reward_2));
 
         const expected_reward_final = expected_reward_1 + expected_reward_2;
 

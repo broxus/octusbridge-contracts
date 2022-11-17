@@ -1836,24 +1836,27 @@ const sendTokens = async function (
   amount: number,
   payload: any
 ) {
-  await _userTokenWallet.methods
-    .transfer({
-      amount: amount,
-      recipient: recipient.address,
-      deployWalletValue: 0,
-      remainingGasTo: user.address,
-      notify: true,
-      payload: payload,
-    })
-    .send({
-      from: user.address,
-      amount: locklift.utils.toNano(11),
-    }),
-    {
-      allowedCodes: {
-        compute: [null],
-      },
-    };
+  const { traceTree } = await locklift.tracing.trace(_userTokenWallet.methods
+      .transfer({
+        amount: amount,
+        recipient: recipient.address,
+        deployWalletValue: 0,
+        remainingGasTo: user.address,
+        notify: true,
+        payload: payload,
+      })
+      .send({
+        from: user.address,
+        amount: locklift.utils.toNano(11),
+      }),
+      {
+        allowedCodes: {
+          compute: [null],
+        },
+      }
+  );
+  await traceTree?.beautyPrint();
+
 };
 
 const depositTokens = async function (
