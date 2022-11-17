@@ -4,7 +4,6 @@ import { FactorySource } from "../../build/factorySource";
 import { Address, Contract, Signer } from "locklift";
 import { Account } from "everscale-standalone-client/nodejs";
 const {
-  expect,
   deployAccount,
   deployTokenRoot,
   depositTokens,
@@ -12,6 +11,8 @@ const {
   mintTokens,
   sleep,
 } = require("../utils");
+
+import { expect } from "chai";
 
 const BigNumber = require("bignumber.js");
 
@@ -98,25 +99,33 @@ describe("Test Staking Relay mechanic", async function () {
 
     const _user_bal = await userTokenWallet.methods
       .balance({ answerId: 0 })
-      .call();
+      .call()
+      .then((t) => t.value0);
     const user_data = await userAccount.methods
       .getDetails({ answerId: 0 })
       .call();
     const _user_data_bal = user_data.value0.token_balance;
 
-    // console.log(_pool_wallet_bal.toString(), _pool_bal.toString(), _pool_reward_bal.toString(), _user_bal.toString(), _user_data_bal.toString());
-
     expect(_pool_wallet_bal).to.be.equal(
-      pool_wallet_bal,
+      pool_wallet_bal.toString(),
       "Pool wallet balance bad"
     );
-    expect(_pool_bal).to.be.equal(pool_bal, "Pool balance bad");
-    expect(_pool_reward_bal).to.be.equal(
-      pool_reward_bal,
+    expect(_pool_bal.toString()).to.be.equal(
+      pool_bal.toString(),
+      "Pool balance bad"
+    );
+    expect(_pool_reward_bal.toString()).to.be.equal(
+      pool_reward_bal.toString(),
       "Pool reward balance bad"
     );
-    expect(_user_bal).to.be.equal(user_bal, "User balance bad");
-    expect(_user_data_bal).to.be.equal(user_data_bal, "User data balance bad");
+    expect(_user_bal.toString()).to.be.equal(
+      user_bal.toString(),
+      "User balance bad"
+    );
+    expect(_user_data_bal.toString()).to.be.equal(
+      user_data_bal.toString(),
+      "User data balance bad"
+    );
   };
 
   const startNewRewardRound = async function () {
@@ -150,10 +159,11 @@ describe("Test Staking Relay mechanic", async function () {
         round_num: round_num,
         answerId: 0,
       })
-      .call();
+      .call()
+      .then((t) => t.value0);
     const election = await locklift.factory.getDeployedContract(
       "Election",
-      addr.value0
+      addr
     );
     return election;
   };
@@ -370,12 +380,6 @@ describe("Test Staking Relay mechanic", async function () {
             RELAY_INITIAL_DEPOSIT + 50
           );
           logger.log(`User address: ${account.address}`);
-
-          const isDeployed = await locklift.provider
-            .getFullContractState({ address: account.address })
-            .then((res) => res.state?.isDeployed);
-
-          expect(isDeployed).to.be.true;
           users.push(account);
         }
         [user1, user2, user3] = users;
@@ -392,30 +396,37 @@ describe("Test Staking Relay mechanic", async function () {
 
         const balance1 = await userTokenWallet1.methods
           .balance({ answerId: 0 })
-          .call();
+          .call()
+          .then((t) => parseInt(t.value0, 10));
+
         const balance2 = await userTokenWallet2.methods
           .balance({ answerId: 0 })
-          .call();
+          .call()
+          .then((t) => parseInt(t.value0, 10));
+
         const balance3 = await userTokenWallet3.methods
           .balance({ answerId: 0 })
-          .call();
+          .call()
+          .then((t) => parseInt(t.value0, 10));
+
         const balance4 = await ownerWallet.methods
           .balance({ answerId: 0 })
-          .call();
+          .call()
+          .then((t) => parseInt(t.value0, 10));
 
-        expect(balance1.value0).to.be.equal(
+        expect(balance1).to.be.equal(
           userInitialTokenBal,
           "User ton token wallet empty"
         );
-        expect(balance2.value0).to.be.equal(
+        expect(balance2).to.be.equal(
           userInitialTokenBal,
           "User ton token wallet empty"
         );
-        expect(balance3.value0).to.be.equal(
+        expect(balance3).to.be.equal(
           userInitialTokenBal,
           "User ton token wallet empty"
         );
-        expect(balance4.value0).to.be.equal(
+        expect(balance4).to.be.equal(
           userInitialTokenBal,
           "User ton token wallet empty"
         );
@@ -501,16 +512,19 @@ describe("Test Staking Relay mechanic", async function () {
         // call in order to check if wallet is deployed
         const owner_address = await stakingWallet.methods
           .owner({ answerId: 0 })
-          .call();
+          .call()
+          .then((t) => t.value0);
+
         const root_address = await stakingWallet.methods
           .root({ answerId: 0 })
-          .call();
-        expect(owner_address).to.be.equal(
-          stakingRoot.address,
+          .call()
+          .then((t) => t.value0);
+        expect(owner_address.toString()).to.be.equal(
+          stakingRoot.address.toString(),
           "Wrong staking token wallet owner"
         );
-        expect(root_address).to.be.equal(
-          stakingToken.address,
+        expect(root_address.toString()).to.be.equal(
+          stakingToken.address.toString(),
           "Wrong staking token wallet root"
         );
       });
@@ -587,7 +601,8 @@ describe("Test Staking Relay mechanic", async function () {
 
         const active = await stakingRoot.methods
           .isActive({ answerId: 0 })
-          .call();
+          .call()
+          .then((t) => t.value0);
         expect(active).to.be.equal(true, "Staking not active");
       });
 
@@ -607,7 +622,8 @@ describe("Test Staking Relay mechanic", async function () {
 
         const staking_balance = await stakingWallet.methods
           .balance({ answerId: 0 })
-          .call();
+          .call()
+          .then((v) => v.value0);
 
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
@@ -785,10 +801,20 @@ describe("Test Staking Relay mechanic", async function () {
 
         const total_tokens_staked = await round.methods
           .total_tokens_staked()
-          .call();
-        const round_reward = await round.methods.round_reward().call();
-        const relays_count = await round.methods.relays_count().call();
-        const reward_round_num = await round.methods.reward_round_num().call();
+          .call()
+          .then((v) => v.total_tokens_staked);
+        const round_reward = await round.methods
+          .round_reward()
+          .call()
+          .then((v) => v.round_reward);
+        const relays_count = await round.methods
+          .relays_count()
+          .call()
+          .then((v) => v.relays_count);
+        const reward_round_num = await round.methods
+          .reward_round_num()
+          .call()
+          .then((v) => v.reward_round_num);
 
         const _round_reward = RELAY_ROUND_TIME_1 * rewardPerSec;
         expect(total_tokens_staked.toString()).to.be.equal(
@@ -818,9 +844,15 @@ describe("Test Staking Relay mechanic", async function () {
         const reward_rounds_new = staking_details.rewardRounds;
 
         const expected_reward =
-          round_reward + new BigNumber(reward_rounds[0].totalReward);
-        expect(expected_reward.toString()).to.be.equal(
-          reward_rounds_new[0].totalReward.toString(),
+          new BigNumber(round_reward) +
+          new BigNumber(reward_rounds[0].totalReward);
+
+        console.log(new BigNumber(round_reward));
+        console.log(new BigNumber(reward_rounds[0].totalReward));
+        console.log(new BigNumber(reward_rounds_new[0].totalReward));
+
+        expect(expected_reward).to.be.equal(
+          reward_rounds_new[0].totalReward,
           "Bad reward after relay round init"
         );
 
@@ -841,7 +873,10 @@ describe("Test Staking Relay mechanic", async function () {
         ] = events;
 
         expect(_round_num.toString()).to.be.equal("0", "Bad event");
-        expect(_round_addr).to.be.equal(round.address, "Bad event");
+        expect(_round_addr.toString()).to.be.equal(
+          round.address.toString(),
+          "Bad event"
+        );
 
         expect(_relays_count.toString()).to.be.equal(
           "1",
@@ -859,8 +894,8 @@ describe("Test Staking Relay mechanic", async function () {
           })
           .call();
 
-        expect(relay._staker_addr).to.be.equal(
-          user1.address,
+        expect(relay._staker_addr.toString()).to.be.equal(
+          user1.address.toString(),
           "Relay creation fail - staker addr"
         );
         expect(relay._ton_key.toString()).to.be.equal(
@@ -907,10 +942,10 @@ describe("Test Staking Relay mechanic", async function () {
         );
 
         expect(user2_pk_expected.toString(16)).to.be.equal(
-          user2_pk.toString(),
+          BigNumber(user2_pk).toString(16),
           "Bad ton pubkey installed"
         );
-        expect(_user2_eth_addr.toString()).to.be.equal(
+        expect(BigNumber(_user2_eth_addr).toString(16)).to.be.equal(
           user2_eth_addr_expected.toString(16),
           "Bad eth addr installed"
         );
@@ -941,10 +976,10 @@ describe("Test Staking Relay mechanic", async function () {
         );
 
         expect(user3_pk_expected.toString(16)).to.be.equal(
-          user3_pk.toString(),
+          BigNumber(user3_pk).toString(16),
           "Bad ton pubkey installed"
         );
-        expect(_user3_eth_addr.toString()).to.be.equal(
+        expect(BigNumber(_user3_eth_addr).toString(16)).to.be.equal(
           user3_eth_addr_expected.toString(16),
           "Bad eth addr installed"
         );
@@ -1056,7 +1091,10 @@ describe("Test Staking Relay mechanic", async function () {
         if (locklift.context.network.name === "dev") {
           await sleep(DEV_WAIT);
         }
-        const round_num = await election.methods.round_num().call();
+        const round_num = await election.methods
+          .round_num()
+          .call()
+          .then((t) => t.round_num);
         expect(round_num.toString()).to.be.equal(
           "1",
           "Bad election - round num"
@@ -1079,8 +1117,8 @@ describe("Test Staking Relay mechanic", async function () {
           "1",
           "Bad election - round num"
         );
-        expect(_election_addr).to.be.equal(
-          election.address,
+        expect(_election_addr.toString()).to.be.equal(
+          election.address.toString(),
           "Bad election - address"
         );
       });
@@ -1133,7 +1171,7 @@ describe("Test Staking Relay mechanic", async function () {
           user1_token_balance.toString(),
           "Bad event - tokens"
         );
-        expect(_ton_pubkey1.toString()).to.be.equal(
+        expect("0x" + BigNumber(_ton_pubkey1).toString(16)).to.be.equal(
           expected_ton_pubkey1,
           "Bad event - ton pubkey"
         );
@@ -1287,8 +1325,8 @@ describe("Test Staking Relay mechanic", async function () {
           "Bad request - eth addr"
         );
 
-        expect(staker_addrs[1]).to.be.equal(
-          user2.address,
+        expect(staker_addrs[1].toString()).to.be.equal(
+          user2.address.toString(),
           "Bad request - staker addr"
         );
         expect(staked_tokens[1].toString()).to.be.equal(
@@ -1304,8 +1342,8 @@ describe("Test Staking Relay mechanic", async function () {
           "Bad request - eth addr"
         );
 
-        expect(staker_addrs[2]).to.be.equal(
-          user1.address,
+        expect(staker_addrs[2].toString()).to.be.equal(
+          user1.address.toString(),
           "Bad request - staker addr"
         );
         expect(staked_tokens[2].toString()).to.be.equal(
@@ -1400,7 +1438,7 @@ describe("Test Staking Relay mechanic", async function () {
           "Bad relay init event - round num"
         );
         expect(_round_addr.toString()).to.be.equal(
-          round.address,
+          round.address.toString(),
           "Bad relay init event - round addr"
         );
         expect(_relays_count.toString()).to.be.equal(
@@ -2431,8 +2469,10 @@ describe("Test Staking Relay mechanic", async function () {
           .getRelayRoundsDetails({ answerId: 0 })
           .call()
           .then((t) => t.value0);
-        expect(root_round_details_1.currentRelayRoundStartTime).to.be.gt(
-          root_round_details.currentRelayRoundEndTime,
+        expect(
+          root_round_details_1.currentRelayRoundStartTime.toString()
+        ).to.be.gt(
+          root_round_details.currentRelayRoundEndTime.toString(),
           "Bad new round start time"
         );
       });
@@ -2462,7 +2502,9 @@ describe("Test Staking Relay mechanic", async function () {
 
         const expected_bal =
           new BigNumber(prev_details.tokenBalance) - userDeposit;
-        expect(after_details.tokenBalance).to.be.equal(expected_bal);
+        expect(new BigNumber(after_details.tokenBalance)).to.be.equal(
+          expected_bal
+        );
       });
 
       it("Rescuer withdraw all tokens", async function () {
@@ -2476,7 +2518,7 @@ describe("Test Staking Relay mechanic", async function () {
           .getDetails({ answerId: 0 })
           .call()
           .then((v) => v.value0);
-        expect(after_details.tokenBalance).to.be.equal(
+        expect(new BigNumber(after_details.tokenBalance)).to.be.equal(
           new BigNumber(prev_details.tokenBalance) - 100
         );
 
