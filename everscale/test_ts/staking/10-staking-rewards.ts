@@ -42,7 +42,7 @@ describe("Test Staking Rewards", async function () {
     return await userData.methods
       .getDetails({ answerId: 0 })
       .call()
-      .then((v) => v.value0.rewardRounds.toString());
+      .then((v) => v.value0.rewardRounds);
   };
 
   const userTokenBalance = async function (
@@ -776,7 +776,8 @@ describe("Test Staking Rewards", async function () {
         user2_withdraw_time = staking_details_1.lastRewardTime;
 
         const reward2 =
-          parseInt(user2_rew_after[0], 10) - parseInt(user2_rew_before[0], 10);
+          parseInt(user2_rew_after[0].reward_balance, 10) -
+          parseInt(user2_rew_before[0].reward_balance, 10);
 
         const time_passed_21 =
           parseInt(user1_withdraw_time, 10) - parseInt(user2_deposit_time, 10);
@@ -845,8 +846,8 @@ describe("Test Staking Rewards", async function () {
         );
 
         const user2_reward_after = await userRewardRounds(user2Data);
-        expect(user2_reward_before[0]).to.be.equal(
-          user2_reward_after[0],
+        expect(user2_reward_before[0].reward_balance).to.be.equal(
+          user2_reward_after[0].reward_balance,
           "Claim reward fail"
         );
       });
@@ -865,7 +866,7 @@ describe("Test Staking Rewards", async function () {
 
         expect(reward_rounds.length).to.be.equal(2, "Bad reward rounds");
         expect(cur_round.rewardTokens).to.be.equal(
-          0,
+          "0",
           "Bad reward rounds balance"
         );
         expect(parseInt(cur_round.accRewardPerShare, 16)).to.be.equal(
@@ -873,7 +874,7 @@ describe("Test Staking Rewards", async function () {
           "Bad reward rounds share"
         );
         expect(cur_round.totalReward).to.be.equal(
-          0,
+          "0",
           "Bad reward rounds reward"
         );
         expect(cur_round.startTime).to.be.equal(
@@ -899,7 +900,7 @@ describe("Test Staking Rewards", async function () {
 
         const user1_token_reward = Math.floor(
           (Math.floor(
-            (parseInt(user1_reward, 10) * 1e10) /
+            (parseInt(user1_reward.reward_balance, 10) * 1e10) /
               parseInt(round1_rewards_data.totalReward, 10)
           ) *
             parseInt(round1_rewards_data.rewardTokens, 10)) /
@@ -907,7 +908,7 @@ describe("Test Staking Rewards", async function () {
         );
         const user2_token_reward = Math.floor(
           (Math.floor(
-            (parseInt(user2_reward, 10) * 1e10) /
+            (parseInt(user2_reward.reward_balance, 10) * 1e10) /
               parseInt(round1_rewards_data.totalReward, 10)
           ) *
             parseInt(round1_rewards_data.rewardTokens, 10)) /
@@ -969,7 +970,7 @@ describe("Test Staking Rewards", async function () {
         const user1_reward_after = user1_data_3.rewardRounds;
 
         expect(user1_reward_after[0].reward_balance).to.be.equal(
-          0,
+          "0",
           "Claim reward fail"
         );
 
@@ -999,7 +1000,10 @@ describe("Test Staking Rewards", async function () {
         );
 
         const user2_reward_after = await userRewardRounds(user2Data);
-        expect(user2_reward_after[0]).to.be.equal(0, "Claim reward fail");
+        expect(user2_reward_after[0].reward_balance).to.be.equal(
+          "0",
+          "Claim reward fail"
+        );
       });
     });
 
@@ -1018,7 +1022,8 @@ describe("Test Staking Rewards", async function () {
         );
         const staking_balance = await stakingWallet.methods
           .balance({ answerId: 0 })
-          .call();
+          .call()
+          .then((t) => t.value0);
 
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
@@ -1033,15 +1038,15 @@ describe("Test Staking Rewards", async function () {
 
         const realRewardTokensBal = rewardTokensBal + balance_err;
         expect(staking_balance.toString()).to.be.equal(
-          realRewardTokensBal,
+          realRewardTokensBal.toString(),
           "Farm pool balance empty"
         );
         expect(staking_reward_balance_stored.toString()).to.be.equal(
-          realRewardTokensBal,
+          realRewardTokensBal.toString(),
           "Farm pool reward balance not recognized"
         );
         expect(staking_balance_stored.toString()).to.be.equal(
-          0,
+          "0",
           "Farm pool reward balance not recognized"
         );
 
@@ -1053,11 +1058,11 @@ describe("Test Staking Rewards", async function () {
         const cur_round = reward_rounds[1];
 
         expect(cur_round.rewardTokens).to.be.equal(
-          rewardTokensBal,
+          rewardTokensBal.toString(),
           "Bad reward rounds balance"
         );
         expect(cur_round.totalReward).to.be.equal(
-          0,
+          "0",
           "Bad reward rounds reward"
         );
       });
@@ -1093,7 +1098,7 @@ describe("Test Staking Rewards", async function () {
 
         expect(reward_rounds.length).to.be.equal(3, "Bad reward rounds");
         expect(cur_round.rewardTokens).to.be.equal(
-          0,
+          "0",
           "Bad reward rounds balance"
         );
         expect(parseInt(cur_round.accRewardPerShare, 16)).to.be.equal(
@@ -1101,7 +1106,7 @@ describe("Test Staking Rewards", async function () {
           "Bad reward rounds share"
         );
         expect(cur_round.totalReward).to.be.equal(
-          0,
+          "0",
           "Bad reward rounds reward"
         );
         expect(cur_round.startTime).to.be.equal(
@@ -1126,7 +1131,8 @@ describe("Test Staking Rewards", async function () {
         );
         const staking_balance = await stakingWallet.methods
           .balance({ answerId: 0 })
-          .call();
+          .call()
+          .then((t) => t.value0);
 
         const staking_details_1 = await stakingRoot.methods
           .getDetails({ answerId: 0 })
@@ -1148,7 +1154,7 @@ describe("Test Staking Rewards", async function () {
           "Farm pool reward balance not recognized"
         );
         expect(staking_balance_stored.toString()).to.be.equal(
-          userDeposit,
+          userDeposit.toString(),
           "Farm pool reward balance not recognized"
         );
 
@@ -1168,7 +1174,7 @@ describe("Test Staking Rewards", async function () {
           (parseInt(last_reward_time_2, 10) - parseInt(last_reward_time, 10)) *
           rewardPerSec;
         expect(cur_round.rewardTokens).to.be.equal(
-          rewardTokensBal,
+          rewardTokensBal.toString(),
           "Bad reward rounds balance"
         );
         expect(cur_round.totalReward).to.be.equal(
@@ -1223,7 +1229,7 @@ describe("Test Staking Rewards", async function () {
 
         expect(reward_rounds.length).to.be.equal(4, "Bad reward rounds");
         expect(cur_round.rewardTokens).to.be.equal(
-          0,
+          "0",
           "Bad reward rounds balance"
         );
         expect(parseInt(cur_round.accRewardPerShare, 16)).to.be.equal(
@@ -1231,7 +1237,7 @@ describe("Test Staking Rewards", async function () {
           "Bad reward rounds share"
         );
         expect(cur_round.totalReward).to.be.equal(
-          0,
+          "0",
           "Bad reward rounds reward"
         );
         expect(cur_round.startTime).to.be.equal(
@@ -1268,10 +1274,13 @@ describe("Test Staking Rewards", async function () {
         expect(user2_data.length).to.be.equal(3, "Bad user2 data length");
 
         expect(user1_data[1].reward_balance).to.be.equal(
-          0,
+          "0",
           "Bad user1 round reward"
         );
-        expect(user2_data[2]).to.be.equal(0, "Bad user2 round reward");
+        expect(user2_data[2].reward_balance).to.be.equal(
+          "0",
+          "Bad user2 round reward"
+        );
 
         await withdrawTokens(user1, userDeposit);
         await checkTokenBalances(
@@ -1314,13 +1323,16 @@ describe("Test Staking Rewards", async function () {
           round1_reward.toString(),
           "Bad user1 round reward"
         );
-        expect(user2_data[1]).to.be.equal(0, "Bad user2 round reward");
+        expect(user2_data[1].reward_balance).to.be.equal(
+          "0",
+          "Bad user2 round reward"
+        );
 
         expect(user1_data[2].reward_balance).to.be.equal(
           round2_user1_share.toString(),
           "Bad user1 round reward"
         );
-        expect(user2_data[2]).to.be.equal(
+        expect(user2_data[2].reward_balance).to.be.equal(
           round2_user2_share.toString(),
           "Bad user2 round reward"
         );
@@ -1348,7 +1360,10 @@ describe("Test Staking Rewards", async function () {
             user1_reward_data[i].reward_balance,
             10
           );
-          const user2_round_reward = parseInt(user2_reward_data[i], 10);
+          const user2_round_reward = parseInt(
+            user2_reward_data[i].reward_balance,
+            10
+          );
 
           const user1_token_reward = Math.floor(
             (Math.floor(
@@ -1377,6 +1392,8 @@ describe("Test Staking Rewards", async function () {
           .then((v) => v.value0);
         const user1_token_balance = user1_data_1.token_balance;
 
+        logger.log(JSON.stringify(user1_reward_data));
+        logger.log(JSON.stringify(user1_token_balance));
         const res = await pendingReward(user1_token_balance, user1_reward_data);
         expect(res.toString()).to.be.eq(
           user1_expected_token_reward.toString(),
