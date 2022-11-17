@@ -677,6 +677,7 @@ describe("Test Staking Rewards", async function () {
           userInitialTokenBal - userDeposit,
           userDeposit
         );
+
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
           .call()
@@ -692,9 +693,10 @@ describe("Test Staking Rewards", async function () {
           rewardTokensBal + userDeposit * 2,
           userDeposit * 2,
           rewardTokensBal,
-          userInitialTokenBal - userDeposit * 2,
-          userDeposit * 2
+          userInitialTokenBal - userDeposit,
+          userDeposit
         );
+
         const staking_details_1 = await stakingRoot.methods
           .getDetails({ answerId: 0 })
           .call()
@@ -759,7 +761,7 @@ describe("Test Staking Rewards", async function () {
           rewardTokensBal + userDeposit,
           userDeposit,
           rewardTokensBal,
-          userInitialTokenBal - userDeposit,
+          userInitialTokenBal,
           0
         );
 
