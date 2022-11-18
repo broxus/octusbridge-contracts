@@ -599,6 +599,8 @@ describe("Test Staking Relay mechanic", async function () {
           await sleep(DEV_WAIT);
         }
 
+        await locklift.testing.increaseTime(DEV_WAIT);
+
         const active = await stakingRoot.methods
           .isActive({ answerId: 0 })
           .call()
@@ -619,6 +621,8 @@ describe("Test Staking Relay mechanic", async function () {
         if (locklift.context.network.name === "dev") {
           await sleep(DEV_WAIT);
         }
+
+        await locklift.testing.increaseTime(DEV_WAIT);
 
         const staking_balance = await stakingWallet.methods
           .balance({ answerId: 0 })
@@ -671,6 +675,8 @@ describe("Test Staking Relay mechanic", async function () {
           await sleep(DEV_WAIT);
         }
 
+        await locklift.testing.increaseTime(DEV_WAIT);
+
         const relay_config = await stakingRoot.methods
           .getRelayConfig({ answerId: 0 })
           .call()
@@ -700,6 +706,8 @@ describe("Test Staking Relay mechanic", async function () {
           await sleep(DEV_WAIT);
         }
 
+        await locklift.testing.increaseTime(DEV_WAIT);
+
         await checkTokenBalances(
           userTokenWallet1,
           user1Data,
@@ -727,6 +735,8 @@ describe("Test Staking Relay mechanic", async function () {
           await sleep(DEV_WAIT);
         }
 
+        await locklift.testing.increaseTime(DEV_WAIT);
+
         await checkTokenBalances(
           userTokenWallet2,
           user2Data,
@@ -752,6 +762,8 @@ describe("Test Staking Relay mechanic", async function () {
         if (locklift.context.network.name === "dev") {
           await sleep(DEV_WAIT);
         }
+
+        await locklift.testing.increaseTime(DEV_WAIT);
 
         await checkTokenBalances(
           userTokenWallet3,
@@ -791,13 +803,17 @@ describe("Test Staking Relay mechanic", async function () {
           amount: locklift.utils.toNano(200),
         });
 
-        await sleep(500);
+        // await sleep(500);
+
+        await locklift.testing.increaseTime(1);
 
         const round = await getRelayRound(0);
         await waitForDeploy(round.address);
         if (locklift.context.network.name === "dev") {
           await sleep(DEV_WAIT);
         }
+
+        await locklift.testing.increaseTime(DEV_WAIT);
 
         const total_tokens_staked = await round.methods
           .total_tokens_staked()
@@ -921,6 +937,8 @@ describe("Test Staking Relay mechanic", async function () {
           await sleep(DEV_WAIT);
         }
 
+        await locklift.testing.increaseTime(DEV_WAIT);
+
         const user2_details = await user2Data.methods
           .getDetails({ answerId: 0 })
           .call()
@@ -954,6 +972,8 @@ describe("Test Staking Relay mechanic", async function () {
         if (locklift.context.network.name === "dev") {
           await sleep(DEV_WAIT);
         }
+
+        await locklift.testing.increaseTime(DEV_WAIT);
 
         const user3_details = await user3Data.methods
           .getDetails({ answerId: 0 })
@@ -1000,6 +1020,8 @@ describe("Test Staking Relay mechanic", async function () {
           await sleep(DEV_WAIT);
         }
 
+        await locklift.testing.increaseTime(DEV_WAIT);
+
         const user1_details = await user1Data.methods
           .getDetails({ answerId: 0 })
           .call()
@@ -1045,6 +1067,8 @@ describe("Test Staking Relay mechanic", async function () {
         if (locklift.context.network.name === "dev") {
           await sleep(DEV_WAIT);
         }
+
+        await locklift.testing.increaseTime(DEV_WAIT);
 
         const user1_details = await user1Data.methods
           .getDetails({ answerId: 0 })
