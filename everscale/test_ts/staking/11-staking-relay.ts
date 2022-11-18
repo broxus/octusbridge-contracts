@@ -843,16 +843,12 @@ describe("Test Staking Relay mechanic", async function () {
           .then((v) => v.value0);
         const reward_rounds_new = staking_details.rewardRounds;
 
-        const expected_reward =
-          new BigNumber(round_reward) +
-          new BigNumber(reward_rounds[0].totalReward);
+        const expected_reward = new BigNumber(round_reward).plus(
+          new BigNumber(reward_rounds[0].totalReward)
+        );
 
-        console.log(new BigNumber(round_reward));
-        console.log(new BigNumber(reward_rounds[0].totalReward));
-        console.log(new BigNumber(reward_rounds_new[0].totalReward));
-
-        expect(expected_reward).to.be.equal(
-          reward_rounds_new[0].totalReward,
+        expect(expected_reward.toString()).to.be.equal(
+          reward_rounds_new[0].totalReward.toString(),
           "Bad reward after relay round init"
         );
 
@@ -898,11 +894,11 @@ describe("Test Staking Relay mechanic", async function () {
           user1.address.toString(),
           "Relay creation fail - staker addr"
         );
-        expect(relay._ton_key.toString()).to.be.equal(
+        expect(new BigNumber(relay._ton_key).toString(16)).to.be.equal(
           user1_pk.toString(16),
           "Relay creation fail - ton pubkey"
         );
-        expect(relay._eth_addr.toString()).to.be.equal(
+        expect(new BigNumber(relay._eth_addr).toString(16)).to.be.equal(
           user1_eth.toString(16),
           "Relay creation fail - eth addr"
         );
@@ -1091,6 +1087,8 @@ describe("Test Staking Relay mechanic", async function () {
         if (locklift.context.network.name === "dev") {
           await sleep(DEV_WAIT);
         }
+        await locklift.testing.increaseTime(DEV_WAIT);
+
         const round_num = await election.methods
           .round_num()
           .call()
@@ -1134,6 +1132,7 @@ describe("Test Staking Relay mechanic", async function () {
         if (locklift.context.network.name === "dev") {
           await sleep(DEV_WAIT);
         }
+        await locklift.testing.increaseTime(DEV_WAIT);
 
         const bal1_after = await getBalance(user1Data.address);
 
@@ -1193,6 +1192,8 @@ describe("Test Staking Relay mechanic", async function () {
           await sleep(DEV_WAIT);
         }
 
+        await locklift.testing.increaseTime(DEV_WAIT);
+
         const events3 = await user3Data
           .getPastEvents({ filter: "RelayMembershipRequested" })
           .then((e) => e.events);
@@ -1225,7 +1226,7 @@ describe("Test Staking Relay mechanic", async function () {
           user3_token_balance.toString(),
           "Bad event - tokens"
         );
-        expect(_ton_pubkey3.toString()).to.be.equal(
+        expect("0x" + new BigNumber(_ton_pubkey3).toString(16)).to.be.equal(
           expected_ton_pubkey3,
           "Bad event - ton pubkey"
         );
@@ -1247,6 +1248,8 @@ describe("Test Staking Relay mechanic", async function () {
         if (locklift.context.network.name === "dev") {
           await sleep(DEV_WAIT);
         }
+
+        await locklift.testing.increaseTime(DEV_WAIT);
 
         const events2 = await user3Data
           .getPastEvents({ filter: "RelayMembershipRequested" })
@@ -1361,7 +1364,8 @@ describe("Test Staking Relay mechanic", async function () {
       });
 
       it("Election ends, new round initialized", async function () {
-        await sleep(3000);
+        // await sleep(3000);
+        await locklift.testing.increaseTime(5);
 
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
@@ -1456,15 +1460,23 @@ describe("Test Staking Relay mechanic", async function () {
           .then((v) => v.value0);
 
         const stored_round_num = round_details.round_num;
-        const stored_relays_count = await round.methods.relays_count().call();
+        const stored_relays_count = await round.methods
+          .relays_count()
+          .call()
+          .then((t) => t.relays_count);
         const stored_total_tokens_staked = await round.methods
           .total_tokens_staked()
-          .call();
+          .call()
+          .then((t) => t.total_tokens_staked);
         const stored_reward_round_num = await round.methods
           .reward_round_num()
-          .call();
+          .call()
+          .then((t) => t.reward_round_num);
         const stored_relays_installed = round_details.relays_installed;
-        const stored_duplicate = await round.methods.duplicate().call();
+        const stored_duplicate = await round.methods
+          .duplicate()
+          .call()
+          .then((t) => t.duplicate);
 
         const expected_staked_tokens = userDeposit * 6;
 
@@ -1616,6 +1628,7 @@ describe("Test Staking Relay mechanic", async function () {
         if (locklift.context.network.name === "dev") {
           await sleep(DEV_WAIT);
         }
+        await locklift.testing.increaseTime(DEV_WAIT);
 
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
@@ -1645,7 +1658,8 @@ describe("Test Staking Relay mechanic", async function () {
       });
 
       it("Election on new round starts", async function () {
-        await sleep(5000);
+        // await sleep(5000);
+        await locklift.testing.increaseTime(5);
 
         const tx = await startElection(
           (await locklift.keystore.getSigner("2"))!
@@ -1654,8 +1668,12 @@ describe("Test Staking Relay mechanic", async function () {
         if (locklift.context.network.name === "dev") {
           await sleep(DEV_WAIT);
         }
+        await locklift.testing.increaseTime(DEV_WAIT);
 
-        const round_num = await election.methods.round_num().call();
+        const round_num = await election.methods
+          .round_num()
+          .call()
+          .then((t) => t.round_num);
         expect(round_num.toString()).to.be.equal(
           "2",
           "Bad election - round num"
@@ -1678,8 +1696,8 @@ describe("Test Staking Relay mechanic", async function () {
           "2",
           "Bad election - round num"
         );
-        expect(_election_addr).to.be.equal(
-          election.address,
+        expect(_election_addr.toString()).to.be.equal(
+          election.address.toString(),
           "Bad election - address"
         );
       });
@@ -1692,6 +1710,7 @@ describe("Test Staking Relay mechanic", async function () {
         if (locklift.context.network.name === "dev") {
           await sleep(DEV_WAIT);
         }
+        await locklift.testing.increaseTime(DEV_WAIT);
 
         const events1 = await user1Data
           .getPastEvents({ filter: "RelayMembershipRequested" })
@@ -1728,7 +1747,7 @@ describe("Test Staking Relay mechanic", async function () {
           user1_token_balance.toString(),
           "Bad event - tokens"
         );
-        expect(_ton_pubkey1.toString()).to.be.equal(
+        expect("0x" + new BigNumber(_ton_pubkey1).toString(16)).to.be.equal(
           expected_ton_pubkey1,
           "Bad event - ton pubkey"
         );
@@ -1743,7 +1762,8 @@ describe("Test Staking Relay mechanic", async function () {
       });
 
       it("Election ends, not enough users participated, clone prev. round", async function () {
-        await sleep(3500);
+        // await sleep(3500);
+        await locklift.testing.increaseTime(5);
 
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
@@ -1763,6 +1783,8 @@ describe("Test Staking Relay mechanic", async function () {
         if (locklift.context.network.name === "dev") {
           await sleep(DEV_WAIT);
         }
+        await locklift.testing.increaseTime(DEV_WAIT);
+
         // const election = await getElection(2);
 
         // console.log('root', stakingRoot.address)
@@ -1816,7 +1838,7 @@ describe("Test Staking Relay mechanic", async function () {
           "Bad relay init event - round num"
         );
         expect(_round_addr.toString()).to.be.equal(
-          round.address,
+          round.address.toString(),
           "Bad relay init event - round addr"
         );
         expect(_relays_count.toString()).to.be.equal(
@@ -1834,15 +1856,23 @@ describe("Test Staking Relay mechanic", async function () {
           .then((v) => v.value0);
 
         const stored_round_num = round_details.round_num;
-        const stored_relays_count = await round.methods.relays_count().call();
+        const stored_relays_count = await round.methods
+          .relays_count()
+          .call()
+          .then((t) => t.relays_count);
         const stored_total_tokens_staked = await round.methods
           .total_tokens_staked()
-          .call();
+          .call()
+          .then((t) => t.total_tokens_staked);
         const stored_reward_round_num = await round.methods
           .reward_round_num()
-          .call();
+          .call()
+          .then((t) => t.reward_round_num);
         const stored_relays_installed = round_details.relays_installed;
-        const stored_duplicate = await round.methods.duplicate().call();
+        const stored_duplicate = await round.methods
+          .duplicate()
+          .call()
+          .then((t) => t.duplicate);
 
         const expected_staked_tokens = userDeposit * 6;
 
@@ -1930,6 +1960,8 @@ describe("Test Staking Relay mechanic", async function () {
           if (locklift.context.network.name === "dev") {
             await sleep(DEV_WAIT);
           }
+          await locklift.testing.increaseTime(DEV_WAIT);
+
           const _user_rewards = await userRewardRounds(_userData);
 
           await getRewardForRelayRound(
@@ -1940,6 +1972,8 @@ describe("Test Staking Relay mechanic", async function () {
           if (locklift.context.network.name === "dev") {
             await sleep(DEV_WAIT);
           }
+          await locklift.testing.increaseTime(DEV_WAIT);
+
           const _user_rewards_1 = await userRewardRounds(_userData);
 
           const round_reward = rewardPerSec * RELAY_ROUND_TIME_1;
@@ -2005,9 +2039,7 @@ describe("Test Staking Relay mechanic", async function () {
             round1_rewards_data.rewardTokens) /
             1e10
         );
-        const user1_token_balance0 = new BigNumber(
-          await userTokenBalance(user1Data)
-        );
+        const user1_token_balance0 = Number(await userTokenBalance(user1Data));
         // console.log(user1_token_balance0.toFixed(0));
 
         const staking_details_before = await stakingRoot.methods
@@ -2026,8 +2058,7 @@ describe("Test Staking Relay mechanic", async function () {
           },
         ] = events2;
 
-        const expected_withdraw =
-          user1_token_balance0 + new BigNumber(user1_token_reward);
+        const expected_withdraw = user1_token_balance0 + user1_token_reward;
         expect(_tokens_withdraw.toString()).to.be.equal(
           expected_withdraw.toString(),
           "Bad slashed reward"
@@ -2053,7 +2084,8 @@ describe("Test Staking Relay mechanic", async function () {
 
     describe("Destroy old relay round", async function () {
       it("Election on new round starts", async function () {
-        await sleep(5000);
+        // await sleep(5000);
+        await locklift.testing.increaseTime(5);
 
         const tx = await startElection(
           (await locklift.keystore.getSigner("2"))!
@@ -2062,8 +2094,12 @@ describe("Test Staking Relay mechanic", async function () {
         if (locklift.context.network.name === "dev") {
           await sleep(DEV_WAIT);
         }
+        await locklift.testing.increaseTime(DEV_WAIT);
 
-        const round_num = await election.methods.round_num().call();
+        const round_num = await election.methods
+          .round_num()
+          .call()
+          .then((t) => t.round_num);
         expect(round_num.toString()).to.be.equal(
           "3",
           "Bad election - round num"
@@ -2086,14 +2122,15 @@ describe("Test Staking Relay mechanic", async function () {
           "3",
           "Bad election - round num"
         );
-        expect(_election_addr).to.be.equal(
-          election.address,
+        expect(_election_addr.toString()).to.be.equal(
+          election.address.toString(),
           "Bad election - address"
         );
       });
 
       it("Election ends, not enough users participated, clone prev. round", async function () {
         await sleep(3500);
+        await locklift.testing.increaseTime(5);
 
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
@@ -2113,6 +2150,8 @@ describe("Test Staking Relay mechanic", async function () {
         if (locklift.context.network.name === "dev") {
           await sleep(DEV_WAIT);
         }
+        await locklift.testing.increaseTime(DEV_WAIT);
+
         // const election = await getElection(2);
 
         // console.log('root', stakingRoot.address)
@@ -2166,7 +2205,7 @@ describe("Test Staking Relay mechanic", async function () {
           "Bad relay init event - round num"
         );
         expect(_round_addr.toString()).to.be.equal(
-          round.address,
+          round.address.toString(),
           "Bad relay init event - round addr"
         );
         expect(_relays_count.toString()).to.be.equal(
@@ -2184,15 +2223,24 @@ describe("Test Staking Relay mechanic", async function () {
           .then((v) => v.value0);
 
         const stored_round_num = round_details.round_num;
-        const stored_relays_count = await round.methods.relays_count().call();
+
+        const stored_relays_count = await round.methods
+          .relays_count()
+          .call()
+          .then((t) => t.relays_count);
         const stored_total_tokens_staked = await round.methods
           .total_tokens_staked()
-          .call();
+          .call()
+          .then((t) => t.total_tokens_staked);
         const stored_reward_round_num = await round.methods
           .reward_round_num()
-          .call();
+          .call()
+          .then((t) => t.reward_round_num);
         const stored_relays_installed = round_details.relays_installed;
-        const stored_duplicate = await round.methods.duplicate().call();
+        const stored_duplicate = await round.methods
+          .duplicate()
+          .call()
+          .then((t) => t.duplicate);
 
         const expected_staked_tokens = userDeposit * 6;
 
@@ -2262,7 +2310,8 @@ describe("Test Staking Relay mechanic", async function () {
 
     describe("Late round start", async function () {
       it("Election on new round starts", async function () {
-        await sleep(5000);
+        // await sleep(5000);
+        await locklift.testing.increaseTime(5);
 
         const tx = await startElection(
           (await locklift.keystore.getSigner("2"))!
@@ -2271,8 +2320,12 @@ describe("Test Staking Relay mechanic", async function () {
         if (locklift.context.network.name === "dev") {
           await sleep(DEV_WAIT);
         }
+        await locklift.testing.increaseTime(DEV_WAIT);
 
-        const round_num = await election.methods.round_num().call();
+        const round_num = await election.methods
+          .round_num()
+          .call()
+          .then((t) => t.round_num);
         expect(round_num.toString()).to.be.equal(
           "4",
           "Bad election - round num"
@@ -2295,15 +2348,16 @@ describe("Test Staking Relay mechanic", async function () {
           "4",
           "Bad election - round num"
         );
-        expect(_election_addr).to.be.equal(
-          election.address,
+        expect(_election_addr.toString()).to.be.equal(
+          election.address.toString(),
           "Bad election - address"
         );
       });
 
       it("Election ends late, not enough users participated, clone prev. round", async function () {
         // make sure current round ends after prev round end
-        await sleep(RELAY_ROUND_TIME_1 * 1000);
+        // await sleep(RELAY_ROUND_TIME_1 * 1000);
+        await locklift.testing.increaseTime(RELAY_ROUND_TIME_1);
 
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
@@ -2328,6 +2382,8 @@ describe("Test Staking Relay mechanic", async function () {
         if (locklift.context.network.name === "dev") {
           await sleep(DEV_WAIT);
         }
+        await locklift.testing.increaseTime(DEV_WAIT);
+
         // const election = await getElection(2);
 
         // console.log('root', stakingRoot.address)
@@ -2381,7 +2437,7 @@ describe("Test Staking Relay mechanic", async function () {
           "Bad relay init event - round num"
         );
         expect(_round_addr.toString()).to.be.equal(
-          round.address,
+          round.address.toString(),
           "Bad relay init event - round addr"
         );
         expect(_relays_count.toString()).to.be.equal(
@@ -2399,15 +2455,23 @@ describe("Test Staking Relay mechanic", async function () {
           .then((v) => v.value0);
 
         const stored_round_num = round_details.round_num;
-        const stored_relays_count = await round.methods.relays_count().call();
+        const stored_relays_count = await round.methods
+          .relays_count()
+          .call()
+          .then((t) => t.relays_count);
         const stored_total_tokens_staked = await round.methods
           .total_tokens_staked()
-          .call();
+          .call()
+          .then((t) => t.total_tokens_staked);
         const stored_reward_round_num = await round.methods
           .reward_round_num()
-          .call();
+          .call()
+          .then((t) => t.reward_round_num);
         const stored_relays_installed = round_details.relays_installed;
-        const stored_duplicate = await round.methods.duplicate().call();
+        const stored_duplicate = await round.methods
+          .duplicate()
+          .call()
+          .then((t) => t.duplicate);
 
         const expected_staked_tokens = userDeposit * 6;
 
@@ -2470,9 +2534,9 @@ describe("Test Staking Relay mechanic", async function () {
           .call()
           .then((t) => t.value0);
         expect(
-          root_round_details_1.currentRelayRoundStartTime.toString()
+          Number(root_round_details_1.currentRelayRoundStartTime)
         ).to.be.gt(
-          root_round_details.currentRelayRoundEndTime.toString(),
+          Number(root_round_details.currentRelayRoundEndTime),
           "Bad new round start time"
         );
       });
@@ -2494,17 +2558,15 @@ describe("Test Staking Relay mechanic", async function () {
           .call()
           .then((v) => v.value0);
         const tx = await withdrawTokens(user2, userDeposit);
-        await sleep(1000);
+        // await sleep(1000);
+        await locklift.testing.increaseTime(1);
         const after_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
           .call()
           .then((v) => v.value0);
 
-        const expected_bal =
-          new BigNumber(prev_details.tokenBalance) - userDeposit;
-        expect(new BigNumber(after_details.tokenBalance)).to.be.equal(
-          expected_bal
-        );
+        const expected_bal = Number(prev_details.tokenBalance) - userDeposit;
+        expect(Number(after_details.tokenBalance)).to.be.equal(expected_bal);
       });
 
       it("Rescuer withdraw all tokens", async function () {
@@ -2513,17 +2575,19 @@ describe("Test Staking Relay mechanic", async function () {
           .call()
           .then((v) => v.value0);
         await withdrawEmergency(100, false);
-        await sleep(1000);
+        // await sleep(1000);
+        await locklift.testing.increaseTime(1);
         const after_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
           .call()
           .then((v) => v.value0);
-        expect(new BigNumber(after_details.tokenBalance)).to.be.equal(
-          new BigNumber(prev_details.tokenBalance) - 100
+        expect(Number(after_details.tokenBalance)).to.be.equal(
+          Number(prev_details.tokenBalance) - 100
         );
 
         await withdrawEmergency(0, true);
-        await sleep(1000);
+        // await sleep(1000);
+        await locklift.testing.increaseTime(1);
         const after_details_2 = await stakingRoot.methods
           .getDetails({ answerId: 0 })
           .call()
