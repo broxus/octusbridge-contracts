@@ -16,7 +16,9 @@ import "./../base/SolanaEverscaleBaseEvent.sol";
 contract MultiVaultSolanaEverscaleEventNative is SolanaEverscaleBaseEvent, IMultiVaultSolanaEverscaleEventNative {
     address token;
     uint128 amount;
+    uint64 sol_amount;
     address recipient;
+    bytes payload;
 
     address proxy;
     address tokenWallet;
@@ -37,25 +39,16 @@ contract MultiVaultSolanaEverscaleEventNative is SolanaEverscaleBaseEvent, IMult
     }
 
     function onInit() override internal {
-        int8 token_wid;
-        uint256 token_addr;
-
-        int8 recipient_wid;
-        uint256 recipient_addr;
-
         (
-            token_wid,
-            token_addr,
+            token,
             amount,
-            recipient_wid,
-            recipient_addr
+            sol_amount,
+            recipient,
+            payload
         ) = abi.decode(
             eventInitData.voteData.eventData,
-            (int8, uint256, uint128, int8, uint256)
+            (address, uint128, uint64, address, bytes)
         );
-
-        token = address.makeAddrStd(token_wid, token_addr);
-        recipient = address.makeAddrStd(recipient_wid, recipient_addr);
 
         ISolanaEverscaleEventConfiguration(eventInitData.configuration).getDetails{
             value: 1 ton,
@@ -91,16 +84,20 @@ contract MultiVaultSolanaEverscaleEventNative is SolanaEverscaleBaseEvent, IMult
     function getDecodedData() external override responsible returns(
         address token_,
         uint128 amount_,
+        uint64 sol_amount_,
         address recipient_,
         address proxy_,
-        address tokenWallet_
+        address tokenWallet_,
+        bytes payload_
     ) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(
             token,
             amount,
+            sol_amount_,
             recipient,
             proxy,
-            tokenWallet
+            tokenWallet,
+            payload_
         );
     }
 

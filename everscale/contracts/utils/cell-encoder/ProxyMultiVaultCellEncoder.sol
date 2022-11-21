@@ -78,20 +78,21 @@ contract ProxyMultiVaultCellEncoder {
         string symbol,
         uint8 decimals,
         uint128 amount,
-        int8 recipient_wid,
-        uint256 recipient_addr
+        uint64 sol_amount,
+        address recipient,
+        bytes payload
     ) external pure returns (TvmCell) {
-        return abi.encode( base_token, name, symbol, decimals, amount, recipient_wid, recipient_addr);
+        return abi.encode( base_token, name, symbol, decimals, amount, sol_amount, recipient, payload);
     }
 
     function encodeMultiVaultNativeSolanaEverscale(
-        int8 token_wid,
-        uint256 token_addr,
+        address token,
         uint128 amount,
-        int8 recipient_wid,
-        uint256 recipient_addr
+        uint64 sol_amount,
+        address recipient,
+        bytes payload
     ) external pure returns (TvmCell) {
-        return abi.encode(token_wid, token_addr, amount, recipient_wid, recipient_addr);
+        return abi.encode(token, amount, sol_amount, recipient, payload);
     }
 
     function encodeAlienBurnPayloadSolana(
@@ -124,17 +125,16 @@ contract ProxyMultiVaultCellEncoder {
     function decodeMultiVaultNativeEverscaleSolana(
         TvmCell data
     ) external pure returns(
-        int8 token_wid,
-        uint256 token_addr,
+        address token,
         string name,
         string symbol,
         uint8 decimals,
         uint128 amount,
         uint256 recipient
     ) {
-        (token_wid, token_addr, name, symbol, decimals, amount, recipient) = abi.decode(
+        (token, name, symbol, decimals, amount, recipient) = abi.decode(
             data,
-            (int8, uint256, string, string, uint8, uint128, uint256)
+            (address, string, string, uint8, uint128, uint256)
         );
     }
 }

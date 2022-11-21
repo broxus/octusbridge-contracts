@@ -108,8 +108,7 @@
 		{
 			"name": "NativeTransfer",
 			"inputs": [
-				{"name":"token_wid","type":"int8"},
-				{"name":"token_addr","type":"uint256"},
+				{"name":"token","type":"address"},
 				{"name":"name","type":"string"},
 				{"name":"symbol","type":"string"},
 				{"name":"decimals","type":"uint8"},

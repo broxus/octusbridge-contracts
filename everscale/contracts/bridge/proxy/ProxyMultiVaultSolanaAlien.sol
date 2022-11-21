@@ -52,10 +52,10 @@ contract ProxyMultiVaultSolanaAlien is
     }
 
     /// @notice Handles token burn.
-    /// Initializes alien transfer (eg BSC CAKE or ETH AAVE).
+    /// Initializes alien transfer.
     /// @param amount Tokens amount
     /// @param remainingGasTo Address to send remaining gas to
-    /// @param payload TvmCell encoded (uint160 recipient)
+    /// @param payload TvmCell encoded
     function onAcceptTokensBurn(
         uint128 amount,
         address,

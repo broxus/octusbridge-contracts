@@ -300,13 +300,9 @@ describe("Test Solana native multivault pipeline", async function () {
         })
         .call();
 
-      expect(decodedData.token_wid).to.be.equal(
-        root.address.toString().split(":")[0],
-        "Wrong event data token wid"
-      );
-      expect(new BigNumber(decodedData.token_addr).toString(16)).to.be.equal(
-        `${root.address.toString().split(":")[1]}`,
-        "Wrong event data token address"
+      expect(decodedData.token.toString()).to.be.equal(
+        root.address.toString(),
+        "Wrong event data token"
       );
 
       expect(decodedData.amount).to.be.equal(
@@ -446,11 +442,11 @@ describe("Test Solana native multivault pipeline", async function () {
 
     it("Initialize event", async () => {
       eventDataStructure = {
-        token_wid: root.address.toString().split(":")[0],
-        token_addr: `0x${root.address.toString().split(":")[1]}`,
+        token: root.address,
         amount,
-        recipient_wid: initializer.address.toString().split(":")[0],
-        recipient_addr: `0x${initializer.address.toString().split(":")[1]}`,
+        recipient: initializer.address,
+        payload: "",
+        sol_amount: 0,
       };
 
       eventDataEncoded = await cellEncoder.methods

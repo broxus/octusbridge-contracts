@@ -14,8 +14,7 @@ interface IProxyMultiVaultSolanaNative {
     function setConfiguration(Configuration _config, address gasBackAddress) external;
 
     event NativeTransfer(
-        int8 token_wid,
-        uint256 token_addr,
+        address token,
         string name,
         string symbol,
         uint8 decimals,

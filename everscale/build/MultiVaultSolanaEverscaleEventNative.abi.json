@@ -38,9 +38,11 @@
 			"outputs": [
 				{"name":"token_","type":"address"},
 				{"name":"amount_","type":"uint128"},
+				{"name":"sol_amount_","type":"uint64"},
 				{"name":"recipient_","type":"address"},
 				{"name":"proxy_","type":"address"},
-				{"name":"tokenWallet_","type":"address"}
+				{"name":"tokenWallet_","type":"address"},
+				{"name":"payload_","type":"bytes"}
 			]
 		},
 		{
@@ -247,7 +249,9 @@
 		{"components":[{"components":[{"name":"accountSeed","type":"uint128"},{"name":"slot","type":"uint64"},{"name":"blockTime","type":"uint64"},{"name":"txSignature","type":"string"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"eventInitData","type":"tuple"},
 		{"name":"token","type":"address"},
 		{"name":"amount","type":"uint128"},
+		{"name":"sol_amount","type":"uint64"},
 		{"name":"recipient","type":"address"},
+		{"name":"payload","type":"bytes"},
 		{"name":"proxy","type":"address"},
 		{"name":"tokenWallet","type":"address"}
 	]

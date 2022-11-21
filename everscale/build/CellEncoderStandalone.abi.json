@@ -228,8 +228,9 @@
 				{"name":"symbol","type":"string"},
 				{"name":"decimals","type":"uint8"},
 				{"name":"amount","type":"uint128"},
-				{"name":"recipient_wid","type":"int8"},
-				{"name":"recipient_addr","type":"uint256"}
+				{"name":"sol_amount","type":"uint64"},
+				{"name":"recipient","type":"address"},
+				{"name":"payload","type":"bytes"}
 			],
 			"outputs": [
 				{"name":"value0","type":"cell"}
@@ -238,11 +239,11 @@
 		{
 			"name": "encodeMultiVaultNativeSolanaEverscale",
 			"inputs": [
-				{"name":"token_wid","type":"int8"},
-				{"name":"token_addr","type":"uint256"},
+				{"name":"token","type":"address"},
 				{"name":"amount","type":"uint128"},
-				{"name":"recipient_wid","type":"int8"},
-				{"name":"recipient_addr","type":"uint256"}
+				{"name":"sol_amount","type":"uint64"},
+				{"name":"recipient","type":"address"},
+				{"name":"payload","type":"bytes"}
 			],
 			"outputs": [
 				{"name":"value0","type":"cell"}
@@ -285,8 +286,7 @@
 				{"name":"data","type":"cell"}
 			],
 			"outputs": [
-				{"name":"token_wid","type":"int8"},
-				{"name":"token_addr","type":"uint256"},
+				{"name":"token","type":"address"},
 				{"name":"name","type":"string"},
 				{"name":"symbol","type":"string"},
 				{"name":"decimals","type":"uint8"},

@@ -110,8 +110,9 @@ describe("Test Solana alien multivault pipeline", async function () {
         symbol: "GIGA_CHAD",
         decimals: 6,
         amount: 333,
-        recipient_wid: initializer.address.toString().split(":")[0],
-        recipient_addr: `0x${initializer.address.toString().split(":")[1]}`,
+        recipient: initializer.address,
+        sol_amount: 0,
+        payload: "",
       };
 
       eventDataEncoded = await cellEncoder.methods

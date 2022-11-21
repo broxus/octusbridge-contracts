@@ -19,6 +19,8 @@ contract MultiVaultSolanaEverscaleEventAlien is SolanaEverscaleBaseEvent, IMulti
     string symbol;
     uint8 decimals;
     uint128 amount;
+    uint64 sol_amount;
+    bytes payload;
     address recipient;
 
     address proxy;
@@ -45,23 +47,19 @@ contract MultiVaultSolanaEverscaleEventAlien is SolanaEverscaleBaseEvent, IMulti
     }
 
     function onInit() override internal {
-        int8 recipient_wid;
-        uint256 recipient_addr;
-
         (
             base_token,
             name,
             symbol,
             decimals,
             amount,
-            recipient_wid,
-            recipient_addr
+            sol_amount,
+            recipient,
+            payload
         ) = abi.decode(
             eventInitData.voteData.eventData,
-            (uint256, string, string, uint8, uint128, int8, uint256)
+            (uint256, string, string, uint8, uint128, uint64, address, bytes)
         );
-
-        recipient = address.makeAddrStd(recipient_wid, recipient_addr);
 
         ISolanaEverscaleEventConfiguration(eventInitData.configuration).getDetails{
             value: 1 ton,
@@ -117,9 +115,11 @@ contract MultiVaultSolanaEverscaleEventAlien is SolanaEverscaleBaseEvent, IMulti
         string symbol_,
         uint8 decimals_,
         uint128 amount_,
+        uint64 sol_amount_,
         address recipient_,
         address proxy_,
-        address token_
+        address token_,
+        bytes payload_
     ) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(
             base_token,
@@ -127,9 +127,11 @@ contract MultiVaultSolanaEverscaleEventAlien is SolanaEverscaleBaseEvent, IMulti
             symbol,
             decimals,
             amount,
+            sol_amount_,
             recipient,
             proxy,
-            token
+            token,
+            payload_
         );
     }
 }

@@ -21,8 +21,10 @@ interface IMultiVaultSolanaEverscaleEventAlien {
         string symbol_,
         uint8 decimals_,
         uint128 amount_,
+        uint64 sol_amount_,
         address recipient_,
         address proxy_,
-        address token_
+        address token_,
+        bytes payload_
     );
 }

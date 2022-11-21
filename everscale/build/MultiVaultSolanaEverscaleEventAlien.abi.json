@@ -41,9 +41,11 @@
 				{"name":"symbol_","type":"string"},
 				{"name":"decimals_","type":"uint8"},
 				{"name":"amount_","type":"uint128"},
+				{"name":"sol_amount_","type":"uint64"},
 				{"name":"recipient_","type":"address"},
 				{"name":"proxy_","type":"address"},
-				{"name":"token_","type":"address"}
+				{"name":"token_","type":"address"},
+				{"name":"payload_","type":"bytes"}
 			]
 		},
 		{
@@ -253,6 +255,8 @@
 		{"name":"symbol","type":"string"},
 		{"name":"decimals","type":"uint8"},
 		{"name":"amount","type":"uint128"},
+		{"name":"sol_amount","type":"uint64"},
+		{"name":"payload","type":"bytes"},
 		{"name":"recipient","type":"address"},
 		{"name":"proxy","type":"address"},
 		{"name":"token","type":"address"}
