@@ -5,6 +5,7 @@ pragma solidity ^0.8.2;
 interface ICallExecutor {
     function execute(
         address target,
-        bytes memory data
+        bytes memory data,
+        bool success_required
     ) external;
 }

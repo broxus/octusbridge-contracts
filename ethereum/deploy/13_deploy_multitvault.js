@@ -124,8 +124,6 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         return [...await acc, ...facet.abi];
     }, []);
 
-    // console.log(diamondABI.filter(x => x.name == 'Deposit'));
-
     await deployments.save('MultiVault', {
         abi: _.uniqWith(diamondABI, _.isEqual),
         address: proxy.address,
@@ -146,22 +144,9 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         },
         'diamondCut',
         facetCuts,
-        // ethers.constants.AddressZero,
-        // '0x'
         settings.address,
         settingsInitialize
     );
-
-    // await deployments.execute(
-    //     'MultiVault',
-    //     {
-    //         from: deployer,
-    //         log: true
-    //     },
-    //     'initialize',
-    //     bridge_address,
-    //     owner
-    // );
 };
 
 module.exports.tags = ['Deploy_MultiVault'];

@@ -10,10 +10,13 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 contract CallExecutor is ICallExecutor, ReentrancyGuardUpgradeable, OwnableUpgradeable {
     function execute(
         address target,
-        bytes memory data
+        bytes memory data,
+        bool success_required
     ) external override onlyOwner nonReentrant {
         (bool success, ) = target.call(data);
 
-        require(success);
+        if (success_required) {
+            require(success);
+        }
     }
 }

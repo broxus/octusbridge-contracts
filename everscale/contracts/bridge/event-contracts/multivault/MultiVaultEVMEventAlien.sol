@@ -29,14 +29,21 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
 
     uint256 base_chainId;
     uint160 base_token;
+
     string name;
     string symbol;
     uint8 decimals;
+
     uint128 amount;
     address recipient;
 
+    uint value;
+    uint expected_evers;
+    TvmCell payload;
+
     address proxy;
     address token;
+
 
     address router;
     address pool;
@@ -74,15 +81,26 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
         (
             base_chainId,
             base_token,
+
             name,
             symbol,
             decimals,
+
             amount,
             recipient_wid,
-            recipient_addr
+            recipient_addr,
+
+            value,
+            expected_evers,
+            payload
         ) = abi.decode(
             eventInitData.voteData.eventData,
-            (uint256, uint160, string, string, uint8, uint128, int8, uint256)
+            (
+                uint256, uint160,
+                string, string, uint8,
+                uint128, int8, uint256,
+                uint256, uint256, TvmCell
+            )
         );
 
         recipient = address.makeAddrStd(recipient_wid, recipient_addr);

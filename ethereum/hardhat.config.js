@@ -1,6 +1,7 @@
 require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-web3");
 require("@nomiclabs/hardhat-etherscan");
+require("@nomiclabs/hardhat-ethers");
 require('hardhat-deploy-ethers');
 require('hardhat-deploy');
 require('hardhat-abi-exporter');
@@ -133,7 +134,7 @@ const hardhatConfig = {
       allowUnlimitedContractSize: true,
       forking: {
         url: process.env.ETH_MAIN_ARCHIVE_HTTP,
-        blockNumber: 14958000,
+        blockNumber: 16021525,
       },
       chainId: 1111,
       accounts: {
@@ -213,6 +214,9 @@ const hardhatConfig = {
     apiKey: process.env.ETHERSCAN_KEY
   },
   namedAccounts: {
+    multisig: {
+      hardhat: "0xe29B04B9c6712080f79B2dAc5211B18B279D5DE0"
+    },
     dai_vault: {
       hardhat: '0x032d06b4cc8a914b85615acd0131c3e0a7330968',
       0: '0x032d06b4cc8a914b85615acd0131c3e0a7330968'
