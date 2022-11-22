@@ -159,8 +159,7 @@ contract MultiVaultEverscaleSolanaEventNative is EverscaleSolanaBaseEvent, IMult
 
     function _updateEventData() internal {
         eventInitData.voteData.eventData = abi.encode(
-            token.wid,
-            token.value,
+            token,
 
             name,
             symbol,
