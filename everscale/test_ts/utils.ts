@@ -19,6 +19,15 @@ async function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+async function tryIncreaseTime(ms: number) {
+  // @ts-ignore
+  if (locklift.testing.isEnabled) {
+    await locklift.testing.increaseTime(ms / 1000);
+  } else {
+    await sleep(ms);
+  }
+}
+
 class MetricManager {
   contracts: [{ name: string; address: Address }];
   checkpoints: { [key: string]: number[] };
@@ -1843,7 +1852,7 @@ const sendTokens = async function (
         },
       }
   );
-  await traceTree?.beautyPrint();
+  // await traceTree?.beautyPrint();
 
 };
 
@@ -1970,4 +1979,5 @@ module.exports = {
   deployAccount,
   logger,
   sleep,
+  tryIncreaseTime
 };
