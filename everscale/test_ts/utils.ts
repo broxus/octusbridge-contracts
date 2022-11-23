@@ -320,7 +320,6 @@ const setupSolanaEverscaleEventConfiguration = async (
 
   const networkConfiguration = {
     program: 0,
-    settings: 0,
     proxy: proxyFutureAddress,
     startTimestamp: 0,
     endTimestamp: 0,
@@ -476,9 +475,6 @@ const setupSolanaEverscaleEventConfigurationReal = async (
     program: new BigNumber(
       "64325431755338481809989759803115734914716347278988009080185460755052753533847"
     ).toFixed(),
-    settings: new BigNumber(
-      "57841592085658898909210956009470529174855388447817017254133095023581205672081"
-    ).toFixed(),
     proxy: proxyFutureAddress,
     startTimestamp: 0,
     endTimestamp: 0,
@@ -558,9 +554,6 @@ const setupSolanaEverscaleEventConfigurationReal = async (
   const everNetworkConfiguration = {
     program: new BigNumber(
       "64325431755338481809989759803115734914716347278988009080185460755052753533847"
-    ).toFixed(),
-    settings: new BigNumber(
-      "57841592085658898909210956009470529174855388447817017254133095023581205672081"
     ).toFixed(),
     eventEmitter: proxyFutureAddress,
     instruction: 0,
@@ -899,7 +892,6 @@ const setupEverscaleSolanaEventConfiguration = async (
 
   const everNetworkConfiguration = {
     program: 0,
-    settings: 0,
     eventEmitter: proxyFutureAddress,
     instruction: 0,
     executeInstruction: 0,
@@ -1310,7 +1302,6 @@ const setupSolanaAlienMultiVault = async (
 
   const networkConfiguration = {
     program: 0,
-    settings: 0,
     proxy: proxy.address,
     startTimestamp: 0,
     endTimestamp: 0,
@@ -1380,7 +1371,6 @@ const setupSolanaAlienMultiVault = async (
 
   const everNetworkConfiguration = {
     program: 0,
-    settings: 0,
     eventEmitter: proxy.address,
     instruction: 0,
     executeInstruction: 0,
@@ -1521,7 +1511,6 @@ const setupSolanaNativeMultiVault = async (
 
   const networkConfiguration = {
     program: 0,
-    settings: 0,
     proxy: proxy.address,
     startTimestamp: 0,
     endTimestamp: 0,
@@ -1591,7 +1580,6 @@ const setupSolanaNativeMultiVault = async (
 
   const everNetworkConfiguration = {
     program: 0,
-    settings: 0,
     eventEmitter: proxy.address,
     instruction: 0,
     executeInstruction: 0,
