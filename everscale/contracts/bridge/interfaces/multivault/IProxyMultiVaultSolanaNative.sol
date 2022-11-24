@@ -13,12 +13,20 @@ interface IProxyMultiVaultSolanaNative {
     function getConfiguration() external view responsible returns (Configuration);
     function setConfiguration(Configuration _config, address gasBackAddress) external;
 
-    event NativeTransfer(
+    event NativeEverSolanaTransfer(
         address token,
         string name,
         string symbol,
         uint8 decimals,
         uint128 amount,
         uint256 recipient
+    );
+
+    event NativeSolanaEverTransfer(
+        address token,
+        uint128 amount,
+        uint64 sol_amount,
+        address recipient,
+        bytes payload
     );
 }

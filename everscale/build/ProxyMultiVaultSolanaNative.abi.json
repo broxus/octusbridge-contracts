@@ -106,7 +106,7 @@
 	],
 	"events": [
 		{
-			"name": "NativeTransfer",
+			"name": "NativeEverSolanaTransfer",
 			"inputs": [
 				{"name":"token","type":"address"},
 				{"name":"name","type":"string"},
@@ -114,6 +114,18 @@
 				{"name":"decimals","type":"uint8"},
 				{"name":"amount","type":"uint128"},
 				{"name":"recipient","type":"uint256"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "NativeSolanaEverTransfer",
+			"inputs": [
+				{"name":"token","type":"address"},
+				{"name":"amount","type":"uint128"},
+				{"name":"sol_amount","type":"uint64"},
+				{"name":"recipient","type":"address"},
+				{"name":"payload","type":"bytes"}
 			],
 			"outputs": [
 			]

@@ -37,9 +37,20 @@ interface IProxyMultiVaultSolanaAlien {
         TvmCell message
     ) external;
 
-    event AlienTransfer(
+    event AlienEverSolanaTransfer(
         uint256 token,
         uint128 amount,
         uint256 recipient
+    );
+
+    event AlienSolanaEverTransfer(
+        uint256 base_token,
+        string name,
+        string symbol,
+        uint8 decimals,
+        uint128 amount,
+        uint64 sol_amount,
+        address recipient,
+        bytes payload
     );
 }
