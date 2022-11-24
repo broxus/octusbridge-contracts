@@ -43,12 +43,14 @@ const main = async () => {
     ...new Set(fs.readdirSync("build").map((o: string) => o.split(".")[0])),
   ];
 
-  const events = fs.readdirSync("./../solana/abi");
+  const events = fs
+      .readdirSync("./build/")
+      .filter((e: any) => e.endsWith(".abi.json"));
 
   const { eventAbiFile } = await prompts({
     type: "select",
     name: "eventAbiFile",
-    message: "Select Solana ABI, which contains target event",
+    message: "Select Ever ABI, which contains target event",
     choices: events.map((e: any) => new Object({ title: e, value: e })),
     initial:
       events.indexOf(options.eventAbiFile) >= 0

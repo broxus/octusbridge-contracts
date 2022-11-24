@@ -142,7 +142,10 @@ async function main() {
 
   spinner.stop();
 
-  await logContract(proxyTokenTransferFactory);
+  await logContract(
+    "proxyTokenTransferFactory address",
+    proxyTokenTransferFactory.address
+  );
 }
 
 main()

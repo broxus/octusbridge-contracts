@@ -57,7 +57,7 @@ const main = async () => {
 
   spinner.stop();
 
-  await logContract(user);
+  await logContract("user address", user.address);
 
   spinner.start("Deploying alien proxy");
 

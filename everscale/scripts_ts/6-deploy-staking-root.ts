@@ -311,7 +311,7 @@ async function main() {
     });
 
   spinner.succeed("Remaining evers sent ✔");
-  await logContract(stakingRoot);
+  await logContract("stakingRoot address", stakingRoot.address);
 }
 
 main()
