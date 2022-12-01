@@ -21,6 +21,40 @@ export class SimpleGiver implements Giver {
     }
 }
 
+export class TestnetGiver implements Giver {
+    public giverContract: Contract<typeof testnetGiverAbi>;
+
+    constructor(ever: ProviderRpcClient, readonly keyPair: Ed25519KeyPair, address: string) {
+        const giverAddr = new Address(address);
+        this.giverContract = new ever.Contract(testnetGiverAbi, giverAddr);
+    }
+
+    public async sendTo(sendTo: Address, value: string): Promise<{ transaction: Transaction; output?: {} }> {
+        return this.giverContract.methods
+            .sendGrams({
+                dest: sendTo,
+                amount: value
+            })
+            .sendExternal({ publicKey: this.keyPair.publicKey });
+    }
+}
+
+const testnetGiverAbi = {
+    "ABI version": 2,
+    header: ["pubkey", "time", "expire"],
+    functions: [
+        {
+            name: "sendGrams",
+            inputs: [
+                {name: "dest", type: "address"},
+                {name: "amount", type: "uint64"}
+            ],
+            outputs: []
+        }
+    ],
+    events: []
+} as const;
+
 const giverAbi = {
     "ABI version": 2,
     header: ["time", "expire"],
