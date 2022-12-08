@@ -17,8 +17,8 @@ import "../helpers/MultiVaultHelperEmergency.sol";
 import "../helpers/MultiVaultHelperTokens.sol";
 import "../helpers/MultiVaultHelperPendingWithdrawal.sol";
 import "../helpers/MultiVaultHelperTokenBalance.sol";
+import "../helpers/MultiVaultHelperCallback.sol";
 
-import "hardhat/console.sol";
 
 contract MultiVaultFacetWithdraw is
     MultiVaultHelperFee,
@@ -27,6 +27,7 @@ contract MultiVaultFacetWithdraw is
     MultiVaultHelperPendingWithdrawal,
     MultiVaultHelperTokens,
     MultiVaultHelperTokenBalance,
+    MultiVaultHelperCallback,
     IMultiVaultFacetWithdraw
 {
     using SafeERC20 for IERC20;
@@ -84,6 +85,8 @@ contract MultiVaultFacetWithdraw is
             payloadId,
             token
         );
+
+        _callbackNativeWithdrawal(withdrawal);
     }
 
     /// @notice Save withdrawal of alien token
@@ -160,6 +163,8 @@ contract MultiVaultFacetWithdraw is
                 withdrawal.token
             );
 
+            _callbackAlienWithdrawal(withdrawal);
+
             return;
         }
 
@@ -193,6 +198,8 @@ contract MultiVaultFacetWithdraw is
                 IMultiVaultFacetPendingWithdrawals.ApproveStatus.Required
             );
         }
+
+        _callbackAlienWithdrawalPendingCreated(withdrawal);
     }
 
     /// @notice Save withdrawal of alien token
@@ -216,13 +223,18 @@ contract MultiVaultFacetWithdraw is
 
             uint128 amount,
             uint160 recipient,
-            uint256 chainId
+            uint256 chainId,
+
+            uint160 callback_recipient,
+            bytes memory callback_payload,
+            bool callback_strict
         ) = abi.decode(
             eventData,
             (
                 int8, uint256,
                 string, string, uint8,
-                uint128, uint160, uint256
+                uint128, uint160, uint256,
+                uint160, bytes, bool
             )
         );
 
@@ -231,7 +243,12 @@ contract MultiVaultFacetWithdraw is
             meta: IMultiVaultFacetTokens.TokenMeta(name, symbol, decimals),
             amount: amount,
             recipient: address(recipient),
-            chainId: chainId
+            chainId: chainId,
+            callback: Callback(
+                address(callback_recipient),
+                callback_payload,
+                callback_strict
+            )
         });
     }
 
@@ -242,17 +259,29 @@ contract MultiVaultFacetWithdraw is
             uint160 token,
             uint128 amount,
             uint160 recipient,
-            uint256 chainId
+            uint256 chainId,
+
+            uint160 callback_recipient,
+            bytes memory callback_payload,
+            bool callback_strict
         ) = abi.decode(
             eventData,
-            (uint160, uint128, uint160, uint256)
+            (
+                uint160, uint128, uint160, uint256,
+                uint160, bytes, bool
+            )
         );
 
         return AlienWithdrawalParams({
             token: address(token),
             amount: uint256(amount),
             recipient: address(recipient),
-            chainId: chainId
+            chainId: chainId,
+            callback: Callback(
+                address(callback_recipient),
+                callback_payload,
+                callback_strict
+            )
         });
     }
 

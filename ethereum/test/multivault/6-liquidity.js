@@ -124,7 +124,8 @@ describe('Test multivault liquidity supply', async () => {
                 token: token.address,
                 amount: amount,
                 recipient: alice,
-                chainId: utils.defaultChainId
+                chainId: utils.defaultChainId,
+                callback: {}
             });
 
             payload = encodeEverscaleEvent({

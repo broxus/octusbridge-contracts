@@ -113,7 +113,8 @@ describe('Test deposit-withdraw for alien token', async () => {
                 token: token.address,
                 amount: amount,
                 recipient: bob,
-                chainId: utils.defaultChainId
+                chainId: utils.defaultChainId,
+                callback: {}
             });
 
             payload = encodeEverscaleEvent({

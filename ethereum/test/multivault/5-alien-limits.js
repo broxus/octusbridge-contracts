@@ -93,7 +93,8 @@ describe('Test alien withdrawal limits', async () => {
                 token: token.address,
                 amount,
                 recipient: bob,
-                chainId: utils.defaultChainId
+                chainId: utils.defaultChainId,
+                callback: {}
             });
 
             const payload = encodeEverscaleEvent({
@@ -185,7 +186,8 @@ describe('Test alien withdrawal limits', async () => {
                 token: token.address,
                 amount,
                 recipient: bob,
-                chainId: utils.defaultChainId
+                chainId: utils.defaultChainId,
+                callback: {}
             });
 
             const payload = encodeEverscaleEvent({

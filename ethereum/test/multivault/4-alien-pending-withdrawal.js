@@ -55,7 +55,8 @@ describe('Alice creates pending withdrawal', async () => {
             token: token.address,
             amount: amount,
             recipient: bob,
-            chainId: utils.defaultChainId
+            chainId: utils.defaultChainId,
+            callback: {}
         });
 
         const payload = encodeEverscaleEvent({

@@ -43,7 +43,9 @@ describe('Test deposit-withdraw for native token', async () => {
 
                 amount,
                 recipient: bob.address,
-                chainId: utils.defaultChainId
+                chainId: utils.defaultChainId,
+
+                callback: {}
             });
 
             payload = encodeEverscaleEvent({
@@ -212,7 +214,8 @@ describe('Test deposit-withdraw for native token', async () => {
                 decimals: meta.decimals,
                 amount,
                 recipient: bob.address,
-                chainId: utils.defaultChainId
+                chainId: utils.defaultChainId,
+                callback: {}
             });
 
             const payload = encodeEverscaleEvent({
@@ -285,7 +288,9 @@ describe('Test deposit-withdraw for native token', async () => {
 
                 amount,
                 recipient: bob.address,
-                chainId: utils.defaultChainId
+                chainId: utils.defaultChainId,
+
+                callback: {}
             });
 
             const payload = encodeEverscaleEvent({
