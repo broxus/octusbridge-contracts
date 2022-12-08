@@ -26,6 +26,16 @@ interface IMultiVaultFacetSettings {
     function emergencyShutdown() external view returns (bool);
     function setEmergencyShutdown(bool active) external;
 
+    function gasDonor() external view returns(address);
+    function setGasDonor(
+        address _gasDonor
+    ) external;
+
+    function setCustomNative(
+        IEverscale.EverscaleAddress memory token,
+        address native
+    ) external;
+
     function setGuardian(address) external;
     function setManagement(address) external;
     function acceptGovernance() external;

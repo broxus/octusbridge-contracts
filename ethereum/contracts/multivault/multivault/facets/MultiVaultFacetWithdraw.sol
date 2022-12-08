@@ -87,6 +87,8 @@ contract MultiVaultFacetWithdraw is
     }
 
     /// @notice Save withdrawal of alien token
+    /// @param signatures List of payload signatures
+    /// @param bounty Bounty size
     function saveWithdrawAlien(
         bytes memory payload,
         bytes[] memory signatures,

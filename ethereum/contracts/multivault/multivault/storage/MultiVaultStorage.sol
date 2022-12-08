@@ -24,7 +24,7 @@ library MultiVaultStorage {
 
     uint256 constant WITHDRAW_PERIOD_DURATION_IN_SECONDS = 60 * 60 * 24; // 24 hours
 
-    // Previous version of the Vault contract was built with Upgradable Proxy Pattern
+    // Previous version of the Vault contract was built with Upgradable Proxy Pattern, without using Diamond storage
     bytes32 constant MULTIVAULT_LEGACY_STORAGE_POSITION = 0x0000000000000000000000000000000000000000000000000000000000000002;
 
     uint constant LP_EXCHANGE_RATE_BPS = 10_000_000_000;
@@ -78,6 +78,10 @@ library MultiVaultStorage {
         // STORAGE UPDATE 3
         mapping (address => IMultiVaultFacetLiquidity.Liquidity) liquidity;
         uint defaultInterest;
+
+        // STORAGE UPDATE 4
+        // - Receives native value, attached to the deposit
+        address gasDonor;
     }
 
     function _storage() internal pure returns (Storage storage s) {

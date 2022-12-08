@@ -87,9 +87,8 @@ contract MultiVaultFacetTokens is
     }
 
     function getNativeToken(
-        int8 native_wid,
-        uint256 native_addr
-    ) external view override returns (address) {
-        return _getNativeToken(native_wid, native_addr);
+        IEverscale.EverscaleAddress memory native
+    ) external view override returns (address token) {
+        token = _getNativeToken(native);
     }
 }

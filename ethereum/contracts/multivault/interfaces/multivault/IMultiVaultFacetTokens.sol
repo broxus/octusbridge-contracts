@@ -26,6 +26,7 @@ interface IMultiVaultFacetTokens {
         uint depositFee;
         uint withdrawFee;
         bool isNative;
+        address custom;
     }
 
     function prefixes(address _token) external view returns (TokenPrefix memory);
@@ -44,7 +45,6 @@ interface IMultiVaultFacetTokens {
     ) external;
 
     function getNativeToken(
-        int8 native_wid,
-        uint256 native_addr
+        IEverscale.EverscaleAddress memory native
     ) external view returns (address);
 }

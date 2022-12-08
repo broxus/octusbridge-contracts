@@ -8,6 +8,7 @@ import "../../interfaces/multivault/IMultiVaultFacetSettings.sol";
 import "../../interfaces/multivault/IMultiVaultFacetSettingsEvents.sol";
 
 import "../helpers/MultiVaultHelperInitializable.sol";
+import "../helpers/MultiVaultHelperTokens.sol";
 import "../helpers/MultiVaultHelperActors.sol";
 import "../helpers/MultiVaultHelperFee.sol";
 
@@ -18,6 +19,7 @@ contract MultiVaultFacetSettings is
     MultiVaultHelperInitializable,
     MultiVaultHelperActors,
     MultiVaultHelperFee,
+    MultiVaultHelperTokens,
     IMultiVaultFacetSettings,
     IMultiVaultFacetSettingsEvents
 {
@@ -254,6 +256,25 @@ contract MultiVaultFacetSettings is
         s.emergencyShutdown = active;
     }
 
+    function setCustomNative(
+        IEverscale.EverscaleAddress memory token,
+        address custom
+    ) external override onlyGovernance {
+        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
+
+        address native = _getNativeToken(token);
+
+        s.tokens_[native].custom = custom;
+    }
+
+    function setGasDonor(
+        address _gasDonor
+    ) external override onlyGovernance {
+        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
+
+        s.gasDonor = _gasDonor;
+    }
+
     function withdrawGuardian() external view override returns(address) {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
@@ -288,5 +309,11 @@ contract MultiVaultFacetSettings is
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         return s.bridge;
+    }
+
+    function gasDonor() external view override returns(address) {
+        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
+
+        return s.gasDonor;
     }
 }

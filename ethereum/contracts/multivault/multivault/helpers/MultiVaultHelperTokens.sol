@@ -56,7 +56,8 @@ abstract contract MultiVaultHelperTokens is
             blacklisted: false,
             isNative: isNative,
             depositFee: depositFee,
-            withdrawFee: withdrawFee
+            withdrawFee: withdrawFee,
+            custom: address(0)
         });
 
         emit TokenActivated(
@@ -70,20 +71,27 @@ abstract contract MultiVaultHelperTokens is
 
     function _getNativeWithdrawalToken(
         IMultiVaultFacetWithdraw.NativeWithdrawalParams memory withdrawal
-    ) internal returns (address token) {
+    ) internal returns (address) {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
-        token = _getNativeToken(
-            withdrawal.native.wid,
-            withdrawal.native.addr
-        );
+        // Derive native token address from the Everscale (token wid, token addr)
+        address token = _getNativeToken(withdrawal.native);
 
+        // Token is being withdrawn first time - activate it (set default parameters)
+        // And deploy ERC20 representation
         if (s.tokens_[token].activation == 0) {
             _deployTokenForNative(withdrawal.native, withdrawal.meta);
             _activateToken(token, true);
 
             s.natives_[token] = withdrawal.native;
         }
+
+        // Check if there is a custom ERC20 representing this withdrawal.native
+        address custom = s.tokens_[token].custom;
+
+        if (custom != address(0)) return custom;
+
+        return token;
     }
 
     function _increaseCash(
@@ -95,18 +103,16 @@ abstract contract MultiVaultHelperTokens is
         s.liquidity[token].cash += amount;
     }
 
-    /// @notice Calculates the CREATE2 address for token, based on the Everscale sig
-    /// @param native_wid Everscale token workchain ID
-    /// @param native_addr Everscale token address body
+    /// @notice Gets the address
+    /// @param native Everscale token address
     /// @return token Token address
     function _getNativeToken(
-        int8 native_wid,
-        uint256 native_addr
+        IEverscale.EverscaleAddress memory native
     ) internal view returns (address token) {
         token = address(uint160(uint(keccak256(abi.encodePacked(
             hex'ff',
             address(this),
-            keccak256(abi.encodePacked(native_wid, native_addr)),
+            keccak256(abi.encodePacked(native.wid, native.addr)),
             hex'192c19818bebb5c6c95f5dcb3c3257379fc46fb654780cb06f3211ee77e1a360' // MultiVaultToken init code hash
         )))));
     }

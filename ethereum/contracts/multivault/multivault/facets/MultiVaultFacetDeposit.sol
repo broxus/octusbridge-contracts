@@ -78,6 +78,7 @@ contract MultiVaultFacetDeposit is
         }
 
         _increaseTokenFee(d.token, fee);
+        _drainGas();
 
         emit Deposit(
             msg.sender,
@@ -135,5 +136,17 @@ contract MultiVaultFacetDeposit is
         );
 
         _increaseTokenFee(d.token, fee);
+
+        _drainGas();
+    }
+
+    function _drainGas() internal {
+        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
+
+        address payable gasDonor = payable(s.gasDonor);
+
+        if (gasDonor != address(0)) {
+            gasDonor.transfer(address(this).balance);
+        }
     }
 }

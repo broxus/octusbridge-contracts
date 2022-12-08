@@ -133,21 +133,28 @@
   {
     "inputs": [
       {
-        "internalType": "int8",
-        "name": "native_wid",
-        "type": "int8"
-      },
-      {
-        "internalType": "uint256",
-        "name": "native_addr",
-        "type": "uint256"
+        "components": [
+          {
+            "internalType": "int8",
+            "name": "wid",
+            "type": "int8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "addr",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IEverscale.EverscaleAddress",
+        "name": "native",
+        "type": "tuple"
       }
     ],
     "name": "getNativeToken",
     "outputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "token",
         "type": "address"
       }
     ],
@@ -298,6 +305,11 @@
             "internalType": "bool",
             "name": "isNative",
             "type": "bool"
+          },
+          {
+            "internalType": "address",
+            "name": "custom",
+            "type": "address"
           }
         ],
         "internalType": "struct IMultiVaultFacetTokens.Token",
