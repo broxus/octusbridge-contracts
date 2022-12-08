@@ -2,7 +2,7 @@ const utils = require("./../test/utils");
 
 
 module.exports = async ({getNamedAccounts, deployments}) => {
-    const { owner } = await getNamedAccounts();
+    const { owner, gasDonor } = await getNamedAccounts();
 
     await deployments.execute('MultiVault',
         {
@@ -65,6 +65,14 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         },
         'setRewards',
         utils.defaultTonRecipient,
+    );
+
+    await deployments.execute('MultiVault', {
+        from: owner,
+        log: true
+    },
+    'setGasDonor',
+    gasDonor
     );
 
 

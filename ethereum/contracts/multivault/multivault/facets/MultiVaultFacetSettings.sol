@@ -15,6 +15,13 @@ import "../helpers/MultiVaultHelperFee.sol";
 import "../storage/MultiVaultStorage.sol";
 
 
+interface IERC173 {
+    /// @notice Get the address of the owner
+    /// @return owner_ The address of the owner.
+    function owner() external view returns (address owner_);
+}
+
+
 contract MultiVaultFacetSettings is
     MultiVaultHelperInitializable,
     MultiVaultHelperActors,
@@ -260,6 +267,8 @@ contract MultiVaultFacetSettings is
         IEverscale.EverscaleAddress memory token,
         address custom
     ) external override onlyGovernance {
+        require(IERC173(custom).owner() == address(this));
+
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         address native = _getNativeToken(token);

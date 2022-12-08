@@ -484,6 +484,9 @@ const hardhatConfig = {
     withdrawGuardian: {
       default: 23,
       ...multisig
+    },
+    gasDonor: {
+      default: 24
     }
   },
 };

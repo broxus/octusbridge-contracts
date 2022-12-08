@@ -59,7 +59,7 @@ describe('Test deposit-withdraw for native token', async () => {
         });
 
         it('Check EVM token meta', async () => {
-            const tokenAddress = await multivault.getNativeToken(native.wid, native.addr);
+            const tokenAddress = await multivault.getNativeToken(native);
 
             token = await ethers.getContractAt('MultiVaultToken', tokenAddress);
 
@@ -72,7 +72,7 @@ describe('Test deposit-withdraw for native token', async () => {
         });
 
         it('Check native token status', async () => {
-            const tokenAddress = await multivault.getNativeToken(native.wid, native.addr);
+            const tokenAddress = await multivault.getNativeToken(native);
 
             const tokenDetails = await multivault.tokens(tokenAddress);
 
@@ -192,7 +192,7 @@ describe('Test deposit-withdraw for native token', async () => {
         it('Set token prefix', async () => {
             const owner = await ethers.getNamedSigner('owner');
 
-            const tokenAddress = await multivault.getNativeToken(native.wid, native.addr);
+            const tokenAddress = await multivault.getNativeToken(native);
 
             await multivault.connect(owner).setPrefix(
                 tokenAddress,
@@ -228,7 +228,7 @@ describe('Test deposit-withdraw for native token', async () => {
         });
 
         it('Check token prefix', async () => {
-            const tokenAddress = await multivault.getNativeToken(native.wid, native.addr);
+            const tokenAddress = await multivault.getNativeToken(native);
 
             token = await ethers.getContractAt('MultiVaultToken', tokenAddress);
 
@@ -238,6 +238,66 @@ describe('Test deposit-withdraw for native token', async () => {
                 .to.be.equal(meta.symbol, 'Wrong token symbol');
             expect(await token.decimals())
                 .to.be.equal(meta.decimals, 'Wrong token decimals');
+        });
+    });
+
+    describe('Withdraw custom token', async () => {
+        let custom;
+
+        it('Transfer custom token ownership to the multivault', async () => {
+            custom = await ethers.getContract('Token');
+
+            const deployer = await ethers.getNamedSigner('deployer');
+
+            await custom.connect(deployer).transferOwnership(multivault.address);
+        });
+
+        it('Set custom token', async () => {
+            const owner = await ethers.getNamedSigner('owner');
+
+            await multivault.connect(owner).setCustomNative(
+                native,
+                custom.address,
+            );
+        });
+
+        it('Check custom token', async () => {
+            const tokenAddress = await multivault.getNativeToken(native);
+
+            const {
+                custom: customAddress
+            } = await multivault.tokens(tokenAddress);
+
+            expect(customAddress)
+                .to.be.equal(custom.address, 'Wrong custom native address');
+        });
+
+        it('Save withdraw', async () => {
+            const bob = await ethers.getNamedSigner('bob');
+            const amount = ethers.utils.parseUnits('600', 18);
+
+            const withdrawalEventData = utils.encodeMultiTokenNativeWithdrawalData({
+                native,
+
+                name: meta.name,
+                symbol: meta.symbol,
+                decimals: meta.decimals,
+
+                amount,
+                recipient: bob.address,
+                chainId: utils.defaultChainId
+            });
+
+            const payload = encodeEverscaleEvent({
+                eventData: withdrawalEventData,
+                proxy: multivault.address,
+            });
+
+            const signatures = await utils.getPayloadSignatures(payload);
+
+            await multivault
+                .connect(bob)
+                .saveWithdrawNative(payload, signatures);
         });
     });
 });
