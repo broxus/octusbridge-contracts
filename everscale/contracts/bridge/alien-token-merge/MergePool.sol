@@ -8,7 +8,8 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 import "./../../utils/TransferUtils.sol";
 import "./../interfaces/alien-token-merge/IMergePool.sol";
-import "./../interfaces/multivault/IProxyMultiVaultAlien_V3.sol";
+import "./../interfaces/multivault/proxy/alien/IProxyMultiVaultAlien_V4.sol";
+import "./../interfaces/multivault/IEVMCallback.sol";
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensBurnCallback.sol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.sol";
@@ -22,7 +23,8 @@ contract MergePool is
     InternalOwner,
     RandomNonce,
     TransferUtils,
-    IAcceptTokensBurnCallback
+    IAcceptTokensBurnCallback,
+    IEVMCallback
 {
     uint128 constant ATTACH_TO_DECIMALS_REQUEST = 0.3 ton;
 
@@ -253,21 +255,24 @@ contract MergePool is
             // Target token exists in the merge pool but not enabled yet
             // Or burned token is disabled
             // Mint back burned tokens
-            _mintTokens(msg.sender, _amount, walletOwner, remainingGasTo);
+            _mintTokens(msg.sender, _amount, walletOwner, remainingGasTo, operationPayload);
         } else if (amount == 0) {
             // Target token enabled but amount is zero, after conversation to the target decimals
             // Mint back burned tokens
-            _mintTokens(msg.sender, _amount, walletOwner, remainingGasTo);
+            _mintTokens(msg.sender, _amount, walletOwner, remainingGasTo, operationPayload);
         } else if (burnType == BurnType.Swap) {
             // Target token enabled and swap requested
             // Mint specified token and amount, normalized by decimals
-            _mintTokens(targetToken, amount, walletOwner, remainingGasTo);
+            _mintTokens(targetToken, amount, walletOwner, remainingGasTo, operationPayload);
         } else {
             // Target token enabled and bridge withdraw requested
             // Request withdraw on the bridge
-            (uint160 recipient) = abi.decode(operationPayload, (uint160));
+            (
+                uint160 recipient,
+                EVMCallback callback
+            ) = abi.decode(operationPayload, (uint160, EVMCallback));
 
-            IProxyMultiVaultAlien_V3(proxy).withdrawTokensByMergePool{
+            IProxyMultiVaultAlien_V4(proxy).withdrawTokensByMergePool{
                 bounce: false,
                 value: 0,
                 flag: MsgFlag.ALL_NOT_RESERVED
@@ -276,7 +281,8 @@ contract MergePool is
                 targetToken,
                 amount,
                 recipient,
-                remainingGasTo
+                remainingGasTo,
+                callback
             );
         }
     }
@@ -293,9 +299,10 @@ contract MergePool is
         address token,
         uint128 amount,
         address walletOwner,
-        address remainingGasTo
+        address remainingGasTo,
+        TvmCell payload
     ) internal view {
-        IProxyMultiVaultAlien_V3(proxy).mintTokensByMergePool{
+        IProxyMultiVaultAlien_V4(proxy).mintTokensByMergePool{
             bounce: false,
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
@@ -304,7 +311,8 @@ contract MergePool is
             token,
             amount,
             walletOwner,
-            remainingGasTo
+            remainingGasTo,
+            payload
         );
     }
 

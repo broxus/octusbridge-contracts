@@ -26,6 +26,10 @@ contract MultiVaultEverscaleEventNative is EverscaleBaseEvent, IMultiVaultEversc
     uint160 recipient;
     uint256 chainId;
 
+    uint160 callback_recipient;
+    TvmCell callback_payload;
+    bool callback_strict;
+
     string name;
     string symbol;
     uint8 decimals;
@@ -56,10 +60,14 @@ contract MultiVaultEverscaleEventNative is EverscaleBaseEvent, IMultiVaultEversc
             remainingGasTo,
             amount,
             recipient,
-            chainId
+            chainId,
+            callback_recipient, callback_payload, callback_strict
         ) = abi.decode(
             eventInitData.voteData.eventData,
-            (address, address, address, address, uint128, uint160, uint256)
+            (
+                address, address, address, address, uint128, uint160, uint256,
+                uint160, TvmCell, bool
+            )
         );
 
         ITokenRoot(token).name{
@@ -135,6 +143,7 @@ contract MultiVaultEverscaleEventNative is EverscaleBaseEvent, IMultiVaultEversc
         uint128 amount_,
         uint160 recipient_,
         uint256 chainId_,
+        EVMCallback callback,
         string name_,
         string symbol_,
         uint8 decimals_
@@ -147,6 +156,11 @@ contract MultiVaultEverscaleEventNative is EverscaleBaseEvent, IMultiVaultEversc
             amount,
             recipient,
             chainId,
+            EVMCallback(
+                callback_recipient,
+                callback_payload,
+                callback_strict
+            ),
             name,
             symbol,
             decimals
@@ -164,7 +178,11 @@ contract MultiVaultEverscaleEventNative is EverscaleBaseEvent, IMultiVaultEversc
 
             amount,
             recipient,
-            chainId
+            chainId,
+
+            callback_recipient,
+            callback_payload,
+            callback_strict
         );
     }
 

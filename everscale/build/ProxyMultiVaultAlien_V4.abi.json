@@ -33,11 +33,37 @@
 			]
 		},
 		{
+			"name": "withdrawTokensByMergePool",
+			"inputs": [
+				{"name":"nonce","type":"uint256"},
+				{"name":"token","type":"address"},
+				{"name":"amount","type":"uint128"},
+				{"name":"recipient","type":"uint160"},
+				{"name":"remainingGasTo","type":"address"},
+				{"components":[{"name":"recipient","type":"uint160"},{"name":"payload","type":"cell"},{"name":"strict","type":"bool"}],"name":"callback","type":"tuple"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "onEventConfirmedExtended",
 			"inputs": [
 				{"components":[{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"},{"name":"chainId","type":"uint32"}],"name":"value0","type":"tuple"},
 				{"name":"meta","type":"cell"},
 				{"name":"remainingGasTo","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "mintTokensByMergePool",
+			"inputs": [
+				{"name":"nonce","type":"uint256"},
+				{"name":"token","type":"address"},
+				{"name":"amount","type":"uint128"},
+				{"name":"recipient","type":"address"},
+				{"name":"remainingGasTo","type":"address"},
+				{"name":"payload","type":"cell"}
 			],
 			"outputs": [
 			]
@@ -70,6 +96,52 @@
 			]
 		},
 		{
+			"name": "deriveMergeRouter",
+			"inputs": [
+				{"name":"answerId","type":"uint32"},
+				{"name":"token","type":"address"}
+			],
+			"outputs": [
+				{"name":"router","type":"address"}
+			]
+		},
+		{
+			"name": "deployMergeRouter",
+			"inputs": [
+				{"name":"token","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "deriveMergePool",
+			"inputs": [
+				{"name":"answerId","type":"uint32"},
+				{"name":"nonce","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"pool","type":"address"}
+			]
+		},
+		{
+			"name": "upgradeMergePool",
+			"inputs": [
+				{"name":"pool","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "deployMergePool",
+			"inputs": [
+				{"name":"nonce","type":"uint256"},
+				{"name":"tokens","type":"address[]"},
+				{"name":"canonId","type":"uint256"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "sendMessage",
 			"inputs": [
 				{"name":"recipient","type":"address"},
@@ -97,11 +169,84 @@
 			]
 		},
 		{
+			"name": "setManager",
+			"inputs": [
+				{"name":"_manager","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setMergePool",
+			"inputs": [
+				{"name":"_mergePool","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setMergeRouter",
+			"inputs": [
+				{"name":"_mergeRouter","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setMergePoolPlatform",
+			"inputs": [
+				{"name":"_mergePoolPlatform","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "mint",
+			"inputs": [
+				{"name":"token","type":"address"},
+				{"name":"amount","type":"uint128"},
+				{"name":"recipient","type":"address"},
+				{"name":"payload","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "burn",
+			"inputs": [
+				{"name":"token","type":"address"},
+				{"name":"amount","type":"uint128"},
+				{"name":"walletOwner","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "upgrade",
 			"inputs": [
 				{"name":"code","type":"cell"}
 			],
 			"outputs": [
+			]
+		},
+		{
+			"name": "setCustomAlien",
+			"inputs": [
+				{"name":"chainId","type":"uint256"},
+				{"name":"token","type":"uint160"},
+				{"name":"alien","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "customAlien",
+			"inputs": [
+				{"name":"chainId","type":"uint256"},
+				{"name":"token","type":"uint160"}
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
 			]
 		},
 		{
@@ -134,12 +279,34 @@
 			"outputs": [
 				{"name":"_randomNonce","type":"uint256"}
 			]
+		},
+		{
+			"name": "manager",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"manager","type":"address"}
+			]
 		}
 	],
 	"data": [
 		{"key":1,"name":"_randomNonce","type":"uint256"}
 	],
 	"events": [
+		{
+			"name": "AlienTransfer",
+			"inputs": [
+				{"name":"token","type":"uint160"},
+				{"name":"amount","type":"uint128"},
+				{"name":"recipient","type":"uint160"},
+				{"name":"chainId","type":"uint256"},
+				{"name":"callback_recipient","type":"uint160"},
+				{"name":"callback_payload","type":"cell"},
+				{"name":"callback_strict","type":"bool"}
+			],
+			"outputs": [
+			]
+		},
 		{
 			"name": "OwnershipTransferred",
 			"inputs": [
@@ -157,6 +324,12 @@
 		{"name":"owner","type":"address"},
 		{"name":"_randomNonce","type":"uint256"},
 		{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"evmConfigurations","type":"address[]"},{"name":"deployWalletValue","type":"uint128"},{"name":"alienTokenRootCode","type":"cell"},{"name":"alienTokenWalletCode","type":"cell"},{"name":"alienTokenWalletPlatformCode","type":"cell"}],"name":"config","type":"tuple"},
-		{"name":"api_version","type":"uint8"}
+		{"name":"api_version","type":"uint8"},
+		{"name":"manager","type":"address"},
+		{"name":"mergeRouter","type":"cell"},
+		{"name":"mergePool","type":"cell"},
+		{"name":"mergePoolPlatform","type":"cell"},
+		{"name":"mergePoolVersion","type":"uint8"},
+		{"name":"customAliens","type":"map(uint256,map(uint160,address))"}
 	]
 }

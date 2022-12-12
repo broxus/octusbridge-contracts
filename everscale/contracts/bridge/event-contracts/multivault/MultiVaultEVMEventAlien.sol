@@ -10,7 +10,7 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 import "./../../interfaces/multivault/IMultiVaultEVMEventAlien.sol";
 import "./../../interfaces/event-configuration-contracts/IEthereumEventConfiguration.sol";
 import "./../../interfaces/IProxyExtended.sol";
-import "./../../interfaces/multivault/IProxyMultiVaultAlien_V3.sol";
+import "./../../interfaces/multivault/proxy/alien/IProxyMultiVaultAlien_V3.sol";
 import "./../../interfaces/ITokenRootAlienEVM.sol";
 import "./../../interfaces/alien-token-merge/IMergePool.sol";
 import "./../../interfaces/alien-token-merge/IMergeRouter.sol";
@@ -41,9 +41,9 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
     uint expected_evers;
     TvmCell payload;
 
+    // Derived fields
     address proxy;
     address token;
-
 
     address router;
     address pool;
@@ -263,7 +263,8 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
         TvmCell metaData = abi.encode(
             target_token,
             target_amount,
-            recipient
+            recipient,
+            payload
         );
 
         IProxyExtended(eventInitData.configuration).onEventConfirmedExtended{
@@ -279,6 +280,9 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
         uint8 decimals_,
         uint128 amount_,
         address recipient_,
+        uint value_,
+        uint expected_evers_,
+        TvmCell payload_,
         address proxy_,
         address token_
     ) {
@@ -290,6 +294,9 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
             decimals,
             amount,
             recipient,
+            value,
+            expected_evers,
+            payload,
             proxy,
             token
         );

@@ -434,7 +434,7 @@ const setupAlienMultiVault = async (owner, staking, cellEncoder) => {
   await logContract(initializer);
 
   // Deploy proxy
-  const Proxy = await locklift.factory.getContract('ProxyMultiVaultAlien_V3');
+  const Proxy = await locklift.factory.getContract('ProxyMultiVaultAlien_V4');
   const proxy = await locklift.giver.deployContract({
     contract: Proxy,
     constructorParams: {
@@ -583,7 +583,7 @@ const setupNativeMultiVault = async (owner, staking) => {
   await logContract(initializer);
 
   // Deploy proxy
-  const Proxy = await locklift.factory.getContract('ProxyMultiVaultNative');
+  const Proxy = await locklift.factory.getContract('ProxyMultiVaultNative_V2');
   const proxy = await locklift.giver.deployContract({
     contract: Proxy,
     constructorParams: {

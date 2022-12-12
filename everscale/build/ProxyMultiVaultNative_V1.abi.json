@@ -21,11 +21,12 @@
 			]
 		},
 		{
-			"name": "onAcceptTokensBurn",
+			"name": "onAcceptTokensTransfer",
 			"inputs": [
+				{"name":"tokenRoot","type":"address"},
 				{"name":"amount","type":"uint128"},
-				{"name":"value1","type":"address"},
 				{"name":"value2","type":"address"},
+				{"name":"value3","type":"address"},
 				{"name":"remainingGasTo","type":"address"},
 				{"name":"payload","type":"cell"}
 			],
@@ -43,54 +44,18 @@
 			]
 		},
 		{
-			"name": "deriveAlienTokenRoot",
-			"inputs": [
-				{"name":"answerId","type":"uint32"},
-				{"name":"chainId","type":"uint256"},
-				{"name":"token","type":"uint160"},
-				{"name":"name","type":"string"},
-				{"name":"symbol","type":"string"},
-				{"name":"decimals","type":"uint8"}
-			],
-			"outputs": [
-				{"name":"value0","type":"address"}
-			]
-		},
-		{
-			"name": "deployAlienToken",
-			"inputs": [
-				{"name":"chainId","type":"uint256"},
-				{"name":"token","type":"uint160"},
-				{"name":"name","type":"string"},
-				{"name":"symbol","type":"string"},
-				{"name":"decimals","type":"uint8"},
-				{"name":"remainingGasTo","type":"address"}
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "sendMessage",
-			"inputs": [
-				{"name":"recipient","type":"address"},
-				{"name":"message","type":"cell"}
-			],
-			"outputs": [
-			]
-		},
-		{
 			"name": "getConfiguration",
 			"inputs": [
 				{"name":"answerId","type":"uint32"}
 			],
 			"outputs": [
-				{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"evmConfigurations","type":"address[]"},{"name":"deployWalletValue","type":"uint128"},{"name":"alienTokenRootCode","type":"cell"},{"name":"alienTokenWalletCode","type":"cell"},{"name":"alienTokenWalletPlatformCode","type":"cell"}],"name":"value0","type":"tuple"}
+				{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"evmConfigurations","type":"address[]"},{"name":"deployWalletValue","type":"uint128"}],"name":"value0","type":"tuple"}
 			]
 		},
 		{
 			"name": "setConfiguration",
 			"inputs": [
-				{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"evmConfigurations","type":"address[]"},{"name":"deployWalletValue","type":"uint128"},{"name":"alienTokenRootCode","type":"cell"},{"name":"alienTokenWalletCode","type":"cell"},{"name":"alienTokenWalletPlatformCode","type":"cell"}],"name":"_config","type":"tuple"},
+				{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"evmConfigurations","type":"address[]"},{"name":"deployWalletValue","type":"uint128"}],"name":"_config","type":"tuple"},
 				{"name":"remainingGasTo","type":"address"}
 			],
 			"outputs": [
@@ -141,6 +106,21 @@
 	],
 	"events": [
 		{
+			"name": "NativeTransfer",
+			"inputs": [
+				{"name":"token_wid","type":"int8"},
+				{"name":"token_addr","type":"uint256"},
+				{"name":"name","type":"string"},
+				{"name":"symbol","type":"string"},
+				{"name":"decimals","type":"uint8"},
+				{"name":"amount","type":"uint128"},
+				{"name":"recipient","type":"uint160"},
+				{"name":"chainId","type":"uint256"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "OwnershipTransferred",
 			"inputs": [
 				{"name":"previousOwner","type":"address"},
@@ -156,7 +136,7 @@
 		{"name":"_constructorFlag","type":"bool"},
 		{"name":"owner","type":"address"},
 		{"name":"_randomNonce","type":"uint256"},
-		{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"evmConfigurations","type":"address[]"},{"name":"deployWalletValue","type":"uint128"},{"name":"alienTokenRootCode","type":"cell"},{"name":"alienTokenWalletCode","type":"cell"},{"name":"alienTokenWalletPlatformCode","type":"cell"}],"name":"config","type":"tuple"},
+		{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"evmConfigurations","type":"address[]"},{"name":"deployWalletValue","type":"uint128"}],"name":"config","type":"tuple"},
 		{"name":"api_version","type":"uint8"}
 	]
 }

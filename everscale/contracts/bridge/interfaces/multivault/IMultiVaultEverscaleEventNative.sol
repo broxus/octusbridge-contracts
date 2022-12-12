@@ -1,7 +1,9 @@
 pragma ton-solidity >= 0.39.0;
 
+import "./IEVMCallback.sol";
 
-interface IMultiVaultEverscaleEventNative {
+
+interface IMultiVaultEverscaleEventNative is IEVMCallback {
     function receiveTokenName(string name_) external;
     function receiveTokenSymbol(string symbol_) external;
     function receiveTokenDecimals(uint8 decimals_) external;
@@ -15,6 +17,7 @@ interface IMultiVaultEverscaleEventNative {
         uint128 amount_,
         uint160 recipient_,
         uint256 chainId_,
+        EVMCallback callback,
         string name_,
         string symbol_,
         uint8 decimals_

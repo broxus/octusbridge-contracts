@@ -4,15 +4,15 @@ pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 
-import "./../interfaces/IProxyExtended.sol";
-import "./../interfaces/multivault/IProxyMultiVaultNative.sol";
-import "./../interfaces/event-configuration-contracts/IEverscaleEventConfiguration.sol";
+import "./../../interfaces/IProxyExtended.sol";
+import "./../../interfaces/multivault/proxy/native/IProxyMultiVaultNative_V2.sol";
+import "./../../interfaces/event-configuration-contracts/IEverscaleEventConfiguration.sol";
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensTransferCallback.sol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenWallet.sol";
 
-import "./../../utils/ErrorCodes.sol";
-import "./../../utils/TransferUtils.sol";
+import "./../../../utils/ErrorCodes.sol";
+import "./../../../utils/TransferUtils.sol";
 
 
 import '@broxus/contracts/contracts/access/InternalOwner.sol';
@@ -21,13 +21,13 @@ import '@broxus/contracts/contracts/utils/RandomNonce.sol';
 import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
 
 
-contract ProxyMultiVaultNative is
+contract ProxyMultiVaultNative_V2 is
     InternalOwner,
     TransferUtils,
     CheckPubKey,
     RandomNonce,
     IProxyExtended,
-    IProxyMultiVaultNative,
+    IProxyMultiVaultNative_V2,
     IAcceptTokensTransferCallback
 {
     Configuration config;
@@ -64,7 +64,11 @@ contract ProxyMultiVaultNative is
         address remainingGasTo,
         TvmCell payload
     ) override external reserveAtLeastTargetBalance {
-        (uint160 recipient, uint256 chainId) = abi.decode(payload, (uint160, uint256));
+        (
+            uint160 recipient,
+            uint256 chainId,
+            EVMCallback callback
+        ) = abi.decode(payload, (uint160, uint256, EVMCallback));
 
         TvmCell eventData = abi.encode(
             address(this), // Proxy address
@@ -73,7 +77,10 @@ contract ProxyMultiVaultNative is
             remainingGasTo, // Remaining gas to
             amount, // Amount of tokens to withdraw
             recipient, // EVM recipient address
-            chainId // EVM network chain ID
+            chainId, // EVM network chain ID
+            callback.recipient,
+            callback.payload,
+            callback.strict
         );
 
         IEverscaleEvent.EverscaleEventVoteData eventVoteData = IEverscaleEvent.EverscaleEventVoteData(
@@ -102,21 +109,23 @@ contract ProxyMultiVaultNative is
         (
             address token_wallet,
             uint128 amount,
-            address recipient
+            address recipient,
+            TvmCell payload
         ) = abi.decode(
             meta,
-            (address, uint128, address)
+            (address, uint128, address, TvmCell)
         );
 
-        TvmCell empty;
-
-        ITokenWallet(token_wallet).transfer{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+        ITokenWallet(token_wallet).transfer{
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(
             amount,
             recipient,
             config.deployWalletValue,
             remainingGasTo,
             true,
-            empty
+            payload
         );
     }
 

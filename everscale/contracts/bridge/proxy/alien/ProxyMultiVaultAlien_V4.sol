@@ -5,7 +5,7 @@ pragma AbiHeader pubkey;
 
 
 import "./../../interfaces/IProxyExtended.sol";
-import "./../../interfaces/multivault/proxy/alien/IProxyMultiVaultAlien_V3.sol";
+import "./../../interfaces/multivault/proxy/alien/IProxyMultiVaultAlien_V4.sol";
 import "./../../interfaces/event-configuration-contracts/IEverscaleEventConfiguration.sol";
 
 import "./../../../utils/ErrorCodes.sol";
@@ -24,14 +24,14 @@ import '@broxus/contracts/contracts/utils/RandomNonce.sol';
 import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
 
 
-contract ProxyMultiVaultAlien_V3 is
+contract ProxyMultiVaultAlien_V4 is
     InternalOwner,
     TransferUtils,
     CheckPubKey,
     RandomNonce,
     IAcceptTokensBurnCallback,
     IProxyExtended,
-    IProxyMultiVaultAlien_V3
+    IProxyMultiVaultAlien_V4
 {
     Configuration config;
     uint8 api_version = 0;
@@ -42,6 +42,8 @@ contract ProxyMultiVaultAlien_V3 is
     TvmCell mergePoolPlatform;
 
     uint8 mergePoolVersion;
+
+    mapping (uint256 => mapping (uint160 => address)) customAliens;
 
     constructor(
         address owner_
@@ -84,13 +86,14 @@ contract ProxyMultiVaultAlien_V3 is
         address remainingGasTo,
         TvmCell payload
     ) public override reserveAtLeastTargetBalance {
-        (uint160 recipient) = abi.decode(payload, (uint160));
+        (uint160 recipient, EVMCallback callback) = abi.decode(payload, (uint160, EVMCallback));
 
         _deployEvent(
             msg.sender,
             amount,
             recipient,
-            remainingGasTo
+            remainingGasTo,
+            callback
         );
     }
 
@@ -99,13 +102,15 @@ contract ProxyMultiVaultAlien_V3 is
         address token,
         uint128 amount,
         uint160 recipient,
-        address remainingGasTo
+        address remainingGasTo,
+        EVMCallback callback
     ) external override onlyMergePool(nonce) reserveAtLeastTargetBalance {
         _deployEvent(
             token,
             amount,
             recipient,
-            remainingGasTo
+            remainingGasTo,
+            callback
         );
     }
 
@@ -122,17 +127,19 @@ contract ProxyMultiVaultAlien_V3 is
         (
             address token,
             uint128 amount,
-            address recipient
+            address recipient,
+            TvmCell payload
         ) = abi.decode(
             meta,
-            (address, uint128, address)
+            (address, uint128, address, TvmCell)
         );
 
         _mintTokens(
             token,
             amount,
             recipient,
-            remainingGasTo
+            remainingGasTo,
+            payload
         );
     }
 
@@ -148,13 +155,15 @@ contract ProxyMultiVaultAlien_V3 is
         address token,
         uint128 amount,
         address recipient,
-        address remainingGasTo
+        address remainingGasTo,
+        TvmCell payload
     ) external override onlyMergePool(nonce) reserveAtLeastTargetBalance {
         _mintTokens(
             token,
             amount,
             recipient,
-            remainingGasTo
+            remainingGasTo,
+            payload
         );
     }
 
@@ -162,17 +171,20 @@ contract ProxyMultiVaultAlien_V3 is
         address token,
         uint128 amount,
         address recipient,
-        address remainingGasTo
+        address remainingGasTo,
+        TvmCell payload
     ) internal view {
-        TvmCell empty;
-
-        ITokenRoot(token).mint{value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false}(
+        ITokenRoot(token).mint{
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED,
+            bounce: false
+        }(
             amount,
             recipient,
             config.deployWalletValue,
             remainingGasTo,
             true,
-            empty
+            payload
         );
     }
 
@@ -180,14 +192,18 @@ contract ProxyMultiVaultAlien_V3 is
         address token,
         uint128 amount,
         uint160 recipient,
-        address remainingGasTo
+        address remainingGasTo,
+        EVMCallback callback
     ) internal view {
         TvmCell eventData = abi.encode(
             address(this), // Proxy address, used in event contract for validating token root
             token, // Everscale token root address
             remainingGasTo, // Remaining gas receiver (on event contract destroy)
             amount, // Amount of tokens to withdraw
-            recipient // Recipient address in EVM network
+            recipient, // Recipient address in EVM network
+            callback.recipient,
+            callback.payload,
+            callback.strict
         );
 
         IEverscaleEvent.EverscaleEventVoteData eventVoteData = IEverscaleEvent.EverscaleEventVoteData(
@@ -223,6 +239,10 @@ contract ProxyMultiVaultAlien_V3 is
             symbol,
             decimals
         );
+
+        address custom = customAliens[chainId][token];
+
+        if (custom != address.makeAddrStd(0,0)) return custom;
 
         // TODO: check all responsible returns
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
@@ -358,7 +378,7 @@ contract ProxyMultiVaultAlien_V3 is
         external
         view
         responsible
-        returns (Configuration)
+    returns (Configuration)
     {
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} config;
     }
@@ -469,13 +489,15 @@ contract ProxyMultiVaultAlien_V3 is
     function mint(
         address token,
         uint128 amount,
-        address recipient
+        address recipient,
+        TvmCell payload
     ) external override onlyOwner reserveAtLeastTargetBalance {
         _mintTokens(
             token,
             amount,
             recipient,
-            msg.sender
+            msg.sender,
+            payload
         );
     }
 
@@ -523,7 +545,8 @@ contract ProxyMultiVaultAlien_V3 is
             manager,
             mergeRouter,
             mergePool,
-            mergePoolPlatform
+            mergePoolPlatform,
+            mergePoolVersion
         );
 
         tvm.setcode(code);
@@ -539,15 +562,42 @@ contract ProxyMultiVaultAlien_V3 is
             Configuration config_,
             uint8 api_version_,
             uint _randomNonce_,
-            address owner_
+            address owner_,
+            address manager_,
+            TvmCell mergeRouter_,
+            TvmCell mergePool_,
+            TvmCell mergePoolPlatform_
         ) = abi.decode(
             data,
-            (Configuration, uint8, uint, address)
+            (
+                Configuration, uint8, uint, address,
+                address, TvmCell, TvmCell, TvmCell
+            )
         );
 
         config = config_;
         api_version = api_version_ + 1;
         _randomNonce = _randomNonce_;
         owner = owner_;
+
+        manager = manager_;
+        mergeRouter = mergeRouter_;
+        mergePool = mergePool_;
+        mergePoolPlatform = mergePoolPlatform_;
+    }
+
+    function setCustomAlien(
+        uint256 chainId,
+        uint160 token,
+        address alien
+    ) external override onlyOwner {
+        customAliens[chainId][token] = alien;
+    }
+
+    function customAlien(
+        uint256 chainId,
+        uint160 token
+    ) external override returns(address) {
+        return customAliens[chainId][token];
     }
 }

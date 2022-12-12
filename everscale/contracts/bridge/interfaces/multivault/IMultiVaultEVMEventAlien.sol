@@ -46,6 +46,9 @@ interface IMultiVaultEVMEventAlien {
         uint8 decimals_,
         uint128 amount_,
         address recipient_,
+        uint value_,
+        uint expected_evers_,
+        TvmCell payload_,
         address proxy_,
         address token_
     );

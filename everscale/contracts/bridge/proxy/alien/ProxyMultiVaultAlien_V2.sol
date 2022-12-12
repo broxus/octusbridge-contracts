@@ -5,7 +5,7 @@ pragma AbiHeader pubkey;
 
 
 import "./../../interfaces/IProxyExtended.sol";
-import "./../../interfaces/multivault/IProxyMultiVaultAlien_V1.sol";
+import "./../../interfaces/multivault/proxy/alien/IProxyMultiVaultAlien_V1.sol";
 import "./../../interfaces/event-configuration-contracts/IEverscaleEventConfiguration.sol";
 
 import "./../../../utils/ErrorCodes.sol";

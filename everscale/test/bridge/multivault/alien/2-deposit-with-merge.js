@@ -308,6 +308,9 @@ describe('Deposit non-canon token from EVM to Everscale with merging', async fun
             amount,
             recipient_wid: initializer.address.split(':')[0],
             recipient_addr: `0x${initializer.address.split(':')[1]}`,
+            value: 10000,
+            expected_evers: 1000,
+            payload: ''
         };
 
         eventDataEncoded =  await cellEncoder.call({
@@ -663,6 +666,16 @@ describe('Deposit non-canon token from EVM to Everscale with merging', async fun
 
             expect(balance)
                 .to.be.bignumber.equal(amount, 'Initializer failed to receive alien tokens');
+        });
+    });
+
+    discribe('Deposit with custom token', async () => {
+        it('Deploy custom alien token', async () => {
+
+        });
+
+        it('Set up custom alien in the Alien Proxy', async () => {
+
         });
     });
 });

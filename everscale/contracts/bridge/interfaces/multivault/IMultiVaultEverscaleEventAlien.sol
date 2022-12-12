@@ -1,7 +1,9 @@
 pragma ton-solidity >= 0.39.0;
 
+import "./IEVMCallback.sol";
 
-interface IMultiVaultEverscaleEventAlien {
+
+interface IMultiVaultEverscaleEventAlien is IEVMCallback {
     function receiveTokenMeta(
         uint256 base_chainId,
         uint160 base_token,
@@ -20,6 +22,7 @@ interface IMultiVaultEverscaleEventAlien {
         address remainingGasTo_,
         uint128 amount_,
         uint160 recipient_,
+        EVMCallback callback,
         uint256 base_chainId_,
         uint160 base_token_
     );

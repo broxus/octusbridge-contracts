@@ -164,7 +164,12 @@ describe('Withdraw tokens by burning in favor of proxy', async function() {
         const burnPayload = await cellEncoder.call({
             method: 'encodeAlienBurnPayload',
             params: {
-                recipient
+                recipient,
+                callback: {
+                    recipient: 0,
+                    payload: '',
+                    strict: false
+                }
             }
         });
 

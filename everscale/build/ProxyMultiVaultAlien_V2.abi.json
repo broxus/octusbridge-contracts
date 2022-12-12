@@ -141,17 +141,6 @@
 	],
 	"events": [
 		{
-			"name": "AlienTransfer",
-			"inputs": [
-				{"name":"token","type":"uint160"},
-				{"name":"amount","type":"uint128"},
-				{"name":"recipient","type":"uint160"},
-				{"name":"chainId","type":"uint256"}
-			],
-			"outputs": [
-			]
-		},
-		{
 			"name": "OwnershipTransferred",
 			"inputs": [
 				{"name":"previousOwner","type":"address"},

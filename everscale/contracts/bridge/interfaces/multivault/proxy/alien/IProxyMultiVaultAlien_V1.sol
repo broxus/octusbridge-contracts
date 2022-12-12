@@ -38,11 +38,4 @@ interface IProxyMultiVaultAlien_V1 {
         address recipient,
         TvmCell message
     ) external;
-
-    event AlienTransfer(
-        uint160 token,
-        uint128 amount,
-        uint160 recipient,
-        uint256 chainId
-    );
 }

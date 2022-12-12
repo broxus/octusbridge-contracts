@@ -18,6 +18,10 @@ contract MultiVaultEVMEventNative is EthereumBaseEvent, IMultiVaultEVMEventNativ
     uint128 amount;
     address recipient;
 
+    uint value;
+    uint expected_evers;
+    TvmCell payload;
+
     address proxy;
     address tokenWallet;
 
@@ -50,10 +54,17 @@ contract MultiVaultEVMEventNative is EthereumBaseEvent, IMultiVaultEVMEventNativ
             token_addr,
             amount,
             recipient_wid,
-            recipient_addr
+            recipient_addr,
+
+            value,
+            expected_evers,
+            payload
         ) = abi.decode(
             eventInitData.voteData.eventData,
-            (int8, uint256, uint128, int8, uint256)
+            (
+                int8, uint256, uint128, int8, uint256,
+                uint256, uint256, TvmCell
+            )
         );
 
         token = address.makeAddrStd(token_wid, token_addr);
@@ -94,6 +105,9 @@ contract MultiVaultEVMEventNative is EthereumBaseEvent, IMultiVaultEVMEventNativ
         address token_,
         uint128 amount_,
         address recipient_,
+        uint value_,
+        uint expected_evers_,
+        TvmCell payload_,
         address proxy_,
         address tokenWallet_
     ) {
@@ -101,6 +115,9 @@ contract MultiVaultEVMEventNative is EthereumBaseEvent, IMultiVaultEVMEventNativ
             token,
             amount,
             recipient,
+            value,
+            expected_evers,
+            payload,
             proxy,
             tokenWallet
         );
@@ -110,7 +127,8 @@ contract MultiVaultEVMEventNative is EthereumBaseEvent, IMultiVaultEVMEventNativ
         TvmCell metaData = abi.encode(
             tokenWallet,
             amount,
-            recipient
+            recipient,
+            payload
         );
 
         IProxyExtended(eventInitData.configuration).onEventConfirmedExtended{

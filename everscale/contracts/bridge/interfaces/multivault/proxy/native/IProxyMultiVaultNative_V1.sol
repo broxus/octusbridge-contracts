@@ -1,7 +1,7 @@
 pragma ton-solidity >= 0.39.0;
 
 
-interface IProxyMultiVaultNative {
+interface IProxyMultiVaultNative_V1 {
     struct Configuration {
         address everscaleConfiguration;
         address[] evmConfigurations;
