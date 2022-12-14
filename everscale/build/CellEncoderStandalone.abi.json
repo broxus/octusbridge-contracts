@@ -4,6 +4,16 @@
 	"header": ["time"],
 	"functions": [
 		{
+			"name": "encodeAlienHiddenBridgeEventPayload",
+			"inputs": [
+				{"name":"proxy","type":"address"},
+				{"name":"burnPayload","type":"cell"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
+			]
+		},
+		{
 			"name": "encodeMergePoolBurnSwapPayload",
 			"inputs": [
 				{"name":"targetToken","type":"address"}

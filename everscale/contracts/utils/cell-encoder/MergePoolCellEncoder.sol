@@ -1,9 +1,9 @@
 pragma ton-solidity >= 0.39.0;
 
-import "../../bridge/interfaces/multivault/proxy/alien/IProxyMultiVaultAlien_V4.sol";
+import "../../bridge/interfaces/multivault/IEVMCallback.sol";
 
 
-contract MergePoolCellEncoder {
+contract MergePoolCellEncoder is IEVMCallback {
     function encodeMergePoolBurnSwapPayload(
         address targetToken
     ) public pure returns (TvmCell) {
@@ -19,7 +19,7 @@ contract MergePoolCellEncoder {
     function encodeMergePoolBurnWithdrawPayload(
         address targetToken,
         uint160 recipient,
-        IProxyMultiVaultAlien_V4.EVMCallback callback
+        EVMCallback callback
     ) public pure returns (TvmCell) {
         TvmCell operationPayload = abi.encode(recipient, callback);
 

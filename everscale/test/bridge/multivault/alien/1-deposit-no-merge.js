@@ -107,11 +107,12 @@ describe('Deposit Alien token from EVM to Everscale with no merging', async func
 
         const tx = await initializer.runTarget({
             contract: evmConfiguration,
-            method: 'deployEvent',
+            method: 'deployEvents',
             params: {
-                eventVoteData,
+                eventsVoteData: [eventVoteData],
+                values: [locklift.utils.convertCrystal(6, 'nano')]
             },
-            value: locklift.utils.convertCrystal(6, 'nano')
+            value: locklift.utils.convertCrystal(10, 'nano')
         });
 
         logger.log(`Event initialization tx: ${tx.transaction.id}`);
@@ -388,24 +389,6 @@ describe('Deposit Alien token from EVM to Everscale with no merging', async func
 
             expect(balance)
                 .to.be.bignumber.equal(eventDataStructure.amount, 'Initializer failed to receive tokens');
-        });
-    });
-
-    describe('Deposit with custom alien', async () => {
-        it('Set up custom alien token in Proxy', async () => {
-
-        });
-
-        it('Check custom alien token specified', async () => {
-
-        });
-
-        it('Deposit', async () => {
-
-        });
-
-        it('Check user received custom alien token', async () => {
-
         });
     });
 });

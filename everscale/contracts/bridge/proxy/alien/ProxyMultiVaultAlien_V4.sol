@@ -524,7 +524,7 @@ contract ProxyMultiVaultAlien_V4 is
     function _isArrayContainsAddress(
         address[] array,
         address searchElement
-    ) private pure returns (bool){
+    ) private pure returns (bool) {
         for (address value: array) {
             if (searchElement == value) {
                 return true;

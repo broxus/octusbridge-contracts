@@ -18,6 +18,11 @@ interface IEthereumEventConfiguration is IBasicEventConfiguration {
         IEthereumEvent.EthereumEventVoteData eventVoteData
     ) external;
 
+    function deployEvents(
+        IEthereumEvent.EthereumEventVoteData[] eventsVoteData,
+        uint128[] values
+    ) external;
+
     function deriveEventAddress(
         IEthereumEvent.EthereumEventVoteData eventVoteData
     ) external view responsible returns (address eventContract);

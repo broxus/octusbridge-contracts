@@ -6,6 +6,7 @@ import "./DaoCellEncoder.sol";
 import "./TokenCellEncoder.sol";
 import "./StakingCellEncoder.sol";
 import "./MergePoolCellEncoder.sol";
+import "./MediatorCellEncoder.sol";
 
 import '@broxus/contracts/contracts/utils/RandomNonce.sol';
 
@@ -17,6 +18,7 @@ contract CellEncoderStandalone is
     TokenCellEncoder,
     StakingCellEncoder,
     MergePoolCellEncoder,
+    MediatorCellEncoder,
     RandomNonce
 {
 

@@ -668,14 +668,4 @@ describe('Deposit non-canon token from EVM to Everscale with merging', async fun
                 .to.be.bignumber.equal(amount, 'Initializer failed to receive alien tokens');
         });
     });
-
-    discribe('Deposit with custom token', async () => {
-        it('Deploy custom alien token', async () => {
-
-        });
-
-        it('Set up custom alien in the Alien Proxy', async () => {
-
-        });
-    });
 });

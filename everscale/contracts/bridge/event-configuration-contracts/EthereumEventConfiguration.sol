@@ -101,6 +101,31 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IPro
         override
         reserveAtLeastTargetBalance()
     {
+        _deployEvent(eventVoteData, MsgFlag.ALL_NOT_RESERVED, 0);
+    }
+
+    function deployEvents(
+        IEthereumEvent.EthereumEventVoteData[] eventsVoteData,
+        uint128[] values
+    ) external override reserveAtLeastTargetBalance() {
+        require(values.length == eventsVoteData.length && values.length > 0);
+
+        uint counter = 0;
+
+        for (IEthereumEvent.EthereumEventVoteData eventVoteData: eventsVoteData) {
+            _deployEvent(eventVoteData, 0, values[counter]);
+            counter++;
+        }
+
+        msg.sender.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
+    }
+
+
+    function _deployEvent(
+        IEthereumEvent.EthereumEventVoteData eventVoteData,
+        uint8 flag,
+        uint128 value
+    ) internal view {
         require(msg.value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
         require(
             eventVoteData.eventBlockNumber >= networkConfiguration.startBlockNumber,
@@ -121,8 +146,8 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IPro
         emit NewEventContract(eventContract);
 
         new EthereumBaseEvent{
-            value: 0,
-            flag: MsgFlag.ALL_NOT_RESERVED,
+            value: value,
+            flag: flag,
             code: basicConfiguration.eventCode,
             pubkey: 0,
             varInit: {
