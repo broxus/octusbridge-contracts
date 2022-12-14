@@ -1,0 +1,54 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "StakingRelayVerifier",
+  "sourceName": "contracts/bridge/StakingRelayVerifier.sol",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint160",
+          "name": "eth_addr",
+          "type": "uint160"
+        },
+        {
+          "indexed": false,
+          "internalType": "int8",
+          "name": "workchain_id",
+          "type": "int8"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "addr_body",
+          "type": "uint256"
+        }
+      ],
+      "name": "RelayAddressVerified",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "int8",
+          "name": "workchain_id",
+          "type": "int8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "address_body",
+          "type": "uint256"
+        }
+      ],
+      "name": "verify_relay_staker_address",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b5060e98061001f6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c80631f4b19a214602d575b600080fd5b603c60383660046086565b603e565b005b60408051338152600084900b60208201529081018290527fe2abe69c5ea3e0944ca0b28566207b4a17d3a01d5efed3ffb378a36e34c322a99060600160405180910390a15050565b600080604083850312156097578182fd5b823580830b811460a5578283fd5b94602093909301359350505056fea2646970667358221220061944cec54b9d49cd6b8954d9663dcabfabc336f689f2d88b539a2d69843c6664736f6c63430008020033",
+  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060285760003560e01c80631f4b19a214602d575b600080fd5b603c60383660046086565b603e565b005b60408051338152600084900b60208201529081018290527fe2abe69c5ea3e0944ca0b28566207b4a17d3a01d5efed3ffb378a36e34c322a99060600160405180910390a15050565b600080604083850312156097578182fd5b823580830b811460a5578283fd5b94602093909301359350505056fea2646970667358221220061944cec54b9d49cd6b8954d9663dcabfabc336f689f2d88b539a2d69843c6664736f6c63430008020033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

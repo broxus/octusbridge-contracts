@@ -1,0 +1,24 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "ChainId",
+  "sourceName": "contracts/utils/ChainId.sol",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "getChainID",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x6080604052348015600f57600080fd5b50607680601d6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c8063564b81ef14602d575b600080fd5b4660405190815260200160405180910390f3fea26469706673582212205fdcbfd56f1f2f15a4c41dd82046ca0d005f647a01254bb8659d74e6ab3257e564736f6c63430008020033",
+  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060285760003560e01c8063564b81ef14602d575b600080fd5b4660405190815260200160405180910390f3fea26469706673582212205fdcbfd56f1f2f15a4c41dd82046ca0d005f647a01254bb8659d74e6ab3257e564736f6c63430008020033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

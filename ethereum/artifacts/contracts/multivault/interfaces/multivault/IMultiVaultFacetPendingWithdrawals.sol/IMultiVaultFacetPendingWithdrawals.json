@@ -1,0 +1,325 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IMultiVaultFacetPendingWithdrawals",
+  "sourceName": "contracts/multivault/interfaces/multivault/IMultiVaultFacetPendingWithdrawals.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "id",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "int8",
+              "name": "wid",
+              "type": "int8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "addr",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IEverscale.EverscaleAddress",
+          "name": "recipient",
+          "type": "tuple"
+        },
+        {
+          "internalType": "uint256",
+          "name": "expected_evers",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "payload",
+          "type": "bytes"
+        },
+        {
+          "internalType": "uint256",
+          "name": "bounty",
+          "type": "uint256"
+        }
+      ],
+      "name": "cancelPendingWithdrawal",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId[]",
+          "name": "pendingWithdrawalIds",
+          "type": "tuple[]"
+        }
+      ],
+      "name": "forceWithdraw",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "id",
+          "type": "uint256"
+        }
+      ],
+      "name": "pendingWithdrawals",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "token",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "bounty",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "timestamp",
+              "type": "uint256"
+            },
+            {
+              "internalType": "enum IMultiVaultFacetPendingWithdrawals.ApproveStatus",
+              "name": "approveStatus",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct IMultiVaultFacetPendingWithdrawals.PendingWithdrawalParams",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        }
+      ],
+      "name": "pendingWithdrawalsPerUser",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        }
+      ],
+      "name": "pendingWithdrawalsTotal",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId[]",
+          "name": "pendingWithdrawalId",
+          "type": "tuple[]"
+        },
+        {
+          "internalType": "enum IMultiVaultFacetPendingWithdrawals.ApproveStatus[]",
+          "name": "approveStatus",
+          "type": "uint8[]"
+        }
+      ],
+      "name": "setPendingWithdrawalApprove",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId",
+          "name": "pendingWithdrawalId",
+          "type": "tuple"
+        },
+        {
+          "internalType": "enum IMultiVaultFacetPendingWithdrawals.ApproveStatus",
+          "name": "approveStatus",
+          "type": "uint8"
+        }
+      ],
+      "name": "setPendingWithdrawalApprove",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "id",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "bounty",
+          "type": "uint256"
+        }
+      ],
+      "name": "setPendingWithdrawalBounty",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        }
+      ],
+      "name": "withdrawalLimits",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "undeclared",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "daily",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "enabled",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct IMultiVaultFacetPendingWithdrawals.WithdrawalLimits",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "withdrawalPeriodId",
+          "type": "uint256"
+        }
+      ],
+      "name": "withdrawalPeriods",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "total",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "considered",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IMultiVaultFacetPendingWithdrawals.WithdrawalPeriodParams",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

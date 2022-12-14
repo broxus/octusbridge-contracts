@@ -9,13 +9,11 @@ everscale/migration-log.json
 everscale/keys
 settings.env
 migration-log.json
-artifacts/
 ethereum/.openzeppelin
 ethereum/cache
 *.log
 everscale/build/*.code
 everscale/build/*.base64
 everscale/build/*.tvc
-everscale/artifacts
 ethereum/deployments
 .DS_Store

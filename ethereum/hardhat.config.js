@@ -8,6 +8,7 @@ require('hardhat-abi-exporter');
 require("hardhat-gas-reporter");
 require('@primitivefi/hardhat-dodoc');
 require('hardhat-contract-sizer');
+require("hardhat-diamond-abi");
 
 
 task("accounts", "Prints the list of accounts", async () => {
@@ -38,6 +39,25 @@ const bridge = {
  * @type import('hardhat/config').HardhatUserConfig
  */
 const hardhatConfig = {
+  diamondAbi: {
+    // (required) The name of your Diamond ABI.
+    name: "MultiVault",
+    // (optional) An array of strings, matched against fully qualified contract names, to
+    // determine which contracts are included in your Diamond ABI.
+    include: ['interfaces/multivault/IMultiVault'],
+    // // (optional) An array of strings, matched against fully qualified contract names, to
+    // // determine which contracts are excluded from your Diamond ABI.
+    // exclude: ["vendor"],
+    // // (optional) A function that is called with the ABI element, index, entire ABI,
+    // // and fully qualified contract name for each item in the combined ABIs.
+    // // If the function returns `false`, the function is not included in your Diamond ABI.
+    // filter: function (abiElement, index, fullAbi, fullyQualifiedName) {
+    //   return abiElement.name !== "superSecret";
+    // },
+    // (optional) Whether exact duplicate sighashes should cause an error to be thrown,
+    // defaults to true.
+    strict: true,
+  },
   dodoc: {
     runOnCompile: true,
     outputDir: './../docs/evm-specification',

@@ -1,0 +1,434 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IMultiVaultFacetSettings",
+  "sourceName": "contracts/multivault/interfaces/multivault/IMultiVaultFacetSettings.sol",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "acceptGovernance",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "bridge",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "configurationAlien",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "int8",
+              "name": "wid",
+              "type": "int8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "addr",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IEverscale.EverscaleAddress",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "configurationNative",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "int8",
+              "name": "wid",
+              "type": "int8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "addr",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IEverscale.EverscaleAddress",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        }
+      ],
+      "name": "disableWithdrawalLimits",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "emergencyShutdown",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        }
+      ],
+      "name": "enableWithdrawalLimits",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "gasDonor",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "governance",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "guardian",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_bridge",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_governance",
+          "type": "address"
+        }
+      ],
+      "name": "initialize",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "management",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "rewards",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "int8",
+              "name": "wid",
+              "type": "int8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "addr",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IEverscale.EverscaleAddress",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "int8",
+              "name": "wid",
+              "type": "int8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "addr",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IEverscale.EverscaleAddress",
+          "name": "_configuration",
+          "type": "tuple"
+        }
+      ],
+      "name": "setConfigurationAlien",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "int8",
+              "name": "wid",
+              "type": "int8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "addr",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IEverscale.EverscaleAddress",
+          "name": "_configuration",
+          "type": "tuple"
+        }
+      ],
+      "name": "setConfigurationNative",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "int8",
+              "name": "wid",
+              "type": "int8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "addr",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IEverscale.EverscaleAddress",
+          "name": "token",
+          "type": "tuple"
+        },
+        {
+          "internalType": "address",
+          "name": "native",
+          "type": "address"
+        }
+      ],
+      "name": "setCustomNative",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "daily",
+          "type": "uint256"
+        }
+      ],
+      "name": "setDailyWithdrawalLimits",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bool",
+          "name": "active",
+          "type": "bool"
+        }
+      ],
+      "name": "setEmergencyShutdown",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_gasDonor",
+          "type": "address"
+        }
+      ],
+      "name": "setGasDonor",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "setGovernance",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "setGuardian",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "setManagement",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "int8",
+              "name": "wid",
+              "type": "int8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "addr",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IEverscale.EverscaleAddress",
+          "name": "_rewards",
+          "type": "tuple"
+        }
+      ],
+      "name": "setRewards",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "undeclared",
+          "type": "uint256"
+        }
+      ],
+      "name": "setUndeclaredWithdrawalLimits",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "withdrawGuardian",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
