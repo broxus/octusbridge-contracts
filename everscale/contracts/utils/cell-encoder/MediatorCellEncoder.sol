@@ -5,9 +5,10 @@ import "../../bridge/interfaces/multivault/IEVMCallback.sol";
 
 contract MediatorCellEncoder is IEVMCallback {
     function encodeAlienHiddenBridgeEventPayload(
+        uint8 operation,
         address proxy,
-        TvmCell burnPayload
+        TvmCell payload
     ) external pure returns(TvmCell) {
-        return abi.encode(proxy, burnPayload);
+        return abi.encode(operation, proxy, payload);
     }
 }

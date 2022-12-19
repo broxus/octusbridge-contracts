@@ -112,8 +112,9 @@ describe('Pass alien tokens through the hidden bridge', async function() {
         const mediatorPayload = await cellEncoder.call({
             method: 'encodeAlienHiddenBridgeEventPayload',
             params: {
+                operation: 0,
                 proxy: proxy.address,
-                burnPayload: burnPayload
+                payload: burnPayload
             }
         });
 

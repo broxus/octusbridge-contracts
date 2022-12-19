@@ -16,6 +16,8 @@ import "ton-eth-bridge-token-contracts/contracts/TokenWalletPlatform.sol";
 
 
 contract Mediator is IAcceptTokensTransferCallback, IAcceptTokensMintCallback, TransferUtils, InternalOwner, RandomNonce {
+    enum Operation { Burn, Transfer }
+
     uint128 constant DEPLOY_WALLET_VALUE = 0.2 ton;
 
     TvmCell alienTokenWalletPlatformCode;
@@ -30,25 +32,29 @@ contract Mediator is IAcceptTokensTransferCallback, IAcceptTokensMintCallback, T
         alienTokenWalletPlatformCode = _alienTokenWalletPlatformCode;
     }
 
-    /// @notice Accept mint and burn tokens in favor of alien proxy
+    /// @notice Accept incoming mint
     function onAcceptTokensMint(
         address tokenRoot,
         uint128 amount,
         address remainingGasTo,
         TvmCell payload
     ) external override reserveAtLeastTargetBalance {
+        (
+            Operation operation,
+            address proxy,
+            TvmCell operationPayload
+        ) = abi.decode(payload, (Operation, address, TvmCell));
+
         address wallet = _deriveAlienTokenWallet(tokenRoot);
 
-        (address proxy, TvmCell burnPayload) = abi.decode(payload, (address, TvmCell));
-
-        IBurnableTokenWallet(wallet).burn{
-            bounce: false,
-            value: 0,
-            flag: MsgFlag.ALL_NOT_RESERVED
-        }(amount, remainingGasTo, proxy, burnPayload);
+        if (operation == Operation.Burn) {
+            _burn(wallet, amount, proxy, remainingGasTo, operationPayload);
+        } else if (operation == Operation.Transfer) {
+            _transfer(wallet, amount, proxy, remainingGasTo, operationPayload);
+        }
     }
 
-    /// @notice Accept incoming transfer and forward tokens to the native proxy
+    /// @notice Accept incoming transfer
     function onAcceptTokensTransfer(
         address tokenRoot,
         uint128 amount,
@@ -57,13 +63,47 @@ contract Mediator is IAcceptTokensTransferCallback, IAcceptTokensMintCallback, T
         address remainingGasTo,
         TvmCell payload
     ) external override reserveAtLeastTargetBalance {
-        (address proxy, TvmCell transferPayload) = abi.decode(payload, (address, TvmCell));
+        (
+            Operation operation,
+            address proxy,
+            TvmCell operationPayload
+        ) = abi.decode(payload, (Operation, address, TvmCell));
 
-        ITokenWallet(msg.sender).transfer{
+        address wallet = msg.sender;
+
+        if (operation == Operation.Burn) {
+            _burn(wallet, amount, proxy, remainingGasTo, operationPayload);
+        } else if (operation == Operation.Transfer) {
+            _transfer(wallet, amount, proxy, remainingGasTo, operationPayload);
+        }
+    }
+
+    function _transfer(
+        address wallet,
+        uint128 amount,
+        address proxy,
+        address remainingGasTo,
+        TvmCell payload
+    ) internal {
+        ITokenWallet(wallet).transfer{
             bounce: false,
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
-        }(amount, proxy, DEPLOY_WALLET_VALUE, remainingGasTo, true, transferPayload);
+        }(amount, proxy, DEPLOY_WALLET_VALUE, remainingGasTo, true, payload);
+    }
+
+    function _burn(
+        address wallet,
+        uint128 amount,
+        address proxy,
+        address remainingGasTo,
+        TvmCell payload
+    ) internal {
+        IBurnableTokenWallet(wallet).burn{
+            bounce: false,
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(amount, remainingGasTo, proxy, payload);
     }
 
     function _deriveAlienTokenWallet(

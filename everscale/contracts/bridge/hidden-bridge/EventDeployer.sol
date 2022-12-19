@@ -49,6 +49,8 @@ contract EventDeployer is ExternalOwner, RandomNonce {
     function deployEvents(
         DeployRequest[] requests
     ) external onlyOwner {
+        tvm.accept();
+
         for (DeployRequest request: requests) {
             IEthereumEventConfiguration(request.configuration).deployEvents{
                 value: request.value,
