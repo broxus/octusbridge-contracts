@@ -150,4 +150,16 @@ describe('Test upgrading Ethereum MultiVault to the Diamond proxy', async () => 
         expect(await diamond_multivault.gasDonor())
             .to.be.equal(ethers.constants.AddressZero, 'Wrong gas donor');
     });
+
+    it('Check re-initialization multivault fails', async () => {
+        await expect(
+            diamond_multivault
+                .connect(multisig)
+                .initialize(
+                    ethers.constants.AddressZero,
+                    ethers.constants.AddressZero
+                )
+        )
+            .to.be.revertedWith("Initializable: contract is already initialized");
+    });
 });

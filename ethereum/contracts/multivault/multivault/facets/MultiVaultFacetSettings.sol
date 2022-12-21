@@ -13,6 +13,7 @@ import "../helpers/MultiVaultHelperActors.sol";
 import "../helpers/MultiVaultHelperFee.sol";
 
 import "../storage/MultiVaultStorage.sol";
+import "../storage/MultiVaultStorageInitializable.sol";
 
 
 interface IERC173 {
