@@ -56,8 +56,11 @@ contract MultiVaultFacetDeposit is
 
         bool isNative = s.tokens_[d.token].isNative;
 
+        // Replace token address with custom token, if specified
+        address token = s.tokens_[d.token].custom == address(0) ? d.token : s.tokens_[d.token].custom;
+
         if (isNative) {
-            IMultiVaultToken(d.token).burn(
+            IMultiVaultToken(token).burn(
                 msg.sender,
                 d.amount
             );
@@ -66,7 +69,7 @@ contract MultiVaultFacetDeposit is
 
             _transferToEverscaleNative(d, msg.value);
         } else {
-            IERC20(d.token).safeTransferFrom(
+            IERC20(token).safeTransferFrom(
                 msg.sender,
                 address(this),
                 d.amount
