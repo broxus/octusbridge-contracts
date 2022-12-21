@@ -16,11 +16,11 @@ library MultiVaultStorage {
     uint256 constant SYMBOL_LENGTH_LIMIT = 32;
     uint256 constant NAME_LENGTH_LIMIT = 32;
 
-    string constant DEFAULT_NAME_PREFIX = 'Octus ';
-    string constant DEFAULT_SYMBOL_PREFIX = 'oct';
+    string constant DEFAULT_NAME_PREFIX = '';
+    string constant DEFAULT_SYMBOL_PREFIX = '';
 
     string constant DEFAULT_NAME_LP_PREFIX = 'Octus LP ';
-    string constant DEFAULT_SYMBOL_LP_PREFIX = 'octLP'; // TODO: prevent collisions
+    string constant DEFAULT_SYMBOL_LP_PREFIX = 'octLP';
 
     uint256 constant WITHDRAW_PERIOD_DURATION_IN_SECONDS = 60 * 60 * 24; // 24 hours
 

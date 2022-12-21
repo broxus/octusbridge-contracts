@@ -154,7 +154,7 @@ const hardhatConfig = {
       allowUnlimitedContractSize: true,
       forking: {
         url: process.env.ETH_MAIN_ARCHIVE_HTTP,
-        blockNumber: 16021525,
+        blockNumber: 16233635,
       },
       chainId: 1111,
       accounts: {
