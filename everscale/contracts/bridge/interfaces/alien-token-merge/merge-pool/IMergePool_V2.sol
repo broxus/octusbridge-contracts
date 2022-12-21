@@ -1,7 +1,7 @@
 pragma ton-solidity >= 0.39.0;
 
 
-interface IMergePool {
+interface IMergePool_V2 {
     struct Token {
         uint8 decimals;
         bool enabled;

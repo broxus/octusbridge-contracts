@@ -12,7 +12,7 @@ import "./../../../utils/ErrorCodes.sol";
 import "./../../../utils/TransferUtils.sol";
 
 import "./../../alien-token/TokenRootAlienEVM.sol";
-import "./../../alien-token-merge/MergePool.sol";
+import "./../../alien-token-merge/merge-pool/MergePool_V1.sol";
 import "./../../alien-token-merge/MergeRouter.sol";
 import "./../../alien-token-merge/MergePoolPlatform.sol";
 
@@ -301,7 +301,7 @@ contract ProxyMultiVaultAlien_V3 is
     function upgradeMergePool(
         address pool
     ) external override onlyOwner reserveAtLeastTargetBalance {
-        IMergePool(pool).acceptUpgrade{
+        IMergePool_V1(pool).acceptUpgrade{
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED,
             bounce: false

@@ -513,7 +513,7 @@ const setupAlienMultiVault = async (owner, staking, cellEncoder) => {
   const AlienTokenWalletUpgradeable = await locklift.factory.getContract('AlienTokenWalletUpgradeable');
   const AlienTokenWalletPlatform = await locklift.factory.getContract('AlienTokenWalletPlatform');
   const MergeRouter = await locklift.factory.getContract('MergeRouter');
-  const MergePool = await locklift.factory.getContract('MergePool');
+  const MergePool = await locklift.factory.getContract('MergePool_V2');
   const MergePoolPlatform = await locklift.factory.getContract('MergePoolPlatform');
 
   await owner.runTarget({

@@ -12,7 +12,7 @@ import "./../../interfaces/event-configuration-contracts/IEthereumEventConfigura
 import "./../../interfaces/IProxyExtended.sol";
 import "./../../interfaces/multivault/proxy/alien/IProxyMultiVaultAlien_V3.sol";
 import "./../../interfaces/ITokenRootAlienEVM.sol";
-import "./../../interfaces/alien-token-merge/IMergePool.sol";
+import "./../../interfaces/alien-token-merge/merge-pool/IMergePool_V2.sol";
 import "./../../interfaces/alien-token-merge/IMergeRouter.sol";
 
 import "./../base/EthereumBaseEvent.sol";
@@ -210,7 +210,7 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
         if (pool.value == 0) {
             _finishSetup(token, amount);
         } else {
-            IMergePool(pool).getCanon{
+            IMergePool_V2(pool).getCanon{
                 value: 1 ton,
                 bounce: false,
                 callback: MultiVaultEVMEventAlien.receiveMergePoolCanon
@@ -224,7 +224,7 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
     /// @param canonToken_ Canon token
     function receiveMergePoolCanon(
         address canon_,
-        IMergePool.Token canonToken_
+        IMergePool_V2.Token canonToken_
     ) external override {
         require(msg.sender == pool);
 

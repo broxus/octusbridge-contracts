@@ -68,7 +68,10 @@
 				{"name":"base_token","type":"uint160"},
 				{"name":"amount","type":"uint128"},
 				{"name":"recipient","type":"uint160"},
-				{"name":"base_chainId","type":"uint256"}
+				{"name":"base_chainId","type":"uint256"},
+				{"name":"callback_recipient","type":"uint160"},
+				{"name":"callback_payload","type":"cell"},
+				{"name":"callback_strict","type":"bool"}
 			]
 		},
 		{

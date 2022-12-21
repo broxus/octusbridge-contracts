@@ -6,10 +6,10 @@ import '@broxus/contracts/contracts/access/InternalOwner.sol';
 import '@broxus/contracts/contracts/utils/RandomNonce.sol';
 import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
-import "./../../utils/TransferUtils.sol";
-import "./../interfaces/alien-token-merge/IMergePool.sol";
-import "./../interfaces/multivault/proxy/alien/IProxyMultiVaultAlien_V4.sol";
-import "./../interfaces/multivault/IEVMCallback.sol";
+import "./../../../utils/TransferUtils.sol";
+import "./../../interfaces/alien-token-merge/merge-pool/IMergePool_V2.sol";
+import "./../../interfaces/multivault/proxy/alien/IProxyMultiVaultAlien_V4.sol";
+import "./../../interfaces/multivault/IEVMCallback.sol";
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensBurnCallback.sol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.sol";
@@ -18,8 +18,8 @@ import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.sol";
 /// @title Merge pool contract
 /// Basically allows to swap different alien tokens on 1:1 ratio
 /// Must be deployed by the ProxyMultiVaultAlien
-contract MergePool is
-    IMergePool,
+contract MergePool_V2 is
+    IMergePool_V2,
     InternalOwner,
     RandomNonce,
     TransferUtils,
@@ -64,12 +64,26 @@ contract MergePool is
     ) external override onlyProxy {
         if (version == newVersion) return;
 
+        address[] tokens_;
+        uint256 canonId;
+        uint256 counter;
+
+        for ((address token, ): tokens) {
+            tokens_.push(token);
+
+            if (token == canon) {
+                canonId = counter;
+            }
+
+            counter++;
+        }
+
         TvmCell data = abi.encode(
             proxy,
             _randomNonce,
             newVersion,
-            tokens,
-            canon,
+            tokens_,
+            canonId,
             owner,
             manager
         );
@@ -95,7 +109,10 @@ contract MergePool is
             address manager_
         ) = abi.decode(
             data,
-            (address, uint256, uint8, address[], uint256, address, address)
+            (
+                address, uint256, uint8,
+                address[], uint256, address, address
+            )
         );
 
         proxy = proxy_;
@@ -291,7 +308,7 @@ contract MergePool is
         ITokenRoot(token).decimals{
             value: ATTACH_TO_DECIMALS_REQUEST,
             bounce: false,
-            callback: MergePool.receiveTokenDecimals
+            callback: MergePool_V2.receiveTokenDecimals
         }();
     }
 
