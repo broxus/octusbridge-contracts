@@ -91,7 +91,7 @@ interface IProxyMultiVaultAlien_V4 is IProxyMultiVaultAlien_V1, IEVMCallback {
         uint160 recipient,
         uint256 chainId,
         uint160 callback_recipient,
-        TvmCell callback_payload,
+        bytes callback_payload,
         bool callback_strict
     );
 }

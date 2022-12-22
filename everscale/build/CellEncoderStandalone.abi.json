@@ -28,7 +28,7 @@
 			"inputs": [
 				{"name":"targetToken","type":"address"},
 				{"name":"recipient","type":"uint160"},
-				{"components":[{"name":"recipient","type":"uint160"},{"name":"payload","type":"cell"},{"name":"strict","type":"bool"}],"name":"callback","type":"tuple"}
+				{"components":[{"name":"recipient","type":"uint160"},{"name":"payload","type":"bytes"},{"name":"strict","type":"bool"}],"name":"callback","type":"tuple"}
 			],
 			"outputs": [
 				{"name":"value0","type":"cell"}
@@ -150,7 +150,7 @@
 			"name": "encodeAlienBurnPayload",
 			"inputs": [
 				{"name":"recipient","type":"uint160"},
-				{"components":[{"name":"recipient","type":"uint160"},{"name":"payload","type":"cell"},{"name":"strict","type":"bool"}],"name":"callback","type":"tuple"}
+				{"components":[{"name":"recipient","type":"uint160"},{"name":"payload","type":"bytes"},{"name":"strict","type":"bool"}],"name":"callback","type":"tuple"}
 			],
 			"outputs": [
 				{"name":"value0","type":"cell"}
@@ -161,7 +161,7 @@
 			"inputs": [
 				{"name":"recipient","type":"uint160"},
 				{"name":"chainId","type":"uint256"},
-				{"components":[{"name":"recipient","type":"uint160"},{"name":"payload","type":"cell"},{"name":"strict","type":"bool"}],"name":"callback","type":"tuple"}
+				{"components":[{"name":"recipient","type":"uint160"},{"name":"payload","type":"bytes"},{"name":"strict","type":"bool"}],"name":"callback","type":"tuple"}
 			],
 			"outputs": [
 				{"name":"value0","type":"cell"}

@@ -25,7 +25,7 @@ interface IProxyMultiVaultNative_V2 is IEVMCallback {
         uint160 recipient,
         uint256 chainId,
         uint160 callback_recipient,
-        TvmCell callback_payload,
+        bytes callback_payload,
         bool callback_strict
     );
 }

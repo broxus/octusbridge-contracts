@@ -29,6 +29,22 @@
 			]
 		},
 		{
+			"name": "setFlags",
+			"inputs": [
+				{"name":"_flags","type":"uint64"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setEventInitialBalance",
+			"inputs": [
+				{"name":"eventInitialBalance","type":"uint64"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "deployEvent",
 			"inputs": [
 				{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"name":"eventData","type":"cell"}],"name":"eventVoteData","type":"tuple"}
@@ -64,6 +80,15 @@
 			],
 			"outputs": [
 				{"name":"_type","type":"uint8"}
+			]
+		},
+		{
+			"name": "getFlags",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"_flags","type":"uint64"}
 			]
 		},
 		{
@@ -112,6 +137,14 @@
 			"outputs": [
 				{"name":"meta","type":"cell"}
 			]
+		},
+		{
+			"name": "flags",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"flags","type":"uint64"}
+			]
 		}
 	],
 	"data": [
@@ -144,6 +177,7 @@
 		{"name":"owner","type":"address"},
 		{"components":[{"name":"eventABI","type":"bytes"},{"name":"staking","type":"address"},{"name":"eventInitialBalance","type":"uint64"},{"name":"eventCode","type":"cell"}],"name":"basicConfiguration","type":"tuple"},
 		{"components":[{"name":"eventEmitter","type":"address"},{"name":"proxy","type":"uint160"},{"name":"startTimestamp","type":"uint32"},{"name":"endTimestamp","type":"uint32"}],"name":"networkConfiguration","type":"tuple"},
-		{"name":"meta","type":"cell"}
+		{"name":"meta","type":"cell"},
+		{"name":"flags","type":"uint64"}
 	]
 }

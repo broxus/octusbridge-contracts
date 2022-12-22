@@ -24,7 +24,7 @@ contract MultiVaultEverscaleEventAlien is EverscaleBaseEvent, IMultiVaultEversca
     uint160 recipient;
 
     uint160 callback_recipient;
-    TvmCell callback_payload;
+    bytes callback_payload;
     bool callback_strict;
 
     // Derived value
@@ -57,7 +57,7 @@ contract MultiVaultEverscaleEventAlien is EverscaleBaseEvent, IMultiVaultEversca
             eventInitData.voteData.eventData,
             (
                 address, address, address, uint128, uint160,
-                uint160, TvmCell, bool
+                uint160, bytes, bool
             )
         );
 

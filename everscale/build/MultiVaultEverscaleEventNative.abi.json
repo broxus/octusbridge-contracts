@@ -57,7 +57,7 @@
 				{"name":"amount_","type":"uint128"},
 				{"name":"recipient_","type":"uint160"},
 				{"name":"chainId_","type":"uint256"},
-				{"components":[{"name":"recipient","type":"uint160"},{"name":"payload","type":"cell"},{"name":"strict","type":"bool"}],"name":"callback","type":"tuple"},
+				{"components":[{"name":"recipient","type":"uint160"},{"name":"payload","type":"bytes"},{"name":"strict","type":"bool"}],"name":"callback","type":"tuple"},
 				{"name":"name_","type":"string"},
 				{"name":"symbol_","type":"string"},
 				{"name":"decimals_","type":"uint8"}
@@ -316,7 +316,7 @@
 		{"name":"recipient","type":"uint160"},
 		{"name":"chainId","type":"uint256"},
 		{"name":"callback_recipient","type":"uint160"},
-		{"name":"callback_payload","type":"cell"},
+		{"name":"callback_payload","type":"bytes"},
 		{"name":"callback_strict","type":"bool"},
 		{"name":"name","type":"string"},
 		{"name":"symbol","type":"string"},

@@ -40,7 +40,7 @@
 				{"name":"amount","type":"uint128"},
 				{"name":"recipient","type":"uint160"},
 				{"name":"remainingGasTo","type":"address"},
-				{"components":[{"name":"recipient","type":"uint160"},{"name":"payload","type":"cell"},{"name":"strict","type":"bool"}],"name":"callback","type":"tuple"}
+				{"components":[{"name":"recipient","type":"uint160"},{"name":"payload","type":"bytes"},{"name":"strict","type":"bool"}],"name":"callback","type":"tuple"}
 			],
 			"outputs": [
 			]

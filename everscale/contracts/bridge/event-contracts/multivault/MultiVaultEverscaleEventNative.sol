@@ -27,7 +27,7 @@ contract MultiVaultEverscaleEventNative is EverscaleBaseEvent, IMultiVaultEversc
     uint256 chainId;
 
     uint160 callback_recipient;
-    TvmCell callback_payload;
+    bytes callback_payload;
     bool callback_strict;
 
     string name;
@@ -66,7 +66,7 @@ contract MultiVaultEverscaleEventNative is EverscaleBaseEvent, IMultiVaultEversc
             eventInitData.voteData.eventData,
             (
                 address, address, address, address, uint128, uint160, uint256,
-                uint160, TvmCell, bool
+                uint160, bytes, bool
             )
         );
 

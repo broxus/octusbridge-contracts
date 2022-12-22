@@ -24,6 +24,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IPro
     BasicConfiguration public static basicConfiguration;
     EthereumEventConfiguration public static networkConfiguration;
 
+    uint64 public flags;
     TvmCell public meta;
 
     /// @param _owner Event configuration owner
@@ -76,6 +77,19 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IPro
 
         networkConfiguration.endBlockNumber = endBlockNumber;
     }
+
+    function setFlags(
+        uint64 _flags
+    ) override onlyOwner cashBack external {
+        flags = _flags;
+    }
+
+    function setEventInitialBalance(
+        uint64 eventInitialBalance
+    ) override onlyOwner cashBack external {
+        basicConfiguration.eventInitialBalance = eventInitialBalance;
+    }
+
 
     /// @dev Build initial data for event contract
     /// @dev Extends event vote data with configuration params
@@ -204,6 +218,10 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IPro
     /// @return _type Configuration type - Ethereum or Everscale
     function getType() override public pure responsible returns(EventType _type) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} EventType.Ethereum;
+    }
+
+    function getFlags() override public view responsible returns(uint64 _flags) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} flags;
     }
 
     /// @dev Proxy V1 callback.

@@ -23,6 +23,7 @@ contract EverscaleEventConfiguration is IEverscaleEventConfiguration, TransferUt
     EverscaleEventConfiguration public static networkConfiguration;
 
     TvmCell public meta;
+    uint64 public flags;
     uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
 
     /*
@@ -74,6 +75,19 @@ contract EverscaleEventConfiguration is IEverscaleEventConfiguration, TransferUt
 
         networkConfiguration.endTimestamp = endTimestamp;
     }
+
+    function setFlags(
+        uint64 _flags
+    ) override onlyOwner cashBack external {
+        flags = _flags;
+    }
+
+    function setEventInitialBalance(
+        uint64 eventInitialBalance
+    ) override onlyOwner cashBack external {
+        basicConfiguration.eventInitialBalance = eventInitialBalance;
+    }
+
 
     /// @dev Build initial data for event contract.
     /// Extends event vote data with configuration params.
@@ -183,5 +197,9 @@ contract EverscaleEventConfiguration is IEverscaleEventConfiguration, TransferUt
     */
     function getType() override public pure responsible returns(EventType _type) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} EventType.Everscale;
+    }
+
+    function getFlags() override public view responsible returns(uint64 _flags) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} flags;
     }
 }
