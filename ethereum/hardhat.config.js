@@ -48,7 +48,11 @@ const hardhatConfig = {
     name: "MultiVault",
     // (optional) An array of strings, matched against fully qualified contract names, to
     // determine which contracts are included in your Diamond ABI.
-    include: ['interfaces/multivault/IMultiVault'],
+    include: [
+        'interfaces/multivault/IMultiVault',
+        'interfaces/IDiamondCut',
+        'interfaces/IDiamondLoupe',
+    ],
     // // (optional) An array of strings, matched against fully qualified contract names, to
     // // determine which contracts are excluded from your Diamond ABI.
     // exclude: ["vendor"],
@@ -75,7 +79,7 @@ const hardhatConfig = {
     flat: true,
     spacing: 2,
     runOnCompile: true,
-    only: [':Vault$', ':Bridge$', ':DAO$', ':MultiVaultFacet']
+    only: [':Vault$', ':Bridge$', ':DAO$', ':MultiVaultFacet', ':Diamond']
   },
   contractSizer: {
     alphaSort: true,
