@@ -1,8 +1,8 @@
 const main = async () => {
-    const ProxyMultiVaultNative = await locklift.factory.getContract('ProxyMultiVaultNative');
-    const ProxyMultiVaultAlien = await locklift.factory.getContract('ProxyMultiVaultAlien');
+    const ProxyMultiVaultNative_V2 = await locklift.factory.getContract('ProxyMultiVaultNative_V2');
+    const ProxyMultiVaultAlien_V4 = await locklift.factory.getContract('ProxyMultiVaultAlien_V4');
 
-    for (const contract of [ProxyMultiVaultNative, ProxyMultiVaultAlien]) {
+    for (const contract of [ProxyMultiVaultNative_V2, ProxyMultiVaultAlien_V4]) {
         console.log(contract.name);
         console.log(contract.code);
         console.log('');
