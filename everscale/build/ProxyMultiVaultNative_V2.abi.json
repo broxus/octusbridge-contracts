@@ -117,7 +117,7 @@
 				{"name":"recipient","type":"uint160"},
 				{"name":"chainId","type":"uint256"},
 				{"name":"callback_recipient","type":"uint160"},
-				{"name":"callback_payload","type":"cell"},
+				{"name":"callback_payload","type":"bytes"},
 				{"name":"callback_strict","type":"bool"}
 			],
 			"outputs": [

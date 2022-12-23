@@ -24,7 +24,7 @@ import '@broxus/contracts/contracts/utils/RandomNonce.sol';
 import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
 
 
-contract ProxyMultiVaultAlien_V4 is
+contract ProxyMultiVaultAlien_V5 is
     InternalOwner,
     TransferUtils,
     CheckPubKey,
@@ -566,12 +566,13 @@ contract ProxyMultiVaultAlien_V4 is
             address manager_,
             TvmCell mergeRouter_,
             TvmCell mergePool_,
-            TvmCell mergePoolPlatform_
+            TvmCell mergePoolPlatform_,
+            uint8 _mergePoolVersion
         ) = abi.decode(
             data,
             (
                 Configuration, uint8, uint, address,
-                address, TvmCell, TvmCell, TvmCell
+                address, TvmCell, TvmCell, TvmCell, uint8
             )
         );
 
@@ -584,6 +585,7 @@ contract ProxyMultiVaultAlien_V4 is
         mergeRouter = mergeRouter_;
         mergePool = mergePool_;
         mergePoolPlatform = mergePoolPlatform_;
+        mergePoolVersion = _mergePoolVersion;
     }
 
     function setCustomAlien(

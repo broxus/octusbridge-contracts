@@ -203,4 +203,25 @@ describe('Test Alien proxy upgrade', async function() {
         expect(await proxy.call({ method: 'apiVersion' }))
             .to.be.bignumber.equal(4, 'Wrong api version');
     });
+
+    it('Upgrade proxy to V5', async () => {
+        const Proxy = await locklift.factory.getContract('ProxyMultiVaultAlien_V5');
+
+        const tx = await owner.runTarget({
+            contract: proxy,
+            method: 'upgrade',
+            params: {
+                code: Proxy.code
+            }
+        });
+
+        proxy.abi = Proxy.abi;
+
+        logger.log(`Upgrade tx: ${tx.transaction.id}`);
+    });
+
+    it('Check API version', async () => {
+        expect(await proxy.call({ method: 'apiVersion' }))
+            .to.be.bignumber.equal(5, 'Wrong api version');
+    });
 });

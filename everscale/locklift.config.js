@@ -67,7 +67,7 @@ module.exports = {
     main: {
       ton_client: {
         network: {
-          server_address: 'https://main.ton.dev'
+          server_address: 'https://mainnet.evercloud.dev/b1dc00680557477394f34882aa92cc30'
         }
       },
       giver: {
