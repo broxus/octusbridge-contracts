@@ -4,7 +4,6 @@ pragma solidity 0.8.0;
 
 import "./IMultiVaultFacetTokens.sol";
 
-
 interface IMultiVaultFacetDepositEvents {
     event NativeTransfer(
         int8 native_wid,
@@ -32,10 +31,12 @@ interface IMultiVaultFacetDepositEvents {
     );
 
     event Deposit(
+        IMultiVaultFacetTokens.TokenType _type,
         address sender,
         address token,
         int8 recipient_wid,
         uint256 recipient_addr,
-        uint256 amount
+        uint256 amount,
+        uint256 fee
     );
 }

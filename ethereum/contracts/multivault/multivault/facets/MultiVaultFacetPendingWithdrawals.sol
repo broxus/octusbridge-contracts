@@ -135,7 +135,7 @@ contract MultiVaultFacetPendingWithdrawals is
             payload: payload
         });
 
-        _transferToEverscaleAlien(deposit, msg.value);
+        _transferToEverscaleAlien(deposit, 0, msg.value);
 
         emit PendingWithdrawalCancel(msg.sender, id, amount);
 

@@ -13,6 +13,7 @@ import "../storage/MultiVaultStorage.sol";
 abstract contract MultiVaultHelperEverscale is IMultiVaultFacetDepositEvents {
     function _transferToEverscaleNative(
         IMultiVaultFacetDeposit.DepositParams memory deposit,
+        uint fee,
         uint value
     ) internal {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
@@ -30,10 +31,13 @@ abstract contract MultiVaultHelperEverscale is IMultiVaultFacetDepositEvents {
             deposit.expected_evers,
             deposit.payload
         );
+
+        _emitDeposit(deposit, fee, true);
     }
 
     function _transferToEverscaleAlien(
         IMultiVaultFacetDeposit.DepositParams memory deposit,
+        uint fee,
         uint value
     ) internal {
         emit AlienTransfer(
@@ -49,6 +53,24 @@ abstract contract MultiVaultHelperEverscale is IMultiVaultFacetDepositEvents {
             value,
             deposit.expected_evers,
             deposit.payload
+        );
+
+        _emitDeposit(deposit, fee, false);
+    }
+
+    function _emitDeposit(
+        IMultiVaultFacetDeposit.DepositParams memory deposit,
+        uint fee,
+        bool isNative
+    ) internal {
+        emit Deposit(
+            isNative ? IMultiVaultFacetTokens.TokenType.Native : IMultiVaultFacetTokens.TokenType.Alien,
+            msg.sender,
+            deposit.token,
+            deposit.recipient.wid,
+            deposit.recipient.addr,
+            deposit.amount + fee,
+            fee
         );
     }
 }

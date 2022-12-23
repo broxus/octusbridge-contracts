@@ -67,7 +67,7 @@ contract MultiVaultFacetDeposit is
 
             d.amount -= fee;
 
-            _transferToEverscaleNative(d, msg.value);
+            _transferToEverscaleNative(d, fee, msg.value);
         } else {
             IERC20(token).safeTransferFrom(
                 msg.sender,
@@ -77,19 +77,11 @@ contract MultiVaultFacetDeposit is
 
             d.amount -= fee;
 
-            _transferToEverscaleAlien(d, msg.value);
+            _transferToEverscaleAlien(d, fee, msg.value);
         }
 
         _increaseTokenFee(d.token, fee);
         _drainGas();
-
-        emit Deposit(
-            msg.sender,
-            d.token,
-            d.recipient.wid,
-            d.recipient.addr,
-            d.amount
-        );
     }
 
     function deposit(
@@ -135,6 +127,7 @@ contract MultiVaultFacetDeposit is
 
         _transferToEverscaleAlien(
             d,
+            fee,
             msg.value
         );
 
