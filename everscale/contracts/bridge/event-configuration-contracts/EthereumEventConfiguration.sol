@@ -24,6 +24,7 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IPro
     BasicConfiguration public static basicConfiguration;
     EthereumEventConfiguration public static networkConfiguration;
 
+    uint64 public flags;
     TvmCell public meta;
 
     /// @param _owner Event configuration owner
@@ -77,6 +78,19 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IPro
         networkConfiguration.endBlockNumber = endBlockNumber;
     }
 
+    function setFlags(
+        uint64 _flags
+    ) override onlyOwner cashBack external {
+        flags = _flags;
+    }
+
+    function setEventInitialBalance(
+        uint64 eventInitialBalance
+    ) override onlyOwner cashBack external {
+        basicConfiguration.eventInitialBalance = eventInitialBalance;
+    }
+
+
     /// @dev Build initial data for event contract
     /// @dev Extends event vote data with configuration params
     /// @param eventVoteData Event vote data structure, passed by relay
@@ -101,6 +115,31 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IPro
         override
         reserveAtLeastTargetBalance()
     {
+        _deployEvent(eventVoteData, MsgFlag.ALL_NOT_RESERVED, 0);
+    }
+
+    function deployEvents(
+        IEthereumEvent.EthereumEventVoteData[] eventsVoteData,
+        uint128[] values
+    ) external override reserveAtLeastTargetBalance() {
+        require(values.length == eventsVoteData.length && values.length > 0);
+
+        uint counter = 0;
+
+        for (IEthereumEvent.EthereumEventVoteData eventVoteData: eventsVoteData) {
+            _deployEvent(eventVoteData, 0, values[counter]);
+            counter++;
+        }
+
+        msg.sender.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
+    }
+
+
+    function _deployEvent(
+        IEthereumEvent.EthereumEventVoteData eventVoteData,
+        uint8 flag,
+        uint128 value
+    ) internal view {
         require(msg.value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
         require(
             eventVoteData.eventBlockNumber >= networkConfiguration.startBlockNumber,
@@ -121,8 +160,8 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IPro
         emit NewEventContract(eventContract);
 
         new EthereumBaseEvent{
-            value: 0,
-            flag: MsgFlag.ALL_NOT_RESERVED,
+            value: value,
+            flag: flag,
             code: basicConfiguration.eventCode,
             pubkey: 0,
             varInit: {
@@ -179,6 +218,10 @@ contract EthereumEventConfiguration is IEthereumEventConfiguration, IProxy, IPro
     /// @return _type Configuration type - Ethereum or Everscale
     function getType() override public pure responsible returns(EventType _type) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} EventType.Ethereum;
+    }
+
+    function getFlags() override public view responsible returns(uint64 _flags) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} flags;
     }
 
     /// @dev Proxy V1 callback.

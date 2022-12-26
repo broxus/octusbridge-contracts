@@ -136,7 +136,8 @@ describe('Swap tokens by burning in favor of merge pool', async function() {
             params: {
                 amount: mintAmount,
                 token: alienTokenRoot.address,
-                recipient: initializer.address
+                recipient: initializer.address,
+                payload: ''
             }
         });
     });

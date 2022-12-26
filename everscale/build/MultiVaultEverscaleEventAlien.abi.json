@@ -43,6 +43,7 @@
 				{"name":"remainingGasTo_","type":"address"},
 				{"name":"amount_","type":"uint128"},
 				{"name":"recipient_","type":"uint160"},
+				{"components":[{"name":"recipient","type":"uint160"},{"name":"payload","type":"bytes"},{"name":"strict","type":"bool"}],"name":"callback","type":"tuple"},
 				{"name":"base_chainId_","type":"uint256"},
 				{"name":"base_token_","type":"uint160"}
 			]
@@ -297,6 +298,9 @@
 		{"name":"remainingGasTo","type":"address"},
 		{"name":"amount","type":"uint128"},
 		{"name":"recipient","type":"uint160"},
+		{"name":"callback_recipient","type":"uint160"},
+		{"name":"callback_payload","type":"bytes"},
+		{"name":"callback_strict","type":"bool"},
 		{"name":"base_chainId","type":"uint256"},
 		{"name":"base_token","type":"uint160"},
 		{"name":"expectedToken","type":"address"}

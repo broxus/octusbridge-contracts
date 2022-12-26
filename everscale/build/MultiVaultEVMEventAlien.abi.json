@@ -80,6 +80,9 @@
 				{"name":"decimals_","type":"uint8"},
 				{"name":"amount_","type":"uint128"},
 				{"name":"recipient_","type":"address"},
+				{"name":"value_","type":"uint256"},
+				{"name":"expected_evers_","type":"uint256"},
+				{"name":"payload_","type":"cell"},
 				{"name":"proxy_","type":"address"},
 				{"name":"token_","type":"address"}
 			]
@@ -330,6 +333,9 @@
 		{"name":"decimals","type":"uint8"},
 		{"name":"amount","type":"uint128"},
 		{"name":"recipient","type":"address"},
+		{"name":"value","type":"uint256"},
+		{"name":"expected_evers","type":"uint256"},
+		{"name":"payload","type":"cell"},
 		{"name":"proxy","type":"address"},
 		{"name":"token","type":"address"},
 		{"name":"router","type":"address"},

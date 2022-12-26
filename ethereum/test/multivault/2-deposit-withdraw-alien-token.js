@@ -37,7 +37,21 @@ describe('Test deposit-withdraw for alien token', async () => {
                 .connect(alice)
                 .approve(multivault.address, ethers.utils.parseUnits('1000000000000', 18));
 
-            await expect(multivault.connect(alice)['deposit((int8,uint256),address,uint256)'](recipient, token.address, amount))
+            const deposit = multivault
+                .connect(alice)
+                ['deposit(((int8,uint256),address,uint256,uint256,bytes))'];
+
+            const deposit_value = ethers.utils.parseEther("0.1");
+            const deposit_expected_evers = 33;
+            const deposit_payload = "0x001122";
+
+            await expect(deposit({
+                    recipient,
+                    token: token.address,
+                    amount,
+                    expected_evers: deposit_expected_evers,
+                    payload: deposit_payload
+                }, { value: deposit_value }))
                 .to.emit(multivault, 'AlienTransfer')
                 .withArgs(
                     utils.defaultChainId,
@@ -47,7 +61,10 @@ describe('Test deposit-withdraw for alien token', async () => {
                     await token.decimals(),
                     amount.sub(fee),
                     recipient.wid,
-                    recipient.addr
+                    recipient.addr,
+                    deposit_value,
+                    deposit_expected_evers,
+                    deposit_payload
                 );
         });
 
@@ -67,12 +84,12 @@ describe('Test deposit-withdraw for alien token', async () => {
                 .to.be.equal(amount, 'Wrong MultiVault token balance after deposit');
         });
 
-        it('Skim alien fees to Everscale', async () => {
+        it('Skim alien fees in EVM', async () => {
             const owner = await ethers.getNamedSigner('owner');
 
             const fee = await multivault.fees(token.address);
 
-            await expect(() => multivault.connect(owner).skim(token.address, false))
+            await expect(() => multivault.connect(owner)['skim(address)'](token.address))
                 .to.changeTokenBalances(
                     token,
                     [multivault, owner],
@@ -96,7 +113,8 @@ describe('Test deposit-withdraw for alien token', async () => {
                 token: token.address,
                 amount: amount,
                 recipient: bob,
-                chainId: utils.defaultChainId
+                chainId: utils.defaultChainId,
+                callback: {}
             });
 
             payload = encodeEverscaleEvent({
@@ -121,26 +139,6 @@ describe('Test deposit-withdraw for alien token', async () => {
                     token,
                     [multivault, bob],
                     [ethers.BigNumber.from(0).sub(amount.sub(fee)), amount.sub(fee)]
-                );
-        });
-
-        it('Skim Alien fees to Everscale', async () => {
-            const owner = await ethers.getNamedSigner('owner');
-            const rewards = await multivault.rewards();
-
-            const fee = await multivault.fees(token.address);
-
-            await expect(multivault.connect(owner).skim(token.address, true))
-                .to.emit(multivault, 'AlienTransfer')
-                .withArgs(
-                    utils.defaultChainId,
-                    token.address,
-                    await token.name(),
-                    await token.symbol(),
-                    await token.decimals(),
-                    fee,
-                    rewards.wid,
-                    rewards.addr
                 );
         });
     });

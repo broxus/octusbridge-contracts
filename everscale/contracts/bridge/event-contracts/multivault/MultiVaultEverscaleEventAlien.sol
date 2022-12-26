@@ -5,8 +5,8 @@ pragma AbiHeader pubkey;
 
 
 import "./../../interfaces/multivault/IMultiVaultEverscaleEventAlien.sol";
-import "./../../interfaces/multivault/IProxyMultiVaultAlien_V3.sol";
-import "./../../interfaces/multivault/IProxyMultiVaultAlien_V1.sol";
+import "./../../interfaces/multivault/proxy/alien/IProxyMultiVaultAlien_V3.sol";
+import "./../../interfaces/multivault/proxy/alien/IProxyMultiVaultAlien_V1.sol";
 import "./../../interfaces/ITokenRootAlienEVM.sol";
 
 import "./../base/EverscaleBaseEvent.sol";
@@ -23,6 +23,11 @@ contract MultiVaultEverscaleEventAlien is EverscaleBaseEvent, IMultiVaultEversca
     uint128 amount;
     uint160 recipient;
 
+    uint160 callback_recipient;
+    bytes callback_payload;
+    bool callback_strict;
+
+    // Derived value
     uint256 base_chainId;
     uint160 base_token;
     address expectedToken;
@@ -45,9 +50,15 @@ contract MultiVaultEverscaleEventAlien is EverscaleBaseEvent, IMultiVaultEversca
     function onInit() override internal {
         setStatusInitializing();
 
-        (proxy, token, remainingGasTo, amount, recipient) = abi.decode(
+        (
+            proxy, token, remainingGasTo, amount, recipient,
+            callback_recipient, callback_payload, callback_strict
+        ) = abi.decode(
             eventInitData.voteData.eventData,
-            (address, address, address, uint128, uint160)
+            (
+                address, address, address, uint128, uint160,
+                uint160, bytes, bool
+            )
         );
 
         ITokenRootAlienEVM(token).meta{
@@ -103,17 +114,20 @@ contract MultiVaultEverscaleEventAlien is EverscaleBaseEvent, IMultiVaultEversca
             base_token,
             amount,
             recipient,
-            base_chainId
+            base_chainId,
+            callback_recipient,
+            callback_payload,
+            callback_strict
         );
     }
 
-    // TODO: add on-bounce all over the multivault contracts to prevent stuck in Initializing
     function getDecodedData() external override responsible returns(
         address proxy_,
         address token_,
         address remainingGasTo_,
         uint128 amount_,
         uint160 recipient_,
+        EVMCallback callback,
         uint256 base_chainId_,
         uint160 base_token_
     ) {
@@ -123,6 +137,11 @@ contract MultiVaultEverscaleEventAlien is EverscaleBaseEvent, IMultiVaultEversca
             remainingGasTo,
             amount,
             recipient,
+            EVMCallback(
+                callback_recipient,
+                callback_payload,
+                callback_strict
+            ),
             base_chainId,
             base_token
         );

@@ -10,9 +10,9 @@ import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 import "./../../interfaces/multivault/IMultiVaultEVMEventAlien.sol";
 import "./../../interfaces/event-configuration-contracts/IEthereumEventConfiguration.sol";
 import "./../../interfaces/IProxyExtended.sol";
-import "./../../interfaces/multivault/IProxyMultiVaultAlien_V3.sol";
+import "./../../interfaces/multivault/proxy/alien/IProxyMultiVaultAlien_V3.sol";
 import "./../../interfaces/ITokenRootAlienEVM.sol";
-import "./../../interfaces/alien-token-merge/IMergePool.sol";
+import "./../../interfaces/alien-token-merge/merge-pool/IMergePool_V2.sol";
 import "./../../interfaces/alien-token-merge/IMergeRouter.sol";
 
 import "./../base/EthereumBaseEvent.sol";
@@ -29,12 +29,19 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
 
     uint256 base_chainId;
     uint160 base_token;
+
     string name;
     string symbol;
     uint8 decimals;
+
     uint128 amount;
     address recipient;
 
+    uint value;
+    uint expected_evers;
+    TvmCell payload;
+
+    // Derived fields
     address proxy;
     address token;
 
@@ -74,15 +81,26 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
         (
             base_chainId,
             base_token,
+
             name,
             symbol,
             decimals,
+
             amount,
             recipient_wid,
-            recipient_addr
+            recipient_addr,
+
+            value,
+            expected_evers,
+            payload
         ) = abi.decode(
             eventInitData.voteData.eventData,
-            (uint256, uint160, string, string, uint8, uint128, int8, uint256)
+            (
+                uint256, uint160,
+                string, string, uint8,
+                uint128, int8, uint256,
+                uint256, uint256, TvmCell
+            )
         );
 
         recipient = address.makeAddrStd(recipient_wid, recipient_addr);
@@ -192,7 +210,7 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
         if (pool.value == 0) {
             _finishSetup(token, amount);
         } else {
-            IMergePool(pool).getCanon{
+            IMergePool_V2(pool).getCanon{
                 value: 1 ton,
                 bounce: false,
                 callback: MultiVaultEVMEventAlien.receiveMergePoolCanon
@@ -206,7 +224,7 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
     /// @param canonToken_ Canon token
     function receiveMergePoolCanon(
         address canon_,
-        IMergePool.Token canonToken_
+        IMergePool_V2.Token canonToken_
     ) external override {
         require(msg.sender == pool);
 
@@ -245,7 +263,8 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
         TvmCell metaData = abi.encode(
             target_token,
             target_amount,
-            recipient
+            recipient,
+            payload
         );
 
         IProxyExtended(eventInitData.configuration).onEventConfirmedExtended{
@@ -261,6 +280,9 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
         uint8 decimals_,
         uint128 amount_,
         address recipient_,
+        uint value_,
+        uint expected_evers_,
+        TvmCell payload_,
         address proxy_,
         address token_
     ) {
@@ -272,6 +294,9 @@ contract MultiVaultEVMEventAlien is EthereumBaseEvent, IMultiVaultEVMEventAlien 
             decimals,
             amount,
             recipient,
+            value,
+            expected_evers,
+            payload,
             proxy,
             token
         );

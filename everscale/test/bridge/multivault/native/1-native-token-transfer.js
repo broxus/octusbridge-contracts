@@ -74,7 +74,12 @@ describe('Test EVM native multivault pipeline', async function() {
                 method: 'encodeNativeTransferPayload',
                 params: {
                     recipient,
-                    chainId
+                    chainId,
+                    callback: {
+                        recipient: 0,
+                        payload: '',
+                        strict: false
+                    }
                 }
             });
 
@@ -337,6 +342,9 @@ describe('Test EVM native multivault pipeline', async function() {
                 amount,
                 recipient_wid: initializer.address.split(':')[0],
                 recipient_addr: `0x${initializer.address.split(':')[1]}`,
+                value: 10000,
+                expected_evers: 1000,
+                payload: ''
             };
 
             eventDataEncoded =  await cellEncoder.call({

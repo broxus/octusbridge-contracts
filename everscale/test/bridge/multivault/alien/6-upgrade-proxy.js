@@ -160,4 +160,68 @@ describe('Test Alien proxy upgrade', async function() {
 
         await logContract(proxy);
     });
+
+    it('Upgrade proxy to V4', async () => {
+        const _configuration = await proxy.call({ method: 'getConfiguration' });
+        const _owner = await proxy.call({ method: 'owner' });
+
+        const Proxy = await locklift.factory.getContract('ProxyMultiVaultAlien_V4');
+
+        const tx = await owner.runTarget({
+            contract: proxy,
+            method: 'upgrade',
+            params: {
+                code: Proxy.code
+            }
+        });
+
+        proxy.abi = Proxy.abi;
+
+        logger.log(`Upgrade tx: ${tx.transaction.id}`);
+
+        const configuration = await proxy.call({ method: 'getConfiguration' });
+
+        expect(configuration.everscaleConfiguration)
+            .to.be.equal(_configuration.everscaleConfiguration, 'Wrong everscale configuration');
+        expect(configuration.evmConfigurations)
+            .to.be.eql(_configuration.evmConfigurations, 'Wrong evm configurations');
+        expect(configuration.deployWalletValue)
+            .to.be.bignumber.equal(_configuration.deployWalletValue, 'Wrong deploy wallet value');
+
+        expect(configuration.alienTokenRootCode)
+            .to.be.equal(_configuration.alienTokenRootCode, 'Wrong alien token root code');
+        expect(configuration.alienTokenWalletCode)
+            .to.be.equal(_configuration.alienTokenWalletCode, 'Wrong alien token wallet code');
+        expect(configuration.alienTokenWalletPlatformCode)
+            .to.be.equal(_configuration.alienTokenWalletPlatformCode, 'Wrong alien token wallet platform code');
+
+        expect(await proxy.call({ method: 'owner' }))
+            .to.be.equal(_owner, 'Wrong owner after upgrade');
+    });
+
+    it('Check API version', async () => {
+        expect(await proxy.call({ method: 'apiVersion' }))
+            .to.be.bignumber.equal(4, 'Wrong api version');
+    });
+
+    it('Upgrade proxy to V5', async () => {
+        const Proxy = await locklift.factory.getContract('ProxyMultiVaultAlien_V5');
+
+        const tx = await owner.runTarget({
+            contract: proxy,
+            method: 'upgrade',
+            params: {
+                code: Proxy.code
+            }
+        });
+
+        proxy.abi = Proxy.abi;
+
+        logger.log(`Upgrade tx: ${tx.transaction.id}`);
+    });
+
+    it('Check API version', async () => {
+        expect(await proxy.call({ method: 'apiVersion' }))
+            .to.be.bignumber.equal(5, 'Wrong api version');
+    });
 });

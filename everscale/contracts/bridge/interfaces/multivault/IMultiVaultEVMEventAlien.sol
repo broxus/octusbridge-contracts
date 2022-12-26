@@ -2,7 +2,7 @@ pragma ton-solidity >= 0.39.0;
 
 
 import "./../event-configuration-contracts/IEthereumEventConfiguration.sol";
-import "./../../interfaces/alien-token-merge/IMergePool.sol";
+import "./../../interfaces/alien-token-merge/merge-pool/IMergePool_V2.sol";
 
 
 interface IMultiVaultEVMEventAlien {
@@ -35,7 +35,7 @@ interface IMultiVaultEVMEventAlien {
 
     function receiveMergePoolCanon(
         address canon_,
-        IMergePool.Token canonToken_
+        IMergePool_V2.Token canonToken_
     ) external;
 
     function getDecodedData() external responsible returns(
@@ -46,6 +46,9 @@ interface IMultiVaultEVMEventAlien {
         uint8 decimals_,
         uint128 amount_,
         address recipient_,
+        uint value_,
+        uint expected_evers_,
+        TvmCell payload_,
         address proxy_,
         address token_
     );

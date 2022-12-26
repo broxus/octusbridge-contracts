@@ -139,7 +139,8 @@ describe('Withdraw tokens by burning in favor of merge pool', async function() {
             params: {
                 amount: mintAmount,
                 token: alienTokenRoot.address,
-                recipient: initializer.address
+                recipient: initializer.address,
+                payload: ''
             }
         });
     });
@@ -264,7 +265,12 @@ describe('Withdraw tokens by burning in favor of merge pool', async function() {
             method: 'encodeMergePoolBurnWithdrawPayload',
             params: {
                 targetToken: canonTokenRoot.address,
-                recipient
+                recipient,
+                callback: {
+                    recipient: 0,
+                    payload: '',
+                    strict: false
+                }
             }
         });
 
@@ -480,7 +486,12 @@ describe('Withdraw tokens by burning in favor of merge pool', async function() {
                 method: 'encodeMergePoolBurnWithdrawPayload',
                 params: {
                     targetToken: canonTokenRoot.address,
-                    recipient
+                    recipient,
+                    callback: {
+                        recipient: 0,
+                        payload: '',
+                        strict: false
+                    }
                 }
             });
 

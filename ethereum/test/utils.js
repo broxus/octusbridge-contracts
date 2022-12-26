@@ -35,9 +35,9 @@ const signReceipt = async (receipt, signer) => {
     .utils
     .soliditySha3(receipt)
     .toString('hex');
-  
+
   const messageHashBytes = ethers.utils.arrayify(receiptHash);
-  
+
   return signer.signMessage(messageHashBytes);
 };
 
@@ -120,13 +120,13 @@ const generateWallets = async (amount) => Promise.all(_
 
 const getVaultByToken = async (registry, token) => {
   const filter = registry.filters.NewVault(token, null);
-  
+
   const [{
     args: {
       vault: _vault
     }
   }] = await registry.queryFilter(filter, 0, "latest");
-  
+
   return ethers.getContractAt('Vault', _vault);
 };
 
@@ -134,13 +134,17 @@ const getVaultByToken = async (registry, token) => {
 const encodeMultiTokenAlienWithdrawalData = (params) => {
   return web3.eth.abi.encodeParameters(
       [
-        'uint160', 'uint128', 'uint160', 'uint256'
+        'uint160', 'uint128', 'uint160', 'uint256',
+          'uint160', 'bytes', 'bool'
       ],
       [
         params.token,
         params.amount,
         params.recipient,
-        params.chainId || defaultChainId
+        params.chainId || defaultChainId,
+        params.callback.recipient || ethers.constants.AddressZero,
+        params.callback.payload || "0x00",
+        params.callback.strict || false
       ]
   );
 };
@@ -151,7 +155,8 @@ const encodeMultiTokenNativeWithdrawalData = (params) => {
       [
           'int8', 'uint256',
           'string', 'string', 'uint8',
-          'uint128', 'uint160', 'uint256'
+          'uint128', 'uint160', 'uint256',
+          'uint160', 'bytes', 'bool'
       ],
       [
           params.native.wid,
@@ -163,7 +168,11 @@ const encodeMultiTokenNativeWithdrawalData = (params) => {
 
           params.amount,
           params.recipient,
-          params.chainId || defaultChainId
+          params.chainId || defaultChainId,
+
+          params.callback.recipient || ethers.constants.AddressZero,
+          params.callback.payload || "0x00",
+          params.callback.strict || false
       ]
   );
 }
@@ -208,7 +217,7 @@ const mineBlocks = async (num) => {
 
 const issueTokens = async ({ token, owner, amount, recipient }) => {
   const locker = await getSignerFromAddr(owner);
-  
+
   await token
     .connect(locker)
     .transfer(recipient, amount);

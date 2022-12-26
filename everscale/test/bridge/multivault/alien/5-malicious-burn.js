@@ -36,7 +36,12 @@ describe('Test event contract behaviour when Alien token is incorrect', async fu
             const burnPayload = await cellEncoder.call({
                 method: 'encodeAlienBurnPayload',
                 params: {
-                    recipient
+                    recipient,
+                    callback: {
+                        recipient: 0,
+                        payload: '',
+                        strict: false
+                    }
                 }
             });
 

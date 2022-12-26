@@ -87,6 +87,9 @@ describe('Deposit Alien token from EVM to Everscale with no merging', async func
             amount: 333,
             recipient_wid: initializer.address.split(':')[0],
             recipient_addr: `0x${initializer.address.split(':')[1]}`,
+            value: 10000,
+            expected_evers: 1000,
+            payload: ''
         };
 
         eventDataEncoded =  await cellEncoder.call({
@@ -104,11 +107,12 @@ describe('Deposit Alien token from EVM to Everscale with no merging', async func
 
         const tx = await initializer.runTarget({
             contract: evmConfiguration,
-            method: 'deployEvent',
+            method: 'deployEvents',
             params: {
-                eventVoteData,
+                eventsVoteData: [eventVoteData],
+                values: [locklift.utils.convertCrystal(6, 'nano')]
             },
-            value: locklift.utils.convertCrystal(6, 'nano')
+            value: locklift.utils.convertCrystal(10, 'nano')
         });
 
         logger.log(`Event initialization tx: ${tx.transaction.id}`);

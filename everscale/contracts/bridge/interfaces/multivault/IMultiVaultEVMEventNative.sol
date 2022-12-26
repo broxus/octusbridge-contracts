@@ -19,6 +19,9 @@ interface IMultiVaultEVMEventNative {
         address token_,
         uint128 amount_,
         address recipient_,
+        uint value_,
+        uint expected_evers_,
+        TvmCell payload_,
         address proxy_,
         address tokenWallet_
     );

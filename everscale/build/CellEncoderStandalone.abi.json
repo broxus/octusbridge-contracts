@@ -4,6 +4,17 @@
 	"header": ["time"],
 	"functions": [
 		{
+			"name": "encodeAlienHiddenBridgeEventPayload",
+			"inputs": [
+				{"name":"operation","type":"uint8"},
+				{"name":"proxy","type":"address"},
+				{"name":"payload","type":"cell"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
+			]
+		},
+		{
 			"name": "encodeMergePoolBurnSwapPayload",
 			"inputs": [
 				{"name":"targetToken","type":"address"}
@@ -16,7 +27,8 @@
 			"name": "encodeMergePoolBurnWithdrawPayload",
 			"inputs": [
 				{"name":"targetToken","type":"address"},
-				{"name":"recipient","type":"uint160"}
+				{"name":"recipient","type":"uint160"},
+				{"components":[{"name":"recipient","type":"uint160"},{"name":"payload","type":"bytes"},{"name":"strict","type":"bool"}],"name":"callback","type":"tuple"}
 			],
 			"outputs": [
 				{"name":"value0","type":"cell"}
@@ -109,7 +121,10 @@
 				{"name":"decimals","type":"uint8"},
 				{"name":"amount","type":"uint128"},
 				{"name":"recipient_wid","type":"int8"},
-				{"name":"recipient_addr","type":"uint256"}
+				{"name":"recipient_addr","type":"uint256"},
+				{"name":"value","type":"uint256"},
+				{"name":"expected_evers","type":"uint256"},
+				{"name":"payload","type":"cell"}
 			],
 			"outputs": [
 				{"name":"value0","type":"cell"}
@@ -122,7 +137,10 @@
 				{"name":"token_addr","type":"uint256"},
 				{"name":"amount","type":"uint128"},
 				{"name":"recipient_wid","type":"int8"},
-				{"name":"recipient_addr","type":"uint256"}
+				{"name":"recipient_addr","type":"uint256"},
+				{"name":"value","type":"uint256"},
+				{"name":"expected_evers","type":"uint256"},
+				{"name":"payload","type":"cell"}
 			],
 			"outputs": [
 				{"name":"value0","type":"cell"}
@@ -131,7 +149,8 @@
 		{
 			"name": "encodeAlienBurnPayload",
 			"inputs": [
-				{"name":"recipient","type":"uint160"}
+				{"name":"recipient","type":"uint160"},
+				{"components":[{"name":"recipient","type":"uint160"},{"name":"payload","type":"bytes"},{"name":"strict","type":"bool"}],"name":"callback","type":"tuple"}
 			],
 			"outputs": [
 				{"name":"value0","type":"cell"}
@@ -141,7 +160,8 @@
 			"name": "encodeNativeTransferPayload",
 			"inputs": [
 				{"name":"recipient","type":"uint160"},
-				{"name":"chainId","type":"uint256"}
+				{"name":"chainId","type":"uint256"},
+				{"components":[{"name":"recipient","type":"uint160"},{"name":"payload","type":"bytes"},{"name":"strict","type":"bool"}],"name":"callback","type":"tuple"}
 			],
 			"outputs": [
 				{"name":"value0","type":"cell"}
@@ -156,7 +176,10 @@
 				{"name":"base_token","type":"uint160"},
 				{"name":"amount","type":"uint128"},
 				{"name":"recipient","type":"uint160"},
-				{"name":"base_chainId","type":"uint256"}
+				{"name":"base_chainId","type":"uint256"},
+				{"name":"callback_recipient","type":"uint160"},
+				{"name":"callback_payload","type":"cell"},
+				{"name":"callback_strict","type":"bool"}
 			]
 		},
 		{
@@ -172,7 +195,10 @@
 				{"name":"decimals","type":"uint8"},
 				{"name":"amount","type":"uint128"},
 				{"name":"recipient","type":"uint160"},
-				{"name":"chainId","type":"uint256"}
+				{"name":"chainId","type":"uint256"},
+				{"name":"callback_recipient","type":"uint160"},
+				{"name":"callback_payload","type":"cell"},
+				{"name":"callback_strict","type":"bool"}
 			]
 		},
 		{
