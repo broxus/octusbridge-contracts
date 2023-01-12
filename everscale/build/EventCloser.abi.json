@@ -7,24 +7,16 @@
 			"name": "constructor",
 			"inputs": [
 				{"name":"_guardian","type":"address"},
-				{"name":"_owner","type":"uint256"}
+				{"name":"_owner","type":"uint256"},
+				{"name":"_deployer","type":"address"}
 			],
 			"outputs": [
 			]
 		},
 		{
-			"name": "drain",
+			"name": "close",
 			"inputs": [
-				{"name":"receiver","type":"address"},
-				{"name":"value","type":"uint128"}
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "deployEvents",
-			"inputs": [
-				{"components":[{"name":"configuration","type":"address"},{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"}],"name":"eventsVoteData","type":"tuple[]"},{"name":"values","type":"uint128[]"},{"name":"value","type":"uint128"}],"name":"requests","type":"tuple[]"}
+				{"name":"events","type":"address[]"}
 			],
 			"outputs": [
 			]
@@ -60,6 +52,14 @@
 			"outputs": [
 				{"name":"guardian","type":"address"}
 			]
+		},
+		{
+			"name": "deployer",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"deployer","type":"address"}
+			]
 		}
 	],
 	"data": [
@@ -82,6 +82,7 @@
 		{"name":"_constructorFlag","type":"bool"},
 		{"name":"owner","type":"uint256"},
 		{"name":"_randomNonce","type":"uint256"},
-		{"name":"guardian","type":"address"}
+		{"name":"guardian","type":"address"},
+		{"name":"deployer","type":"address"}
 	]
 }
