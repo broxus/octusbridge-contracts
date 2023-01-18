@@ -22,9 +22,35 @@ contract TransferUtils {
         _;
     }
 
+    function _reserveAtLeastTargetBalance() internal view {
+        tvm.rawReserve(
+            math.max(address(this).balance - msg.value, _targetBalance()),
+            2
+        );
+    }
+
+    modifier reserveAtLeastTargetBalance() {
+        _reserveAtLeastTargetBalance();
+
+        _;
+    }
+
+    modifier reserveTargetBalance() {
+        tvm.rawReserve(
+            _targetBalance(),
+            2
+        );
+
+        _;
+    }
+
     modifier reserveMinBalance(uint128 min_balance) {
         tvm.rawReserve(math.max(address(this).balance - msg.value, min_balance), 2);
         _;
+    }
+
+    function _reserveTargetBalance() internal view {
+        tvm.rawReserve(_targetBalance(), 0);
     }
 
     modifier cashBack() {
@@ -37,5 +63,9 @@ contract TransferUtils {
         tvm.rawReserve(address(this).balance - msg.value, 2);
         _;
         receiver.transfer({ value: 0, flag: 129 });
+    }
+
+    function _targetBalance() internal pure virtual returns (uint128) {
+        return 1 ton;
     }
 }

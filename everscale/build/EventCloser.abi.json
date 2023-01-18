@@ -1,0 +1,88 @@
+{
+	"ABI version": 2,
+	"version": "2.2",
+	"header": ["pubkey", "time", "expire"],
+	"functions": [
+		{
+			"name": "constructor",
+			"inputs": [
+				{"name":"_guardian","type":"address"},
+				{"name":"_owner","type":"uint256"},
+				{"name":"_deployer","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "close",
+			"inputs": [
+				{"name":"events","type":"address[]"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "transferOwnership",
+			"inputs": [
+				{"name":"newOwner","type":"uint256"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "owner",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"owner","type":"uint256"}
+			]
+		},
+		{
+			"name": "_randomNonce",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"_randomNonce","type":"uint256"}
+			]
+		},
+		{
+			"name": "guardian",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"guardian","type":"address"}
+			]
+		},
+		{
+			"name": "deployer",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"deployer","type":"address"}
+			]
+		}
+	],
+	"data": [
+		{"key":1,"name":"_randomNonce","type":"uint256"}
+	],
+	"events": [
+		{
+			"name": "OwnershipTransferred",
+			"inputs": [
+				{"name":"previousOwner","type":"uint256"},
+				{"name":"newOwner","type":"uint256"}
+			],
+			"outputs": [
+			]
+		}
+	],
+	"fields": [
+		{"name":"_pubkey","type":"uint256"},
+		{"name":"_timestamp","type":"uint64"},
+		{"name":"_constructorFlag","type":"bool"},
+		{"name":"owner","type":"uint256"},
+		{"name":"_randomNonce","type":"uint256"},
+		{"name":"guardian","type":"address"},
+		{"name":"deployer","type":"address"}
+	]
+}

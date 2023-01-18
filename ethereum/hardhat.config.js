@@ -1,11 +1,14 @@
 require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-web3");
 require("@nomiclabs/hardhat-etherscan");
+require("@nomiclabs/hardhat-ethers");
 require('hardhat-deploy-ethers');
 require('hardhat-deploy');
 require('hardhat-abi-exporter');
 require("hardhat-gas-reporter");
 require('@primitivefi/hardhat-dodoc');
+require('hardhat-contract-sizer');
+require("hardhat-diamond-abi");
 
 
 task("accounts", "Prints the list of accounts", async () => {
@@ -22,6 +25,8 @@ const multisig = {
   polygon: '0xB8dD7223edc08A1681c81278D31d644576ECF0b4',
   bsc: '0xbF13DBbf86B6B1cc02a4169Dde38E16862C77a0a',
   fantom: '0x5B2329A2b2B5ec2f5F77afb6826F825dcec3A3Fd',
+  milkomeda: '0x43137648a18925c73e0905005a96462daEf684C9',
+  avalanche: '0x7591519D32bB268D828249FcE2AA34A24Bc1B3eA'
 };
 
 const bridge = {
@@ -29,6 +34,8 @@ const bridge = {
   polygon: '0x62AE18A40Fa81697Fc7d0fe58402af5cAF795e68',
   bsc: '0xc25CA21377C5bbC860F0bF48dF685D744A411489',
   fantom: '0x9f6898d5D36e2a4b9A0c6e58A0e86525475f58d7',
+  milkomeda: '0x25D28c131461dE91d42495d0DacC603AF3f4Eb33',
+  avalanche: '0x32Be6537F7FD40A919158d94e1C15271bF9855cB'
 };
 
 
@@ -36,6 +43,29 @@ const bridge = {
  * @type import('hardhat/config').HardhatUserConfig
  */
 const hardhatConfig = {
+  diamondAbi: {
+    // (required) The name of your Diamond ABI.
+    name: "MultiVault",
+    // (optional) An array of strings, matched against fully qualified contract names, to
+    // determine which contracts are included in your Diamond ABI.
+    include: [
+        'interfaces/multivault/IMultiVault',
+        'interfaces/IDiamondCut',
+        'interfaces/IDiamondLoupe',
+    ],
+    // // (optional) An array of strings, matched against fully qualified contract names, to
+    // // determine which contracts are excluded from your Diamond ABI.
+    // exclude: ["vendor"],
+    // // (optional) A function that is called with the ABI element, index, entire ABI,
+    // // and fully qualified contract name for each item in the combined ABIs.
+    // // If the function returns `false`, the function is not included in your Diamond ABI.
+    // filter: function (abiElement, index, fullAbi, fullyQualifiedName) {
+    //   return abiElement.name !== "superSecret";
+    // },
+    // (optional) Whether exact duplicate sighashes should cause an error to be thrown,
+    // defaults to true.
+    strict: true,
+  },
   dodoc: {
     runOnCompile: true,
     outputDir: './../docs/evm-specification',
@@ -49,7 +79,14 @@ const hardhatConfig = {
     flat: true,
     spacing: 2,
     runOnCompile: true,
-    only: [':Vault$', ':Bridge$', ':DAO$', ':MultiVault$']
+    only: [':Vault$', ':Bridge$', ':DAO$', ':MultiVaultFacet', ':Diamond']
+  },
+  contractSizer: {
+    alphaSort: true,
+    disambiguatePaths: false,
+    runOnCompile: true,
+    strict: true,
+    only: [':VaultFacet', ':MultiVaultFacet'],
   },
   solidity: {
     compilers: [
@@ -63,11 +100,20 @@ const hardhatConfig = {
         }
       },
       {
-        version: '0.8.2',
+        version: '0.8.1',
         settings: {
           optimizer: {
             enabled: true,
             runs: 200
+          }
+        }
+      },
+      {
+        version: '0.8.2',
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 0
           }
         }
       },
@@ -109,13 +155,26 @@ const hardhatConfig = {
       deployer: "0xdD54d5Fca0Df238f92A0421B31Ca766A20f70F6d",
       funding: "50000000000000000",
       signedTx: "0xf8a78085746a528800830186a08080b853604580600e600039806000f350fe7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf3820217a06c337d22bed572141f530759e3d6390be456630218a5084f7fd06e9f0734a8e1a00c474f88289644b0f4bfd7c6bde7b55e043027ee03e4cd65a533a756698c2d33",
+    },
+    "2001": {
+      factory: "0xcD04370a052CC2EeA4feC3f96Dc5D5c6e2129c69",
+      deployer: "0xdD54d5Fca0Df238f92A0421B31Ca766A20f70F6d",
+      funding: "10000000000000000",
+      signedTx: "0xf8a78085174876e800830186a08080b853604580600e600039806000f350fe7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf3820fc6a06618d4d7b9efae446845c081827c524a36a81a421f205126f298c5872141fba3a039f63392b00cfabb22747f45168ba13e781b21557139d9b068b7df83f22e023d",
+    },
+    "43114": {
+      factory: "0xcD04370a052CC2EeA4feC3f96Dc5D5c6e2129c69",
+      deployer: "0xdD54d5Fca0Df238f92A0421B31Ca766A20f70F6d",
+      funding: "10000000000000000",
+      signedTx: "0xf8a88085174876e800830186a08080b853604580600e600039806000f350fe7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf3830150f7a027fe3b05132ecdd5b50e78b3bae1113c34c6222e01bf8e1aeb9500ee7f30d93fa01c38ee4f899bd4e729d716828dbb5a378ecce845f36f2af52edfcba632519b6d",
     }
   },
   networks: {
     hardhat: {
+      allowUnlimitedContractSize: true,
       forking: {
         url: process.env.ETH_MAIN_ARCHIVE_HTTP,
-        blockNumber: 14522000,
+        blockNumber: 16233635,
       },
       chainId: 1111,
       accounts: {
@@ -195,8 +254,24 @@ const hardhatConfig = {
     apiKey: process.env.ETHERSCAN_KEY
   },
   namedAccounts: {
+    multisig: {
+      hardhat: "0xe29B04B9c6712080f79B2dAc5211B18B279D5DE0"
+    },
     dai_vault: {
-      hardhat: '0x032d06b4cc8a914b85615acd0131c3e0a7330968'
+      hardhat: '0x032d06b4cc8a914b85615acd0131c3e0a7330968',
+      0: '0x032d06b4cc8a914b85615acd0131c3e0a7330968'
+    },
+    usdt_vault: {
+      hardhat: '0x81598d5362eac63310e5719315497c5b8980c579',
+      0: '0x81598d5362eac63310e5719315497c5b8980c579'
+    },
+    usdc_vault: {
+      hardhat: '0xf8a0d53ddc6c92c3c59824f380c0f3d2a3cf521c',
+      0: '0xf8a0d53ddc6c92c3c59824f380c0f3d2a3cf521c'
+    },
+    usdt: {
+      hardhat: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+      0: '0xdAC17F958D2ee523a2206206994597C13D831ec7'
     },
     proxy_admin: {
       hardhat: '0x5889d26Ad270540E315B028Dd39Ae0ECB3De6179'
@@ -449,6 +524,9 @@ const hardhatConfig = {
     withdrawGuardian: {
       default: 23,
       ...multisig
+    },
+    gasDonor: {
+      default: 24
     }
   },
 };

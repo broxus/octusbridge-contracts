@@ -43,7 +43,7 @@ contract ProxyTokenTransfer is
     TransferUtils,
     CheckPubKey
 {
-    uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
+    event Withdraw(int8 wid, uint256 addr, uint128 tokens, uint160 eth_addr, uint32 chainId);
 
     Configuration config;
 
@@ -106,7 +106,7 @@ contract ProxyTokenTransfer is
     function onEventConfirmed(
         IEthereumEverscaleEvent.EthereumEverscaleEventInitData eventData,
         address gasBackAddress
-    ) external override onlyEthereumConfiguration reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    ) public override onlyEthereumConfiguration reserveAtLeastTargetBalance {
         require(!paused, ErrorCodes.PROXY_PAUSED);
         require(config.tokenRoot.value != 0, ErrorCodes.PROXY_TOKEN_ROOT_IS_EMPTY);
 
@@ -144,6 +144,32 @@ contract ProxyTokenTransfer is
         );
     }
 
+    // Legacy token migration
+    fallback() external view {
+        tvm.rawReserve(address(this).balance - msg.value, 2);
+        TvmSlice bodySlice = msg.data;
+        uint32 functionId = bodySlice.decode(uint32);
+        require(functionId == tvm.functionId(ILegacyBurnTokensCallback.burnCallback), ErrorCodes.NOT_LEGACY_BURN);
+        (uint128 tokens,, address sender_address,)
+            = bodySlice.decode(uint128, uint256, address, address);
+        TvmCell payload = bodySlice.loadRef();
+        bodySlice = bodySlice.loadRefAsSlice();
+        address send_gas_to = bodySlice.decode(address);
+
+        if (isArrayContainsAddress(config.outdatedTokenRoots, msg.sender)) {
+            ITokenRoot(config.tokenRoot).mint{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+                tokens,
+                sender_address,
+                config.settingsDeployWalletGrams,
+                send_gas_to,
+                true,
+                payload
+            );
+        } else {
+            send_gas_to.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED});
+        }
+    }
+
     /// @notice Accept token burn callback
     /// Can be called only by `config.tokenRoot`
     /// @param tokens Burn amount
@@ -155,7 +181,7 @@ contract ProxyTokenTransfer is
         address,
         address remainingGasTo,
         TvmCell payload
-    ) public override reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    ) public override reserveAtLeastTargetBalance {
         if (config.tokenRoot == msg.sender) {
             burnedCount += tokens;
 
@@ -262,24 +288,28 @@ contract ProxyTokenTransfer is
         config = _config;
     }
 
+    /// @dev Compiler lies, cant be pure
     function transferTokenOwnership(
         address target,
         address newOwner
-    ) external view onlyOwner reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    ) external view onlyOwner reserveAtLeastTargetBalance {
         mapping(address => ITransferableOwnership.CallbackParams) empty;
 
         ITransferableOwnership(target).transferOwnership{
             value: 0,
+            bounce: false,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(newOwner, msg.sender, empty);
     }
 
+    /// @dev Compiler lies cant be pure
     function legacyTransferTokenOwnership(
         address target,
         address newOwner
-    ) external view onlyOwner reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    ) external view onlyOwner reserveAtLeastTargetBalance {
         ILegacyTransferOwner(target).transferOwner{
             value: 0,
+            bounce: false,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(0, newOwner);
     }

@@ -32,14 +32,6 @@ contract DaoEthereumActionEvent is EverscaleEthereumBaseEvent, DaoCellEncoder {
         return bodyCopy;
     }
 
-    function close() public view {
-        require(status == Status.Confirmed || status == Status.Rejected, ErrorCodes.EVENT_PENDING);
-        address gasBackAddress = getGasBackAddress();
-
-        require(msg.sender == gasBackAddress, ErrorCodes.SENDER_IS_NOT_EVENT_OWNER);
-        transferAll(gasBackAddress);
-    }
-
     function getDecodedData() public view responsible returns (
         address gasBackAddress,
         uint32 chainId,
@@ -54,11 +46,12 @@ contract DaoEthereumActionEvent is EverscaleEthereumBaseEvent, DaoCellEncoder {
 
         gasBackAddress = address.makeAddrStd(gasBackAddressWid, gasBackAddressValue);
 
-        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} (gasBackAddress, _chainId, _actions);
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} (gasBackAddress, _chainId, _actions);
     }
 
-    function getGasBackAddress() private view returns(address) {
-        (address gasBackAddress,,) = getDecodedData();
-        return gasBackAddress;
+    function gasBackAddress() internal override view returns(address) {
+        (address gasBackAddress_,,) = getDecodedData();
+
+        return gasBackAddress_;
     }
 }

@@ -88,7 +88,7 @@ const setupBridge = async (relays) => {
       _randomNonce,
     },
     keyPair,
-  }, locklift.utils.convertCrystal(30, 'nano'));
+  }, locklift.utils.convertCrystal(1000, 'nano'));
 
   owner.setKeyPair(keyPair);
   owner.afterRun = afterRun;
@@ -196,7 +196,7 @@ const setupEthereumEverscaleEventConfiguration = async (owner, staking, cellEnco
       }
     },
     keyPair
-  }, locklift.utils.convertCrystal(1, 'nano'));
+  }, locklift.utils.convertCrystal(2, 'nano'));
 
   await logContract(ethereumEverscaleEventConfiguration);
 
@@ -692,7 +692,7 @@ const setupEverscaleEthereumEventConfiguration = async (owner, staking, cellEnco
       }
     },
     keyPair
-  }, locklift.utils.convertCrystal(1, 'nano'));
+  }, locklift.utils.convertCrystal(2, 'nano'));
 
   await logContract(everscaleEthereumEventConfiguration);
 
@@ -907,7 +907,7 @@ const setupEthereumAlienMultiVault = async (owner, staking, cellEncoder) => {
   await logContract(initializer);
 
   // Deploy proxy
-  const Proxy = await locklift.factory.getContract('ProxyMultiVaultEthereumAlien');
+  const Proxy = await locklift.factory.getContract('ProxyMultiVaultAlien_V4');
   const proxy = await locklift.giver.deployContract({
     contract: Proxy,
     constructorParams: {
@@ -917,7 +917,7 @@ const setupEthereumAlienMultiVault = async (owner, staking, cellEncoder) => {
       _randomNonce,
     },
     keyPair
-  }, locklift.utils.convertCrystal(1, 'nano'));
+  }, locklift.utils.convertCrystal(2, 'nano'));
 
   await logContract(proxy);
 
@@ -948,7 +948,7 @@ const setupEthereumAlienMultiVault = async (owner, staking, cellEncoder) => {
       }
     },
     keyPair
-  }, locklift.utils.convertCrystal(1, 'nano'));
+  }, locklift.utils.convertCrystal(2, 'nano'));
 
   await logContract(evmEventConfiguration);
 
@@ -977,7 +977,7 @@ const setupEthereumAlienMultiVault = async (owner, staking, cellEncoder) => {
       }
     },
     keyPair
-  }, locklift.utils.convertCrystal(1, 'nano'));
+  }, locklift.utils.convertCrystal(2, 'nano'));
 
   await logContract(everscaleEthereumEventConfiguration);
 
@@ -985,6 +985,9 @@ const setupEthereumAlienMultiVault = async (owner, staking, cellEncoder) => {
   const AlienTokenRoot = await locklift.factory.getContract('TokenRootAlienEVMEverscale');
   const AlienTokenWalletUpgradeable = await locklift.factory.getContract('AlienTokenWalletUpgradeable');
   const AlienTokenWalletPlatform = await locklift.factory.getContract('AlienTokenWalletPlatform');
+  const MergeRouter = await locklift.factory.getContract('MergeRouter');
+  const MergePool = await locklift.factory.getContract('MergePool_V2');
+  const MergePoolPlatform = await locklift.factory.getContract('MergePoolPlatform');
 
   await owner.runTarget({
     contract: proxy,
@@ -1003,7 +1006,31 @@ const setupEthereumAlienMultiVault = async (owner, staking, cellEncoder) => {
     value: locklift.utils.convertCrystal(0.5, 'nano')
   });
 
-  return [evmEventConfiguration, everscaleEthereumEventConfiguration, proxy, initializer];
+  await owner.runTarget({
+    contract: proxy,
+    method: 'setMergePool',
+    params: {
+      _mergePool: MergePool.code
+    }
+  });
+
+  await owner.runTarget({
+    contract: proxy,
+    method: 'setMergePoolPlatform',
+    params: {
+      _mergePoolPlatform: MergePoolPlatform.code
+    }
+  });
+
+  await owner.runTarget({
+    contract: proxy,
+    method: 'setMergeRouter',
+    params: {
+      _mergeRouter: MergeRouter.code
+    }
+  });
+
+  return [evmEventConfiguration, everscaleEventConfiguration, proxy, initializer];
 };
 
 
@@ -1029,7 +1056,7 @@ const setupEthereumNativeMultiVault = async (owner, staking) => {
   await logContract(initializer);
 
   // Deploy proxy
-  const Proxy = await locklift.factory.getContract('ProxyMultiVaultEthereumNative');
+  const Proxy = await locklift.factory.getContract('ProxyMultiVaultNative_V2');
   const proxy = await locklift.giver.deployContract({
     contract: Proxy,
     constructorParams: {
@@ -1070,7 +1097,7 @@ const setupEthereumNativeMultiVault = async (owner, staking) => {
       }
     },
     keyPair
-  }, locklift.utils.convertCrystal(1, 'nano'));
+  }, locklift.utils.convertCrystal(2, 'nano'));
 
   await logContract(evmEventConfiguration);
 
@@ -1099,7 +1126,7 @@ const setupEthereumNativeMultiVault = async (owner, staking) => {
       }
     },
     keyPair
-  }, locklift.utils.convertCrystal(1, 'nano'));
+  }, locklift.utils.convertCrystal(2, 'nano'));
 
   await logContract(everscaleEthereumEventConfiguration);
 

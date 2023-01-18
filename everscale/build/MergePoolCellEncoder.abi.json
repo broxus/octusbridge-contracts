@@ -1,0 +1,43 @@
+{
+	"ABI version": 2,
+	"version": "2.2",
+	"header": ["time"],
+	"functions": [
+		{
+			"name": "encodeMergePoolBurnSwapPayload",
+			"inputs": [
+				{"name":"targetToken","type":"address"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
+			]
+		},
+		{
+			"name": "encodeMergePoolBurnWithdrawPayload",
+			"inputs": [
+				{"name":"targetToken","type":"address"},
+				{"name":"recipient","type":"uint160"},
+				{"components":[{"name":"recipient","type":"uint160"},{"name":"payload","type":"bytes"},{"name":"strict","type":"bool"}],"name":"callback","type":"tuple"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
+			]
+		},
+		{
+			"name": "constructor",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		}
+	],
+	"data": [
+	],
+	"events": [
+	],
+	"fields": [
+		{"name":"_pubkey","type":"uint256"},
+		{"name":"_timestamp","type":"uint64"},
+		{"name":"_constructorFlag","type":"bool"}
+	]
+}

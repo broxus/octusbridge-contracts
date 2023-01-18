@@ -3,7 +3,7 @@ const {
     encodeEverscaleEvent,
     ...utils
 } = require('./../utils');
-const {getNamedAccounts} = require("hardhat");
+const {getNamedAccounts, ethers} = require("hardhat");
 
 
 describe('Test deposit-withdraw for native token', async () => {
@@ -43,7 +43,9 @@ describe('Test deposit-withdraw for native token', async () => {
 
                 amount,
                 recipient: bob.address,
-                chainId: utils.defaultChainId
+                chainId: utils.defaultChainId,
+
+                callback: {}
             });
 
             payload = encodeEverscaleEvent({
@@ -59,20 +61,20 @@ describe('Test deposit-withdraw for native token', async () => {
         });
 
         it('Check EVM token meta', async () => {
-            const tokenAddress = await multivault.getNativeToken(native.wid, native.addr);
+            const tokenAddress = await multivault.getNativeToken(native);
 
             token = await ethers.getContractAt('MultiVaultToken', tokenAddress);
 
             expect(await token.name())
-                .to.be.equal(`Octus ${meta.name}`, 'Wrong token name');
+                .to.be.equal(`${meta.name}`, 'Wrong token name');
             expect(await token.symbol())
-                .to.be.equal(`oct${meta.symbol}`, 'Wrong token symbol');
+                .to.be.equal(`${meta.symbol}`, 'Wrong token symbol');
             expect(await token.decimals())
                 .to.be.equal(meta.decimals, 'Wrong token decimals');
         });
 
         it('Check native token status', async () => {
-            const tokenAddress = await multivault.getNativeToken(native.wid, native.addr);
+            const tokenAddress = await multivault.getNativeToken(native);
 
             const tokenDetails = await multivault.tokens(tokenAddress);
 
@@ -107,12 +109,12 @@ describe('Test deposit-withdraw for native token', async () => {
             await token.connect(bob).transfer(alice, ethers.utils.parseUnits('100', 18));
         });
 
-        it('Skim native fees to EVM', async () => {
+        it('Skim native fees', async () => {
             const owner = await ethers.getNamedSigner('owner');
 
             const fee = await multivault.fees(token.address);
 
-            await expect(() => multivault.connect(owner).skim(token.address, false))
+            await expect(() => multivault.connect(owner).skim(token.address))
                 .to.changeTokenBalances(
                     token,
                     [multivault, owner],
@@ -141,40 +143,37 @@ describe('Test deposit-withdraw for native token', async () => {
 
             fee = tokenDetails.depositFee.mul(amount).div(10000);
 
-            await expect(multivault.connect(bob).deposit(recipient, token.address, amount))
+            const deposit = multivault
+                .connect(bob)
+                ['deposit(((int8,uint256),address,uint256,uint256,bytes))'];
+
+            const deposit_value = ethers.utils.parseEther("0.1");
+            const deposit_expected_evers = 33;
+            const deposit_payload = "0x001122";
+
+            await expect(deposit({
+                recipient,
+                token: token.address,
+                amount,
+                expected_evers: deposit_expected_evers,
+                payload: deposit_payload
+            }, { value: deposit_value }))
                 .to.emit(multivault, 'NativeTransfer')
                 .withArgs(
                     native.wid,
                     native.addr,
                     amount.sub(fee),
                     recipient.wid,
-                    recipient.addr
+                    recipient.addr,
+                    deposit_value,
+                    deposit_expected_evers,
+                    deposit_payload
                 );
         });
 
         it('Check MultiVault balance', async () => {
             expect(await token.balanceOf(multivault.address))
                 .to.be.equal(0, 'MultiVault balance should be zero');
-        });
-
-        it('Skim native fees to Everscale', async () => {
-            const owner = await ethers.getNamedSigner('owner');
-
-            const rewards = await multivault.rewards();
-            const fee = await multivault.fees(token.address);
-
-            await expect(multivault.connect(owner).skim(token.address, true))
-                .to.emit(multivault, 'NativeTransfer')
-                .withArgs(
-                    native.wid,
-                    native.addr,
-                    fee,
-                    rewards.wid,
-                    rewards.addr
-                );
-
-            expect(await multivault.fees(token.address))
-                .to.be.equal(0);
         });
     });
 
@@ -195,7 +194,7 @@ describe('Test deposit-withdraw for native token', async () => {
         it('Set token prefix', async () => {
             const owner = await ethers.getNamedSigner('owner');
 
-            const tokenAddress = await multivault.getNativeToken(native.wid, native.addr);
+            const tokenAddress = await multivault.getNativeToken(native);
 
             await multivault.connect(owner).setPrefix(
                 tokenAddress,
@@ -215,7 +214,8 @@ describe('Test deposit-withdraw for native token', async () => {
                 decimals: meta.decimals,
                 amount,
                 recipient: bob.address,
-                chainId: utils.defaultChainId
+                chainId: utils.defaultChainId,
+                callback: {}
             });
 
             const payload = encodeEverscaleEvent({
@@ -231,7 +231,7 @@ describe('Test deposit-withdraw for native token', async () => {
         });
 
         it('Check token prefix', async () => {
-            const tokenAddress = await multivault.getNativeToken(native.wid, native.addr);
+            const tokenAddress = await multivault.getNativeToken(native);
 
             token = await ethers.getContractAt('MultiVaultToken', tokenAddress);
 
@@ -241,6 +241,68 @@ describe('Test deposit-withdraw for native token', async () => {
                 .to.be.equal(meta.symbol, 'Wrong token symbol');
             expect(await token.decimals())
                 .to.be.equal(meta.decimals, 'Wrong token decimals');
+        });
+    });
+
+    describe('Withdraw custom token', async () => {
+        let custom;
+
+        it('Transfer custom token ownership to the multivault', async () => {
+            custom = await ethers.getContract('Token');
+
+            const deployer = await ethers.getNamedSigner('deployer');
+
+            await custom.connect(deployer).transferOwnership(multivault.address);
+        });
+
+        it('Set custom token', async () => {
+            const owner = await ethers.getNamedSigner('owner');
+
+            await multivault.connect(owner).setCustomNative(
+                native,
+                custom.address,
+            );
+        });
+
+        it('Check custom token', async () => {
+            const tokenAddress = await multivault.getNativeToken(native);
+
+            const {
+                custom: customAddress
+            } = await multivault.tokens(tokenAddress);
+
+            expect(customAddress)
+                .to.be.equal(custom.address, 'Wrong custom native address');
+        });
+
+        it('Save withdraw', async () => {
+            const bob = await ethers.getNamedSigner('bob');
+            const amount = ethers.utils.parseUnits('600', 18);
+
+            const withdrawalEventData = utils.encodeMultiTokenNativeWithdrawalData({
+                native,
+
+                name: meta.name,
+                symbol: meta.symbol,
+                decimals: meta.decimals,
+
+                amount,
+                recipient: bob.address,
+                chainId: utils.defaultChainId,
+
+                callback: {}
+            });
+
+            const payload = encodeEverscaleEvent({
+                eventData: withdrawalEventData,
+                proxy: multivault.address,
+            });
+
+            const signatures = await utils.getPayloadSignatures(payload);
+
+            await multivault
+                .connect(bob)
+                .saveWithdrawNative(payload, signatures);
         });
     });
 });

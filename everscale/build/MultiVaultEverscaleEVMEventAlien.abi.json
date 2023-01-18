@@ -13,13 +13,6 @@
 			]
 		},
 		{
-			"name": "close",
-			"inputs": [
-			],
-			"outputs": [
-			]
-		},
-		{
 			"name": "receiveTokenMeta",
 			"inputs": [
 				{"name":"base_chainId_","type":"uint256"},
@@ -50,6 +43,7 @@
 				{"name":"remainingGasTo_","type":"address"},
 				{"name":"amount_","type":"uint128"},
 				{"name":"recipient_","type":"uint160"},
+				{"components":[{"name":"recipient","type":"uint160"},{"name":"payload","type":"bytes"},{"name":"strict","type":"bool"}],"name":"callback","type":"tuple"},
 				{"name":"base_chainId_","type":"uint256"},
 				{"name":"base_token_","type":"uint160"}
 			]
@@ -81,6 +75,13 @@
 			]
 		},
 		{
+			"name": "close",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "getDetails",
 			"inputs": [
 				{"name":"answerId","type":"uint32"}
@@ -96,6 +97,14 @@
 				{"name":"_initializer","type":"address"},
 				{"name":"_meta","type":"cell"},
 				{"name":"_requiredVotes","type":"uint32"}
+			]
+		},
+		{
+			"name": "status",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"uint8"}
 			]
 		},
 		{
@@ -142,14 +151,6 @@
 			],
 			"outputs": [
 				{"name":"value0","type":"uint32"}
-			]
-		},
-		{
-			"name": "status",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"status","type":"uint8"}
 			]
 		},
 		{
@@ -260,12 +261,27 @@
 			],
 			"outputs": [
 			]
+		},
+		{
+			"name": "Confirmed",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "Rejected",
+			"inputs": [
+				{"name":"reason","type":"uint32"}
+			],
+			"outputs": [
+			]
 		}
 	],
 	"fields": [
 		{"name":"_pubkey","type":"uint256"},
 		{"name":"_constructorFlag","type":"bool"},
-		{"name":"status","type":"uint8"},
+		{"name":"_status","type":"uint8"},
 		{"name":"votes","type":"map(uint256,uint8)"},
 		{"name":"initializer","type":"address"},
 		{"name":"meta","type":"cell"},
@@ -282,6 +298,9 @@
 		{"name":"remainingGasTo","type":"address"},
 		{"name":"amount","type":"uint128"},
 		{"name":"recipient","type":"uint160"},
+		{"name":"callback_recipient","type":"uint160"},
+		{"name":"callback_payload","type":"bytes"},
+		{"name":"callback_strict","type":"bool"},
 		{"name":"base_chainId","type":"uint256"},
 		{"name":"base_token","type":"uint160"},
 		{"name":"expectedToken","type":"address"}

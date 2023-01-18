@@ -42,6 +42,7 @@ library ErrorCodes {
     uint16 constant EVENT_NOT_INITIALIZING = 2321;
     uint16 constant SENDER_IS_NOT_EVENT_OWNER = 2322;
     uint16 constant WRONG_VOTE_RECEIVER = 2323;
+    uint16 constant WRONG_STATUS = 2324;
 
     // Connector
     uint16 constant DEPLOYER_NOT_BRIDGE = 2420;

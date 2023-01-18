@@ -13,9 +13,9 @@ import "../../interfaces/event-contracts/IBasicEvent.sol";
 import '@broxus/contracts/contracts/libraries/MsgFlag.sol';
 
 
-abstract contract BaseEvent is IBasicEvent, TransferUtils{
+abstract contract BaseEvent is IBasicEvent, TransferUtils {
     // Event contract status
-    Status public status;
+    Status private _status;
     // Relays votes
     mapping (uint => Vote) public votes;
     // Event contract deployer
@@ -33,13 +33,17 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils{
     // number of relay round
     uint32 public round_number;
 
+    function status() public view returns (Status) {
+        return _status;
+    }
+
     function onInit() virtual internal {
+        setStatusInitializing();
+
         loadRelays();
     }
 
-    function onRelaysLoaded() virtual internal {
-        status = Status.Pending;
-    }
+    function onRelaysLoaded() virtual internal {}
 
     function onConfirm() virtual internal {}
     function onReject() virtual internal {}
@@ -49,23 +53,29 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils{
         _;
     }
 
+    modifier eventNotRejected() {
+        require(_status != Status.Rejected, ErrorCodes.WRONG_STATUS);
+
+        _;
+    }
+
     modifier onlyStaking() {
         require(msg.sender == getStakingAddress(), ErrorCodes.SENDER_NOT_STAKING);
         _;
     }
 
     modifier onlyRelayRound() {
-        require (msg.sender == relay_round, ErrorCodes.SENDER_NOT_RELAY_ROUND);
+        require(msg.sender == relay_round, ErrorCodes.SENDER_NOT_RELAY_ROUND);
         _;
     }
 
     modifier eventInitializing() {
-        require(status == Status.Initializing, ErrorCodes.EVENT_NOT_INITIALIZING);
+        require(_status == Status.Initializing, ErrorCodes.EVENT_NOT_INITIALIZING);
         _;
     }
 
     modifier eventPending() {
-        require(status == Status.Pending, ErrorCodes.EVENT_NOT_PENDING);
+        require(_status == Status.Pending, ErrorCodes.EVENT_NOT_PENDING);
         _;
     }
 
@@ -73,14 +83,13 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils{
     function isExternalVoteCall(uint32 functionId) virtual internal view returns (bool);
 
     function loadRelays() internal view {
+        require(_status == Status.Initializing, ErrorCodes.WRONG_STATUS);
+
         IStaking(getStakingAddress()).getRelayRoundAddressFromTimestamp{
             value: 1 ton,
+            bounce: false,
             callback: BaseEvent.receiveRoundAddress
         }(now);
-    }
-
-    function _checkVoteReceiver(address voteReceiver) internal pure {
-        require(voteReceiver == address(this), ErrorCodes.WRONG_VOTE_RECEIVER);
     }
 
     // TODO: cant be pure, compiler lies
@@ -93,6 +102,7 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils{
 
         IRound(roundContract).relayKeys{
             value: 1 ton,
+            bounce: false,
             callback: BaseEvent.receiveRoundRelays
         }();
     }
@@ -106,13 +116,44 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils{
             votes[key] = Vote.Empty;
         }
 
+        _status = Status.Pending;
+
         onRelaysLoaded();
+    }
+
+    function setStatusConfirmed() internal {
+        require(_status == Status.Pending, ErrorCodes.WRONG_STATUS);
+
+        _status = Status.Confirmed;
+
+        emit Confirmed();
+    }
+
+    function setStatusRejected(uint16 reason) internal {
+        require(
+            _status == Status.Initializing || _status == Status.Pending,
+            ErrorCodes.WRONG_STATUS
+        );
+
+        _status = Status.Rejected;
+
+        emit Rejected(reason);
+    }
+
+    function setStatusInitializing() internal {
+        require(_status == Status.Initializing, ErrorCodes.WRONG_STATUS);
+
+        _status = Status.Initializing;
+    }
+
+    function _checkVoteReceiver(address voteReceiver) internal pure {
+        require(voteReceiver == address(this), ErrorCodes.WRONG_VOTE_RECEIVER);
     }
 
     /*
         @dev Get voters by the vote type
         @param vote Vote type
-        @returns voters List of voters (relays) public keys
+        @return voters List of voters (relays) public keys
     */
     function getVoters(Vote vote) public view responsible returns(uint[] voters) {
         for ((uint voter, Vote vote_): votes) {
@@ -121,14 +162,14 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils{
             }
         }
 
-        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} voters;
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} voters;
     }
 
     function getVote(uint256 voter) public view responsible returns(optional(Vote) vote) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} votes.fetch(voter);
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} votes.fetch(voter);
     }
 
     function getApiVersion() external pure responsible returns(uint32) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} 2;
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} 2;
     }
 }

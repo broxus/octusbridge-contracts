@@ -31,6 +31,43 @@
 			]
 		},
 		{
+			"name": "receiveTokenMeta",
+			"inputs": [
+				{"name":"value0","type":"uint256"},
+				{"name":"value1","type":"uint160"},
+				{"name":"value2","type":"string"},
+				{"name":"value3","type":"string"},
+				{"name":"value4","type":"uint8"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "receiveMergeRouter",
+			"inputs": [
+				{"name":"router_","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "receiveMergeRouterPool",
+			"inputs": [
+				{"name":"pool_","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "receiveMergePoolCanon",
+			"inputs": [
+				{"name":"canon_","type":"address"},
+				{"components":[{"name":"decimals","type":"uint8"},{"name":"enabled","type":"bool"}],"name":"canonToken_","type":"tuple"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "getDecodedData",
 			"inputs": [
 				{"name":"answerId","type":"uint32"}
@@ -43,8 +80,33 @@
 				{"name":"decimals_","type":"uint8"},
 				{"name":"amount_","type":"uint128"},
 				{"name":"recipient_","type":"address"},
+				{"name":"value_","type":"uint256"},
+				{"name":"expected_evers_","type":"uint256"},
+				{"name":"payload_","type":"cell"},
 				{"name":"proxy_","type":"address"},
 				{"name":"token_","type":"address"}
+			]
+		},
+		{
+			"name": "getDecodedDataExtended",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"base_chainId_","type":"uint256"},
+				{"name":"base_token_","type":"uint160"},
+				{"name":"name_","type":"string"},
+				{"name":"symbol_","type":"string"},
+				{"name":"decimals_","type":"uint8"},
+				{"name":"amount_","type":"uint128"},
+				{"name":"recipient_","type":"address"},
+				{"name":"proxy_","type":"address"},
+				{"name":"token_","type":"address"},
+				{"name":"router_","type":"address"},
+				{"name":"pool_","type":"address"},
+				{"name":"canon_","type":"address"},
+				{"name":"target_token_","type":"address"},
+				{"name":"target_amount_","type":"uint128"}
 			]
 		},
 		{
@@ -87,6 +149,14 @@
 				{"name":"_initializer","type":"address"},
 				{"name":"_meta","type":"cell"},
 				{"name":"_requiredVotes","type":"uint32"}
+			]
+		},
+		{
+			"name": "status",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"uint8"}
 			]
 		},
 		{
@@ -133,14 +203,6 @@
 			],
 			"outputs": [
 				{"name":"value0","type":"uint32"}
-			]
-		},
-		{
-			"name": "status",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"status","type":"uint8"}
 			]
 		},
 		{
@@ -234,12 +296,27 @@
 			],
 			"outputs": [
 			]
+		},
+		{
+			"name": "Confirmed",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "Rejected",
+			"inputs": [
+				{"name":"reason","type":"uint32"}
+			],
+			"outputs": [
+			]
 		}
 	],
 	"fields": [
 		{"name":"_pubkey","type":"uint256"},
 		{"name":"_constructorFlag","type":"bool"},
-		{"name":"status","type":"uint8"},
+		{"name":"_status","type":"uint8"},
 		{"name":"votes","type":"map(uint256,uint8)"},
 		{"name":"initializer","type":"address"},
 		{"name":"meta","type":"cell"},
@@ -256,7 +333,15 @@
 		{"name":"decimals","type":"uint8"},
 		{"name":"amount","type":"uint128"},
 		{"name":"recipient","type":"address"},
+		{"name":"value","type":"uint256"},
+		{"name":"expected_evers","type":"uint256"},
+		{"name":"payload","type":"cell"},
 		{"name":"proxy","type":"address"},
-		{"name":"token","type":"address"}
+		{"name":"token","type":"address"},
+		{"name":"router","type":"address"},
+		{"name":"pool","type":"address"},
+		{"name":"canon","type":"address"},
+		{"name":"target_token","type":"address"},
+		{"name":"target_amount","type":"uint128"}
 	]
 }

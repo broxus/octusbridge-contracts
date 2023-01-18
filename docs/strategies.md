@@ -41,3 +41,23 @@ for recapitalization.
 [Convex Finance](https://www.convexfinance.com/stake)
 
 [Curve 3crv pool](https://curve.fi/frax/deposit)
+
+## ConvexBUSD
+### Intro
+This strategy is a modified version of the yearn strategy that manages 3crv-Frax curve lp tokens
+for use in the convex protocol. Main difference is that the Everscale bridge version
+accepts not lp tokens, but the underlying stablecoins (USDC/USDT/DAI) + 3crv-BUSD is used instead of 3crv-Frax
+
+### Mechanic
+Strategy's mechanic duplicates the original one, except that it accepts USDC/USDT/DAI instead of curve lp creating them on the fly.
+Strategy unwraps lp to underlying coins if it is needed, for example to pay debt to vault.
+Thus, the strategy can be connected to any vault using one of USDC / USDT / DAI coins.
+The strategy's earnings consist of CVX and CRV tokens, which are exchanged for stablecoins and wrapped in 3crv-BUSD lp
+for recapitalization.
+
+### Resources
+[Original yearn strategy](https://yearn.watch/network/ethereum/vault/0xB4AdA607B9d6b2c9Ee07A275e9616B84AC560139/strategy/0x5E1dCe90AB54382e3f66E0b245E07209798c171c)
+
+[Convex Finance](https://www.convexfinance.com/stake)
+
+[Curve 3crv pool](https://curve.fi/busdv2/deposit)

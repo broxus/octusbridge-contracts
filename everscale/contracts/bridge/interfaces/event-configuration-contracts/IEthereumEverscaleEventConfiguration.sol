@@ -18,6 +18,11 @@ interface IEthereumEverscaleEventConfiguration is IBasicEventConfiguration {
         IEthereumEverscaleEvent.EthereumEverscaleEventVoteData eventVoteData
     ) external;
 
+    function deployEvents(
+        IEthereumEvent.EthereumEventVoteData[] eventsVoteData,
+        uint128[] values
+    ) external;
+
     function deriveEventAddress(
         IEthereumEverscaleEvent.EthereumEverscaleEventVoteData eventVoteData
     ) external view responsible returns (address eventContract);
@@ -28,5 +33,9 @@ interface IEthereumEverscaleEventConfiguration is IBasicEventConfiguration {
         TvmCell _meta
     );
 
+    function getFlags() external view responsible returns(uint64 _flags);
+
     function setEndBlockNumber(uint32 endBlockNumber) external;
+    function setFlags(uint64 _flags) external;
+    function setEventInitialBalance(uint64 eventInitialBalance) external;
 }
