@@ -18,7 +18,7 @@ import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 
-/// @title Basic Ethereum-Everscale event configuration contract.
+/// @title Basic Ethereum-Everscale event configuration contract
 /// @author https://github.com/broxus
 contract EthereumEverscaleEventConfiguration is
     IEthereumEverscaleEventConfiguration,
@@ -219,7 +219,7 @@ contract EthereumEverscaleEventConfiguration is
     }
 
     /// @dev Get event configuration type
-    /// @return _type Configuration type - Ethereum or Everscale
+    /// @return _type Configuration type (enum EventType)
     function getType() override public pure responsible returns(EventType _type) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} EventType.EthereumEverscale;
     }

@@ -2,7 +2,12 @@ pragma ton-solidity >= 0.39.0;
 
 
 interface IBasicEventConfiguration {
-    enum EventType { EthereumEverscale, EverscaleEthereum, SolanaEverscale, EverscaleSolana  }
+    enum EventType {
+        EthereumEverscale,
+        EverscaleEthereum,
+        SolanaEverscale,
+        EverscaleSolana
+    }
 
     struct BasicConfiguration {
         bytes eventABI;
@@ -14,5 +19,9 @@ interface IBasicEventConfiguration {
     event NewEventContract(address eventContract);
 
     function getType() external pure responsible returns(EventType _type);
+    function getFlags() external view responsible returns(uint64 _flags);
+
+    function setFlags(uint64 _flags) external;
+    function setEventInitialBalance(uint64 eventInitialBalance) external;
     function setMeta(TvmCell _meta) external;
 }

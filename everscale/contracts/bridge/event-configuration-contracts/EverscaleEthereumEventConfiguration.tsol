@@ -15,32 +15,42 @@ import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 
-/*
-    @title Basic example of Everscale event configuration
-*/
-contract EverscaleEthereumEventConfiguration is IEverscaleEthereumEventConfiguration, TransferUtils, InternalOwner, CheckPubKey {
+/// @title Basic Everscale-Ethereum event configuration contract
+/// @author https://github.com/broxus
+contract EverscaleEthereumEventConfiguration is
+    IEverscaleEthereumEventConfiguration,
+    TransferUtils,
+    InternalOwner,
+    CheckPubKey
+{
     BasicConfiguration public static basicConfiguration;
     EverscaleEthereumEventConfiguration public static networkConfiguration;
 
     TvmCell public meta;
-    uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
+    uint64 public flags;
 
-    /*
-        @param _owner Event configuration owner
-    */
-    constructor(address _owner, TvmCell _meta) public checkPubKey {
+    /// @param _owner Event configuration owner
+    constructor(
+        address _owner,
+        TvmCell _meta
+    ) public checkPubKey {
         tvm.accept();
+
+        _reserveTargetBalance();
 
         setOwnership(_owner);
 
         meta = _meta;
+
+        _owner.transfer({
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        });
     }
 
-    /**
-        @notice
-            Set new configuration meta.
-        @param _meta New configuration meta
-    */
+    /// @notice Set new configuration meta.
+    /// @param _meta New configuration meta
     function setMeta(TvmCell _meta) override onlyOwner cashBack external {
         meta = _meta;
     }
@@ -67,6 +77,18 @@ contract EverscaleEthereumEventConfiguration is IEverscaleEthereumEventConfigura
         networkConfiguration.endTimestamp = endTimestamp;
     }
 
+    function setFlags(
+        uint64 _flags
+    ) override onlyOwner cashBack external {
+        flags = _flags;
+    }
+
+    function setEventInitialBalance(
+        uint64 eventInitialBalance
+    ) override onlyOwner cashBack external {
+        basicConfiguration.eventInitialBalance = eventInitialBalance;
+    }
+
     /// @dev Build initial data for event contract.
     /// Extends event vote data with configuration params.
     /// @param eventVoteData Event vote data structure, passed by relay
@@ -85,7 +107,11 @@ contract EverscaleEthereumEventConfiguration is IEverscaleEthereumEventConfigura
     /// @param eventVoteData Event vote data
     function deployEvent(
         IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData
-    ) override external reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    )
+        override
+        external
+        reserveAtLeastTargetBalance()
+    {
         require(msg.sender == networkConfiguration.eventEmitter, ErrorCodes.SENDER_IS_NOT_EVENT_EMITTER);
         require(msg.value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
         require(
@@ -99,7 +125,6 @@ contract EverscaleEthereumEventConfiguration is IEverscaleEthereumEventConfigura
                 ErrorCodes.EVENT_TIMESTAMP_HIGHER_THAN_END
             );
         }
-
 
         IEverscaleEthereumEvent.EverscaleEthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
 
@@ -121,7 +146,7 @@ contract EverscaleEthereumEventConfiguration is IEverscaleEthereumEventConfigura
     /*
         @dev Derive the Ethereum event contract address from it's init data
         @param eventVoteData Ethereum event vote data
-        @returns eventContract Address of the corresponding ethereum event contract
+        @return eventContract Address of the corresponding ethereum event contract
     */
     function deriveEventAddress(
         IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData
@@ -147,11 +172,9 @@ contract EverscaleEthereumEventConfiguration is IEverscaleEthereumEventConfigura
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} address(tvm.hash(stateInit));
     }
 
-    /*
-        @dev Get configuration details.
-        @return _basicConfiguration Basic configuration init data
-        @return _initData Network specific configuration init data
-    */
+    /// @dev Get configuration details.
+    /// @return _basicConfiguration Basic configuration init data
+    /// @return _initData Network specific configuration init data
     function getDetails() override public view responsible returns(
         BasicConfiguration _basicConfiguration,
         EverscaleEthereumEventConfiguration _networkConfiguration,
@@ -164,12 +187,13 @@ contract EverscaleEthereumEventConfiguration is IEverscaleEthereumEventConfigura
         );
     }
 
-
-    /*
-        @dev Get event configuration type
-        @return _type Configuration type - Ethereum or Everscale
-    */
+    /// @dev Get event configuration type
+    /// @return _type Configuration type (enum EventType)
     function getType() override public pure responsible returns(EventType _type) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} EventType.EverscaleEthereum;
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} EventType.Everscale;
+    }
+
+    function getFlags() override public view responsible returns(uint64 _flags) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} flags;
     }
 }
