@@ -10,10 +10,9 @@ declare global {
 const config: LockliftConfig = {
   compiler: {
     // Specify path to your TON-Solidity-Compiler
-    // path: "/usr/local/bin/solc-8ef1c39'",
+    path: "/usr/local/bin/solc-8ef1c39",
 
     // Or specify version of compiler
-    version: "0.62.0",
 
     // Specify config for extarnal contracts as in exapmple
     // This filed for generating types only
@@ -23,12 +22,9 @@ const config: LockliftConfig = {
   },
   linker: {
     // Specify path to your stdlib
-    // lib: "/home/s34g/Projects/everscale/TON-Solidity-Compiler/lib/stdlib_sol.tvm",
+    lib: "/Users/pavlovdog/TON-Solidity-Compiler/lib/stdlib_sol.tvm",
     // // Specify path to your Linker
-    // path: "/usr/local/bin/tvm_linker-2a896430",
-
-    // Or specify version of linker
-    version: "0.15.48",
+    path: "/usr/local/bin/tvm_linker-2a896430",
   },
   networks: {
     testnet: {

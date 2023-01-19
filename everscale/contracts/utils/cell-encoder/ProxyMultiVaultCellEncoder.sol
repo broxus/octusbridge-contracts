@@ -4,6 +4,8 @@ import "./../../bridge/interfaces/event-contracts/IEverscaleSolanaEvent.sol";
 
 import "./../../bridge/interfaces/multivault/proxy/alien/IProxyMultiVaultAlien_V4.sol";
 import "./../../bridge/interfaces/multivault/IEVMCallback.sol";
+
+
 contract ProxyMultiVaultCellEncoder is IEVMCallback {
     function encodeMultiVaultAlienEVMEverscale(
         uint256 base_chainId,
@@ -47,7 +49,8 @@ contract ProxyMultiVaultCellEncoder is IEVMCallback {
     }
 
     function encodeAlienBurnPayloadEthereum(
-        uint160 recipient
+        uint160 recipient,
+        EVMCallback callback
     ) external pure returns(TvmCell) {
         return abi.encode(recipient, callback);
     }

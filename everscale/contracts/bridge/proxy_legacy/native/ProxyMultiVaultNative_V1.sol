@@ -5,7 +5,7 @@ pragma AbiHeader pubkey;
 
 
 import "./../../interfaces/IProxyExtended.sol";
-import "./../../interfaces/multivault/proxy/native/IProxyMultiVaultNative_V2.sol";
+import "./../../interfaces/multivault/proxy/native/IProxyMultiVaultNative_V1.sol";
 import "./../../interfaces/event-configuration-contracts/IEverscaleEventConfiguration.sol";
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensTransferCallback.sol";
@@ -21,12 +21,13 @@ import '@broxus/contracts/contracts/utils/RandomNonce.sol';
 import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
 
 
-contract ProxyMultiVaultNative_V2 is
+contract ProxyMultiVaultNative_V1 is
     InternalOwner,
     TransferUtils,
     CheckPubKey,
     RandomNonce,
-    IProxyMultiVaultNative_V2,
+    IProxyExtended,
+    IProxyMultiVaultNative_V1,
     IAcceptTokensTransferCallback
 {
     Configuration config;
@@ -63,11 +64,7 @@ contract ProxyMultiVaultNative_V2 is
         address remainingGasTo,
         TvmCell payload
     ) override external reserveAtLeastTargetBalance {
-        (
-            uint160 recipient,
-            uint256 chainId,
-            EVMCallback callback
-        ) = abi.decode(payload, (uint160, uint256, EVMCallback));
+        (uint160 recipient, uint256 chainId) = abi.decode(payload, (uint160, uint256));
 
         TvmCell eventData = abi.encode(
             address(this), // Proxy address
@@ -76,10 +73,7 @@ contract ProxyMultiVaultNative_V2 is
             remainingGasTo, // Remaining gas to
             amount, // Amount of tokens to withdraw
             recipient, // EVM recipient address
-            chainId, // EVM network chain ID
-            callback.recipient,
-            callback.payload,
-            callback.strict
+            chainId // EVM network chain ID
         );
 
         IEverscaleEvent.EverscaleEventVoteData eventVoteData = IEverscaleEvent.EverscaleEventVoteData(
@@ -108,23 +102,21 @@ contract ProxyMultiVaultNative_V2 is
         (
             address token_wallet,
             uint128 amount,
-            address recipient,
-            TvmCell payload
+            address recipient
         ) = abi.decode(
             meta,
-            (address, uint128, address, TvmCell)
+            (address, uint128, address)
         );
 
-        ITokenWallet(token_wallet).transfer{
-            value: 0,
-            flag: MsgFlag.ALL_NOT_RESERVED
-        }(
+        TvmCell empty;
+
+        ITokenWallet(token_wallet).transfer{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
             amount,
             recipient,
             config.deployWalletValue,
             remainingGasTo,
             true,
-            payload
+            empty
         );
     }
 
@@ -133,8 +125,7 @@ contract ProxyMultiVaultNative_V2 is
         external
         view
         responsible
-        returns (Configuration)
-    {
+    returns (Configuration) {
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} config;
     }
 

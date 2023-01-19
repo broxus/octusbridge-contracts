@@ -21,11 +21,12 @@ import '@broxus/contracts/contracts/utils/RandomNonce.sol';
 import "@broxus/contracts/contracts/libraries/MsgFlag.sol";
 
 
-contract ProxyMultiVaultNative_V2 is
+contract ProxyMultiVaultNative_V3 is
     InternalOwner,
     TransferUtils,
     CheckPubKey,
     RandomNonce,
+    IProxyExtended,
     IProxyMultiVaultNative_V2,
     IAcceptTokensTransferCallback
 {

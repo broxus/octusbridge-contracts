@@ -26,6 +26,7 @@ contract ProxyMultiVaultNative_V2 is
     TransferUtils,
     CheckPubKey,
     RandomNonce,
+    IProxyExtended,
     IProxyMultiVaultNative_V2,
     IAcceptTokensTransferCallback
 {
