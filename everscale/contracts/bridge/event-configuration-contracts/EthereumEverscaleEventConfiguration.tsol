@@ -18,29 +18,44 @@ import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 
-/// @title Basic Ethereum event configuration contract.
+/// @title Basic Ethereum-Everscale event configuration contract.
 /// @author https://github.com/broxus
-contract EthereumEverscaleEventConfiguration is IEthereumEverscaleEventConfiguration, IEthereumEverscaleProxy, IEthereumEverscaleProxyExtended, TransferUtils, InternalOwner, CheckPubKey {
+contract EthereumEverscaleEventConfiguration is
+    IEthereumEverscaleEventConfiguration,
+    IEthereumEverscaleProxy,
+    IEthereumEverscaleProxyExtended,
+    TransferUtils,
+    InternalOwner,
+    CheckPubKey
+{
     BasicConfiguration public static basicConfiguration;
     EthereumEverscaleEventConfiguration public static networkConfiguration;
 
+    uint64 public flags;
     TvmCell public meta;
-    uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
 
     /// @param _owner Event configuration owner
-    constructor(address _owner, TvmCell _meta) public checkPubKey {
+    constructor(
+        address _owner,
+        TvmCell _meta
+    ) public checkPubKey {
         tvm.accept();
+
+        _reserveTargetBalance();
 
         setOwnership(_owner);
 
         meta = _meta;
+
+        _owner.transfer({
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        });
     }
 
-    /**
-        @notice
-            Set new configuration meta.
-        @param _meta New configuration meta
-    */
+    /// @notice Set new configuration meta.
+    /// @param _meta New configuration meta
     function setMeta(TvmCell _meta) override onlyOwner cashBack external {
         meta = _meta;
     }
@@ -67,6 +82,19 @@ contract EthereumEverscaleEventConfiguration is IEthereumEverscaleEventConfigura
         networkConfiguration.endBlockNumber = endBlockNumber;
     }
 
+    function setFlags(
+        uint64 _flags
+    ) override onlyOwner cashBack external {
+        flags = _flags;
+    }
+
+    function setEventInitialBalance(
+        uint64 eventInitialBalance
+    ) override onlyOwner cashBack external {
+        basicConfiguration.eventInitialBalance = eventInitialBalance;
+    }
+
+
     /// @dev Build initial data for event contract
     /// @dev Extends event vote data with configuration params
     /// @param eventVoteData Event vote data structure, passed by relay
@@ -89,8 +117,33 @@ contract EthereumEverscaleEventConfiguration is IEthereumEverscaleEventConfigura
     )
         external
         override
-        reserveMinBalance(MIN_CONTRACT_BALANCE)
+        reserveAtLeastTargetBalance()
     {
+        _deployEvent(eventVoteData, MsgFlag.ALL_NOT_RESERVED, 0);
+    }
+
+    function deployEvents(
+        IEthereumEverscaleEvent.EthereumEverscaleEventVoteData[] eventsVoteData,
+        uint128[] values
+    ) external override reserveAtLeastTargetBalance() {
+        require(values.length == eventsVoteData.length && values.length > 0);
+
+        uint counter = 0;
+
+        for (IEthereumEverscaleEvent.EthereumEverscaleEventVoteData eventVoteData: eventsVoteData) {
+            _deployEvent(eventVoteData, 0, values[counter]);
+            counter++;
+        }
+
+        msg.sender.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
+    }
+
+
+    function _deployEvent(
+        IEthereumEverscaleEvent.EthereumEverscaleEventVoteData eventVoteData,
+        uint8 flag,
+        uint128 value
+    ) internal view {
         require(msg.value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
         require(
             eventVoteData.eventBlockNumber >= networkConfiguration.startBlockNumber,
@@ -111,8 +164,8 @@ contract EthereumEverscaleEventConfiguration is IEthereumEverscaleEventConfigura
         emit NewEventContract(eventContract);
 
         new EthereumEverscaleBaseEvent{
-            value: 0,
-            flag: MsgFlag.ALL_NOT_RESERVED,
+            value: value,
+            flag: flag,
             code: basicConfiguration.eventCode,
             pubkey: 0,
             varInit: {
@@ -171,6 +224,10 @@ contract EthereumEverscaleEventConfiguration is IEthereumEverscaleEventConfigura
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} EventType.EthereumEverscale;
     }
 
+    function getFlags() override public view responsible returns(uint64 _flags) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} flags;
+    }
+
     /// @dev Proxy V1 callback.
     /// Receives "confirm" callback from the event contract and checks event contract correctness.
     /// If it's correct, then sends the callback to the proxy with the same signature.
@@ -179,7 +236,7 @@ contract EthereumEverscaleEventConfiguration is IEthereumEverscaleEventConfigura
     function onEventConfirmed(
         IEthereumEverscaleEvent.EthereumEverscaleEventInitData eventInitData,
         address gasBackAddress
-    ) external override reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    ) external override reserveAtLeastTargetBalance() {
         require(
             eventInitData.configuration == address(this),
             ErrorCodes.SENDER_NOT_EVENT_CONTRACT
@@ -208,7 +265,7 @@ contract EthereumEverscaleEventConfiguration is IEthereumEverscaleEventConfigura
         IEthereumEverscaleEvent.EthereumEverscaleEventInitData eventInitData,
         TvmCell _meta,
         address gasBackAddress
-    ) external override reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    ) external override reserveAtLeastTargetBalance {
         require(
             eventInitData.configuration == address(this),
             ErrorCodes.SENDER_NOT_EVENT_CONTRACT
