@@ -2,7 +2,7 @@ import * as fs from "fs";
 import path from "path";
 
 const main = () => {
-  const pathToProject = path.resolve("/home/pavlovdog/Work/bridge-contracts/everscale/contracts/");
+  const pathToProject = path.resolve("/Users/pavlovdog/Work/bridge-contracts/everscale/contracts/");
   renameRecursively(pathToProject);
 };
 

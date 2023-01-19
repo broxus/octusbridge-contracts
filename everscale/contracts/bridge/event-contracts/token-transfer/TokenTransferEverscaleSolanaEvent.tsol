@@ -1,0 +1,93 @@
+pragma ton-solidity >= 0.39.0;
+pragma AbiHeader time;
+pragma AbiHeader expire;
+pragma AbiHeader pubkey;
+
+import "./../base/EverscaleSolanaBaseEvent.tsol";
+import "./../../../utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol";
+import "./../../interfaces/IEventNotificationReceiver.tsol";
+import "./../../interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
+import "./../../../utils/ErrorCodes.tsol";
+import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
+
+/*
+    @title Everscale Solana event
+    @dev This implementation is used for cross chain token transfers
+*/
+contract TokenTransferEverscaleSolanaEvent is EverscaleSolanaBaseEvent, ProxyTokenTransferCellEncoder {
+    constructor(
+        address _initializer,
+        TvmCell _meta
+    ) EverscaleSolanaBaseEvent(_initializer, _meta) public {}
+
+
+    function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
+        body.decode(uint64, uint32);
+        TvmSlice bodyCopy = body;
+        uint32 functionId = body.decode(uint32);
+        if (isExternalVoteCall(functionId)){
+            require(votes[msg.pubkey()] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
+        }
+        return bodyCopy;
+    }
+
+    function onInit() override internal {
+        notifyEventStatusChanged();
+
+        loadRelays();
+    }
+
+    function onConfirm() override internal {
+        notifyEventStatusChanged();
+
+        transferAll(getOwner());
+    }
+
+    function onReject() override internal {
+        notifyEventStatusChanged();
+
+        transferAll(getOwner());
+    }
+
+    function getOwner() private view returns(address) {
+        (address ownerAddress,,) = getDecodedData();
+        return ownerAddress;
+    }
+
+    /*
+        @dev Get decoded event data
+        @returns senderAddress Tokens sender address
+        @returns tokens How much tokens to burn
+        @returns solanaOwnerAddress Receiver solana address
+    */
+    function getDecodedData() public view responsible returns (
+        address senderAddress,
+        uint128 tokens,
+        uint256 solanaOwnerAddress
+    ) {
+        (
+            senderAddress,
+            tokens,
+            solanaOwnerAddress
+        ) = decodeEverscaleSolanaEventData(eventInitData.voteData.eventData);
+
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} (
+            senderAddress,
+            tokens,
+            solanaOwnerAddress
+        );
+    }
+
+    /*
+        @dev Notify owner contract that event contract status has been changed
+        @dev In this example, notification receiver is derived from the configuration meta
+        @dev Used to easily collect all confirmed events by user's wallet
+    */
+    function notifyEventStatusChanged() internal view {
+        address owner = getOwner();
+
+        if (owner.value != 0) {
+            IEventNotificationReceiver(owner).notifyEventStatusChanged{flag: 0, bounce: false}(status);
+        }
+    }
+}

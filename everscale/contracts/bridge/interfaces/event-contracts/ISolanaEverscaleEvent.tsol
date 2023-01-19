@@ -1,0 +1,20 @@
+pragma ton-solidity >= 0.39.0;
+
+import "./IBasicEvent.tsol";
+
+
+interface ISolanaEverscaleEvent {
+    struct SolanaEverscaleEventVoteData {
+        uint128 accountSeed;
+        uint64 slot;
+        uint64 blockTime;
+        string txSignature;
+        TvmCell eventData;
+    }
+
+    struct SolanaEverscaleEventInitData {
+        SolanaEverscaleEventVoteData voteData;
+        address configuration;
+        address staking;
+    }
+}
