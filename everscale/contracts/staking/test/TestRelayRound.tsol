@@ -1,4 +1,4 @@
-pragma ton-solidity >= 0.57.0;
+pragma ever-solidity >= 0.57.0;
 
 
 
@@ -11,7 +11,7 @@ contract TestRelayRound {
     uint128 public total_tokens_staked;
     uint32 public relays_count;
 
-    uint128 min_gas = 2 ton;
+    uint128 min_gas = 2 ever;
 
 
     constructor() public {

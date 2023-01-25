@@ -1,15 +1,17 @@
-pragma ton-solidity >= 0.39.0;
+pragma ever-solidity >= 0.39.0;
 
+
+import "./../interfaces/event-configuration-contracts/ISolanaEverscaleEventConfiguration.tsol";
 
 import "./../../utils/TransferUtils.tsol";
+import "./../event-configuration-contracts/solana/SolanaEverscaleEventConfiguration.tsol";
+
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
-import "./../event-configuration-contracts/SolanaEverscaleEventConfiguration.tsol";
-import "./../interfaces/event-configuration-contracts/ISolanaEverscaleEventConfiguration.tsol";
 
 
 contract SolanaEverscaleEventConfigurationFactory is TransferUtils, RandomNonce {
     TvmCell public configurationCode;
-    uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
+    uint128 constant MIN_CONTRACT_BALANCE = 1 ever;
 
     constructor(TvmCell _configurationCode) public {
         tvm.accept();

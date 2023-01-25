@@ -1,4 +1,4 @@
-pragma ton-solidity >= 0.39.0;
+pragma ever-solidity >= 0.39.0;
 pragma AbiHeader pubkey;
 
 
@@ -12,7 +12,7 @@ contract TonConfigMockup {
 
     function deployEvent(
         IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData
-    ) external  {
-        return;
+    ) external pure {
+//        return;
     }
 }

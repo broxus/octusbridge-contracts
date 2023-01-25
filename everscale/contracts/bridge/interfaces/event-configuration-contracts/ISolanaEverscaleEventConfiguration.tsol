@@ -1,4 +1,4 @@
-pragma ton-solidity >= 0.39.0;
+pragma ever-solidity >= 0.39.0;
 
 import "./IBasicEventConfiguration.tsol";
 import "./../event-contracts/ISolanaEverscaleEvent.tsol";
@@ -14,6 +14,11 @@ interface ISolanaEverscaleEventConfiguration is IBasicEventConfiguration {
 
     function deployEvent(
         ISolanaEverscaleEvent.SolanaEverscaleEventVoteData eventVoteData
+    ) external;
+
+    function deployEvents(
+        ISolanaEverscaleEvent.SolanaEverscaleEventVoteData[] eventsVoteData,
+        uint128[] values
     ) external;
 
     function deriveEventAddress(

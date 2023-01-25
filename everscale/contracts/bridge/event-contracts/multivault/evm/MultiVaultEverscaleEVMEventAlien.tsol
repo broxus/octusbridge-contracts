@@ -1,0 +1,162 @@
+pragma ever-solidity >= 0.39.0;
+pragma AbiHeader time;
+pragma AbiHeader pubkey;
+
+
+import "./../../../interfaces/event-contracts/multivault/evm/IMultiVaultEverscaleEVMEventAlien.tsol";
+import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V6.tsol";
+import "./../../../interfaces/alien-token/ITokenRootAlienEVM.tsol";
+
+import "./../../base/evm/EverscaleEthereumBaseEvent.tsol";
+
+
+/// @notice Everscale-EVM event for MultiVault alien token transfer.
+/// Before switching into the `Pending` status, event contract must perform
+/// the following actions:
+/// - Obtain the `token` token source.
+contract MultiVaultEverscaleEVMEventAlien is EverscaleEthereumBaseEvent, IMultiVaultEverscaleEVMEventAlien {
+    address proxy;
+    address token;
+    address remainingGasTo;
+    uint128 amount;
+    uint160 recipient;
+
+    uint160 callback_recipient;
+    bytes callback_payload;
+    bool callback_strict;
+
+    // Derived value
+    uint256 base_chainId;
+    uint160 base_token;
+    address expectedToken;
+
+    constructor(
+        address _initializer,
+        TvmCell _meta
+    ) EverscaleEthereumBaseEvent(_initializer, _meta) public {}
+
+    function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
+        body.decode(uint64, uint32);
+        TvmSlice bodyCopy = body;
+        uint32 functionId = body.decode(uint32);
+        if (isExternalVoteCall(functionId)){
+            require(votes[msg.pubkey()] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
+        }
+        return bodyCopy;
+    }
+
+    function onInit() override internal {
+        setStatusInitializing();
+
+        (
+            proxy, token, remainingGasTo, amount, recipient,
+            callback_recipient, callback_payload, callback_strict
+        ) = abi.decode(
+            eventInitData.voteData.eventData,
+            (
+                address, address, address, uint128, uint160,
+                uint160, bytes, bool
+            )
+        );
+
+        ITokenRootAlienEVM(token).meta{
+            value: 1 ever,
+            bounce: true,
+            callback: MultiVaultEverscaleEVMEventAlien.receiveTokenMeta
+        }();
+    }
+
+    function receiveTokenMeta(
+        uint256 base_chainId_,
+        uint160 base_token_,
+        string name,
+        string symbol,
+        uint8 decimals
+    ) external override {
+        require(msg.sender == token);
+
+        base_chainId = base_chainId_;
+        base_token = base_token_;
+
+        IProxyMultiVaultAlien_V6(proxy).deriveEVMAlienTokenRoot{
+            value: 1 ever,
+            bounce: true,
+            callback: MultiVaultEverscaleEVMEventAlien.receiveAlienTokenRoot
+        }(
+            base_chainId,
+            base_token,
+            name,
+            symbol,
+            decimals
+        );
+    }
+
+    function receiveAlienTokenRoot(
+        address token_
+    ) external override {
+        require(msg.sender == proxy);
+
+        expectedToken = token_;
+
+        if (expectedToken == token) {
+            _updateEventData();
+
+            loadRelays();
+        } else {
+            setStatusRejected(1);
+        }
+    }
+
+    function _updateEventData() internal {
+        eventInitData.voteData.eventData = abi.encode(
+            base_token,
+            amount,
+            recipient,
+            base_chainId,
+            callback_recipient,
+            callback_payload,
+            callback_strict
+        );
+    }
+
+    function getDecodedData() external override responsible returns(
+        address proxy_,
+        address token_,
+        address remainingGasTo_,
+        uint128 amount_,
+        uint160 recipient_,
+        EVMCallback callback,
+        uint256 base_chainId_,
+        uint160 base_token_
+    ) {
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS}(
+            proxy,
+            token,
+            remainingGasTo,
+            amount,
+            recipient,
+            EVMCallback(
+                callback_recipient,
+                callback_payload,
+                callback_strict
+            ),
+            base_chainId,
+            base_token
+        );
+    }
+
+    function gasBackAddress() internal override view returns(address) {
+        return remainingGasTo;
+    }
+
+    onBounce(TvmSlice slice) external {
+        uint32 selector = slice.decode(uint32);
+
+        if (
+            (selector == tvm.functionId(ITokenRootAlienEVM.meta) && msg.sender == token) ||
+            (selector == tvm.functionId(IProxyMultiVaultAlien_V6.deriveEVMAlienTokenRoot) && msg.sender == proxy)
+        ) {
+            setStatusRejected(2);
+        }
+    }
+}

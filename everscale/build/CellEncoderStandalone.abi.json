@@ -35,7 +35,7 @@
 			]
 		},
 		{
-			"name": "decodeTonStakingEventData",
+			"name": "decodeEverscaleEthereumStakingEventData",
 			"inputs": [
 				{"name":"data","type":"cell"}
 			],

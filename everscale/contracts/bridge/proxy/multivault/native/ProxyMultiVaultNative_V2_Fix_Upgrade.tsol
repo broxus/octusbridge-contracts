@@ -1,0 +1,46 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma ever-solidity >= 0.62.0;
+
+
+import "./../../../interfaces/proxy/multivault/native/IProxyMultiVaultNative_V1.tsol";
+import "../../../../utils/TransferUtils.tsol";
+
+import "@broxus/contracts/contracts/access/InternalOwner.tsol";
+import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
+import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
+
+
+contract ProxyMultiVaultNative_V2_Fix_Upgrade is TransferUtils, RandomNonce, InternalOwner {
+    IProxyMultiVaultNative_V1.Configuration config;
+    uint8 api_version;
+
+    function upgrade(
+        TvmCell code
+    ) external onlyOwner cashBack {
+        TvmCell data = abi.encode(
+            config,
+            owner,
+            _randomNonce
+        );
+
+        tvm.setcode(code);
+        tvm.setCurrentCode(code);
+
+        onCodeUpgrade(data);
+    }
+
+    function onCodeUpgrade(TvmCell data) private {
+        (
+            IProxyMultiVaultNative_V1.Configuration config_,
+            uint8 api_version_,
+            uint _randomNonce_
+        ) = abi.decode(
+            data,
+            (IProxyMultiVaultNative_V1.Configuration, uint8, uint)
+        );
+
+        config = config_;
+        api_version = api_version_ + 1;
+        _randomNonce = _randomNonce_;
+    }
+}

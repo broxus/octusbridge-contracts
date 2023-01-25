@@ -1,0 +1,54 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma ever-solidity >= 0.62.0;
+
+
+import "./../../../../interfaces/proxy/multivault/native/IProxyMultiVaultNative_V1.tsol";
+
+import "./ProxyMultiVaultNative_V3_Deposit.tsol";
+
+import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
+import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
+
+
+contract ProxyMultiVaultNative_V3 is ProxyMultiVaultNative_V3_Deposit, CheckPubKey, RandomNonce {
+    constructor(
+        address owner_
+    ) public checkPubKey {
+        tvm.accept();
+
+        setOwnership(owner_);
+    }
+
+    function upgrade(
+        TvmCell code
+    ) external onlyOwner cashBack {
+        TvmCell data = abi.encode(
+            evmConfiguration,
+            solanaConfiguration,
+            owner,
+            _randomNonce
+        );
+
+        tvm.setcode(code);
+        tvm.setCurrentCode(code);
+
+        onCodeUpgrade(data);
+    }
+
+    function onCodeUpgrade(TvmCell data) private {
+        (
+            IProxyMultiVaultNative_V1.Configuration config_,
+            address owner_,
+            uint _randomNonce_
+        ) = abi.decode(
+            data,
+            (IProxyMultiVaultNative_V1.Configuration, address, uint)
+        );
+
+        evmConfiguration.evmConfigurations = config_.evmConfigurations;
+        evmConfiguration.everscaleConfiguration = config_.everscaleConfiguration;
+
+        setOwnership(owner_);
+        _randomNonce = _randomNonce_;
+    }
+}

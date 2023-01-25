@@ -1,4 +1,4 @@
-pragma ton-solidity >= 0.39.0;
+pragma ever-solidity >= 0.39.0;
 
 import "./IBasicEvent.tsol";
 
@@ -15,4 +15,6 @@ interface IEverscaleEthereumEvent is IBasicEvent {
         address configuration;
         address staking;
     }
+
+    function close() external view;
 }

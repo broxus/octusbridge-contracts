@@ -1,4 +1,4 @@
-pragma ton-solidity >= 0.57.0;
+pragma ever-solidity >= 0.57.0;
 pragma AbiHeader pubkey;
 
 
@@ -101,13 +101,13 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
         );
     }
 
-    function _buildElectionParams(uint32 round_num) internal inline view returns (TvmCell) {
+    function _buildElectionParams(uint32 round_num) internal inline pure returns (TvmCell) {
         TvmBuilder builder;
         builder.store(round_num);
         return builder.toCell();
     }
 
-    function _buildRelayRoundParams(uint32 round_num) internal inline view returns (TvmCell) {
+    function _buildRelayRoundParams(uint32 round_num) internal inline pure returns (TvmCell) {
         TvmBuilder builder;
         builder.store(round_num);
         return builder.toCell();

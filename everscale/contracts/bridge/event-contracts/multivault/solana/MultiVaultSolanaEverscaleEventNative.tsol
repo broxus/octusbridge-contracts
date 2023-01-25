@@ -1,0 +1,129 @@
+pragma ever-solidity >= 0.39.0;
+pragma AbiHeader time;
+pragma AbiHeader pubkey;
+
+
+import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.tsol";
+
+import "./../../../interfaces/event-contracts/multivault/solana/IMultiVaultSolanaEverscaleEventNative.tsol";
+import "./../../../interfaces/event-configuration-contracts/ISolanaEverscaleEventConfiguration.tsol";
+import "./../../../interfaces/proxy/ISolanaEverscaleProxyExtended.tsol";
+
+import "./../../base/solana/SolanaEverscaleBaseEvent.tsol";
+
+
+contract MultiVaultSolanaEverscaleEventNative is
+    SolanaEverscaleBaseEvent,
+    IMultiVaultSolanaEverscaleEventNative
+{
+    address token;
+    uint128 amount;
+    address recipient;
+
+    uint64 value;
+    uint expected_evers;
+    TvmCell payload;
+
+    address proxy;
+    address tokenWallet;
+
+    constructor(
+        address _initializer,
+        TvmCell _meta
+    ) SolanaEverscaleBaseEvent(_initializer, _meta) public {}
+
+    function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
+        body.decode(uint64, uint32);
+        TvmSlice bodyCopy = body;
+        uint32 functionId = body.decode(uint32);
+        if (isExternalVoteCall(functionId)){
+            require(votes[msg.pubkey()] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
+        }
+        return bodyCopy;
+    }
+
+    function onInit() override internal {
+        setStatusInitializing();
+
+        (
+            token,
+            amount,
+            recipient,
+
+            value,
+            expected_evers,
+            payload
+        ) = abi.decode(
+            eventInitData.voteData.eventData,
+            (
+                address, uint128, address,
+                uint64, uint, TvmCell
+            )
+        );
+
+        ISolanaEverscaleEventConfiguration(eventInitData.configuration).getDetails{
+            value: 1 ever,
+            callback: MultiVaultSolanaEverscaleEventNative.receiveConfigurationDetails
+        }();
+    }
+
+    function receiveConfigurationDetails(
+        ISolanaEverscaleEventConfiguration.BasicConfiguration,
+        ISolanaEverscaleEventConfiguration.SolanaEverscaleEventConfiguration _networkConfiguration,
+        TvmCell
+    ) external override {
+        require(msg.sender == eventInitData.configuration);
+
+        proxy = _networkConfiguration.proxy;
+
+        ITokenRoot(token).walletOf{
+            value: 0.1 ever,
+            callback: MultiVaultSolanaEverscaleEventNative.receiveProxyTokenWallet
+        }(proxy);
+    }
+
+    function receiveProxyTokenWallet(
+        address tokenWallet_
+    ) external override {
+        require(msg.sender == token);
+
+        tokenWallet = tokenWallet_;
+
+        loadRelays();
+    }
+
+    function getDecodedData() external override responsible returns(
+        address token_,
+        uint128 amount_,
+        address recipient_,
+        uint64 value_,
+        uint expected_evers_,
+        TvmCell payload_,
+        address proxy_,
+        address tokenWallet_
+    ) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(
+            token,
+            amount,
+            recipient,
+            value,
+            expected_evers,
+            payload,
+            proxy,
+            tokenWallet
+        );
+    }
+
+    function onConfirm() internal override {
+        TvmCell metaData = abi.encode(
+            tokenWallet,
+            amount,
+            recipient,
+            payload
+        );
+
+        ISolanaEverscaleProxyExtended(eventInitData.configuration).onEventConfirmedExtended{
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(eventInitData, metaData, initializer);
+    }
+}

@@ -1,4 +1,4 @@
-pragma ton-solidity >= 0.39.0;
+pragma ever-solidity >= 0.39.0;
 
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
@@ -6,8 +6,8 @@ pragma AbiHeader pubkey;
 import "@broxus/contracts/contracts/access/ExternalOwner.tsol";
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
 
-import "./../interfaces/event-contracts/IEthereumEvent.tsol";
-import "./../interfaces/event-configuration-contracts/IEthereumEventConfiguration.tsol";
+import "./../interfaces/event-contracts/IEthereumEverscaleEvent.tsol";
+import "./../interfaces/event-configuration-contracts/IEthereumEverscaleEventConfiguration.tsol";
 
 
 contract EventDeployer is ExternalOwner, RandomNonce {
@@ -25,7 +25,7 @@ contract EventDeployer is ExternalOwner, RandomNonce {
 
     struct DeployRequest {
         address configuration;
-        IEthereumEvent.EthereumEventVoteData[] eventsVoteData;
+        IEthereumEverscaleEvent.EthereumEverscaleEventVoteData[] eventsVoteData;
         uint128[] values;
         uint128 value;
     }
@@ -39,7 +39,7 @@ contract EventDeployer is ExternalOwner, RandomNonce {
     function drain(
         address receiver,
         uint128 value
-    ) external onlyGuardian {
+    ) external view onlyGuardian {
         receiver.transfer({
             value: value,
             flag: 0,
@@ -49,11 +49,11 @@ contract EventDeployer is ExternalOwner, RandomNonce {
 
     function deployEvents(
         DeployRequest[] requests
-    ) external onlyOwner {
+    ) external onlyOwner view {
         tvm.accept();
 
         for (DeployRequest request: requests) {
-            IEthereumEventConfiguration(request.configuration).deployEvents{
+            IEthereumEverscaleEventConfiguration(request.configuration).deployEvents{
                 value: request.value,
                 bounce: true,
                 flag: 0

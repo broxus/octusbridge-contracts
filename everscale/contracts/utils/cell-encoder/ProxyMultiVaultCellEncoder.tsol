@@ -1,9 +1,9 @@
-pragma ton-solidity >= 0.39.0;
+pragma ever-solidity >= 0.39.0;
 
 import "./../../bridge/interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
 
-import "./../../bridge/interfaces/multivault/proxy/alien/IProxyMultiVaultAlien_V4.tsol";
-import "./../../bridge/interfaces/multivault/IEVMCallback.tsol";
+import "./../../bridge/interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V4.tsol";
+import "./../../bridge/interfaces/event-contracts/multivault/evm/IEVMCallback.tsol";
 
 
 contract ProxyMultiVaultCellEncoder is IEVMCallback {

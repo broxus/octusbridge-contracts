@@ -1,4 +1,4 @@
-pragma ton-solidity >= 0.39.0;
+pragma ever-solidity >= 0.39.0;
 
 pragma AbiHeader pubkey;
 pragma AbiHeader expire;
@@ -19,10 +19,10 @@ contract Receiver {
         tvm.accept();
     }
 
-    function fetchRelays(address roundContract) public {
+    function fetchRelays(address roundContract) public pure {
         tvm.accept();
         IRound(roundContract).relayKeysSimple{
-            value: 2 ton,
+            value: 2 ever,
             callback: Receiver.receiveRoundRelays
         }();
     }

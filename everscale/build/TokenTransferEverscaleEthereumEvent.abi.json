@@ -13,6 +13,13 @@
 			]
 		},
 		{
+			"name": "close",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "getDecodedData",
 			"inputs": [
 				{"name":"answerId","type":"uint32"}
@@ -140,13 +147,6 @@
 			"name": "reject",
 			"inputs": [
 				{"name":"voteReceiver","type":"address"}
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "close",
-			"inputs": [
 			],
 			"outputs": [
 			]

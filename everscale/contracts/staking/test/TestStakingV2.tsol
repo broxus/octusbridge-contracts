@@ -1,4 +1,4 @@
-pragma ton-solidity >= 0.39.0;
+pragma ever-solidity >= 0.39.0;
 pragma AbiHeader pubkey;
 pragma AbiHeader expire;
 
@@ -95,7 +95,7 @@ contract TestStakingV2 is StakingPoolRelay {
     function onCodeUpgrade(TvmCell upgrade_data) private {
         tvm.resetStorage();
         TvmSlice main = upgrade_data.toSlice();
-        address send_gas_to = main.decode(address);
+//        address send_gas_to = main.decode(address);
 
         TvmSlice codes_data = main.loadRefAsSlice();
         TvmSlice main_data = main.loadRefAsSlice();

@@ -1,9 +1,9 @@
-pragma ton-solidity >= 0.39.0;
+pragma ever-solidity >= 0.39.0;
 pragma AbiHeader time;
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
-import "./../base/EverscaleEthereumBaseEvent.tsol";
+import "./../base/evm/EverscaleEthereumBaseEvent.tsol";
 import "./../../interfaces/IEventNotificationReceiver.tsol";
 import "./../../interfaces/event-contracts/IEverscaleEthereumEvent.tsol";
 import "../../../utils/cell-encoder/DaoCellEncoder.tsol";

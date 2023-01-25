@@ -1,7 +1,7 @@
 {
 	"ABI version": 2,
 	"version": "2.2",
-	"header": ["pubkey", "time", "expire"],
+	"header": ["pubkey", "time"],
 	"functions": [
 		{
 			"name": "constructor",
@@ -38,11 +38,12 @@
 			"outputs": [
 				{"name":"token_","type":"address"},
 				{"name":"amount_","type":"uint128"},
-				{"name":"sol_amount_","type":"uint64"},
 				{"name":"recipient_","type":"address"},
+				{"name":"value_","type":"uint64"},
+				{"name":"expected_evers_","type":"uint256"},
+				{"name":"payload_","type":"cell"},
 				{"name":"proxy_","type":"address"},
-				{"name":"tokenWallet_","type":"address"},
-				{"name":"payload_","type":"bytes"}
+				{"name":"tokenWallet_","type":"address"}
 			]
 		},
 		{
@@ -85,6 +86,14 @@
 				{"name":"_initializer","type":"address"},
 				{"name":"_meta","type":"cell"},
 				{"name":"_requiredVotes","type":"uint32"}
+			]
+		},
+		{
+			"name": "status",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"uint8"}
 			]
 		},
 		{
@@ -131,14 +140,6 @@
 			],
 			"outputs": [
 				{"name":"value0","type":"uint32"}
-			]
-		},
-		{
-			"name": "status",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"status","type":"uint8"}
 			]
 		},
 		{
@@ -232,12 +233,27 @@
 			],
 			"outputs": [
 			]
+		},
+		{
+			"name": "Confirmed",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "Rejected",
+			"inputs": [
+				{"name":"reason","type":"uint32"}
+			],
+			"outputs": [
+			]
 		}
 	],
 	"fields": [
 		{"name":"_pubkey","type":"uint256"},
 		{"name":"_constructorFlag","type":"bool"},
-		{"name":"status","type":"uint8"},
+		{"name":"_status","type":"uint8"},
 		{"name":"votes","type":"map(uint256,uint8)"},
 		{"name":"initializer","type":"address"},
 		{"name":"meta","type":"cell"},
@@ -249,9 +265,10 @@
 		{"components":[{"components":[{"name":"accountSeed","type":"uint128"},{"name":"slot","type":"uint64"},{"name":"blockTime","type":"uint64"},{"name":"txSignature","type":"string"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"eventInitData","type":"tuple"},
 		{"name":"token","type":"address"},
 		{"name":"amount","type":"uint128"},
-		{"name":"sol_amount","type":"uint64"},
 		{"name":"recipient","type":"address"},
-		{"name":"payload","type":"bytes"},
+		{"name":"value","type":"uint64"},
+		{"name":"expected_evers","type":"uint256"},
+		{"name":"payload","type":"cell"},
 		{"name":"proxy","type":"address"},
 		{"name":"tokenWallet","type":"address"}
 	]

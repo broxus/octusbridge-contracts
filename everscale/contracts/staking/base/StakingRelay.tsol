@@ -1,11 +1,11 @@
-pragma ton-solidity >= 0.57.0;
+pragma ever-solidity >= 0.57.0;
 pragma AbiHeader pubkey;
 //pragma AbiHeader expire;
 
 import "./StakingUpgradable.tsol";
 import "../../bridge/interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.tsol";
 import "../../bridge/interfaces/event-configuration-contracts/IEverscaleSolanaEventConfiguration.tsol";
-import "../../bridge/interfaces/IEthereumEverscaleProxy.tsol";
+import "../../bridge/interfaces/proxy/IEthereumEverscaleProxy.tsol";
 
 
 abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleProxy {
@@ -35,7 +35,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
         confirmEthAccount(ton_staker_addr, eth_addr, gasBackAddress);
     }
 
-    function confirmEthAccount(address staker_addr, uint160 eth_address, address send_gas_to) internal {
+    function confirmEthAccount(address staker_addr, uint160 eth_address, address send_gas_to) internal view {
         address user_data = getUserDataAddress(staker_addr);
         IUserData(user_data).processConfirmEthAccount{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(eth_address, send_gas_to);
     }
@@ -117,13 +117,13 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
         uint160[] eth_addrs,
         uint128[] staked_tokens,
         uint128 ton_deposit,
-        address send_gas_to
+        address
     ) external onlyAdmin {
         require (staker_addrs.length <= RELAY_PACK_SIZE, ErrorCodes.BAD_INPUT_ARRAYS);
         // MIN_CALL_MSG_VALUE cover deployment of relay round and setting relays
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE + ton_deposit * staker_addrs.length, ErrorCodes.VALUE_TOO_LOW);
         require (round_details.currentRelayRound == 0 && round_details.currentRelayRoundStartTime == 0, ErrorCodes.ORIGIN_ROUND_ALREADY_INITIALIZED);
-        require (ton_deposit > Gas.DEPLOY_USER_DATA_MIN_VALUE + 0.2 ton, ErrorCodes.VALUE_TOO_LOW);
+        require (ton_deposit > Gas.DEPLOY_USER_DATA_MIN_VALUE + 0.2 ever, ErrorCodes.VALUE_TOO_LOW);
         bool correct_len = staker_addrs.length == ton_pubkeys.length;
         bool correct_len_1 = ton_pubkeys.length == eth_addrs.length;
         bool correct_len_2 = eth_addrs.length == staked_tokens.length;

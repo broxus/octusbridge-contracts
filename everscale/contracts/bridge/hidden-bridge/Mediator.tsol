@@ -1,4 +1,4 @@
-pragma ton-solidity >= 0.39.0;
+pragma ever-solidity >= 0.39.0;
 
 pragma AbiHeader expire;
 
@@ -18,7 +18,7 @@ import "ton-eth-bridge-token-contracts/contracts/TokenWalletPlatform.tsol";
 contract Mediator is IAcceptTokensTransferCallback, IAcceptTokensMintCallback, TransferUtils, InternalOwner, RandomNonce {
     enum Operation { Burn, Transfer }
 
-    uint128 constant DEPLOY_WALLET_VALUE = 0.2 ton;
+    uint128 constant DEPLOY_WALLET_VALUE = 0.2 ever;
 
     TvmCell alienTokenWalletPlatformCode;
 
@@ -56,10 +56,10 @@ contract Mediator is IAcceptTokensTransferCallback, IAcceptTokensMintCallback, T
 
     /// @notice Accept incoming transfer
     function onAcceptTokensTransfer(
-        address tokenRoot,
+        address,
         uint128 amount,
-        address sender,
-        address senderWallet,
+        address,
+        address,
         address remainingGasTo,
         TvmCell payload
     ) external override reserveAtLeastTargetBalance {
@@ -84,7 +84,7 @@ contract Mediator is IAcceptTokensTransferCallback, IAcceptTokensMintCallback, T
         address proxy,
         address remainingGasTo,
         TvmCell payload
-    ) internal {
+    ) internal pure {
         ITokenWallet(wallet).transfer{
             bounce: false,
             value: 0,
@@ -98,7 +98,7 @@ contract Mediator is IAcceptTokensTransferCallback, IAcceptTokensMintCallback, T
         address proxy,
         address remainingGasTo,
         TvmCell payload
-    ) internal {
+    ) internal pure {
         IBurnableTokenWallet(wallet).burn{
             bounce: false,
             value: 0,
@@ -108,7 +108,7 @@ contract Mediator is IAcceptTokensTransferCallback, IAcceptTokensMintCallback, T
 
     function _deriveAlienTokenWallet(
         address root
-    ) internal returns(address) {
+    ) internal view returns(address) {
         TvmCell stateInit = tvm.buildStateInit({
             contr: TokenWalletPlatform,
             varInit: {

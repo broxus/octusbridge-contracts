@@ -10,7 +10,7 @@ declare global {
 const config: LockliftConfig = {
   compiler: {
     // Specify path to your TON-Solidity-Compiler
-    path: "/usr/local/bin/solc-8ef1c39",
+    path: "/usr/local/bin/solc-e66e9ac",
 
     // Or specify version of compiler
 
@@ -24,7 +24,7 @@ const config: LockliftConfig = {
     // Specify path to your stdlib
     lib: "/Users/pavlovdog/TON-Solidity-Compiler/lib/stdlib_sol.tvm",
     // // Specify path to your Linker
-    path: "/usr/local/bin/tvm_linker-2a896430",
+    path: "/usr/local/bin/tvm_linker-0.16.1",
   },
   networks: {
     testnet: {

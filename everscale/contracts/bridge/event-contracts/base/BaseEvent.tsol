@@ -1,4 +1,4 @@
-pragma ton-solidity >= 0.39.0;
+pragma ever-solidity >= 0.39.0;
 pragma AbiHeader time;
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
@@ -86,7 +86,7 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
         require(_status == Status.Initializing, ErrorCodes.WRONG_STATUS);
 
         IStaking(getStakingAddress()).getRelayRoundAddressFromTimestamp{
-            value: 1 ton,
+            value: 1 ever,
             bounce: false,
             callback: BaseEvent.receiveRoundAddress
         }(now);
@@ -101,7 +101,7 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
         round_number = roundNum;
 
         IRound(roundContract).relayKeys{
-            value: 1 ton,
+            value: 1 ever,
             bounce: false,
             callback: BaseEvent.receiveRoundRelays
         }();

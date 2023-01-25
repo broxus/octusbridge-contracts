@@ -1,7 +1,7 @@
 {
 	"ABI version": 2,
 	"version": "2.2",
-	"header": ["pubkey", "time", "expire"],
+	"header": ["pubkey", "time"],
 	"functions": [
 		{
 			"name": "constructor",
@@ -31,13 +31,9 @@
 			]
 		},
 		{
-			"name": "receiveTokenMeta",
+			"name": "receiveTokenName",
 			"inputs": [
-				{"name":"value0","type":"uint256"},
-				{"name":"value1","type":"uint160"},
-				{"name":"value2","type":"string"},
-				{"name":"value3","type":"string"},
-				{"name":"value4","type":"uint8"}
+				{"name":"value0","type":"string"}
 			],
 			"outputs": [
 			]

@@ -1,17 +1,11 @@
-pragma ton-solidity >= 0.39.0;
+pragma ever-solidity >= 0.39.0;
 
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 
-import "./event-configuration-contracts/EthereumEverscaleEventConfiguration.tsol";
-import "./event-configuration-contracts/EverscaleEthereumEventConfiguration.tsol";
-import "./event-configuration-contracts/SolanaEverscaleEventConfiguration.tsol";
-import "./event-configuration-contracts/EverscaleSolanaEventConfiguration.tsol";
-
 import "./interfaces/IBridge.tsol";
 import "./interfaces/IConnector.tsol";
-import "./interfaces/event-configuration-contracts/IBasicEventConfiguration.tsol";
 
 import "./../utils/TransferUtils.tsol";
 import "./../utils/ErrorCodes.tsol";
@@ -37,9 +31,8 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
     address public manager;
 
     uint64 public connectorCounter = 0;
-    uint128 constant MIN_CONTRACT_BALANCE = 1 ton;
 
-/// @param _owner Owner address, can pause Bridge, so new Connectors can't be deployed
+    /// @param _owner Owner address, can pause Bridge, so new Connectors can't be deployed
     /// @param _manager Manager role - can enable connectors
     /// @param _connectorCode Connector contract code
     /// @param _connectorDeployValue Value in TONs, required to be attached, to deploy Connector

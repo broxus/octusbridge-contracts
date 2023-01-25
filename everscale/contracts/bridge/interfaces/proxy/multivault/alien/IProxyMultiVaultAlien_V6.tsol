@@ -1,0 +1,163 @@
+pragma ever-solidity >= 0.39.0;
+
+import "../../../event-contracts/multivault/evm/IEVMCallback.tsol";
+import "../../../event-contracts/IEverscaleSolanaEvent.tsol";
+import "../../INetworks.tsol";
+
+
+interface IProxyMultiVaultAlien_V6 is IEVMCallback, INetworks {
+    struct EVMConfiguration {
+        address everscaleConfiguration;
+        address[] evmConfigurations;
+
+        TvmCell alienTokenRootCode;
+        TvmCell alienTokenWalletCode;
+        TvmCell alienTokenWalletPlatformCode;
+    }
+
+    struct SolanaConfiguration {
+        address everscaleConfiguration;
+        address solanaConfiguration;
+
+        TvmCell alienTokenRootCode;
+        TvmCell alienTokenWalletCode;
+        TvmCell alienTokenWalletPlatformCode;
+    }
+
+    // Settings
+    function getConfiguration() external view responsible returns (EVMConfiguration, SolanaConfiguration);
+    function setEVMConfiguration(EVMConfiguration _config, address gasBackAddress) external;
+    function setSolanaConfiguration(SolanaConfiguration _config, address gasBackAddress) external;
+
+    // Token merging
+    function setManager(address _manager) external;
+    function setMergePool(TvmCell _mergePool) external;
+    function setMergeRouter(TvmCell _mergeRouter) external;
+    function setMergePoolPlatform(TvmCell _mergePoolPlatform) external;
+
+    function upgradeMergePool(
+        address pool
+    ) external;
+
+    function deriveMergeRouter(
+        address token
+    ) external responsible returns (address);
+
+    function deployMergeRouter(
+        address token
+    ) external;
+
+    function deriveMergePool(
+        uint256 nonce
+    ) external responsible returns (address);
+
+    function deployMergePool(
+        uint256 nonce,
+        address[] tokens,
+        uint256 canonId
+    ) external;
+
+    // Admin mint / burn
+    function mint(
+        address token,
+        uint128 amount,
+        address recipient,
+        TvmCell payload
+    ) external;
+
+    function burn(
+        address token,
+        uint128 amount,
+        address walletOwner
+    ) external;
+
+    // Merge pool deposit / withdrawal
+    function mintTokensByMergePool(
+        uint nonce,
+        address token,
+        uint128 amount,
+        address recipient,
+        address remainingGasTo,
+        TvmCell payload
+    ) external;
+
+    function withdrawTokensToEVMByMergePool(
+        uint nonce,
+        address token,
+        uint128 amount,
+        uint160 recipient,
+        address remainingGasTo,
+        EVMCallback callback
+    ) external;
+
+    function withdrawTokensToSolanaByMergePool(
+        uint nonce,
+        address remainingGasTo,
+        uint128 amount,
+        uint256 recipient,
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
+    ) external;
+
+    // Derive token root address
+    function deriveSolanaAlienTokenRoot(
+        uint256 base_token,
+        string name,
+        string symbol,
+        uint8 decimals
+    ) external responsible returns (address);
+
+    function deriveEVMAlienTokenRoot(
+        uint256 base_chainId,
+        uint160 base_token,
+        string name,
+        string symbol,
+        uint8 decimals
+    ) external responsible returns (address);
+
+    // Deploy token root
+    function deployEVMAlienToken(
+        uint256 chainId,
+        uint160 token,
+        string name,
+        string symbol,
+        uint8 decimals,
+        address remainingGasTo
+    ) external;
+
+    function deploySolanaAlienToken(
+        uint256 token,
+        string name,
+        string symbol,
+        uint8 decimals,
+        address remainingGasTo
+    ) external;
+
+
+    // Support functions
+    function sendMessage(
+        address recipient,
+        TvmCell message
+    ) external;
+
+    // Events specification
+    event SolanaAlienTransfer(
+        uint256 base_token,
+        string name,
+        string symbol,
+        uint8 decimals,
+        uint128 amount,
+        uint64 sol_amount,
+        address recipient,
+        bytes payload
+    );
+
+    event EVMAlienTransfer(
+        uint160 token,
+        uint128 amount,
+        uint160 recipient,
+        uint256 chainId,
+        uint160 callback_recipient,
+        bytes callback_payload,
+        bool callback_strict
+    );
+}

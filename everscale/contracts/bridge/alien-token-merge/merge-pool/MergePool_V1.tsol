@@ -1,4 +1,4 @@
-pragma ton-solidity >= 0.39.0;
+pragma ever-solidity >= 0.39.0;
 pragma AbiHeader pubkey;
 
 
@@ -8,7 +8,7 @@ import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 import "./../../../utils/TransferUtils.tsol";
 import "./../../interfaces/alien-token-merge/merge-pool/IMergePool_V1.tsol";
-import "./../../interfaces/multivault/proxy/alien/IProxyMultiVaultAlien_V3.tsol";
+import "./../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V3.tsol";
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensBurnCallback.tsol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.tsol";
@@ -24,7 +24,7 @@ contract MergePool_V1 is
     TransferUtils,
     IAcceptTokensBurnCallback
 {
-    uint128 constant ATTACH_TO_DECIMALS_REQUEST = 0.3 ton;
+    uint128 constant ATTACH_TO_DECIMALS_REQUEST = 0.3 ever;
 
     address static proxy;
 

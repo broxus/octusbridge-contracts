@@ -1,4 +1,4 @@
-pragma ton-solidity >= 0.57.0;
+pragma ever-solidity >= 0.57.0;
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
@@ -70,7 +70,7 @@ contract UserData is IUserData, IUpgradableByRequest {
 
     // ---------------- DAO -------------------
 
-    function _reserve() internal view returns (uint128) {
+    function _reserve() internal pure returns (uint128) {
         return math.max(address(this).balance - msg.value, Gas.USER_DATA_INITIAL_BALANCE);
     }
 
@@ -222,7 +222,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         }
     }
 
-    function _buildProposalInitialData(uint32 proposal_id) private view returns (TvmCell) {
+    function _buildProposalInitialData(uint32 proposal_id) private pure returns (TvmCell) {
         TvmBuilder builder;
         builder.store(proposal_id);
         return builder.toCell();
@@ -504,13 +504,13 @@ contract UserData is IUserData, IUpgradableByRequest {
         });
     }
 
-    function _buildElectionParams(uint32 round_num) private view returns (TvmCell) {
+    function _buildElectionParams(uint32 round_num) private pure returns (TvmCell) {
         TvmBuilder builder;
         builder.store(round_num);
         return builder.toCell();
     }
 
-    function _buildRelayRoundParams(uint32 round_num) private view returns (TvmCell) {
+    function _buildRelayRoundParams(uint32 round_num) private pure returns (TvmCell) {
         TvmBuilder builder;
         builder.store(round_num);
         return builder.toCell();

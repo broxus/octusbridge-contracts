@@ -158,6 +158,14 @@
 			]
 		},
 		{
+			"name": "status",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"uint8"}
+			]
+		},
+		{
 			"name": "receiveRoundAddress",
 			"inputs": [
 				{"name":"roundContract","type":"address"},
@@ -201,14 +209,6 @@
 			],
 			"outputs": [
 				{"name":"value0","type":"uint32"}
-			]
-		},
-		{
-			"name": "status",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"status","type":"uint8"}
 			]
 		},
 		{
@@ -302,12 +302,27 @@
 			],
 			"outputs": [
 			]
+		},
+		{
+			"name": "Confirmed",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "Rejected",
+			"inputs": [
+				{"name":"reason","type":"uint32"}
+			],
+			"outputs": [
+			]
 		}
 	],
 	"fields": [
 		{"name":"_pubkey","type":"uint256"},
 		{"name":"_constructorFlag","type":"bool"},
-		{"name":"status","type":"uint8"},
+		{"name":"_status","type":"uint8"},
 		{"name":"votes","type":"map(uint256,uint8)"},
 		{"name":"initializer","type":"address"},
 		{"name":"meta","type":"cell"},

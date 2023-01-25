@@ -1,4 +1,4 @@
-pragma ton-solidity >= 0.39.0;
+pragma ever-solidity >= 0.39.0;
 
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
@@ -9,7 +9,7 @@ import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 import "./../../utils/TransferUtils.tsol";
 
-import "./../event-contracts/base/EverscaleBaseEvent.tsol";
+import "./../event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol";
 
 
 contract EventCloser is ExternalOwner, RandomNonce, TransferUtils {
@@ -29,24 +29,24 @@ contract EventCloser is ExternalOwner, RandomNonce, TransferUtils {
     }
 
     function _targetBalance() internal pure override returns (uint128) {
-        return 10 ton;
+        return 10 ever;
     }
 
     function close(
         address[] events
-    ) external onlyOwner {
+    ) external view onlyOwner {
         tvm.accept();
 
         for (address e: events) {
-            EverscaleBaseEvent(e).close{
+            EverscaleEthereumBaseEvent(e).close{
                 bounce: true,
                 flag: 0,
-                value: 0.1 ton
+                value: 0.1 ever
             }();
         }
     }
 
-    receive() external reserveTargetBalance {
+    receive() external view reserveTargetBalance {
         deployer.transfer({
             bounce: false,
             value: 0,

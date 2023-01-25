@@ -1,0 +1,199 @@
+pragma ever-solidity >= 0.39.0;
+pragma AbiHeader expire;
+
+
+import "./../../interfaces/event-contracts/IEverscaleEthereumEvent.tsol";
+import "./../../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.tsol";
+
+import "./../../event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol";
+
+import "./../../../utils/TransferUtils.tsol";
+import "./../../../utils/ErrorCodes.tsol";
+
+import "@broxus/contracts/contracts/access/InternalOwner.tsol";
+import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
+import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
+
+
+/// @title Basic Everscale-Ethereum event configuration contract
+/// @author https://github.com/broxus
+contract EverscaleEthereumEventConfiguration is
+    IEverscaleEthereumEventConfiguration,
+    TransferUtils,
+    InternalOwner,
+    CheckPubKey
+{
+    BasicConfiguration public static basicConfiguration;
+    EverscaleEthereumEventConfiguration public static networkConfiguration;
+
+    TvmCell public meta;
+    uint64 public flags;
+
+    /// @param _owner Event configuration owner
+    constructor(
+        address _owner,
+        TvmCell _meta
+    ) public checkPubKey {
+        tvm.accept();
+
+        _reserveTargetBalance();
+
+        setOwnership(_owner);
+
+        meta = _meta;
+
+        _owner.transfer({
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        });
+    }
+
+    /// @notice Set new configuration meta.
+    /// @param _meta New configuration meta
+    function setMeta(TvmCell _meta) override onlyOwner cashBack external {
+        meta = _meta;
+    }
+
+    /// @dev Set end timestamp. Can be set only in case current value is 0.
+    /// @param endTimestamp End timestamp.
+    function setEndTimestamp(
+        uint32 endTimestamp
+    )
+        override
+        public
+        onlyOwner
+    {
+        require(
+            networkConfiguration.endTimestamp == 0,
+            ErrorCodes.END_TIMESTAMP_ALREADY_SET
+        );
+
+        require(
+            endTimestamp >= networkConfiguration.startTimestamp,
+            ErrorCodes.TOO_LOW_END_TIMESTAMP
+        );
+
+        networkConfiguration.endTimestamp = endTimestamp;
+    }
+
+    function setFlags(
+        uint64 _flags
+    ) override onlyOwner cashBack external {
+        flags = _flags;
+    }
+
+    function setEventInitialBalance(
+        uint64 eventInitialBalance
+    ) override onlyOwner cashBack external {
+        basicConfiguration.eventInitialBalance = eventInitialBalance;
+    }
+
+    /// @dev Build initial data for event contract.
+    /// Extends event vote data with configuration params.
+    /// @param eventVoteData Event vote data structure, passed by relay
+    function buildEventInitData(
+        IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData
+    ) internal view returns(
+        IEverscaleEthereumEvent.EverscaleEthereumEventInitData eventInitData
+    ) {
+        eventInitData.voteData = eventVoteData;
+
+        eventInitData.configuration = address(this);
+        eventInitData.staking = basicConfiguration.staking;
+    }
+
+    /// @dev Deploy event contract
+    /// @param eventVoteData Event vote data
+    function deployEvent(
+        IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData
+    )
+        override
+        external
+        reserveAtLeastTargetBalance()
+    {
+        require(msg.sender == networkConfiguration.eventEmitter, ErrorCodes.SENDER_IS_NOT_EVENT_EMITTER);
+        require(msg.value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
+        require(
+            eventVoteData.eventTimestamp >= networkConfiguration.startTimestamp,
+            ErrorCodes.EVENT_TIMESTAMP_LESS_THAN_START
+        );
+
+        if (networkConfiguration.endTimestamp != 0) {
+            require(
+                eventVoteData.eventTimestamp <= networkConfiguration.endTimestamp,
+                ErrorCodes.EVENT_TIMESTAMP_HIGHER_THAN_END
+            );
+        }
+
+        IEverscaleEthereumEvent.EverscaleEthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
+
+        address eventContract = deriveEventAddress(eventVoteData);
+
+        emit NewEventContract(eventContract);
+
+        new EverscaleEthereumBaseEvent{
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED,
+            code: basicConfiguration.eventCode,
+            pubkey: 0,
+            varInit: {
+                eventInitData: eventInitData
+            }
+        }(msg.sender, meta);
+    }
+
+    /*
+        @dev Derive the Ethereum event contract address from it's init data
+        @param eventVoteData Ethereum event vote data
+        @return eventContract Address of the corresponding ethereum event contract
+    */
+    function deriveEventAddress(
+        IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData
+    )
+        override
+        public
+        view
+        responsible
+    returns (
+        address eventContract
+    ) {
+        IEverscaleEthereumEvent.EverscaleEthereumEventInitData eventInitData = buildEventInitData(eventVoteData);
+
+        TvmCell stateInit = tvm.buildStateInit({
+            contr: EverscaleEthereumBaseEvent,
+            varInit: {
+                eventInitData: eventInitData
+            },
+            pubkey: 0,
+            code: basicConfiguration.eventCode
+        });
+
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} address(tvm.hash(stateInit));
+    }
+
+    /// @dev Get configuration details.
+    /// @return _basicConfiguration Basic configuration settings
+    /// @return _networkConfiguration Network specific configuration settings
+    function getDetails() override public view responsible returns(
+        BasicConfiguration _basicConfiguration,
+        EverscaleEthereumEventConfiguration _networkConfiguration,
+        TvmCell _meta
+    ) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(
+            basicConfiguration,
+            networkConfiguration,
+            meta
+        );
+    }
+
+    /// @dev Get event configuration type
+    /// @return _type Configuration type (enum EventType)
+    function getType() override public pure responsible returns(EventType _type) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} EventType.EverscaleEthereum;
+    }
+
+    function getFlags() override public view responsible returns(uint64 _flags) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} flags;
+    }
+}

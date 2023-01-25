@@ -1,23 +1,18 @@
-pragma ton-solidity >= 0.39.0;
+pragma ever-solidity >= 0.39.0;
 pragma AbiHeader time;
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 import "./../../interfaces/IEventNotificationReceiver.tsol";
 import "./../../interfaces/event-contracts/IEthereumEverscaleEvent.tsol";
-import "./../../interfaces/IEthereumEverscaleProxy.tsol";
+import "./../../interfaces/proxy/IEthereumEverscaleProxy.tsol";
 import "./../../../utils/ErrorCodes.tsol";
 
-import "./../base/EthereumEverscaleBaseEvent.tsol";
+import "./../base/evm/EthereumEverscaleBaseEvent.tsol";
 import "./../../../utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 
-/// @title Basic example of Ethereum event configuration
-/// @dev Anyone can deploy it for specific event. Relays send their
-/// rejects / confirms with external message directly into this contract.
-/// In case enough confirmations is collected - callback is executed.
-/// This implementation is used for cross chain token transfers
 contract TokenTransferEthereumEverscaleEvent is EthereumEverscaleBaseEvent, ProxyTokenTransferCellEncoder {
     constructor(
         address _initializer,
@@ -95,7 +90,10 @@ contract TokenTransferEthereumEverscaleEvent is EthereumEverscaleBaseEvent, Prox
         address owner = getOwner();
 
         if (owner.value != 0) {
-            IEventNotificationReceiver(owner).notifyEventStatusChanged{flag: 0, bounce: false}(status);
+            IEventNotificationReceiver(owner).notifyEventStatusChanged{
+                flag: 0,
+                bounce: false
+            }(status());
         }
     }
 }

@@ -1,4 +1,4 @@
-pragma ton-solidity >= 0.39.0;
+pragma ever-solidity >= 0.39.0;
 
 import "./interfaces/IProposal.tsol";
 import "./interfaces/IDaoRoot.tsol";
@@ -10,7 +10,9 @@ import "./libraries/Gas.tsol";
 import "./structures/PlatformTypes.tsol";
 
 import "../staking/interfaces/IUserData.tsol";
-import {PlatformTypes as StakingPlatformTypes} from "../staking/libraries/PlatformTypes.sol";
+import {
+    PlatformTypes as StakingPlatformTypes
+} from "../staking/libraries/PlatformTypes.tsol";
 
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 import "@broxus/contracts/contracts/platform/Platform.tsol";

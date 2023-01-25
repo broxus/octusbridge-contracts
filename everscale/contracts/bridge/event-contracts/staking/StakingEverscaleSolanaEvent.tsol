@@ -1,9 +1,9 @@
-pragma ton-solidity >= 0.39.0;
+pragma ever-solidity >= 0.39.0;
 pragma AbiHeader time;
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
-import "../base/EverscaleSolanaBaseEvent.tsol";
+import "../base/solana/EverscaleSolanaBaseEvent.tsol";
 import "../../interfaces/IEventNotificationReceiver.tsol";
 import "../../interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
 import "../../../utils/ErrorCodes.tsol";
@@ -11,9 +11,7 @@ import "../../../utils/cell-encoder/StakingCellEncoder.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 
-
 contract StakingEverscaleSolanaEvent is EverscaleSolanaBaseEvent, StakingCellEncoder {
-
     constructor(
         address _initializer,
         TvmCell _meta

@@ -1,0 +1,135 @@
+pragma ever-solidity >= 0.39.0;
+pragma AbiHeader time;
+pragma AbiHeader pubkey;
+
+
+import "./../../../interfaces/event-contracts/multivault/solana/IMultiVaultEverscaleSolanaEventAlien.tsol";
+import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V6.tsol";
+import "./../../../interfaces/alien-token/ITokenRootAlienSolana.tsol";
+
+import "./../../base/solana/EverscaleSolanaBaseEvent.tsol";
+
+
+/// @notice Everscale-Solana event for MultiVault alien token transfer.
+/// Before switching into the `Pending` status, event contract must perform
+/// the following actions:
+/// - Obtain the `token` token source.
+contract MultiVaultEverscaleSolanaEventAlien is EverscaleSolanaBaseEvent, IMultiVaultEverscaleSolanaEventAlien {
+    address proxy;
+    address token;
+    address remainingGasTo;
+    uint128 amount;
+    uint256 recipient;
+
+    uint256 base_token;
+    address expectedToken;
+
+    constructor(
+        address _initializer,
+        TvmCell _meta
+    ) EverscaleSolanaBaseEvent(_initializer, _meta) public {}
+
+    function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
+        body.decode(uint64, uint32);
+        TvmSlice bodyCopy = body;
+        uint32 functionId = body.decode(uint32);
+        if (isExternalVoteCall(functionId)){
+            require(votes[msg.pubkey()] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
+        }
+        return bodyCopy;
+    }
+
+    function onInit() override internal {
+        setStatusInitializing();
+
+        (proxy, token, remainingGasTo, amount, recipient) = abi.decode(
+            eventInitData.voteData.eventData,
+            (address, address, address, uint128, uint256)
+        );
+
+        ITokenRootAlienSolana(token).meta{
+            value: 1 ever,
+            bounce: true,
+            callback: MultiVaultEverscaleSolanaEventAlien.receiveTokenMeta
+        }();
+    }
+
+    function receiveTokenMeta(
+        uint256 base_token_,
+        string name,
+        string symbol,
+        uint8 decimals
+    ) external override {
+        require(msg.sender == token);
+
+        base_token = base_token_;
+
+        IProxyMultiVaultAlien_V6(proxy).deriveSolanaAlienTokenRoot{
+            value: 1 ever,
+            bounce: true,
+            callback: MultiVaultEverscaleSolanaEventAlien.receiveAlienTokenRoot
+        }(
+            base_token,
+            name,
+            symbol,
+            decimals
+        );
+    }
+
+    function receiveAlienTokenRoot(
+        address token_
+    ) external override {
+        require(msg.sender == proxy);
+
+        expectedToken = token_;
+
+        if (expectedToken == token) {
+            _updateEventData();
+
+            loadRelays();
+        } else {
+            setStatusRejected(1);
+        }
+    }
+
+    function _updateEventData() internal {
+        eventInitData.voteData.eventData = abi.encode(
+            base_token,
+            amount,
+            recipient
+        );
+    }
+
+    function gasBackAddress() internal view returns(address) {
+        return remainingGasTo;
+    }
+
+    function getDecodedData() external override responsible returns(
+        address proxy_,
+        address token_,
+        address remainingGasTo_,
+        uint128 amount_,
+        uint256 recipient_,
+        uint256 base_token_
+    ) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(
+            proxy,
+            token,
+            remainingGasTo,
+            amount,
+            recipient,
+            base_token
+        );
+    }
+
+    onBounce(TvmSlice slice) external {
+        uint32 selector = slice.decode(uint32);
+
+        if (
+            (selector == tvm.functionId(ITokenRootAlienSolana.meta) && msg.sender == token) ||
+            (selector == tvm.functionId(IProxyMultiVaultAlien_V6.deriveSolanaAlienTokenRoot) && msg.sender == proxy)
+        ) {
+            setStatusRejected(2);
+        }
+    }
+}

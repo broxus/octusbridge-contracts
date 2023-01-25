@@ -29,9 +29,34 @@
 			]
 		},
 		{
+			"name": "setFlags",
+			"inputs": [
+				{"name":"_flags","type":"uint64"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setEventInitialBalance",
+			"inputs": [
+				{"name":"eventInitialBalance","type":"uint64"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "deployEvent",
 			"inputs": [
 				{"components":[{"name":"accountSeed","type":"uint128"},{"name":"slot","type":"uint64"},{"name":"blockTime","type":"uint64"},{"name":"txSignature","type":"string"},{"name":"eventData","type":"cell"}],"name":"eventVoteData","type":"tuple"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "deployEvents",
+			"inputs": [
+				{"components":[{"name":"accountSeed","type":"uint128"},{"name":"slot","type":"uint64"},{"name":"blockTime","type":"uint64"},{"name":"txSignature","type":"string"},{"name":"eventData","type":"cell"}],"name":"eventsVoteData","type":"tuple[]"},
+				{"name":"values","type":"uint128[]"}
 			],
 			"outputs": [
 			]
@@ -64,6 +89,15 @@
 			],
 			"outputs": [
 				{"name":"_type","type":"uint8"}
+			]
+		},
+		{
+			"name": "getFlags",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"_flags","type":"uint64"}
 			]
 		},
 		{
@@ -125,6 +159,14 @@
 			]
 		},
 		{
+			"name": "flags",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"flags","type":"uint64"}
+			]
+		},
+		{
 			"name": "meta",
 			"inputs": [
 			],
@@ -163,6 +205,7 @@
 		{"name":"owner","type":"address"},
 		{"components":[{"name":"eventABI","type":"bytes"},{"name":"staking","type":"address"},{"name":"eventInitialBalance","type":"uint64"},{"name":"eventCode","type":"cell"}],"name":"basicConfiguration","type":"tuple"},
 		{"components":[{"name":"program","type":"uint256"},{"name":"proxy","type":"address"},{"name":"startTimestamp","type":"uint64"},{"name":"endTimestamp","type":"uint64"}],"name":"networkConfiguration","type":"tuple"},
+		{"name":"flags","type":"uint64"},
 		{"name":"meta","type":"cell"}
 	]
 }

@@ -1,4 +1,4 @@
-pragma ton-solidity >= 0.57.0;
+pragma ever-solidity >= 0.57.0;
 pragma AbiHeader pubkey;
 pragma AbiHeader expire;
 
@@ -82,7 +82,7 @@ contract StakingV1_1 is StakingPoolRelay {
         );
     }
 
-    function onCodeUpgrade(TvmCell upgrade_data) private {
+    function onCodeUpgrade(TvmCell) private pure {
         emit StakingUpdated();
     }
 }

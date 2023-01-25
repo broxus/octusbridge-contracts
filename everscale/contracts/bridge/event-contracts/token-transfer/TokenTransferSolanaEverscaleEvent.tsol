@@ -1,14 +1,14 @@
-pragma ton-solidity >= 0.39.0;
+pragma ever-solidity >= 0.39.0;
 pragma AbiHeader time;
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 import "./../../interfaces/IEventNotificationReceiver.tsol";
 import "./../../interfaces/event-contracts/ISolanaEverscaleEvent.tsol";
-import "./../../interfaces/ISolanaEverscaleProxy.tsol";
+import "./../../interfaces/proxy/ISolanaEverscaleProxy.tsol";
 import "./../../../utils/ErrorCodes.tsol";
 
-import "./../base/SolanaEverscaleBaseEvent.tsol";
+import "./../base/solana/SolanaEverscaleBaseEvent.tsol";
 import "./../../../utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
@@ -86,7 +86,10 @@ contract TokenTransferSolanaEverscaleEvent is SolanaEverscaleBaseEvent, ProxyTok
         address owner = getOwner();
 
         if (owner.value != 0) {
-            IEventNotificationReceiver(owner).notifyEventStatusChanged{flag: 0, bounce: false}(status);
+            IEventNotificationReceiver(owner).notifyEventStatusChanged{
+                flag: 0,
+                bounce: false
+            }(status());
         }
     }
 }
