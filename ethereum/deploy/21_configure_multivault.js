@@ -6,7 +6,8 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         deployer,
         owner,
         bridge: bridge_,
-        gasDonor
+        gasDonor,
+        weth,
     } = await getNamedAccounts();
 
     let bridge_address;
@@ -27,6 +28,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         'initialize',
         bridge_address,
         owner,
+        weth
     );
 
     await deployments.execute('MultiVault',

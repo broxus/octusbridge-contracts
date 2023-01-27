@@ -28,6 +28,14 @@ const multisig = {
   milkomeda: '0x43137648a18925c73e0905005a96462daEf684C9',
   avalanche: '0x7591519D32bB268D828249FcE2AA34A24Bc1B3eA'
 };
+const weth = {
+  main: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+  polygon: '0xB8dD7223edc08A1681c81278D31d644576ECF0b4',
+  bsc: '0xbF13DBbf86B6B1cc02a4169Dde38E16862C77a0a',
+  fantom: '0x5B2329A2b2B5ec2f5F77afb6826F825dcec3A3Fd',
+  milkomeda: '0x43137648a18925c73e0905005a96462daEf684C9',
+  avalanche: '0x7591519D32bB268D828249FcE2AA34A24Bc1B3eA'
+};
 
 const bridge = {
   main: '0xF4404070f63a7E19Be0b1dd89A5fb88E12c0173A',
@@ -43,6 +51,9 @@ const bridge = {
  * @type import('hardhat/config').HardhatUserConfig
  */
 const hardhatConfig = {
+  mocha:{
+    bail:true
+  },
   diamondAbi: {
     // (required) The name of your Diamond ABI.
     name: "MultiVault",
@@ -170,6 +181,7 @@ const hardhatConfig = {
     }
   },
   networks: {
+
     hardhat: {
       allowUnlimitedContractSize: true,
       forking: {
@@ -292,6 +304,10 @@ const hardhatConfig = {
     owner: {
       default: 3,
       ...multisig
+    },
+    weth: {
+      default: weth.main,
+      ...weth
     },
     alice: {
       default: 4,

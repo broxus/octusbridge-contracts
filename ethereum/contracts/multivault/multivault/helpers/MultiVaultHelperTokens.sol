@@ -16,9 +16,9 @@ abstract contract MultiVaultHelperTokens is
     MultiVaultHelperEmergency,
     IMultiVaultFacetTokensEvents
 {
-    modifier initializeToken(address token) {
+    modifier initializeToken(address _token, bool is_weth) {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
-
+        address token = is_weth ? s.weth : _token;
         if (s.tokens_[token].activation == 0) {
             // Non-activated tokens are always aliens, native tokens are activate on the first `saveWithdrawNative`
 
@@ -34,9 +34,9 @@ abstract contract MultiVaultHelperTokens is
         _;
     }
 
-    modifier tokenNotBlacklisted(address token) {
+    modifier tokenNotBlacklisted(address _token, bool is_weth) {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
-
+        address token = is_weth ? s.weth : _token;
         require(!s.tokens_[token].blacklisted);
 
         _;

@@ -1,0 +1,7 @@
+{
+
+  "scripts": {
+"test": "cross-env ETH_MAIN_ARCHIVE_HTTP=\"https://eth-mainnet.alchemyapi.io/v2/ZZ0-A-arGnUmxQp6kE9qCWJBDg49zBs2\" ETH_MNEMONIC=\"another floor talent month change gorilla bronze clip august cabbage earn enact\" npx hardhat test test/multivault/2-1-deposit-withdraw-native-token.js"
+  }
+
+}

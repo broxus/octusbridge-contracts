@@ -9,13 +9,15 @@ const {ethers} = require("hardhat");
 
 
 describe('Test deposit-withdraw for alien token', async () => {
-    let multivault, token;
+    let multivault, token, weth;
 
     it('Setup contracts', async () => {
         await deployments.fixture();
 
         multivault = await ethers.getContract('MultiVault');
         token = await ethers.getContract('Token');
+        weth = await ethers.getNamedSigner("weth")
+            .then(({address}) => ethers.getContractAt("IWETH", address))
     });
 
     describe('Deposit', async () => {
@@ -45,13 +47,14 @@ describe('Test deposit-withdraw for alien token', async () => {
             const deposit_expected_evers = 33;
             const deposit_payload = "0x001122";
 
+
             await expect(deposit({
-                    recipient,
-                    token: token.address,
-                    amount,
-                    expected_evers: deposit_expected_evers,
-                    payload: deposit_payload
-                }, { value: deposit_value }))
+                recipient,
+                token: token.address,
+                amount,
+                expected_evers: deposit_expected_evers,
+                payload: deposit_payload
+            }, {value: deposit_value}))
                 .to.emit(multivault, 'AlienTransfer')
                 .withArgs(
                     utils.defaultChainId,
@@ -60,6 +63,52 @@ describe('Test deposit-withdraw for alien token', async () => {
                     await token.symbol(),
                     await token.decimals(),
                     amount.sub(fee),
+                    recipient.wid,
+                    recipient.addr,
+                    deposit_value,
+                    deposit_expected_evers,
+                    deposit_payload
+                );
+        });
+
+        it('should deposit eth as weth', async () => {
+            const amount_eth = ethers.utils.parseUnits('0.9', 'ether');
+
+            const alice = await ethers.getNamedSigner('alice');
+
+            const recipient = {
+                wid: 0,
+                addr: 123123
+            };
+
+            const defaultDepositFee = await multivault.defaultAlienDepositFee();
+            const fee = defaultDepositFee.mul(amount_eth).div(10000);
+            const deposit = multivault
+                .connect(alice)
+                ['depositByNativeToken(((int8,uint256),uint256,uint256,bytes))'];
+
+
+            const deposit_value = ethers.utils.parseEther("0.1");
+
+
+            const deposit_expected_evers = 33;
+            const deposit_payload = "0x001122";
+
+            const depResult = await deposit({
+                recipient,
+                amount: amount_eth,
+                expected_evers: deposit_expected_evers,
+                payload: deposit_payload
+            }, {value: amount_eth.add(deposit_value)})
+            await expect(depResult)
+                .to.emit(multivault, 'AlienTransfer')
+                .withArgs(
+                    utils.defaultChainId,
+                    weth.address,
+                    await weth.name(),
+                    await weth.symbol(),
+                    await weth.decimals(),
+                    amount_eth.sub(fee),
                     recipient.wid,
                     recipient.addr,
                     deposit_value,
@@ -107,7 +156,7 @@ describe('Test deposit-withdraw for alien token', async () => {
         let payload, signatures;
 
         it('Prepare payload & signatures', async () => {
-            const { bob } = await getNamedAccounts();
+            const {bob} = await getNamedAccounts();
 
             const withdrawalEventData = utils.encodeMultiTokenAlienWithdrawalData({
                 token: token.address,

@@ -10,6 +10,7 @@ import "../../interfaces/multivault/IMultiVaultFacetPendingWithdrawalsEvents.sol
 import "../../interfaces/IMultiVaultToken.sol";
 import "../../interfaces/IEverscale.sol";
 import "../../interfaces/IERC20.sol";
+import "../../interfaces/IWETH.sol";
 
 import "../../libraries/SafeERC20.sol";
 
@@ -20,6 +21,8 @@ import "../helpers/MultiVaultHelperReentrancyGuard.sol";
 import "../helpers/MultiVaultHelperTokens.sol";
 import "../helpers/MultiVaultHelperFee.sol";
 import "../helpers/MultiVaultHelperPendingWithdrawal.sol";
+import "hardhat/console.sol";
+
 
 
 contract MultiVaultFacetDeposit is
@@ -32,9 +35,35 @@ contract MultiVaultFacetDeposit is
 {
     using SafeERC20 for IERC20;
 
-    /// @notice Transfer tokens to the Everscale. Works both for native and alien tokens.
-    /// Approve is required only for alien tokens deposit.
-    /// @param d Deposit parameters
+    function depositByNativeToken(
+        DepositNativeTokenParams memory d
+    )
+        external
+        payable
+        override
+        nonReentrant
+        tokenNotBlacklisted(address(0), true)
+        initializeToken(address(0), true)
+        onlyEmergencyDisabled
+    {
+        require(msg.value >= d.amount, "WRONG");
+        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
+
+        IWETH(s.weth).deposit{value: d.amount}();
+        _deposit(
+            DepositParams({
+            recipient: d.recipient,
+            token: s.weth,
+            amount: d.amount,
+            expected_evers: d.expected_evers,
+            payload: d.payload
+            }),
+            address(this),
+            msg.sender,
+            msg.value - d.amount
+        );
+    }
+
     function deposit(
         DepositParams memory d
     )
@@ -42,12 +71,22 @@ contract MultiVaultFacetDeposit is
         payable
         override
         nonReentrant
-        tokenNotBlacklisted(d.token)
-        initializeToken(d.token)
+        tokenNotBlacklisted(d.token, false)
+        initializeToken(d.token, false)
         onlyEmergencyDisabled
     {
+        _deposit(d, msg.sender, msg.sender, msg.value);
+    }
+    /// @notice Transfer tokens to the Everscale. Works both for native and alien tokens.
+    /// Approve is required only for alien tokens deposit.
+    /// @param d Deposit parameters
+    function _deposit(
+        DepositParams memory d,
+        address _tokens_sender,
+        address _original_sender,
+        uint256 _value
+    ) internal {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
-
         uint fee = _calculateMovementFee(
             d.amount,
             d.token,
@@ -61,23 +100,23 @@ contract MultiVaultFacetDeposit is
 
         if (isNative) {
             IMultiVaultToken(token).burn(
-                msg.sender,
+                _tokens_sender,
                 d.amount
             );
 
             d.amount -= fee;
 
-            _transferToEverscaleNative(d, fee, msg.value);
+            _transferToEverscaleNative(d, fee, _value, _original_sender);
         } else {
             IERC20(token).safeTransferFrom(
-                msg.sender,
+                _tokens_sender,
                 address(this),
                 d.amount
             );
 
             d.amount -= fee;
 
-            _transferToEverscaleAlien(d, fee, msg.value);
+            _transferToEverscaleAlien(d, fee, _value, _original_sender);
         }
 
         _increaseTokenFee(d.token, fee);
@@ -88,7 +127,7 @@ contract MultiVaultFacetDeposit is
         DepositParams memory d,
         uint256 expectedMinBounty,
         IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId[] memory pendingWithdrawalIds
-    ) external payable override tokenNotBlacklisted(d.token) nonReentrant {
+    ) external payable override tokenNotBlacklisted(d.token, false) nonReentrant {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         uint amountLeft = d.amount;
@@ -128,7 +167,8 @@ contract MultiVaultFacetDeposit is
         _transferToEverscaleAlien(
             d,
             fee,
-            msg.value
+            msg.value,
+            msg.sender
         );
 
         _increaseTokenFee(d.token, fee);
