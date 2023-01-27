@@ -109,7 +109,7 @@ describe('Test deposit-withdraw for native token', async () => {
             const {bob} = await getNamedAccounts();
 
             const withdrawalEventData = utils.encodeMultiTokenAlienWithdrawalData({
-                token: token.address,
+                token: weth.address,
                 amount: amount,
                 recipient: bob,
                 chainId: utils.defaultChainId,
@@ -129,7 +129,7 @@ describe('Test deposit-withdraw for native token', async () => {
 
             const {
                 withdrawFee
-            } = await multivault.tokens(token.address);
+            } = await multivault.tokens(weth.address);
 
             const fee = withdrawFee.mul(amount).div(10000);
 
