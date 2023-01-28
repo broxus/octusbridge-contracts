@@ -5,16 +5,18 @@ const {
     encodeEvmTokenSourceMeta,
     ...utils
 } = require('../utils');
-const {ethers} = require("hardhat");
+const {ethers, web3} = require("hardhat");
 
 
 describe('Test deposit-withdraw for native token', async () => {
-    let multivault, weth;
+    let multivault, weth, unwrapNativeToken;
 
     it('Setup contracts', async () => {
         await deployments.fixture();
 
         multivault = await ethers.getContract('MultiVault');
+        unwrapNativeToken = await ethers.getContract('UnwrapNativeToken');
+
         weth = await ethers.getNamedSigner("weth")
             .then(({address}) => ethers.getContractAt("IWETH", address))
     });
@@ -100,28 +102,42 @@ describe('Test deposit-withdraw for native token', async () => {
         });
     });
 
-    describe.skip('Withdraw', async () => {
-        const amount = ethers.utils.parseUnits('500', 18);
+    describe('Withdraw', async () => {
+        const amount = ethers.utils.parseUnits('0.4', 'ether')
+
 
         let payload, signatures;
 
         it('Prepare payload & signatures', async () => {
             const {bob} = await getNamedAccounts();
+            // const withdrawalEventData = utils.encodeMultiTokenAlienWithdrawalData({
+            //     token: weth.address,
+            //     amount: amount,
+            //     recipient: bob,
+            //     chainId: utils.defaultChainId,
+            //     callback: {}
+            // });
 
             const withdrawalEventData = utils.encodeMultiTokenAlienWithdrawalData({
                 token: weth.address,
                 amount: amount,
-                recipient: bob,
+                recipient: unwrapNativeToken.address,
                 chainId: utils.defaultChainId,
-                callback: {}
-            });
+                callback: {
+                    recipient: unwrapNativeToken.address,
+                    payload: web3.eth.abi.encodeParameters(
+                        ['address'], [bob]
+                    ),
+                    strict: true
+                }
 
+            });
             payload = encodeEverscaleEvent({
                 eventData: withdrawalEventData,
                 proxy: multivault.address,
             });
 
-            signatures = await utils.getPayloadSignatures(payload);
+            signatures = await utils.getPayloadSignatures(payload)
         });
 
         it('Save withdrawal', async () => {
@@ -133,12 +149,19 @@ describe('Test deposit-withdraw for native token', async () => {
 
             const fee = withdrawFee.mul(amount).div(10000);
 
-            await expect(() => multivault['saveWithdrawAlien(bytes,bytes[])'](payload, signatures))
+            let saveWithdrawAlienTransaction;
+
+            await expect(() => {
+                saveWithdrawAlienTransaction = multivault['saveWithdrawAlien(bytes,bytes[])'](payload, signatures)
+                return saveWithdrawAlienTransaction
+            })
                 .to.changeTokenBalances(
-                    token,
-                    [multivault, bob],
-                    [ethers.BigNumber.from(0).sub(amount.sub(fee)), amount.sub(fee)]
-                );
+                    weth,
+                    [multivault],
+                    [ethers.BigNumber.from(0).sub(amount.sub(fee))]
+                )
+
+            await expect(await saveWithdrawAlienTransaction).to.changeEtherBalance(bob, amount.sub(fee))
         });
     });
 });

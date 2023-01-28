@@ -10,7 +10,7 @@ import "../../interfaces/multivault/IMultiVaultFacetPendingWithdrawalsEvents.sol
 import "../../interfaces/IMultiVaultToken.sol";
 import "../../interfaces/IEverscale.sol";
 import "../../interfaces/IERC20.sol";
-import "../../interfaces/IWETH.sol";
+import "../../../interfaces/IWETH.sol";
 
 import "../../libraries/SafeERC20.sol";
 
@@ -42,8 +42,8 @@ contract MultiVaultFacetDeposit is
         payable
         override
         nonReentrant
-        tokenNotBlacklisted(address(0), true)
-        initializeToken(address(0), true)
+        wethNotBlacklisted
+        initializeWethToken
         onlyEmergencyDisabled
     {
         require(msg.value >= d.amount, "WRONG");
@@ -71,8 +71,8 @@ contract MultiVaultFacetDeposit is
         payable
         override
         nonReentrant
-        tokenNotBlacklisted(d.token, false)
-        initializeToken(d.token, false)
+        tokenNotBlacklisted(d.token)
+        initializeToken(d.token)
         onlyEmergencyDisabled
     {
         _deposit(d, msg.sender, msg.sender, msg.value);
@@ -123,11 +123,41 @@ contract MultiVaultFacetDeposit is
         _drainGas();
     }
 
+    function depositByNativeToken(
+        DepositNativeTokenParams memory d,
+        uint256 expectedMinBounty,
+        IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId[] memory pendingWithdrawalIds
+    ) external payable override wethNotBlacklisted nonReentrant {
+        require(msg.value >= d.amount, "WRONG");
+        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
+
+        IWETH(s.weth).deposit{value: d.amount}();
+        _deposit(
+            DepositParams({
+                recipient:d.recipient,
+                token: s.weth,
+                amount: d.amount,
+                expected_evers: d.expected_evers,
+                payload: d.payload
+            }),
+            expectedMinBounty,
+            pendingWithdrawalIds,
+            msg.value - d.amount
+        );
+    }
     function deposit(
         DepositParams memory d,
         uint256 expectedMinBounty,
         IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId[] memory pendingWithdrawalIds
-    ) external payable override tokenNotBlacklisted(d.token, false) nonReentrant {
+    ) external payable override tokenNotBlacklisted(d.token) nonReentrant {
+        _deposit(d, expectedMinBounty, pendingWithdrawalIds, msg.value);
+    }
+    function _deposit(
+        DepositParams memory d,
+        uint256 expectedMinBounty,
+        IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId[] memory pendingWithdrawalIds,
+        uint256 _value
+    ) internal {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         uint amountLeft = d.amount;
@@ -167,7 +197,7 @@ contract MultiVaultFacetDeposit is
         _transferToEverscaleAlien(
             d,
             fee,
-            msg.value,
+            _value,
             msg.sender
         );
 

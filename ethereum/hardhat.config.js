@@ -108,6 +108,7 @@ const hardhatConfig = {
             enabled: true,
             runs: 200
           }
+
         }
       },
       {

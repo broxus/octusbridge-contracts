@@ -26,6 +26,12 @@ interface IMultiVaultFacetDeposit {
         DepositNativeTokenParams memory d
     ) external payable;
 
+    function depositByNativeToken(
+        DepositNativeTokenParams memory d,
+        uint256 expectedMinBounty,
+        IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId[] memory pendingWithdrawalIds
+    ) external payable;
+
     function deposit(
         DepositParams memory d
     ) external payable;
