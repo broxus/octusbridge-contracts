@@ -83,7 +83,7 @@ describe("Test configuration factory", async function () {
         })
         .send({
           from: bridgeOwner.address,
-          amount: locklift.utils.toNano(0.5),
+          amount: locklift.utils.toNano(2),
         });
 
       let ethereumEverscaleEventConfigurationAddress = await factory.methods
@@ -165,7 +165,7 @@ describe("Test configuration factory", async function () {
 
       const networkConfiguration = {
         program: 0,
-        settings: 0,
+        // settings: 0,
         proxy: zeroAddress,
         startTimestamp: 0,
         endTimestamp: 0,
@@ -179,7 +179,7 @@ describe("Test configuration factory", async function () {
         })
         .send({
           from: bridgeOwner.address,
-          amount: locklift.utils.toNano(0.5),
+          amount: locklift.utils.toNano(2),
         });
 
       let solanaEverscaleEventConfigurationAddress = await factory.methods
@@ -257,7 +257,7 @@ describe("Test configuration factory", async function () {
 
       const networkConfiguration = {
         program: 0,
-        settings: 0,
+        // settings: 0,
         eventEmitter: zeroAddress,
         instruction: 0,
         executeInstruction: 0,
@@ -274,7 +274,7 @@ describe("Test configuration factory", async function () {
         })
         .send({
           from: bridgeOwner.address,
-          amount: locklift.utils.toNano(0.5),
+          amount: locklift.utils.toNano(2),
         });
 
       let everscaleSolanaEventConfigurationAddress = await factory.methods
