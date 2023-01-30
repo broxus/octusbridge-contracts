@@ -30,11 +30,11 @@ const multisig = {
 };
 const weth = {
   main: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
-  polygon: '0xB8dD7223edc08A1681c81278D31d644576ECF0b4',
-  bsc: '0xbF13DBbf86B6B1cc02a4169Dde38E16862C77a0a',
-  fantom: '0x5B2329A2b2B5ec2f5F77afb6826F825dcec3A3Fd',
-  milkomeda: '0x43137648a18925c73e0905005a96462daEf684C9',
-  avalanche: '0x7591519D32bB268D828249FcE2AA34A24Bc1B3eA'
+  polygon: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
+  bsc: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+  fantom: '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83',
+  milkomeda: '0x43137648a18925c73e0905005a96462daEf684C9', // SKIPPED
+  avalanche: '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7'
 };
 
 const bridge = {
@@ -52,7 +52,7 @@ const bridge = {
  */
 const hardhatConfig = {
   mocha:{
-    bail:true
+    bail: true
   },
   diamondAbi: {
     // (required) The name of your Diamond ABI.
@@ -108,7 +108,6 @@ const hardhatConfig = {
             enabled: true,
             runs: 200
           }
-
         }
       },
       {
@@ -182,7 +181,6 @@ const hardhatConfig = {
     }
   },
   networks: {
-
     hardhat: {
       allowUnlimitedContractSize: true,
       forking: {

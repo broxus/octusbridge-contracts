@@ -163,7 +163,7 @@ contract MultiVaultFacetWithdraw is
                 withdrawal.token
             );
 
-            _callbackAlienWithdrawal(withdrawal);
+            _callbackAlienWithdrawal(withdrawal, withdrawAmount);
 
             return;
         }
@@ -201,7 +201,7 @@ contract MultiVaultFacetWithdraw is
             );
         }
 
-        _callbackAlienWithdrawalPendingCreated(withdrawal);
+        _callbackAlienWithdrawalPendingCreated(withdrawal, pendingWithdrawalId);
     }
 
     /// @notice Save withdrawal of alien token

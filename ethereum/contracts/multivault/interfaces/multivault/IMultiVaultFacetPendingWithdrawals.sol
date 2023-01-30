@@ -24,7 +24,6 @@ interface IMultiVaultFacetPendingWithdrawals {
 
         uint256 chainId;
         IMultiVaultFacetWithdraw.Callback callback;
-
     }
 
     struct PendingWithdrawalId {

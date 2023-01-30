@@ -7,10 +7,10 @@ import "../../interfaces/multivault/IMultiVaultFacetFees.sol";
 import "../../interfaces/multivault/IMultiVaultFacetTokens.sol";
 import "../../interfaces/multivault/IMultiVaultFacetPendingWithdrawals.sol";
 import "../../interfaces/multivault/IMultiVaultFacetPendingWithdrawalsEvents.sol";
+import "../../interfaces/multivault/IMultiVaultFacetWithdraw.sol";
 import "../../interfaces/IMultiVaultToken.sol";
 import "../../interfaces/IEverscale.sol";
 import "../../interfaces/IERC20.sol";
-import "../../interfaces/multivault/IMultiVaultFacetWithdraw.sol";
 import "../../../interfaces/IWETH.sol";
 
 import "../../libraries/SafeERC20.sol";
@@ -47,7 +47,7 @@ contract MultiVaultFacetDeposit is
         initializeWethToken
         onlyEmergencyDisabled
     {
-        require(msg.value >= d.amount, "WRONG");
+        require(msg.value >= d.amount, "Msg value to low");
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         IWETH(s.weth).deposit{value: d.amount}();
@@ -128,7 +128,7 @@ contract MultiVaultFacetDeposit is
         uint256 expectedMinBounty,
         IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId[] memory pendingWithdrawalIds
     ) external payable override wethNotBlacklisted nonReentrant {
-        require(msg.value >= d.amount, "WRONG");
+        require(msg.value >= d.amount, "Msg value to low");
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         IWETH(s.weth).deposit{value: d.amount}();
@@ -187,13 +187,16 @@ contract MultiVaultFacetDeposit is
                 pendingWithdrawal.amount - pendingWithdrawal.bounty
             );
 
-            _callbackAlienWithdrawal(IMultiVaultFacetWithdraw.AlienWithdrawalParams({
-                token: pendingWithdrawal.token,
-                amount: pendingWithdrawal.amount,
-                recipient: pendingWithdrawalId.recipient,
-                chainId: pendingWithdrawal.chainId,
-                callback: pendingWithdrawal.callback
-            }));
+            _callbackAlienWithdrawal(
+                IMultiVaultFacetWithdraw.AlienWithdrawalParams({
+                    token: pendingWithdrawal.token,
+                    amount: pendingWithdrawal.amount,
+                    recipient: pendingWithdrawalId.recipient,
+                    chainId: pendingWithdrawal.chainId,
+                    callback: pendingWithdrawal.callback
+                }),
+                pendingWithdrawal.amount
+            );
 
         }
 

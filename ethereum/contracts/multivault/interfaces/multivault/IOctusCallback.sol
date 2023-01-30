@@ -5,7 +5,15 @@ import "./IMultiVaultFacetWithdraw.sol";
 
 
 interface IOctusCallback {
-    function onNativeWithdrawal(IMultiVaultFacetWithdraw.NativeWithdrawalParams memory payload) external;
-    function onAlienWithdrawal(IMultiVaultFacetWithdraw.AlienWithdrawalParams memory payload) external;
-    function onAlienWithdrawalPendingCreated(IMultiVaultFacetWithdraw.AlienWithdrawalParams memory payload) external;
+    function onNativeWithdrawal(
+        IMultiVaultFacetWithdraw.NativeWithdrawalParams memory payload
+    ) external;
+    function onAlienWithdrawal(
+        IMultiVaultFacetWithdraw.AlienWithdrawalParams memory payload,
+        uint256 withdrawAmount
+    ) external;
+    function onAlienWithdrawalPendingCreated(
+        IMultiVaultFacetWithdraw.AlienWithdrawalParams memory _payload,
+        uint pendingWithdrawalId
+    ) external;
 }
