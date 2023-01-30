@@ -4,7 +4,6 @@ pragma solidity 0.8.0;
 
 import "../../interfaces/multivault/IMultiVaultFacetWithdraw.sol";
 import "../../interfaces/multivault/IOctusCallback.sol";
-import "hardhat/console.sol";
 
 abstract contract MultiVaultHelperCallback {
     modifier checkCallbackRecipient(address recipient) {
@@ -49,7 +48,7 @@ abstract contract MultiVaultHelperCallback {
         IMultiVaultFacetWithdraw.AlienWithdrawalParams memory withdrawal
     ) checkCallbackRecipient(withdrawal.callback.recipient) internal {
         bytes memory data = abi.encodeWithSelector(
-            IOctusCallback.onAlienWithdrawal.selector,
+            IOctusCallback.onAlienWithdrawalPendingCreated.selector,
             withdrawal
         );
 
@@ -65,7 +64,7 @@ abstract contract MultiVaultHelperCallback {
         bytes memory data,
         bool strict
     ) internal {
-        (bool success, bytes memory data) = recipient.call(data);
+        (bool success, ) = recipient.call(data);
 
         if (strict) require(success);
     }

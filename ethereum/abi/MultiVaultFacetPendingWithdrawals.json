@@ -467,6 +467,33 @@
             "internalType": "enum IMultiVaultFacetPendingWithdrawals.ApproveStatus",
             "name": "approveStatus",
             "type": "uint8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "chainId",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "recipient",
+                "type": "address"
+              },
+              {
+                "internalType": "bytes",
+                "name": "payload",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bool",
+                "name": "strict",
+                "type": "bool"
+              }
+            ],
+            "internalType": "struct IMultiVaultFacetWithdraw.Callback",
+            "name": "callback",
+            "type": "tuple"
           }
         ],
         "internalType": "struct IMultiVaultFacetPendingWithdrawals.PendingWithdrawalParams",

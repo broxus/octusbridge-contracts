@@ -10,6 +10,7 @@ import "../../interfaces/multivault/IMultiVaultFacetPendingWithdrawalsEvents.sol
 import "../../interfaces/IMultiVaultToken.sol";
 import "../../interfaces/IEverscale.sol";
 import "../../interfaces/IERC20.sol";
+import "../../interfaces/multivault/IMultiVaultFacetWithdraw.sol";
 import "../../../interfaces/IWETH.sol";
 
 import "../../libraries/SafeERC20.sol";
@@ -21,8 +22,7 @@ import "../helpers/MultiVaultHelperReentrancyGuard.sol";
 import "../helpers/MultiVaultHelperTokens.sol";
 import "../helpers/MultiVaultHelperFee.sol";
 import "../helpers/MultiVaultHelperPendingWithdrawal.sol";
-import "hardhat/console.sol";
-
+import "../helpers/MultiVaultHelperCallback.sol";
 
 
 contract MultiVaultFacetDeposit is
@@ -31,7 +31,8 @@ contract MultiVaultFacetDeposit is
     MultiVaultHelperReentrancyGuard,
     MultiVaultHelperTokens,
     MultiVaultHelperPendingWithdrawal,
-    IMultiVaultFacetDeposit
+    IMultiVaultFacetDeposit,
+    MultiVaultHelperCallback
 {
     using SafeERC20 for IERC20;
 
@@ -58,9 +59,8 @@ contract MultiVaultFacetDeposit is
             expected_evers: d.expected_evers,
             payload: d.payload
             }),
-            address(this),
-            msg.sender,
-            msg.value - d.amount
+            msg.value - d.amount,
+            address(this)
         );
     }
 
@@ -75,18 +75,18 @@ contract MultiVaultFacetDeposit is
         initializeToken(d.token)
         onlyEmergencyDisabled
     {
-        _deposit(d, msg.sender, msg.sender, msg.value);
+        _deposit(d, msg.value, msg.sender);
     }
     /// @notice Transfer tokens to the Everscale. Works both for native and alien tokens.
     /// Approve is required only for alien tokens deposit.
     /// @param d Deposit parameters
     function _deposit(
         DepositParams memory d,
-        address _tokens_sender,
-        address _original_sender,
-        uint256 _value
+        uint256 _value,
+        address tokens_owner
     ) internal {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
+
         uint fee = _calculateMovementFee(
             d.amount,
             d.token,
@@ -100,23 +100,23 @@ contract MultiVaultFacetDeposit is
 
         if (isNative) {
             IMultiVaultToken(token).burn(
-                _tokens_sender,
+                msg.sender,
                 d.amount
             );
 
             d.amount -= fee;
 
-            _transferToEverscaleNative(d, fee, _value, _original_sender);
+            _transferToEverscaleNative(d, fee, msg.value);
         } else {
             IERC20(token).safeTransferFrom(
-                _tokens_sender,
+                tokens_owner,
                 address(this),
                 d.amount
             );
 
             d.amount -= fee;
 
-            _transferToEverscaleAlien(d, fee, _value, _original_sender);
+            _transferToEverscaleAlien(d, fee, _value);
         }
 
         _increaseTokenFee(d.token, fee);
@@ -150,6 +150,7 @@ contract MultiVaultFacetDeposit is
         uint256 expectedMinBounty,
         IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId[] memory pendingWithdrawalIds
     ) external payable override tokenNotBlacklisted(d.token) nonReentrant {
+        IERC20(d.token).safeTransferFrom(msg.sender, address(this), d.amount);
         _deposit(d, expectedMinBounty, pendingWithdrawalIds, msg.value);
     }
     function _deposit(
@@ -163,7 +164,6 @@ contract MultiVaultFacetDeposit is
         uint amountLeft = d.amount;
         uint amountPlusBounty = d.amount;
 
-        IERC20(d.token).safeTransferFrom(msg.sender, address(this), d.amount);
 
         for (uint i = 0; i < pendingWithdrawalIds.length; i++) {
             IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId memory pendingWithdrawalId = pendingWithdrawalIds[i];
@@ -186,6 +186,15 @@ contract MultiVaultFacetDeposit is
                 pendingWithdrawalId.recipient,
                 pendingWithdrawal.amount - pendingWithdrawal.bounty
             );
+
+            _callbackAlienWithdrawal(IMultiVaultFacetWithdraw.AlienWithdrawalParams({
+                token: pendingWithdrawal.token,
+                amount: pendingWithdrawal.amount,
+                recipient: pendingWithdrawalId.recipient,
+                chainId: pendingWithdrawal.chainId,
+                callback: pendingWithdrawal.callback
+            }));
+
         }
 
         require(amountPlusBounty - d.amount >= expectedMinBounty);
@@ -197,8 +206,7 @@ contract MultiVaultFacetDeposit is
         _transferToEverscaleAlien(
             d,
             fee,
-            _value,
-            msg.sender
+            _value
         );
 
         _increaseTokenFee(d.token, fee);

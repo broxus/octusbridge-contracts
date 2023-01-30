@@ -18,7 +18,6 @@ import "../helpers/MultiVaultHelperTokens.sol";
 import "../helpers/MultiVaultHelperPendingWithdrawal.sol";
 import "../helpers/MultiVaultHelperTokenBalance.sol";
 import "../helpers/MultiVaultHelperCallback.sol";
-import "hardhat/console.sol";
 
 
 contract MultiVaultFacetWithdraw is
@@ -152,7 +151,6 @@ contract MultiVaultFacetWithdraw is
             withdrawalPeriod
         );
 
-
         // Token balance sufficient and none of the limits are violated
         if (withdrawal.amount <= _vaultTokenBalance(withdrawal.token) && withdrawalLimitsPassed) {
 
@@ -183,7 +181,9 @@ contract MultiVaultFacetWithdraw is
             amount: withdrawAmount,
             bounty: msg.sender == withdrawal.recipient ? bounty : 0,
             timestamp: _event.eventTimestamp,
-            approveStatus: IMultiVaultFacetPendingWithdrawals.ApproveStatus.NotRequired
+            approveStatus: IMultiVaultFacetPendingWithdrawals.ApproveStatus.NotRequired,
+            chainId: withdrawal.chainId,
+            callback: withdrawal.callback
         });
 
         emit PendingWithdrawalCreated(
