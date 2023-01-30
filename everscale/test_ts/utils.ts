@@ -215,7 +215,7 @@ const setupEthereumEverscaleEventConfiguration = async (
         },
       },
       publicKey: signer.publicKey,
-      value: locklift.utils.toNano(1),
+      value: locklift.utils.toNano(2),
     });
 
   await logContract(
@@ -348,7 +348,7 @@ const setupSolanaEverscaleEventConfiguration = async (
     })
     .send({
       from: owner.address,
-      amount: locklift.utils.toNano(0.5),
+      amount: locklift.utils.toNano(2),
     });
 
   let solanaEverscaleEventConfigurationAddress = await factory.methods
@@ -777,7 +777,7 @@ const setupEverscaleEthereumEventConfiguration = async (
         },
       },
       publicKey: signer.publicKey,
-      value: locklift.utils.toNano(1),
+      value: locklift.utils.toNano(2),
     });
 
   await logContract(
@@ -923,7 +923,7 @@ const setupEverscaleSolanaEventConfiguration = async (
     })
     .send({
       from: owner.address,
-      amount: locklift.utils.toNano(0.5),
+      amount: locklift.utils.toNano(2),
     });
 
   let everscaleSolanaEventConfigurationAddress = await everFactory.methods

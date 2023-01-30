@@ -33,10 +33,8 @@ contract EverscaleEthereumEventConfiguration is
     constructor(
         address _owner,
         TvmCell _meta
-    ) public checkPubKey {
+    ) public checkPubKey reserveTargetBalance() {
         tvm.accept();
-
-        _reserveTargetBalance();
 
         setOwnership(_owner);
 
