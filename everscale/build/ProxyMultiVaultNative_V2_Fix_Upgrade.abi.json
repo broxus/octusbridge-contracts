@@ -12,6 +12,24 @@
 			]
 		},
 		{
+			"name": "apiVersion",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"value0","type":"uint8"}
+			]
+		},
+		{
+			"name": "getConfiguration",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"evmConfigurations","type":"address[]"},{"name":"deployWalletValue","type":"uint128"}],"name":"value0","type":"tuple"}
+			]
+		},
+		{
 			"name": "transferOwnership",
 			"inputs": [
 				{"name":"newOwner","type":"address"}
@@ -34,19 +52,19 @@
 			]
 		},
 		{
-			"name": "_randomNonce",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"_randomNonce","type":"uint256"}
-			]
-		},
-		{
 			"name": "owner",
 			"inputs": [
 			],
 			"outputs": [
 				{"name":"owner","type":"address"}
+			]
+		},
+		{
+			"name": "_randomNonce",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"_randomNonce","type":"uint256"}
 			]
 		}
 	],
@@ -68,8 +86,8 @@
 		{"name":"_pubkey","type":"uint256"},
 		{"name":"_timestamp","type":"uint64"},
 		{"name":"_constructorFlag","type":"bool"},
-		{"name":"_randomNonce","type":"uint256"},
 		{"name":"owner","type":"address"},
+		{"name":"_randomNonce","type":"uint256"},
 		{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"evmConfigurations","type":"address[]"},{"name":"deployWalletValue","type":"uint128"}],"name":"config","type":"tuple"},
 		{"name":"api_version","type":"uint8"}
 	]

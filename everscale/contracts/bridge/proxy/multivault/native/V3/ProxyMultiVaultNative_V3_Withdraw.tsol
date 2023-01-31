@@ -52,7 +52,7 @@ abstract contract ProxyMultiVaultNative_V3_Withdraw is
             ) = abi.decode(payload, (uint160, uint256, EVMCallback));
 
             _deployEVMEvent(
-                msg.sender,
+                tokenRoot,
                 chainId,
                 amount,
                 recipient,

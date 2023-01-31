@@ -21,11 +21,12 @@ contract ProxyMultiVaultNative_V3 is ProxyMultiVaultNative_V3_Deposit, CheckPubK
 
     function upgrade(
         TvmCell code
-    ) external onlyOwner cashBack {
+    ) external onlyOwner {
         TvmCell data = abi.encode(
             evmConfiguration,
             solanaConfiguration,
             owner,
+            api_version,
             _randomNonce
         );
 
@@ -36,18 +37,22 @@ contract ProxyMultiVaultNative_V3 is ProxyMultiVaultNative_V3_Deposit, CheckPubK
     }
 
     function onCodeUpgrade(TvmCell data) private {
+        tvm.resetStorage();
+
         (
             IProxyMultiVaultNative_V1.Configuration config_,
             address owner_,
+            uint8 api_version_,
             uint _randomNonce_
         ) = abi.decode(
             data,
-            (IProxyMultiVaultNative_V1.Configuration, address, uint)
+            (IProxyMultiVaultNative_V1.Configuration, address, uint8, uint)
         );
 
         evmConfiguration.evmConfigurations = config_.evmConfigurations;
         evmConfiguration.everscaleConfiguration = config_.everscaleConfiguration;
 
+        api_version = api_version_ + 1;
         setOwnership(owner_);
         _randomNonce = _randomNonce_;
     }

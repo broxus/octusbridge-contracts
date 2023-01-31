@@ -26,7 +26,7 @@ abstract contract ProxyMultiVaultNative_V3_Deposit is
         require(_isArrayContainsAddress(evmConfiguration.evmConfigurations, msg.sender));
 
         (
-            address token,
+            address token_wallet,
             uint128 amount,
             address recipient,
             TvmCell payload
@@ -35,8 +35,8 @@ abstract contract ProxyMultiVaultNative_V3_Deposit is
             (address, uint128, address, TvmCell)
         );
 
-        _mintTokens(
-            token,
+        _transferTokens(
+            token_wallet,
             amount,
             recipient,
             remainingGasTo,
@@ -55,7 +55,7 @@ abstract contract ProxyMultiVaultNative_V3_Deposit is
         require(solanaConfiguration.solanaConfiguration == msg.sender);
 
         (
-            address token,
+            address token_wallet,
             uint128 amount,
             address recipient
         ) = abi.decode(
@@ -65,8 +65,8 @@ abstract contract ProxyMultiVaultNative_V3_Deposit is
 
         TvmCell empty;
 
-        _mintTokens(
-            token,
+        _transferTokens(
+            token_wallet,
             amount,
             recipient,
             remainingGasTo,

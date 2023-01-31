@@ -53,6 +53,15 @@
 			]
 		},
 		{
+			"name": "apiVersion",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"value0","type":"uint8"}
+			]
+		},
+		{
 			"name": "getConfiguration",
 			"inputs": [
 				{"name":"answerId","type":"uint32"}
@@ -172,6 +181,7 @@
 		{"name":"owner","type":"address"},
 		{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"evmConfigurations","type":"address[]"}],"name":"evmConfiguration","type":"tuple"},
 		{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"solanaConfiguration","type":"address"}],"name":"solanaConfiguration","type":"tuple"},
+		{"name":"api_version","type":"uint8"},
 		{"name":"_randomNonce","type":"uint256"}
 	]
 }

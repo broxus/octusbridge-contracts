@@ -8,18 +8,20 @@ import "../../../../utils/TransferUtils.tsol";
 import "@broxus/contracts/contracts/access/InternalOwner.tsol";
 import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
+import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 
-contract ProxyMultiVaultNative_V2_Fix_Upgrade is TransferUtils, RandomNonce, InternalOwner {
+contract ProxyMultiVaultNative_V2_Fix_Upgrade is InternalOwner, TransferUtils, RandomNonce {
     IProxyMultiVaultNative_V1.Configuration config;
     uint8 api_version;
 
     function upgrade(
         TvmCell code
-    ) external onlyOwner cashBack {
+    ) external onlyOwner {
         TvmCell data = abi.encode(
             config,
             owner,
+            api_version,
             _randomNonce
         );
 
@@ -27,6 +29,21 @@ contract ProxyMultiVaultNative_V2_Fix_Upgrade is TransferUtils, RandomNonce, Int
         tvm.setCurrentCode(code);
 
         onCodeUpgrade(data);
+    }
+
+    /// @notice Get current contract API version.
+    /// Each time contract is upgraded, API version is incremented.
+    /// @return Current API version
+    function apiVersion() external view responsible returns(uint8) {
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} api_version;
+    }
+
+    function getConfiguration()
+        external
+        view
+        responsible
+    returns (IProxyMultiVaultNative_V1.Configuration) {
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} config;
     }
 
     function onCodeUpgrade(TvmCell data) private {
