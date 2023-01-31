@@ -24,6 +24,8 @@ interface IProxyMultiVaultAlien_V6 is IEVMCallback, INetworks {
         TvmCell alienTokenWalletPlatformCode;
     }
 
+    function apiVersion() external view responsible returns(uint8);
+
     // Settings
     function getConfiguration() external view responsible returns (EVMConfiguration, SolanaConfiguration);
     function setEVMConfiguration(EVMConfiguration _config, address gasBackAddress) external;
@@ -92,9 +94,10 @@ interface IProxyMultiVaultAlien_V6 is IEVMCallback, INetworks {
 
     function withdrawTokensToSolanaByMergePool(
         uint nonce,
-        address remainingGasTo,
+        address token,
         uint128 amount,
         uint256 recipient,
+        address remainingGasTo,
         IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
     ) external;
 

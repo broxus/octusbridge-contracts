@@ -110,7 +110,7 @@
 			]
 		},
 		{
-			"name": "onEventConfirmedExtended",
+			"name": "onSolanaEventConfirmedExtended",
 			"inputs": [
 				{"components":[{"components":[{"name":"accountSeed","type":"uint128"},{"name":"slot","type":"uint64"},{"name":"blockTime","type":"uint64"},{"name":"txSignature","type":"string"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"eventInitData","type":"tuple"},
 				{"name":"_meta","type":"cell"},

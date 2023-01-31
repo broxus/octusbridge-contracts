@@ -47,7 +47,7 @@ abstract contract ProxyMultiVaultNative_V3_Deposit is
     /// @notice Handles alien token transfer from Solana. Token address is derived automatically and MUST
     /// be deployed before. See note on `deployAlienToken`
     /// @param remainingGasTo Gas back address
-    function onEventConfirmedExtended(
+    function onSolanaEventConfirmedExtended(
         ISolanaEverscaleEvent.SolanaEverscaleEventInitData,
         TvmCell meta,
         address remainingGasTo

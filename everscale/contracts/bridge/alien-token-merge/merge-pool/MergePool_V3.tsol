@@ -2,19 +2,19 @@ pragma ever-solidity >= 0.39.0;
 pragma AbiHeader pubkey;
 
 
-import "@broxus/contracts/contracts/access/InternalOwner.tsol";
-import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
-import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
-
 import "./../../../utils/TransferUtils.tsol";
 import "./../../interfaces/alien-token-merge/merge-pool/IMergePool_V2.tsol";
 import "./../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V6.tsol";
 import "./../../interfaces/event-contracts/multivault/evm/IEVMCallback.tsol";
+import "./../../interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
 import "./../../interfaces/proxy/INetworks.tsol";
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensBurnCallback.tsol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.tsol";
-import "../../interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
+
+import "@broxus/contracts/contracts/access/InternalOwner.tsol";
+import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
+import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 
 /// @title Merge pool contract
@@ -301,9 +301,10 @@ contract MergePool_V3 is
                     flag: MsgFlag.ALL_NOT_RESERVED
                 }(
                     _randomNonce,
-                    remainingGasTo,
+                    targetToken,
                     amount,
                     recipient,
+                    remainingGasTo,
                     executeAccounts
                 );
             } else if (network == Network.EVM) {

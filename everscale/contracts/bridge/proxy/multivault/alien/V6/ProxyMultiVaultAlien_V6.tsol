@@ -31,6 +31,13 @@ contract ProxyMultiVaultAlien_V6 is
         });
     }
 
+    /// @notice Get current contract API version.
+    /// Each time contract is upgraded, API version is incremented.
+    /// @return Current API version
+    function apiVersion() external override view responsible returns(uint8) {
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} api_version;
+    }
+
     function upgrade(
         TvmCell code
     ) external onlyOwner {
@@ -57,7 +64,7 @@ contract ProxyMultiVaultAlien_V6 is
 
         (
             IProxyMultiVaultAlien_V1.Configuration config_,
-            , // api_version
+            uint8 api_version_,
             uint _randomNonce_,
             address owner_,
 
@@ -75,11 +82,12 @@ contract ProxyMultiVaultAlien_V6 is
         );
 
         evmConfiguration.alienTokenRootCode = config_.alienTokenRootCode;
-        evmConfiguration.alienTokenWalletCode = config_.alienTokenRootCode;
+        evmConfiguration.alienTokenWalletCode = config_.alienTokenWalletCode;
         evmConfiguration.alienTokenWalletPlatformCode = config_.alienTokenWalletPlatformCode;
         evmConfiguration.everscaleConfiguration = config_.everscaleConfiguration;
         evmConfiguration.evmConfigurations = config_.evmConfigurations;
 
+        api_version = api_version_ + 1;
         _randomNonce = _randomNonce_;
         owner = owner_;
 

@@ -12,6 +12,15 @@
 			]
 		},
 		{
+			"name": "apiVersion",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"value0","type":"uint8"}
+			]
+		},
+		{
 			"name": "upgrade",
 			"inputs": [
 				{"name":"code","type":"cell"}
@@ -95,9 +104,10 @@
 			"name": "withdrawTokensToSolanaByMergePool",
 			"inputs": [
 				{"name":"nonce","type":"uint256"},
-				{"name":"remainingGasTo","type":"address"},
+				{"name":"token","type":"address"},
 				{"name":"amount","type":"uint128"},
 				{"name":"recipient","type":"uint256"},
+				{"name":"remainingGasTo","type":"address"},
 				{"components":[{"name":"account","type":"uint256"},{"name":"readOnly","type":"bool"},{"name":"isSigner","type":"bool"}],"name":"executeAccounts","type":"tuple[]"}
 			],
 			"outputs": [
@@ -143,6 +153,16 @@
 			"name": "onEventConfirmedExtended",
 			"inputs": [
 				{"components":[{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"},{"name":"chainId","type":"uint32"}],"name":"value0","type":"tuple"},
+				{"name":"meta","type":"cell"},
+				{"name":"remainingGasTo","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "onSolanaEventConfirmedExtended",
+			"inputs": [
+				{"components":[{"components":[{"name":"accountSeed","type":"uint128"},{"name":"slot","type":"uint64"},{"name":"blockTime","type":"uint64"},{"name":"txSignature","type":"string"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"value0","type":"tuple"},
 				{"name":"meta","type":"cell"},
 				{"name":"remainingGasTo","type":"address"}
 			],
@@ -389,6 +409,7 @@
 		{"name":"owner","type":"address"},
 		{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"solanaConfiguration","type":"address"},{"name":"alienTokenRootCode","type":"cell"},{"name":"alienTokenWalletCode","type":"cell"},{"name":"alienTokenWalletPlatformCode","type":"cell"}],"name":"solanaConfiguration","type":"tuple"},
 		{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"evmConfigurations","type":"address[]"},{"name":"alienTokenRootCode","type":"cell"},{"name":"alienTokenWalletCode","type":"cell"},{"name":"alienTokenWalletPlatformCode","type":"cell"}],"name":"evmConfiguration","type":"tuple"},
+		{"name":"api_version","type":"uint8"},
 		{"name":"manager","type":"address"},
 		{"name":"mergeRouter","type":"cell"},
 		{"name":"mergePool","type":"cell"},

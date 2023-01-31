@@ -1,5 +1,7 @@
 pragma ever-solidity >= 0.39.0;
+pragma AbiHeader time;
 pragma AbiHeader pubkey;
+pragma AbiHeader expire;
 
 
 import "@broxus/contracts/contracts/access/InternalOwner.tsol";

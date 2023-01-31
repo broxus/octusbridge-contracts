@@ -1,7 +1,7 @@
 {
 	"ABI version": 2,
 	"version": "2.2",
-	"header": ["pubkey", "time"],
+	"header": ["pubkey", "time", "expire"],
 	"functions": [
 		{
 			"name": "constructor",
@@ -82,6 +82,13 @@
 			"name": "reject",
 			"inputs": [
 				{"name":"voteReceiver","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "close",
+			"inputs": [
 			],
 			"outputs": [
 			]

@@ -251,7 +251,7 @@ contract SolanaEverscaleEventConfiguration is
     /// @param eventInitData Solana event data
     /// @param _meta Arbitrary meta cell
     /// @param gasBackAddress Gas back address
-    function onEventConfirmedExtended(
+    function onSolanaEventConfirmedExtended(
         ISolanaEverscaleEvent.SolanaEverscaleEventInitData eventInitData,
         TvmCell _meta,
         address gasBackAddress
@@ -268,7 +268,7 @@ contract SolanaEverscaleEventConfiguration is
             ErrorCodes.SENDER_NOT_EVENT_CONTRACT
         );
 
-        ISolanaEverscaleProxyExtended(networkConfiguration.proxy).onEventConfirmedExtended{
+        ISolanaEverscaleProxyExtended(networkConfiguration.proxy).onSolanaEventConfirmedExtended{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, _meta, gasBackAddress);
     }

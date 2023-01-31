@@ -22,4 +22,6 @@ interface IEverscaleSolanaEvent is IBasicEvent {
         bool readOnly;
         bool isSigner;
     }
+
+    function close() external view;
 }

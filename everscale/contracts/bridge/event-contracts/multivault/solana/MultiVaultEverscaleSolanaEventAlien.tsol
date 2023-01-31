@@ -1,6 +1,7 @@
 pragma ever-solidity >= 0.39.0;
 pragma AbiHeader time;
 pragma AbiHeader pubkey;
+pragma AbiHeader expire;
 
 
 import "./../../../interfaces/event-contracts/multivault/solana/IMultiVaultEverscaleSolanaEventAlien.tsol";
@@ -14,7 +15,10 @@ import "./../../base/solana/EverscaleSolanaBaseEvent.tsol";
 /// Before switching into the `Pending` status, event contract must perform
 /// the following actions:
 /// - Obtain the `token` token source.
-contract MultiVaultEverscaleSolanaEventAlien is EverscaleSolanaBaseEvent, IMultiVaultEverscaleSolanaEventAlien {
+contract MultiVaultEverscaleSolanaEventAlien is
+    EverscaleSolanaBaseEvent,
+    IMultiVaultEverscaleSolanaEventAlien
+{
     address proxy;
     address token;
     address remainingGasTo;
@@ -100,7 +104,7 @@ contract MultiVaultEverscaleSolanaEventAlien is EverscaleSolanaBaseEvent, IMulti
         );
     }
 
-    function gasBackAddress() internal view returns(address) {
+    function gasBackAddress() internal override view returns(address) {
         return remainingGasTo;
     }
 

@@ -8,13 +8,13 @@ import "./../../../../interfaces/event-contracts/IEverscaleEthereumEvent.tsol";
 import "./../../../../interfaces/event-configuration-contracts/IEverscaleSolanaEventConfiguration.tsol";
 import "./../../../../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.tsol";
 
-import "./ProxyMultiVaultAlien_V6_Deposit.tsol";
+import "./ProxyMultiVaultAlien_V6_Deposit_EVM.tsol";
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensBurnCallback.tsol";
 
 
 abstract contract ProxyMultiVaultAlien_V6_Withdraw is
-    ProxyMultiVaultAlien_V6_Deposit,
+    ProxyMultiVaultAlien_V6_Deposit_EVM,
     IAcceptTokensBurnCallback
 {
     /// @notice Handles token burn.
@@ -35,12 +35,13 @@ abstract contract ProxyMultiVaultAlien_V6_Withdraw is
             (
                 uint256 recipient,
                 IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
-            ) = abi.decode(payload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[]));
+            ) = abi.decode(burnPayload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[]));
 
             _deploySolanaEvent(
-                remainingGasTo,
+                msg.sender,
                 amount,
                 recipient,
+                remainingGasTo,
                 executeAccounts
             );
         } else if (network == Network.EVM) {
@@ -60,14 +61,15 @@ abstract contract ProxyMultiVaultAlien_V6_Withdraw is
     }
 
     function _deploySolanaEvent(
-        address remainingGasTo,
+        address token,
         uint128 amount,
         uint256 recipient,
+        address remainingGasTo,
         IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
     ) internal view {
         TvmCell eventData = abi.encode(
             address(this), // Proxy address, used in event contract for validating token root
-            msg.sender, // Everscale token root address
+            token, // Everscale token root address
             remainingGasTo, // Remaining gas receiver (on event contract destroy)
             amount, // Amount of tokens to withdraw
             recipient // Recipient address in Solana network

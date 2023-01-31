@@ -1,6 +1,7 @@
 pragma ever-solidity >= 0.39.0;
 pragma AbiHeader time;
 pragma AbiHeader pubkey;
+pragma AbiHeader expire;
 
 
 import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V6.tsol";
@@ -240,7 +241,7 @@ contract MultiVaultSolanaEverscaleEventAlien is
             payload
         );
 
-        ISolanaEverscaleProxyExtended(eventInitData.configuration).onEventConfirmedExtended{
+        ISolanaEverscaleProxyExtended(eventInitData.configuration).onSolanaEventConfirmedExtended{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, metaData, initializer);
     }

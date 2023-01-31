@@ -114,6 +114,26 @@ contract EverscaleSolanaBaseEvent is BaseEvent, IEverscaleSolanaEvent {
         }
     }
 
+    function gasBackAddress() internal virtual view returns(address) {
+        return initializer;
+    }
+
+    function close() external override virtual view {
+        require(
+            status() != Status.Pending || now > createdAt + FORCE_CLOSE_TIMEOUT,
+            ErrorCodes.WRONG_STATUS
+        );
+
+        address gasBackAddress_ = gasBackAddress();
+
+        require(
+            msg.sender == gasBackAddress_,
+            ErrorCodes.SENDER_IS_NOT_EVENT_OWNER
+        );
+
+        transferAll(gasBackAddress_);
+    }
+
     /*
         @dev Get event details
         @returns _initData Init data

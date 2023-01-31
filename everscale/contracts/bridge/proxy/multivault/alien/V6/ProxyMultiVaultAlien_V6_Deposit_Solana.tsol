@@ -1,0 +1,42 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma ever-solidity >= 0.62.0;
+
+import "./ProxyMultiVaultAlien_V6_Token.tsol";
+
+import "./../../../../interfaces/event-contracts/ISolanaEverscaleEvent.tsol";
+import "./../../../../interfaces/proxy/ISolanaEverscaleProxyExtended.tsol";
+
+abstract contract ProxyMultiVaultAlien_V6_Deposit_Solana is
+    ProxyMultiVaultAlien_V6_Token,
+    ISolanaEverscaleProxyExtended
+{
+    /// @notice Handles alien token transfer from Solana. Token address is derived automatically and MUST
+    /// be deployed before. See note on `deployAlienToken`
+    /// @param remainingGasTo Gas back address
+    function onSolanaEventConfirmedExtended(
+        ISolanaEverscaleEvent.SolanaEverscaleEventInitData,
+        TvmCell meta,
+        address remainingGasTo
+    ) external override reserveAtLeastTargetBalance {
+        require(solanaConfiguration.solanaConfiguration == msg.sender);
+
+        (
+            address token,
+            uint128 amount,
+            address recipient
+        ) = abi.decode(
+            meta,
+            (address, uint128, address)
+        );
+
+        TvmCell empty;
+
+        _mintTokens(
+            token,
+            amount,
+            recipient,
+            remainingGasTo,
+            empty
+        );
+    }
+}

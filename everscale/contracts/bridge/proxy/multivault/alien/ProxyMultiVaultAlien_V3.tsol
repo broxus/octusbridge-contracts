@@ -33,7 +33,7 @@ contract ProxyMultiVaultAlien_V3 is
     IProxyMultiVaultAlien_V3
 {
     Configuration config;
-    uint8 api_version;
+    uint8 api_version = 0;
 
     address public manager;
     TvmCell mergeRouter;

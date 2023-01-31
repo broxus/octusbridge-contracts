@@ -38,6 +38,13 @@
 			]
 		},
 		{
+			"name": "close",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "getDetails",
 			"inputs": [
 				{"name":"answerId","type":"uint32"}

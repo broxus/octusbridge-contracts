@@ -1,9 +1,11 @@
 pragma ever-solidity >= 0.39.0;
 
 import "../../bridge/interfaces/event-contracts/multivault/evm/IEVMCallback.tsol";
+import "../../bridge/interfaces/proxy/INetworks.tsol";
+import "../../bridge/interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
 
 
-contract MergePoolCellEncoder is IEVMCallback {
+contract MergePoolCellEncoder is IEVMCallback, INetworks {
     function encodeMergePoolBurnSwapPayload(
         address targetToken
     ) public pure returns (TvmCell) {
@@ -16,12 +18,30 @@ contract MergePoolCellEncoder is IEVMCallback {
         );
     }
 
-    function encodeMergePoolBurnWithdrawPayload(
+    function encodeMergePoolBurnWithdrawPayloadEthereum(
         address targetToken,
         uint160 recipient,
         EVMCallback callback
     ) public pure returns (TvmCell) {
-        TvmCell operationPayload = abi.encode(recipient, callback);
+        TvmCell withdrawPayload = abi.encode(recipient, callback);
+
+        TvmCell operationPayload = abi.encode(Network.EVM, withdrawPayload);
+
+        return abi.encode(
+            uint8(0),
+            targetToken,
+            operationPayload
+        );
+    }
+
+    function encodeMergePoolBurnWithdrawPayloadSolana(
+        address targetToken,
+        uint256 recipient,
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
+    ) public pure returns (TvmCell) {
+        TvmCell withdrawPayload = abi.encode(recipient, executeAccounts);
+
+        TvmCell operationPayload = abi.encode(Network.Solana, withdrawPayload);
 
         return abi.encode(
             uint8(0),

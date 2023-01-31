@@ -1,0 +1,43 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma ever-solidity >= 0.62.0;
+
+
+import "./ProxyMultiVaultAlien_V6_Deposit_Solana.tsol";
+
+import "./../../../../interfaces/event-contracts/IEthereumEverscaleEvent.tsol";
+import "./../../../../interfaces/proxy/IEthereumEverscaleProxyExtended.tsol";
+
+
+abstract contract ProxyMultiVaultAlien_V6_Deposit_EVM is
+    ProxyMultiVaultAlien_V6_Deposit_Solana,
+    IEthereumEverscaleProxyExtended
+{
+    /// @notice Handles alien token transfer from EVM. Token address is derived automatically and MUST
+    /// be deployed before. See note on `deployAlienToken`
+    /// @param remainingGasTo Gas back address
+    function onEventConfirmedExtended(
+        IEthereumEverscaleEvent.EthereumEverscaleEventInitData,
+        TvmCell meta,
+        address remainingGasTo
+    ) external override reserveAtLeastTargetBalance {
+        require(_isArrayContainsAddress(evmConfiguration.evmConfigurations, msg.sender));
+
+        (
+            address token,
+            uint128 amount,
+            address recipient,
+            TvmCell payload
+        ) = abi.decode(
+            meta,
+            (address, uint128, address, TvmCell)
+        );
+
+        _mintTokens(
+            token,
+            amount,
+            recipient,
+            remainingGasTo,
+            payload
+        );
+    }
+}

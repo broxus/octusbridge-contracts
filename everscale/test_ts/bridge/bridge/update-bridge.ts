@@ -1,12 +1,12 @@
-const { setupBridge, setupRelays } = require("../../utils");
 
 import { expect } from "chai";
 import { Contract } from "locklift";
-import { FactorySource } from "../../../build/factorySource";
+import {BridgeAbi} from "../../../build/factorySource";
 import { Account } from "everscale-standalone-client/nodejs";
+import {setupBridge, setupRelays} from "../../utils/bridge";
 const { zeroAddress } = require("locklift");
 
-let bridge: Contract<FactorySource["Bridge"]>;
+let bridge: Contract<BridgeAbi>;
 let bridgeOwner: Account;
 
 describe("Test bridge update", async function () {

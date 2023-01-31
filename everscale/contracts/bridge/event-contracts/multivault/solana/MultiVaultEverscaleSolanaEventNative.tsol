@@ -1,6 +1,7 @@
 pragma ever-solidity >= 0.39.0;
 pragma AbiHeader time;
 pragma AbiHeader pubkey;
+pragma AbiHeader expire;
 
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.tsol";
@@ -162,6 +163,10 @@ contract MultiVaultEverscaleSolanaEventNative is
             amount,
             recipient
         );
+    }
+
+    function gasBackAddress() internal override view returns(address) {
+        return remainingGasTo;
     }
 
     onBounce(TvmSlice slice) external {

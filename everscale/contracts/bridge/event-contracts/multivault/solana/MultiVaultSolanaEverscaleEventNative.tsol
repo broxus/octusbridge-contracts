@@ -1,6 +1,7 @@
 pragma ever-solidity >= 0.39.0;
 pragma AbiHeader time;
 pragma AbiHeader pubkey;
+pragma AbiHeader expire;
 
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.tsol";
@@ -122,7 +123,7 @@ contract MultiVaultSolanaEverscaleEventNative is
             payload
         );
 
-        ISolanaEverscaleProxyExtended(eventInitData.configuration).onEventConfirmedExtended{
+        ISolanaEverscaleProxyExtended(eventInitData.configuration).onSolanaEventConfirmedExtended{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, metaData, initializer);
     }
