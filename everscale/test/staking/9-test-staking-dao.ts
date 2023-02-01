@@ -1,3 +1,5 @@
+import {setupEverscaleEthereumEventConfiguration} from "../utils/event-configurations/evm";
+
 export {};
 
 import { FactorySource } from "../../build/factorySource";
@@ -5,15 +7,19 @@ import { Address, Contract } from "locklift";
 import { Account } from "everscale-standalone-client/nodejs";
 const BigNumber = require("bignumber.js");
 const {
-  deployAccount,
-  deployTokenWallets,
+  stringToBytesArray,
+} = require("../utils");
+
+import {deployAccount} from "../utils/account";
+import {
   deployTokenRoot,
   depositTokens,
-  logger,
   mintTokens,
-  stringToBytesArray,
-  sleep,
-} = require("../utils");
+  deployTokenWallets
+} from "../utils/token";
+import {sleep} from "../utils/time";
+
+const logger = require("mocha-logger");
 
 import { expect } from "chai";
 
@@ -51,47 +57,13 @@ let daoRoot: Contract<FactorySource["DaoRoot"]>;
 describe("Test DAO in Staking", async function () {
   this.timeout(1000000);
 
-  const deployEventConfiguration = async function (
-    _owner: Address,
-    _dao: Address
-  ) {
-    const signer = (await locklift.keystore.getSigner("0"))!;
-
-    const DaoEthereumActionEvent = await locklift.factory.getContractArtifacts(
-      "DaoEthereumActionEvent"
-    );
-
-    const { contract: eventConfig } = await locklift.factory.deployContract({
-      contract: "EverscaleEthereumEventConfiguration",
-      constructorParams: { _owner, _meta: "" },
-      initParams: {
-        basicConfiguration: {
-          eventABI: "",
-          eventInitialBalance: locklift.utils.toNano(2),
-          staking: new Address(bridge),
-          eventCode: DaoEthereumActionEvent.code,
-        },
-        networkConfiguration: {
-          eventEmitter: _dao,
-          proxy: 0,
-          startTimestamp: 0,
-          endTimestamp: 0,
-        },
-      },
-      publicKey: signer.publicKey,
-      value: locklift.utils.toNano(1),
-    });
-
-    return eventConfig;
-  };
-
   before("Setup staking", async function () {
     const signer = (await locklift.keystore.getSigner("0"))!;
 
     logger.log(`Deploying stakingOwner`);
     stakingOwner = await deployAccount(signer, 500);
     logger.log(`Deploying stakingToken`);
-    stakingToken = await deployTokenRoot("Staking", "ST", stakingOwner);
+    stakingToken = await deployTokenRoot("Staking", "ST", 9, stakingOwner.address);
     logger.log(`Deploying DaoRoot`);
 
     const Platform = await locklift.factory.getContractArtifacts("Platform");
@@ -128,10 +100,18 @@ describe("Test DAO in Staking", async function () {
     );
 
     logger.log(`Deploy DAO ethereum action event configuration`);
-    const eventConfiguration = await deployEventConfiguration(
-      stakingOwner.address,
-      daoRoot.address
+
+    const DaoEthereumActionEvent = await locklift.factory.getContractArtifacts(
+        "DaoEthereumActionEvent"
     );
+
+    const eventConfiguration = await setupEverscaleEthereumEventConfiguration(
+        stakingOwner,
+        (await locklift.factory.getDeployedContract("StakingMockup", new Address(bridge))),
+        daoRoot.address,
+        DaoEthereumActionEvent.code
+    );
+
 
     logger.log(`Installing EthereumActionEventConfiguration address`);
     logger.log(eventConfiguration.address);

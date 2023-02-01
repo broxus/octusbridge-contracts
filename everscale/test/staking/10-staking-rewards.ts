@@ -3,14 +3,15 @@ export {};
 import { FactorySource, StakingV1_2Abi } from "../../build/factorySource";
 import { Contract } from "locklift";
 import { Account } from "everscale-standalone-client/nodejs";
-const {
-  deployAccount,
+
+import {deployAccount} from "../utils/account";
+import {
   deployTokenRoot,
   depositTokens,
-  logger,
-  mintTokens,
-} = require("../utils");
+  mintTokens
+} from "../utils/token";
 
+const logger = require("mocha-logger");
 import { expect } from "chai";
 
 let stakingRoot: Contract<FactorySource["StakingV1_2"]>;
@@ -211,7 +212,7 @@ describe("Test Staking Rewards", async function () {
       });
 
       it("Deploy root", async function () {
-        stakingToken = await deployTokenRoot("Farm token", "FT", stakingOwner);
+        stakingToken = await deployTokenRoot("Farm token", "FT", 9, stakingOwner.address);
       });
     });
 

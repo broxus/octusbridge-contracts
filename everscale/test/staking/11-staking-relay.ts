@@ -5,15 +5,17 @@ import {Address, Contract, Signer} from "locklift";
 import {Account} from "everscale-standalone-client/nodejs";
 import {expect} from "chai";
 
-const {
-    deployAccount,
+
+import {deployAccount} from "../utils/account";
+import {
     deployTokenRoot,
     depositTokens,
-    logger,
-    mintTokens,
-    tryIncreaseTime,
-} = require("../utils");
+    mintTokens
+} from "../utils/token";
+import {tryIncreaseTime} from "../utils/time";
 
+
+const logger = require("mocha-logger");
 const BigNumber = require("bignumber.js");
 
 const user1_eth_addr = "0x93E05804b0A58668531F65A93AbfA1aD8F7F5B2b";
@@ -366,7 +368,7 @@ describe("Test Staking Relay mechanic", async function () {
             });
 
             it("Deploy root", async function () {
-                stakingToken = await deployTokenRoot("Farm token", "FT", stakingOwner);
+                stakingToken = await deployTokenRoot("Farm token", "FT", 9, stakingOwner.address);
             });
         });
 

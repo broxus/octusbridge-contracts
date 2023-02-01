@@ -117,7 +117,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
         uint160[] eth_addrs,
         uint128[] staked_tokens,
         uint128 ton_deposit,
-        address
+        address send_gas_to
     ) external onlyAdmin {
         require (staker_addrs.length <= RELAY_PACK_SIZE, ErrorCodes.BAD_INPUT_ARRAYS);
         // MIN_CALL_MSG_VALUE cover deployment of relay round and setting relays
