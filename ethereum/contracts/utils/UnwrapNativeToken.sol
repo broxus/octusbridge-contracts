@@ -1,25 +1,23 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity  >= 0.8.0;
 
 import "../interfaces/IWETH.sol";
 import "../multivault/interfaces/multivault/IOctusCallback.sol";
 import "../multivault/interfaces/multivault/IMultiVaultFacetWithdraw.sol";
-import "../multivault/interfaces/multivault/IMultiVaultFacetTokens.sol";
 import "../multivault/interfaces/multivault/IMultiVaultFacetPendingWithdrawals.sol";
+import "../multivault/utils/Initializable.sol";
 
-import "hardhat/console.sol";
-
-
-contract UnwrapNativeToken is IOctusCallback {
+contract UnwrapNativeToken is IOctusCallback, Initializable {
     IWETH wethContract;
     address multiVault;
 
     mapping(address => mapping(uint => bool)) pendingWithdrawals;
 
-    constructor(address _weth, address _multiVault) {
+    function initialize(address _weth, address _multiVault) public initializer {
         wethContract = IWETH(_weth);
         multiVault = _multiVault;
     }
+
 
     modifier onlyWithdrawRequestOwner(uint _withdrawRequestId) {
         require(pendingWithdrawals[msg.sender][_withdrawRequestId], "Withdraw id not exists or sender not an owner");
@@ -67,17 +65,13 @@ contract UnwrapNativeToken is IOctusCallback {
         IMultiVaultFacetWithdraw.AlienWithdrawalParams memory _payload,
         uint256 withdrawAmount
     ) external override onlyMultiVault {
-
         address payable nativeTokenReceiver = abi.decode(_payload.callback.payload, (address));
-
         wethContract.withdraw(withdrawAmount);
+
         nativeTokenReceiver.transfer(withdrawAmount);
     }
 
     function onNativeWithdrawal(
         IMultiVaultFacetWithdraw.NativeWithdrawalParams memory _payload
     ) external override onlyMultiVault {}
-
-    receive() external payable {}
-
 }

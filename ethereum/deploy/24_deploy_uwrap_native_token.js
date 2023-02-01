@@ -4,10 +4,16 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     await deployments.deploy('UnwrapNativeToken', {
         from: deployer,
         log: true,
-        args: [
-            weth,
-            multiVaultAddress
-        ]
+        proxy:{
+            proxyContract: 'EIP173ProxyWithReceive',
+            execute:{
+                methodName: 'initialize',
+                args: [
+                    weth,
+                    multiVaultAddress
+                ]
+            }
+        }
     });
 };
 
