@@ -1,18 +1,16 @@
+import {tryIncreaseTime} from "../utils/time";
+
 export {};
 
-import { FactorySource, StakingV1_2Abi } from "../../build/factorySource";
-import { Contract } from "locklift";
-import { Account } from "everscale-standalone-client/nodejs";
+import {FactorySource, StakingV1_2Abi} from "../../build/factorySource";
+import {Contract} from "locklift";
+import {Account} from "everscale-standalone-client/nodejs";
 
 import {deployAccount} from "../utils/account";
-import {
-  deployTokenRoot,
-  depositTokens,
-  mintTokens
-} from "../utils/token";
+import {deployTokenRoot, depositTokens, mintTokens} from "../utils/token";
+import {expect} from "chai";
 
 const logger = require("mocha-logger");
-import { expect } from "chai";
 
 let stakingRoot: Contract<FactorySource["StakingV1_2"]>;
 let stakingToken: Contract<FactorySource["TokenRoot"]>;
@@ -126,7 +124,7 @@ describe("Test Staking Rewards", async function () {
   };
 
   const startNewRewardRound = async function () {
-    return await locklift.transactions.waitFinalized(
+    return await locklift.tracing.trace(
       stakingRoot.methods
         .startNewRewardRound({
           send_gas_to: stakingOwner.address,
@@ -139,7 +137,7 @@ describe("Test Staking Rewards", async function () {
   };
 
   const claimReward = async function (user: Account) {
-    await locklift.transactions.waitFinalized(
+    await locklift.tracing.trace(
       stakingRoot.methods
         .claimReward({
           send_gas_to: user.address,
@@ -177,21 +175,20 @@ describe("Test Staking Rewards", async function () {
   };
 
   const getUserDataAccount = async function (_user: Account) {
-    const userData = await locklift.factory.getDeployedContract(
+    return await locklift.factory.getDeployedContract(
       "UserData",
       await stakingRoot.methods
-        .getUserDataAddress({ user: _user.address, answerId: 0 })
+        .getUserDataAddress({user: _user.address, answerId: 0})
         .call()
         .then((t) => t.value0)
     );
-    return userData;
   };
 
   const withdrawTokens = async function (
     user: Account,
     withdraw_amount: number
   ) {
-    return await locklift.transactions.waitFinalized(
+    return await locklift.tracing.trace(
       stakingRoot.methods
         .withdraw({
           amount: withdraw_amount,
@@ -296,7 +293,7 @@ describe("Test Staking Rewards", async function () {
           "StakingV1_2"
         );
         const { contract: stakingRootDeployer } =
-          await locklift.transactions.waitFinalized(
+          await locklift.tracing.trace(
             locklift.factory.deployContract({
               contract: "StakingRootDeployer",
               constructorParams: {},
@@ -847,6 +844,7 @@ describe("Test Staking Rewards", async function () {
       });
 
       it("New reward round starts", async function () {
+        await tryIncreaseTime(5000);
         await startNewRewardRound();
 
         const staking_details = await stakingRoot.methods
@@ -878,6 +876,7 @@ describe("Test Staking Rewards", async function () {
       });
 
       it("Claim rewards", async function () {
+        await tryIncreaseTime(5000);
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
           .call()
@@ -909,6 +908,7 @@ describe("Test Staking Rewards", async function () {
             1e10
         );
 
+        await tryIncreaseTime(5000);
         const user1_token_balance0 = await userTokenBalance(user1Data);
 
         const res0 = await pendingReward(
@@ -1077,6 +1077,7 @@ describe("Test Staking Rewards", async function () {
       });
 
       it("New reward round starts", async function () {
+        await tryIncreaseTime(5000);
         await startNewRewardRound();
 
         const staking_details = await stakingRoot.methods
@@ -1206,7 +1207,9 @@ describe("Test Staking Rewards", async function () {
           .call()
           .then((v) => v.value0);
         const prev_reward_time = staking_details.lastRewardTime;
+        await tryIncreaseTime(5000);
         await startNewRewardRound();
+        await tryIncreaseTime(5000);
 
         const staking_details_1 = await stakingRoot.methods
           .getDetails({ answerId: 0 })
@@ -1333,6 +1336,8 @@ describe("Test Staking Rewards", async function () {
       });
 
       it("Users claim tokens", async function () {
+        await tryIncreaseTime(5000);
+
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
           .call()
@@ -1375,7 +1380,7 @@ describe("Test Staking Rewards", async function () {
               parseInt(reward_rounds[i].rewardTokens, 10)) /
               1e10
           );
-
+          
           user1_expected_token_reward += user1_token_reward;
           user2_expected_token_reward += user2_token_reward;
         }

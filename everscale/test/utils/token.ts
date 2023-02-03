@@ -1,7 +1,8 @@
 import {Address, Contract, zeroAddress} from "locklift";
-import {FactorySource} from "../../build/factorySource";
+import {FactorySource, StakingV1_2Abi} from "../../build/factorySource";
 import {Account} from "everscale-standalone-client/nodejs";
 import {logContract} from "./logger";
+
 const logger = require("mocha-logger");
 
 
@@ -113,12 +114,10 @@ export const getTokenWalletByAddress = async (
         })
         .call();
 
-    const tokenWallet = await locklift.factory.getDeployedContract(
-        "TokenWallet",
-        walletAddress.value0
+    return await locklift.factory.getDeployedContract(
+      "TokenWallet",
+      walletAddress.value0
     );
-
-    return tokenWallet;
 };
 
 
@@ -133,7 +132,7 @@ export const getTokenRoot = async (rootAddress: Address) => {
 
 
 export const depositTokens = async function (
-    stakingRoot: Account,
+    stakingRoot: Contract<StakingV1_2Abi>,
     user: Account,
     _userTokenWallet: Contract<FactorySource["TokenWallet"]>,
     depositAmount: number,
@@ -200,7 +199,7 @@ export const mintTokens = async function (
 const sendTokens = async function (
     user: Account,
     _userTokenWallet: Contract<FactorySource["TokenWallet"]>,
-    recipient: Account,
+    recipient: {address: Address},
     amount: number,
     payload: any
 ) {
