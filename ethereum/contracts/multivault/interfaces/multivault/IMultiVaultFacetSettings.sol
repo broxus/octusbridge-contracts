@@ -8,7 +8,8 @@ import "../IEverscale.sol";
 interface IMultiVaultFacetSettings {
     function initialize(
         address _bridge,
-        address _governance
+        address _governance,
+        address _weth
     ) external;
 
     function rewards() external view returns (IEverscale.EverscaleAddress memory);

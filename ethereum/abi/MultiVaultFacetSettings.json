@@ -658,6 +658,11 @@
         "internalType": "address",
         "name": "_governance",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_weth",
+        "type": "address"
       }
     ],
     "name": "initialize",

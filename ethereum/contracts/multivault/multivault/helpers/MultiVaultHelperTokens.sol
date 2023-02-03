@@ -16,30 +16,48 @@ abstract contract MultiVaultHelperTokens is
     MultiVaultHelperEmergency,
     IMultiVaultFacetTokensEvents
 {
-    modifier initializeToken(address token) {
+    modifier initializeToken(address _token) {
+        _initializeToken(_token);
+        _;
+    }
+    modifier initializeWethToken() {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
-        if (s.tokens_[token].activation == 0) {
-            // Non-activated tokens are always aliens, native tokens are activate on the first `saveWithdrawNative`
-
-            require(
-                IERC20Metadata(token).decimals() <= MultiVaultStorage.DECIMALS_LIMIT &&
-                bytes(IERC20Metadata(token).symbol()).length <= MultiVaultStorage.SYMBOL_LENGTH_LIMIT &&
-                bytes(IERC20Metadata(token).name()).length <= MultiVaultStorage.NAME_LENGTH_LIMIT
-            );
-
-            _activateToken(token, false);
-        }
-
+        _initializeToken(s.weth);
         _;
     }
 
-    modifier tokenNotBlacklisted(address token) {
+    function _initializeToken(address _token) internal {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
+        if (s.tokens_[_token].activation == 0) {
+            // Non-activated tokens are always aliens, native tokens are activate on the first `saveWithdrawNative`
 
-        require(!s.tokens_[token].blacklisted);
+            require(
+                IERC20Metadata(_token).decimals() <= MultiVaultStorage.DECIMALS_LIMIT &&
+                bytes(IERC20Metadata(_token).symbol()).length <= MultiVaultStorage.SYMBOL_LENGTH_LIMIT &&
+                bytes(IERC20Metadata(_token).name()).length <= MultiVaultStorage.NAME_LENGTH_LIMIT
+            );
+
+            _activateToken(_token, false);
+        }
+    }
+
+    modifier tokenNotBlacklisted(address _token) {
+        bool isBlackListed = isTokenNoBlackListed(_token);
+        require(!isBlackListed);
 
         _;
+    }
+    modifier wethNotBlacklisted() {
+        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
+        bool isBlackListed = isTokenNoBlackListed(s.weth);
+        require(!isBlackListed);
+
+        _;
+    }
+    function isTokenNoBlackListed(address _token) internal view returns (bool) {
+        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
+        return s.tokens_[_token].blacklisted;
     }
 
     function _activateToken(

@@ -82,6 +82,7 @@ library MultiVaultStorage {
         // STORAGE UPDATE 4
         // - Receives native value, attached to the deposit
         address gasDonor;
+        address weth;
     }
 
     function _storage() internal pure returns (Storage storage s) {

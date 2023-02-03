@@ -653,6 +653,22 @@ event EmergencyShutdown(bool active)
 |---|---|---|
 | active  | bool | undefined |
 
+### Initialized
+
+```solidity
+event Initialized(uint8 version)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| version  | uint8 | undefined |
+
 ### NewRound
 
 ```solidity

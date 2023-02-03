@@ -7,9 +7,11 @@ import "../../interfaces/multivault/IMultiVaultFacetFees.sol";
 import "../../interfaces/multivault/IMultiVaultFacetTokens.sol";
 import "../../interfaces/multivault/IMultiVaultFacetPendingWithdrawals.sol";
 import "../../interfaces/multivault/IMultiVaultFacetPendingWithdrawalsEvents.sol";
+import "../../interfaces/multivault/IMultiVaultFacetWithdraw.sol";
 import "../../interfaces/IMultiVaultToken.sol";
 import "../../interfaces/IEverscale.sol";
 import "../../interfaces/IERC20.sol";
+import "../../../interfaces/IWETH.sol";
 
 import "../../libraries/SafeERC20.sol";
 
@@ -20,6 +22,7 @@ import "../helpers/MultiVaultHelperReentrancyGuard.sol";
 import "../helpers/MultiVaultHelperTokens.sol";
 import "../helpers/MultiVaultHelperFee.sol";
 import "../helpers/MultiVaultHelperPendingWithdrawal.sol";
+import "../helpers/MultiVaultHelperCallback.sol";
 
 
 contract MultiVaultFacetDeposit is
@@ -28,13 +31,39 @@ contract MultiVaultFacetDeposit is
     MultiVaultHelperReentrancyGuard,
     MultiVaultHelperTokens,
     MultiVaultHelperPendingWithdrawal,
-    IMultiVaultFacetDeposit
+    IMultiVaultFacetDeposit,
+    MultiVaultHelperCallback
 {
     using SafeERC20 for IERC20;
 
-    /// @notice Transfer tokens to the Everscale. Works both for native and alien tokens.
-    /// Approve is required only for alien tokens deposit.
-    /// @param d Deposit parameters
+    function depositByNativeToken(
+        DepositNativeTokenParams memory d
+    )
+        external
+        payable
+        override
+        nonReentrant
+        wethNotBlacklisted
+        initializeWethToken
+        onlyEmergencyDisabled
+    {
+        require(msg.value >= d.amount, "Msg value to low");
+        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
+
+        IWETH(s.weth).deposit{value: d.amount}();
+        _deposit(
+            DepositParams({
+            recipient: d.recipient,
+            token: s.weth,
+            amount: d.amount,
+            expected_evers: d.expected_evers,
+            payload: d.payload
+            }),
+            msg.value - d.amount,
+            address(this)
+        );
+    }
+
     function deposit(
         DepositParams memory d
     )
@@ -46,6 +75,16 @@ contract MultiVaultFacetDeposit is
         initializeToken(d.token)
         onlyEmergencyDisabled
     {
+        _deposit(d, msg.value, msg.sender);
+    }
+    /// @notice Transfer tokens to the Everscale. Works both for native and alien tokens.
+    /// Approve is required only for alien tokens deposit.
+    /// @param d Deposit parameters
+    function _deposit(
+        DepositParams memory d,
+        uint256 _value,
+        address tokens_owner
+    ) internal {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         uint fee = _calculateMovementFee(
@@ -70,31 +109,61 @@ contract MultiVaultFacetDeposit is
             _transferToEverscaleNative(d, fee, msg.value);
         } else {
             IERC20(token).safeTransferFrom(
-                msg.sender,
+                tokens_owner,
                 address(this),
                 d.amount
             );
 
             d.amount -= fee;
 
-            _transferToEverscaleAlien(d, fee, msg.value);
+            _transferToEverscaleAlien(d, fee, _value);
         }
 
         _increaseTokenFee(d.token, fee);
         _drainGas();
     }
 
+    function depositByNativeToken(
+        DepositNativeTokenParams memory d,
+        uint256 expectedMinBounty,
+        IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId[] memory pendingWithdrawalIds
+    ) external payable override wethNotBlacklisted nonReentrant {
+        require(msg.value >= d.amount, "Msg value to low");
+        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
+
+        IWETH(s.weth).deposit{value: d.amount}();
+        _deposit(
+            DepositParams({
+                recipient:d.recipient,
+                token: s.weth,
+                amount: d.amount,
+                expected_evers: d.expected_evers,
+                payload: d.payload
+            }),
+            expectedMinBounty,
+            pendingWithdrawalIds,
+            msg.value - d.amount
+        );
+    }
     function deposit(
         DepositParams memory d,
         uint256 expectedMinBounty,
         IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId[] memory pendingWithdrawalIds
     ) external payable override tokenNotBlacklisted(d.token) nonReentrant {
+        IERC20(d.token).safeTransferFrom(msg.sender, address(this), d.amount);
+        _deposit(d, expectedMinBounty, pendingWithdrawalIds, msg.value);
+    }
+    function _deposit(
+        DepositParams memory d,
+        uint256 expectedMinBounty,
+        IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId[] memory pendingWithdrawalIds,
+        uint256 _value
+    ) internal {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         uint amountLeft = d.amount;
         uint amountPlusBounty = d.amount;
 
-        IERC20(d.token).safeTransferFrom(msg.sender, address(this), d.amount);
 
         for (uint i = 0; i < pendingWithdrawalIds.length; i++) {
             IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId memory pendingWithdrawalId = pendingWithdrawalIds[i];
@@ -117,6 +186,18 @@ contract MultiVaultFacetDeposit is
                 pendingWithdrawalId.recipient,
                 pendingWithdrawal.amount - pendingWithdrawal.bounty
             );
+
+            _callbackAlienWithdrawal(
+                IMultiVaultFacetWithdraw.AlienWithdrawalParams({
+                    token: pendingWithdrawal.token,
+                    amount: pendingWithdrawal.amount,
+                    recipient: pendingWithdrawalId.recipient,
+                    chainId: pendingWithdrawal.chainId,
+                    callback: pendingWithdrawal.callback
+                }),
+                pendingWithdrawal.amount
+            );
+
         }
 
         require(amountPlusBounty - d.amount >= expectedMinBounty);
@@ -128,7 +209,7 @@ contract MultiVaultFacetDeposit is
         _transferToEverscaleAlien(
             d,
             fee,
-            msg.value
+            _value
         );
 
         _increaseTokenFee(d.token, fee);

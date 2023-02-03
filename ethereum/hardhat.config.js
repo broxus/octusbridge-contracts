@@ -28,6 +28,14 @@ const multisig = {
   milkomeda: '0x43137648a18925c73e0905005a96462daEf684C9',
   avalanche: '0x7591519D32bB268D828249FcE2AA34A24Bc1B3eA'
 };
+const weth = {
+  main: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', // https://etherscan.io/token/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2
+  polygon: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270', // https://polygonscan.com/token/0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270
+  bsc: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', // https://bscscan.com/address/0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c
+  fantom: '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83', // https://ftmscan.com/token/0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83
+  milkomeda: '0x43137648a18925c73e0905005a96462daEf684C9', // SKIPPED
+  avalanche: '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7' // https://snowtrace.io/token/0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7
+};
 
 const bridge = {
   main: '0xF4404070f63a7E19Be0b1dd89A5fb88E12c0173A',
@@ -43,6 +51,9 @@ const bridge = {
  * @type import('hardhat/config').HardhatUserConfig
  */
 const hardhatConfig = {
+  mocha:{
+    bail: true
+  },
   diamondAbi: {
     // (required) The name of your Diamond ABI.
     name: "MultiVault",
@@ -292,6 +303,10 @@ const hardhatConfig = {
     owner: {
       default: 3,
       ...multisig
+    },
+    weth: {
+      default: weth.main,
+      ...weth
     },
     alice: {
       default: 4,

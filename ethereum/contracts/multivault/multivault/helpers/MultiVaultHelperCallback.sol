@@ -30,32 +30,36 @@ abstract contract MultiVaultHelperCallback {
     }
 
     function _callbackAlienWithdrawal(
-        IMultiVaultFacetWithdraw.AlienWithdrawalParams memory withdrawal
-    ) internal checkCallbackRecipient(withdrawal.callback.recipient) {
+        IMultiVaultFacetWithdraw.AlienWithdrawalParams memory _withdrawal,
+        uint256 _withdrawAmount
+    ) internal checkCallbackRecipient(_withdrawal.callback.recipient) {
         bytes memory data = abi.encodeWithSelector(
             IOctusCallback.onAlienWithdrawal.selector,
-            withdrawal
+            _withdrawal,
+            _withdrawAmount
         );
 
         _execute(
-            withdrawal.callback.recipient,
+            _withdrawal.callback.recipient,
             data,
-            withdrawal.callback.strict
+            _withdrawal.callback.strict
         );
     }
 
     function _callbackAlienWithdrawalPendingCreated(
-        IMultiVaultFacetWithdraw.AlienWithdrawalParams memory withdrawal
-    ) checkCallbackRecipient(withdrawal.callback.recipient) internal {
+        IMultiVaultFacetWithdraw.AlienWithdrawalParams memory _withdrawal,
+        uint _pendingWithdrawalId
+    ) checkCallbackRecipient(_withdrawal.callback.recipient) internal {
         bytes memory data = abi.encodeWithSelector(
-            IOctusCallback.onAlienWithdrawal.selector,
-            withdrawal
+            IOctusCallback.onAlienWithdrawalPendingCreated.selector,
+            _withdrawal,
+            _pendingWithdrawalId
         );
 
         _execute(
-            withdrawal.callback.recipient,
+            _withdrawal.callback.recipient,
             data,
-            withdrawal.callback.strict
+            _withdrawal.callback.strict
         );
     }
 
