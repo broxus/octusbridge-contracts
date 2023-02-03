@@ -35,7 +35,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
         confirmEthAccount(ton_staker_addr, eth_addr, gasBackAddress);
     }
 
-    function confirmEthAccount(address staker_addr, uint160 eth_address, address send_gas_to) internal view {
+    function confirmEthAccount(address staker_addr, uint160 eth_address, address send_gas_to) internal {
         address user_data = getUserDataAddress(staker_addr);
         IUserData(user_data).processConfirmEthAccount{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(eth_address, send_gas_to);
     }

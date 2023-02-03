@@ -12,8 +12,8 @@ contract TonConfigMockup {
 
     function deployEvent(
         IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData
-    ) external pure {
-//        return;
+    ) external  {
+        return;
     }
 
 }

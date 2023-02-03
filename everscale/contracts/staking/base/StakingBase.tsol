@@ -91,11 +91,11 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
     address public bridge_event_config_ton_sol;
 
     RelayConfigDetails relay_config = RelayConfigDetails(
-        30 days, 7 days, 2 days, 4 days, 1 hours, 30, 13, 100000 * 10**9, 500 ever, 1000000, 1000000
+        30 days, 7 days, 2 days, 4 days, 1 hours, 30, 13, 100000 * 10**9, 500 ton, 1000000, 1000000
     );
 
-    uint128 tonEthEventDeployValue = 2.5 ever;
-    uint128 tonSolEventDeployValue = 2.5 ever;
+    uint128 tonEthEventDeployValue = 2.5 ton;
+    uint128 tonSolEventDeployValue = 2.5 ton;
 
     // payloads for token receive callback
     uint8 constant STAKE_DEPOSIT = 0;
@@ -145,7 +145,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
         }
     }
 
-    function _reserve() internal pure returns (uint128) {
+    function _reserve() internal view returns (uint128) {
         return math.max(address(this).balance - msg.value, Gas.ROOT_INITIAL_BALANCE);
     }
 
@@ -298,7 +298,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
     }
 
     // try to decode deposit payload
-    function decodeDepositPayload(TvmCell payload) public pure returns (uint8 deposit_type, bool correct) {
+    function decodeDepositPayload(TvmCell payload) public view returns (uint8 deposit_type, bool correct) {
         // check if payload assembled correctly
         TvmSlice slice = payload.toSlice();
         // 1 uint8
@@ -311,10 +311,10 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
 
     // deposit occurs here
     function onAcceptTokensTransfer(
-        address,
+        address tokenRoot,
         uint128 amount,
         address sender,
-        address,
+        address senderWallet,
         address remainingGasTo,
         TvmCell payload
     ) external override {
@@ -519,7 +519,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
         base_details.rewardRounds[base_details.rewardRounds.length - 1].accRewardPerShare += (new_reward * SCALING_FACTOR) / base_details.tokenBalance;
     }
 
-    function _buildUserDataParams(address user) private pure returns (TvmCell) {
+    function _buildUserDataParams(address user) private view returns (TvmCell) {
         TvmBuilder builder;
         builder.store(user);
         return builder.toCell();
@@ -539,7 +539,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
         });
     }
 
-    function deployUserData(address user_data_owner) internal view returns (address) {
+    function deployUserData(address user_data_owner) internal returns (address) {
         TvmBuilder constructor_params;
         constructor_params.store(code_data.user_data_version);
         constructor_params.store(code_data.user_data_version);
@@ -605,7 +605,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
         }(code_data.user_data_version, proposal_ids);
     }
 
-    function withdrawTonsUserEmergency() external view {
+    function withdrawTonsUserEmergency() external {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         require (base_details.emergency, ErrorCodes.EMERGENCY);
 
@@ -618,7 +618,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
         }();
     }
 
-    function withdrawTonsEmergency(uint128 amount, address receiver, bool all, address send_gas_to) external view onlyRescuer {
+    function withdrawTonsEmergency(uint128 amount, address receiver, bool all, address send_gas_to) external onlyRescuer {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         require (base_details.emergency, ErrorCodes.EMERGENCY);
         require (address(this).balance > amount, ErrorCodes.VALUE_TOO_LOW);
@@ -677,8 +677,8 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
         send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
     }
 
-    onBounce(TvmSlice slice) external view {
-//        tvm.accept();
+    onBounce(TvmSlice slice) external {
+        tvm.accept();
 
         uint32 functionId = slice.decode(uint32);
         // if processing failed - contract was not deployed. Deploy and try again

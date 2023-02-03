@@ -12,7 +12,7 @@ contract TonConfigMockup {
 
     function deployEvent(
         IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData
-    ) external pure {
-//        return;
+    ) external  {
+        return;
     }
 }

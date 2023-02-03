@@ -425,10 +425,10 @@
 		{
 			"name": "onAcceptTokensTransfer",
 			"inputs": [
-				{"name":"value0","type":"address"},
+				{"name":"tokenRoot","type":"address"},
 				{"name":"amount","type":"uint128"},
 				{"name":"sender","type":"address"},
-				{"name":"value3","type":"address"},
+				{"name":"senderWallet","type":"address"},
 				{"name":"remainingGasTo","type":"address"},
 				{"name":"payload","type":"cell"}
 			],

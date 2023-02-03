@@ -82,7 +82,7 @@ contract StakingV1_1 is StakingPoolRelay {
         );
     }
 
-    function onCodeUpgrade(TvmCell) private pure {
+    function onCodeUpgrade(TvmCell upgrade_data) private {
         emit StakingUpdated();
     }
 }

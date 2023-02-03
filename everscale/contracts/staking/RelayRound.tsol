@@ -207,7 +207,7 @@ contract RelayRound is IRelayRound {
 
     function onCodeUpgrade(TvmCell upgrade_data) private {
         TvmSlice s = upgrade_data.toSlice();
-        (address _root, ,) = s.decode(address, uint8, address);
+        (address _root, , address send_gas_to) = s.decode(address, uint8, address);
 
         TvmCell _platform_code = s.loadRef();
 
@@ -373,7 +373,7 @@ contract RelayRound is IRelayRound {
         });
     }
 
-    function _buildUserDataParams(address user) private pure returns (TvmCell) {
+    function _buildUserDataParams(address user) private view returns (TvmCell) {
         TvmBuilder builder;
         builder.store(user);
         return builder.toCell();
