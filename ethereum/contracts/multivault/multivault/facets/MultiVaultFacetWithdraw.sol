@@ -163,7 +163,7 @@ contract MultiVaultFacetWithdraw is
                 withdrawal.token
             );
 
-            _callbackAlienWithdrawal(withdrawal);
+            _callbackAlienWithdrawal(withdrawal, withdrawAmount);
 
             return;
         }
@@ -181,7 +181,9 @@ contract MultiVaultFacetWithdraw is
             amount: withdrawAmount,
             bounty: msg.sender == withdrawal.recipient ? bounty : 0,
             timestamp: _event.eventTimestamp,
-            approveStatus: IMultiVaultFacetPendingWithdrawals.ApproveStatus.NotRequired
+            approveStatus: IMultiVaultFacetPendingWithdrawals.ApproveStatus.NotRequired,
+            chainId: withdrawal.chainId,
+            callback: withdrawal.callback
         });
 
         emit PendingWithdrawalCreated(
@@ -199,7 +201,7 @@ contract MultiVaultFacetWithdraw is
             );
         }
 
-        _callbackAlienWithdrawalPendingCreated(withdrawal);
+        _callbackAlienWithdrawalPendingCreated(withdrawal, pendingWithdrawalId);
     }
 
     /// @notice Save withdrawal of alien token

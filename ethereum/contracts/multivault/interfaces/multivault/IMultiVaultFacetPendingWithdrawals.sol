@@ -3,6 +3,7 @@ pragma solidity 0.8.0;
 
 
 import "../IEverscale.sol";
+import "./IMultiVaultFacetWithdraw.sol";
 
 
 interface IMultiVaultFacetPendingWithdrawals {
@@ -20,6 +21,9 @@ interface IMultiVaultFacetPendingWithdrawals {
         uint256 bounty;
         uint256 timestamp;
         ApproveStatus approveStatus;
+
+        uint256 chainId;
+        IMultiVaultFacetWithdraw.Callback callback;
     }
 
     struct PendingWithdrawalId {

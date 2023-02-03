@@ -79,9 +79,7 @@ describe('Test upgrading Ethereum MultiVault to the Diamond proxy', async () => 
             const facet = await ethers.getContract(name);
 
             const functionSelectors = Object.entries(facet.interface.functions).map(([function_name, fn]) => {
-                const sig_hash = ethers.utils.Interface.getSighash(fn);
-
-                return sig_hash;
+                return ethers.utils.Interface.getSighash(fn);
             });
 
             return {
@@ -156,6 +154,7 @@ describe('Test upgrading Ethereum MultiVault to the Diamond proxy', async () => 
             diamond_multivault
                 .connect(multisig)
                 .initialize(
+                    ethers.constants.AddressZero,
                     ethers.constants.AddressZero,
                     ethers.constants.AddressZero
                 )

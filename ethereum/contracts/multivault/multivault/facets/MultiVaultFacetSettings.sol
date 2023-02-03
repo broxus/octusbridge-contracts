@@ -36,12 +36,14 @@ contract MultiVaultFacetSettings is
     /// @param _governance Governance address
     function initialize(
         address _bridge,
-        address _governance
+        address _governance,
+        address _weth
     ) external override initializer {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         s.bridge = _bridge;
         s.governance = _governance;
+        s.weth = _weth;
     }
 
     /// @notice Rewards address

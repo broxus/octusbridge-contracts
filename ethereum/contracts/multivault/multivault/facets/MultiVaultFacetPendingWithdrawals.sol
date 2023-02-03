@@ -4,6 +4,7 @@ pragma solidity 0.8.0;
 
 import "../../interfaces/multivault/IMultiVaultFacetPendingWithdrawals.sol";
 import "../../interfaces/multivault/IMultiVaultFacetPendingWithdrawalsEvents.sol";
+import "../../interfaces/multivault/IMultiVaultFacetWithdraw.sol";
 import "../../interfaces/IEverscale.sol";
 import "../../interfaces/IERC20.sol";
 
@@ -12,9 +13,11 @@ import "../helpers/MultiVaultHelperActors.sol";
 import "../helpers/MultiVaultHelperPendingWithdrawal.sol";
 import "../helpers/MultiVaultHelperTokenBalance.sol";
 import "../helpers/MultiVaultHelperEverscale.sol";
+import "../helpers/MultiVaultHelperCallback.sol";
 
 import "../storage/MultiVaultStorage.sol";
 import "../../libraries/SafeERC20.sol";
+
 
 
 contract MultiVaultFacetPendingWithdrawals is
@@ -23,7 +26,8 @@ contract MultiVaultFacetPendingWithdrawals is
     MultiVaultHelperEverscale,
     MultiVaultHelperTokenBalance,
     MultiVaultHelperPendingWithdrawal,
-    IMultiVaultFacetPendingWithdrawals
+    IMultiVaultFacetPendingWithdrawals,
+    MultiVaultHelperCallback
 {
     using SafeERC20 for IERC20;
 
@@ -97,6 +101,17 @@ contract MultiVaultFacetPendingWithdrawals is
             emit PendingWithdrawalForce(
                 pendingWithdrawalId.recipient,
                 pendingWithdrawalId.id
+            );
+
+            _callbackAlienWithdrawal(
+                IMultiVaultFacetWithdraw.AlienWithdrawalParams({
+                    token: pendingWithdrawal.token,
+                    amount: pendingWithdrawal.amount,
+                    recipient: pendingWithdrawalId.recipient,
+                    chainId: pendingWithdrawal.chainId,
+                    callback: pendingWithdrawal.callback
+                }),
+                pendingWithdrawal.amount
             );
         }
     }
