@@ -11,8 +11,8 @@ contract TonConfigMockup {
     constructor() public { tvm.accept(); }
 
     function deployEvent(
-        IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData
-    ) external  {
+        IEverscaleSolanaEvent.EverscaleSolanaEventVoteData
+    ) external pure {
         return;
     }
 }

@@ -51,7 +51,7 @@ contract Election is IElection {
     constructor() public { revert(); }
 
     // return sorted list of requests
-    function getRequests(uint128 limit) public responsible returns (
+    function getRequests(uint128 limit) public view responsible returns (
         uint256[] _ton_keys,
         uint160[] _eth_addrs,
         address[] _staker_addrs,
@@ -62,7 +62,6 @@ contract Election is IElection {
             uint160[] _eth_addrs_limit,
             address[] _staker_addrs_limit,
             uint128[] _staked_tokens_limit,
-            uint256 _
         ) = _getRequestsFromIdx(limit, list_start_idx);
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }(
             _ton_keys_limit, _eth_addrs_limit, _staker_addrs_limit, _staked_tokens_limit
@@ -351,7 +350,7 @@ contract Election is IElection {
         IStakingPool(root).onElectionStarted{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(round_num);
     }
 
-    function _buildUserDataParams(address user) private view returns (TvmCell) {
+    function _buildUserDataParams(address user) private pure returns (TvmCell) {
         TvmBuilder builder;
         builder.store(user);
         return builder.toCell();

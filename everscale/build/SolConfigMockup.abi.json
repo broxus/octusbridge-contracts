@@ -13,7 +13,7 @@
 		{
 			"name": "deployEvent",
 			"inputs": [
-				{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"components":[{"name":"account","type":"uint256"},{"name":"readOnly","type":"bool"},{"name":"isSigner","type":"bool"}],"name":"executeAccounts","type":"tuple[]"},{"name":"eventData","type":"cell"}],"name":"eventVoteData","type":"tuple"}
+				{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"components":[{"name":"account","type":"uint256"},{"name":"readOnly","type":"bool"},{"name":"isSigner","type":"bool"}],"name":"executeAccounts","type":"tuple[]"},{"name":"eventData","type":"cell"}],"name":"value0","type":"tuple"}
 			],
 			"outputs": [
 			]

@@ -73,7 +73,7 @@
 				{"name":"eth_addrs","type":"uint160[]"},
 				{"name":"staked_tokens","type":"uint128[]"},
 				{"name":"ton_deposit","type":"uint128"},
-				{"name":"send_gas_to","type":"address"}
+				{"name":"value5","type":"address"}
 			],
 			"outputs": [
 			]
@@ -427,10 +427,10 @@
 		{
 			"name": "onAcceptTokensTransfer",
 			"inputs": [
-				{"name":"tokenRoot","type":"address"},
+				{"name":"value0","type":"address"},
 				{"name":"amount","type":"uint128"},
 				{"name":"sender","type":"address"},
-				{"name":"senderWallet","type":"address"},
+				{"name":"value3","type":"address"},
 				{"name":"remainingGasTo","type":"address"},
 				{"name":"payload","type":"cell"}
 			],
