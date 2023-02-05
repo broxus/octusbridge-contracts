@@ -378,7 +378,7 @@ describe("Test Staking Relay mechanic", async function () {
                 for (const i of [0, 1, 2]) {
                     const keyPair = await locklift.keystore.getSigner(i.toString());
                     const account = await deployAccount(
-                        keyPair,
+                        keyPair as Signer,
                         RELAY_INITIAL_DEPOSIT + 50
                     );
                     logger.log(`User address: ${account.address}`);
@@ -784,15 +784,15 @@ describe("Test Staking Relay mechanic", async function () {
                     16
                 );
                 const user1_eth = new BigNumber(user1_eth_addr.toLowerCase(), 16);
-
-                const input_params = {
-                    staker_addrs: [user1.address],
-                    ton_pubkeys: [user1_pk.toFixed()],
-                    eth_addrs: [user1_eth.toFixed()],
-                    staked_tokens: [1],
-                    ton_deposit: locklift.utils.toNano(100),
-                    send_gas_to: stakingOwner.address,
-                };
+                //
+                // const input_params = {
+                //     staker_addrs: [user1.address],
+                //     ton_pubkeys: [user1_pk.toFixed()],
+                //     eth_addrs: [user1_eth.toFixed()],
+                //     staked_tokens: [1],
+                //     ton_deposit: locklift.utils.toNano(100),
+                //     send_gas_to: stakingOwner.address,
+                // };
 
                 const staking_details_0 = await stakingRoot.methods
                     .getDetails({answerId: 0})
@@ -800,7 +800,15 @@ describe("Test Staking Relay mechanic", async function () {
                     .then((v) => v.value0);
                 const reward_rounds = staking_details_0.rewardRounds;
 
-                await stakingRoot.methods.createOriginRelayRound(input_params).send({
+                await stakingRoot.methods.createOriginRelayRound(
+                  {
+                      staker_addrs: [user1.address],
+                      ton_pubkeys: [user1_pk.toFixed()],
+                      eth_addrs: [user1_eth.toFixed()],
+                      staked_tokens: [1],
+                      ton_deposit: locklift.utils.toNano(100)
+                  }
+                ).send({
                     from: stakingOwner.address,
                     amount: locklift.utils.toNano(200),
                 });
@@ -1187,7 +1195,7 @@ describe("Test Staking Relay mechanic", async function () {
                 const user1_eth = new BigNumber(user1_eth_addr.toLowerCase(), 16);
                 const block_now = tx.createdAt + 30 * 24 * 60 * 60;
 
-                console.log(_lock_until1, block_now);
+                // console.log(_lock_until1, block_now);
                 expect(_round_num1.toString()).to.be.equal(
                     "1",
                     "Bad event - round num"
@@ -1761,9 +1769,6 @@ describe("Test Staking Relay mechanic", async function () {
                     (await locklift.keystore.getSigner("0"))!.publicKey,
                     16
                 );
-                const expected_ton_pubkey1 = `0x${user1_pk
-                    .toString(16)
-                    .padStart(64, "0")}`;
                 const user1_eth = new BigNumber(user1_eth_addr.toLowerCase(), 16);
                 const block_now = tx.createdAt + 30 * 24 * 60 * 60;
 
@@ -1774,9 +1779,9 @@ describe("Test Staking Relay mechanic", async function () {
                 expect(_tokens1.toString()).to.be.equal(
                     user1_token_balance.toString(),
                     "Bad event - tokens"
-                );
-                expect("0x" + new BigNumber(_ton_pubkey1).toString(16)).to.be.equal(
-                    expected_ton_pubkey1,
+                )
+                expect(_ton_pubkey1).to.be.equal(
+                    user1_pk.toFixed(),
                     "Bad event - ton pubkey"
                 );
                 expect(_eth_address1.toString()).to.be.equal(

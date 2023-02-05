@@ -72,8 +72,7 @@
 				{"name":"ton_pubkeys","type":"uint256[]"},
 				{"name":"eth_addrs","type":"uint160[]"},
 				{"name":"staked_tokens","type":"uint128[]"},
-				{"name":"ton_deposit","type":"uint128"},
-				{"name":"value5","type":"address"}
+				{"name":"ton_deposit","type":"uint128"}
 			],
 			"outputs": [
 			]

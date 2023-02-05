@@ -137,7 +137,7 @@ describe("Test Staking Rewards", async function () {
   };
 
   const claimReward = async function (user: Account) {
-    await locklift.tracing.trace(
+    return await locklift.tracing.trace(
       stakingRoot.methods
         .claimReward({
           send_gas_to: user.address,
@@ -686,6 +686,7 @@ describe("Test Staking Rewards", async function () {
           .then((v) => v.value0);
         user1_deposit_time = staking_details.lastRewardTime;
 
+        await tryIncreaseTime(5000);
         await depositTokens(stakingRoot, user2, userTokenWallet2, userDeposit);
         user2Data = await getUserDataAccount(user2);
 
@@ -796,13 +797,14 @@ describe("Test Staking Rewards", async function () {
       });
 
       it("Claim rewards (expect fail)", async function () {
+        await tryIncreaseTime(1000);
         const user1_data = await user1Data.methods
           .getDetails({ answerId: 0 })
           .call()
           .then((v) => v.value0);
         const user1_reward_before = user1_data.rewardRounds;
 
-        await claimReward(user1);
+        const {traceTree} = await claimReward(user1);
         await checkTokenBalances(
           userTokenWallet1,
           user1Data,
@@ -1062,6 +1064,7 @@ describe("Test Staking Rewards", async function () {
       });
 
       it("User 1 deposit", async function () {
+        await tryIncreaseTime(1000);
         await depositTokens(stakingRoot, user1, userTokenWallet1, userDeposit);
         const realRewardTokensBal = rewardTokensBal + balance_err;
         await checkTokenBalances(
