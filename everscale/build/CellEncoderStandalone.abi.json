@@ -24,7 +24,7 @@
 			]
 		},
 		{
-			"name": "encodeMergePoolBurnWithdrawPayload",
+			"name": "encodeMergePoolBurnWithdrawPayloadEthereum",
 			"inputs": [
 				{"name":"targetToken","type":"address"},
 				{"name":"recipient","type":"uint160"},
@@ -35,7 +35,18 @@
 			]
 		},
 		{
-			"name": "decodeTonStakingEventData",
+			"name": "encodeMergePoolBurnWithdrawPayloadSolana",
+			"inputs": [
+				{"name":"targetToken","type":"address"},
+				{"name":"recipient","type":"uint256"},
+				{"components":[{"name":"account","type":"uint256"},{"name":"readOnly","type":"bool"},{"name":"isSigner","type":"bool"}],"name":"executeAccounts","type":"tuple[]"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
+			]
+		},
+		{
+			"name": "decodeEverscaleEthereumStakingEventData",
 			"inputs": [
 				{"name":"data","type":"cell"}
 			],
@@ -46,7 +57,7 @@
 			]
 		},
 		{
-			"name": "decodeEthereumStakingEventData",
+			"name": "decodeEthereumEverscaleStakingEventData",
 			"inputs": [
 				{"name":"data","type":"cell"}
 			],
@@ -57,7 +68,7 @@
 			]
 		},
 		{
-			"name": "encodeEthereumStakingEventData",
+			"name": "encodeEthereumEverscaleStakingEventData",
 			"inputs": [
 				{"name":"eth_addr","type":"uint160"},
 				{"name":"wk_id","type":"int8"},
@@ -68,7 +79,51 @@
 			]
 		},
 		{
-			"name": "encodeBurnPayload",
+			"name": "decodeEverscaleSolanaStakingEventData",
+			"inputs": [
+				{"name":"data","type":"cell"}
+			],
+			"outputs": [
+				{"name":"round_num","type":"uint32"},
+				{"name":"sol_keys","type":"uint256[]"},
+				{"name":"round_end","type":"uint32"}
+			]
+		},
+		{
+			"name": "encodeEverscaleSolanaStakingEventData",
+			"inputs": [
+				{"name":"round_num","type":"uint32"},
+				{"name":"sol_keys","type":"uint256[]"},
+				{"name":"round_end","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
+		},
+		{
+			"name": "decodeSolanaEverscaleStakingEventData",
+			"inputs": [
+				{"name":"data","type":"cell"}
+			],
+			"outputs": [
+				{"name":"sol_addr","type":"uint256"},
+				{"name":"wk_id","type":"int8"},
+				{"name":"ever_addr_body","type":"uint256"}
+			]
+		},
+		{
+			"name": "encodeSolanaEverscaleStakingEventData",
+			"inputs": [
+				{"name":"sol_addr","type":"uint256"},
+				{"name":"wk_id","type":"int8"},
+				{"name":"ever_addr_body","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
+		},
+		{
+			"name": "encodeEthereumBurnPayload",
 			"inputs": [
 				{"name":"ethereumAddress","type":"uint160"},
 				{"name":"chainId","type":"uint32"}
@@ -78,13 +133,33 @@
 			]
 		},
 		{
-			"name": "decodeBurnPayload",
+			"name": "decodeEthereumBurnPayload",
 			"inputs": [
 				{"name":"data","type":"cell"}
 			],
 			"outputs": [
 				{"name":"ethereumAddress","type":"uint160"},
 				{"name":"chainId","type":"uint32"}
+			]
+		},
+		{
+			"name": "encodeSolanaBurnPayload",
+			"inputs": [
+				{"name":"solanaOwnerAddress","type":"uint256"},
+				{"components":[{"name":"account","type":"uint256"},{"name":"readOnly","type":"bool"},{"name":"isSigner","type":"bool"}],"name":"executeAccounts","type":"tuple[]"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
+		},
+		{
+			"name": "decodeSolanaBurnPayload",
+			"inputs": [
+				{"name":"data","type":"cell"}
+			],
+			"outputs": [
+				{"name":"solanaOwnerAddress","type":"uint256"},
+				{"components":[{"name":"account","type":"uint256"},{"name":"readOnly","type":"bool"},{"name":"isSigner","type":"bool"}],"name":"executeAccounts","type":"tuple[]"}
 			]
 		},
 		{
@@ -112,7 +187,7 @@
 			]
 		},
 		{
-			"name": "encodeMultiVaultAlienEVM",
+			"name": "encodeMultiVaultAlienEVMEverscale",
 			"inputs": [
 				{"name":"base_chainId","type":"uint256"},
 				{"name":"base_token","type":"uint160"},
@@ -131,7 +206,7 @@
 			]
 		},
 		{
-			"name": "encodeMultiVaultNativeEVM",
+			"name": "encodeMultiVaultNativeEVMEverscale",
 			"inputs": [
 				{"name":"token_wid","type":"int8"},
 				{"name":"token_addr","type":"uint256"},
@@ -147,7 +222,7 @@
 			]
 		},
 		{
-			"name": "encodeAlienBurnPayload",
+			"name": "encodeAlienBurnPayloadEthereum",
 			"inputs": [
 				{"name":"recipient","type":"uint160"},
 				{"components":[{"name":"recipient","type":"uint160"},{"name":"payload","type":"bytes"},{"name":"strict","type":"bool"}],"name":"callback","type":"tuple"}
@@ -157,7 +232,17 @@
 			]
 		},
 		{
-			"name": "encodeNativeTransferPayload",
+			"name": "encodeAlienBurnPayloadSolana",
+			"inputs": [
+				{"name":"recipient","type":"uint256"},
+				{"components":[{"name":"account","type":"uint256"},{"name":"readOnly","type":"bool"},{"name":"isSigner","type":"bool"}],"name":"executeAccounts","type":"tuple[]"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
+			]
+		},
+		{
+			"name": "encodeNativeTransferPayloadEthereum",
 			"inputs": [
 				{"name":"recipient","type":"uint160"},
 				{"name":"chainId","type":"uint256"},
@@ -168,7 +253,7 @@
 			]
 		},
 		{
-			"name": "decodeMultiVaultAlienEverscale",
+			"name": "decodeMultiVaultAlienEverscaleEthereum",
 			"inputs": [
 				{"name":"data","type":"cell"}
 			],
@@ -183,7 +268,7 @@
 			]
 		},
 		{
-			"name": "decodeMultiVaultNativeEverscale",
+			"name": "decodeMultiVaultNativeEverscaleEthereum",
 			"inputs": [
 				{"name":"data","type":"cell"}
 			],
@@ -202,7 +287,72 @@
 			]
 		},
 		{
-			"name": "encodeEthereumEventData",
+			"name": "encodeMultiVaultAlienSolanaEverscale",
+			"inputs": [
+				{"name":"base_token","type":"uint256"},
+				{"name":"name","type":"string"},
+				{"name":"symbol","type":"string"},
+				{"name":"decimals","type":"uint8"},
+				{"name":"amount","type":"uint128"},
+				{"name":"recipient","type":"address"},
+				{"name":"value","type":"uint64"},
+				{"name":"expected_evers","type":"uint256"},
+				{"name":"payload","type":"cell"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
+			]
+		},
+		{
+			"name": "encodeMultiVaultNativeSolanaEverscale",
+			"inputs": [
+				{"name":"token","type":"address"},
+				{"name":"amount","type":"uint128"},
+				{"name":"sol_amount","type":"uint64"},
+				{"name":"recipient","type":"address"},
+				{"name":"payload","type":"bytes"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
+			]
+		},
+		{
+			"name": "encodeNativeTransferPayloadSolana",
+			"inputs": [
+				{"name":"recipient","type":"uint256"},
+				{"components":[{"name":"account","type":"uint256"},{"name":"readOnly","type":"bool"},{"name":"isSigner","type":"bool"}],"name":"executeAccounts","type":"tuple[]"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
+			]
+		},
+		{
+			"name": "decodeMultiVaultAlienEverscaleSolana",
+			"inputs": [
+				{"name":"data","type":"cell"}
+			],
+			"outputs": [
+				{"name":"base_token","type":"uint256"},
+				{"name":"amount","type":"uint128"},
+				{"name":"recipient","type":"uint256"}
+			]
+		},
+		{
+			"name": "decodeMultiVaultNativeEverscaleSolana",
+			"inputs": [
+				{"name":"data","type":"cell"}
+			],
+			"outputs": [
+				{"name":"token","type":"address"},
+				{"name":"name","type":"string"},
+				{"name":"symbol","type":"string"},
+				{"name":"decimals","type":"uint8"},
+				{"name":"amount","type":"uint128"},
+				{"name":"recipient","type":"uint256"}
+			]
+		},
+		{
+			"name": "encodeEthereumEverscaleEventData",
 			"inputs": [
 				{"name":"tokens","type":"uint256"},
 				{"name":"wid","type":"int128"},
@@ -213,7 +363,18 @@
 			]
 		},
 		{
-			"name": "decodeEthereumEventData",
+			"name": "encodeSolanaEverscaleEventData",
+			"inputs": [
+				{"name":"sender_addr","type":"uint256"},
+				{"name":"tokens","type":"uint128"},
+				{"name":"receiver_addr","type":"address"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
+		},
+		{
+			"name": "decodeEthereumEverscaleEventData",
 			"inputs": [
 				{"name":"data","type":"cell"}
 			],
@@ -224,7 +385,18 @@
 			]
 		},
 		{
-			"name": "encodeEverscaleEventData",
+			"name": "decodeSolanaEverscaleEventData",
+			"inputs": [
+				{"name":"data","type":"cell"}
+			],
+			"outputs": [
+				{"name":"sender_addr","type":"uint256"},
+				{"name":"tokens","type":"uint128"},
+				{"name":"receiver_addr","type":"address"}
+			]
+		},
+		{
+			"name": "encodeEverscaleEthereumEventData",
 			"inputs": [
 				{"name":"wid","type":"int8"},
 				{"name":"addr","type":"uint256"},
@@ -237,7 +409,18 @@
 			]
 		},
 		{
-			"name": "decodeEverscaleEventData",
+			"name": "encodeEverscaleSolanaEventData",
+			"inputs": [
+				{"name":"senderAddress","type":"address"},
+				{"name":"tokens","type":"uint128"},
+				{"name":"solanaOwnerAddress","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
+		},
+		{
+			"name": "decodeEverscaleEthereumEventData",
 			"inputs": [
 				{"name":"data","type":"cell"}
 			],
@@ -247,6 +430,17 @@
 				{"name":"tokens","type":"uint128"},
 				{"name":"ethereum_address","type":"uint160"},
 				{"name":"chainId","type":"uint32"}
+			]
+		},
+		{
+			"name": "decodeEverscaleSolanaEventData",
+			"inputs": [
+				{"name":"data","type":"cell"}
+			],
+			"outputs": [
+				{"name":"senderAddress","type":"address"},
+				{"name":"tokens","type":"uint128"},
+				{"name":"solanaOwnerAddress","type":"uint256"}
 			]
 		},
 		{

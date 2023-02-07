@@ -72,8 +72,7 @@
 				{"name":"ton_pubkeys","type":"uint256[]"},
 				{"name":"eth_addrs","type":"uint160[]"},
 				{"name":"staked_tokens","type":"uint128[]"},
-				{"name":"ton_deposit","type":"uint128"},
-				{"name":"send_gas_to","type":"address"}
+				{"name":"ton_deposit","type":"uint128"}
 			],
 			"outputs": [
 			]
@@ -145,7 +144,8 @@
 				{"name":"round_reward","type":"uint128"},
 				{"name":"reward_round_num","type":"uint32"},
 				{"name":"duplicate","type":"bool"},
-				{"name":"eth_keys","type":"uint160[]"}
+				{"name":"eth_keys","type":"uint160[]"},
+				{"name":"ton_keys","type":"uint256[]"}
 			],
 			"outputs": [
 			]
@@ -307,9 +307,10 @@
 			]
 		},
 		{
-			"name": "setTonEventDeployValue",
+			"name": "setEventDeployValues",
 			"inputs": [
-				{"name":"new_value","type":"uint128"},
+				{"name":"ton_eth_event_value","type":"uint128"},
+				{"name":"ton_sol_event_value","type":"uint128"},
 				{"name":"send_gas_to","type":"address"}
 			],
 			"outputs": [
@@ -328,6 +329,15 @@
 			"name": "setBridgeEventTonEthConfig",
 			"inputs": [
 				{"name":"new_bridge_event_config_ton_eth","type":"address"},
+				{"name":"send_gas_to","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setBridgeEventTonSolConfig",
+			"inputs": [
+				{"name":"new_bridge_event_config_ton_sol","type":"address"},
 				{"name":"send_gas_to","type":"address"}
 			],
 			"outputs": [
@@ -416,10 +426,10 @@
 		{
 			"name": "onAcceptTokensTransfer",
 			"inputs": [
-				{"name":"tokenRoot","type":"address"},
+				{"name":"value0","type":"address"},
 				{"name":"amount","type":"uint128"},
 				{"name":"sender","type":"address"},
-				{"name":"senderWallet","type":"address"},
+				{"name":"value3","type":"address"},
 				{"name":"remainingGasTo","type":"address"},
 				{"name":"payload","type":"cell"}
 			],
@@ -580,6 +590,14 @@
 			"outputs": [
 				{"name":"delegators","type":"map(address,uint256[])"}
 			]
+		},
+		{
+			"name": "bridge_event_config_ton_sol",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"bridge_event_config_ton_sol","type":"address"}
+			]
 		}
 	],
 	"data": [
@@ -676,6 +694,16 @@
 			]
 		},
 		{
+			"name": "RelayRoundCreationSol",
+			"inputs": [
+				{"name":"round_num","type":"uint32"},
+				{"name":"ton_pubkeys","type":"uint256[]"},
+				{"name":"round_end","type":"uint32"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "RelaySlashed",
 			"inputs": [
 				{"name":"user","type":"address"},
@@ -726,7 +754,23 @@
 			]
 		},
 		{
-			"name": "TonEventDeployValueUpdated",
+			"name": "BridgeEventTonSolConfigUpdated",
+			"inputs": [
+				{"name":"new_bridge_event_config_ton_sol","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "TonEthEventDeployValueUpdated",
+			"inputs": [
+				{"name":"new_value","type":"uint128"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "TonSolEventDeployValueUpdated",
 			"inputs": [
 				{"name":"new_value","type":"uint128"}
 			],
@@ -834,8 +878,10 @@
 		{"components":[{"name":"platform_code","type":"cell"},{"name":"has_platform_code","type":"bool"},{"name":"user_data_code","type":"cell"},{"name":"user_data_version","type":"uint32"},{"name":"election_code","type":"cell"},{"name":"election_version","type":"uint32"},{"name":"relay_round_code","type":"cell"},{"name":"relay_round_version","type":"uint32"}],"name":"code_data","type":"tuple"},
 		{"components":[{"name":"currentRelayRound","type":"uint32"},{"name":"currentRelayRoundStartTime","type":"uint32"},{"name":"currentRelayRoundEndTime","type":"uint32"},{"name":"currentElectionStartTime","type":"uint32"},{"name":"currentElectionEnded","type":"bool"}],"name":"round_details","type":"tuple"},
 		{"components":[{"name":"dao_root","type":"address"},{"name":"bridge_event_config_eth_ton","type":"address"},{"name":"bridge_event_config_ton_eth","type":"address"},{"name":"tokenRoot","type":"address"},{"name":"tokenWallet","type":"address"},{"name":"admin","type":"address"},{"name":"rescuer","type":"address"},{"name":"rewarder","type":"address"},{"name":"tokenBalance","type":"uint128"},{"name":"rewardTokenBalance","type":"uint128"},{"name":"lastRewardTime","type":"uint32"},{"components":[{"name":"accRewardPerShare","type":"uint256"},{"name":"rewardTokens","type":"uint128"},{"name":"totalReward","type":"uint128"},{"name":"startTime","type":"uint32"}],"name":"rewardRounds","type":"tuple[]"},{"name":"emergency","type":"bool"}],"name":"base_details","type":"tuple"},
+		{"name":"bridge_event_config_ton_sol","type":"address"},
 		{"components":[{"name":"relayLockTime","type":"uint32"},{"name":"relayRoundTime","type":"uint32"},{"name":"electionTime","type":"uint32"},{"name":"timeBeforeElection","type":"uint32"},{"name":"minRoundGapTime","type":"uint32"},{"name":"relaysCount","type":"uint16"},{"name":"minRelaysCount","type":"uint16"},{"name":"minRelayDeposit","type":"uint128"},{"name":"relayInitialTonDeposit","type":"uint128"},{"name":"relayRewardPerSecond","type":"uint128"},{"name":"userRewardPerSecond","type":"uint128"}],"name":"relay_config","type":"tuple"},
-		{"name":"tonEventDeployValue","type":"uint128"},
+		{"name":"tonEthEventDeployValue","type":"uint128"},
+		{"name":"tonSolEventDeployValue","type":"uint128"},
 		{"name":"deposit_nonce","type":"uint64"},
 		{"components":[{"name":"user","type":"address"},{"name":"amount","type":"uint128"},{"name":"send_gas_to","type":"address"}],"name":"deposits","type":"map(uint64,tuple)"}
 	]

@@ -3,7 +3,10 @@ const _ = require("lodash");
 
 module.exports = async ({getNamedAccounts, deployments}) => {
     const {
-        deployer
+        deployer,
+        weth,
+        bridge: bridge_,
+        owner
     } = await getNamedAccounts();
 
 
@@ -64,6 +67,29 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         address: proxy.address,
     });
 
+    // Initialize multivault
+    // - Get bridge address
+    let bridge_address;
+
+    if (bridge_ === ethers.constants.AddressZero) {
+        const bridge = await deployments.get('Bridge');
+
+        bridge_address = bridge.address;
+    } else {
+        bridge_address = bridge_;
+    }
+
+    const settings = await ethers.getContract('MultiVaultFacetSettings');
+
+    const {
+        data: multiVaultInitialize
+    } = await settings.populateTransaction.initialize(
+        bridge_address,
+        owner,
+        weth
+    );
+
+
     await deployments.execute(
         'MultiVault',
         {
@@ -72,8 +98,8 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         },
         'diamondCut',
         facetCuts,
-        ethers.constants.AddressZero,
-        '0x'
+        settings.address,
+        multiVaultInitialize
     );
 };
 

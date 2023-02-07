@@ -1,0 +1,20 @@
+pragma ever-solidity >= 0.39.0;
+
+import "./IBasicEvent.tsol";
+
+
+interface IEverscaleEthereumEvent is IBasicEvent {
+    struct EverscaleEthereumEventVoteData {
+        uint64 eventTransactionLt;
+        uint32 eventTimestamp;
+        TvmCell eventData;
+    }
+
+    struct EverscaleEthereumEventInitData {
+        EverscaleEthereumEventVoteData voteData;
+        address configuration;
+        address staking;
+    }
+
+    function close() external view;
+}

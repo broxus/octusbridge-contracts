@@ -1,0 +1,14 @@
+pragma ever-solidity >= 0.39.0;
+
+import "../../bridge/interfaces/event-contracts/multivault/evm/IEVMCallback.tsol";
+
+
+contract MediatorCellEncoder is IEVMCallback {
+    function encodeAlienHiddenBridgeEventPayload(
+        uint8 operation,
+        address proxy,
+        TvmCell payload
+    ) external pure returns(TvmCell) {
+        return abi.encode(operation, proxy, payload);
+    }
+}

@@ -1,0 +1,101 @@
+pragma ever-solidity >= 0.39.0;
+pragma AbiHeader time;
+pragma AbiHeader pubkey;
+
+
+import "../../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V1.tsol";
+import "./ProxyMultiVaultAlien_V6_MergeRouter.tsol";
+
+import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
+import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
+
+
+contract ProxyMultiVaultAlien_V6 is
+    ProxyMultiVaultAlien_V6_MergeRouter,
+    CheckPubKey,
+    RandomNonce
+{
+    constructor(
+        address owner_
+    ) public checkPubKey {
+        tvm.accept();
+
+        _reserveTargetBalance();
+
+        setOwnership(owner_);
+
+        owner_.transfer({
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        });
+    }
+
+    /// @notice Get current contract API version.
+    /// Each time contract is upgraded, API version is incremented.
+    /// @return Current API version
+    function apiVersion() external override view responsible returns(uint8) {
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} api_version;
+    }
+
+    function upgrade(
+        TvmCell code
+    ) external onlyOwner {
+        TvmCell data = abi.encode(
+            evmConfiguration,
+            solanaConfiguration,
+            _randomNonce,
+            owner,
+            manager,
+            mergeRouter,
+            mergePool,
+            mergePoolPlatform,
+            mergePoolVersion
+        );
+
+        tvm.setcode(code);
+        tvm.setCurrentCode(code);
+
+        onCodeUpgrade(data);
+    }
+
+    function onCodeUpgrade(TvmCell data) private {
+        tvm.resetStorage();
+
+        (
+            IProxyMultiVaultAlien_V1.Configuration config_,
+            uint8 api_version_,
+            uint _randomNonce_,
+            address owner_,
+
+            address manager_,
+            TvmCell mergeRouter_,
+            TvmCell mergePool_,
+            TvmCell mergePoolPlatform_,
+            uint8 _mergePoolVersion
+        ) = abi.decode(
+            data,
+            (
+                IProxyMultiVaultAlien_V1.Configuration, uint8, uint, address,
+                address, TvmCell, TvmCell, TvmCell, uint8
+            )
+        );
+
+        evmConfiguration.alienTokenRootCode = config_.alienTokenRootCode;
+        evmConfiguration.alienTokenWalletCode = config_.alienTokenWalletCode;
+        evmConfiguration.alienTokenWalletPlatformCode = config_.alienTokenWalletPlatformCode;
+        evmConfiguration.everscaleConfiguration = config_.everscaleConfiguration;
+        evmConfiguration.evmConfigurations = config_.evmConfigurations;
+
+        api_version = api_version_ + 1;
+        _randomNonce = _randomNonce_;
+        owner = owner_;
+
+        manager = manager_;
+        mergeRouter = mergeRouter_;
+        mergePool = mergePool_;
+        mergePoolPlatform = mergePoolPlatform_;
+        mergePoolVersion = _mergePoolVersion;
+    }
+
+}

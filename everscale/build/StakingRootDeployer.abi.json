@@ -19,6 +19,7 @@
 				{"name":"_rescuer","type":"address"},
 				{"name":"_bridge_event_config_eth_ton","type":"address"},
 				{"name":"_bridge_event_config_ton_eth","type":"address"},
+				{"name":"_bridge_event_config_ton_sol","type":"address"},
 				{"name":"_tokenRoot","type":"address"},
 				{"name":"_deploy_nonce","type":"uint32"}
 			],

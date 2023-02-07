@@ -1,0 +1,21 @@
+pragma ever-solidity >= 0.39.0;
+
+import "./IBasicEvent.tsol";
+
+
+interface IEthereumEverscaleEvent {
+    struct EthereumEverscaleEventVoteData {
+        uint eventTransaction;
+        uint32 eventIndex;
+        TvmCell eventData;
+        uint32 eventBlockNumber;
+        uint eventBlock;
+    }
+
+    struct EthereumEverscaleEventInitData {
+        EthereumEverscaleEventVoteData voteData;
+        address configuration;
+        address staking;
+        uint32 chainId;
+    }
+}

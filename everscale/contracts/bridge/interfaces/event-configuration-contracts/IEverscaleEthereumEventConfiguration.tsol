@@ -1,0 +1,30 @@
+pragma ever-solidity >= 0.39.0;
+
+import "./IBasicEventConfiguration.tsol";
+import "./../event-contracts/IEverscaleEthereumEvent.tsol";
+
+
+interface IEverscaleEthereumEventConfiguration is IBasicEventConfiguration {
+    struct EverscaleEthereumEventConfiguration {
+        address eventEmitter;
+        uint160 proxy;
+        uint32 startTimestamp;
+        uint32 endTimestamp;
+    }
+
+    function deployEvent(
+        IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData
+    ) external;
+
+    function deriveEventAddress(
+        IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData
+    ) external view responsible returns (address eventContract);
+
+    function getDetails() external view responsible returns(
+        BasicConfiguration _basicConfiguration,
+        EverscaleEthereumEventConfiguration _networkConfiguration,
+        TvmCell _meta
+    );
+
+    function setEndTimestamp(uint32 endTimestamp) external;
+}

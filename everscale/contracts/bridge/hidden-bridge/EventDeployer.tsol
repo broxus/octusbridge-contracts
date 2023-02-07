@@ -1,0 +1,63 @@
+pragma ever-solidity >= 0.39.0;
+
+pragma AbiHeader expire;
+pragma AbiHeader pubkey;
+
+import "@broxus/contracts/contracts/access/ExternalOwner.tsol";
+import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
+
+import "./../interfaces/event-contracts/IEthereumEverscaleEvent.tsol";
+import "./../interfaces/event-configuration-contracts/IEthereumEverscaleEventConfiguration.tsol";
+
+
+contract EventDeployer is ExternalOwner, RandomNonce {
+    address public guardian;
+
+    constructor(
+        address _guardian,
+        uint _owner
+    ) public {
+        tvm.accept();
+
+        guardian = _guardian;
+        setOwnership(_owner);
+    }
+
+    struct DeployRequest {
+        address configuration;
+        IEthereumEverscaleEvent.EthereumEverscaleEventVoteData[] eventsVoteData;
+        uint128[] values;
+        uint128 value;
+    }
+
+    modifier onlyGuardian() {
+        require(msg.sender == guardian);
+
+        _;
+    }
+
+    function drain(
+        address receiver,
+        uint128 value
+    ) external view onlyGuardian {
+        receiver.transfer({
+            value: value,
+            flag: 0,
+            bounce: true
+        });
+    }
+
+    function deployEvents(
+        DeployRequest[] requests
+    ) external onlyOwner view {
+        tvm.accept();
+
+        for (DeployRequest request: requests) {
+            IEthereumEverscaleEventConfiguration(request.configuration).deployEvents{
+                value: request.value,
+                bounce: true,
+                flag: 0
+            }(request.eventsVoteData, request.values);
+        }
+    }
+}

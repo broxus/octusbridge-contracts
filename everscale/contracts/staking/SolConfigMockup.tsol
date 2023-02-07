@@ -1,0 +1,18 @@
+pragma ever-solidity >= 0.39.0;
+pragma AbiHeader pubkey;
+
+
+import "../bridge/interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
+
+
+contract TonConfigMockup {
+    uint64 static nonce;
+
+    constructor() public { tvm.accept(); }
+
+    function deployEvent(
+        IEverscaleSolanaEvent.EverscaleSolanaEventVoteData
+    ) external pure {
+        return;
+    }
+}

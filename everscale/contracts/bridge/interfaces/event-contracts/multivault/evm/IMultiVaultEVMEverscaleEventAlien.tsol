@@ -1,0 +1,67 @@
+pragma ever-solidity >= 0.39.0;
+
+
+import "./../../../event-configuration-contracts/IEthereumEverscaleEventConfiguration.tsol";
+import "./../../../alien-token-merge/merge-pool/IMergePool_V2.tsol";
+
+
+interface IMultiVaultEVMEverscaleEventAlien {
+    function receiveConfigurationDetails(
+        IEthereumEverscaleEventConfiguration.BasicConfiguration,
+        IEthereumEverscaleEventConfiguration.EthereumEverscaleEventConfiguration _networkConfiguration,
+        TvmCell
+    ) external;
+
+    function receiveAlienTokenRoot(
+        address token_
+    ) external;
+
+    function receiveTokenName(
+        string
+    ) external;
+
+    function receiveMergeRouter(
+        address router_
+    ) external;
+
+    function receiveMergeRouterPool(
+        address pool_
+    ) external;
+
+    function receiveMergePoolCanon(
+        address canon_,
+        IMergePool_V2.Token canonToken_
+    ) external;
+
+    function getDecodedData() external responsible returns(
+        uint256 base_chainId_,
+        uint160 base_token_,
+        string name_,
+        string symbol_,
+        uint8 decimals_,
+        uint128 amount_,
+        address recipient_,
+        uint value_,
+        uint expected_evers_,
+        TvmCell payload_,
+        address proxy_,
+        address token_
+    );
+
+    function getDecodedDataExtended() external responsible returns(
+        uint256 base_chainId_,
+        uint160 base_token_,
+        string name_,
+        string symbol_,
+        uint8 decimals_,
+        uint128 amount_,
+        address recipient_,
+        address proxy_,
+        address token_,
+        address router_,
+        address pool_,
+        address canon_,
+        address target_token_,
+        uint128 target_amount_
+    );
+}

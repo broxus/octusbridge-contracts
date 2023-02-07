@@ -1,0 +1,19 @@
+pragma ever-solidity >= 0.39.0;
+pragma AbiHeader pubkey;
+
+
+import "../bridge/interfaces/event-contracts/IEverscaleEthereumEvent.tsol";
+
+
+contract TonConfigMockup {
+    uint64 static nonce;
+
+    constructor() public { tvm.accept(); }
+
+    function deployEvent(
+        IEverscaleEthereumEvent.EverscaleEthereumEventVoteData
+    ) external pure {
+        return;
+    }
+
+}

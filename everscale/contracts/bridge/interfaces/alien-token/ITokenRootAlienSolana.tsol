@@ -1,0 +1,11 @@
+pragma ever-solidity >= 0.39.0;
+
+
+interface ITokenRootAlienSolana {
+    function meta() external responsible returns (
+        uint256 base_token,
+        string name,
+        string symbol,
+        uint8 decimals
+    );
+}

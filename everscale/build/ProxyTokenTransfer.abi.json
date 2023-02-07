@@ -12,6 +12,15 @@
 			]
 		},
 		{
+			"name": "onSolanaEventConfirmed",
+			"inputs": [
+				{"components":[{"components":[{"name":"accountSeed","type":"uint128"},{"name":"slot","type":"uint64"},{"name":"blockTime","type":"uint64"},{"name":"txSignature","type":"string"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"eventData","type":"tuple"},
+				{"name":"gasBackAddress","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "onEventConfirmed",
 			"inputs": [
 				{"components":[{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"},{"name":"chainId","type":"uint32"}],"name":"eventData","type":"tuple"},
@@ -38,7 +47,7 @@
 				{"name":"answerId","type":"uint32"}
 			],
 			"outputs": [
-				{"components":[{"name":"tonConfiguration","type":"address"},{"name":"ethereumConfigurations","type":"address[]"},{"name":"outdatedTokenRoots","type":"address[]"},{"name":"tokenRoot","type":"address"},{"name":"settingsDeployWalletGrams","type":"uint128"}],"name":"value0","type":"tuple"},
+				{"components":[{"name":"everscaleEthereumConfiguration","type":"address"},{"name":"ethereumEverscaleConfigurations","type":"address[]"},{"name":"everscaleSolanaConfiguration","type":"address"},{"name":"solanaEverscaleConfiguration","type":"address"},{"name":"tokenRoot","type":"address"},{"name":"outdatedTokenRoots","type":"address[]"},{"name":"settingsDeployWalletGrams","type":"uint128"}],"name":"value0","type":"tuple"},
 				{"name":"value1","type":"address"},
 				{"name":"value2","type":"uint128"},
 				{"name":"value3","type":"bool"}
@@ -59,13 +68,13 @@
 				{"name":"answerId","type":"uint32"}
 			],
 			"outputs": [
-				{"components":[{"name":"tonConfiguration","type":"address"},{"name":"ethereumConfigurations","type":"address[]"},{"name":"outdatedTokenRoots","type":"address[]"},{"name":"tokenRoot","type":"address"},{"name":"settingsDeployWalletGrams","type":"uint128"}],"name":"value0","type":"tuple"}
+				{"components":[{"name":"everscaleEthereumConfiguration","type":"address"},{"name":"ethereumEverscaleConfigurations","type":"address[]"},{"name":"everscaleSolanaConfiguration","type":"address"},{"name":"solanaEverscaleConfiguration","type":"address"},{"name":"tokenRoot","type":"address"},{"name":"outdatedTokenRoots","type":"address[]"},{"name":"settingsDeployWalletGrams","type":"uint128"}],"name":"value0","type":"tuple"}
 			]
 		},
 		{
 			"name": "setConfiguration",
 			"inputs": [
-				{"components":[{"name":"tonConfiguration","type":"address"},{"name":"ethereumConfigurations","type":"address[]"},{"name":"outdatedTokenRoots","type":"address[]"},{"name":"tokenRoot","type":"address"},{"name":"settingsDeployWalletGrams","type":"uint128"}],"name":"_config","type":"tuple"},
+				{"components":[{"name":"everscaleEthereumConfiguration","type":"address"},{"name":"ethereumEverscaleConfigurations","type":"address[]"},{"name":"everscaleSolanaConfiguration","type":"address"},{"name":"solanaEverscaleConfiguration","type":"address"},{"name":"tokenRoot","type":"address"},{"name":"outdatedTokenRoots","type":"address[]"},{"name":"settingsDeployWalletGrams","type":"uint128"}],"name":"_config","type":"tuple"},
 				{"name":"gasBackAddress","type":"address"}
 			],
 			"outputs": [
@@ -90,6 +99,14 @@
 			]
 		},
 		{
+			"name": "upgrade",
+			"inputs": [
+				{"name":"code","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "transferOwnership",
 			"inputs": [
 				{"name":"newOwner","type":"address"}
@@ -105,7 +122,7 @@
 			]
 		},
 		{
-			"name": "encodeEthereumEventData",
+			"name": "encodeEthereumEverscaleEventData",
 			"inputs": [
 				{"name":"tokens","type":"uint256"},
 				{"name":"wid","type":"int128"},
@@ -116,7 +133,18 @@
 			]
 		},
 		{
-			"name": "decodeEthereumEventData",
+			"name": "encodeSolanaEverscaleEventData",
+			"inputs": [
+				{"name":"sender_addr","type":"uint256"},
+				{"name":"tokens","type":"uint128"},
+				{"name":"receiver_addr","type":"address"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
+		},
+		{
+			"name": "decodeEthereumEverscaleEventData",
 			"inputs": [
 				{"name":"data","type":"cell"}
 			],
@@ -127,7 +155,18 @@
 			]
 		},
 		{
-			"name": "encodeEverscaleEventData",
+			"name": "decodeSolanaEverscaleEventData",
+			"inputs": [
+				{"name":"data","type":"cell"}
+			],
+			"outputs": [
+				{"name":"sender_addr","type":"uint256"},
+				{"name":"tokens","type":"uint128"},
+				{"name":"receiver_addr","type":"address"}
+			]
+		},
+		{
+			"name": "encodeEverscaleEthereumEventData",
 			"inputs": [
 				{"name":"wid","type":"int8"},
 				{"name":"addr","type":"uint256"},
@@ -140,7 +179,18 @@
 			]
 		},
 		{
-			"name": "decodeEverscaleEventData",
+			"name": "encodeEverscaleSolanaEventData",
+			"inputs": [
+				{"name":"senderAddress","type":"address"},
+				{"name":"tokens","type":"uint128"},
+				{"name":"solanaOwnerAddress","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
+		},
+		{
+			"name": "decodeEverscaleEthereumEventData",
 			"inputs": [
 				{"name":"data","type":"cell"}
 			],
@@ -150,6 +200,17 @@
 				{"name":"tokens","type":"uint128"},
 				{"name":"ethereum_address","type":"uint160"},
 				{"name":"chainId","type":"uint32"}
+			]
+		},
+		{
+			"name": "decodeEverscaleSolanaEventData",
+			"inputs": [
+				{"name":"data","type":"cell"}
+			],
+			"outputs": [
+				{"name":"senderAddress","type":"address"},
+				{"name":"tokens","type":"uint128"},
+				{"name":"solanaOwnerAddress","type":"uint256"}
 			]
 		},
 		{
@@ -174,22 +235,32 @@
 	],
 	"events": [
 		{
-			"name": "Withdraw",
+			"name": "OwnershipTransferred",
+			"inputs": [
+				{"name":"previousOwner","type":"address"},
+				{"name":"newOwner","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "WithdrawSolana",
+			"inputs": [
+				{"name":"addr","type":"address"},
+				{"name":"tokens","type":"uint128"},
+				{"name":"solana_addr","type":"uint256"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "WithdrawEthereum",
 			"inputs": [
 				{"name":"wid","type":"int8"},
 				{"name":"addr","type":"uint256"},
 				{"name":"tokens","type":"uint128"},
 				{"name":"eth_addr","type":"uint160"},
 				{"name":"chainId","type":"uint32"}
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "OwnershipTransferred",
-			"inputs": [
-				{"name":"previousOwner","type":"address"},
-				{"name":"newOwner","type":"address"}
 			],
 			"outputs": [
 			]
@@ -201,8 +272,9 @@
 		{"name":"_constructorFlag","type":"bool"},
 		{"name":"_randomNonce","type":"uint256"},
 		{"name":"owner","type":"address"},
-		{"components":[{"name":"tonConfiguration","type":"address"},{"name":"ethereumConfigurations","type":"address[]"},{"name":"outdatedTokenRoots","type":"address[]"},{"name":"tokenRoot","type":"address"},{"name":"settingsDeployWalletGrams","type":"uint128"}],"name":"config","type":"tuple"},
+		{"components":[{"name":"everscaleEthereumConfiguration","type":"address"},{"name":"ethereumEverscaleConfigurations","type":"address[]"},{"name":"everscaleSolanaConfiguration","type":"address"},{"name":"solanaEverscaleConfiguration","type":"address"},{"name":"tokenRoot","type":"address"},{"name":"outdatedTokenRoots","type":"address[]"},{"name":"settingsDeployWalletGrams","type":"uint128"}],"name":"config","type":"tuple"},
 		{"name":"burnedCount","type":"uint128"},
+		{"name":"mintedCount","type":"uint128"},
 		{"name":"paused","type":"bool"}
 	]
 }

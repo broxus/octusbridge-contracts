@@ -1,0 +1,266 @@
+pragma ever-solidity >= 0.39.0;
+
+import "./interfaces/IProposal.tsol";
+import "./interfaces/IDaoRoot.tsol";
+import "./interfaces/IUpgradableByRequest.tsol";
+
+import "./libraries/DaoErrors.tsol";
+import "./libraries/Gas.tsol";
+
+import "./structures/PlatformTypes.tsol";
+
+import "../staking/interfaces/IUserData.tsol";
+import {
+    PlatformTypes as StakingPlatformTypes
+} from "../staking/libraries/PlatformTypes.tsol";
+
+import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
+import "@broxus/contracts/contracts/platform/Platform.tsol";
+import "@broxus/contracts/contracts/platform/PlatformBase.tsol";
+
+contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformTypes {
+    uint32 public /*static */ id;
+
+    address public stakingRoot;
+
+    address public proposer;
+    string public description;
+    TonAction[] public tonActions;
+    EthAction[] public ethActions;
+    uint16 public proposalVersion;
+    ProposalConfiguration public config;
+    uint32 public startTime;
+    uint32 public endTime;
+    uint32 public executionTime;
+    bool public canceled;
+    bool public executed;
+
+    uint128 public forVotes;
+    uint128 public againstVotes;
+
+    modifier onlyStakingAccount(address accountOwner) {
+        require(msg.sender == expectedAccountAddress(accountOwner), DaoErrors.NOT_ACCOUNT);
+        _;
+    }
+    /*******************
+    * Getter functions *
+    *******************/
+
+    function getOverview() override public view responsible returns (
+        address proposer_,
+        string description_,
+        uint32 startTime_,
+        uint32 endTime_,
+        uint32 executionTime_,
+        uint128 forVotes_,
+        uint128 againstVotes_,
+        uint128 quorumVotes_,
+        ProposalState state_
+    ) {
+        return{
+            value: 0,
+            flag: MsgFlag.REMAINING_GAS,
+            bounce: false
+        }(proposer, description, startTime, endTime, executionTime, forVotes, againstVotes, config.quorumVotes, state());
+
+    }
+
+    function getProposer() override public view responsible returns (address) {
+        return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} proposer;
+    }
+
+    function getActions() override public view responsible returns (TonAction[], EthAction[]) {
+        return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} (tonActions, ethActions);
+    }
+
+    function getConfig() override public view responsible returns (ProposalConfiguration) {
+        return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} config;
+    }
+
+    function getTimings() override public view responsible returns (uint32, uint32, uint32) {
+        return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} (startTime, endTime, executionTime);
+    }
+
+    function getVotes() override public view responsible returns (uint128, uint128, uint128) {
+        return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} (forVotes, againstVotes, config.quorumVotes);
+    }
+
+    function getStatuses() override public view responsible returns (bool, bool) {
+        return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} (canceled, executed);
+    }
+
+    function getState() override public view responsible returns (ProposalState) {
+        return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} state();
+    }
+
+    function queue() override public {
+        require(state() == ProposalState.Succeeded, DaoErrors.PROPOSAL_IS_NOT_SUCCEEDED);
+        tvm.accept();
+        executionTime = endTime + config.timeLock;
+        emit Queued(executionTime);
+        IUserData(expectedAccountAddress(proposer)).unlockVoteTokens{
+            value: Gas.UNLOCK_VOTE_VALUE,
+            flag: MsgFlag.SENDER_PAYS_FEES
+        }(id, true);
+    }
+
+    function execute() override public {
+        require(state() == ProposalState.Queued, DaoErrors.PROPOSAL_IS_NOT_QUEUED);
+        require(now >= executionTime, DaoErrors.EXECUTION_TIME_NOT_COME_YET);
+        tvm.accept();
+        executed = true;
+        emit Executed();
+        IDaoRoot(root).onProposalSucceeded{
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(id, proposer, tonActions, ethActions);
+    }
+
+    function cancel() override public {
+        require(!executed, DaoErrors.PROPOSAL_IS_EXECUTED);
+        require(msg.sender == proposer, DaoErrors.NOT_OWNER);
+        tvm.rawReserve(Gas.PROPOSAL_INITIAL_BALANCE, 2);
+        canceled = true;
+        emit Canceled();
+        IUserData(expectedAccountAddress(proposer)).unlockVoteTokens{
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(id, true);
+    }
+
+    function castVote(
+        uint32 /*proposalId*/,
+        address voter,
+        uint128 votes,
+        bool support,
+        string reason
+    ) override public onlyStakingAccount(voter) {
+        if (state() == ProposalState.Active) {
+            if (support) {
+                forVotes += votes;
+            } else {
+                againstVotes += votes;
+            }
+            emit VoteCast(voter, support, votes, reason);
+            IUserData(msg.sender).voteCasted{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(id);
+        } else {
+            IUserData(msg.sender).rejectVote{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(id);
+        }
+    }
+
+    function onActionsExecuted() override public onlyRoot {
+        tvm.rawReserve(Gas.ACCOUNT_INITIAL_BALANCE, 2);
+        proposer.transfer({value: 0, flag: MsgFlag.ALL_NOT_RESERVED});
+    }
+
+    function state() private view returns (ProposalState) {
+        if (canceled) {
+            return ProposalState.Canceled;
+        } else if (executed) {
+            return ProposalState.Executed;
+        } else if (now <= startTime) {
+            return ProposalState.Pending;
+        } else if (now <= endTime) {
+            return ProposalState.Active;
+        } else if (forVotes <= againstVotes || forVotes < config.quorumVotes) {
+            return ProposalState.Failed;
+        } else if (executionTime == 0) {
+            return ProposalState.Succeeded;
+        } else if (now > executionTime + config.gracePeriod) {
+            return ProposalState.Expired;
+        } else {
+            return ProposalState.Queued;
+        }
+    }
+
+    function unlockCastedVote(address accountOwner) override public view onlyStakingAccount(accountOwner) {
+        ProposalState currentState = state();
+        bool success = currentState != ProposalState.Active;
+        IUserData(msg.sender).unlockCastedVote{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(id, success);
+    }
+
+    function unlockVoteTokens(address accountOwner) override public view onlyStakingAccount(accountOwner) {
+        ProposalState currentState = state();
+        bool success = (
+            accountOwner == proposer &&
+            currentState != ProposalState.Pending &&
+            currentState != ProposalState.Active
+        );
+        IUserData(msg.sender).unlockVoteTokens{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(id, success);
+    }
+
+    function expectedAccountAddress(address accountOwner) private view returns (address) {
+        return address(tvm.hash(_buildStakingInitData(StakingPlatformTypes.UserData, _buildAccountInitialData(accountOwner))));
+    }
+
+    function _buildAccountInitialData(address accountOwner) private inline pure returns (TvmCell) {
+        TvmBuilder builder;
+        builder.store(accountOwner);
+        return builder.toCell();
+    }
+
+    function _buildStakingInitData(uint8 platformType, TvmCell initialData) private inline view returns (TvmCell) {
+        return tvm.buildStateInit({
+            contr: Platform,
+            varInit: {
+                root: stakingRoot,
+                platformType: platformType,
+                initialData: initialData,
+                platformCode: platformCode
+            },
+            pubkey: 0,
+            code: platformCode
+        });
+    }
+
+    function onCodeUpgrade(TvmCell data) private {
+        tvm.resetStorage();
+        TvmSlice s = data.toSlice();
+        (root, /*type*/, /*sendGasTo*/) = s.decode(address, uint8, address);
+
+        platformCode = s.loadRef();
+
+        TvmSlice initialData = s.loadRefAsSlice();
+        id = initialData.decode(uint32);
+
+        TvmCell params = s.loadRef();
+        (stakingRoot, proposer, description, tonActions, ethActions, config, proposalVersion)
+            = abi.decode(params, (address, address, string, TonAction[], EthAction[], ProposalConfiguration, uint16));
+        startTime = now + config.votingDelay;
+        endTime = startTime + config.votingPeriod;
+    }
+
+    /********************
+    * Upgrade functions *
+    ********************/
+
+    function requestUpgrade(address sendGasTo) override public view {
+        require(msg.sender == proposer, DaoErrors.NOT_OWNER);
+        require(msg.value >= Gas.UPGRADE_PROPOSAL_MIN_VALUE, DaoErrors.VALUE_TOO_LOW);
+        tvm.rawReserve(Gas.ACCOUNT_INITIAL_BALANCE, 2);
+        emit CodeUpgradeRequested(proposalVersion);
+        IDaoRoot(root).requestUpgradeProposal{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(proposalVersion, sendGasTo, id);
+    }
+
+    function upgrade(TvmCell code, uint16 newVersion, address sendGasTo) override public onlyRoot {
+        if (proposalVersion == newVersion) {
+            sendGasTo.transfer({value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false});
+        } else {
+            emit ProposalCodeUpgraded(newVersion);
+            TvmCell data = abi.encode(
+                root, proposer, stakingRoot,
+                id, description, config,
+                tonActions, ethActions,
+                startTime, endTime, executionTime,
+                canceled, executed,
+                forVotes, againstVotes,
+                proposalVersion, newVersion,
+                platformCode
+            );
+
+            tvm.setcode(code);
+
+            tvm.setCurrentCode(code);
+            onCodeUpgrade(data);
+        }}
+}

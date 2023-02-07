@@ -1,0 +1,52 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma ever-solidity >= 0.62.0;
+
+import "../../../../alien-token-merge/MergeRouter.tsol";
+import "./ProxyMultiVaultAlien_V6_MergePool.tsol";
+
+
+abstract contract ProxyMultiVaultAlien_V6_MergeRouter is ProxyMultiVaultAlien_V6_MergePool {
+    function deriveMergeRouter(
+        address token
+    ) external override responsible returns (address router) {
+        TvmCell stateInit = _buildMergeRouterInitState(token);
+
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
+    }
+
+    function deployMergeRouter(
+        address token
+    ) external override reserveAtLeastTargetBalance {
+        TvmCell stateInit = _buildMergeRouterInitState(token);
+
+        new MergeRouter{
+            stateInit: stateInit,
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(owner, manager);
+    }
+
+    function _buildMergeRouterInitState(
+        address token
+    ) internal view returns (TvmCell) {
+        return tvm.buildStateInit({
+            contr: MergeRouter,
+            varInit: {
+                token: token,
+                proxy: address(this)
+            },
+            pubkey: 0,
+            code: mergeRouter
+        });
+    }
+
+    /// @notice Set merge router code
+    /// Can be called only by `owner`
+    /// @param _mergeRouter New merge router code
+    function setMergeRouter(
+        TvmCell _mergeRouter
+    ) external override onlyOwner cashBack {
+        mergeRouter = _mergeRouter;
+    }
+}

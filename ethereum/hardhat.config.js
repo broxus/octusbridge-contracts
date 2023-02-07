@@ -5,7 +5,7 @@ require("@nomiclabs/hardhat-ethers");
 require('hardhat-deploy-ethers');
 require('hardhat-deploy');
 require('hardhat-abi-exporter');
-require("hardhat-gas-reporter");
+// require("hardhat-gas-reporter");
 require('@primitivefi/hardhat-dodoc');
 require('hardhat-contract-sizer');
 require("hardhat-diamond-abi");
@@ -90,7 +90,7 @@ const hardhatConfig = {
     flat: true,
     spacing: 2,
     runOnCompile: true,
-    only: [':Vault$', ':Bridge$', ':DAO$', ':MultiVaultFacet', ':Diamond']
+    only: [':Vault$', ':Bridge$', ':DAO$', ':MultiVaultFacet', ':Diamond', ':StakingRelayVerifier']
   },
   contractSizer: {
     alphaSort: true,

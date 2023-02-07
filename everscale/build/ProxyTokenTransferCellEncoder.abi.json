@@ -4,7 +4,7 @@
 	"header": ["time"],
 	"functions": [
 		{
-			"name": "encodeEthereumEventData",
+			"name": "encodeEthereumEverscaleEventData",
 			"inputs": [
 				{"name":"tokens","type":"uint256"},
 				{"name":"wid","type":"int128"},
@@ -15,7 +15,18 @@
 			]
 		},
 		{
-			"name": "decodeEthereumEventData",
+			"name": "encodeSolanaEverscaleEventData",
+			"inputs": [
+				{"name":"sender_addr","type":"uint256"},
+				{"name":"tokens","type":"uint128"},
+				{"name":"receiver_addr","type":"address"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
+		},
+		{
+			"name": "decodeEthereumEverscaleEventData",
 			"inputs": [
 				{"name":"data","type":"cell"}
 			],
@@ -26,7 +37,18 @@
 			]
 		},
 		{
-			"name": "encodeEverscaleEventData",
+			"name": "decodeSolanaEverscaleEventData",
+			"inputs": [
+				{"name":"data","type":"cell"}
+			],
+			"outputs": [
+				{"name":"sender_addr","type":"uint256"},
+				{"name":"tokens","type":"uint128"},
+				{"name":"receiver_addr","type":"address"}
+			]
+		},
+		{
+			"name": "encodeEverscaleEthereumEventData",
 			"inputs": [
 				{"name":"wid","type":"int8"},
 				{"name":"addr","type":"uint256"},
@@ -39,7 +61,18 @@
 			]
 		},
 		{
-			"name": "decodeEverscaleEventData",
+			"name": "encodeEverscaleSolanaEventData",
+			"inputs": [
+				{"name":"senderAddress","type":"address"},
+				{"name":"tokens","type":"uint128"},
+				{"name":"solanaOwnerAddress","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
+		},
+		{
+			"name": "decodeEverscaleEthereumEventData",
 			"inputs": [
 				{"name":"data","type":"cell"}
 			],
@@ -49,6 +82,17 @@
 				{"name":"tokens","type":"uint128"},
 				{"name":"ethereum_address","type":"uint160"},
 				{"name":"chainId","type":"uint32"}
+			]
+		},
+		{
+			"name": "decodeEverscaleSolanaEventData",
+			"inputs": [
+				{"name":"data","type":"cell"}
+			],
+			"outputs": [
+				{"name":"senderAddress","type":"address"},
+				{"name":"tokens","type":"uint128"},
+				{"name":"solanaOwnerAddress","type":"uint256"}
 			]
 		},
 		{
