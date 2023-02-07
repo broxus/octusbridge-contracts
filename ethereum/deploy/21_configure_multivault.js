@@ -3,33 +3,9 @@ const utils = require("./../test/utils");
 
 module.exports = async ({getNamedAccounts, deployments}) => {
     const {
-        deployer,
         owner,
-        bridge: bridge_,
         gasDonor,
-        weth,
     } = await getNamedAccounts();
-
-    let bridge_address;
-
-    if (bridge_ === ethers.constants.AddressZero) {
-        const bridge = await deployments.get('Bridge');
-
-        bridge_address = bridge.address;
-    } else {
-        bridge_address = bridge_;
-    }
-
-    await deployments.execute('MultiVault',
-        {
-            from: deployer,
-            log: true,
-        },
-        'initialize',
-        bridge_address,
-        owner,
-        weth
-    );
 
     await deployments.execute('MultiVault',
         {

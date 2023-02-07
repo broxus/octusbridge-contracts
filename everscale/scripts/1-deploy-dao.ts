@@ -1,11 +1,11 @@
 export {};
 
-const {
-  logContract,
-  isValidTonAddress,
-  deployAccount,
-  logger,
-} = require("../test/utils");
+const logger = require("mocha-logger");
+
+import {logContract} from "../test/utils/logger";
+import {isValidTonAddress} from "../test/utils";
+import {deployAccount} from "../test/utils/account";
+
 
 const prompts = require("prompts");
 const ora = require("ora");

@@ -1,6 +1,7 @@
 export {};
 
-const { logContract, isValidTonAddress } = require("../test/utils");
+const { isValidTonAddress } = require("../test/utils");
+import {logContract} from "../test/utils/logger";
 
 const prompts = require("prompts");
 const ora = require("ora");

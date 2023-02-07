@@ -1,6 +1,6 @@
 export {};
 
-const { logContract } = require("../test/utils");
+const { logContract } = require("../test/utils/logger");
 const ora = require("ora");
 
 async function main() {

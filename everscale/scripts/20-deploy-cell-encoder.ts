@@ -1,6 +1,6 @@
 export {};
 
-const { logContract } = require("../test/utils");
+const { logContract } = require("../test/utils/logger");
 
 const main = async () => {
   const signer = (await locklift.keystore.getSigner("0"))!;

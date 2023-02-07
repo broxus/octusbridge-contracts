@@ -1,11 +1,10 @@
-export {};
+import {logContract} from "../test/utils/logger";
+import {isValidTonAddress} from "../test/utils";
+import {deployAccount} from "../test/utils/account";
+
 const prompts = require("prompts");
 const ora = require("ora");
-const {
-  logContract,
-  isValidTonAddress,
-  deployAccount,
-} = require("../test/utils");
+
 
 async function main() {
   // bright
@@ -195,7 +194,7 @@ async function main() {
       _deploy_nonce: locklift.utils.getRandomNonce(),
     })
     .sendExternal({
-      publicKey: admin.address,
+      publicKey: signer.publicKey,
     });
 
   if (!address.output?.value0) {
@@ -306,8 +305,9 @@ async function main() {
       flags: 128,
       payload: "",
     })
-    .sendExternal({
-      publicKey: admin.address,
+    .send({
+      from: admin.address,
+      amount: locklift.utils.toNano(15),
     });
 
   spinner.succeed("Remaining evers sent ✔");
