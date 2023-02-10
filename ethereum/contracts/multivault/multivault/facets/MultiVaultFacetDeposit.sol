@@ -108,11 +108,14 @@ contract MultiVaultFacetDeposit is
 
             _transferToEverscaleNative(d, fee, msg.value);
         } else {
-            IERC20(token).safeTransferFrom(
-                tokens_owner,
-                address(this),
-                d.amount
-            );
+
+            if (tokens_owner != address(this)) {
+                IERC20(token).safeTransferFrom(
+                    tokens_owner,
+                    address(this),
+                    d.amount
+                );
+            }
 
             d.amount -= fee;
 
