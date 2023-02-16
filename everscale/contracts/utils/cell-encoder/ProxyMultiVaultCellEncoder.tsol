@@ -154,11 +154,13 @@ contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
     function encodeMultiVaultNativeSolanaEverscale(
         address token,
         uint128 amount,
-        uint64 sol_amount,
         address recipient,
-        bytes payload
+
+        uint64 value,
+        uint expected_evers,
+        TvmCell payload
     ) external pure returns (TvmCell) {
-        return abi.encode(token, amount, sol_amount, recipient, payload);
+        return abi.encode(token, amount, recipient, value, expected_evers, payload);
     }
 
     function encodeNativeTransferPayloadSolana(
