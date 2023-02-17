@@ -142,9 +142,10 @@ interface IProxyMultiVaultAlien_V6 is IEVMCallback, INetworks {
         string symbol,
         uint8 decimals,
         uint128 amount,
-        uint64 sol_amount,
         address recipient,
-        bytes payload
+        uint64 value,
+        uint expected_evers,
+        TvmCell payload
     );
 
     event EVMAlienTransfer(

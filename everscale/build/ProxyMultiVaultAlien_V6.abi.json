@@ -371,9 +371,10 @@
 				{"name":"symbol","type":"string"},
 				{"name":"decimals","type":"uint8"},
 				{"name":"amount","type":"uint128"},
-				{"name":"sol_amount","type":"uint64"},
 				{"name":"recipient","type":"address"},
-				{"name":"payload","type":"bytes"}
+				{"name":"value","type":"uint64"},
+				{"name":"expected_evers","type":"uint256"},
+				{"name":"payload","type":"cell"}
 			],
 			"outputs": [
 			]
