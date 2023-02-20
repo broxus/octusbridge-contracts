@@ -19,6 +19,7 @@ interface IMultiVaultEverscaleSolanaEventAlien {
         address remainingGasTo_,
         uint128 amount_,
         uint256 recipient_,
-        uint256 base_token_
+        uint256 base_token_,
+        bytes solanaPayload
     );
 }

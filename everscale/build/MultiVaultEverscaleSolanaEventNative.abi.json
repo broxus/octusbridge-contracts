@@ -58,7 +58,8 @@
 				{"name":"recipient_","type":"uint256"},
 				{"name":"name_","type":"string"},
 				{"name":"symbol_","type":"string"},
-				{"name":"decimals_","type":"uint8"}
+				{"name":"decimals_","type":"uint8"},
+				{"name":"solanaPayload_","type":"bytes"}
 			]
 		},
 		{
@@ -410,6 +411,7 @@
 		{"name":"name","type":"string"},
 		{"name":"symbol","type":"string"},
 		{"name":"decimals","type":"uint8"},
-		{"name":"expectedTokenWallet","type":"address"}
+		{"name":"expectedTokenWallet","type":"address"},
+		{"name":"solanaPayload","type":"bytes"}
 	]
 }

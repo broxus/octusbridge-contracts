@@ -36,6 +36,7 @@ contract MultiVaultEverscaleSolanaEventNative is
     string public symbol;
     uint8 public decimals;
     address public expectedTokenWallet;
+    bytes public solanaPayload;
 
     constructor(
         address _initializer,
@@ -62,9 +63,10 @@ contract MultiVaultEverscaleSolanaEventNative is
             amount,
             recipient,
             sender
+            solanaPayload
         ) = abi.decode(
             eventInitData.voteData.eventData,
-            (uint32, address, address, address, address, uint128, uint256, address)
+            (uint32, address, address, address, address, uint128, uint256, address, bytes)
         );
 
         initial_balance = address(this).balance;
@@ -143,7 +145,8 @@ contract MultiVaultEverscaleSolanaEventNative is
         uint256 recipient_,
         string name_,
         string symbol_,
-        uint8 decimals_
+        uint8 decimals_,
+        bytes solanaPayload_
     ) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(
             proxy,
@@ -154,7 +157,8 @@ contract MultiVaultEverscaleSolanaEventNative is
             recipient,
             name,
             symbol,
-            decimals
+            decimals,
+            solanaPayload
         );
     }
 
@@ -167,7 +171,8 @@ contract MultiVaultEverscaleSolanaEventNative is
             decimals,
 
             amount,
-            recipient
+            recipient,
+            solanaPayload
         );
     }
 

@@ -34,15 +34,17 @@ abstract contract ProxyMultiVaultNative_V3_Withdraw is
         if (network == Network.Solana) {
             (
                 uint256 recipient,
-                IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
-            ) = abi.decode(payload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[]));
+                IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
+                bytes solanaPayload
+            ) = abi.decode(payload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[], bytes));
 
             _deploySolanaEvent(
                 tokenRoot,
                 remainingGasTo,
                 amount,
                 recipient,
-                executeAccounts
+                executeAccounts,
+                solanaPayload
             );
         } else if (network == Network.EVM) {
             (
@@ -67,7 +69,8 @@ abstract contract ProxyMultiVaultNative_V3_Withdraw is
         address remainingGasTo,
         uint128 amount,
         uint256 recipient,
-        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
+        bytes solanaPayload
     ) internal view {
         TvmCell eventData = abi.encode(
             address(this), // Proxy address
@@ -75,7 +78,8 @@ abstract contract ProxyMultiVaultNative_V3_Withdraw is
             token, // Token root
             remainingGasTo, // Remaining gas to
             amount, // Amount of tokens to withdraw
-            recipient // Solana recipient address
+            recipient, // Solana recipient address
+            solanaPayload
         );
 
         IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(

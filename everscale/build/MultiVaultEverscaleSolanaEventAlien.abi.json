@@ -42,7 +42,8 @@
 				{"name":"remainingGasTo_","type":"address"},
 				{"name":"amount_","type":"uint128"},
 				{"name":"recipient_","type":"uint256"},
-				{"name":"base_token_","type":"uint256"}
+				{"name":"base_token_","type":"uint256"},
+				{"name":"solanaPayload_","type":"bytes"}
 			]
 		},
 		{
@@ -367,6 +368,7 @@
 		{"name":"sender","type":"address"},
 		{"name":"initial_balance","type":"uint128"},
 		{"name":"base_token","type":"uint256"},
-		{"name":"expectedToken","type":"address"}
+		{"name":"expectedToken","type":"address"},
+		{"name":"solanaPayload","type":"bytes"}
 	]
 }

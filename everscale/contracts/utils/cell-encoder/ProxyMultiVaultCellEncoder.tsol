@@ -60,9 +60,10 @@ contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
 
     function encodeAlienBurnPayloadSolana(
         uint256 recipient,
-        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
+        bytes payload
     ) external pure returns(TvmCell) {
-        TvmCell burnPayload = abi.encode(recipient, executeAccounts);
+        TvmCell burnPayload = abi.encode(recipient, executeAccounts, payload);
 
         return abi.encode(uint32(0), Network.Solana, burnPayload);
     }
@@ -165,9 +166,10 @@ contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
 
     function encodeNativeTransferPayloadSolana(
         uint256 recipient,
-        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
+        bytes solanaPayload
     ) external pure returns (TvmCell) {
-        TvmCell transferPayload = abi.encode(recipient, executeAccounts);
+        TvmCell transferPayload = abi.encode(recipient, executeAccounts, solanaPayload);
 
         return abi.encode(uint32(0), Network.Solana, transferPayload);
     }
@@ -177,11 +179,12 @@ contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
     ) external pure returns (
         uint256 base_token,
         uint128 amount,
-        uint256 recipient
+        uint256 recipient,
+        bytes payload
     ) {
-        (base_token, amount, recipient) = abi.decode(
+        (base_token, amount, recipient, payload) = abi.decode(
             data,
-            (uint256, uint128, uint256)
+            (uint256, uint128, uint256, bytes)
         );
     }
 

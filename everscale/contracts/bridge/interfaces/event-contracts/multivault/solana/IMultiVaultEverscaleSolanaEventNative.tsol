@@ -16,6 +16,7 @@ interface IMultiVaultEverscaleSolanaEventNative {
         uint256 recipient_,
         string name_,
         string symbol_,
-        uint8 decimals_
+        uint8 decimals_,
+        bytes payload
     );
 }

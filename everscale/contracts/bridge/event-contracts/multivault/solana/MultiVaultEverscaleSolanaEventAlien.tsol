@@ -31,6 +31,7 @@ contract MultiVaultEverscaleSolanaEventAlien is
 
     uint256 public base_token;
     address public expectedToken;
+    bytes public solanaPayload;
 
     constructor(
         address _initializer,
@@ -48,9 +49,9 @@ contract MultiVaultEverscaleSolanaEventAlien is
     }
 
     function onInit() override internal {
-        (nonce, proxy, token, remainingGasTo, amount, recipient, sender) = abi.decode(
+        (nonce, proxy, token, remainingGasTo, amount, recipient, sender, solanaPayload) = abi.decode(
             eventInitData.voteData.eventData,
-            (uint32, address, address, address, uint128, uint256, address)
+            (uint32, address, address, address, uint128, uint256, address, bytes)
         );
 
         initial_balance = address(this).balance;
@@ -104,7 +105,8 @@ contract MultiVaultEverscaleSolanaEventAlien is
         eventInitData.voteData.eventData = abi.encode(
             base_token,
             amount,
-            recipient
+            recipient,
+            solanaPayload
         );
     }
 
@@ -118,7 +120,9 @@ contract MultiVaultEverscaleSolanaEventAlien is
         address remainingGasTo_,
         uint128 amount_,
         uint256 recipient_,
-        uint256 base_token_
+        uint256 base_token_,
+        bytes solanaPayload_
+
     ) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(
             proxy,
@@ -126,7 +130,8 @@ contract MultiVaultEverscaleSolanaEventAlien is
             remainingGasTo,
             amount,
             recipient,
-            base_token
+            base_token,
+            solanaPayload
         );
     }
 

@@ -52,7 +52,8 @@
 			"name": "encodeAlienBurnPayloadSolana",
 			"inputs": [
 				{"name":"recipient","type":"uint256"},
-				{"components":[{"name":"account","type":"uint256"},{"name":"readOnly","type":"bool"},{"name":"isSigner","type":"bool"}],"name":"executeAccounts","type":"tuple[]"}
+				{"components":[{"name":"account","type":"uint256"},{"name":"readOnly","type":"bool"},{"name":"isSigner","type":"bool"}],"name":"executeAccounts","type":"tuple[]"},
+				{"name":"payload","type":"bytes"}
 			],
 			"outputs": [
 				{"name":"value0","type":"cell"}
@@ -138,7 +139,8 @@
 			"name": "encodeNativeTransferPayloadSolana",
 			"inputs": [
 				{"name":"recipient","type":"uint256"},
-				{"components":[{"name":"account","type":"uint256"},{"name":"readOnly","type":"bool"},{"name":"isSigner","type":"bool"}],"name":"executeAccounts","type":"tuple[]"}
+				{"components":[{"name":"account","type":"uint256"},{"name":"readOnly","type":"bool"},{"name":"isSigner","type":"bool"}],"name":"executeAccounts","type":"tuple[]"},
+				{"name":"solanaPayload","type":"bytes"}
 			],
 			"outputs": [
 				{"name":"value0","type":"cell"}
@@ -152,7 +154,8 @@
 			"outputs": [
 				{"name":"base_token","type":"uint256"},
 				{"name":"amount","type":"uint128"},
-				{"name":"recipient","type":"uint256"}
+				{"name":"recipient","type":"uint256"},
+				{"name":"payload","type":"bytes"}
 			]
 		},
 		{
