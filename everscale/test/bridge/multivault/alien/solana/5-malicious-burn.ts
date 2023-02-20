@@ -73,7 +73,8 @@ describe("Test event contract behaviour when Alien token is incorrect", async fu
         it("Call burn callback on proxy", async () => {
             const burnPayload = await cellEncoder.methods.encodeAlienBurnPayloadSolana({
                 recipient,
-                executeAccounts
+                executeAccounts,
+                payload: ''
             }).call();
 
             const tx = await proxy.methods

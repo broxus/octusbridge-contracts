@@ -189,7 +189,8 @@ describe('Withdraw Solana alien tokens by burning in favor of proxy', async func
     it('Burn tokens in favor of proxy', async () => {
         const burnPayload = await cellEncoder.methods.encodeAlienBurnPayloadSolana({
             recipient,
-            executeAccounts
+            executeAccounts,
+            payload: ''
         }).call();
 
         const tx = await locklift.tracing.trace(initializerAlienTokenWallet.methods.burn({
