@@ -245,7 +245,8 @@ describe('Withdraw custom tokens by burning in favor of merge pool', async funct
         const burnPayload = await cellEncoder.methods.encodeMergePoolBurnWithdrawPayloadSolana({
             targetToken: alienTokenRoot.address,
             recipient,
-            executeAccounts
+            executeAccounts,
+            payload: ''
         }).call();
 
         const tx = await locklift.tracing.trace(initializerCustomTokenWallet.methods.burn({

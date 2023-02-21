@@ -38,9 +38,10 @@ contract MergePoolCellEncoder is IEVMCallback, INetworks {
     function encodeMergePoolBurnWithdrawPayloadSolana(
         address targetToken,
         uint256 recipient,
-        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
+        bytes payload
     ) public pure returns (TvmCell) {
-        TvmCell withdrawPayload = abi.encode(recipient, executeAccounts);
+        TvmCell withdrawPayload = abi.encode(recipient, executeAccounts, payload);
 
         TvmCell operationPayload = abi.encode(Network.Solana, withdrawPayload);
 
