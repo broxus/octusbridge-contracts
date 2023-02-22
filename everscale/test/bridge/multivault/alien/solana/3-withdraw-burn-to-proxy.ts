@@ -190,6 +190,8 @@ describe('Withdraw Solana alien tokens by burning in favor of proxy', async func
         const burnPayload = await cellEncoder.methods.encodeAlienBurnPayloadSolana({
             recipient,
             executeAccounts,
+            executePayloadNeeded: false,
+            executePayloadAccounts: executeAccounts,
             payload: ''
         }).call();
 

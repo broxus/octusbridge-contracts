@@ -8,6 +8,8 @@ interface IEverscaleSolanaEvent is IBasicEvent {
         uint64 eventTransactionLt;
         uint32 eventTimestamp;
         EverscaleSolanaExecuteAccount[] executeAccounts;
+        bool executePayloadNeeded;
+        EverscaleSolanaExecuteAccount[] executePayloadAccounts;
         TvmCell eventData;
     }
 

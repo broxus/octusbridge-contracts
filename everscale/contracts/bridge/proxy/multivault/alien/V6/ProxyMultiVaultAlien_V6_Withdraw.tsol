@@ -35,8 +35,10 @@ abstract contract ProxyMultiVaultAlien_V6_Withdraw is
             (
                 uint256 recipient,
                 IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
+                bool executePayloadNeeded,
+                IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
                 bytes solanaPayload
-            ) = abi.decode(burnPayload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[], bytes));
+            ) = abi.decode(burnPayload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[], bool, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[], bytes));
 
             _deploySolanaEvent(
                 msg.sender,
@@ -44,6 +46,8 @@ abstract contract ProxyMultiVaultAlien_V6_Withdraw is
                 recipient,
                 remainingGasTo,
                 executeAccounts,
+                executePayloadNeeded,
+                executePayloadAccounts,
                 solanaPayload
             );
         } else if (network == Network.EVM) {
@@ -68,6 +72,8 @@ abstract contract ProxyMultiVaultAlien_V6_Withdraw is
         uint256 recipient,
         address remainingGasTo,
         IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
+        bool executePayloadNeeded,
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
         bytes solanaPayload
     ) internal view {
         TvmCell eventData = abi.encode(
@@ -83,6 +89,8 @@ abstract contract ProxyMultiVaultAlien_V6_Withdraw is
             tx.timestamp,
             now,
             executeAccounts,
+            executePayloadNeeded,
+            executePayloadAccounts,
             eventData
         );
 

@@ -111,6 +111,7 @@ export const setupEverscaleSolanaEventConfiguration = async (
         eventEmitter,
         instruction: 0,
         executeInstruction: 0,
+        executePayloadInstruction: 0,
         executeNeeded: false,
         startTimestamp: 0,
         endTimestamp: 0,

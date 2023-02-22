@@ -133,6 +133,8 @@ describe("Test EVM native multivault pipeline", async function () {
           .encodeNativeTransferPayloadSolana({
             recipient,
             executeAccounts,
+            executePayloadNeeded: false,
+            executePayloadAccounts: executeAccounts,
             solanaPayload: ''
           })
           .call()

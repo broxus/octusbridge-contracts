@@ -74,6 +74,8 @@ describe("Test event contract behaviour when Alien token is incorrect", async fu
             const burnPayload = await cellEncoder.methods.encodeAlienBurnPayloadSolana({
                 recipient,
                 executeAccounts,
+                executePayloadNeeded: false,
+                executePayloadAccounts: executeAccounts,
                 payload: ''
             }).call();
 

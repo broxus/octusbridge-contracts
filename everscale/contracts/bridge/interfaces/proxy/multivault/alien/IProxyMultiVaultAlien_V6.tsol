@@ -99,6 +99,8 @@ interface IProxyMultiVaultAlien_V6 is IEVMCallback, INetworks {
         uint256 recipient,
         address remainingGasTo,
         IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
+        bool executePayloadNeeded,
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
         bytes solanaPayload
     ) external;
 

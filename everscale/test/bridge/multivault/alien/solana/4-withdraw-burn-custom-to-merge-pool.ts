@@ -246,6 +246,8 @@ describe('Withdraw custom tokens by burning in favor of merge pool', async funct
             targetToken: alienTokenRoot.address,
             recipient,
             executeAccounts,
+            executePayloadNeeded: false,
+            executePayloadAccounts: executeAccounts,
             payload: ''
         }).call();
 
