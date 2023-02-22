@@ -169,7 +169,8 @@
 				{"name":"symbol","type":"string"},
 				{"name":"decimals","type":"uint8"},
 				{"name":"amount","type":"uint128"},
-				{"name":"recipient","type":"uint256"}
+				{"name":"recipient","type":"uint256"},
+				{"name":"payload","type":"bytes"}
 			]
 		},
 		{

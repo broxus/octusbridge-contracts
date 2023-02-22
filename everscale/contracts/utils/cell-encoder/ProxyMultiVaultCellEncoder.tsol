@@ -196,11 +196,12 @@ contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
         string symbol,
         uint8 decimals,
         uint128 amount,
-        uint256 recipient
+        uint256 recipient,
+        bytes payload
     ) {
-        (token, name, symbol, decimals, amount, recipient) = abi.decode(
+        (token, name, symbol, decimals, amount, recipient, payload) = abi.decode(
             data,
-            (address, string, string, uint8, uint128, uint256)
+            (address, string, string, uint8, uint128, uint256, bytes)
         );
     }
 }
