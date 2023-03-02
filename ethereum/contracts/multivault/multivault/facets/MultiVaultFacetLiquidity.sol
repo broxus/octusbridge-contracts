@@ -55,7 +55,7 @@ contract MultiVaultFacetLiquidity is
 
         emit MintLiquidity(msg.sender, token, amount, lp_amount);
 
-        IMultiVaultToken(lp).mint(receiver, amount);
+        IMultiVaultToken(lp).mint(receiver, lp_amount);
     }
 
     /// @notice The redeem function converts a specified quantity of LP tokens
