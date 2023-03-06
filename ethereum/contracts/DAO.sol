@@ -6,7 +6,7 @@ import "./interfaces/IBridge.sol";
 import "./interfaces/IEverscale.sol";
 import "./interfaces/IDAO.sol";
 
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 import "./utils/Cache.sol";
@@ -16,7 +16,7 @@ import "./utils/ChainId.sol";
 /// @title DAO contract for Everscale-EVM bridge
 /// @dev Executes proposals confirmed in Everscale Bridge DAO.
 /// Proposals are submitted in form of payloads and signatures
-contract DAO is IDAO, IEverscale, ReentrancyGuard, OwnableUpgradeable, Cache, ChainId {
+contract DAO is IDAO, IEverscale, ReentrancyGuardUpgradeable, OwnableUpgradeable, Cache, ChainId {
     address public bridge;
     EverscaleAddress public configuration;
 
