@@ -1,9 +1,10 @@
-# Welcome to the Everscale bridge
+<p align="center">
+  <a href="https://github.com/venom-blockchain/developer-program">
+    <img src="https://raw.githubusercontent.com/venom-blockchain/developer-program/main/vf-dev-program.png" alt="Logo" width="366.8" height="146.4">
+  </a>
+</p>
 
-This document is a starting point about the Everscale bridge between EVM networks and FreeTON.
 
-## Getting started
+# Welcome to the Octus bridge
 
-* [Litepaper V2](docs/litepaper.md)
-* [Artifacts V1](docs/artifacts.md)
-* [Strategies](docs/strategies.md)
+This repo contains smart contract source for the bridge between arbitrary EVM and Everscale / VENOM
