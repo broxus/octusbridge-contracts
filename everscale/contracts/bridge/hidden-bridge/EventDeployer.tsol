@@ -10,6 +10,9 @@ import "./../interfaces/event-contracts/IEthereumEverscaleEvent.tsol";
 import "./../interfaces/event-configuration-contracts/IEthereumEverscaleEventConfiguration.tsol";
 
 
+/// @title Event deployer
+/// @dev Used as part of credit-transfer pipeline, specifically for evm-ever transfers
+/// Allows credit backend to deploy multiple event-contacts at once
 contract EventDeployer is ExternalOwner, RandomNonce {
     address public guardian;
 
@@ -47,6 +50,9 @@ contract EventDeployer is ExternalOwner, RandomNonce {
         });
     }
 
+    /// @notice Batch events deployment
+    /// @dev Can be called only by external owner
+    /// @param requests List of requests, one request per event configuration
     function deployEvents(
         DeployRequest[] requests
     ) external onlyOwner view {
