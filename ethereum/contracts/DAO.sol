@@ -20,6 +20,10 @@ contract DAO is IDAO, IEverscale, ReentrancyGuardUpgradeable, OwnableUpgradeable
     address public bridge;
     EverscaleAddress public configuration;
 
+    constructor() {
+        _disableInitializers();
+    }
+
     /**
         @notice Initializer
         @param _owner DAO owner. Should be used only for initial set up,

@@ -13,6 +13,10 @@ contract UnwrapNativeToken is IOctusCallback, Initializable {
 
     mapping(address => mapping(uint => bool)) pendingWithdrawals;
 
+    constructor() {
+        _disableInitializers();
+    }
+
     function initialize(address _weth, address _multiVault) public initializer {
         wethContract = IWETH(_weth);
         multiVault = _multiVault;

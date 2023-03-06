@@ -47,6 +47,10 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
     // NOTE: Broxus Bridge Everscale-ETH configuration address, that emits event with round relays
     EverscaleAddress public roundRelaysConfiguration;
 
+    constructor() {
+        _disableInitializers();
+    }
+
     /**
         @notice Bridge initializer
         @dev `roundRelaysConfiguration` should be specified after deploy, since it's an Everscale contract,
