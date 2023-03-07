@@ -11,6 +11,7 @@ import "../../interfaces/IERC20.sol";
 import "../helpers/MultiVaultHelperEmergency.sol";
 import "../helpers/MultiVaultHelperActors.sol";
 import "../helpers/MultiVaultHelperPendingWithdrawal.sol";
+import "../helpers/MultiVaultHelperReentrancyGuard.sol";
 import "../helpers/MultiVaultHelperTokenBalance.sol";
 import "../helpers/MultiVaultHelperEverscale.sol";
 import "../helpers/MultiVaultHelperCallback.sol";
@@ -19,13 +20,13 @@ import "../storage/MultiVaultStorage.sol";
 import "../../libraries/SafeERC20.sol";
 
 
-
 contract MultiVaultFacetPendingWithdrawals is
     MultiVaultHelperEmergency,
     MultiVaultHelperActors,
     MultiVaultHelperEverscale,
     MultiVaultHelperTokenBalance,
     MultiVaultHelperPendingWithdrawal,
+    MultiVaultHelperReentrancyGuard,
     IMultiVaultFacetPendingWithdrawals,
     MultiVaultHelperCallback
 {
@@ -84,12 +85,19 @@ contract MultiVaultFacetPendingWithdrawals is
 
     function forceWithdraw(
         PendingWithdrawalId[] memory pendingWithdrawalIds
-    ) external override {
+    )
+        external
+        override
+        nonReentrant
+        onlyEmergencyDisabled
+    {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         for (uint i = 0; i < pendingWithdrawalIds.length; i++) {
             PendingWithdrawalId memory pendingWithdrawalId = pendingWithdrawalIds[i];
             PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(pendingWithdrawalId);
+
+            require(pendingWithdrawal.amount > 0);
 
             s.pendingWithdrawals_[pendingWithdrawalId.recipient][pendingWithdrawalId.id].amount = 0;
 
@@ -134,6 +142,7 @@ contract MultiVaultFacetPendingWithdrawals is
         payable
         override
         onlyEmergencyDisabled
+        nonReentrant
     {
         PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(msg.sender, id);
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();

@@ -1,11 +1,9 @@
 const deterministicDeployment = ['multivault-3'];
-const _ = require("lodash");
 
 
 module.exports = async ({getNamedAccounts, deployments}) => {
     const {
         deployer,
-        owner
     } = await getNamedAccounts();
 
     // Deploy diamond
@@ -15,14 +13,6 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         log: true,
         deterministicDeployment
     });
-
-    const diamond = await ethers.getContract('MultiVaultDiamond');
-
-    const {
-        data: diamondInitialize
-    } = await diamond.populateTransaction.initialize(owner);
-
-    console.log(`ProxyAdmin upgrade payload (sets owner to DiamondCuts owner): ${diamondInitialize}`);
 };
 
 
