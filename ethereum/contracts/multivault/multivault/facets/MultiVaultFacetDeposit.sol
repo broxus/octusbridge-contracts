@@ -196,7 +196,10 @@ contract MultiVaultFacetDeposit is
             amountLeft -= pendingWithdrawal.amount;
             amountPlusBounty += pendingWithdrawal.bounty;
 
-            s.pendingWithdrawals_[pendingWithdrawalId.recipient][pendingWithdrawalId.id].amount = 0;
+            _pendingWithdrawalAmountReduce(
+                pendingWithdrawalId,
+                pendingWithdrawal.amount
+            );
 
             emit PendingWithdrawalFill(
                 pendingWithdrawalId.recipient,

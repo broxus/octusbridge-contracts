@@ -99,7 +99,10 @@ contract MultiVaultFacetPendingWithdrawals is
 
             require(pendingWithdrawal.amount > 0);
 
-            s.pendingWithdrawals_[pendingWithdrawalId.recipient][pendingWithdrawalId.id].amount = 0;
+            _pendingWithdrawalAmountReduce(
+                pendingWithdrawalId,
+                pendingWithdrawal.amount
+            );
 
             IERC20(pendingWithdrawal.token).safeTransfer(
                 pendingWithdrawalId.recipient,
@@ -149,7 +152,10 @@ contract MultiVaultFacetPendingWithdrawals is
 
         require(amount > 0 && amount <= pendingWithdrawal.amount);
 
-        s.pendingWithdrawals_[msg.sender][id].amount -= amount;
+        _pendingWithdrawalAmountReduce(
+            PendingWithdrawalId(msg.sender, id),
+            amount
+        );
 
         IMultiVaultFacetDeposit.DepositParams memory deposit = IMultiVaultFacetDeposit.DepositParams({
             recipient: recipient,
@@ -198,7 +204,6 @@ contract MultiVaultFacetPendingWithdrawals is
         // Fill approved withdrawal
         if (approveStatus == ApproveStatus.Approved && pendingWithdrawal.amount <= _vaultTokenBalance(pendingWithdrawal.token)) {
             _pendingWithdrawalAmountReduce(
-                pendingWithdrawal.token,
                 pendingWithdrawalId,
                 pendingWithdrawal.amount
             );
