@@ -24,6 +24,12 @@ contract DAO is IDAO, IEverscale, ReentrancyGuardUpgradeable, OwnableUpgradeable
         _disableInitializers();
     }
 
+    modifier notZeroAddress(address addr) {
+        require(addr != address(0));
+
+        _;
+    }
+
     /**
         @notice Initializer
         @param _owner DAO owner. Should be used only for initial set up,
@@ -33,7 +39,7 @@ contract DAO is IDAO, IEverscale, ReentrancyGuardUpgradeable, OwnableUpgradeable
     function initialize(
         address _owner,
         address _bridge
-    ) public initializer {
+    ) public initializer notZeroAddress(_owner) notZeroAddress(_bridge) {
         bridge = _bridge;
 
         __Ownable_init();
@@ -54,7 +60,7 @@ contract DAO is IDAO, IEverscale, ReentrancyGuardUpgradeable, OwnableUpgradeable
     /// @param _bridge New bridge address
     function setBridge(
         address _bridge
-    ) override external onlyOwner {
+    ) override external onlyOwner notZeroAddress(_bridge) {
         bridge = _bridge;
     }
 
