@@ -57,6 +57,9 @@ abstract contract MultiVaultHelperPendingWithdrawal is IMultiVaultFacetPendingWi
 
         IMultiVaultFacetPendingWithdrawals.PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(pendingWithdrawalId);
 
+        require(pendingWithdrawal.approveStatus == IMultiVaultFacetPendingWithdrawals.ApproveStatus.NotRequired
+            || pendingWithdrawal.approveStatus == IMultiVaultFacetPendingWithdrawals.ApproveStatus.Approved);
+
         s.pendingWithdrawals_[pendingWithdrawalId.recipient][pendingWithdrawalId.id].amount -= amount;
         s.pendingWithdrawalsTotal[pendingWithdrawal.token] -= amount;
     }

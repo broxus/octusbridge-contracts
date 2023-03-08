@@ -93,8 +93,6 @@ contract MultiVaultFacetPendingWithdrawals is
         nonReentrant
         onlyEmergencyDisabled
     {
-        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
-
         for (uint i = 0; i < pendingWithdrawalIds.length; i++) {
             PendingWithdrawalId memory pendingWithdrawalId = pendingWithdrawalIds[i];
             PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(pendingWithdrawalId);
@@ -151,7 +149,6 @@ contract MultiVaultFacetPendingWithdrawals is
         drainGas
     {
         PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(msg.sender, id);
-        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         require(amount > 0 && amount <= pendingWithdrawal.amount);
 
