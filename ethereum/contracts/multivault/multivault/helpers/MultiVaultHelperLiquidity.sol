@@ -73,7 +73,7 @@ abstract contract MultiVaultHelperLiquidity is IMultiVaultFacetLiquidityEvents {
         address token,
         uint amount
     ) internal view returns (uint) {
-        return MultiVaultStorage.LP_EXCHANGE_RATE_BPS / _exchangeRateCurrent(token) * amount;
+        return MultiVaultStorage.LP_EXCHANGE_RATE_BPS * amount / _exchangeRateCurrent(token);
     }
 
     function _deployLPToken(
