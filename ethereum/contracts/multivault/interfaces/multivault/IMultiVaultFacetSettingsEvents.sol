@@ -14,6 +14,7 @@ interface IMultiVaultFacetSettingsEvents {
     event UpdateManagement(address management);
     event NewPendingGovernance(address governance);
     event UpdateGuardian(address guardian);
+    event UpdateWithdrawGuardian(address withdrawGuardian);
 
     event EmergencyShutdown(bool active);
 }

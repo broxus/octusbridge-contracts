@@ -494,6 +494,19 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "withdrawGuardian",
+        "type": "address"
+      }
+    ],
+    "name": "UpdateWithdrawGuardian",
+    "type": "event"
+  },
+  {
     "inputs": [],
     "name": "acceptGovernance",
     "outputs": [],
@@ -904,6 +917,19 @@
       }
     ],
     "name": "setUndeclaredWithdrawalLimits",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_withdrawGuardian",
+        "type": "address"
+      }
+    ],
+    "name": "setWithdrawGuardian",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

@@ -38,6 +38,7 @@ interface IMultiVaultFacetSettings {
     ) external;
 
     function setGuardian(address) external;
+    function setWithdrawGuardian(address _withdrawGuardian) external;
     function setManagement(address) external;
     function acceptGovernance() external;
     function setGovernance(address) external;
