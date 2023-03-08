@@ -103,6 +103,12 @@ contract MultiVaultFacetLiquidity is
         return _getCash(token);
     }
 
+    function getSupply(
+        address token
+    ) external view override returns (uint) {
+        return _getSupply(token);
+    }
+
     /// @notice Get LP token address by the address of the underlying asset
     /// @param token The address of underlying asset
     /// @return The address of LP token

@@ -30,6 +30,10 @@ interface IMultiVaultFacetLiquidity {
         address token
     ) external view returns(uint);
 
+    function getSupply(
+        address token
+    ) external view returns(uint);
+
     function getLPToken(
         address token
     ) external view returns (address);

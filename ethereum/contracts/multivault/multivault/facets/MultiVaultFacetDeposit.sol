@@ -181,8 +181,6 @@ contract MultiVaultFacetDeposit is
         IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId[] memory pendingWithdrawalIds,
         uint256 _value
     ) internal drainGas {
-        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
-
         uint amountLeft = d.amount;
         uint amountPlusBounty = d.amount;
 

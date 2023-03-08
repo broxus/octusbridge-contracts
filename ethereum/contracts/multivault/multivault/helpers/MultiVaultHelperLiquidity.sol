@@ -52,6 +52,16 @@ abstract contract MultiVaultHelperLiquidity is IMultiVaultFacetLiquidityEvents {
         return liquidity.cash;
     }
 
+    function _getSupply(
+        address token
+    ) internal view returns(uint) {
+        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
+
+        IMultiVaultFacetLiquidity.Liquidity memory liquidity = s.liquidity[token];
+
+        return liquidity.supply;
+    }
+
     function _convertLPToUnderlying(
         address token,
         uint amount
