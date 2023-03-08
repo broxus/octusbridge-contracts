@@ -110,12 +110,6 @@
       },
       {
         "indexed": false,
-        "internalType": "bool",
-        "name": "skim_to_everscale",
-        "type": "bool"
-      },
-      {
-        "indexed": false,
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"

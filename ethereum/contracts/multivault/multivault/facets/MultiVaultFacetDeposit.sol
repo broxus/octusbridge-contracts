@@ -23,10 +23,12 @@ import "../helpers/MultiVaultHelperTokens.sol";
 import "../helpers/MultiVaultHelperFee.sol";
 import "../helpers/MultiVaultHelperPendingWithdrawal.sol";
 import "../helpers/MultiVaultHelperCallback.sol";
+import "../helpers/MultiVaultHelperGas.sol";
 
 
 contract MultiVaultFacetDeposit is
     MultiVaultHelperFee,
+    MultiVaultHelperGas,
     MultiVaultHelperEverscale,
     MultiVaultHelperReentrancyGuard,
     MultiVaultHelperTokens,
@@ -84,7 +86,7 @@ contract MultiVaultFacetDeposit is
         DepositParams memory d,
         uint256 _value,
         address tokens_owner
-    ) internal {
+    ) internal drainGas {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         uint fee = _calculateMovementFee(
@@ -123,7 +125,6 @@ contract MultiVaultFacetDeposit is
         }
 
         _increaseTokenFee(d.token, fee);
-        _drainGas();
     }
 
     function depositByNativeToken(
@@ -179,7 +180,7 @@ contract MultiVaultFacetDeposit is
         uint256 expectedMinBounty,
         IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId[] memory pendingWithdrawalIds,
         uint256 _value
-    ) internal {
+    ) internal drainGas {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         uint amountLeft = d.amount;
@@ -237,17 +238,5 @@ contract MultiVaultFacetDeposit is
         );
 
         _increaseTokenFee(d.token, fee);
-
-        _drainGas();
-    }
-
-    function _drainGas() internal {
-        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
-
-        address payable gasDonor = payable(s.gasDonor);
-
-        if (gasDonor != address(0)) {
-            gasDonor.transfer(address(this).balance);
-        }
     }
 }

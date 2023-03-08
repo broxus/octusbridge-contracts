@@ -15,6 +15,7 @@ import "../helpers/MultiVaultHelperReentrancyGuard.sol";
 import "../helpers/MultiVaultHelperTokenBalance.sol";
 import "../helpers/MultiVaultHelperEverscale.sol";
 import "../helpers/MultiVaultHelperCallback.sol";
+import "../helpers/MultiVaultHelperGas.sol";
 
 import "../storage/MultiVaultStorage.sol";
 import "../../libraries/SafeERC20.sol";
@@ -22,6 +23,7 @@ import "../../libraries/SafeERC20.sol";
 
 contract MultiVaultFacetPendingWithdrawals is
     MultiVaultHelperEmergency,
+    MultiVaultHelperGas,
     MultiVaultHelperActors,
     MultiVaultHelperEverscale,
     MultiVaultHelperTokenBalance,
@@ -146,6 +148,7 @@ contract MultiVaultFacetPendingWithdrawals is
         override
         onlyEmergencyDisabled
         nonReentrant
+        drainGas
     {
         PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(msg.sender, id);
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();

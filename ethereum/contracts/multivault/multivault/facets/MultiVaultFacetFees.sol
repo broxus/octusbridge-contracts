@@ -69,7 +69,7 @@ contract MultiVaultFacetFees is
     /// @param token Token address, can be both native or alien
     function skim(
         address token
-    ) external payable override nonReentrant onlyGovernanceOrManagement {
+    ) external override nonReentrant onlyGovernanceOrManagement {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         uint fee = s.fees[token];
@@ -87,7 +87,7 @@ contract MultiVaultFacetFees is
             IERC20(token).safeTransfer(s.governance, fee);
         }
 
-        emit SkimFee(token, false, fee);
+        emit SkimFee(token, fee);
     }
 
     /// @notice Set default deposit fee for native tokens.
