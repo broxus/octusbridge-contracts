@@ -175,6 +175,8 @@ contract MultiVaultFacetWithdraw is
 
         s.pendingWithdrawalsTotal[withdrawal.token] += withdrawAmount;
 
+        require(bounty <= withdrawAmount);
+
         // - Save withdrawal as pending
         s.pendingWithdrawals_[withdrawal.recipient][pendingWithdrawalId] = IMultiVaultFacetPendingWithdrawals.PendingWithdrawalParams({
             token: withdrawal.token,
