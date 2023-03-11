@@ -82,6 +82,8 @@ contract UnwrapNativeToken is IOctusCallbackAlien, Initializable {
         address payable nativeTokenReceiver = abi.decode(_payload.callback.payload, (address));
         wethContract.withdraw(withdrawAmount);
 
-        nativeTokenReceiver.transfer(withdrawAmount);
+        (bool sent, ) = nativeTokenReceiver.call{value: withdrawAmount}("");
+
+        require(sent);
     }
 }
