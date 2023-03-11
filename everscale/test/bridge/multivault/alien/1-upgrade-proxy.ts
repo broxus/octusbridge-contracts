@@ -6,6 +6,7 @@ import {
     ProxyMultiVaultAlien_V4Abi,
     ProxyMultiVaultAlien_V5Abi,
     ProxyMultiVaultAlien_V6Abi,
+    ProxyMultiVaultAlien_V7Abi,
 } from "../../../../build/factorySource";
 import { Account } from "everscale-standalone-client/nodejs";
 import { expect } from "chai";
@@ -19,6 +20,7 @@ let proxy_v3: Contract<ProxyMultiVaultAlien_V3Abi>;
 let proxy_v4: Contract<ProxyMultiVaultAlien_V4Abi>;
 let proxy_v5: Contract<ProxyMultiVaultAlien_V5Abi>;
 let proxy_v6: Contract<ProxyMultiVaultAlien_V6Abi>;
+let proxy_v7: Contract<ProxyMultiVaultAlien_V7Abi>;
 
 let _configuration: any;
 let _owner: Address;
@@ -392,6 +394,77 @@ describe("Test Alien proxy upgrade", async function () {
             const {
                 owner
             } = await proxy_v4.methods.owner().call();
+
+            expect(owner.toString())
+                .to.be.equal(_owner.toString(), 'Wrong owner after upgrade')
+        });
+    });
+
+    describe('Update proxy to V7', async () => {
+        it('Save state', async () => {
+            _configuration = await proxy_v6
+                .methods
+                .getConfiguration({ answerId: 0 }).call().then(t => t.value0);
+
+            _owner = await proxy_v6
+                .methods
+                .owner().call().then(t => t.owner);
+        });
+
+        it('Upgrade', async () => {
+            const ProxyMultiVaultAlien_V7 = await locklift.factory.getContractArtifacts(
+                "ProxyMultiVaultAlien_V7"
+            );
+
+            await proxy_v6.methods
+                .upgrade({
+                    code: ProxyMultiVaultAlien_V7.code
+                })
+                .send({
+                    from: owner.address,
+                    amount: locklift.utils.toNano(1)
+                });
+
+            proxy_v7 = await locklift.factory.getDeployedContract(
+                "ProxyMultiVaultAlien_V7",
+                proxy_v1.address
+            );
+        });
+
+        it('Check API version', async () => {
+            const api_version = await proxy_v7
+                .methods
+                .apiVersion({ answerId: 0 }).call().then(t => t.value0);
+
+            expect(api_version).to.be.equal(
+                "7",
+                "Wrong api version"
+            );
+        });
+
+        it('Check state', async () => {
+            const {
+                value0: evmConfiguration,
+                value1: solanaConfiguration
+            } = await proxy_v7.methods.getConfiguration({ answerId: 0 }).call();
+
+            expect(evmConfiguration.everscaleConfiguration.toString())
+                .to.be.equal(_configuration.everscaleConfiguration.toString(), 'Wrong Everscale-EVM configuration');
+            expect(evmConfiguration.evmConfigurations.map(t => t.toString()))
+                .to.be.eql(_configuration.evmConfigurations.map(t => t.toString()), 'Wrong EVM-Everscale configurations');
+
+            expect(evmConfiguration.alienTokenRootCode)
+                .to.be.equal(_configuration.alienTokenRootCode, 'Wrong alien token root code');
+            expect(evmConfiguration.alienTokenWalletCode)
+                .to.be.equal(_configuration.alienTokenWalletCode, 'Wrong alien token wallet code');
+            expect(evmConfiguration.alienTokenWalletPlatformCode)
+                .to.be.equal(_configuration.alienTokenWalletPlatformCode, 'Wrong alien token wallet platform code');
+        });
+
+        it('Check owner', async () => {
+            const {
+                owner
+            } = await proxy_v7.methods.owner().call();
 
             expect(owner.toString())
                 .to.be.equal(_owner.toString(), 'Wrong owner after upgrade')

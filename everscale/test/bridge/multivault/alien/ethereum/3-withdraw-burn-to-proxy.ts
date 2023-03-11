@@ -32,6 +32,7 @@ let everscaleEthereumEventConfiguration: Contract<EverscaleEthereumEventConfigur
 let solanaEverscaleEventConfiguration: Contract<SolanaEverscaleEventConfigurationAbi>;
 let everscaleSolanaEventConfiguration: Contract<EverscaleSolanaEventConfigurationAbi>;
 let initializer: Account;
+let eventCloser: Account;
 let proxy: Contract<ProxyMultiVaultAlien_V6Abi>;
 
 let alienTokenRoot: Contract<TokenRootAlienEVMAbi>;
@@ -74,6 +75,11 @@ describe('Withdraw tokens by burning in favor of proxy', async function() {
             everscaleSolanaEventConfiguration,
             proxy
         ] = await setupAlienMultiVault(bridgeOwner, staking);
+
+        eventCloser = await deployAccount(
+            (await locklift.keystore.getSigner("1"))!,
+            50
+        );
     });
 
     it('Deploy alien token root', async () => {
@@ -143,7 +149,7 @@ describe('Withdraw tokens by burning in favor of proxy', async function() {
 
         const tx = await initializerAlienTokenWallet.methods.burn({
             amount,
-            remainingGasTo: initializer.address,
+            remainingGasTo: eventCloser.address,
             callbackTo: proxy.address,
             payload: burnPayload.value0
         }).send({
@@ -202,6 +208,22 @@ describe('Withdraw tokens by burning in favor of proxy', async function() {
             .to.be.equal(mintAmount - amount, 'Wrong initializer token balance after burn')
     });
 
+    it('Check sender address', async () => {
+        const sender = await eventContract.methods.sender({}).call();
+
+        expect(sender.toString())
+            .to.be.equal(initializer.toString(), 'Wrong sender');
+    });
+
+    it('Check initial balance', async () => {
+        const {
+            initial_balance
+        } = await eventContract.methods.initial_balance({}).call();
+
+        expect(Number(initial_balance))
+            .to.be.greaterThan(Number(locklift.utils.toNano(9)), 'Wrong event contract initial balance');
+    });
+
     it('Check event data after mutation', async () => {
         const decodedData = await eventContract.methods.getDecodedData({
             answerId: 0
@@ -244,7 +266,7 @@ describe('Withdraw tokens by burning in favor of proxy', async function() {
 
         const { traceTree } = await locklift.tracing.trace(
             eventContract.methods.close().send({
-                from: initializer.address,
+                from: eventCloser.address,
                 amount: locklift.utils.toNano(0.1)
             })
         );
@@ -252,7 +274,7 @@ describe('Withdraw tokens by burning in favor of proxy', async function() {
         expect(Number(await locklift.provider.getBalance(eventContract.address)))
             .to.be.equal(0, 'Event contract balance should be 0 after close');
 
-        expect(Number(traceTree?.getBalanceDiff(initializer.address)))
+        expect(Number(traceTree?.getBalanceDiff(eventCloser.address)))
             .to.be.greaterThan(
                 Number(balance) - Number(locklift.utils.toNano(1)), // Greater than balance - 1 ton for fees
             "Initializer should get money back after close"

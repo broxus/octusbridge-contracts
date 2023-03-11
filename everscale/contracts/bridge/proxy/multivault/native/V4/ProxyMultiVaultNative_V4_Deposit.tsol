@@ -1,0 +1,89 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma ever-solidity >= 0.62.0;
+
+import "./ProxyMultiVaultNative_V4_Withdraw.tsol";
+
+import "./../../../../interfaces/event-contracts/IEthereumEverscaleEvent.tsol";
+import "./../../../../interfaces/event-contracts/ISolanaEverscaleEvent.tsol";
+
+import "./../../../../interfaces/proxy/IEthereumEverscaleProxyExtended.tsol";
+import "./../../../../interfaces/proxy/ISolanaEverscaleProxyExtended.tsol";
+
+
+abstract contract ProxyMultiVaultNative_V4_Deposit is
+    IEthereumEverscaleProxyExtended,
+    ISolanaEverscaleProxyExtended,
+    ProxyMultiVaultNative_V4_Withdraw
+{
+    /// @notice Handles alien token transfer from EVM. Token address is derived automatically and MUST
+    /// be deployed before. See note on `deployAlienToken`
+    /// @param remainingGasTo Gas back address
+    function onEventConfirmedExtended(
+        IEthereumEverscaleEvent.EthereumEverscaleEventInitData,
+        TvmCell meta,
+        address remainingGasTo
+    ) external override reserveAtLeastTargetBalance {
+        require(_isArrayContainsAddress(evmConfiguration.evmConfigurations, msg.sender));
+
+        (
+            address token_wallet,
+            uint128 amount,
+            address recipient,
+            TvmCell payload
+        ) = abi.decode(
+            meta,
+            (address, uint128, address, TvmCell)
+        );
+
+        _transferTokens(
+            token_wallet,
+            amount,
+            recipient,
+            remainingGasTo,
+            payload
+        );
+    }
+
+    /// @notice Handles alien token transfer from Solana. Token address is derived automatically and MUST
+    /// be deployed before. See note on `deployAlienToken`
+    /// @param remainingGasTo Gas back address
+    function onSolanaEventConfirmedExtended(
+        ISolanaEverscaleEvent.SolanaEverscaleEventInitData,
+        TvmCell meta,
+        address remainingGasTo
+    ) external override reserveAtLeastTargetBalance {
+        require(solanaConfiguration.solanaConfiguration == msg.sender);
+
+        (
+            address token_wallet,
+            uint128 amount,
+            address recipient
+        ) = abi.decode(
+            meta,
+            (address, uint128, address)
+        );
+
+        TvmCell empty;
+
+        _transferTokens(
+            token_wallet,
+            amount,
+            recipient,
+            remainingGasTo,
+            empty
+        );
+    }
+
+    function _isArrayContainsAddress(
+        address[] array,
+        address searchElement
+    ) private pure returns (bool) {
+        for (address value: array) {
+            if (searchElement == value) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}

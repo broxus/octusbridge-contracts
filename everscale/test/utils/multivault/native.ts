@@ -34,7 +34,7 @@ export const setupNativeMultiVault = async (
 
     // Deploy proxy
     const { contract: proxy } = await locklift.factory.deployContract({
-        contract: "ProxyMultiVaultNative_V3",
+        contract: "ProxyMultiVaultNative_V4",
         constructorParams: {
             owner_: owner.address,
         },
@@ -45,7 +45,7 @@ export const setupNativeMultiVault = async (
         value: locklift.utils.toNano(15),
     });
 
-    await logContract("ProxyMultiVaultNative_V3", proxy.address);
+    await logContract("ProxyMultiVaultNative_V4", proxy.address);
 
     // Load event contracts
     const ethereumEverscaleEvent = await locklift.factory.getContractArtifacts(

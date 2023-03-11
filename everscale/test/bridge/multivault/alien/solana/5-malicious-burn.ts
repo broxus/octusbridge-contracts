@@ -79,7 +79,7 @@ describe("Test event contract behaviour when Alien token is incorrect", async fu
             const tx = await proxy.methods
                 .onAcceptTokensBurn({
                     amount,
-                    value1: initializer.address,
+                    sender: initializer.address,
                     value2: initializer.address,
                     remainingGasTo: initializer.address,
                     payload: burnPayload.value0,

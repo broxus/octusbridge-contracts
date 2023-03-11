@@ -219,6 +219,78 @@
 			"outputs": [
 				{"name":"createdAt","type":"uint32"}
 			]
+		},
+		{
+			"name": "proxy",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"proxy","type":"address"}
+			]
+		},
+		{
+			"name": "token",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"token","type":"address"}
+			]
+		},
+		{
+			"name": "remainingGasTo",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"remainingGasTo","type":"address"}
+			]
+		},
+		{
+			"name": "amount",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"amount","type":"uint128"}
+			]
+		},
+		{
+			"name": "recipient",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"recipient","type":"uint256"}
+			]
+		},
+		{
+			"name": "sender",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"sender","type":"address"}
+			]
+		},
+		{
+			"name": "initial_balance",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"initial_balance","type":"uint128"}
+			]
+		},
+		{
+			"name": "base_token",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"base_token","type":"uint256"}
+			]
+		},
+		{
+			"name": "expectedToken",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"expectedToken","type":"address"}
+			]
 		}
 	],
 	"data": [
@@ -283,6 +355,8 @@
 		{"name":"remainingGasTo","type":"address"},
 		{"name":"amount","type":"uint128"},
 		{"name":"recipient","type":"uint256"},
+		{"name":"sender","type":"address"},
+		{"name":"initial_balance","type":"uint128"},
 		{"name":"base_token","type":"uint256"},
 		{"name":"expectedToken","type":"address"}
 	]

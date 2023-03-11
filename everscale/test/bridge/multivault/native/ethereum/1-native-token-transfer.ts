@@ -40,6 +40,7 @@ let solanaEverscaleEventConfiguration: Contract<SolanaEverscaleEventConfiguratio
 let everscaleSolanaEventConfiguration: Contract<EverscaleSolanaEventConfigurationAbi>;
 let proxy: Contract<ProxyMultiVaultNative_V3Abi>;
 let initializer: Account;
+let eventCloser: Account;
 
 let tokenRoot: Contract<TokenRootAbi>;
 let initializerTokenWallet: Contract<TokenWalletAbi>;
@@ -81,6 +82,11 @@ describe("Test EVM native multivault pipeline", async function () {
             everscaleSolanaEventConfiguration,
             proxy
         ] = await setupNativeMultiVault(bridgeOwner, staking);
+
+        eventCloser = await deployAccount(
+            (await locklift.keystore.getSigner("1"))!,
+            50
+        );
     });
 
     it('Deploy native token root', async () => {
@@ -143,7 +149,7 @@ describe("Test EVM native multivault pipeline", async function () {
                     amount,
                     recipient: proxy.address,
                     deployWalletValue: locklift.utils.toNano(0.2),
-                    remainingGasTo: initializer.address,
+                    remainingGasTo: eventCloser.address,
                     notify: true,
                     payload,
                 })
@@ -209,6 +215,22 @@ describe("Test EVM native multivault pipeline", async function () {
             ).to.be.greaterThan(0, "Event contract balance is zero");
         });
 
+        it('Check sender address', async () => {
+            const sender = await eventContract.methods.sender({}).call();
+
+            expect(sender.toString())
+                .to.be.equal(initializer.toString(), 'Wrong sender');
+        });
+
+        it('Check initial balance', async () => {
+            const {
+                initial_balance
+            } = await eventContract.methods.initial_balance({}).call();
+
+            expect(Number(initial_balance))
+                .to.be.greaterThan(Number(locklift.utils.toNano(9)), 'Wrong event contract initial balance');
+        });
+
         it("Check event state before confirmation", async () => {
             const details = await eventContract.methods
                 .getDetails({ answerId: 0 })
@@ -267,7 +289,7 @@ describe("Test EVM native multivault pipeline", async function () {
             );
 
             expect(decodedData.remainingGasTo_.toString()).to.be.equal(
-                initializer.address.toString(),
+                eventCloser.address.toString(),
                 "Wrong event decoded remaining gas to"
             );
 
@@ -444,7 +466,7 @@ describe("Test EVM native multivault pipeline", async function () {
 
         it("Close event", async () => {
             await eventContract.methods.close({}).send({
-                from: initializer.address,
+                from: eventCloser.address,
                 amount: locklift.utils.toNano(1),
             });
         });
