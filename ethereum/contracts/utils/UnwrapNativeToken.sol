@@ -7,7 +7,8 @@ import "../multivault/interfaces/multivault/IMultiVaultFacetWithdraw.sol";
 import "../multivault/interfaces/multivault/IMultiVaultFacetPendingWithdrawals.sol";
 import "../multivault/utils/Initializable.sol";
 
-contract UnwrapNativeToken is IOctusCallback, Initializable {
+
+contract UnwrapNativeToken is IOctusCallbackAlien, Initializable {
     IWETH wethContract;
     address multiVault;
 
@@ -83,8 +84,4 @@ contract UnwrapNativeToken is IOctusCallback, Initializable {
 
         nativeTokenReceiver.transfer(withdrawAmount);
     }
-
-    function onNativeWithdrawal(
-        IMultiVaultFacetWithdraw.NativeWithdrawalParams memory _payload
-    ) external override onlyMultiVault {}
 }

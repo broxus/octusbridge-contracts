@@ -86,7 +86,7 @@ contract MultiVaultFacetWithdraw is
             token
         );
 
-        _callbackNativeWithdrawal(withdrawal);
+        _callbackNativeWithdrawal(withdrawal, withdrawal.amount - fee);
     }
 
     /// @notice Save withdrawal of alien token
