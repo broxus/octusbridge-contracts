@@ -25,7 +25,7 @@ abstract contract MultiVaultHelperLiquidity is IMultiVaultFacetLiquidityEvents {
         lp = address(uint160(uint(keccak256(abi.encodePacked(
             hex'ff',
             address(this),
-            keccak256(abi.encodePacked(token)), // TODO: prevent collision
+            keccak256(abi.encodePacked('LP', token)),
             hex'192c19818bebb5c6c95f5dcb3c3257379fc46fb654780cb06f3211ee77e1a360' // MultiVaultToken init code hash
         )))));
     }
@@ -39,7 +39,7 @@ abstract contract MultiVaultHelperLiquidity is IMultiVaultFacetLiquidityEvents {
 
         if (liquidity.supply == 0 || liquidity.activation == 0) return MultiVaultStorage.LP_EXCHANGE_RATE_BPS;
 
-        return MultiVaultStorage.LP_EXCHANGE_RATE_BPS * liquidity.cash / liquidity.supply; // TODO: precision
+        return MultiVaultStorage.LP_EXCHANGE_RATE_BPS * liquidity.cash / liquidity.supply;
     }
 
     function _getCash(
@@ -96,7 +96,7 @@ abstract contract MultiVaultHelperLiquidity is IMultiVaultFacetLiquidityEvents {
 
         string memory name = IERC20Metadata(token).name();
         string memory symbol = IERC20Metadata(token).symbol();
-        uint8 decimals = IERC20Metadata(token).decimals(); // TODO: think again?
+        uint8 decimals = IERC20Metadata(token).decimals();
 
         IMultiVaultToken(lp).initialize(
             string(abi.encodePacked(MultiVaultStorage.DEFAULT_NAME_LP_PREFIX, name)),
