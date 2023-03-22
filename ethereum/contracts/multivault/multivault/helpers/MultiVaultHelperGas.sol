@@ -14,7 +14,9 @@ contract MultiVaultHelperGas {
         address payable gasDonor = payable(s.gasDonor);
 
         if (gasDonor != address(0)) {
-            gasDonor.transfer(address(this).balance);
+            (bool sent,) = gasDonor.call{value: address(this).balance}("");
+
+            require(sent);
         }
     }
 }
