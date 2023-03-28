@@ -88,7 +88,7 @@ abstract contract MultiVaultHelperLiquidity is IMultiVaultFacetLiquidityEvents {
 
         bytes memory bytecode = type(MultiVaultToken).creationCode;
 
-        bytes32 salt = keccak256(abi.encodePacked(token));
+        bytes32 salt = keccak256(abi.encodePacked('LP', token));
 
         assembly {
             lp := create2(0, add(bytecode, 32), mload(bytecode), salt)
