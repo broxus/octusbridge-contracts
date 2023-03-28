@@ -19,6 +19,7 @@ contract MultiVaultEverscaleSolanaEventAlien is
     EverscaleSolanaBaseEvent,
     IMultiVaultEverscaleSolanaEventAlien
 {
+    uint32 public nonce;
     address public proxy;
     address public token;
     address public remainingGasTo;
@@ -49,9 +50,9 @@ contract MultiVaultEverscaleSolanaEventAlien is
     function onInit() override internal {
         setStatusInitializing();
 
-        (proxy, token, remainingGasTo, amount, recipient, sender) = abi.decode(
+        (nonce, proxy, token, remainingGasTo, amount, recipient, sender) = abi.decode(
             eventInitData.voteData.eventData,
-            (address, address, address, uint128, uint256, address)
+            (uint32, address, address, address, uint128, uint256, address)
         );
 
         initial_balance = address(this).balance;

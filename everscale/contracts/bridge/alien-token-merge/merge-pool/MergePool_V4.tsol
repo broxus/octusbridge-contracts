@@ -262,10 +262,11 @@ contract MergePool_V4 is
         TvmCell payload
     ) external override tokenExists(msg.sender) reserveBalance {
         (
+            uint32 nonce,
             BurnType burnType,
             address targetToken,
             TvmCell operationPayload
-        ) = abi.decode(payload, (BurnType, address, TvmCell));
+        ) = abi.decode(payload, (uint32, BurnType, address, TvmCell));
 
         uint128 amount = _convertDecimals(
             _amount,
@@ -301,6 +302,7 @@ contract MergePool_V4 is
                     flag: MsgFlag.ALL_NOT_RESERVED
                 }(
                     _randomNonce,
+                    nonce,
                     targetToken,
                     amount,
                     recipient,
@@ -322,6 +324,7 @@ contract MergePool_V4 is
                     flag: MsgFlag.ALL_NOT_RESERVED
                 }(
                     _randomNonce,
+                    nonce,
                     targetToken,
                     amount,
                     recipient,

@@ -6,6 +6,7 @@ import "./ProxyMultiVaultAlien_V7_Deposit_Solana.tsol";
 
 import "./../../../../interfaces/event-contracts/IEthereumEverscaleEvent.tsol";
 import "./../../../../interfaces/proxy/IEthereumEverscaleProxyExtended.tsol";
+import "../../../../libraries/EventContractNonce.tsol";
 
 
 abstract contract ProxyMultiVaultAlien_V7_Deposit_EVM is
@@ -16,7 +17,7 @@ abstract contract ProxyMultiVaultAlien_V7_Deposit_EVM is
     /// be deployed before. See note on `deployAlienToken`
     /// @param remainingGasTo Gas back address
     function onEventConfirmedExtended(
-        IEthereumEverscaleEvent.EthereumEverscaleEventInitData,
+        IEthereumEverscaleEvent.EthereumEverscaleEventInitData eventInitData,
         TvmCell meta,
         address remainingGasTo
     ) external override reserveAtLeastTargetBalance {
@@ -32,12 +33,14 @@ abstract contract ProxyMultiVaultAlien_V7_Deposit_EVM is
             (address, uint128, address, TvmCell)
         );
 
+        uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
+
         _mintTokens(
             token,
             amount,
             recipient,
             remainingGasTo,
-            payload
+            abi.encode(nonce, payload)
         );
     }
 }

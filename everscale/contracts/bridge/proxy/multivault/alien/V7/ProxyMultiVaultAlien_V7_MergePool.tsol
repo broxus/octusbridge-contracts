@@ -53,19 +53,19 @@ abstract contract ProxyMultiVaultAlien_V7_MergePool is ProxyMultiVaultAlien_V7_W
 
     /// @notice Handles mint request from merge pool
     /// Mints `amount` in `token` to `recipient`
-    /// @param nonce Merge pool nonce
+    /// @param mergePoolNonce Merge pool nonce
     /// @param token Token address
     /// @param amount Amount to mint
     /// @param recipient Token recipient
     /// @param remainingGasTo Remaining gas to
     function mintTokensByMergePool(
-        uint nonce,
+        uint mergePoolNonce,
         address token,
         uint128 amount,
         address recipient,
         address remainingGasTo,
         TvmCell payload
-    ) external override onlyMergePool(nonce) reserveAtLeastTargetBalance {
+    ) external override onlyMergePool(mergePoolNonce) reserveAtLeastTargetBalance {
         _mintTokens(
             token,
             amount,
@@ -76,15 +76,17 @@ abstract contract ProxyMultiVaultAlien_V7_MergePool is ProxyMultiVaultAlien_V7_W
     }
 
     function withdrawTokensToEVMByMergePool(
-        uint nonce,
+        uint mergePoolNonce,
+        uint32 nonce,
         address token,
         uint128 amount,
         uint160 recipient,
         address remainingGasTo,
         address sender,
         EVMCallback callback
-    ) external override onlyMergePool(nonce) reserveAtLeastTargetBalance {
+    ) external override onlyMergePool(mergePoolNonce) reserveAtLeastTargetBalance {
         _deployEVMEvent(
+            nonce,
             token,
             amount,
             recipient,
@@ -95,15 +97,17 @@ abstract contract ProxyMultiVaultAlien_V7_MergePool is ProxyMultiVaultAlien_V7_W
     }
 
     function withdrawTokensToSolanaByMergePool(
-        uint nonce,
+        uint mergePoolNonce,
+        uint32 nonce,
         address token,
         uint128 amount,
         uint256 recipient,
         address remainingGasTo,
         address sender,
         IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
-    ) external override onlyMergePool(nonce) reserveAtLeastTargetBalance {
+    ) external override onlyMergePool(mergePoolNonce) reserveAtLeastTargetBalance {
         _deploySolanaEvent(
+            nonce,
             token,
             amount,
             recipient,
@@ -114,13 +118,13 @@ abstract contract ProxyMultiVaultAlien_V7_MergePool is ProxyMultiVaultAlien_V7_W
     }
 
     function _buildMergePoolPlatformInitState(
-        uint256 nonce
+        uint256 mergePoolNonce
     ) internal view returns (TvmCell) {
         return tvm.buildStateInit({
             contr: MergePoolPlatform,
             varInit: {
                 proxy: address(this),
-                _randomNonce: nonce
+                _randomNonce: mergePoolNonce
             },
             pubkey: 0,
             code: mergePoolPlatform

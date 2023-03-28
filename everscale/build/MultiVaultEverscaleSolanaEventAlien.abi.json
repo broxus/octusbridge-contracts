@@ -221,6 +221,14 @@
 			]
 		},
 		{
+			"name": "nonce",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"nonce","type":"uint32"}
+			]
+		},
+		{
 			"name": "proxy",
 			"inputs": [
 			],
@@ -350,6 +358,7 @@
 		{"name":"round_number","type":"uint32"},
 		{"name":"createdAt","type":"uint32"},
 		{"components":[{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"components":[{"name":"account","type":"uint256"},{"name":"readOnly","type":"bool"},{"name":"isSigner","type":"bool"}],"name":"executeAccounts","type":"tuple[]"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"eventInitData","type":"tuple"},
+		{"name":"nonce","type":"uint32"},
 		{"name":"proxy","type":"address"},
 		{"name":"token","type":"address"},
 		{"name":"remainingGasTo","type":"address"},

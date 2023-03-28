@@ -113,4 +113,6 @@ library ErrorCodes {
     uint16 constant NOT_SOLANA_CONFIG = 2707;
     uint16 constant WRONG_TOKEN_ROOT = 2708;
 
+    // Mediator
+    uint16 constant UNKNOWN_MEDIATOR_OPERATION = 2801;
 }

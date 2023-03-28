@@ -264,6 +264,150 @@
 			"outputs": [
 				{"name":"round_number","type":"uint32"}
 			]
+		},
+		{
+			"name": "nonce",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"nonce","type":"uint32"}
+			]
+		},
+		{
+			"name": "base_chainId",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"base_chainId","type":"uint256"}
+			]
+		},
+		{
+			"name": "base_token",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"base_token","type":"uint160"}
+			]
+		},
+		{
+			"name": "name",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"name","type":"string"}
+			]
+		},
+		{
+			"name": "symbol",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"symbol","type":"string"}
+			]
+		},
+		{
+			"name": "decimals",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"decimals","type":"uint8"}
+			]
+		},
+		{
+			"name": "amount",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"amount","type":"uint128"}
+			]
+		},
+		{
+			"name": "recipient",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"recipient","type":"address"}
+			]
+		},
+		{
+			"name": "value",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value","type":"uint256"}
+			]
+		},
+		{
+			"name": "expected_evers",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"expected_evers","type":"uint256"}
+			]
+		},
+		{
+			"name": "payload",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"payload","type":"cell"}
+			]
+		},
+		{
+			"name": "proxy",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"proxy","type":"address"}
+			]
+		},
+		{
+			"name": "token",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"token","type":"address"}
+			]
+		},
+		{
+			"name": "router",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"router","type":"address"}
+			]
+		},
+		{
+			"name": "pool",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"pool","type":"address"}
+			]
+		},
+		{
+			"name": "canon",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"canon","type":"address"}
+			]
+		},
+		{
+			"name": "target_token",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"target_token","type":"address"}
+			]
+		},
+		{
+			"name": "target_amount",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"target_amount","type":"uint128"}
+			]
 		}
 	],
 	"data": [
@@ -322,6 +466,7 @@
 		{"name":"relay_round","type":"address"},
 		{"name":"round_number","type":"uint32"},
 		{"components":[{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"},{"name":"chainId","type":"uint32"}],"name":"eventInitData","type":"tuple"},
+		{"name":"nonce","type":"uint32"},
 		{"name":"base_chainId","type":"uint256"},
 		{"name":"base_token","type":"uint160"},
 		{"name":"name","type":"string"},

@@ -3,7 +3,7 @@ import {Contract} from "locklift";
 import {
     EthereumEverscaleEventConfigurationAbi,
     EverscaleEthereumEventConfigurationAbi, EverscaleSolanaEventConfigurationAbi,
-    FactorySource, ProxyMultiVaultAlien_V6Abi, SolanaEverscaleEventConfigurationAbi
+    FactorySource, ProxyMultiVaultAlien_V7Abi, SolanaEverscaleEventConfigurationAbi
 } from "../../../build/factorySource";
 import {logContract} from "../logger";
 import {
@@ -24,7 +24,7 @@ export const setupAlienMultiVault = async (
     Contract<EverscaleEthereumEventConfigurationAbi>,
     Contract<SolanaEverscaleEventConfigurationAbi>,
     Contract<EverscaleSolanaEventConfigurationAbi>,
-    Contract<ProxyMultiVaultAlien_V6Abi>
+    Contract<ProxyMultiVaultAlien_V7Abi>
 ]> => {
     const _randomNonce = locklift.utils.getRandomNonce();
     const signer = (await locklift.keystore.getSigner("2"))!;

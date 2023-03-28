@@ -28,7 +28,7 @@ export const enableEventConfiguration = async (
 ) => {
     const connectorId = await bridge.methods.connectorCounter().call();
     const connectorDeployValue = await bridge.methods
-        .connectorDeployValue()
+        .connectorDeployValue({})
         .call();
 
     await locklift.transactions.waitFinalized(
@@ -154,8 +154,8 @@ export const setupBridge = async (relays: Ed25519KeyPair[]): Promise<[
         initParams: {
             _randomNonce: locklift.utils.getRandomNonce(),
         },
-        publicKey: signer.publicKey,
-        value: locklift.utils.toNano(1),
+        publicKey: signer?.publicKey as string,
+        value: locklift.utils.toNano(1)
     });
 
     await logContract("CellEncoderStandalone", cellEncoder.address);

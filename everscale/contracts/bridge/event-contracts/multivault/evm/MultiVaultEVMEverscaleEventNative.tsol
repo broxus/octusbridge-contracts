@@ -17,16 +17,17 @@ contract MultiVaultEVMEverscaleEventNative is
     EthereumEverscaleBaseEvent,
     IMultiVaultEVMEverscaleEventNative
 {
-    address token;
-    uint128 amount;
-    address recipient;
+    address public token;
+    uint128 public amount;
+    address public recipient;
 
-    uint value;
-    uint expected_evers;
-    TvmCell payload;
+    uint public value;
+    uint public expected_evers;
+    TvmCell public payload;
 
-    address proxy;
-    address tokenWallet;
+    // Derived fields
+    address public proxy;
+    address public tokenWallet;
 
     constructor(
         address _initializer,

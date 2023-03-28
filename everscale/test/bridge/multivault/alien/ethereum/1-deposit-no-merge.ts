@@ -8,7 +8,7 @@ import {
     EverscaleSolanaEventConfigurationAbi,
     MergeRouterAbi,
     MultiVaultEVMEverscaleEventAlienAbi,
-    ProxyMultiVaultAlien_V6Abi,
+    ProxyMultiVaultAlien_V7Abi,
     SolanaEverscaleEventConfigurationAbi,
     StakingMockupAbi,
     TokenRootAlienEVMAbi
@@ -35,7 +35,7 @@ let everscaleEthereumEventConfiguration: Contract<EverscaleEthereumEventConfigur
 let solanaEverscaleEventConfiguration: Contract<SolanaEverscaleEventConfigurationAbi>;
 let everscaleSolanaEventConfiguration: Contract<EverscaleSolanaEventConfigurationAbi>;
 let initializer: Account;
-let proxy: Contract<ProxyMultiVaultAlien_V6Abi>;
+let proxy: Contract<ProxyMultiVaultAlien_V7Abi>;
 
 let alienTokenRoot: Contract<TokenRootAlienEVMAbi>;
 let mergeRouter: Contract<MergeRouterAbi>;
@@ -118,6 +118,15 @@ describe('Deposit Alien token to Everscale with no merging', async function() {
                 eventBlock: 444,
             };
 
+            // const tx = await locklift.tracing.trace(ethereumEverscaleEventConfiguration.methods
+            //     .deployEvent({
+            //         eventVoteData,
+            //     })
+            //     .send({
+            //         from: initializer.address,
+            //         amount: locklift.utils.toNano(6),
+            //     }));
+
             const tx = await ethereumEverscaleEventConfiguration.methods
                 .deployEvent({
                     eventVoteData,
@@ -127,7 +136,7 @@ describe('Deposit Alien token to Everscale with no merging', async function() {
                     amount: locklift.utils.toNano(6),
                 });
 
-            logger.log(`Event initialization tx: ${tx.id.hash}`);
+            logger.log(`Event initialization tx: ${tx.id}`);
 
             const expectedEventContract = await ethereumEverscaleEventConfiguration.methods
                 .deriveEventAddress({

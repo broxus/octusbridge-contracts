@@ -4,7 +4,7 @@ import "../../bridge/interfaces/event-contracts/multivault/evm/IEVMCallback.tsol
 
 
 contract MediatorCellEncoder is IEVMCallback {
-    function encodeAlienHiddenBridgeEventPayload(
+    function encodeMediatorPayload(
         uint8 operation,
         address proxy,
         TvmCell payload

@@ -19,6 +19,7 @@ contract MultiVaultEverscaleEVMEventAlien is
     EverscaleEthereumBaseEvent,
     IMultiVaultEverscaleEVMEventAlien
 {
+    uint32 public nonce;
     address public proxy;
     address public token;
     address public remainingGasTo;
@@ -56,12 +57,12 @@ contract MultiVaultEverscaleEVMEventAlien is
         setStatusInitializing();
 
         (
-            proxy, token, remainingGasTo, amount, recipient, sender,
+            nonce, proxy, token, remainingGasTo, amount, recipient, sender,
             callback_recipient, callback_payload, callback_strict
         ) = abi.decode(
             eventInitData.voteData.eventData,
             (
-                address, address, address, uint128, uint160, address,
+                uint32, address, address, address, uint128, uint160, address,
                 uint160, bytes, bool
             )
         );

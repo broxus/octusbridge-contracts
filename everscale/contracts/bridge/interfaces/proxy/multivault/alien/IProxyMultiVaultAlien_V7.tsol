@@ -84,7 +84,8 @@ interface IProxyMultiVaultAlien_V7 is IEVMCallback, INetworks {
     ) external;
 
     function withdrawTokensToEVMByMergePool(
-        uint nonce,
+        uint mergePoolNonce,
+        uint32 nonce,
         address token,
         uint128 amount,
         uint160 recipient,
@@ -94,7 +95,8 @@ interface IProxyMultiVaultAlien_V7 is IEVMCallback, INetworks {
     ) external;
 
     function withdrawTokensToSolanaByMergePool(
-        uint nonce,
+        uint mergePoolNonce,
+        uint32 nonce,
         address token,
         uint128 amount,
         uint256 recipient,

@@ -24,30 +24,30 @@ contract MultiVaultEVMEverscaleEventAlien is
 {
     uint128 constant POWER_BASE = 10;
 
-    uint256 base_chainId;
-    uint160 base_token;
+    uint256 public base_chainId;
+    uint160 public base_token;
 
-    string name;
-    string symbol;
-    uint8 decimals;
+    string public name;
+    string public symbol;
+    uint8 public decimals;
 
-    uint128 amount;
-    address recipient;
+    uint128 public amount;
+    address public recipient;
 
-    uint value;
-    uint expected_evers;
-    TvmCell payload;
+    uint public value;
+    uint public expected_evers;
+    TvmCell public payload;
 
     // Derived fields
-    address proxy;
-    address token;
+    address public proxy;
+    address public token;
 
-    address router;
-    address pool;
-    address canon;
+    address public router;
+    address public pool;
+    address public canon;
 
-    address target_token;
-    uint128 target_amount;
+    address public target_token;
+    uint128 public target_amount;
 
     constructor(
         address _initializer,

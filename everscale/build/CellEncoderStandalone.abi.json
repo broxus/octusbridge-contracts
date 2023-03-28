@@ -4,7 +4,7 @@
 	"header": ["time"],
 	"functions": [
 		{
-			"name": "encodeAlienHiddenBridgeEventPayload",
+			"name": "encodeMediatorPayload",
 			"inputs": [
 				{"name":"operation","type":"uint8"},
 				{"name":"proxy","type":"address"},

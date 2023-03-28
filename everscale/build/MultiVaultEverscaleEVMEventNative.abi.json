@@ -249,6 +249,14 @@
 			]
 		},
 		{
+			"name": "nonce",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"nonce","type":"uint32"}
+			]
+		},
+		{
 			"name": "proxy",
 			"inputs": [
 			],
@@ -436,6 +444,7 @@
 		{"name":"createdAt","type":"uint32"},
 		{"components":[{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"eventInitData","type":"tuple"},
 		{"name":"signatures","type":"map(uint256,bytes)"},
+		{"name":"nonce","type":"uint32"},
 		{"name":"proxy","type":"address"},
 		{"name":"tokenWallet","type":"address"},
 		{"name":"token","type":"address"},

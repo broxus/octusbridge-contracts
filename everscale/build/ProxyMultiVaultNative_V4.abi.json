@@ -47,7 +47,7 @@
 				{"name":"sender","type":"address"},
 				{"name":"value3","type":"address"},
 				{"name":"remainingGasTo","type":"address"},
-				{"name":"transferPayload","type":"cell"}
+				{"name":"payload","type":"cell"}
 			],
 			"outputs": [
 			]

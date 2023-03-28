@@ -1,0 +1,17 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma ever-solidity >= 0.62.0;
+
+import "../interfaces/event-contracts/IEthereumEverscaleEvent.tsol";
+
+
+library EventContractNonce {
+    uint constant U32_MAX = 2**32 - 1;
+
+    function _calculateNonce(
+        IEthereumEverscaleEvent.EthereumEverscaleEventInitData eventInitData
+    ) internal returns (uint32) {
+        uint dataHash = tvm.hash(abi.encode(eventInitData));
+
+        return uint32(dataHash % U32_MAX);
+    }
+}

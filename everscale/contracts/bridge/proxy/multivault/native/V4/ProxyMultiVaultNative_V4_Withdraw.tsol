@@ -27,17 +27,22 @@ abstract contract ProxyMultiVaultNative_V4_Withdraw is
         address sender,
         address,
         address remainingGasTo,
-        TvmCell transferPayload
+        TvmCell payload
     ) override external reserveAtLeastTargetBalance {
-        (Network network, TvmCell payload) = abi.decode(transferPayload, (Network, TvmCell));
+        (
+            uint32 nonce,
+            Network network,
+            TvmCell transferPayload
+        ) = abi.decode(payload, (uint32, Network, TvmCell));
 
         if (network == Network.Solana) {
             (
                 uint256 recipient,
                 IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
-            ) = abi.decode(payload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[]));
+            ) = abi.decode(transferPayload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[]));
 
             _deploySolanaEvent(
+                nonce,
                 tokenRoot,
                 remainingGasTo,
                 amount,
@@ -50,9 +55,10 @@ abstract contract ProxyMultiVaultNative_V4_Withdraw is
                 uint160 recipient,
                 uint256 chainId,
                 EVMCallback callback
-            ) = abi.decode(payload, (uint160, uint256, EVMCallback));
+            ) = abi.decode(transferPayload, (uint160, uint256, EVMCallback));
 
             _deployEVMEvent(
+                nonce,
                 tokenRoot,
                 chainId,
                 amount,
@@ -65,6 +71,7 @@ abstract contract ProxyMultiVaultNative_V4_Withdraw is
     }
 
     function _deploySolanaEvent(
+        uint32 nonce,
         address token,
         address remainingGasTo,
         uint128 amount,
@@ -73,6 +80,7 @@ abstract contract ProxyMultiVaultNative_V4_Withdraw is
         IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
     ) internal view {
         TvmCell eventData = abi.encode(
+            nonce,
             address(this), // Proxy address
             msg.sender, // Token wallet address, must be validated in the event contract
             token, // Token root
@@ -97,6 +105,7 @@ abstract contract ProxyMultiVaultNative_V4_Withdraw is
     }
 
     function _deployEVMEvent(
+        uint32 nonce,
         address token,
         uint256 chainId,
         uint128 amount,
@@ -106,6 +115,7 @@ abstract contract ProxyMultiVaultNative_V4_Withdraw is
         EVMCallback callback
     ) internal view {
         TvmCell eventData = abi.encode(
+            nonce,
             address(this), // Proxy address
             msg.sender, // Token wallet address, must be validated in the event contract
             token, // Token root

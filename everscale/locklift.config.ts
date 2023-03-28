@@ -27,29 +27,6 @@ const config: LockliftConfig = {
     path: "/usr/local/bin/tvm_linker-0.16.1",
   },
   networks: {
-    testnet: {
-      // Specify connection settings for https://github.com/broxus/everscale-standalone-client/
-      connection: {
-        id: 2,
-        group: 'testnet',
-        type: 'graphql',
-        data: {
-          endpoints: ['https://devnet.evercloud.dev/57a5b802e303424fb0078f612a4fbe35/graphql'],
-          local: false,
-        },
-      },
-      giver: {
-        giverFactory: (ever, keyPair, address) => new TestnetGiver(ever, keyPair, address),
-        address: "0:a4053fd2e9798d0457c9e8f012cef203e49da863d76f36d52d5e2e62c326b217",
-        key: "",
-      },
-      keys: {
-        // Use everdev to generate your phrase
-        // !!! Never commit it in your repos !!!
-        // phrase: "action inject penalty envelope rabbit element slim tornado dinner pizza off blood",
-        amount: 20,
-      },
-    },
     local: {
       // Specify connection settings for https://github.com/broxus/everscale-standalone-client/
       connection: {
@@ -79,7 +56,7 @@ const config: LockliftConfig = {
     },
     mainnet: {
       // Specify connection settings for https://github.com/broxus/everscale-standalone-client/
-      connection: "mainnet",
+      connection: "mainnetJrpc",
       // Here, default SafeMultisig wallet is used as a giver
       giver: {
         giverFactory: (ever, keyPair, address) => new GiverWallet(ever, keyPair, address),

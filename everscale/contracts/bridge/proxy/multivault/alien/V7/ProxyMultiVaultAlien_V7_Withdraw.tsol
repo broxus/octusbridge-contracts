@@ -29,7 +29,11 @@ abstract contract ProxyMultiVaultAlien_V7_Withdraw is
         address remainingGasTo,
         TvmCell payload
     ) public override reserveAtLeastTargetBalance {
-        (Network network, TvmCell burnPayload) = abi.decode(payload, (Network, TvmCell));
+        (
+            uint32 nonce,
+            Network network,
+            TvmCell burnPayload
+        ) = abi.decode(payload, (uint32, Network, TvmCell));
 
         if (network == Network.Solana) {
             (
@@ -38,6 +42,7 @@ abstract contract ProxyMultiVaultAlien_V7_Withdraw is
             ) = abi.decode(burnPayload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[]));
 
             _deploySolanaEvent(
+                nonce,
                 msg.sender,
                 amount,
                 recipient,
@@ -52,6 +57,7 @@ abstract contract ProxyMultiVaultAlien_V7_Withdraw is
             ) = abi.decode(burnPayload, (uint160, EVMCallback));
 
             _deployEVMEvent(
+                nonce,
                 msg.sender,
                 amount,
                 recipient,
@@ -63,6 +69,7 @@ abstract contract ProxyMultiVaultAlien_V7_Withdraw is
     }
 
     function _deploySolanaEvent(
+        uint32 nonce,
         address token,
         uint128 amount,
         uint256 recipient,
@@ -71,6 +78,7 @@ abstract contract ProxyMultiVaultAlien_V7_Withdraw is
         IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
     ) internal view {
         TvmCell eventData = abi.encode(
+            nonce,
             address(this), // Proxy address, used in event contract for validating token root
             token, // Everscale token root address
             remainingGasTo, // Remaining gas receiver (on event contract destroy)
@@ -94,6 +102,7 @@ abstract contract ProxyMultiVaultAlien_V7_Withdraw is
     }
 
     function _deployEVMEvent(
+        uint32 nonce,
         address token,
         uint128 amount,
         uint160 recipient,
@@ -102,6 +111,7 @@ abstract contract ProxyMultiVaultAlien_V7_Withdraw is
         EVMCallback callback
     ) internal view {
         TvmCell eventData = abi.encode(
+            nonce,
             address(this), // Proxy address, used in event contract for validating token root
             token, // Everscale token root address
             remainingGasTo, // Remaining gas receiver (on event contract destroy)
