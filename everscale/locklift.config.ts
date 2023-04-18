@@ -60,7 +60,7 @@ const config: LockliftConfig = {
         amount: 20,
       },
     },
-    venom: {
+    venom_testnet: {
       connection: {
         id: 1000,
         group: "group",
