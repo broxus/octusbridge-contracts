@@ -6,7 +6,6 @@
 		{
 			"name": "constructor",
 			"inputs": [
-				{"name":"_guardian","type":"address"},
 				{"name":"_owner","type":"uint256"},
 				{"name":"_deployer","type":"address"}
 			],
@@ -46,14 +45,6 @@
 			]
 		},
 		{
-			"name": "guardian",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"guardian","type":"address"}
-			]
-		},
-		{
 			"name": "deployer",
 			"inputs": [
 			],
@@ -82,7 +73,6 @@
 		{"name":"_constructorFlag","type":"bool"},
 		{"name":"owner","type":"uint256"},
 		{"name":"_randomNonce","type":"uint256"},
-		{"name":"guardian","type":"address"},
 		{"name":"deployer","type":"address"}
 	]
 }

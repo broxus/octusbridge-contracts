@@ -17,17 +17,14 @@ import "./../event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol";
 /// Allows credit backend to call .close on the event contracts, where remainingGasTo = EventCloser
 /// Receives the EVERs and immediately transfers them to the EventDeployer contract
 contract EventCloser is ExternalOwner, RandomNonce, TransferUtils {
-    address public guardian;
     address public deployer;
 
     constructor(
-        address _guardian,
         uint _owner,
         address _deployer
     ) public {
         tvm.accept();
 
-        guardian = _guardian;
         setOwnership(_owner);
         deployer = _deployer;
     }

@@ -10,12 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "@broxus/contracts": "^1.1.1",
-    "@nomiclabs/hardhat-etherscan": "^2.1.1",
-    "@nomiclabs/hardhat-waffle": "^2.0.1",
-    "@nomiclabs/hardhat-web3": "^2.0.0",
     "@openzeppelin/contracts": "^4.3.0",
     "@openzeppelin/contracts-upgradeable": "^4.1.0",
-    "@openzeppelin/hardhat-upgrades": "^1.6.0",
     "@primitivefi/hardhat-dodoc": "^0.2.3",
     "@studydefi/money-legos": "^2.4.2",
     "bignumber.js": "^9.0.1",
@@ -46,8 +42,6 @@
     "prompts": "^2.4.1",
     "simple-node-logger": "^18.12.24",
     "solidity-docgen": "^0.5.7",
-    "ton-client-js": "^0.28.1",
-    "ton-client-node-js": "^0.24.0",
     "ton-eth-bridge-token-contracts": "https://github.com/broxus/ton-eth-bridge-token-contracts#480c1b4481d1dddb028b408b20ba8c19abd1a4a4",
     "underscore": "^1.12.0",
     "web3": "^1.3.4"
