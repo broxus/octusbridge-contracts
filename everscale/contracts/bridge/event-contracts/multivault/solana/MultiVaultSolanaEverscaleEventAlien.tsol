@@ -91,6 +91,17 @@ contract MultiVaultSolanaEverscaleEventAlien is
             )
         );
 
+        // Destroy event contract in case event contract is less than required
+        if (address(this).balance < expected_evers) {
+            recipient.transfer({
+                value: 0,
+                bounce: false,
+                flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.DESTROY_IF_ZERO
+            });
+
+            return;
+        }
+
         ISolanaEverscaleEventConfiguration(eventInitData.configuration).getDetails{
             value: 1 ever,
             callback: MultiVaultSolanaEverscaleEventAlien.receiveConfigurationDetails
