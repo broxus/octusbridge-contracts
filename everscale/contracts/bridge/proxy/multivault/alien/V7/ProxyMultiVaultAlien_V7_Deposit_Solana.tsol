@@ -18,7 +18,7 @@ abstract contract ProxyMultiVaultAlien_V7_Deposit_Solana is
         TvmCell meta,
         address remainingGasTo
     ) external override reserveAtLeastTargetBalance {
-        require(solanaConfiguration.solanaConfiguration == msg.sender);
+        require(solanaConfiguration.solanaConfiguration == msg.sender, ErrorCodes.NOT_SOLANA_CONFIG);
 
         (
             address token,

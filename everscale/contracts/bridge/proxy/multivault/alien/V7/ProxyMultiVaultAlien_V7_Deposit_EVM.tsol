@@ -21,7 +21,10 @@ abstract contract ProxyMultiVaultAlien_V7_Deposit_EVM is
         TvmCell meta,
         address remainingGasTo
     ) external override reserveAtLeastTargetBalance {
-        require(_isArrayContainsAddress(evmConfiguration.evmConfigurations, msg.sender));
+        require(
+            _isArrayContainsAddress(evmConfiguration.evmConfigurations, msg.sender),
+            ErrorCodes.NOT_ETHEREUM_CONFIG
+        );
 
         (
             address token,

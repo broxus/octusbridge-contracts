@@ -9,7 +9,7 @@ import "./ProxyMultiVaultAlien_V7_Withdraw.tsol";
 
 abstract contract ProxyMultiVaultAlien_V7_MergePool is ProxyMultiVaultAlien_V7_Withdraw {
     modifier onlyMergePool(uint nonce) {
-        require(deriveMergePool(nonce) == msg.sender);
+        require(deriveMergePool(nonce) == msg.sender, ErrorCodes.WRONG_MERGE_POOL_NONCE);
 
         _;
     }
@@ -32,7 +32,7 @@ abstract contract ProxyMultiVaultAlien_V7_MergePool is ProxyMultiVaultAlien_V7_W
         address[] tokens,
         uint256 canonId
     ) external override reserveAtLeastTargetBalance {
-        require(msg.sender == owner || msg.sender == manager);
+        require(msg.sender == owner || msg.sender == manager, ErrorCodes.ONLY_OWNER_OR_MANAGER);
 
         TvmCell stateInit = _buildMergePoolPlatformInitState(nonce);
 

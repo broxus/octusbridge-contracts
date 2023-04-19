@@ -23,7 +23,10 @@ abstract contract ProxyMultiVaultNative_V4_Deposit is
         TvmCell meta,
         address remainingGasTo
     ) external override reserveAtLeastTargetBalance {
-        require(_isArrayContainsAddress(evmConfiguration.evmConfigurations, msg.sender));
+        require(
+            _isArrayContainsAddress(evmConfiguration.evmConfigurations, msg.sender),
+            ErrorCodes.NOT_ETHEREUM_CONFIG
+        );
 
         (
             address token_wallet,
@@ -52,7 +55,7 @@ abstract contract ProxyMultiVaultNative_V4_Deposit is
         TvmCell meta,
         address remainingGasTo
     ) external override reserveAtLeastTargetBalance {
-        require(solanaConfiguration.solanaConfiguration == msg.sender);
+        require(solanaConfiguration.solanaConfiguration == msg.sender, ErrorCodes.NOT_SOLANA_CONFIG);
 
         (
             address token_wallet,
