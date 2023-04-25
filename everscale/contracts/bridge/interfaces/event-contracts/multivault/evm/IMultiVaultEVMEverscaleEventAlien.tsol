@@ -6,6 +6,34 @@ import "./../../../alien-token-merge/merge-pool/IMergePool_V2.tsol";
 
 
 interface IMultiVaultEVMEverscaleEventAlien {
+    struct EventData {
+        uint256 base_chainId;
+        uint160 base_token;
+
+        string name;
+        string symbol;
+        uint8 decimals;
+
+        uint128 amount;
+        address recipient;
+
+        uint value;
+        uint expected_evers;
+        TvmCell payload;
+    }
+
+    struct TransitionalData {
+        address proxy;
+        address token;
+
+        address router;
+        address pool;
+        address canon;
+
+        address target_token;
+        uint128 target_amount;
+    }
+
     function receiveConfigurationDetails(
         IEthereumEverscaleEventConfiguration.BasicConfiguration,
         IEthereumEverscaleEventConfiguration.EthereumEverscaleEventConfiguration _networkConfiguration,
@@ -33,6 +61,9 @@ interface IMultiVaultEVMEverscaleEventAlien {
         IMergePool_V2.Token canonToken_
     ) external;
 
+    function getEventData() external responsible returns(EventData);
+
+    // Legacy
     function getDecodedData() external responsible returns(
         uint256 base_chainId_,
         uint160 base_token_,
@@ -46,22 +77,5 @@ interface IMultiVaultEVMEverscaleEventAlien {
         TvmCell payload_,
         address proxy_,
         address token_
-    );
-
-    function getDecodedDataExtended() external responsible returns(
-        uint256 base_chainId_,
-        uint160 base_token_,
-        string name_,
-        string symbol_,
-        uint8 decimals_,
-        uint128 amount_,
-        address recipient_,
-        address proxy_,
-        address token_,
-        address router_,
-        address pool_,
-        address canon_,
-        address target_token_,
-        uint128 target_amount_
     );
 }

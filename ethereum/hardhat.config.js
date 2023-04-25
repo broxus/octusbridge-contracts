@@ -7,8 +7,8 @@ require('hardhat-deploy');
 require('hardhat-abi-exporter');
 // require("hardhat-gas-reporter");
 require('@primitivefi/hardhat-dodoc');
-require('hardhat-contract-sizer');
-require("hardhat-diamond-abi");
+// require('hardhat-contract-sizer');
+// require("hardhat-diamond-abi");
 
 
 task("accounts", "Prints the list of accounts", async () => {
@@ -19,6 +19,14 @@ task("accounts", "Prints the list of accounts", async () => {
   }
 });
 
+
+const proxyadmin = {
+  main: '0x5889d26Ad270540E315B028Dd39Ae0ECB3De6179',
+  polygon: '0x9f6898d5D36e2a4b9A0c6e58A0e86525475f58d7',
+  bsc: '0xa3CbceE67325bCa03aCCcD06b9121955CCF224C3',
+  fantom: '0x6dF42fdE8BC7AF2596a450b9af306EA2060Ec8dc',
+  avalanche: '0x25D28c131461dE91d42495d0DacC603AF3f4Eb33',
+};
 
 const multisig = {
   main: '0xe29B04B9c6712080f79B2dAc5211B18B279D5DE0',
@@ -194,7 +202,7 @@ const hardhatConfig = {
     },
     main: {
       url: 'https://mainnet.infura.io/v3/f3ca4333bf4a41308d0a277ae1c09336',
-      gasPrice: 100000000000, // 100 gwei
+      gasPrice: 50000000000, // 100 gwei
       gas: 3000000,
       timeout: 1000000,
       accounts: {
@@ -204,7 +212,7 @@ const hardhatConfig = {
     },
     polygon: {
       url: 'https://matic-mainnet.chainstacklabs.com',
-      gasPrice: 1001000000, // 1.001 gwei
+      gasPrice: 300001000000, // 1.001 gwei
       gas: 3000000,
       timeout: 1000000,
       accounts: {
@@ -225,6 +233,16 @@ const hardhatConfig = {
     fantom: {
       url: 'https://rpc.ftm.tools/',
       gasPrice: 550000000000, // 550 gwei
+      gas: 3000000,
+      timeout: 1000000,
+      accounts: {
+        mnemonic: process.env.ETH_MNEMONIC,
+        count: 50
+      },
+    },
+    avalanche: {
+      url: 'https://api.avax.network/ext/bc/C/rpc',
+      gasPrice: 100000000000, // 100 gwei
       gas: 3000000,
       timeout: 1000000,
       accounts: {
@@ -300,6 +318,10 @@ const hardhatConfig = {
       default: '0x0000000000000000000000000000000000000000',
       ...bridge
     },
+    proxyadmin: {
+      default: '0x0000000000000000000000000000000000000000',
+      ...proxyadmin
+    },
     owner: {
       default: 3,
       ...multisig
@@ -328,6 +350,14 @@ const hardhatConfig = {
     },
     dai_owner: {
       default: '0xA929022c9107643515F5c777cE9a910F0D1e490C',
+    },
+    multivault: {
+      default: '0x0000000000000000000000000000000000000000',
+      main: '0x54c55369a6900731d22eacb0df7c0253cf19dfff',
+      polygon: '0x54c55369a6900731d22eacb0df7c0253cf19dfff',
+      bsc: '0x54c55369a6900731d22eacb0df7c0253cf19dfff',
+      fantom: '0x54c55369a6900731d22eacb0df7c0253cf19dfff',
+      avalanche: '0x54c55369a6900731d22eacb0df7c0253cf19dfff',
     },
     relay_1: {
       default: 10,

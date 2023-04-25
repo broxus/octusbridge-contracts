@@ -124,7 +124,7 @@ describe('Deposit Alien token to Everscale with no merging', async function() {
             //     })
             //     .send({
             //         from: initializer.address,
-            //         amount: locklift.utils.toNano(6),
+            //         amount: locklift.utils.toNano(8),
             //     }));
 
             const tx = await ethereumEverscaleEventConfiguration.methods

@@ -297,6 +297,14 @@ contract MultiVaultFacetSettings is
         s.gasDonor = _gasDonor;
     }
 
+    function setWeth(
+        address _weth
+    ) external override onlyGovernance {
+        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
+
+        s.weth = _weth;
+    }
+
     function withdrawGuardian() external view override returns(address) {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 

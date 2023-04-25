@@ -24,30 +24,7 @@ contract MultiVaultEVMEverscaleEventAlien is
 {
     uint128 constant POWER_BASE = 10;
 
-    uint256 public base_chainId;
-    uint160 public base_token;
-
-    string public name;
-    string public symbol;
-    uint8 public decimals;
-
-    uint128 public amount;
-    address public recipient;
-
-    uint public value;
-    uint public expected_evers;
-    TvmCell public payload;
-
-    // Derived fields
-    address public proxy;
-    address public token;
-
-    address public router;
-    address public pool;
-    address public canon;
-
-    address public target_token;
-    uint128 public target_amount;
+    TvmCell public transitionalDataCell;
 
     constructor(
         address _initializer,
@@ -70,41 +47,15 @@ contract MultiVaultEVMEverscaleEventAlien is
     }
 
     function onInit() override internal {
+        _init_transitional_data();
+
         setStatusInitializing();
 
-        int8 recipient_wid;
-        uint256 recipient_addr;
-
-        (
-            base_chainId,
-            base_token,
-
-            name,
-            symbol,
-            decimals,
-
-            amount,
-            recipient_wid,
-            recipient_addr,
-
-            value,
-            expected_evers,
-            payload
-        ) = abi.decode(
-            eventInitData.voteData.eventData,
-            (
-                uint256, uint160,
-                string, string, uint8,
-                uint128, int8, uint256,
-                uint256, uint256, TvmCell
-            )
-        );
-
-        recipient = address.makeAddrStd(recipient_wid, recipient_addr);
+        EventData eventData = getEventData();
 
         // Destroy event contract in case event contract is less than required
-        if (address(this).balance < expected_evers) {
-            recipient.transfer({
+        if (address(this).balance < eventData.expected_evers) {
+            eventData.recipient.transfer({
                 value: 0,
                 bounce: false,
                 flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.DESTROY_IF_ZERO
@@ -126,17 +77,19 @@ contract MultiVaultEVMEverscaleEventAlien is
     ) external override {
         require(msg.sender == eventInitData.configuration);
 
-        proxy = _networkConfiguration.proxy;
+        _set_proxy(_networkConfiguration.proxy);
 
-        IProxyMultiVaultAlien_V6(proxy).deriveEVMAlienTokenRoot{
+        EventData eventData = getEventData();
+
+        IProxyMultiVaultAlien_V6(_networkConfiguration.proxy).deriveEVMAlienTokenRoot{
             value: 1 ever,
             callback: MultiVaultEVMEverscaleEventAlien.receiveAlienTokenRoot
         }(
-            base_chainId,
-            base_token,
-            name,
-            symbol,
-            decimals
+            eventData.base_chainId,
+            eventData.base_token,
+            eventData.name,
+            eventData.symbol,
+            eventData.decimals
         );
     }
 
@@ -145,11 +98,13 @@ contract MultiVaultEVMEverscaleEventAlien is
     /// @dev Sends the request to token to ensure it's already deployed
     /// In case it's not - bounced message will be received, see `onBounce`
     function receiveAlienTokenRoot(
-        address token_
+        address token
     ) external override {
-        require(msg.sender == proxy);
+        TransitionalData transitionalData = getTransitionalData();
 
-        token = token_;
+        require(msg.sender == transitionalData.proxy);
+
+        _set_token(token);
 
         TIP3TokenRoot(token).name{
             value: 1 ever,
@@ -161,32 +116,38 @@ contract MultiVaultEVMEverscaleEventAlien is
     function receiveTokenName(
         string // name
     ) external override {
-        require(msg.sender == token);
+        TransitionalData transitionalData = getTransitionalData();
+
+        require(msg.sender == transitionalData.token);
 
         _requestMergeRouter();
     }
 
     function _requestMergeRouter() internal view {
+        TransitionalData transitionalData = getTransitionalData();
+
         // Token exists, no need to deploy
         // Ask the router address
-        IProxyMultiVaultAlien_V6(proxy).deriveMergeRouter{
+        IProxyMultiVaultAlien_V6(transitionalData.proxy).deriveMergeRouter{
             value: 1 ever,
             bounce: false,
             callback: MultiVaultEVMEverscaleEventAlien.receiveMergeRouter
-        }(token);
+        }(transitionalData.token);
     }
 
     /// @notice Receives merge router address
     /// Can be called only by `proxy`
     /// @dev Sends request to the merge router to receive pool address
     /// In case merge router is not deployed yet - the onBounce message will be received
-    /// @param router_ Router address
+    /// @param router Router address
     function receiveMergeRouter(
-        address router_
+        address router
     ) external override {
-        require(msg.sender == proxy);
+        TransitionalData transitionalData = getTransitionalData();
 
-        router = router_;
+        require(msg.sender == transitionalData.proxy);
+
+        _set_router(router);
 
         // Request merge router pool
         IMergeRouter(router).getPool{
@@ -200,16 +161,20 @@ contract MultiVaultEVMEverscaleEventAlien is
     /// Can be called only by `router`
     /// @dev In case pool is zero address - then finish transfer with `token` and `amount`
     /// Otherwise - request canon token from the pool
-    /// @param pool_ Pool address
+    /// @param pool Pool address
     function receiveMergeRouterPool(
-        address pool_
+        address pool
     ) external override {
-        require(msg.sender == router);
+        TransitionalData transitionalData = getTransitionalData();
 
-        pool = pool_;
+        require(msg.sender == transitionalData.router);
+
+        _set_pool(pool);
 
         if (pool.value == 0) {
-            _finishSetup(token, amount);
+            EventData eventData = getEventData();
+
+            _finishSetup(transitionalData.token, eventData.amount);
         } else {
             IMergePool_V2(pool).getCanon{
                 value: 1 ever,
@@ -221,39 +186,43 @@ contract MultiVaultEVMEverscaleEventAlien is
 
     /// @notice Receives merge pool canon
     /// @dev Canon token can be disabled, in this case user receives `token`
-    /// @param canon_ Canon token address
+    /// @param canon Canon token address
     /// @param canonToken_ Canon token
     function receiveMergePoolCanon(
-        address canon_,
+        address canon,
         IMergePool_V2.Token canonToken_
     ) external override {
-        require(msg.sender == pool);
+        TransitionalData transitionalData = getTransitionalData();
 
-        canon = canon_;
+        require(msg.sender == transitionalData.pool);
+
+        _set_canon(canon);
+
+        EventData eventData = getEventData();
 
         if (canonToken_.enabled == false) {
             // Canon token specified but not enabled
             // fallback to the `token`
 
-            _finishSetup(token, amount);
+            _finishSetup(transitionalData.token, eventData.amount);
         } else {
             // Canon token specified and enabled
 
             uint128 canon_amount;
 
-            if (decimals > canonToken_.decimals) {
-                canon_amount = amount / (POWER_BASE**(decimals - canonToken_.decimals));
-            } else if (decimals < canonToken_.decimals) {
-                canon_amount = amount * (POWER_BASE**(canonToken_.decimals - decimals));
+            if (eventData.decimals > canonToken_.decimals) {
+                canon_amount = eventData.amount / (POWER_BASE**(eventData.decimals - canonToken_.decimals));
+            } else if (eventData.decimals < canonToken_.decimals) {
+                canon_amount = eventData.amount * (POWER_BASE**(canonToken_.decimals - eventData.decimals));
             } else {
-                canon_amount = amount;
+                canon_amount = eventData.amount;
             }
 
             // In case the token decimals is more than canon decimals
             // And the transferred amount is too low
             // The canon_amount may be equal to zero. In this case - mints user the original token
             if (canon_amount == 0) {
-                _finishSetup(token, amount);
+                _finishSetup(transitionalData.token, eventData.amount);
             } else {
                 _finishSetup(canon, canon_amount);
             }
@@ -261,11 +230,14 @@ contract MultiVaultEVMEverscaleEventAlien is
     }
 
     function onConfirm() internal override {
+        EventData eventData = getEventData();
+        TransitionalData transitionalData = getTransitionalData();
+
         TvmCell metaData = abi.encode(
-            target_token,
-            target_amount,
-            recipient,
-            payload
+            transitionalData.target_token,
+            transitionalData.target_amount,
+            eventData.recipient,
+            eventData.payload
         );
 
         IEthereumEverscaleProxyExtended(eventInitData.configuration).onEventConfirmedExtended{
@@ -273,6 +245,163 @@ contract MultiVaultEVMEverscaleEventAlien is
         }(eventInitData, metaData, initializer);
     }
 
+    function getEventData() public override responsible returns(EventData) {
+        (
+            uint256 base_chainId,
+            uint160 base_token,
+
+            string name,
+            string symbol,
+            uint8 decimals,
+
+            uint128 amount,
+            int8 recipient_wid,
+            uint256 recipient_addr,
+
+            uint256 value,
+            uint256 expected_evers,
+            TvmCell payload
+        ) = abi.decode(
+            eventInitData.voteData.eventData,
+            (
+                uint256, uint160,
+                string, string, uint8,
+                uint128, int8, uint256,
+                uint256, uint256, TvmCell
+            )
+        );
+
+        address recipient = address.makeAddrStd(recipient_wid, recipient_addr);
+
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} EventData(
+            base_chainId,
+            base_token,
+
+            name,
+            symbol,
+            decimals,
+
+            amount,
+            recipient,
+
+            value,
+            expected_evers,
+            payload
+        );
+    }
+
+    onBounce(TvmSlice slice) external {
+        uint32 selector = slice.decode(uint32);
+
+        EventData eventData = getEventData();
+        TransitionalData transitionalData = getTransitionalData();
+
+        if (
+            selector == tvm.functionId(TIP3TokenRoot.name) &&
+            msg.sender == transitionalData.token
+        ) {
+            // Failed to request token meta
+            // Seems like corresponding token root not deployed so deploy it
+            IProxyMultiVaultAlien_V6(transitionalData.proxy).deployEVMAlienToken{
+                value: 2 ever,
+                bounce: false
+            }(
+                eventData.base_chainId,
+                eventData.base_token,
+                eventData.name,
+                eventData.symbol,
+                eventData.decimals,
+                eventData.recipient
+            );
+
+            _requestMergeRouter();
+        } else if (
+            selector == tvm.functionId(IMergeRouter.getPool) &&
+            msg.sender == transitionalData.router
+        ) {
+            // Failed to request router's pool
+            // Seems like corresponding router not deployed so deploy it
+            IProxyMultiVaultAlien_V6(transitionalData.proxy).deployMergeRouter{
+                value: 1 ever,
+                bounce: false
+            }(transitionalData.token);
+
+            _finishSetup(transitionalData.token, eventData.amount);
+        }
+    }
+
+    function _finishSetup(
+        address target_token,
+        uint128 target_amount
+    ) internal {
+        TransitionalData transitionalData = getTransitionalData();
+
+        transitionalData.target_amount = target_amount;
+        transitionalData.target_token = target_token;
+
+        _set_transitional_data(transitionalData);
+
+        loadRelays();
+    }
+
+    // ==== Transitional data ====
+    function getTransitionalData() public view returns(TransitionalData) {
+        return abi.decode(transitionalDataCell, (TransitionalData));
+    }
+
+    function _init_transitional_data() internal {
+        TransitionalData transitionalData;
+
+        _set_transitional_data(transitionalData);
+    }
+
+    function _set_transitional_data(
+        TransitionalData transitionalData
+    ) internal {
+        transitionalDataCell = abi.encode(transitionalData);
+    }
+
+    function _set_proxy(address proxy) internal {
+        TransitionalData transitionalData = getTransitionalData();
+
+        transitionalData.proxy = proxy;
+
+        _set_transitional_data(transitionalData);
+    }
+
+    function _set_token(address token) internal {
+        TransitionalData transitionalData = getTransitionalData();
+
+        transitionalData.token = token;
+
+        _set_transitional_data(transitionalData);
+    }
+
+    function _set_router(address router) internal {
+        TransitionalData transitionalData = getTransitionalData();
+
+        transitionalData.router = router;
+
+        _set_transitional_data(transitionalData);
+    }
+
+    function _set_pool(address pool) internal {
+        TransitionalData transitionalData = getTransitionalData();
+
+        transitionalData.pool = pool;
+
+        _set_transitional_data(transitionalData);
+    }
+
+    function _set_canon(address canon) internal {
+        TransitionalData transitionalData = getTransitionalData();
+
+        transitionalData.canon = canon;
+
+        _set_transitional_data(transitionalData);
+    }
+
+    // ==== Legacy ====
     function getDecodedData() external override responsible returns(
         uint256 base_chainId_,
         uint160 base_token_,
@@ -287,101 +416,26 @@ contract MultiVaultEVMEverscaleEventAlien is
         address proxy_,
         address token_
     ) {
-        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS}(
-            base_chainId,
-            base_token,
-            name,
-            symbol,
-            decimals,
-            amount,
-            recipient,
-            value,
-            expected_evers,
-            payload,
-            proxy,
-            token
+        EventData eventData = getEventData();
+        TransitionalData transitionalData = getTransitionalData();
+
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} (
+            eventData.base_chainId,
+            eventData.base_token,
+
+            eventData.name,
+            eventData.symbol,
+            eventData.decimals,
+
+            eventData.amount,
+            eventData.recipient,
+
+            eventData.value,
+            eventData.expected_evers,
+            eventData.payload,
+
+            transitionalData.proxy,
+            transitionalData.token
         );
-    }
-
-    // TODO: legacy decoded data?
-    function getDecodedDataExtended() external override responsible returns(
-        uint256 base_chainId_,
-        uint160 base_token_,
-        string name_,
-        string symbol_,
-        uint8 decimals_,
-        uint128 amount_,
-        address recipient_,
-        address proxy_,
-        address token_,
-        address router_,
-        address pool_,
-        address canon_,
-        address target_token_,
-        uint128 target_amount_
-    ) {
-        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS}(
-            base_chainId,
-            base_token,
-            name,
-            symbol,
-            decimals,
-            amount,
-            recipient,
-            proxy,
-            token,
-            router,
-            pool,
-            canon,
-            target_token,
-            target_amount
-        );
-    }
-
-    onBounce(TvmSlice slice) external {
-        uint32 selector = slice.decode(uint32);
-
-        if (
-            selector == tvm.functionId(TIP3TokenRoot.name) &&
-            msg.sender == token
-        ) {
-            // Failed to request token meta
-            // Seems like corresponding token root not deployed so deploy it
-            IProxyMultiVaultAlien_V6(proxy).deployEVMAlienToken{
-                value: 2 ever,
-                bounce: false
-            }(
-                base_chainId,
-                base_token,
-                name,
-                symbol,
-                decimals,
-                recipient
-            );
-
-            _requestMergeRouter();
-        } else if (
-            selector == tvm.functionId(IMergeRouter.getPool) &&
-            msg.sender == router
-        ) {
-            // Failed to request router's pool
-            // Seems like corresponding router not deployed so deploy it
-            IProxyMultiVaultAlien_V6(proxy).deployMergeRouter{
-                value: 1 ever,
-                bounce: false
-            }(token);
-
-            _finishSetup(token, amount);
-        }
-    }
-
-    function _finishSetup(
-        address _target_token,
-        uint128 _target_amount
-    ) internal {
-        target_token = _target_token;
-        target_amount = _target_amount;
-
-        loadRelays();
     }
 }

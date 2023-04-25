@@ -7,7 +7,8 @@
 			"name": "constructor",
 			"inputs": [
 				{"name":"_owner","type":"address"},
-				{"name":"_meta","type":"cell"}
+				{"name":"_meta","type":"cell"},
+				{"name":"_flags","type":"uint64"}
 			],
 			"outputs": [
 			]

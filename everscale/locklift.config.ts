@@ -2,11 +2,19 @@ import {LockliftConfig} from "locklift";
 import { FactorySource } from "./build/factorySource";
 const LOCAL_NETWORK_ENDPOINT = "http://localhost/graphql";
 
+import "locklift-verifier";
+
 declare global {
   const locklift: import("locklift").Locklift<FactorySource>;
 }
 
 const config: LockliftConfig = {
+  verifier: {
+    verifierVersion: "latest", // contract verifier binary, see https://github.com/broxus/everscan-verify/releases
+    apiKey: "uwJlTyvauW",
+    secretKey: "IEx2jg4hqE3V1YUqcVOY",
+    // license: "AGPL-3.0-or-later", <- this is default value and can be overrided
+  },
   compiler: {
     version: "0.62.0",
     // Specify config for extarnal contracts as in exapmple
