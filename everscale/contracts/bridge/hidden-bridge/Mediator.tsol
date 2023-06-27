@@ -64,14 +64,14 @@ contract Mediator is
 
     /// @notice Accept incoming mint
     function onAcceptTokensMint(
-        address tokenRoot,
+        address,
         uint128 amount,
         address remainingGasTo,
         TvmCell payloadWithNonce
     ) external override reserveAtLeastTargetBalance {
         _handleTokens(
             payloadWithNonce,
-            _deriveAlienTokenWallet(tokenRoot),
+            msg.sender,
             amount,
             remainingGasTo
         );
