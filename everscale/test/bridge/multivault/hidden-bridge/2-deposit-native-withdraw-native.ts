@@ -1,36 +1,34 @@
 import {setupBridge, setupRelays} from "../../../utils/bridge";
 import {deployAccount} from "../../../utils/account";
 import {logContract} from "../../../utils/logger";
-import {setupAlienMultiVault} from "../../../utils/multivault/alien";
+import {setupNativeMultiVault} from "../../../utils/multivault/native";
+import {deployTokenRoot, mintTokens} from "../../../utils/token";
 import {Ed25519KeyPair} from "nekoton-wasm";
-import {Contract} from "locklift";
+import {Contract, toNano} from "locklift";
 import {
-    AlienTokenWalletUpgradeableAbi,
     BridgeAbi,
     CellEncoderStandaloneAbi,
     EthereumEverscaleEventConfigurationAbi,
     EverscaleEthereumEventConfigurationAbi,
-    EverscaleSolanaEventConfigurationAbi,
-    MediatorAbi,
-    MergePool_V3Abi,
-    MergeRouterAbi,
+    EverscaleSolanaEventConfigurationAbi, MediatorAbi,
     MultiVaultEverscaleEVMEventNativeAbi,
     MultiVaultEVMEverscaleEventAlienAbi,
-    ProxyMultiVaultAlien_V7Abi,
-    ProxyMultiVaultNative_V4Abi, ProxyMultiVaultNative_V5Abi,
+    MultiVaultEVMEverscaleEventNativeAbi, ProxyMultiVaultAlien_V7Abi,
+    ProxyMultiVaultNative_V5Abi,
     SolanaEverscaleEventConfigurationAbi,
     StakingMockupAbi,
     TokenRootAbi,
-    TokenRootAlienEVMAbi
+    TokenWalletAbi
 } from "../../../../build/factorySource";
 import {Account} from "everscale-standalone-client/nodejs";
-import {expect} from "chai";
-import {EventAction, EventType, processEvent} from "../../../utils/events";
 import {MediatorOperation, setupHiddenBridge} from "../../../utils/hidden-bridge";
-import {setupNativeMultiVault} from "../../../utils/multivault/native";
-import exp from "constants";
+import {setupAlienMultiVault} from "../../../utils/multivault/alien";
+import {EventAction, EventType, processEvent} from "../../../utils/events";
+import {expect} from "chai";
+
 
 const logger = require("mocha-logger");
+
 
 let relays: Ed25519KeyPair[];
 let bridge: Contract<BridgeAbi>;
@@ -44,7 +42,6 @@ let alienEthereumEverscaleEventConfiguration: Contract<EthereumEverscaleEventCon
 let alienEverscaleEthereumEventConfiguration: Contract<EverscaleEthereumEventConfigurationAbi>;
 let alienSolanaEverscaleEventConfiguration: Contract<SolanaEverscaleEventConfigurationAbi>;
 let alienEverscaleSolanaEventConfiguration: Contract<EverscaleSolanaEventConfigurationAbi>;
-let initializer: Account;
 let alienProxy: Contract<ProxyMultiVaultAlien_V7Abi>;
 
 let nativeEthereumEverscaleEventConfiguration: Contract<EthereumEverscaleEventConfigurationAbi>;
@@ -53,26 +50,26 @@ let nativeSolanaEverscaleEventConfiguration: Contract<SolanaEverscaleEventConfig
 let nativeEverscaleSolanaEventConfiguration: Contract<EverscaleSolanaEventConfigurationAbi>;
 let nativeProxy: Contract<ProxyMultiVaultNative_V5Abi>;
 
-let alienTokenRoot: Contract<TokenRootAlienEVMAbi>;
-let customTokenRoot: Contract<TokenRootAbi>;
-let mergeRouter: Contract<MergeRouterAbi>;
-let mergePool: Contract<MergePool_V3Abi>;
-let initializerAlienTokenWallet: Contract<AlienTokenWalletUpgradeableAbi>;
+let initializer: Account;
+let eventCloser: Account;
+
+let tokenRoot: Contract<TokenRootAbi>;
+let initializerTokenWallet: Contract<TokenWalletAbi>;
 
 
-describe('Test EVM-EVM bridge transfers, deposit alien withdraw native token', async function() {
+describe('Test EVM-EVM bridge transfers, deposit native withdraw native token', async function() {
     this.timeout(10000000);
 
-    const alienTokenBase = {
-        chainId: 111,
-        token: 222,
+    const tokenMeta = {
+        name: 'Custom Giga Chad',
+        symbol: 'CUSTOM_GIGA_CHAD',
+        decimals: 9
     };
 
-    const alienTokenMeta = {
-        name: 'Giga Chad',
-        symbol: 'GIGA_CHAD',
-        decimals: 6,
-    };
+
+    const mintAmount = 1000;
+    const amount = 500;
+
 
     it("Setup bridge", async () => {
         relays = await setupRelays();
@@ -81,20 +78,9 @@ describe('Test EVM-EVM bridge transfers, deposit alien withdraw native token', a
         const signer = (await locklift.keystore.getSigner("0"))!;
 
         initializer = await deployAccount(signer, 50);
+
         await logContract("Initializer", initializer.address);
-    });
 
-    it('Setup alien pipeline', async () => {
-        [
-            alienEthereumEverscaleEventConfiguration,
-            alienEverscaleEthereumEventConfiguration,
-            alienSolanaEverscaleEventConfiguration,
-            alienEverscaleSolanaEventConfiguration,
-            alienProxy
-        ] = await setupAlienMultiVault(bridgeOwner, staking);
-    });
-
-    it('Setup native pipeline', async () => {
         [
             nativeEthereumEverscaleEventConfiguration,
             nativeEverscaleEthereumEventConfiguration,
@@ -102,6 +88,39 @@ describe('Test EVM-EVM bridge transfers, deposit alien withdraw native token', a
             nativeEverscaleSolanaEventConfiguration,
             nativeProxy
         ] = await setupNativeMultiVault(bridgeOwner, staking);
+
+        [
+            alienEthereumEverscaleEventConfiguration,
+            alienEverscaleEthereumEventConfiguration,
+            alienSolanaEverscaleEventConfiguration,
+            alienEverscaleSolanaEventConfiguration,
+            alienProxy
+        ] = await setupAlienMultiVault(bridgeOwner, staking);
+
+        eventCloser = await deployAccount(
+            (await locklift.keystore.getSigner("1"))!,
+            50
+        );
+    });
+
+    it('Deploy native token root', async () => {
+        tokenRoot = await deployTokenRoot(
+            tokenMeta.name,
+            tokenMeta.symbol,
+            tokenMeta.decimals,
+            bridgeOwner.address
+        );
+
+        await logContract("Custom token root", tokenRoot.address);
+    });
+
+    it('Mint tokens to initializer', async () => {
+        [initializerTokenWallet] = await mintTokens(
+            bridgeOwner,
+            [initializer],
+            tokenRoot,
+            mintAmount
+        );
     });
 
     it('Setup mediator', async () => {
@@ -114,12 +133,26 @@ describe('Test EVM-EVM bridge transfers, deposit alien withdraw native token', a
         await logContract('Mediator', mediator.address);
     });
 
-    describe('Deposit Alien token, withdraw Native (WBNB BNB -> FTM)', async () => {
-        let depositEventContract: Contract<MultiVaultEVMEverscaleEventAlienAbi>;
+    it('Send tokens to native proxy without notification', async () => {
+        await initializerTokenWallet.methods.transfer({
+            recipient: nativeProxy.address,
+            deployWalletValue: toNano(0.1),
+            amount,
+            payload: '',
+            notify: false,
+            remainingGasTo: initializer.address
+        }).send({
+            from: initializer.address,
+            amount: toNano(1)
+        });
+    });
+
+    describe('Deposit native token, withdraw native token (eg WEVER ETH-BNB)', async () => {
+        let depositEventContract: Contract<MultiVaultEVMEverscaleEventNativeAbi>;
         let withdrawEventContract: Contract<MultiVaultEverscaleEVMEventNativeAbi>;
 
         type EncodeMultiVaultAlienEVMEverscaleParam = Parameters<
-            Contract<CellEncoderStandaloneAbi>["methods"]["encodeMultiVaultAlienEVMEverscale"]
+            Contract<CellEncoderStandaloneAbi>["methods"]["encodeMultiVaultNativeEVMEverscale"]
             >[0];
         let eventDataStructure: EncodeMultiVaultAlienEVMEverscaleParam;
 
@@ -154,11 +187,10 @@ describe('Test EVM-EVM bridge transfers, deposit alien withdraw native token', a
                 }).call().then(t => t.value0);
         });
 
-        it('Deploy', async () => {
+        it('Deploy event contract (deposit)', async () => {
             eventDataStructure = {
-                base_chainId: alienTokenBase.chainId,
-                base_token: alienTokenBase.token,
-                ...alienTokenMeta,
+                token_wid: tokenRoot.address.toString().split(":")[0],
+                token_addr: `0x${tokenRoot.address.toString().split(":")[1]}`,
 
                 amount: 333,
                 recipient_wid: mediator.address.toString().split(":")[0],
@@ -170,7 +202,7 @@ describe('Test EVM-EVM bridge transfers, deposit alien withdraw native token', a
             };
 
             eventDataEncoded = await cellEncoder.methods
-                .encodeMultiVaultAlienEVMEverscale(eventDataStructure)
+                .encodeMultiVaultNativeEVMEverscale(eventDataStructure)
                 .call()
                 .then((t) => t.value0);
 
@@ -182,7 +214,7 @@ describe('Test EVM-EVM bridge transfers, deposit alien withdraw native token', a
                 eventBlock: 444,
             };
 
-            const tx = await alienEthereumEverscaleEventConfiguration.methods
+            const tx = await nativeEthereumEverscaleEventConfiguration.methods
                 .deployEvent({
                     eventVoteData,
                 })
@@ -193,7 +225,7 @@ describe('Test EVM-EVM bridge transfers, deposit alien withdraw native token', a
 
             logger.log(`Event initialization tx: ${tx.id.hash}`);
 
-            const expectedEventContract = await alienEthereumEverscaleEventConfiguration.methods
+            const expectedEventContract = await nativeEthereumEverscaleEventConfiguration.methods
                 .deriveEventAddress({
                     eventVoteData: eventVoteData,
                     answerId: 0,
@@ -203,7 +235,7 @@ describe('Test EVM-EVM bridge transfers, deposit alien withdraw native token', a
             logger.log(`Expected event: ${expectedEventContract.eventContract}`);
 
             depositEventContract = await locklift.factory.getDeployedContract(
-                "MultiVaultEVMEverscaleEventAlien",
+                "MultiVaultEVMEverscaleEventNative",
                 expectedEventContract.eventContract
             );
         });

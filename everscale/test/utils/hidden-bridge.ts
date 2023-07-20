@@ -3,14 +3,14 @@ import {Contract} from "locklift";
 import {
     MediatorAbi,
     ProxyMultiVaultAlien_V7Abi,
-    ProxyMultiVaultNative_V4Abi
+    ProxyMultiVaultNative_V4Abi, ProxyMultiVaultNative_V5Abi
 } from "../../build/factorySource";
 import {Account} from "everscale-standalone-client/nodejs";
 
 
 export const setupHiddenBridge = async (
     owner: Account,
-    nativeProxy: Contract<ProxyMultiVaultNative_V4Abi>,
+    nativeProxy: Contract<ProxyMultiVaultNative_V5Abi>,
     alienProxy: Contract<ProxyMultiVaultAlien_V7Abi>
 ): Promise<[
     Contract<MediatorAbi>

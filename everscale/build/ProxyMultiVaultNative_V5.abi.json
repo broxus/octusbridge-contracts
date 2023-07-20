@@ -62,6 +62,14 @@
 			]
 		},
 		{
+			"name": "setDexMiddleware",
+			"inputs": [
+				{"name":"_dex_middleware","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "getConfiguration",
 			"inputs": [
 				{"name":"answerId","type":"uint32"}
@@ -119,6 +127,14 @@
 			],
 			"outputs": [
 				{"name":"owner","type":"address"}
+			]
+		},
+		{
+			"name": "dex_middleware",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"dex_middleware","type":"address"}
 			]
 		},
 		{
@@ -185,6 +201,7 @@
 		{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"evmConfigurations","type":"address[]"}],"name":"evmConfiguration","type":"tuple"},
 		{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"solanaConfiguration","type":"address"}],"name":"solanaConfiguration","type":"tuple"},
 		{"name":"api_version","type":"uint8"},
+		{"name":"dex_middleware","type":"address"},
 		{"name":"_randomNonce","type":"uint256"}
 	]
 }
