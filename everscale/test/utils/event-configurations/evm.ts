@@ -18,6 +18,7 @@ export const setupEthereumEverscaleEventConfiguration = async (
         contract: "EthereumEverscaleEventConfiguration",
         constructorParams: {
             _owner: owner.address,
+            _flags: 0,
             _meta: "",
         },
         initParams: {
@@ -63,6 +64,7 @@ export const setupEverscaleEthereumEventConfiguration = async (
         contract: "EverscaleEthereumEventConfiguration",
         constructorParams: {
             _owner: owner.address,
+            _flags: 0,
             _meta: "",
         },
         initParams: {

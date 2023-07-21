@@ -15,7 +15,6 @@ interface IMultiVaultFacetFeesEvents {
 
     event SkimFee(
         address token,
-        bool skim_to_everscale,
         uint256 amount
     );
 }

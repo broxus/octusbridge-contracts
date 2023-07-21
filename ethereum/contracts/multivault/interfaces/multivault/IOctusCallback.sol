@@ -4,10 +4,14 @@ pragma solidity 0.8.0;
 import "./IMultiVaultFacetWithdraw.sol";
 
 
-interface IOctusCallback {
+interface IOctusCallbackNative {
     function onNativeWithdrawal(
-        IMultiVaultFacetWithdraw.NativeWithdrawalParams memory payload
+        IMultiVaultFacetWithdraw.NativeWithdrawalParams memory payload,
+        uint256 withdrawAmount
     ) external;
+}
+
+interface IOctusCallbackAlien {
     function onAlienWithdrawal(
         IMultiVaultFacetWithdraw.AlienWithdrawalParams memory payload,
         uint256 withdrawAmount

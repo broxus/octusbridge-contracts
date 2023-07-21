@@ -7,13 +7,27 @@ import "../multivault/interfaces/multivault/IMultiVaultFacetWithdraw.sol";
 import "../multivault/interfaces/multivault/IMultiVaultFacetPendingWithdrawals.sol";
 import "../multivault/utils/Initializable.sol";
 
-contract UnwrapNativeToken is IOctusCallback, Initializable {
+
+contract UnwrapNativeToken is IOctusCallbackAlien, Initializable {
     IWETH wethContract;
     address multiVault;
 
     mapping(address => mapping(uint => bool)) pendingWithdrawals;
 
-    function initialize(address _weth, address _multiVault) public initializer {
+    modifier notZeroAddress(address addr) {
+        require(addr != address(0));
+
+        _;
+    }
+
+    constructor() {
+        _disableInitializers();
+    }
+
+    function initialize(
+        address _weth,
+        address _multiVault
+    ) public initializer notZeroAddress(_weth) notZeroAddress(_multiVault) {
         wethContract = IWETH(_weth);
         multiVault = _multiVault;
     }
@@ -68,10 +82,8 @@ contract UnwrapNativeToken is IOctusCallback, Initializable {
         address payable nativeTokenReceiver = abi.decode(_payload.callback.payload, (address));
         wethContract.withdraw(withdrawAmount);
 
-        nativeTokenReceiver.transfer(withdrawAmount);
-    }
+        (bool sent, ) = nativeTokenReceiver.call{value: withdrawAmount}("");
 
-    function onNativeWithdrawal(
-        IMultiVaultFacetWithdraw.NativeWithdrawalParams memory _payload
-    ) external override onlyMultiVault {}
+        require(sent);
+    }
 }

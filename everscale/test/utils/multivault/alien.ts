@@ -3,7 +3,7 @@ import {Contract} from "locklift";
 import {
     EthereumEverscaleEventConfigurationAbi,
     EverscaleEthereumEventConfigurationAbi, EverscaleSolanaEventConfigurationAbi,
-    FactorySource, ProxyMultiVaultAlien_V6Abi, SolanaEverscaleEventConfigurationAbi
+    FactorySource, ProxyMultiVaultAlien_V7Abi, SolanaEverscaleEventConfigurationAbi
 } from "../../../build/factorySource";
 import {logContract} from "../logger";
 import {
@@ -24,14 +24,14 @@ export const setupAlienMultiVault = async (
     Contract<EverscaleEthereumEventConfigurationAbi>,
     Contract<SolanaEverscaleEventConfigurationAbi>,
     Contract<EverscaleSolanaEventConfigurationAbi>,
-    Contract<ProxyMultiVaultAlien_V6Abi>
+    Contract<ProxyMultiVaultAlien_V7Abi>
 ]> => {
     const _randomNonce = locklift.utils.getRandomNonce();
     const signer = (await locklift.keystore.getSigner("2"))!;
 
     // Deploy proxy
     const { contract: proxy } = await locklift.factory.deployContract({
-        contract: "ProxyMultiVaultAlien_V6",
+        contract: "ProxyMultiVaultAlien_V7",
         constructorParams: {
             owner_: owner.address,
         },
@@ -42,7 +42,7 @@ export const setupAlienMultiVault = async (
         value: locklift.utils.toNano(15),
     });
 
-    await logContract("ProxyMultiVaultAlien_V6", proxy.address);
+    await logContract("ProxyMultiVaultAlien_V7", proxy.address);
 
     // Load event contracts
     const ethereumEverscaleEvent = await locklift.factory.getContractArtifacts(
@@ -118,7 +118,7 @@ export const setupAlienMultiVault = async (
 
     // Set merging
     const MergeRouter = await locklift.factory.getContractArtifacts('MergeRouter');
-    const MergePool = await locklift.factory.getContractArtifacts('MergePool_V3');
+    const MergePool = await locklift.factory.getContractArtifacts('MergePool_V4');
     const MergePoolPlatform = await locklift.factory.getContractArtifacts('MergePoolPlatform');
 
     await proxy.methods.setMergeRouter({

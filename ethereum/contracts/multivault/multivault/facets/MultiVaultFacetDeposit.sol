@@ -23,10 +23,12 @@ import "../helpers/MultiVaultHelperTokens.sol";
 import "../helpers/MultiVaultHelperFee.sol";
 import "../helpers/MultiVaultHelperPendingWithdrawal.sol";
 import "../helpers/MultiVaultHelperCallback.sol";
+import "../helpers/MultiVaultHelperGas.sol";
 
 
 contract MultiVaultFacetDeposit is
     MultiVaultHelperFee,
+    MultiVaultHelperGas,
     MultiVaultHelperEverscale,
     MultiVaultHelperReentrancyGuard,
     MultiVaultHelperTokens,
@@ -84,7 +86,7 @@ contract MultiVaultFacetDeposit is
         DepositParams memory d,
         uint256 _value,
         address tokens_owner
-    ) internal {
+    ) internal drainGas {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         uint fee = _calculateMovementFee(
@@ -108,11 +110,14 @@ contract MultiVaultFacetDeposit is
 
             _transferToEverscaleNative(d, fee, msg.value);
         } else {
-            IERC20(token).safeTransferFrom(
-                tokens_owner,
-                address(this),
-                d.amount
-            );
+
+            if (tokens_owner != address(this)) {
+                IERC20(token).safeTransferFrom(
+                    tokens_owner,
+                    address(this),
+                    d.amount
+                );
+            }
 
             d.amount -= fee;
 
@@ -120,14 +125,21 @@ contract MultiVaultFacetDeposit is
         }
 
         _increaseTokenFee(d.token, fee);
-        _drainGas();
     }
 
     function depositByNativeToken(
         DepositNativeTokenParams memory d,
         uint256 expectedMinBounty,
         IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId[] memory pendingWithdrawalIds
-    ) external payable override wethNotBlacklisted nonReentrant {
+    )
+        external
+        payable
+        override
+        wethNotBlacklisted
+        nonReentrant
+        initializeWethToken
+        onlyEmergencyDisabled
+    {
         require(msg.value >= d.amount, "Msg value to low");
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
@@ -145,22 +157,30 @@ contract MultiVaultFacetDeposit is
             msg.value - d.amount
         );
     }
+
     function deposit(
         DepositParams memory d,
         uint256 expectedMinBounty,
         IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId[] memory pendingWithdrawalIds
-    ) external payable override tokenNotBlacklisted(d.token) nonReentrant {
+    )
+        external
+        payable
+        override
+        tokenNotBlacklisted(d.token)
+        nonReentrant
+        initializeToken(d.token)
+        onlyEmergencyDisabled
+    {
         IERC20(d.token).safeTransferFrom(msg.sender, address(this), d.amount);
         _deposit(d, expectedMinBounty, pendingWithdrawalIds, msg.value);
     }
+
     function _deposit(
         DepositParams memory d,
         uint256 expectedMinBounty,
         IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId[] memory pendingWithdrawalIds,
         uint256 _value
-    ) internal {
-        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
-
+    ) internal drainGas {
         uint amountLeft = d.amount;
         uint amountPlusBounty = d.amount;
 
@@ -175,7 +195,10 @@ contract MultiVaultFacetDeposit is
             amountLeft -= pendingWithdrawal.amount;
             amountPlusBounty += pendingWithdrawal.bounty;
 
-            s.pendingWithdrawals_[pendingWithdrawalId.recipient][pendingWithdrawalId.id].amount = 0;
+            _pendingWithdrawalAmountReduce(
+                pendingWithdrawalId,
+                pendingWithdrawal.amount
+            );
 
             emit PendingWithdrawalFill(
                 pendingWithdrawalId.recipient,
@@ -213,17 +236,5 @@ contract MultiVaultFacetDeposit is
         );
 
         _increaseTokenFee(d.token, fee);
-
-        _drainGas();
-    }
-
-    function _drainGas() internal {
-        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
-
-        address payable gasDonor = payable(s.gasDonor);
-
-        if (gasDonor != address(0)) {
-            gasDonor.transfer(address(this).balance);
-        }
     }
 }

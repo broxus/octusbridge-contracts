@@ -60,9 +60,9 @@ export const processEvent = async (
             );
 
             if (action_ == EventAction.Confirm) {
-                vote = eventContract.methods.confirm({
+                vote = locklift.tracing.trace(eventContract.methods.confirm({
                     voteReceiver: eventContract_
-                }).sendExternal({publicKey: relay.publicKey});
+                }).sendExternal({publicKey: relay.publicKey}), {raise: false});
             } else {
                 vote = eventContract.methods.reject({
                     voteReceiver: eventContract_
@@ -119,5 +119,9 @@ export const processEvent = async (
         votes.push(vote);
     }
 
-    await Promise.all(votes);
+    const txs = await Promise.all(votes);
+
+    // for (const tx of txs) {
+    //     await tx.traceTree.beautyPrint();
+    // }
 }

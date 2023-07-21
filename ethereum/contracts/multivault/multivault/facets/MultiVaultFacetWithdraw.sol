@@ -86,7 +86,7 @@ contract MultiVaultFacetWithdraw is
             token
         );
 
-        _callbackNativeWithdrawal(withdrawal);
+        _callbackNativeWithdrawal(withdrawal, withdrawal.amount - fee);
     }
 
     /// @notice Save withdrawal of alien token
@@ -174,6 +174,8 @@ contract MultiVaultFacetWithdraw is
         s.pendingWithdrawalsPerUser[withdrawal.recipient]++;
 
         s.pendingWithdrawalsTotal[withdrawal.token] += withdrawAmount;
+
+        require(bounty <= withdrawAmount);
 
         // - Save withdrawal as pending
         s.pendingWithdrawals_[withdrawal.recipient][pendingWithdrawalId] = IMultiVaultFacetPendingWithdrawals.PendingWithdrawalParams({

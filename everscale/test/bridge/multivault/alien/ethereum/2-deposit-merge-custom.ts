@@ -14,7 +14,7 @@ import {
     MergePool_V3Abi,
     MergeRouterAbi,
     MultiVaultEVMEverscaleEventAlienAbi,
-    ProxyMultiVaultAlien_V6Abi,
+    ProxyMultiVaultAlien_V6Abi, ProxyMultiVaultAlien_V7Abi,
     SolanaEverscaleEventConfigurationAbi,
     StakingMockupAbi,
     TokenRootAbi,
@@ -38,7 +38,7 @@ let everscaleEthereumEventConfiguration: Contract<EverscaleEthereumEventConfigur
 let solanaEverscaleEventConfiguration: Contract<SolanaEverscaleEventConfigurationAbi>;
 let everscaleSolanaEventConfiguration: Contract<EverscaleSolanaEventConfigurationAbi>;
 let initializer: Account;
-let proxy: Contract<ProxyMultiVaultAlien_V6Abi>;
+let proxy: Contract<ProxyMultiVaultAlien_V7Abi>;
 
 let alienTokenRoot: Contract<TokenRootAlienEVMAbi>;
 let customTokenRoot: Contract<TokenRootAbi>;
@@ -247,14 +247,16 @@ describe('Deposit Alien token with merging with custom token', async function() 
             eventBlock: 444,
         };
 
-        const tx = await ethereumEverscaleEventConfiguration.methods
+        const tx = await locklift.tracing.trace(ethereumEverscaleEventConfiguration.methods
             .deployEvent({
                 eventVoteData,
             })
             .send({
                 from: initializer.address,
                 amount: locklift.utils.toNano(6),
-            });
+            }), {raise: false});
+
+        // await tx.traceTree?.beautyPrint();
 
         logger.log(`Event initialization tx: ${tx.id.hash}`);
 
@@ -279,6 +281,15 @@ describe('Deposit Alien token with merging with custom token', async function() 
         ).to.be.greaterThan(0, "Event contract balance is zero");
     });
 
+    it('Check init pipeline passed', async () => {
+        const details = await eventContract.methods
+            .getDetails({ answerId: 0 })
+            .call();
+
+
+        expect(details._status).to.be.equal("1", "Wrong status");
+    });
+
     it('Confirm event', async () => {
         await processEvent(
             relays,
@@ -286,6 +297,10 @@ describe('Deposit Alien token with merging with custom token', async function() 
             EventType.EthereumEverscale,
             EventAction.Confirm
         );
+
+        // const transitional = await eventContract.methods.getTransitionalData({}).call();
+        //
+        // console.log(transitional);
     });
 
     it('Check alien total supply is zero', async () => {

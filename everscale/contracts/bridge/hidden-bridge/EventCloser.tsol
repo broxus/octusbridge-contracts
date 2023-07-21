@@ -12,18 +12,19 @@ import "./../../utils/TransferUtils.tsol";
 import "./../event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol";
 
 
+/// @title Event closer
+/// @dev Used as part of credit-transfer pipeline, specifically for ever-evm transfers
+/// Allows credit backend to call .close on the event contracts, where remainingGasTo = EventCloser
+/// Receives the EVERs and immediately transfers them to the EventDeployer contract
 contract EventCloser is ExternalOwner, RandomNonce, TransferUtils {
-    address public guardian;
     address public deployer;
 
     constructor(
-        address _guardian,
         uint _owner,
         address _deployer
     ) public {
         tvm.accept();
 
-        guardian = _guardian;
         setOwnership(_owner);
         deployer = _deployer;
     }
@@ -32,6 +33,9 @@ contract EventCloser is ExternalOwner, RandomNonce, TransferUtils {
         return 10 ever;
     }
 
+    /// @notice Batch close for ever-evm event-contracts
+    /// @dev Can be called only by the external owner
+    /// @param events List of event-contracts addresses
     function close(
         address[] events
     ) external view onlyOwner {

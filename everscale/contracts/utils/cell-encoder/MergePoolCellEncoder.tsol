@@ -28,6 +28,7 @@ contract MergePoolCellEncoder is IEVMCallback, INetworks {
         TvmCell operationPayload = abi.encode(Network.EVM, withdrawPayload);
 
         return abi.encode(
+            uint32(0),
             uint8(0),
             targetToken,
             operationPayload
@@ -44,6 +45,7 @@ contract MergePoolCellEncoder is IEVMCallback, INetworks {
         TvmCell operationPayload = abi.encode(Network.Solana, withdrawPayload);
 
         return abi.encode(
+            uint32(0),
             uint8(0),
             targetToken,
             operationPayload

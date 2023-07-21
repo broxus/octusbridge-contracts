@@ -260,6 +260,14 @@
 			"outputs": [
 				{"name":"round_number","type":"uint32"}
 			]
+		},
+		{
+			"name": "nonce",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"nonce","type":"uint32"}
+			]
 		}
 	],
 	"data": [
@@ -317,6 +325,7 @@
 		{"name":"rejects","type":"uint16"},
 		{"name":"relay_round","type":"address"},
 		{"name":"round_number","type":"uint32"},
-		{"components":[{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"},{"name":"chainId","type":"uint32"}],"name":"eventInitData","type":"tuple"}
+		{"components":[{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"},{"name":"chainId","type":"uint32"}],"name":"eventInitData","type":"tuple"},
+		{"name":"nonce","type":"uint32"}
 	]
 }

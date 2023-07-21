@@ -3,6 +3,7 @@ pragma AbiHeader pubkey;
 
 
 import "./../../../utils/TransferUtils.tsol";
+import "./../../../utils/ErrorCodes.tsol";
 import "./../../interfaces/alien-token-merge/merge-pool/IMergePool_V2.tsol";
 import "./../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V6.tsol";
 import "./../../interfaces/event-contracts/multivault/evm/IEVMCallback.tsol";
@@ -42,19 +43,19 @@ contract MergePool_V3 is
     address canon;
 
     modifier tokenExists(address token) {
-        require(tokens.exists(token));
+        require(tokens.exists(token), ErrorCodes.TOKEN_NOT_EXISTS);
 
         _;
     }
 
     modifier onlyOwnerOrManager() {
-        require(msg.sender == owner || msg.sender == manager);
+        require(msg.sender == owner || msg.sender == manager, ErrorCodes.ONLY_OWNER_OR_MANAGER);
 
         _;
     }
 
     modifier onlyProxy() {
-        require(msg.sender == proxy);
+        require(msg.sender == proxy, ErrorCodes.WRONG_PROXY);
 
         _;
     }
@@ -165,8 +166,8 @@ contract MergePool_V3 is
     function removeToken(
         address token
     ) external override onlyOwnerOrManager cashBack {
-        require(tokens.exists(token));
-        require(token != canon);
+        require(tokens.exists(token), ErrorCodes.TOKEN_NOT_EXISTS);
+        require(token != canon, ErrorCodes.TOKEN_IS_CANON);
 
         delete tokens[token];
     }
@@ -178,7 +179,7 @@ contract MergePool_V3 is
     function addToken(
         address token
     ) external override onlyOwnerOrManager {
-        require(!tokens.exists(token));
+        require(!tokens.exists(token), ErrorCodes.TOKEN_ALREADY_EXISTS);
 
         tokens[token] = Token({
             decimals: 0,
@@ -194,7 +195,7 @@ contract MergePool_V3 is
     function setCanon(
         address token
     ) external override onlyOwnerOrManager tokenExists(token) cashBack {
-        require(tokens[token].enabled);
+        require(tokens[token].enabled, ErrorCodes.TOKEN_NOT_ENABLED);
 
         canon = token;
     }
@@ -380,10 +381,10 @@ contract MergePool_V3 is
     }
 
     function _setTokenStatus(address token, bool status) internal {
-        require(tokens.exists(token));
+        require(tokens.exists(token), ErrorCodes.TOKEN_NOT_EXISTS);
 
         if (status == true) {
-            require(tokens[token].decimals > 0);
+            require(tokens[token].decimals > 0, ErrorCodes.TOKEN_DECIMALS_IS_ZERO);
         }
 
         tokens[token].enabled = status;

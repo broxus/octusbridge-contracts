@@ -48,6 +48,9 @@ interface IProxyMultiVaultNative_V3 is IEVMCallback, INetworks {
         uint8 decimals,
         uint128 amount,
         uint160 recipient,
-        uint256 chainId
+        uint256 chainId,
+        uint160 callback_recipient,
+        bytes callback_payload,
+        bool callback_strict
     );
 }

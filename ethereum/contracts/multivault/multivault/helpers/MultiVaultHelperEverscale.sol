@@ -11,11 +11,17 @@ import "../storage/MultiVaultStorage.sol";
 
 
 abstract contract MultiVaultHelperEverscale is IMultiVaultFacetDepositEvents {
+    modifier checkDepositAmount(uint amount) {
+        require(amount < type(uint128).max, "Deposit amount too is large");
+
+        _;
+    }
+
     function _transferToEverscaleNative(
         IMultiVaultFacetDeposit.DepositParams memory deposit,
         uint fee,
         uint value
-    ) internal {
+    ) internal checkDepositAmount(deposit.amount) {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         IEverscale.EverscaleAddress memory native = s.natives_[deposit.token];
@@ -39,7 +45,7 @@ abstract contract MultiVaultHelperEverscale is IMultiVaultFacetDepositEvents {
         IMultiVaultFacetDeposit.DepositParams memory deposit,
         uint fee,
         uint value
-    ) internal {
+    ) internal checkDepositAmount(deposit.amount) {
         emit AlienTransfer(
             block.chainid,
             uint160(deposit.token),

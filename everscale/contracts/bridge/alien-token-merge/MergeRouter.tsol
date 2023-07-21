@@ -8,6 +8,7 @@ import "@broxus/contracts/contracts/access/InternalOwner.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 import "./../../utils/TransferUtils.tsol";
 import "../interfaces/alien-token-merge/IMergeRouter.tsol";
+import "../../utils/ErrorCodes.tsol";
 
 
 contract MergeRouter is IMergeRouter, InternalOwner, TransferUtils {
@@ -18,7 +19,7 @@ contract MergeRouter is IMergeRouter, InternalOwner, TransferUtils {
     address public manager;
 
     modifier onlyOwnerOrManager() {
-        require(msg.sender == owner || msg.sender == manager);
+        require(msg.sender == owner || msg.sender == manager, ErrorCodes.ONLY_OWNER_OR_MANAGER);
 
         _;
     }
@@ -27,7 +28,7 @@ contract MergeRouter is IMergeRouter, InternalOwner, TransferUtils {
         address _owner,
         address _manager
     ) public {
-        require(msg.sender == proxy);
+        require(msg.sender == proxy, ErrorCodes.WRONG_PROXY);
 
         manager = _manager;
 
@@ -40,7 +41,7 @@ contract MergeRouter is IMergeRouter, InternalOwner, TransferUtils {
     function setPool(
         address pool_
     ) external override cashBack onlyOwnerOrManager {
-        require(pool_.value != 0);
+        require(pool_.value != 0, ErrorCodes.MERGE_POOL_IS_ZERO_ADDRESS);
 
         pool = pool_;
     }

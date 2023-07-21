@@ -7,11 +7,13 @@ import "./../BaseEvent.tsol";
 import "../../../interfaces/event-contracts/IEthereumEverscaleEvent.tsol";
 
 import "./../../../../utils/ErrorCodes.tsol";
+import "../../../libraries/EventContractNonce.tsol";
 
 
 contract EthereumEverscaleBaseEvent is BaseEvent, IEthereumEverscaleEvent {
     // Event data
     EthereumEverscaleEventInitData static eventInitData;
+    uint32 public nonce;
 
     event Confirm(uint relay);
 
@@ -27,6 +29,7 @@ contract EthereumEverscaleBaseEvent is BaseEvent, IEthereumEverscaleEvent {
             ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION
         );
 
+        nonce = EventContractNonce._calculateNonce(eventInitData);
         initializer = _initializer;
         meta = _meta;
 

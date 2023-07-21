@@ -28,8 +28,13 @@ interface IMultiVaultFacetSettings {
     function setEmergencyShutdown(bool active) external;
 
     function gasDonor() external view returns(address);
+
     function setGasDonor(
         address _gasDonor
+    ) external;
+
+    function setWeth(
+        address _weth
     ) external;
 
     function setCustomNative(
@@ -38,6 +43,7 @@ interface IMultiVaultFacetSettings {
     ) external;
 
     function setGuardian(address) external;
+    function setWithdrawGuardian(address _withdrawGuardian) external;
     function setManagement(address) external;
     function acceptGovernance() external;
     function setGovernance(address) external;

@@ -5,7 +5,7 @@ import {
     EverscaleEthereumEventConfigurationAbi,
     EverscaleSolanaEventConfigurationAbi,
     FactorySource,
-    ProxyMultiVaultNative_V3Abi,
+    ProxyMultiVaultNative_V3Abi, ProxyMultiVaultNative_V4Abi, ProxyMultiVaultNative_V5Abi,
     SolanaEverscaleEventConfigurationAbi
 } from "../../../build/factorySource";
 import {logContract} from "../logger";
@@ -27,14 +27,14 @@ export const setupNativeMultiVault = async (
     Contract<EverscaleEthereumEventConfigurationAbi>,
     Contract<SolanaEverscaleEventConfigurationAbi>,
     Contract<EverscaleSolanaEventConfigurationAbi>,
-    Contract<ProxyMultiVaultNative_V3Abi>
+    Contract<ProxyMultiVaultNative_V5Abi>
 ]> => {
     const _randomNonce = locklift.utils.getRandomNonce();
     const signer = (await locklift.keystore.getSigner("2"))!;
 
     // Deploy proxy
     const { contract: proxy } = await locklift.factory.deployContract({
-        contract: "ProxyMultiVaultNative_V3",
+        contract: "ProxyMultiVaultNative_V5",
         constructorParams: {
             owner_: owner.address,
         },
@@ -45,7 +45,7 @@ export const setupNativeMultiVault = async (
         value: locklift.utils.toNano(15),
     });
 
-    await logContract("ProxyMultiVaultNative_V3", proxy.address);
+    await logContract("ProxyMultiVaultNative_V5", proxy.address);
 
     // Load event contracts
     const ethereumEverscaleEvent = await locklift.factory.getContractArtifacts(

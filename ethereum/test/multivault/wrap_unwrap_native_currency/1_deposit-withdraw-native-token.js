@@ -122,7 +122,7 @@ describe('Test deposit-withdraw for native token', async () => {
                     payload: web3.eth.abi.encodeParameters(
                         ['address'], [bob]
                     ),
-                    strict: false
+                    strict: true
                 }
 
             });

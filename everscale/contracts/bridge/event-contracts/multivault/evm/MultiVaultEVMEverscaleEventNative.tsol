@@ -17,16 +17,17 @@ contract MultiVaultEVMEverscaleEventNative is
     EthereumEverscaleBaseEvent,
     IMultiVaultEVMEverscaleEventNative
 {
-    address token;
-    uint128 amount;
-    address recipient;
+    address public token;
+    uint128 public amount;
+    address public recipient;
 
-    uint value;
-    uint expected_evers;
-    TvmCell payload;
+    uint public value;
+    uint public expected_evers;
+    TvmCell public payload;
 
-    address proxy;
-    address tokenWallet;
+    // Derived fields
+    address public proxy;
+    address public tokenWallet;
 
     constructor(
         address _initializer,
@@ -72,6 +73,17 @@ contract MultiVaultEVMEverscaleEventNative is
 
         token = address.makeAddrStd(token_wid, token_addr);
         recipient = address.makeAddrStd(recipient_wid, recipient_addr);
+
+        // Destroy event contract in case event contract is less than required
+        if (address(this).balance < expected_evers) {
+            recipient.transfer({
+                value: 0,
+                bounce: false,
+                flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.DESTROY_IF_ZERO
+            });
+
+            return;
+        }
 
         IEthereumEverscaleEventConfiguration(eventInitData.configuration).getDetails{
             value: 1 ever,

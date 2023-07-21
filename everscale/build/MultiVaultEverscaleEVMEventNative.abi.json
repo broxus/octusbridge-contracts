@@ -247,6 +247,142 @@
 			"outputs": [
 				{"name":"signatures","type":"map(uint256,bytes)"}
 			]
+		},
+		{
+			"name": "nonce",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"nonce","type":"uint32"}
+			]
+		},
+		{
+			"name": "proxy",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"proxy","type":"address"}
+			]
+		},
+		{
+			"name": "tokenWallet",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"tokenWallet","type":"address"}
+			]
+		},
+		{
+			"name": "token",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"token","type":"address"}
+			]
+		},
+		{
+			"name": "remainingGasTo",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"remainingGasTo","type":"address"}
+			]
+		},
+		{
+			"name": "amount",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"amount","type":"uint128"}
+			]
+		},
+		{
+			"name": "recipient",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"recipient","type":"uint160"}
+			]
+		},
+		{
+			"name": "chainId",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"chainId","type":"uint256"}
+			]
+		},
+		{
+			"name": "sender",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"sender","type":"address"}
+			]
+		},
+		{
+			"name": "initial_balance",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"initial_balance","type":"uint128"}
+			]
+		},
+		{
+			"name": "callback_recipient",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"callback_recipient","type":"uint160"}
+			]
+		},
+		{
+			"name": "callback_payload",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"callback_payload","type":"bytes"}
+			]
+		},
+		{
+			"name": "callback_strict",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"callback_strict","type":"bool"}
+			]
+		},
+		{
+			"name": "name",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"name","type":"string"}
+			]
+		},
+		{
+			"name": "symbol",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"symbol","type":"string"}
+			]
+		},
+		{
+			"name": "decimals",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"decimals","type":"uint8"}
+			]
+		},
+		{
+			"name": "expectedTokenWallet",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"expectedTokenWallet","type":"address"}
+			]
 		}
 	],
 	"data": [
@@ -308,6 +444,7 @@
 		{"name":"createdAt","type":"uint32"},
 		{"components":[{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"eventInitData","type":"tuple"},
 		{"name":"signatures","type":"map(uint256,bytes)"},
+		{"name":"nonce","type":"uint32"},
 		{"name":"proxy","type":"address"},
 		{"name":"tokenWallet","type":"address"},
 		{"name":"token","type":"address"},
@@ -315,6 +452,8 @@
 		{"name":"amount","type":"uint128"},
 		{"name":"recipient","type":"uint160"},
 		{"name":"chainId","type":"uint256"},
+		{"name":"sender","type":"address"},
+		{"name":"initial_balance","type":"uint128"},
 		{"name":"callback_recipient","type":"uint160"},
 		{"name":"callback_payload","type":"bytes"},
 		{"name":"callback_strict","type":"bool"},

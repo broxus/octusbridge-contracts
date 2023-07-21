@@ -22,22 +22,26 @@ contract MultiVaultEverscaleEVMEventNative is
     EverscaleEthereumBaseEvent,
     IMultiVaultEverscaleEVMEventNative
 {
-    address proxy;
-    address tokenWallet;
-    address token;
-    address remainingGasTo;
-    uint128 amount;
-    uint160 recipient;
-    uint256 chainId;
+    uint32 public nonce;
+    address public proxy;
+    address public tokenWallet;
+    address public token;
+    address public remainingGasTo;
+    uint128 public amount;
+    uint160 public recipient;
+    uint256 public chainId;
 
-    uint160 callback_recipient;
-    bytes callback_payload;
-    bool callback_strict;
+    address public sender;
+    uint128 public initial_balance;
 
-    string name;
-    string symbol;
-    uint8 decimals;
-    address expectedTokenWallet;
+    uint160 public callback_recipient;
+    bytes public callback_payload;
+    bool public callback_strict;
+
+    string public name;
+    string public symbol;
+    uint8 public decimals;
+    address public expectedTokenWallet;
 
     constructor(
         address _initializer,
@@ -58,6 +62,7 @@ contract MultiVaultEverscaleEVMEventNative is
         setStatusInitializing();
 
         (
+            nonce,
             proxy,
             tokenWallet,
             token,
@@ -65,14 +70,17 @@ contract MultiVaultEverscaleEVMEventNative is
             amount,
             recipient,
             chainId,
+            sender,
             callback_recipient, callback_payload, callback_strict
         ) = abi.decode(
             eventInitData.voteData.eventData,
             (
-                address, address, address, address, uint128, uint160, uint256,
+                uint32, address, address, address, address, uint128, uint160, uint256, address,
                 uint160, bytes, bool
             )
         );
+
+        initial_balance = address(this).balance;
 
         ITokenRoot(token).name{
             value: 0.1 ever,

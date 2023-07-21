@@ -15,6 +15,7 @@
 			"name": "deploy",
 			"inputs": [
 				{"name":"_owner","type":"address"},
+				{"name":"_flags","type":"uint64"},
 				{"components":[{"name":"eventABI","type":"bytes"},{"name":"staking","type":"address"},{"name":"eventInitialBalance","type":"uint64"},{"name":"eventCode","type":"cell"}],"name":"basicConfiguration","type":"tuple"},
 				{"components":[{"name":"chainId","type":"uint32"},{"name":"eventEmitter","type":"uint160"},{"name":"eventBlocksToConfirm","type":"uint16"},{"name":"proxy","type":"address"},{"name":"startBlockNumber","type":"uint32"},{"name":"endBlockNumber","type":"uint32"}],"name":"networkConfiguration","type":"tuple"}
 			],

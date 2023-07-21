@@ -20,6 +20,7 @@ contract EverscaleEthereumEventConfigurationFactory is TransferUtils, RandomNonc
 
     function deploy(
         address _owner,
+        uint64 _flags,
         IEverscaleEthereumEventConfiguration.BasicConfiguration basicConfiguration,
         IEverscaleEthereumEventConfiguration.EverscaleEthereumEventConfiguration networkConfiguration
     ) external view reserveMinBalance(MIN_CONTRACT_BALANCE) {
@@ -34,7 +35,7 @@ contract EverscaleEthereumEventConfigurationFactory is TransferUtils, RandomNonc
                 basicConfiguration: basicConfiguration,
                 networkConfiguration: networkConfiguration
             }
-        }(_owner, _meta);
+        }(_owner, _meta, _flags);
     }
 
     function deriveConfigurationAddress(

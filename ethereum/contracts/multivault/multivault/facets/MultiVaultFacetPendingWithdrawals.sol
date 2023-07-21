@@ -11,21 +11,24 @@ import "../../interfaces/IERC20.sol";
 import "../helpers/MultiVaultHelperEmergency.sol";
 import "../helpers/MultiVaultHelperActors.sol";
 import "../helpers/MultiVaultHelperPendingWithdrawal.sol";
+import "../helpers/MultiVaultHelperReentrancyGuard.sol";
 import "../helpers/MultiVaultHelperTokenBalance.sol";
 import "../helpers/MultiVaultHelperEverscale.sol";
 import "../helpers/MultiVaultHelperCallback.sol";
+import "../helpers/MultiVaultHelperGas.sol";
 
 import "../storage/MultiVaultStorage.sol";
 import "../../libraries/SafeERC20.sol";
 
 
-
 contract MultiVaultFacetPendingWithdrawals is
     MultiVaultHelperEmergency,
+    MultiVaultHelperGas,
     MultiVaultHelperActors,
     MultiVaultHelperEverscale,
     MultiVaultHelperTokenBalance,
     MultiVaultHelperPendingWithdrawal,
+    MultiVaultHelperReentrancyGuard,
     IMultiVaultFacetPendingWithdrawals,
     MultiVaultHelperCallback
 {
@@ -84,14 +87,22 @@ contract MultiVaultFacetPendingWithdrawals is
 
     function forceWithdraw(
         PendingWithdrawalId[] memory pendingWithdrawalIds
-    ) external override {
-        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
-
+    )
+        external
+        override
+        nonReentrant
+        onlyEmergencyDisabled
+    {
         for (uint i = 0; i < pendingWithdrawalIds.length; i++) {
             PendingWithdrawalId memory pendingWithdrawalId = pendingWithdrawalIds[i];
             PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(pendingWithdrawalId);
 
-            s.pendingWithdrawals_[pendingWithdrawalId.recipient][pendingWithdrawalId.id].amount = 0;
+            require(pendingWithdrawal.amount > 0);
+
+            _pendingWithdrawalAmountReduce(
+                pendingWithdrawalId,
+                pendingWithdrawal.amount
+            );
 
             IERC20(pendingWithdrawal.token).safeTransfer(
                 pendingWithdrawalId.recipient,
@@ -134,13 +145,17 @@ contract MultiVaultFacetPendingWithdrawals is
         payable
         override
         onlyEmergencyDisabled
+        nonReentrant
+        drainGas
     {
         PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(msg.sender, id);
-        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         require(amount > 0 && amount <= pendingWithdrawal.amount);
 
-        s.pendingWithdrawals_[msg.sender][id].amount -= amount;
+        _pendingWithdrawalAmountReduce(
+            PendingWithdrawalId(msg.sender, id),
+            amount
+        );
 
         IMultiVaultFacetDeposit.DepositParams memory deposit = IMultiVaultFacetDeposit.DepositParams({
             recipient: recipient,
@@ -189,7 +204,6 @@ contract MultiVaultFacetPendingWithdrawals is
         // Fill approved withdrawal
         if (approveStatus == ApproveStatus.Approved && pendingWithdrawal.amount <= _vaultTokenBalance(pendingWithdrawal.token)) {
             _pendingWithdrawalAmountReduce(
-                pendingWithdrawal.token,
                 pendingWithdrawalId,
                 pendingWithdrawal.amount
             );

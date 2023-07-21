@@ -175,12 +175,6 @@
       },
       {
         "indexed": false,
-        "internalType": "bool",
-        "name": "skim_to_everscale",
-        "type": "bool"
-      },
-      {
-        "indexed": false,
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
@@ -497,6 +491,19 @@
       }
     ],
     "name": "UpdateTokenWithdrawFee",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "withdrawGuardian",
+        "type": "address"
+      }
+    ],
+    "name": "UpdateWithdrawGuardian",
     "type": "event"
   },
   {
@@ -910,6 +917,32 @@
       }
     ],
     "name": "setUndeclaredWithdrawalLimits",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_weth",
+        "type": "address"
+      }
+    ],
+    "name": "setWeth",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_withdrawGuardian",
+        "type": "address"
+      }
+    ],
+    "name": "setWithdrawGuardian",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

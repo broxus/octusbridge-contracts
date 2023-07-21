@@ -21,17 +21,21 @@ contract MultiVaultEverscaleSolanaEventNative is
     EverscaleSolanaBaseEvent,
     IMultiVaultEverscaleSolanaEventNative
 {
-    address proxy;
-    address tokenWallet;
-    address token;
-    address remainingGasTo;
-    uint128 amount;
-    uint256 recipient;
+    uint32 public nonce;
+    address public proxy;
+    address public tokenWallet;
+    address public token;
+    address public remainingGasTo;
+    uint128 public amount;
+    uint256 public recipient;
 
-    string name;
-    string symbol;
-    uint8 decimals;
-    address expectedTokenWallet;
+    address public sender;
+    uint128 public initial_balance;
+
+    string public name;
+    string public symbol;
+    uint8 public decimals;
+    address public expectedTokenWallet;
 
     constructor(
         address _initializer,
@@ -52,16 +56,20 @@ contract MultiVaultEverscaleSolanaEventNative is
         setStatusInitializing();
 
         (
+            nonce,
             proxy,
             tokenWallet,
             token,
             remainingGasTo,
             amount,
-            recipient
+            recipient,
+            sender
         ) = abi.decode(
             eventInitData.voteData.eventData,
-            (address, address, address, address, uint128, uint256)
+            (uint32, address, address, address, address, uint128, uint256, address)
         );
+
+        initial_balance = address(this).balance;
 
         ITokenRoot(token).name{
             value: 0.1 ever,

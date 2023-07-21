@@ -38,6 +38,8 @@ contract MultiVaultFacetLiquidity is
     ) external override onlyEmergencyDisabled nonReentrant {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
+        require(s.tokens_[token].isNative == false);
+
         IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
 
         address lp;
@@ -55,7 +57,7 @@ contract MultiVaultFacetLiquidity is
 
         emit MintLiquidity(msg.sender, token, amount, lp_amount);
 
-        IMultiVaultToken(lp).mint(receiver, amount);
+        IMultiVaultToken(lp).mint(receiver, lp_amount);
     }
 
     /// @notice The redeem function converts a specified quantity of LP tokens
@@ -99,6 +101,12 @@ contract MultiVaultFacetLiquidity is
         address token
     ) external view override returns (uint) {
         return _getCash(token);
+    }
+
+    function getSupply(
+        address token
+    ) external view override returns (uint) {
+        return _getSupply(token);
     }
 
     /// @notice Get LP token address by the address of the underlying asset

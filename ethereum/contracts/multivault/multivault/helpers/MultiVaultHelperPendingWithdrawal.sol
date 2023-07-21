@@ -50,14 +50,18 @@ abstract contract MultiVaultHelperPendingWithdrawal is IMultiVaultFacetPendingWi
     }
 
     function _pendingWithdrawalAmountReduce(
-        address token,
         IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId memory pendingWithdrawalId,
         uint amount
     ) internal {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
+        IMultiVaultFacetPendingWithdrawals.PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(pendingWithdrawalId);
+
+        require(pendingWithdrawal.approveStatus == IMultiVaultFacetPendingWithdrawals.ApproveStatus.NotRequired
+            || pendingWithdrawal.approveStatus == IMultiVaultFacetPendingWithdrawals.ApproveStatus.Approved);
+
         s.pendingWithdrawals_[pendingWithdrawalId.recipient][pendingWithdrawalId.id].amount -= amount;
-        s.pendingWithdrawalsTotal[token] -= amount;
+        s.pendingWithdrawalsTotal[pendingWithdrawal.token] -= amount;
     }
 
     function _withdrawalPeriod(

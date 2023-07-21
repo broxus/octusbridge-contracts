@@ -245,6 +245,16 @@ contract MultiVaultFacetSettings is
         emit UpdateGuardian(s.guardian);
     }
 
+    function setWithdrawGuardian(
+        address _withdrawGuardian
+    ) external override onlyGovernance {
+        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
+
+        s.withdrawGuardian = _withdrawGuardian;
+
+        emit UpdateWithdrawGuardian(s.withdrawGuardian);
+    }
+
     /// @notice Activates or deactivates MultiVault emergency shutdown.
     ///     During emergency shutdown:
     ///     - Deposits are disabled
@@ -285,6 +295,14 @@ contract MultiVaultFacetSettings is
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         s.gasDonor = _gasDonor;
+    }
+
+    function setWeth(
+        address _weth
+    ) external override onlyGovernance {
+        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
+
+        s.weth = _weth;
     }
 
     function withdrawGuardian() external view override returns(address) {

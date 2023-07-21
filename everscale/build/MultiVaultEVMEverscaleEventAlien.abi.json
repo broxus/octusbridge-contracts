@@ -25,7 +25,7 @@
 		{
 			"name": "receiveAlienTokenRoot",
 			"inputs": [
-				{"name":"token_","type":"address"}
+				{"name":"token","type":"address"}
 			],
 			"outputs": [
 			]
@@ -41,7 +41,7 @@
 		{
 			"name": "receiveMergeRouter",
 			"inputs": [
-				{"name":"router_","type":"address"}
+				{"name":"router","type":"address"}
 			],
 			"outputs": [
 			]
@@ -49,7 +49,7 @@
 		{
 			"name": "receiveMergeRouterPool",
 			"inputs": [
-				{"name":"pool_","type":"address"}
+				{"name":"pool","type":"address"}
 			],
 			"outputs": [
 			]
@@ -57,10 +57,27 @@
 		{
 			"name": "receiveMergePoolCanon",
 			"inputs": [
-				{"name":"canon_","type":"address"},
+				{"name":"canon","type":"address"},
 				{"components":[{"name":"decimals","type":"uint8"},{"name":"enabled","type":"bool"}],"name":"canonToken_","type":"tuple"}
 			],
 			"outputs": [
+			]
+		},
+		{
+			"name": "getEventData",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"components":[{"name":"base_chainId","type":"uint256"},{"name":"base_token","type":"uint160"},{"name":"name","type":"string"},{"name":"symbol","type":"string"},{"name":"decimals","type":"uint8"},{"name":"amount","type":"uint128"},{"name":"recipient","type":"address"},{"name":"value","type":"uint256"},{"name":"expected_evers","type":"uint256"},{"name":"payload","type":"cell"}],"name":"value0","type":"tuple"}
+			]
+		},
+		{
+			"name": "getTransitionalData",
+			"inputs": [
+			],
+			"outputs": [
+				{"components":[{"name":"proxy","type":"address"},{"name":"token","type":"address"},{"name":"router","type":"address"},{"name":"pool","type":"address"},{"name":"canon","type":"address"},{"name":"target_token","type":"address"},{"name":"target_amount","type":"uint128"}],"name":"value0","type":"tuple"}
 			]
 		},
 		{
@@ -81,28 +98,6 @@
 				{"name":"payload_","type":"cell"},
 				{"name":"proxy_","type":"address"},
 				{"name":"token_","type":"address"}
-			]
-		},
-		{
-			"name": "getDecodedDataExtended",
-			"inputs": [
-				{"name":"answerId","type":"uint32"}
-			],
-			"outputs": [
-				{"name":"base_chainId_","type":"uint256"},
-				{"name":"base_token_","type":"uint160"},
-				{"name":"name_","type":"string"},
-				{"name":"symbol_","type":"string"},
-				{"name":"decimals_","type":"uint8"},
-				{"name":"amount_","type":"uint128"},
-				{"name":"recipient_","type":"address"},
-				{"name":"proxy_","type":"address"},
-				{"name":"token_","type":"address"},
-				{"name":"router_","type":"address"},
-				{"name":"pool_","type":"address"},
-				{"name":"canon_","type":"address"},
-				{"name":"target_token_","type":"address"},
-				{"name":"target_amount_","type":"uint128"}
 			]
 		},
 		{
@@ -264,6 +259,22 @@
 			"outputs": [
 				{"name":"round_number","type":"uint32"}
 			]
+		},
+		{
+			"name": "nonce",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"nonce","type":"uint32"}
+			]
+		},
+		{
+			"name": "transitionalDataCell",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"transitionalDataCell","type":"cell"}
+			]
 		}
 	],
 	"data": [
@@ -322,22 +333,7 @@
 		{"name":"relay_round","type":"address"},
 		{"name":"round_number","type":"uint32"},
 		{"components":[{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"},{"name":"chainId","type":"uint32"}],"name":"eventInitData","type":"tuple"},
-		{"name":"base_chainId","type":"uint256"},
-		{"name":"base_token","type":"uint160"},
-		{"name":"name","type":"string"},
-		{"name":"symbol","type":"string"},
-		{"name":"decimals","type":"uint8"},
-		{"name":"amount","type":"uint128"},
-		{"name":"recipient","type":"address"},
-		{"name":"value","type":"uint256"},
-		{"name":"expected_evers","type":"uint256"},
-		{"name":"payload","type":"cell"},
-		{"name":"proxy","type":"address"},
-		{"name":"token","type":"address"},
-		{"name":"router","type":"address"},
-		{"name":"pool","type":"address"},
-		{"name":"canon","type":"address"},
-		{"name":"target_token","type":"address"},
-		{"name":"target_amount","type":"uint128"}
+		{"name":"nonce","type":"uint32"},
+		{"name":"transitionalDataCell","type":"cell"}
 	]
 }

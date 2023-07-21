@@ -2,6 +2,7 @@ pragma ever-solidity >= 0.39.0;
 
 
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
+import "../../utils/ErrorCodes.tsol";
 
 
 contract MergePoolPlatform is RandomNonce {
@@ -15,7 +16,7 @@ contract MergePoolPlatform is RandomNonce {
         address owner_,
         address manager_
     ) public {
-        require(msg.sender == proxy);
+        require(msg.sender == proxy, ErrorCodes.WRONG_PROXY);
 
         initialize(
             code,

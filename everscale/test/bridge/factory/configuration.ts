@@ -78,6 +78,7 @@ describe("Test configuration factory", async function () {
       await factory.methods
         .deploy({
           _owner: bridgeOwner.address,
+          _flags: 0,
           basicConfiguration,
           networkConfiguration,
         })
