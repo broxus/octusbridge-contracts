@@ -46,6 +46,15 @@
 			]
 		},
 		{
+			"name": "setCreditBackend",
+			"inputs": [
+				{"name":"_eventCloser","type":"address"},
+				{"name":"_eventDeployer","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "upgrade",
 			"inputs": [
 				{"name":"code","type":"cell"}
@@ -99,6 +108,22 @@
 			"outputs": [
 				{"name":"nativeProxy","type":"address"}
 			]
+		},
+		{
+			"name": "eventCloser",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"eventCloser","type":"address"}
+			]
+		},
+		{
+			"name": "eventDeployer",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"eventDeployer","type":"address"}
+			]
 		}
 	],
 	"data": [
@@ -122,6 +147,8 @@
 		{"name":"owner","type":"address"},
 		{"name":"_randomNonce","type":"uint256"},
 		{"name":"alienTokenWalletPlatformCode","type":"cell"},
-		{"name":"nativeProxy","type":"address"}
+		{"name":"nativeProxy","type":"address"},
+		{"name":"eventCloser","type":"address"},
+		{"name":"eventDeployer","type":"address"}
 	]
 }

@@ -43,6 +43,8 @@ contract Mediator is
 
     TvmCell public alienTokenWalletPlatformCode;
     address public nativeProxy;
+    address public eventCloser;
+    address public eventDeployer;
 
     constructor(
         address _owner,
@@ -101,8 +103,10 @@ contract Mediator is
         address wallet,
         uint128 amount,
         address remainingGasTo
-    ) internal pure {
+    ) internal view {
         (uint32 nonce, TvmCell payload) = abi.decode(payloadWithNonce, (uint32, TvmCell));
+
+        remainingGasTo = remainingGasTo == eventDeployer ? eventCloser : remainingGasTo;
 
         (
             Operation operation,
@@ -198,6 +202,14 @@ contract Mediator is
         return address(tvm.hash(stateInit));
     }
 
+    function setCreditBackend(
+        address _eventCloser,
+        address _eventDeployer
+    ) external onlyOwner {
+        eventCloser = _eventCloser;
+        eventDeployer = _eventDeployer;
+    }
+
     function upgrade(
         TvmCell code
     ) external onlyOwner {
@@ -205,7 +217,9 @@ contract Mediator is
             owner,
             nativeProxy,
             alienTokenWalletPlatformCode,
-            _randomNonce
+            _randomNonce,
+            eventCloser,
+            eventDeployer
         );
 
         tvm.setcode(code);
