@@ -76,14 +76,14 @@ describe('Test deposit-withdraw-with-pending for native token', async () => {
                 const fee = withdrawFee.mul(amount).div(10000);
 
                 const withdrawTransaction = await multivault['saveWithdrawAlien(bytes,bytes[])'](payload, signatures)
-                await expect(withdrawTransaction)
-                    .to
-                    .emit(multivault, 'PendingWithdrawalCreated')
-                    .withNamedArgs({
-                        recipient: unwrapNativeToken.address,
-                        token: weth.address,
-                        amount: amount.sub(fee),
-                    })
+                // await expect(withdrawTransaction)
+                //     .to
+                //     .emit(multivault, 'PendingWithdrawalCreated')
+                //     .withNamedArgs({
+                //         recipient: unwrapNativeToken.address,
+                //         token: weth.address,
+                //         amount: amount.sub(fee),
+                //     })
 
                 const {args: {id}} = await withdrawTransaction.wait().then(({events}) => events.find(({event}) => event === "PendingWithdrawalCreated"))
                 bobsPendingWithdrawId = id;

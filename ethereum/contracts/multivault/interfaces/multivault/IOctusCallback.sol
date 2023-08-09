@@ -9,6 +9,12 @@ interface IOctusCallbackNative {
         IMultiVaultFacetWithdraw.NativeWithdrawalParams memory payload,
         uint256 withdrawAmount
     ) external;
+
+
+    function onNativeWithdrawalPendingCreated(
+        IMultiVaultFacetWithdraw.NativeWithdrawalParams memory _payload,
+        uint pendingWithdrawalId
+    ) external;
 }
 
 interface IOctusCallbackAlien {
@@ -16,6 +22,7 @@ interface IOctusCallbackAlien {
         IMultiVaultFacetWithdraw.AlienWithdrawalParams memory payload,
         uint256 withdrawAmount
     ) external;
+
     function onAlienWithdrawalPendingCreated(
         IMultiVaultFacetWithdraw.AlienWithdrawalParams memory _payload,
         uint pendingWithdrawalId

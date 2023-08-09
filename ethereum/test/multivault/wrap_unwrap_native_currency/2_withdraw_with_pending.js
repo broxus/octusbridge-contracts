@@ -65,7 +65,6 @@ describe('Test deposit-withdraw-with-pending for native token', async () => {
             });
 
             it('Bob makes pending withdraw', async () => {
-
                 const {
                     withdrawFee
                 } = await multivault.tokens(weth.address);
@@ -73,17 +72,19 @@ describe('Test deposit-withdraw-with-pending for native token', async () => {
                 const fee = withdrawFee.mul(amount).div(10000);
 
                 const withdrawTransaction = await multivault['saveWithdrawAlien(bytes,bytes[])'](payload, signatures)
-                await expect(withdrawTransaction)
-                    .to
-                    .emit(multivault, 'PendingWithdrawalCreated')
-                    .withNamedArgs({
-                        recipient: unwrapNativeToken.address,
-                        token: weth.address,
-                        amount: amount.sub(fee),
-                    })
 
-                const {args: {id}} = await withdrawTransaction.wait().then(({events}) => events.find(({event}) => event === "PendingWithdrawalCreated"))
-                pendingWithdrawId = id;
+                const {args} = await withdrawTransaction
+                    .wait()
+                    .then(({events}) => events.find(({event}) => event === "PendingWithdrawalCreated"));
+
+                expect(args.amount)
+                    .to.be.equal(amount.sub(fee), 'Emitted amount is wrong');
+                expect(args.recipient)
+                    .to.be.equal(unwrapNativeToken.address, 'Emitted recipient is wrong');
+                expect(args.token)
+                    .to.be.equal(weth.address, 'Emitted token is wrong');
+
+                pendingWithdrawId = args.id;
             });
 
             it("Alice makes close of the bob's pending withdraw", async () => {

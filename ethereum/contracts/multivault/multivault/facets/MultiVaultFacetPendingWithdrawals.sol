@@ -5,6 +5,7 @@ pragma solidity 0.8.0;
 import "../../interfaces/multivault/IMultiVaultFacetPendingWithdrawals.sol";
 import "../../interfaces/multivault/IMultiVaultFacetPendingWithdrawalsEvents.sol";
 import "../../interfaces/multivault/IMultiVaultFacetWithdraw.sol";
+import "../../interfaces/IMultiVaultToken.sol";
 import "../../interfaces/IEverscale.sol";
 import "../../interfaces/IERC20.sol";
 
@@ -74,6 +75,7 @@ contract MultiVaultFacetPendingWithdrawals is
 
         PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(msg.sender, id);
 
+        require(!s.tokens_[pendingWithdrawal.token].isNative);
         require(bounty <= pendingWithdrawal.amount);
 
         s.pendingWithdrawals_[msg.sender][id].bounty = bounty;
@@ -148,8 +150,10 @@ contract MultiVaultFacetPendingWithdrawals is
         nonReentrant
         drainGas
     {
+        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
         PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(msg.sender, id);
 
+        require(!s.tokens_[pendingWithdrawal.token].isNative);
         require(amount > 0 && amount <= pendingWithdrawal.amount);
 
         _pendingWithdrawalAmountReduce(
@@ -201,17 +205,29 @@ contract MultiVaultFacetPendingWithdrawals is
 
         _pendingWithdrawalApproveStatusUpdate(pendingWithdrawalId, approveStatus);
 
+        bool isNative = s.tokens_[pendingWithdrawal.token].isNative;
+
         // Fill approved withdrawal
-        if (approveStatus == ApproveStatus.Approved && pendingWithdrawal.amount <= _vaultTokenBalance(pendingWithdrawal.token)) {
+        if (
+            approveStatus == ApproveStatus.Approved &&
+            (pendingWithdrawal.amount <= _vaultTokenBalance(pendingWithdrawal.token) || isNative)
+        ) {
             _pendingWithdrawalAmountReduce(
                 pendingWithdrawalId,
                 pendingWithdrawal.amount
             );
 
-            IERC20(pendingWithdrawal.token).safeTransfer(
-                pendingWithdrawalId.recipient,
-                pendingWithdrawal.amount
-            );
+            if (!isNative) {
+                IERC20(pendingWithdrawal.token).safeTransfer(
+                    pendingWithdrawalId.recipient,
+                    pendingWithdrawal.amount
+                );
+            } else {
+                IMultiVaultToken(pendingWithdrawal.token).mint(
+                    pendingWithdrawalId.recipient,
+                    pendingWithdrawal.amount
+                );
+            }
 
             emit PendingWithdrawalWithdraw(
                 pendingWithdrawalId.recipient,

@@ -77,16 +77,75 @@ contract MultiVaultFacetWithdraw is
 
         _increaseTokenFee(token, fee);
 
-        _withdraw(
-            withdrawal.recipient,
-            withdrawal.amount,
-            fee,
-            IMultiVaultFacetTokens.TokenType.Native,
-            payloadId,
-            token
+        uint withdrawAmount = withdrawal.amount - fee;
+
+        // Consider withdrawal period limit
+        IMultiVaultFacetPendingWithdrawals.WithdrawalPeriodParams memory withdrawalPeriod = _withdrawalPeriod(
+            token,
+            _event.eventTimestamp
         );
 
-        _callbackNativeWithdrawal(withdrawal, withdrawal.amount - fee);
+        _withdrawalPeriodIncreaseTotalByTimestamp(
+            token,
+            _event.eventTimestamp,
+            withdrawal.amount
+        );
+
+        bool withdrawalLimitsPassed = _withdrawalPeriodCheckLimitsPassed(
+            token,
+            withdrawal.amount,
+            withdrawalPeriod
+        );
+
+        if (withdrawalLimitsPassed) {
+            _withdraw(
+                withdrawal.recipient,
+                withdrawal.amount,
+                fee,
+                IMultiVaultFacetTokens.TokenType.Native,
+                payloadId,
+                token
+            );
+
+            _callbackNativeWithdrawal(withdrawal, withdrawal.amount - fee);
+
+            return;
+        }
+
+        // Create pending withdrawal
+        uint pendingWithdrawalId = s.pendingWithdrawalsPerUser[withdrawal.recipient];
+
+        s.pendingWithdrawalsPerUser[withdrawal.recipient]++;
+
+        s.pendingWithdrawalsTotal[token] += withdrawAmount;
+
+        // - Save withdrawal as pending
+        s.pendingWithdrawals_[withdrawal.recipient][pendingWithdrawalId] = IMultiVaultFacetPendingWithdrawals.PendingWithdrawalParams({
+            token: token,
+            amount: withdrawAmount,
+            bounty: 0,
+            timestamp: _event.eventTimestamp,
+            approveStatus: IMultiVaultFacetPendingWithdrawals.ApproveStatus.NotRequired,
+            chainId: withdrawal.chainId,
+            callback: withdrawal.callback
+        });
+
+        emit PendingWithdrawalCreated(
+            withdrawal.recipient,
+            pendingWithdrawalId,
+            token,
+            withdrawAmount,
+            payloadId
+        );
+
+        if (!withdrawalLimitsPassed) {
+            _pendingWithdrawalApproveStatusUpdate(
+                IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId(withdrawal.recipient, pendingWithdrawalId),
+                IMultiVaultFacetPendingWithdrawals.ApproveStatus.Required
+            );
+        }
+
+        _callbackNativeWithdrawalPendingCreated(withdrawal, pendingWithdrawalId);
     }
 
     /// @notice Save withdrawal of alien token
