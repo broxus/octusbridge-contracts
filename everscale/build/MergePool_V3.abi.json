@@ -114,7 +114,7 @@
 			"inputs": [
 				{"name":"_amount","type":"uint128"},
 				{"name":"walletOwner","type":"address"},
-				{"name":"value2","type":"address"},
+				{"name":"sender","type":"address"},
 				{"name":"remainingGasTo","type":"address"},
 				{"name":"payload","type":"cell"}
 			],

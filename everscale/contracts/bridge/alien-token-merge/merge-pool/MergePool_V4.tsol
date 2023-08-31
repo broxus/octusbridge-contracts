@@ -295,8 +295,11 @@ contract MergePool_V4 is
             if (network == Network.Solana) {
                 (
                     uint256 recipient,
-                    IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
-                ) = abi.decode(withdrawPayload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[]));
+                    IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
+                    bool executePayloadNeeded,
+                    IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
+                    bytes solanaPayload
+                ) = abi.decode(withdrawPayload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[], bool, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[], bytes));
 
                 IProxyMultiVaultAlien_V7(proxy).withdrawTokensToSolanaByMergePool{
                     bounce: false,
@@ -310,7 +313,10 @@ contract MergePool_V4 is
                     recipient,
                     remainingGasTo,
                     sender,
-                    executeAccounts
+                    executeAccounts,
+                    executePayloadNeeded,
+                    executePayloadAccounts,
+                    solanaPayload
                 );
             } else if (network == Network.EVM) {
                 // Target token enabled and bridge withdraw requested

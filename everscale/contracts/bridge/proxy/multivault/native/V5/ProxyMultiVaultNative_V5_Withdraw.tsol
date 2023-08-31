@@ -38,17 +38,23 @@ abstract contract ProxyMultiVaultNative_V5_Withdraw is
         if (network == Network.Solana) {
             (
                 uint256 recipient,
-                IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
-            ) = abi.decode(transferPayload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[]));
+                IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
+                bool executePayloadNeeded,
+                IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
+                bytes solanaPayload
+            ) = abi.decode(transferPayload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[], bool, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[], bytes));
 
             _deploySolanaEvent(
                 nonce,
                 tokenRoot,
-                remainingGasTo,
                 amount,
                 recipient,
                 sender,
-                executeAccounts
+                remainingGasTo,
+                executeAccounts ,
+                executePayloadNeeded,
+                executePayloadAccounts,
+                solanaPayload
             );
         } else if (network == Network.EVM) {
             (
@@ -73,11 +79,14 @@ abstract contract ProxyMultiVaultNative_V5_Withdraw is
     function _deploySolanaEvent(
         uint32 nonce,
         address token,
-        address remainingGasTo,
         uint128 amount,
         uint256 recipient,
         address sender,
-        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
+        address remainingGasTo,
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
+        bool executePayloadNeeded,
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
+        bytes solanaPayload
     ) internal view {
         TvmCell eventData = abi.encode(
             nonce,
@@ -87,13 +96,16 @@ abstract contract ProxyMultiVaultNative_V5_Withdraw is
             remainingGasTo, // Remaining gas to
             amount, // Amount of tokens to withdraw
             recipient, // Solana recipient address
-            sender
+            sender,
+            solanaPayload
         );
 
         IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(
             tx.timestamp,
             now,
             executeAccounts,
+            executePayloadNeeded,
+            executePayloadAccounts,
             eventData
         );
 

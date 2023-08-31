@@ -246,6 +246,14 @@
 			]
 		},
 		{
+			"name": "tokenWallet",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"tokenWallet","type":"address"}
+			]
+		},
+		{
 			"name": "remainingGasTo",
 			"inputs": [
 			],
@@ -299,6 +307,14 @@
 			],
 			"outputs": [
 				{"name":"expectedToken","type":"address"}
+			]
+		},
+		{
+			"name": "solanaPayload",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"solanaPayload","type":"bytes"}
 			]
 		}
 	],
@@ -358,10 +374,11 @@
 		{"name":"relay_round","type":"address"},
 		{"name":"round_number","type":"uint32"},
 		{"name":"createdAt","type":"uint32"},
-		{"components":[{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"components":[{"name":"account","type":"uint256"},{"name":"readOnly","type":"bool"},{"name":"isSigner","type":"bool"}],"name":"executeAccounts","type":"tuple[]"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"eventInitData","type":"tuple"},
+		{"components":[{"components":[{"name":"eventTransactionLt","type":"uint64"},{"name":"eventTimestamp","type":"uint32"},{"components":[{"name":"account","type":"uint256"},{"name":"readOnly","type":"bool"},{"name":"isSigner","type":"bool"}],"name":"executeAccounts","type":"tuple[]"},{"name":"executePayloadNeeded","type":"bool"},{"components":[{"name":"account","type":"uint256"},{"name":"readOnly","type":"bool"},{"name":"isSigner","type":"bool"}],"name":"executePayloadAccounts","type":"tuple[]"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"eventInitData","type":"tuple"},
 		{"name":"nonce","type":"uint32"},
 		{"name":"proxy","type":"address"},
 		{"name":"token","type":"address"},
+		{"name":"tokenWallet","type":"address"},
 		{"name":"remainingGasTo","type":"address"},
 		{"name":"amount","type":"uint128"},
 		{"name":"recipient","type":"uint256"},

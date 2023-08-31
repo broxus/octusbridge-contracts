@@ -38,17 +38,23 @@ abstract contract ProxyMultiVaultAlien_V7_Withdraw is
         if (network == Network.Solana) {
             (
                 uint256 recipient,
-                IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
-            ) = abi.decode(burnPayload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[]));
+                IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
+                bool executePayloadNeeded,
+                IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
+                bytes solanaPayload
+            ) = abi.decode(burnPayload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[], bool, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[], bytes));
 
             _deploySolanaEvent(
                 nonce,
                 msg.sender,
                 amount,
                 recipient,
-                remainingGasTo,
                 sender,
-                executeAccounts
+                remainingGasTo,
+                executeAccounts,
+                executePayloadNeeded,
+                executePayloadAccounts,
+                solanaPayload
             );
         } else if (network == Network.EVM) {
             (
@@ -73,24 +79,31 @@ abstract contract ProxyMultiVaultAlien_V7_Withdraw is
         address token,
         uint128 amount,
         uint256 recipient,
-        address remainingGasTo,
         address sender,
-        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
+        address remainingGasTo,
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
+        bool executePayloadNeeded,
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
+        bytes solanaPayload
     ) internal view {
         TvmCell eventData = abi.encode(
             nonce,
             address(this), // Proxy address, used in event contract for validating token root
+            msg.sender, // Token wallet address, must be validated in the event contract
             token, // Everscale token root address
             remainingGasTo, // Remaining gas receiver (on event contract destroy)
             amount, // Amount of tokens to withdraw
             recipient, // Recipient address in Solana network
-            sender
+            sender,
+            solanaPayload
         );
 
         IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(
             tx.timestamp,
             now,
             executeAccounts,
+            executePayloadNeeded,
+            executePayloadAccounts,
             eventData
         );
 

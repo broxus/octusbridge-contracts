@@ -62,7 +62,7 @@ contract MultiVaultEverscaleSolanaEventNative is
             remainingGasTo,
             amount,
             recipient,
-            sender
+            sender,
             solanaPayload
         ) = abi.decode(
             eventInitData.voteData.eventData,

@@ -93,20 +93,23 @@ abstract contract ProxyMultiVaultAlien_V6_MergePool is ProxyMultiVaultAlien_V6_W
     }
 
     function withdrawTokensToSolanaByMergePool(
-        uint nonce,
+        uint32 nonce,
         address token,
         uint128 amount,
         uint256 recipient,
         address remainingGasTo,
+        address sender,
         IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
         bool executePayloadNeeded,
         IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
         bytes solanaPayload
     ) external override onlyMergePool(nonce) reserveAtLeastTargetBalance {
         _deploySolanaEvent(
+            nonce,
             token,
             amount,
             recipient,
+            sender,
             remainingGasTo,
             executeAccounts,
             executePayloadNeeded,

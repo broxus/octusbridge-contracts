@@ -258,15 +258,16 @@ contract MergePool_V3 is
     function onAcceptTokensBurn(
         uint128 _amount,
         address walletOwner,
-        address,
+        address sender,
         address remainingGasTo,
         TvmCell payload
     ) external override tokenExists(msg.sender) reserveBalance {
         (
+            uint32 nonce,
             BurnType burnType,
             address targetToken,
             TvmCell operationPayload
-        ) = abi.decode(payload, (BurnType, address, TvmCell));
+        ) = abi.decode(payload, (uint32, BurnType, address, TvmCell));
 
         uint128 amount = _convertDecimals(
             _amount,
@@ -304,11 +305,12 @@ contract MergePool_V3 is
                     value: 0,
                     flag: MsgFlag.ALL_NOT_RESERVED
                 }(
-                    _randomNonce,
+                    nonce,
                     targetToken,
                     amount,
                     recipient,
                     remainingGasTo,
+                    sender,
                     executeAccounts,
                     executePayloadNeeded,
                     executePayloadAccounts,

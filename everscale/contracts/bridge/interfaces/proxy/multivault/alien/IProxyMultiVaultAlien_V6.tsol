@@ -93,11 +93,12 @@ interface IProxyMultiVaultAlien_V6 is IEVMCallback, INetworks {
     ) external;
 
     function withdrawTokensToSolanaByMergePool(
-        uint nonce,
+        uint32 nonce,
         address token,
         uint128 amount,
         uint256 recipient,
         address remainingGasTo,
+        address sender,
         IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
         bool executePayloadNeeded,
         IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
