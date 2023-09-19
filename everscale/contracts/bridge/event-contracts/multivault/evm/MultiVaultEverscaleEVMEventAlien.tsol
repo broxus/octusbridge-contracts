@@ -38,10 +38,15 @@ contract MultiVaultEverscaleEVMEventAlien is
     uint160 public base_token;
     address public expectedToken;
 
+    // Unmodified event data
+    TvmCell public unmodifiedEventData;
+
     constructor(
         address _initializer,
         TvmCell _meta
-    ) EverscaleEthereumBaseEvent(_initializer, _meta) public {}
+    ) EverscaleEthereumBaseEvent(_initializer, _meta) public {
+        unmodifiedEventData = eventInitData.voteData.eventData;
+    }
 
     function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
         body.decode(uint64, uint32);
@@ -51,6 +56,10 @@ contract MultiVaultEverscaleEVMEventAlien is
             require(votes[msg.pubkey()] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
         }
         return bodyCopy;
+    }
+
+    function getUnmodifiedEventData() external override responsible returns(TvmCell) {
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} unmodifiedEventData;
     }
 
     function onInit() override internal {

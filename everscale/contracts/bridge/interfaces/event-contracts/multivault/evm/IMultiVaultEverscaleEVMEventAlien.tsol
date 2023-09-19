@@ -16,6 +16,8 @@ interface IMultiVaultEverscaleEVMEventAlien is IEVMCallback {
         address token_
     ) external;
 
+    function getUnmodifiedEventData() external responsible returns(TvmCell);
+    
     function getDecodedData() external responsible returns(
         address proxy_,
         address token_,

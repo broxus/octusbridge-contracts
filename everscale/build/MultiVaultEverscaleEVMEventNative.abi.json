@@ -13,6 +13,15 @@
 			]
 		},
 		{
+			"name": "getUnmodifiedEventData",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
+			]
+		},
+		{
 			"name": "receiveTokenName",
 			"inputs": [
 				{"name":"name_","type":"string"}
@@ -383,6 +392,14 @@
 			"outputs": [
 				{"name":"expectedTokenWallet","type":"address"}
 			]
+		},
+		{
+			"name": "unmodifiedEventData",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"unmodifiedEventData","type":"cell"}
+			]
 		}
 	],
 	"data": [
@@ -460,6 +477,7 @@
 		{"name":"name","type":"string"},
 		{"name":"symbol","type":"string"},
 		{"name":"decimals","type":"uint8"},
-		{"name":"expectedTokenWallet","type":"address"}
+		{"name":"expectedTokenWallet","type":"address"},
+		{"name":"unmodifiedEventData","type":"cell"}
 	]
 }
