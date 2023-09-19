@@ -7,32 +7,6 @@
         "internalType": "address",
         "name": "token",
         "type": "address"
-      }
-    ],
-    "name": "BlacklistTokenAdded",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      }
-    ],
-    "name": "BlacklistTokenRemoved",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
       },
       {
         "indexed": false,
@@ -115,6 +89,69 @@
       }
     ],
     "name": "TokenCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "status",
+        "type": "bool"
+      }
+    ],
+    "name": "UpdateTokenBlacklist",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "limit",
+        "type": "uint256"
+      }
+    ],
+    "name": "UpdateTokenDepositLimit",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "name_prefix",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "symbol_prefix",
+        "type": "string"
+      }
+    ],
+    "name": "UpdateTokenPrefix",
     "type": "event"
   },
   {
@@ -236,6 +273,24 @@
         "type": "address"
       },
       {
+        "internalType": "uint256",
+        "name": "limit",
+        "type": "uint256"
+      }
+    ],
+    "name": "setDepositLimit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
         "internalType": "string",
         "name": "name_prefix",
         "type": "string"
@@ -310,6 +365,11 @@
             "internalType": "address",
             "name": "custom",
             "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "depositLimit",
+            "type": "uint256"
           }
         ],
         "internalType": "struct IMultiVaultFacetTokens.Token",

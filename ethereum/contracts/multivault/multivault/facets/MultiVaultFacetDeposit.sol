@@ -53,13 +53,14 @@ contract MultiVaultFacetDeposit is
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         IWETH(s.weth).deposit{value: d.amount}();
+
         _deposit(
             DepositParams({
-            recipient: d.recipient,
-            token: s.weth,
-            amount: d.amount,
-            expected_evers: d.expected_evers,
-            payload: d.payload
+                recipient: d.recipient,
+                token: s.weth,
+                amount: d.amount,
+                expected_evers: d.expected_evers,
+                payload: d.payload
             }),
             msg.value - d.amount,
             address(this)
@@ -87,6 +88,7 @@ contract MultiVaultFacetDeposit is
         uint256 _value,
         address tokens_owner
     ) internal drainGas {
+        require(!_limitsViolated(d.token, d.amount));
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         uint fee = _calculateMovementFee(
@@ -110,7 +112,6 @@ contract MultiVaultFacetDeposit is
 
             _transferToEverscaleNative(d, fee, msg.value);
         } else {
-
             if (tokens_owner != address(this)) {
                 IERC20(token).safeTransferFrom(
                     tokens_owner,
@@ -181,9 +182,10 @@ contract MultiVaultFacetDeposit is
         IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId[] memory pendingWithdrawalIds,
         uint256 _value
     ) internal drainGas {
+        require(!_limitsViolated(d.token, d.amount));
+
         uint amountLeft = d.amount;
         uint amountPlusBounty = d.amount;
-
 
         for (uint i = 0; i < pendingWithdrawalIds.length; i++) {
             IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId memory pendingWithdrawalId = pendingWithdrawalIds[i];

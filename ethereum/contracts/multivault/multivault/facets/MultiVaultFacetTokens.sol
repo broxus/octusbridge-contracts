@@ -75,6 +75,8 @@ contract MultiVaultFacetTokens is
         prefix.symbol = symbol_prefix;
 
         s.prefixes_[token] = prefix;
+
+        emit UpdateTokenPrefix(token, name_prefix, symbol_prefix);
     }
 
     function setTokenBlacklist(
@@ -84,6 +86,19 @@ contract MultiVaultFacetTokens is
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         s.tokens_[token].blacklisted = blacklisted;
+
+        emit UpdateTokenBlacklist(token, blacklisted);
+    }
+
+    function setDepositLimit(
+        address token,
+        uint limit
+    ) external override onlyGovernance {
+        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
+
+        s.tokens_[token].depositLimit = limit;
+
+        emit UpdateTokenDepositLimit(token, limit);
     }
 
     function getNativeToken(

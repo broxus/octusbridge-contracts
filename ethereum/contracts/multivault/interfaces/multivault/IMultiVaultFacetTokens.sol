@@ -27,6 +27,7 @@ interface IMultiVaultFacetTokens {
         uint withdrawFee;
         bool isNative;
         address custom;
+        uint256 depositLimit;
     }
 
     function prefixes(address _token) external view returns (TokenPrefix memory);
@@ -37,6 +38,11 @@ interface IMultiVaultFacetTokens {
         address token,
         string memory name_prefix,
         string memory symbol_prefix
+    ) external;
+
+    function setDepositLimit(
+        address token,
+        uint amount
     ) external;
 
     function setTokenBlacklist(

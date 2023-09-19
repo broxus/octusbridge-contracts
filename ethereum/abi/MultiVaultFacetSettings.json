@@ -7,32 +7,6 @@
         "internalType": "address",
         "name": "token",
         "type": "address"
-      }
-    ],
-    "name": "BlacklistTokenAdded",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      }
-    ],
-    "name": "BlacklistTokenRemoved",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
       },
       {
         "indexed": false,
@@ -318,6 +292,50 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "int8",
+        "name": "wid",
+        "type": "int8"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "addr",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "UpdateCustom",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "limit",
+        "type": "uint256"
+      }
+    ],
+    "name": "UpdateDailyWithdrawalLimits",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
         "internalType": "uint256",
         "name": "fee",
         "type": "uint256"
@@ -376,6 +394,19 @@
       }
     ],
     "name": "UpdateDefaultNativeWithdrawFee",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "gasDonor",
+        "type": "address"
+      }
+    ],
+    "name": "UpdateGasDonor",
     "type": "event"
   },
   {
@@ -447,12 +478,50 @@
       },
       {
         "indexed": false,
+        "internalType": "bool",
+        "name": "status",
+        "type": "bool"
+      }
+    ],
+    "name": "UpdateTokenBlacklist",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "uint256",
         "name": "fee",
         "type": "uint256"
       }
     ],
     "name": "UpdateTokenDepositFee",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "limit",
+        "type": "uint256"
+      }
+    ],
+    "name": "UpdateTokenDepositLimit",
     "type": "event"
   },
   {
@@ -485,6 +554,31 @@
       },
       {
         "indexed": false,
+        "internalType": "string",
+        "name": "name_prefix",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "symbol_prefix",
+        "type": "string"
+      }
+    ],
+    "name": "UpdateTokenPrefix",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "uint256",
         "name": "fee",
         "type": "uint256"
@@ -499,11 +593,62 @@
       {
         "indexed": false,
         "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "limit",
+        "type": "uint256"
+      }
+    ],
+    "name": "UpdateUndeclaredWithdrawalLimits",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "weth",
+        "type": "address"
+      }
+    ],
+    "name": "UpdateWeth",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
         "name": "withdrawGuardian",
         "type": "address"
       }
     ],
     "name": "UpdateWithdrawGuardian",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "status",
+        "type": "bool"
+      }
+    ],
+    "name": "UpdateWithdrawalLimitStatus",
     "type": "event"
   },
   {

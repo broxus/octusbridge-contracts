@@ -75,7 +75,8 @@ abstract contract MultiVaultHelperTokens is
             isNative: isNative,
             depositFee: depositFee,
             withdrawFee: withdrawFee,
-            custom: address(0)
+            custom: address(0),
+            depositLimit: 0
         });
 
         emit TokenActivated(
@@ -171,5 +172,20 @@ abstract contract MultiVaultHelperTokens is
             meta.symbol,
             meta.decimals
         );
+    }
+
+    function _limitsViolated(
+        address token,
+        uint amount
+    ) internal view returns(bool) {
+        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
+
+        uint depositLimit = s.tokens_[token].depositLimit;
+
+        if (depositLimit == 0) return false;
+
+        uint balance = IERC20(token).balanceOf(address(this));
+
+        return (balance + amount) > depositLimit;
     }
 }

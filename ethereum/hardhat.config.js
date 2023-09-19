@@ -21,37 +21,35 @@ task("accounts", "Prints the list of accounts", async () => {
 
 
 const proxyadmin = {
-  main: '0x5889d26Ad270540E315B028Dd39Ae0ECB3De6179',
-  polygon: '0x9f6898d5D36e2a4b9A0c6e58A0e86525475f58d7',
-  bsc: '0xa3CbceE67325bCa03aCCcD06b9121955CCF224C3',
-  fantom: '0x6dF42fdE8BC7AF2596a450b9af306EA2060Ec8dc',
-  avalanche: '0x25D28c131461dE91d42495d0DacC603AF3f4Eb33',
+  // main: '0x5889d26Ad270540E315B028Dd39Ae0ECB3De6179',
+  // polygon: '0x9f6898d5D36e2a4b9A0c6e58A0e86525475f58d7',
+  // bsc: '0xa3CbceE67325bCa03aCCcD06b9121955CCF224C3',
+  // fantom: '0x6dF42fdE8BC7AF2596a450b9af306EA2060Ec8dc',
+  // avalanche: '0x25D28c131461dE91d42495d0DacC603AF3f4Eb33',
 };
 
 const multisig = {
-  main: '0xe29B04B9c6712080f79B2dAc5211B18B279D5DE0',
-  polygon: '0xB8dD7223edc08A1681c81278D31d644576ECF0b4',
-  bsc: '0xbF13DBbf86B6B1cc02a4169Dde38E16862C77a0a',
-  fantom: '0x5B2329A2b2B5ec2f5F77afb6826F825dcec3A3Fd',
-  milkomeda: '0x43137648a18925c73e0905005a96462daEf684C9',
-  avalanche: '0x7591519D32bB268D828249FcE2AA34A24Bc1B3eA'
+  main: '0x32c6fA709EA1bB6FdcB194D4Ca8d0e667EF2A800',
+  polygon: '0x32c6fA709EA1bB6FdcB194D4Ca8d0e667EF2A800',
+  bsc: '0x32c6fA709EA1bB6FdcB194D4Ca8d0e667EF2A800',
+  fantom: '0x32c6fA709EA1bB6FdcB194D4Ca8d0e667EF2A800',
+  avalanche: '0x32c6fA709EA1bB6FdcB194D4Ca8d0e667EF2A800'
 };
+
 const weth = {
   main: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', // https://etherscan.io/token/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2
   polygon: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270', // https://polygonscan.com/token/0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270
   bsc: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', // https://bscscan.com/address/0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c
   fantom: '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83', // https://ftmscan.com/token/0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83
-  milkomeda: '0x43137648a18925c73e0905005a96462daEf684C9', // SKIPPED
   avalanche: '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7' // https://snowtrace.io/token/0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7
 };
 
 const bridge = {
-  main: '0xF4404070f63a7E19Be0b1dd89A5fb88E12c0173A',
-  polygon: '0x62AE18A40Fa81697Fc7d0fe58402af5cAF795e68',
-  bsc: '0xc25CA21377C5bbC860F0bF48dF685D744A411489',
-  fantom: '0x9f6898d5D36e2a4b9A0c6e58A0e86525475f58d7',
-  milkomeda: '0x25D28c131461dE91d42495d0DacC603AF3f4Eb33',
-  avalanche: '0x32Be6537F7FD40A919158d94e1C15271bF9855cB'
+  // main: '0xF4404070f63a7E19Be0b1dd89A5fb88E12c0173A',
+  // polygon: '0x62AE18A40Fa81697Fc7d0fe58402af5cAF795e68',
+  // bsc: '0xc25CA21377C5bbC860F0bF48dF685D744A411489',
+  // fantom: '0x9f6898d5D36e2a4b9A0c6e58A0e86525475f58d7',
+  // avalanche: '0x32Be6537F7FD40A919158d94e1C15271bF9855cB'
 };
 
 
@@ -250,26 +248,6 @@ const hardhatConfig = {
         count: 50
       },
     },
-    goerli: {
-      url: 'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
-      gasPrice: 1500000007,
-      gas: 3000000,
-      timeout: 1000000,
-      accounts: {
-        mnemonic: process.env.ETH_MNEMONIC,
-        count: 50
-      },
-    },
-    ropsten: {
-      url: 'https://ropsten.infura.io/v3/f3ca4333bf4a41308d0a277ae1c09336',
-      gasPrice: 1500000007,
-      gas: 3000000,
-      timeout: 1000000,
-      accounts: {
-        mnemonic: process.env.ETH_MNEMONIC,
-        count: 50
-      },
-    }
   },
   gasReporter: {
     currency: 'USD',
@@ -361,210 +339,76 @@ const hardhatConfig = {
     },
     relay_1: {
       default: 10,
-      ropsten: '0xA54364663D6C0f0bC0E6D282580C82256aB79dfD',
-      goerli: '0xA54364663D6C0f0bC0E6D282580C82256aB79dfD',
-      main: '0xA54364663D6C0f0bC0E6D282580C82256aB79dfD',
-      polygon: '0xA54364663D6C0f0bC0E6D282580C82256aB79dfD',
-      bsc: '0xA54364663D6C0f0bC0E6D282580C82256aB79dfD',
-      fantom: '0xA54364663D6C0f0bC0E6D282580C82256aB79dfD'
+      main: '0xB7CEB630183EF502f6B850471f7FbAfdfb72cB29',
+      polygon: '0xB7CEB630183EF502f6B850471f7FbAfdfb72cB29',
+      bsc: '0xB7CEB630183EF502f6B850471f7FbAfdfb72cB29',
+      fantom: '0xB7CEB630183EF502f6B850471f7FbAfdfb72cB29',
+      avalanche: '0xB7CEB630183EF502f6B850471f7FbAfdfb72cB29',
     },
     relay_2: {
       default: 11,
       ropsten: '0x1bA36D24E58302A713FbBDAAFB82D7E5FB8A66BC',
-      goerli: '0x1bA36D24E58302A713FbBDAAFB82D7E5FB8A66BC',
-      main: '0x1bA36D24E58302A713FbBDAAFB82D7E5FB8A66BC',
-      polygon: '0x1bA36D24E58302A713FbBDAAFB82D7E5FB8A66BC',
-      bsc: '0x1bA36D24E58302A713FbBDAAFB82D7E5FB8A66BC',
-      fantom: '0x1bA36D24E58302A713FbBDAAFB82D7E5FB8A66BC'
+      main: '0x6a8A4CeCc1f4d7A60902DDD632B934e723E599c5',
+      polygon: '0x6a8A4CeCc1f4d7A60902DDD632B934e723E599c5',
+      bsc: '0x6a8A4CeCc1f4d7A60902DDD632B934e723E599c5',
+      fantom: '0x6a8A4CeCc1f4d7A60902DDD632B934e723E599c5',
+      avalanche: '0x6a8A4CeCc1f4d7A60902DDD632B934e723E599c5',
     },
     relay_3: {
       default: 12,
-      ropsten: '0xCF4814AcAf02DBe83E9BC2f02D98b879a5055E1f',
-      goerli: '0xCF4814AcAf02DBe83E9BC2f02D98b879a5055E1f',
-      main: '0xCF4814AcAf02DBe83E9BC2f02D98b879a5055E1f',
-      polygon: '0xCF4814AcAf02DBe83E9BC2f02D98b879a5055E1f',
-      bsc: '0xCF4814AcAf02DBe83E9BC2f02D98b879a5055E1f',
-      fantom: '0xCF4814AcAf02DBe83E9BC2f02D98b879a5055E1f'
+      main: '0x77B4F015C6660951712B4E467Fdecebbc331C466',
+      polygon: '0x77B4F015C6660951712B4E467Fdecebbc331C466',
+      bsc: '0x77B4F015C6660951712B4E467Fdecebbc331C466',
+      fantom: '0x77B4F015C6660951712B4E467Fdecebbc331C466',
+      avalanche: '0x77B4F015C6660951712B4E467Fdecebbc331C466',
     },
     relay_4: {
       default: 13,
-      ropsten: '0x7FB8Ba3b7Dc351eBDAbceA134D055F2512383500',
-      goerli: '0x7FB8Ba3b7Dc351eBDAbceA134D055F2512383500',
-      main: '0x7FB8Ba3b7Dc351eBDAbceA134D055F2512383500',
-      polygon: '0x7FB8Ba3b7Dc351eBDAbceA134D055F2512383500',
-      bsc: '0x7FB8Ba3b7Dc351eBDAbceA134D055F2512383500',
-      fantom: '0x7FB8Ba3b7Dc351eBDAbceA134D055F2512383500'
+      main: '0x38aB5e2652238EFba61e2427A3D51f3172CA0569',
+      polygon: '0x38aB5e2652238EFba61e2427A3D51f3172CA0569',
+      bsc: '0x38aB5e2652238EFba61e2427A3D51f3172CA0569',
+      fantom: '0x38aB5e2652238EFba61e2427A3D51f3172CA0569',
+      avalanche: '0x38aB5e2652238EFba61e2427A3D51f3172CA0569',
     },
     relay_5: {
       default: 14,
-      ropsten: '0x6A2070BC7DD5c592dA7b07Ab34041ABce9628427',
-      goerli: '0x6A2070BC7DD5c592dA7b07Ab34041ABce9628427',
-      main: '0x6A2070BC7DD5c592dA7b07Ab34041ABce9628427',
-      polygon: '0x6A2070BC7DD5c592dA7b07Ab34041ABce9628427',
-      bsc: '0x6A2070BC7DD5c592dA7b07Ab34041ABce9628427',
-      fantom: '0x6A2070BC7DD5c592dA7b07Ab34041ABce9628427'
+      main: '0xC834Dc237193368D67C9efc61b6a86516EA110aa',
+      polygon: '0xC834Dc237193368D67C9efc61b6a86516EA110aa',
+      bsc: '0xC834Dc237193368D67C9efc61b6a86516EA110aa',
+      fantom: '0xC834Dc237193368D67C9efc61b6a86516EA110aa',
+      avalanche: '0xC834Dc237193368D67C9efc61b6a86516EA110aa',
     },
     relay_6: {
       default: 15,
-      ropsten: '0xE9D34fB58964c10027CB6CA070eb94efE301091F',
-      goerli: '0xE9D34fB58964c10027CB6CA070eb94efE301091F',
-      main: '0xE9D34fB58964c10027CB6CA070eb94efE301091F',
-      polygon: '0xE9D34fB58964c10027CB6CA070eb94efE301091F',
-      bsc: '0xE9D34fB58964c10027CB6CA070eb94efE301091F',
-      fantom: '0xE9D34fB58964c10027CB6CA070eb94efE301091F'
+      main: '0x66CB9111D32999B23eCB49EA1ae21550ccC82931',
+      polygon: '0x66CB9111D32999B23eCB49EA1ae21550ccC82931',
+      bsc: '0x66CB9111D32999B23eCB49EA1ae21550ccC82931',
+      fantom: '0x66CB9111D32999B23eCB49EA1ae21550ccC82931',
+      avalanche: '0x66CB9111D32999B23eCB49EA1ae21550ccC82931',
     },
     relay_7: {
       default: 16,
-      ropsten: '0xB978AD11dA94aD99D9a17b2C5a2de71aaD2c8AC8',
-      goerli: '0xB978AD11dA94aD99D9a17b2C5a2de71aaD2c8AC8',
-      main: '0xB978AD11dA94aD99D9a17b2C5a2de71aaD2c8AC8',
-      polygon: '0xB978AD11dA94aD99D9a17b2C5a2de71aaD2c8AC8',
-      bsc: '0xB978AD11dA94aD99D9a17b2C5a2de71aaD2c8AC8',
-      fantom: '0xB978AD11dA94aD99D9a17b2C5a2de71aaD2c8AC8'
+      main: '0xEdDCBC7cC88ff1554e80C935Da5f378a68a259d5',
+      polygon: '0xEdDCBC7cC88ff1554e80C935Da5f378a68a259d5',
+      bsc: '0xEdDCBC7cC88ff1554e80C935Da5f378a68a259d5',
+      fantom: '0xEdDCBC7cC88ff1554e80C935Da5f378a68a259d5',
+      avalanche: '0xEdDCBC7cC88ff1554e80C935Da5f378a68a259d5',
     },
     relay_8: {
       default: 17,
-      ropsten: '0x4cF29aD4FAeB5191003Bafced4457091423f892B',
-      goerli: '0x4cF29aD4FAeB5191003Bafced4457091423f892B',
-      main: '0x4cF29aD4FAeB5191003Bafced4457091423f892B',
-      polygon: '0x4cF29aD4FAeB5191003Bafced4457091423f892B',
-      bsc: '0x4cF29aD4FAeB5191003Bafced4457091423f892B',
-      fantom: '0x4cF29aD4FAeB5191003Bafced4457091423f892B'
+      main: '0xf575f080c22ad4facd0297af2123a6c71a5d4eb6',
+      polygon: '0xf575f080c22ad4facd0297af2123a6c71a5d4eb6',
+      bsc: '0xf575f080c22ad4facd0297af2123a6c71a5d4eb6',
+      fantom: '0xf575f080c22ad4facd0297af2123a6c71a5d4eb6',
+      avalanche: '0xf575f080c22ad4facd0297af2123a6c71a5d4eb6',
     },
     relay_9: {
       default: 18,
-      ropsten: '0x3Eb41a0198FCB8fc68097ebadE34C61847e8C03C',
-      goerli: '0x3Eb41a0198FCB8fc68097ebadE34C61847e8C03C',
-      main: '0x3Eb41a0198FCB8fc68097ebadE34C61847e8C03C',
-      polygon: '0x3Eb41a0198FCB8fc68097ebadE34C61847e8C03C',
-      bsc: '0x3Eb41a0198FCB8fc68097ebadE34C61847e8C03C',
-      fantom: '0x3Eb41a0198FCB8fc68097ebadE34C61847e8C03C'
-    },
-    relay_10: {
-      default: 19,
-      ropsten: '0x16532B04d536fdC7e2aFE75Dd95B65951dEE820a',
-      goerli: '0x16532B04d536fdC7e2aFE75Dd95B65951dEE820a',
-      main: '0x16532B04d536fdC7e2aFE75Dd95B65951dEE820a',
-      polygon: '0x16532B04d536fdC7e2aFE75Dd95B65951dEE820a',
-      bsc: '0x16532B04d536fdC7e2aFE75Dd95B65951dEE820a',
-      fantom: '0x16532B04d536fdC7e2aFE75Dd95B65951dEE820a'
-    },
-    relay_11: {
-      default: 20,
-      ropsten: '0x70a0dA19e5Ff5feb9E55Ac54b9faf433287BCc76',
-      goerli: '0x70a0dA19e5Ff5feb9E55Ac54b9faf433287BCc76',
-      main: '0x70a0dA19e5Ff5feb9E55Ac54b9faf433287BCc76',
-      polygon: '0x70a0dA19e5Ff5feb9E55Ac54b9faf433287BCc76',
-      bsc: '0x70a0dA19e5Ff5feb9E55Ac54b9faf433287BCc76',
-      fantom: '0x70a0dA19e5Ff5feb9E55Ac54b9faf433287BCc76'
-    },
-    relay_12: {
-      default: 21,
-      ropsten: '0xC1879B6720beFfbE0934a51c3ea77460A368C781',
-      goerli: '0xC1879B6720beFfbE0934a51c3ea77460A368C781',
-      main: '0xC1879B6720beFfbE0934a51c3ea77460A368C781',
-      polygon: '0xC1879B6720beFfbE0934a51c3ea77460A368C781',
-      bsc: '0xC1879B6720beFfbE0934a51c3ea77460A368C781',
-      fantom: '0xC1879B6720beFfbE0934a51c3ea77460A368C781'
-    },
-    relay_13: {
-      default: 22,
-      ropsten: '0x882Cecc2632e19d46feC8aED5FeC2f2de88FB56A',
-      goerli: '0x882Cecc2632e19d46feC8aED5FeC2f2de88FB56A',
-      main: '0x882Cecc2632e19d46feC8aED5FeC2f2de88FB56A',
-      polygon: '0x882Cecc2632e19d46feC8aED5FeC2f2de88FB56A',
-      bsc: '0x882Cecc2632e19d46feC8aED5FeC2f2de88FB56A',
-      fantom: '0x882Cecc2632e19d46feC8aED5FeC2f2de88FB56A'
-    },
-    relay_14: {
-      default: 23,
-      ropsten: '0xC5023CE9F22cD7d545bB9e50D1C867290312d761',
-      goerli: '0xC5023CE9F22cD7d545bB9e50D1C867290312d761',
-      main: '0xC5023CE9F22cD7d545bB9e50D1C867290312d761',
-      polygon: '0xC5023CE9F22cD7d545bB9e50D1C867290312d761',
-      bsc: '0xC5023CE9F22cD7d545bB9e50D1C867290312d761',
-      fantom: '0xC5023CE9F22cD7d545bB9e50D1C867290312d761'
-    },
-    relay_15: {
-      default: 24,
-      ropsten: '0xC97E42a0ACB49273688b867AFb2d5bbe989cABE0',
-      goerli: '0xC97E42a0ACB49273688b867AFb2d5bbe989cABE0',
-      main: '0xC97E42a0ACB49273688b867AFb2d5bbe989cABE0',
-      polygon: '0xC97E42a0ACB49273688b867AFb2d5bbe989cABE0',
-      bsc: '0xC97E42a0ACB49273688b867AFb2d5bbe989cABE0',
-      fantom: '0xC97E42a0ACB49273688b867AFb2d5bbe989cABE0'
-    },
-    relay_16: {
-      default: 25,
-      ropsten: '0xF81Ad5dF888140915aaa2d636A948F5f32ae7113',
-      goerli: '0xF81Ad5dF888140915aaa2d636A948F5f32ae7113',
-      main: '0xF81Ad5dF888140915aaa2d636A948F5f32ae7113',
-      polygon: '0xF81Ad5dF888140915aaa2d636A948F5f32ae7113',
-      bsc: '0xF81Ad5dF888140915aaa2d636A948F5f32ae7113',
-      fantom: '0xF81Ad5dF888140915aaa2d636A948F5f32ae7113'
-    },
-    relay_17: {
-      default: 26,
-      ropsten: '0x1a88767a059946C9Ed07D5e3FCccA7D46D9F8bF0',
-      goerli: '0x1a88767a059946C9Ed07D5e3FCccA7D46D9F8bF0',
-      main: '0x1a88767a059946C9Ed07D5e3FCccA7D46D9F8bF0',
-      polygon: '0x1a88767a059946C9Ed07D5e3FCccA7D46D9F8bF0',
-      bsc: '0x1a88767a059946C9Ed07D5e3FCccA7D46D9F8bF0',
-      fantom: '0x1a88767a059946C9Ed07D5e3FCccA7D46D9F8bF0'
-    },
-    relay_18: {
-      default: 27,
-      ropsten: '0xCC9f29245465C7941707cc206568BFd9Ce3ECf49',
-      goerli: '0xCC9f29245465C7941707cc206568BFd9Ce3ECf49',
-      main: '0xCC9f29245465C7941707cc206568BFd9Ce3ECf49',
-      polygon: '0xCC9f29245465C7941707cc206568BFd9Ce3ECf49',
-      bsc: '0xCC9f29245465C7941707cc206568BFd9Ce3ECf49',
-      fantom: '0xCC9f29245465C7941707cc206568BFd9Ce3ECf49'
-    },
-    relay_19: {
-      default: 28,
-      ropsten: '0x4cb2f1140F36850161231Dcf5662661c53489550',
-      goerli: '0x4cb2f1140F36850161231Dcf5662661c53489550',
-      main: '0x4cb2f1140F36850161231Dcf5662661c53489550',
-      polygon: '0x4cb2f1140F36850161231Dcf5662661c53489550',
-      bsc: '0x4cb2f1140F36850161231Dcf5662661c53489550',
-      fantom: '0x4cb2f1140F36850161231Dcf5662661c53489550'
-    },
-    relay_20: {
-      default: 29,
-      ropsten: '0xEc1218E93Aaa54d649f3a6EB90443b6139bb9FD4',
-      goerli: '0xEc1218E93Aaa54d649f3a6EB90443b6139bb9FD4',
-      main: '0xEc1218E93Aaa54d649f3a6EB90443b6139bb9FD4',
-      polygon: '0xEc1218E93Aaa54d649f3a6EB90443b6139bb9FD4',
-      bsc: '0xEc1218E93Aaa54d649f3a6EB90443b6139bb9FD4',
-      fantom: '0xEc1218E93Aaa54d649f3a6EB90443b6139bb9FD4'
-    },
-    relay_21: {
-      default: 30,
-      ropsten: '0xa89145c6a87BB6644071843F75b9c0ba74C2EcFb',
-      goerli: '0xa89145c6a87BB6644071843F75b9c0ba74C2EcFb',
-      main: '0xa89145c6a87BB6644071843F75b9c0ba74C2EcFb',
-      polygon: '0xa89145c6a87BB6644071843F75b9c0ba74C2EcFb',
-      bsc: '0xa89145c6a87BB6644071843F75b9c0ba74C2EcFb',
-      fantom: '0xa89145c6a87BB6644071843F75b9c0ba74C2EcFb'
-    },
-    relay_22: {
-      default: 31,
-      ropsten: '0x59046DdC0CcA9CAceE1d1ed6362A045faF33806D',
-      goerli: '0x59046DdC0CcA9CAceE1d1ed6362A045faF33806D',
-      main: '0x59046DdC0CcA9CAceE1d1ed6362A045faF33806D',
-      polygon: '0x59046DdC0CcA9CAceE1d1ed6362A045faF33806D',
-      bsc: '0x59046DdC0CcA9CAceE1d1ed6362A045faF33806D',
-      fantom: '0x59046DdC0CcA9CAceE1d1ed6362A045faF33806D'
-    },
-    relay_23: {
-      default: 32,
-      ropsten: '0xAfA0109C95bffaBB215A0eA378EDc96562E4B783',
-      goerli: '0xAfA0109C95bffaBB215A0eA378EDc96562E4B783',
-      main: '0xAfA0109C95bffaBB215A0eA378EDc96562E4B783',
-      polygon: '0xAfA0109C95bffaBB215A0eA378EDc96562E4B783',
-      bsc: '0xAfA0109C95bffaBB215A0eA378EDc96562E4B783',
-      fantom: '0xAfA0109C95bffaBB215A0eA378EDc96562E4B783'
+      main: '0xE02826355Bbae81D367B1479CA2fdb3530A83d82',
+      polygon: '0xE02826355Bbae81D367B1479CA2fdb3530A83d82',
+      bsc: '0xE02826355Bbae81D367B1479CA2fdb3530A83d82',
+      fantom: '0xE02826355Bbae81D367B1479CA2fdb3530A83d82',
+      avalanche: '0xE02826355Bbae81D367B1479CA2fdb3530A83d82',
     },
     withdrawGuardian: {
       default: 23,

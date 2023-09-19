@@ -42,8 +42,13 @@ contract MultiVaultFacetSettings is
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         s.bridge = _bridge;
+        emit UpdateBridge(s.bridge); 
+
         s.governance = _governance;
+        emit UpdateGovernance(s.governance);
+        
         s.weth = _weth;
+        emit UpdateWeth(s.weth);
     }
 
     /// @notice Rewards address
@@ -140,6 +145,8 @@ contract MultiVaultFacetSettings is
         require(daily >= s.withdrawalLimits_[token].undeclared);
 
         s.withdrawalLimits_[token].daily = daily;
+
+        emit UpdateDailyWithdrawalLimits(token, daily);
     }
 
     /// @notice Enable or upgrade withdrawal limits for specific token
@@ -155,6 +162,8 @@ contract MultiVaultFacetSettings is
         require(s.withdrawalLimits_[token].daily >= undeclared);
 
         s.withdrawalLimits_[token].undeclared = undeclared;
+
+        emit UpdateUndeclaredWithdrawalLimits(token, undeclared);
     }
 
     /// @notice Disable withdrawal limits for specific token
@@ -166,6 +175,8 @@ contract MultiVaultFacetSettings is
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         s.withdrawalLimits_[token].enabled = false;
+
+        emit UpdateWithdrawalLimitStatus(token, false);
     }
 
     /// @notice Enable withdrawal limits for specific token
@@ -177,6 +188,8 @@ contract MultiVaultFacetSettings is
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         s.withdrawalLimits_[token].enabled = true;
+
+        emit UpdateWithdrawalLimitStatus(token, true);
     }
 
     /// @notice Nominate new address to use as a governance.
@@ -274,6 +287,8 @@ contract MultiVaultFacetSettings is
         }
 
         s.emergencyShutdown = active;
+
+        emit EmergencyShutdown(s.emergencyShutdown);
     }
 
     function setCustomNative(
@@ -287,6 +302,8 @@ contract MultiVaultFacetSettings is
         address native = _getNativeToken(token);
 
         s.tokens_[native].custom = custom;
+
+        emit UpdateCustom(token.wid, token.addr, custom);
     }
 
     function setGasDonor(
@@ -295,6 +312,8 @@ contract MultiVaultFacetSettings is
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         s.gasDonor = _gasDonor;
+
+        emit UpdateGasDonor(s.gasDonor);
     }
 
     function setWeth(

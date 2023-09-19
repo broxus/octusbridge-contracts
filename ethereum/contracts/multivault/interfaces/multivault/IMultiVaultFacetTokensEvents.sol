@@ -3,8 +3,9 @@ pragma solidity 0.8.0;
 
 
 interface IMultiVaultFacetTokensEvents {
-    event BlacklistTokenAdded(address token);
-    event BlacklistTokenRemoved(address token);
+    event UpdateTokenPrefix(address token, string name_prefix, string symbol_prefix);
+    event UpdateTokenBlacklist(address token, bool status);
+    event UpdateTokenDepositLimit(address token, uint limit);
 
     event TokenActivated(
         address token,
