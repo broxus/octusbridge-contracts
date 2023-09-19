@@ -1,4 +1,4 @@
-const deterministicDeployment = ['multivault-3'];
+const deterministicDeployment = ['multivault-venom-main'];
 const _ = require('lodash');
 
 

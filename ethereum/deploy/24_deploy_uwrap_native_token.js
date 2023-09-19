@@ -20,7 +20,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     await deployments.deploy('UnwrapNativeToken', {
         from: deployer,
         log: true,
-        deterministicDeployment: '0x001122',
+        deterministicDeployment: 'multivault-venom-main',
         proxy:{
             proxyContract: 'EIP173ProxyWithReceive',
         }

@@ -200,7 +200,7 @@ const hardhatConfig = {
     },
     main: {
       url: 'https://mainnet.infura.io/v3/f3ca4333bf4a41308d0a277ae1c09336',
-      gasPrice: 50000000000, // 100 gwei
+      gasPrice: 30000000000, // 100 gwei
       gas: 3000000,
       timeout: 1000000,
       accounts: {
