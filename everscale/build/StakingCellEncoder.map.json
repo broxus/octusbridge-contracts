@@ -1,0 +1,1934 @@
+{
+  "map": {
+    "3083f553cd19f64a93d795e4a3275c09054202678c537db0717bc0fbefa6f328": {
+      "0": {
+        "filename": "StakingCellEncoder.code",
+        "line": 300
+      },
+      "8": {
+        "filename": "StakingCellEncoder.code",
+        "line": 301
+      },
+      "24": {
+        "filename": "StakingCellEncoder.code",
+        "line": 302
+      },
+      "48": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 34
+      },
+      "64": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 34
+      },
+      "80": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 34
+      },
+      "96": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 34
+      },
+      "104": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 34
+      },
+      "120": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 34
+      },
+      "128": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 34
+      },
+      "144": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 34
+      },
+      "152": {
+        "filename": "StakingCellEncoder.code",
+        "line": 313
+      },
+      "168": {
+        "filename": "StakingCellEncoder.code",
+        "line": 316
+      },
+      "176": {
+        "filename": "StakingCellEncoder.code",
+        "line": 317
+      },
+      "192": {
+        "filename": "StakingCellEncoder.code",
+        "line": 318
+      },
+      "200": {
+        "filename": "StakingCellEncoder.code",
+        "line": 319
+      },
+      "208": {
+        "filename": "StakingCellEncoder.code",
+        "line": 320
+      },
+      "224": {
+        "filename": "StakingCellEncoder.code",
+        "line": 321
+      },
+      "240": {
+        "filename": "StakingCellEncoder.code",
+        "line": 322
+      },
+      "248": {
+        "filename": "StakingCellEncoder.code",
+        "line": 323
+      },
+      "256": {
+        "filename": "StakingCellEncoder.code",
+        "line": 324
+      },
+      "264": {
+        "filename": "StakingCellEncoder.code",
+        "line": 325
+      },
+      "288": {
+        "filename": "StakingCellEncoder.code",
+        "line": 326
+      },
+      "296": {
+        "filename": "StakingCellEncoder.code",
+        "line": 327
+      },
+      "344": {
+        "filename": "StakingCellEncoder.code",
+        "line": 328
+      },
+      "368": {
+        "filename": "StakingCellEncoder.code",
+        "line": 329
+      },
+      "376": {
+        "filename": "StakingCellEncoder.code",
+        "line": 330
+      },
+      "384": {
+        "filename": "StakingCellEncoder.code",
+        "line": 331
+      },
+      "392": {
+        "filename": "StakingCellEncoder.code",
+        "line": 332
+      },
+      "408": {
+        "filename": "StakingCellEncoder.code",
+        "line": 334
+      },
+      "416": {
+        "filename": "StakingCellEncoder.code",
+        "line": 335
+      },
+      "424": {
+        "filename": "StakingCellEncoder.code",
+        "line": 337
+      },
+      "432": {
+        "filename": "StakingCellEncoder.code",
+        "line": 338
+      },
+      "448": {
+        "filename": "StakingCellEncoder.code",
+        "line": 341
+      }
+    },
+    "35271e5c3a95e60ae22b1bce332fdc24b321788e69a6ba7aaf2d640438325d54": {
+      "0": {
+        "filename": "StakingCellEncoder.code",
+        "line": 556
+      },
+      "16": {
+        "filename": "StakingCellEncoder.code",
+        "line": 557
+      },
+      "24": {
+        "filename": "StakingCellEncoder.code",
+        "line": 558
+      },
+      "40": {
+        "filename": "StakingCellEncoder.code",
+        "line": 559
+      },
+      "56": {
+        "filename": "StakingCellEncoder.code",
+        "line": 560
+      },
+      "72": {
+        "filename": "StakingCellEncoder.code",
+        "line": 561
+      },
+      "80": {
+        "filename": "StakingCellEncoder.code",
+        "line": 562
+      },
+      "88": {
+        "filename": "StakingCellEncoder.code",
+        "line": 563
+      },
+      "112": {
+        "filename": "StakingCellEncoder.code",
+        "line": 564
+      },
+      "136": {
+        "filename": "StakingCellEncoder.code",
+        "line": 565
+      },
+      "144": {
+        "filename": "StakingCellEncoder.code",
+        "line": 566
+      },
+      "152": {
+        "filename": "StakingCellEncoder.code",
+        "line": 567
+      },
+      "168": {
+        "filename": "StakingCellEncoder.code",
+        "line": 568
+      },
+      "184": {
+        "filename": "StakingCellEncoder.code",
+        "line": 572
+      },
+      "192": {
+        "filename": "StakingCellEncoder.code",
+        "line": 573
+      },
+      "216": {
+        "filename": "StakingCellEncoder.code",
+        "line": 574
+      },
+      "232": {
+        "filename": "StakingCellEncoder.code",
+        "line": 575
+      },
+      "240": {
+        "filename": "StakingCellEncoder.code",
+        "line": 576
+      },
+      "256": {
+        "filename": "StakingCellEncoder.code",
+        "line": 580
+      },
+      "264": {
+        "filename": "StakingCellEncoder.code",
+        "line": 581
+      },
+      "280": {
+        "filename": "StakingCellEncoder.code",
+        "line": 584
+      }
+    },
+    "42aa676d16d19f95a85a3a8f6b8578c96167a12005f5a454dcdc62d5181d3cf4": {
+      "0": {
+        "filename": "StakingCellEncoder.code",
+        "line": 4
+      },
+      "8": {
+        "filename": "StakingCellEncoder.code",
+        "line": 5
+      },
+      "24": {
+        "filename": "StakingCellEncoder.code",
+        "line": 6
+      },
+      "32": {
+        "filename": "StakingCellEncoder.code",
+        "line": 7
+      },
+      "48": {
+        "filename": "StakingCellEncoder.code",
+        "line": 10
+      },
+      "64": {
+        "filename": "StakingCellEncoder.code",
+        "line": 11
+      },
+      "80": {
+        "filename": "StakingCellEncoder.code",
+        "line": 12
+      },
+      "88": {
+        "filename": "StakingCellEncoder.code",
+        "line": 13
+      },
+      "104": {
+        "filename": "StakingCellEncoder.code",
+        "line": 14
+      },
+      "120": {
+        "filename": "StakingCellEncoder.code",
+        "line": 17
+      }
+    },
+    "46a76f605f3dc44dba691d695848db95072d5d3988b49c5ca6260093c37da8ed": {
+      "0": {
+        "filename": "StakingCellEncoder.code",
+        "line": 625
+      },
+      "8": {
+        "filename": "StakingCellEncoder.code",
+        "line": 626
+      },
+      "56": {
+        "filename": "StakingCellEncoder.code",
+        "line": 627
+      },
+      "64": {
+        "filename": "StakingCellEncoder.code",
+        "line": 628
+      },
+      "80": {
+        "filename": "StakingCellEncoder.code",
+        "line": 631
+      },
+      "88": {
+        "filename": "StakingCellEncoder.code",
+        "line": 632
+      },
+      "136": {
+        "filename": "StakingCellEncoder.code",
+        "line": 633
+      },
+      "144": {
+        "filename": "StakingCellEncoder.code",
+        "line": 634
+      },
+      "160": {
+        "filename": "StakingCellEncoder.code",
+        "line": 637
+      },
+      "168": {
+        "filename": "StakingCellEncoder.code",
+        "line": 638
+      },
+      "216": {
+        "filename": "StakingCellEncoder.code",
+        "line": 639
+      },
+      "224": {
+        "filename": "StakingCellEncoder.code",
+        "line": 640
+      },
+      "240": {
+        "filename": "StakingCellEncoder.code",
+        "line": 643
+      },
+      "248": {
+        "filename": "StakingCellEncoder.code",
+        "line": 644
+      },
+      "296": {
+        "filename": "StakingCellEncoder.code",
+        "line": 645
+      },
+      "304": {
+        "filename": "StakingCellEncoder.code",
+        "line": 646
+      }
+    },
+    "46eccc46b970355fe47f0ea3ee5c8150de64ba262546e980d8dceb482b3550c9": {
+      "0": {
+        "filename": "StakingCellEncoder.code",
+        "line": 157
+      },
+      "8": {
+        "filename": "StakingCellEncoder.code",
+        "line": 158
+      },
+      "24": {
+        "filename": "StakingCellEncoder.code",
+        "line": 159
+      },
+      "48": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 18
+      },
+      "56": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 18
+      },
+      "64": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 18
+      },
+      "80": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 18
+      },
+      "96": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 18
+      },
+      "104": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 18
+      },
+      "112": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 18
+      },
+      "120": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 18
+      },
+      "128": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 18
+      },
+      "144": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 18
+      },
+      "160": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 18
+      },
+      "168": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 18
+      },
+      "184": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 18
+      },
+      "192": {
+        "filename": "StakingCellEncoder.code",
+        "line": 177
+      },
+      "208": {
+        "filename": "StakingCellEncoder.code",
+        "line": 180
+      },
+      "216": {
+        "filename": "StakingCellEncoder.code",
+        "line": 181
+      },
+      "232": {
+        "filename": "StakingCellEncoder.code",
+        "line": 182
+      },
+      "240": {
+        "filename": "StakingCellEncoder.code",
+        "line": 183
+      },
+      "248": {
+        "filename": "StakingCellEncoder.code",
+        "line": 184
+      },
+      "264": {
+        "filename": "StakingCellEncoder.code",
+        "line": 185
+      },
+      "280": {
+        "filename": "StakingCellEncoder.code",
+        "line": 186
+      },
+      "288": {
+        "filename": "StakingCellEncoder.code",
+        "line": 187
+      },
+      "296": {
+        "filename": "StakingCellEncoder.code",
+        "line": 188
+      },
+      "304": {
+        "filename": "StakingCellEncoder.code",
+        "line": 189
+      },
+      "328": {
+        "filename": "StakingCellEncoder.code",
+        "line": 190
+      },
+      "336": {
+        "filename": "StakingCellEncoder.code",
+        "line": 191
+      },
+      "384": {
+        "filename": "StakingCellEncoder.code",
+        "line": 192
+      },
+      "408": {
+        "filename": "StakingCellEncoder.code",
+        "line": 193
+      },
+      "416": {
+        "filename": "StakingCellEncoder.code",
+        "line": 194
+      },
+      "424": {
+        "filename": "StakingCellEncoder.code",
+        "line": 195
+      },
+      "432": {
+        "filename": "StakingCellEncoder.code",
+        "line": 196
+      },
+      "448": {
+        "filename": "StakingCellEncoder.code",
+        "line": 198
+      },
+      "456": {
+        "filename": "StakingCellEncoder.code",
+        "line": 199
+      },
+      "464": {
+        "filename": "StakingCellEncoder.code",
+        "line": 201
+      },
+      "472": {
+        "filename": "StakingCellEncoder.code",
+        "line": 202
+      },
+      "488": {
+        "filename": "StakingCellEncoder.code",
+        "line": 205
+      }
+    },
+    "51e349e5c6cd7d3a2f8494f83296b3c8c2ddcf4a1277f3dfd5e6f641f1b52fd1": {
+      "0": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 42
+      },
+      "8": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 42
+      },
+      "16": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 43
+      },
+      "24": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 43
+      },
+      "32": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 43
+      },
+      "48": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 43
+      },
+      "64": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 43
+      },
+      "88": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 43
+      },
+      "96": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 43
+      },
+      "104": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 43
+      }
+    },
+    "5d41676d051e17840660a491c7cb5147ef6d9a7af38e692362b71b5fc6f4834c": {
+      "0": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 36
+      },
+      "8": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 36
+      },
+      "16": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 36
+      },
+      "32": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 37
+      },
+      "40": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 37
+      },
+      "56": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 37
+      },
+      "64": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 37
+      },
+      "80": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 37
+      },
+      "96": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 38
+      },
+      "112": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 39
+      }
+    },
+    "60488e96384d55db5809d3be340ce676908c99e02e0f6a89a307f1376c1ceb17": {
+      "0": {
+        "filename": "StakingCellEncoder.code",
+        "line": 530
+      },
+      "16": {
+        "filename": "StakingCellEncoder.code",
+        "line": 531
+      },
+      "32": {
+        "filename": "StakingCellEncoder.code",
+        "line": 532
+      },
+      "40": {
+        "filename": "StakingCellEncoder.code",
+        "line": 533
+      },
+      "56": {
+        "filename": "StakingCellEncoder.code",
+        "line": 534
+      },
+      "72": {
+        "filename": "StakingCellEncoder.code",
+        "line": 535
+      },
+      "88": {
+        "filename": "StakingCellEncoder.code",
+        "line": 536
+      },
+      "96": {
+        "filename": "StakingCellEncoder.code",
+        "line": 537
+      }
+    },
+    "71913dbd3c6a04b26f3b2c20cd21fffd435ca749ad092f6634f3ea40953045f8": {
+      "0": {
+        "filename": "StakingCellEncoder.code",
+        "line": 226
+      },
+      "8": {
+        "filename": "StakingCellEncoder.code",
+        "line": 227
+      },
+      "24": {
+        "filename": "StakingCellEncoder.code",
+        "line": 228
+      },
+      "48": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 26
+      },
+      "56": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 26
+      },
+      "64": {
+        "filename": "StakingCellEncoder.code",
+        "line": 233
+      },
+      "80": {
+        "filename": "StakingCellEncoder.code",
+        "line": 236
+      },
+      "88": {
+        "filename": "StakingCellEncoder.code",
+        "line": 237
+      },
+      "104": {
+        "filename": "StakingCellEncoder.code",
+        "line": 238
+      },
+      "112": {
+        "filename": "StakingCellEncoder.code",
+        "line": 239
+      },
+      "120": {
+        "filename": "StakingCellEncoder.code",
+        "line": 240
+      },
+      "136": {
+        "filename": "StakingCellEncoder.code",
+        "line": 241
+      },
+      "152": {
+        "filename": "StakingCellEncoder.code",
+        "line": 242
+      },
+      "160": {
+        "filename": "StakingCellEncoder.code",
+        "line": 243
+      },
+      "168": {
+        "filename": "StakingCellEncoder.code",
+        "line": 244
+      },
+      "176": {
+        "filename": "StakingCellEncoder.code",
+        "line": 245
+      },
+      "200": {
+        "filename": "StakingCellEncoder.code",
+        "line": 246
+      },
+      "208": {
+        "filename": "StakingCellEncoder.code",
+        "line": 247
+      },
+      "224": {
+        "filename": "StakingCellEncoder.code",
+        "line": 248
+      },
+      "240": {
+        "filename": "StakingCellEncoder.code",
+        "line": 249
+      },
+      "256": {
+        "filename": "StakingCellEncoder.code",
+        "line": 250
+      },
+      "304": {
+        "filename": "StakingCellEncoder.code",
+        "line": 251
+      },
+      "320": {
+        "filename": "StakingCellEncoder.code",
+        "line": 252
+      },
+      "328": {
+        "filename": "StakingCellEncoder.code",
+        "line": 253
+      },
+      "344": {
+        "filename": "StakingCellEncoder.code",
+        "line": 254
+      },
+      "352": {
+        "filename": "StakingCellEncoder.code",
+        "line": 255
+      },
+      "368": {
+        "filename": "StakingCellEncoder.code",
+        "line": 256
+      },
+      "384": {
+        "filename": "StakingCellEncoder.code",
+        "line": 257
+      },
+      "400": {
+        "filename": "StakingCellEncoder.code",
+        "line": 258
+      },
+      "408": {
+        "filename": "StakingCellEncoder.code",
+        "line": 259
+      },
+      "416": {
+        "filename": "StakingCellEncoder.code",
+        "line": 260
+      },
+      "432": {
+        "filename": "StakingCellEncoder.code",
+        "line": 262
+      },
+      "440": {
+        "filename": "StakingCellEncoder.code",
+        "line": 263
+      },
+      "456": {
+        "filename": "StakingCellEncoder.code",
+        "line": 265
+      },
+      "464": {
+        "filename": "StakingCellEncoder.code",
+        "line": 266
+      },
+      "480": {
+        "filename": "StakingCellEncoder.code",
+        "line": 269
+      }
+    },
+    "73867e37ec1ffb9ecb087a37d71892215b0b805a73c127da219a28729084e2e0": {
+      "0": {
+        "filename": "<internal-selector>",
+        "line": 1
+      },
+      "24": {
+        "filename": "<internal-selector>",
+        "line": 2
+      }
+    },
+    "7c79f49a4004fc927344c57008cac8e78f0a3ece7507a5e980f86d39934dc476": {
+      "0": {
+        "filename": "StakingCellEncoder.code",
+        "line": 654
+      },
+      "8": {
+        "filename": "StakingCellEncoder.code",
+        "line": 655
+      },
+      "56": {
+        "filename": "StakingCellEncoder.code",
+        "line": 656
+      },
+      "64": {
+        "filename": "StakingCellEncoder.code",
+        "line": 657
+      },
+      "80": {
+        "filename": "StakingCellEncoder.code",
+        "line": 660
+      },
+      "88": {
+        "filename": "StakingCellEncoder.code",
+        "line": 661
+      },
+      "136": {
+        "filename": "StakingCellEncoder.code",
+        "line": 662
+      },
+      "144": {
+        "filename": "StakingCellEncoder.code",
+        "line": 663
+      },
+      "160": {
+        "filename": "StakingCellEncoder.code",
+        "line": 666
+      },
+      "168": {
+        "filename": "StakingCellEncoder.code",
+        "line": 667
+      },
+      "216": {
+        "filename": "StakingCellEncoder.code",
+        "line": 668
+      },
+      "224": {
+        "filename": "StakingCellEncoder.code",
+        "line": 669
+      },
+      "240": {
+        "filename": "StakingCellEncoder.code",
+        "line": 672
+      },
+      "248": {
+        "filename": "StakingCellEncoder.code",
+        "line": 673
+      },
+      "296": {
+        "filename": "StakingCellEncoder.code",
+        "line": 674
+      },
+      "304": {
+        "filename": "StakingCellEncoder.code",
+        "line": 675
+      }
+    },
+    "81a155e74093298801009ebc5ff98ec875d4d5a99ad8a8feb004fa766aece529": {
+      "0": {
+        "filename": "<entry-selector>",
+        "line": 1
+      },
+      "8": {
+        "filename": "<entry-selector>",
+        "line": 2
+      },
+      "24": {
+        "filename": "<entry-selector>",
+        "line": 3
+      },
+      "32": {
+        "filename": "<entry-selector>",
+        "line": 4
+      },
+      "48": {
+        "filename": "<entry-selector>",
+        "line": 5
+      },
+      "56": {
+        "filename": "<entry-selector>",
+        "line": 6
+      },
+      "72": {
+        "filename": "<entry-selector>",
+        "line": 7
+      },
+      "88": {
+        "filename": "<entry-selector>",
+        "line": 8
+      },
+      "96": {
+        "filename": "<entry-selector>",
+        "line": 9
+      },
+      "112": {
+        "filename": "<entry-selector>",
+        "line": 10
+      },
+      "128": {
+        "filename": "<entry-selector>",
+        "line": 11
+      }
+    },
+    "8edc6fa3add9a6a345faba55ea87bcb488d1d87cf4223ff004764afd4300e06f": {
+      "0": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 49
+      },
+      "8": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 49
+      },
+      "16": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 49
+      },
+      "32": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 50
+      },
+      "40": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 50
+      },
+      "56": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 51
+      },
+      "72": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 52
+      }
+    },
+    "97f32aadfbb72d1cbb7c9ff3e158e442244247436c8fd73f63db9e03f47e4f0c": {
+      "0": {
+        "filename": "StakingCellEncoder.code",
+        "line": 621
+      },
+      "8": {
+        "filename": "StakingCellEncoder.code",
+        "line": 622
+      },
+      "56": {
+        "filename": "StakingCellEncoder.code",
+        "line": 623
+      },
+      "64": {
+        "filename": "StakingCellEncoder.code",
+        "line": 624
+      },
+      "80": {
+        "filename": "StakingCellEncoder.code",
+        "line": 650
+      },
+      "88": {
+        "filename": "StakingCellEncoder.code",
+        "line": 651
+      },
+      "136": {
+        "filename": "StakingCellEncoder.code",
+        "line": 652
+      },
+      "144": {
+        "filename": "StakingCellEncoder.code",
+        "line": 653
+      }
+    },
+    "a73ae2cbe5fe060533b100873d6290e61c4ae79f82a648952e2188e8493d4622": {
+      "0": {
+        "filename": "StakingCellEncoder.code",
+        "line": 428
+      },
+      "8": {
+        "filename": "StakingCellEncoder.code",
+        "line": 429
+      },
+      "24": {
+        "filename": "StakingCellEncoder.code",
+        "line": 430
+      },
+      "48": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 47
+      },
+      "56": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 47
+      },
+      "64": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 47
+      },
+      "80": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 47
+      },
+      "96": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 47
+      },
+      "104": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 47
+      },
+      "112": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 47
+      },
+      "120": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 47
+      },
+      "128": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 47
+      },
+      "144": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 47
+      },
+      "160": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 47
+      },
+      "168": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 47
+      },
+      "184": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 47
+      },
+      "192": {
+        "filename": "StakingCellEncoder.code",
+        "line": 448
+      },
+      "208": {
+        "filename": "StakingCellEncoder.code",
+        "line": 451
+      },
+      "216": {
+        "filename": "StakingCellEncoder.code",
+        "line": 452
+      },
+      "232": {
+        "filename": "StakingCellEncoder.code",
+        "line": 453
+      },
+      "240": {
+        "filename": "StakingCellEncoder.code",
+        "line": 454
+      },
+      "248": {
+        "filename": "StakingCellEncoder.code",
+        "line": 455
+      },
+      "264": {
+        "filename": "StakingCellEncoder.code",
+        "line": 456
+      },
+      "280": {
+        "filename": "StakingCellEncoder.code",
+        "line": 457
+      },
+      "288": {
+        "filename": "StakingCellEncoder.code",
+        "line": 458
+      },
+      "296": {
+        "filename": "StakingCellEncoder.code",
+        "line": 459
+      },
+      "304": {
+        "filename": "StakingCellEncoder.code",
+        "line": 460
+      },
+      "328": {
+        "filename": "StakingCellEncoder.code",
+        "line": 461
+      },
+      "336": {
+        "filename": "StakingCellEncoder.code",
+        "line": 462
+      },
+      "384": {
+        "filename": "StakingCellEncoder.code",
+        "line": 463
+      },
+      "408": {
+        "filename": "StakingCellEncoder.code",
+        "line": 464
+      },
+      "416": {
+        "filename": "StakingCellEncoder.code",
+        "line": 465
+      },
+      "424": {
+        "filename": "StakingCellEncoder.code",
+        "line": 466
+      },
+      "432": {
+        "filename": "StakingCellEncoder.code",
+        "line": 467
+      },
+      "448": {
+        "filename": "StakingCellEncoder.code",
+        "line": 469
+      },
+      "456": {
+        "filename": "StakingCellEncoder.code",
+        "line": 470
+      },
+      "464": {
+        "filename": "StakingCellEncoder.code",
+        "line": 472
+      },
+      "472": {
+        "filename": "StakingCellEncoder.code",
+        "line": 473
+      },
+      "488": {
+        "filename": "StakingCellEncoder.code",
+        "line": 476
+      }
+    },
+    "a78c192690acf09bcca873fbf90f4b71666d02ef68998e5cabec4fd544f25056": {
+      "0": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 20
+      },
+      "8": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 20
+      },
+      "16": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 20
+      },
+      "32": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 21
+      },
+      "40": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 21
+      },
+      "56": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 22
+      },
+      "72": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 23
+      }
+    },
+    "b3fe7c8cda569d96c4a3727ecbe4720e4b5d2688d1f7a9fee3e02f6153aa6c52": {
+      "0": {
+        "filename": "StakingCellEncoder.code",
+        "line": 94
+      },
+      "8": {
+        "filename": "StakingCellEncoder.code",
+        "line": 95
+      },
+      "24": {
+        "filename": "StakingCellEncoder.code",
+        "line": 96
+      },
+      "48": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 13
+      },
+      "56": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 13
+      },
+      "64": {
+        "filename": "StakingCellEncoder.code",
+        "line": 101
+      },
+      "80": {
+        "filename": "StakingCellEncoder.code",
+        "line": 104
+      },
+      "88": {
+        "filename": "StakingCellEncoder.code",
+        "line": 105
+      },
+      "104": {
+        "filename": "StakingCellEncoder.code",
+        "line": 106
+      },
+      "112": {
+        "filename": "StakingCellEncoder.code",
+        "line": 107
+      },
+      "120": {
+        "filename": "StakingCellEncoder.code",
+        "line": 108
+      },
+      "136": {
+        "filename": "StakingCellEncoder.code",
+        "line": 109
+      },
+      "152": {
+        "filename": "StakingCellEncoder.code",
+        "line": 110
+      },
+      "160": {
+        "filename": "StakingCellEncoder.code",
+        "line": 111
+      },
+      "168": {
+        "filename": "StakingCellEncoder.code",
+        "line": 112
+      },
+      "176": {
+        "filename": "StakingCellEncoder.code",
+        "line": 113
+      },
+      "200": {
+        "filename": "StakingCellEncoder.code",
+        "line": 114
+      },
+      "208": {
+        "filename": "StakingCellEncoder.code",
+        "line": 115
+      },
+      "216": {
+        "filename": "StakingCellEncoder.code",
+        "line": 116
+      },
+      "240": {
+        "filename": "StakingCellEncoder.code",
+        "line": 117
+      },
+      "256": {
+        "filename": "StakingCellEncoder.code",
+        "line": 118
+      },
+      "264": {
+        "filename": "StakingCellEncoder.code",
+        "line": 119
+      },
+      "312": {
+        "filename": "StakingCellEncoder.code",
+        "line": 120
+      },
+      "328": {
+        "filename": "StakingCellEncoder.code",
+        "line": 121
+      },
+      "344": {
+        "filename": "StakingCellEncoder.code",
+        "line": 122
+      },
+      "360": {
+        "filename": "StakingCellEncoder.code",
+        "line": 123
+      },
+      "368": {
+        "filename": "StakingCellEncoder.code",
+        "line": 124
+      },
+      "376": {
+        "filename": "StakingCellEncoder.code",
+        "line": 125
+      },
+      "384": {
+        "filename": "StakingCellEncoder.code",
+        "line": 126
+      },
+      "400": {
+        "filename": "StakingCellEncoder.code",
+        "line": 128
+      },
+      "408": {
+        "filename": "StakingCellEncoder.code",
+        "line": 129
+      },
+      "424": {
+        "filename": "StakingCellEncoder.code",
+        "line": 131
+      },
+      "432": {
+        "filename": "StakingCellEncoder.code",
+        "line": 132
+      },
+      "448": {
+        "filename": "StakingCellEncoder.code",
+        "line": 135
+      }
+    },
+    "b6f27d187f26bd046272f9f471e9ae01f051b960e654874ac3fb0749c691c4c6": {
+      "0": {
+        "filename": "StakingCellEncoder.code",
+        "line": 508
+      },
+      "16": {
+        "filename": "StakingCellEncoder.code",
+        "line": 509
+      },
+      "24": {
+        "filename": "StakingCellEncoder.code",
+        "line": 510
+      },
+      "40": {
+        "filename": "StakingCellEncoder.code",
+        "line": 511
+      },
+      "56": {
+        "filename": "StakingCellEncoder.code",
+        "line": 512
+      },
+      "72": {
+        "filename": "StakingCellEncoder.code",
+        "line": 513
+      },
+      "80": {
+        "filename": "StakingCellEncoder.code",
+        "line": 514
+      },
+      "96": {
+        "filename": "StakingCellEncoder.code",
+        "line": 515
+      },
+      "104": {
+        "filename": "StakingCellEncoder.code",
+        "line": 516
+      },
+      "120": {
+        "filename": "StakingCellEncoder.code",
+        "line": 517
+      },
+      "136": {
+        "filename": "StakingCellEncoder.code",
+        "line": 518
+      },
+      "152": {
+        "filename": "StakingCellEncoder.code",
+        "line": 519
+      },
+      "168": {
+        "filename": "StakingCellEncoder.code",
+        "line": 520
+      },
+      "192": {
+        "filename": "StakingCellEncoder.code",
+        "line": 521
+      },
+      "208": {
+        "filename": "StakingCellEncoder.code",
+        "line": 522
+      },
+      "216": {
+        "filename": "StakingCellEncoder.code",
+        "line": 523
+      },
+      "232": {
+        "filename": "StakingCellEncoder.code",
+        "line": 525
+      }
+    },
+    "d3bc0b80f42baccdd6f3d4645285e871d51096f0919df01e56056785f9822f9b": {
+      "0": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 13
+      },
+      "8": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 13
+      },
+      "16": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 14
+      },
+      "24": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 14
+      },
+      "32": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 14
+      },
+      "48": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 14
+      },
+      "64": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 14
+      },
+      "88": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 14
+      },
+      "96": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 14
+      },
+      "104": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 14
+      }
+    },
+    "f24e1e7aa04d89aad2945816b6e9b921f2b3892da9ba53e2383c148351b96d0c": {
+      "0": {
+        "filename": "StakingCellEncoder.code",
+        "line": 569
+      },
+      "16": {
+        "filename": "StakingCellEncoder.code",
+        "line": 570
+      }
+    },
+    "f2687f9cd09c0d40494f4582b4e85f908507af6762322b3222d057f44c003b8c": {
+      "0": {
+        "filename": "StakingCellEncoder.code",
+        "line": 20
+      },
+      "8": {
+        "filename": "StakingCellEncoder.code",
+        "line": 21
+      },
+      "24": {
+        "filename": "StakingCellEncoder.code",
+        "line": 22
+      },
+      "48": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 5
+      },
+      "56": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 5
+      },
+      "64": {
+        "filename": "StakingCellEncoder.code",
+        "line": 27
+      },
+      "80": {
+        "filename": "StakingCellEncoder.code",
+        "line": 30
+      },
+      "88": {
+        "filename": "StakingCellEncoder.code",
+        "line": 31
+      },
+      "104": {
+        "filename": "StakingCellEncoder.code",
+        "line": 32
+      },
+      "112": {
+        "filename": "StakingCellEncoder.code",
+        "line": 33
+      },
+      "120": {
+        "filename": "StakingCellEncoder.code",
+        "line": 34
+      },
+      "136": {
+        "filename": "StakingCellEncoder.code",
+        "line": 35
+      },
+      "152": {
+        "filename": "StakingCellEncoder.code",
+        "line": 36
+      },
+      "160": {
+        "filename": "StakingCellEncoder.code",
+        "line": 37
+      },
+      "168": {
+        "filename": "StakingCellEncoder.code",
+        "line": 38
+      },
+      "176": {
+        "filename": "StakingCellEncoder.code",
+        "line": 39
+      },
+      "200": {
+        "filename": "StakingCellEncoder.code",
+        "line": 40
+      },
+      "208": {
+        "filename": "StakingCellEncoder.code",
+        "line": 41
+      },
+      "224": {
+        "filename": "StakingCellEncoder.code",
+        "line": 42
+      },
+      "240": {
+        "filename": "StakingCellEncoder.code",
+        "line": 43
+      },
+      "256": {
+        "filename": "StakingCellEncoder.code",
+        "line": 44
+      },
+      "304": {
+        "filename": "StakingCellEncoder.code",
+        "line": 45
+      },
+      "320": {
+        "filename": "StakingCellEncoder.code",
+        "line": 46
+      },
+      "328": {
+        "filename": "StakingCellEncoder.code",
+        "line": 47
+      },
+      "344": {
+        "filename": "StakingCellEncoder.code",
+        "line": 48
+      },
+      "352": {
+        "filename": "StakingCellEncoder.code",
+        "line": 49
+      },
+      "368": {
+        "filename": "StakingCellEncoder.code",
+        "line": 50
+      },
+      "384": {
+        "filename": "StakingCellEncoder.code",
+        "line": 51
+      },
+      "400": {
+        "filename": "StakingCellEncoder.code",
+        "line": 52
+      },
+      "408": {
+        "filename": "StakingCellEncoder.code",
+        "line": 53
+      },
+      "416": {
+        "filename": "StakingCellEncoder.code",
+        "line": 54
+      },
+      "432": {
+        "filename": "StakingCellEncoder.code",
+        "line": 56
+      },
+      "440": {
+        "filename": "StakingCellEncoder.code",
+        "line": 57
+      },
+      "456": {
+        "filename": "StakingCellEncoder.code",
+        "line": 59
+      },
+      "464": {
+        "filename": "StakingCellEncoder.code",
+        "line": 60
+      },
+      "480": {
+        "filename": "StakingCellEncoder.code",
+        "line": 63
+      }
+    },
+    "f2b6fee906959c240bebf2ae6014f1d4be66e2dc6e03df25aa5ea29205d3e249": {
+      "0": {
+        "filename": "StakingCellEncoder.code",
+        "line": 497
+      },
+      "16": {
+        "filename": "StakingCellEncoder.code",
+        "line": 498
+      },
+      "24": {
+        "filename": "StakingCellEncoder.code",
+        "line": 499
+      },
+      "40": {
+        "filename": "StakingCellEncoder.code",
+        "line": 500
+      },
+      "56": {
+        "filename": "StakingCellEncoder.code",
+        "line": 501
+      },
+      "72": {
+        "filename": "StakingCellEncoder.code",
+        "line": 502
+      },
+      "80": {
+        "filename": "StakingCellEncoder.code",
+        "line": 503
+      },
+      "88": {
+        "filename": "StakingCellEncoder.code",
+        "line": 504
+      },
+      "104": {
+        "filename": "StakingCellEncoder.code",
+        "line": 505
+      }
+    },
+    "f2cdbf932c7913d13d0651bb84ebfaa9ffd3ef1b44b78978ebd0efb9630c909e": {
+      "0": {
+        "filename": "StakingCellEncoder.code",
+        "line": 365
+      },
+      "8": {
+        "filename": "StakingCellEncoder.code",
+        "line": 366
+      },
+      "24": {
+        "filename": "StakingCellEncoder.code",
+        "line": 367
+      },
+      "48": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 42
+      },
+      "56": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 42
+      },
+      "64": {
+        "filename": "StakingCellEncoder.code",
+        "line": 372
+      },
+      "80": {
+        "filename": "StakingCellEncoder.code",
+        "line": 375
+      },
+      "88": {
+        "filename": "StakingCellEncoder.code",
+        "line": 376
+      },
+      "104": {
+        "filename": "StakingCellEncoder.code",
+        "line": 377
+      },
+      "112": {
+        "filename": "StakingCellEncoder.code",
+        "line": 378
+      },
+      "120": {
+        "filename": "StakingCellEncoder.code",
+        "line": 379
+      },
+      "136": {
+        "filename": "StakingCellEncoder.code",
+        "line": 380
+      },
+      "152": {
+        "filename": "StakingCellEncoder.code",
+        "line": 381
+      },
+      "160": {
+        "filename": "StakingCellEncoder.code",
+        "line": 382
+      },
+      "168": {
+        "filename": "StakingCellEncoder.code",
+        "line": 383
+      },
+      "176": {
+        "filename": "StakingCellEncoder.code",
+        "line": 384
+      },
+      "200": {
+        "filename": "StakingCellEncoder.code",
+        "line": 385
+      },
+      "208": {
+        "filename": "StakingCellEncoder.code",
+        "line": 386
+      },
+      "216": {
+        "filename": "StakingCellEncoder.code",
+        "line": 387
+      },
+      "240": {
+        "filename": "StakingCellEncoder.code",
+        "line": 388
+      },
+      "256": {
+        "filename": "StakingCellEncoder.code",
+        "line": 389
+      },
+      "264": {
+        "filename": "StakingCellEncoder.code",
+        "line": 390
+      },
+      "312": {
+        "filename": "StakingCellEncoder.code",
+        "line": 391
+      },
+      "328": {
+        "filename": "StakingCellEncoder.code",
+        "line": 392
+      },
+      "344": {
+        "filename": "StakingCellEncoder.code",
+        "line": 393
+      },
+      "360": {
+        "filename": "StakingCellEncoder.code",
+        "line": 394
+      },
+      "368": {
+        "filename": "StakingCellEncoder.code",
+        "line": 395
+      },
+      "376": {
+        "filename": "StakingCellEncoder.code",
+        "line": 396
+      },
+      "384": {
+        "filename": "StakingCellEncoder.code",
+        "line": 397
+      },
+      "400": {
+        "filename": "StakingCellEncoder.code",
+        "line": 399
+      },
+      "408": {
+        "filename": "StakingCellEncoder.code",
+        "line": 400
+      },
+      "424": {
+        "filename": "StakingCellEncoder.code",
+        "line": 402
+      },
+      "432": {
+        "filename": "StakingCellEncoder.code",
+        "line": 403
+      },
+      "448": {
+        "filename": "StakingCellEncoder.code",
+        "line": 406
+      }
+    },
+    "f9f96e013a096737a3ad9990fe8dd9a95ec1e5180ecc02b2653baeb3b94f3f42": {
+      "0": {
+        "filename": "StakingCellEncoder.code",
+        "line": 588
+      },
+      "16": {
+        "filename": "StakingCellEncoder.code",
+        "line": 589
+      },
+      "24": {
+        "filename": "StakingCellEncoder.code",
+        "line": 590
+      },
+      "40": {
+        "filename": "StakingCellEncoder.code",
+        "line": 591
+      },
+      "56": {
+        "filename": "StakingCellEncoder.code",
+        "line": 592
+      },
+      "72": {
+        "filename": "StakingCellEncoder.code",
+        "line": 593
+      },
+      "80": {
+        "filename": "StakingCellEncoder.code",
+        "line": 594
+      },
+      "96": {
+        "filename": "StakingCellEncoder.code",
+        "line": 597
+      },
+      "112": {
+        "filename": "StakingCellEncoder.code",
+        "line": 598
+      },
+      "120": {
+        "filename": "StakingCellEncoder.code",
+        "line": 599
+      },
+      "128": {
+        "filename": "StakingCellEncoder.code",
+        "line": 600
+      },
+      "144": {
+        "filename": "StakingCellEncoder.code",
+        "line": 601
+      },
+      "160": {
+        "filename": "StakingCellEncoder.code",
+        "line": 602
+      },
+      "168": {
+        "filename": "StakingCellEncoder.code",
+        "line": 603
+      },
+      "184": {
+        "filename": "StakingCellEncoder.code",
+        "line": 604
+      },
+      "192": {
+        "filename": "StakingCellEncoder.code",
+        "line": 605
+      },
+      "208": {
+        "filename": "StakingCellEncoder.code",
+        "line": 606
+      },
+      "224": {
+        "filename": "StakingCellEncoder.code",
+        "line": 607
+      },
+      "240": {
+        "filename": "StakingCellEncoder.code",
+        "line": 609
+      },
+      "248": {
+        "filename": "StakingCellEncoder.code",
+        "line": 610
+      },
+      "264": {
+        "filename": "StakingCellEncoder.code",
+        "line": 611
+      },
+      "272": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "288": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "296": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "304": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "320": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "328": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "344": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "368": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "376": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "416": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "424": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "432": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "448": {
+        "filename": "stdlib.sol",
+        "line": 63
+      },
+      "464": {
+        "filename": "StakingCellEncoder.code",
+        "line": 613
+      },
+      "480": {
+        "filename": "StakingCellEncoder.code",
+        "line": 614
+      },
+      "488": {
+        "filename": "StakingCellEncoder.code",
+        "line": 615
+      },
+      "504": {
+        "filename": "StakingCellEncoder.code",
+        "line": 618
+      }
+    },
+    "ff852f76a11c9c3e1197fa5019297aeb640d6d14ff7fe8f32b767e3e99f2b388": {
+      "0": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 5
+      },
+      "8": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 5
+      },
+      "16": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 5
+      },
+      "24": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 5
+      },
+      "40": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 6
+      },
+      "48": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 6
+      },
+      "56": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 7
+      },
+      "64": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 7
+      },
+      "80": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 7
+      },
+      "88": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 7
+      },
+      "96": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 8
+      },
+      "112": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 8
+      },
+      "128": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 8
+      },
+      "136": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 8
+      },
+      "152": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 8
+      },
+      "160": {
+        "filename": "../contracts/utils/cell-encoder/StakingCellEncoder.tsol",
+        "line": 9
+      }
+    }
+  }
+}
