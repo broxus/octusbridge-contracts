@@ -1,0 +1,7 @@
+pragma ever-solidity >= 0.39.0;
+
+
+library EventCreditGas {
+    uint128 constant EVENT_CLOSER_INITIAL_BALANCE = 10 ever;
+    uint128 constant EVENT_DEPLOYER_INITIAL_BALANCE = 10 ever;
+}

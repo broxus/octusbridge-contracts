@@ -3,28 +3,31 @@ pragma ever-solidity >= 0.39.0;
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
+
 import "@broxus/contracts/contracts/access/ExternalOwner.tsol";
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
+import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 import "./../interfaces/event-contracts/IEthereumEverscaleEvent.tsol";
 import "./../interfaces/event-configuration-contracts/IEthereumEverscaleEventConfiguration.tsol";
 import "../../utils/ErrorCodes.tsol";
+
+import './EventCreditGas.tsol';
 
 
 /// @title Event deployer
 /// @dev Used as part of credit-transfer pipeline, specifically for evm-ever transfers
 /// Allows credit backend to deploy multiple event-contacts at once
 contract EventDeployer is ExternalOwner, RandomNonce {
-    address public guardian;
+    address public static factory;
 
     constructor(
-        address _guardian,
-        uint _owner
+        uint owner_
     ) public {
+        require(msg.sender == factory);
         tvm.accept();
 
-        guardian = _guardian;
-        setOwnership(_owner);
+        setOwnership(owner_);
     }
 
     struct DeployRequest {
@@ -34,19 +37,16 @@ contract EventDeployer is ExternalOwner, RandomNonce {
         uint128 value;
     }
 
-    modifier onlyGuardian() {
-        require(msg.sender == guardian, ErrorCodes.WRONG_GUARDIAN);
-
-        _;
-    }
-
     function drain(
-        address receiver,
-        uint128 value
-    ) external view onlyGuardian {
+        address receiver
+    ) external view {
+        require(msg.sender == factory, 101);
+
+        tvm.rawReserve(EventCreditGas.EVENT_DEPLOYER_INITIAL_BALANCE, 0);
+
         receiver.transfer({
-            value: value,
-            flag: 0,
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED,
             bounce: true
         });
     }
@@ -63,7 +63,7 @@ contract EventDeployer is ExternalOwner, RandomNonce {
             IEthereumEverscaleEventConfiguration(request.configuration).deployEvents{
                 value: request.value,
                 bounce: true,
-                flag: 0
+                flag: MsgFlag.IGNORE_ERRORS
             }(request.eventsVoteData, request.values);
         }
     }

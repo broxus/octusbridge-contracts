@@ -6,8 +6,7 @@
 		{
 			"name": "constructor",
 			"inputs": [
-				{"name":"_guardian","type":"address"},
-				{"name":"_owner","type":"uint256"}
+				{"name":"owner_","type":"uint256"}
 			],
 			"outputs": [
 			]
@@ -15,8 +14,7 @@
 		{
 			"name": "drain",
 			"inputs": [
-				{"name":"receiver","type":"address"},
-				{"name":"value","type":"uint128"}
+				{"name":"receiver","type":"address"}
 			],
 			"outputs": [
 			]
@@ -54,16 +52,17 @@
 			]
 		},
 		{
-			"name": "guardian",
+			"name": "factory",
 			"inputs": [
 			],
 			"outputs": [
-				{"name":"guardian","type":"address"}
+				{"name":"factory","type":"address"}
 			]
 		}
 	],
 	"data": [
-		{"key":1,"name":"_randomNonce","type":"uint256"}
+		{"key":1,"name":"_randomNonce","type":"uint256"},
+		{"key":2,"name":"factory","type":"address"}
 	],
 	"events": [
 		{
@@ -82,6 +81,6 @@
 		{"name":"_constructorFlag","type":"bool"},
 		{"name":"owner","type":"uint256"},
 		{"name":"_randomNonce","type":"uint256"},
-		{"name":"guardian","type":"address"}
+		{"name":"factory","type":"address"}
 	]
 }

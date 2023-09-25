@@ -11,26 +11,34 @@ import "./../../utils/TransferUtils.tsol";
 
 import "./../event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol";
 
+import './EventCreditGas.tsol';
+
 
 /// @title Event closer
 /// @dev Used as part of credit-transfer pipeline, specifically for ever-evm transfers
 /// Allows credit backend to call .close on the event contracts, where remainingGasTo = EventCloser
 /// Receives the EVERs and immediately transfers them to the EventDeployer contract
 contract EventCloser is ExternalOwner, RandomNonce, TransferUtils {
-    address public deployer;
+    address static factory;
+
+    address[] public deployers;
+    uint8 public deployerIndex;
 
     constructor(
-        uint _owner,
-        address _deployer
+        uint owner_,
+        address[] deployers_
     ) public {
+        require(msg.sender == factory);
         tvm.accept();
 
-        setOwnership(_owner);
-        deployer = _deployer;
+        setOwnership(owner_);
+
+        deployers = deployers_;
+        deployerIndex = uint8(rnd.next() % deployers.length);
     }
 
     function _targetBalance() internal pure override returns (uint128) {
-        return 10 ever;
+        return EventCreditGas.EVENT_CLOSER_INITIAL_BALANCE;
     }
 
     /// @notice Batch close for ever-evm event-contracts
@@ -50,11 +58,13 @@ contract EventCloser is ExternalOwner, RandomNonce, TransferUtils {
         }
     }
 
-    receive() external view reserveTargetBalance {
-        deployer.transfer({
+    receive() external reserveTargetBalance {
+        deployers[deployerIndex].transfer({
             bounce: false,
             value: 0,
-            flag: MsgFlag.ALL_NOT_RESERVED
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS
         });
+
+        deployerIndex = (deployerIndex + 1) % uint8(deployers.length);
     }
 }
