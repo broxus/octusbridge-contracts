@@ -18,3 +18,6 @@ everscale/build/*.tvc
 ethereum/deployments
 .DS_Store
 ethereum/artifacts
+*deploy-manager*
+manifest.json
+tokens.json
