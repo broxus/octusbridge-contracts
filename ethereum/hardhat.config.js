@@ -331,11 +331,11 @@ const hardhatConfig = {
     },
     multivault: {
       default: '0x0000000000000000000000000000000000000000',
-      main: '0x7dbFdC0a2d18f690d35F38E66DfAB795c0175DAc',
-      polygon: '0x7dbFdC0a2d18f690d35F38E66DfAB795c0175DAc',
-      bsc: '0x7dbFdC0a2d18f690d35F38E66DfAB795c0175DAc',
-      fantom: '0x7dbFdC0a2d18f690d35F38E66DfAB795c0175DAc',
-      avalanche: '0x7dbFdC0a2d18f690d35F38E66DfAB795c0175DAc',
+      main: '0x2Dc29C87162354289cC2a1C585bb20EadA0b382d',
+      polygon: '0x2Dc29C87162354289cC2a1C585bb20EadA0b382d',
+      bsc: '0x2Dc29C87162354289cC2a1C585bb20EadA0b382d',
+      fantom: '0x2Dc29C87162354289cC2a1C585bb20EadA0b382d',
+      avalanche: '0x2Dc29C87162354289cC2a1C585bb20EadA0b382d',
     },
     relay_1: {
       default: 10,
