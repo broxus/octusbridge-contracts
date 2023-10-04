@@ -3,7 +3,6 @@ pragma solidity 0.8.0;
 
 
 import "../../interfaces/multivault/IMultiVaultFacetTokens.sol";
-import "../../interfaces/multivault/IMultiVaultFacetTokensEvents.sol";
 
 import "../../MultiVaultToken.sol";
 import "../storage/MultiVaultStorage.sol";

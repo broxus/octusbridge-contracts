@@ -4,12 +4,10 @@ pragma solidity 0.8.0;
 
 import "../../interfaces/multivault/IMultiVaultFacetDeposit.sol";
 import "../../interfaces/multivault/IMultiVaultFacetFees.sol";
-import "../../interfaces/multivault/IMultiVaultFacetTokens.sol";
 import "../../interfaces/multivault/IMultiVaultFacetPendingWithdrawals.sol";
 import "../../interfaces/multivault/IMultiVaultFacetPendingWithdrawalsEvents.sol";
 import "../../interfaces/multivault/IMultiVaultFacetWithdraw.sol";
 import "../../interfaces/IMultiVaultToken.sol";
-import "../../interfaces/IEverscale.sol";
 import "../../interfaces/IERC20.sol";
 import "../../../interfaces/IWETH.sol";
 
