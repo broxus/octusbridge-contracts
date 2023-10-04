@@ -42,13 +42,13 @@ contract MultiVaultFacetSettings is
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         s.bridge = _bridge;
-        emit UpdateBridge(s.bridge); 
+        emit UpdateBridge(_bridge); 
 
         s.governance = _governance;
-        emit UpdateGovernance(s.governance);
+        emit UpdateGovernance(_governance);
         
         s.weth = _weth;
-        emit UpdateWeth(s.weth);
+        emit UpdateWeth(_weth);
     }
 
     /// @notice Rewards address
@@ -97,7 +97,7 @@ contract MultiVaultFacetSettings is
 
         s.rewards_ = _rewards;
 
-        emit UpdateRewards(s.rewards_.wid, s.rewards_.addr);
+        emit UpdateRewards(_rewards.wid, _rewards.addr);
     }
 
     /// @notice Set alien configuration address.
@@ -205,7 +205,7 @@ contract MultiVaultFacetSettings is
 
         s.pendingGovernance = _governance;
 
-        emit NewPendingGovernance(s.pendingGovernance);
+        emit NewPendingGovernance(_governance);
     }
 
     /// @notice Once a new governance address has been proposed using `setGovernance`,
@@ -238,7 +238,7 @@ contract MultiVaultFacetSettings is
 
         s.management = _management;
 
-        emit UpdateManagement(s.management);
+        emit UpdateManagement(_management);
     }
 
     /// @notice Changes the address of `guardian`.
@@ -255,7 +255,7 @@ contract MultiVaultFacetSettings is
 
         s.guardian = _guardian;
 
-        emit UpdateGuardian(s.guardian);
+        emit UpdateGuardian(_guardian);
     }
 
     function setWithdrawGuardian(
@@ -265,7 +265,7 @@ contract MultiVaultFacetSettings is
 
         s.withdrawGuardian = _withdrawGuardian;
 
-        emit UpdateWithdrawGuardian(s.withdrawGuardian);
+        emit UpdateWithdrawGuardian(_withdrawGuardian);
     }
 
     /// @notice Activates or deactivates MultiVault emergency shutdown.
@@ -288,7 +288,7 @@ contract MultiVaultFacetSettings is
 
         s.emergencyShutdown = active;
 
-        emit EmergencyShutdown(s.emergencyShutdown);
+        emit EmergencyShutdown(active);
     }
 
     function setCustomNative(
@@ -313,7 +313,7 @@ contract MultiVaultFacetSettings is
 
         s.gasDonor = _gasDonor;
 
-        emit UpdateGasDonor(s.gasDonor);
+        emit UpdateGasDonor(_gasDonor);
     }
 
     function setWeth(
