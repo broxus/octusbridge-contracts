@@ -9,23 +9,23 @@ import "../../interfaces/multivault/IMultiVaultFacetLiquidity.sol";
 
 
 library MultiVaultStorage {
-    uint constant MAX_BPS = 10_000;
-    uint constant FEE_LIMIT = MAX_BPS / 2;
+    uint constant public MAX_BPS = 10_000;
+    uint constant public FEE_LIMIT = MAX_BPS / 2;
 
-    uint8 constant DECIMALS_LIMIT = 18;
-    uint256 constant SYMBOL_LENGTH_LIMIT = 32;
-    uint256 constant NAME_LENGTH_LIMIT = 32;
+    uint8 constant public DECIMALS_LIMIT = 18;
+    uint256 constant public SYMBOL_LENGTH_LIMIT = 32;
+    uint256 constant public NAME_LENGTH_LIMIT = 32;
 
-    string constant DEFAULT_NAME_PREFIX = '';
-    string constant DEFAULT_SYMBOL_PREFIX = '';
+    string constant public DEFAULT_NAME_PREFIX = '';
+    string constant public DEFAULT_SYMBOL_PREFIX = '';
 
-    string constant DEFAULT_NAME_LP_PREFIX = 'Octus LP ';
-    string constant DEFAULT_SYMBOL_LP_PREFIX = 'octLP';
+    string constant public DEFAULT_NAME_LP_PREFIX = 'Octus LP ';
+    string constant public DEFAULT_SYMBOL_LP_PREFIX = 'octLP';
 
-    uint256 constant WITHDRAW_PERIOD_DURATION_IN_SECONDS = 60 * 60 * 24; // 24 hours
+    uint256 constant public WITHDRAW_PERIOD_DURATION_IN_SECONDS = 60 * 60 * 24; // 24 hours
 
     // Previous version of the Vault contract was built with Upgradable Proxy Pattern, without using Diamond storage
-    bytes32 constant MULTIVAULT_LEGACY_STORAGE_POSITION = 0x0000000000000000000000000000000000000000000000000000000000000002;
+    bytes32 constant public MULTIVAULT_LEGACY_STORAGE_POSITION = 0x0000000000000000000000000000000000000000000000000000000000000002;
 
     uint constant LP_EXCHANGE_RATE_BPS = 10_000_000_000;
 

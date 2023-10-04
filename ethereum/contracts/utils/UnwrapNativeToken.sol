@@ -9,10 +9,10 @@ import "../multivault/utils/Initializable.sol";
 
 
 contract UnwrapNativeToken is IOctusCallbackAlien, Initializable {
-    IWETH wethContract;
-    address multiVault;
+    IWETH public wethContract;
+    address public multiVault;
 
-    mapping(address => mapping(uint => bool)) pendingWithdrawals;
+    mapping(address => mapping(uint => bool)) public pendingWithdrawals;
 
     modifier notZeroAddress(address addr) {
         require(addr != address(0));

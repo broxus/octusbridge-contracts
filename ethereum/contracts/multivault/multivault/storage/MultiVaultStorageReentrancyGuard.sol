@@ -33,10 +33,10 @@ library MultiVaultStorageReentrancyGuard {
     // amount. Since refunds are capped to a percentage of the total
     // transaction's gas, it is best to keep them low in cases like this one, to
     // increase the likelihood of the full refund coming into effect.
-    uint256 constant _NOT_ENTERED = 1;
-    uint256 constant _ENTERED = 2;
+    uint256 public constant _NOT_ENTERED = 1;
+    uint256 public constant _ENTERED = 2;
 
-    bytes32 constant REENTRANCY_GUARD_LEGACY_STORAGE_POSITION = 0x0000000000000000000000000000000000000000000000000000000000000001;
+    bytes32 constant public REENTRANCY_GUARD_LEGACY_STORAGE_POSITION = 0x0000000000000000000000000000000000000000000000000000000000000001;
 
     struct ReentrancyGuardStorage {
         uint256 _status;

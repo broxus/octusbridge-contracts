@@ -11,7 +11,7 @@ import "../../libraries/Meta.sol";
 
 
 library DiamondStorage {
-    bytes32 constant DIAMOND_STORAGE_POSITION = keccak256("diamond.standard.diamond.storage");
+    bytes32 constant public DIAMOND_STORAGE_POSITION = keccak256("diamond.standard.diamond.storage");
 
     struct FacetAddressAndPosition {
         address facetAddress;
