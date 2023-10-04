@@ -5,6 +5,44 @@
 </p>
 
 
-# Welcome to the Octus bridge
+# EVM documentation
 
-This repo contains smart contract source for the bridge between arbitrary EVM and Everscale / VENOM
+## MultiVault roles
+
+- Governance
+
+- Pending governance
+
+- Guardian
+
+- Management
+
+- Withdraw guardian
+
+|                                                        | Governance | Manager | Guardian | Withdraw manager | Diamond cut owner | Proxy owner |
+| :----------------------------------------------------- | ---------- | ------- | -------- | ---------------- | ----------------- | ----------- |
+| Enabling emergency mode                                | ✅          | ❌       | ✅        | ❌                | ❌                 | ❌           |
+| Disabling emergency mode                               | ✅          | ❌       | ❌        | ❌                | ❌                 | ❌           |
+| Setting native / alien configuration address           | ✅          | ❌       | ❌        | ❌                | ❌                 | ❌           |
+| Setting withdrawal limits (daily, native) per token    | ✅          | ❌       | ❌        | ❌                | ❌                 | ❌           |
+| Enabling / Disabling withdrawal limits                 | ✅          | ❌       | ❌        | ❌                | ❌                 | ❌           |
+| Setting deposit limits per token                       | ✅          | ❌       | ❌        | ❌                | ❌                 | ❌           |
+| Setting gas donor                                      | ✅          | ❌       | ❌        | ❌                | ❌                 | ❌           |
+| Setting guardian                                       | ✅          | ❌       | ❌        | ❌                | ❌                 | ❌           |
+| Setting withdraw guardian                              | ✅          | ❌       | ❌        | ❌                | ❌                 | ❌           |
+| Setting management                                     | ✅          | ❌       | ❌        | ❌                | ❌                 | ❌           |
+| Setting governance                                     | ✅          | ❌       | ❌        | ❌                | ❌                 | ❌           |
+| Blacklist token                                        | ✅          | ❌       | ❌        | ❌                | ❌                 | ❌           |
+| Approve / reject pending withdrawal                    | ✅          | ❌       | ❌        | ✅                | ❌                 | ❌           |
+| Set native token prefix                                | ✅          | ✅       | ❌        | ❌                | ❌                 | ❌           |
+| Set token deposit fee                                  | ✅          | ✅       | ❌        | ❌                | ❌                 | ❌           |
+| Set token withdraw fee                                 | ✅          | ✅       | ❌        | ❌                | ❌                 | ❌           |
+| Skim tokens                                            | ✅          | ✅       | ❌        | ❌                | ❌                 | ❌           |
+| Set default native deposit fee                         | ✅          | ✅       | ❌        | ❌                | ❌                 | ❌           |
+| Set default native withdraw fee                        | ✅          | ✅       | ❌        | ❌                | ❌                 | ❌           |
+| Set default alien deposit fee                          | ✅          | ✅       | ❌        | ❌                | ❌                 | ❌           |
+| Set default alien withdraw fee                         | ✅          | ✅       | ❌        | ❌                | ❌                 | ❌           |
+| Upgrade proxy implementation (currently Diamond proxy) | ❌          | ❌       | ❌        | ❌                | ❌                 | ✅           |
+| Upgrade diamond cuts                                   | ❌          | ❌       | ❌        | ❌                | ✅                 | ❌           |
+
+There is an additional role, called `gasDonor`. This address don't have any permissions in the MultiVault itseld. Instead, it receives all the value attached to `deposit` methods.
