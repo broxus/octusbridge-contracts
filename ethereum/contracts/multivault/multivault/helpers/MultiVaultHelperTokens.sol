@@ -113,15 +113,6 @@ abstract contract MultiVaultHelperTokens is
         return token;
     }
 
-    function _increaseCash(
-        address token,
-        uint amount
-    ) internal {
-        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
-
-        s.liquidity[token].cash += amount;
-    }
-
     /// @notice Gets the address
     /// @param native Everscale token address
     /// @return token Token address
