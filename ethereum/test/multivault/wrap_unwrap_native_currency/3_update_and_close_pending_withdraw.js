@@ -76,14 +76,22 @@ describe('Test deposit-withdraw-with-pending for native token', async () => {
                 const fee = withdrawFee.mul(amount).div(10000);
 
                 const withdrawTransaction = await multivault['saveWithdrawAlien(bytes,bytes[])'](payload, signatures)
-                // await expect(withdrawTransaction)
-                //     .to
-                //     .emit(multivault, 'PendingWithdrawalCreated')
-                //     .withNamedArgs({
-                //         recipient: unwrapNativeToken.address,
-                //         token: weth.address,
-                //         amount: amount.sub(fee),
-                //     })
+
+                const receipt = await withdrawTransaction.wait();
+
+                const {
+                    events: [{
+                        args: {
+                            id: pendingWithdrawalId,
+                            payloadId
+                        }
+                    }]
+                } = receipt;
+
+                await expect(withdrawTransaction)
+                    .to
+                    .emit(multivault, 'PendingWithdrawalCreated')
+                    .withArgs(unwrapNativeToken.address, pendingWithdrawalId, weth.address, amount.sub(fee), payloadId);
 
                 const {args: {id}} = await withdrawTransaction.wait().then(({events}) => events.find(({event}) => event === "PendingWithdrawalCreated"))
                 bobsPendingWithdrawId = id;
@@ -101,11 +109,7 @@ describe('Test deposit-withdraw-with-pending for native token', async () => {
                 )
                     .to
                     .emit(multivault, 'PendingWithdrawalUpdateBounty')
-                    .withNamedArgs({
-                        recipient: unwrapNativeToken.address,
-                        id: bobsPendingWithdrawId,
-                        bounty: NEW_BOUNTY
-                    })
+                    .withArgs(unwrapNativeToken.address, bobsPendingWithdrawId, NEW_BOUNTY)
 
                 const pendingWithdrawState = await multivault.pendingWithdrawals(unwrapNativeToken.address, bobsPendingWithdrawId);
                 expect(pendingWithdrawState.bounty).to.be.equal(NEW_BOUNTY, "bounty value should be updated")
@@ -133,11 +137,7 @@ describe('Test deposit-withdraw-with-pending for native token', async () => {
                 )
                     .to
                     .emit(multivault, 'PendingWithdrawalCancel')
-                    .withNamedArgs({
-                        recipient: unwrapNativeToken.address,
-                        id: bobsPendingWithdrawId,
-                        amount: partialCancelWithdrawAmount
-                    })
+                    .withArgs(unwrapNativeToken.address, bobsPendingWithdrawId, partialCancelWithdrawAmount)
                 const pendingWithdrawState = await multivault.pendingWithdrawals(unwrapNativeToken.address, bobsPendingWithdrawId);
                 expect(pendingWithdrawState.amount).to.be.equal(amount.sub(partialCancelWithdrawAmount), "withdraw amount should be decreased")
             });
@@ -200,13 +200,13 @@ describe('Test deposit-withdraw-with-pending for native token', async () => {
                     return forceWithdrawTransaction
                 }).to.changeTokenBalances(
                     weth,
-                    [multivault.address],
+                    [multivault],
                     [ethers.BigNumber.from(0).sub(amount.sub(partialCancelWithdrawAmount))]
                 )
                 await expect(await forceWithdrawTransaction)
                     .to
                     .emit(multivault,"PendingWithdrawalForce")
-                    .withNamedArgs({
+                    .withArgs({
                         recipient:unwrapNativeToken.address,
                         id: bobsPendingWithdrawId
                     })

@@ -111,11 +111,17 @@ contract MultiVaultFacetDeposit is
             _transferToEverscaleNative(d, fee, msg.value);
         } else {
             if (tokens_owner != address(this)) {
+                uint balanceBefore = IERC20(token).balanceOf(address(this));
+    
                 IERC20(token).safeTransferFrom(
                     tokens_owner,
                     address(this),
                     d.amount
                 );
+    
+                uint balanceAfter = IERC20(token).balanceOf(address(this));
+
+                d.amount = balanceAfter - balanceBefore;
             }
 
             d.amount -= fee;
@@ -170,7 +176,14 @@ contract MultiVaultFacetDeposit is
         initializeToken(d.token)
         onlyEmergencyDisabled
     {
+        uint balanceBefore = IERC20(d.token).balanceOf(address(this));
+
         IERC20(d.token).safeTransferFrom(msg.sender, address(this), d.amount);
+
+        uint balanceAfter = IERC20(d.token).balanceOf(address(this));
+
+        d.amount = balanceAfter - balanceBefore;
+
         _deposit(d, expectedMinBounty, pendingWithdrawalIds, msg.value);
     }
 
