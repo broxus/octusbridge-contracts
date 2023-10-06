@@ -238,7 +238,9 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
     ) public pure returns (address signer) {
         signer = keccak256(payload)
             .toBytesPrefixed()
-            .recover(signature);
+            .tryRecover(signature);
+    
+        require(signer != address(0));
     }
 
     /**
