@@ -21,7 +21,7 @@ abstract contract MultiVaultHelperWithdraw is IMultiVaultFacetWithdrawEvents {
 
         bytes32 withdrawalId = keccak256(payload);
 
-        require(!s.withdrawalIds[withdrawalId]);
+        require(!s.withdrawalIds[withdrawalId], "Withdraw: already seen");
         s.withdrawalIds[withdrawalId] = true;
 
         _;
@@ -43,7 +43,8 @@ abstract contract MultiVaultHelperWithdraw is IMultiVaultFacetWithdrawEvents {
 
         require(
             _event.configurationWid == configuration.wid &&
-            _event.configurationAddress == configuration.addr
+            _event.configurationAddress == configuration.addr,
+            "Withdraw: invalid configuration"
         );
 
         return _event;

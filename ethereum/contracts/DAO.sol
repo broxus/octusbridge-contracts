@@ -25,7 +25,7 @@ contract DAO is IDAO, IEverscale, ReentrancyGuardUpgradeable, OwnableUpgradeable
     }
 
     modifier notZeroAddress(address addr) {
-        require(addr != address(0));
+        require(addr != address(0), "DAO: zero address");
 
         _;
     }

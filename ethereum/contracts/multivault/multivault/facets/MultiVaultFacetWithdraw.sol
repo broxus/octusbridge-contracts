@@ -59,14 +59,14 @@ contract MultiVaultFacetWithdraw is
         NativeWithdrawalParams memory withdrawal = decodeNativeWithdrawalEventData(_event.eventData);
 
         // Ensure chain id is correct
-        require(withdrawal.chainId == block.chainid);
+        require(withdrawal.chainId == block.chainid, "Withdraw: wrong chain id");
 
         // Derive token address
         // Depends on the withdrawn token source
         address token = _getNativeWithdrawalToken(withdrawal);
 
         // Ensure token is not blacklisted
-        require(!s.tokens_[token].blacklisted);
+        require(!s.tokens_[token].blacklisted, "Withdraw: token is blacklisted");
 
         // Consider movement fee and send it to `rewards_`
         uint256 fee = _calculateMovementFee(
@@ -176,10 +176,10 @@ contract MultiVaultFacetWithdraw is
         AlienWithdrawalParams memory withdrawal = decodeAlienWithdrawalEventData(_event.eventData);
 
         // Ensure chain id is correct
-        require(withdrawal.chainId == block.chainid); // TODO: add errors
+        require(withdrawal.chainId == block.chainid, "Withdraw: wrong chain id");
 
         // Ensure token is not blacklisted
-        require(!s.tokens_[withdrawal.token].blacklisted);
+        require(!s.tokens_[withdrawal.token].blacklisted, "Withdraw: token is blacklisted");
 
         // Consider movement fee and send it to `rewards_`
         uint256 fee = _calculateMovementFee(
@@ -234,7 +234,7 @@ contract MultiVaultFacetWithdraw is
 
         s.pendingWithdrawalsTotal[withdrawal.token] += withdrawAmount;
 
-        require(bounty <= withdrawAmount);
+        require(bounty <= withdrawAmount, "Withdraw: bounty > withdraw amount");
 
         // - Save withdrawal as pending
         s.pendingWithdrawals_[withdrawal.recipient][pendingWithdrawalId] = IMultiVaultFacetPendingWithdrawals.PendingWithdrawalParams({

@@ -14,7 +14,7 @@ abstract contract MultiVaultHelperLiquidity is IMultiVaultFacetLiquidityEvents {
     modifier onlyActivatedLP(address token) {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
-        require(s.liquidity[token].activation != 0);
+        require(s.liquidity[token].activation != 0, "Liquidity: LP not activated");
 
         _;
     }
@@ -81,7 +81,7 @@ abstract contract MultiVaultHelperLiquidity is IMultiVaultFacetLiquidityEvents {
     ) internal returns (address lp) {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
-        require(s.liquidity[token].activation == 0);
+        require(s.liquidity[token].activation == 0, "Liquidity: already activated");
 
         s.liquidity[token].activation = block.number;
         s.liquidity[token].interest = s.defaultInterest;

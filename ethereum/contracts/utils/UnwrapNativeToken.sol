@@ -15,7 +15,7 @@ contract UnwrapNativeToken is IOctusCallbackAlien, Initializable {
     mapping(address => mapping(uint => bool)) public pendingWithdrawals;
 
     modifier notZeroAddress(address addr) {
-        require(addr != address(0));
+        require(addr != address(0), "UnwrapNativeToken: zero address");
 
         _;
     }
@@ -84,6 +84,6 @@ contract UnwrapNativeToken is IOctusCallbackAlien, Initializable {
 
         (bool sent, ) = nativeTokenReceiver.call{value: withdrawAmount}("");
 
-        require(sent);
+        require(sent, "UnwrapNativeToken: failed to send ETH");
     }
 }

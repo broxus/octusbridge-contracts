@@ -13,7 +13,7 @@ import "./MultiVaultHelperLiquidity.sol";
 
 abstract contract MultiVaultHelperFee is MultiVaultHelperLiquidity, IMultiVaultFacetFeesEvents {
     modifier respectFeeLimit(uint fee) {
-        require(fee <= MultiVaultStorage.FEE_LIMIT);
+        require(fee <= MultiVaultStorage.FEE_LIMIT, "Fee: limit exceeded");
 
         _;
     }

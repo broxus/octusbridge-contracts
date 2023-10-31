@@ -35,7 +35,8 @@ abstract contract MultiVaultHelperTokens is
             require(
                 IERC20Metadata(_token).decimals() <= MultiVaultStorage.DECIMALS_LIMIT &&
                 bytes(IERC20Metadata(_token).symbol()).length <= MultiVaultStorage.SYMBOL_LENGTH_LIMIT &&
-                bytes(IERC20Metadata(_token).name()).length <= MultiVaultStorage.NAME_LENGTH_LIMIT
+                bytes(IERC20Metadata(_token).name()).length <= MultiVaultStorage.NAME_LENGTH_LIMIT,
+                "Tokens: invalid token meta"
             );
 
             _activateToken(_token, false);
@@ -44,14 +45,14 @@ abstract contract MultiVaultHelperTokens is
 
     modifier tokenNotBlacklisted(address _token) {
         bool isBlackListed = isTokenNoBlackListed(_token);
-        require(!isBlackListed);
+        require(!isBlackListed, "Tokens: token is blacklisted");
 
         _;
     }
     modifier wethNotBlacklisted() {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
         bool isBlackListed = isTokenNoBlackListed(s.weth);
-        require(!isBlackListed);
+        require(!isBlackListed, "Tokens: weth is blacklisted");
 
         _;
     }

@@ -37,11 +37,6 @@ interface IMultiVaultFacetSettings {
         address _weth
     ) external;
 
-    function setCustomNative(
-        IEverscale.EverscaleAddress memory token,
-        address native
-    ) external;
-
     function setGuardian(address) external;
     function setWithdrawGuardian(address _withdrawGuardian) external;
     function setManagement(address) external;

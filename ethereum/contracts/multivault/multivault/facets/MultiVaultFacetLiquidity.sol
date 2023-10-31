@@ -38,7 +38,7 @@ contract MultiVaultFacetLiquidity is
     ) external override onlyEmergencyDisabled nonReentrant {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
-        require(s.tokens_[token].isNative == false);
+        require(s.tokens_[token].isNative == false, "Liquidity: token is native");
 
         IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
 

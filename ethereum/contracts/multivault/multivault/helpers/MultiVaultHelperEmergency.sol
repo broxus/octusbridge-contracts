@@ -8,7 +8,7 @@ abstract contract MultiVaultHelperEmergency {
     modifier onlyEmergencyDisabled() {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
-        require(!s.emergencyShutdown);
+        require(!s.emergencyShutdown, "Emergency: shutdown");
 
         _;
     }

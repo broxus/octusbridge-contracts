@@ -7,7 +7,7 @@ import "../../interfaces/multivault/IOctusCallback.sol";
 
 abstract contract MultiVaultHelperCallback {
     modifier checkCallbackRecipient(address recipient) {
-        require(recipient != address(this));
+        require(recipient != address(this), "Callback: cant call itself");
 
         if (recipient != address(0)) {
             _;
@@ -89,6 +89,6 @@ abstract contract MultiVaultHelperCallback {
     ) internal {
         (bool success, ) = recipient.call(data);
 
-        if (strict) require(success);
+        if (strict) require(success, "Callback: strict call failed");
     }
 }

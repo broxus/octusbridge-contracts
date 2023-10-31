@@ -74,7 +74,7 @@ contract MultiVaultFacetFees is
 
         uint fee = s.fees[token];
 
-        require(fee > 0);
+        require(fee > 0, "Fees: no fees to skim");
 
         s.fees[token] = 0;
 

@@ -14,7 +14,7 @@ abstract contract MultiVaultHelperPendingWithdrawal is IMultiVaultFacetPendingWi
     ) {
         IMultiVaultFacetPendingWithdrawals.PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(pendingWithdrawalId);
 
-        require(pendingWithdrawal.amount > 0);
+        require(pendingWithdrawal.amount > 0, "Pending: amount is zero");
 
         _;
     }
@@ -58,7 +58,7 @@ abstract contract MultiVaultHelperPendingWithdrawal is IMultiVaultFacetPendingWi
         IMultiVaultFacetPendingWithdrawals.PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(pendingWithdrawalId);
 
         require(pendingWithdrawal.approveStatus == IMultiVaultFacetPendingWithdrawals.ApproveStatus.NotRequired
-            || pendingWithdrawal.approveStatus == IMultiVaultFacetPendingWithdrawals.ApproveStatus.Approved);
+            || pendingWithdrawal.approveStatus == IMultiVaultFacetPendingWithdrawals.ApproveStatus.Approved, "Pending: wrong approve status");
 
         s.pendingWithdrawals_[pendingWithdrawalId.recipient][pendingWithdrawalId.id].amount -= amount;
         s.pendingWithdrawalsTotal[pendingWithdrawal.token] -= amount;

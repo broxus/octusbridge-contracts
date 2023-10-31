@@ -75,8 +75,8 @@ contract MultiVaultFacetPendingWithdrawals is
 
         PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(msg.sender, id);
 
-        require(!s.tokens_[pendingWithdrawal.token].isNative);
-        require(bounty <= pendingWithdrawal.amount);
+        require(!s.tokens_[pendingWithdrawal.token].isNative, "Pending: native token");
+        require(bounty <= pendingWithdrawal.amount, "Pending: bounty too large");
 
         s.pendingWithdrawals_[msg.sender][id].bounty = bounty;
 
@@ -99,7 +99,7 @@ contract MultiVaultFacetPendingWithdrawals is
             PendingWithdrawalId memory pendingWithdrawalId = pendingWithdrawalIds[i];
             PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(pendingWithdrawalId);
 
-            require(pendingWithdrawal.amount > 0);
+            require(pendingWithdrawal.amount > 0, "Pending: zero amount");
 
             _pendingWithdrawalAmountReduce(
                 pendingWithdrawalId,
@@ -153,8 +153,8 @@ contract MultiVaultFacetPendingWithdrawals is
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
         PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(msg.sender, id);
 
-        require(!s.tokens_[pendingWithdrawal.token].isNative);
-        require(amount > 0 && amount <= pendingWithdrawal.amount);
+        require(!s.tokens_[pendingWithdrawal.token].isNative, "Pending: native token");
+        require(amount > 0 && amount <= pendingWithdrawal.amount, "Pending: wrong amount");
 
         _pendingWithdrawalAmountReduce(
             PendingWithdrawalId(msg.sender, id),
@@ -196,11 +196,12 @@ contract MultiVaultFacetPendingWithdrawals is
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
         PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(pendingWithdrawalId);
 
-        require(pendingWithdrawal.approveStatus == ApproveStatus.Required);
+        require(pendingWithdrawal.approveStatus == ApproveStatus.Required, "Pending: wrong current approve status");
 
         require(
             approveStatus == ApproveStatus.Approved ||
-            approveStatus == ApproveStatus.Rejected
+            approveStatus == ApproveStatus.Rejected,
+            "Pending: wrong approve status"
         );
 
         _pendingWithdrawalApproveStatusUpdate(pendingWithdrawalId, approveStatus);
@@ -251,7 +252,7 @@ contract MultiVaultFacetPendingWithdrawals is
         PendingWithdrawalId[] memory pendingWithdrawalId,
         ApproveStatus[] memory approveStatus
     ) external override {
-        require(pendingWithdrawalId.length == approveStatus.length);
+        require(pendingWithdrawalId.length == approveStatus.length, "Pending: params mismatch");
 
         for (uint i = 0; i < pendingWithdrawalId.length; i++) {
             setPendingWithdrawalApprove(pendingWithdrawalId[i], approveStatus[i]);

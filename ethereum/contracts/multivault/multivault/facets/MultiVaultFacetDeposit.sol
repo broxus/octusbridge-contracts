@@ -86,7 +86,7 @@ contract MultiVaultFacetDeposit is
         uint256 _value,
         address tokens_owner
     ) internal drainGas {
-        require(!_limitsViolated(d.token, d.amount));
+        require(!_limitsViolated(d.token, d.amount), "Deposit: limits violated");
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         uint fee = _calculateMovementFee(

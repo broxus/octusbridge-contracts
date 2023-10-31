@@ -16,7 +16,7 @@ contract MultiVaultHelperGas {
         if (gasDonor != address(0)) {
             (bool sent,) = gasDonor.call{value: address(this).balance}("");
 
-            require(sent);
+            require(sent, "Gas: failed to send gas to donor");
         }
     }
 }

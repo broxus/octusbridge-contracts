@@ -141,7 +141,7 @@ contract MultiVaultFacetSettings is
     ) external override onlyGovernance {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
-        require(daily >= s.withdrawalLimits_[token].undeclared);
+        require(daily >= s.withdrawalLimits_[token].undeclared, "Settings: daily limit < undeclared");
 
         s.withdrawalLimits_[token].daily = daily;
 
@@ -158,7 +158,7 @@ contract MultiVaultFacetSettings is
     ) external override onlyGovernance {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
-        require(s.withdrawalLimits_[token].daily >= undeclared);
+        require(s.withdrawalLimits_[token].daily >= undeclared, "Settings: daily limit < undeclared");
 
         s.withdrawalLimits_[token].undeclared = undeclared;
 
@@ -280,29 +280,14 @@ contract MultiVaultFacetSettings is
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         if (active) {
-            require(msg.sender == s.guardian || msg.sender == s.governance);
+            require(msg.sender == s.guardian || msg.sender == s.governance, "Settings: only guardian or governance");
         } else {
-            require(msg.sender == s.governance);
+            require(msg.sender == s.governance, "Settings: only governance");
         }
 
         s.emergencyShutdown = active;
 
         emit EmergencyShutdown(active);
-    }
-
-    function setCustomNative(
-        IEverscale.EverscaleAddress memory token,
-        address custom
-    ) external override onlyGovernance {
-        require(IERC173(custom).owner() == address(this));
-
-        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
-
-        address native = _getNativeToken(token);
-
-        s.tokens_[native].custom = custom;
-
-        emit UpdateCustom(token.wid, token.addr, custom);
     }
 
     function setGasDonor(

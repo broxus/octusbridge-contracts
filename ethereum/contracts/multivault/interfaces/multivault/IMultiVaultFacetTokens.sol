@@ -26,7 +26,7 @@ interface IMultiVaultFacetTokens {
         uint depositFee;
         uint withdrawFee;
         bool isNative;
-        address custom;
+        address custom; // deprecated
         uint256 depositLimit;
     }
 

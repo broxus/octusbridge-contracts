@@ -11,7 +11,6 @@ interface IMultiVaultFacetSettingsEvents {
     event UpdateRewards(int128 wid, uint256 addr);
     event UpdateWeth(address weth);
     event UpdateGasDonor(address gasDonor);
-    event UpdateCustom(int8 wid, uint256 addr, address token);
 
     event UpdateDailyWithdrawalLimits(address token, uint limit);
     event UpdateUndeclaredWithdrawalLimits(address token, uint limit);

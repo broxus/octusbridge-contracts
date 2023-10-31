@@ -9,7 +9,7 @@ abstract contract MultiVaultHelperActors {
     modifier onlyPendingGovernance() {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
-        require(msg.sender == s.pendingGovernance);
+        require(msg.sender == s.pendingGovernance, "Actors: only pending governance");
 
         _;
     }
@@ -17,7 +17,7 @@ abstract contract MultiVaultHelperActors {
     modifier onlyGovernance() {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
-        require(msg.sender == s.governance);
+        require(msg.sender == s.governance, "Actors: only governance");
 
         _;
     }
@@ -25,7 +25,7 @@ abstract contract MultiVaultHelperActors {
     modifier onlyGovernanceOrManagement() {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
-        require(msg.sender == s.governance || msg.sender == s.management);
+        require(msg.sender == s.governance || msg.sender == s.management, "Actors: only governance or management");
 
         _;
     }
@@ -33,7 +33,7 @@ abstract contract MultiVaultHelperActors {
     modifier onlyGovernanceOrWithdrawGuardian() {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
-        require(msg.sender == s.governance || msg.sender == s.withdrawGuardian);
+        require(msg.sender == s.governance || msg.sender == s.withdrawGuardian, "Actors: only governance or withdraw guardian");
 
         _;
     }

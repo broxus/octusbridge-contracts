@@ -292,31 +292,6 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "int8",
-        "name": "wid",
-        "type": "int8"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "addr",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      }
-    ],
-    "name": "UpdateCustom",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
         "internalType": "address",
         "name": "token",
         "type": "address"
@@ -906,36 +881,6 @@
       }
     ],
     "name": "setConfigurationNative",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "int8",
-            "name": "wid",
-            "type": "int8"
-          },
-          {
-            "internalType": "uint256",
-            "name": "addr",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct IEverscale.EverscaleAddress",
-        "name": "token",
-        "type": "tuple"
-      },
-      {
-        "internalType": "address",
-        "name": "custom",
-        "type": "address"
-      }
-    ],
-    "name": "setCustomNative",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
