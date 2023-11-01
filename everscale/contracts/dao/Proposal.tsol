@@ -95,6 +95,8 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
 
     function queue() override public {
         require(state() == ProposalState.Succeeded, DaoErrors.PROPOSAL_IS_NOT_SUCCEEDED);
+        require(address(this).balance > Gas.UNLOCK_VOTE_VALUE, DaoErrors.PROPOSAL_BALANCE_TOO_LOW);
+
         tvm.accept();
         executionTime = endTime + config.timeLock;
         emit Queued(executionTime);
