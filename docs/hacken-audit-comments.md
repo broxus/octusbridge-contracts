@@ -67,6 +67,17 @@ Fixed. Added `drain` function for recovering lost tokens. Added condition to `on
 
 Fixed. Marked `Cache` as abstract. Removed `ChainId` contract, replace it with `block.timestamp`. Added `__gap` to `Cache` contract.
 
+## [VN-015][Informational]Redundant_Code.md
+
+Fixed.
+
+
+
+
+
+
+
+
 ## [VN-040][Medium] Outdated OpenZeppelin Contracts Used.md
 
 Fixed - 97437ee8ee44524f05a8a5714e069ffff086a9d1.
