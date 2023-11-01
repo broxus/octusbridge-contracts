@@ -121,6 +121,12 @@ library DiamondStorage {
         initializeDiamondCut(_init, _calldata);
     }
 
+    function addFacet(Storage storage ds, address _facetAddress) internal {
+        enforceHasContractCode(_facetAddress, "DiamondStorage: New facet has no code");
+        ds.facetFunctionSelectors[_facetAddress].facetAddressPosition = uint16(ds.facetAddresses.length);
+        ds.facetAddresses.push(_facetAddress);
+    }
+
     function addFunctions(address _facetAddress, bytes4[] memory _functionSelectors) internal {
         require(_functionSelectors.length > 0, "DiamondStorage: No selectors in facet to cut");
         Storage storage ds = _storage();
@@ -129,9 +135,7 @@ library DiamondStorage {
         uint16 selectorPosition = uint16(ds.facetFunctionSelectors[_facetAddress].functionSelectors.length);
         // add new facet address if it does not exist
         if (selectorPosition == 0) {
-            enforceHasContractCode(_facetAddress, "DiamondStorage: New facet has no code");
-            ds.facetFunctionSelectors[_facetAddress].facetAddressPosition = uint16(ds.facetAddresses.length);
-            ds.facetAddresses.push(_facetAddress);
+            addFacet(ds, _facetAddress);
         }
         for (uint256 selectorIndex; selectorIndex < _functionSelectors.length; selectorIndex++) {
             bytes4 selector = _functionSelectors[selectorIndex];
@@ -151,9 +155,7 @@ library DiamondStorage {
         uint16 selectorPosition = uint16(ds.facetFunctionSelectors[_facetAddress].functionSelectors.length);
         // add new facet address if it does not exist
         if (selectorPosition == 0) {
-            enforceHasContractCode(_facetAddress, "DiamondStorage: New facet has no code");
-            ds.facetFunctionSelectors[_facetAddress].facetAddressPosition = uint16(ds.facetAddresses.length);
-            ds.facetAddresses.push(_facetAddress);
+            addFacet(ds, _facetAddress);
         }
         for (uint256 selectorIndex; selectorIndex < _functionSelectors.length; selectorIndex++) {
             bytes4 selector = _functionSelectors[selectorIndex];

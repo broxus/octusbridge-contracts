@@ -107,6 +107,14 @@ Fixed. Added requirement before `tvm.accept()`.
 
 Fixed.
 
+## [VN-026][Informational]Inefficient Token Existence Check in Bulk Operations.md
+
+Fixed.
+
+## [VN-027][Informational]Redundant Code in DiamondProxy Storage Functions.md
+
+Fixed.
+
 ## [VN-040][Medium] Outdated OpenZeppelin Contracts Used.md
 
 Fixed - 97437ee8ee44524f05a8a5714e069ffff086a9d1.
