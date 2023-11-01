@@ -59,20 +59,6 @@ interface IProxyMultiVaultAlien_V7 is IEVMCallback, INetworks {
         uint256 canonId
     ) external;
 
-    // Admin mint / burn
-    function mint(
-        address token,
-        uint128 amount,
-        address recipient,
-        TvmCell payload
-    ) external;
-
-    function burn(
-        address token,
-        uint128 amount,
-        address walletOwner
-    ) external;
-
     // Merge pool deposit / withdrawal
     function mintTokensByMergePool(
         uint nonce,

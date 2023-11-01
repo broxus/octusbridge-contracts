@@ -136,6 +136,10 @@ If the code is updated by mistake, automatic tests will fail.
 
 Fixed. Aggregate check is not necessary - if there's not enough value, transaction will fail with revert too. Refactored `_deployEvent`.
 
+## [VN-033][Medium]Centralization_Risk.md
+
+Fixed. Removed `mint` and `burn` functions.
+
 ## [VN-040][Medium] Outdated OpenZeppelin Contracts Used.md
 
 Fixed - 97437ee8ee44524f05a8a5714e069ffff086a9d1.
