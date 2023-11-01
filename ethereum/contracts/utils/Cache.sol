@@ -3,8 +3,9 @@ pragma solidity ^0.8.20;
 pragma experimental ABIEncoderV2;
 
 
-contract Cache {
+abstract contract Cache {
     mapping (bytes32 => bool) public cache;
+    uint256[49] __gap;
 
     modifier notCached(bytes memory payload) {
         bytes32 hash_ = keccak256(abi.encode(payload));

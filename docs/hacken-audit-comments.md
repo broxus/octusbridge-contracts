@@ -63,6 +63,10 @@ Fixed - 0be7d150a54497a884cea111911ff3177717895e. Removed `setCustomNative` func
 
 Fixed. Added `drain` function for recovering lost tokens. Added condition to `onAlienWithdrawal`.
 
+## [VN-014][Low]Missing_storage_gaps.md
+
+Fixed. Marked `Cache` as abstract. Removed `ChainId` contract, replace it with `block.timestamp`. Added `__gap` to `Cache` contract.
+
 ## [VN-040][Medium] Outdated OpenZeppelin Contracts Used.md
 
 Fixed - 97437ee8ee44524f05a8a5714e069ffff086a9d1.

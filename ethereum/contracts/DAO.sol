@@ -10,13 +10,12 @@ import "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 import "./utils/Cache.sol";
-import "./utils/ChainId.sol";
 
 
 /// @title DAO contract for Everscale-EVM bridge
 /// @dev Executes proposals confirmed in Everscale Bridge DAO.
 /// Proposals are submitted in form of payloads and signatures
-contract DAO is IDAO, IEverscale, ReentrancyGuardUpgradeable, OwnableUpgradeable, Cache, ChainId {
+contract DAO is IDAO, IEverscale, ReentrancyGuardUpgradeable, OwnableUpgradeable, Cache {
     address public bridge;
     EverscaleAddress public configuration;
 
@@ -119,7 +118,7 @@ contract DAO is IDAO, IEverscale, ReentrancyGuardUpgradeable, OwnableUpgradeable
         ) = decodeEthActionsEventData(payload);
 
         require(
-            chainId == getChainID(),
+            chainId == block.chainid,
             "DAO: wrong chain id"
         );
 

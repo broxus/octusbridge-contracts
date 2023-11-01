@@ -115,23 +115,6 @@ Execute set of actions.
 |---|---|---|
 | responses | bytes[] | Bytes-encoded payload action responses |
 
-### getChainID
-
-```solidity
-function getChainID() external view returns (uint256)
-```
-
-
-
-
-
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | uint256 | undefined |
-
 ### initialize
 
 ```solidity
