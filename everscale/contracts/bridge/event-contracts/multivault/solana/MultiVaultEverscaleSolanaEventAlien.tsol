@@ -48,8 +48,6 @@ contract MultiVaultEverscaleSolanaEventAlien is
     }
 
     function onInit() override internal {
-        setStatusInitializing();
-
         (nonce, proxy, token, remainingGasTo, amount, recipient, sender) = abi.decode(
             eventInitData.voteData.eventData,
             (uint32, address, address, address, uint128, uint256, address)

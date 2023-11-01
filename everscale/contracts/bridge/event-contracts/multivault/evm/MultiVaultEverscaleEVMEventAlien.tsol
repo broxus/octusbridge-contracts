@@ -63,8 +63,6 @@ contract MultiVaultEverscaleEVMEventAlien is
     }
 
     function onInit() override internal {
-        setStatusInitializing();
-
         (
             nonce, proxy, token, remainingGasTo, amount, recipient, sender,
             callback_recipient, callback_payload, callback_strict

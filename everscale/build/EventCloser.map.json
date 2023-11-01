@@ -1,321 +1,161 @@
 {
   "map": {
-    "0b710f110ed3f975f2a80bc22223e8cbe67329de2c36925ec7ba34f8e52d41c5": {
+    "27cc0f4a508ef1782e9b0455e7cb1b2921f19eeaba0aac7e450cf70dd4cecebf": {
       "0": {
         "filename": "EventCloser.code",
-        "line": 380
-      },
-      "16": {
-        "filename": "EventCloser.code",
-        "line": 381
-      },
-      "24": {
-        "filename": "EventCloser.code",
-        "line": 382
-      },
-      "40": {
-        "filename": "EventCloser.code",
-        "line": 383
-      },
-      "56": {
-        "filename": "EventCloser.code",
-        "line": 384
-      },
-      "72": {
-        "filename": "EventCloser.code",
-        "line": 385
-      },
-      "80": {
-        "filename": "EventCloser.code",
-        "line": 386
-      },
-      "88": {
-        "filename": "EventCloser.code",
-        "line": 387
-      },
-      "104": {
-        "filename": "EventCloser.code",
-        "line": 388
-      },
-      "120": {
-        "filename": "EventCloser.code",
-        "line": 389
-      },
-      "128": {
-        "filename": "EventCloser.code",
-        "line": 390
-      },
-      "144": {
-        "filename": "EventCloser.code",
-        "line": 391
-      },
-      "168": {
-        "filename": "EventCloser.code",
-        "line": 392
-      },
-      "176": {
-        "filename": "EventCloser.code",
-        "line": 393
-      },
-      "184": {
-        "filename": "EventCloser.code",
-        "line": 394
-      },
-      "200": {
-        "filename": "EventCloser.code",
-        "line": 395
-      },
-      "208": {
-        "filename": "EventCloser.code",
-        "line": 396
-      },
-      "216": {
-        "filename": "EventCloser.code",
-        "line": 397
-      },
-      "224": {
-        "filename": "EventCloser.code",
-        "line": 398
-      },
-      "232": {
-        "filename": "EventCloser.code",
-        "line": 399
-      },
-      "256": {
-        "filename": "EventCloser.code",
-        "line": 400
-      },
-      "272": {
-        "filename": "EventCloser.code",
-        "line": 401
-      },
-      "280": {
-        "filename": "EventCloser.code",
-        "line": 402
-      },
-      "296": {
-        "filename": "EventCloser.code",
-        "line": 403
-      },
-      "304": {
-        "filename": "EventCloser.code",
-        "line": 404
-      },
-      "312": {
-        "filename": "EventCloser.code",
-        "line": 405
-      },
-      "328": {
-        "filename": "EventCloser.code",
-        "line": 407
-      },
-      "336": {
-        "filename": "EventCloser.code",
-        "line": 409
-      },
-      "344": {
-        "filename": "EventCloser.code",
-        "line": 410
-      },
-      "360": {
-        "filename": "EventCloser.code",
-        "line": 413
-      },
-      "368": {
-        "filename": "EventCloser.code",
-        "line": 414
-      },
-      "384": {
-        "filename": "EventCloser.code",
-        "line": 417
-      }
-    },
-    "264601bac8c9476d9c27f0bee319b76ce3b16380043dae00be6e43ccdfc8b2d1": {
-      "0": {
-        "filename": "EventCloser.code",
-        "line": 288
-      },
-      "16": {
-        "filename": "EventCloser.code",
-        "line": 289
-      },
-      "24": {
-        "filename": "EventCloser.code",
-        "line": 290
-      },
-      "40": {
-        "filename": "EventCloser.code",
-        "line": 291
-      },
-      "56": {
-        "filename": "EventCloser.code",
-        "line": 292
-      },
-      "72": {
-        "filename": "EventCloser.code",
-        "line": 293
-      },
-      "80": {
-        "filename": "EventCloser.code",
-        "line": 294
-      },
-      "96": {
-        "filename": "EventCloser.code",
-        "line": 295
-      },
-      "112": {
-        "filename": "EventCloser.code",
-        "line": 296
-      },
-      "120": {
-        "filename": "EventCloser.code",
-        "line": 297
-      },
-      "128": {
-        "filename": "EventCloser.code",
-        "line": 298
-      },
-      "136": {
-        "filename": "EventCloser.code",
-        "line": 299
-      },
-      "152": {
-        "filename": "EventCloser.code",
-        "line": 300
-      },
-      "160": {
-        "filename": "EventCloser.code",
-        "line": 301
-      },
-      "176": {
-        "filename": "EventCloser.code",
-        "line": 302
-      },
-      "192": {
-        "filename": "EventCloser.code",
-        "line": 303
-      },
-      "208": {
-        "filename": "EventCloser.code",
-        "line": 304
-      },
-      "224": {
-        "filename": "EventCloser.code",
-        "line": 305
-      }
-    },
-    "29109c2d2a87a8267ef90902a493cb455e34ae5047364dc185bfc071f0e53ff4": {
-      "0": {
-        "filename": "EventCloser.code",
-        "line": 235
+        "line": 582
       },
       "8": {
         "filename": "EventCloser.code",
-        "line": 236
+        "line": 583
       },
-      "24": {
+      "16": {
         "filename": "EventCloser.code",
-        "line": 237
+        "line": 584
+      },
+      "32": {
+        "filename": "EventCloser.code",
+        "line": 587
       },
       "48": {
         "filename": "EventCloser.code",
-        "line": 238
+        "line": 588
       },
-      "64": {
+      "56": {
         "filename": "EventCloser.code",
-        "line": 239
+        "line": 589
       },
       "72": {
         "filename": "EventCloser.code",
-        "line": 240
+        "line": 590
       },
-      "88": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 33
-      },
-      "96": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 33
-      },
-      "104": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 33
-      },
-      "112": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 33
-      },
-      "120": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 33
-      },
-      "128": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 33
-      },
-      "136": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 33
-      },
-      "152": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 33
-      },
-      "160": {
+      "232": {
         "filename": "EventCloser.code",
-        "line": 254
+        "line": 591
       },
-      "176": {
+      "240": {
         "filename": "EventCloser.code",
-        "line": 257
+        "line": 592
       },
-      "184": {
+      "248": {
         "filename": "EventCloser.code",
-        "line": 258
+        "line": 593
       },
-      "200": {
+      "256": {
         "filename": "EventCloser.code",
-        "line": 261
+        "line": 594
+      },
+      "272": {
+        "filename": "EventCloser.code",
+        "line": 595
+      },
+      "280": {
+        "filename": "EventCloser.code",
+        "line": 596
+      },
+      "296": {
+        "filename": "EventCloser.code",
+        "line": 597
+      },
+      "312": {
+        "filename": "EventCloser.code",
+        "line": 598
+      },
+      "320": {
+        "filename": "EventCloser.code",
+        "line": 599
+      },
+      "328": {
+        "filename": "EventCloser.code",
+        "line": 600
+      },
+      "344": {
+        "filename": "EventCloser.code",
+        "line": 602
+      },
+      "352": {
+        "filename": "EventCloser.code",
+        "line": 603
       }
     },
     "2919f51a959445de2ad14eb6f72e21c7ba164d42ba19a74bf61e0ff1929e89f7": {
       "0": {
         "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 33
+        "line": 41
       }
     },
-    "2c96a60d9fe4f8fabaa01cf6078111efd8e30ecf1f36436e6f35f82a0390af62": {
+    "29f07f696786bfa373cb84960c417b09405ec87b351d5e879f9eb8e3b8129825": {
       "0": {
         "filename": "EventCloser.code",
-        "line": 541
+        "line": 266
       },
       "8": {
         "filename": "EventCloser.code",
-        "line": 542
+        "line": 267
       },
-      "56": {
+      "24": {
         "filename": "EventCloser.code",
-        "line": 543
+        "line": 268
+      },
+      "48": {
+        "filename": "EventCloser.code",
+        "line": 269
       },
       "64": {
         "filename": "EventCloser.code",
-        "line": 544
+        "line": 270
       },
-      "80": {
+      "72": {
         "filename": "EventCloser.code",
-        "line": 570
+        "line": 271
       },
       "88": {
-        "filename": "EventCloser.code",
-        "line": 571
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 33
+      },
+      "96": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 33
+      },
+      "104": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 33
+      },
+      "112": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 33
+      },
+      "120": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 33
+      },
+      "128": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 33
       },
       "136": {
-        "filename": "EventCloser.code",
-        "line": 572
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 33
       },
-      "144": {
+      "152": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 33
+      },
+      "160": {
         "filename": "EventCloser.code",
-        "line": 573
+        "line": 285
+      },
+      "176": {
+        "filename": "EventCloser.code",
+        "line": 288
+      },
+      "184": {
+        "filename": "EventCloser.code",
+        "line": 289
+      },
+      "200": {
+        "filename": "EventCloser.code",
+        "line": 292
       }
     },
     "2e9f1b516fef5ead73c771ac0e2156dd761e5d0a798b348b54733be3efc8947f": {
@@ -364,575 +204,353 @@
         "line": 27
       }
     },
-    "3332299e6e5ee33b520f6b33109893e7a7262c181160a75ab91e0407c8d7ef66": {
+    "32a68ca954ef4117a4b0585776ee41702d61c57be2615e6ac00a215b7b9d5cf6": {
       "0": {
         "filename": "EventCloser.code",
-        "line": 521
+        "line": 562
       },
       "8": {
         "filename": "EventCloser.code",
-        "line": 522
+        "line": 563
       },
       "16": {
         "filename": "EventCloser.code",
-        "line": 523
+        "line": 564
       },
       "32": {
         "filename": "EventCloser.code",
-        "line": 526
+        "line": 567
       },
       "48": {
         "filename": "EventCloser.code",
-        "line": 527
+        "line": 568
       },
       "56": {
         "filename": "EventCloser.code",
-        "line": 528
+        "line": 569
       },
       "72": {
         "filename": "EventCloser.code",
-        "line": 529
+        "line": 570
       },
       "232": {
         "filename": "EventCloser.code",
-        "line": 530
+        "line": 571
       },
       "240": {
         "filename": "EventCloser.code",
-        "line": 531
+        "line": 572
       },
       "248": {
         "filename": "EventCloser.code",
-        "line": 532
-      },
-      "256": {
-        "filename": "EventCloser.code",
-        "line": 533
+        "line": 573
       },
       "264": {
         "filename": "EventCloser.code",
-        "line": 534
+        "line": 574
       },
       "272": {
         "filename": "EventCloser.code",
-        "line": 535
+        "line": 575
       },
-      "288": {
+      "280": {
         "filename": "EventCloser.code",
-        "line": 537
+        "line": 576
       },
       "296": {
         "filename": "EventCloser.code",
-        "line": 538
+        "line": 578
+      },
+      "304": {
+        "filename": "EventCloser.code",
+        "line": 579
       }
     },
-    "36dd51c10f553a33cfc6707b9ac93fc080d36f688930a4f710b6a62267daa5c4": {
+    "32b33217610959a4cb1f88d57f47c451bd5d320ee022e64b0c3cde2c8b614929": {
       "0": {
         "filename": "EventCloser.code",
-        "line": 308
+        "line": 542
+      },
+      "8": {
+        "filename": "EventCloser.code",
+        "line": 543
       },
       "16": {
         "filename": "EventCloser.code",
-        "line": 309
+        "line": 544
       },
-      "24": {
+      "32": {
         "filename": "EventCloser.code",
-        "line": 310
+        "line": 547
       },
-      "40": {
+      "48": {
         "filename": "EventCloser.code",
-        "line": 311
+        "line": 548
       },
       "56": {
         "filename": "EventCloser.code",
-        "line": 312
+        "line": 549
       },
       "72": {
         "filename": "EventCloser.code",
-        "line": 341
+        "line": 550
+      },
+      "232": {
+        "filename": "EventCloser.code",
+        "line": 551
+      },
+      "240": {
+        "filename": "EventCloser.code",
+        "line": 552
+      },
+      "248": {
+        "filename": "EventCloser.code",
+        "line": 553
+      },
+      "264": {
+        "filename": "EventCloser.code",
+        "line": 554
+      },
+      "272": {
+        "filename": "EventCloser.code",
+        "line": 555
+      },
+      "280": {
+        "filename": "EventCloser.code",
+        "line": 556
+      },
+      "296": {
+        "filename": "EventCloser.code",
+        "line": 558
+      },
+      "304": {
+        "filename": "EventCloser.code",
+        "line": 559
+      }
+    },
+    "4473d5d5e2351c943c6b784323e8f37ebf1e044d23b7abb8ccd1d5997aedbbc2": {
+      "0": {
+        "filename": "EventCloser.code",
+        "line": 606
+      },
+      "8": {
+        "filename": "EventCloser.code",
+        "line": 607
+      },
+      "16": {
+        "filename": "EventCloser.code",
+        "line": 608
+      },
+      "32": {
+        "filename": "EventCloser.code",
+        "line": 611
+      },
+      "48": {
+        "filename": "EventCloser.code",
+        "line": 612
+      },
+      "56": {
+        "filename": "EventCloser.code",
+        "line": 613
+      },
+      "72": {
+        "filename": "EventCloser.code",
+        "line": 614
+      },
+      "232": {
+        "filename": "EventCloser.code",
+        "line": 615
+      },
+      "240": {
+        "filename": "EventCloser.code",
+        "line": 616
+      },
+      "248": {
+        "filename": "EventCloser.code",
+        "line": 617
+      },
+      "264": {
+        "filename": "EventCloser.code",
+        "line": 618
+      },
+      "272": {
+        "filename": "EventCloser.code",
+        "line": 619
+      },
+      "280": {
+        "filename": "EventCloser.code",
+        "line": 620
+      },
+      "296": {
+        "filename": "EventCloser.code",
+        "line": 622
+      },
+      "304": {
+        "filename": "EventCloser.code",
+        "line": 623
+      }
+    },
+    "4b34d49faa70baef3a66bcf0732c293367f7e642555db84c1b43e86f950e9b55": {
+      "0": {
+        "filename": "EventCloser.code",
+        "line": 630
+      },
+      "8": {
+        "filename": "EventCloser.code",
+        "line": 631
+      },
+      "56": {
+        "filename": "EventCloser.code",
+        "line": 632
+      },
+      "64": {
+        "filename": "EventCloser.code",
+        "line": 633
+      },
+      "80": {
+        "filename": "EventCloser.code",
+        "line": 636
+      },
+      "88": {
+        "filename": "EventCloser.code",
+        "line": 637
+      },
+      "136": {
+        "filename": "EventCloser.code",
+        "line": 638
+      },
+      "144": {
+        "filename": "EventCloser.code",
+        "line": 639
+      },
+      "160": {
+        "filename": "EventCloser.code",
+        "line": 642
+      },
+      "168": {
+        "filename": "EventCloser.code",
+        "line": 643
+      },
+      "216": {
+        "filename": "EventCloser.code",
+        "line": 644
+      },
+      "224": {
+        "filename": "EventCloser.code",
+        "line": 645
+      },
+      "240": {
+        "filename": "EventCloser.code",
+        "line": 648
+      },
+      "248": {
+        "filename": "EventCloser.code",
+        "line": 649
+      },
+      "296": {
+        "filename": "EventCloser.code",
+        "line": 650
+      },
+      "304": {
+        "filename": "EventCloser.code",
+        "line": 651
+      }
+    },
+    "4ef8f025d6c4900529b8fccaad4434e5213ff8a8c80f20d21bfb56970eec8990": {
+      "0": {
+        "filename": "EventCloser.code",
+        "line": 63
+      },
+      "8": {
+        "filename": "EventCloser.code",
+        "line": 64
+      },
+      "24": {
+        "filename": "EventCloser.code",
+        "line": 65
+      },
+      "48": {
+        "filename": "EventCloser.code",
+        "line": 66
+      },
+      "64": {
+        "filename": "EventCloser.code",
+        "line": 67
+      },
+      "72": {
+        "filename": "EventCloser.code",
+        "line": 68
+      },
+      "88": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 47
+      },
+      "104": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 47
+      },
+      "120": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 47
+      },
+      "128": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 47
+      },
+      "144": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 47
+      },
+      "152": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 47
+      },
+      "160": {
+        "filename": "EventCloser.code",
+        "line": 79
+      },
+      "176": {
+        "filename": "EventCloser.code",
+        "line": 82
+      },
+      "192": {
+        "filename": "EventCloser.code",
+        "line": 85
+      }
+    },
+    "58e8507e080a86e77f6fda6c139831c6f79b68806069ea3bae7f6bf683a275c1": {
+      "0": {
+        "filename": "EventCloser.code",
+        "line": 347
+      },
+      "16": {
+        "filename": "EventCloser.code",
+        "line": 348
+      },
+      "24": {
+        "filename": "EventCloser.code",
+        "line": 349
+      },
+      "40": {
+        "filename": "EventCloser.code",
+        "line": 350
+      },
+      "56": {
+        "filename": "EventCloser.code",
+        "line": 351
+      },
+      "72": {
+        "filename": "EventCloser.code",
+        "line": 393
       }
     },
     "61ab4641fa30d9310391025086eec65d200d79268e1b7cd402565e01ba64be3c": {
       "0": {
         "filename": "EventCloser.code",
-        "line": 427
+        "line": 372
       }
     },
-    "73867e37ec1ffb9ecb087a37d71892215b0b805a73c127da219a28729084e2e0": {
-      "0": {
-        "filename": "<internal-selector>",
-        "line": 1
-      },
-      "24": {
-        "filename": "<internal-selector>",
-        "line": 2
-      }
-    },
-    "8e6d1b2c2eebd932800a40b23c42f0536655f66ecd861c8889d0820f0ed6e6de": {
-      "0": {
-        "filename": "EventCloser.code",
-        "line": 47
-      },
-      "8": {
-        "filename": "EventCloser.code",
-        "line": 48
-      },
-      "24": {
-        "filename": "EventCloser.code",
-        "line": 49
-      },
-      "48": {
-        "filename": "EventCloser.code",
-        "line": 50
-      },
-      "64": {
-        "filename": "EventCloser.code",
-        "line": 51
-      },
-      "72": {
-        "filename": "EventCloser.code",
-        "line": 52
-      },
-      "88": {
-        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 39
-      },
-      "104": {
-        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 39
-      },
-      "120": {
-        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 39
-      },
-      "128": {
-        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 39
-      },
-      "144": {
-        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 39
-      },
-      "152": {
-        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 39
-      },
-      "160": {
-        "filename": "EventCloser.code",
-        "line": 63
-      },
-      "176": {
-        "filename": "EventCloser.code",
-        "line": 66
-      },
-      "192": {
-        "filename": "EventCloser.code",
-        "line": 69
-      }
-    },
-    "9889383a50f7950a1b20496ac8c9f7a9da9a062d1770c12460902b26fac39ded": {
-      "0": {
-        "filename": "EventCloser.code",
-        "line": 421
-      },
-      "16": {
-        "filename": "EventCloser.code",
-        "line": 422
-      },
-      "24": {
-        "filename": "EventCloser.code",
-        "line": 423
-      },
-      "40": {
-        "filename": "EventCloser.code",
-        "line": 424
-      },
-      "56": {
-        "filename": "EventCloser.code",
-        "line": 425
-      },
-      "72": {
-        "filename": "EventCloser.code",
-        "line": 426
-      },
-      "80": {
-        "filename": "EventCloser.code",
-        "line": 429
-      },
-      "96": {
-        "filename": "EventCloser.code",
-        "line": 430
-      },
-      "104": {
-        "filename": "EventCloser.code",
-        "line": 431
-      },
-      "120": {
-        "filename": "EventCloser.code",
-        "line": 434
-      },
-      "136": {
-        "filename": "EventCloser.code",
-        "line": 435
-      },
-      "144": {
-        "filename": "EventCloser.code",
-        "line": 436
-      },
-      "160": {
-        "filename": "EventCloser.code",
-        "line": 437
-      },
-      "176": {
-        "filename": "EventCloser.code",
-        "line": 438
-      },
-      "192": {
-        "filename": "EventCloser.code",
-        "line": 439
-      },
-      "200": {
-        "filename": "EventCloser.code",
-        "line": 440
-      },
-      "216": {
-        "filename": "EventCloser.code",
-        "line": 441
-      },
-      "224": {
-        "filename": "EventCloser.code",
-        "line": 442
-      },
-      "240": {
-        "filename": "EventCloser.code",
-        "line": 443
-      },
-      "248": {
-        "filename": "EventCloser.code",
-        "line": 444
-      },
-      "256": {
-        "filename": "EventCloser.code",
-        "line": 445
-      },
-      "272": {
-        "filename": "EventCloser.code",
-        "line": 446
-      },
-      "280": {
-        "filename": "EventCloser.code",
-        "line": 447
-      },
-      "288": {
-        "filename": "EventCloser.code",
-        "line": 449
-      },
-      "296": {
-        "filename": "EventCloser.code",
-        "line": 450
-      },
-      "304": {
-        "filename": "EventCloser.code",
-        "line": 451
-      },
-      "320": {
-        "filename": "EventCloser.code",
-        "line": 453
-      },
-      "328": {
-        "filename": "EventCloser.code",
-        "line": 454
-      },
-      "336": {
-        "filename": "EventCloser.code",
-        "line": 455
-      },
-      "352": {
-        "filename": "EventCloser.code",
-        "line": 456
-      },
-      "368": {
-        "filename": "EventCloser.code",
-        "line": 457
-      },
-      "384": {
-        "filename": "EventCloser.code",
-        "line": 459
-      },
-      "392": {
-        "filename": "EventCloser.code",
-        "line": 460
-      },
-      "408": {
-        "filename": "EventCloser.code",
-        "line": 461
-      },
-      "416": {
-        "filename": "EventCloser.code",
-        "line": 462
-      },
-      "432": {
-        "filename": "EventCloser.code",
-        "line": 464
-      },
-      "440": {
-        "filename": "EventCloser.code",
-        "line": 465
-      },
-      "456": {
-        "filename": "EventCloser.code",
-        "line": 466
-      },
-      "464": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "480": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "488": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "496": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "512": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "520": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "536": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "560": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "568": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "608": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "616": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "624": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "640": {
-        "filename": "stdlib.sol",
-        "line": 63
-      },
-      "656": {
-        "filename": "EventCloser.code",
-        "line": 468
-      },
-      "672": {
-        "filename": "EventCloser.code",
-        "line": 469
-      },
-      "680": {
-        "filename": "EventCloser.code",
-        "line": 470
-      },
-      "696": {
-        "filename": "EventCloser.code",
-        "line": 471
-      },
-      "704": {
-        "filename": "EventCloser.code",
-        "line": 472
-      },
-      "720": {
-        "filename": "EventCloser.code",
-        "line": 473
-      },
-      "736": {
-        "filename": "EventCloser.code",
-        "line": 474
-      },
-      "744": {
-        "filename": "EventCloser.code",
-        "line": 475
-      },
-      "760": {
-        "filename": "EventCloser.code",
-        "line": 478
-      }
-    },
-    "9e3a40588fee438d8f8d53762df9db6ac40a1c138b084b955038c255e3120299": {
-      "0": {
-        "filename": "EventCloser.code",
-        "line": 313
-      },
-      "8": {
-        "filename": "EventCloser.code",
-        "line": 314
-      },
-      "24": {
-        "filename": "EventCloser.code",
-        "line": 315
-      },
-      "32": {
-        "filename": "EventCloser.code",
-        "line": 316
-      },
-      "48": {
-        "filename": "EventCloser.code",
-        "line": 317
-      },
-      "56": {
-        "filename": "EventCloser.code",
-        "line": 318
-      },
-      "64": {
-        "filename": "EventCloser.code",
-        "line": 319
-      },
-      "72": {
-        "filename": "EventCloser.code",
-        "line": 320
-      },
-      "88": {
-        "filename": "EventCloser.code",
-        "line": 321
-      },
-      "104": {
-        "filename": "EventCloser.code",
-        "line": 322
-      },
-      "120": {
-        "filename": "EventCloser.code",
-        "line": 323
-      },
-      "128": {
-        "filename": "EventCloser.code",
-        "line": 324
-      },
-      "152": {
-        "filename": "EventCloser.code",
-        "line": 326
-      },
-      "160": {
-        "filename": "EventCloser.code",
-        "line": 327
-      },
-      "168": {
-        "filename": "EventCloser.code",
-        "line": 330
-      },
-      "184": {
-        "filename": "EventCloser.code",
-        "line": 331
-      },
-      "200": {
-        "filename": "EventCloser.code",
-        "line": 332
-      },
-      "216": {
-        "filename": "EventCloser.code",
-        "line": 333
-      },
-      "232": {
-        "filename": "EventCloser.code",
-        "line": 334
-      },
-      "248": {
-        "filename": "EventCloser.code",
-        "line": 335
-      },
-      "264": {
-        "filename": "EventCloser.code",
-        "line": 336
-      },
-      "288": {
-        "filename": "EventCloser.code",
-        "line": 337
-      },
-      "304": {
-        "filename": "EventCloser.code",
-        "line": 338
-      },
-      "312": {
-        "filename": "EventCloser.code",
-        "line": 339
-      }
-    },
-    "9e9cb930ff73a6c8aef1d4bb83ff6717d5d737a966633e1ca1e75d4fc135f393": {
-      "0": {
-        "filename": "EventCloser.code",
-        "line": 481
-      },
-      "8": {
-        "filename": "EventCloser.code",
-        "line": 482
-      },
-      "16": {
-        "filename": "EventCloser.code",
-        "line": 483
-      },
-      "32": {
-        "filename": "EventCloser.code",
-        "line": 486
-      },
-      "48": {
-        "filename": "EventCloser.code",
-        "line": 487
-      },
-      "56": {
-        "filename": "EventCloser.code",
-        "line": 488
-      },
-      "72": {
-        "filename": "EventCloser.code",
-        "line": 489
-      },
-      "232": {
-        "filename": "EventCloser.code",
-        "line": 490
-      },
-      "240": {
-        "filename": "EventCloser.code",
-        "line": 491
-      },
-      "248": {
-        "filename": "EventCloser.code",
-        "line": 492
-      },
-      "264": {
-        "filename": "EventCloser.code",
-        "line": 493
-      },
-      "272": {
-        "filename": "EventCloser.code",
-        "line": 494
-      },
-      "280": {
-        "filename": "EventCloser.code",
-        "line": 495
-      },
-      "296": {
-        "filename": "EventCloser.code",
-        "line": 497
-      },
-      "304": {
-        "filename": "EventCloser.code",
-        "line": 498
-      }
-    },
-    "b3c8f8a9b9b7a67e8a4465fe58b2584cd7b504afbbe6e781e5db2e6abcc77093": {
+    "6bd3fb89f3bf451c24d0142668706f499f87dfba2fdeb990e0bb2a16082b1226": {
       "0": {
         "filename": "EventCloser.code",
         "line": 4
@@ -993,264 +611,238 @@
         "filename": "EventCloser.code",
         "line": 21
       },
-      "168": {
-        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 26
+      "176": {
+        "filename": "EventCloser.code",
+        "line": 22
       },
       "184": {
-        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 28
-      },
-      "192": {
-        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 28
-      },
-      "208": {
-        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 29
-      },
-      "224": {
         "filename": "EventCloser.code",
-        "line": 32
-      },
-      "240": {
-        "filename": "EventCloser.code",
-        "line": 35
-      }
-    },
-    "bc9c77e5e759fb1e3bbb2a5f9cfb3040207d26cbebdecf1fce1271189982074c": {
-      "0": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 14
-      },
-      "16": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 14
-      },
-      "24": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 14
-      },
-      "32": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 14
-      },
-      "40": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 14
-      },
-      "48": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 14
-      },
-      "56": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 14
-      },
-      "64": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 14
-      },
-      "80": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 14
-      },
-      "88": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 14
-      },
-      "112": {
-        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 42
-      },
-      "128": {
-        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 44
-      },
-      "144": {
-        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 44
-      },
-      "152": {
-        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 44
-      },
-      "160": {
-        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 44
-      },
-      "168": {
-        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 44
-      },
-      "184": {
-        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 44
+        "line": 23
       },
       "200": {
-        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 44
+        "filename": "EventCloser.code",
+        "line": 24
+      },
+      "208": {
+        "filename": "EventCloser.code",
+        "line": 25
       },
       "216": {
         "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 44
+        "line": 31
       },
       "232": {
         "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 44
-      },
-      "240": {
-        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 44
+        "line": 31
       },
       "248": {
         "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 44
-      },
-      "256": {
-        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 44
+        "line": 31
       },
       "264": {
         "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 44
-      },
-      "272": {
-        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 44
+        "line": 31
       },
       "288": {
         "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 45
-      },
-      "296": {
-        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 45
+        "line": 32
       },
       "304": {
         "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 45
+        "line": 34
       },
       "312": {
         "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 45
+        "line": 34
       },
-      "336": {
+      "328": {
         "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 45
+        "line": 36
       },
-      "352": {
+      "344": {
         "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 45
+        "line": 37
+      },
+      "360": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 37
       },
       "376": {
         "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 45
+        "line": 37
       },
-      "384": {
+      "392": {
         "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 45
+        "line": 37
       },
-      "576": {
+      "408": {
         "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 45
+        "line": 37
       },
-      "600": {
+      "424": {
         "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 45
+        "line": 37
       },
-      "608": {
-        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 45
-      },
-      "616": {
-        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 45
-      },
-      "632": {
+      "440": {
         "filename": "EventCloser.code",
-        "line": 116
+        "line": 48
       },
-      "640": {
+      "456": {
         "filename": "EventCloser.code",
-        "line": 117
-      },
-      "648": {
-        "filename": "EventCloser.code",
-        "line": 118
-      },
-      "656": {
-        "filename": "EventCloser.code",
-        "line": 120
-      },
-      "664": {
-        "filename": "EventCloser.code",
-        "line": 121
+        "line": 51
       }
     },
-    "cd20db5cad096762c3d855652b7bd6f6fb790ce2ab393315ae518f8cf856cb06": {
+    "6e36f6c3059798e6550a84734d79896af4966fc82766d64adc8ee76321d7b98c": {
       "0": {
         "filename": "EventCloser.code",
-        "line": 501
-      },
-      "8": {
-        "filename": "EventCloser.code",
-        "line": 502
+        "line": 319
       },
       "16": {
         "filename": "EventCloser.code",
-        "line": 503
+        "line": 320
       },
-      "32": {
+      "24": {
         "filename": "EventCloser.code",
-        "line": 506
+        "line": 321
       },
-      "48": {
+      "40": {
         "filename": "EventCloser.code",
-        "line": 507
+        "line": 322
       },
       "56": {
         "filename": "EventCloser.code",
-        "line": 508
+        "line": 323
       },
       "72": {
         "filename": "EventCloser.code",
-        "line": 509
+        "line": 324
+      },
+      "80": {
+        "filename": "EventCloser.code",
+        "line": 325
+      },
+      "96": {
+        "filename": "EventCloser.code",
+        "line": 326
+      },
+      "112": {
+        "filename": "EventCloser.code",
+        "line": 327
+      },
+      "120": {
+        "filename": "EventCloser.code",
+        "line": 328
+      },
+      "128": {
+        "filename": "EventCloser.code",
+        "line": 329
+      },
+      "136": {
+        "filename": "EventCloser.code",
+        "line": 330
+      },
+      "152": {
+        "filename": "EventCloser.code",
+        "line": 331
+      },
+      "168": {
+        "filename": "EventCloser.code",
+        "line": 332
+      },
+      "184": {
+        "filename": "EventCloser.code",
+        "line": 333
+      },
+      "192": {
+        "filename": "EventCloser.code",
+        "line": 334
+      },
+      "208": {
+        "filename": "EventCloser.code",
+        "line": 335
+      },
+      "216": {
+        "filename": "EventCloser.code",
+        "line": 336
       },
       "232": {
         "filename": "EventCloser.code",
-        "line": 510
+        "line": 337
       },
       "240": {
         "filename": "EventCloser.code",
-        "line": 511
+        "line": 338
       },
-      "248": {
+      "256": {
         "filename": "EventCloser.code",
-        "line": 512
-      },
-      "264": {
-        "filename": "EventCloser.code",
-        "line": 513
+        "line": 339
       },
       "272": {
         "filename": "EventCloser.code",
-        "line": 514
+        "line": 340
       },
-      "280": {
+      "288": {
         "filename": "EventCloser.code",
-        "line": 515
-      },
-      "296": {
-        "filename": "EventCloser.code",
-        "line": 517
+        "line": 341
       },
       "304": {
         "filename": "EventCloser.code",
-        "line": 518
+        "line": 342
+      },
+      "320": {
+        "filename": "EventCloser.code",
+        "line": 343
+      },
+      "336": {
+        "filename": "EventCloser.code",
+        "line": 344
       }
     },
-    "d6bee8b4fda36282e9291167b631fe12b8a7610eadaf2469d747d3c2359e51e6": {
+    "73867e37ec1ffb9ecb087a37d71892215b0b805a73c127da219a28729084e2e0": {
+      "0": {
+        "filename": "<internal-selector>",
+        "line": 1
+      },
+      "24": {
+        "filename": "<internal-selector>",
+        "line": 2
+      }
+    },
+    "897fd2c24907eecc98920427ac6950e134dbcaf3467b2d6021d4ed310926ab7a": {
+      "0": {
+        "filename": "EventCloser.code",
+        "line": 626
+      },
+      "8": {
+        "filename": "EventCloser.code",
+        "line": 627
+      },
+      "56": {
+        "filename": "EventCloser.code",
+        "line": 628
+      },
+      "64": {
+        "filename": "EventCloser.code",
+        "line": 629
+      },
+      "80": {
+        "filename": "EventCloser.code",
+        "line": 655
+      },
+      "88": {
+        "filename": "EventCloser.code",
+        "line": 656
+      },
+      "136": {
+        "filename": "EventCloser.code",
+        "line": 657
+      },
+      "144": {
+        "filename": "EventCloser.code",
+        "line": 658
+      }
+    },
+    "b559ced7f0146aded820a2af5255179cc8a317f5f23f632f29ad030038562b8a": {
       "0": {
         "filename": "<entry-selector>",
         "line": 1
@@ -1296,70 +888,322 @@
         "line": 11
       }
     },
-    "d9e077f76c67ee13238dcbcae6ee0289d637ec77eb64e999017bfe039115b34c": {
+    "bbbca28f98a24119113befab986d48b3129c34c5e3bc6161c310568e32e35a95": {
       "0": {
-        "filename": "EventCloser.code",
-        "line": 346
-      },
-      "16": {
-        "filename": "EventCloser.code",
-        "line": 347
-      },
-      "32": {
-        "filename": "EventCloser.code",
-        "line": 348
-      },
-      "48": {
-        "filename": "EventCloser.code",
-        "line": 349
-      },
-      "64": {
-        "filename": "EventCloser.code",
-        "line": 350
-      },
-      "72": {
-        "filename": "EventCloser.code",
-        "line": 351
-      },
-      "88": {
         "filename": "EventCloser.code",
         "line": 352
       },
-      "104": {
+      "8": {
         "filename": "EventCloser.code",
         "line": 353
       },
-      "120": {
+      "24": {
         "filename": "EventCloser.code",
         "line": 354
       },
-      "136": {
+      "32": {
         "filename": "EventCloser.code",
         "line": 355
       },
-      "152": {
+      "48": {
         "filename": "EventCloser.code",
         "line": 356
       },
-      "168": {
+      "56": {
         "filename": "EventCloser.code",
         "line": 357
       },
-      "176": {
+      "64": {
         "filename": "EventCloser.code",
         "line": 358
       },
-      "184": {
+      "72": {
         "filename": "EventCloser.code",
         "line": 359
       },
-      "192": {
+      "88": {
         "filename": "EventCloser.code",
         "line": 360
       },
-      "200": {
+      "104": {
         "filename": "EventCloser.code",
         "line": 361
+      },
+      "120": {
+        "filename": "EventCloser.code",
+        "line": 362
+      },
+      "128": {
+        "filename": "EventCloser.code",
+        "line": 363
+      },
+      "152": {
+        "filename": "EventCloser.code",
+        "line": 365
+      },
+      "160": {
+        "filename": "EventCloser.code",
+        "line": 366
+      },
+      "168": {
+        "filename": "EventCloser.code",
+        "line": 367
+      },
+      "176": {
+        "filename": "EventCloser.code",
+        "line": 368
+      },
+      "192": {
+        "filename": "EventCloser.code",
+        "line": 369
+      },
+      "208": {
+        "filename": "EventCloser.code",
+        "line": 370
+      },
+      "224": {
+        "filename": "EventCloser.code",
+        "line": 375
+      },
+      "232": {
+        "filename": "EventCloser.code",
+        "line": 376
+      },
+      "240": {
+        "filename": "EventCloser.code",
+        "line": 377
+      },
+      "248": {
+        "filename": "EventCloser.code",
+        "line": 378
+      },
+      "264": {
+        "filename": "EventCloser.code",
+        "line": 379
+      },
+      "272": {
+        "filename": "EventCloser.code",
+        "line": 380
+      },
+      "288": {
+        "filename": "EventCloser.code",
+        "line": 381
+      },
+      "304": {
+        "filename": "EventCloser.code",
+        "line": 382
+      },
+      "320": {
+        "filename": "EventCloser.code",
+        "line": 383
+      },
+      "336": {
+        "filename": "EventCloser.code",
+        "line": 384
+      },
+      "352": {
+        "filename": "EventCloser.code",
+        "line": 385
+      },
+      "368": {
+        "filename": "EventCloser.code",
+        "line": 386
+      },
+      "384": {
+        "filename": "EventCloser.code",
+        "line": 387
+      },
+      "400": {
+        "filename": "EventCloser.code",
+        "line": 388
+      },
+      "424": {
+        "filename": "EventCloser.code",
+        "line": 389
+      },
+      "440": {
+        "filename": "EventCloser.code",
+        "line": 390
+      },
+      "448": {
+        "filename": "EventCloser.code",
+        "line": 391
+      }
+    },
+    "bc9c77e5e759fb1e3bbb2a5f9cfb3040207d26cbebdecf1fce1271189982074c": {
+      "0": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 14
+      },
+      "16": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 14
+      },
+      "24": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 14
+      },
+      "32": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 14
+      },
+      "40": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 14
+      },
+      "48": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 14
+      },
+      "56": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 14
+      },
+      "64": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 14
+      },
+      "80": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 14
+      },
+      "88": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 14
+      },
+      "112": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 50
+      },
+      "128": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 52
+      },
+      "144": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 52
+      },
+      "152": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 52
+      },
+      "160": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 52
+      },
+      "168": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 52
+      },
+      "184": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 52
+      },
+      "200": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 52
+      },
+      "216": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 52
+      },
+      "232": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 52
+      },
+      "240": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 52
+      },
+      "248": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 52
+      },
+      "256": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 52
+      },
+      "264": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 52
+      },
+      "272": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 52
+      },
+      "288": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 53
+      },
+      "296": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 53
+      },
+      "304": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 53
+      },
+      "312": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 53
+      },
+      "336": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 53
+      },
+      "352": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 53
+      },
+      "376": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 53
+      },
+      "384": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 53
+      },
+      "576": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 53
+      },
+      "600": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 53
+      },
+      "608": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 53
+      },
+      "616": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 53
+      },
+      "632": {
+        "filename": "EventCloser.code",
+        "line": 132
+      },
+      "640": {
+        "filename": "EventCloser.code",
+        "line": 133
+      },
+      "648": {
+        "filename": "EventCloser.code",
+        "line": 134
+      },
+      "656": {
+        "filename": "EventCloser.code",
+        "line": 136
+      },
+      "664": {
+        "filename": "EventCloser.code",
+        "line": 137
+      }
+    },
+    "d558e53bf690afc8a76b8887a99a49a52db1bd24bec5da84780ea0e7bc0aad3f": {
+      "0": {
+        "filename": "EventCloser.code",
+        "line": 371
       }
     },
     "e5d67038082a836af1c43f9ebfd3c4fab992f8a6ce11f05f253cd1e763d344f6": {
@@ -1423,111 +1267,77 @@
     "e6936e8f0e7b8fe98c2ca66eee9d4e9dafcfc747defef9cb795288fabb1b7ef3": {
       "0": {
         "filename": "EventCloser.code",
-        "line": 364
+        "line": 425
       },
       "16": {
         "filename": "EventCloser.code",
-        "line": 365
+        "line": 426
       },
       "24": {
         "filename": "EventCloser.code",
-        "line": 366
+        "line": 427
       },
       "40": {
         "filename": "EventCloser.code",
-        "line": 367
+        "line": 428
       },
       "56": {
         "filename": "EventCloser.code",
-        "line": 368
+        "line": 429
       },
       "64": {
         "filename": "EventCloser.code",
-        "line": 369
+        "line": 430
       },
       "80": {
         "filename": "EventCloser.code",
-        "line": 370
+        "line": 431
       },
       "88": {
         "filename": "EventCloser.code",
-        "line": 371
+        "line": 432
       },
       "96": {
         "filename": "EventCloser.code",
-        "line": 372
+        "line": 433
       },
       "112": {
         "filename": "EventCloser.code",
-        "line": 373
+        "line": 434
       },
       "128": {
         "filename": "EventCloser.code",
-        "line": 374
+        "line": 435
       },
       "136": {
         "filename": "EventCloser.code",
-        "line": 375
+        "line": 436
       },
       "144": {
         "filename": "EventCloser.code",
-        "line": 376
+        "line": 437
       }
     },
-    "ef8d5a1a690a46f3623c28fd9911553e5f9ad7c0c72435a8ff03910878c21fd8": {
+    "eefc63f2ea91a5e2a3cb67bb9b59570a3a6da0409cc3ec8866b977faecb9f79d": {
       "0": {
         "filename": "EventCloser.code",
-        "line": 574
-      },
-      "8": {
-        "filename": "EventCloser.code",
-        "line": 575
-      },
-      "56": {
-        "filename": "EventCloser.code",
-        "line": 576
-      },
-      "64": {
-        "filename": "EventCloser.code",
-        "line": 577
-      },
-      "80": {
-        "filename": "EventCloser.code",
-        "line": 580
-      },
-      "88": {
-        "filename": "EventCloser.code",
-        "line": 581
-      },
-      "136": {
-        "filename": "EventCloser.code",
-        "line": 582
-      },
-      "144": {
-        "filename": "EventCloser.code",
-        "line": 583
-      }
-    },
-    "ef93d45f63c8030a5387d669b272a4d663bdde64a941d86534c92efd794c6922": {
-      "0": {
-        "filename": "EventCloser.code",
-        "line": 125
+        "line": 141
       },
       "16": {
         "filename": "EventCloser.code",
-        "line": 126
+        "line": 142
       },
       "40": {
         "filename": "EventCloser.code",
-        "line": 127
+        "line": 143
       },
       "56": {
         "filename": "EventCloser.code",
-        "line": 128
+        "line": 144
       },
       "64": {
         "filename": "EventCloser.code",
-        "line": 129
+        "line": 145
       },
       "80": {
         "filename": "../contracts/utils/TransferUtils.tsol",
@@ -1543,113 +1353,627 @@
       },
       "120": {
         "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 54
+        "line": 62
       },
       "136": {
         "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 54
+        "line": 62
       },
-      "144": {
+      "152": {
         "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 54
+        "line": 62
       },
       "168": {
         "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 54
+        "line": 62
       },
-      "176": {
+      "184": {
         "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 54
+        "line": 62
       },
-      "192": {
+      "200": {
         "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 54
-      },
-      "208": {
-        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 54
+        "line": 62
       },
       "216": {
         "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 54
+        "line": 62
       },
-      "232": {
+      "224": {
         "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
-        "line": 54
+        "line": 62
       },
       "248": {
-        "filename": "EventCloser.code",
-        "line": 149
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 62
       },
       "256": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 62
+      },
+      "272": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 62
+      },
+      "288": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 62
+      },
+      "296": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 62
+      },
+      "312": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 62
+      },
+      "328": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 62
+      },
+      "344": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 62
+      },
+      "360": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 68
+      },
+      "376": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 68
+      },
+      "384": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 68
+      },
+      "400": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 68
+      },
+      "416": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 68
+      },
+      "432": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 68
+      },
+      "448": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 68
+      },
+      "464": {
+        "filename": "../contracts/bridge/hidden-bridge/EventCloser.tsol",
+        "line": 68
+      },
+      "480": {
         "filename": "EventCloser.code",
-        "line": 150
+        "line": 181
       }
     },
-    "f0a4471bb1b83fd15dc59356991772f338ea193cfe957cdb559ba04e7babe412": {
+    "f27b8498f0059d3fdfdcad67d813e3e8cf7785fcd28aa8c1e03836e9884b1026": {
       "0": {
         "filename": "EventCloser.code",
-        "line": 545
+        "line": 482
       },
-      "8": {
+      "16": {
         "filename": "EventCloser.code",
-        "line": 546
+        "line": 483
       },
-      "48": {
+      "24": {
         "filename": "EventCloser.code",
-        "line": 547
+        "line": 484
+      },
+      "40": {
+        "filename": "EventCloser.code",
+        "line": 485
       },
       "56": {
         "filename": "EventCloser.code",
-        "line": 548
+        "line": 486
       },
       "72": {
         "filename": "EventCloser.code",
-        "line": 551
+        "line": 487
       },
       "80": {
         "filename": "EventCloser.code",
-        "line": 552
+        "line": 490
       },
-      "128": {
+      "96": {
         "filename": "EventCloser.code",
-        "line": 553
+        "line": 491
+      },
+      "104": {
+        "filename": "EventCloser.code",
+        "line": 492
+      },
+      "120": {
+        "filename": "EventCloser.code",
+        "line": 495
       },
       "136": {
         "filename": "EventCloser.code",
-        "line": 554
+        "line": 496
       },
-      "152": {
+      "144": {
         "filename": "EventCloser.code",
-        "line": 557
+        "line": 497
       },
       "160": {
         "filename": "EventCloser.code",
-        "line": 558
+        "line": 498
       },
-      "208": {
+      "176": {
         "filename": "EventCloser.code",
-        "line": 559
+        "line": 499
+      },
+      "192": {
+        "filename": "EventCloser.code",
+        "line": 500
+      },
+      "200": {
+        "filename": "EventCloser.code",
+        "line": 501
       },
       "216": {
         "filename": "EventCloser.code",
-        "line": 560
+        "line": 502
       },
-      "232": {
+      "224": {
         "filename": "EventCloser.code",
-        "line": 563
+        "line": 503
       },
       "240": {
         "filename": "EventCloser.code",
-        "line": 564
+        "line": 504
+      },
+      "248": {
+        "filename": "EventCloser.code",
+        "line": 505
+      },
+      "256": {
+        "filename": "EventCloser.code",
+        "line": 506
+      },
+      "272": {
+        "filename": "EventCloser.code",
+        "line": 507
+      },
+      "280": {
+        "filename": "EventCloser.code",
+        "line": 508
       },
       "288": {
         "filename": "EventCloser.code",
-        "line": 565
+        "line": 510
       },
       "296": {
         "filename": "EventCloser.code",
-        "line": 566
+        "line": 511
+      },
+      "304": {
+        "filename": "EventCloser.code",
+        "line": 512
+      },
+      "320": {
+        "filename": "EventCloser.code",
+        "line": 514
+      },
+      "328": {
+        "filename": "EventCloser.code",
+        "line": 515
+      },
+      "336": {
+        "filename": "EventCloser.code",
+        "line": 516
+      },
+      "352": {
+        "filename": "EventCloser.code",
+        "line": 517
+      },
+      "368": {
+        "filename": "EventCloser.code",
+        "line": 518
+      },
+      "384": {
+        "filename": "EventCloser.code",
+        "line": 520
+      },
+      "392": {
+        "filename": "EventCloser.code",
+        "line": 521
+      },
+      "408": {
+        "filename": "EventCloser.code",
+        "line": 522
+      },
+      "416": {
+        "filename": "EventCloser.code",
+        "line": 523
+      },
+      "432": {
+        "filename": "EventCloser.code",
+        "line": 525
+      },
+      "440": {
+        "filename": "EventCloser.code",
+        "line": 526
+      },
+      "456": {
+        "filename": "EventCloser.code",
+        "line": 527
+      },
+      "464": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "480": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "488": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "496": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "512": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "520": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "536": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "560": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "568": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "608": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "616": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "624": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "640": {
+        "filename": "stdlib.sol",
+        "line": 63
+      },
+      "656": {
+        "filename": "EventCloser.code",
+        "line": 529
+      },
+      "672": {
+        "filename": "EventCloser.code",
+        "line": 530
+      },
+      "680": {
+        "filename": "EventCloser.code",
+        "line": 531
+      },
+      "696": {
+        "filename": "EventCloser.code",
+        "line": 532
+      },
+      "704": {
+        "filename": "EventCloser.code",
+        "line": 533
+      },
+      "720": {
+        "filename": "EventCloser.code",
+        "line": 534
+      },
+      "736": {
+        "filename": "EventCloser.code",
+        "line": 535
+      },
+      "744": {
+        "filename": "EventCloser.code",
+        "line": 536
+      },
+      "760": {
+        "filename": "EventCloser.code",
+        "line": 539
+      }
+    },
+    "f30545fbcb8efef78ca5dcfec3431d193511a65b79bc95aa427631a4b7902158": {
+      "0": {
+        "filename": "EventCloser.code",
+        "line": 441
+      },
+      "16": {
+        "filename": "EventCloser.code",
+        "line": 442
+      },
+      "24": {
+        "filename": "EventCloser.code",
+        "line": 443
+      },
+      "40": {
+        "filename": "EventCloser.code",
+        "line": 444
+      },
+      "56": {
+        "filename": "EventCloser.code",
+        "line": 445
+      },
+      "72": {
+        "filename": "EventCloser.code",
+        "line": 446
+      },
+      "80": {
+        "filename": "EventCloser.code",
+        "line": 447
+      },
+      "88": {
+        "filename": "EventCloser.code",
+        "line": 448
+      },
+      "104": {
+        "filename": "EventCloser.code",
+        "line": 449
+      },
+      "120": {
+        "filename": "EventCloser.code",
+        "line": 450
+      },
+      "128": {
+        "filename": "EventCloser.code",
+        "line": 451
+      },
+      "144": {
+        "filename": "EventCloser.code",
+        "line": 452
+      },
+      "168": {
+        "filename": "EventCloser.code",
+        "line": 453
+      },
+      "176": {
+        "filename": "EventCloser.code",
+        "line": 454
+      },
+      "184": {
+        "filename": "EventCloser.code",
+        "line": 455
+      },
+      "200": {
+        "filename": "EventCloser.code",
+        "line": 456
+      },
+      "208": {
+        "filename": "EventCloser.code",
+        "line": 457
+      },
+      "216": {
+        "filename": "EventCloser.code",
+        "line": 458
+      },
+      "224": {
+        "filename": "EventCloser.code",
+        "line": 459
+      },
+      "232": {
+        "filename": "EventCloser.code",
+        "line": 460
+      },
+      "256": {
+        "filename": "EventCloser.code",
+        "line": 461
+      },
+      "272": {
+        "filename": "EventCloser.code",
+        "line": 462
+      },
+      "280": {
+        "filename": "EventCloser.code",
+        "line": 463
+      },
+      "296": {
+        "filename": "EventCloser.code",
+        "line": 464
+      },
+      "304": {
+        "filename": "EventCloser.code",
+        "line": 465
+      },
+      "312": {
+        "filename": "EventCloser.code",
+        "line": 466
+      },
+      "328": {
+        "filename": "EventCloser.code",
+        "line": 468
+      },
+      "336": {
+        "filename": "EventCloser.code",
+        "line": 470
+      },
+      "344": {
+        "filename": "EventCloser.code",
+        "line": 471
+      },
+      "360": {
+        "filename": "EventCloser.code",
+        "line": 474
+      },
+      "368": {
+        "filename": "EventCloser.code",
+        "line": 475
+      },
+      "384": {
+        "filename": "EventCloser.code",
+        "line": 478
+      }
+    },
+    "f9617d9c1021224b8c1db46fa43610538e1515d16947ffd3e4cb1507f2e26d79": {
+      "0": {
+        "filename": "EventCloser.code",
+        "line": 659
+      },
+      "8": {
+        "filename": "EventCloser.code",
+        "line": 660
+      },
+      "56": {
+        "filename": "EventCloser.code",
+        "line": 661
+      },
+      "64": {
+        "filename": "EventCloser.code",
+        "line": 662
+      },
+      "80": {
+        "filename": "EventCloser.code",
+        "line": 665
+      },
+      "88": {
+        "filename": "EventCloser.code",
+        "line": 666
+      },
+      "136": {
+        "filename": "EventCloser.code",
+        "line": 667
+      },
+      "144": {
+        "filename": "EventCloser.code",
+        "line": 668
+      },
+      "160": {
+        "filename": "EventCloser.code",
+        "line": 671
+      },
+      "168": {
+        "filename": "EventCloser.code",
+        "line": 672
+      },
+      "216": {
+        "filename": "EventCloser.code",
+        "line": 673
+      },
+      "224": {
+        "filename": "EventCloser.code",
+        "line": 674
+      }
+    },
+    "faa17f0091f61ee04459f724f390d82db2b3296420a992a3d81bc34b11e9bf8f": {
+      "0": {
+        "filename": "EventCloser.code",
+        "line": 398
+      },
+      "16": {
+        "filename": "EventCloser.code",
+        "line": 399
+      },
+      "32": {
+        "filename": "EventCloser.code",
+        "line": 400
+      },
+      "48": {
+        "filename": "EventCloser.code",
+        "line": 401
+      },
+      "64": {
+        "filename": "EventCloser.code",
+        "line": 402
+      },
+      "80": {
+        "filename": "EventCloser.code",
+        "line": 403
+      },
+      "96": {
+        "filename": "EventCloser.code",
+        "line": 404
+      },
+      "112": {
+        "filename": "EventCloser.code",
+        "line": 405
+      },
+      "120": {
+        "filename": "EventCloser.code",
+        "line": 406
+      },
+      "136": {
+        "filename": "EventCloser.code",
+        "line": 407
+      },
+      "152": {
+        "filename": "EventCloser.code",
+        "line": 408
+      },
+      "168": {
+        "filename": "EventCloser.code",
+        "line": 409
+      },
+      "184": {
+        "filename": "EventCloser.code",
+        "line": 410
+      },
+      "200": {
+        "filename": "EventCloser.code",
+        "line": 411
+      },
+      "216": {
+        "filename": "EventCloser.code",
+        "line": 412
+      },
+      "224": {
+        "filename": "EventCloser.code",
+        "line": 413
+      },
+      "232": {
+        "filename": "EventCloser.code",
+        "line": 414
+      },
+      "240": {
+        "filename": "EventCloser.code",
+        "line": 415
+      },
+      "256": {
+        "filename": "EventCloser.code",
+        "line": 416
+      },
+      "264": {
+        "filename": "EventCloser.code",
+        "line": 417
+      },
+      "280": {
+        "filename": "EventCloser.code",
+        "line": 418
+      },
+      "296": {
+        "filename": "EventCloser.code",
+        "line": 419
+      },
+      "312": {
+        "filename": "EventCloser.code",
+        "line": 420
+      },
+      "320": {
+        "filename": "EventCloser.code",
+        "line": 421
+      },
+      "328": {
+        "filename": "EventCloser.code",
+        "line": 422
       }
     }
   }

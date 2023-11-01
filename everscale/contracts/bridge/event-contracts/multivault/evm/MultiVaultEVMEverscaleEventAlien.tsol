@@ -49,8 +49,6 @@ contract MultiVaultEVMEverscaleEventAlien is
     function onInit() override internal {
         _init_transitional_data();
 
-        setStatusInitializing();
-
         EventData eventData = getEventData();
 
         // Destroy event contract in case event contract is less than required

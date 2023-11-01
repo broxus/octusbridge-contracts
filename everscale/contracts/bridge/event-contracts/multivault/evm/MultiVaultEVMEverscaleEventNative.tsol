@@ -45,8 +45,6 @@ contract MultiVaultEVMEverscaleEventNative is
     }
 
     function onInit() override internal {
-        setStatusInitializing();
-
         int8 token_wid;
         uint256 token_addr;
 

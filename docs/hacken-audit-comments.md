@@ -87,6 +87,9 @@ Fixed.
 
 Fixed.
 
+## [VN-021][Informational]Redundant State Update.md
+
+Fixed.
 
 ## [VN-040][Medium] Outdated OpenZeppelin Contracts Used.md
 

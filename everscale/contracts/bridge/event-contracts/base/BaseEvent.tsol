@@ -38,7 +38,8 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
     }
 
     function onInit() virtual internal {
-        setStatusInitializing();
+        // Suppress view warning
+        _status = Status.Initializing;
 
         loadRelays();
     }
@@ -138,12 +139,6 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
         _status = Status.Rejected;
 
         emit Rejected(reason);
-    }
-
-    function setStatusInitializing() internal {
-        require(_status == Status.Initializing, ErrorCodes.WRONG_STATUS);
-
-        _status = Status.Initializing;
     }
 
     function _checkVoteReceiver(address voteReceiver) internal pure {

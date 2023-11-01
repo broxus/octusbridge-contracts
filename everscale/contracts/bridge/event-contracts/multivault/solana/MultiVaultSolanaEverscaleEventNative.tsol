@@ -44,8 +44,6 @@ contract MultiVaultSolanaEverscaleEventNative is
     }
 
     function onInit() override internal {
-        setStatusInitializing();
-
         (
             token,
             amount,
