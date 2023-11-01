@@ -203,8 +203,10 @@ contract MultiVaultFacetDeposit is
             IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId memory pendingWithdrawalId = pendingWithdrawalIds[i];
             IMultiVaultFacetPendingWithdrawals.PendingWithdrawalParams memory pendingWithdrawal = _pendingWithdrawal(pendingWithdrawalId);
 
-            require(pendingWithdrawal.amount > 0);
-            require(pendingWithdrawal.token == d.token);
+            require(pendingWithdrawal.amount > 0, "Pending: already filled");
+            require(pendingWithdrawal.token == d.token, "Pending: wrong token");
+
+            require(amountLeft >= pendingWithdrawal.amount, "Pending: deposit insufficient");
 
             amountLeft -= pendingWithdrawal.amount;
             amountPlusBounty += pendingWithdrawal.bounty;

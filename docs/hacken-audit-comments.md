@@ -45,9 +45,15 @@ Fixed. Privilage for updating fees changed to `onlyGovernance`. In the mainnet, 
 
 ## [VN-009][Low]Missing_events.md
 
+Fixed.
+
 ## [VN-010][Low]Test_contracts.md
 
+Fixed.
+
 ## [VN-011][Low]Arithmetic_underflow.md
+
+
 
 ## [VN-012][Medium]Inconsistency_across_Chains.md
 
