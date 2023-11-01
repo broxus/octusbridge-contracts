@@ -75,10 +75,17 @@ Fixed.
 
 Fixed.
 
+## [VN-017][Low]Redundant_import_statements.md
 
+Fixed.
 
+## [VN-018][Low]Missing_visibility.md
 
+Fixed.
 
+## [VN-019][Medium]Ownership Irrevocability.md
+
+Fixed.
 
 
 ## [VN-040][Medium] Outdated OpenZeppelin Contracts Used.md

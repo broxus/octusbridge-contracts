@@ -23,6 +23,10 @@ contract DAO is IDAO, IEverscale, ReentrancyGuardUpgradeable, OwnableUpgradeable
         _disableInitializers();
     }
 
+    function renounceOwnership() public override {
+        revert("DAO: renounce ownership is not allowed");
+    }
+
     modifier notZeroAddress(address addr) {
         require(addr != address(0), "DAO: zero address");
 

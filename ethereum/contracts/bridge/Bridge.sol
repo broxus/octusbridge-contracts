@@ -64,6 +64,10 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
         _disableInitializers();
     }
 
+    function renounceOwnership() public override {
+        revert("Bridge: renounce ownership is not allowed");
+    }
+
     /**
         @notice Bridge initializer
         @dev `roundRelaysConfiguration` should be specified after deploy, since it's an Everscale contract,
