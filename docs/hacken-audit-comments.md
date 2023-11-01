@@ -95,6 +95,10 @@ Fixed.
 
 Fixed.
 
+## [VN-023][Medium]Transaction Replay Attack On `deployEvents`.md
+
+Fixed. Added `MsgFlag.IGNORE_ERRORS` flag, so insufficient balance does not lead to an execution error.
+
 ## [VN-040][Medium] Outdated OpenZeppelin Contracts Used.md
 
 Fixed - 97437ee8ee44524f05a8a5714e069ffff086a9d1.
