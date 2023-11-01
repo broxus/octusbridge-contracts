@@ -49,17 +49,6 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
     function onConfirm() virtual internal {}
     function onReject() virtual internal {}
 
-    modifier onlyInitializer() {
-        require(msg.sender == initializer, ErrorCodes.SENDER_NOT_INITIALIZER);
-        _;
-    }
-
-    modifier eventNotRejected() {
-        require(_status != Status.Rejected, ErrorCodes.WRONG_STATUS);
-
-        _;
-    }
-
     modifier onlyStaking() {
         require(msg.sender == getStakingAddress(), ErrorCodes.SENDER_NOT_STAKING);
         _;
@@ -67,11 +56,6 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
 
     modifier onlyRelayRound() {
         require(msg.sender == relay_round, ErrorCodes.SENDER_NOT_RELAY_ROUND);
-        _;
-    }
-
-    modifier eventInitializing() {
-        require(_status == Status.Initializing, ErrorCodes.EVENT_NOT_INITIALIZING);
         _;
     }
 

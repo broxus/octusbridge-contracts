@@ -91,6 +91,10 @@ Fixed.
 
 Fixed.
 
+## [VN-022][Informational]Unused Modifier.md
+
+Fixed.
+
 ## [VN-040][Medium] Outdated OpenZeppelin Contracts Used.md
 
 Fixed - 97437ee8ee44524f05a8a5714e069ffff086a9d1.
