@@ -965,19 +965,6 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_weth",
-        "type": "address"
-      }
-    ],
-    "name": "setWeth",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
         "name": "_withdrawGuardian",
         "type": "address"
       }

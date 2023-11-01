@@ -31,10 +31,6 @@ interface IMultiVaultFacetSettings {
         address _gasDonor
     ) external;
 
-    function setWeth(
-        address _weth
-    ) external;
-
     function setGuardian(address) external;
     function setWithdrawGuardian(address _withdrawGuardian) external;
     function setManagement(address) external;

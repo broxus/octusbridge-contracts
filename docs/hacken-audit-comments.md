@@ -140,6 +140,10 @@ Fixed. Aggregate check is not necessary - if there's not enough value, transacti
 
 Fixed. Removed `mint` and `burn` functions.
 
+## [VN-034][Medium]Potential WETH Address Manipulation.md
+
+Fixed. Removed `setWeth` function.
+
 ## [VN-040][Medium] Outdated OpenZeppelin Contracts Used.md
 
 Fixed - 97437ee8ee44524f05a8a5714e069ffff086a9d1.
