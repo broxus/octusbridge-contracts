@@ -9,6 +9,7 @@ require('hardhat-abi-exporter');
 require('@primitivefi/hardhat-dodoc');
 // require('hardhat-contract-sizer');
 // require("hardhat-diamond-abi");
+require('hardhat-dependency-compiler');
 
 
 task("accounts", "Prints the list of accounts", async () => {
@@ -59,6 +60,12 @@ const bridge = {
 const hardhatConfig = {
   mocha:{
     bail: true
+  },
+  dependencyCompiler: {
+    paths: [
+      '@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol',
+      '@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol',
+    ],
   },
   diamondAbi: {
     // (required) The name of your Diamond ABI.
@@ -117,7 +124,7 @@ const hardhatConfig = {
         }
       },
       {
-        version: '0.8.1',
+        version: '0.8.20',
         settings: {
           optimizer: {
             enabled: true,

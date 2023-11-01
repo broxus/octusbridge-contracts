@@ -7,29 +7,31 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         deployer,
     } = await getNamedAccounts();
 
-    // Deploy proxy admin
-    await deployments.deploy('MultiVaultProxyAdmin', {
-        contract: 'contracts/multivault/proxy/ProxyAdmin.sol:ProxyAdmin',
+    // Deploy diamond
+    await deployments.deploy('MultiVaultDiamond', {
+        contract: 'contracts/multivault/Diamond.sol:Diamond',
         from: deployer,
         log: true,
-        deterministicDeployment,
-        args: [
-            deployer
-        ]
+        deterministicDeployment
     });
+    
+    const MultiVaultDiamond = await deployments.get('MultiVaultDiamond');
+    const diamond = await ethers.getContract('MultiVaultDiamond');
 
-    // Deploy proxy with empty implementation
-    const multiVaultProxyAdmin = await deployments.get('MultiVaultProxyAdmin');
+    const {
+        data: diamondInitialize
+    } = await diamond.populateTransaction.initialize(deployer);
 
+    // Deploy proxy with diamond implementation
     await deployments.deploy('MultiVaultProxy', {
-        contract: 'contracts/multivault/proxy/TransparentUpgradeableProxy.sol:TransparentUpgradeableProxy',
+        contract: 'TransparentUpgradeableProxy',
         from: deployer,
         log: true,
         deterministicDeployment,
         args: [
-            ethers.constants.AddressZero,
-            multiVaultProxyAdmin.address,
-            '0x'
+            MultiVaultDiamond.address,
+            deployer,
+            diamondInitialize
         ]
     });
 };

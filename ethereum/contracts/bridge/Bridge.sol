@@ -1,14 +1,26 @@
 // SPDX-License-Identifier: AGPL-3.0
-pragma solidity ^0.8.2;
+pragma solidity ^0.8.20;
 pragma experimental ABIEncoderV2;
 
-import "./../interfaces/IBridge.sol";
-import "./../libraries/ECDSA.sol";
-
+import "./../interfaces/bridge/IBridge.sol";
 import "./../utils/Cache.sol";
 
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol";
+
+
+library PrefixBytes {
+    function toBytesPrefixed(bytes32 hash)
+        internal
+        pure
+        returns (bytes32)
+    {
+        return keccak256(
+            abi.encodePacked("\x19Ethereum Signed Message:\n32", hash)
+        );
+    }
+}
 
 
 /// @title EVM Bridge contract
@@ -16,6 +28,7 @@ import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 /// @notice Stores relays for each round, implements relay slashing, helps in validating Everscale-EVM events
 contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
     using ECDSA for bytes32;
+    using PrefixBytes for bytes32;
 
     // NOTE: round number -> address -> is relay?
     mapping (uint32 => mapping(address => bool)) public relays;
@@ -73,8 +86,7 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
         uint160[] calldata _relays
     ) external initializer {
         __Pausable_init();
-        __Ownable_init();
-        transferOwnership(_owner);
+        __Ownable_init(_owner);
 
         roundSubmitter = _roundSubmitter;
         emit UpdateRoundSubmitter(_roundSubmitter);
@@ -235,12 +247,14 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
     function recoverSignature(
         bytes memory payload,
         bytes memory signature
-    ) public pure returns (address signer) {
-        signer = keccak256(payload)
+    ) public pure returns (address) {
+        (address signer, ECDSA.RecoverError e,) = keccak256(payload)
             .toBytesPrefixed()
             .tryRecover(signature);
     
-        require(signer != address(0));
+        require(signer != address(0) && e == ECDSA.RecoverError.NoError, "Bridge: signature recover failed");
+
+        return signer;
     }
 
     /**

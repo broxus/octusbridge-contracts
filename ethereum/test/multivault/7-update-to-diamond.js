@@ -49,7 +49,7 @@ describe('Test upgrading Ethereum MultiVault to the Diamond proxy', async () => 
         const Diamond = await ethers.getContractFactory('Diamond');
         const diamond = await Diamond.deploy();
 
-        const proxyAdmin = await ethers.getContractAt('contracts/multivault/proxy/ProxyAdmin.sol:ProxyAdmin', PROXY_ADMIN);
+        const proxyAdmin = await ethers.getContractAt('ProxyAdmin', PROXY_ADMIN);
 
         const {
             data: diamondInitialize
@@ -72,7 +72,8 @@ describe('Test upgrading Ethereum MultiVault to the Diamond proxy', async () => 
             'MultiVaultFacetSettings',
             'MultiVaultFacetTokens',
             'MultiVaultFacetWithdraw',
-            'MultiVaultFacetLiquidity'
+            'MultiVaultFacetLiquidity',
+            'MultiVaultFacetTokenFactory'
         ];
 
         const facetCuts = await Promise.all(facets.map(async (name) => {

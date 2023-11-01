@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0
-pragma solidity ^0.8.2;
+pragma solidity ^0.8.20;
 pragma experimental ABIEncoderV2;
 
 

@@ -16,7 +16,7 @@ Also, overpaying does not result in funds loss. Instead, user receives more VENO
 
 ## [VN-004][Low]Empty_require.md
 
-Fixed -  . Added requirements strings, except MultiVaultToken due to the upgrade limitations.
+Fixed -  0be7d150a54497a884cea111911ff3177717895e. Added requirements strings, except MultiVaultToken due to the upgrade limitations.
 
 ## [VN-005][Low]Contract_name_reuse.md
 
@@ -34,4 +34,4 @@ Fixed -  . Added requirements strings, except MultiVaultToken due to the upgrade
 
 ## [VN-012][Medium]Inconsistency_across_Chains.md
 
-Fixed - . Removed `setCustomNative` functions. Made `address custom` field deprecatec.
+Fixed - 0be7d150a54497a884cea111911ff3177717895e. Removed `setCustomNative` functions. Made `address custom` field deprecated.

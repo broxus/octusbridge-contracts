@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0
-pragma solidity ^0.8.2;
+pragma solidity ^0.8.20;
 pragma experimental ABIEncoderV2;
 
-import "./interfaces/IBridge.sol";
+import "./interfaces/bridge/IBridge.sol";
 import "./interfaces/IEverscale.sol";
 import "./interfaces/IDAO.sol";
 
-import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 import "./utils/Cache.sol";
@@ -42,8 +42,7 @@ contract DAO is IDAO, IEverscale, ReentrancyGuardUpgradeable, OwnableUpgradeable
     ) public initializer notZeroAddress(_owner) notZeroAddress(_bridge) {
         bridge = _bridge;
 
-        __Ownable_init();
-        transferOwnership(_owner);
+        __Ownable_init(_owner);
     }
 
     /**

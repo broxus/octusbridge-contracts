@@ -52,7 +52,7 @@ function cache(bytes32) external view returns (bool)
 ### configuration
 
 ```solidity
-function configuration() external view returns (int128 wid, uint256 addr)
+function configuration() external view returns (int8 wid, uint256 addr)
 ```
 
 
@@ -64,7 +64,7 @@ function configuration() external view returns (int128 wid, uint256 addr)
 
 | Name | Type | Description |
 |---|---|---|
-| wid | int128 | undefined |
+| wid | int8 | undefined |
 | addr | uint256 | undefined |
 
 ### decodeEthActionsEventData
@@ -174,7 +174,7 @@ function renounceOwnership() external nonpayable
 
 
 
-*Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner.*
+*Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner.*
 
 
 ### setBridge
@@ -232,18 +232,18 @@ function transferOwnership(address newOwner) external nonpayable
 ### Initialized
 
 ```solidity
-event Initialized(uint8 version)
+event Initialized(uint64 version)
 ```
 
 
 
-
+*Triggered when the contract has been initialized or reinitialized.*
 
 #### Parameters
 
 | Name | Type | Description |
 |---|---|---|
-| version  | uint8 | undefined |
+| version  | uint64 | undefined |
 
 ### OwnershipTransferred
 
@@ -293,6 +293,74 @@ event UpdateConfiguration(IEverscale.EverscaleAddress configuration)
 | Name | Type | Description |
 |---|---|---|
 | configuration  | IEverscale.EverscaleAddress | undefined |
+
+
+
+## Errors
+
+### InvalidInitialization
+
+```solidity
+error InvalidInitialization()
+```
+
+
+
+*The contract is already initialized.*
+
+
+### NotInitializing
+
+```solidity
+error NotInitializing()
+```
+
+
+
+*The contract is not initializing.*
+
+
+### OwnableInvalidOwner
+
+```solidity
+error OwnableInvalidOwner(address owner)
+```
+
+
+
+*The owner is not a valid owner account. (eg. `address(0)`)*
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| owner | address | undefined |
+
+### OwnableUnauthorizedAccount
+
+```solidity
+error OwnableUnauthorizedAccount(address account)
+```
+
+
+
+*The caller account is not authorized to perform an operation.*
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| account | address | undefined |
+
+### ReentrancyGuardReentrantCall
+
+```solidity
+error ReentrancyGuardReentrantCall()
+```
+
+
+
+*Unauthorized reentrant call.*
 
 
 

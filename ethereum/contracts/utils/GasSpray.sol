@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0
-pragma solidity 0.8.0;
+pragma solidity ^0.8.20;
 pragma experimental ABIEncoderV2;
 
-import "../multivault/interfaces/multivault/IMultiVaultFacetSettings.sol"; 
+import "../interfaces/multivault/IMultiVaultFacetSettings.sol"; 
 
 
 contract GasSpray {

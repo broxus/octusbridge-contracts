@@ -155,50 +155,6 @@
     "type": "event"
   },
   {
-    "inputs": [],
-    "name": "getInitHash",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "int8",
-            "name": "wid",
-            "type": "int8"
-          },
-          {
-            "internalType": "uint256",
-            "name": "addr",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct IEverscale.EverscaleAddress",
-        "name": "native",
-        "type": "tuple"
-      }
-    ],
-    "name": "getNativeToken",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -279,29 +235,6 @@
       }
     ],
     "name": "setDepositLimit",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "internalType": "string",
-        "name": "name_prefix",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "symbol_prefix",
-        "type": "string"
-      }
-    ],
-    "name": "setPrefix",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

@@ -59,7 +59,7 @@ describe('Test native withdrawal limits', async() => {
             .connect(bob)
             .saveWithdrawNative(payload, signatures);
 
-        const tokenAddress = await multivault.getNativeToken(native);
+        const tokenAddress = await multivault.getNativeToken(native.wid, native.addr);
 
         token = await ethers.getContractAt('MultiVaultToken', tokenAddress);
     });

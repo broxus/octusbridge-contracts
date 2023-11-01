@@ -67,7 +67,7 @@ describe('Test multivault liquidity supply', async () => {
 
             await expect(() => multivault
                 .connect(bob)
-                .mint(token.address, liquidity_deposit, bob.address)
+                .mintLP(token.address, liquidity_deposit, bob.address)
             ).to.changeTokenBalances(
                 token,
                 [bob, multivault],
@@ -183,7 +183,7 @@ describe('Test multivault liquidity supply', async () => {
             expect(expected_tokens)
                 .to.be.gt(liquidity_deposit, 'Wrong expected amount before LP redeem');
 
-            await expect(() => multivault.connect(bob).redeem(token.address, lp_balance, bob.address))
+            await expect(() => multivault.connect(bob).redeemLP(token.address, lp_balance, bob.address))
                 .to.changeTokenBalances(
                     token,
                     [multivault, bob],
