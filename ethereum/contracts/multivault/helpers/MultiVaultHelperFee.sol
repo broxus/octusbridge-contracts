@@ -48,7 +48,7 @@ abstract contract MultiVaultHelperFee is MultiVaultHelperLiquidity, IMultiVaultF
 
         uint amount;
 
-        if (s.liquidity[token].activation == 0) {
+        if (s.liquidity[token].activation == 0 || s.liquidity[token].supply == 0) {
             amount = _amount;
         } else {
             uint liquidity_fee = _amount * liquidity.interest / MultiVaultStorage.MAX_BPS;
