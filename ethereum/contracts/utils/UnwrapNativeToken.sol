@@ -5,14 +5,19 @@ pragma solidity ^0.8.20;
 import "../interfaces/IWETH.sol";
 import "../interfaces/multivault/IOctusCallback.sol";
 import "../interfaces/multivault/IMultiVaultFacetWithdraw.sol";
+import "../interfaces/multivault/IMultiVaultFacetSettings.sol";
 import "../interfaces/multivault/IMultiVaultFacetPendingWithdrawals.sol";
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 
 contract UnwrapNativeToken is IOctusCallbackAlien, Initializable {
     IWETH public wethContract;
     address public multiVault;
+
+    using SafeERC20 for IERC20;
 
     mapping(address => mapping(uint => bool)) public pendingWithdrawals;
 
@@ -82,10 +87,37 @@ contract UnwrapNativeToken is IOctusCallbackAlien, Initializable {
         uint256 withdrawAmount
     ) external override onlyMultiVault {
         address payable nativeTokenReceiver = abi.decode(_payload.callback.payload, (address));
+
+        if (_payload.token != address(wethContract)) {
+            IERC20(_payload.token).safeTransfer(nativeTokenReceiver, withdrawAmount);
+
+            return;
+        }
+
         wethContract.withdraw(withdrawAmount);
 
         (bool sent, ) = nativeTokenReceiver.call{value: withdrawAmount}("");
 
         require(sent, "UnwrapNativeToken: failed to send ETH");
+    }
+
+    function drain(
+        address recipient,
+        address token,
+        uint256 amount
+    ) external {
+        address governance = IMultiVaultFacetSettings(multiVault).governance();
+
+        require(msg.sender == governance, "UnwrapNativeToken: only governance");
+
+        uint256 amount_;
+
+        if (amount == 0) {
+            amount_ = IERC20(token).balanceOf(address(this));
+        } else {
+            amount_ = amount;
+        }
+
+        IERC20(token).safeTransfer(recipient, amount_);
     }
 }

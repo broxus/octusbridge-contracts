@@ -53,11 +53,15 @@ Fixed.
 
 ## [VN-011][Low]Arithmetic_underflow.md
 
-
+Fixed.
 
 ## [VN-012][Medium]Inconsistency_across_Chains.md
 
 Fixed - 0be7d150a54497a884cea111911ff3177717895e. Removed `setCustomNative` functions. Made `address custom` field deprecated.
+
+## [VN-013][Medium]Missing_validation.md
+
+Fixed. Added `drain` function for recovering lost tokens. Added condition to `onAlienWithdrawal`.
 
 ## [VN-040][Medium] Outdated OpenZeppelin Contracts Used.md
 
