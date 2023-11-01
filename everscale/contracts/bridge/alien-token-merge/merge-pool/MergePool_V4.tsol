@@ -165,8 +165,7 @@ contract MergePool_V4 is
     /// @param token Token address
     function removeToken(
         address token
-    ) external override onlyOwnerOrManager cashBack {
-        require(tokens.exists(token), ErrorCodes.TOKEN_NOT_EXISTS);
+    ) external override onlyOwnerOrManager tokenExists(token) cashBack {
         require(token != canon, ErrorCodes.TOKEN_IS_CANON);
 
         delete tokens[token];

@@ -103,6 +103,10 @@ Fixed. Added `MsgFlag.IGNORE_ERRORS` flag, so insufficient balance does not lead
 
 Fixed. Added requirement before `tvm.accept()`.
 
+## [VN-025][Informational]Redundant Control Logic in `removeToken` Function.md
+
+Fixed.
+
 ## [VN-040][Medium] Outdated OpenZeppelin Contracts Used.md
 
 Fixed - 97437ee8ee44524f05a8a5714e069ffff086a9d1.
