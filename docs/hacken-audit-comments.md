@@ -20,11 +20,28 @@ Fixed -  0be7d150a54497a884cea111911ff3177717895e. Added requirements strings, e
 
 ## [VN-005][Low]Contract_name_reuse.md
 
+Fixed. The whole `ethereum/contracts` folder is refactored. Important changes:
+
+- Moved `ethereum/contracts/multivault/multivault` content into `ethereum/contract/multivault`
+- Removed all local OZ contracts, replaced local imports with `@openzeppelin` imports
+- Removed all duplications
+- `MultiVaultToken` and relative contracts are not upgraded, code hash remains the same
+
 ## [VN-006][Informational]Floating_pragma.md
+
+Fixed. Two pragmas left:
+
+- `MultiVaultToken` and relevant contract are still using `0.8.0` since they can't me modified
+- Rest of the contracts are using `^0.8.20`
+
+New facet `MultiVaultFacetTokenFactory` is introduced. It has same Solidity version ad `MultiVaultToken` and implements all the interactions with MV tokens - deployment, mint, burn.
+Note: interface `IMultiVaultFacetTokenFactory` has `^0.8.20` Solidity version and is not inherited directly by facet, it only describes the interface.
 
 ## [VN-007][Informational]Style_guides.md
 
 ## [VN-008][Medium]Race_condition.md
+
+Fixed. Privilage for updating fees changed to `onlyGovernance`. In the mainnet, the `governance` role will be transferred to DAO, which already implements the actions delay.
 
 ## [VN-009][Low]Missing_events.md
 
@@ -35,3 +52,7 @@ Fixed -  0be7d150a54497a884cea111911ff3177717895e. Added requirements strings, e
 ## [VN-012][Medium]Inconsistency_across_Chains.md
 
 Fixed - 0be7d150a54497a884cea111911ff3177717895e. Removed `setCustomNative` functions. Made `address custom` field deprecated.
+
+## [VN-040][Medium] Outdated OpenZeppelin Contracts Used.md
+
+Fixed - 97437ee8ee44524f05a8a5714e069ffff086a9d1.

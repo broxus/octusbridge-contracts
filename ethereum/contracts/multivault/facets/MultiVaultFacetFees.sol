@@ -34,7 +34,7 @@ contract MultiVaultFacetFees is
     )
         public
         override
-        onlyGovernanceOrManagement
+        onlyGovernance
         respectFeeLimit(_depositFee)
     {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
@@ -54,7 +54,7 @@ contract MultiVaultFacetFees is
     )
         public
         override
-        onlyGovernanceOrManagement
+        onlyGovernance
         respectFeeLimit(_withdrawFee)
     {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
@@ -98,7 +98,7 @@ contract MultiVaultFacetFees is
     )
         external
         override
-        onlyGovernanceOrManagement
+        onlyGovernance
         respectFeeLimit(fee)
     {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
@@ -116,7 +116,7 @@ contract MultiVaultFacetFees is
     )
         external
         override
-        onlyGovernanceOrManagement
+        onlyGovernance
         respectFeeLimit(fee)
     {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
@@ -134,7 +134,7 @@ contract MultiVaultFacetFees is
     )
         external
         override
-        onlyGovernanceOrManagement
+        onlyGovernance
         respectFeeLimit(fee)
     {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
@@ -152,7 +152,7 @@ contract MultiVaultFacetFees is
     )
         external
         override
-        onlyGovernanceOrManagement
+        onlyGovernance
         respectFeeLimit(fee)
     {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
