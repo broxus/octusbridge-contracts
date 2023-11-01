@@ -119,6 +119,8 @@ contract EthereumEverscaleEventConfiguration is
         override
         reserveAtLeastTargetBalance()
     {
+        require(msg.value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
+
         _deployEvent(eventVoteData, MsgFlag.ALL_NOT_RESERVED, 0);
     }
 
@@ -135,7 +137,7 @@ contract EthereumEverscaleEventConfiguration is
             counter++;
         }
 
-        msg.sender.transfer({ value: 0, flag: MsgFlag.ALL_NOT_RESERVED });
+        msg.sender.transfer({ value: 0, flag: MsgFlag.IGNORE_ERRORS, bounce: false });
     }
 
 
@@ -144,7 +146,10 @@ contract EthereumEverscaleEventConfiguration is
         uint8 flag,
         uint128 value
     ) internal view {
-        require(msg.value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
+        if (value != 0) {
+            require(value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
+        }
+
         require(
             eventVoteData.eventBlockNumber >= networkConfiguration.startBlockNumber,
             ErrorCodes.EVENT_BLOCK_NUMBER_LESS_THAN_START

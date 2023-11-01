@@ -123,6 +123,19 @@ Fixed.
 
 Fixed.
 
+## [VN-030][Informational]Inefficient_Event_Emission.md
+
+Fixed.
+
+## [VN-031][Medium]Incorrect_hardcoded_value.md
+
+Without changes. Hardcoded token cash is the cheapest method for deriving token address. All risks are known, `MultiVaultToken` code won't be changed in any future upgrades.
+If the code is updated by mistake, automatic tests will fail.
+
+## [VN-032][Medium]Inefficient Gas Management.md
+
+Fixed. Aggregate check is not necessary - if there's not enough value, transaction will fail with revert too. Refactored `_deployEvent`.
+
 ## [VN-040][Medium] Outdated OpenZeppelin Contracts Used.md
 
 Fixed - 97437ee8ee44524f05a8a5714e069ffff086a9d1.
