@@ -50,18 +50,6 @@ contract MultiVaultFacetSettings is
         emit UpdateWeth(_weth);
     }
 
-    /// @notice Rewards address
-    /// @return Everscale address, used for collecting rewards.
-    function rewards()
-        external
-        view
-        override
-    returns (IEverscale.EverscaleAddress memory) {
-        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
-
-        return s.rewards_;
-    }
-
     /// @notice Native configuration address
     /// @return Everscale address, used for verifying native withdrawals
     function configurationNative()
@@ -84,19 +72,6 @@ contract MultiVaultFacetSettings is
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
         return s.configurationAlien_;
-    }
-
-    /// @notice Set address to receive fees.
-    /// This may be called only by `governance`
-    /// @param _rewards Rewards receiver in Everscale network
-    function setRewards(
-        IEverscale.EverscaleAddress memory _rewards
-    ) external override onlyGovernance {
-        MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
-
-        s.rewards_ = _rewards;
-
-        emit UpdateRewards(_rewards.wid, _rewards.addr);
     }
 
     /// @notice Set alien configuration address.

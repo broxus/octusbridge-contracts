@@ -64,15 +64,6 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     await deployments.execute('MultiVault',
         {
             from: owner,
-            log: true,
-        },
-        'setRewards',
-        utils.defaultTonRecipient,
-    );
-
-    await deployments.execute('MultiVault',
-        {
-            from: owner,
             log: true
         },
         'setGasDonor',

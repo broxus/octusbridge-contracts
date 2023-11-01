@@ -71,6 +71,9 @@ Fixed. Marked `Cache` as abstract. Removed `ChainId` contract, replace it with `
 
 Fixed.
 
+## [VN-016][Low]Redundant_functions.md
+
+Fixed.
 
 
 

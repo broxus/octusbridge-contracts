@@ -36,7 +36,7 @@ library MultiVaultStorage {
 
         address bridge;
         mapping(bytes32 => bool) withdrawalIds;
-        IEverscale.EverscaleAddress rewards_;
+        IEverscale.EverscaleAddress rewards_; // deprecated
         IEverscale.EverscaleAddress configurationNative_;
         IEverscale.EverscaleAddress configurationAlien_;
 
@@ -45,7 +45,7 @@ library MultiVaultStorage {
         address guardian;
         address management;
 
-        mapping (address => IMultiVaultFacetTokens.TokenPrefix) prefixes_;
+        mapping (address => IMultiVaultFacetTokens.TokenPrefix) prefixes_; // deprecated
         mapping (address => uint) fees;
 
         // STORAGE UPDATE 1

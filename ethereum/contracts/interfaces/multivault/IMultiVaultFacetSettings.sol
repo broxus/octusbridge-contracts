@@ -12,8 +12,6 @@ interface IMultiVaultFacetSettings {
         address _weth
     ) external;
 
-    function rewards() external view returns (IEverscale.EverscaleAddress memory);
-
     function configurationAlien() external view returns (IEverscale.EverscaleAddress memory);
     function configurationNative() external view returns (IEverscale.EverscaleAddress memory);
 
@@ -65,9 +63,5 @@ interface IMultiVaultFacetSettings {
     ) external;
     function setConfigurationAlien(
         IEverscale.EverscaleAddress memory _configuration
-    ) external;
-
-    function setRewards(
-        IEverscale.EverscaleAddress memory _rewards
     ) external;
 }
