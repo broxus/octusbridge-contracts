@@ -58,8 +58,6 @@ abstract contract MultiVaultHelperFee is MultiVaultHelperLiquidity, IMultiVaultF
             _increaseTokenCash(token, liquidity_fee);
         }
 
-        if (amount == 0) return;
-
         s.fees[token] += amount;
         emit EarnTokenFee(token, amount);
     }
