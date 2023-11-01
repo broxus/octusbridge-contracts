@@ -205,12 +205,14 @@ contract MergePool_V4 is
     /// @param token Token address
     function enableToken(
         address token
-    ) public override onlyOwnerOrManager cashBack {
+    ) public override onlyOwnerOrManager tokenExists(token) cashBack {
+        require(tokens[token].decimals > 0, ErrorCodes.TOKEN_DECIMALS_IS_ZERO);
         _setTokenStatus(token, true);
     }
 
     function enableAll() external override onlyOwnerOrManager cashBack {
         for ((address token,): tokens) {
+            require(tokens[token].decimals > 0, ErrorCodes.TOKEN_DECIMALS_IS_ZERO);
             _setTokenStatus(token, true);
         }
     }
@@ -222,7 +224,7 @@ contract MergePool_V4 is
     /// @param token Token address
     function disableToken(
         address token
-    ) public override onlyOwnerOrManager cashBack {
+    ) public override onlyOwnerOrManager tokenExists(token) cashBack {
         _setTokenStatus(token, false);
     }
 
@@ -385,12 +387,6 @@ contract MergePool_V4 is
     }
 
     function _setTokenStatus(address token, bool status) internal {
-        require(tokens.exists(token), ErrorCodes.TOKEN_NOT_EXISTS);
-
-        if (status == true) {
-            require(tokens[token].decimals > 0, ErrorCodes.TOKEN_DECIMALS_IS_ZERO);
-        }
-
         tokens[token].enabled = status;
     }
 }
