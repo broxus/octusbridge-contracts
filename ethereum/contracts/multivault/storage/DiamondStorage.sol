@@ -127,6 +127,13 @@ library DiamondStorage {
         ds.facetAddresses.push(_facetAddress);
     }
 
+    function addFunction(Storage storage ds, bytes4 _selector, uint16 _selectorPosition, address _facetAddress) internal {
+        ds.selectorToFacetAndPosition[_selector].functionSelectorPosition = _selectorPosition;
+        ds.facetFunctionSelectors[_facetAddress].functionSelectors.push(_selector);
+        ds.selectorToFacetAndPosition[_selector].facetAddress = _facetAddress;
+    }
+
+
     function addFunctions(address _facetAddress, bytes4[] memory _functionSelectors) internal {
         require(_functionSelectors.length > 0, "DiamondStorage: No selectors in facet to cut");
         Storage storage ds = _storage();
@@ -141,9 +148,9 @@ library DiamondStorage {
             bytes4 selector = _functionSelectors[selectorIndex];
             address oldFacetAddress = ds.selectorToFacetAndPosition[selector].facetAddress;
             require(oldFacetAddress == address(0), "DiamondStorage: Can't add function that already exists");
-            ds.facetFunctionSelectors[_facetAddress].functionSelectors.push(selector);
-            ds.selectorToFacetAndPosition[selector].facetAddress = _facetAddress;
-            ds.selectorToFacetAndPosition[selector].functionSelectorPosition = selectorPosition;
+
+            addFunction(ds, selector, selectorPosition, _facetAddress);
+
             selectorPosition++;
         }
     }
@@ -161,11 +168,10 @@ library DiamondStorage {
             bytes4 selector = _functionSelectors[selectorIndex];
             address oldFacetAddress = ds.selectorToFacetAndPosition[selector].facetAddress;
             require(oldFacetAddress != _facetAddress, "DiamondStorage: Can't replace function with same function");
+
             removeFunction(oldFacetAddress, selector);
-            // add function
-            ds.selectorToFacetAndPosition[selector].functionSelectorPosition = selectorPosition;
-            ds.facetFunctionSelectors[_facetAddress].functionSelectors.push(selector);
-            ds.selectorToFacetAndPosition[selector].facetAddress = _facetAddress;
+            addFunction(ds, selector, selectorPosition, _facetAddress);
+
             selectorPosition++;
         }
     }
