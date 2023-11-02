@@ -2216,24 +2216,6 @@
         "line": 2070
       }
     },
-    "2d2a67651f92fe9c004a77a33576083853de169789ff7dba72cee82ae0a00093": {
-      "4": {
-        "filename": "TokenRootAlienEVM.code",
-        "line": 810
-      },
-      "12": {
-        "filename": "TokenRootAlienEVM.code",
-        "line": 812
-      },
-      "28": {
-        "filename": "TokenRootAlienEVM.code",
-        "line": 815
-      },
-      "44": {
-        "filename": "TokenRootAlienEVM.code",
-        "line": 816
-      }
-    },
     "2d902b235d1e7ddff51db93fdfc9bfb862c5589cb978957a9e5a43b18af777f7": {
       "0": {
         "filename": "TokenRootAlienEVM.code",
@@ -3907,7 +3889,7 @@
     "61ab4641fa30d9310391025086eec65d200d79268e1b7cd402565e01ba64be3c": {
       "0": {
         "filename": "TokenRootAlienEVM.code",
-        "line": 3282
+        "line": 3064
       }
     },
     "62a4de0b5834921dbb90a68cf6d0fef393cd62dd7f84463ab99152010cb1a1b9": {
@@ -9947,6 +9929,24 @@
       "24": {
         "filename": "../../node_modules/ton-eth-bridge-token-contracts/contracts/abstract/TokenRootBase.tsol",
         "line": 199
+      }
+    },
+    "eec0ae5de5ea8072e6b70657de200186388b9f729446766a558766b352bfe43a": {
+      "38": {
+        "filename": "TokenRootAlienEVM.code",
+        "line": 810
+      },
+      "46": {
+        "filename": "TokenRootAlienEVM.code",
+        "line": 812
+      },
+      "62": {
+        "filename": "TokenRootAlienEVM.code",
+        "line": 815
+      },
+      "78": {
+        "filename": "TokenRootAlienEVM.code",
+        "line": 816
       }
     },
     "eed4972255667a9d1f3f570af09a2f548d2c80588acb1ee0681038124403c81f": {

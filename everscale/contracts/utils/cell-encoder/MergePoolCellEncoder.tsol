@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.39.0;
+pragma ever-solidity >= 0.62.0;
 
 import "../../bridge/interfaces/event-contracts/multivault/evm/IEVMCallback.tsol";
 import "../../bridge/interfaces/proxy/INetworks.tsol";

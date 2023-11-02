@@ -3057,7 +3057,7 @@
     "61ab4641fa30d9310391025086eec65d200d79268e1b7cd402565e01ba64be3c": {
       "0": {
         "filename": "AlienTokenWalletUpgradeable.code",
-        "line": 2153
+        "line": 2022
       }
     },
     "6676ffc0b93faeaae524805e55350fce42b96307dbfa4ea09ce6376dcd12b700": {
@@ -4755,6 +4755,52 @@
         "line": 2143
       }
     },
+    "a2e77dacaa1dffe87b56b8b823cd1645e7748de23d0914c9cade58f2272f052b": {
+      "38": {
+        "filename": "../../node_modules/ton-eth-bridge-token-contracts/contracts/TokenWalletUpgradeable.tsol",
+        "line": 112
+      },
+      "54": {
+        "filename": "../../node_modules/ton-eth-bridge-token-contracts/contracts/TokenWalletUpgradeable.tsol",
+        "line": 112
+      },
+      "62": {
+        "filename": "../../node_modules/ton-eth-bridge-token-contracts/contracts/TokenWalletUpgradeable.tsol",
+        "line": 112
+      },
+      "78": {
+        "filename": "../../node_modules/ton-eth-bridge-token-contracts/contracts/TokenWalletUpgradeable.tsol",
+        "line": 113
+      },
+      "86": {
+        "filename": "../../node_modules/ton-eth-bridge-token-contracts/contracts/TokenWalletUpgradeable.tsol",
+        "line": 113
+      },
+      "102": {
+        "filename": "../../node_modules/ton-eth-bridge-token-contracts/contracts/TokenWalletUpgradeable.tsol",
+        "line": 113
+      },
+      "110": {
+        "filename": "../../node_modules/ton-eth-bridge-token-contracts/contracts/TokenWalletUpgradeable.tsol",
+        "line": 113
+      },
+      "126": {
+        "filename": "../../node_modules/ton-eth-bridge-token-contracts/contracts/TokenWalletUpgradeable.tsol",
+        "line": 113
+      },
+      "134": {
+        "filename": "../../node_modules/ton-eth-bridge-token-contracts/contracts/TokenWalletUpgradeable.tsol",
+        "line": 113
+      },
+      "150": {
+        "filename": "../../node_modules/ton-eth-bridge-token-contracts/contracts/TokenWalletUpgradeable.tsol",
+        "line": 113
+      },
+      "158": {
+        "filename": "../../node_modules/ton-eth-bridge-token-contracts/contracts/TokenWalletUpgradeable.tsol",
+        "line": 113
+      }
+    },
     "a5749adbbed03b8045435de07b2d4f12ce6cc5e0e2ef96e66c23082bc60e601c": {
       "0": {
         "filename": "../../node_modules/ton-eth-bridge-token-contracts/contracts/abstract/TokenWalletBase.tsol",
@@ -5691,52 +5737,6 @@
       "240": {
         "filename": "AlienTokenWalletUpgradeable.code",
         "line": 1657
-      }
-    },
-    "c16a5f2bf83cdf6125cc3e20ebaaac287ab971023d2a9ffdada10f9f5130017a": {
-      "40": {
-        "filename": "../../node_modules/ton-eth-bridge-token-contracts/contracts/TokenWalletUpgradeable.tsol",
-        "line": 112
-      },
-      "56": {
-        "filename": "../../node_modules/ton-eth-bridge-token-contracts/contracts/TokenWalletUpgradeable.tsol",
-        "line": 112
-      },
-      "64": {
-        "filename": "../../node_modules/ton-eth-bridge-token-contracts/contracts/TokenWalletUpgradeable.tsol",
-        "line": 112
-      },
-      "80": {
-        "filename": "../../node_modules/ton-eth-bridge-token-contracts/contracts/TokenWalletUpgradeable.tsol",
-        "line": 113
-      },
-      "88": {
-        "filename": "../../node_modules/ton-eth-bridge-token-contracts/contracts/TokenWalletUpgradeable.tsol",
-        "line": 113
-      },
-      "104": {
-        "filename": "../../node_modules/ton-eth-bridge-token-contracts/contracts/TokenWalletUpgradeable.tsol",
-        "line": 113
-      },
-      "112": {
-        "filename": "../../node_modules/ton-eth-bridge-token-contracts/contracts/TokenWalletUpgradeable.tsol",
-        "line": 113
-      },
-      "128": {
-        "filename": "../../node_modules/ton-eth-bridge-token-contracts/contracts/TokenWalletUpgradeable.tsol",
-        "line": 113
-      },
-      "136": {
-        "filename": "../../node_modules/ton-eth-bridge-token-contracts/contracts/TokenWalletUpgradeable.tsol",
-        "line": 113
-      },
-      "152": {
-        "filename": "../../node_modules/ton-eth-bridge-token-contracts/contracts/TokenWalletUpgradeable.tsol",
-        "line": 113
-      },
-      "160": {
-        "filename": "../../node_modules/ton-eth-bridge-token-contracts/contracts/TokenWalletUpgradeable.tsol",
-        "line": 113
       }
     },
     "c79fb3bf1ccefe4dceae6ce71c243c7992cf450f304ed417cc5eaeca742f0a51": {

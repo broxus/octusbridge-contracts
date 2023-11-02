@@ -109,15 +109,62 @@ describe('Withdraw Solana alien tokens by burning in favor of proxy', async func
     });
 
     it('Mint tokens to the initializer', async () => {
-        await proxy.methods.mint({
+        const eventDataStructure = {
+            base_token: alienTokenBase.token,
+            ...alienTokenMeta,
+
             amount: mintAmount,
             recipient: initializer.address,
-            payload: '',
-            token: alienTokenRoot.address
-        }).send({
-            from: bridgeOwner.address,
-            amount: locklift.utils.toNano(2)
-        });
+
+            value: 10000,
+            expected_evers: 1000,
+            payload: ''
+        };
+
+        const eventDataEncoded = await cellEncoder.methods
+            .encodeMultiVaultAlienSolanaEverscale(eventDataStructure)
+            .call()
+            .then((t) => t.value0);
+
+        const eventVoteData = {
+            accountSeed: 111,
+            slot: 0,
+            blockTime: 0,
+            txSignature: "",
+            eventData: eventDataEncoded,
+        };
+
+        const tx = await solanaEverscaleEventConfiguration.methods
+            .deployEvent({
+                eventVoteData,
+            })
+            .send({
+                from: initializer.address,
+                amount: locklift.utils.toNano(6),
+            });
+
+        logger.log(`Event initialization tx: ${tx.id.hash}`);
+
+        const expectedEventContract = await solanaEverscaleEventConfiguration.methods
+            .deriveEventAddress({
+                eventVoteData: eventVoteData,
+                answerId: 0,
+            })
+            .call();
+
+        logger.log(`Expected event: ${expectedEventContract.eventContract}`);
+
+        const eventContract = await locklift.factory.getDeployedContract(
+            "MultiVaultSolanaEverscaleEventAlien",
+            expectedEventContract.eventContract
+        );
+
+        await processEvent(
+            relays,
+            eventContract.address,
+            EventType.EthereumEverscale,
+            EventAction.Confirm
+        );
     });
 
     it('Check initializer token balance', async () => {

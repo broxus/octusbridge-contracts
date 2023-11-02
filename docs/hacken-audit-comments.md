@@ -172,3 +172,7 @@ Fixed - 97437ee8ee44524f05a8a5714e069ffff086a9d1.
 
 Fixed. Added amount updatre after `safeTransferFrom`. Virtual list of approved tokens exists because of VN-036.
 
+## [VN-042][Informational]Floating Pragma in tsol Files.md
+
+Fixed. Using `>= 0.62.0`.
+

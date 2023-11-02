@@ -358,90 +358,38 @@
         "line": 45
       }
     },
-    "08e21691a705a827ab7341490ad679209bbda6a467d9f032d69581301836977b": {
+    "068f24ad07f0535eb91de7246d539a3c3dbec038ca7fd68b3b1fa816fbb1b5e1": {
       "0": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
-        "line": 125
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2312
       },
-      "24": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
-        "line": 125
-      },
-      "40": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
-        "line": 125
+      "8": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2313
       },
       "56": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
-        "line": 125
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2314
       },
       "64": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
-        "line": 125
-      },
-      "72": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
-        "line": 125
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2315
       },
       "80": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
-        "line": 125
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2433
       },
-      "96": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
-        "line": 125
+      "88": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2434
       },
-      "112": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
-        "line": 125
+      "136": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2435
       },
       "144": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
-        "line": 125
-      },
-      "152": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
-        "line": 125
-      },
-      "168": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
-        "line": 125
-      },
-      "176": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
-        "line": 125
-      },
-      "184": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
-        "line": 125
-      },
-      "200": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
-        "line": 130
-      },
-      "216": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
-        "line": 132
-      },
-      "240": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
-        "line": 132
-      },
-      "256": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
-        "line": 132
-      },
-      "264": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
-        "line": 132
-      },
-      "280": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
-        "line": 132
-      },
-      "296": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
-        "line": 137
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2436
       }
     },
     "0b0b1c22b149ea6079a63bc4ce7f9ab7219acf5532cfd93a0b9681ae3b99df33": {
@@ -724,52 +672,6 @@
       "992": {
         "filename": "DaoEthereumActionEvent.code",
         "line": 1416
-      }
-    },
-    "0bafaff895ead61ece2781f94b337e7e1e0fb6958de0fbd85c215e57b25ccf7c": {
-      "0": {
-        "filename": "<entry-selector>",
-        "line": 1
-      },
-      "8": {
-        "filename": "<entry-selector>",
-        "line": 2
-      },
-      "24": {
-        "filename": "<entry-selector>",
-        "line": 3
-      },
-      "32": {
-        "filename": "<entry-selector>",
-        "line": 4
-      },
-      "48": {
-        "filename": "<entry-selector>",
-        "line": 5
-      },
-      "56": {
-        "filename": "<entry-selector>",
-        "line": 6
-      },
-      "72": {
-        "filename": "<entry-selector>",
-        "line": 7
-      },
-      "88": {
-        "filename": "<entry-selector>",
-        "line": 8
-      },
-      "96": {
-        "filename": "<entry-selector>",
-        "line": 9
-      },
-      "112": {
-        "filename": "<entry-selector>",
-        "line": 10
-      },
-      "128": {
-        "filename": "<entry-selector>",
-        "line": 11
       }
     },
     "0ff91b8bd477585ba714e21a867a7d258f9dc0ce8744c517675017d4428fc35c": {
@@ -1096,6 +998,92 @@
         "line": 1419
       }
     },
+    "27ee60bab6c7d740cb0e9af4c4d74136ac3d99870056617b0ac46f6956c61c54": {
+      "0": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
+        "line": 125
+      },
+      "24": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
+        "line": 125
+      },
+      "40": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
+        "line": 125
+      },
+      "56": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
+        "line": 125
+      },
+      "64": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
+        "line": 125
+      },
+      "72": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
+        "line": 125
+      },
+      "80": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
+        "line": 125
+      },
+      "96": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
+        "line": 125
+      },
+      "112": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
+        "line": 125
+      },
+      "144": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
+        "line": 125
+      },
+      "152": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
+        "line": 125
+      },
+      "168": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
+        "line": 125
+      },
+      "176": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
+        "line": 125
+      },
+      "184": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
+        "line": 125
+      },
+      "200": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
+        "line": 130
+      },
+      "216": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
+        "line": 132
+      },
+      "240": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
+        "line": 132
+      },
+      "256": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
+        "line": 132
+      },
+      "264": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
+        "line": 132
+      },
+      "280": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
+        "line": 132
+      },
+      "296": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
+        "line": 137
+      }
+    },
     "28c3a2fdc2ac0d454fccf2f91cb58766e42dab2d49e362a061d5904c0ecda4cc": {
       "0": {
         "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
@@ -1104,48 +1092,6 @@
       "16": {
         "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
         "line": 49
-      }
-    },
-    "293bd664fa9fd190f55425dc9140659658cb6ccd52d77842b4bd29d903a91227": {
-      "0": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 716
-      },
-      "8": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 717
-      },
-      "24": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 718
-      },
-      "48": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 719
-      },
-      "64": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 720
-      },
-      "72": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 721
-      },
-      "88": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
-        "line": 124
-      },
-      "96": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 727
-      },
-      "112": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 730
-      },
-      "128": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 733
       }
     },
     "29f000d67dc4537a34ab9f61b39c7b1e97343426c07a27dc90766f9cb4455715": {
@@ -1466,6 +1412,144 @@
       "0": {
         "filename": "../contracts/bridge/event-contracts/base/BaseEvent.tsol",
         "line": 114
+      }
+    },
+    "42c292cb7b02905e4e474532f8fe790eedffb8ac77d300ff7f10d6564ff8406d": {
+      "0": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 1971
+      },
+      "16": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 1972
+      },
+      "24": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 1973
+      },
+      "40": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 1974
+      },
+      "56": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 1975
+      },
+      "72": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 1976
+      },
+      "80": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 1977
+      },
+      "88": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 1978
+      },
+      "104": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 1979
+      },
+      "120": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 1980
+      },
+      "128": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 1981
+      },
+      "144": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 1982
+      },
+      "168": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 1983
+      },
+      "184": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 1984
+      },
+      "192": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 1985
+      },
+      "208": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 1986
+      },
+      "248": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 1987
+      },
+      "264": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 1988
+      },
+      "272": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 1989
+      },
+      "288": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 1990
+      },
+      "296": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 1991
+      },
+      "312": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 1992
+      },
+      "328": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 1993
+      },
+      "336": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 1994
+      },
+      "344": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 1995
+      },
+      "360": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 1996
+      },
+      "376": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2000
+      },
+      "384": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2001
+      },
+      "408": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2002
+      },
+      "424": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2003
+      },
+      "432": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2004
+      },
+      "448": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2008
+      },
+      "456": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2009
+      },
+      "472": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2012
       }
     },
     "42d3b9614706a0b6670566267b128e2c562866459f36f7f2a6d6725ac79588b4": {
@@ -3030,8 +3114,8 @@
     },
     "61ab4641fa30d9310391025086eec65d200d79268e1b7cd402565e01ba64be3c": {
       "0": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2022
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 35
       }
     },
     "66360faed9bb70cbd306946d35c7fe3d4a903d0fc7a0b5a21207c664818c33e6": {
@@ -3100,38 +3184,92 @@
         "line": 1215
       }
     },
-    "6ebe2087298c809d7076802eb7fc76ebd175d5cc6681f08b1853964bd4e78889": {
+    "6ef919997d8bbf2a4321feceed398349b034de59cf5ed3d5694321a11fbfe4d1": {
+      "0": {
+        "filename": "<entry-selector>",
+        "line": 1
+      },
+      "8": {
+        "filename": "<entry-selector>",
+        "line": 2
+      },
+      "24": {
+        "filename": "<entry-selector>",
+        "line": 3
+      },
+      "32": {
+        "filename": "<entry-selector>",
+        "line": 4
+      },
+      "48": {
+        "filename": "<entry-selector>",
+        "line": 5
+      },
+      "56": {
+        "filename": "<entry-selector>",
+        "line": 6
+      },
+      "72": {
+        "filename": "<entry-selector>",
+        "line": 7
+      },
+      "88": {
+        "filename": "<entry-selector>",
+        "line": 8
+      },
+      "96": {
+        "filename": "<entry-selector>",
+        "line": 9
+      },
+      "112": {
+        "filename": "<entry-selector>",
+        "line": 10
+      },
+      "128": {
+        "filename": "<entry-selector>",
+        "line": 11
+      }
+    },
+    "71dcc8d114f01bd4c143b0ac42da6766822a3d707f0b01136f2364d899734529": {
       "0": {
         "filename": "DaoEthereumActionEvent.code",
-        "line": 2312
+        "line": 716
       },
       "8": {
         "filename": "DaoEthereumActionEvent.code",
-        "line": 2313
+        "line": 717
       },
-      "56": {
+      "24": {
         "filename": "DaoEthereumActionEvent.code",
-        "line": 2314
+        "line": 718
+      },
+      "48": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 719
       },
       "64": {
         "filename": "DaoEthereumActionEvent.code",
-        "line": 2315
+        "line": 720
       },
-      "80": {
+      "72": {
         "filename": "DaoEthereumActionEvent.code",
-        "line": 2433
+        "line": 721
       },
       "88": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2434
+        "filename": "../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol",
+        "line": 124
       },
-      "136": {
+      "96": {
         "filename": "DaoEthereumActionEvent.code",
-        "line": 2435
+        "line": 727
       },
-      "144": {
+      "112": {
         "filename": "DaoEthereumActionEvent.code",
-        "line": 2436
+        "line": 730
+      },
+      "128": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 733
       }
     },
     "73795aba4b1908c3ff299f7119183e2d74136b662a89cfe091cebe2006aaf125": {
@@ -4281,6 +4419,72 @@
         "line": 2189
       }
     },
+    "a35775591caff1f77e3518d89997569b18a75c5235ab24eb4148aa73005345b4": {
+      "0": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2320
+      },
+      "8": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2321
+      },
+      "56": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2322
+      },
+      "64": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2323
+      },
+      "80": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2326
+      },
+      "88": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2327
+      },
+      "136": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2328
+      },
+      "144": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2329
+      },
+      "160": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2332
+      },
+      "168": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2333
+      },
+      "216": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2334
+      },
+      "224": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2335
+      },
+      "240": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2338
+      },
+      "248": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2339
+      },
+      "296": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2340
+      },
+      "304": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2341
+      }
+    },
     "a8279d3f422255d89f917ab318e8331ecf35a34cebb7a5957cc79e78b0a13a9c": {
       "0": {
         "filename": "DaoEthereumActionEvent.code",
@@ -4629,144 +4833,6 @@
         "line": 45
       }
     },
-    "b7c75c73b26eaf31220405d10f532535a59eca8befc99123dbcf363c79cf272f": {
-      "0": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 1971
-      },
-      "16": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 1972
-      },
-      "24": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 1973
-      },
-      "40": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 1974
-      },
-      "56": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 1975
-      },
-      "72": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 1976
-      },
-      "80": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 1977
-      },
-      "88": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 1978
-      },
-      "104": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 1979
-      },
-      "120": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 1980
-      },
-      "128": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 1981
-      },
-      "144": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 1982
-      },
-      "168": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 1983
-      },
-      "184": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 1984
-      },
-      "192": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 1985
-      },
-      "208": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 1986
-      },
-      "248": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 1987
-      },
-      "264": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 1988
-      },
-      "272": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 1989
-      },
-      "288": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 1990
-      },
-      "296": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 1991
-      },
-      "312": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 1992
-      },
-      "328": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 1993
-      },
-      "336": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 1994
-      },
-      "344": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 1995
-      },
-      "360": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 1996
-      },
-      "376": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2000
-      },
-      "384": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2001
-      },
-      "408": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2002
-      },
-      "424": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2003
-      },
-      "432": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2004
-      },
-      "448": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2008
-      },
-      "456": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2009
-      },
-      "472": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2012
-      }
-    },
     "ba62791d1e8dbe33e436d010c53414b37af63e37634d0ae41acb4033c5370f55": {
       "0": {
         "filename": "DaoEthereumActionEvent.code",
@@ -4981,6 +5047,72 @@
       "160": {
         "filename": "DaoEthereumActionEvent.code",
         "line": 1846
+      }
+    },
+    "c08103a3fae4b98e696146dd32d61c7f29e91669f9c357dadde5feeebabeab76": {
+      "0": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2316
+      },
+      "8": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2317
+      },
+      "56": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2318
+      },
+      "64": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2319
+      },
+      "80": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2345
+      },
+      "88": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2346
+      },
+      "136": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2347
+      },
+      "144": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2348
+      },
+      "160": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2374
+      },
+      "168": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2375
+      },
+      "216": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2376
+      },
+      "224": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2377
+      },
+      "240": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2403
+      },
+      "248": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2404
+      },
+      "296": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2405
+      },
+      "304": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2406
       }
     },
     "c1420872735fb16737a9cac20b62d6941f187147c5475ada3e27ecb772ea20e8": {
@@ -5383,6 +5515,292 @@
       "0": {
         "filename": "../contracts/bridge/event-contracts/base/BaseEvent.tsol",
         "line": 37
+      }
+    },
+    "d15674b15c62d1761ad9a623acf65d35d2c06559effcce05ec9cb5e4cbc6355f": {
+      "0": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2016
+      },
+      "16": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2017
+      },
+      "24": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2018
+      },
+      "40": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2019
+      },
+      "56": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2020
+      },
+      "72": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2021
+      },
+      "80": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2024
+      },
+      "96": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2025
+      },
+      "104": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2026
+      },
+      "120": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2029
+      },
+      "136": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2030
+      },
+      "144": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2031
+      },
+      "160": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2032
+      },
+      "176": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2033
+      },
+      "192": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2034
+      },
+      "200": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2035
+      },
+      "216": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2036
+      },
+      "224": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2037
+      },
+      "240": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2038
+      },
+      "248": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2039
+      },
+      "256": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2040
+      },
+      "272": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2041
+      },
+      "280": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2042
+      },
+      "288": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2044
+      },
+      "296": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2045
+      },
+      "304": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2046
+      },
+      "320": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2048
+      },
+      "328": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2049
+      },
+      "336": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2050
+      },
+      "352": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2051
+      },
+      "368": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2052
+      },
+      "384": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2054
+      },
+      "392": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2055
+      },
+      "408": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2056
+      },
+      "416": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2057
+      },
+      "432": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2059
+      },
+      "440": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2060
+      },
+      "456": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 26
+      },
+      "472": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 26
+      },
+      "488": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 26
+      },
+      "496": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 26
+      },
+      "504": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 27
+      },
+      "520": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 28
+      },
+      "536": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 28
+      },
+      "544": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 29
+      },
+      "552": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 29
+      },
+      "568": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 29
+      },
+      "584": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 30
+      },
+      "608": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 30
+      },
+      "624": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 30
+      },
+      "632": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 30
+      },
+      "640": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 30
+      },
+      "648": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 30
+      },
+      "656": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 30
+      },
+      "664": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 30
+      },
+      "672": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 30
+      },
+      "688": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 30
+      },
+      "704": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 30
+      },
+      "720": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 30
+      },
+      "736": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 30
+      },
+      "744": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 30
+      },
+      "768": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 30
+      },
+      "776": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 30
+      },
+      "792": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 30
+      },
+      "808": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2099
+      },
+      "816": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 32
+      },
+      "824": {
+        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
+        "line": 32
+      },
+      "840": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2104
+      },
+      "856": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2105
+      },
+      "864": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2106
+      },
+      "880": {
+        "filename": "DaoEthereumActionEvent.code",
+        "line": 2109
       }
     },
     "d1ee0d3b522eff4d08d4b4ccb91f404a0af949bfa9bf219597c336f35324b22d": {
@@ -5971,358 +6389,6 @@
         "line": 2169
       }
     },
-    "d9e5eb7917e778288bdf9505a04ed70a3dd3a9729e22f700baaa4ab09de3c8a8": {
-      "0": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2016
-      },
-      "16": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2017
-      },
-      "24": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2018
-      },
-      "40": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2019
-      },
-      "56": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2020
-      },
-      "72": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2021
-      },
-      "80": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2024
-      },
-      "96": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2025
-      },
-      "104": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2026
-      },
-      "120": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2029
-      },
-      "136": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2030
-      },
-      "144": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2031
-      },
-      "160": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2032
-      },
-      "176": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2033
-      },
-      "192": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2034
-      },
-      "200": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2035
-      },
-      "216": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2036
-      },
-      "224": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2037
-      },
-      "240": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2038
-      },
-      "248": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2039
-      },
-      "256": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2040
-      },
-      "272": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2041
-      },
-      "280": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2042
-      },
-      "288": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2044
-      },
-      "296": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2045
-      },
-      "304": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2046
-      },
-      "320": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2048
-      },
-      "328": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2049
-      },
-      "336": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2050
-      },
-      "352": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2051
-      },
-      "368": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2052
-      },
-      "384": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2054
-      },
-      "392": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2055
-      },
-      "408": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2056
-      },
-      "416": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2057
-      },
-      "432": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2059
-      },
-      "440": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2060
-      },
-      "456": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 26
-      },
-      "472": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 26
-      },
-      "488": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 26
-      },
-      "496": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 26
-      },
-      "504": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 27
-      },
-      "520": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 28
-      },
-      "536": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 28
-      },
-      "544": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 29
-      },
-      "552": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 29
-      },
-      "568": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 29
-      },
-      "584": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 30
-      },
-      "608": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 30
-      },
-      "624": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 30
-      },
-      "632": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 30
-      },
-      "640": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 30
-      },
-      "648": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 30
-      },
-      "656": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 30
-      },
-      "664": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 30
-      },
-      "672": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 30
-      },
-      "688": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 30
-      },
-      "704": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 30
-      },
-      "720": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 30
-      },
-      "736": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 30
-      },
-      "744": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 30
-      },
-      "768": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 30
-      },
-      "776": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 30
-      },
-      "792": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 30
-      },
-      "808": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2099
-      },
-      "816": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 32
-      },
-      "824": {
-        "filename": "../contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol",
-        "line": 32
-      },
-      "840": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2104
-      },
-      "856": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2105
-      },
-      "864": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2106
-      },
-      "880": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2109
-      }
-    },
-    "e928281939f661851a64b25153e92417137158beefd706f37676110fc7c5afe4": {
-      "0": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2320
-      },
-      "8": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2321
-      },
-      "56": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2322
-      },
-      "64": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2323
-      },
-      "80": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2326
-      },
-      "88": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2327
-      },
-      "136": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2328
-      },
-      "144": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2329
-      },
-      "160": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2332
-      },
-      "168": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2333
-      },
-      "216": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2334
-      },
-      "224": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2335
-      },
-      "240": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2338
-      },
-      "248": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2339
-      },
-      "296": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2340
-      },
-      "304": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2341
-      }
-    },
     "f24e1e7aa04d89aad2945816b6e9b921f2b3892da9ba53e2383c148351b96d0c": {
       "0": {
         "filename": "DaoEthereumActionEvent.code",
@@ -6393,72 +6459,6 @@
       "304": {
         "filename": "DaoEthereumActionEvent.code",
         "line": 2209
-      }
-    },
-    "f3076cbc7bfad3984e0cad443dfeb4dca32deb4c290bca04ebef8756e25bbc81": {
-      "0": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2316
-      },
-      "8": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2317
-      },
-      "56": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2318
-      },
-      "64": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2319
-      },
-      "80": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2345
-      },
-      "88": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2346
-      },
-      "136": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2347
-      },
-      "144": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2348
-      },
-      "160": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2374
-      },
-      "168": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2375
-      },
-      "216": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2376
-      },
-      "224": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2377
-      },
-      "240": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2403
-      },
-      "248": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2404
-      },
-      "296": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2405
-      },
-      "304": {
-        "filename": "DaoEthereumActionEvent.code",
-        "line": 2406
       }
     },
     "f38e0edf2cd6979e624bb5144901fbd295ca391d0f00d60f04d58b48bdf7e99f": {

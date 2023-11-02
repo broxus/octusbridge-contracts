@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.39.0;
+pragma ever-solidity >= 0.62.0;
 
 library Gas {
     uint128 constant DEPLOY_PROPOSAL_VALUE = 10 ever;

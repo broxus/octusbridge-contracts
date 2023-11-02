@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.39.0;
+pragma ever-solidity >= 0.62.0;
 
 library DaoErrors {
     uint8 constant NOT_ADMIN = 101;

@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.39.0;
+pragma ever-solidity >= 0.62.0;
 
 /*
     Ad hoc contract, used to perform encode / decode TvmCell.

@@ -110,15 +110,64 @@ describe('Withdraw tokens by burning in favor of proxy', async function() {
     });
 
     it('Mint tokens to the initializer', async () => {
-        await proxy.methods.mint({
+        const eventDataStructure = {
+            base_chainId: alienTokenBase.chainId,
+            base_token: alienTokenBase.token,
+            ...alienTokenMeta,
+
             amount: mintAmount,
-            recipient: initializer.address,
-            payload: '',
-            token: alienTokenRoot.address
-        }).send({
-            from: bridgeOwner.address,
-            amount: locklift.utils.toNano(2)
-        });
+            recipient_wid: initializer.address.toString().split(":")[0],
+            recipient_addr: `0x${initializer.address.toString().split(":")[1]}`,
+
+            value: 10000,
+            expected_evers: 1000,
+            payload: ''
+        };
+
+        const eventDataEncoded = await cellEncoder.methods
+            .encodeMultiVaultAlienEVMEverscale(eventDataStructure)
+            .call()
+            .then((t) => t.value0);
+
+        const eventVoteData = {
+            eventTransaction: 111,
+            eventIndex: 222,
+            eventData: eventDataEncoded,
+            eventBlockNumber: 333,
+            eventBlock: 444,
+        };
+
+        const tx = await ethereumEverscaleEventConfiguration.methods
+            .deployEvent({
+                eventVoteData,
+            })
+            .send({
+                from: initializer.address,
+                amount: locklift.utils.toNano(6),
+            });
+
+        logger.log(`Event initialization tx: ${tx.id}`);
+
+        const expectedEventContract = await ethereumEverscaleEventConfiguration.methods
+            .deriveEventAddress({
+                eventVoteData: eventVoteData,
+                answerId: 0,
+            })
+            .call();
+
+        logger.log(`Expected event: ${expectedEventContract.eventContract}`);
+
+        const eventContract = await locklift.factory.getDeployedContract(
+            "MultiVaultEVMEverscaleEventAlien",
+            expectedEventContract.eventContract
+        );
+
+        await processEvent(
+            relays,
+            eventContract.address,
+            EventType.EthereumEverscale,
+            EventAction.Confirm
+        );
     });
 
     it('Check initializer token balance', async () => {
