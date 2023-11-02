@@ -16,11 +16,13 @@ import "./interfaces/IUpgradable.tsol";
 
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 import "@broxus/contracts/contracts/platform/Platform.tsol";
+import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
+
 import "../utils/Delegate.tsol";
 import "../utils/cell-encoder/DaoCellEncoder.tsol";
 import "../bridge/interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.tsol";
 
-contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate {
+contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey {
 
     uint8 public constant proposalMaxOperations = 10;
     uint16 public constant proposalMaxDescriptionLen = 4096;
@@ -76,7 +78,7 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate {
         TvmCell platformCode_,
         ProposalConfiguration proposalConfiguration_,
         address admin_
-    ) public {
+    ) public checkPubKey {
         tvm.accept();
         platformCode = platformCode_;
         proposalConfiguration = proposalConfiguration_;

@@ -6,6 +6,7 @@ pragma AbiHeader pubkey;
 import "@broxus/contracts/contracts/access/ExternalOwner.tsol";
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
+import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 
 import "./../../utils/TransferUtils.tsol";
 
@@ -18,7 +19,7 @@ import './EventCreditGas.tsol';
 /// @dev Used as part of credit-transfer pipeline, specifically for ever-evm transfers
 /// Allows credit backend to call .close on the event contracts, where remainingGasTo = EventCloser
 /// Receives the EVERs and immediately transfers them to the EventDeployer contract
-contract EventCloser is ExternalOwner, RandomNonce, TransferUtils {
+contract EventCloser is ExternalOwner, RandomNonce, TransferUtils, CheckPubKey {
     address static factory;
 
     address[] public deployers;
@@ -27,7 +28,7 @@ contract EventCloser is ExternalOwner, RandomNonce, TransferUtils {
     constructor(
         uint owner_,
         address[] deployers_
-    ) public {
+    ) public checkPubKey {
         require(msg.sender == factory);
         tvm.accept();
 

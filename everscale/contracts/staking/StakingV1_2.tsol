@@ -18,8 +18,6 @@ contract StakingV1_2 is StakingPoolRelay {
         address _bridge_event_config_ton_sol,
         address _tokenRoot
     ) public {
-        tvm.accept();
-
         base_details.tokenRoot = _tokenRoot;
         base_details.bridge_event_config_eth_ton = _bridge_event_config_eth_ton;
         base_details.bridge_event_config_ton_eth = _bridge_event_config_ton_eth;

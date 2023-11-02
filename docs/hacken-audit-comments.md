@@ -239,3 +239,7 @@ Fixed.
 ## [VN-061][Medium] Funds Lock Due To Initialization Front Run.md
 
 Fixed.
+
+## [VN-062][High] Funds Loss Due To Initialization Front Run.md
+
+Fixed.

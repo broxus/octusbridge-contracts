@@ -3,66 +3,298 @@
     "1095a24192c82c763e0185a9dc8ce430b05a3cd52a13bb1790f9c872f3e2965a": {
       "0": {
         "filename": "EventDeployer.code",
-        "line": 508
+        "line": 520
       },
       "8": {
         "filename": "EventDeployer.code",
-        "line": 509
+        "line": 521
       },
       "16": {
         "filename": "EventDeployer.code",
-        "line": 510
+        "line": 522
       },
       "32": {
         "filename": "EventDeployer.code",
-        "line": 513
+        "line": 525
       },
       "48": {
         "filename": "EventDeployer.code",
-        "line": 514
+        "line": 526
       },
       "56": {
         "filename": "EventDeployer.code",
-        "line": 515
+        "line": 527
       },
       "72": {
         "filename": "EventDeployer.code",
-        "line": 516
+        "line": 528
       },
       "232": {
         "filename": "EventDeployer.code",
-        "line": 517
+        "line": 529
       },
       "240": {
         "filename": "EventDeployer.code",
-        "line": 518
+        "line": 530
       },
       "248": {
         "filename": "EventDeployer.code",
-        "line": 519
+        "line": 531
       },
       "256": {
         "filename": "EventDeployer.code",
-        "line": 520
+        "line": 532
       },
       "264": {
         "filename": "EventDeployer.code",
-        "line": 521
+        "line": 533
       },
       "272": {
         "filename": "EventDeployer.code",
-        "line": 522
+        "line": 534
       },
       "288": {
         "filename": "EventDeployer.code",
-        "line": 524
+        "line": 536
       },
       "296": {
         "filename": "EventDeployer.code",
-        "line": 525
+        "line": 537
       }
     },
-    "19f4f97e5f6cd4abb8f5f23ee536fccdffcb967662e1c31f169c3cd4b8db9fbd": {
+    "264601bac8c9476d9c27f0bee319b76ce3b16380043dae00be6e43ccdfc8b2d1": {
+      "0": {
+        "filename": "EventDeployer.code",
+        "line": 286
+      },
+      "16": {
+        "filename": "EventDeployer.code",
+        "line": 287
+      },
+      "24": {
+        "filename": "EventDeployer.code",
+        "line": 288
+      },
+      "40": {
+        "filename": "EventDeployer.code",
+        "line": 289
+      },
+      "56": {
+        "filename": "EventDeployer.code",
+        "line": 290
+      },
+      "72": {
+        "filename": "EventDeployer.code",
+        "line": 291
+      },
+      "80": {
+        "filename": "EventDeployer.code",
+        "line": 292
+      },
+      "96": {
+        "filename": "EventDeployer.code",
+        "line": 293
+      },
+      "112": {
+        "filename": "EventDeployer.code",
+        "line": 294
+      },
+      "120": {
+        "filename": "EventDeployer.code",
+        "line": 295
+      },
+      "128": {
+        "filename": "EventDeployer.code",
+        "line": 296
+      },
+      "136": {
+        "filename": "EventDeployer.code",
+        "line": 297
+      },
+      "152": {
+        "filename": "EventDeployer.code",
+        "line": 298
+      },
+      "160": {
+        "filename": "EventDeployer.code",
+        "line": 299
+      },
+      "176": {
+        "filename": "EventDeployer.code",
+        "line": 300
+      },
+      "192": {
+        "filename": "EventDeployer.code",
+        "line": 301
+      },
+      "208": {
+        "filename": "EventDeployer.code",
+        "line": 302
+      },
+      "224": {
+        "filename": "EventDeployer.code",
+        "line": 303
+      }
+    },
+    "29109c2d2a87a8267ef90902a493cb455e34ae5047364dc185bfc071f0e53ff4": {
+      "0": {
+        "filename": "EventDeployer.code",
+        "line": 233
+      },
+      "8": {
+        "filename": "EventDeployer.code",
+        "line": 234
+      },
+      "24": {
+        "filename": "EventDeployer.code",
+        "line": 235
+      },
+      "48": {
+        "filename": "EventDeployer.code",
+        "line": 236
+      },
+      "64": {
+        "filename": "EventDeployer.code",
+        "line": 237
+      },
+      "72": {
+        "filename": "EventDeployer.code",
+        "line": 238
+      },
+      "88": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 33
+      },
+      "96": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 33
+      },
+      "104": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 33
+      },
+      "112": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 33
+      },
+      "120": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 33
+      },
+      "128": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 33
+      },
+      "136": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 33
+      },
+      "152": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 33
+      },
+      "160": {
+        "filename": "EventDeployer.code",
+        "line": 252
+      },
+      "176": {
+        "filename": "EventDeployer.code",
+        "line": 255
+      },
+      "184": {
+        "filename": "EventDeployer.code",
+        "line": 256
+      },
+      "200": {
+        "filename": "EventDeployer.code",
+        "line": 259
+      }
+    },
+    "2e9f1b516fef5ead73c771ac0e2156dd761e5d0a798b348b54733be3efc8947f": {
+      "0": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 23
+      },
+      "16": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 25
+      },
+      "24": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 25
+      },
+      "40": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 27
+      },
+      "200": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 27
+      },
+      "208": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 27
+      },
+      "216": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 27
+      },
+      "232": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 27
+      },
+      "248": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 27
+      },
+      "256": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 27
+      },
+      "264": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
+        "line": 27
+      }
+    },
+    "40f3ab97f0a2c972f7e933e13812ab1e2254b7d786418274c9c35765cd45a12a": {
+      "0": {
+        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
+        "line": 63
+      },
+      "16": {
+        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
+        "line": 63
+      },
+      "32": {
+        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
+        "line": 63
+      },
+      "48": {
+        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
+        "line": 63
+      },
+      "64": {
+        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
+        "line": 63
+      },
+      "80": {
+        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
+        "line": 63
+      },
+      "88": {
+        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
+        "line": 63
+      },
+      "96": {
+        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
+        "line": 63
+      },
+      "104": {
+        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
+        "line": 63
+      }
+    },
+    "41274f1800b69a1138f0dc90c6d651a13b7219482c2686aadc0b6cee8f867568": {
       "0": {
         "filename": "EventDeployer.code",
         "line": 4
@@ -120,318 +352,76 @@
         "line": 20
       },
       "152": {
-        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 27
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
       },
       "168": {
-        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 27
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
+      },
+      "176": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
       },
       "184": {
-        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 27
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
+      },
+      "192": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
       },
       "200": {
-        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 27
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
       },
-      "224": {
+      "208": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
+      },
+      "216": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
+      },
+      "232": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
+      },
+      "240": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
+      },
+      "264": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
         "line": 28
       },
-      "240": {
+      "280": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 30
+        "line": 28
       },
-      "256": {
-        "filename": "EventDeployer.code",
-        "line": 33
-      },
-      "272": {
-        "filename": "EventDeployer.code",
-        "line": 36
-      }
-    },
-    "264601bac8c9476d9c27f0bee319b76ce3b16380043dae00be6e43ccdfc8b2d1": {
-      "0": {
-        "filename": "EventDeployer.code",
-        "line": 274
-      },
-      "16": {
-        "filename": "EventDeployer.code",
-        "line": 275
-      },
-      "24": {
-        "filename": "EventDeployer.code",
-        "line": 276
-      },
-      "40": {
-        "filename": "EventDeployer.code",
-        "line": 277
-      },
-      "56": {
-        "filename": "EventDeployer.code",
-        "line": 278
-      },
-      "72": {
-        "filename": "EventDeployer.code",
-        "line": 279
-      },
-      "80": {
-        "filename": "EventDeployer.code",
-        "line": 280
-      },
-      "96": {
-        "filename": "EventDeployer.code",
-        "line": 281
-      },
-      "112": {
-        "filename": "EventDeployer.code",
-        "line": 282
-      },
-      "120": {
-        "filename": "EventDeployer.code",
-        "line": 283
-      },
-      "128": {
-        "filename": "EventDeployer.code",
-        "line": 284
-      },
-      "136": {
-        "filename": "EventDeployer.code",
-        "line": 285
-      },
-      "152": {
-        "filename": "EventDeployer.code",
-        "line": 286
-      },
-      "160": {
-        "filename": "EventDeployer.code",
-        "line": 287
-      },
-      "176": {
-        "filename": "EventDeployer.code",
-        "line": 288
-      },
-      "192": {
-        "filename": "EventDeployer.code",
-        "line": 289
-      },
-      "208": {
-        "filename": "EventDeployer.code",
-        "line": 290
-      },
-      "224": {
-        "filename": "EventDeployer.code",
-        "line": 291
-      }
-    },
-    "29109c2d2a87a8267ef90902a493cb455e34ae5047364dc185bfc071f0e53ff4": {
-      "0": {
-        "filename": "EventDeployer.code",
-        "line": 221
-      },
-      "8": {
-        "filename": "EventDeployer.code",
-        "line": 222
-      },
-      "24": {
-        "filename": "EventDeployer.code",
-        "line": 223
-      },
-      "48": {
-        "filename": "EventDeployer.code",
-        "line": 224
-      },
-      "64": {
-        "filename": "EventDeployer.code",
-        "line": 225
-      },
-      "72": {
-        "filename": "EventDeployer.code",
-        "line": 226
-      },
-      "88": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 33
-      },
-      "96": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 33
-      },
-      "104": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 33
-      },
-      "112": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 33
-      },
-      "120": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 33
-      },
-      "128": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 33
-      },
-      "136": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 33
-      },
-      "152": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 33
-      },
-      "160": {
-        "filename": "EventDeployer.code",
-        "line": 240
-      },
-      "176": {
-        "filename": "EventDeployer.code",
-        "line": 243
-      },
-      "184": {
-        "filename": "EventDeployer.code",
-        "line": 244
-      },
-      "200": {
-        "filename": "EventDeployer.code",
-        "line": 247
-      }
-    },
-    "2e9f1b516fef5ead73c771ac0e2156dd761e5d0a798b348b54733be3efc8947f": {
-      "0": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 23
-      },
-      "16": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 25
-      },
-      "24": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 25
-      },
-      "40": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 27
-      },
-      "200": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 27
-      },
-      "208": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 27
-      },
-      "216": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 27
-      },
-      "232": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 27
-      },
-      "248": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 27
-      },
-      "256": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 27
-      },
-      "264": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/ExternalOwner.tsol",
-        "line": 27
-      }
-    },
-    "40f3ab97f0a2c972f7e933e13812ab1e2254b7d786418274c9c35765cd45a12a": {
-      "0": {
+      "296": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
+        "line": 28
       },
-      "16": {
+      "312": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
+        "line": 28
       },
-      "32": {
+      "336": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
+        "line": 29
       },
-      "48": {
+      "352": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
+        "line": 31
       },
-      "64": {
-        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
-      },
-      "80": {
-        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
-      },
-      "88": {
-        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
-      },
-      "96": {
-        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
-      },
-      "104": {
-        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
-      }
-    },
-    "452d5d1b59283a76287eeb8f81b41452559be84d5d4c59c9678eddf1bd68530b": {
-      "0": {
+      "368": {
         "filename": "EventDeployer.code",
-        "line": 561
+        "line": 45
       },
-      "8": {
+      "384": {
         "filename": "EventDeployer.code",
-        "line": 562
-      },
-      "56": {
-        "filename": "EventDeployer.code",
-        "line": 563
-      },
-      "64": {
-        "filename": "EventDeployer.code",
-        "line": 564
-      },
-      "80": {
-        "filename": "EventDeployer.code",
-        "line": 567
-      },
-      "88": {
-        "filename": "EventDeployer.code",
-        "line": 568
-      },
-      "136": {
-        "filename": "EventDeployer.code",
-        "line": 569
-      },
-      "144": {
-        "filename": "EventDeployer.code",
-        "line": 570
-      },
-      "160": {
-        "filename": "EventDeployer.code",
-        "line": 573
-      },
-      "168": {
-        "filename": "EventDeployer.code",
-        "line": 574
-      },
-      "216": {
-        "filename": "EventDeployer.code",
-        "line": 575
-      },
-      "224": {
-        "filename": "EventDeployer.code",
-        "line": 576
+        "line": 48
       }
     },
     "53ee749e16d030cb7a5c772f78367c89c2be68edc9a26dc4c32454983fb72ee7": {
@@ -477,235 +467,269 @@
       },
       "112": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 60
+        "line": 61
       },
       "128": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
+        "line": 63
       },
       "144": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
+        "line": 63
       },
       "152": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
+        "line": 63
       },
       "160": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
+        "line": 63
       },
       "176": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
+        "line": 63
       },
       "192": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "200": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "216": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "224": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "240": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "248": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "264": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "272": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "288": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "296": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "304": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "328": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "344": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "368": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "376": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "384": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "400": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "448": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "472": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "480": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "496": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "504": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "520": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "536": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "544": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "560": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "568": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "584": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "600": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "608": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "616": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 63
+        "line": 64
       },
       "632": {
         "filename": "EventDeployer.code",
-        "line": 191
+        "line": 203
       },
       "640": {
         "filename": "EventDeployer.code",
-        "line": 192
+        "line": 204
       },
       "648": {
         "filename": "EventDeployer.code",
-        "line": 193
+        "line": 205
       },
       "656": {
         "filename": "EventDeployer.code",
-        "line": 195
+        "line": 207
       },
       "664": {
         "filename": "EventDeployer.code",
-        "line": 196
+        "line": 208
       }
     },
     "5be897185897e73332ba089dfdc8ab255e44ab339b65eedc223e8fc6ce7b65dc": {
       "0": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
+        "line": 63
       },
       "16": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
+        "line": 63
       },
       "32": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
+        "line": 63
       },
       "48": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
+        "line": 63
       },
       "56": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
+        "line": 63
       },
       "72": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
+        "line": 63
       },
       "80": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
+        "line": 63
       },
       "96": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
+        "line": 63
       },
       "112": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
+        "line": 63
       },
       "120": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
+        "line": 63
       },
       "136": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
+        "line": 63
       },
       "144": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
+        "line": 63
       },
       "160": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
+        "line": 63
       },
       "168": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 62
+        "line": 63
+      }
+    },
+    "608e1246be1e6e882de5004cc6332f73529f214dd498c7a35871513f4e266e92": {
+      "0": {
+        "filename": "EventDeployer.code",
+        "line": 540
+      },
+      "8": {
+        "filename": "EventDeployer.code",
+        "line": 541
+      },
+      "56": {
+        "filename": "EventDeployer.code",
+        "line": 542
+      },
+      "64": {
+        "filename": "EventDeployer.code",
+        "line": 543
+      },
+      "80": {
+        "filename": "EventDeployer.code",
+        "line": 569
+      },
+      "88": {
+        "filename": "EventDeployer.code",
+        "line": 570
+      },
+      "136": {
+        "filename": "EventDeployer.code",
+        "line": 571
+      },
+      "144": {
+        "filename": "EventDeployer.code",
+        "line": 572
       }
     },
     "61ab4641fa30d9310391025086eec65d200d79268e1b7cd402565e01ba64be3c": {
       "0": {
         "filename": "EventDeployer.code",
-        "line": 414
+        "line": 331
       }
     },
     "73867e37ec1ffb9ecb087a37d71892215b0b805a73c127da219a28729084e2e0": {
@@ -718,187 +742,285 @@
         "line": 2
       }
     },
-    "9e9cb930ff73a6c8aef1d4bb83ff6717d5d737a966633e1ca1e75d4fc135f393": {
+    "8c33d0fc6890cf0bd2b2255013d360f592057c6c92836b8f40c14caf30ca2708": {
       "0": {
         "filename": "EventDeployer.code",
-        "line": 468
-      },
-      "8": {
-        "filename": "EventDeployer.code",
-        "line": 469
+        "line": 385
       },
       "16": {
         "filename": "EventDeployer.code",
-        "line": 470
+        "line": 386
       },
-      "32": {
+      "24": {
         "filename": "EventDeployer.code",
-        "line": 473
+        "line": 387
       },
-      "48": {
+      "40": {
         "filename": "EventDeployer.code",
-        "line": 474
+        "line": 388
       },
       "56": {
         "filename": "EventDeployer.code",
-        "line": 475
+        "line": 389
       },
       "72": {
         "filename": "EventDeployer.code",
-        "line": 476
+        "line": 390
       },
-      "232": {
+      "80": {
         "filename": "EventDeployer.code",
-        "line": 477
+        "line": 391
       },
-      "240": {
+      "88": {
         "filename": "EventDeployer.code",
-        "line": 478
+        "line": 392
+      },
+      "104": {
+        "filename": "EventDeployer.code",
+        "line": 393
+      },
+      "120": {
+        "filename": "EventDeployer.code",
+        "line": 394
+      },
+      "128": {
+        "filename": "EventDeployer.code",
+        "line": 395
+      },
+      "144": {
+        "filename": "EventDeployer.code",
+        "line": 396
+      },
+      "168": {
+        "filename": "EventDeployer.code",
+        "line": 397
+      },
+      "176": {
+        "filename": "EventDeployer.code",
+        "line": 398
+      },
+      "184": {
+        "filename": "EventDeployer.code",
+        "line": 399
+      },
+      "200": {
+        "filename": "EventDeployer.code",
+        "line": 400
+      },
+      "216": {
+        "filename": "EventDeployer.code",
+        "line": 404
+      },
+      "224": {
+        "filename": "EventDeployer.code",
+        "line": 405
       },
       "248": {
         "filename": "EventDeployer.code",
-        "line": 479
+        "line": 406
       },
       "264": {
         "filename": "EventDeployer.code",
-        "line": 480
+        "line": 407
       },
       "272": {
         "filename": "EventDeployer.code",
-        "line": 481
+        "line": 408
       },
-      "280": {
+      "288": {
         "filename": "EventDeployer.code",
-        "line": 482
+        "line": 412
       },
       "296": {
         "filename": "EventDeployer.code",
-        "line": 484
+        "line": 413
+      },
+      "312": {
+        "filename": "EventDeployer.code",
+        "line": 416
+      }
+    },
+    "9e9cb930ff73a6c8aef1d4bb83ff6717d5d737a966633e1ca1e75d4fc135f393": {
+      "0": {
+        "filename": "EventDeployer.code",
+        "line": 480
+      },
+      "8": {
+        "filename": "EventDeployer.code",
+        "line": 481
+      },
+      "16": {
+        "filename": "EventDeployer.code",
+        "line": 482
+      },
+      "32": {
+        "filename": "EventDeployer.code",
+        "line": 485
+      },
+      "48": {
+        "filename": "EventDeployer.code",
+        "line": 486
+      },
+      "56": {
+        "filename": "EventDeployer.code",
+        "line": 487
+      },
+      "72": {
+        "filename": "EventDeployer.code",
+        "line": 488
+      },
+      "232": {
+        "filename": "EventDeployer.code",
+        "line": 489
+      },
+      "240": {
+        "filename": "EventDeployer.code",
+        "line": 490
+      },
+      "248": {
+        "filename": "EventDeployer.code",
+        "line": 491
+      },
+      "264": {
+        "filename": "EventDeployer.code",
+        "line": 492
+      },
+      "272": {
+        "filename": "EventDeployer.code",
+        "line": 493
+      },
+      "280": {
+        "filename": "EventDeployer.code",
+        "line": 494
+      },
+      "296": {
+        "filename": "EventDeployer.code",
+        "line": 496
       },
       "304": {
         "filename": "EventDeployer.code",
-        "line": 485
+        "line": 497
       }
     },
     "a7bfcd7aa4848d7cde95252244b78d3faf7c0e1560e5c22918c5e57f3666c8ff": {
       "0": {
         "filename": "EventDeployer.code",
-        "line": 299
+        "line": 311
       },
       "8": {
         "filename": "EventDeployer.code",
-        "line": 300
+        "line": 312
       },
       "24": {
         "filename": "EventDeployer.code",
-        "line": 301
+        "line": 313
       },
       "32": {
         "filename": "EventDeployer.code",
-        "line": 302
+        "line": 314
       },
       "48": {
         "filename": "EventDeployer.code",
-        "line": 303
+        "line": 315
       },
       "56": {
         "filename": "EventDeployer.code",
-        "line": 304
+        "line": 316
       },
       "64": {
         "filename": "EventDeployer.code",
-        "line": 305
+        "line": 317
       },
       "72": {
         "filename": "EventDeployer.code",
-        "line": 306
+        "line": 318
       },
       "88": {
         "filename": "EventDeployer.code",
-        "line": 307
+        "line": 319
       },
       "104": {
         "filename": "EventDeployer.code",
-        "line": 308
+        "line": 320
       },
       "120": {
         "filename": "EventDeployer.code",
-        "line": 309
+        "line": 321
       },
       "128": {
         "filename": "EventDeployer.code",
-        "line": 310
+        "line": 322
       },
       "152": {
         "filename": "EventDeployer.code",
-        "line": 312
+        "line": 324
       },
       "160": {
         "filename": "EventDeployer.code",
-        "line": 313
+        "line": 325
       },
       "168": {
         "filename": "EventDeployer.code",
-        "line": 314
+        "line": 326
       },
       "176": {
         "filename": "EventDeployer.code",
-        "line": 315
+        "line": 327
       },
       "192": {
         "filename": "EventDeployer.code",
-        "line": 316
+        "line": 328
       },
       "208": {
         "filename": "EventDeployer.code",
-        "line": 317
+        "line": 329
       },
       "224": {
         "filename": "EventDeployer.code",
-        "line": 322
+        "line": 334
       },
       "232": {
         "filename": "EventDeployer.code",
-        "line": 323
+        "line": 335
       },
       "248": {
         "filename": "EventDeployer.code",
-        "line": 324
+        "line": 336
       },
       "264": {
         "filename": "EventDeployer.code",
-        "line": 325
+        "line": 337
       },
       "280": {
         "filename": "EventDeployer.code",
-        "line": 326
+        "line": 338
       },
       "296": {
         "filename": "EventDeployer.code",
-        "line": 327
+        "line": 339
       },
       "312": {
         "filename": "EventDeployer.code",
-        "line": 328
+        "line": 340
       },
       "328": {
         "filename": "EventDeployer.code",
-        "line": 329
+        "line": 341
       },
       "352": {
         "filename": "EventDeployer.code",
-        "line": 330
+        "line": 342
       },
       "368": {
         "filename": "EventDeployer.code",
-        "line": 331
+        "line": 343
       },
       "376": {
         "filename": "EventDeployer.code",
-        "line": 332
+        "line": 344
       }
     },
-    "ae1fd50f5199a31b4db4073f6163e5d0e2061e856d90cae03f585a99e754e17c": {
+    "b63064315f23c792e3908126761c76028b2534162bc01b787205ebd000123b21": {
       "0": {
         "filename": "<entry-selector>",
         "line": 1
@@ -944,552 +1066,158 @@
         "line": 11
       }
     },
-    "b328a5b7832f14a0d9c3f682cf724db915ce2ab5a31f86bde299e82304765dd2": {
+    "c880e4260c06237b61e0a0db98fe07340fe10f205745436ba3935f0cfb348091": {
       "0": {
         "filename": "EventDeployer.code",
-        "line": 373
+        "line": 420
       },
       "16": {
-        "filename": "EventDeployer.code",
-        "line": 374
-      },
-      "24": {
-        "filename": "EventDeployer.code",
-        "line": 375
-      },
-      "40": {
-        "filename": "EventDeployer.code",
-        "line": 376
-      },
-      "56": {
-        "filename": "EventDeployer.code",
-        "line": 377
-      },
-      "72": {
-        "filename": "EventDeployer.code",
-        "line": 378
-      },
-      "80": {
-        "filename": "EventDeployer.code",
-        "line": 379
-      },
-      "88": {
-        "filename": "EventDeployer.code",
-        "line": 380
-      },
-      "104": {
-        "filename": "EventDeployer.code",
-        "line": 381
-      },
-      "120": {
-        "filename": "EventDeployer.code",
-        "line": 382
-      },
-      "128": {
-        "filename": "EventDeployer.code",
-        "line": 383
-      },
-      "144": {
-        "filename": "EventDeployer.code",
-        "line": 384
-      },
-      "168": {
-        "filename": "EventDeployer.code",
-        "line": 385
-      },
-      "176": {
-        "filename": "EventDeployer.code",
-        "line": 386
-      },
-      "184": {
-        "filename": "EventDeployer.code",
-        "line": 387
-      },
-      "200": {
-        "filename": "EventDeployer.code",
-        "line": 388
-      },
-      "216": {
-        "filename": "EventDeployer.code",
-        "line": 392
-      },
-      "224": {
-        "filename": "EventDeployer.code",
-        "line": 393
-      },
-      "248": {
-        "filename": "EventDeployer.code",
-        "line": 394
-      },
-      "264": {
-        "filename": "EventDeployer.code",
-        "line": 395
-      },
-      "272": {
-        "filename": "EventDeployer.code",
-        "line": 396
-      },
-      "288": {
-        "filename": "EventDeployer.code",
-        "line": 400
-      },
-      "296": {
-        "filename": "EventDeployer.code",
-        "line": 401
-      },
-      "312": {
-        "filename": "EventDeployer.code",
-        "line": 404
-      }
-    },
-    "cd20db5cad096762c3d855652b7bd6f6fb790ce2ab393315ae518f8cf856cb06": {
-      "0": {
-        "filename": "EventDeployer.code",
-        "line": 488
-      },
-      "8": {
-        "filename": "EventDeployer.code",
-        "line": 489
-      },
-      "16": {
-        "filename": "EventDeployer.code",
-        "line": 490
-      },
-      "32": {
-        "filename": "EventDeployer.code",
-        "line": 493
-      },
-      "48": {
-        "filename": "EventDeployer.code",
-        "line": 494
-      },
-      "56": {
-        "filename": "EventDeployer.code",
-        "line": 495
-      },
-      "72": {
-        "filename": "EventDeployer.code",
-        "line": 496
-      },
-      "232": {
-        "filename": "EventDeployer.code",
-        "line": 497
-      },
-      "240": {
-        "filename": "EventDeployer.code",
-        "line": 498
-      },
-      "248": {
-        "filename": "EventDeployer.code",
-        "line": 499
-      },
-      "264": {
-        "filename": "EventDeployer.code",
-        "line": 500
-      },
-      "272": {
-        "filename": "EventDeployer.code",
-        "line": 501
-      },
-      "280": {
-        "filename": "EventDeployer.code",
-        "line": 502
-      },
-      "296": {
-        "filename": "EventDeployer.code",
-        "line": 504
-      },
-      "304": {
-        "filename": "EventDeployer.code",
-        "line": 505
-      }
-    },
-    "d0ffca474033b5ed6646ca52be0ed6f10e838064b602f898b033577443d38660": {
-      "0": {
-        "filename": "EventDeployer.code",
-        "line": 532
-      },
-      "8": {
-        "filename": "EventDeployer.code",
-        "line": 533
-      },
-      "56": {
-        "filename": "EventDeployer.code",
-        "line": 534
-      },
-      "64": {
-        "filename": "EventDeployer.code",
-        "line": 535
-      },
-      "80": {
-        "filename": "EventDeployer.code",
-        "line": 538
-      },
-      "88": {
-        "filename": "EventDeployer.code",
-        "line": 539
-      },
-      "136": {
-        "filename": "EventDeployer.code",
-        "line": 540
-      },
-      "144": {
-        "filename": "EventDeployer.code",
-        "line": 541
-      },
-      "160": {
-        "filename": "EventDeployer.code",
-        "line": 544
-      },
-      "168": {
-        "filename": "EventDeployer.code",
-        "line": 545
-      },
-      "216": {
-        "filename": "EventDeployer.code",
-        "line": 546
-      },
-      "224": {
-        "filename": "EventDeployer.code",
-        "line": 547
-      },
-      "240": {
-        "filename": "EventDeployer.code",
-        "line": 550
-      },
-      "248": {
-        "filename": "EventDeployer.code",
-        "line": 551
-      },
-      "296": {
-        "filename": "EventDeployer.code",
-        "line": 552
-      },
-      "304": {
-        "filename": "EventDeployer.code",
-        "line": 553
-      }
-    },
-    "d558e53bf690afc8a76b8887a99a49a52db1bd24bec5da84780ea0e7bc0aad3f": {
-      "0": {
-        "filename": "EventDeployer.code",
-        "line": 318
-      }
-    },
-    "d9b5c5ed9a6aa4dfc4ad7db8fb9757022a8bda20c463c72c73bf28b605c3667b": {
-      "0": {
-        "filename": "EventDeployer.code",
-        "line": 528
-      },
-      "8": {
-        "filename": "EventDeployer.code",
-        "line": 529
-      },
-      "56": {
-        "filename": "EventDeployer.code",
-        "line": 530
-      },
-      "64": {
-        "filename": "EventDeployer.code",
-        "line": 531
-      },
-      "80": {
-        "filename": "EventDeployer.code",
-        "line": 557
-      },
-      "88": {
-        "filename": "EventDeployer.code",
-        "line": 558
-      },
-      "136": {
-        "filename": "EventDeployer.code",
-        "line": 559
-      },
-      "144": {
-        "filename": "EventDeployer.code",
-        "line": 560
-      }
-    },
-    "d9e077f76c67ee13238dcbcae6ee0289d637ec77eb64e999017bfe039115b34c": {
-      "0": {
-        "filename": "EventDeployer.code",
-        "line": 339
-      },
-      "16": {
-        "filename": "EventDeployer.code",
-        "line": 340
-      },
-      "32": {
-        "filename": "EventDeployer.code",
-        "line": 341
-      },
-      "48": {
-        "filename": "EventDeployer.code",
-        "line": 342
-      },
-      "64": {
-        "filename": "EventDeployer.code",
-        "line": 343
-      },
-      "72": {
-        "filename": "EventDeployer.code",
-        "line": 344
-      },
-      "88": {
-        "filename": "EventDeployer.code",
-        "line": 345
-      },
-      "104": {
-        "filename": "EventDeployer.code",
-        "line": 346
-      },
-      "120": {
-        "filename": "EventDeployer.code",
-        "line": 347
-      },
-      "136": {
-        "filename": "EventDeployer.code",
-        "line": 348
-      },
-      "152": {
-        "filename": "EventDeployer.code",
-        "line": 349
-      },
-      "168": {
-        "filename": "EventDeployer.code",
-        "line": 350
-      },
-      "176": {
-        "filename": "EventDeployer.code",
-        "line": 351
-      },
-      "184": {
-        "filename": "EventDeployer.code",
-        "line": 352
-      },
-      "192": {
-        "filename": "EventDeployer.code",
-        "line": 353
-      },
-      "200": {
-        "filename": "EventDeployer.code",
-        "line": 354
-      }
-    },
-    "dbd43413c05304b2ca8c6e60be986b637a9312de5fd0e819a49f07d07b698bde": {
-      "0": {
-        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 43
-      },
-      "16": {
-        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 43
-      },
-      "32": {
-        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 43
-      },
-      "48": {
-        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 43
-      },
-      "72": {
-        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 45
-      },
-      "120": {
-        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 45
-      },
-      "128": {
-        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 45
-      },
-      "144": {
-        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 47
-      },
-      "152": {
-        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 47
-      },
-      "176": {
-        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 47
-      },
-      "184": {
-        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 47
-      },
-      "200": {
-        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 47
-      },
-      "216": {
-        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 47
-      },
-      "224": {
-        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 47
-      },
-      "240": {
-        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 47
-      }
-    },
-    "e4e7f65f59607c8e5071076c4692c902422b7bfa0fcf2db1e8d01d8273a2fcdd": {
-      "0": {
-        "filename": "EventDeployer.code",
-        "line": 408
-      },
-      "16": {
-        "filename": "EventDeployer.code",
-        "line": 409
-      },
-      "24": {
-        "filename": "EventDeployer.code",
-        "line": 410
-      },
-      "40": {
-        "filename": "EventDeployer.code",
-        "line": 411
-      },
-      "56": {
-        "filename": "EventDeployer.code",
-        "line": 412
-      },
-      "72": {
-        "filename": "EventDeployer.code",
-        "line": 413
-      },
-      "80": {
-        "filename": "EventDeployer.code",
-        "line": 416
-      },
-      "96": {
-        "filename": "EventDeployer.code",
-        "line": 417
-      },
-      "104": {
-        "filename": "EventDeployer.code",
-        "line": 418
-      },
-      "120": {
         "filename": "EventDeployer.code",
         "line": 421
       },
-      "136": {
+      "24": {
         "filename": "EventDeployer.code",
         "line": 422
       },
-      "144": {
+      "40": {
         "filename": "EventDeployer.code",
         "line": 423
       },
-      "160": {
+      "56": {
         "filename": "EventDeployer.code",
         "line": 424
       },
-      "176": {
+      "72": {
         "filename": "EventDeployer.code",
         "line": 425
       },
-      "192": {
-        "filename": "EventDeployer.code",
-        "line": 426
-      },
-      "200": {
-        "filename": "EventDeployer.code",
-        "line": 427
-      },
-      "216": {
+      "80": {
         "filename": "EventDeployer.code",
         "line": 428
       },
-      "224": {
+      "96": {
         "filename": "EventDeployer.code",
         "line": 429
       },
-      "240": {
+      "104": {
         "filename": "EventDeployer.code",
         "line": 430
       },
-      "248": {
-        "filename": "EventDeployer.code",
-        "line": 431
-      },
-      "256": {
-        "filename": "EventDeployer.code",
-        "line": 432
-      },
-      "272": {
+      "120": {
         "filename": "EventDeployer.code",
         "line": 433
       },
-      "280": {
+      "136": {
         "filename": "EventDeployer.code",
         "line": 434
       },
-      "288": {
+      "144": {
+        "filename": "EventDeployer.code",
+        "line": 435
+      },
+      "160": {
         "filename": "EventDeployer.code",
         "line": 436
       },
-      "296": {
+      "176": {
         "filename": "EventDeployer.code",
         "line": 437
       },
-      "304": {
+      "192": {
         "filename": "EventDeployer.code",
         "line": 438
       },
-      "320": {
+      "200": {
+        "filename": "EventDeployer.code",
+        "line": 439
+      },
+      "216": {
         "filename": "EventDeployer.code",
         "line": 440
       },
-      "328": {
+      "224": {
         "filename": "EventDeployer.code",
         "line": 441
       },
-      "336": {
+      "240": {
         "filename": "EventDeployer.code",
         "line": 442
       },
-      "352": {
+      "248": {
         "filename": "EventDeployer.code",
         "line": 443
       },
-      "368": {
+      "256": {
         "filename": "EventDeployer.code",
         "line": 444
       },
-      "384": {
+      "272": {
+        "filename": "EventDeployer.code",
+        "line": 445
+      },
+      "280": {
         "filename": "EventDeployer.code",
         "line": 446
       },
-      "392": {
-        "filename": "EventDeployer.code",
-        "line": 447
-      },
-      "408": {
+      "288": {
         "filename": "EventDeployer.code",
         "line": 448
       },
-      "416": {
+      "296": {
         "filename": "EventDeployer.code",
         "line": 449
       },
-      "432": {
+      "304": {
         "filename": "EventDeployer.code",
-        "line": 451
+        "line": 450
       },
-      "440": {
+      "320": {
         "filename": "EventDeployer.code",
         "line": 452
       },
-      "456": {
+      "328": {
         "filename": "EventDeployer.code",
         "line": 453
+      },
+      "336": {
+        "filename": "EventDeployer.code",
+        "line": 454
+      },
+      "352": {
+        "filename": "EventDeployer.code",
+        "line": 455
+      },
+      "368": {
+        "filename": "EventDeployer.code",
+        "line": 456
+      },
+      "384": {
+        "filename": "EventDeployer.code",
+        "line": 458
+      },
+      "392": {
+        "filename": "EventDeployer.code",
+        "line": 459
+      },
+      "408": {
+        "filename": "EventDeployer.code",
+        "line": 460
+      },
+      "416": {
+        "filename": "EventDeployer.code",
+        "line": 461
+      },
+      "432": {
+        "filename": "EventDeployer.code",
+        "line": 463
+      },
+      "440": {
+        "filename": "EventDeployer.code",
+        "line": 464
+      },
+      "456": {
+        "filename": "EventDeployer.code",
+        "line": 465
       },
       "464": {
         "filename": "stdlib.sol",
@@ -1545,39 +1273,351 @@
       },
       "656": {
         "filename": "EventDeployer.code",
-        "line": 455
+        "line": 467
       },
       "672": {
         "filename": "EventDeployer.code",
-        "line": 456
+        "line": 468
       },
       "680": {
         "filename": "EventDeployer.code",
-        "line": 457
+        "line": 469
       },
       "696": {
         "filename": "EventDeployer.code",
-        "line": 458
+        "line": 470
       },
       "704": {
         "filename": "EventDeployer.code",
-        "line": 459
+        "line": 471
       },
       "720": {
         "filename": "EventDeployer.code",
-        "line": 460
+        "line": 472
       },
       "736": {
         "filename": "EventDeployer.code",
-        "line": 461
+        "line": 473
       },
       "744": {
         "filename": "EventDeployer.code",
-        "line": 462
+        "line": 474
       },
       "760": {
         "filename": "EventDeployer.code",
-        "line": 465
+        "line": 477
+      }
+    },
+    "cd20db5cad096762c3d855652b7bd6f6fb790ce2ab393315ae518f8cf856cb06": {
+      "0": {
+        "filename": "EventDeployer.code",
+        "line": 500
+      },
+      "8": {
+        "filename": "EventDeployer.code",
+        "line": 501
+      },
+      "16": {
+        "filename": "EventDeployer.code",
+        "line": 502
+      },
+      "32": {
+        "filename": "EventDeployer.code",
+        "line": 505
+      },
+      "48": {
+        "filename": "EventDeployer.code",
+        "line": 506
+      },
+      "56": {
+        "filename": "EventDeployer.code",
+        "line": 507
+      },
+      "72": {
+        "filename": "EventDeployer.code",
+        "line": 508
+      },
+      "232": {
+        "filename": "EventDeployer.code",
+        "line": 509
+      },
+      "240": {
+        "filename": "EventDeployer.code",
+        "line": 510
+      },
+      "248": {
+        "filename": "EventDeployer.code",
+        "line": 511
+      },
+      "264": {
+        "filename": "EventDeployer.code",
+        "line": 512
+      },
+      "272": {
+        "filename": "EventDeployer.code",
+        "line": 513
+      },
+      "280": {
+        "filename": "EventDeployer.code",
+        "line": 514
+      },
+      "296": {
+        "filename": "EventDeployer.code",
+        "line": 516
+      },
+      "304": {
+        "filename": "EventDeployer.code",
+        "line": 517
+      }
+    },
+    "d0ffca474033b5ed6646ca52be0ed6f10e838064b602f898b033577443d38660": {
+      "0": {
+        "filename": "EventDeployer.code",
+        "line": 544
+      },
+      "8": {
+        "filename": "EventDeployer.code",
+        "line": 545
+      },
+      "56": {
+        "filename": "EventDeployer.code",
+        "line": 546
+      },
+      "64": {
+        "filename": "EventDeployer.code",
+        "line": 547
+      },
+      "80": {
+        "filename": "EventDeployer.code",
+        "line": 550
+      },
+      "88": {
+        "filename": "EventDeployer.code",
+        "line": 551
+      },
+      "136": {
+        "filename": "EventDeployer.code",
+        "line": 552
+      },
+      "144": {
+        "filename": "EventDeployer.code",
+        "line": 553
+      },
+      "160": {
+        "filename": "EventDeployer.code",
+        "line": 556
+      },
+      "168": {
+        "filename": "EventDeployer.code",
+        "line": 557
+      },
+      "216": {
+        "filename": "EventDeployer.code",
+        "line": 558
+      },
+      "224": {
+        "filename": "EventDeployer.code",
+        "line": 559
+      },
+      "240": {
+        "filename": "EventDeployer.code",
+        "line": 562
+      },
+      "248": {
+        "filename": "EventDeployer.code",
+        "line": 563
+      },
+      "296": {
+        "filename": "EventDeployer.code",
+        "line": 564
+      },
+      "304": {
+        "filename": "EventDeployer.code",
+        "line": 565
+      }
+    },
+    "d558e53bf690afc8a76b8887a99a49a52db1bd24bec5da84780ea0e7bc0aad3f": {
+      "0": {
+        "filename": "EventDeployer.code",
+        "line": 330
+      }
+    },
+    "d9e077f76c67ee13238dcbcae6ee0289d637ec77eb64e999017bfe039115b34c": {
+      "0": {
+        "filename": "EventDeployer.code",
+        "line": 351
+      },
+      "16": {
+        "filename": "EventDeployer.code",
+        "line": 352
+      },
+      "32": {
+        "filename": "EventDeployer.code",
+        "line": 353
+      },
+      "48": {
+        "filename": "EventDeployer.code",
+        "line": 354
+      },
+      "64": {
+        "filename": "EventDeployer.code",
+        "line": 355
+      },
+      "72": {
+        "filename": "EventDeployer.code",
+        "line": 356
+      },
+      "88": {
+        "filename": "EventDeployer.code",
+        "line": 357
+      },
+      "104": {
+        "filename": "EventDeployer.code",
+        "line": 358
+      },
+      "120": {
+        "filename": "EventDeployer.code",
+        "line": 359
+      },
+      "136": {
+        "filename": "EventDeployer.code",
+        "line": 360
+      },
+      "152": {
+        "filename": "EventDeployer.code",
+        "line": 361
+      },
+      "168": {
+        "filename": "EventDeployer.code",
+        "line": 362
+      },
+      "176": {
+        "filename": "EventDeployer.code",
+        "line": 363
+      },
+      "184": {
+        "filename": "EventDeployer.code",
+        "line": 364
+      },
+      "192": {
+        "filename": "EventDeployer.code",
+        "line": 365
+      },
+      "200": {
+        "filename": "EventDeployer.code",
+        "line": 366
+      }
+    },
+    "da62b4f4ffaee70b9aab84f665c099faeedb393aea5b4db13cccee63d85396c9": {
+      "0": {
+        "filename": "EventDeployer.code",
+        "line": 573
+      },
+      "8": {
+        "filename": "EventDeployer.code",
+        "line": 574
+      },
+      "56": {
+        "filename": "EventDeployer.code",
+        "line": 575
+      },
+      "64": {
+        "filename": "EventDeployer.code",
+        "line": 576
+      },
+      "80": {
+        "filename": "EventDeployer.code",
+        "line": 579
+      },
+      "88": {
+        "filename": "EventDeployer.code",
+        "line": 580
+      },
+      "136": {
+        "filename": "EventDeployer.code",
+        "line": 581
+      },
+      "144": {
+        "filename": "EventDeployer.code",
+        "line": 582
+      },
+      "160": {
+        "filename": "EventDeployer.code",
+        "line": 585
+      },
+      "168": {
+        "filename": "EventDeployer.code",
+        "line": 586
+      },
+      "216": {
+        "filename": "EventDeployer.code",
+        "line": 587
+      },
+      "224": {
+        "filename": "EventDeployer.code",
+        "line": 588
+      }
+    },
+    "dbd43413c05304b2ca8c6e60be986b637a9312de5fd0e819a49f07d07b698bde": {
+      "0": {
+        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
+        "line": 44
+      },
+      "16": {
+        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
+        "line": 44
+      },
+      "32": {
+        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
+        "line": 44
+      },
+      "48": {
+        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
+        "line": 44
+      },
+      "72": {
+        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
+        "line": 46
+      },
+      "120": {
+        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
+        "line": 46
+      },
+      "128": {
+        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
+        "line": 46
+      },
+      "144": {
+        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
+        "line": 48
+      },
+      "152": {
+        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
+        "line": 48
+      },
+      "176": {
+        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
+        "line": 48
+      },
+      "184": {
+        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
+        "line": 48
+      },
+      "200": {
+        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
+        "line": 48
+      },
+      "216": {
+        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
+        "line": 48
+      },
+      "224": {
+        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
+        "line": 48
+      },
+      "240": {
+        "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
+        "line": 48
       }
     },
     "e5d67038082a836af1c43f9ebfd3c4fab992f8a6ce11f05f253cd1e763d344f6": {
@@ -1641,223 +1681,223 @@
     "e6936e8f0e7b8fe98c2ca66eee9d4e9dafcfc747defef9cb795288fabb1b7ef3": {
       "0": {
         "filename": "EventDeployer.code",
-        "line": 357
+        "line": 369
       },
       "16": {
         "filename": "EventDeployer.code",
-        "line": 358
+        "line": 370
       },
       "24": {
         "filename": "EventDeployer.code",
-        "line": 359
+        "line": 371
       },
       "40": {
         "filename": "EventDeployer.code",
-        "line": 360
+        "line": 372
       },
       "56": {
         "filename": "EventDeployer.code",
-        "line": 361
+        "line": 373
       },
       "64": {
         "filename": "EventDeployer.code",
-        "line": 362
+        "line": 374
       },
       "80": {
         "filename": "EventDeployer.code",
-        "line": 363
+        "line": 375
       },
       "88": {
         "filename": "EventDeployer.code",
-        "line": 364
+        "line": 376
       },
       "96": {
         "filename": "EventDeployer.code",
-        "line": 365
+        "line": 377
       },
       "112": {
         "filename": "EventDeployer.code",
-        "line": 366
+        "line": 378
       },
       "128": {
         "filename": "EventDeployer.code",
-        "line": 367
+        "line": 379
       },
       "136": {
         "filename": "EventDeployer.code",
-        "line": 368
+        "line": 380
       },
       "144": {
         "filename": "EventDeployer.code",
-        "line": 369
+        "line": 381
       }
     },
     "e894a50d201f4356cad4c96ff81d5cd8547eac70b6318e3881213d47a3391145": {
       "0": {
         "filename": "EventDeployer.code",
-        "line": 39
+        "line": 51
       },
       "8": {
         "filename": "EventDeployer.code",
-        "line": 40
+        "line": 52
       },
       "24": {
         "filename": "EventDeployer.code",
-        "line": 41
+        "line": 53
       },
       "48": {
         "filename": "EventDeployer.code",
-        "line": 42
+        "line": 54
       },
       "64": {
         "filename": "EventDeployer.code",
-        "line": 43
+        "line": 55
       },
       "72": {
         "filename": "EventDeployer.code",
-        "line": 44
+        "line": 56
       },
       "88": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 40
+        "line": 41
       },
       "96": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 40
+        "line": 41
       },
       "104": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 40
+        "line": 41
       },
       "112": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 40
+        "line": 41
       },
       "120": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 40
+        "line": 41
       },
       "128": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 40
+        "line": 41
       },
       "136": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 40
+        "line": 41
       },
       "152": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 40
+        "line": 41
       },
       "160": {
         "filename": "EventDeployer.code",
-        "line": 58
+        "line": 70
       },
       "176": {
         "filename": "EventDeployer.code",
-        "line": 61
+        "line": 73
       },
       "192": {
         "filename": "EventDeployer.code",
-        "line": 64
+        "line": 76
       }
     },
     "f05fd9881c4937c71f8fac3896be03307fd0176f4a411087703e4fe8d6c63c3b": {
       "0": {
         "filename": "EventDeployer.code",
-        "line": 294
+        "line": 306
       },
       "16": {
         "filename": "EventDeployer.code",
-        "line": 295
+        "line": 307
       },
       "24": {
         "filename": "EventDeployer.code",
-        "line": 296
+        "line": 308
       },
       "40": {
         "filename": "EventDeployer.code",
-        "line": 297
+        "line": 309
       },
       "56": {
         "filename": "EventDeployer.code",
-        "line": 298
+        "line": 310
       },
       "72": {
         "filename": "EventDeployer.code",
-        "line": 334
+        "line": 346
       }
     },
     "f24e1e7aa04d89aad2945816b6e9b921f2b3892da9ba53e2383c148351b96d0c": {
       "0": {
         "filename": "EventDeployer.code",
-        "line": 389
+        "line": 401
       },
       "16": {
         "filename": "EventDeployer.code",
-        "line": 390
+        "line": 402
       }
     },
     "fbde7712f8160c237e2cdaa4f03d5a049468df159e29ee3eaef21c2a678b2079": {
       "0": {
         "filename": "EventDeployer.code",
-        "line": 88
+        "line": 100
       },
       "8": {
         "filename": "EventDeployer.code",
-        "line": 89
+        "line": 101
       },
       "24": {
         "filename": "EventDeployer.code",
-        "line": 90
+        "line": 102
       },
       "48": {
         "filename": "EventDeployer.code",
-        "line": 91
+        "line": 103
       },
       "64": {
         "filename": "EventDeployer.code",
-        "line": 92
+        "line": 104
       },
       "72": {
         "filename": "EventDeployer.code",
-        "line": 93
+        "line": 105
       },
       "88": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 57
+        "line": 58
       },
       "104": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 57
+        "line": 58
       },
       "120": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 57
+        "line": 58
       },
       "128": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 57
+        "line": 58
       },
       "144": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 57
+        "line": 58
       },
       "152": {
         "filename": "../contracts/bridge/hidden-bridge/EventDeployer.tsol",
-        "line": 57
+        "line": 58
       },
       "160": {
         "filename": "EventDeployer.code",
-        "line": 104
+        "line": 116
       },
       "176": {
         "filename": "EventDeployer.code",
-        "line": 107
+        "line": 119
       },
       "192": {
         "filename": "EventDeployer.code",
-        "line": 110
+        "line": 122
       }
     }
   }

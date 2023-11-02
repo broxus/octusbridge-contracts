@@ -5,6 +5,7 @@ pragma AbiHeader expire;
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 import "@broxus/contracts/contracts/access/InternalOwner.tsol";
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
+import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 
 import "./../../utils/TransferUtils.tsol";
 import "../interfaces/proxy/INetworks.tsol";
@@ -31,7 +32,8 @@ contract Mediator is
     INetworks,
     TransferUtils,
     InternalOwner,
-    RandomNonce
+    RandomNonce,
+    CheckPubKey
 {
     enum Operation {
         BurnToAlienProxy,
@@ -50,7 +52,7 @@ contract Mediator is
         address _owner,
         address _nativeProxy,
         TvmCell _alienTokenWalletPlatformCode
-    ) public {
+    ) public checkPubKey {
         tvm.accept();
 
         setOwnership(_owner);

@@ -7,6 +7,7 @@ pragma AbiHeader pubkey;
 import "@broxus/contracts/contracts/access/ExternalOwner.tsol";
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
+import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 
 import "./../interfaces/event-contracts/IEthereumEverscaleEvent.tsol";
 import "./../interfaces/event-configuration-contracts/IEthereumEverscaleEventConfiguration.tsol";
@@ -18,12 +19,12 @@ import './EventCreditGas.tsol';
 /// @title Event deployer
 /// @dev Used as part of credit-transfer pipeline, specifically for evm-ever transfers
 /// Allows credit backend to deploy multiple event-contacts at once
-contract EventDeployer is ExternalOwner, RandomNonce {
+contract EventDeployer is ExternalOwner, RandomNonce, CheckPubKey {
     address public static factory;
 
     constructor(
         uint owner_
-    ) public {
+    ) public checkPubKey {
         require(msg.sender == factory);
         tvm.accept();
 
