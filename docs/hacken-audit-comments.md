@@ -275,3 +275,11 @@ Fixed.
 ## [VN-070][Informational]Redundant Check.md
 
 Fixed.
+
+## [VN-071][Low] Incorrect int Type Size Used.md
+
+Fixed.
+
+## [VN-072][Low] NatSpec Contradiction.md
+
+Fixed.

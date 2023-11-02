@@ -23,7 +23,7 @@ contract MultiVaultFacetFees is
     using SafeERC20 for IERC20;
 
     /// @notice Set deposit fee for specific token.
-    /// This may be called only by `owner` or `management`.
+    /// This may be called only by `governance` or `management`.
     /// @param token Token address
     /// @param _depositFee Deposit fee, must be less than FEE_LIMIT.
     function setTokenDepositFee(
