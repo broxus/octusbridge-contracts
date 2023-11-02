@@ -223,3 +223,7 @@ Fixed.
 ## [VN-055][Low]Test-only Contract Not In MockTest Folder.md
 
 Fixed. Removed `Receiver`
+
+## [VN-057][Medium]Transaction Replay Possibility in `close()` Function.md
+
+Fixed.

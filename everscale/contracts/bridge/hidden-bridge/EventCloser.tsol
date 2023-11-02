@@ -52,7 +52,7 @@ contract EventCloser is ExternalOwner, RandomNonce, TransferUtils {
         for (address e: events) {
             EverscaleEthereumBaseEvent(e).close{
                 bounce: true,
-                flag: 0,
+                flag: MsgFlag.IGNORE_ERRORS,
                 value: 0.1 ever
             }();
         }
