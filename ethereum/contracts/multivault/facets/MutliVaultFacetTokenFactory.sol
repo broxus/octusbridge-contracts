@@ -7,8 +7,8 @@ import "../MultiVaultToken.sol";
 
 
 contract MultiVaultFacetTokenFactory {
-    string constant public DEFAULT_NAME_LP_PREFIX = 'Octus LP ';
-    string constant public DEFAULT_SYMBOL_LP_PREFIX = 'octLP';
+    string constant public DEFAULT_NAME_LP_PREFIX = 'Venom LP ';
+    string constant public DEFAULT_SYMBOL_LP_PREFIX = 'venomLP';
 
     modifier onlySelfCall() {
         require(msg.sender == address(this), "TokenFactory: not self call");

@@ -107,10 +107,13 @@ describe('Test multivault liquidity supply', async () => {
 
             lp_token = await ethers.getContractAt('MultiVaultToken', lp_token_address);
 
+            const name_prefix = await multivault.DEFAULT_NAME_LP_PREFIX();
+            const symbol_prefix = await multivault.DEFAULT_SYMBOL_LP_PREFIX();
+
             expect(await lp_token.name())
-                .to.be.equal(`Octus LP ${await token.name()}`);
+                .to.be.equal(`${name_prefix}${await token.name()}`);
             expect(await lp_token.symbol())
-                .to.be.equal(`octLP${await token.symbol()}`);
+                .to.be.equal(`${symbol_prefix}${await token.symbol()}`);
 
             expect(await lp_token.totalSupply())
                 .to.be.equal(liquidity_deposit);

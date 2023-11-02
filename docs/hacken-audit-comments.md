@@ -255,3 +255,7 @@ Fixed.
 ## [VN-065]Possible Not Implemented Emergency Shutdown Functionality in Bridge.md
 
 Fixed.
+
+## [VN-066][Informational] Name Contradiction In MultiVaultStorage Contract.md
+
+Fixed.
