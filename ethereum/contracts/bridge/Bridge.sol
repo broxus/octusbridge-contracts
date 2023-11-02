@@ -324,7 +324,7 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
 
     function decodeRoundRelaysEventData(
         bytes memory payload
-    ) public pure returns (
+    ) public override pure returns (
         uint32 round,
         uint160[] memory _relays,
         uint32 roundEnd
@@ -339,7 +339,7 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
 
     function decodeEverscaleEvent(
         bytes memory payload
-    ) external pure returns (EverscaleEvent memory _event) {
+    ) external override pure returns (EverscaleEvent memory _event) {
         (_event) = abi.decode(payload, (EverscaleEvent));
     }
 

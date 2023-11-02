@@ -14,6 +14,19 @@ interface IDAO {
         bytes data;
     }
 
+    function setConfiguration(
+        IBridge.EverscaleAddress calldata _configuration
+    ) external;
+
+    function decodeEthActionsEventData(
+        bytes memory payload
+    ) external pure returns (
+        int8 _wid,
+        uint256 _addr,
+        uint32 chainId,
+        EthAction[] memory actions
+    );
+ 
     function setBridge(
         address _bridge
     ) external;

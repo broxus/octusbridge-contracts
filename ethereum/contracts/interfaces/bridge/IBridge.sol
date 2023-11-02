@@ -18,6 +18,18 @@ interface IBridge is IEverscale {
     function setConfiguration(EverscaleAddress calldata _roundRelaysConfiguration) external;
     function updateRoundTTL(uint32 _roundTTL) external;
 
+    function decodeRoundRelaysEventData(
+        bytes memory payload
+    ) external pure returns (
+        uint32 round,
+        uint160[] memory _relays,
+        uint32 roundEnd
+    );
+
+    function decodeEverscaleEvent(
+        bytes memory payload
+    ) external returns (EverscaleEvent memory _event);
+
     function isRelay(
         uint32 round,
         address candidate

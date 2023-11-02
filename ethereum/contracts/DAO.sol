@@ -54,7 +54,7 @@ contract DAO is IDAO, IEverscale, ReentrancyGuardUpgradeable, OwnableUpgradeable
     */
     function setConfiguration(
         EverscaleAddress calldata _configuration
-    ) public onlyOwner {
+    ) public override onlyOwner {
         configuration = _configuration;
     }
 
@@ -68,7 +68,7 @@ contract DAO is IDAO, IEverscale, ReentrancyGuardUpgradeable, OwnableUpgradeable
 
     function decodeEthActionsEventData(
         bytes memory payload
-    ) public pure returns (
+    ) public override pure returns (
         int8 _wid,
         uint256 _addr,
         uint32 chainId,

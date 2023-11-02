@@ -267,3 +267,7 @@ Fixed.
 ## [VN-068][Low] Redundant Inheritance of MultiVaultHelperEverscale.md
 
 Fixed.
+
+## [VN-069][Informational] Missing Function Declarations in Interfaces.md
+
+Fixed.
