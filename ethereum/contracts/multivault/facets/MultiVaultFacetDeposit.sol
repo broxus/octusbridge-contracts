@@ -229,12 +229,12 @@ contract MultiVaultFacetDeposit is
             _callbackAlienWithdrawal(
                 IMultiVaultFacetWithdraw.AlienWithdrawalParams({
                     token: pendingWithdrawal.token,
-                    amount: pendingWithdrawal.amount,
+                    amount: pendingWithdrawal.amount - pendingWithdrawal.bounty,
                     recipient: pendingWithdrawalId.recipient,
                     chainId: pendingWithdrawal.chainId,
                     callback: pendingWithdrawal.callback
                 }),
-                pendingWithdrawal.amount
+                pendingWithdrawal.amount - pendingWithdrawal.bounty
             );
 
         }

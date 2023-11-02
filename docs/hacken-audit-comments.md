@@ -339,3 +339,7 @@ Fixed.
 ## [VN-086][Low] Missing Zero Address Validation in StakingBase.md
 
 Fixed.
+
+## [VN-087][Medium]Incorrect_withdrawn_alien_token_amount_in_callback.md
+
+Fixed.
