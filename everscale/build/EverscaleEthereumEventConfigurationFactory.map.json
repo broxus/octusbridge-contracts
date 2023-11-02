@@ -1,491 +1,803 @@
 {
   "map": {
-    "03b5bf689a3842ea547b0e94bb4c9bb15ab0e3fb3de7cbc34a6f7176db4f60a3": {
-      "0": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 562
-      },
-      "8": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 563
-      },
-      "56": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 564
-      },
-      "64": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 565
-      },
-      "80": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 591
-      },
-      "88": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 592
-      },
-      "136": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 593
-      },
-      "144": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 594
-      }
-    },
     "0d5dd87725cbdaf960ec8fb663c628571810256ca03ac6cc51763419e9c1f51c": {
       "0": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "16": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "32": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "40": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "48": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "64": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "80": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
+      }
+    },
+    "0f219602202c11f57cbb4311ece01efc0f89ba32d958c50825fd865aa5a60da3": {
+      "0": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 4
+      },
+      "8": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 5
+      },
+      "24": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 6
+      },
+      "32": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 7
+      },
+      "48": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 10
+      },
+      "64": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 11
+      },
+      "80": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 12
+      },
+      "88": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 13
+      },
+      "96": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
+      },
+      "112": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
+      },
+      "120": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
+      },
+      "128": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
+      },
+      "136": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
+      },
+      "144": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
+      },
+      "152": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
+      },
+      "160": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
+      },
+      "176": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
+      },
+      "184": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
+      },
+      "208": {
+        "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
+        "line": 17
+      },
+      "224": {
+        "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
+        "line": 19
+      },
+      "240": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 31
+      },
+      "256": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 34
       }
     },
     "167cbcddb50e29cce7c28a14df73bae947a561cc10d9c38c298a1e02278eb4e6": {
       "0": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "8": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "24": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "32": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "40": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "56": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "64": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "72": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "88": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "96": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "104": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "120": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "128": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "136": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "152": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "168": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "184": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "192": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
+      }
+    },
+    "39a38082834ac135729b3e8bea609ed6e1dbe02face51f8ea4e54f05b95c6d1d": {
+      "0": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 576
+      },
+      "8": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 577
+      },
+      "56": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 578
+      },
+      "64": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 579
+      },
+      "80": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 605
+      },
+      "88": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 606
+      },
+      "136": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 607
+      },
+      "144": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 608
+      }
+    },
+    "45d2d050c3e1fb219637a924c862746a29fd0f97afcba1d2116cd1d522d22995": {
+      "0": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 580
+      },
+      "8": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 581
+      },
+      "56": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 582
+      },
+      "64": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 583
+      },
+      "80": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 586
+      },
+      "88": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 587
+      },
+      "136": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 588
+      },
+      "144": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 589
+      },
+      "160": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 592
+      },
+      "168": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 593
+      },
+      "216": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 594
+      },
+      "224": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 595
+      },
+      "240": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 598
+      },
+      "248": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 599
+      },
+      "296": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 600
+      },
+      "304": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 601
+      }
+    },
+    "49820443396462771e0ccfa40aa270f10d9ba7bbf64caad444efe5e9796b21a9": {
+      "0": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 499
+      },
+      "16": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 500
+      },
+      "24": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 501
+      },
+      "40": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 502
+      },
+      "56": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 503
+      },
+      "72": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 504
+      },
+      "360": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 505
+      },
+      "376": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 506
+      },
+      "384": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 507
+      },
+      "400": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 510
+      },
+      "416": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 511
+      },
+      "424": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 512
+      },
+      "440": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 513
+      },
+      "456": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 514
+      },
+      "472": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 515
+      },
+      "480": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 516
+      },
+      "496": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 517
+      },
+      "504": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 518
+      },
+      "520": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 519
+      },
+      "528": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 520
+      },
+      "544": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 521
+      },
+      "560": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 522
+      },
+      "576": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 524
+      },
+      "584": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 525
+      },
+      "600": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 526
+      },
+      "608": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "624": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "632": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "640": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "656": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "664": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "680": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "704": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "712": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "752": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "760": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "768": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "784": {
+        "filename": "stdlib.sol",
+        "line": 63
+      },
+      "800": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 528
+      },
+      "816": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 529
+      },
+      "824": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 530
+      },
+      "840": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 533
       }
     },
     "58a82fbc9bcd7a5dff7a37a5588ac331f9865a387c2ad21eaf00399457b2518f": {
       "0": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 184
+        "line": 196
       },
       "8": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 185
+        "line": 197
       },
       "24": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 186
+        "line": 198
       },
       "48": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 187
+        "line": 199
       },
       "64": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 188
+        "line": 200
       },
       "72": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 189
+        "line": 201
       },
       "88": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 41
+        "line": 42
       },
       "96": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 41
+        "line": 42
       },
       "104": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 41
+        "line": 42
       },
       "112": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 41
+        "line": 42
       },
       "120": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 41
+        "line": 42
       },
       "128": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 41
+        "line": 42
       },
       "136": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 41
+        "line": 42
       },
       "144": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 41
+        "line": 42
       },
       "152": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 41
+        "line": 42
       },
       "160": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 41
+        "line": 42
       },
       "176": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 41
+        "line": 42
       },
       "192": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 41
+        "line": 42
       },
       "200": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 41
+        "line": 42
       },
       "216": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 41
+        "line": 42
       },
       "232": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 41
+        "line": 42
       },
       "240": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 41
+        "line": 42
       },
       "248": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 41
+        "line": 42
       },
       "256": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 41
+        "line": 42
       },
       "264": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 41
+        "line": 42
       },
       "280": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 41
+        "line": 42
       },
       "296": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 41
+        "line": 42
       },
       "312": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 41
+        "line": 42
       },
       "328": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 41
+        "line": 42
       },
       "344": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 41
+        "line": 42
       },
       "360": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 41
+        "line": 42
       },
       "368": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 41
+        "line": 42
       },
       "376": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 222
+        "line": 234
       },
       "392": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 225
+        "line": 237
       },
       "400": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 226
+        "line": 238
       },
       "416": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 227
+        "line": 239
       },
       "424": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 228
+        "line": 240
       },
       "432": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 229
+        "line": 241
       },
       "448": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 230
+        "line": 242
       },
       "464": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 231
+        "line": 243
       },
       "472": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 232
+        "line": 244
       },
       "480": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 233
+        "line": 245
       },
       "488": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 234
+        "line": 246
       },
       "512": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 235
+        "line": 247
       },
       "520": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 236
+        "line": 248
       },
       "528": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 237
+        "line": 249
       },
       "552": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 238
+        "line": 250
       },
       "560": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 239
+        "line": 251
       },
       "568": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 240
+        "line": 252
       },
       "616": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 241
+        "line": 253
       },
       "624": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 242
+        "line": 254
       },
       "632": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 243
+        "line": 255
       },
       "640": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 244
+        "line": 256
       },
       "648": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 245
+        "line": 257
       },
       "664": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 247
+        "line": 259
       },
       "672": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 248
+        "line": 260
       },
       "680": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 250
+        "line": 262
       },
       "688": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 251
+        "line": 263
       },
       "704": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 254
+        "line": 266
       }
     },
-    "674fc9f0a42550b1d696503d5d37a43a0995e6f1a0876a0506ed1d4187acb88b": {
+    "68ce38e516e8d975fd6501a746de39093f6d1d5b6572ac85dae734c4e4defe47": {
       "0": {
-        "filename": "<entry-selector>",
-        "line": 1
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 464
       },
-      "8": {
-        "filename": "<entry-selector>",
-        "line": 2
+      "16": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 465
       },
       "24": {
-        "filename": "<entry-selector>",
-        "line": 3
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 466
       },
-      "32": {
-        "filename": "<entry-selector>",
-        "line": 4
-      },
-      "48": {
-        "filename": "<entry-selector>",
-        "line": 5
+      "40": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 467
       },
       "56": {
-        "filename": "<entry-selector>",
-        "line": 6
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 468
       },
       "72": {
-        "filename": "<entry-selector>",
-        "line": 7
-      },
-      "88": {
-        "filename": "<entry-selector>",
-        "line": 8
-      },
-      "96": {
-        "filename": "<entry-selector>",
-        "line": 9
-      },
-      "112": {
-        "filename": "<entry-selector>",
-        "line": 10
-      },
-      "128": {
-        "filename": "<entry-selector>",
-        "line": 11
-      }
-    },
-    "6e0e81595f560da3cf1874b9d06e97bf7b5607bf4e581a02dd8cca6a2f0a4bd3": {
-      "0": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 566
-      },
-      "8": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 567
-      },
-      "56": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 568
-      },
-      "64": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 569
+        "line": 469
       },
       "80": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 572
+        "line": 470
       },
       "88": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 573
+        "line": 471
       },
-      "136": {
+      "104": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 574
+        "line": 472
+      },
+      "120": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 473
+      },
+      "128": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 474
       },
       "144": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 575
-      },
-      "160": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 578
+        "line": 475
       },
       "168": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 579
+        "line": 476
+      },
+      "176": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 477
+      },
+      "184": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 478
+      },
+      "200": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 479
       },
       "216": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 580
+        "line": 483
       },
       "224": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 581
-      },
-      "240": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 584
+        "line": 484
       },
       "248": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 585
+        "line": 485
+      },
+      "264": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 486
+      },
+      "272": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 487
+      },
+      "288": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 491
       },
       "296": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 586
+        "line": 492
       },
-      "304": {
+      "312": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 587
+        "line": 495
       }
     },
     "73867e37ec1ffb9ecb087a37d71892215b0b805a73c127da219a28729084e2e0": {
@@ -501,217 +813,217 @@
     "7f85152918443df5d60e0835abd3b3dd69dba9aedade122b53ad2f3818e0bdf5": {
       "0": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 542
+        "line": 556
       },
       "8": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 543
+        "line": 557
       },
       "16": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 544
+        "line": 558
       },
       "32": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 547
+        "line": 561
       },
       "48": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 548
+        "line": 562
       },
       "56": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 549
+        "line": 563
       },
       "72": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 550
+        "line": 564
       },
       "232": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 551
+        "line": 565
       },
       "240": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 552
+        "line": 566
       },
       "248": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 553
+        "line": 567
       },
       "256": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 554
+        "line": 568
       },
       "264": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 555
+        "line": 569
       },
       "272": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 556
+        "line": 570
       },
       "288": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 558
+        "line": 572
       },
       "296": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 559
+        "line": 573
       }
     },
     "7fbb1a40b706c0e2318819879b86e0ecd0eea1bc9d07d2f8c2ea6bd6d46f1eb8": {
       "0": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 25
+        "line": 37
       },
       "8": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 26
+        "line": 38
       },
       "24": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 27
+        "line": 39
       },
       "48": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 28
+        "line": 40
       },
       "64": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 29
+        "line": 41
       },
       "72": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 30
+        "line": 42
       },
       "88": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "96": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "104": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "112": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "120": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "128": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "136": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "152": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "168": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "176": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "184": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "192": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "200": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "216": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "232": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "240": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "256": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "272": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "280": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "288": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "296": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "304": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "320": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "336": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "352": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "368": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "384": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "400": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "408": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 21
+        "line": 22
       },
       "416": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 65
+        "line": 77
       },
       "432": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 68
+        "line": 80
       },
       "448": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 71
+        "line": 83
       }
     },
     "8e3afdbf162fa45fb3c0f86bab02bfe3d1cfda4ec8ee262ea7f633e6ed0b5cc3": {
@@ -761,1056 +1073,792 @@
       },
       "176": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "184": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "192": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "208": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "216": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "224": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "240": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "248": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "256": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "272": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "288": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "304": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "320": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "328": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "336": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "352": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "368": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "384": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "400": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "408": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "416": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "432": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "448": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "456": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "472": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "480": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "496": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "504": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "528": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "544": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "560": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "576": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "584": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "592": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "608": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "616": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "648": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "664": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "672": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "696": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "712": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "720": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "744": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "752": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "768": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "776": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "792": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "808": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "816": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "864": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "872": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "880": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "896": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "904": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "912": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "928": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       }
     },
     "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7": {},
     "a1a042af2535c47fd0de766898936397a134fb312560c94bae00bdb687dda847": {
       "0": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 522
+        "line": 536
       },
       "8": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 523
+        "line": 537
       },
       "16": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 524
+        "line": 538
       },
       "32": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 527
+        "line": 541
       },
       "48": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 528
+        "line": 542
       },
       "56": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 529
+        "line": 543
       },
       "72": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 530
+        "line": 544
       },
       "232": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 531
+        "line": 545
       },
       "240": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 532
+        "line": 546
       },
       "248": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 533
+        "line": 547
       },
       "264": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 534
+        "line": 548
       },
       "272": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 535
+        "line": 549
       },
       "280": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 536
+        "line": 550
       },
       "296": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 538
+        "line": 552
       },
       "304": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 539
+        "line": 553
       }
     },
     "a46190431fb6b4b482eb39a4b580da596d426646b235b2c8681cf11a85100aef": {
       "0": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "8": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "16": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "32": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "40": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "48": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "64": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "80": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "88": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "104": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "112": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "120": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "136": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "152": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "160": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "176": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "184": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "192": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "208": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "224": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "232": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "248": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "256": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "272": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "280": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "304": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "320": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "336": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "352": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 45
+        "line": 46
       },
       "360": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 55
+        "line": 56
       },
       "376": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 55
+        "line": 56
       },
       "384": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 55
+        "line": 56
       },
       "416": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 55
+        "line": 56
       },
       "432": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 55
+        "line": 56
       },
       "440": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 55
+        "line": 56
       }
     },
     "a846ddc8c538d66cda2a2b51399cd8eb803d6a77451d8a66a4c1af7245ffd631": {
       "0": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 372
+        "line": 384
       },
       "16": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 373
+        "line": 385
       },
       "24": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 374
+        "line": 386
       },
       "40": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 375
+        "line": 387
       },
       "56": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 376
+        "line": 388
       },
       "72": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 377
+        "line": 389
       },
       "80": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 378
+        "line": 390
       },
       "96": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 379
+        "line": 391
       },
       "104": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 380
+        "line": 392
       },
       "112": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 381
+        "line": 393
       },
       "128": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 382
+        "line": 394
       },
       "144": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 383
+        "line": 395
       },
       "160": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 384
+        "line": 396
       }
     },
     "b4fbd61986ea1d64d5387e0bef5a2b279c3d0ecb9a92f1b4bca9f65e2a09c222": {
       "0": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 422
+        "line": 434
       },
       "16": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 423
+        "line": 435
       },
       "32": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 424
+        "line": 436
       },
       "48": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 425
+        "line": 437
       },
       "64": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 426
+        "line": 438
       },
       "72": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 427
+        "line": 439
       },
       "88": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 428
+        "line": 440
       },
       "104": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 429
+        "line": 441
       },
       "120": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 430
+        "line": 442
       },
       "136": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 431
+        "line": 443
       },
       "144": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 432
+        "line": 444
       },
       "152": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 433
+        "line": 445
       }
     },
-    "bb3e566a30d5165b7d7f99d42ad0355f8d7aee5d4ddf4b7daf73a78f290c1430": {
+    "ce4c31793e386cc6a49e2d011834eefde03c9979d2b2fe527be99bcb169c575f": {
       "0": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 487
+        "filename": "<entry-selector>",
+        "line": 1
       },
-      "16": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 488
+      "8": {
+        "filename": "<entry-selector>",
+        "line": 2
       },
       "24": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 489
+        "filename": "<entry-selector>",
+        "line": 3
       },
-      "40": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 490
+      "32": {
+        "filename": "<entry-selector>",
+        "line": 4
+      },
+      "48": {
+        "filename": "<entry-selector>",
+        "line": 5
       },
       "56": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 491
+        "filename": "<entry-selector>",
+        "line": 6
       },
       "72": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 492
+        "filename": "<entry-selector>",
+        "line": 7
       },
-      "360": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 493
+      "88": {
+        "filename": "<entry-selector>",
+        "line": 8
       },
-      "376": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 494
+      "96": {
+        "filename": "<entry-selector>",
+        "line": 9
       },
-      "384": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 495
+      "112": {
+        "filename": "<entry-selector>",
+        "line": 10
       },
-      "400": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 498
-      },
-      "416": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 499
-      },
-      "424": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 500
-      },
-      "432": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 501
-      },
-      "448": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 502
-      },
-      "464": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 503
-      },
-      "472": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 504
-      },
-      "488": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 505
-      },
-      "496": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 506
-      },
-      "512": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 507
-      },
-      "528": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 508
-      },
-      "544": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 510
-      },
-      "552": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 511
-      },
-      "568": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 512
-      },
-      "576": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "592": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "600": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "608": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "624": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "632": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "648": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "672": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "680": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "720": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "728": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "736": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "752": {
-        "filename": "stdlib.sol",
-        "line": 63
-      },
-      "768": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 514
-      },
-      "784": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 515
-      },
-      "792": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 516
-      },
-      "808": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 519
+      "128": {
+        "filename": "<entry-selector>",
+        "line": 11
       }
     },
     "e6936e8f0e7b8fe98c2ca66eee9d4e9dafcfc747defef9cb795288fabb1b7ef3": {
       "0": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 436
+        "line": 448
       },
       "16": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 437
+        "line": 449
       },
       "24": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 438
+        "line": 450
       },
       "40": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 439
+        "line": 451
       },
       "56": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 440
+        "line": 452
       },
       "64": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 441
+        "line": 453
       },
       "80": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 442
+        "line": 454
       },
       "88": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 443
+        "line": 455
       },
       "96": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 444
+        "line": 456
       },
       "112": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 445
+        "line": 457
       },
       "128": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 446
+        "line": 458
       },
       "136": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 447
+        "line": 459
       },
       "144": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 448
+        "line": 460
       }
     },
     "ea8edcf1510ac2f4df40332bb0c8d8630e0ed8c4714ec08596415fafad54de9a": {
       "0": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 387
+        "line": 399
       },
       "16": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 388
+        "line": 400
       },
       "24": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 389
+        "line": 401
       },
       "40": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 390
+        "line": 402
       },
       "56": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 391
+        "line": 403
       },
       "72": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 417
+        "line": 429
       }
     },
     "f24e1e7aa04d89aad2945816b6e9b921f2b3892da9ba53e2383c148351b96d0c": {
       "0": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 468
+        "line": 480
       },
       "16": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 469
+        "line": 481
       }
     },
     "f4394c42e841a32f67ffe76e5fb45721e3015d5c1f4398469d6d5ee6274585f2": {
       "0": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 392
-      },
-      "8": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 393
-      },
-      "24": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 394
-      },
-      "32": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 395
-      },
-      "48": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 396
-      },
-      "56": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 397
-      },
-      "64": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 398
-      },
-      "80": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 399
-      },
-      "96": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 400
-      },
-      "112": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 401
-      },
-      "120": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 402
-      },
-      "144": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
         "line": 404
       },
-      "152": {
+      "8": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
         "line": 405
       },
-      "160": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 407
-      },
-      "176": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 408
-      },
-      "192": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 409
-      },
-      "208": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 410
-      },
-      "224": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 411
-      },
-      "240": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 412
-      },
-      "264": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 413
-      },
-      "280": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 414
-      },
-      "288": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 415
-      }
-    },
-    "f853b69dbbac36d0293a7344681916e4417ec4d8347610be75f2c8402ddf883e": {
-      "0": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 452
-      },
-      "16": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 453
-      },
       "24": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 454
-      },
-      "40": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 455
-      },
-      "56": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 456
-      },
-      "72": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 457
-      },
-      "80": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 458
-      },
-      "88": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 459
-      },
-      "104": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 460
-      },
-      "120": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 461
-      },
-      "128": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 462
-      },
-      "144": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 463
-      },
-      "168": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 464
-      },
-      "176": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 465
-      },
-      "184": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 466
-      },
-      "200": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 467
-      },
-      "216": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 471
-      },
-      "224": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 472
-      },
-      "248": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 473
-      },
-      "264": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 474
-      },
-      "272": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 475
-      },
-      "288": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 479
-      },
-      "296": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 480
-      },
-      "312": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 483
-      }
-    },
-    "fc30b288421b0f199e01784820c59625918bb17f80cb9fd2e52517066a978c9c": {
-      "0": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 4
-      },
-      "8": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 5
-      },
-      "24": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 6
+        "line": 406
       },
       "32": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 7
+        "line": 407
       },
       "48": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 10
+        "line": 408
+      },
+      "56": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 409
       },
       "64": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 11
+        "line": 410
       },
       "80": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 12
-      },
-      "88": {
-        "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 13
+        "line": 411
       },
       "96": {
-        "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 16
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 412
       },
       "112": {
-        "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 18
-      },
-      "128": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 19
+        "line": 413
+      },
+      "120": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 414
       },
       "144": {
         "filename": "EverscaleEthereumEventConfigurationFactory.code",
-        "line": 22
+        "line": 416
+      },
+      "152": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 417
+      },
+      "160": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 419
+      },
+      "176": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 420
+      },
+      "192": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 421
+      },
+      "208": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 422
+      },
+      "224": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 423
+      },
+      "240": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 424
+      },
+      "264": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 425
+      },
+      "280": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 426
+      },
+      "288": {
+        "filename": "EverscaleEthereumEventConfigurationFactory.code",
+        "line": 427
       }
     },
     "ffe5d39cf6aca542084ff0c5f0498ee49bd5f3ee3159197cac3b270f3450a2b1": {
       "0": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "16": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "32": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "40": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "48": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "56": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       },
       "72": {
         "filename": "../contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol",
-        "line": 29
+        "line": 30
       }
     }
   }

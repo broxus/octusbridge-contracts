@@ -235,3 +235,7 @@ Without changes.
 ## [VN-060][Medium]Unrestricted Access to `deploy()` Function.md
 
 Fixed.
+
+## [VN-061][Medium] Funds Lock Due To Initialization Front Run.md
+
+Fixed.

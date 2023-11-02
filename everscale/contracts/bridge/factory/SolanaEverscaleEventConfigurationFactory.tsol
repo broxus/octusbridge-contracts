@@ -7,13 +7,14 @@ import "./../../utils/TransferUtils.tsol";
 import "./../event-configuration-contracts/solana/SolanaEverscaleEventConfiguration.tsol";
 
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
+import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 
 
-contract SolanaEverscaleEventConfigurationFactory is TransferUtils, RandomNonce {
+contract SolanaEverscaleEventConfigurationFactory is TransferUtils, RandomNonce, CheckPubKey {
     TvmCell public configurationCode;
     uint128 constant MIN_CONTRACT_BALANCE = 1 ever;
 
-    constructor(TvmCell _configurationCode) public {
+    constructor(TvmCell _configurationCode) public checkPubKey {
         tvm.accept();
 
         configurationCode = _configurationCode;

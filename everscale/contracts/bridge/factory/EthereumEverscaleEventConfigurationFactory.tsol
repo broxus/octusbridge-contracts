@@ -3,15 +3,16 @@ pragma ever-solidity >= 0.62.0;
 
 import "./../../utils/TransferUtils.tsol";
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
+import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 import "./../event-configuration-contracts/evm/EthereumEverscaleEventConfiguration.tsol";
 import "./../interfaces/event-configuration-contracts/IEthereumEverscaleEventConfiguration.tsol";
 
 
-contract EthereumEverscaleEventConfigurationFactory is TransferUtils, RandomNonce {
+contract EthereumEverscaleEventConfigurationFactory is TransferUtils, RandomNonce, CheckPubKey {
     TvmCell public configurationCode;
     uint128 constant MIN_CONTRACT_BALANCE = 1 ever;
 
-    constructor(TvmCell _configurationCode) public {
+    constructor(TvmCell _configurationCode) public checkPubKey {
         tvm.accept();
 
         configurationCode = _configurationCode;
