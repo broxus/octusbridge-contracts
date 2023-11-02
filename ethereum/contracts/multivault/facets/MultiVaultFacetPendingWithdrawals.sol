@@ -107,14 +107,14 @@ contract MultiVaultFacetPendingWithdrawals is
                 pendingWithdrawal.amount
             );
 
-            IERC20(pendingWithdrawal.token).safeTransfer(
-                pendingWithdrawalId.recipient,
-                pendingWithdrawal.amount
-            );
-
             emit PendingWithdrawalForce(
                 pendingWithdrawalId.recipient,
                 pendingWithdrawalId.id
+            );
+
+            IERC20(pendingWithdrawal.token).safeTransfer(
+                pendingWithdrawalId.recipient,
+                pendingWithdrawal.amount
             );
 
             _callbackAlienWithdrawal(

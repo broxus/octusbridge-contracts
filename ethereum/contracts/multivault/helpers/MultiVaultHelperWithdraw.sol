@@ -59,12 +59,6 @@ abstract contract MultiVaultHelperWithdraw is IMultiVaultFacetWithdrawEvents {
         bytes32 payloadId,
         address token
     ) internal {
-        if (tokenType == IMultiVaultFacetTokens.TokenType.Native) {
-            IMultiVaultToken(token).mint(recipient, amount - fee);
-        } else {
-            IERC20(token).safeTransfer(recipient, amount - fee);
-        }
-
         emit Withdraw(
             tokenType,
             payloadId,
@@ -73,5 +67,10 @@ abstract contract MultiVaultHelperWithdraw is IMultiVaultFacetWithdrawEvents {
             amount,
             fee
         );
+        if (tokenType == IMultiVaultFacetTokens.TokenType.Native) {
+            IMultiVaultToken(token).mint(recipient, amount - fee);
+        } else {
+            IERC20(token).safeTransfer(recipient, amount - fee);
+        }
     }
 }

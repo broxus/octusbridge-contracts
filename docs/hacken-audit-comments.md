@@ -287,3 +287,7 @@ Fixed.
 ## [VN-073][Low] TODO Comments in Production Code.md
 
 Fixed.
+
+## [VN-074][Low] CEI Violation With Event Emission.md
+
+Fixed.
