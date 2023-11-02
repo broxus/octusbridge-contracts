@@ -152,6 +152,10 @@ Fixed.
 
 Fixed. Only `governance` or `management` can make a first deposit.
 
+## [VN-037][High]Potential_Funds_Lock.md
+
+Fixed. Increased `FORCE_TIMEOUT` to 3 days. Minting tokens back would significantly affect every part of the bridge architecture, which is unacceptable.
+
 ## [VN-040][Medium] Outdated OpenZeppelin Contracts Used.md
 
 Fixed - 97437ee8ee44524f05a8a5714e069ffff086a9d1.

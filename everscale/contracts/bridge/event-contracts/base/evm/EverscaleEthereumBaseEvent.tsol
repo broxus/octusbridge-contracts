@@ -10,7 +10,7 @@ import "./../../../../utils/ErrorCodes.tsol";
 
 
 contract EverscaleEthereumBaseEvent is BaseEvent, IEverscaleEthereumEvent {
-    uint32 constant FORCE_CLOSE_TIMEOUT = 1 days;
+    uint32 constant FORCE_CLOSE_TIMEOUT = 3 days;
     uint32 public createdAt;
 
     // Event data
