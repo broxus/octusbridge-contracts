@@ -644,7 +644,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
     function withdrawTonsEmergency(uint128 amount, address receiver, bool all, address send_gas_to) external view onlyRescuer {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         require (base_details.emergency, ErrorCodes.EMERGENCY);
-        require (address(this).balance > amount, ErrorCodes.VALUE_TOO_LOW);
+        require (address(this).balance - msg.value > amount, ErrorCodes.VALUE_TOO_LOW);
 
         tvm.rawReserve(Gas.ROOT_INITIAL_BALANCE, 0);
 

@@ -367,3 +367,7 @@ Without changes. CellEncoder is used only for tests.
 ## [VN-093][Low] Missing Revert Error Codes in require.md
 
 Fixed.
+
+## [VN-094][Informational] Invalid Balance Sanity Check in withdrawTonsEmergency.md
+
+Fixed.

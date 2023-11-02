@@ -104,14 +104,14 @@
     "contracts/staking/interfaces/IRelayRound.tsol": {
         "modificationTime": 1698917827635
     },
+    "contracts/staking/interfaces/IStakingDao.tsol": {
+        "modificationTime": 1698917827634
+    },
     "contracts/staking/interfaces/IStakingPool.tsol": {
         "modificationTime": 1698917827635
     },
     "contracts/staking/interfaces/ITokensReceivedCallback.tsol": {
         "modificationTime": 1698917827635
-    },
-    "contracts/staking/interfaces/IStakingDao.tsol": {
-        "modificationTime": 1698917827634
     },
     "contracts/staking/interfaces/IUpgradableByRequest.tsol": {
         "modificationTime": 1698917827635
@@ -374,16 +374,16 @@
     "contracts/bridge/alien-token-merge/merge-pool/MergePool_V4.tsol": {
         "modificationTime": 1698941080463
     },
-    "contracts/bridge/event-configuration-contracts/evm/EverscaleEthereumEventConfiguration.tsol": {
-        "modificationTime": 1698934769264
-    },
     "contracts/bridge/event-configuration-contracts/evm/EthereumEverscaleEventConfiguration.tsol": {
         "modificationTime": 1698934760808
     },
-    "contracts/bridge/event-configuration-contracts/solana/SolanaEverscaleEventConfiguration.tsol": {
-        "modificationTime": 1698917827633
+    "contracts/bridge/event-configuration-contracts/evm/EverscaleEthereumEventConfiguration.tsol": {
+        "modificationTime": 1698934769264
     },
     "contracts/bridge/event-configuration-contracts/solana/EverscaleSolanaEventConfiguration.tsol": {
+        "modificationTime": 1698917827633
+    },
+    "contracts/bridge/event-configuration-contracts/solana/SolanaEverscaleEventConfiguration.tsol": {
         "modificationTime": 1698917827633
     },
     "contracts/bridge/event-contracts/base/BaseEvent.tsol": {
@@ -404,17 +404,17 @@
     "contracts/bridge/event-contracts/multivault/solana/MultiVaultEverscaleSolanaEventNative.tsol": {
         "modificationTime": 1698940923077
     },
-    "contracts/bridge/event-contracts/multivault/solana/MultiVaultSolanaEverscaleEventNative.tsol": {
-        "modificationTime": 1698917827613
-    },
     "contracts/bridge/event-contracts/multivault/solana/MultiVaultSolanaEverscaleEventAlien.tsol": {
         "modificationTime": 1698941308999
     },
-    "contracts/bridge/event-contracts/staking/StakingEverscaleEthereumEvent.tsol": {
-        "modificationTime": 1698917827612
+    "contracts/bridge/event-contracts/multivault/solana/MultiVaultSolanaEverscaleEventNative.tsol": {
+        "modificationTime": 1698917827613
     },
     "contracts/bridge/event-contracts/staking/StakingEthereumEverscaleEvent.tsol": {
         "modificationTime": 1698917827613
+    },
+    "contracts/bridge/event-contracts/staking/StakingEverscaleEthereumEvent.tsol": {
+        "modificationTime": 1698917827612
     },
     "contracts/bridge/event-contracts/staking/StakingEverscaleSolanaEvent.tsol": {
         "modificationTime": 1698917827613
@@ -440,11 +440,11 @@
     "contracts/bridge/factory/EverscaleEthereumEventConfigurationFactory.tsol": {
         "modificationTime": 1698927362967
     },
-    "contracts/bridge/factory/EverscaleSolanaEventConfigurationFactory.tsol": {
-        "modificationTime": 1698926389712
-    },
     "contracts/bridge/factory/SolanaEverscaleEventConfigurationFactory.tsol": {
         "modificationTime": 1698926404831
+    },
+    "contracts/bridge/factory/EverscaleSolanaEventConfigurationFactory.tsol": {
+        "modificationTime": 1698926389712
     },
     "contracts/bridge/hidden-bridge/EventCloser.tsol": {
         "modificationTime": 1698938971231
@@ -530,11 +530,11 @@
     "contracts/bridge/proxy/multivault/native/V5/ProxyMultiVaultNative_V5_Withdraw.tsol": {
         "modificationTime": 1698917827634
     },
-    "contracts/dao/Proposal.tsol": {
-        "modificationTime": 1698917827636
-    },
     "contracts/dao/DaoRoot.tsol": {
         "modificationTime": 1698937296814
+    },
+    "contracts/dao/Proposal.tsol": {
+        "modificationTime": 1698917827636
     },
     "contracts/staking/Election.tsol": {
         "modificationTime": 1698917827634
@@ -546,7 +546,7 @@
         "modificationTime": 1698934186621
     },
     "contracts/staking/base/StakingBase.tsol": {
-        "modificationTime": 1698940534507
+        "modificationTime": 1698941751566
     },
     "contracts/utils/Platform.tsol": {
         "modificationTime": 1698917827635
