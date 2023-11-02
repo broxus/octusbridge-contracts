@@ -227,3 +227,11 @@ Fixed. Removed `Receiver`
 ## [VN-057][Medium]Transaction Replay Possibility in `close()` Function.md
 
 Fixed.
+
+## [VN-059][Low]Transaction Replay Possibility in constructor.md
+
+Without changes.
+
+## [VN-060][Medium]Unrestricted Access to `deploy()` Function.md
+
+Fixed.
