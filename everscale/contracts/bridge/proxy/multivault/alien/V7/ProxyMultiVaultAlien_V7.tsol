@@ -61,8 +61,6 @@ contract ProxyMultiVaultAlien_V7 is
     }
 
     function onCodeUpgrade(TvmCell data) private {
-//        tvm.resetStorage();
-
         (
             EVMConfiguration evmConfiguration_,
             SolanaConfiguration solanaConfiguration_,

@@ -323,3 +323,7 @@ Fixed.
 ## [VN-082][Low] Missing cashBack Modifier.md
 
 Fixed.
+
+## [VN-083][Informational] Commented-out Code.md
+
+Fixed.
