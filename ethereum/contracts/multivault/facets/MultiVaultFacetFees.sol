@@ -10,14 +10,12 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "../storage/MultiVaultStorage.sol";
 
 import "../helpers/MultiVaultHelperActors.sol";
-import "../helpers/MultiVaultHelperEverscale.sol";
 import "../helpers/MultiVaultHelperFee.sol";
 import "../helpers/MultiVaultHelperReentrancyGuard.sol";
 
 
 contract MultiVaultFacetFees is
     MultiVaultHelperActors,
-    MultiVaultHelperEverscale,
     MultiVaultHelperFee,
     MultiVaultHelperReentrancyGuard,
     IMultiVaultFacetFees

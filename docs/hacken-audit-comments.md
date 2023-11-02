@@ -263,3 +263,7 @@ Fixed.
 ## [VN-067][Low] Missing Zero Address Check.md
 
 Fixed.
+
+## [VN-068][Low] Redundant Inheritance of MultiVaultHelperEverscale.md
+
+Fixed.
