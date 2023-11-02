@@ -188,6 +188,10 @@ Without changes. Correct calculation of the attached value is a key task of the 
 
 Fixed.
 
+## [VN-047][Medium]High Permissions May Lead to Data Inconsistency.md
+
+Fixed.
+
 ## [VN-048]
 
 Fixed.
