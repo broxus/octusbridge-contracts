@@ -211,3 +211,11 @@ Without changes.
 ## [VN-052][Informational]Redundant Modifier in Delegate Contract.md
 
 Fixed.
+
+## [VN-053][Informational] Redundant Functionality.md
+
+Without changes.
+
+## [VN-054][Low] Unlimited Event Size Allows Relayer To Burn Service Contract Balance.md
+
+Fixed.

@@ -43,6 +43,7 @@ library ErrorCodes {
     uint16 constant SENDER_IS_NOT_EVENT_OWNER = 2322;
     uint16 constant WRONG_VOTE_RECEIVER = 2323;
     uint16 constant WRONG_STATUS = 2324;
+    uint16 constant WRONG_SIGNATURE_SIZE = 2325;
 
     // Connector
     uint16 constant DEPLOYER_NOT_BRIDGE = 2420;

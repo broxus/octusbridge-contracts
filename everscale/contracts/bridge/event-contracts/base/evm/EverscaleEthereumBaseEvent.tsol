@@ -53,6 +53,10 @@ contract EverscaleEthereumBaseEvent is BaseEvent, IEverscaleEthereumEvent {
         return functionId == tvm.functionId(confirm) || functionId == tvm.functionId(reject);
     }
 
+    function len(bytes data) external pure returns(uint256) {
+        return data.length;
+    }
+
     /*
         @dev Confirm event
         @dev Can be called only when event configuration is in Pending status
@@ -65,6 +69,7 @@ contract EverscaleEthereumBaseEvent is BaseEvent, IEverscaleEthereumEvent {
         uint relay = msg.pubkey();
 
         require(votes[relay] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
+        require(signature.length <= 65, ErrorCodes.WRONG_SIGNATURE_SIZE);
 
         tvm.accept();
 
