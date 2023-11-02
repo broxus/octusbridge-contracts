@@ -39,9 +39,6 @@ contract Bridge is OwnableUpgradeable, PausableUpgradeable, Cache, IBridge {
     // NOTE: round meta data
     mapping (uint32 => Round) public rounds;
 
-    // NOTE: signature verifications always fails is emergency is on
-    bool public emergencyShutdown;
-
     // NOTE: The required signatures per round can't be less than this
     uint32 public minimumRequiredSignatures;
 

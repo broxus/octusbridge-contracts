@@ -247,3 +247,11 @@ Fixed.
 ## [VN-063][Low]Not_Explicit_Interface_Usage.md
 
 Fixed.
+
+## [VN-064][Low] Redundant Event Declaration.md
+
+Fixed.
+
+## [VN-065]Possible Not Implemented Emergency Shutdown Functionality in Bridge.md
+
+Fixed.

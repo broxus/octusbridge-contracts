@@ -59,8 +59,6 @@ interface IBridge is IEverscale {
 
     function setRoundSubmitter(address _roundSubmitter) external;
 
-    event EmergencyShutdown(bool active);
-
     event UpdateMinimumRequiredSignatures(uint32 value);
     event UpdateRoundTTL(uint32 value);
     event UpdateRoundRelaysConfiguration(EverscaleAddress configuration);

@@ -116,23 +116,6 @@ function decodeRoundRelaysEventData(bytes payload) external pure returns (uint32
 | _relays | uint160[] | undefined |
 | roundEnd | uint32 | undefined |
 
-### emergencyShutdown
-
-```solidity
-function emergencyShutdown() external view returns (bool)
-```
-
-
-
-
-
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | bool | undefined |
-
 ### forceRoundRelays
 
 ```solidity
@@ -636,22 +619,6 @@ event BanRelay(address indexed relay, bool status)
 |---|---|---|
 | relay `indexed` | address | undefined |
 | status  | bool | undefined |
-
-### EmergencyShutdown
-
-```solidity
-event EmergencyShutdown(bool active)
-```
-
-
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| active  | bool | undefined |
 
 ### Initialized
 
