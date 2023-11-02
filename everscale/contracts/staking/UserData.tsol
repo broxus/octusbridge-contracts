@@ -455,7 +455,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     ) external override onlyElection(round_num) {
         tvm.rawReserve(_reserve(), 0);
 
-        // lock for 30 days
+        // lock for election time + relay lock time
         relay_lock_until = now + lock_time;
 
         emit RelayMembershipRequested(round_num, tokens, ton_pubkey, eth_addr, relay_lock_until);

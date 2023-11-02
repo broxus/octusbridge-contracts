@@ -303,3 +303,7 @@ Fixed.
 ## [VN-077][Low] Hardcoded Values and Magic Numbers.md
 
 Fixed.
+
+## [VN-078][Low] Inaccurate Comment on Relay Membership Lock Time.md
+
+Fixed.
