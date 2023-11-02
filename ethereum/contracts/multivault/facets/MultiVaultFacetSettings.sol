@@ -40,6 +40,10 @@ contract MultiVaultFacetSettings is
     ) external override initializer {
         MultiVaultStorage.Storage storage s = MultiVaultStorage._storage();
 
+        require(_bridge != address(0), "Settings: wrong bridge");
+        require(_governance != address(0), "Settings: wrong governance");
+        require(_weth != address(0), "Settings: wrong weth");
+
         s.bridge = _bridge;
         emit UpdateBridge(_bridge); 
 

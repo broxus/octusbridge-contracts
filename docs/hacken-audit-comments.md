@@ -259,3 +259,7 @@ Fixed.
 ## [VN-066][Informational] Name Contradiction In MultiVaultStorage Contract.md
 
 Fixed.
+
+## [VN-067][Low] Missing Zero Address Check.md
+
+Fixed.
