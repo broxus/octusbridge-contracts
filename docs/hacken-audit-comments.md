@@ -176,3 +176,14 @@ Fixed. Added amount updatre after `safeTransferFrom`. Virtual list of approved t
 
 Fixed. Using `>= 0.62.0`.
 
+## [VN-043][Informational] Contradictory Naming.md
+
+Without changes.
+
+## [VN-045][Medium]Potential Funds Lock on Token Burn.md
+
+Without changes. Correct calculation of the attached value is a key task of the UI.
+
+## [VN-046][Medium]Potential Funds Lock on Event Rejection.md
+
+Fixed.

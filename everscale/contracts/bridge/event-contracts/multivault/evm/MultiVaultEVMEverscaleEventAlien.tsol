@@ -31,6 +31,10 @@ contract MultiVaultEVMEverscaleEventAlien is
         TvmCell _meta
     ) EthereumEverscaleBaseEvent(_initializer, _meta) public {}
 
+    function onReject() virtual override internal {
+        transferAll(initializer);
+    }
+
     function afterSignatureCheck(
         TvmSlice body,
         TvmCell

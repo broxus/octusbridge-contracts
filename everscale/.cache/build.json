@@ -215,10 +215,10 @@
     "contracts/bridge/interfaces/proxy/IEthereumEverscaleProxyExtended.tsol": {
         "modificationTime": 1698917827632
     },
-    "contracts/bridge/interfaces/proxy/ISolanaEverscaleProxy.tsol": {
+    "contracts/bridge/interfaces/proxy/ISolanaEverscaleProxyExtended.tsol": {
         "modificationTime": 1698917827632
     },
-    "contracts/bridge/interfaces/proxy/ISolanaEverscaleProxyExtended.tsol": {
+    "contracts/bridge/interfaces/proxy/ISolanaEverscaleProxy.tsol": {
         "modificationTime": 1698917827632
     },
     "contracts/bridge/interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V3.tsol": {
@@ -308,10 +308,10 @@
     "contracts/staking/TonConfigMockup.tsol": {
         "modificationTime": 1698917827634
     },
-    "contracts/staking/base/StakingUpgradable.tsol": {
+    "contracts/staking/base/StakingRelay.tsol": {
         "modificationTime": 1698917827635
     },
-    "contracts/staking/base/StakingRelay.tsol": {
+    "contracts/staking/base/StakingUpgradable.tsol": {
         "modificationTime": 1698917827635
     },
     "contracts/staking/interfaces/IUserData.tsol": {
@@ -344,11 +344,11 @@
     "contracts/bridge/Bridge.tsol": {
         "modificationTime": 1698917827501
     },
-    "contracts/bridge/alien-token/AlienTokenWalletPlatform.tsol": {
-        "modificationTime": 1698917827633
-    },
     "contracts/bridge/Connector.tsol": {
         "modificationTime": 1698917827501
+    },
+    "contracts/bridge/alien-token/AlienTokenWalletPlatform.tsol": {
+        "modificationTime": 1698917827633
     },
     "contracts/bridge/alien-token/AlienTokenWalletUpgradeable.tsol": {
         "modificationTime": 1698917827633
@@ -356,19 +356,19 @@
     "contracts/bridge/alien-token/TokenRootAlienEVM.tsol": {
         "modificationTime": 1698917827633
     },
-    "contracts/bridge/alien-token-merge/MergePoolPlatform.tsol": {
-        "modificationTime": 1698917827632
-    },
     "contracts/bridge/alien-token/TokenRootAlienSolana.tsol": {
         "modificationTime": 1698917827633
     },
-    "contracts/bridge/alien-token-merge/merge-pool/MergePool_V1.tsol": {
+    "contracts/bridge/alien-token-merge/MergePoolPlatform.tsol": {
         "modificationTime": 1698917827632
     },
     "contracts/bridge/alien-token-merge/MergeRouter.tsol": {
         "modificationTime": 1698917827633
     },
     "contracts/bridge/alien-token-merge/merge-pool/MergePool_V2.tsol": {
+        "modificationTime": 1698917827632
+    },
+    "contracts/bridge/alien-token-merge/merge-pool/MergePool_V1.tsol": {
         "modificationTime": 1698917827632
     },
     "contracts/bridge/alien-token-merge/merge-pool/MergePool_V3.tsol": {
@@ -380,10 +380,10 @@
     "contracts/bridge/event-configuration-contracts/evm/EthereumEverscaleEventConfiguration.tsol": {
         "modificationTime": 1698917827633
     },
-    "contracts/bridge/event-configuration-contracts/solana/EverscaleSolanaEventConfiguration.tsol": {
+    "contracts/bridge/event-configuration-contracts/evm/EverscaleEthereumEventConfiguration.tsol": {
         "modificationTime": 1698917827633
     },
-    "contracts/bridge/event-configuration-contracts/evm/EverscaleEthereumEventConfiguration.tsol": {
+    "contracts/bridge/event-configuration-contracts/solana/EverscaleSolanaEventConfiguration.tsol": {
         "modificationTime": 1698917827633
     },
     "contracts/bridge/event-configuration-contracts/solana/SolanaEverscaleEventConfiguration.tsol": {
@@ -395,11 +395,11 @@
     "contracts/bridge/event-contracts/dao/DaoEthereumActionEvent.tsol": {
         "modificationTime": 1698917827631
     },
-    "contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol": {
-        "modificationTime": 1698917827592
-    },
     "contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventAlien.tsol": {
-        "modificationTime": 1698917827632
+        "modificationTime": 1698920707420
+    },
+    "contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol": {
+        "modificationTime": 1698920716085
     },
     "contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventNative.tsol": {
         "modificationTime": 1698917827592
@@ -410,31 +410,31 @@
     "contracts/bridge/event-contracts/multivault/solana/MultiVaultSolanaEverscaleEventAlien.tsol": {
         "modificationTime": 1698917827592
     },
-    "contracts/bridge/event-contracts/multivault/solana/MultiVaultSolanaEverscaleEventNative.tsol": {
-        "modificationTime": 1698917827613
-    },
     "contracts/bridge/event-contracts/staking/StakingEthereumEverscaleEvent.tsol": {
-        "modificationTime": 1698917827613
-    },
-    "contracts/bridge/event-contracts/staking/StakingEverscaleEthereumEvent.tsol": {
-        "modificationTime": 1698917827612
-    },
-    "contracts/bridge/event-contracts/staking/StakingEverscaleSolanaEvent.tsol": {
         "modificationTime": 1698917827613
     },
     "contracts/bridge/event-contracts/staking/StakingSolanaEverscaleEvent.tsol": {
         "modificationTime": 1698917827635
     },
+    "contracts/bridge/event-contracts/staking/StakingEverscaleEthereumEvent.tsol": {
+        "modificationTime": 1698917827612
+    },
     "contracts/bridge/event-contracts/token-transfer/TokenTransferEthereumEverscaleEvent.tsol": {
+        "modificationTime": 1698917827613
+    },
+    "contracts/bridge/event-contracts/staking/StakingEverscaleSolanaEvent.tsol": {
         "modificationTime": 1698917827613
     },
     "contracts/bridge/event-contracts/token-transfer/TokenTransferEverscaleEthereumEvent.tsol": {
         "modificationTime": 1698917827631
     },
+    "contracts/bridge/event-contracts/token-transfer/TokenTransferEverscaleSolanaEvent.tsol": {
+        "modificationTime": 1698917827613
+    },
     "contracts/bridge/event-contracts/token-transfer/TokenTransferSolanaEverscaleEvent.tsol": {
         "modificationTime": 1698917827613
     },
-    "contracts/bridge/event-contracts/token-transfer/TokenTransferEverscaleSolanaEvent.tsol": {
+    "contracts/bridge/event-contracts/multivault/solana/MultiVaultSolanaEverscaleEventNative.tsol": {
         "modificationTime": 1698917827613
     },
     "contracts/bridge/factory/EthereumEverscaleEventConfigurationFactory.tsol": {
@@ -455,10 +455,10 @@
     "contracts/bridge/hidden-bridge/EventCreditFactory.tsol": {
         "modificationTime": 1698917827634
     },
-    "contracts/bridge/hidden-bridge/EventDeployer.tsol": {
+    "contracts/bridge/hidden-bridge/Mediator.tsol": {
         "modificationTime": 1698917827634
     },
-    "contracts/bridge/hidden-bridge/Mediator.tsol": {
+    "contracts/bridge/hidden-bridge/EventDeployer.tsol": {
         "modificationTime": 1698917827634
     },
     "contracts/bridge/mockups/StakingMockup.tsol": {
@@ -470,10 +470,10 @@
     "contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V2.tsol": {
         "modificationTime": 1698917827633
     },
-    "contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V4.tsol": {
+    "contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol": {
         "modificationTime": 1698917827633
     },
-    "contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol": {
+    "contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V4.tsol": {
         "modificationTime": 1698917827633
     },
     "contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol": {
@@ -500,16 +500,16 @@
     "contracts/bridge/proxy/multivault/native/ProxyMultiVaultNative_V1.tsol": {
         "modificationTime": 1698917827633
     },
-    "contracts/bridge/proxy/multivault/native/ProxyMultiVaultNative_V2.tsol": {
-        "modificationTime": 1698917827634
-    },
     "contracts/bridge/proxy/multivault/native/ProxyMultiVaultNative_V2_Fix_Upgrade.tsol": {
         "modificationTime": 1698917827633
     },
-    "contracts/bridge/proxy/multivault/native/V3/ProxyMultiVaultNative_V3.tsol": {
+    "contracts/bridge/proxy/multivault/native/V3/ProxyMultiVaultNative_V3_Base.tsol": {
         "modificationTime": 1698917827634
     },
-    "contracts/bridge/proxy/multivault/native/V3/ProxyMultiVaultNative_V3_Base.tsol": {
+    "contracts/bridge/proxy/multivault/native/ProxyMultiVaultNative_V2.tsol": {
+        "modificationTime": 1698917827634
+    },
+    "contracts/bridge/proxy/multivault/native/V3/ProxyMultiVaultNative_V3.tsol": {
         "modificationTime": 1698917827634
     },
     "contracts/bridge/proxy/multivault/native/V3/ProxyMultiVaultNative_V3_Withdraw.tsol": {
