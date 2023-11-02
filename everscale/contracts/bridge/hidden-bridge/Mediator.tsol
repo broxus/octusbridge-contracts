@@ -53,6 +53,8 @@ contract Mediator is
         address _nativeProxy,
         TvmCell _alienTokenWalletPlatformCode
     ) public checkPubKey {
+        require(_owner != address(0), ErrorCodes.ZERO_ADDRESS);
+        require(_nativeProxy != address(0), ErrorCodes.ZERO_ADDRESS);
         tvm.accept();
 
         setOwnership(_owner);
@@ -63,6 +65,7 @@ contract Mediator is
     function setNativeProxy(
         address _nativeProxy
     ) external onlyOwner cashBack {
+        require(_nativeProxy != address(0), ErrorCodes.ZERO_ADDRESS);
         nativeProxy = _nativeProxy;
     }
 
@@ -208,6 +211,9 @@ contract Mediator is
         address _eventCloser,
         address _eventDeployer
     ) external onlyOwner {
+        require(_eventCloser != address(0), ErrorCodes.ZERO_ADDRESS);
+        require(_eventDeployer != address(0), ErrorCodes.ZERO_ADDRESS);
+
         eventCloser = _eventCloser;
         eventDeployer = _eventDeployer;
     }

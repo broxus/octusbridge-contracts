@@ -343,3 +343,12 @@ Fixed.
 ## [VN-087][Medium]Incorrect_withdrawn_alien_token_amount_in_callback.md
 
 Fixed.
+
+## [VN-088][Low] Incorrect Gas Amount Attached to Contract Deployment.md
+
+Without changes.
+
+## [VN-089][Low] Missing Zero Address Validation.md
+
+Fixed.
+

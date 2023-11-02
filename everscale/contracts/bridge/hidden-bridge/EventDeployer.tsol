@@ -25,7 +25,8 @@ contract EventDeployer is ExternalOwner, RandomNonce, CheckPubKey {
     constructor(
         uint owner_
     ) public checkPubKey {
-        require(msg.sender == factory);
+        require(owner_ != 0, ErrorCodes.ZERO_ADDRESS);
+        require(msg.sender == factory, ErrorCodes.ZERO_ADDRESS);
         tvm.accept();
 
         setOwnership(owner_);

@@ -29,7 +29,11 @@ contract EventCloser is ExternalOwner, RandomNonce, TransferUtils, CheckPubKey {
         uint owner_,
         address[] deployers_
     ) public checkPubKey {
-        require(msg.sender == factory);
+        require(msg.sender == factory, ErrorCodes.ZERO_ADDRESS);
+        for (address deployer: deployers_) {
+            require(deployer != address(0), ErrorCodes.ZERO_ADDRESS);
+        }
+
         tvm.accept();
 
         setOwnership(owner_);
