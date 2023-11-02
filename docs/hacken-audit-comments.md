@@ -291,3 +291,7 @@ Fixed.
 ## [VN-074][Low] CEI Violation With Event Emission.md
 
 Fixed.
+
+## [VN-075][Low] Missing Validation in _getNativeWithdrawalToken.md
+
+Fixed.

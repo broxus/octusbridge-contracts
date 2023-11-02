@@ -107,13 +107,15 @@ abstract contract MultiVaultHelperTokens is
         // Token is being withdrawn first time - activate it (set default parameters)
         // And deploy ERC20 representation
         if (s.tokens_[token].activation == 0) {
-            IMultiVaultFacetTokenFactory(address(this)).deployTokenForNative(
+            address deployedToken = IMultiVaultFacetTokenFactory(address(this)).deployTokenForNative(
                 withdrawal.native.wid,
                 withdrawal.native.addr,
                 withdrawal.meta.name,
                 withdrawal.meta.symbol,
                 withdrawal.meta.decimals
             );
+
+            require(deployedToken == token, "Tokens: invalid token");
         
             emit TokenCreated(
                 token,
