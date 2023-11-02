@@ -156,6 +156,19 @@ Fixed. Only `governance` or `management` can make a first deposit.
 
 Fixed. Increased `FORCE_TIMEOUT` to 3 days. Minting tokens back would significantly affect every part of the bridge architecture, which is unacceptable.
 
+## [VN-038][Medium]Incorrect Implementation of Diamonds Storage Slots.md
+
+Without changes.
+
+## [VN-039][Medium]Potential Funds Lock on Event Rejection.md
+
+Without changes.
+
 ## [VN-040][Medium] Outdated OpenZeppelin Contracts Used.md
 
 Fixed - 97437ee8ee44524f05a8a5714e069ffff086a9d1.
+
+## [VN-041][Medium]Mismanagement of Deflationary Tokens in Liquidity Facet.md
+
+Fixed. Added amount updatre after `safeTransferFrom`. Virtual list of approved tokens exists because of VN-036.
+

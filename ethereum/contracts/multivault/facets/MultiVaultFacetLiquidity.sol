@@ -40,7 +40,13 @@ contract MultiVaultFacetLiquidity is
 
         require(s.tokens_[token].isNative == false, "Liquidity: token is native");
 
+        uint balanceBefore = IERC20(token).balanceOf(address(this));
+
         IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
+
+        uint balanceAfter = IERC20(token).balanceOf(address(this));
+
+        amount = balanceAfter - balanceBefore;
 
         address lp;
 
