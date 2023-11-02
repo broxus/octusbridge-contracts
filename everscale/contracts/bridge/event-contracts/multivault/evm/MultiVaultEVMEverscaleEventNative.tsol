@@ -94,7 +94,7 @@ contract MultiVaultEVMEverscaleEventNative is
     }
 
     function receiveConfigurationDetails(
-        IEthereumEverscaleEventConfiguration.BasicConfiguration,
+        IBasicEventConfiguration.BasicConfiguration,
         IEthereumEverscaleEventConfiguration.EthereumEverscaleEventConfiguration _networkConfiguration,
         TvmCell
     ) external override {

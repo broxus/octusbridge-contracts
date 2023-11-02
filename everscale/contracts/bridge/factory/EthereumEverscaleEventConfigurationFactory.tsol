@@ -21,7 +21,7 @@ contract EthereumEverscaleEventConfigurationFactory is TransferUtils, RandomNonc
     function deploy(
         address _owner,
         uint64 _flags,
-        IEthereumEverscaleEventConfiguration.BasicConfiguration basicConfiguration,
+        IBasicEventConfiguration.BasicConfiguration basicConfiguration,
         IEthereumEverscaleEventConfiguration.EthereumEverscaleEventConfiguration networkConfiguration
     ) external view reserveMinBalance(MIN_CONTRACT_BALANCE) {
         TvmCell _meta;
@@ -39,7 +39,7 @@ contract EthereumEverscaleEventConfigurationFactory is TransferUtils, RandomNonc
     }
 
     function deriveConfigurationAddress(
-        IEthereumEverscaleEventConfiguration.BasicConfiguration basicConfiguration,
+        IBasicEventConfiguration.BasicConfiguration basicConfiguration,
         IEthereumEverscaleEventConfiguration.EthereumEverscaleEventConfiguration networkConfiguration
     ) external view returns(address) {
         TvmCell stateInit = tvm.buildStateInit({

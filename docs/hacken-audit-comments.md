@@ -243,3 +243,7 @@ Fixed.
 ## [VN-062][High] Funds Loss Due To Initialization Front Run.md
 
 Fixed.
+
+## [VN-063][Low]Not_Explicit_Interface_Usage.md
+
+Fixed.
