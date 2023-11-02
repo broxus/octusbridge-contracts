@@ -7,11 +7,6 @@ abstract contract Delegate {
 
     mapping(address => uint[]) public delegators;
 
-    modifier onlyDelegate {
-        checkDelegate();
-        _;
-    }
-
     function checkDelegate() internal {
         optional(uint[]) optDelegate = delegators.fetch(msg.sender);
         require(optDelegate.hasValue(), DELEGATE_NOT_FOUND);

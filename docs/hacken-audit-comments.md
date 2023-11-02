@@ -195,3 +195,19 @@ Fixed.
 ## [VN-048]
 
 Fixed.
+
+## [VN-049][Medium]Overly Permissive Rescuer Role.md
+
+Without changes.
+
+## [VN-050][Low]Redundant Code Patterns in StakingRelay, StakingBase, and UserData Contracts.md
+
+Without changes.
+
+## [VN-051][Informational]Redundant Constant Variables in Multiple Contracts.md
+
+Without changes.
+
+## [VN-052][Informational]Redundant Modifier in Delegate Contract.md
+
+Fixed.
