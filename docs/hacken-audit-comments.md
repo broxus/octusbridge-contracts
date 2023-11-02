@@ -379,3 +379,7 @@ Without changes.
 ## [VN-096][Informational] Wrapping Address to Contract Implementation Instead of Interface.md
 
 Fixed.
+
+## [VN-097][Informational] Incorrect Interface Version Used.md
+
+Fixed.
