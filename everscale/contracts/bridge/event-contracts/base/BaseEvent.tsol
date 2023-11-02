@@ -77,7 +77,6 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
         }(now);
     }
 
-    // TODO: cant be pure, compiler lies
     function receiveRoundAddress(
         address roundContract,
         uint32 roundNum
