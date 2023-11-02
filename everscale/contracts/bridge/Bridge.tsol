@@ -44,6 +44,10 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         uint64 _connectorDeployValue,
         address _staking
     ) public checkPubKey {
+        require(_owner != address(0), ErrorCodes.ZERO_ADDRESS);
+        require(_manager != address(0), ErrorCodes.ZERO_ADDRESS);
+        require(_staking != address(0), ErrorCodes.ZERO_ADDRESS);
+
         tvm.accept();
 
         setOwnership(_owner);
@@ -62,6 +66,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
     function setManager(
         address _manager
     ) external override cashBack {
+        require(_manager != address(0), ErrorCodes.ZERO_ADDRESS);
         require(msg.sender == manager || msg.sender == owner, ErrorCodes.SENDER_NOT_MANAGER_OR_OWNER);
 
         manager = _manager;

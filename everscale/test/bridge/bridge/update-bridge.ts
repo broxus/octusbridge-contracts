@@ -4,6 +4,7 @@ import { Contract } from "locklift";
 import {BridgeAbi} from "../../../build/factorySource";
 import { Account } from "everscale-standalone-client/nodejs";
 import {setupBridge, setupRelays} from "../../utils/bridge";
+import { deployAccount } from "../../utils/account";
 const { zeroAddress } = require("locklift");
 
 let bridge: Contract<BridgeAbi>;
@@ -58,9 +59,12 @@ describe("Test bridge update", async function () {
       "Wrong manager address"
     );
 
+    const signer = (await locklift.keystore.getSigner("0"))!;
+    const new_manager = await deployAccount(signer, 5);
+
     await bridge.methods
       .setManager({
-        _manager: zeroAddress,
+        _manager: new_manager.address,
       })
       .send({
         from: bridgeOwner.address,
@@ -68,7 +72,7 @@ describe("Test bridge update", async function () {
       });
 
     expect(await bridge.methods.manager().call().then(t => t.manager.toString())).to.be.equal(
-      zeroAddress.toString(),
+      new_manager.address.toString(),
       "Wrong manager address"
     );
   });

@@ -315,3 +315,7 @@ Fixed.
 ## [VN-080][Low] Documentation Mismatch Regarding Native.md
 
 Fixed.
+
+## [VN-081][Low]Missing Zero Address Checks.md
+
+Fixed.
