@@ -219,3 +219,7 @@ Without changes.
 ## [VN-054][Low] Unlimited Event Size Allows Relayer To Burn Service Contract Balance.md
 
 Fixed.
+
+## [VN-055][Low]Test-only Contract Not In MockTest Folder.md
+
+Fixed. Removed `Receiver`
