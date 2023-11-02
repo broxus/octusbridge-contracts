@@ -271,3 +271,7 @@ Fixed.
 ## [VN-069][Informational] Missing Function Declarations in Interfaces.md
 
 Fixed.
+
+## [VN-070][Informational]Redundant Check.md
+
+Fixed.

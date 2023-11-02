@@ -138,12 +138,10 @@ contract MultiVaultFacetWithdraw is
             payloadId
         );
 
-        if (!withdrawalLimitsPassed) {
-            _pendingWithdrawalApproveStatusUpdate(
-                IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId(withdrawal.recipient, pendingWithdrawalId),
-                IMultiVaultFacetPendingWithdrawals.ApproveStatus.Required
-            );
-        }
+        _pendingWithdrawalApproveStatusUpdate(
+            IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId(withdrawal.recipient, pendingWithdrawalId),
+            IMultiVaultFacetPendingWithdrawals.ApproveStatus.Required
+        );
 
         _callbackNativeWithdrawalPendingCreated(withdrawal, pendingWithdrawalId);
     }
