@@ -383,3 +383,7 @@ Fixed.
 ## [VN-097][Informational] Incorrect Interface Version Used.md
 
 Fixed.
+
+## [VN-099][Medium] User Funds Mismanagement in propose.md
+
+Without changes.
