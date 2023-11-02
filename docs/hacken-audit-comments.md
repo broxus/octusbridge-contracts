@@ -307,3 +307,7 @@ Fixed.
 ## [VN-078][Low] Inaccurate Comment on Relay Membership Lock Time.md
 
 Fixed.
+
+## [VN-079][Low] Documentation Mismatch Regarding Function Access.md
+
+Fixed.

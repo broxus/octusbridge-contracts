@@ -161,7 +161,7 @@ contract MergePool_V4 is
     /// @notice Remove token from the pool
     /// Token must be presented in the pool
     /// Token must be different from the canon. Otherwise set new canon first.
-    /// Can be called only by `owner`
+    /// Can be called only by `owner` or `manager`
     /// @param token Token address
     function removeToken(
         address token
@@ -173,7 +173,7 @@ contract MergePool_V4 is
 
     /// @notice Add new token to the pool
     /// Token must not be presented in the pool
-    /// Can be called only by `owner`
+    /// Can be called only by `owner` or `manager`
     /// @param token Token address
     function addToken(
         address token
@@ -189,7 +189,7 @@ contract MergePool_V4 is
     }
 
     /// @notice Set `canon` token
-    /// Can be called only by `owner`
+    /// Can be called only by `owner` or `manager`
     /// @param token token address
     function setCanon(
         address token
@@ -200,7 +200,7 @@ contract MergePool_V4 is
     }
 
     /// @notice Enable token
-    /// Can be called only by `owner`
+    /// Can be called only by `owner` or `manager`
     /// Token must be presented in the pool
     /// @param token Token address
     function enableToken(
@@ -218,7 +218,7 @@ contract MergePool_V4 is
     }
 
     /// @notice Disable token
-    /// Can be called only by `owner`
+    /// Can be called only by `owner` or `manager`
     /// Token must be presented in the pool
     /// Users cant swap tokens to the disabled tokens
     /// @param token Token address
