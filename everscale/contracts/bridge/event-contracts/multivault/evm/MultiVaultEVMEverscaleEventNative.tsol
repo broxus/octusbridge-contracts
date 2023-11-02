@@ -78,7 +78,7 @@ contract MultiVaultEVMEverscaleEventNative is
 
         // Destroy event contract in case event contract is less than required
         if (address(this).balance < expected_evers) {
-            recipient.transfer({
+            initializer.transfer({
                 value: 0,
                 bounce: false,
                 flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.DESTROY_IF_ZERO

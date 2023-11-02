@@ -1,5 +1,71 @@
 {
   "map": {
+    "0114fddbe667804c2c10a4f294cf6a614f124dbf3df291ef958a87deec07e3e8": {
+      "0": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2678
+      },
+      "8": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2679
+      },
+      "56": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2680
+      },
+      "64": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2681
+      },
+      "80": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2684
+      },
+      "88": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2685
+      },
+      "136": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2686
+      },
+      "144": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2687
+      },
+      "160": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2690
+      },
+      "168": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2691
+      },
+      "216": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2692
+      },
+      "224": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2693
+      },
+      "240": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2696
+      },
+      "248": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2697
+      },
+      "296": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2698
+      },
+      "304": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2699
+      }
+    },
     "016502983ecf2f4447f7d4fc9d31d97efca782602e84fb1ae4fb86d674e1374b": {
       "0": {
         "filename": "../contracts/bridge/event-contracts/base/BaseEvent.tsol",
@@ -708,72 +774,6 @@
         "line": 88
       }
     },
-    "0bb676680f83b48a163177c35ed741605eaa5d41542dbe635e7b161fd34d0ad7": {
-      "0": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2616
-      },
-      "8": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2617
-      },
-      "56": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2618
-      },
-      "64": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2619
-      },
-      "80": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2645
-      },
-      "88": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2646
-      },
-      "136": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2647
-      },
-      "144": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2648
-      },
-      "160": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2674
-      },
-      "168": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2675
-      },
-      "216": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2676
-      },
-      "224": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2677
-      },
-      "240": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2703
-      },
-      "248": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2704
-      },
-      "296": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2705
-      },
-      "304": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2706
-      }
-    },
     "0ffa226f4450e08779b0b963aa50d0ac3f64ee434aadc1d97b7e5a9f9243e18c": {
       "0": {
         "filename": "MultiVaultEVMEverscaleEventNative.code",
@@ -1470,6 +1470,268 @@
         "line": 2670
       }
     },
+    "33b4634d90ced0be6f7cbf886611083b87d8d1f28167f4385e0017ea481705a0": {
+      "0": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 52
+      },
+      "8": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 52
+      },
+      "24": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 58
+      },
+      "40": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 58
+      },
+      "56": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 58
+      },
+      "64": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 58
+      },
+      "80": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 58
+      },
+      "96": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 58
+      },
+      "112": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 58
+      },
+      "128": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 58
+      },
+      "144": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 58
+      },
+      "160": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 58
+      },
+      "168": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 58
+      },
+      "176": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 58
+      },
+      "184": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 58
+      },
+      "200": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 58
+      },
+      "208": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 58
+      },
+      "216": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 58
+      },
+      "232": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 58
+      },
+      "240": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 58
+      },
+      "248": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 58
+      },
+      "264": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 58
+      },
+      "272": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 58
+      },
+      "280": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 58
+      },
+      "296": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 58
+      },
+      "312": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 58
+      },
+      "328": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 76
+      },
+      "336": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 76
+      },
+      "344": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 76
+      },
+      "352": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 76
+      },
+      "376": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 76
+      },
+      "392": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 76
+      },
+      "408": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 76
+      },
+      "416": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 76
+      },
+      "424": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 76
+      },
+      "440": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 77
+      },
+      "448": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 77
+      },
+      "456": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 77
+      },
+      "480": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 77
+      },
+      "496": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 77
+      },
+      "512": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 77
+      },
+      "520": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 77
+      },
+      "528": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 77
+      },
+      "544": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 80
+      },
+      "560": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 80
+      },
+      "576": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 80
+      },
+      "592": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 80
+      },
+      "600": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 80
+      },
+      "616": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 81
+      },
+      "632": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 81
+      },
+      "640": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 81
+      },
+      "664": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 81
+      },
+      "672": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 81
+      },
+      "688": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 81
+      },
+      "704": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 81
+      },
+      "712": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 81
+      },
+      "728": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 81
+      },
+      "744": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 81
+      },
+      "760": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 81
+      },
+      "776": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 134
+      },
+      "784": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 90
+      },
+      "800": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 90
+      },
+      "816": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 90
+      },
+      "824": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 90
+      },
+      "848": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 90
+      }
+    },
     "33cf5ffcc565791e9658f4354694360c94b77c89351083b79370f6220b566ba5": {
       "0": {
         "filename": "MultiVaultEVMEverscaleEventNative.code",
@@ -2040,292 +2302,6 @@
         "line": 197
       }
     },
-    "472098d3c8ba72edcd776e9ea64a28846ca1b17f8b276a8719bc60d3dd1cf531": {
-      "0": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2106
-      },
-      "16": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2107
-      },
-      "24": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2108
-      },
-      "40": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2109
-      },
-      "56": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2110
-      },
-      "72": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2111
-      },
-      "80": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2114
-      },
-      "96": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2115
-      },
-      "104": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2116
-      },
-      "120": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2119
-      },
-      "136": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2120
-      },
-      "144": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2121
-      },
-      "160": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2122
-      },
-      "176": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2123
-      },
-      "192": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2124
-      },
-      "200": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2125
-      },
-      "216": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2126
-      },
-      "224": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2127
-      },
-      "240": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2128
-      },
-      "248": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2129
-      },
-      "256": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2130
-      },
-      "272": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2131
-      },
-      "280": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2132
-      },
-      "288": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2134
-      },
-      "296": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2135
-      },
-      "304": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2136
-      },
-      "320": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2138
-      },
-      "328": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2139
-      },
-      "336": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2140
-      },
-      "352": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2141
-      },
-      "368": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2142
-      },
-      "384": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2144
-      },
-      "392": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2145
-      },
-      "408": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2146
-      },
-      "416": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2147
-      },
-      "432": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2149
-      },
-      "440": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2150
-      },
-      "456": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 42
-      },
-      "472": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 42
-      },
-      "488": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 42
-      },
-      "496": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 42
-      },
-      "504": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 43
-      },
-      "520": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 44
-      },
-      "536": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 44
-      },
-      "544": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 45
-      },
-      "552": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 45
-      },
-      "568": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 45
-      },
-      "584": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 46
-      },
-      "608": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 46
-      },
-      "624": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 46
-      },
-      "632": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 46
-      },
-      "640": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 46
-      },
-      "648": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 46
-      },
-      "656": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 46
-      },
-      "664": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 46
-      },
-      "672": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 46
-      },
-      "688": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 46
-      },
-      "704": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 46
-      },
-      "720": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 46
-      },
-      "736": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 46
-      },
-      "744": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 46
-      },
-      "768": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 46
-      },
-      "776": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 46
-      },
-      "792": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 46
-      },
-      "808": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2189
-      },
-      "816": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 48
-      },
-      "824": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 48
-      },
-      "840": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2194
-      },
-      "856": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2195
-      },
-      "864": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2196
-      },
-      "880": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2199
-      }
-    },
     "47d4d182a89ef236007152d249aab7584ccba9e9ab5e5ba11216599f381bc314": {
       "0": {
         "filename": "../contracts/bridge/event-contracts/base/BaseEvent.tsol",
@@ -2884,6 +2860,292 @@
         "line": 2259
       }
     },
+    "558fc6ecf7af899effe760241c1d934affabd6432ec7d40bd5450722ac2beab2": {
+      "0": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2106
+      },
+      "16": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2107
+      },
+      "24": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2108
+      },
+      "40": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2109
+      },
+      "56": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2110
+      },
+      "72": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2111
+      },
+      "80": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2114
+      },
+      "96": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2115
+      },
+      "104": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2116
+      },
+      "120": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2119
+      },
+      "136": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2120
+      },
+      "144": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2121
+      },
+      "160": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2122
+      },
+      "176": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2123
+      },
+      "192": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2124
+      },
+      "200": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2125
+      },
+      "216": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2126
+      },
+      "224": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2127
+      },
+      "240": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2128
+      },
+      "248": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2129
+      },
+      "256": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2130
+      },
+      "272": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2131
+      },
+      "280": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2132
+      },
+      "288": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2134
+      },
+      "296": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2135
+      },
+      "304": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2136
+      },
+      "320": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2138
+      },
+      "328": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2139
+      },
+      "336": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2140
+      },
+      "352": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2141
+      },
+      "368": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2142
+      },
+      "384": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2144
+      },
+      "392": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2145
+      },
+      "408": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2146
+      },
+      "416": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2147
+      },
+      "432": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2149
+      },
+      "440": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2150
+      },
+      "456": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 42
+      },
+      "472": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 42
+      },
+      "488": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 42
+      },
+      "496": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 42
+      },
+      "504": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 43
+      },
+      "520": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 44
+      },
+      "536": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 44
+      },
+      "544": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 45
+      },
+      "552": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 45
+      },
+      "568": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 45
+      },
+      "584": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 46
+      },
+      "608": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 46
+      },
+      "624": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 46
+      },
+      "632": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 46
+      },
+      "640": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 46
+      },
+      "648": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 46
+      },
+      "656": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 46
+      },
+      "664": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 46
+      },
+      "672": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 46
+      },
+      "688": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 46
+      },
+      "704": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 46
+      },
+      "720": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 46
+      },
+      "736": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 46
+      },
+      "744": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 46
+      },
+      "768": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 46
+      },
+      "776": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 46
+      },
+      "792": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 46
+      },
+      "808": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2189
+      },
+      "816": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 48
+      },
+      "824": {
+        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
+        "line": 48
+      },
+      "840": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2194
+      },
+      "856": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2195
+      },
+      "864": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2196
+      },
+      "880": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2199
+      }
+    },
     "570cd351818707e7764714f19c11e9fd49a6c815e5722187016f36205a9616b2": {
       "0": {
         "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
@@ -2908,144 +3170,6 @@
       "88": {
         "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
         "line": 118
-      }
-    },
-    "59c78926364529276029c281bb6cc2fdd81286e35d5e634cf41a06b4a73244c0": {
-      "0": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2061
-      },
-      "16": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2062
-      },
-      "24": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2063
-      },
-      "40": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2064
-      },
-      "56": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2065
-      },
-      "72": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2066
-      },
-      "80": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2067
-      },
-      "88": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2068
-      },
-      "104": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2069
-      },
-      "120": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2070
-      },
-      "128": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2071
-      },
-      "144": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2072
-      },
-      "168": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2073
-      },
-      "184": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2074
-      },
-      "192": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2075
-      },
-      "208": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2076
-      },
-      "248": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2077
-      },
-      "264": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2078
-      },
-      "272": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2079
-      },
-      "288": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2080
-      },
-      "296": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2081
-      },
-      "312": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2082
-      },
-      "328": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2083
-      },
-      "336": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2084
-      },
-      "344": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2085
-      },
-      "360": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2086
-      },
-      "376": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2090
-      },
-      "384": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2091
-      },
-      "408": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2092
-      },
-      "424": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2093
-      },
-      "432": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2094
-      },
-      "448": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2098
-      },
-      "456": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2099
-      },
-      "472": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2102
       }
     },
     "5a3512697092391119a9c4a00d4530074956b727bea64b6ce6caccc18d21929e": {
@@ -3144,6 +3268,52 @@
       "0": {
         "filename": "MultiVaultEVMEverscaleEventNative.code",
         "line": 2112
+      }
+    },
+    "624dfa29b5da5133a0c45737d921cb6edabca624ea0eb74bf6a0a39eb9617f84": {
+      "0": {
+        "filename": "<entry-selector>",
+        "line": 1
+      },
+      "8": {
+        "filename": "<entry-selector>",
+        "line": 2
+      },
+      "24": {
+        "filename": "<entry-selector>",
+        "line": 3
+      },
+      "32": {
+        "filename": "<entry-selector>",
+        "line": 4
+      },
+      "48": {
+        "filename": "<entry-selector>",
+        "line": 5
+      },
+      "56": {
+        "filename": "<entry-selector>",
+        "line": 6
+      },
+      "72": {
+        "filename": "<entry-selector>",
+        "line": 7
+      },
+      "88": {
+        "filename": "<entry-selector>",
+        "line": 8
+      },
+      "96": {
+        "filename": "<entry-selector>",
+        "line": 9
+      },
+      "112": {
+        "filename": "<entry-selector>",
+        "line": 10
+      },
+      "128": {
+        "filename": "<entry-selector>",
+        "line": 11
       }
     },
     "6322a9eee85392f0423c1557ca2938e605026845428ed68df41da258324d1f5b": {
@@ -3614,52 +3784,6 @@
         "line": 2
       }
     },
-    "764bc50834cfd1165f503d2b68e52e40eb59751577d713495e57f8fe3cb1ed3b": {
-      "0": {
-        "filename": "<entry-selector>",
-        "line": 1
-      },
-      "8": {
-        "filename": "<entry-selector>",
-        "line": 2
-      },
-      "24": {
-        "filename": "<entry-selector>",
-        "line": 3
-      },
-      "32": {
-        "filename": "<entry-selector>",
-        "line": 4
-      },
-      "48": {
-        "filename": "<entry-selector>",
-        "line": 5
-      },
-      "56": {
-        "filename": "<entry-selector>",
-        "line": 6
-      },
-      "72": {
-        "filename": "<entry-selector>",
-        "line": 7
-      },
-      "88": {
-        "filename": "<entry-selector>",
-        "line": 8
-      },
-      "96": {
-        "filename": "<entry-selector>",
-        "line": 9
-      },
-      "112": {
-        "filename": "<entry-selector>",
-        "line": 10
-      },
-      "128": {
-        "filename": "<entry-selector>",
-        "line": 11
-      }
-    },
     "76b521fd213a3ded3e4272a8d965acfa393f03cf45c2aefec6bf76d153d55461": {
       "0": {
         "filename": "MultiVaultEVMEverscaleEventNative.code",
@@ -4118,6 +4242,128 @@
         "line": 1860
       }
     },
+    "7b6e5f9525749d46b166c4159cd216cfe3318608a7eb7021b23e72cbde55270a": {
+      "0": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 4
+      },
+      "8": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 5
+      },
+      "24": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 6
+      },
+      "32": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 7
+      },
+      "48": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 10
+      },
+      "64": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 11
+      },
+      "80": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 12
+      },
+      "88": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 13
+      },
+      "96": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 14
+      },
+      "104": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 15
+      },
+      "112": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 16
+      },
+      "120": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 18
+      },
+      "128": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 19
+      },
+      "144": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 20
+      },
+      "152": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 21
+      },
+      "160": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EthereumEverscaleBaseEvent.tsol",
+        "line": 27
+      },
+      "184": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EthereumEverscaleBaseEvent.tsol",
+        "line": 27
+      },
+      "200": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EthereumEverscaleBaseEvent.tsol",
+        "line": 27
+      },
+      "216": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EthereumEverscaleBaseEvent.tsol",
+        "line": 27
+      },
+      "232": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EthereumEverscaleBaseEvent.tsol",
+        "line": 27
+      },
+      "248": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EthereumEverscaleBaseEvent.tsol",
+        "line": 27
+      },
+      "264": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EthereumEverscaleBaseEvent.tsol",
+        "line": 32
+      },
+      "280": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EthereumEverscaleBaseEvent.tsol",
+        "line": 32
+      },
+      "296": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EthereumEverscaleBaseEvent.tsol",
+        "line": 32
+      },
+      "312": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EthereumEverscaleBaseEvent.tsol",
+        "line": 33
+      },
+      "320": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EthereumEverscaleBaseEvent.tsol",
+        "line": 33
+      },
+      "336": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EthereumEverscaleBaseEvent.tsol",
+        "line": 34
+      },
+      "352": {
+        "filename": "../contracts/bridge/event-contracts/base/evm/EthereumEverscaleBaseEvent.tsol",
+        "line": 36
+      },
+      "368": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 45
+      },
+      "384": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 48
+      }
+    },
     "7b927247dc6a89d67cf1851f4cb5529c862128ede715f116c0341d4dc740b33e": {
       "0": {
         "filename": "MultiVaultEVMEverscaleEventNative.code",
@@ -4450,268 +4696,6 @@
       "680": {
         "filename": "MultiVaultEVMEverscaleEventNative.code",
         "line": 581
-      }
-    },
-    "7ff0ec6a17cde5f8d6e119c7b04b572399528307978f05fe806ea8e88747cabd": {
-      "0": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 52
-      },
-      "8": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 52
-      },
-      "24": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 58
-      },
-      "40": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 58
-      },
-      "56": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 58
-      },
-      "64": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 58
-      },
-      "80": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 58
-      },
-      "96": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 58
-      },
-      "112": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 58
-      },
-      "128": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 58
-      },
-      "144": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 58
-      },
-      "160": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 58
-      },
-      "168": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 58
-      },
-      "176": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 58
-      },
-      "184": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 58
-      },
-      "200": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 58
-      },
-      "208": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 58
-      },
-      "216": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 58
-      },
-      "232": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 58
-      },
-      "240": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 58
-      },
-      "248": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 58
-      },
-      "264": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 58
-      },
-      "272": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 58
-      },
-      "280": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 58
-      },
-      "296": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 58
-      },
-      "312": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 58
-      },
-      "328": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 76
-      },
-      "336": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 76
-      },
-      "344": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 76
-      },
-      "352": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 76
-      },
-      "376": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 76
-      },
-      "392": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 76
-      },
-      "408": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 76
-      },
-      "416": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 76
-      },
-      "424": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 76
-      },
-      "440": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 77
-      },
-      "448": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 77
-      },
-      "456": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 77
-      },
-      "480": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 77
-      },
-      "496": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 77
-      },
-      "512": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 77
-      },
-      "520": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 77
-      },
-      "528": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 77
-      },
-      "544": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 80
-      },
-      "560": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 80
-      },
-      "576": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 80
-      },
-      "592": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 80
-      },
-      "600": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 80
-      },
-      "616": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 81
-      },
-      "632": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 81
-      },
-      "640": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 81
-      },
-      "664": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 81
-      },
-      "672": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 81
-      },
-      "688": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 81
-      },
-      "704": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 81
-      },
-      "712": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 81
-      },
-      "728": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 81
-      },
-      "744": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 81
-      },
-      "760": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 81
-      },
-      "776": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 134
-      },
-      "784": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 90
-      },
-      "800": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 90
-      },
-      "816": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 90
-      },
-      "824": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 90
-      },
-      "848": {
-        "filename": "../contracts/bridge/event-contracts/multivault/evm/MultiVaultEVMEverscaleEventNative.tsol",
-        "line": 90
       }
     },
     "81688659c10ed2dfef4742a23c6832165d50ef8f216a8073deaf45eaeb414eef": {
@@ -5101,6 +5085,244 @@
       "304": {
         "filename": "../contracts/bridge/libraries/EventContractNonce.tsol",
         "line": 16
+      }
+    },
+    "9e128edeb80cd063ae2b9381adea91ea749e4b27868bb28f120c8c65e2294de9": {
+      "0": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2616
+      },
+      "8": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2617
+      },
+      "56": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2618
+      },
+      "64": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2619
+      },
+      "80": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2645
+      },
+      "88": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2646
+      },
+      "136": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2647
+      },
+      "144": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2648
+      },
+      "160": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2674
+      },
+      "168": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2675
+      },
+      "216": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2676
+      },
+      "224": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2677
+      },
+      "240": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2703
+      },
+      "248": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2704
+      },
+      "296": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2705
+      },
+      "304": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2706
+      }
+    },
+    "9f0dad9d138d7370f4b3c1adf81a032aae8febc5483c072aea9a460e5e98d1ac": {
+      "0": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2612
+      },
+      "8": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2613
+      },
+      "56": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2614
+      },
+      "64": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2615
+      },
+      "80": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2733
+      },
+      "88": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2734
+      },
+      "136": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2735
+      },
+      "144": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2736
+      }
+    },
+    "9f852745e3d8a8f1b42458d0b1c5a64667a7305c2c79010cf00ce4f0e403eeea": {
+      "0": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2061
+      },
+      "16": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2062
+      },
+      "24": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2063
+      },
+      "40": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2064
+      },
+      "56": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2065
+      },
+      "72": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2066
+      },
+      "80": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2067
+      },
+      "88": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2068
+      },
+      "104": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2069
+      },
+      "120": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2070
+      },
+      "128": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2071
+      },
+      "144": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2072
+      },
+      "168": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2073
+      },
+      "184": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2074
+      },
+      "192": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2075
+      },
+      "208": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2076
+      },
+      "248": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2077
+      },
+      "264": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2078
+      },
+      "272": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2079
+      },
+      "288": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2080
+      },
+      "296": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2081
+      },
+      "312": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2082
+      },
+      "328": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2083
+      },
+      "336": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2084
+      },
+      "344": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2085
+      },
+      "360": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2086
+      },
+      "376": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2090
+      },
+      "384": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2091
+      },
+      "408": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2092
+      },
+      "424": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2093
+      },
+      "432": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2094
+      },
+      "448": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2098
+      },
+      "456": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2099
+      },
+      "472": {
+        "filename": "MultiVaultEVMEverscaleEventNative.code",
+        "line": 2102
       }
     },
     "a2a40cecfeae0e12fc7f2514f84410d637952e5e1edf574518aca3c0e22dfae1": {
@@ -6003,128 +6225,6 @@
         "line": 40
       }
     },
-    "c7a87e574983ea9cba130d71d614c84b14851bf230c2768c73c7a2bd6bf41a2f": {
-      "0": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 4
-      },
-      "8": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 5
-      },
-      "24": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 6
-      },
-      "32": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 7
-      },
-      "48": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 10
-      },
-      "64": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 11
-      },
-      "80": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 12
-      },
-      "88": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 13
-      },
-      "96": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 14
-      },
-      "104": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 15
-      },
-      "112": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 16
-      },
-      "120": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 18
-      },
-      "128": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 19
-      },
-      "144": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 20
-      },
-      "152": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 21
-      },
-      "160": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EthereumEverscaleBaseEvent.tsol",
-        "line": 27
-      },
-      "184": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EthereumEverscaleBaseEvent.tsol",
-        "line": 27
-      },
-      "200": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EthereumEverscaleBaseEvent.tsol",
-        "line": 27
-      },
-      "216": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EthereumEverscaleBaseEvent.tsol",
-        "line": 27
-      },
-      "232": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EthereumEverscaleBaseEvent.tsol",
-        "line": 27
-      },
-      "248": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EthereumEverscaleBaseEvent.tsol",
-        "line": 27
-      },
-      "264": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EthereumEverscaleBaseEvent.tsol",
-        "line": 32
-      },
-      "280": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EthereumEverscaleBaseEvent.tsol",
-        "line": 32
-      },
-      "296": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EthereumEverscaleBaseEvent.tsol",
-        "line": 32
-      },
-      "312": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EthereumEverscaleBaseEvent.tsol",
-        "line": 33
-      },
-      "320": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EthereumEverscaleBaseEvent.tsol",
-        "line": 33
-      },
-      "336": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EthereumEverscaleBaseEvent.tsol",
-        "line": 34
-      },
-      "352": {
-        "filename": "../contracts/bridge/event-contracts/base/evm/EthereumEverscaleBaseEvent.tsol",
-        "line": 36
-      },
-      "368": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 45
-      },
-      "384": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 48
-      }
-    },
     "c8454626bca791d788f7d9353c68279e4775b2bf6af8a8e0e53154f280a60d6a": {
       "0": {
         "filename": "MultiVaultEVMEverscaleEventNative.code",
@@ -6731,40 +6831,6 @@
       "304": {
         "filename": "MultiVaultEVMEverscaleEventNative.code",
         "line": 2359
-      }
-    },
-    "ddfa512d7ba90fec68f1603ddc89aff3dc2fb60f2dd40225db3020fe3f6f8012": {
-      "0": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2612
-      },
-      "8": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2613
-      },
-      "56": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2614
-      },
-      "64": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2615
-      },
-      "80": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2733
-      },
-      "88": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2734
-      },
-      "136": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2735
-      },
-      "144": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2736
       }
     },
     "e786fed408981704b8264c5632b568f3ee2ae1d651c0203dc65c1f35a20fe71c": {
@@ -7717,72 +7783,6 @@
       "304": {
         "filename": "MultiVaultEVMEverscaleEventNative.code",
         "line": 2827
-      }
-    },
-    "f6c68d5141ecc632834a3fc8bad967cbe201eebd0e07feba9ad1830859a35db5": {
-      "0": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2678
-      },
-      "8": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2679
-      },
-      "56": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2680
-      },
-      "64": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2681
-      },
-      "80": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2684
-      },
-      "88": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2685
-      },
-      "136": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2686
-      },
-      "144": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2687
-      },
-      "160": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2690
-      },
-      "168": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2691
-      },
-      "216": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2692
-      },
-      "224": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2693
-      },
-      "240": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2696
-      },
-      "248": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2697
-      },
-      "296": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2698
-      },
-      "304": {
-        "filename": "MultiVaultEVMEverscaleEventNative.code",
-        "line": 2699
       }
     },
     "f8b3671e4594ca4f8035a519f061ba6ea384fd67fdb9bebf8c7e6730a95edf4a": {

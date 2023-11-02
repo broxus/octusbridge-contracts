@@ -187,3 +187,7 @@ Without changes. Correct calculation of the attached value is a key task of the 
 ## [VN-046][Medium]Potential Funds Lock on Event Rejection.md
 
 Fixed.
+
+## [VN-048]
+
+Fixed.
