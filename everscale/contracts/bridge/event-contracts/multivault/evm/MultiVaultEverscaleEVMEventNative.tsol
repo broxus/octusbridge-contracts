@@ -117,7 +117,7 @@ contract MultiVaultEverscaleEVMEventNative is
     function receiveTokenName(
         string name_
     ) external override {
-        require(msg.sender == token);
+        require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
 
         name = name_;
     }
@@ -125,7 +125,7 @@ contract MultiVaultEverscaleEVMEventNative is
     function receiveTokenSymbol(
         string symbol_
     ) external override {
-        require(msg.sender == token);
+        require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
 
         symbol = symbol_;
     }
@@ -133,7 +133,7 @@ contract MultiVaultEverscaleEVMEventNative is
     function receiveTokenDecimals(
         uint8 decimals_
     ) external override {
-        require(msg.sender == token);
+        require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
 
         decimals = decimals_;
     }
@@ -141,7 +141,7 @@ contract MultiVaultEverscaleEVMEventNative is
     function receiveProxyTokenWallet(
         address tokenWallet_
     ) external override {
-        require(msg.sender == token);
+        require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
 
         expectedTokenWallet = tokenWallet_;
 

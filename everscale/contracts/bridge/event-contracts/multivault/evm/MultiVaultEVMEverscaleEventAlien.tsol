@@ -104,7 +104,7 @@ contract MultiVaultEVMEverscaleEventAlien is
     ) external override {
         TransitionalData transitionalData = getTransitionalData();
 
-        require(msg.sender == transitionalData.proxy);
+        require(msg.sender == transitionalData.proxy, ErrorCodes.WRONG_PROXY);
 
         _set_token(token);
 
@@ -120,7 +120,7 @@ contract MultiVaultEVMEverscaleEventAlien is
     ) external override {
         TransitionalData transitionalData = getTransitionalData();
 
-        require(msg.sender == transitionalData.token);
+        require(msg.sender == transitionalData.token, ErrorCodes.SENDER_NOT_ROOT);
 
         _requestMergeRouter();
     }
@@ -147,7 +147,7 @@ contract MultiVaultEVMEverscaleEventAlien is
     ) external override {
         TransitionalData transitionalData = getTransitionalData();
 
-        require(msg.sender == transitionalData.proxy);
+        require(msg.sender == transitionalData.proxy, ErrorCodes.WRONG_PROXY);
 
         _set_router(router);
 
@@ -169,7 +169,7 @@ contract MultiVaultEVMEverscaleEventAlien is
     ) external override {
         TransitionalData transitionalData = getTransitionalData();
 
-        require(msg.sender == transitionalData.router);
+        require(msg.sender == transitionalData.router, ErrorCodes.WRONG_ROUTER);
 
         _set_pool(pool);
 
@@ -196,7 +196,7 @@ contract MultiVaultEVMEverscaleEventAlien is
     ) external override {
         TransitionalData transitionalData = getTransitionalData();
 
-        require(msg.sender == transitionalData.pool);
+        require(msg.sender == transitionalData.pool, ErrorCodes.WRONG_POOL);
 
         _set_canon(canon);
 

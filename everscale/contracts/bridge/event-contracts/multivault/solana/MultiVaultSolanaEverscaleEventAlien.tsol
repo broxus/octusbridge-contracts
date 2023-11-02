@@ -131,7 +131,7 @@ contract MultiVaultSolanaEverscaleEventAlien is
     function receiveAlienTokenRoot(
         address token_
     ) external override {
-        require(msg.sender == proxy);
+        require(msg.sender == proxy, ErrorCodes.WRONG_PROXY);
 
         token = token_;
 
@@ -145,7 +145,7 @@ contract MultiVaultSolanaEverscaleEventAlien is
     function receiveTokenName(
         string // name
     ) external override {
-        require(msg.sender == token);
+        require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
 
         _requestMergeRouter();
     }
@@ -168,7 +168,7 @@ contract MultiVaultSolanaEverscaleEventAlien is
     function receiveMergeRouter(
         address router_
     ) external override {
-        require(msg.sender == proxy);
+        require(msg.sender == proxy, ErrorCodes.WRONG_PROXY);
 
         router = router_;
 
@@ -188,7 +188,7 @@ contract MultiVaultSolanaEverscaleEventAlien is
     function receiveMergeRouterPool(
         address pool_
     ) external override {
-        require(msg.sender == router);
+        require(msg.sender == router, ErrorCodes.WRONG_ROUTER);
 
         pool = pool_;
 
@@ -211,7 +211,7 @@ contract MultiVaultSolanaEverscaleEventAlien is
         address canon_,
         IMergePool_V2.Token canonToken_
     ) external override {
-        require(msg.sender == pool);
+        require(msg.sender == pool, ErrorCodes.WRONG_POOL);
 
         canon = canon_;
 

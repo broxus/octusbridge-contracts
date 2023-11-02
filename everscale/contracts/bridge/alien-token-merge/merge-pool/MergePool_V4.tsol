@@ -125,9 +125,9 @@ contract MergePool_V4 is
         _randomNonce = _randomNonce_;
         version = version_;
 
-        require(tokens_.length > 0);
-        require(msg.sender == proxy);
-        require(canonId <= tokens_.length - 1);
+        require(tokens_.length > 0, ErrorCodes.TOKEN_NOT_EXISTS);
+        require(msg.sender == proxy, ErrorCodes.WRONG_PROXY);
+        require(canonId <= tokens_.length - 1, ErrorCodes.WRONG_CANON_ID);
 
         canon = tokens_[canonId];
 

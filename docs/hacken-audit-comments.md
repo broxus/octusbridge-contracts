@@ -356,3 +356,14 @@ Fixed.
 
 Fixed.
 
+## [VN-091][Low] Unsupported ERC20 Tokens with Zero Decimals.md
+
+Without changes. Is it really an issue? The ERC20 standard is not relevant for TVM contracts.
+
+## [VN-092][Low] Missing Encoder for Everscale to Ethereum.md
+
+Without changes. CellEncoder is used only for tests.
+
+## [VN-093][Low] Missing Revert Error Codes in require.md
+
+Fixed.

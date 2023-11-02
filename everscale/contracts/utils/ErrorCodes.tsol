@@ -44,6 +44,9 @@ library ErrorCodes {
     uint16 constant WRONG_VOTE_RECEIVER = 2323;
     uint16 constant WRONG_STATUS = 2324;
     uint16 constant WRONG_SIGNATURE_SIZE = 2325;
+    uint16 constant SENDER_NOT_ROOT = 2326;
+    uint16 constant WRONG_ROUTER = 2327;
+    uint16 constant WRONG_POOL = 2328;
 
     // Connector
     uint16 constant DEPLOYER_NOT_BRIDGE = 2420;
@@ -118,6 +121,7 @@ library ErrorCodes {
     // Hidden bridge
     uint16 constant UNKNOWN_MEDIATOR_OPERATION = 2801;
     uint16 constant WRONG_GUARDIAN = 2802;
+    uint16 constant NOT_NATIVE_PROXY = 2803;
 
     // Merging
     uint16 constant WRONG_PROXY = 2901;
@@ -128,6 +132,7 @@ library ErrorCodes {
     uint16 constant MERGE_POOL_IS_ZERO_ADDRESS = 2906;
     uint16 constant TOKEN_NOT_ENABLED = 2907;
     uint16 constant TOKEN_DECIMALS_IS_ZERO = 2908;
+    uint16 constant WRONG_CANON_ID = 2909;
 
     // Event deployer
 

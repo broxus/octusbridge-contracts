@@ -602,30 +602,96 @@
         "line": 3444
       }
     },
-    "095fffe250f43a6af13a59fed121af7f2bc8ae4a324bb0cb0dc6d5949e320311": {
+    "08db642036bef6b290d04a2fe44f5c5b9d4271bb0fa4095c239736129bedd75c": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 7866
+        "line": 9665
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 7867
+        "line": 9666
       },
-      "24": {
+      "56": {
         "filename": "TestStakingV2.code",
-        "line": 7868
-      },
-      "48": {
-        "filename": "TestStakingV2.code",
-        "line": 7869
+        "line": 9667
       },
       "64": {
         "filename": "TestStakingV2.code",
+        "line": 9668
+      },
+      "80": {
+        "filename": "TestStakingV2.code",
+        "line": 9671
+      },
+      "88": {
+        "filename": "TestStakingV2.code",
+        "line": 9672
+      },
+      "136": {
+        "filename": "TestStakingV2.code",
+        "line": 9673
+      },
+      "144": {
+        "filename": "TestStakingV2.code",
+        "line": 9674
+      },
+      "160": {
+        "filename": "TestStakingV2.code",
+        "line": 9677
+      },
+      "168": {
+        "filename": "TestStakingV2.code",
+        "line": 9678
+      },
+      "216": {
+        "filename": "TestStakingV2.code",
+        "line": 9679
+      },
+      "224": {
+        "filename": "TestStakingV2.code",
+        "line": 9680
+      },
+      "240": {
+        "filename": "TestStakingV2.code",
+        "line": 9683
+      },
+      "248": {
+        "filename": "TestStakingV2.code",
+        "line": 9684
+      },
+      "296": {
+        "filename": "TestStakingV2.code",
+        "line": 9685
+      },
+      "304": {
+        "filename": "TestStakingV2.code",
+        "line": 9686
+      }
+    },
+    "095fffe250f43a6af13a59fed121af7f2bc8ae4a324bb0cb0dc6d5949e320311": {
+      "0": {
+        "filename": "TestStakingV2.code",
+        "line": 7867
+      },
+      "8": {
+        "filename": "TestStakingV2.code",
+        "line": 7868
+      },
+      "24": {
+        "filename": "TestStakingV2.code",
+        "line": 7869
+      },
+      "48": {
+        "filename": "TestStakingV2.code",
         "line": 7870
+      },
+      "64": {
+        "filename": "TestStakingV2.code",
+        "line": 7871
       },
       "72": {
         "filename": "TestStakingV2.code",
-        "line": 7871
+        "line": 7872
       },
       "88": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
@@ -645,15 +711,15 @@
       },
       "136": {
         "filename": "TestStakingV2.code",
-        "line": 7880
+        "line": 7881
       },
       "152": {
         "filename": "TestStakingV2.code",
-        "line": 7883
+        "line": 7884
       },
       "168": {
         "filename": "TestStakingV2.code",
-        "line": 7886
+        "line": 7887
       }
     },
     "099374d560d6e035b60f34f16cefd51d6c860c7b41b3afef5c4b1f574115d7cf": {
@@ -703,7 +769,7 @@
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 7191
+        "line": 7192
       },
       "168": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
@@ -735,11 +801,11 @@
       },
       "248": {
         "filename": "TestStakingV2.code",
-        "line": 7402
+        "line": 7403
       },
       "256": {
         "filename": "TestStakingV2.code",
-        "line": 7403
+        "line": 7404
       },
       "264": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
@@ -1049,67 +1115,67 @@
     "0ae5a55ccce3a787541418175283446199aa31b0affd02c7d2a2eacf5d291781": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 9510
+        "line": 9511
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 9511
+        "line": 9512
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 9512
+        "line": 9513
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 9513
+        "line": 9514
       },
       "80": {
         "filename": "TestStakingV2.code",
-        "line": 9539
+        "line": 9540
       },
       "88": {
         "filename": "TestStakingV2.code",
-        "line": 9540
+        "line": 9541
       },
       "136": {
         "filename": "TestStakingV2.code",
-        "line": 9541
+        "line": 9542
       },
       "144": {
         "filename": "TestStakingV2.code",
-        "line": 9542
+        "line": 9543
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 9568
+        "line": 9569
       },
       "168": {
         "filename": "TestStakingV2.code",
-        "line": 9569
+        "line": 9570
       },
       "216": {
         "filename": "TestStakingV2.code",
-        "line": 9570
+        "line": 9571
       },
       "224": {
         "filename": "TestStakingV2.code",
-        "line": 9571
+        "line": 9572
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 9597
+        "line": 9598
       },
       "248": {
         "filename": "TestStakingV2.code",
-        "line": 9598
+        "line": 9599
       },
       "296": {
         "filename": "TestStakingV2.code",
-        "line": 9599
+        "line": 9600
       },
       "304": {
         "filename": "TestStakingV2.code",
-        "line": 9600
+        "line": 9601
       }
     },
     "0b11be2cdea2d98d0a892f863e4d995a09275e3ffa00dd78833342108dbd8826": {
@@ -1375,67 +1441,67 @@
     "0c4205c99d95264cfe3ac21dec0cda2fa4c52678918bbc72a7497e543dc5f76f": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 9301
+        "line": 9302
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 9302
+        "line": 9303
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 9303
+        "line": 9304
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 9304
+        "line": 9305
       },
       "80": {
         "filename": "TestStakingV2.code",
-        "line": 9307
+        "line": 9308
       },
       "88": {
         "filename": "TestStakingV2.code",
-        "line": 9308
+        "line": 9309
       },
       "136": {
         "filename": "TestStakingV2.code",
-        "line": 9309
+        "line": 9310
       },
       "144": {
         "filename": "TestStakingV2.code",
-        "line": 9310
+        "line": 9311
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 9313
+        "line": 9314
       },
       "168": {
         "filename": "TestStakingV2.code",
-        "line": 9314
+        "line": 9315
       },
       "216": {
         "filename": "TestStakingV2.code",
-        "line": 9315
+        "line": 9316
       },
       "224": {
         "filename": "TestStakingV2.code",
-        "line": 9316
+        "line": 9317
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 9319
+        "line": 9320
       },
       "248": {
         "filename": "TestStakingV2.code",
-        "line": 9320
+        "line": 9321
       },
       "296": {
         "filename": "TestStakingV2.code",
-        "line": 9321
+        "line": 9322
       },
       "304": {
         "filename": "TestStakingV2.code",
-        "line": 9322
+        "line": 9323
       }
     },
     "0f1868f67c8316772f302f29709fecc4b4acb3021ff11ec7bad849392d5192d5": {
@@ -2189,169 +2255,169 @@
     "1060d97c29e889b2e18c9850a5a6bb2a3792c4a651959f6f438fe969dcad05e9": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 9272
+        "line": 9273
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 9273
+        "line": 9274
       },
       "48": {
         "filename": "TestStakingV2.code",
-        "line": 9274
+        "line": 9275
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 9275
+        "line": 9276
       },
       "72": {
         "filename": "TestStakingV2.code",
-        "line": 9278
+        "line": 9279
       },
       "80": {
         "filename": "TestStakingV2.code",
-        "line": 9279
+        "line": 9280
       },
       "120": {
         "filename": "TestStakingV2.code",
-        "line": 9280
+        "line": 9281
       },
       "128": {
         "filename": "TestStakingV2.code",
-        "line": 9281
+        "line": 9282
       },
       "144": {
         "filename": "TestStakingV2.code",
-        "line": 9284
+        "line": 9285
       },
       "152": {
         "filename": "TestStakingV2.code",
-        "line": 9285
+        "line": 9286
       },
       "192": {
         "filename": "TestStakingV2.code",
-        "line": 9286
+        "line": 9287
       },
       "200": {
         "filename": "TestStakingV2.code",
-        "line": 9287
+        "line": 9288
       },
       "216": {
         "filename": "TestStakingV2.code",
-        "line": 9290
+        "line": 9291
       },
       "224": {
         "filename": "TestStakingV2.code",
-        "line": 9291
+        "line": 9292
       },
       "272": {
         "filename": "TestStakingV2.code",
-        "line": 9292
+        "line": 9293
       },
       "280": {
         "filename": "TestStakingV2.code",
-        "line": 9293
+        "line": 9294
       }
     },
     "111eac0d8e5fb04cc5d5a79d61ff6c93f69461827897d8a8c6c8da1c41f572be": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 8874
+        "line": 8875
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 8875
+        "line": 8876
       },
       "24": {
         "filename": "TestStakingV2.code",
-        "line": 8876
+        "line": 8877
       },
       "32": {
         "filename": "TestStakingV2.code",
-        "line": 8877
+        "line": 8878
       },
       "48": {
         "filename": "TestStakingV2.code",
-        "line": 8878
+        "line": 8879
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 8879
+        "line": 8880
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 8880
+        "line": 8881
       },
       "72": {
         "filename": "TestStakingV2.code",
-        "line": 8881
+        "line": 8882
       },
       "88": {
         "filename": "TestStakingV2.code",
-        "line": 8882
+        "line": 8883
       },
       "104": {
         "filename": "TestStakingV2.code",
-        "line": 8883
+        "line": 8884
       },
       "120": {
         "filename": "TestStakingV2.code",
-        "line": 8884
+        "line": 8885
       },
       "128": {
         "filename": "TestStakingV2.code",
-        "line": 8885
+        "line": 8886
       },
       "152": {
         "filename": "TestStakingV2.code",
-        "line": 8887
+        "line": 8888
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 8888
+        "line": 8889
       },
       "168": {
         "filename": "TestStakingV2.code",
-        "line": 8889
+        "line": 8890
       },
       "176": {
         "filename": "TestStakingV2.code",
-        "line": 8890
+        "line": 8891
       },
       "192": {
         "filename": "TestStakingV2.code",
-        "line": 8891
+        "line": 8892
       },
       "208": {
         "filename": "TestStakingV2.code",
-        "line": 8892
+        "line": 8893
       },
       "224": {
         "filename": "TestStakingV2.code",
-        "line": 8897
+        "line": 8898
       },
       "232": {
         "filename": "TestStakingV2.code",
-        "line": 8898
+        "line": 8899
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 8899
+        "line": 8900
       },
       "248": {
         "filename": "TestStakingV2.code",
-        "line": 8900
+        "line": 8901
       },
       "256": {
         "filename": "TestStakingV2.code",
-        "line": 8902
+        "line": 8903
       },
       "264": {
         "filename": "TestStakingV2.code",
-        "line": 8903
+        "line": 8904
       },
       "272": {
         "filename": "TestStakingV2.code",
-        "line": 8905
+        "line": 8906
       }
     },
     "117b6e5640d54f8ea8db97a2a9c7cf02636027399a651850271d700202c94902": {
@@ -2620,264 +2686,30 @@
         "line": 38
       }
     },
-    "128d7b84486e8deefe85ed83a824eabbb6e82cfcf55258b18eac57b595e44856": {
-      "0": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 344
-      },
-      "16": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 344
-      },
-      "32": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 344
-      },
-      "48": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 344
-      },
-      "64": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 344
-      },
-      "88": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 346
-      },
-      "104": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 346
-      },
-      "112": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 346
-      },
-      "128": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 348
-      },
-      "136": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 348
-      },
-      "152": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 350
-      },
-      "160": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 350
-      },
-      "176": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 350
-      },
-      "184": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 350
-      },
-      "232": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 350
-      },
-      "240": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 350
-      },
-      "256": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 350
-      },
-      "264": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 350
-      },
-      "280": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 350
-      },
-      "296": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 350
-      },
-      "312": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 350
-      },
-      "320": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 350
-      },
-      "328": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 350
-      },
-      "336": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 350
-      },
-      "344": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 350
-      },
-      "360": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "368": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "376": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "384": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "392": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "408": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "416": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "432": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "448": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "456": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "480": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "488": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "496": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "520": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "536": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "544": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "592": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "608": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "616": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "632": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "648": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "656": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "664": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "680": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "688": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "696": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "704": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "712": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "728": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 352
-      },
-      "744": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 360
-      },
-      "752": {
-        "filename": "TestStakingV2.code",
-        "line": 6059
-      },
-      "760": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 363
-      },
-      "776": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 365
-      }
-    },
     "155ead0f1082b92f8061cfa2cf46937637e3385725068b4d4e3e52848dd2749f": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 6244
+        "line": 6245
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 6245
+        "line": 6246
       },
       "24": {
         "filename": "TestStakingV2.code",
-        "line": 6246
+        "line": 6247
       },
       "48": {
         "filename": "TestStakingV2.code",
-        "line": 6247
+        "line": 6248
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 6248
+        "line": 6249
       },
       "72": {
         "filename": "TestStakingV2.code",
-        "line": 6249
+        "line": 6250
       },
       "88": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
@@ -2889,19 +2721,19 @@
       },
       "112": {
         "filename": "TestStakingV2.code",
-        "line": 6256
+        "line": 6257
       },
       "128": {
         "filename": "TestStakingV2.code",
-        "line": 6259
+        "line": 6260
       },
       "136": {
         "filename": "TestStakingV2.code",
-        "line": 6260
+        "line": 6261
       },
       "152": {
         "filename": "TestStakingV2.code",
-        "line": 6263
+        "line": 6264
       }
     },
     "1562b57caf3ee897edab0501e3eef5018356eb8389330ef5dcfad1888cd5503f": {
@@ -3121,7 +2953,7 @@
       },
       "424": {
         "filename": "TestStakingV2.code",
-        "line": 8267
+        "line": 8268
       }
     },
     "167cbcddb50e29cce7c28a14df73bae947a561cc10d9c38c298a1e02278eb4e6": {
@@ -3291,27 +3123,27 @@
     "16a0d3054d121e14c5a1facd560743289ccdfdee6758c519baf631af8e7f63cb": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 6784
+        "line": 6785
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 6785
+        "line": 6786
       },
       "24": {
         "filename": "TestStakingV2.code",
-        "line": 6786
+        "line": 6787
       },
       "48": {
         "filename": "TestStakingV2.code",
-        "line": 6787
+        "line": 6788
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 6788
+        "line": 6789
       },
       "72": {
         "filename": "TestStakingV2.code",
-        "line": 6789
+        "line": 6790
       },
       "88": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
@@ -3383,19 +3215,19 @@
       },
       "264": {
         "filename": "TestStakingV2.code",
-        "line": 6812
+        "line": 6813
       },
       "280": {
         "filename": "TestStakingV2.code",
-        "line": 6815
+        "line": 6816
       },
       "288": {
         "filename": "TestStakingV2.code",
-        "line": 6816
+        "line": 6817
       },
       "304": {
         "filename": "TestStakingV2.code",
-        "line": 6819
+        "line": 6820
       }
     },
     "16c67e73bd4947a196436009d566409c5fcc91ddec01075dee12b3852c30ef57": {
@@ -3499,7 +3331,7 @@
       },
       "168": {
         "filename": "TestStakingV2.code",
-        "line": 7438
+        "line": 7439
       },
       "176": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
@@ -3875,129 +3707,129 @@
     "1cb2e26f020a9f46e3f49cfd012dd2d9df3ef3a1a354db944add94bd33119021": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 9722
+        "line": 9723
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 9723
+        "line": 9724
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 9724
+        "line": 9725
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 9725
+        "line": 9726
       },
       "80": {
         "filename": "TestStakingV2.code",
-        "line": 9728
+        "line": 9729
       },
       "88": {
         "filename": "TestStakingV2.code",
-        "line": 9729
+        "line": 9730
       },
       "136": {
         "filename": "TestStakingV2.code",
-        "line": 9730
+        "line": 9731
       },
       "144": {
         "filename": "TestStakingV2.code",
-        "line": 9731
+        "line": 9732
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 9734
+        "line": 9735
       },
       "168": {
         "filename": "TestStakingV2.code",
-        "line": 9735
+        "line": 9736
       },
       "216": {
         "filename": "TestStakingV2.code",
-        "line": 9736
+        "line": 9737
       },
       "224": {
         "filename": "TestStakingV2.code",
-        "line": 9737
+        "line": 9738
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 9740
+        "line": 9741
       },
       "248": {
         "filename": "TestStakingV2.code",
-        "line": 9741
+        "line": 9742
       },
       "296": {
         "filename": "TestStakingV2.code",
-        "line": 9742
+        "line": 9743
       },
       "304": {
         "filename": "TestStakingV2.code",
-        "line": 9743
+        "line": 9744
       }
     },
     "1cdc6734a06ce8c490a29106b3409ef9c903dc0781b53d0de18f1cb2feae2511": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 9224
+        "line": 9225
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 9225
+        "line": 9226
       },
       "16": {
         "filename": "TestStakingV2.code",
-        "line": 9226
+        "line": 9227
       },
       "32": {
         "filename": "TestStakingV2.code",
-        "line": 9229
+        "line": 9230
       },
       "48": {
         "filename": "TestStakingV2.code",
-        "line": 9230
+        "line": 9231
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 9231
+        "line": 9232
       },
       "72": {
         "filename": "TestStakingV2.code",
-        "line": 9232
+        "line": 9233
       },
       "232": {
         "filename": "TestStakingV2.code",
-        "line": 9233
+        "line": 9234
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 9234
+        "line": 9235
       },
       "248": {
         "filename": "TestStakingV2.code",
-        "line": 9235
+        "line": 9236
       },
       "264": {
         "filename": "TestStakingV2.code",
-        "line": 9236
+        "line": 9237
       },
       "272": {
         "filename": "TestStakingV2.code",
-        "line": 9237
+        "line": 9238
       },
       "280": {
         "filename": "TestStakingV2.code",
-        "line": 9238
+        "line": 9239
       },
       "296": {
         "filename": "TestStakingV2.code",
-        "line": 9240
+        "line": 9241
       },
       "304": {
         "filename": "TestStakingV2.code",
-        "line": 9241
+        "line": 9242
       }
     },
     "1cf4a7e7fcc4841019a94bc42897dedd86e5be68fef82e33d9723d0fc67d8eab": {
@@ -4181,67 +4013,67 @@
     "1e03b3634745b036d1e9d1fa8e6f600e71a7a7c39f69291e33b143c9ff18cd94": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 9393
+        "line": 9394
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 9394
+        "line": 9395
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 9395
+        "line": 9396
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 9396
+        "line": 9397
       },
       "80": {
         "filename": "TestStakingV2.code",
-        "line": 9399
+        "line": 9400
       },
       "88": {
         "filename": "TestStakingV2.code",
-        "line": 9400
+        "line": 9401
       },
       "136": {
         "filename": "TestStakingV2.code",
-        "line": 9401
+        "line": 9402
       },
       "144": {
         "filename": "TestStakingV2.code",
-        "line": 9402
+        "line": 9403
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 9405
+        "line": 9406
       },
       "168": {
         "filename": "TestStakingV2.code",
-        "line": 9406
+        "line": 9407
       },
       "216": {
         "filename": "TestStakingV2.code",
-        "line": 9407
+        "line": 9408
       },
       "224": {
         "filename": "TestStakingV2.code",
-        "line": 9408
+        "line": 9409
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 9411
+        "line": 9412
       },
       "248": {
         "filename": "TestStakingV2.code",
-        "line": 9412
+        "line": 9413
       },
       "296": {
         "filename": "TestStakingV2.code",
-        "line": 9413
+        "line": 9414
       },
       "304": {
         "filename": "TestStakingV2.code",
-        "line": 9414
+        "line": 9415
       }
     },
     "208e3c28982d2b9c9a8a9329132030a4debcaa2ec9f0a238527e14ee5bf199df": {
@@ -4773,27 +4605,27 @@
     "22223a4d5cb3caeb9a144f1b85dbee6058e454320dcc270a5b0168d2deb25afb": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 8436
+        "line": 8437
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 8437
+        "line": 8438
       },
       "24": {
         "filename": "TestStakingV2.code",
-        "line": 8438
+        "line": 8439
       },
       "48": {
         "filename": "TestStakingV2.code",
-        "line": 8439
+        "line": 8440
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 8440
+        "line": 8441
       },
       "72": {
         "filename": "TestStakingV2.code",
-        "line": 8441
+        "line": 8442
       },
       "88": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
@@ -4841,19 +4673,19 @@
       },
       "200": {
         "filename": "TestStakingV2.code",
-        "line": 8459
+        "line": 8460
       },
       "216": {
         "filename": "TestStakingV2.code",
-        "line": 8462
+        "line": 8463
       },
       "224": {
         "filename": "TestStakingV2.code",
-        "line": 8463
+        "line": 8464
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 8466
+        "line": 8467
       }
     },
     "23f95ba9582606d3570be43bf8333c337986361bfd261d8474e57a7a33893fc9": {
@@ -5389,35 +5221,35 @@
     "29fb4dd40cb6ca8766bba1f2e647aed4ba38646cfd96508bebd0c6e056c5edc0": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 9139
+        "line": 9140
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 9140
+        "line": 9141
       },
       "24": {
         "filename": "TestStakingV2.code",
-        "line": 9141
+        "line": 9142
       },
       "32": {
         "filename": "TestStakingV2.code",
-        "line": 8516
+        "line": 8517
       },
       "48": {
         "filename": "TestStakingV2.code",
-        "line": 8517
+        "line": 8518
       },
       "72": {
         "filename": "TestStakingV2.code",
-        "line": 8518
+        "line": 8519
       },
       "88": {
         "filename": "TestStakingV2.code",
-        "line": 8519
+        "line": 8520
       },
       "96": {
         "filename": "TestStakingV2.code",
-        "line": 8520
+        "line": 8521
       },
       "112": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
@@ -5449,19 +5281,19 @@
       },
       "232": {
         "filename": "TestStakingV2.code",
-        "line": 8604
+        "line": 8605
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 8606
+        "line": 8607
       },
       "248": {
         "filename": "TestStakingV2.code",
-        "line": 8607
+        "line": 8608
       },
       "256": {
         "filename": "TestStakingV2.code",
-        "line": 8608
+        "line": 8609
       }
     },
     "2d32929a41670938c443c0184b54ee8619fcd264563f34d995e1a3dc95ecad72": {
@@ -5581,7 +5413,7 @@
       },
       "96": {
         "filename": "TestStakingV2.code",
-        "line": 7397
+        "line": 7398
       },
       "104": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
@@ -6013,191 +5845,191 @@
     "32383361ec48c31479f8964b2caaf0b3e7af3053520334bad33a17d629ca75eb": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 8926
+        "line": 8927
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 8929
+        "line": 8930
       },
       "16": {
         "filename": "TestStakingV2.code",
-        "line": 8930
+        "line": 8931
       },
       "32": {
         "filename": "TestStakingV2.code",
-        "line": 8931
+        "line": 8932
       },
       "48": {
         "filename": "TestStakingV2.code",
-        "line": 8932
+        "line": 8933
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 8933
+        "line": 8934
       },
       "72": {
         "filename": "TestStakingV2.code",
-        "line": 8934
+        "line": 8935
       },
       "80": {
         "filename": "TestStakingV2.code",
-        "line": 8935
+        "line": 8936
       },
       "96": {
         "filename": "TestStakingV2.code",
-        "line": 8936
+        "line": 8937
       },
       "112": {
         "filename": "TestStakingV2.code",
-        "line": 8937
+        "line": 8938
       },
       "128": {
         "filename": "TestStakingV2.code",
-        "line": 8938
+        "line": 8939
       },
       "144": {
         "filename": "TestStakingV2.code",
-        "line": 8939
+        "line": 8940
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 8940
+        "line": 8941
       },
       "176": {
         "filename": "TestStakingV2.code",
-        "line": 8941
+        "line": 8942
       },
       "192": {
         "filename": "TestStakingV2.code",
-        "line": 8942
+        "line": 8943
       },
       "208": {
         "filename": "TestStakingV2.code",
-        "line": 8943
+        "line": 8944
       },
       "224": {
         "filename": "TestStakingV2.code",
-        "line": 8944
+        "line": 8945
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 8945
+        "line": 8946
       },
       "256": {
         "filename": "TestStakingV2.code",
-        "line": 8946
+        "line": 8947
       },
       "272": {
         "filename": "TestStakingV2.code",
-        "line": 8947
+        "line": 8948
       },
       "288": {
         "filename": "TestStakingV2.code",
-        "line": 8948
+        "line": 8949
       },
       "304": {
         "filename": "TestStakingV2.code",
-        "line": 8949
+        "line": 8950
       },
       "320": {
         "filename": "TestStakingV2.code",
-        "line": 8950
+        "line": 8951
       },
       "336": {
         "filename": "TestStakingV2.code",
-        "line": 8951
+        "line": 8952
       },
       "352": {
         "filename": "TestStakingV2.code",
-        "line": 8952
+        "line": 8953
       },
       "376": {
         "filename": "TestStakingV2.code",
-        "line": 8953
+        "line": 8954
       },
       "392": {
         "filename": "TestStakingV2.code",
-        "line": 8954
+        "line": 8955
       },
       "400": {
         "filename": "TestStakingV2.code",
-        "line": 8955
+        "line": 8956
       },
       "416": {
         "filename": "TestStakingV2.code",
-        "line": 8956
+        "line": 8957
       },
       "456": {
         "filename": "TestStakingV2.code",
-        "line": 8957
+        "line": 8958
       },
       "496": {
         "filename": "TestStakingV2.code",
-        "line": 8958
+        "line": 8959
       },
       "528": {
         "filename": "TestStakingV2.code",
-        "line": 8959
+        "line": 8960
       },
       "568": {
         "filename": "TestStakingV2.code",
-        "line": 8960
+        "line": 8961
       },
       "592": {
         "filename": "TestStakingV2.code",
-        "line": 8961
+        "line": 8962
       },
       "608": {
         "filename": "TestStakingV2.code",
-        "line": 8962
+        "line": 8963
       },
       "624": {
         "filename": "TestStakingV2.code",
-        "line": 8963
+        "line": 8964
       },
       "688": {
         "filename": "TestStakingV2.code",
-        "line": 8964
+        "line": 8965
       },
       "744": {
         "filename": "TestStakingV2.code",
-        "line": 8965
+        "line": 8966
       },
       "784": {
         "filename": "TestStakingV2.code",
-        "line": 8966
+        "line": 8967
       },
       "792": {
         "filename": "TestStakingV2.code",
-        "line": 8967
+        "line": 8968
       },
       "808": {
         "filename": "TestStakingV2.code",
-        "line": 8968
+        "line": 8969
       },
       "824": {
         "filename": "TestStakingV2.code",
-        "line": 8969
+        "line": 8970
       },
       "872": {
         "filename": "TestStakingV2.code",
-        "line": 8970
+        "line": 8971
       },
       "888": {
         "filename": "TestStakingV2.code",
-        "line": 8971
+        "line": 8972
       },
       "936": {
         "filename": "TestStakingV2.code",
-        "line": 8972
+        "line": 8973
       },
       "952": {
         "filename": "TestStakingV2.code",
-        "line": 8973
+        "line": 8974
       },
       "960": {
         "filename": "TestStakingV2.code",
-        "line": 8974
+        "line": 8975
       }
     },
     "3294bca4ff91e89328912b82aaa593567074519d6a9471f65c21c4613e1ec9ff": {
@@ -6473,27 +6305,27 @@
     "36be030cecb69a899f64635096325016b86eec46dc62084de412eeb997f0e167": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 8141
+        "line": 8142
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 8142
+        "line": 8143
       },
       "24": {
         "filename": "TestStakingV2.code",
-        "line": 8143
+        "line": 8144
       },
       "48": {
         "filename": "TestStakingV2.code",
-        "line": 8144
+        "line": 8145
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 8145
+        "line": 8146
       },
       "72": {
         "filename": "TestStakingV2.code",
-        "line": 8146
+        "line": 8147
       },
       "88": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
@@ -6553,15 +6385,15 @@
       },
       "232": {
         "filename": "TestStakingV2.code",
-        "line": 8166
+        "line": 8167
       },
       "248": {
         "filename": "TestStakingV2.code",
-        "line": 8169
+        "line": 8170
       },
       "264": {
         "filename": "TestStakingV2.code",
-        "line": 8172
+        "line": 8173
       }
     },
     "3743579573e5d0a5562c28ec33bb4976ec2ca64eed57a332e3edd573d868dcef": {
@@ -6710,70 +6542,70 @@
         "line": 233
       }
     },
-    "39fb378ef3be8075decf99974a6cfc01316b478f52771f6b6d9cd02f24422029": {
+    "3a763e13a2876b885caa879017e92a3fee4b1175a909531b04dacd12cb1db4e6": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 9264
+        "line": 9632
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 9265
+        "line": 9633
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 9266
+        "line": 9634
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 9267
+        "line": 9635
       },
       "80": {
         "filename": "TestStakingV2.code",
-        "line": 9385
+        "line": 9661
       },
       "88": {
         "filename": "TestStakingV2.code",
-        "line": 9386
+        "line": 9662
       },
       "136": {
         "filename": "TestStakingV2.code",
-        "line": 9387
+        "line": 9663
       },
       "144": {
         "filename": "TestStakingV2.code",
-        "line": 9388
+        "line": 9664
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 9506
+        "line": 9690
       },
       "168": {
         "filename": "TestStakingV2.code",
-        "line": 9507
+        "line": 9691
       },
       "216": {
         "filename": "TestStakingV2.code",
-        "line": 9508
+        "line": 9692
       },
       "224": {
         "filename": "TestStakingV2.code",
-        "line": 9509
+        "line": 9693
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 9627
+        "line": 9719
       },
       "248": {
         "filename": "TestStakingV2.code",
-        "line": 9628
+        "line": 9720
       },
       "296": {
         "filename": "TestStakingV2.code",
-        "line": 9629
+        "line": 9721
       },
       "304": {
         "filename": "TestStakingV2.code",
-        "line": 9630
+        "line": 9722
       }
     },
     "3b416e661467923957fc5dda8b9aacc3d34330d7b5721362e95f7036c72bc3fe": {
@@ -6869,89 +6701,89 @@
     "429b02c1ec449a4f03259a6fa487a514ed97d9e33108a891801663b6a369d2ae": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 9244
+        "line": 9245
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 9245
+        "line": 9246
       },
       "16": {
         "filename": "TestStakingV2.code",
-        "line": 9246
+        "line": 9247
       },
       "32": {
         "filename": "TestStakingV2.code",
-        "line": 9249
+        "line": 9250
       },
       "48": {
         "filename": "TestStakingV2.code",
-        "line": 9250
+        "line": 9251
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 9251
+        "line": 9252
       },
       "72": {
         "filename": "TestStakingV2.code",
-        "line": 9252
+        "line": 9253
       },
       "232": {
         "filename": "TestStakingV2.code",
-        "line": 9253
+        "line": 9254
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 9254
+        "line": 9255
       },
       "248": {
         "filename": "TestStakingV2.code",
-        "line": 9255
+        "line": 9256
       },
       "256": {
         "filename": "TestStakingV2.code",
-        "line": 9256
+        "line": 9257
       },
       "264": {
         "filename": "TestStakingV2.code",
-        "line": 9257
+        "line": 9258
       },
       "272": {
         "filename": "TestStakingV2.code",
-        "line": 9258
+        "line": 9259
       },
       "288": {
         "filename": "TestStakingV2.code",
-        "line": 9260
+        "line": 9261
       },
       "296": {
         "filename": "TestStakingV2.code",
-        "line": 9261
+        "line": 9262
       }
     },
     "42da9b5d0bf18453bc9f8f885ab4f28f3449e8659b65266794636d9902c9ae4e": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 7816
+        "line": 7817
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 7817
+        "line": 7818
       },
       "24": {
         "filename": "TestStakingV2.code",
-        "line": 7818
+        "line": 7819
       },
       "48": {
         "filename": "TestStakingV2.code",
-        "line": 7819
+        "line": 7820
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 7820
+        "line": 7821
       },
       "72": {
         "filename": "TestStakingV2.code",
-        "line": 7821
+        "line": 7822
       },
       "88": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
@@ -6967,15 +6799,15 @@
       },
       "128": {
         "filename": "TestStakingV2.code",
-        "line": 7829
+        "line": 7830
       },
       "144": {
         "filename": "TestStakingV2.code",
-        "line": 7832
+        "line": 7833
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 7835
+        "line": 7836
       }
     },
     "43287cf0e115b9dd38850779ab46b6024dc82b1901ce114faa55789cbf30b3e7": {
@@ -7127,27 +6959,27 @@
     "446fce91208c842526883d852c36e38f434570e89a37f77cdf897adede537f27": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 8869
+        "line": 8870
       },
       "16": {
         "filename": "TestStakingV2.code",
-        "line": 8870
+        "line": 8871
       },
       "24": {
         "filename": "TestStakingV2.code",
-        "line": 8871
+        "line": 8872
       },
       "40": {
         "filename": "TestStakingV2.code",
-        "line": 8872
+        "line": 8873
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 8873
+        "line": 8874
       },
       "72": {
         "filename": "TestStakingV2.code",
-        "line": 8976
+        "line": 8977
       }
     },
     "46041d61d3706eade52acc14e093860bab5dabde6af6bae4e3698996aeb5490c": {
@@ -7870,70 +7702,116 @@
         "line": 231
       }
     },
+    "4cc1438b470f394dbf3099c93f60d453fac2ef0c7a0a618893a50e8e2254b066": {
+      "0": {
+        "filename": "<entry-selector>",
+        "line": 1
+      },
+      "8": {
+        "filename": "<entry-selector>",
+        "line": 2
+      },
+      "24": {
+        "filename": "<entry-selector>",
+        "line": 3
+      },
+      "32": {
+        "filename": "<entry-selector>",
+        "line": 4
+      },
+      "48": {
+        "filename": "<entry-selector>",
+        "line": 5
+      },
+      "56": {
+        "filename": "<entry-selector>",
+        "line": 6
+      },
+      "72": {
+        "filename": "<entry-selector>",
+        "line": 7
+      },
+      "88": {
+        "filename": "<entry-selector>",
+        "line": 8
+      },
+      "96": {
+        "filename": "<entry-selector>",
+        "line": 9
+      },
+      "112": {
+        "filename": "<entry-selector>",
+        "line": 10
+      },
+      "128": {
+        "filename": "<entry-selector>",
+        "line": 11
+      }
+    },
     "4dbe487966fb5e643d16204a3870f6331532b0776a2b0fde42b591eb15991f58": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 9451
+        "line": 9452
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 9452
+        "line": 9453
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 9453
+        "line": 9454
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 9454
+        "line": 9455
       },
       "80": {
         "filename": "TestStakingV2.code",
-        "line": 9457
+        "line": 9458
       },
       "88": {
         "filename": "TestStakingV2.code",
-        "line": 9458
+        "line": 9459
       },
       "136": {
         "filename": "TestStakingV2.code",
-        "line": 9459
+        "line": 9460
       },
       "144": {
         "filename": "TestStakingV2.code",
-        "line": 9460
+        "line": 9461
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 9463
+        "line": 9464
       },
       "168": {
         "filename": "TestStakingV2.code",
-        "line": 9464
+        "line": 9465
       },
       "216": {
         "filename": "TestStakingV2.code",
-        "line": 9465
+        "line": 9466
       },
       "224": {
         "filename": "TestStakingV2.code",
-        "line": 9466
+        "line": 9467
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 9469
+        "line": 9470
       },
       "248": {
         "filename": "TestStakingV2.code",
-        "line": 9470
+        "line": 9471
       },
       "296": {
         "filename": "TestStakingV2.code",
-        "line": 9471
+        "line": 9472
       },
       "304": {
         "filename": "TestStakingV2.code",
-        "line": 9472
+        "line": 9473
       }
     },
     "4e1e0d6393b55a9a215c91bc4d61f40a8cccbe1dc6cacff5ddc937f218ddba59": {
@@ -8249,27 +8127,27 @@
     "50956db9fe4f04a2f59da3a58c0a81c1d8c91f7d5f607dafde37f969ef67293f": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 7947
+        "line": 7948
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 7948
+        "line": 7949
       },
       "24": {
         "filename": "TestStakingV2.code",
-        "line": 7949
+        "line": 7950
       },
       "48": {
         "filename": "TestStakingV2.code",
-        "line": 7950
+        "line": 7951
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 7951
+        "line": 7952
       },
       "72": {
         "filename": "TestStakingV2.code",
-        "line": 7952
+        "line": 7953
       },
       "88": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
@@ -8281,81 +8159,15 @@
       },
       "112": {
         "filename": "TestStakingV2.code",
-        "line": 7959
+        "line": 7960
       },
       "128": {
         "filename": "TestStakingV2.code",
-        "line": 7962
+        "line": 7963
       },
       "144": {
         "filename": "TestStakingV2.code",
-        "line": 7965
-      }
-    },
-    "526aeccad9e65c41b779f33b2d145a45ce6bea4781edc92870933c29d7a49bbc": {
-      "0": {
-        "filename": "TestStakingV2.code",
-        "line": 9664
-      },
-      "8": {
-        "filename": "TestStakingV2.code",
-        "line": 9665
-      },
-      "56": {
-        "filename": "TestStakingV2.code",
-        "line": 9666
-      },
-      "64": {
-        "filename": "TestStakingV2.code",
-        "line": 9667
-      },
-      "80": {
-        "filename": "TestStakingV2.code",
-        "line": 9670
-      },
-      "88": {
-        "filename": "TestStakingV2.code",
-        "line": 9671
-      },
-      "136": {
-        "filename": "TestStakingV2.code",
-        "line": 9672
-      },
-      "144": {
-        "filename": "TestStakingV2.code",
-        "line": 9673
-      },
-      "160": {
-        "filename": "TestStakingV2.code",
-        "line": 9676
-      },
-      "168": {
-        "filename": "TestStakingV2.code",
-        "line": 9677
-      },
-      "216": {
-        "filename": "TestStakingV2.code",
-        "line": 9678
-      },
-      "224": {
-        "filename": "TestStakingV2.code",
-        "line": 9679
-      },
-      "240": {
-        "filename": "TestStakingV2.code",
-        "line": 9682
-      },
-      "248": {
-        "filename": "TestStakingV2.code",
-        "line": 9683
-      },
-      "296": {
-        "filename": "TestStakingV2.code",
-        "line": 9684
-      },
-      "304": {
-        "filename": "TestStakingV2.code",
-        "line": 9685
+        "line": 7966
       }
     },
     "53745e1de6abf90ce3483c133a9d02e1240712ae27dcb86a55da9aa1f62e6be9": {
@@ -8623,139 +8435,139 @@
     "53f5664c8e0c282b72fe7472bf72fd7b58f01b344998f9963558f908971925d0": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 8833
+        "line": 8834
       },
       "16": {
         "filename": "TestStakingV2.code",
-        "line": 8834
+        "line": 8835
       },
       "32": {
         "filename": "TestStakingV2.code",
-        "line": 8835
+        "line": 8836
       },
       "48": {
         "filename": "TestStakingV2.code",
-        "line": 8836
+        "line": 8837
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 8837
+        "line": 8838
       },
       "72": {
         "filename": "TestStakingV2.code",
-        "line": 8838
+        "line": 8839
       },
       "80": {
         "filename": "TestStakingV2.code",
-        "line": 8839
+        "line": 8840
       },
       "88": {
         "filename": "TestStakingV2.code",
-        "line": 8840
+        "line": 8841
       },
       "104": {
         "filename": "TestStakingV2.code",
-        "line": 8841
+        "line": 8842
       },
       "120": {
         "filename": "TestStakingV2.code",
-        "line": 8842
+        "line": 8843
       },
       "136": {
         "filename": "TestStakingV2.code",
-        "line": 8843
+        "line": 8844
       },
       "152": {
         "filename": "TestStakingV2.code",
-        "line": 8844
+        "line": 8845
       },
       "168": {
         "filename": "TestStakingV2.code",
-        "line": 8845
+        "line": 8846
       },
       "176": {
         "filename": "TestStakingV2.code",
-        "line": 8846
+        "line": 8847
       },
       "192": {
         "filename": "TestStakingV2.code",
-        "line": 8847
+        "line": 8848
       },
       "208": {
         "filename": "TestStakingV2.code",
-        "line": 8848
+        "line": 8849
       },
       "224": {
         "filename": "TestStakingV2.code",
-        "line": 8849
+        "line": 8850
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 8850
+        "line": 8851
       },
       "248": {
         "filename": "TestStakingV2.code",
-        "line": 8851
+        "line": 8852
       },
       "264": {
         "filename": "TestStakingV2.code",
-        "line": 8852
+        "line": 8853
       },
       "280": {
         "filename": "TestStakingV2.code",
-        "line": 8853
+        "line": 8854
       },
       "296": {
         "filename": "TestStakingV2.code",
-        "line": 8854
+        "line": 8855
       },
       "312": {
         "filename": "TestStakingV2.code",
-        "line": 8855
+        "line": 8856
       },
       "328": {
         "filename": "TestStakingV2.code",
-        "line": 8856
+        "line": 8857
       },
       "344": {
         "filename": "TestStakingV2.code",
-        "line": 8857
+        "line": 8858
       },
       "360": {
         "filename": "TestStakingV2.code",
-        "line": 8858
+        "line": 8859
       },
       "376": {
         "filename": "TestStakingV2.code",
-        "line": 8859
+        "line": 8860
       },
       "392": {
         "filename": "TestStakingV2.code",
-        "line": 8860
+        "line": 8861
       },
       "408": {
         "filename": "TestStakingV2.code",
-        "line": 8861
+        "line": 8862
       },
       "424": {
         "filename": "TestStakingV2.code",
-        "line": 8862
+        "line": 8863
       },
       "440": {
         "filename": "TestStakingV2.code",
-        "line": 8863
+        "line": 8864
       },
       "456": {
         "filename": "TestStakingV2.code",
-        "line": 8864
+        "line": 8865
       },
       "472": {
         "filename": "TestStakingV2.code",
-        "line": 8865
+        "line": 8866
       },
       "488": {
         "filename": "TestStakingV2.code",
-        "line": 8866
+        "line": 8867
       }
     },
     "547febb2c6567c6309454dbff7218531171fe7273181fef60bf7cf42ef668d92": {
@@ -9744,6 +9556,64 @@
         "line": 2546
       }
     },
+    "5c5df0864a0e3194e8398f07637c7690e2f1c6c02bb860339987bf4180cb822f": {
+      "4": {
+        "filename": "../contracts/staking/test/TestStakingV2.tsol",
+        "line": 96
+      },
+      "12": {
+        "filename": "../contracts/staking/test/TestStakingV2.tsol",
+        "line": 96
+      },
+      "28": {
+        "filename": "../contracts/staking/test/TestStakingV2.tsol",
+        "line": 96
+      },
+      "36": {
+        "filename": "../contracts/staking/test/TestStakingV2.tsol",
+        "line": 96
+      },
+      "52": {
+        "filename": "../contracts/staking/test/TestStakingV2.tsol",
+        "line": 96
+      },
+      "60": {
+        "filename": "../contracts/staking/test/TestStakingV2.tsol",
+        "line": 96
+      },
+      "76": {
+        "filename": "../contracts/staking/test/TestStakingV2.tsol",
+        "line": 96
+      },
+      "84": {
+        "filename": "../contracts/staking/test/TestStakingV2.tsol",
+        "line": 96
+      },
+      "100": {
+        "filename": "../contracts/staking/test/TestStakingV2.tsol",
+        "line": 96
+      },
+      "108": {
+        "filename": "../contracts/staking/test/TestStakingV2.tsol",
+        "line": 96
+      },
+      "124": {
+        "filename": "../contracts/staking/test/TestStakingV2.tsol",
+        "line": 96
+      },
+      "132": {
+        "filename": "../contracts/staking/test/TestStakingV2.tsol",
+        "line": 96
+      },
+      "140": {
+        "filename": "../contracts/staking/test/TestStakingV2.tsol",
+        "line": 96
+      },
+      "148": {
+        "filename": "../contracts/staking/test/TestStakingV2.tsol",
+        "line": 96
+      }
+    },
     "5e5abf08bda14a893a14ae687ae15733ae4a707311ea397383e2c450c9d06c29": {
       "0": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
@@ -9970,8 +9840,8 @@
     },
     "61ab4641fa30d9310391025086eec65d200d79268e1b7cd402565e01ba64be3c": {
       "0": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 712
+        "filename": "../contracts/staking/test/TestStakingV2.tsol",
+        "line": 96
       }
     },
     "6285f6d3255ab9c2428a6b4cff2d0f30f3877258d826bfe136c56e92c01588a4": {
@@ -10493,133 +10363,133 @@
     "63d64baea351f2e2f12c318d8152070c76e2f26b46884156590b1b88ec158f3a": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 9693
+        "line": 9694
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 9694
+        "line": 9695
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 9695
+        "line": 9696
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 9696
+        "line": 9697
       },
       "80": {
         "filename": "TestStakingV2.code",
-        "line": 9699
+        "line": 9700
       },
       "88": {
         "filename": "TestStakingV2.code",
-        "line": 9700
+        "line": 9701
       },
       "136": {
         "filename": "TestStakingV2.code",
-        "line": 9701
+        "line": 9702
       },
       "144": {
         "filename": "TestStakingV2.code",
-        "line": 9702
+        "line": 9703
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 9705
+        "line": 9706
       },
       "168": {
         "filename": "TestStakingV2.code",
-        "line": 9706
+        "line": 9707
       },
       "216": {
         "filename": "TestStakingV2.code",
-        "line": 9707
+        "line": 9708
       },
       "224": {
         "filename": "TestStakingV2.code",
-        "line": 9708
+        "line": 9709
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 9711
+        "line": 9712
       },
       "248": {
         "filename": "TestStakingV2.code",
-        "line": 9712
+        "line": 9713
       },
       "296": {
         "filename": "TestStakingV2.code",
-        "line": 9713
+        "line": 9714
       },
       "304": {
         "filename": "TestStakingV2.code",
-        "line": 9714
+        "line": 9715
       }
     },
     "65102c550f42428127ae4296194adde25338f55809c6d95f1f97a731e1f19ec5": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 9635
+        "line": 9636
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 9636
+        "line": 9637
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 9637
+        "line": 9638
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 9638
+        "line": 9639
       },
       "80": {
         "filename": "TestStakingV2.code",
-        "line": 9641
+        "line": 9642
       },
       "88": {
         "filename": "TestStakingV2.code",
-        "line": 9642
+        "line": 9643
       },
       "136": {
         "filename": "TestStakingV2.code",
-        "line": 9643
+        "line": 9644
       },
       "144": {
         "filename": "TestStakingV2.code",
-        "line": 9644
+        "line": 9645
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 9647
+        "line": 9648
       },
       "168": {
         "filename": "TestStakingV2.code",
-        "line": 9648
+        "line": 9649
       },
       "216": {
         "filename": "TestStakingV2.code",
-        "line": 9649
+        "line": 9650
       },
       "224": {
         "filename": "TestStakingV2.code",
-        "line": 9650
+        "line": 9651
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 9653
+        "line": 9654
       },
       "248": {
         "filename": "TestStakingV2.code",
-        "line": 9654
+        "line": 9655
       },
       "296": {
         "filename": "TestStakingV2.code",
-        "line": 9655
+        "line": 9656
       },
       "304": {
         "filename": "TestStakingV2.code",
-        "line": 9656
+        "line": 9657
       }
     },
     "68abbb1afcd1090b30bf5b38f64d9d7d6aca4fe74ce3ca2ba9f76d4a213eb242": {
@@ -12073,27 +11943,27 @@
     "7238afa6569dfb8bd53d07e1b049e1a27b93d4fc5c0a0f443fa7208ca25a61d6": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 8270
+        "line": 8271
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 8271
+        "line": 8272
       },
       "24": {
         "filename": "TestStakingV2.code",
-        "line": 8272
+        "line": 8273
       },
       "48": {
         "filename": "TestStakingV2.code",
-        "line": 8273
+        "line": 8274
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 8274
+        "line": 8275
       },
       "72": {
         "filename": "TestStakingV2.code",
-        "line": 8275
+        "line": 8276
       },
       "88": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
@@ -12153,19 +12023,19 @@
       },
       "232": {
         "filename": "TestStakingV2.code",
-        "line": 8295
+        "line": 8296
       },
       "248": {
         "filename": "TestStakingV2.code",
-        "line": 8298
+        "line": 8299
       },
       "256": {
         "filename": "TestStakingV2.code",
-        "line": 8299
+        "line": 8300
       },
       "272": {
         "filename": "TestStakingV2.code",
-        "line": 8302
+        "line": 8303
       }
     },
     "751c684333eb5edb169d76fbf8bc8db64b00be6f1a7341886a08bb559899a791": {
@@ -13530,72 +13400,6 @@
         "line": 19
       }
     },
-    "83973e9ac3782dab429bb8dd6178a63ad8dd00b756e1e6685cf30761c40b5d4b": {
-      "0": {
-        "filename": "TestStakingV2.code",
-        "line": 9631
-      },
-      "8": {
-        "filename": "TestStakingV2.code",
-        "line": 9632
-      },
-      "56": {
-        "filename": "TestStakingV2.code",
-        "line": 9633
-      },
-      "64": {
-        "filename": "TestStakingV2.code",
-        "line": 9634
-      },
-      "80": {
-        "filename": "TestStakingV2.code",
-        "line": 9660
-      },
-      "88": {
-        "filename": "TestStakingV2.code",
-        "line": 9661
-      },
-      "136": {
-        "filename": "TestStakingV2.code",
-        "line": 9662
-      },
-      "144": {
-        "filename": "TestStakingV2.code",
-        "line": 9663
-      },
-      "160": {
-        "filename": "TestStakingV2.code",
-        "line": 9689
-      },
-      "168": {
-        "filename": "TestStakingV2.code",
-        "line": 9690
-      },
-      "216": {
-        "filename": "TestStakingV2.code",
-        "line": 9691
-      },
-      "224": {
-        "filename": "TestStakingV2.code",
-        "line": 9692
-      },
-      "240": {
-        "filename": "TestStakingV2.code",
-        "line": 9718
-      },
-      "248": {
-        "filename": "TestStakingV2.code",
-        "line": 9719
-      },
-      "296": {
-        "filename": "TestStakingV2.code",
-        "line": 9720
-      },
-      "304": {
-        "filename": "TestStakingV2.code",
-        "line": 9721
-      }
-    },
     "8547708cf6f05acb17bebd42ed55f465115d6599158163a71cf6d835a1f4a41c": {
       "0": {
         "filename": "TestStakingV2.code",
@@ -14373,67 +14177,67 @@
     "8ba648c06f37953a055478d5d412144acc97ec10fca8c3a1d90ffc06025ecb08": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 9422
+        "line": 9423
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 9423
+        "line": 9424
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 9424
+        "line": 9425
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 9425
+        "line": 9426
       },
       "80": {
         "filename": "TestStakingV2.code",
-        "line": 9428
+        "line": 9429
       },
       "88": {
         "filename": "TestStakingV2.code",
-        "line": 9429
+        "line": 9430
       },
       "136": {
         "filename": "TestStakingV2.code",
-        "line": 9430
+        "line": 9431
       },
       "144": {
         "filename": "TestStakingV2.code",
-        "line": 9431
+        "line": 9432
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 9434
+        "line": 9435
       },
       "168": {
         "filename": "TestStakingV2.code",
-        "line": 9435
+        "line": 9436
       },
       "216": {
         "filename": "TestStakingV2.code",
-        "line": 9436
+        "line": 9437
       },
       "224": {
         "filename": "TestStakingV2.code",
-        "line": 9437
+        "line": 9438
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 9440
+        "line": 9441
       },
       "248": {
         "filename": "TestStakingV2.code",
-        "line": 9441
+        "line": 9442
       },
       "296": {
         "filename": "TestStakingV2.code",
-        "line": 9442
+        "line": 9443
       },
       "304": {
         "filename": "TestStakingV2.code",
-        "line": 9443
+        "line": 9444
       }
     },
     "8bb9c0cfb202fdfc327fcb709a7cc40132ec6865703606d14259092263704cc4": {
@@ -14720,6 +14524,144 @@
       "280": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
         "line": 520
+      }
+    },
+    "8cb2467d24f78800fc3248bbfe745f0d006614ec2166e8ca7e50612c419c8fce": {
+      "0": {
+        "filename": "TestStakingV2.code",
+        "line": 9117
+      },
+      "16": {
+        "filename": "TestStakingV2.code",
+        "line": 9118
+      },
+      "24": {
+        "filename": "TestStakingV2.code",
+        "line": 9119
+      },
+      "40": {
+        "filename": "TestStakingV2.code",
+        "line": 9120
+      },
+      "56": {
+        "filename": "TestStakingV2.code",
+        "line": 9121
+      },
+      "72": {
+        "filename": "TestStakingV2.code",
+        "line": 9122
+      },
+      "80": {
+        "filename": "TestStakingV2.code",
+        "line": 9123
+      },
+      "88": {
+        "filename": "TestStakingV2.code",
+        "line": 9124
+      },
+      "104": {
+        "filename": "TestStakingV2.code",
+        "line": 9125
+      },
+      "120": {
+        "filename": "TestStakingV2.code",
+        "line": 9126
+      },
+      "128": {
+        "filename": "TestStakingV2.code",
+        "line": 9127
+      },
+      "144": {
+        "filename": "TestStakingV2.code",
+        "line": 9128
+      },
+      "168": {
+        "filename": "TestStakingV2.code",
+        "line": 9129
+      },
+      "184": {
+        "filename": "TestStakingV2.code",
+        "line": 9130
+      },
+      "192": {
+        "filename": "TestStakingV2.code",
+        "line": 9131
+      },
+      "208": {
+        "filename": "TestStakingV2.code",
+        "line": 9132
+      },
+      "248": {
+        "filename": "TestStakingV2.code",
+        "line": 9133
+      },
+      "264": {
+        "filename": "TestStakingV2.code",
+        "line": 9134
+      },
+      "272": {
+        "filename": "TestStakingV2.code",
+        "line": 9135
+      },
+      "288": {
+        "filename": "TestStakingV2.code",
+        "line": 9136
+      },
+      "296": {
+        "filename": "TestStakingV2.code",
+        "line": 9137
+      },
+      "312": {
+        "filename": "TestStakingV2.code",
+        "line": 9138
+      },
+      "328": {
+        "filename": "TestStakingV2.code",
+        "line": 9139
+      },
+      "344": {
+        "filename": "TestStakingV2.code",
+        "line": 9145
+      },
+      "352": {
+        "filename": "TestStakingV2.code",
+        "line": 9146
+      },
+      "368": {
+        "filename": "TestStakingV2.code",
+        "line": 9147
+      },
+      "384": {
+        "filename": "TestStakingV2.code",
+        "line": 9151
+      },
+      "392": {
+        "filename": "TestStakingV2.code",
+        "line": 9152
+      },
+      "416": {
+        "filename": "TestStakingV2.code",
+        "line": 9153
+      },
+      "432": {
+        "filename": "TestStakingV2.code",
+        "line": 9154
+      },
+      "440": {
+        "filename": "TestStakingV2.code",
+        "line": 9155
+      },
+      "456": {
+        "filename": "TestStakingV2.code",
+        "line": 9159
+      },
+      "464": {
+        "filename": "TestStakingV2.code",
+        "line": 9160
+      },
+      "480": {
+        "filename": "TestStakingV2.code",
+        "line": 9163
       }
     },
     "8da53eaa23431a6a704b1eb31ba1eb9ea62311796d94c8fdfff35b68b552fd22": {
@@ -15543,128 +15485,70 @@
       }
     },
     "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7": {},
-    "96be4453d7f98cac5f138cc1d3887f7755c8c0c98fee54701ffab091201cc8dd": {
-      "40": {
-        "filename": "../contracts/staking/test/TestStakingV2.tsol",
-        "line": 96
-      },
-      "48": {
-        "filename": "../contracts/staking/test/TestStakingV2.tsol",
-        "line": 96
-      },
-      "64": {
-        "filename": "../contracts/staking/test/TestStakingV2.tsol",
-        "line": 96
-      },
-      "72": {
-        "filename": "../contracts/staking/test/TestStakingV2.tsol",
-        "line": 96
-      },
-      "88": {
-        "filename": "../contracts/staking/test/TestStakingV2.tsol",
-        "line": 96
-      },
-      "96": {
-        "filename": "../contracts/staking/test/TestStakingV2.tsol",
-        "line": 96
-      },
-      "112": {
-        "filename": "../contracts/staking/test/TestStakingV2.tsol",
-        "line": 96
-      },
-      "120": {
-        "filename": "../contracts/staking/test/TestStakingV2.tsol",
-        "line": 96
-      },
-      "136": {
-        "filename": "../contracts/staking/test/TestStakingV2.tsol",
-        "line": 96
-      },
-      "144": {
-        "filename": "../contracts/staking/test/TestStakingV2.tsol",
-        "line": 96
-      },
-      "160": {
-        "filename": "../contracts/staking/test/TestStakingV2.tsol",
-        "line": 96
-      },
-      "168": {
-        "filename": "../contracts/staking/test/TestStakingV2.tsol",
-        "line": 96
-      },
-      "176": {
-        "filename": "../contracts/staking/test/TestStakingV2.tsol",
-        "line": 96
-      },
-      "184": {
-        "filename": "../contracts/staking/test/TestStakingV2.tsol",
-        "line": 96
-      }
-    },
     "976915c14bb6ef0f1fd2c123169256995c5ed6332920731384a37eeed35e1d49": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 9514
+        "line": 9515
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 9515
+        "line": 9516
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 9516
+        "line": 9517
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 9517
+        "line": 9518
       },
       "80": {
         "filename": "TestStakingV2.code",
-        "line": 9520
+        "line": 9521
       },
       "88": {
         "filename": "TestStakingV2.code",
-        "line": 9521
+        "line": 9522
       },
       "136": {
         "filename": "TestStakingV2.code",
-        "line": 9522
+        "line": 9523
       },
       "144": {
         "filename": "TestStakingV2.code",
-        "line": 9523
+        "line": 9524
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 9526
+        "line": 9527
       },
       "168": {
         "filename": "TestStakingV2.code",
-        "line": 9527
+        "line": 9528
       },
       "216": {
         "filename": "TestStakingV2.code",
-        "line": 9528
+        "line": 9529
       },
       "224": {
         "filename": "TestStakingV2.code",
-        "line": 9529
+        "line": 9530
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 9532
+        "line": 9533
       },
       "248": {
         "filename": "TestStakingV2.code",
-        "line": 9533
+        "line": 9534
       },
       "296": {
         "filename": "TestStakingV2.code",
-        "line": 9534
+        "line": 9535
       },
       "304": {
         "filename": "TestStakingV2.code",
-        "line": 9535
+        "line": 9536
       }
     },
     "981f731e30b2f6ec16cdf9ad9ec71e421a3ba02fea34a7f294cf9f562c43a8ac": {
@@ -16748,133 +16632,133 @@
     "a049606ac9917ad1141360fd8f625de90d19850c7913222af8ad6d00aec8864f": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 9572
+        "line": 9573
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 9573
+        "line": 9574
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 9574
+        "line": 9575
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 9575
+        "line": 9576
       },
       "80": {
         "filename": "TestStakingV2.code",
-        "line": 9578
+        "line": 9579
       },
       "88": {
         "filename": "TestStakingV2.code",
-        "line": 9579
+        "line": 9580
       },
       "136": {
         "filename": "TestStakingV2.code",
-        "line": 9580
+        "line": 9581
       },
       "144": {
         "filename": "TestStakingV2.code",
-        "line": 9581
+        "line": 9582
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 9584
+        "line": 9585
       },
       "168": {
         "filename": "TestStakingV2.code",
-        "line": 9585
+        "line": 9586
       },
       "216": {
         "filename": "TestStakingV2.code",
-        "line": 9586
+        "line": 9587
       },
       "224": {
         "filename": "TestStakingV2.code",
-        "line": 9587
+        "line": 9588
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 9590
+        "line": 9591
       },
       "248": {
         "filename": "TestStakingV2.code",
-        "line": 9591
+        "line": 9592
       },
       "296": {
         "filename": "TestStakingV2.code",
-        "line": 9592
+        "line": 9593
       },
       "304": {
         "filename": "TestStakingV2.code",
-        "line": 9593
+        "line": 9594
       }
     },
     "a136a717b9b14abbd29229b6ef291103b632a68b68b918253445bea97aebd627": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 9480
+        "line": 9481
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 9481
+        "line": 9482
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 9482
+        "line": 9483
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 9483
+        "line": 9484
       },
       "80": {
         "filename": "TestStakingV2.code",
-        "line": 9486
+        "line": 9487
       },
       "88": {
         "filename": "TestStakingV2.code",
-        "line": 9487
+        "line": 9488
       },
       "136": {
         "filename": "TestStakingV2.code",
-        "line": 9488
+        "line": 9489
       },
       "144": {
         "filename": "TestStakingV2.code",
-        "line": 9489
+        "line": 9490
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 9492
+        "line": 9493
       },
       "168": {
         "filename": "TestStakingV2.code",
-        "line": 9493
+        "line": 9494
       },
       "216": {
         "filename": "TestStakingV2.code",
-        "line": 9494
+        "line": 9495
       },
       "224": {
         "filename": "TestStakingV2.code",
-        "line": 9495
+        "line": 9496
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 9498
+        "line": 9499
       },
       "248": {
         "filename": "TestStakingV2.code",
-        "line": 9499
+        "line": 9500
       },
       "296": {
         "filename": "TestStakingV2.code",
-        "line": 9500
+        "line": 9501
       },
       "304": {
         "filename": "TestStakingV2.code",
-        "line": 9501
+        "line": 9502
       }
     },
     "a21c49ee48f023168d3847f2f9644b7bc4758f2ff1bda3636dcf60ad282199d1": {
@@ -16913,6 +16797,136 @@
       "136": {
         "filename": "../contracts/staking/base/StakingRelay.tsol",
         "line": 208
+      }
+    },
+    "a36224d190790852608666696d7f8dbeda42a0383a47440c56e4c36d18ef2912": {
+      "0": {
+        "filename": "TestStakingV2.code",
+        "line": 5949
+      },
+      "8": {
+        "filename": "TestStakingV2.code",
+        "line": 5950
+      },
+      "24": {
+        "filename": "TestStakingV2.code",
+        "line": 5951
+      },
+      "48": {
+        "filename": "TestStakingV2.code",
+        "line": 5952
+      },
+      "64": {
+        "filename": "TestStakingV2.code",
+        "line": 5953
+      },
+      "72": {
+        "filename": "TestStakingV2.code",
+        "line": 5954
+      },
+      "88": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 336
+      },
+      "96": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 336
+      },
+      "104": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 336
+      },
+      "112": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 336
+      },
+      "120": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 336
+      },
+      "128": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 336
+      },
+      "136": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 336
+      },
+      "152": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 336
+      },
+      "168": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 336
+      },
+      "176": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 336
+      },
+      "184": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 336
+      },
+      "192": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 336
+      },
+      "208": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 336
+      },
+      "216": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 336
+      },
+      "224": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 336
+      },
+      "232": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 336
+      },
+      "248": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 336
+      },
+      "256": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 336
+      },
+      "264": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 336
+      },
+      "272": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 336
+      },
+      "288": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 336
+      },
+      "296": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 336
+      },
+      "304": {
+        "filename": "TestStakingV2.code",
+        "line": 5982
+      },
+      "320": {
+        "filename": "TestStakingV2.code",
+        "line": 5985
+      },
+      "328": {
+        "filename": "TestStakingV2.code",
+        "line": 5986
+      },
+      "344": {
+        "filename": "TestStakingV2.code",
+        "line": 5989
       }
     },
     "a47a93aad388b2b527e2e4a62b5a375971d2728b7040069f519c5a9b8bb81a81": {
@@ -17592,7 +17606,7 @@
       },
       "456": {
         "filename": "TestStakingV2.code",
-        "line": 8344
+        "line": 8345
       },
       "464": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
@@ -17786,163 +17800,163 @@
     "ab1a27dd23e5cc0cb4cf65073d40cf100a4ee6823f65ed36babadfb9088c10e0": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 9058
+        "line": 9059
       },
       "16": {
         "filename": "TestStakingV2.code",
-        "line": 9059
+        "line": 9060
       },
       "24": {
         "filename": "TestStakingV2.code",
-        "line": 9060
+        "line": 9061
       },
       "40": {
         "filename": "TestStakingV2.code",
-        "line": 9061
+        "line": 9062
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 9062
+        "line": 9063
       },
       "72": {
         "filename": "TestStakingV2.code",
-        "line": 9063
+        "line": 9064
       },
       "88": {
         "filename": "TestStakingV2.code",
-        "line": 9064
+        "line": 9065
       },
       "96": {
         "filename": "TestStakingV2.code",
-        "line": 9065
+        "line": 9066
       },
       "104": {
         "filename": "TestStakingV2.code",
-        "line": 9066
+        "line": 9067
       },
       "112": {
         "filename": "TestStakingV2.code",
-        "line": 9067
+        "line": 9068
       },
       "128": {
         "filename": "TestStakingV2.code",
-        "line": 9068
+        "line": 9069
       },
       "144": {
         "filename": "TestStakingV2.code",
-        "line": 9069
+        "line": 9070
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 9070
+        "line": 9071
       },
       "176": {
         "filename": "TestStakingV2.code",
-        "line": 9071
+        "line": 9072
       },
       "192": {
         "filename": "TestStakingV2.code",
-        "line": 9072
+        "line": 9073
       },
       "208": {
         "filename": "TestStakingV2.code",
-        "line": 9073
+        "line": 9074
       },
       "224": {
         "filename": "TestStakingV2.code",
-        "line": 9074
+        "line": 9075
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 9075
+        "line": 9076
       },
       "256": {
         "filename": "TestStakingV2.code",
-        "line": 9076
+        "line": 9077
       },
       "272": {
         "filename": "TestStakingV2.code",
-        "line": 9077
+        "line": 9078
       },
       "288": {
         "filename": "TestStakingV2.code",
-        "line": 9078
+        "line": 9079
       },
       "296": {
         "filename": "TestStakingV2.code",
-        "line": 9079
+        "line": 9080
       },
       "312": {
         "filename": "TestStakingV2.code",
-        "line": 9080
+        "line": 9081
       },
       "328": {
         "filename": "TestStakingV2.code",
-        "line": 9081
+        "line": 9082
       },
       "344": {
         "filename": "TestStakingV2.code",
-        "line": 9082
+        "line": 9083
       },
       "360": {
         "filename": "TestStakingV2.code",
-        "line": 9083
+        "line": 9084
       },
       "376": {
         "filename": "TestStakingV2.code",
-        "line": 9084
+        "line": 9085
       },
       "392": {
         "filename": "TestStakingV2.code",
-        "line": 9085
+        "line": 9086
       },
       "408": {
         "filename": "TestStakingV2.code",
-        "line": 9086
+        "line": 9087
       },
       "416": {
         "filename": "TestStakingV2.code",
-        "line": 9087
+        "line": 9088
       },
       "424": {
         "filename": "TestStakingV2.code",
-        "line": 9088
+        "line": 9089
       },
       "432": {
         "filename": "TestStakingV2.code",
-        "line": 9089
+        "line": 9090
       },
       "440": {
         "filename": "TestStakingV2.code",
-        "line": 9090
+        "line": 9091
       },
       "448": {
         "filename": "TestStakingV2.code",
-        "line": 9091
+        "line": 9092
       },
       "456": {
         "filename": "TestStakingV2.code",
-        "line": 9092
+        "line": 9093
       },
       "464": {
         "filename": "TestStakingV2.code",
-        "line": 9093
+        "line": 9094
       },
       "472": {
         "filename": "TestStakingV2.code",
-        "line": 9094
+        "line": 9095
       },
       "480": {
         "filename": "TestStakingV2.code",
-        "line": 9095
+        "line": 9096
       },
       "488": {
         "filename": "TestStakingV2.code",
-        "line": 9096
+        "line": 9097
       },
       "496": {
         "filename": "TestStakingV2.code",
-        "line": 9097
+        "line": 9098
       }
     },
     "ab90dd5ba69692ab8e7b9acd69101ec559a28ac7e24255546192a63a2aaa1891": {
@@ -18118,27 +18132,27 @@
     "ac8f3d1fd4fccfe372d902cf62b7a01e4a35e819ca069391e8e13f4c3f5657f0": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 6484
+        "line": 6485
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 6485
+        "line": 6486
       },
       "24": {
         "filename": "TestStakingV2.code",
-        "line": 6486
+        "line": 6487
       },
       "48": {
         "filename": "TestStakingV2.code",
-        "line": 6487
+        "line": 6488
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 6488
+        "line": 6489
       },
       "72": {
         "filename": "TestStakingV2.code",
-        "line": 6489
+        "line": 6490
       },
       "88": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
@@ -18178,19 +18192,19 @@
       },
       "176": {
         "filename": "TestStakingV2.code",
-        "line": 6504
+        "line": 6505
       },
       "192": {
         "filename": "TestStakingV2.code",
-        "line": 6507
+        "line": 6508
       },
       "200": {
         "filename": "TestStakingV2.code",
-        "line": 6508
+        "line": 6509
       },
       "216": {
         "filename": "TestStakingV2.code",
-        "line": 6511
+        "line": 6512
       }
     },
     "ac927c2b14c87137b3d344e5d04ce882b6cf2245d6c819936e6d44a811d8bead": {
@@ -18212,7 +18226,7 @@
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 7290
+        "line": 7291
       },
       "64": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
@@ -18252,163 +18266,33 @@
       },
       "208": {
         "filename": "TestStakingV2.code",
-        "line": 7395
-      }
-    },
-    "acd77338ae5629c0bed5374c5122147cb14486253dac1eb4193391cffca174dc": {
-      "0": {
-        "filename": "TestStakingV2.code",
-        "line": 5949
-      },
-      "8": {
-        "filename": "TestStakingV2.code",
-        "line": 5950
-      },
-      "24": {
-        "filename": "TestStakingV2.code",
-        "line": 5951
-      },
-      "48": {
-        "filename": "TestStakingV2.code",
-        "line": 5952
-      },
-      "64": {
-        "filename": "TestStakingV2.code",
-        "line": 5953
-      },
-      "72": {
-        "filename": "TestStakingV2.code",
-        "line": 5954
-      },
-      "88": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 336
-      },
-      "96": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 336
-      },
-      "104": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 336
-      },
-      "112": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 336
-      },
-      "120": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 336
-      },
-      "128": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 336
-      },
-      "136": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 336
-      },
-      "152": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 336
-      },
-      "168": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 336
-      },
-      "176": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 336
-      },
-      "184": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 336
-      },
-      "192": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 336
-      },
-      "208": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 336
-      },
-      "216": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 336
-      },
-      "224": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 336
-      },
-      "232": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 336
-      },
-      "248": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 336
-      },
-      "256": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 336
-      },
-      "264": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 336
-      },
-      "272": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 336
-      },
-      "288": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 336
-      },
-      "296": {
-        "filename": "../contracts/staking/base/StakingBase.tsol",
-        "line": 336
-      },
-      "304": {
-        "filename": "TestStakingV2.code",
-        "line": 5982
-      },
-      "320": {
-        "filename": "TestStakingV2.code",
-        "line": 5985
-      },
-      "328": {
-        "filename": "TestStakingV2.code",
-        "line": 5986
-      },
-      "344": {
-        "filename": "TestStakingV2.code",
-        "line": 5989
+        "line": 7396
       }
     },
     "ad7e42220e6150afda4f9619bdceaeed62b237d188e0ee4cf71eb74bf8ff53b6": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 6693
+        "line": 6694
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 6694
+        "line": 6695
       },
       "24": {
         "filename": "TestStakingV2.code",
-        "line": 6695
+        "line": 6696
       },
       "48": {
         "filename": "TestStakingV2.code",
-        "line": 6696
+        "line": 6697
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 6697
+        "line": 6698
       },
       "72": {
         "filename": "TestStakingV2.code",
-        "line": 6698
+        "line": 6699
       },
       "88": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
@@ -18444,19 +18328,19 @@
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 6712
+        "line": 6713
       },
       "176": {
         "filename": "TestStakingV2.code",
-        "line": 6715
+        "line": 6716
       },
       "184": {
         "filename": "TestStakingV2.code",
-        "line": 6716
+        "line": 6717
       },
       "200": {
         "filename": "TestStakingV2.code",
-        "line": 6719
+        "line": 6720
       }
     },
     "af6b5979533d1713c0a7d6eba612a20133edb54c256f848a708e47a660369a10": {
@@ -18510,67 +18394,67 @@
     "b0a5d0158e85cc36adce071ea9f5ded663740be21b4ee47c98c8c64937ed64ae": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 8906
+        "line": 8907
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 8908
+        "line": 8909
       },
       "16": {
         "filename": "TestStakingV2.code",
-        "line": 8909
+        "line": 8910
       },
       "24": {
         "filename": "TestStakingV2.code",
-        "line": 8911
+        "line": 8912
       },
       "32": {
         "filename": "TestStakingV2.code",
-        "line": 8912
+        "line": 8913
       },
       "48": {
         "filename": "TestStakingV2.code",
-        "line": 8913
+        "line": 8914
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 8914
+        "line": 8915
       },
       "72": {
         "filename": "TestStakingV2.code",
-        "line": 8915
+        "line": 8916
       },
       "88": {
         "filename": "TestStakingV2.code",
-        "line": 8916
+        "line": 8917
       },
       "96": {
         "filename": "TestStakingV2.code",
-        "line": 8919
+        "line": 8920
       },
       "112": {
         "filename": "TestStakingV2.code",
-        "line": 8920
+        "line": 8921
       },
       "120": {
         "filename": "TestStakingV2.code",
-        "line": 8921
+        "line": 8922
       },
       "136": {
         "filename": "TestStakingV2.code",
-        "line": 8922
+        "line": 8923
       },
       "144": {
         "filename": "TestStakingV2.code",
-        "line": 8923
+        "line": 8924
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 8924
+        "line": 8925
       },
       "168": {
         "filename": "TestStakingV2.code",
-        "line": 8925
+        "line": 8926
       }
     },
     "b123a50801a8490cd89a4c917bc7eca8a95760bfb652722855a94f2c9abc6902": {
@@ -18794,11 +18678,11 @@
       },
       "224": {
         "filename": "TestStakingV2.code",
-        "line": 6914
+        "line": 6915
       },
       "232": {
         "filename": "TestStakingV2.code",
-        "line": 6915
+        "line": 6916
       },
       "240": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
@@ -18942,73 +18826,73 @@
       },
       "824": {
         "filename": "TestStakingV2.code",
-        "line": 6987
+        "line": 6988
       }
     },
     "b226174cd35edb6b7400f6f894715a9b5f6bac44de1c64395d5af2aef743151e": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 9359
+        "line": 9360
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 9360
+        "line": 9361
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 9361
+        "line": 9362
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 9362
+        "line": 9363
       },
       "80": {
         "filename": "TestStakingV2.code",
-        "line": 9365
+        "line": 9366
       },
       "88": {
         "filename": "TestStakingV2.code",
-        "line": 9366
+        "line": 9367
       },
       "136": {
         "filename": "TestStakingV2.code",
-        "line": 9367
+        "line": 9368
       },
       "144": {
         "filename": "TestStakingV2.code",
-        "line": 9368
+        "line": 9369
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 9371
+        "line": 9372
       },
       "168": {
         "filename": "TestStakingV2.code",
-        "line": 9372
+        "line": 9373
       },
       "216": {
         "filename": "TestStakingV2.code",
-        "line": 9373
+        "line": 9374
       },
       "224": {
         "filename": "TestStakingV2.code",
-        "line": 9374
+        "line": 9375
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 9377
+        "line": 9378
       },
       "248": {
         "filename": "TestStakingV2.code",
-        "line": 9378
+        "line": 9379
       },
       "296": {
         "filename": "TestStakingV2.code",
-        "line": 9379
+        "line": 9380
       },
       "304": {
         "filename": "TestStakingV2.code",
-        "line": 9380
+        "line": 9381
       }
     },
     "b2bc26021966bd939f2af4283723be79e1280100624b726050a4c4cbeec66294": {
@@ -19372,67 +19256,67 @@
     "b6eaa8884366b42ae98fe1a7cf75ee000d6401118449fb101e37bd775ef56209": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 9543
+        "line": 9544
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 9544
+        "line": 9545
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 9545
+        "line": 9546
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 9546
+        "line": 9547
       },
       "80": {
         "filename": "TestStakingV2.code",
-        "line": 9549
+        "line": 9550
       },
       "88": {
         "filename": "TestStakingV2.code",
-        "line": 9550
+        "line": 9551
       },
       "136": {
         "filename": "TestStakingV2.code",
-        "line": 9551
+        "line": 9552
       },
       "144": {
         "filename": "TestStakingV2.code",
-        "line": 9552
+        "line": 9553
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 9555
+        "line": 9556
       },
       "168": {
         "filename": "TestStakingV2.code",
-        "line": 9556
+        "line": 9557
       },
       "216": {
         "filename": "TestStakingV2.code",
-        "line": 9557
+        "line": 9558
       },
       "224": {
         "filename": "TestStakingV2.code",
-        "line": 9558
+        "line": 9559
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 9561
+        "line": 9562
       },
       "248": {
         "filename": "TestStakingV2.code",
-        "line": 9562
+        "line": 9563
       },
       "296": {
         "filename": "TestStakingV2.code",
-        "line": 9563
+        "line": 9564
       },
       "304": {
         "filename": "TestStakingV2.code",
-        "line": 9564
+        "line": 9565
       }
     },
     "b92922577bc3b758f6d2e7ff9ac786662229536487481eb5d8c98269c0f34052": {
@@ -20087,240 +19971,6 @@
       "856": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
         "line": 418
-      }
-    },
-    "baff63eb0cf9416141e8322a590fbaefc5887baa0b46d0efb6175d614a8d2f36": {
-      "0": {
-        "filename": "TestStakingV2.code",
-        "line": 9166
-      },
-      "16": {
-        "filename": "TestStakingV2.code",
-        "line": 9167
-      },
-      "24": {
-        "filename": "TestStakingV2.code",
-        "line": 9168
-      },
-      "40": {
-        "filename": "TestStakingV2.code",
-        "line": 9169
-      },
-      "56": {
-        "filename": "TestStakingV2.code",
-        "line": 9170
-      },
-      "72": {
-        "filename": "TestStakingV2.code",
-        "line": 9171
-      },
-      "80": {
-        "filename": "TestStakingV2.code",
-        "line": 9174
-      },
-      "96": {
-        "filename": "TestStakingV2.code",
-        "line": 9175
-      },
-      "104": {
-        "filename": "TestStakingV2.code",
-        "line": 9176
-      },
-      "120": {
-        "filename": "TestStakingV2.code",
-        "line": 9179
-      },
-      "136": {
-        "filename": "TestStakingV2.code",
-        "line": 9180
-      },
-      "144": {
-        "filename": "TestStakingV2.code",
-        "line": 9181
-      },
-      "160": {
-        "filename": "TestStakingV2.code",
-        "line": 9182
-      },
-      "176": {
-        "filename": "TestStakingV2.code",
-        "line": 9183
-      },
-      "192": {
-        "filename": "TestStakingV2.code",
-        "line": 9184
-      },
-      "200": {
-        "filename": "TestStakingV2.code",
-        "line": 9185
-      },
-      "216": {
-        "filename": "TestStakingV2.code",
-        "line": 9186
-      },
-      "224": {
-        "filename": "TestStakingV2.code",
-        "line": 9187
-      },
-      "240": {
-        "filename": "TestStakingV2.code",
-        "line": 9188
-      },
-      "248": {
-        "filename": "TestStakingV2.code",
-        "line": 9189
-      },
-      "256": {
-        "filename": "TestStakingV2.code",
-        "line": 9190
-      },
-      "272": {
-        "filename": "TestStakingV2.code",
-        "line": 9191
-      },
-      "280": {
-        "filename": "TestStakingV2.code",
-        "line": 9192
-      },
-      "288": {
-        "filename": "TestStakingV2.code",
-        "line": 9194
-      },
-      "296": {
-        "filename": "TestStakingV2.code",
-        "line": 9195
-      },
-      "304": {
-        "filename": "TestStakingV2.code",
-        "line": 9196
-      },
-      "320": {
-        "filename": "TestStakingV2.code",
-        "line": 9198
-      },
-      "328": {
-        "filename": "TestStakingV2.code",
-        "line": 9199
-      },
-      "344": {
-        "filename": "TestStakingV2.code",
-        "line": 9200
-      },
-      "360": {
-        "filename": "TestStakingV2.code",
-        "line": 9202
-      },
-      "368": {
-        "filename": "TestStakingV2.code",
-        "line": 9203
-      },
-      "384": {
-        "filename": "TestStakingV2.code",
-        "line": 9204
-      },
-      "392": {
-        "filename": "TestStakingV2.code",
-        "line": 9205
-      },
-      "408": {
-        "filename": "TestStakingV2.code",
-        "line": 9207
-      },
-      "416": {
-        "filename": "TestStakingV2.code",
-        "line": 9208
-      },
-      "432": {
-        "filename": "TestStakingV2.code",
-        "line": 9209
-      },
-      "440": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "456": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "464": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "472": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "488": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "496": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "512": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "536": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "544": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "584": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "592": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "600": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "616": {
-        "filename": "stdlib.sol",
-        "line": 63
-      },
-      "632": {
-        "filename": "TestStakingV2.code",
-        "line": 9211
-      },
-      "648": {
-        "filename": "TestStakingV2.code",
-        "line": 9212
-      },
-      "656": {
-        "filename": "TestStakingV2.code",
-        "line": 9213
-      },
-      "672": {
-        "filename": "TestStakingV2.code",
-        "line": 9214
-      },
-      "680": {
-        "filename": "TestStakingV2.code",
-        "line": 9215
-      },
-      "696": {
-        "filename": "TestStakingV2.code",
-        "line": 9216
-      },
-      "712": {
-        "filename": "TestStakingV2.code",
-        "line": 9217
-      },
-      "720": {
-        "filename": "TestStakingV2.code",
-        "line": 9218
-      },
-      "736": {
-        "filename": "TestStakingV2.code",
-        "line": 9221
       }
     },
     "bb656e43f025b814e4ea952bdf5eeef914dc48e87a8b12a0fec0698448fed94b": {
@@ -20978,11 +20628,11 @@
       },
       "752": {
         "filename": "TestStakingV2.code",
-        "line": 6907
+        "line": 6908
       },
       "760": {
         "filename": "TestStakingV2.code",
-        "line": 6909
+        "line": 6910
       },
       "768": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
@@ -21277,6 +20927,72 @@
         "line": 430
       }
     },
+    "c3315a8095a110a6251e7bdf6fef5ff0f4a6a74a784f0164d937625236dc19b3": {
+      "0": {
+        "filename": "TestStakingV2.code",
+        "line": 9265
+      },
+      "8": {
+        "filename": "TestStakingV2.code",
+        "line": 9266
+      },
+      "56": {
+        "filename": "TestStakingV2.code",
+        "line": 9267
+      },
+      "64": {
+        "filename": "TestStakingV2.code",
+        "line": 9268
+      },
+      "80": {
+        "filename": "TestStakingV2.code",
+        "line": 9386
+      },
+      "88": {
+        "filename": "TestStakingV2.code",
+        "line": 9387
+      },
+      "136": {
+        "filename": "TestStakingV2.code",
+        "line": 9388
+      },
+      "144": {
+        "filename": "TestStakingV2.code",
+        "line": 9389
+      },
+      "160": {
+        "filename": "TestStakingV2.code",
+        "line": 9507
+      },
+      "168": {
+        "filename": "TestStakingV2.code",
+        "line": 9508
+      },
+      "216": {
+        "filename": "TestStakingV2.code",
+        "line": 9509
+      },
+      "224": {
+        "filename": "TestStakingV2.code",
+        "line": 9510
+      },
+      "240": {
+        "filename": "TestStakingV2.code",
+        "line": 9628
+      },
+      "248": {
+        "filename": "TestStakingV2.code",
+        "line": 9629
+      },
+      "296": {
+        "filename": "TestStakingV2.code",
+        "line": 9630
+      },
+      "304": {
+        "filename": "TestStakingV2.code",
+        "line": 9631
+      }
+    },
     "c34f96cd8ba79ddc6b5bcb538d99732a24be9515d53b9cd419d444ee2d5fa05a": {
       "0": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
@@ -21538,67 +21254,67 @@
     "c3c49557682849766d919d8d564fc069d9383d256b91e61d9a4429d508676e09": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 9389
+        "line": 9390
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 9390
+        "line": 9391
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 9391
+        "line": 9392
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 9392
+        "line": 9393
       },
       "80": {
         "filename": "TestStakingV2.code",
-        "line": 9418
+        "line": 9419
       },
       "88": {
         "filename": "TestStakingV2.code",
-        "line": 9419
+        "line": 9420
       },
       "136": {
         "filename": "TestStakingV2.code",
-        "line": 9420
+        "line": 9421
       },
       "144": {
         "filename": "TestStakingV2.code",
-        "line": 9421
+        "line": 9422
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 9447
+        "line": 9448
       },
       "168": {
         "filename": "TestStakingV2.code",
-        "line": 9448
+        "line": 9449
       },
       "216": {
         "filename": "TestStakingV2.code",
-        "line": 9449
+        "line": 9450
       },
       "224": {
         "filename": "TestStakingV2.code",
-        "line": 9450
+        "line": 9451
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 9476
+        "line": 9477
       },
       "248": {
         "filename": "TestStakingV2.code",
-        "line": 9477
+        "line": 9478
       },
       "296": {
         "filename": "TestStakingV2.code",
-        "line": 9478
+        "line": 9479
       },
       "304": {
         "filename": "TestStakingV2.code",
-        "line": 9479
+        "line": 9480
       }
     },
     "c55a95297406cc952f0c10168a833f5a0c0866a8dd14d0fbd3f399ccea070c01": {
@@ -21858,27 +21574,27 @@
     "c5bb1c6f0f0065ae9269a5c71c0163c74c2e865eafa703685e979e09575f6c60": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 6990
+        "line": 6991
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 6991
+        "line": 6992
       },
       "24": {
         "filename": "TestStakingV2.code",
-        "line": 6992
+        "line": 6993
       },
       "48": {
         "filename": "TestStakingV2.code",
-        "line": 6993
+        "line": 6994
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 6994
+        "line": 6995
       },
       "72": {
         "filename": "TestStakingV2.code",
-        "line": 6995
+        "line": 6996
       },
       "88": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
@@ -21954,203 +21670,203 @@
       },
       "296": {
         "filename": "TestStakingV2.code",
-        "line": 7019
+        "line": 7020
       },
       "312": {
         "filename": "TestStakingV2.code",
-        "line": 7022
+        "line": 7023
       },
       "320": {
         "filename": "TestStakingV2.code",
-        "line": 7023
+        "line": 7024
       },
       "336": {
         "filename": "TestStakingV2.code",
-        "line": 7024
+        "line": 7025
       },
       "344": {
         "filename": "TestStakingV2.code",
-        "line": 7025
+        "line": 7026
       },
       "352": {
         "filename": "TestStakingV2.code",
-        "line": 7026
+        "line": 7027
       },
       "368": {
         "filename": "TestStakingV2.code",
-        "line": 7027
+        "line": 7028
       },
       "384": {
         "filename": "TestStakingV2.code",
-        "line": 7028
+        "line": 7029
       },
       "392": {
         "filename": "TestStakingV2.code",
-        "line": 7029
+        "line": 7030
       },
       "400": {
         "filename": "TestStakingV2.code",
-        "line": 7030
+        "line": 7031
       },
       "408": {
         "filename": "TestStakingV2.code",
-        "line": 7031
+        "line": 7032
       },
       "432": {
         "filename": "TestStakingV2.code",
-        "line": 7032
+        "line": 7033
       },
       "440": {
         "filename": "TestStakingV2.code",
-        "line": 7033
+        "line": 7034
       },
       "488": {
         "filename": "TestStakingV2.code",
-        "line": 7034
+        "line": 7035
       },
       "512": {
         "filename": "TestStakingV2.code",
-        "line": 7035
+        "line": 7036
       },
       "528": {
         "filename": "TestStakingV2.code",
-        "line": 7036
+        "line": 7037
       },
       "536": {
         "filename": "TestStakingV2.code",
-        "line": 7037
+        "line": 7038
       },
       "544": {
         "filename": "TestStakingV2.code",
-        "line": 7039
+        "line": 7040
       },
       "560": {
         "filename": "TestStakingV2.code",
-        "line": 7040
+        "line": 7041
       },
       "576": {
         "filename": "TestStakingV2.code",
-        "line": 7041
+        "line": 7042
       },
       "584": {
         "filename": "TestStakingV2.code",
-        "line": 7042
+        "line": 7043
       },
       "600": {
         "filename": "TestStakingV2.code",
-        "line": 7043
+        "line": 7044
       },
       "608": {
         "filename": "TestStakingV2.code",
-        "line": 7044
+        "line": 7045
       },
       "624": {
         "filename": "TestStakingV2.code",
-        "line": 7045
+        "line": 7046
       },
       "640": {
         "filename": "TestStakingV2.code",
-        "line": 7046
+        "line": 7047
       },
       "656": {
         "filename": "TestStakingV2.code",
-        "line": 7047
+        "line": 7048
       },
       "672": {
         "filename": "TestStakingV2.code",
-        "line": 7048
+        "line": 7049
       },
       "680": {
         "filename": "TestStakingV2.code",
-        "line": 7049
+        "line": 7050
       },
       "704": {
         "filename": "TestStakingV2.code",
-        "line": 7050
+        "line": 7051
       },
       "720": {
         "filename": "TestStakingV2.code",
-        "line": 7051
+        "line": 7052
       },
       "744": {
         "filename": "TestStakingV2.code",
-        "line": 7052
+        "line": 7053
       },
       "752": {
         "filename": "TestStakingV2.code",
-        "line": 7053
+        "line": 7054
       },
       "760": {
         "filename": "TestStakingV2.code",
-        "line": 7054
+        "line": 7055
       },
       "776": {
         "filename": "TestStakingV2.code",
-        "line": 7055
+        "line": 7056
       },
       "792": {
         "filename": "TestStakingV2.code",
-        "line": 7056
+        "line": 7057
       },
       "800": {
         "filename": "TestStakingV2.code",
-        "line": 7057
+        "line": 7058
       },
       "824": {
         "filename": "TestStakingV2.code",
-        "line": 7058
+        "line": 7059
       },
       "832": {
         "filename": "TestStakingV2.code",
-        "line": 7059
+        "line": 7060
       },
       "840": {
         "filename": "TestStakingV2.code",
-        "line": 7060
+        "line": 7061
       },
       "856": {
         "filename": "TestStakingV2.code",
-        "line": 7061
+        "line": 7062
       },
       "872": {
         "filename": "TestStakingV2.code",
-        "line": 7062
+        "line": 7063
       },
       "896": {
         "filename": "TestStakingV2.code",
-        "line": 7063
+        "line": 7064
       },
       "912": {
         "filename": "TestStakingV2.code",
-        "line": 7064
+        "line": 7065
       },
       "920": {
         "filename": "TestStakingV2.code",
-        "line": 7065
+        "line": 7066
       },
       "928": {
         "filename": "TestStakingV2.code",
-        "line": 7066
+        "line": 7067
       },
       "944": {
         "filename": "TestStakingV2.code",
-        "line": 7067
+        "line": 7068
       },
       "960": {
         "filename": "TestStakingV2.code",
-        "line": 7069
+        "line": 7070
       },
       "968": {
         "filename": "TestStakingV2.code",
-        "line": 7070
+        "line": 7071
       },
       "984": {
         "filename": "TestStakingV2.code",
-        "line": 7071
+        "line": 7072
       },
       "1000": {
         "filename": "TestStakingV2.code",
-        "line": 7074
+        "line": 7075
       }
     },
     "cb55766dbf6d1b03fe3240fb4aca01bb1695dcc6b7dcb6f4b0f37e169a9c226f": {
@@ -22528,27 +22244,27 @@
     "cf5231e8417d3af9dc46ea371f092ead2444235457c4cc5df8cdfc7be393e9b2": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 6371
+        "line": 6372
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 6372
+        "line": 6373
       },
       "24": {
         "filename": "TestStakingV2.code",
-        "line": 6373
+        "line": 6374
       },
       "48": {
         "filename": "TestStakingV2.code",
-        "line": 6374
+        "line": 6375
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 6375
+        "line": 6376
       },
       "72": {
         "filename": "TestStakingV2.code",
-        "line": 6376
+        "line": 6377
       },
       "88": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
@@ -22560,19 +22276,19 @@
       },
       "112": {
         "filename": "TestStakingV2.code",
-        "line": 6383
+        "line": 6384
       },
       "128": {
         "filename": "TestStakingV2.code",
-        "line": 6386
+        "line": 6387
       },
       "136": {
         "filename": "TestStakingV2.code",
-        "line": 6387
+        "line": 6388
       },
       "152": {
         "filename": "TestStakingV2.code",
-        "line": 6390
+        "line": 6391
       }
     },
     "d1125f885c1377d66f9d539a4f86aee2190bef14bbf94f889a44f1bacc21b820": {
@@ -22810,27 +22526,27 @@
     "d2ae8941593c4e5c0556dfbb02672003d0d489b152c9aa852a672d75fbd33389": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 7700
+        "line": 7701
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 7701
+        "line": 7702
       },
       "24": {
         "filename": "TestStakingV2.code",
-        "line": 7702
+        "line": 7703
       },
       "48": {
         "filename": "TestStakingV2.code",
-        "line": 7703
+        "line": 7704
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 7704
+        "line": 7705
       },
       "72": {
         "filename": "TestStakingV2.code",
-        "line": 7705
+        "line": 7706
       },
       "88": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
@@ -22886,219 +22602,219 @@
       },
       "232": {
         "filename": "TestStakingV2.code",
-        "line": 7724
+        "line": 7725
       },
       "248": {
         "filename": "TestStakingV2.code",
-        "line": 7727
+        "line": 7728
       },
       "256": {
         "filename": "TestStakingV2.code",
-        "line": 7728
+        "line": 7729
       },
       "272": {
         "filename": "TestStakingV2.code",
-        "line": 7729
+        "line": 7730
       },
       "280": {
         "filename": "TestStakingV2.code",
-        "line": 7730
+        "line": 7731
       },
       "288": {
         "filename": "TestStakingV2.code",
-        "line": 7731
+        "line": 7732
       },
       "304": {
         "filename": "TestStakingV2.code",
-        "line": 7732
+        "line": 7733
       },
       "320": {
         "filename": "TestStakingV2.code",
-        "line": 7733
+        "line": 7734
       },
       "328": {
         "filename": "TestStakingV2.code",
-        "line": 7734
+        "line": 7735
       },
       "336": {
         "filename": "TestStakingV2.code",
-        "line": 7735
+        "line": 7736
       },
       "344": {
         "filename": "TestStakingV2.code",
-        "line": 7736
+        "line": 7737
       },
       "368": {
         "filename": "TestStakingV2.code",
-        "line": 7737
+        "line": 7738
       },
       "376": {
         "filename": "TestStakingV2.code",
-        "line": 7738
+        "line": 7739
       },
       "384": {
         "filename": "TestStakingV2.code",
-        "line": 7739
+        "line": 7740
       },
       "408": {
         "filename": "TestStakingV2.code",
-        "line": 7740
+        "line": 7741
       },
       "416": {
         "filename": "TestStakingV2.code",
-        "line": 7741
+        "line": 7742
       },
       "424": {
         "filename": "TestStakingV2.code",
-        "line": 7742
+        "line": 7743
       },
       "472": {
         "filename": "TestStakingV2.code",
-        "line": 7743
+        "line": 7744
       },
       "480": {
         "filename": "TestStakingV2.code",
-        "line": 7744
+        "line": 7745
       },
       "488": {
         "filename": "TestStakingV2.code",
-        "line": 7745
+        "line": 7746
       },
       "496": {
         "filename": "TestStakingV2.code",
-        "line": 7746
+        "line": 7747
       },
       "504": {
         "filename": "TestStakingV2.code",
-        "line": 7748
+        "line": 7749
       },
       "520": {
         "filename": "TestStakingV2.code",
-        "line": 7749
+        "line": 7750
       },
       "536": {
         "filename": "TestStakingV2.code",
-        "line": 7750
+        "line": 7751
       },
       "544": {
         "filename": "TestStakingV2.code",
-        "line": 7751
+        "line": 7752
       },
       "560": {
         "filename": "TestStakingV2.code",
-        "line": 7752
+        "line": 7753
       },
       "568": {
         "filename": "TestStakingV2.code",
-        "line": 7753
+        "line": 7754
       },
       "584": {
         "filename": "TestStakingV2.code",
-        "line": 7754
+        "line": 7755
       },
       "600": {
         "filename": "TestStakingV2.code",
-        "line": 7755
+        "line": 7756
       },
       "616": {
         "filename": "TestStakingV2.code",
-        "line": 7756
+        "line": 7757
       },
       "632": {
         "filename": "TestStakingV2.code",
-        "line": 7757
+        "line": 7758
       },
       "640": {
         "filename": "TestStakingV2.code",
-        "line": 7758
+        "line": 7759
       },
       "664": {
         "filename": "TestStakingV2.code",
-        "line": 7759
+        "line": 7760
       },
       "680": {
         "filename": "TestStakingV2.code",
-        "line": 7760
+        "line": 7761
       },
       "704": {
         "filename": "TestStakingV2.code",
-        "line": 7761
+        "line": 7762
       },
       "712": {
         "filename": "TestStakingV2.code",
-        "line": 7762
+        "line": 7763
       },
       "720": {
         "filename": "TestStakingV2.code",
-        "line": 7763
+        "line": 7764
       },
       "736": {
         "filename": "TestStakingV2.code",
-        "line": 7764
+        "line": 7765
       },
       "752": {
         "filename": "TestStakingV2.code",
-        "line": 7765
+        "line": 7766
       },
       "760": {
         "filename": "TestStakingV2.code",
-        "line": 7766
+        "line": 7767
       },
       "784": {
         "filename": "TestStakingV2.code",
-        "line": 7767
+        "line": 7768
       },
       "792": {
         "filename": "TestStakingV2.code",
-        "line": 7768
+        "line": 7769
       },
       "800": {
         "filename": "TestStakingV2.code",
-        "line": 7769
+        "line": 7770
       },
       "816": {
         "filename": "TestStakingV2.code",
-        "line": 7770
+        "line": 7771
       },
       "832": {
         "filename": "TestStakingV2.code",
-        "line": 7771
+        "line": 7772
       },
       "856": {
         "filename": "TestStakingV2.code",
-        "line": 7772
+        "line": 7773
       },
       "864": {
         "filename": "TestStakingV2.code",
-        "line": 7773
+        "line": 7774
       },
       "872": {
         "filename": "TestStakingV2.code",
-        "line": 7774
+        "line": 7775
       },
       "880": {
         "filename": "TestStakingV2.code",
-        "line": 7775
+        "line": 7776
       },
       "896": {
         "filename": "TestStakingV2.code",
-        "line": 7776
+        "line": 7777
       },
       "912": {
         "filename": "TestStakingV2.code",
-        "line": 7778
+        "line": 7779
       },
       "920": {
         "filename": "TestStakingV2.code",
-        "line": 7779
+        "line": 7780
       },
       "936": {
         "filename": "TestStakingV2.code",
-        "line": 7780
+        "line": 7781
       },
       "952": {
         "filename": "TestStakingV2.code",
-        "line": 7783
+        "line": 7784
       }
     },
     "d2db32973fb8b0abfc33329b368b679498553d8b940db73d211b3a218a555b4c": {
@@ -23682,7 +23398,7 @@
     "d558e53bf690afc8a76b8887a99a49a52db1bd24bec5da84780ea0e7bc0aad3f": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 8893
+        "line": 8894
       }
     },
     "d61b41b48f24781d0902bd34179ad0b50fa3a954282ec2ec5b0fee9431201ebc": {
@@ -23712,7 +23428,7 @@
       },
       "80": {
         "filename": "TestStakingV2.code",
-        "line": 6241
+        "line": 6242
       }
     },
     "d621e32aae2817fc36a3e8050199331bbdf6d88f71197fd2508e25ab07b746fd": {
@@ -23834,27 +23550,27 @@
     "d9367794d991398fadd39daaa9931ea9ac19b1231fe60c95d89145da355bde62": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 8085
+        "line": 8086
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 8086
+        "line": 8087
       },
       "24": {
         "filename": "TestStakingV2.code",
-        "line": 8087
+        "line": 8088
       },
       "48": {
         "filename": "TestStakingV2.code",
-        "line": 8088
+        "line": 8089
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 8089
+        "line": 8090
       },
       "72": {
         "filename": "TestStakingV2.code",
-        "line": 8090
+        "line": 8091
       },
       "88": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
@@ -23862,15 +23578,15 @@
       },
       "96": {
         "filename": "TestStakingV2.code",
-        "line": 8096
+        "line": 8097
       },
       "112": {
         "filename": "TestStakingV2.code",
-        "line": 8099
+        "line": 8100
       },
       "128": {
         "filename": "TestStakingV2.code",
-        "line": 8102
+        "line": 8103
       }
     },
     "d95a3789401960368eac7af13edf26639c0547d85d89a0ca50c38daa2fcf6f42": {
@@ -24154,27 +23870,27 @@
     "d9ae8931414931b9d6ddc10d980ef5e2e31563c39dd143263338a1c45d259b48": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 6583
+        "line": 6584
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 6584
+        "line": 6585
       },
       "24": {
         "filename": "TestStakingV2.code",
-        "line": 6585
+        "line": 6586
       },
       "48": {
         "filename": "TestStakingV2.code",
-        "line": 6586
+        "line": 6587
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 6587
+        "line": 6588
       },
       "72": {
         "filename": "TestStakingV2.code",
-        "line": 6588
+        "line": 6589
       },
       "88": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
@@ -24230,19 +23946,19 @@
       },
       "216": {
         "filename": "TestStakingV2.code",
-        "line": 6607
+        "line": 6608
       },
       "232": {
         "filename": "TestStakingV2.code",
-        "line": 6610
+        "line": 6611
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 6611
+        "line": 6612
       },
       "256": {
         "filename": "TestStakingV2.code",
-        "line": 6614
+        "line": 6615
       }
     },
     "d9bb81e18987410103fdeec09a23a93626ecdc940b6320cbf87821c3b8d5b9c0": {
@@ -24720,377 +24436,377 @@
     "db3eade01e79f85c39910c79260fb14cf83359d4921221b7d196ffc902d66273": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 8981
+        "line": 8982
       },
       "16": {
         "filename": "TestStakingV2.code",
-        "line": 8982
+        "line": 8983
       },
       "32": {
         "filename": "TestStakingV2.code",
-        "line": 8983
+        "line": 8984
       },
       "48": {
         "filename": "TestStakingV2.code",
-        "line": 8984
+        "line": 8985
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 8985
+        "line": 8986
       },
       "80": {
         "filename": "TestStakingV2.code",
-        "line": 8986
+        "line": 8987
       },
       "96": {
         "filename": "TestStakingV2.code",
-        "line": 8987
+        "line": 8988
       },
       "112": {
         "filename": "TestStakingV2.code",
-        "line": 8988
+        "line": 8989
       },
       "128": {
         "filename": "TestStakingV2.code",
-        "line": 8989
+        "line": 8990
       },
       "144": {
         "filename": "TestStakingV2.code",
-        "line": 8990
+        "line": 8991
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 8991
+        "line": 8992
       },
       "176": {
         "filename": "TestStakingV2.code",
-        "line": 8992
+        "line": 8993
       },
       "192": {
         "filename": "TestStakingV2.code",
-        "line": 8993
+        "line": 8994
       },
       "208": {
         "filename": "TestStakingV2.code",
-        "line": 8994
+        "line": 8995
       },
       "224": {
         "filename": "TestStakingV2.code",
-        "line": 8995
+        "line": 8996
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 8996
+        "line": 8997
       },
       "256": {
         "filename": "TestStakingV2.code",
-        "line": 8997
+        "line": 8998
       },
       "264": {
         "filename": "TestStakingV2.code",
-        "line": 8998
+        "line": 8999
       },
       "280": {
         "filename": "TestStakingV2.code",
-        "line": 8999
+        "line": 9000
       },
       "296": {
         "filename": "TestStakingV2.code",
-        "line": 9000
+        "line": 9001
       },
       "312": {
         "filename": "TestStakingV2.code",
-        "line": 9001
+        "line": 9002
       },
       "328": {
         "filename": "TestStakingV2.code",
-        "line": 9002
+        "line": 9003
       },
       "344": {
         "filename": "TestStakingV2.code",
-        "line": 9003
+        "line": 9004
       },
       "352": {
         "filename": "TestStakingV2.code",
-        "line": 9004
+        "line": 9005
       },
       "368": {
         "filename": "TestStakingV2.code",
-        "line": 9005
+        "line": 9006
       },
       "384": {
         "filename": "TestStakingV2.code",
-        "line": 9006
+        "line": 9007
       },
       "392": {
         "filename": "TestStakingV2.code",
-        "line": 9007
+        "line": 9008
       },
       "408": {
         "filename": "TestStakingV2.code",
-        "line": 9008
+        "line": 9009
       },
       "424": {
         "filename": "TestStakingV2.code",
-        "line": 9009
+        "line": 9010
       },
       "432": {
         "filename": "TestStakingV2.code",
-        "line": 9010
+        "line": 9011
       },
       "448": {
         "filename": "TestStakingV2.code",
-        "line": 9011
+        "line": 9012
       },
       "456": {
         "filename": "TestStakingV2.code",
-        "line": 9012
+        "line": 9013
       },
       "472": {
         "filename": "TestStakingV2.code",
-        "line": 9013
+        "line": 9014
       },
       "488": {
         "filename": "TestStakingV2.code",
-        "line": 9014
+        "line": 9015
       },
       "496": {
         "filename": "TestStakingV2.code",
-        "line": 9015
+        "line": 9016
       },
       "504": {
         "filename": "TestStakingV2.code",
-        "line": 9016
+        "line": 9017
       },
       "520": {
         "filename": "TestStakingV2.code",
-        "line": 9017
+        "line": 9018
       },
       "528": {
         "filename": "TestStakingV2.code",
-        "line": 9018
+        "line": 9019
       },
       "544": {
         "filename": "TestStakingV2.code",
-        "line": 9019
+        "line": 9020
       },
       "552": {
         "filename": "TestStakingV2.code",
-        "line": 9020
+        "line": 9021
       },
       "568": {
         "filename": "TestStakingV2.code",
-        "line": 9021
+        "line": 9022
       },
       "584": {
         "filename": "TestStakingV2.code",
-        "line": 9022
+        "line": 9023
       },
       "600": {
         "filename": "TestStakingV2.code",
-        "line": 9023
+        "line": 9024
       },
       "616": {
         "filename": "TestStakingV2.code",
-        "line": 9024
+        "line": 9025
       },
       "632": {
         "filename": "TestStakingV2.code",
-        "line": 9025
+        "line": 9026
       },
       "648": {
         "filename": "TestStakingV2.code",
-        "line": 9026
+        "line": 9027
       },
       "664": {
         "filename": "TestStakingV2.code",
-        "line": 9027
+        "line": 9028
       },
       "672": {
         "filename": "TestStakingV2.code",
-        "line": 9028
+        "line": 9029
       },
       "688": {
         "filename": "TestStakingV2.code",
-        "line": 9029
+        "line": 9030
       },
       "704": {
         "filename": "TestStakingV2.code",
-        "line": 9030
+        "line": 9031
       },
       "712": {
         "filename": "TestStakingV2.code",
-        "line": 9031
+        "line": 9032
       },
       "728": {
         "filename": "TestStakingV2.code",
-        "line": 9032
+        "line": 9033
       },
       "736": {
         "filename": "TestStakingV2.code",
-        "line": 9033
+        "line": 9034
       },
       "744": {
         "filename": "TestStakingV2.code",
-        "line": 9034
+        "line": 9035
       },
       "752": {
         "filename": "TestStakingV2.code",
-        "line": 9035
+        "line": 9036
       },
       "768": {
         "filename": "TestStakingV2.code",
-        "line": 9036
+        "line": 9037
       },
       "776": {
         "filename": "TestStakingV2.code",
-        "line": 9037
+        "line": 9038
       },
       "784": {
         "filename": "TestStakingV2.code",
-        "line": 9038
+        "line": 9039
       },
       "792": {
         "filename": "TestStakingV2.code",
-        "line": 9039
+        "line": 9040
       },
       "808": {
         "filename": "TestStakingV2.code",
-        "line": 9040
+        "line": 9041
       },
       "816": {
         "filename": "TestStakingV2.code",
-        "line": 9041
+        "line": 9042
       },
       "824": {
         "filename": "TestStakingV2.code",
-        "line": 9042
+        "line": 9043
       },
       "840": {
         "filename": "TestStakingV2.code",
-        "line": 9043
+        "line": 9044
       },
       "848": {
         "filename": "TestStakingV2.code",
-        "line": 9044
+        "line": 9045
       },
       "856": {
         "filename": "TestStakingV2.code",
-        "line": 9045
+        "line": 9046
       },
       "872": {
         "filename": "TestStakingV2.code",
-        "line": 9046
+        "line": 9047
       },
       "880": {
         "filename": "TestStakingV2.code",
-        "line": 9047
+        "line": 9048
       },
       "888": {
         "filename": "TestStakingV2.code",
-        "line": 9048
+        "line": 9049
       },
       "904": {
         "filename": "TestStakingV2.code",
-        "line": 9049
+        "line": 9050
       },
       "912": {
         "filename": "TestStakingV2.code",
-        "line": 9050
+        "line": 9051
       },
       "920": {
         "filename": "TestStakingV2.code",
-        "line": 9051
+        "line": 9052
       },
       "936": {
         "filename": "TestStakingV2.code",
-        "line": 9052
+        "line": 9053
       },
       "944": {
         "filename": "TestStakingV2.code",
-        "line": 9053
+        "line": 9054
       },
       "952": {
         "filename": "TestStakingV2.code",
-        "line": 9054
+        "line": 9055
       },
       "968": {
         "filename": "TestStakingV2.code",
-        "line": 9055
+        "line": 9056
       },
       "984": {
         "filename": "TestStakingV2.code",
-        "line": 9056
+        "line": 9057
       },
       "1000": {
         "filename": "TestStakingV2.code",
-        "line": 9057
+        "line": 9058
       }
     },
     "db424f42825896eb892bdf099b57325a124e362ad8235e41603225ceca3b6247": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 9268
+        "line": 9269
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 9269
+        "line": 9270
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 9270
+        "line": 9271
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 9271
+        "line": 9272
       },
       "80": {
         "filename": "TestStakingV2.code",
-        "line": 9297
+        "line": 9298
       },
       "88": {
         "filename": "TestStakingV2.code",
-        "line": 9298
+        "line": 9299
       },
       "136": {
         "filename": "TestStakingV2.code",
-        "line": 9299
+        "line": 9300
       },
       "144": {
         "filename": "TestStakingV2.code",
-        "line": 9300
+        "line": 9301
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 9326
+        "line": 9327
       },
       "168": {
         "filename": "TestStakingV2.code",
-        "line": 9327
+        "line": 9328
       },
       "216": {
         "filename": "TestStakingV2.code",
-        "line": 9328
+        "line": 9329
       },
       "224": {
         "filename": "TestStakingV2.code",
-        "line": 9329
+        "line": 9330
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 9355
+        "line": 9356
       },
       "248": {
         "filename": "TestStakingV2.code",
-        "line": 9356
+        "line": 9357
       },
       "296": {
         "filename": "TestStakingV2.code",
-        "line": 9357
+        "line": 9358
       },
       "304": {
         "filename": "TestStakingV2.code",
-        "line": 9358
+        "line": 9359
       }
     },
     "db53337f617cac453918b9e75fe5455f1d389194172982913d7a99635650af08": {
@@ -26098,27 +25814,27 @@
     "e31c7c6d530730c903c5c5b163cdaff71bb08839a0439a268eefbff3b5fb52ca": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 8012
+        "line": 8013
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 8013
+        "line": 8014
       },
       "24": {
         "filename": "TestStakingV2.code",
-        "line": 8014
+        "line": 8015
       },
       "48": {
         "filename": "TestStakingV2.code",
-        "line": 8015
+        "line": 8016
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 8016
+        "line": 8017
       },
       "72": {
         "filename": "TestStakingV2.code",
-        "line": 8017
+        "line": 8018
       },
       "88": {
         "filename": "../contracts/staking/base/StakingBase.tsol",
@@ -26146,15 +25862,15 @@
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 8028
+        "line": 8029
       },
       "176": {
         "filename": "TestStakingV2.code",
-        "line": 8031
+        "line": 8032
       },
       "192": {
         "filename": "TestStakingV2.code",
-        "line": 8034
+        "line": 8035
       }
     },
     "e34408aead332a3636426779e3c582b132a1f6d0cfa61606f0016518f984ee17": {
@@ -26460,67 +26176,67 @@
     "e3a6e1fb43da1288ab57430a008c83949185676b6fbd17523c08f3babfd904da": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 9330
+        "line": 9331
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 9331
+        "line": 9332
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 9332
+        "line": 9333
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 9333
+        "line": 9334
       },
       "80": {
         "filename": "TestStakingV2.code",
-        "line": 9336
+        "line": 9337
       },
       "88": {
         "filename": "TestStakingV2.code",
-        "line": 9337
+        "line": 9338
       },
       "136": {
         "filename": "TestStakingV2.code",
-        "line": 9338
+        "line": 9339
       },
       "144": {
         "filename": "TestStakingV2.code",
-        "line": 9339
+        "line": 9340
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 9342
+        "line": 9343
       },
       "168": {
         "filename": "TestStakingV2.code",
-        "line": 9343
+        "line": 9344
       },
       "216": {
         "filename": "TestStakingV2.code",
-        "line": 9344
+        "line": 9345
       },
       "224": {
         "filename": "TestStakingV2.code",
-        "line": 9345
+        "line": 9346
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 9348
+        "line": 9349
       },
       "248": {
         "filename": "TestStakingV2.code",
-        "line": 9349
+        "line": 9350
       },
       "296": {
         "filename": "TestStakingV2.code",
-        "line": 9350
+        "line": 9351
       },
       "304": {
         "filename": "TestStakingV2.code",
-        "line": 9351
+        "line": 9352
       }
     },
     "e42df8dbcef020231283ad9cfeaa2c15945ff4138d1651560b6c4a140df1e0db": {
@@ -26692,331 +26408,331 @@
     "e57ffbc9269b7bda5238b9e9fc03de346800f25f1d4bcb98ecfcfaab2e60c2b5": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 8751
+        "line": 8752
       },
       "16": {
         "filename": "TestStakingV2.code",
-        "line": 8752
+        "line": 8753
       },
       "24": {
         "filename": "TestStakingV2.code",
-        "line": 8753
+        "line": 8754
       },
       "40": {
         "filename": "TestStakingV2.code",
-        "line": 8754
+        "line": 8755
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 8755
+        "line": 8756
       },
       "72": {
         "filename": "TestStakingV2.code",
-        "line": 8756
+        "line": 8757
       },
       "80": {
         "filename": "TestStakingV2.code",
-        "line": 8757
+        "line": 8758
       },
       "96": {
         "filename": "TestStakingV2.code",
-        "line": 8758
+        "line": 8759
       },
       "112": {
         "filename": "TestStakingV2.code",
-        "line": 8759
+        "line": 8760
       },
       "128": {
         "filename": "TestStakingV2.code",
-        "line": 8760
+        "line": 8761
       },
       "144": {
         "filename": "TestStakingV2.code",
-        "line": 8761
+        "line": 8762
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 8762
+        "line": 8763
       },
       "168": {
         "filename": "TestStakingV2.code",
-        "line": 8763
+        "line": 8764
       },
       "184": {
         "filename": "TestStakingV2.code",
-        "line": 8764
+        "line": 8765
       },
       "192": {
         "filename": "TestStakingV2.code",
-        "line": 8765
+        "line": 8766
       },
       "208": {
         "filename": "TestStakingV2.code",
-        "line": 8766
+        "line": 8767
       },
       "216": {
         "filename": "TestStakingV2.code",
-        "line": 8767
+        "line": 8768
       },
       "224": {
         "filename": "TestStakingV2.code",
-        "line": 8768
+        "line": 8769
       },
       "232": {
         "filename": "TestStakingV2.code",
-        "line": 8769
+        "line": 8770
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 8770
+        "line": 8771
       },
       "256": {
         "filename": "TestStakingV2.code",
-        "line": 8771
+        "line": 8772
       },
       "264": {
         "filename": "TestStakingV2.code",
-        "line": 8772
+        "line": 8773
       },
       "280": {
         "filename": "TestStakingV2.code",
-        "line": 8773
+        "line": 8774
       },
       "296": {
         "filename": "TestStakingV2.code",
-        "line": 8774
+        "line": 8775
       },
       "312": {
         "filename": "TestStakingV2.code",
-        "line": 8775
+        "line": 8776
       },
       "320": {
         "filename": "TestStakingV2.code",
-        "line": 8776
+        "line": 8777
       },
       "336": {
         "filename": "TestStakingV2.code",
-        "line": 8777
+        "line": 8778
       },
       "352": {
         "filename": "TestStakingV2.code",
-        "line": 8778
+        "line": 8779
       },
       "368": {
         "filename": "TestStakingV2.code",
-        "line": 8779
+        "line": 8780
       },
       "384": {
         "filename": "TestStakingV2.code",
-        "line": 8780
+        "line": 8781
       },
       "400": {
         "filename": "TestStakingV2.code",
-        "line": 8781
+        "line": 8782
       },
       "416": {
         "filename": "TestStakingV2.code",
-        "line": 8782
+        "line": 8783
       },
       "432": {
         "filename": "TestStakingV2.code",
-        "line": 8783
+        "line": 8784
       },
       "440": {
         "filename": "TestStakingV2.code",
-        "line": 8784
+        "line": 8785
       },
       "456": {
         "filename": "TestStakingV2.code",
-        "line": 8785
+        "line": 8786
       },
       "464": {
         "filename": "TestStakingV2.code",
-        "line": 8786
+        "line": 8787
       },
       "472": {
         "filename": "TestStakingV2.code",
-        "line": 8787
+        "line": 8788
       },
       "480": {
         "filename": "TestStakingV2.code",
-        "line": 8788
+        "line": 8789
       },
       "496": {
         "filename": "TestStakingV2.code",
-        "line": 8789
+        "line": 8790
       },
       "504": {
         "filename": "TestStakingV2.code",
-        "line": 8790
+        "line": 8791
       },
       "512": {
         "filename": "TestStakingV2.code",
-        "line": 8791
+        "line": 8792
       },
       "520": {
         "filename": "TestStakingV2.code",
-        "line": 8792
+        "line": 8793
       },
       "536": {
         "filename": "TestStakingV2.code",
-        "line": 8793
+        "line": 8794
       },
       "544": {
         "filename": "TestStakingV2.code",
-        "line": 8794
+        "line": 8795
       },
       "552": {
         "filename": "TestStakingV2.code",
-        "line": 8795
+        "line": 8796
       },
       "560": {
         "filename": "TestStakingV2.code",
-        "line": 8796
+        "line": 8797
       },
       "576": {
         "filename": "TestStakingV2.code",
-        "line": 8797
+        "line": 8798
       },
       "584": {
         "filename": "TestStakingV2.code",
-        "line": 8798
+        "line": 8799
       },
       "592": {
         "filename": "TestStakingV2.code",
-        "line": 8799
+        "line": 8800
       },
       "600": {
         "filename": "TestStakingV2.code",
-        "line": 8800
+        "line": 8801
       },
       "616": {
         "filename": "TestStakingV2.code",
-        "line": 8801
+        "line": 8802
       },
       "624": {
         "filename": "TestStakingV2.code",
-        "line": 8802
+        "line": 8803
       },
       "632": {
         "filename": "TestStakingV2.code",
-        "line": 8803
+        "line": 8804
       },
       "640": {
         "filename": "TestStakingV2.code",
-        "line": 8804
+        "line": 8805
       },
       "656": {
         "filename": "TestStakingV2.code",
-        "line": 8805
+        "line": 8806
       },
       "664": {
         "filename": "TestStakingV2.code",
-        "line": 8806
+        "line": 8807
       },
       "672": {
         "filename": "TestStakingV2.code",
-        "line": 8807
+        "line": 8808
       },
       "680": {
         "filename": "TestStakingV2.code",
-        "line": 8808
+        "line": 8809
       },
       "696": {
         "filename": "TestStakingV2.code",
-        "line": 8809
+        "line": 8810
       },
       "704": {
         "filename": "TestStakingV2.code",
-        "line": 8810
+        "line": 8811
       },
       "712": {
         "filename": "TestStakingV2.code",
-        "line": 8811
+        "line": 8812
       },
       "720": {
         "filename": "TestStakingV2.code",
-        "line": 8812
+        "line": 8813
       },
       "736": {
         "filename": "TestStakingV2.code",
-        "line": 8813
+        "line": 8814
       },
       "752": {
         "filename": "TestStakingV2.code",
-        "line": 8814
+        "line": 8815
       },
       "768": {
         "filename": "TestStakingV2.code",
-        "line": 8815
+        "line": 8816
       },
       "784": {
         "filename": "TestStakingV2.code",
-        "line": 8816
+        "line": 8817
       },
       "800": {
         "filename": "TestStakingV2.code",
-        "line": 8817
+        "line": 8818
       },
       "816": {
         "filename": "TestStakingV2.code",
-        "line": 8818
+        "line": 8819
       },
       "824": {
         "filename": "TestStakingV2.code",
-        "line": 8819
+        "line": 8820
       },
       "840": {
         "filename": "TestStakingV2.code",
-        "line": 8820
+        "line": 8821
       },
       "848": {
         "filename": "TestStakingV2.code",
-        "line": 8821
+        "line": 8822
       },
       "864": {
         "filename": "TestStakingV2.code",
-        "line": 8822
+        "line": 8823
       },
       "880": {
         "filename": "TestStakingV2.code",
-        "line": 8823
+        "line": 8824
       },
       "896": {
         "filename": "TestStakingV2.code",
-        "line": 8824
+        "line": 8825
       },
       "904": {
         "filename": "TestStakingV2.code",
-        "line": 8825
+        "line": 8826
       },
       "912": {
         "filename": "TestStakingV2.code",
-        "line": 8826
+        "line": 8827
       },
       "920": {
         "filename": "TestStakingV2.code",
-        "line": 8827
+        "line": 8828
       },
       "928": {
         "filename": "TestStakingV2.code",
-        "line": 8828
+        "line": 8829
       },
       "944": {
         "filename": "TestStakingV2.code",
-        "line": 8829
+        "line": 8830
       },
       "960": {
         "filename": "TestStakingV2.code",
-        "line": 8830
+        "line": 8831
       },
       "976": {
         "filename": "TestStakingV2.code",
-        "line": 8831
+        "line": 8832
       },
       "992": {
         "filename": "TestStakingV2.code",
-        "line": 8832
+        "line": 8833
       }
     },
     "e58d273f90e72b877a9f47514a92a59df40afbbed5dfd27e1da1835a137eadc0": {
@@ -27048,55 +26764,55 @@
     "e6936e8f0e7b8fe98c2ca66eee9d4e9dafcfc747defef9cb795288fabb1b7ef3": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 9100
+        "line": 9101
       },
       "16": {
         "filename": "TestStakingV2.code",
-        "line": 9101
+        "line": 9102
       },
       "24": {
         "filename": "TestStakingV2.code",
-        "line": 9102
+        "line": 9103
       },
       "40": {
         "filename": "TestStakingV2.code",
-        "line": 9103
+        "line": 9104
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 9104
+        "line": 9105
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 9105
+        "line": 9106
       },
       "80": {
         "filename": "TestStakingV2.code",
-        "line": 9106
+        "line": 9107
       },
       "88": {
         "filename": "TestStakingV2.code",
-        "line": 9107
+        "line": 9108
       },
       "96": {
         "filename": "TestStakingV2.code",
-        "line": 9108
+        "line": 9109
       },
       "112": {
         "filename": "TestStakingV2.code",
-        "line": 9109
+        "line": 9110
       },
       "128": {
         "filename": "TestStakingV2.code",
-        "line": 9110
+        "line": 9111
       },
       "136": {
         "filename": "TestStakingV2.code",
-        "line": 9111
+        "line": 9112
       },
       "144": {
         "filename": "TestStakingV2.code",
-        "line": 9112
+        "line": 9113
       }
     },
     "e8a4cba9a2a029706ac409a42d7b8c21033070de1bcf76babac94a2d788d7da2": {
@@ -27347,52 +27063,6 @@
       "144": {
         "filename": "TestStakingV2.code",
         "line": 2496
-      }
-    },
-    "ecfd671273b9d22a71ff9e9d0919b36b771234105235797dd46aeadec88a8fdd": {
-      "0": {
-        "filename": "<entry-selector>",
-        "line": 1
-      },
-      "8": {
-        "filename": "<entry-selector>",
-        "line": 2
-      },
-      "24": {
-        "filename": "<entry-selector>",
-        "line": 3
-      },
-      "32": {
-        "filename": "<entry-selector>",
-        "line": 4
-      },
-      "48": {
-        "filename": "<entry-selector>",
-        "line": 5
-      },
-      "56": {
-        "filename": "<entry-selector>",
-        "line": 6
-      },
-      "72": {
-        "filename": "<entry-selector>",
-        "line": 7
-      },
-      "88": {
-        "filename": "<entry-selector>",
-        "line": 8
-      },
-      "96": {
-        "filename": "<entry-selector>",
-        "line": 9
-      },
-      "112": {
-        "filename": "<entry-selector>",
-        "line": 10
-      },
-      "128": {
-        "filename": "<entry-selector>",
-        "line": 11
       }
     },
     "edf06d973d6f8e96079b9002899416747e7eb386c9ffd1a16aa45432da1b3b6a": {
@@ -27714,67 +27384,301 @@
     "f17d2bd8d7f2b98b54a6a8b8c7db1ceb687d5b6f7ef15ad20d282df4e23a4be4": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 9601
+        "line": 9602
       },
       "8": {
         "filename": "TestStakingV2.code",
-        "line": 9602
+        "line": 9603
       },
       "56": {
         "filename": "TestStakingV2.code",
-        "line": 9603
+        "line": 9604
       },
       "64": {
         "filename": "TestStakingV2.code",
-        "line": 9604
+        "line": 9605
       },
       "80": {
         "filename": "TestStakingV2.code",
-        "line": 9607
+        "line": 9608
       },
       "88": {
         "filename": "TestStakingV2.code",
-        "line": 9608
+        "line": 9609
       },
       "136": {
         "filename": "TestStakingV2.code",
-        "line": 9609
+        "line": 9610
       },
       "144": {
         "filename": "TestStakingV2.code",
-        "line": 9610
+        "line": 9611
       },
       "160": {
         "filename": "TestStakingV2.code",
-        "line": 9613
+        "line": 9614
       },
       "168": {
         "filename": "TestStakingV2.code",
-        "line": 9614
+        "line": 9615
       },
       "216": {
         "filename": "TestStakingV2.code",
-        "line": 9615
+        "line": 9616
       },
       "224": {
         "filename": "TestStakingV2.code",
-        "line": 9616
+        "line": 9617
       },
       "240": {
         "filename": "TestStakingV2.code",
-        "line": 9619
+        "line": 9620
       },
       "248": {
         "filename": "TestStakingV2.code",
-        "line": 9620
+        "line": 9621
       },
       "296": {
         "filename": "TestStakingV2.code",
-        "line": 9621
+        "line": 9622
       },
       "304": {
         "filename": "TestStakingV2.code",
-        "line": 9622
+        "line": 9623
+      }
+    },
+    "f1ca8f4a84fadddefe3a643b66a912980974717432eed31957934f4484f0632f": {
+      "0": {
+        "filename": "TestStakingV2.code",
+        "line": 9167
+      },
+      "16": {
+        "filename": "TestStakingV2.code",
+        "line": 9168
+      },
+      "24": {
+        "filename": "TestStakingV2.code",
+        "line": 9169
+      },
+      "40": {
+        "filename": "TestStakingV2.code",
+        "line": 9170
+      },
+      "56": {
+        "filename": "TestStakingV2.code",
+        "line": 9171
+      },
+      "72": {
+        "filename": "TestStakingV2.code",
+        "line": 9172
+      },
+      "80": {
+        "filename": "TestStakingV2.code",
+        "line": 9175
+      },
+      "96": {
+        "filename": "TestStakingV2.code",
+        "line": 9176
+      },
+      "104": {
+        "filename": "TestStakingV2.code",
+        "line": 9177
+      },
+      "120": {
+        "filename": "TestStakingV2.code",
+        "line": 9180
+      },
+      "136": {
+        "filename": "TestStakingV2.code",
+        "line": 9181
+      },
+      "144": {
+        "filename": "TestStakingV2.code",
+        "line": 9182
+      },
+      "160": {
+        "filename": "TestStakingV2.code",
+        "line": 9183
+      },
+      "176": {
+        "filename": "TestStakingV2.code",
+        "line": 9184
+      },
+      "192": {
+        "filename": "TestStakingV2.code",
+        "line": 9185
+      },
+      "200": {
+        "filename": "TestStakingV2.code",
+        "line": 9186
+      },
+      "216": {
+        "filename": "TestStakingV2.code",
+        "line": 9187
+      },
+      "224": {
+        "filename": "TestStakingV2.code",
+        "line": 9188
+      },
+      "240": {
+        "filename": "TestStakingV2.code",
+        "line": 9189
+      },
+      "248": {
+        "filename": "TestStakingV2.code",
+        "line": 9190
+      },
+      "256": {
+        "filename": "TestStakingV2.code",
+        "line": 9191
+      },
+      "272": {
+        "filename": "TestStakingV2.code",
+        "line": 9192
+      },
+      "280": {
+        "filename": "TestStakingV2.code",
+        "line": 9193
+      },
+      "288": {
+        "filename": "TestStakingV2.code",
+        "line": 9195
+      },
+      "296": {
+        "filename": "TestStakingV2.code",
+        "line": 9196
+      },
+      "304": {
+        "filename": "TestStakingV2.code",
+        "line": 9197
+      },
+      "320": {
+        "filename": "TestStakingV2.code",
+        "line": 9199
+      },
+      "328": {
+        "filename": "TestStakingV2.code",
+        "line": 9200
+      },
+      "344": {
+        "filename": "TestStakingV2.code",
+        "line": 9201
+      },
+      "360": {
+        "filename": "TestStakingV2.code",
+        "line": 9203
+      },
+      "368": {
+        "filename": "TestStakingV2.code",
+        "line": 9204
+      },
+      "384": {
+        "filename": "TestStakingV2.code",
+        "line": 9205
+      },
+      "392": {
+        "filename": "TestStakingV2.code",
+        "line": 9206
+      },
+      "408": {
+        "filename": "TestStakingV2.code",
+        "line": 9208
+      },
+      "416": {
+        "filename": "TestStakingV2.code",
+        "line": 9209
+      },
+      "432": {
+        "filename": "TestStakingV2.code",
+        "line": 9210
+      },
+      "440": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "456": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "464": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "472": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "488": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "496": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "512": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "536": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "544": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "584": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "592": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "600": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "616": {
+        "filename": "stdlib.sol",
+        "line": 63
+      },
+      "632": {
+        "filename": "TestStakingV2.code",
+        "line": 9212
+      },
+      "648": {
+        "filename": "TestStakingV2.code",
+        "line": 9213
+      },
+      "656": {
+        "filename": "TestStakingV2.code",
+        "line": 9214
+      },
+      "672": {
+        "filename": "TestStakingV2.code",
+        "line": 9215
+      },
+      "680": {
+        "filename": "TestStakingV2.code",
+        "line": 9216
+      },
+      "696": {
+        "filename": "TestStakingV2.code",
+        "line": 9217
+      },
+      "712": {
+        "filename": "TestStakingV2.code",
+        "line": 9218
+      },
+      "720": {
+        "filename": "TestStakingV2.code",
+        "line": 9219
+      },
+      "736": {
+        "filename": "TestStakingV2.code",
+        "line": 9222
       }
     },
     "f1da85aa6c72bc1740aa1c402b4f2a1d78c09137a39582fe95d0098de497d86f": {
@@ -28014,11 +27918,11 @@
       },
       "552": {
         "filename": "TestStakingV2.code",
-        "line": 8727
+        "line": 8728
       },
       "560": {
         "filename": "TestStakingV2.code",
-        "line": 8728
+        "line": 8729
       },
       "568": {
         "filename": "../contracts/utils/Delegate.tsol",
@@ -28082,17 +27986,17 @@
       },
       "784": {
         "filename": "TestStakingV2.code",
-        "line": 8748
+        "line": 8749
       }
     },
     "f24e1e7aa04d89aad2945816b6e9b921f2b3892da9ba53e2383c148351b96d0c": {
       "0": {
         "filename": "TestStakingV2.code",
-        "line": 9147
+        "line": 9148
       },
       "16": {
         "filename": "TestStakingV2.code",
-        "line": 9148
+        "line": 9149
       }
     },
     "f2dcded325934727a19e917f26f72e527f75477f51fa135bb52254b22d4b713c": {
@@ -28409,6 +28313,244 @@
       "696": {
         "filename": "../contracts/staking/base/StakingRelay.tsol",
         "line": 21
+      }
+    },
+    "f3d36455a99e51dbcef0c11e33bb73e659f706c4a370ba2e9903b069ce9fe187": {
+      "0": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 344
+      },
+      "24": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 344
+      },
+      "40": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 344
+      },
+      "56": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 344
+      },
+      "72": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 344
+      },
+      "88": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 344
+      },
+      "104": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 346
+      },
+      "120": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 346
+      },
+      "128": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 346
+      },
+      "144": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 348
+      },
+      "152": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 348
+      },
+      "168": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 350
+      },
+      "176": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 350
+      },
+      "192": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 350
+      },
+      "200": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 350
+      },
+      "248": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 350
+      },
+      "256": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 350
+      },
+      "272": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 350
+      },
+      "280": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 350
+      },
+      "296": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 350
+      },
+      "312": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 350
+      },
+      "328": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 350
+      },
+      "336": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 350
+      },
+      "344": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 350
+      },
+      "352": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 350
+      },
+      "360": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 350
+      },
+      "376": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "384": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "392": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "400": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "408": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "424": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "432": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "448": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "464": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "472": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "496": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "504": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "512": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "536": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "552": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "560": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "608": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "624": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "632": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "648": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "664": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "672": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "680": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "696": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "704": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "712": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "720": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "728": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "744": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 352
+      },
+      "760": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 360
+      },
+      "768": {
+        "filename": "TestStakingV2.code",
+        "line": 6060
+      },
+      "776": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 363
+      },
+      "792": {
+        "filename": "../contracts/staking/base/StakingBase.tsol",
+        "line": 365
       }
     },
     "f43a453b5825586a285d677a6153998eb984810149fe56d7b45134ef01581385": {
@@ -28807,144 +28949,6 @@
       "216": {
         "filename": "TestStakingV2.code",
         "line": 4577
-      }
-    },
-    "fc56fb23dfe4e0085efdaa6bc9b8ad44a48b7797d33a69e1b164d41568ee09d1": {
-      "0": {
-        "filename": "TestStakingV2.code",
-        "line": 9116
-      },
-      "16": {
-        "filename": "TestStakingV2.code",
-        "line": 9117
-      },
-      "24": {
-        "filename": "TestStakingV2.code",
-        "line": 9118
-      },
-      "40": {
-        "filename": "TestStakingV2.code",
-        "line": 9119
-      },
-      "56": {
-        "filename": "TestStakingV2.code",
-        "line": 9120
-      },
-      "72": {
-        "filename": "TestStakingV2.code",
-        "line": 9121
-      },
-      "80": {
-        "filename": "TestStakingV2.code",
-        "line": 9122
-      },
-      "88": {
-        "filename": "TestStakingV2.code",
-        "line": 9123
-      },
-      "104": {
-        "filename": "TestStakingV2.code",
-        "line": 9124
-      },
-      "120": {
-        "filename": "TestStakingV2.code",
-        "line": 9125
-      },
-      "128": {
-        "filename": "TestStakingV2.code",
-        "line": 9126
-      },
-      "144": {
-        "filename": "TestStakingV2.code",
-        "line": 9127
-      },
-      "168": {
-        "filename": "TestStakingV2.code",
-        "line": 9128
-      },
-      "184": {
-        "filename": "TestStakingV2.code",
-        "line": 9129
-      },
-      "192": {
-        "filename": "TestStakingV2.code",
-        "line": 9130
-      },
-      "208": {
-        "filename": "TestStakingV2.code",
-        "line": 9131
-      },
-      "248": {
-        "filename": "TestStakingV2.code",
-        "line": 9132
-      },
-      "264": {
-        "filename": "TestStakingV2.code",
-        "line": 9133
-      },
-      "272": {
-        "filename": "TestStakingV2.code",
-        "line": 9134
-      },
-      "288": {
-        "filename": "TestStakingV2.code",
-        "line": 9135
-      },
-      "296": {
-        "filename": "TestStakingV2.code",
-        "line": 9136
-      },
-      "312": {
-        "filename": "TestStakingV2.code",
-        "line": 9137
-      },
-      "328": {
-        "filename": "TestStakingV2.code",
-        "line": 9138
-      },
-      "344": {
-        "filename": "TestStakingV2.code",
-        "line": 9144
-      },
-      "352": {
-        "filename": "TestStakingV2.code",
-        "line": 9145
-      },
-      "368": {
-        "filename": "TestStakingV2.code",
-        "line": 9146
-      },
-      "384": {
-        "filename": "TestStakingV2.code",
-        "line": 9150
-      },
-      "392": {
-        "filename": "TestStakingV2.code",
-        "line": 9151
-      },
-      "416": {
-        "filename": "TestStakingV2.code",
-        "line": 9152
-      },
-      "432": {
-        "filename": "TestStakingV2.code",
-        "line": 9153
-      },
-      "440": {
-        "filename": "TestStakingV2.code",
-        "line": 9154
-      },
-      "456": {
-        "filename": "TestStakingV2.code",
-        "line": 9158
-      },
-      "464": {
-        "filename": "TestStakingV2.code",
-        "line": 9159
-      },
-      "480": {
-        "filename": "TestStakingV2.code",
-        "line": 9162
       }
     },
     "ff0bcee133527a048d9cb2e1c4a8af26dbd7ac03cf6097c3023a2b811c1b8785": {

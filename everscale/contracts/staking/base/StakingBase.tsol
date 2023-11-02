@@ -341,7 +341,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
         address remainingGasTo,
         TvmCell payload
     ) external override {
-        require (msg.sender == base_details.tokenWallet);
+        require (msg.sender == base_details.tokenWallet, ErrorCodes.NOT_TOKEN_WALLET);
 
         tvm.rawReserve(_reserve(), 0);
 

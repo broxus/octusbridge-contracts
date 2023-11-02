@@ -93,7 +93,7 @@ contract Mediator is
         address remainingGasTo,
         TvmCell payloadWithNonce
     ) external override reserveAtLeastTargetBalance {
-        require(sender == nativeProxy);
+        require(sender == nativeProxy, ErrorCodes.NOT_NATIVE_PROXY);
 
         _handleTokens(
             payloadWithNonce,

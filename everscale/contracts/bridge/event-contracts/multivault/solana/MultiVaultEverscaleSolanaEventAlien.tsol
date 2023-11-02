@@ -68,7 +68,7 @@ contract MultiVaultEverscaleSolanaEventAlien is
         string symbol,
         uint8 decimals
     ) external override {
-        require(msg.sender == token);
+        require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
 
         base_token = base_token_;
 
@@ -87,7 +87,7 @@ contract MultiVaultEverscaleSolanaEventAlien is
     function receiveAlienTokenRoot(
         address token_
     ) external override {
-        require(msg.sender == proxy);
+        require(msg.sender == proxy, ErrorCodes.WRONG_PROXY);
 
         expectedToken = token_;
 

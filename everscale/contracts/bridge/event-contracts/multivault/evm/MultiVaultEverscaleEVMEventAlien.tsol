@@ -90,7 +90,7 @@ contract MultiVaultEverscaleEVMEventAlien is
         string symbol,
         uint8 decimals
     ) external override {
-        require(msg.sender == token);
+        require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
 
         base_chainId = base_chainId_;
         base_token = base_token_;
@@ -111,7 +111,7 @@ contract MultiVaultEverscaleEVMEventAlien is
     function receiveAlienTokenRoot(
         address token_
     ) external override {
-        require(msg.sender == proxy);
+        require(msg.sender == proxy, ErrorCodes.SENDER_NOT_ROOT);
 
         expectedToken = token_;
 

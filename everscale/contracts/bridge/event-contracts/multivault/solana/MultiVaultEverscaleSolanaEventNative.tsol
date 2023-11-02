@@ -97,7 +97,7 @@ contract MultiVaultEverscaleSolanaEventNative is
     function receiveTokenName(
         string name_
     ) external override {
-        require(msg.sender == token);
+        require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
 
         name = name_;
     }
@@ -105,7 +105,7 @@ contract MultiVaultEverscaleSolanaEventNative is
     function receiveTokenSymbol(
         string symbol_
     ) external override {
-        require(msg.sender == token);
+        require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
 
         symbol = symbol_;
     }
@@ -113,7 +113,7 @@ contract MultiVaultEverscaleSolanaEventNative is
     function receiveTokenDecimals(
         uint8 decimals_
     ) external override {
-        require(msg.sender == token);
+        require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
 
         decimals = decimals_;
     }
@@ -121,7 +121,7 @@ contract MultiVaultEverscaleSolanaEventNative is
     function receiveProxyTokenWallet(
         address tokenWallet_
     ) external override {
-        require(msg.sender == token);
+        require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
 
         expectedTokenWallet = tokenWallet_;
 
