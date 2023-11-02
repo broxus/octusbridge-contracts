@@ -311,3 +311,7 @@ Fixed.
 ## [VN-079][Low] Documentation Mismatch Regarding Function Access.md
 
 Fixed.
+
+## [VN-080][Low] Documentation Mismatch Regarding Native.md
+
+Fixed.
