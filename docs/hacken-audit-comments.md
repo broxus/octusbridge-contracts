@@ -295,3 +295,11 @@ Fixed.
 ## [VN-075][Low] Missing Validation in _getNativeWithdrawalToken.md
 
 Fixed.
+
+## [VN-076][Low] Contradictory Documentation on Event Confirmation and Rejection.md
+
+Fixed.
+
+## [VN-077][Low] Hardcoded Values and Magic Numbers.md
+
+Fixed.

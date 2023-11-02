@@ -53,14 +53,10 @@ contract EverscaleEthereumBaseEvent is BaseEvent, IEverscaleEthereumEvent {
         return functionId == tvm.functionId(confirm) || functionId == tvm.functionId(reject);
     }
 
-    function len(bytes data) external pure returns(uint256) {
-        return data.length;
-    }
-
     /*
         @dev Confirm event
-        @dev Can be called only when event configuration is in Pending status
-        @param eventDataSignature Relay's signature of the TonEvent data
+        @dev Can be called only by relay, who have not voted on event yet
+        @param signature Relay's signature of the EVM EverscaleEvent data
         @param voteReceiver Should be always equal to the event contract address
     */
     function confirm(bytes signature, address voteReceiver) public {
@@ -93,7 +89,7 @@ contract EverscaleEthereumBaseEvent is BaseEvent, IEverscaleEthereumEvent {
 
     /*
         @dev Reject event
-        @dev Can be called only when event configuration is in Pending status
+        @dev Can be called only by relay, who have not voted on event yet
         @param voteReceiver Should be always equal to the event contract address
     */
     function reject(address voteReceiver) public {

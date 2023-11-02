@@ -82,15 +82,6 @@
 			]
 		},
 		{
-			"name": "len",
-			"inputs": [
-				{"name":"data","type":"bytes"}
-			],
-			"outputs": [
-				{"name":"value0","type":"uint256"}
-			]
-		},
-		{
 			"name": "confirm",
 			"inputs": [
 				{"name":"signature","type":"bytes"},
