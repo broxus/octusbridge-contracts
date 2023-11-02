@@ -172,6 +172,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
     }
 
     function setDaoRoot(address new_dao_root, address send_gas_to) external onlyDaoRoot {
+        require(new_dao_root != address(0), ErrorCodes.ZERO_ADDRESS);
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 0);
         emit DaoRootUpdated(new_dao_root);

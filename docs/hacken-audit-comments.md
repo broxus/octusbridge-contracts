@@ -327,3 +327,15 @@ Fixed.
 ## [VN-083][Informational] Commented-out Code.md
 
 Fixed.
+
+## [VN-084][Low] Missing Validation in DaoRoot.md
+
+Fixed.
+
+## [VN-085][Low] Missing Zero Address Checks in DaoRoot.md
+
+Fixed.
+
+## [VN-086][Low] Missing Zero Address Validation in StakingBase.md
+
+Fixed.

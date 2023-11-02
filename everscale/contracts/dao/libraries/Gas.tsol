@@ -18,4 +18,5 @@ library Gas {
     uint128 constant UNLOCK_CASTED_VOTE_VALUE = 0.1 ever;
     uint128 constant UNLOCK_LOCKED_VOTE_TOKENS_VALUE = 0.5 ever;
     uint128 constant PROPOSAL_DEPLOYED_CALLBACK_VALUE = 0.2 ever;
+    uint128 constant DEPLOY_EVENT_MIN_VALUE = 1 ever;
 }

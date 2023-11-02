@@ -79,6 +79,8 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
         ProposalConfiguration proposalConfiguration_,
         address admin_
     ) public checkPubKey {
+        require(admin_ != address(0), DaoErrors.ZERO_ADDRESS);
+        checkProposalConfiguration(proposalConfiguration_);
         tvm.accept();
         platformCode = platformCode_;
         proposalConfiguration = proposalConfiguration_;
@@ -322,6 +324,7 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
     ******************/
 
     function setStakingRoot(address newStakingRoot) override public onlyAdmin {
+        require(newStakingRoot != address(0), DaoErrors.ZERO_ADDRESS);
         emit StakingRootUpdated(stakingRoot, newStakingRoot);
         stakingRoot = newStakingRoot;
         admin.transfer({value: 0, flag: MsgFlag.REMAINING_GAS});
@@ -345,6 +348,9 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
         address newConfiguration,
         uint128 newDeployEventValue
     ) override public onlyAdmin {
+        require(newConfiguration != address(0), DaoErrors.ZERO_ADDRESS);
+        require(newDeployEventValue > Gas.DEPLOY_EVENT_MIN_VALUE, DaoErrors.VALUE_TOO_LOW);
+
         emit EthereumActionEventConfigurationUpdated(
             ethereumActionEventConfiguration,
             newConfiguration,
