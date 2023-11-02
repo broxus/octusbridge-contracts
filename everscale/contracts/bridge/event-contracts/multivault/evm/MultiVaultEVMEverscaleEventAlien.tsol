@@ -313,7 +313,7 @@ contract MultiVaultEVMEverscaleEventAlien is
                 eventData.name,
                 eventData.symbol,
                 eventData.decimals,
-                eventData.recipient
+                initializer
             );
 
             _requestMergeRouter();
