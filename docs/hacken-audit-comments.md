@@ -371,3 +371,11 @@ Fixed.
 ## [VN-094][Informational] Invalid Balance Sanity Check in withdrawTonsEmergency.md
 
 Fixed.
+
+## [VN-095][Informational] Invalid Required Gas Calculation.md
+
+Without changes.
+
+## [VN-096][Informational] Wrapping Address to Contract Implementation Instead of Interface.md
+
+Fixed.

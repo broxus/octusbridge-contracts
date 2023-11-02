@@ -197,7 +197,7 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
         if (ethActions.length > 0) {
             executeEthActions(proposer, ethActions);
         }
-        Proposal(msg.sender).onActionsExecuted{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}();
+        IProposal(msg.sender).onActionsExecuted{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}();
     }
 
     function executeTonAction(TonAction action) private pure inline {
