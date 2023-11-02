@@ -62,6 +62,7 @@ contract EverscaleEthereumEventConfiguration is
     )
         override
         public
+        cashBack
         onlyOwner
     {
         require(

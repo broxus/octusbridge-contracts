@@ -177,7 +177,7 @@ contract MergePool_V4 is
     /// @param token Token address
     function addToken(
         address token
-    ) external override onlyOwnerOrManager {
+    ) external override onlyOwnerOrManager cashBack {
         require(!tokens.exists(token), ErrorCodes.TOKEN_ALREADY_EXISTS);
 
         tokens[token] = Token({

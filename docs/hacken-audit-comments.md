@@ -319,3 +319,7 @@ Fixed.
 ## [VN-081][Low]Missing Zero Address Checks.md
 
 Fixed.
+
+## [VN-082][Low] Missing cashBack Modifier.md
+
+Fixed.

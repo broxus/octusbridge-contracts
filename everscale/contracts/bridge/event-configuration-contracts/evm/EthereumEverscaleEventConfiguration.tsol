@@ -67,6 +67,7 @@ contract EthereumEverscaleEventConfiguration is
     )
         override
         onlyOwner
+        cashBack
         external
     {
         require(
