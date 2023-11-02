@@ -147,6 +147,10 @@ Fixed. Removed `setWeth` function.
 ## [VN-035][High]Invalid Fee Beneficiary Handling for Zero Liquidity.md
 
 Fixed.
+ 
+## [VN-036][Critical]Share Inflation and Front-Running in Multivault Contracts.md
+
+Fixed. Only `governance` or `management` can make a first deposit.
 
 ## [VN-040][Medium] Outdated OpenZeppelin Contracts Used.md
 

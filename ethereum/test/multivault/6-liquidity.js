@@ -33,6 +33,13 @@ describe('Test multivault liquidity supply', async () => {
         await multivault.connect(owner).setDefaultInterest(interest);
     });
 
+    it('Set Bob as manager', async () => {
+        const owner = await ethers.getNamedSigner('owner');
+        const bob = await ethers.getNamedSigner('bob');
+
+        await multivault.connect(owner).setManagement(bob.address);
+    });
+
     it('Alice deposits alien token', async () => {
         const alice = await ethers.getNamedSigner('alice');
 
