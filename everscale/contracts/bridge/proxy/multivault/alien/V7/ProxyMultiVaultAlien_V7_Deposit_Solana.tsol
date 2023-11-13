@@ -5,6 +5,7 @@ import "./ProxyMultiVaultAlien_V7_Token.tsol";
 
 import "./../../../../interfaces/event-contracts/ISolanaEverscaleEvent.tsol";
 import "./../../../../interfaces/proxy/ISolanaEverscaleProxyExtended.tsol";
+import "../../../../libraries/EventContractNonce.tsol";
 
 abstract contract ProxyMultiVaultAlien_V7_Deposit_Solana is
     ProxyMultiVaultAlien_V7_Token,
@@ -14,7 +15,7 @@ abstract contract ProxyMultiVaultAlien_V7_Deposit_Solana is
     /// be deployed before. See note on `deployAlienToken`
     /// @param remainingGasTo Gas back address
     function onSolanaEventConfirmedExtended(
-        ISolanaEverscaleEvent.SolanaEverscaleEventInitData,
+        ISolanaEverscaleEvent.SolanaEverscaleEventInitData eventInitData,
         TvmCell meta,
         address remainingGasTo
     ) external override reserveAtLeastTargetBalance {
@@ -23,20 +24,21 @@ abstract contract ProxyMultiVaultAlien_V7_Deposit_Solana is
         (
             address token,
             uint128 amount,
-            address recipient
+            address recipient,
+            TvmCell payload
         ) = abi.decode(
             meta,
-            (address, uint128, address)
+            (address, uint128, address, TvmCell)
         );
 
-        TvmCell empty;
+        uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
 
         _mintTokens(
             token,
             amount,
             recipient,
             remainingGasTo,
-            empty
+            abi.encode(nonce, payload)
         );
     }
 }

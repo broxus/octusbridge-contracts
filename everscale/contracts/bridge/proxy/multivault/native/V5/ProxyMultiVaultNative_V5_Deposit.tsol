@@ -61,7 +61,7 @@ abstract contract ProxyMultiVaultNative_V5_Deposit is
     /// @notice Handles native token transfer from Solana.
     /// @param remainingGasTo Gas back address
     function onSolanaEventConfirmedExtended(
-        ISolanaEverscaleEvent.SolanaEverscaleEventInitData,
+        ISolanaEverscaleEvent.SolanaEverscaleEventInitData eventInitData,
         TvmCell meta,
         address remainingGasTo
     ) external override reserveAtLeastTargetBalance {
@@ -70,20 +70,29 @@ abstract contract ProxyMultiVaultNative_V5_Deposit is
         (
             address token_wallet,
             uint128 amount,
-            address recipient
+            address recipient,
+            TvmCell payload
         ) = abi.decode(
             meta,
-            (address, uint128, address)
+            (address, uint128, address, TvmCell)
         );
 
-        TvmCell empty;
+        TvmCell transferPayload;
+
+        if (recipient == dex_middleware) {
+            transferPayload = payload;
+        } else {
+            uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
+
+            transferPayload = abi.encode(nonce, payload);
+        }
 
         _transferTokens(
             token_wallet,
             amount,
             recipient,
             remainingGasTo,
-            empty
+            transferPayload
         );
     }
 

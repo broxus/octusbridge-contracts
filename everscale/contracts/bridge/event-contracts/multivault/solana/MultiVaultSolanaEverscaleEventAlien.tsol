@@ -277,9 +277,9 @@ contract MultiVaultSolanaEverscaleEventAlien is
             decimals,
             amount,
             recipient,
-            value_,
+            value,
             expected_evers,
-            payload_,
+            payload,
             proxy,
             token
         );
