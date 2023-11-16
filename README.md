@@ -10,6 +10,14 @@
 
 # EVM documentation
 
+## Diamond storage positions
+
+The storage slots in the Diamond storage contracts are hardcoded (`DiamondStorage`, `MultiVaultStorage`, `MultiVaultStorageInitializable`, `MultiVaultStorageReentrancyGuard`). The reason for this is past migration of existing contracts,
+from Transparent Proxy pattern to a diamond pattern. In the future, new variables will be added to a new storage, which slot
+would be calculated in a way Diamond standard recommends.
+
+Keep in mind, that `MultiVaultStorageInitializable` and `MultiVaultStorageReentrancyGuard`'s storage can't be upgraded or extended.
+
 ## MultiVault roles
 
 - Governance
