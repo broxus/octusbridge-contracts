@@ -4,6 +4,9 @@
   </a>
 </p>
 
+# Integration documentation
+
+[https://integrate.octusbridge.io/](https://integrate.octusbridge.io/)
 
 # EVM documentation
 
