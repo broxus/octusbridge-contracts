@@ -8,6 +8,32 @@
 
 [https://integrate.octusbridge.io/](https://integrate.octusbridge.io/)
 
+# Rescuer role in a Staking contract
+
+In the context of our staking contract, the rescuer role is a critical component designed to manage emergency situations. This section outlines the responsibilities, limitations, and procedural guidelines associated with the rescuer role, ensuring a clear understanding of its purpose and functioning within the contract ecosystem.
+
+## Purpose
+
+The rescuer role serves as an emergency response mechanism within the staking contract. Its primary function is to safeguard assets and maintain the integrity of the contract in the face of immediate threats or anomalies.
+
+## Responsibilities
+
+- Emergency Activation: The rescuer has the capability to set the contract into an emergency state. This action is taken in response to detected threats or contract vulnerabilities that could jeopardize the security of the assets or the functioning of the contract.
+
+- Alert System: The rescuer acts as an alert system, identifying potential risks and initiating the emergency protocol.
+
+## Procedural Guidelines
+
+1. Emergency Activation: Upon detecting a threat, the rescuer activates the emergency state and notifies the DAO immediately.
+
+2. DAO Notification: The DAO is alerted through predefined communication channels, and an emergency session is convened.
+
+3. DAO Deliberation and Action: The DAO assesses the situation, votes on the necessary actions (including asset withdrawals or contract modifications), and implements these decisions in a timely manner.
+
+4. Post-Emergency Review: After resolving the emergency, a thorough review is conducted to analyze the response efficacy, improve protocols, and mitigate future risks.
+
+
+
 # EVM documentation
 
 ## Diamond storage positions
