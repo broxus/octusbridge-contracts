@@ -36,6 +36,19 @@ The rescuer role serves as an emergency response mechanism within the staking co
 
 Event rejection is essential for handling exceptional cases in the TVM to EVM bridge process, ensuring only valid transactions are processed. Users should double-check transaction details before burning tokens. Burning is irreversible, and errors can lead to permanent token loss. If an event is rejected, the current EverscaleEthereumBaseEvent contract does not re-mint burnt tokens. This means rejected events will result in permanent loss of funds.
 
+# Potential Funds Lock on Token Burn in TVM to EVM Bridge
+
+When burning tokens as part of the TVM to EVM bridge process, it's crucial to attach a sufficient amount of value (Gas) to the transaction. Burning tokens with a value that is too low to cover the necessary network fees can result in the irreversible loss of those funds.
+
+## Calculating the Correct Value
+
+To prevent fund loss, users must ensure they calculate the correct amount of value to attach to the burn transaction. This involves considering:
+
+- Event's Minimal Balance
+- Additional Network Fees: Add an extra amount to cover all anticipated network fees.
+
+It's essential to accurately assess these costs to avoid any risk of fund loss during the token burning process.
+
 # EVM documentation
 
 ## Diamond storage positions
