@@ -52,6 +52,8 @@ contract MultiVaultFacetLiquidity is
 
         if (s.liquidity[token].activation == 0) {
             require(msg.sender == s.governance || msg.sender == s.management, "Liquidity: only governance or management");
+            require(amount >= 1000 wei, "Liquidity: amount is too small");
+            require(recipient == s.governance, "Liquidity: recipient is not governance");
             lp = IMultiVaultFacetTokenFactory(address(this)).deployLPToken(token);
 
             s.liquidity[token].activation = block.number;
