@@ -32,7 +32,9 @@ The rescuer role serves as an emergency response mechanism within the staking co
 
 4. Post-Emergency Review: After resolving the emergency, a thorough review is conducted to analyze the response efficacy, improve protocols, and mitigate future risks.
 
+# Potential Funds Lock on Event Rejection in TVM to EVM Bridge
 
+Event rejection is essential for handling exceptional cases in the TVM to EVM bridge process, ensuring only valid transactions are processed. Users should double-check transaction details before burning tokens. Burning is irreversible, and errors can lead to permanent token loss. If an event is rejected, the current EverscaleEthereumBaseEvent contract does not re-mint burnt tokens. This means rejected events will result in permanent loss of funds.
 
 # EVM documentation
 
