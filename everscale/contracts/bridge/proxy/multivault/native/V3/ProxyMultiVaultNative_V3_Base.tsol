@@ -50,22 +50,6 @@ abstract contract ProxyMultiVaultNative_V3_Base is IProxyMultiVaultNative_V3, In
         solanaConfiguration = _config;
     }
 
-    /// @notice Proxies arbitrary message to any contract.
-    /// Should be used for interacting with `onlyOwner` alien token root methods.
-    /// This can be called only by `owner`.
-    /// @param recipient Recipient address
-    /// @param message TvmCell message, eg function call
-    function sendMessage(
-        address recipient,
-        TvmCell message
-    ) external override onlyOwner reserveAtLeastTargetBalance {
-        recipient.transfer({
-            value: 0,
-            flag: MsgFlag.ALL_NOT_RESERVED,
-            body: message
-        });
-    }
-
     function _transferTokens(
         address token_wallet,
         uint128 amount,

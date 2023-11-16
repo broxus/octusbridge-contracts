@@ -279,15 +279,6 @@
 			]
 		},
 		{
-			"name": "sendMessage",
-			"inputs": [
-				{"name":"recipient","type":"address"},
-				{"name":"message","type":"cell"}
-			],
-			"outputs": [
-			]
-		},
-		{
 			"name": "transferOwnership",
 			"inputs": [
 				{"name":"newOwner","type":"address"}

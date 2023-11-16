@@ -135,13 +135,6 @@ interface IProxyMultiVaultAlien_V6 is IEVMCallback, INetworks {
         address remainingGasTo
     ) external;
 
-
-    // Support functions
-    function sendMessage(
-        address recipient,
-        TvmCell message
-    ) external;
-
     // Events specification
     event SolanaAlienTransfer(
         uint256 base_token,

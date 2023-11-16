@@ -22,12 +22,6 @@ interface IProxyMultiVaultNative_V3 is IEVMCallback, INetworks {
     function setEVMConfiguration(EVMConfiguration _config, address gasBackAddress) external;
     function setSolanaConfiguration(SolanaConfiguration _config, address gasBackAddress) external;
 
-    // Support functions
-    function sendMessage(
-        address recipient,
-        TvmCell message
-    ) external;
-
     // Events specification
     event SolanaNativeTransfer(
         uint256 base_token,
