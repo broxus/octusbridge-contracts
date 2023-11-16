@@ -138,7 +138,7 @@ contract EthereumEverscaleEventConfiguration is
             counter++;
         }
 
-        msg.sender.transfer({ value: 0, flag: MsgFlag.IGNORE_ERRORS, bounce: false });
+        msg.sender.transfer({ value: 0, flag: MsgFlag.IGNORE_ERRORS + MsgFlag.ALL_NOT_RESERVED, bounce: false });
     }
 
 
