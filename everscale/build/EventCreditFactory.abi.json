@@ -1,0 +1,107 @@
+{
+	"ABI version": 2,
+	"version": "2.2",
+	"header": ["pubkey", "time", "expire"],
+	"functions": [
+		{
+			"name": "constructor",
+			"inputs": [
+				{"name":"owner_","type":"address"},
+				{"name":"key_","type":"uint256"},
+				{"name":"eventCloserCode_","type":"cell"},
+				{"name":"eventDeployerCode_","type":"cell"},
+				{"name":"eventClosersCount","type":"uint8"},
+				{"name":"eventDeployersCount","type":"uint8"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "drainDeployers",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "upgrade",
+			"inputs": [
+				{"name":"code","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "transferOwnership",
+			"inputs": [
+				{"name":"newOwner","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "renounceOwnership",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "owner",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"owner","type":"address"}
+			]
+		},
+		{
+			"name": "_randomNonce",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"_randomNonce","type":"uint256"}
+			]
+		},
+		{
+			"name": "eventClosers",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"eventClosers","type":"address[]"}
+			]
+		},
+		{
+			"name": "eventDeployers",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"eventDeployers","type":"address[]"}
+			]
+		}
+	],
+	"data": [
+		{"key":1,"name":"_randomNonce","type":"uint256"}
+	],
+	"events": [
+		{
+			"name": "OwnershipTransferred",
+			"inputs": [
+				{"name":"previousOwner","type":"address"},
+				{"name":"newOwner","type":"address"}
+			],
+			"outputs": [
+			]
+		}
+	],
+	"fields": [
+		{"name":"_pubkey","type":"uint256"},
+		{"name":"_timestamp","type":"uint64"},
+		{"name":"_constructorFlag","type":"bool"},
+		{"name":"owner","type":"address"},
+		{"name":"_randomNonce","type":"uint256"},
+		{"name":"eventCloserCode","type":"cell"},
+		{"name":"eventDeployerCode","type":"cell"},
+		{"name":"eventClosers","type":"address[]"},
+		{"name":"eventDeployers","type":"address[]"}
+	]
+}

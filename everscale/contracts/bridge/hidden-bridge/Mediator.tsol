@@ -1,10 +1,11 @@
-pragma ever-solidity >= 0.39.0;
+pragma ever-solidity >= 0.62.0;
 
 pragma AbiHeader expire;
 
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 import "@broxus/contracts/contracts/access/InternalOwner.tsol";
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
+import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 
 import "./../../utils/TransferUtils.tsol";
 import "../interfaces/proxy/INetworks.tsol";
@@ -31,7 +32,8 @@ contract Mediator is
     INetworks,
     TransferUtils,
     InternalOwner,
-    RandomNonce
+    RandomNonce,
+    CheckPubKey
 {
     enum Operation {
         BurnToAlienProxy,
@@ -50,7 +52,9 @@ contract Mediator is
         address _owner,
         address _nativeProxy,
         TvmCell _alienTokenWalletPlatformCode
-    ) public {
+    ) public checkPubKey {
+        require(_owner != address(0), ErrorCodes.ZERO_ADDRESS);
+        require(_nativeProxy != address(0), ErrorCodes.ZERO_ADDRESS);
         tvm.accept();
 
         setOwnership(_owner);
@@ -61,6 +65,7 @@ contract Mediator is
     function setNativeProxy(
         address _nativeProxy
     ) external onlyOwner cashBack {
+        require(_nativeProxy != address(0), ErrorCodes.ZERO_ADDRESS);
         nativeProxy = _nativeProxy;
     }
 
@@ -88,7 +93,7 @@ contract Mediator is
         address remainingGasTo,
         TvmCell payloadWithNonce
     ) external override reserveAtLeastTargetBalance {
-        require(sender == nativeProxy);
+        require(sender == nativeProxy, ErrorCodes.NOT_NATIVE_PROXY);
 
         _handleTokens(
             payloadWithNonce,
@@ -206,6 +211,9 @@ contract Mediator is
         address _eventCloser,
         address _eventDeployer
     ) external onlyOwner {
+        require(_eventCloser != address(0), ErrorCodes.ZERO_ADDRESS);
+        require(_eventDeployer != address(0), ErrorCodes.ZERO_ADDRESS);
+
         eventCloser = _eventCloser;
         eventDeployer = _eventDeployer;
     }

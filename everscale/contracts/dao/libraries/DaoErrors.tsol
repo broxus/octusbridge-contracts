@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.39.0;
+pragma ever-solidity >= 0.62.0;
 
 library DaoErrors {
     uint8 constant NOT_ADMIN = 101;
@@ -25,6 +25,7 @@ library DaoErrors {
     uint8 constant PROPOSAL_IS_NOT_QUEUED = 141;
     uint8 constant PROPOSAL_IS_EXECUTED = 142;
     uint8 constant EXECUTION_TIME_NOT_COME_YET = 143;
-
+    uint8 constant PROPOSAL_BALANCE_TOO_LOW = 144;
+    uint8 constant ZERO_ADDRESS = 145;
 
 }

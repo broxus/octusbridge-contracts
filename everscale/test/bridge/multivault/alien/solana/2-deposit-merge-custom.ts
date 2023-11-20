@@ -15,6 +15,7 @@ import {
     MergeRouterAbi,
     MultiVaultEVMEverscaleEventAlienAbi, MultiVaultSolanaEverscaleEventAlienAbi,
     ProxyMultiVaultAlien_V6Abi,
+    ProxyMultiVaultAlien_V7Abi,
     SolanaEverscaleEventConfigurationAbi,
     StakingMockupAbi,
     TokenRootAbi,
@@ -38,7 +39,7 @@ let everscaleEthereumEventConfiguration: Contract<EverscaleEthereumEventConfigur
 let solanaEverscaleEventConfiguration: Contract<SolanaEverscaleEventConfigurationAbi>;
 let everscaleSolanaEventConfiguration: Contract<EverscaleSolanaEventConfigurationAbi>;
 let initializer: Account;
-let proxy: Contract<ProxyMultiVaultAlien_V6Abi>;
+let proxy: Contract<ProxyMultiVaultAlien_V7Abi>;
 
 let alienTokenRoot: Contract<TokenRootAlienSolanaAbi>;
 let customTokenRoot: Contract<TokenRootAbi>;

@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.39.0;
+pragma ever-solidity >= 0.62.0;
 
 import "../../utils/Delegate.tsol";
 
@@ -14,6 +14,11 @@ contract TestTarget is Delegate {
     constructor (address _daoRoot) public {
         tvm.accept();
         daoRoot = _daoRoot;
+    }
+
+    modifier onlyDelegate {
+        checkDelegate();
+        _;
     }
 
     function call(uint32 newParam) public pure {

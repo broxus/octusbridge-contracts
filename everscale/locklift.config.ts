@@ -83,9 +83,28 @@ const config: LockliftConfig = {
         accountId: 0,
       },
       keys: {
+        phrase: process.env.VENOM_SEED ?? '',
         amount: 20
       }
-    }
+    },
+    venom_main: {
+      connection: {
+        id: 1,
+        group: "group",
+        type: "jrpc",
+        data: {
+          endpoint: "https://jrpc.venom.foundation"
+        },
+      },
+      giver: {
+        address: process.env.VENOM_MAIN_GIVER_ADDRESS ?? "",
+        phrase: process.env.VENOM_MAIN_GIVER_PHRASE ?? "",
+        accountId: 0,
+      },
+      keys: {
+        amount: 20
+      }
+    },
   },
   // you can use any settings that mocha framework support
   mocha: {

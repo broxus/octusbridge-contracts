@@ -1,11 +1,11 @@
-pragma ever-solidity >= 0.39.0;
+pragma ever-solidity >= 0.62.0;
 pragma AbiHeader time;
 pragma AbiHeader pubkey;
 pragma AbiHeader expire;
 
 
 import "./../../../interfaces/event-contracts/multivault/solana/IMultiVaultEverscaleSolanaEventAlien.tsol";
-import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V6.tsol";
+import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V7.tsol";
 import "./../../../interfaces/alien-token/ITokenRootAlienSolana.tsol";
 
 import "./../../base/solana/EverscaleSolanaBaseEvent.tsol";
@@ -48,8 +48,6 @@ contract MultiVaultEverscaleSolanaEventAlien is
     }
 
     function onInit() override internal {
-        setStatusInitializing();
-
         (nonce, proxy, token, remainingGasTo, amount, recipient, sender) = abi.decode(
             eventInitData.voteData.eventData,
             (uint32, address, address, address, uint128, uint256, address)
@@ -70,11 +68,11 @@ contract MultiVaultEverscaleSolanaEventAlien is
         string symbol,
         uint8 decimals
     ) external override {
-        require(msg.sender == token);
+        require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
 
         base_token = base_token_;
 
-        IProxyMultiVaultAlien_V6(proxy).deriveSolanaAlienTokenRoot{
+        IProxyMultiVaultAlien_V7(proxy).deriveSolanaAlienTokenRoot{
             value: 1 ever,
             bounce: true,
             callback: MultiVaultEverscaleSolanaEventAlien.receiveAlienTokenRoot
@@ -89,7 +87,7 @@ contract MultiVaultEverscaleSolanaEventAlien is
     function receiveAlienTokenRoot(
         address token_
     ) external override {
-        require(msg.sender == proxy);
+        require(msg.sender == proxy, ErrorCodes.WRONG_PROXY);
 
         expectedToken = token_;
 
@@ -137,7 +135,7 @@ contract MultiVaultEverscaleSolanaEventAlien is
 
         if (
             (selector == tvm.functionId(ITokenRootAlienSolana.meta) && msg.sender == token) ||
-            (selector == tvm.functionId(IProxyMultiVaultAlien_V6.deriveSolanaAlienTokenRoot) && msg.sender == proxy)
+            (selector == tvm.functionId(IProxyMultiVaultAlien_V7.deriveSolanaAlienTokenRoot) && msg.sender == proxy)
         ) {
             setStatusRejected(2);
         }

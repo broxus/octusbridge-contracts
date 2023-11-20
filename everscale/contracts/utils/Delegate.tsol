@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.39.0;
+pragma ever-solidity >= 0.62.0;
 
 abstract contract Delegate {
     uint16 constant DELEGATE_NOT_FOUND = 1201;
@@ -6,11 +6,6 @@ abstract contract Delegate {
     uint16 constant WRONG_DELEGATE_CALL_HASH = 1203;
 
     mapping(address => uint[]) public delegators;
-
-    modifier onlyDelegate {
-        checkDelegate();
-        _;
-    }
 
     function checkDelegate() internal {
         optional(uint[]) optDelegate = delegators.fetch(msg.sender);

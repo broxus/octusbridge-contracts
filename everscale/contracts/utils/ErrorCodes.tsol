@@ -1,8 +1,7 @@
-pragma ever-solidity >= 0.39.0;
+pragma ever-solidity >= 0.62.0;
 pragma AbiHeader expire;
 
 
-// TODO: remove unused codes before release
 library ErrorCodes {
     // Bridge
     uint16 constant BRIDGE_NOT_ACTIVE = 2102;
@@ -14,6 +13,7 @@ library ErrorCodes {
     uint16 constant IS_NOT_BASE_CHAIN = 2109;
     uint16 constant SENDER_NOT_RELAY_ROUND = 2110;
     uint16 constant SENDER_NOT_MANAGER_OR_OWNER = 2111;
+    uint16 constant ZERO_ADDRESS = 2112;
 
     // Event configuration contract
     uint16 constant SENDER_NOT_BRIDGE = 2209;
@@ -43,6 +43,10 @@ library ErrorCodes {
     uint16 constant SENDER_IS_NOT_EVENT_OWNER = 2322;
     uint16 constant WRONG_VOTE_RECEIVER = 2323;
     uint16 constant WRONG_STATUS = 2324;
+    uint16 constant WRONG_SIGNATURE_SIZE = 2325;
+    uint16 constant SENDER_NOT_ROOT = 2326;
+    uint16 constant WRONG_ROUTER = 2327;
+    uint16 constant WRONG_POOL = 2328;
 
     // Connector
     uint16 constant DEPLOYER_NOT_BRIDGE = 2420;
@@ -117,6 +121,7 @@ library ErrorCodes {
     // Hidden bridge
     uint16 constant UNKNOWN_MEDIATOR_OPERATION = 2801;
     uint16 constant WRONG_GUARDIAN = 2802;
+    uint16 constant NOT_NATIVE_PROXY = 2803;
 
     // Merging
     uint16 constant WRONG_PROXY = 2901;
@@ -127,6 +132,7 @@ library ErrorCodes {
     uint16 constant MERGE_POOL_IS_ZERO_ADDRESS = 2906;
     uint16 constant TOKEN_NOT_ENABLED = 2907;
     uint16 constant TOKEN_DECIMALS_IS_ZERO = 2908;
+    uint16 constant WRONG_CANON_ID = 2909;
 
     // Event deployer
 

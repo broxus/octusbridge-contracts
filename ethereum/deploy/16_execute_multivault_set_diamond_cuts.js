@@ -19,7 +19,8 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         'MultiVaultFacetSettings',
         'MultiVaultFacetTokens',
         'MultiVaultFacetWithdraw',
-        'MultiVaultFacetLiquidity'
+        'MultiVaultFacetLiquidity',
+        'MultiVaultFacetTokenFactory'
     ];
 
     // Deploy every facet

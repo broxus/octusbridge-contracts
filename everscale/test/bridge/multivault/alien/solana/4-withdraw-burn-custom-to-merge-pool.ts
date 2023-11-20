@@ -8,6 +8,7 @@ import {
     EverscaleSolanaEventConfigurationAbi, MergePool_V3Abi,
     MergeRouterAbi, MultiVaultEverscaleEVMEventAlienAbi, MultiVaultEverscaleSolanaEventAlienAbi,
     ProxyMultiVaultAlien_V6Abi,
+    ProxyMultiVaultAlien_V7Abi,
     SolanaEverscaleEventConfigurationAbi,
     StakingMockupAbi,
     TokenRootAbi,
@@ -35,7 +36,7 @@ let everscaleEthereumEventConfiguration: Contract<EverscaleEthereumEventConfigur
 let solanaEverscaleEventConfiguration: Contract<SolanaEverscaleEventConfigurationAbi>;
 let everscaleSolanaEventConfiguration: Contract<EverscaleSolanaEventConfigurationAbi>;
 let initializer: Account;
-let proxy: Contract<ProxyMultiVaultAlien_V6Abi>;
+let proxy: Contract<ProxyMultiVaultAlien_V7Abi>;
 
 let alienTokenRoot: Contract<TokenRootAlienSolanaAbi>;
 let customTokenRoot: Contract<TokenRootAbi>;
@@ -101,18 +102,31 @@ describe('Withdraw custom tokens by burning in favor of merge pool', async funct
             customTokenMeta.name,
             customTokenMeta.symbol,
             customTokenMeta.decimals,
-            proxy.address
+            bridgeOwner.address
         );
 
         await logContract("Custom token root", customTokenRoot.address);
     });
 
     it('Mint custom tokens to initializer', async () => {
-        await proxy.methods.mint({
+        await customTokenRoot.methods.mint({
             amount: mintAmount,
             recipient: initializer.address,
             payload: '',
-            token: customTokenRoot.address
+            deployWalletValue: locklift.utils.toNano(1),
+            remainingGasTo: bridgeOwner.address,
+            notify: false,
+        }).send({
+            from: bridgeOwner.address,
+            amount: locklift.utils.toNano(2)
+        });
+    });
+
+    it('Transfer custom token ownership to proxy', async () => {
+        await customTokenRoot.methods.transferOwnership({
+            newOwner: proxy.address,
+            remainingGasTo: bridgeOwner.address,
+            callbacks: []
         }).send({
             from: bridgeOwner.address,
             amount: locklift.utils.toNano(2)

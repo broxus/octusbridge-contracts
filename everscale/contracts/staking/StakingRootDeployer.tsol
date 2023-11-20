@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.39.0;
+pragma ever-solidity >= 0.62.0;
 
 import "./StakingV1_2.tsol";
 
@@ -24,6 +24,7 @@ contract StakingRootDeployer {
         address _tokenRoot,
         uint32 _deploy_nonce
     ) public view returns(address) {
+        require(tvm.pubkey() == msg.pubkey(), WRONG_PUBKEY);
         tvm.accept();
         return new StakingV1_2 {
             stateInit: tvm.buildStateInit({

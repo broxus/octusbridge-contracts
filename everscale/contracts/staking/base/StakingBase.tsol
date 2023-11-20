@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.57.0;
+pragma ever-solidity >= 0.62.0;
 //pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
@@ -90,8 +90,30 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
 
     address public bridge_event_config_ton_sol;
 
+    uint32 constant RELAY_LOCK_TIME = 30 days;
+    uint32 constant RELAY_ROUND_TIME = 7 days;
+    uint32 constant ELECTION_TIME = 2 days;
+    uint32 constant TIME_BEFORE_ELECTION = 4 days;
+    uint32 constant MIN_ROUND_GAP_TIME = 1 hours;
+    uint16 constant RELAYS_COUNT = 30;
+    uint16 constant MIN_RELAYS_COUNT = 13;
+    uint128 constant MIN_RELAY_DEPOSIT = 100000 * 10**9;
+    uint128 constant RELAY_INITIAL_TON_DEPOSIT = 500 ton;
+    uint128 constant RELAY_REWARD_PER_SECOND = 1000000;
+    uint128 constant USER_REWARD_PER_SECOND = 1000000;
+
     RelayConfigDetails relay_config = RelayConfigDetails(
-        30 days, 7 days, 2 days, 4 days, 1 hours, 30, 13, 100000 * 10**9, 500 ton, 1000000, 1000000
+        RELAY_LOCK_TIME,
+        RELAY_ROUND_TIME,
+        ELECTION_TIME,
+        TIME_BEFORE_ELECTION,
+        MIN_ROUND_GAP_TIME,
+        RELAYS_COUNT,
+        MIN_RELAYS_COUNT,
+        MIN_RELAY_DEPOSIT,
+        RELAY_INITIAL_TON_DEPOSIT,
+        RELAY_REWARD_PER_SECOND,
+        USER_REWARD_PER_SECOND
     );
 
     uint128 tonEthEventDeployValue = 2.5 ton;
@@ -150,6 +172,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
     }
 
     function setDaoRoot(address new_dao_root, address send_gas_to) external onlyDaoRoot {
+        require(new_dao_root != address(0), ErrorCodes.ZERO_ADDRESS);
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 0);
         emit DaoRootUpdated(new_dao_root);
@@ -318,7 +341,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
         address remainingGasTo,
         TvmCell payload
     ) external override {
-        require (msg.sender == base_details.tokenWallet);
+        require (msg.sender == base_details.tokenWallet, ErrorCodes.NOT_TOKEN_WALLET);
 
         tvm.rawReserve(_reserve(), 0);
 
@@ -621,7 +644,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
     function withdrawTonsEmergency(uint128 amount, address receiver, bool all, address send_gas_to) external view onlyRescuer {
         require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
         require (base_details.emergency, ErrorCodes.EMERGENCY);
-        require (address(this).balance > amount, ErrorCodes.VALUE_TOO_LOW);
+        require (address(this).balance - msg.value > amount, ErrorCodes.VALUE_TOO_LOW);
 
         tvm.rawReserve(Gas.ROOT_INITIAL_BALANCE, 0);
 

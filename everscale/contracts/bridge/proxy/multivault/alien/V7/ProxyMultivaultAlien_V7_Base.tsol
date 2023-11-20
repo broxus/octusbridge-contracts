@@ -59,22 +59,6 @@ abstract contract ProxyMultivaultAlien_V7_Base is IProxyMultiVaultAlien_V7, Tran
         manager = _manager;
     }
 
-    /// @notice Proxies arbitrary message to any contract.
-    /// Should be used for interacting with `onlyOwner` alien token root methods.
-    /// This can be called only by `owner`.
-    /// @param recipient Recipient address
-    /// @param message TvmCell message, eg function call
-    function sendMessage(
-        address recipient,
-        TvmCell message
-    ) external override onlyOwner reserveAtLeastTargetBalance {
-        recipient.transfer({
-            value: 0,
-            flag: MsgFlag.ALL_NOT_RESERVED,
-            body: message
-        });
-    }
-
     function _isArrayContainsAddress(
         address[] array,
         address searchElement

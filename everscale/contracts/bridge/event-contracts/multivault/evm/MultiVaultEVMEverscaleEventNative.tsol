@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.39.0;
+pragma ever-solidity >= 0.62.0;
 pragma AbiHeader time;
 pragma AbiHeader pubkey;
 pragma AbiHeader expire;
@@ -34,6 +34,10 @@ contract MultiVaultEVMEverscaleEventNative is
         TvmCell _meta
     ) EthereumEverscaleBaseEvent(_initializer, _meta) public {}
 
+    function onReject() virtual override internal {
+        transferAll(initializer);
+    }
+
     function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
         body.decode(uint64, uint32);
         TvmSlice bodyCopy = body;
@@ -45,8 +49,6 @@ contract MultiVaultEVMEverscaleEventNative is
     }
 
     function onInit() override internal {
-        setStatusInitializing();
-
         int8 token_wid;
         uint256 token_addr;
 
@@ -76,7 +78,7 @@ contract MultiVaultEVMEverscaleEventNative is
 
         // Destroy event contract in case event contract is less than required
         if (address(this).balance < expected_evers) {
-            recipient.transfer({
+            initializer.transfer({
                 value: 0,
                 bounce: false,
                 flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.DESTROY_IF_ZERO
@@ -92,11 +94,11 @@ contract MultiVaultEVMEverscaleEventNative is
     }
 
     function receiveConfigurationDetails(
-        IEthereumEverscaleEventConfiguration.BasicConfiguration,
+        IBasicEventConfiguration.BasicConfiguration,
         IEthereumEverscaleEventConfiguration.EthereumEverscaleEventConfiguration _networkConfiguration,
         TvmCell
     ) external override {
-        require(msg.sender == eventInitData.configuration);
+        require(msg.sender == eventInitData.configuration, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
 
         proxy = _networkConfiguration.proxy;
 
@@ -109,7 +111,7 @@ contract MultiVaultEVMEverscaleEventNative is
     function receiveProxyTokenWallet(
         address tokenWallet_
     ) external override {
-        require(msg.sender == token);
+        require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
 
         tokenWallet = tokenWallet_;
 

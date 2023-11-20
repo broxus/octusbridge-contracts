@@ -49,7 +49,7 @@ describe('Test upgrading Ethereum MultiVault to the Diamond proxy', async () => 
         const Diamond = await ethers.getContractFactory('Diamond');
         const diamond = await Diamond.deploy();
 
-        const proxyAdmin = await ethers.getContractAt('contracts/multivault/proxy/ProxyAdmin.sol:ProxyAdmin', PROXY_ADMIN);
+        const proxyAdmin = await ethers.getContractAt('ProxyAdmin', PROXY_ADMIN);
 
         const {
             data: diamondInitialize
@@ -72,7 +72,8 @@ describe('Test upgrading Ethereum MultiVault to the Diamond proxy', async () => 
             'MultiVaultFacetSettings',
             'MultiVaultFacetTokens',
             'MultiVaultFacetWithdraw',
-            'MultiVaultFacetLiquidity'
+            'MultiVaultFacetLiquidity',
+            'MultiVaultFacetTokenFactory'
         ];
 
         const facetCuts = await Promise.all(facets.map(async (name) => {
@@ -111,18 +112,12 @@ describe('Test upgrading Ethereum MultiVault to the Diamond proxy', async () => 
 
     it('Validate new storage', async () => {
         const governance = await diamond_multivault.governance();
-        const rewards = await diamond_multivault.rewards();
         const configurationNative = await diamond_multivault.configurationNative();
         const initHash = await diamond_multivault.getInitHash();
         const nativeToken = await diamond_multivault.tokens(NATIVE_TOKEN);
 
         expect(governance)
             .to.be.equal(state.governance, 'Wrong governance');
-
-        expect(rewards.wid)
-            .to.be.equal(state.rewards.wid, 'Wrong rewards');
-        expect(rewards.addr)
-            .to.be.equal(state.rewards.addr, 'Wrong rewards');
 
         expect(configurationNative.wid)
             .to.be.equal(state.configurationNative.wid, 'Wrong native configuration');

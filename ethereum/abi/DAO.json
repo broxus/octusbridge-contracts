@@ -5,13 +5,50 @@
     "type": "constructor"
   },
   {
+    "inputs": [],
+    "name": "InvalidInitialization",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotInitializing",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnableInvalidOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "OwnableUnauthorizedAccount",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ReentrancyGuardReentrantCall",
+    "type": "error"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
         "indexed": false,
-        "internalType": "uint8",
+        "internalType": "uint64",
         "name": "version",
-        "type": "uint8"
+        "type": "uint64"
       }
     ],
     "name": "Initialized",
@@ -55,9 +92,9 @@
       {
         "components": [
           {
-            "internalType": "int128",
+            "internalType": "int8",
             "name": "wid",
-            "type": "int128"
+            "type": "int8"
           },
           {
             "internalType": "uint256",
@@ -111,9 +148,9 @@
     "name": "configuration",
     "outputs": [
       {
-        "internalType": "int128",
+        "internalType": "int8",
         "name": "wid",
-        "type": "int128"
+        "type": "int8"
       },
       {
         "internalType": "uint256",
@@ -205,19 +242,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "getChainID",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -273,9 +297,9 @@
       {
         "components": [
           {
-            "internalType": "int128",
+            "internalType": "int8",
             "name": "wid",
-            "type": "int128"
+            "type": "int8"
           },
           {
             "internalType": "uint256",

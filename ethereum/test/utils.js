@@ -4,9 +4,9 @@ const BigNumber = require('bignumber.js');
 const _ = require('underscore');
 
 const chai = require('chai');
-const { solidity } = require("ethereum-waffle");
+// const { solidity } = require("ethereum-waffle");
 
-chai.use(solidity);
+// chai.use(solidity);
 // chai.use(require('chai-bignumber')());
 
 const { expect } = chai;

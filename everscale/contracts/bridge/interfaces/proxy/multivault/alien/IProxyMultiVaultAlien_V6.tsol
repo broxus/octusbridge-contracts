@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.39.0;
+pragma ever-solidity >= 0.62.0;
 
 import "../../../event-contracts/multivault/evm/IEVMCallback.tsol";
 import "../../../event-contracts/IEverscaleSolanaEvent.tsol";
@@ -133,13 +133,6 @@ interface IProxyMultiVaultAlien_V6 is IEVMCallback, INetworks {
         string symbol,
         uint8 decimals,
         address remainingGasTo
-    ) external;
-
-
-    // Support functions
-    function sendMessage(
-        address recipient,
-        TvmCell message
     ) external;
 
     // Events specification

@@ -13,6 +13,15 @@
 			]
 		},
 		{
+			"name": "getUnmodifiedEventData",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
+			]
+		},
+		{
 			"name": "receiveTokenMeta",
 			"inputs": [
 				{"name":"base_chainId_","type":"uint256"},
@@ -344,6 +353,14 @@
 			"outputs": [
 				{"name":"expectedToken","type":"address"}
 			]
+		},
+		{
+			"name": "unmodifiedEventData",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"unmodifiedEventData","type":"cell"}
+			]
 		}
 	],
 	"data": [
@@ -418,6 +435,7 @@
 		{"name":"callback_strict","type":"bool"},
 		{"name":"base_chainId","type":"uint256"},
 		{"name":"base_token","type":"uint160"},
-		{"name":"expectedToken","type":"address"}
+		{"name":"expectedToken","type":"address"},
+		{"name":"unmodifiedEventData","type":"cell"}
 	]
 }

@@ -23,7 +23,7 @@ abstract contract ProxyMultiVaultAlien_V7_MergePool is ProxyMultiVaultAlien_V7_W
     }
 
     /// @notice Deploy merge pool
-    /// Can be called only by `owner`
+    /// Can be called only by `owner` or `manager`
     /// @param nonce Unique nonce
     /// @param tokens List of tokens, connected in the merge pool
     /// @param canonId Index of token from `tokens`, used as default in case of EVM-EVER transfer

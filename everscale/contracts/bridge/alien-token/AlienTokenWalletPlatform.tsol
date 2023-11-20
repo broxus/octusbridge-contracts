@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.39.0;
+pragma ever-solidity >= 0.62.0;
 
 
 import "ton-eth-bridge-token-contracts/contracts/libraries/TokenMsgFlag.tsol";

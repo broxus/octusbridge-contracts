@@ -1,0 +1,98 @@
+pragma ever-solidity >= 0.62.0;
+
+
+pragma AbiHeader expire;
+pragma AbiHeader pubkey;
+
+import "@broxus/contracts/contracts/access/InternalOwner.tsol";
+import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
+
+import './EventDeployer.tsol';
+import './EventCloser.tsol';
+
+import './EventCreditGas.tsol';
+
+
+contract EventCreditFactory is InternalOwner, RandomNonce {
+    TvmCell eventCloserCode;
+    TvmCell eventDeployerCode;
+
+    address[] public eventClosers;
+    address[] public eventDeployers;
+
+    constructor(
+        address owner_,
+        uint key_,
+        TvmCell eventCloserCode_,
+        TvmCell eventDeployerCode_,
+        uint8 eventClosersCount,
+        uint8 eventDeployersCount
+    ) public {
+        tvm.accept();
+
+        eventCloserCode = eventCloserCode_;
+        eventDeployerCode = eventDeployerCode_;
+
+        setOwnership(owner_);
+
+        // Deploy event deployers
+        for (uint8 i; i < eventDeployersCount; i++) {
+            address deployer = new EventDeployer{
+                value: EventCreditGas.EVENT_DEPLOYER_INITIAL_BALANCE + 0.5 ever,
+                flag: 0,
+                bounce: false,
+                code: eventDeployerCode,
+                pubkey: 0,
+                varInit: {
+                    _randomNonce: i,
+                    factory: address(this)
+                }
+            }(key_);
+
+            eventDeployers.push(deployer);
+        }
+
+        // Deploy event closers
+        for (uint8 i; i < eventClosersCount; i++) {
+            address closer = new EventCloser{
+                value: EventCreditGas.EVENT_CLOSER_INITIAL_BALANCE + 0.5 ever,
+                flag: 0,
+                bounce: false,
+                code: eventCloserCode,
+                pubkey: 0,
+                varInit: {
+                    _randomNonce: i,
+                    factory: address(this)
+                }
+            }(key_, eventDeployers);
+
+            eventClosers.push(closer);
+        }
+    }
+
+    receive() external view {
+        uint128 value_per_deployer = (msg.value - 1 ever) / uint8(eventDeployers.length);
+
+        for (address deployer: eventDeployers) {
+            deployer.transfer({
+                value: value_per_deployer,
+                bounce: false,
+                flag: 0
+            });
+        }
+    }
+
+    function drainDeployers() onlyOwner view external {
+        for (address deployer: eventDeployers) {
+            EventDeployer(deployer).drain{
+                value: 0.1 ever,
+                bounce: false,
+                flag: 0
+            }(owner);
+        }
+    }
+
+    function upgrade(TvmCell code) external onlyOwner {
+
+    }
+}

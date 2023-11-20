@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.39.0;
+pragma ever-solidity >= 0.62.0;
 pragma AbiHeader pubkey;
 
 
@@ -125,9 +125,9 @@ contract MergePool_V4 is
         _randomNonce = _randomNonce_;
         version = version_;
 
-        require(tokens_.length > 0);
-        require(msg.sender == proxy);
-        require(canonId <= tokens_.length - 1);
+        require(tokens_.length > 0, ErrorCodes.TOKEN_NOT_EXISTS);
+        require(msg.sender == proxy, ErrorCodes.WRONG_PROXY);
+        require(canonId <= tokens_.length - 1, ErrorCodes.WRONG_CANON_ID);
 
         canon = tokens_[canonId];
 
@@ -161,12 +161,11 @@ contract MergePool_V4 is
     /// @notice Remove token from the pool
     /// Token must be presented in the pool
     /// Token must be different from the canon. Otherwise set new canon first.
-    /// Can be called only by `owner`
+    /// Can be called only by `owner` or `manager`
     /// @param token Token address
     function removeToken(
         address token
-    ) external override onlyOwnerOrManager cashBack {
-        require(tokens.exists(token), ErrorCodes.TOKEN_NOT_EXISTS);
+    ) external override onlyOwnerOrManager tokenExists(token) cashBack {
         require(token != canon, ErrorCodes.TOKEN_IS_CANON);
 
         delete tokens[token];
@@ -174,11 +173,11 @@ contract MergePool_V4 is
 
     /// @notice Add new token to the pool
     /// Token must not be presented in the pool
-    /// Can be called only by `owner`
+    /// Can be called only by `owner` or `manager`
     /// @param token Token address
     function addToken(
         address token
-    ) external override onlyOwnerOrManager {
+    ) external override onlyOwnerOrManager cashBack {
         require(!tokens.exists(token), ErrorCodes.TOKEN_ALREADY_EXISTS);
 
         tokens[token] = Token({
@@ -190,7 +189,7 @@ contract MergePool_V4 is
     }
 
     /// @notice Set `canon` token
-    /// Can be called only by `owner`
+    /// Can be called only by `owner` or `manager`
     /// @param token token address
     function setCanon(
         address token
@@ -201,29 +200,31 @@ contract MergePool_V4 is
     }
 
     /// @notice Enable token
-    /// Can be called only by `owner`
+    /// Can be called only by `owner` or `manager`
     /// Token must be presented in the pool
     /// @param token Token address
     function enableToken(
         address token
-    ) public override onlyOwnerOrManager cashBack {
+    ) public override onlyOwnerOrManager tokenExists(token) cashBack {
+        require(tokens[token].decimals > 0, ErrorCodes.TOKEN_DECIMALS_IS_ZERO);
         _setTokenStatus(token, true);
     }
 
     function enableAll() external override onlyOwnerOrManager cashBack {
         for ((address token,): tokens) {
+            require(tokens[token].decimals > 0, ErrorCodes.TOKEN_DECIMALS_IS_ZERO);
             _setTokenStatus(token, true);
         }
     }
 
     /// @notice Disable token
-    /// Can be called only by `owner`
+    /// Can be called only by `owner` or `manager`
     /// Token must be presented in the pool
     /// Users cant swap tokens to the disabled tokens
     /// @param token Token address
     function disableToken(
         address token
-    ) public override onlyOwnerOrManager cashBack {
+    ) public override onlyOwnerOrManager tokenExists(token) cashBack {
         _setTokenStatus(token, false);
     }
 
@@ -386,12 +387,6 @@ contract MergePool_V4 is
     }
 
     function _setTokenStatus(address token, bool status) internal {
-        require(tokens.exists(token), ErrorCodes.TOKEN_NOT_EXISTS);
-
-        if (status == true) {
-            require(tokens[token].decimals > 0, ErrorCodes.TOKEN_DECIMALS_IS_ZERO);
-        }
-
         tokens[token].enabled = status;
     }
 }

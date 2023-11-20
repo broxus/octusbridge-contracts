@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.39.0;
+pragma ever-solidity >= 0.62.0;
 pragma AbiHeader time;
 pragma AbiHeader pubkey;
 pragma AbiHeader expire;
@@ -53,8 +53,6 @@ contract MultiVaultEverscaleSolanaEventNative is
     }
 
     function onInit() override internal {
-        setStatusInitializing();
-
         (
             nonce,
             proxy,
@@ -99,7 +97,7 @@ contract MultiVaultEverscaleSolanaEventNative is
     function receiveTokenName(
         string name_
     ) external override {
-        require(msg.sender == token);
+        require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
 
         name = name_;
     }
@@ -107,7 +105,7 @@ contract MultiVaultEverscaleSolanaEventNative is
     function receiveTokenSymbol(
         string symbol_
     ) external override {
-        require(msg.sender == token);
+        require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
 
         symbol = symbol_;
     }
@@ -115,7 +113,7 @@ contract MultiVaultEverscaleSolanaEventNative is
     function receiveTokenDecimals(
         uint8 decimals_
     ) external override {
-        require(msg.sender == token);
+        require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
 
         decimals = decimals_;
     }
@@ -123,7 +121,7 @@ contract MultiVaultEverscaleSolanaEventNative is
     function receiveProxyTokenWallet(
         address tokenWallet_
     ) external override {
-        require(msg.sender == token);
+        require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
 
         expectedTokenWallet = tokenWallet_;
 

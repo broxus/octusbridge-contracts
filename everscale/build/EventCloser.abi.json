@@ -6,8 +6,8 @@
 		{
 			"name": "constructor",
 			"inputs": [
-				{"name":"_owner","type":"uint256"},
-				{"name":"_deployer","type":"address"}
+				{"name":"owner_","type":"uint256"},
+				{"name":"deployers_","type":"address[]"}
 			],
 			"outputs": [
 			]
@@ -45,16 +45,25 @@
 			]
 		},
 		{
-			"name": "deployer",
+			"name": "deployers",
 			"inputs": [
 			],
 			"outputs": [
-				{"name":"deployer","type":"address"}
+				{"name":"deployers","type":"address[]"}
+			]
+		},
+		{
+			"name": "deployerIndex",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"deployerIndex","type":"uint8"}
 			]
 		}
 	],
 	"data": [
-		{"key":1,"name":"_randomNonce","type":"uint256"}
+		{"key":1,"name":"_randomNonce","type":"uint256"},
+		{"key":2,"name":"factory","type":"address"}
 	],
 	"events": [
 		{
@@ -73,6 +82,8 @@
 		{"name":"_constructorFlag","type":"bool"},
 		{"name":"owner","type":"uint256"},
 		{"name":"_randomNonce","type":"uint256"},
-		{"name":"deployer","type":"address"}
+		{"name":"factory","type":"address"},
+		{"name":"deployers","type":"address[]"},
+		{"name":"deployerIndex","type":"uint8"}
 	]
 }

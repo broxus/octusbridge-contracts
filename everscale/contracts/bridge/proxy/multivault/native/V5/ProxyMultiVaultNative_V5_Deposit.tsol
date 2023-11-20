@@ -17,8 +17,7 @@ abstract contract ProxyMultiVaultNative_V5_Deposit is
     ISolanaEverscaleProxyExtended,
     ProxyMultiVaultNative_V5_Withdraw
 {
-    /// @notice Handles alien token transfer from EVM. Token address is derived automatically and MUST
-    /// be deployed before. See note on `deployAlienToken`
+    /// @notice Handles native token transfer from EVM.
     /// @param remainingGasTo Gas back address
     function onEventConfirmedExtended(
         IEthereumEverscaleEvent.EthereumEverscaleEventInitData eventInitData,
@@ -59,8 +58,7 @@ abstract contract ProxyMultiVaultNative_V5_Deposit is
         );
     }
 
-    /// @notice Handles alien token transfer from Solana. Token address is derived automatically and MUST
-    /// be deployed before. See note on `deployAlienToken`
+    /// @notice Handles native token transfer from Solana.
     /// @param remainingGasTo Gas back address
     function onSolanaEventConfirmedExtended(
         ISolanaEverscaleEvent.SolanaEverscaleEventInitData,

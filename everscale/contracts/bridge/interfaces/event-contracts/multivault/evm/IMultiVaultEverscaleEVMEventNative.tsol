@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.39.0;
+pragma ever-solidity >= 0.62.0;
 
 import "./IEVMCallback.tsol";
 
@@ -8,6 +8,8 @@ interface IMultiVaultEverscaleEVMEventNative is IEVMCallback {
     function receiveTokenSymbol(string symbol_) external;
     function receiveTokenDecimals(uint8 decimals_) external;
     function receiveProxyTokenWallet(address tokenWallet_) external;
+
+    function getUnmodifiedEventData() external responsible returns(TvmCell);
 
     function getDecodedData() external responsible returns(
         address proxy_,

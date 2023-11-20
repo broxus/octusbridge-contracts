@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0
-pragma solidity ^0.8.2;
-pragma experimental ABIEncoderV2;
+pragma solidity ^0.8.20;
 
 
-import "./IBridge.sol";
+
+import "./bridge/IBridge.sol";
 
 
 interface IDAO {
@@ -14,6 +14,19 @@ interface IDAO {
         bytes data;
     }
 
+    function setConfiguration(
+        IBridge.EverscaleAddress calldata _configuration
+    ) external;
+
+    function decodeEthActionsEventData(
+        bytes memory payload
+    ) external pure returns (
+        int8 _wid,
+        uint256 _addr,
+        uint32 chainId,
+        EthAction[] memory actions
+    );
+ 
     function setBridge(
         address _bridge
     ) external;

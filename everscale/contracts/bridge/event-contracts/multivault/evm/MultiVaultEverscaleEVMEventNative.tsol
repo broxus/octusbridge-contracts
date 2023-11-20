@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.39.0;
+pragma ever-solidity >= 0.62.0;
 pragma AbiHeader time;
 pragma AbiHeader pubkey;
 pragma AbiHeader expire;
@@ -43,10 +43,15 @@ contract MultiVaultEverscaleEVMEventNative is
     uint8 public decimals;
     address public expectedTokenWallet;
 
+    // Unmodified event data
+    TvmCell public unmodifiedEventData;
+
     constructor(
         address _initializer,
         TvmCell _meta
-    ) EverscaleEthereumBaseEvent(_initializer, _meta) public {}
+    ) EverscaleEthereumBaseEvent(_initializer, _meta) public {
+        unmodifiedEventData = eventInitData.voteData.eventData;
+    }
 
     function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
         body.decode(uint64, uint32);
@@ -58,9 +63,11 @@ contract MultiVaultEverscaleEVMEventNative is
         return bodyCopy;
     }
 
-    function onInit() override internal {
-        setStatusInitializing();
+    function getUnmodifiedEventData() external override responsible returns(TvmCell) {
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} unmodifiedEventData;
+    }
 
+    function onInit() override internal {
         (
             nonce,
             proxy,
@@ -110,7 +117,7 @@ contract MultiVaultEverscaleEVMEventNative is
     function receiveTokenName(
         string name_
     ) external override {
-        require(msg.sender == token);
+        require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
 
         name = name_;
     }
@@ -118,7 +125,7 @@ contract MultiVaultEverscaleEVMEventNative is
     function receiveTokenSymbol(
         string symbol_
     ) external override {
-        require(msg.sender == token);
+        require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
 
         symbol = symbol_;
     }
@@ -126,7 +133,7 @@ contract MultiVaultEverscaleEVMEventNative is
     function receiveTokenDecimals(
         uint8 decimals_
     ) external override {
-        require(msg.sender == token);
+        require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
 
         decimals = decimals_;
     }
@@ -134,7 +141,7 @@ contract MultiVaultEverscaleEVMEventNative is
     function receiveProxyTokenWallet(
         address tokenWallet_
     ) external override {
-        require(msg.sender == token);
+        require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
 
         expectedTokenWallet = tokenWallet_;
 

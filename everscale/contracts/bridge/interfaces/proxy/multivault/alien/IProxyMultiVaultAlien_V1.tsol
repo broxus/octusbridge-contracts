@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.39.0;
+pragma ever-solidity >= 0.62.0;
 
 
 interface IProxyMultiVaultAlien_V1 {
@@ -32,10 +32,5 @@ interface IProxyMultiVaultAlien_V1 {
         string symbol,
         uint8 decimals,
         address remainingGasTo
-    ) external;
-
-    function sendMessage(
-        address recipient,
-        TvmCell message
     ) external;
 }

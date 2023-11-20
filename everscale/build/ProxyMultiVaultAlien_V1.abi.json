@@ -70,15 +70,6 @@
 			]
 		},
 		{
-			"name": "sendMessage",
-			"inputs": [
-				{"name":"recipient","type":"address"},
-				{"name":"message","type":"cell"}
-			],
-			"outputs": [
-			]
-		},
-		{
 			"name": "getConfiguration",
 			"inputs": [
 				{"name":"answerId","type":"uint32"}

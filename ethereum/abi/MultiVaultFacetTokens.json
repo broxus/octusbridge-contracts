@@ -7,32 +7,6 @@
         "internalType": "address",
         "name": "token",
         "type": "address"
-      }
-    ],
-    "name": "BlacklistTokenAdded",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      }
-    ],
-    "name": "BlacklistTokenRemoved",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
       },
       {
         "indexed": false,
@@ -118,48 +92,67 @@
     "type": "event"
   },
   {
-    "inputs": [],
-    "name": "getInitHash",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
+    "anonymous": false,
     "inputs": [
       {
-        "components": [
-          {
-            "internalType": "int8",
-            "name": "wid",
-            "type": "int8"
-          },
-          {
-            "internalType": "uint256",
-            "name": "addr",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct IEverscale.EverscaleAddress",
-        "name": "native",
-        "type": "tuple"
-      }
-    ],
-    "name": "getNativeToken",
-    "outputs": [
-      {
+        "indexed": false,
         "internalType": "address",
         "name": "token",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "status",
+        "type": "bool"
       }
     ],
-    "stateMutability": "view",
-    "type": "function"
+    "name": "UpdateTokenBlacklist",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "limit",
+        "type": "uint256"
+      }
+    ],
+    "name": "UpdateTokenDepositLimit",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "name_prefix",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "symbol_prefix",
+        "type": "string"
+      }
+    ],
+    "name": "UpdateTokenPrefix",
+    "type": "event"
   },
   {
     "inputs": [
@@ -236,17 +229,12 @@
         "type": "address"
       },
       {
-        "internalType": "string",
-        "name": "name_prefix",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "symbol_prefix",
-        "type": "string"
+        "internalType": "uint256",
+        "name": "limit",
+        "type": "uint256"
       }
     ],
-    "name": "setPrefix",
+    "name": "setDepositLimit",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -310,6 +298,11 @@
             "internalType": "address",
             "name": "custom",
             "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "depositLimit",
+            "type": "uint256"
           }
         ],
         "internalType": "struct IMultiVaultFacetTokens.Token",

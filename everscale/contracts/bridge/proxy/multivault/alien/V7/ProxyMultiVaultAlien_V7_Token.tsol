@@ -8,41 +8,6 @@ import "./ProxyMultivaultAlien_V7_Base.tsol";
 
 
 abstract contract ProxyMultiVaultAlien_V7_Token is ProxyMultivaultAlien_V7_Base {
-    function mint(
-        address token,
-        uint128 amount,
-        address recipient,
-        TvmCell payload
-    ) external override onlyOwner reserveAtLeastTargetBalance {
-        _mintTokens(
-            token,
-            amount,
-            recipient,
-            msg.sender,
-            payload
-        );
-    }
-
-    function burn(
-        address token,
-        uint128 amount,
-        address walletOwner
-    ) external override onlyOwner reserveAtLeastTargetBalance {
-        TvmCell empty;
-
-        IBurnableByRootTokenRoot(token).burnTokens{
-            value: 0,
-            flag: MsgFlag.ALL_NOT_RESERVED,
-            bounce: false
-        }(
-            amount,
-            walletOwner,
-            msg.sender,
-            msg.sender,
-            empty
-        );
-    }
-
     function _mintTokens(
         address token,
         uint128 amount,

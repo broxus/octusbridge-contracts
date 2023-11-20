@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.39.0;
+pragma ever-solidity >= 0.62.0;
 
 
 import "./../../../event-configuration-contracts/IEthereumEverscaleEventConfiguration.tsol";
@@ -6,7 +6,7 @@ import "./../../../event-configuration-contracts/IEthereumEverscaleEventConfigur
 
 interface IMultiVaultEVMEverscaleEventNative {
     function receiveConfigurationDetails(
-        IEthereumEverscaleEventConfiguration.BasicConfiguration,
+        IBasicEventConfiguration.BasicConfiguration,
         IEthereumEverscaleEventConfiguration.EthereumEverscaleEventConfiguration _networkConfiguration,
         TvmCell
     ) external;

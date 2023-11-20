@@ -116,23 +116,6 @@ function decodeRoundRelaysEventData(bytes payload) external pure returns (uint32
 | _relays | uint160[] | undefined |
 | roundEnd | uint32 | undefined |
 
-### emergencyShutdown
-
-```solidity
-function emergencyShutdown() external view returns (bool)
-```
-
-
-
-
-
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | bool | undefined |
-
 ### forceRoundRelays
 
 ```solidity
@@ -338,7 +321,7 @@ function paused() external view returns (bool)
 ### recoverSignature
 
 ```solidity
-function recoverSignature(bytes payload, bytes signature) external pure returns (address signer)
+function recoverSignature(bytes payload, bytes signature) external pure returns (address)
 ```
 
 Recover signer from the payload and signature
@@ -356,7 +339,7 @@ Recover signer from the payload and signature
 
 | Name | Type | Description |
 |---|---|---|
-| signer | address | undefined |
+| _0 | address | undefined |
 
 ### relays
 
@@ -389,13 +372,13 @@ function renounceOwnership() external nonpayable
 
 
 
-*Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner.*
+*Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner.*
 
 
 ### roundRelaysConfiguration
 
 ```solidity
-function roundRelaysConfiguration() external view returns (int128 wid, uint256 addr)
+function roundRelaysConfiguration() external view returns (int8 wid, uint256 addr)
 ```
 
 
@@ -407,7 +390,7 @@ function roundRelaysConfiguration() external view returns (int128 wid, uint256 a
 
 | Name | Type | Description |
 |---|---|---|
-| wid | int128 | undefined |
+| wid | int8 | undefined |
 | addr | uint256 | undefined |
 
 ### roundSubmitter
@@ -637,37 +620,21 @@ event BanRelay(address indexed relay, bool status)
 | relay `indexed` | address | undefined |
 | status  | bool | undefined |
 
-### EmergencyShutdown
-
-```solidity
-event EmergencyShutdown(bool active)
-```
-
-
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| active  | bool | undefined |
-
 ### Initialized
 
 ```solidity
-event Initialized(uint8 version)
+event Initialized(uint64 version)
 ```
 
 
 
-
+*Triggered when the contract has been initialized or reinitialized.*
 
 #### Parameters
 
 | Name | Type | Description |
 |---|---|---|
-| version  | uint8 | undefined |
+| version  | uint64 | undefined |
 
 ### NewRound
 
@@ -711,7 +678,7 @@ event Paused(address account)
 
 
 
-
+*Emitted when the pause is triggered by `account`.*
 
 #### Parameters
 
@@ -744,7 +711,7 @@ event Unpaused(address account)
 
 
 
-
+*Emitted when the pause is lifted by `account`.*
 
 #### Parameters
 
@@ -816,5 +783,84 @@ event UpdateRoundTTL(uint32 value)
 |---|---|---|
 | value  | uint32 | undefined |
 
+
+
+## Errors
+
+### EnforcedPause
+
+```solidity
+error EnforcedPause()
+```
+
+
+
+*The operation failed because the contract is paused.*
+
+
+### ExpectedPause
+
+```solidity
+error ExpectedPause()
+```
+
+
+
+*The operation failed because the contract is not paused.*
+
+
+### InvalidInitialization
+
+```solidity
+error InvalidInitialization()
+```
+
+
+
+*The contract is already initialized.*
+
+
+### NotInitializing
+
+```solidity
+error NotInitializing()
+```
+
+
+
+*The contract is not initializing.*
+
+
+### OwnableInvalidOwner
+
+```solidity
+error OwnableInvalidOwner(address owner)
+```
+
+
+
+*The owner is not a valid owner account. (eg. `address(0)`)*
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| owner | address | undefined |
+
+### OwnableUnauthorizedAccount
+
+```solidity
+error OwnableUnauthorizedAccount(address account)
+```
+
+
+
+*The caller account is not authorized to perform an operation.*
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| account | address | undefined |
 
 

@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.39.0;
+pragma ever-solidity >= 0.62.0;
 
 import "Proposal.tsol";
 
@@ -16,11 +16,13 @@ import "./interfaces/IUpgradable.tsol";
 
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 import "@broxus/contracts/contracts/platform/Platform.tsol";
+import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
+
 import "../utils/Delegate.tsol";
 import "../utils/cell-encoder/DaoCellEncoder.tsol";
 import "../bridge/interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.tsol";
 
-contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate {
+contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey {
 
     uint8 public constant proposalMaxOperations = 10;
     uint16 public constant proposalMaxDescriptionLen = 4096;
@@ -76,7 +78,9 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate {
         TvmCell platformCode_,
         ProposalConfiguration proposalConfiguration_,
         address admin_
-    ) public {
+    ) public checkPubKey {
+        require(admin_ != address(0), DaoErrors.ZERO_ADDRESS);
+        checkProposalConfiguration(proposalConfiguration_);
         tvm.accept();
         platformCode = platformCode_;
         proposalConfiguration = proposalConfiguration_;
@@ -193,7 +197,7 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate {
         if (ethActions.length > 0) {
             executeEthActions(proposer, ethActions);
         }
-        Proposal(msg.sender).onActionsExecuted{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}();
+        IProposal(msg.sender).onActionsExecuted{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}();
     }
 
     function executeTonAction(TonAction action) private pure inline {
@@ -320,6 +324,7 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate {
     ******************/
 
     function setStakingRoot(address newStakingRoot) override public onlyAdmin {
+        require(newStakingRoot != address(0), DaoErrors.ZERO_ADDRESS);
         emit StakingRootUpdated(stakingRoot, newStakingRoot);
         stakingRoot = newStakingRoot;
         admin.transfer({value: 0, flag: MsgFlag.REMAINING_GAS});
@@ -343,6 +348,9 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate {
         address newConfiguration,
         uint128 newDeployEventValue
     ) override public onlyAdmin {
+        require(newConfiguration != address(0), DaoErrors.ZERO_ADDRESS);
+        require(newDeployEventValue > Gas.DEPLOY_EVENT_MIN_VALUE, DaoErrors.VALUE_TOO_LOW);
+
         emit EthereumActionEventConfigurationUpdated(
             ethereumActionEventConfiguration,
             newConfiguration,

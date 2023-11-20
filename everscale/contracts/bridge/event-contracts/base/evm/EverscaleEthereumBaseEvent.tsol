@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.39.0;
+pragma ever-solidity >= 0.62.0;
 pragma AbiHeader time;
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
@@ -10,7 +10,7 @@ import "./../../../../utils/ErrorCodes.tsol";
 
 
 contract EverscaleEthereumBaseEvent is BaseEvent, IEverscaleEthereumEvent {
-    uint32 constant FORCE_CLOSE_TIMEOUT = 1 days;
+    uint32 constant FORCE_CLOSE_TIMEOUT = 3 days;
     uint32 public createdAt;
 
     // Event data
@@ -55,8 +55,8 @@ contract EverscaleEthereumBaseEvent is BaseEvent, IEverscaleEthereumEvent {
 
     /*
         @dev Confirm event
-        @dev Can be called only when event configuration is in Pending status
-        @param eventDataSignature Relay's signature of the TonEvent data
+        @dev Can be called only by relay, who have not voted on event yet
+        @param signature Relay's signature of the EVM EverscaleEvent data
         @param voteReceiver Should be always equal to the event contract address
     */
     function confirm(bytes signature, address voteReceiver) public {
@@ -65,6 +65,7 @@ contract EverscaleEthereumBaseEvent is BaseEvent, IEverscaleEthereumEvent {
         uint relay = msg.pubkey();
 
         require(votes[relay] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
+        require(signature.length <= 65, ErrorCodes.WRONG_SIGNATURE_SIZE);
 
         tvm.accept();
 
@@ -88,7 +89,7 @@ contract EverscaleEthereumBaseEvent is BaseEvent, IEverscaleEthereumEvent {
 
     /*
         @dev Reject event
-        @dev Can be called only when event configuration is in Pending status
+        @dev Can be called only by relay, who have not voted on event yet
         @param voteReceiver Should be always equal to the event contract address
     */
     function reject(address voteReceiver) public {

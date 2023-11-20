@@ -174,27 +174,6 @@
 			]
 		},
 		{
-			"name": "mint",
-			"inputs": [
-				{"name":"token","type":"address"},
-				{"name":"amount","type":"uint128"},
-				{"name":"recipient","type":"address"},
-				{"name":"payload","type":"cell"}
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "burn",
-			"inputs": [
-				{"name":"token","type":"address"},
-				{"name":"amount","type":"uint128"},
-				{"name":"walletOwner","type":"address"}
-			],
-			"outputs": [
-			]
-		},
-		{
 			"name": "deployEVMAlienToken",
 			"inputs": [
 				{"name":"chainId","type":"uint256"},
@@ -278,15 +257,6 @@
 			"name": "setManager",
 			"inputs": [
 				{"name":"_manager","type":"address"}
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "sendMessage",
-			"inputs": [
-				{"name":"recipient","type":"address"},
-				{"name":"message","type":"cell"}
 			],
 			"outputs": [
 			]

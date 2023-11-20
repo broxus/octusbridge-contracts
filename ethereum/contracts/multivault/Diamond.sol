@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.1;
+pragma solidity ^0.8.20;
 
 
-import "./multivault/facets/DiamondCutFacet.sol";
-import "./multivault/facets/DiamondLoupeFacet.sol";
-import "./multivault/facets/DiamondOwnershipFacet.sol";
+import "./facets/DiamondCutFacet.sol";
+import "./facets/DiamondLoupeFacet.sol";
+import "./facets/DiamondOwnershipFacet.sol";
 
-import "./multivault/storage/DiamondStorage.sol";
+import "./storage/DiamondStorage.sol";
 
 
 contract Diamond {

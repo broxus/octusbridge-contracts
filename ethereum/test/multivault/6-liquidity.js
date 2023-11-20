@@ -33,6 +33,14 @@ describe('Test multivault liquidity supply', async () => {
         await multivault.connect(owner).setDefaultInterest(interest);
     });
 
+    it('Set Bob as governance', async () => {
+        const owner = await ethers.getNamedSigner('owner');
+        const bob = await ethers.getNamedSigner('bob');
+
+        await multivault.connect(owner).setGovernance(bob.address);
+        await multivault.connect(bob).acceptGovernance();
+    });
+
     it('Alice deposits alien token', async () => {
         const alice = await ethers.getNamedSigner('alice');
 
@@ -67,7 +75,7 @@ describe('Test multivault liquidity supply', async () => {
 
             await expect(() => multivault
                 .connect(bob)
-                .mint(token.address, liquidity_deposit, bob.address)
+                .mintLP(token.address, liquidity_deposit, bob.address)
             ).to.changeTokenBalances(
                 token,
                 [bob, multivault],
@@ -100,10 +108,13 @@ describe('Test multivault liquidity supply', async () => {
 
             lp_token = await ethers.getContractAt('MultiVaultToken', lp_token_address);
 
+            const name_prefix = await multivault.DEFAULT_NAME_LP_PREFIX();
+            const symbol_prefix = await multivault.DEFAULT_SYMBOL_LP_PREFIX();
+
             expect(await lp_token.name())
-                .to.be.equal(`Octus LP ${await token.name()}`);
+                .to.be.equal(`${name_prefix}${await token.name()}`);
             expect(await lp_token.symbol())
-                .to.be.equal(`octLP${await token.symbol()}`);
+                .to.be.equal(`${symbol_prefix}${await token.symbol()}`);
 
             expect(await lp_token.totalSupply())
                 .to.be.equal(liquidity_deposit);
@@ -183,7 +194,7 @@ describe('Test multivault liquidity supply', async () => {
             expect(expected_tokens)
                 .to.be.gt(liquidity_deposit, 'Wrong expected amount before LP redeem');
 
-            await expect(() => multivault.connect(bob).redeem(token.address, lp_balance, bob.address))
+            await expect(() => multivault.connect(bob).redeemLP(token.address, lp_balance, bob.address))
                 .to.changeTokenBalances(
                     token,
                     [multivault, bob],

@@ -158,7 +158,7 @@ async function main() {
   const stakingRootData = await locklift.factory.getContractArtifacts(
     "StakingV1_2"
   );
-  const { contract: stakingRootDeployer } =
+  const r =
     await locklift.transactions.waitFinalized(
       locklift.factory.deployContract({
         contract: "StakingRootDeployer",
@@ -171,6 +171,12 @@ async function main() {
         value: locklift.utils.toNano(30),
       })
     );
+
+  const {
+    extTransaction: {
+      contract: stakingRootDeployer
+    }
+  } = r;
 
   spinner.succeed(`Staking deployer address: ${stakingRootDeployer.address}`);
 

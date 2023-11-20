@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.39.0;
+pragma ever-solidity >= 0.62.0;
 pragma AbiHeader time;
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
@@ -38,7 +38,8 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
     }
 
     function onInit() virtual internal {
-        setStatusInitializing();
+        // Suppress view warning
+        _status = Status.Initializing;
 
         loadRelays();
     }
@@ -48,17 +49,6 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
     function onConfirm() virtual internal {}
     function onReject() virtual internal {}
 
-    modifier onlyInitializer() {
-        require(msg.sender == initializer, ErrorCodes.SENDER_NOT_INITIALIZER);
-        _;
-    }
-
-    modifier eventNotRejected() {
-        require(_status != Status.Rejected, ErrorCodes.WRONG_STATUS);
-
-        _;
-    }
-
     modifier onlyStaking() {
         require(msg.sender == getStakingAddress(), ErrorCodes.SENDER_NOT_STAKING);
         _;
@@ -66,11 +56,6 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
 
     modifier onlyRelayRound() {
         require(msg.sender == relay_round, ErrorCodes.SENDER_NOT_RELAY_ROUND);
-        _;
-    }
-
-    modifier eventInitializing() {
-        require(_status == Status.Initializing, ErrorCodes.EVENT_NOT_INITIALIZING);
         _;
     }
 
@@ -92,7 +77,6 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
         }(now);
     }
 
-    // TODO: cant be pure, compiler lies
     function receiveRoundAddress(
         address roundContract,
         uint32 roundNum
@@ -138,12 +122,6 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
         _status = Status.Rejected;
 
         emit Rejected(reason);
-    }
-
-    function setStatusInitializing() internal {
-        require(_status == Status.Initializing, ErrorCodes.WRONG_STATUS);
-
-        _status = Status.Initializing;
     }
 
     function _checkVoteReceiver(address voteReceiver) internal pure {

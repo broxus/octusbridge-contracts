@@ -1,22 +1,21 @@
 // SPDX-License-Identifier: AGPL-3.0
-pragma solidity ^0.8.2;
-pragma experimental ABIEncoderV2;
+pragma solidity ^0.8.20;
 
-import "./interfaces/IBridge.sol";
+
+import "./interfaces/bridge/IBridge.sol";
 import "./interfaces/IEverscale.sol";
 import "./interfaces/IDAO.sol";
 
-import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 import "./utils/Cache.sol";
-import "./utils/ChainId.sol";
 
 
 /// @title DAO contract for Everscale-EVM bridge
 /// @dev Executes proposals confirmed in Everscale Bridge DAO.
 /// Proposals are submitted in form of payloads and signatures
-contract DAO is IDAO, IEverscale, ReentrancyGuardUpgradeable, OwnableUpgradeable, Cache, ChainId {
+contract DAO is IDAO, IEverscale, ReentrancyGuardUpgradeable, OwnableUpgradeable, Cache {
     address public bridge;
     EverscaleAddress public configuration;
 
@@ -24,8 +23,12 @@ contract DAO is IDAO, IEverscale, ReentrancyGuardUpgradeable, OwnableUpgradeable
         _disableInitializers();
     }
 
+    function renounceOwnership() public override {
+        revert("DAO: renounce ownership is not allowed");
+    }
+
     modifier notZeroAddress(address addr) {
-        require(addr != address(0));
+        require(addr != address(0), "DAO: zero address");
 
         _;
     }
@@ -42,8 +45,7 @@ contract DAO is IDAO, IEverscale, ReentrancyGuardUpgradeable, OwnableUpgradeable
     ) public initializer notZeroAddress(_owner) notZeroAddress(_bridge) {
         bridge = _bridge;
 
-        __Ownable_init();
-        transferOwnership(_owner);
+        __Ownable_init(_owner);
     }
 
     /**
@@ -52,7 +54,7 @@ contract DAO is IDAO, IEverscale, ReentrancyGuardUpgradeable, OwnableUpgradeable
     */
     function setConfiguration(
         EverscaleAddress calldata _configuration
-    ) public onlyOwner {
+    ) public override onlyOwner {
         configuration = _configuration;
     }
 
@@ -66,7 +68,7 @@ contract DAO is IDAO, IEverscale, ReentrancyGuardUpgradeable, OwnableUpgradeable
 
     function decodeEthActionsEventData(
         bytes memory payload
-    ) public pure returns (
+    ) public override pure returns (
         int8 _wid,
         uint256 _addr,
         uint32 chainId,
@@ -120,7 +122,7 @@ contract DAO is IDAO, IEverscale, ReentrancyGuardUpgradeable, OwnableUpgradeable
         ) = decodeEthActionsEventData(payload);
 
         require(
-            chainId == getChainID(),
+            chainId == block.chainid,
             "DAO: wrong chain id"
         );
 

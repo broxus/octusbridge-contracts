@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0
-pragma solidity ^0.8.2;
-pragma experimental ABIEncoderV2;
+pragma solidity ^0.8.20;
 
 
-contract Cache {
+
+abstract contract Cache {
     mapping (bytes32 => bool) public cache;
+    uint256[49] __gap;
 
     modifier notCached(bytes memory payload) {
         bytes32 hash_ = keccak256(abi.encode(payload));

@@ -10,6 +10,31 @@
 
 ## Methods
 
+### decodeEthActionsEventData
+
+```solidity
+function decodeEthActionsEventData(bytes payload) external pure returns (int8 _wid, uint256 _addr, uint32 chainId, struct IDAO.EthAction[] actions)
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| payload | bytes | undefined |
+
+#### Returns
+
+| Name | Type | Description |
+|---|---|---|
+| _wid | int8 | undefined |
+| _addr | uint256 | undefined |
+| chainId | uint32 | undefined |
+| actions | IDAO.EthAction[] | undefined |
+
 ### execute
 
 ```solidity
@@ -48,6 +73,22 @@ function setBridge(address _bridge) external nonpayable
 | Name | Type | Description |
 |---|---|---|
 | _bridge | address | undefined |
+
+### setConfiguration
+
+```solidity
+function setConfiguration(IEverscale.EverscaleAddress _configuration) external nonpayable
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| _configuration | IEverscale.EverscaleAddress | undefined |
 
 
 

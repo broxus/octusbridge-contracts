@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.39.0;
+pragma ever-solidity >= 0.62.0;
 pragma AbiHeader time;
 pragma AbiHeader pubkey;
 
@@ -177,25 +177,6 @@ contract ProxyMultiVaultAlien_V1 is
             false, // Burn paused
             remainingGasTo // Remaining gas receiver
         );
-    }
-
-    /// @notice Proxies arbitrary message to any contract.
-    /// Should be used for interacting with `onlyOwner` alien token root methods.
-    /// This can be called only by `owner`.
-    /// @param recipient Recipient address
-    /// @param message TvmCell message, eg function call
-    function sendMessage(
-        address recipient,
-        TvmCell message
-    ) external override onlyOwner reserveMinBalance(MIN_CONTRACT_BALANCE) {
-        TvmBuilder payload;
-        payload.store(message);
-
-        recipient.transfer({
-            value: 0,
-            flag: MsgFlag.ALL_NOT_RESERVED,
-            body: payload.toCell()
-        });
     }
 
     function getConfiguration()

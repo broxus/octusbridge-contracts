@@ -1,4 +1,4 @@
-pragma ever-solidity >= 0.39.0;
+pragma ever-solidity >= 0.62.0;
 pragma AbiHeader time;
 pragma AbiHeader pubkey;
 
@@ -61,8 +61,6 @@ contract ProxyMultiVaultAlien_V7 is
     }
 
     function onCodeUpgrade(TvmCell data) private {
-//        tvm.resetStorage();
-
         (
             EVMConfiguration evmConfiguration_,
             SolanaConfiguration solanaConfiguration_,
