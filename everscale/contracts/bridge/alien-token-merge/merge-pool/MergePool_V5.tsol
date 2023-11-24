@@ -5,7 +5,7 @@ pragma AbiHeader pubkey;
 import "./../../../utils/TransferUtils.tsol";
 import "./../../../utils/ErrorCodes.tsol";
 import "./../../interfaces/alien-token-merge/merge-pool/IMergePool_V2.tsol";
-import "./../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V7.tsol";
+import "./../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V8.tsol";
 import "./../../interfaces/event-contracts/multivault/evm/IEVMCallback.tsol";
 import "./../../interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
 import "./../../interfaces/proxy/INetworks.tsol";
@@ -21,9 +21,9 @@ import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 /// @title Merge pool contract
 /// Basically allows to swap different alien tokens on 1:1 ratio
 /// Must be deployed by the ProxyMultiVaultAlien
-/// @dev Differences from the V2:
-/// 1. Added Solana withdrawal support
-contract MergePool_V4 is
+/// @dev Differences from the V4:
+/// 1. Fixed Solana interface
+contract MergePool_V5 is
     IMergePool_V2,
     InternalOwner,
     RandomNonce,
@@ -295,10 +295,13 @@ contract MergePool_V4 is
             if (network == Network.Solana) {
                 (
                     uint256 recipient,
-                    IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
-                ) = abi.decode(withdrawPayload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[]));
+                    IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
+                    bool executePayloadNeeded,
+                    IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
+                    bytes solanaPayload
+                ) = abi.decode(withdrawPayload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[], bool, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[], bytes));
 
-                IProxyMultiVaultAlien_V7(proxy).withdrawTokensToSolanaByMergePool{
+                IProxyMultiVaultAlien_V8(proxy).withdrawTokensToSolanaByMergePool{
                     bounce: false,
                     value: 0,
                     flag: MsgFlag.ALL_NOT_RESERVED
@@ -310,7 +313,10 @@ contract MergePool_V4 is
                     recipient,
                     remainingGasTo,
                     sender,
-                    executeAccounts
+                    executeAccounts,
+                    executePayloadNeeded,
+                    executePayloadAccounts,
+                    solanaPayload
                 );
             } else if (network == Network.EVM) {
                 // Target token enabled and bridge withdraw requested
@@ -320,7 +326,7 @@ contract MergePool_V4 is
                     EVMCallback callback
                 ) = abi.decode(withdrawPayload, (uint160, EVMCallback));
 
-                IProxyMultiVaultAlien_V7(proxy).withdrawTokensToEVMByMergePool{
+                IProxyMultiVaultAlien_V8(proxy).withdrawTokensToEVMByMergePool{
                     bounce: false,
                     value: 0,
                     flag: MsgFlag.ALL_NOT_RESERVED
@@ -342,7 +348,7 @@ contract MergePool_V4 is
         ITokenRoot(token).decimals{
             value: ATTACH_TO_DECIMALS_REQUEST,
             bounce: false,
-            callback: MergePool_V4.receiveTokenDecimals
+            callback: MergePool_V5.receiveTokenDecimals
         }();
     }
 
@@ -353,7 +359,7 @@ contract MergePool_V4 is
         address remainingGasTo,
         TvmCell payload
     ) internal view {
-        IProxyMultiVaultAlien_V7(proxy).mintTokensByMergePool{
+        IProxyMultiVaultAlien_V8(proxy).mintTokensByMergePool{
             bounce: false,
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED

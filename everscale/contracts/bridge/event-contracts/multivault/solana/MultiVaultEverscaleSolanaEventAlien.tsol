@@ -5,7 +5,7 @@ pragma AbiHeader expire;
 
 
 import "./../../../interfaces/event-contracts/multivault/solana/IMultiVaultEverscaleSolanaEventAlien.tsol";
-import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V7.tsol";
+import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V8.tsol";
 import "./../../../interfaces/alien-token/ITokenRootAlienSolana.tsol";
 
 import "./../../base/solana/EverscaleSolanaBaseEvent.tsol";
@@ -22,6 +22,7 @@ contract MultiVaultEverscaleSolanaEventAlien is
     uint32 public nonce;
     address public proxy;
     address public token;
+    address public tokenWallet;
     address public remainingGasTo;
     uint128 public amount;
     uint256 public recipient;
@@ -49,9 +50,9 @@ contract MultiVaultEverscaleSolanaEventAlien is
     }
 
     function onInit() override internal {
-        (nonce, proxy, token, remainingGasTo, amount, recipient, sender, solanaPayload) = abi.decode(
+        (nonce, proxy, tokenWallet, token, remainingGasTo, amount, recipient, sender, solanaPayload) = abi.decode(
             eventInitData.voteData.eventData,
-            (uint32, address, address, address, uint128, uint256, address, bytes)
+            (uint32, address, address, address, address, uint128, uint256, address, bytes)
         );
 
         initial_balance = address(this).balance;
@@ -73,7 +74,7 @@ contract MultiVaultEverscaleSolanaEventAlien is
 
         base_token = base_token_;
 
-        IProxyMultiVaultAlien_V7(proxy).deriveSolanaAlienTokenRoot{
+        IProxyMultiVaultAlien_V8(proxy).deriveSolanaAlienTokenRoot{
             value: 1 ever,
             bounce: true,
             callback: MultiVaultEverscaleSolanaEventAlien.receiveAlienTokenRoot
@@ -116,6 +117,7 @@ contract MultiVaultEverscaleSolanaEventAlien is
 
     function getDecodedData() external override responsible returns(
         address proxy_,
+        address tokenWallet_,
         address token_,
         address remainingGasTo_,
         uint128 amount_,
@@ -126,6 +128,7 @@ contract MultiVaultEverscaleSolanaEventAlien is
     ) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(
             proxy,
+            tokenWallet,
             token,
             remainingGasTo,
             amount,
@@ -140,7 +143,7 @@ contract MultiVaultEverscaleSolanaEventAlien is
 
         if (
             (selector == tvm.functionId(ITokenRootAlienSolana.meta) && msg.sender == token) ||
-            (selector == tvm.functionId(IProxyMultiVaultAlien_V7.deriveSolanaAlienTokenRoot) && msg.sender == proxy)
+            (selector == tvm.functionId(IProxyMultiVaultAlien_V8.deriveSolanaAlienTokenRoot) && msg.sender == proxy)
         ) {
             setStatusRejected(2);
         }

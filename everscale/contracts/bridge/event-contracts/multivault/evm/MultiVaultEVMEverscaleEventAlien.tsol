@@ -4,7 +4,7 @@ pragma AbiHeader pubkey;
 pragma AbiHeader expire;
 
 
-import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V7.tsol";
+import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V8.tsol";
 
 import "./../../../interfaces/event-contracts/multivault/evm/IMultiVaultEVMEverscaleEventAlien.tsol";
 import "./../../../interfaces/event-configuration-contracts/IEthereumEverscaleEventConfiguration.tsol";
@@ -83,7 +83,7 @@ contract MultiVaultEVMEverscaleEventAlien is
 
         EventData eventData = getEventData();
 
-        IProxyMultiVaultAlien_V7(_networkConfiguration.proxy).deriveEVMAlienTokenRoot{
+        IProxyMultiVaultAlien_V8(_networkConfiguration.proxy).deriveEVMAlienTokenRoot{
             value: 1 ever,
             callback: MultiVaultEVMEverscaleEventAlien.receiveAlienTokenRoot
         }(
@@ -130,7 +130,7 @@ contract MultiVaultEVMEverscaleEventAlien is
 
         // Token exists, no need to deploy
         // Ask the router address
-        IProxyMultiVaultAlien_V7(transitionalData.proxy).deriveMergeRouter{
+        IProxyMultiVaultAlien_V8(transitionalData.proxy).deriveMergeRouter{
             value: 1 ever,
             bounce: false,
             callback: MultiVaultEVMEverscaleEventAlien.receiveMergeRouter
@@ -304,7 +304,7 @@ contract MultiVaultEVMEverscaleEventAlien is
         ) {
             // Failed to request token meta
             // Seems like corresponding token root not deployed so deploy it
-            IProxyMultiVaultAlien_V7(transitionalData.proxy).deployEVMAlienToken{
+            IProxyMultiVaultAlien_V8(transitionalData.proxy).deployEVMAlienToken{
                 value: 2 ever,
                 bounce: false
             }(
@@ -323,7 +323,7 @@ contract MultiVaultEVMEverscaleEventAlien is
         ) {
             // Failed to request router's pool
             // Seems like corresponding router not deployed so deploy it
-            IProxyMultiVaultAlien_V7(transitionalData.proxy).deployMergeRouter{
+            IProxyMultiVaultAlien_V8(transitionalData.proxy).deployMergeRouter{
                 value: 1 ever,
                 bounce: false
             }(transitionalData.token);

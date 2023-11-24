@@ -4,7 +4,7 @@ pragma AbiHeader pubkey;
 pragma AbiHeader expire;
 
 
-import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V7.tsol";
+import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V8.tsol";
 
 import "./../../../interfaces/event-contracts/multivault/solana/IMultiVaultSolanaEverscaleEventAlien.tsol";
 import "./../../../interfaces/event-configuration-contracts/ISolanaEverscaleEventConfiguration.tsol";
@@ -117,7 +117,7 @@ contract MultiVaultSolanaEverscaleEventAlien is
 
         proxy = _networkConfiguration.proxy;
 
-        IProxyMultiVaultAlien_V7(proxy).deriveSolanaAlienTokenRoot{
+        IProxyMultiVaultAlien_V8(proxy).deriveSolanaAlienTokenRoot{
             value: 1 ever,
             callback: MultiVaultSolanaEverscaleEventAlien.receiveAlienTokenRoot
         }(
@@ -153,7 +153,7 @@ contract MultiVaultSolanaEverscaleEventAlien is
     function _requestMergeRouter() internal view {
         // Token exists, no need to deploy
         // Ask the router address
-        IProxyMultiVaultAlien_V7(proxy).deriveMergeRouter{
+        IProxyMultiVaultAlien_V8(proxy).deriveMergeRouter{
             value: 1 ever,
             bounce: false,
             callback: MultiVaultSolanaEverscaleEventAlien.receiveMergeRouter
@@ -294,7 +294,7 @@ contract MultiVaultSolanaEverscaleEventAlien is
         ) {
             // Failed to request token meta
             // Seems like corresponding token root not deployed so deploy it
-            IProxyMultiVaultAlien_V7(proxy).deploySolanaAlienToken{
+            IProxyMultiVaultAlien_V8(proxy).deploySolanaAlienToken{
                 value: 2 ever,
                 bounce: false
             }(
@@ -312,7 +312,7 @@ contract MultiVaultSolanaEverscaleEventAlien is
         ) {
             // Failed to request router's pool
             // Seems like corresponding router not deployed so deploy it
-            IProxyMultiVaultAlien_V7(proxy).deployMergeRouter{
+            IProxyMultiVaultAlien_V8(proxy).deployMergeRouter{
                 value: 1 ever,
                 bounce: false
             }(token);

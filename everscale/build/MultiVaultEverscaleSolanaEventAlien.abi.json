@@ -38,6 +38,7 @@
 			],
 			"outputs": [
 				{"name":"proxy_","type":"address"},
+				{"name":"tokenWallet_","type":"address"},
 				{"name":"token_","type":"address"},
 				{"name":"remainingGasTo_","type":"address"},
 				{"name":"amount_","type":"uint128"},

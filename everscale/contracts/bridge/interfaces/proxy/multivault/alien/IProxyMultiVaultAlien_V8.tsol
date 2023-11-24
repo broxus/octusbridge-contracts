@@ -5,7 +5,7 @@ import "../../../event-contracts/IEverscaleSolanaEvent.tsol";
 import "../../INetworks.tsol";
 
 
-interface IProxyMultiVaultAlien_V6 is IEVMCallback, INetworks {
+interface IProxyMultiVaultAlien_V8 is IEVMCallback, INetworks {
     struct EVMConfiguration {
         address everscaleConfiguration;
         address[] evmConfigurations;
@@ -59,20 +59,6 @@ interface IProxyMultiVaultAlien_V6 is IEVMCallback, INetworks {
         uint256 canonId
     ) external;
 
-    // Admin mint / burn
-    function mint(
-        address token,
-        uint128 amount,
-        address recipient,
-        TvmCell payload
-    ) external;
-
-    function burn(
-        address token,
-        uint128 amount,
-        address walletOwner
-    ) external;
-
     // Merge pool deposit / withdrawal
     function mintTokensByMergePool(
         uint nonce,
@@ -84,22 +70,28 @@ interface IProxyMultiVaultAlien_V6 is IEVMCallback, INetworks {
     ) external;
 
     function withdrawTokensToEVMByMergePool(
-        uint nonce,
+        uint mergePoolNonce,
+        uint32 nonce,
         address token,
         uint128 amount,
         uint160 recipient,
         address remainingGasTo,
+        address sender,
         EVMCallback callback
     ) external;
 
     function withdrawTokensToSolanaByMergePool(
+        uint mergePoolNonce,
         uint32 nonce,
         address token,
         uint128 amount,
         uint256 recipient,
         address remainingGasTo,
         address sender,
-        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
+        bool executePayloadNeeded,
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
+        bytes solanaPayload
     ) external;
 
     // Derive token root address

@@ -11,7 +11,7 @@ import {
     AlienTokenWalletUpgradeableAbi,
     TokenRootAlienSolanaAbi,
     MultiVaultEverscaleSolanaEventAlienAbi,
-    ProxyMultiVaultAlien_V7Abi
+    ProxyMultiVaultAlien_V8Abi
 } from "../../../../../build/factorySource";
 import {Account} from "everscale-standalone-client/nodejs";
 import {setupBridge, setupRelays} from "../../../../utils/bridge";
@@ -34,7 +34,8 @@ let everscaleEthereumEventConfiguration: Contract<EverscaleEthereumEventConfigur
 let solanaEverscaleEventConfiguration: Contract<SolanaEverscaleEventConfigurationAbi>;
 let everscaleSolanaEventConfiguration: Contract<EverscaleSolanaEventConfigurationAbi>;
 let initializer: Account;
-let proxy: Contract<ProxyMultiVaultAlien_V7Abi>;
+let eventCloser: Account;
+let proxy: Contract<ProxyMultiVaultAlien_V8Abi>;
 
 let alienTokenRoot: Contract<TokenRootAlienSolanaAbi>;
 let initializerAlienTokenWallet: Contract<AlienTokenWalletUpgradeableAbi>;
@@ -82,6 +83,11 @@ describe('Withdraw Solana alien tokens by burning in favor of proxy', async func
             everscaleSolanaEventConfiguration,
             proxy
         ] = await setupAlienMultiVault(bridgeOwner, staking);
+
+        eventCloser = await deployAccount(
+            (await locklift.keystore.getSigner("1"))!,
+            50
+        );
     });
 
     it('Deploy alien token root', async () => {
@@ -197,7 +203,7 @@ describe('Withdraw Solana alien tokens by burning in favor of proxy', async func
 
         const tx = await locklift.tracing.trace(initializerAlienTokenWallet.methods.burn({
             amount,
-            remainingGasTo: initializer.address,
+            remainingGasTo: eventCloser.address,
             callbackTo: proxy.address,
             payload: burnPayload.value0
         }).send({
@@ -294,7 +300,7 @@ describe('Withdraw Solana alien tokens by burning in favor of proxy', async func
 
         const { traceTree } = await locklift.tracing.trace(
             eventContract.methods.close().send({
-                from: initializer.address,
+                from: eventCloser.address,
                 amount: locklift.utils.toNano(0.1)
             })
         );
@@ -302,7 +308,7 @@ describe('Withdraw Solana alien tokens by burning in favor of proxy', async func
         expect(Number(await locklift.provider.getBalance(eventContract.address)))
             .to.be.equal(0, 'Event contract balance should be 0 after close');
 
-        expect(Number(traceTree?.getBalanceDiff(initializer.address)))
+        expect(Number(traceTree?.getBalanceDiff(eventCloser.address)))
             .to.be.greaterThan(
                 Number(balance) - Number(locklift.utils.toNano(1)), // Greater than balance - 1 ton for fees
             "Initializer should get money back after close"

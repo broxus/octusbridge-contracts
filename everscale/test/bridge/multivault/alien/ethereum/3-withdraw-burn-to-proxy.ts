@@ -11,7 +11,7 @@ import {
     TokenRootAlienEVMAbi,
     AlienTokenWalletUpgradeableAbi,
     MultiVaultEverscaleEVMEventAlienAbi,
-    ProxyMultiVaultAlien_V7Abi
+    ProxyMultiVaultAlien_V8Abi
 } from "../../../../../build/factorySource";
 import {Account} from "everscale-standalone-client/nodejs";
 import {setupBridge, setupRelays} from "../../../../utils/bridge";
@@ -36,7 +36,7 @@ let solanaEverscaleEventConfiguration: Contract<SolanaEverscaleEventConfiguratio
 let everscaleSolanaEventConfiguration: Contract<EverscaleSolanaEventConfigurationAbi>;
 let initializer: Account;
 let eventCloser: Account;
-let proxy: Contract<ProxyMultiVaultAlien_V7Abi>;
+let proxy: Contract<ProxyMultiVaultAlien_V8Abi>;
 
 let alienTokenRoot: Contract<TokenRootAlienEVMAbi>;
 let initializerAlienTokenWallet: Contract<AlienTokenWalletUpgradeableAbi>;

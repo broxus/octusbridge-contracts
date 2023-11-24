@@ -112,7 +112,10 @@
 				{"name":"recipient","type":"uint256"},
 				{"name":"remainingGasTo","type":"address"},
 				{"name":"sender","type":"address"},
-				{"components":[{"name":"account","type":"uint256"},{"name":"readOnly","type":"bool"},{"name":"isSigner","type":"bool"}],"name":"executeAccounts","type":"tuple[]"}
+				{"components":[{"name":"account","type":"uint256"},{"name":"readOnly","type":"bool"},{"name":"isSigner","type":"bool"}],"name":"executeAccounts","type":"tuple[]"},
+				{"name":"executePayloadNeeded","type":"bool"},
+				{"components":[{"name":"account","type":"uint256"},{"name":"readOnly","type":"bool"},{"name":"isSigner","type":"bool"}],"name":"executePayloadAccounts","type":"tuple[]"},
+				{"name":"solanaPayload","type":"bytes"}
 			],
 			"outputs": [
 			]

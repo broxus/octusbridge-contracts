@@ -8,13 +8,13 @@ import "./../../../../interfaces/event-contracts/IEverscaleEthereumEvent.tsol";
 import "./../../../../interfaces/event-configuration-contracts/IEverscaleSolanaEventConfiguration.tsol";
 import "./../../../../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.tsol";
 
-import "./ProxyMultiVaultAlien_V7_Deposit_EVM.tsol";
+import "./ProxyMultiVaultAlien_V8_Deposit_EVM.tsol";
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensBurnCallback.tsol";
 
 
-abstract contract ProxyMultiVaultAlien_V7_Withdraw is
-    ProxyMultiVaultAlien_V7_Deposit_EVM,
+abstract contract ProxyMultiVaultAlien_V8_Withdraw is
+ProxyMultiVaultAlien_V8_Deposit_EVM,
     IAcceptTokensBurnCallback
 {
     /// @notice Handles token burn.
@@ -38,8 +38,11 @@ abstract contract ProxyMultiVaultAlien_V7_Withdraw is
         if (network == Network.Solana) {
             (
                 uint256 recipient,
-                IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
-            ) = abi.decode(burnPayload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[]));
+                IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
+                bool executePayloadNeeded,
+                IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
+                bytes solanaPayload
+            ) = abi.decode(burnPayload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[], bool, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[], bytes));
 
             _deploySolanaEvent(
                 nonce,
@@ -48,7 +51,10 @@ abstract contract ProxyMultiVaultAlien_V7_Withdraw is
                 recipient,
                 sender,
                 remainingGasTo,
-                executeAccounts
+                executeAccounts,
+                executePayloadNeeded,
+                executePayloadAccounts,
+                solanaPayload
             );
         } else if (network == Network.EVM) {
             (
@@ -75,7 +81,10 @@ abstract contract ProxyMultiVaultAlien_V7_Withdraw is
         uint256 recipient,
         address sender,
         address remainingGasTo,
-        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
+        bool executePayloadNeeded,
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
+        bytes solanaPayload
     ) internal view {
         TvmCell eventData = abi.encode(
             nonce,
@@ -85,15 +94,15 @@ abstract contract ProxyMultiVaultAlien_V7_Withdraw is
             remainingGasTo, // Remaining gas receiver (on event contract destroy)
             amount, // Amount of tokens to withdraw
             recipient, // Recipient address in Solana network
-            sender
+            sender,
+            solanaPayload
         );
 
-        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts;
         IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(
             tx.timestamp,
             now,
             executeAccounts,
-            false,
+            executePayloadNeeded,
             executePayloadAccounts,
             eventData
         );

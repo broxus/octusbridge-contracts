@@ -4,10 +4,10 @@ pragma ever-solidity >= 0.62.0;
 import "./../../../../interfaces/alien-token-merge/merge-pool/IMergePool_V2.tsol";
 
 import "../../../../alien-token-merge/MergePoolPlatform.tsol";
-import "./ProxyMultiVaultAlien_V7_Withdraw.tsol";
+import "./ProxyMultiVaultAlien_V8_Withdraw.tsol";
 
 
-abstract contract ProxyMultiVaultAlien_V7_MergePool is ProxyMultiVaultAlien_V7_Withdraw {
+abstract contract ProxyMultiVaultAlien_V8_MergePool is ProxyMultiVaultAlien_V8_Withdraw {
     modifier onlyMergePool(uint nonce) {
         require(deriveMergePool(nonce) == msg.sender, ErrorCodes.WRONG_MERGE_POOL_NONCE);
 
@@ -104,7 +104,10 @@ abstract contract ProxyMultiVaultAlien_V7_MergePool is ProxyMultiVaultAlien_V7_W
         uint256 recipient,
         address remainingGasTo,
         address sender,
-        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
+        bool executePayloadNeeded,
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
+        bytes solanaPayload
     ) external override onlyMergePool(mergePoolNonce) reserveAtLeastTargetBalance {
         _deploySolanaEvent(
             nonce,
@@ -113,7 +116,10 @@ abstract contract ProxyMultiVaultAlien_V7_MergePool is ProxyMultiVaultAlien_V7_W
             recipient,
             sender,
             remainingGasTo,
-            executeAccounts
+            executeAccounts,
+            executePayloadNeeded,
+            executePayloadAccounts,
+            solanaPayload
         );
     }
 

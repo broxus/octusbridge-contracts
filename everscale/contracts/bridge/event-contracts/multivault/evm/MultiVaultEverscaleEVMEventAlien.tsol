@@ -5,7 +5,7 @@ pragma AbiHeader expire;
 
 
 import "./../../../interfaces/event-contracts/multivault/evm/IMultiVaultEverscaleEVMEventAlien.tsol";
-import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V7.tsol";
+import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V8.tsol";
 import "./../../../interfaces/alien-token/ITokenRootAlienEVM.tsol";
 
 import "./../../base/evm/EverscaleEthereumBaseEvent.tsol";
@@ -95,7 +95,7 @@ contract MultiVaultEverscaleEVMEventAlien is
         base_chainId = base_chainId_;
         base_token = base_token_;
 
-        IProxyMultiVaultAlien_V7(proxy).deriveEVMAlienTokenRoot{
+        IProxyMultiVaultAlien_V8(proxy).deriveEVMAlienTokenRoot{
             value: 1 ever,
             bounce: true,
             callback: MultiVaultEverscaleEVMEventAlien.receiveAlienTokenRoot
@@ -171,7 +171,7 @@ contract MultiVaultEverscaleEVMEventAlien is
 
         if (
             (selector == tvm.functionId(ITokenRootAlienEVM.meta) && msg.sender == token) ||
-            (selector == tvm.functionId(IProxyMultiVaultAlien_V7.deriveEVMAlienTokenRoot) && msg.sender == proxy)
+            (selector == tvm.functionId(IProxyMultiVaultAlien_V8.deriveEVMAlienTokenRoot) && msg.sender == proxy)
         ) {
             setStatusRejected(2);
         }

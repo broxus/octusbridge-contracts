@@ -34,11 +34,8 @@ abstract contract ProxyMultiVaultAlien_V6_Withdraw is
         if (network == Network.Solana) {
             (
                 uint256 recipient,
-                IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
-                bool executePayloadNeeded,
-                IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
-                bytes solanaPayload
-            ) = abi.decode(burnPayload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[], bool, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[], bytes));
+                IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
+            ) = abi.decode(burnPayload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[]));
 
             _deploySolanaEvent(
                 nonce,
@@ -47,10 +44,7 @@ abstract contract ProxyMultiVaultAlien_V6_Withdraw is
                 recipient,
                 sender,
                 remainingGasTo,
-                executeAccounts,
-                executePayloadNeeded,
-                executePayloadAccounts,
-                solanaPayload
+                executeAccounts
             );
         } else if (network == Network.EVM) {
             (
@@ -75,10 +69,7 @@ abstract contract ProxyMultiVaultAlien_V6_Withdraw is
         uint256 recipient,
         address sender,
         address remainingGasTo,
-        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
-        bool executePayloadNeeded,
-        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
-        bytes solanaPayload
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
     ) internal view {
         TvmCell eventData = abi.encode(
             nonce,
@@ -88,15 +79,15 @@ abstract contract ProxyMultiVaultAlien_V6_Withdraw is
             remainingGasTo, // Remaining gas receiver (on event contract destroy)
             amount, // Amount of tokens to withdraw
             recipient, // Recipient address in Solana network
-            sender,
-            solanaPayload
+            sender
         );
 
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts;
         IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(
             tx.timestamp,
             now,
             executeAccounts,
-            executePayloadNeeded,
+            false,
             executePayloadAccounts,
             eventData
         );
