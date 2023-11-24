@@ -65,6 +65,7 @@ ProxyMultiVaultAlien_V8_MergeRouter,
             EVMConfiguration evmConfiguration_,
             SolanaConfiguration solanaConfiguration_,
             uint _randomNonce_,
+            uint8  api_version_,
             address owner_,
 
             address manager_,
@@ -75,7 +76,7 @@ ProxyMultiVaultAlien_V8_MergeRouter,
         ) = abi.decode(
             data,
             (
-                EVMConfiguration, SolanaConfiguration, uint, address,
+                EVMConfiguration, SolanaConfiguration, uint, uint8, address,
                 address, TvmCell, TvmCell, TvmCell, uint8
             )
         );
@@ -84,7 +85,7 @@ ProxyMultiVaultAlien_V8_MergeRouter,
         solanaConfiguration = solanaConfiguration_;
 
         _randomNonce = _randomNonce_;
-        api_version++;
+        api_version = api_version_ + 1;
         owner = owner_;
 
         manager = manager_;
