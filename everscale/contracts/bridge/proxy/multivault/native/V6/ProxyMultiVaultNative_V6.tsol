@@ -45,12 +45,13 @@ contract ProxyMultiVaultNative_V6 is ProxyMultiVaultNative_V6_Deposit, CheckPubK
             SolanaConfiguration solanaConfiguration_,
             address owner_,
             uint8 api_version_,
+            address dex_middleware_,
             uint _randomNonce_
         ) = abi.decode(
             data,
             (
                 EVMConfiguration, SolanaConfiguration,
-                address, uint8, uint
+                address, uint8, address, uint
             )
         );
 
@@ -58,6 +59,7 @@ contract ProxyMultiVaultNative_V6 is ProxyMultiVaultNative_V6_Deposit, CheckPubK
         solanaConfiguration = solanaConfiguration_;
 
         api_version = api_version_ + 1;
+        dex_middleware = dex_middleware_;
         setOwnership(owner_);
         _randomNonce = _randomNonce_;
     }
