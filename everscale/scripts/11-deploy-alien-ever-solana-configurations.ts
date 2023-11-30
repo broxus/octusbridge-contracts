@@ -3,6 +3,7 @@ import {isValidTonAddress, stringToBytesArray} from "../test/utils";
 import {Address, Contract} from "locklift";
 import {EverscaleSolanaEventConfigurationFactoryAbi} from "../build/factorySource";
 import BigNumber from "bignumber.js";
+import { deployAccount } from "../test/utils/account";
 
 const prompts = require("prompts");
 const ora = require("ora");
@@ -114,6 +115,9 @@ const main = async () => {
         endTimestamp: response.endTimestamp,
     };
 
+    const signer = (await locklift.keystore.getSigner("0"))!;
+    const admin = await deployAccount(signer, 3);
+
     await factory.methods
         .deploy({
             _owner: response.owner,
@@ -121,7 +125,7 @@ const main = async () => {
             networkConfiguration: everNetworkConfiguration,
         })
         .send({
-            from: response.owner,
+            from: admin.address,
             amount: locklift.utils.toNano(2),
         });
 
