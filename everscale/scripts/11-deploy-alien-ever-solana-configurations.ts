@@ -77,7 +77,7 @@ const main = async () => {
             message: "Execute payload instruction",
         },
         {
-            type: "boolean",
+            type: "bool",
             name: "executeNeeded",
             initial: true,
             message: "Execute needed",
