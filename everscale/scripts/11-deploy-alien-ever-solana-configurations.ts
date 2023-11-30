@@ -76,12 +76,12 @@ const main = async () => {
             initial: 4,
             message: "Execute payload instruction",
         },
-        {
-            type: "bool",
-            name: "executeNeeded",
-            initial: true,
-            message: "Execute needed",
-        },
+        // {
+        //     type: "bool",
+        //     name: "executeNeeded",
+        //     initial: true,
+        //     message: "Execute needed",
+        // },
     ]);
 
     const spinner = ora("Deploying alien ever solana event configuration").start();
@@ -110,7 +110,7 @@ const main = async () => {
         instruction: response.instruction, // vote
         executeInstruction: response.executeInstruction, // execute sol
         executePayloadInstruction: response.executePayloadInstruction, // execute sol
-        executeNeeded: response.executeNeeded,
+        executeNeeded: true,
         startTimestamp: response.startTimestamp,
         endTimestamp: response.endTimestamp,
     };
