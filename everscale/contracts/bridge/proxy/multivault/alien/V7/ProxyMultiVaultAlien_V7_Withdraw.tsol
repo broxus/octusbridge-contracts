@@ -46,8 +46,8 @@ abstract contract ProxyMultiVaultAlien_V7_Withdraw is
                 msg.sender,
                 amount,
                 recipient,
-                remainingGasTo,
                 sender,
+                remainingGasTo,
                 executeAccounts
             );
         } else if (network == Network.EVM) {
@@ -73,13 +73,14 @@ abstract contract ProxyMultiVaultAlien_V7_Withdraw is
         address token,
         uint128 amount,
         uint256 recipient,
-        address remainingGasTo,
         address sender,
+        address remainingGasTo,
         IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
     ) internal view {
         TvmCell eventData = abi.encode(
             nonce,
             address(this), // Proxy address, used in event contract for validating token root
+            msg.sender, // Token wallet address, must be validated in the event contract
             token, // Everscale token root address
             remainingGasTo, // Remaining gas receiver (on event contract destroy)
             amount, // Amount of tokens to withdraw
@@ -87,10 +88,13 @@ abstract contract ProxyMultiVaultAlien_V7_Withdraw is
             sender
         );
 
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts;
         IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(
             tx.timestamp,
             now,
             executeAccounts,
+            false,
+            executePayloadAccounts,
             eventData
         );
 

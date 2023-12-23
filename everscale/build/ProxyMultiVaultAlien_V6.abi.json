@@ -103,11 +103,12 @@
 		{
 			"name": "withdrawTokensToSolanaByMergePool",
 			"inputs": [
-				{"name":"nonce","type":"uint256"},
+				{"name":"nonce","type":"uint32"},
 				{"name":"token","type":"address"},
 				{"name":"amount","type":"uint128"},
 				{"name":"recipient","type":"uint256"},
 				{"name":"remainingGasTo","type":"address"},
+				{"name":"sender","type":"address"},
 				{"components":[{"name":"account","type":"uint256"},{"name":"readOnly","type":"bool"},{"name":"isSigner","type":"bool"}],"name":"executeAccounts","type":"tuple[]"}
 			],
 			"outputs": [
@@ -141,7 +142,7 @@
 			"name": "onAcceptTokensBurn",
 			"inputs": [
 				{"name":"amount","type":"uint128"},
-				{"name":"value1","type":"address"},
+				{"name":"sender","type":"address"},
 				{"name":"value2","type":"address"},
 				{"name":"remainingGasTo","type":"address"},
 				{"name":"payload","type":"cell"}

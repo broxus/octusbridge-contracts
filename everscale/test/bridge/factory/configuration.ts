@@ -262,6 +262,7 @@ describe("Test configuration factory", async function () {
         eventEmitter: zeroAddress,
         instruction: 0,
         executeInstruction: 0,
+        executePayloadInstruction: 0,
         executeNeeded: false,
         startTimestamp: 0,
         endTimestamp: 0,

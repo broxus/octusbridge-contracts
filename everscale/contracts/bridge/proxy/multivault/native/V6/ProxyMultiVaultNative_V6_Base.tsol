@@ -1,0 +1,78 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma ever-solidity >= 0.62.0;
+
+import "../../../../interfaces/proxy/multivault/native/IProxyMultiVaultNative_V3.tsol";
+import "../../../../interfaces/proxy/multivault/native/IProxyMultiVaultNative_V1.tsol";
+
+import "../../../../../utils/TransferUtils.tsol";
+import "../../../../../utils/ErrorCodes.tsol";
+
+import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenWallet.tsol";
+
+import "@broxus/contracts/contracts/access/InternalOwner.tsol";
+import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
+
+
+abstract contract ProxyMultiVaultNative_V6_Base is IProxyMultiVaultNative_V3, InternalOwner, TransferUtils {
+    EVMConfiguration evmConfiguration;
+    SolanaConfiguration solanaConfiguration;
+    uint8 api_version;
+    address public dex_middleware;
+
+    uint128 constant DEPLOY_WALLET_VALUE = 0.2 ever;
+
+    /// @notice Get current contract API version.
+    /// Each time contract is upgraded, API version is incremented.
+    /// @return Current API version
+    function apiVersion() external override view responsible returns(uint8) {
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} api_version;
+    }
+
+    function setDexMiddleware(address _dex_middleware) external onlyOwner cashBack {
+        dex_middleware = _dex_middleware;
+    }
+
+    function getConfiguration()
+        override
+        external
+        view
+        responsible
+    returns (EVMConfiguration, SolanaConfiguration) {
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} (evmConfiguration, solanaConfiguration);
+    }
+
+    function setEVMConfiguration(
+        EVMConfiguration _config,
+        address remainingGasTo
+    ) override external onlyOwner cashBackTo(remainingGasTo) {
+        evmConfiguration = _config;
+    }
+
+    function setSolanaConfiguration(
+        SolanaConfiguration _config,
+        address remainingGasTo
+    ) override external onlyOwner cashBackTo(remainingGasTo) {
+        solanaConfiguration = _config;
+    }
+
+    function _transferTokens(
+        address token_wallet,
+        uint128 amount,
+        address recipient,
+        address remainingGasTo,
+        TvmCell payload
+    ) internal pure {
+        ITokenWallet(token_wallet).transfer{
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(
+            amount,
+            recipient,
+            DEPLOY_WALLET_VALUE,
+            remainingGasTo,
+            true,
+            payload
+        );
+    }
+}

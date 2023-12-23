@@ -1,0 +1,74 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma ever-solidity >= 0.62.0;
+
+
+import "../../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V8.tsol";
+
+import "./../../../../../utils/TransferUtils.tsol";
+import "./../../../../../utils/ErrorCodes.tsol";
+
+
+import "@broxus/contracts/contracts/access/InternalOwner.tsol";
+import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
+
+
+abstract contract ProxyMultivaultAlien_V8_Base is IProxyMultiVaultAlien_V8, TransferUtils, InternalOwner {
+    SolanaConfiguration solanaConfiguration;
+    EVMConfiguration evmConfiguration;
+    uint128 constant DEPLOY_WALLET_VALUE = 0.2 ever;
+
+    uint8 api_version = 0;
+
+    address public manager;
+    TvmCell public mergeRouter;
+    TvmCell public mergePool;
+    TvmCell public mergePoolPlatform;
+
+    uint8 public mergePoolVersion;
+
+
+    function getConfiguration()
+        override
+        external
+        view
+        responsible
+    returns (EVMConfiguration, SolanaConfiguration) {
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} (evmConfiguration, solanaConfiguration);
+    }
+
+    function setEVMConfiguration(
+        EVMConfiguration _config,
+        address remainingGasTo
+    ) override external onlyOwner cashBackTo(remainingGasTo) {
+        evmConfiguration = _config;
+    }
+
+    function setSolanaConfiguration(
+        SolanaConfiguration _config,
+        address remainingGasTo
+    ) override external onlyOwner cashBackTo(remainingGasTo) {
+        solanaConfiguration = _config;
+    }
+
+    /// @notice Set merge manager
+    /// Can be called only by `owner`
+    /// @param _manager Manager address
+    function setManager(
+        address _manager
+    ) external override onlyOwner cashBack {
+        manager = _manager;
+    }
+
+    function _isArrayContainsAddress(
+        address[] array,
+        address searchElement
+    ) internal pure returns (bool) {
+        for (address value: array) {
+            if (searchElement == value) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}

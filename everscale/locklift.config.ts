@@ -27,6 +27,27 @@ const config: LockliftConfig = {
     version: "0.15.48",
   },
   networks: {
+    proxy: {
+      deploy: ["local/"],
+      giver: {
+        // Check if you need provide custom giver
+        address: "0:ece57bcc6c530283becbbd8a3b24d3c5987cdddc3c8b7b33be6e4a6312490415",
+        key: "172af540e43a524763dd53b26a066d472a97c4de37d5498170564510608250c3",
+      },
+      connection: {
+        id: 1001,
+        // @ts-ignore
+        type: "proxy",
+        // @ts-ignore
+        data: {},
+      },
+      keys: {
+        // Use everdev to generate your phrase
+        // !!! Never commit it in your repos !!!
+        // phrase: "action inject penalty envelope rabbit element slim tornado dinner pizza off blood",
+        amount: 20,
+      },
+    },
     local: {
       // Specify connection settings for https://github.com/broxus/everscale-standalone-client/
       connection: {

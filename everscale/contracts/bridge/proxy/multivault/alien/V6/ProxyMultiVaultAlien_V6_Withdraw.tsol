@@ -24,12 +24,12 @@ abstract contract ProxyMultiVaultAlien_V6_Withdraw is
     /// @param payload TvmCell encoded (uint160 recipient)
     function onAcceptTokensBurn(
         uint128 amount,
-        address,
+        address sender,
         address,
         address remainingGasTo,
         TvmCell payload
     ) public override reserveAtLeastTargetBalance {
-        (Network network, TvmCell burnPayload) = abi.decode(payload, (Network, TvmCell));
+        (uint32 nonce, Network network, TvmCell burnPayload) = abi.decode(payload, (uint32, Network, TvmCell));
 
         if (network == Network.Solana) {
             (
@@ -38,9 +38,11 @@ abstract contract ProxyMultiVaultAlien_V6_Withdraw is
             ) = abi.decode(burnPayload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[]));
 
             _deploySolanaEvent(
+                nonce,
                 msg.sender,
                 amount,
                 recipient,
+                sender,
                 remainingGasTo,
                 executeAccounts
             );
@@ -61,24 +63,32 @@ abstract contract ProxyMultiVaultAlien_V6_Withdraw is
     }
 
     function _deploySolanaEvent(
+        uint32 nonce,
         address token,
         uint128 amount,
         uint256 recipient,
+        address sender,
         address remainingGasTo,
         IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
     ) internal view {
         TvmCell eventData = abi.encode(
+            nonce,
             address(this), // Proxy address, used in event contract for validating token root
+            msg.sender, // Token wallet address, must be validated in the event contract
             token, // Everscale token root address
             remainingGasTo, // Remaining gas receiver (on event contract destroy)
             amount, // Amount of tokens to withdraw
-            recipient // Recipient address in Solana network
+            recipient, // Recipient address in Solana network
+            sender
         );
 
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts;
         IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(
             tx.timestamp,
             now,
             executeAccounts,
+            false,
+            executePayloadAccounts,
             eventData
         );
 

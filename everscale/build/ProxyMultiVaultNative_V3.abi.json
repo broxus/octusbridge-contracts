@@ -44,7 +44,7 @@
 			"inputs": [
 				{"name":"tokenRoot","type":"address"},
 				{"name":"amount","type":"uint128"},
-				{"name":"value2","type":"address"},
+				{"name":"sender","type":"address"},
 				{"name":"value3","type":"address"},
 				{"name":"remainingGasTo","type":"address"},
 				{"name":"transferPayload","type":"cell"}

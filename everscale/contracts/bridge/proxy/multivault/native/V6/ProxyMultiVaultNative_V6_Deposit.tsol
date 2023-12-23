@@ -1,0 +1,111 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma ever-solidity >= 0.62.0;
+
+import "./ProxyMultiVaultNative_V6_Withdraw.tsol";
+
+import "./../../../../interfaces/event-contracts/IEthereumEverscaleEvent.tsol";
+import "./../../../../interfaces/event-contracts/ISolanaEverscaleEvent.tsol";
+
+import "./../../../../interfaces/proxy/IEthereumEverscaleProxyExtended.tsol";
+import "./../../../../interfaces/proxy/ISolanaEverscaleProxyExtended.tsol";
+
+import "../../../../libraries/EventContractNonce.tsol";
+
+
+abstract contract ProxyMultiVaultNative_V6_Deposit is
+    IEthereumEverscaleProxyExtended,
+    ISolanaEverscaleProxyExtended,
+ProxyMultiVaultNative_V6_Withdraw
+{
+    /// @notice Handles native token transfer from EVM.
+    /// @param remainingGasTo Gas back address
+    function onEventConfirmedExtended(
+        IEthereumEverscaleEvent.EthereumEverscaleEventInitData eventInitData,
+        TvmCell meta,
+        address remainingGasTo
+    ) external override reserveAtLeastTargetBalance {
+        require(
+            _isArrayContainsAddress(evmConfiguration.evmConfigurations, msg.sender),
+            ErrorCodes.NOT_ETHEREUM_CONFIG
+        );
+
+        (
+            address token_wallet,
+            uint128 amount,
+            address recipient,
+            TvmCell payload
+        ) = abi.decode(
+            meta,
+            (address, uint128, address, TvmCell)
+        );
+
+        TvmCell transferPayload;
+
+        if (recipient == dex_middleware) {
+            transferPayload = payload;
+        } else {
+            uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
+
+            transferPayload = abi.encode(nonce, payload);
+        }
+
+        _transferTokens(
+            token_wallet,
+            amount,
+            recipient,
+            remainingGasTo,
+            transferPayload
+        );
+    }
+
+    /// @notice Handles native token transfer from Solana.
+    /// @param remainingGasTo Gas back address
+    function onSolanaEventConfirmedExtended(
+        ISolanaEverscaleEvent.SolanaEverscaleEventInitData eventInitData,
+        TvmCell meta,
+        address remainingGasTo
+    ) external override reserveAtLeastTargetBalance {
+        require(solanaConfiguration.solanaConfiguration == msg.sender, ErrorCodes.NOT_SOLANA_CONFIG);
+
+        (
+            address token_wallet,
+            uint128 amount,
+            address recipient,
+            TvmCell payload
+        ) = abi.decode(
+            meta,
+            (address, uint128, address, TvmCell)
+        );
+
+        TvmCell transferPayload;
+
+        if (recipient == dex_middleware) {
+            transferPayload = payload;
+        } else {
+            uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
+
+            transferPayload = abi.encode(nonce, payload);
+        }
+
+        _transferTokens(
+            token_wallet,
+            amount,
+            recipient,
+            remainingGasTo,
+            transferPayload
+        );
+    }
+
+    function _isArrayContainsAddress(
+        address[] array,
+        address searchElement
+    ) private pure returns (bool) {
+        for (address value: array) {
+            if (searchElement == value) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}

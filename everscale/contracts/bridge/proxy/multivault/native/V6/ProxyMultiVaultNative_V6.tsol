@@ -1,0 +1,66 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma ever-solidity >= 0.62.0;
+
+
+import "./../../../../interfaces/proxy/multivault/native/IProxyMultiVaultNative_V1.tsol";
+
+import "./ProxyMultiVaultNative_V6_Deposit.tsol";
+
+import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
+import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
+
+
+contract ProxyMultiVaultNative_V6 is ProxyMultiVaultNative_V6_Deposit, CheckPubKey, RandomNonce {
+    constructor(
+        address owner_
+    ) public checkPubKey {
+        tvm.accept();
+
+        setOwnership(owner_);
+    }
+
+    function upgrade(
+        TvmCell code
+    ) external onlyOwner {
+        TvmCell data = abi.encode(
+            evmConfiguration,
+            solanaConfiguration,
+            owner,
+            api_version,
+            dex_middleware,
+            _randomNonce
+        );
+
+        tvm.setcode(code);
+        tvm.setCurrentCode(code);
+
+        onCodeUpgrade(data);
+    }
+
+    function onCodeUpgrade(TvmCell data) private {
+        tvm.resetStorage();
+
+        (
+            EVMConfiguration evmConfiguration_,
+            SolanaConfiguration solanaConfiguration_,
+            address owner_,
+            uint8 api_version_,
+            address dex_middleware_,
+            uint _randomNonce_
+        ) = abi.decode(
+            data,
+            (
+                EVMConfiguration, SolanaConfiguration,
+                address, uint8, address, uint
+            )
+        );
+
+        evmConfiguration = evmConfiguration_;
+        solanaConfiguration = solanaConfiguration_;
+
+        api_version = api_version_ + 1;
+        dex_middleware = dex_middleware_;
+        setOwnership(owner_);
+        _randomNonce = _randomNonce_;
+    }
+}

@@ -1,0 +1,151 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma ever-solidity >= 0.62.0;
+
+
+import "./../../../../interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
+import "./../../../../interfaces/event-contracts/IEverscaleEthereumEvent.tsol";
+
+import "./../../../../interfaces/event-configuration-contracts/IEverscaleSolanaEventConfiguration.tsol";
+import "./../../../../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.tsol";
+
+import "./ProxyMultiVaultAlien_V8_Deposit_EVM.tsol";
+
+import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensBurnCallback.tsol";
+
+
+abstract contract ProxyMultiVaultAlien_V8_Withdraw is
+ProxyMultiVaultAlien_V8_Deposit_EVM,
+    IAcceptTokensBurnCallback
+{
+    /// @notice Handles token burn.
+    /// Initializes alien transfer (eg BSC CAKE or ETH AAVE).
+    /// @param amount Tokens amount
+    /// @param remainingGasTo Address to send remaining gas to
+    /// @param payload TvmCell encoded (uint160 recipient)
+    function onAcceptTokensBurn(
+        uint128 amount,
+        address sender,
+        address,
+        address remainingGasTo,
+        TvmCell payload
+    ) public override reserveAtLeastTargetBalance {
+        (
+            uint32 nonce,
+            Network network,
+            TvmCell burnPayload
+        ) = abi.decode(payload, (uint32, Network, TvmCell));
+
+        if (network == Network.Solana) {
+            (
+                uint256 recipient,
+                IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
+                bool executePayloadNeeded,
+                IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
+                bytes solanaPayload
+            ) = abi.decode(burnPayload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[], bool, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[], bytes));
+
+            _deploySolanaEvent(
+                nonce,
+                msg.sender,
+                amount,
+                recipient,
+                sender,
+                remainingGasTo,
+                executeAccounts,
+                executePayloadNeeded,
+                executePayloadAccounts,
+                solanaPayload
+            );
+        } else if (network == Network.EVM) {
+            (
+                uint160 recipient,
+                EVMCallback callback
+            ) = abi.decode(burnPayload, (uint160, EVMCallback));
+
+            _deployEVMEvent(
+                nonce,
+                msg.sender,
+                amount,
+                recipient,
+                remainingGasTo,
+                sender,
+                callback
+            );
+        }
+    }
+
+    function _deploySolanaEvent(
+        uint32 nonce,
+        address token,
+        uint128 amount,
+        uint256 recipient,
+        address sender,
+        address remainingGasTo,
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
+        bool executePayloadNeeded,
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
+        bytes solanaPayload
+    ) internal view {
+        TvmCell eventData = abi.encode(
+            nonce,
+            address(this), // Proxy address, used in event contract for validating token root
+            msg.sender, // Token wallet address, must be validated in the event contract
+            token, // Everscale token root address
+            remainingGasTo, // Remaining gas receiver (on event contract destroy)
+            amount, // Amount of tokens to withdraw
+            recipient, // Recipient address in Solana network
+            sender,
+            solanaPayload
+        );
+
+        IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(
+            tx.timestamp,
+            now,
+            executeAccounts,
+            executePayloadNeeded,
+            executePayloadAccounts,
+            eventData
+        );
+
+        IEverscaleSolanaEventConfiguration(solanaConfiguration.everscaleConfiguration).deployEvent{
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(eventVoteData);
+    }
+
+    function _deployEVMEvent(
+        uint32 nonce,
+        address token,
+        uint128 amount,
+        uint160 recipient,
+        address remainingGasTo,
+        address sender,
+        EVMCallback callback
+    ) internal view {
+        TvmCell eventData = abi.encode(
+            nonce,
+            address(this), // Proxy address, used in event contract for validating token root
+            token, // Everscale token root address
+            remainingGasTo, // Remaining gas receiver (on event contract destroy)
+            amount, // Amount of tokens to withdraw
+            recipient, // Recipient address in EVM network
+            sender,
+            callback.recipient,
+            callback.payload,
+            callback.strict
+        );
+
+        IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData = IEverscaleEthereumEvent.EverscaleEthereumEventVoteData(
+            tx.timestamp,
+            now,
+            eventData
+        );
+
+        IEverscaleEthereumEventConfiguration(evmConfiguration.everscaleConfiguration).deployEvent{
+                value: 0,
+                bounce: false,
+                flag: MsgFlag.ALL_NOT_RESERVED
+        }(eventVoteData);
+    }
+}

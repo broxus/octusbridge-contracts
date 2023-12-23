@@ -8,7 +8,7 @@ import {
     EverscaleSolanaEventConfigurationAbi, MergePool_V3Abi,
     MergeRouterAbi, MultiVaultEverscaleEVMEventAlienAbi, MultiVaultEverscaleSolanaEventAlienAbi,
     ProxyMultiVaultAlien_V6Abi,
-    ProxyMultiVaultAlien_V7Abi,
+    ProxyMultiVaultAlien_V8Abi,
     SolanaEverscaleEventConfigurationAbi,
     StakingMockupAbi,
     TokenRootAbi,
@@ -36,7 +36,7 @@ let everscaleEthereumEventConfiguration: Contract<EverscaleEthereumEventConfigur
 let solanaEverscaleEventConfiguration: Contract<SolanaEverscaleEventConfigurationAbi>;
 let everscaleSolanaEventConfiguration: Contract<EverscaleSolanaEventConfigurationAbi>;
 let initializer: Account;
-let proxy: Contract<ProxyMultiVaultAlien_V7Abi>;
+let proxy: Contract<ProxyMultiVaultAlien_V8Abi>;
 
 let alienTokenRoot: Contract<TokenRootAlienSolanaAbi>;
 let customTokenRoot: Contract<TokenRootAbi>;
@@ -245,7 +245,10 @@ describe('Withdraw custom tokens by burning in favor of merge pool', async funct
         const burnPayload = await cellEncoder.methods.encodeMergePoolBurnWithdrawPayloadSolana({
             targetToken: alienTokenRoot.address,
             recipient,
-            executeAccounts
+            executeAccounts,
+            executePayloadNeeded: false,
+            executePayloadAccounts: executeAccounts,
+            payload: ''
         }).call();
 
         const tx = await locklift.tracing.trace(initializerCustomTokenWallet.methods.burn({

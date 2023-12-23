@@ -10,7 +10,7 @@ import {
   EverscaleSolanaEventConfigurationAbi,
   MultiVaultEverscaleEVMEventNativeAbi, MultiVaultEverscaleSolanaEventNativeAbi,
   MultiVaultEVMEverscaleEventNativeAbi,
-  ProxyMultiVaultNative_V3Abi,
+  ProxyMultiVaultNative_V3Abi, ProxyMultiVaultNative_V6Abi,
   SolanaEverscaleEventConfigurationAbi,
   StakingMockupAbi,
   TokenRootAbi,
@@ -38,7 +38,7 @@ let ethereumEverscaleEventConfiguration: Contract<EthereumEverscaleEventConfigur
 let everscaleEthereumEventConfiguration: Contract<EverscaleEthereumEventConfigurationAbi>;
 let solanaEverscaleEventConfiguration: Contract<SolanaEverscaleEventConfigurationAbi>;
 let everscaleSolanaEventConfiguration: Contract<EverscaleSolanaEventConfigurationAbi>;
-let proxy: Contract<ProxyMultiVaultNative_V3Abi>;
+let proxy: Contract<ProxyMultiVaultNative_V6Abi>;
 let initializer: Account;
 
 let tokenRoot: Contract<TokenRootAbi>;
@@ -132,7 +132,10 @@ describe("Test EVM native multivault pipeline", async function () {
       const payload = await cellEncoder.methods
           .encodeNativeTransferPayloadSolana({
             recipient,
-            executeAccounts
+            executeAccounts,
+            executePayloadNeeded: false,
+            executePayloadAccounts: executeAccounts,
+            solanaPayload: ''
           })
           .call()
           .then((t) => t.value0);
