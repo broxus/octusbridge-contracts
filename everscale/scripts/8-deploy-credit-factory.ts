@@ -26,7 +26,7 @@ const main = async () => {
                 _randomNonce: getRandomNonce()
             },
             publicKey: signer.publicKey,
-            value: toNano(100)
+            value: toNano(50)
         })
     );
 

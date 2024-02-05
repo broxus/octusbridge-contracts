@@ -11,6 +11,8 @@ import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 
 import "./../interfaces/event-contracts/IEthereumEverscaleEvent.tsol";
 import "./../interfaces/event-configuration-contracts/IEthereumEverscaleEventConfiguration.tsol";
+import "./../interfaces/event-contracts/ISolanaEverscaleEvent.tsol";
+import "./../interfaces/event-configuration-contracts/ISolanaEverscaleEventConfiguration.tsol";
 import "../../utils/ErrorCodes.tsol";
 
 import './EventCreditGas.tsol';
@@ -32,9 +34,16 @@ contract EventDeployer is ExternalOwner, RandomNonce, CheckPubKey {
         setOwnership(owner_);
     }
 
-    struct DeployRequest {
+    struct DeployRequestEVM {
         address configuration;
         IEthereumEverscaleEvent.EthereumEverscaleEventVoteData[] eventsVoteData;
+        uint128[] values;
+        uint128 value;
+    }
+
+    struct DeployRequestSolana {
+        address configuration;
+        ISolanaEverscaleEvent.SolanaEverscaleEventVoteData[] eventsVoteData;
         uint128[] values;
         uint128 value;
     }
@@ -55,17 +64,27 @@ contract EventDeployer is ExternalOwner, RandomNonce, CheckPubKey {
 
     /// @notice Batch events deployment
     /// @dev Can be called only by external owner
-    /// @param requests List of requests, one request per event configuration
+    /// @param requestsEVM List of EVM requests, one request per event configuration
+    /// @param requestsSolana List of Solana requests, one request per event configuration
     function deployEvents(
-        DeployRequest[] requests
+        DeployRequestEVM[] requestsEVM,
+        DeployRequestSolana[] requestsSolana
     ) external onlyOwner view {
         tvm.accept();
 
-        for (DeployRequest request: requests) {
+        for (DeployRequestEVM request: requestsEVM) {
             IEthereumEverscaleEventConfiguration(request.configuration).deployEvents{
                 value: request.value,
                 bounce: true,
                 flag: MsgFlag.IGNORE_ERRORS
+            }(request.eventsVoteData, request.values);
+        }
+
+        for (DeployRequestSolana request: requestsSolana) {
+            ISolanaEverscaleEventConfiguration(request.configuration).deployEvents{
+                value: request.value,
+                bounce: true,
+                flag: 0
             }(request.eventsVoteData, request.values);
         }
     }

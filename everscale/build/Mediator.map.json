@@ -1262,40 +1262,6 @@
         "line": 59
       }
     },
-    "4fa6d40fa2a3f76766c8330d908fc2f184b09dd5be416702690ef32f55cbbeed": {
-      "40": {
-        "filename": "../contracts/bridge/hidden-bridge/Mediator.tsol",
-        "line": 242
-      },
-      "48": {
-        "filename": "../contracts/bridge/hidden-bridge/Mediator.tsol",
-        "line": 242
-      },
-      "64": {
-        "filename": "../contracts/bridge/hidden-bridge/Mediator.tsol",
-        "line": 242
-      },
-      "72": {
-        "filename": "../contracts/bridge/hidden-bridge/Mediator.tsol",
-        "line": 242
-      },
-      "88": {
-        "filename": "../contracts/bridge/hidden-bridge/Mediator.tsol",
-        "line": 242
-      },
-      "96": {
-        "filename": "../contracts/bridge/hidden-bridge/Mediator.tsol",
-        "line": 242
-      },
-      "112": {
-        "filename": "../contracts/bridge/hidden-bridge/Mediator.tsol",
-        "line": 242
-      },
-      "120": {
-        "filename": "../contracts/bridge/hidden-bridge/Mediator.tsol",
-        "line": 242
-      }
-    },
     "5b8a67731c1cb79b1bdbba949a13e7c6d930792f9d8062cac94172df687ffdb3": {
       "0": {
         "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
@@ -1372,8 +1338,8 @@
     },
     "61ab4641fa30d9310391025086eec65d200d79268e1b7cd402565e01ba64be3c": {
       "0": {
-        "filename": "Mediator.code",
-        "line": 1105
+        "filename": "../contracts/bridge/hidden-bridge/Mediator.tsol",
+        "line": 68
       }
     },
     "67153a6766abf944db383624f0772b18d79d1a382ccc58d072b155cb7b6d9e82": {
@@ -3111,6 +3077,40 @@
       "200": {
         "filename": "Mediator.code",
         "line": 101
+      }
+    },
+    "cfb68bfe706c7fd36fad58232bc4151c855fe900bf0433b3a95730e90f95d9df": {
+      "38": {
+        "filename": "../contracts/bridge/hidden-bridge/Mediator.tsol",
+        "line": 242
+      },
+      "46": {
+        "filename": "../contracts/bridge/hidden-bridge/Mediator.tsol",
+        "line": 242
+      },
+      "62": {
+        "filename": "../contracts/bridge/hidden-bridge/Mediator.tsol",
+        "line": 242
+      },
+      "70": {
+        "filename": "../contracts/bridge/hidden-bridge/Mediator.tsol",
+        "line": 242
+      },
+      "86": {
+        "filename": "../contracts/bridge/hidden-bridge/Mediator.tsol",
+        "line": 242
+      },
+      "94": {
+        "filename": "../contracts/bridge/hidden-bridge/Mediator.tsol",
+        "line": 242
+      },
+      "110": {
+        "filename": "../contracts/bridge/hidden-bridge/Mediator.tsol",
+        "line": 242
+      },
+      "118": {
+        "filename": "../contracts/bridge/hidden-bridge/Mediator.tsol",
+        "line": 242
       }
     },
     "d0de54af38c19ad1e7357e08ec9e5e96b131c6faa7fc93a0922c3f900ce354be": {

@@ -22,14 +22,6 @@
 			]
 		},
 		{
-			"name": "deployEvents",
-			"inputs": [
-				{"components":[{"name":"configuration","type":"address"},{"components":[{"name":"accountSeed","type":"uint128"},{"name":"slot","type":"uint64"},{"name":"blockTime","type":"uint64"},{"name":"txSignature","type":"string"},{"name":"eventData","type":"cell"}],"name":"eventsVoteData","type":"tuple[]"},{"name":"values","type":"uint128[]"},{"name":"value","type":"uint128"}],"name":"requests","type":"tuple[]"}
-			],
-			"outputs": [
-			]
-		},
-		{
 			"name": "transferOwnership",
 			"inputs": [
 				{"name":"newOwner","type":"uint256"}
