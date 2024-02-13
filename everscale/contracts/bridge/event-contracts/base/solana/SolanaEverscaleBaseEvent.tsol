@@ -7,11 +7,13 @@ import "./../BaseEvent.tsol";
 import "../../../interfaces/event-contracts/ISolanaEverscaleEvent.tsol";
 
 import "./../../../../utils/ErrorCodes.tsol";
+import "../../../libraries/EventContractNonce.tsol";
 
 
 contract SolanaEverscaleBaseEvent is BaseEvent, ISolanaEverscaleEvent {
     // Event data
     SolanaEverscaleEventInitData static eventInitData;
+    uint32 public nonce;
 
     event Confirm(uint relay);
 
@@ -27,6 +29,7 @@ contract SolanaEverscaleBaseEvent is BaseEvent, ISolanaEverscaleEvent {
             ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION
         );
 
+        nonce = EventContractNonce._calculateNonce(eventInitData);
         initializer = _initializer;
         meta = _meta;
 
