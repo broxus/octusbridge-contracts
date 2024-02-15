@@ -3297,7 +3297,7 @@
     "61ab4641fa30d9310391025086eec65d200d79268e1b7cd402565e01ba64be3c": {
       "0": {
         "filename": "../contracts/staking/Election.tsol",
-        "line": 327
+        "line": 94
       }
     },
     "67390b78a6ccebe8362439819ad1b7f2fe9ae3695f4aa07fecb5120ab052c958": {
@@ -3856,328 +3856,6 @@
       "536": {
         "filename": "../contracts/staking/Election.tsol",
         "line": 161
-      }
-    },
-    "75513d6b1ac33c5673c58fb3e93fe44ba03a4c4bc32ec20418f012de9b8c1ebf": {
-      "4": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "12": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "28": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "36": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "52": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "60": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "76": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "84": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "100": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "108": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "116": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "132": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "148": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "156": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "164": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "180": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "196": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "204": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "212": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "228": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "244": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "252": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "260": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "276": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "292": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "300": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "308": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "324": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "340": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "348": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "364": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "372": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "388": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "396": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 327
-      },
-      "412": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 328
-      },
-      "460": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 328
-      },
-      "468": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 328
-      },
-      "484": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 330
-      },
-      "492": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 331
-      },
-      "500": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 331
-      },
-      "516": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 331
-      },
-      "532": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 331
-      },
-      "548": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 331
-      },
-      "556": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 331
-      },
-      "564": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 332
-      },
-      "580": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 334
-      },
-      "588": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 334
-      },
-      "596": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 334
-      },
-      "604": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 334
-      },
-      "620": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 336
-      },
-      "628": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 337
-      },
-      "652": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 337
-      },
-      "668": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 339
-      },
-      "676": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 339
-      },
-      "684": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 340
-      },
-      "700": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 340
-      },
-      "724": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 340
-      },
-      "732": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 340
-      },
-      "748": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 343
-      },
-      "764": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 343
-      },
-      "772": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 343
-      },
-      "780": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 343
-      },
-      "796": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 343
-      },
-      "812": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 343
-      },
-      "820": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 343
-      },
-      "836": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 343
-      },
-      "844": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 343
-      },
-      "852": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 343
-      },
-      "868": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 343
-      },
-      "884": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 343
-      },
-      "900": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 343
-      },
-      "916": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 343
-      },
-      "932": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 345
-      },
-      "948": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 345
-      },
-      "956": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 345
-      },
-      "964": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 345
-      },
-      "980": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 345
-      },
-      "988": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 345
-      },
-      "1004": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 345
-      },
-      "1012": {
-        "filename": "../contracts/staking/Election.tsol",
-        "line": 345
       }
     },
     "7ab914c10f5fd56fbdec916bb70e9ccfa26d2719e2edc72215760ee65bbd49d0": {
@@ -6288,23 +5966,23 @@
     "ca7d2f740bc93b249c84e344fffe1252cf7f0f3ace41bb04598c449d033e9cbb": {
       "0": {
         "filename": "../contracts/staking/Election.tsol",
-        "line": 343
+        "line": 136
       },
       "16": {
         "filename": "../contracts/staking/Election.tsol",
-        "line": 343
+        "line": 136
       },
       "24": {
         "filename": "../contracts/staking/Election.tsol",
-        "line": 343
+        "line": 136
       },
       "32": {
         "filename": "../contracts/staking/Election.tsol",
-        "line": 343
+        "line": 136
       },
       "48": {
         "filename": "../contracts/staking/Election.tsol",
-        "line": 343
+        "line": 136
       }
     },
     "cbfdd5ac6ace26b81cc11c11932226756a735f96af6eecad63e9c036c647823b": {
@@ -6739,6 +6417,328 @@
       "408": {
         "filename": "../contracts/staking/Election.tsol",
         "line": 164
+      }
+    },
+    "dfeb485a16859ff401131ce336f2eb0fc30a4869d6f4d46f6bf7a54982f78c91": {
+      "38": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "46": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "62": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "70": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "86": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "94": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "110": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "118": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "134": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "142": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "150": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "166": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "182": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "190": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "198": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "214": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "230": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "238": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "246": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "262": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "278": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "286": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "294": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "310": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "326": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "334": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "342": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "358": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "374": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "382": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "398": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "406": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "422": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "430": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 327
+      },
+      "446": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 328
+      },
+      "494": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 328
+      },
+      "502": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 328
+      },
+      "518": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 330
+      },
+      "526": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 331
+      },
+      "534": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 331
+      },
+      "550": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 331
+      },
+      "566": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 331
+      },
+      "582": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 331
+      },
+      "590": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 331
+      },
+      "598": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 332
+      },
+      "614": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 334
+      },
+      "622": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 334
+      },
+      "630": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 334
+      },
+      "638": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 334
+      },
+      "654": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 336
+      },
+      "662": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 337
+      },
+      "686": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 337
+      },
+      "702": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 339
+      },
+      "710": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 339
+      },
+      "718": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 340
+      },
+      "734": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 340
+      },
+      "758": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 340
+      },
+      "766": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 340
+      },
+      "782": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 343
+      },
+      "798": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 343
+      },
+      "806": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 343
+      },
+      "814": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 343
+      },
+      "830": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 343
+      },
+      "846": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 343
+      },
+      "854": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 343
+      },
+      "870": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 343
+      },
+      "878": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 343
+      },
+      "886": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 343
+      },
+      "902": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 343
+      },
+      "918": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 343
+      },
+      "934": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 343
+      },
+      "950": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 343
+      },
+      "966": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 345
+      },
+      "982": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 345
+      },
+      "990": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 345
+      },
+      "998": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 345
+      },
+      "1014": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 345
+      },
+      "1022": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 345
+      },
+      "1038": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 345
+      },
+      "1046": {
+        "filename": "../contracts/staking/Election.tsol",
+        "line": 345
       }
     },
     "e246fccaa07ed97569343a9aacc96a2af2e859832e3ee1bbeaf4eda9706143af": {

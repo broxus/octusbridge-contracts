@@ -10,7 +10,7 @@ import {
     CellEncoderStandaloneAbi,
     EthereumEverscaleEventConfigurationAbi,
     EverscaleEthereumEventConfigurationAbi,
-    EverscaleSolanaEventConfigurationAbi, MediatorAbi,
+    EverscaleSolanaEventConfigurationAbi, Mediator_V2Abi,
     MultiVaultEverscaleEVMEventNativeAbi,
     MultiVaultEVMEverscaleEventAlienAbi,
     MultiVaultEVMEverscaleEventNativeAbi, ProxyMultiVaultAlien_V8Abi,
@@ -36,7 +36,7 @@ let cellEncoder: Contract<CellEncoderStandaloneAbi>;
 let staking: Contract<StakingMockupAbi>;
 let bridgeOwner: Account;
 
-let mediator: Contract<MediatorAbi>;
+let mediator: Contract<Mediator_V2Abi>;
 
 let alienEthereumEverscaleEventConfiguration: Contract<EthereumEverscaleEventConfigurationAbi>;
 let alienEverscaleEthereumEventConfiguration: Contract<EverscaleEthereumEventConfigurationAbi>;

@@ -1,7 +1,7 @@
 import {logContract} from "./logger";
 import {Contract} from "locklift";
 import {
-    MediatorAbi,
+    Mediator_V2Abi,
     ProxyMultiVaultAlien_V8Abi,
     ProxyMultiVaultNative_V4Abi, ProxyMultiVaultNative_V6Abi
 } from "../../build/factorySource";
@@ -13,7 +13,7 @@ export const setupHiddenBridge = async (
     nativeProxy: Contract<ProxyMultiVaultNative_V6Abi>,
     alienProxy: Contract<ProxyMultiVaultAlien_V8Abi>
 ): Promise<[
-    Contract<MediatorAbi>
+    Contract<Mediator_V2Abi>
 ]> => {
     const signer = (await locklift.keystore.getSigner("0"))!;
 
@@ -24,7 +24,7 @@ export const setupHiddenBridge = async (
     const {
         contract: mediator
     } = await locklift.factory.deployContract({
-        contract: "Mediator",
+        contract: "Mediator_V2",
         constructorParams: {
             _owner: owner.address,
             _nativeProxy: nativeProxy.address,
