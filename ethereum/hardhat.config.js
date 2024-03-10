@@ -130,7 +130,8 @@ const hardhatConfig = {
             enabled: true,
             runs: 200
           }
-        }
+        },
+        evmVersion: `paris`
       },
       {
         version: '0.8.2',
