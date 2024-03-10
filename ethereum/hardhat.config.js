@@ -129,9 +129,9 @@ const hardhatConfig = {
           optimizer: {
             enabled: true,
             runs: 200
-          }
+          },
+          evmVersion: `paris`
         },
-        evmVersion: `paris`
       },
       {
         version: '0.8.2',
@@ -292,7 +292,7 @@ const hardhatConfig = {
       hardhat: '0x5889d26Ad270540E315B028Dd39Ae0ECB3De6179'
     },
     deployer: {
-      default: 0,
+      default: 4,
     },
     guardian: {
       default: 1,
