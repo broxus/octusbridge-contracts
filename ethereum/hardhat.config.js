@@ -292,7 +292,7 @@ const hardhatConfig = {
       hardhat: '0x5889d26Ad270540E315B028Dd39Ae0ECB3De6179'
     },
     deployer: {
-      default: 4,
+      default: 0,
     },
     guardian: {
       default: 1,
