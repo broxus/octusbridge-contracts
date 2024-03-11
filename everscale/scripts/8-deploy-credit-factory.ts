@@ -1,8 +1,8 @@
 import { Address, getRandomNonce, toNano } from "locklift";
 
 const main = async () => {
-    const key = '0xbc19d15b1b681d3a2d6fcc81188e271314f0355af5f03fc8c114f5437dfadd4a';
-    const owner = '0:e02729e9be9ad07dea46caa6f77085975049b1a7678150b0a0808e4bb86426be';
+    const key = '0x9c9565a37e90ac15fd574726162c46c212b4d34259c9b0e5a452cd591bb77d89';
+    const owner = '0:42387b9e0c9ac80b4ac3228e560b9be87540bc1ff5c516265fb51e5a36ef4286';
 
     const EventCloser = await locklift.factory.getContractArtifacts('EventCloser');
     const EventDeployer = await locklift.factory.getContractArtifacts('EventDeployer');
