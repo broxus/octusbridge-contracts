@@ -36,7 +36,7 @@ const main = async () => {
     const {
         contract: Mediator
     } = await locklift.factory.deployContract({
-        contract: "Mediator",
+        contract: "Mediator_V2",
         constructorParams: {
             _owner: new Address(response.owner),
             _nativeProxy: new Address(response.nativeProxy),
@@ -53,47 +53,47 @@ const main = async () => {
 
     await logContract('Mediator', Mediator.address);
 
-    spinner.start('Deploying event deployer');
+    // spinner.start('Deploying event deployer');
 
-    const {
-        contract: EventDeployer
-    } = await locklift.factory.deployContract({
-        contract: 'EventDeployer',
-        constructorParams: {
-            _guardian: new Address(response.owner),
-            _owner: response.key
-        },
-        initParams: {
-            _randomNonce: locklift.utils.getRandomNonce()
-        },
-        value: locklift.utils.toNano(15),
-        publicKey: signer.publicKey
-    });
+    // const {
+    //     contract: EventDeployer
+    // } = await locklift.factory.deployContract({
+    //     contract: 'EventDeployer',
+    //     constructorParams: {
+    //         _guardian: new Address(response.owner),
+    //         _owner: response.key
+    //     },
+    //     initParams: {
+    //         _randomNonce: locklift.utils.getRandomNonce()
+    //     },
+    //     value: locklift.utils.toNano(15),
+    //     publicKey: signer.publicKey
+    // });
 
-    spinner.stop();
+    // spinner.stop();
 
-    await logContract('EventDeployer', EventDeployer.address);
+    // await logContract('EventDeployer', EventDeployer.address);
 
-    spinner.start('Deploying event closer');
+    // spinner.start('Deploying event closer');
 
-    const {
-        contract: EventCloser
-    } = await locklift.factory.deployContract({
-        contract: 'EventCloser',
-        constructorParams: {
-            _owner: response.key,
-            _deployer: EventDeployer.address
-        },
-        initParams: {
-            _randomNonce: locklift.utils.getRandomNonce()
-        },
-        value: locklift.utils.toNano(15),
-        publicKey: signer.publicKey
-    });
+    // const {
+    //     contract: EventCloser
+    // } = await locklift.factory.deployContract({
+    //     contract: 'EventCloser',
+    //     constructorParams: {
+    //         _owner: response.key,
+    //         _deployer: EventDeployer.address
+    //     },
+    //     initParams: {
+    //         _randomNonce: locklift.utils.getRandomNonce()
+    //     },
+    //     value: locklift.utils.toNano(15),
+    //     publicKey: signer.publicKey
+    // });
 
-    spinner.stop();
+    // spinner.stop();
 
-    await logContract('EventCloser', EventCloser.address);
+    // await logContract('EventCloser', EventCloser.address);
 }
 
 
