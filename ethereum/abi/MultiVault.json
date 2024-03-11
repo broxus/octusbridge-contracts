@@ -284,6 +284,122 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "int8",
+                "name": "wid",
+                "type": "int8"
+              },
+              {
+                "internalType": "uint256",
+                "name": "addr",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct IEverscale.EverscaleAddress",
+            "name": "recipient",
+            "type": "tuple"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "expected_evers",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes",
+            "name": "payload",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct IMultiVaultFacetDeposit.DepositNativeTokenParams",
+        "name": "d",
+        "type": "tuple"
+      }
+    ],
+    "name": "depositByNativeToken",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "int8",
+                "name": "wid",
+                "type": "int8"
+              },
+              {
+                "internalType": "uint256",
+                "name": "addr",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct IEverscale.EverscaleAddress",
+            "name": "recipient",
+            "type": "tuple"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "expected_evers",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes",
+            "name": "payload",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct IMultiVaultFacetDeposit.DepositNativeTokenParams",
+        "name": "d",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint256",
+        "name": "expectedMinBounty",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "recipient",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IMultiVaultFacetPendingWithdrawals.PendingWithdrawalId[]",
+        "name": "pendingWithdrawalIds",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "depositByNativeToken",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -629,7 +745,7 @@
     ],
     "name": "skim",
     "outputs": [],
-    "stateMutability": "payable",
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -659,12 +775,6 @@
         "internalType": "address",
         "name": "token",
         "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "bool",
-        "name": "skim_to_everscale",
-        "type": "bool"
       },
       {
         "indexed": false,
@@ -860,12 +970,12 @@
         "type": "address"
       }
     ],
-    "name": "getLPToken",
+    "name": "getSupply",
     "outputs": [
       {
-        "internalType": "address",
+        "internalType": "uint256",
         "name": "",
-        "type": "address"
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -926,11 +1036,11 @@
       },
       {
         "internalType": "address",
-        "name": "receiver",
+        "name": "recipient",
         "type": "address"
       }
     ],
-    "name": "mint",
+    "name": "mintLP",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -949,11 +1059,11 @@
       },
       {
         "internalType": "address",
-        "name": "receiver",
+        "name": "recipient",
         "type": "address"
       }
     ],
-    "name": "redeem",
+    "name": "redeemLP",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1218,6 +1328,33 @@
             "internalType": "enum IMultiVaultFacetPendingWithdrawals.ApproveStatus",
             "name": "approveStatus",
             "type": "uint8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "chainId",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "recipient",
+                "type": "address"
+              },
+              {
+                "internalType": "bytes",
+                "name": "payload",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bool",
+                "name": "strict",
+                "type": "bool"
+              }
+            ],
+            "internalType": "struct IMultiVaultFacetWithdraw.Callback",
+            "name": "callback",
+            "type": "tuple"
           }
         ],
         "internalType": "struct IMultiVaultFacetPendingWithdrawals.PendingWithdrawalParams",
@@ -1750,6 +1887,11 @@
         "internalType": "address",
         "name": "_governance",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_weth",
+        "type": "address"
       }
     ],
     "name": "initialize",
@@ -1765,31 +1907,6 @@
         "internalType": "address",
         "name": "",
         "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "rewards",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "int8",
-            "name": "wid",
-            "type": "int8"
-          },
-          {
-            "internalType": "uint256",
-            "name": "addr",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct IEverscale.EverscaleAddress",
-        "name": "",
-        "type": "tuple"
       }
     ],
     "stateMutability": "view",
@@ -1841,36 +1958,6 @@
       }
     ],
     "name": "setConfigurationNative",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "int8",
-            "name": "wid",
-            "type": "int8"
-          },
-          {
-            "internalType": "uint256",
-            "name": "addr",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct IEverscale.EverscaleAddress",
-        "name": "token",
-        "type": "tuple"
-      },
-      {
-        "internalType": "address",
-        "name": "native",
-        "type": "address"
-      }
-    ],
-    "name": "setCustomNative",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1961,31 +2048,6 @@
   {
     "inputs": [
       {
-        "components": [
-          {
-            "internalType": "int8",
-            "name": "wid",
-            "type": "int8"
-          },
-          {
-            "internalType": "uint256",
-            "name": "addr",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct IEverscale.EverscaleAddress",
-        "name": "_rewards",
-        "type": "tuple"
-      }
-    ],
-    "name": "setRewards",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "address",
         "name": "token",
         "type": "address"
@@ -1997,6 +2059,19 @@
       }
     ],
     "name": "setUndeclaredWithdrawalLimits",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_withdrawGuardian",
+        "type": "address"
+      }
+    ],
+    "name": "setWithdrawGuardian",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -2084,6 +2159,38 @@
       {
         "indexed": false,
         "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "limit",
+        "type": "uint256"
+      }
+    ],
+    "name": "UpdateDailyWithdrawalLimits",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "gasDonor",
+        "type": "address"
+      }
+    ],
+    "name": "UpdateGasDonor",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
         "name": "governance",
         "type": "address"
       }
@@ -2137,34 +2244,214 @@
     "type": "event"
   },
   {
+    "anonymous": false,
     "inputs": [
       {
-        "components": [
-          {
-            "internalType": "int8",
-            "name": "wid",
-            "type": "int8"
-          },
-          {
-            "internalType": "uint256",
-            "name": "addr",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct IEverscale.EverscaleAddress",
-        "name": "native",
-        "type": "tuple"
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "limit",
+        "type": "uint256"
+      }
+    ],
+    "name": "UpdateUndeclaredWithdrawalLimits",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "weth",
+        "type": "address"
+      }
+    ],
+    "name": "UpdateWeth",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "withdrawGuardian",
+        "type": "address"
+      }
+    ],
+    "name": "UpdateWithdrawGuardian",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "status",
+        "type": "bool"
+      }
+    ],
+    "name": "UpdateWithdrawalLimitStatus",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "burn",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "deployLPToken",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "lp",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int8",
+        "name": "wid",
+        "type": "int8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "addr",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "symbol",
+        "type": "string"
+      },
+      {
+        "internalType": "uint8",
+        "name": "decimals",
+        "type": "uint8"
+      }
+    ],
+    "name": "deployTokenForNative",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "getLPToken",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "lp",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int8",
+        "name": "wid",
+        "type": "int8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "addr",
+        "type": "uint256"
       }
     ],
     "name": "getNativeToken",
     "outputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "token",
         "type": "address"
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "mint",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -2242,17 +2529,12 @@
         "type": "address"
       },
       {
-        "internalType": "string",
-        "name": "name_prefix",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "symbol_prefix",
-        "type": "string"
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
       }
     ],
-    "name": "setPrefix",
+    "name": "setDepositLimit",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -2316,6 +2598,11 @@
             "internalType": "address",
             "name": "custom",
             "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "depositLimit",
+            "type": "uint256"
           }
         ],
         "internalType": "struct IMultiVaultFacetTokens.Token",
@@ -2325,32 +2612,6 @@
     ],
     "stateMutability": "view",
     "type": "function"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      }
-    ],
-    "name": "BlacklistTokenAdded",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      }
-    ],
-    "name": "BlacklistTokenRemoved",
-    "type": "event"
   },
   {
     "anonymous": false,
@@ -2442,6 +2703,69 @@
       }
     ],
     "name": "TokenCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "status",
+        "type": "bool"
+      }
+    ],
+    "name": "UpdateTokenBlacklist",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "limit",
+        "type": "uint256"
+      }
+    ],
+    "name": "UpdateTokenDepositLimit",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "name_prefix",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "symbol_prefix",
+        "type": "string"
+      }
+    ],
+    "name": "UpdateTokenPrefix",
     "type": "event"
   },
   {
