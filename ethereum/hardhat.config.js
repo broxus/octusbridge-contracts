@@ -189,8 +189,8 @@ const hardhatConfig = {
       }
     },
     main: {
-      url: 'https://mainnet.infura.io/v3/f3ca4333bf4a41308d0a277ae1c09336',
-      gasPrice: 30000000000, // 100 gwei
+      url: 'https://mainnet.infura.io/v3/619e6537ee3d44dbbd00c6182b897a0b',
+      gasPrice: 70000000000, // 70 gwei
       gas: 3000000,
       timeout: 1000000,
       accounts: {
@@ -199,7 +199,7 @@ const hardhatConfig = {
       },
     },
     polygon: {
-      url: 'https://matic-mainnet.chainstacklabs.com',
+      url: 'https://polygon-mainnet.infura.io/v3/619e6537ee3d44dbbd00c6182b897a0b',
       gasPrice: 300001000000, // 1.001 gwei
       gas: 3000000,
       timeout: 1000000,
