@@ -15,6 +15,10 @@ interface IMultiVaultEVMEverscaleEventNative {
         address tokenWallet_
     ) external;
 
+    function receiveTokenWalletRoot(
+        address tokenRoot_
+    ) external;
+
     function getDecodedData() external responsible returns(
         address token_,
         uint128 amount_,
