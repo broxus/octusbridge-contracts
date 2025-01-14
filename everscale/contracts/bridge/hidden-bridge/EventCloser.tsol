@@ -58,7 +58,7 @@ contract EventCloser is ExternalOwner, RandomNonce, TransferUtils, CheckPubKey {
             EverscaleEthereumBaseEvent(e).close{
                 bounce: true,
                 flag: MsgFlag.IGNORE_ERRORS,
-                value: 0.1 ever
+                value: gasToValue(EventCreditGas.CLOSE_EVENT_GAS, address(this).wid)
             }();
         }
     }

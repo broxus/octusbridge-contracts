@@ -32,8 +32,6 @@ contract ProxyMultiVaultAlien_V2 is
     Configuration config;
     uint8 api_version = 0;
 
-    uint128 constant MIN_CONTRACT_BALANCE = 1 ever;
-
     constructor(
         address owner_
     ) public checkPubKey {
@@ -61,7 +59,7 @@ contract ProxyMultiVaultAlien_V2 is
         address,
         address remainingGasTo,
         TvmCell payload
-    ) public override reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    ) public override reserveMinBalance(Gas.TARGET_BALANCE) {
         (uint160 recipient) = abi.decode(payload, (uint160));
 
         TvmCell eventData = abi.encode(
@@ -92,7 +90,7 @@ contract ProxyMultiVaultAlien_V2 is
         IEthereumEverscaleEvent.EthereumEverscaleEventInitData,
         TvmCell meta,
         address remainingGasTo
-    ) external override reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    ) external override reserveMinBalance(Gas.TARGET_BALANCE) {
         require(_isArrayContainsAddress(config.evmConfigurations, msg.sender));
 
         (
@@ -155,7 +153,7 @@ contract ProxyMultiVaultAlien_V2 is
         string symbol,
         uint8 decimals,
         address remainingGasTo
-    ) external override reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    ) external override reserveMinBalance(Gas.TARGET_BALANCE) {
         TvmCell stateInit = _buildAlienTokenRootInitState(
             chainId,
             token,

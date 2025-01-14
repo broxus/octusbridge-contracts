@@ -15,7 +15,6 @@ import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 abstract contract ProxyMultivaultAlien_V6_Base is IProxyMultiVaultAlien_V6, TransferUtils, InternalOwner {
     SolanaConfiguration solanaConfiguration;
     EVMConfiguration evmConfiguration;
-    uint128 constant DEPLOY_WALLET_VALUE = 0.2 ever;
 
     uint8 api_version = 0;
 

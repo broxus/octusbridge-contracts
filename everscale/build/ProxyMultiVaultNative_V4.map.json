@@ -1,127 +1,9 @@
 {
   "map": {
-    "0120b59863e14d365d962f54b1d50f8329771ca73ba608b03343654531e75b2c": {
-      "0": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "8": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "16": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "64": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "80": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "88": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "96": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "104": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "128": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "144": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "168": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "176": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "184": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "208": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "224": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "232": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "280": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "296": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "304": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "320": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "336": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "344": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "352": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "368": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "376": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "384": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "392": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "400": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      },
-      "416": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 60
-      }
-    },
     "02275850dfb4cb5d8ebf846eb0dda67c839e70644a0eb75802bb7a89a262f3e4": {
       "0": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 23
+        "line": 24
       },
       "16": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Withdraw.tsol",
@@ -379,79 +261,79 @@
       },
       "88": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 39
+        "line": 38
       },
       "96": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 39
+        "line": 38
       },
       "104": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 39
+        "line": 38
       },
       "112": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 39
+        "line": 38
       },
       "120": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 39
+        "line": 38
       },
       "128": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 39
+        "line": 38
       },
       "136": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 39
+        "line": 38
       },
       "152": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 39
+        "line": 38
       },
       "168": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 39
+        "line": 38
       },
       "184": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 39
+        "line": 38
       },
       "192": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 39
+        "line": 38
       },
       "208": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 39
+        "line": 38
       },
       "216": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 39
+        "line": 38
       },
       "232": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 39
+        "line": 38
       },
       "240": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 39
+        "line": 38
       },
       "248": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 39
+        "line": 38
       },
       "256": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 39
+        "line": 38
       },
       "264": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 39
+        "line": 38
       },
       "280": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 39
+        "line": 38
       },
       "288": {
         "filename": "ProxyMultiVaultNative_V4.code",
@@ -470,283 +352,73 @@
         "line": 967
       }
     },
-    "17cbe56ad4062d27f0b6485290b2094a3c95f5b9357926990d34f65f7ec43bd5": {
-      "0": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 23
-      },
-      "16": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 26
-      },
-      "40": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 26
-      },
-      "56": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 26
-      },
-      "72": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 26
-      },
-      "88": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 26
-      },
-      "104": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 26
-      },
-      "120": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 31
-      },
-      "128": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 31
-      },
-      "136": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 31
-      },
-      "152": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 31
-      },
-      "168": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 31
-      },
-      "176": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 31
-      },
-      "184": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 31
-      },
-      "192": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 31
-      },
-      "208": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 31
-      },
-      "216": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 31
-      },
-      "224": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 41
-      },
-      "240": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 41
-      },
-      "248": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 41
-      },
-      "264": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 313
-      }
-    },
-    "25dc8229d923e13de02453ea438d39c7aac2fc0a1590c635489fad4b0a90713a": {
+    "1e35a04789fcfebcffdb610f6abe8383a6871b86c808e40c200474b87a0e3cdb": {
       "0": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 316
+        "line": 1652
       },
       "8": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 317
+        "line": 1653
       },
-      "24": {
+      "56": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 318
-      },
-      "48": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 319
+        "line": 1654
       },
       "64": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 320
+        "line": 1655
       },
-      "72": {
+      "80": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 321
+        "line": 1658
       },
       "88": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1659
       },
-      "96": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
-      },
-      "112": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
-      },
-      "128": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
+      "136": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1660
       },
       "144": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1661
       },
       "160": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1664
       },
       "168": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
-      },
-      "176": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
-      },
-      "192": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
-      },
-      "208": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1665
       },
       "216": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1666
       },
       "224": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
-      },
-      "232": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1667
       },
       "240": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1670
       },
       "248": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
-      },
-      "264": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
-      },
-      "280": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1671
       },
       "296": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1672
       },
       "304": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
-      },
-      "312": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
-      },
-      "328": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
-      },
-      "344": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
-      },
-      "352": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
-      },
-      "360": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
-      },
-      "376": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
-      },
-      "384": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
-      },
-      "392": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
-      },
-      "400": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
-      },
-      "416": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
-      },
-      "432": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
-      },
-      "448": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
-      },
-      "456": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
-      },
-      "464": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
-      },
-      "472": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
-      },
-      "480": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
-      },
-      "488": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
-      },
-      "504": {
-        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
-        "line": 53
-      },
-      "512": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 365
-      },
-      "528": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 368
-      },
-      "536": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 369
-      },
-      "552": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 372
+        "line": 1673
       }
     },
-    "29311b15ae33dde4053abab5cd718db14984c8a57c1f79576f6d9023bc73e5f6": {
+    "40ec4ba5420409b322afd8ad66bdc2122bbf063bd7aa3b9793aea02ec96d3d1c": {
       "0": {
         "filename": "ProxyMultiVaultNative_V4.code",
         "line": 219
@@ -1029,33 +701,99 @@
     "47977409fbda8114191f94c945863c8ffefbd15cba3d8cd73aeccd3ab1407e50": {
       "0": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 59
+        "line": 60
       }
     },
     "4ba7d202bb0340e1da53a63bf9c03c035cbd11d028f36a73875d7a7b91839268": {
       "0": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1368
+        "line": 1370
       },
       "16": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1369
+        "line": 1371
       },
       "24": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1370
+        "line": 1372
       },
       "40": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1371
+        "line": 1373
       },
       "56": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1372
+        "line": 1374
       },
       "72": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1413
+        "line": 1415
+      }
+    },
+    "53ac80be75d6aba84c4150e568e53a4cca619ab88c98ec8001c9a14ec6503327": {
+      "0": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1619
+      },
+      "8": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1620
+      },
+      "56": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1621
+      },
+      "64": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1622
+      },
+      "80": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1648
+      },
+      "88": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1649
+      },
+      "136": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1650
+      },
+      "144": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1651
+      },
+      "160": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1677
+      },
+      "168": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1678
+      },
+      "216": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1679
+      },
+      "224": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1680
+      },
+      "240": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1706
+      },
+      "248": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1707
+      },
+      "296": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1708
+      },
+      "304": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1709
       }
     },
     "54e504f19946aae9b919d9a04d509dd5dfcec456773b6e2bd7047d3f8077f224": {
@@ -1085,27 +823,27 @@
       },
       "88": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 30
+        "line": 29
       },
       "104": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 30
+        "line": 29
       },
       "120": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 30
+        "line": 29
       },
       "128": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 30
+        "line": 29
       },
       "144": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 30
+        "line": 29
       },
       "160": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 30
+        "line": 29
       },
       "168": {
         "filename": "ProxyMultiVaultNative_V4.code",
@@ -1264,66 +1002,132 @@
         "line": 858
       }
     },
-    "56a986df472183a1b945649afa9f84d7818ca35b5953e3f400b106e19accd571": {
+    "55b24497d26e571771a0fef7cbc9de6a1cdd630ea8bbfc000ffcaedc16c5bb45": {
       "0": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1579
+        "line": 1623
       },
       "8": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1580
-      },
-      "16": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1581
-      },
-      "32": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1584
+        "line": 1624
       },
       "48": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1585
+        "line": 1625
       },
       "56": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1586
+        "line": 1626
       },
       "72": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1587
+        "line": 1629
+      },
+      "80": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1630
+      },
+      "128": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1631
+      },
+      "136": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1632
+      },
+      "152": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1635
+      },
+      "160": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1636
+      },
+      "208": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1637
+      },
+      "216": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1638
       },
       "232": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1588
+        "line": 1641
       },
       "240": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1589
+        "line": 1642
       },
-      "248": {
+      "288": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1590
-      },
-      "264": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1591
-      },
-      "272": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1592
-      },
-      "280": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1593
+        "line": 1643
       },
       "296": {
         "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1644
+      }
+    },
+    "56a986df472183a1b945649afa9f84d7818ca35b5953e3f400b106e19accd571": {
+      "0": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1581
+      },
+      "8": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1582
+      },
+      "16": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1583
+      },
+      "32": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1586
+      },
+      "48": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1587
+      },
+      "56": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1588
+      },
+      "72": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1589
+      },
+      "232": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1590
+      },
+      "240": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1591
+      },
+      "248": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1592
+      },
+      "264": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1593
+      },
+      "272": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1594
+      },
+      "280": {
+        "filename": "ProxyMultiVaultNative_V4.code",
         "line": 1595
+      },
+      "296": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1597
       },
       "304": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1596
+        "line": 1598
       }
     },
     "57f747ae381a6622a0c0cbd0da17b29a0e167c4b85bd65cc55d3b0d2a31bd4bb": {
@@ -1530,50 +1334,194 @@
         "line": 39
       }
     },
-    "5bd60af0d2870914e0c2b67034c1dbd86d001c5ac20787d2b8d7676fc3860ebb": {
+    "5f1526392bd0dd8f330e16068761c94cb96870cc14f3535954fbb3daaa35f319": {
       "0": {
-        "filename": "<entry-selector>",
-        "line": 1
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 316
       },
       "8": {
-        "filename": "<entry-selector>",
-        "line": 2
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 317
       },
       "24": {
-        "filename": "<entry-selector>",
-        "line": 3
-      },
-      "32": {
-        "filename": "<entry-selector>",
-        "line": 4
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 318
       },
       "48": {
-        "filename": "<entry-selector>",
-        "line": 5
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 319
       },
-      "56": {
-        "filename": "<entry-selector>",
-        "line": 6
+      "64": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 320
       },
       "72": {
-        "filename": "<entry-selector>",
-        "line": 7
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 321
       },
       "88": {
-        "filename": "<entry-selector>",
-        "line": 8
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
       },
       "96": {
-        "filename": "<entry-selector>",
-        "line": 9
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
       },
       "112": {
-        "filename": "<entry-selector>",
-        "line": 10
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
       },
       "128": {
-        "filename": "<entry-selector>",
-        "line": 11
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "144": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "160": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "168": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "176": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "192": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "208": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "216": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "224": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "232": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "240": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "248": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "264": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "280": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "296": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "304": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "312": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "328": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "344": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "352": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "360": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "376": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "384": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "392": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "400": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "416": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "432": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "448": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "456": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "464": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "472": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "480": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "488": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "504": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 53
+      },
+      "512": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 365
+      },
+      "528": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 368
+      },
+      "536": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 369
+      },
+      "552": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 372
       }
     },
     "61ab4641fa30d9310391025086eec65d200d79268e1b7cd402565e01ba64be3c": {
@@ -1582,70 +1530,326 @@
         "line": 37
       }
     },
+    "621499455a7623d3b60de5b1fb925a2b9d7f7414538b855ce06aebd81d058000": {
+      "0": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "8": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "16": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "32": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "48": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "56": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "64": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "72": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "96": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "112": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "136": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "144": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "152": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "176": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "192": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "200": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "248": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "264": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "272": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "288": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "304": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "312": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "320": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "336": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "344": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "352": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "360": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "368": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      },
+      "384": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
+        "line": 59
+      }
+    },
     "652cc130b402d4343539a51e4d0d36f96c956bb1eac5c096177eef715de81f14": {
       "0": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1661
+        "line": 1681
       },
       "8": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1662
+        "line": 1682
       },
       "56": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1663
+        "line": 1683
       },
       "64": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1664
+        "line": 1684
       },
       "80": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1667
+        "line": 1687
       },
       "88": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1668
+        "line": 1688
       },
       "136": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1669
+        "line": 1689
       },
       "144": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1670
+        "line": 1690
       },
       "160": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1673
+        "line": 1693
       },
       "168": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1674
+        "line": 1694
       },
       "216": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1675
+        "line": 1695
       },
       "224": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1676
+        "line": 1696
       },
       "240": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1679
+        "line": 1699
       },
       "248": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1680
+        "line": 1700
       },
       "296": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1681
+        "line": 1701
       },
       "304": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1682
+        "line": 1702
+      }
+    },
+    "67243953bcf2ac28054f4e23d87f709746d5a7e789bb7ec12fef9460fe240ccb": {
+      "0": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1477
+      },
+      "16": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1478
+      },
+      "24": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1479
+      },
+      "40": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1480
+      },
+      "56": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1481
+      },
+      "72": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1482
+      },
+      "80": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1483
+      },
+      "88": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1484
+      },
+      "104": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1485
+      },
+      "120": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1486
+      },
+      "128": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1487
+      },
+      "144": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1488
+      },
+      "168": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1489
+      },
+      "184": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1490
+      },
+      "192": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1491
+      },
+      "208": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1492
+      },
+      "248": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1493
+      },
+      "264": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1494
+      },
+      "272": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1495
+      },
+      "288": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1496
+      },
+      "296": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1497
+      },
+      "312": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1498
+      },
+      "328": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1499
+      },
+      "336": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1500
+      },
+      "344": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1501
+      },
+      "360": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1502
+      },
+      "376": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1506
+      },
+      "384": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1507
+      },
+      "408": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1508
+      },
+      "424": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1509
+      },
+      "432": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1510
+      },
+      "448": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1514
+      },
+      "456": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1515
+      },
+      "472": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1518
       }
     },
     "68e66dec8579648dda91b0f52411d8b67cc8c3c9d68a3ebcd40d2fc291eda2b5": {
@@ -1675,27 +1879,27 @@
       },
       "88": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 26
+        "line": 25
       },
       "104": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 26
+        "line": 25
       },
       "120": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 26
+        "line": 25
       },
       "128": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 26
+        "line": 25
       },
       "144": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 26
+        "line": 25
       },
       "160": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 26
+        "line": 25
       },
       "168": {
         "filename": "ProxyMultiVaultNative_V4.code",
@@ -1886,228 +2090,248 @@
         "line": 786
       }
     },
-    "68e9ee4950edd36be4665c4689d1f437c8f31e1222c03d31bac88df1efe9039f": {
+    "6903990f07337883c485f226ed890dff4e539f38ea080d0918285663617ecee6": {
       "0": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1603
+        "filename": "stdlib.sol",
+        "line": 75
       },
       "8": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1604
+        "filename": "stdlib.sol",
+        "line": 75
+      },
+      "24": {
+        "filename": "stdlib.sol",
+        "line": 75
+      },
+      "32": {
+        "filename": "stdlib.sol",
+        "line": 75
       },
       "48": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1605
+        "filename": "stdlib.sol",
+        "line": 75
       },
       "56": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1606
-      },
-      "72": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1609
+        "filename": "stdlib.sol",
+        "line": 75
       },
       "80": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1610
+        "filename": "stdlib.sol",
+        "line": 76
+      },
+      "96": {
+        "filename": "stdlib.sol",
+        "line": 76
+      },
+      "112": {
+        "filename": "stdlib.sol",
+        "line": 76
       },
       "128": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1611
+        "filename": "stdlib.sol",
+        "line": 76
       },
-      "136": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1612
+      "144": {
+        "filename": "stdlib.sol",
+        "line": 76
       },
       "152": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1615
+        "filename": "stdlib.sol",
+        "line": 76
       },
-      "160": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1616
+      "168": {
+        "filename": "stdlib.sol",
+        "line": 76
+      },
+      "176": {
+        "filename": "stdlib.sol",
+        "line": 77
+      },
+      "200": {
+        "filename": "stdlib.sol",
+        "line": 78
       },
       "208": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1617
+        "filename": "stdlib.sol",
+        "line": 79
       },
-      "216": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1618
-      },
-      "232": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1621
+      "224": {
+        "filename": "stdlib.sol",
+        "line": 79
       },
       "240": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1622
+        "filename": "stdlib.sol",
+        "line": 79
       },
-      "288": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1623
+      "256": {
+        "filename": "stdlib.sol",
+        "line": 79
+      },
+      "272": {
+        "filename": "stdlib.sol",
+        "line": 79
       },
       "296": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1624
+        "filename": "stdlib.sol",
+        "line": 79
       }
     },
     "6a39ff610e381ddff75b71063a79cba198f245c733d3cc8720a7e0da62b5eb07": {
       "0": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1327
+        "line": 1329
       },
       "16": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1328
+        "line": 1330
       },
       "24": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1329
+        "line": 1331
       },
       "40": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1330
+        "line": 1332
       },
       "56": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1331
+        "line": 1333
       },
       "72": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1332
+        "line": 1334
       },
       "80": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1333
+        "line": 1335
       },
       "96": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1334
+        "line": 1336
       },
       "104": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1335
+        "line": 1337
       },
       "112": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1336
+        "line": 1338
       },
       "120": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1337
+        "line": 1339
       },
       "136": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1338
+        "line": 1340
       },
       "152": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1339
+        "line": 1341
       },
       "168": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1340
+        "line": 1342
       },
       "176": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1341
+        "line": 1343
       },
       "192": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1342
+        "line": 1344
       },
       "200": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1343
+        "line": 1345
       },
       "216": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1344
+        "line": 1346
       },
       "224": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1345
+        "line": 1347
       },
       "232": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1346
+        "line": 1348
       },
       "240": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1347
+        "line": 1349
       },
       "248": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1348
+        "line": 1350
       },
       "264": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1349
+        "line": 1351
       },
       "272": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1350
+        "line": 1352
       },
       "280": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1351
+        "line": 1353
       },
       "288": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1352
+        "line": 1354
       },
       "304": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1353
+        "line": 1355
       },
       "312": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1354
+        "line": 1356
       },
       "328": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1355
+        "line": 1357
       },
       "336": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1356
+        "line": 1358
       },
       "352": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1357
+        "line": 1359
       },
       "368": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1358
+        "line": 1360
       },
       "376": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1359
+        "line": 1361
       },
       "392": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1360
+        "line": 1362
       },
       "408": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1361
+        "line": 1363
       },
       "424": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1362
+        "line": 1364
       },
       "440": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1363
+        "line": 1365
       },
       "456": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1364
+        "line": 1366
       },
       "472": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1365
+        "line": 1367
       }
     },
     "6a52b0d0ff35df2c83f08e944f5b5d72d2cf79c9f032347b4ed146f3733d1924": {
@@ -2137,79 +2361,79 @@
       },
       "88": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 46
+        "line": 45
       },
       "96": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 46
+        "line": 45
       },
       "104": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 46
+        "line": 45
       },
       "112": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 46
+        "line": 45
       },
       "120": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 46
+        "line": 45
       },
       "128": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 46
+        "line": 45
       },
       "136": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 46
+        "line": 45
       },
       "152": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 46
+        "line": 45
       },
       "160": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 46
+        "line": 45
       },
       "168": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 46
+        "line": 45
       },
       "176": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 46
+        "line": 45
       },
       "192": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 46
+        "line": 45
       },
       "200": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 46
+        "line": 45
       },
       "216": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 46
+        "line": 45
       },
       "224": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 46
+        "line": 45
       },
       "232": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 46
+        "line": 45
       },
       "240": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 46
+        "line": 45
       },
       "248": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 46
+        "line": 45
       },
       "264": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 46
+        "line": 45
       },
       "272": {
         "filename": "ProxyMultiVaultNative_V4.code",
@@ -2231,27 +2455,27 @@
     "6f6526215b8c032f7e321b0ce4939fb0a843e26cf9d0b545b2b99900295b97d9": {
       "0": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1280
+        "line": 1282
       },
       "8": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1281
+        "line": 1283
       },
       "24": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1282
+        "line": 1284
       },
       "48": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1283
+        "line": 1285
       },
       "64": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1284
+        "line": 1286
       },
       "72": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1285
+        "line": 1287
       },
       "88": {
         "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
@@ -2259,19 +2483,19 @@
       },
       "96": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1291
+        "line": 1293
       },
       "112": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1294
+        "line": 1296
       },
       "120": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1295
+        "line": 1297
       },
       "136": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1298
+        "line": 1300
       }
     },
     "768ee1b57c3c588838cff6663ca1daae0b4d9d5d1c075b15373577e23523093a": {
@@ -2333,175 +2557,109 @@
       },
       "200": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 53
+        "line": 54
       },
       "216": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 53
-      },
-      "232": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 53
-      },
-      "240": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 53
-      },
-      "256": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 53
-      },
-      "264": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 53
-      },
-      "272": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 53
-      },
-      "288": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 53
-      },
-      "296": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 53
-      },
-      "312": {
         "filename": "../contracts/utils/TransferUtils.tsol",
         "line": 54
       },
+      "232": {
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 54
+      },
+      "240": {
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 54
+      },
+      "256": {
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 54
+      },
+      "264": {
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 54
+      },
+      "272": {
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 54
+      },
+      "288": {
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 54
+      },
+      "296": {
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 54
+      },
+      "312": {
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 55
+      },
       "320": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 50
+        "line": 49
       },
       "328": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 50
+        "line": 49
       },
       "344": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 55
+        "line": 56
       },
       "352": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 55
+        "line": 56
       },
       "376": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 55
+        "line": 56
       },
       "384": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 55
+        "line": 56
       },
       "400": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 55
+        "line": 56
       },
       "416": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 55
+        "line": 56
       },
       "424": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 55
+        "line": 56
       },
       "448": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 55
-      }
-    },
-    "80ba72bc1a67cc34a3c9a1123edec5a9a58d94533d3b39eff64a8259f3783fbf": {
-      "0": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1632
-      },
-      "8": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1633
-      },
-      "56": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1634
-      },
-      "64": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1635
-      },
-      "80": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1638
-      },
-      "88": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1639
-      },
-      "136": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1640
-      },
-      "144": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1641
-      },
-      "160": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1644
-      },
-      "168": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1645
-      },
-      "216": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1646
-      },
-      "224": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1647
-      },
-      "240": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1650
-      },
-      "248": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1651
-      },
-      "296": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1652
-      },
-      "304": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1653
+        "line": 56
       }
     },
     "8315e1498596f70d2222ae8fe5a32d843f51201be6eef4a8dd6dd28169b297b6": {
       "0": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1222
+        "line": 1224
       },
       "8": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1223
+        "line": 1225
       },
       "24": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1224
+        "line": 1226
       },
       "48": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1225
+        "line": 1227
       },
       "64": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1226
+        "line": 1228
       },
       "72": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1227
+        "line": 1229
       },
       "88": {
         "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
@@ -2537,19 +2695,19 @@
       },
       "160": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1241
+        "line": 1243
       },
       "176": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1244
+        "line": 1246
       },
       "184": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1245
+        "line": 1247
       },
       "200": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1248
+        "line": 1250
       }
     },
     "88f8db21f2a114c984fa54828e12babd8be850357c22d871686eca0dde27b84f": {
@@ -2573,139 +2731,139 @@
     "90635329878e13ffac2abd68563533ae49f77f657a8a6cc772b7d9fc14cef08a": {
       "0": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1373
+        "line": 1375
       },
       "8": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1374
+        "line": 1376
       },
       "24": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1375
+        "line": 1377
       },
       "32": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1376
+        "line": 1378
       },
       "48": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1377
+        "line": 1379
       },
       "56": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1380
+        "line": 1382
       },
       "64": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1381
+        "line": 1383
       },
       "72": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1382
+        "line": 1384
       },
       "80": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1383
+        "line": 1385
       },
       "96": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1384
+        "line": 1386
       },
       "112": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1385
+        "line": 1387
       },
       "120": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1388
+        "line": 1390
       },
       "128": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1389
+        "line": 1391
       },
       "144": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1390
+        "line": 1392
       },
       "152": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1391
+        "line": 1393
       },
       "160": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1392
+        "line": 1394
       },
       "168": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1393
+        "line": 1395
       },
       "184": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1394
+        "line": 1396
       },
       "200": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1395
+        "line": 1397
       },
       "216": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1396
+        "line": 1398
       },
       "224": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1397
+        "line": 1399
       },
       "248": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1399
+        "line": 1401
       },
       "256": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1400
+        "line": 1402
       },
       "272": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1401
+        "line": 1403
       },
       "288": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1402
+        "line": 1404
       },
       "304": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1403
+        "line": 1405
       },
       "320": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1404
+        "line": 1406
       },
       "336": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1405
+        "line": 1407
       },
       "352": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1406
+        "line": 1408
       },
       "368": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1407
+        "line": 1409
       },
       "384": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1408
+        "line": 1410
       },
       "408": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1409
+        "line": 1411
       },
       "424": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1410
+        "line": 1412
       },
       "432": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1411
+        "line": 1413
       }
     },
     "964348b07ba00e86470e6646f31846ef015c982a3a17311be9ca9bc0ace8de73": {
@@ -2922,159 +3080,159 @@
     "98feb7d0f7fb220c6f6aa89347812215e821d54a811f6f51a8ef07f7e5b0f792": {
       "0": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1418
+        "line": 1420
       },
       "16": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1419
+        "line": 1421
       },
       "32": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1420
+        "line": 1422
       },
       "48": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1421
+        "line": 1423
       },
       "64": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1422
+        "line": 1424
       },
       "80": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1423
+        "line": 1425
       },
       "96": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1424
+        "line": 1426
       },
       "112": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1425
+        "line": 1427
       },
       "120": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1426
+        "line": 1428
       },
       "136": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1427
+        "line": 1429
       },
       "152": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1428
+        "line": 1430
       },
       "168": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1429
+        "line": 1431
       },
       "176": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1430
+        "line": 1432
       },
       "184": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1431
+        "line": 1433
       },
       "200": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1432
+        "line": 1434
       },
       "208": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1433
+        "line": 1435
       },
       "224": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1434
+        "line": 1436
       },
       "232": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1435
+        "line": 1437
       },
       "240": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1436
+        "line": 1438
       },
       "248": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1437
+        "line": 1439
       },
       "264": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1438
+        "line": 1440
       },
       "272": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1439
+        "line": 1441
       },
       "288": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1440
+        "line": 1442
       },
       "304": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1441
+        "line": 1443
       },
       "312": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1442
+        "line": 1444
       },
       "328": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1443
+        "line": 1445
       },
       "336": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1444
+        "line": 1446
       },
       "352": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1445
+        "line": 1447
       },
       "360": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1446
+        "line": 1448
       },
       "368": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1447
+        "line": 1449
       },
       "384": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1448
+        "line": 1450
       },
       "392": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1449
+        "line": 1451
       },
       "400": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1450
+        "line": 1452
       },
       "416": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1451
+        "line": 1453
       },
       "432": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1452
+        "line": 1454
       },
       "440": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1453
+        "line": 1455
       },
       "448": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1454
+        "line": 1456
       },
       "456": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1455
+        "line": 1457
       },
       "464": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1456
+        "line": 1458
       }
     },
     "a43ce7b8e39182d41f924f22197c0dc7aa194c4e49e6eb73612047d26f3a64c4": {
@@ -3668,63 +3826,63 @@
     "be3b02c1fb8968096c8c0dd836869e8f6eb81d1a8c5407e009f134c23a282f67": {
       "0": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1559
+        "line": 1561
       },
       "8": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1560
+        "line": 1562
       },
       "16": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1561
+        "line": 1563
       },
       "32": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1564
+        "line": 1566
       },
       "48": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1565
+        "line": 1567
       },
       "56": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1566
+        "line": 1568
       },
       "72": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1567
+        "line": 1569
       },
       "232": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1568
+        "line": 1570
       },
       "240": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1569
+        "line": 1571
       },
       "248": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1570
+        "line": 1572
       },
       "256": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1571
+        "line": 1573
       },
       "264": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1572
+        "line": 1574
       },
       "272": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1573
+        "line": 1575
       },
       "288": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1575
+        "line": 1577
       },
       "296": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1576
+        "line": 1578
       }
     },
     "c07f5799e75dd41f733064c1d82d09d127ed94095f7e4e0a07fb8dbfa5177839": {
@@ -3740,219 +3898,49 @@
     "c3ed76f751644bad39a7e046491a8b4a2b9db7ccb55864aa797a5d9f1e9cdd49": {
       "0": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 36
+        "line": 35
       },
       "16": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 36
+        "line": 35
       },
       "24": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 36
+        "line": 35
       },
       "40": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 36
+        "line": 35
       },
       "48": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 36
+        "line": 35
       },
       "64": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 36
+        "line": 35
       },
       "80": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 36
+        "line": 35
       },
       "96": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 36
+        "line": 35
       },
       "112": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 36
+        "line": 35
       },
       "128": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 36
+        "line": 35
       }
     },
-    "c500c57e47c17b13f3cc7ffdf71420e0485b986a732e4acb542f946baf562b82": {
-      "0": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1520
-      },
-      "16": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1521
-      },
-      "24": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1522
-      },
-      "40": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1523
-      },
-      "56": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1524
-      },
-      "72": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1525
-      },
-      "80": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1528
-      },
-      "96": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1529
-      },
-      "104": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1530
-      },
-      "120": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1533
-      },
-      "136": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1534
-      },
-      "144": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1535
-      },
-      "160": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1536
-      },
-      "176": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1537
-      },
-      "192": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1538
-      },
-      "200": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1539
-      },
-      "216": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1540
-      },
-      "224": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1541
-      },
-      "240": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1542
-      },
-      "248": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1543
-      },
-      "264": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1544
-      },
-      "280": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1545
-      },
-      "296": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1547
-      },
-      "304": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1548
-      },
-      "320": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1549
-      },
-      "328": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "344": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "352": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "360": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "376": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "384": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "400": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "424": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "432": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "472": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "480": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "488": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "504": {
-        "filename": "stdlib.sol",
-        "line": 63
-      },
-      "520": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1551
-      },
-      "536": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1552
-      },
-      "544": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1553
-      },
-      "560": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1556
-      }
-    },
-    "d1eab4eea8d3b8b7bc474efbad90bfa6d3bd4754ee17ebc00688dd561aee8b84": {
+    "c3fcea51ca29daad3e245af5e0a91078869a5c745e3c62e1a13de1e46fa3f8a9": {
       "0": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 23
+        "line": 24
       },
       "16": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
@@ -4031,6 +4019,276 @@
         "line": 404
       }
     },
+    "cb9489731ce5f1bd00f84417b9105f1b20b0f3e662233489376498beee289d02": {
+      "0": {
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 24
+      },
+      "16": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 26
+      },
+      "40": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 26
+      },
+      "56": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 26
+      },
+      "72": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 26
+      },
+      "88": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 26
+      },
+      "104": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 26
+      },
+      "120": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 31
+      },
+      "128": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 31
+      },
+      "136": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 31
+      },
+      "152": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 31
+      },
+      "168": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 31
+      },
+      "176": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 31
+      },
+      "184": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 31
+      },
+      "192": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 31
+      },
+      "208": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 31
+      },
+      "216": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 31
+      },
+      "224": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 41
+      },
+      "240": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 41
+      },
+      "248": {
+        "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Deposit.tsol",
+        "line": 41
+      },
+      "264": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 313
+      }
+    },
+    "d0050363854d7804c0cdba332a07eab4666e011e590504781474b5e0c27faad9": {
+      "0": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1522
+      },
+      "16": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1523
+      },
+      "24": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1524
+      },
+      "40": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1525
+      },
+      "56": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1526
+      },
+      "72": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1527
+      },
+      "80": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1530
+      },
+      "96": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1531
+      },
+      "104": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1532
+      },
+      "120": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1535
+      },
+      "136": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1536
+      },
+      "144": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1537
+      },
+      "160": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1538
+      },
+      "176": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1539
+      },
+      "192": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1540
+      },
+      "200": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1541
+      },
+      "216": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1542
+      },
+      "224": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1543
+      },
+      "240": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1544
+      },
+      "248": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1545
+      },
+      "264": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1546
+      },
+      "280": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1547
+      },
+      "296": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1549
+      },
+      "304": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1550
+      },
+      "320": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1551
+      },
+      "328": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "344": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "352": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "360": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "376": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "384": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "400": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "424": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "432": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "472": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "480": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "488": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "504": {
+        "filename": "stdlib.sol",
+        "line": 63
+      },
+      "520": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1553
+      },
+      "536": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1554
+      },
+      "544": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1555
+      },
+      "560": {
+        "filename": "ProxyMultiVaultNative_V4.code",
+        "line": 1558
+      }
+    },
+    "d67d017829fd701394a2b9e4ec5e2680613c792025dd4034d006a6bdad00651e": {
+      "0": {
+        "filename": "stdlib.sol",
+        "line": 71
+      },
+      "16": {
+        "filename": "stdlib.sol",
+        "line": 71
+      },
+      "32": {
+        "filename": "stdlib.sol",
+        "line": 71
+      }
+    },
     "dcbfbc4d1e6722506d6e2e357ddac7162afb0a328541ffae0d71d19d0af93d15": {
       "0": {
         "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
@@ -4090,83 +4348,83 @@
       },
       "200": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 53
+        "line": 54
       },
       "216": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 53
+        "line": 54
       },
       "232": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 53
+        "line": 54
       },
       "240": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 53
+        "line": 54
       },
       "256": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 53
+        "line": 54
       },
       "264": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 53
+        "line": 54
       },
       "272": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 53
+        "line": 54
       },
       "288": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 53
+        "line": 54
       },
       "296": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 53
+        "line": 54
       },
       "312": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 54
+        "line": 55
       },
       "320": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 43
+        "line": 42
       },
       "328": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 43
+        "line": 42
       },
       "344": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 55
+        "line": 56
       },
       "352": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 55
+        "line": 56
       },
       "376": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 55
+        "line": 56
       },
       "384": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 55
+        "line": 56
       },
       "400": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 55
+        "line": 56
       },
       "416": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 55
+        "line": 56
       },
       "424": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 55
+        "line": 56
       },
       "448": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 55
+        "line": 56
       }
     },
     "e1436e9db296bcb3d538f455d371f8b0902959442a42d159919cff20d96e72dc": {
@@ -4423,58 +4681,68 @@
         "line": 112
       }
     },
+    "e5bcdd2119476d1431fe608d0e167cc2a472cc103c84b8c2f7d0157c12a715a8": {
+      "0": {
+        "filename": "stdlib.sol",
+        "line": 76
+      },
+      "8": {
+        "filename": "stdlib.sol",
+        "line": 76
+      }
+    },
     "e6936e8f0e7b8fe98c2ca66eee9d4e9dafcfc747defef9cb795288fabb1b7ef3": {
       "0": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1459
+        "line": 1461
       },
       "16": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1460
+        "line": 1462
       },
       "24": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1461
+        "line": 1463
       },
       "40": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1462
+        "line": 1464
       },
       "56": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1463
+        "line": 1465
       },
       "64": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1464
+        "line": 1466
       },
       "80": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1465
+        "line": 1467
       },
       "88": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1466
+        "line": 1468
       },
       "96": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1467
+        "line": 1469
       },
       "112": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1468
+        "line": 1470
       },
       "128": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1469
+        "line": 1471
       },
       "136": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1470
+        "line": 1472
       },
       "144": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1471
+        "line": 1473
       }
     },
     "e8a4cba9a2a029706ac409a42d7b8c21033070de1bcf76babac94a2d788d7da2": {
@@ -4683,218 +4951,60 @@
         "line": 43
       }
     },
-    "f0d8a38179ac54a0bcd9142ad24cb47ca8cc5d93b9a682585fd18defbf9a6802": {
+    "eec88d9b04d63b4ac6c9b01bbe2261d407df4903e35ee0d77f8be9b9fc3896e6": {
       "0": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1599
+        "filename": "<entry-selector>",
+        "line": 1
       },
       "8": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1600
-      },
-      "56": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1601
-      },
-      "64": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1602
-      },
-      "80": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1628
-      },
-      "88": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1629
-      },
-      "136": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1630
-      },
-      "144": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1631
-      },
-      "160": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1657
-      },
-      "168": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1658
-      },
-      "216": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1659
-      },
-      "224": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1660
-      },
-      "240": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1686
-      },
-      "248": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1687
-      },
-      "296": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1688
-      },
-      "304": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1689
-      }
-    },
-    "f192ece1309ab2be14979c23ee76488a8e93380c5d8be8cdca3ef24d600fee4a": {
-      "0": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1475
-      },
-      "16": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1476
+        "filename": "<entry-selector>",
+        "line": 2
       },
       "24": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1477
+        "filename": "<entry-selector>",
+        "line": 3
       },
-      "40": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1478
+      "32": {
+        "filename": "<entry-selector>",
+        "line": 4
+      },
+      "48": {
+        "filename": "<entry-selector>",
+        "line": 5
       },
       "56": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1479
+        "filename": "<entry-selector>",
+        "line": 6
       },
       "72": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1480
-      },
-      "80": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1481
+        "filename": "<entry-selector>",
+        "line": 7
       },
       "88": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1482
+        "filename": "<entry-selector>",
+        "line": 8
       },
-      "104": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1483
+      "96": {
+        "filename": "<entry-selector>",
+        "line": 9
       },
-      "120": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1484
+      "112": {
+        "filename": "<entry-selector>",
+        "line": 10
       },
       "128": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1485
-      },
-      "144": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1486
-      },
-      "168": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1487
-      },
-      "184": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1488
-      },
-      "192": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1489
-      },
-      "208": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1490
-      },
-      "248": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1491
-      },
-      "264": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1492
-      },
-      "272": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1493
-      },
-      "288": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1494
-      },
-      "296": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1495
-      },
-      "312": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1496
-      },
-      "328": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1497
-      },
-      "336": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1498
-      },
-      "344": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1499
-      },
-      "360": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1500
-      },
-      "376": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1504
-      },
-      "384": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1505
-      },
-      "408": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1506
-      },
-      "424": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1507
-      },
-      "432": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1508
-      },
-      "448": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1512
-      },
-      "456": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1513
-      },
-      "472": {
-        "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1516
+        "filename": "<entry-selector>",
+        "line": 11
       }
     },
     "f24e1e7aa04d89aad2945816b6e9b921f2b3892da9ba53e2383c148351b96d0c": {
       "0": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1501
+        "line": 1503
       },
       "16": {
         "filename": "ProxyMultiVaultNative_V4.code",
-        "line": 1502
+        "line": 1504
       }
     },
     "f41e483d6ece7ecdfa1f85807d286c498e50f67a1d2295f02f9c496a3848aeb2": {
@@ -5103,6 +5213,40 @@
         "line": 913
       }
     },
+    "f4f5be5f10b2fe4d2fc7a7d2effa12ed00d38b4ba788b41c83f02109ced7e4bc": {
+      "0": {
+        "filename": "../contracts/bridge/libraries/Gas.tsol",
+        "line": 34
+      },
+      "24": {
+        "filename": "../contracts/bridge/libraries/Gas.tsol",
+        "line": 34
+      },
+      "40": {
+        "filename": "../contracts/bridge/libraries/Gas.tsol",
+        "line": 34
+      },
+      "56": {
+        "filename": "../contracts/bridge/libraries/Gas.tsol",
+        "line": 34
+      },
+      "72": {
+        "filename": "../contracts/bridge/libraries/Gas.tsol",
+        "line": 34
+      },
+      "88": {
+        "filename": "../contracts/bridge/libraries/Gas.tsol",
+        "line": 34
+      },
+      "136": {
+        "filename": "../contracts/bridge/libraries/Gas.tsol",
+        "line": 34
+      },
+      "144": {
+        "filename": "../contracts/bridge/libraries/Gas.tsol",
+        "line": 34
+      }
+    },
     "f9cf078b1ee9bb5f8428c5cac6a83ef09103184df306b169e8f3e88359b5ef45": {
       "0": {
         "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
@@ -5168,85 +5312,85 @@
     "fd4d42c889898c15e076750e73b46185047d0d411d8c0d7cc85d81769022b6e2": {
       "0": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 16
+        "line": 17
       },
       "16": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 16
+        "line": 17
       },
       "32": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 16
+        "line": 17
       },
       "40": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 16
+        "line": 17
       },
       "56": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 16
+        "line": 17
       },
       "64": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 16
+        "line": 17
       },
       "72": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 16
+        "line": 17
       },
       "88": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 16
+        "line": 17
       },
       "104": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 16
+        "line": 17
       },
       "120": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 16
+        "line": 17
       },
       "128": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 16
+        "line": 17
       }
     },
     "fdd5e0572e56faafecbc66a0cb7acf647be900cb52ec43a183961c5495c5a216": {
       "0": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 27
+        "line": 26
       },
       "16": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 27
+        "line": 26
       },
       "24": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 27
+        "line": 26
       },
       "40": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 27
+        "line": 26
       },
       "48": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 27
+        "line": 26
       },
       "64": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 27
+        "line": 26
       },
       "80": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 27
+        "line": 26
       },
       "96": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 27
+        "line": 26
       },
       "112": {
         "filename": "../contracts/bridge/proxy/multivault/native/V4/ProxyMultiVaultNative_V4_Base.tsol",
-        "line": 27
+        "line": 26
       }
     }
   }

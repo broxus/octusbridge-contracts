@@ -123,7 +123,7 @@ contract UserData is IUserData, IUpgradableByRequest {
 
         if (slashed) error = ErrorCodes.SLASHED;
         if (code_version > current_version) error = ErrorCodes.OLD_VERSION;
-        if (msg.value < Gas.CAST_VOTE_VALUE) error = ErrorCodes.VALUE_TOO_LOW;
+        if (msg.value < gasToValue(Gas.CAST_VOTE_GAS, address(this).wid)) error = ErrorCodes.VALUE_TOO_LOW;
         if (casted_votes.exists(proposal_id)) error = ErrorCodes.ALREADY_VOTED;
         if (bytes(reason).length > MAX_REASON_LENGTH) error = ErrorCodes.REASON_IS_TOO_LONG;
 
@@ -160,7 +160,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         uint16 error;
 
         if (code_version > current_version) error = ErrorCodes.OLD_VERSION;
-        if (msg.value < Gas.UNLOCK_LOCKED_VOTE_TOKENS_VALUE) error = ErrorCodes.VALUE_TOO_LOW;
+        if (msg.value < gasToValue(Gas.UNLOCK_LOCKED_VOTE_TOKENS_GAS, address(this).wid)) error = ErrorCodes.VALUE_TOO_LOW;
         if (!created_proposals.exists(proposal_id)) error = ErrorCodes.WRONG_PROPOSAL_ID;
 
         if (error != 0){
@@ -191,7 +191,10 @@ contract UserData is IUserData, IUpgradableByRequest {
         uint16 error;
 
         if (code_version > current_version) error = ErrorCodes.OLD_VERSION;
-        if (msg.value < proposal_ids.length * Gas.UNLOCK_CASTED_VOTE_VALUE + 1 ton) error = ErrorCodes.VALUE_TOO_LOW;
+        if (msg.value < gasToValue(
+            uint128(proposal_ids.length) * Gas.UNLOCK_CASTED_VOTE_GAS + Gas.UNLOCK_CASTED_VOTES_EXTRA_GAS,
+            address(this).wid)
+        ) error = ErrorCodes.VALUE_TOO_LOW;
 
         if (error != 0){
             IVoter(user).onCastedVoteNotUnlocked{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(proposal_ids, error);
@@ -201,7 +204,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         for (uint i = 0; i < proposal_ids.length; i++) {
             if (casted_votes.exists(proposal_ids[i])) {
                 IProposal(getProposalAddress(proposal_ids[i])).unlockCastedVote{
-                    value: Gas.UNLOCK_CASTED_VOTE_VALUE,
+                    value: gasToValue(Gas.UNLOCK_CASTED_VOTE_GAS, address(this).wid),
                     flag: MsgFlag.SENDER_PAYS_FEES
                 }(user);
             }
@@ -333,13 +336,13 @@ contract UserData is IUserData, IUpgradableByRequest {
 
     function getRewardForRelayRound(uint32 round_num) external onlyRelay {
         require (!slashed, ErrorCodes.SLASHED);
-        require (address(this).balance > Gas.USER_DATA_INITIAL_BALANCE + Gas.MIN_CALL_MSG_VALUE, ErrorCodes.LOW_BALANCE);
+        require (address(this).balance > Gas.USER_DATA_INITIAL_BALANCE + Gas.getMinCallMsgValue(), ErrorCodes.LOW_BALANCE);
         require (now >= lastExtCall + EXTERNAL_CALL_INTERVAL, ErrorCodes.DUPLICATE_CALL);
 
         tvm.accept();
 
         lastExtCall = now;
-        IStakingPool(root).processGetRewardForRelayRound{value: Gas.MIN_CALL_MSG_VALUE}(user, round_num);
+        IStakingPool(root).processGetRewardForRelayRound{value: Gas.getMinCallMsgValue()}(user, round_num);
     }
 
     function processGetRewardForRelayRound2(
@@ -423,13 +426,13 @@ contract UserData is IUserData, IUpgradableByRequest {
 
     function becomeRelayNextRound() external onlyRelay {
         require (!slashed, ErrorCodes.SLASHED);
-        require (address(this).balance > Gas.USER_DATA_INITIAL_BALANCE + Gas.MIN_CALL_MSG_VALUE, ErrorCodes.LOW_BALANCE);
+        require (address(this).balance > Gas.USER_DATA_INITIAL_BALANCE + Gas.getMinCallMsgValue(), ErrorCodes.LOW_BALANCE);
         require (now >= lastExtCall + EXTERNAL_CALL_INTERVAL, ErrorCodes.DUPLICATE_CALL);
 
         tvm.accept();
 
         lastExtCall = now;
-        IStakingPool(root).processBecomeRelayNextRound{value: Gas.MIN_CALL_MSG_VALUE}(user);
+        IStakingPool(root).processBecomeRelayNextRound{value: Gas.getMinCallMsgValue()}(user);
     }
 
     function processBecomeRelayNextRound2(

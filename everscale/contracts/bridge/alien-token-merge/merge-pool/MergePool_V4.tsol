@@ -17,6 +17,7 @@ import "@broxus/contracts/contracts/access/InternalOwner.tsol";
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
+import "../../libraries/Gas.tsol";
 
 /// @title Merge pool contract
 /// Basically allows to swap different alien tokens on 1:1 ratio
@@ -32,8 +33,6 @@ contract MergePool_V4 is
     IEVMCallback,
     INetworks
 {
-    uint128 constant ATTACH_TO_DECIMALS_REQUEST = 0.3 ever;
-
     address static proxy;
 
     uint8 public version;
@@ -340,7 +339,7 @@ contract MergePool_V4 is
 
     function _requestTokenDecimals(address token) internal pure {
         ITokenRoot(token).decimals{
-            value: ATTACH_TO_DECIMALS_REQUEST,
+            value: gasToValue(Gas.REQUEST_TOKEN_DECIMALS_GAS, address(this).wid),
             bounce: false,
             callback: MergePool_V4.receiveTokenDecimals
         }();

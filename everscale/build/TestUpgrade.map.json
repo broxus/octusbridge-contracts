@@ -76,32 +76,6 @@
         "line": 71
       }
     },
-    "1dcd24c66eb870d1fc1613e6e468c0a95c44cb08355b462b5ef55caf490791cd": {
-      "40": {
-        "filename": "../contracts/dao/test/TestUpgrade.tsol",
-        "line": 12
-      },
-      "56": {
-        "filename": "../contracts/dao/test/TestUpgrade.tsol",
-        "line": 13
-      },
-      "64": {
-        "filename": "../contracts/dao/test/TestUpgrade.tsol",
-        "line": 13
-      },
-      "80": {
-        "filename": "TestUpgrade.code",
-        "line": 27
-      },
-      "96": {
-        "filename": "TestUpgrade.code",
-        "line": 30
-      },
-      "112": {
-        "filename": "TestUpgrade.code",
-        "line": 31
-      }
-    },
     "26a9a0db81ef35772aa3cbe61300feadb51e344db918a8cc654b75b75c35baa3": {
       "0": {
         "filename": "TestUpgrade.code",
@@ -735,6 +709,32 @@
       "16": {
         "filename": "TestUpgrade.code",
         "line": 120
+      }
+    },
+    "fb6b731ea9d4b35b33ef76c9927b481f542eb21525321529d5621e07288dac5d": {
+      "4": {
+        "filename": "../contracts/dao/test/TestUpgrade.tsol",
+        "line": 12
+      },
+      "20": {
+        "filename": "../contracts/dao/test/TestUpgrade.tsol",
+        "line": 13
+      },
+      "28": {
+        "filename": "../contracts/dao/test/TestUpgrade.tsol",
+        "line": 13
+      },
+      "44": {
+        "filename": "TestUpgrade.code",
+        "line": 27
+      },
+      "60": {
+        "filename": "TestUpgrade.code",
+        "line": 30
+      },
+      "76": {
+        "filename": "TestUpgrade.code",
+        "line": 31
       }
     }
   }

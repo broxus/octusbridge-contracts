@@ -11,7 +11,6 @@ import "./../interfaces/event-configuration-contracts/IEverscaleEthereumEventCon
 
 contract EverscaleEthereumEventConfigurationFactory is TransferUtils, RandomNonce, CheckPubKey {
     TvmCell public configurationCode;
-    uint128 constant MIN_CONTRACT_BALANCE = 1 ever;
 
     constructor(TvmCell _configurationCode) public checkPubKey {
         tvm.accept();
@@ -24,7 +23,7 @@ contract EverscaleEthereumEventConfigurationFactory is TransferUtils, RandomNonc
         uint64 _flags,
         IBasicEventConfiguration.BasicConfiguration basicConfiguration,
         IEverscaleEthereumEventConfiguration.EverscaleEthereumEventConfiguration networkConfiguration
-    ) external view reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    ) external view reserveMinBalance(Gas.CONFIGURATION_FACTORY_INITIAL_BALANCE) {
         TvmCell _meta;
 
         new EverscaleEthereumEventConfiguration{

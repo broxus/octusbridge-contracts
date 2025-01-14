@@ -77,7 +77,7 @@ contract MultiVaultEverscaleEVMEventAlien is
         initial_balance = address(this).balance;
 
         ITokenRootAlienEVM(token).meta{
-            value: 1 ever,
+            value: gasToValue(Gas.GET_TOKEN_ROOT_META_GAS, address(this).wid),
             bounce: true,
             callback: MultiVaultEverscaleEVMEventAlien.receiveTokenMeta
         }();
@@ -96,7 +96,7 @@ contract MultiVaultEverscaleEVMEventAlien is
         base_token = base_token_;
 
         IProxyMultiVaultAlien_V8(proxy).deriveEVMAlienTokenRoot{
-            value: 1 ever,
+            value: gasToValue(Gas.DERIVE_TOKEN_ROOT_GAS, address(this).wid),
             bounce: true,
             callback: MultiVaultEverscaleEVMEventAlien.receiveAlienTokenRoot
         }(

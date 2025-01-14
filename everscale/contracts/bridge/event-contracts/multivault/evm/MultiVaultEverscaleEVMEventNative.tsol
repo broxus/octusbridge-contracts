@@ -89,26 +89,28 @@ contract MultiVaultEverscaleEVMEventNative is
 
         initial_balance = address(this).balance;
 
+        uint128 value = gasToValue(Gas.GET_TOKEN_DATA_GAS, address(this).wid);
+
         ITokenRoot(token).name{
-            value: 0.1 ever,
+            value: value,
             bounce: true,
             callback: MultiVaultEverscaleEVMEventNative.receiveTokenName
         }();
 
         ITokenRoot(token).symbol{
-            value: 0.1 ever,
+            value: value,
             bounce: true,
             callback: MultiVaultEverscaleEVMEventNative.receiveTokenSymbol
         }();
 
         ITokenRoot(token).decimals{
-            value: 0.1 ever,
+            value: value,
             bounce: true,
             callback: MultiVaultEverscaleEVMEventNative.receiveTokenDecimals
         }();
 
         ITokenRoot(token).walletOf{
-            value: 0.1 ever,
+            value: value,
             bounce: true,
             callback: MultiVaultEverscaleEVMEventNative.receiveProxyTokenWallet
         }(proxy);

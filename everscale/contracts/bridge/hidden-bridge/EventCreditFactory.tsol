@@ -38,7 +38,7 @@ contract EventCreditFactory is InternalOwner, RandomNonce {
         // Deploy event deployers
         for (uint8 i; i < eventDeployersCount; i++) {
             address deployer = new EventDeployer{
-                value: EventCreditGas.EVENT_DEPLOYER_INITIAL_BALANCE + 0.5 ever,
+                value: EventCreditGas.getDeployEventDeployerValue(),
                 flag: 0,
                 bounce: false,
                 code: eventDeployerCode,
@@ -55,7 +55,7 @@ contract EventCreditFactory is InternalOwner, RandomNonce {
         // Deploy event closers
         for (uint8 i; i < eventClosersCount; i++) {
             address closer = new EventCloser{
-                value: EventCreditGas.EVENT_CLOSER_INITIAL_BALANCE + 0.5 ever,
+                value: EventCreditGas.getDeployEventCloserValue(),
                 flag: 0,
                 bounce: false,
                 code: eventCloserCode,
@@ -85,7 +85,7 @@ contract EventCreditFactory is InternalOwner, RandomNonce {
     function drainDeployers() onlyOwner view external {
         for (address deployer: eventDeployers) {
             EventDeployer(deployer).drain{
-                value: 0.1 ever,
+                value: gasToValue(EventCreditGas.DRAIN_EVENT_DEPLOYER_GAS, address(this).wid),
                 bounce: false,
                 flag: 0
             }(owner);

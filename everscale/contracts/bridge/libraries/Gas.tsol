@@ -1,0 +1,36 @@
+pragma ever-solidity >= 0.62.0;
+
+library Gas {
+    uint128 constant TOKEN_ROOT_INITIAL_BALANCE = 1 ever;
+    uint128 constant CONFIGURATION_FACTORY_INITIAL_BALANCE = 1 ever;
+    uint128 constant TARGET_BALANCE = 1 ever; // most contracts initial balance
+
+    // mergePool
+    uint128 constant REQUEST_TOKEN_DECIMALS_GAS = 300000;
+
+    // event contracts
+    uint128 constant GET_RELAY_ROUND_GAS = 1000000;
+    uint128 constant RELAY_KEYS_GAS = 1000000;
+    uint128 constant GET_TOKEN_ROOT_META_GAS = 1000000;
+    uint128 constant DERIVE_TOKEN_ROOT_GAS = 1000000;
+    uint128 constant GET_TOKEN_DATA_GAS = 100000;
+    uint128 constant REQUEST_CONFIGURATION_DETAILS_GAS = 1000000;
+    uint128 constant REQUEST_TOKEN_NAME_GAS = 1000000;
+    uint128 constant REQUEST_MERGE_ROUTER_GAS = 1000000;
+    uint128 constant REQUEST_POOL_GAS = 1000000;
+    uint128 constant REQUEST_CANON_GAS = 1000000;
+
+    uint128 constant DEPLOY_TOKEN_ROOT_GAS = 1000000;
+    uint128 constant DEPLOY_MERGE_ROUTER_GAS = 1000000;
+
+    function getDeployTokenRootValue() public returns(uint128) {
+        return gasToValue(DEPLOY_TOKEN_ROOT_GAS, address(this).wid) + TOKEN_ROOT_INITIAL_BALANCE;
+    }
+
+    uint64 constant TOKEN_WALLET_DEPLOY_GAS = 30000;
+    uint64 constant TOKEN_WALLET_FIXED_VALUE = 0.1 ever;
+
+    function getDeployTokenWalletValue() public returns(uint128) {
+        return gasToValue(TOKEN_WALLET_DEPLOY_GAS, address(this).wid) + TOKEN_WALLET_FIXED_VALUE;
+    }
+}

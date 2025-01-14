@@ -137,7 +137,7 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
         uint128 tonTotalGasValue = calcTonActionsValue(tonActions);
         uint128 ethTotalGasValue = calcEthActionsValue(ethActions);
         require(
-            msg.value >= ethTotalGasValue + tonTotalGasValue + Gas.DEPLOY_PROPOSAL_VALUE,
+            msg.value >= ethTotalGasValue + tonTotalGasValue + Gas.getDeployProposalValue(),
             DaoErrors.MSG_VALUE_TOO_LOW_TO_CREATE_PROPOSAL
         );
         TvmBuilder proposalData;
@@ -164,7 +164,7 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
         proposalCount++;
         emit ProposalCreated(proposalCount, accountOwner, tonActions, ethActions, description);
         IStakingAccount(msg.sender).onProposalDeployed{
-            value: Gas.PROPOSAL_DEPLOYED_CALLBACK_VALUE,
+            value: gasToValue(Gas.PROPOSAL_DEPLOYED_CALLBACK_GAS, address(this).wid),
             flag: MsgFlag.SENDER_PAYS_FEES,
             bounce: false
         }(nonce, proposalCount, answerId);
@@ -239,7 +239,7 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
     function calcTonActionsValue(TonAction[] actions) public pure returns (uint128 totalValue) {
         totalValue = 0;
         for (uint i = 0; i < actions.length; i++) {
-            totalValue += (actions[i].value + Gas.EXECUTE_TON_ACTION_VALUE);
+            totalValue += (actions[i].value + gasToValue(Gas.EXECUTE_TON_ACTION_GAS, address(this).wid));
         }
     }
 
@@ -254,7 +254,7 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
                 totalValue += deployEventValue;
                 chains[chainId] = true;
             }
-            totalValue += Gas.EXECUTE_ETH_ACTION_VALUE;
+            totalValue += gasToValue(Gas.EXECUTE_ETH_ACTION_GAS, address(this).wid);
         }
     }
 
@@ -349,7 +349,7 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
         uint128 newDeployEventValue
     ) override public onlyAdmin {
         require(newConfiguration != address(0), DaoErrors.ZERO_ADDRESS);
-        require(newDeployEventValue > Gas.DEPLOY_EVENT_MIN_VALUE, DaoErrors.VALUE_TOO_LOW);
+        require(newDeployEventValue > gasToValue(Gas.DEPLOY_EVENT_MIN_GAS, address(this).wid), DaoErrors.VALUE_TOO_LOW);
 
         emit EthereumActionEventConfigurationUpdated(
             ethereumActionEventConfiguration,
@@ -475,7 +475,7 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
     }
 
     function upgrade(TvmCell code) override public onlyAdmin {
-        require(msg.value > Gas.UPGRADE_ACCOUNT_MIN_VALUE, DaoErrors.VALUE_TOO_LOW);
+        require(msg.value > gasToValue(Gas.UPGRADE_ACCOUNT_MIN_GAS, address(this).wid), DaoErrors.VALUE_TOO_LOW);
         tvm.rawReserve(address(this).balance - msg.value, 2);
 
         emit RootCodeUpgraded();

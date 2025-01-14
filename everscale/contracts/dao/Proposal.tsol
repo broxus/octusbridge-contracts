@@ -95,13 +95,14 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
 
     function queue() override public {
         require(state() == ProposalState.Succeeded, DaoErrors.PROPOSAL_IS_NOT_SUCCEEDED);
-        require(address(this).balance > Gas.UNLOCK_VOTE_VALUE, DaoErrors.PROPOSAL_BALANCE_TOO_LOW);
 
         tvm.accept();
+        require(address(this).balance > gasToValue(Gas.UNLOCK_VOTE_GAS, address(this).wid), DaoErrors.PROPOSAL_BALANCE_TOO_LOW);
+
         executionTime = endTime + config.timeLock;
         emit Queued(executionTime);
         IUserData(expectedAccountAddress(proposer)).unlockVoteTokens{
-            value: Gas.UNLOCK_VOTE_VALUE,
+            value: gasToValue(Gas.UNLOCK_VOTE_GAS, address(this).wid),
             flag: MsgFlag.SENDER_PAYS_FEES
         }(id, true);
     }
@@ -238,7 +239,7 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
 
     function requestUpgrade(address sendGasTo) override public view {
         require(msg.sender == proposer, DaoErrors.NOT_OWNER);
-        require(msg.value >= Gas.UPGRADE_PROPOSAL_MIN_VALUE, DaoErrors.VALUE_TOO_LOW);
+        require(msg.value >= gasToValue(Gas.UPGRADE_PROPOSAL_MIN_GAS, address(this).wid), DaoErrors.VALUE_TOO_LOW);
         tvm.rawReserve(Gas.ACCOUNT_INITIAL_BALANCE, 2);
         emit CodeUpgradeRequested(proposalVersion);
         IDaoRoot(root).requestUpgradeProposal{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(proposalVersion, sendGasTo, id);

@@ -11,6 +11,7 @@ import "../../interfaces/IEventNotificationReceiver.tsol";
 import "../../interfaces/event-contracts/IBasicEvent.tsol";
 
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
+import "../../libraries/Gas.tsol";
 
 
 abstract contract BaseEvent is IBasicEvent, TransferUtils {
@@ -71,7 +72,7 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
         require(_status == Status.Initializing, ErrorCodes.WRONG_STATUS);
 
         IStaking(getStakingAddress()).getRelayRoundAddressFromTimestamp{
-            value: 1 ever,
+            value: gasToValue(Gas.GET_RELAY_ROUND_GAS, address(this).wid),
             bounce: false,
             callback: BaseEvent.receiveRoundAddress
         }(now);
@@ -85,7 +86,7 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
         round_number = roundNum;
 
         IRound(roundContract).relayKeys{
-            value: 1 ever,
+            value: gasToValue(Gas.RELAY_KEYS_GAS, address(this).wid),
             bounce: false,
             callback: BaseEvent.receiveRoundRelays
         }();
