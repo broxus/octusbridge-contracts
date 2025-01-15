@@ -200,7 +200,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
 
         // Gas.getMinCallMsgValue() should be enough to cover all storage fees of all contracts in chain
         // + deploy ton event + destroy of election and old relay round
-        uint128 required_gas = gasToValue(Gas.MIN_END_ELECTION_MSG_GAS + _relaysPacksCount() * Gas.MIN_SEND_RELAYS_MSG_GAS, address(this).wid);
+        uint128 required_gas = Gas.getMinEndElectionMsgValue() + _relaysPacksCount() * gasToValue(Gas.MIN_SEND_RELAYS_MSG_GAS, address(this).wid);
         uint128 min_balance = required_gas + Gas.ROOT_INITIAL_BALANCE;
         require (address(this).balance > min_balance, ErrorCodes.LOW_BALANCE);
 

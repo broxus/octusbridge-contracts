@@ -39,12 +39,18 @@ library Gas {
     // min values for calls
     uint64 constant MIN_CALL_MSG_GAS = 8_000_000;
     uint64 constant MIN_CALL_MSG_FIXED_VALUE = 2 ever;
-    uint64 constant MIN_END_ELECTION_MSG_GAS = 20_000_000;
+    uint64 constant MIN_END_ELECTION_MSG_GAS = 15_000_000;
     uint64 constant MIN_SEND_RELAYS_MSG_GAS = 2_000_000;
     uint64 constant DESTROY_MSG_GAS = 1_000_000;
 
     function getMinCallMsgValue() public returns(uint128) {
         return gasToValue(MIN_CALL_MSG_GAS, address(this).wid) + MIN_CALL_MSG_FIXED_VALUE;
+    }
+
+    function getMinEndElectionMsgValue() public returns(uint128) {
+        return gasToValue(MIN_END_ELECTION_MSG_GAS, address(this).wid) +
+               getDeployRelayRoundMinValue() +
+               math.max(RELAY_ROUND_INITIAL_BALANCE, ELECTION_INITIAL_BALANCE); // stakingRelay.onRelayRoundDeployed
     }
 
     // DAO
