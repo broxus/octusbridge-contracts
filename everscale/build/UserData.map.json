@@ -3033,35 +3033,35 @@
     "333e7a2eca9fd1864526adace117a595c29bbf5d0dbe6e5e6ee4ecb3b9ade949": {
       "0": {
         "filename": "../contracts/staking/libraries/Gas.tsol",
-        "line": 47
+        "line": 45
       },
       "40": {
         "filename": "../contracts/staking/libraries/Gas.tsol",
-        "line": 47
+        "line": 45
       },
       "56": {
         "filename": "../contracts/staking/libraries/Gas.tsol",
-        "line": 47
+        "line": 45
       },
       "72": {
         "filename": "../contracts/staking/libraries/Gas.tsol",
-        "line": 47
+        "line": 45
       },
       "88": {
         "filename": "../contracts/staking/libraries/Gas.tsol",
-        "line": 47
+        "line": 45
       },
       "104": {
         "filename": "../contracts/staking/libraries/Gas.tsol",
-        "line": 47
+        "line": 45
       },
       "152": {
         "filename": "../contracts/staking/libraries/Gas.tsol",
-        "line": 47
+        "line": 45
       },
       "160": {
         "filename": "../contracts/staking/libraries/Gas.tsol",
-        "line": 47
+        "line": 45
       }
     },
     "33b215fc2ef6d617e579e26d84c4a0c96263ac270cc77dac9cbee17a02e22fb1": {
@@ -4386,6 +4386,112 @@
       "224": {
         "filename": "UserData.code",
         "line": 261
+      }
+    },
+    "4166edb2827c5a21c38a82dd1213cdda28a7391e055c1891e6598c0bcdf7e7ef": {
+      "38": {
+        "filename": "../contracts/staking/UserData.tsol",
+        "line": 559
+      },
+      "46": {
+        "filename": "../contracts/staking/UserData.tsol",
+        "line": 559
+      },
+      "62": {
+        "filename": "../contracts/staking/UserData.tsol",
+        "line": 559
+      },
+      "70": {
+        "filename": "../contracts/staking/UserData.tsol",
+        "line": 559
+      },
+      "86": {
+        "filename": "../contracts/staking/UserData.tsol",
+        "line": 559
+      },
+      "94": {
+        "filename": "../contracts/staking/UserData.tsol",
+        "line": 559
+      },
+      "110": {
+        "filename": "../contracts/staking/UserData.tsol",
+        "line": 559
+      },
+      "118": {
+        "filename": "../contracts/staking/UserData.tsol",
+        "line": 559
+      },
+      "134": {
+        "filename": "../contracts/staking/UserData.tsol",
+        "line": 559
+      },
+      "142": {
+        "filename": "../contracts/staking/UserData.tsol",
+        "line": 559
+      },
+      "150": {
+        "filename": "../contracts/staking/UserData.tsol",
+        "line": 559
+      },
+      "166": {
+        "filename": "../contracts/staking/UserData.tsol",
+        "line": 559
+      },
+      "182": {
+        "filename": "../contracts/staking/UserData.tsol",
+        "line": 559
+      },
+      "190": {
+        "filename": "../contracts/staking/UserData.tsol",
+        "line": 559
+      },
+      "206": {
+        "filename": "../contracts/staking/UserData.tsol",
+        "line": 559
+      },
+      "214": {
+        "filename": "../contracts/staking/UserData.tsol",
+        "line": 559
+      },
+      "230": {
+        "filename": "../contracts/staking/UserData.tsol",
+        "line": 559
+      },
+      "238": {
+        "filename": "../contracts/staking/UserData.tsol",
+        "line": 559
+      },
+      "254": {
+        "filename": "../contracts/staking/UserData.tsol",
+        "line": 559
+      },
+      "262": {
+        "filename": "../contracts/staking/UserData.tsol",
+        "line": 559
+      },
+      "278": {
+        "filename": "../contracts/staking/UserData.tsol",
+        "line": 559
+      },
+      "286": {
+        "filename": "../contracts/staking/UserData.tsol",
+        "line": 559
+      },
+      "302": {
+        "filename": "../contracts/staking/UserData.tsol",
+        "line": 559
+      },
+      "310": {
+        "filename": "../contracts/staking/UserData.tsol",
+        "line": 559
+      },
+      "326": {
+        "filename": "../contracts/staking/UserData.tsol",
+        "line": 559
+      },
+      "334": {
+        "filename": "../contracts/staking/UserData.tsol",
+        "line": 559
       }
     },
     "47f6751e04b3bb39915f11e9f0eeb8dc58b9ceb7e2fa5ae6cb1210848cb592ef": {
@@ -9127,112 +9233,6 @@
       "304": {
         "filename": "UserData.code",
         "line": 3009
-      }
-    },
-    "ae4a1d2d8de40f3dbca99a0330993a2f0cc0e70aaffde75d5b8e5e7fcce8fdf2": {
-      "40": {
-        "filename": "../contracts/staking/UserData.tsol",
-        "line": 559
-      },
-      "48": {
-        "filename": "../contracts/staking/UserData.tsol",
-        "line": 559
-      },
-      "64": {
-        "filename": "../contracts/staking/UserData.tsol",
-        "line": 559
-      },
-      "72": {
-        "filename": "../contracts/staking/UserData.tsol",
-        "line": 559
-      },
-      "88": {
-        "filename": "../contracts/staking/UserData.tsol",
-        "line": 559
-      },
-      "96": {
-        "filename": "../contracts/staking/UserData.tsol",
-        "line": 559
-      },
-      "112": {
-        "filename": "../contracts/staking/UserData.tsol",
-        "line": 559
-      },
-      "120": {
-        "filename": "../contracts/staking/UserData.tsol",
-        "line": 559
-      },
-      "136": {
-        "filename": "../contracts/staking/UserData.tsol",
-        "line": 559
-      },
-      "144": {
-        "filename": "../contracts/staking/UserData.tsol",
-        "line": 559
-      },
-      "152": {
-        "filename": "../contracts/staking/UserData.tsol",
-        "line": 559
-      },
-      "168": {
-        "filename": "../contracts/staking/UserData.tsol",
-        "line": 559
-      },
-      "184": {
-        "filename": "../contracts/staking/UserData.tsol",
-        "line": 559
-      },
-      "192": {
-        "filename": "../contracts/staking/UserData.tsol",
-        "line": 559
-      },
-      "208": {
-        "filename": "../contracts/staking/UserData.tsol",
-        "line": 559
-      },
-      "216": {
-        "filename": "../contracts/staking/UserData.tsol",
-        "line": 559
-      },
-      "232": {
-        "filename": "../contracts/staking/UserData.tsol",
-        "line": 559
-      },
-      "240": {
-        "filename": "../contracts/staking/UserData.tsol",
-        "line": 559
-      },
-      "256": {
-        "filename": "../contracts/staking/UserData.tsol",
-        "line": 559
-      },
-      "264": {
-        "filename": "../contracts/staking/UserData.tsol",
-        "line": 559
-      },
-      "280": {
-        "filename": "../contracts/staking/UserData.tsol",
-        "line": 559
-      },
-      "288": {
-        "filename": "../contracts/staking/UserData.tsol",
-        "line": 559
-      },
-      "304": {
-        "filename": "../contracts/staking/UserData.tsol",
-        "line": 559
-      },
-      "312": {
-        "filename": "../contracts/staking/UserData.tsol",
-        "line": 559
-      },
-      "328": {
-        "filename": "../contracts/staking/UserData.tsol",
-        "line": 559
-      },
-      "336": {
-        "filename": "../contracts/staking/UserData.tsol",
-        "line": 559
       }
     },
     "aef8e47d76f4e17298a9a4ca972c94d463fa55acc73dc21b8bf689e2302ddaff": {
