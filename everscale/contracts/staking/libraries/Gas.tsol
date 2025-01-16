@@ -8,7 +8,7 @@ library Gas {
     uint64 constant TOKEN_WALLET_INITIAL_BALANCE = 0.1 ever;
 
     // deploy
-    uint64 constant TOKEN_WALLET_DEPLOY_GAS = 200_000;
+    uint64 constant TOKEN_WALLET_DEPLOY_GAS = 30_000;
     uint64 constant TOKEN_WALLET_EXTRA_GAS = 100_000;
 
     uint64 constant DEPLOY_ELECTION_MIN_GAS = 1_000_000;
