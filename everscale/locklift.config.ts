@@ -92,6 +92,25 @@ const config: LockliftConfig = {
         amount: 20
       }
     },
+    tycho: {
+      connection: {
+        id: 2000,
+        type: "jrpc",
+        group: "tycho",
+        data: {
+          endpoint: "https://rpc-testnet.tychoprotocol.com",
+        },
+      },
+      giver: {
+        address: process.env.TYCHO_GIVER_ADDRESS!,
+        phrase: process.env.TYCHO_GIVER_PHRASE!,
+        accountId: 0,
+      },
+      keys: {
+        phrase: process.env.TYCHO_PHRASE!,
+        amount: 20,
+      },
+    },
   },
   // you can use any settings that mocha framework support
   mocha: {

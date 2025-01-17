@@ -1,0 +1,3270 @@
+.version sol 0.62.0
+
+.macro constructor
+DROP
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+GETGLOB 6
+THROWIF 51
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDREF
+ENDS
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 32
+PUSHINT 2313
+GETGLOB 20
+SECOND
+GETGLOB 9
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 37
+NOW
+SETGLOB 19
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 38
+SWAP
+SETGLOB 12
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 39
+SETGLOB 13
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 41
+CALLREF {
+	CALL $onInit_78857270_internal_macro$
+}
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 48
+GETGLOB 20
+INDEX2 0, 2
+PUSHINT 36
+SETGLOBVAR
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 0
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro getUnmodifiedEventData
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 61
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+ENDS
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 0
+CALLREF {
+	CALL $getUnmodifiedEventData_7dd98fe9_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 2561567949
+	STUR 130
+	STREF
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 106
+	STZEROES
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STREF
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro getUnmodifiedEventData_7dd98fe9_internal_macro
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 62
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+FALSE
+SETINDEXQ 1
+PUSHINT 64
+SETINDEXQ 4
+SETGLOB 4
+PUSHINT 36
+GETGLOBVAR
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 0
+
+.globl	onInit_78857270_internal
+.type	onInit_78857270_internal, @function
+CALL $onInit_78857270_internal_macro$
+
+.macro onInit_78857270_internal_macro
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 66
+GETGLOB 20
+INDEX2 0, 2
+CTOS
+LDU 32
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDU 128
+LDU 160
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDU 160
+LDREF
+LDI 1
+ENDS
+REVERSE 10, 0
+SETGLOB 22
+SETGLOB 23
+SETGLOB 24
+SETGLOB 25
+SETGLOB 26
+SETGLOB 27
+SETGLOB 28
+SETGLOB 30
+SETGLOB 31
+PUSHINT 32
+SETGLOBVAR
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 77
+GETPARAM 7
+FIRST
+SETGLOB 29
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 79
+GETGLOB 24
+TRUE
+NEWC
+STSLICECONST x6_
+STI 1
+STSLICECONST x1_
+STSLICE
+PUSHINT 54415172769541377993823933492320150904965849228122718777877508
+STUR 207
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 0
+
+.macro receiveTokenMeta
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 86
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDU 256
+LDU 160
+LDREF
+LDREF
+LDU 8
+ENDS
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 0
+CALLREF {
+	CALL $receiveTokenMeta_bb6062ce_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro receiveTokenMeta_bb6062ce_internal_macro
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 93
+PUSHINT 2326
+GETGLOB 9
+GETGLOB 24
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 95
+ROLL 4
+PUSHINT 33
+SETGLOBVAR
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 96
+ROLL 3
+PUSHINT 34
+SETGLOBVAR
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 98
+XCHG S2
+PUSHINT 34
+GETGLOBVAR
+PUSHINT 33
+GETGLOBVAR
+GETGLOB 23
+TRUE
+NEWC
+STSLICECONST x6_
+STI 1
+STSLICECONST x1_
+STSLICE
+PUSHINT 2949852426645541256083542794369173188247553
+STUR 143
+ROLLREV 5
+PUSHSLICE x3777bd0c369b7676
+NEWC
+STSLICE
+STU 256
+STU 160
+STREF
+STREF
+STU 8
+STBREFR
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 0
+
+.macro receiveAlienTokenRoot
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 111
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+ENDS
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 0
+CALLREF {
+	CALL $receiveAlienTokenRoot_e769fa39_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro receiveAlienTokenRoot_e769fa39_internal_macro
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 114
+PUSHINT 2326
+GETGLOB 9
+GETGLOB 23
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 116
+DUP
+PUSHINT 35
+SETGLOBVAR
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 118
+GETGLOB 24
+SDEQ
+PUSHCONT {
+	.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 119
+	CALLREF {
+		CALL $_updateEventData_d66c6812_internal_macro$
+	}
+	.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 121
+	CALLREF {
+		CALL $loadRelays_27380da1_internal_macro$
+	}
+}
+PUSHCONT {
+	.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 123
+	PUSHINT 1
+	CALLREF {
+		CALL $setStatusRejected_d67027cf_internal_macro$
+	}
+}
+IFELSE
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 0
+
+.globl	_updateEventData_d66c6812_internal
+.type	_updateEventData_d66c6812_internal, @function
+CALL $_updateEventData_d66c6812_internal_macro$
+
+.macro _updateEventData_d66c6812_internal_macro
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 128
+PUSHINT 32
+GETGLOBVAR
+GETGLOB 31
+GETGLOB 30
+PUSHINT 33
+GETGLOBVAR
+GETGLOB 27
+GETGLOB 26
+PUSHINT 34
+GETGLOBVAR
+NEWC
+STU 160
+STU 128
+STU 160
+STU 256
+STU 160
+STREF
+STI 1
+ENDC
+GETGLOB 20
+DUP
+FIRST
+ROT
+SETINDEX 2
+SETINDEX 0
+SETGLOB 20
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 0
+
+.macro getDecodedData
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 139
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+ENDS
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 0
+CALLREF {
+	CALL $getDecodedData_fab3912c_internal_macro$
+}
+PUSH S8
+PUSHCONT {
+	PUSH S10
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	REVERSE 9, 0
+	NEWC
+	STSLICECONST x9f021818
+	STSLICE
+	ROLLREV 7
+	NEWC
+	STSLICE
+	ROLLREV 6
+	NEWC
+	STSLICE
+	STU 128
+	STU 160
+	SWAP
+	UNTRIPLE
+	REVERSE 4, 0
+	ROLLREV 5
+	NEWC
+	STU 160
+	STREF
+	STI 1
+	STU 256
+	STU 160
+	STBREFR
+	STBREFR
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	REVERSE 9, 0
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STSLICE
+	ROLLREV 7
+	NEWC
+	STSLICE
+	ROLLREV 6
+	NEWC
+	STSLICE
+	STU 128
+	STU 160
+	SWAP
+	UNTRIPLE
+	REVERSE 4, 0
+	ROLLREV 5
+	NEWC
+	STU 160
+	STREF
+	STI 1
+	STU 256
+	STU 160
+	STBREFR
+	STBREFR
+	STBREFR
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro getDecodedData_fab3912c_internal_macro
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 149
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+FALSE
+SETINDEXQ 1
+PUSHINT 64
+SETINDEXQ 4
+SETGLOB 4
+GETGLOB 23
+GETGLOB 24
+GETGLOB 25
+GETGLOB 26
+GETGLOB 27
+GETGLOB 30
+GETGLOB 31
+PUSHINT 32
+GETGLOBVAR
+TRIPLE
+PUSHINT 33
+GETGLOBVAR
+PUSHINT 34
+GETGLOBVAR
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 0
+
+.globl	gasBackAddress_097a9936_internal
+.type	gasBackAddress_097a9936_internal, @function
+CALL $gasBackAddress_097a9936_internal_macro$
+
+.macro gasBackAddress_097a9936_internal_macro
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 166
+GETGLOB 25
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 0
+
+.macro on_bounce_macro
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 170
+PLDU 32
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 172
+DUP
+PUSHINT 833314494
+EQUAL
+GETGLOB 9
+GETGLOB 24
+SDEQ
+AND
+SWAP
+PUSHINT 930594060
+EQUAL
+GETGLOB 9
+GETGLOB 23
+SDEQ
+AND
+OR
+PUSHCONT {
+	.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 176
+	PUSHINT 2
+	CALLREF {
+		CALL $setStatusRejected_d67027cf_internal_macro$
+	}
+	.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 0
+}
+IF
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 0
+CALLREF {
+	CALL $c7_to_c4$
+}
+
+.macro getEventInitData
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 44
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+ENDS
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 0
+CALLREF {
+	CALL $getEventInitData_1e2f29c9_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	SWAP
+	NEWC
+	STSLICECONST xfc273bf6
+	SWAP
+	UNTRIPLE
+	REVERSE 4, 0
+	SWAP
+	UNTRIPLE
+	REVERSE 4, 0
+	STU 64
+	STU 32
+	STREF
+	STSLICE
+	SWAP
+	NEWC
+	STSLICE
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	SWAP
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	SWAP
+	UNTRIPLE
+	REVERSE 4, 0
+	SWAP
+	UNTRIPLE
+	REVERSE 4, 0
+	STU 64
+	STU 32
+	STREF
+	STSLICE
+	SWAP
+	NEWC
+	STSLICE
+	STBREFR
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	getEventInitData_1e2f29c9_internal
+.type	getEventInitData_1e2f29c9_internal, @function
+CALL $getEventInitData_1e2f29c9_internal_macro$
+
+.macro getEventInitData_1e2f29c9_internal_macro
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 45
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+FALSE
+SETINDEXQ 1
+SETGLOB 4
+GETGLOB 20
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 0
+
+.globl	getStakingAddress_0e9ed68b_internal
+.type	getStakingAddress_0e9ed68b_internal, @function
+CALL $getStakingAddress_0e9ed68b_internal_macro$
+
+.macro getStakingAddress_0e9ed68b_internal_macro
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 49
+GETGLOB 20
+THIRD
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 0
+
+.globl	isExternalVoteCall_d63359fe_internal
+.type	isExternalVoteCall_d63359fe_internal, @function
+CALL $isExternalVoteCall_d63359fe_internal_macro$
+
+.macro isExternalVoteCall_d63359fe_internal_macro
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 53
+DUP
+PUSHINT 1447845380
+EQUAL
+SWAP
+PUSHINT 1047874239
+EQUAL
+OR
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 0
+
+.macro confirm
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 62
+OVER
+PUSHCONT {
+	LDREF
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDREF
+}
+IFELSE
+LDMSGADDR
+ENDS
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 0
+CALLREF {
+	CALL $confirm_4044eb94_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	confirm_4044eb94_internal
+.type	confirm_4044eb94_internal, @function
+CALL $confirm_4044eb94_internal_macro$
+
+.macro confirm_4044eb94_internal_macro
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 63
+CALLREF {
+	CALL $_checkVoteReceiver_1de88840_internal_macro$
+}
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 65
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 67
+PUSHINT 2318
+OVER
+GETGLOB 11
+PUSHPOW2 8
+DICTUGET
+ZEROSWAPIFNOT
+PUSHCONT {
+	PLDU 8
+}
+IF
+EQINT 1
+THROWANYIFNOT
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 68
+PUSHINT 2325
+PUSH S2
+PUSHPOW2DEC 32
+CDATASIZE
+DROP
+NIP
+RSHIFT 3
+LESSINT 66
+THROWANYIFNOT
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 70
+ACCEPT
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 72
+DUP
+GETGLOB 11
+NEWC
+STSLICECONST x02
+ROTREV
+PUSHPOW2 8
+DICTUSETB
+SETGLOB 11
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 73
+DUP2
+GETGLOB 21
+PUSHPOW2 8
+DICTUSETREF
+SETGLOB 21
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 75
+PUSHSLICE xc000000000000000000000000039509bd2
+NEWC
+STSLICE
+STU 256
+STREF
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 76
+GETGLOB 15
+INC
+UFITS 16
+SETGLOB 15
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 79
+CALLREF {
+	CALL $status_200d2ed2_internal_macro$
+}
+NEQINT 1
+IFRET
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 83
+GETGLOB 15
+GETGLOB 14
+GEQ
+PUSHCONT {
+	.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 84
+	CALLREF {
+		CALL $setStatusConfirmed_2f7e581f_internal_macro$
+	}
+	.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 86
+	CALLREF {
+		CALL $onConfirm_069ca32f_internal_macro$
+	}
+	.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 0
+}
+IF
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 0
+
+.macro reject
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 95
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+ENDS
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 0
+CALLREF {
+	CALL $reject_ab0da5a9_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	reject_ab0da5a9_internal
+.type	reject_ab0da5a9_internal, @function
+CALL $reject_ab0da5a9_internal_macro$
+
+.macro reject_ab0da5a9_internal_macro
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 96
+CALLREF {
+	CALL $_checkVoteReceiver_1de88840_internal_macro$
+}
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 98
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 100
+PUSHINT 2318
+OVER
+GETGLOB 11
+PUSHPOW2 8
+DICTUGET
+ZEROSWAPIFNOT
+PUSHCONT {
+	PLDU 8
+}
+IF
+EQINT 1
+THROWANYIFNOT
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 102
+ACCEPT
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 104
+DUP
+GETGLOB 11
+NEWC
+STSLICECONST x03
+ROTREV
+PUSHPOW2 8
+DICTUSETB
+SETGLOB 11
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 106
+PUSHSLICE xc000000000000000000000000028f67645
+NEWC
+STSLICE
+STU 256
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 107
+GETGLOB 16
+INC
+UFITS 16
+SETGLOB 16
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 110
+CALLREF {
+	CALL $status_200d2ed2_internal_macro$
+}
+NEQINT 1
+IFRET
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 114
+GETGLOB 16
+GETGLOB 14
+GEQ
+PUSHCONT {
+	.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 115
+	PUSHINT 0
+	CALLREF {
+		CALL $setStatusRejected_d67027cf_internal_macro$
+	}
+	.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 117
+	CALLREF {
+		CALL $onReject_f99c9a36_internal_macro$
+	}
+	.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 0
+}
+IF
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 0
+
+.globl	EverscaleEthereumBaseEvent_gasBackAddress_097a9936
+.type	EverscaleEthereumBaseEvent_gasBackAddress_097a9936, @function
+CALL $EverscaleEthereumBaseEvent_gasBackAddress_097a9936_macro$
+
+.macro EverscaleEthereumBaseEvent_gasBackAddress_097a9936_macro
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 122
+GETGLOB 12
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 0
+
+.macro close
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 125
+ENDS
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 0
+CALLREF {
+	CALL $close_43d726d6_internal_macro$
+}
+IFREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro close_43d726d6_internal_macro
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 126
+PUSHINT 2324
+CALLREF {
+	CALL $status_200d2ed2_internal_macro$
+}
+NEQINT 1
+DUP
+PUSHCONT {
+	DROP
+	NOW
+	GETGLOB 19
+	PUSHINT 259200
+	ADD
+	UFITS 32
+	GREATER
+}
+IFNOT
+THROWANYIFNOT
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 131
+CALLREF {
+	CALL $gasBackAddress_097a9936_internal_macro$
+}
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 133
+PUSHINT 2322
+GETGLOB 9
+PUSH S2
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 138
+CALLREF {
+	CALL $transferAll_a3a7e7f3_internal_macro$
+}
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 0
+
+.macro getDetails
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 149
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+ENDS
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 0
+CALLREF {
+	CALL $getDetails_fbbf93a0_internal_macro$
+}
+PUSH S10
+PUSHCONT {
+	PUSH S12
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	REVERSE 11, 0
+	NEWC
+	STSLICECONST xf3db7d80
+	SWAP
+	UNTRIPLE
+	REVERSE 4, 0
+	SWAP
+	UNTRIPLE
+	REVERSE 4, 0
+	STU 64
+	STU 32
+	STREF
+	STSLICE
+	ROLLREV 10
+	NEWC
+	STSLICE
+	STU 8
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	ROLLREV 5
+	NEWC
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	STU 128
+	STSLICE
+	STREF
+	STU 32
+	STBREFR
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	REVERSE 11, 0
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	SWAP
+	UNTRIPLE
+	REVERSE 4, 0
+	SWAP
+	UNTRIPLE
+	REVERSE 4, 0
+	STU 64
+	STU 32
+	STREF
+	STSLICE
+	ROLLREV 10
+	NEWC
+	STSLICE
+	STU 8
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	ROLLREV 5
+	NEWC
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	STU 128
+	STSLICE
+	STREF
+	STU 32
+	STBREFR
+	STBREFR
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro getDetails_fbbf93a0_internal_macro
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 149
+PUSHINT 0
+NEWDICT
+PAIR
+DUP
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 161
+PUSHINT 2
+CALLREF {
+	CALL $getVoters_3aa4256c_internal_macro$
+}
+POP S2
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 163
+OVER
+SECOND
+PUSHINT 0
+NULL
+PUSHCONT {
+	PUSH2 S1, S2
+	PUSHINT 32
+	DICTUGET
+	NULLSWAPIFNOT
+	PUSHCONT {
+		PLDU 256
+	}
+	IF
+	DUP
+	POP S2
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 164
+	PUSH2 S3, S0
+	GETGLOB 21
+	PUSHPOW2 8
+	DICTUGETREF
+	PUSHCONT {
+		PUSHREF {
+		}
+	}
+	IFNOT
+	SWAP
+	UNPAIR
+	OVER
+	INC
+	ROLLREV 3
+	PUSHINT 32
+	DICTUSETREF
+	PAIR
+	POP S4
+	.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 0
+	OVER
+	INC
+	POP S2
+}
+WHILE
+BLKDROP 3
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 167
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+FALSE
+SETINDEXQ 1
+SETGLOB 4
+GETGLOB 20
+CALLREF {
+	CALL $status_200d2ed2_internal_macro$
+}
+ROLL 3
+PUSHINT 3
+CALLREF {
+	CALL $getVoters_3aa4256c_internal_macro$
+}
+PUSHINT 1
+CALLREF {
+	CALL $getVoters_3aa4256c_internal_macro$
+}
+ROLL 5
+GETPARAM 7
+FIRST
+GETGLOB 12
+GETGLOB 13
+GETGLOB 14
+.loc ../contracts/bridge/event-contracts/base/evm/EverscaleEthereumBaseEvent.tsol, 0
+
+.macro status
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 36
+ENDS
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 0
+CALLREF {
+	CALL $status_200d2ed2_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 3339896713
+	STUR 130
+	STU 8
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+PUSHCONT {
+	DROP
+}
+IFELSE
+IFREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	status_200d2ed2_internal
+.type	status_200d2ed2_internal, @function
+CALL $status_200d2ed2_internal_macro$
+
+.macro status_200d2ed2_internal_macro
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 37
+GETGLOB 10
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 0
+
+.globl	BaseEvent_onInit_78857270
+.type	BaseEvent_onInit_78857270, @function
+CALL $BaseEvent_onInit_78857270_macro$
+
+.macro BaseEvent_onInit_78857270_macro
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 42
+PUSHINT 0
+SETGLOB 10
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 44
+CALLREF {
+	CALL $loadRelays_27380da1_internal_macro$
+}
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 0
+
+.globl	onRelaysLoaded_6de4dfff_internal
+.type	onRelaysLoaded_6de4dfff_internal, @function
+CALL $onRelaysLoaded_6de4dfff_internal_macro$
+
+.macro onRelaysLoaded_6de4dfff_internal_macro
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 0
+
+.globl	onConfirm_069ca32f_internal
+.type	onConfirm_069ca32f_internal, @function
+CALL $onConfirm_069ca32f_internal_macro$
+
+.macro onConfirm_069ca32f_internal_macro
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 0
+
+.globl	onReject_f99c9a36_internal
+.type	onReject_f99c9a36_internal, @function
+CALL $onReject_f99c9a36_internal_macro$
+
+.macro onReject_f99c9a36_internal_macro
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 0
+
+.globl	loadRelays_27380da1_internal
+.type	loadRelays_27380da1_internal, @function
+CALL $loadRelays_27380da1_internal_macro$
+
+.macro loadRelays_27380da1_internal_macro
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 71
+PUSHINT 2324
+GETGLOB 10
+EQINT 0
+THROWANYIFNOT
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 73
+NOW
+CALLREF {
+	CALL $getStakingAddress_0e9ed68b_internal_macro$
+}
+FALSE
+NEWC
+STSLICECONST x6_
+STI 1
+STSLICECONST x1_
+STSLICE
+PUSHINT 54415172769541377993823933492320150904965854292998026099087979
+STUR 207
+STU 32
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 0
+
+.macro receiveRoundAddress
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 80
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDU 32
+ENDS
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 0
+CALLREF {
+	CALL $receiveRoundAddress_4cecc125_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro receiveRoundAddress_4cecc125_internal_macro
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 53
+PUSHINT 2107
+GETGLOB 9
+CALLREF {
+	CALL $getStakingAddress_0e9ed68b_internal_macro$
+}
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 84
+OVER
+SETGLOB 17
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 85
+SETGLOB 18
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 87
+FALSE
+NEWC
+STSLICECONST x6_
+STI 1
+STSLICECONST x1_
+STSLICE
+PUSHINT 54415172769541377993823933492320150904965846484423444970872146
+STUR 207
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 0
+
+.macro receiveRoundRelays
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 94
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+ENDS
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 0
+CALLREF {
+	CALL $receiveRoundRelays_6858d208_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro receiveRoundRelays_6858d208_internal_macro
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 58
+PUSHINT 2110
+GETGLOB 9
+GETGLOB 17
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 97
+DUP
+FIRST
+MULCONST 2
+PUSHINT 3
+DIV
+UFITS 16
+INC
+UFITS 16
+SETGLOB 14
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 99
+SECOND
+PUSHINT 0
+NULL
+PUSHCONT {
+	PUSH2 S1, S2
+	PUSHINT 32
+	DICTUGET
+	NULLSWAPIFNOT
+	PUSHCONT {
+		PLDU 256
+	}
+	IF
+	DUP
+	POP S2
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 100
+	DUP
+	GETGLOB 11
+	NEWC
+	STSLICECONST x01
+	ROTREV
+	PUSHPOW2 8
+	DICTUSETB
+	SETGLOB 11
+	.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 0
+	OVER
+	INC
+	POP S2
+}
+WHILE
+BLKDROP 3
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 103
+PUSHINT 1
+SETGLOB 10
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 105
+CALLREF {
+	CALL $onRelaysLoaded_6de4dfff_internal_macro$
+}
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 0
+
+.globl	setStatusConfirmed_2f7e581f_internal
+.type	setStatusConfirmed_2f7e581f_internal, @function
+CALL $setStatusConfirmed_2f7e581f_internal_macro$
+
+.macro setStatusConfirmed_2f7e581f_internal_macro
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 109
+PUSHINT 2324
+GETGLOB 10
+EQINT 1
+THROWANYIFNOT
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 111
+PUSHINT 2
+SETGLOB 10
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 113
+PUSHREF {
+	.blob xc00000000000000000000000005245f247
+}
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 0
+
+.globl	setStatusRejected_d67027cf_internal
+.type	setStatusRejected_d67027cf_internal, @function
+CALL $setStatusRejected_d67027cf_internal_macro$
+
+.macro setStatusRejected_d67027cf_internal_macro
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 117
+PUSHINT 2324
+GETGLOB 10
+EQINT 0
+GETGLOB 10
+EQINT 1
+OR
+THROWANYIFNOT
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 122
+PUSHINT 3
+SETGLOB 10
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 124
+PUSHSLICE xc000000000000000000000000002c3a8af
+NEWC
+STSLICE
+STU 32
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 0
+
+.globl	_checkVoteReceiver_1de88840_internal
+.type	_checkVoteReceiver_1de88840_internal, @function
+CALL $_checkVoteReceiver_1de88840_internal_macro$
+
+.macro _checkVoteReceiver_1de88840_internal_macro
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 128
+PUSHINT 2323
+SWAP
+MYADDR
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 0
+
+.macro getVoters
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 136
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+LDU 8
+OVER
+GTINT 3
+THROWIF 73
+ENDS
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 0
+CALLREF {
+	CALL $getVoters_3aa4256c_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 2650309993
+	STUR 130
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 106
+	STZEROES
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	getVoters_3aa4256c_internal
+.type	getVoters_3aa4256c_internal, @function
+CALL $getVoters_3aa4256c_internal_macro$
+
+.macro getVoters_3aa4256c_internal_macro
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 136
+PUSHINT 0
+NEWDICT
+PAIR
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 137
+GETGLOB 11
+DUP
+PUSHPOW2 8
+DICTUMIN
+PUSHCONT {
+	DUP
+	ROT
+	PLDU 8
+}
+PUSHCONT {
+	NULL
+	BLKPUSH 2, 0
+}
+IFELSE
+PUSHCONT {
+	PUSH S2
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 138
+	PUSH2 S0, S5
+	EQUAL
+	PUSHCONT {
+		.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 139
+		PUSH2 S4, S1
+		NEWC
+		STU 256
+		SWAP
+		UNPAIR
+		OVER
+		INC
+		ROLLREV 3
+		PUSHINT 32
+		DICTUSETB
+		PAIR
+		POP S5
+		.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 0
+	}
+	IF
+	.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 0
+	PUSH2 S2, S3
+	PUSHPOW2 8
+	DICTUGETNEXT
+	PUSHCONT {
+		DUP
+		ROT
+		PLDU 8
+	}
+	PUSHCONT {
+		NULL
+		BLKPUSH 2, 0
+	}
+	IFELSE
+	BLKDROP2 3, 3
+}
+WHILE
+BLKDROP 4
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 143
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+FALSE
+SETINDEXQ 1
+PUSHINT 64
+SETINDEXQ 4
+SETGLOB 4
+NIP
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 0
+
+.macro getVote
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 146
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDU 256
+ENDS
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 0
+CALLREF {
+	CALL $getVote_5a55c1f0_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 2697822873
+	STUR 130
+	XCPU S1, S0
+	ISNULL
+	PUSHCONT {
+		DROP
+		STSLICECONST 0
+	}
+	PUSHCONT {
+		SWAP
+		STSLICECONST 1
+		STU 8
+	}
+	IFELSE
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 106
+	STZEROES
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	XCPU S1, S0
+	ISNULL
+	PUSHCONT {
+		DROP
+		STSLICECONST 0
+	}
+	PUSHCONT {
+		SWAP
+		STSLICECONST 1
+		STU 8
+	}
+	IFELSE
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	getVote_5a55c1f0_internal
+.type	getVote_5a55c1f0_internal, @function
+CALL $getVote_5a55c1f0_internal_macro$
+
+.macro getVote_5a55c1f0_internal_macro
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 147
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+FALSE
+SETINDEXQ 1
+PUSHINT 64
+SETINDEXQ 4
+SETGLOB 4
+GETGLOB 11
+PUSHPOW2 8
+DICTUGET
+NULLSWAPIFNOT
+PUSHCONT {
+	PLDU 8
+}
+IF
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 0
+
+.macro getApiVersion
+DROP
+GETGLOB 6
+THROWIFNOT 76
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 150
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+ENDS
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 0
+CALLREF {
+	CALL $getApiVersion_49d9db18_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 2780706251
+	STUR 130
+	STU 32
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 106
+	STZEROES
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STU 32
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro getApiVersion_49d9db18_internal_macro
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 151
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+FALSE
+SETINDEXQ 1
+PUSHINT 64
+SETINDEXQ 4
+SETGLOB 4
+PUSHINT 2
+.loc ../contracts/bridge/event-contracts/base/BaseEvent.tsol, 0
+
+.globl	transferAll_a3a7e7f3_internal
+.type	transferAll_a3a7e7f3_internal, @function
+CALL $transferAll_a3a7e7f3_internal_macro$
+
+.macro transferAll_a3a7e7f3_internal_macro
+.loc ../contracts/utils/TransferUtils.tsol, 7
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHINT 129
+SENDRAWMSG
+.loc ../contracts/utils/TransferUtils.tsol, 0
+
+.globl	_reserveAtLeastTargetBalance_a644bc3b_internal
+.type	_reserveAtLeastTargetBalance_a644bc3b_internal, @function
+CALL $_reserveAtLeastTargetBalance_a644bc3b_internal_macro$
+
+.macro _reserveAtLeastTargetBalance_a644bc3b_internal_macro
+.loc ../contracts/utils/TransferUtils.tsol, 16
+GETPARAM 7
+FIRST
+DEPTH
+ADDCONST -2
+PICK
+SUB
+UFITS 128
+CALLREF {
+	CALL $_targetBalance_81a00f03_internal_macro$
+}
+MAX
+PUSHINT 2
+RAWRESERVE
+.loc ../contracts/utils/TransferUtils.tsol, 0
+
+.globl	_reserveTargetBalance_c4db675c_internal
+.type	_reserveTargetBalance_c4db675c_internal, @function
+CALL $_reserveTargetBalance_c4db675c_internal_macro$
+
+.macro _reserveTargetBalance_c4db675c_internal_macro
+.loc ../contracts/utils/TransferUtils.tsol, 43
+CALLREF {
+	CALL $_targetBalance_81a00f03_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/utils/TransferUtils.tsol, 0
+
+.globl	_targetBalance_81a00f03_internal
+.type	_targetBalance_81a00f03_internal, @function
+CALL $_targetBalance_81a00f03_internal_macro$
+
+.macro _targetBalance_81a00f03_internal_macro
+.loc ../contracts/utils/TransferUtils.tsol, 59
+PUSHINT 1000000000
+.loc ../contracts/utils/TransferUtils.tsol, 0
+
+.macro c4_to_c7
+PUSHROOT
+CTOS
+LDU 256 ; pubkey c4
+LDU 1 ; ctor flag
+NIP
+LDU 8
+OVER
+GTINT 3
+THROWIF 73
+LDDICT
+LDMSGADDR
+LDREF
+LDU 32
+LDU 16
+LDU 16
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDU 32
+LDU 32
+LDU 64
+LDU 32
+LDREF
+ROLLREV 3
+TRIPLE
+SWAP
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ROLLREV 3
+TRIPLE
+SWAP
+LDDICT
+LDU 32
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDU 128
+LDU 160
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDU 128
+LDU 160
+LDREF
+LDI 1
+LDREF
+ENDS
+CTOS
+LDU 256
+LDU 160
+LDMSGADDR
+LDREF
+ENDS
+PUSHINT 0
+GETGLOBVAR
+GETGLOB 1
+GETGLOB 2
+GETGLOB 3
+GETGLOB 4
+GETGLOB 5
+GETGLOB 6
+GETGLOB 7
+GETGLOB 8
+GETGLOB 9
+PUSHINT 27
+PUSHINT 10
+BLKSWX
+PUSHINT 37
+TUPLEVAR
+POP C7
+SETGLOB 2
+
+.macro c4_to_c7_with_init_storage
+PUSHROOT
+CTOS
+SBITS
+GTINT 1
+PUSHCONT {
+	PUSHINT 0
+	PUSHROOT
+	CTOS
+	PLDDICT ; D
+	PUSHINT 0
+	GETGLOBVAR
+	GETGLOB 1
+	GETGLOB 2
+	GETGLOB 3
+	GETGLOB 4
+	GETGLOB 5
+	GETGLOB 6
+	GETGLOB 7
+	GETGLOB 8
+	GETGLOB 9
+	PUSHINT 0
+	NEWDICT
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	PUSHREF {
+	}
+	PUSHINT 0
+	BLKPUSH 2, 0
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	PUSHINT 0
+	DUP
+	PUSHINT 1
+	PUSH S21
+	PUSHINT 64
+	DICTUGETREF
+	PUSHCONT {
+		CTOS
+		CALLREF {
+			LDU 64
+			LDU 32
+			LDREF
+			ROLLREV 3
+			TRIPLE
+			SWAP
+			LDMSGADDR
+			LDREF
+			ENDS
+			CTOS
+			LDMSGADDR
+			ENDS
+			TRIPLE
+		}
+	}
+	PUSHCONT {
+		PUSHINT 0
+		DUP
+		PUSHREF {
+		}
+		TRIPLE
+		PUSHREFSLICE {
+			.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+		}
+		DUP
+		TRIPLE
+	}
+	IFELSE
+	NEWDICT
+	PUSHINT 0
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	BLKPUSH 2, 0
+	PUSHINT 0
+	DUP
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	PUSHINT 0
+	DUP
+	PUSHREF {
+	}
+	PUSHINT 0
+	BLKPUSH 2, 0
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	PUSHREF {
+	}
+	PUSHINT 37
+	TUPLEVAR
+	POP C7
+	PUSHINT 64
+	DICTUGET
+	THROWIFNOT 61
+	PLDU 256
+	SETGLOB 2
+	PUSHINT 0 ; timestamp
+	SETGLOB 3
+}
+IFREFELSE {
+	CALL $c4_to_c7$
+}
+
+.macro c7_to_c4
+PUSH C7
+FALSE
+PUSHINT 37
+SETINDEXVARQ
+PUSHINT 38
+UNTUPLEVAR
+DROP
+PUSHINT 37
+PUSHINT 0
+REVX
+BLKDROP 10
+GETGLOB 2
+NEWC
+STU 256
+STONE
+STU 8
+STDICT
+STSLICE
+STREF
+STU 32
+STU 16
+STU 16
+PUSHINT 20
+ROLLREVX
+NEWC
+STSLICE
+STU 32
+STU 32
+SWAP
+UNTRIPLE
+REVERSE 4, 0
+SWAP
+UNTRIPLE
+REVERSE 4, 0
+STU 64
+STU 32
+STREF
+PUSHINT 18
+ROLLREVX
+NEWC
+STSLICE
+PUSHINT 17
+ROLLREVX
+NEWC
+STSLICE
+STDICT
+STU 32
+ROLLREV 14
+NEWC
+STSLICE
+ROLLREV 13
+NEWC
+STSLICE
+ROLLREV 12
+NEWC
+STSLICE
+STU 128
+STU 160
+ROLLREV 9
+NEWC
+STSLICE
+STU 128
+STU 160
+STREF
+STI 1
+ROLLREV 4
+NEWC
+STU 256
+STU 160
+STSLICE
+STREF
+STBREFR
+STBREFR
+STBREFR
+STBREFR
+STBREFR
+STBREFR
+STBREFR
+STBREFR
+ENDC
+POPROOT
+
+.macro upd_only_time_in_c4
+PUSHROOT
+CTOS
+LDU 256
+LDU 64
+NIP
+GETGLOB 3
+ROT
+NEWC
+STU 256
+STU 64
+STSLICE
+ENDC
+POPROOT
+
+.internal-alias :main_internal, 0
+.internal :main_internal
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSH S2
+CTOS
+LDU 4 ; bounced tail
+LDMSGADDR ; bounced src tail
+DROP
+SETGLOB 9
+MODPOW2 1
+GETGLOB 4
+TRUE
+SETINDEXQ 1
+PUSHINT 10000000
+SETINDEXQ 2
+NULL
+SETINDEXQ 3
+PUSHINT 0
+SETINDEXQ 4
+SETGLOB 4
+IFJMPREF {
+	OVER
+	LDSLICE 32
+	NIP
+	CALL $on_bounce_macro$
+}
+OVER
+SEMPTY ; isEmpty
+IFJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+OVER
+LDUQ 32  ; [funcId] body' ok
+THROWIFNOT 60
+OVER
+IFNOTJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.internal-alias :main_external, -1
+.internal :main_external
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+SETGLOB 9
+OVER
+CALLREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+LDU 1 ; haveSign msgSlice
+SWAP
+PUSHCONT {
+	PUSHPOW2 9
+	LDSLICEX ; signatureSlice msgSlice
+	DUP
+	HASHSU ; signatureSlice msgSlice hashMsgSlice
+	SWAP
+	LDU 1 ; signatureSlice hashMsgSlice hasPubkey msgSlice
+	SWAP
+	PUSHCONT {
+		LDU 256 ; signatureSlice hashMsgSlice pubkey msgSlice
+		XCHG S3
+		SWAP
+	}
+	PUSHCONT {
+		XCHG S2
+		GETGLOB 2
+	}
+	IFELSE
+	DUP
+	SETGLOB 5
+	CHKSIGNU ; msgSlice isSigned
+	THROWIFNOT 40
+}
+PUSHCONT {
+	LDU 1 ; hasPubkey msgSlice
+	SWAP
+	THROWIF 58
+}
+IFELSE
+PUSH2 S3, S0
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 52
+LDU 64
+LDU 32
+POP S4
+DROP2
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 53
+PUSH2 S1, S1
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 54
+LDU 32
+POP S4
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 55
+DUP
+CALLREF {
+	CALL $isExternalVoteCall_d63359fe_internal_macro$
+}
+PUSHCONT {
+	.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 56
+	PUSHINT 2318
+	GETGLOB 5
+	DUP
+	ISNULL
+	PUSHCONT {
+		DROP
+		PUSHINT 0
+	}
+	IF
+	GETGLOB 11
+	PUSHPOW2 8
+	DICTUGET
+	ZEROSWAPIFNOT
+	PUSHCONT {
+		PLDU 8
+	}
+	IF
+	EQINT 1
+	THROWANYIFNOT
+	.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 0
+}
+IF
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 58
+OVER
+BLKDROP2 4, 1
+.loc ../contracts/bridge/event-contracts/multivault/evm/MultiVaultEverscaleEVMEventAlien.tsol, 0
+LDU 32 ; funcId body
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.macro votes
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 11
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000a403a57c
+	NEWC
+	STSLICE
+	STDICT
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro initializer
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 12
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000bf7648d4
+	NEWC
+	STSLICE
+	STSLICE
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro meta
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 13
+OVER
+PUSHCONT {
+	PUSHSLICE xc00000000000000000000000008419845c
+	NEWC
+	STSLICE
+	STREF
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro requiredVotes
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 14
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000c94b475c
+	NEWC
+	STSLICE
+	STU 32
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro confirms
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 15
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000a6ae58ce
+	NEWC
+	STSLICE
+	STU 16
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro rejects
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 16
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000bc1aa034
+	NEWC
+	STSLICE
+	STU 16
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro relay_round
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 17
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000f284aa9d
+	NEWC
+	STSLICE
+	STSLICE
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro round_number
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 18
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000d237e03f
+	NEWC
+	STSLICE
+	STU 32
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro createdAt
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 19
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000f86f16ee
+	NEWC
+	STSLICE
+	STU 32
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro signatures
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 21
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000d0c72c2e
+	NEWC
+	STSLICE
+	STDICT
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro nonce
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 22
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000de1be220
+	NEWC
+	STSLICE
+	STU 32
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro proxy
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 23
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000f9028dcf
+	NEWC
+	STSLICE
+	STSLICE
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro token
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 24
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000e270cc50
+	NEWC
+	STSLICE
+	STSLICE
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro remainingGasTo
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 25
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000a2c11f5d
+	NEWC
+	STSLICE
+	STSLICE
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro amount
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 26
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000920f88cd
+	NEWC
+	STSLICE
+	STU 128
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro recipient
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 27
+OVER
+PUSHCONT {
+	PUSHSLICE xc000000000000000000000000092e11108
+	NEWC
+	STSLICE
+	STU 160
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro sender
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 28
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000bf912be4
+	NEWC
+	STSLICE
+	STSLICE
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro initial_balance
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 29
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000a972c427
+	NEWC
+	STSLICE
+	STU 128
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro callback_recipient
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 30
+OVER
+PUSHCONT {
+	PUSHSLICE xc000000000000000000000000097075d2b
+	NEWC
+	STSLICE
+	STU 160
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro callback_payload
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 31
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000a117b83a
+	NEWC
+	STSLICE
+	STREF
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro callback_strict
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+PUSHINT 32
+GETGLOBVAR
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000d93da4a1
+	NEWC
+	STSLICE
+	STI 1
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro base_chainId
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+PUSHINT 33
+GETGLOBVAR
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000fd97c170
+	NEWC
+	STSLICE
+	STU 256
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro base_token
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+PUSHINT 34
+GETGLOBVAR
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000f1f38b05
+	NEWC
+	STSLICE
+	STU 160
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro expectedToken
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+PUSHINT 35
+GETGLOBVAR
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000f2e9842f
+	NEWC
+	STSLICE
+	STSLICE
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro unmodifiedEventData
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+PUSHINT 36
+GETGLOBVAR
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000d9c6848e
+	NEWC
+	STSLICE
+	STREF
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro public_function_selector
+DUP
+PUSHINT 666029341
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 306109035
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 68781148
+		EQUAL
+		IFJMPREF {
+			CALL $meta$
+		}
+		DUP
+		PUSHINT 90933268
+		EQUAL
+		IFJMPREF {
+			CALL $close$
+		}
+		DUP
+		PUSHINT 303007949
+		EQUAL
+		IFJMPREF {
+			CALL $amount$
+		}
+		DUP
+		PUSHINT 306109035
+		EQUAL
+		IFJMPREF {
+			CALL $receiveRoundAddress$
+		}
+	}
+	DUP
+	PUSHINT 502826345
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 316739848
+		EQUAL
+		IFJMPREF {
+			CALL $recipient$
+		}
+		DUP
+		PUSHINT 386358571
+		EQUAL
+		IFJMPREF {
+			CALL $callback_recipient$
+		}
+		DUP
+		PUSHINT 414084301
+		EQUAL
+		IFJMPREF {
+			CALL $getUnmodifiedEventData$
+		}
+		DUP
+		PUSHINT 502826345
+		EQUAL
+		IFJMPREF {
+			CALL $getVoters$
+		}
+	}
+	DUP
+	PUSHINT 583081821
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 520230936
+		EQUAL
+		IFJMPREF {
+			CALL $getDecodedData$
+		}
+		DUP
+		PUSHINT 550339225
+		EQUAL
+		IFJMPREF {
+			CALL $getVote$
+		}
+		DUP
+		PUSHINT 555202618
+		EQUAL
+		IFJMPREF {
+			CALL $callback_payload$
+		}
+		DUP
+		PUSHINT 583081821
+		EQUAL
+		IFJMPREF {
+			CALL $remainingGasTo$
+		}
+	}
+	DUP
+	PUSHINT 666029341
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 604218748
+		EQUAL
+		IFJMPREF {
+			CALL $votes$
+		}
+		DUP
+		PUSHINT 633222603
+		EQUAL
+		IFJMPREF {
+			CALL $getApiVersion$
+		}
+		DUP
+		PUSHINT 648960206
+		EQUAL
+		IFJMPREF {
+			CALL $confirms$
+		}
+		DUP
+		PUSHINT 666029341
+		EQUAL
+		IFJMPREF {
+			CALL $constructor$
+		}
+	}
+}
+DUP
+PUSHINT 1578885664
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 1035445252
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 695387175
+		EQUAL
+		IFJMPREF {
+			CALL $initial_balance$
+		}
+		DUP
+		PUSHINT 916158070
+		EQUAL
+		IFJMPREF {
+			CALL $receiveAlienTokenRoot$
+		}
+		DUP
+		PUSHINT 1008377908
+		EQUAL
+		IFJMPREF {
+			CALL $rejects$
+		}
+		DUP
+		PUSHINT 1035445252
+		EQUAL
+		IFJMPREF {
+			CALL $receiveTokenMeta$
+		}
+	}
+	DUP
+	PUSHINT 1192413065
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1047874239
+		EQUAL
+		IFJMPREF {
+			CALL $reject$
+		}
+		DUP
+		PUSHINT 1064716500
+		EQUAL
+		IFJMPREF {
+			CALL $initializer$
+		}
+		DUP
+		PUSHINT 1066478564
+		EQUAL
+		IFJMPREF {
+			CALL $sender$
+		}
+		DUP
+		PUSHINT 1192413065
+		EQUAL
+		IFJMPREF {
+			CALL $status$
+		}
+	}
+	DUP
+	PUSHINT 1408507218
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1229670236
+		EQUAL
+		IFJMPREF {
+			CALL $requiredVotes$
+		}
+		DUP
+		PUSHINT 1355230254
+		EQUAL
+		IFJMPREF {
+			CALL $signatures$
+		}
+		DUP
+		PUSHINT 1379393599
+		EQUAL
+		IFJMPREF {
+			CALL $round_number$
+		}
+		DUP
+		PUSHINT 1408507218
+		EQUAL
+		IFJMPREF {
+			CALL $receiveRoundRelays$
+		}
+	}
+	DUP
+	PUSHINT 1578885664
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1447845380
+		EQUAL
+		IFJMPREF {
+			CALL $confirm$
+		}
+		DUP
+		PUSHINT 1497212065
+		EQUAL
+		IFJMPREF {
+			CALL $callback_strict$
+		}
+		DUP
+		PUSHINT 1506182286
+		EQUAL
+		IFJMPREF {
+			CALL $unmodifiedEventData$
+		}
+		DUP
+		PUSHINT 1578885664
+		EQUAL
+		IFJMPREF {
+			CALL $nonce$
+		}
+	}
+}
+DUP
+PUSHINT 2107097456
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 1927906351
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1651559504
+		EQUAL
+		IFJMPREF {
+			CALL $token$
+		}
+		DUP
+		PUSHINT 1911786245
+		EQUAL
+		IFJMPREF {
+			CALL $base_token$
+		}
+		DUP
+		PUSHINT 1921297053
+		EQUAL
+		IFJMPREF {
+			CALL $relay_round$
+		}
+		DUP
+		PUSHINT 1927906351
+		EQUAL
+		IFJMPREF {
+			CALL $expectedToken$
+		}
+	}
+	DUP
+	PUSHINT 2082946038
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1943764352
+		EQUAL
+		IFJMPREF {
+			CALL $getDetails$
+		}
+		DUP
+		PUSHINT 2020546286
+		EQUAL
+		IFJMPREF {
+			CALL $createdAt$
+		}
+		DUP
+		PUSHINT 2030210511
+		EQUAL
+		IFJMPREF {
+			CALL $proxy$
+		}
+		DUP
+		PUSHINT 2082946038
+		EQUAL
+		IFJMPREF {
+			CALL $getEventInitData$
+		}
+	}
+	DUP
+	PUSHINT 2107097456
+	EQUAL
+	IFJMPREF {
+		CALL $base_chainId$
+	}
+}
+

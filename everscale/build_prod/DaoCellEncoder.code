@@ -1,0 +1,299 @@
+.version sol 0.62.0
+
+.macro constructor
+DROP
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+GETGLOB 6
+THROWIF 51
+ENDS
+ACCEPT
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro encodeDaoEthereumActionData
+DROP
+GETGLOB 6
+THROWIFNOT 76
+.loc ../contracts/utils/cell-encoder/DaoCellEncoder.tsol, 6
+LDI 8
+LDU 256
+LDU 32
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+ENDS
+.loc ../contracts/utils/cell-encoder/DaoCellEncoder.tsol, 0
+CALLREF {
+	CALL $encodeDaoEthereumActionData_2394a3ac_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 3102183535
+	STUR 130
+	STREF
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+PUSHCONT {
+	DROP
+}
+IFELSE
+IFREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	encodeDaoEthereumActionData_2394a3ac_internal
+.type	encodeDaoEthereumActionData_2394a3ac_internal, @function
+CALL $encodeDaoEthereumActionData_2394a3ac_internal_macro$
+
+.macro encodeDaoEthereumActionData_2394a3ac_internal_macro
+.loc ../contracts/utils/cell-encoder/DaoCellEncoder.tsol, 15
+REVERSE 4, 0
+NEWC
+STI 8
+STU 256
+STU 32
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+.loc ../contracts/utils/cell-encoder/DaoCellEncoder.tsol, 16
+ENDC
+.loc ../contracts/utils/cell-encoder/DaoCellEncoder.tsol, 0
+
+.macro decodeDaoEthereumActionData
+DROP
+GETGLOB 6
+THROWIFNOT 76
+.loc ../contracts/utils/cell-encoder/DaoCellEncoder.tsol, 19
+LDREF
+ENDS
+.loc ../contracts/utils/cell-encoder/DaoCellEncoder.tsol, 0
+CALLREF {
+	CALL $decodeDaoEthereumActionData_a3d3c7a3_internal_macro$
+}
+PUSH S4
+PUSHCONT {
+	PUSH S6
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	REVERSE 5, 0
+	NEWC
+	STSLICECONST xf3ccfd6e
+	STI 8
+	STU 256
+	STU 32
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+PUSHCONT {
+	BLKDROP 4
+}
+IFELSE
+IFREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	decodeDaoEthereumActionData_a3d3c7a3_internal
+.type	decodeDaoEthereumActionData_a3d3c7a3_internal, @function
+CALL $decodeDaoEthereumActionData_a3d3c7a3_internal_macro$
+
+.macro decodeDaoEthereumActionData_a3d3c7a3_internal_macro
+.loc ../contracts/utils/cell-encoder/DaoCellEncoder.tsol, 19
+PUSHINT 0
+BLKPUSH 2, 0
+.loc ../contracts/utils/cell-encoder/DaoCellEncoder.tsol, 27
+ROLL 3
+CTOS
+LDI 8
+LDU 256
+LDU 32
+LDU 32
+PLDDICT
+PAIR
+REVERSE 4, 0
+POP S6
+POP S4
+POP S2
+.loc ../contracts/utils/cell-encoder/DaoCellEncoder.tsol, 0
+
+.macro c4_to_c7
+PUSHROOT
+CTOS
+LDU 256 ; pubkey c4
+LDU 64 ; pubkey timestamp c4
+LDU 1 ; ctor flag
+NIP
+ENDS
+SETGLOB 3
+SETGLOB 2
+
+.macro c4_to_c7_with_init_storage
+PUSHROOT
+CTOS
+SBITS
+GTINT 1
+PUSHCONT {
+	PUSHINT 0
+	PUSHROOT
+	CTOS
+	PLDDICT ; D
+	PUSHINT 64
+	DICTUGET
+	THROWIFNOT 61
+	PLDU 256
+	SETGLOB 2
+	PUSHINT 0 ; timestamp
+	SETGLOB 3
+}
+IFREFELSE {
+	CALL $c4_to_c7$
+}
+
+.macro c7_to_c4
+GETGLOB 3
+GETGLOB 2
+NEWC
+STU 256
+STU 64
+STONE
+ENDC
+POPROOT
+
+.macro upd_only_time_in_c4
+PUSHROOT
+CTOS
+LDU 256
+LDU 64
+NIP
+GETGLOB 3
+ROT
+NEWC
+STU 256
+STU 64
+STSLICE
+ENDC
+POPROOT
+
+.internal-alias :main_internal, 0
+.internal :main_internal
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSH S2
+CTOS
+PLDU 4
+MODPOW2 1
+IFRET
+OVER
+SEMPTY ; isEmpty
+IFJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+OVER
+LDUQ 32  ; [funcId] body' ok
+THROWIFNOT 60
+OVER
+IFNOTJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.internal-alias :main_external, -1
+.internal :main_external
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+OVER
+CALLREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+LDU 1 ; haveSign msgSlice
+SWAP
+PUSHCONT {
+	PUSHPOW2 9
+	LDSLICEX ; signatureSlice msgSlice
+	DUP
+	HASHSU ; signatureSlice msgSlice hashMsgSlice
+	ROT
+	GETGLOB 2
+	CHKSIGNU ; msgSlice isSigned
+	THROWIFNOT 40
+}
+IF
+LDU 64 ; timestamp msgSlice
+SWAP
+CALL $replay_protection_macro$
+LDU 32 ; funcId body
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.macro public_function_selector
+DUP
+PUSHINT 954699887
+EQUAL
+IFJMPREF {
+	CALL $encodeDaoEthereumActionData$
+}
+DUP
+PUSHINT 1756716863
+EQUAL
+IFJMPREF {
+	CALL $constructor$
+}
+DUP
+PUSHINT 1942814062
+EQUAL
+IFJMPREF {
+	CALL $decodeDaoEthereumActionData$
+}
+

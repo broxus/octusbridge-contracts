@@ -1,0 +1,731 @@
+.version sol 0.62.0
+
+.macro constructor
+DROP
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+GETGLOB 6
+THROWIF 51
+ENDS
+ACCEPT
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro encodeEthereumEverscaleEventData
+DROP
+GETGLOB 6
+THROWIFNOT 76
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 9
+OVER
+PUSHCONT {
+	LDU 256
+	LDI 128
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDU 256
+	LDI 128
+}
+IFELSE
+LDU 256
+ENDS
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 0
+CALLREF {
+	CALL $encodeEthereumEverscaleEventData_dc64e6a3_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 3343221618
+	STUR 130
+	STREF
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+PUSHCONT {
+	DROP
+}
+IFELSE
+IFREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	encodeEthereumEverscaleEventData_dc64e6a3_internal
+.type	encodeEthereumEverscaleEventData_dc64e6a3_internal, @function
+CALL $encodeEthereumEverscaleEventData_dc64e6a3_internal_macro$
+
+.macro encodeEthereumEverscaleEventData_dc64e6a3_internal_macro
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 18
+XCHG S2
+NEWC
+STU 256
+STI 128
+STU 256
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 20
+ENDC
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 0
+
+.macro encodeSolanaEverscaleEventData
+DROP
+GETGLOB 6
+THROWIFNOT 76
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 23
+OVER
+PUSHCONT {
+	LDU 256
+	LDU 128
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDU 256
+	LDU 128
+}
+IFELSE
+LDMSGADDR
+ENDS
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 0
+CALLREF {
+	CALL $encodeSolanaEverscaleEventData_9580133b_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 2174084052
+	STUR 130
+	STREF
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+PUSHCONT {
+	DROP
+}
+IFELSE
+IFREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	encodeSolanaEverscaleEventData_9580133b_internal
+.type	encodeSolanaEverscaleEventData_9580133b_internal, @function
+CALL $encodeSolanaEverscaleEventData_9580133b_internal_macro$
+
+.macro encodeSolanaEverscaleEventData_9580133b_internal_macro
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 32
+XCHG S2
+NEWC
+STU 256
+STU 128
+STSLICE
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 34
+ENDC
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 0
+
+.macro decodeEthereumEverscaleEventData
+DROP
+GETGLOB 6
+THROWIFNOT 76
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 37
+LDREF
+ENDS
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 0
+CALLREF {
+	CALL $decodeEthereumEverscaleEventData_6a81a0a4_internal_macro$
+}
+PUSH S3
+PUSHCONT {
+	PUSH S5
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	REVERSE 4, 0
+	NEWC
+	STSLICECONST xd8f3f286
+	STU 128
+	STI 8
+	STU 256
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+PUSHCONT {
+	BLKDROP 3
+}
+IFELSE
+IFREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	decodeEthereumEverscaleEventData_6a81a0a4_internal
+.type	decodeEthereumEverscaleEventData_6a81a0a4_internal, @function
+CALL $decodeEthereumEverscaleEventData_6a81a0a4_internal_macro$
+
+.macro decodeEthereumEverscaleEventData_6a81a0a4_internal_macro
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 44
+CTOS
+LDU 256
+LDI 128
+PLDU 256
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 49
+ROT
+UFITS 128
+ROT
+FITS 8
+ROT
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 0
+
+.macro decodeSolanaEverscaleEventData
+DROP
+GETGLOB 6
+THROWIFNOT 76
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 52
+LDREF
+ENDS
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 0
+CALLREF {
+	CALL $decodeSolanaEverscaleEventData_cca209a1_internal_macro$
+}
+PUSH S3
+PUSHCONT {
+	PUSH S5
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	REVERSE 4, 0
+	NEWC
+	STSLICECONST xff27a5fe
+	STU 256
+	STU 128
+	STSLICE
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+PUSHCONT {
+	BLKDROP 3
+}
+IFELSE
+IFREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	decodeSolanaEverscaleEventData_cca209a1_internal
+.type	decodeSolanaEverscaleEventData_cca209a1_internal, @function
+CALL $decodeSolanaEverscaleEventData_cca209a1_internal_macro$
+
+.macro decodeSolanaEverscaleEventData_cca209a1_internal_macro
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 52
+PUSHINT 0
+DUP
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 59
+ROT
+CTOS
+LDU 256
+LDU 128
+LDMSGADDR
+DROP
+XCHG S2
+POP S4
+POP S2
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 0
+
+.macro encodeEverscaleEthereumEventData
+DROP
+GETGLOB 6
+THROWIFNOT 76
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 66
+OVER
+PUSHCONT {
+	LDI 8
+	LDU 256
+	LDU 128
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDI 8
+	LDU 256
+	LDU 128
+}
+IFELSE
+LDU 160
+LDU 32
+ENDS
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 0
+CALLREF {
+	CALL $encodeEverscaleEthereumEventData_20fa24f8_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 3749888184
+	STUR 130
+	STREF
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+PUSHCONT {
+	DROP
+}
+IFELSE
+IFREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	encodeEverscaleEthereumEventData_20fa24f8_internal
+.type	encodeEverscaleEthereumEventData_20fa24f8_internal, @function
+CALL $encodeEverscaleEthereumEventData_20fa24f8_internal_macro$
+
+.macro encodeEverscaleEthereumEventData_20fa24f8_internal_macro
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 77
+REVERSE 5, 0
+NEWC
+STI 8
+STU 256
+STU 128
+STU 160
+STU 32
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 79
+ENDC
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 0
+
+.macro encodeEverscaleSolanaEventData
+DROP
+GETGLOB 6
+THROWIFNOT 76
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 82
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDU 128
+LDU 256
+ENDS
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 0
+CALLREF {
+	CALL $encodeEverscaleSolanaEventData_09c731cc_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 3658268553
+	STUR 130
+	STREF
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+PUSHCONT {
+	DROP
+}
+IFELSE
+IFREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	encodeEverscaleSolanaEventData_09c731cc_internal
+.type	encodeEverscaleSolanaEventData_09c731cc_internal, @function
+CALL $encodeEverscaleSolanaEventData_09c731cc_internal_macro$
+
+.macro encodeEverscaleSolanaEventData_09c731cc_internal_macro
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 91
+XCHG S2
+NEWC
+STSLICE
+STU 128
+STU 256
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 93
+ENDC
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 0
+
+.macro decodeEverscaleEthereumEventData
+DROP
+GETGLOB 6
+THROWIFNOT 76
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 96
+LDREF
+ENDS
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 0
+CALLREF {
+	CALL $decodeEverscaleEthereumEventData_2df2fb38_internal_macro$
+}
+PUSH S5
+PUSHCONT {
+	PUSH S7
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	REVERSE 6, 0
+	NEWC
+	STSLICECONST xc8fdeaed
+	STI 8
+	STU 256
+	STU 128
+	STU 160
+	STU 32
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+PUSHCONT {
+	BLKDROP 5
+}
+IFELSE
+IFREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	decodeEverscaleEthereumEventData_2df2fb38_internal
+.type	decodeEverscaleEthereumEventData_2df2fb38_internal, @function
+CALL $decodeEverscaleEthereumEventData_2df2fb38_internal_macro$
+
+.macro decodeEverscaleEthereumEventData_2df2fb38_internal_macro
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 96
+PUSHINT 0
+BLKPUSH 3, 0
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 105
+ROLL 4
+CTOS
+LDI 8
+LDU 256
+LDU 128
+LDU 160
+PLDU 32
+REVERSE 5, 0
+POP S8
+POP S6
+POP S4
+POP S2
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 0
+
+.macro decodeEverscaleSolanaEventData
+DROP
+GETGLOB 6
+THROWIFNOT 76
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 114
+LDREF
+ENDS
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 0
+CALLREF {
+	CALL $decodeEverscaleSolanaEventData_fb0cb197_internal_macro$
+}
+PUSH S3
+PUSHCONT {
+	PUSH S5
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	REVERSE 4, 0
+	NEWC
+	STSLICECONST xbb4e083e
+	STSLICE
+	STU 128
+	STU 256
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+PUSHCONT {
+	BLKDROP 3
+}
+IFELSE
+IFREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	decodeEverscaleSolanaEventData_fb0cb197_internal
+.type	decodeEverscaleSolanaEventData_fb0cb197_internal, @function
+CALL $decodeEverscaleSolanaEventData_fb0cb197_internal_macro$
+
+.macro decodeEverscaleSolanaEventData_fb0cb197_internal_macro
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 114
+PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+PUSHINT 0
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 121
+ROT
+CTOS
+LDMSGADDR
+LDU 128
+PLDU 256
+XCHG S2
+POP S4
+POP S2
+.loc ../contracts/utils/cell-encoder/ProxyTokenTransferCellEncoder.tsol, 0
+
+.macro c4_to_c7
+PUSHROOT
+CTOS
+LDU 256 ; pubkey c4
+LDU 64 ; pubkey timestamp c4
+LDU 1 ; ctor flag
+NIP
+ENDS
+SETGLOB 3
+SETGLOB 2
+
+.macro c4_to_c7_with_init_storage
+PUSHROOT
+CTOS
+SBITS
+GTINT 1
+PUSHCONT {
+	PUSHINT 0
+	PUSHROOT
+	CTOS
+	PLDDICT ; D
+	PUSHINT 64
+	DICTUGET
+	THROWIFNOT 61
+	PLDU 256
+	SETGLOB 2
+	PUSHINT 0 ; timestamp
+	SETGLOB 3
+}
+IFREFELSE {
+	CALL $c4_to_c7$
+}
+
+.macro c7_to_c4
+GETGLOB 3
+GETGLOB 2
+NEWC
+STU 256
+STU 64
+STONE
+ENDC
+POPROOT
+
+.macro upd_only_time_in_c4
+PUSHROOT
+CTOS
+LDU 256
+LDU 64
+NIP
+GETGLOB 3
+ROT
+NEWC
+STU 256
+STU 64
+STSLICE
+ENDC
+POPROOT
+
+.internal-alias :main_internal, 0
+.internal :main_internal
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSH S2
+CTOS
+PLDU 4
+MODPOW2 1
+IFRET
+OVER
+SEMPTY ; isEmpty
+IFJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+OVER
+LDUQ 32  ; [funcId] body' ok
+THROWIFNOT 60
+OVER
+IFNOTJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.internal-alias :main_external, -1
+.internal :main_external
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+OVER
+CALLREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+LDU 1 ; haveSign msgSlice
+SWAP
+PUSHCONT {
+	PUSHPOW2 9
+	LDSLICEX ; signatureSlice msgSlice
+	DUP
+	HASHSU ; signatureSlice msgSlice hashMsgSlice
+	ROT
+	GETGLOB 2
+	CHKSIGNU ; msgSlice isSigned
+	THROWIFNOT 40
+}
+IF
+LDU 64 ; timestamp msgSlice
+SWAP
+CALL $replay_protection_macro$
+LDU 32 ; funcId body
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.macro public_function_selector
+DUP
+PUSHINT 1224600301
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 26600404
+	EQUAL
+	IFJMPREF {
+		CALL $encodeSolanaEverscaleEventData$
+	}
+	DUP
+	PUSHINT 994969662
+	EQUAL
+	IFJMPREF {
+		CALL $decodeEverscaleSolanaEventData$
+	}
+	DUP
+	PUSHINT 1195737970
+	EQUAL
+	IFJMPREF {
+		CALL $encodeEthereumEverscaleEventData$
+	}
+	DUP
+	PUSHINT 1224600301
+	EQUAL
+	IFJMPREF {
+		CALL $decodeEverscaleEthereumEventData$
+	}
+}
+DUP
+PUSHINT 1756716863
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 1492382342
+	EQUAL
+	IFJMPREF {
+		CALL $decodeEthereumEverscaleEventData$
+	}
+	DUP
+	PUSHINT 1510784905
+	EQUAL
+	IFJMPREF {
+		CALL $encodeEverscaleSolanaEventData$
+	}
+	DUP
+	PUSHINT 1602404536
+	EQUAL
+	IFJMPREF {
+		CALL $encodeEverscaleEthereumEventData$
+	}
+	DUP
+	PUSHINT 1756716863
+	EQUAL
+	IFJMPREF {
+		CALL $constructor$
+	}
+}
+DUP
+PUSHINT 2133304830
+EQUAL
+IFJMPREF {
+	CALL $decodeSolanaEverscaleEventData$
+}
+
