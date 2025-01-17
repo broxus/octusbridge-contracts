@@ -138,282 +138,578 @@
         "line": 66
       }
     },
-    "0979a9cbb9210034832db4a6f79fbef40c2b7f0445a6557dffea75367ae978d5": {
+    "05ed7f206c23f9e9f6efa1e02f40913b7e4c53a476277be27adbf32e667e7aba": {
       "0": {
-        "filename": "RelayRound.code",
-        "line": 2191
-      },
-      "16": {
-        "filename": "RelayRound.code",
-        "line": 2192
-      },
-      "24": {
-        "filename": "RelayRound.code",
-        "line": 2193
-      },
-      "40": {
-        "filename": "RelayRound.code",
-        "line": 2194
-      },
-      "56": {
-        "filename": "RelayRound.code",
-        "line": 2195
-      },
-      "72": {
-        "filename": "RelayRound.code",
-        "line": 2196
-      },
-      "80": {
-        "filename": "RelayRound.code",
-        "line": 2197
-      },
-      "88": {
-        "filename": "RelayRound.code",
-        "line": 2198
-      },
-      "104": {
-        "filename": "RelayRound.code",
-        "line": 2199
-      },
-      "120": {
-        "filename": "RelayRound.code",
-        "line": 2200
-      },
-      "128": {
-        "filename": "RelayRound.code",
-        "line": 2201
-      },
-      "144": {
-        "filename": "RelayRound.code",
-        "line": 2202
-      },
-      "168": {
-        "filename": "RelayRound.code",
-        "line": 2203
-      },
-      "184": {
-        "filename": "RelayRound.code",
-        "line": 2204
-      },
-      "192": {
-        "filename": "RelayRound.code",
-        "line": 2205
-      },
-      "208": {
-        "filename": "RelayRound.code",
-        "line": 2206
-      },
-      "248": {
-        "filename": "RelayRound.code",
-        "line": 2207
-      },
-      "264": {
-        "filename": "RelayRound.code",
-        "line": 2208
-      },
-      "272": {
-        "filename": "RelayRound.code",
-        "line": 2209
-      },
-      "288": {
-        "filename": "RelayRound.code",
-        "line": 2210
-      },
-      "296": {
-        "filename": "RelayRound.code",
-        "line": 2211
-      },
-      "312": {
-        "filename": "RelayRound.code",
-        "line": 2212
-      },
-      "328": {
-        "filename": "RelayRound.code",
-        "line": 2213
-      },
-      "336": {
-        "filename": "RelayRound.code",
-        "line": 2214
-      },
-      "344": {
-        "filename": "RelayRound.code",
-        "line": 2215
-      },
-      "360": {
-        "filename": "RelayRound.code",
-        "line": 2216
-      },
-      "376": {
-        "filename": "RelayRound.code",
-        "line": 2220
-      },
-      "384": {
-        "filename": "RelayRound.code",
-        "line": 2221
-      },
-      "408": {
-        "filename": "RelayRound.code",
-        "line": 2222
-      },
-      "424": {
-        "filename": "RelayRound.code",
-        "line": 2223
-      },
-      "432": {
-        "filename": "RelayRound.code",
-        "line": 2224
-      },
-      "448": {
-        "filename": "RelayRound.code",
-        "line": 2228
-      },
-      "456": {
-        "filename": "RelayRound.code",
-        "line": 2229
-      },
-      "472": {
-        "filename": "RelayRound.code",
-        "line": 2232
-      }
-    },
-    "1334072557ea09b0ffd056c2641f47ca763663b413ec64b840f14766da29a573": {
-      "0": {
-        "filename": "RelayRound.code",
-        "line": 1585
-      },
-      "8": {
-        "filename": "RelayRound.code",
-        "line": 1586
-      },
-      "24": {
-        "filename": "RelayRound.code",
-        "line": 1587
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 121
       },
       "48": {
-        "filename": "RelayRound.code",
-        "line": 1588
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 121
       },
-      "64": {
-        "filename": "RelayRound.code",
-        "line": 1589
+      "56": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 121
       },
       "72": {
-        "filename": "RelayRound.code",
-        "line": 1590
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 123
       },
       "88": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 250
-      },
-      "96": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 250
+        "line": 123
       },
       "104": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 250
+        "line": 123
       },
-      "112": {
+      "120": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 250
+        "line": 123
       },
       "128": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 250
-      },
-      "136": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 250
+        "line": 123
       },
       "144": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 250
+        "line": 124
       },
       "152": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 250
+        "line": 124
       },
       "160": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 250
-      },
-      "168": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 250
+        "line": 124
       },
       "184": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 250
+        "line": 124
       },
       "192": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 250
+        "line": 124
+      },
+      "240": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 124
+      },
+      "264": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 124
+      },
+      "272": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 124
+      },
+      "288": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 124
+      },
+      "304": {
+        "filename": "RelayRound.code",
+        "line": 836
+      },
+      "312": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 128
+      },
+      "328": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 128
+      },
+      "344": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 135
+      },
+      "360": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "376": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "384": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "408": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "416": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "464": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "488": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "496": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "512": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "520": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "536": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "552": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "560": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "576": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "584": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "600": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "616": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "624": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "640": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "648": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "664": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "680": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "688": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "704": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "712": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "728": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "744": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "752": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      },
+      "768": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 137
+      }
+    },
+    "14bef51ee649404703d4acead36e411ec4d55708c3bf59440dcfe89900f66355": {
+      "0": {
+        "filename": "RelayRound.code",
+        "line": 2236
+      },
+      "16": {
+        "filename": "RelayRound.code",
+        "line": 2237
+      },
+      "24": {
+        "filename": "RelayRound.code",
+        "line": 2238
+      },
+      "40": {
+        "filename": "RelayRound.code",
+        "line": 2239
+      },
+      "56": {
+        "filename": "RelayRound.code",
+        "line": 2240
+      },
+      "72": {
+        "filename": "RelayRound.code",
+        "line": 2241
+      },
+      "80": {
+        "filename": "RelayRound.code",
+        "line": 2244
+      },
+      "96": {
+        "filename": "RelayRound.code",
+        "line": 2245
+      },
+      "104": {
+        "filename": "RelayRound.code",
+        "line": 2246
+      },
+      "120": {
+        "filename": "RelayRound.code",
+        "line": 2249
+      },
+      "136": {
+        "filename": "RelayRound.code",
+        "line": 2250
+      },
+      "144": {
+        "filename": "RelayRound.code",
+        "line": 2251
+      },
+      "152": {
+        "filename": "RelayRound.code",
+        "line": 2252
+      },
+      "168": {
+        "filename": "RelayRound.code",
+        "line": 2253
+      },
+      "184": {
+        "filename": "RelayRound.code",
+        "line": 2254
+      },
+      "192": {
+        "filename": "RelayRound.code",
+        "line": 2255
       },
       "208": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 250
+        "filename": "RelayRound.code",
+        "line": 2256
       },
       "216": {
         "filename": "RelayRound.code",
-        "line": 1610
+        "line": 2257
       },
       "232": {
         "filename": "RelayRound.code",
-        "line": 1613
+        "line": 2258
       },
-      "240": {
+      "248": {
         "filename": "RelayRound.code",
-        "line": 1614
+        "line": 2259
       },
-      "256": {
+      "264": {
         "filename": "RelayRound.code",
-        "line": 1617
+        "line": 2261
+      },
+      "272": {
+        "filename": "RelayRound.code",
+        "line": 2262
+      },
+      "288": {
+        "filename": "RelayRound.code",
+        "line": 2263
+      },
+      "296": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "312": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "320": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "328": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "344": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "352": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "368": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "392": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "400": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "440": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "448": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "456": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "472": {
+        "filename": "stdlib.sol",
+        "line": 63
+      },
+      "488": {
+        "filename": "RelayRound.code",
+        "line": 2265
+      },
+      "504": {
+        "filename": "RelayRound.code",
+        "line": 2266
+      },
+      "512": {
+        "filename": "RelayRound.code",
+        "line": 2267
+      },
+      "528": {
+        "filename": "RelayRound.code",
+        "line": 2270
       }
     },
-    "1d8b5ecd9f38afddedee72465687d1bd3fcd303f3d5dc6f118e83ee9adac9013": {
+    "1741fbefbed98236d8cc7a58d52072b0e0cb357a3ee25f36cdceaf3bab702ff2": {
       "0": {
-        "filename": "<entry-selector>",
-        "line": 1
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
       },
       "8": {
-        "filename": "<entry-selector>",
-        "line": 2
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
       },
       "24": {
-        "filename": "<entry-selector>",
-        "line": 3
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
       },
       "32": {
-        "filename": "<entry-selector>",
-        "line": 4
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
       },
       "48": {
-        "filename": "<entry-selector>",
-        "line": 5
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
       },
       "56": {
-        "filename": "<entry-selector>",
-        "line": 6
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
       },
       "72": {
-        "filename": "<entry-selector>",
-        "line": 7
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
       },
-      "88": {
-        "filename": "<entry-selector>",
-        "line": 8
+      "80": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
       },
       "96": {
-        "filename": "<entry-selector>",
-        "line": 9
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
       },
-      "112": {
-        "filename": "<entry-selector>",
-        "line": 10
+      "104": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "120": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
       },
       "128": {
-        "filename": "<entry-selector>",
-        "line": 11
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "144": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "152": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "168": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "176": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "192": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "200": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "216": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "224": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "240": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "248": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "264": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "272": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "288": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "296": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "304": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "320": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "336": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "344": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "352": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "368": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "384": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "392": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "400": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "416": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "432": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "440": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "448": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "464": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "480": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "488": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "504": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "512": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "528": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "536": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "552": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "560": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "576": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "584": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "600": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "608": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
       }
     },
     "227370c402731a631d8a588e4b148e3501ba1e40863485c0cbbefcd51badefea": {
@@ -1284,7 +1580,239 @@
         "line": 956
       }
     },
-    "4b0a6dcb3f8ff46da71cc353f36a77d4afb40ae717082cee51695f414940e5a4": {
+    "3e9211e32fa424aac633b0b2c3b39d4e3cea812dd8e5bde9d0eb61e242c6f410": {
+      "0": {
+        "filename": "<entry-selector>",
+        "line": 1
+      },
+      "8": {
+        "filename": "<entry-selector>",
+        "line": 2
+      },
+      "24": {
+        "filename": "<entry-selector>",
+        "line": 3
+      },
+      "32": {
+        "filename": "<entry-selector>",
+        "line": 4
+      },
+      "48": {
+        "filename": "<entry-selector>",
+        "line": 5
+      },
+      "56": {
+        "filename": "<entry-selector>",
+        "line": 6
+      },
+      "72": {
+        "filename": "<entry-selector>",
+        "line": 7
+      },
+      "88": {
+        "filename": "<entry-selector>",
+        "line": 8
+      },
+      "96": {
+        "filename": "<entry-selector>",
+        "line": 9
+      },
+      "112": {
+        "filename": "<entry-selector>",
+        "line": 10
+      },
+      "128": {
+        "filename": "<entry-selector>",
+        "line": 11
+      }
+    },
+    "4dc6e4bdb2094885e4fe87133b6802a759e08e74181a00114e228d67b52f4924": {
+      "0": {
+        "filename": "RelayRound.code",
+        "line": 292
+      },
+      "8": {
+        "filename": "RelayRound.code",
+        "line": 293
+      },
+      "24": {
+        "filename": "RelayRound.code",
+        "line": 294
+      },
+      "48": {
+        "filename": "RelayRound.code",
+        "line": 295
+      },
+      "64": {
+        "filename": "RelayRound.code",
+        "line": 296
+      },
+      "72": {
+        "filename": "RelayRound.code",
+        "line": 297
+      },
+      "88": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 69
+      },
+      "104": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 69
+      },
+      "120": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 69
+      },
+      "128": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 69
+      },
+      "144": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 69
+      },
+      "160": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 69
+      },
+      "168": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 69
+      },
+      "176": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 69
+      },
+      "184": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 69
+      },
+      "192": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 69
+      },
+      "200": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 69
+      },
+      "208": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 69
+      },
+      "224": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 69
+      },
+      "232": {
+        "filename": "RelayRound.code",
+        "line": 316
+      },
+      "248": {
+        "filename": "RelayRound.code",
+        "line": 319
+      },
+      "256": {
+        "filename": "RelayRound.code",
+        "line": 320
+      },
+      "272": {
+        "filename": "RelayRound.code",
+        "line": 321
+      },
+      "280": {
+        "filename": "RelayRound.code",
+        "line": 322
+      },
+      "288": {
+        "filename": "RelayRound.code",
+        "line": 323
+      },
+      "304": {
+        "filename": "RelayRound.code",
+        "line": 324
+      },
+      "320": {
+        "filename": "RelayRound.code",
+        "line": 325
+      },
+      "328": {
+        "filename": "RelayRound.code",
+        "line": 326
+      },
+      "336": {
+        "filename": "RelayRound.code",
+        "line": 327
+      },
+      "344": {
+        "filename": "RelayRound.code",
+        "line": 328
+      },
+      "368": {
+        "filename": "RelayRound.code",
+        "line": 329
+      },
+      "376": {
+        "filename": "RelayRound.code",
+        "line": 330
+      },
+      "384": {
+        "filename": "RelayRound.code",
+        "line": 331
+      },
+      "408": {
+        "filename": "RelayRound.code",
+        "line": 332
+      },
+      "424": {
+        "filename": "RelayRound.code",
+        "line": 333
+      },
+      "432": {
+        "filename": "RelayRound.code",
+        "line": 334
+      },
+      "480": {
+        "filename": "RelayRound.code",
+        "line": 335
+      },
+      "496": {
+        "filename": "RelayRound.code",
+        "line": 336
+      },
+      "512": {
+        "filename": "RelayRound.code",
+        "line": 337
+      },
+      "520": {
+        "filename": "RelayRound.code",
+        "line": 338
+      },
+      "528": {
+        "filename": "RelayRound.code",
+        "line": 339
+      },
+      "536": {
+        "filename": "RelayRound.code",
+        "line": 340
+      },
+      "552": {
+        "filename": "RelayRound.code",
+        "line": 341
+      },
+      "560": {
+        "filename": "RelayRound.code",
+        "line": 342
+      },
+      "568": {
+        "filename": "RelayRound.code",
+        "line": 343
+      },
+      "576": {
+        "filename": "RelayRound.code",
+        "line": 344
+      }
+    },
+    "4dca525aac8f83332d427ffd8a66038a274ea160ceb4e442edd4a2f10f688085": {
       "0": {
         "filename": "../contracts/staking/RelayRound.tsol",
         "line": 77
@@ -1530,190 +2058,82 @@
         "line": 86
       }
     },
-    "4dc6e4bdb2094885e4fe87133b6802a759e08e74181a00114e228d67b52f4924": {
+    "4e5c0ea6d55f64a9336a16bac408b50d87ca70b31bf7dc66d3be5f9dc9b803b5": {
       "0": {
         "filename": "RelayRound.code",
-        "line": 292
+        "line": 447
       },
       "8": {
         "filename": "RelayRound.code",
-        "line": 293
+        "line": 448
       },
       "24": {
         "filename": "RelayRound.code",
-        "line": 294
+        "line": 449
       },
       "48": {
         "filename": "RelayRound.code",
-        "line": 295
+        "line": 450
       },
       "64": {
         "filename": "RelayRound.code",
-        "line": 296
+        "line": 451
       },
       "72": {
         "filename": "RelayRound.code",
-        "line": 297
+        "line": 452
       },
       "88": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 69
+        "line": 77
+      },
+      "96": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 77
       },
       "104": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 69
+        "line": 77
+      },
+      "112": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 77
       },
       "120": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 69
+        "line": 77
       },
       "128": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 69
+        "line": 77
       },
-      "144": {
+      "136": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 69
+        "line": 77
       },
-      "160": {
+      "152": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 69
+        "line": 77
       },
       "168": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 69
+        "line": 77
       },
       "176": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 69
-      },
-      "184": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 69
+        "filename": "RelayRound.code",
+        "line": 467
       },
       "192": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 69
+        "filename": "RelayRound.code",
+        "line": 470
       },
       "200": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 69
-      },
-      "208": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 69
-      },
-      "224": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 69
-      },
-      "232": {
         "filename": "RelayRound.code",
-        "line": 316
+        "line": 471
       },
-      "248": {
+      "216": {
         "filename": "RelayRound.code",
-        "line": 319
-      },
-      "256": {
-        "filename": "RelayRound.code",
-        "line": 320
-      },
-      "272": {
-        "filename": "RelayRound.code",
-        "line": 321
-      },
-      "280": {
-        "filename": "RelayRound.code",
-        "line": 322
-      },
-      "288": {
-        "filename": "RelayRound.code",
-        "line": 323
-      },
-      "304": {
-        "filename": "RelayRound.code",
-        "line": 324
-      },
-      "320": {
-        "filename": "RelayRound.code",
-        "line": 325
-      },
-      "328": {
-        "filename": "RelayRound.code",
-        "line": 326
-      },
-      "336": {
-        "filename": "RelayRound.code",
-        "line": 327
-      },
-      "344": {
-        "filename": "RelayRound.code",
-        "line": 328
-      },
-      "368": {
-        "filename": "RelayRound.code",
-        "line": 329
-      },
-      "376": {
-        "filename": "RelayRound.code",
-        "line": 330
-      },
-      "384": {
-        "filename": "RelayRound.code",
-        "line": 331
-      },
-      "408": {
-        "filename": "RelayRound.code",
-        "line": 332
-      },
-      "424": {
-        "filename": "RelayRound.code",
-        "line": 333
-      },
-      "432": {
-        "filename": "RelayRound.code",
-        "line": 334
-      },
-      "480": {
-        "filename": "RelayRound.code",
-        "line": 335
-      },
-      "496": {
-        "filename": "RelayRound.code",
-        "line": 336
-      },
-      "512": {
-        "filename": "RelayRound.code",
-        "line": 337
-      },
-      "520": {
-        "filename": "RelayRound.code",
-        "line": 338
-      },
-      "528": {
-        "filename": "RelayRound.code",
-        "line": 339
-      },
-      "536": {
-        "filename": "RelayRound.code",
-        "line": 340
-      },
-      "552": {
-        "filename": "RelayRound.code",
-        "line": 341
-      },
-      "560": {
-        "filename": "RelayRound.code",
-        "line": 342
-      },
-      "568": {
-        "filename": "RelayRound.code",
-        "line": 343
-      },
-      "576": {
-        "filename": "RelayRound.code",
-        "line": 344
+        "line": 474
       }
     },
     "513e1bac8c68a128a628580680417c72a97250ab8ca4ce56efe85c9e84ee5813": {
@@ -2100,40 +2520,6 @@
         "line": 2310
       }
     },
-    "53c30eb2b04b29f0fc506c0f447de47673c371ab35c7c48977d118abe81b3ed4": {
-      "0": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 396
-      },
-      "24": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 396
-      },
-      "40": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 396
-      },
-      "56": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 396
-      },
-      "72": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 396
-      },
-      "88": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 396
-      },
-      "104": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 397
-      },
-      "120": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 120
-      }
-    },
     "54a1241f4a6ecd5ce693198997ea10f0b4bb145b4b4a3ab8fe6cf92a7b2eb5aa": {
       "0": {
         "filename": "../contracts/staking/RelayRound.tsol",
@@ -2268,6 +2654,72 @@
       "168": {
         "filename": "../contracts/staking/RelayRound.tsol",
         "line": 167
+      }
+    },
+    "5585d45b3412ed9bc66668aed90b28e1c76b91c638c8f55d7e73444fc01290cc": {
+      "0": {
+        "filename": "RelayRound.code",
+        "line": 2499
+      },
+      "8": {
+        "filename": "RelayRound.code",
+        "line": 2500
+      },
+      "56": {
+        "filename": "RelayRound.code",
+        "line": 2501
+      },
+      "64": {
+        "filename": "RelayRound.code",
+        "line": 2502
+      },
+      "80": {
+        "filename": "RelayRound.code",
+        "line": 2505
+      },
+      "88": {
+        "filename": "RelayRound.code",
+        "line": 2506
+      },
+      "136": {
+        "filename": "RelayRound.code",
+        "line": 2507
+      },
+      "144": {
+        "filename": "RelayRound.code",
+        "line": 2508
+      },
+      "160": {
+        "filename": "RelayRound.code",
+        "line": 2511
+      },
+      "168": {
+        "filename": "RelayRound.code",
+        "line": 2512
+      },
+      "216": {
+        "filename": "RelayRound.code",
+        "line": 2513
+      },
+      "224": {
+        "filename": "RelayRound.code",
+        "line": 2514
+      },
+      "240": {
+        "filename": "RelayRound.code",
+        "line": 2517
+      },
+      "248": {
+        "filename": "RelayRound.code",
+        "line": 2518
+      },
+      "296": {
+        "filename": "RelayRound.code",
+        "line": 2519
+      },
+      "304": {
+        "filename": "RelayRound.code",
+        "line": 2520
       }
     },
     "5c740b5b470e41410889aeba958ba90ccdd3b433adab3f78bfc369a18079bf23": {
@@ -2564,84 +3016,6 @@
         "line": 1939
       }
     },
-    "5c89a95ad60b3133cab5ddf8c72674e7437d697078786806b553b617a9bcdc41": {
-      "0": {
-        "filename": "RelayRound.code",
-        "line": 447
-      },
-      "8": {
-        "filename": "RelayRound.code",
-        "line": 448
-      },
-      "24": {
-        "filename": "RelayRound.code",
-        "line": 449
-      },
-      "48": {
-        "filename": "RelayRound.code",
-        "line": 450
-      },
-      "64": {
-        "filename": "RelayRound.code",
-        "line": 451
-      },
-      "72": {
-        "filename": "RelayRound.code",
-        "line": 452
-      },
-      "88": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 77
-      },
-      "96": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 77
-      },
-      "104": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 77
-      },
-      "112": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 77
-      },
-      "120": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 77
-      },
-      "128": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 77
-      },
-      "136": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 77
-      },
-      "152": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 77
-      },
-      "168": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 77
-      },
-      "176": {
-        "filename": "RelayRound.code",
-        "line": 467
-      },
-      "192": {
-        "filename": "RelayRound.code",
-        "line": 470
-      },
-      "200": {
-        "filename": "RelayRound.code",
-        "line": 471
-      },
-      "216": {
-        "filename": "RelayRound.code",
-        "line": 474
-      }
-    },
     "5cf4d181b41e567250478f1283647fa7f43518bb76e2f036e3e1f3d3c492f1c0": {
       "0": {
         "filename": "RelayRound.code",
@@ -2812,113 +3186,303 @@
         "line": 2099
       }
     },
-    "6107597cfdd1eed7e72fd7d2c45d355cdde9de1759eb5d56d4d2a3b380708c50": {
-      "0": {
-        "filename": "RelayRound.code",
-        "line": 2433
-      },
-      "8": {
-        "filename": "RelayRound.code",
-        "line": 2434
-      },
-      "56": {
-        "filename": "RelayRound.code",
-        "line": 2435
-      },
-      "64": {
-        "filename": "RelayRound.code",
-        "line": 2436
-      },
-      "80": {
-        "filename": "RelayRound.code",
-        "line": 2554
-      },
-      "88": {
-        "filename": "RelayRound.code",
-        "line": 2555
-      },
-      "136": {
-        "filename": "RelayRound.code",
-        "line": 2556
-      },
-      "144": {
-        "filename": "RelayRound.code",
-        "line": 2557
-      }
-    },
     "61ab4641fa30d9310391025086eec65d200d79268e1b7cd402565e01ba64be3c": {
       "0": {
-        "filename": "RelayRound.code",
-        "line": 2242
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 103
       }
     },
-    "6b0e4e2b078f48f2ae945a6a691ee1fff71bd6cdebf3c04168a5352889c52584": {
-      "0": {
-        "filename": "RelayRound.code",
-        "line": 2499
+    "6431194c375148023cec6fb6fb96063716a3ee0321e4c359dfc829ea70df395a": {
+      "40": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 209
       },
-      "8": {
-        "filename": "RelayRound.code",
-        "line": 2500
+      "48": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 210
       },
       "56": {
-        "filename": "RelayRound.code",
-        "line": 2501
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 210
       },
-      "64": {
-        "filename": "RelayRound.code",
-        "line": 2502
-      },
-      "80": {
-        "filename": "RelayRound.code",
-        "line": 2505
+      "72": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 210
       },
       "88": {
-        "filename": "RelayRound.code",
-        "line": 2506
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 210
+      },
+      "104": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 210
+      },
+      "112": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 210
+      },
+      "120": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 212
+      },
+      "128": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 212
       },
       "136": {
-        "filename": "RelayRound.code",
-        "line": 2507
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 212
       },
       "144": {
-        "filename": "RelayRound.code",
-        "line": 2508
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 214
+      },
+      "152": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 214
       },
       "160": {
-        "filename": "RelayRound.code",
-        "line": 2511
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 214
       },
       "168": {
-        "filename": "RelayRound.code",
-        "line": 2512
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 214
+      },
+      "176": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 215
+      },
+      "200": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 217
       },
       "216": {
-        "filename": "RelayRound.code",
-        "line": 2513
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 217
       },
       "224": {
-        "filename": "RelayRound.code",
-        "line": 2514
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 217
+      },
+      "232": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 218
       },
       "240": {
-        "filename": "RelayRound.code",
-        "line": 2517
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 218
       },
-      "248": {
-        "filename": "RelayRound.code",
-        "line": 2518
+      "256": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 218
+      },
+      "272": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 218
+      },
+      "280": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 220
+      },
+      "288": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 220
       },
       "296": {
-        "filename": "RelayRound.code",
-        "line": 2519
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 220
       },
-      "304": {
+      "312": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 239
+      },
+      "328": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 242
+      },
+      "376": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 242
+      },
+      "384": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 242
+      },
+      "400": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "416": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "432": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "448": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "464": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "480": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "496": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "512": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "528": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "544": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "560": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "576": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "584": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "608": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "616": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "624": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "648": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "664": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "672": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "720": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "736": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "752": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "768": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "784": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "800": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "816": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "832": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "840": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "856": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "864": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "880": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "896": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "904": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "920": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "928": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "944": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "960": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "968": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "976": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "984": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "1000": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 244
+      },
+      "1016": {
         "filename": "RelayRound.code",
-        "line": 2520
+        "line": 1577
+      },
+      "1032": {
+        "filename": "RelayRound.code",
+        "line": 1578
       }
     },
-    "6d3c0d4d5dbc4b1d669a0623e94cec7aa90913498e67774fdceed5b3be7453d4": {
+    "6beeeed704f87cd123f1024de5663ea639b2e7832c6c05f5c9b064545f2551d7": {
       "0": {
         "filename": "<internal-selector>",
         "line": 1
@@ -2926,6 +3490,72 @@
       "24": {
         "filename": "<internal-selector>",
         "line": 2
+      }
+    },
+    "6cc808a6ca4fe3cb7acc07c135cec6523bbdf89a214f1309e7a4c46c2a60da9f": {
+      "0": {
+        "filename": "RelayRound.code",
+        "line": 2441
+      },
+      "8": {
+        "filename": "RelayRound.code",
+        "line": 2442
+      },
+      "56": {
+        "filename": "RelayRound.code",
+        "line": 2443
+      },
+      "64": {
+        "filename": "RelayRound.code",
+        "line": 2444
+      },
+      "80": {
+        "filename": "RelayRound.code",
+        "line": 2447
+      },
+      "88": {
+        "filename": "RelayRound.code",
+        "line": 2448
+      },
+      "136": {
+        "filename": "RelayRound.code",
+        "line": 2449
+      },
+      "144": {
+        "filename": "RelayRound.code",
+        "line": 2450
+      },
+      "160": {
+        "filename": "RelayRound.code",
+        "line": 2453
+      },
+      "168": {
+        "filename": "RelayRound.code",
+        "line": 2454
+      },
+      "216": {
+        "filename": "RelayRound.code",
+        "line": 2455
+      },
+      "224": {
+        "filename": "RelayRound.code",
+        "line": 2456
+      },
+      "240": {
+        "filename": "RelayRound.code",
+        "line": 2459
+      },
+      "248": {
+        "filename": "RelayRound.code",
+        "line": 2460
+      },
+      "296": {
+        "filename": "RelayRound.code",
+        "line": 2461
+      },
+      "304": {
+        "filename": "RelayRound.code",
+        "line": 2462
       }
     },
     "77276ef1a962442eeb7db790f6d92ffc6428bb54f2e19894f5074716ad3dbc6f": {
@@ -3170,166 +3800,70 @@
         "line": 292
       }
     },
-    "795499d8bdcf37dd607b7fd833bb8e5151cdd6655ef131696509b3c43bdc6146": {
+    "792b3491e68f38658760d7d9851f84ae5fe13ded0c2ea99f55c1799f70da9981": {
       "0": {
         "filename": "RelayRound.code",
-        "line": 2236
+        "line": 2470
       },
-      "16": {
+      "8": {
         "filename": "RelayRound.code",
-        "line": 2237
-      },
-      "24": {
-        "filename": "RelayRound.code",
-        "line": 2238
-      },
-      "40": {
-        "filename": "RelayRound.code",
-        "line": 2239
+        "line": 2471
       },
       "56": {
         "filename": "RelayRound.code",
-        "line": 2240
+        "line": 2472
       },
-      "72": {
+      "64": {
         "filename": "RelayRound.code",
-        "line": 2241
+        "line": 2473
       },
       "80": {
         "filename": "RelayRound.code",
-        "line": 2244
+        "line": 2476
       },
-      "96": {
+      "88": {
         "filename": "RelayRound.code",
-        "line": 2245
-      },
-      "104": {
-        "filename": "RelayRound.code",
-        "line": 2246
-      },
-      "120": {
-        "filename": "RelayRound.code",
-        "line": 2249
+        "line": 2477
       },
       "136": {
         "filename": "RelayRound.code",
-        "line": 2250
+        "line": 2478
       },
       "144": {
         "filename": "RelayRound.code",
-        "line": 2251
+        "line": 2479
       },
-      "152": {
+      "160": {
         "filename": "RelayRound.code",
-        "line": 2252
+        "line": 2482
       },
       "168": {
         "filename": "RelayRound.code",
-        "line": 2253
-      },
-      "184": {
-        "filename": "RelayRound.code",
-        "line": 2254
-      },
-      "192": {
-        "filename": "RelayRound.code",
-        "line": 2255
-      },
-      "208": {
-        "filename": "RelayRound.code",
-        "line": 2256
+        "line": 2483
       },
       "216": {
         "filename": "RelayRound.code",
-        "line": 2257
+        "line": 2484
       },
-      "232": {
+      "224": {
         "filename": "RelayRound.code",
-        "line": 2258
+        "line": 2485
+      },
+      "240": {
+        "filename": "RelayRound.code",
+        "line": 2488
       },
       "248": {
         "filename": "RelayRound.code",
-        "line": 2259
-      },
-      "264": {
-        "filename": "RelayRound.code",
-        "line": 2261
-      },
-      "272": {
-        "filename": "RelayRound.code",
-        "line": 2262
-      },
-      "288": {
-        "filename": "RelayRound.code",
-        "line": 2263
+        "line": 2489
       },
       "296": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "312": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "320": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "328": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "344": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "352": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "368": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "392": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "400": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "440": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "448": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "456": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "472": {
-        "filename": "stdlib.sol",
-        "line": 63
-      },
-      "488": {
         "filename": "RelayRound.code",
-        "line": 2265
+        "line": 2490
       },
-      "504": {
+      "304": {
         "filename": "RelayRound.code",
-        "line": 2266
-      },
-      "512": {
-        "filename": "RelayRound.code",
-        "line": 2267
-      },
-      "528": {
-        "filename": "RelayRound.code",
-        "line": 2270
+        "line": 2491
       }
     },
     "7a99194996556db5e8a96ddb79b1861a6b86f81e5adeb26f11347b4e83017d42": {
@@ -3456,7 +3990,53 @@
         "line": 2370
       }
     },
-    "91a012023ed6dfe4b292a8b72f7c67a8f52955d1ce5fab610a60ce1a14fd287f": {
+    "8545106bee7a49c5c464e3a21977b1c8f312191f185cd59af7b27403627fd11a": {
+      "0": {
+        "filename": "RelayRound.code",
+        "line": 976
+      },
+      "8": {
+        "filename": "RelayRound.code",
+        "line": 977
+      },
+      "24": {
+        "filename": "RelayRound.code",
+        "line": 978
+      },
+      "48": {
+        "filename": "RelayRound.code",
+        "line": 979
+      },
+      "64": {
+        "filename": "RelayRound.code",
+        "line": 980
+      },
+      "72": {
+        "filename": "RelayRound.code",
+        "line": 981
+      },
+      "88": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 146
+      },
+      "96": {
+        "filename": "RelayRound.code",
+        "line": 987
+      },
+      "112": {
+        "filename": "RelayRound.code",
+        "line": 990
+      },
+      "120": {
+        "filename": "RelayRound.code",
+        "line": 991
+      },
+      "136": {
+        "filename": "RelayRound.code",
+        "line": 994
+      }
+    },
+    "884902b418b18e7d39df79c392ebeabedfeb6cb7c6255a775acf9d605fc34638": {
       "0": {
         "filename": "../contracts/staking/RelayRound.tsol",
         "line": 147
@@ -3540,6 +4120,74 @@
       "336": {
         "filename": "../contracts/staking/RelayRound.tsol",
         "line": 153
+      }
+    },
+    "8b241d4d9fdaf976cda8aeb77ad2a06491bb8a79e1e32050fe52d810685db9fe": {
+      "0": {
+        "filename": "RelayRound.code",
+        "line": 2433
+      },
+      "8": {
+        "filename": "RelayRound.code",
+        "line": 2434
+      },
+      "56": {
+        "filename": "RelayRound.code",
+        "line": 2435
+      },
+      "64": {
+        "filename": "RelayRound.code",
+        "line": 2436
+      },
+      "80": {
+        "filename": "RelayRound.code",
+        "line": 2554
+      },
+      "88": {
+        "filename": "RelayRound.code",
+        "line": 2555
+      },
+      "136": {
+        "filename": "RelayRound.code",
+        "line": 2556
+      },
+      "144": {
+        "filename": "RelayRound.code",
+        "line": 2557
+      }
+    },
+    "911bc07bf02e3f46f9ddb45c99182ade89b12426a636bcf6917232e85d66bd9f": {
+      "0": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 396
+      },
+      "24": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 396
+      },
+      "40": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 396
+      },
+      "56": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 396
+      },
+      "72": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 396
+      },
+      "88": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 396
+      },
+      "104": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 397
+      },
+      "120": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 120
       }
     },
     "91ac529f99eed36c3b2e20a72293ae85c1bee169d7320644995279801f0bfd36": {
@@ -4243,70 +4891,106 @@
         "line": 54
       }
     },
-    "a2f19e4728f1b2847fee378a50d280621269a00535faae59d0d6d2d697a33ebd": {
+    "9cc4be9b30f21a9c621046da0f33b4783605da22b8e43c3aa422109457ac2b10": {
       "0": {
-        "filename": "RelayRound.code",
-        "line": 2528
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 396
       },
-      "8": {
-        "filename": "RelayRound.code",
-        "line": 2529
+      "24": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 396
+      },
+      "40": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 396
       },
       "56": {
-        "filename": "RelayRound.code",
-        "line": 2530
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 396
       },
-      "64": {
-        "filename": "RelayRound.code",
-        "line": 2531
-      },
-      "80": {
-        "filename": "RelayRound.code",
-        "line": 2534
+      "72": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 396
       },
       "88": {
-        "filename": "RelayRound.code",
-        "line": 2535
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 396
+      },
+      "104": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 251
+      },
+      "112": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 251
+      },
+      "128": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 251
       },
       "136": {
-        "filename": "RelayRound.code",
-        "line": 2536
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 251
       },
-      "144": {
-        "filename": "RelayRound.code",
-        "line": 2537
+      "152": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 252
       },
-      "160": {
-        "filename": "RelayRound.code",
-        "line": 2540
+      "200": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 252
       },
-      "168": {
-        "filename": "RelayRound.code",
-        "line": 2541
-      },
-      "216": {
-        "filename": "RelayRound.code",
-        "line": 2542
+      "208": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 252
       },
       "224": {
-        "filename": "RelayRound.code",
-        "line": 2543
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 253
+      },
+      "232": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 253
       },
       "240": {
-        "filename": "RelayRound.code",
-        "line": 2546
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 253
       },
-      "248": {
-        "filename": "RelayRound.code",
-        "line": 2547
+      "264": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 253
       },
-      "296": {
-        "filename": "RelayRound.code",
-        "line": 2548
+      "272": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 253
+      },
+      "288": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 253
       },
       "304": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 253
+      },
+      "312": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 253
+      },
+      "328": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 253
+      },
+      "344": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 253
+      },
+      "360": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 314
+      },
+      "368": {
         "filename": "RelayRound.code",
-        "line": 2549
+        "line": 1793
       }
     },
     "a3bc39a374529a8e9152d3f1387c41d53ecda8cd8d23f07823bfa4bf1a0183ee": {
@@ -4485,216 +5169,6 @@
       "592": {
         "filename": "../contracts/staking/RelayRound.tsol",
         "line": 314
-      }
-    },
-    "a53cbdb5a23afb06cd639270ff9aa2ffcf388098ada34d10da4268d5b6a3f681": {
-      "0": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "8": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "24": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "32": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "48": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "56": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "72": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "80": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "96": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "104": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "120": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "128": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "144": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "152": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "168": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "176": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "192": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "200": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "216": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "224": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "240": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "248": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "264": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "272": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "288": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "296": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "304": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "320": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "336": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "344": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "352": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "368": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "384": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "392": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "400": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "416": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "432": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "440": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "448": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "464": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "480": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "488": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "504": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "512": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "528": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "536": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "552": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "560": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "576": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "584": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "600": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "608": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
       }
     },
     "a73c1e1cd11221cf8717624c85200c52d4d132e5259f4565d5896f726e321e0e": {
@@ -5233,52 +5707,6 @@
         "line": 2045
       }
     },
-    "ab511175bfc95133108c00b5a5bf5f65f1df0102f6c017d8b332394941eb242f": {
-      "0": {
-        "filename": "RelayRound.code",
-        "line": 976
-      },
-      "8": {
-        "filename": "RelayRound.code",
-        "line": 977
-      },
-      "24": {
-        "filename": "RelayRound.code",
-        "line": 978
-      },
-      "48": {
-        "filename": "RelayRound.code",
-        "line": 979
-      },
-      "64": {
-        "filename": "RelayRound.code",
-        "line": 980
-      },
-      "72": {
-        "filename": "RelayRound.code",
-        "line": 981
-      },
-      "88": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 146
-      },
-      "96": {
-        "filename": "RelayRound.code",
-        "line": 987
-      },
-      "112": {
-        "filename": "RelayRound.code",
-        "line": 990
-      },
-      "120": {
-        "filename": "RelayRound.code",
-        "line": 991
-      },
-      "136": {
-        "filename": "RelayRound.code",
-        "line": 994
-      }
-    },
     "af88e52cf2165d030fe87cd634fc815a994ba0a1047fb79f115a2641267c6bc3": {
       "0": {
         "filename": "../contracts/staking/RelayRound.tsol",
@@ -5293,206 +5721,332 @@
         "line": 379
       }
     },
-    "b11c8ffd4b4bd5bad556c03eda7bef727ddd4868cf40d5b631623d65ba2ca766": {
+    "b1c75c6892325989006373701a3dde7160b1eebd2989e58932616738d9d6b26b": {
       "0": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 121
+        "filename": "RelayRound.code",
+        "line": 1585
+      },
+      "8": {
+        "filename": "RelayRound.code",
+        "line": 1586
+      },
+      "24": {
+        "filename": "RelayRound.code",
+        "line": 1587
       },
       "48": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 121
+        "filename": "RelayRound.code",
+        "line": 1588
       },
-      "56": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 121
+      "64": {
+        "filename": "RelayRound.code",
+        "line": 1589
       },
       "72": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 123
+        "filename": "RelayRound.code",
+        "line": 1590
       },
       "88": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 123
+        "line": 250
+      },
+      "96": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 250
       },
       "104": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 123
+        "line": 250
       },
-      "120": {
+      "112": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 123
+        "line": 250
       },
       "128": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 123
+        "line": 250
+      },
+      "136": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 250
       },
       "144": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 124
+        "line": 250
       },
       "152": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 124
+        "line": 250
       },
       "160": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 124
+        "line": 250
+      },
+      "168": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 250
       },
       "184": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 124
+        "line": 250
       },
       "192": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 124
+        "line": 250
+      },
+      "208": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 250
+      },
+      "216": {
+        "filename": "RelayRound.code",
+        "line": 1610
+      },
+      "232": {
+        "filename": "RelayRound.code",
+        "line": 1613
       },
       "240": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 124
+        "filename": "RelayRound.code",
+        "line": 1614
       },
-      "264": {
+      "256": {
+        "filename": "RelayRound.code",
+        "line": 1617
+      }
+    },
+    "b43ac99c786676525749cabfbbbde8a4d6bedadbf20770621fc75f5d573e95f2": {
+      "0": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 124
+        "line": 221
+      },
+      "8": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "24": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 221
+      },
+      "40": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 222
+      },
+      "88": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 222
+      },
+      "96": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 222
+      },
+      "112": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 224
+      },
+      "120": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 224
+      },
+      "136": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 224
+      },
+      "152": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 225
+      },
+      "160": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 225
+      },
+      "176": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 226
+      },
+      "184": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 226
+      },
+      "200": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 227
+      },
+      "208": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 227
+      },
+      "224": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 229
+      },
+      "232": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 229
+      },
+      "248": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 229
+      },
+      "256": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 229
       },
       "272": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 124
+        "line": 230
       },
-      "288": {
+      "280": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 124
+        "line": 230
+      },
+      "296": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 230
       },
       "304": {
-        "filename": "RelayRound.code",
-        "line": 836
-      },
-      "312": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 128
+        "line": 230
+      },
+      "320": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 232
       },
       "328": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 128
+        "line": 232
       },
       "344": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 135
+        "line": 232
       },
-      "360": {
+      "352": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
+        "line": 232
+      },
+      "368": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 233
       },
       "376": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
+        "line": 233
       },
-      "384": {
+      "392": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
+        "line": 233
       },
-      "408": {
+      "400": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
+        "line": 233
       },
       "416": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
+        "line": 234
+      },
+      "424": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 234
+      },
+      "440": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 234
+      },
+      "448": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 234
       },
       "464": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
+        "line": 235
+      },
+      "472": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 235
       },
       "488": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
+        "line": 235
       },
       "496": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
+        "line": 235
       },
       "512": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
+        "line": 236
       },
       "520": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
+        "line": 236
       },
       "536": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
+        "line": 236
       },
-      "552": {
+      "544": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
+        "line": 236
       },
       "560": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
+        "line": 237
       },
-      "576": {
+      "568": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
+        "line": 237
       },
       "584": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
+        "line": 237
       },
-      "600": {
+      "592": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
+        "line": 237
       },
-      "616": {
+      "608": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
+        "line": 239
       },
       "624": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
+        "line": 239
       },
       "640": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
+        "line": 239
       },
-      "648": {
+      "656": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
+        "line": 239
       },
-      "664": {
+      "672": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
+        "line": 239
       },
       "680": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
-      },
-      "688": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
+        "line": 239
       },
       "704": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
+        "line": 239
       },
       "712": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
+        "line": 239
       },
-      "728": {
+      "760": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
+        "line": 239
       },
-      "744": {
+      "784": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
+        "line": 239
       },
-      "752": {
+      "800": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
-      },
-      "768": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 137
+        "line": 239
       }
     },
     "b9b9090ac118307031f2b8987441914d9c5f378492176a220be0a4ccb95681e7": {
@@ -5839,84 +6393,6 @@
         "line": 172
       }
     },
-    "bc9fb58f08d84294eb108c58abf5d4ff47cf7fa1710571bd60bcac4b7b4b85b9": {
-      "0": {
-        "filename": "RelayRound.code",
-        "line": 775
-      },
-      "8": {
-        "filename": "RelayRound.code",
-        "line": 776
-      },
-      "24": {
-        "filename": "RelayRound.code",
-        "line": 777
-      },
-      "48": {
-        "filename": "RelayRound.code",
-        "line": 778
-      },
-      "64": {
-        "filename": "RelayRound.code",
-        "line": 779
-      },
-      "72": {
-        "filename": "RelayRound.code",
-        "line": 780
-      },
-      "88": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 120
-      },
-      "96": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 120
-      },
-      "104": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 120
-      },
-      "112": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 120
-      },
-      "120": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 120
-      },
-      "128": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 120
-      },
-      "136": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 120
-      },
-      "152": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 120
-      },
-      "168": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 120
-      },
-      "176": {
-        "filename": "RelayRound.code",
-        "line": 795
-      },
-      "192": {
-        "filename": "RelayRound.code",
-        "line": 798
-      },
-      "200": {
-        "filename": "RelayRound.code",
-        "line": 799
-      },
-      "216": {
-        "filename": "RelayRound.code",
-        "line": 802
-      }
-    },
     "bca121671f9664ace82b6e6307e30f865d0888a29affc2c90451be04c4f98aec": {
       "0": {
         "filename": "RelayRound.code",
@@ -6183,70 +6659,130 @@
         "line": 246
       }
     },
-    "bed35fcfd2cbf7f363f35775ea30fec0d5b7d88c1a7660124181a82676d34322": {
+    "bfef07c0e8f72d219527b86231ef83a341ffb22506d813b3304863b397bf14c0": {
       "0": {
         "filename": "RelayRound.code",
-        "line": 2437
+        "line": 1028
       },
       "8": {
         "filename": "RelayRound.code",
-        "line": 2438
+        "line": 1029
       },
-      "56": {
+      "24": {
         "filename": "RelayRound.code",
-        "line": 2439
+        "line": 1030
+      },
+      "48": {
+        "filename": "RelayRound.code",
+        "line": 1031
       },
       "64": {
         "filename": "RelayRound.code",
-        "line": 2440
+        "line": 1032
       },
-      "80": {
+      "72": {
         "filename": "RelayRound.code",
-        "line": 2466
+        "line": 1033
       },
       "88": {
-        "filename": "RelayRound.code",
-        "line": 2467
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 156
       },
-      "136": {
-        "filename": "RelayRound.code",
-        "line": 2468
+      "104": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 156
+      },
+      "120": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 156
+      },
+      "128": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 156
       },
       "144": {
-        "filename": "RelayRound.code",
-        "line": 2469
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 156
       },
-      "160": {
-        "filename": "RelayRound.code",
-        "line": 2495
+      "152": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 156
       },
       "168": {
-        "filename": "RelayRound.code",
-        "line": 2496
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 156
+      },
+      "184": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 156
+      },
+      "192": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 156
+      },
+      "208": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 156
       },
       "216": {
-        "filename": "RelayRound.code",
-        "line": 2497
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 156
       },
-      "224": {
-        "filename": "RelayRound.code",
-        "line": 2498
-      },
-      "240": {
-        "filename": "RelayRound.code",
-        "line": 2524
+      "232": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 156
       },
       "248": {
-        "filename": "RelayRound.code",
-        "line": 2525
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 156
+      },
+      "256": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 156
+      },
+      "272": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 156
+      },
+      "280": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 156
       },
       "296": {
-        "filename": "RelayRound.code",
-        "line": 2526
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 156
       },
-      "304": {
+      "312": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 156
+      },
+      "320": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 156
+      },
+      "336": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 156
+      },
+      "344": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 156
+      },
+      "352": {
         "filename": "RelayRound.code",
-        "line": 2527
+        "line": 1059
+      },
+      "368": {
+        "filename": "RelayRound.code",
+        "line": 1062
+      },
+      "376": {
+        "filename": "RelayRound.code",
+        "line": 1063
+      },
+      "392": {
+        "filename": "RelayRound.code",
+        "line": 1066
       }
     },
     "c3c1522ee3edb24cf78f7f1398ee016d9509ab4931dfd42d68f27e3084ae9472": {
@@ -6879,6 +7415,150 @@
         "line": 74
       }
     },
+    "ceae61bb5dfb082d1c38d87a1d3cebd3533f3e70f13a5d018a355dc403fc6e08": {
+      "0": {
+        "filename": "RelayRound.code",
+        "line": 775
+      },
+      "8": {
+        "filename": "RelayRound.code",
+        "line": 776
+      },
+      "24": {
+        "filename": "RelayRound.code",
+        "line": 777
+      },
+      "48": {
+        "filename": "RelayRound.code",
+        "line": 778
+      },
+      "64": {
+        "filename": "RelayRound.code",
+        "line": 779
+      },
+      "72": {
+        "filename": "RelayRound.code",
+        "line": 780
+      },
+      "88": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 120
+      },
+      "96": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 120
+      },
+      "104": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 120
+      },
+      "112": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 120
+      },
+      "120": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 120
+      },
+      "128": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 120
+      },
+      "136": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 120
+      },
+      "152": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 120
+      },
+      "168": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 120
+      },
+      "176": {
+        "filename": "RelayRound.code",
+        "line": 795
+      },
+      "192": {
+        "filename": "RelayRound.code",
+        "line": 798
+      },
+      "200": {
+        "filename": "RelayRound.code",
+        "line": 799
+      },
+      "216": {
+        "filename": "RelayRound.code",
+        "line": 802
+      }
+    },
+    "d061254b7b0f62657f44249dc29e220de052fc0d85057dbc563c7864da064de0": {
+      "0": {
+        "filename": "RelayRound.code",
+        "line": 2437
+      },
+      "8": {
+        "filename": "RelayRound.code",
+        "line": 2438
+      },
+      "56": {
+        "filename": "RelayRound.code",
+        "line": 2439
+      },
+      "64": {
+        "filename": "RelayRound.code",
+        "line": 2440
+      },
+      "80": {
+        "filename": "RelayRound.code",
+        "line": 2466
+      },
+      "88": {
+        "filename": "RelayRound.code",
+        "line": 2467
+      },
+      "136": {
+        "filename": "RelayRound.code",
+        "line": 2468
+      },
+      "144": {
+        "filename": "RelayRound.code",
+        "line": 2469
+      },
+      "160": {
+        "filename": "RelayRound.code",
+        "line": 2495
+      },
+      "168": {
+        "filename": "RelayRound.code",
+        "line": 2496
+      },
+      "216": {
+        "filename": "RelayRound.code",
+        "line": 2497
+      },
+      "224": {
+        "filename": "RelayRound.code",
+        "line": 2498
+      },
+      "240": {
+        "filename": "RelayRound.code",
+        "line": 2524
+      },
+      "248": {
+        "filename": "RelayRound.code",
+        "line": 2525
+      },
+      "296": {
+        "filename": "RelayRound.code",
+        "line": 2526
+      },
+      "304": {
+        "filename": "RelayRound.code",
+        "line": 2527
+      }
+    },
     "d2bb9a208003fe08220ce71468b49ded82b6133d5547981ef8e768fafdd7def0": {
       "0": {
         "filename": "../contracts/staking/RelayRound.tsol",
@@ -7015,72 +7695,6 @@
         "line": 2410
       }
     },
-    "d4be7a87652151659cdbc66afa9c3e6c2d32df28f159d2ab42c929b82d4cb63d": {
-      "0": {
-        "filename": "RelayRound.code",
-        "line": 2441
-      },
-      "8": {
-        "filename": "RelayRound.code",
-        "line": 2442
-      },
-      "56": {
-        "filename": "RelayRound.code",
-        "line": 2443
-      },
-      "64": {
-        "filename": "RelayRound.code",
-        "line": 2444
-      },
-      "80": {
-        "filename": "RelayRound.code",
-        "line": 2447
-      },
-      "88": {
-        "filename": "RelayRound.code",
-        "line": 2448
-      },
-      "136": {
-        "filename": "RelayRound.code",
-        "line": 2449
-      },
-      "144": {
-        "filename": "RelayRound.code",
-        "line": 2450
-      },
-      "160": {
-        "filename": "RelayRound.code",
-        "line": 2453
-      },
-      "168": {
-        "filename": "RelayRound.code",
-        "line": 2454
-      },
-      "216": {
-        "filename": "RelayRound.code",
-        "line": 2455
-      },
-      "224": {
-        "filename": "RelayRound.code",
-        "line": 2456
-      },
-      "240": {
-        "filename": "RelayRound.code",
-        "line": 2459
-      },
-      "248": {
-        "filename": "RelayRound.code",
-        "line": 2460
-      },
-      "296": {
-        "filename": "RelayRound.code",
-        "line": 2461
-      },
-      "304": {
-        "filename": "RelayRound.code",
-        "line": 2462
-      }
-    },
     "d78e6dbf4955347f3dd71a3c48a7a8c636cc30883cf9fe7bd2c1e7e8d3ca3d8f": {
       "0": {
         "filename": "RelayRound.code",
@@ -7141,6 +7755,210 @@
       "304": {
         "filename": "RelayRound.code",
         "line": 2390
+      }
+    },
+    "d8d04e7655936d85a8b759ea92540ab1826e4a980ecc238b666521ff877abf86": {
+      "0": {
+        "filename": "RelayRound.code",
+        "line": 2528
+      },
+      "8": {
+        "filename": "RelayRound.code",
+        "line": 2529
+      },
+      "56": {
+        "filename": "RelayRound.code",
+        "line": 2530
+      },
+      "64": {
+        "filename": "RelayRound.code",
+        "line": 2531
+      },
+      "80": {
+        "filename": "RelayRound.code",
+        "line": 2534
+      },
+      "88": {
+        "filename": "RelayRound.code",
+        "line": 2535
+      },
+      "136": {
+        "filename": "RelayRound.code",
+        "line": 2536
+      },
+      "144": {
+        "filename": "RelayRound.code",
+        "line": 2537
+      },
+      "160": {
+        "filename": "RelayRound.code",
+        "line": 2540
+      },
+      "168": {
+        "filename": "RelayRound.code",
+        "line": 2541
+      },
+      "216": {
+        "filename": "RelayRound.code",
+        "line": 2542
+      },
+      "224": {
+        "filename": "RelayRound.code",
+        "line": 2543
+      },
+      "240": {
+        "filename": "RelayRound.code",
+        "line": 2546
+      },
+      "248": {
+        "filename": "RelayRound.code",
+        "line": 2547
+      },
+      "296": {
+        "filename": "RelayRound.code",
+        "line": 2548
+      },
+      "304": {
+        "filename": "RelayRound.code",
+        "line": 2549
+      }
+    },
+    "da0738958595eba831380b1245853b4086f8a956ef9034e941b0b3c6c4ea0c1c": {
+      "0": {
+        "filename": "RelayRound.code",
+        "line": 2191
+      },
+      "16": {
+        "filename": "RelayRound.code",
+        "line": 2192
+      },
+      "24": {
+        "filename": "RelayRound.code",
+        "line": 2193
+      },
+      "40": {
+        "filename": "RelayRound.code",
+        "line": 2194
+      },
+      "56": {
+        "filename": "RelayRound.code",
+        "line": 2195
+      },
+      "72": {
+        "filename": "RelayRound.code",
+        "line": 2196
+      },
+      "80": {
+        "filename": "RelayRound.code",
+        "line": 2197
+      },
+      "88": {
+        "filename": "RelayRound.code",
+        "line": 2198
+      },
+      "104": {
+        "filename": "RelayRound.code",
+        "line": 2199
+      },
+      "120": {
+        "filename": "RelayRound.code",
+        "line": 2200
+      },
+      "128": {
+        "filename": "RelayRound.code",
+        "line": 2201
+      },
+      "144": {
+        "filename": "RelayRound.code",
+        "line": 2202
+      },
+      "168": {
+        "filename": "RelayRound.code",
+        "line": 2203
+      },
+      "184": {
+        "filename": "RelayRound.code",
+        "line": 2204
+      },
+      "192": {
+        "filename": "RelayRound.code",
+        "line": 2205
+      },
+      "208": {
+        "filename": "RelayRound.code",
+        "line": 2206
+      },
+      "248": {
+        "filename": "RelayRound.code",
+        "line": 2207
+      },
+      "264": {
+        "filename": "RelayRound.code",
+        "line": 2208
+      },
+      "272": {
+        "filename": "RelayRound.code",
+        "line": 2209
+      },
+      "288": {
+        "filename": "RelayRound.code",
+        "line": 2210
+      },
+      "296": {
+        "filename": "RelayRound.code",
+        "line": 2211
+      },
+      "312": {
+        "filename": "RelayRound.code",
+        "line": 2212
+      },
+      "328": {
+        "filename": "RelayRound.code",
+        "line": 2213
+      },
+      "336": {
+        "filename": "RelayRound.code",
+        "line": 2214
+      },
+      "344": {
+        "filename": "RelayRound.code",
+        "line": 2215
+      },
+      "360": {
+        "filename": "RelayRound.code",
+        "line": 2216
+      },
+      "376": {
+        "filename": "RelayRound.code",
+        "line": 2220
+      },
+      "384": {
+        "filename": "RelayRound.code",
+        "line": 2221
+      },
+      "408": {
+        "filename": "RelayRound.code",
+        "line": 2222
+      },
+      "424": {
+        "filename": "RelayRound.code",
+        "line": 2223
+      },
+      "432": {
+        "filename": "RelayRound.code",
+        "line": 2224
+      },
+      "448": {
+        "filename": "RelayRound.code",
+        "line": 2228
+      },
+      "456": {
+        "filename": "RelayRound.code",
+        "line": 2229
+      },
+      "472": {
+        "filename": "RelayRound.code",
+        "line": 2232
       }
     },
     "dc0a5582744bdb31739b421bce4018837a6bc3cd4f72584a158610522c68ba3c": {
@@ -7325,294 +8143,142 @@
         "line": 314
       }
     },
-    "e8e50802dbdf7a08dd6e10b8090edbf3b611b0d37c17d652d254c700bd005e77": {
+    "e9588a969878ec9e993ac4f2752d0e1e2405043d5bffc80622e709c64e0ea13c": {
+      "0": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 162
+      },
+      "24": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 162
+      },
       "40": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 209
-      },
-      "48": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 210
+        "line": 162
       },
       "56": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 210
+        "line": 162
       },
       "72": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 210
+        "line": 162
       },
       "88": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 210
+        "line": 162
       },
       "104": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 210
-      },
-      "112": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 210
+        "line": 162
       },
       "120": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 212
-      },
-      "128": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 212
+        "line": 162
       },
       "136": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 212
-      },
-      "144": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 214
+        "line": 162
       },
       "152": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 214
-      },
-      "160": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 214
+        "line": 162
       },
       "168": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 214
+        "line": 162
       },
-      "176": {
+      "184": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 215
+        "line": 162
+      },
+      "192": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 162
       },
       "200": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 217
+        "line": 162
       },
       "216": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 217
-      },
-      "224": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 217
-      },
-      "232": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 218
+        "line": 163
       },
       "240": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 218
+        "line": 163
       },
       "256": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 218
+        "line": 163
       },
-      "272": {
+      "264": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 218
+        "line": 163
       },
       "280": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 220
-      },
-      "288": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 220
-      },
-      "296": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 220
-      },
-      "312": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 239
+        "line": 165
       },
       "328": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 242
+        "line": 165
       },
-      "376": {
+      "336": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 242
+        "line": 165
+      },
+      "352": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 167
+      },
+      "360": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 167
+      },
+      "368": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 167
       },
       "384": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 242
+        "line": 167
       },
       "400": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
+        "line": 167
       },
-      "416": {
+      "408": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
+        "line": 167
       },
-      "432": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
+      "424": {
+        "filename": "RelayRound.code",
+        "line": 1229
       },
-      "448": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
+      "440": {
+        "filename": "RelayRound.code",
+        "line": 1230
       },
-      "464": {
+      "456": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
+        "line": 182
+      },
+      "472": {
+        "filename": "../contracts/staking/RelayRound.tsol",
+        "line": 182
       },
       "480": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
+        "line": 182
       },
       "496": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
+        "line": 182
       },
       "512": {
         "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "528": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "544": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "560": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "576": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "584": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "608": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "616": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "624": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "648": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "664": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "672": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "720": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "736": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "752": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "768": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "784": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "800": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "816": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "832": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "840": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "856": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "864": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "880": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "896": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "904": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "920": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "928": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "944": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "960": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "968": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "976": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "984": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "1000": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 244
-      },
-      "1016": {
-        "filename": "RelayRound.code",
-        "line": 1577
-      },
-      "1032": {
-        "filename": "RelayRound.code",
-        "line": 1578
+        "line": 183
       }
     },
     "ea019de0a63756b9c8dae9c4fb53b56f61ca6a5370624951d1c4c830e937586b": {
@@ -7639,366 +8305,6 @@
       "72": {
         "filename": "RelayRound.code",
         "line": 2101
-      }
-    },
-    "ec0757dc91e5502a43a3bd4df5b0ab3b12a86b98aff581100c6a0686c387dc9a": {
-      "0": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "8": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "24": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 221
-      },
-      "40": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 222
-      },
-      "88": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 222
-      },
-      "96": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 222
-      },
-      "112": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 224
-      },
-      "120": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 224
-      },
-      "136": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 224
-      },
-      "152": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 225
-      },
-      "160": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 225
-      },
-      "176": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 226
-      },
-      "184": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 226
-      },
-      "200": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 227
-      },
-      "208": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 227
-      },
-      "224": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 229
-      },
-      "232": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 229
-      },
-      "248": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 229
-      },
-      "256": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 229
-      },
-      "272": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 230
-      },
-      "280": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 230
-      },
-      "296": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 230
-      },
-      "304": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 230
-      },
-      "320": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 232
-      },
-      "328": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 232
-      },
-      "344": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 232
-      },
-      "352": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 232
-      },
-      "368": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 233
-      },
-      "376": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 233
-      },
-      "392": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 233
-      },
-      "400": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 233
-      },
-      "416": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 234
-      },
-      "424": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 234
-      },
-      "440": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 234
-      },
-      "448": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 234
-      },
-      "464": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 235
-      },
-      "472": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 235
-      },
-      "488": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 235
-      },
-      "496": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 235
-      },
-      "512": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 236
-      },
-      "520": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 236
-      },
-      "536": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 236
-      },
-      "544": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 236
-      },
-      "560": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 237
-      },
-      "568": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 237
-      },
-      "584": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 237
-      },
-      "592": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 237
-      },
-      "608": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 239
-      },
-      "624": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 239
-      },
-      "640": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 239
-      },
-      "656": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 239
-      },
-      "672": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 239
-      },
-      "680": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 239
-      },
-      "704": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 239
-      },
-      "712": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 239
-      },
-      "760": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 239
-      },
-      "784": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 239
-      },
-      "800": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 239
-      }
-    },
-    "eeb937eefb0cf47e77a3d5552c25ab094feb1f0f750d1eb8763a9cf89ba579ec": {
-      "0": {
-        "filename": "RelayRound.code",
-        "line": 1028
-      },
-      "8": {
-        "filename": "RelayRound.code",
-        "line": 1029
-      },
-      "24": {
-        "filename": "RelayRound.code",
-        "line": 1030
-      },
-      "48": {
-        "filename": "RelayRound.code",
-        "line": 1031
-      },
-      "64": {
-        "filename": "RelayRound.code",
-        "line": 1032
-      },
-      "72": {
-        "filename": "RelayRound.code",
-        "line": 1033
-      },
-      "88": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 156
-      },
-      "104": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 156
-      },
-      "120": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 156
-      },
-      "128": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 156
-      },
-      "144": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 156
-      },
-      "152": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 156
-      },
-      "168": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 156
-      },
-      "184": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 156
-      },
-      "192": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 156
-      },
-      "208": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 156
-      },
-      "216": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 156
-      },
-      "232": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 156
-      },
-      "248": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 156
-      },
-      "256": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 156
-      },
-      "272": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 156
-      },
-      "280": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 156
-      },
-      "296": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 156
-      },
-      "312": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 156
-      },
-      "320": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 156
-      },
-      "336": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 156
-      },
-      "344": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 156
-      },
-      "352": {
-        "filename": "RelayRound.code",
-        "line": 1059
-      },
-      "368": {
-        "filename": "RelayRound.code",
-        "line": 1062
-      },
-      "376": {
-        "filename": "RelayRound.code",
-        "line": 1063
-      },
-      "392": {
-        "filename": "RelayRound.code",
-        "line": 1066
       }
     },
     "eeda419f9eccac2e53985b0c0f85b637c0dcb28b914f18e216632cce2354b9a0": {
@@ -8163,210 +8469,6 @@
         "line": 363
       }
     },
-    "eefe66609f85bc86a5c68b5658f08eaa9588dcd64a77040e31c34dc5ea413166": {
-      "0": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 162
-      },
-      "24": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 162
-      },
-      "40": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 162
-      },
-      "56": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 162
-      },
-      "72": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 162
-      },
-      "88": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 162
-      },
-      "104": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 162
-      },
-      "120": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 162
-      },
-      "136": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 162
-      },
-      "152": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 162
-      },
-      "168": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 162
-      },
-      "184": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 162
-      },
-      "192": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 162
-      },
-      "200": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 162
-      },
-      "216": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 163
-      },
-      "240": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 163
-      },
-      "256": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 163
-      },
-      "264": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 163
-      },
-      "280": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 165
-      },
-      "328": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 165
-      },
-      "336": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 165
-      },
-      "352": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 167
-      },
-      "360": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 167
-      },
-      "368": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 167
-      },
-      "384": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 167
-      },
-      "400": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 167
-      },
-      "408": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 167
-      },
-      "424": {
-        "filename": "RelayRound.code",
-        "line": 1229
-      },
-      "440": {
-        "filename": "RelayRound.code",
-        "line": 1230
-      },
-      "456": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 182
-      },
-      "472": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 182
-      },
-      "480": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 182
-      },
-      "496": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 182
-      },
-      "512": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 183
-      }
-    },
-    "f0e23f49655d7aef370c91768680417c8a8d73a3027b9125e442fa56617ec85f": {
-      "0": {
-        "filename": "RelayRound.code",
-        "line": 2470
-      },
-      "8": {
-        "filename": "RelayRound.code",
-        "line": 2471
-      },
-      "56": {
-        "filename": "RelayRound.code",
-        "line": 2472
-      },
-      "64": {
-        "filename": "RelayRound.code",
-        "line": 2473
-      },
-      "80": {
-        "filename": "RelayRound.code",
-        "line": 2476
-      },
-      "88": {
-        "filename": "RelayRound.code",
-        "line": 2477
-      },
-      "136": {
-        "filename": "RelayRound.code",
-        "line": 2478
-      },
-      "144": {
-        "filename": "RelayRound.code",
-        "line": 2479
-      },
-      "160": {
-        "filename": "RelayRound.code",
-        "line": 2482
-      },
-      "168": {
-        "filename": "RelayRound.code",
-        "line": 2483
-      },
-      "216": {
-        "filename": "RelayRound.code",
-        "line": 2484
-      },
-      "224": {
-        "filename": "RelayRound.code",
-        "line": 2485
-      },
-      "240": {
-        "filename": "RelayRound.code",
-        "line": 2488
-      },
-      "248": {
-        "filename": "RelayRound.code",
-        "line": 2489
-      },
-      "296": {
-        "filename": "RelayRound.code",
-        "line": 2490
-      },
-      "304": {
-        "filename": "RelayRound.code",
-        "line": 2491
-      }
-    },
     "f24e1e7aa04d89aad2945816b6e9b921f2b3892da9ba53e2383c148351b96d0c": {
       "0": {
         "filename": "RelayRound.code",
@@ -8375,108 +8477,6 @@
       "16": {
         "filename": "RelayRound.code",
         "line": 2218
-      }
-    },
-    "fb985cc7b30ab7dcd946dcb3caac79a7bc9ad292ed2de58225b4e4921b06eb60": {
-      "0": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 396
-      },
-      "24": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 396
-      },
-      "40": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 396
-      },
-      "56": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 396
-      },
-      "72": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 396
-      },
-      "88": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 396
-      },
-      "104": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 251
-      },
-      "112": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 251
-      },
-      "128": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 251
-      },
-      "136": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 251
-      },
-      "152": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 252
-      },
-      "200": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 252
-      },
-      "208": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 252
-      },
-      "224": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 253
-      },
-      "232": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 253
-      },
-      "240": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 253
-      },
-      "264": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 253
-      },
-      "272": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 253
-      },
-      "288": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 253
-      },
-      "304": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 253
-      },
-      "312": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 253
-      },
-      "328": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 253
-      },
-      "344": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 253
-      },
-      "360": {
-        "filename": "../contracts/staking/RelayRound.tsol",
-        "line": 314
-      },
-      "368": {
-        "filename": "RelayRound.code",
-        "line": 1793
       }
     }
   }

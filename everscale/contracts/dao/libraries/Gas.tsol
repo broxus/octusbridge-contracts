@@ -1,8 +1,8 @@
 pragma ever-solidity >= 0.62.0;
 
 library Gas {
-    uint128 constant PROPOSAL_INITIAL_BALANCE = 1 ever;
-    uint128 constant ACCOUNT_INITIAL_BALANCE = 0.2 ever;
+    uint128 constant PROPOSAL_INITIAL_BALANCE = 6 ever;
+    uint128 constant ACCOUNT_INITIAL_BALANCE = 1.2 ever;
 
     uint128 constant DEPLOY_PROPOSAL_GAS = 9_000_000;
     uint128 constant EXECUTE_TON_ACTION_GAS = 500_000;

@@ -1,10 +1,10 @@
 pragma ever-solidity >= 0.62.0;
 
 library Gas {
-    uint128 constant TOKEN_ROOT_INITIAL_BALANCE = 1 ever;
-    uint128 constant TOKEN_WALLET_INITIAL_BALANCE = 0.1 ever;
-    uint128 constant CONFIGURATION_FACTORY_INITIAL_BALANCE = 1 ever;
-    uint128 constant TARGET_BALANCE = 1 ever; // most contracts initial balance
+    uint128 constant TOKEN_ROOT_INITIAL_BALANCE = 6 ever;
+    uint128 constant TOKEN_WALLET_INITIAL_BALANCE = 0.6 ever;
+    uint128 constant CONFIGURATION_FACTORY_INITIAL_BALANCE = 6 ever;
+    uint128 constant TARGET_BALANCE = 6 ever; // most contracts initial balance
 
     // mergePool
     uint128 constant REQUEST_TOKEN_DECIMALS_GAS = 300_000;

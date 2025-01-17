@@ -210,6 +210,12 @@
         "line": 214
       }
     },
+    "0a37e2106198cd91e781c3a8e8fca5cabb6fa3baab4806be8506b6e3883d4111": {
+      "0": {
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 60
+      }
+    },
     "0ad7e583bab2554b1d918988d77be238e80175fda0e1ae42908cb8d251d863fd": {
       "0": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
@@ -336,216 +342,260 @@
         "line": 519
       }
     },
-    "0bbafb0693c9d966de69d1e77327523f5d10a2f62280d1d127817a653cf59049": {
+    "0cc4602155b76119fada15c75b782411b25f4a6d41d6ce273d5d4392a56dbcba": {
       "0": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 364
+        "line": 216
       },
       "8": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 365
+        "line": 217
       },
       "24": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 366
+        "line": 218
       },
       "48": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 367
+        "line": 219
       },
       "64": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 368
+        "line": 220
       },
       "72": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 369
+        "line": 221
       },
       "88": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 152
+        "line": 99
       },
       "96": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 152
+        "line": 99
       },
       "104": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 152
+        "line": 99
       },
       "112": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 152
+        "line": 99
       },
       "120": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 152
+        "line": 99
       },
       "128": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 152
+        "line": 99
       },
       "136": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 152
+        "line": 99
       },
       "152": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 152
+        "line": 99
       },
       "168": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 152
+        "line": 99
       },
       "184": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 152
+        "line": 99
       },
       "192": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 152
+        "line": 99
       },
       "200": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 152
+        "line": 99
       },
       "208": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 152
+        "line": 99
       },
       "224": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 152
-      },
-      "232": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 152
+        "line": 99
       },
       "240": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 152
+        "line": 99
       },
-      "248": {
+      "256": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 152
+        "line": 99
       },
       "264": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 152
-      },
-      "272": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 152
+        "line": 99
       },
       "280": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 394
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 99
       },
       "296": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 397
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 99
       },
-      "304": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 398
+      "312": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 99
       },
       "320": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 99
+      },
+      "328": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 401
+        "line": 248
+      },
+      "344": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 251
+      },
+      "352": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 252
+      },
+      "368": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 255
       }
     },
-    "0cbbd81eb54fb8d19fe96737dafdc98ea17904c428d7ea9654554720bd40b702": {
+    "0d53060b148bb81baa675e93f508af026289fbe0aed47b8a085d0cb0e54b0076": {
       "0": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1987
+        "line": 684
       },
       "8": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1988
+        "line": 685
       },
       "24": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1989
+        "line": 686
       },
       "48": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1990
+        "line": 687
       },
       "64": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1991
+        "line": 688
       },
       "72": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1992
+        "line": 689
       },
       "88": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 489
+        "line": 259
       },
       "96": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 489
+        "line": 259
       },
       "104": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 489
+        "line": 259
       },
       "112": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 489
+        "line": 259
       },
       "120": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 489
+        "line": 259
       },
       "128": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 489
+        "line": 259
       },
-      "136": {
+      "144": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 489
+        "line": 259
       },
-      "152": {
+      "160": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 489
+        "line": 259
       },
       "168": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 489
+        "line": 259
       },
       "176": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 489
-      },
-      "184": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 489
+        "line": 259
       },
       "192": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 489
+        "line": 259
       },
-      "208": {
+      "200": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 489
+        "line": 259
       },
       "216": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2011
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 259
       },
       "232": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2014
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 259
       },
       "240": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2015
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 259
       },
-      "256": {
+      "248": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 259
+      },
+      "264": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 259
+      },
+      "272": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 259
+      },
+      "280": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 259
+      },
+      "288": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 259
+      },
+      "296": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 259
+      },
+      "312": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 259
+      },
+      "320": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2018
+        "line": 718
+      },
+      "336": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 721
+      },
+      "344": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 722
+      },
+      "360": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 725
       }
     },
     "11d8b96358075455531161c3effd9453484fe67e5c1bfc4668ebe49e6d833223": {
@@ -656,6 +706,102 @@
       "328": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
         "line": 410
+      }
+    },
+    "135bd9a06b89a9774d35eb217b7d9a0d2eecaafec61463f6deb2cee382193c71": {
+      "0": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 99
+      },
+      "16": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 64
+      },
+      "32": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 64
+      },
+      "48": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 64
+      },
+      "64": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 64
+      },
+      "88": {
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 24
+      },
+      "104": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 107
+      }
+    },
+    "1630fa9f32e0d669e4ef1fa00bbbed0f253f96a7b557c29c034177c2d141a034": {
+      "0": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3029
+      },
+      "8": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3030
+      },
+      "56": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3031
+      },
+      "64": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3032
+      },
+      "80": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3058
+      },
+      "88": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3059
+      },
+      "136": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3060
+      },
+      "144": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3061
+      },
+      "160": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3087
+      },
+      "168": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3088
+      },
+      "216": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3089
+      },
+      "224": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3090
+      },
+      "240": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3116
+      },
+      "248": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3117
+      },
+      "296": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3118
+      },
+      "304": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3119
       }
     },
     "167cbcddb50e29cce7c28a14df73bae947a561cc10d9c38c298a1e02278eb4e6": {
@@ -794,104 +940,86 @@
         "line": 2982
       }
     },
-    "195ffae5d27fd5a8b590e36c3c1ceea9cfbc4642fd4690b8dc0ad59ba1888ffa": {
+    "1978f4d648839f8b2df97a6f53d803f0b468de97d6151619f3a9e8f97bf93c5f": {
       "0": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3025
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 24
       },
-      "8": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3026
+      "16": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 124
       },
-      "56": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3027
+      "32": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 124
+      },
+      "48": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 124
       },
       "64": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3028
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 124
       },
       "80": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3146
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 124
       },
-      "88": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3147
+      "104": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 126
       },
-      "136": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3148
+      "112": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 126
       },
-      "144": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3149
-      }
-    },
-    "1a9ca1be1a54fb2db80589a42a68d425d1b3428d54d37fa66783b9573d39b76a": {
-      "0": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3150
-      },
-      "8": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3151
-      },
-      "56": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3152
-      },
-      "64": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3153
-      },
-      "80": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3179
-      },
-      "88": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3180
+      "120": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 126
       },
       "136": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3181
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 126
       },
-      "144": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3182
+      "152": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 126
       },
       "160": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3208
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 126
       },
       "168": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3209
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 126
       },
-      "216": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3210
+      "176": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 126
+      },
+      "192": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 126
+      },
+      "200": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 126
+      },
+      "208": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 136
       },
       "224": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3211
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 136
       },
-      "240": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3237
+      "232": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 136
       },
       "248": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3238
-      },
-      "296": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3239
-      },
-      "304": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3240
+        "line": 361
       }
     },
     "1b61aab316256dcd25e574bc5278acab3a33a48ace5aca12d07d23ea240a276a": {
@@ -1076,50 +1204,6 @@
         "line": 1400
       }
     },
-    "1b6568c8ef39bec3ca9e818deac27d611592db152b327db9d1f2d1585979763c": {
-      "0": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 44
-      },
-      "16": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 44
-      },
-      "24": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 44
-      }
-    },
-    "1c5b3338b60cc3c5d2e2e6b47efb737ae5864416cbdd163c71ae0904d95703c9": {
-      "0": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 152
-      },
-      "16": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 64
-      },
-      "32": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 64
-      },
-      "48": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 64
-      },
-      "64": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 64
-      },
-      "88": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 24
-      },
-      "104": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 160
-      }
-    },
     "1ccd89b68242015a45f8fde2983dfa8277e538cfe313baea69bea695c1bbfc67": {
       "0": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
@@ -1146,66 +1230,38 @@
         "line": 544
       }
     },
-    "218f2fdbbf574644d27e2433a0ee4328d58d56a48ab0fc96dc1c76c2da189032": {
-      "38": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 544
+    "227b99542e00df103886b7221c741ee7131836b02fc4d954eab36b5398c6f53b": {
+      "0": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3025
       },
-      "46": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 544
+      "8": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3026
       },
-      "62": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 544
+      "56": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3027
       },
-      "70": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 544
+      "64": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3028
       },
-      "86": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 544
+      "80": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3146
       },
-      "94": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 544
+      "88": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3147
       },
-      "102": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 544
+      "136": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3148
       },
-      "110": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 544
-      },
-      "126": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 544
-      },
-      "134": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 544
-      },
-      "142": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 544
-      },
-      "158": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 544
-      },
-      "174": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 544
-      },
-      "190": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 544
-      },
-      "198": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 544
+      "144": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3149
       }
     },
     "2584f2ecdd600e7c4521f679fe3b5d42e4cffd9851ab9c936e9991db820ac6bd": {
@@ -1214,136 +1270,266 @@
         "line": 612
       }
     },
-    "35199538d2af358756d8784c855b1ec3b17faa33f78bfeff6ebf250c0892637c": {
+    "25d7e5934762b474058e95e07e194b42afe4b80b1aee42ff78142581a6796f17": {
       "0": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3062
+        "line": 1923
       },
       "8": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3063
+        "line": 1924
       },
-      "56": {
+      "24": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3064
+        "line": 1925
+      },
+      "48": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 1926
       },
       "64": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3065
+        "line": 1927
       },
-      "80": {
+      "72": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3068
+        "line": 1928
       },
       "88": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3069
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 474
+      },
+      "96": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 474
+      },
+      "104": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 474
+      },
+      "112": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 474
+      },
+      "120": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 474
+      },
+      "128": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 474
       },
       "136": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3070
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 474
       },
-      "144": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3071
-      },
-      "160": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3074
+      "152": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 474
       },
       "168": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3075
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 474
+      },
+      "176": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 474
+      },
+      "184": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 474
+      },
+      "192": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 474
+      },
+      "208": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 474
       },
       "216": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3076
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 474
       },
       "224": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3077
+        "line": 1948
       },
       "240": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3080
+        "line": 1951
       },
       "248": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3081
+        "line": 1952
       },
-      "296": {
+      "264": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3082
-      },
-      "304": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3083
+        "line": 1955
       }
     },
-    "353cf10fa55224de6114765956c31e1fb92ad3a096b66e42d3bb177bbc16ba08": {
+    "2f086a928aff378bce74bc13786cbd830a7f1e04a172ef868558e30561066cc9": {
       "0": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3154
+        "line": 1182
       },
       "8": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3155
+        "line": 1183
       },
-      "56": {
+      "24": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3156
+        "line": 1184
+      },
+      "48": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 1185
       },
       "64": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3157
+        "line": 1186
       },
-      "80": {
+      "72": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3160
+        "line": 1187
       },
       "88": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3161
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 337
+      },
+      "96": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 337
+      },
+      "104": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 337
+      },
+      "112": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 337
+      },
+      "120": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 337
+      },
+      "128": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 337
       },
       "136": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3162
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 337
       },
-      "144": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3163
-      },
-      "160": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3166
+      "152": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 337
       },
       "168": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3167
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 337
+      },
+      "184": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 337
+      },
+      "192": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 337
+      },
+      "208": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 337
       },
       "216": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3168
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 337
       },
-      "224": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3169
+      "232": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 337
       },
       "240": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3172
+        "line": 1207
+      },
+      "256": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 1210
+      },
+      "264": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 1211
+      },
+      "280": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 1214
+      }
+    },
+    "35900588775927067423a3e9f58573fba9b6feea752ce4130ae362f38969e94a": {
+      "0": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3212
+      },
+      "8": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3213
+      },
+      "56": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3214
+      },
+      "64": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3215
+      },
+      "80": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3218
+      },
+      "88": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3219
+      },
+      "136": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3220
+      },
+      "144": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3221
+      },
+      "160": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3224
+      },
+      "168": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3225
+      },
+      "216": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3226
+      },
+      "224": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3227
+      },
+      "240": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3230
       },
       "248": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3173
+        "line": 3231
       },
       "296": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3174
+        "line": 3232
       },
       "304": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3175
+        "line": 3233
       }
     },
     "35d7c5d85f4a8a7dd3397af760bd66dcab6ba31e7c386179b43cabe693090a17": {
@@ -1764,228 +1950,6 @@
         "line": 2846
       }
     },
-    "3f1ab0ef565c0dd6e77613f76dd0aaee97b15d56abd5c4fee74fb9e4d1f4d66b": {
-      "0": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2910
-      },
-      "16": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2911
-      },
-      "24": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2912
-      },
-      "40": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2913
-      },
-      "56": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2914
-      },
-      "72": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2915
-      },
-      "80": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2918
-      },
-      "96": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2919
-      },
-      "104": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2920
-      },
-      "120": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2923
-      },
-      "136": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2924
-      },
-      "144": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2925
-      },
-      "160": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2926
-      },
-      "176": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2927
-      },
-      "192": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2928
-      },
-      "200": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2929
-      },
-      "216": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2930
-      },
-      "224": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2931
-      },
-      "240": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2932
-      },
-      "248": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2933
-      },
-      "256": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2934
-      },
-      "272": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2935
-      },
-      "280": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2936
-      },
-      "288": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2938
-      },
-      "296": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2939
-      },
-      "304": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2940
-      },
-      "320": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2942
-      },
-      "328": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2943
-      },
-      "336": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2944
-      },
-      "352": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2945
-      },
-      "368": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2946
-      },
-      "384": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2948
-      },
-      "392": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2949
-      },
-      "408": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2950
-      },
-      "416": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2951
-      },
-      "432": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2953
-      },
-      "440": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2954
-      },
-      "456": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2955
-      },
-      "464": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "480": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "488": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "496": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "512": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "520": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "536": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "560": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "568": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "608": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "616": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "624": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "640": {
-        "filename": "stdlib.sol",
-        "line": 63
-      },
-      "656": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2957
-      },
-      "672": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2958
-      },
-      "680": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2959
-      },
-      "696": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2962
-      }
-    },
     "4104bf14bc92c625fdb92c5f68ade3f7f20db28c99ea9ccbc6fd53c96476789c": {
       "0": {
         "filename": "ProxyMultiVaultAlien_V5.code",
@@ -2046,6 +2010,80 @@
       "296": {
         "filename": "ProxyMultiVaultAlien_V5.code",
         "line": 3022
+      }
+    },
+    "416278d8ad0ad015d62e3d6aba0b4298ac167f4ef3f190a2097714ad1ed31299": {
+      "0": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 1114
+      },
+      "8": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 1115
+      },
+      "24": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 1116
+      },
+      "48": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 1117
+      },
+      "64": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 1118
+      },
+      "72": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 1119
+      },
+      "88": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 322
+      },
+      "96": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 322
+      },
+      "104": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 322
+      },
+      "112": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 322
+      },
+      "120": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 322
+      },
+      "128": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 322
+      },
+      "136": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 322
+      },
+      "152": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 322
+      },
+      "160": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 1133
+      },
+      "176": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 1136
+      },
+      "184": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 1137
+      },
+      "200": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 1140
       }
     },
     "43cfeff865e560ad4488a45d525a829a526c9dea97adfedcc63d69db975a2be4": {
@@ -2558,10 +2596,270 @@
         "line": 581
       }
     },
-    "47977409fbda8114191f94c945863c8ffefbd15cba3d8cd73aeccd3ab1407e50": {
+    "44596592da3a13c06b81899fc4ae650a7d425598f2bbf98a544cdb03659d1a17": {
+      "0": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3062
+      },
+      "8": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3063
+      },
+      "56": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3064
+      },
+      "64": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3065
+      },
+      "80": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3068
+      },
+      "88": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3069
+      },
+      "136": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3070
+      },
+      "144": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3071
+      },
+      "160": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3074
+      },
+      "168": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3075
+      },
+      "216": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3076
+      },
+      "224": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3077
+      },
+      "240": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3080
+      },
+      "248": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3081
+      },
+      "296": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3082
+      },
+      "304": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3083
+      }
+    },
+    "4a24333c780a6eb0d09dbcb0fa60c723156a44a72e747eb48e11be760d3ff242": {
       "0": {
         "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 60
+        "line": 24
+      },
+      "16": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 301
+      },
+      "32": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "48": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "64": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "72": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "80": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "96": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "104": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "136": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "152": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "160": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "184": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "200": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "208": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "232": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "240": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "256": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "264": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "280": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "288": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "296": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "344": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "352": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "360": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "368": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "376": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "384": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "392": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "400": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      },
+      "416": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 303
+      }
+    },
+    "4a6215245467e8eb92b480fe994cb6b8905a246fc43e91560eb640f06b79bba6": {
+      "0": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
+        "line": 15
+      },
+      "16": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
+        "line": 15
+      },
+      "32": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
+        "line": 15
+      },
+      "48": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
+        "line": 15
+      },
+      "56": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
+        "line": 15
+      },
+      "64": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
+        "line": 15
+      },
+      "72": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
+        "line": 15
+      },
+      "88": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
+        "line": 15
+      },
+      "104": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
+        "line": 15
+      },
+      "120": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
+        "line": 15
+      },
+      "144": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
+        "line": 15
+      },
+      "160": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
+        "line": 15
+      },
+      "168": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
+        "line": 15
+      },
+      "192": {
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 24
+      },
+      "208": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 480
+      },
+      "224": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 480
+      },
+      "240": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 480
+      },
+      "256": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 480
       }
     },
     "4aecfcbd33f74fbd0b243f15162e8fd40ddeab86943ab4f48a92dbb4f7e7ec4d": {
@@ -2662,422 +2960,192 @@
         "line": 2791
       }
     },
-    "4b73f9ee119b9b9730b7e14637acfb7735b12588732d68200bb31c13fdb8cde2": {
+    "4b29a2c2d12fe32d5f4f4288e1999ae8b4d6f87cd55f157a45c163b1ad242d55": {
       "0": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 216
+        "line": 3033
       },
       "8": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 217
-      },
-      "24": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 218
+        "line": 3034
       },
       "48": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 219
+        "line": 3035
       },
-      "64": {
+      "56": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 220
+        "line": 3036
       },
       "72": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 221
+        "line": 3039
+      },
+      "80": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3040
+      },
+      "128": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3041
+      },
+      "136": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3042
+      },
+      "152": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3045
+      },
+      "160": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3046
+      },
+      "208": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3047
+      },
+      "216": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3048
+      },
+      "232": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3051
+      },
+      "240": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3052
+      },
+      "288": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3053
+      },
+      "296": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3054
+      }
+    },
+    "4c4ae2c86244954bde26d3778df388e633215486d6276fcf5a9eb5cc8578fbdb": {
+      "0": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 144
+      },
+      "8": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 145
+      },
+      "24": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 146
+      },
+      "48": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 147
+      },
+      "64": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 148
+      },
+      "72": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 149
       },
       "88": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 99
+        "line": 81
       },
       "96": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 99
+        "line": 81
       },
       "104": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 99
-      },
-      "112": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 99
+        "line": 81
       },
       "120": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 99
+        "line": 81
       },
       "128": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 99
+        "line": 81
       },
       "136": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 99
-      },
-      "152": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 99
-      },
-      "168": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 99
-      },
-      "184": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 99
-      },
-      "192": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 99
-      },
-      "200": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 99
-      },
-      "208": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 99
-      },
-      "224": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 99
-      },
-      "240": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 99
-      },
-      "256": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 99
-      },
-      "264": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 99
-      },
-      "280": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 99
-      },
-      "296": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 99
-      },
-      "312": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 99
-      },
-      "320": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 99
-      },
-      "328": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 248
-      },
-      "344": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 251
-      },
-      "352": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 252
-      },
-      "368": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 255
-      }
-    },
-    "4ba7b2787e71b9f1659e4d1d0043aa292d52ea81756dc037c8ed4e80e06b0672": {
-      "0": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 24
-      },
-      "16": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 342
-      },
-      "32": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 342
-      },
-      "48": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 342
-      },
-      "64": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 342
-      },
-      "80": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 342
-      },
-      "96": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 342
-      },
-      "112": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 342
-      },
-      "120": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 342
+        "line": 81
       },
       "144": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 344
+        "line": 81
       },
       "152": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 344
+        "line": 81
       },
       "168": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "184": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "200": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "216": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "224": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "240": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "256": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "272": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "280": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "296": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "304": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "336": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "352": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "360": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "384": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "400": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "408": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "432": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "440": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "456": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "464": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "480": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "496": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "504": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "552": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "560": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "576": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "584": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "600": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "608": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "624": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "640": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "656": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "664": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "672": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "680": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "688": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "696": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "704": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "712": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      },
-      "728": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 346
-      }
-    },
-    "4fd8e5d2c97717540974766968cefb7e4a311d3d887676b36a1d85de0b74feba": {
-      "0": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 24
-      },
-      "16": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 124
-      },
-      "32": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 124
-      },
-      "48": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 124
-      },
-      "64": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 124
-      },
-      "80": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 124
-      },
-      "104": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 126
-      },
-      "112": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 126
-      },
-      "120": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 126
-      },
-      "136": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 126
-      },
-      "152": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 126
-      },
-      "160": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 126
-      },
-      "168": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 126
+        "line": 81
       },
       "176": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 126
+        "line": 81
       },
       "192": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 126
+        "line": 81
       },
       "200": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 126
+        "line": 81
       },
       "208": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 136
+        "line": 81
       },
-      "224": {
+      "216": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 136
+        "line": 81
       },
       "232": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 136
+        "line": 81
+      },
+      "240": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 81
       },
       "248": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 81
+      },
+      "256": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 81
+      },
+      "272": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 81
+      },
+      "280": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 81
+      },
+      "288": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 361
+        "line": 176
+      },
+      "304": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 179
+      },
+      "312": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 180
+      },
+      "328": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 183
       }
     },
     "5269cbef64d919c3c9cb9a0f8002ff937af6c5bb439bd1cac2ec64724119d7ce": {
@@ -3260,72 +3328,6 @@
       "576": {
         "filename": "ProxyMultiVaultAlien_V5.code",
         "line": 1351
-      }
-    },
-    "54a80d72a691713975c7ccfd7e4ffa2338ff39c737cd63ea955c2347dc2cb558": {
-      "0": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3033
-      },
-      "8": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3034
-      },
-      "48": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3035
-      },
-      "56": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3036
-      },
-      "72": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3039
-      },
-      "80": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3040
-      },
-      "128": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3041
-      },
-      "136": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3042
-      },
-      "152": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3045
-      },
-      "160": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3046
-      },
-      "208": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3047
-      },
-      "216": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3048
-      },
-      "232": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3051
-      },
-      "240": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3052
-      },
-      "288": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3053
-      },
-      "296": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3054
       }
     },
     "56785df4c80a51739a289e0a29ba8f77a1b0d88f89e6beea410b855ce43f23bf": {
@@ -3530,304 +3532,8 @@
     },
     "61ab4641fa30d9310391025086eec65d200d79268e1b7cd402565e01ba64be3c": {
       "0": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
-        "line": 37
-      }
-    },
-    "62ff40c4bf453821963ea314df0f2b338786b834352ba01cf6279c6baf550d2c": {
-      "0": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 24
-      },
-      "16": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 301
-      },
-      "32": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "48": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "64": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "72": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "80": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "96": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "104": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "136": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "152": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "160": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "184": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "200": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "208": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "232": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "240": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "256": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "264": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "280": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "288": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "296": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "344": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "352": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "360": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "368": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "376": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "384": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "392": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "400": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      },
-      "416": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 303
-      }
-    },
-    "63aa2c85008c4fc1f68762e40b4b3135b62edd3fe3a16174f1810f9078e6a675": {
-      "0": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 278
-      },
-      "8": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 279
-      },
-      "24": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 280
-      },
-      "48": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 281
-      },
-      "64": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 282
-      },
-      "72": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 283
-      },
-      "88": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "96": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "104": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "112": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "120": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "128": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "136": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "152": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "168": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "176": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "192": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "208": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "224": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "240": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "248": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "256": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "264": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "272": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "288": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "296": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "304": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "312": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "328": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "344": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "360": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "376": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "384": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "392": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "400": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "408": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "416": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "432": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 119
-      },
-      "440": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 321
-      },
-      "456": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 324
-      },
-      "464": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 325
-      },
-      "480": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 328
+        "line": 544
       }
     },
     "65b2deabaeb0c2a8a995daec788b6f706b4619123fbbeb4eeb337320216fa14c": {
@@ -4308,72 +4014,6 @@
         "line": 50
       }
     },
-    "6eaad22878130e633934fde4a0ed5ae0d46f11d4789796483175409ec74ba9a0": {
-      "0": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3029
-      },
-      "8": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3030
-      },
-      "56": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3031
-      },
-      "64": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3032
-      },
-      "80": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3058
-      },
-      "88": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3059
-      },
-      "136": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3060
-      },
-      "144": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3061
-      },
-      "160": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3087
-      },
-      "168": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3088
-      },
-      "216": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3089
-      },
-      "224": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3090
-      },
-      "240": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3116
-      },
-      "248": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3117
-      },
-      "296": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3118
-      },
-      "304": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3119
-      }
-    },
     "72573ac259a383f9856b3e0e3f1cc8d3190fda3d2fc181f83dfb4d517271b1d4": {
       "0": {
         "filename": "ProxyMultiVaultAlien_V5.code",
@@ -4672,412 +4312,6 @@
         "line": 885
       }
     },
-    "7265ac2370caa0ea8f670b67bcf0947ec5cf6a0c501f98d56011708c22ad32c8": {
-      "0": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2865
-      },
-      "16": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2866
-      },
-      "24": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2867
-      },
-      "40": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2868
-      },
-      "56": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2869
-      },
-      "72": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2870
-      },
-      "80": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2871
-      },
-      "88": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2872
-      },
-      "104": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2873
-      },
-      "120": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2874
-      },
-      "128": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2875
-      },
-      "144": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2876
-      },
-      "168": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2877
-      },
-      "184": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2878
-      },
-      "192": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2879
-      },
-      "208": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2880
-      },
-      "248": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2881
-      },
-      "264": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2882
-      },
-      "272": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2883
-      },
-      "288": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2884
-      },
-      "296": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2885
-      },
-      "312": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2886
-      },
-      "328": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2887
-      },
-      "336": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2888
-      },
-      "344": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2889
-      },
-      "360": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2890
-      },
-      "376": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2894
-      },
-      "384": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2895
-      },
-      "408": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2896
-      },
-      "424": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2897
-      },
-      "432": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2898
-      },
-      "448": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2902
-      },
-      "456": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2903
-      },
-      "472": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 2906
-      }
-    },
-    "726cc42718f3cae75382daedbb8ff4582d8c7f60ec2b816643a5f87b381e5c5f": {
-      "0": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1923
-      },
-      "8": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1924
-      },
-      "24": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1925
-      },
-      "48": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1926
-      },
-      "64": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1927
-      },
-      "72": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1928
-      },
-      "88": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 474
-      },
-      "96": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 474
-      },
-      "104": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 474
-      },
-      "112": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 474
-      },
-      "120": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 474
-      },
-      "128": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 474
-      },
-      "136": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 474
-      },
-      "152": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 474
-      },
-      "168": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 474
-      },
-      "176": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 474
-      },
-      "184": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 474
-      },
-      "192": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 474
-      },
-      "208": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 474
-      },
-      "216": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 474
-      },
-      "224": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1948
-      },
-      "240": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1951
-      },
-      "248": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1952
-      },
-      "264": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1955
-      }
-    },
-    "757d5d76fd5d48c106c48efd80a924dd15382f9209eef4e7f821e0b4678a6fdd": {
-      "0": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 24
-      },
-      "16": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 267
-      },
-      "32": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 267
-      },
-      "48": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "56": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "64": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "80": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "96": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "112": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "120": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "136": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "152": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "160": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "176": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "184": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "216": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "232": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "240": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "264": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "280": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "288": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "312": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "320": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "336": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "344": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "360": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "376": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "384": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "432": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "440": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "456": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "472": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "488": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "504": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "520": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "528": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "536": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "544": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "552": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "560": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "568": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      },
-      "584": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 275
-      }
-    },
     "768ee1b57c3c588838cff6663ca1daae0b4d9d5d1c075b15373577e23523093a": {
       "0": {
         "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
@@ -5216,6 +4450,166 @@
         "line": 56
       }
     },
+    "77492a4cdd6ea120a953069258892a7127fb2e0d76d26750e94455929a84c212": {
+      "0": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 1987
+      },
+      "8": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 1988
+      },
+      "24": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 1989
+      },
+      "48": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 1990
+      },
+      "64": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 1991
+      },
+      "72": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 1992
+      },
+      "88": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 489
+      },
+      "96": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 489
+      },
+      "104": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 489
+      },
+      "112": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 489
+      },
+      "120": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 489
+      },
+      "128": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 489
+      },
+      "136": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 489
+      },
+      "152": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 489
+      },
+      "168": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 489
+      },
+      "176": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 489
+      },
+      "184": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 489
+      },
+      "192": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 489
+      },
+      "208": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 489
+      },
+      "216": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2011
+      },
+      "232": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2014
+      },
+      "240": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2015
+      },
+      "256": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2018
+      }
+    },
+    "774ff8a79bbea08224fac14a0ed41beee6cc364ff6a3b316d6ee734ecc577b0d": {
+      "0": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3154
+      },
+      "8": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3155
+      },
+      "56": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3156
+      },
+      "64": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3157
+      },
+      "80": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3160
+      },
+      "88": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3161
+      },
+      "136": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3162
+      },
+      "144": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3163
+      },
+      "160": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3166
+      },
+      "168": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3167
+      },
+      "216": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3168
+      },
+      "224": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3169
+      },
+      "240": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3172
+      },
+      "248": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3173
+      },
+      "296": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3174
+      },
+      "304": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3175
+      }
+    },
     "78f567ea8cf07fe52a4cfd31dd46b8d089ef3524601692a6cb66d4ece0db2f8c": {
       "0": {
         "filename": "ProxyMultiVaultAlien_V5.code",
@@ -5288,52 +4682,6 @@
       "200": {
         "filename": "ProxyMultiVaultAlien_V5.code",
         "line": 2601
-      }
-    },
-    "7abd15a26e4b742c38e432a743d0295d916232d9873692ee7da881672971f16c": {
-      "0": {
-        "filename": "<entry-selector>",
-        "line": 1
-      },
-      "8": {
-        "filename": "<entry-selector>",
-        "line": 2
-      },
-      "24": {
-        "filename": "<entry-selector>",
-        "line": 3
-      },
-      "32": {
-        "filename": "<entry-selector>",
-        "line": 4
-      },
-      "48": {
-        "filename": "<entry-selector>",
-        "line": 5
-      },
-      "56": {
-        "filename": "<entry-selector>",
-        "line": 6
-      },
-      "72": {
-        "filename": "<entry-selector>",
-        "line": 7
-      },
-      "88": {
-        "filename": "<entry-selector>",
-        "line": 8
-      },
-      "96": {
-        "filename": "<entry-selector>",
-        "line": 9
-      },
-      "112": {
-        "filename": "<entry-selector>",
-        "line": 10
-      },
-      "128": {
-        "filename": "<entry-selector>",
-        "line": 11
       }
     },
     "7e8f3e98be86c9ef86061d8f60dbd5b0656b034fc530aa7d8d081fa93e3ec0ac": {
@@ -5830,158 +5178,216 @@
         "line": 540
       }
     },
-    "892fab1d7ca82ccd5dc627dfb90d61478843d4000799e6dd2f6367ebe72e18d1": {
+    "8504f3f02f2e556da33842f2795688fa01509338670205929beda9c43823db33": {
       "0": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 4
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 152
       },
-      "8": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 5
-      },
-      "24": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 6
+      "16": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 64
       },
       "32": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 7
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 64
       },
       "48": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 10
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 64
       },
       "64": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 11
-      },
-      "80": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 12
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 64
       },
       "88": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 13
-      },
-      "96": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 14
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 24
       },
       "104": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 160
+      }
+    },
+    "8a7c0b6c2288664abba388490c1caf82daabbc02df560e17c01429f1f79db75e": {
+      "0": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
         "line": 15
       },
-      "112": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 16
+      "16": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
+        "line": 15
+      },
+      "32": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
+        "line": 15
+      },
+      "48": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
+        "line": 15
+      },
+      "56": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
+        "line": 15
+      },
+      "64": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
+        "line": 15
+      },
+      "72": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
+        "line": 15
+      },
+      "88": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
+        "line": 15
+      },
+      "104": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
+        "line": 15
       },
       "120": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 18
-      },
-      "128": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 19
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
+        "line": 15
       },
       "144": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 20
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
+        "line": 15
       },
-      "152": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
-        "line": 9
+      "160": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
+        "line": 15
       },
       "168": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
-        "line": 9
-      },
-      "176": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
-        "line": 9
-      },
-      "184": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
-        "line": 9
+        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
+        "line": 15
       },
       "192": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
-        "line": 9
-      },
-      "200": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
-        "line": 9
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 24
       },
       "208": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
-        "line": 9
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 494
       },
       "216": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
-        "line": 9
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 496
       },
       "232": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
-        "line": 9
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 496
       },
       "240": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
-        "line": 9
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 496
+      },
+      "256": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 496
       },
       "264": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 50
+        "line": 496
+      },
+      "272": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 496
       },
       "280": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 52
-      },
-      "296": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 54
+        "line": 496
       },
       "304": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 54
+        "line": 496
       },
       "320": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 56
+        "line": 496
       },
-      "328": {
+      "344": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 56
+        "line": 496
       },
       "352": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 56
+        "line": 496
       },
       "360": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 56
+        "line": 496
       },
-      "376": {
+      "384": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 56
-      },
-      "392": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 56
+        "line": 496
       },
       "400": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 56
+        "line": 496
       },
-      "416": {
+      "408": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 56
+        "line": 496
       },
-      "432": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 54
+      "456": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 496
       },
-      "448": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 57
+      "472": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 496
+      },
+      "480": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 496
+      },
+      "496": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 496
+      },
+      "504": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 496
+      },
+      "512": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 496
+      },
+      "520": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 496
+      },
+      "528": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 496
+      },
+      "536": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 496
+      },
+      "544": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 496
+      },
+      "552": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 496
+      },
+      "560": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 496
+      },
+      "568": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 496
+      },
+      "576": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 496
+      },
+      "592": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 496
       }
     },
     "8bb955c452e7ca77d68a4ae9c7ed02706f3022424902a4b2f5fdb1b93cda8427": {
@@ -6298,104 +5704,6 @@
         "line": 385
       }
     },
-    "8caf4f4dcb1412c575512af437bfaa89ea2133e404ebd0e80452d6a78cc5af27": {
-      "0": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1182
-      },
-      "8": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1183
-      },
-      "24": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1184
-      },
-      "48": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1185
-      },
-      "64": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1186
-      },
-      "72": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1187
-      },
-      "88": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 337
-      },
-      "96": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 337
-      },
-      "104": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 337
-      },
-      "112": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 337
-      },
-      "120": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 337
-      },
-      "128": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 337
-      },
-      "136": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 337
-      },
-      "152": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 337
-      },
-      "168": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 337
-      },
-      "184": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 337
-      },
-      "192": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 337
-      },
-      "208": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 337
-      },
-      "216": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 337
-      },
-      "232": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 337
-      },
-      "240": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1207
-      },
-      "256": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1210
-      },
-      "264": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1211
-      },
-      "280": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1214
-      }
-    },
     "8cc1bc3c2d9e83a43ffb60a0e0661424c84abff7e635dee5aa052ef601cfad05": {
       "0": {
         "filename": "ProxyMultiVaultAlien_V5.code",
@@ -6444,102 +5752,6 @@
       "144": {
         "filename": "ProxyMultiVaultAlien_V5.code",
         "line": 1751
-      }
-    },
-    "8e38630755d0134ba4aba62f5f7b255d02051180b6a08d0fbabb626e893bcdd0": {
-      "0": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3091
-      },
-      "8": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3092
-      },
-      "56": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3093
-      },
-      "64": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3094
-      },
-      "80": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3097
-      },
-      "88": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3098
-      },
-      "136": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3099
-      },
-      "144": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3100
-      },
-      "160": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3103
-      },
-      "168": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3104
-      },
-      "216": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3105
-      },
-      "224": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3106
-      },
-      "240": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3109
-      },
-      "248": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3110
-      },
-      "296": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3111
-      },
-      "304": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3112
-      }
-    },
-    "90c7fd8b5af26e251ecbf460d367d3e9ccd134315ca46e09788623612681f395": {
-      "0": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 99
-      },
-      "16": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 64
-      },
-      "32": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 64
-      },
-      "48": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 64
-      },
-      "64": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 64
-      },
-      "88": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 24
-      },
-      "104": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 107
       }
     },
     "9212e370bf7fb42b877431b25d416722a3687293a4c436ab8ed5f88c2ba0f6fc": {
@@ -6680,6 +5892,72 @@
         "line": 1458
       }
     },
+    "926eab77a221d0d10e1e695af5bda43bf21e610b5e4c336fac9767de81d7260f": {
+      "0": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3091
+      },
+      "8": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3092
+      },
+      "56": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3093
+      },
+      "64": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3094
+      },
+      "80": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3097
+      },
+      "88": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3098
+      },
+      "136": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3099
+      },
+      "144": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3100
+      },
+      "160": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3103
+      },
+      "168": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3104
+      },
+      "216": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3105
+      },
+      "224": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3106
+      },
+      "240": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3109
+      },
+      "248": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3110
+      },
+      "296": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3111
+      },
+      "304": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3112
+      }
+    },
     "947f44d2fce66bc9672dd73cf21782dd7ca3e2b3a69daeb2271b6748be89e6b6": {
       "0": {
         "filename": "ProxyMultiVaultAlien_V5.code",
@@ -6727,128 +6005,6 @@
       }
     },
     "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7": {},
-    "992418bc4dc9122d7e07b02a74fa1fa71dc8d284181ab0aecf622da19d4d8c52": {
-      "0": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 144
-      },
-      "8": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 145
-      },
-      "24": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 146
-      },
-      "48": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 147
-      },
-      "64": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 148
-      },
-      "72": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 149
-      },
-      "88": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 81
-      },
-      "96": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 81
-      },
-      "104": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 81
-      },
-      "120": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 81
-      },
-      "128": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 81
-      },
-      "136": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 81
-      },
-      "144": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 81
-      },
-      "152": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 81
-      },
-      "168": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 81
-      },
-      "176": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 81
-      },
-      "192": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 81
-      },
-      "200": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 81
-      },
-      "208": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 81
-      },
-      "216": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 81
-      },
-      "232": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 81
-      },
-      "240": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 81
-      },
-      "248": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 81
-      },
-      "256": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 81
-      },
-      "272": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 81
-      },
-      "280": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 81
-      },
-      "288": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 176
-      },
-      "304": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 179
-      },
-      "312": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 180
-      },
-      "328": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 183
-      }
-    },
     "a2c156564110faae80404c4dd9d97c1ff225c978b4e5072613b968274b265278": {
       "0": {
         "filename": "ProxyMultiVaultAlien_V5.code",
@@ -7085,6 +6241,72 @@
       "848": {
         "filename": "ProxyMultiVaultAlien_V5.code",
         "line": 128
+      }
+    },
+    "a5b4efb041c0d6b3c5edc7546f8bdad1e81760b362cc099ae9464e0e3f3254b5": {
+      "0": {
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 24
+      },
+      "16": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 88
+      },
+      "24": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 88
+      },
+      "40": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 88
+      },
+      "56": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 88
+      },
+      "64": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 88
+      },
+      "80": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 88
+      },
+      "96": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 88
+      },
+      "112": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 88
+      },
+      "120": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 88
+      },
+      "128": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 90
+      },
+      "144": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 90
+      },
+      "160": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 90
+      },
+      "176": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 90
+      },
+      "192": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 90
+      },
+      "208": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 213
       }
     },
     "aa74645cde9ec1ee167a889040ef67182aced6acfcda76d7800739c3a972676a": {
@@ -7443,6 +6665,176 @@
         "line": 249
       }
     },
+    "aa99689c0ccad4574b576908ff5d2fb2cbb2d83977df2738e1dc2aa5058ddd63": {
+      "0": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 278
+      },
+      "8": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 279
+      },
+      "24": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 280
+      },
+      "48": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 281
+      },
+      "64": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 282
+      },
+      "72": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 283
+      },
+      "88": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "96": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "104": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "112": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "120": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "128": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "136": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "152": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "168": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "176": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "192": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "208": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "224": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "240": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "248": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "256": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "264": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "272": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "288": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "296": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "304": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "312": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "328": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "344": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "360": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "376": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "384": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "392": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "400": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "408": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "416": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "432": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 119
+      },
+      "440": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 321
+      },
+      "456": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 324
+      },
+      "464": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 325
+      },
+      "480": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 328
+      }
+    },
     "acadfc879b95c06717ee1702b660e497e9b735a611c2601b46450f4adcca49de": {
       "0": {
         "filename": "ProxyMultiVaultAlien_V5.code",
@@ -7549,210 +6941,254 @@
         "line": 2364
       }
     },
-    "baa78c64bad5d325c52a660b6860659519dc9a1c4cb6b52adc14c2213d379564": {
-      "0": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 24
-      },
-      "16": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 88
-      },
-      "24": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 88
-      },
-      "40": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 88
-      },
-      "56": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 88
-      },
-      "64": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 88
-      },
-      "80": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 88
-      },
-      "96": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 88
-      },
-      "112": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 88
-      },
-      "120": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 88
-      },
-      "128": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 90
-      },
-      "144": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 90
-      },
-      "160": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 90
-      },
-      "176": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 90
-      },
-      "192": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 90
-      },
-      "208": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 213
-      }
-    },
-    "bb9425e41f9f36c94837af9065b3e0aefcf86d09f60cb3f10200a2c3d3dcebad": {
+    "b415c6d1ca59172ff20c77bd1e1707916a470c51d3645176626aefd4d6ac9aa6": {
       "0": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3212
+        "line": 3120
       },
       "8": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3213
+        "line": 3121
       },
       "56": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3214
+        "line": 3122
       },
       "64": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3215
+        "line": 3123
       },
       "80": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3218
+        "line": 3126
       },
       "88": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3219
+        "line": 3127
       },
       "136": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3220
+        "line": 3128
       },
       "144": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3221
+        "line": 3129
       },
       "160": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3224
+        "line": 3132
       },
       "168": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3225
+        "line": 3133
       },
       "216": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3226
+        "line": 3134
       },
       "224": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3227
+        "line": 3135
       },
       "240": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3230
+        "line": 3138
       },
       "248": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3231
+        "line": 3139
       },
       "296": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3232
+        "line": 3140
       },
       "304": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3233
+        "line": 3141
       }
     },
-    "bd946e63a4ab9a1863a287a9048bc1050f18631d32dc29d00c8ba2d4787d5a57": {
+    "bac0ed68cdf52e4caaa6cdca5697891bf8a74d7811716bfe0c5ec95d29da8554": {
       "0": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
-        "line": 15
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 17
       },
       "16": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
-        "line": 15
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 17
       },
       "32": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
-        "line": 15
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 17
       },
-      "48": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
-        "line": 15
+      "40": {
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 17
       },
       "56": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
-        "line": 15
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 17
       },
       "64": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
-        "line": 15
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 17
       },
       "72": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
-        "line": 15
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 17
       },
       "88": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
-        "line": 15
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 17
       },
       "104": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
-        "line": 15
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 17
       },
       "120": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
-        "line": 15
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 17
+      },
+      "128": {
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 17
+      }
+    },
+    "bbbf29b9b29e0d549eb499e565b2d3a6875f778a2dda7a78881b2aebe7ec6b0b": {
+      "0": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2865
+      },
+      "16": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2866
+      },
+      "24": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2867
+      },
+      "40": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2868
+      },
+      "56": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2869
+      },
+      "72": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2870
+      },
+      "80": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2871
+      },
+      "88": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2872
+      },
+      "104": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2873
+      },
+      "120": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2874
+      },
+      "128": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2875
       },
       "144": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
-        "line": 15
-      },
-      "160": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
-        "line": 15
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2876
       },
       "168": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
-        "line": 15
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2877
+      },
+      "184": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2878
       },
       "192": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 24
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2879
       },
       "208": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 480
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2880
       },
-      "224": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 480
+      "248": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2881
       },
-      "240": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 480
+      "264": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2882
       },
-      "256": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 480
+      "272": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2883
+      },
+      "288": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2884
+      },
+      "296": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2885
+      },
+      "312": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2886
+      },
+      "328": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2887
+      },
+      "336": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2888
+      },
+      "344": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2889
+      },
+      "360": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2890
+      },
+      "376": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2894
+      },
+      "384": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2895
+      },
+      "408": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2896
+      },
+      "424": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2897
+      },
+      "432": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2898
+      },
+      "448": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2902
+      },
+      "456": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2903
+      },
+      "472": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2906
       }
     },
     "c02f0e4b766838a4998b45d2a81cacf9d9ea6c1ba18f7625dc0859f4106fe8c3": {
@@ -8035,6 +7471,176 @@
         "line": 1818
       }
     },
+    "c37fd6101edc30a2644b9e9fd2878aa6a2467168c3c881ef46b29bbf55597a92": {
+      "0": {
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 24
+      },
+      "16": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 267
+      },
+      "32": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 267
+      },
+      "48": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "56": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "64": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "80": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "96": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "112": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "120": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "136": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "152": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "160": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "176": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "184": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "216": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "232": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "240": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "264": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "280": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "288": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "312": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "320": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "336": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "344": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "360": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "376": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "384": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "432": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "440": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "456": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "472": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "488": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "504": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "520": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "528": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "536": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "544": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "552": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "560": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "568": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      },
+      "584": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 275
+      }
+    },
     "c392678117bb0204e0c7c8cd7ce487ddce2262791528ced708c75af32071e93c": {
       "0": {
         "filename": "ProxyMultiVaultAlien_V5.code",
@@ -8085,6 +7691,66 @@
         "line": 1880
       }
     },
+    "c81160ca6b88186e5726b8b11cefd779ec28f5a87c36925478bf52f3e23e1d00": {
+      "0": {
+        "filename": "<entry-selector>",
+        "line": 1
+      },
+      "8": {
+        "filename": "<entry-selector>",
+        "line": 2
+      },
+      "24": {
+        "filename": "<entry-selector>",
+        "line": 3
+      },
+      "32": {
+        "filename": "<entry-selector>",
+        "line": 4
+      },
+      "48": {
+        "filename": "<entry-selector>",
+        "line": 5
+      },
+      "56": {
+        "filename": "<entry-selector>",
+        "line": 6
+      },
+      "72": {
+        "filename": "<entry-selector>",
+        "line": 7
+      },
+      "88": {
+        "filename": "<entry-selector>",
+        "line": 8
+      },
+      "96": {
+        "filename": "<entry-selector>",
+        "line": 9
+      },
+      "112": {
+        "filename": "<entry-selector>",
+        "line": 10
+      },
+      "128": {
+        "filename": "<entry-selector>",
+        "line": 11
+      }
+    },
+    "c8df6152978938f7da568458cde077b2fbf1565b880adebec7821ad49479440f": {
+      "0": {
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 44
+      },
+      "16": {
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 44
+      },
+      "24": {
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 44
+      }
+    },
     "c9ad0d115cd2e7c020fe1c4964458af8fe66f5072f91a6623a927bd48f6b6da7": {
       "0": {
         "filename": "ProxyMultiVaultAlien_V5.code",
@@ -8133,6 +7799,68 @@
       "144": {
         "filename": "ProxyMultiVaultAlien_V5.code",
         "line": 2143
+      }
+    },
+    "cc432d251116a8250acf6be9d1111f71bb9407d1296b67c617dbf1ce8b46f0b7": {
+      "4": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 544
+      },
+      "12": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 544
+      },
+      "28": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 544
+      },
+      "36": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 544
+      },
+      "52": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 544
+      },
+      "60": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 544
+      },
+      "68": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 544
+      },
+      "76": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 544
+      },
+      "92": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 544
+      },
+      "100": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 544
+      },
+      "108": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 544
+      },
+      "124": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 544
+      },
+      "140": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 544
+      },
+      "156": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 544
+      },
+      "164": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 544
       }
     },
     "cc5ee6145bb35d25ebae6bb6335e208559aba9807c35d9138b846082260ab5df": {
@@ -8263,6 +7991,124 @@
       "440": {
         "filename": "../contracts/utils/TransferUtils.tsol",
         "line": 50
+      }
+    },
+    "d15c211e82bd169cb231e9b7a73f1b742e486341ffbb650cacfcf8b657789a19": {
+      "0": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 364
+      },
+      "8": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 365
+      },
+      "24": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 366
+      },
+      "48": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 367
+      },
+      "64": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 368
+      },
+      "72": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 369
+      },
+      "88": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 152
+      },
+      "96": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 152
+      },
+      "104": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 152
+      },
+      "112": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 152
+      },
+      "120": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 152
+      },
+      "128": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 152
+      },
+      "136": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 152
+      },
+      "152": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 152
+      },
+      "168": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 152
+      },
+      "184": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 152
+      },
+      "192": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 152
+      },
+      "200": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 152
+      },
+      "208": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 152
+      },
+      "224": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 152
+      },
+      "232": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 152
+      },
+      "240": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 152
+      },
+      "248": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 152
+      },
+      "264": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 152
+      },
+      "272": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 152
+      },
+      "280": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 394
+      },
+      "296": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 397
+      },
+      "304": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 398
+      },
+      "320": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 401
       }
     },
     "d2dfb086d90104d82d74a8e14f9372135fd7062b34d620f13bdc5aafbfa3c292": {
@@ -8417,134 +8263,442 @@
         "line": 242
       }
     },
-    "d8373d00a92ad57ae01c8ddf5325121f9c7eab7c018c860d61d4e6efeafa640f": {
+    "d7db45ecee6f1d818982fabb58b277ce5b74a679dc8f5ef6ce3600df88bb051b": {
       "0": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 684
+        "filename": "../contracts/utils/TransferUtils.tsol",
+        "line": 24
       },
-      "8": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 685
+      "16": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 342
       },
-      "24": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 686
+      "32": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 342
       },
       "48": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 687
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 342
       },
       "64": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 688
-      },
-      "72": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 689
-      },
-      "88": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 259
+        "line": 342
+      },
+      "80": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 342
       },
       "96": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 259
-      },
-      "104": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 259
+        "line": 342
       },
       "112": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 259
+        "line": 342
       },
       "120": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 259
-      },
-      "128": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 259
+        "line": 342
       },
       "144": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 259
+        "line": 344
       },
-      "160": {
+      "152": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 259
+        "line": 344
       },
       "168": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 259
+        "line": 346
       },
-      "176": {
+      "184": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 259
-      },
-      "192": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 259
+        "line": 346
       },
       "200": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 259
+        "line": 346
       },
       "216": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 259
+        "line": 346
       },
-      "232": {
+      "224": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 259
+        "line": 346
       },
       "240": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 259
+        "line": 346
       },
-      "248": {
+      "256": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 259
-      },
-      "264": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 259
+        "line": 346
       },
       "272": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 259
+        "line": 346
       },
       "280": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 259
-      },
-      "288": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 259
+        "line": 346
       },
       "296": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 259
+        "line": 346
       },
-      "312": {
+      "304": {
         "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 259
-      },
-      "320": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 718
+        "line": 346
       },
       "336": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 721
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
       },
-      "344": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 722
+      "352": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
       },
       "360": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      },
+      "384": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      },
+      "400": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      },
+      "408": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      },
+      "432": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      },
+      "440": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      },
+      "456": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      },
+      "464": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      },
+      "480": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      },
+      "496": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      },
+      "504": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      },
+      "552": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      },
+      "560": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      },
+      "576": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      },
+      "584": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      },
+      "600": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      },
+      "608": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      },
+      "624": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      },
+      "640": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      },
+      "656": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      },
+      "664": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      },
+      "672": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      },
+      "680": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      },
+      "688": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      },
+      "696": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      },
+      "704": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      },
+      "712": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      },
+      "728": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 346
+      }
+    },
+    "dfe999d920d6fe58b8cfb3a19aaaad8ae932e1d3b73de29ea9a323705e82ab3b": {
+      "0": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 725
+        "line": 910
+      },
+      "8": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 911
+      },
+      "24": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 912
+      },
+      "48": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 913
+      },
+      "64": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 914
+      },
+      "72": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 915
+      },
+      "88": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 298
+      },
+      "96": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 298
+      },
+      "104": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 298
+      },
+      "112": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 298
+      },
+      "120": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 298
+      },
+      "128": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 298
+      },
+      "136": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 298
+      },
+      "152": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 298
+      },
+      "160": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 929
+      },
+      "176": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 932
+      },
+      "184": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 933
+      },
+      "200": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 936
+      }
+    },
+    "e0b5b7708fd55563ffba5087a49680e7c995eff22180bcde2df43f9319405ee0": {
+      "0": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 4
+      },
+      "8": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 5
+      },
+      "24": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 6
+      },
+      "32": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 7
+      },
+      "48": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 10
+      },
+      "64": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 11
+      },
+      "80": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 12
+      },
+      "88": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 13
+      },
+      "96": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 14
+      },
+      "104": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 15
+      },
+      "112": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 16
+      },
+      "120": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 18
+      },
+      "128": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 19
+      },
+      "144": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 20
+      },
+      "152": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
+      },
+      "168": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
+      },
+      "176": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
+      },
+      "184": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
+      },
+      "192": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
+      },
+      "200": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
+      },
+      "208": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
+      },
+      "216": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
+      },
+      "232": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
+      },
+      "240": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol",
+        "line": 9
+      },
+      "264": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 50
+      },
+      "280": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 52
+      },
+      "296": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 54
+      },
+      "304": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 54
+      },
+      "320": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 56
+      },
+      "328": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 56
+      },
+      "352": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 56
+      },
+      "360": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 56
+      },
+      "376": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 56
+      },
+      "392": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 56
+      },
+      "400": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 56
+      },
+      "416": {
+        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
+        "line": 56
+      },
+      "432": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 54
+      },
+      "448": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 57
       }
     },
     "e6936e8f0e7b8fe98c2ca66eee9d4e9dafcfc747defef9cb795288fabb1b7ef3": {
@@ -8599,72 +8753,6 @@
       "144": {
         "filename": "ProxyMultiVaultAlien_V5.code",
         "line": 2861
-      }
-    },
-    "e8662c4561582feb707c7bd1a857928fabe87fc6b85b71c76912fcdda7cefb7e": {
-      "0": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3120
-      },
-      "8": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3121
-      },
-      "56": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3122
-      },
-      "64": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3123
-      },
-      "80": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3126
-      },
-      "88": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3127
-      },
-      "136": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3128
-      },
-      "144": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3129
-      },
-      "160": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3132
-      },
-      "168": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3133
-      },
-      "216": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3134
-      },
-      "224": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3135
-      },
-      "240": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3138
-      },
-      "248": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3139
-      },
-      "296": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3140
-      },
-      "304": {
-        "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 3141
       }
     },
     "e8a4cba9a2a029706ac409a42d7b8c21033070de1bcf76babac94a2d788d7da2": {
@@ -8813,6 +8901,72 @@
         "line": 3204
       }
     },
+    "f1d9f0a038e7707cc35362139e19ab59e7efcea6e588d20af594e7be84a8f9b9": {
+      "0": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3150
+      },
+      "8": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3151
+      },
+      "56": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3152
+      },
+      "64": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3153
+      },
+      "80": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3179
+      },
+      "88": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3180
+      },
+      "136": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3181
+      },
+      "144": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3182
+      },
+      "160": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3208
+      },
+      "168": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3209
+      },
+      "216": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3210
+      },
+      "224": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3211
+      },
+      "240": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3237
+      },
+      "248": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3238
+      },
+      "296": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3239
+      },
+      "304": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 3240
+      }
+    },
     "f24e1e7aa04d89aad2945816b6e9b921f2b3892da9ba53e2383c148351b96d0c": {
       "0": {
         "filename": "ProxyMultiVaultAlien_V5.code",
@@ -8823,152 +8977,226 @@
         "line": 2892
       }
     },
-    "f47a792cdf0336c303d5dbb2e102f6f19f6b62922367a9a55bc9b3f0933b6498": {
+    "f25408b1dfda2a7957c2456add2ebb1aa2a977eecaf3776e031f8ffc4cc492af": {
       "0": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 910
+        "line": 2910
       },
-      "8": {
+      "16": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 911
+        "line": 2911
       },
       "24": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 912
+        "line": 2912
       },
-      "48": {
+      "40": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 913
+        "line": 2913
       },
-      "64": {
+      "56": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 914
+        "line": 2914
       },
       "72": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 915
+        "line": 2915
       },
-      "88": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 298
+      "80": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2918
       },
       "96": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 298
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2919
       },
       "104": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 298
-      },
-      "112": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 298
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2920
       },
       "120": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 298
-      },
-      "128": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 298
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2923
       },
       "136": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 298
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2924
       },
-      "152": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 298
+      "144": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2925
       },
       "160": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 929
+        "line": 2926
       },
       "176": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 932
+        "line": 2927
       },
-      "184": {
+      "192": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 933
+        "line": 2928
       },
       "200": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 936
-      }
-    },
-    "f489da76cd87250d21ba09beb942359f4f0e882b880b7cad8a8075edd04513bd": {
-      "0": {
+        "line": 2929
+      },
+      "216": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1114
+        "line": 2930
       },
-      "8": {
+      "224": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1115
+        "line": 2931
       },
-      "24": {
+      "240": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1116
+        "line": 2932
       },
-      "48": {
+      "248": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1117
+        "line": 2933
       },
-      "64": {
+      "256": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1118
+        "line": 2934
       },
-      "72": {
+      "272": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1119
+        "line": 2935
       },
-      "88": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 322
-      },
-      "96": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 322
-      },
-      "104": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 322
-      },
-      "112": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 322
-      },
-      "120": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 322
-      },
-      "128": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 322
-      },
-      "136": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 322
-      },
-      "152": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 322
-      },
-      "160": {
+      "280": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1133
+        "line": 2936
       },
-      "176": {
+      "288": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1136
+        "line": 2938
       },
-      "184": {
+      "296": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1137
+        "line": 2939
       },
-      "200": {
+      "304": {
         "filename": "ProxyMultiVaultAlien_V5.code",
-        "line": 1140
+        "line": 2940
+      },
+      "320": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2942
+      },
+      "328": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2943
+      },
+      "336": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2944
+      },
+      "352": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2945
+      },
+      "368": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2946
+      },
+      "384": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2948
+      },
+      "392": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2949
+      },
+      "408": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2950
+      },
+      "416": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2951
+      },
+      "432": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2953
+      },
+      "440": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2954
+      },
+      "456": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2955
+      },
+      "464": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "480": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "488": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "496": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "512": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "520": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "536": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "560": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "568": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "608": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "616": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "624": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "640": {
+        "filename": "stdlib.sol",
+        "line": 63
+      },
+      "656": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2957
+      },
+      "672": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2958
+      },
+      "680": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2959
+      },
+      "696": {
+        "filename": "ProxyMultiVaultAlien_V5.code",
+        "line": 2962
       }
     },
     "f7b9ea283cd2dd2ee574b7481a42f37b2de5e854aedd5bd1db4d169f48e37a0a": {
@@ -9093,7 +9321,7 @@
         "line": 176
       }
     },
-    "f8b8871748cfbbec8f9a88a04bec0879b146b704eea14a6509b8a061bf917369": {
+    "f7ef648c83bb7e57677448e32b6d4c1ce71ff54b5199e703e60b6fd0e59f4d67": {
       "0": {
         "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
         "line": 15
@@ -9395,52 +9623,6 @@
         "line": 424
       }
     },
-    "fd4d42c889898c15e076750e73b46185047d0d411d8c0d7cc85d81769022b6e2": {
-      "0": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 17
-      },
-      "16": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 17
-      },
-      "32": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 17
-      },
-      "40": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 17
-      },
-      "56": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 17
-      },
-      "64": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 17
-      },
-      "72": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 17
-      },
-      "88": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 17
-      },
-      "104": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 17
-      },
-      "120": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 17
-      },
-      "128": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 17
-      }
-    },
     "fd81e503d9aec93bf66bf97fd35eb424a8618f5d89be271978d4f13430bdccb4": {
       "0": {
         "filename": "ProxyMultiVaultAlien_V5.code",
@@ -9501,188 +9683,6 @@
       "304": {
         "filename": "ProxyMultiVaultAlien_V5.code",
         "line": 3002
-      }
-    },
-    "fdd0c6693a710bc2d9e5d5c97fd2a081d5c1392b622db0c04dc3811b220fce15": {
-      "0": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
-        "line": 15
-      },
-      "16": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
-        "line": 15
-      },
-      "32": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
-        "line": 15
-      },
-      "48": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
-        "line": 15
-      },
-      "56": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
-        "line": 15
-      },
-      "64": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
-        "line": 15
-      },
-      "72": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
-        "line": 15
-      },
-      "88": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
-        "line": 15
-      },
-      "104": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
-        "line": 15
-      },
-      "120": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
-        "line": 15
-      },
-      "144": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
-        "line": 15
-      },
-      "160": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
-        "line": 15
-      },
-      "168": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol",
-        "line": 15
-      },
-      "192": {
-        "filename": "../contracts/utils/TransferUtils.tsol",
-        "line": 24
-      },
-      "208": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 494
-      },
-      "216": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "232": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "240": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "256": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "264": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "272": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "280": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "304": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "320": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "344": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "352": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "360": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "384": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "400": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "408": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "456": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "472": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "480": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "496": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "504": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "512": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "520": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "528": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "536": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "544": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "552": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "560": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "568": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "576": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
-      },
-      "592": {
-        "filename": "../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V5.tsol",
-        "line": 496
       }
     },
     "fdd5e0572e56faafecbc66a0cb7acf647be900cb52ec43a183961c5495c5a216": {

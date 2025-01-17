@@ -1,5 +1,51 @@
 {
   "map": {
+    "00b93e6d712afeca8d1dfc0e04066cc8f55c5f2623468de2dd7dd91c3c98bf62": {
+      "0": {
+        "filename": "Proposal.code",
+        "line": 1015
+      },
+      "8": {
+        "filename": "Proposal.code",
+        "line": 1016
+      },
+      "24": {
+        "filename": "Proposal.code",
+        "line": 1017
+      },
+      "48": {
+        "filename": "Proposal.code",
+        "line": 1018
+      },
+      "64": {
+        "filename": "Proposal.code",
+        "line": 1019
+      },
+      "72": {
+        "filename": "Proposal.code",
+        "line": 1020
+      },
+      "88": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 122
+      },
+      "96": {
+        "filename": "Proposal.code",
+        "line": 1026
+      },
+      "112": {
+        "filename": "Proposal.code",
+        "line": 1029
+      },
+      "120": {
+        "filename": "Proposal.code",
+        "line": 1030
+      },
+      "136": {
+        "filename": "Proposal.code",
+        "line": 1033
+      }
+    },
     "00bdafcdb03610dbdbcca80483133eac4b59e7ee7e47821634dfc6c5c67ae629": {
       "0": {
         "filename": "Proposal.code",
@@ -274,50 +320,152 @@
         "line": 1996
       }
     },
-    "05cb61b7c9ba696641ca20e30cf4f49ae6a7de58fc8e5b2432b310eff7a4d9a6": {
+    "01c9e9f06675120b1a0e27676dfebe8ad72d9acda0b2195e9f27160904771b17": {
       "0": {
-        "filename": "<entry-selector>",
-        "line": 1
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 123
       },
-      "8": {
-        "filename": "<entry-selector>",
-        "line": 2
+      "16": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 123
       },
-      "24": {
-        "filename": "<entry-selector>",
-        "line": 3
-      },
-      "32": {
-        "filename": "<entry-selector>",
-        "line": 4
-      },
-      "48": {
-        "filename": "<entry-selector>",
-        "line": 5
+      "40": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 124
       },
       "56": {
-        "filename": "<entry-selector>",
-        "line": 6
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 124
       },
       "72": {
-        "filename": "<entry-selector>",
-        "line": 7
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 124
       },
       "88": {
-        "filename": "<entry-selector>",
-        "line": 8
-      },
-      "96": {
-        "filename": "<entry-selector>",
-        "line": 9
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 124
       },
       "112": {
-        "filename": "<entry-selector>",
-        "line": 10
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 125
       },
-      "128": {
-        "filename": "<entry-selector>",
-        "line": 11
+      "160": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 125
+      },
+      "168": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 125
+      },
+      "184": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 126
+      },
+      "192": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 126
+      },
+      "208": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 127
+      },
+      "216": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 127
+      },
+      "224": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 127
+      },
+      "240": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 128
+      },
+      "248": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 128
+      },
+      "264": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 128
+      },
+      "280": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 128
+      },
+      "296": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 128
+      },
+      "304": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 128
+      },
+      "328": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 128
+      },
+      "336": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 128
+      },
+      "384": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 128
+      },
+      "408": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 128
+      },
+      "424": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 128
+      },
+      "440": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 128
+      },
+      "448": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 128
+      },
+      "464": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 128
+      }
+    },
+    "060439131a9ebd78bbf66cfead2b35d8836ff1e630ec4e46af6fab8b21872d60": {
+      "40": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 220
+      },
+      "48": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 220
+      },
+      "64": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 220
+      },
+      "72": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 220
+      },
+      "88": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 220
+      },
+      "96": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 220
+      },
+      "112": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 220
+      },
+      "120": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 220
       }
     },
     "07891af2801baf115d103ba1492d96d16c9d885524ac9e9016d9b42345e0bfc3": {
@@ -466,168 +614,6 @@
         "line": 2724
       }
     },
-    "0a6de637e63bbd130cc0b83b73695a07f52ec3a0d4f18fc9ec1333db424e6516": {
-      "0": {
-        "filename": "Proposal.code",
-        "line": 2181
-      },
-      "16": {
-        "filename": "Proposal.code",
-        "line": 2182
-      },
-      "24": {
-        "filename": "Proposal.code",
-        "line": 2183
-      },
-      "40": {
-        "filename": "Proposal.code",
-        "line": 2184
-      },
-      "56": {
-        "filename": "Proposal.code",
-        "line": 2185
-      },
-      "72": {
-        "filename": "Proposal.code",
-        "line": 2186
-      },
-      "80": {
-        "filename": "Proposal.code",
-        "line": 2189
-      },
-      "96": {
-        "filename": "Proposal.code",
-        "line": 2190
-      },
-      "104": {
-        "filename": "Proposal.code",
-        "line": 2191
-      },
-      "120": {
-        "filename": "Proposal.code",
-        "line": 2194
-      },
-      "136": {
-        "filename": "Proposal.code",
-        "line": 2195
-      },
-      "144": {
-        "filename": "Proposal.code",
-        "line": 2196
-      },
-      "152": {
-        "filename": "Proposal.code",
-        "line": 2197
-      },
-      "168": {
-        "filename": "Proposal.code",
-        "line": 2198
-      },
-      "184": {
-        "filename": "Proposal.code",
-        "line": 2199
-      },
-      "192": {
-        "filename": "Proposal.code",
-        "line": 2200
-      },
-      "208": {
-        "filename": "Proposal.code",
-        "line": 2201
-      },
-      "216": {
-        "filename": "Proposal.code",
-        "line": 2202
-      },
-      "232": {
-        "filename": "Proposal.code",
-        "line": 2203
-      },
-      "248": {
-        "filename": "Proposal.code",
-        "line": 2204
-      },
-      "264": {
-        "filename": "Proposal.code",
-        "line": 2206
-      },
-      "272": {
-        "filename": "Proposal.code",
-        "line": 2207
-      },
-      "288": {
-        "filename": "Proposal.code",
-        "line": 2208
-      },
-      "296": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "312": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "320": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "328": {
-        "filename": "stdlib.sol",
-        "line": 61
-      },
-      "344": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "352": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "368": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "392": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "400": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "440": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "448": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "456": {
-        "filename": "stdlib.sol",
-        "line": 62
-      },
-      "472": {
-        "filename": "stdlib.sol",
-        "line": 63
-      },
-      "488": {
-        "filename": "Proposal.code",
-        "line": 2210
-      },
-      "504": {
-        "filename": "Proposal.code",
-        "line": 2211
-      },
-      "512": {
-        "filename": "Proposal.code",
-        "line": 2212
-      },
-      "528": {
-        "filename": "Proposal.code",
-        "line": 2215
-      }
-    },
     "0ce95c481767af68f06c01a040854329a1401ec8fdc331f62602bc4b8769c35e": {
       "0": {
         "filename": "Proposal.code",
@@ -688,6 +674,72 @@
       "304": {
         "filename": "Proposal.code",
         "line": 2551
+      }
+    },
+    "0f9c7c90dbfd73314c4e51dd50d7ba34e4d2dc5f5d500911bb19fe856c328b4b": {
+      "0": {
+        "filename": "Proposal.code",
+        "line": 2761
+      },
+      "8": {
+        "filename": "Proposal.code",
+        "line": 2762
+      },
+      "56": {
+        "filename": "Proposal.code",
+        "line": 2763
+      },
+      "64": {
+        "filename": "Proposal.code",
+        "line": 2764
+      },
+      "80": {
+        "filename": "Proposal.code",
+        "line": 2767
+      },
+      "88": {
+        "filename": "Proposal.code",
+        "line": 2768
+      },
+      "136": {
+        "filename": "Proposal.code",
+        "line": 2769
+      },
+      "144": {
+        "filename": "Proposal.code",
+        "line": 2770
+      },
+      "160": {
+        "filename": "Proposal.code",
+        "line": 2773
+      },
+      "168": {
+        "filename": "Proposal.code",
+        "line": 2774
+      },
+      "216": {
+        "filename": "Proposal.code",
+        "line": 2775
+      },
+      "224": {
+        "filename": "Proposal.code",
+        "line": 2776
+      },
+      "240": {
+        "filename": "Proposal.code",
+        "line": 2779
+      },
+      "248": {
+        "filename": "Proposal.code",
+        "line": 2780
+      },
+      "296": {
+        "filename": "Proposal.code",
+        "line": 2781
+      },
+      "304": {
+        "filename": "Proposal.code",
+        "line": 2782
       }
     },
     "0fc24a2a0ba944bf3457cd0fd084c071024003bf93ef8572514e59deba12d10d": {
@@ -1104,70 +1156,50 @@
         "line": 1198
       }
     },
-    "27b3dedf6152f9d77d40bca48efa6b0ac9d008a3149633869446365e7d5e2ac2": {
+    "284fc430b813875947044d99f72e5c014dd66932e9508709885a979d770d4756": {
       "0": {
-        "filename": "Proposal.code",
-        "line": 2761
+        "filename": "<entry-selector>",
+        "line": 1
       },
       "8": {
-        "filename": "Proposal.code",
-        "line": 2762
+        "filename": "<entry-selector>",
+        "line": 2
+      },
+      "24": {
+        "filename": "<entry-selector>",
+        "line": 3
+      },
+      "32": {
+        "filename": "<entry-selector>",
+        "line": 4
+      },
+      "48": {
+        "filename": "<entry-selector>",
+        "line": 5
       },
       "56": {
-        "filename": "Proposal.code",
-        "line": 2763
+        "filename": "<entry-selector>",
+        "line": 6
       },
-      "64": {
-        "filename": "Proposal.code",
-        "line": 2764
-      },
-      "80": {
-        "filename": "Proposal.code",
-        "line": 2767
+      "72": {
+        "filename": "<entry-selector>",
+        "line": 7
       },
       "88": {
-        "filename": "Proposal.code",
-        "line": 2768
+        "filename": "<entry-selector>",
+        "line": 8
       },
-      "136": {
-        "filename": "Proposal.code",
-        "line": 2769
+      "96": {
+        "filename": "<entry-selector>",
+        "line": 9
       },
-      "144": {
-        "filename": "Proposal.code",
-        "line": 2770
+      "112": {
+        "filename": "<entry-selector>",
+        "line": 10
       },
-      "160": {
-        "filename": "Proposal.code",
-        "line": 2773
-      },
-      "168": {
-        "filename": "Proposal.code",
-        "line": 2774
-      },
-      "216": {
-        "filename": "Proposal.code",
-        "line": 2775
-      },
-      "224": {
-        "filename": "Proposal.code",
-        "line": 2776
-      },
-      "240": {
-        "filename": "Proposal.code",
-        "line": 2779
-      },
-      "248": {
-        "filename": "Proposal.code",
-        "line": 2780
-      },
-      "296": {
-        "filename": "Proposal.code",
-        "line": 2781
-      },
-      "304": {
-        "filename": "Proposal.code",
-        "line": 2782
+      "128": {
+        "filename": "<entry-selector>",
+        "line": 11
       }
     },
     "2b01c3c83c9bcce3e267996bb613a096355f7984d4370114e3234a19e9d3ccff": {
@@ -1440,74 +1472,166 @@
         "line": 2511
       }
     },
-    "2fff5b13893786869b97fe849b6c019a9e8cddd9750bcaa02a215fd6df1e458f": {
+    "2f6a528c9cd316733d1ff6d8603f2330fe9632a3a69b22337e48d338d987161e": {
       "0": {
         "filename": "Proposal.code",
-        "line": 1680
+        "line": 2181
       },
-      "8": {
+      "16": {
         "filename": "Proposal.code",
-        "line": 1681
+        "line": 2182
       },
       "24": {
         "filename": "Proposal.code",
-        "line": 1682
+        "line": 2183
       },
-      "48": {
+      "40": {
         "filename": "Proposal.code",
-        "line": 1683
+        "line": 2184
       },
-      "64": {
+      "56": {
         "filename": "Proposal.code",
-        "line": 1684
+        "line": 2185
       },
       "72": {
         "filename": "Proposal.code",
-        "line": 1685
+        "line": 2186
       },
-      "88": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 240
+      "80": {
+        "filename": "Proposal.code",
+        "line": 2189
       },
       "96": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 240
+        "filename": "Proposal.code",
+        "line": 2190
       },
       "104": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 240
-      },
-      "112": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 240
+        "filename": "Proposal.code",
+        "line": 2191
       },
       "120": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 240
-      },
-      "128": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 240
+        "filename": "Proposal.code",
+        "line": 2194
       },
       "136": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 240
+        "filename": "Proposal.code",
+        "line": 2195
+      },
+      "144": {
+        "filename": "Proposal.code",
+        "line": 2196
       },
       "152": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 240
-      },
-      "160": {
         "filename": "Proposal.code",
-        "line": 1699
+        "line": 2197
       },
-      "176": {
+      "168": {
         "filename": "Proposal.code",
-        "line": 1702
+        "line": 2198
+      },
+      "184": {
+        "filename": "Proposal.code",
+        "line": 2199
       },
       "192": {
         "filename": "Proposal.code",
-        "line": 1705
+        "line": 2200
+      },
+      "208": {
+        "filename": "Proposal.code",
+        "line": 2201
+      },
+      "216": {
+        "filename": "Proposal.code",
+        "line": 2202
+      },
+      "232": {
+        "filename": "Proposal.code",
+        "line": 2203
+      },
+      "248": {
+        "filename": "Proposal.code",
+        "line": 2204
+      },
+      "264": {
+        "filename": "Proposal.code",
+        "line": 2206
+      },
+      "272": {
+        "filename": "Proposal.code",
+        "line": 2207
+      },
+      "288": {
+        "filename": "Proposal.code",
+        "line": 2208
+      },
+      "296": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "312": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "320": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "328": {
+        "filename": "stdlib.sol",
+        "line": 61
+      },
+      "344": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "352": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "368": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "392": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "400": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "440": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "448": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "456": {
+        "filename": "stdlib.sol",
+        "line": 62
+      },
+      "472": {
+        "filename": "stdlib.sol",
+        "line": 63
+      },
+      "488": {
+        "filename": "Proposal.code",
+        "line": 2210
+      },
+      "504": {
+        "filename": "Proposal.code",
+        "line": 2211
+      },
+      "512": {
+        "filename": "Proposal.code",
+        "line": 2212
+      },
+      "528": {
+        "filename": "Proposal.code",
+        "line": 2215
       }
     },
     "344d13744a19797ba0b0c488c3c3704ad29e8cb2355ceedf4acc788a82b6bd47": {
@@ -1674,56 +1798,6 @@
         "line": 2753
       }
     },
-    "382b9e1581cb57074764ece899df71114b0accb3d12d8301195f501c3e7f80e2": {
-      "0": {
-        "filename": "Proposal.code",
-        "line": 2574
-      },
-      "8": {
-        "filename": "Proposal.code",
-        "line": 2575
-      },
-      "56": {
-        "filename": "Proposal.code",
-        "line": 2576
-      },
-      "64": {
-        "filename": "Proposal.code",
-        "line": 2577
-      },
-      "80": {
-        "filename": "Proposal.code",
-        "line": 2695
-      },
-      "88": {
-        "filename": "Proposal.code",
-        "line": 2696
-      },
-      "136": {
-        "filename": "Proposal.code",
-        "line": 2697
-      },
-      "144": {
-        "filename": "Proposal.code",
-        "line": 2698
-      },
-      "160": {
-        "filename": "Proposal.code",
-        "line": 2816
-      },
-      "168": {
-        "filename": "Proposal.code",
-        "line": 2817
-      },
-      "216": {
-        "filename": "Proposal.code",
-        "line": 2818
-      },
-      "224": {
-        "filename": "Proposal.code",
-        "line": 2819
-      }
-    },
     "3f69666047fb3960d42e65f63669e6682ed87dbc8103fb90fe5d32533d7b02b8": {
       "0": {
         "filename": "Proposal.code",
@@ -1874,6 +1948,184 @@
       "296": {
         "filename": "Proposal.code",
         "line": 1677
+      }
+    },
+    "40c776545833a8613af22ba08b8123ab7b6155533283dbfc9a32325cec6b3128": {
+      "0": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 241
+      },
+      "16": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 241
+      },
+      "32": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 241
+      },
+      "48": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 241
+      },
+      "72": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 242
+      },
+      "80": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 242
+      },
+      "96": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 242
+      },
+      "104": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 242
+      },
+      "144": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 242
+      },
+      "160": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 242
+      },
+      "176": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 242
+      },
+      "192": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 242
+      },
+      "208": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 242
+      },
+      "216": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 242
+      },
+      "240": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 243
+      },
+      "288": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 243
+      },
+      "296": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 243
+      },
+      "312": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 244
+      },
+      "328": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 244
+      },
+      "488": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 244
+      },
+      "496": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 244
+      },
+      "504": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 244
+      },
+      "520": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 244
+      },
+      "528": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 244
+      },
+      "536": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 244
+      },
+      "552": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 245
+      },
+      "568": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 245
+      },
+      "576": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 245
+      },
+      "592": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 245
+      },
+      "608": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 245
+      },
+      "616": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 245
+      },
+      "640": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 245
+      },
+      "648": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 245
+      },
+      "656": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 245
+      },
+      "680": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 245
+      },
+      "696": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 245
+      },
+      "704": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 245
+      },
+      "752": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 245
+      },
+      "768": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 245
+      },
+      "776": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 245
+      },
+      "792": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 245
+      },
+      "800": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 245
+      },
+      "808": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 245
+      },
+      "824": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 245
       }
     },
     "421f1a5a0370ff24e44e8c83857161ffc6fe1b751c35e1734121ec649f17aef6": {
@@ -2946,72 +3198,6 @@
         "line": 2255
       }
     },
-    "594cfe9638ebb8bc9a8ca3ae0f592d00014b4a75e09cecf1a5ad69e201fdf450": {
-      "0": {
-        "filename": "Proposal.code",
-        "line": 2578
-      },
-      "8": {
-        "filename": "Proposal.code",
-        "line": 2579
-      },
-      "56": {
-        "filename": "Proposal.code",
-        "line": 2580
-      },
-      "64": {
-        "filename": "Proposal.code",
-        "line": 2581
-      },
-      "80": {
-        "filename": "Proposal.code",
-        "line": 2607
-      },
-      "88": {
-        "filename": "Proposal.code",
-        "line": 2608
-      },
-      "136": {
-        "filename": "Proposal.code",
-        "line": 2609
-      },
-      "144": {
-        "filename": "Proposal.code",
-        "line": 2610
-      },
-      "160": {
-        "filename": "Proposal.code",
-        "line": 2636
-      },
-      "168": {
-        "filename": "Proposal.code",
-        "line": 2637
-      },
-      "216": {
-        "filename": "Proposal.code",
-        "line": 2638
-      },
-      "224": {
-        "filename": "Proposal.code",
-        "line": 2639
-      },
-      "240": {
-        "filename": "Proposal.code",
-        "line": 2665
-      },
-      "248": {
-        "filename": "Proposal.code",
-        "line": 2666
-      },
-      "296": {
-        "filename": "Proposal.code",
-        "line": 2667
-      },
-      "304": {
-        "filename": "Proposal.code",
-        "line": 2668
-      }
-    },
     "5b2fc5604d524c747aa3c5bda550cdfd0d58b2ec62635dbc9a0450af7168caff": {
       "0": {
         "filename": "../contracts/dao/Proposal.tsol",
@@ -3216,8 +3402,8 @@
     },
     "61ab4641fa30d9310391025086eec65d200d79268e1b7cd402565e01ba64be3c": {
       "0": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 220
+        "filename": "Proposal.code",
+        "line": 2020
       }
     },
     "61b39a9b3ec01b4cb633d94ddf78a27cb46428e416597d504f96fb98ecdb81cc": {
@@ -3488,230 +3674,6 @@
       "296": {
         "filename": "stdlib.sol",
         "line": 79
-      }
-    },
-    "6bc93ca68b4e10896896e4d5fbfe38d8cd149bf47d2dbae1479a3b0ae7f72d4c": {
-      "0": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 241
-      },
-      "16": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 241
-      },
-      "32": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 241
-      },
-      "48": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 241
-      },
-      "72": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 242
-      },
-      "80": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 242
-      },
-      "96": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 242
-      },
-      "104": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 242
-      },
-      "144": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 242
-      },
-      "160": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 242
-      },
-      "176": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 242
-      },
-      "192": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 242
-      },
-      "208": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 242
-      },
-      "216": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 242
-      },
-      "240": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 243
-      },
-      "288": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 243
-      },
-      "296": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 243
-      },
-      "312": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 244
-      },
-      "328": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 244
-      },
-      "488": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 244
-      },
-      "496": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 244
-      },
-      "504": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 244
-      },
-      "520": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 244
-      },
-      "528": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 244
-      },
-      "536": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 244
-      },
-      "552": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 245
-      },
-      "568": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 245
-      },
-      "576": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 245
-      },
-      "592": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 245
-      },
-      "608": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 245
-      },
-      "616": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 245
-      },
-      "640": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 245
-      },
-      "648": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 245
-      },
-      "656": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 245
-      },
-      "680": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 245
-      },
-      "696": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 245
-      },
-      "704": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 245
-      },
-      "752": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 245
-      },
-      "768": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 245
-      },
-      "776": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 245
-      },
-      "792": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 245
-      },
-      "800": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 245
-      },
-      "808": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 245
-      },
-      "824": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 245
-      }
-    },
-    "6db558b3d75bec32132dee0a6ea0991c791ac2dbd772699a7a75b55c2fcee040": {
-      "0": {
-        "filename": "Proposal.code",
-        "line": 1015
-      },
-      "8": {
-        "filename": "Proposal.code",
-        "line": 1016
-      },
-      "24": {
-        "filename": "Proposal.code",
-        "line": 1017
-      },
-      "48": {
-        "filename": "Proposal.code",
-        "line": 1018
-      },
-      "64": {
-        "filename": "Proposal.code",
-        "line": 1019
-      },
-      "72": {
-        "filename": "Proposal.code",
-        "line": 1020
-      },
-      "88": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 122
-      },
-      "96": {
-        "filename": "Proposal.code",
-        "line": 1026
-      },
-      "112": {
-        "filename": "Proposal.code",
-        "line": 1029
-      },
-      "120": {
-        "filename": "Proposal.code",
-        "line": 1030
-      },
-      "136": {
-        "filename": "Proposal.code",
-        "line": 1033
       }
     },
     "6df5ad5c38bc4a1bdf7723f83ad2f67760dec01aa16182f4479f67bd273f51eb": {
@@ -4178,52 +4140,6 @@
       "192": {
         "filename": "Proposal.code",
         "line": 1374
-      }
-    },
-    "6fca156102f3562db8c8229b2b0e06063b910de2d6ca9fbc07b220a5901d992c": {
-      "0": {
-        "filename": "Proposal.code",
-        "line": 1201
-      },
-      "8": {
-        "filename": "Proposal.code",
-        "line": 1202
-      },
-      "24": {
-        "filename": "Proposal.code",
-        "line": 1203
-      },
-      "48": {
-        "filename": "Proposal.code",
-        "line": 1204
-      },
-      "64": {
-        "filename": "Proposal.code",
-        "line": 1205
-      },
-      "72": {
-        "filename": "Proposal.code",
-        "line": 1206
-      },
-      "88": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 154
-      },
-      "96": {
-        "filename": "Proposal.code",
-        "line": 1212
-      },
-      "112": {
-        "filename": "Proposal.code",
-        "line": 1215
-      },
-      "120": {
-        "filename": "Proposal.code",
-        "line": 1216
-      },
-      "136": {
-        "filename": "Proposal.code",
-        "line": 1219
       }
     },
     "6fd9f7b9811d8521401fae041f2a9d7792ab2c68fd3217abb83e1721609c113d": {
@@ -4792,6 +4708,52 @@
         "line": 2403
       }
     },
+    "80f61b773e05ee2064d0860ba715c11e75ec0c6805a53f66672434a90106253b": {
+      "0": {
+        "filename": "Proposal.code",
+        "line": 1201
+      },
+      "8": {
+        "filename": "Proposal.code",
+        "line": 1202
+      },
+      "24": {
+        "filename": "Proposal.code",
+        "line": 1203
+      },
+      "48": {
+        "filename": "Proposal.code",
+        "line": 1204
+      },
+      "64": {
+        "filename": "Proposal.code",
+        "line": 1205
+      },
+      "72": {
+        "filename": "Proposal.code",
+        "line": 1206
+      },
+      "88": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 154
+      },
+      "96": {
+        "filename": "Proposal.code",
+        "line": 1212
+      },
+      "112": {
+        "filename": "Proposal.code",
+        "line": 1215
+      },
+      "120": {
+        "filename": "Proposal.code",
+        "line": 1216
+      },
+      "136": {
+        "filename": "Proposal.code",
+        "line": 1219
+      }
+    },
     "86ba65ebab8b3a30851118a2fb3213b1fd72b0c9b35ee2061512b4b8bd9b9089": {
       "0": {
         "filename": "Proposal.code",
@@ -4968,6 +4930,76 @@
       "584": {
         "filename": "Proposal.code",
         "line": 67
+      }
+    },
+    "87c38bf6411de6ac97773792ebcbc2cd4c9c5d784e6ffd5b3547807cbb79d826": {
+      "0": {
+        "filename": "Proposal.code",
+        "line": 1680
+      },
+      "8": {
+        "filename": "Proposal.code",
+        "line": 1681
+      },
+      "24": {
+        "filename": "Proposal.code",
+        "line": 1682
+      },
+      "48": {
+        "filename": "Proposal.code",
+        "line": 1683
+      },
+      "64": {
+        "filename": "Proposal.code",
+        "line": 1684
+      },
+      "72": {
+        "filename": "Proposal.code",
+        "line": 1685
+      },
+      "88": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 240
+      },
+      "96": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 240
+      },
+      "104": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 240
+      },
+      "112": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 240
+      },
+      "120": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 240
+      },
+      "128": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 240
+      },
+      "136": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 240
+      },
+      "152": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 240
+      },
+      "160": {
+        "filename": "Proposal.code",
+        "line": 1699
+      },
+      "176": {
+        "filename": "Proposal.code",
+        "line": 1702
+      },
+      "192": {
+        "filename": "Proposal.code",
+        "line": 1705
       }
     },
     "8b131a7f3537a7c6687fa8f2719e1f75bfe0b20f6c22e4b4c98e6f4a8380716b": {
@@ -5196,6 +5228,72 @@
       "304": {
         "filename": "Proposal.code",
         "line": 2451
+      }
+    },
+    "92b68a6793e460c9089a2002823fcccfc920f66e755dbf724b0656619b60d3e5": {
+      "0": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/platform/PlatformBase.tsol",
+        "line": 8
+      },
+      "16": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/platform/PlatformBase.tsol",
+        "line": 8
+      },
+      "32": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/platform/PlatformBase.tsol",
+        "line": 8
+      },
+      "48": {
+        "filename": "../../node_modules/@broxus/contracts/contracts/platform/PlatformBase.tsol",
+        "line": 8
+      },
+      "72": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 155
+      },
+      "120": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 155
+      },
+      "128": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 155
+      },
+      "144": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 156
+      },
+      "160": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 156
+      },
+      "168": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 156
+      },
+      "192": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 156
+      },
+      "200": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 156
+      },
+      "216": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 156
+      },
+      "232": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 156
+      },
+      "240": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 156
+      },
+      "256": {
+        "filename": "../contracts/dao/Proposal.tsol",
+        "line": 156
       }
     },
     "948a0a7c385190922641a6da42a5cac63bbfecded0044df6a0c1c0975e99cfa0": {
@@ -5735,6 +5833,72 @@
       "296": {
         "filename": "Proposal.code",
         "line": 2335
+      }
+    },
+    "acacd09073100cec35c9b9a14eaf6b3acc7384862dd496b0525542da02a5f360": {
+      "0": {
+        "filename": "Proposal.code",
+        "line": 2699
+      },
+      "8": {
+        "filename": "Proposal.code",
+        "line": 2700
+      },
+      "56": {
+        "filename": "Proposal.code",
+        "line": 2701
+      },
+      "64": {
+        "filename": "Proposal.code",
+        "line": 2702
+      },
+      "80": {
+        "filename": "Proposal.code",
+        "line": 2728
+      },
+      "88": {
+        "filename": "Proposal.code",
+        "line": 2729
+      },
+      "136": {
+        "filename": "Proposal.code",
+        "line": 2730
+      },
+      "144": {
+        "filename": "Proposal.code",
+        "line": 2731
+      },
+      "160": {
+        "filename": "Proposal.code",
+        "line": 2757
+      },
+      "168": {
+        "filename": "Proposal.code",
+        "line": 2758
+      },
+      "216": {
+        "filename": "Proposal.code",
+        "line": 2759
+      },
+      "224": {
+        "filename": "Proposal.code",
+        "line": 2760
+      },
+      "240": {
+        "filename": "Proposal.code",
+        "line": 2786
+      },
+      "248": {
+        "filename": "Proposal.code",
+        "line": 2787
+      },
+      "296": {
+        "filename": "Proposal.code",
+        "line": 2788
+      },
+      "304": {
+        "filename": "Proposal.code",
+        "line": 2789
       }
     },
     "adb2a8298286587f5cd3c08cbe575703edfa3d58d53d59fd01ceb25fa8c97f4b": {
@@ -6485,6 +6649,56 @@
         "line": 2117
       }
     },
+    "bacbe2880b364c558f6d29739990e74dd23226d7f074fda41a554a389a30de46": {
+      "0": {
+        "filename": "Proposal.code",
+        "line": 2820
+      },
+      "8": {
+        "filename": "Proposal.code",
+        "line": 2821
+      },
+      "56": {
+        "filename": "Proposal.code",
+        "line": 2822
+      },
+      "64": {
+        "filename": "Proposal.code",
+        "line": 2823
+      },
+      "80": {
+        "filename": "Proposal.code",
+        "line": 2826
+      },
+      "88": {
+        "filename": "Proposal.code",
+        "line": 2827
+      },
+      "136": {
+        "filename": "Proposal.code",
+        "line": 2828
+      },
+      "144": {
+        "filename": "Proposal.code",
+        "line": 2829
+      },
+      "160": {
+        "filename": "Proposal.code",
+        "line": 2832
+      },
+      "168": {
+        "filename": "Proposal.code",
+        "line": 2833
+      },
+      "216": {
+        "filename": "Proposal.code",
+        "line": 2834
+      },
+      "224": {
+        "filename": "Proposal.code",
+        "line": 2835
+      }
+    },
     "be69d93c7dbea811f3df33ee48a952e203f78cbe0e41b125879fd1a437a4fabd": {
       "0": {
         "filename": "../contracts/dao/Proposal.tsol",
@@ -6915,142 +7129,54 @@
         "line": 2275
       }
     },
-    "cf40ddcac2dad0ed5992c1c04fe3a7b7f435463272728f1a38d6ba8f81c90b66": {
+    "c7b84bab186acea638efea18a2c8a515bdf6b052a5afaebd6131c9ebf67968d5": {
       "0": {
         "filename": "Proposal.code",
-        "line": 2136
+        "line": 2574
       },
-      "16": {
+      "8": {
         "filename": "Proposal.code",
-        "line": 2137
-      },
-      "24": {
-        "filename": "Proposal.code",
-        "line": 2138
-      },
-      "40": {
-        "filename": "Proposal.code",
-        "line": 2139
+        "line": 2575
       },
       "56": {
         "filename": "Proposal.code",
-        "line": 2140
+        "line": 2576
       },
-      "72": {
+      "64": {
         "filename": "Proposal.code",
-        "line": 2141
+        "line": 2577
       },
       "80": {
         "filename": "Proposal.code",
-        "line": 2142
+        "line": 2695
       },
       "88": {
         "filename": "Proposal.code",
-        "line": 2143
+        "line": 2696
       },
-      "104": {
+      "136": {
         "filename": "Proposal.code",
-        "line": 2144
-      },
-      "120": {
-        "filename": "Proposal.code",
-        "line": 2145
-      },
-      "128": {
-        "filename": "Proposal.code",
-        "line": 2146
+        "line": 2697
       },
       "144": {
         "filename": "Proposal.code",
-        "line": 2147
+        "line": 2698
+      },
+      "160": {
+        "filename": "Proposal.code",
+        "line": 2816
       },
       "168": {
         "filename": "Proposal.code",
-        "line": 2148
+        "line": 2817
       },
-      "184": {
+      "216": {
         "filename": "Proposal.code",
-        "line": 2149
+        "line": 2818
       },
-      "192": {
+      "224": {
         "filename": "Proposal.code",
-        "line": 2150
-      },
-      "208": {
-        "filename": "Proposal.code",
-        "line": 2151
-      },
-      "248": {
-        "filename": "Proposal.code",
-        "line": 2152
-      },
-      "264": {
-        "filename": "Proposal.code",
-        "line": 2153
-      },
-      "272": {
-        "filename": "Proposal.code",
-        "line": 2154
-      },
-      "288": {
-        "filename": "Proposal.code",
-        "line": 2155
-      },
-      "296": {
-        "filename": "Proposal.code",
-        "line": 2156
-      },
-      "312": {
-        "filename": "Proposal.code",
-        "line": 2157
-      },
-      "328": {
-        "filename": "Proposal.code",
-        "line": 2158
-      },
-      "336": {
-        "filename": "Proposal.code",
-        "line": 2159
-      },
-      "344": {
-        "filename": "Proposal.code",
-        "line": 2160
-      },
-      "360": {
-        "filename": "Proposal.code",
-        "line": 2161
-      },
-      "376": {
-        "filename": "Proposal.code",
-        "line": 2165
-      },
-      "384": {
-        "filename": "Proposal.code",
-        "line": 2166
-      },
-      "408": {
-        "filename": "Proposal.code",
-        "line": 2167
-      },
-      "424": {
-        "filename": "Proposal.code",
-        "line": 2168
-      },
-      "432": {
-        "filename": "Proposal.code",
-        "line": 2169
-      },
-      "448": {
-        "filename": "Proposal.code",
-        "line": 2173
-      },
-      "456": {
-        "filename": "Proposal.code",
-        "line": 2174
-      },
-      "472": {
-        "filename": "Proposal.code",
-        "line": 2177
+        "line": 2819
       }
     },
     "cf6ee8fab36f3a52bbf47c1172ac300f1f4228187708c5eafef1faba490fed98": {
@@ -7349,54 +7475,142 @@
         "line": 2
       }
     },
-    "dbc7ae825d117f90afb7e41cc97d55b24a159e97c9a82d45285f84e7e7917e65": {
+    "de03d35d723d0f21586acb0e46ed0871df6acaf46ab04c73e34f16ae19e8c5c8": {
       "0": {
         "filename": "Proposal.code",
-        "line": 2820
+        "line": 2136
       },
-      "8": {
+      "16": {
         "filename": "Proposal.code",
-        "line": 2821
+        "line": 2137
+      },
+      "24": {
+        "filename": "Proposal.code",
+        "line": 2138
+      },
+      "40": {
+        "filename": "Proposal.code",
+        "line": 2139
       },
       "56": {
         "filename": "Proposal.code",
-        "line": 2822
+        "line": 2140
       },
-      "64": {
+      "72": {
         "filename": "Proposal.code",
-        "line": 2823
+        "line": 2141
       },
       "80": {
         "filename": "Proposal.code",
-        "line": 2826
+        "line": 2142
       },
       "88": {
         "filename": "Proposal.code",
-        "line": 2827
+        "line": 2143
       },
-      "136": {
+      "104": {
         "filename": "Proposal.code",
-        "line": 2828
+        "line": 2144
+      },
+      "120": {
+        "filename": "Proposal.code",
+        "line": 2145
+      },
+      "128": {
+        "filename": "Proposal.code",
+        "line": 2146
       },
       "144": {
         "filename": "Proposal.code",
-        "line": 2829
-      },
-      "160": {
-        "filename": "Proposal.code",
-        "line": 2832
+        "line": 2147
       },
       "168": {
         "filename": "Proposal.code",
-        "line": 2833
+        "line": 2148
       },
-      "216": {
+      "184": {
         "filename": "Proposal.code",
-        "line": 2834
+        "line": 2149
       },
-      "224": {
+      "192": {
         "filename": "Proposal.code",
-        "line": 2835
+        "line": 2150
+      },
+      "208": {
+        "filename": "Proposal.code",
+        "line": 2151
+      },
+      "248": {
+        "filename": "Proposal.code",
+        "line": 2152
+      },
+      "264": {
+        "filename": "Proposal.code",
+        "line": 2153
+      },
+      "272": {
+        "filename": "Proposal.code",
+        "line": 2154
+      },
+      "288": {
+        "filename": "Proposal.code",
+        "line": 2155
+      },
+      "296": {
+        "filename": "Proposal.code",
+        "line": 2156
+      },
+      "312": {
+        "filename": "Proposal.code",
+        "line": 2157
+      },
+      "328": {
+        "filename": "Proposal.code",
+        "line": 2158
+      },
+      "336": {
+        "filename": "Proposal.code",
+        "line": 2159
+      },
+      "344": {
+        "filename": "Proposal.code",
+        "line": 2160
+      },
+      "360": {
+        "filename": "Proposal.code",
+        "line": 2161
+      },
+      "376": {
+        "filename": "Proposal.code",
+        "line": 2165
+      },
+      "384": {
+        "filename": "Proposal.code",
+        "line": 2166
+      },
+      "408": {
+        "filename": "Proposal.code",
+        "line": 2167
+      },
+      "424": {
+        "filename": "Proposal.code",
+        "line": 2168
+      },
+      "432": {
+        "filename": "Proposal.code",
+        "line": 2169
+      },
+      "448": {
+        "filename": "Proposal.code",
+        "line": 2173
+      },
+      "456": {
+        "filename": "Proposal.code",
+        "line": 2174
+      },
+      "472": {
+        "filename": "Proposal.code",
+        "line": 2177
       }
     },
     "de2ef3668b8f100c3e565c41fb824dc0cabf4138759d233f8bb2eae72fd8d155": {
@@ -7895,72 +8109,6 @@
         "line": 823
       }
     },
-    "e06b58f90b556fda0a5493d17b39d6eeebd3d0f0f0ed72bbfc8a91eb52ec2777": {
-      "0": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/platform/PlatformBase.tsol",
-        "line": 8
-      },
-      "16": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/platform/PlatformBase.tsol",
-        "line": 8
-      },
-      "32": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/platform/PlatformBase.tsol",
-        "line": 8
-      },
-      "48": {
-        "filename": "../../node_modules/@broxus/contracts/contracts/platform/PlatformBase.tsol",
-        "line": 8
-      },
-      "72": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 155
-      },
-      "120": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 155
-      },
-      "128": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 155
-      },
-      "144": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 156
-      },
-      "160": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 156
-      },
-      "168": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 156
-      },
-      "192": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 156
-      },
-      "200": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 156
-      },
-      "216": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 156
-      },
-      "232": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 156
-      },
-      "240": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 156
-      },
-      "256": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 156
-      }
-    },
     "e17077cb608228d35644ad3f39c9ea0d35c7067b6045a25224399c9f3602ef37": {
       "0": {
         "filename": "Proposal.code",
@@ -8277,72 +8425,6 @@
         "line": 148
       }
     },
-    "e4d58f8408e7d9859b6fc3b0b5f3e441a7353f6866e80c398bd1559a43c6b96c": {
-      "0": {
-        "filename": "Proposal.code",
-        "line": 2699
-      },
-      "8": {
-        "filename": "Proposal.code",
-        "line": 2700
-      },
-      "56": {
-        "filename": "Proposal.code",
-        "line": 2701
-      },
-      "64": {
-        "filename": "Proposal.code",
-        "line": 2702
-      },
-      "80": {
-        "filename": "Proposal.code",
-        "line": 2728
-      },
-      "88": {
-        "filename": "Proposal.code",
-        "line": 2729
-      },
-      "136": {
-        "filename": "Proposal.code",
-        "line": 2730
-      },
-      "144": {
-        "filename": "Proposal.code",
-        "line": 2731
-      },
-      "160": {
-        "filename": "Proposal.code",
-        "line": 2757
-      },
-      "168": {
-        "filename": "Proposal.code",
-        "line": 2758
-      },
-      "216": {
-        "filename": "Proposal.code",
-        "line": 2759
-      },
-      "224": {
-        "filename": "Proposal.code",
-        "line": 2760
-      },
-      "240": {
-        "filename": "Proposal.code",
-        "line": 2786
-      },
-      "248": {
-        "filename": "Proposal.code",
-        "line": 2787
-      },
-      "296": {
-        "filename": "Proposal.code",
-        "line": 2788
-      },
-      "304": {
-        "filename": "Proposal.code",
-        "line": 2789
-      }
-    },
     "e5bcdd2119476d1431fe608d0e167cc2a472cc103c84b8c2f7d0157c12a715a8": {
       "0": {
         "filename": "stdlib.sol",
@@ -8351,120 +8433,6 @@
       "8": {
         "filename": "stdlib.sol",
         "line": 76
-      }
-    },
-    "e66bae2e32a49880b78e29e07855868cabb7690a9bd230146ba40dab8fea709e": {
-      "0": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 123
-      },
-      "16": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 123
-      },
-      "40": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 124
-      },
-      "56": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 124
-      },
-      "72": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 124
-      },
-      "88": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 124
-      },
-      "112": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 125
-      },
-      "160": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 125
-      },
-      "168": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 125
-      },
-      "184": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 126
-      },
-      "192": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 126
-      },
-      "208": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 127
-      },
-      "216": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 127
-      },
-      "224": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 127
-      },
-      "240": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 128
-      },
-      "248": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 128
-      },
-      "264": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 128
-      },
-      "280": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 128
-      },
-      "296": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 128
-      },
-      "304": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 128
-      },
-      "328": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 128
-      },
-      "336": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 128
-      },
-      "384": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 128
-      },
-      "408": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 128
-      },
-      "424": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 128
-      },
-      "440": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 128
-      },
-      "448": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 128
-      },
-      "464": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 128
       }
     },
     "e6936e8f0e7b8fe98c2ca66eee9d4e9dafcfc747defef9cb795288fabb1b7ef3": {
@@ -8527,41 +8495,73 @@
         "line": 267
       }
     },
-    "e9f86d06b97a82cdcc77cfbe81dabad024a3bdb0dc689485c6366f52971c8ec1": {
-      "4": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 220
+    "eae129aa5322784c5026665319c6677eb0811e2d2e257542cb81fec4d1cdf946": {
+      "0": {
+        "filename": "Proposal.code",
+        "line": 2578
       },
-      "12": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 220
+      "8": {
+        "filename": "Proposal.code",
+        "line": 2579
       },
-      "28": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 220
+      "56": {
+        "filename": "Proposal.code",
+        "line": 2580
       },
-      "36": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 220
+      "64": {
+        "filename": "Proposal.code",
+        "line": 2581
       },
-      "52": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 220
+      "80": {
+        "filename": "Proposal.code",
+        "line": 2607
       },
-      "60": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 220
+      "88": {
+        "filename": "Proposal.code",
+        "line": 2608
       },
-      "76": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 220
+      "136": {
+        "filename": "Proposal.code",
+        "line": 2609
       },
-      "84": {
-        "filename": "../contracts/dao/Proposal.tsol",
-        "line": 220
+      "144": {
+        "filename": "Proposal.code",
+        "line": 2610
+      },
+      "160": {
+        "filename": "Proposal.code",
+        "line": 2636
+      },
+      "168": {
+        "filename": "Proposal.code",
+        "line": 2637
+      },
+      "216": {
+        "filename": "Proposal.code",
+        "line": 2638
+      },
+      "224": {
+        "filename": "Proposal.code",
+        "line": 2639
+      },
+      "240": {
+        "filename": "Proposal.code",
+        "line": 2665
+      },
+      "248": {
+        "filename": "Proposal.code",
+        "line": 2666
+      },
+      "296": {
+        "filename": "Proposal.code",
+        "line": 2667
+      },
+      "304": {
+        "filename": "Proposal.code",
+        "line": 2668
       }
     },
-    "ef3f5bd6c36e88e8566e76699ae217bb38e2a1a759175a161f3cb64620718c9f": {
+    "edc50a3946fbde20b5266a31c54bf126feb74c5991a5e4ebe8bd45c0a206fa46": {
       "0": {
         "filename": "Proposal.code",
         "line": 2611
