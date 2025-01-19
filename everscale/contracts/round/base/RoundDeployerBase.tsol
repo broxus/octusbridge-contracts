@@ -1,0 +1,222 @@
+pragma ever-solidity >= 0.62.0;
+//pragma AbiHeader expire;
+pragma AbiHeader pubkey;
+
+import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensTransferCallback.tsol";
+
+import "./../interfaces/IUpgradableByRequest.tsol";
+import "./../interfaces/IRoundDeployer.tsol";
+import "./../interfaces/IRelayRound.tsol";
+
+import "./../libraries/PlatformTypes.tsol";
+import "./../../utils/ErrorCodes.tsol";
+import "./../libraries/Gas.tsol";
+
+import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
+import "@broxus/contracts/contracts/platform/Platform.tsol";
+import "../../utils/Delegate.tsol";
+
+
+abstract contract RoundDeployerBase is IRoundDeployer, Delegate {
+    // Events
+    event RelayRoundInitialized(
+        uint32 round_num,
+        uint32 round_start_time,
+        uint32 round_end_time,
+        address round_addr,
+        uint32 relays_count
+    );
+    event RelayRoundCreation(uint32 round_num, uint160[] eth_keys, uint32 round_end);
+    event RelayRoundCreationSol(uint32 round_num, uint256[] ton_pubkeys, uint32 round_end);
+
+    event BridgeEventEthTonConfigUpdated(address new_bridge_event_config_eth_ton);
+    event BridgeEventTonEthConfigUpdated(address new_bridge_event_config_ton_eth);
+    event BridgeEventTonSolConfigUpdated(address new_bridge_event_config_ton_sol);
+
+    event TonEthEventDeployValueUpdated(uint128 new_value);
+    event TonSolEventDeployValueUpdated(uint128 new_value);
+
+    event AdminUpdated(address new_admin);
+    event ManagerUpdated(address new_manager);
+
+    event ActiveUpdated(bool active);
+
+    event RequestedRelayRoundUpgrade(uint32 round_num);
+    event RelayRoundCodeUpgraded(uint32 code_version);
+    event RelayConfigUpdated(RelayConfigDetails);
+
+    uint32 static deploy_nonce;
+//    address static deployer;
+
+    bool active;
+
+    CodeData code_data;
+
+    RelayRoundsDetails round_details;
+
+    BaseDetails base_details;
+
+    address public bridge_event_config_ton_sol;
+
+    address manager;
+
+    uint32 constant RELAY_ROUND_TIME = 7 days;
+    uint32 constant TIME_BEFORE_SET_RELAYS = 6 days;
+    uint32 constant MIN_ROUND_GAP_TIME = 1 hours;
+    uint16 constant MIN_RELAYS_COUNT = 13;
+
+    RelayConfigDetails relay_config = RelayConfigDetails(
+        RELAY_ROUND_TIME,
+        TIME_BEFORE_SET_RELAYS,
+        MIN_ROUND_GAP_TIME,
+        MIN_RELAYS_COUNT
+    );
+
+    uint128 tonEthEventDeployValue = 2.5 ever;
+    uint128 tonSolEventDeployValue = 2.5 ever;
+
+    function getDetails() public view responsible returns (BaseDetails) {
+        return{ value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false }base_details;
+    }
+
+    function getCodeData() external view responsible returns (CodeData) {
+        return{ value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false }code_data;
+    }
+
+    function getRelayRoundsDetails() external override view responsible returns (RelayRoundsDetails) {
+        return{ value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false }round_details;
+    }
+
+    function getRelayConfig() external view responsible returns (RelayConfigDetails) {
+        return{ value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false }relay_config;
+    }
+
+    function addDelegate(address addr, uint callHash) public onlyAdmin {
+        optional(uint[]) optDelegate = delegators.fetch(addr);
+        if (optDelegate.hasValue()) {
+            uint[] delegate = optDelegate.get();
+            delegate.push(callHash);
+            delegators[addr] = delegate;
+        } else {
+            delegators[addr] = [callHash];
+        }
+    }
+
+    function _reserve() internal pure returns (uint128) {
+        return math.max(address(this).balance - msg.value, Gas.ROOT_INITIAL_BALANCE);
+    }
+
+    function setEventDeployValues(uint128 ton_eth_event_value, uint128 ton_sol_event_value, address send_gas_to) external onlyAdmin {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        tvm.rawReserve(_reserve(), 0);
+
+        emit TonEthEventDeployValueUpdated(ton_eth_event_value);
+        emit TonSolEventDeployValueUpdated(ton_sol_event_value);
+
+        tonEthEventDeployValue = ton_eth_event_value;
+        tonSolEventDeployValue = ton_sol_event_value;
+
+        send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
+    }
+
+    function setBridgeEventTonEthConfig(address new_bridge_event_config_ton_eth, address send_gas_to) external onlyAdmin {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        tvm.rawReserve(_reserve(), 0);
+        emit BridgeEventTonEthConfigUpdated(new_bridge_event_config_ton_eth);
+        base_details.bridge_event_config_ton_eth = new_bridge_event_config_ton_eth;
+        send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
+    }
+
+    function setBridgeEventTonSolConfig(address new_bridge_event_config_ton_sol, address send_gas_to) external onlyAdmin {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        tvm.rawReserve(_reserve(), 0);
+        emit BridgeEventTonSolConfigUpdated(new_bridge_event_config_ton_sol);
+        bridge_event_config_ton_sol = new_bridge_event_config_ton_sol;
+        send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
+    }
+
+    function setAdmin(address new_admin, address send_gas_to) external onlyAdmin {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        tvm.rawReserve(_reserve(), 0);
+        emit AdminUpdated(new_admin);
+        base_details.admin = new_admin;
+        send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
+    }
+
+    function setManager(address new_manager, address send_gas_to) external onlyAdmin {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        tvm.rawReserve(_reserve(), 0);
+        emit ManagerUpdated(new_manager);
+        manager = new_manager;
+        send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
+    }
+
+    // Active
+    function setActive(bool new_active, address send_gas_to) external onlyAdmin {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        tvm.rawReserve(_reserve(), 0);
+        if (
+            new_active
+            && base_details.bridge_event_config_ton_eth.value != 0
+            && code_data.has_platform_code
+            && code_data.relay_round_version > 0
+        ) {
+            active = true;
+        } else {
+            active = false;
+        }
+        emit ActiveUpdated(active);
+        send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
+    }
+
+    function isActive() external view responsible returns (bool) {
+        return{ value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false } active;
+    }
+
+    function setRelayConfig(RelayConfigDetails new_relay_config, address send_gas_to) external onlyAdmin {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        tvm.rawReserve(_reserve(), 0);
+
+        relay_config = new_relay_config;
+
+        emit RelayConfigUpdated(relay_config);
+        send_gas_to.transfer({ value: 0, bounce: false, flag: MsgFlag.ALL_NOT_RESERVED });
+    }
+
+    function _buildInitData(uint8 type_id, TvmCell _initialData) internal view returns (TvmCell) {
+        return tvm.buildStateInit({
+            contr: Platform,
+            varInit: {
+                root: address(this),
+                platformType: type_id,
+                initialData: _initialData,
+                platformCode: code_data.platform_code
+            },
+            pubkey: 0,
+            code: code_data.platform_code
+        });
+    }
+
+    onBounce(TvmSlice /* slice */) external view {}
+
+    modifier onlyAdmin() {
+        if (msg.sender != base_details.admin) {
+            checkDelegate();
+        }
+        _;
+    }
+
+    modifier onlyAdminOrManager() {
+        require(msg.sender.value != 0, ErrorCodes.NOT_ADMIN);
+        if (msg.sender != manager && msg.sender != base_details.admin) {
+            checkDelegate();
+        }
+        _;
+    }
+
+    modifier onlyActive() {
+        require(active, ErrorCodes.NOT_ACTIVE);
+        _;
+    }
+
+}

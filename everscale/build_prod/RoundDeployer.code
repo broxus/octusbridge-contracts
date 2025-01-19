@@ -1,0 +1,3319 @@
+.version sol 0.62.0
+
+.macro constructor
+DROP
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+GETGLOB 6
+THROWIF 51
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/round/RoundDeployer.tsol, 16
+PUSHINT 2000000000
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/round/RoundDeployer.tsol, 18
+ACCEPT
+.loc ../contracts/round/RoundDeployer.tsol, 20
+GETGLOB 15
+ROT
+SETINDEX 0
+DUP
+SETGLOB 15
+.loc ../contracts/round/RoundDeployer.tsol, 21
+PUSH S2
+SETINDEX 1
+SETGLOB 15
+.loc ../contracts/round/RoundDeployer.tsol, 22
+SETGLOB 16
+.loc ../contracts/round/RoundDeployer.tsol, 24
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+ADDCONST 2
+UFITS 8
+SENDRAWMSG
+.loc ../contracts/round/RoundDeployer.tsol, 0
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro upgrade
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/round/RoundDeployer.tsol, 31
+OVER
+PUSHCONT {
+	LDREF
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDREF
+}
+IFELSE
+LDMSGADDR
+ENDS
+.loc ../contracts/round/RoundDeployer.tsol, 0
+CALLREF {
+	CALL $upgrade_09b97e7c_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro upgrade_09b97e7c_internal_macro
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 203
+GETGLOB 9
+GETGLOB 15
+SECOND
+SDEQ
+IFNOTREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/round/RoundDeployer.tsol, 32
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 50000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/round/RoundDeployer.tsol, 34
+GETGLOB 20
+GETGLOB 19
+GETGLOB 18
+INDEX 3
+GETGLOB 18
+THIRD
+GETGLOB 18
+FIRST
+GETGLOB 14
+THIRD
+GETGLOB 14
+SECOND
+GETGLOB 14
+FIRST
+GETGLOB 12
+GETGLOB 16
+GETGLOB 15
+SECOND
+GETGLOB 15
+FIRST
+GETGLOB 11
+GETGLOB 13
+INDEX 4
+GETGLOB 13
+THIRD
+GETGLOB 13
+FIRST
+GETGLOB 13
+INDEX 3
+GETGLOB 13
+SECOND
+PUSHINT 18
+ROLLX
+NEWC
+STSLICE
+STI 1
+STU 32
+STREF
+STREF
+STREF
+STU 32
+ROLLREV 12
+NEWC
+STSLICE
+ROLLREV 11
+NEWC
+STSLICE
+ROLLREV 10
+NEWC
+STSLICE
+STI 1
+STU 32
+STU 32
+STU 32
+STU 32
+STU 32
+STU 16
+STU 128
+SWAP
+NEWC
+STU 128
+STBREFR
+STBREFR
+STBREFR
+STBREFR
+ENDC
+.loc ../contracts/round/RoundDeployer.tsol, 61
+OVER
+SETCODE
+.loc ../contracts/round/RoundDeployer.tsol, 64
+SWAP
+CTOS
+DUP
+PUSHSLICE x8adb35
+SDEQ
+PUSHCONT {
+	PLDREFIDX 1
+	CTOS
+}
+IF
+PLDREF
+CTOS
+BLESS
+POP C3
+.loc ../contracts/round/RoundDeployer.tsol, 65
+CALLREF {
+	CALL $:onCodeUpgrade$
+}
+.loc ../contracts/round/RoundDeployer.tsol, 0
+
+.internal-alias :onCodeUpgrade, 2
+.internal :onCodeUpgrade
+.loc ../contracts/round/RoundDeployer.tsol, 69
+PUSHINT 1000000000
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/round/RoundDeployer.tsol, 71
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+.loc ../contracts/round/RoundDeployer.tsol, 73
+SWAP
+CTOS
+LDMSGADDR
+LDI 1
+LDU 32
+LDREF
+LDREF
+LDREF
+LDU 32
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDI 1
+LDU 32
+LDU 32
+LDU 32
+LDU 32
+LDU 32
+LDU 16
+LDU 128
+LDREF
+ENDS
+CTOS
+LDU 128
+ENDS
+PUSHINT 19
+PUSHINT 0
+REVX
+POP S19
+GETGLOB 13
+SWAP
+SETINDEX 1
+DUP
+SETGLOB 13
+SWAP
+SETINDEX 3
+DUP
+SETGLOB 13
+SWAP
+SETINDEX 0
+DUP
+SETGLOB 13
+SWAP
+SETINDEX 2
+DUP
+SETGLOB 13
+SWAP
+SETINDEX 4
+SETGLOB 13
+SETGLOB 11
+GETGLOB 15
+SWAP
+SETINDEX 0
+DUP
+SETGLOB 15
+SWAP
+SETINDEX 1
+SETGLOB 15
+SETGLOB 16
+SETGLOB 12
+GETGLOB 14
+SWAP
+SETINDEX 0
+DUP
+SETGLOB 14
+SWAP
+SETINDEX 1
+DUP
+SETGLOB 14
+SWAP
+SETINDEX 2
+SETGLOB 14
+GETGLOB 18
+SWAP
+SETINDEX 0
+DUP
+SETGLOB 18
+SWAP
+SETINDEX 2
+DUP
+SETGLOB 18
+SWAP
+SETINDEX 3
+SETGLOB 18
+SETGLOB 19
+SETGLOB 20
+.loc ../contracts/round/RoundDeployer.tsol, 122
+GETGLOB 14
+PUSHINT 1735155571
+SETINDEX 1
+DUP
+SETGLOB 14
+.loc ../contracts/round/RoundDeployer.tsol, 123
+PUSHINT 1735155581
+SETINDEX 2
+SETGLOB 14
+.loc ../contracts/round/RoundDeployer.tsol, 125
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+ADDCONST 2
+UFITS 8
+SENDRAWMSG
+.loc ../contracts/round/RoundDeployer.tsol, 0
+CALLREF {
+	CALL $c7_to_c4$
+}
+COMMIT
+THROW 0
+
+.macro setRelaysOnNewRound
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 12
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+ENDS
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 0
+CALLREF {
+	CALL $setRelaysOnNewRound_bd47cdd5_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setRelaysOnNewRound_bd47cdd5_internal_macro
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 210
+PUSHINT 2501
+GETGLOB 9
+PARSEMSGADDR
+INDEX 3
+PLDU 256
+NEQINT 0
+THROWANYIFNOT
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 211
+GETGLOB 9
+GETGLOB 17
+SDEQ
+NOT
+GETGLOB 9
+GETGLOB 15
+SECOND
+SDEQ
+NOT
+AND
+IFREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 218
+PUSHINT 2514
+GETGLOB 12
+THROWANYIFNOT
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 16
+PUSHINT 2544
+BLOCKLT
+GETGLOB 14
+SECOND
+GETGLOB 18
+SECOND
+ADD
+UFITS 32
+GEQ
+THROWANYIFNOT
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 17
+DUP
+FIRST
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 18
+PUSHINT 2531
+PUSH2 S1, S3
+FIRST
+EQUAL
+THROWANYIFNOT
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 19
+PUSHINT 2545
+SWAP
+GETGLOB 18
+INDEX 3
+GEQ
+THROWANYIFNOT
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 20
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+GETGLOB 19
+GETGLOB 20
+ADD
+UFITS 128
+PUSHINT 100000000
+ADD
+UFITS 128
+PUSHINT 2500000000
+ADD
+UFITS 128
+PUSHINT 1000000000
+ADD
+UFITS 128
+GEQ
+THROWANYIFNOT
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 25
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 27
+PUSHINT 0
+DUP
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 30
+GETGLOB 14
+FIRST
+EQINT 0
+GETGLOB 14
+SECOND
+EQINT 0
+AND
+PUSHCONT {
+	.loc ../contracts/round/base/RoundDeployerRelay.tsol, 31
+	DROP
+	PUSHINT 0
+	.loc ../contracts/round/base/RoundDeployerRelay.tsol, 32
+	NOW
+	POP S2
+}
+PUSHCONT {
+	.loc ../contracts/round/base/RoundDeployerRelay.tsol, 34
+	GETGLOB 14
+	FIRST
+	INC
+	UFITS 32
+	NIP
+	.loc ../contracts/round/base/RoundDeployerRelay.tsol, 37
+	NOW
+	GETGLOB 14
+	THIRD
+	GETGLOB 18
+	THIRD
+	SUB
+	UFITS 32
+	GREATER
+	PUSHCONT {
+		.loc ../contracts/round/base/RoundDeployerRelay.tsol, 38
+		NOW
+		GETGLOB 18
+		THIRD
+		ADD
+		UFITS 32
+	}
+	PUSHCONT {
+		.loc ../contracts/round/base/RoundDeployerRelay.tsol, 41
+		GETGLOB 14
+		THIRD
+	}
+	IFELSE
+	POP S2
+	.loc ../contracts/round/base/RoundDeployerRelay.tsol, 0
+}
+IFELSE
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 44
+OVER
+GETGLOB 18
+FIRST
+ADD
+UFITS 32
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 46
+XCHG S1, S2
+PUSHINT 1
+CALLREF {
+	CALL $deployRelayRound_aa36bb72_internal_macro$
+}
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 53
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 1159181898
+STUR 143
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 0
+
+.globl	deployRelayRound_aa36bb72_internal
+.type	deployRelayRound_aa36bb72_internal, @function
+CALL $deployRelayRound_aa36bb72_internal_macro$
+
+.macro deployRelayRound_aa36bb72_internal_macro
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 66
+GETGLOB 13
+INDEX 5
+NEWC
+STU 32
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 67
+GETGLOB 13
+INDEX 5
+STUR 32
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 68
+ROLL 3
+STUR 32
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 69
+XCHG S1, S2
+STU 32
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 71
+MYADDR
+SWAP
+ENDC
+GETGLOB 13
+INDEX 4
+PUSHINT 102
+ROLL 5
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 43
+NEWC
+STU 32
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 44
+ENDC
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 0
+CALLREF {
+	CALL $_buildInitData_65db94e9_internal_macro$
+}
+DUP
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+ENDC
+CTOS
+ROLLREV 4
+PUSH S4
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 3193241341889361301170909809801365188247555
+STUR 143
+OVER
+CALLREF {
+	CTOS
+	LDI 1
+	SWAP
+	PUSHCONT {
+		LDI 5
+		NIP
+	}
+	IF
+	LDI 1
+	SWAP
+	PUSHCONT {
+		LDI 2
+		NIP
+	}
+	IF
+	LDOPTREF
+	LDOPTREF
+	LDDICT
+	ENDS
+	BLKDROP 3
+}
+STREF
+STSLICECONST 1
+ROLLREV 3
+NEWC
+STSLICECONST x3f61459c
+STREF
+STREF
+STSLICE
+STBREFR
+ENDC
+ROT
+SENDRAWMSG
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 0
+
+.macro onRelayRoundInitialized
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 78
+OVER
+PUSHCONT {
+	LDU 32
+	LDU 32
+	LDU 32
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDU 32
+	LDU 32
+	LDU 32
+}
+IFELSE
+LDU 32
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+ENDS
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 0
+CALLREF {
+	CALL $onRelayRoundInitialized_b985f047_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro onRelayRoundInitialized_b985f047_internal_macro
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 78
+PUSH S5
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 117
+CALLREF {
+	CALL $getRelayRoundAddress_9cd92e39_internal_macro$
+}
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 118
+PUSHINT 2515
+SWAP
+GETGLOB 9
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 86
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 88
+GETGLOB 14
+PUSH S6
+SETINDEX 0
+DUP
+SETGLOB 14
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 89
+PUSH S4
+SETINDEX 2
+DUP
+SETGLOB 14
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 90
+PUSH S5
+SETINDEX 1
+SETGLOB 14
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 92
+PUSH S5
+GTINT 0
+PUSHCONT {
+	.loc ../contracts/round/base/RoundDeployerRelay.tsol, 94
+	PUSH S5
+	NEWC
+	STU 32
+	.loc ../contracts/round/base/RoundDeployerRelay.tsol, 95
+	PUSH S2
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	.loc ../contracts/round/base/RoundDeployerRelay.tsol, 96
+	PUSH S4
+	STUR 32
+	.loc ../contracts/round/base/RoundDeployerRelay.tsol, 97
+	LTIME
+	NOW
+	ROT
+	ENDC
+	TRIPLE
+	.loc ../contracts/round/base/RoundDeployerRelay.tsol, 98
+	GETGLOB 19
+	GETGLOB 15
+	FIRST
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 547684567
+	STUR 139
+	SWAP
+	UNTRIPLE
+	REVERSE 4, 0
+	STU 64
+	STU 32
+	STREF
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc ../contracts/round/base/RoundDeployerRelay.tsol, 101
+	PUSH S5
+	NEWC
+	STU 32
+	.loc ../contracts/round/base/RoundDeployerRelay.tsol, 102
+	OVER
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	.loc ../contracts/round/base/RoundDeployerRelay.tsol, 103
+	PUSH S4
+	STUR 32
+	.loc ../contracts/round/base/RoundDeployerRelay.tsol, 104
+	PUSHINT 0
+	NEWDICT
+	PAIR
+	.loc ../contracts/round/base/RoundDeployerRelay.tsol, 105
+	LTIME
+	NOW
+	PUSH S2
+	FALSE
+	BLKSWAP 2, 4
+	SWAP
+	ENDC
+	TUPLE 6
+	.loc ../contracts/round/base/RoundDeployerRelay.tsol, 106
+	GETGLOB 20
+	GETGLOB 16
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1089435086
+	STUR 139
+	SWAP
+	UNTUPLE 6
+	REVERSE 7, 0
+	STU 64
+	STU 32
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	STI 1
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	STREF
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc ../contracts/round/base/RoundDeployerRelay.tsol, 0
+}
+IF
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 109
+DROP2
+PUSH S3
+GTINT 2
+PUSHCONT {
+	.loc ../contracts/round/base/RoundDeployerRelay.tsol, 110
+	PUSH S3
+	ADDCONST -3
+	UFITS 32
+	CALLREF {
+		CALL $getRelayRoundAddress_9cd92e39_internal_macro$
+	}
+	.loc ../contracts/round/base/RoundDeployerRelay.tsol, 111
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	PUSHINT 12042311241760164903241885269213816626727588821588259
+	STUR 175
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc ../contracts/round/base/RoundDeployerRelay.tsol, 0
+}
+IF
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 113
+GETGLOB 9
+BLKSWAP 3, 2
+XCHG S2
+PUSHSLICE xc0000000000000000000000000660d7d98
+NEWC
+STSLICE
+STU 32
+STU 32
+STU 32
+STSLICE
+STU 32
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/round/base/RoundDeployerRelay.tsol, 0
+
+.macro installPlatformOnce
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 9
+OVER
+PUSHCONT {
+	LDREF
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDREF
+}
+IFELSE
+LDMSGADDR
+ENDS
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 0
+CALLREF {
+	CALL $installPlatformOnce_d17c69ba_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro installPlatformOnce_d17c69ba_internal_macro
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 203
+GETGLOB 9
+GETGLOB 15
+SECOND
+SDEQ
+IFNOTREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 10
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 50000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 12
+PUSHINT 2510
+GETGLOB 13
+SECOND
+NOT
+THROWANYIFNOT
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 13
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 14
+GETGLOB 13
+ROT
+SETINDEX 0
+DUP
+SETGLOB 13
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 15
+TRUE
+SETINDEX 1
+SETGLOB 13
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 16
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 0
+
+.macro installOrUpdateRelayRoundCode
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 19
+OVER
+PUSHCONT {
+	LDREF
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDREF
+}
+IFELSE
+LDMSGADDR
+ENDS
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 0
+CALLREF {
+	CALL $installOrUpdateRelayRoundCode_8d4d6e2b_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro installOrUpdateRelayRoundCode_8d4d6e2b_internal_macro
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 203
+GETGLOB 9
+GETGLOB 15
+SECOND
+SDEQ
+IFNOTREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 20
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 50000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 21
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 22
+GETGLOB 13
+ROT
+SETINDEX 4
+DUP
+SETGLOB 13
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 23
+DUP
+INDEX 5
+INC
+UFITS 32
+SETINDEX 5
+DUP
+SETGLOB 13
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 24
+INDEX 5
+PUSHSLICE xc00000000000000000000000007b4325db
+NEWC
+STSLICE
+STU 32
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 25
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 0
+
+.macro upgradeRelayRound
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 28
+OVER
+PUSHCONT {
+	LDU 32
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDU 32
+}
+IFELSE
+LDMSGADDR
+ENDS
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 0
+CALLREF {
+	CALL $upgradeRelayRound_6340636e_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro upgradeRelayRound_6340636e_internal_macro
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 203
+GETGLOB 9
+GETGLOB 15
+SECOND
+SDEQ
+IFNOTREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 32
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 50000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 33
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 35
+OVER
+PUSHSLICE xc000000000000000000000000079171008
+NEWC
+STSLICE
+STU 32
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 36
+GETGLOB 13
+INDEX 5
+GETGLOB 13
+INDEX 4
+ROLL 3
+CALLREF {
+	CALL $getRelayRoundAddress_9cd92e39_internal_macro$
+}
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 1
+STUR 111
+ROLLREV 3
+NEWC
+STSLICECONST x64a578c8
+STREF
+STU 32
+STSLICE
+STBREFR
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 0
+
+.macro getRelayRoundAddress
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 47
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+LDU 32
+ENDS
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 0
+CALLREF {
+	CALL $getRelayRoundAddress_9cd92e39_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	SWAP
+	NEWC
+	STSLICECONST xbc631db7
+	STSLICE
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	SWAP
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STSLICE
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	getRelayRoundAddress_9cd92e39_internal
+.type	getRelayRoundAddress_9cd92e39_internal, @function
+CALL $getRelayRoundAddress_9cd92e39_internal_macro$
+
+.macro getRelayRoundAddress_9cd92e39_internal_macro
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 48
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+FALSE
+SETINDEXQ 1
+PUSHINT 64
+SETINDEXQ 4
+SETGLOB 4
+PUSHINT 102
+SWAP
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 43
+NEWC
+STU 32
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 44
+ENDC
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 0
+CALLREF {
+	CALL $_buildInitData_65db94e9_internal_macro$
+}
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+ENDC
+CTOS
+
+.macro getRelayRoundAddressFromTimestamp
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 55
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+LDU 32
+ENDS
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 0
+CALLREF {
+	CALL $getRelayRoundAddressFromTimestamp_8ebbb78d_internal_macro$
+}
+PUSH S2
+PUSHCONT {
+	PUSH S4
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	XCHG S2
+	NEWC
+	STSLICECONST xf7f56c00
+	STSLICE
+	STU 32
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	XCHG S2
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STSLICE
+	STU 32
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	getRelayRoundAddressFromTimestamp_8ebbb78d_internal
+.type	getRelayRoundAddressFromTimestamp_8ebbb78d_internal, @function
+CALL $getRelayRoundAddressFromTimestamp_8ebbb78d_internal_macro$
+
+.macro getRelayRoundAddressFromTimestamp_8ebbb78d_internal_macro
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 56
+GETGLOB 14
+SECOND
+LESS
+PUSHCONT {
+	GETGLOB 14
+	FIRST
+	DEC
+	UFITS 32
+}
+PUSHCONT {
+	GETGLOB 14
+	FIRST
+}
+IFELSE
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 57
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+FALSE
+SETINDEXQ 1
+PUSHINT 64
+SETINDEXQ 4
+SETGLOB 4
+DUP
+CALLREF {
+	CALL $getRelayRoundAddress_9cd92e39_internal_macro$
+}
+SWAP
+.loc ../contracts/round/base/RoundDeployerUpgradable.tsol, 0
+
+.macro getDetails
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 78
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+ENDS
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+CALLREF {
+	CALL $getDetails_fbbf93a0_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	SWAP
+	NEWC
+	STSLICECONST xb6cf0449
+	SWAP
+	UNPAIR
+	XCHG S2
+	STSLICE
+	SWAP
+	NEWC
+	STSLICE
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	SWAP
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	SWAP
+	UNPAIR
+	XCHG S2
+	STSLICE
+	SWAP
+	NEWC
+	STSLICE
+	STBREFR
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	getDetails_fbbf93a0_internal
+.type	getDetails_fbbf93a0_internal, @function
+CALL $getDetails_fbbf93a0_internal_macro$
+
+.macro getDetails_fbbf93a0_internal_macro
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 79
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+FALSE
+SETINDEXQ 1
+SETGLOB 4
+GETGLOB 15
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+
+.macro getCodeData
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 82
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+ENDS
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+CALLREF {
+	CALL $getCodeData_c61567e2_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 2318776683
+	STUR 130
+	SWAP
+	UNTUPLE 6
+	REVERSE 7, 0
+	STREF
+	STI 1
+	STREF
+	STU 32
+	STREF
+	STU 32
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 106
+	STZEROES
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	SWAP
+	UNTUPLE 6
+	REVERSE 7, 0
+	STREF
+	STI 1
+	STREF
+	STU 32
+	STREF
+	STU 32
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.macro getCodeData_c61567e2_internal_macro
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 83
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+FALSE
+SETINDEXQ 1
+SETGLOB 4
+GETGLOB 13
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+
+.macro getRelayRoundsDetails
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 86
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+ENDS
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+CALLREF {
+	CALL $getRelayRoundsDetails_1666c2a5_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 3989119502
+	STUR 130
+	SWAP
+	UNTRIPLE
+	REVERSE 4, 0
+	STU 32
+	STU 32
+	STU 32
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 106
+	STZEROES
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	SWAP
+	UNTRIPLE
+	REVERSE 4, 0
+	STU 32
+	STU 32
+	STU 32
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.macro getRelayRoundsDetails_1666c2a5_internal_macro
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 87
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+FALSE
+SETINDEXQ 1
+SETGLOB 4
+GETGLOB 14
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+
+.macro getRelayConfig
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 90
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+ENDS
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+CALLREF {
+	CALL $getRelayConfig_5ee9bf11_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 3561073159
+	STUR 130
+	SWAP
+	UNTUPLE 4
+	REVERSE 5, 0
+	STU 32
+	STU 32
+	STU 32
+	STU 16
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 106
+	STZEROES
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	SWAP
+	UNTUPLE 4
+	REVERSE 5, 0
+	STU 32
+	STU 32
+	STU 32
+	STU 16
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.macro getRelayConfig_5ee9bf11_internal_macro
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 91
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+FALSE
+SETINDEXQ 1
+SETGLOB 4
+GETGLOB 18
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+
+.macro addDelegate
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 94
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDU 256
+ENDS
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+CALLREF {
+	CALL $addDelegate_5bcfd212_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	addDelegate_5bcfd212_internal
+.type	addDelegate_5bcfd212_internal, @function
+CALL $addDelegate_5bcfd212_internal_macro$
+
+.macro addDelegate_5bcfd212_internal_macro
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 203
+GETGLOB 9
+GETGLOB 15
+SECOND
+SDEQ
+IFNOTREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 95
+OVER
+GETGLOB 10
+PUSHINT 267
+DICTGET
+NULLSWAPIFNOT
+PUSHCONT {
+	LDU 32
+	PLDDICT
+	PAIR
+}
+IF
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 96
+DUP
+ISNULL
+PUSHCONT {
+	.loc ../contracts/round/base/RoundDeployerBase.tsol, 101
+	OVER
+	PUSHINT 0
+	NEWDICT
+	PUSHINT 1
+	PUSHCONT {
+		ROT
+		NEWC
+		STU 256
+		PUSH S2
+		INC
+		XCHG S3
+		ROT
+		PUSHINT 32
+		DICTUSETB
+	}
+	REPEAT
+	PAIR
+}
+PUSHCONT {
+	.loc ../contracts/round/base/RoundDeployerBase.tsol, 97
+	BLKPUSH 2, 0
+	ISNULL
+	THROWIF 63
+	.loc ../contracts/round/base/RoundDeployerBase.tsol, 98
+	PUSH S2
+	NEWC
+	STU 256
+	SWAP
+	UNPAIR
+	OVER
+	INC
+	ROLLREV 3
+	PUSHINT 32
+	DICTUSETB
+	PAIR
+	.loc ../contracts/round/base/RoundDeployerBase.tsol, 99
+}
+IFELSE
+PUSH S3
+GETGLOB 10
+NEWC
+ROLL 3
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+ROTREV
+PUSHINT 267
+DICTSETB
+SETGLOB 10
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+BLKDROP 3
+
+.globl	_reserve_413ab4a8_internal
+.type	_reserve_413ab4a8_internal, @function
+CALL $_reserve_413ab4a8_internal_macro$
+
+.macro _reserve_413ab4a8_internal_macro
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 106
+GETPARAM 7
+FIRST
+DEPTH
+ADDCONST -2
+PICK
+SUB
+UFITS 128
+PUSHINT 2000000000
+MAX
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+
+.macro setEventDeployValues
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 109
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDU 128
+LDU 128
+LDMSGADDR
+ENDS
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+CALLREF {
+	CALL $setEventDeployValues_ec7d5c80_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setEventDeployValues_ec7d5c80_internal_macro
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 203
+GETGLOB 9
+GETGLOB 15
+SECOND
+SDEQ
+IFNOTREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 110
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 50000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 111
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 113
+PUSH S2
+PUSHSLICE xc0000000000000000000000000557171ff
+NEWC
+STSLICE
+STU 128
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 114
+OVER
+PUSHSLICE xc00000000000000000000000003f14e517
+NEWC
+STSLICE
+STU 128
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 116
+ROT
+SETGLOB 19
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 117
+SWAP
+SETGLOB 20
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 119
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+
+.macro setBridgeEventTonEthConfig
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 122
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+CALLREF {
+	CALL $setBridgeEventTonEthConfig_86dcf301_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setBridgeEventTonEthConfig_86dcf301_internal_macro
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 203
+GETGLOB 9
+GETGLOB 15
+SECOND
+SDEQ
+IFNOTREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 123
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 50000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 124
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 125
+OVER
+PUSHSLICE xc000000000000000000000000027c45002
+NEWC
+STSLICE
+STSLICE
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 126
+GETGLOB 15
+ROT
+SETINDEX 0
+SETGLOB 15
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 127
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+
+.macro setBridgeEventTonSolConfig
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 130
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+CALLREF {
+	CALL $setBridgeEventTonSolConfig_2feb20ba_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setBridgeEventTonSolConfig_2feb20ba_internal_macro
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 203
+GETGLOB 9
+GETGLOB 15
+SECOND
+SDEQ
+IFNOTREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 131
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 50000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 132
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 133
+OVER
+PUSHSLICE xc000000000000000000000000042df1047
+NEWC
+STSLICE
+STSLICE
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 134
+SWAP
+SETGLOB 16
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 135
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+
+.macro setAdmin
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 138
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+CALLREF {
+	CALL $setAdmin_c55b6bb7_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setAdmin_c55b6bb7_internal_macro
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 203
+GETGLOB 9
+GETGLOB 15
+SECOND
+SDEQ
+IFNOTREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 139
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 50000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 140
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 141
+OVER
+PUSHSLICE xc000000000000000000000000063e81821
+NEWC
+STSLICE
+STSLICE
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 142
+GETGLOB 15
+ROT
+SETINDEX 1
+SETGLOB 15
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 143
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+
+.macro setManager
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 146
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+CALLREF {
+	CALL $setManager_5df8122f_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setManager_5df8122f_internal_macro
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 203
+GETGLOB 9
+GETGLOB 15
+SECOND
+SDEQ
+IFNOTREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 147
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 50000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 148
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 149
+OVER
+PUSHSLICE xc0000000000000000000000000243376df
+NEWC
+STSLICE
+STSLICE
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 150
+SWAP
+SETGLOB 17
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 151
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+
+.macro setActive
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 155
+OVER
+PUSHCONT {
+	LDI 1
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDI 1
+}
+IFELSE
+LDMSGADDR
+ENDS
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+CALLREF {
+	CALL $setActive_83dffa84_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setActive_83dffa84_internal_macro
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 203
+GETGLOB 9
+GETGLOB 15
+SECOND
+SDEQ
+IFNOTREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 156
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 50000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 157
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 158
+XCPU S1, S0
+PUSHCONT {
+	DROP
+	GETGLOB 15
+	FIRST
+	PARSEMSGADDR
+	INDEX 3
+	PLDU 256
+	NEQINT 0
+	GETGLOB 13
+	SECOND
+	GETGLOB 13
+	INDEX 5
+	GTINT 0
+	AND
+	AND
+}
+IF
+TRUE
+FALSE
+CONDSEL
+DUP
+SETGLOB 12
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 168
+PUSHSLICE xc000000000000000000000000006f5aa9c
+NEWC
+STSLICE
+STI 1
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 169
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+
+.macro isActive
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 172
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+ENDS
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+CALLREF {
+	CALL $isActive_22f3e2d4_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 2712534506
+	STUR 130
+	STI 1
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 106
+	STZEROES
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STI 1
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.macro isActive_22f3e2d4_internal_macro
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 173
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+FALSE
+SETINDEXQ 1
+SETGLOB 4
+GETGLOB 12
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+
+.macro setRelayConfig
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 176
+OVER
+PUSHCONT {
+	LDU 32
+	LDU 32
+	LDU 32
+	LDU 16
+	ROLLREV 4
+	TUPLE 4
+	SWAP
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDU 32
+	LDU 32
+	LDU 32
+	LDU 16
+	ROLLREV 4
+	TUPLE 4
+	SWAP
+}
+IFELSE
+LDMSGADDR
+ENDS
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+CALLREF {
+	CALL $setRelayConfig_2fec3c1e_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setRelayConfig_2fec3c1e_internal_macro
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 203
+GETGLOB 9
+GETGLOB 15
+SECOND
+SDEQ
+IFNOTREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 177
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 50000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 178
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 180
+XCPU S1, S0
+SETGLOB 18
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 182
+PUSHSLICE xc0000000000000000000000000622a7ac2
+NEWC
+STSLICE
+SWAP
+UNTUPLE 4
+REVERSE 5, 0
+STU 32
+STU 32
+STU 32
+STU 16
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 183
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+
+.globl	_buildInitData_65db94e9_internal
+.type	_buildInitData_65db94e9_internal, @function
+CALL $_buildInitData_65db94e9_internal_macro$
+
+.macro _buildInitData_65db94e9_internal_macro
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 187
+PUSHINT 0
+NEWC
+STU 256
+PUSHINT 0
+NEWDICT
+PUSHINT 64
+DICTUSETB
+MYADDR
+PUSHINT 1
+ROT
+PUSHINT 64
+DICTUSET
+ROT
+NEWC
+STU 8
+PUSHINT 2
+ROT
+PUSHINT 64
+DICTUSETB
+SWAP
+PUSHINT 3
+ROT
+PUSHINT 64
+DICTUSETREF
+GETGLOB 13
+FIRST
+PUSHINT 4
+ROT
+PUSHINT 64
+DICTUSETREF
+NEWC
+STDICT
+ENDC
+GETGLOB 13
+FIRST
+NEWC
+STSLICECONST x2_
+STOPTREF
+STOPTREF
+STZERO
+ENDC
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+
+.macro on_bounce_macro
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/round/base/RoundDeployerBase.tsol, 0
+DUP
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+
+.globl	checkDelegate_c45d6a7d_internal
+.type	checkDelegate_c45d6a7d_internal, @function
+CALL $checkDelegate_c45d6a7d_internal_macro$
+
+.macro checkDelegate_c45d6a7d_internal_macro
+.loc ../contracts/utils/Delegate.tsol, 11
+GETGLOB 9
+GETGLOB 10
+PUSHINT 267
+DICTGET
+NULLSWAPIFNOT
+PUSHCONT {
+	LDU 32
+	PLDDICT
+	PAIR
+}
+IF
+.loc ../contracts/utils/Delegate.tsol, 12
+DUP
+ISNULL
+THROWIF 1201
+.loc ../contracts/utils/Delegate.tsol, 13
+DUP
+ISNULL
+THROWIF 63
+.loc ../contracts/utils/Delegate.tsol, 14
+DUP
+FIRST
+.loc ../contracts/utils/Delegate.tsol, 15
+DUP
+THROWIFNOT 1202
+.loc ../contracts/utils/Delegate.tsol, 16
+DEPTH
+ADDCONST -4
+PICK
+HASHSU
+.loc ../contracts/utils/Delegate.tsol, 17
+OVER
+EQINT 1
+PUSHCONT {
+	.loc ../contracts/utils/Delegate.tsol, 18
+	PUSHINT 0
+	PUSH S3
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PLDU 256
+	OVER
+	EQUAL
+	THROWIFNOT 1203
+	.loc ../contracts/utils/Delegate.tsol, 19
+	GETGLOB 9
+	GETGLOB 10
+	PUSHINT 267
+	DICTDEL
+	DROP
+}
+PUSHCONT {
+	.loc ../contracts/utils/Delegate.tsol, 21
+	FALSE
+	DUP
+	.loc ../contracts/utils/Delegate.tsol, 22
+	NEWDICT
+	PAIR
+	.loc ../contracts/utils/Delegate.tsol, 23
+	PUSHINT 0
+	PUSHCONT {
+		PUSH2 S0, S4
+		LESS
+	}
+	PUSHCONT {
+		.loc ../contracts/utils/Delegate.tsol, 24
+		PUSH2 S0, S5
+		SECOND
+		PUSHINT 32
+		DICTUGET
+		THROWIFNOT 50
+		PLDU 256
+		PUSH S4
+		EQUAL
+		PUSH S3
+		NOT
+		AND
+		PUSHCONT {
+			.loc ../contracts/utils/Delegate.tsol, 25
+			TRUE
+			POP S3
+		}
+		PUSHCONT {
+			.loc ../contracts/utils/Delegate.tsol, 27
+			DUP2
+			PUSH S7
+			SECOND
+			PUSHINT 32
+			DICTUGET
+			THROWIFNOT 50
+			PLDU 256
+			NEWC
+			STU 256
+			SWAP
+			UNPAIR
+			OVER
+			INC
+			ROLLREV 3
+			PUSHINT 32
+			DICTUSETB
+			PAIR
+			POP S2
+		}
+		IFELSE
+		.loc ../contracts/utils/Delegate.tsol, 23
+		INC
+		.loc ../contracts/utils/Delegate.tsol, 0
+	}
+	WHILE
+	DROP
+	.loc ../contracts/utils/Delegate.tsol, 30
+	SWAP
+	THROWIFNOT 1203
+	.loc ../contracts/utils/Delegate.tsol, 31
+	GETGLOB 9
+	GETGLOB 10
+	NEWC
+	ROLL 3
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	ROTREV
+	PUSHINT 267
+	DICTSETB
+}
+IFELSE
+SETGLOB 10
+.loc ../contracts/utils/Delegate.tsol, 0
+BLKDROP 3
+
+.macro c4_to_c7
+PUSHROOT
+CTOS
+LDU 256 ; pubkey c4
+LDU 64 ; pubkey timestamp c4
+LDU 1 ; ctor flag
+NIP
+LDDICT
+LDU 32
+LDI 1
+LDREF
+LDI 1
+LDREF
+LDU 32
+LDREF
+ENDS
+CTOS
+LDREF
+LDU 32
+ROLLREV 6
+TUPLE 6
+SWAP
+LDU 32
+LDU 32
+LDU 32
+ROLLREV 3
+TRIPLE
+SWAP
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ROTREV
+PAIR
+SWAP
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDU 32
+LDU 32
+LDU 32
+LDU 16
+ROLLREV 4
+TUPLE 4
+SWAP
+LDU 128
+LDU 128
+ENDS
+SETGLOB 20
+SETGLOB 19
+SETGLOB 18
+SETGLOB 17
+SETGLOB 16
+SETGLOB 15
+SETGLOB 14
+SETGLOB 13
+SETGLOB 12
+SETGLOB 11
+SETGLOB 10
+SETGLOB 3
+SETGLOB 2
+
+.macro c4_to_c7_with_init_storage
+PUSHROOT
+CTOS
+SBITS
+GTINT 1
+PUSHCONT {
+	PUSHINT 0
+	PUSHROOT
+	CTOS
+	PLDDICT ; D
+	NEWDICT
+	PUSHINT 1
+	PUSH S2
+	PUSHINT 64
+	DICTUGET
+	ZEROSWAPIFNOT
+	PUSHCONT {
+		PLDU 32
+	}
+	IF
+	PUSHINT 0
+	PUSHREF {
+	}
+	PUSHINT 0
+	PUSHREF {
+	}
+	PUSHINT 0
+	PUSHREF {
+	}
+	PUSHINT 0
+	TUPLE 6
+	PUSHINT 0
+	BLKPUSH 2, 0
+	TRIPLE
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	DUP
+	PAIR
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	DUP
+	PUSHINT 0
+	BLKPUSH 3, 0
+	TUPLE 4
+	PUSHINT 0
+	DUP
+	SETGLOB 20
+	SETGLOB 19
+	SETGLOB 18
+	SETGLOB 17
+	SETGLOB 16
+	SETGLOB 15
+	SETGLOB 14
+	SETGLOB 13
+	SETGLOB 12
+	SETGLOB 11
+	SETGLOB 10
+	PUSHINT 64
+	DICTUGET
+	THROWIFNOT 61
+	PLDU 256
+	SETGLOB 2
+	PUSHINT 0 ; timestamp
+	SETGLOB 3
+	PUSHINT 604800
+	PUSHINT 518400
+	PUSHINT 3600
+	PUSHINT 13
+	TUPLE 4
+	SETGLOB 18
+	PUSHINT 2500000000
+	SETGLOB 19
+	PUSHINT 2500000000
+	SETGLOB 20
+}
+IFREFELSE {
+	CALL $c4_to_c7$
+}
+
+.macro c7_to_c4
+GETGLOB 20
+GETGLOB 19
+GETGLOB 18
+GETGLOB 17
+GETGLOB 16
+GETGLOB 15
+GETGLOB 14
+GETGLOB 13
+GETGLOB 12
+GETGLOB 11
+GETGLOB 10
+GETGLOB 3
+GETGLOB 2
+NEWC
+STU 256
+STU 64
+STONE
+STDICT
+STU 32
+STI 1
+SWAP
+UNTUPLE 6
+REVERSE 7, 0
+STREF
+STI 1
+STREF
+STU 32
+ROLLREV 9
+NEWC
+STREF
+STU 32
+SWAP
+UNTRIPLE
+REVERSE 4, 0
+STU 32
+STU 32
+STU 32
+SWAP
+UNPAIR
+XCHG S2
+STSLICE
+ROLLREV 6
+NEWC
+STSLICE
+ROLLREV 5
+NEWC
+STSLICE
+ROLLREV 4
+NEWC
+STSLICE
+SWAP
+UNTUPLE 4
+REVERSE 5, 0
+STU 32
+STU 32
+STU 32
+STU 16
+STU 128
+STU 128
+STBREFR
+STBREFR
+STBREFR
+STBREFR
+ENDC
+POPROOT
+
+.macro upd_only_time_in_c4
+PUSHROOT
+CTOS
+LDU 256
+LDU 64
+NIP
+GETGLOB 3
+ROT
+NEWC
+STU 256
+STU 64
+STSLICE
+ENDC
+POPROOT
+
+.internal-alias :main_internal, 0
+.internal :main_internal
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSH S2
+CTOS
+LDU 4 ; bounced tail
+LDMSGADDR ; bounced src tail
+DROP
+SETGLOB 9
+MODPOW2 1
+GETGLOB 4
+TRUE
+SETINDEXQ 1
+PUSHINT 10000000
+SETINDEXQ 2
+NULL
+SETINDEXQ 3
+PUSHINT 0
+SETINDEXQ 4
+SETGLOB 4
+IFRET
+OVER
+SEMPTY ; isEmpty
+IFJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+OVER
+LDUQ 32  ; [funcId] body' ok
+THROWIFNOT 60
+OVER
+IFNOTJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.internal-alias :main_external, -1
+.internal :main_external
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+SETGLOB 9
+OVER
+CALLREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+LDU 1 ; haveSign msgSlice
+SWAP
+PUSHCONT {
+	PUSHPOW2 9
+	LDSLICEX ; signatureSlice msgSlice
+	DUP
+	HASHSU ; signatureSlice msgSlice hashMsgSlice
+	SWAP
+	LDU 1 ; signatureSlice hashMsgSlice hasPubkey msgSlice
+	SWAP
+	PUSHCONT {
+		LDU 256 ; signatureSlice hashMsgSlice pubkey msgSlice
+		XCHG S3
+		SWAP
+	}
+	PUSHCONT {
+		XCHG S2
+		GETGLOB 2
+	}
+	IFELSE
+	CHKSIGNU ; msgSlice isSigned
+	THROWIFNOT 40
+}
+PUSHCONT {
+	LDU 1 ; hasPubkey msgSlice
+	SWAP
+	THROWIF 58
+}
+IFELSE
+LDU 64 ; timestamp msgSlice
+SWAP
+CALL $replay_protection_macro$
+LDU 32 ; expireAt msgSlice
+SWAP
+NOW ; msgSlice expireAt now
+GREATER ; msgSlice expireAt>now
+THROWIFNOT 57
+LDU 32 ; funcId body
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.macro delegators
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 10
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000cfaf03fd
+	NEWC
+	STSLICE
+	STDICT
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro bridge_event_config_ton_sol
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 16
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000d94dc925
+	NEWC
+	STSLICE
+	STSLICE
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro public_function_selector
+DUP
+PUSHINT 1408155670
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 410172924
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 66075115
+		EQUAL
+		IFJMPREF {
+			CALL $setRelaysOnNewRound$
+		}
+		DUP
+		PUSHINT 171293035
+		EQUAL
+		IFJMPREF {
+			CALL $getCodeData$
+		}
+		DUP
+		PUSHINT 273997743
+		EQUAL
+		IFJMPREF {
+			CALL $upgrade$
+		}
+		DUP
+		PUSHINT 410172924
+		EQUAL
+		IFJMPREF {
+			CALL $onRelayRoundInitialized$
+		}
+	}
+	DUP
+	PUSHINT 693131876
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 454122448
+		EQUAL
+		IFJMPREF {
+			CALL $upgradeRelayRound$
+		}
+		DUP
+		PUSHINT 565050858
+		EQUAL
+		IFJMPREF {
+			CALL $isActive$
+		}
+		DUP
+		PUSHINT 690792533
+		EQUAL
+		IFJMPREF {
+			CALL $setManager$
+		}
+		DUP
+		PUSHINT 693131876
+		EQUAL
+		IFJMPREF {
+			CALL $setActive$
+		}
+	}
+	DUP
+	PUSHINT 1133217191
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 919536713
+		EQUAL
+		IFJMPREF {
+			CALL $getDetails$
+		}
+		DUP
+		PUSHINT 1013128631
+		EQUAL
+		IFJMPREF {
+			CALL $getRelayRoundAddress$
+		}
+		DUP
+		PUSHINT 1114700010
+		EQUAL
+		IFJMPREF {
+			CALL $setEventDeployValues$
+		}
+		DUP
+		PUSHINT 1133217191
+		EQUAL
+		IFJMPREF {
+			CALL $addDelegate$
+		}
+	}
+	DUP
+	PUSHINT 1408155670
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1336869885
+		EQUAL
+		IFJMPREF {
+			CALL $delegators$
+		}
+		DUP
+		PUSHINT 1365660547
+		EQUAL
+		IFJMPREF {
+			CALL $setBridgeEventTonEthConfig$
+		}
+		DUP
+		PUSHINT 1390414051
+		EQUAL
+		IFJMPREF {
+			CALL $setBridgeEventTonSolConfig$
+		}
+		DUP
+		PUSHINT 1408155670
+		EQUAL
+		IFJMPREF {
+			CALL $installOrUpdateRelayRoundCode$
+		}
+	}
+}
+DUP
+PUSHINT 2012572672
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 1572759129
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1413589511
+		EQUAL
+		IFJMPREF {
+			CALL $getRelayConfig$
+		}
+		DUP
+		PUSHINT 1498269989
+		EQUAL
+		IFJMPREF {
+			CALL $bridge_event_config_ton_sol$
+		}
+		DUP
+		PUSHINT 1544991781
+		EQUAL
+		IFJMPREF {
+			CALL $setRelayConfig$
+		}
+		DUP
+		PUSHINT 1572759129
+		EQUAL
+		IFJMPREF {
+			CALL $setAdmin$
+		}
+	}
+	DUP
+	PUSHINT 2012572672
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1824563769
+		EQUAL
+		IFJMPREF {
+			CALL $constructor$
+		}
+		DUP
+		PUSHINT 1841635854
+		EQUAL
+		IFJMPREF {
+			CALL $getRelayRoundsDetails$
+		}
+		DUP
+		PUSHINT 1892814778
+		EQUAL
+		IFJMPREF {
+			CALL $installPlatformOnce$
+		}
+		DUP
+		PUSHINT 2012572672
+		EQUAL
+		IFJMPREF {
+			CALL $getRelayRoundAddressFromTimestamp$
+		}
+	}
+}
+

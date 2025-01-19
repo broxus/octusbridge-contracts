@@ -1,0 +1,131 @@
+pragma ever-solidity >= 0.62.0;
+pragma AbiHeader pubkey;
+pragma AbiHeader expire;
+
+import "./base/RoundDeployerRelay.tsol";
+
+
+contract RoundDeployer is RoundDeployerRelay {
+    event RoundDeployerUpdated();
+
+    constructor(
+        address _admin,
+        address _bridge_event_config_ton_eth,
+        address _bridge_event_config_ton_sol
+    ) public {
+        tvm.rawReserve(Gas.ROOT_INITIAL_BALANCE, 0);
+
+        tvm.accept();
+
+        base_details.bridge_event_config_ton_eth = _bridge_event_config_ton_eth;
+        base_details.admin = _admin;
+        bridge_event_config_ton_sol = _bridge_event_config_ton_sol;
+
+        _admin.transfer({
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS
+        });
+
+    }
+
+    function upgrade(TvmCell code, address send_gas_to) external onlyAdmin {
+        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+
+        TvmCell data = abi.encode(
+            send_gas_to, // address
+            code_data.has_platform_code, // bool
+            code_data.user_data_version, // 32
+            code_data.platform_code, // ref1
+            code_data.user_data_code, // ref2
+            code_data.relay_round_code, // ref3
+            deploy_nonce, // 32
+//            deployer, // address 267
+            base_details.bridge_event_config_ton_eth, // address 267
+            base_details.admin, // address 267
+
+            bridge_event_config_ton_sol,
+
+            active, // 1
+            round_details.currentRelayRound, // 32
+            round_details.currentRelayRoundStartTime, // 32
+            round_details.currentRelayRoundEndTime, // 32
+
+            relay_config.relayRoundTime, // 32
+            relay_config.minRoundGapTime, // 32
+            relay_config.minRelaysCount, // 16
+            tonEthEventDeployValue, // 128
+            tonSolEventDeployValue // 128
+        );
+
+        // set code after complete this method
+        tvm.setcode(code);
+
+        // run onCodeUpgrade from new code
+        tvm.setCurrentCode(code);
+        onCodeUpgrade(data);
+    }
+
+    function onCodeUpgrade(TvmCell upgrade_data) private {
+        tvm.rawReserve(1 ever, 0);
+
+        address send_gas_to;
+
+        (
+            send_gas_to, // address
+            code_data.has_platform_code, // bool
+            code_data.user_data_version, // 32
+            code_data.platform_code, // ref1
+            code_data.user_data_code, // ref2
+            code_data.relay_round_code, // ref3
+            deploy_nonce, // 32
+            //            deployer, // address 267
+            base_details.bridge_event_config_ton_eth, // address 267
+            base_details.admin, // address 267
+
+            bridge_event_config_ton_sol,
+
+            active, // 1
+            round_details.currentRelayRound, // 32
+            round_details.currentRelayRoundStartTime, // 32
+            round_details.currentRelayRoundEndTime, // 32
+
+            relay_config.relayRoundTime, // 32
+            relay_config.minRoundGapTime, // 32
+            relay_config.minRelaysCount, // 16
+            tonEthEventDeployValue, // 128
+            tonSolEventDeployValue
+        ) = abi.decode(upgrade_data, (
+            address,
+            bool,
+            uint32,
+            TvmCell,
+            TvmCell,
+            TvmCell,
+            uint32,
+            address,
+            address,
+
+            address,
+
+            bool,
+            uint32,
+            uint32,
+            uint32,
+
+            uint32,
+            uint32,
+            uint16,
+            uint128,
+            uint128
+        ));
+
+        round_details.currentRelayRoundStartTime = 1735155571;
+        round_details.currentRelayRoundEndTime = 1735155581;
+
+        send_gas_to.transfer({
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS
+        });
+    }
+}

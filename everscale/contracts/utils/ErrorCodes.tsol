@@ -96,6 +96,8 @@ library ErrorCodes {
     uint16 constant LOW_BALANCE = 2541;
     uint16 constant NOT_RESCUER = 2542;
     uint16 constant EMERGENCY = 2543;
+    uint16 constant TOO_EARLY_TO_SET_RELAYS = 2544;
+    uint16 constant NOT_ENOUGH_RELAYS = 2545;
 
     // staking dao
     uint16 constant NOT_DAO_ROOT = 2601;

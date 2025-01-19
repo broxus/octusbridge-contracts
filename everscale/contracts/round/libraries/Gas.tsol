@@ -1,0 +1,15 @@
+pragma ever-solidity >= 0.62.0;
+
+library Gas {
+    // deploy
+    uint64 constant TOKEN_WALLET_DEPLOY_VALUE = 1 ever;
+    uint64 constant DEPLOY_RELAY_ROUND_MIN_VALUE = 2.5 ever;
+
+    uint64 constant ROOT_INITIAL_BALANCE = 2 ever;
+    uint64 constant RELAY_ROUND_INITIAL_BALANCE = 2 ever;
+
+    // min values for calls
+    uint64 constant MIN_CALL_MSG_VALUE = 0.05 ever;
+    uint64 constant MIN_SEND_RELAYS_MSG_VALUE = 1 ever;
+    uint64 constant DESTROY_MSG_VALUE = 0.1 ever;
+}

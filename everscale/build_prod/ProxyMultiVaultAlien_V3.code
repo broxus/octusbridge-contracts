@@ -1,0 +1,2963 @@
+.version sol 0.62.0
+
+.macro constructor
+DROP
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+GETGLOB 6
+THROWIF 51
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+ENDS
+.loc ../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol, 9
+GETGLOB 5
+DUP
+ISNULL
+PUSHCONT {
+	DROP
+	PUSHINT 0
+}
+IF
+GETGLOB 2
+EQUAL
+THROWIFNOT 1103
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 48
+ACCEPT
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 50
+CALLREF {
+	CALL $_reserveTargetBalance_c4db675c_internal_macro$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 52
+DUP
+CALLREF {
+	CALL $setOwnership_a7016023_internal_macro$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 54
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../../node_modules/@broxus/contracts/contracts/utils/CheckPubKey.tsol, 0
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro apiVersion
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 70
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+ENDS
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+CALLREF {
+	CALL $apiVersion_25829410_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 2155612015
+	STUR 130
+	STU 8
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 106
+	STZEROES
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STU 8
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.macro apiVersion_25829410_internal_macro
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 71
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+FALSE
+SETINDEXQ 1
+PUSHINT 64
+SETINDEXQ 4
+SETGLOB 4
+GETGLOB 13
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+
+.macro onAcceptTokensBurn
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 79
+OVER
+PUSHCONT {
+	LDU 128
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDU 128
+}
+IFELSE
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+CALLREF {
+	CALL $onAcceptTokensBurn_07d14114_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	onAcceptTokensBurn_07d14114_internal
+.type	onAcceptTokensBurn_07d14114_internal, @function
+CALL $onAcceptTokensBurn_07d14114_internal_macro$
+
+.macro onAcceptTokensBurn_07d14114_internal_macro
+.loc ../contracts/utils/TransferUtils.tsol, 23
+CALLREF {
+	CALL $_reserveAtLeastTargetBalance_a644bc3b_internal_macro$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 86
+CTOS
+LDU 160
+ENDS
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 88
+GETGLOB 9
+ROLL 5
+SWAP2
+SWAP
+CALLREF {
+	CALL $_deployEvent_d2bf3558_internal_macro$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+DROP2
+
+.macro withdrawTokensByMergePool
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 96
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDU 256
+LDMSGADDR
+LDU 128
+LDREF
+ENDS
+CTOS
+LDU 160
+LDMSGADDR
+ENDS
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+CALLREF {
+	CALL $withdrawTokensByMergePool_7b632c22_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro withdrawTokensByMergePool_7b632c22_internal_macro
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 96
+ROLL 4
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 62
+CALLREF {
+	CALL $deriveMergePool_61fad7ec_internal_macro$
+}
+GETGLOB 9
+SDEQ
+THROWIFNOT 100
+.loc ../contracts/utils/TransferUtils.tsol, 23
+CALLREF {
+	CALL $_reserveAtLeastTargetBalance_a644bc3b_internal_macro$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 103
+CALLREF {
+	CALL $_deployEvent_d2bf3558_internal_macro$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+
+.macro onEventConfirmedExtended
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 114
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDU 256
+LDU 32
+LDREF
+LDU 32
+LDU 256
+ROLLREV 5
+TUPLE 5
+SWAP
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDU 32
+ROLLREV 4
+TUPLE 4
+SWAP
+LDREF
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+CALLREF {
+	CALL $onEventConfirmedExtended_0278ec8c_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro onEventConfirmedExtended_0278ec8c_internal_macro
+.loc ../contracts/utils/TransferUtils.tsol, 23
+CALLREF {
+	CALL $_reserveAtLeastTargetBalance_a644bc3b_internal_macro$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 119
+GETGLOB 12
+SECOND
+GETGLOB 9
+CALLREF {
+	CALL $_isArrayContainsAddress_fd9f2e52_internal_macro$
+}
+THROWIFNOT 100
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 121
+SWAP
+CTOS
+LDMSGADDR
+LDU 128
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 130
+ROLL 3
+CALLREF {
+	CALL $_mintTokens_e0268d60_internal_macro$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+DROP
+
+.macro mintTokensByMergePool
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 145
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDU 256
+LDMSGADDR
+LDU 128
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+CALLREF {
+	CALL $mintTokensByMergePool_4a5c359e_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro mintTokensByMergePool_4a5c359e_internal_macro
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 145
+ROLL 4
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 62
+CALLREF {
+	CALL $deriveMergePool_61fad7ec_internal_macro$
+}
+GETGLOB 9
+SDEQ
+THROWIFNOT 100
+.loc ../contracts/utils/TransferUtils.tsol, 23
+CALLREF {
+	CALL $_reserveAtLeastTargetBalance_a644bc3b_internal_macro$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 152
+CALLREF {
+	CALL $_mintTokens_e0268d60_internal_macro$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+
+.globl	_mintTokens_e0268d60_internal
+.type	_mintTokens_e0268d60_internal, @function
+CALL $_mintTokens_e0268d60_internal_macro$
+
+.macro _mintTokens_e0268d60_internal_macro
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 166
+PUSHREF {
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 168
+TRUE
+ROT
+GETGLOB 12
+THIRD
+BLKSWAP 3, 4
+XCHG S2
+FALSE
+NEWC
+STSLICECONST x6_
+STI 1
+STSLICECONST x1_
+STSLICE
+PUSHINT 1
+STUR 111
+ROLLREV 6
+NEWC
+STSLICECONST x20bfb3b8
+STU 128
+STSLICE
+STU 128
+ROLLREV 3
+NEWC
+STSLICE
+STI 1
+STREF
+STBREFR
+STBREFR
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+
+.globl	_deployEvent_d2bf3558_internal
+.type	_deployEvent_d2bf3558_internal, @function
+CALL $_deployEvent_d2bf3558_internal_macro$
+
+.macro _deployEvent_d2bf3558_internal_macro
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 184
+SWAP
+XCHG S3
+MYADDR
+NEWC
+STSLICE
+ROLLREV 4
+NEWC
+STSLICE
+ROLLREV 3
+NEWC
+STSLICE
+STU 128
+STU 160
+STBREFR
+STBREFR
+ENDC
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 192
+LTIME
+NOW
+ROT
+TRIPLE
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 198
+GETGLOB 12
+FIRST
+FALSE
+NEWC
+STSLICECONST x6_
+STI 1
+STSLICECONST x1_
+STSLICE
+PUSHINT 547684567
+STUR 143
+SWAP
+UNTRIPLE
+REVERSE 4, 0
+STU 64
+STU 32
+STREF
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+
+.macro deriveAlienTokenRoot
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 211
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDU 256
+LDU 160
+LDREF
+LDREF
+LDU 8
+ENDS
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+CALLREF {
+	CALL $deriveAlienTokenRoot_1a29c07c_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	SWAP
+	NEWC
+	STSLICECONST xc2df6afb
+	STSLICE
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	SWAP
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STSLICE
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	deriveAlienTokenRoot_1a29c07c_internal
+.type	deriveAlienTokenRoot_1a29c07c_internal, @function
+CALL $deriveAlienTokenRoot_1a29c07c_internal_macro$
+
+.macro deriveAlienTokenRoot_1a29c07c_internal_macro
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 218
+CALLREF {
+	CALL $_buildAlienTokenRootInitState_34ba757a_internal_macro$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 227
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+FALSE
+SETINDEXQ 1
+PUSHINT 64
+SETINDEXQ 4
+SETGLOB 4
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+ENDC
+CTOS
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+
+.macro deployAlienToken
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 237
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+	LDU 160
+	LDREF
+	LDREF
+	LDU 8
+}
+PUSHCONT {
+	LDU 256
+	LDU 160
+	LDREF
+	LDREF
+	LDU 8
+	LDREF
+	ENDS
+	CTOS
+}
+IFELSE
+LDMSGADDR
+ENDS
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+CALLREF {
+	CALL $deployAlienToken_a53c98e5_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro deployAlienToken_a53c98e5_internal_macro
+.loc ../contracts/utils/TransferUtils.tsol, 23
+CALLREF {
+	CALL $_reserveAtLeastTargetBalance_a644bc3b_internal_macro$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 245
+ROLLREV 5
+CALLREF {
+	CALL $_buildAlienTokenRootInitState_34ba757a_internal_macro$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 253
+SWAP
+FALSE
+BLKPUSH 2, 0
+GETGLOB 12
+THIRD
+PUSHINT 0
+MYADDR
+ROLL 7
+DUP
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+NEWC
+STSLICECONST x62_
+STB
+PUSHINT 3
+STUR 111
+OVER
+CALLREF {
+	CTOS
+	LDI 1
+	SWAP
+	PUSHCONT {
+		LDI 5
+		NIP
+	}
+	IF
+	LDI 1
+	SWAP
+	PUSHCONT {
+		LDI 2
+		NIP
+	}
+	IF
+	LDOPTREF
+	LDOPTREF
+	LDDICT
+	ENDS
+	BLKDROP 3
+}
+STREF
+STSLICECONST 1
+ROLLREV 7
+NEWC
+STSLICECONST x0a23e69c
+STSLICE
+STU 128
+STU 128
+STI 1
+STI 1
+STI 1
+SWAP
+NEWC
+STSLICE
+STBREFR
+STBREFR
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+
+.macro deriveMergeRouter
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 268
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+ENDS
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+CALLREF {
+	CALL $deriveMergeRouter_02634715_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	SWAP
+	NEWC
+	STSLICECONST xdbbeb5f2
+	STSLICE
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	SWAP
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STSLICE
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro deriveMergeRouter_02634715_internal_macro
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 271
+CALLREF {
+	CALL $_buildMergeRouterInitState_0e738382_internal_macro$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 273
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+FALSE
+SETINDEXQ 1
+PUSHINT 64
+SETINDEXQ 4
+SETGLOB 4
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+ENDC
+CTOS
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+
+.macro deployMergeRouter
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 276
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+ENDS
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+CALLREF {
+	CALL $deployMergeRouter_97e926b9_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro deployMergeRouter_97e926b9_internal_macro
+.loc ../contracts/utils/TransferUtils.tsol, 23
+CALLREF {
+	CALL $_reserveAtLeastTargetBalance_a644bc3b_internal_macro$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 279
+CALLREF {
+	CALL $_buildMergeRouterInitState_0e738382_internal_macro$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 281
+GETGLOB 14
+GETGLOB 10
+ROT
+DUP
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+NEWC
+STSLICECONST x42_
+STB
+PUSHINT 3
+STUR 111
+OVER
+CALLREF {
+	CTOS
+	LDI 1
+	SWAP
+	PUSHCONT {
+		LDI 5
+		NIP
+	}
+	IF
+	LDI 1
+	SWAP
+	PUSHCONT {
+		LDI 2
+		NIP
+	}
+	IF
+	LDOPTREF
+	LDOPTREF
+	LDDICT
+	ENDS
+	BLKDROP 3
+}
+STREF
+STSLICECONST 1
+ROTREV
+NEWC
+STSLICECONST x49fa7cdf
+STSLICE
+SWAP
+NEWC
+STSLICE
+STBREFR
+STBREFR
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+
+.macro deriveMergePool
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 289
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDU 256
+ENDS
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+CALLREF {
+	CALL $deriveMergePool_61fad7ec_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	SWAP
+	NEWC
+	STSLICECONST xde285708
+	STSLICE
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	SWAP
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STSLICE
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	deriveMergePool_61fad7ec_internal
+.type	deriveMergePool_61fad7ec_internal, @function
+CALL $deriveMergePool_61fad7ec_internal_macro$
+
+.macro deriveMergePool_61fad7ec_internal_macro
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 292
+CALLREF {
+	CALL $_buildMergePoolPlatformInitState_326e7c24_internal_macro$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 294
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+FALSE
+SETINDEXQ 1
+PUSHINT 64
+SETINDEXQ 4
+SETGLOB 4
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+ENDC
+CTOS
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+
+.macro upgradeMergePool
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 300
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+ENDS
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+CALLREF {
+	CALL $upgradeMergePool_6468d653_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro upgradeMergePool_6468d653_internal_macro
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 15
+GETGLOB 9
+GETGLOB 10
+SDEQ
+DUP
+PUSHCONT {
+	DROP
+	GETGLOB 9
+	PARSEMSGADDR
+	INDEX 3
+	PLDU 256
+	NEQINT 0
+}
+IF
+THROWIFNOT 1101
+.loc ../contracts/utils/TransferUtils.tsol, 23
+CALLREF {
+	CALL $_reserveAtLeastTargetBalance_a644bc3b_internal_macro$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 303
+GETGLOB 18
+GETGLOB 16
+ROT
+FALSE
+NEWC
+STSLICECONST x6_
+STI 1
+STSLICECONST x1_
+STSLICE
+PUSHINT 27519108
+STUR 143
+STREF
+STU 8
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+
+.macro deployMergePool
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 315
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDU 256
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 256
+ENDS
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+CALLREF {
+	CALL $deployMergePool_c057cf93_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro deployMergePool_c057cf93_internal_macro
+.loc ../contracts/utils/TransferUtils.tsol, 23
+CALLREF {
+	CALL $_reserveAtLeastTargetBalance_a644bc3b_internal_macro$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 320
+GETGLOB 9
+GETGLOB 10
+SDEQ
+GETGLOB 9
+GETGLOB 14
+SDEQ
+OR
+THROWIFNOT 100
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 322
+ROT
+CALLREF {
+	CALL $_buildMergePoolPlatformInitState_326e7c24_internal_macro$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 324
+GETGLOB 14
+GETGLOB 10
+BLKSWAP 2, 3
+SWAP
+GETGLOB 18
+GETGLOB 16
+ROLL 6
+DUP
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+NEWC
+STSLICECONST x42_
+STB
+PUSHINT 3
+STUR 111
+OVER
+CALLREF {
+	CTOS
+	LDI 1
+	SWAP
+	PUSHCONT {
+		LDI 5
+		NIP
+	}
+	IF
+	LDI 1
+	SWAP
+	PUSHCONT {
+		LDI 2
+		NIP
+	}
+	IF
+	LDOPTREF
+	LDOPTREF
+	LDDICT
+	ENDS
+	BLKDROP 3
+}
+STREF
+STSLICECONST 1
+ROLLREV 6
+NEWC
+STSLICECONST x4547894e
+STREF
+STU 8
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+STU 256
+STSLICE
+SWAP
+NEWC
+STSLICE
+STBREFR
+STBREFR
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+
+.macro getConfiguration
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 339
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+ENDS
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+CALLREF {
+	CALL $getConfiguration_6bd50cef_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	SWAP
+	NEWC
+	STSLICECONST xcc4e8c68
+	SWAP
+	UNTUPLE 6
+	REVERSE 7, 0
+	STSLICE
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	STU 128
+	STREF
+	STREF
+	STREF
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	SWAP
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	SWAP
+	UNTUPLE 6
+	REVERSE 7, 0
+	STSLICE
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	STU 128
+	STREF
+	STREF
+	STREF
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.macro getConfiguration_6bd50cef_internal_macro
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 346
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+FALSE
+SETINDEXQ 1
+PUSHINT 64
+SETINDEXQ 4
+SETGLOB 4
+GETGLOB 12
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+
+.macro setConfiguration
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 349
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 128
+LDREF
+LDREF
+LDREF
+ENDS
+CTOS
+LDREF
+ROLLREV 6
+TUPLE 6
+SWAP
+LDMSGADDR
+ENDS
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+CALLREF {
+	CALL $setConfiguration_2e4d39fc_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setConfiguration_2e4d39fc_internal_macro
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 15
+GETGLOB 9
+GETGLOB 10
+SDEQ
+DUP
+PUSHCONT {
+	DROP
+	GETGLOB 9
+	PARSEMSGADDR
+	INDEX 3
+	PLDU 256
+	NEQINT 0
+}
+IF
+THROWIFNOT 1101
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 16
+DUP
+.loc ../contracts/utils/TransferUtils.tsol, 53
+GETPARAM 7
+FIRST
+DEPTH
+ADDCONST -2
+PICK
+SUB
+UFITS 128
+PUSHINT 2
+RAWRESERVE
+.loc ../contracts/utils/TransferUtils.tsol, 54
+ROTREV
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 353
+DROP
+SETGLOB 12
+.loc ../contracts/utils/TransferUtils.tsol, 55
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHINT 129
+SENDRAWMSG
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+
+.globl	_buildAlienTokenRootInitState_34ba757a_internal
+.type	_buildAlienTokenRootInitState_34ba757a_internal, @function
+CALL $_buildAlienTokenRootInitState_34ba757a_internal_macro$
+
+.macro _buildAlienTokenRootInitState_34ba757a_internal_macro
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 363
+PUSHINT 0
+NEWC
+STU 256
+PUSHINT 0
+NEWDICT
+PUSHINT 64
+DICTUSETB
+PUSHINT 0
+NEWC
+STU 256
+PUSHINT 6
+ROT
+PUSHINT 64
+DICTUSETB
+MYADDR
+PUSHINT 7
+ROT
+PUSHINT 64
+DICTUSET
+MYADDR
+PUSHINT 4
+ROT
+PUSHINT 64
+DICTUSET
+ROLL 5
+NEWC
+STU 256
+PUSHINT 9
+ROT
+PUSHINT 64
+DICTUSETB
+ROLL 4
+NEWC
+STU 160
+PUSHINT 10
+ROT
+PUSHINT 64
+DICTUSETB
+ROLL 3
+PUSHINT 1
+ROT
+PUSHINT 64
+DICTUSETREF
+ROT
+PUSHINT 2
+ROT
+PUSHINT 64
+DICTUSETREF
+SWAP
+NEWC
+STU 8
+PUSHINT 3
+ROT
+PUSHINT 64
+DICTUSETB
+GETGLOB 12
+INDEX 4
+PUSHINT 5
+ROT
+PUSHINT 64
+DICTUSETREF
+GETGLOB 12
+INDEX 5
+PUSHINT 8
+ROT
+PUSHINT 64
+DICTUSETREF
+NEWC
+STDICT
+ENDC
+GETGLOB 12
+INDEX 3
+NEWC
+STSLICECONST x2_
+STOPTREF
+STOPTREF
+STZERO
+ENDC
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+
+.globl	_buildMergeRouterInitState_0e738382_internal
+.type	_buildMergeRouterInitState_0e738382_internal, @function
+CALL $_buildMergeRouterInitState_0e738382_internal_macro$
+
+.macro _buildMergeRouterInitState_0e738382_internal_macro
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 388
+PUSHINT 0
+NEWC
+STU 256
+PUSHINT 0
+NEWDICT
+PUSHINT 64
+DICTUSETB
+SWAP
+PUSHINT 2
+ROT
+PUSHINT 64
+DICTUSET
+MYADDR
+PUSHINT 1
+ROT
+PUSHINT 64
+DICTUSET
+NEWC
+STDICT
+ENDC
+GETGLOB 15
+NEWC
+STSLICECONST x2_
+STOPTREF
+STOPTREF
+STZERO
+ENDC
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+
+.globl	_buildMergePoolPlatformInitState_326e7c24_internal
+.type	_buildMergePoolPlatformInitState_326e7c24_internal, @function
+CALL $_buildMergePoolPlatformInitState_326e7c24_internal_macro$
+
+.macro _buildMergePoolPlatformInitState_326e7c24_internal_macro
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 402
+PUSHINT 0
+NEWC
+STU 256
+PUSHINT 0
+NEWDICT
+PUSHINT 64
+DICTUSETB
+MYADDR
+PUSHINT 2
+ROT
+PUSHINT 64
+DICTUSET
+SWAP
+NEWC
+STU 256
+PUSHINT 1
+ROT
+PUSHINT 64
+DICTUSETB
+NEWC
+STDICT
+ENDC
+GETGLOB 17
+NEWC
+STSLICECONST x2_
+STOPTREF
+STOPTREF
+STZERO
+ENDC
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+
+.macro setManager
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 416
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+ENDS
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+CALLREF {
+	CALL $setManager_d0ebdbe7_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setManager_d0ebdbe7_internal_macro
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 15
+GETGLOB 9
+GETGLOB 10
+SDEQ
+DUP
+PUSHCONT {
+	DROP
+	GETGLOB 9
+	PARSEMSGADDR
+	INDEX 3
+	PLDU 256
+	NEQINT 0
+}
+IF
+THROWIFNOT 1101
+.loc ../contracts/utils/TransferUtils.tsol, 47
+GETPARAM 7
+FIRST
+DEPTH
+ADDCONST -2
+PICK
+SUB
+UFITS 128
+PUSHINT 2
+RAWRESERVE
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 419
+SETGLOB 14
+.loc ../contracts/utils/TransferUtils.tsol, 49
+GETGLOB 9
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHINT 129
+SENDRAWMSG
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+
+.macro setMergePool
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 426
+LDREF
+ENDS
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+CALLREF {
+	CALL $setMergePool_c64eaead_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setMergePool_c64eaead_internal_macro
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 15
+GETGLOB 9
+GETGLOB 10
+SDEQ
+DUP
+PUSHCONT {
+	DROP
+	GETGLOB 9
+	PARSEMSGADDR
+	INDEX 3
+	PLDU 256
+	NEQINT 0
+}
+IF
+THROWIFNOT 1101
+.loc ../contracts/utils/TransferUtils.tsol, 47
+GETPARAM 7
+FIRST
+DEPTH
+ADDCONST -2
+PICK
+SUB
+UFITS 128
+PUSHINT 2
+RAWRESERVE
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 429
+SETGLOB 16
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 431
+GETGLOB 18
+INC
+UFITS 8
+SETGLOB 18
+.loc ../contracts/utils/TransferUtils.tsol, 49
+GETGLOB 9
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHINT 129
+SENDRAWMSG
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+
+.macro setMergeRouter
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 437
+LDREF
+ENDS
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+CALLREF {
+	CALL $setMergeRouter_a1495e23_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setMergeRouter_a1495e23_internal_macro
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 15
+GETGLOB 9
+GETGLOB 10
+SDEQ
+DUP
+PUSHCONT {
+	DROP
+	GETGLOB 9
+	PARSEMSGADDR
+	INDEX 3
+	PLDU 256
+	NEQINT 0
+}
+IF
+THROWIFNOT 1101
+.loc ../contracts/utils/TransferUtils.tsol, 47
+GETPARAM 7
+FIRST
+DEPTH
+ADDCONST -2
+PICK
+SUB
+UFITS 128
+PUSHINT 2
+RAWRESERVE
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 440
+SETGLOB 15
+.loc ../contracts/utils/TransferUtils.tsol, 49
+GETGLOB 9
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHINT 129
+SENDRAWMSG
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+
+.macro setMergePoolPlatform
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 446
+LDREF
+ENDS
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+CALLREF {
+	CALL $setMergePoolPlatform_f978c621_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setMergePoolPlatform_f978c621_internal_macro
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 15
+GETGLOB 9
+GETGLOB 10
+SDEQ
+DUP
+PUSHCONT {
+	DROP
+	GETGLOB 9
+	PARSEMSGADDR
+	INDEX 3
+	PLDU 256
+	NEQINT 0
+}
+IF
+THROWIFNOT 1101
+.loc ../contracts/utils/TransferUtils.tsol, 47
+GETPARAM 7
+FIRST
+DEPTH
+ADDCONST -2
+PICK
+SUB
+UFITS 128
+PUSHINT 2
+RAWRESERVE
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 449
+SETGLOB 17
+.loc ../contracts/utils/TransferUtils.tsol, 49
+GETGLOB 9
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHINT 129
+SENDRAWMSG
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+
+.macro mint
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 452
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDU 128
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+CALLREF {
+	CALL $mint_9a255db6_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro mint_9a255db6_internal_macro
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 15
+GETGLOB 9
+GETGLOB 10
+SDEQ
+DUP
+PUSHCONT {
+	DROP
+	GETGLOB 9
+	PARSEMSGADDR
+	INDEX 3
+	PLDU 256
+	NEQINT 0
+}
+IF
+THROWIFNOT 1101
+.loc ../contracts/utils/TransferUtils.tsol, 23
+CALLREF {
+	CALL $_reserveAtLeastTargetBalance_a644bc3b_internal_macro$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 457
+GETGLOB 9
+CALLREF {
+	CALL $_mintTokens_e0268d60_internal_macro$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+
+.macro burn
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 465
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDU 128
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+CALLREF {
+	CALL $burn_2bdd5ab5_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro burn_2bdd5ab5_internal_macro
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 15
+GETGLOB 9
+GETGLOB 10
+SDEQ
+DUP
+PUSHCONT {
+	DROP
+	GETGLOB 9
+	PARSEMSGADDR
+	INDEX 3
+	PLDU 256
+	NEQINT 0
+}
+IF
+THROWIFNOT 1101
+.loc ../contracts/utils/TransferUtils.tsol, 23
+CALLREF {
+	CALL $_reserveAtLeastTargetBalance_a644bc3b_internal_macro$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 470
+PUSHREF {
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 472
+GETGLOB 9
+DUP
+BLKSWAP 3, 3
+XCHG S2
+FALSE
+NEWC
+STSLICECONST x6_
+STI 1
+STSLICECONST x1_
+STSLICE
+PUSHINT 1
+STUR 111
+ROLLREV 5
+NEWC
+STSLICECONST x0c98682c
+STU 128
+STSLICE
+ROLLREV 3
+NEWC
+STSLICE
+ROTREV
+NEWC
+STSLICE
+STREF
+STBREFR
+STBREFR
+STBREFR
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+
+.globl	_isArrayContainsAddress_fd9f2e52_internal
+.type	_isArrayContainsAddress_fd9f2e52_internal, @function
+CALL $_isArrayContainsAddress_fd9f2e52_internal_macro$
+
+.macro _isArrayContainsAddress_fd9f2e52_internal_macro
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 489
+SWAP
+SECOND
+PUSHINT 0
+NULL
+FALSE ; decl return flag
+PUSHCONT {
+	PUSH2 S2, S3
+	PUSHINT 32
+	DICTUGET
+	NULLSWAPIFNOT
+	DROP
+	DUP
+	POP S3
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 490
+	PUSH2 S4, S1
+	SDEQ
+	PUSHCONT {
+		.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 491
+		BLKDROP 5
+		TRUE
+		PUSHINT 4
+		RETALT
+		.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+	}
+	IFJMP
+	.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+	PUSH S2
+	INC
+	POP S3
+}
+WHILEBRK
+IFRET
+BLKDROP 4
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 495
+FALSE
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+
+.macro upgrade
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 498
+LDREF
+ENDS
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+CALLREF {
+	CALL $upgrade_7916ae0d_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro upgrade_7916ae0d_internal_macro
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 15
+GETGLOB 9
+GETGLOB 10
+SDEQ
+DUP
+PUSHCONT {
+	DROP
+	GETGLOB 9
+	PARSEMSGADDR
+	INDEX 3
+	PLDU 256
+	NEQINT 0
+}
+IF
+THROWIFNOT 1101
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 501
+GETGLOB 17
+GETGLOB 16
+GETGLOB 15
+GETGLOB 14
+GETGLOB 10
+GETGLOB 11
+GETGLOB 13
+NEWC
+GETGLOB 12
+UNTUPLE 6
+REVERSE 7, 0
+STSLICE
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+STU 128
+STREF
+STREF
+ROLLREV 8
+NEWC
+STREF
+STU 8
+STU 256
+STSLICE
+ROLLREV 4
+NEWC
+STSLICE
+STREF
+STREF
+STREF
+STBREFR
+STBREFR
+ENDC
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 512
+OVER
+SETCODE
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 513
+SWAP
+CTOS
+DUP
+PUSHSLICE x8adb35
+SDEQ
+PUSHCONT {
+	PLDREFIDX 1
+	CTOS
+}
+IF
+PLDREF
+CTOS
+BLESS
+POP C3
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 515
+CALLREF {
+	CALL $:onCodeUpgrade$
+}
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+
+.internal-alias :onCodeUpgrade, 2
+.internal :onCodeUpgrade
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 519
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+SETGLOB 10
+PUSHINT 0
+SETGLOB 11
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+PUSHINT 0
+NEWDICT
+PAIR
+PUSHINT 0
+PUSHREF {
+}
+BLKPUSH 2, 0
+TUPLE 6
+SETGLOB 12
+PUSHINT 0
+SETGLOB 13
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+SETGLOB 14
+PUSHREF {
+}
+SETGLOB 15
+PUSHREF {
+}
+SETGLOB 16
+PUSHREF {
+}
+SETGLOB 17
+PUSHINT 0
+SETGLOB 18
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 521
+CTOS
+LDMSGADDR
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 128
+LDREF
+LDREF
+LDREF
+ENDS
+CTOS
+LDREF
+ROLLREV 6
+TUPLE 6
+SWAP
+LDU 8
+LDU 256
+LDMSGADDR
+ENDS
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 531
+ROLL 3
+SETGLOB 12
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 532
+ROT
+INC
+UFITS 8
+SETGLOB 13
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 533
+SWAP
+SETGLOB 11
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 534
+SETGLOB 10
+.loc ../contracts/bridge/proxy/multivault/alien/ProxyMultiVaultAlien_V3.tsol, 0
+CALLREF {
+	CALL $c7_to_c4$
+}
+COMMIT
+THROW 0
+
+.globl	transferAll_a3a7e7f3_internal
+.type	transferAll_a3a7e7f3_internal, @function
+CALL $transferAll_a3a7e7f3_internal_macro$
+
+.macro transferAll_a3a7e7f3_internal_macro
+.loc ../contracts/utils/TransferUtils.tsol, 7
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHINT 129
+SENDRAWMSG
+.loc ../contracts/utils/TransferUtils.tsol, 0
+
+.globl	_reserveAtLeastTargetBalance_a644bc3b_internal
+.type	_reserveAtLeastTargetBalance_a644bc3b_internal, @function
+CALL $_reserveAtLeastTargetBalance_a644bc3b_internal_macro$
+
+.macro _reserveAtLeastTargetBalance_a644bc3b_internal_macro
+.loc ../contracts/utils/TransferUtils.tsol, 16
+GETPARAM 7
+FIRST
+DEPTH
+ADDCONST -2
+PICK
+SUB
+UFITS 128
+CALLREF {
+	CALL $_targetBalance_81a00f03_internal_macro$
+}
+MAX
+PUSHINT 2
+RAWRESERVE
+.loc ../contracts/utils/TransferUtils.tsol, 0
+
+.globl	_reserveTargetBalance_c4db675c_internal
+.type	_reserveTargetBalance_c4db675c_internal, @function
+CALL $_reserveTargetBalance_c4db675c_internal_macro$
+
+.macro _reserveTargetBalance_c4db675c_internal_macro
+.loc ../contracts/utils/TransferUtils.tsol, 43
+CALLREF {
+	CALL $_targetBalance_81a00f03_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/utils/TransferUtils.tsol, 0
+
+.globl	_targetBalance_81a00f03_internal
+.type	_targetBalance_81a00f03_internal, @function
+CALL $_targetBalance_81a00f03_internal_macro$
+
+.macro _targetBalance_81a00f03_internal_macro
+.loc ../contracts/utils/TransferUtils.tsol, 59
+PUSHINT 1000000000
+.loc ../contracts/utils/TransferUtils.tsol, 0
+
+.globl	setOwnership_a7016023_internal
+.type	setOwnership_a7016023_internal, @function
+CALL $setOwnership_a7016023_internal_macro$
+
+.macro setOwnership_a7016023_internal_macro
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 24
+GETGLOB 10
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 26
+OVER
+SETGLOB 10
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 28
+PUSHSLICE xc0000000000000000000000001
+NEWC
+STSLICE
+ROTREV
+NEWC
+STSLICECONST x6115f072
+STSLICE
+SWAP
+NEWC
+STSLICE
+STBREFR
+STBREFR
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 0
+
+.macro transferOwnership
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 34
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+ENDS
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 0
+CALLREF {
+	CALL $transferOwnership_f2fde38b_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro transferOwnership_f2fde38b_internal_macro
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 15
+GETGLOB 9
+GETGLOB 10
+SDEQ
+DUP
+PUSHCONT {
+	DROP
+	GETGLOB 9
+	PARSEMSGADDR
+	INDEX 3
+	PLDU 256
+	NEQINT 0
+}
+IF
+THROWIFNOT 1101
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 37
+DUP
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+SDEQ
+THROWIF 1102
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 39
+CALLREF {
+	CALL $setOwnership_a7016023_internal_macro$
+}
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 0
+
+.macro renounceOwnership
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 45
+ENDS
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 0
+CALLREF {
+	CALL $renounceOwnership_715018a6_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro renounceOwnership_715018a6_internal_macro
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 15
+GETGLOB 9
+GETGLOB 10
+SDEQ
+DUP
+PUSHCONT {
+	DROP
+	GETGLOB 9
+	PARSEMSGADDR
+	INDEX 3
+	PLDU 256
+	NEQINT 0
+}
+IF
+THROWIFNOT 1101
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 46
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 48
+CALLREF {
+	CALL $setOwnership_a7016023_internal_macro$
+}
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 0
+
+.macro c4_to_c7
+PUSHROOT
+CTOS
+LDU 256 ; pubkey c4
+LDU 64 ; pubkey timestamp c4
+LDU 1 ; ctor flag
+NIP
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDU 256
+LDMSGADDR
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 128
+LDREF
+LDREF
+LDREF
+ENDS
+CTOS
+LDREF
+ROLLREV 6
+TUPLE 6
+SWAP
+LDU 8
+LDMSGADDR
+LDREF
+LDREF
+LDREF
+LDU 8
+ENDS
+SETGLOB 18
+SETGLOB 17
+SETGLOB 16
+SETGLOB 15
+SETGLOB 14
+SETGLOB 13
+SETGLOB 12
+SETGLOB 11
+SETGLOB 10
+SETGLOB 3
+SETGLOB 2
+
+.macro c4_to_c7_with_init_storage
+PUSHROOT
+CTOS
+SBITS
+GTINT 1
+PUSHCONT {
+	PUSHINT 0
+	PUSHROOT
+	CTOS
+	PLDDICT ; D
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	PUSHINT 1
+	PUSH S2
+	PUSHINT 64
+	DICTUGET
+	ZEROSWAPIFNOT
+	PUSHCONT {
+		PLDU 256
+	}
+	IF
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	PUSHINT 0
+	NEWDICT
+	PAIR
+	PUSHINT 0
+	PUSHREF {
+	}
+	BLKPUSH 2, 0
+	TUPLE 6
+	PUSHINT 0
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	PUSHREF {
+	}
+	BLKPUSH 2, 0
+	PUSHINT 0
+	SETGLOB 18
+	SETGLOB 17
+	SETGLOB 16
+	SETGLOB 15
+	SETGLOB 14
+	SETGLOB 13
+	SETGLOB 12
+	SETGLOB 11
+	SETGLOB 10
+	PUSHINT 64
+	DICTUGET
+	THROWIFNOT 61
+	PLDU 256
+	SETGLOB 2
+	PUSHINT 0 ; timestamp
+	SETGLOB 3
+	PUSHINT 0
+	SETGLOB 13
+}
+IFREFELSE {
+	CALL $c4_to_c7$
+}
+
+.macro c7_to_c4
+GETGLOB 18
+GETGLOB 17
+GETGLOB 16
+GETGLOB 15
+GETGLOB 14
+GETGLOB 13
+GETGLOB 12
+GETGLOB 11
+GETGLOB 10
+GETGLOB 3
+GETGLOB 2
+NEWC
+STU 256
+STU 64
+STONE
+STSLICE
+ROLLREV 8
+NEWC
+STU 256
+SWAP
+UNTUPLE 6
+REVERSE 7, 0
+STSLICE
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+STU 128
+STREF
+STREF
+ROLLREV 7
+NEWC
+STREF
+STU 8
+STSLICE
+STREF
+STREF
+STREF
+STU 8
+STBREFR
+STBREFR
+ENDC
+POPROOT
+
+.macro upd_only_time_in_c4
+PUSHROOT
+CTOS
+LDU 256
+LDU 64
+NIP
+GETGLOB 3
+ROT
+NEWC
+STU 256
+STU 64
+STSLICE
+ENDC
+POPROOT
+
+.internal-alias :main_internal, 0
+.internal :main_internal
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSH S2
+CTOS
+LDU 4 ; bounced tail
+LDMSGADDR ; bounced src tail
+DROP
+SETGLOB 9
+MODPOW2 1
+GETGLOB 4
+TRUE
+SETINDEXQ 1
+PUSHINT 10000000
+SETINDEXQ 2
+NULL
+SETINDEXQ 3
+PUSHINT 0
+SETINDEXQ 4
+SETGLOB 4
+IFRET
+OVER
+SEMPTY ; isEmpty
+IFJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+OVER
+LDUQ 32  ; [funcId] body' ok
+THROWIFNOT 60
+OVER
+IFNOTJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.internal-alias :main_external, -1
+.internal :main_external
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+SETGLOB 9
+OVER
+CALLREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+LDU 1 ; haveSign msgSlice
+SWAP
+PUSHCONT {
+	PUSHPOW2 9
+	LDSLICEX ; signatureSlice msgSlice
+	DUP
+	HASHSU ; signatureSlice msgSlice hashMsgSlice
+	SWAP
+	LDU 1 ; signatureSlice hashMsgSlice hasPubkey msgSlice
+	SWAP
+	PUSHCONT {
+		LDU 256 ; signatureSlice hashMsgSlice pubkey msgSlice
+		XCHG S3
+		SWAP
+	}
+	PUSHCONT {
+		XCHG S2
+		GETGLOB 2
+	}
+	IFELSE
+	DUP
+	SETGLOB 5
+	CHKSIGNU ; msgSlice isSigned
+	THROWIFNOT 40
+}
+PUSHCONT {
+	LDU 1 ; hasPubkey msgSlice
+	SWAP
+	THROWIF 58
+}
+IFELSE
+LDU 64 ; timestamp msgSlice
+SWAP
+CALL $replay_protection_macro$
+LDU 32 ; funcId body
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.macro owner
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 10
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000df0bcfde
+	NEWC
+	STSLICE
+	STSLICE
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro _randomNonce
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 11
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000bb53331f
+	NEWC
+	STSLICE
+	STU 256
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro manager
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 14
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000dfd7a949
+	NEWC
+	STSLICE
+	STSLICE
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro public_function_selector
+DUP
+PUSHINT 1175960962
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 292077233
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 8128367
+		EQUAL
+		IFJMPREF {
+			CALL $apiVersion$
+		}
+		DUP
+		PUSHINT 222744783
+		EQUAL
+		IFJMPREF {
+			CALL $onEventConfirmedExtended$
+		}
+		DUP
+		PUSHINT 235197086
+		EQUAL
+		IFJMPREF {
+			CALL $transferOwnership$
+		}
+		DUP
+		PUSHINT 292077233
+		EQUAL
+		IFJMPREF {
+			CALL $setMergePoolPlatform$
+		}
+	}
+	DUP
+	PUSHINT 504495978
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 307137937
+		EQUAL
+		IFJMPREF {
+			CALL $mintTokensByMergePool$
+		}
+		DUP
+		PUSHINT 388172858
+		EQUAL
+		IFJMPREF {
+			CALL $upgrade$
+		}
+		DUP
+		PUSHINT 413823644
+		EQUAL
+		IFJMPREF {
+			CALL $upgradeMergePool$
+		}
+		DUP
+		PUSHINT 504495978
+		EQUAL
+		IFJMPREF {
+			CALL $mint$
+		}
+	}
+	DUP
+	PUSHINT 861431512
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 511343020
+		EQUAL
+		IFJMPREF {
+			CALL $deployAlienToken$
+		}
+		DUP
+		PUSHINT 675064219
+		EQUAL
+		IFJMPREF {
+			CALL $burn$
+		}
+		DUP
+		PUSHINT 709022562
+		EQUAL
+		IFJMPREF {
+			CALL $deployMergeRouter$
+		}
+		DUP
+		PUSHINT 861431512
+		EQUAL
+		IFJMPREF {
+			CALL $setConfiguration$
+		}
+	}
+	DUP
+	PUSHINT 1175960962
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 995308319
+		EQUAL
+		IFJMPREF {
+			CALL $_randomNonce$
+		}
+		DUP
+		PUSHINT 1065951690
+		EQUAL
+		IFJMPREF {
+			CALL $setMergeRouter$
+		}
+		DUP
+		PUSHINT 1121938171
+		EQUAL
+		IFJMPREF {
+			CALL $deriveAlienTokenRoot$
+		}
+		DUP
+		PUSHINT 1175960962
+		EQUAL
+		IFJMPREF {
+			CALL $withdrawTokensByMergePool$
+		}
+	}
+}
+DUP
+PUSHINT 2036555365
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 1539225074
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1196840156
+		EQUAL
+		IFJMPREF {
+			CALL $constructor$
+		}
+		DUP
+		PUSHINT 1280216168
+		EQUAL
+		IFJMPREF {
+			CALL $getConfiguration$
+		}
+		DUP
+		PUSHINT 1320360074
+		EQUAL
+		IFJMPREF {
+			CALL $setManager$
+		}
+		DUP
+		PUSHINT 1539225074
+		EQUAL
+		IFJMPREF {
+			CALL $deriveMergeRouter$
+		}
+	}
+	DUP
+	PUSHINT 1657782923
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1579702024
+		EQUAL
+		IFJMPREF {
+			CALL $deriveMergePool$
+		}
+		DUP
+		PUSHINT 1594609630
+		EQUAL
+		IFJMPREF {
+			CALL $owner$
+		}
+		DUP
+		PUSHINT 1607969097
+		EQUAL
+		IFJMPREF {
+			CALL $manager$
+		}
+		DUP
+		PUSHINT 1657782923
+		EQUAL
+		IFJMPREF {
+			CALL $deployMergePool$
+		}
+	}
+	DUP
+	PUSHINT 2036555365
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1729444094
+		EQUAL
+		IFJMPREF {
+			CALL $renounceOwnership$
+		}
+		DUP
+		PUSHINT 1745391003
+		EQUAL
+		IFJMPREF {
+			CALL $onAcceptTokensBurn$
+		}
+		DUP
+		PUSHINT 2036555365
+		EQUAL
+		IFJMPREF {
+			CALL $setMergePool$
+		}
+	}
+}
+

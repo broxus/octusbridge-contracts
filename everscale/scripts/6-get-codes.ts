@@ -47,6 +47,7 @@ const main = async () => {
     const stakingEverscaleEthereumEvent = await getNamedContract('StakingEverscaleEthereumEvent');
     const stakingEthereumEverscaleEvent = await getNamedContract('StakingEthereumEverscaleEvent');
     const daoEthereumActionEvent = await getNamedContract('DaoEthereumActionEvent');
+    const roundDeployer = await getNamedContract('RoundDeployer');
 
     // Load alien token contracts
     const alienTokenRootEVM = await getNamedContract("TokenRootAlienEVM");
@@ -75,6 +76,7 @@ const main = async () => {
         stakingEverscaleEthereumEvent,
         stakingEthereumEverscaleEvent,
         daoEthereumActionEvent,
+        roundDeployer,
 
         alienTokenRootEVM,
         alienTokenRootSolana,
