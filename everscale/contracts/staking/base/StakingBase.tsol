@@ -10,12 +10,12 @@ import "./../interfaces/IUserData.tsol";
 import "./../interfaces/IUpgradableByRequest.tsol";
 import "./../interfaces/IStakingPool.tsol";
 import "./../interfaces/IStakingDao.tsol";
-import "./../interfaces/IRelayRound.tsol";
+import "./../interfaces/IStakingRelayRound.tsol";
 import "./../interfaces/IElection.tsol";
 
 import "./../UserData.tsol";
 import "./../Election.tsol";
-import "./../RelayRound.tsol";
+import "./../StakingRelayRound.tsol";
 
 import "./../libraries/PlatformTypes.tsol";
 import "./../../utils/ErrorCodes.tsol";

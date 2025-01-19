@@ -107,7 +107,7 @@ abstract contract RoundDeployerBase is IRoundDeployer, Delegate {
     }
 
     function setEventDeployValues(uint128 ton_eth_event_value, uint128 ton_sol_event_value, address send_gas_to) external onlyAdmin {
-        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (msg.value >= Gas.getMinCallMsgValue(), ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 0);
 
         emit TonEthEventDeployValueUpdated(ton_eth_event_value);
@@ -120,7 +120,7 @@ abstract contract RoundDeployerBase is IRoundDeployer, Delegate {
     }
 
     function setBridgeEventTonEthConfig(address new_bridge_event_config_ton_eth, address send_gas_to) external onlyAdmin {
-        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (msg.value >= Gas.getMinCallMsgValue(), ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 0);
         emit BridgeEventTonEthConfigUpdated(new_bridge_event_config_ton_eth);
         base_details.bridge_event_config_ton_eth = new_bridge_event_config_ton_eth;
@@ -128,7 +128,7 @@ abstract contract RoundDeployerBase is IRoundDeployer, Delegate {
     }
 
     function setBridgeEventTonSolConfig(address new_bridge_event_config_ton_sol, address send_gas_to) external onlyAdmin {
-        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (msg.value >= Gas.getMinCallMsgValue(), ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 0);
         emit BridgeEventTonSolConfigUpdated(new_bridge_event_config_ton_sol);
         bridge_event_config_ton_sol = new_bridge_event_config_ton_sol;
@@ -136,7 +136,7 @@ abstract contract RoundDeployerBase is IRoundDeployer, Delegate {
     }
 
     function setAdmin(address new_admin, address send_gas_to) external onlyAdmin {
-        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (msg.value >= Gas.getMinCallMsgValue(), ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 0);
         emit AdminUpdated(new_admin);
         base_details.admin = new_admin;
@@ -144,7 +144,7 @@ abstract contract RoundDeployerBase is IRoundDeployer, Delegate {
     }
 
     function setManager(address new_manager, address send_gas_to) external onlyAdmin {
-        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (msg.value >= Gas.getMinCallMsgValue(), ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 0);
         emit ManagerUpdated(new_manager);
         manager = new_manager;
@@ -153,7 +153,7 @@ abstract contract RoundDeployerBase is IRoundDeployer, Delegate {
 
     // Active
     function setActive(bool new_active, address send_gas_to) external onlyAdmin {
-        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (msg.value >= Gas.getMinCallMsgValue(), ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 0);
         if (
             new_active
@@ -174,7 +174,7 @@ abstract contract RoundDeployerBase is IRoundDeployer, Delegate {
     }
 
     function setRelayConfig(RelayConfigDetails new_relay_config, address send_gas_to) external onlyAdmin {
-        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (msg.value >= Gas.getMinCallMsgValue(), ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 0);
 
         relay_config = new_relay_config;

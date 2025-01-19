@@ -77,7 +77,7 @@ contract StakingV1_1 is StakingPoolRelay {
         tvm.rawReserve(_reserve(), 0);
 
         address relay_round_addr = getRelayRoundAddress(relay_round);
-        IRelayRound(relay_round_addr).setRelays{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+        IStakingRelayRound(relay_round_addr).setRelays{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
             _ton_keys, _eth_addrs, _staker_addrs, _staked_tokens
         );
     }

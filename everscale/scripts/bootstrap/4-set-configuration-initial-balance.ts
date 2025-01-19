@@ -12,7 +12,7 @@ const initialBalances: Record<string, InitialBalance> = {
 const ADMIN = new Address('0:2746d46337aa25d790c97f1aefb01a5de48cc1315b41a4f32753146a1e1aeb7d');
 
 const Gas = {
-    CONFIGURATION_SET_INITIAL_BALANCE: toNano(0.2),
+    CONFIGURATION_SET_INITIAL_BALANCE: toNano(1.2),
 };
 
 const main = async (): Promise<void> => {

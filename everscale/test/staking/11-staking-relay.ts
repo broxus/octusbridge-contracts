@@ -193,7 +193,7 @@ describe("Test Staking Relay mechanic", async function () {
             })
             .call();
         const round = await locklift.factory.getDeployedContract(
-            "RelayRound",
+            "StakingRelayRound",
             addr.value0
         );
         return round;
@@ -539,7 +539,7 @@ describe("Test Staking Relay mechanic", async function () {
                     "Election"
                 );
                 const RelayRound = await locklift.factory.getContractArtifacts(
-                    "RelayRound"
+                    "StakingRelayRound"
                 );
                 const Platform = await locklift.factory.getContractArtifacts(
                     "Platform"

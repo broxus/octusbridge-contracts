@@ -35,7 +35,7 @@ const setupStakingParams = async (staking: Contract<RoundDeployerAbi>, admin: Ac
       })
       .send({
         from: admin.address,
-        amount: locklift.utils.toNano(11),
+        amount: locklift.utils.toNano(660),
         bounce: true,
       }),
   );
@@ -52,7 +52,7 @@ const setupStakingParams = async (staking: Contract<RoundDeployerAbi>, admin: Ac
       })
       .send({
         from: admin.address,
-        amount: locklift.utils.toNano(11),
+        amount: locklift.utils.toNano(660),
         bounce: true,
       }),
   );
@@ -72,7 +72,7 @@ const setupStakingParams = async (staking: Contract<RoundDeployerAbi>, admin: Ac
       })
       .send({
         from: admin.address,
-        amount: locklift.utils.toNano(11),
+        amount: locklift.utils.toNano(660),
         bounce: true,
       }),
   );
@@ -91,7 +91,7 @@ const deployConfigFactories = async (signer: Signer): Promise<{
     },
     initParams: { _randomNonce: getRandomNonce() },
     publicKey: signer.publicKey,
-    value: toNano(1.5),
+    value: toNano(90),
   });
 
   console.log(`EthEverEventConfigFactory: ${ethEverEventConfigFactory.address}`);
@@ -103,7 +103,7 @@ const deployConfigFactories = async (signer: Signer): Promise<{
     },
     initParams: { _randomNonce: getRandomNonce() },
     publicKey: signer.publicKey,
-    value: toNano(1.5),
+    value: toNano(90),
   });
 
   console.log(`EverEthEventConfigFactory: ${everEthEventConfigFactory.address}`);
@@ -120,7 +120,7 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
     constructorParams: { owner_: admin.address },
     initParams: { _randomNonce: getRandomNonce() },
     publicKey: signer.publicKey,
-    value: locklift.utils.toNano(1.5),
+    value: locklift.utils.toNano(90),
   });
 
   console.log(`ProxyMultiVaultAlien: ${proxyAlien.address}`);
@@ -132,7 +132,7 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
       })
       .send({
         from: admin.address,
-        amount: toNano(0.5),
+        amount: toNano(30),
         bounce: true,
       })
   );
@@ -146,7 +146,7 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
       })
       .send({
         from: admin.address,
-        amount: toNano(0.5),
+        amount: toNano(30),
         bounce: true,
       })
   );
@@ -160,7 +160,7 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
       })
       .send({
         from: admin.address,
-        amount: toNano(0.5),
+        amount: toNano(30),
         bounce: true,
       })
   );
@@ -172,7 +172,7 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
     constructorParams: { owner_: admin.address },
     initParams: { _randomNonce: getRandomNonce() },
     publicKey: signer.publicKey,
-    value: locklift.utils.toNano(1.5),
+    value: locklift.utils.toNano(30),
   });
 
   console.log(`ProxyMultiVaultNative: ${proxyNative.address}`);
@@ -205,7 +205,7 @@ const deployStakingConfigurations = async (
       eventABI: Buffer.from(JSON.stringify(stakingEthEventAbi)).toString("base64"),
       eventCode: locklift.factory.getContractArtifacts("StakingEthereumEverscaleEvent").code,
       staking: staking.address,
-      eventInitialBalance: toNano(1),
+      eventInitialBalance: toNano(6),
     },
     networkConfiguration: {
       chainId: STAKING_CHAIN_ID,
@@ -222,7 +222,7 @@ const deployStakingConfigurations = async (
       .deploy(stakingEthEverConfiguration)
       .send({
         from: admin.address,
-        amount: toNano(2),
+        amount: toNano(120),
         bounce: true,
       }),
   );
@@ -250,7 +250,7 @@ const deployStakingConfigurations = async (
       eventABI: Buffer.from(JSON.stringify(stakingEverEventAbi)).toString("base64"),
       eventCode: locklift.factory.getContractArtifacts("StakingEverscaleEthereumEvent").code,
       staking: staking.address,
-      eventInitialBalance: toNano(1),
+      eventInitialBalance: toNano(6),
     },
     networkConfiguration: {
       eventEmitter: staking.address,
@@ -265,7 +265,7 @@ const deployStakingConfigurations = async (
       .deploy(stakingEverEthConfiguration)
       .send({
         from: admin.address,
-        amount: toNano(2),
+        amount: toNano(120),
         bounce: true,
       }),
   );
@@ -297,7 +297,7 @@ const deployConnectors = async (
         .deployConnector({ _eventConfiguration: configuration.address })
         .send({
           from: admin.address,
-          amount: toNano(2),
+          amount: toNano(120),
           bounce: true,
         }),
     );
@@ -312,7 +312,7 @@ const deployConnectors = async (
         .enable({})
         .send({
           from: admin.address,
-          amount: toNano(0.5),
+          amount: toNano(30),
           bounce: true,
         }),
     );
@@ -327,7 +327,7 @@ const main = async (): Promise<void> => {
   const { account: admin } = await locklift.factory.accounts.addNewAccount({
     type: WalletTypes.EverWallet,
     publicKey: signer.publicKey,
-    value: toNano(50),
+    value: toNano(3000),
   });
 
   console.log(`Bridge admin: ${admin.address}`);
@@ -337,7 +337,7 @@ const main = async (): Promise<void> => {
     constructorParams: {
       initialSupplyTo: admin.address,
       initialSupply: 0,
-      deployWalletValue: toNano(0.1),
+      deployWalletValue: toNano(3),
       mintDisabled: false,
       burnByRootDisabled: false,
       burnPaused: true,
@@ -352,7 +352,7 @@ const main = async (): Promise<void> => {
       randomNonce_: getRandomNonce(),
       walletCode_: locklift.factory.getContractArtifacts("TokenWallet").code,
     },
-    value: toNano(1.5),
+    value: toNano(90),
     publicKey: await locklift.keystore.getSigner("0").then((s) => s!.publicKey)
   });
 
@@ -367,7 +367,7 @@ const main = async (): Promise<void> => {
       },
       initParams: { deploy_nonce: getRandomNonce() },
       publicKey: signer.publicKey,
-      value: locklift.utils.toNano(3),
+      value: locklift.utils.toNano(180),
   });
 
   console.log(`Staking: ${staking.address}`);
@@ -382,10 +382,10 @@ const main = async (): Promise<void> => {
       _staking: staking.address,
       _manager: admin.address,
       _connectorCode: locklift.factory.getContractArtifacts("Connector").code,
-      _connectorDeployValue: toNano(1),
+      _connectorDeployValue: toNano(60),
     },
     publicKey: signer.publicKey,
-    value: toNano(1.5),
+    value: toNano(90),
   });
 
   console.log(`Bridge: ${bridge.address}`);
@@ -402,7 +402,7 @@ const main = async (): Promise<void> => {
     constructorParams: {},
     initParams: { _randomNonce: getRandomNonce() },
     publicKey: signer.publicKey,
-    value: locklift.utils.toNano(1.5),
+    value: locklift.utils.toNano(90),
   });
 
   console.log(`CellEncoderStandalone: ${cellEncoder.address}`);
@@ -427,7 +427,7 @@ const main = async (): Promise<void> => {
       })
       .send({
         from: admin.address,
-        amount: toNano(11),
+        amount: toNano(660),
         bounce: true
       }),
   );
@@ -442,7 +442,7 @@ const main = async (): Promise<void> => {
       })
       .send({
         from: admin.address,
-        amount: locklift.utils.toNano(11),
+        amount: locklift.utils.toNano(660),
         bounce: true,
       }),
   );

@@ -73,12 +73,12 @@ const ALIEN_PROXY_MULTI_VAULT = new Address('0:3d2ee3ff7118b05c7ea39ff6cdefe8101
 const ADMIN = new Address('0:2746d46337aa25d790c97f1aefb01a5de48cc1315b41a4f32753146a1e1aeb7d');
 
 const Gas = {
-    DEPLOY_ALIEN_TOKEN: toNano(2),
-    DEPLOY_MERGE_ROUTER: toNano(2),
-    DEPLOY_MERGE_POOL: toNano(2),
-    MERGE_POOL_ADD_TOKEN: toNano(0.5),
-    MERGE_POOL_ENABLE_ALL: toNano(1),
-    MERGE_ROUTER_SET_POOL: toNano(0.5),
+    DEPLOY_ALIEN_TOKEN: toNano(120),
+    DEPLOY_MERGE_ROUTER: toNano(120),
+    DEPLOY_MERGE_POOL: toNano(120),
+    MERGE_POOL_ADD_TOKEN: toNano(30),
+    MERGE_POOL_ENABLE_ALL: toNano(60),
+    MERGE_ROUTER_SET_POOL: toNano(30),
 };
 
 const main = async (): Promise<void> => {

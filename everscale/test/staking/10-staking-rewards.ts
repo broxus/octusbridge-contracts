@@ -368,7 +368,7 @@ describe("Test Staking Rewards", async function () {
           "Election"
         );
         const RelayRound = await locklift.factory.getContractArtifacts(
-          "RelayRound"
+          "StakingRelayRound"
         );
         const Platform = await locklift.factory.getContractArtifacts(
           "Platform"

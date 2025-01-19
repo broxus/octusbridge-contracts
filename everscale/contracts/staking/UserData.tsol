@@ -7,7 +7,7 @@ import "./interfaces/IStakingPool.tsol";
 import "./interfaces/IUserData.tsol";
 import "./interfaces/IUpgradableByRequest.tsol";
 import "./interfaces/IElection.tsol";
-import "./interfaces/IRelayRound.tsol";
+import "./interfaces/IStakingRelayRound.tsol";
 
 import "./../utils/ErrorCodes.tsol";
 import "./libraries/Gas.tsol";
@@ -359,7 +359,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         syncRewards(reward_rounds, token_balance);
 
         address relay_round_addr = getRelayRoundAddress(round_num);
-        IRelayRound(relay_round_addr).getRewardForRound{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(user, relay_round_code_version);
+        IStakingRelayRound(relay_round_addr).getRewardForRound{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(user, relay_round_code_version);
     }
 
     function receiveRewardForRelayRound(

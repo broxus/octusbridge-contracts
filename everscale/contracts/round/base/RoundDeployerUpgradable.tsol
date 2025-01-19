@@ -7,7 +7,7 @@ import "./RoundDeployerBase.tsol";
 
 abstract contract RoundDeployerUpgradable is RoundDeployerBase {
     function installPlatformOnce(TvmCell code, address send_gas_to) external onlyAdmin {
-        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (msg.value >= Gas.getMinCallMsgValue(), ErrorCodes.VALUE_TOO_LOW);
         // can be installed only once
         require(!code_data.has_platform_code, ErrorCodes.PLATFORM_CODE_NON_EMPTY);
         tvm.rawReserve(_reserve(), 0);
@@ -17,7 +17,7 @@ abstract contract RoundDeployerUpgradable is RoundDeployerBase {
     }
 
     function installOrUpdateRelayRoundCode(TvmCell code, address send_gas_to) external onlyAdmin {
-        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (msg.value >= Gas.getMinCallMsgValue(), ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 0);
         code_data.relay_round_code = code;
         code_data.relay_round_version++;
@@ -29,7 +29,7 @@ abstract contract RoundDeployerUpgradable is RoundDeployerBase {
         uint32 round_num,
         address send_gas_to
     ) external onlyAdmin {
-        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (msg.value >= Gas.getMinCallMsgValue(), ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 0);
 
         emit RequestedRelayRoundUpgrade(round_num);

@@ -13,12 +13,12 @@ abstract contract RoundDeployerRelay is RoundDeployerUpgradable {
         uint160[] eth_keys,
         uint256[] ton_keys
     ) external override onlyAdminOrManager onlyActive {
-        require (block.timestamp >= (round_details.currentRelayRoundStartTime + relay_config.timeBeforeSetRelays), ErrorCodes.TOO_EARLY_TO_SET_RELAYS);
+        require (now >= (round_details.currentRelayRoundStartTime + relay_config.timeBeforeSetRelays), ErrorCodes.TOO_EARLY_TO_SET_RELAYS);
         uint256 relays_count = ton_keys.length;
         require (relays_count == eth_keys.length, ErrorCodes.BAD_INPUT_ARRAYS);
         require (relays_count >= relay_config.minRelaysCount, ErrorCodes.NOT_ENOUGH_RELAYS);
         require (
-            msg.value >= tonEthEventDeployValue + tonSolEventDeployValue + Gas.DESTROY_MSG_VALUE + Gas.DEPLOY_RELAY_ROUND_MIN_VALUE + Gas.MIN_SEND_RELAYS_MSG_VALUE,
+            msg.value >= tonEthEventDeployValue + tonSolEventDeployValue + Gas.getDeployRelayRoundMinValue() + gasToValue(Gas.DESTROY_MSG_GAS + Gas.MIN_SEND_RELAYS_MSG_GAS, address(this).wid),
             ErrorCodes.VALUE_TOO_LOW
         );
 
@@ -70,7 +70,7 @@ abstract contract RoundDeployerRelay is RoundDeployerUpgradable {
 
         return new Platform{
                 stateInit: _buildInitData(PlatformTypes.RelayRound, _buildRelayRoundParams(round_num)),
-                value: Gas.DEPLOY_RELAY_ROUND_MIN_VALUE,
+                value: Gas.getDeployRelayRoundMinValue(),
                 flag: msg_flag
             }(code_data.relay_round_code, constructor_params.toCell(), address(this));
     }
@@ -108,7 +108,7 @@ abstract contract RoundDeployerRelay is RoundDeployerUpgradable {
 
         if (round_num >= 3) {
             address old_relay_round = getRelayRoundAddress(round_num - 3);
-            IRelayRound(old_relay_round).destroy{value: Gas.DESTROY_MSG_VALUE}();
+            IRelayRound(old_relay_round).destroy{value: gasToValue(Gas.DESTROY_MSG_GAS, address(this).wid)}();
         }
         emit RelayRoundInitialized(round_num, round_start_time, round_end_time, msg.sender, relays_count);
     }
