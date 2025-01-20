@@ -72,8 +72,8 @@ abstract contract RoundDeployerBase is IRoundDeployer, Delegate {
         MIN_RELAYS_COUNT
     );
 
-    uint128 tonEthEventDeployValue = 2.5 ever;
-    uint128 tonSolEventDeployValue = 2.5 ever;
+    uint128 tonEthEventDeployValue = 150 ever;
+    uint128 tonSolEventDeployValue = 150 ever;
 
     function getDetails() public view responsible returns (BaseDetails) {
         return{ value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false }base_details;

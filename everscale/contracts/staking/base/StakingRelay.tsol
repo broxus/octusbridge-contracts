@@ -121,7 +121,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
         require (staker_addrs.length <= RELAY_PACK_SIZE, ErrorCodes.BAD_INPUT_ARRAYS);
         // Gas.getMinCallMsgValue() cover deployment of relay round and setting relays
         require (msg.value >= Gas.getMinCallMsgValue() + ton_deposit * staker_addrs.length, ErrorCodes.VALUE_TOO_LOW);
-        require (round_details.currentRelayRound == 0 && round_details.currentRelayRoundStartTime == 0, ErrorCodes.ORIGIN_ROUND_ALREADY_INITIALIZED);
+        require (round_details.currentRelayRound == 1 && round_details.currentRelayRoundStartTime == 0, ErrorCodes.ORIGIN_ROUND_ALREADY_INITIALIZED);
         require (ton_deposit > Gas.getDeployUserDataMinValue() + gasToValue(Gas.LINK_RELAY_ACCOUNTS_GAS, address(this).wid), ErrorCodes.VALUE_TOO_LOW);
         bool correct_len = staker_addrs.length == ton_pubkeys.length;
         bool correct_len_1 = ton_pubkeys.length == eth_addrs.length;

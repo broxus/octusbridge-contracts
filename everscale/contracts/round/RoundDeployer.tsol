@@ -20,6 +20,7 @@ contract RoundDeployer is RoundDeployerRelay {
         base_details.bridge_event_config_ton_eth = _bridge_event_config_ton_eth;
         base_details.admin = _admin;
         bridge_event_config_ton_sol = _bridge_event_config_ton_sol;
+        round_details.currentRelayRound = 1;
 
         _admin.transfer({
             value: 0,
