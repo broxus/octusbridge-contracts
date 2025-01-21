@@ -28,7 +28,7 @@ abstract contract RoundDeployerRelay is RoundDeployerUpgradable {
         uint32 round_num;
         // origin round
         if (round_details.currentRelayRound == 1 && round_details.currentRelayRoundStartTime == 0) {
-            round_num = 0;
+            round_num = 1;
             start_time = now;
         } else {
             round_num = round_details.currentRelayRound + 1;
