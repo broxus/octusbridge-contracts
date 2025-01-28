@@ -6,12 +6,12 @@ import assert from "node:assert";
 
 import {
   BridgeAbi,
-  MultiVaultEVMTONEventAlienAbi,
-  MultiVaultTONEVMEventAlienAbi,
+  MultiVaultEVMEverscaleEventAlienAbi,
+  MultiVaultEverscaleEVMEventAlienAbi,
   EthereumEverscaleEventConfigurationFactoryAbi,
   EverscaleEthereumEventConfigurationFactoryAbi,
-  ProxyMultiVaultAlienJettonAbi,
-  ProxyMultiVaultNativeJettonAbi,
+  ProxyMultiVaultAlien_V8Abi,
+  ProxyMultiVaultNative_V6Abi,
   RoundDeployerAbi,
 } from '../../build/factorySource';
 
@@ -83,7 +83,7 @@ const EVER_NATIVE_TRANSFER_EVENT_ABI = [
 const deployConnectors = async (
   admin: Account,
   bridge: Contract<BridgeAbi>,
-  configurations: Contract<MultiVaultEVMTONEventAlienAbi | MultiVaultTONEVMEventAlienAbi>[],
+  configurations: Contract<MultiVaultEVMEverscaleEventAlienAbi | MultiVaultEverscaleEVMEventAlienAbi>[],
 ): Promise<void> => {
   for (const configuration of configurations) {
     const { traceTree: ttConnector } = await locklift.tracing.trace(
@@ -128,8 +128,8 @@ const main = async (): Promise<void> => {
 
   const ethEverEventConfigFactory = locklift.deployments.getContract<EthereumEverscaleEventConfigurationFactoryAbi>('EthEverEventConfigFactory');
   const everEthEventConfigFactory = locklift.deployments.getContract<EverscaleEthereumEventConfigurationFactoryAbi>('EverEthEventConfigFactory');
-  const proxyMultiVaultAlien = locklift.deployments.getContract<ProxyMultiVaultAlienJettonAbi>('ProxyMultiVaultAlien');
-  const proxyMultiVaultNative = locklift.deployments.getContract<ProxyMultiVaultNativeJettonAbi>('ProxyMultiVaultNative');
+  const proxyMultiVaultAlien = locklift.deployments.getContract<ProxyMultiVaultAlien_V8Abi>('ProxyMultiVaultAlien');
+  const proxyMultiVaultNative = locklift.deployments.getContract<ProxyMultiVaultNative_V6Abi>('ProxyMultiVaultNative');
   const bridge = locklift.deployments.getContract<BridgeAbi>('Bridge');
   const roundDeployer = locklift.deployments.getContract<RoundDeployerAbi>('RoundDeployer');
 
@@ -148,7 +148,7 @@ const main = async (): Promise<void> => {
           eventABI: Buffer.from(JSON.stringify(ALIEN_TRANSFER_EVENT_ABI)).toString("base64"),
           staking: roundDeployer.address,
           eventInitialBalance: config?.GAS.CONFIGURATION_EVENT_INITIAL_BALANCE,
-          eventCode: locklift.factory.getContractArtifacts("MultiVaultEVMTONEventAlien").code,
+          eventCode: locklift.factory.getContractArtifacts("MultiVaultEVMEverscaleEventAlien").code,
         },
         networkConfiguration: {
           chainId: chainId,
@@ -201,7 +201,7 @@ const main = async (): Promise<void> => {
           eventABI: Buffer.from(JSON.stringify(NATIVE_TRANSFER_EVENT_ABI)).toString("base64"),
           staking: roundDeployer.address,
           eventInitialBalance: config?.GAS.CONFIGURATION_EVENT_INITIAL_BALANCE,
-          eventCode: locklift.factory.getContractArtifacts("MultiVaultEVMTONEventNative").code,
+          eventCode: locklift.factory.getContractArtifacts("MultiVaultEVMEverscaleEventNative").code,
         },
         networkConfiguration: {
           chainId: chainId,
@@ -255,7 +255,7 @@ const main = async (): Promise<void> => {
         eventABI: Buffer.from(JSON.stringify(EVER_ALIEN_TRANSFER_EVENT_ABI)).toString("base64"),
         staking: roundDeployer.address,
         eventInitialBalance: config?.GAS.CONFIGURATION_EVENT_INITIAL_BALANCE,
-        eventCode: locklift.factory.getContractArtifacts("MultiVaultTONEVMEventAlien").code,
+        eventCode: locklift.factory.getContractArtifacts("MultiVaultEverscaleEVMEventAlien").code,
       },
       networkConfiguration: {
         eventEmitter: proxyMultiVaultAlien.address,
@@ -306,7 +306,7 @@ const main = async (): Promise<void> => {
         eventABI: Buffer.from(JSON.stringify(EVER_NATIVE_TRANSFER_EVENT_ABI)).toString("base64"),
         staking: roundDeployer.address,
         eventInitialBalance: config?.GAS.CONFIGURATION_EVENT_INITIAL_BALANCE,
-        eventCode: locklift.factory.getContractArtifacts("MultiVaultTONEVMEventNative").code,
+        eventCode: locklift.factory.getContractArtifacts("MultiVaultEverscaleEVMEventNative").code,
       },
       networkConfiguration: {
         eventEmitter: proxyMultiVaultNative.address,

@@ -153,7 +153,7 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
   await locklift.tracing.trace(
     proxyAlien.methods
       .setMergePool({
-        _mergePool: locklift.factory.getContractArtifacts("MergePool").code,
+        _mergePool: locklift.factory.getContractArtifacts("MergePool_V5").code,
       })
       .send({
         from: admin.address,
@@ -162,7 +162,7 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
       })
   );
 
-  console.log(`Set merge pool code to alien proxy. Code hash: ${locklift.factory.getContractArtifacts("MergePool").codeHash}`);
+  console.log(`Set merge pool code to alien proxy. Code hash: ${locklift.factory.getContractArtifacts("MergePool_V5").codeHash}`);
 
   await locklift.tracing.trace(
     proxyAlien.methods
@@ -223,7 +223,7 @@ const deployStakingConfigurations = async (
       _flags: 0,
       basicConfiguration: {
         eventABI: Buffer.from(JSON.stringify(stakingEthEventAbi)).toString("base64"),
-        eventCode: locklift.factory.getContractArtifacts("RoundEthereumEverscaleEvent").code,
+        eventCode: locklift.factory.getContractArtifacts("RelayRound").code,
         staking: staking.address,
         eventInitialBalance: config?.GAS.ROUND_DEPLOYER_EVENT_INITIAL_BALANCE,
       },
@@ -277,7 +277,7 @@ const deployStakingConfigurations = async (
     _flags: 0,
     basicConfiguration: {
       eventABI: Buffer.from(JSON.stringify(stakingEverEventAbi)).toString("base64"),
-      eventCode: locklift.factory.getContractArtifacts("RoundEverscaleEthereumEvent").code,
+      eventCode: locklift.factory.getContractArtifacts("RelayRound").code,
       staking: staking.address,
       eventInitialBalance: config?.GAS.ROUND_DEPLOYER_EVENT_INITIAL_BALANCE,
     },

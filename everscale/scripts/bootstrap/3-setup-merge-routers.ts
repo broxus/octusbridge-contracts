@@ -43,8 +43,8 @@ type TokensConfig = {
 };
 
 const networkToId: Record<Network, number> = {
-    [Network.BSC]: 56,
     [Network.ETHEREUM]: 1,
+    [Network.BSC]: 56,
     [Network.AVALANCHE]: 43114,
 };
 
@@ -197,7 +197,7 @@ const main = async (): Promise<void> => {
 
             console.log(`Merge pool for ${token} -> ${tokenToMergePool[token].toString()}`);
 
-            const mergePool = locklift.factory.getDeployedContract('MergePool', tokenToMergePool[token]);
+            const mergePool = locklift.factory.getDeployedContract('MergePool_V5', tokenToMergePool[token]);
             const addedTokens = await mergePool.methods
                 .getTokens({ answerId: 0 })
                 .call()
@@ -234,7 +234,7 @@ const main = async (): Promise<void> => {
         console.log(`Merge pool for ${token} -> ${mergePool.toString()}`);
 
         await locklift.deployments.saveContract({
-            contractName: 'MergePool',
+            contractName: 'MergePool_V5',
             address: mergePool,
             deploymentName: `MergePool-${token}`
         })
@@ -300,7 +300,7 @@ const main = async (): Promise<void> => {
     const pendingMergePoolEnableTxs: Promise<unknown>[] = [];
 
     for (const [token, mergePoolAddress] of Object.entries(tokenToMergePool)) {
-        const mergePool = locklift.factory.getDeployedContract("MergePool", mergePoolAddress);
+        const mergePool = locklift.factory.getDeployedContract("MergePool_V5", mergePoolAddress);
 
         console.log(`Enable ${token} merge pool`);
 

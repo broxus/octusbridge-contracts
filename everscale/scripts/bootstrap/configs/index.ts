@@ -1,4 +1,5 @@
 import { config as localConfig } from './local.config';
+import { config as hmstrConfig } from './hmstr.config';
 
 export type Config = {
     RELAYS_COUNT: number;
@@ -20,6 +21,7 @@ export type Config = {
 export const getConfig = (): Config | null => {
     switch (process.env.BOOTSTRAP_ENV) {
         case 'local': return localConfig;
+        case 'hmstr': return hmstrConfig;
         default: return null;
     }
 };
