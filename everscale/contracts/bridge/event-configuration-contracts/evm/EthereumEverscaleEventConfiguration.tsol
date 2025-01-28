@@ -134,7 +134,7 @@ contract EthereumEverscaleEventConfiguration is
         uint counter = 0;
 
         for (IEthereumEverscaleEvent.EthereumEverscaleEventVoteData eventVoteData: eventsVoteData) {
-            _deployEvent(eventVoteData, 0, values[counter]);
+            _deployEvent(eventVoteData, MsgFlag.SENDER_PAYS_FEES, values[counter]);
             counter++;
         }
 
