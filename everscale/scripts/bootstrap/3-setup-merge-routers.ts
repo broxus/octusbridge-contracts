@@ -1,19 +1,25 @@
 import { utils } from 'ethers';
-import { Address, WalletTypes, toNano, getRandomNonce } from 'locklift';
+import { Address, getRandomNonce } from 'locklift';
 import { BigNumber } from 'bignumber.js';
-import assert from 'node:assert';
+import { getConfig } from './configs';
+import assert from "node:assert";
+
+const config = getConfig();
+
+assert(!!config, 'Config should be defined');
+
+import { ProxyMultiVaultAlien_V8Abi } from "../../build/factorySource";
 
 enum Network {
     BSC = 'BSC',
-    POLYGON = 'POLYGON',
     AVALANCHE = 'AVALANCHE',
     ETHEREUM = 'ETHEREUM',
-    CELO = 'CELO',
 }
 
 enum Token {
     USDT = 'USDT',
-    DAI = 'DAI',
+    USDC = 'USDC',
+    WBTC = 'WETH',
 }
 
 type MergeRouterInfo = {
@@ -32,7 +38,6 @@ type TokenParams = {
 };
 
 type TokensConfig = {
-    mergePool?: Address;
     reference: Network;
     tokens: TokenParams[];
 };
@@ -40,69 +45,57 @@ type TokensConfig = {
 const networkToId: Record<Network, number> = {
     [Network.BSC]: 56,
     [Network.ETHEREUM]: 1,
-    [Network.POLYGON]: 137,
     [Network.AVALANCHE]: 43114,
-    [Network.CELO]: 42220,
 };
 
 const tokenToConfig: Record<string, TokensConfig> = {
     [Token.USDT]: {
         reference: Network.ETHEREUM, // Token of this network will be used as 'main' for EVM->TVM transfers
-        mergePool: new Address('0:8f95a32c53a0517d117505ecb5d20191f14341df6a81033c331a634249c0c002'), // Set it if merge pool is already deployed. New tokens will be connected to predeployed pool. In other case, new merge pool will be deployed
         tokens: [
             { network: Network.ETHEREUM, address: utils.getAddress('0xdac17f958d2ee523a2206206994597c13d831ec7'), name: 'Tether USD', symbol: 'USDT', decimals: 6 },
             { network: Network.BSC, address: utils.getAddress('0x55d398326f99059fF775485246999027B3197955'), name: 'Tether USD', symbol: 'USDT', decimals: 18 },
-            { network: Network.POLYGON, address: utils.getAddress('0xc2132D05D31c914a87C6611C10748AEb04B58e8F'), name: '(PoS) Tether USD', symbol: 'USDT', decimals: 6 },
             { network: Network.AVALANCHE, address: utils.getAddress('0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7'), name: 'TetherToken', symbol: 'USDt', decimals: 6 },
-            { network: Network.CELO, address: utils.getAddress('0x48065fbBE25f71C9282ddf5e1cD6D6A887483D5e'), name: 'Tether USD', symbol: 'USD₮', decimals: 6 },
-        ],
+        ]
     },
-    [Token.DAI]: {
+    [Token.USDC]: {
         reference: Network.ETHEREUM,
-        mergePool: new Address('0:d488d922694ad0aeb09fdf3d416d4b4a26e3edfa87bfe5ad77d83b8f75aee362'),
         tokens: [
-            { network: Network.ETHEREUM, address: utils.getAddress('0x6B175474E89094C44Da98b954EedeAC495271d0F'), name: 'Dai Stablecoin', symbol: 'DAI', decimals: 18 },
-            { network: Network.BSC, address: utils.getAddress('0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3'), name: 'Dai Token', symbol: 'DAI', decimals: 18 },
-            { network: Network.POLYGON, address: utils.getAddress('0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063'), name: '(PoS) Dai Stablecoin', symbol: 'DAI', decimals: 18 },
-            { network: Network.AVALANCHE, address: utils.getAddress('0xd586E7F844cEa2F87f50152665BCbc2C279D8d70'), name: 'Dai Stablecoin', symbol: 'DAI.e', decimals: 18 },
-        ],
+            { network: Network.ETHEREUM, address: utils.getAddress('0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'), name: 'USD Coin', symbol: 'USDC', decimals: 6 },
+            { network: Network.BSC, address: utils.getAddress('0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d'), name: 'USD Coin', symbol: 'USDC', decimals: 18 },
+            { network: Network.AVALANCHE, address: utils.getAddress('0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E'), name: 'USD Coin', symbol: 'USDC', decimals: 6 },
+        ]
     },
-};
-
-const ALIEN_PROXY_MULTI_VAULT = new Address('0:3d2ee3ff7118b05c7ea39ff6cdefe8101814bc3753ca45654d76b6791611992a');
-const ADMIN = new Address('0:2746d46337aa25d790c97f1aefb01a5de48cc1315b41a4f32753146a1e1aeb7d');
-
-const Gas = {
-    DEPLOY_ALIEN_TOKEN: toNano(120),
-    DEPLOY_MERGE_ROUTER: toNano(120),
-    DEPLOY_MERGE_POOL: toNano(120),
-    MERGE_POOL_ADD_TOKEN: toNano(30),
-    MERGE_POOL_ENABLE_ALL: toNano(60),
-    MERGE_ROUTER_SET_POOL: toNano(30),
+    [Token.WBTC]: {
+        reference: Network.ETHEREUM, // Token of this network will be used as 'main' for EVM->TVM transfers
+        tokens: [
+            { network: Network.ETHEREUM, address: utils.getAddress('0x2260fac5e5542a773aa44fbcfedf7c193bc2c599'), name: 'Wrapped BTC', symbol: 'WBTC', decimals: 8 },
+            { network: Network.BSC, address: utils.getAddress('0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c'), name: 'BTCB Token', symbol: 'BTCB', decimals: 18 },
+            { network: Network.AVALANCHE, address: utils.getAddress('0x50b7545627a5162f82a992c33b87adc75187b218'), name: 'Wrapped BTC', symbol: 'WBTC.e', decimals: 8 },
+        ]
+    },
 };
 
 const main = async (): Promise<void> => {
-    await locklift.factory.accounts.addExistingAccount({
-        type: WalletTypes.EverWallet,
-        address: ADMIN,
-    });
+    await locklift.deployments.load();
 
-    const alienProxyMultiVault = locklift.factory.getDeployedContract('ProxyMultiVaultAlien_V8', ALIEN_PROXY_MULTI_VAULT);
-    const alienProxyMultiVaultState = await alienProxyMultiVault.getFullState().then((s) => s.state);
+    const admin = locklift.deployments.getAccount('Admin').account;
+    const proxyMultiVaultAlien = locklift.deployments.getContract<ProxyMultiVaultAlien_V8Abi>('ProxyMultiVaultAlien');
+
+    const alienProxyMultiVaultState = await proxyMultiVaultAlien.getFullState().then((s) => s.state);
 
     const tokenToNetworkToAlienToken: Record<string, Record<string, Address>> = {};
     const pendingAlienTokenDeploys: Promise<unknown>[] = [];
 
     // Derive alien TIP-3 token address from EVM token on different network
-    for (const [token, config] of Object.entries(tokenToConfig)) {
+    for (const [token, tokenConfig] of Object.entries(tokenToConfig)) {
         tokenToNetworkToAlienToken[token] = {};
 
-        for (const tokenParams of config.tokens) {
-            const alienToken = await alienProxyMultiVault.methods
+        for (const tokenParams of tokenConfig.tokens) {
+            const alienToken = await proxyMultiVaultAlien.methods
                 .deriveEVMAlienTokenRoot({
                     answerId: 0,
                     chainId: networkToId[tokenParams.network],
-                    token: new BigNumber(tokenParams.address.toLowerCase()).toString(10),
+                    token: new BigNumber(tokenParams.address.toLowerCase(), 16).toString(10),
                     name: tokenParams.name,
                     symbol: tokenParams.symbol,
                     decimals: tokenParams.decimals,
@@ -122,16 +115,16 @@ const main = async (): Promise<void> => {
                 console.log(`Deploying alien token for ${tokenParams.network}-${token}`);
 
                 const deployTx = locklift.transactions.waitFinalized(
-                    alienProxyMultiVault.methods
+                    proxyMultiVaultAlien.methods
                         .deployEVMAlienToken({
                             chainId: networkToId[tokenParams.network],
-                            token: new BigNumber(tokenParams.address.toLowerCase()).toString(10),
+                            token: new BigNumber(tokenParams.address.toLowerCase(), 16).toString(10),
                             name: tokenParams.name,
                             symbol: tokenParams.symbol,
                             decimals: tokenParams.decimals,
-                            remainingGasTo: ADMIN,
+                            remainingGasTo: admin.address,
                         })
-                        .send({ from: ADMIN, amount: Gas.DEPLOY_ALIEN_TOKEN, bounce: true }),
+                        .send({ from: admin.address, amount: config?.GAS.DEPLOY_ALIEN_TOKEN, bounce: true }),
                 );
 
                 pendingAlienTokenDeploys.push(deployTx);
@@ -152,7 +145,7 @@ const main = async (): Promise<void> => {
             const mergeRouter: MergeRouterInfo = {
                 token: token as Token,
                 network: network as Network,
-                address: await alienProxyMultiVault.methods
+                address: await proxyMultiVaultAlien.methods
                     .deriveMergeRouter({ answerId: 0, token: alienToken })
                     .call({ cachedState: alienProxyMultiVaultState })
                     .then((r) => r.router)
@@ -162,6 +155,12 @@ const main = async (): Promise<void> => {
 
             console.log(`Merge router for ${network}-${token} -> ${mergeRouter.address.toString()}`);
 
+            await locklift.deployments.saveContract({
+                contractName: 'MergeRouter',
+                address: mergeRouter.address,
+                deploymentName: `MergeRouter-${network}-${token}`
+            })
+
             const isDeployed = await locklift.provider
                 .getFullContractState({ address: mergeRouter.address })
                 .then((r) => !!r.state?.isDeployed);
@@ -170,9 +169,9 @@ const main = async (): Promise<void> => {
                 console.log(`Deploying merge router for ${network}-${token}`);
 
                 const deployTx = locklift.transactions.waitFinalized(
-                    alienProxyMultiVault.methods
+                    proxyMultiVaultAlien.methods
                         .deployMergeRouter({ token: alienToken })
-                        .send({ from: ADMIN, amount: Gas.DEPLOY_MERGE_ROUTER, bounce: true }),
+                        .send({ from: admin.address, amount: config?.GAS.DEPLOY_MERGE_ROUTER, bounce: true }),
                 );
 
                 pendingMergeRouterDeploys.push(deployTx);
@@ -193,12 +192,12 @@ const main = async (): Promise<void> => {
 
         // Reuse old merge pool
 
-        if (tokenToConfig[token].mergePool) {
-            tokenToMergePool[token] = tokenToConfig[token].mergePool!;
+        if (locklift.deployments.deploymentsStore[`MergePool-${token}`]) {
+            tokenToMergePool[token] = locklift.deployments.deploymentsStore[`MergePool-${token}`].address;
 
             console.log(`Merge pool for ${token} -> ${tokenToMergePool[token].toString()}`);
 
-            const mergePool = locklift.factory.getDeployedContract('MergePool_V5', tokenToMergePool[token]);
+            const mergePool = locklift.factory.getDeployedContract('MergePool', tokenToMergePool[token]);
             const addedTokens = await mergePool.methods
                 .getTokens({ answerId: 0 })
                 .call()
@@ -211,7 +210,7 @@ const main = async (): Promise<void> => {
                     const addTokenTx = locklift.transactions.waitFinalized(
                         mergePool.methods
                             .addToken({ token: alienToken })
-                            .send({ from: ADMIN, amount: Gas.MERGE_POOL_ADD_TOKEN, bounce: true }),
+                            .send({ from: admin.address, amount: config?.GAS.MERGE_POOL_ADD_TOKEN, bounce: true }),
                     );
 
                     pendingMergePoolTxs.push(addTokenTx);
@@ -225,7 +224,7 @@ const main = async (): Promise<void> => {
 
         const nonce = getRandomNonce();
 
-        const mergePool = await alienProxyMultiVault.methods
+        const mergePool = await proxyMultiVaultAlien.methods
             .deriveMergePool({ answerId: 0, nonce: nonce })
             .call({ cachedState: alienProxyMultiVaultState })
             .then((r) => r.pool);
@@ -233,6 +232,12 @@ const main = async (): Promise<void> => {
         tokenToMergePool[token] = mergePool;
 
         console.log(`Merge pool for ${token} -> ${mergePool.toString()}`);
+
+        await locklift.deployments.saveContract({
+            contractName: 'MergePool',
+            address: mergePool,
+            deploymentName: `MergePool-${token}`
+        })
 
         const isDeployed = await locklift.provider
             .getFullContractState({ address: mergePool })
@@ -248,13 +253,13 @@ const main = async (): Promise<void> => {
             console.log(`Deploying merge pool for ${token}. Reference token network ${tokenToConfig[token].reference} -> ${alienTokens[canonIndex].toString()}`);
 
             const deployTx = locklift.transactions.waitFinalized(
-                alienProxyMultiVault.methods
+                proxyMultiVaultAlien.methods
                     .deployMergePool({
                         nonce: nonce,
                         tokens: alienTokens,
                         canonId: canonIndex,
                     })
-                    .send({ from: ADMIN, amount: Gas.DEPLOY_MERGE_POOL, bounce: true }),
+                    .send({ from: admin.address, amount: config?.GAS.DEPLOY_MERGE_POOL, bounce: true }),
             );
 
             pendingMergePoolTxs.push(deployTx);
@@ -281,7 +286,7 @@ const main = async (): Promise<void> => {
             const setPoolTx = locklift.transactions.waitFinalized(
                 mergeRouter.methods
                     .setPool({pool_: tokenToMergePool[mergeRouterInfo.token]})
-                    .send({from: ADMIN, amount: Gas.MERGE_ROUTER_SET_POOL, bounce: true}),
+                    .send({from: admin.address, amount: config?.GAS.MERGE_ROUTER_SET_POOL, bounce: true}),
             );
 
             pendingMergePoolTxs.push(setPoolTx);
@@ -295,14 +300,14 @@ const main = async (): Promise<void> => {
     const pendingMergePoolEnableTxs: Promise<unknown>[] = [];
 
     for (const [token, mergePoolAddress] of Object.entries(tokenToMergePool)) {
-        const mergePool = locklift.factory.getDeployedContract("MergePool_V5", mergePoolAddress);
+        const mergePool = locklift.factory.getDeployedContract("MergePool", mergePoolAddress);
 
         console.log(`Enable ${token} merge pool`);
 
         const enableAllTx = locklift.transactions.waitFinalized(
             mergePool.methods
                 .enableAll({})
-                .send({ from: ADMIN, amount: Gas.MERGE_POOL_ENABLE_ALL, bounce: true }),
+                .send({ from: admin.address, amount: config?.GAS.MERGE_POOL_ENABLE_ALL, bounce: true }),
         );
 
         pendingMergePoolEnableTxs.push(enableAllTx);

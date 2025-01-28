@@ -1,7 +1,17 @@
 import { LockliftConfig } from "locklift";
 import { FactorySource } from "./build/factorySource";
+import 'dotenv/config';
 
 import "locklift-verifier";
+import "@broxus/locklift-deploy";
+import {Deployments} from "@broxus/locklift-deploy";
+
+declare module "locklift" {
+  //@ts-ignore
+  export interface Locklift {
+    deployments: Deployments<FactorySource>;
+  }
+}
 
 declare global {
   const locklift: import("locklift").Locklift<FactorySource>;
