@@ -19,7 +19,8 @@ enum Network {
 enum Token {
     USDT = 'USDT',
     USDC = 'USDC',
-    WBTC = 'WETH',
+    WBTC = 'WBTC',
+    WETH = 'WETH',
 }
 
 type MergeRouterInfo = {
@@ -73,6 +74,14 @@ const tokenToConfig: Record<string, TokensConfig> = {
             { network: Network.AVALANCHE, address: utils.getAddress('0x50b7545627a5162f82a992c33b87adc75187b218'), name: 'Wrapped BTC', symbol: 'WBTC.e', decimals: 8 },
         ]
     },
+    [Token.WETH]: {
+        reference: Network.ETHEREUM, // Token of this network will be used as 'main' for EVM->TVM transfers
+        tokens: [
+            { network: Network.ETHEREUM, address: utils.getAddress('0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'), name: 'Wrapped Ether', symbol: 'WETH', decimals: 18 },
+            { network: Network.BSC, address: utils.getAddress('0x2170Ed0880ac9A755fd29B2688956BD959F933F8'), name: 'Ethereum Token', symbol: 'ETH', decimals: 18 },
+            { network: Network.AVALANCHE, address: utils.getAddress('0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB'), name: 'Wrapped Ether', symbol: 'WETH.e', decimals: 18 },
+        ]
+    }
 };
 
 const main = async (): Promise<void> => {

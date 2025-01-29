@@ -11,8 +11,12 @@ assert(!!config, 'Config should be defined');
 type InitialBalance = { alien?: string; native?: string };
 
 const initialBalances: Record<number, InitialBalance> = {
-    56: { alien: toNano(0.3), native: toNano(0.3) },
+    1: { alien: toNano(230), native: toNano(90) },
+    56: { alien: toNano(230), native: toNano(90) },
+    43114: { alien: toNano(230), native: toNano(90) },
 };
+
+//TODO:  EverscaleEthereumEventConfiguration
 
 const main = async (): Promise<void> => {
     await locklift.deployments.load();
@@ -29,17 +33,16 @@ const main = async (): Promise<void> => {
                 .call()
                 .then((r) => r._basicConfiguration.eventInitialBalance);
 
-            if (currentInitialBalance === values.alien) {
-                continue;
+            if (currentInitialBalance !== values.alien) {
+                const tx = locklift.transactions.waitFinalized(
+                    configuration.methods
+                        .setEventInitialBalance({ eventInitialBalance: values.alien })
+                        .send({from: admin.address, amount: config?.GAS.CONFIGURATION_SET_INITIAL_BALANCE, bounce: true}),
+                ).then(() => console.log(`${configuration.address.toString()} -> ${values.alien}`));
+
+                pendingConfigurationTxs.push(tx);
             }
 
-            const tx = locklift.transactions.waitFinalized(
-                configuration.methods
-                    .setEventInitialBalance({ eventInitialBalance: values.alien })
-                    .send({from: admin.address, amount: config?.GAS.CONFIGURATION_SET_INITIAL_BALANCE, bounce: true}),
-            ).then(() => console.log(`${configuration.address.toString()} -> ${values.alien}`));
-
-            pendingConfigurationTxs.push(tx);
         }
 
         if (values.native) {
@@ -49,17 +52,16 @@ const main = async (): Promise<void> => {
                 .call()
                 .then((r) => r._basicConfiguration.eventInitialBalance);
 
-            if (currentInitialBalance === values.native) {
-                continue;
+            if (currentInitialBalance !== values.native) {
+                const tx = locklift.transactions.waitFinalized(
+                    configuration.methods
+                        .setEventInitialBalance({ eventInitialBalance: values.native })
+                        .send({from: admin.address, amount: config?.GAS.CONFIGURATION_SET_INITIAL_BALANCE, bounce: true}),
+                ).then(() => console.log(`${configuration.address.toString()} -> ${values.native}`));
+
+                pendingConfigurationTxs.push(tx);
             }
 
-            const tx = locklift.transactions.waitFinalized(
-                configuration.methods
-                    .setEventInitialBalance({ eventInitialBalance: values.native })
-                    .send({from: admin.address, amount: config?.GAS.CONFIGURATION_SET_INITIAL_BALANCE, bounce: true}),
-            ).then(() => console.log(`${configuration.address.toString()} -> ${values.alien}`));
-
-            pendingConfigurationTxs.push(tx);
         }
     }
 
