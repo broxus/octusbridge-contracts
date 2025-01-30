@@ -16,44 +16,35 @@ import {
 
 const NEW_OWNER = new Address("");
 
+type internalOwnerContractsType =
+  | BridgeAbi
+  | ProxyMultiVaultAlien_V8Abi
+  | ProxyMultiVaultNative_V6Abi
+  | EthereumEverscaleEventConfigurationAbi
+  | EverscaleEthereumEventConfigurationAbi
+  | ConnectorAbi
+  | MergeRouterAbi
+  | MergePool_V5Abi
+  | Mediator_V2Abi
+  | EventCreditFactoryAbi;
+
+const internalOwnerContracts = [
+  "Bridge",
+  "ProxyMultiVaultAlien",
+  "ProxyMultiVaultNative",
+  "RoundDeployerConfiguration",
+  "NetworkConfig",
+  "Connector",
+  "MergeRouter",
+  "MergePool",
+  "Mediator",
+  "EventCreditFactory",
+];
+
 const main = async (): Promise<void> => {
   await locklift.deployments.load();
 
-  // const admin = locklift.deployments.getAccount("Admin").account;
-  const [{ account: admin }] = await locklift.deployments.deployAccounts([
-    {
-      deploymentName: "Admin",
-      signerId: "0",
-      accountSettings: {
-        type: WalletTypes.EverWallet,
-        value: toNano(40),
-      },
-    },
-  ]);
-
-  type internalOwnerContractsType =
-    | BridgeAbi
-    | ProxyMultiVaultAlien_V8Abi
-    | ProxyMultiVaultNative_V6Abi
-    | EthereumEverscaleEventConfigurationAbi
-    | EverscaleEthereumEventConfigurationAbi
-    | ConnectorAbi
-    | MergeRouterAbi
-    | MergePool_V5Abi
-    | Mediator_V2Abi
-    | EventCreditFactoryAbi;
-  const internalOwnerContracts = [
-    "Bridge",
-    "ProxyMultiVaultAlien",
-    "ProxyMultiVaultNative",
-    "RoundDeployerConfiguration",
-    "NetworkConfig",
-    "Connector",
-    "MergeRouter",
-    "MergePool",
-    "Mediator",
-    "EventCreditFactory",
-  ];
+  const admin = locklift.deployments.getAccount("Admin").account;
 
   for (const deployment of Object.entries(
     locklift.deployments.deploymentsStore
@@ -83,7 +74,6 @@ const main = async (): Promise<void> => {
         deployment[0].includes(contractName)
       ).length
     ) {
-      console.log(deployment[0], (deployment[1] as any).address);
       const contract: Contract<internalOwnerContractsType> =
         await locklift.deployments.getContract(deployment[0]);
       await contract.methods
