@@ -124,6 +124,7 @@ library ErrorCodes {
     uint16 constant UNKNOWN_MEDIATOR_OPERATION = 2801;
     uint16 constant WRONG_GUARDIAN = 2802;
     uint16 constant NOT_NATIVE_PROXY = 2803;
+    uint16 constant WRONG_GAS_RECIPIENT = 2804;
 
     // Merging
     uint16 constant WRONG_PROXY = 2901;

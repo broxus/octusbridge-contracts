@@ -21,8 +21,8 @@ const main = async () => {
                 key_: key,
                 eventCloserCode_: EventCloser.code,
                 eventDeployerCode_: EventDeployer.code,
-                eventClosersCount: 1,
-                eventDeployersCount: 1
+                eventClosersCount: 2,
+                eventDeployersCount: 2
             },
             initParams: {
                 _randomNonce: getRandomNonce()

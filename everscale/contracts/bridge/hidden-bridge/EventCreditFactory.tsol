@@ -71,14 +71,16 @@ contract EventCreditFactory is InternalOwner, RandomNonce {
     }
 
     receive() external view {
-        uint128 value_per_deployer = (msg.value - 1 ever) / uint8(eventDeployers.length);
+        if(msg.value >= 3 ever) {
+            uint128 value_per_deployer = (msg.value - 3 ever) / uint8(eventDeployers.length);
 
-        for (address deployer: eventDeployers) {
-            deployer.transfer({
-                value: value_per_deployer,
-                bounce: false,
-                flag: 0
-            });
+            for (address deployer: eventDeployers) {
+                deployer.transfer({
+                    value: value_per_deployer,
+                    bounce: false,
+                    flag: 0
+                });
+            }
         }
     }
 
@@ -90,6 +92,16 @@ contract EventCreditFactory is InternalOwner, RandomNonce {
                 flag: 0
             }(owner);
         }
+    }
+
+    function drainDeployer(address deployer, address receiver) onlyOwner view external {
+        require(receiver.value != 0, ErrorCodes.WRONG_GAS_RECIPIENT);
+
+        EventDeployer(deployer).drain{
+                value: gasToValue(EventCreditGas.DRAIN_EVENT_DEPLOYER_GAS, address(this).wid),
+                bounce: false,
+                flag: 0
+            }(receiver);
     }
 
     function upgrade(TvmCell code) external onlyOwner {
