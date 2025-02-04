@@ -178,6 +178,51 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
 
   console.log(`Set merge router to alien proxy. Code hash: ${locklift.factory.getContractArtifacts("MergeRouter").codeHash}`);
 
+  await locklift.tracing.trace(
+    proxyAlien.methods
+      .setEVMAlienTokenRootCode({
+        _tokenRootCode: locklift.factory.getContractArtifacts('TokenRootAlienEVM').code,
+        _remainingGasTo: admin.address,
+      })
+      .send({
+        from: admin.address,
+        amount: config?.GAS.PROXY_MULTI_VAULT_SET_EVM_TOKEN_ROOT,
+        bounce: true,
+      })
+  );
+
+  console.log(`Set EVM token root to alien proxy. Code hash: ${locklift.factory.getContractArtifacts('TokenRootAlienEVM').codeHash}`);
+
+  await locklift.tracing.trace(
+    proxyAlien.methods
+      .setEVMAlienTokenWalletCode({
+        _tokenWalletCode: locklift.factory.getContractArtifacts('AlienTokenWalletUpgradeable').code,
+        _remainingGasTo: admin.address,
+      })
+      .send({
+        from: admin.address,
+        amount: config?.GAS.PROXY_MULTI_VAULT_SET_EVM_TOKEN_WALLET,
+        bounce: true,
+      })
+  );
+
+  console.log(`Set EVM token wallet to alien proxy. Code hash: ${locklift.factory.getContractArtifacts('AlienTokenWalletUpgradeable').codeHash}`);
+
+  await locklift.tracing.trace(
+    proxyAlien.methods
+      .setOnceEVMAlienTokenPlatformCode({
+        _tokenPlatformCode: locklift.factory.getContractArtifacts('AlienTokenWalletPlatform').code,
+        _remainingGasTo: admin.address,
+      })
+      .send({
+        from: admin.address,
+        amount: config?.GAS.PROXY_MULTI_VAULT_SET_ONCE_EVM_TOKEN_PLATFORM,
+        bounce: true,
+      })
+  );
+
+  console.log(`Set EVM token platform to alien proxy. Code hash: ${locklift.factory.getContractArtifacts('AlienTokenWalletPlatform').codeHash}`);
+
   const { contract: proxyNative } = await locklift.factory.deployContract({
     contract: "ProxyMultiVaultNative_V6",
     constructorParams: { owner_: admin.address },

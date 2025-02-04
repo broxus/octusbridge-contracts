@@ -85,14 +85,39 @@ export const setupAlienMultiVault = async (
     // Set proxy EVM configuration
     await proxy.methods
         .setEVMConfiguration({
-            _config: {
-                everscaleConfiguration: everscaleEthereumEventConfiguration.address,
-                evmConfigurations: [ethereumEverscaleEventConfiguration.address],
-                alienTokenRootCode: alienTokenRootEVM.code,
-                alienTokenWalletCode: alienTokenWalletUpgradeableData.code,
-                alienTokenWalletPlatformCode: alienTokenWalletPlatformData.code,
-            },
-            remainingGasTo: owner.address,
+            _everscaleConfiguration: everscaleEthereumEventConfiguration.address,
+            _evmConfigurations: [ethereumEverscaleEventConfiguration.address],
+            _remainingGasTo: owner.address,
+        })
+        .send({
+            from: owner.address,
+            amount: locklift.utils.toNano(0.5),
+        });
+
+    await proxy.methods
+        .setEVMAlienTokenRootCode({
+            _tokenRootCode: alienTokenRootEVM.code,
+            _remainingGasTo: owner.address,
+        })
+        .send({
+            from: owner.address,
+            amount: locklift.utils.toNano(0.5),
+        });
+
+    await proxy.methods
+        .setEVMAlienTokenWalletCode({
+            _tokenWalletCode: alienTokenWalletUpgradeableData.code,
+            _remainingGasTo: owner.address,
+        })
+        .send({
+            from: owner.address,
+            amount: locklift.utils.toNano(0.5),
+        });
+
+    await proxy.methods
+        .setOnceEVMAlienTokenPlatformCode({
+            _tokenPlatformCode: alienTokenWalletPlatformData.code,
+            _remainingGasTo: owner.address,
         })
         .send({
             from: owner.address,
@@ -102,18 +127,43 @@ export const setupAlienMultiVault = async (
     // Set proxy Solana configuration
     await proxy.methods
         .setSolanaConfiguration({
-            _config: {
-                everscaleConfiguration: everscaleSolanaEventConfiguration.address,
-                solanaConfiguration: solanaEverscaleEventConfiguration.address,
-                alienTokenRootCode: alienTokenRootSolana.code,
-                alienTokenWalletCode: alienTokenWalletUpgradeableData.code,
-                alienTokenWalletPlatformCode: alienTokenWalletPlatformData.code,
-            },
-            remainingGasTo: owner.address
+            _everscaleConfiguration: everscaleSolanaEventConfiguration.address,
+            _solanaConfiguration: solanaEverscaleEventConfiguration.address,
+            _remainingGasTo: owner.address
         })
         .send({
             from: owner.address,
             amount: locklift.utils.toNano(0.5)
+        });
+
+    await proxy.methods
+        .setSolanaAlienTokenRootCode({
+            _tokenRootCode: alienTokenRootSolana.code,
+            _remainingGasTo: owner.address,
+        })
+        .send({
+            from: owner.address,
+            amount: locklift.utils.toNano(0.5),
+        });
+
+    await proxy.methods
+        .setSolanaAlienTokenWalletCode({
+            _tokenWalletCode: alienTokenWalletUpgradeableData.code,
+            _remainingGasTo: owner.address,
+        })
+        .send({
+            from: owner.address,
+            amount: locklift.utils.toNano(0.5),
+        });
+
+    await proxy.methods
+        .setOnceSolanaAlienTokenPlatformCode({
+            _tokenPlatformCode: alienTokenWalletPlatformData.code,
+            _remainingGasTo: owner.address,
+        })
+        .send({
+            from: owner.address,
+            amount: locklift.utils.toNano(0.5),
         });
 
     // Set merging

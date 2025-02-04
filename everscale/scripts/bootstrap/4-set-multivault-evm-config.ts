@@ -1,4 +1,4 @@
-import { ProxyMultiVaultAlien_V8Abi, ProxyMultiVaultNative_V6Abi } from "../../build_prod/factorySource";
+import { ProxyMultiVaultAlien_V8Abi, ProxyMultiVaultNative_V6Abi } from "../../build/factorySource";
 
 import { getConfig } from "./configs";
 import assert from "node:assert";
@@ -27,14 +27,9 @@ const main = async (): Promise<void> => {
     await locklift.tracing.trace(
         proxyMultiVaultAlien.methods
             .setEVMConfiguration({
-                _config: {
-                    everscaleConfiguration: locklift.deployments.getContract('NetworkConfig-EverEthAlienEvent').address,
-                    evmConfigurations: alienEvmConfigurations,
-                    alienTokenWalletPlatformCode: locklift.factory.getContractArtifacts('AlienTokenWalletPlatform').code,
-                    alienTokenRootCode: locklift.factory.getContractArtifacts('TokenRootAlienEVM').code,
-                    alienTokenWalletCode: locklift.factory.getContractArtifacts('AlienTokenWalletUpgradeable').code,
-                },
-                remainingGasTo: admin.address,
+                _everscaleConfiguration: locklift.deployments.getContract('NetworkConfig-EverEthAlienEvent').address,
+                _evmConfigurations: alienEvmConfigurations,
+                _remainingGasTo: admin.address,
             })
             .send({
                 from: admin.address,
