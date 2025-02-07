@@ -10,7 +10,7 @@ import {
     EverscaleSolanaEventConfigurationAbi,
     MultiVaultEverscaleEVMEventNativeAbi,
     MultiVaultEVMEverscaleEventNativeAbi,
-    ProxyMultiVaultNative_V4Abi, ProxyMultiVaultNative_V6Abi,
+    ProxyMultiVaultNative_V6Abi,
     SolanaEverscaleEventConfigurationAbi,
     StakingMockupAbi,
     TokenRootAbi,
@@ -110,19 +110,21 @@ describe("Test EVM native multivault pipeline", async function () {
     });
 
     it('Check initializer token balance', async () => {
-        const walletAddress = await tokenRoot.methods.walletOf({
-            answerId: 0,
-            walletOwner: initializer.address
-        }).call();
+        const walletAddress = await tokenRoot.methods
+            .walletOf({
+                answerId: 0,
+                walletOwner: initializer.address
+            })
+            .call({ responsible: true });
 
-        initializerTokenWallet = await locklift.factory.getDeployedContract(
+        initializerTokenWallet = locklift.factory.getDeployedContract(
             'TokenWallet',
             walletAddress.value0
         );
 
-        const balance = await initializerTokenWallet.methods.balance({
-            answerId: 0
-        }).call();
+        const balance = await initializerTokenWallet.methods
+            .balance({ answerId: 0 })
+            .call({ responsible: true });
 
         expect(Number(balance.value0))
             .to.be.equal(mintAmount, 'Wrong initializer token balance after mint')
@@ -177,7 +179,7 @@ describe("Test EVM native multivault pipeline", async function () {
 
             logger.log(`Expected event address: ${expectedEventContract}`);
 
-            eventContract = await locklift.factory.getDeployedContract(
+            eventContract = locklift.factory.getDeployedContract(
                 "MultiVaultEverscaleEVMEventNative",
                 expectedEventContract
             );
@@ -186,7 +188,7 @@ describe("Test EVM native multivault pipeline", async function () {
         it("Check initializer token balance", async () => {
             const balance = await initializerTokenWallet.methods
                 .balance({ answerId: 0 })
-                .call();
+                .call({ responsible: true });
 
             expect(Number(balance.value0)).to.be.equal(
                 mintAmount - amount,
@@ -202,7 +204,7 @@ describe("Test EVM native multivault pipeline", async function () {
 
             const balance = await proxyTokenWallet.methods
                 .balance({ answerId: 0 })
-                .call()
+                .call({ responsible: true })
                 .then((t: any) => t.value0);
 
             expect(Number(balance))
@@ -234,7 +236,7 @@ describe("Test EVM native multivault pipeline", async function () {
         it("Check event state before confirmation", async () => {
             const details = await eventContract.methods
                 .getDetails({ answerId: 0 })
-                .call();
+                .call({ responsible: true });
 
             expect(details._eventInitData.configuration.toString()).to.be.equal(
                 everscaleEthereumEventConfiguration.address.toString(),
@@ -266,7 +268,7 @@ describe("Test EVM native multivault pipeline", async function () {
         it("Check event data after mutation", async () => {
             const decodedData = await eventContract.methods
                 .getDecodedData({ answerId: 0 })
-                .call();
+                .call({ responsible: true });
 
             const proxyTokenWallet = await getTokenWalletByAddress(
                 proxy.address,
@@ -310,17 +312,17 @@ describe("Test EVM native multivault pipeline", async function () {
 
             const name = await tokenRoot.methods
                 .name({ answerId: 0 })
-                .call()
+                .call({ responsible: true })
                 .then((t) => t.value0);
 
             const symbol = await tokenRoot.methods
                 .symbol({ answerId: 0 })
-                .call()
+                .call({ responsible: true })
                 .then((t) => t.value0);
 
             const decimals = await tokenRoot.methods
                 .decimals({ answerId: 0 })
-                .call()
+                .call({ responsible: true })
                 .then((t) => t.value0);
 
             expect(decodedData.name_).to.be.equal(
@@ -340,7 +342,7 @@ describe("Test EVM native multivault pipeline", async function () {
         it("Check mutated event data", async () => {
             const eventInitData = await eventContract.methods
                 .getEventInitData({ answerId: 0 })
-                .call();
+                .call({ responsible: true });
 
             const decodedData = await cellEncoder.methods
                 .decodeMultiVaultNativeEverscaleEthereum({
@@ -376,17 +378,17 @@ describe("Test EVM native multivault pipeline", async function () {
 
             const name = await tokenRoot.methods
                 .name({ answerId: 0 })
-                .call()
+                .call({ responsible: true })
                 .then((t) => t.value0);
 
             const symbol = await tokenRoot.methods
                 .symbol({ answerId: 0 })
-                .call()
+                .call({ responsible: true })
                 .then((t) => t.value0);
 
             const decimals = await tokenRoot.methods
                 .decimals({ answerId: 0 })
-                .call()
+                .call({ responsible: true })
                 .then((t) => t.value0);
 
             expect(decodedData.name)
@@ -412,7 +414,7 @@ describe("Test EVM native multivault pipeline", async function () {
                     vote: 1,
                     answerId: 0,
                 })
-                .call();
+                .call({ responsible: true });
 
             expect(requiredVotes).to.be.greaterThan(
                 0,
@@ -436,7 +438,7 @@ describe("Test EVM native multivault pipeline", async function () {
         it("Check event confirmed", async () => {
             const details = await eventContract.methods
                 .getDetails({ answerId: 0 })
-                .call();
+                .call({ responsible: true });
 
             const requiredVotes = await eventContract.methods
                 .requiredVotes()
@@ -527,13 +529,13 @@ describe("Test EVM native multivault pipeline", async function () {
                     eventVoteData: eventVoteData,
                     answerId: 0,
                 })
-                .call();
+                .call({ responsible: true });
 
             logger.log(
                 `Expected event address: ${expectedEventContract.eventContract}`
             );
 
-            eventContract = await locklift.factory.getDeployedContract(
+            eventContract = locklift.factory.getDeployedContract(
                 "MultiVaultEVMEverscaleEventNative",
                 expectedEventContract.eventContract
             );
@@ -548,7 +550,7 @@ describe("Test EVM native multivault pipeline", async function () {
         it("Check event state before confirmation", async () => {
             const details = await eventContract.methods
                 .getDetails({ answerId: 0 })
-                .call();
+                .call({ responsible: true });
 
             expect(details._eventInitData.voteData.eventTransaction).to.be.equal(
                 eventVoteData.eventTransaction.toString(),
@@ -607,7 +609,7 @@ describe("Test EVM native multivault pipeline", async function () {
         it("Check event decoded data", async () => {
             const decodedData = await eventContract.methods
                 .getDecodedData({ answerId: 0 })
-                .call();
+                .call({ responsible: true });
 
             expect(decodedData.token_.toString()).to.be.equal(
                 tokenRoot.address.toString(),
@@ -648,7 +650,7 @@ describe("Test EVM native multivault pipeline", async function () {
                     vote: 1,
                     answerId: 0,
                 })
-                .call();
+                .call({ responsible: true });
 
             expect(requiredVotes).to.be.greaterThan(
                 0,
@@ -678,7 +680,7 @@ describe("Test EVM native multivault pipeline", async function () {
         it("Check event confirmed", async () => {
             const details = await eventContract.methods
                 .getDetails({ answerId: 0 })
-                .call();
+                .call({ responsible: true });
 
             const requiredVotes = await eventContract.methods
                 .requiredVotes()
@@ -701,7 +703,7 @@ describe("Test EVM native multivault pipeline", async function () {
         it("Check initializer token balance", async () => {
             const balance = await initializerTokenWallet.methods
                 .balance({ answerId: 0 })
-                .call();
+                .call({ responsible: true });
 
             expect(parseInt(balance.value0, 10)).to.be.equal(
                 mintAmount,
@@ -717,7 +719,7 @@ describe("Test EVM native multivault pipeline", async function () {
 
             const balance = await proxyTokenWallet.methods
                 .balance({ answerId: 0 })
-                .call()
+                .call({ responsible: true })
                 .then((t: any) => t.value0);
 
             expect(balance)

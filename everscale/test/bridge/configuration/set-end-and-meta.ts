@@ -1,8 +1,8 @@
 import { expect } from "chai";
-import {Address, Contract, zeroAddress} from "locklift";
-import {BridgeAbi, CellEncoderStandaloneAbi, FactorySource, StakingMockupAbi} from "../../../build/factorySource";
+import { Contract, zeroAddress } from "locklift";
+import { BridgeAbi, CellEncoderStandaloneAbi, FactorySource, StakingMockupAbi } from "../../../build/factorySource";
 import { Account } from "everscale-standalone-client/nodejs";
-import {setupBridge, setupRelays} from "../../utils/bridge";
+import { setupBridge, setupRelays } from "../../utils/bridge";
 import {
     setupEthereumEverscaleEventConfiguration,
     setupEverscaleEthereumEventConfiguration
@@ -65,7 +65,7 @@ describe("Test setting configuration end", async function () {
 
             const details = await ethereumEverscaleEventConfiguration.methods
                 .getDetails({ answerId: 0 })
-                .call();
+                .call({ responsible: true });
 
             expect(details._networkConfiguration.endBlockNumber).to.be.equal(
                 "1",
@@ -87,7 +87,7 @@ describe("Test setting configuration end", async function () {
         it("Check Ethereum Everscale configuration meta", async () => {
             const details = await ethereumEverscaleEventConfiguration.methods
                 .getDetails({ answerId: 0 })
-                .call();
+                .call({ responsible: true });
 
             expect(details._meta.toString()).to.be.equal(emptyCell, "Wrong meta");
         });
@@ -119,7 +119,7 @@ describe("Test setting configuration end", async function () {
         it("Check Everscale Ethereum configuration end timestamp", async () => {
             const details = await everscaleEthereumEventConfiguration.methods
                 .getDetails({ answerId: 0 })
-                .call();
+                .call({ responsible: true });
 
             expect(details._networkConfiguration.endTimestamp).to.be.equal(
                 "1",
@@ -141,7 +141,7 @@ describe("Test setting configuration end", async function () {
         it("Check Everscale Ethereum configuration meta", async () => {
             const details = await everscaleEthereumEventConfiguration.methods
                 .getDetails({ answerId: 0 })
-                .call();
+                .call({ responsible: true });
 
             expect(details._meta.toString()).to.be.equal(emptyCell, "Wrong meta");
         });
@@ -173,7 +173,7 @@ describe("Test setting configuration end", async function () {
         it("Check Solana Everscale configuration end block", async () => {
             const details = await solanaEverscaleEventConfiguration.methods
                 .getDetails({ answerId: 0 })
-                .call();
+                .call({ responsible: true });
 
             expect(details._networkConfiguration.endTimestamp).to.be.equal(
                 "1",
@@ -195,7 +195,7 @@ describe("Test setting configuration end", async function () {
         it("Check Solana Everscale configuration meta", async () => {
             const details = await solanaEverscaleEventConfiguration.methods
                 .getDetails({ answerId: 0 })
-                .call();
+                .call({ responsible: true });
 
             expect(details._meta.toString()).to.be.equal(emptyCell, "Wrong meta");
         });
@@ -227,7 +227,7 @@ describe("Test setting configuration end", async function () {
         it("Check Everscale Solana configuration end timestamp", async () => {
             const details = await everscaleSolanaEventConfiguration.methods
                 .getDetails({ answerId: 0 })
-                .call();
+                .call({ responsible: true });
 
             expect(details._networkConfiguration.endTimestamp).to.be.equal(
                 "1",
@@ -249,7 +249,7 @@ describe("Test setting configuration end", async function () {
         it("Check Everscale Solana configuration meta", async () => {
             const details = await everscaleSolanaEventConfiguration.methods
                 .getDetails({ answerId: 0 })
-                .call();
+                .call({ responsible: true });
 
             expect(details._meta.toString()).to.be.equal(emptyCell, "Wrong meta");
         });

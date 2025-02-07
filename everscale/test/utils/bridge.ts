@@ -1,16 +1,14 @@
 import {ed25519_generateKeyPair, Ed25519KeyPair} from "nekoton-wasm";
-import {Address, Contract, WalletTypes} from "locklift";
+import {Address, Contract} from "locklift";
 import _ from "underscore";
 import {Account} from "everscale-standalone-client/nodejs";
 import {
     BridgeAbi,
-    CellEncoderStandaloneAbi, EthereumEverscaleBaseEventAbi,
+    CellEncoderStandaloneAbi,
     FactorySource,
-    StakingAbi,
     StakingMockupAbi
 } from "../../build/factorySource";
 import {logContract} from "./logger";
-const logger = require("mocha-logger");
 import {deployAccount} from "./account";
 
 
@@ -50,7 +48,7 @@ export const enableEventConfiguration = async (
         })
         .call();
 
-    const connector = await locklift.factory.getDeployedContract(
+    const connector = locklift.factory.getDeployedContract(
         "Connector",
         connectorAddress.connector
     );
@@ -67,7 +65,7 @@ export const enableEventConfiguration = async (
 export const captureConnectors = async (bridge: Contract<FactorySource["Bridge"]>) => {
     const connectorCounter = await bridge.methods.connectorCounter().call();
 
-    const configurations = await Promise.all(
+    const configurations = await Promise.all<{ _id: string; _eventConfiguration: Address; _enabled: boolean }>(
         _.range(parseInt(connectorCounter.connectorCounter, 10)).map(
             async (connectorId: number) => {
                 const connectorAddress = await bridge.methods
@@ -76,7 +74,7 @@ export const captureConnectors = async (bridge: Contract<FactorySource["Bridge"]
                     })
                     .call();
 
-                const connector = await locklift.factory.getDeployedContract(
+                const connector = locklift.factory.getDeployedContract(
                     "Connector",
                     connectorAddress.connector
                 );
@@ -105,7 +103,7 @@ export const setupBridge = async (relays: Ed25519KeyPair[]): Promise<[
 
     const _randomNonce = locklift.utils.getRandomNonce();
 
-    const owner = await deployAccount(signer, 30);
+    const owner = await deployAccount(signer, 100);
 
     await logContract("Owner", owner.address);
 
@@ -124,7 +122,7 @@ export const setupBridge = async (relays: Ed25519KeyPair[]): Promise<[
 
     await logContract("Staking", staking.address);
 
-    const connectorData = await locklift.factory.getContractArtifacts(
+    const connectorData = locklift.factory.getContractArtifacts(
         "Connector"
     );
 

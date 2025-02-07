@@ -5,14 +5,16 @@ import {
     CellEncoderStandaloneAbi,
     EthereumEverscaleEventConfigurationAbi,
     EverscaleEthereumEventConfigurationAbi,
-    EverscaleSolanaEventConfigurationAbi, MergePool_V3Abi,
-    MergeRouterAbi, MultiVaultEverscaleEVMEventAlienAbi,
-    ProxyMultiVaultAlien_V6Abi,
+    EverscaleSolanaEventConfigurationAbi,
+    MergePool_V3Abi,
+    MergeRouterAbi,
+    MultiVaultEverscaleEVMEventAlienAbi,
     ProxyMultiVaultAlien_V8Abi,
     SolanaEverscaleEventConfigurationAbi,
     StakingMockupAbi,
     TokenRootAbi,
-    TokenRootAlienEVMAbi, TokenWalletAbi
+    TokenRootAlienEVMAbi,
+    TokenWalletAbi
 } from "../../../../../build/factorySource";
 import {Account} from "everscale-standalone-client/nodejs";
 import {setupBridge, setupRelays} from "../../../../utils/bridge";
@@ -117,7 +119,7 @@ describe('Withdraw custom tokens by burning in favor of merge pool', async funct
             notify: false,
         }).send({
             from: bridgeOwner.address,
-            amount: locklift.utils.toNano(2)
+            amount: locklift.utils.toNano(10)
         });
     });
 
@@ -133,19 +135,21 @@ describe('Withdraw custom tokens by burning in favor of merge pool', async funct
     });
 
     it('Check initializer custom token balance', async () => {
-        const walletAddress = await customTokenRoot.methods.walletOf({
-            answerId: 0,
-            walletOwner: initializer.address
-        }).call();
+        const walletAddress = await customTokenRoot.methods
+            .walletOf({
+                answerId: 0,
+                walletOwner: initializer.address
+            })
+            .call({ responsible: true });
 
-        initializerCustomTokenWallet = await locklift.factory.getDeployedContract(
+        initializerCustomTokenWallet = locklift.factory.getDeployedContract(
             'TokenWallet',
             walletAddress.value0
         );
 
-        const balance = await initializerCustomTokenWallet.methods.balance({
-            answerId: 0
-        }).call();
+        const balance = await initializerCustomTokenWallet.methods
+            .balance({ answerId: 0 })
+            .call({ responsible: true });
 
         expect(Number(balance.value0))
             .to.be.equal(mintAmount, 'Wrong initializer token balance after mint')
@@ -158,16 +162,18 @@ describe('Withdraw custom tokens by burning in favor of merge pool', async funct
             remainingGasTo: initializer.address
         }).send({
             from: initializer.address,
-            amount: locklift.utils.toNano(5),
+            amount: locklift.utils.toNano(15),
         });
 
-        const alienTokenRootAddress = await proxy.methods.deriveEVMAlienTokenRoot({
-            ...alienTokenBase,
-            ...alienTokenMeta,
-            answerId: 0
-        }).call();
+        const alienTokenRootAddress = await proxy.methods
+            .deriveEVMAlienTokenRoot({
+                ...alienTokenBase,
+                ...alienTokenMeta,
+                answerId: 0
+            })
+            .call({ responsible: true });
 
-        alienTokenRoot = await locklift.factory.getDeployedContract(
+        alienTokenRoot = locklift.factory.getDeployedContract(
             'TokenRootAlienEVM',
             alienTokenRootAddress.value0
         );
@@ -183,12 +189,14 @@ describe('Withdraw custom tokens by burning in favor of merge pool', async funct
             amount: locklift.utils.toNano(5)
         });
 
-        const mergeRouterAddress = await proxy.methods.deriveMergeRouter({
-            answerId: 0,
-            token: alienTokenRoot.address
-        }).call();
+        const mergeRouterAddress = await proxy.methods
+            .deriveMergeRouter({
+                answerId: 0,
+                token: alienTokenRoot.address
+            })
+            .call({ responsible: true });
 
-        mergeRouter = await locklift.factory.getDeployedContract(
+        mergeRouter = locklift.factory.getDeployedContract(
             'MergeRouter',
             mergeRouterAddress.router
         );
@@ -208,12 +216,14 @@ describe('Withdraw custom tokens by burning in favor of merge pool', async funct
             amount: locklift.utils.toNano(5)
         });
 
-        const mergePoolAddress = await proxy.methods.deriveMergePool({
-            nonce,
-            answerId: 0
-        }).call();
+        const mergePoolAddress = await proxy.methods
+            .deriveMergePool({
+                nonce,
+                answerId: 0
+            })
+            .call({ responsible: true });
 
-        mergePool = await locklift.factory.getDeployedContract(
+        mergePool =locklift.factory.getDeployedContract(
             'MergePool_V3',
             mergePoolAddress.pool
         );
@@ -227,9 +237,9 @@ describe('Withdraw custom tokens by burning in favor of merge pool', async funct
             amount: locklift.utils.toNano(1)
         });
 
-        const tokens = await mergePool.methods.getTokens({
-            answerId: 0
-        }).call();
+        const tokens = await mergePool.methods
+            .getTokens({ answerId: 0 })
+            .call({ responsible: true });
 
         expect(tokens._tokens[0][1].enabled)
             .to.be.equal(true, 'Wrong alien status');
@@ -282,7 +292,7 @@ describe('Withdraw custom tokens by burning in favor of merge pool', async funct
 
         logger.log(`Expected event address: ${expectedEventContract}`);
 
-        eventContract = await locklift.factory.getDeployedContract(
+        eventContract = locklift.factory.getDeployedContract(
             "MultiVaultEverscaleEVMEventAlien",
             expectedEventContract
         );
@@ -295,18 +305,18 @@ describe('Withdraw custom tokens by burning in favor of merge pool', async funct
     });
 
     it('Check total supply reduced', async () => {
-        const totalSupply = await customTokenRoot.methods.totalSupply({
-            answerId: 0
-        }).call();
+        const totalSupply = await customTokenRoot.methods
+            .totalSupply({ answerId: 0 })
+            .call({ responsible: true });
 
         expect(Number(totalSupply.value0))
             .to.be.equal(mintAmount - amount, 'Wrong total supply after burn');
     });
 
     it('Check initializer token balance reduced', async () => {
-        const balance = await initializerCustomTokenWallet.methods.balance({
-            answerId: 0
-        }).call();
+        const balance = await initializerCustomTokenWallet.methods
+            .balance({ answerId: 0 })
+            .call({ responsible: true });
 
         expect(Number(balance.value0))
             .to.be.equal(mintAmount - amount, 'Wrong initializer token balance after burn')
@@ -320,18 +330,18 @@ describe('Withdraw custom tokens by burning in favor of merge pool', async funct
     });
 
     it('Check event data after mutation', async () => {
-        const decodedData = await eventContract.methods.getDecodedData({
-            answerId: 0
-        }).call();
+        const decodedData = await eventContract.methods
+            .getDecodedData({ answerId: 0 })
+            .call({ responsible: true });
 
         expect(Number(decodedData.base_token_))
             .to.be.equal(alienTokenBase.token, 'Wrong alien base token');
         expect(Number(decodedData.base_chainId_))
             .to.be.equal(alienTokenBase.chainId, 'Wrong alien base chain id');
 
-        const eventInitData = await eventContract.methods.getEventInitData({
-            answerId: 0,
-        }).call();
+        const eventInitData = await eventContract.methods
+            .getEventInitData({ answerId: 0 })
+            .call({ responsible: true });
 
         const decodedEventData = await cellEncoder.methods.decodeMultiVaultAlienEverscaleEthereum({
             data: eventInitData.value0.voteData.eventData

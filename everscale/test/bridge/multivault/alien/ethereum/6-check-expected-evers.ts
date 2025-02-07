@@ -3,7 +3,7 @@ import {deployAccount} from "../../../../utils/account";
 import {logContract} from "../../../../utils/logger";
 import {setupAlienMultiVault} from "../../../../utils/multivault/alien";
 import {Ed25519KeyPair} from "nekoton-wasm";
-import {Contract, zeroAddress} from "locklift";
+import {Contract} from "locklift";
 import {
     BridgeAbi,
     CellEncoderStandaloneAbi,
@@ -17,7 +17,6 @@ import {
 } from "../../../../../build/factorySource";
 import {Account} from "everscale-standalone-client/nodejs";
 import {expect} from "chai";
-import {EventAction, EventType, processEvent} from "../../../../utils/events";
 import BigNumber from "bignumber.js";
 
 const logger = require("mocha-logger");
@@ -140,11 +139,11 @@ describe('Check expected_evers constraint on event deployment', async function()
                     eventVoteData: eventVoteData,
                     answerId: 0,
                 })
-                .call();
+                .call({ responsible: true });
 
             logger.log(`Expected event: ${expectedEventContract.eventContract}`);
 
-            eventContract = await locklift.factory.getDeployedContract(
+            eventContract = locklift.factory.getDeployedContract(
                 "MultiVaultEVMEverscaleEventAlien",
                 expectedEventContract.eventContract
             );
@@ -211,11 +210,11 @@ describe('Check expected_evers constraint on event deployment', async function()
                     eventVoteData: eventVoteData,
                     answerId: 0,
                 })
-                .call();
+                .call({ responsible: true });
 
             logger.log(`Expected event: ${expectedEventContract.eventContract}`);
 
-            eventContract = await locklift.factory.getDeployedContract(
+            eventContract = locklift.factory.getDeployedContract(
                 "MultiVaultEVMEverscaleEventAlien",
                 expectedEventContract.eventContract
             );
@@ -230,7 +229,7 @@ describe('Check expected_evers constraint on event deployment', async function()
         it("Check event state", async () => {
             const details = await eventContract.methods
                 .getDetails({ answerId: 0 })
-                .call();
+                .call({ responsible: true });
 
             expect(details._eventInitData.voteData.eventTransaction.toString()).to.be.equal(
                 eventVoteData.eventTransaction.toString(),

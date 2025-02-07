@@ -1,10 +1,9 @@
 import { expect } from "chai";
-import { Contract } from "locklift";
+import { Contract, zeroAddress } from "locklift";
 import { FactorySource } from "../../../build/factorySource";
 import { Account } from "everscale-standalone-client/nodejs";
-import {setupBridge, setupRelays} from "../../utils/bridge";
-import {logContract} from "../../utils/logger";
-const { zeroAddress } = require("locklift");
+import { setupBridge, setupRelays } from "../../utils/bridge";
+import { logContract } from "../../utils/logger";
 
 let bridge: Contract<FactorySource["Bridge"]>;
 let cellEncoder: Contract<FactorySource["CellEncoderStandalone"]>;
@@ -27,7 +26,7 @@ describe("Test configuration factory", async function () {
 
     it("Setup Ethereum event configuration factory", async () => {
       const signer = (await locklift.keystore.getSigner("0"))!;
-      const Configuration = await locklift.factory.getContractArtifacts(
+      const Configuration = locklift.factory.getContractArtifacts(
         "EthereumEverscaleEventConfiguration"
       );
 
@@ -55,7 +54,7 @@ describe("Test configuration factory", async function () {
     >;
 
     it("Deploy configuration", async () => {
-      const EthereumEvent = await locklift.factory.getContractArtifacts(
+      const EthereumEvent = locklift.factory.getContractArtifacts(
         "TokenTransferEthereumEverscaleEvent"
       );
 
@@ -84,7 +83,7 @@ describe("Test configuration factory", async function () {
         })
         .send({
           from: bridgeOwner.address,
-          amount: locklift.utils.toNano(2),
+          amount: locklift.utils.toNano(20),
         });
 
       let ethereumEverscaleEventConfigurationAddress = await factory.methods
@@ -105,7 +104,7 @@ describe("Test configuration factory", async function () {
     it("Check configuration", async () => {
       const details = await configuration.methods
         .getDetails({ answerId: 0 })
-        .call();
+        .call({ responsible: true });
 
       expect(details._basicConfiguration.staking.toString()).to.be.equal(
         staking.address.toString(),
@@ -125,7 +124,7 @@ describe("Test configuration factory", async function () {
 
     it("Setup Solana Ever event configuration factory", async () => {
       const signer = (await locklift.keystore.getSigner("0"))!;
-      const Configuration = await locklift.factory.getContractArtifacts(
+      const Configuration = locklift.factory.getContractArtifacts(
         "SolanaEverscaleEventConfiguration"
       );
 
@@ -153,7 +152,7 @@ describe("Test configuration factory", async function () {
     >;
 
     it("Deploy configuration", async () => {
-      const SolanaEvent = await locklift.factory.getContractArtifacts(
+      const SolanaEvent = locklift.factory.getContractArtifacts(
         "TokenTransferSolanaEverscaleEvent"
       );
 
@@ -180,7 +179,7 @@ describe("Test configuration factory", async function () {
         })
         .send({
           from: bridgeOwner.address,
-          amount: locklift.utils.toNano(2),
+          amount: locklift.utils.toNano(20),
         });
 
       let solanaEverscaleEventConfigurationAddress = await factory.methods
@@ -201,7 +200,7 @@ describe("Test configuration factory", async function () {
     it("Check configuration", async () => {
       const details = await configuration.methods
         .getDetails({ answerId: 0 })
-        .call();
+        .call({ responsible: true });
 
       expect(details._basicConfiguration.staking.toString()).to.be.equal(
         staking.address.toString(),
@@ -217,7 +216,7 @@ describe("Test configuration factory", async function () {
 
     it("Setup Ever Solana event configuration factory", async () => {
       const signer = (await locklift.keystore.getSigner("0"))!;
-      const Configuration = await locklift.factory.getContractArtifacts(
+      const Configuration = locklift.factory.getContractArtifacts(
         "EverscaleSolanaEventConfiguration"
       );
 
@@ -245,7 +244,7 @@ describe("Test configuration factory", async function () {
     >;
 
     it("Deploy configuration", async () => {
-      const EverEvent = await locklift.factory.getContractArtifacts(
+      const EverEvent = locklift.factory.getContractArtifacts(
         "TokenTransferEverscaleSolanaEvent"
       );
 
@@ -276,7 +275,7 @@ describe("Test configuration factory", async function () {
         })
         .send({
           from: bridgeOwner.address,
-          amount: locklift.utils.toNano(2),
+          amount: locklift.utils.toNano(20),
         });
 
       let everscaleSolanaEventConfigurationAddress = await factory.methods
@@ -297,7 +296,7 @@ describe("Test configuration factory", async function () {
     it("Check configuration", async () => {
       const details = await configuration.methods
         .getDetails({ answerId: 0 })
-        .call();
+        .call({ responsible: true });
 
       expect(details._basicConfiguration.staking.toString()).to.be.equal(
         staking.address.toString(),

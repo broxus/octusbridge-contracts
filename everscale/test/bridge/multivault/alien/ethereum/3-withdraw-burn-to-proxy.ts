@@ -20,7 +20,6 @@ import {logContract} from "../../../../utils/logger";
 import {setupAlienMultiVault} from "../../../../utils/multivault/alien";
 import {expect} from "chai";
 import {EventAction, EventType, processEvent} from "../../../../utils/events";
-import exp from "constants";
 const logger = require("mocha-logger");
 
 
@@ -92,16 +91,18 @@ describe('Withdraw tokens by burning in favor of proxy', async function() {
             remainingGasTo: initializer.address
         }).send({
             from: initializer.address,
-            amount: locklift.utils.toNano(5),
+            amount: locklift.utils.toNano(20),
         });
 
-        const alienTokenRootAddress = await proxy.methods.deriveEVMAlienTokenRoot({
-            ...alienTokenBase,
-            ...alienTokenMeta,
-            answerId: 0
-        }).call();
+        const alienTokenRootAddress = await proxy.methods
+            .deriveEVMAlienTokenRoot({
+                ...alienTokenBase,
+                ...alienTokenMeta,
+                answerId: 0
+            })
+            .call({ responsible: true });
 
-        alienTokenRoot = await locklift.factory.getDeployedContract(
+        alienTokenRoot = locklift.factory.getDeployedContract(
             'TokenRootAlienEVM',
             alienTokenRootAddress.value0
         );
@@ -153,11 +154,11 @@ describe('Withdraw tokens by burning in favor of proxy', async function() {
                 eventVoteData: eventVoteData,
                 answerId: 0,
             })
-            .call();
+            .call({ responsible: true });
 
         logger.log(`Expected event: ${expectedEventContract.eventContract}`);
 
-        const eventContract = await locklift.factory.getDeployedContract(
+        const eventContract = locklift.factory.getDeployedContract(
             "MultiVaultEVMEverscaleEventAlien",
             expectedEventContract.eventContract
         );
@@ -171,19 +172,21 @@ describe('Withdraw tokens by burning in favor of proxy', async function() {
     });
 
     it('Check initializer token balance', async () => {
-        const walletAddress = await alienTokenRoot.methods.walletOf({
-            answerId: 0,
-            walletOwner: initializer.address
-        }).call();
+        const walletAddress = await alienTokenRoot.methods
+            .walletOf({
+                answerId: 0,
+                walletOwner: initializer.address
+            })
+            .call({ responsible: true });
 
-        initializerAlienTokenWallet = await locklift.factory.getDeployedContract(
+        initializerAlienTokenWallet = locklift.factory.getDeployedContract(
             'AlienTokenWalletUpgradeable',
             walletAddress.value0
         );
 
-        const balance = await initializerAlienTokenWallet.methods.balance({
-            answerId: 0
-        }).call();
+        const balance = await initializerAlienTokenWallet.methods
+            .balance({ answerId: 0 })
+            .call({ responsible: true });
 
         expect(Number(balance.value0))
             .to.be.equal(mintAmount, 'Wrong initializer token balance after mint')
@@ -230,7 +233,7 @@ describe('Withdraw tokens by burning in favor of proxy', async function() {
 
         logger.log(`Expected event address: ${expectedEventContract}`);
 
-        eventContract = await locklift.factory.getDeployedContract(
+        eventContract = locklift.factory.getDeployedContract(
             "MultiVaultEverscaleEVMEventAlien",
             expectedEventContract
         );
@@ -243,18 +246,18 @@ describe('Withdraw tokens by burning in favor of proxy', async function() {
     });
 
     it('Check total supply reduced', async () => {
-        const totalSupply = await alienTokenRoot.methods.totalSupply({
-            answerId: 0
-        }).call();
+        const totalSupply = await alienTokenRoot.methods
+            .totalSupply({ answerId: 0 })
+            .call({ responsible: true });
 
         expect(Number(totalSupply.value0))
             .to.be.equal(mintAmount - amount, 'Wrong total supply after burn');
     });
 
     it('Check initializer token balance reduced', async () => {
-        const balance = await initializerAlienTokenWallet.methods.balance({
-            answerId: 0
-        }).call();
+        const balance = await initializerAlienTokenWallet.methods
+            .balance({ answerId: 0 })
+            .call({ responsible: true });
 
         expect(Number(balance.value0))
             .to.be.equal(mintAmount - amount, 'Wrong initializer token balance after burn')
@@ -277,18 +280,18 @@ describe('Withdraw tokens by burning in favor of proxy', async function() {
     });
 
     it('Check event data after mutation', async () => {
-        const decodedData = await eventContract.methods.getDecodedData({
-            answerId: 0
-        }).call();
+        const decodedData = await eventContract.methods
+            .getDecodedData({ answerId: 0 })
+            .call({ responsible: true });
 
         expect(Number(decodedData.base_token_))
             .to.be.equal(alienTokenBase.token, 'Wrong alien base token');
         expect(Number(decodedData.base_chainId_))
             .to.be.equal(alienTokenBase.chainId, 'Wrong alien base chain id');
 
-        const eventInitData = await eventContract.methods.getEventInitData({
-            answerId: 0,
-        }).call();
+        const eventInitData = await eventContract.methods
+            .getEventInitData({ answerId: 0 })
+            .call({ responsible: true });
 
         const decodedEventData = await cellEncoder.methods.decodeMultiVaultAlienEverscaleEthereum({
             data: eventInitData.value0.voteData.eventData

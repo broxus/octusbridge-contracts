@@ -133,7 +133,7 @@ describe('Deposit Alien token to Everscale with no merging', async function() {
                 })
                 .send({
                     from: initializer.address,
-                    amount: locklift.utils.toNano(6),
+                    amount: locklift.utils.toNano(60),
                 });
 
             logger.log(`Event initialization tx: ${tx.id}`);
@@ -143,11 +143,11 @@ describe('Deposit Alien token to Everscale with no merging', async function() {
                     eventVoteData: eventVoteData,
                     answerId: 0,
                 })
-                .call();
+                .call({ responsible: true });
 
             logger.log(`Expected event: ${expectedEventContract.eventContract}`);
 
-            eventContract = await locklift.factory.getDeployedContract(
+            eventContract = locklift.factory.getDeployedContract(
                 "MultiVaultEVMEverscaleEventAlien",
                 expectedEventContract.eventContract
             );
@@ -162,7 +162,7 @@ describe('Deposit Alien token to Everscale with no merging', async function() {
         it("Check event state before confirmation", async () => {
             const details = await eventContract.methods
                 .getDetails({ answerId: 0 })
-                .call();
+                .call({ responsible: true });
 
             expect(details._eventInitData.voteData.eventTransaction.toString()).to.be.equal(
                 eventVoteData.eventTransaction.toString(),
@@ -222,7 +222,7 @@ describe('Deposit Alien token to Everscale with no merging', async function() {
         it("Check event initialization pipeline passed", async () => {
             const decodedData = await eventContract.methods
                 .getDecodedData({ answerId: 0 })
-                .call();
+                .call({ responsible: true });
 
             expect(decodedData.proxy_).to.not.be.equal(
                 zeroAddress.toString(),
@@ -235,16 +235,18 @@ describe('Deposit Alien token to Everscale with no merging', async function() {
         });
 
         it('Fetch alien token', async () => {
-            const tokenAddress = await proxy.methods.deriveEVMAlienTokenRoot({
-                answerId: 0,
-                chainId: eventDataStructure.base_chainId,
-                token: eventDataStructure.base_token,
-                name: eventDataStructure.name,
-                symbol: eventDataStructure.symbol,
-                decimals: eventDataStructure.decimals,
-            }).call();
+            const tokenAddress = await proxy.methods
+                .deriveEVMAlienTokenRoot({
+                    answerId: 0,
+                    chainId: eventDataStructure.base_chainId,
+                    token: eventDataStructure.base_token,
+                    name: eventDataStructure.name,
+                    symbol: eventDataStructure.symbol,
+                    decimals: eventDataStructure.decimals,
+                })
+                .call({ responsible: true });
 
-            alienTokenRoot = await locklift.factory.getDeployedContract(
+            alienTokenRoot = locklift.factory.getDeployedContract(
                 'TokenRootAlienEVM',
                 tokenAddress.value0
             );
@@ -259,9 +261,9 @@ describe('Deposit Alien token to Everscale with no merging', async function() {
         });
 
         it('Check alien token root meta', async () => {
-            const meta = await alienTokenRoot.methods.meta({
-                answerId: 0
-            }).call();
+            const meta = await alienTokenRoot.methods
+                .meta({ answerId: 0 })
+                .call({ responsible: true });
 
             expect(meta.base_chainId)
                 .to.be.equal(eventDataStructure.base_chainId.toString(), 'Wrong alien token base chain id');
@@ -274,19 +276,23 @@ describe('Deposit Alien token to Everscale with no merging', async function() {
             expect(meta.decimals)
                 .to.be.equal(eventDataStructure.decimals.toString(), 'Wrong alien token decimals');
 
-            expect(await alienTokenRoot.methods.rootOwner({
-                answerId: 0
-            }).call().then(t => t.value0.toString()))
-                .to.be.equal(proxy.address.toString(), 'Wrong alien token owner');
+            expect(
+                await alienTokenRoot.methods
+                    .rootOwner({ answerId: 0 })
+                    .call({ responsible: true })
+                    .then(t => t.value0.toString())
+            ).to.be.equal(proxy.address.toString(), 'Wrong alien token owner');
         });
 
         it('Fetch merge router', async () => {
-            const mergeRouterAddress = await proxy.methods.deriveMergeRouter({
-                token: alienTokenRoot.address,
-                answerId: 0
-            }).call();
+            const mergeRouterAddress = await proxy.methods
+                .deriveMergeRouter({
+                    token: alienTokenRoot.address,
+                    answerId: 0
+                })
+                .call({ responsible: true });
 
-            mergeRouter = await locklift.factory.getDeployedContract(
+            mergeRouter = locklift.factory.getDeployedContract(
                 'MergeRouter',
                 mergeRouterAddress.router
             );
@@ -301,9 +307,9 @@ describe('Deposit Alien token to Everscale with no merging', async function() {
         });
 
         it('Check merge router data', async () => {
-            const details = await mergeRouter.methods.getDetails({
-                answerId: 0
-            }).call();
+            const details = await mergeRouter.methods
+                .getDetails({ answerId: 0 })
+                .call({ responsible: true });
 
             expect(details._proxy.toString())
                 .to.be.equal(proxy.address.toString(), 'Wrong proxy address in merge router');
@@ -335,7 +341,7 @@ describe('Deposit Alien token to Everscale with no merging', async function() {
                     vote: 1,
                     answerId: 0,
                 })
-                .call();
+                .call({ responsible: true });
 
             expect(requiredVotes).to.be.greaterThan(
                 0,
@@ -369,7 +375,7 @@ describe('Deposit Alien token to Everscale with no merging', async function() {
             it("Check event confirmed", async () => {
                 const details = await eventContract.methods
                     .getDetails({ answerId: 0 })
-                    .call();
+                    .call({ responsible: true });
 
                 const requiredVotes = await eventContract.methods
                     .requiredVotes()
@@ -390,21 +396,23 @@ describe('Deposit Alien token to Everscale with no merging', async function() {
             });
 
             it('Check total supply', async () => {
-                const totalSupply = await alienTokenRoot.methods.totalSupply({
-                    answerId: 0
-                }).call();
+                const totalSupply = await alienTokenRoot.methods
+                    .totalSupply({ answerId: 0 })
+                    .call({ responsible: true });
 
                 expect(Number(totalSupply.value0))
                     .to.be.equal(eventDataStructure.amount, 'Wrong total supply');
             });
 
             it('Check initializer token wallet exists', async () => {
-                const walletAddress = await alienTokenRoot.methods.walletOf({
-                    walletOwner: initializer.address,
-                    answerId: 0
-                }).call();
+                const walletAddress = await alienTokenRoot.methods
+                    .walletOf({
+                        walletOwner: initializer.address,
+                        answerId: 0
+                    })
+                    .call({ responsible: true });
 
-                initializerAlienTokenWallet = await locklift.factory.getDeployedContract(
+                initializerAlienTokenWallet = locklift.factory.getDeployedContract(
                     'AlienTokenWalletUpgradeable',
                     walletAddress.value0
                 );
@@ -415,9 +423,9 @@ describe('Deposit Alien token to Everscale with no merging', async function() {
             });
 
             it('Check initializer received tokens', async () => {
-                const balance = await initializerAlienTokenWallet.methods.balance({
-                    answerId: 0
-                }).call();
+                const balance = await initializerAlienTokenWallet.methods
+                    .balance({ answerId: 0 })
+                    .call({ responsible: true });
 
                 expect(Number(balance.value0))
                     .to.be.equal(eventDataStructure.amount, 'Initializer failed to received tokens');
