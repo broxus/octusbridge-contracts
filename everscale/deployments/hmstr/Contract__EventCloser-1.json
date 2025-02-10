@@ -1,0 +1,154 @@
+{
+    "type": "Contract",
+    "deploymentName": "EventCloser-1",
+    "address": "0:28a05ce25d7ab030a1fabf6d2044da8e273b4cc546722797adedeea044514e83",
+    "contractName": "EventCloser",
+    "abi": {
+        "ABI version": 2,
+        "version": "2.2",
+        "header": [
+            "pubkey",
+            "time",
+            "expire"
+        ],
+        "functions": [
+            {
+                "name": "constructor",
+                "inputs": [
+                    {
+                        "name": "owner_",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "deployers_",
+                        "type": "address[]"
+                    }
+                ],
+                "outputs": []
+            },
+            {
+                "name": "close",
+                "inputs": [
+                    {
+                        "name": "events",
+                        "type": "address[]"
+                    }
+                ],
+                "outputs": []
+            },
+            {
+                "name": "transferOwnership",
+                "inputs": [
+                    {
+                        "name": "newOwner",
+                        "type": "uint256"
+                    }
+                ],
+                "outputs": []
+            },
+            {
+                "name": "owner",
+                "inputs": [],
+                "outputs": [
+                    {
+                        "name": "owner",
+                        "type": "uint256"
+                    }
+                ]
+            },
+            {
+                "name": "_randomNonce",
+                "inputs": [],
+                "outputs": [
+                    {
+                        "name": "_randomNonce",
+                        "type": "uint256"
+                    }
+                ]
+            },
+            {
+                "name": "deployers",
+                "inputs": [],
+                "outputs": [
+                    {
+                        "name": "deployers",
+                        "type": "address[]"
+                    }
+                ]
+            },
+            {
+                "name": "deployerIndex",
+                "inputs": [],
+                "outputs": [
+                    {
+                        "name": "deployerIndex",
+                        "type": "uint8"
+                    }
+                ]
+            }
+        ],
+        "data": [
+            {
+                "key": 1,
+                "name": "_randomNonce",
+                "type": "uint256"
+            },
+            {
+                "key": 2,
+                "name": "factory",
+                "type": "address"
+            }
+        ],
+        "events": [
+            {
+                "name": "OwnershipTransferred",
+                "inputs": [
+                    {
+                        "name": "previousOwner",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "newOwner",
+                        "type": "uint256"
+                    }
+                ],
+                "outputs": []
+            }
+        ],
+        "fields": [
+            {
+                "name": "_pubkey",
+                "type": "uint256"
+            },
+            {
+                "name": "_timestamp",
+                "type": "uint64"
+            },
+            {
+                "name": "_constructorFlag",
+                "type": "bool"
+            },
+            {
+                "name": "owner",
+                "type": "uint256"
+            },
+            {
+                "name": "_randomNonce",
+                "type": "uint256"
+            },
+            {
+                "name": "factory",
+                "type": "address"
+            },
+            {
+                "name": "deployers",
+                "type": "address[]"
+            },
+            {
+                "name": "deployerIndex",
+                "type": "uint8"
+            }
+        ]
+    },
+    "codeHash": "bcc7992c4ecea07bfae042e67f51e43c481eac68460a707ef8385e5d658460dc"
+}

@@ -1,0 +1,1278 @@
+{
+    "type": "Contract",
+    "deploymentName": "CellEncoderStandalone",
+    "address": "0:c00f4e27ab87081a43fc1d6f45e13cc2a3f4c444d815a28b571e7ffd075b24fc",
+    "contractName": "CellEncoderStandalone",
+    "abi": {
+        "ABI version": 2,
+        "version": "2.2",
+        "header": [
+            "time"
+        ],
+        "functions": [
+            {
+                "name": "encodeMediatorPayload",
+                "inputs": [
+                    {
+                        "name": "operation",
+                        "type": "uint8"
+                    },
+                    {
+                        "name": "proxy",
+                        "type": "address"
+                    },
+                    {
+                        "name": "payload",
+                        "type": "cell"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "value0",
+                        "type": "cell"
+                    }
+                ]
+            },
+            {
+                "name": "encodeMergePoolBurnSwapPayload",
+                "inputs": [
+                    {
+                        "name": "targetToken",
+                        "type": "address"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "value0",
+                        "type": "cell"
+                    }
+                ]
+            },
+            {
+                "name": "encodeMergePoolBurnWithdrawPayloadEthereum",
+                "inputs": [
+                    {
+                        "name": "targetToken",
+                        "type": "address"
+                    },
+                    {
+                        "name": "recipient",
+                        "type": "uint160"
+                    },
+                    {
+                        "components": [
+                            {
+                                "name": "recipient",
+                                "type": "uint160"
+                            },
+                            {
+                                "name": "payload",
+                                "type": "bytes"
+                            },
+                            {
+                                "name": "strict",
+                                "type": "bool"
+                            }
+                        ],
+                        "name": "callback",
+                        "type": "tuple"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "value0",
+                        "type": "cell"
+                    }
+                ]
+            },
+            {
+                "name": "encodeMergePoolBurnWithdrawPayloadSolana",
+                "inputs": [
+                    {
+                        "name": "targetToken",
+                        "type": "address"
+                    },
+                    {
+                        "name": "recipient",
+                        "type": "uint256"
+                    },
+                    {
+                        "components": [
+                            {
+                                "name": "account",
+                                "type": "uint256"
+                            },
+                            {
+                                "name": "readOnly",
+                                "type": "bool"
+                            },
+                            {
+                                "name": "isSigner",
+                                "type": "bool"
+                            }
+                        ],
+                        "name": "executeAccounts",
+                        "type": "tuple[]"
+                    },
+                    {
+                        "name": "executePayloadNeeded",
+                        "type": "bool"
+                    },
+                    {
+                        "components": [
+                            {
+                                "name": "account",
+                                "type": "uint256"
+                            },
+                            {
+                                "name": "readOnly",
+                                "type": "bool"
+                            },
+                            {
+                                "name": "isSigner",
+                                "type": "bool"
+                            }
+                        ],
+                        "name": "executePayloadAccounts",
+                        "type": "tuple[]"
+                    },
+                    {
+                        "name": "payload",
+                        "type": "bytes"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "value0",
+                        "type": "cell"
+                    }
+                ]
+            },
+            {
+                "name": "decodeEverscaleEthereumStakingEventData",
+                "inputs": [
+                    {
+                        "name": "data",
+                        "type": "cell"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "round_num",
+                        "type": "uint32"
+                    },
+                    {
+                        "name": "eth_keys",
+                        "type": "uint160[]"
+                    },
+                    {
+                        "name": "round_end",
+                        "type": "uint32"
+                    }
+                ]
+            },
+            {
+                "name": "decodeEthereumEverscaleStakingEventData",
+                "inputs": [
+                    {
+                        "name": "data",
+                        "type": "cell"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "eth_addr",
+                        "type": "uint160"
+                    },
+                    {
+                        "name": "wk_id",
+                        "type": "int8"
+                    },
+                    {
+                        "name": "ton_addr_body",
+                        "type": "uint256"
+                    }
+                ]
+            },
+            {
+                "name": "encodeEthereumEverscaleStakingEventData",
+                "inputs": [
+                    {
+                        "name": "eth_addr",
+                        "type": "uint160"
+                    },
+                    {
+                        "name": "wk_id",
+                        "type": "int8"
+                    },
+                    {
+                        "name": "ton_addr_body",
+                        "type": "uint256"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "data",
+                        "type": "cell"
+                    }
+                ]
+            },
+            {
+                "name": "decodeEverscaleSolanaStakingEventData",
+                "inputs": [
+                    {
+                        "name": "data",
+                        "type": "cell"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "round_num",
+                        "type": "uint32"
+                    },
+                    {
+                        "name": "sol_keys",
+                        "type": "uint256[]"
+                    },
+                    {
+                        "name": "round_end",
+                        "type": "uint32"
+                    }
+                ]
+            },
+            {
+                "name": "encodeEverscaleSolanaStakingEventData",
+                "inputs": [
+                    {
+                        "name": "round_num",
+                        "type": "uint32"
+                    },
+                    {
+                        "name": "sol_keys",
+                        "type": "uint256[]"
+                    },
+                    {
+                        "name": "round_end",
+                        "type": "uint32"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "data",
+                        "type": "cell"
+                    }
+                ]
+            },
+            {
+                "name": "decodeSolanaEverscaleStakingEventData",
+                "inputs": [
+                    {
+                        "name": "data",
+                        "type": "cell"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "sol_addr",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "wk_id",
+                        "type": "int8"
+                    },
+                    {
+                        "name": "ever_addr_body",
+                        "type": "uint256"
+                    }
+                ]
+            },
+            {
+                "name": "encodeSolanaEverscaleStakingEventData",
+                "inputs": [
+                    {
+                        "name": "sol_addr",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "wk_id",
+                        "type": "int8"
+                    },
+                    {
+                        "name": "ever_addr_body",
+                        "type": "uint256"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "data",
+                        "type": "cell"
+                    }
+                ]
+            },
+            {
+                "name": "encodeEthereumBurnPayload",
+                "inputs": [
+                    {
+                        "name": "ethereumAddress",
+                        "type": "uint160"
+                    },
+                    {
+                        "name": "chainId",
+                        "type": "uint32"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "data",
+                        "type": "cell"
+                    }
+                ]
+            },
+            {
+                "name": "decodeEthereumBurnPayload",
+                "inputs": [
+                    {
+                        "name": "data",
+                        "type": "cell"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "ethereumAddress",
+                        "type": "uint160"
+                    },
+                    {
+                        "name": "chainId",
+                        "type": "uint32"
+                    }
+                ]
+            },
+            {
+                "name": "encodeSolanaBurnPayload",
+                "inputs": [
+                    {
+                        "name": "solanaOwnerAddress",
+                        "type": "uint256"
+                    },
+                    {
+                        "components": [
+                            {
+                                "name": "account",
+                                "type": "uint256"
+                            },
+                            {
+                                "name": "readOnly",
+                                "type": "bool"
+                            },
+                            {
+                                "name": "isSigner",
+                                "type": "bool"
+                            }
+                        ],
+                        "name": "executeAccounts",
+                        "type": "tuple[]"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "data",
+                        "type": "cell"
+                    }
+                ]
+            },
+            {
+                "name": "decodeSolanaBurnPayload",
+                "inputs": [
+                    {
+                        "name": "data",
+                        "type": "cell"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "solanaOwnerAddress",
+                        "type": "uint256"
+                    },
+                    {
+                        "components": [
+                            {
+                                "name": "account",
+                                "type": "uint256"
+                            },
+                            {
+                                "name": "readOnly",
+                                "type": "bool"
+                            },
+                            {
+                                "name": "isSigner",
+                                "type": "bool"
+                            }
+                        ],
+                        "name": "executeAccounts",
+                        "type": "tuple[]"
+                    }
+                ]
+            },
+            {
+                "name": "encodeDaoEthereumActionData",
+                "inputs": [
+                    {
+                        "name": "gasBackWid",
+                        "type": "int8"
+                    },
+                    {
+                        "name": "gasBackAddress",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "chainId",
+                        "type": "uint32"
+                    },
+                    {
+                        "components": [
+                            {
+                                "name": "value",
+                                "type": "uint256"
+                            },
+                            {
+                                "name": "target",
+                                "type": "uint160"
+                            },
+                            {
+                                "name": "signature",
+                                "type": "string"
+                            },
+                            {
+                                "name": "callData",
+                                "type": "bytes"
+                            }
+                        ],
+                        "name": "actions",
+                        "type": "tuple[]"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "data",
+                        "type": "cell"
+                    }
+                ]
+            },
+            {
+                "name": "decodeDaoEthereumActionData",
+                "inputs": [
+                    {
+                        "name": "data",
+                        "type": "cell"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "gasBackWid",
+                        "type": "int8"
+                    },
+                    {
+                        "name": "gasBackAddress",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "chainId",
+                        "type": "uint32"
+                    },
+                    {
+                        "components": [
+                            {
+                                "name": "value",
+                                "type": "uint256"
+                            },
+                            {
+                                "name": "target",
+                                "type": "uint160"
+                            },
+                            {
+                                "name": "signature",
+                                "type": "string"
+                            },
+                            {
+                                "name": "callData",
+                                "type": "bytes"
+                            }
+                        ],
+                        "name": "actions",
+                        "type": "tuple[]"
+                    }
+                ]
+            },
+            {
+                "name": "encodeMultiVaultAlienEVMEverscale",
+                "inputs": [
+                    {
+                        "name": "base_chainId",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "base_token",
+                        "type": "uint160"
+                    },
+                    {
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "symbol",
+                        "type": "string"
+                    },
+                    {
+                        "name": "decimals",
+                        "type": "uint8"
+                    },
+                    {
+                        "name": "amount",
+                        "type": "uint128"
+                    },
+                    {
+                        "name": "recipient_wid",
+                        "type": "int8"
+                    },
+                    {
+                        "name": "recipient_addr",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "value",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "expected_evers",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "payload",
+                        "type": "cell"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "value0",
+                        "type": "cell"
+                    }
+                ]
+            },
+            {
+                "name": "encodeMultiVaultNativeEVMEverscale",
+                "inputs": [
+                    {
+                        "name": "token_wid",
+                        "type": "int8"
+                    },
+                    {
+                        "name": "token_addr",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "amount",
+                        "type": "uint128"
+                    },
+                    {
+                        "name": "recipient_wid",
+                        "type": "int8"
+                    },
+                    {
+                        "name": "recipient_addr",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "value",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "expected_evers",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "payload",
+                        "type": "cell"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "value0",
+                        "type": "cell"
+                    }
+                ]
+            },
+            {
+                "name": "encodeAlienBurnPayloadEthereum",
+                "inputs": [
+                    {
+                        "name": "recipient",
+                        "type": "uint160"
+                    },
+                    {
+                        "components": [
+                            {
+                                "name": "recipient",
+                                "type": "uint160"
+                            },
+                            {
+                                "name": "payload",
+                                "type": "bytes"
+                            },
+                            {
+                                "name": "strict",
+                                "type": "bool"
+                            }
+                        ],
+                        "name": "callback",
+                        "type": "tuple"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "value0",
+                        "type": "cell"
+                    }
+                ]
+            },
+            {
+                "name": "encodeAlienBurnPayloadSolana",
+                "inputs": [
+                    {
+                        "name": "recipient",
+                        "type": "uint256"
+                    },
+                    {
+                        "components": [
+                            {
+                                "name": "account",
+                                "type": "uint256"
+                            },
+                            {
+                                "name": "readOnly",
+                                "type": "bool"
+                            },
+                            {
+                                "name": "isSigner",
+                                "type": "bool"
+                            }
+                        ],
+                        "name": "executeAccounts",
+                        "type": "tuple[]"
+                    },
+                    {
+                        "name": "executePayloadNeeded",
+                        "type": "bool"
+                    },
+                    {
+                        "components": [
+                            {
+                                "name": "account",
+                                "type": "uint256"
+                            },
+                            {
+                                "name": "readOnly",
+                                "type": "bool"
+                            },
+                            {
+                                "name": "isSigner",
+                                "type": "bool"
+                            }
+                        ],
+                        "name": "executePayloadAccounts",
+                        "type": "tuple[]"
+                    },
+                    {
+                        "name": "payload",
+                        "type": "bytes"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "value0",
+                        "type": "cell"
+                    }
+                ]
+            },
+            {
+                "name": "encodeNativeTransferPayloadEthereum",
+                "inputs": [
+                    {
+                        "name": "recipient",
+                        "type": "uint160"
+                    },
+                    {
+                        "name": "chainId",
+                        "type": "uint256"
+                    },
+                    {
+                        "components": [
+                            {
+                                "name": "recipient",
+                                "type": "uint160"
+                            },
+                            {
+                                "name": "payload",
+                                "type": "bytes"
+                            },
+                            {
+                                "name": "strict",
+                                "type": "bool"
+                            }
+                        ],
+                        "name": "callback",
+                        "type": "tuple"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "value0",
+                        "type": "cell"
+                    }
+                ]
+            },
+            {
+                "name": "decodeMultiVaultAlienEverscaleEthereum",
+                "inputs": [
+                    {
+                        "name": "data",
+                        "type": "cell"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "base_token",
+                        "type": "uint160"
+                    },
+                    {
+                        "name": "amount",
+                        "type": "uint128"
+                    },
+                    {
+                        "name": "recipient",
+                        "type": "uint160"
+                    },
+                    {
+                        "name": "base_chainId",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "callback_recipient",
+                        "type": "uint160"
+                    },
+                    {
+                        "name": "callback_payload",
+                        "type": "cell"
+                    },
+                    {
+                        "name": "callback_strict",
+                        "type": "bool"
+                    }
+                ]
+            },
+            {
+                "name": "decodeMultiVaultNativeEverscaleEthereum",
+                "inputs": [
+                    {
+                        "name": "data",
+                        "type": "cell"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "token_wid",
+                        "type": "int8"
+                    },
+                    {
+                        "name": "token_addr",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "symbol",
+                        "type": "string"
+                    },
+                    {
+                        "name": "decimals",
+                        "type": "uint8"
+                    },
+                    {
+                        "name": "amount",
+                        "type": "uint128"
+                    },
+                    {
+                        "name": "recipient",
+                        "type": "uint160"
+                    },
+                    {
+                        "name": "chainId",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "callback_recipient",
+                        "type": "uint160"
+                    },
+                    {
+                        "name": "callback_payload",
+                        "type": "cell"
+                    },
+                    {
+                        "name": "callback_strict",
+                        "type": "bool"
+                    }
+                ]
+            },
+            {
+                "name": "encodeMultiVaultAlienSolanaEverscale",
+                "inputs": [
+                    {
+                        "name": "base_token",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "symbol",
+                        "type": "string"
+                    },
+                    {
+                        "name": "decimals",
+                        "type": "uint8"
+                    },
+                    {
+                        "name": "amount",
+                        "type": "uint128"
+                    },
+                    {
+                        "name": "recipient",
+                        "type": "address"
+                    },
+                    {
+                        "name": "value",
+                        "type": "uint64"
+                    },
+                    {
+                        "name": "expected_evers",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "payload",
+                        "type": "cell"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "value0",
+                        "type": "cell"
+                    }
+                ]
+            },
+            {
+                "name": "encodeMultiVaultNativeSolanaEverscale",
+                "inputs": [
+                    {
+                        "name": "token",
+                        "type": "address"
+                    },
+                    {
+                        "name": "amount",
+                        "type": "uint128"
+                    },
+                    {
+                        "name": "recipient",
+                        "type": "address"
+                    },
+                    {
+                        "name": "value",
+                        "type": "uint64"
+                    },
+                    {
+                        "name": "expected_evers",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "payload",
+                        "type": "cell"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "value0",
+                        "type": "cell"
+                    }
+                ]
+            },
+            {
+                "name": "encodeNativeTransferPayloadSolana",
+                "inputs": [
+                    {
+                        "name": "recipient",
+                        "type": "uint256"
+                    },
+                    {
+                        "components": [
+                            {
+                                "name": "account",
+                                "type": "uint256"
+                            },
+                            {
+                                "name": "readOnly",
+                                "type": "bool"
+                            },
+                            {
+                                "name": "isSigner",
+                                "type": "bool"
+                            }
+                        ],
+                        "name": "executeAccounts",
+                        "type": "tuple[]"
+                    },
+                    {
+                        "name": "executePayloadNeeded",
+                        "type": "bool"
+                    },
+                    {
+                        "components": [
+                            {
+                                "name": "account",
+                                "type": "uint256"
+                            },
+                            {
+                                "name": "readOnly",
+                                "type": "bool"
+                            },
+                            {
+                                "name": "isSigner",
+                                "type": "bool"
+                            }
+                        ],
+                        "name": "executePayloadAccounts",
+                        "type": "tuple[]"
+                    },
+                    {
+                        "name": "solanaPayload",
+                        "type": "bytes"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "value0",
+                        "type": "cell"
+                    }
+                ]
+            },
+            {
+                "name": "decodeMultiVaultAlienEverscaleSolana",
+                "inputs": [
+                    {
+                        "name": "data",
+                        "type": "cell"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "base_token",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "amount",
+                        "type": "uint128"
+                    },
+                    {
+                        "name": "recipient",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "payload",
+                        "type": "bytes"
+                    }
+                ]
+            },
+            {
+                "name": "decodeMultiVaultNativeEverscaleSolana",
+                "inputs": [
+                    {
+                        "name": "data",
+                        "type": "cell"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "token",
+                        "type": "address"
+                    },
+                    {
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "symbol",
+                        "type": "string"
+                    },
+                    {
+                        "name": "decimals",
+                        "type": "uint8"
+                    },
+                    {
+                        "name": "amount",
+                        "type": "uint128"
+                    },
+                    {
+                        "name": "recipient",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "payload",
+                        "type": "bytes"
+                    }
+                ]
+            },
+            {
+                "name": "encodeEthereumEverscaleEventData",
+                "inputs": [
+                    {
+                        "name": "tokens",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "wid",
+                        "type": "int128"
+                    },
+                    {
+                        "name": "owner_addr",
+                        "type": "uint256"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "data",
+                        "type": "cell"
+                    }
+                ]
+            },
+            {
+                "name": "encodeSolanaEverscaleEventData",
+                "inputs": [
+                    {
+                        "name": "sender_addr",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "tokens",
+                        "type": "uint128"
+                    },
+                    {
+                        "name": "receiver_addr",
+                        "type": "address"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "data",
+                        "type": "cell"
+                    }
+                ]
+            },
+            {
+                "name": "decodeEthereumEverscaleEventData",
+                "inputs": [
+                    {
+                        "name": "data",
+                        "type": "cell"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "tokens",
+                        "type": "uint128"
+                    },
+                    {
+                        "name": "wid",
+                        "type": "int8"
+                    },
+                    {
+                        "name": "owner_addr",
+                        "type": "uint256"
+                    }
+                ]
+            },
+            {
+                "name": "decodeSolanaEverscaleEventData",
+                "inputs": [
+                    {
+                        "name": "data",
+                        "type": "cell"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "sender_addr",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "tokens",
+                        "type": "uint128"
+                    },
+                    {
+                        "name": "receiver_addr",
+                        "type": "address"
+                    }
+                ]
+            },
+            {
+                "name": "encodeEverscaleEthereumEventData",
+                "inputs": [
+                    {
+                        "name": "wid",
+                        "type": "int8"
+                    },
+                    {
+                        "name": "addr",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "tokens",
+                        "type": "uint128"
+                    },
+                    {
+                        "name": "ethereum_address",
+                        "type": "uint160"
+                    },
+                    {
+                        "name": "chainId",
+                        "type": "uint32"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "data",
+                        "type": "cell"
+                    }
+                ]
+            },
+            {
+                "name": "encodeEverscaleSolanaEventData",
+                "inputs": [
+                    {
+                        "name": "senderAddress",
+                        "type": "address"
+                    },
+                    {
+                        "name": "tokens",
+                        "type": "uint128"
+                    },
+                    {
+                        "name": "solanaOwnerAddress",
+                        "type": "uint256"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "data",
+                        "type": "cell"
+                    }
+                ]
+            },
+            {
+                "name": "decodeEverscaleEthereumEventData",
+                "inputs": [
+                    {
+                        "name": "data",
+                        "type": "cell"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "wid",
+                        "type": "int8"
+                    },
+                    {
+                        "name": "addr",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "tokens",
+                        "type": "uint128"
+                    },
+                    {
+                        "name": "ethereum_address",
+                        "type": "uint160"
+                    },
+                    {
+                        "name": "chainId",
+                        "type": "uint32"
+                    }
+                ]
+            },
+            {
+                "name": "decodeEverscaleSolanaEventData",
+                "inputs": [
+                    {
+                        "name": "data",
+                        "type": "cell"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "senderAddress",
+                        "type": "address"
+                    },
+                    {
+                        "name": "tokens",
+                        "type": "uint128"
+                    },
+                    {
+                        "name": "solanaOwnerAddress",
+                        "type": "uint256"
+                    }
+                ]
+            },
+            {
+                "name": "constructor",
+                "inputs": [],
+                "outputs": []
+            },
+            {
+                "name": "_randomNonce",
+                "inputs": [],
+                "outputs": [
+                    {
+                        "name": "_randomNonce",
+                        "type": "uint256"
+                    }
+                ]
+            }
+        ],
+        "data": [
+            {
+                "key": 1,
+                "name": "_randomNonce",
+                "type": "uint256"
+            }
+        ],
+        "events": [],
+        "fields": [
+            {
+                "name": "_pubkey",
+                "type": "uint256"
+            },
+            {
+                "name": "_timestamp",
+                "type": "uint64"
+            },
+            {
+                "name": "_constructorFlag",
+                "type": "bool"
+            },
+            {
+                "name": "_randomNonce",
+                "type": "uint256"
+            }
+        ]
+    },
+    "codeHash": "fa367bce4fa59abf64ae0db1142dec4a58127010579aabcbea9be1bcf09edc2b"
+}

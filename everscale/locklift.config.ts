@@ -20,8 +20,8 @@ declare global {
 const config: LockliftConfig = {
   verifier: {
     verifierVersion: "latest",
-    apiKey: process.env.VERIFIER_API_KEY!,
-    secretKey: process.env.VERIFIER_SECRET_KEY!,
+    apiKey: process.env.EVERSCAN_API_KEY!,
+    secretKey: process.env.EVERSCAN_SECRET_KEY!,
   },
   compiler: {
     version: "0.62.0",
@@ -68,40 +68,40 @@ const config: LockliftConfig = {
         amount: 20,
       },
     },
-    venom_main: {
+    // venom_main: {
+    //   connection: {
+    //     id: 1,
+    //     group: "group",
+    //     type: "jrpc",
+    //     data: {
+    //       endpoint: process.env.VENOM_MAIN_JRPC_ENDPOINT!
+    //     },
+    //   },
+    //   giver: {
+    //     address: process.env.VENOM_MAIN_GIVER_ADDRESS!,
+    //     phrase: process.env.VENOM_MAIN_GIVER_PHRASE!,
+    //     accountId: 0,
+    //   },
+    //   keys: {
+    //     amount: 20
+    //   }
+    // },
+    hmstr: {
       connection: {
-        id: 1,
-        group: "group",
-        type: "jrpc",
-        data: {
-          endpoint: process.env.VENOM_MAIN_JRPC_ENDPOINT!
-        },
-      },
-      giver: {
-        address: process.env.VENOM_MAIN_GIVER_ADDRESS!,
-        phrase: process.env.VENOM_MAIN_GIVER_PHRASE!,
-        accountId: 0,
-      },
-      keys: {
-        amount: 20
-      }
-    },
-    tycho: {
-      connection: {
-        id: 2000,
+        id: 7,
         type: "jrpc",
         group: "tycho",
         data: {
-          endpoint: process.env.TYCHO_JRPC_ENDPOINT!,
+          endpoint: process.env.HMSTR_NETWORK_ENDPOINT!,
         },
       },
       giver: {
-        address: process.env.TYCHO_GIVER_ADDRESS!,
-        phrase: process.env.TYCHO_GIVER_PHRASE!,
+        address: process.env.HMSTR_GIVER_ADDRESS!,
+        phrase: process.env.HMSTR_GIVER_PHRASE!,
         accountId: 0,
       },
       keys: {
-        phrase: process.env.TYCHO_PHRASE!,
+        phrase: process.env.HMSTR_PHRASE!,
         amount: 20,
       },
     },

@@ -21,6 +21,7 @@ enum Token {
     USDC = 'USDC',
     WBTC = 'WBTC',
     WETH = 'WETH',
+    WTON = 'WTON',
 }
 
 type MergeRouterInfo = {
@@ -50,38 +51,46 @@ const networkToId: Record<Network, number> = {
 };
 
 const tokenToConfig: Record<string, TokensConfig> = {
-    [Token.USDT]: {
+    // [Token.USDT]: {
+    //     reference: Network.ETHEREUM, // Token of this network will be used as 'main' for EVM->TVM transfers
+    //     tokens: [
+    //         { network: Network.ETHEREUM, address: utils.getAddress('0xdac17f958d2ee523a2206206994597c13d831ec7'), name: 'Tether USD', symbol: 'USDT', decimals: 6 },
+    //         { network: Network.BSC, address: utils.getAddress('0x55d398326f99059fF775485246999027B3197955'), name: 'Tether USD', symbol: 'USDT', decimals: 18 },
+    //         { network: Network.AVALANCHE, address: utils.getAddress('0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7'), name: 'TetherToken', symbol: 'USDt', decimals: 6 },
+    //     ]
+    // },
+    // [Token.USDC]: {
+    //     reference: Network.ETHEREUM,
+    //     tokens: [
+    //         { network: Network.ETHEREUM, address: utils.getAddress('0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'), name: 'USD Coin', symbol: 'USDC', decimals: 6 },
+    //         { network: Network.BSC, address: utils.getAddress('0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d'), name: 'USD Coin', symbol: 'USDC', decimals: 18 },
+    //         { network: Network.AVALANCHE, address: utils.getAddress('0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E'), name: 'USD Coin', symbol: 'USDC', decimals: 6 },
+    //     ]
+    // },
+    // [Token.WBTC]: {
+    //     reference: Network.ETHEREUM, // Token of this network will be used as 'main' for EVM->TVM transfers
+    //     tokens: [
+    //         { network: Network.ETHEREUM, address: utils.getAddress('0x2260fac5e5542a773aa44fbcfedf7c193bc2c599'), name: 'Wrapped BTC', symbol: 'WBTC', decimals: 8 },
+    //         { network: Network.BSC, address: utils.getAddress('0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c'), name: 'BTCB Token', symbol: 'BTCB', decimals: 18 },
+    //         { network: Network.AVALANCHE, address: utils.getAddress('0x50b7545627a5162f82a992c33b87adc75187b218'), name: 'Wrapped BTC', symbol: 'WBTC.e', decimals: 8 },
+    //     ]
+    // },
+    // [Token.WETH]: {
+    //     reference: Network.ETHEREUM, // Token of this network will be used as 'main' for EVM->TVM transfers
+    //     tokens: [
+    //         { network: Network.ETHEREUM, address: utils.getAddress('0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'), name: 'Wrapped Ether', symbol: 'WETH', decimals: 18 },
+    //         { network: Network.BSC, address: utils.getAddress('0x2170Ed0880ac9A755fd29B2688956BD959F933F8'), name: 'Ethereum Token', symbol: 'ETH', decimals: 18 },
+    //         { network: Network.AVALANCHE, address: utils.getAddress('0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB'), name: 'Wrapped Ether', symbol: 'WETH.e', decimals: 18 },
+    //     ]
+    // },
+    [Token.WTON]: {
         reference: Network.ETHEREUM, // Token of this network will be used as 'main' for EVM->TVM transfers
-        tokens: [
-            { network: Network.ETHEREUM, address: utils.getAddress('0xdac17f958d2ee523a2206206994597c13d831ec7'), name: 'Tether USD', symbol: 'USDT', decimals: 6 },
-            { network: Network.BSC, address: utils.getAddress('0x55d398326f99059fF775485246999027B3197955'), name: 'Tether USD', symbol: 'USDT', decimals: 18 },
-            { network: Network.AVALANCHE, address: utils.getAddress('0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7'), name: 'TetherToken', symbol: 'USDt', decimals: 6 },
+            tokens: [
+            { network: Network.ETHEREUM, address: utils.getAddress('0x02c282cee8d5474f2369f83e6ccfdf0ee66ed9ec'), name: 'ChainConnect Wrapped TON', symbol: 'ccWTON', decimals: 9 },
+            { network: Network.BSC, address: utils.getAddress('0x02c282cee8d5474f2369f83e6ccfdf0ee66ed9ec'), name: 'ChainConnect Wrapped TON', symbol: 'ccWTON', decimals: 9 },
+            { network: Network.AVALANCHE, address: utils.getAddress('0x02c282cee8d5474f2369f83e6ccfdf0ee66ed9ec'), name: 'ChainConnect Wrapped TON', symbol: 'ccWTON', decimals: 9 },
         ]
     },
-    [Token.USDC]: {
-        reference: Network.ETHEREUM,
-        tokens: [
-            { network: Network.ETHEREUM, address: utils.getAddress('0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'), name: 'USD Coin', symbol: 'USDC', decimals: 6 },
-            { network: Network.BSC, address: utils.getAddress('0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d'), name: 'USD Coin', symbol: 'USDC', decimals: 18 },
-            { network: Network.AVALANCHE, address: utils.getAddress('0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E'), name: 'USD Coin', symbol: 'USDC', decimals: 6 },
-        ]
-    },
-    [Token.WBTC]: {
-        reference: Network.ETHEREUM, // Token of this network will be used as 'main' for EVM->TVM transfers
-        tokens: [
-            { network: Network.ETHEREUM, address: utils.getAddress('0x2260fac5e5542a773aa44fbcfedf7c193bc2c599'), name: 'Wrapped BTC', symbol: 'WBTC', decimals: 8 },
-            { network: Network.BSC, address: utils.getAddress('0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c'), name: 'BTCB Token', symbol: 'BTCB', decimals: 18 },
-            { network: Network.AVALANCHE, address: utils.getAddress('0x50b7545627a5162f82a992c33b87adc75187b218'), name: 'Wrapped BTC', symbol: 'WBTC.e', decimals: 8 },
-        ]
-    },
-    [Token.WETH]: {
-        reference: Network.ETHEREUM, // Token of this network will be used as 'main' for EVM->TVM transfers
-        tokens: [
-            { network: Network.ETHEREUM, address: utils.getAddress('0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'), name: 'Wrapped Ether', symbol: 'WETH', decimals: 18 },
-            { network: Network.BSC, address: utils.getAddress('0x2170Ed0880ac9A755fd29B2688956BD959F933F8'), name: 'Ethereum Token', symbol: 'ETH', decimals: 18 },
-            { network: Network.AVALANCHE, address: utils.getAddress('0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB'), name: 'Wrapped Ether', symbol: 'WETH.e', decimals: 18 },
-        ]
-    }
 };
 
 const main = async (): Promise<void> => {
