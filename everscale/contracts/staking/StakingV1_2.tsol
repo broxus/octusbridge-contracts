@@ -25,6 +25,7 @@ contract StakingV1_2 is StakingPoolRelay {
         base_details.dao_root = _dao_root;
         base_details.rescuer = _rescuer;
         base_details.rewarder = _rewarder;
+        round_details.currentRelayRound = 1;
         bridge_event_config_ton_sol = _bridge_event_config_ton_sol;
         base_details.rewardRounds.push(RewardRound(0, 0, 0, now));
         setUpTokenWallet();

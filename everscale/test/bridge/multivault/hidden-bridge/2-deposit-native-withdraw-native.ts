@@ -10,10 +10,11 @@ import {
     CellEncoderStandaloneAbi,
     EthereumEverscaleEventConfigurationAbi,
     EverscaleEthereumEventConfigurationAbi,
-    EverscaleSolanaEventConfigurationAbi, Mediator_V2Abi,
+    EverscaleSolanaEventConfigurationAbi,
+    Mediator_V2Abi,
     MultiVaultEverscaleEVMEventNativeAbi,
-    MultiVaultEVMEverscaleEventAlienAbi,
-    MultiVaultEVMEverscaleEventNativeAbi, ProxyMultiVaultAlien_V8Abi,
+    MultiVaultEVMEverscaleEventNativeAbi,
+    ProxyMultiVaultAlien_V8Abi,
     ProxyMultiVaultNative_V6Abi,
     SolanaEverscaleEventConfigurationAbi,
     StakingMockupAbi,
@@ -230,11 +231,11 @@ describe('Test EVM-EVM bridge transfers, deposit native withdraw native token', 
                     eventVoteData: eventVoteData,
                     answerId: 0,
                 })
-                .call();
+                .call({ responsible: true });
 
             logger.log(`Expected event: ${expectedEventContract.eventContract}`);
 
-            depositEventContract = await locklift.factory.getDeployedContract(
+            depositEventContract = locklift.factory.getDeployedContract(
                 "MultiVaultEVMEverscaleEventNative",
                 expectedEventContract.eventContract
             );
@@ -269,7 +270,7 @@ describe('Test EVM-EVM bridge transfers, deposit native withdraw native token', 
 
             logger.log(`Expected event address: ${expectedEventContract}`);
 
-            withdrawEventContract = await locklift.factory.getDeployedContract(
+            withdrawEventContract = locklift.factory.getDeployedContract(
                 "MultiVaultEverscaleEVMEventNative",
                 expectedEventContract
             );

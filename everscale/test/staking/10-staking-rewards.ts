@@ -44,7 +44,7 @@ describe("Test Staking Rewards", async function () {
   ) {
     return await userData.methods
       .getDetails({ answerId: 0 })
-      .call()
+      .call({ responsible: true })
       .then((v) => v.value0.rewardRounds);
   };
 
@@ -53,7 +53,7 @@ describe("Test Staking Rewards", async function () {
   ) {
     return await userData.methods
       .getDetails({ answerId: 0 })
-      .call()
+      .call({ responsible: true })
       .then((v) => v.value0.token_balance.toString());
   };
 
@@ -67,7 +67,7 @@ describe("Test Staking Rewards", async function () {
         user_reward_data: user_reward_rounds,
         answerId: 0,
       })
-      .call()
+      .call({ responsible: true })
       .then((v) => v.value0);
   };
 
@@ -82,23 +82,23 @@ describe("Test Staking Rewards", async function () {
   ) {
     const staking_details = await stakingRoot.methods
       .getDetails({ answerId: 0 })
-      .call()
+      .call({ responsible: true })
       .then((v) => v.value0);
 
     const _pool_wallet_bal = await stakingWallet.methods
       .balance({ answerId: 0 })
-      .call()
+      .call({ responsible: true })
       .then((v) => v.value0);
     const _pool_bal = staking_details.tokenBalance;
     const _pool_reward_bal = staking_details.rewardTokenBalance;
 
     const _user_bal = await userTokenWallet.methods
       .balance({ answerId: 0 })
-      .call()
+      .call({ responsible: true })
       .then((t) => t.value0);
     const user_data = await userAccount.methods
       .getDetails({ answerId: 0 })
-      .call();
+      .call({ responsible: true });
     const _user_data_bal = user_data.value0.token_balance;
 
     expect(_pool_wallet_bal).to.be.equal(
@@ -131,7 +131,7 @@ describe("Test Staking Rewards", async function () {
         })
         .send({
           from: stakingOwner.address,
-          amount: locklift.utils.toNano(11),
+          amount: locklift.utils.toNano(30),
         })
     );
   };
@@ -144,7 +144,7 @@ describe("Test Staking Rewards", async function () {
         })
         .send({
           from: user.address,
-          amount: locklift.utils.toNano(11),
+          amount: locklift.utils.toNano(30),
         })
     );
   };
@@ -157,7 +157,7 @@ describe("Test Staking Rewards", async function () {
   ) {
     const user_data = await userData.methods
       .getDetails({ answerId: 0 })
-      .call()
+      .call({ responsible: true })
       .then((v) => v.value0);
     const user_rew_after = user_data.rewardRounds;
     const user_rew_balance_before = prevRewData[0].reward_balance;
@@ -175,11 +175,11 @@ describe("Test Staking Rewards", async function () {
   };
 
   const getUserDataAccount = async function (_user: Account) {
-    return await locklift.factory.getDeployedContract(
+    return locklift.factory.getDeployedContract(
       "UserData",
       await stakingRoot.methods
         .getUserDataAddress({user: _user.address, answerId: 0})
-        .call()
+        .call({ responsible: true })
         .then((t) => t.value0)
     );
   };
@@ -196,7 +196,7 @@ describe("Test Staking Rewards", async function () {
         })
         .send({
           from: user.address,
-          amount: locklift.utils.toNano(11),
+          amount: locklift.utils.toNano(30),
         })
     );
   };
@@ -218,7 +218,7 @@ describe("Test Staking Rewards", async function () {
         let users = [];
         for (const i of [1, 2]) {
           const signer = (await locklift.keystore.getSigner(i.toString()))!;
-          const account = await deployAccount(signer, 25);
+          const account = await deployAccount(signer, 100);
           logger.log(`User address: ${account.address}`);
 
           // const isDeployed = await locklift.provider
@@ -241,15 +241,15 @@ describe("Test Staking Rewards", async function () {
 
         const balance1 = await userTokenWallet1.methods
           .balance({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((t) => parseInt(t.value0, 10));
         const balance2 = await userTokenWallet2.methods
           .balance({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((t) => parseInt(t.value0, 10));
         const balance3 = await ownerWallet.methods
           .balance({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((t) => parseInt(t.value0, 10));
 
         expect(balance1).to.be.equal(
@@ -289,7 +289,7 @@ describe("Test Staking Rewards", async function () {
             value: locklift.utils.toNano(1),
           });
 
-        const stakingRootData = await locklift.factory.getContractArtifacts(
+        const stakingRootData = locklift.factory.getContractArtifacts(
           "StakingV1_2"
         );
         const { contract: stakingRootDeployer } =
@@ -323,7 +323,7 @@ describe("Test Staking Rewards", async function () {
             publicKey: signer.publicKey,
           });
 
-        stakingRoot = await locklift.factory.getDeployedContract(
+        stakingRoot = locklift.factory.getDeployedContract(
           "StakingV1_2",
           address?.value0!
         );
@@ -334,11 +334,11 @@ describe("Test Staking Rewards", async function () {
 
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         logger.log(`Staking token wallet: ${staking_details.tokenWallet}`);
 
-        stakingWallet = await locklift.factory.getDeployedContract(
+        stakingWallet = locklift.factory.getDeployedContract(
           "TokenWallet",
           staking_details.tokenWallet
         );
@@ -346,10 +346,10 @@ describe("Test Staking Rewards", async function () {
         // call in order to check if wallet is deployed
         const owner_address = await stakingWallet.methods
           .owner({ answerId: 0 })
-          .call();
+          .call({ responsible: true });
         const root_address = await stakingWallet.methods
           .root({ answerId: 0 })
-          .call();
+          .call({ responsible: true });
         expect(owner_address.value0.toString()).to.be.equal(
           stakingRoot.address.toString(),
           "Wrong staking token wallet owner"
@@ -361,16 +361,16 @@ describe("Test Staking Rewards", async function () {
       });
 
       it("Installing codes", async function () {
-        const UserData = await locklift.factory.getContractArtifacts(
+        const UserData = locklift.factory.getContractArtifacts(
           "UserData"
         );
-        const Election = await locklift.factory.getContractArtifacts(
+        const Election = locklift.factory.getContractArtifacts(
           "Election"
         );
-        const RelayRound = await locklift.factory.getContractArtifacts(
+        const RelayRound = locklift.factory.getContractArtifacts(
           "StakingRelayRound"
         );
-        const Platform = await locklift.factory.getContractArtifacts(
+        const Platform = locklift.factory.getContractArtifacts(
           "Platform"
         );
 
@@ -382,7 +382,7 @@ describe("Test Staking Rewards", async function () {
           })
           .send({
             from: stakingOwner.address,
-            amount: locklift.utils.toNano(11),
+            amount: locklift.utils.toNano(30),
           });
         logger.log(`Installing UserData code`);
         await stakingRoot.methods
@@ -392,7 +392,7 @@ describe("Test Staking Rewards", async function () {
           })
           .send({
             from: stakingOwner.address,
-            amount: locklift.utils.toNano(11),
+            amount: locklift.utils.toNano(30),
           });
         logger.log(`Installing ElectionCode code`);
         await stakingRoot.methods
@@ -402,7 +402,7 @@ describe("Test Staking Rewards", async function () {
           })
           .send({
             from: stakingOwner.address,
-            amount: locklift.utils.toNano(11),
+            amount: locklift.utils.toNano(30),
           });
         logger.log(`Installing RelayRoundCode code`);
         await stakingRoot.methods
@@ -412,7 +412,7 @@ describe("Test Staking Rewards", async function () {
           })
           .send({
             from: stakingOwner.address,
-            amount: locklift.utils.toNano(11),
+            amount: locklift.utils.toNano(30),
           });
         logger.log(`Set staking to Active`);
         await stakingRoot.methods
@@ -422,12 +422,12 @@ describe("Test Staking Rewards", async function () {
           })
           .send({
             from: stakingOwner.address,
-            amount: locklift.utils.toNano(11),
+            amount: locklift.utils.toNano(30),
           });
 
         const active = await stakingRoot.methods
           .isActive({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((t) => t.value0);
         expect(active).to.be.equal(true, "Staking not active");
       });
@@ -445,12 +445,12 @@ describe("Test Staking Rewards", async function () {
 
         const staking_balance = await stakingWallet.methods
           .balance({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((t) => t.value0);
 
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const staking_balance_stored = staking_details.rewardTokenBalance;
 
@@ -501,13 +501,13 @@ describe("Test Staking Rewards", async function () {
       it("Deposit 2nd time", async function () {
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const prev_reward_time = staking_details.lastRewardTime;
 
         const user1_data = await user1Data.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const user1_rew_before = user1_data.rewardRounds;
 
@@ -525,7 +525,7 @@ describe("Test Staking Rewards", async function () {
 
         const staking_details_1 = await stakingRoot.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const new_reward_time = staking_details_1.lastRewardTime;
         await checkReward(
@@ -556,13 +556,13 @@ describe("Test Staking Rewards", async function () {
       it("User withdraw half of staked amount", async function () {
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const prev_reward_time = staking_details.lastRewardTime;
 
         const user1_data = await user1Data.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const user1_rew_before = user1_data.rewardRounds;
 
@@ -579,7 +579,7 @@ describe("Test Staking Rewards", async function () {
 
         const staking_details_1 = await stakingRoot.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const new_reward_time = staking_details_1.lastRewardTime;
         await checkReward(
@@ -610,13 +610,13 @@ describe("Test Staking Rewards", async function () {
       it("User withdraw other half", async function () {
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const prev_reward_time = staking_details.lastRewardTime;
 
         const user1_data = await user1Data.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const user1_rew_before = user1_data.rewardRounds;
 
@@ -624,7 +624,7 @@ describe("Test Staking Rewards", async function () {
 
         const staking_details_1 = await stakingRoot.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const new_reward_time = staking_details_1.lastRewardTime;
         await checkReward(
@@ -682,7 +682,7 @@ describe("Test Staking Rewards", async function () {
 
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         user1_deposit_time = staking_details.lastRewardTime;
 
@@ -702,7 +702,7 @@ describe("Test Staking Rewards", async function () {
 
         const staking_details_1 = await stakingRoot.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         user2_deposit_time = staking_details_1.lastRewardTime;
       });
@@ -710,7 +710,7 @@ describe("Test Staking Rewards", async function () {
       it("Users withdraw tokens", async function () {
         const user1_data = await user1Data.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const user1_rew_before = user1_data.rewardRounds;
 
@@ -718,13 +718,13 @@ describe("Test Staking Rewards", async function () {
 
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         user1_withdraw_time = staking_details.lastRewardTime;
 
         const user1_data_1 = await user1Data.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const user1_rew_after = user1_data_1.rewardRounds;
 
@@ -763,7 +763,7 @@ describe("Test Staking Rewards", async function () {
         const user2_rew_after = await userRewardRounds(user2Data);
         const staking_details_1 = await stakingRoot.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         user2_withdraw_time = staking_details_1.lastRewardTime;
 
@@ -800,7 +800,7 @@ describe("Test Staking Rewards", async function () {
         await tryIncreaseTime(1000);
         const user1_data = await user1Data.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const user1_reward_before = user1_data.rewardRounds;
 
@@ -817,7 +817,7 @@ describe("Test Staking Rewards", async function () {
 
         const user1_data_1 = await user1Data.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const user1_reward_after = user1_data_1.rewardRounds;
         expect(user1_reward_before[0].reward_balance).to.be.equal(
@@ -851,7 +851,7 @@ describe("Test Staking Rewards", async function () {
 
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
 
         const reward_rounds = staking_details.rewardRounds;
@@ -881,7 +881,7 @@ describe("Test Staking Rewards", async function () {
         await tryIncreaseTime(5000);
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
 
         let rounds_rewards_data = staking_details.rewardRounds;
@@ -946,7 +946,7 @@ describe("Test Staking Rewards", async function () {
 
         const user1_data_2 = await user1Data.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const user1_token_balance = user1_data_2.token_balance;
 
@@ -961,7 +961,7 @@ describe("Test Staking Rewards", async function () {
 
         const user1_data_3 = await user1Data.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const user1_reward_after = user1_data_3.rewardRounds;
 
@@ -1018,12 +1018,12 @@ describe("Test Staking Rewards", async function () {
         );
         const staking_balance = await stakingWallet.methods
           .balance({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((t) => t.value0);
 
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
 
         const staking_reward_balance_stored =
@@ -1048,7 +1048,7 @@ describe("Test Staking Rewards", async function () {
 
         const staking_details_1 = await stakingRoot.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const reward_rounds = staking_details_1.rewardRounds;
         const cur_round = reward_rounds[1];
@@ -1085,7 +1085,7 @@ describe("Test Staking Rewards", async function () {
 
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
 
         const reward_rounds = staking_details.rewardRounds;
@@ -1116,7 +1116,7 @@ describe("Test Staking Rewards", async function () {
       it("Deposit reward", async function () {
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const last_reward_time = staking_details.lastRewardTime;
 
@@ -1129,12 +1129,12 @@ describe("Test Staking Rewards", async function () {
         );
         const staking_balance = await stakingWallet.methods
           .balance({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((t) => t.value0);
 
         const staking_details_1 = await stakingRoot.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const staking_reward_balance_stored =
           staking_details_1.rewardTokenBalance;
@@ -1158,14 +1158,14 @@ describe("Test Staking Rewards", async function () {
 
         const staking_details_2 = await stakingRoot.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const reward_rounds = staking_details_2.rewardRounds;
         const cur_round = reward_rounds[2];
 
         const staking_details_3 = await stakingRoot.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const last_reward_time_2 = staking_details_3.lastRewardTime;
         const expected_reward =
@@ -1196,7 +1196,7 @@ describe("Test Staking Rewards", async function () {
 
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const last_reward_time = staking_details.lastRewardTime;
         const time_passed =
@@ -1207,7 +1207,7 @@ describe("Test Staking Rewards", async function () {
       it("New reward round starts", async function () {
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const prev_reward_time = staking_details.lastRewardTime;
         await tryIncreaseTime(5000);
@@ -1216,7 +1216,7 @@ describe("Test Staking Rewards", async function () {
 
         const staking_details_1 = await stakingRoot.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const reward_rounds = staking_details_1.rewardRounds;
         const last_reward_time = staking_details_1.lastRewardTime;
@@ -1247,7 +1247,7 @@ describe("Test Staking Rewards", async function () {
 
         const user1_data = await user1Data.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const user1_reward_before = user1_data.rewardRounds;
         const user1_token_balance0 = user1_data.token_balance;
@@ -1258,17 +1258,17 @@ describe("Test Staking Rewards", async function () {
       it("Users withdraw tokens", async function () {
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const reward_rounds = staking_details.rewardRounds;
 
         const user1_details = await user1Data.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
-        var user1_data = user1_details.rewardRounds;
+        let user1_data = user1_details.rewardRounds;
 
-        var user2_data = await userRewardRounds(user2Data);
+        let user2_data = await userRewardRounds(user2Data);
 
         expect(user1_data.length).to.be.equal(2, "Bad user1 data length");
         expect(user2_data.length).to.be.equal(3, "Bad user2 data length");
@@ -1308,7 +1308,7 @@ describe("Test Staking Rewards", async function () {
 
         const user1_details_1 = await user1Data.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         user1_data = user1_details_1.rewardRounds;
 
@@ -1343,19 +1343,19 @@ describe("Test Staking Rewards", async function () {
 
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         let reward_rounds = staking_details.rewardRounds;
 
         const user1_data = await user1Data.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const user1_reward_data = user1_data.rewardRounds;
 
         const user2_reward_data = await userRewardRounds(user2Data);
 
-        var user1_expected_token_reward = 0,
+        let user1_expected_token_reward = 0,
           user2_expected_token_reward = 0;
         for (const i of [...Array(reward_rounds.length).keys()]) {
           const user1_round_reward = parseInt(
@@ -1390,7 +1390,7 @@ describe("Test Staking Rewards", async function () {
 
         const user1_data_1 = await user1Data.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         const user1_token_balance = user1_data_1.token_balance;
 

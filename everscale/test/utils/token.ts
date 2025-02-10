@@ -14,7 +14,7 @@ export const deployTokenRoot = async function (
 ) {
     const signer = (await locklift.keystore.getSigner("0"))!;
 
-    const TokenWallet = await locklift.factory.getContractArtifacts(
+    const TokenWallet = locklift.factory.getContractArtifacts(
         "TokenWallet"
     );
 
@@ -39,7 +39,7 @@ export const deployTokenRoot = async function (
             deployer_: zeroAddress,
         },
         publicKey: signer.publicKey,
-        value: locklift.utils.toNano(2),
+        value: locklift.utils.toNano(15),
     });
 
     return _root;
@@ -52,7 +52,7 @@ export const getTokenWalletAddr = async function (
 ) {
     return await _root.methods
         .walletOf({ answerId: 0, walletOwner: user.address })
-        .call()
+        .call({ responsible: true })
         .then((t) => t.value0);
 };
 
@@ -64,7 +64,7 @@ export const setupTokenRootWithWallet = async (
 ) => {
     const signer = (await locklift.keystore.getSigner("2"))!;
 
-    const tokenWallet = await locklift.factory.getContractArtifacts(
+    const tokenWallet = locklift.factory.getContractArtifacts(
         "TokenWallet"
     );
 
@@ -102,7 +102,7 @@ export const getTokenWalletByAddress = async (
     walletOwner: Address,
     rootAddress: Address
 ) => {
-    const tokenRoot = await locklift.factory.getDeployedContract(
+    const tokenRoot = locklift.factory.getDeployedContract(
         "TokenRoot",
         rootAddress
     );
@@ -112,9 +112,9 @@ export const getTokenWalletByAddress = async (
             answerId: 0,
             walletOwner: walletOwner,
         })
-        .call();
+        .call({ responsible: true });
 
-    return await locklift.factory.getDeployedContract(
+    return locklift.factory.getDeployedContract(
       "TokenWallet",
       walletAddress.value0
     );
@@ -122,12 +122,10 @@ export const getTokenWalletByAddress = async (
 
 
 export const getTokenRoot = async (rootAddress: Address) => {
-    const tokenRoot = await locklift.factory.getDeployedContract(
+    return locklift.factory.getDeployedContract(
         "TokenRoot",
         rootAddress
     );
-
-    return tokenRoot;
 };
 
 
@@ -138,7 +136,7 @@ export const depositTokens = async function (
     depositAmount: number,
     reward = false
 ) {
-    var payload;
+    let payload;
     const DEPOSIT_PAYLOAD = "te6ccgEBAQEAAwAAAgA=";
     const REWARD_DEPOSIT_PAYLOAD = "te6ccgEBAQEAAwAAAgE=";
     if (reward) {
@@ -185,7 +183,7 @@ export const mintTokens = async function (
 
         logger.log(`User token wallet: ${walletAddr}`);
 
-        let userTokenWallet = await locklift.factory.getDeployedContract(
+        let userTokenWallet = locklift.factory.getDeployedContract(
             "TokenWallet",
             walletAddr
         );
@@ -215,7 +213,7 @@ const sendTokens = async function (
             })
             .send({
                 from: user.address,
-                amount: locklift.utils.toNano(11),
+                amount: locklift.utils.toNano(30),
             }),
         {
             allowedCodes: {
@@ -250,7 +248,7 @@ export const deployTokenWallets = async function (
 
         logger.log(`User token wallet: ${walletAddr}`);
 
-        let userTokenWallet = await locklift.factory.getDeployedContract(
+        let userTokenWallet = locklift.factory.getDeployedContract(
             "TokenWallet",
             walletAddr
         );

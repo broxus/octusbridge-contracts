@@ -14,7 +14,7 @@ import {
     MergePool_V3Abi,
     MergeRouterAbi,
     MultiVaultEVMEverscaleEventAlienAbi,
-    ProxyMultiVaultAlien_V6Abi, ProxyMultiVaultAlien_V8Abi,
+    ProxyMultiVaultAlien_V8Abi,
     SolanaEverscaleEventConfigurationAbi,
     StakingMockupAbi,
     TokenRootAbi,
@@ -121,16 +121,18 @@ describe('Deposit Alien token with merging with custom token', async function() 
             remainingGasTo: initializer.address
         }).send({
             from: initializer.address,
-            amount: locklift.utils.toNano(5),
+            amount: locklift.utils.toNano(15),
         });
 
-        const alienTokenRootAddress = await proxy.methods.deriveEVMAlienTokenRoot({
-            ...alienTokenBase,
-            ...alienTokenMeta,
-            answerId: 0
-        }).call();
+        const alienTokenRootAddress = await proxy.methods
+            .deriveEVMAlienTokenRoot({
+                ...alienTokenBase,
+                ...alienTokenMeta,
+                answerId: 0
+            })
+            .call({ responsible: true });
 
-        alienTokenRoot = await locklift.factory.getDeployedContract(
+        alienTokenRoot = locklift.factory.getDeployedContract(
             'TokenRootAlienEVM',
             alienTokenRootAddress.value0
         );
@@ -146,12 +148,14 @@ describe('Deposit Alien token with merging with custom token', async function() 
             amount: locklift.utils.toNano(5)
         });
 
-        const mergeRouterAddress = await proxy.methods.deriveMergeRouter({
-            answerId: 0,
-            token: alienTokenRoot.address
-        }).call();
+        const mergeRouterAddress = await proxy.methods
+            .deriveMergeRouter({
+                answerId: 0,
+                token: alienTokenRoot.address
+            })
+            .call({ responsible: true });
 
-        mergeRouter = await locklift.factory.getDeployedContract(
+        mergeRouter = locklift.factory.getDeployedContract(
             'MergeRouter',
             mergeRouterAddress.router
         );
@@ -171,12 +175,14 @@ describe('Deposit Alien token with merging with custom token', async function() 
             amount: locklift.utils.toNano(5)
         });
 
-        const mergePoolAddress = await proxy.methods.deriveMergePool({
-            nonce,
-            answerId: 0
-        }).call();
+        const mergePoolAddress = await proxy.methods
+            .deriveMergePool({
+                nonce,
+                answerId: 0
+            })
+            .call({ responsible: true });
 
-        mergePool = await locklift.factory.getDeployedContract(
+        mergePool = locklift.factory.getDeployedContract(
             'MergePool_V3',
             mergePoolAddress.pool
         );
@@ -190,9 +196,9 @@ describe('Deposit Alien token with merging with custom token', async function() 
             amount: locklift.utils.toNano(1)
         });
 
-        const tokens = await mergePool.methods.getTokens({
-            answerId: 0
-        }).call();
+        const tokens = await mergePool.methods
+            .getTokens({ answerId: 0 })
+            .call({ responsible: true });
 
         expect(tokens._tokens[0][1].enabled)
             .to.be.equal(true, 'Wrong alien status');
@@ -211,9 +217,9 @@ describe('Deposit Alien token with merging with custom token', async function() 
             amount: locklift.utils.toNano(1)
         });
 
-        const pool = await mergeRouter.methods.getPool({
-            answerId: 0
-        }).call();
+        const pool = await mergeRouter.methods
+            .getPool({ answerId: 0 })
+            .call({ responsible: true });
 
         expect(pool.value0.toString())
             .to.be.equal(mergePool.address.toString(), 'Wrong pool in router');
@@ -265,11 +271,11 @@ describe('Deposit Alien token with merging with custom token', async function() 
                 eventVoteData: eventVoteData,
                 answerId: 0,
             })
-            .call();
+            .call({ responsible: true });
 
         logger.log(`Expected event: ${expectedEventContract.eventContract}`);
 
-        eventContract = await locklift.factory.getDeployedContract(
+        eventContract = locklift.factory.getDeployedContract(
             "MultiVaultEVMEverscaleEventAlien",
             expectedEventContract.eventContract
         );
@@ -284,7 +290,7 @@ describe('Deposit Alien token with merging with custom token', async function() 
     it('Check init pipeline passed', async () => {
         const details = await eventContract.methods
             .getDetails({ answerId: 0 })
-            .call();
+            .call({ responsible: true });
 
 
         expect(details._status).to.be.equal("1", "Wrong status");
@@ -304,18 +310,18 @@ describe('Deposit Alien token with merging with custom token', async function() 
     });
 
     it('Check alien total supply is zero', async () => {
-        const totalSupply = await alienTokenRoot.methods.totalSupply({
-            answerId: 0
-        }).call();
+        const totalSupply = await alienTokenRoot.methods
+            .totalSupply({ answerId: 0 })
+            .call({ responsible: true });
 
         expect(Number(totalSupply.value0))
             .to.be.equal(0, 'Alien total supply should remain zero');
     });
 
     it('Check custom total supply', async () => {
-        const totalSupply = await customTokenRoot.methods.totalSupply({
-            answerId: 0
-        }).call();
+        const totalSupply = await customTokenRoot.methods
+            .totalSupply({ answerId: 0 })
+            .call({ responsible: true });
 
         expect(Number(totalSupply.value0))
             .to.be.equal(

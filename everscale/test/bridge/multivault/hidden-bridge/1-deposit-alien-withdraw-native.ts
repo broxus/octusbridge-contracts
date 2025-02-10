@@ -17,7 +17,7 @@ import {
     MultiVaultEverscaleEVMEventNativeAbi,
     MultiVaultEVMEverscaleEventAlienAbi,
     ProxyMultiVaultAlien_V8Abi,
-    ProxyMultiVaultNative_V4Abi, ProxyMultiVaultNative_V6Abi,
+    ProxyMultiVaultNative_V6Abi,
     SolanaEverscaleEventConfigurationAbi,
     StakingMockupAbi,
     TokenRootAbi,
@@ -28,7 +28,6 @@ import {expect} from "chai";
 import {EventAction, EventType, processEvent} from "../../../utils/events";
 import {MediatorOperation, setupHiddenBridge} from "../../../utils/hidden-bridge";
 import {setupNativeMultiVault} from "../../../utils/multivault/native";
-import exp from "constants";
 
 const logger = require("mocha-logger");
 
@@ -188,7 +187,7 @@ describe('Test EVM-EVM bridge transfers, deposit alien withdraw native token', a
                 })
                 .send({
                     from: initializer.address,
-                    amount: locklift.utils.toNano(10),
+                    amount: locklift.utils.toNano(30),
                 });
 
             logger.log(`Event initialization tx: ${tx.id.hash}`);
@@ -198,11 +197,11 @@ describe('Test EVM-EVM bridge transfers, deposit alien withdraw native token', a
                     eventVoteData: eventVoteData,
                     answerId: 0,
                 })
-                .call();
+                .call({ responsible: true });
 
             logger.log(`Expected event: ${expectedEventContract.eventContract}`);
 
-            depositEventContract = await locklift.factory.getDeployedContract(
+            depositEventContract = locklift.factory.getDeployedContract(
                 "MultiVaultEVMEverscaleEventAlien",
                 expectedEventContract.eventContract
             );
@@ -237,7 +236,7 @@ describe('Test EVM-EVM bridge transfers, deposit alien withdraw native token', a
 
             logger.log(`Expected event address: ${expectedEventContract}`);
 
-            withdrawEventContract = await locklift.factory.getDeployedContract(
+            withdrawEventContract = locklift.factory.getDeployedContract(
                 "MultiVaultEverscaleEVMEventNative",
                 expectedEventContract
             );

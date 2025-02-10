@@ -12,7 +12,7 @@ export const setupSolanaEverscaleEventConfiguration = async (
 ) => {
     const signer = (await locklift.keystore.getSigner("1"))!;
 
-    const solanaEverscaleEventConfigurationData = await locklift.factory.getContractArtifacts(
+    const solanaEverscaleEventConfigurationData = locklift.factory.getContractArtifacts(
         "SolanaEverscaleEventConfiguration"
     );
 
@@ -25,7 +25,7 @@ export const setupSolanaEverscaleEventConfiguration = async (
             _randomNonce: locklift.utils.getRandomNonce(),
         },
         publicKey: signer.publicKey,
-        value: locklift.utils.toNano(1),
+        value: locklift.utils.toNano(2),
     });
 
     const basicConfiguration = {
@@ -50,7 +50,7 @@ export const setupSolanaEverscaleEventConfiguration = async (
         })
         .send({
             from: owner.address,
-            amount: locklift.utils.toNano(2),
+            amount: locklift.utils.toNano(20),
         });
 
     let solanaEverscaleEventConfigurationAddress = await factory.methods
@@ -83,7 +83,7 @@ export const setupEverscaleSolanaEventConfiguration = async (
 ) => {
     const signer = (await locklift.keystore.getSigner("1"))!;
 
-    const everscaleSolanaEventConfigurationData = await locklift.factory.getContractArtifacts(
+    const everscaleSolanaEventConfigurationData = locklift.factory.getContractArtifacts(
         "EverscaleSolanaEventConfiguration"
     );
 
@@ -96,7 +96,7 @@ export const setupEverscaleSolanaEventConfiguration = async (
             _randomNonce: locklift.utils.getRandomNonce(),
         },
         publicKey: signer.publicKey,
-        value: locklift.utils.toNano(1),
+        value: locklift.utils.toNano(2),
     });
 
     const everBasicConfiguration = {
@@ -125,7 +125,7 @@ export const setupEverscaleSolanaEventConfiguration = async (
         })
         .send({
             from: owner.address,
-            amount: locklift.utils.toNano(2),
+            amount: locklift.utils.toNano(20),
         });
 
     let everscaleSolanaEventConfigurationAddress = await factory.methods

@@ -1,9 +1,8 @@
-import {logContract} from "./logger";
 import {Contract} from "locklift";
 import {
     Mediator_V2Abi,
     ProxyMultiVaultAlien_V8Abi,
-    ProxyMultiVaultNative_V4Abi, ProxyMultiVaultNative_V6Abi
+    ProxyMultiVaultNative_V6Abi
 } from "../../build/factorySource";
 import {Account} from "everscale-standalone-client/nodejs";
 
@@ -17,9 +16,9 @@ export const setupHiddenBridge = async (
 ]> => {
     const signer = (await locklift.keystore.getSigner("0"))!;
 
-    const configuration = await alienProxy.methods.getConfiguration({
-        answerId: 0
-    }).call();
+    const configuration = await alienProxy.methods
+        .getConfiguration({ answerId: 0 })
+        .call({ responsible: true });
 
     const {
         contract: mediator

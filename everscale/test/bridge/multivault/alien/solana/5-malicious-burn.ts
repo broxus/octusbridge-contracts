@@ -113,7 +113,7 @@ describe("Test event contract behaviour when Alien token is incorrect", async fu
 
             logger.log(`Expected event address: ${expectedEventContract}`);
 
-            eventContract = await locklift.factory.getDeployedContract(
+            eventContract = locklift.factory.getDeployedContract(
                 "MultiVaultEverscaleSolanaEventAlien",
                 expectedEventContract
             );
@@ -122,7 +122,7 @@ describe("Test event contract behaviour when Alien token is incorrect", async fu
         it("Check event contract rejected and relays are loaded", async () => {
             const details = await eventContract.methods
                 .getDetails({ answerId: 0 })
-                .call();
+                .call({ responsible: true });
 
             expect(details._status).to.be.equal(
                 "0",
