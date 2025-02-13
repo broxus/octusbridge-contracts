@@ -1,8 +1,8 @@
-import { Contract, getRandomNonce, Signer, WalletTypes, zeroAddress } from 'locklift';
-import { Account } from 'everscale-standalone-client/nodejs';
-import { BigNumber } from 'bignumber.js';
+import { Contract, getRandomNonce, Signer, WalletTypes, zeroAddress } from "locklift";
+import { Account } from "everscale-standalone-client/nodejs";
+import { BigNumber } from "bignumber.js";
 import assert from "node:assert";
-import { getConfig } from './configs';
+import { getConfig } from "./configs";
 
 import {
   BridgeAbi,
@@ -11,11 +11,11 @@ import {
   EverscaleEthereumEventConfigurationAbi,
   EverscaleEthereumEventConfigurationFactoryAbi,
   RoundDeployerAbi,
-} from '../../build/factorySource';
+} from "../../build/factorySource";
 
 const config = getConfig();
 
-assert(!!config, 'Config should be defined');
+assert(!!config, "Config should be defined");
 
 const setupRoundDeployerParams = async (roundDeployer: Contract<RoundDeployerAbi>, admin: Account): Promise<void> => {
   const platformArtifacts = locklift.factory.getContractArtifacts("Platform");
@@ -73,9 +73,11 @@ const setupRoundDeployerParams = async (roundDeployer: Contract<RoundDeployerAbi
   console.log("Set relay config to round deployer");
 };
 
-const deployConfigFactories = async (signer: Signer): Promise<{
-  ethEverEventConfigFactory: Contract<EthereumEverscaleEventConfigurationFactoryAbi>,
-  everEthEventConfigFactory: Contract<EverscaleEthereumEventConfigurationFactoryAbi>,
+const deployConfigFactories = async (
+  signer: Signer,
+): Promise<{
+  ethEverEventConfigFactory: Contract<EthereumEverscaleEventConfigurationFactoryAbi>;
+  everEthEventConfigFactory: Contract<EverscaleEthereumEventConfigurationFactoryAbi>;
 }> => {
   const { contract: ethEverEventConfigFactory } = await locklift.factory.deployContract({
     contract: "EthereumEverscaleEventConfigurationFactory",
@@ -88,9 +90,9 @@ const deployConfigFactories = async (signer: Signer): Promise<{
   });
 
   await locklift.deployments.saveContract({
-    contractName: 'EthereumEverscaleEventConfigurationFactory',
+    contractName: "EthereumEverscaleEventConfigurationFactory",
     address: ethEverEventConfigFactory.address,
-    deploymentName: 'EthEverEventConfigFactory'
+    deploymentName: "EthEverEventConfigFactory",
   });
 
   console.log(`EthEverEventConfigFactory: ${ethEverEventConfigFactory.address}`);
@@ -106,9 +108,9 @@ const deployConfigFactories = async (signer: Signer): Promise<{
   });
 
   await locklift.deployments.saveContract({
-    contractName: 'EverscaleEthereumEventConfigurationFactory',
+    contractName: "EverscaleEthereumEventConfigurationFactory",
     address: everEthEventConfigFactory.address,
-    deploymentName: 'EverEthEventConfigFactory'
+    deploymentName: "EverEthEventConfigFactory",
   });
 
   console.log(`EverEthEventConfigFactory: ${everEthEventConfigFactory.address}`);
@@ -129,9 +131,9 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
   });
 
   await locklift.deployments.saveContract({
-    contractName: 'ProxyMultiVaultAlien_V8',
+    contractName: "ProxyMultiVaultAlien_V8",
     address: proxyAlien.address,
-    deploymentName: 'ProxyMultiVaultAlien'
+    deploymentName: "ProxyMultiVaultAlien",
   });
 
   console.log(`ProxyMultiVaultAlien: ${proxyAlien.address}`);
@@ -145,10 +147,14 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
         from: admin.address,
         amount: config?.GAS.PROXY_MULTI_VAULT_SET_MERGE_POOL_PLATFORM,
         bounce: true,
-      })
+      }),
   );
 
-  console.log(`Set merge pool platform code to alien proxy. Code hash: ${locklift.factory.getContractArtifacts("MergePoolPlatform").codeHash}`);
+  console.log(
+    `Set merge pool platform code to alien proxy. Code hash: ${
+      locklift.factory.getContractArtifacts("MergePoolPlatform").codeHash
+    }`,
+  );
 
   await locklift.tracing.trace(
     proxyAlien.methods
@@ -159,10 +165,12 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
         from: admin.address,
         amount: config?.GAS.PROXY_MULTI_VAULT_SET_MERGE_POOL,
         bounce: true,
-      })
+      }),
   );
 
-  console.log(`Set merge pool code to alien proxy. Code hash: ${locklift.factory.getContractArtifacts("MergePool_V5").codeHash}`);
+  console.log(
+    `Set merge pool code to alien proxy. Code hash: ${locklift.factory.getContractArtifacts("MergePool_V5").codeHash}`,
+  );
 
   await locklift.tracing.trace(
     proxyAlien.methods
@@ -173,55 +181,69 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
         from: admin.address,
         amount: config?.GAS.PROXY_MULTI_VAULT_SET_MERGE_ROUTER,
         bounce: true,
-      })
+      }),
   );
 
-  console.log(`Set merge router to alien proxy. Code hash: ${locklift.factory.getContractArtifacts("MergeRouter").codeHash}`);
+  console.log(
+    `Set merge router to alien proxy. Code hash: ${locklift.factory.getContractArtifacts("MergeRouter").codeHash}`,
+  );
 
   await locklift.tracing.trace(
     proxyAlien.methods
       .setEVMAlienTokenRootCode({
-        _tokenRootCode: locklift.factory.getContractArtifacts('TokenRootAlienEVM').code,
+        _tokenRootCode: locklift.factory.getContractArtifacts("TokenRootAlienEVM").code,
         _remainingGasTo: admin.address,
       })
       .send({
         from: admin.address,
         amount: config?.GAS.PROXY_MULTI_VAULT_SET_EVM_TOKEN_ROOT,
         bounce: true,
-      })
+      }),
   );
 
-  console.log(`Set EVM token root to alien proxy. Code hash: ${locklift.factory.getContractArtifacts('TokenRootAlienEVM').codeHash}`);
+  console.log(
+    `Set EVM token root to alien proxy. Code hash: ${
+      locklift.factory.getContractArtifacts("TokenRootAlienEVM").codeHash
+    }`,
+  );
 
   await locklift.tracing.trace(
     proxyAlien.methods
       .setEVMAlienTokenWalletCode({
-        _tokenWalletCode: locklift.factory.getContractArtifacts('AlienTokenWalletUpgradeable').code,
+        _tokenWalletCode: locklift.factory.getContractArtifacts("AlienTokenWalletUpgradeable").code,
         _remainingGasTo: admin.address,
       })
       .send({
         from: admin.address,
         amount: config?.GAS.PROXY_MULTI_VAULT_SET_EVM_TOKEN_WALLET,
         bounce: true,
-      })
+      }),
   );
 
-  console.log(`Set EVM token wallet to alien proxy. Code hash: ${locklift.factory.getContractArtifacts('AlienTokenWalletUpgradeable').codeHash}`);
+  console.log(
+    `Set EVM token wallet to alien proxy. Code hash: ${
+      locklift.factory.getContractArtifacts("AlienTokenWalletUpgradeable").codeHash
+    }`,
+  );
 
   await locklift.tracing.trace(
     proxyAlien.methods
       .setOnceEVMAlienTokenPlatformCode({
-        _tokenPlatformCode: locklift.factory.getContractArtifacts('AlienTokenWalletPlatform').code,
+        _tokenPlatformCode: locklift.factory.getContractArtifacts("AlienTokenWalletPlatform").code,
         _remainingGasTo: admin.address,
       })
       .send({
         from: admin.address,
         amount: config?.GAS.PROXY_MULTI_VAULT_SET_ONCE_EVM_TOKEN_PLATFORM,
         bounce: true,
-      })
+      }),
   );
 
-  console.log(`Set EVM token platform to alien proxy. Code hash: ${locklift.factory.getContractArtifacts('AlienTokenWalletPlatform').codeHash}`);
+  console.log(
+    `Set EVM token platform to alien proxy. Code hash: ${
+      locklift.factory.getContractArtifacts("AlienTokenWalletPlatform").codeHash
+    }`,
+  );
 
   const { contract: proxyNative } = await locklift.factory.deployContract({
     contract: "ProxyMultiVaultNative_V6",
@@ -232,9 +254,9 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
   });
 
   await locklift.deployments.saveContract({
-    contractName: 'ProxyMultiVaultNative_V6',
+    contractName: "ProxyMultiVaultNative_V6",
     address: proxyNative.address,
-    deploymentName: 'ProxyMultiVaultNative'
+    deploymentName: "ProxyMultiVaultNative",
   });
 
   console.log(`ProxyMultiVaultNative: ${proxyNative.address}`);
@@ -246,8 +268,8 @@ const deployStakingConfigurations = async (
   ethEverEventConfigFactory: Contract<EthereumEverscaleEventConfigurationFactoryAbi>,
   everEthEventConfigFactory: Contract<EverscaleEthereumEventConfigurationFactoryAbi>,
 ): Promise<{
-  stakingEthEverConfigs: Record<number, Contract<EthereumEverscaleEventConfigurationAbi>>,
-  stakingEverEthConfig: Contract<EverscaleEthereumEventConfigurationAbi>,
+  stakingEthEverConfigs: Record<number, Contract<EthereumEverscaleEventConfigurationAbi>>;
+  stakingEverEthConfig: Contract<EverscaleEthereumEventConfigurationAbi>;
 }> => {
   const stakingEthEventAbi = {
     anonymous: false,
@@ -268,7 +290,7 @@ const deployStakingConfigurations = async (
       _flags: 0,
       basicConfiguration: {
         eventABI: Buffer.from(JSON.stringify(stakingEthEventAbi)).toString("base64"),
-        eventCode: locklift.factory.getContractArtifacts("RelayRound").code,
+        eventCode: locklift.factory.getContractArtifacts("StakingEthereumEverscaleEvent").code,
         staking: staking.address,
         eventInitialBalance: config?.GAS.ROUND_DEPLOYER_EVENT_INITIAL_BALANCE,
       },
@@ -283,29 +305,27 @@ const deployStakingConfigurations = async (
     };
 
     await locklift.tracing.trace(
-        ethEverEventConfigFactory.methods
-            .deploy(stakingEthEverConfiguration)
-            .send({
-              from: admin.address,
-              amount: config?.GAS.DEPLOY_CONFIGURATION,
-              bounce: true,
-            }),
+      ethEverEventConfigFactory.methods.deploy(stakingEthEverConfiguration).send({
+        from: admin.address,
+        amount: config?.GAS.DEPLOY_CONFIGURATION,
+        bounce: true,
+      }),
     );
 
     const stakingEthEverConfig = await ethEverEventConfigFactory.methods
-        .deriveConfigurationAddress({
-          basicConfiguration: stakingEthEverConfiguration.basicConfiguration,
-          networkConfiguration: stakingEthEverConfiguration.networkConfiguration,
-        })
-        .call()
-        .then((r) => locklift.factory.getDeployedContract("EthereumEverscaleEventConfiguration", r.value0));
+      .deriveConfigurationAddress({
+        basicConfiguration: stakingEthEverConfiguration.basicConfiguration,
+        networkConfiguration: stakingEthEverConfiguration.networkConfiguration,
+      })
+      .call()
+      .then(r => locklift.factory.getDeployedContract("EthereumEverscaleEventConfiguration", r.value0));
 
     stakingEthEverConfigs[chainId] = stakingEthEverConfig;
 
     await locklift.deployments.saveContract({
-      contractName: 'EthereumEverscaleEventConfiguration',
+      contractName: "EthereumEverscaleEventConfiguration",
       address: stakingEthEverConfig.address,
-      deploymentName: `RoundDeployerConfiguration-EthEverEvent-${chainId}`
+      deploymentName: `RoundDeployerConfiguration-EthEverEvent-${chainId}`,
     });
 
     console.log(`EthereumEverscaleEventConfiguration (${chainId}): ${stakingEthEverConfig.address}`);
@@ -322,7 +342,7 @@ const deployStakingConfigurations = async (
     _flags: 0,
     basicConfiguration: {
       eventABI: Buffer.from(JSON.stringify(stakingEverEventAbi)).toString("base64"),
-      eventCode: locklift.factory.getContractArtifacts("RelayRound").code,
+      eventCode: locklift.factory.getContractArtifacts("StakingEverscaleEthereumEvent").code,
       staking: staking.address,
       eventInitialBalance: config?.GAS.ROUND_DEPLOYER_EVENT_INITIAL_BALANCE,
     },
@@ -335,13 +355,11 @@ const deployStakingConfigurations = async (
   };
 
   await locklift.tracing.trace(
-    everEthEventConfigFactory.methods
-      .deploy(stakingEverEthConfiguration)
-      .send({
-        from: admin.address,
-        amount: config?.GAS.DEPLOY_CONFIGURATION,
-        bounce: true,
-      }),
+    everEthEventConfigFactory.methods.deploy(stakingEverEthConfiguration).send({
+      from: admin.address,
+      amount: config?.GAS.DEPLOY_CONFIGURATION,
+      bounce: true,
+    }),
   );
 
   const stakingEverEthConfig = await everEthEventConfigFactory.methods
@@ -350,12 +368,12 @@ const deployStakingConfigurations = async (
       networkConfiguration: stakingEverEthConfiguration.networkConfiguration,
     })
     .call()
-    .then((r) => locklift.factory.getDeployedContract("EverscaleEthereumEventConfiguration", r.value0));
+    .then(r => locklift.factory.getDeployedContract("EverscaleEthereumEventConfiguration", r.value0));
 
   await locklift.deployments.saveContract({
-    contractName: 'EverscaleEthereumEventConfiguration',
+    contractName: "EverscaleEthereumEventConfiguration",
     address: stakingEverEthConfig.address,
-    deploymentName: `RoundDeployerConfiguration-EverEthEvent`
+    deploymentName: `RoundDeployerConfiguration-EverEthEvent`,
   });
 
   console.log(`EverscaleEthereumEventConfiguration: ${stakingEverEthConfig.address}`);
@@ -373,13 +391,11 @@ const deployConnectors = async (
 ): Promise<void> => {
   for (const configuration of configurations) {
     const { traceTree: ttConnector } = await locklift.tracing.trace(
-      bridge.methods
-        .deployConnector({ _eventConfiguration: configuration.address })
-        .send({
-          from: admin.address,
-          amount: config?.GAS.DEPLOY_CONNECTOR,
-          bounce: true,
-        }),
+      bridge.methods.deployConnector({ _eventConfiguration: configuration.address }).send({
+        from: admin.address,
+        amount: config?.GAS.DEPLOY_CONNECTOR,
+        bounce: true,
+      }),
     );
 
     const connector = locklift.factory.getDeployedContract(
@@ -388,19 +404,17 @@ const deployConnectors = async (
     );
 
     await locklift.deployments.saveContract({
-      contractName: 'Connector',
+      contractName: "Connector",
       address: connector.address,
       deploymentName: `Connector-${configuration.address.toString()}`,
     });
 
     await locklift.tracing.trace(
-      connector.methods
-        .enable({})
-        .send({
-          from: admin.address,
-          amount: config?.GAS.CONNECTOR_ENABLE,
-          bounce: true,
-        }),
+      connector.methods.enable({}).send({
+        from: admin.address,
+        amount: config?.GAS.CONNECTOR_ENABLE,
+        bounce: true,
+      }),
     );
 
     console.log(`${configuration.address} Connector: ${connector.address}`);
@@ -410,33 +424,35 @@ const deployConnectors = async (
 const main = async (): Promise<void> => {
   const signer = (await locklift.keystore.getSigner("0"))!;
 
-  const [{ account: admin }] = await locklift.deployments.deployAccounts([{
-    deploymentName: "Admin",
-    signerId: "0",
-    accountSettings: {
-      type: WalletTypes.EverWallet,
-      value: config?.GAS.DEPLOY_ADMIN,
+  const [{ account: admin }] = await locklift.deployments.deployAccounts([
+    {
+      deploymentName: "Admin",
+      signerId: "0",
+      accountSettings: {
+        type: WalletTypes.EverWallet,
+        value: config?.GAS.DEPLOY_ADMIN,
+      },
     },
-  }]);
+  ]);
 
   console.log(`Bridge admin: ${admin.address}`);
 
   const { contract: roundDeployer } = await locklift.factory.deployContract({
-      contract: "RoundDeployer",
-      constructorParams: {
-        _admin: admin.address,
-        _bridge_event_config_ton_sol: zeroAddress,
-        _bridge_event_config_ton_eth: zeroAddress,
-      },
-      initParams: { deploy_nonce: getRandomNonce() },
-      publicKey: signer.publicKey,
-      value: config?.GAS.DEPLOY_ROUND_DEPLOYER,
+    contract: "RoundDeployer",
+    constructorParams: {
+      _admin: admin.address,
+      _bridge_event_config_ton_sol: zeroAddress,
+      _bridge_event_config_ton_eth: zeroAddress,
+    },
+    initParams: { deploy_nonce: getRandomNonce() },
+    publicKey: signer.publicKey,
+    value: config?.GAS.DEPLOY_ROUND_DEPLOYER,
   });
 
   await locklift.deployments.saveContract({
-    deploymentName: 'RoundDeployer',
+    deploymentName: "RoundDeployer",
     address: roundDeployer.address,
-    contractName: 'RoundDeployer'
+    contractName: "RoundDeployer",
   });
 
   console.log(`RoundDeployer: ${roundDeployer.address}`);
@@ -460,15 +476,12 @@ const main = async (): Promise<void> => {
   console.log(`Bridge: ${bridge.address}`);
 
   await locklift.deployments.saveContract({
-    deploymentName: 'Bridge',
+    deploymentName: "Bridge",
     address: bridge.address,
-    contractName: 'Bridge'
+    contractName: "Bridge",
   });
 
-  const {
-    ethEverEventConfigFactory,
-    everEthEventConfigFactory,
-  } = await deployConfigFactories(signer);
+  const { ethEverEventConfigFactory, everEthEventConfigFactory } = await deployConfigFactories(signer);
 
   await deployMultiVaults(admin, signer);
 
@@ -483,15 +496,12 @@ const main = async (): Promise<void> => {
   console.log(`CellEncoderStandalone: ${cellEncoder.address}`);
 
   await locklift.deployments.saveContract({
-    deploymentName: 'CellEncoderStandalone',
+    deploymentName: "CellEncoderStandalone",
     address: cellEncoder.address,
-    contractName: 'CellEncoderStandalone'
+    contractName: "CellEncoderStandalone",
   });
 
-  const {
-    stakingEthEverConfigs,
-    stakingEverEthConfig,
-  } = await deployStakingConfigurations(
+  const { stakingEthEverConfigs, stakingEverEthConfig } = await deployStakingConfigurations(
     admin,
     roundDeployer,
     ethEverEventConfigFactory,
@@ -509,7 +519,7 @@ const main = async (): Promise<void> => {
       .send({
         from: admin.address,
         amount: config?.GAS.ROUND_DEPLOYER_SET_BRIDGE_EVENT_TON_ETH_CONFIG,
-        bounce: true
+        bounce: true,
       }),
   );
 
