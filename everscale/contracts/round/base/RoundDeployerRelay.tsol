@@ -106,7 +106,7 @@ abstract contract RoundDeployerRelay is RoundDeployerUpgradable {
             IEverscaleSolanaEventConfiguration(bridge_event_config_ton_sol).deployEvent{value: tonSolEventDeployValue}(event_data_sol);
         }
 
-        if (round_num >= 3) {
+        if (round_num > 3) {
             address old_relay_round = getRelayRoundAddress(round_num - 3);
             IRelayRound(old_relay_round).destroy{value: gasToValue(Gas.DESTROY_MSG_GAS, address(this).wid)}();
         }
