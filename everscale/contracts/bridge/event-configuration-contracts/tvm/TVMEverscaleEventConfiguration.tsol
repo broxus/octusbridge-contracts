@@ -1,0 +1,312 @@
+pragma ever-solidity >= 0.62.0;
+pragma AbiHeader expire;
+
+
+import "./../../interfaces/event-contracts/ITVMEverscaleEvent.tsol";
+import "./../../interfaces/event-configuration-contracts/ITVMEverscaleEventConfiguration.tsol";
+
+import "./../../interfaces/proxy/ITVMEverscaleProxy.tsol";
+import "./../../interfaces/proxy/ITVMEverscaleProxyExtended.tsol";
+
+import "./../../event-contracts/base/tvm/TVMEverscaleBaseEvent.tsol";
+
+import "./../../../utils/TransferUtils.tsol";
+import "./../../../utils/ErrorCodes.tsol";
+
+import "@broxus/contracts/contracts/access/InternalOwner.tsol";
+import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
+import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
+
+
+/// @title Basic TVM-Everscale event configuration contract
+/// @author https://github.com/broxus
+contract TVMEverscaleEventConfiguration is
+    ITVMEverscaleEventConfiguration,
+    ITVMEverscaleProxy,
+    ITVMEverscaleProxyExtended,
+    TransferUtils,
+    InternalOwner,
+    CheckPubKey
+{
+    BasicConfiguration public static basicConfiguration;
+    TVMEverscaleEventConfiguration public static networkConfiguration;
+
+    uint64 public flags;
+    TvmCell public meta;
+
+    /// @param _owner Event configuration owner
+    constructor(
+        address _owner,
+        TvmCell _meta,
+        uint64 _flags
+    ) public checkPubKey reserveTargetBalance() {
+        tvm.accept();
+
+        setOwnership(_owner);
+
+        meta = _meta;
+        flags = _flags;
+
+        _owner.transfer({
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        });
+    }
+
+    /// @notice Set new configuration meta.
+    /// @param _meta New configuration meta
+    function setMeta(TvmCell _meta) override onlyOwner cashBack external {
+        meta = _meta;
+    }
+
+    /// @dev Set end block number. Can be set only in case current value is 0.
+    /// @param endBlockNumber End block number
+    function setEndBlockNumber(
+        uint32 endBlockNumber
+    )
+        override
+        onlyOwner
+        cashBack
+        external
+    {
+        require(
+            networkConfiguration.endBlockNumber == 0,
+            ErrorCodes.END_BLOCK_NUMBER_ALREADY_SET
+        );
+
+        require(
+            endBlockNumber >= networkConfiguration.startBlockNumber,
+            ErrorCodes.TOO_LOW_END_BLOCK_NUMBER
+        );
+
+        networkConfiguration.endBlockNumber = endBlockNumber;
+    }
+
+    function setFlags(
+        uint64 _flags
+    ) override onlyOwner cashBack external {
+        flags = _flags;
+    }
+
+    function setEventInitialBalance(
+        uint64 eventInitialBalance
+    ) override onlyOwner cashBack external {
+        basicConfiguration.eventInitialBalance = eventInitialBalance;
+    }
+
+    function setTransactionChecker(
+        address transactionChecker
+    ) override onlyOwner cashBack external {
+        networkConfiguration.transactionChecker = transactionChecker;
+    }
+
+    /// @dev Build initial data for event contract
+    /// @dev Extends event vote data with configuration params
+    /// @param eventVoteData Event vote data structure, passed by relay
+    function buildEventInitData(
+        ITVMEverscaleEvent.TVMEverscaleEventVoteData eventVoteData
+    ) internal view returns(
+        ITVMEverscaleEvent.TVMEverscaleEventInitData eventInitData
+    ) {
+        eventInitData.voteData = eventVoteData;
+
+        eventInitData.configuration = address(this);
+        eventInitData.chainId = networkConfiguration.chainId;
+
+        return eventInitData;
+    }
+
+    /// @dev Deploy event contract
+    /// @param eventVoteData Event vote data
+    function deployEvent(
+        ITVMEverscaleEvent.TVMEverscaleEventVoteData eventVoteData
+    )
+        external
+        override
+        reserveAtLeastTargetBalance()
+    {
+        require(msg.value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
+
+        _deployEvent(eventVoteData, MsgFlag.ALL_NOT_RESERVED, 0);
+    }
+
+    function deployEvents(
+        ITVMEverscaleEvent.TVMEverscaleEventVoteData[] eventsVoteData,
+        uint128[] values
+    ) external override reserveAtLeastTargetBalance() {
+        require(values.length == eventsVoteData.length && values.length > 0);
+
+        uint counter = 0;
+
+        for (ITVMEverscaleEvent.TVMEverscaleEventVoteData eventVoteData: eventsVoteData) {
+            _deployEvent(eventVoteData, MsgFlag.SENDER_PAYS_FEES, values[counter]);
+            counter++;
+        }
+
+        msg.sender.transfer({ value: 0, flag: MsgFlag.IGNORE_ERRORS + MsgFlag.ALL_NOT_RESERVED, bounce: false });
+    }
+
+
+    function _deployEvent(
+        ITVMEverscaleEvent.TVMEverscaleEventVoteData eventVoteData,
+        uint8 flag,
+        uint128 value
+    ) internal view {
+        if (value != 0) {
+            require(value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
+        }
+
+        require(
+            eventVoteData.eventBlockNumber >= networkConfiguration.startBlockNumber,
+            ErrorCodes.EVENT_BLOCK_NUMBER_LESS_THAN_START
+        );
+
+        if (networkConfiguration.endBlockNumber != 0) {
+            require(
+                eventVoteData.eventBlockNumber <= networkConfiguration.endBlockNumber,
+                ErrorCodes.EVENT_BLOCK_NUMBER_HIGHER_THAN_END
+            );
+        }
+
+        ITVMEverscaleEvent.TVMEverscaleEventInitData eventInitData = buildEventInitData(eventVoteData);
+
+        address eventContract = deriveEventAddress(eventVoteData);
+
+        emit NewEventContract(eventContract);
+
+        new TVMEverscaleBaseEvent{
+            value: value,
+            flag: flag,
+            code: basicConfiguration.eventCode,
+            pubkey: 0,
+            varInit: {
+                eventInitData: eventInitData
+            }
+        }(msg.sender, meta, networkConfiguration.transactionChecker, networkConfiguration.eventEmitter);
+    }
+
+    /// @dev Derive the Ethereum event contract address from it's init data
+    /// @param eventVoteData Ethereum event vote data
+    /// @return eventContract Address of the corresponding ethereum event contract
+    function deriveEventAddress(
+        ITVMEverscaleEvent.TVMEverscaleEventVoteData eventVoteData
+    )
+        override
+        public
+        view
+        responsible
+    returns(
+        address eventContract
+    ) {
+        ITVMEverscaleEvent.TVMEverscaleEventInitData eventInitData = buildEventInitData(eventVoteData);
+
+        TvmCell stateInit = tvm.buildStateInit({
+            contr: TVMEverscaleBaseEvent,
+            varInit: {
+                eventInitData: eventInitData
+            },
+            pubkey: 0,
+            code: basicConfiguration.eventCode
+        });
+
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} address(tvm.hash(stateInit));
+    }
+
+    /**
+        @dev Get configuration details.
+        @return _basicConfiguration Basic configuration init data
+        @return _networkConfiguration Network specific configuration init data
+    */
+    function getDetails() override public view responsible returns(
+        BasicConfiguration _basicConfiguration,
+        TVMEverscaleEventConfiguration _networkConfiguration,
+        TvmCell _meta
+    ) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(
+            basicConfiguration,
+            networkConfiguration,
+            meta
+        );
+    }
+
+    /// @dev Get event configuration type
+    /// @return _type Configuration type (enum EventType)
+    function getType() override public pure responsible returns(EventType _type) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} EventType.EthereumEverscale;
+    }
+
+    function getFlags() override public view responsible returns(uint64 _flags) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} flags;
+    }
+
+    /// @dev Proxy V1 callback.
+    /// Receives "confirm" callback from the event contract and checks event contract correctness.
+    /// If it's correct, then sends the callback to the proxy with the same signature.
+    /// @param eventInitData Ethereum event data
+    /// @param gasBackAddress Gas back address
+    function onEventConfirmed(
+        ITVMEverscaleEvent.TVMEverscaleEventInitData eventInitData,
+        address gasBackAddress
+    ) external override reserveAtLeastTargetBalance() {
+        require(
+            eventInitData.configuration == address(this),
+            ErrorCodes.SENDER_NOT_EVENT_CONTRACT
+        );
+
+        address eventContract = _deriveEventAddress(eventInitData);
+
+        require(
+            eventContract == msg.sender,
+            ErrorCodes.SENDER_NOT_EVENT_CONTRACT
+        );
+
+        ITVMEverscaleProxy(networkConfiguration.proxy).onEventConfirmed{
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(eventInitData, gasBackAddress);
+
+    }
+
+    /// @dev Proxy V2 callback. Receives additional cell.
+    /// Receives "confirm" callback from the event contract and checks event contract correctness.
+    /// If it's correct, then sends the callback to the proxy with the same signature.
+    /// @param eventInitData Ethereum event data
+    /// @param _meta Arbitrary meta cell
+    /// @param gasBackAddress Gas back address
+    function onEventConfirmedExtended(
+        ITVMEverscaleEvent.TVMEverscaleEventInitData eventInitData,
+        TvmCell _meta,
+        address gasBackAddress
+    ) external override reserveAtLeastTargetBalance {
+        require(
+            eventInitData.configuration == address(this),
+            ErrorCodes.SENDER_NOT_EVENT_CONTRACT
+        );
+
+        address eventContract = _deriveEventAddress(eventInitData);
+
+        require(
+            eventContract == msg.sender,
+            ErrorCodes.SENDER_NOT_EVENT_CONTRACT
+        );
+
+        ITVMEverscaleProxyExtended(networkConfiguration.proxy).onEventConfirmedExtended{
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(eventInitData, _meta, gasBackAddress);
+    }
+
+    function _deriveEventAddress(
+        ITVMEverscaleEvent.TVMEverscaleEventInitData eventInitData
+    ) internal view returns (address _event) {
+        TvmCell stateInit = tvm.buildStateInit({
+            contr: TVMEverscaleBaseEvent,
+            varInit: {
+                eventInitData: eventInitData
+            },
+            pubkey: 0,
+            code: basicConfiguration.eventCode
+        });
+
+        _event = address(tvm.hash(stateInit));
+    }
+}

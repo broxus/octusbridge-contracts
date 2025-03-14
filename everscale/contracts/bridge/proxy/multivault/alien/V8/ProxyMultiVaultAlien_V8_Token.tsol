@@ -104,6 +104,15 @@ abstract contract ProxyMultiVaultAlien_V8_Token is ProxyMultivaultAlien_V8_Base 
         );
     }
 
+    function deployTVMAlienToken(
+        uint256 chainId,
+        address token,
+        string name,
+        string symbol,
+        uint8 decimals,
+        address remainingGasTo
+    ) external override reserveAtLeastTargetBalance {}
+
     /// @notice Derives root address for alien token, without deploying it
     /// @param chainId EVM network chain ID
     /// @param token EVM token address
@@ -148,6 +157,14 @@ abstract contract ProxyMultiVaultAlien_V8_Token is ProxyMultivaultAlien_V8_Base 
 
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
     }
+
+    function deriveTVMAlienTokenRoot(
+        uint256 chainId,
+        address token,
+        string name,
+        string symbol,
+        uint8 decimals
+    ) public override responsible returns (address) {}
 
     function _buildEVMAlienTokenRootInitState(
         uint256 chainId,

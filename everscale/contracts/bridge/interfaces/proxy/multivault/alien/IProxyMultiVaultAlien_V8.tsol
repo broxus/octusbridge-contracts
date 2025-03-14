@@ -126,6 +126,14 @@ interface IProxyMultiVaultAlien_V8 is IEVMCallback, INetworks {
         uint8 decimals
     ) external responsible returns (address);
 
+    function deriveTVMAlienTokenRoot(
+        uint256 base_chainId,
+        address base_token,
+        string name,
+        string symbol,
+        uint8 decimals
+    ) external responsible returns (address);
+
     // Deploy token root
     function deployEVMAlienToken(
         uint256 chainId,
@@ -138,6 +146,15 @@ interface IProxyMultiVaultAlien_V8 is IEVMCallback, INetworks {
 
     function deploySolanaAlienToken(
         uint256 token,
+        string name,
+        string symbol,
+        uint8 decimals,
+        address remainingGasTo
+    ) external;
+
+    function deployTVMAlienToken(
+        uint256 chainId,
+        address token,
         string name,
         string symbol,
         uint8 decimals,
