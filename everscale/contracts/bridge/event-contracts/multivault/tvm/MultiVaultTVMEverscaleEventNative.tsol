@@ -1,0 +1,163 @@
+pragma ever-solidity >= 0.62.0;
+pragma AbiHeader time;
+pragma AbiHeader pubkey;
+pragma AbiHeader expire;
+
+import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.tsol";
+
+import "./../../../interfaces/event-contracts/multivault/tvm/IMultiVaultTVMEverscaleEventNative.tsol";
+import "./../../../interfaces/event-configuration-contracts/ITVMEverscaleEventConfiguration.tsol";
+import "./../../../interfaces/proxy/ITVMEverscaleProxyExtended.tsol";
+
+import "./../../base/tvm/TVMEverscaleBaseEvent.tsol";
+
+
+contract MultiVaultTVMEverscaleEventNative is
+    TVMEverscaleBaseEvent,
+    IMultiVaultTVMEverscaleEventNative
+{
+    address public token;
+    uint128 public amount;
+    address public recipient;
+
+    uint public value;
+    uint public expected_evers;
+    TvmCell public payload;
+
+    // Derived fields
+    address public proxy;
+    address public tokenWallet;
+
+    constructor(
+        address _initializer,
+        TvmCell _meta,
+        address _transactionChecker,
+        address _eventEmitter
+    ) TVMEverscaleBaseEvent(_initializer, _meta,  _transactionChecker, _eventEmitter) public {}
+
+    function onInit() override internal {
+        status = Status.Initializing;
+
+        (
+            token,
+            amount,
+            recipient,
+
+            value,
+            expected_evers,
+            payload
+        ) = abi.decode(
+            eventInitData.voteData.eventData,
+            (
+                address, uint128, address,
+                uint256, uint256, TvmCell
+            )
+        );
+
+        // Destroy event contract in case event contract is less than required
+        if (address(this).balance < expected_evers) {
+            initializer.transfer({
+                value: 0,
+                bounce: false,
+                flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.DESTROY_IF_ZERO
+            });
+
+            return;
+        }
+
+        ITVMEverscaleEventConfiguration(eventInitData.configuration).getDetails{
+            value: gasToValue(Gas.REQUEST_CONFIGURATION_DETAILS_GAS, address(this).wid),
+            callback: MultiVaultTVMEverscaleEventNative.receiveConfigurationDetails
+       }();
+    }
+
+    function receiveConfigurationDetails(
+        IBasicEventConfiguration.BasicConfiguration,
+        ITVMEverscaleEventConfiguration.TVMEverscaleEventConfiguration _networkConfiguration,
+        TvmCell
+    ) external override {
+        require(msg.sender == eventInitData.configuration, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
+
+        proxy = _networkConfiguration.proxy;
+
+        ITokenRoot(token).walletOf{
+            value: gasToValue(Gas.GET_TOKEN_DATA_GAS, address(this).wid),
+            callback: MultiVaultTVMEverscaleEventNative.receiveProxyTokenWallet
+        }(proxy);
+    }
+
+    function receiveProxyTokenWallet(
+        address tokenWallet_
+    ) external override {
+        require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
+
+        tokenWallet = tokenWallet_;
+
+        status = Status.Pending;
+        // todo call transactionChecker to validate eventVoteData (callback onTransactionCheck)
+    }
+
+    function onTransactionCheck() external {
+        // todo handle results
+
+        //mock
+        bool success = true;
+
+        // if failed (too new block)
+        if (!success) {
+            initializer.transfer({
+                value: 0,
+                bounce: false,
+                flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.DESTROY_IF_ZERO
+            });
+            return;
+        }
+
+        // if failed (other errors)
+        if (!success) {
+            status = Status.Rejected;
+            onReject();
+
+            return;
+        }
+
+        // if success
+        status = Status.Confirmed;
+        onConfirm();
+    }
+
+    function getDecodedData() external override responsible returns(
+        address token_,
+        uint128 amount_,
+        address recipient_,
+        uint value_,
+        uint expected_evers_,
+        TvmCell payload_,
+        address proxy_,
+        address tokenWallet_
+    ) {
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS}(
+            token,
+            amount,
+            recipient,
+            value,
+            expected_evers,
+            payload,
+            proxy,
+            tokenWallet
+        );
+    }
+
+    function onConfirm() internal override {
+        TvmCell metaData = abi.encode(
+            tokenWallet,
+            amount,
+            recipient,
+            payload
+        );
+
+        ITVMEverscaleProxyExtended(eventInitData.configuration).onEventConfirmedExtended{
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(eventInitData, metaData, initializer);
+    }
+}

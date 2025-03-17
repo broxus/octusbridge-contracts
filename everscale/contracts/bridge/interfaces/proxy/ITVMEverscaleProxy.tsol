@@ -1,0 +1,10 @@
+pragma ever-solidity >= 0.62.0;
+
+import "./../event-contracts/ITVMEverscaleEvent.tsol";
+
+interface ITVMEverscaleProxy is ITVMEverscaleEvent {
+    function onEventConfirmed(
+        ITVMEverscaleEvent.TVMEverscaleEventInitData eventData,
+        address gasBackAddress
+    ) external;
+}

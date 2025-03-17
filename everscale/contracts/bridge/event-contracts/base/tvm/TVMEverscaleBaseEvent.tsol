@@ -1,0 +1,80 @@
+pragma ever-solidity >= 0.62.0;
+pragma AbiHeader time;
+pragma AbiHeader expire;
+pragma AbiHeader pubkey;
+
+import "./../BaseEvent.tsol";
+import "../../../interfaces/event-contracts/ITVMEverscaleEvent.tsol";
+import "./../../../../utils/TransferUtils.tsol";
+import "./../../../../utils/ErrorCodes.tsol";
+import "../../../libraries/EventContractNonce.tsol";
+
+
+import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
+
+
+contract TVMEverscaleBaseEvent is ITVMEverscaleEvent, TransferUtils {
+    Status public status;
+    // Event contract deployer
+    address public initializer;
+    // Event configuration meta
+    TvmCell public meta;
+
+    address public transactionChecker;
+    address public eventEmitter;
+
+    // Event data
+    TVMEverscaleEventInitData static eventInitData;
+    uint32 public nonce;
+
+    /// @dev Should be deployed only by corresponding TVMEverscaleEventConfiguration contract
+    /// @param _initializer The address who paid for contract deployment.
+    /// Receives all contract balance at the end of event contract lifecycle.
+    constructor(
+        address _initializer,
+        TvmCell _meta,
+        address _transactionChecker,
+        address _eventEmitter
+    ) public {
+        require(
+            eventInitData.configuration == msg.sender,
+            ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION
+        );
+
+        nonce = EventContractNonce._calculateNonce(eventInitData);
+        initializer = _initializer;
+        meta = _meta;
+
+        transactionChecker = _transactionChecker;
+        eventEmitter = _eventEmitter;
+
+        onInit();
+    }
+
+    function onConfirm() virtual internal {}
+    function onReject() virtual internal {}
+
+    function onInit() virtual internal {
+        onConfirm();
+    }
+
+    function getEventInitData() public view responsible returns (TVMEverscaleEventInitData) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} eventInitData;
+    }
+
+    /// @dev Get event details
+    /// @return _eventInitData Init data
+    /// @return _initializer Account who has deployed this contract
+    /// @return _meta Meta data from the corresponding event configuration
+    function getDetails() external view responsible returns (
+        TVMEverscaleEventInitData _eventInitData,
+        address _initializer,
+        TvmCell _meta
+    ) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} (
+            eventInitData,
+            initializer,
+            meta
+        );
+    }
+}
