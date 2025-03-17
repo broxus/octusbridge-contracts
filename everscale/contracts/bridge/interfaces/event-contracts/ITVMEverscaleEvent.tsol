@@ -10,7 +10,7 @@ interface ITVMEverscaleEvent {
     event Rejected();
 
     struct TVMEverscaleEventVoteData {
-        TvmCell eventData;
+        TvmCell eventData; // boc
         uint eventTransaction;
         TvmCell proof;
         uint32 eventBlockNumber;

@@ -38,6 +38,8 @@ contract MultiVaultTVMEverscaleEventNative is
     function onInit() override internal {
         status = Status.Initializing;
 
+        TvmCell body = eventInitData.voteData.eventData.toSlice().loadRef();
+        TvmCell data = body.toSlice().loadRef();
         (
             token,
             amount,
@@ -47,7 +49,7 @@ contract MultiVaultTVMEverscaleEventNative is
             expected_evers,
             payload
         ) = abi.decode(
-            eventInitData.voteData.eventData,
+            data,
             (
                 address, uint128, address,
                 uint256, uint256, TvmCell
