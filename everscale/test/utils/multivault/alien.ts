@@ -45,16 +45,16 @@ export const setupAlienMultiVault = async (
     await logContract("ProxyMultiVaultAlien_V8", proxy.address);
 
     // Load event contracts
-    const ethereumEverscaleEvent = await locklift.factory.getContractArtifacts(
+    const ethereumEverscaleEvent = locklift.factory.getContractArtifacts(
         "MultiVaultEVMEverscaleEventAlien"
     );
-    const everscaleEthereumEvent = await locklift.factory.getContractArtifacts(
+    const everscaleEthereumEvent = locklift.factory.getContractArtifacts(
         "MultiVaultEverscaleEVMEventAlien"
     );
-    const solanaEverscaleEvent = await locklift.factory.getContractArtifacts(
+    const solanaEverscaleEvent = locklift.factory.getContractArtifacts(
         "MultiVaultSolanaEverscaleEventAlien"
     );
-    const everscaleSolanaEvent = await locklift.factory.getContractArtifacts(
+    const everscaleSolanaEvent = locklift.factory.getContractArtifacts(
         "MultiVaultEverscaleSolanaEventAlien"
     );
 
@@ -74,13 +74,14 @@ export const setupAlienMultiVault = async (
     );
 
     // Load proxy settings
-    const alienTokenRootEVM = await locklift.factory.getContractArtifacts("TokenRootAlienEVM");
-    const alienTokenRootSolana = await locklift.factory.getContractArtifacts("TokenRootAlienSolana");
+    const alienTokenRootEVM = locklift.factory.getContractArtifacts("TokenRootAlienEVM");
+    const alienTokenRootSolana = locklift.factory.getContractArtifacts("TokenRootAlienSolana");
+    const alienTokenRootTVM = locklift.factory.getContractArtifacts("TokenRootAlienTVM");
 
     const alienTokenWalletUpgradeableData =
-        await locklift.factory.getContractArtifacts("AlienTokenWalletUpgradeable");
+        locklift.factory.getContractArtifacts("AlienTokenWalletUpgradeable");
     const alienTokenWalletPlatformData =
-        await locklift.factory.getContractArtifacts("AlienTokenWalletPlatform");
+        locklift.factory.getContractArtifacts("AlienTokenWalletPlatform");
 
     // Set proxy EVM configuration
     await proxy.methods
@@ -165,6 +166,47 @@ export const setupAlienMultiVault = async (
             from: owner.address,
             amount: locklift.utils.toNano(0.5),
         });
+
+    // Set proxy TVM configuration
+    await proxy.methods
+      .setTVMConfiguration({
+          _incomingConfigurations: [], // TODO: add configurations
+          _remainingGasTo: owner.address,
+      })
+      .send({
+          from: owner.address,
+          amount: locklift.utils.toNano(0.5),
+      });
+
+    await proxy.methods
+      .setTVMAlienTokenRootCode({
+          _tokenRootCode: alienTokenRootTVM.code,
+          _remainingGasTo: owner.address,
+      })
+      .send({
+          from: owner.address,
+          amount: locklift.utils.toNano(0.5),
+      });
+
+    await proxy.methods
+      .setTVMAlienTokenWalletCode({
+          _tokenWalletCode: alienTokenWalletUpgradeableData.code,
+          _remainingGasTo: owner.address,
+      })
+      .send({
+          from: owner.address,
+          amount: locklift.utils.toNano(0.5),
+      });
+
+    await proxy.methods
+      .setOnceTVMAlienTokenPlatformCode({
+          _tokenPlatformCode: alienTokenWalletPlatformData.code,
+          _remainingGasTo: owner.address,
+      })
+      .send({
+          from: owner.address,
+          amount: locklift.utils.toNano(0.5),
+      });
 
     // Set merging
     const MergeRouter = await locklift.factory.getContractArtifacts('MergeRouter');

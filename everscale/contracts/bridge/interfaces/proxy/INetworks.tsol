@@ -2,5 +2,5 @@
 pragma ever-solidity >= 0.62.0;
 
 interface INetworks {
-    enum Network { Solana, EVM }
+    enum Network { Solana, EVM, TVM }
 }

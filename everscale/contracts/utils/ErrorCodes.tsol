@@ -119,6 +119,8 @@ library ErrorCodes {
     uint16 constant NOT_SOLANA_CONFIG = 2707;
     uint16 constant WRONG_TOKEN_ROOT = 2708;
     uint16 constant WRONG_MERGE_POOL_NONCE = 2709;
+    uint16 constant NOT_TVM_CONFIG = 2710;
+    uint16 constant NOT_ETHEREUM_CONFIG_OR_ALIEN_PROXY = 2711;
 
     // Hidden bridge
     uint16 constant UNKNOWN_MEDIATOR_OPERATION = 2801;

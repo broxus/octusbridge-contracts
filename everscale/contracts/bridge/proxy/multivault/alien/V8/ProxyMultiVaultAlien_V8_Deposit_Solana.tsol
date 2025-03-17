@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma ever-solidity >= 0.62.0;
 
-import "./ProxyMultiVaultAlien_V8_Token.tsol";
+import "./ProxyMultiVaultAlien_V8_Deposit_TVM.tsol";
 
 import "./../../../../interfaces/event-contracts/ISolanaEverscaleEvent.tsol";
 import "./../../../../interfaces/proxy/ISolanaEverscaleProxyExtended.tsol";
 import "../../../../libraries/EventContractNonce.tsol";
 
 abstract contract ProxyMultiVaultAlien_V8_Deposit_Solana is
-ProxyMultiVaultAlien_V8_Token,
+    ProxyMultiVaultAlien_V8_Deposit_TVM,
     ISolanaEverscaleProxyExtended
 {
     /// @notice Handles alien token transfer from Solana. Token address is derived automatically and MUST

@@ -26,7 +26,7 @@ const config: LockliftConfig = {
   compiler: {
     version: "0.62.0",
     externalContracts: {
-      "../node_modules/ton-eth-bridge-token-contracts/build": ['TokenRoot', 'TokenWallet']
+      "../node_modules/ton-eth-bridge-token-contracts/contracts": ['TokenRoot', 'TokenWallet']
     }
   },
   linker: {

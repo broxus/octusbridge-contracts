@@ -25,8 +25,9 @@ ProxyMultiVaultNative_V6_Withdraw
         address remainingGasTo
     ) external override reserveAtLeastTargetBalance {
         require(
+            (proxyMultiVaultAlien.value != 0 && msg.sender == proxyMultiVaultAlien) ||
             _isArrayContainsAddress(evmConfiguration.evmConfigurations, msg.sender),
-            ErrorCodes.NOT_ETHEREUM_CONFIG
+            ErrorCodes.NOT_ETHEREUM_CONFIG_OR_ALIEN_PROXY
         );
 
         (

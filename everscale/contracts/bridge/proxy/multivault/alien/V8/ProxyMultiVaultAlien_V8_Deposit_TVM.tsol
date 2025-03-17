@@ -1,0 +1,44 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma ever-solidity >= 0.62.0;
+
+import "../../../../interfaces/event-contracts/IEverscaleEverscaleEvent.tsol";
+import "../../../../interfaces/proxy/IEverscaleEverscaleProxyExtended.tsol";
+import "../../../../libraries/EventContractNonce.tsol";
+
+import "./ProxyMultiVaultAlien_V8_Token.tsol";
+
+abstract contract ProxyMultiVaultAlien_V8_Deposit_TVM is
+    ProxyMultiVaultAlien_V8_Token,
+    IEverscaleEverscaleProxyExtended
+{
+    function onTVMEventConfirmedExtended(
+        EverscaleEverscaleEventInitData eventInitData,
+        TvmCell meta,
+        address remainingGasTo
+    ) external override reserveAtLeastTargetBalance {
+        require(
+            _isArrayContainsAddress(tvmConfiguration.incomingConfigurations, msg.sender),
+            ErrorCodes.NOT_TVM_CONFIG
+        );
+
+        (
+            address token,
+            uint128 amount,
+            address recipient,
+            TvmCell payload
+        ) = abi.decode(
+            meta,
+            (address, uint128, address, TvmCell)
+        );
+
+        uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
+
+        _mintTokens(
+            token,
+            amount,
+            recipient,
+            remainingGasTo,
+            abi.encode(nonce, payload)
+        );
+    }
+}

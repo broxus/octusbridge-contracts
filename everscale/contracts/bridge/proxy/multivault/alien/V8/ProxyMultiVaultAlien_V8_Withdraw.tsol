@@ -71,6 +71,21 @@ ProxyMultiVaultAlien_V8_Deposit_EVM,
                 sender,
                 callback
             );
+        } else if (network == Network.TVM) {
+            (
+                address recipient,
+                TVMCallback callback
+            ) = abi.decode(burnPayload, (address, TVMCallback));
+
+            _emitTVMEvent(
+                nonce,
+                msg.sender,
+                amount,
+                recipient,
+                remainingGasTo,
+                sender,
+                callback
+            );
         }
     }
 
@@ -147,5 +162,34 @@ ProxyMultiVaultAlien_V8_Deposit_EVM,
                 bounce: false,
                 flag: MsgFlag.ALL_NOT_RESERVED
         }(eventVoteData);
+    }
+
+    function _emitTVMEvent(
+        uint32 nonce,
+        address token,
+        uint128 amount,
+        address recipient,
+        address remainingGasTo,
+        address sender,
+        TVMCallback callback
+    ) internal pure {
+        TvmCell eventData = abi.encode(
+            nonce,
+            address(this), // Proxy address, used in event contract for validating token root
+            token, // Everscale token root address
+            remainingGasTo, // Remaining gas receiver (on event contract destroy)
+            amount, // Amount of tokens to withdraw
+            recipient, // Recipient address in EVM network
+            sender,
+            callback.recipient,
+            callback.payload,
+            callback.strict
+        );
+
+        IEverscaleEverscaleEvent.EverscaleEverscaleEventVoteData eventVoteData = IEverscaleEverscaleEvent.EverscaleEverscaleEventVoteData(
+            tx.timestamp,
+            now,
+            eventData
+        );
     }
 }

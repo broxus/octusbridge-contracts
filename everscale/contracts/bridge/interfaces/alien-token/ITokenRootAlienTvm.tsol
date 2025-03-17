@@ -1,0 +1,11 @@
+pragma ever-solidity >= 0.62.0;
+
+interface ITokenRootAlienTVM {
+    function meta() external responsible returns (
+        uint256 base_chainId,
+        address base_token,
+        string name,
+        string symbol,
+        uint8 decimals
+    );
+}

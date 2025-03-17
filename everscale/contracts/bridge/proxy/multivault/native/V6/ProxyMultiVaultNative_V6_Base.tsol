@@ -19,6 +19,7 @@ abstract contract ProxyMultiVaultNative_V6_Base is IProxyMultiVaultNative_V3, In
     SolanaConfiguration solanaConfiguration;
     uint8 api_version;
     address public dex_middleware;
+    address proxyMultiVaultAlien;
 
     /// @notice Get current contract API version.
     /// Each time contract is upgraded, API version is incremented.
@@ -29,6 +30,10 @@ abstract contract ProxyMultiVaultNative_V6_Base is IProxyMultiVaultNative_V3, In
 
     function setDexMiddleware(address _dex_middleware) external onlyOwner cashBack {
         dex_middleware = _dex_middleware;
+    }
+
+    function setProxyMultiVaultAlien(address _proxyMultiVaultAlien) external onlyOwner cashBack {
+        proxyMultiVaultAlien = _proxyMultiVaultAlien;
     }
 
     function getConfiguration()

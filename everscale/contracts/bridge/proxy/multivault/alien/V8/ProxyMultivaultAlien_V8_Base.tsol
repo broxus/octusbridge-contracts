@@ -15,6 +15,7 @@ import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 abstract contract ProxyMultivaultAlien_V8_Base is IProxyMultiVaultAlien_V8, TransferUtils, InternalOwner {
     SolanaConfiguration solanaConfiguration;
     EVMConfiguration evmConfiguration;
+    TVMConfiguration tvmConfiguration;
 
     uint8 api_version = 0;
 
@@ -31,8 +32,13 @@ abstract contract ProxyMultivaultAlien_V8_Base is IProxyMultiVaultAlien_V8, Tran
         external
         view
         responsible
-    returns (EVMConfiguration, SolanaConfiguration) {
-        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} (evmConfiguration, solanaConfiguration);
+        returns (EVMConfiguration, SolanaConfiguration, TVMConfiguration)
+    {
+        return {
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.REMAINING_GAS
+        } (evmConfiguration, solanaConfiguration, tvmConfiguration);
     }
 
     function setEVMConfiguration(
@@ -115,6 +121,60 @@ abstract contract ProxyMultivaultAlien_V8_Base is IProxyMultiVaultAlien_V8, Tran
         );
 
         solanaConfiguration.alienTokenWalletPlatformCode = _tokenPlatformCode;
+    }
+
+    function setTVMConfiguration(
+        address[] _incomingConfigurations,
+        address _remainingGasTo
+    ) override external onlyOwner cashBackTo(_remainingGasTo) {
+        tvmConfiguration.incomingConfigurations = _incomingConfigurations;
+    }
+
+    function addPredeployedTVMToken(
+        address _incomingExternal,
+        address _existingInternal,
+        address _remainingGasTo
+    ) external override onlyOwner cashBackTo(_remainingGasTo) {
+        tvmConfiguration.predeployedTokens[_incomingExternal] = _existingInternal;
+    }
+
+    function removePredeployedTVMToken(
+        address _incomingExternal,
+        address _remainingGasTo
+    ) external override onlyOwner cashBackTo(_remainingGasTo) {
+        delete tvmConfiguration.predeployedTokens[_incomingExternal];
+    }
+
+    function setTVMAlienTokenRootCode(TvmCell _tokenRootCode, address _remainingGasTo)
+        override
+        external
+        onlyOwner
+        cashBackTo(_remainingGasTo)
+    {
+        tvmConfiguration.alienTokenRootCode = _tokenRootCode;
+    }
+
+    function setTVMAlienTokenWalletCode(TvmCell _tokenWalletCode, address _remainingGasTo)
+        override
+        external
+        onlyOwner
+        cashBackTo(_remainingGasTo)
+    {
+        tvmConfiguration.alienTokenWalletCode = _tokenWalletCode;
+    }
+
+    function setOnceTVMAlienTokenPlatformCode(TvmCell _tokenPlatformCode, address _remainingGasTo)
+        override
+        external
+        onlyOwner
+        cashBackTo(_remainingGasTo)
+    {
+        require(
+            tvmConfiguration.alienTokenWalletPlatformCode.toSlice().empty(),
+            ErrorCodes.PLATFORM_CODE_NON_EMPTY
+        );
+
+        tvmConfiguration.alienTokenWalletPlatformCode = _tokenPlatformCode;
     }
 
     /// @notice Set merge manager

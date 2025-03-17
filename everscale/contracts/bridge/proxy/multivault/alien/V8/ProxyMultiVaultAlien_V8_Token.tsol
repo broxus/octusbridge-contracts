@@ -3,6 +3,7 @@ pragma ever-solidity >= 0.62.0;
 
 import "../../../../alien-token/TokenRootAlienEVM.tsol";
 import "../../../../alien-token/TokenRootAlienSolana.tsol";
+import "../../../../alien-token/TokenRootAlienTVM.tsol";
 
 import "./ProxyMultivaultAlien_V8_Base.tsol";
 
@@ -104,6 +105,37 @@ abstract contract ProxyMultiVaultAlien_V8_Token is ProxyMultivaultAlien_V8_Base 
         );
     }
 
+    function deployTVMAlienToken(
+        uint256 chainId,
+        address token,
+        string name,
+        string symbol,
+        uint8 decimals,
+        address remainingGasTo
+    ) external override reserveAtLeastTargetBalance {
+        TvmCell stateInit = _buildTVMAlienTokenRootInitState(
+            chainId,
+            token,
+            name,
+            symbol,
+            decimals
+        );
+
+        new TokenRootAlienTVM{
+            stateInit: stateInit,
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(
+            address(this), // Initial supply recipient
+            0, // Initial supply
+            Gas.getDeployTokenWalletValue(), // Deploy wallet value
+            false, // Mint disabled
+            false, // Burn by root disabled
+            false, // Burn paused
+            remainingGasTo // Remaining gas receiver
+        );
+    }
+
     /// @notice Derives root address for alien token, without deploying it
     /// @param chainId EVM network chain ID
     /// @param token EVM token address
@@ -147,6 +179,28 @@ abstract contract ProxyMultiVaultAlien_V8_Token is ProxyMultivaultAlien_V8_Base 
         );
 
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
+    }
+
+    function deriveTVMAlienTokenRoot(
+        uint256 chainId,
+        address token,
+        string name,
+        string symbol,
+        uint8 decimals
+    ) public override responsible returns (address) {
+        TvmCell stateInit = _buildTVMAlienTokenRootInitState(
+            chainId,
+            token,
+            name,
+            symbol,
+            decimals
+        );
+
+        return {
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.REMAINING_GAS
+        } address(tvm.hash(stateInit));
     }
 
     function _buildEVMAlienTokenRootInitState(
@@ -202,6 +256,35 @@ abstract contract ProxyMultiVaultAlien_V8_Token is ProxyMultivaultAlien_V8_Base 
             },
             pubkey: 0,
             code: solanaConfiguration.alienTokenRootCode
+        });
+    }
+
+    function _buildTVMAlienTokenRootInitState(
+        uint256 chainId,
+        address token,
+        string name,
+        string symbol,
+        uint8 decimals
+    ) internal view returns (TvmCell) {
+        return tvm.buildStateInit({
+            contr: TokenRootAlienTVM,
+            varInit: {
+                randomNonce_: 0,
+                deployer_: address(this),
+                rootOwner_: address(this),
+
+                base_chainId_: chainId,
+                base_token_: token,
+
+                name_: name,
+                symbol_: symbol,
+                decimals_: decimals,
+
+                walletCode_: tvmConfiguration.alienTokenWalletCode,
+                platformCode_: tvmConfiguration.alienTokenWalletPlatformCode
+            },
+            pubkey: 0,
+            code: tvmConfiguration.alienTokenRootCode
         });
     }
 }
