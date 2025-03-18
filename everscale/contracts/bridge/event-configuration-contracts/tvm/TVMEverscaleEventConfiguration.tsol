@@ -34,6 +34,9 @@ contract TVMEverscaleEventConfiguration is
     uint64 public flags;
     TvmCell public meta;
 
+    address public static transactionChecker;
+    address public static eventEmitter;
+
     /// @param _owner Event configuration owner
     constructor(
         address _owner,
@@ -96,9 +99,9 @@ contract TVMEverscaleEventConfiguration is
     }
 
     function setTransactionChecker(
-        address transactionChecker
+        address _transactionChecker
     ) override onlyOwner cashBack external {
-        networkConfiguration.transactionChecker = transactionChecker;
+        transactionChecker = _transactionChecker;
     }
 
     /// @dev Build initial data for event contract
@@ -183,7 +186,7 @@ contract TVMEverscaleEventConfiguration is
             varInit: {
                 eventInitData: eventInitData
             }
-        }(msg.sender, meta, networkConfiguration.transactionChecker, networkConfiguration.eventEmitter);
+        }(msg.sender, meta, transactionChecker, eventEmitter);
     }
 
     /// @dev Derive the Ethereum event contract address from it's init data
