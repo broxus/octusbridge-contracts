@@ -2,7 +2,12 @@ import { Account } from "everscale-standalone-client/nodejs";
 import { Address, zeroAddress } from "locklift";
 import { logContract } from "../logger";
 
-export const setupTVMEverscaleEventConfiguration = async (owner: Account, proxy: Address, eventCode: string) => {
+export const setupTVMEverscaleEventConfiguration = async (
+  owner: Account,
+  proxy: Address,
+  eventCode: string,
+  transactionChecker: Address,
+) => {
   const signer = (await locklift.keystore.getSigner("10"))!;
 
   const { contract: tvmEverscaleEventConfiguration } = await locklift.factory.deployContract({
@@ -25,7 +30,7 @@ export const setupTVMEverscaleEventConfiguration = async (owner: Account, proxy:
         startBlockNumber: 0,
         endBlockNumber: 0,
       },
-      transactionChecker: zeroAddress,
+      transactionChecker: transactionChecker,
       eventEmitter: zeroAddress,
     },
     publicKey: signer.publicKey,

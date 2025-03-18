@@ -235,7 +235,7 @@ describe("Test setting configuration end", async function () {
     let tvmEverscaleEventConfiguration: Contract<FactorySource["TVMEverscaleEventConfiguration"]>;
 
     it("Setup TVM Everscale event configuration", async () => {
-      tvmEverscaleEventConfiguration = await setupTVMEverscaleEventConfiguration(bridgeOwner, proxy, "");
+      tvmEverscaleEventConfiguration = await setupTVMEverscaleEventConfiguration(bridgeOwner, proxy, "", zeroAddress);
     });
 
     it("Set TVM Everscale end block", async () => {
