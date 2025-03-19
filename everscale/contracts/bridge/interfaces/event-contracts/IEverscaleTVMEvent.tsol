@@ -1,0 +1,9 @@
+pragma ever-solidity >= 0.62.0;
+
+interface IEverscaleTVMEvent {
+    event EverscaleTVMEventData(
+        uint64 eventTransactionLt,
+        uint32 eventTimestamp,
+        TvmCell eventData
+    );
+}

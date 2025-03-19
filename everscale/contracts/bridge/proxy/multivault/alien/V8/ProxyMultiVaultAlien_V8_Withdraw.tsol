@@ -4,6 +4,7 @@ pragma ever-solidity >= 0.62.0;
 
 import "./../../../../interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
 import "./../../../../interfaces/event-contracts/IEverscaleEthereumEvent.tsol";
+import "./../../../../interfaces/event-contracts/IEverscaleTVMEvent.tsol";
 
 import "./../../../../interfaces/event-configuration-contracts/IEverscaleSolanaEventConfiguration.tsol";
 import "./../../../../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.tsol";
@@ -14,8 +15,9 @@ import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensBurnCal
 
 
 abstract contract ProxyMultiVaultAlien_V8_Withdraw is
-ProxyMultiVaultAlien_V8_Deposit_EVM,
-    IAcceptTokensBurnCallback
+    ProxyMultiVaultAlien_V8_Deposit_EVM,
+    IAcceptTokensBurnCallback,
+    IEverscaleTVMEvent
 {
     /// @notice Handles token burn.
     /// Initializes alien transfer (eg BSC CAKE or ETH AAVE).
@@ -186,10 +188,10 @@ ProxyMultiVaultAlien_V8_Deposit_EVM,
             callback.strict
         );
 
-        IEverscaleEverscaleEvent.EverscaleEverscaleEventVoteData eventVoteData = IEverscaleEverscaleEvent.EverscaleEverscaleEventVoteData(
-            tx.timestamp,
-            now,
-            eventData
-        );
+        emit EverscaleTVMEventData({
+            eventTransactionLt: tx.timestamp,
+            eventTimestamp: now,
+            eventData: eventData
+        });
     }
 }

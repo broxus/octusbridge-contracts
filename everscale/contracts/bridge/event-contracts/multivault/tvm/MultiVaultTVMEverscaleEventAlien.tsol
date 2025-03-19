@@ -225,7 +225,7 @@ contract MultiVaultTVMEverscaleEventAlien is
             eventData.payload
         );
 
-        ITVMEverscaleProxyExtended(eventInitData.configuration).onEventConfirmedExtended{
+        ITVMEverscaleProxyExtended(eventInitData.configuration).onTVMEventConfirmedExtended{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, metaData, initializer);
     }

@@ -54,7 +54,7 @@ export const processEvent = async (
         let vote: any;
 
         if (type_ == EventType.EthereumEverscale) {
-            const eventContract = await locklift.factory.getDeployedContract(
+            const eventContract = locklift.factory.getDeployedContract(
                 "EthereumEverscaleBaseEvent",
                 eventContract_
             );
@@ -69,7 +69,7 @@ export const processEvent = async (
                 }).sendExternal({publicKey: relay.publicKey});
             }
         } else if (type_ == EventType.SolanaEverscale) {
-            const eventContract = await locklift.factory.getDeployedContract(
+            const eventContract = alocklift.factory.getDeployedContract(
                 "SolanaEverscaleBaseEvent",
                 eventContract_
             );
@@ -84,7 +84,7 @@ export const processEvent = async (
                 }).sendExternal({publicKey: relay.publicKey});
             }
         } else if (type_ == EventType.EverscaleSolana) {
-            const eventContract = await locklift.factory.getDeployedContract(
+            const eventContract = locklift.factory.getDeployedContract(
                 "EverscaleSolanaBaseEvent",
                 eventContract_
             );
@@ -99,7 +99,7 @@ export const processEvent = async (
                 }).sendExternal({publicKey: relay.publicKey});
             }
         } else if (type_ == EventType.EverscaleEthereum) {
-            const eventContract = await locklift.factory.getDeployedContract(
+            const eventContract = locklift.factory.getDeployedContract(
                 "EverscaleEthereumBaseEvent",
                 eventContract_
             );

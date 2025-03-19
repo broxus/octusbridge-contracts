@@ -233,7 +233,7 @@ contract TVMEverscaleEventConfiguration is
     /// @dev Get event configuration type
     /// @return _type Configuration type (enum EventType)
     function getType() override public pure responsible returns(EventType _type) {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} EventType.EthereumEverscale;
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} EventType.TvmEverscale;
     }
 
     function getFlags() override public view responsible returns(uint64 _flags) {
@@ -273,7 +273,7 @@ contract TVMEverscaleEventConfiguration is
     /// @param eventInitData Ethereum event data
     /// @param _meta Arbitrary meta cell
     /// @param gasBackAddress Gas back address
-    function onEventConfirmedExtended(
+    function onTVMEventConfirmedExtended(
         ITVMEverscaleEvent.TVMEverscaleEventInitData eventInitData,
         TvmCell _meta,
         address gasBackAddress
@@ -290,7 +290,7 @@ contract TVMEverscaleEventConfiguration is
             ErrorCodes.SENDER_NOT_EVENT_CONTRACT
         );
 
-        ITVMEverscaleProxyExtended(networkConfiguration.proxy).onEventConfirmedExtended{
+        ITVMEverscaleProxyExtended(networkConfiguration.proxy).onTVMEventConfirmedExtended{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, _meta, gasBackAddress);
     }
