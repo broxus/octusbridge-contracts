@@ -193,5 +193,11 @@ abstract contract ProxyMultiVaultAlien_V8_Withdraw is
             eventTimestamp: now,
             eventData: eventData
         });
+
+        remainingGasTo.transfer({
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+            bounce: false
+        });
     }
 }

@@ -5,9 +5,9 @@ import "./../../bridge/interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
 import "./../../bridge/interfaces/proxy/INetworks.tsol";
 import "./../../bridge/interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V6.tsol";
 import "./../../bridge/interfaces/event-contracts/multivault/evm/IEVMCallback.tsol";
+import "./../../bridge/interfaces/event-contracts/multivault/tvm/ITVMCallback.tsol";
 
-
-contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
+contract ProxyMultiVaultCellEncoder is IEVMCallback, ITVMCallback, INetworks {
     function encodeMultiVaultAlienEVMEverscale(
         uint256 base_chainId,
         uint160 base_token,
@@ -81,6 +81,15 @@ contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
         TvmCell burnPayload = abi.encode(recipient, callback);
 
         return abi.encode(uint32(0), Network.EVM, burnPayload);
+    }
+
+    function encodeAlienBurnPayloadTVM(
+        address recipient,
+        TVMCallback callback
+    ) external pure returns(TvmCell) {
+        TvmCell burnPayload = abi.encode(recipient, callback);
+
+        return abi.encode(uint32(0), Network.TVM, burnPayload);
     }
 
     function encodeAlienBurnPayloadSolana(
