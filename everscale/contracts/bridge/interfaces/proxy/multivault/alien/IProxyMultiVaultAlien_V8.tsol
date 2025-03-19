@@ -1,11 +1,10 @@
 pragma ever-solidity >= 0.62.0;
 
 import "../../../event-contracts/multivault/evm/IEVMCallback.tsol";
-import "../../../event-contracts/multivault/tvm/ITVMCallback.tsol";
 import "../../../event-contracts/IEverscaleSolanaEvent.tsol";
 import "../../INetworks.tsol";
 
-interface IProxyMultiVaultAlien_V8 is IEVMCallback, ITVMCallback, INetworks {
+interface IProxyMultiVaultAlien_V8 is IEVMCallback, INetworks {
     struct EVMConfiguration {
         address everscaleConfiguration;
         address[] evmConfigurations;
@@ -116,6 +115,16 @@ interface IProxyMultiVaultAlien_V8 is IEVMCallback, ITVMCallback, INetworks {
         EVMCallback callback
     ) external;
 
+    function withdrawTokensToTVMByMergePool(
+        uint mergePoolNonce,
+        uint32 nonce,
+        address token,
+        uint128 amount,
+        address remainingGasTo,
+        address sender,
+        TvmCell withdrawPayload
+    ) external;
+
     function withdrawTokensToSolanaByMergePool(
         uint mergePoolNonce,
         uint32 nonce,
@@ -181,35 +190,15 @@ interface IProxyMultiVaultAlien_V8 is IEVMCallback, ITVMCallback, INetworks {
         address remainingGasTo
     ) external;
 
-    // Events specification
-    event SolanaAlienTransfer(
-        uint256 base_token,
-        string name,
-        string symbol,
-        uint8 decimals,
-        uint128 amount,
-        uint64 sol_amount,
-        address recipient,
-        bytes payload
-    );
-
-    event EVMAlienTransfer(
-        uint160 token,
-        uint128 amount,
-        uint160 recipient,
+    event TvmTvmAlien(
         uint256 chainId,
-        uint160 callback_recipient,
-        bytes callback_payload,
-        bool callback_strict
-    );
-
-    event TVMAlienTransfer(
         address token,
-        uint128 amount,
+        uint256 amount,
         address recipient,
-        uint256 chainId,
-        address callback_recipient,
-        TvmCell callback_payload,
-        bool callback_strict
+
+        uint256 value,
+        uint256 expectedGas,
+        address remainingGasTo,
+        TvmCell payload
     );
 }

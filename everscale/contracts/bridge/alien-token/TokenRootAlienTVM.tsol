@@ -31,12 +31,13 @@ contract TokenRootAlienTVM is TokenRootUpgradeable, ITokenRootAlienTVM {
         remainingGasTo
     ) {}
 
-    function meta() external override responsible returns (
+    function meta(TvmCell _payload) external override responsible returns (
         uint256 base_chainId,
         address base_token,
         string name,
         string symbol,
-        uint8 decimals
+        uint8 decimals,
+        TvmCell payload
     ) {
         return {
             value: 0,
@@ -47,7 +48,8 @@ contract TokenRootAlienTVM is TokenRootUpgradeable, ITokenRootAlienTVM {
             base_token_,
             name_,
             symbol_,
-            decimals_
+            decimals_,
+            _payload
         );
     }
 }

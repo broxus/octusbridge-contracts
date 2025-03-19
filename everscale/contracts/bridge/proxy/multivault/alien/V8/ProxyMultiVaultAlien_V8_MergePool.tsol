@@ -123,6 +123,25 @@ abstract contract ProxyMultiVaultAlien_V8_MergePool is ProxyMultiVaultAlien_V8_W
         );
     }
 
+    function withdrawTokensToTVMByMergePool(
+        uint mergePoolNonce,
+        uint32 nonce,
+        address token,
+        uint128 amount,
+        address remainingGasTo,
+        address sender,
+        TvmCell withdrawPayload
+    ) external override onlyMergePool(mergePoolNonce) reserveAtLeastTargetBalance {
+        _emitTVMEvent(
+            nonce,
+            token,
+            amount,
+            remainingGasTo,
+            sender,
+            withdrawPayload
+        );
+    }
+
     function _buildMergePoolPlatformInitState(
         uint256 mergePoolNonce
     ) internal view returns (TvmCell) {

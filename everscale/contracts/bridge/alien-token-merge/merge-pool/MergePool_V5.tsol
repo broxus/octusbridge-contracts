@@ -340,6 +340,20 @@ contract MergePool_V5 is
                     sender,
                     callback
                 );
+            } else if (network == Network.TVM) {
+                IProxyMultiVaultAlien_V8(proxy).withdrawTokensToTVMByMergePool{
+                        bounce: false,
+                        value: 0,
+                        flag: MsgFlag.ALL_NOT_RESERVED
+                    }(
+                    _randomNonce,
+                    nonce,
+                    targetToken,
+                    amount,
+                    remainingGasTo,
+                    sender,
+                    withdrawPayload
+                );
             }
         }
     }

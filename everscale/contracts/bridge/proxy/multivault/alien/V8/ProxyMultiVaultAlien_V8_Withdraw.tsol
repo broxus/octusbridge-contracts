@@ -4,7 +4,6 @@ pragma ever-solidity >= 0.62.0;
 
 import "./../../../../interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
 import "./../../../../interfaces/event-contracts/IEverscaleEthereumEvent.tsol";
-import "./../../../../interfaces/event-contracts/IEverscaleTVMEvent.tsol";
 
 import "./../../../../interfaces/event-configuration-contracts/IEverscaleSolanaEventConfiguration.tsol";
 import "./../../../../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.tsol";
@@ -16,8 +15,7 @@ import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensBurnCal
 
 abstract contract ProxyMultiVaultAlien_V8_Withdraw is
     ProxyMultiVaultAlien_V8_Deposit_EVM,
-    IAcceptTokensBurnCallback,
-    IEverscaleTVMEvent
+    IAcceptTokensBurnCallback
 {
     /// @notice Handles token burn.
     /// Initializes alien transfer (eg BSC CAKE or ETH AAVE).
@@ -74,19 +72,13 @@ abstract contract ProxyMultiVaultAlien_V8_Withdraw is
                 callback
             );
         } else if (network == Network.TVM) {
-            (
-                address recipient,
-                TVMCallback callback
-            ) = abi.decode(burnPayload, (address, TVMCallback));
-
             _emitTVMEvent(
                 nonce,
                 msg.sender,
                 amount,
-                recipient,
                 remainingGasTo,
                 sender,
-                callback
+                burnPayload
             );
         }
     }
@@ -167,32 +159,75 @@ abstract contract ProxyMultiVaultAlien_V8_Withdraw is
     }
 
     function _emitTVMEvent(
-        uint32 nonce,
+        uint32 /*nonce*/,
         address token,
         uint128 amount,
-        address recipient,
         address remainingGasTo,
-        address sender,
-        TVMCallback callback
+        address /*sender*/,
+        TvmCell withdrawPayload
     ) internal pure {
-        TvmCell eventData = abi.encode(
-            nonce,
-            address(this), // Proxy address, used in event contract for validating token root
-            token, // Everscale token root address
-            remainingGasTo, // Remaining gas receiver (on event contract destroy)
-            amount, // Amount of tokens to withdraw
-            recipient, // Recipient address in EVM network
-            sender,
-            callback.recipient,
-            callback.payload,
-            callback.strict
+        TvmCell payload = abi.encode(
+//            nonce,
+            amount,
+            remainingGasTo,
+//            sender,
+            withdrawPayload
         );
 
-        emit EverscaleTVMEventData({
-            eventTransactionLt: tx.timestamp,
-            eventTimestamp: now,
-            eventData: eventData
-        });
+        ITokenRootAlienTVM(token).meta{
+            value: MsgFlag.ALL_NOT_RESERVED,
+            callback: ProxyMultiVaultAlien_V8_Withdraw.receiveTokenRootAlienTvmMeta
+        }(payload);
+    }
+
+    function receiveTokenRootAlienTvmMeta(
+        uint256 base_chainId,
+        address base_token,
+        string name,
+        string symbol,
+        uint8 decimals,
+        TvmCell payload
+    ) public reserveAtLeastTargetBalance {
+        require(
+            msg.sender == deriveTVMAlienTokenRoot(base_chainId, base_token, name, symbol, decimals),
+            ErrorCodes.BAD_SENDER
+        );
+
+        (
+//            uint32 nonce,
+            uint128 amount,
+            address remainingGasTo,
+//            address sender,
+            TvmCell withdrawPayload
+        ) = abi.decode(payload, (
+//            uint32,
+            uint128,
+            address,
+//            address,
+            TvmCell
+        ));
+
+        (
+            address recipient,
+            uint256 expectedGas,
+            TvmCell eventPayload
+        ) = abi.decode(withdrawPayload, (
+            address,
+            uint256,
+            TvmCell
+        ));
+
+        emit TvmTvmAlien(
+            base_chainId,
+            base_token,
+            amount,
+            recipient,
+
+            msg.value, // todo subtract the cost of the current transaction
+            expectedGas,
+            remainingGasTo,
+            eventPayload
+        );
 
         remainingGasTo.transfer({
             value: 0,
