@@ -12,13 +12,16 @@ import "./../../../interfaces/event-configuration-contracts/ITVMEverscaleEventCo
 import "./../../../interfaces/proxy/ITVMEverscaleProxyExtended.tsol";
 import "./../../../interfaces/alien-token-merge/merge-pool/IMergePool_V2.tsol";
 import "./../../../interfaces/alien-token-merge/IMergeRouter.tsol";
+import "./../../../interfaces/trustless-verifier/ITrustlessVerifier.tsol";
+import "./../../../interfaces/trustless-verifier/IOnTrustlessVerify.tsol";
 
 import "./../../base/tvm/TVMEverscaleBaseEvent.tsol";
 
 
 contract MultiVaultTVMEverscaleEventAlien is
     TVMEverscaleBaseEvent,
-    IMultiVaultTVMEverscaleEventAlien
+    IMultiVaultTVMEverscaleEventAlien,
+    IOnTrustlessVerify
 {
     uint128 constant POWER_BASE = 10;
 
@@ -235,8 +238,8 @@ contract MultiVaultTVMEverscaleEventAlien is
     }
 
     function getEventData() public override responsible returns(EventData) {
-        TvmCell body = eventInitData.voteData.eventData.toSlice().loadRef();
-        TvmCell data = body.toSlice().loadRef();
+        TvmCell data = eventInitData.voteData.eventData.toSlice().loadRef();
+
         (
             uint256 base_chainId,
             address base_token,
@@ -330,15 +333,20 @@ contract MultiVaultTVMEverscaleEventAlien is
         _set_transitional_data(transitionalData);
 
         status = Status.Pending;
+
         // todo call transactionChecker to validate eventVoteData (callback onTransactionCheck)
+
+        TvmCell empty;
+
+        ITrustlessVerifier(transactionChecker)
+            .verify{
+                value: gasToValue(Gas.VERIFY_TRANSACTION_GAS, address(this).wid),
+                flag: MsgFlag.SENDER_PAYS_FEES
+            }(123, 123, empty);
     }
 
-    function onTransactionCheck() external {
-        // todo handle results
-
-        //mock
-        bool success = true;
-
+    function onTrustlessVerify(bool success) external override {
+        // todo: added guard modifier
         // if failed (too new block)
         if (!success) {
             initializer.transfer({

@@ -1,7 +1,6 @@
 import { Account } from "everscale-standalone-client/nodejs";
-import { Address, Contract, zeroAddress } from "locklift";
+import { Address, zeroAddress } from "locklift";
 
-import { FactorySource } from "../../../build/factorySource";
 import { logContract } from "../logger";
 
 export const setupTVMEverscaleEventConfiguration = async (
@@ -12,33 +11,32 @@ export const setupTVMEverscaleEventConfiguration = async (
 ) => {
   const signer = (await locklift.keystore.getSigner("10"))!;
 
-  const { contract: tvmEverscaleEventConfiguration } = await locklift.tracing.trace(
-    locklift.factory.deployContract({
-      contract: "TVMEverscaleEventConfiguration",
-      constructorParams: {
-        _owner: owner.address,
-        _flags: 0,
-        _meta: "",
+  const { contract: tvmEverscaleEventConfiguration } = await locklift.factory.deployContract({
+    contract: "TVMEverscaleEventConfiguration",
+    constructorParams: {
+      _owner: owner.address,
+      _flags: 0,
+      _meta: "",
+    },
+    initParams: {
+      basicConfiguration: {
+        eventABI: "",
+        eventInitialBalance: locklift.utils.toNano(2),
+        staking: zeroAddress,
+        eventCode,
       },
-      initParams: {
-        basicConfiguration: {
-          eventABI: "",
-          eventInitialBalance: locklift.utils.toNano(2),
-          staking: zeroAddress,
-          eventCode,
-        },
-        networkConfiguration: {
-          chainId: 1,
-          proxy,
-          startBlockNumber: 0,
-          endBlockNumber: 0,
-        },
-        transactionChecker: zeroAddress
+      networkConfiguration: {
+        chainId: 1,
+        proxy,
+        startBlockNumber: 0,
+        endBlockNumber: 0,
       },
-      publicKey: signer.publicKey,
-      value: locklift.utils.toNano(20),
-    })
-  );
+      transactionChecker: transactionChecker,
+      eventEmitter: zeroAddress,
+    },
+    publicKey: signer.publicKey,
+    value: locklift.utils.toNano(20),
+  });
 
   await logContract("TVMEverscaleEventConfiguration", tvmEverscaleEventConfiguration.address);
 

@@ -20,6 +20,7 @@ library Gas {
     uint128 constant REQUEST_MERGE_ROUTER_GAS = 1_000_000;
     uint128 constant REQUEST_POOL_GAS = 1_000_000;
     uint128 constant REQUEST_CANON_GAS = 1_000_000;
+    uint128 constant VERIFY_TRANSACTION_GAS = 1_000_000;
 
     uint128 constant DEPLOY_TOKEN_ROOT_GAS = 1_000_000;
     uint128 constant DEPLOY_MERGE_ROUTER_GAS = 1_000_000;

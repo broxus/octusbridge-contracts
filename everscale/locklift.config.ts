@@ -1,10 +1,14 @@
-import { LockliftConfig } from "locklift";
+import { LockliftConfig, lockliftChai } from "locklift";
 import { FactorySource } from "./build/factorySource";
 import 'dotenv/config';
+
+import chai from 'chai';
 
 import "locklift-verifier";
 import "@broxus/locklift-deploy";
 import {Deployments} from "@broxus/locklift-deploy";
+
+chai.use(lockliftChai)
 
 declare module "locklift" {
   //@ts-ignore

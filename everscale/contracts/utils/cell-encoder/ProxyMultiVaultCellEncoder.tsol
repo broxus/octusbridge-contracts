@@ -47,12 +47,14 @@ contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
         uint256 expected_evers,
         TvmCell payload
     ) external pure returns (TvmCell) {
-        return abi.encode(
+        TvmCell data = abi.encode(
             base_chainId, base_token,
             name, symbol, decimals,
             amount, recipient,
             value, expected_evers, payload
         );
+
+        return abi.encode(data);
     }
 
     function encodeMultiVaultNativeEVMEverscale(

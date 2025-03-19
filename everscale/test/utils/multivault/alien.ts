@@ -1,9 +1,10 @@
 import {Account} from "everscale-standalone-client/nodejs";
-import {Contract} from "locklift";
+import {Contract, zeroAddress} from "locklift";
 import {
     EthereumEverscaleEventConfigurationAbi,
     EverscaleEthereumEventConfigurationAbi, EverscaleSolanaEventConfigurationAbi,
     FactorySource, ProxyMultiVaultAlien_V8Abi, SolanaEverscaleEventConfigurationAbi,
+    TrustlessVerifierMockupAbi,
     TVMEverscaleEventConfigurationAbi,
 } from "../../../build/factorySource";
 import {logContract} from "../logger";
@@ -19,14 +20,15 @@ import { setupTVMEverscaleEventConfiguration } from "../event-configurations/tvm
 
 export const setupAlienMultiVault = async (
     owner: Account,
-    staking: Contract<FactorySource["StakingMockup"]>
+    staking: Contract<FactorySource["StakingMockup"]>,
+    trustlessVerifier?: Contract<TrustlessVerifierMockupAbi>,
 ): Promise<[
     Contract<EthereumEverscaleEventConfigurationAbi>,
     Contract<EverscaleEthereumEventConfigurationAbi>,
     Contract<SolanaEverscaleEventConfigurationAbi>,
     Contract<EverscaleSolanaEventConfigurationAbi>,
+    Contract<ProxyMultiVaultAlien_V8Abi>,
     Contract<TVMEverscaleEventConfigurationAbi>,
-    Contract<ProxyMultiVaultAlien_V8Abi>
 ]> => {
     const _randomNonce = locklift.utils.getRandomNonce();
     const signer = (await locklift.keystore.getSigner("2"))!;
@@ -78,143 +80,31 @@ export const setupAlienMultiVault = async (
         owner, staking, proxy.address, everscaleSolanaEvent.code
     );
     const tvmEverscaleEventConfiguration = await setupTVMEverscaleEventConfiguration(
-        owner, staking, proxy.address, tvmEverscaleEvent.code
+        owner, proxy.address, tvmEverscaleEvent.code, trustlessVerifier?.address || zeroAddress
     );
 
-    // Load proxy settings
-    const alienTokenRootEVM = locklift.factory.getContractArtifacts("TokenRootAlienEVM");
-    const alienTokenRootSolana = locklift.factory.getContractArtifacts("TokenRootAlienSolana");
-    const alienTokenRootTVM = locklift.factory.getContractArtifacts("TokenRootAlienTVM");
-
-    const alienTokenWalletUpgradeableData =
-        locklift.factory.getContractArtifacts("AlienTokenWalletUpgradeable");
-    const alienTokenWalletPlatformData =
-        locklift.factory.getContractArtifacts("AlienTokenWalletPlatform");
-
     // Set proxy EVM configuration
-    await proxy.methods
-        .setEVMConfiguration({
-            _everscaleConfiguration: everscaleEthereumEventConfiguration.address,
-            _evmConfigurations: [ethereumEverscaleEventConfiguration.address],
-            _remainingGasTo: owner.address,
-        })
-        .send({
-            from: owner.address,
-            amount: locklift.utils.toNano(0.5),
-        });
-
-    await proxy.methods
-        .setEVMAlienTokenRootCode({
-            _tokenRootCode: alienTokenRootEVM.code,
-            _remainingGasTo: owner.address,
-        })
-        .send({
-            from: owner.address,
-            amount: locklift.utils.toNano(0.5),
-        });
-
-    await proxy.methods
-        .setEVMAlienTokenWalletCode({
-            _tokenWalletCode: alienTokenWalletUpgradeableData.code,
-            _remainingGasTo: owner.address,
-        })
-        .send({
-            from: owner.address,
-            amount: locklift.utils.toNano(0.5),
-        });
-
-    await proxy.methods
-        .setOnceEVMAlienTokenPlatformCode({
-            _tokenPlatformCode: alienTokenWalletPlatformData.code,
-            _remainingGasTo: owner.address,
-        })
-        .send({
-            from: owner.address,
-            amount: locklift.utils.toNano(0.5),
-        });
+    await setEvmConfiguration(
+      proxy,
+      owner,
+      everscaleEthereumEventConfiguration,
+      [ethereumEverscaleEventConfiguration],
+    );
 
     // Set proxy Solana configuration
-    await proxy.methods
-        .setSolanaConfiguration({
-            _everscaleConfiguration: everscaleSolanaEventConfiguration.address,
-            _solanaConfiguration: solanaEverscaleEventConfiguration.address,
-            _remainingGasTo: owner.address
-        })
-        .send({
-            from: owner.address,
-            amount: locklift.utils.toNano(0.5)
-        });
-
-    await proxy.methods
-        .setSolanaAlienTokenRootCode({
-            _tokenRootCode: alienTokenRootSolana.code,
-            _remainingGasTo: owner.address,
-        })
-        .send({
-            from: owner.address,
-            amount: locklift.utils.toNano(0.5),
-        });
-
-    await proxy.methods
-        .setSolanaAlienTokenWalletCode({
-            _tokenWalletCode: alienTokenWalletUpgradeableData.code,
-            _remainingGasTo: owner.address,
-        })
-        .send({
-            from: owner.address,
-            amount: locklift.utils.toNano(0.5),
-        });
-
-    await proxy.methods
-        .setOnceSolanaAlienTokenPlatformCode({
-            _tokenPlatformCode: alienTokenWalletPlatformData.code,
-            _remainingGasTo: owner.address,
-        })
-        .send({
-            from: owner.address,
-            amount: locklift.utils.toNano(0.5),
-        });
+    await setSolanaConfiguration(
+      proxy,
+      owner,
+      everscaleSolanaEventConfiguration,
+      solanaEverscaleEventConfiguration,
+    );
 
     // Set proxy TVM configuration
-    await proxy.methods
-      .setTVMConfiguration({
-          _incomingConfigurations: [tvmEverscaleEventConfiguration.address],
-          _remainingGasTo: owner.address,
-      })
-      .send({
-          from: owner.address,
-          amount: locklift.utils.toNano(0.5),
-      });
-
-    await proxy.methods
-      .setTVMAlienTokenRootCode({
-          _tokenRootCode: alienTokenRootTVM.code,
-          _remainingGasTo: owner.address,
-      })
-      .send({
-          from: owner.address,
-          amount: locklift.utils.toNano(0.5),
-      });
-
-    await proxy.methods
-      .setTVMAlienTokenWalletCode({
-          _tokenWalletCode: alienTokenWalletUpgradeableData.code,
-          _remainingGasTo: owner.address,
-      })
-      .send({
-          from: owner.address,
-          amount: locklift.utils.toNano(0.5),
-      });
-
-    await proxy.methods
-      .setOnceTVMAlienTokenPlatformCode({
-          _tokenPlatformCode: alienTokenWalletPlatformData.code,
-          _remainingGasTo: owner.address,
-      })
-      .send({
-          from: owner.address,
-          amount: locklift.utils.toNano(0.5),
-      });
+    await setTVMConfiguration(
+      proxy,
+      owner,
+      [tvmEverscaleEventConfiguration],
+    );
 
     // Set merging
     const MergeRouter = locklift.factory.getContractArtifacts('MergeRouter');
@@ -247,7 +137,197 @@ export const setupAlienMultiVault = async (
         everscaleEthereumEventConfiguration,
         solanaEverscaleEventConfiguration,
         everscaleSolanaEventConfiguration,
-        tvmEverscaleEventConfiguration,
         proxy,
+        tvmEverscaleEventConfiguration,
     ];
 };
+
+const setEvmConfiguration = async (
+  proxy: Contract<ProxyMultiVaultAlien_V8Abi>,
+  owner: Account,
+  everscaleConfiguration: Contract<EverscaleEthereumEventConfigurationAbi>,
+  evmConfigurations: Contract<EthereumEverscaleEventConfigurationAbi>[],
+): Promise<void> => {
+  const alienTokenRootEVM = locklift.factory.getContractArtifacts("TokenRootAlienEVM");
+  const alienTokenWalletUpgradeableData = locklift.factory.getContractArtifacts("AlienTokenWalletUpgradeable");
+  const alienTokenWalletPlatformData = locklift.factory.getContractArtifacts("AlienTokenWalletPlatform");
+
+  await locklift.transactions.waitFinalized(
+    proxy.methods
+      .setEVMConfiguration({
+        _everscaleConfiguration: everscaleConfiguration.address,
+        _evmConfigurations: evmConfigurations.map((e) => e.address),
+        _remainingGasTo: owner.address,
+      })
+      .send({
+        from: owner.address,
+        amount: locklift.utils.toNano(0.5),
+        bounce: true,
+      })
+  );
+
+  await locklift.transactions.waitFinalized(
+    proxy.methods
+      .setEVMAlienTokenRootCode({
+        _tokenRootCode: alienTokenRootEVM.code,
+        _remainingGasTo: owner.address,
+      })
+      .send({
+        from: owner.address,
+        amount: locklift.utils.toNano(0.5),
+        bounce: true,
+      }),
+  );
+
+  await locklift.transactions.waitFinalized(
+    proxy.methods
+      .setEVMAlienTokenWalletCode({
+        _tokenWalletCode: alienTokenWalletUpgradeableData.code,
+        _remainingGasTo: owner.address,
+      })
+      .send({
+        from: owner.address,
+        amount: locklift.utils.toNano(0.5),
+        bounce: true,
+      }),
+  );
+
+  await locklift.transactions.waitFinalized(
+    proxy.methods
+      .setOnceEVMAlienTokenPlatformCode({
+        _tokenPlatformCode: alienTokenWalletPlatformData.code,
+        _remainingGasTo: owner.address,
+      })
+      .send({
+        from: owner.address,
+        amount: locklift.utils.toNano(0.5),
+        bounce: true,
+      }),
+  );
+}
+
+const setSolanaConfiguration = async (
+  proxy: Contract<ProxyMultiVaultAlien_V8Abi>,
+  owner: Account,
+  everscaleConfiguration: Contract<EverscaleSolanaEventConfigurationAbi>,
+  solanaConfiguration: Contract<SolanaEverscaleEventConfigurationAbi>,
+): Promise<void> => {
+  const alienTokenRootSolana = locklift.factory.getContractArtifacts("TokenRootAlienSolana");
+  const alienTokenWalletUpgradeableData = locklift.factory.getContractArtifacts("AlienTokenWalletUpgradeable");
+  const alienTokenWalletPlatformData = locklift.factory.getContractArtifacts("AlienTokenWalletPlatform");
+
+  await locklift.transactions.waitFinalized(
+    proxy.methods
+      .setSolanaConfiguration({
+        _everscaleConfiguration: everscaleConfiguration.address,
+        _solanaConfiguration: solanaConfiguration.address,
+        _remainingGasTo: owner.address,
+      })
+      .send({
+        from: owner.address,
+        amount: locklift.utils.toNano(0.5),
+        bounce: true,
+      })
+  );
+
+  await locklift.transactions.waitFinalized(
+    proxy.methods
+      .setSolanaAlienTokenRootCode({
+        _tokenRootCode: alienTokenRootSolana.code,
+        _remainingGasTo: owner.address,
+      })
+      .send({
+        from: owner.address,
+        amount: locklift.utils.toNano(0.5),
+        bounce: true,
+      }),
+  );
+
+  await locklift.transactions.waitFinalized(
+    proxy.methods
+      .setSolanaAlienTokenWalletCode({
+        _tokenWalletCode: alienTokenWalletUpgradeableData.code,
+        _remainingGasTo: owner.address,
+      })
+      .send({
+        from: owner.address,
+        amount: locklift.utils.toNano(0.5),
+        bounce: true,
+      }),
+  );
+
+  await locklift.transactions.waitFinalized(
+    proxy.methods
+      .setOnceSolanaAlienTokenPlatformCode({
+        _tokenPlatformCode: alienTokenWalletPlatformData.code,
+        _remainingGasTo: owner.address,
+      })
+      .send({
+        from: owner.address,
+        amount: locklift.utils.toNano(0.5),
+        bounce: true,
+      }),
+  );
+}
+
+const setTVMConfiguration = async (
+  proxy: Contract<ProxyMultiVaultAlien_V8Abi>,
+  owner: Account,
+  incomingConfigurations: Contract<TVMEverscaleEventConfigurationAbi>[],
+): Promise<void> => {
+  const alienTokenRootTVM = locklift.factory.getContractArtifacts("TokenRootAlienTVM");
+  const alienTokenWalletUpgradeableData = locklift.factory.getContractArtifacts("AlienTokenWalletUpgradeable");
+  const alienTokenWalletPlatformData = locklift.factory.getContractArtifacts("AlienTokenWalletPlatform");
+
+  await locklift.transactions.waitFinalized(
+    proxy.methods
+      .setTVMConfiguration({
+        _incomingConfigurations: incomingConfigurations.map((e) => e.address),
+        _remainingGasTo: owner.address,
+      })
+      .send({
+        from: owner.address,
+        amount: locklift.utils.toNano(0.5),
+        bounce: true,
+      })
+  );
+
+  await locklift.transactions.waitFinalized(
+    proxy.methods
+      .setTVMAlienTokenRootCode({
+        _tokenRootCode: alienTokenRootTVM.code,
+        _remainingGasTo: owner.address,
+      })
+      .send({
+        from: owner.address,
+        amount: locklift.utils.toNano(0.5),
+        bounce: true,
+      }),
+  );
+
+  await locklift.transactions.waitFinalized(
+    proxy.methods
+      .setTVMAlienTokenWalletCode({
+        _tokenWalletCode: alienTokenWalletUpgradeableData.code,
+        _remainingGasTo: owner.address,
+      })
+      .send({
+        from: owner.address,
+        amount: locklift.utils.toNano(0.5),
+        bounce: true,
+      }),
+  );
+
+  await locklift.transactions.waitFinalized(
+    proxy.methods
+      .setOnceTVMAlienTokenPlatformCode({
+        _tokenPlatformCode: alienTokenWalletPlatformData.code,
+        _remainingGasTo: owner.address,
+      })
+      .send({
+        from: owner.address,
+        amount: locklift.utils.toNano(0.5),
+        bounce: true,
+      }),
+  );
+}

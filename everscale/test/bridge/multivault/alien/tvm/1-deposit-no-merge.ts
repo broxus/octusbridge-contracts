@@ -1,4 +1,8 @@
-import {Contract, zeroAddress} from "locklift";
+import { Address, Contract, toNano, zeroAddress } from "locklift";
+import { Account } from "everscale-standalone-client/nodejs";
+import { Ed25519KeyPair } from "nekoton-wasm";
+import { expect } from "chai";
+
 import {
   AlienTokenWalletUpgradeableAbi,
   CellEncoderStandaloneAbi,
@@ -7,15 +11,14 @@ import {
   MultiVaultTVMEverscaleEventAlienAbi,
   ProxyMultiVaultAlien_V8Abi,
   StakingMockupAbi,
-  TokenRootAlienTVMAbi
+  TokenRootAlienTVMAbi,
+  TrustlessVerifierMockupAbi,
 } from "../../../../../build/factorySource";
-import {Account} from "everscale-standalone-client/nodejs";
-import {Ed25519KeyPair} from "nekoton-wasm";
-import {setupBridge, setupRelays} from "../../../../utils/bridge";
-import {setupAlienMultiVault} from "../../../../utils/multivault/alien";
-import {expect} from "chai";
-import {deployAccount} from "../../../../utils/account";
-import {logContract} from "../../../../utils/logger";
+
+import { setupBridge, setupRelays } from "../../../../utils/bridge";
+import { setupAlienMultiVault } from "../../../../utils/multivault/alien";
+import { deployAccount } from "../../../../utils/account";
+import { logContract } from "../../../../utils/logger";
 
 const logger = require("mocha-logger");
 
@@ -23,6 +26,7 @@ let relays: Ed25519KeyPair[];
 let cellEncoder: Contract<CellEncoderStandaloneAbi>;
 let staking: Contract<StakingMockupAbi>;
 let bridgeOwner: Account;
+let trustlessVerifier: Contract<TrustlessVerifierMockupAbi>;
 
 let tvmEverscaleEventConfiguration: Contract<TVMEverscaleEventConfigurationAbi>;
 let initializer: Account;
@@ -32,13 +36,12 @@ let alienTokenRoot: Contract<TokenRootAlienTVMAbi>;
 let mergeRouter: Contract<MergeRouterAbi>;
 let initializerAlienTokenWallet: Contract<AlienTokenWalletUpgradeableAbi>;
 
-
-describe('Deposit Alien TVM token to TVM with no merging', async function() {
+describe('Deposit Alien TVM token to TVM with no merging', function () {
   this.timeout(10000000);
 
   const alienTokenBase = {
     chainId: 111,
-    token: zeroAddress,
+    token: new Address('0:4c46c7268222cfd4bd35e17ac48b05adb45b3514f64b276aaf7157f1b57b2a11'),
   };
 
   const tokenMeta = {
@@ -49,54 +52,15 @@ describe('Deposit Alien TVM token to TVM with no merging', async function() {
 
   it("Setup bridge", async () => {
     relays = await setupRelays();
-    [, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
+    [, bridgeOwner, staking, cellEncoder, trustlessVerifier] = await setupBridge(relays);
 
     const signer = (await locklift.keystore.getSigner("0"))!;
-
-    const { contract: tvmEverscaleEventConfiguration } = await locklift.tracing.trace(
-      locklift.factory.deployContract({
-        contract: "TVMEverscaleEventConfiguration",
-        constructorParams: {
-          _owner: zeroAddress,
-          _flags: 0,
-          _meta: "",
-        },
-        initParams: {
-          basicConfiguration: {
-            eventABI: "",
-            eventInitialBalance: locklift.utils.toNano(2),
-            staking: staking.address,
-            eventCode: '',
-          },
-          networkConfiguration: {
-            chainId: 1,
-            eventEmitter: zeroAddress,
-            proxy: zeroAddress,
-            startBlockNumber: 0,
-            endBlockNumber: 0,
-            transactionChecker: zeroAddress
-          },
-        },
-        publicKey: signer.publicKey,
-        value: locklift.utils.toNano(20),
-      }),
-      { raise: false }
-    );
-
-    console.log(123)
 
     initializer = await deployAccount(signer, 50);
 
     await logContract("Initializer", initializer.address);
 
-    [
-      ,
-      ,
-      ,
-      ,
-      ,
-      proxy
-    ] = await setupAlienMultiVault(bridgeOwner, staking);
+    [, , , , proxy, tvmEverscaleEventConfiguration] = await setupAlienMultiVault(bridgeOwner, staking, trustlessVerifier);
   });
 
   describe('Transfer alien token from TVM to TVM', async () => {
@@ -141,23 +105,26 @@ describe('Deposit Alien TVM token to TVM with no merging', async function() {
         proof: ''
       };
 
-      // const tx = await locklift.tracing.trace(ethereumEverscaleEventConfiguration.methods
-      //     .deployEvent({
-      //         eventVoteData,
-      //     })
-      //     .send({
-      //         from: initializer.address,
-      //         amount: locklift.utils.toNano(8),
-      //     }));
+      await locklift.transactions.waitFinalized(
+        trustlessVerifier.methods
+          .setApprove({ _approve: true })
+          .send({
+            from: bridgeOwner.address,
+            amount: toNano(0.5),
+            bounce: true,
+          }),
+      );
 
-      const tx = await tvmEverscaleEventConfiguration.methods
-        .deployEvent({ eventVoteData })
-        .send({
-          from: initializer.address,
-          amount: locklift.utils.toNano(60),
-        });
+      const tx = await locklift.transactions.waitFinalized(
+        tvmEverscaleEventConfiguration.methods
+          .deployEvent({ eventVoteData })
+          .send({
+            from: initializer.address,
+            amount: locklift.utils.toNano(60),
+          }),
+      );
 
-      logger.log(`Event initialization tx: ${tx.id}`);
+      logger.log(`Event initialization tx: ${tx.extTransaction.id}`);
 
       const expectedEventContract = await tvmEverscaleEventConfiguration.methods
         .deriveEventAddress({
@@ -174,10 +141,10 @@ describe('Deposit Alien TVM token to TVM with no merging', async function() {
       );
     });
 
-    it("Check event contract exists", async () => {
+    it("Check event contract destroyed", async () => {
       expect(
         Number(await locklift.provider.getBalance(eventContract.address))
-      ).to.be.greaterThan(0, "Event contract balance is zero");
+      ).to.be.equal(0, "Event contract balance is zero");
     });
 
     it("Check event state before confirmation", async () => {
@@ -266,7 +233,7 @@ describe('Deposit Alien TVM token to TVM with no merging', async function() {
 
       expect(meta.base_chainId)
         .to.be.equal(eventDataStructure.base_chainId.toString(), 'Wrong alien token base chain id');
-      expect(meta.base_token)
+      expect(meta.base_token.toString())
         .to.be.equal(eventDataStructure.base_token.toString(), 'Wrong alien token base token');
       expect(meta.name)
         .to.be.equal(eventDataStructure.name, 'Wrong alien token name');

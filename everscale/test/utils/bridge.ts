@@ -6,7 +6,8 @@ import {
     BridgeAbi,
     CellEncoderStandaloneAbi,
     FactorySource,
-    StakingMockupAbi
+    StakingMockupAbi,
+    TrustlessVerifierMockupAbi,
 } from "../../build/factorySource";
 import {logContract} from "./logger";
 import {deployAccount} from "./account";
@@ -97,7 +98,8 @@ export const setupBridge = async (relays: Ed25519KeyPair[]): Promise<[
     Contract<BridgeAbi>,
     Account,
     Contract<StakingMockupAbi>,
-    Contract<CellEncoderStandaloneAbi>
+    Contract<CellEncoderStandaloneAbi>,
+    Contract<TrustlessVerifierMockupAbi>,
 ]> => {
     const signer = (await locklift.keystore.getSigner("0"))!;
 
@@ -158,6 +160,18 @@ export const setupBridge = async (relays: Ed25519KeyPair[]): Promise<[
 
     await logContract("CellEncoderStandalone", cellEncoder.address);
 
-    return [bridge, owner, staking, cellEncoder];
+    const { contract: trustlessVerifier } = await locklift.factory.deployContract({
+      contract: "TrustlessVerifierMockup",
+      constructorParams: {},
+      initParams: {
+        _randomNonce: locklift.utils.getRandomNonce(),
+      },
+      publicKey: signer?.publicKey,
+      value: locklift.utils.toNano(10)
+    });
+
+    await logContract("TrustlessVerifier", trustlessVerifier.address);
+
+    return [bridge, owner, staking, cellEncoder, trustlessVerifier];
 };
 
