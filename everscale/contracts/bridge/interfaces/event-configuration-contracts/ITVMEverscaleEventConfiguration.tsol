@@ -7,11 +7,9 @@ import "./../event-contracts/ITVMEverscaleEvent.tsol";
 interface ITVMEverscaleEventConfiguration is IBasicEventConfiguration {
     struct TVMEverscaleEventConfiguration {
         uint32 chainId;
-        address eventEmitter;
         address proxy;
         uint32 startBlockNumber;
         uint32 endBlockNumber;
-        address transactionChecker;
     }
 
     function deployEvent(

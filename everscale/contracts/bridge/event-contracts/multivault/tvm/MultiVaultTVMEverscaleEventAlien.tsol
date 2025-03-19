@@ -235,6 +235,8 @@ contract MultiVaultTVMEverscaleEventAlien is
     }
 
     function getEventData() public override responsible returns(EventData) {
+        TvmCell body = eventInitData.voteData.eventData.toSlice().loadRef();
+        TvmCell data = body.toSlice().loadRef();
         (
             uint256 base_chainId,
             address base_token,
@@ -250,7 +252,7 @@ contract MultiVaultTVMEverscaleEventAlien is
             uint256 expected_evers,
             TvmCell payload
         ) = abi.decode(
-            eventInitData.voteData.eventData,
+            data,
             (
                 uint256, address,
                 string, string, uint8,

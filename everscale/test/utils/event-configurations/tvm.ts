@@ -6,9 +6,9 @@ import { logContract } from "../logger";
 
 export const setupTVMEverscaleEventConfiguration = async (
   owner: Account,
-  staking: Contract<FactorySource["StakingMockup"]>,
   proxy: Address,
-  eventCode: string
+  eventCode: string,
+  transactionChecker: Address,
 ) => {
   const signer = (await locklift.keystore.getSigner("10"))!;
 
@@ -24,17 +24,16 @@ export const setupTVMEverscaleEventConfiguration = async (
         basicConfiguration: {
           eventABI: "",
           eventInitialBalance: locklift.utils.toNano(2),
-          staking: staking.address,
+          staking: zeroAddress,
           eventCode,
         },
         networkConfiguration: {
           chainId: 1,
-          eventEmitter: zeroAddress,
           proxy,
           startBlockNumber: 0,
           endBlockNumber: 0,
-          transactionChecker: zeroAddress
         },
+        transactionChecker: zeroAddress
       },
       publicKey: signer.publicKey,
       value: locklift.utils.toNano(20),
