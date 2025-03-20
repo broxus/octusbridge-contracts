@@ -38,6 +38,7 @@ interface IProxyMultiVaultNative_V6 is IEVMCallback, INetworks {
         uint256 value,
         uint256 expectedGas,
         address remainingGasTo,
+        address sender,
         TvmCell payload
     );
 }

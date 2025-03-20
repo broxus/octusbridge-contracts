@@ -168,7 +168,7 @@ abstract contract ProxyMultiVaultNative_V6_Withdraw is
         address token,
         uint128 amount,
         address remainingGasTo,
-        address /*sender*/,
+        address sender,
         TvmCell transferPayload
     ) internal pure {
         (
@@ -203,6 +203,7 @@ abstract contract ProxyMultiVaultNative_V6_Withdraw is
             msg.value, // todo subtract the cost of the current transaction
             expectedGas,
             remainingGasTo,
+            sender,
             eventPayload
         );
 
