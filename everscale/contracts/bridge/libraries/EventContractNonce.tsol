@@ -5,7 +5,7 @@ import "../interfaces/event-contracts/IEthereumEverscaleEvent.tsol";
 import "../interfaces/event-contracts/IEverscaleEthereumEvent.tsol";
 import "../interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
 import "../interfaces/event-contracts/ISolanaEverscaleEvent.tsol";
-import "../interfaces/event-contracts/ITVMEverscaleEvent.tsol";
+import "../interfaces/event-contracts/ITvmTvmEvent.tsol";
 
 
 library EventContractNonce {
@@ -44,7 +44,7 @@ library EventContractNonce {
     }
 
     function _calculateNonce(
-        ITVMEverscaleEvent.TVMEverscaleEventInitData eventInitData
+        ITvmTvmEvent.TvmTvmEventInitData eventInitData
     ) internal returns (uint32) {
         uint dataHash = tvm.hash(abi.encode(eventInitData));
 

@@ -3,13 +3,13 @@ pragma ever-solidity >= 0.62.0;
 import "./IBasicEvent.tsol";
 
 
-interface ITVMEverscaleEvent {
+interface ITvmTvmEvent {
     enum Status { Initializing, Pending, Confirmed, Rejected }
 
     event Confirmed();
     event Rejected();
 
-    struct TVMEverscaleEventVoteData {
+    struct TvmTvmEventVoteData {
         TvmCell eventData; // boc
         uint eventTransaction;
         TvmCell proof;
@@ -17,8 +17,8 @@ interface ITVMEverscaleEvent {
         uint eventBlock;
     }
 
-    struct TVMEverscaleEventInitData {
-        TVMEverscaleEventVoteData voteData;
+    struct TvmTvmEventInitData {
+        TvmTvmEventVoteData voteData;
         address configuration;
         uint32 chainId;
     }

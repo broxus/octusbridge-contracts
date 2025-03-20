@@ -5,16 +5,16 @@ pragma AbiHeader expire;
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.tsol";
 
-import "./../../../interfaces/event-contracts/multivault/tvm/IMultiVaultTVMEverscaleEventNative.tsol";
-import "./../../../interfaces/event-configuration-contracts/ITVMEverscaleEventConfiguration.tsol";
-import "./../../../interfaces/proxy/ITVMEverscaleProxyExtended.tsol";
+import "./../../../interfaces/event-contracts/multivault/tvm/IMultiVaultTvmTvmEventNative.tsol";
+import "./../../../interfaces/event-configuration-contracts/ITvmTvmEventConfiguration.tsol";
+import "./../../../interfaces/proxy/ITvmTvmProxyExtended.tsol";
 
-import "./../../base/tvm/TVMEverscaleBaseEvent.tsol";
+import "./../../base/tvm/TvmTvmBaseEvent.tsol";
 
 
-contract MultiVaultTVMEverscaleEventNative is
-    TVMEverscaleBaseEvent,
-    IMultiVaultTVMEverscaleEventNative
+contract MultiVaultTvmTvmEventNative is
+    TvmTvmBaseEvent,
+    IMultiVaultTvmTvmEventNative
 {
     address public token;
     uint128 public amount;
@@ -33,7 +33,7 @@ contract MultiVaultTVMEverscaleEventNative is
         TvmCell _meta,
         address _transactionChecker,
         address _eventEmitter
-    ) TVMEverscaleBaseEvent(_initializer, _meta,  _transactionChecker, _eventEmitter) public {}
+    ) TvmTvmBaseEvent(_initializer, _meta,  _transactionChecker, _eventEmitter) public {}
 
     function onInit() override internal {
         status = Status.Initializing;
@@ -67,15 +67,15 @@ contract MultiVaultTVMEverscaleEventNative is
             return;
         }
 
-        ITVMEverscaleEventConfiguration(eventInitData.configuration).getDetails{
+        ITvmTvmEventConfiguration(eventInitData.configuration).getDetails{
             value: gasToValue(Gas.REQUEST_CONFIGURATION_DETAILS_GAS, address(this).wid),
-            callback: MultiVaultTVMEverscaleEventNative.receiveConfigurationDetails
+            callback: MultiVaultTvmTvmEventNative.receiveConfigurationDetails
        }();
     }
 
     function receiveConfigurationDetails(
         IBasicEventConfiguration.BasicConfiguration,
-        ITVMEverscaleEventConfiguration.TVMEverscaleEventConfiguration _networkConfiguration,
+        ITvmTvmEventConfiguration.TvmTvmEventConfiguration _networkConfiguration,
         TvmCell
     ) external override {
         require(msg.sender == eventInitData.configuration, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
@@ -84,7 +84,7 @@ contract MultiVaultTVMEverscaleEventNative is
 
         ITokenRoot(token).walletOf{
             value: gasToValue(Gas.GET_TOKEN_DATA_GAS, address(this).wid),
-            callback: MultiVaultTVMEverscaleEventNative.receiveProxyTokenWallet
+            callback: MultiVaultTvmTvmEventNative.receiveProxyTokenWallet
         }(proxy);
     }
 
@@ -158,7 +158,7 @@ contract MultiVaultTVMEverscaleEventNative is
             payload
         );
 
-        ITVMEverscaleProxyExtended(eventInitData.configuration).onTVMEventConfirmedExtended{
+        ITvmTvmProxyExtended(eventInitData.configuration).onTVMEventConfirmedExtended{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, metaData, initializer);
     }

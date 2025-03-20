@@ -1,13 +1,13 @@
 pragma ever-solidity >= 0.62.0;
 
 
-import "./../../../event-configuration-contracts/ITVMEverscaleEventConfiguration.tsol";
+import "./../../../event-configuration-contracts/ITvmTvmEventConfiguration.tsol";
 
 
-interface IMultiVaultTVMEverscaleEventNative {
+interface IMultiVaultTvmTvmEventNative {
     function receiveConfigurationDetails(
         IBasicEventConfiguration.BasicConfiguration,
-        ITVMEverscaleEventConfiguration.TVMEverscaleEventConfiguration _networkConfiguration,
+        ITvmTvmEventConfiguration.TvmTvmEventConfiguration _networkConfiguration,
         TvmCell
     ) external;
 

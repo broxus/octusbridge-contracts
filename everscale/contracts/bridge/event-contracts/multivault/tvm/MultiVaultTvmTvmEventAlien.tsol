@@ -7,20 +7,20 @@ import "ton-eth-bridge-token-contracts/contracts/interfaces/TIP3TokenRoot.tsol";
 
 import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V8.tsol";
 
-import "./../../../interfaces/event-contracts/multivault/tvm/IMultiVaultTVMEverscaleEventAlien.tsol";
-import "./../../../interfaces/event-configuration-contracts/ITVMEverscaleEventConfiguration.tsol";
-import "./../../../interfaces/proxy/ITVMEverscaleProxyExtended.tsol";
+import "./../../../interfaces/event-contracts/multivault/tvm/IMultiVaultTvmTvmEventAlien.tsol";
+import "./../../../interfaces/event-configuration-contracts/ITvmTvmEventConfiguration.tsol";
+import "./../../../interfaces/proxy/ITvmTvmProxyExtended.tsol";
 import "./../../../interfaces/alien-token-merge/merge-pool/IMergePool_V2.tsol";
 import "./../../../interfaces/alien-token-merge/IMergeRouter.tsol";
 import "./../../../interfaces/trustless-verifier/ITrustlessVerifier.tsol";
 import "./../../../interfaces/trustless-verifier/IOnTrustlessVerify.tsol";
 
-import "./../../base/tvm/TVMEverscaleBaseEvent.tsol";
+import "./../../base/tvm/TvmTvmBaseEvent.tsol";
 
 
-contract MultiVaultTVMEverscaleEventAlien is
-    TVMEverscaleBaseEvent,
-    IMultiVaultTVMEverscaleEventAlien,
+contract MultiVaultTvmTvmEventAlien is
+    TvmTvmBaseEvent,
+    IMultiVaultTvmTvmEventAlien,
     IOnTrustlessVerify
 {
     uint128 constant POWER_BASE = 10;
@@ -32,7 +32,7 @@ contract MultiVaultTVMEverscaleEventAlien is
         TvmCell _meta,
         address _transactionChecker,
         address _eventEmitter
-    ) TVMEverscaleBaseEvent(_initializer, _meta, _transactionChecker, _eventEmitter) public {}
+    ) TvmTvmBaseEvent(_initializer, _meta, _transactionChecker, _eventEmitter) public {}
 
     function onInit() override internal {
         status = Status.Initializing;
@@ -52,15 +52,15 @@ contract MultiVaultTVMEverscaleEventAlien is
             return;
         }
 
-        ITVMEverscaleEventConfiguration(eventInitData.configuration).getDetails{
+        ITvmTvmEventConfiguration(eventInitData.configuration).getDetails{
             value: gasToValue(Gas.REQUEST_CONFIGURATION_DETAILS_GAS, address(this).wid),
-            callback: MultiVaultTVMEverscaleEventAlien.receiveConfigurationDetails
+            callback: MultiVaultTvmTvmEventAlien.receiveConfigurationDetails
         }();
     }
 
     function receiveConfigurationDetails(
         IBasicEventConfiguration.BasicConfiguration,
-        ITVMEverscaleEventConfiguration.TVMEverscaleEventConfiguration _networkConfiguration,
+        ITvmTvmEventConfiguration.TvmTvmEventConfiguration _networkConfiguration,
         TvmCell
     ) external override {
         require(msg.sender == eventInitData.configuration);
@@ -71,7 +71,7 @@ contract MultiVaultTVMEverscaleEventAlien is
 
         IProxyMultiVaultAlien_V8(_networkConfiguration.proxy).deriveTVMAlienTokenRoot{
             value: gasToValue(Gas.DERIVE_TOKEN_ROOT_GAS, address(this).wid),
-            callback: MultiVaultTVMEverscaleEventAlien.receiveAlienTokenRoot
+            callback: MultiVaultTvmTvmEventAlien.receiveAlienTokenRoot
         }(
             eventData.base_chainId,
             eventData.base_token,
@@ -97,7 +97,7 @@ contract MultiVaultTVMEverscaleEventAlien is
         TIP3TokenRoot(token).name{
             value: gasToValue(Gas.REQUEST_TOKEN_NAME_GAS, address(this).wid),
             bounce: true,
-            callback: MultiVaultTVMEverscaleEventAlien.receiveTokenName
+            callback: MultiVaultTvmTvmEventAlien.receiveTokenName
         }();
     }
 
@@ -119,7 +119,7 @@ contract MultiVaultTVMEverscaleEventAlien is
         IProxyMultiVaultAlien_V8(transitionalData.proxy).deriveMergeRouter{
             value: gasToValue(Gas.REQUEST_MERGE_ROUTER_GAS, address(this).wid),
             bounce: false,
-            callback: MultiVaultTVMEverscaleEventAlien.receiveMergeRouter
+            callback: MultiVaultTvmTvmEventAlien.receiveMergeRouter
         }(transitionalData.token);
     }
 
@@ -141,7 +141,7 @@ contract MultiVaultTVMEverscaleEventAlien is
         IMergeRouter(router).getPool{
             value: gasToValue(Gas.REQUEST_POOL_GAS, address(this).wid),
             bounce: true,
-            callback: MultiVaultTVMEverscaleEventAlien.receiveMergeRouterPool
+            callback: MultiVaultTvmTvmEventAlien.receiveMergeRouterPool
         }();
     }
 
@@ -167,7 +167,7 @@ contract MultiVaultTVMEverscaleEventAlien is
             IMergePool_V2(pool).getCanon{
                 value: gasToValue(Gas.REQUEST_CANON_GAS, address(this).wid),
                 bounce: false,
-                callback: MultiVaultTVMEverscaleEventAlien.receiveMergePoolCanon
+                callback: MultiVaultTvmTvmEventAlien.receiveMergePoolCanon
             }();
         }
     }
@@ -228,7 +228,7 @@ contract MultiVaultTVMEverscaleEventAlien is
             eventData.payload
         );
 
-        ITVMEverscaleProxyExtended(eventInitData.configuration).onTVMEventConfirmedExtended{
+        ITvmTvmProxyExtended(eventInitData.configuration).onTVMEventConfirmedExtended{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, metaData, initializer);
     }

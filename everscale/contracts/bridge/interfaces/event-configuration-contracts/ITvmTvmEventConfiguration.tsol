@@ -1,11 +1,11 @@
 pragma ever-solidity >= 0.62.0;
 
 import "./IBasicEventConfiguration.tsol";
-import "./../event-contracts/ITVMEverscaleEvent.tsol";
+import "./../event-contracts/ITvmTvmEvent.tsol";
 
 
-interface ITVMEverscaleEventConfiguration is IBasicEventConfiguration {
-    struct TVMEverscaleEventConfiguration {
+interface ITvmTvmEventConfiguration is IBasicEventConfiguration {
+    struct TvmTvmEventConfiguration {
         uint32 chainId;
         address proxy;
         uint32 startBlockNumber;
@@ -13,21 +13,21 @@ interface ITVMEverscaleEventConfiguration is IBasicEventConfiguration {
     }
 
     function deployEvent(
-        ITVMEverscaleEvent.TVMEverscaleEventVoteData eventVoteData
+        ITvmTvmEvent.TvmTvmEventVoteData eventVoteData
     ) external;
 
     function deployEvents(
-        ITVMEverscaleEvent.TVMEverscaleEventVoteData[] eventsVoteData,
+        ITvmTvmEvent.TvmTvmEventVoteData[] eventsVoteData,
         uint128[] values
     ) external;
 
     function deriveEventAddress(
-        ITVMEverscaleEvent.TVMEverscaleEventVoteData eventVoteData
+        ITvmTvmEvent.TvmTvmEventVoteData eventVoteData
     ) external view responsible returns (address eventContract);
 
     function getDetails() external view responsible returns(
         BasicConfiguration _basicConfiguration,
-        TVMEverscaleEventConfiguration _networkConfiguration,
+        TvmTvmEventConfiguration _networkConfiguration,
         TvmCell _meta
     );
 

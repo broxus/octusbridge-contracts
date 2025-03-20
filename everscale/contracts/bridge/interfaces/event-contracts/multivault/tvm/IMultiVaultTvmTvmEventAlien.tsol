@@ -1,11 +1,11 @@
 pragma ever-solidity >= 0.62.0;
 
 
-import "./../../../event-configuration-contracts/ITVMEverscaleEventConfiguration.tsol";
+import "./../../../event-configuration-contracts/ITvmTvmEventConfiguration.tsol";
 import "./../../../alien-token-merge/merge-pool/IMergePool_V2.tsol";
 
 
-interface IMultiVaultTVMEverscaleEventAlien {
+interface IMultiVaultTvmTvmEventAlien {
     struct EventData {
         uint256 base_chainId;
         address base_token;
@@ -36,7 +36,7 @@ interface IMultiVaultTVMEverscaleEventAlien {
 
     function receiveConfigurationDetails(
         IBasicEventConfiguration.BasicConfiguration,
-        ITVMEverscaleEventConfiguration.TVMEverscaleEventConfiguration _networkConfiguration,
+        ITvmTvmEventConfiguration.TvmTvmEventConfiguration _networkConfiguration,
         TvmCell
     ) external;
 
