@@ -25,7 +25,7 @@ library BocDecoder {
         uint15 outmsgCnt,
         uint2 origStatus,
         uint2 endStatus,
-        TvmCell inMessage,
+        optional(TvmCell) inMessage,
         mapping(uint15 => TvmCell) outMessages
     ) {
         TvmSlice s = _txBoc.toSlice();
@@ -43,10 +43,36 @@ library BocDecoder {
 
         TvmSlice messages = s.loadRefAsSlice();
 
-        inMessage = messages.loadRef();
+        inMessage = messages.decode(optional(TvmCell));
         outMessages = messages.decode(mapping(uint15 => TvmCell));
 
         // totalFees, stateUpdate, description
+    }
+
+    function decodeTransactionShort(TvmCell _txBoc) public returns (
+        uint256 accountAddr,
+        uint64 lt,
+        uint32 nowTimestamp,
+        mapping(uint15 => TvmCell) outMessages
+    ) {
+        TvmSlice s = _txBoc.toSlice();
+
+        s.skip(4);
+        accountAddr = s.decode(uint256);
+        lt = s.decode(uint64);
+        s.skip(320);
+        nowTimestamp = s.decode(uint32);
+        s.skip(19);
+
+        TvmSlice messages = s.loadRefAsSlice();
+
+        bool hasInMessage = messages.decode(bool);
+
+        if (hasInMessage) {
+            messages.skip(0, 1);
+        }
+
+        outMessages = messages.decode(mapping(uint15 => TvmCell));
     }
 
     function findMessageInTransaction(
