@@ -21,11 +21,12 @@ contract TvmTvmBaseEvent is ITvmTvmEvent, TransferUtils {
     TvmCell public meta;
 
     address public transactionChecker;
-    address public eventEmitter;
 
     // Event data
     TvmTvmEventInitData static eventInitData;
     uint32 public nonce;
+
+    TvmCell eventBody;
 
     /// @dev Should be deployed only by corresponding TvmTvmEventConfiguration contract
     /// @param _initializer The address who paid for contract deployment.
@@ -34,7 +35,7 @@ contract TvmTvmBaseEvent is ITvmTvmEvent, TransferUtils {
         address _initializer,
         TvmCell _meta,
         address _transactionChecker,
-        address _eventEmitter
+        TvmCell _eventBody
     ) public {
         require(
             eventInitData.configuration == msg.sender,
@@ -44,9 +45,9 @@ contract TvmTvmBaseEvent is ITvmTvmEvent, TransferUtils {
         nonce = EventContractNonce._calculateNonce(eventInitData);
         initializer = _initializer;
         meta = _meta;
+        eventBody = _eventBody;
 
         transactionChecker = _transactionChecker;
-        eventEmitter = _eventEmitter;
 
         onInit();
     }
@@ -77,4 +78,6 @@ contract TvmTvmBaseEvent is ITvmTvmEvent, TransferUtils {
             meta
         );
     }
+
+    function processProof(ITvmTvmEvent.TvmTvmEventVoteData eventVoteData) override virtual external {}
 }

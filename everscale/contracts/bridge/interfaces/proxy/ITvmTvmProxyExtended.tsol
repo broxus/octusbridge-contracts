@@ -2,7 +2,7 @@ pragma ever-solidity >= 0.62.0;
 
 import "./../event-contracts/ITvmTvmEvent.tsol";
 
-interface ITvmTvmProxyExtended is ITvmTvmEvent {
+interface ITvmTvmProxyExtended {
     function onTVMEventConfirmedExtended(
         ITvmTvmEvent.TvmTvmEventInitData eventData,
         TvmCell meta,

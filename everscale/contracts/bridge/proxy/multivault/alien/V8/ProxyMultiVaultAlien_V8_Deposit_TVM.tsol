@@ -12,7 +12,7 @@ abstract contract ProxyMultiVaultAlien_V8_Deposit_TVM is
     ITvmTvmProxyExtended
 {
     function onTVMEventConfirmedExtended(
-        TvmTvmEventInitData eventInitData,
+        ITvmTvmEvent.TvmTvmEventInitData eventInitData,
         TvmCell meta,
         address remainingGasTo
     ) external override reserveAtLeastTargetBalance {

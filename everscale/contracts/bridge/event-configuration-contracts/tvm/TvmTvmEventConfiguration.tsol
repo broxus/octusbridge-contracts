@@ -17,7 +17,7 @@ import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 
-/// @title Basic TVM-Everscale event configuration contract
+/// @title Basic TVM-TVM event configuration contract
 /// @author https://github.com/broxus
 contract TvmTvmEventConfiguration is
     ITvmTvmEventConfiguration,
@@ -62,10 +62,10 @@ contract TvmTvmEventConfiguration is
         meta = _meta;
     }
 
-    /// @dev Set end block number. Can be set only in case current value is 0.
-    /// @param endBlockNumber End block number
-    function setEndBlockNumber(
-        uint32 endBlockNumber
+    /// @dev Set end timestamp. Can be set only in case current value is 0.
+    /// @param endTimestamp End timestamp
+    function setEndTimestamp(
+        uint32 endTimestamp
     )
         override
         onlyOwner
@@ -73,16 +73,16 @@ contract TvmTvmEventConfiguration is
         external
     {
         require(
-            networkConfiguration.endBlockNumber == 0,
-            ErrorCodes.END_BLOCK_NUMBER_ALREADY_SET
+            networkConfiguration.endTimestamp == 0,
+            ErrorCodes.END_TIMESTAMP_ALREADY_SET
         );
 
         require(
-            endBlockNumber >= networkConfiguration.startBlockNumber,
-            ErrorCodes.TOO_LOW_END_BLOCK_NUMBER
+            endTimestamp >= networkConfiguration.startTimestamp,
+            ErrorCodes.TOO_LOW_END_TIMESTAMP
         );
 
-        networkConfiguration.endBlockNumber = endBlockNumber;
+        networkConfiguration.endTimestamp = endTimestamp;
     }
 
     function setFlags(
@@ -105,13 +105,13 @@ contract TvmTvmEventConfiguration is
 
     /// @dev Build initial data for event contract
     /// @dev Extends event vote data with configuration params
-    /// @param eventVoteData Event vote data structure, passed by relay
+    /// @param msgHash Message hash
     function buildEventInitData(
-        ITvmTvmEvent.TvmTvmEventVoteData eventVoteData
+        uint msgHash
     ) internal view returns(
         ITvmTvmEvent.TvmTvmEventInitData eventInitData
     ) {
-        eventInitData.voteData = eventVoteData;
+        eventInitData.msgHash = msgHash;
 
         eventInitData.configuration = address(this);
         eventInitData.chainId = networkConfiguration.chainId;
@@ -159,40 +159,56 @@ contract TvmTvmEventConfiguration is
             require(value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
         }
 
+        // todo parse txBlockProof
+        // todo check if chainId is correct
+
+        // todo parse txProof
+        // todo check msgHash existence (hash(eventBody) == msgHash)
+        TvmCell eventBody; // todo use bocDecoder
+
+        // todo check if eventEmitter is correct
+        // todo check timestamp (below)
+        uint256 txTimestamp = networkConfiguration.startTimestamp; // todo use bocDecoder
         require(
-            eventVoteData.eventBlockNumber >= networkConfiguration.startBlockNumber,
-            ErrorCodes.EVENT_BLOCK_NUMBER_LESS_THAN_START
+            txTimestamp >= networkConfiguration.startTimestamp,
+            ErrorCodes.EVENT_TIMESTAMP_LESS_THAN_START
         );
 
-        if (networkConfiguration.endBlockNumber != 0) {
+        if (networkConfiguration.endTimestamp != 0) {
             require(
-                eventVoteData.eventBlockNumber <= networkConfiguration.endBlockNumber,
-                ErrorCodes.EVENT_BLOCK_NUMBER_HIGHER_THAN_END
+                txTimestamp <= networkConfiguration.endTimestamp,
+                ErrorCodes.EVENT_TIMESTAMP_HIGHER_THAN_END
             );
         }
 
-        ITvmTvmEvent.TvmTvmEventInitData eventInitData = buildEventInitData(eventVoteData);
+        ITvmTvmEvent.TvmTvmEventInitData eventInitData = buildEventInitData(eventVoteData.msgHash);
 
-        address eventContract = deriveEventAddress(eventVoteData);
+        address eventContract = deriveEventAddress(eventVoteData.msgHash);
 
         emit NewEventContract(eventContract);
 
         new TvmTvmBaseEvent{
-            value: value,
-            flag: flag,
+            value: gasToValue(Gas.DEPLOY_TVM_TVM_EVENT, address(this).wid),
+            flag: MsgFlag.SENDER_PAYS_FEES,
             code: basicConfiguration.eventCode,
             pubkey: 0,
             varInit: {
                 eventInitData: eventInitData
             }
-        }(msg.sender, meta, transactionChecker, eventEmitter);
+        }(msg.sender, meta, transactionChecker, eventBody);
+
+        ITvmTvmEvent(eventContract)
+            .processProof{
+                value: value - gasToValue(Gas.DEPLOY_TVM_TVM_EVENT, address(this).wid),
+                flag: flag
+            }(eventVoteData);
     }
 
     /// @dev Derive the Ethereum event contract address from it's init data
-    /// @param eventVoteData Ethereum event vote data
+    /// @param msgHash Message hash
     /// @return eventContract Address of the corresponding ethereum event contract
     function deriveEventAddress(
-        ITvmTvmEvent.TvmTvmEventVoteData eventVoteData
+        uint msgHash
     )
         override
         public
@@ -201,7 +217,7 @@ contract TvmTvmEventConfiguration is
     returns(
         address eventContract
     ) {
-        ITvmTvmEvent.TvmTvmEventInitData eventInitData = buildEventInitData(eventVoteData);
+        ITvmTvmEvent.TvmTvmEventInitData eventInitData = buildEventInitData(msgHash);
 
         TvmCell stateInit = tvm.buildStateInit({
             contr: TvmTvmBaseEvent,

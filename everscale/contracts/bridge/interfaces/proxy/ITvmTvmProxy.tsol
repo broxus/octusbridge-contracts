@@ -2,7 +2,7 @@ pragma ever-solidity >= 0.62.0;
 
 import "./../event-contracts/ITvmTvmEvent.tsol";
 
-interface ITvmTvmProxy is ITvmTvmEvent {
+interface ITvmTvmProxy {
     function onEventConfirmed(
         ITvmTvmEvent.TvmTvmEventInitData eventData,
         address gasBackAddress

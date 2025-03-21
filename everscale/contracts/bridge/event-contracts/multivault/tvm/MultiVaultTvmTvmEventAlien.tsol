@@ -26,36 +26,62 @@ contract MultiVaultTvmTvmEventAlien is
     uint128 constant POWER_BASE = 10;
 
     TvmCell public transitionalDataCell;
+    bool setupFinished;
 
     constructor(
         address _initializer,
         TvmCell _meta,
         address _transactionChecker,
-        address _eventEmitter
-    ) TvmTvmBaseEvent(_initializer, _meta, _transactionChecker, _eventEmitter) public {}
+        TvmCell _eventBody
+    ) TvmTvmBaseEvent(_initializer, _meta, _transactionChecker, _eventBody) public {}
 
     function onInit() override internal {
         status = Status.Initializing;
 
         _init_transitional_data();
+    }
+
+    function processProof(ITvmTvmEvent.TvmTvmEventVoteData _eventVoteData) override external {
+        require(msg.sender == eventInitData.configuration, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
 
         EventData eventData = getEventData();
 
-        // Destroy event contract in case event contract is less than required
-        if (address(this).balance < eventData.expected_evers) {
+        // return gas in case event contract balance is less than required
+        if (address(this).balance < eventData.expected_gas) {
             initializer.transfer({
                 value: 0,
                 bounce: false,
-                flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.DESTROY_IF_ZERO
+                flag: MsgFlag.ALL_NOT_RESERVED
             });
 
             return;
         }
 
-        ITvmTvmEventConfiguration(eventInitData.configuration).getDetails{
-            value: gasToValue(Gas.REQUEST_CONFIGURATION_DETAILS_GAS, address(this).wid),
-            callback: MultiVaultTvmTvmEventAlien.receiveConfigurationDetails
-        }();
+        status = Status.Pending;
+
+        // todo call transactionChecker to validate eventVoteData (callback onTransactionCheck)
+
+        uint256 txHash = 0; // todo use BocDecoder
+        ITrustlessVerifier(transactionChecker)
+            .verifyTx{
+                value: gasToValue(Gas.VERIFY_TRANSACTION_GAS, address(this).wid),
+                flag: MsgFlag.SENDER_PAYS_FEES
+            }(txHash, _eventVoteData.txBlockProof);
+
+        ITvmTvmEventConfiguration(eventInitData.configuration)
+            .getDetails{
+                value: gasToValue(Gas.REQUEST_CONFIGURATION_DETAILS_GAS, address(this).wid),
+                callback: MultiVaultTvmTvmEventAlien.receiveConfigurationDetails
+            }();
+    }
+
+    function onTrustlessVerify(bool success) external override {
+        require(msg.sender == transactionChecker, ErrorCodes.SENDER_NOT_TX_CHECKER);
+
+        if (success) {
+            status = Status.Confirmed;
+            onConfirm();
+        }
     }
 
     function receiveConfigurationDetails(
@@ -218,19 +244,21 @@ contract MultiVaultTvmTvmEventAlien is
     }
 
     function onConfirm() internal override {
-        EventData eventData = getEventData();
-        TransitionalData transitionalData = getTransitionalData();
+        if (status == Status.Confirmed && setupFinished) {
+            EventData eventData = getEventData();
+            TransitionalData transitionalData = getTransitionalData();
 
-        TvmCell metaData = abi.encode(
-            transitionalData.target_token,
-            transitionalData.target_amount,
-            eventData.recipient,
-            eventData.payload
-        );
+            TvmCell metaData = abi.encode(
+                transitionalData.target_token,
+                transitionalData.target_amount,
+                eventData.recipient,
+                eventData.payload
+            );
 
-        ITvmTvmProxyExtended(eventInitData.configuration).onTVMEventConfirmedExtended{
-            flag: MsgFlag.ALL_NOT_RESERVED
-        }(eventInitData, metaData, initializer);
+            ITvmTvmProxyExtended(eventInitData.configuration).onTVMEventConfirmedExtended{
+                flag: MsgFlag.ALL_NOT_RESERVED
+            }(eventInitData, metaData, initializer);
+        }
     }
 
     function onReject() virtual override internal {
@@ -238,12 +266,10 @@ contract MultiVaultTvmTvmEventAlien is
     }
 
     function getEventData() public override responsible returns(EventData) {
-        TvmCell data = eventInitData.voteData.eventData.toSlice().loadRef();
+        TvmCell data = eventBody.toSlice().loadRef();
 
         (
-            uint256 base_chainId,
             address base_token,
-
             string name,
             string symbol,
             uint8 decimals,
@@ -252,20 +278,25 @@ contract MultiVaultTvmTvmEventAlien is
             address recipient,
 
             uint256 value,
-            uint256 expected_evers,
+            uint256 expected_gas,
+
+            /*remaining_gas_to*/,
+            /*sender*/,
+
             TvmCell payload
         ) = abi.decode(
             data,
             (
-                uint256, address,
-                string, string, uint8,
+                address, string, string, uint8,
                 uint128, address,
-                uint256, uint256, TvmCell
+                uint256, uint256,
+                address, address,
+                TvmCell
             )
         );
 
         return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} EventData(
-            base_chainId,
+            eventInitData.chainId,
             base_token,
 
             name,
@@ -276,7 +307,7 @@ contract MultiVaultTvmTvmEventAlien is
             recipient,
 
             value,
-            expected_evers,
+            expected_gas,
             payload
         );
     }
@@ -332,41 +363,7 @@ contract MultiVaultTvmTvmEventAlien is
 
         _set_transitional_data(transitionalData);
 
-        status = Status.Pending;
-
-        // todo call transactionChecker to validate eventVoteData (callback onTransactionCheck)
-
-        TvmCell empty;
-
-        ITrustlessVerifier(transactionChecker)
-            .verify{
-                value: gasToValue(Gas.VERIFY_TRANSACTION_GAS, address(this).wid),
-                flag: MsgFlag.SENDER_PAYS_FEES
-            }(123, 123, empty);
-    }
-
-    function onTrustlessVerify(bool success) external override {
-        // todo: added guard modifier
-        // if failed (too new block)
-        if (!success) {
-            initializer.transfer({
-                value: 0,
-                bounce: false,
-                flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.DESTROY_IF_ZERO
-            });
-            return;
-        }
-
-        // if failed (other errors)
-        if (!success) {
-            status = Status.Rejected;
-            onReject();
-
-            return;
-        }
-
-        // if success
-        status = Status.Confirmed;
+        setupFinished = true;
         onConfirm();
     }
 
@@ -437,7 +434,7 @@ contract MultiVaultTvmTvmEventAlien is
         uint128 amount_,
         address recipient_,
         uint value_,
-        uint expected_evers_,
+        uint expected_gas_,
         TvmCell payload_,
         address proxy_,
         address token_
@@ -457,7 +454,7 @@ contract MultiVaultTvmTvmEventAlien is
             eventData.recipient,
 
             eventData.value,
-            eventData.expected_evers,
+            eventData.expected_gas,
             eventData.payload,
 
             transitionalData.proxy,

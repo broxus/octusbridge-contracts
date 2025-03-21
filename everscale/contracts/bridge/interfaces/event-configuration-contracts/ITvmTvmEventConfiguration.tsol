@@ -8,8 +8,8 @@ interface ITvmTvmEventConfiguration is IBasicEventConfiguration {
     struct TvmTvmEventConfiguration {
         uint32 chainId;
         address proxy;
-        uint32 startBlockNumber;
-        uint32 endBlockNumber;
+        uint32 startTimestamp;
+        uint32 endTimestamp;
     }
 
     function deployEvent(
@@ -22,7 +22,7 @@ interface ITvmTvmEventConfiguration is IBasicEventConfiguration {
     ) external;
 
     function deriveEventAddress(
-        ITvmTvmEvent.TvmTvmEventVoteData eventVoteData
+        uint msgHash
     ) external view responsible returns (address eventContract);
 
     function getDetails() external view responsible returns(
@@ -31,6 +31,6 @@ interface ITvmTvmEventConfiguration is IBasicEventConfiguration {
         TvmCell _meta
     );
 
-    function setEndBlockNumber(uint32 endBlockNumber) external;
+    function setEndTimestamp(uint32 endTimestamp) external;
     function setTransactionChecker(address transactionChecker) external;
 }

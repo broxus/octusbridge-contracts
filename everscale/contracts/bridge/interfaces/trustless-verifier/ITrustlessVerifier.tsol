@@ -1,5 +1,5 @@
 pragma ever-solidity >= 0.62.0;
 
 interface ITrustlessVerifier {
-    function verify(uint64 _txLt, uint64 _keyBlock, TvmCell _proof) external;
+    function verifyTx(uint txHash, TvmCell txBlockProof) external;
 }

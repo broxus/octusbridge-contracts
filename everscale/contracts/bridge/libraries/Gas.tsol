@@ -34,4 +34,6 @@ library Gas {
     function getDeployTokenWalletValue() public returns(uint128) {
         return gasToValue(TOKEN_WALLET_DEPLOY_GAS, address(this).wid) + TOKEN_WALLET_INITIAL_BALANCE;
     }
+
+    uint128 constant DEPLOY_TVM_TVM_EVENT = 1_000_000;
 }

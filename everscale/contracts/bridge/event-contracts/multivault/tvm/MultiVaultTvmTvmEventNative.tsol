@@ -8,69 +8,101 @@ import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.tsol";
 import "./../../../interfaces/event-contracts/multivault/tvm/IMultiVaultTvmTvmEventNative.tsol";
 import "./../../../interfaces/event-configuration-contracts/ITvmTvmEventConfiguration.tsol";
 import "./../../../interfaces/proxy/ITvmTvmProxyExtended.tsol";
+import "./../../../interfaces/trustless-verifier/ITrustlessVerifier.tsol";
+import "./../../../interfaces/trustless-verifier/IOnTrustlessVerify.tsol";
 
 import "./../../base/tvm/TvmTvmBaseEvent.tsol";
 
 
 contract MultiVaultTvmTvmEventNative is
     TvmTvmBaseEvent,
-    IMultiVaultTvmTvmEventNative
+    IMultiVaultTvmTvmEventNative,
+    IOnTrustlessVerify
 {
     address public token;
     uint128 public amount;
     address public recipient;
 
     uint public value;
-    uint public expected_evers;
+    uint public expected_gas;
     TvmCell public payload;
 
     // Derived fields
     address public proxy;
     address public tokenWallet;
 
+    bool setupFinished;
+
     constructor(
         address _initializer,
         TvmCell _meta,
         address _transactionChecker,
-        address _eventEmitter
-    ) TvmTvmBaseEvent(_initializer, _meta,  _transactionChecker, _eventEmitter) public {}
+        TvmCell _eventBody
+    ) TvmTvmBaseEvent(_initializer, _meta,  _transactionChecker, _eventBody) public {}
 
     function onInit() override internal {
         status = Status.Initializing;
+    }
 
-        TvmCell body = eventInitData.voteData.eventData.toSlice().loadRef();
-        TvmCell data = body.toSlice().loadRef();
+    function processProof(ITvmTvmEvent.TvmTvmEventVoteData _eventVoteData) override external {
+        require(msg.sender == eventInitData.configuration, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
+
+        TvmCell data = eventBody.toSlice().loadRef();
         (
+            /*chain_id*/,
             token,
             amount,
             recipient,
 
             value,
-            expected_evers,
+            expected_gas,
+            /*remaining_gas_to*/,
+            /*sender*/,
             payload
         ) = abi.decode(
             data,
             (
-                address, uint128, address,
-                uint256, uint256, TvmCell
+                uint256, address, uint128, address,
+                uint256, uint256, address, address,
+                TvmCell
             )
         );
 
-        // Destroy event contract in case event contract is less than required
-        if (address(this).balance < expected_evers) {
+        // return gas in case event contract is less than required
+        if (address(this).balance < expected_gas) {
             initializer.transfer({
                 value: 0,
                 bounce: false,
-                flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.DESTROY_IF_ZERO
+                flag: MsgFlag.ALL_NOT_RESERVED
             });
 
             return;
         }
 
+        status = Status.Pending;
+
+        // todo call transactionChecker to validate eventVoteData (callback onTransactionCheck)
+
+        uint256 txHash = 0; // todo use BocDecoder
+        ITrustlessVerifier(transactionChecker)
+            .verifyTx{
+                value: gasToValue(Gas.VERIFY_TRANSACTION_GAS, address(this).wid),
+                flag: MsgFlag.SENDER_PAYS_FEES
+            }(txHash, _eventVoteData.txBlockProof);
+
         ITvmTvmEventConfiguration(eventInitData.configuration).getDetails{
-            value: gasToValue(Gas.REQUEST_CONFIGURATION_DETAILS_GAS, address(this).wid),
-            callback: MultiVaultTvmTvmEventNative.receiveConfigurationDetails
-       }();
+                value: gasToValue(Gas.REQUEST_CONFIGURATION_DETAILS_GAS, address(this).wid),
+                callback: MultiVaultTvmTvmEventNative.receiveConfigurationDetails
+            }();
+    }
+
+    function onTrustlessVerify(bool success) external override {
+        require(msg.sender == transactionChecker, ErrorCodes.SENDER_NOT_TX_CHECKER);
+
+        if (success) {
+            status = Status.Confirmed;
+            onConfirm();
+        }
     }
 
     function receiveConfigurationDetails(
@@ -95,36 +127,7 @@ contract MultiVaultTvmTvmEventNative is
 
         tokenWallet = tokenWallet_;
 
-        status = Status.Pending;
-        // todo call transactionChecker to validate eventVoteData (callback onTransactionCheck)
-    }
-
-    function onTransactionCheck() external {
-        // todo handle results
-
-        //mock
-        bool success = true;
-
-        // if failed (too new block)
-        if (!success) {
-            initializer.transfer({
-                value: 0,
-                bounce: false,
-                flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.DESTROY_IF_ZERO
-            });
-            return;
-        }
-
-        // if failed (other errors)
-        if (!success) {
-            status = Status.Rejected;
-            onReject();
-
-            return;
-        }
-
-        // if success
-        status = Status.Confirmed;
+        setupFinished = true;
         onConfirm();
     }
 
@@ -133,7 +136,7 @@ contract MultiVaultTvmTvmEventNative is
         uint128 amount_,
         address recipient_,
         uint value_,
-        uint expected_evers_,
+        uint expected_gas_,
         TvmCell payload_,
         address proxy_,
         address tokenWallet_
@@ -143,7 +146,7 @@ contract MultiVaultTvmTvmEventNative is
             amount,
             recipient,
             value,
-            expected_evers,
+            expected_gas,
             payload,
             proxy,
             tokenWallet
@@ -151,15 +154,17 @@ contract MultiVaultTvmTvmEventNative is
     }
 
     function onConfirm() internal override {
-        TvmCell metaData = abi.encode(
-            tokenWallet,
-            amount,
-            recipient,
-            payload
-        );
+        if (status == Status.Confirmed && setupFinished) {
+            TvmCell metaData = abi.encode(
+                tokenWallet,
+                amount,
+                recipient,
+                payload
+            );
 
-        ITvmTvmProxyExtended(eventInitData.configuration).onTVMEventConfirmedExtended{
-            flag: MsgFlag.ALL_NOT_RESERVED
-        }(eventInitData, metaData, initializer);
+            ITvmTvmProxyExtended(eventInitData.configuration).onTVMEventConfirmedExtended{
+                flag: MsgFlag.ALL_NOT_RESERVED
+            }(eventInitData, metaData, initializer);
+        }
     }
 }

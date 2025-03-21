@@ -1,25 +1,24 @@
 pragma ever-solidity >= 0.62.0;
 
-import "./IBasicEvent.tsol";
-
 
 interface ITvmTvmEvent {
-    enum Status { Initializing, Pending, Confirmed, Rejected }
+    enum Status { Initializing, Pending, Confirmed }
 
     event Confirmed();
     event Rejected();
 
     struct TvmTvmEventVoteData {
-        TvmCell eventData; // boc
-        uint eventTransaction;
-        TvmCell proof;
-        uint32 eventBlockNumber;
-        uint eventBlock;
+        uint msgHash;
+        uint15 messageIndex;
+        TvmCell txBlockProof;
+        TvmCell txProof;
     }
 
     struct TvmTvmEventInitData {
-        TvmTvmEventVoteData voteData;
+        uint msgHash;
         address configuration;
         uint32 chainId;
     }
+
+    function processProof(ITvmTvmEvent.TvmTvmEventVoteData eventVoteData) external;
 }

@@ -47,6 +47,7 @@ library ErrorCodes {
     uint16 constant SENDER_NOT_ROOT = 2326;
     uint16 constant WRONG_ROUTER = 2327;
     uint16 constant WRONG_POOL = 2328;
+    uint16 constant SENDER_NOT_TX_CHECKER = 2329;
 
     // Connector
     uint16 constant DEPLOYER_NOT_BRIDGE = 2420;
