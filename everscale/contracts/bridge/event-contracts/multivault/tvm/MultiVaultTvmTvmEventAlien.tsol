@@ -42,6 +42,7 @@ contract MultiVaultTvmTvmEventAlien is
     }
 
     function processProof(ITvmTvmEvent.TvmTvmEventVoteData _eventVoteData) override external {
+        require(status != Status.Confirmed, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
         require(msg.sender == eventInitData.configuration, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
 
         EventData eventData = getEventData();
