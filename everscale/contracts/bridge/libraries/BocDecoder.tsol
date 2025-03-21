@@ -1,0 +1,219 @@
+pragma ever-solidity >= 0.62.0;
+
+library BocDecoder {
+    function decodeBlockProof(TvmCell _proof) public returns (int32 chainId) {
+        TvmSlice s = _proof.toSlice().loadRefAsSlice();
+
+        s.decode(uint32); // tag
+
+        return s.decode(int32);
+    }
+
+    //transaction$0111 account_addr:bits256 lt:uint64
+    //  prev_trans_hash:bits256 prev_trans_lt:uint64 now:uint32
+    //  outmsg_cnt:uint15
+    //  orig_status:AccountStatus end_status:AccountStatus
+    //  ^[ in_msg:(Maybe ^(Message Any)) out_msgs:(HashmapE 15 ^(Message Any)) ]
+    //  total_fees:CurrencyCollection state_update:^(HASH_UPDATE Account)
+    //  description:^TransactionDescr = Transaction;
+    function decodeTransaction(TvmCell _txBoc) public returns (
+        uint256 accountAddr,
+        uint64 lt,
+        uint256 prevTransHash,
+        uint64 prevTransLt,
+        uint32 nowTimestamp,
+        uint15 outmsgCnt,
+        uint2 origStatus,
+        uint2 endStatus,
+        TvmCell inMessage,
+        mapping(uint15 => TvmCell) outMessages
+    ) {
+        TvmSlice s = _txBoc.toSlice();
+
+        s.decode(uint4); // tag
+
+        accountAddr = s.decode(uint256);
+        lt = s.decode(uint64);
+        prevTransHash = s.decode(uint256);
+        prevTransLt = s.decode(uint64);
+        nowTimestamp = s.decode(uint32);
+        outmsgCnt = s.decode(uint15);
+        origStatus = s.decode(uint2);
+        endStatus = s.decode(uint2);
+
+        TvmSlice messages = s.loadRefAsSlice();
+
+        inMessage = messages.loadRef();
+        outMessages = messages.decode(mapping(uint15 => TvmCell));
+
+        // totalFees, stateUpdate, description
+    }
+
+    function findMessageInTransaction(
+        TvmCell _txBoc,
+        uint256 _msgHash
+    ) public returns (optional(TvmCell), optional(MessageDirection)) {
+        TvmSlice s = _txBoc.toSlice();
+        TvmSlice messages = s.loadRefAsSlice();
+
+        TvmCell inMessage = messages.loadRef();
+        mapping(uint15 => TvmCell) outMessages = messages.decode(mapping(uint15 => TvmCell));
+
+        if (tvm.hash(inMessage) == _msgHash) {
+            return (inMessage, MessageDirection.INBOUND);
+        }
+
+        return (findMessage(outMessages, _msgHash), MessageDirection.OUTBOUND);
+    }
+
+    function findMessage(
+        mapping(uint15 => TvmCell) _messages,
+        uint256 _msgHash
+    ) public returns (optional(TvmCell)) {
+        for ((, TvmCell value) : _messages) {
+            if (tvm.hash(value) == _msgHash) {
+                return value;
+            }
+        }
+
+        return null;
+    }
+
+    //message$_ {X:Type} info:CommonMsgInfo
+    //  init:(Maybe (Either StateInit ^StateInit))
+    //  body:(Either X ^X) = Message X;
+    function decodeMessage(
+        TvmCell _msgBoc,
+        optional(MessageDirection) _direction
+    ) public returns (
+        MessageInfo info,
+        optional(TvmCell) init,
+        TvmCell body
+    ) {
+        TvmCell initAndBody;
+
+        (info, initAndBody) = decodeMessageInfo(_msgBoc, _direction);
+
+        TvmSlice s = initAndBody.toSlice();
+        init = s.decode(optional(TvmCell));
+
+        TvmBuilder b;
+        b.store(s);
+        body = b.toCell();
+    }
+
+    enum MessageType {
+        INTERNAL,
+        EXTERNAL
+    }
+
+    enum MessageDirection {
+        INBOUND,
+        OUTBOUND
+    }
+
+    struct InternalMessageInfo {
+        bool ihrDisabled;
+        bool bounce;
+        bool bounced;
+        address src;
+        address dest;
+        uint128 value;
+        mapping(uint32 => varUint32) extraCurrency;
+        uint128 ihrFee;
+        uint128 fwdFee;
+        uint64 createdLt;
+        uint32 createdAt;
+    }
+
+    struct ExternalMessageInfo {
+        address src;
+        address dest;
+        uint128 importFee;
+        uint64 createdLt;
+        uint32 createdAt;
+    }
+
+    struct MessageInfo {
+        MessageType messageType;
+        MessageDirection messageDirection;
+
+        optional(InternalMessageInfo) internalMessage;
+        optional(ExternalMessageInfo) externalMessage;
+    }
+
+    //int_msg_info$0 ihr_disabled:Bool bounce:Bool bounced:Bool
+    //  src:MsgAddressInt dest:MsgAddressInt
+    //  value:CurrencyCollection ihr_fee:Grams fwd_fee:Grams
+    //  created_lt:uint64 created_at:uint32 = CommonMsgInfo;
+    //
+    //ext_in_msg_info$10 src:MsgAddressExt dest:MsgAddressInt
+    //  import_fee:Grams = CommonMsgInfo;
+    //
+    //ext_out_msg_info$11 src:MsgAddressInt dest:MsgAddressExt
+    //  created_lt:uint64 created_at:uint32 = CommonMsgInfo;
+    function decodeMessageInfo(
+        TvmCell _msgBoc,
+        optional(MessageDirection) _direction
+    ) public returns (MessageInfo info, TvmCell initAndBody) {
+        TvmSlice s = _msgBoc.toSlice();
+
+        bool isExternal = s.decode(bool);
+
+        optional(MessageDirection) direction = _direction;
+        optional(InternalMessageInfo) internalMessage;
+        optional(ExternalMessageInfo) externalMessage;
+
+        if (isExternal) {
+            bool isOutbound = s.decode(bool);
+            address src = s.decode(address);
+            address dest = s.decode(address);
+
+            uint128 importFee;
+            uint64 createdLt;
+            uint32 createdAt;
+
+            if (isOutbound) {
+                createdLt = s.decode(uint64);
+                createdAt = s.decode(uint32);
+            } else {
+                importFee = s.loadTons();
+            }
+
+            direction = isOutbound ? MessageDirection.OUTBOUND : MessageDirection.INBOUND;
+            externalMessage = ExternalMessageInfo({
+                src: src,
+                dest: dest,
+                importFee: importFee,
+                createdLt: createdLt,
+                createdAt: createdAt
+            });
+        } else {
+            internalMessage = InternalMessageInfo({
+                ihrDisabled: s.decode(bool),
+                bounce: s.decode(bool),
+                bounced: s.decode(bool),
+                src: s.decode(address),
+                dest: s.decode(address),
+                value: s.loadTons(),
+                extraCurrency: s.decode(mapping(uint32 => varUint32)),
+                ihrFee: s.loadTons(),
+                fwdFee: s.loadTons(),
+                createdLt: s.decode(uint64),
+                createdAt: s.decode(uint32)
+            });
+        }
+
+        info = MessageInfo({
+            messageType: isExternal ? MessageType.EXTERNAL : MessageType.INTERNAL,
+            messageDirection: direction.get(),
+
+            externalMessage: externalMessage,
+            internalMessage: internalMessage
+        });
+
+        TvmBuilder b;
+        b.store(s);
+        initAndBody = b.toCell();
+    }
+}

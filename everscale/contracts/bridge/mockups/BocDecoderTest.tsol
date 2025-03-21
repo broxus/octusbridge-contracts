@@ -1,0 +1,67 @@
+pragma ever-solidity >= 0.62.0;
+
+import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
+import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
+
+import "../libraries/BocDecoder.tsol";
+
+contract BocDecoderTest is RandomNonce {
+    function decodeBlockProof(TvmCell _proof) external pure responsible returns (int32 chainId) {
+        return {
+            value: 0,
+            flag: MsgFlag.REMAINING_GAS,
+            bounce: false
+        } BocDecoder.decodeBlockProof(_proof);
+    }
+
+    function decodeTransaction(TvmCell _txBoc) external pure responsible returns (
+        uint256 accountAddr,
+        uint64 lt,
+        uint256 prevTransHash,
+        uint64 prevTransLt,
+        uint32 nowTimestamp,
+        uint15 outmsgCnt,
+        uint2 origStatus,
+        uint2 endStatus,
+        TvmCell inMessage,
+        mapping(uint15 => TvmCell) outMessages
+    ) {
+        return {
+            value: 0,
+            flag: MsgFlag.REMAINING_GAS,
+            bounce: false
+        } BocDecoder.decodeTransaction(_txBoc);
+    }
+
+    function findMessageAndDecode(TvmCell _txBoc, uint256 _msgHash) external pure responsible returns (
+        BocDecoder.MessageInfo info,
+        optional(TvmCell) init,
+        TvmCell body
+    ) {
+        (
+            optional(TvmCell) message,
+            optional(BocDecoder.MessageDirection) direction
+        ) = BocDecoder.findMessageInTransaction(_txBoc, _msgHash);
+
+        return {
+            value: 0,
+            flag: MsgFlag.REMAINING_GAS,
+            bounce: false
+        } BocDecoder.decodeMessage(message.get(), direction);
+    }
+
+    function decodeMessages(
+        TvmCell _msgBoc,
+        optional(BocDecoder.MessageDirection) _direction
+    ) external pure responsible returns (
+        BocDecoder.MessageInfo info,
+        optional(TvmCell) init,
+        TvmCell body
+    ) {
+        return {
+            value: 0,
+            flag: MsgFlag.REMAINING_GAS,
+            bounce: false
+        } BocDecoder.decodeMessage(_msgBoc, _direction);
+    }
+}
