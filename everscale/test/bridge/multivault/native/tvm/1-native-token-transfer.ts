@@ -1,43 +1,36 @@
-import {Ed25519KeyPair} from "nekoton-wasm";
+import { Ed25519KeyPair } from "nekoton-wasm";
+import { expect } from "chai";
+import {Address, Contract} from "locklift";
+import { Account } from "everscale-standalone-client/nodejs";
+import { BigNumber } from "bignumber.js";
 
-import {expect} from "chai";
-import {Contract} from "locklift";
 import {
     BridgeAbi,
     CellEncoderStandaloneAbi,
-    EthereumEverscaleEventConfigurationAbi,
-    EverscaleEthereumEventConfigurationAbi,
-    EverscaleSolanaEventConfigurationAbi,
-    MultiVaultEverscaleEVMEventNativeAbi,
-    MultiVaultEVMEverscaleEventNativeAbi,
+    TVMEverscaleEventConfigurationAbi,
+    MultiVaultTVMEverscaleEventNativeAbi,
     ProxyMultiVaultNative_V6Abi,
-    SolanaEverscaleEventConfigurationAbi,
     StakingMockupAbi,
     TokenRootAbi,
     TokenWalletAbi,
+    TrustlessVerifierMockupAbi,
 } from "../../../../../build/factorySource";
-import {Account} from "everscale-standalone-client/nodejs";
-import BigNumber from "bignumber.js";
-import {logContract} from "../../../../utils/logger";
-import {setupBridge, setupRelays} from "../../../../utils/bridge";
-import {setupNativeMultiVault} from "../../../../utils/multivault/native";
-import {deployTokenRoot, getTokenWalletByAddress, mintTokens} from "../../../../utils/token";
-import {deployAccount} from "../../../../utils/account";
-import {EventAction, EventType, processEvent} from "../../../../utils/events";
+
+import { logContract } from "../../../../utils/logger";
+import { setupBridge, setupRelays } from "../../../../utils/bridge";
+import { setupNativeMultiVault } from "../../../../utils/multivault/native";
+import { deployTokenRoot, getTokenWalletByAddress, mintTokens } from "../../../../utils/token";
+import { deployAccount } from "../../../../utils/account";
 
 const logger = require("mocha-logger");
 
-
 let relays: Ed25519KeyPair[];
-let bridge: Contract<BridgeAbi>;
 let cellEncoder: Contract<CellEncoderStandaloneAbi>;
 let staking: Contract<StakingMockupAbi>;
 let bridgeOwner: Account;
+let trustlessVerifier: Contract<TrustlessVerifierMockupAbi>;
 
-let ethereumEverscaleEventConfiguration: Contract<EthereumEverscaleEventConfigurationAbi>;
-let everscaleEthereumEventConfiguration: Contract<EverscaleEthereumEventConfigurationAbi>;
-let solanaEverscaleEventConfiguration: Contract<SolanaEverscaleEventConfigurationAbi>;
-let everscaleSolanaEventConfiguration: Contract<EverscaleSolanaEventConfigurationAbi>;
+let tvmEverscaleEventConfiguration: Contract<TVMEverscaleEventConfigurationAbi>;
 let proxy: Contract<ProxyMultiVaultNative_V6Abi>;
 let initializer: Account;
 let eventCloser: Account;
@@ -45,8 +38,7 @@ let eventCloser: Account;
 let tokenRoot: Contract<TokenRootAbi>;
 let initializerTokenWallet: Contract<TokenWalletAbi>;
 
-
-describe("Test EVM native multivault pipeline", async function () {
+describe("Test TVM native multivault pipeline", async function () {
     this.timeout(10000000);
 
     const tokenMeta = {
@@ -56,7 +48,7 @@ describe("Test EVM native multivault pipeline", async function () {
     };
 
     const callback = {
-        recipient: 123,
+        recipient: new Address('0:4c46c7268222cfd4bd35e17ac48b05adb45b3514f64b276aaf7157f1b57b2a11'),
         strict: false,
         payload: ''
     };
@@ -67,7 +59,7 @@ describe("Test EVM native multivault pipeline", async function () {
 
     it("Setup bridge", async () => {
         relays = await setupRelays();
-        [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
+        [ , bridgeOwner, staking, cellEncoder, trustlessVerifier] = await setupBridge(relays);
 
         const signer = (await locklift.keystore.getSigner("0"))!;
 
@@ -75,13 +67,7 @@ describe("Test EVM native multivault pipeline", async function () {
 
         await logContract("Initializer", initializer.address);
 
-        [
-            ethereumEverscaleEventConfiguration,
-            everscaleEthereumEventConfiguration,
-            solanaEverscaleEventConfiguration,
-            everscaleSolanaEventConfiguration,
-            proxy
-        ] = await setupNativeMultiVault(bridgeOwner, staking);
+        [ , , , , proxy, tvmEverscaleEventConfiguration] = await setupNativeMultiVault(bridgeOwner, staking, trustlessVerifier);
 
         eventCloser = await deployAccount(
             (await locklift.keystore.getSigner("1"))!,
@@ -131,14 +117,12 @@ describe("Test EVM native multivault pipeline", async function () {
     });
 
     describe("Transfer native token from Everscale to EVM", async () => {
-        const recipient = 111;
+        const recipient = new Address('0:4c46c7268222cfd4bd35e17ac48b05adb45b3514f64b276aaf7157f1b57b2a11');
         const chainId = 222;
-
-        let eventContract: Contract<MultiVaultEverscaleEVMEventNativeAbi>;
 
         it("Transfer tokens to the Native Proxy", async () => {
             const payload = await cellEncoder.methods
-                .encodeNativeTransferPayloadEthereum({
+                .encodeNativeTransferPayloadTVM({
                     recipient,
                     chainId,
                     callback
@@ -162,7 +146,7 @@ describe("Test EVM native multivault pipeline", async function () {
 
             logger.log(`Token transfer tx: ${tx.id.hash}`);
 
-            const events = await everscaleEthereumEventConfiguration
+            const events = await everscaleTvmEventConfiguration
                 .getPastEvents({ filter: "NewEventContract" })
                 .then((e) => e.events);
 
