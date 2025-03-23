@@ -193,7 +193,7 @@ interface IProxyMultiVaultAlien_V8 is IEVMCallback, INetworks {
     event TvmTvmAlien(
         uint256 chainId,
         address token,
-        uint256 amount,
+        uint128 amount,
         address recipient,
 
         uint256 value,
