@@ -70,12 +70,14 @@ contract TvmTvmBaseEvent is ITvmTvmEvent, TransferUtils {
     function getDetails() external view responsible returns (
         TvmTvmEventInitData _eventInitData,
         address _initializer,
-        TvmCell _meta
+        TvmCell _meta,
+        Status _status
     ) {
         return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} (
             eventInitData,
             initializer,
-            meta
+            meta,
+            status
         );
     }
 
