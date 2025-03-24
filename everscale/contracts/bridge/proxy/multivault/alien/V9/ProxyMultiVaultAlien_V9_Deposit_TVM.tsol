@@ -32,7 +32,7 @@ abstract contract ProxyMultiVaultAlien_V9_Deposit_TVM is
             (address, uint128, address, TvmCell, address)
         );
 
-        if (tvmConfiguration.predeployedTokens.exists(token)) {
+        if (nativeProxyTokenWallet.value != 0) {
             TvmCell _meta = abi.encode(
                 nativeProxyTokenWallet,
                 amount,
