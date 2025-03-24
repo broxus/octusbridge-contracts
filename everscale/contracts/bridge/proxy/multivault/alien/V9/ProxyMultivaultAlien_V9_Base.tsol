@@ -2,7 +2,7 @@
 pragma ever-solidity >= 0.62.0;
 
 
-import "../../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V8.tsol";
+import "../../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V9.tsol";
 
 import "./../../../../../utils/TransferUtils.tsol";
 import "./../../../../../utils/ErrorCodes.tsol";
@@ -12,9 +12,10 @@ import "@broxus/contracts/contracts/access/InternalOwner.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 
-abstract contract ProxyMultivaultAlien_V8_Base is IProxyMultiVaultAlien_V8, TransferUtils, InternalOwner {
+abstract contract ProxyMultivaultAlien_V9_Base is IProxyMultiVaultAlien_V9, TransferUtils, InternalOwner {
     SolanaConfiguration solanaConfiguration;
     EVMConfiguration evmConfiguration;
+    TVMConfiguration tvmConfiguration;
 
     uint8 api_version = 0;
 
@@ -25,14 +26,39 @@ abstract contract ProxyMultivaultAlien_V8_Base is IProxyMultiVaultAlien_V8, Tran
 
     uint8 public mergePoolVersion;
 
+    address public proxyMultiVaultNative;
+
 
     function getConfiguration()
         override
         external
         view
         responsible
-    returns (EVMConfiguration, SolanaConfiguration) {
-        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} (evmConfiguration, solanaConfiguration);
+        returns (EVMConfiguration, SolanaConfiguration, TVMConfiguration)
+    {
+        return {
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.REMAINING_GAS
+        } (evmConfiguration, solanaConfiguration, tvmConfiguration);
+    }
+
+    function getPredeployedTokenData(address token)
+        override
+        external
+        view
+        responsible
+        returns (address, optional(address))
+    {
+        return {
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.REMAINING_GAS
+        } (proxyMultiVaultNative, tvmConfiguration.predeployedTokens.fetch(token));
+    }
+
+    function setProxyMultiVaultNative(address _proxyMultiVaultNative) external onlyOwner cashBack {
+        proxyMultiVaultNative = _proxyMultiVaultNative;
     }
 
     function setEVMConfiguration(
@@ -115,6 +141,60 @@ abstract contract ProxyMultivaultAlien_V8_Base is IProxyMultiVaultAlien_V8, Tran
         );
 
         solanaConfiguration.alienTokenWalletPlatformCode = _tokenPlatformCode;
+    }
+
+    function setTVMConfiguration(
+        address[] _incomingConfigurations,
+        address _remainingGasTo
+    ) override external onlyOwner cashBackTo(_remainingGasTo) {
+        tvmConfiguration.incomingConfigurations = _incomingConfigurations;
+    }
+
+    function addPredeployedTVMToken(
+        address _incomingExternal,
+        address _existingInternal,
+        address _remainingGasTo
+    ) external override onlyOwner cashBackTo(_remainingGasTo) {
+        tvmConfiguration.predeployedTokens[_incomingExternal] = _existingInternal;
+    }
+
+    function removePredeployedTVMToken(
+        address _incomingExternal,
+        address _remainingGasTo
+    ) external override onlyOwner cashBackTo(_remainingGasTo) {
+        delete tvmConfiguration.predeployedTokens[_incomingExternal];
+    }
+
+    function setTVMAlienTokenRootCode(TvmCell _tokenRootCode, address _remainingGasTo)
+        override
+        external
+        onlyOwner
+        cashBackTo(_remainingGasTo)
+    {
+        tvmConfiguration.alienTokenRootCode = _tokenRootCode;
+    }
+
+    function setTVMAlienTokenWalletCode(TvmCell _tokenWalletCode, address _remainingGasTo)
+        override
+        external
+        onlyOwner
+        cashBackTo(_remainingGasTo)
+    {
+        tvmConfiguration.alienTokenWalletCode = _tokenWalletCode;
+    }
+
+    function setOnceTVMAlienTokenPlatformCode(TvmCell _tokenPlatformCode, address _remainingGasTo)
+        override
+        external
+        onlyOwner
+        cashBackTo(_remainingGasTo)
+    {
+        require(
+            tvmConfiguration.alienTokenWalletPlatformCode.toSlice().empty(),
+            ErrorCodes.PLATFORM_CODE_NON_EMPTY
+        );
+
+        tvmConfiguration.alienTokenWalletPlatformCode = _tokenPlatformCode;
     }
 
     /// @notice Set merge manager

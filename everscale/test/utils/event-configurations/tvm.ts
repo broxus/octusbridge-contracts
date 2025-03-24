@@ -3,7 +3,7 @@ import { Address, zeroAddress } from "locklift";
 
 import { logContract } from "../logger";
 
-export const setupTVMEverscaleEventConfiguration = async (
+export const setupTvmTvmEventConfiguration = async (
   owner: Account,
   proxy: Address,
   eventCode: string,
@@ -11,8 +11,8 @@ export const setupTVMEverscaleEventConfiguration = async (
 ) => {
   const signer = (await locklift.keystore.getSigner("10"))!;
 
-  const { contract: tvmEverscaleEventConfiguration } = await locklift.factory.deployContract({
-    contract: "TVMEverscaleEventConfiguration",
+  const { contract: tvmTvmEventConfiguration } = await locklift.factory.deployContract({
+    contract: "TvmTvmEventConfiguration",
     constructorParams: {
       _owner: owner.address,
       _flags: 0,
@@ -28,8 +28,8 @@ export const setupTVMEverscaleEventConfiguration = async (
       networkConfiguration: {
         chainId: 1,
         proxy,
-        startBlockNumber: 0,
-        endBlockNumber: 0,
+        startTimestamp: 0,
+        endTimestamp: 0,
       },
       transactionChecker: transactionChecker,
       eventEmitter: zeroAddress,
@@ -38,7 +38,7 @@ export const setupTVMEverscaleEventConfiguration = async (
     value: locklift.utils.toNano(20),
   });
 
-  await logContract("TVMEverscaleEventConfiguration", tvmEverscaleEventConfiguration.address);
+  await logContract("TvmTvmEventConfiguration", tvmTvmEventConfiguration.address);
 
-  return tvmEverscaleEventConfiguration;
+  return tvmTvmEventConfiguration;
 };

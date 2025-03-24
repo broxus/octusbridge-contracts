@@ -2,15 +2,14 @@
 pragma ever-solidity >= 0.62.0;
 
 
-import "./../../../../interfaces/proxy/multivault/native/IProxyMultiVaultNative_V1.tsol";
-
-import "./ProxyMultiVaultNative_V6_Deposit.tsol";
+import "./../../../../interfaces/proxy/multivault/native/IProxyMultiVaultNative_V7.tsol";
+import "./ProxyMultiVaultNative_V7_Deposit.tsol";
 
 import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
 
 
-contract ProxyMultiVaultNative_V6 is ProxyMultiVaultNative_V6_Deposit, CheckPubKey, RandomNonce {
+contract ProxyMultiVaultNative_V7 is ProxyMultiVaultNative_V7_Deposit, CheckPubKey, RandomNonce {
     constructor(
         address owner_
     ) public checkPubKey {
@@ -25,9 +24,11 @@ contract ProxyMultiVaultNative_V6 is ProxyMultiVaultNative_V6_Deposit, CheckPubK
         TvmCell data = abi.encode(
             evmConfiguration,
             solanaConfiguration,
+            tvmConfiguration,
             owner,
             api_version,
             dex_middleware,
+            proxyMultiVaultAlien,
             _randomNonce
         );
 

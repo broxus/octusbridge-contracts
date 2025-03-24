@@ -32,12 +32,23 @@ interface IMultiVaultTvmTvmEventAlien {
 
         address target_token;
         uint128 target_amount;
+
+        address native_proxy_token_wallet;
     }
 
     function receiveConfigurationDetails(
         IBasicEventConfiguration.BasicConfiguration,
         ITvmTvmEventConfiguration.TvmTvmEventConfiguration _networkConfiguration,
         TvmCell
+    ) external;
+
+    function receivePredeployedToken(
+        address nativeProxy,
+        optional(address) token
+    ) external;
+
+    function receiveProxyTokenWallet(
+        address tokenWallet_
     ) external;
 
     function receiveAlienTokenRoot(
@@ -76,6 +87,7 @@ interface IMultiVaultTvmTvmEventAlien {
         uint expected_evers_,
         TvmCell payload_,
         address proxy_,
-        address token_
+        address token_,
+        address native_proxy_token_wallet
     );
 }

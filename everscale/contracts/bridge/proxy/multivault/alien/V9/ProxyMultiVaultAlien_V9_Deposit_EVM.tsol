@@ -1,25 +1,30 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma ever-solidity >= 0.62.0;
 
-import "./ProxyMultiVaultAlien_V8_Token.tsol";
 
-import "./../../../../interfaces/event-contracts/ISolanaEverscaleEvent.tsol";
-import "./../../../../interfaces/proxy/ISolanaEverscaleProxyExtended.tsol";
+import "./ProxyMultiVaultAlien_V9_Deposit_Solana.tsol";
+
+import "./../../../../interfaces/event-contracts/IEthereumEverscaleEvent.tsol";
+import "./../../../../interfaces/proxy/IEthereumEverscaleProxyExtended.tsol";
 import "../../../../libraries/EventContractNonce.tsol";
 
-abstract contract ProxyMultiVaultAlien_V8_Deposit_Solana is
-    ProxyMultiVaultAlien_V8_Token,
-    ISolanaEverscaleProxyExtended
+
+abstract contract ProxyMultiVaultAlien_V9_Deposit_EVM is
+    ProxyMultiVaultAlien_V9_Deposit_Solana,
+    IEthereumEverscaleProxyExtended
 {
-    /// @notice Handles alien token transfer from Solana. Token address is derived automatically and MUST
+    /// @notice Handles alien token transfer from EVM. Token address is derived automatically and MUST
     /// be deployed before. See note on `deployAlienToken`
     /// @param remainingGasTo Gas back address
-    function onSolanaEventConfirmedExtended(
-        ISolanaEverscaleEvent.SolanaEverscaleEventInitData eventInitData,
+    function onEventConfirmedExtended(
+        IEthereumEverscaleEvent.EthereumEverscaleEventInitData eventInitData,
         TvmCell meta,
         address remainingGasTo
     ) external override reserveAtLeastTargetBalance {
-        require(solanaConfiguration.solanaConfiguration == msg.sender, ErrorCodes.NOT_SOLANA_CONFIG);
+        require(
+            _isArrayContainsAddress(evmConfiguration.evmConfigurations, msg.sender),
+            ErrorCodes.NOT_ETHEREUM_CONFIG
+        );
 
         (
             address token,

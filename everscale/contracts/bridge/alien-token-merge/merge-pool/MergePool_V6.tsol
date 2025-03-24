@@ -5,7 +5,7 @@ pragma AbiHeader pubkey;
 import "./../../../utils/TransferUtils.tsol";
 import "./../../../utils/ErrorCodes.tsol";
 import "./../../interfaces/alien-token-merge/merge-pool/IMergePool_V2.tsol";
-import "./../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V8.tsol";
+import "./../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V9.tsol";
 import "./../../interfaces/event-contracts/multivault/evm/IEVMCallback.tsol";
 import "./../../interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
 import "./../../interfaces/proxy/INetworks.tsol";
@@ -23,16 +23,16 @@ import "../../libraries/Gas.tsol";
 /// @title Merge pool contract
 /// Basically allows to swap different alien tokens on 1:1 ratio
 /// Must be deployed by the ProxyMultiVaultAlien
-/// @dev Differences from the V4:
-/// 1. Fixed Solana interface
-contract MergePool_V5 is
-IMergePool_V2,
-InternalOwner,
-RandomNonce,
-TransferUtils,
-IAcceptTokensBurnCallback,
-IEVMCallback,
-INetworks
+/// @dev Differences from the V5:
+/// 1. Added TVM-TVM support
+contract MergePool_V6 is
+    IMergePool_V2,
+    InternalOwner,
+    RandomNonce,
+    TransferUtils,
+    IAcceptTokensBurnCallback,
+    IEVMCallback,
+    INetworks
 {
     address static proxy;
 
@@ -106,18 +106,18 @@ INetworks
         tvm.resetStorage();
 
         (
-        address proxy_,
-        uint256 _randomNonce_,
-        uint8 version_,
-        address[] tokens_,
-        uint256 canonId,
-        address owner_,
-        address manager_
+            address proxy_,
+            uint256 _randomNonce_,
+            uint8 version_,
+            address[] tokens_,
+            uint256 canonId,
+            address owner_,
+            address manager_
         ) = abi.decode(
             data,
             (
-            address, uint256, uint8,
-            address[], uint256, address, address
+                address, uint256, uint8,
+                address[], uint256, address, address
             )
         );
 
@@ -264,10 +264,10 @@ INetworks
         TvmCell payload
     ) external override tokenExists(msg.sender) reserveBalance {
         (
-        uint32 nonce,
-        BurnType burnType,
-        address targetToken,
-        TvmCell operationPayload
+            uint32 nonce,
+            BurnType burnType,
+            address targetToken,
+            TvmCell operationPayload
         ) = abi.decode(payload, (uint32, BurnType, address, TvmCell));
 
         uint128 amount = _convertDecimals(
@@ -294,18 +294,18 @@ INetworks
 
             if (network == Network.Solana) {
                 (
-                uint256 recipient,
-                IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
-                bool executePayloadNeeded,
-                IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
-                bytes solanaPayload
+                    uint256 recipient,
+                    IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
+                    bool executePayloadNeeded,
+                    IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
+                    bytes solanaPayload
                 ) = abi.decode(withdrawPayload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[], bool, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[], bytes));
 
-                IProxyMultiVaultAlien_V8(proxy).withdrawTokensToSolanaByMergePool{
-                        bounce: false,
-                        value: 0,
-                        flag: MsgFlag.ALL_NOT_RESERVED
-                    }(
+                IProxyMultiVaultAlien_V9(proxy).withdrawTokensToSolanaByMergePool{
+                    bounce: false,
+                    value: 0,
+                    flag: MsgFlag.ALL_NOT_RESERVED
+                }(
                     _randomNonce,
                     nonce,
                     targetToken,
@@ -322,15 +322,15 @@ INetworks
                 // Target token enabled and bridge withdraw requested
                 // Request withdraw on the bridge
                 (
-                uint160 recipient,
-                EVMCallback callback
+                    uint160 recipient,
+                    EVMCallback callback
                 ) = abi.decode(withdrawPayload, (uint160, EVMCallback));
 
-                IProxyMultiVaultAlien_V8(proxy).withdrawTokensToEVMByMergePool{
-                        bounce: false,
-                        value: 0,
-                        flag: MsgFlag.ALL_NOT_RESERVED
-                    }(
+                IProxyMultiVaultAlien_V9(proxy).withdrawTokensToEVMByMergePool{
+                    bounce: false,
+                    value: 0,
+                    flag: MsgFlag.ALL_NOT_RESERVED
+                }(
                     _randomNonce,
                     nonce,
                     targetToken,
@@ -340,16 +340,30 @@ INetworks
                     sender,
                     callback
                 );
+            } else if (network == Network.TVM) {
+                IProxyMultiVaultAlien_V9(proxy).withdrawTokensToTVMByMergePool{
+                        bounce: false,
+                        value: 0,
+                        flag: MsgFlag.ALL_NOT_RESERVED
+                    }(
+                    _randomNonce,
+                    nonce,
+                    targetToken,
+                    amount,
+                    remainingGasTo,
+                    sender,
+                    withdrawPayload
+                );
             }
         }
     }
 
     function _requestTokenDecimals(address token) internal pure {
         ITokenRoot(token).decimals{
-                value: gasToValue(Gas.REQUEST_TOKEN_DECIMALS_GAS, address(this).wid),
-                bounce: false,
-                callback: MergePool_V5.receiveTokenDecimals
-            }();
+            value: gasToValue(Gas.REQUEST_TOKEN_DECIMALS_GAS, address(this).wid),
+            bounce: false,
+            callback: MergePool_V6.receiveTokenDecimals
+        }();
     }
 
     function _mintTokens(
@@ -359,11 +373,11 @@ INetworks
         address remainingGasTo,
         TvmCell payload
     ) internal view {
-        IProxyMultiVaultAlien_V8(proxy).mintTokensByMergePool{
-                bounce: false,
-                value: 0,
-                flag: MsgFlag.ALL_NOT_RESERVED
-            }(
+        IProxyMultiVaultAlien_V9(proxy).mintTokensByMergePool{
+            bounce: false,
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(
             _randomNonce,
             token,
             amount,

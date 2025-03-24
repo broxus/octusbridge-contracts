@@ -3,9 +3,9 @@ pragma AbiHeader time;
 pragma AbiHeader pubkey;
 pragma AbiHeader expire;
 
-import "ton-eth-bridge-token-contracts/contracts/interfaces/TIP3TokenRoot.tsol";
+import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.tsol";
 
-import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V8.tsol";
+import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V9.tsol";
 
 import "./../../../interfaces/event-contracts/multivault/tvm/IMultiVaultTvmTvmEventAlien.tsol";
 import "./../../../interfaces/event-configuration-contracts/ITvmTvmEventConfiguration.tsol";
@@ -96,16 +96,56 @@ contract MultiVaultTvmTvmEventAlien is
 
         EventData eventData = getEventData();
 
-        IProxyMultiVaultAlien_V8(_networkConfiguration.proxy).deriveTVMAlienTokenRoot{
-            value: gasToValue(Gas.DERIVE_TOKEN_ROOT_GAS, address(this).wid),
-            callback: MultiVaultTvmTvmEventAlien.receiveAlienTokenRoot
-        }(
+        IProxyMultiVaultAlien_V9(_networkConfiguration.proxy).getPredeployedTokenData{
+            value: gasToValue(Gas.GET_TOKEN_DATA_GAS, address(this).wid),
+            callback: MultiVaultTvmTvmEventAlien.receivePredeployedToken
+        }(eventData.base_token);
+    }
+
+    function receivePredeployedToken(
+        address nativeProxy,
+        optional(address) token
+    ) external override {
+        TransitionalData transitionalData = getTransitionalData();
+
+        require(msg.sender == transitionalData.proxy, ErrorCodes.WRONG_PROXY);
+
+        if (token.hasValue()) {
+            _set_token(token.get());
+
+            ITokenRoot(token.get()).walletOf{
+                value: gasToValue(Gas.GET_TOKEN_DATA_GAS, address(this).wid),
+                callback: MultiVaultTvmTvmEventAlien.receiveProxyTokenWallet
+            }(nativeProxy);
+
+            return;
+        }
+
+        EventData eventData = getEventData();
+
+        IProxyMultiVaultAlien_V9(transitionalData.proxy).deriveTVMAlienTokenRoot{
+                value: gasToValue(Gas.DERIVE_TOKEN_ROOT_GAS, address(this).wid),
+                callback: MultiVaultTvmTvmEventAlien.receiveAlienTokenRoot
+            }(
             eventData.base_chainId,
             eventData.base_token,
             eventData.name,
             eventData.symbol,
             eventData.decimals
         );
+    }
+
+    function receiveProxyTokenWallet(
+        address tokenWallet_
+    ) external override {
+        TransitionalData transitionalData = getTransitionalData();
+
+        require(msg.sender == transitionalData.token, ErrorCodes.SENDER_NOT_ROOT);
+
+        _set_native_proxy_token_wallet(tokenWallet_);
+
+        EventData eventData = getEventData();
+        _finishSetup(transitionalData.token, eventData.amount);
     }
 
     /// @notice Receives the alien token root address
@@ -121,7 +161,7 @@ contract MultiVaultTvmTvmEventAlien is
 
         _set_token(token);
 
-        TIP3TokenRoot(token).name{
+        ITokenRoot(token).name{
             value: gasToValue(Gas.REQUEST_TOKEN_NAME_GAS, address(this).wid),
             bounce: true,
             callback: MultiVaultTvmTvmEventAlien.receiveTokenName
@@ -143,7 +183,7 @@ contract MultiVaultTvmTvmEventAlien is
 
         // Token exists, no need to deploy
         // Ask the router address
-        IProxyMultiVaultAlien_V8(transitionalData.proxy).deriveMergeRouter{
+        IProxyMultiVaultAlien_V9(transitionalData.proxy).deriveMergeRouter{
             value: gasToValue(Gas.REQUEST_MERGE_ROUTER_GAS, address(this).wid),
             bounce: false,
             callback: MultiVaultTvmTvmEventAlien.receiveMergeRouter
@@ -253,7 +293,8 @@ contract MultiVaultTvmTvmEventAlien is
                 transitionalData.target_token,
                 transitionalData.target_amount,
                 eventData.recipient,
-                eventData.payload
+                eventData.payload,
+                transitionalData.native_proxy_token_wallet
             );
 
             ITvmTvmProxyExtended(eventInitData.configuration).onTVMEventConfirmedExtended{
@@ -328,7 +369,7 @@ contract MultiVaultTvmTvmEventAlien is
         ) {
             // Failed to request token meta
             // Seems like corresponding token root not deployed so deploy it
-            IProxyMultiVaultAlien_V8(transitionalData.proxy).deployTVMAlienToken{
+            IProxyMultiVaultAlien_V9(transitionalData.proxy).deployTVMAlienToken{
                 value: Gas.getDeployTokenRootValue(),
                 bounce: false
             }(
@@ -347,7 +388,7 @@ contract MultiVaultTvmTvmEventAlien is
         ) {
             // Failed to request router's pool
             // Seems like corresponding router not deployed so deploy it
-            IProxyMultiVaultAlien_V8(transitionalData.proxy).deployMergeRouter{
+            IProxyMultiVaultAlien_V9(transitionalData.proxy).deployMergeRouter{
                 value: gasToValue(Gas.DEPLOY_MERGE_ROUTER_GAS, address(this).wid),
                 bounce: false
             }(transitionalData.token);
@@ -428,6 +469,14 @@ contract MultiVaultTvmTvmEventAlien is
         _set_transitional_data(transitionalData);
     }
 
+    function _set_native_proxy_token_wallet(address wallet) internal {
+        TransitionalData transitionalData = getTransitionalData();
+
+        transitionalData.native_proxy_token_wallet = wallet;
+
+        _set_transitional_data(transitionalData);
+    }
+
     // ==== Legacy ====
     function getDecodedData() external override responsible returns(
         uint256 base_chainId_,
@@ -441,7 +490,8 @@ contract MultiVaultTvmTvmEventAlien is
         uint expected_gas_,
         TvmCell payload_,
         address proxy_,
-        address token_
+        address token_,
+        address native_proxy_token_wallet
     ) {
         EventData eventData = getEventData();
         TransitionalData transitionalData = getTransitionalData();
@@ -462,7 +512,9 @@ contract MultiVaultTvmTvmEventAlien is
             eventData.payload,
 
             transitionalData.proxy,
-            transitionalData.token
+            transitionalData.token,
+
+            transitionalData.native_proxy_token_wallet
         );
     }
 }

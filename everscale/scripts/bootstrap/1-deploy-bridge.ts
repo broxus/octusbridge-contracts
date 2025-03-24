@@ -123,7 +123,7 @@ const deployConfigFactories = async (
 
 const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> => {
   const { contract: proxyAlien } = await locklift.factory.deployContract({
-    contract: "ProxyMultiVaultAlien_V8",
+    contract: "ProxyMultiVaultAlien_V9",
     constructorParams: { owner_: admin.address },
     initParams: { _randomNonce: getRandomNonce() },
     publicKey: signer.publicKey,
@@ -131,7 +131,7 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
   });
 
   await locklift.deployments.saveContract({
-    contractName: "ProxyMultiVaultAlien_V8",
+    contractName: "ProxyMultiVaultAlien_V9",
     address: proxyAlien.address,
     deploymentName: "ProxyMultiVaultAlien",
   });
@@ -159,7 +159,7 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
   await locklift.tracing.trace(
     proxyAlien.methods
       .setMergePool({
-        _mergePool: locklift.factory.getContractArtifacts("MergePool_V5").code,
+        _mergePool: locklift.factory.getContractArtifacts("MergePool_V6").code,
       })
       .send({
         from: admin.address,
@@ -169,7 +169,7 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
   );
 
   console.log(
-    `Set merge pool code to alien proxy. Code hash: ${locklift.factory.getContractArtifacts("MergePool_V5").codeHash}`,
+    `Set merge pool code to alien proxy. Code hash: ${locklift.factory.getContractArtifacts("MergePool_V6").codeHash}`,
   );
 
   await locklift.tracing.trace(
@@ -246,7 +246,7 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
   );
 
   const { contract: proxyNative } = await locklift.factory.deployContract({
-    contract: "ProxyMultiVaultNative_V6",
+    contract: "ProxyMultiVaultNative_V7",
     constructorParams: { owner_: admin.address },
     initParams: { _randomNonce: getRandomNonce() },
     publicKey: signer.publicKey,
@@ -254,7 +254,7 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
   });
 
   await locklift.deployments.saveContract({
-    contractName: "ProxyMultiVaultNative_V6",
+    contractName: "ProxyMultiVaultNative_V7",
     address: proxyNative.address,
     deploymentName: "ProxyMultiVaultNative",
   });

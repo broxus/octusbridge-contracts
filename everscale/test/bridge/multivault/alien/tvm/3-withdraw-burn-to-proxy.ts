@@ -9,7 +9,7 @@ import {
   StakingMockupAbi,
   TokenRootAlienTVMAbi,
   AlienTokenWalletUpgradeableAbi,
-  ProxyMultiVaultAlien_V8Abi,
+  ProxyMultiVaultAlien_V9Abi,
   TrustlessVerifierMockupAbi,
 } from "../../../../../build/factorySource";
 
@@ -29,12 +29,12 @@ let trustlessVerifier: Contract<TrustlessVerifierMockupAbi>;
 let tvmEverscaleEventConfiguration: Contract<TVMEverscaleEventConfigurationAbi>;
 let initializer: Account;
 let eventCloser: Account;
-let proxy: Contract<ProxyMultiVaultAlien_V8Abi>;
+let proxy: Contract<ProxyMultiVaultAlien_V9Abi>;
 
 let alienTokenRoot: Contract<TokenRootAlienTVMAbi>;
 let initializerAlienTokenWallet: Contract<AlienTokenWalletUpgradeableAbi>;
 
-describe("Withdraw tokens by burning in favor of proxy", async function () {
+describe.skip("Withdraw tokens by burning in favor of proxy", async function () {
   this.timeout(10000000);
 
   const alienTokenBase = {

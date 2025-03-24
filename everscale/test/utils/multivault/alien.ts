@@ -1,149 +1,150 @@
-import {Account} from "everscale-standalone-client/nodejs";
-import {Contract, zeroAddress} from "locklift";
+import { Account } from "everscale-standalone-client/nodejs";
+import { Contract, zeroAddress } from "locklift";
 import {
-    EthereumEverscaleEventConfigurationAbi,
-    EverscaleEthereumEventConfigurationAbi, EverscaleSolanaEventConfigurationAbi,
-    FactorySource, ProxyMultiVaultAlien_V8Abi, SolanaEverscaleEventConfigurationAbi,
-    TrustlessVerifierMockupAbi,
-    TVMEverscaleEventConfigurationAbi,
+  EthereumEverscaleEventConfigurationAbi,
+  EverscaleEthereumEventConfigurationAbi,
+  EverscaleSolanaEventConfigurationAbi,
+  FactorySource,
+  ProxyMultiVaultAlien_V9Abi,
+  SolanaEverscaleEventConfigurationAbi,
+  TrustlessVerifierMockupAbi,
+  TvmTvmEventConfigurationAbi,
 } from "../../../build/factorySource";
-import {logContract} from "../logger";
+import { logContract } from "../logger";
 import {
-    setupEthereumEverscaleEventConfiguration,
-    setupEverscaleEthereumEventConfiguration
+  setupEthereumEverscaleEventConfiguration,
+  setupEverscaleEthereumEventConfiguration,
 } from "../event-configurations/evm";
 import {
-    setupEverscaleSolanaEventConfiguration,
-    setupSolanaEverscaleEventConfiguration
+  setupEverscaleSolanaEventConfiguration,
+  setupSolanaEverscaleEventConfiguration,
 } from "../event-configurations/solana";
-import { setupTVMEverscaleEventConfiguration } from "../event-configurations/tvm"
+import { setupTvmTvmEventConfiguration } from "../event-configurations/tvm";
 
 export const setupAlienMultiVault = async (
-    owner: Account,
-    staking: Contract<FactorySource["StakingMockup"]>,
-    trustlessVerifier?: Contract<TrustlessVerifierMockupAbi>,
-): Promise<[
+  owner: Account,
+  staking: Contract<FactorySource["StakingMockup"]>,
+  trustlessVerifier?: Contract<TrustlessVerifierMockupAbi>,
+): Promise<
+  [
     Contract<EthereumEverscaleEventConfigurationAbi>,
     Contract<EverscaleEthereumEventConfigurationAbi>,
     Contract<SolanaEverscaleEventConfigurationAbi>,
     Contract<EverscaleSolanaEventConfigurationAbi>,
-    Contract<ProxyMultiVaultAlien_V8Abi>,
-    Contract<TVMEverscaleEventConfigurationAbi>,
-]> => {
-    const _randomNonce = locklift.utils.getRandomNonce();
-    const signer = (await locklift.keystore.getSigner("2"))!;
+    Contract<ProxyMultiVaultAlien_V9Abi>,
+    Contract<TvmTvmEventConfigurationAbi>,
+  ]
+> => {
+  const _randomNonce = locklift.utils.getRandomNonce();
+  const signer = (await locklift.keystore.getSigner("2"))!;
 
-    // Deploy proxy
-    const { contract: proxy } = await locklift.factory.deployContract({
-        contract: "ProxyMultiVaultAlien_V8",
-        constructorParams: {
-            owner_: owner.address,
-        },
-        initParams: {
-            _randomNonce,
-        },
-        publicKey: signer.publicKey,
-        value: locklift.utils.toNano(15),
+  // Deploy proxy
+  const { contract: proxy } = await locklift.factory.deployContract({
+    contract: "ProxyMultiVaultAlien_V9",
+    constructorParams: {
+      owner_: owner.address,
+    },
+    initParams: {
+      _randomNonce,
+    },
+    publicKey: signer.publicKey,
+    value: locklift.utils.toNano(15),
+  });
+
+  await logContract("ProxyMultiVaultAlien_V9", proxy.address);
+
+  // Load event contracts
+  const ethereumEverscaleEvent = locklift.factory.getContractArtifacts("MultiVaultEVMEverscaleEventAlien");
+  const everscaleEthereumEvent = locklift.factory.getContractArtifacts("MultiVaultEverscaleEVMEventAlien");
+  const solanaEverscaleEvent = locklift.factory.getContractArtifacts("MultiVaultSolanaEverscaleEventAlien");
+  const everscaleSolanaEvent = locklift.factory.getContractArtifacts("MultiVaultEverscaleSolanaEventAlien");
+  const tvmEverscaleEvent = locklift.factory.getContractArtifacts("MultiVaultTvmTvmEventAlien");
+
+  // Deploy configurations
+  const ethereumEverscaleEventConfiguration = await setupEthereumEverscaleEventConfiguration(
+    owner,
+    staking,
+    proxy.address,
+    ethereumEverscaleEvent.code,
+  );
+  const everscaleEthereumEventConfiguration = await setupEverscaleEthereumEventConfiguration(
+    owner,
+    staking,
+    proxy.address,
+    everscaleEthereumEvent.code,
+  );
+  const solanaEverscaleEventConfiguration = await setupSolanaEverscaleEventConfiguration(
+    owner,
+    staking,
+    proxy.address,
+    solanaEverscaleEvent.code,
+  );
+  const everscaleSolanaEventConfiguration = await setupEverscaleSolanaEventConfiguration(
+    owner,
+    staking,
+    proxy.address,
+    everscaleSolanaEvent.code,
+  );
+  const tvmTvmEventConfiguration = await setupTvmTvmEventConfiguration(
+    owner,
+    proxy.address,
+    tvmEverscaleEvent.code,
+    trustlessVerifier?.address || zeroAddress,
+  );
+
+  // Set proxy EVM configuration
+  await setEvmConfiguration(proxy, owner, everscaleEthereumEventConfiguration, [ethereumEverscaleEventConfiguration]);
+
+  // Set proxy Solana configuration
+  await setSolanaConfiguration(proxy, owner, everscaleSolanaEventConfiguration, solanaEverscaleEventConfiguration);
+
+  // Set proxy TVM configuration
+  await setTVMConfiguration(proxy, owner, [tvmTvmEventConfiguration]);
+
+  // Set merging
+  const MergeRouter = locklift.factory.getContractArtifacts("MergeRouter");
+  const MergePool = locklift.factory.getContractArtifacts("MergePool_V6");
+  const MergePoolPlatform = locklift.factory.getContractArtifacts("MergePoolPlatform");
+
+  await proxy.methods
+    .setMergeRouter({
+      _mergeRouter: MergeRouter.code,
+    })
+    .send({
+      from: owner.address,
+      amount: locklift.utils.toNano(1),
     });
 
-    await logContract("ProxyMultiVaultAlien_V8", proxy.address);
-
-    // Load event contracts
-    const ethereumEverscaleEvent = locklift.factory.getContractArtifacts(
-        "MultiVaultEVMEverscaleEventAlien"
-    );
-    const everscaleEthereumEvent = locklift.factory.getContractArtifacts(
-        "MultiVaultEverscaleEVMEventAlien"
-    );
-    const solanaEverscaleEvent = locklift.factory.getContractArtifacts(
-        "MultiVaultSolanaEverscaleEventAlien"
-    );
-    const everscaleSolanaEvent = locklift.factory.getContractArtifacts(
-        "MultiVaultEverscaleSolanaEventAlien"
-    );
-    const tvmEverscaleEvent = locklift.factory.getContractArtifacts(
-        "MultiVaultTVMEverscaleEventAlien"
-    );
-
-
-    // Deploy configurations
-    const ethereumEverscaleEventConfiguration = await setupEthereumEverscaleEventConfiguration(
-        owner, staking, proxy.address, ethereumEverscaleEvent.code
-    );
-    const everscaleEthereumEventConfiguration = await setupEverscaleEthereumEventConfiguration(
-        owner, staking, proxy.address, everscaleEthereumEvent.code
-    );
-    const solanaEverscaleEventConfiguration = await setupSolanaEverscaleEventConfiguration(
-        owner, staking, proxy.address, solanaEverscaleEvent.code
-    );
-    const everscaleSolanaEventConfiguration = await setupEverscaleSolanaEventConfiguration(
-        owner, staking, proxy.address, everscaleSolanaEvent.code
-    );
-    const tvmEverscaleEventConfiguration = await setupTVMEverscaleEventConfiguration(
-        owner, proxy.address, tvmEverscaleEvent.code, trustlessVerifier?.address || zeroAddress
-    );
-
-    // Set proxy EVM configuration
-    await setEvmConfiguration(
-      proxy,
-      owner,
-      everscaleEthereumEventConfiguration,
-      [ethereumEverscaleEventConfiguration],
-    );
-
-    // Set proxy Solana configuration
-    await setSolanaConfiguration(
-      proxy,
-      owner,
-      everscaleSolanaEventConfiguration,
-      solanaEverscaleEventConfiguration,
-    );
-
-    // Set proxy TVM configuration
-    await setTVMConfiguration(
-      proxy,
-      owner,
-      [tvmEverscaleEventConfiguration],
-    );
-
-    // Set merging
-    const MergeRouter = locklift.factory.getContractArtifacts('MergeRouter');
-    const MergePool = locklift.factory.getContractArtifacts('MergePool_V5');
-    const MergePoolPlatform = locklift.factory.getContractArtifacts('MergePoolPlatform');
-
-    await proxy.methods.setMergeRouter({
-        _mergeRouter: MergeRouter.code
-    }).send({
-        from: owner.address,
-        amount: locklift.utils.toNano(1)
+  await proxy.methods
+    .setMergePool({
+      _mergePool: MergePool.code,
+    })
+    .send({
+      from: owner.address,
+      amount: locklift.utils.toNano(1),
     });
 
-    await proxy.methods.setMergePool({
-        _mergePool: MergePool.code
-    }).send({
-        from: owner.address,
-        amount: locklift.utils.toNano(1)
+  await proxy.methods
+    .setMergePoolPlatform({
+      _mergePoolPlatform: MergePoolPlatform.code,
+    })
+    .send({
+      from: owner.address,
+      amount: locklift.utils.toNano(1),
     });
 
-    await proxy.methods.setMergePoolPlatform({
-        _mergePoolPlatform: MergePoolPlatform.code
-    }).send({
-        from: owner.address,
-        amount: locklift.utils.toNano(1)
-    });
-
-    return [
-        ethereumEverscaleEventConfiguration,
-        everscaleEthereumEventConfiguration,
-        solanaEverscaleEventConfiguration,
-        everscaleSolanaEventConfiguration,
-        proxy,
-        tvmEverscaleEventConfiguration,
-    ];
+  return [
+    ethereumEverscaleEventConfiguration,
+    everscaleEthereumEventConfiguration,
+    solanaEverscaleEventConfiguration,
+    everscaleSolanaEventConfiguration,
+    proxy,
+    tvmTvmEventConfiguration,
+  ];
 };
 
 const setEvmConfiguration = async (
-  proxy: Contract<ProxyMultiVaultAlien_V8Abi>,
+  proxy: Contract<ProxyMultiVaultAlien_V9Abi>,
   owner: Account,
   everscaleConfiguration: Contract<EverscaleEthereumEventConfigurationAbi>,
   evmConfigurations: Contract<EthereumEverscaleEventConfigurationAbi>[],
@@ -156,14 +157,14 @@ const setEvmConfiguration = async (
     proxy.methods
       .setEVMConfiguration({
         _everscaleConfiguration: everscaleConfiguration.address,
-        _evmConfigurations: evmConfigurations.map((e) => e.address),
+        _evmConfigurations: evmConfigurations.map(e => e.address),
         _remainingGasTo: owner.address,
       })
       .send({
         from: owner.address,
         amount: locklift.utils.toNano(0.5),
         bounce: true,
-      })
+      }),
   );
 
   await locklift.transactions.waitFinalized(
@@ -204,10 +205,10 @@ const setEvmConfiguration = async (
         bounce: true,
       }),
   );
-}
+};
 
 const setSolanaConfiguration = async (
-  proxy: Contract<ProxyMultiVaultAlien_V8Abi>,
+  proxy: Contract<ProxyMultiVaultAlien_V9Abi>,
   owner: Account,
   everscaleConfiguration: Contract<EverscaleSolanaEventConfigurationAbi>,
   solanaConfiguration: Contract<SolanaEverscaleEventConfigurationAbi>,
@@ -227,7 +228,7 @@ const setSolanaConfiguration = async (
         from: owner.address,
         amount: locklift.utils.toNano(0.5),
         bounce: true,
-      })
+      }),
   );
 
   await locklift.transactions.waitFinalized(
@@ -268,12 +269,12 @@ const setSolanaConfiguration = async (
         bounce: true,
       }),
   );
-}
+};
 
 const setTVMConfiguration = async (
-  proxy: Contract<ProxyMultiVaultAlien_V8Abi>,
+  proxy: Contract<ProxyMultiVaultAlien_V9Abi>,
   owner: Account,
-  incomingConfigurations: Contract<TVMEverscaleEventConfigurationAbi>[],
+  incomingConfigurations: Contract<TvmTvmEventConfigurationAbi>[],
 ): Promise<void> => {
   const alienTokenRootTVM = locklift.factory.getContractArtifacts("TokenRootAlienTVM");
   const alienTokenWalletUpgradeableData = locklift.factory.getContractArtifacts("AlienTokenWalletUpgradeable");
@@ -282,14 +283,14 @@ const setTVMConfiguration = async (
   await locklift.transactions.waitFinalized(
     proxy.methods
       .setTVMConfiguration({
-        _incomingConfigurations: incomingConfigurations.map((e) => e.address),
+        _incomingConfigurations: incomingConfigurations.map(e => e.address),
         _remainingGasTo: owner.address,
       })
       .send({
         from: owner.address,
         amount: locklift.utils.toNano(0.5),
         bounce: true,
-      })
+      }),
   );
 
   await locklift.transactions.waitFinalized(
@@ -330,4 +331,4 @@ const setTVMConfiguration = async (
         bounce: true,
       }),
   );
-}
+};

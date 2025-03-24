@@ -3,15 +3,15 @@ pragma AbiHeader time;
 pragma AbiHeader pubkey;
 
 
-import "../../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V1.tsol";
-import "./ProxyMultiVaultAlien_V8_MergeRouter.tsol";
+import "../../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V9.tsol";
+import "./ProxyMultiVaultAlien_V9_MergeRouter.tsol";
 
 import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
 
 
-contract ProxyMultiVaultAlien_V8 is
-ProxyMultiVaultAlien_V8_MergeRouter,
+contract ProxyMultiVaultAlien_V9 is
+    ProxyMultiVaultAlien_V9_MergeRouter,
     CheckPubKey,
     RandomNonce
 {
@@ -44,6 +44,7 @@ ProxyMultiVaultAlien_V8_MergeRouter,
         TvmCell data = abi.encode(
             evmConfiguration,
             solanaConfiguration,
+            tvmConfiguration,
             _randomNonce,
             api_version,
             owner,
@@ -51,7 +52,8 @@ ProxyMultiVaultAlien_V8_MergeRouter,
             mergeRouter,
             mergePool,
             mergePoolPlatform,
-            mergePoolVersion
+            mergePoolVersion,
+            proxyMultiVaultNative
         );
 
         tvm.setcode(code);
@@ -61,6 +63,8 @@ ProxyMultiVaultAlien_V8_MergeRouter,
     }
 
     function onCodeUpgrade(TvmCell data) private {
+        tvm.resetStorage();
+
         (
             EVMConfiguration evmConfiguration_,
             SolanaConfiguration solanaConfiguration_,

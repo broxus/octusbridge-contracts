@@ -11,7 +11,7 @@ import {
   setupEverscaleSolanaEventConfiguration,
   setupSolanaEverscaleEventConfiguration,
 } from "../../utils/event-configurations/solana";
-import { setupTVMEverscaleEventConfiguration } from "../../utils/event-configurations/tvm";
+import { setupTvmTvmEventConfiguration } from "../../utils/event-configurations/tvm";
 
 let bridge: Contract<BridgeAbi>;
 let cellEncoder: Contract<CellEncoderStandaloneAbi>;
@@ -231,17 +231,17 @@ describe("Test setting configuration end", async function () {
     });
   });
 
-  describe("TVM Everscale event configuration", async () => {
-    let tvmEverscaleEventConfiguration: Contract<FactorySource["TVMEverscaleEventConfiguration"]>;
+  describe("TVM-TVM event configuration", async () => {
+    let tvmTvmEventConfiguration: Contract<FactorySource["TvmTvmEventConfiguration"]>;
 
-    it("Setup TVM Everscale event configuration", async () => {
-      tvmEverscaleEventConfiguration = await setupTVMEverscaleEventConfiguration(bridgeOwner, proxy, "", zeroAddress);
+    it("Setup TVM-TVM event configuration", async () => {
+      tvmTvmEventConfiguration = await setupTvmTvmEventConfiguration(bridgeOwner, proxy, "", zeroAddress);
     });
 
-    it("Set TVM Everscale end block", async () => {
-      await tvmEverscaleEventConfiguration.methods
-        .setEndBlockNumber({
-          endBlockNumber: 1,
+    it("Set TVM-TVM end timestamp", async () => {
+      await tvmTvmEventConfiguration.methods
+        .setEndTimestamp({
+          endTimestamp: 1,
         })
         .send({
           from: bridgeOwner.address,
@@ -249,7 +249,7 @@ describe("Test setting configuration end", async function () {
         });
     });
 
-    it("Check TVM Everscale configuration end block", async () => {
+    it("Check TVM-TVM configuration end timestamp", async () => {
       expect(
         await bridge.methods
           .active()
@@ -257,15 +257,13 @@ describe("Test setting configuration end", async function () {
           .then(t => t.active),
       ).to.be.equal(true, "Wrong active status");
 
-      const details = await tvmEverscaleEventConfiguration.methods
-        .getDetails({ answerId: 0 })
-        .call({ responsible: true });
+      const details = await tvmTvmEventConfiguration.methods.getDetails({ answerId: 0 }).call({ responsible: true });
 
-      expect(details._networkConfiguration.endBlockNumber).to.be.equal("1", "Wrong end block number");
+      expect(details._networkConfiguration.endTimestamp).to.be.equal("1", "Wrong end timestamp");
     });
 
-    it("Set TVM Everscale meta", async () => {
-      await tvmEverscaleEventConfiguration.methods
+    it("Set TVM-TVM meta", async () => {
+      await tvmTvmEventConfiguration.methods
         .setMeta({
           _meta: "",
         })
@@ -275,10 +273,8 @@ describe("Test setting configuration end", async function () {
         });
     });
 
-    it("Check TVM Everscale configuration meta", async () => {
-      const details = await tvmEverscaleEventConfiguration.methods
-        .getDetails({ answerId: 0 })
-        .call({ responsible: true });
+    it("Check TVM-TVM configuration meta", async () => {
+      const details = await tvmTvmEventConfiguration.methods.getDetails({ answerId: 0 }).call({ responsible: true });
 
       expect(details._meta.toString()).to.be.equal(emptyCell, "Wrong meta");
     });

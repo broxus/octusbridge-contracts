@@ -5,10 +5,10 @@ import "../../../../interfaces/event-contracts/ITvmTvmEvent.tsol";
 import "../../../../interfaces/proxy/ITvmTvmProxyExtended.tsol";
 import "../../../../libraries/EventContractNonce.tsol";
 
-import "./ProxyMultiVaultAlien_V8_Token.tsol";
+import "./ProxyMultiVaultAlien_V9_Token.tsol";
 
-abstract contract ProxyMultiVaultAlien_V8_Deposit_TVM is
-    ProxyMultiVaultAlien_V8_Token,
+abstract contract ProxyMultiVaultAlien_V9_Deposit_TVM is
+    ProxyMultiVaultAlien_V9_Token,
     ITvmTvmProxyExtended
 {
     function onTVMEventConfirmedExtended(
@@ -25,11 +25,27 @@ abstract contract ProxyMultiVaultAlien_V8_Deposit_TVM is
             address token,
             uint128 amount,
             address recipient,
-            TvmCell payload
+            TvmCell payload,
+            address nativeProxyTokenWallet
         ) = abi.decode(
             meta,
-            (address, uint128, address, TvmCell)
+            (address, uint128, address, TvmCell, address)
         );
+
+        if (tvmConfiguration.predeployedTokens.exists(token)) {
+            TvmCell _meta = abi.encode(
+                nativeProxyTokenWallet,
+                amount,
+                recipient,
+                payload
+            );
+
+            ITvmTvmProxyExtended(proxyMultiVaultNative).onTVMEventConfirmedExtended{
+                    flag: MsgFlag.ALL_NOT_RESERVED
+                }(eventInitData, _meta, remainingGasTo);
+
+            return;
+        }
 
         uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
 

@@ -1,21 +1,23 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma ever-solidity >= 0.62.0;
 
-import "./ProxyMultiVaultNative_V6_Withdraw.tsol";
+import "./ProxyMultiVaultNative_V7_Withdraw.tsol";
 
 import "./../../../../interfaces/event-contracts/IEthereumEverscaleEvent.tsol";
 import "./../../../../interfaces/event-contracts/ISolanaEverscaleEvent.tsol";
 
 import "./../../../../interfaces/proxy/IEthereumEverscaleProxyExtended.tsol";
 import "./../../../../interfaces/proxy/ISolanaEverscaleProxyExtended.tsol";
+import "./../../../../interfaces/proxy/ITvmTvmProxyExtended.tsol";
 
 import "../../../../libraries/EventContractNonce.tsol";
 
 
-abstract contract ProxyMultiVaultNative_V6_Deposit is
+abstract contract ProxyMultiVaultNative_V7_Deposit is
     IEthereumEverscaleProxyExtended,
     ISolanaEverscaleProxyExtended,
-ProxyMultiVaultNative_V6_Withdraw
+    ITvmTvmProxyExtended,
+    ProxyMultiVaultNative_V7_Withdraw
 {
     /// @notice Handles native token transfer from EVM.
     /// @param remainingGasTo Gas back address
@@ -66,6 +68,48 @@ ProxyMultiVaultNative_V6_Withdraw
         address remainingGasTo
     ) external override reserveAtLeastTargetBalance {
         require(solanaConfiguration.solanaConfiguration == msg.sender, ErrorCodes.NOT_SOLANA_CONFIG);
+
+        (
+            address token_wallet,
+            uint128 amount,
+            address recipient,
+            TvmCell payload
+        ) = abi.decode(
+            meta,
+            (address, uint128, address, TvmCell)
+        );
+
+        TvmCell transferPayload;
+
+        if (recipient == dex_middleware) {
+            transferPayload = payload;
+        } else {
+            uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
+
+            transferPayload = abi.encode(nonce, payload);
+        }
+
+        _transferTokens(
+            token_wallet,
+            amount,
+            recipient,
+            remainingGasTo,
+            transferPayload
+        );
+    }
+
+    /// @notice Handles native token transfer from TVM.
+    /// @param remainingGasTo Gas back address
+    function onTVMEventConfirmedExtended(
+        ITvmTvmEvent.TvmTvmEventInitData eventInitData,
+        TvmCell meta,
+        address remainingGasTo
+    ) external override reserveAtLeastTargetBalance {
+        require(
+            (proxyMultiVaultAlien.value != 0 && msg.sender == proxyMultiVaultAlien) ||
+            _isArrayContainsAddress(tvmConfiguration.incomingConfigurations, msg.sender),
+            ErrorCodes.NOT_TVM_CONFIG_OR_ALIEN_PROXY
+        );
 
         (
             address token_wallet,

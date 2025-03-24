@@ -9,7 +9,7 @@ import {
   EverscaleEthereumEventConfigurationAbi,
   ConnectorAbi,
   MergeRouterAbi,
-  MergePool_V5Abi,
+  MergePool_V6Abi,
   Mediator_V2Abi,
   EventCreditFactoryAbi,
 } from "../../build_prod/factorySource";
@@ -24,7 +24,7 @@ type internalOwnerContractsType =
   | EverscaleEthereumEventConfigurationAbi
   | ConnectorAbi
   | MergeRouterAbi
-  | MergePool_V5Abi
+  | MergePool_V6Abi
   | Mediator_V2Abi
   | EventCreditFactoryAbi;
 
@@ -46,15 +46,12 @@ const main = async (): Promise<void> => {
 
   const admin = locklift.deployments.getAccount("Admin").account;
 
-  for (const deployment of Object.entries(
-    locklift.deployments.deploymentsStore
-  )) {
+  for (const deployment of Object.entries(locklift.deployments.deploymentsStore)) {
     if (deployment[0] == "RoundDeployer") {
-      const roundDeployer: Contract<RoundDeployerAbi> =
-        await locklift.factory.getDeployedContract(
-          deployment[0],
-          (deployment[1] as any).address
-        );
+      const roundDeployer: Contract<RoundDeployerAbi> = await locklift.factory.getDeployedContract(
+        deployment[0],
+        (deployment[1] as any).address,
+      );
       await roundDeployer.methods
         .setAdmin({ new_admin: NEW_OWNER, send_gas_to: admin.address })
         .send({ from: admin.address, amount: toNano(30) });
@@ -63,19 +60,14 @@ const main = async (): Promise<void> => {
         await roundDeployer.methods
           .getDetails({ answerId: 0 })
           .call()
-          .then((a) => a.value0.admin.toString())
+          .then(a => a.value0.admin.toString()),
       );
 
       continue;
     }
 
-    if (
-      internalOwnerContracts.filter((contractName) =>
-        deployment[0].includes(contractName)
-      ).length
-    ) {
-      const contract: Contract<internalOwnerContractsType> =
-        await locklift.deployments.getContract(deployment[0]);
+    if (internalOwnerContracts.filter(contractName => deployment[0].includes(contractName)).length) {
+      const contract: Contract<internalOwnerContractsType> = await locklift.deployments.getContract(deployment[0]);
       await contract.methods
         .transferOwnership({ newOwner: NEW_OWNER })
         .send({ from: admin.address, amount: toNano(0.2) });
@@ -84,7 +76,7 @@ const main = async (): Promise<void> => {
         await contract.methods
           .owner({})
           .call()
-          .then((a) => a.owner.toString())
+          .then(a => a.owner.toString()),
       );
     }
   }

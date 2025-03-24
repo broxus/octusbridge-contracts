@@ -1,7 +1,7 @@
-import { Contract } from 'locklift';
-import { BigNumber } from 'bignumber.js';
-import { Account } from 'everscale-standalone-client/nodejs';
-import { getConfig } from './configs';
+import { Contract } from "locklift";
+import { BigNumber } from "bignumber.js";
+import { Account } from "everscale-standalone-client/nodejs";
+import { getConfig } from "./configs";
 import assert from "node:assert";
 
 import {
@@ -10,14 +10,14 @@ import {
   MultiVaultEverscaleEVMEventAlienAbi,
   EthereumEverscaleEventConfigurationFactoryAbi,
   EverscaleEthereumEventConfigurationFactoryAbi,
-  ProxyMultiVaultAlien_V8Abi,
-  ProxyMultiVaultNative_V6Abi,
+  ProxyMultiVaultAlien_V9Abi,
+  ProxyMultiVaultNative_V7Abi,
   RoundDeployerAbi,
-} from '../../build/factorySource';
+} from "../../build/factorySource";
 
 const config = getConfig();
 
-assert(!!config, 'Config should be defined');
+assert(!!config, "Config should be defined");
 
 const START_TIMESTAMP = Math.floor(Date.now() / 1000);
 
@@ -34,10 +34,10 @@ const ALIEN_TRANSFER_EVENT_ABI = {
     { indexed: false, internalType: "uint256", name: "recipient_addr", type: "uint256" },
     { indexed: false, internalType: "uint256", name: "value", type: "uint256" },
     { indexed: false, internalType: "uint256", name: "expected_evers", type: "uint256" },
-    { indexed: false, internalType: "bytes", name: "payload", type: "bytes" }
+    { indexed: false, internalType: "bytes", name: "payload", type: "bytes" },
   ],
   name: "AlienTransfer",
-  type: "event"
+  type: "event",
 };
 
 const NATIVE_TRANSFER_EVENT_ABI = {
@@ -50,10 +50,10 @@ const NATIVE_TRANSFER_EVENT_ABI = {
     { indexed: false, internalType: "uint256", name: "recipient_addr", type: "uint256" },
     { indexed: false, internalType: "uint256", name: "value", type: "uint256" },
     { indexed: false, internalType: "uint256", name: "expected_evers", type: "uint256" },
-    { indexed: false, internalType: "bytes", name: "payload", type: "bytes" }
+    { indexed: false, internalType: "bytes", name: "payload", type: "bytes" },
   ],
   name: "NativeTransfer",
-  type: "event"
+  type: "event",
 };
 
 const EVER_ALIEN_TRANSFER_EVENT_ABI = [
@@ -63,7 +63,7 @@ const EVER_ALIEN_TRANSFER_EVENT_ABI = [
   { name: "chainId", type: "uint256" },
   { name: "callback_recipient", type: "uint160" },
   { name: "callback_payload", type: "bytes" },
-  { name: "callback_strict", type: "bool" }
+  { name: "callback_strict", type: "bool" },
 ];
 
 const EVER_NATIVE_TRANSFER_EVENT_ABI = [
@@ -77,7 +77,7 @@ const EVER_NATIVE_TRANSFER_EVENT_ABI = [
   { name: "chainId", type: "uint256" },
   { name: "callback_recipient", type: "uint160" },
   { name: "callback_payload", type: "bytes" },
-  { name: "callback_strict", type: "bool" }
+  { name: "callback_strict", type: "bool" },
 ];
 
 const deployConnectors = async (
@@ -87,13 +87,11 @@ const deployConnectors = async (
 ): Promise<void> => {
   for (const configuration of configurations) {
     const { traceTree: ttConnector } = await locklift.tracing.trace(
-      bridge.methods
-        .deployConnector({ _eventConfiguration: configuration.address })
-        .send({
-          from: admin.address,
-          amount: config?.GAS.DEPLOY_CONNECTOR,
-          bounce: true,
-        }),
+      bridge.methods.deployConnector({ _eventConfiguration: configuration.address }).send({
+        from: admin.address,
+        amount: config?.GAS.DEPLOY_CONNECTOR,
+        bounce: true,
+      }),
     );
 
     const connector = locklift.factory.getDeployedContract(
@@ -102,19 +100,17 @@ const deployConnectors = async (
     );
 
     await locklift.deployments.saveContract({
-      contractName: 'Connector',
+      contractName: "Connector",
       address: connector.address,
       deploymentName: `Connector-${configuration.address.toString()}`,
     });
 
     await locklift.tracing.trace(
-      connector.methods
-        .enable({})
-        .send({
-          from: admin.address,
-          amount: config?.GAS.CONNECTOR_ENABLE,
-          bounce: true,
-        }),
+      connector.methods.enable({}).send({
+        from: admin.address,
+        amount: config?.GAS.CONNECTOR_ENABLE,
+        bounce: true,
+      }),
     );
 
     console.log(`${configuration.address} Connector: ${connector.address}`);
@@ -124,20 +120,30 @@ const deployConnectors = async (
 const main = async (): Promise<void> => {
   await locklift.deployments.load();
 
-  const admin = locklift.deployments.getAccount('Admin').account;
+  const admin = locklift.deployments.getAccount("Admin").account;
 
-  const ethEverEventConfigFactory = locklift.deployments.getContract<EthereumEverscaleEventConfigurationFactoryAbi>('EthEverEventConfigFactory');
-  const everEthEventConfigFactory = locklift.deployments.getContract<EverscaleEthereumEventConfigurationFactoryAbi>('EverEthEventConfigFactory');
-  const proxyMultiVaultAlien = locklift.deployments.getContract<ProxyMultiVaultAlien_V8Abi>('ProxyMultiVaultAlien');
-  const proxyMultiVaultNative = locklift.deployments.getContract<ProxyMultiVaultNative_V6Abi>('ProxyMultiVaultNative');
-  const bridge = locklift.deployments.getContract<BridgeAbi>('Bridge');
-  const roundDeployer = locklift.deployments.getContract<RoundDeployerAbi>('RoundDeployer');
+  const ethEverEventConfigFactory =
+    locklift.deployments.getContract<EthereumEverscaleEventConfigurationFactoryAbi>("EthEverEventConfigFactory");
+  const everEthEventConfigFactory =
+    locklift.deployments.getContract<EverscaleEthereumEventConfigurationFactoryAbi>("EverEthEventConfigFactory");
+  const proxyMultiVaultAlien = locklift.deployments.getContract<ProxyMultiVaultAlien_V9Abi>("ProxyMultiVaultAlien");
+  const proxyMultiVaultNative = locklift.deployments.getContract<ProxyMultiVaultNative_V7Abi>("ProxyMultiVaultNative");
+  const bridge = locklift.deployments.getContract<BridgeAbi>("Bridge");
+  const roundDeployer = locklift.deployments.getContract<RoundDeployerAbi>("RoundDeployer");
 
   const ethEverFactoryConfigCode = await ethEverEventConfigFactory.methods.configurationCode().call();
   const everEthFactoryConfigCode = await everEthEventConfigFactory.methods.configurationCode().call();
 
-  assert(ethEverFactoryConfigCode.configurationCode === locklift.factory.getContractArtifacts('EthereumEverscaleEventConfiguration').code, "Different config codes on eth ever factory");
-  assert(everEthFactoryConfigCode.configurationCode === locklift.factory.getContractArtifacts('EverscaleEthereumEventConfiguration').code, "Different config codes on ever eth factory");
+  assert(
+    ethEverFactoryConfigCode.configurationCode ===
+      locklift.factory.getContractArtifacts("EthereumEverscaleEventConfiguration").code,
+    "Different config codes on eth ever factory",
+  );
+  assert(
+    everEthFactoryConfigCode.configurationCode ===
+      locklift.factory.getContractArtifacts("EverscaleEthereumEventConfiguration").code,
+    "Different config codes on ever eth factory",
+  );
 
   for (const chainId of config.ETH_CHAIN_IDS) {
     if (!locklift.deployments.deploymentsStore[`NetworkConfig-EthEverAlienEvent-${chainId}`]) {
@@ -161,36 +167,30 @@ const main = async (): Promise<void> => {
       };
 
       await locklift.tracing.trace(
-          ethEverEventConfigFactory.methods
-              .deploy(ethEverAlienConfiguration)
-              .send({
-                from: admin.address,
-                amount: config?.GAS.DEPLOY_CONFIGURATION,
-                bounce: true,
-              }),
+        ethEverEventConfigFactory.methods.deploy(ethEverAlienConfiguration).send({
+          from: admin.address,
+          amount: config?.GAS.DEPLOY_CONFIGURATION,
+          bounce: true,
+        }),
       );
 
       const ethEverAlienConfig = await ethEverEventConfigFactory.methods
-          .deriveConfigurationAddress({
-            networkConfiguration: ethEverAlienConfiguration.networkConfiguration,
-            basicConfiguration: ethEverAlienConfiguration.basicConfiguration,
-          })
-          .call()
-          .then((r) => locklift.factory.getDeployedContract("EthereumEverscaleEventConfiguration", r.value0));
+        .deriveConfigurationAddress({
+          networkConfiguration: ethEverAlienConfiguration.networkConfiguration,
+          basicConfiguration: ethEverAlienConfiguration.basicConfiguration,
+        })
+        .call()
+        .then(r => locklift.factory.getDeployedContract("EthereumEverscaleEventConfiguration", r.value0));
 
       console.log(`EthEverAlienEventConfig-${chainId}: ${ethEverAlienConfig.address}`);
 
       await locklift.deployments.saveContract({
-        contractName: 'EthereumEverscaleEventConfiguration',
+        contractName: "EthereumEverscaleEventConfiguration",
         address: ethEverAlienConfig.address,
-        deploymentName: `NetworkConfig-EthEverAlienEvent-${chainId}`
+        deploymentName: `NetworkConfig-EthEverAlienEvent-${chainId}`,
       });
 
-      await deployConnectors(
-          admin,
-          bridge,
-          [ethEverAlienConfig] as never[],
-      );
+      await deployConnectors(admin, bridge, [ethEverAlienConfig] as never[]);
     }
 
     if (!locklift.deployments.deploymentsStore[`NetworkConfig-EthEverNativeEvent-${chainId}`]) {
@@ -214,40 +214,34 @@ const main = async (): Promise<void> => {
       };
 
       await locklift.tracing.trace(
-          ethEverEventConfigFactory.methods
-              .deploy(ethEverNativeConfiguration)
-              .send({
-                from: admin.address,
-                amount: config?.GAS.DEPLOY_CONFIGURATION,
-                bounce: true,
-              }),
+        ethEverEventConfigFactory.methods.deploy(ethEverNativeConfiguration).send({
+          from: admin.address,
+          amount: config?.GAS.DEPLOY_CONFIGURATION,
+          bounce: true,
+        }),
       );
 
       const ethEverNativeConfig = await ethEverEventConfigFactory.methods
-          .deriveConfigurationAddress({
-            basicConfiguration: ethEverNativeConfiguration.basicConfiguration,
-            networkConfiguration: ethEverNativeConfiguration.networkConfiguration,
-          })
-          .call()
-          .then((r) => locklift.factory.getDeployedContract("EthereumEverscaleEventConfiguration", r.value0));
+        .deriveConfigurationAddress({
+          basicConfiguration: ethEverNativeConfiguration.basicConfiguration,
+          networkConfiguration: ethEverNativeConfiguration.networkConfiguration,
+        })
+        .call()
+        .then(r => locklift.factory.getDeployedContract("EthereumEverscaleEventConfiguration", r.value0));
 
       console.log(`EthEverNativeEventConfig-${chainId}: ${ethEverNativeConfig.address}`);
 
       await locklift.deployments.saveContract({
-        contractName: 'EthereumEverscaleEventConfiguration',
+        contractName: "EthereumEverscaleEventConfiguration",
         address: ethEverNativeConfig.address,
-        deploymentName: `NetworkConfig-EthEverNativeEvent-${chainId}`
+        deploymentName: `NetworkConfig-EthEverNativeEvent-${chainId}`,
       });
 
-      await deployConnectors(
-          admin,
-          bridge,
-          [ethEverNativeConfig] as never[],
-      );
+      await deployConnectors(admin, bridge, [ethEverNativeConfig] as never[]);
     }
   }
 
-  if (!locklift.deployments.deploymentsStore['NetworkConfig-EverEthAlienEvent']) {
+  if (!locklift.deployments.deploymentsStore["NetworkConfig-EverEthAlienEvent"]) {
     const everEthAlienConfiguration = {
       _owner: admin.address,
       _flags: 0,
@@ -266,39 +260,33 @@ const main = async (): Promise<void> => {
     };
 
     await locklift.tracing.trace(
-        everEthEventConfigFactory.methods
-            .deploy(everEthAlienConfiguration)
-            .send({
-              from: admin.address,
-              amount: config?.GAS.DEPLOY_CONFIGURATION,
-              bounce: true,
-            }),
+      everEthEventConfigFactory.methods.deploy(everEthAlienConfiguration).send({
+        from: admin.address,
+        amount: config?.GAS.DEPLOY_CONFIGURATION,
+        bounce: true,
+      }),
     );
 
     const everEthAlienConfig = await everEthEventConfigFactory.methods
-        .deriveConfigurationAddress({
-          basicConfiguration: everEthAlienConfiguration.basicConfiguration,
-          networkConfiguration: everEthAlienConfiguration.networkConfiguration,
-        })
-        .call()
-        .then((r) => locklift.factory.getDeployedContract("EverscaleEthereumEventConfiguration", r.value0));
+      .deriveConfigurationAddress({
+        basicConfiguration: everEthAlienConfiguration.basicConfiguration,
+        networkConfiguration: everEthAlienConfiguration.networkConfiguration,
+      })
+      .call()
+      .then(r => locklift.factory.getDeployedContract("EverscaleEthereumEventConfiguration", r.value0));
 
     console.log(`EverEthAlienEventConfig: ${everEthAlienConfig.address}`);
 
     await locklift.deployments.saveContract({
-      contractName: 'EverscaleEthereumEventConfiguration',
+      contractName: "EverscaleEthereumEventConfiguration",
       address: everEthAlienConfig.address,
-      deploymentName: `NetworkConfig-EverEthAlienEvent`
+      deploymentName: `NetworkConfig-EverEthAlienEvent`,
     });
 
-    await deployConnectors(
-        admin,
-        bridge,
-        [everEthAlienConfig] as never[],
-    );
+    await deployConnectors(admin, bridge, [everEthAlienConfig] as never[]);
   }
 
-  if (!locklift.deployments.deploymentsStore['NetworkConfig-EverEthNativeEvent']) {
+  if (!locklift.deployments.deploymentsStore["NetworkConfig-EverEthNativeEvent"]) {
     const everEthNativeConfiguration = {
       _owner: admin.address,
       _flags: 1,
@@ -317,36 +305,30 @@ const main = async (): Promise<void> => {
     };
 
     await locklift.tracing.trace(
-        everEthEventConfigFactory.methods
-            .deploy(everEthNativeConfiguration)
-            .send({
-              from: admin.address,
-              amount: config?.GAS.DEPLOY_CONFIGURATION,
-              bounce: true,
-            }),
+      everEthEventConfigFactory.methods.deploy(everEthNativeConfiguration).send({
+        from: admin.address,
+        amount: config?.GAS.DEPLOY_CONFIGURATION,
+        bounce: true,
+      }),
     );
 
     const everEthNativeConfig = await everEthEventConfigFactory.methods
-        .deriveConfigurationAddress({
-          basicConfiguration: everEthNativeConfiguration.basicConfiguration,
-          networkConfiguration: everEthNativeConfiguration.networkConfiguration,
-        })
-        .call()
-        .then((r) => locklift.factory.getDeployedContract("EverscaleEthereumEventConfiguration", r.value0));
+      .deriveConfigurationAddress({
+        basicConfiguration: everEthNativeConfiguration.basicConfiguration,
+        networkConfiguration: everEthNativeConfiguration.networkConfiguration,
+      })
+      .call()
+      .then(r => locklift.factory.getDeployedContract("EverscaleEthereumEventConfiguration", r.value0));
 
     console.log(`EverEthNativeEventConfig: ${everEthNativeConfig.address}`);
 
     await locklift.deployments.saveContract({
-      contractName: 'EverscaleEthereumEventConfiguration',
+      contractName: "EverscaleEthereumEventConfiguration",
       address: everEthNativeConfig.address,
-      deploymentName: `NetworkConfig-EverEthNativeEvent`
+      deploymentName: `NetworkConfig-EverEthNativeEvent`,
     });
 
-    await deployConnectors(
-        admin,
-        bridge,
-        [everEthNativeConfig] as never[],
-    );
+    await deployConnectors(admin, bridge, [everEthNativeConfig] as never[]);
   }
 };
 

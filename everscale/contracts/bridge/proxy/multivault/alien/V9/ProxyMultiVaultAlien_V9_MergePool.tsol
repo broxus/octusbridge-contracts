@@ -4,10 +4,10 @@ pragma ever-solidity >= 0.62.0;
 import "./../../../../interfaces/alien-token-merge/merge-pool/IMergePool_V2.tsol";
 
 import "../../../../alien-token-merge/MergePoolPlatform.tsol";
-import "./ProxyMultiVaultAlien_V8_Withdraw.tsol";
+import "./ProxyMultiVaultAlien_V9_Withdraw.tsol";
 
 
-abstract contract ProxyMultiVaultAlien_V8_MergePool is ProxyMultiVaultAlien_V8_Withdraw {
+abstract contract ProxyMultiVaultAlien_V9_MergePool is ProxyMultiVaultAlien_V9_Withdraw {
     modifier onlyMergePool(uint nonce) {
         require(deriveMergePool(nonce) == msg.sender, ErrorCodes.WRONG_MERGE_POOL_NONCE);
 
@@ -120,6 +120,25 @@ abstract contract ProxyMultiVaultAlien_V8_MergePool is ProxyMultiVaultAlien_V8_W
             executePayloadNeeded,
             executePayloadAccounts,
             solanaPayload
+        );
+    }
+
+    function withdrawTokensToTVMByMergePool(
+        uint mergePoolNonce,
+        uint32 nonce,
+        address token,
+        uint128 amount,
+        address remainingGasTo,
+        address sender,
+        TvmCell withdrawPayload
+    ) external override onlyMergePool(mergePoolNonce) reserveAtLeastTargetBalance {
+        _emitTVMEvent(
+            nonce,
+            token,
+            amount,
+            remainingGasTo,
+            sender,
+            withdrawPayload
         );
     }
 

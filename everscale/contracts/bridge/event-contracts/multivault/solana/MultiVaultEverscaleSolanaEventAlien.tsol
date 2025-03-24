@@ -5,7 +5,7 @@ pragma AbiHeader expire;
 
 
 import "./../../../interfaces/event-contracts/multivault/solana/IMultiVaultEverscaleSolanaEventAlien.tsol";
-import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V8.tsol";
+import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V9.tsol";
 import "./../../../interfaces/alien-token/ITokenRootAlienSolana.tsol";
 
 import "./../../base/solana/EverscaleSolanaBaseEvent.tsol";
@@ -74,7 +74,7 @@ contract MultiVaultEverscaleSolanaEventAlien is
 
         base_token = base_token_;
 
-        IProxyMultiVaultAlien_V8(proxy).deriveSolanaAlienTokenRoot{
+        IProxyMultiVaultAlien_V9(proxy).deriveSolanaAlienTokenRoot{
             value: gasToValue(Gas.DERIVE_TOKEN_ROOT_GAS, address(this).wid),
             bounce: true,
             callback: MultiVaultEverscaleSolanaEventAlien.receiveAlienTokenRoot
@@ -143,7 +143,7 @@ contract MultiVaultEverscaleSolanaEventAlien is
 
         if (
             (selector == tvm.functionId(ITokenRootAlienSolana.meta) && msg.sender == token) ||
-            (selector == tvm.functionId(IProxyMultiVaultAlien_V8.deriveSolanaAlienTokenRoot) && msg.sender == proxy)
+            (selector == tvm.functionId(IProxyMultiVaultAlien_V9.deriveSolanaAlienTokenRoot) && msg.sender == proxy)
         ) {
             setStatusRejected(2);
         }

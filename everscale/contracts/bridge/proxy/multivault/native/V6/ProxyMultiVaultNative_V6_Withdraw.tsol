@@ -73,15 +73,6 @@ abstract contract ProxyMultiVaultNative_V6_Withdraw is
                 sender,
                 callback
             );
-        } else if (network == Network.TVM) {
-            _emitTVMEvent(
-                nonce,
-                tokenRoot,
-                amount,
-                remainingGasTo,
-                sender,
-                transferPayload
-            );
         }
     }
 
@@ -161,56 +152,5 @@ abstract contract ProxyMultiVaultNative_V6_Withdraw is
             bounce: false,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventVoteData);
-    }
-
-    function _emitTVMEvent(
-        uint32 /*nonce*/,
-        address token,
-        uint128 amount,
-        address remainingGasTo,
-        address sender,
-        TvmCell transferPayload
-    ) internal pure {
-        (
-            address recipient,
-            uint256 chainId,
-            string name,
-            string symbol,
-            uint8 decimals,
-            uint256 expectedGas,
-            TvmCell eventPayload
-        ) = abi.decode(transferPayload, (
-            address,
-            uint256,
-            string,
-            string,
-            uint8,
-            uint256,
-            TvmCell
-        ));
-
-        emit TvmTvmNative(
-            chainId,
-
-            token,
-            name,
-            symbol,
-            decimals,
-
-            amount,
-            recipient,
-
-            msg.value, // todo subtract the cost of the current transaction
-            expectedGas,
-            remainingGasTo,
-            sender,
-            eventPayload
-        );
-
-        remainingGasTo.transfer({
-            value: 0,
-            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
-            bounce: false
-        });
     }
 }

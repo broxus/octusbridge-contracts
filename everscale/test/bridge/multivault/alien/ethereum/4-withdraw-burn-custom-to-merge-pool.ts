@@ -1,31 +1,30 @@
-import {Ed25519KeyPair} from "nekoton-wasm";
-import {Contract, toNano} from "locklift";
+import { Ed25519KeyPair } from "nekoton-wasm";
+import { Contract, toNano } from "locklift";
 import {
-    BridgeAbi,
-    CellEncoderStandaloneAbi,
-    EthereumEverscaleEventConfigurationAbi,
-    EverscaleEthereumEventConfigurationAbi,
-    EverscaleSolanaEventConfigurationAbi,
-    MergePool_V3Abi,
-    MergeRouterAbi,
-    MultiVaultEverscaleEVMEventAlienAbi,
-    ProxyMultiVaultAlien_V8Abi,
-    SolanaEverscaleEventConfigurationAbi,
-    StakingMockupAbi,
-    TokenRootAbi,
-    TokenRootAlienEVMAbi,
-    TokenWalletAbi
+  BridgeAbi,
+  CellEncoderStandaloneAbi,
+  EthereumEverscaleEventConfigurationAbi,
+  EverscaleEthereumEventConfigurationAbi,
+  EverscaleSolanaEventConfigurationAbi,
+  MergePool_V3Abi,
+  MergeRouterAbi,
+  MultiVaultEverscaleEVMEventAlienAbi,
+  ProxyMultiVaultAlien_V9Abi,
+  SolanaEverscaleEventConfigurationAbi,
+  StakingMockupAbi,
+  TokenRootAbi,
+  TokenRootAlienEVMAbi,
+  TokenWalletAbi,
 } from "../../../../../build/factorySource";
-import {Account} from "everscale-standalone-client/nodejs";
-import {setupBridge, setupRelays} from "../../../../utils/bridge";
-import {deployAccount} from "../../../../utils/account";
-import {logContract} from "../../../../utils/logger";
-import {setupAlienMultiVault} from "../../../../utils/multivault/alien";
-import {deployTokenRoot} from "../../../../utils/token";
-import {expect} from "chai";
-import {EventAction, EventType, processEvent} from "../../../../utils/events";
+import { Account } from "everscale-standalone-client/nodejs";
+import { setupBridge, setupRelays } from "../../../../utils/bridge";
+import { deployAccount } from "../../../../utils/account";
+import { logContract } from "../../../../utils/logger";
+import { setupAlienMultiVault } from "../../../../utils/multivault/alien";
+import { deployTokenRoot } from "../../../../utils/token";
+import { expect } from "chai";
+import { EventAction, EventType, processEvent } from "../../../../utils/events";
 const logger = require("mocha-logger");
-
 
 let relays: Ed25519KeyPair[];
 let bridge: Contract<BridgeAbi>;
@@ -39,7 +38,7 @@ let solanaEverscaleEventConfiguration: Contract<SolanaEverscaleEventConfiguratio
 let everscaleSolanaEventConfiguration: Contract<EverscaleSolanaEventConfigurationAbi>;
 let initializer: Account;
 let eventCloser: Account;
-let proxy: Contract<ProxyMultiVaultAlien_V8Abi>;
+let proxy: Contract<ProxyMultiVaultAlien_V9Abi>;
 
 let alienTokenRoot: Contract<TokenRootAlienEVMAbi>;
 let customTokenRoot: Contract<TokenRootAbi>;
@@ -48,344 +47,307 @@ let mergeRouter: Contract<MergeRouterAbi>;
 let mergePool: Contract<MergePool_V3Abi>;
 let eventContract: Contract<MultiVaultEverscaleEVMEventAlienAbi>;
 
+describe("Withdraw custom tokens by burning in favor of merge pool", async function () {
+  this.timeout(10000000);
 
-describe('Withdraw custom tokens by burning in favor of merge pool', async function() {
-    this.timeout(10000000);
+  const alienTokenBase = {
+    chainId: 111,
+    token: 222,
+  };
 
-    const alienTokenBase = {
-        chainId: 111,
-        token: 222,
-    };
+  const alienTokenMeta = {
+    name: "Giga Chad",
+    symbol: "GIGA_CHAD",
+    decimals: 6,
+  };
 
-    const alienTokenMeta = {
-        name: 'Giga Chad',
-        symbol: 'GIGA_CHAD',
-        decimals: 6,
-    };
+  const customTokenMeta = {
+    name: "Custom Giga Chad",
+    symbol: "CUSTOM_GIGA_CHAD",
+    decimals: 9,
+  };
 
-    const customTokenMeta = {
-        name: 'Custom Giga Chad',
-        symbol: 'CUSTOM_GIGA_CHAD',
-        decimals: 9
-    };
+  const mintAmount = 100000;
+  const amount = 33300;
+  const recipient = 888;
 
-    const mintAmount = 100000;
-    const amount = 33300;
-    const recipient = 888;
+  it("Setup bridge", async () => {
+    relays = await setupRelays();
+    [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
 
+    const signer = (await locklift.keystore.getSigner("0"))!;
 
-    it("Setup bridge", async () => {
-        relays = await setupRelays();
-        [bridge, bridgeOwner, staking, cellEncoder] = await setupBridge(relays);
+    initializer = await deployAccount(signer, 50);
 
-        const signer = (await locklift.keystore.getSigner("0"))!;
+    await logContract("Initializer", initializer.address);
 
-        initializer = await deployAccount(signer, 50);
+    [
+      ethereumEverscaleEventConfiguration,
+      everscaleEthereumEventConfiguration,
+      solanaEverscaleEventConfiguration,
+      everscaleSolanaEventConfiguration,
+      proxy,
+    ] = await setupAlienMultiVault(bridgeOwner, staking);
 
-        await logContract("Initializer", initializer.address);
+    eventCloser = await deployAccount((await locklift.keystore.getSigner("1"))!, 50);
+  });
 
-        [
-            ethereumEverscaleEventConfiguration,
-            everscaleEthereumEventConfiguration,
-            solanaEverscaleEventConfiguration,
-            everscaleSolanaEventConfiguration,
-            proxy
-        ] = await setupAlienMultiVault(bridgeOwner, staking);
+  it("Deploy custom token root", async () => {
+    customTokenRoot = await deployTokenRoot(
+      customTokenMeta.name,
+      customTokenMeta.symbol,
+      customTokenMeta.decimals,
+      bridgeOwner.address,
+    );
 
-        eventCloser = await deployAccount(
-            (await locklift.keystore.getSigner("1"))!,
-            50
-        );
+    await logContract("Custom token root", customTokenRoot.address);
+  });
+
+  it("Mint custom tokens to initializer", async () => {
+    await customTokenRoot.methods
+      .mint({
+        amount: mintAmount,
+        recipient: initializer.address,
+        payload: "",
+        deployWalletValue: toNano(1),
+        remainingGasTo: bridgeOwner.address,
+        notify: false,
+      })
+      .send({
+        from: bridgeOwner.address,
+        amount: locklift.utils.toNano(10),
+      });
+  });
+
+  it("Transfer custom token ownership to proxy", async () => {
+    await customTokenRoot.methods
+      .transferOwnership({
+        newOwner: proxy.address,
+        remainingGasTo: bridgeOwner.address,
+        callbacks: [],
+      })
+      .send({
+        from: bridgeOwner.address,
+        amount: locklift.utils.toNano(2),
+      });
+  });
+
+  it("Check initializer custom token balance", async () => {
+    const walletAddress = await customTokenRoot.methods
+      .walletOf({
+        answerId: 0,
+        walletOwner: initializer.address,
+      })
+      .call({ responsible: true });
+
+    initializerCustomTokenWallet = locklift.factory.getDeployedContract("TokenWallet", walletAddress.value0);
+
+    const balance = await initializerCustomTokenWallet.methods.balance({ answerId: 0 }).call({ responsible: true });
+
+    expect(Number(balance.value0)).to.be.equal(mintAmount, "Wrong initializer token balance after mint");
+  });
+
+  it("Deploy alien token root", async () => {
+    await proxy.methods
+      .deployEVMAlienToken({
+        ...alienTokenBase,
+        ...alienTokenMeta,
+        remainingGasTo: initializer.address,
+      })
+      .send({
+        from: initializer.address,
+        amount: locklift.utils.toNano(15),
+      });
+
+    const alienTokenRootAddress = await proxy.methods
+      .deriveEVMAlienTokenRoot({
+        ...alienTokenBase,
+        ...alienTokenMeta,
+        answerId: 0,
+      })
+      .call({ responsible: true });
+
+    alienTokenRoot = locklift.factory.getDeployedContract("TokenRootAlienEVM", alienTokenRootAddress.value0);
+
+    await logContract("Alien token root", alienTokenRoot.address);
+  });
+
+  it("Deploy merge router", async () => {
+    await proxy.methods
+      .deployMergeRouter({
+        token: alienTokenRoot.address,
+      })
+      .send({
+        from: initializer.address,
+        amount: locklift.utils.toNano(5),
+      });
+
+    const mergeRouterAddress = await proxy.methods
+      .deriveMergeRouter({
+        answerId: 0,
+        token: alienTokenRoot.address,
+      })
+      .call({ responsible: true });
+
+    mergeRouter = locklift.factory.getDeployedContract("MergeRouter", mergeRouterAddress.router);
+
+    await logContract("Merge router", mergeRouter.address);
+  });
+
+  it("Deploy merge pool", async () => {
+    const nonce = locklift.utils.getRandomNonce();
+
+    await proxy.methods
+      .deployMergePool({
+        nonce,
+        tokens: [alienTokenRoot.address, customTokenRoot.address],
+        canonId: 1,
+      })
+      .send({
+        from: initializer.address,
+        amount: locklift.utils.toNano(5),
+      });
+
+    const mergePoolAddress = await proxy.methods
+      .deriveMergePool({
+        nonce,
+        answerId: 0,
+      })
+      .call({ responsible: true });
+
+    mergePool = locklift.factory.getDeployedContract("MergePool_V3", mergePoolAddress.pool);
+
+    await logContract("MergePool", mergePool.address);
+  });
+
+  it("Enable merge pool tokens", async () => {
+    await mergePool.methods.enableAll().send({
+      from: bridgeOwner.address,
+      amount: locklift.utils.toNano(1),
     });
 
-    it('Deploy custom token root', async () => {
-        customTokenRoot = await deployTokenRoot(
-            customTokenMeta.name,
-            customTokenMeta.symbol,
-            customTokenMeta.decimals,
-            bridgeOwner.address
-        );
+    const tokens = await mergePool.methods.getTokens({ answerId: 0 }).call({ responsible: true });
 
-        await logContract("Custom token root", customTokenRoot.address);
-    });
+    expect(tokens._tokens[0][1].enabled).to.be.equal(true, "Wrong alien status");
+    expect(tokens._tokens[1][1].enabled).to.be.equal(true, "Wrong canon status");
 
-    it('Mint custom tokens to initializer', async () => {
-        await customTokenRoot.methods.mint({
-            amount: mintAmount,
-            recipient: initializer.address,
-            payload: '',
-            deployWalletValue: toNano(1),
-            remainingGasTo: bridgeOwner.address,
-            notify: false,
-        }).send({
-            from: bridgeOwner.address,
-            amount: locklift.utils.toNano(10)
-        });
-    });
+    expect(tokens._canon.toString()).to.be.equal(customTokenRoot.address.toString(), "Wrong canon token");
+  });
 
-    it('Transfer custom token ownership to proxy', async () => {
-        await customTokenRoot.methods.transferOwnership({
-            newOwner: proxy.address,
-            remainingGasTo: bridgeOwner.address,
-            callbacks: []
-        }).send({
-            from: bridgeOwner.address,
-            amount: locklift.utils.toNano(2)
-        });
-    });
+  it("Burn tokens in favor of merge pool", async () => {
+    const burnPayload = await cellEncoder.methods
+      .encodeMergePoolBurnWithdrawPayloadEthereum({
+        targetToken: alienTokenRoot.address,
+        recipient,
+        callback: {
+          recipient: 0,
+          strict: false,
+          payload: "",
+        },
+      })
+      .call();
 
-    it('Check initializer custom token balance', async () => {
-        const walletAddress = await customTokenRoot.methods
-            .walletOf({
-                answerId: 0,
-                walletOwner: initializer.address
-            })
-            .call({ responsible: true });
+    const tx = await initializerCustomTokenWallet.methods
+      .burn({
+        amount,
+        remainingGasTo: eventCloser.address,
+        callbackTo: mergePool.address,
+        payload: burnPayload.value0,
+      })
+      .send({
+        from: initializer.address,
+        amount: locklift.utils.toNano(10),
+      });
 
-        initializerCustomTokenWallet = locklift.factory.getDeployedContract(
-            'TokenWallet',
-            walletAddress.value0
-        );
+    logger.log(`Event initialization tx: ${tx.id.hash}`);
 
-        const balance = await initializerCustomTokenWallet.methods
-            .balance({ answerId: 0 })
-            .call({ responsible: true });
+    const events = await everscaleEthereumEventConfiguration
+      .getPastEvents({ filter: "NewEventContract" })
+      .then(e => e.events);
 
-        expect(Number(balance.value0))
-            .to.be.equal(mintAmount, 'Wrong initializer token balance after mint')
-    });
+    expect(events).to.have.lengthOf(1, "Everscale event configuration failed to deploy event");
 
-    it('Deploy alien token root', async () => {
-        await proxy.methods.deployEVMAlienToken({
-            ...alienTokenBase,
-            ...alienTokenMeta,
-            remainingGasTo: initializer.address
-        }).send({
-            from: initializer.address,
-            amount: locklift.utils.toNano(15),
-        });
+    const [
+      {
+        data: { eventContract: expectedEventContract },
+      },
+    ] = events;
 
-        const alienTokenRootAddress = await proxy.methods
-            .deriveEVMAlienTokenRoot({
-                ...alienTokenBase,
-                ...alienTokenMeta,
-                answerId: 0
-            })
-            .call({ responsible: true });
+    logger.log(`Expected event address: ${expectedEventContract}`);
 
-        alienTokenRoot = locklift.factory.getDeployedContract(
-            'TokenRootAlienEVM',
-            alienTokenRootAddress.value0
-        );
+    eventContract = locklift.factory.getDeployedContract("MultiVaultEverscaleEVMEventAlien", expectedEventContract);
+  });
 
-        await logContract("Alien token root", alienTokenRoot.address);
-    });
+  it("Check event contract exists", async () => {
+    expect(Number(await locklift.provider.getBalance(eventContract.address))).to.be.greaterThan(
+      0,
+      "Event contract balance is zero",
+    );
+  });
 
-    it('Deploy merge router', async () => {
-        await proxy.methods.deployMergeRouter({
-            token: alienTokenRoot.address
-        }).send({
-            from: initializer.address,
-            amount: locklift.utils.toNano(5)
-        });
+  it("Check total supply reduced", async () => {
+    const totalSupply = await customTokenRoot.methods.totalSupply({ answerId: 0 }).call({ responsible: true });
 
-        const mergeRouterAddress = await proxy.methods
-            .deriveMergeRouter({
-                answerId: 0,
-                token: alienTokenRoot.address
-            })
-            .call({ responsible: true });
+    expect(Number(totalSupply.value0)).to.be.equal(mintAmount - amount, "Wrong total supply after burn");
+  });
 
-        mergeRouter = locklift.factory.getDeployedContract(
-            'MergeRouter',
-            mergeRouterAddress.router
-        );
+  it("Check initializer token balance reduced", async () => {
+    const balance = await initializerCustomTokenWallet.methods.balance({ answerId: 0 }).call({ responsible: true });
 
-        await logContract("Merge router", mergeRouter.address);
-    });
+    expect(Number(balance.value0)).to.be.equal(mintAmount - amount, "Wrong initializer token balance after burn");
+  });
 
-    it('Deploy merge pool', async () => {
-        const nonce = locklift.utils.getRandomNonce();
+  it("Check sender address", async () => {
+    const sender = await eventContract.methods.sender({}).call();
 
-        await proxy.methods.deployMergePool({
-            nonce,
-            tokens: [alienTokenRoot.address, customTokenRoot.address],
-            canonId: 1
-        }).send({
-            from: initializer.address,
-            amount: locklift.utils.toNano(5)
-        });
+    expect(sender.toString()).to.be.equal(initializer.toString(), "Wrong sender");
+  });
 
-        const mergePoolAddress = await proxy.methods
-            .deriveMergePool({
-                nonce,
-                answerId: 0
-            })
-            .call({ responsible: true });
+  it("Check event data after mutation", async () => {
+    const decodedData = await eventContract.methods.getDecodedData({ answerId: 0 }).call({ responsible: true });
 
-        mergePool =locklift.factory.getDeployedContract(
-            'MergePool_V3',
-            mergePoolAddress.pool
-        );
+    expect(Number(decodedData.base_token_)).to.be.equal(alienTokenBase.token, "Wrong alien base token");
+    expect(Number(decodedData.base_chainId_)).to.be.equal(alienTokenBase.chainId, "Wrong alien base chain id");
 
-        await logContract("MergePool", mergePool.address);
-    });
+    const eventInitData = await eventContract.methods.getEventInitData({ answerId: 0 }).call({ responsible: true });
 
-    it('Enable merge pool tokens', async () => {
-        await mergePool.methods.enableAll().send({
-            from: bridgeOwner.address,
-            amount: locklift.utils.toNano(1)
-        });
+    const decodedEventData = await cellEncoder.methods
+      .decodeMultiVaultAlienEverscaleEthereum({
+        data: eventInitData.value0.voteData.eventData,
+      })
+      .call();
 
-        const tokens = await mergePool.methods
-            .getTokens({ answerId: 0 })
-            .call({ responsible: true });
+    expect(Number(decodedEventData.base_token)).to.be.equal(alienTokenBase.token, "Wrong event data base token");
+    expect(Number(decodedEventData.base_chainId)).to.be.equal(alienTokenBase.chainId, "Wrong event data base chain id");
+    expect(Number(decodedEventData.amount)).to.be.equal(
+      Math.floor(amount / 10 ** (customTokenMeta.decimals - alienTokenMeta.decimals)),
+      "Wrong event data amount",
+    );
+    expect(Number(decodedEventData.recipient)).to.be.equal(recipient, "Wrong event data recipient");
+  });
 
-        expect(tokens._tokens[0][1].enabled)
-            .to.be.equal(true, 'Wrong alien status');
-        expect(tokens._tokens[1][1].enabled)
-            .to.be.equal(true, 'Wrong canon status');
+  it("Confirm event", async () => {
+    await processEvent(relays, eventContract.address, EventType.EverscaleEthereum, EventAction.Confirm);
+  });
 
-        expect(tokens._canon.toString())
-            .to.be.equal(customTokenRoot.address.toString(), 'Wrong canon token');
-    });
+  it("Close event", async () => {
+    const balance = await locklift.provider.getBalance(eventContract.address);
 
-    it('Burn tokens in favor of merge pool', async () => {
-        const burnPayload = await cellEncoder.methods.encodeMergePoolBurnWithdrawPayloadEthereum({
-            targetToken: alienTokenRoot.address,
-            recipient,
-            callback: {
-                recipient: 0,
-                strict: false,
-                payload: ''
-            }
-        }).call();
+    const { traceTree } = await locklift.tracing.trace(
+      eventContract.methods.close().send({
+        from: eventCloser.address,
+        amount: locklift.utils.toNano(0.1),
+      }),
+    );
 
-        const tx = await initializerCustomTokenWallet.methods.burn({
-            amount,
-            remainingGasTo: eventCloser.address,
-            callbackTo: mergePool.address,
-            payload: burnPayload.value0
-        }).send({
-            from: initializer.address,
-            amount: locklift.utils.toNano(10)
-        });
+    expect(Number(await locklift.provider.getBalance(eventContract.address))).to.be.equal(
+      0,
+      "Event contract balance should be 0 after close",
+    );
 
-        logger.log(`Event initialization tx: ${tx.id.hash}`);
-
-        const events = await everscaleEthereumEventConfiguration
-            .getPastEvents({ filter: "NewEventContract" })
-            .then((e) => e.events);
-
-        expect(events).to.have.lengthOf(
-            1,
-            "Everscale event configuration failed to deploy event"
-        );
-
-        const [
-            {
-                data: {
-                    eventContract: expectedEventContract
-                },
-            },
-        ] = events;
-
-        logger.log(`Expected event address: ${expectedEventContract}`);
-
-        eventContract = locklift.factory.getDeployedContract(
-            "MultiVaultEverscaleEVMEventAlien",
-            expectedEventContract
-        );
-    });
-
-    it("Check event contract exists", async () => {
-        expect(
-            Number(await locklift.provider.getBalance(eventContract.address))
-        ).to.be.greaterThan(0, "Event contract balance is zero");
-    });
-
-    it('Check total supply reduced', async () => {
-        const totalSupply = await customTokenRoot.methods
-            .totalSupply({ answerId: 0 })
-            .call({ responsible: true });
-
-        expect(Number(totalSupply.value0))
-            .to.be.equal(mintAmount - amount, 'Wrong total supply after burn');
-    });
-
-    it('Check initializer token balance reduced', async () => {
-        const balance = await initializerCustomTokenWallet.methods
-            .balance({ answerId: 0 })
-            .call({ responsible: true });
-
-        expect(Number(balance.value0))
-            .to.be.equal(mintAmount - amount, 'Wrong initializer token balance after burn')
-    });
-
-    it('Check sender address', async () => {
-        const sender = await eventContract.methods.sender({}).call();
-
-        expect(sender.toString())
-            .to.be.equal(initializer.toString(), 'Wrong sender');
-    });
-
-    it('Check event data after mutation', async () => {
-        const decodedData = await eventContract.methods
-            .getDecodedData({ answerId: 0 })
-            .call({ responsible: true });
-
-        expect(Number(decodedData.base_token_))
-            .to.be.equal(alienTokenBase.token, 'Wrong alien base token');
-        expect(Number(decodedData.base_chainId_))
-            .to.be.equal(alienTokenBase.chainId, 'Wrong alien base chain id');
-
-        const eventInitData = await eventContract.methods
-            .getEventInitData({ answerId: 0 })
-            .call({ responsible: true });
-
-        const decodedEventData = await cellEncoder.methods.decodeMultiVaultAlienEverscaleEthereum({
-            data: eventInitData.value0.voteData.eventData
-        }).call();
-
-        expect(Number(decodedEventData.base_token))
-            .to.be.equal(alienTokenBase.token, 'Wrong event data base token');
-        expect(Number(decodedEventData.base_chainId))
-            .to.be.equal(alienTokenBase.chainId, 'Wrong event data base chain id');
-        expect(Number(decodedEventData.amount))
-            .to.be.equal(
-                Math.floor(amount / (10**(customTokenMeta.decimals-alienTokenMeta.decimals))),
-            'Wrong event data amount'
-            );
-        expect(Number(decodedEventData.recipient))
-            .to.be.equal(recipient, 'Wrong event data recipient');
-    });
-
-    it('Confirm event', async () => {
-        await processEvent(
-            relays,
-            eventContract.address,
-            EventType.EverscaleEthereum,
-            EventAction.Confirm
-        );
-    });
-
-    it('Close event', async () => {
-        const balance = await locklift.provider.getBalance(eventContract.address);
-
-        const { traceTree } = await locklift.tracing.trace(
-            eventContract.methods.close().send({
-                from: eventCloser.address,
-                amount: locklift.utils.toNano(0.1)
-            })
-        );
-
-        expect(Number(await locklift.provider.getBalance(eventContract.address)))
-            .to.be.equal(0, 'Event contract balance should be 0 after close');
-
-        expect(Number(traceTree?.getBalanceDiff(eventCloser.address)))
-            .to.be.greaterThan(
-            Number(balance) - Number(locklift.utils.toNano(1)), // Greater than balance - 1 ton for fees
-            "Initializer should get money back after close"
-        );
-    });
+    expect(Number(traceTree?.getBalanceDiff(eventCloser.address))).to.be.greaterThan(
+      Number(balance) - Number(locklift.utils.toNano(1)), // Greater than balance - 1 ton for fees
+      "Initializer should get money back after close",
+    );
+  });
 });

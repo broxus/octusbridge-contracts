@@ -4,7 +4,7 @@ pragma AbiHeader pubkey;
 pragma AbiHeader expire;
 
 
-import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V8.tsol";
+import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V9.tsol";
 
 import "./../../../interfaces/event-contracts/multivault/solana/IMultiVaultSolanaEverscaleEventAlien.tsol";
 import "./../../../interfaces/event-configuration-contracts/ISolanaEverscaleEventConfiguration.tsol";
@@ -117,7 +117,7 @@ contract MultiVaultSolanaEverscaleEventAlien is
 
         proxy = _networkConfiguration.proxy;
 
-        IProxyMultiVaultAlien_V8(proxy).deriveSolanaAlienTokenRoot{
+        IProxyMultiVaultAlien_V9(proxy).deriveSolanaAlienTokenRoot{
             value: gasToValue(Gas.DERIVE_TOKEN_ROOT_GAS, address(this).wid),
             callback: MultiVaultSolanaEverscaleEventAlien.receiveAlienTokenRoot
         }(
@@ -153,7 +153,7 @@ contract MultiVaultSolanaEverscaleEventAlien is
     function _requestMergeRouter() internal view {
         // Token exists, no need to deploy
         // Ask the router address
-        IProxyMultiVaultAlien_V8(proxy).deriveMergeRouter{
+        IProxyMultiVaultAlien_V9(proxy).deriveMergeRouter{
             value: gasToValue(Gas.REQUEST_MERGE_ROUTER_GAS, address(this).wid),
             bounce: false,
             callback: MultiVaultSolanaEverscaleEventAlien.receiveMergeRouter
@@ -294,7 +294,7 @@ contract MultiVaultSolanaEverscaleEventAlien is
         ) {
             // Failed to request token meta
             // Seems like corresponding token root not deployed so deploy it
-            IProxyMultiVaultAlien_V8(proxy).deploySolanaAlienToken{
+            IProxyMultiVaultAlien_V9(proxy).deploySolanaAlienToken{
                 value: Gas.getDeployTokenRootValue(),
                 bounce: false
             }(
@@ -312,7 +312,7 @@ contract MultiVaultSolanaEverscaleEventAlien is
         ) {
             // Failed to request router's pool
             // Seems like corresponding router not deployed so deploy it
-            IProxyMultiVaultAlien_V8(proxy).deployMergeRouter{
+            IProxyMultiVaultAlien_V9(proxy).deployMergeRouter{
                 value: gasToValue(Gas.DEPLOY_MERGE_ROUTER_GAS, address(this).wid),
                 bounce: false
             }(token);

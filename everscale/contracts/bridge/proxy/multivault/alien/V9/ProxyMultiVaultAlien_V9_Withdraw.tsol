@@ -8,13 +8,13 @@ import "./../../../../interfaces/event-contracts/IEverscaleEthereumEvent.tsol";
 import "./../../../../interfaces/event-configuration-contracts/IEverscaleSolanaEventConfiguration.tsol";
 import "./../../../../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.tsol";
 
-import "./ProxyMultiVaultAlien_V8_Deposit_EVM.tsol";
+import "./ProxyMultiVaultAlien_V9_Deposit_EVM.tsol";
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensBurnCallback.tsol";
 
 
-abstract contract ProxyMultiVaultAlien_V8_Withdraw is
-ProxyMultiVaultAlien_V8_Deposit_EVM,
+abstract contract ProxyMultiVaultAlien_V9_Withdraw is
+    ProxyMultiVaultAlien_V9_Deposit_EVM,
     IAcceptTokensBurnCallback
 {
     /// @notice Handles token burn.
@@ -70,6 +70,15 @@ ProxyMultiVaultAlien_V8_Deposit_EVM,
                 remainingGasTo,
                 sender,
                 callback
+            );
+        } else if (network == Network.TVM) {
+            _emitTVMEvent(
+                nonce,
+                msg.sender,
+                amount,
+                remainingGasTo,
+                sender,
+                burnPayload
             );
         }
     }
@@ -147,5 +156,84 @@ ProxyMultiVaultAlien_V8_Deposit_EVM,
                 bounce: false,
                 flag: MsgFlag.ALL_NOT_RESERVED
         }(eventVoteData);
+    }
+
+    function _emitTVMEvent(
+        uint32 /*nonce*/,
+        address token,
+        uint128 amount,
+        address remainingGasTo,
+        address /*sender*/,
+        TvmCell withdrawPayload
+    ) internal pure {
+        TvmCell payload = abi.encode(
+//            nonce,
+            amount,
+            remainingGasTo,
+//            sender,
+            withdrawPayload
+        );
+
+        ITokenRootAlienTVM(token).meta{
+            value: MsgFlag.ALL_NOT_RESERVED,
+            callback: ProxyMultiVaultAlien_V9_Withdraw.receiveTokenRootAlienTvmMeta
+        }(payload);
+    }
+
+    function receiveTokenRootAlienTvmMeta(
+        uint256 base_chainId,
+        address base_token,
+        string name,
+        string symbol,
+        uint8 decimals,
+        TvmCell payload
+    ) public reserveAtLeastTargetBalance {
+        require(
+            msg.sender == deriveTVMAlienTokenRoot(base_chainId, base_token, name, symbol, decimals),
+            ErrorCodes.BAD_SENDER
+        );
+
+        (
+//            uint32 nonce,
+            uint128 amount,
+            address remainingGasTo,
+            address sender,
+            TvmCell withdrawPayload
+        ) = abi.decode(payload, (
+//            uint32,
+            uint128,
+            address,
+            address,
+            TvmCell
+        ));
+
+        (
+            address recipient,
+            uint256 expectedGas,
+            TvmCell eventPayload
+        ) = abi.decode(withdrawPayload, (
+            address,
+            uint256,
+            TvmCell
+        ));
+
+        emit TvmTvmAlien(
+            base_chainId,
+            base_token,
+            amount,
+            recipient,
+
+            msg.value, // todo subtract the cost of the current transaction
+            expectedGas,
+            remainingGasTo,
+            sender,
+            eventPayload
+        );
+
+        remainingGasTo.transfer({
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+            bounce: false
+        });
     }
 }

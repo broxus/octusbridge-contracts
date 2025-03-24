@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma ever-solidity >= 0.62.0;
 
-import "../../../../interfaces/proxy/multivault/native/IProxyMultiVaultNative_V3.tsol";
-import "../../../../interfaces/proxy/multivault/native/IProxyMultiVaultNative_V1.tsol";
+import "../../../../interfaces/proxy/multivault/native/IProxyMultiVaultNative_V7.tsol";
 
 import "../../../../../utils/TransferUtils.tsol";
 import "../../../../../utils/ErrorCodes.tsol";
@@ -14,11 +13,14 @@ import "@broxus/contracts/contracts/access/InternalOwner.tsol";
 import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 
-abstract contract ProxyMultiVaultNative_V6_Base is IProxyMultiVaultNative_V3, InternalOwner, TransferUtils {
+abstract contract ProxyMultiVaultNative_V7_Base is IProxyMultiVaultNative_V7, InternalOwner, TransferUtils {
     EVMConfiguration evmConfiguration;
     SolanaConfiguration solanaConfiguration;
+    TVMConfiguration tvmConfiguration;
+
     uint8 api_version;
     address public dex_middleware;
+    address proxyMultiVaultAlien;
 
     /// @notice Get current contract API version.
     /// Each time contract is upgraded, API version is incremented.
@@ -29,6 +31,10 @@ abstract contract ProxyMultiVaultNative_V6_Base is IProxyMultiVaultNative_V3, In
 
     function setDexMiddleware(address _dex_middleware) external onlyOwner cashBack {
         dex_middleware = _dex_middleware;
+    }
+
+    function setProxyMultiVaultAlien(address _proxyMultiVaultAlien) external onlyOwner cashBack {
+        proxyMultiVaultAlien = _proxyMultiVaultAlien;
     }
 
     function getConfiguration()
@@ -52,6 +58,13 @@ abstract contract ProxyMultiVaultNative_V6_Base is IProxyMultiVaultNative_V3, In
         address remainingGasTo
     ) override external onlyOwner cashBackTo(remainingGasTo) {
         solanaConfiguration = _config;
+    }
+
+    function setTVMConfiguration(
+        TVMConfiguration _config,
+        address remainingGasTo
+    ) override external onlyOwner cashBackTo(remainingGasTo) {
+        tvmConfiguration = _config;
     }
 
     function _transferTokens(
