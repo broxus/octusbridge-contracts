@@ -48,8 +48,9 @@ contract MultiVaultTvmTvmEventNative is
         require(status != Status.Confirmed, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
         require(msg.sender == eventInitData.configuration, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
 
-        TvmCell data = eventBody.toSlice().loadRef();
+        optional(TvmCell) data = eventBody.toSlice().decode(optional(TvmCell));
         (
+            /*functionId*/,
             /*chain_id*/,
             token,
             amount,
@@ -60,14 +61,12 @@ contract MultiVaultTvmTvmEventNative is
             /*remaining_gas_to*/,
             /*sender*/,
             payload
-        ) = abi.decode(
-            data,
-            (
-                uint256, address, uint128, address,
-                uint256, uint256, address, address,
-                TvmCell
-            )
-        );
+        ) = abi.decode(data.get(), (
+            uint32, int32,
+            address, uint128, address,
+            uint256, uint256, address, address,
+            TvmCell
+        ));
 
         // return gas in case event contract is less than required
         if (address(this).balance < expected_gas) {
@@ -81,8 +80,6 @@ contract MultiVaultTvmTvmEventNative is
         }
 
         status = Status.Pending;
-
-        // todo call transactionChecker to validate eventVoteData (callback onTransactionCheck)
 
         uint256 txHash = 0; // todo use BocDecoder
         ITrustlessVerifier(transactionChecker)

@@ -91,7 +91,7 @@ contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
 
     function encodeNativeTransferPayloadTVM(
         address recipient,
-        uint256 chainId,
+        int32 chainId,
         string name,
         string symbol,
         uint8 decimals,

@@ -161,7 +161,7 @@ interface IProxyMultiVaultAlien_V9 is IEVMCallback, INetworks {
     ) external responsible returns (address);
 
     function deriveTVMAlienTokenRoot(
-        uint256 base_chainId,
+        int32 base_chainId,
         address base_token,
         string name,
         string symbol,
@@ -187,7 +187,7 @@ interface IProxyMultiVaultAlien_V9 is IEVMCallback, INetworks {
     ) external;
 
     function deployTVMAlienToken(
-        uint256 chainId,
+        int32 chainId,
         address token,
         string name,
         string symbol,
@@ -196,7 +196,7 @@ interface IProxyMultiVaultAlien_V9 is IEVMCallback, INetworks {
     ) external;
 
     event TvmTvmAlien(
-        uint256 chainId,
+        int32 chainId,
         address token,
         uint128 amount,
         address recipient,

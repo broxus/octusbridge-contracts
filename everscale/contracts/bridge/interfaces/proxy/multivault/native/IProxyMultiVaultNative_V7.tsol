@@ -30,7 +30,7 @@ interface IProxyMultiVaultNative_V7 is IEVMCallback, INetworks {
     // Events specification
 
     event TvmTvmNative(
-        uint256 chainId,
+        int32 chainId,
 
         address token,
         string name,

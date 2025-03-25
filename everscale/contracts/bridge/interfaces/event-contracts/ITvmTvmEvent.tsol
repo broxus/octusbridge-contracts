@@ -17,7 +17,7 @@ interface ITvmTvmEvent {
     struct TvmTvmEventInitData {
         uint msgHash;
         address configuration;
-        uint32 chainId;
+        int32 chainId;
     }
 
     function processProof(ITvmTvmEvent.TvmTvmEventVoteData eventVoteData) external;

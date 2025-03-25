@@ -60,8 +60,6 @@ contract MultiVaultTvmTvmEventAlien is
 
         status = Status.Pending;
 
-        // todo call transactionChecker to validate eventVoteData (callback onTransactionCheck)
-
         uint256 txHash = 0; // todo use BocDecoder
         ITrustlessVerifier(transactionChecker)
             .verifyTx{
@@ -308,9 +306,10 @@ contract MultiVaultTvmTvmEventAlien is
     }
 
     function getEventData() public override responsible returns(EventData) {
-        TvmCell data = eventBody.toSlice().loadRef();
+        optional(TvmCell) data = eventBody.toSlice().decode(optional(TvmCell));
 
         (
+            /*functionId*/,
             /*chainId*/,
 
             address base_token,
@@ -328,17 +327,14 @@ contract MultiVaultTvmTvmEventAlien is
             /*sender*/,
 
             TvmCell payload
-        ) = abi.decode(
-            data,
-            (
-                uint256,
-                address, string, string, uint8,
-                uint128, address,
-                uint256, uint256,
-                address, address,
-                TvmCell
-            )
-        );
+        ) = abi.decode(data.get(), (
+            uint32, int32,
+            address, string, string, uint8,
+            uint128, address,
+            uint256, uint256,
+            address, address,
+            TvmCell
+        ));
 
         return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} EventData(
             eventInitData.chainId,
@@ -479,7 +475,7 @@ contract MultiVaultTvmTvmEventAlien is
 
     // ==== Legacy ====
     function getDecodedData() external override responsible returns(
-        uint256 base_chainId_,
+        int32 base_chainId_,
         address base_token_,
         string name_,
         string symbol_,

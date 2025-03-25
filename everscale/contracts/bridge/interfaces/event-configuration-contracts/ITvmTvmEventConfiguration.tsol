@@ -6,7 +6,7 @@ import "./../event-contracts/ITvmTvmEvent.tsol";
 
 interface ITvmTvmEventConfiguration is IBasicEventConfiguration {
     struct TvmTvmEventConfiguration {
-        uint32 chainId;
+        int32 chainId;
         address proxy;
         uint32 startTimestamp;
         uint32 endTimestamp;

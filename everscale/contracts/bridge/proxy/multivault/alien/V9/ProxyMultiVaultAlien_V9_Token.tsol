@@ -106,7 +106,7 @@ abstract contract ProxyMultiVaultAlien_V9_Token is ProxyMultivaultAlien_V9_Base 
     }
 
     function deployTVMAlienToken(
-        uint256 chainId,
+        int32 chainId,
         address token,
         string name,
         string symbol,
@@ -182,7 +182,7 @@ abstract contract ProxyMultiVaultAlien_V9_Token is ProxyMultivaultAlien_V9_Base 
     }
 
     function deriveTVMAlienTokenRoot(
-        uint256 chainId,
+        int32 chainId,
         address token,
         string name,
         string symbol,
@@ -260,7 +260,7 @@ abstract contract ProxyMultiVaultAlien_V9_Token is ProxyMultivaultAlien_V9_Base 
     }
 
     function _buildTVMAlienTokenRootInitState(
-        uint256 chainId,
+        int32 chainId,
         address token,
         string name,
         string symbol,

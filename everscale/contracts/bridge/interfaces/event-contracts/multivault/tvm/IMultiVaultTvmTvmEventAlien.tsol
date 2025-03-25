@@ -7,7 +7,7 @@ import "./../../../alien-token-merge/merge-pool/IMergePool_V2.tsol";
 
 interface IMultiVaultTvmTvmEventAlien {
     struct EventData {
-        uint256 base_chainId;
+        int32 base_chainId;
         address base_token;
 
         string name;
@@ -76,7 +76,7 @@ interface IMultiVaultTvmTvmEventAlien {
 
     // Legacy
     function getDecodedData() external responsible returns(
-        uint256 base_chainId_,
+        int32 base_chainId_,
         address base_token_,
         string name_,
         string symbol_,

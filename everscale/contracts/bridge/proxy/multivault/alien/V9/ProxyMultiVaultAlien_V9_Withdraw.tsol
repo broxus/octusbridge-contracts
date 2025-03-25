@@ -163,25 +163,26 @@ abstract contract ProxyMultiVaultAlien_V9_Withdraw is
         address token,
         uint128 amount,
         address remainingGasTo,
-        address /*sender*/,
+        address sender,
         TvmCell withdrawPayload
     ) internal pure {
         TvmCell payload = abi.encode(
 //            nonce,
             amount,
             remainingGasTo,
-//            sender,
+            sender,
             withdrawPayload
         );
 
         ITokenRootAlienTVM(token).meta{
-            value: MsgFlag.ALL_NOT_RESERVED,
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED,
             callback: ProxyMultiVaultAlien_V9_Withdraw.receiveTokenRootAlienTvmMeta
         }(payload);
     }
 
     function receiveTokenRootAlienTvmMeta(
-        uint256 base_chainId,
+        int32 base_chainId,
         address base_token,
         string name,
         string symbol,

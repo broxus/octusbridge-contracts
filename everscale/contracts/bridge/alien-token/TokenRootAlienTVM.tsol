@@ -10,7 +10,7 @@ import "ton-eth-bridge-token-contracts/contracts/TokenRootUpgradeable.tsol";
 import "./../interfaces/alien-token/ITokenRootAlienTVM.tsol";
 
 contract TokenRootAlienTVM is TokenRootUpgradeable, ITokenRootAlienTVM {
-    uint256 static base_chainId_;
+    int32 static base_chainId_;
     address static base_token_;
 
     constructor(
@@ -32,7 +32,7 @@ contract TokenRootAlienTVM is TokenRootUpgradeable, ITokenRootAlienTVM {
     ) {}
 
     function meta(TvmCell _payload) external override responsible returns (
-        uint256 base_chainId,
+        int32 base_chainId,
         address base_token,
         string name,
         string symbol,
