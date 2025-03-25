@@ -17,6 +17,8 @@ export type Config = {
     ETH_CONFIRMS_COUNT: Record<number, number>;
 
     TVM_CHAIN_IDS: number[];
+    TRANSACTION_CHECKER: string;
+    TVM_EVENT_EMITTERS: Record<number, { alien: string; native: string; }>;
 
     GAS: Record<string, string>;
 };

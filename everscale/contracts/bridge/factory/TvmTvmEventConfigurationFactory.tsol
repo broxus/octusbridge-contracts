@@ -11,18 +11,24 @@ import "../interfaces/event-configuration-contracts/ITvmTvmEventConfiguration.ts
 
 contract TvmTvmEventConfigurationFactory is TransferUtils, RandomNonce, CheckPubKey {
     TvmCell public configurationCode;
+    address public transactionChecker;
 
-    constructor(TvmCell _configurationCode) public checkPubKey {
+    constructor(
+        TvmCell _configurationCode,
+        address _transactionChecker
+    ) public checkPubKey {
         tvm.accept();
 
         configurationCode = _configurationCode;
+        transactionChecker = _transactionChecker;
     }
 
     function deploy(
         address _owner,
         uint64 _flags,
         IBasicEventConfiguration.BasicConfiguration basicConfiguration,
-        ITvmTvmEventConfiguration.TvmTvmEventConfiguration networkConfiguration
+        ITvmTvmEventConfiguration.TvmTvmEventConfiguration networkConfiguration,
+        address _eventEmitter
     ) external view reserveMinBalance(Gas.CONFIGURATION_FACTORY_INITIAL_BALANCE) {
         TvmCell _meta;
 
@@ -32,6 +38,8 @@ contract TvmTvmEventConfigurationFactory is TransferUtils, RandomNonce, CheckPub
             code: configurationCode,
             pubkey: 0,
             varInit: {
+                eventEmitter: _eventEmitter,
+                transactionChecker: transactionChecker,
                 basicConfiguration: basicConfiguration,
                 networkConfiguration: networkConfiguration
             }
@@ -40,11 +48,14 @@ contract TvmTvmEventConfigurationFactory is TransferUtils, RandomNonce, CheckPub
 
     function deriveConfigurationAddress(
         IBasicEventConfiguration.BasicConfiguration basicConfiguration,
-        ITvmTvmEventConfiguration.TvmTvmEventConfiguration networkConfiguration
+        ITvmTvmEventConfiguration.TvmTvmEventConfiguration networkConfiguration,
+        address _eventEmitter
     ) external view returns (address) {
         TvmCell stateInit = tvm.buildStateInit({
             contr: TvmTvmEventConfiguration,
             varInit: {
+                eventEmitter: _eventEmitter,
+                transactionChecker: transactionChecker,
                 basicConfiguration: basicConfiguration,
                 networkConfiguration: networkConfiguration
             },

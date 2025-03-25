@@ -1,4 +1,4 @@
-import { Contract } from "locklift";
+import { Contract, Address } from "locklift";
 import { BigNumber } from "bignumber.js";
 import { Account } from "everscale-standalone-client/nodejs";
 import { getConfig } from "./configs";
@@ -171,6 +171,7 @@ const main = async (): Promise<void> => {
           startTimestamp: START_TIMESTAMP,
           endTimestamp: 0,
         },
+        _eventEmitter: new Address(config?.TVM_EVENT_EMITTERS[chainId].native),
       };
 
       await locklift.tracing.trace(
@@ -185,6 +186,7 @@ const main = async (): Promise<void> => {
         .deriveConfigurationAddress({
           networkConfiguration: tvmTvmAlienConfiguration.networkConfiguration,
           basicConfiguration: tvmTvmAlienConfiguration.basicConfiguration,
+          _eventEmitter: new Address(config?.TVM_EVENT_EMITTERS[chainId].native)
         })
         .call()
         .then(r => locklift.factory.getDeployedContract("TvmTvmEventConfiguration", r.value0));
@@ -216,6 +218,7 @@ const main = async (): Promise<void> => {
           startTimestamp: START_TIMESTAMP,
           endTimestamp: 0,
         },
+        _eventEmitter: new Address(config?.TVM_EVENT_EMITTERS[chainId].alien),
       };
 
       await locklift.tracing.trace(
@@ -230,6 +233,7 @@ const main = async (): Promise<void> => {
         .deriveConfigurationAddress({
           basicConfiguration: tvmTvmNativeConfiguration.basicConfiguration,
           networkConfiguration: tvmTvmNativeConfiguration.networkConfiguration,
+          _eventEmitter: new Address(config?.TVM_EVENT_EMITTERS[chainId].alien),
         })
         .call()
         .then(r => locklift.factory.getDeployedContract("TvmTvmEventConfiguration", r.value0));

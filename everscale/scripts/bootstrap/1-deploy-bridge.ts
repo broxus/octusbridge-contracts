@@ -1,4 +1,4 @@
-import { Contract, getRandomNonce, Signer, WalletTypes, zeroAddress } from "locklift";
+import { Contract, getRandomNonce, Signer, WalletTypes, zeroAddress, Address } from "locklift";
 import { Account } from "everscale-standalone-client/nodejs";
 import { BigNumber } from "bignumber.js";
 import assert from "node:assert";
@@ -122,6 +122,7 @@ const deployConfigFactories = async (
     contract: "TvmTvmEventConfigurationFactory",
     constructorParams: {
       _configurationCode: locklift.factory.getContractArtifacts("TvmTvmEventConfiguration").code,
+      _transactionChecker: new Address(config?.TRANSACTION_CHECKER),
     },
     initParams: { _randomNonce: getRandomNonce() },
     publicKey: signer.publicKey,

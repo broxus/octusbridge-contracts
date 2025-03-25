@@ -21,6 +21,17 @@ export const config: Config = {
     ETH_CONFIRMS_COUNT: { 1: 15, 56: 30, 43114: 200 },
 
     TVM_CHAIN_IDS: [123, 456],
+    TRANSACTION_CHECKER: '0:6e599d8d7d024abecb5890150e4457760c6fe6028a16753bb63602c145277542',
+    TVM_EVENT_EMITTERS: {
+        123: {
+            alien: '0:6e599d8d7d024abecb5890150e4457760c6fe6028a16753bb63602c145277542',
+            native: '0:6e599d8d7d024abecb5890150e4457760c6fe6028a16753bb63602c145277542',
+        },
+        456: {
+            alien: '0:6e599d8d7d024abecb5890150e4457760c6fe6028a16753bb63602c145277542',
+            native: '0:6e599d8d7d024abecb5890150e4457760c6fe6028a16753bb63602c145277542',
+        },
+    },
 
     GAS: {
         ROUND_DEPLOYER_INSTALL_PLATFORM_ONCE: toNano(11 * GAS_COEFF),
