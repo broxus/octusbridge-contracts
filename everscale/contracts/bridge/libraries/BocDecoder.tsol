@@ -3,10 +3,11 @@ pragma ever-solidity >= 0.62.0;
 library BocDecoder {
     function decodeBlockProof(TvmCell _proof) public returns (int32 chainId) {
         TvmSlice s = _proof.toSlice().loadRefAsSlice();
+        TvmSlice ss = s.loadRefAsSlice();
 
-        s.decode(uint32); // tag
+        ss.decode(uint32); // tag
 
-        return s.decode(int32);
+        return ss.decode(int32);
     }
 
     //transaction$0111 account_addr:bits256 lt:uint64
@@ -29,19 +30,20 @@ library BocDecoder {
         mapping(uint15 => TvmCell) outMessages
     ) {
         TvmSlice s = _txBoc.toSlice();
+        TvmSlice ss = s.loadRefAsSlice();
 
-        s.decode(uint4); // tag
+        ss.decode(uint4); // tag
 
-        accountAddr = s.decode(uint256);
-        lt = s.decode(uint64);
-        prevTransHash = s.decode(uint256);
-        prevTransLt = s.decode(uint64);
-        nowTimestamp = s.decode(uint32);
-        outmsgCnt = s.decode(uint15);
-        origStatus = s.decode(uint2);
-        endStatus = s.decode(uint2);
+        accountAddr = ss.decode(uint256);
+        lt = ss.decode(uint64);
+        prevTransHash = ss.decode(uint256);
+        prevTransLt = ss.decode(uint64);
+        nowTimestamp = ss.decode(uint32);
+        outmsgCnt = ss.decode(uint15);
+        origStatus = ss.decode(uint2);
+        endStatus = ss.decode(uint2);
 
-        TvmSlice messages = s.loadRefAsSlice();
+        TvmSlice messages = ss.loadRefAsSlice();
 
         inMessage = messages.decode(optional(TvmCell));
         outMessages = messages.decode(mapping(uint15 => TvmCell));
@@ -56,15 +58,16 @@ library BocDecoder {
         mapping(uint15 => TvmCell) outMessages
     ) {
         TvmSlice s = _txBoc.toSlice();
+        TvmSlice ss = s.loadRefAsSlice();
 
-        s.skip(4);
-        accountAddr = s.decode(uint256);
-        lt = s.decode(uint64);
-        s.skip(320);
-        nowTimestamp = s.decode(uint32);
-        s.skip(19);
+        ss.skip(4);
+        accountAddr = ss.decode(uint256);
+        lt = ss.decode(uint64);
+        ss.skip(320);
+        nowTimestamp = ss.decode(uint32);
+        ss.skip(19);
 
-        TvmSlice messages = s.loadRefAsSlice();
+        TvmSlice messages = ss.loadRefAsSlice();
 
         bool hasInMessage = messages.decode(bool);
 
@@ -80,7 +83,8 @@ library BocDecoder {
         uint256 _msgHash
     ) public returns (optional(TvmCell), optional(MessageDirection)) {
         TvmSlice s = _txBoc.toSlice();
-        TvmSlice messages = s.loadRefAsSlice();
+        TvmSlice ss = s.loadRefAsSlice();
+        TvmSlice messages = ss.loadRefAsSlice();
 
         TvmCell inMessage = messages.loadRef();
         mapping(uint15 => TvmCell) outMessages = messages.decode(mapping(uint15 => TvmCell));

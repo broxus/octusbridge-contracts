@@ -10,6 +10,8 @@ import {
   EthereumEverscaleEventConfigurationFactoryAbi,
   EverscaleEthereumEventConfigurationAbi,
   EverscaleEthereumEventConfigurationFactoryAbi,
+  TvmTvmEventConfigurationAbi,
+  TvmTvmEventConfigurationFactoryAbi,
   RoundDeployerAbi,
 } from "../../build/factorySource";
 
@@ -78,6 +80,7 @@ const deployConfigFactories = async (
 ): Promise<{
   ethEverEventConfigFactory: Contract<EthereumEverscaleEventConfigurationFactoryAbi>;
   everEthEventConfigFactory: Contract<EverscaleEthereumEventConfigurationFactoryAbi>;
+  tvmTvmEventConfigFactory: Contract<TvmTvmEventConfigurationFactoryAbi>;
 }> => {
   const { contract: ethEverEventConfigFactory } = await locklift.factory.deployContract({
     contract: "EthereumEverscaleEventConfigurationFactory",
@@ -115,9 +118,28 @@ const deployConfigFactories = async (
 
   console.log(`EverEthEventConfigFactory: ${everEthEventConfigFactory.address}`);
 
+  const { contract: tvmTvmEventConfigFactory } = await locklift.factory.deployContract({
+    contract: "TvmTvmEventConfigurationFactory",
+    constructorParams: {
+      _configurationCode: locklift.factory.getContractArtifacts("TvmTvmEventConfiguration").code,
+    },
+    initParams: { _randomNonce: getRandomNonce() },
+    publicKey: signer.publicKey,
+    value: config?.GAS.DEPLOY_CONFIGURATION_FACTORY,
+  });
+
+  await locklift.deployments.saveContract({
+    contractName: "TvmTvmEventConfigurationFactory",
+    address: tvmTvmEventConfigFactory.address,
+    deploymentName: "TvmTvmEventConfigFactory",
+  });
+
+  console.log(`TvmTvmEventConfigFactory: ${tvmTvmEventConfigFactory.address}`);
+
   return {
     ethEverEventConfigFactory,
     everEthEventConfigFactory,
+    tvmTvmEventConfigFactory,
   };
 };
 
@@ -245,6 +267,63 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
     }`,
   );
 
+  await locklift.tracing.trace(
+    proxyAlien.methods
+      .setTVMAlienTokenRootCode({
+        _tokenRootCode: locklift.factory.getContractArtifacts("TokenRootAlienTVM").code,
+        _remainingGasTo: admin.address,
+      })
+      .send({
+        from: admin.address,
+        amount: config?.GAS.PROXY_MULTI_VAULT_SET_EVM_TOKEN_ROOT,
+        bounce: true,
+      }),
+  );
+
+  console.log(
+    `Set TVM token root to alien proxy. Code hash: ${
+      locklift.factory.getContractArtifacts("TokenRootAlienTVM").codeHash
+    }`,
+  );
+
+  await locklift.tracing.trace(
+    proxyAlien.methods
+      .setTVMAlienTokenWalletCode({
+        _tokenWalletCode: locklift.factory.getContractArtifacts("AlienTokenWalletUpgradeable").code,
+        _remainingGasTo: admin.address,
+      })
+      .send({
+        from: admin.address,
+        amount: config?.GAS.PROXY_MULTI_VAULT_SET_EVM_TOKEN_WALLET,
+        bounce: true,
+      }),
+  );
+
+  console.log(
+    `Set TVM token wallet to alien proxy. Code hash: ${
+      locklift.factory.getContractArtifacts("AlienTokenWalletUpgradeable").codeHash
+    }`,
+  );
+
+  await locklift.tracing.trace(
+    proxyAlien.methods
+      .setOnceTVMAlienTokenPlatformCode({
+        _tokenPlatformCode: locklift.factory.getContractArtifacts("AlienTokenWalletPlatform").code,
+        _remainingGasTo: admin.address,
+      })
+      .send({
+        from: admin.address,
+        amount: config?.GAS.PROXY_MULTI_VAULT_SET_ONCE_EVM_TOKEN_PLATFORM,
+        bounce: true,
+      }),
+  );
+
+  console.log(
+    `Set TVM token platform to alien proxy. Code hash: ${
+      locklift.factory.getContractArtifacts("AlienTokenWalletPlatform").codeHash
+    }`,
+  );
+
   const { contract: proxyNative } = await locklift.factory.deployContract({
     contract: "ProxyMultiVaultNative_V7",
     constructorParams: { owner_: admin.address },
@@ -260,6 +339,30 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
   });
 
   console.log(`ProxyMultiVaultNative: ${proxyNative.address}`);
+
+  await locklift.tracing.trace(
+    proxyAlien.methods
+      .setProxyMultiVaultNative({ _proxyMultiVaultNative: proxyNative.address })
+      .send({
+        from: admin.address,
+        amount: config?.GAS.PROXY_MULTI_VAULT_SET_ONCE_EVM_TOKEN_PLATFORM,
+        bounce: true,
+      }),
+  );
+
+  console.log('Set native proxy to alien proxy');
+
+  await locklift.tracing.trace(
+    proxyNative.methods
+      .setProxyMultiVaultAlien({ _proxyMultiVaultAlien: proxyAlien.address })
+      .send({
+        from: admin.address,
+        amount: config?.GAS.PROXY_MULTI_VAULT_SET_ONCE_EVM_TOKEN_PLATFORM,
+        bounce: true,
+      }),
+  );
+
+  console.log('Set alien proxy to native proxy');
 };
 
 const deployStakingConfigurations = async (
@@ -387,7 +490,7 @@ const deployStakingConfigurations = async (
 const deployConnectors = async (
   admin: Account,
   bridge: Contract<BridgeAbi>,
-  configurations: Contract<EthereumEverscaleEventConfigurationAbi | EverscaleEthereumEventConfigurationAbi>[],
+  configurations: Contract<EthereumEverscaleEventConfigurationAbi | EverscaleEthereumEventConfigurationAbi | TvmTvmEventConfigurationAbi>[],
 ): Promise<void> => {
   for (const configuration of configurations) {
     const { traceTree: ttConnector } = await locklift.tracing.trace(

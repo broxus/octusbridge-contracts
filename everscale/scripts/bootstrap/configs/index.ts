@@ -15,6 +15,9 @@ export type Config = {
     ETH_STAKING_RELAY_VERIFIER: string;
     ETH_LAST_BLOCK: Record<number, number>;
     ETH_CONFIRMS_COUNT: Record<number, number>;
+
+    TVM_CHAIN_IDS: number[];
+
     GAS: Record<string, string>;
 };
 

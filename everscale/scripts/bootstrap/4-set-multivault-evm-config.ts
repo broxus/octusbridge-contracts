@@ -1,4 +1,4 @@
-import { ProxyMultiVaultAlien_V8Abi, ProxyMultiVaultNative_V6Abi } from "../../build/factorySource";
+import { ProxyMultiVaultAlien_V9Abi, ProxyMultiVaultNative_V7Abi } from "../../build/factorySource";
 
 import { getConfig } from "./configs";
 import assert from "node:assert";
@@ -15,8 +15,8 @@ const DISABLE_CONFIGURATIONS: { address: Address, endBlock?: string, endTimestam
 
 const main = async (): Promise<void> => {
     const admin = locklift.deployments.getAccount('Admin').account;
-    const proxyMultiVaultAlien = locklift.deployments.getContract<ProxyMultiVaultAlien_V8Abi>('ProxyMultiVaultAlien');
-    const proxyMultiVaultNative = locklift.deployments.getContract<ProxyMultiVaultNative_V6Abi>('ProxyMultiVaultNative');
+    const proxyMultiVaultAlien = locklift.deployments.getContract<ProxyMultiVaultAlien_V9Abi>('ProxyMultiVaultAlien');
+    const proxyMultiVaultNative = locklift.deployments.getContract<ProxyMultiVaultNative_V7Abi>('ProxyMultiVaultNative');
 
     console.log('Set ProxyMultiVaultAlienJetton EVM configuration...');
 
@@ -58,6 +58,44 @@ const main = async (): Promise<void> => {
                 amount: config?.GAS.PROXY_MULTI_VAULT_SET_EVM_CONFIGURATION,
                 bounce: true,
             })
+    );
+
+    console.log('Set ProxyMultiVaultAlien TVM configuration...');
+
+    const alienTvmConfigurations = Object.keys(locklift.deployments.deploymentsStore)
+        .filter((n) => n.startsWith('NetworkConfig-TvmTvmAlien'))
+        .map((r) => locklift.deployments.getContract(r).address);
+
+    await locklift.tracing.trace(
+        proxyMultiVaultAlien.methods
+            .setTVMConfiguration({
+                _incomingConfigurations: alienTvmConfigurations,
+                _remainingGasTo: admin.address,
+            })
+            .send({
+          from: admin.address,
+          amount: config?.GAS.PROXY_MULTI_VAULT_SET_EVM_CONFIGURATION,
+          bounce: true,
+        })
+    );
+
+    console.log('Set ProxyMultiVaultNative TVM configuration...');
+
+    const nativeTvmConfigurations = Object.keys(locklift.deployments.deploymentsStore)
+        .filter((n) => n.startsWith('NetworkConfig-TvmTvmNative'))
+        .map((r) => locklift.deployments.getContract(r).address);
+
+    await locklift.tracing.trace(
+        proxyMultiVaultNative.methods
+            .setTVMConfiguration({
+              _config: { incomingConfigurations: nativeTvmConfigurations },
+              remainingGasTo: admin.address,
+            })
+            .send({
+          from: admin.address,
+          amount: config?.GAS.PROXY_MULTI_VAULT_SET_EVM_CONFIGURATION,
+          bounce: true,
+        })
     );
 
     for (const conf of DISABLE_CONFIGURATIONS) {

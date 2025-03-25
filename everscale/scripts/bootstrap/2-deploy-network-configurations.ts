@@ -10,6 +10,7 @@ import {
   MultiVaultEverscaleEVMEventAlienAbi,
   EthereumEverscaleEventConfigurationFactoryAbi,
   EverscaleEthereumEventConfigurationFactoryAbi,
+  TvmTvmEventConfigurationFactoryAbi,
   ProxyMultiVaultAlien_V9Abi,
   ProxyMultiVaultNative_V7Abi,
   RoundDeployerAbi,
@@ -126,6 +127,8 @@ const main = async (): Promise<void> => {
     locklift.deployments.getContract<EthereumEverscaleEventConfigurationFactoryAbi>("EthEverEventConfigFactory");
   const everEthEventConfigFactory =
     locklift.deployments.getContract<EverscaleEthereumEventConfigurationFactoryAbi>("EverEthEventConfigFactory");
+  const tvmTvmEventConfigFactory =
+    locklift.deployments.getContract<TvmTvmEventConfigurationFactoryAbi>("TvmTvmEventConfigFactory");
   const proxyMultiVaultAlien = locklift.deployments.getContract<ProxyMultiVaultAlien_V9Abi>("ProxyMultiVaultAlien");
   const proxyMultiVaultNative = locklift.deployments.getContract<ProxyMultiVaultNative_V7Abi>("ProxyMultiVaultNative");
   const bridge = locklift.deployments.getContract<BridgeAbi>("Bridge");
@@ -133,6 +136,7 @@ const main = async (): Promise<void> => {
 
   const ethEverFactoryConfigCode = await ethEverEventConfigFactory.methods.configurationCode().call();
   const everEthFactoryConfigCode = await everEthEventConfigFactory.methods.configurationCode().call();
+  const tvmTvmFactoryConfigCode = await tvmTvmEventConfigFactory.methods.configurationCode().call();
 
   assert(
     ethEverFactoryConfigCode.configurationCode ===
@@ -144,6 +148,103 @@ const main = async (): Promise<void> => {
       locklift.factory.getContractArtifacts("EverscaleEthereumEventConfiguration").code,
     "Different config codes on ever eth factory",
   );
+  assert(
+    tvmTvmFactoryConfigCode.configurationCode ===
+    locklift.factory.getContractArtifacts("TvmTvmEventConfiguration").code,
+    "Different config codes on tvm tvm factory",
+  );
+
+  for (const chainId of config.TVM_CHAIN_IDS) {
+    if (!locklift.deployments.deploymentsStore[`NetworkConfig-TvmTvmAlienEvent-${chainId}`]) {
+      const tvmTvmAlienConfiguration = {
+        _owner: admin.address,
+        _flags: 2,
+        basicConfiguration: {
+          eventABI: Buffer.from(JSON.stringify(ALIEN_TRANSFER_EVENT_ABI)).toString("base64"),
+          staking: roundDeployer.address,
+          eventInitialBalance: config?.GAS.CONFIGURATION_EVENT_INITIAL_BALANCE,
+          eventCode: locklift.factory.getContractArtifacts("MultiVaultTvmTvmEventAlien").code,
+        },
+        networkConfiguration: {
+          chainId: chainId,
+          proxy: proxyMultiVaultAlien.address,
+          startTimestamp: START_TIMESTAMP,
+          endTimestamp: 0,
+        },
+      };
+
+      await locklift.tracing.trace(
+        tvmTvmEventConfigFactory.methods.deploy(tvmTvmAlienConfiguration).send({
+          from: admin.address,
+          amount: config?.GAS.DEPLOY_CONFIGURATION,
+          bounce: true,
+        }),
+      );
+
+      const tvmTvmAlienConfig = await tvmTvmEventConfigFactory.methods
+        .deriveConfigurationAddress({
+          networkConfiguration: tvmTvmAlienConfiguration.networkConfiguration,
+          basicConfiguration: tvmTvmAlienConfiguration.basicConfiguration,
+        })
+        .call()
+        .then(r => locklift.factory.getDeployedContract("TvmTvmEventConfiguration", r.value0));
+
+      console.log(`TvmTvmAlienEventConfig-${chainId}: ${tvmTvmAlienConfig.address}`);
+
+      await locklift.deployments.saveContract({
+        contractName: "TvmTvmEventConfiguration",
+        address: tvmTvmAlienConfig.address,
+        deploymentName: `NetworkConfig-TvmTvmAlienEvent-${chainId}`,
+      });
+
+      await deployConnectors(admin, bridge, [tvmTvmAlienConfig] as never[]);
+    }
+
+    if (!locklift.deployments.deploymentsStore[`NetworkConfig-TvmTvmNativeEvent-${chainId}`]) {
+      const tvmTvmNativeConfiguration = {
+        _owner: admin.address,
+        _flags: 10,
+        basicConfiguration: {
+          eventABI: Buffer.from(JSON.stringify(NATIVE_TRANSFER_EVENT_ABI)).toString("base64"),
+          staking: roundDeployer.address,
+          eventInitialBalance: config?.GAS.CONFIGURATION_EVENT_INITIAL_BALANCE,
+          eventCode: locklift.factory.getContractArtifacts("MultiVaultTvmTvmEventNative").code,
+        },
+        networkConfiguration: {
+          chainId: chainId,
+          proxy: proxyMultiVaultNative.address,
+          startTimestamp: START_TIMESTAMP,
+          endTimestamp: 0,
+        },
+      };
+
+      await locklift.tracing.trace(
+        tvmTvmEventConfigFactory.methods.deploy(tvmTvmNativeConfiguration).send({
+          from: admin.address,
+          amount: config?.GAS.DEPLOY_CONFIGURATION,
+          bounce: true,
+        }),
+      );
+
+      const tvmTvmNativeConfig = await tvmTvmEventConfigFactory.methods
+        .deriveConfigurationAddress({
+          basicConfiguration: tvmTvmNativeConfiguration.basicConfiguration,
+          networkConfiguration: tvmTvmNativeConfiguration.networkConfiguration,
+        })
+        .call()
+        .then(r => locklift.factory.getDeployedContract("TvmTvmEventConfiguration", r.value0));
+
+      console.log(`TvmTvmNativeEventConfig-${chainId}: ${tvmTvmNativeConfig.address}`);
+
+      await locklift.deployments.saveContract({
+        contractName: "TvmTvmEventConfiguration",
+        address: tvmTvmNativeConfig.address,
+        deploymentName: `NetworkConfig-TvmTvmNativeEvent-${chainId}`,
+      });
+
+      await deployConnectors(admin, bridge, [tvmTvmNativeConfig] as never[]);
+    }
+  }
 
   for (const chainId of config.ETH_CHAIN_IDS) {
     if (!locklift.deployments.deploymentsStore[`NetworkConfig-EthEverAlienEvent-${chainId}`]) {
