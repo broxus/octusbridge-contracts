@@ -1,13 +1,18 @@
 pragma ever-solidity >= 0.62.0;
 
+function exoticCellToSlice(TvmCell a) assembly pure returns (TvmSlice, bool) {
+    "XCTOS",
+}
+
 library BocDecoder {
     function decodeBlockProof(TvmCell _proof) public returns (int32 chainId) {
-        TvmSlice s = _proof.toSlice().loadRefAsSlice();
-        TvmSlice ss = s.loadRefAsSlice();
+        (TvmSlice s, ) = exoticCellToSlice(_proof);
+        TvmSlice proofS = s.loadRefAsSlice();
+        TvmSlice blockS = proofS.loadRefAsSlice();
 
-        ss.load(uint32); // tag
+        blockS.load(uint32); // tag
 
-        return ss.load(int32);
+        return blockS.load(int32);
     }
 
     //transaction$0111 account_addr:bits256 lt:uint64
@@ -30,20 +35,19 @@ library BocDecoder {
         mapping(uint15 => TvmCell) outMessages
     ) {
         TvmSlice s = _txBoc.toSlice();
-        TvmSlice ss = s.loadRefAsSlice();
 
-        ss.load(uint4); // tag
+        s.load(uint4); // tag
 
-        accountAddr = ss.load(uint256);
-        lt = ss.load(uint64);
-        prevTransHash = ss.load(uint256);
-        prevTransLt = ss.load(uint64);
-        nowTimestamp = ss.load(uint32);
-        outmsgCnt = ss.load(uint15);
-        origStatus = ss.load(uint2);
-        endStatus = ss.load(uint2);
+        accountAddr = s.load(uint256);
+        lt = s.load(uint64);
+        prevTransHash = s.load(uint256);
+        prevTransLt = s.load(uint64);
+        nowTimestamp = s.load(uint32);
+        outmsgCnt = s.load(uint15);
+        origStatus = s.load(uint2);
+        endStatus = s.load(uint2);
 
-        TvmSlice messages = ss.loadRefAsSlice();
+        TvmSlice messages = s.loadRefAsSlice();
 
         inMessage = messages.load(optional(TvmCell));
         outMessages = messages.load(mapping(uint15 => TvmCell));
@@ -57,7 +61,7 @@ library BocDecoder {
         uint32 nowTimestamp,
         mapping(uint15 => TvmCell) outMessages
     ) {
-        TvmSlice s = _txBoc.toSlice();
+        (TvmSlice s, ) = exoticCellToSlice(_txBoc);
         TvmSlice ss = s.loadRefAsSlice();
 
         ss.skip(4);
@@ -83,8 +87,7 @@ library BocDecoder {
         uint256 _msgHash
     ) public returns (optional(TvmCell), optional(MessageDirection)) {
         TvmSlice s = _txBoc.toSlice();
-        TvmSlice ss = s.loadRefAsSlice();
-        TvmSlice messages = ss.loadRefAsSlice();
+        TvmSlice messages = s.loadRefAsSlice();
 
         TvmCell inMessage = messages.loadRef();
         mapping(uint15 => TvmCell) outMessages = messages.load(mapping(uint15 => TvmCell));
