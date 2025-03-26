@@ -53,7 +53,6 @@ contract TvmTvmBaseEvent is ITvmTvmEvent, TransferUtils {
     }
 
     function onConfirm() virtual internal {}
-    function onReject() virtual internal {}
 
     function onInit() virtual internal {
         onConfirm();

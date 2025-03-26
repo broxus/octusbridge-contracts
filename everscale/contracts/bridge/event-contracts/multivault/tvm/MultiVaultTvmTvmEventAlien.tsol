@@ -284,6 +284,8 @@ contract MultiVaultTvmTvmEventAlien is
 
     function onConfirm() internal override {
         if (status == Status.Confirmed && setupFinished) {
+            emit Confirmed();
+
             EventData eventData = getEventData();
             TransitionalData transitionalData = getTransitionalData();
 
@@ -299,10 +301,6 @@ contract MultiVaultTvmTvmEventAlien is
                 flag: MsgFlag.ALL_NOT_RESERVED
             }(eventInitData, metaData, initializer);
         }
-    }
-
-    function onReject() virtual override internal {
-        transferAll(initializer);
     }
 
     function getEventData() public override responsible returns(EventData) {
