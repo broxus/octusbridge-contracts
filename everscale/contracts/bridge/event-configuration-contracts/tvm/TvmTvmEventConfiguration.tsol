@@ -162,7 +162,7 @@ contract TvmTvmEventConfiguration is
         }
 
         int32 chainId = BocDecoder.decodeBlockProof(eventVoteData.txBlockProof);
-        require(chainId == networkConfiguration.chainId, ErrorCodes.WRONG_CHAIN_ID);
+        require(chainId == networkConfiguration.chainId, ErrorCodes.WRONG_DISPATCH_CHAIN_ID);
 
         (
             uint256 accountAddr,
@@ -179,7 +179,18 @@ contract TvmTvmEventConfiguration is
 
         (, , TvmCell eventBody) = BocDecoder.decodeMessage(message.get(), null);
 
-        // TODO: check chain id from event
+        int32 globalId = tvm.rawConfigParam(19)
+            .get()
+            .toSlice()
+            .load(int32);
+        (, int32 destinationChainId) = eventBody
+            .toSlice()
+            .load(optional(TvmCell))
+            .get()
+            .toSlice()
+            .load(uint32, int32);
+
+        require(globalId == destinationChainId, ErrorCodes.WRONG_DESTINATION_CHAIN_ID);
         require(accountAddr == eventEmitter.value, ErrorCodes.SENDER_IS_NOT_EVENT_EMITTER);
         require(
             txTimestamp >= networkConfiguration.startTimestamp,

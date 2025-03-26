@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "postinstall": "ts-node ./everscale/scripts/1000-postinstall.ts",
     "free-ton-docs": "cd everscale && locklift gendoc --config locklift.config.js --include '^Bridge|^TonEvent|^EthereumEvent'"
   },
   "author": "broxus",

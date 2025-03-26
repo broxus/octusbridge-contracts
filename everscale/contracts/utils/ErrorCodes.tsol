@@ -28,8 +28,9 @@ library ErrorCodes {
     uint16 constant END_TIMESTAMP_ALREADY_SET = 2218;
     uint16 constant END_BLOCK_NUMBER_ALREADY_SET = 2219;
     uint16 constant SENDER_IS_NOT_EVENT_EMITTER = 2220;
-    uint16 constant WRONG_CHAIN_ID = 2221;
+    uint16 constant WRONG_DISPATCH_CHAIN_ID = 2221;
     uint16 constant WRONG_MESSAGE_HASH = 2222;
+    uint16 constant WRONG_DESTINATION_CHAIN_ID = 2223;
 
     // Event contract
     uint16 constant EVENT_NOT_PENDING = 2312;
