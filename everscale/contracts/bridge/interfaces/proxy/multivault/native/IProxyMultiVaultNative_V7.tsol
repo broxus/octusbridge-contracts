@@ -41,7 +41,7 @@ interface IProxyMultiVaultNative_V7 is IEVMCallback, INetworks {
         address recipient,
 
         uint256 value,
-        uint256 expectedGas,
+        uint128 expectedGas,
         address remainingGasTo,
         address sender,
         TvmCell payload

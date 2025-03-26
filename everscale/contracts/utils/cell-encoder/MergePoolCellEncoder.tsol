@@ -58,7 +58,7 @@ contract MergePoolCellEncoder is IEVMCallback, INetworks {
     function encodeMergePoolBurnWithdrawPayloadTVM(
         address targetToken,
         address recipient,
-        uint256 expectedGas,
+        uint128 expectedGas,
         TvmCell payload
     ) public pure returns (TvmCell) {
         TvmCell withdrawPayload = abi.encode(recipient, expectedGas, payload);

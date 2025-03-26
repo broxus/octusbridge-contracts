@@ -24,7 +24,7 @@ contract MultiVaultTvmTvmEventNative is
     address public recipient;
 
     uint public value;
-    uint public expected_gas;
+    uint128 public expected_gas;
     TvmCell public payload;
 
     // Derived fields
@@ -64,7 +64,7 @@ contract MultiVaultTvmTvmEventNative is
         ) = abi.decode(data.get(), (
             uint32, int32,
             address, uint128, address,
-            uint256, uint256, address, address,
+            uint256, uint128, address, address,
             TvmCell
         ));
 
@@ -134,7 +134,7 @@ contract MultiVaultTvmTvmEventNative is
         uint128 amount_,
         address recipient_,
         uint value_,
-        uint expected_gas_,
+        uint128 expected_gas_,
         TvmCell payload_,
         address proxy_,
         address tokenWallet_

@@ -210,11 +210,11 @@ abstract contract ProxyMultiVaultAlien_V9_Withdraw is
 
         (
             address recipient,
-            uint256 expectedGas,
+            uint128 expectedGas,
             TvmCell eventPayload
         ) = abi.decode(withdrawPayload, (
             address,
-            uint256,
+            uint128,
             TvmCell
         ));
 
