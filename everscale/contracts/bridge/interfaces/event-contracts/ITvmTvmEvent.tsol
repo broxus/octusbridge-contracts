@@ -5,7 +5,6 @@ interface ITvmTvmEvent {
     enum Status { Initializing, Pending, Confirmed }
 
     event Confirmed();
-    event Rejected();
 
     struct TvmTvmEventVoteData {
         uint msgHash;
