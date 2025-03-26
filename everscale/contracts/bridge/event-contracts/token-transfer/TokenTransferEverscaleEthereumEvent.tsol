@@ -1,5 +1,5 @@
 pragma ever-solidity >= 0.62.0;
-pragma AbiHeader time;
+
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
@@ -15,13 +15,12 @@ contract TokenTransferEverscaleEthereumEvent is EverscaleEthereumBaseEvent, Prox
     constructor(
         address _initializer,
         TvmCell _meta
-    ) EverscaleEthereumBaseEvent(_initializer, _meta) public {}
-
+    ) EverscaleEthereumBaseEvent(_initializer, _meta) {}
 
     function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
-        body.decode(uint64, uint32);
+        body.load(uint64, uint32);
         TvmSlice bodyCopy = body;
-        uint32 functionId = body.decode(uint32);
+        uint32 functionId = body.load(uint32);
         if (isExternalVoteCall(functionId)){
             require(votes[msg.pubkey()] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
         }
@@ -29,7 +28,7 @@ contract TokenTransferEverscaleEthereumEvent is EverscaleEthereumBaseEvent, Prox
     }
 
     function close() external override view {
-        require(status() != Status.Pending || now > createdAt + FORCE_CLOSE_TIMEOUT, ErrorCodes.EVENT_PENDING);
+        require(status() != Status.Pending || block.timestamp > createdAt + FORCE_CLOSE_TIMEOUT, ErrorCodes.EVENT_PENDING);
         address ownerAddress = getOwner();
 
         require(msg.sender == ownerAddress, ErrorCodes.SENDER_IS_NOT_EVENT_OWNER);

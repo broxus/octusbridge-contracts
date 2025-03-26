@@ -30,7 +30,7 @@ contract RelayRound is IRelayRound {
     address root; // setup from initialData
 
     // Cant be deployed directly
-    constructor() public { revert(); }
+    constructor() { revert(); }
 
     function getDetails() external view override responsible returns (RelayRoundDetails) {
         return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }RelayRoundDetails(
@@ -73,15 +73,15 @@ contract RelayRound is IRelayRound {
 
     function onCodeUpgrade(TvmCell upgrade_data) private {
         TvmSlice s = upgrade_data.toSlice();
-        (address _root,,) = s.decode(address, uint8, address);
+        (address _root,,) = s.load(address, uint8, address);
 
         TvmCell _platform_code = s.loadRef();
 
         TvmSlice initialData = s.loadRefAsSlice();
-        uint32 _round_num = initialData.decode(uint32);
+        uint32 _round_num = initialData.load(uint32);
 
         TvmSlice params = s.loadRefAsSlice();
-        (uint32 _current_version, uint32 _prev_version) = params.decode(uint32, uint32);
+        (uint32 _current_version, uint32 _prev_version) = params.load(uint32, uint32);
         // DEPLOY
         if (_current_version == _prev_version) {
             tvm.resetStorage();
@@ -92,8 +92,8 @@ contract RelayRound is IRelayRound {
             round_num = _round_num;
             current_version = _current_version;
 
-            start_time = params.decode(uint32);
-            end_time = params.decode(uint32);
+            start_time = params.load(uint32);
+            end_time = params.load(uint32);
         } else {
             // UPGRADE from broken version
             tvm.rawReserve(Gas.RELAY_ROUND_INITIAL_BALANCE, 0);

@@ -48,7 +48,7 @@ contract Election is IElection {
     uint256 relay_transfer_start_idx = 0;
 
     // Cant be deployed directly
-    constructor() public { revert(); }
+    constructor() { revert(); }
 
     // return sorted list of requests
     function getRequests(uint128 limit) public view responsible returns (
@@ -328,16 +328,16 @@ contract Election is IElection {
         tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 0);
 
         TvmSlice s = upgrade_data.toSlice();
-        (address root_, ,) = s.decode(address, uint8, address);
+        (address root_, ,) = s.load(address, uint8, address);
         root = root_;
 
         platform_code = s.loadRef();
 
         TvmSlice initialData = s.loadRefAsSlice();
-        round_num = initialData.decode(uint32);
+        round_num = initialData.load(uint32);
 
         TvmSlice params = s.loadRefAsSlice();
-        (current_version, ) = params.decode(uint32, uint32);
+        (current_version, ) = params.load(uint32, uint32);
 
         // create origin node after contract initialization
         requests_nodes.push(Node(0, 0));

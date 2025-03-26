@@ -51,7 +51,7 @@ contract MergePool_V1 is
         _;
     }
 
-    constructor() public {
+    constructor() {
         revert();
     }
 

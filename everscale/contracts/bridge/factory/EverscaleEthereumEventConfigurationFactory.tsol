@@ -12,7 +12,7 @@ import "./../interfaces/event-configuration-contracts/IEverscaleEthereumEventCon
 contract EverscaleEthereumEventConfigurationFactory is TransferUtils, RandomNonce, CheckPubKey {
     TvmCell public configurationCode;
 
-    constructor(TvmCell _configurationCode) public checkPubKey {
+    constructor(TvmCell _configurationCode) checkPubKey {
         tvm.accept();
 
         configurationCode = _configurationCode;

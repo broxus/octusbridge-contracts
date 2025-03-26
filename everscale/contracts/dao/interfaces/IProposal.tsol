@@ -1,6 +1,6 @@
 pragma ever-solidity >= 0.62.0;
 
-import "IDaoRoot.tsol";
+import "./IDaoRoot.tsol";
 import "../structures/ActionStructure.tsol";
 import "../structures/ProposalConfigurationStructure.tsol";
 import "../structures/ProposalSates.tsol";

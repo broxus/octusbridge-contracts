@@ -1,7 +1,6 @@
 pragma ever-solidity >= 0.62.0;
-pragma AbiHeader time;
-pragma AbiHeader pubkey;
 
+pragma AbiHeader pubkey;
 
 import "../../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V1.tsol";
 import "./ProxyMultiVaultAlien_V7_MergeRouter.tsol";
@@ -15,9 +14,7 @@ contract ProxyMultiVaultAlien_V7 is
     CheckPubKey,
     RandomNonce
 {
-    constructor(
-        address owner_
-    ) public checkPubKey {
+    constructor(address owner_) checkPubKey {
         tvm.accept();
 
         _reserveTargetBalance();

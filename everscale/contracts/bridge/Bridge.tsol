@@ -43,7 +43,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
         TvmCell _connectorCode,
         uint64 _connectorDeployValue,
         address _staking
-    ) public checkPubKey {
+    ) checkPubKey {
         require(_owner != address(0), ErrorCodes.ZERO_ADDRESS);
         require(_manager != address(0), ErrorCodes.ZERO_ADDRESS);
         require(_staking != address(0), ErrorCodes.ZERO_ADDRESS);

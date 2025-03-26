@@ -60,7 +60,7 @@ INetworks
         _;
     }
 
-    constructor() public {
+    constructor() {
         revert();
     }
 

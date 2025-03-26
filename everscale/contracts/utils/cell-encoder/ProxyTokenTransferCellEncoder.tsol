@@ -45,7 +45,7 @@ contract ProxyTokenTransferCellEncoder {
             uint256 _amount,
             int128 _wid,
             uint256 _addr
-        ) = data.toSlice().decode(uint256, int128, uint256);
+        ) = data.toSlice().load(uint256, int128, uint256);
         return (uint128(_amount), int8(_wid), _addr);
     }
 
@@ -60,7 +60,7 @@ contract ProxyTokenTransferCellEncoder {
             sender_addr,
             tokens,
             receiver_addr
-        ) = data.toSlice().decode(uint256, uint128, address);
+        ) = data.toSlice().load(uint256, uint128, address);
     }
 
     function encodeEverscaleEthereumEventData(
@@ -108,7 +108,7 @@ contract ProxyTokenTransferCellEncoder {
             tokens,
             ethereum_address,
             chainId
-        ) = data.toSlice().decode(int8, uint, uint128, uint160, uint32);
+        ) = data.toSlice().load(int8, uint, uint128, uint160, uint32);
     }
 
     function decodeEverscaleSolanaEventData(
@@ -122,6 +122,6 @@ contract ProxyTokenTransferCellEncoder {
             senderAddress,
             tokens,
             solanaOwnerAddress
-        ) = data.toSlice().decode(address, uint128, uint256);
+        ) = data.toSlice().load(address, uint128, uint256);
     }
 }

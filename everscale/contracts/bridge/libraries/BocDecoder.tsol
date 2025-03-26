@@ -5,9 +5,9 @@ library BocDecoder {
         TvmSlice s = _proof.toSlice().loadRefAsSlice();
         TvmSlice ss = s.loadRefAsSlice();
 
-        ss.decode(uint32); // tag
+        ss.load(uint32); // tag
 
-        return ss.decode(int32);
+        return ss.load(int32);
     }
 
     //transaction$0111 account_addr:bits256 lt:uint64
@@ -32,21 +32,21 @@ library BocDecoder {
         TvmSlice s = _txBoc.toSlice();
         TvmSlice ss = s.loadRefAsSlice();
 
-        ss.decode(uint4); // tag
+        ss.load(uint4); // tag
 
-        accountAddr = ss.decode(uint256);
-        lt = ss.decode(uint64);
-        prevTransHash = ss.decode(uint256);
-        prevTransLt = ss.decode(uint64);
-        nowTimestamp = ss.decode(uint32);
-        outmsgCnt = ss.decode(uint15);
-        origStatus = ss.decode(uint2);
-        endStatus = ss.decode(uint2);
+        accountAddr = ss.load(uint256);
+        lt = ss.load(uint64);
+        prevTransHash = ss.load(uint256);
+        prevTransLt = ss.load(uint64);
+        nowTimestamp = ss.load(uint32);
+        outmsgCnt = ss.load(uint15);
+        origStatus = ss.load(uint2);
+        endStatus = ss.load(uint2);
 
         TvmSlice messages = ss.loadRefAsSlice();
 
-        inMessage = messages.decode(optional(TvmCell));
-        outMessages = messages.decode(mapping(uint15 => TvmCell));
+        inMessage = messages.load(optional(TvmCell));
+        outMessages = messages.load(mapping(uint15 => TvmCell));
 
         // totalFees, stateUpdate, description
     }
@@ -61,21 +61,21 @@ library BocDecoder {
         TvmSlice ss = s.loadRefAsSlice();
 
         ss.skip(4);
-        accountAddr = ss.decode(uint256);
-        lt = ss.decode(uint64);
+        accountAddr = ss.load(uint256);
+        lt = ss.load(uint64);
         ss.skip(320);
-        nowTimestamp = ss.decode(uint32);
+        nowTimestamp = ss.load(uint32);
         ss.skip(19);
 
         TvmSlice messages = ss.loadRefAsSlice();
 
-        bool hasInMessage = messages.decode(bool);
+        bool hasInMessage = messages.load(bool);
 
         if (hasInMessage) {
             messages.skip(0, 1);
         }
 
-        outMessages = messages.decode(mapping(uint15 => TvmCell));
+        outMessages = messages.load(mapping(uint15 => TvmCell));
     }
 
     function findMessageInTransaction(
@@ -87,7 +87,7 @@ library BocDecoder {
         TvmSlice messages = ss.loadRefAsSlice();
 
         TvmCell inMessage = messages.loadRef();
-        mapping(uint15 => TvmCell) outMessages = messages.decode(mapping(uint15 => TvmCell));
+        mapping(uint15 => TvmCell) outMessages = messages.load(mapping(uint15 => TvmCell));
 
         if (tvm.hash(inMessage) == _msgHash) {
             return (inMessage, MessageDirection.INBOUND);
@@ -125,7 +125,7 @@ library BocDecoder {
         (info, initAndBody) = decodeMessageInfo(_msgBoc, _direction);
 
         TvmSlice s = initAndBody.toSlice();
-        init = s.decode(optional(TvmCell));
+        init = s.load(optional(TvmCell));
 
         TvmBuilder b;
         b.store(s);
@@ -188,24 +188,24 @@ library BocDecoder {
     ) public returns (MessageInfo info, TvmCell initAndBody) {
         TvmSlice s = _msgBoc.toSlice();
 
-        bool isExternal = s.decode(bool);
+        bool isExternal = s.load(bool);
 
         optional(MessageDirection) direction = _direction;
         optional(InternalMessageInfo) internalMessage;
         optional(ExternalMessageInfo) externalMessage;
 
         if (isExternal) {
-            bool isOutbound = s.decode(bool);
-            address src = s.decode(address);
-            address dest = s.decode(address);
+            bool isOutbound = s.load(bool);
+            address src = s.load(address);
+            address dest = s.load(address);
 
             uint128 importFee;
             uint64 createdLt;
             uint32 createdAt;
 
             if (isOutbound) {
-                createdLt = s.decode(uint64);
-                createdAt = s.decode(uint32);
+                createdLt = s.load(uint64);
+                createdAt = s.load(uint32);
             } else {
                 importFee = s.loadTons();
             }
@@ -220,17 +220,17 @@ library BocDecoder {
             });
         } else {
             internalMessage = InternalMessageInfo({
-                ihrDisabled: s.decode(bool),
-                bounce: s.decode(bool),
-                bounced: s.decode(bool),
-                src: s.decode(address),
-                dest: s.decode(address),
+                ihrDisabled: s.load(bool),
+                bounce: s.load(bool),
+                bounced: s.load(bool),
+                src: s.load(address),
+                dest: s.load(address),
                 value: s.loadTons(),
-                extraCurrency: s.decode(mapping(uint32 => varUint32)),
+                extraCurrency: s.load(mapping(uint32 => varUint32)),
                 ihrFee: s.loadTons(),
                 fwdFee: s.loadTons(),
-                createdLt: s.decode(uint64),
-                createdAt: s.decode(uint32)
+                createdLt: s.load(uint64),
+                createdAt: s.load(uint32)
             });
         }
 

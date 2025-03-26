@@ -1,5 +1,5 @@
 pragma ever-solidity >= 0.62.0;
-pragma AbiHeader time;
+
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
@@ -19,13 +19,12 @@ contract DaoEthereumActionEvent is EverscaleEthereumBaseEvent, DaoCellEncoder {
     constructor(
         address _initializer,
         TvmCell _meta
-    ) EverscaleEthereumBaseEvent(_initializer, _meta) public {}
-
+    ) EverscaleEthereumBaseEvent(_initializer, _meta) {}
 
     function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
-        body.decode(uint64, uint32);
+        body.load(uint64, uint32);
         TvmSlice bodyCopy = body;
-        uint32 functionId = body.decode(uint32);
+        uint32 functionId = body.load(uint32);
         if (isExternalVoteCall(functionId)){
             require(votes[msg.pubkey()] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
         }
@@ -33,7 +32,7 @@ contract DaoEthereumActionEvent is EverscaleEthereumBaseEvent, DaoCellEncoder {
     }
 
     function getDecodedData() public view responsible returns (
-        address gasBackAddress,
+        address _gasBackAddress,
         uint32 chainId,
         ActionStructure.EthActionStripped[] actions
     ) {
@@ -44,9 +43,9 @@ contract DaoEthereumActionEvent is EverscaleEthereumBaseEvent, DaoCellEncoder {
             ActionStructure.EthActionStripped[] _actions
         ) = decodeDaoEthereumActionData(eventInitData.voteData.eventData);
 
-        gasBackAddress = address.makeAddrStd(gasBackAddressWid, gasBackAddressValue);
+        _gasBackAddress = address.makeAddrStd(gasBackAddressWid, gasBackAddressValue);
 
-        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} (gasBackAddress, _chainId, _actions);
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} (_gasBackAddress, _chainId, _actions);
     }
 
     function gasBackAddress() internal override view returns(address) {

@@ -1,5 +1,5 @@
 pragma ever-solidity >= 0.62.0;
-pragma AbiHeader time;
+
 pragma AbiHeader pubkey;
 pragma AbiHeader expire;
 
@@ -29,7 +29,7 @@ contract MultiVaultEVMEverscaleEventAlien is
     constructor(
         address _initializer,
         TvmCell _meta
-    ) EthereumEverscaleBaseEvent(_initializer, _meta) public {}
+    ) EthereumEverscaleBaseEvent(_initializer, _meta) {}
 
     function onReject() virtual override internal {
         transferAll(initializer);
@@ -39,9 +39,9 @@ contract MultiVaultEVMEverscaleEventAlien is
         TvmSlice body,
         TvmCell
     ) private inline view returns (TvmSlice) {
-        body.decode(uint64, uint32);
+        body.load(uint64, uint32);
         TvmSlice bodyCopy = body;
-        uint32 functionId = body.decode(uint32);
+        uint32 functionId = body.load(uint32);
 
         if (isExternalVoteCall(functionId)) {
             require(votes[msg.pubkey()] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
@@ -293,7 +293,7 @@ contract MultiVaultEVMEverscaleEventAlien is
     }
 
     onBounce(TvmSlice slice) external {
-        uint32 selector = slice.decode(uint32);
+        uint32 selector = slice.load(uint32);
 
         EventData eventData = getEventData();
         TransitionalData transitionalData = getTransitionalData();

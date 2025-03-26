@@ -1,5 +1,5 @@
 pragma ever-solidity >= 0.62.0;
-pragma AbiHeader time;
+
 pragma AbiHeader pubkey;
 pragma AbiHeader expire;
 
@@ -33,7 +33,7 @@ contract MultiVaultTvmTvmEventAlien is
         TvmCell _meta,
         address _transactionChecker,
         TvmCell _eventBody
-    ) TvmTvmBaseEvent(_initializer, _meta, _transactionChecker, _eventBody) public {}
+    ) TvmTvmBaseEvent(_initializer, _meta, _transactionChecker, _eventBody) {}
 
     function onInit() override internal {
         status = Status.Initializing;
@@ -306,7 +306,7 @@ contract MultiVaultTvmTvmEventAlien is
     }
 
     function getEventData() public override responsible returns(EventData) {
-        optional(TvmCell) data = eventBody.toSlice().decode(optional(TvmCell));
+        optional(TvmCell) data = eventBody.toSlice().load(optional(TvmCell));
 
         (
             /*functionId*/,
@@ -354,7 +354,7 @@ contract MultiVaultTvmTvmEventAlien is
     }
 
     onBounce(TvmSlice slice) external {
-        uint32 selector = slice.decode(uint32);
+        uint32 selector = slice.load(uint32);
 
         EventData eventData = getEventData();
         TransitionalData transitionalData = getTransitionalData();

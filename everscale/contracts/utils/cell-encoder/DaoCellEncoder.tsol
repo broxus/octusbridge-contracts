@@ -29,6 +29,6 @@ contract DaoCellEncoder {
             gasBackAddress,
             chainId,
             actions
-        ) = data.toSlice().decode(int8, uint256, uint32, ActionStructure.EthActionStripped[]);
+        ) = data.toSlice().load(int8, uint256, uint32, ActionStructure.EthActionStripped[]);
     }
 }

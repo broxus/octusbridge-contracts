@@ -317,7 +317,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
 
         updatePoolInfo();
 
-        base_details.rewardRounds.push(RewardRound(0, 0, 0, now));
+        base_details.rewardRounds.push(RewardRound(0, 0, 0, block.timestamp));
         emit NewRewardRound(uint32(base_details.rewardRounds.length - 1));
 
         send_gas_to.transfer(0, false, MsgFlag.ALL_NOT_RESERVED);
@@ -331,7 +331,7 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
         if (!slice.hasNBitsAndRefs(8, 0)) {
             return (0, false);
         }
-        deposit_type = slice.decode(uint8);
+        deposit_type = slice.load(uint8);
         return (deposit_type, true);
     }
 
@@ -496,9 +496,9 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
     function pendingReward(uint256 user_token_balance, IUserData.RewardRoundData[] user_reward_data) external view responsible returns (uint256) {
         RewardRound[] _reward_rounds = base_details.rewardRounds;
         // sync rewards up to this moment
-        if (now > base_details.lastRewardTime && base_details.tokenBalance > 0) {
+        if (block.timestamp > base_details.lastRewardTime && base_details.tokenBalance > 0) {
             // if token balance if empty, no need to update pool info
-            uint128 new_reward = (now - base_details.lastRewardTime) * relay_config.userRewardPerSecond;
+            uint128 new_reward = (block.timestamp - base_details.lastRewardTime) * relay_config.userRewardPerSecond;
             _reward_rounds[_reward_rounds.length - 1].totalReward += new_reward;
             _reward_rounds[_reward_rounds.length - 1].accRewardPerShare += (new_reward * SCALING_FACTOR) / base_details.tokenBalance;
         }
@@ -528,19 +528,19 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
     }
 
     function updatePoolInfo() internal {
-        if (now <= base_details.lastRewardTime) {
+        if (block.timestamp <= base_details.lastRewardTime) {
             return;
         }
 
         if (base_details.tokenBalance == 0) {
-            base_details.lastRewardTime = now;
+            base_details.lastRewardTime = block.timestamp;
             return;
         }
 
-        uint128 multiplier = now - base_details.lastRewardTime;
+        uint128 multiplier = block.timestamp - base_details.lastRewardTime;
         uint128 new_reward = relay_config.userRewardPerSecond * multiplier;
         base_details.rewardRounds[base_details.rewardRounds.length - 1].totalReward += new_reward;
-        base_details.lastRewardTime = now;
+        base_details.lastRewardTime = block.timestamp;
 
         base_details.rewardRounds[base_details.rewardRounds.length - 1].accRewardPerShare += (new_reward * SCALING_FACTOR) / base_details.tokenBalance;
     }
@@ -706,12 +706,12 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
     onBounce(TvmSlice slice) external view {
         tvm.accept();
 
-        uint32 functionId = slice.decode(uint32);
+        uint32 functionId = slice.load(uint32);
         // if processing failed - contract was not deployed. Deploy and try again
         if (functionId == tvm.functionId(UserData.processDeposit)) {
             tvm.rawReserve(_reserve(), 0);
 
-            uint64 _deposit_nonce = slice.decode(uint64);
+            uint64 _deposit_nonce = slice.load(uint64);
             PendingDeposit deposit = deposits[_deposit_nonce];
             address user_data_addr = deployUserData(deposit.user);
             // try again

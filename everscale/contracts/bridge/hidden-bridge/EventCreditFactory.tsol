@@ -27,7 +27,7 @@ contract EventCreditFactory is InternalOwner, RandomNonce {
         TvmCell eventDeployerCode_,
         uint8 eventClosersCount,
         uint8 eventDeployersCount
-    ) public {
+    ) {
         tvm.accept();
 
         eventCloserCode = eventCloserCode_;

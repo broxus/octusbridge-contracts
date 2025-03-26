@@ -19,7 +19,7 @@ contract Connector is IConnector, InternalOwner {
     constructor(
         address _eventConfiguration,
         address _owner
-    ) public {
+    ) {
         require(bridge == msg.sender, ErrorCodes.DEPLOYER_NOT_BRIDGE);
 
         eventConfiguration = _eventConfiguration;

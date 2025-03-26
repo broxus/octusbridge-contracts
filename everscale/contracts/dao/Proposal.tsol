@@ -109,7 +109,7 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
 
     function execute() override public {
         require(state() == ProposalState.Queued, DaoErrors.PROPOSAL_IS_NOT_QUEUED);
-        require(now >= executionTime, DaoErrors.EXECUTION_TIME_NOT_COME_YET);
+        require(block.timestamp >= executionTime, DaoErrors.EXECUTION_TIME_NOT_COME_YET);
         tvm.accept();
         executed = true;
         emit Executed();
@@ -161,15 +161,15 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
             return ProposalState.Canceled;
         } else if (executed) {
             return ProposalState.Executed;
-        } else if (now <= startTime) {
+        } else if (block.timestamp <= startTime) {
             return ProposalState.Pending;
-        } else if (now <= endTime) {
+        } else if (block.timestamp <= endTime) {
             return ProposalState.Active;
         } else if (forVotes <= againstVotes || forVotes < config.quorumVotes) {
             return ProposalState.Failed;
         } else if (executionTime == 0) {
             return ProposalState.Succeeded;
-        } else if (now > executionTime + config.gracePeriod) {
+        } else if (block.timestamp > executionTime + config.gracePeriod) {
             return ProposalState.Expired;
         } else {
             return ProposalState.Queued;
@@ -219,17 +219,17 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
     function onCodeUpgrade(TvmCell data) private {
         tvm.resetStorage();
         TvmSlice s = data.toSlice();
-        (root, /*type*/, /*sendGasTo*/) = s.decode(address, uint8, address);
+        (root, /*type*/, /*sendGasTo*/) = s.load(address, uint8, address);
 
         platformCode = s.loadRef();
 
         TvmSlice initialData = s.loadRefAsSlice();
-        id = initialData.decode(uint32);
+        id = initialData.load(uint32);
 
         TvmCell params = s.loadRef();
         (stakingRoot, proposer, description, tonActions, ethActions, config, proposalVersion)
             = abi.decode(params, (address, address, string, TonAction[], EthAction[], ProposalConfiguration, uint16));
-        startTime = now + config.votingDelay;
+        startTime = block.timestamp + config.votingDelay;
         endTime = startTime + config.votingPeriod;
     }
 

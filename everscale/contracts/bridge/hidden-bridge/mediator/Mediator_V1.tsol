@@ -51,7 +51,7 @@ contract Mediator is
         address _owner,
         address _nativeProxy,
         TvmCell _alienTokenWalletPlatformCode
-    ) public checkPubKey {
+    ) checkPubKey {
         require(_owner != address(0), ErrorCodes.ZERO_ADDRESS);
         require(_nativeProxy != address(0), ErrorCodes.ZERO_ADDRESS);
         tvm.accept();

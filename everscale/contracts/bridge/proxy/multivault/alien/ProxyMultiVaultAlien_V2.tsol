@@ -1,7 +1,6 @@
 pragma ever-solidity >= 0.62.0;
-pragma AbiHeader time;
-pragma AbiHeader pubkey;
 
+pragma AbiHeader pubkey;
 
 import "./../../../interfaces/proxy/IEthereumEverscaleProxyExtended.tsol";
 import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V1.tsol";
@@ -32,9 +31,7 @@ contract ProxyMultiVaultAlien_V2 is
     Configuration config;
     uint8 api_version = 0;
 
-    constructor(
-        address owner_
-    ) public checkPubKey {
+    constructor(address owner_) checkPubKey {
         tvm.accept();
 
         setOwnership(owner_);
@@ -71,8 +68,8 @@ contract ProxyMultiVaultAlien_V2 is
     );
 
         IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData = IEverscaleEthereumEvent.EverscaleEthereumEventVoteData(
-            tx.timestamp,
-            now,
+            tx.logicaltime,
+            block.timestamp,
             eventData
         );
 

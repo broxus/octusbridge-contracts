@@ -11,9 +11,7 @@ import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
 
 
 contract ProxyMultiVaultNative_V5 is ProxyMultiVaultNative_V5_Deposit, CheckPubKey, RandomNonce {
-    constructor(
-        address owner_
-    ) public checkPubKey {
+    constructor(address owner_) checkPubKey {
         tvm.accept();
 
         setOwnership(owner_);

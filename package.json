@@ -9,7 +9,7 @@
   "author": "broxus",
   "license": "ISC",
   "dependencies": {
-    "@broxus/contracts": "^1.1.1",
+    "@broxus/contracts": "^2.0.0",
     "@openzeppelin/contracts": "^5.0.0",
     "@openzeppelin/contracts-upgradeable": "^5.0.0",
     "@primitivefi/hardhat-dodoc": "^0.2.3",
@@ -42,7 +42,7 @@
     "prompts": "^2.4.1",
     "simple-node-logger": "^18.12.24",
     "solidity-docgen": "^0.5.7",
-    "ton-eth-bridge-token-contracts": "https://github.com/broxus/tip3#d1aad6c539c1b5499cf6db070e1119981a7feca7",
+    "ton-eth-bridge-token-contracts": "https://github.com/broxus/tip3#bbdc0b8e81e6f070e1d40437e5cb15332bfc8014",
     "underscore": "^1.12.0"
   },
   "devDependencies": {

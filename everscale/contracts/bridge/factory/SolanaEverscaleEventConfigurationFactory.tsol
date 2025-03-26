@@ -13,7 +13,7 @@ import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 contract SolanaEverscaleEventConfigurationFactory is TransferUtils, RandomNonce, CheckPubKey {
     TvmCell public configurationCode;
 
-    constructor(TvmCell _configurationCode) public checkPubKey {
+    constructor(TvmCell _configurationCode) checkPubKey {
         tvm.accept();
 
         configurationCode = _configurationCode;

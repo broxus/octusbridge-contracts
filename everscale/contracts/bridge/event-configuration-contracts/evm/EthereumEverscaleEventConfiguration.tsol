@@ -39,7 +39,7 @@ contract EthereumEverscaleEventConfiguration is
         address _owner,
         TvmCell _meta,
         uint64 _flags
-    ) public checkPubKey reserveTargetBalance() {
+    ) checkPubKey reserveTargetBalance() {
         tvm.accept();
 
         setOwnership(_owner);

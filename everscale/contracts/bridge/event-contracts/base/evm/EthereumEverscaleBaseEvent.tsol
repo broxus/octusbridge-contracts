@@ -1,5 +1,5 @@
 pragma ever-solidity >= 0.62.0;
-pragma AbiHeader time;
+
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
@@ -23,7 +23,7 @@ contract EthereumEverscaleBaseEvent is BaseEvent, IEthereumEverscaleEvent {
     constructor(
         address _initializer,
         TvmCell _meta
-    ) public {
+    ) {
         require(
             eventInitData.configuration == msg.sender,
             ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION

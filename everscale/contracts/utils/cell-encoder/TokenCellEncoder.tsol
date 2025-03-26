@@ -22,7 +22,7 @@ contract TokenCellEncoder {
         uint160 ethereumAddress,
         uint32 chainId
     ) {
-        (ethereumAddress, chainId) = data.toSlice().decode(uint160, uint32);
+        (ethereumAddress, chainId) = data.toSlice().load(uint160, uint32);
     }
 
     function encodeSolanaBurnPayload(
@@ -42,6 +42,6 @@ contract TokenCellEncoder {
         uint256 solanaOwnerAddress,
         IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts
     ) {
-        (solanaOwnerAddress, executeAccounts) = data.toSlice().decode(uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[]);
+        (solanaOwnerAddress, executeAccounts) = data.toSlice().load(uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[]);
     }
 }

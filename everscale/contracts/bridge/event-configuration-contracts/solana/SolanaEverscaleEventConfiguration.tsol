@@ -38,7 +38,7 @@ contract SolanaEverscaleEventConfiguration is
     constructor(
         address _owner,
         TvmCell _meta
-    ) public checkPubKey reserveTargetBalance() {
+    ) checkPubKey reserveTargetBalance() {
         tvm.accept();
 
         setOwnership(_owner);

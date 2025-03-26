@@ -1,6 +1,6 @@
 pragma ever-solidity >= 0.62.0;
 
-import "Proposal.tsol";
+import "./Proposal.tsol";
 
 import {
     PlatformTypes as StakingPlatformTypes
@@ -78,7 +78,7 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
         TvmCell platformCode_,
         ProposalConfiguration proposalConfiguration_,
         address admin_
-    ) public checkPubKey {
+    ) checkPubKey {
         require(admin_ != address(0), DaoErrors.ZERO_ADDRESS);
         checkProposalConfiguration(proposalConfiguration_);
         tvm.accept();
@@ -158,8 +158,13 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
     ) override public onlyStakingAccount(accountOwner){
         tvm.rawReserve(address(this).balance - msg.value, 2);
 
-        (uint32 answerId, TonAction[] tonActions, EthAction[] ethActions, string description)
-            = proposalData.toSlice().decodeFunctionParams(propose);
+        TvmSlice s = proposalData.toSlice();
+        (
+            uint32 answerId,
+            TonAction[] tonActions,
+            EthAction[] ethActions,
+            string description
+        ) = s.loadFunctionParams(propose);
 
         proposalCount++;
         emit ProposalCreated(proposalCount, accountOwner, tonActions, ethActions, description);
@@ -227,7 +232,7 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
         }
         for ((uint32 chainId, EthActionStripped[] ethActions) : chainActions) {
             TvmCell eventData = encodeDaoEthereumActionData(proposer.wid, proposer.value, chainId, ethActions);
-            IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData = IEverscaleEthereumEvent.EverscaleEthereumEventVoteData(tx.timestamp, now, eventData);
+            IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData = IEverscaleEthereumEvent.EverscaleEthereumEventVoteData(tx.logicaltime, block.timestamp, eventData);
             IEverscaleEthereumEventConfiguration(ethereumActionEventConfiguration).deployEvent{
                 value: deployEventValue,
                 flag: MsgFlag.SENDER_PAYS_FEES,

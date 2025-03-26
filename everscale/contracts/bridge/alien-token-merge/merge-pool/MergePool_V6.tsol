@@ -60,7 +60,7 @@ contract MergePool_V6 is
         _;
     }
 
-    constructor() public {
+    constructor() {
         revert();
     }
 

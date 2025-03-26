@@ -16,7 +16,7 @@ contract TvmTvmEventConfigurationFactory is TransferUtils, RandomNonce, CheckPub
     constructor(
         TvmCell _configurationCode,
         address _transactionChecker
-    ) public checkPubKey {
+    ) checkPubKey {
         tvm.accept();
 
         configurationCode = _configurationCode;

@@ -1,8 +1,7 @@
 pragma ever-solidity >= 0.62.0;
-pragma AbiHeader time;
+
 pragma AbiHeader pubkey;
 pragma AbiHeader expire;
-
 
 import "./../../../interfaces/event-contracts/multivault/evm/IMultiVaultEverscaleEVMEventAlien.tsol";
 import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V8.tsol";
@@ -44,14 +43,14 @@ contract MultiVaultEverscaleEVMEventAlien is
     constructor(
         address _initializer,
         TvmCell _meta
-    ) EverscaleEthereumBaseEvent(_initializer, _meta) public {
+    ) EverscaleEthereumBaseEvent(_initializer, _meta) {
         unmodifiedEventData = eventInitData.voteData.eventData;
     }
 
     function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
-        body.decode(uint64, uint32);
+        body.load(uint64, uint32);
         TvmSlice bodyCopy = body;
-        uint32 functionId = body.decode(uint32);
+        uint32 functionId = body.load(uint32);
         if (isExternalVoteCall(functionId)){
             require(votes[msg.pubkey()] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
         }
@@ -167,7 +166,7 @@ contract MultiVaultEverscaleEVMEventAlien is
     }
 
     onBounce(TvmSlice slice) external {
-        uint32 selector = slice.decode(uint32);
+        uint32 selector = slice.load(uint32);
 
         if (
             (selector == tvm.functionId(ITokenRootAlienEVM.meta) && msg.sender == token) ||

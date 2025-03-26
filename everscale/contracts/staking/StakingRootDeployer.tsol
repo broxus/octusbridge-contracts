@@ -8,7 +8,7 @@ contract StakingRootDeployer {
 
     uint8 constant WRONG_PUBKEY = 101;
 
-    constructor() public {
+    constructor() {
         require (tvm.pubkey() == msg.pubkey(), WRONG_PUBKEY);
         tvm.accept();
     }

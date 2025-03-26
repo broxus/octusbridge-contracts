@@ -11,7 +11,7 @@ contract TestTarget is Delegate {
     uint128 public value;
     uint32 public param;
 
-    constructor (address _daoRoot) public {
+    constructor(address _daoRoot) {
         tvm.accept();
         daoRoot = _daoRoot;
     }

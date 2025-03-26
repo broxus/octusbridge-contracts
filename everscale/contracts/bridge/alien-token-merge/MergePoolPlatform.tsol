@@ -15,7 +15,7 @@ contract MergePoolPlatform is RandomNonce {
         uint256 canonId,
         address owner_,
         address manager_
-    ) public {
+    ) {
         require(msg.sender == proxy, ErrorCodes.WRONG_PROXY);
 
         initialize(

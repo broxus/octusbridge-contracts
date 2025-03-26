@@ -28,13 +28,13 @@ const config: LockliftConfig = {
     secretKey: process.env.EVERSCAN_SECRET_KEY!,
   },
   compiler: {
-    version: "0.62.0",
+    version: "0.71.0",
     externalContracts: {
       "../node_modules/ton-eth-bridge-token-contracts/contracts": ['TokenRoot', 'TokenWallet']
     }
   },
   linker: {
-    version: "0.15.48",
+    version: "0.20.6",
   },
   networks: {
     proxy: {

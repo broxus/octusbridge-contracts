@@ -59,7 +59,7 @@ contract MergePool_V3 is
         _;
     }
 
-    constructor() public {
+    constructor() {
         revert();
     }
 

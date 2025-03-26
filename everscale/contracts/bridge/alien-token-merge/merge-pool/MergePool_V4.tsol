@@ -59,7 +59,7 @@ contract MergePool_V4 is
         _;
     }
 
-    constructor() public {
+    constructor() {
         revert();
     }
 

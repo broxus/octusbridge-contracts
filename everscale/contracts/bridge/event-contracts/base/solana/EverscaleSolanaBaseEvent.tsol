@@ -1,5 +1,5 @@
 pragma ever-solidity >= 0.62.0;
-pragma AbiHeader time;
+
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
@@ -26,13 +26,13 @@ contract EverscaleSolanaBaseEvent is BaseEvent, IEverscaleSolanaEvent {
     constructor(
         address _initializer,
         TvmCell _meta
-    ) public {
+    ) {
         require(
             eventInitData.configuration == msg.sender,
             ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION
         );
 
-        createdAt = now;
+        createdAt = block.timestamp;
         initializer = _initializer;
         meta = _meta;
 
@@ -120,7 +120,7 @@ contract EverscaleSolanaBaseEvent is BaseEvent, IEverscaleSolanaEvent {
 
     function close() external override virtual view {
         require(
-            status() != Status.Pending || now > createdAt + FORCE_CLOSE_TIMEOUT,
+            status() != Status.Pending || block.timestamp > createdAt + FORCE_CLOSE_TIMEOUT,
             ErrorCodes.WRONG_STATUS
         );
 

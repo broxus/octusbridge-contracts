@@ -12,7 +12,7 @@ contract RoundDeployer is RoundDeployerRelay {
         address _admin,
         address _bridge_event_config_ton_eth,
         address _bridge_event_config_ton_sol
-    ) public {
+    ) {
         tvm.rawReserve(Gas.ROOT_INITIAL_BALANCE, 0);
 
         tvm.accept();

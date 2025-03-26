@@ -8,7 +8,7 @@ import "../bridge/interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
 contract TonConfigMockup {
     uint64 static nonce;
 
-    constructor() public { tvm.accept(); }
+    constructor() { tvm.accept(); }
 
     function deployEvent(
         IEverscaleSolanaEvent.EverscaleSolanaEventVoteData

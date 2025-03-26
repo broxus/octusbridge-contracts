@@ -1,5 +1,5 @@
 pragma ever-solidity >= 0.62.0;
-pragma AbiHeader time;
+
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
@@ -75,7 +75,7 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
             value: gasToValue(Gas.GET_RELAY_ROUND_GAS, address(this).wid),
             bounce: false,
             callback: BaseEvent.receiveRoundAddress
-        }(now);
+        }(block.timestamp);
     }
 
     function receiveRoundAddress(

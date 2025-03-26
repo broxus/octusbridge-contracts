@@ -13,7 +13,7 @@ abstract contract RoundDeployerRelay is RoundDeployerUpgradable {
         uint160[] eth_keys,
         uint256[] ton_keys
     ) external override onlyAdminOrManager onlyActive {
-        require (now >= (round_details.currentRelayRoundStartTime + relay_config.timeBeforeSetRelays), ErrorCodes.TOO_EARLY_TO_SET_RELAYS);
+        require (block.timestamp >= (round_details.currentRelayRoundStartTime + relay_config.timeBeforeSetRelays), ErrorCodes.TOO_EARLY_TO_SET_RELAYS);
         uint256 relays_count = ton_keys.length;
         require (relays_count == eth_keys.length, ErrorCodes.BAD_INPUT_ARRAYS);
         require (relays_count >= relay_config.minRelaysCount, ErrorCodes.NOT_ENOUGH_RELAYS);
@@ -29,13 +29,13 @@ abstract contract RoundDeployerRelay is RoundDeployerUpgradable {
         // origin round
         if (round_details.currentRelayRound == 1 && round_details.currentRelayRoundStartTime == 0) {
             round_num = 1;
-            start_time = now;
+            start_time = block.timestamp;
         } else {
             round_num = round_details.currentRelayRound + 1;
 
             // relays are set too late, start new round later
-            if (now > round_details.currentRelayRoundEndTime - relay_config.minRoundGapTime) {
-                start_time = now + relay_config.minRoundGapTime;
+            if (block.timestamp > round_details.currentRelayRoundEndTime - relay_config.minRoundGapTime) {
+                start_time = block.timestamp + relay_config.minRoundGapTime;
             // relays are set in time, start new round right after cur round
             } else {
                 start_time = round_details.currentRelayRoundEndTime;
@@ -94,7 +94,7 @@ abstract contract RoundDeployerRelay is RoundDeployerUpgradable {
             event_builder.store(round_num); // 32
             event_builder.store(eth_keys); // ref
             event_builder.store(round_end_time);
-            IEverscaleEthereumEvent.EverscaleEthereumEventVoteData event_data_eth = IEverscaleEthereumEvent.EverscaleEthereumEventVoteData(tx.timestamp, now, event_builder.toCell());
+            IEverscaleEthereumEvent.EverscaleEthereumEventVoteData event_data_eth = IEverscaleEthereumEvent.EverscaleEthereumEventVoteData(tx.logicaltime, block.timestamp, event_builder.toCell());
             IEverscaleEthereumEventConfiguration(base_details.bridge_event_config_ton_eth).deployEvent{value: tonEthEventDeployValue}(event_data_eth);
 
             TvmBuilder event_builder2;
@@ -102,7 +102,7 @@ abstract contract RoundDeployerRelay is RoundDeployerUpgradable {
             event_builder2.store(ton_keys);
             event_builder2.store(round_end_time);
             IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] _empty;
-            IEverscaleSolanaEvent.EverscaleSolanaEventVoteData event_data_sol = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(tx.timestamp, now, _empty, false, _empty, event_builder2.toCell());
+            IEverscaleSolanaEvent.EverscaleSolanaEventVoteData event_data_sol = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(tx.logicaltime, block.timestamp, _empty, false, _empty, event_builder2.toCell());
             IEverscaleSolanaEventConfiguration(bridge_event_config_ton_sol).deployEvent{value: tonSolEventDeployValue}(event_data_sol);
         }
 

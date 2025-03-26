@@ -1,5 +1,5 @@
 pragma ever-solidity >= 0.62.0;
-pragma AbiHeader time;
+
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
@@ -36,7 +36,7 @@ contract TvmTvmBaseEvent is ITvmTvmEvent, TransferUtils {
         TvmCell _meta,
         address _transactionChecker,
         TvmCell _eventBody
-    ) public {
+    ) {
         require(
             eventInitData.configuration == msg.sender,
             ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION

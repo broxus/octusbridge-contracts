@@ -1,5 +1,5 @@
 pragma ever-solidity >= 0.62.0;
-pragma AbiHeader time;
+
 pragma AbiHeader pubkey;
 pragma AbiHeader expire;
 
@@ -38,7 +38,7 @@ contract MultiVaultTvmTvmEventNative is
         TvmCell _meta,
         address _transactionChecker,
         TvmCell _eventBody
-    ) TvmTvmBaseEvent(_initializer, _meta,  _transactionChecker, _eventBody) public {}
+    ) TvmTvmBaseEvent(_initializer, _meta,  _transactionChecker, _eventBody) {}
 
     function onInit() override internal {
         status = Status.Initializing;
@@ -48,7 +48,7 @@ contract MultiVaultTvmTvmEventNative is
         require(status != Status.Confirmed, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
         require(msg.sender == eventInitData.configuration, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
 
-        optional(TvmCell) data = eventBody.toSlice().decode(optional(TvmCell));
+        optional(TvmCell) data = eventBody.toSlice().load(optional(TvmCell));
         (
             /*functionId*/,
             /*chain_id*/,
