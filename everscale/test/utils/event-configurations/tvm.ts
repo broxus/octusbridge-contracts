@@ -8,6 +8,7 @@ export const setupTvmTvmEventConfiguration = async (
   proxy: Address,
   eventCode: string,
   transactionChecker: Address,
+  eventEmitter: Address,
 ) => {
   const signer = (await locklift.keystore.getSigner("10"))!;
 
@@ -26,13 +27,13 @@ export const setupTvmTvmEventConfiguration = async (
         eventCode,
       },
       networkConfiguration: {
-        chainId: 1,
+        chainId: -6001,
         proxy,
         startTimestamp: 0,
         endTimestamp: 0,
       },
       transactionChecker: transactionChecker,
-      eventEmitter: zeroAddress,
+      eventEmitter,
     },
     publicKey: signer.publicKey,
     value: locklift.utils.toNano(20),

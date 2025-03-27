@@ -235,7 +235,13 @@ describe("Test setting configuration end", async function () {
     let tvmTvmEventConfiguration: Contract<FactorySource["TvmTvmEventConfiguration"]>;
 
     it("Setup TVM-TVM event configuration", async () => {
-      tvmTvmEventConfiguration = await setupTvmTvmEventConfiguration(bridgeOwner, proxy, "", zeroAddress);
+      tvmTvmEventConfiguration = await setupTvmTvmEventConfiguration(
+        bridgeOwner,
+        proxy,
+        "",
+        zeroAddress,
+        zeroAddress
+      );
     });
 
     it("Set TVM-TVM end timestamp", async () => {

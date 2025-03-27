@@ -1,5 +1,5 @@
 import { Account } from "everscale-standalone-client/nodejs";
-import { Contract } from "locklift";
+import { Address, Contract } from "locklift";
 import {
   EthereumEverscaleEventConfigurationAbi,
   EverscaleEthereumEventConfigurationAbi,
@@ -90,6 +90,7 @@ export const setupNativeMultiVault = async (
     proxy.address,
     tvmTvmEvent.code,
     trustlessVerifier.address,
+    new Address("0:057493dab4639b455bd9305c0c2cc44d30cf48e5b185b6cc05a0d102c91e0fe8")
   );
 
   // Set proxy EVM configuration
