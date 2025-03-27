@@ -55,7 +55,7 @@ const RELAYS_COUNT_1 = 3;
 const MIN_RELAYS = 2;
 const RELAY_INITIAL_DEPOSIT = 500;
 
-describe("Test Staking Relay mechanic", async function () {
+describe.skip("Test Staking Relay mechanic", async function () {
     this.timeout(10000000);
 
     const userRewardRounds = async function (

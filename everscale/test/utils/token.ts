@@ -10,7 +10,8 @@ export const deployTokenRoot = async function (
     token_name: string,
     token_symbol: string,
     decimals: number,
-    owner: Address
+    owner: Address,
+    nonce?: number,
 ) {
     const signer = (await locklift.keystore.getSigner("0"))!;
 
@@ -35,7 +36,7 @@ export const deployTokenRoot = async function (
             decimals_: decimals,
             rootOwner_: owner,
             walletCode_: TokenWallet.code,
-            randomNonce_: locklift.utils.getRandomNonce(),
+            randomNonce_: nonce || locklift.utils.getRandomNonce(),
             deployer_: zeroAddress,
         },
         publicKey: signer.publicKey,
