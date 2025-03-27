@@ -59,12 +59,13 @@ contract ProxyMultiVaultAlien_V9 is
         onCodeUpgrade(data);
     }
 
-    function onCodeUpgrade(TvmCell data) private {
+    function onCodeUpgrade(TvmCell data) functionID(2) private {
         tvm.resetStorage();
 
         (
             EVMConfiguration evmConfiguration_,
             SolanaConfiguration solanaConfiguration_,
+            // TVMConfiguration tvmConfiguration_,
             uint _randomNonce_,
             uint8  api_version_,
             address owner_,
@@ -73,17 +74,19 @@ contract ProxyMultiVaultAlien_V9 is
             TvmCell mergeRouter_,
             TvmCell mergePool_,
             TvmCell mergePoolPlatform_,
-            uint8 _mergePoolVersion
+            uint8 mergePoolVersion_ /*,
+            address proxyMultiVaultNative_ */
         ) = abi.decode(
             data,
             (
-                EVMConfiguration, SolanaConfiguration, uint, uint8, address,
-                address, TvmCell, TvmCell, TvmCell, uint8
+                EVMConfiguration, SolanaConfiguration, /* TVMConfiguration ,*/ uint, uint8, address,
+                address, TvmCell, TvmCell, TvmCell, uint8 /*, address*/
             )
         );
 
         evmConfiguration = evmConfiguration_;
         solanaConfiguration = solanaConfiguration_;
+        // tvmConfiguration = tvmConfiguration_;
 
         _randomNonce = _randomNonce_;
         api_version = api_version_ + 1;
@@ -93,7 +96,8 @@ contract ProxyMultiVaultAlien_V9 is
         mergeRouter = mergeRouter_;
         mergePool = mergePool_;
         mergePoolPlatform = mergePoolPlatform_;
-        mergePoolVersion = _mergePoolVersion;
+        mergePoolVersion = mergePoolVersion_;
+        // proxyMultiVaultNative = proxyMultiVaultNative_;
     }
 
 }

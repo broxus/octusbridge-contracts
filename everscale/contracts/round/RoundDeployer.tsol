@@ -120,9 +120,6 @@ contract RoundDeployer is RoundDeployerRelay {
             uint128
         ));
 
-        round_details.currentRelayRoundStartTime = 1735155571;
-        round_details.currentRelayRoundEndTime = 1735155581;
-
         send_gas_to.transfer({
             value: 0,
             bounce: false,

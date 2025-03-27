@@ -36,29 +36,33 @@ contract ProxyMultiVaultNative_V7 is ProxyMultiVaultNative_V7_Deposit, CheckPubK
         onCodeUpgrade(data);
     }
 
-    function onCodeUpgrade(TvmCell data) private {
+    function onCodeUpgrade(TvmCell data) functionID(2) private {
         tvm.resetStorage();
 
         (
             EVMConfiguration evmConfiguration_,
             SolanaConfiguration solanaConfiguration_,
+            // TVMConfiguration tvmConfiguration_,
             address owner_,
             uint8 api_version_,
             address dex_middleware_,
+            // address proxyMultiVaultAlien_,
             uint _randomNonce_
         ) = abi.decode(
             data,
             (
-                EVMConfiguration, SolanaConfiguration,
-                address, uint8, address, uint
+                EVMConfiguration, SolanaConfiguration, /* TVMConfiguration, */
+                address, uint8, address, /* address, */ uint
             )
         );
 
         evmConfiguration = evmConfiguration_;
         solanaConfiguration = solanaConfiguration_;
+        // tvmConfiguration = tvmConfiguration_;
 
         api_version = api_version_ + 1;
         dex_middleware = dex_middleware_;
+        // proxyMultiVaultAlien = proxyMultiVaultAlien_;
         setOwnership(owner_);
         _randomNonce = _randomNonce_;
     }

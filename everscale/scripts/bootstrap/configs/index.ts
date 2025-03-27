@@ -1,5 +1,7 @@
 import { config as localConfig } from './local.config';
 import { config as hmstrConfig } from './hmstr.config';
+import { config as devnet1Config } from './devnet1.config';
+import { config as devnet1aConfig } from './devnet1a.config';
 
 export type Config = {
     RELAYS_COUNT: number;
@@ -27,6 +29,8 @@ export const getConfig = (): Config | null => {
     switch (process.env.BOOTSTRAP_ENV) {
         case 'local': return localConfig;
         case 'hmstr': return hmstrConfig;
+        case 'devnet1': return devnet1Config;
+        case 'devnet1a': return devnet1aConfig;
         default: return null;
     }
 };

@@ -14,14 +14,14 @@ assert(!!config, 'Config should be defined');
 type InitialBalance = { alien?: string; native?: string };
 
 const initialBalances: Record<number, InitialBalance> = {
-    1: { alien: toNano(230), native: toNano(90) },
-    56: { alien: toNano(230), native: toNano(90) },
-    43114: { alien: toNano(230), native: toNano(90) },
+    // 1: { alien: toNano(230), native: toNano(90) },
+    // 56: { alien: toNano(230), native: toNano(90) },
+    // 43114: { alien: toNano(230), native: toNano(90) },
 };
 
 const initialBalancesTvm: Record<number, InitialBalance> = {
-    123: { alien: toNano(230), native: toNano(90) },
-    456: { alien: toNano(230), native: toNano(90) },
+    [-6001]: { alien: toNano(230), native: toNano(90) },
+    // 456: { alien: toNano(230), native: toNano(90) },
 };
 
 //TODO:  EverscaleEthereumEventConfiguration

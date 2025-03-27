@@ -30,7 +30,8 @@ const config: LockliftConfig = {
   compiler: {
     version: "0.71.0",
     externalContracts: {
-      "../node_modules/ton-eth-bridge-token-contracts/contracts": ['TokenRoot', 'TokenWallet']
+      "../node_modules/ton-eth-bridge-token-contracts": ['TokenRootUpgradable', 'TokenWalletUpgradable', 'TokenWalletPlatform'],
+      "build_prod": ['Bridge']
     }
   },
   linker: {
@@ -72,40 +73,44 @@ const config: LockliftConfig = {
         amount: 20,
       },
     },
-    // venom_main: {
-    //   connection: {
-    //     id: 1,
-    //     group: "group",
-    //     type: "jrpc",
-    //     data: {
-    //       endpoint: process.env.VENOM_MAIN_JRPC_ENDPOINT!
-    //     },
-    //   },
-    //   giver: {
-    //     address: process.env.VENOM_MAIN_GIVER_ADDRESS!,
-    //     phrase: process.env.VENOM_MAIN_GIVER_PHRASE!,
-    //     accountId: 0,
-    //   },
-    //   keys: {
-    //     amount: 20
-    //   }
-    // },
-    hmstr: {
+
+    devnet1: {
       connection: {
-        id: 7,
+        id: 2000,
         type: "jrpc",
         group: "tycho",
         data: {
-          endpoint: process.env.HMSTR_NETWORK_ENDPOINT!,
+          endpoint: process.env.DEVNET1_NETWORK_ENDPOINT!,
         },
       },
       giver: {
-        address: process.env.HMSTR_GIVER_ADDRESS!,
-        phrase: process.env.HMSTR_GIVER_PHRASE!,
-        accountId: 0,
+        address: process.env.TYCHO_GIVER_ADDRESS!,
+        key: process.env.TYCHO_GIVER_KEY!
+        //phrase: process.env.TYCHO_GIVER_PHRASE!,
+        //accountId: 0,
       },
       keys: {
-        phrase: process.env.HMSTR_PHRASE!,
+        phrase: process.env.TYCHO_PHRASE!,
+        amount: 20,
+      },
+    },
+    devnet1a: {
+      connection: {
+        id: 2000,
+        type: "jrpc",
+        group: "tycho",
+        data: {
+          endpoint: process.env.DEVNET1_NETWORK_ENDPOINT!,
+        },
+      },
+      giver: {
+        address: process.env.TYCHO_GIVER_ADDRESS!,
+        key: process.env.TYCHO_GIVER_KEY!
+        //phrase: process.env.TYCHO_GIVER_PHRASE!,
+        //accountId: 0,
+      },
+      keys: {
+        phrase: process.env.TYCHO_PHRASE!,
         amount: 20,
       },
     },

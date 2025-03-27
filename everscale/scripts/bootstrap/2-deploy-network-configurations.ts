@@ -5,16 +5,19 @@ import { getConfig } from "./configs";
 import assert from "node:assert";
 
 import {
+  TvmTvmEventConfigurationFactoryAbi,
+  ProxyMultiVaultAlien_V9Abi,
+  ProxyMultiVaultNative_V7Abi
+} from "../../build/factorySource";
+
+import {
   BridgeAbi,
   MultiVaultEVMEverscaleEventAlienAbi,
   MultiVaultEverscaleEVMEventAlienAbi,
   EthereumEverscaleEventConfigurationFactoryAbi,
   EverscaleEthereumEventConfigurationFactoryAbi,
-  TvmTvmEventConfigurationFactoryAbi,
-  ProxyMultiVaultAlien_V9Abi,
-  ProxyMultiVaultNative_V7Abi,
   RoundDeployerAbi,
-} from "../../build/factorySource";
+} from "../../build_prod/factorySource";
 
 const config = getConfig();
 
@@ -140,12 +143,12 @@ const main = async (): Promise<void> => {
 
   assert(
     ethEverFactoryConfigCode.configurationCode ===
-      locklift.factory.getContractArtifacts("EthereumEverscaleEventConfiguration").code,
+      locklift.factory.getContractArtifacts("EthereumEverscaleEventConfiguration").code || config?.ETH_CHAIN_IDS.length === 0,
     "Different config codes on eth ever factory",
   );
   assert(
     everEthFactoryConfigCode.configurationCode ===
-      locklift.factory.getContractArtifacts("EverscaleEthereumEventConfiguration").code,
+      locklift.factory.getContractArtifacts("EverscaleEthereumEventConfiguration").code || config?.ETH_CHAIN_IDS.length === 0,
     "Different config codes on ever eth factory",
   );
   assert(
