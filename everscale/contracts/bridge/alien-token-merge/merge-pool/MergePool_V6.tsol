@@ -351,7 +351,7 @@ contract MergePool_V6 is
                     targetToken,
                     amount,
                     remainingGasTo,
-                    sender,
+                    walletOwner,
                     withdrawPayload
                 );
             }
