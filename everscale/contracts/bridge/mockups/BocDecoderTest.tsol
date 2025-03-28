@@ -18,13 +18,15 @@ contract BocDecoderTest is RandomNonce {
         uint256 accountAddr,
         uint64 lt,
         uint32 nowTimestamp,
-        mapping(uint15 => TvmCell) outMessages
+        mapping(uint15 => TvmCell) outMessages,
+        uint256 hash
     ) {
         (
             accountAddr,
             lt,
             nowTimestamp,
-            outMessages
+            outMessages,
+            hash
         ) = BocDecoder.decodeTransactionShort(_txBoc);
 
         if (_msgIndex.hasValue()) {
@@ -39,7 +41,7 @@ contract BocDecoderTest is RandomNonce {
             value: 0,
             flag: MsgFlag.REMAINING_GAS,
             bounce: false
-        } (accountAddr, lt, nowTimestamp, outMessages);
+        } (accountAddr, lt, nowTimestamp, outMessages, hash);
     }
 
     function decodeTransaction(TvmCell _txBoc) external pure responsible returns (

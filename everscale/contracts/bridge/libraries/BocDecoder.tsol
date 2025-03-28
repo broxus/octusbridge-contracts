@@ -5,8 +5,18 @@ function exoticCellToSlice(TvmCell a) assembly pure returns (TvmSlice, bool) {
 }
 
 library BocDecoder {
+    uint16 constant CELL_IS_NOT_EXOTIC = 321;
+    uint16 constant NOT_MERKLE_PROOF = 322;
+
     function decodeBlockProof(TvmCell _proof) public returns (int32 chainId) {
-        (TvmSlice s, ) = exoticCellToSlice(_proof);
+        (TvmSlice s, bool isExotic) = exoticCellToSlice(_proof);
+
+        require(isExotic, CELL_IS_NOT_EXOTIC);
+
+        uint8 cellType = s.load(uint8);
+
+        require(cellType == 3, NOT_MERKLE_PROOF);
+
         TvmSlice proofS = s.loadRefAsSlice();
         TvmSlice blockS = proofS.loadRefAsSlice();
 
@@ -59,9 +69,18 @@ library BocDecoder {
         uint256 accountAddr,
         uint64 lt,
         uint32 nowTimestamp,
-        mapping(uint15 => TvmCell) outMessages
+        mapping(uint15 => TvmCell) outMessages,
+        uint256 hash
     ) {
-        (TvmSlice s, ) = exoticCellToSlice(_txBoc);
+        (TvmSlice s, bool isExotic) = exoticCellToSlice(_txBoc);
+
+        require(isExotic, CELL_IS_NOT_EXOTIC);
+
+        uint8 cellType = s.load(uint8);
+        require(cellType == 3, NOT_MERKLE_PROOF);
+
+        hash = s.load(uint256);
+
         TvmSlice ss = s.loadRefAsSlice();
 
         ss.skip(4);

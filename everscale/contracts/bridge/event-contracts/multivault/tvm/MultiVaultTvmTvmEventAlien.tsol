@@ -14,6 +14,7 @@ import "./../../../interfaces/alien-token-merge/merge-pool/IMergePool_V2.tsol";
 import "./../../../interfaces/alien-token-merge/IMergeRouter.tsol";
 import "./../../../interfaces/trustless-verifier/ITrustlessVerifier.tsol";
 import "./../../../interfaces/trustless-verifier/IOnTrustlessVerify.tsol";
+import "./../../../libraries/BocDecoder.tsol";
 
 import "./../../base/tvm/TvmTvmBaseEvent.tsol";
 
@@ -60,11 +61,19 @@ contract MultiVaultTvmTvmEventAlien is
 
         status = Status.Pending;
 
+        (uint256 accountAddr, uint64 lt, , , uint256 hash) = BocDecoder.decodeTransactionShort(_eventVoteData.txProof);
+
+        TvmCell txProof = abi.encode(
+            accountAddr,
+            lt,
+            hash
+        );
+
         ITrustlessVerifier(transactionChecker)
             .verifyTx{
                 value: gasToValue(Gas.VERIFY_TRANSACTION_GAS, address(this).wid),
                 flag: MsgFlag.SENDER_PAYS_FEES
-            }(_eventVoteData.txBlockProof, _eventVoteData.txProof);
+            }(_eventVoteData.txBlockProof, txProof);
 
         ITvmTvmEventConfiguration(eventInitData.configuration)
             .getDetails{

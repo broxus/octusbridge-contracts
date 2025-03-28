@@ -168,7 +168,7 @@ contract TvmTvmEventConfiguration is
             uint256 accountAddr,
             ,
             uint32 txTimestamp,
-            mapping(uint15 => TvmCell) outMessages
+            mapping(uint15 => TvmCell) outMessages,
         ) = BocDecoder.decodeTransactionShort(eventVoteData.txProof);
         optional(TvmCell) message = outMessages.fetch(eventVoteData.messageIndex);
 
