@@ -15,12 +15,12 @@ contract TrustlessVerifierMockup is ITrustlessVerifier, RandomNonce, TransferUti
         approve = _approve;
     }
 
-    function verifyTx(uint, TvmCell) external override reserveTargetBalance() {
+    function verifyTx(TvmCell, TvmCell) external functionID(0xddab5b88) override reserveTargetBalance() {
         IOnTrustlessVerify(msg.sender)
             .onTrustlessVerify{
                 value: 0,
                 flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
                 bounce: false
-            }(approve);
+            }(approve, 333);
     }
 }

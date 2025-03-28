@@ -60,12 +60,11 @@ contract MultiVaultTvmTvmEventAlien is
 
         status = Status.Pending;
 
-        uint256 txHash = 0; // todo use BocDecoder
         ITrustlessVerifier(transactionChecker)
             .verifyTx{
                 value: gasToValue(Gas.VERIFY_TRANSACTION_GAS, address(this).wid),
                 flag: MsgFlag.SENDER_PAYS_FEES
-            }(txHash, _eventVoteData.txBlockProof);
+            }(_eventVoteData.txBlockProof, _eventVoteData.txProof);
 
         ITvmTvmEventConfiguration(eventInitData.configuration)
             .getDetails{
@@ -74,7 +73,7 @@ contract MultiVaultTvmTvmEventAlien is
             }();
     }
 
-    function onTrustlessVerify(bool success) external override {
+    function onTrustlessVerify(bool success, uint256 /*txHash*/) external functionID(0x756adff1) override {
         require(msg.sender == transactionChecker, ErrorCodes.SENDER_NOT_TX_CHECKER);
 
         if (success) {
