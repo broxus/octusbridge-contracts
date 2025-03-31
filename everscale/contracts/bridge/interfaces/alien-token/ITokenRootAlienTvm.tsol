@@ -4,6 +4,7 @@ interface ITokenRootAlienTVM {
     function meta(TvmCell _payload) external responsible returns (
         int32 base_chainId,
         address base_token,
+        address base_native_proxy_wallet,
         string name,
         string symbol,
         uint8 decimals,

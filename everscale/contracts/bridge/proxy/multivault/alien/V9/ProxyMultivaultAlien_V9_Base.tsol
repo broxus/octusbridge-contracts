@@ -48,7 +48,7 @@ abstract contract ProxyMultivaultAlien_V9_Base is IProxyMultiVaultAlien_V9, Tran
         external
         view
         responsible
-        returns (address, optional(address))
+        returns (address, optional(PredeployedTokenData))
     {
         return {
             value: 0,
@@ -152,10 +152,10 @@ abstract contract ProxyMultivaultAlien_V9_Base is IProxyMultiVaultAlien_V9, Tran
 
     function addPredeployedTVMToken(
         address _incomingExternal,
-        address _existingInternal,
+        PredeployedTokenData _tokenData,
         address _remainingGasTo
     ) external override onlyOwner cashBackTo(_remainingGasTo) {
-        tvmConfiguration.predeployedTokens[_incomingExternal] = _existingInternal;
+        tvmConfiguration.predeployedTokens[_incomingExternal] = _tokenData;
     }
 
     function removePredeployedTVMToken(

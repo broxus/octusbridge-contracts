@@ -31,6 +31,7 @@ interface IProxyMultiVaultNative_V7 is IEVMCallback, INetworks {
 
     event TvmTvmNative(
         int32 chainId,
+        address nativeProxyWallet,
 
         address token,
         string name,

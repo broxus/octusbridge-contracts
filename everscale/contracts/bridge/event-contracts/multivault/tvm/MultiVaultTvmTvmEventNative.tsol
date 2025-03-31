@@ -20,6 +20,7 @@ contract MultiVaultTvmTvmEventNative is
     IMultiVaultTvmTvmEventNative,
     IOnTrustlessVerify
 {
+    address public tokenWallet;
     address public token;
     uint128 public amount;
     address public recipient;
@@ -30,7 +31,6 @@ contract MultiVaultTvmTvmEventNative is
 
     // Derived fields
     address public proxy;
-    address public tokenWallet;
 
     bool setupFinished;
 
@@ -54,6 +54,7 @@ contract MultiVaultTvmTvmEventNative is
             /*functionId*/,
             /*chain_id*/,
             token,
+            tokenWallet,
             amount,
             recipient,
 
@@ -64,7 +65,7 @@ contract MultiVaultTvmTvmEventNative is
             payload
         ) = abi.decode(data.get(), (
             uint32, int32,
-            address, uint128, address,
+            address, address, uint128, address,
             uint256, uint128, address, address,
             TvmCell
         ));
@@ -119,19 +120,6 @@ contract MultiVaultTvmTvmEventNative is
         require(msg.sender == eventInitData.configuration, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
 
         proxy = _networkConfiguration.proxy;
-
-        ITokenRoot(token).walletOf{
-            value: gasToValue(Gas.GET_TOKEN_DATA_GAS, address(this).wid),
-            callback: MultiVaultTvmTvmEventNative.receiveProxyTokenWallet
-        }(proxy);
-    }
-
-    function receiveProxyTokenWallet(
-        address tokenWallet_
-    ) external override {
-        require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
-
-        tokenWallet = tokenWallet_;
 
         setupFinished = true;
         onConfirm();

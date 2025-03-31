@@ -4,11 +4,14 @@ pragma ever-solidity >= 0.62.0;
 import "./../../../event-configuration-contracts/ITvmTvmEventConfiguration.tsol";
 import "./../../../alien-token-merge/merge-pool/IMergePool_V2.tsol";
 
+import "./../../../proxy/multivault/alien/IProxyMultiVaultAlien_V9.tsol";
+
 
 interface IMultiVaultTvmTvmEventAlien {
     struct EventData {
         int32 base_chainId;
         address base_token;
+        address base_native_proxy_wallet;
 
         string name;
         string symbol;
@@ -44,7 +47,7 @@ interface IMultiVaultTvmTvmEventAlien {
 
     function receivePredeployedToken(
         address nativeProxy,
-        optional(address) token
+        optional(IProxyMultiVaultAlien_V9.PredeployedTokenData) token
     ) external;
 
     function receiveProxyTokenWallet(
@@ -78,6 +81,7 @@ interface IMultiVaultTvmTvmEventAlien {
     function getDecodedData() external responsible returns(
         int32 base_chainId_,
         address base_token_,
+        address base_native_proxy_wallet_,
         string name_,
         string symbol_,
         uint8 decimals_,

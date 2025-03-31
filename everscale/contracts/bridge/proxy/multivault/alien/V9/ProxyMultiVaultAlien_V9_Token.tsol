@@ -108,6 +108,7 @@ abstract contract ProxyMultiVaultAlien_V9_Token is ProxyMultivaultAlien_V9_Base 
     function deployTVMAlienToken(
         int32 chainId,
         address token,
+        address native_proxy_wallet,
         string name,
         string symbol,
         uint8 decimals,
@@ -116,6 +117,7 @@ abstract contract ProxyMultiVaultAlien_V9_Token is ProxyMultivaultAlien_V9_Base 
         TvmCell stateInit = _buildTVMAlienTokenRootInitState(
             chainId,
             token,
+            native_proxy_wallet,
             name,
             symbol,
             decimals
@@ -184,6 +186,7 @@ abstract contract ProxyMultiVaultAlien_V9_Token is ProxyMultivaultAlien_V9_Base 
     function deriveTVMAlienTokenRoot(
         int32 chainId,
         address token,
+        address native_proxy_wallet,
         string name,
         string symbol,
         uint8 decimals
@@ -191,6 +194,7 @@ abstract contract ProxyMultiVaultAlien_V9_Token is ProxyMultivaultAlien_V9_Base 
         TvmCell stateInit = _buildTVMAlienTokenRootInitState(
             chainId,
             token,
+            native_proxy_wallet,
             name,
             symbol,
             decimals
@@ -262,6 +266,7 @@ abstract contract ProxyMultiVaultAlien_V9_Token is ProxyMultivaultAlien_V9_Base 
     function _buildTVMAlienTokenRootInitState(
         int32 chainId,
         address token,
+        address native_proxy_wallet,
         string name,
         string symbol,
         uint8 decimals
@@ -275,6 +280,7 @@ abstract contract ProxyMultiVaultAlien_V9_Token is ProxyMultivaultAlien_V9_Base 
 
                 base_chainId_: chainId,
                 base_token_: token,
+                base_native_proxy_wallet_: native_proxy_wallet,
 
                 name_: name,
                 symbol_: symbol,
