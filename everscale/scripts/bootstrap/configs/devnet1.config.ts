@@ -20,12 +20,16 @@ export const config: Config = {
     ETH_LAST_BLOCK: { 56: 47782189},
     ETH_CONFIRMS_COUNT: { 56: 30},
 
-    TVM_CHAIN_IDS: [-6001],
-    TRANSACTION_CHECKER: '0:d8a9e3de9894d0336efc3ef3779dfb99ee21533f8db164872ec5fe11be32e5e8',
+    TVM_CHAIN_IDS: [-239],
+    TRANSACTION_CHECKER: '0:128db5b83f4d23357db9baf7ac1b9fbe6b2690e30a500942b1ec1246cf017f60',
     TVM_EVENT_EMITTERS: {
-        [-6001]: {
-            alien: '0:989c7ab54cfe503a3706c437d78609d35213f0de6c6c3d9852f800217249b668',
-            native: '0:e6234da2ef4e9747ce1b3f6240c74394d579bea42b56463bf84247e021689873',
+        // [-6001]: {
+        //     alien: '0:989c7ab54cfe503a3706c437d78609d35213f0de6c6c3d9852f800217249b668',
+        //     native: '0:e6234da2ef4e9747ce1b3f6240c74394d579bea42b56463bf84247e021689873',
+        // },
+        [-239]: {
+            alien: '0:e8a096d2945b7b874de1c00acff174f91975aff6b0eb8baf4a316bf6769cbf7a',
+            native: '0:74d5af2734f264d49cdcefa9b6adc2d93f3d69d45720d84773a40f9e2b239e72',
         }
     },
 

@@ -84,6 +84,46 @@ const EVER_NATIVE_TRANSFER_EVENT_ABI = [
   { name: "callback_strict", type: "bool" },
 ];
 
+
+const TVM_ALIEN_TRANSFER_EVENT_ABI = {
+  "name": "TvmTvmAlien",
+  "inputs": [
+    {"name":"chainId","type":"int32"},
+    {"name":"token","type":"address"},
+    {"name":"native_proxy_wallet","type":"address"},
+    {"name":"amount","type":"uint128"},
+    {"name":"recipient","type":"address"},
+    {"name":"value","type":"uint256"},
+    {"name":"expectedGas","type":"uint128"},
+    {"name":"remainingGasTo","type":"address"},
+    {"name":"sender","type":"address"},
+    {"name":"payload","type":"cell"}
+  ],
+  "outputs": [
+  ]
+};
+
+const TVM_NATIVE_TRANSFER_EVENT_ABI = {
+  "name": "TvmTvmNative",
+  "inputs": [
+    {"name":"chainId","type":"int32"},
+    {"name":"nativeProxyWallet","type":"address"},
+    {"name":"token","type":"address"},
+    {"name":"name","type":"string"},
+    {"name":"symbol","type":"string"},
+    {"name":"decimals","type":"uint8"},
+    {"name":"amount","type":"uint128"},
+    {"name":"recipient","type":"address"},
+    {"name":"value","type":"uint256"},
+    {"name":"expectedGas","type":"uint128"},
+    {"name":"remainingGasTo","type":"address"},
+    {"name":"sender","type":"address"},
+    {"name":"payload","type":"cell"}
+  ],
+  "outputs": [
+  ]
+};
+
 const deployConnectors = async (
   admin: Account,
   bridge: Contract<BridgeAbi>,
@@ -163,7 +203,7 @@ const main = async (): Promise<void> => {
         _owner: admin.address,
         _flags: 2,
         basicConfiguration: {
-          eventABI: Buffer.from(JSON.stringify(ALIEN_TRANSFER_EVENT_ABI)).toString("base64"),
+          eventABI: Buffer.from(JSON.stringify(TVM_ALIEN_TRANSFER_EVENT_ABI)).toString("base64"),
           staking: roundDeployer.address,
           eventInitialBalance: config?.GAS.CONFIGURATION_EVENT_INITIAL_BALANCE,
           eventCode: locklift.factory.getContractArtifacts("MultiVaultTvmTvmEventAlien").code,
@@ -210,7 +250,7 @@ const main = async (): Promise<void> => {
         _owner: admin.address,
         _flags: 10,
         basicConfiguration: {
-          eventABI: Buffer.from(JSON.stringify(NATIVE_TRANSFER_EVENT_ABI)).toString("base64"),
+          eventABI: Buffer.from(JSON.stringify(TVM_NATIVE_TRANSFER_EVENT_ABI)).toString("base64"),
           staking: roundDeployer.address,
           eventInitialBalance: config?.GAS.CONFIGURATION_EVENT_INITIAL_BALANCE,
           eventCode: locklift.factory.getContractArtifacts("MultiVaultTvmTvmEventNative").code,

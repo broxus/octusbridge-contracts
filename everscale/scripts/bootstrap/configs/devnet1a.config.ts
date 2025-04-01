@@ -21,7 +21,7 @@ export const config: Config = {
     ETH_CONFIRMS_COUNT: {},
 
     TVM_CHAIN_IDS: [-6001],
-    TRANSACTION_CHECKER: '0:d8a9e3de9894d0336efc3ef3779dfb99ee21533f8db164872ec5fe11be32e5e8',
+    TRANSACTION_CHECKER: '0:d0a83c5960e3e56b552b6aee0ea507f06fb0f882a8def7fbeff183f0b576600b',
     TVM_EVENT_EMITTERS: {
         [-6001]: {
             alien: '0:7b5ee2aa7bd843bb507154a678b6a2e46034ea41dce26d6aa56d8134542bbc32',

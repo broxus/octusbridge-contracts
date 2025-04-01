@@ -102,7 +102,7 @@ contract MergePool_V6 is
 
     function onCodeUpgrade(
         TvmCell data
-    ) private {
+    )  functionID(2) private {
         tvm.resetStorage();
 
         (
