@@ -59,7 +59,7 @@ contract MergePoolCellEncoder is IEVMCallback, INetworks {
         address targetToken,
         address recipient,
         uint128 expectedGas,
-        TvmCell payload
+        optional(TvmCell) payload
     ) public pure returns (TvmCell) {
         TvmCell withdrawPayload = abi.encode(recipient, expectedGas, payload);
 

@@ -182,16 +182,16 @@ abstract contract ProxyMultiVaultAlien_V9_Withdraw is
     }
 
     function receiveTokenRootAlienTvmMeta(
-        int32 base_chainId,
-        address base_token,
-        address base_native_proxy_wallet_,
+        int32 baseChainId,
+        address baseToken,
+        address baseNativeProxyWallet,
         string name,
         string symbol,
         uint8 decimals,
         TvmCell payload
     ) public reserveAtLeastTargetBalance {
         require(
-            msg.sender == deriveTVMAlienTokenRoot(base_chainId, base_token, base_native_proxy_wallet_, name, symbol, decimals),
+            msg.sender == deriveTVMAlienTokenRoot(baseChainId, baseToken, baseNativeProxyWallet, name, symbol, decimals),
             ErrorCodes.BAD_SENDER
         );
 
@@ -212,24 +212,29 @@ abstract contract ProxyMultiVaultAlien_V9_Withdraw is
         (
             address recipient,
             uint128 expectedGas,
-            TvmCell eventPayload
+            optional(TvmCell) eventPayload
         ) = abi.decode(withdrawPayload, (
             address,
             uint128,
-            TvmCell
+            optional(TvmCell)
         ));
 
         emit TvmTvmAlien(
-            base_chainId,
-            base_token,
-            base_native_proxy_wallet_,
-            amount,
+            baseChainId,
+
+            baseToken,
+            name,
+            symbol,
+            decimals,
+            baseNativeProxyWallet,
+
+            sender,
             recipient,
+            amount,
 
             msg.value, // todo subtract the cost of the current transaction
             expectedGas,
             remainingGasTo,
-            sender,
             eventPayload
         );
 

@@ -22,7 +22,7 @@ interface IMultiVaultTvmTvmEventAlien {
 
         uint value;
         uint128 expected_gas;
-        TvmCell payload;
+        optional(TvmCell) payload;
     }
 
     struct TransitionalData {
@@ -36,7 +36,7 @@ interface IMultiVaultTvmTvmEventAlien {
         address target_token;
         uint128 target_amount;
 
-        address native_proxy_token_wallet;
+        optional(address) native_proxy_token_wallet;
     }
 
     function receiveConfigurationDetails(
@@ -89,9 +89,9 @@ interface IMultiVaultTvmTvmEventAlien {
         address recipient_,
         uint value_,
         uint128 expected_gas_,
-        TvmCell payload_,
+        optional(TvmCell) payload_,
         address proxy_,
         address token_,
-        address native_proxy_token_wallet
+        optional(address) native_proxy_token_wallet
     );
 }

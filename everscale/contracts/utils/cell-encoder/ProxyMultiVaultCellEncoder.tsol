@@ -60,7 +60,7 @@ contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
     function encodeAlienBurnPayloadTVM(
         address recipient,
         uint128 expectedGas,
-        TvmCell payload
+        optional(TvmCell) payload
     ) external pure returns(TvmCell) {
         TvmCell burnPayload = abi.encode(recipient, expectedGas, payload);
 
@@ -96,7 +96,7 @@ contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
         string symbol,
         uint8 decimals,
         uint128 expectedGas,
-        TvmCell payload
+        optional(TvmCell) payload
     ) external pure returns (TvmCell) {
         TvmCell transferPayload = abi.encode(recipient, chainId, name, symbol, decimals, expectedGas, payload);
 

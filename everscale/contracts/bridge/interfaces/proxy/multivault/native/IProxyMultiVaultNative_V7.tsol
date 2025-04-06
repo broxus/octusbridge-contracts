@@ -30,21 +30,21 @@ interface IProxyMultiVaultNative_V7 is IEVMCallback, INetworks {
     // Events specification
 
     event TvmTvmNative(
-        int32 chainId,
-        address nativeProxyWallet,
+        int32 destinationChainId,
 
-        address token,
+        address baseToken,
         string name,
         string symbol,
         uint8 decimals,
+        address nativeProxyWallet,
 
-        uint128 amount,
+        address sender,
         address recipient,
+        uint128 amount,
 
-        uint256 value,
+        uint256 attachedGas,
         uint128 expectedGas,
         address remainingGasTo,
-        address sender,
-        TvmCell payload
+        optional(TvmCell) payload
     );
 }
