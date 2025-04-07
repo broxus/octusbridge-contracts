@@ -106,7 +106,7 @@
 				{"name":"answerId","type":"uint32"}
 			],
 			"outputs": [
-				{"components":[{"name":"base_chainId","type":"int32"},{"name":"base_token","type":"address"},{"name":"base_native_proxy_wallet","type":"address"},{"name":"name","type":"string"},{"name":"symbol","type":"string"},{"name":"decimals","type":"uint8"},{"name":"amount","type":"uint128"},{"name":"recipient","type":"address"},{"name":"value","type":"uint256"},{"name":"expected_gas","type":"uint128"},{"name":"payload","type":"cell"}],"name":"value0","type":"tuple"}
+				{"components":[{"name":"base_chainId","type":"int32"},{"name":"base_token","type":"address"},{"name":"base_native_proxy_wallet","type":"address"},{"name":"name","type":"string"},{"name":"symbol","type":"string"},{"name":"decimals","type":"uint8"},{"name":"amount","type":"uint128"},{"name":"recipient","type":"address"},{"name":"value","type":"uint256"},{"name":"expected_gas","type":"uint128"},{"name":"payload","type":"optional(cell)"}],"name":"value0","type":"tuple"}
 			]
 		},
 		{
@@ -114,7 +114,7 @@
 			"inputs": [
 			],
 			"outputs": [
-				{"components":[{"name":"proxy","type":"address"},{"name":"token","type":"address"},{"name":"router","type":"address"},{"name":"pool","type":"address"},{"name":"canon","type":"address"},{"name":"target_token","type":"address"},{"name":"target_amount","type":"uint128"},{"name":"native_proxy_token_wallet","type":"address"}],"name":"value0","type":"tuple"}
+				{"components":[{"name":"proxy","type":"address"},{"name":"token","type":"address"},{"name":"router","type":"address"},{"name":"pool","type":"address"},{"name":"canon","type":"address"},{"name":"target_token","type":"address"},{"name":"target_amount","type":"uint128"},{"name":"native_proxy_token_wallet","type":"optional(address)"}],"name":"value0","type":"tuple"}
 			]
 		},
 		{
@@ -133,10 +133,10 @@
 				{"name":"recipient_","type":"address"},
 				{"name":"value_","type":"uint256"},
 				{"name":"expected_gas_","type":"uint128"},
-				{"name":"payload_","type":"cell"},
+				{"name":"payload_","type":"optional(cell)"},
 				{"name":"proxy_","type":"address"},
 				{"name":"token_","type":"address"},
-				{"name":"native_proxy_token_wallet","type":"address"}
+				{"name":"native_proxy_token_wallet","type":"optional(address)"}
 			]
 		},
 		{
