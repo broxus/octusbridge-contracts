@@ -118,7 +118,16 @@
 		{
 			"name": "setTVMConfiguration",
 			"inputs": [
-				{"components":[{"name":"incomingConfigurations","type":"address[]"}],"name":"_config","type":"tuple"},
+				{"name":"_incomingConfigurations","type":"address[]"},
+				{"name":"remainingGasTo","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setTVMEventAddressKeeperCode",
+			"inputs": [
+				{"name":"_eventAddressKeeperCode","type":"cell"},
 				{"name":"remainingGasTo","type":"address"}
 			],
 			"outputs": [
@@ -205,7 +214,7 @@
 		{"name":"owner","type":"address"},
 		{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"evmConfigurations","type":"address[]"}],"name":"evmConfiguration","type":"tuple"},
 		{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"solanaConfiguration","type":"address"}],"name":"solanaConfiguration","type":"tuple"},
-		{"components":[{"name":"incomingConfigurations","type":"address[]"}],"name":"tvmConfiguration","type":"tuple"},
+		{"components":[{"name":"incomingConfigurations","type":"address[]"},{"name":"eventAddressKeeperCode","type":"cell"}],"name":"tvmConfiguration","type":"tuple"},
 		{"name":"api_version","type":"uint8"},
 		{"name":"dex_middleware","type":"address"},
 		{"name":"proxyMultiVaultAlien","type":"address"},

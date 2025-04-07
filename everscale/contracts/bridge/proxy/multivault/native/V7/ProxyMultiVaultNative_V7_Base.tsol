@@ -61,10 +61,17 @@ abstract contract ProxyMultiVaultNative_V7_Base is IProxyMultiVaultNative_V7, In
     }
 
     function setTVMConfiguration(
-        TVMConfiguration _config,
+        address[] _incomingConfigurations,
         address remainingGasTo
     ) override external onlyOwner cashBackTo(remainingGasTo) {
-        tvmConfiguration = _config;
+        tvmConfiguration.incomingConfigurations = _incomingConfigurations;
+    }
+
+    function setTVMEventAddressKeeperCode(
+        TvmCell _eventAddressKeeperCode,
+        address remainingGasTo
+    ) override external onlyOwner cashBackTo(remainingGasTo) {
+        tvmConfiguration.eventAddressKeeperCode = _eventAddressKeeperCode;
     }
 
     function _transferTokens(

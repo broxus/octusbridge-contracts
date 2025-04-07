@@ -18,6 +18,7 @@ interface IProxyMultiVaultNative_V7 is IEVMCallback, INetworks {
 
     struct TVMConfiguration {
         address[] incomingConfigurations;
+        TvmCell eventAddressKeeperCode;
     }
 
     // Settings
@@ -25,7 +26,8 @@ interface IProxyMultiVaultNative_V7 is IEVMCallback, INetworks {
     function getConfiguration() external view responsible returns (EVMConfiguration, SolanaConfiguration);
     function setEVMConfiguration(EVMConfiguration _config, address gasBackAddress) external;
     function setSolanaConfiguration(SolanaConfiguration _config, address gasBackAddress) external;
-    function setTVMConfiguration(TVMConfiguration _config, address gasBackAddress) external;
+    function setTVMConfiguration(address[] _incomingConfigurations, address gasBackAddress) external;
+    function setTVMEventAddressKeeperCode(TvmCell _eventAddressKeeperCode, address gasBackAddress) external;
 
     // Events specification
 
