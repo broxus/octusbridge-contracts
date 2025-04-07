@@ -7,13 +7,13 @@ import "../../../../interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
 import "../../../../interfaces/event-configuration-contracts/IEverscaleSolanaEventConfiguration.tsol";
 import "../../../../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.tsol";
 
-import "./ProxyMultiVaultNative_V7_Base.tsol";
+import "./ProxyMultiVaultNative_V7_Fees.tsol";
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensTransferCallback.tsol";
 
 
 abstract contract ProxyMultiVaultNative_V7_Withdraw is
-    ProxyMultiVaultNative_V7_Base,
+    ProxyMultiVaultNative_V7_Fees,
     IAcceptTokensTransferCallback
 {
     /// @notice Handles incoming token transfer
@@ -171,6 +171,11 @@ abstract contract ProxyMultiVaultNative_V7_Withdraw is
         address sender,
         TvmCell transferPayload
     ) internal pure {
+
+        // accumulate fee
+        uint128 fee = _calculateFees(amount);
+        _accumulateFee(fee, token);
+
         (
             address recipient,
             int32 chainId,
@@ -198,7 +203,7 @@ abstract contract ProxyMultiVaultNative_V7_Withdraw is
             symbol,
             decimals,
 
-            amount,
+            amount - fee,
             recipient,
 
             msg.value, // todo subtract the cost of the current transaction

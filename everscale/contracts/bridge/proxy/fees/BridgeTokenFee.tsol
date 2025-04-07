@@ -1,0 +1,61 @@
+pragma ever-solidity >= 0.62.0;
+
+import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
+import "../../../.././libraries/Gas.tsol";
+import "../../../.././libraries/ErrorCodes.tsol";
+
+contract BridgeTokenFee {
+//    for Native Proxy - token wallet, for Alien Proxy - tokenRoot
+    address static token;
+    address static proxy;
+
+    uint128 accumulatedFees;
+
+    constructor() {revert();}
+
+    modifier onlyProxy {
+        require(
+            msg.sender.value != 0 &&
+            proxy == msg.sender,
+            ErrorCodes.SENDER_IS_NOT_PROXY
+        );
+        _;
+    }
+
+    function _init(TvmCell _params) private {
+        tvm.rawReserve(Gas.BRIDGE_TOKEN_FEES_INITIAL_BALANCE, 0);
+
+        accumulatedFees = 0;
+
+        _remainingGasTo.transfer({
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERROR,
+            bounce: false
+        });
+    }
+
+    function accumulateFee(uint128 fee) external onlyProxy {
+        accumulatedFees += fee;
+    }
+
+    function getAccumulatedFee(TvmCell _payload) external onlyProxy returns(TvmCell) {
+        (address recipient) = abi.decide(_payload, (address));
+        TvmCell payload = abi.encode(recipient, accumulatedFees, token);
+
+        accumulatedFees = 0;
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} payload;
+    }
+
+    function onCodeUpgrade(TvmCell data) private {
+        (
+            address _root,
+            address _remainingGasTo
+            TvmCell _initialData,
+            TvmCell _params,
+            /*TvmCell _platformCode*/,
+        ) =  abi.decode(data, (address, address, TvmCell, TvmCell, TvmCell));
+
+        (token, proxy) = abi.decode(_initialData,(address , address));
+        _init(_params);
+    }
+}

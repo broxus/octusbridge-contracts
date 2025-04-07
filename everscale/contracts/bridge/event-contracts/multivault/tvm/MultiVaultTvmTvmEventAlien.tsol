@@ -15,6 +15,7 @@ import "./../../../interfaces/trustless-verifier/IOnTrustlessVerify.tsol";
 import "./../../../libraries/BocDecoder.tsol";
 
 import "./../../base/tvm/TvmTvmBaseEvent.tsol";
+import "../../../proxy/fees/BridgeTokenFee.tsol";
 
 
 contract MultiVaultTvmTvmEventAlien is
@@ -391,6 +392,12 @@ contract MultiVaultTvmTvmEventAlien is
                 eventData.decimals,
                 initializer
             );
+
+            // Deploy BridgeTokenFee for this Token
+            IProxyMultiVaultAlien_V9(transitionalData.proxy).deployBridgeTokenFee{
+                value: Gas.getDeployBridgeTokenFeeValue() + gasToValue(BRIDGE_TOKEN_FEES_EXTRA_GAS, address(this).wid),
+                bounce: false
+            }(base_token, initializer);
 
             _requestMergeRouter();
         } else if (

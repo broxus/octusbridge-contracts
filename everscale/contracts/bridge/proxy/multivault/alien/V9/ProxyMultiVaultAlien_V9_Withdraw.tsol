@@ -194,7 +194,6 @@ abstract contract ProxyMultiVaultAlien_V9_Withdraw is
             msg.sender == deriveTVMAlienTokenRoot(base_chainId, base_token, base_native_proxy_wallet_, name, symbol, decimals),
             ErrorCodes.BAD_SENDER
         );
-
         (
 //            uint32 nonce,
             uint128 amount,
@@ -208,6 +207,10 @@ abstract contract ProxyMultiVaultAlien_V9_Withdraw is
             address,
             TvmCell
         ));
+
+        // accumulate fee
+        uint128 fee = _calculateFees(amount);
+        _accumulateFee(fee, msg.sender);
 
         (
             address recipient,
@@ -223,7 +226,7 @@ abstract contract ProxyMultiVaultAlien_V9_Withdraw is
             base_chainId,
             base_token,
             base_native_proxy_wallet_,
-            amount,
+            amount - fee,
             recipient,
 
             msg.value, // todo subtract the cost of the current transaction

@@ -121,6 +121,11 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
             (address, uint128, address, TvmCell)
         );
 
+
+        // accumulate fee
+        uint128 fee = _calculateFees(amount);
+        _accumulateFee(fee, token_wallet);
+
         TvmCell transferPayload;
 
         if (recipient == dex_middleware) {
@@ -133,7 +138,7 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
 
         _transferTokens(
             token_wallet,
-            amount,
+            amount - fee,
             recipient,
             remainingGasTo,
             transferPayload

@@ -1,0 +1,6 @@
+pragma ever-solidity >= 0.62.0;
+
+interface IBridgeTokenFee{
+    function accumulateFee(uint128 fee) external onlyProxy;
+    function getAccumulatedFee() external returns(uint128);
+}
