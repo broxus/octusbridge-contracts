@@ -16,13 +16,15 @@ ethereum/cache
 everscale/build/*.code
 everscale/build/*.base64
 everscale/build/*.tvc
+everscale/build/*.map.json
+everscale/build/factorySource.ts
 ethereum/deployments
 .DS_Store
 ethereum/artifacts
 *deploy-manager*
 manifest.json
 tokens.json
-everscale/build
 everscale/.cache
 everscale/.env
 everscale/deployments/proxy
+everscale/deployments/locklift

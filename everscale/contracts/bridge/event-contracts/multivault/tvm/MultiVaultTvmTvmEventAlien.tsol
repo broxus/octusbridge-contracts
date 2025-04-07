@@ -136,9 +136,9 @@ contract MultiVaultTvmTvmEventAlien is
         }
 
         IProxyMultiVaultAlien_V9(transitionalData.proxy).deriveTVMAlienTokenRoot{
-                value: gasToValue(Gas.DERIVE_TOKEN_ROOT_GAS, address(this).wid),
-                callback: MultiVaultTvmTvmEventAlien.receiveAlienTokenRoot
-            }(
+            value: gasToValue(Gas.DERIVE_TOKEN_ROOT_GAS, address(this).wid),
+            callback: MultiVaultTvmTvmEventAlien.receiveAlienTokenRoot
+        }(
             eventData.base_chainId,
             eventData.base_token,
             eventData.base_native_proxy_wallet,
@@ -324,30 +324,27 @@ contract MultiVaultTvmTvmEventAlien is
         (
             /*functionId*/,
             /*chainId*/,
-            address base_native_proxy_wallet,
 
             address base_token,
             string name,
             string symbol,
             uint8 decimals,
+            address base_native_proxy_wallet,
 
-            uint128 amount,
+            /*sender*/,
             address recipient,
+            uint128 amount,
 
             uint256 value,
             uint128 expected_gas,
-
             /*remaining_gas_to*/,
-            /*sender*/,
-
-            TvmCell payload
+            optional(TvmCell) payload
         ) = abi.decode(data.get(), (
-            uint32, int32, address,
-            address, string, string, uint8,
-            uint128, address,
-            uint256, uint128,
-            address, address,
-            TvmCell
+            uint32, int32,
+            address, string, string, uint8, address,
+            address, address, uint128,
+            uint256, uint128, address,
+            optional(TvmCell)
         ));
 
         return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} EventData(
@@ -395,9 +392,9 @@ contract MultiVaultTvmTvmEventAlien is
 
             // Deploy BridgeTokenFee for this Token
             IProxyMultiVaultAlien_V9(transitionalData.proxy).deployBridgeTokenFee{
-                value: Gas.getDeployBridgeTokenFeeValue() + gasToValue(BRIDGE_TOKEN_FEES_EXTRA_GAS, address(this).wid),
+                value: Gas.getDeployBridgeTokenFeeValue() + gasToValue(Gas.BRIDGE_TOKEN_FEES_EXTRA_GAS, address(this).wid),
                 bounce: false
-            }(base_token, initializer);
+            }(eventData.base_token, initializer);
 
             _requestMergeRouter();
         } else if (
@@ -490,7 +487,7 @@ contract MultiVaultTvmTvmEventAlien is
     function _set_native_proxy_token_wallet(address wallet) internal {
         TransitionalData transitionalData = getTransitionalData();
 
-        transitionalData.native_proxy_token_wallet = wallet;
+        transitionalData.native_proxy_token_wallet.set(wallet);
 
         _set_transitional_data(transitionalData);
     }
@@ -507,10 +504,10 @@ contract MultiVaultTvmTvmEventAlien is
         address recipient_,
         uint value_,
         uint128 expected_gas_,
-        TvmCell payload_,
+        optional(TvmCell) payload_,
         address proxy_,
         address token_,
-        address native_proxy_token_wallet
+        optional(address) native_proxy_token_wallet
     ) {
         EventData eventData = getEventData();
         TransitionalData transitionalData = getTransitionalData();

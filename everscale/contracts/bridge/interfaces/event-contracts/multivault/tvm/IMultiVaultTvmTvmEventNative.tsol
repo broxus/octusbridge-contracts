@@ -13,11 +13,14 @@ interface IMultiVaultTvmTvmEventNative {
 
     function getDecodedData() external responsible returns(
         address token_,
+        string name_,
+        string symbol_,
+        uint8 decimals_,
         uint128 amount_,
         address recipient_,
         uint value_,
         uint128 expected_gas_,
-        TvmCell payload_,
+        optional(TvmCell) payload_,
         address proxy_,
         address tokenWallet_
     );

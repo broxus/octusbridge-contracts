@@ -115,21 +115,21 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
             address token_wallet,
             uint128 amount,
             address recipient,
-            TvmCell payload
+            optional(TvmCell) payload
         ) = abi.decode(
             meta,
-            (address, uint128, address, TvmCell)
+            (address, uint128, address, optional(TvmCell))
         );
 
 
         // accumulate fee
-        uint128 fee = _calculateFees(amount);
+        uint128 fee = _calculateFees(amount, token_wallet);
         _accumulateFee(fee, token_wallet);
 
         TvmCell transferPayload;
 
         if (recipient == dex_middleware) {
-            transferPayload = payload;
+            transferPayload = payload.get();
         } else {
             uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
 

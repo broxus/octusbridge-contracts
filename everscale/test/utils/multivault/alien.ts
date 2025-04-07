@@ -1,12 +1,13 @@
 import { Account } from "everscale-standalone-client/nodejs";
 import { Address, Contract, zeroAddress } from "locklift";
 import {
+  BridgeTokenFeeAbi,
   EthereumEverscaleEventConfigurationAbi,
   EverscaleEthereumEventConfigurationAbi,
   EverscaleSolanaEventConfigurationAbi,
   FactorySource,
   ProxyMultiVaultAlien_V9Abi,
-  SolanaEverscaleEventConfigurationAbi,
+  SolanaEverscaleEventConfigurationAbi, TokenWalletAbi,
   TrustlessVerifierMockupAbi,
   TvmTvmEventConfigurationAbi,
 } from "../../../build/factorySource";
@@ -90,7 +91,7 @@ export const setupAlienMultiVault = async (
     proxy.address,
     tvmEverscaleEvent.code,
     trustlessVerifier?.address || zeroAddress,
-    new Address("0:a9edc1dc697cf58ace613fcfecba69f0b3226a9b6b84449f9bb7285431b97262")
+    new Address("0:74d5af2734f264d49cdcefa9b6adc2d93f3d69d45720d84773a40f9e2b239e72")
   );
 
   // Set proxy EVM configuration
@@ -333,3 +334,52 @@ const setTVMConfiguration = async (
       }),
   );
 };
+
+export const deployBridgeTokenFeeAndSetFee = async (
+  owner: Account,
+  token: Contract<FactorySource["TokenRoot"]>,
+  proxy: Contract<FactorySource["ProxyMultiVaultAlien_V9"]>,
+  fee: number
+): Promise<[Contract<BridgeTokenFeeAbi>, Contract<TokenWalletAbi>]> => {
+  const bridgeTokenFeeCode = locklift.factory.getContractArtifacts( "BridgeTokenFee").code;
+  const platformCode = locklift.factory.getContractArtifacts( "Platform").code;
+
+  //set bridge token fee code
+  await proxy.methods.setBridgeTokenFeeCode({_code: bridgeTokenFeeCode}).send({
+      from: owner.address,
+      amount: locklift.utils.toNano(0.5)
+  });
+
+  //set platform
+  await proxy.methods.setPlatformCode({_code: platformCode}).send({
+      from: owner.address,
+      amount: locklift.utils.toNano(0.5)
+  });
+
+  let proxyTokenWallet = await token.methods.walletOf({answerId: 0, walletOwner: proxy.address})
+    .call()
+    .then((a) =>  locklift.factory.getDeployedContract('TokenWallet', a.value0));
+
+  // deploy bridgeTokenFee
+  const { traceTree } = await locklift.tracing.trace(await proxy.methods.deployBridgeTokenFee({_token: proxyTokenWallet.address, _remainingGasTo: owner.address})
+    .send({
+      from: owner.address,
+      amount: locklift.utils.toNano(5),
+    }));
+
+  let bridgeTokenFee = await proxy.methods.getExpectedBridgeTokenFeeAddress({_token: proxyTokenWallet.address, answerId: 0})
+    .call()
+    .then((a) => locklift.factory.getDeployedContract("BridgeTokenFee", a.value0));
+
+    await logContract('BridgeTokenFee', bridgeTokenFee.address);
+
+  // Set fees
+  await proxy.methods.setDefaultFeeNumerator({_defaultFee: fee})
+    .send({
+      from: owner.address,
+      amount: locklift.utils.toNano(0.5),
+    });
+
+  return [bridgeTokenFee, proxyTokenWallet];
+};
+

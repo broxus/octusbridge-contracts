@@ -203,17 +203,22 @@ interface IProxyMultiVaultAlien_V9 is IEVMCallback, INetworks {
     ) external;
 
     event TvmTvmAlien(
-        int32 chainId,
-        address token,
-        address nativeProxyWallet,
-        uint128 amount,
-        address recipient,
+        int32 destinationChainId,
 
-        uint256 value,
+        address baseToken,
+        string name,
+        string symbol,
+        uint8 decimals,
+        address nativeProxyWallet,
+
+        address sender,
+        address recipient,
+        uint128 amount,
+
+        uint256 attachedGas,
         uint128 expectedGas,
         address remainingGasTo,
-        address sender,
-        TvmCell payload
+        optional(TvmCell) payload
     );
 
     // deploy token fees

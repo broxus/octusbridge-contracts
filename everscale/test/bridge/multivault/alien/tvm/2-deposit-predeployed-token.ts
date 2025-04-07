@@ -8,11 +8,11 @@ import {
   StakingMockupAbi,
   TrustlessVerifierMockupAbi,
   TvmTvmEventConfigurationAbi,
-  TokenRootAbi,
+  TokenRootAbi, BridgeTokenFeeAbi, TokenWalletAbi,
 } from "../../../../../build/factorySource";
 
 import { setupBridge } from "../../../../utils/bridge";
-import { setupAlienMultiVault } from "../../../../utils/multivault/alien";
+import {deployBridgeTokenFeeAndSetFee, setupAlienMultiVault} from "../../../../utils/multivault/alien";
 import { setupNativeMultiVault } from "../../../../utils/multivault/native";
 import { deployTokenRoot, mintTokens, getTokenWalletByAddress } from "../../../../utils/token";
 
@@ -101,7 +101,7 @@ describe("Deposit alien TVM as predeployed native token", () => {
       alienProxy.methods
         .addPredeployedTVMToken({
           _incomingExternal: new Address("0:21ecbffd6eecb69728a063ad99350eedc2a566cebd5ec8aff682c9141300c41f"),
-          _existingInternal: tokenRoot.address,
+          _tokenData: { internalToken: tokenRoot.address, externalNativeProxyWallet: },
           _remainingGasTo: bridgeOwner.address,
         })
         .send({ from: bridgeOwner.address, amount: toNano(2), bounce: true }),

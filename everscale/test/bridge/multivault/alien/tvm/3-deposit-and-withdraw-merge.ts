@@ -32,6 +32,11 @@ const customTokenMeta = {
 const alienTokenBase = {
   chainId: -6001,
   token: new Address("0:21ecbffd6eecb69728a063ad99350eedc2a566cebd5ec8aff682c9141300c41f"),
+  native_proxy_wallet: ,
+  name: customTokenMeta.name,
+  symbol: customTokenMeta.symbol,
+  decimals: customTokenMeta.decimals,
+  remainingGasTo: new Address()
 };
 
 const alienTokenMeta = {

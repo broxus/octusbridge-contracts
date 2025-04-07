@@ -28,14 +28,15 @@ const config: LockliftConfig = {
     secretKey: process.env.EVERSCAN_SECRET_KEY!,
   },
   compiler: {
-    version: "0.71.0",
-    externalContracts: {
-      "../node_modules/ton-eth-bridge-token-contracts": ['TokenRootUpgradable', 'TokenWalletUpgradable', 'TokenWalletPlatform'],
+    path: '/Users/helenkhramtsova/TVM-Solidity-Compiler/build/solc/solc',
+    externalContractsArtifacts: {
+      "../node_modules/ton-eth-bridge-token-contracts/build": ['TokenRoot', 'TokenWallet', 'TokenWalletPlatform'],
       "build_prod": ['Bridge']
     }
   },
   linker: {
-    version: "0.20.6",
+    path: '/Users/helenkhramtsova/Library/Caches/locklift-nodejs/linker/0_20_6/tvm_linker_0_20_6_darwin',
+    lib:'/Users/helenkhramtsova/Library/Caches/locklift-nodejs/lib/0_71_0/stdlib_sol_0_71_0.tvm'
   },
   networks: {
     proxy: {
@@ -73,7 +74,22 @@ const config: LockliftConfig = {
         amount: 20,
       },
     },
-
+    locklift: {
+      giver: {
+        address: process.env.LOCAL_GIVER_ADDRESS!,
+        key: process.env.LOCAL_GIVER_KEY!,
+      },
+      connection: {
+        id: 1001,
+        type: "proxy",
+        // @ts-ignore
+        data: {}
+      },
+      keys: {
+        phrase: process.env.LOCAL_PHRASE,
+        amount: 20,
+      },
+    },
     devnet1: {
       connection: {
         id: 2000,

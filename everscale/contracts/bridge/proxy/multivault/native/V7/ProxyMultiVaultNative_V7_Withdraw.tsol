@@ -170,11 +170,11 @@ abstract contract ProxyMultiVaultNative_V7_Withdraw is
         address remainingGasTo,
         address sender,
         TvmCell transferPayload
-    ) internal pure {
+    ) internal view {
 
         // accumulate fee
-        uint128 fee = _calculateFees(amount);
-        _accumulateFee(fee, token);
+        uint128 fee = _calculateFees(amount, msg.sender);
+        _accumulateFee(fee, msg.sender);
 
         (
             address recipient,
@@ -183,7 +183,7 @@ abstract contract ProxyMultiVaultNative_V7_Withdraw is
             string symbol,
             uint8 decimals,
             uint128 expectedGas,
-            TvmCell eventPayload
+            optional(TvmCell) eventPayload
         ) = abi.decode(transferPayload, (
             address,
             int32,
@@ -191,25 +191,25 @@ abstract contract ProxyMultiVaultNative_V7_Withdraw is
             string,
             uint8,
             uint128,
-            TvmCell
+            optional(TvmCell)
         ));
 
         emit TvmTvmNative(
             chainId,
-            msg.sender,
 
             token,
             name,
             symbol,
             decimals,
+            msg.sender,
 
-            amount - fee,
+            sender,
             recipient,
+            amount - fee,
 
             msg.value, // todo subtract the cost of the current transaction
             expectedGas,
             remainingGasTo,
-            sender,
             eventPayload
         );
 

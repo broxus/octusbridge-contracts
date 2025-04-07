@@ -1,6 +1,6 @@
 pragma ever-solidity >= 0.68.0;
 
-import "@broxus/ever-contracts/contracts/libraries/MsgFlag.tsol";
+import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
 
 contract Platform {
     address static root;
@@ -40,8 +40,8 @@ contract Platform {
         tvm.setcode(code);
         tvm.setCurrentCode(code);
 
-        onCodeUpgrade(data);
+        onCodeUpgrade(data, false);
     }
 
-    function onCodeUpgrade(TvmCell data) private {}
+    function onCodeUpgrade(TvmCell _data, bool _upgrade) private {}
 }
