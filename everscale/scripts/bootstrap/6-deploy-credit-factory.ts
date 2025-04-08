@@ -1,10 +1,10 @@
-import { Address, getRandomNonce, toNano } from "locklift";
+import {Address, getRandomNonce, toNano} from "locklift";
 
 const main = async () => {
     const key =
-        "0x2651a72372046434af0e752205b6ad50b31c9498d9072ce793156af1d1754862";
+        "0x9fa323a12eed65d2ffb2bf2efe0674d4da1b5372ae3a9433043c452640c73938";
     const owner =
-        "0:60b6a00f4abf2e9c6cd04ad5ebd383e9a219367d67fab85464f5c5a4a2e13c33";
+        "0:387caecd8624b1ef095cd68595f0370fc6ed820ccd55913a4c7c736b800e2b3e";
 
     const EventCloser = locklift.factory.getContractArtifacts('EventCloser');
     const EventDeployer = locklift.factory.getContractArtifacts('EventDeployer');
@@ -40,7 +40,7 @@ const main = async () => {
         contractName: 'EventCreditFactory'
     });
 
-    const { eventClosers } = await creditFactory.methods.eventClosers().call();
+    const {eventClosers} = await creditFactory.methods.eventClosers().call();
 
     for (let i = 0; i < eventClosers.length; i++) {
         await locklift.deployments.saveContract({
@@ -51,7 +51,7 @@ const main = async () => {
         console.log(`EventCloser ${(i + 1)}: ${eventClosers[i].toString()}`);
     }
 
-    const { eventDeployers } = await creditFactory.methods.eventDeployers().call();
+    const {eventDeployers} = await creditFactory.methods.eventDeployers().call();
 
     for (let i = 0; i < eventDeployers.length; i++) {
         await locklift.deployments.saveContract({
@@ -65,8 +65,8 @@ const main = async () => {
 
 
 main()
-  .then(() => process.exit(0))
-  .catch((e) => {
-    console.log(e);
-    process.exit(1);
-  });
+    .then(() => process.exit(0))
+    .catch((e) => {
+        console.log(e);
+        process.exit(1);
+    });

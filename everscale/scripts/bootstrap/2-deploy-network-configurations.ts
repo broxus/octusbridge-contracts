@@ -88,16 +88,19 @@ const EVER_NATIVE_TRANSFER_EVENT_ABI = [
 const TVM_ALIEN_TRANSFER_EVENT_ABI = {
   "name": "TvmTvmAlien",
   "inputs": [
-    {"name":"chainId","type":"int32"},
-    {"name":"token","type":"address"},
-    {"name":"native_proxy_wallet","type":"address"},
-    {"name":"amount","type":"uint128"},
+    {"name":"destinationChainId","type":"int32"},
+    {"name":"baseToken","type":"address"},
+    {"name":"name","type":"string"},
+    {"name":"symbol","type":"string"},
+    {"name":"decimals","type":"uint8"},
+    {"name":"nativeProxyWallet","type":"address"},
+    {"name":"sender","type":"address"},
     {"name":"recipient","type":"address"},
-    {"name":"value","type":"uint256"},
+    {"name":"amount","type":"uint128"},
+    {"name":"attachedGas","type":"uint256"},
     {"name":"expectedGas","type":"uint128"},
     {"name":"remainingGasTo","type":"address"},
-    {"name":"sender","type":"address"},
-    {"name":"payload","type":"cell"}
+    {"name":"payload","type":"optional(cell)"}
   ],
   "outputs": [
   ]
@@ -106,19 +109,19 @@ const TVM_ALIEN_TRANSFER_EVENT_ABI = {
 const TVM_NATIVE_TRANSFER_EVENT_ABI = {
   "name": "TvmTvmNative",
   "inputs": [
-    {"name":"chainId","type":"int32"},
-    {"name":"nativeProxyWallet","type":"address"},
-    {"name":"token","type":"address"},
+    {"name":"destinationChainId","type":"int32"},
+    {"name":"baseToken","type":"address"},
     {"name":"name","type":"string"},
     {"name":"symbol","type":"string"},
     {"name":"decimals","type":"uint8"},
-    {"name":"amount","type":"uint128"},
+    {"name":"nativeProxyWallet","type":"address"},
+    {"name":"sender","type":"address"},
     {"name":"recipient","type":"address"},
-    {"name":"value","type":"uint256"},
+    {"name":"amount","type":"uint128"},
+    {"name":"attachedGas","type":"uint256"},
     {"name":"expectedGas","type":"uint128"},
     {"name":"remainingGasTo","type":"address"},
-    {"name":"sender","type":"address"},
-    {"name":"payload","type":"cell"}
+    {"name":"payload","type":"optional(cell)"}
   ],
   "outputs": [
   ]

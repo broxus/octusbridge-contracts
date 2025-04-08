@@ -88,7 +88,7 @@ const main = async (): Promise<void> => {
     await locklift.tracing.trace(
         proxyMultiVaultNative.methods
             .setTVMConfiguration({
-              _config: { incomingConfigurations: nativeTvmConfigurations },
+              _incomingConfigurations: nativeTvmConfigurations,
               remainingGasTo: admin.address,
             })
             .send({

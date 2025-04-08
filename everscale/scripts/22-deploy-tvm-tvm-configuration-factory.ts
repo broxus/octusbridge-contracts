@@ -6,6 +6,8 @@ const config = getConfig();
 
 assert(!!config, "Config should be defined");
 const main = async () => {
+
+  await locklift.deployments.load();
   const signer = (await locklift.keystore.getSigner("0"))!;
 
   const { contract: tvmTvmEventConfigFactory } = await locklift.factory.deployContract({
