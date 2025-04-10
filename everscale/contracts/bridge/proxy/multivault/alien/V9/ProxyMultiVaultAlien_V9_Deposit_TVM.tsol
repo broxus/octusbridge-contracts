@@ -26,18 +26,25 @@ abstract contract ProxyMultiVaultAlien_V9_Deposit_TVM is
             uint128 amount,
             address recipient,
             optional(TvmCell) payload,
+            address eventContract,
             optional(address) nativeProxyTokenWallet
-        ) = abi.decode(
-            meta,
-            (address, uint128, address, optional(TvmCell), optional(address))
-        );
+        ) = abi.decode(meta, (
+            address,
+            uint128,
+            address,
+            optional(TvmCell),
+            address,
+            optional(address)
+        ));
+
 
         if (nativeProxyTokenWallet.hasValue()) {
             TvmCell _meta = abi.encode(
                 nativeProxyTokenWallet.get(),
                 amount,
                 recipient,
-                payload
+                payload,
+                eventContract
             );
 
             ITvmTvmProxyExtended(proxyMultiVaultNative).onTVMEventConfirmedExtended{

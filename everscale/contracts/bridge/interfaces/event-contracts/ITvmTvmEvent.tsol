@@ -2,9 +2,21 @@ pragma ever-solidity >= 0.62.0;
 
 
 interface ITvmTvmEvent {
-    enum Status { Initializing, Pending, Confirmed }
+    enum Status {
+        Initializing,
+        Pending,
+        Confirmed,
+        NotEnoughLiquidity,
+        Cancelled,
+        LiquidityRequested,
+        LiquidityProvided
+    }
 
     event Confirmed();
+    event NotEnoughLiquidity();
+    event Cancelled();
+    event LiquidityRequested(uint128 reward);
+    event LiquidityProvided(address tokenSender);
 
     struct TvmTvmEventVoteData {
         uint msgHash;
@@ -20,4 +32,5 @@ interface ITvmTvmEvent {
     }
 
     function processProof(ITvmTvmEvent.TvmTvmEventVoteData eventVoteData) external;
+    function notEnoughLiquidity() external;
 }

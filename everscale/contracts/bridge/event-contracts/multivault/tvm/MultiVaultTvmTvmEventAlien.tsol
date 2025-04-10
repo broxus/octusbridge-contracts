@@ -41,7 +41,7 @@ contract MultiVaultTvmTvmEventAlien is
     }
 
     function processProof(ITvmTvmEvent.TvmTvmEventVoteData _eventVoteData) override external {
-        require(status != Status.Confirmed, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
+        require(status == Status.Initializing || status == Status.Pending, ErrorCodes.EVENT_NOT_INITIALIZING);
         require(msg.sender == eventInitData.configuration, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
 
         EventData eventData = getEventData();
@@ -82,6 +82,7 @@ contract MultiVaultTvmTvmEventAlien is
 
     function onTrustlessVerify(bool success, uint256 /*txHash*/) external functionID(0x756adff1) override {
         require(msg.sender == transactionChecker, ErrorCodes.SENDER_NOT_TX_CHECKER);
+        require(status == Status.Pending, ErrorCodes.EVENT_NOT_PENDING);
 
         if (success) {
             status = Status.Confirmed;
@@ -308,6 +309,7 @@ contract MultiVaultTvmTvmEventAlien is
                 transitionalData.target_amount,
                 eventData.recipient,
                 eventData.payload,
+                address(this),
                 transitionalData.native_proxy_token_wallet
             );
 

@@ -79,11 +79,12 @@ abstract contract ProxyMultiVaultNative_V7_Base is IProxyMultiVaultNative_V7, In
         uint128 amount,
         address recipient,
         address remainingGasTo,
-        TvmCell payload
+        TvmCell payload,
+        bool bounce
     ) internal pure {
         ITokenWallet(token_wallet).transfer{
             value: 0,
-            bounce: false,
+            bounce: bounce,
             flag: MsgFlag.ALL_NOT_RESERVED
         }(
             amount,
@@ -93,5 +94,18 @@ abstract contract ProxyMultiVaultNative_V7_Base is IProxyMultiVaultNative_V7, In
             true,
             payload
         );
+    }
+
+    function _isArrayContainsAddress(
+        address[] array,
+        address searchElement
+    ) internal pure returns (bool) {
+        for (address value: array) {
+            if (searchElement == value) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

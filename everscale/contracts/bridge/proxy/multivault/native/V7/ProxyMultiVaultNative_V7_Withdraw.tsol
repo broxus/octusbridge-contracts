@@ -3,9 +3,12 @@ pragma ever-solidity >= 0.62.0;
 
 import "../../../../interfaces/event-contracts/IEverscaleEthereumEvent.tsol";
 import "../../../../interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
+import "../../../../interfaces/proxy/ITvmEventCancelled.tsol";
 
 import "../../../../interfaces/event-configuration-contracts/IEverscaleSolanaEventConfiguration.tsol";
 import "../../../../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.tsol";
+
+import "../../../../../utils/ErrorCodes.tsol";
 
 import "./ProxyMultiVaultNative_V7_Base.tsol";
 
@@ -14,7 +17,8 @@ import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensTransfe
 
 abstract contract ProxyMultiVaultNative_V7_Withdraw is
     ProxyMultiVaultNative_V7_Base,
-    IAcceptTokensTransferCallback
+    IAcceptTokensTransferCallback,
+    ITvmEventCancelled
 {
     /// @notice Handles incoming token transfer
     /// Initializes native token withdraw
@@ -83,6 +87,40 @@ abstract contract ProxyMultiVaultNative_V7_Withdraw is
                 transferPayload
             );
         }
+    }
+
+    function onTVMEventCancelled(
+        ITvmTvmEvent.TvmTvmEventInitData /*eventInitData*/,
+        TvmCell withdrawPayload
+    ) external override reserveAtLeastTargetBalance {
+        require(
+            (proxyMultiVaultAlien.value != 0 && msg.sender == proxyMultiVaultAlien) ||
+            _isArrayContainsAddress(tvmConfiguration.incomingConfigurations, msg.sender),
+            ErrorCodes.NOT_TVM_CONFIG_OR_ALIEN_PROXY
+        );
+
+        (
+            address tokenRoot,
+            uint128 amount,
+            address sender,
+            address remainingGasTo,
+            TvmCell transferData
+        ) = abi.decode(withdrawPayload, (
+            address,
+            uint128,
+            address,
+            address,
+            TvmCell
+        ));
+
+        _emitTVMEvent(
+            0,
+            tokenRoot,
+            amount,
+            remainingGasTo,
+            sender,
+            transferData
+        );
     }
 
     function _deploySolanaEvent(

@@ -52,6 +52,10 @@ library ErrorCodes {
     uint16 constant WRONG_POOL = 2328;
     uint16 constant SENDER_NOT_TX_CHECKER = 2329;
     uint16 constant WRONG_BASE_NATIVE_PROXY_WALLET = 2330;
+    uint16 constant SENDER_NOT_PROXY = 2331;
+    uint16 constant SENDER_NOT_RECIPIENT = 2332;
+    uint16 constant WRONG_REWARD = 2333;
+    uint16 constant SENDER_NOT_TOKEN_WALLET = 2334;
 
     // Connector
     uint16 constant DEPLOYER_NOT_BRIDGE = 2420;
@@ -126,6 +130,7 @@ library ErrorCodes {
     uint16 constant WRONG_MERGE_POOL_NONCE = 2709;
     uint16 constant NOT_TVM_CONFIG = 2710;
     uint16 constant NOT_TVM_CONFIG_OR_ALIEN_PROXY = 2711;
+    uint16 constant NOT_EVENT_ADDRESS_KEEPER = 2712;
 
     // Hidden bridge
     uint16 constant UNKNOWN_MEDIATOR_OPERATION = 2801;
@@ -149,4 +154,7 @@ library ErrorCodes {
     // Proxy multi vault alien
 
     // Proxy multi vault native
+
+    // Event address keeper
+    uint16 constant WRONG_DEPLOYER = 3001;
 }

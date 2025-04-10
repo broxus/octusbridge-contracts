@@ -3,7 +3,7 @@ pragma AbiHeader expire;
 
 
 import "./../../interfaces/event-configuration-contracts/ITvmTvmEventConfiguration.tsol";
-
+import "./../../interfaces/proxy/ITvmEventCancelled.tsol";
 import "./../../interfaces/proxy/ITvmTvmProxy.tsol";
 import "./../../interfaces/proxy/ITvmTvmProxyExtended.tsol";
 
@@ -25,6 +25,7 @@ contract TvmTvmEventConfiguration is
     ITvmTvmEventConfiguration,
     ITvmTvmProxy,
     ITvmTvmProxyExtended,
+    ITvmEventCancelled,
     TransferUtils,
     InternalOwner,
     CheckPubKey
@@ -225,6 +226,27 @@ contract TvmTvmEventConfiguration is
             }(eventVoteData);
     }
 
+    function onTVMEventCancelled(
+        ITvmTvmEvent.TvmTvmEventInitData eventInitData,
+        TvmCell _withdrawPayload
+    ) external override reserveAtLeastTargetBalance {
+        require(
+            eventInitData.configuration == address(this),
+            ErrorCodes.SENDER_NOT_EVENT_CONTRACT
+        );
+
+        address eventContract = _deriveEventAddress(eventInitData);
+
+        require(
+            eventContract == msg.sender,
+            ErrorCodes.SENDER_NOT_EVENT_CONTRACT
+        );
+
+        ITvmEventCancelled(networkConfiguration.proxy).onTVMEventCancelled{
+                flag: MsgFlag.ALL_NOT_RESERVED
+            }(eventInitData, _withdrawPayload);
+    }
+
     /// @dev Derive the Ethereum event contract address from it's init data
     /// @param msgHash Message hash
     /// @return eventContract Address of the corresponding ethereum event contract
@@ -284,7 +306,7 @@ contract TvmTvmEventConfiguration is
     /// If it's correct, then sends the callback to the proxy with the same signature.
     /// @param eventInitData Ethereum event data
     /// @param gasBackAddress Gas back address
-    function onEventConfirmed(
+    function onTVMEventConfirmed(
         ITvmTvmEvent.TvmTvmEventInitData eventInitData,
         address gasBackAddress
     ) external override reserveAtLeastTargetBalance() {
@@ -300,7 +322,7 @@ contract TvmTvmEventConfiguration is
             ErrorCodes.SENDER_NOT_EVENT_CONTRACT
         );
 
-        ITvmTvmProxy(networkConfiguration.proxy).onEventConfirmed{
+        ITvmTvmProxy(networkConfiguration.proxy).onTVMEventConfirmed{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, gasBackAddress);
 

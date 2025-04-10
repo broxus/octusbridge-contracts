@@ -36,4 +36,5 @@ library Gas {
     }
 
     uint128 constant DEPLOY_TVM_TVM_EVENT = 1_000_000;
+    uint128 constant DEPLOY_EVENT_ADDRESS_KEEPER = 1_000_000;
 }
