@@ -29,7 +29,7 @@ abstract contract ProxyMultiVaultAlien_V9_Deposit_TVM is
             optional(address) nativeProxyTokenWallet
         ) = abi.decode(
             meta,
-            (address, uint128, address, TvmCell, address)
+            (address, uint128, address, optional(TvmCell), optional(address))
         );
 
         if (nativeProxyTokenWallet.hasValue()) {
