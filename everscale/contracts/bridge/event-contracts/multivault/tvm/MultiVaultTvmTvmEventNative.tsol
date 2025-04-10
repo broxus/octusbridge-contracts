@@ -4,10 +4,13 @@ pragma AbiHeader pubkey;
 pragma AbiHeader expire;
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.tsol";
+import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenWallet.tsol";
+import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensTransferCallback.tsol";
 
 import "./../../../interfaces/event-contracts/multivault/tvm/IMultiVaultTvmTvmEventNative.tsol";
 import "./../../../interfaces/event-configuration-contracts/ITvmTvmEventConfiguration.tsol";
 import "./../../../interfaces/proxy/ITvmTvmProxyExtended.tsol";
+import "./../../../interfaces/proxy/ITvmEventCancelled.tsol";
 import "./../../../interfaces/trustless-verifier/ITrustlessVerifier.tsol";
 import "./../../../interfaces/trustless-verifier/IOnTrustlessVerify.tsol";
 import "./../../../libraries/BocDecoder.tsol";
@@ -18,7 +21,8 @@ import "./../../base/tvm/TvmTvmBaseEvent.tsol";
 contract MultiVaultTvmTvmEventNative is
     TvmTvmBaseEvent,
     IMultiVaultTvmTvmEventNative,
-    IOnTrustlessVerify
+    IOnTrustlessVerify,
+    IAcceptTokensTransferCallback
 {
     address public token;
     string public name;
@@ -38,6 +42,9 @@ contract MultiVaultTvmTvmEventNative is
 
     bool setupFinished;
 
+    uint128 public reward;
+    address public eventTokenWallet;
+
     constructor(
         address _initializer,
         TvmCell _meta,
@@ -50,7 +57,7 @@ contract MultiVaultTvmTvmEventNative is
     }
 
     function processProof(ITvmTvmEvent.TvmTvmEventVoteData _eventVoteData) override external {
-        require(status != Status.Confirmed, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
+        require(status == Status.Initializing || status == Status.Pending, ErrorCodes.EVENT_NOT_INITIALIZING);
         require(msg.sender == eventInitData.configuration, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
 
         optional(TvmCell) data = eventBody.toSlice().load(optional(TvmCell));
@@ -118,6 +125,7 @@ contract MultiVaultTvmTvmEventNative is
 
     function onTrustlessVerify(bool success, uint256 /*txHash*/) external functionID(0x756adff1) override {
         require(msg.sender == transactionChecker, ErrorCodes.SENDER_NOT_TX_CHECKER);
+        require(status == Status.Pending, ErrorCodes.EVENT_NOT_PENDING);
 
         if (success) {
             status = Status.Confirmed;
@@ -174,12 +182,177 @@ contract MultiVaultTvmTvmEventNative is
                 proxyTokenWallet,
                 amount,
                 recipient,
-                payload
+                payload,
+                address(this)
             );
 
             ITvmTvmProxyExtended(eventInitData.configuration).onTVMEventConfirmedExtended{
                 flag: MsgFlag.ALL_NOT_RESERVED
             }(eventInitData, metaData, initializer);
         }
+    }
+
+    function notEnoughLiquidity() external override {
+        require(msg.sender == proxy, ErrorCodes.SENDER_NOT_PROXY);
+
+        status = Status.NotEnoughLiquidity;
+        emit NotEnoughLiquidity();
+
+        initializer.transfer({
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+            bounce: false
+        });
+    }
+
+    function cancel(
+        address _newRecipient,
+        address _remainingGasTo,
+        uint128 _expectedGas,
+        optional(TvmCell) eventPayload
+    ) external {
+        require(status == Status.NotEnoughLiquidity, ErrorCodes.WRONG_STATUS);
+        require(msg.sender == recipient, ErrorCodes.SENDER_NOT_RECIPIENT);
+
+        status = Status.Cancelled;
+        emit Cancelled();
+
+        TvmCell transferData = abi.encode(
+            _newRecipient,
+            eventInitData.chainId,
+            name,
+            symbol,
+            decimals,
+            _expectedGas,
+            eventPayload
+        );
+
+        TvmCell withdrawPayload = abi.encode(
+            token,
+            amount,
+            recipient,
+            _remainingGasTo,
+            transferData
+        );
+
+        ITvmEventCancelled(eventInitData.configuration)
+            .onTVMEventCancelled{
+                flag: MsgFlag.ALL_NOT_RESERVED
+            }(eventInitData, withdrawPayload);
+    }
+
+    function requestLiquidity(uint128 _reward) external {
+        require(status == Status.NotEnoughLiquidity, ErrorCodes.WRONG_STATUS);
+        require(msg.sender == recipient, ErrorCodes.SENDER_NOT_RECIPIENT);
+        require(reward <= amount, ErrorCodes.WRONG_REWARD);
+
+        status = Status.LiquidityRequested;
+        reward = _reward;
+
+        emit LiquidityRequested(reward);
+
+        ITokenRoot(token).walletOf{
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED,
+            callback: MultiVaultTvmTvmEventNative.receiveProxyTokenWallet
+        }(address(this));
+    }
+
+    function receiveProxyTokenWallet(
+        address tokenWallet_
+    ) external override {
+        require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
+
+        eventTokenWallet = tokenWallet_;
+
+        recipient.transfer({
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+            bounce: false
+        });
+    }
+
+    function onAcceptTokensTransfer(
+        address /*_tokenRoot*/,
+        uint128 _amount,
+        address _sender,
+        address /*senderWallet*/,
+        address _remainingGasTo,
+        TvmCell _payload
+    ) override external {
+        require(msg.sender == eventTokenWallet, ErrorCodes.SENDER_NOT_TOKEN_WALLET);
+
+        // return tokens to sender in case of wrong amount or incorrect status
+        if (status != Status.LiquidityRequested || _amount < amount - reward) {
+            TvmCell empty;
+
+            ITokenWallet(eventTokenWallet).transfer{
+                value: 0,
+                bounce: false,
+                flag: MsgFlag.ALL_NOT_RESERVED
+            }(
+                _amount,
+                _sender,
+                Gas.getDeployTokenWalletValue(),
+                _remainingGasTo,
+                false,
+                empty
+            );
+
+            return;
+        }
+
+        status = Status.LiquidityProvided;
+        emit LiquidityProvided(_sender);
+
+        // send tokens to original recipient
+        ITokenWallet(eventTokenWallet).transfer{
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(
+            _amount,
+            recipient,
+            Gas.getDeployTokenWalletValue(),
+            _remainingGasTo,
+            payload.hasValue() ? true : false,
+            payload.get()
+        );
+
+        // emit withdraw event to original chainId
+        (
+            address newRecipient,
+            address remainingGasTo,
+            uint128 expectedGas,
+            optional(TvmCell) eventPayload
+        ) = abi.decode(_payload, (
+            address,
+            address,
+            uint128,
+            optional(TvmCell)
+        ));
+
+        TvmCell transferData = abi.encode(
+            newRecipient,
+            eventInitData.chainId,
+            name,
+            symbol,
+            decimals,
+            expectedGas,
+            eventPayload
+        );
+
+        TvmCell withdrawPayload = abi.encode(
+            token,
+            amount,
+            _sender,
+            remainingGasTo,
+            transferData
+        );
+
+        ITvmEventCancelled(eventInitData.configuration)
+            .onTVMEventCancelled{
+                flag: MsgFlag.ALL_NOT_RESERVED
+            }(eventInitData, withdrawPayload);
     }
 }

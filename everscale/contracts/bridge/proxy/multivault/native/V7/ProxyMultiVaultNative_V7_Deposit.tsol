@@ -2,9 +2,11 @@
 pragma ever-solidity >= 0.62.0;
 
 import "./ProxyMultiVaultNative_V7_Withdraw.tsol";
+import {EventAddressKeeper} from "../../../../event-address-keeper/EventAddressKeeper.tsol";
 
 import "./../../../../interfaces/event-contracts/IEthereumEverscaleEvent.tsol";
 import "./../../../../interfaces/event-contracts/ISolanaEverscaleEvent.tsol";
+import "./../../../../interfaces/IEventAddressKeeper.tsol";
 
 import "./../../../../interfaces/proxy/IEthereumEverscaleProxyExtended.tsol";
 import "./../../../../interfaces/proxy/ISolanaEverscaleProxyExtended.tsol";
@@ -56,7 +58,8 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
             amount,
             recipient,
             remainingGasTo,
-            transferPayload
+            transferPayload,
+            false
         );
     }
 
@@ -94,7 +97,8 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
             amount,
             recipient,
             remainingGasTo,
-            transferPayload
+            transferPayload,
+            false
         );
     }
 
@@ -115,10 +119,11 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
             address token_wallet,
             uint128 amount,
             address recipient,
-            optional(TvmCell) payload
+            optional(TvmCell) payload,
+            address eventAddress
         ) = abi.decode(
             meta,
-            (address, uint128, address, optional(TvmCell))
+            (address, uint128, address, optional(TvmCell), address)
         );
 
 
@@ -131,30 +136,93 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
         if (recipient == dex_middleware) {
             transferPayload = payload.get();
         } else {
-            uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
+        uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
+        TvmCell transferPayload = abi.encode(nonce, payload);
 
-            transferPayload = abi.encode(nonce, payload);
-        }
+        TvmCell stateInit = tvm.buildStateInit({
+            contr: EventAddressKeeper,
+            varInit: {
+            proxy: address(this),
+            callId: nonce
+        },
+            pubkey: 0,
+            code: tvmConfiguration.eventAddressKeeperCode
+        });
+
+        new EventAddressKeeper{
+            value: gasToValue(Gas.DEPLOY_EVENT_ADDRESS_KEEPER, address(this).wid),
+            flag: MsgFlag.SENDER_PAYS_FEES,
+            stateInit: stateInit
+        }(eventAddress);
 
         _transferTokens(
             token_wallet,
             amount - fee,
             recipient,
             remainingGasTo,
-            transferPayload
+            transferPayload,
+            true
         );
     }
 
-    function _isArrayContainsAddress(
-        address[] array,
-        address searchElement
-    ) private pure returns (bool) {
-        for (address value: array) {
-            if (searchElement == value) {
-                return true;
-            }
-        }
+    onBounce(TvmSlice slice) external view reserveAtLeastTargetBalance {
+        uint32 selector = slice.load(uint32);
 
-        return false;
+        if (selector == tvm.functionId(ITokenWallet.transfer)) {
+            (
+                uint128 amount,
+                address recipient,
+                uint128 deployWalletValue,
+                address remainingGasTo,
+                bool notify,
+                TvmCell payload
+            ) = slice.decodeFunctionParams(ITokenWallet.transfer);
+
+            (uint32 nonce,) = abi.decode(payload, (uint32, optional(TvmCell)));
+
+            IEventAddressKeeper(_deriveEventKeeperAddress(nonce))
+                .getEventContract{
+                    flag: MsgFlag.ALL_NOT_RESERVED,
+                    bounce: false,
+                    callback: ProxyMultiVaultNative_V7_Deposit.receiveEventContractAddress
+                }();
+        }
+    }
+
+    function receiveEventContractAddress(
+        address eventContract,
+        uint32 callId
+    )
+        external
+        view
+        reserveAtLeastTargetBalance
+    {
+        require(msg.sender == _deriveEventKeeperAddress(callId), ErrorCodes.NOT_EVENT_ADDRESS_KEEPER);
+
+        ITvmTvmEvent(eventContract)
+            .notEnoughLiquidity{
+                flag: MsgFlag.ALL_NOT_RESERVED,
+                bounce: false
+            }();
+    }
+
+    function _deriveEventKeeperAddress(
+        uint32 callId
+    )
+        internal
+        view
+        returns (address)
+    {
+        TvmCell stateInit = tvm.buildStateInit({
+            contr: EventAddressKeeper,
+            varInit: {
+            proxy: address(this),
+            callId: callId
+        },
+            pubkey: 0,
+            code: tvmConfiguration.eventAddressKeeperCode
+        });
+
+        return address(tvm.hash(stateInit));
     }
 }

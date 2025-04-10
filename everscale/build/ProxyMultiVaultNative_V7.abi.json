@@ -50,6 +50,15 @@
 			]
 		},
 		{
+			"name": "receiveEventContractAddress",
+			"inputs": [
+				{"name":"eventContract","type":"address"},
+				{"name":"callId","type":"uint32"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "onAcceptTokensTransfer",
 			"inputs": [
 				{"name":"tokenRoot","type":"address"},
@@ -58,6 +67,15 @@
 				{"name":"value3","type":"address"},
 				{"name":"remainingGasTo","type":"address"},
 				{"name":"payload","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "onTVMEventCancelled",
+			"inputs": [
+				{"components":[{"name":"msgHash","type":"uint256"},{"name":"configuration","type":"address"},{"name":"chainId","type":"int32"}],"name":"value0","type":"tuple"},
+				{"name":"withdrawPayload","type":"cell"}
 			],
 			"outputs": [
 			]
@@ -340,10 +358,6 @@
 		{"name":"api_version","type":"uint8"},
 		{"name":"dex_middleware","type":"address"},
 		{"name":"proxyMultiVaultAlien","type":"address"},
-		{"name":"defaultFeeNumerator","type":"uint128"},
-		{"name":"fees","type":"map(address,uint128)"},
-		{"name":"platformCode","type":"cell"},
-		{"name":"bridgeTokenFeeCode","type":"cell"},
 		{"name":"_randomNonce","type":"uint256"}
 	]
 }

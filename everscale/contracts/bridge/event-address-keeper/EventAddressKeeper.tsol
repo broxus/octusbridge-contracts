@@ -1,0 +1,23 @@
+pragma ever-solidity >= 0.62.0;
+
+import "../interfaces/IEventAddressKeeper.tsol";
+
+import {MsgFlag} from "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
+import "../../utils/ErrorCodes.tsol";
+
+
+contract EventAddressKeeper is IEventAddressKeeper {
+    address public static proxy;
+    uint32 public static callId;
+
+    address public eventContract;
+
+    constructor(address _eventContract) {
+        require(msg.sender == proxy, ErrorCodes.WRONG_DEPLOYER);
+        eventContract = _eventContract;
+    }
+
+    function getEventContract() override external responsible returns(address, uint32){
+        return { value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false } (eventContract, callId);
+    }
+}

@@ -161,6 +161,13 @@
 			]
 		},
 		{
+			"name": "notEnoughLiquidity",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "status",
 			"inputs": [
 			],
@@ -216,6 +223,36 @@
 		{
 			"name": "Confirmed",
 			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "NotEnoughLiquidity",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "Cancelled",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "LiquidityRequested",
+			"inputs": [
+				{"name":"reward","type":"uint128"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "LiquidityProvided",
+			"inputs": [
+				{"name":"tokenSender","type":"address"}
 			],
 			"outputs": [
 			]

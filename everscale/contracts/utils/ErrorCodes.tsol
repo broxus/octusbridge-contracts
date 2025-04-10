@@ -52,6 +52,10 @@ library ErrorCodes {
     uint16 constant WRONG_POOL = 2328;
     uint16 constant SENDER_NOT_TX_CHECKER = 2329;
     uint16 constant WRONG_BASE_NATIVE_PROXY_WALLET = 2330;
+    uint16 constant SENDER_NOT_PROXY = 2331;
+    uint16 constant SENDER_NOT_RECIPIENT = 2332;
+    uint16 constant WRONG_REWARD = 2333;
+    uint16 constant SENDER_NOT_TOKEN_WALLET = 2334;
 
     // Connector
     uint16 constant DEPLOYER_NOT_BRIDGE = 2420;
@@ -153,4 +157,7 @@ library ErrorCodes {
     // Proxy multi vault alien
 
     // Proxy multi vault native
+
+    // Event address keeper
+    uint16 constant WRONG_DEPLOYER = 3001;
 }

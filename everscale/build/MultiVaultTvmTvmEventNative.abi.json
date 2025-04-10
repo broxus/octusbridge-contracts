@@ -62,6 +62,53 @@
 			]
 		},
 		{
+			"name": "notEnoughLiquidity",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "cancel",
+			"inputs": [
+				{"name":"_newRecipient","type":"address"},
+				{"name":"_remainingGasTo","type":"address"},
+				{"name":"_expectedGas","type":"uint128"},
+				{"name":"eventPayload","type":"optional(cell)"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "requestLiquidity",
+			"inputs": [
+				{"name":"_reward","type":"uint128"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "receiveProxyTokenWallet",
+			"inputs": [
+				{"name":"tokenWallet_","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "onAcceptTokensTransfer",
+			"inputs": [
+				{"name":"value0","type":"address"},
+				{"name":"_amount","type":"uint128"},
+				{"name":"_sender","type":"address"},
+				{"name":"value3","type":"address"},
+				{"name":"_remainingGasTo","type":"address"},
+				{"name":"_payload","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "getEventInitData",
 			"inputs": [
 				{"name":"answerId","type":"uint32"}
@@ -209,6 +256,22 @@
 			"outputs": [
 				{"name":"proxy","type":"address"}
 			]
+		},
+		{
+			"name": "reward",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"reward","type":"uint128"}
+			]
+		},
+		{
+			"name": "eventTokenWallet",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"eventTokenWallet","type":"address"}
+			]
 		}
 	],
 	"data": [
@@ -218,6 +281,36 @@
 		{
 			"name": "Confirmed",
 			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "NotEnoughLiquidity",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "Cancelled",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "LiquidityRequested",
+			"inputs": [
+				{"name":"reward","type":"uint128"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "LiquidityProvided",
+			"inputs": [
+				{"name":"tokenSender","type":"address"}
 			],
 			"outputs": [
 			]
@@ -245,6 +338,8 @@
 		{"name":"expected_gas","type":"uint128"},
 		{"name":"payload","type":"optional(cell)"},
 		{"name":"proxy","type":"address"},
-		{"name":"setupFinished","type":"bool"}
+		{"name":"setupFinished","type":"bool"},
+		{"name":"reward","type":"uint128"},
+		{"name":"eventTokenWallet","type":"address"}
 	]
 }
