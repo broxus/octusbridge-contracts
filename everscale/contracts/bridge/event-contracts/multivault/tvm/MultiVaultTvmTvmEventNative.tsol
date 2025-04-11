@@ -232,6 +232,7 @@ contract MultiVaultTvmTvmEventNative is
             amount,
             recipient,
             _remainingGasTo,
+            proxyTokenWallet,
             transferData
         );
 
@@ -347,6 +348,7 @@ contract MultiVaultTvmTvmEventNative is
             amount,
             _sender,
             remainingGasTo,
+            proxyTokenWallet,
             transferData
         );
 
