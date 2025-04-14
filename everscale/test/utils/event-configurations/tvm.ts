@@ -22,7 +22,7 @@ export const setupTvmTvmEventConfiguration = async (
     initParams: {
       basicConfiguration: {
         eventABI: "",
-        eventInitialBalance: locklift.utils.toNano(2),
+        eventInitialBalance: locklift.utils.toNano(1),
         staking: zeroAddress,
         eventCode,
       },

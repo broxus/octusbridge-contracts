@@ -90,7 +90,7 @@ export const setupNativeMultiVault = async (
     proxy.address,
     tvmTvmEvent.code,
     trustlessVerifier.address,
-    new Address("0:057493dab4639b455bd9305c0c2cc44d30cf48e5b185b6cc05a0d102c91e0fe8")
+    new Address("0:9a7e9eefc394a85f6313785db41e9310b5022858e1f46b018bfa946a1bf656ad")
   );
 
   // Set proxy EVM configuration
@@ -124,9 +124,7 @@ export const setupNativeMultiVault = async (
   // Set proxy TVM configuration
   await proxy.methods
     .setTVMConfiguration({
-      _config: {
-        incomingConfigurations: [tvmTvmEventConfiguration.address],
-      },
+      _incomingConfigurations: [tvmTvmEventConfiguration.address],
       remainingGasTo: owner.address,
     })
     .send({

@@ -90,7 +90,7 @@ export const setupAlienMultiVault = async (
     proxy.address,
     tvmEverscaleEvent.code,
     trustlessVerifier?.address || zeroAddress,
-    new Address("0:a9edc1dc697cf58ace613fcfecba69f0b3226a9b6b84449f9bb7285431b97262")
+    new Address("0:d63068964945d0f9b283f081273f719af49c37dddd8bdf0a368cdc5b56539d99")
   );
 
   // Set proxy EVM configuration

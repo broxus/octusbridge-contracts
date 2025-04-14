@@ -1,0 +1,100 @@
+{
+	"ABI version": 2,
+	"version": "2.3",
+	"header": ["time"],
+	"functions": [
+		{
+			"name": "decodeEverscaleEthereumStakingEventData",
+			"inputs": [
+				{"name":"data","type":"cell"}
+			],
+			"outputs": [
+				{"name":"round_num","type":"uint32"},
+				{"name":"eth_keys","type":"uint160[]"},
+				{"name":"round_end","type":"uint32"}
+			]
+		},
+		{
+			"name": "decodeEthereumEverscaleStakingEventData",
+			"inputs": [
+				{"name":"data","type":"cell"}
+			],
+			"outputs": [
+				{"name":"eth_addr","type":"uint160"},
+				{"name":"wk_id","type":"int8"},
+				{"name":"ton_addr_body","type":"uint256"}
+			]
+		},
+		{
+			"name": "encodeEthereumEverscaleStakingEventData",
+			"inputs": [
+				{"name":"eth_addr","type":"uint160"},
+				{"name":"wk_id","type":"int8"},
+				{"name":"ton_addr_body","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
+		},
+		{
+			"name": "decodeEverscaleSolanaStakingEventData",
+			"inputs": [
+				{"name":"data","type":"cell"}
+			],
+			"outputs": [
+				{"name":"round_num","type":"uint32"},
+				{"name":"sol_keys","type":"uint256[]"},
+				{"name":"round_end","type":"uint32"}
+			]
+		},
+		{
+			"name": "encodeEverscaleSolanaStakingEventData",
+			"inputs": [
+				{"name":"round_num","type":"uint32"},
+				{"name":"sol_keys","type":"uint256[]"},
+				{"name":"round_end","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
+		},
+		{
+			"name": "decodeSolanaEverscaleStakingEventData",
+			"inputs": [
+				{"name":"data","type":"cell"}
+			],
+			"outputs": [
+				{"name":"sol_addr","type":"uint256"},
+				{"name":"wk_id","type":"int8"},
+				{"name":"ever_addr_body","type":"uint256"}
+			]
+		},
+		{
+			"name": "encodeSolanaEverscaleStakingEventData",
+			"inputs": [
+				{"name":"sol_addr","type":"uint256"},
+				{"name":"wk_id","type":"int8"},
+				{"name":"ever_addr_body","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
+		},
+		{
+			"name": "constructor",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		}
+	],
+	"data": [
+	],
+	"events": [
+	],
+	"fields": [
+		{"name":"_pubkey","type":"uint256"},
+		{"name":"_timestamp","type":"uint64"},
+		{"name":"_constructorFlag","type":"bool"}
+	]
+}

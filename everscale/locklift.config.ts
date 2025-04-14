@@ -30,7 +30,13 @@ const config: LockliftConfig = {
   compiler: {
     version: "0.71.0",
     externalContracts: {
-      "../node_modules/ton-eth-bridge-token-contracts": ['TokenRootUpgradable', 'TokenWalletUpgradable', 'TokenWalletPlatform'],
+      "../node_modules/ton-eth-bridge-token-contracts/contracts": [
+        'TokenRoot',
+        'TokenWallet',
+        'TokenRootUpgradeable',
+        'TokenWalletUpgradeable',
+        'TokenWalletPlatform'
+      ],
       "build_prod": ['Bridge']
     }
   },

@@ -1,0 +1,63 @@
+{
+	"ABI version": 2,
+	"version": "2.3",
+	"header": ["time"],
+	"functions": [
+		{
+			"name": "constructor",
+			"inputs": [
+				{"name":"_eventContract","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "getEventContract",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"value0","type":"address"},
+				{"name":"value1","type":"uint32"}
+			]
+		},
+		{
+			"name": "proxy",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"proxy","type":"address"}
+			]
+		},
+		{
+			"name": "callId",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"callId","type":"uint32"}
+			]
+		},
+		{
+			"name": "eventContract",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"eventContract","type":"address"}
+			]
+		}
+	],
+	"data": [
+		{"key":1,"name":"proxy","type":"address"},
+		{"key":2,"name":"callId","type":"uint32"}
+	],
+	"events": [
+	],
+	"fields": [
+		{"name":"_pubkey","type":"uint256"},
+		{"name":"_timestamp","type":"uint64"},
+		{"name":"_constructorFlag","type":"bool"},
+		{"name":"proxy","type":"address"},
+		{"name":"callId","type":"uint32"},
+		{"name":"eventContract","type":"address"}
+	]
+}

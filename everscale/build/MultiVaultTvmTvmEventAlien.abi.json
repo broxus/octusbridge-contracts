@@ -270,6 +270,7 @@
 		{"name":"nonce","type":"uint32"},
 		{"name":"eventBody","type":"cell"},
 		{"name":"transitionalDataCell","type":"cell"},
-		{"name":"setupFinished","type":"bool"}
+		{"name":"tokenDeployStatus","type":"uint8"},
+		{"name":"routerDeployStatus","type":"uint8"}
 	]
 }
