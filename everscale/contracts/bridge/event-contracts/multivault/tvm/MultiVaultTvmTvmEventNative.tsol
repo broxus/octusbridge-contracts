@@ -57,7 +57,9 @@ contract MultiVaultTvmTvmEventNative is
     }
 
     function processProof(ITvmTvmEvent.TvmTvmEventVoteData _eventVoteData) override external {
-        require(status == Status.Initializing || status == Status.Pending, ErrorCodes.EVENT_NOT_INITIALIZING);
+        bool isValidStatus = status == Status.Initializing || status == Status.Pending || status == Status.Verified;
+
+        require(isValidStatus, ErrorCodes.EVENT_NOT_INITIALIZING);
         require(msg.sender == eventInitData.configuration, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
 
         optional(TvmCell) data = eventBody.toSlice().load(optional(TvmCell));
@@ -100,21 +102,29 @@ contract MultiVaultTvmTvmEventNative is
             return;
         }
 
-        status = Status.Pending;
+        if (status == Status.Initializing || status == Status.Pending) {
+            status = Status.Pending;
 
-        (uint256 accountAddr, uint64 lt, , , uint256 hash) = BocDecoder.decodeTransactionShort(_eventVoteData.txProof);
+            (
+                uint256 accountAddr,
+                uint64 lt,
+                ,
+                ,
+                uint256 hash
+            ) = BocDecoder.decodeTransactionShort(_eventVoteData.txProof);
 
-        TvmCell txProof = abi.encode(
-            accountAddr,
-            lt,
-            hash
-        );
+            TvmCell txProof = abi.encode(
+                accountAddr,
+                lt,
+                hash
+            );
 
-        ITrustlessVerifier(transactionChecker)
-            .verifyTx{
-                value: gasToValue(Gas.VERIFY_TRANSACTION_GAS, address(this).wid),
-                flag: MsgFlag.SENDER_PAYS_FEES
-            }(_eventVoteData.txBlockProof, txProof);
+            ITrustlessVerifier(transactionChecker)
+                .verifyTx{
+                    value: gasToValue(Gas.VERIFY_TRANSACTION_GAS, address(this).wid),
+                    flag: MsgFlag.SENDER_PAYS_FEES
+                }(_eventVoteData.txBlockProof, txProof);
+        }
 
         ITvmTvmEventConfiguration(eventInitData.configuration)
             .getDetails{
@@ -128,7 +138,7 @@ contract MultiVaultTvmTvmEventNative is
         require(status == Status.Pending, ErrorCodes.EVENT_NOT_PENDING);
 
         if (success) {
-            status = Status.Confirmed;
+            status = Status.Verified;
             onConfirm();
         }
     }
@@ -175,7 +185,7 @@ contract MultiVaultTvmTvmEventNative is
     }
 
     function onConfirm() internal override {
-        if (status == Status.Confirmed && setupFinished) {
+        if (status == Status.Verified && setupFinished) {
             emit Confirmed();
 
             TvmCell metaData = abi.encode(

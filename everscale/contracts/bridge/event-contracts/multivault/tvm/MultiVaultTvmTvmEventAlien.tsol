@@ -25,7 +25,9 @@ contract MultiVaultTvmTvmEventAlien is
     uint128 constant POWER_BASE = 10;
 
     TvmCell public transitionalDataCell;
-    bool setupFinished;
+
+    DeployStatus private _tokenDeployStatus = DeployStatus.NONE;
+    DeployStatus private _routerDeployStatus = DeployStatus.NONE;
 
     constructor(
         address _initializer,
@@ -41,7 +43,9 @@ contract MultiVaultTvmTvmEventAlien is
     }
 
     function processProof(ITvmTvmEvent.TvmTvmEventVoteData _eventVoteData) override external {
-        require(status == Status.Initializing || status == Status.Pending, ErrorCodes.EVENT_NOT_INITIALIZING);
+        bool isValidStatus = status == Status.Initializing || status == Status.Pending || status == Status.Verified;
+
+        require(isValidStatus, ErrorCodes.EVENT_NOT_INITIALIZING);
         require(msg.sender == eventInitData.configuration, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
 
         EventData eventData = getEventData();
@@ -57,27 +61,56 @@ contract MultiVaultTvmTvmEventAlien is
             return;
         }
 
-        status = Status.Pending;
+        if (status == Status.Initializing || status == Status.Pending) {
+            status = Status.Pending;
 
-        (uint256 accountAddr, uint64 lt, , , uint256 hash) = BocDecoder.decodeTransactionShort(_eventVoteData.txProof);
+            (
+                uint256 accountAddr,
+                uint64 lt,
+                ,
+                ,
+                uint256 hash
+            ) = BocDecoder.decodeTransactionShort(_eventVoteData.txProof);
 
-        TvmCell txProof = abi.encode(
-            accountAddr,
-            lt,
-            hash
-        );
+            TvmCell txProof = abi.encode(accountAddr, lt, hash);
 
-        ITrustlessVerifier(transactionChecker)
-            .verifyTx{
-                value: gasToValue(Gas.VERIFY_TRANSACTION_GAS, address(this).wid),
-                flag: MsgFlag.SENDER_PAYS_FEES
-            }(_eventVoteData.txBlockProof, txProof);
+            ITrustlessVerifier(transactionChecker)
+                .verifyTx{
+                    value: gasToValue(Gas.VERIFY_TRANSACTION_GAS, address(this).wid),
+                    flag: MsgFlag.SENDER_PAYS_FEES
+                }(_eventVoteData.txBlockProof, txProof);
+        }
 
-        ITvmTvmEventConfiguration(eventInitData.configuration)
-            .getDetails{
-                value: gasToValue(Gas.REQUEST_CONFIGURATION_DETAILS_GAS, address(this).wid),
-                callback: MultiVaultTvmTvmEventAlien.receiveConfigurationDetails
-            }();
+        if (
+            _tokenDeployStatus == DeployStatus.NONE &&
+            _routerDeployStatus == DeployStatus.NONE
+        ) {
+            ITvmTvmEventConfiguration(eventInitData.configuration)
+                .getDetails{
+                    value: gasToValue(Gas.REQUEST_CONFIGURATION_DETAILS_GAS, address(this).wid),
+                    callback: MultiVaultTvmTvmEventAlien.receiveConfigurationDetails
+                }();
+
+            return;
+        }
+
+        TransitionalData transitionalData = getTransitionalData();
+
+        if (_tokenDeployStatus == DeployStatus.NOT_DEPLOYED) {
+            bool isTokenDeployed = _deployTvmAlienToken(transitionalData.proxy, eventData);
+
+            if (isTokenDeployed) {
+                _requestMergeRouter();
+            }
+
+            return;
+        }
+
+        bool isRouterDeployed = _deployMergeRouter(transitionalData.proxy, transitionalData.token);
+
+        if (isRouterDeployed) {
+            _finishSetup(transitionalData.token, eventData.amount);
+        }
     }
 
     function onTrustlessVerify(bool success, uint256 /*txHash*/) external functionID(0x756adff1) override {
@@ -85,7 +118,7 @@ contract MultiVaultTvmTvmEventAlien is
         require(status == Status.Pending, ErrorCodes.EVENT_NOT_PENDING);
 
         if (success) {
-            status = Status.Confirmed;
+            status = Status.Verified;
             onConfirm();
         }
     }
@@ -157,6 +190,10 @@ contract MultiVaultTvmTvmEventAlien is
 
         _set_native_proxy_token_wallet(tokenWallet_);
 
+        // Skip deploys for predeployed token flow
+        _tokenDeployStatus = DeployStatus.DEPLOYED;
+        _routerDeployStatus = DeployStatus.DEPLOYED;
+
         EventData eventData = getEventData();
         _finishSetup(transitionalData.token, eventData.amount);
     }
@@ -187,6 +224,8 @@ contract MultiVaultTvmTvmEventAlien is
         TransitionalData transitionalData = getTransitionalData();
 
         require(msg.sender == transitionalData.token, ErrorCodes.SENDER_NOT_ROOT);
+
+        _tokenDeployStatus = DeployStatus.DEPLOYED;
 
         _requestMergeRouter();
     }
@@ -238,6 +277,8 @@ contract MultiVaultTvmTvmEventAlien is
         require(msg.sender == transitionalData.router, ErrorCodes.WRONG_ROUTER);
 
         _set_pool(pool);
+
+        _routerDeployStatus = DeployStatus.DEPLOYED;
 
         if (pool.value == 0) {
             EventData eventData = getEventData();
@@ -298,7 +339,14 @@ contract MultiVaultTvmTvmEventAlien is
     }
 
     function onConfirm() internal override {
-        if (status == Status.Confirmed && setupFinished) {
+        // Always check that TVM-TVM event was verified and all contracts were deployed
+        if (
+            status == Status.Verified &&
+            _tokenDeployStatus == DeployStatus.DEPLOYED &&
+            _routerDeployStatus == DeployStatus.DEPLOYED
+        ) {
+            status = Status.Confirmed;
+
             emit Confirmed();
 
             EventData eventData = getEventData();
@@ -372,38 +420,30 @@ contract MultiVaultTvmTvmEventAlien is
         EventData eventData = getEventData();
         TransitionalData transitionalData = getTransitionalData();
 
+        tvm.accept();
+
         if (
             selector == tvm.functionId(TIP3TokenRoot.name) &&
             msg.sender == transitionalData.token
         ) {
             // Failed to request token meta
             // Seems like corresponding token root not deployed so deploy it
-            IProxyMultiVaultAlien_V9(transitionalData.proxy).deployTVMAlienToken{
-                value: Gas.getDeployTokenRootValue(),
-                bounce: false
-            }(
-                eventData.base_chainId,
-                eventData.base_token,
-                eventData.base_native_proxy_wallet,
-                eventData.name,
-                eventData.symbol,
-                eventData.decimals,
-                initializer
-            );
+            bool isTokenDeployed = _deployTvmAlienToken(transitionalData.proxy, eventData);
 
-            _requestMergeRouter();
+            if (isTokenDeployed) {
+                _requestMergeRouter();
+            }
         } else if (
             selector == tvm.functionId(IMergeRouter.getPool) &&
             msg.sender == transitionalData.router
         ) {
             // Failed to request router's pool
             // Seems like corresponding router not deployed so deploy it
-            IProxyMultiVaultAlien_V9(transitionalData.proxy).deployMergeRouter{
-                value: gasToValue(Gas.DEPLOY_MERGE_ROUTER_GAS, address(this).wid),
-                bounce: false
-            }(transitionalData.token);
+            bool isRouterDeployed = _deployMergeRouter(transitionalData.proxy, transitionalData.token);
 
-            _finishSetup(transitionalData.token, eventData.amount);
+            if (isRouterDeployed) {
+                _finishSetup(transitionalData.token, eventData.amount);
+            }
         }
     }
 
@@ -418,8 +458,56 @@ contract MultiVaultTvmTvmEventAlien is
 
         _set_transitional_data(transitionalData);
 
-        setupFinished = true;
         onConfirm();
+    }
+
+    // ==== Deploys ====
+    function _deployTvmAlienToken(address _alienProxy, EventData _eventData) internal returns (bool) {
+        uint128 deployTokenValue = Gas.getDeployTokenRootValue();
+
+        if (address(this).balance < deployTokenValue) {
+            _tokenDeployStatus = DeployStatus.NOT_DEPLOYED;
+
+            return false;
+        }
+
+        IProxyMultiVaultAlien_V9(_alienProxy)
+            .deployTVMAlienToken{
+                value: deployTokenValue,
+                bounce: false
+            }(
+                _eventData.base_chainId,
+                _eventData.base_token,
+                _eventData.base_native_proxy_wallet,
+                _eventData.name,
+                _eventData.symbol,
+                _eventData.decimals,
+                initializer
+            );
+
+        _tokenDeployStatus = DeployStatus.DEPLOYED;
+
+        return true;
+    }
+
+    function _deployMergeRouter(address _alienProxy, address _alienToken) internal returns (bool) {
+        uint128 deployRouterValue = gasToValue(Gas.DEPLOY_MERGE_ROUTER_GAS, address(this).wid);
+
+        if (address(this).balance < deployRouterValue) {
+            _routerDeployStatus = DeployStatus.NOT_DEPLOYED;
+
+            return false;
+        }
+
+        IProxyMultiVaultAlien_V9(_alienProxy)
+            .deployMergeRouter{
+                value: deployRouterValue,
+                bounce: false
+            }(_alienToken);
+
+        _routerDeployStatus = DeployStatus.DEPLOYED;
+
+        return true;
     }
 
     // ==== Transitional data ====

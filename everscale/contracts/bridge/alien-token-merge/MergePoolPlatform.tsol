@@ -52,5 +52,5 @@ contract MergePoolPlatform is RandomNonce {
         onCodeUpgrade(data);
     }
 
-    function onCodeUpgrade(TvmCell data) private {}
+    function onCodeUpgrade(TvmCell data) private functionID(2) {}
 }

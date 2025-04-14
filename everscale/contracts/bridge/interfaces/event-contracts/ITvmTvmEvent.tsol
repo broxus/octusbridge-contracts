@@ -5,6 +5,7 @@ interface ITvmTvmEvent {
     enum Status {
         Initializing,
         Pending,
+        Verified,
         Confirmed,
         NotEnoughLiquidity,
         Cancelled,
