@@ -186,6 +186,8 @@ contract MultiVaultTvmTvmEventNative is
 
     function onConfirm() internal override {
         if (status == Status.Verified && setupFinished) {
+            status = Status.Confirmed;
+
             emit Confirmed();
 
             TvmCell metaData = abi.encode(
