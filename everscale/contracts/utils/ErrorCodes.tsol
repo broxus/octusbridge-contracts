@@ -130,7 +130,8 @@ library ErrorCodes {
     uint16 constant WRONG_MERGE_POOL_NONCE = 2709;
     uint16 constant NOT_TVM_CONFIG = 2710;
     uint16 constant NOT_TVM_CONFIG_OR_ALIEN_PROXY = 2711;
-    uint16 constant LOW_MSG_VALUE = 2712;
+    uint16 constant NOT_EVENT_ADDRESS_KEEPER = 2712;
+    uint16 constant LOW_MSG_VALUE = 2713;
 
     // BridgeTokenFee
      uint16 constant SENDER_IS_NOT_PROXY = 2750;

@@ -51,7 +51,7 @@ abstract contract ProxyMultiVaultAlien_V9_Fees is ProxyMultiVaultAlien_V9_Token 
     }
 
     function _deployBridgeTokenFee(address _token, address _remainingGasTo) internal view {
-        TvmBuilder emptyParams;
+        TvmCell emptyParams;
 
         new Platform {
             stateInit: _buildBridgeTokenFeeStateInit(_token),
@@ -59,7 +59,7 @@ abstract contract ProxyMultiVaultAlien_V9_Fees is ProxyMultiVaultAlien_V9_Token 
             flag: MsgFlag.SENDER_PAYS_FEES
         }(
             bridgeTokenFeeCode,
-            emptyParams.toCell(),
+            emptyParams,
             _remainingGasTo
         );
     }
@@ -118,7 +118,7 @@ abstract contract ProxyMultiVaultAlien_V9_Fees is ProxyMultiVaultAlien_V9_Token 
     }
 
     function withdrawTokenFee(address _tokenRoot, address _recipient) external view onlyOwner {
-        require(msg.value > Gas.getDeployTokenWalletValue(), ErrorCodes.LOW_BALANCE); //todo
+        require(msg.value > Gas.getDeployTokenWalletValue(), ErrorCodes.LOW_MSG_VALUE);
 
         IBridgeTokenFee(_getExpectedBridgeTokenFeeAddress(_tokenRoot)).getAccumulatedFee{
             value: 0,
@@ -136,7 +136,7 @@ abstract contract ProxyMultiVaultAlien_V9_Fees is ProxyMultiVaultAlien_V9_Token 
         ) = abi.decode(_payload, (address, uint128, address));
 
         if (accumulatedFees > 0) {
-            TvmBuilder emptyPayload;
+            TvmCell emptyPayload;
 
             ITokenRoot(tokenRoot).mint{
                 value: 0,
@@ -148,7 +148,7 @@ abstract contract ProxyMultiVaultAlien_V9_Fees is ProxyMultiVaultAlien_V9_Token 
                 Gas.getDeployTokenWalletValue(),
                 owner,
                 false,
-                emptyPayload.toCell()
+                emptyPayload
             );
 
         } else {
@@ -161,7 +161,6 @@ abstract contract ProxyMultiVaultAlien_V9_Fees is ProxyMultiVaultAlien_V9_Token 
     }
 
     function upgradeBridgeTokenFee(
-        TvmCell _code,
         address _token,
         address _remainingGasTo
     ) external view onlyOwner {
@@ -170,6 +169,6 @@ abstract contract ProxyMultiVaultAlien_V9_Fees is ProxyMultiVaultAlien_V9_Token 
             value: 0,
             flag: MsgFlag.REMAINING_GAS,
             bounce: false
-        }(_code, _remainingGasTo);
+        }(bridgeTokenFeeCode, _remainingGasTo);
     }
 }

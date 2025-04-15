@@ -396,7 +396,7 @@ contract MultiVaultTvmTvmEventAlien is
             IProxyMultiVaultAlien_V9(transitionalData.proxy).deployBridgeTokenFee{
                 value: Gas.getDeployBridgeTokenFeeValue() + gasToValue(Gas.BRIDGE_TOKEN_FEES_EXTRA_GAS, address(this).wid),
                 bounce: false
-            }(eventData.base_token, initializer);
+            }(transitionalData.token, initializer);
 
             _requestMergeRouter();
         } else if (

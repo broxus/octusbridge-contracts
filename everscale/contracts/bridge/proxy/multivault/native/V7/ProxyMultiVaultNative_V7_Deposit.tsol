@@ -126,18 +126,11 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
             (address, uint128, address, optional(TvmCell), address)
         );
 
+        uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
 
         // accumulate fee
         uint128 fee = _calculateFees(amount, token_wallet);
         _accumulateFee(fee, token_wallet);
-
-        TvmCell transferPayload;
-
-        if (recipient == dex_middleware) {
-            transferPayload = payload.get();
-        } else {
-        uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
-        TvmCell transferPayload = abi.encode(nonce, payload);
 
         TvmCell stateInit = tvm.buildStateInit({
             contr: EventAddressKeeper,
@@ -160,7 +153,7 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
             amount - fee,
             recipient,
             remainingGasTo,
-            transferPayload,
+            abi.encode(nonce, payload),
             true
         );
     }
@@ -176,7 +169,7 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
                 address remainingGasTo,
                 bool notify,
                 TvmCell payload
-            ) = slice.decodeFunctionParams(ITokenWallet.transfer);
+            ) = slice.loadFunctionParams(ITokenWallet.transfer);
 
             (uint32 nonce,) = abi.decode(payload, (uint32, optional(TvmCell)));
 

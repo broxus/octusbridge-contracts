@@ -1,7 +1,6 @@
 pragma ever-solidity >= 0.62.0;
 
 import "../../../../../utils/Platform.tsol";
-import "../../../../interfaces/proxy/multivault/native/IProxyMultiVaultNative_V7.tsol";
 import "../../../../interfaces/proxy/IBridgeTokenFee.tsol";
 import "./ProxyMultiVaultNative_V7_Base.tsol";
 
@@ -118,7 +117,7 @@ abstract contract ProxyMultiVaultNative_V7_Fees is ProxyMultiVaultNative_V7_Base
     }
 
     function withdrawTokenFee(address _token, address _recipient) external view onlyOwner {
-        require(msg.value > Gas.getDeployTokenWalletValue(), ErrorCodes.LOW_BALANCE);
+        require(msg.value > Gas.getDeployTokenWalletValue(), ErrorCodes.LOW_MSG_VALUE);
 
         IBridgeTokenFee(_getExpectedBridgeTokenFeeAddress(_token)).getAccumulatedFee{
             value: 0,
@@ -130,17 +129,17 @@ abstract contract ProxyMultiVaultNative_V7_Fees is ProxyMultiVaultNative_V7_Base
 
     function onGetAccumulatedFee(TvmCell _payload) external view reserveAtLeastTargetBalance {
         (
-        address recipient,
-        uint128 accumulatedFees,
-        address tokenWallet
+            address recipient,
+            uint128 accumulatedFees,
+            address tokenWallet
         ) = abi.decode(_payload, (address, uint128, address));
 
         if (accumulatedFees > 0) {
-            TvmBuilder emptyPayload;
+            TvmCell emptyPayload;
 
             ITokenWallet(tokenWallet).transfer{
                 value: 0,
-                flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+                flag: MsgFlag.ALL_NOT_RESERVED,
                 bounce: false
             }(
                 accumulatedFees,
@@ -148,7 +147,7 @@ abstract contract ProxyMultiVaultNative_V7_Fees is ProxyMultiVaultNative_V7_Base
                 Gas.getDeployTokenWalletValue(),
                 owner,
                 false,
-                emptyPayload.toCell()
+                emptyPayload
             );
         } else {
             owner.transfer({

@@ -243,7 +243,7 @@ abstract contract ProxyMultiVaultNative_V7_Withdraw is
 
             sender,
             recipient,
-            amount,
+            amount - fee,
 
             msg.value, // todo subtract the cost of the current transaction
             expectedGas,

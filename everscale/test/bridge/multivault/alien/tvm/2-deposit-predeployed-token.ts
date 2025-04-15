@@ -101,7 +101,7 @@ describe("Deposit alien TVM as predeployed native token", () => {
       alienProxy.methods
         .addPredeployedTVMToken({
           _incomingExternal: new Address("0:21ecbffd6eecb69728a063ad99350eedc2a566cebd5ec8aff682c9141300c41f"),
-          _tokenData: { internalToken: tokenRoot.address, externalNativeProxyWallet: },
+          _tokenData: { internalToken: tokenRoot.address, externalNativeProxyWallet: tokenRoot.address },//todo
           _remainingGasTo: bridgeOwner.address,
         })
         .send({ from: bridgeOwner.address, amount: toNano(2), bounce: true }),

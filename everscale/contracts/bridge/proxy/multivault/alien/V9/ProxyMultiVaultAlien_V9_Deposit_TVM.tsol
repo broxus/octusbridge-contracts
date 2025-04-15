@@ -37,7 +37,6 @@ abstract contract ProxyMultiVaultAlien_V9_Deposit_TVM is
             optional(address)
         ));
 
-
         // accumulate fee
         uint128 fee = _calculateFees(amount, token);
         _accumulateFee(fee, token);
@@ -45,7 +44,7 @@ abstract contract ProxyMultiVaultAlien_V9_Deposit_TVM is
         if (nativeProxyTokenWallet.hasValue()) {
             TvmCell _meta = abi.encode(
                 nativeProxyTokenWallet.get(),
-                amount - fee,
+                amount,
                 recipient,
                 payload,
                 eventContract

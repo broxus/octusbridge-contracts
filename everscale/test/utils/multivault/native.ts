@@ -169,7 +169,7 @@ export const deployBridgeTokenFeeAndSetFee = async (
     .then((a) =>  locklift.factory.getDeployedContract('TokenWallet', a.value0));
 
   // deploy bridgeTokenFee
-  const { traceTree } = await locklift.tracing.trace(await proxy.methods.deployBridgeTokenFee({_token: proxyTokenWallet.address, _remainingGasTo: owner.address})
+  const { traceTree } = await locklift.tracing.trace(proxy.methods.deployBridgeTokenFee({_token: proxyTokenWallet.address, _remainingGasTo: owner.address})
     .send({
       from: owner.address,
       amount: locklift.utils.toNano(5),

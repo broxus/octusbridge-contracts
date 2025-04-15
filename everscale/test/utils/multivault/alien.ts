@@ -91,7 +91,7 @@ export const setupAlienMultiVault = async (
     proxy.address,
     tvmEverscaleEvent.code,
     trustlessVerifier?.address || zeroAddress,
-    new Address("0:74d5af2734f264d49cdcefa9b6adc2d93f3d69d45720d84773a40f9e2b239e72")
+    new Address("0:e5a27c4483793c43db13ad995df317c7dd29b6d6d95d8bcf77bfcd531c25cd8a")
   );
 
   // Set proxy EVM configuration
@@ -134,6 +134,9 @@ export const setupAlienMultiVault = async (
       from: owner.address,
       amount: locklift.utils.toNano(1),
     });
+
+  // set BridgeTokenFee and Platform code
+  await setCode(proxy, owner);
 
   return [
     ethereumEverscaleEventConfiguration,
@@ -335,12 +338,10 @@ const setTVMConfiguration = async (
   );
 };
 
-export const deployBridgeTokenFeeAndSetFee = async (
-  owner: Account,
-  token: Contract<FactorySource["TokenRoot"]>,
-  proxy: Contract<FactorySource["ProxyMultiVaultAlien_V9"]>,
-  fee: number
-): Promise<[Contract<BridgeTokenFeeAbi>, Contract<TokenWalletAbi>]> => {
+const setCode = async (
+  proxy: Contract<ProxyMultiVaultAlien_V9Abi>,
+  owner: Account
+): Promise<void> => {
   const bridgeTokenFeeCode = locklift.factory.getContractArtifacts( "BridgeTokenFee").code;
   const platformCode = locklift.factory.getContractArtifacts( "Platform").code;
 
@@ -355,6 +356,39 @@ export const deployBridgeTokenFeeAndSetFee = async (
       from: owner.address,
       amount: locklift.utils.toNano(0.5)
   });
+};
+
+export const getBridgeTokenFee = async (
+  token: Contract<FactorySource["TokenRoot"]>,
+  proxy: Contract<FactorySource["ProxyMultiVaultAlien_V9"]>
+): Promise<Contract<BridgeTokenFeeAbi>> => {
+
+    let bridgeTokenFee = await proxy.methods.getExpectedBridgeTokenFeeAddress({_token: token.address, answerId: 0})
+    .call()
+    .then((a) => locklift.factory.getDeployedContract("BridgeTokenFee", a.value0));
+
+    await logContract('BridgeTokenFee', bridgeTokenFee.address);
+    return bridgeTokenFee;
+}
+
+export const setDefaultFee = async (
+  proxy: Contract<FactorySource["ProxyMultiVaultAlien_V9"]>,
+  owner: Account,
+  defaultFee: number
+): Promise<void> => {
+    await proxy.methods.setDefaultFeeNumerator({_defaultFee: defaultFee})
+    .send({
+      from: owner.address,
+      amount: locklift.utils.toNano(0.5),
+    });
+}
+
+export const deployBridgeTokenFeeAndSetFee = async (
+  owner: Account,
+  token: Contract<FactorySource["TokenRoot"]>,
+  proxy: Contract<FactorySource["ProxyMultiVaultAlien_V9"]>,
+  fee: number
+): Promise<[Contract<BridgeTokenFeeAbi>, Contract<TokenWalletAbi>]> => {
 
   let proxyTokenWallet = await token.methods.walletOf({answerId: 0, walletOwner: proxy.address})
     .call()
