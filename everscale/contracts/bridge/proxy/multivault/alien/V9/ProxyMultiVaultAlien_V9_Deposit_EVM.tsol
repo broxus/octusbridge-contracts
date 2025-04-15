@@ -7,6 +7,7 @@ import "./ProxyMultiVaultAlien_V9_Deposit_Solana.tsol";
 import "./../../../../interfaces/event-contracts/IEthereumEverscaleEvent.tsol";
 import "./../../../../interfaces/proxy/IEthereumEverscaleProxyExtended.tsol";
 import "../../../../libraries/EventContractNonce.tsol";
+import "../../../../libraries/BridgeOpCodes.tsol";
 
 
 abstract contract ProxyMultiVaultAlien_V9_Deposit_EVM is
@@ -48,7 +49,7 @@ abstract contract ProxyMultiVaultAlien_V9_Deposit_EVM is
             amount,
             recipient,
             remainingGasTo,
-            abi.encode(nonce, mintPayload),
+            abi.encode(BridgeOpCodes.BridgeDeposit, nonce, mintPayload),
             null
         );
     }

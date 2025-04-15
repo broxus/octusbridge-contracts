@@ -13,6 +13,7 @@ import "./../../../../interfaces/proxy/ISolanaEverscaleProxyExtended.tsol";
 import "./../../../../interfaces/proxy/ITvmTvmProxyExtended.tsol";
 
 import "../../../../libraries/EventContractNonce.tsol";
+import "../../../../libraries/BridgeOpCodes.tsol";
 
 
 abstract contract ProxyMultiVaultNative_V7_Deposit is
@@ -55,7 +56,7 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
             amount,
             recipient,
             remainingGasTo,
-            abi.encode(nonce, transferPayload),
+            abi.encode(BridgeOpCodes.BridgeDeposit, nonce, transferPayload),
             false,
             null
         );
@@ -92,7 +93,7 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
             amount,
             recipient,
             remainingGasTo,
-            abi.encode(nonce, transferPayload),
+            abi.encode(BridgeOpCodes.BridgeDeposit, nonce, transferPayload),
             false,
             null
         );
@@ -146,7 +147,7 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
             amount,
             recipient,
             recipient,
-            abi.encode(nonce, payload),
+            abi.encode(BridgeOpCodes.BridgeDeposit, nonce, payload),
             true,
             Gas.getTransferTokenValue() + expectedGas
         );

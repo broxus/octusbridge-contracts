@@ -4,6 +4,7 @@ pragma ever-solidity >= 0.62.0;
 import "../../../../interfaces/event-contracts/ITvmTvmEvent.tsol";
 import "../../../../interfaces/proxy/ITvmTvmProxyExtended.tsol";
 import "../../../../libraries/EventContractNonce.tsol";
+import "../../../../libraries/BridgeOpCodes.tsol";
 
 import "./ProxyMultiVaultAlien_V9_Token.tsol";
 
@@ -64,7 +65,7 @@ abstract contract ProxyMultiVaultAlien_V9_Deposit_TVM is
             amount,
             recipient,
             recipient,
-            abi.encode(nonce, payload),
+            abi.encode(BridgeOpCodes.BridgeDeposit, nonce, payload),
             Gas.getMintTokenValue() + expectedGas
         );
 
