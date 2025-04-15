@@ -131,8 +131,6 @@ contract TvmTvmEventConfiguration is
         override
         reserveAtLeastTargetBalance()
     {
-        require(msg.value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
-
         _deployEvent(eventVoteData, MsgFlag.ALL_NOT_RESERVED, 0);
     }
 
@@ -158,10 +156,6 @@ contract TvmTvmEventConfiguration is
         uint8 flag,
         uint128 value
     ) internal view {
-        if (value != 0) {
-            require(value >= basicConfiguration.eventInitialBalance, ErrorCodes.TOO_LOW_DEPLOY_VALUE);
-        }
-
         int32 chainId = BocDecoder.decodeBlockProof(eventVoteData.txBlockProof);
         require(chainId == networkConfiguration.chainId, ErrorCodes.WRONG_DISPATCH_CHAIN_ID);
 
@@ -213,7 +207,7 @@ contract TvmTvmEventConfiguration is
             code: basicConfiguration.eventCode,
             pubkey: 0,
             varInit: { eventInitData: eventInitData }
-        }(msg.sender, meta, transactionChecker, eventBody);
+        }(msg.sender, meta, transactionChecker, eventBody, basicConfiguration.eventInitialBalance);
 
         emit NewEventContract(eventContract);
 

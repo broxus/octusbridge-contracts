@@ -9,7 +9,8 @@
 				{"name":"_initializer","type":"address"},
 				{"name":"_meta","type":"cell"},
 				{"name":"_transactionChecker","type":"address"},
-				{"name":"_eventBody","type":"cell"}
+				{"name":"_eventBody","type":"cell"},
+				{"name":"_eventInitialBalance","type":"uint128"}
 			],
 			"outputs": [
 			]
@@ -74,7 +75,7 @@
 				{"name":"_newRecipient","type":"address"},
 				{"name":"_remainingGasTo","type":"address"},
 				{"name":"_expectedGas","type":"uint128"},
-				{"name":"eventPayload","type":"optional(cell)"}
+				{"name":"_eventPayload","type":"optional(cell)"}
 			],
 			"outputs": [
 			]
@@ -167,6 +168,14 @@
 			],
 			"outputs": [
 				{"name":"nonce","type":"uint32"}
+			]
+		},
+		{
+			"name": "eventInitialBalance",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"eventInitialBalance","type":"uint128"}
 			]
 		},
 		{
@@ -327,6 +336,7 @@
 		{"components":[{"name":"msgHash","type":"uint256"},{"name":"configuration","type":"address"},{"name":"chainId","type":"int32"}],"name":"eventInitData","type":"tuple"},
 		{"name":"nonce","type":"uint32"},
 		{"name":"eventBody","type":"cell"},
+		{"name":"eventInitialBalance","type":"uint128"},
 		{"name":"token","type":"address"},
 		{"name":"name","type":"string"},
 		{"name":"symbol","type":"string"},

@@ -32,11 +32,7 @@ const customTokenMeta = {
 const alienTokenBase = {
   chainId: -6001,
   token: new Address("0:21ecbffd6eecb69728a063ad99350eedc2a566cebd5ec8aff682c9141300c41f"),
-  native_proxy_wallet: ,
-  name: customTokenMeta.name,
-  symbol: customTokenMeta.symbol,
-  decimals: customTokenMeta.decimals,
-  remainingGasTo: new Address()
+  native_proxy_wallet: new Address("0:bf8e95f91d91937031ffd90720fd160dfce21814001792e41090a1c50cdeabd6"),
 };
 
 const alienTokenMeta = {
@@ -189,7 +185,7 @@ describe("Deposit and withdraw alien TVM token with merging", () => {
             txProof: TX_PROOF,
           },
         })
-        .send({ from: bridgeOwner.address, amount: toNano(6), bounce: true}),
+        .send({ from: bridgeOwner.address, amount: toNano(1.5), bounce: true }),
       { allowedCodes: { compute: [null] } },
     );
 
@@ -243,8 +239,8 @@ describe("Deposit and withdraw alien TVM token with merging", () => {
       .to.emit("TvmTvmAlien")
       .count(1)
       .withNamedArgs({
-        chainId: "-6001",
-        token: alienTokenBase.token,
+        destinationChainId: "-6001",
+        baseToken: alienTokenBase.token,
         amount: "500",
         recipient: bridgeOwner.address,
         expectedGas: "0",

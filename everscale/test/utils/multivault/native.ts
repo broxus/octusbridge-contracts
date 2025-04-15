@@ -8,7 +8,8 @@ import {
   ProxyMultiVaultNative_V7Abi,
   SolanaEverscaleEventConfigurationAbi,
   TvmTvmEventConfigurationAbi,
-  BridgeTokenFeeAbi, TokenWalletAbi
+  BridgeTokenFeeAbi,
+  TokenWalletAbi
 } from "../../../build/factorySource";
 import { logContract } from "../logger";
 import {
@@ -125,8 +126,8 @@ export const setupNativeMultiVault = async (
   // Set proxy TVM configuration
   await proxy.methods
     .setTVMConfiguration({
-        _incomingConfigurations: [tvmTvmEventConfiguration.address],
-        remainingGasTo: owner.address
+      _incomingConfigurations: [tvmTvmEventConfiguration.address],
+      remainingGasTo: owner.address,
     })
     .send({
       from: owner.address,
@@ -139,7 +140,7 @@ export const setupNativeMultiVault = async (
     solanaEverscaleEventConfiguration,
     everscaleSolanaEventConfiguration,
     proxy,
-    tvmTvmEventConfiguration
+    tvmTvmEventConfiguration,
   ];
 };
 

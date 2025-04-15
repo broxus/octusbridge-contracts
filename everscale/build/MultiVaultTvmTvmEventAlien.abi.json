@@ -9,7 +9,8 @@
 				{"name":"_initializer","type":"address"},
 				{"name":"_meta","type":"cell"},
 				{"name":"_transactionChecker","type":"address"},
-				{"name":"_eventBody","type":"cell"}
+				{"name":"_eventBody","type":"cell"},
+				{"name":"_eventInitialBalance","type":"uint128"}
 			],
 			"outputs": [
 			]
@@ -208,6 +209,14 @@
 			]
 		},
 		{
+			"name": "eventInitialBalance",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"eventInitialBalance","type":"uint128"}
+			]
+		},
+		{
 			"name": "transitionalDataCell",
 			"inputs": [
 			],
@@ -269,7 +278,9 @@
 		{"components":[{"name":"msgHash","type":"uint256"},{"name":"configuration","type":"address"},{"name":"chainId","type":"int32"}],"name":"eventInitData","type":"tuple"},
 		{"name":"nonce","type":"uint32"},
 		{"name":"eventBody","type":"cell"},
+		{"name":"eventInitialBalance","type":"uint128"},
 		{"name":"transitionalDataCell","type":"cell"},
-		{"name":"setupFinished","type":"bool"}
+		{"name":"_tokenDeployStatus","type":"uint8"},
+		{"name":"_routerDeployStatus","type":"uint8"}
 	]
 }

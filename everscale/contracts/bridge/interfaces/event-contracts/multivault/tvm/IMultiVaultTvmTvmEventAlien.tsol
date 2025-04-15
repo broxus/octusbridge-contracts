@@ -39,6 +39,12 @@ interface IMultiVaultTvmTvmEventAlien {
         optional(address) native_proxy_token_wallet;
     }
 
+    enum DeployStatus {
+        NONE,
+        NOT_DEPLOYED,
+        DEPLOYED
+    }
+
     function receiveConfigurationDetails(
         IBasicEventConfiguration.BasicConfiguration,
         ITvmTvmEventConfiguration.TvmTvmEventConfiguration _networkConfiguration,

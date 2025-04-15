@@ -4,12 +4,12 @@ import { expect } from "chai";
 
 import {
   CellEncoderStandaloneAbi,
-  TvmTvmEventConfigurationAbi,
   ProxyMultiVaultNative_V7Abi,
   StakingMockupAbi,
   TokenRootAbi,
   TokenWalletAbi,
   TrustlessVerifierMockupAbi,
+  TvmTvmEventConfigurationAbi,
   BridgeTokenFeeAbi,
 } from "../../../../../build/factorySource";
 
@@ -70,7 +70,7 @@ describe("Deposit and withdraw native TVM token with no merging", () => {
       tokenMeta.symbol,
       tokenMeta.decimals,
       bridgeOwner.address,
-      1934
+      0
     );
 
     initializerTokenWallet = await tokenRoot.methods

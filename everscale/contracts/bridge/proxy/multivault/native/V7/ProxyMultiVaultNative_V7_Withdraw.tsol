@@ -84,6 +84,7 @@ abstract contract ProxyMultiVaultNative_V7_Withdraw is
                 amount,
                 remainingGasTo,
                 sender,
+                msg.sender,
                 transferPayload
             );
         }
@@ -104,10 +105,12 @@ abstract contract ProxyMultiVaultNative_V7_Withdraw is
             uint128 amount,
             address sender,
             address remainingGasTo,
+            address nativeProxyWallet,
             TvmCell transferData
         ) = abi.decode(withdrawPayload, (
             address,
             uint128,
+            address,
             address,
             address,
             TvmCell
@@ -119,6 +122,7 @@ abstract contract ProxyMultiVaultNative_V7_Withdraw is
             amount,
             remainingGasTo,
             sender,
+            nativeProxyWallet,
             transferData
         );
     }
@@ -207,6 +211,7 @@ abstract contract ProxyMultiVaultNative_V7_Withdraw is
         uint128 amount,
         address remainingGasTo,
         address sender,
+        address nativeProxyWallet,
         TvmCell transferPayload
     ) internal view {
 
@@ -239,7 +244,7 @@ abstract contract ProxyMultiVaultNative_V7_Withdraw is
             name,
             symbol,
             decimals,
-            msg.sender,
+            nativeProxyWallet,
 
             sender,
             recipient,

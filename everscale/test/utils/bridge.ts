@@ -167,7 +167,7 @@ export const setupBridge = async (relays: Ed25519KeyPair[]): Promise<[
         _randomNonce: locklift.utils.getRandomNonce(),
       },
       publicKey: signer?.publicKey,
-      value: locklift.utils.toNano(10)
+      value: locklift.utils.toNano(6.01)
     });
 
     await logContract("TrustlessVerifier", trustlessVerifier.address);

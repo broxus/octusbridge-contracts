@@ -7,7 +7,8 @@ import {
   EverscaleSolanaEventConfigurationAbi,
   FactorySource,
   ProxyMultiVaultAlien_V9Abi,
-  SolanaEverscaleEventConfigurationAbi, TokenWalletAbi,
+  SolanaEverscaleEventConfigurationAbi,
+  TokenWalletAbi,
   TrustlessVerifierMockupAbi,
   TvmTvmEventConfigurationAbi,
 } from "../../../build/factorySource";

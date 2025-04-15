@@ -6,6 +6,7 @@ import "./ProxyMultiVaultAlien_V9_Deposit_TVM.tsol";
 import "./../../../../interfaces/event-contracts/ISolanaEverscaleEvent.tsol";
 import "./../../../../interfaces/proxy/ISolanaEverscaleProxyExtended.tsol";
 import "../../../../libraries/EventContractNonce.tsol";
+import "../../../../libraries/BridgeOpCodes.tsol";
 
 abstract contract ProxyMultiVaultAlien_V9_Deposit_Solana is
     ProxyMultiVaultAlien_V9_Deposit_TVM,
@@ -33,12 +34,18 @@ abstract contract ProxyMultiVaultAlien_V9_Deposit_Solana is
 
         uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
 
+        optional(TvmCell) mintPayload;
+        if (!payload.toSlice().empty()) {
+            mintPayload.set(payload);
+        }
+
         _mintTokens(
             token,
             amount,
             recipient,
             remainingGasTo,
-            abi.encode(nonce, payload)
+            abi.encode(BridgeOpCodes.BridgeDeposit, nonce, mintPayload),
+            null
         );
     }
 }

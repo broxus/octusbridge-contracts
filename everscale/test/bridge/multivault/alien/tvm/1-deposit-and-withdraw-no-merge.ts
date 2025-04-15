@@ -1,4 +1,4 @@
-import {Contract, toNano, TraceType} from "locklift";
+import { Contract, toNano, TraceType } from "locklift";
 import { Account } from "everscale-standalone-client/nodejs";
 import { expect } from "chai";
 
@@ -9,7 +9,8 @@ import {
   StakingMockupAbi,
   TrustlessVerifierMockupAbi,
   TvmTvmEventConfigurationAbi,
-  BridgeTokenFeeAbi, TokenRootAbi
+  BridgeTokenFeeAbi,
+  TokenRootAbi
 } from "../../../../../build/factorySource";
 
 import { setupBridge } from "../../../../utils/bridge";
@@ -63,10 +64,9 @@ describe("Deposit and withdraw alien TVM token with no merging", () => {
             txProof: TX_PROOF,
           },
         })
-        .send({ from: bridgeOwner.address, amount: toNano(6), bounce: true}),
+        .send({ from: bridgeOwner.address, amount: toNano(18), bounce: true }),
       { allowedCodes: { compute: [null] } },
     );
-
 
     const tokenWalletAddress = traceTree?.findByTypeWithFullData({
       type: TraceType.FUNCTION_CALL,

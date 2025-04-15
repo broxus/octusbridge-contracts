@@ -16,11 +16,12 @@ abstract contract ProxyMultiVaultAlien_V9_Token is ProxyMultivaultAlien_V9_Base 
         uint128 amount,
         address recipient,
         address remainingGasTo,
-        TvmCell payload
+        TvmCell payload,
+        optional(uint128) value
     ) internal pure {
         ITokenRoot(token).mint{
-            value: 0,
-            flag: MsgFlag.ALL_NOT_RESERVED,
+            value: value.getOr(0),
+            flag: value.hasValue() ? MsgFlag.SENDER_PAYS_FEES : MsgFlag.ALL_NOT_RESERVED,
             bounce: false
         }(
             amount,
