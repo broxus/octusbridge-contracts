@@ -1,0 +1,174 @@
+pragma ever-solidity >= 0.62.0;
+
+import "./ProxyMultiVaultAlien_V9_Token.tsol";
+import "../../../../../utils/Platform.tsol";
+import "../../../../interfaces/proxy/IBridgeTokenFee.tsol";
+
+abstract contract ProxyMultiVaultAlien_V9_Fees is ProxyMultiVaultAlien_V9_Token {
+
+    function getDefaultFeeNumerator() external view responsible returns(uint128) {
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} defaultFeeNumerator;
+    }
+
+    function getPlatformCode() external view responsible returns(TvmCell) {
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} platformCode;
+    }
+
+    function getBridgeTokenFeeCode() external view responsible returns(TvmCell) {
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} bridgeTokenFeeCode;
+    }
+
+    function getCustomBridgeFeesNumerator() external view responsible returns(mapping(address => uint128)) {
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} fees;
+    }
+
+    function setDefaultFeeNumerator(uint128 _defaultFee) external onlyOwner cashBack {
+        defaultFeeNumerator = _defaultFee;
+    }
+
+    function setPlatformCode(TvmCell _code) external onlyOwner cashBack {
+        platformCode = _code;
+    }
+
+    function setBridgeTokenFeeCode(TvmCell _code) external onlyOwner cashBack {
+        bridgeTokenFeeCode = _code;
+    }
+
+    function setFeeForToken(address _token,uint128  _fee) external onlyOwner cashBack {
+        if (_fee <= 10000) {
+            fees[_token] = _fee;
+        }
+    }
+
+    function deleteFeeForToken(address _token) external onlyOwner cashBack {
+        delete fees[_token];
+    }
+
+    function deployBridgeTokenFee(address _token, address _remainingGasTo) external view {
+         require(msg.value > Gas.getDeployBridgeTokenFeeValue(), ErrorCodes.LOW_MSG_VALUE);
+
+        _deployBridgeTokenFee(_token, _remainingGasTo);
+    }
+
+    function _deployBridgeTokenFee(address _token, address _remainingGasTo) internal view {
+        TvmCell emptyParams;
+
+        new Platform {
+            stateInit: _buildBridgeTokenFeeStateInit(_token),
+            value: Gas.getDeployBridgeTokenFeeValue(),
+            flag: MsgFlag.SENDER_PAYS_FEES
+        }(
+            bridgeTokenFeeCode,
+            emptyParams,
+            _remainingGasTo
+        );
+    }
+
+    function getExpectedBridgeTokenFeeAddress(address _token)
+        external
+        responsible
+        view
+        returns(address)
+    {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} _getExpectedBridgeTokenFeeAddress(_token);
+    }
+
+    function _getExpectedBridgeTokenFeeAddress(address _token)
+        internal
+        view
+        returns(address)
+    {
+        TvmCell state = _buildBridgeTokenFeeStateInit(_token);
+        return address(tvm.hash(state));
+    }
+
+    function _buildBridgeTokenFeeStateInit(address _token)
+        internal
+        view
+        returns(TvmCell)
+    {
+        return tvm.buildStateInit({
+            contr: Platform,
+            varInit: {
+                root: address(this),
+                platformType: 0,
+                initialData: abi.encode(_token)
+            },
+            code: platformCode
+        });
+    }
+
+    function _calculateFees(uint128 _amount, address _token) internal view returns(uint128) {
+        uint128 accumulatedFees = 0;
+
+            if (fees.exists(_token)) {
+                accumulatedFees = math.muldiv(_amount, fees[_token], denominator);
+            } else if (defaultFeeNumerator > 0) {
+                accumulatedFees = math.muldiv(_amount, defaultFeeNumerator, denominator);
+            }
+        return accumulatedFees;
+    }
+
+    function _accumulateFee(uint128 _fee, address _token) internal view {
+        IBridgeTokenFee(_getExpectedBridgeTokenFeeAddress(_token)).accumulateFee{
+            value: gasToValue(Gas.ACCUMULATE_FEES_GAS, address(this).wid),
+            flag: MsgFlag.SENDER_PAYS_FEES,
+            bounce: false
+        }(_fee);
+    }
+
+    function withdrawTokenFee(address _tokenRoot, address _recipient) external view onlyOwner {
+        require(msg.value > Gas.getDeployTokenWalletValue(), ErrorCodes.LOW_MSG_VALUE);
+
+        IBridgeTokenFee(_getExpectedBridgeTokenFeeAddress(_tokenRoot)).getAccumulatedFee{
+            value: 0,
+            flag: MsgFlag.REMAINING_GAS,
+            bounce: false,
+            callback: ProxyMultiVaultAlien_V9_Fees.onGetAccumulatedFee
+        }(_recipient);
+    }
+
+    function onGetAccumulatedFee(TvmCell _payload) external view reserveAtLeastTargetBalance {
+        (
+            address recipient,
+            uint128 accumulatedFees,
+            address tokenRoot
+        ) = abi.decode(_payload, (address, uint128, address));
+
+        if (accumulatedFees > 0) {
+            TvmCell emptyPayload;
+
+            ITokenRoot(tokenRoot).mint{
+                value: 0,
+                flag: MsgFlag.ALL_NOT_RESERVED,
+                bounce: false
+            }(
+                accumulatedFees,
+                recipient,
+                Gas.getDeployTokenWalletValue(),
+                owner,
+                false,
+                emptyPayload
+            );
+
+        } else {
+            owner.transfer({
+				value: 0,
+				flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+				bounce: false
+			});
+        }
+    }
+
+    function upgradeBridgeTokenFee(
+        address _token,
+        address _remainingGasTo
+    ) external view onlyOwner {
+
+        IBridgeTokenFee(_getExpectedBridgeTokenFeeAddress(_token)).upgrade{
+            value: 0,
+            flag: MsgFlag.REMAINING_GAS,
+            bounce: false
+        }(bridgeTokenFeeCode, _remainingGasTo);
+    }
+}

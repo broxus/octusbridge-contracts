@@ -5,6 +5,7 @@ library Gas {
     uint128 constant TOKEN_WALLET_INITIAL_BALANCE = 0.6 ever;
     uint128 constant CONFIGURATION_FACTORY_INITIAL_BALANCE = 6 ever;
     uint128 constant TARGET_BALANCE = 6 ever; // most contracts initial balance
+    uint128 constant BRIDGE_TOKEN_FEES_INITIAL_BALANCE = 0.6 ever;
 
     // mergePool
     uint128 constant REQUEST_TOKEN_DECIMALS_GAS = 300_000;
@@ -27,6 +28,14 @@ library Gas {
 
     function getDeployTokenRootValue() public returns(uint128) {
         return gasToValue(DEPLOY_TOKEN_ROOT_GAS, address(this).wid) + TOKEN_ROOT_INITIAL_BALANCE;
+    }
+
+    uint128 constant DEPLOY_BRIDGE_TOKEN_FEES_GAS = 100_000;
+    uint128 constant BRIDGE_TOKEN_FEES_EXTRA_GAS = 10_000;
+    uint128 constant ACCUMULATE_FEES_GAS = 10_000;
+
+    function getDeployBridgeTokenFeeValue()  public returns(uint128) {
+        return gasToValue(DEPLOY_BRIDGE_TOKEN_FEES_GAS, address(this).wid) + BRIDGE_TOKEN_FEES_INITIAL_BALANCE;
     }
 
     uint64 constant TOKEN_WALLET_DEPLOY_GAS = 30_000;

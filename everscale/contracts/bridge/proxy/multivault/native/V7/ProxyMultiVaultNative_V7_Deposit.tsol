@@ -126,6 +126,10 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
 
         uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
 
+        // accumulate fee
+        uint128 fee = _calculateFees(amount, token_wallet);
+        _accumulateFee(fee, token_wallet);
+
         TvmCell stateInit = tvm.buildStateInit({
             contr: EventAddressKeeper,
             varInit: {
@@ -144,7 +148,7 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
 
         _transferTokens(
             token_wallet,
-            amount,
+            amount - fee,
             recipient,
             recipient,
             abi.encode(BridgeOpCodes.BridgeDeposit, nonce, payload),
@@ -165,13 +169,13 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
 
         if (selector == tvm.functionId(ITokenWallet.transfer)) {
             (
-                uint128 amount,
-                address recipient,
-                uint128 deployWalletValue,
-                address remainingGasTo,
-                bool notify,
+                ,
+                ,
+                ,
+                ,
+                ,
                 TvmCell payload
-            ) = slice.decodeFunctionParams(ITokenWallet.transfer);
+            ) = slice.loadFunctionParams(ITokenWallet.transfer);
 
             (uint32 nonce,) = abi.decode(payload, (uint32, optional(TvmCell)));
 

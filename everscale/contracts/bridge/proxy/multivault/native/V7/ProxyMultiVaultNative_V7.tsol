@@ -27,7 +27,11 @@ contract ProxyMultiVaultNative_V7 is ProxyMultiVaultNative_V7_Deposit, CheckPubK
             api_version,
             dex_middleware,
             proxyMultiVaultAlien,
-            _randomNonce
+            _randomNonce,
+            defaultFeeNumerator,
+            fees,
+            platformCode,
+            bridgeTokenFeeCode
         );
 
         tvm.setcode(code);
@@ -36,7 +40,7 @@ contract ProxyMultiVaultNative_V7 is ProxyMultiVaultNative_V7_Deposit, CheckPubK
         onCodeUpgrade(data);
     }
 
-    function onCodeUpgrade(TvmCell data) functionID(2) private {
+    function onCodeUpgrade(TvmCell data) /*functionID(2)*/ private {
         tvm.resetStorage();
 
         (
@@ -47,12 +51,16 @@ contract ProxyMultiVaultNative_V7 is ProxyMultiVaultNative_V7_Deposit, CheckPubK
             uint8 api_version_,
             address dex_middleware_,
             // address proxyMultiVaultAlien_,
-            uint _randomNonce_
+            uint _randomNonce_/*,
+            uint128 defaultFeeNumerator_,
+            mapping(address => uint128) fees_,
+            TvmCell platformCode_,
+            TvmCell bridgeTokenFeeCode_*/
         ) = abi.decode(
             data,
             (
                 EVMConfiguration, SolanaConfiguration, /* TVMConfiguration, */
-                address, uint8, address, /* address, */ uint
+                address, uint8, address, /* address, */ uint/*, uint128, mapping(address => uint128), TvmCell, TvmCell */
             )
         );
 
@@ -65,5 +73,10 @@ contract ProxyMultiVaultNative_V7 is ProxyMultiVaultNative_V7_Deposit, CheckPubK
         // proxyMultiVaultAlien = proxyMultiVaultAlien_;
         setOwnership(owner_);
         _randomNonce = _randomNonce_;
+
+//        defaultFeeNumerator =defaultFeeNumerator_;
+//        fees = fees_;
+//        platformCode = platformCode_;
+//        bridgeTokenFeeCode = bridgeTokenFeeCode_;
     }
 }

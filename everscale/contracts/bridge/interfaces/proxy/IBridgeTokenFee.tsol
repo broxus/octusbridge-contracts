@@ -1,0 +1,7 @@
+pragma ever-solidity >= 0.62.0;
+
+interface IBridgeTokenFee{
+    function accumulateFee(uint128 _fee) external;
+    function getAccumulatedFee(address _recipient) external responsible view returns(TvmCell);
+    function upgrade(TvmCell _code, address _remainingGasTo) external;
+}

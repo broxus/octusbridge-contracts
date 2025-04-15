@@ -220,4 +220,10 @@ interface IProxyMultiVaultAlien_V9 is IEVMCallback, INetworks {
         address remainingGasTo,
         optional(TvmCell) payload
     );
+
+    // deploy token fees
+    function deployBridgeTokenFee(
+        address _token,
+        address _remainingGasTo
+    ) external;
 }

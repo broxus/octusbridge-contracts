@@ -530,14 +530,14 @@ describe("Test Alien proxy upgrade", async function () {
     it("Upgrade", async () => {
       const ProxyMultiVaultAlien_V9 = locklift.factory.getContractArtifacts("ProxyMultiVaultAlien_V9");
 
-      await proxy_v8.methods
+       const { traceTree } = await locklift.tracing.trace( proxy_v8.methods
         .upgrade({
           code: ProxyMultiVaultAlien_V9.code,
         })
         .send({
           from: owner.address,
           amount: locklift.utils.toNano(1),
-        });
+        }));
 
       proxy_v9 = locklift.factory.getDeployedContract("ProxyMultiVaultAlien_V9", proxy_v1.address);
     });

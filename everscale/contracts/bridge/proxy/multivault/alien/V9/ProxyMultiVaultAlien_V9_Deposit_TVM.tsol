@@ -6,10 +6,10 @@ import "../../../../interfaces/proxy/ITvmTvmProxyExtended.tsol";
 import "../../../../libraries/EventContractNonce.tsol";
 import "../../../../libraries/BridgeOpCodes.tsol";
 
-import "./ProxyMultiVaultAlien_V9_Token.tsol";
+import "./ProxyMultiVaultAlien_V9_Fees.tsol";
 
 abstract contract ProxyMultiVaultAlien_V9_Deposit_TVM is
-    ProxyMultiVaultAlien_V9_Token,
+    ProxyMultiVaultAlien_V9_Fees,
     ITvmTvmProxyExtended
 {
     function onTVMEventConfirmedExtended(
@@ -40,6 +40,9 @@ abstract contract ProxyMultiVaultAlien_V9_Deposit_TVM is
             uint128
         ));
 
+        // accumulate fee
+        uint128 fee = _calculateFees(amount, token);
+        _accumulateFee(fee, token);
 
         if (nativeProxyTokenWallet.hasValue()) {
             TvmCell _meta = abi.encode(
@@ -62,7 +65,7 @@ abstract contract ProxyMultiVaultAlien_V9_Deposit_TVM is
 
         _mintTokens(
             token,
-            amount,
+            amount - fee,
             recipient,
             recipient,
             abi.encode(BridgeOpCodes.BridgeDeposit, nonce, payload),

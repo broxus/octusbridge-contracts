@@ -22,6 +22,12 @@ abstract contract ProxyMultiVaultNative_V7_Base is IProxyMultiVaultNative_V7, In
     address public dex_middleware;
     address proxyMultiVaultAlien;
 
+    uint128 constant denominator = 100_000;
+    uint128 defaultFeeNumerator = 0;
+    mapping(address => uint128) fees;
+    TvmCell platformCode;
+    TvmCell bridgeTokenFeeCode;
+
     /// @notice Get current contract API version.
     /// Each time contract is upgraded, API version is incremented.
     /// @return Current API version

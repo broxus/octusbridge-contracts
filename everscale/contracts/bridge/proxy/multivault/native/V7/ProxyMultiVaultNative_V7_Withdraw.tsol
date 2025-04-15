@@ -10,13 +10,13 @@ import "../../../../interfaces/event-configuration-contracts/IEverscaleEthereumE
 
 import "../../../../../utils/ErrorCodes.tsol";
 
-import "./ProxyMultiVaultNative_V7_Base.tsol";
+import "./ProxyMultiVaultNative_V7_Fees.tsol";
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensTransferCallback.tsol";
 
 
 abstract contract ProxyMultiVaultNative_V7_Withdraw is
-    ProxyMultiVaultNative_V7_Base,
+    ProxyMultiVaultNative_V7_Fees,
     IAcceptTokensTransferCallback,
     ITvmEventCancelled
 {
@@ -213,7 +213,12 @@ abstract contract ProxyMultiVaultNative_V7_Withdraw is
         address sender,
         address nativeProxyWallet,
         TvmCell transferPayload
-    ) internal pure {
+    ) internal view {
+
+        // accumulate fee
+        uint128 fee = _calculateFees(amount, msg.sender);
+        _accumulateFee(fee, msg.sender);
+
         (
             address recipient,
             int32 chainId,
@@ -243,7 +248,7 @@ abstract contract ProxyMultiVaultNative_V7_Withdraw is
 
             sender,
             recipient,
-            amount,
+            amount - fee,
 
             msg.value, // todo subtract the cost of the current transaction
             expectedGas,

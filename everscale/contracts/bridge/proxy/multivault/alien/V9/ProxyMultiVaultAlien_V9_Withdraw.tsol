@@ -219,6 +219,10 @@ abstract contract ProxyMultiVaultAlien_V9_Withdraw is
             optional(TvmCell)
         ));
 
+        // accumulate fee
+        uint128 fee = _calculateFees(amount, msg.sender);
+        _accumulateFee(fee, msg.sender);
+
         emit TvmTvmAlien(
             baseChainId,
 
@@ -230,9 +234,9 @@ abstract contract ProxyMultiVaultAlien_V9_Withdraw is
 
             sender,
             recipient,
-            amount,
+            amount - fee,
 
-            msg.value, // todo subtract the cost of the current transaction
+            msg.value, //todo subtract the cost of the current transaction
             expectedGas,
             remainingGasTo,
             eventPayload

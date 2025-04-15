@@ -1,4 +1,4 @@
-import { LockliftConfig, lockliftChai } from "locklift";
+     import { LockliftConfig, lockliftChai } from "locklift";
 import { FactorySource } from "./build/factorySource";
 import "dotenv/config";
 

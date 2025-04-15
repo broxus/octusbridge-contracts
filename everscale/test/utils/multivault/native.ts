@@ -8,6 +8,8 @@ import {
   ProxyMultiVaultNative_V7Abi,
   SolanaEverscaleEventConfigurationAbi,
   TvmTvmEventConfigurationAbi,
+  BridgeTokenFeeAbi,
+  TokenWalletAbi
 } from "../../../build/factorySource";
 import { logContract } from "../logger";
 import {
@@ -90,7 +92,7 @@ export const setupNativeMultiVault = async (
     proxy.address,
     tvmTvmEvent.code,
     trustlessVerifier.address,
-    new Address("0:9a7e9eefc394a85f6313785db41e9310b5022858e1f46b018bfa946a1bf656ad")
+    new Address("0:057493dab4639b455bd9305c0c2cc44d30cf48e5b185b6cc05a0d102c91e0fe8")
   );
 
   // Set proxy EVM configuration
@@ -140,4 +142,52 @@ export const setupNativeMultiVault = async (
     proxy,
     tvmTvmEventConfiguration,
   ];
+};
+
+export const deployBridgeTokenFeeAndSetFee = async (
+  owner: Account,
+  token: Contract<FactorySource["TokenRoot"]>,
+  proxy: Contract<FactorySource["ProxyMultiVaultNative_V7"]>,
+  fee: number
+): Promise<[Contract<BridgeTokenFeeAbi>, Contract<TokenWalletAbi>]> => {
+  const bridgeTokenFeeCode = locklift.factory.getContractArtifacts( "BridgeTokenFee").code;
+  const platformCode = locklift.factory.getContractArtifacts( "Platform").code;
+
+  //set bridge token fee code
+  await proxy.methods.setBridgeTokenFeeCode({_code: bridgeTokenFeeCode}).send({
+      from: owner.address,
+      amount: locklift.utils.toNano(0.5)
+  });
+
+  //set platform
+  await proxy.methods.setPlatformCode({_code: platformCode}).send({
+      from: owner.address,
+      amount: locklift.utils.toNano(0.5)
+  });
+
+  let proxyTokenWallet = await token.methods.walletOf({answerId: 0, walletOwner: proxy.address})
+    .call()
+    .then((a) =>  locklift.factory.getDeployedContract('TokenWallet', a.value0));
+
+  // deploy bridgeTokenFee
+  const { traceTree } = await locklift.tracing.trace(proxy.methods.deployBridgeTokenFee({_token: proxyTokenWallet.address, _remainingGasTo: owner.address})
+    .send({
+      from: owner.address,
+      amount: locklift.utils.toNano(5),
+    }));
+
+  let bridgeTokenFee = await proxy.methods.getExpectedBridgeTokenFeeAddress({_token: proxyTokenWallet.address, answerId: 0})
+    .call()
+    .then((a) => locklift.factory.getDeployedContract("BridgeTokenFee", a.value0));
+
+    await logContract('BridgeTokenFee', bridgeTokenFee.address);
+
+  // Set fees
+  await proxy.methods.setDefaultFeeNumerator({_defaultFee: fee})
+    .send({
+      from: owner.address,
+      amount: locklift.utils.toNano(0.5),
+    });
+
+  return [bridgeTokenFee, proxyTokenWallet];
 };
