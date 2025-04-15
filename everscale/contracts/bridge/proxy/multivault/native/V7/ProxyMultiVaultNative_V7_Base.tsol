@@ -80,12 +80,13 @@ abstract contract ProxyMultiVaultNative_V7_Base is IProxyMultiVaultNative_V7, In
         address recipient,
         address remainingGasTo,
         TvmCell payload,
-        bool bounce
+        bool bounce,
+        optional(uint128) value
     ) internal pure {
         ITokenWallet(token_wallet).transfer{
-            value: 0,
+            value: value.getOr(0),
             bounce: bounce,
-            flag: MsgFlag.ALL_NOT_RESERVED
+            flag: value.hasValue() ? MsgFlag.SENDER_PAYS_FEES : MsgFlag.ALL_NOT_RESERVED
         }(
             amount,
             recipient,

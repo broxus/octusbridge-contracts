@@ -35,6 +35,18 @@ library Gas {
         return gasToValue(TOKEN_WALLET_DEPLOY_GAS, address(this).wid) + TOKEN_WALLET_INITIAL_BALANCE;
     }
 
+    uint128 constant MINT_TOKEN_GAS = 100_000;
+
+    function getMintTokenValue() public returns (uint128) {
+        return gasToValue(MINT_TOKEN_GAS, address(this).wid) + getDeployTokenWalletValue();
+    }
+
+    uint128 constant TRANSFER_TOKEN_GAS = 100_000;
+
+    function getTransferTokenValue() public returns (uint128) {
+        return gasToValue(TRANSFER_TOKEN_GAS, address(this).wid) + getDeployTokenWalletValue();
+    }
+
     uint128 constant DEPLOY_TVM_TVM_EVENT = 1_000_000;
     uint128 constant DEPLOY_EVENT_ADDRESS_KEEPER = 1_000_000;
 }

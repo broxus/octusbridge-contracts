@@ -28,6 +28,8 @@ contract TvmTvmBaseEvent is ITvmTvmEvent, TransferUtils {
 
     TvmCell eventBody;
 
+    uint128 public eventInitialBalance;
+
     /// @dev Should be deployed only by corresponding TvmTvmEventConfiguration contract
     /// @param _initializer The address who paid for contract deployment.
     /// Receives all contract balance at the end of event contract lifecycle.
@@ -35,7 +37,8 @@ contract TvmTvmBaseEvent is ITvmTvmEvent, TransferUtils {
         address _initializer,
         TvmCell _meta,
         address _transactionChecker,
-        TvmCell _eventBody
+        TvmCell _eventBody,
+        uint128 _eventInitialBalance
     ) {
         require(
             eventInitData.configuration == msg.sender,
@@ -48,6 +51,7 @@ contract TvmTvmBaseEvent is ITvmTvmEvent, TransferUtils {
         eventBody = _eventBody;
 
         transactionChecker = _transactionChecker;
+        eventInitialBalance = _eventInitialBalance;
 
         onInit();
     }

@@ -56,7 +56,8 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
             recipient,
             remainingGasTo,
             abi.encode(nonce, transferPayload),
-            false
+            false,
+            null
         );
     }
 
@@ -92,7 +93,8 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
             recipient,
             remainingGasTo,
             abi.encode(nonce, transferPayload),
-            false
+            false,
+            null
         );
     }
 
@@ -114,10 +116,11 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
             uint128 amount,
             address recipient,
             optional(TvmCell) payload,
-            address eventAddress
+            address eventAddress,
+            uint128 expectedGas
         ) = abi.decode(
             meta,
-            (address, uint128, address, optional(TvmCell), address)
+            (address, uint128, address, optional(TvmCell), address, uint128)
         );
 
         uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
@@ -142,10 +145,18 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
             token_wallet,
             amount,
             recipient,
-            remainingGasTo,
+            recipient,
             abi.encode(nonce, payload),
-            true
+            true,
+            Gas.getTransferTokenValue() + expectedGas
         );
+
+        // Refund remaining gas to event deployer
+        remainingGasTo.transfer({
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+            bounce: false
+        });
     }
 
     onBounce(TvmSlice slice) external view reserveAtLeastTargetBalance {

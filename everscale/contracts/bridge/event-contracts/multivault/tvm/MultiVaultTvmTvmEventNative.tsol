@@ -49,8 +49,9 @@ contract MultiVaultTvmTvmEventNative is
         address _initializer,
         TvmCell _meta,
         address _transactionChecker,
-        TvmCell _eventBody
-    ) TvmTvmBaseEvent(_initializer, _meta,  _transactionChecker, _eventBody) {}
+        TvmCell _eventBody,
+        uint128 _eventInitialBalance
+    ) TvmTvmBaseEvent(_initializer, _meta,  _transactionChecker, _eventBody, _eventInitialBalance) {}
 
     function onInit() override internal {
         status = Status.Initializing;
@@ -92,7 +93,7 @@ contract MultiVaultTvmTvmEventNative is
 
 
         // return gas in case event contract is less than required
-        if (address(this).balance < expected_gas) {
+        if (address(this).balance < expected_gas + eventInitialBalance) {
             initializer.transfer({
                 value: 0,
                 bounce: false,
@@ -195,7 +196,8 @@ contract MultiVaultTvmTvmEventNative is
                 amount,
                 recipient,
                 payload,
-                address(this)
+                address(this),
+                expected_gas
             );
 
             ITvmTvmProxyExtended(eventInitData.configuration).onTVMEventConfirmedExtended{

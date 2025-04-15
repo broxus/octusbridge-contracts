@@ -27,14 +27,16 @@ abstract contract ProxyMultiVaultAlien_V9_Deposit_TVM is
             address recipient,
             optional(TvmCell) payload,
             address eventContract,
-            optional(address) nativeProxyTokenWallet
+            optional(address) nativeProxyTokenWallet,
+            uint128 expectedGas
         ) = abi.decode(meta, (
             address,
             uint128,
             address,
             optional(TvmCell),
             address,
-            optional(address)
+            optional(address),
+            uint128
         ));
 
 
@@ -44,7 +46,8 @@ abstract contract ProxyMultiVaultAlien_V9_Deposit_TVM is
                 amount,
                 recipient,
                 payload,
-                eventContract
+                eventContract,
+                expectedGas
             );
 
             ITvmTvmProxyExtended(proxyMultiVaultNative).onTVMEventConfirmedExtended{
@@ -60,8 +63,16 @@ abstract contract ProxyMultiVaultAlien_V9_Deposit_TVM is
             token,
             amount,
             recipient,
-            remainingGasTo,
-            abi.encode(nonce, payload)
+            recipient,
+            abi.encode(nonce, payload),
+            Gas.getMintTokenValue() + expectedGas
         );
+
+        // Refund remaining gas to event deployer
+        remainingGasTo.transfer({
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+            bounce: false
+        });
     }
 }

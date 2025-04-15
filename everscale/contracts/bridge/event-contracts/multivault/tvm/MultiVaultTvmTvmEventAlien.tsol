@@ -33,8 +33,9 @@ contract MultiVaultTvmTvmEventAlien is
         address _initializer,
         TvmCell _meta,
         address _transactionChecker,
-        TvmCell _eventBody
-    ) TvmTvmBaseEvent(_initializer, _meta, _transactionChecker, _eventBody) {}
+        TvmCell _eventBody,
+        uint128 _eventInitialBalance
+    ) TvmTvmBaseEvent(_initializer, _meta, _transactionChecker, _eventBody, _eventInitialBalance) {}
 
     function onInit() override internal {
         status = Status.Initializing;
@@ -51,7 +52,7 @@ contract MultiVaultTvmTvmEventAlien is
         EventData eventData = getEventData();
 
         // return gas in case event contract balance is less than required
-        if (address(this).balance < eventData.expected_gas) {
+        if (address(this).balance < eventData.expected_gas + eventInitialBalance) {
             initializer.transfer({
                 value: 0,
                 bounce: false,
@@ -358,7 +359,8 @@ contract MultiVaultTvmTvmEventAlien is
                 eventData.recipient,
                 eventData.payload,
                 address(this),
-                transitionalData.native_proxy_token_wallet
+                transitionalData.native_proxy_token_wallet,
+                eventData.expected_gas
             );
 
             ITvmTvmProxyExtended(eventInitData.configuration).onTVMEventConfirmedExtended{

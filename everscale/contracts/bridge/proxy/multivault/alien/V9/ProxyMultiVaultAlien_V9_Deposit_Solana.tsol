@@ -43,7 +43,8 @@ abstract contract ProxyMultiVaultAlien_V9_Deposit_Solana is
             amount,
             recipient,
             remainingGasTo,
-            abi.encode(nonce, mintPayload)
+            abi.encode(nonce, mintPayload),
+            null
         );
     }
 }

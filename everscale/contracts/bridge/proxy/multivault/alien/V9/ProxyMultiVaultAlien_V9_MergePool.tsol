@@ -71,7 +71,8 @@ abstract contract ProxyMultiVaultAlien_V9_MergePool is ProxyMultiVaultAlien_V9_W
             amount,
             recipient,
             remainingGasTo,
-            payload
+            payload,
+            null
         );
     }
 
