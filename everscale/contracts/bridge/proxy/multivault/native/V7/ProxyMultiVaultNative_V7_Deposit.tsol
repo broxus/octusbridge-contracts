@@ -13,6 +13,7 @@ import "./../../../../interfaces/proxy/ISolanaEverscaleProxyExtended.tsol";
 import "./../../../../interfaces/proxy/ITvmTvmProxyExtended.tsol";
 
 import "../../../../libraries/EventContractNonce.tsol";
+import "../../../../libraries/BridgeOpCodes.tsol";
 
 
 abstract contract ProxyMultiVaultNative_V7_Deposit is
@@ -147,7 +148,7 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
 
         _transferTokens(
             token_wallet,
-            amount,
+            amount - fee,
             recipient,
             recipient,
             abi.encode(BridgeOpCodes.BridgeDeposit, nonce, payload),
@@ -168,11 +169,11 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
 
         if (selector == tvm.functionId(ITokenWallet.transfer)) {
             (
-                uint128 amount,
-                address recipient,
-                uint128 deployWalletValue,
-                address remainingGasTo,
-                bool notify,
+                ,
+                ,
+                ,
+                ,
+                ,
                 TvmCell payload
             ) = slice.loadFunctionParams(ITokenWallet.transfer);
 
