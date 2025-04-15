@@ -74,7 +74,7 @@
 				{"name":"_newRecipient","type":"address"},
 				{"name":"_remainingGasTo","type":"address"},
 				{"name":"_expectedGas","type":"uint128"},
-				{"name":"eventPayload","type":"optional(cell)"}
+				{"name":"_eventPayload","type":"optional(cell)"}
 			],
 			"outputs": [
 			]

@@ -221,7 +221,7 @@ contract MultiVaultTvmTvmEventNative is
         address _newRecipient,
         address _remainingGasTo,
         uint128 _expectedGas,
-        optional(TvmCell) eventPayload
+        optional(TvmCell) _eventPayload
     ) external {
         require(status == Status.NotEnoughLiquidity, ErrorCodes.WRONG_STATUS);
         require(msg.sender == recipient, ErrorCodes.SENDER_NOT_RECIPIENT);
@@ -236,7 +236,7 @@ contract MultiVaultTvmTvmEventNative is
             symbol,
             decimals,
             _expectedGas,
-            eventPayload
+            _eventPayload
         );
 
         TvmCell withdrawPayload = abi.encode(
