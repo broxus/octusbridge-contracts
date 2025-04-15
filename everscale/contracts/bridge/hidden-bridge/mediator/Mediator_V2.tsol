@@ -105,7 +105,7 @@ contract Mediator_V2 is
         uint128 amount,
         address remainingGasTo
     ) internal view {
-        (uint32 nonce, TvmCell payload) = abi.decode(payloadWithNonce, (uint32, TvmCell));
+        (uint32 nonce, optional(TvmCell) payload) = abi.decode(payloadWithNonce, (uint32, optional(TvmCell)));
 
         remainingGasTo = _includes(eventDeployers, remainingGasTo)
           ? _randomChoice(eventClosers)
@@ -115,7 +115,7 @@ contract Mediator_V2 is
             Operation operation,
             address proxy,
             TvmCell operationPayload
-        ) = abi.decode(payload, (Operation, address, TvmCell));
+        ) = abi.decode(payload.get(), (Operation, address, TvmCell));
 
         TvmCell withdrawPayload = _encodeWithdrawPayload(operation, operationPayload, nonce);
 

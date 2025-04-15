@@ -43,14 +43,11 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
             (address, uint128, address, TvmCell)
         );
 
-        TvmCell transferPayload;
+        uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
 
-        if (recipient == dex_middleware) {
-            transferPayload = payload;
-        } else {
-            uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
-
-            transferPayload = abi.encode(nonce, payload);
+        optional(TvmCell) transferPayload;
+        if (!payload.toSlice().empty()) {
+            transferPayload.set(payload);
         }
 
         _transferTokens(
@@ -58,7 +55,7 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
             amount,
             recipient,
             remainingGasTo,
-            transferPayload,
+            abi.encode(nonce, transferPayload),
             false
         );
     }
@@ -82,14 +79,11 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
             (address, uint128, address, TvmCell)
         );
 
-        TvmCell transferPayload;
+        uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
 
-        if (recipient == dex_middleware) {
-            transferPayload = payload;
-        } else {
-            uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
-
-            transferPayload = abi.encode(nonce, payload);
+        optional(TvmCell) transferPayload;
+        if (!payload.toSlice().empty()) {
+            transferPayload.set(payload);
         }
 
         _transferTokens(
@@ -97,7 +91,7 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
             amount,
             recipient,
             remainingGasTo,
-            transferPayload,
+            abi.encode(nonce, transferPayload),
             false
         );
     }
@@ -127,7 +121,6 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
         );
 
         uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
-        TvmCell transferPayload = abi.encode(nonce, payload);
 
         TvmCell stateInit = tvm.buildStateInit({
             contr: EventAddressKeeper,
@@ -150,7 +143,7 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
             amount,
             recipient,
             remainingGasTo,
-            transferPayload,
+            abi.encode(nonce, payload),
             true
         );
     }

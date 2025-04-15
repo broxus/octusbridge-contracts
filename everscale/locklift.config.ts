@@ -1,14 +1,14 @@
 import { LockliftConfig, lockliftChai } from "locklift";
 import { FactorySource } from "./build/factorySource";
-import 'dotenv/config';
+import "dotenv/config";
 
-import chai from 'chai';
+import chai from "chai";
 
 import "locklift-verifier";
 import "@broxus/locklift-deploy";
-import {Deployments} from "@broxus/locklift-deploy";
+import { Deployments } from "@broxus/locklift-deploy";
 
-chai.use(lockliftChai)
+chai.use(lockliftChai);
 
 declare module "locklift" {
   //@ts-ignore
@@ -30,15 +30,15 @@ const config: LockliftConfig = {
   compiler: {
     version: "0.71.0",
     externalContracts: {
-      "../node_modules/ton-eth-bridge-token-contracts/contracts": [
-        'TokenRoot',
-        'TokenWallet',
-        'TokenRootUpgradeable',
-        'TokenWalletUpgradeable',
-        'TokenWalletPlatform'
+      "../node_modules/ton-eth-bridge-token-contracts": [
+        "TokenRoot",
+        "TokenWallet",
+        "TokenRootUpgradeable",
+        "TokenWalletUpgradeable",
+        "TokenWalletPlatform",
       ],
-      "build_prod": ['Bridge']
-    }
+      build_prod: ["Bridge"],
+    },
   },
   linker: {
     version: "0.20.6",
@@ -91,7 +91,7 @@ const config: LockliftConfig = {
       },
       giver: {
         address: process.env.TYCHO_GIVER_ADDRESS!,
-        key: process.env.TYCHO_GIVER_KEY!
+        key: process.env.TYCHO_GIVER_KEY!,
         //phrase: process.env.TYCHO_GIVER_PHRASE!,
         //accountId: 0,
       },
@@ -111,7 +111,7 @@ const config: LockliftConfig = {
       },
       giver: {
         address: process.env.TYCHO_GIVER_ADDRESS!,
-        key: process.env.TYCHO_GIVER_KEY!
+        key: process.env.TYCHO_GIVER_KEY!,
         //phrase: process.env.TYCHO_GIVER_PHRASE!,
         //accountId: 0,
       },

@@ -38,12 +38,17 @@ abstract contract ProxyMultiVaultAlien_V9_Deposit_EVM is
 
         uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
 
+        optional(TvmCell) mintPayload;
+        if (!payload.toSlice().empty()) {
+            mintPayload.set(payload);
+        }
+
         _mintTokens(
             token,
             amount,
             recipient,
             remainingGasTo,
-            abi.encode(nonce, payload)
+            abi.encode(nonce, mintPayload)
         );
     }
 }
