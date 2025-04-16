@@ -27,7 +27,8 @@ contract ProxyMultiVaultNative_V7 is ProxyMultiVaultNative_V7_Deposit, CheckPubK
             api_version,
             dex_middleware,
             proxyMultiVaultAlien,
-            _randomNonce
+            _randomNonce,
+            platformCode
         );
 
         tvm.setcode(code);
@@ -47,12 +48,13 @@ contract ProxyMultiVaultNative_V7 is ProxyMultiVaultNative_V7_Deposit, CheckPubK
             uint8 api_version_,
             address dex_middleware_,
             // address proxyMultiVaultAlien_,
-            uint _randomNonce_
+            uint _randomNonce_/*,
+            TvmCell platformCode_*/
         ) = abi.decode(
             data,
             (
                 EVMConfiguration, SolanaConfiguration, /* TVMConfiguration, */
-                address, uint8, address, /* address, */ uint
+                address, uint8, address, /* address, */ uint /*,  TvmCell */
             )
         );
 
@@ -65,5 +67,6 @@ contract ProxyMultiVaultNative_V7 is ProxyMultiVaultNative_V7_Deposit, CheckPubK
         // proxyMultiVaultAlien = proxyMultiVaultAlien_;
         setOwnership(owner_);
         _randomNonce = _randomNonce_;
+//        platformCode = platformCode_;
     }
 }

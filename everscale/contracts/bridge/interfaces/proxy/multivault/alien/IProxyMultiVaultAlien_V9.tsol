@@ -35,7 +35,6 @@ interface IProxyMultiVaultAlien_V9 is IEVMCallback, INetworks {
         TvmCell alienTokenRootCode;
         TvmCell alienTokenWalletCode;
         TvmCell alienTokenWalletPlatformCode;
-        TvmCell platformCode;
         TvmCell tokenFeeCode;
         Fees defaultFee;
         mapping(address => Fees) fees;

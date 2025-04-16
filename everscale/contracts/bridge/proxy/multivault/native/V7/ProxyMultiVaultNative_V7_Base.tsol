@@ -22,7 +22,8 @@ abstract contract ProxyMultiVaultNative_V7_Base is IProxyMultiVaultNative_V7, In
     address public dex_middleware;
     address proxyMultiVaultAlien;
 
-    uint32 constant DENOMINATOR = 100_000;
+    uint32 constant FEE_DENOMINATOR = 100_000;
+    TvmCell platformCode;
 
 
     /// @notice Get current contract API version.

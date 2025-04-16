@@ -19,11 +19,11 @@ abstract contract ProxyMultiVaultAlien_V9_Fees is ProxyMultiVaultAlien_V9_Token 
                 value: 0,
                 bounce: false,
                 flag: MsgFlag.REMAINING_GAS
-        } (tvmConfiguration.defaultFee.incoming, tvmConfiguration.defaultFee.outgoing, DENOMINATOR);
+        } (tvmConfiguration.defaultFee.incoming, tvmConfiguration.defaultFee.outgoing, FEE_DENOMINATOR);
     }
 
     function getPlatformCode() external view responsible returns(TvmCell) {
-        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} tvmConfiguration.platformCode;
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} platformCode;
     }
 
     function getTokenFeeCode() external view responsible returns(TvmCell) {
@@ -49,13 +49,13 @@ abstract contract ProxyMultiVaultAlien_V9_Fees is ProxyMultiVaultAlien_V9_Token 
                         value: 0,
                         bounce: false,
                         flag: MsgFlag.REMAINING_GAS
-                } (tvmConfiguration.fees[_token].incoming, tvmConfiguration.fees[_token].outgoing, DENOMINATOR);
+                } (tvmConfiguration.fees[_token].incoming, tvmConfiguration.fees[_token].outgoing, FEE_DENOMINATOR);
             } else {
                 return {
                         value: 0,
                         bounce: false,
                         flag: MsgFlag.REMAINING_GAS
-                } (tvmConfiguration.defaultFee.incoming, tvmConfiguration.defaultFee.outgoing, DENOMINATOR);
+                } (tvmConfiguration.defaultFee.incoming, tvmConfiguration.defaultFee.outgoing, FEE_DENOMINATOR);
             }
     }
 
@@ -64,7 +64,7 @@ abstract contract ProxyMultiVaultAlien_V9_Fees is ProxyMultiVaultAlien_V9_Token 
     }
 
     function setPlatformCode(TvmCell _code) external onlyOwner cashBack {
-        tvmConfiguration.platformCode = _code;
+        platformCode = _code;
     }
 
     function setTokenFeeCode(TvmCell _code) external onlyOwner cashBack {
@@ -131,24 +131,24 @@ abstract contract ProxyMultiVaultAlien_V9_Fees is ProxyMultiVaultAlien_V9_Token 
                 platformType: 0,
                 initialData: abi.encode(_token)
             },
-            code: tvmConfiguration.platformCode
+            code: platformCode
         });
     }
 
-function _calculateFeesDeposit(uint128 _amount, address _token) internal view returns(uint128) {
+    function _calculateFeesDeposit(uint128 _amount, address _token) internal view returns(uint128) {
         uint128 accumulatedFees = 0;
 
             if (tvmConfiguration.fees.exists(_token)) {
                 accumulatedFees = math.muldiv(
                     _amount,
                     uint128(tvmConfiguration.fees[_token].outgoing),
-                    uint128(DENOMINATOR)
+                    uint128(FEE_DENOMINATOR)
                 );
             } else if (tvmConfiguration.defaultFee.outgoing > 0) {
                 accumulatedFees = math.muldiv(
                     _amount,
                     uint128(tvmConfiguration.defaultFee.outgoing),
-                    uint128(DENOMINATOR)
+                    uint128(FEE_DENOMINATOR)
                 );
             }
         return accumulatedFees;
@@ -161,13 +161,13 @@ function _calculateFeesDeposit(uint128 _amount, address _token) internal view re
                 accumulatedFees = math.muldiv(
                     _amount,
                     uint128(tvmConfiguration.fees[_token].incoming),
-                    uint128(DENOMINATOR)
+                    uint128(FEE_DENOMINATOR)
                 );
             } else if (tvmConfiguration.defaultFee.incoming > 0) {
                 accumulatedFees = math.muldiv(
                     _amount,
                     uint128(tvmConfiguration.defaultFee.incoming),
-                    uint128(DENOMINATOR)
+                    uint128(FEE_DENOMINATOR)
                 );
             }
         return accumulatedFees;

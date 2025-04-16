@@ -28,7 +28,8 @@ abstract contract ProxyMultivaultAlien_V9_Base is IProxyMultiVaultAlien_V9, Tran
 
     address public proxyMultiVaultNative;
 
-    uint32 constant DENOMINATOR = 100_000;
+    uint32 constant FEE_DENOMINATOR = 100_000;
+    TvmCell platformCode;
 
     function getConfiguration()
         override
