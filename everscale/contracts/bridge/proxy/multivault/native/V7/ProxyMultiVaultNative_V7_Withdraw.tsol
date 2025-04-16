@@ -216,7 +216,7 @@ abstract contract ProxyMultiVaultNative_V7_Withdraw is
     ) internal view {
 
         // accumulate fee
-        uint128 fee = _calculateFees(amount, msg.sender);
+        uint128 fee = _calculateFeesWithdraw(amount, msg.sender);
         _accumulateFee(fee, msg.sender);
 
         (

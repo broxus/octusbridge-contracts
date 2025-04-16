@@ -222,7 +222,7 @@ interface IProxyMultiVaultAlien_V9 is IEVMCallback, INetworks {
     );
 
     // deploy token fees
-    function deployBridgeTokenFee(
+    function deployTokenFee(
         address _token,
         address _remainingGasTo
     ) external;

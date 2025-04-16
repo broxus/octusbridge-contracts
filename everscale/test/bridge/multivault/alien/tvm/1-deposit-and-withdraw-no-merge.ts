@@ -20,7 +20,8 @@ const PSEUDO_BLOCK_PROOF = "te6ccgECywEAHGAACUYDzfVsz/cMJXHUUP6xIXFngMJ9NcQe5aZA
 const TX_PROOF = "te6ccgECFAEAArQACUYDLiVNpG2z9KLgzAIzT4Dd1l/MHHjd+KL0BpckY4MZu2wACwEjt35aJ8RIN5PEPbE62ZXfMXx90pttbZXYvPd7/NUxwlzYoAAAAAAAAAgQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAG1n/oYAAAdIBBCZMIBAMCKEgBAXA5dB4mccVNKPb3BejJCJTTQTKoohLnb7ZpI03/gQcrAAEoSAEBoEV6XdoX/I14/PQyjpJI4ObOfKGkbnicrBKiqkd/h+QAACIB4BMFIgHbBwYoSAEBJr86Q19dvCzEUEqBo9QektYFoeZl7FVztBzM5YFRtaoAASIBIBIIAQEgCQFd4ActE+IkG8niHtidbMrvmL4+6U22tsrsXnu9/mqY4S5sUAAAAAAAAAEGz/0MAMAKA1VNX3wz///oj4ALB86Z3/Rp4X5zTSz7YF0+SkUHU143BNWNX6YE0w2JWgEwERALAUOABJdbJ2T5LljPrsiP3S3ZibAq5Ikh5mJjqAHsCgqkvpSQDAFDgAEX1xqTwGJUvejNsDmG/9KdHpyuv50QhG3iRORrhx8mcA0Bo4ABF9cak8BiVL3ozbA5hv/SnR6crr+dEIRt4kTka4cfJmAAAAAAAAAAAAAAAAAAAD6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARZu2rhAOAWMAAAAAAAAAAAAAAAAAAAAAgAEX1xqTwGJUvejNsDmG/9KdHpyuv50QhG3iRORrhx8meA8AAAAgQ1VTVE9NX0dJR0FfQ0hBRAAgQ3VzdG9tIEdpZ2EgQ2hhZChIAQEOE64SKh4o1kAP+Vp66L0+8aG1wfc+NSvKZGDligBiFgABKEgBAdOF47hD//VlGnXtZAf6QgmNfDAhU9cVVDl1sHOpA2Z6AAc=";
 const EVENT_MSG_HASH = "0x44d60b7462e2701eb0f8c57dcf205a4a28d92981ec301abe519b5d353c41c8d1";
 
-const defaultFee = 10000;
+const incomingFee = 10000;
+const outgoingFee = 10000;
 
 describe("Deposit and withdraw alien TVM token with no merging", () => {
   let bridgeOwner: Account;
@@ -42,7 +43,7 @@ describe("Deposit and withdraw alien TVM token with no merging", () => {
       trustlessVerifier,
     );
 
-    await setDefaultFee(alienProxy, bridgeOwner, defaultFee);
+    await setDefaultFee(alienProxy, bridgeOwner, incomingFee, outgoingFee);
   });
 
   it("Allow tx verifier to approve txs", async () => {
@@ -85,7 +86,7 @@ describe("Deposit and withdraw alien TVM token with no merging", () => {
     bridgeTokenFee = await getBridgeTokenFee(tokenRoot, alienProxy);
 
     expect(traceTree)
-      .to.call("deployBridgeTokenFee")
+      .to.call("deployTokenFee")
       .count(1)
       .withNamedArgs({_token: tokenRoot.address, _remainingGasTo: bridgeOwner.address});
 
@@ -142,19 +143,19 @@ describe("Deposit and withdraw alien TVM token with no merging", () => {
         sender: bridgeOwner.address,
         recipient: bridgeOwner.address,
         amount: (450 - 45).toString(),
-        attachedGas: "9936546948",
+        attachedGas: "9936187000",
         expectedGas: "0",
         remainingGasTo: bridgeOwner.address,
         payload: "te6ccgEBAQEAAgAAAA=="
       });
-  });
+      });
 
   it("Upgrade bridge token fee", async () => {
     const bridgeTokenFeeCode = locklift.factory.getContractArtifacts(
                 "BridgeTokenFee"
             ).code;
 
-    await alienProxy.methods.setBridgeTokenFeeCode({_code: bridgeTokenFeeCode}).send({
+    await alienProxy.methods.setTokenFeeCode({_code: bridgeTokenFeeCode}).send({
       from: bridgeOwner.address,
       amount: toNano(0.2),
     });
@@ -163,7 +164,7 @@ describe("Deposit and withdraw alien TVM token with no merging", () => {
           .then((f) => f.fields);
 
     const { traceTree } = await locklift.tracing.trace(
-      alienProxy.methods.upgradeBridgeTokenFee({
+      alienProxy.methods.upgradeTokenFee({
         _token: tokenRoot.address,
         _remainingGasTo: bridgeOwner.address
       }).send({
@@ -207,5 +208,5 @@ describe("Deposit and withdraw alien TVM token with no merging", () => {
 
      let diff = traceTree!.tokens.getTokenBalanceChange(bridgeOwnerWallet);
      return expect(+diff).to.be.equal(95);
-});
+  });
 });

@@ -7,81 +7,97 @@ import "./ProxyMultiVaultNative_V7_Base.tsol";
 
 abstract contract ProxyMultiVaultNative_V7_Fees is ProxyMultiVaultNative_V7_Base {
 
-    function getDefaultFeeNumerator() external view responsible returns(uint128) {
-        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} defaultFeeNumerator;
+   function getTvmDefaultFee() external view responsible returns(Fees) {
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} defaultFee;
     }
 
     function getPlatformCode() external view responsible returns(TvmCell) {
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} platformCode;
     }
 
-    function getBridgeTokenFeeCode() external view responsible returns(TvmCell) {
-        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} bridgeTokenFeeCode;
+    function getTokenFeeCode() external view responsible returns(TvmCell) {
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} tokenFeeCode;
     }
 
-    function getCustomBridgeFeesNumerator() external view responsible returns(mapping(address => uint128)) {
+    function getTvmFees() external view responsible returns(mapping(address => Fees)) {
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} fees;
     }
 
-    function setDefaultFeeNumerator(uint128 _defaultFee) external onlyOwner cashBack {
-        if (_defaultFee < 10000) {
-            defaultFeeNumerator = _defaultFee;
-        }
+    function getTvmTokenFee(address _token)
+        external
+        view
+        responsible
+        returns(Fees)
+    {
+        return
+            {
+                value: 0,
+                bounce: false,
+                flag: MsgFlag.REMAINING_GAS
+            } fees.exists(_token) ? fees[_token] : defaultFee;
+    }
+
+    function setTvmDefaultFeeNumerator(uint128 _incoming, uint128 _outgoing) external onlyOwner cashBack {
+        defaultFee = Fees(_incoming, _outgoing, denominator);
     }
 
     function setPlatformCode(TvmCell _code) external onlyOwner cashBack {
         platformCode = _code;
     }
 
-    function setBridgeTokenFeeCode(TvmCell _code) external onlyOwner cashBack {
-        bridgeTokenFeeCode = _code;
+    function setTokenFeeCode(TvmCell _code) external onlyOwner cashBack {
+        tokenFeeCode = _code;
     }
 
-    function setFeeForToken(address _token,uint128  _fee) external onlyOwner cashBack {
-        if (_fee <= 10000) {
-            fees[_token] = _fee;
+    function setTvmTokenFee(address _token, uint128 _incoming, uint128 _outgoing) external onlyOwner cashBack {
+        if (_outgoing <= 10000  && _outgoing <= 10000) {
+            fees[_token] = Fees(_incoming, _outgoing, denominator);
         }
     }
 
-    function deleteFeeForToken(address _token) external onlyOwner cashBack {
+    function deleteTvmTokenFee(address _token) external onlyOwner cashBack {
         delete fees[_token];
     }
 
-    function deployBridgeTokenFee(address _token, address _remainingGasTo) external view {
-        require(msg.value > Gas.getDeployBridgeTokenFeeValue(), ErrorCodes.LOW_MSG_VALUE);
+    function deployTokenFee(address _token, address _remainingGasTo) external view {
+         require(msg.value > Gas.getDeployTokenFeeValue(), ErrorCodes.LOW_MSG_VALUE);
 
+        _deployTokenFee(_token, _remainingGasTo);
+    }
+
+    function _deployTokenFee(address _token, address _remainingGasTo) internal view {
         TvmCell emptyParams;
 
         new Platform {
-            stateInit: _buildBridgeTokenFeeStateInit(_token),
-            value: 0,
-            flag: MsgFlag.REMAINING_GAS
+            stateInit: _buildTokenFeeStateInit(_token),
+            value: Gas.getDeployTokenFeeValue(),
+            flag: MsgFlag.SENDER_PAYS_FEES
         }(
-            bridgeTokenFeeCode,
+            tokenFeeCode,
             emptyParams,
             _remainingGasTo
         );
     }
 
-    function getExpectedBridgeTokenFeeAddress(address _token)
+    function getExpectedTokenFeeAddress(address _token)
         external
         responsible
         view
         returns(address)
     {
-        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} _getExpectedBridgeTokenFeeAddress(_token);
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} _getExpectedTokenFeeAddress(_token);
     }
 
-    function _getExpectedBridgeTokenFeeAddress(address _token)
+    function _getExpectedTokenFeeAddress(address _token)
         internal
         view
         returns(address)
     {
-        TvmCell state = _buildBridgeTokenFeeStateInit(_token);
+        TvmCell state = _buildTokenFeeStateInit(_token);
         return address(tvm.hash(state));
     }
 
-    function _buildBridgeTokenFeeStateInit(address _token)
+    function _buildTokenFeeStateInit(address _token)
         internal
         view
         returns(TvmCell)
@@ -97,29 +113,40 @@ abstract contract ProxyMultiVaultNative_V7_Fees is ProxyMultiVaultNative_V7_Base
         });
     }
 
-    function _calculateFees(uint128 _amount, address _token) internal view returns(uint128) {
+    function _calculateFeesDeposit(uint128 _amount, address _token) internal view returns(uint128) {
         uint128 accumulatedFees = 0;
 
             if (fees.exists(_token)) {
-                accumulatedFees = math.muldiv(_amount, fees[_token], denominator);
-            } else if (defaultFeeNumerator > 0) {
-                accumulatedFees = math.muldiv(_amount, defaultFeeNumerator, denominator);
+                accumulatedFees = math.muldiv(_amount, fees[_token].outgoing, fees[_token].denominator);
+            } else if (defaultFee.outgoing > 0) {
+                accumulatedFees = math.muldiv(_amount, defaultFee.outgoing, defaultFee.denominator);
+            }
+        return accumulatedFees;
+    }
+
+    function _calculateFeesWithdraw(uint128 _amount, address _token) internal view returns(uint128) {
+        uint128 accumulatedFees = 0;
+
+            if (fees.exists(_token)) {
+                accumulatedFees = math.muldiv(_amount, fees[_token].incoming, fees[_token].denominator);
+            } else if (defaultFee.outgoing > 0) {
+                accumulatedFees = math.muldiv(_amount, defaultFee.incoming, defaultFee.denominator);
             }
         return accumulatedFees;
     }
 
     function _accumulateFee(uint128 _fee, address _token) internal view {
-        IBridgeTokenFee(_getExpectedBridgeTokenFeeAddress(_token)).accumulateFee{
+        IBridgeTokenFee(_getExpectedTokenFeeAddress(_token)).accumulateFee{
             value: gasToValue(Gas.ACCUMULATE_FEES_GAS, address(this).wid),
             flag: MsgFlag.SENDER_PAYS_FEES,
             bounce: false
         }(_fee);
     }
 
-    function withdrawTokenFee(address _token, address _recipient) external view onlyOwner {
+    function withdrawTokenFee(address _tokenRoot, address _recipient) external view onlyOwner {
         require(msg.value > Gas.getDeployTokenWalletValue(), ErrorCodes.LOW_MSG_VALUE);
 
-        IBridgeTokenFee(_getExpectedBridgeTokenFeeAddress(_token)).getAccumulatedFee{
+        IBridgeTokenFee(_getExpectedTokenFeeAddress(_tokenRoot)).getAccumulatedFee{
             value: 0,
             flag: MsgFlag.REMAINING_GAS,
             bounce: false,
@@ -158,15 +185,15 @@ abstract contract ProxyMultiVaultNative_V7_Fees is ProxyMultiVaultNative_V7_Base
         }
     }
 
-    function upgradeBridgeTokenFee(
+    function upgradeTokenFee(
         address _token,
         address _remainingGasTo
     ) external view onlyOwner {
 
-        IBridgeTokenFee(_getExpectedBridgeTokenFeeAddress(_token)).upgrade{
+        IBridgeTokenFee(_getExpectedTokenFeeAddress(_token)).upgrade{
             value: 0,
             flag: MsgFlag.REMAINING_GAS,
             bounce: false
-        }(bridgeTokenFeeCode, _remainingGasTo);
+        }(tokenFeeCode, _remainingGasTo);
     }
 }

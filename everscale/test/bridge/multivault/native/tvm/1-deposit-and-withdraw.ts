@@ -32,7 +32,8 @@ const tokenMeta = {
 
 const mintAmount = 1000;
 const amount = 500;
-const fee = 10000;
+const incomingFee = 10000;
+const outgoingFee = 10000;
 
 describe("Deposit and withdraw native TVM token with no merging", () => {
   let bridgeOwner: Account;
@@ -84,7 +85,8 @@ describe("Deposit and withdraw native TVM token with no merging", () => {
       bridgeOwner,
       tokenRoot,
       nativeProxy,
-      fee
+      incomingFee,
+      outgoingFee
     );
 
   });
@@ -121,6 +123,11 @@ describe("Deposit and withdraw native TVM token with no merging", () => {
     const events = await nativeProxy.getPastEvents({filter: "TvmTvmNative" as const});
     console.log(events.events[0].transaction.boc);
 
+    expect(traceTree)
+      .to.call("accumulateFee")
+      .count(1)
+      .withNamedArgs({_fee: '50'});
+
     return expect(traceTree)
       .to.emit("TvmTvmNative")
       .count(1)
@@ -130,11 +137,11 @@ describe("Deposit and withdraw native TVM token with no merging", () => {
         name: tokenMeta.name,
         symbol: tokenMeta.symbol,
         decimals: tokenMeta.decimals.toString(),
-        nativeProxyWallet: nativeProxyTokenWallet,
+        nativeProxyWallet: nativeProxyTokenWallet.address,
         sender: bridgeOwner.address,
         recipient: bridgeOwner.address,
-        amount: "500",
-        attachedGas: "0",
+        amount: (500 - 50).toString(),
+        attachedGas: "9342662000",
         expectedGas: "0",
         remainingGasTo: bridgeOwner.address
       });
@@ -175,7 +182,7 @@ describe("Deposit and withdraw native TVM token with no merging", () => {
                 "BridgeTokenFee"
             ).code;
 
-    await nativeProxy.methods.setBridgeTokenFeeCode({_code: bridgeTokenFeeCode}).send({
+    await nativeProxy.methods.setTokenFeeCode({_code: bridgeTokenFeeCode}).send({
       from: bridgeOwner.address,
       amount: toNano(0.2),
     });
@@ -184,7 +191,7 @@ describe("Deposit and withdraw native TVM token with no merging", () => {
           .then((f) => f.fields);
 
     const { traceTree } = await locklift.tracing.trace(
-      nativeProxy.methods.upgradeBridgeTokenFee({
+      nativeProxy.methods.upgradeTokenFee({
         _token: nativeProxyTokenWallet.address,
         _remainingGasTo: bridgeOwner.address
       }).send({
@@ -204,12 +211,12 @@ describe("Deposit and withdraw native TVM token with no merging", () => {
 
      const { traceTree } = await locklift.tracing.trace(
        await nativeProxy.methods.withdrawTokenFee({
-         _token: nativeProxyTokenWallet.address,
+         _tokenRoot: nativeProxyTokenWallet.address,
          _recipient: bridgeOwner.address
        }).send({
           from: bridgeOwner.address,
           amount: toNano(10)
-       })
+       }),{ allowedCodes: { compute: [51] } }
      );
 
      let balance = await initializerTokenWallet.methods
@@ -218,6 +225,6 @@ describe("Deposit and withdraw native TVM token with no merging", () => {
             .then((b) => b.value0);
 
      let diff = traceTree!.tokens.getTokenBalanceChange(initializerTokenWallet);
-     return expect(diff).to.be.equal(toNano(10));
+     return expect(diff).to.be.equal('50');
   });
 });

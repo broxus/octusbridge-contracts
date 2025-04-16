@@ -28,10 +28,10 @@ contract ProxyMultiVaultNative_V7 is ProxyMultiVaultNative_V7_Deposit, CheckPubK
             dex_middleware,
             proxyMultiVaultAlien,
             _randomNonce,
-            defaultFeeNumerator,
+            defaultFee,
             fees,
             platformCode,
-            bridgeTokenFeeCode
+            tokenFeeCode
         );
 
         tvm.setcode(code);
@@ -52,15 +52,15 @@ contract ProxyMultiVaultNative_V7 is ProxyMultiVaultNative_V7_Deposit, CheckPubK
             address dex_middleware_,
             // address proxyMultiVaultAlien_,
             uint _randomNonce_/*,
-            uint128 defaultFeeNumerator_,
-            mapping(address => uint128) fees_,
+            Fees defaultFee_,
+            mapping(address => Fees) fees_,
             TvmCell platformCode_,
-            TvmCell bridgeTokenFeeCode_*/
+            TvmCell tokenFeeCode_*/
         ) = abi.decode(
             data,
             (
                 EVMConfiguration, SolanaConfiguration, /* TVMConfiguration, */
-                address, uint8, address, /* address, */ uint/*, uint128, mapping(address => uint128), TvmCell, TvmCell */
+                address, uint8, address, /* address, */ uint/*, Fees, mapping(address => Fees), TvmCell, TvmCell */
             )
         );
 
@@ -74,9 +74,9 @@ contract ProxyMultiVaultNative_V7 is ProxyMultiVaultNative_V7_Deposit, CheckPubK
         setOwnership(owner_);
         _randomNonce = _randomNonce_;
 
-//        defaultFeeNumerator =defaultFeeNumerator_;
+//        defaultFee =defaultFee_;
 //        fees = fees_;
 //        platformCode = platformCode_;
-//        bridgeTokenFeeCode = bridgeTokenFeeCode_;
+//        tokenFeeCode = tokenFeeCode_;
     }
 }

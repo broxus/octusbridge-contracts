@@ -51,10 +51,10 @@ contract ProxyMultiVaultAlien_V9 is
             mergePoolPlatform,
             mergePoolVersion,
             proxyMultiVaultNative,
-            defaultFeeNumerator,
+            defaultFee,
             fees,
             platformCode,
-            bridgeTokenFeeCode
+            tokenFeeCode
         );
 
         tvm.setcode(code);
@@ -80,15 +80,15 @@ contract ProxyMultiVaultAlien_V9 is
             TvmCell mergePoolPlatform_,
             uint8 mergePoolVersion_ /*,
             address proxyMultiVaultNative_,
-            uint128 defaultFeeNumerator_,
-            mapping(address => uint128) fees_,
+            Fees defaultFee_,
+            mapping(address => Fees) fees_,
             TvmCell platformCode_,
             TvmCell bridgeTokenFeeCode_*/
         ) = abi.decode(
             data,
             (
                 EVMConfiguration, SolanaConfiguration, /* TVMConfiguration ,*/ uint, uint8, address,
-                address, TvmCell, TvmCell, TvmCell, uint8 /*, address, uint128, mapping(address => uint128), TvmCell, TvmCell*/
+                address, TvmCell, TvmCell, TvmCell, uint8 /*, address, Fees, mapping(address => Fees), TvmCell, TvmCell*/
             )
         );
 
@@ -107,10 +107,10 @@ contract ProxyMultiVaultAlien_V9 is
         mergePoolVersion = mergePoolVersion_;
         // proxyMultiVaultNative = proxyMultiVaultNative_;
 
-//        defaultFeeNumerator =defaultFeeNumerator_;
+//        defaultFee = defaultFee_;
 //        fees = fees_;
 //        platformCode = platformCode_;
-//        bridgeTokenFeeCode = bridgeTokenFeeCode_;
+//        tokenFeeCode = tokenFeeCode_;
     }
 
 }
