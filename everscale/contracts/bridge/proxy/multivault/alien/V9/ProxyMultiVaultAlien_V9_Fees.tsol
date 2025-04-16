@@ -6,56 +6,79 @@ import "../../../../interfaces/proxy/IBridgeTokenFee.tsol";
 
 abstract contract ProxyMultiVaultAlien_V9_Fees is ProxyMultiVaultAlien_V9_Token {
 
-    function getTvmDefaultFee() external view responsible returns(Fees) {
-        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} defaultFee;
+    function getTvmDefaultFee()
+        external
+        view
+        responsible
+        returns(
+            uint32 incomingNumerator,
+            uint32 outgoingNumerator,
+            uint32 denominator
+    ) {
+        return {
+                value: 0,
+                bounce: false,
+                flag: MsgFlag.REMAINING_GAS
+        } (tvmConfiguration.defaultFee.incoming, tvmConfiguration.defaultFee.outgoing, DENOMINATOR);
     }
 
     function getPlatformCode() external view responsible returns(TvmCell) {
-        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} platformCode;
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} tvmConfiguration.platformCode;
     }
 
     function getTokenFeeCode() external view responsible returns(TvmCell) {
-        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} tokenFeeCode;
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} tvmConfiguration.tokenFeeCode;
     }
 
     function getTvmFees() external view responsible returns(mapping(address => Fees)) {
-        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} fees;
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} tvmConfiguration.fees;
     }
 
     function getTvmTokenFee(address _token)
         external
         view
         responsible
-        returns(Fees)
-    {
-        return
-            {
-                value: 0,
-                bounce: false,
-                flag: MsgFlag.REMAINING_GAS
-            } fees.exists(_token) ? fees[_token] : defaultFee;
+        returns(
+            uint32 incomingNumerator,
+            uint32 outgoingNumerator,
+            uint32 denominator
+    ) {
+
+        if (tvmConfiguration.fees.exists(_token))  {
+                return {
+                        value: 0,
+                        bounce: false,
+                        flag: MsgFlag.REMAINING_GAS
+                } (tvmConfiguration.fees[_token].incoming, tvmConfiguration.fees[_token].outgoing, DENOMINATOR);
+            } else {
+                return {
+                        value: 0,
+                        bounce: false,
+                        flag: MsgFlag.REMAINING_GAS
+                } (tvmConfiguration.defaultFee.incoming, tvmConfiguration.defaultFee.outgoing, DENOMINATOR);
+            }
     }
 
-    function setTvmDefaultFeeNumerator(uint128 _incoming, uint128 _outgoing) external onlyOwner cashBack {
-        defaultFee = Fees(_incoming, _outgoing, denominator);
+    function setTvmDefaultFeeNumerator(uint32 _incoming, uint32 _outgoing) external onlyOwner cashBack {
+        tvmConfiguration.defaultFee = Fees(_incoming, _outgoing);
     }
 
     function setPlatformCode(TvmCell _code) external onlyOwner cashBack {
-        platformCode = _code;
+        tvmConfiguration.platformCode = _code;
     }
 
     function setTokenFeeCode(TvmCell _code) external onlyOwner cashBack {
-        tokenFeeCode = _code;
+        tvmConfiguration.tokenFeeCode = _code;
     }
 
-    function setTvmTokenFee(address _token, uint128 _incoming, uint128 _outgoing) external onlyOwner cashBack {
+    function setTvmTokenFee(address _token, uint32 _incoming, uint32 _outgoing) external onlyOwner cashBack {
         if (_outgoing <= 10000  && _outgoing <= 10000) {
-            fees[_token] = Fees(_incoming, _outgoing, denominator);
+            tvmConfiguration.fees[_token] = Fees(_incoming, _outgoing);
         }
     }
 
     function deleteTvmTokenFee(address _token) external onlyOwner cashBack {
-        delete fees[_token];
+        delete tvmConfiguration.fees[_token];
     }
 
     function deployTokenFee(address _token, address _remainingGasTo) external view {
@@ -72,7 +95,7 @@ abstract contract ProxyMultiVaultAlien_V9_Fees is ProxyMultiVaultAlien_V9_Token 
             value: Gas.getDeployTokenFeeValue(),
             flag: MsgFlag.SENDER_PAYS_FEES
         }(
-            tokenFeeCode,
+            tvmConfiguration.tokenFeeCode,
             emptyParams,
             _remainingGasTo
         );
@@ -108,17 +131,25 @@ abstract contract ProxyMultiVaultAlien_V9_Fees is ProxyMultiVaultAlien_V9_Token 
                 platformType: 0,
                 initialData: abi.encode(_token)
             },
-            code: platformCode
+            code: tvmConfiguration.platformCode
         });
     }
 
-    function _calculateFeesDeposit(uint128 _amount, address _token) internal view returns(uint128) {
+function _calculateFeesDeposit(uint128 _amount, address _token) internal view returns(uint128) {
         uint128 accumulatedFees = 0;
 
-            if (fees.exists(_token)) {
-                accumulatedFees = math.muldiv(_amount, fees[_token].outgoing, fees[_token].denominator);
-            } else if (defaultFee.outgoing > 0) {
-                accumulatedFees = math.muldiv(_amount, defaultFee.outgoing, defaultFee.denominator);
+            if (tvmConfiguration.fees.exists(_token)) {
+                accumulatedFees = math.muldiv(
+                    _amount,
+                    uint128(tvmConfiguration.fees[_token].outgoing),
+                    uint128(DENOMINATOR)
+                );
+            } else if (tvmConfiguration.defaultFee.outgoing > 0) {
+                accumulatedFees = math.muldiv(
+                    _amount,
+                    uint128(tvmConfiguration.defaultFee.outgoing),
+                    uint128(DENOMINATOR)
+                );
             }
         return accumulatedFees;
     }
@@ -126,10 +157,18 @@ abstract contract ProxyMultiVaultAlien_V9_Fees is ProxyMultiVaultAlien_V9_Token 
     function _calculateFeesWithdraw(uint128 _amount, address _token) internal view returns(uint128) {
         uint128 accumulatedFees = 0;
 
-            if (fees.exists(_token)) {
-                accumulatedFees = math.muldiv(_amount, fees[_token].incoming, fees[_token].denominator);
-            } else if (defaultFee.incoming > 0) {
-                accumulatedFees = math.muldiv(_amount, defaultFee.incoming, defaultFee.denominator);
+            if (tvmConfiguration.fees.exists(_token)) {
+                accumulatedFees = math.muldiv(
+                    _amount,
+                    uint128(tvmConfiguration.fees[_token].incoming),
+                    uint128(DENOMINATOR)
+                );
+            } else if (tvmConfiguration.defaultFee.incoming > 0) {
+                accumulatedFees = math.muldiv(
+                    _amount,
+                    uint128(tvmConfiguration.defaultFee.incoming),
+                    uint128(DENOMINATOR)
+                );
             }
         return accumulatedFees;
     }
@@ -194,6 +233,6 @@ abstract contract ProxyMultiVaultAlien_V9_Fees is ProxyMultiVaultAlien_V9_Token 
             value: 0,
             flag: MsgFlag.REMAINING_GAS,
             bounce: false
-        }(tokenFeeCode, _remainingGasTo);
+        }(tvmConfiguration.tokenFeeCode, _remainingGasTo);
     }
 }
