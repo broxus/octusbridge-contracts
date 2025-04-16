@@ -19,9 +19,9 @@ interface IProxyMultiVaultNative_V7 is IEVMCallback, INetworks {
     struct TVMConfiguration {
         address[] incomingConfigurations;
         TvmCell eventAddressKeeperCode;
-        TvmCell tokenFeeCode;
         Fees defaultFee;
         mapping(address => Fees) fees;
+        TvmCell tokenFeeCode;
     }
 
     struct Fees {
