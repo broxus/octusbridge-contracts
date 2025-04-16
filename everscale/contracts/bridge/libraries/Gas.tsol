@@ -34,7 +34,7 @@ library Gas {
     uint128 constant BRIDGE_TOKEN_FEES_EXTRA_GAS = 10_000;
     uint128 constant ACCUMULATE_FEES_GAS = 10_000;
 
-    function getDeployBridgeTokenFeeValue()  public returns(uint128) {
+    function getDeployTokenFeeValue()  public returns(uint128) {
         return gasToValue(DEPLOY_BRIDGE_TOKEN_FEES_GAS, address(this).wid) + BRIDGE_TOKEN_FEES_INITIAL_BALANCE;
     }
 

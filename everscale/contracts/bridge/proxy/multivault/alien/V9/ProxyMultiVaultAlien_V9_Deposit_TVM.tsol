@@ -41,7 +41,7 @@ abstract contract ProxyMultiVaultAlien_V9_Deposit_TVM is
         ));
 
         // accumulate fee
-        uint128 fee = _calculateFees(amount, token);
+        uint128 fee = _calculateFeesDeposit(amount, token);
         _accumulateFee(fee, token);
 
         if (nativeProxyTokenWallet.hasValue()) {

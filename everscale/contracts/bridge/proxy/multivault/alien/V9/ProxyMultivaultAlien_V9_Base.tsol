@@ -28,11 +28,17 @@ abstract contract ProxyMultivaultAlien_V9_Base is IProxyMultiVaultAlien_V9, Tran
 
     address public proxyMultiVaultNative;
 
+    struct Fees {
+        uint128 incoming; // withdraw
+        uint128 outgoing; // deposit
+        uint128 denominator;
+    }
     uint128 constant denominator = 100_000;
-    uint128 defaultFeeNumerator = 0;
-    mapping(address => uint128) fees;
+
+    Fees defaultFee = Fees(0, 0, denominator);
+    mapping(address => Fees) fees;
     TvmCell platformCode;
-    TvmCell bridgeTokenFeeCode;
+    TvmCell tokenFeeCode;
 
     function getConfiguration()
         override
