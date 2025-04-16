@@ -177,7 +177,7 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
                 TvmCell payload
             ) = slice.loadFunctionParams(ITokenWallet.transfer);
 
-            (uint32 nonce,) = abi.decode(payload, (uint32, optional(TvmCell)));
+            (,uint32 nonce,) = abi.decode(payload, (uint16, uint32, optional(TvmCell)));
 
             IEventAddressKeeper(_deriveEventKeeperAddress(nonce))
                 .getEventContract{
