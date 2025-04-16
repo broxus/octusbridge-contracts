@@ -23,6 +23,20 @@ abstract contract ProxyMultiVaultNative_V7_Fees is ProxyMultiVaultNative_V7_Base
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} fees;
     }
 
+    function getBridgeFeesNumeratorByToken(address _token)
+        external
+        view
+        responsible
+        returns(uint128)
+    {
+        return
+            {
+                value: 0,
+                bounce: false,
+                flag: MsgFlag.REMAINING_GAS
+            } fees.exists(_token) ? fees[_token] : defaultFeeNumerator;
+    }
+
     function setDefaultFeeNumerator(uint128 _defaultFee) external onlyOwner cashBack {
         if (_defaultFee < 10000) {
             defaultFeeNumerator = _defaultFee;

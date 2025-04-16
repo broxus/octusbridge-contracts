@@ -22,6 +22,20 @@ abstract contract ProxyMultiVaultAlien_V9_Fees is ProxyMultiVaultAlien_V9_Token 
         return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} fees;
     }
 
+    function getBridgeFeesNumeratorByToken(address _token)
+        external
+        view
+        responsible
+        returns(uint128)
+    {
+        return
+            {
+                value: 0,
+                bounce: false,
+                flag: MsgFlag.REMAINING_GAS
+            } fees.exists(_token) ? fees[_token] : defaultFeeNumerator;
+    }
+
     function setDefaultFeeNumerator(uint128 _defaultFee) external onlyOwner cashBack {
         defaultFeeNumerator = _defaultFee;
     }
