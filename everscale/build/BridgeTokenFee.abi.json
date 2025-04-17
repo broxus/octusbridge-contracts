@@ -1,0 +1,73 @@
+{
+	"ABI version": 2,
+	"version": "2.3",
+	"header": ["time"],
+	"functions": [
+		{
+			"name": "constructor",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "getToken",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
+			]
+		},
+		{
+			"name": "getProxy",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
+			]
+		},
+		{
+			"name": "accumulateFee",
+			"inputs": [
+				{"name":"_fee","type":"uint128"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "getAccumulatedFee",
+			"inputs": [
+				{"name":"answerId","type":"uint32"},
+				{"name":"_recipient","type":"address"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
+			]
+		},
+		{
+			"name": "upgrade",
+			"inputs": [
+				{"name":"_code","type":"cell"},
+				{"name":"_remainingGasTo","type":"address"}
+			],
+			"outputs": [
+			]
+		}
+	],
+	"data": [
+		{"key":1,"name":"token","type":"address"},
+		{"key":2,"name":"proxy","type":"address"}
+	],
+	"events": [
+	],
+	"fields": [
+		{"name":"_pubkey","type":"uint256"},
+		{"name":"_timestamp","type":"uint64"},
+		{"name":"_constructorFlag","type":"bool"},
+		{"name":"token","type":"address"},
+		{"name":"proxy","type":"address"},
+		{"name":"accumulatedFees","type":"uint128"}
+	]
+}
