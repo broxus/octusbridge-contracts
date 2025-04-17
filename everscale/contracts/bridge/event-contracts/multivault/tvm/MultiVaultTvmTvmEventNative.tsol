@@ -214,12 +214,6 @@ contract MultiVaultTvmTvmEventNative is
 
         status = Status.NotEnoughLiquidity;
         emit NotEnoughLiquidity();
-
-        initializer.transfer({
-            value: 0,
-            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
-            bounce: false
-        });
     }
 
     function cancel(
@@ -264,16 +258,17 @@ contract MultiVaultTvmTvmEventNative is
         require(msg.sender == recipient, ErrorCodes.SENDER_NOT_RECIPIENT);
         require(reward <= amount, ErrorCodes.WRONG_REWARD);
 
-        status = Status.LiquidityRequested;
         reward = _reward;
 
-        emit LiquidityRequested(reward);
-
-        ITokenRoot(token).walletOf{
-            value: 0,
-            flag: MsgFlag.ALL_NOT_RESERVED,
-            callback: MultiVaultTvmTvmEventNative.receiveProxyTokenWallet
-        }(address(this));
+        if (eventTokenWallet.value == 0) {
+            ITokenRoot(token).walletOf{
+                value: 0,
+                flag: MsgFlag.REMAINING_GAS,
+                callback: MultiVaultTvmTvmEventNative.receiveProxyTokenWallet
+            }(address(this));
+        } else {
+            emit LiquidityRequested(reward);
+        }
     }
 
     function receiveProxyTokenWallet(
@@ -281,13 +276,12 @@ contract MultiVaultTvmTvmEventNative is
     ) external override {
         require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
 
-        eventTokenWallet = tokenWallet_;
+        if (status == Status.NotEnoughLiquidity) {
+            eventTokenWallet = tokenWallet_;
+            status = Status.LiquidityRequested;
 
-        recipient.transfer({
-            value: 0,
-            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
-            bounce: false
-        });
+            emit LiquidityRequested(reward);
+        }
     }
 
     function onAcceptTokensTransfer(
@@ -307,7 +301,7 @@ contract MultiVaultTvmTvmEventNative is
             ITokenWallet(eventTokenWallet).transfer{
                 value: 0,
                 bounce: false,
-                flag: MsgFlag.ALL_NOT_RESERVED
+                flag: MsgFlag.REMAINING_GAS
             }(
                 _amount,
                 _sender,
@@ -325,7 +319,7 @@ contract MultiVaultTvmTvmEventNative is
 
         // send tokens to original recipient
         ITokenWallet(eventTokenWallet).transfer{
-            value: Gas.getTransferTokenValue(),
+            value: address(this).balance - msg.value,
             bounce: false,
             flag: MsgFlag.SENDER_PAYS_FEES
         }(
