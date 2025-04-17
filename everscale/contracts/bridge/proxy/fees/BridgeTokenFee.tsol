@@ -13,6 +13,22 @@ contract BridgeTokenFee {
 
     constructor() {revert();}
 
+    function onDeployRetry(
+        TvmCell,
+        TvmCell,
+        address remainingGasTo
+    )
+        external
+        pure
+        functionID(0x68b55f3f)
+    {
+        remainingGasTo.transfer({
+            value: 0,
+            flag: MsgFlag.REMAINING_GAS + MsgFlag.IGNORE_ERRORS,
+            bounce: false
+        });
+    }
+
     modifier onlyProxy {
         require(
             msg.sender.value != 0 &&
