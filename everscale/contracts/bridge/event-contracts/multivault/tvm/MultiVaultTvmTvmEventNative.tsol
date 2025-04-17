@@ -305,8 +305,8 @@ contract MultiVaultTvmTvmEventNative is
             }(
                 _amount,
                 _sender,
-                Gas.getDeployTokenWalletValue(),
-                _remainingGasTo,
+                0,
+                _sender,
                 false,
                 empty
             );
@@ -326,7 +326,7 @@ contract MultiVaultTvmTvmEventNative is
             _amount,
             recipient,
             Gas.getDeployTokenWalletValue(),
-            _remainingGasTo,
+            recipient,
             payload.hasValue() ? true : false,
             payload.get()
         );
