@@ -92,9 +92,9 @@ contract BridgeTokenFee {
                 address _root,
                 address _remainingGasTo,
                 TvmCell _initialData,
-                TvmCell _params /*,
-                TvmCell _platformCode */
-            ) =  abi.decode(_data, (address, address, TvmCell, TvmCell /*, TvmCell */));
+                TvmCell _params,
+                /*TvmCell _platformCode */
+            ) =  abi.decode(_data, (address, address, TvmCell, TvmCell, TvmCell));
 
             proxy = _root;
             token = abi.decode(_initialData,(address));

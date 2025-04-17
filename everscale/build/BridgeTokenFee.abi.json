@@ -11,6 +11,17 @@
 			]
 		},
 		{
+			"name": "onDeployRetry",
+			"id": "0x68B55F3F",
+			"inputs": [
+				{"name":"value0","type":"cell"},
+				{"name":"value1","type":"cell"},
+				{"name":"remainingGasTo","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "getToken",
 			"inputs": [
 				{"name":"answerId","type":"uint32"}
