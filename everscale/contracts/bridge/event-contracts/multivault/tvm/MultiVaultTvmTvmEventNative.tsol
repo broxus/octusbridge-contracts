@@ -13,7 +13,9 @@ import "./../../../interfaces/proxy/ITvmTvmProxyExtended.tsol";
 import "./../../../interfaces/proxy/ITvmEventCancelled.tsol";
 import "./../../../interfaces/trustless-verifier/ITrustlessVerifier.tsol";
 import "./../../../interfaces/trustless-verifier/IOnTrustlessVerify.tsol";
+
 import "./../../../libraries/BocDecoder.tsol";
+import "./../../../libraries/Gas.tsol";
 
 import "./../../base/tvm/TvmTvmBaseEvent.tsol";
 
@@ -208,6 +210,7 @@ contract MultiVaultTvmTvmEventNative is
 
     function notEnoughLiquidity() external override {
         require(msg.sender == proxy, ErrorCodes.SENDER_NOT_PROXY);
+        require(status == Status.Confirmed, ErrorCodes.WRONG_STATUS);
 
         status = Status.NotEnoughLiquidity;
         emit NotEnoughLiquidity();
@@ -225,7 +228,7 @@ contract MultiVaultTvmTvmEventNative is
         uint128 _expectedGas,
         optional(TvmCell) _eventPayload
     ) external {
-        require(status == Status.NotEnoughLiquidity, ErrorCodes.WRONG_STATUS);
+        require(status == Status.NotEnoughLiquidity || status == Status.LiquidityRequested, ErrorCodes.WRONG_STATUS);
         require(msg.sender == recipient, ErrorCodes.SENDER_NOT_RECIPIENT);
 
         status = Status.Cancelled;
@@ -257,7 +260,7 @@ contract MultiVaultTvmTvmEventNative is
     }
 
     function requestLiquidity(uint128 _reward) external {
-        require(status == Status.NotEnoughLiquidity, ErrorCodes.WRONG_STATUS);
+        require(status == Status.NotEnoughLiquidity || status == Status.LiquidityRequested, ErrorCodes.WRONG_STATUS);
         require(msg.sender == recipient, ErrorCodes.SENDER_NOT_RECIPIENT);
         require(reward <= amount, ErrorCodes.WRONG_REWARD);
 
@@ -322,9 +325,9 @@ contract MultiVaultTvmTvmEventNative is
 
         // send tokens to original recipient
         ITokenWallet(eventTokenWallet).transfer{
-            value: 0,
+            value: Gas.getTransferTokenValue(),
             bounce: false,
-            flag: MsgFlag.ALL_NOT_RESERVED
+            flag: MsgFlag.SENDER_PAYS_FEES
         }(
             _amount,
             recipient,
