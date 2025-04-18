@@ -175,11 +175,13 @@ abstract contract ProxyMultiVaultNative_V7_Fees is ProxyMultiVaultNative_V7_Base
     }
 
     function _accumulateFee(uint128 _fee, address _token) internal view {
-        IBridgeTokenFee(_getExpectedTokenFeeAddress(_token)).accumulateFee{
-            value: gasToValue(Gas.ACCUMULATE_FEES_GAS, address(this).wid),
-            flag: MsgFlag.SENDER_PAYS_FEES,
-            bounce: false
-        }(_fee);
+        if(_fee > 0) {
+            IBridgeTokenFee(_getExpectedTokenFeeAddress(_token)).accumulateFee{
+                value: gasToValue(Gas.ACCUMULATE_FEES_GAS, address(this).wid),
+                flag: MsgFlag.SENDER_PAYS_FEES,
+                bounce: false
+            }(_fee);
+        }
     }
 
     function withdrawTokenFee(address _tokenRoot, address _recipient) external view onlyOwner {

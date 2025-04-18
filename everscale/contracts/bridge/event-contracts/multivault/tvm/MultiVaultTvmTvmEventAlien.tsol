@@ -53,7 +53,7 @@ contract MultiVaultTvmTvmEventAlien is
         EventData eventData = getEventData();
 
         // return gas in case event contract balance is less than required
-        if (address(this).balance < eventData.expected_gas + eventInitialBalance) {
+        if (address(this).balance < eventData.expected_gas + eventInitialBalance - gasToValue(Gas.DEPLOY_TVM_TVM_EVENT, address(this).wid)) {
             initializer.transfer({
                 value: 0,
                 bounce: false,

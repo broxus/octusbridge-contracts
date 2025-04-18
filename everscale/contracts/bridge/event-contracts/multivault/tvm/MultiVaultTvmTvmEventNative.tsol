@@ -95,7 +95,7 @@ contract MultiVaultTvmTvmEventNative is
 
 
         // return gas in case event contract is less than required
-        if (address(this).balance < expected_gas + eventInitialBalance) {
+        if (address(this).balance < expected_gas + eventInitialBalance - gasToValue(Gas.DEPLOY_TVM_TVM_EVENT, address(this).wid)) {
             initializer.transfer({
                 value: 0,
                 bounce: false,
@@ -289,7 +289,7 @@ contract MultiVaultTvmTvmEventNative is
         uint128 _amount,
         address _sender,
         address /*senderWallet*/,
-        address _remainingGasTo,
+        address /*_remainingGasTo*/,
         TvmCell _payload
     ) override external {
         require(msg.sender == eventTokenWallet, ErrorCodes.SENDER_NOT_TOKEN_WALLET);
