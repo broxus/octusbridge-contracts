@@ -18,6 +18,7 @@ contract EventAddressKeeper is IEventAddressKeeper {
     }
 
     function getEventContract() override external responsible returns(address, uint32){
-        return { value: 0, flag: MsgFlag.ALL_NOT_RESERVED, bounce: false } (eventContract, callId);
+        require(msg.sender == proxy, ErrorCodes.NOT_PROXY);
+        return { value: 0, flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.DESTROY_IF_ZERO, bounce: false } (eventContract, callId);
     }
 }

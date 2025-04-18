@@ -161,4 +161,6 @@ library ErrorCodes {
 
     // Event address keeper
     uint16 constant WRONG_DEPLOYER = 3001;
+    uint16 constant NOT_PROXY = 3002;
+
 }
