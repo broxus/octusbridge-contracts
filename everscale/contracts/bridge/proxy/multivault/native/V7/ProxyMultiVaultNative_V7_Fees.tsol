@@ -142,13 +142,13 @@ abstract contract ProxyMultiVaultNative_V7_Fees is ProxyMultiVaultNative_V7_Base
             if (tvmConfiguration.fees.exists(_token)) {
                 accumulatedFees = math.muldiv(
                     _amount,
-                    uint128(tvmConfiguration.fees[_token].outgoing),
+                    uint128(tvmConfiguration.fees[_token].incoming),
                     uint128(FEE_DENOMINATOR)
                 );
-            } else if (tvmConfiguration.defaultFee.outgoing > 0) {
+            } else if (tvmConfiguration.defaultFee.incoming > 0) {
                 accumulatedFees = math.muldiv(
                     _amount,
-                    uint128(tvmConfiguration.defaultFee.outgoing),
+                    uint128(tvmConfiguration.defaultFee.incoming),
                     uint128(FEE_DENOMINATOR)
                 );
             }
@@ -161,13 +161,13 @@ abstract contract ProxyMultiVaultNative_V7_Fees is ProxyMultiVaultNative_V7_Base
             if (tvmConfiguration.fees.exists(_token)) {
                 accumulatedFees = math.muldiv(
                     _amount,
-                    uint128(tvmConfiguration.fees[_token].incoming),
+                    uint128(tvmConfiguration.fees[_token].outgoing),
                     uint128(FEE_DENOMINATOR)
                 );
-            } else if (tvmConfiguration.defaultFee.incoming > 0) {
+            } else if (tvmConfiguration.defaultFee.outgoing > 0) {
                 accumulatedFees = math.muldiv(
                     _amount,
-                    uint128(tvmConfiguration.defaultFee.incoming),
+                    uint128(tvmConfiguration.defaultFee.outgoing),
                     uint128(FEE_DENOMINATOR)
                 );
             }

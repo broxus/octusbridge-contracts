@@ -41,8 +41,8 @@ interface IProxyMultiVaultAlien_V9 is IEVMCallback, INetworks {
     }
 
     struct Fees {
-        uint32 incoming; // withdraw
-        uint32 outgoing; // deposit
+        uint32 incoming; // deposit
+        uint32 outgoing; // withdraw
     }
 
 
