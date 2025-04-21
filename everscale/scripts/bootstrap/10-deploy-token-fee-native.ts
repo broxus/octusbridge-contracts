@@ -2,10 +2,13 @@ import tokens from "../../assets/native_tokens.json";
 import {ProxyMultiVaultNative_V7Abi} from "../../build/factorySource";
 import {getConfig} from "./configs";
 import {Address} from "locklift";
+import assert from "node:assert";
 
 const main = async () => {
 
   const config = getConfig();
+  assert(!!config, "Config should be defined");
+
   const admin = locklift.deployments.getAccount('Admin').account;
   const proxyNative = locklift.deployments.getContract<ProxyMultiVaultNative_V7Abi>('ProxyMultiVaultNative');
 
@@ -21,7 +24,7 @@ const main = async () => {
       _remainingGasTo: admin.address
     }).send({
       from: admin.address,
-      amount: config!.GAS.PROXY_MULTI_VAULT_DEPLOY_TOKEN_FEE.toString()
+      amount: config?.GAS.PROXY_MULTI_VAULT_DEPLOY_TOKEN_FEE.toString()
     });
 
     const tokenFee = await  proxyNative.methods.getExpectedTokenFeeAddress({answerId: 0, _token: proxyTokenWalletAddress})

@@ -325,6 +325,38 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
     }`,
   );
 
+  await locklift.tracing.trace(
+    proxyAlien.methods.setPlatformCode({
+      _code: locklift.factory.getContractArtifacts("Platform").code
+    }).send({
+        from: admin.address,
+        amount: config?.GAS.PROXY_MULTI_VAULT_SET_PLATFORM,
+        bounce: true,
+      }),
+  );
+
+  console.log(
+    `Set platform code to alien proxy. Code hash: ${
+      locklift.factory.getContractArtifacts("Platform").codeHash
+    }`,
+  );
+
+  await locklift.tracing.trace(
+    proxyAlien.methods.setTokenFeeCode({
+      _code: locklift.factory.getContractArtifacts("BridgeTokenFee").code
+    }).send({
+        from: admin.address,
+        amount: config?.GAS.PROXY_MULTI_VAULT_SET_TOKEN_FEE,
+        bounce: true,
+      }),
+  );
+
+  console.log(
+    `Set token fee code to alien proxy. Code hash: ${
+      locklift.factory.getContractArtifacts("BridgeTokenFee").codeHash
+    }`,
+  );
+
   const { contract: proxyNative } = await locklift.factory.deployContract({
     contract: "ProxyMultiVaultNative_V7",
     constructorParams: { owner_: admin.address },
@@ -340,6 +372,38 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
   });
 
   console.log(`ProxyMultiVaultNative: ${proxyNative.address}`);
+
+  await locklift.tracing.trace(
+    proxyNative.methods.setPlatformCode({
+      _code: locklift.factory.getContractArtifacts("Platform").code
+    }).send({
+        from: admin.address,
+        amount: config?.GAS.PROXY_MULTI_VAULT_SET_PLATFORM,
+        bounce: true,
+      }),
+  );
+
+  console.log(
+    `Set platform code to native proxy. Code hash: ${
+      locklift.factory.getContractArtifacts("Platform").codeHash
+    }`,
+  );
+
+  await locklift.tracing.trace(
+    proxyNative.methods.setTokenFeeCode({
+      _code: locklift.factory.getContractArtifacts("BridgeTokenFee").code
+    }).send({
+        from: admin.address,
+        amount: config?.GAS.PROXY_MULTI_VAULT_SET_TOKEN_FEE,
+        bounce: true,
+      }),
+  );
+
+  console.log(
+    `Set token fee code to native proxy. Code hash: ${
+      locklift.factory.getContractArtifacts("BridgeTokenFee").codeHash
+    }`,
+  );
 
   await locklift.tracing.trace(
     proxyAlien.methods
