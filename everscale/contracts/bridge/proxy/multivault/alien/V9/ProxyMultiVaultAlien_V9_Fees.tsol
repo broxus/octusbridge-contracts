@@ -82,7 +82,7 @@ abstract contract ProxyMultiVaultAlien_V9_Fees is ProxyMultiVaultAlien_V9_Token 
     }
 
     function deployTokenFee(address _token, address _remainingGasTo) external view {
-         require(msg.value > Gas.getDeployTokenFeeValue(), ErrorCodes.LOW_MSG_VALUE);
+         require(msg.value >= Gas.getDeployTokenFeeValue(), ErrorCodes.LOW_MSG_VALUE);
 
         _deployTokenFee(_token, _remainingGasTo);
     }
@@ -92,8 +92,8 @@ abstract contract ProxyMultiVaultAlien_V9_Fees is ProxyMultiVaultAlien_V9_Token 
 
         new Platform {
             stateInit: _buildTokenFeeStateInit(_token),
-            value: Gas.getDeployTokenFeeValue(),
-            flag: MsgFlag.SENDER_PAYS_FEES
+            value: 0,
+            flag: MsgFlag.REMAINING_GAS
         }(
             tvmConfiguration.tokenFeeCode,
             emptyParams,
