@@ -1,6 +1,7 @@
 import fees from "../../assets/fee_tokens.json";
 import {ProxyMultiVaultAlien_V9Abi, ProxyMultiVaultNative_V7Abi} from "../../build/factorySource";
 import {toNano} from "locklift";
+import BigNumber from "bignumber.js";
 
 const prompts = require("prompts");
 
@@ -9,71 +10,73 @@ const main = async () => {
   const admin = locklift.deployments.getAccount('Admin').account;
   const proxyNative = locklift.deployments.getContract<ProxyMultiVaultNative_V7Abi>('ProxyMultiVaultNative');
   const proxyAlien = locklift.deployments.getContract<ProxyMultiVaultAlien_V9Abi>('ProxyMultiVaultAlien');
+  const DENOMINATOR = 100_000;
+
 
   const defaultFee = await prompts([
     {
       type: "number",
       name: "incomingNativeFee",
-      message: "Default incoming native fee",
-      initial: 0.01
+      message: "Default incoming native fee %",
+      initial: 0.5
     },
     {
       type: "number",
       name: "outgoingNativeFee",
-      message: "Default outgoing native fee",
-      initial: 0.01
+      message: "Default outgoing native fee %",
+      initial: 0.5
     },
       {
       type: "number",
       name: "incomingAlienFee",
-      message: "Default incoming alien fee",
-      initial: 0.01
+      message: "Default incoming alien fee %",
+      initial: 0.5
     },
     {
       type: "number",
       name: "outgoingAlienFee",
-      message: "Default outgoing alien fee",
-      initial: 0.01
+      message: "Default outgoing alien fee %",
+      initial: 0.5
     }
   ]);
 
   await proxyNative.methods.setTvmDefaultFeeNumerator({
-    _incoming: defaultFee.incomingNativeFee,
-    _outgoing: defaultFee.outgoingNativeFee
+    _incoming: new BigNumber(defaultFee.incomingNativeFee).times(DENOMINATOR).div(100).toString(),
+    _outgoing: new BigNumber(defaultFee.outgoingNativeFee).times(DENOMINATOR).div(100).toString(),
   }).send({
       from: admin.address,
-      amount: toNano(0.01)
+      amount: toNano(5)
   });
 
   await proxyAlien.methods.setTvmDefaultFeeNumerator({
-    _incoming: defaultFee.incomingAlienFee,
-    _outgoing: defaultFee.outgoingAlienFee
+    _incoming: new BigNumber(defaultFee.incomingAlienFee).times(DENOMINATOR).div(100).toString(),
+    _outgoing: new BigNumber(defaultFee.outgoingAlienFee).times(DENOMINATOR).div(100).toString(),
   }).send({
       from: admin.address,
-      amount: toNano(0.01)
+      amount: toNano(5)
   });
 
-  for (let native_fee of fees.native.length) {
+  for (let native_fee of fees.native) {
 
     await proxyNative.methods.setTvmTokenFee({
       _token: native_fee.token,
-      _incoming:native_fee.fee.incoming,
-      _outgoing:native_fee.fee.outgoing
+      _incoming: new BigNumber(native_fee.fee.incoming).times(DENOMINATOR).div(100).toString(),
+      _outgoing: new BigNumber(native_fee.fee.outgoing).times(DENOMINATOR).div(100).toString(),
     }).send({
       from: admin.address,
-      amount: toNano(0.01)
+      amount: toNano(5)
     });
   }
 
-  for (let alien_fee of fees.alien.length) {
+  for (let alien_fee of fees.alien) {
 
     await proxyAlien.methods.setTvmTokenFee({
       _token: alien_fee.token,
-      _incoming:alien_fee.fee.incoming,
-      _outgoing:alien_fee.fee.outgoing
+      _incoming: new BigNumber(alien_fee.fee.incoming).times(DENOMINATOR).div(100).toString(),
+      _outgoing: new BigNumber(alien_fee.fee.outgoing).times(DENOMINATOR).div(100).toString(),
     }).send({
       from: admin.address,
-      amount: toNano(0.01)
+      amount: toNano(5)
     });
   }
 };
