@@ -20,7 +20,7 @@ contract BridgeTokenFee {
     )
         external
         pure
-        functionID(0x68b55f3f)
+        functionID(0x3f61459c)
     {
         remainingGasTo.transfer({
             value: 0,
