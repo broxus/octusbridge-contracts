@@ -59,6 +59,11 @@ interface IProxyMultiVaultAlien_V9 is IEVMCallback, INetworks {
         view
         responsible
         returns (address, optional(PredeployedTokenData));
+    function getPredeployedTokens()
+        external
+        view
+        responsible
+        returns (mapping(address => PredeployedTokenData));
     function setEVMConfiguration(
         address _everscaleConfiguration,
         address[] _evmConfigurations,

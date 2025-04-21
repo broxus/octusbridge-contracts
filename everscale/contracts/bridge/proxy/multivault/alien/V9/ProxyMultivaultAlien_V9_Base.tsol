@@ -59,6 +59,20 @@ abstract contract ProxyMultivaultAlien_V9_Base is IProxyMultiVaultAlien_V9, Tran
         } (proxyMultiVaultNative, tvmConfiguration.predeployedTokens.fetch(token));
     }
 
+
+    function getPredeployedTokens()
+        external
+        view
+        responsible
+        returns (mapping(address => PredeployedTokenData))
+    {
+        return {
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.REMAINING_GAS
+        } (tvmConfiguration.predeployedTokens);
+    }
+
     function setProxyMultiVaultNative(address _proxyMultiVaultNative) external onlyOwner cashBack {
         proxyMultiVaultNative = _proxyMultiVaultNative;
     }
