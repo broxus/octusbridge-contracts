@@ -46,32 +46,32 @@ const main = async () => {
     }`,
   );
 
-  for (let tokenFee of tokenFees) {
-    let tokenFeeContract = locklift.factory.getDeployedContract("BridgeTokenFee", tokenFee);
+  for (let i=0; i<tokenFees.length; i++) {
+    let tokenFeeContract = locklift.factory.getDeployedContract("BridgeTokenFee", tokenFees[i]);
     let proxy = await tokenFeeContract.methods.getProxy({answerId: 0}).call().then((a) => a.value0);
 
     if (proxy == proxyNative.address) {
       await locklift.tracing.trace(
-        proxyNative.methods.upgradeTokenFee({_token: tokenFee, _remainingGasTo: admin.address}).send({
+        proxyNative.methods.upgradeTokenFee({_token: tokenFees[i], _remainingGasTo: admin.address}).send({
           from: admin.address,
           amount: config?.GAS.PROXY_MULTI_VAULT_UPGRADE_TOKEN_FEE,
           bounce: true,
         }),
       );
 
-      console.log( `Success upgrade native token fee: ${tokenFee.toString()}`);
+      console.log( `Success upgrade native token fee: ${tokenFees[i].toString()}`);
 
     } else if (proxy == proxyAlien.address) {
 
       await locklift.tracing.trace(
-        proxyAlien.methods.upgradeTokenFee({_token: tokenFee, _remainingGasTo: admin.address}).send({
+        proxyAlien.methods.upgradeTokenFee({_token: tokenFees[i], _remainingGasTo: admin.address}).send({
           from: admin.address,
           amount: config?.GAS.PROXY_MULTI_VAULT_UPGRADE_TOKEN_FEE,
           bounce: true,
         }),
       );
 
-      console.log( `Success upgrade alien token fee: ${tokenFee.toString()}`);
+      console.log( `Success upgrade alien token fee: ${tokenFees[i].toString()}`);
     }
   }
 
