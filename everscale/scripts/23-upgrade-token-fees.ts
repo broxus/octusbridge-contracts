@@ -11,7 +11,7 @@ const main = async () => {
   const proxyNative = locklift.deployments.getContract<ProxyMultiVaultNative_V7Abi>('ProxyMultiVaultNative');
 
   const tokenFees = await locklift.provider.getAccountsByCodeHash({
-    codeHash: '13d634ab192a56c83a00ca9ec3b330b6fae93b187eb63db2777486543741285e'
+    codeHash: 'd04b21cee3dd382e1e53368c05331925ef207d522324f9401b46d540b341a6f4'
   }).then((r) => r.accounts);
 
   await locklift.tracing.trace(
