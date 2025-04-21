@@ -56,6 +56,6 @@ library Gas {
         return gasToValue(TRANSFER_TOKEN_GAS, address(this).wid) + getDeployTokenWalletValue();
     }
 
-    uint128 constant DEPLOY_TVM_TVM_EVENT = 100_000;
+    uint128 constant DEPLOY_TVM_TVM_EVENT = 150_000;
     uint128 constant DEPLOY_EVENT_ADDRESS_KEEPER = 20_000;
 }
