@@ -456,6 +456,15 @@
 			]
 		},
 		{
+			"name": "getPredeployedTokens",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"components":[{"name":"internalToken","type":"address"},{"name":"externalNativeProxyWallet","type":"address"}],"name":"value0","type":"map(address,tuple)"}
+			]
+		},
+		{
 			"name": "setProxyMultiVaultNative",
 			"inputs": [
 				{"name":"_proxyMultiVaultNative","type":"address"}
