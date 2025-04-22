@@ -204,6 +204,7 @@ contract TvmTvmEventConfiguration is
         address eventContract = new TvmTvmBaseEvent{
             value: gasToValue(Gas.DEPLOY_TVM_TVM_EVENT, address(this).wid),
             flag: MsgFlag.SENDER_PAYS_FEES,
+            bounce: false,
             code: basicConfiguration.eventCode,
             pubkey: 0,
             varInit: { eventInitData: eventInitData }
