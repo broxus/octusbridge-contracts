@@ -50,7 +50,7 @@ library Gas {
         return gasToValue(MINT_TOKEN_GAS, address(this).wid) + getDeployTokenWalletValue();
     }
 
-    uint128 constant TRANSFER_TOKEN_GAS = 100_000;
+    uint128 constant TRANSFER_TOKEN_GAS = 200_000;
 
     function getTransferTokenValue() public returns (uint128) {
         return gasToValue(TRANSFER_TOKEN_GAS, address(this).wid) + getDeployTokenWalletValue();
