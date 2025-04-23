@@ -202,7 +202,7 @@
 			]
 		},
 		{
-			"name": "onGetAccumulatedFee",
+			"name": "onCheckAccumulatedFee",
 			"inputs": [
 				{"name":"_payload","type":"cell"}
 			],
@@ -358,6 +358,25 @@
 				{"name":"expectedGas","type":"uint128"},
 				{"name":"remainingGasTo","type":"address"},
 				{"name":"payload","type":"optional(cell)"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "incomingFeeTaken",
+			"inputs": [
+				{"name":"fee","type":"uint128"},
+				{"name":"token","type":"address"},
+				{"name":"msgHash","type":"uint256"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "outgoingFeeTaken",
+			"inputs": [
+				{"name":"fee","type":"uint128"},
+				{"name":"token","type":"address"}
 			],
 			"outputs": [
 			]

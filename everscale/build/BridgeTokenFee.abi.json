@@ -50,6 +50,15 @@
 		{
 			"name": "getAccumulatedFee",
 			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"value0","type":"uint128"}
+			]
+		},
+		{
+			"name": "checkAccumulatedFee",
+			"inputs": [
 				{"name":"answerId","type":"uint32"},
 				{"name":"_recipient","type":"address"}
 			],
