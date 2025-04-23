@@ -40,9 +40,6 @@ abstract contract ProxyMultiVaultAlien_V9_Deposit_TVM is
             uint128
         ));
 
-        // accumulate fee
-        uint128 fee = _calculateFeesDeposit(amount, token);
-        _accumulateFee(fee, token);
 
         if (nativeProxyTokenWallet.hasValue()) {
             TvmCell _meta = abi.encode(
@@ -62,6 +59,12 @@ abstract contract ProxyMultiVaultAlien_V9_Deposit_TVM is
         }
 
         uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
+
+        // accumulate fee
+        uint128 fee = _calculateFeesDeposit(amount, token);
+        _accumulateFee(fee, token);
+
+        emit incomingFeeTaken(fee, token, eventInitData.msgHash);
 
         _mintTokens(
             token,

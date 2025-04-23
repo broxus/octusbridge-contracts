@@ -90,6 +90,22 @@ interface IProxyMultiVaultAlien_V9 is IEVMCallback, INetworks {
     function setTVMAlienTokenWalletCode(TvmCell _tokenWalletCode, address _remainingGasTo) external;
     function setOnceTVMAlienTokenPlatformCode(TvmCell _tokenPlatformCode, address _remainingGasTo) external;
 
+    // fee
+    function getTvmDefaultFee() external view responsible returns(uint32 incomingNumerator,uint32 outgoingNumerator, uint32 denominator);
+    function getTvmTokenFee(address _token) external view responsible returns(uint32 incomingNumerator, uint32 outgoingNumerator, uint32 denominator);
+    function getExpectedTokenFeeAddress(address _token)external responsible view returns(address);
+    function getPlatformCode() external view responsible returns(TvmCell);
+    function getTokenFeeCode() external view responsible returns(TvmCell);
+
+    function setTvmDefaultFeeNumerator(uint32 _incoming, uint32 _outgoing) external;
+    function setPlatformCode(TvmCell _code) external;
+    function setTokenFeeCode(TvmCell _code) external;
+    function setTvmTokenFee(address _token, uint32 _incoming, uint32 _outgoing) external;
+
+    function deleteTvmTokenFee(address _token) external;
+    function withdrawTokenFee(address _token, address _recipient) external;
+    function upgradeTokenFee(address _token, address _remainingGasTo) external view;
+
     // Token merging
     function setManager(address _manager) external;
     function setMergePool(TvmCell _mergePool) external;
@@ -216,6 +232,13 @@ interface IProxyMultiVaultAlien_V9 is IEVMCallback, INetworks {
         address remainingGasTo
     ) external;
 
+    // deploy token fees
+    function deployTokenFee(
+        address _token,
+        address _remainingGasTo
+    ) external;
+
+    // Events specification
     event TvmTvmAlien(
         int32 destinationChainId,
 
@@ -235,9 +258,7 @@ interface IProxyMultiVaultAlien_V9 is IEVMCallback, INetworks {
         optional(TvmCell) payload
     );
 
-    // deploy token fees
-    function deployTokenFee(
-        address _token,
-        address _remainingGasTo
-    ) external;
+    event incomingFeeTaken(uint128 fee, address token, uint256 msgHash);
+    event outgoingFeeTaken(uint128 fee, address token);
+
 }

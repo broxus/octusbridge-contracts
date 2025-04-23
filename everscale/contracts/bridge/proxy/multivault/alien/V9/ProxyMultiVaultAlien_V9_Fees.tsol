@@ -186,15 +186,15 @@ abstract contract ProxyMultiVaultAlien_V9_Fees is ProxyMultiVaultAlien_V9_Token 
     function withdrawTokenFee(address _tokenRoot, address _recipient) external view onlyOwner {
         require(msg.value > Gas.getDeployTokenWalletValue(), ErrorCodes.LOW_MSG_VALUE);
 
-        IBridgeTokenFee(_getExpectedTokenFeeAddress(_tokenRoot)).getAccumulatedFee{
+        IBridgeTokenFee(_getExpectedTokenFeeAddress(_tokenRoot)).checkAccumulatedFee{
             value: 0,
             flag: MsgFlag.REMAINING_GAS,
             bounce: false,
-            callback: ProxyMultiVaultAlien_V9_Fees.onGetAccumulatedFee
+            callback: ProxyMultiVaultAlien_V9_Fees.onCheckAccumulatedFee
         }(_recipient);
     }
 
-    function onGetAccumulatedFee(TvmCell _payload) external view reserveAtLeastTargetBalance {
+    function onCheckAccumulatedFee(TvmCell _payload) external view reserveAtLeastTargetBalance {
         (
             address recipient,
             uint128 accumulatedFees,

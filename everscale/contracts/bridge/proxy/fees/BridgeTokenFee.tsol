@@ -6,7 +6,7 @@ import "../../../utils/ErrorCodes.tsol";
 
 contract BridgeTokenFee {
 
-    address static token; // for Native Proxy - tokenWallet, for Alien Proxy - tokenRoot
+    address static token; // for Native Proxy - proxy tokenWallet, for Alien Proxy - tokenRoot
     address static proxy;
 
     uint128 accumulatedFees;
@@ -39,7 +39,6 @@ contract BridgeTokenFee {
     }
 
     function _init(TvmCell /* _params*/) private {
-        tvm.rawReserve(Gas.BRIDGE_TOKEN_FEES_INITIAL_BALANCE, 0);
 
         accumulatedFees = 0;
     }
@@ -56,7 +55,11 @@ contract BridgeTokenFee {
         accumulatedFees += _fee;
     }
 
-    function getAccumulatedFee(address _recipient) external responsible onlyProxy returns(TvmCell) {
+    function getAccumulatedFee() external view responsible returns(uint128) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} accumulatedFees;
+    }
+
+    function checkAccumulatedFee(address _recipient) external responsible onlyProxy returns(TvmCell) {
         TvmCell payload = abi.encode(_recipient, accumulatedFees, token);
 
         accumulatedFees = 0;
@@ -67,7 +70,6 @@ contract BridgeTokenFee {
         TvmCell _code,
         address _remainingGasTo
     ) external onlyProxy {
-        tvm.rawReserve(Gas.BRIDGE_TOKEN_FEES_INITIAL_BALANCE, 0);
 
         TvmCell data = abi.encode(
             token,

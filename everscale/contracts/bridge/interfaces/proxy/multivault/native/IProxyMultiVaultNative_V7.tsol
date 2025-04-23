@@ -37,8 +37,23 @@ interface IProxyMultiVaultNative_V7 is IEVMCallback, INetworks {
     function setTVMConfiguration(address[] _incomingConfigurations, address gasBackAddress) external;
     function setTVMEventAddressKeeperCode(TvmCell _eventAddressKeeperCode, address gasBackAddress) external;
 
-    // Events specification
+    // fee
+    function getTvmDefaultFee() external view responsible returns(uint32 incomingNumerator,uint32 outgoingNumerator, uint32 denominator);
+    function getTvmTokenFee(address _token) external view responsible returns(uint32 incomingNumerator, uint32 outgoingNumerator, uint32 denominator);
+    function getExpectedTokenFeeAddress(address _token)external responsible view returns(address);
+    function getPlatformCode() external view responsible returns(TvmCell);
+    function getTokenFeeCode() external view responsible returns(TvmCell);
 
+    function setTvmDefaultFeeNumerator(uint32 _incoming, uint32 _outgoing) external;
+    function setPlatformCode(TvmCell _code) external;
+    function setTokenFeeCode(TvmCell _code) external;
+    function setTvmTokenFee(address _token, uint32 _incoming, uint32 _outgoing) external;
+
+    function deleteTvmTokenFee(address _token) external;
+    function withdrawTokenFee(address _token, address _recipient) external;
+    function upgradeTokenFee(address _token, address _remainingGasTo) external view;
+
+    // Events specification
     event TvmTvmNative(
         int32 destinationChainId,
 
@@ -57,4 +72,7 @@ interface IProxyMultiVaultNative_V7 is IEVMCallback, INetworks {
         address remainingGasTo,
         optional(TvmCell) payload
     );
+
+    event incomingFeeTaken(uint128 fee, address token, uint256 msgHash);
+    event outgoingFeeTaken(uint128 fee, address token);
 }
