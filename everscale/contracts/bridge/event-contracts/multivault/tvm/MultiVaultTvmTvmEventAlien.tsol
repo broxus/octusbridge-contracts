@@ -57,7 +57,7 @@ contract MultiVaultTvmTvmEventAlien is
             initializer.transfer({
                 value: 0,
                 bounce: false,
-                flag: MsgFlag.ALL_NOT_RESERVED
+                flag: MsgFlag.REMAINING_GAS
             });
 
             return;
