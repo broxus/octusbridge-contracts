@@ -363,7 +363,7 @@
 			]
 		},
 		{
-			"name": "incomingFeeTaken",
+			"name": "IncomingFeeTaken",
 			"inputs": [
 				{"name":"fee","type":"uint128"},
 				{"name":"token","type":"address"},
@@ -373,7 +373,7 @@
 			]
 		},
 		{
-			"name": "outgoingFeeTaken",
+			"name": "OutgoingFeeTaken",
 			"inputs": [
 				{"name":"fee","type":"uint128"},
 				{"name":"token","type":"address"}

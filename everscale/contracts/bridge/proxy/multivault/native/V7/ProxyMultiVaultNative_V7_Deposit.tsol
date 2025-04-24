@@ -130,7 +130,7 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
         uint128 fee = _calculateFeesDeposit(amount, token_wallet);
         _accumulateFee(fee, token_wallet);
 
-        emit incomingFeeTaken(fee, token_wallet, eventInitData.msgHash);
+        emit IncomingFeeTaken(fee, token_wallet, eventInitData.msgHash);
 
         TvmCell stateInit = tvm.buildStateInit({
             contr: EventAddressKeeper,

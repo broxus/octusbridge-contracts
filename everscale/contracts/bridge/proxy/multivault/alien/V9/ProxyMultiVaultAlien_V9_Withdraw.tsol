@@ -223,7 +223,7 @@ abstract contract ProxyMultiVaultAlien_V9_Withdraw is
         uint128 fee = _calculateFeesWithdraw(amount, msg.sender);
         _accumulateFee(fee, msg.sender);
 
-        emit outgoingFeeTaken(fee, msg.sender);
+        emit OutgoingFeeTaken(fee, msg.sender);
 
         emit TvmTvmAlien(
             baseChainId,

@@ -219,7 +219,7 @@ abstract contract ProxyMultiVaultNative_V7_Withdraw is
         uint128 fee = _calculateFeesWithdraw(amount, nativeProxyWallet);
         _accumulateFee(fee, nativeProxyWallet);
 
-        emit outgoingFeeTaken(fee, nativeProxyWallet);
+        emit OutgoingFeeTaken(fee, nativeProxyWallet);
 
         (
             address recipient,

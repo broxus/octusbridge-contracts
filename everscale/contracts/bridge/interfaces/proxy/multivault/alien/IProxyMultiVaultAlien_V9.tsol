@@ -258,7 +258,7 @@ interface IProxyMultiVaultAlien_V9 is IEVMCallback, INetworks {
         optional(TvmCell) payload
     );
 
-    event incomingFeeTaken(uint128 fee, address token, uint256 msgHash);
-    event outgoingFeeTaken(uint128 fee, address token);
+    event IncomingFeeTaken(uint128 fee, address token, uint256 msgHash);
+    event OutgoingFeeTaken(uint128 fee, address token);
 
 }

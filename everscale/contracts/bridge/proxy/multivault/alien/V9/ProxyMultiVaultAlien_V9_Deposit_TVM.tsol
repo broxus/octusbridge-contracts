@@ -64,7 +64,7 @@ abstract contract ProxyMultiVaultAlien_V9_Deposit_TVM is
         uint128 fee = _calculateFeesDeposit(amount, token);
         _accumulateFee(fee, token);
 
-        emit incomingFeeTaken(fee, token, eventInitData.msgHash);
+        emit IncomingFeeTaken(fee, token, eventInitData.msgHash);
 
         _mintTokens(
             token,
