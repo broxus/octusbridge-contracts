@@ -53,6 +53,7 @@
 				{"name":"name_","type":"string"},
 				{"name":"symbol_","type":"string"},
 				{"name":"decimals_","type":"uint8"},
+				{"name":"sender_","type":"address"},
 				{"name":"amount_","type":"uint128"},
 				{"name":"recipient_","type":"address"},
 				{"name":"value_","type":"uint256"},
@@ -219,6 +220,14 @@
 			]
 		},
 		{
+			"name": "sender",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"sender","type":"address"}
+			]
+		},
+		{
 			"name": "amount",
 			"inputs": [
 			],
@@ -342,6 +351,7 @@
 		{"name":"symbol","type":"string"},
 		{"name":"decimals","type":"uint8"},
 		{"name":"proxyTokenWallet","type":"address"},
+		{"name":"sender","type":"address"},
 		{"name":"amount","type":"uint128"},
 		{"name":"recipient","type":"address"},
 		{"name":"value","type":"uint256"},
