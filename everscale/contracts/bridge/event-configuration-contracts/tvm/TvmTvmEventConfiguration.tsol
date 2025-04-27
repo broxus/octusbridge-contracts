@@ -143,7 +143,7 @@ contract TvmTvmEventConfiguration is
         uint counter = 0;
 
         for (ITvmTvmEvent.TvmTvmEventVoteData eventVoteData: eventsVoteData) {
-            _deployEvent(eventVoteData, MsgFlag.SENDER_PAYS_FEES, values[counter]);
+            _deployEvent(eventVoteData, 0, values[counter]);
             counter++;
         }
 
