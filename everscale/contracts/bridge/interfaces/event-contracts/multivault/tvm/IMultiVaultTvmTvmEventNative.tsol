@@ -20,6 +20,7 @@ interface IMultiVaultTvmTvmEventNative {
         string name_,
         string symbol_,
         uint8 decimals_,
+        address sender_,
         uint128 amount_,
         address recipient_,
         uint value_,

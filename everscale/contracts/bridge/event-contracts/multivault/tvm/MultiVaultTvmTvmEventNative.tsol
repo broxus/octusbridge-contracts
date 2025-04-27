@@ -32,6 +32,7 @@ contract MultiVaultTvmTvmEventNative is
     uint8 public decimals;
     address public proxyTokenWallet;
 
+    address public sender;
     uint128 public amount;
     address public recipient;
 
@@ -76,7 +77,7 @@ contract MultiVaultTvmTvmEventNative is
             decimals,
             proxyTokenWallet,
 
-            /*sender*/,
+            sender,
             recipient,
             amount,
 
@@ -164,6 +165,7 @@ contract MultiVaultTvmTvmEventNative is
         string name_,
         string symbol_,
         uint8 decimals_,
+        address sender_,
         uint128 amount_,
         address recipient_,
         uint value_,
@@ -177,6 +179,7 @@ contract MultiVaultTvmTvmEventNative is
             name,
             symbol,
             decimals,
+            sender_,
             amount,
             recipient,
             value,
@@ -223,7 +226,7 @@ contract MultiVaultTvmTvmEventNative is
         optional(TvmCell) _eventPayload
     ) external {
         require(status == Status.NotEnoughLiquidity || status == Status.LiquidityRequested, ErrorCodes.WRONG_STATUS);
-        require(msg.sender == recipient, ErrorCodes.SENDER_NOT_RECIPIENT);
+        require(msg.sender == recipient || msg.sender == sender, ErrorCodes.SENDER_NOT_RECIPIENT);
 
         status = Status.Cancelled;
         emit Cancelled();
@@ -255,7 +258,7 @@ contract MultiVaultTvmTvmEventNative is
 
     function requestLiquidity(uint128 _reward) external {
         require(status == Status.NotEnoughLiquidity || status == Status.LiquidityRequested, ErrorCodes.WRONG_STATUS);
-        require(msg.sender == recipient, ErrorCodes.SENDER_NOT_RECIPIENT);
+        require(msg.sender == recipient || msg.sender == sender, ErrorCodes.SENDER_NOT_RECIPIENT);
         require(reward <= amount, ErrorCodes.WRONG_REWARD);
 
         reward = _reward;
