@@ -6,8 +6,7 @@
 		{
 			"name": "constructor",
 			"inputs": [
-				{"name":"_configurationCode","type":"cell"},
-				{"name":"_transactionChecker","type":"address"}
+				{"name":"_configurationCode","type":"cell"}
 			],
 			"outputs": [
 			]
@@ -19,7 +18,8 @@
 				{"name":"_flags","type":"uint64"},
 				{"components":[{"name":"eventABI","type":"bytes"},{"name":"staking","type":"address"},{"name":"eventInitialBalance","type":"uint64"},{"name":"eventCode","type":"cell"}],"name":"basicConfiguration","type":"tuple"},
 				{"components":[{"name":"chainId","type":"int32"},{"name":"proxy","type":"address"},{"name":"startTimestamp","type":"uint32"},{"name":"endTimestamp","type":"uint32"}],"name":"networkConfiguration","type":"tuple"},
-				{"name":"_eventEmitter","type":"address"}
+				{"name":"_eventEmitter","type":"address"},
+				{"name":"_transactionChecker","type":"address"}
 			],
 			"outputs": [
 			]
@@ -29,7 +29,8 @@
 			"inputs": [
 				{"components":[{"name":"eventABI","type":"bytes"},{"name":"staking","type":"address"},{"name":"eventInitialBalance","type":"uint64"},{"name":"eventCode","type":"cell"}],"name":"basicConfiguration","type":"tuple"},
 				{"components":[{"name":"chainId","type":"int32"},{"name":"proxy","type":"address"},{"name":"startTimestamp","type":"uint32"},{"name":"endTimestamp","type":"uint32"}],"name":"networkConfiguration","type":"tuple"},
-				{"name":"_eventEmitter","type":"address"}
+				{"name":"_eventEmitter","type":"address"},
+				{"name":"_transactionChecker","type":"address"}
 			],
 			"outputs": [
 				{"name":"value0","type":"address"}
@@ -50,14 +51,6 @@
 			"outputs": [
 				{"name":"configurationCode","type":"cell"}
 			]
-		},
-		{
-			"name": "transactionChecker",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"transactionChecker","type":"address"}
-			]
 		}
 	],
 	"data": [
@@ -70,7 +63,6 @@
 		{"name":"_timestamp","type":"uint64"},
 		{"name":"_constructorFlag","type":"bool"},
 		{"name":"_randomNonce","type":"uint256"},
-		{"name":"configurationCode","type":"cell"},
-		{"name":"transactionChecker","type":"address"}
+		{"name":"configurationCode","type":"cell"}
 	]
 }

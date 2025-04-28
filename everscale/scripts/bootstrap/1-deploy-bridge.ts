@@ -122,7 +122,6 @@ const deployConfigFactories = async (
     contract: "TvmTvmEventConfigurationFactory",
     constructorParams: {
       _configurationCode: locklift.factory.getContractArtifacts("TvmTvmEventConfiguration").code,
-      _transactionChecker: new Address(config?.TRANSACTION_CHECKER),
     },
     initParams: { _randomNonce: getRandomNonce() },
     publicKey: signer.publicKey,
@@ -326,9 +325,11 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
   );
 
   await locklift.tracing.trace(
-    proxyAlien.methods.setPlatformCode({
-      _code: locklift.factory.getContractArtifacts("Platform").code
-    }).send({
+    proxyAlien.methods
+      .setPlatformCode({
+        _code: locklift.factory.getContractArtifacts("Platform").code,
+      })
+      .send({
         from: admin.address,
         amount: config?.GAS.PROXY_MULTI_VAULT_SET_PLATFORM,
         bounce: true,
@@ -336,15 +337,15 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
   );
 
   console.log(
-    `Set platform code to alien proxy. Code hash: ${
-      locklift.factory.getContractArtifacts("Platform").codeHash
-    }`,
+    `Set platform code to alien proxy. Code hash: ${locklift.factory.getContractArtifacts("Platform").codeHash}`,
   );
 
   await locklift.tracing.trace(
-    proxyAlien.methods.setTokenFeeCode({
-      _code: locklift.factory.getContractArtifacts("BridgeTokenFee").code
-    }).send({
+    proxyAlien.methods
+      .setTokenFeeCode({
+        _code: locklift.factory.getContractArtifacts("BridgeTokenFee").code,
+      })
+      .send({
         from: admin.address,
         amount: config?.GAS.PROXY_MULTI_VAULT_SET_TOKEN_FEE,
         bounce: true,
@@ -352,9 +353,7 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
   );
 
   console.log(
-    `Set token fee code to alien proxy. Code hash: ${
-      locklift.factory.getContractArtifacts("BridgeTokenFee").codeHash
-    }`,
+    `Set token fee code to alien proxy. Code hash: ${locklift.factory.getContractArtifacts("BridgeTokenFee").codeHash}`,
   );
 
   const { contract: proxyNative } = await locklift.factory.deployContract({
@@ -374,9 +373,11 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
   console.log(`ProxyMultiVaultNative: ${proxyNative.address}`);
 
   await locklift.tracing.trace(
-    proxyNative.methods.setPlatformCode({
-      _code: locklift.factory.getContractArtifacts("Platform").code
-    }).send({
+    proxyNative.methods
+      .setPlatformCode({
+        _code: locklift.factory.getContractArtifacts("Platform").code,
+      })
+      .send({
         from: admin.address,
         amount: config?.GAS.PROXY_MULTI_VAULT_SET_PLATFORM,
         bounce: true,
@@ -384,15 +385,15 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
   );
 
   console.log(
-    `Set platform code to native proxy. Code hash: ${
-      locklift.factory.getContractArtifacts("Platform").codeHash
-    }`,
+    `Set platform code to native proxy. Code hash: ${locklift.factory.getContractArtifacts("Platform").codeHash}`,
   );
 
   await locklift.tracing.trace(
-    proxyNative.methods.setTokenFeeCode({
-      _code: locklift.factory.getContractArtifacts("BridgeTokenFee").code
-    }).send({
+    proxyNative.methods
+      .setTokenFeeCode({
+        _code: locklift.factory.getContractArtifacts("BridgeTokenFee").code,
+      })
+      .send({
         from: admin.address,
         amount: config?.GAS.PROXY_MULTI_VAULT_SET_TOKEN_FEE,
         bounce: true,
@@ -406,28 +407,24 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
   );
 
   await locklift.tracing.trace(
-    proxyAlien.methods
-      .setProxyMultiVaultNative({ _proxyMultiVaultNative: proxyNative.address })
-      .send({
-        from: admin.address,
-        amount: config?.GAS.PROXY_MULTI_VAULT_SET_ONCE_EVM_TOKEN_PLATFORM,
-        bounce: true,
-      }),
+    proxyAlien.methods.setProxyMultiVaultNative({ _proxyMultiVaultNative: proxyNative.address }).send({
+      from: admin.address,
+      amount: config?.GAS.PROXY_MULTI_VAULT_SET_ONCE_EVM_TOKEN_PLATFORM,
+      bounce: true,
+    }),
   );
 
-  console.log('Set native proxy to alien proxy');
+  console.log("Set native proxy to alien proxy");
 
   await locklift.tracing.trace(
-    proxyNative.methods
-      .setProxyMultiVaultAlien({ _proxyMultiVaultAlien: proxyAlien.address })
-      .send({
-        from: admin.address,
-        amount: config?.GAS.PROXY_MULTI_VAULT_SET_ONCE_EVM_TOKEN_PLATFORM,
-        bounce: true,
-      }),
+    proxyNative.methods.setProxyMultiVaultAlien({ _proxyMultiVaultAlien: proxyAlien.address }).send({
+      from: admin.address,
+      amount: config?.GAS.PROXY_MULTI_VAULT_SET_ONCE_EVM_TOKEN_PLATFORM,
+      bounce: true,
+    }),
   );
 
-  console.log('Set alien proxy to native proxy');
+  console.log("Set alien proxy to native proxy");
 };
 
 const deployStakingConfigurations = async (
@@ -555,7 +552,9 @@ const deployStakingConfigurations = async (
 const deployConnectors = async (
   admin: Account,
   bridge: Contract<BridgeAbi>,
-  configurations: Contract<EthereumEverscaleEventConfigurationAbi | EverscaleEthereumEventConfigurationAbi | TvmTvmEventConfigurationAbi>[],
+  configurations: Contract<
+    EthereumEverscaleEventConfigurationAbi | EverscaleEthereumEventConfigurationAbi | TvmTvmEventConfigurationAbi
+  >[],
 ): Promise<void> => {
   for (const configuration of configurations) {
     const { traceTree: ttConnector } = await locklift.tracing.trace(

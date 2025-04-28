@@ -11,16 +11,13 @@ import "../interfaces/event-configuration-contracts/ITvmTvmEventConfiguration.ts
 
 contract TvmTvmEventConfigurationFactory is TransferUtils, RandomNonce, CheckPubKey {
     TvmCell public configurationCode;
-    address public transactionChecker;
 
     constructor(
-        TvmCell _configurationCode,
-        address _transactionChecker
+        TvmCell _configurationCode
     ) checkPubKey {
         tvm.accept();
 
         configurationCode = _configurationCode;
-        transactionChecker = _transactionChecker;
     }
 
     function deploy(
@@ -28,7 +25,8 @@ contract TvmTvmEventConfigurationFactory is TransferUtils, RandomNonce, CheckPub
         uint64 _flags,
         IBasicEventConfiguration.BasicConfiguration basicConfiguration,
         ITvmTvmEventConfiguration.TvmTvmEventConfiguration networkConfiguration,
-        address _eventEmitter
+        address _eventEmitter,
+        address _transactionChecker
     ) external view reserveMinBalance(Gas.CONFIGURATION_FACTORY_INITIAL_BALANCE) {
         TvmCell _meta;
 
@@ -39,7 +37,7 @@ contract TvmTvmEventConfigurationFactory is TransferUtils, RandomNonce, CheckPub
             pubkey: 0,
             varInit: {
                 eventEmitter: _eventEmitter,
-                transactionChecker: transactionChecker,
+                transactionChecker: _transactionChecker,
                 basicConfiguration: basicConfiguration,
                 networkConfiguration: networkConfiguration
             }
@@ -49,13 +47,14 @@ contract TvmTvmEventConfigurationFactory is TransferUtils, RandomNonce, CheckPub
     function deriveConfigurationAddress(
         IBasicEventConfiguration.BasicConfiguration basicConfiguration,
         ITvmTvmEventConfiguration.TvmTvmEventConfiguration networkConfiguration,
-        address _eventEmitter
+        address _eventEmitter,
+        address _transactionChecker
     ) external view returns (address) {
         TvmCell stateInit = tvm.buildStateInit({
             contr: TvmTvmEventConfiguration,
             varInit: {
                 eventEmitter: _eventEmitter,
-                transactionChecker: transactionChecker,
+                transactionChecker: _transactionChecker,
                 basicConfiguration: basicConfiguration,
                 networkConfiguration: networkConfiguration
             },

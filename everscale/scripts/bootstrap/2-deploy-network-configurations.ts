@@ -7,7 +7,7 @@ import assert from "node:assert";
 import {
   TvmTvmEventConfigurationFactoryAbi,
   ProxyMultiVaultAlien_V9Abi,
-  ProxyMultiVaultNative_V7Abi
+  ProxyMultiVaultNative_V7Abi,
 } from "../../build/factorySource";
 
 import {
@@ -84,47 +84,44 @@ const EVER_NATIVE_TRANSFER_EVENT_ABI = [
   { name: "callback_strict", type: "bool" },
 ];
 
-
 const TVM_ALIEN_TRANSFER_EVENT_ABI = {
-  "name": "TvmTvmAlien",
-  "inputs": [
-    {"name":"destinationChainId","type":"int32"},
-    {"name":"baseToken","type":"address"},
-    {"name":"name","type":"string"},
-    {"name":"symbol","type":"string"},
-    {"name":"decimals","type":"uint8"},
-    {"name":"nativeProxyWallet","type":"address"},
-    {"name":"sender","type":"address"},
-    {"name":"recipient","type":"address"},
-    {"name":"amount","type":"uint128"},
-    {"name":"attachedGas","type":"uint256"},
-    {"name":"expectedGas","type":"uint128"},
-    {"name":"remainingGasTo","type":"address"},
-    {"name":"payload","type":"optional(cell)"}
+  name: "TvmTvmAlien",
+  inputs: [
+    { name: "destinationChainId", type: "int32" },
+    { name: "baseToken", type: "address" },
+    { name: "name", type: "string" },
+    { name: "symbol", type: "string" },
+    { name: "decimals", type: "uint8" },
+    { name: "nativeProxyWallet", type: "address" },
+    { name: "sender", type: "address" },
+    { name: "recipient", type: "address" },
+    { name: "amount", type: "uint128" },
+    { name: "attachedGas", type: "uint256" },
+    { name: "expectedGas", type: "uint128" },
+    { name: "remainingGasTo", type: "address" },
+    { name: "payload", type: "optional(cell)" },
   ],
-  "outputs": [
-  ]
+  outputs: [],
 };
 
 const TVM_NATIVE_TRANSFER_EVENT_ABI = {
-  "name": "TvmTvmNative",
-  "inputs": [
-    {"name":"destinationChainId","type":"int32"},
-    {"name":"baseToken","type":"address"},
-    {"name":"name","type":"string"},
-    {"name":"symbol","type":"string"},
-    {"name":"decimals","type":"uint8"},
-    {"name":"nativeProxyWallet","type":"address"},
-    {"name":"sender","type":"address"},
-    {"name":"recipient","type":"address"},
-    {"name":"amount","type":"uint128"},
-    {"name":"attachedGas","type":"uint256"},
-    {"name":"expectedGas","type":"uint128"},
-    {"name":"remainingGasTo","type":"address"},
-    {"name":"payload","type":"optional(cell)"}
+  name: "TvmTvmNative",
+  inputs: [
+    { name: "destinationChainId", type: "int32" },
+    { name: "baseToken", type: "address" },
+    { name: "name", type: "string" },
+    { name: "symbol", type: "string" },
+    { name: "decimals", type: "uint8" },
+    { name: "nativeProxyWallet", type: "address" },
+    { name: "sender", type: "address" },
+    { name: "recipient", type: "address" },
+    { name: "amount", type: "uint128" },
+    { name: "attachedGas", type: "uint256" },
+    { name: "expectedGas", type: "uint128" },
+    { name: "remainingGasTo", type: "address" },
+    { name: "payload", type: "optional(cell)" },
   ],
-  "outputs": [
-  ]
+  outputs: [],
 };
 
 const deployConnectors = async (
@@ -186,17 +183,19 @@ const main = async (): Promise<void> => {
 
   assert(
     ethEverFactoryConfigCode.configurationCode ===
-      locklift.factory.getContractArtifacts("EthereumEverscaleEventConfiguration").code || config?.ETH_CHAIN_IDS.length === 0,
+      locklift.factory.getContractArtifacts("EthereumEverscaleEventConfiguration").code ||
+      config?.ETH_CHAIN_IDS.length === 0,
     "Different config codes on eth ever factory",
   );
   assert(
     everEthFactoryConfigCode.configurationCode ===
-      locklift.factory.getContractArtifacts("EverscaleEthereumEventConfiguration").code || config?.ETH_CHAIN_IDS.length === 0,
+      locklift.factory.getContractArtifacts("EverscaleEthereumEventConfiguration").code ||
+      config?.ETH_CHAIN_IDS.length === 0,
     "Different config codes on ever eth factory",
   );
   assert(
     tvmTvmFactoryConfigCode.configurationCode ===
-    locklift.factory.getContractArtifacts("TvmTvmEventConfiguration").code,
+      locklift.factory.getContractArtifacts("TvmTvmEventConfiguration").code,
     "Different config codes on tvm tvm factory",
   );
 
@@ -218,6 +217,7 @@ const main = async (): Promise<void> => {
           endTimestamp: 0,
         },
         _eventEmitter: new Address(config?.TVM_EVENT_EMITTERS[chainId].native),
+        _transactionChecker: new Address(config?.TRANSACTION_CHECKERS[chainId]),
       };
 
       await locklift.tracing.trace(
@@ -232,7 +232,8 @@ const main = async (): Promise<void> => {
         .deriveConfigurationAddress({
           networkConfiguration: tvmTvmAlienConfiguration.networkConfiguration,
           basicConfiguration: tvmTvmAlienConfiguration.basicConfiguration,
-          _eventEmitter: new Address(config?.TVM_EVENT_EMITTERS[chainId].native)
+          _eventEmitter: new Address(config?.TVM_EVENT_EMITTERS[chainId].native),
+          _transactionChecker: new Address(config?.TRANSACTION_CHECKERS[chainId]),
         })
         .call()
         .then(r => locklift.factory.getDeployedContract("TvmTvmEventConfiguration", r.value0));
@@ -265,6 +266,7 @@ const main = async (): Promise<void> => {
           endTimestamp: 0,
         },
         _eventEmitter: new Address(config?.TVM_EVENT_EMITTERS[chainId].alien),
+        _transactionChecker: new Address(config?.TRANSACTION_CHECKERS[chainId]),
       };
 
       await locklift.tracing.trace(
@@ -280,6 +282,7 @@ const main = async (): Promise<void> => {
           basicConfiguration: tvmTvmNativeConfiguration.basicConfiguration,
           networkConfiguration: tvmTvmNativeConfiguration.networkConfiguration,
           _eventEmitter: new Address(config?.TVM_EVENT_EMITTERS[chainId].alien),
+          _transactionChecker: new Address(config?.TRANSACTION_CHECKERS[chainId]),
         })
         .call()
         .then(r => locklift.factory.getDeployedContract("TvmTvmEventConfiguration", r.value0));
