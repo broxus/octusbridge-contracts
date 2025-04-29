@@ -407,6 +407,25 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
   );
 
   await locklift.tracing.trace(
+    proxyNative.methods
+      .setTVMEventAddressKeeperCode({
+        _eventAddressKeeperCode: locklift.factory.getContractArtifacts("EventAddressKeeper").code,
+        remainingGasTo: admin.address,
+      })
+      .send({
+        from: admin.address,
+        amount: config?.GAS.PROXY_MULTI_VAULT_SET_EVENT_ADDRESS_KEEPER,
+        bounce: true,
+      }),
+  );
+
+  console.log(
+    `Set eventAddressKeeper code to native proxy. Code hash: ${
+      locklift.factory.getContractArtifacts("EventAddressKeeper").codeHash
+    }`,
+  );
+
+  await locklift.tracing.trace(
     proxyAlien.methods.setProxyMultiVaultNative({ _proxyMultiVaultNative: proxyNative.address }).send({
       from: admin.address,
       amount: config?.GAS.PROXY_MULTI_VAULT_SET_ONCE_EVM_TOKEN_PLATFORM,
