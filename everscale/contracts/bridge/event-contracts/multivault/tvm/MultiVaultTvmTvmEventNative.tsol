@@ -94,9 +94,8 @@ contract MultiVaultTvmTvmEventNative is
             optional(TvmCell)
         ));
 
-
         // return gas in case event contract is less than required
-        if (address(this).balance < expected_gas + eventInitialBalance - gasToValue(Gas.DEPLOY_TVM_TVM_EVENT, address(this).wid)) {
+        if (address(this).balance < expected_gas + eventInitialBalance + msg.forwardFee - gasToValue(Gas.DEPLOY_TVM_TVM_EVENT_REMAINING, address(this).wid)) {
             initializer.transfer({
                 value: 0,
                 bounce: false,

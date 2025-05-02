@@ -57,5 +57,6 @@ library Gas {
     }
 
     uint128 constant DEPLOY_TVM_TVM_EVENT = 150_000;
+    uint128 constant DEPLOY_TVM_TVM_EVENT_REMAINING = 100_000;
     uint128 constant DEPLOY_EVENT_ADDRESS_KEEPER = 20_000;
 }
