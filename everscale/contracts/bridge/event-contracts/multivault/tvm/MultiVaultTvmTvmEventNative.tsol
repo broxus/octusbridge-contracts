@@ -45,7 +45,7 @@ contract MultiVaultTvmTvmEventNative is
 
     bool setupFinished;
 
-    uint128 public reward;
+    uint128 public bounty;
     address public eventTokenWallet;
 
     constructor(
@@ -171,7 +171,8 @@ contract MultiVaultTvmTvmEventNative is
         uint128 expected_gas_,
         optional(TvmCell) payload_,
         address proxy_,
-        address tokenWallet_
+        address tokenWallet_,
+        uint128 bounty_
     ) {
         return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS}(
             token,
@@ -185,7 +186,8 @@ contract MultiVaultTvmTvmEventNative is
             expected_gas,
             payload,
             proxy,
-            proxyTokenWallet
+            proxyTokenWallet,
+            bounty
         );
     }
 
@@ -214,8 +216,16 @@ contract MultiVaultTvmTvmEventNative is
         require(msg.sender == proxy, ErrorCodes.SENDER_NOT_PROXY);
         require(status == Status.Confirmed, ErrorCodes.WRONG_STATUS);
 
-        status = Status.NotEnoughLiquidity;
-        emit NotEnoughLiquidity();
+        if (eventTokenWallet.value == 0) {
+            ITokenRoot(token).walletOf{
+                value: 0,
+                flag: MsgFlag.REMAINING_GAS,
+                callback: MultiVaultTvmTvmEventNative.receiveEventTokenWallet
+            }(address(this));
+        } else {
+            status = Status.LiquidityRequested;
+            emit LiquidityRequested(bounty);
+        }
     }
 
     function cancel(
@@ -224,7 +234,7 @@ contract MultiVaultTvmTvmEventNative is
         uint128 _expectedGas,
         optional(TvmCell) _eventPayload
     ) external {
-        require(status == Status.NotEnoughLiquidity || status == Status.LiquidityRequested, ErrorCodes.WRONG_STATUS);
+        require(status == Status.LiquidityRequested, ErrorCodes.WRONG_STATUS);
         require(msg.sender == recipient || msg.sender == sender, ErrorCodes.SENDER_NOT_RECIPIENT);
 
         status = Status.Cancelled;
@@ -255,35 +265,25 @@ contract MultiVaultTvmTvmEventNative is
             }(eventInitData, withdrawPayload);
     }
 
-    function requestLiquidity(uint128 _reward) external {
-        require(status == Status.NotEnoughLiquidity || status == Status.LiquidityRequested, ErrorCodes.WRONG_STATUS);
+    function setBounty(uint128 _bounty) external {
+        require(status == Status.LiquidityRequested, ErrorCodes.WRONG_STATUS);
         require(msg.sender == recipient || msg.sender == sender, ErrorCodes.SENDER_NOT_RECIPIENT);
-        require(reward <= amount, ErrorCodes.WRONG_REWARD);
+        require(bounty <= amount, ErrorCodes.WRONG_BOUNTY);
 
-        reward = _reward;
+        bounty = _bounty;
 
-        if (eventTokenWallet.value == 0) {
-            ITokenRoot(token).walletOf{
-                value: 0,
-                flag: MsgFlag.REMAINING_GAS,
-                callback: MultiVaultTvmTvmEventNative.receiveProxyTokenWallet
-            }(address(this));
-        } else {
-            emit LiquidityRequested(reward);
-        }
+        emit LiquidityRequested(bounty);
     }
 
-    function receiveProxyTokenWallet(
+    function receiveEventTokenWallet(
         address tokenWallet_
-    ) external override {
+    ) external {
         require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
 
-        if (status == Status.NotEnoughLiquidity) {
-            eventTokenWallet = tokenWallet_;
-            status = Status.LiquidityRequested;
+        eventTokenWallet = tokenWallet_;
+        status = Status.LiquidityRequested;
 
-            emit LiquidityRequested(reward);
-        }
+        emit LiquidityRequested(bounty);
     }
 
     function onAcceptTokensTransfer(
@@ -297,7 +297,7 @@ contract MultiVaultTvmTvmEventNative is
         require(msg.sender == eventTokenWallet, ErrorCodes.SENDER_NOT_TOKEN_WALLET);
 
         // return tokens to sender in case of wrong amount or incorrect status
-        if (status != Status.LiquidityRequested || _amount < amount - reward) {
+        if (status != Status.LiquidityRequested || _amount < amount - bounty) {
             TvmCell empty;
 
             ITokenWallet(eventTokenWallet).transfer{
@@ -370,4 +370,16 @@ contract MultiVaultTvmTvmEventNative is
                 flag: MsgFlag.ALL_NOT_RESERVED
             }(eventInitData, withdrawPayload);
     }
+
+    function retry() external {
+        require(status == Status.LiquidityRequested, ErrorCodes.WRONG_STATUS); // todo add LimitReached status
+        require(
+            msg.sender == recipient || msg.sender == sender || msg.sender == initializer,
+            ErrorCodes.SENDER_NOT_RECIPIENT
+        );
+
+        status = Status.Verified;
+        onConfirm();
+    }
+
 }

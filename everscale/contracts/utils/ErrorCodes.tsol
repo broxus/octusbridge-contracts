@@ -54,7 +54,7 @@ library ErrorCodes {
     uint16 constant WRONG_BASE_NATIVE_PROXY_WALLET = 2330;
     uint16 constant SENDER_NOT_PROXY = 2331;
     uint16 constant SENDER_NOT_RECIPIENT = 2332;
-    uint16 constant WRONG_REWARD = 2333;
+    uint16 constant WRONG_BOUNTY = 2333;
     uint16 constant SENDER_NOT_TOKEN_WALLET = 2334;
 
     // Connector

@@ -107,7 +107,7 @@
 				{"name":"answerId","type":"uint32"}
 			],
 			"outputs": [
-				{"components":[{"name":"base_chainId","type":"int32"},{"name":"base_token","type":"address"},{"name":"base_native_proxy_wallet","type":"address"},{"name":"name","type":"string"},{"name":"symbol","type":"string"},{"name":"decimals","type":"uint8"},{"name":"amount","type":"uint128"},{"name":"recipient","type":"address"},{"name":"value","type":"uint256"},{"name":"expected_gas","type":"uint128"},{"name":"payload","type":"optional(cell)"}],"name":"value0","type":"tuple"}
+				{"components":[{"name":"base_chainId","type":"int32"},{"name":"base_token","type":"address"},{"name":"base_native_proxy_wallet","type":"address"},{"name":"name","type":"string"},{"name":"symbol","type":"string"},{"name":"decimals","type":"uint8"},{"name":"amount","type":"uint128"},{"name":"recipient","type":"address"},{"name":"sender","type":"address"},{"name":"value","type":"uint256"},{"name":"expected_gas","type":"uint128"},{"name":"payload","type":"optional(cell)"}],"name":"value0","type":"tuple"}
 			]
 		},
 		{
@@ -115,7 +115,7 @@
 			"inputs": [
 			],
 			"outputs": [
-				{"components":[{"name":"proxy","type":"address"},{"name":"token","type":"address"},{"name":"router","type":"address"},{"name":"pool","type":"address"},{"name":"canon","type":"address"},{"name":"target_token","type":"address"},{"name":"target_amount","type":"uint128"},{"name":"native_proxy_token_wallet","type":"optional(address)"}],"name":"value0","type":"tuple"}
+				{"components":[{"name":"proxy","type":"address"},{"name":"token","type":"address"},{"name":"router","type":"address"},{"name":"pool","type":"address"},{"name":"canon","type":"address"},{"name":"target_token","type":"address"},{"name":"target_amount","type":"uint128"},{"name":"native_proxy","type":"address"},{"name":"native_proxy_token_wallet","type":"optional(address)"}],"name":"value0","type":"tuple"}
 			]
 		},
 		{
@@ -141,6 +141,61 @@
 			]
 		},
 		{
+			"name": "notEnoughLiquidity",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "receiveEventTokenWallet",
+			"inputs": [
+				{"name":"tokenWallet_","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "cancel",
+			"inputs": [
+				{"name":"_newRecipient","type":"address"},
+				{"name":"_remainingGasTo","type":"address"},
+				{"name":"_expectedGas","type":"uint128"},
+				{"name":"_eventPayload","type":"optional(cell)"},
+				{"name":"_predeployedTokenData","type":"optional(cell)"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setBounty",
+			"inputs": [
+				{"name":"_bounty","type":"uint128"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "onAcceptTokensTransfer",
+			"inputs": [
+				{"name":"value0","type":"address"},
+				{"name":"_amount","type":"uint128"},
+				{"name":"_sender","type":"address"},
+				{"name":"value3","type":"address"},
+				{"name":"value4","type":"address"},
+				{"name":"_payload","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "retry",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "getEventInitData",
 			"inputs": [
 				{"name":"answerId","type":"uint32"}
@@ -159,13 +214,6 @@
 				{"name":"_initializer","type":"address"},
 				{"name":"_meta","type":"cell"},
 				{"name":"_status","type":"uint8"}
-			]
-		},
-		{
-			"name": "notEnoughLiquidity",
-			"inputs": [
-			],
-			"outputs": [
 			]
 		},
 		{
@@ -223,6 +271,22 @@
 			"outputs": [
 				{"name":"transitionalDataCell","type":"cell"}
 			]
+		},
+		{
+			"name": "bounty",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"bounty","type":"uint128"}
+			]
+		},
+		{
+			"name": "eventTokenWallet",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"eventTokenWallet","type":"address"}
+			]
 		}
 	],
 	"data": [
@@ -237,8 +301,9 @@
 			]
 		},
 		{
-			"name": "NotEnoughLiquidity",
+			"name": "LiquidityRequested",
 			"inputs": [
+				{"name":"bounty","type":"uint128"}
 			],
 			"outputs": [
 			]
@@ -246,14 +311,6 @@
 		{
 			"name": "Cancelled",
 			"inputs": [
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "LiquidityRequested",
-			"inputs": [
-				{"name":"reward","type":"uint128"}
 			],
 			"outputs": [
 			]
@@ -281,6 +338,8 @@
 		{"name":"eventInitialBalance","type":"uint128"},
 		{"name":"transitionalDataCell","type":"cell"},
 		{"name":"_tokenDeployStatus","type":"uint8"},
-		{"name":"_routerDeployStatus","type":"uint8"}
+		{"name":"_routerDeployStatus","type":"uint8"},
+		{"name":"bounty","type":"uint128"},
+		{"name":"eventTokenWallet","type":"address"}
 	]
 }

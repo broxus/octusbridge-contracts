@@ -8,6 +8,8 @@ import "./../../../../interfaces/event-contracts/IEverscaleEthereumEvent.tsol";
 import "./../../../../interfaces/event-configuration-contracts/IEverscaleSolanaEventConfiguration.tsol";
 import "./../../../../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.tsol";
 
+import "./../../../../interfaces/proxy/ITvmEventCancelled.tsol";
+
 import "./ProxyMultiVaultAlien_V9_Deposit_EVM.tsol";
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensBurnCallback.tsol";
@@ -15,7 +17,8 @@ import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensBurnCal
 
 abstract contract ProxyMultiVaultAlien_V9_Withdraw is
     ProxyMultiVaultAlien_V9_Deposit_EVM,
-    IAcceptTokensBurnCallback
+    IAcceptTokensBurnCallback,
+    ITvmEventCancelled
 {
     /// @notice Handles token burn.
     /// Initializes alien transfer (eg BSC CAKE or ETH AAVE).
@@ -81,6 +84,60 @@ abstract contract ProxyMultiVaultAlien_V9_Withdraw is
                 burnPayload
             );
         }
+    }
+
+    function onTVMEventCancelled(
+        ITvmTvmEvent.TvmTvmEventInitData _eventInitData,
+        TvmCell _withdrawPayload
+    ) external override reserveAtLeastTargetBalance {
+        require(
+            _isArrayContainsAddress(tvmConfiguration.incomingConfigurations, msg.sender),
+            ErrorCodes.NOT_TVM_CONFIG
+        );
+
+        (
+            uint128 amount,
+            address sender,
+            address nativeProxyWallet,
+            TvmCell transferData
+        ) = abi.decode(_withdrawPayload, (
+            uint128,
+            address,
+            address,
+            TvmCell
+        ));
+
+        if (nativeProxyWallet.value != 0) {
+            ITvmEventCancelled(proxyMultiVaultNative)
+                .onTVMEventCancelled{
+                    flag: MsgFlag.ALL_NOT_RESERVED
+                }(_eventInitData, _withdrawPayload);
+
+            return;
+        }
+
+        (
+            address recipient,
+            address token,
+            address remainingGasTo,
+            uint128 expectedGas,
+            optional(TvmCell) eventPayload
+        ) = abi.decode(transferData, (
+            address,
+            address,
+            address,
+            uint128,
+            optional(TvmCell)
+        ));
+
+        _emitTVMEvent(
+            0,
+            token,
+            amount,
+            remainingGasTo,
+            sender,
+            abi.encode(recipient, expectedGas, eventPayload)
+        );
     }
 
     function _deploySolanaEvent(

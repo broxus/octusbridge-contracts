@@ -112,8 +112,9 @@
 			]
 		},
 		{
-			"name": "NotEnoughLiquidity",
+			"name": "LiquidityRequested",
 			"inputs": [
+				{"name":"bounty","type":"uint128"}
 			],
 			"outputs": [
 			]
@@ -121,14 +122,6 @@
 		{
 			"name": "Cancelled",
 			"inputs": [
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "LiquidityRequested",
-			"inputs": [
-				{"name":"reward","type":"uint128"}
 			],
 			"outputs": [
 			]

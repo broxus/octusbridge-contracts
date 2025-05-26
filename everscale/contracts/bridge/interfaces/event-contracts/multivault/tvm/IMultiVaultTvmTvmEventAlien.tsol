@@ -19,6 +19,7 @@ interface IMultiVaultTvmTvmEventAlien {
 
         uint128 amount;
         address recipient;
+        address sender;
 
         uint value;
         uint128 expected_gas;
@@ -36,6 +37,7 @@ interface IMultiVaultTvmTvmEventAlien {
         address target_token;
         uint128 target_amount;
 
+        address native_proxy;
         optional(address) native_proxy_token_wallet;
     }
 

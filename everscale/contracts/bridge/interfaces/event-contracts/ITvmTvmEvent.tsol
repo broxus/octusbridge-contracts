@@ -7,16 +7,14 @@ interface ITvmTvmEvent {
         Pending,
         Verified,
         Confirmed,
-        NotEnoughLiquidity,
         Cancelled,
         LiquidityRequested,
         LiquidityProvided
     }
 
     event Confirmed();
-    event NotEnoughLiquidity();
+    event LiquidityRequested(uint128 bounty);
     event Cancelled();
-    event LiquidityRequested(uint128 reward);
     event LiquidityProvided(address tokenSender);
 
     struct TvmTvmEventVoteData {

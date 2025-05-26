@@ -171,6 +171,15 @@
 			]
 		},
 		{
+			"name": "onTVMEventCancelled",
+			"inputs": [
+				{"components":[{"name":"msgHash","type":"uint256"},{"name":"configuration","type":"address"},{"name":"chainId","type":"int32"}],"name":"_eventInitData","type":"tuple"},
+				{"name":"_withdrawPayload","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "receiveTokenRootAlienTvmMeta",
 			"inputs": [
 				{"name":"baseChainId","type":"int32"},

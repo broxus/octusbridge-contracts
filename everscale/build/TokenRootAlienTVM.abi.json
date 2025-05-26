@@ -260,7 +260,7 @@
 				{"name":"walletOwner","type":"address"},
 				{"name":"remainingGasTo","type":"address"},
 				{"name":"callbackTo","type":"address"},
-				{"name":"innerPayload","type":"cell"}
+				{"name":"payload","type":"cell"}
 			],
 			"outputs": [
 			]
@@ -271,38 +271,6 @@
 				{"name":"to","type":"address"}
 			],
 			"outputs": [
-			]
-		}
-	],
-	"getters": [
-		{
-			"name": "get_jetton_platform_data",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"value0","type":"cell"},
-				{"name":"value1","type":"int257"}
-			]
-		},
-		{
-			"name": "get_jetton_data",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"value0","type":"int257"},
-				{"name":"value1","type":"bool"},
-				{"name":"value2","type":"address_std"},
-				{"name":"value3","type":"cell"},
-				{"name":"value4","type":"cell"}
-			]
-		},
-		{
-			"name": "get_wallet_address",
-			"inputs": [
-				{"name":"owner_address","type":"address_std"}
-			],
-			"outputs": [
-				{"name":"value0","type":"address_std"}
 			]
 		}
 	],
