@@ -4,6 +4,7 @@ pragma ever-solidity >= 0.62.0;
 import "../../../../interfaces/event-contracts/IEverscaleEthereumEvent.tsol";
 import "../../../../interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
 import "../../../../interfaces/proxy/ITvmEventCancelled.tsol";
+import "../../../../interfaces/proxy/IEvmEventCancelled.tsol";
 
 import "../../../../interfaces/event-configuration-contracts/IEverscaleSolanaEventConfiguration.tsol";
 import "../../../../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.tsol";
@@ -18,7 +19,8 @@ import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensTransfe
 abstract contract ProxyMultiVaultNative_V7_Withdraw is
     ProxyMultiVaultNative_V7_Fees,
     IAcceptTokensTransferCallback,
-    ITvmEventCancelled
+    ITvmEventCancelled,
+    IEvmEventCancelled
 {
     /// @notice Handles incoming token transfer
     /// Initializes native token withdraw
@@ -88,6 +90,43 @@ abstract contract ProxyMultiVaultNative_V7_Withdraw is
                 transferPayload
             );
         }
+    }
+
+    function onEVMEventCancelled(
+        IEthereumEverscaleEvent.EthereumEverscaleEventInitData _eventInitData,
+        TvmCell _withdrawPayload
+    ) external override reserveAtLeastTargetBalance {
+        require(
+            _isArrayContainsAddress(evmConfiguration.evmConfigurations, msg.sender),
+            ErrorCodes.NOT_ETHEREUM_CONFIG
+        );
+
+        (
+            uint128 amount,
+            uint160 recipient,
+            address sender,
+            EVMCallback callback,
+            address tokenRoot,
+            address remainingGasTo
+        ) = abi.decode(_withdrawPayload, (
+            uint128,
+            uint160,
+            address,
+            EVMCallback,
+            address,
+            address
+        ));
+
+        _deployEVMEvent(
+            0,
+            tokenRoot,
+            _eventInitData.chainId,
+            amount,
+            recipient,
+            remainingGasTo,
+            sender,
+            callback
+        );
     }
 
     function onTVMEventCancelled(

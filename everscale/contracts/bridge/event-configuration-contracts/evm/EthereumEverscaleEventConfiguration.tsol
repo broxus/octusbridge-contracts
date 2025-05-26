@@ -7,6 +7,7 @@ import "./../../interfaces/event-configuration-contracts/IEthereumEverscaleEvent
 
 import "./../../interfaces/proxy/IEthereumEverscaleProxy.tsol";
 import "./../../interfaces/proxy/IEthereumEverscaleProxyExtended.tsol";
+import "./../../interfaces/proxy/IEvmEventCancelled.tsol";
 
 import "./../../event-contracts/base/evm/EthereumEverscaleBaseEvent.tsol";
 
@@ -24,6 +25,7 @@ contract EthereumEverscaleEventConfiguration is
     IEthereumEverscaleEventConfiguration,
     IEthereumEverscaleProxy,
     IEthereumEverscaleProxyExtended,
+    IEvmEventCancelled,
     TransferUtils,
     InternalOwner,
     CheckPubKey
@@ -287,6 +289,28 @@ contract EthereumEverscaleEventConfiguration is
         IEthereumEverscaleProxyExtended(networkConfiguration.proxy).onEventConfirmedExtended{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, _meta, gasBackAddress);
+    }
+
+    function onEVMEventCancelled(
+        IEthereumEverscaleEvent.EthereumEverscaleEventInitData _eventInitData,
+        TvmCell _withdrawPayload
+    ) external override reserveAtLeastTargetBalance {
+        require(
+            _eventInitData.configuration == address(this),
+            ErrorCodes.SENDER_NOT_EVENT_CONTRACT
+        );
+
+        address eventContract = _deriveEventAddress(_eventInitData);
+
+        require(
+            eventContract == msg.sender,
+            ErrorCodes.SENDER_NOT_EVENT_CONTRACT
+        );
+
+        IEvmEventCancelled(networkConfiguration.proxy)
+            .onEVMEventCancelled{
+                flag: MsgFlag.ALL_NOT_RESERVED
+            }(_eventInitData, _withdrawPayload);
     }
 
     function _deriveEventAddress(

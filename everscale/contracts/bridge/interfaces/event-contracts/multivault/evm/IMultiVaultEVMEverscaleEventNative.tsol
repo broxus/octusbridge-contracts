@@ -25,4 +25,6 @@ interface IMultiVaultEVMEverscaleEventNative {
         address proxy_,
         address tokenWallet_
     );
+
+    function notEnoughLiquidity() external;
 }

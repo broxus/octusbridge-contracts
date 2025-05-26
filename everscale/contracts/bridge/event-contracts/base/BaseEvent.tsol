@@ -107,11 +107,38 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
     }
 
     function setStatusConfirmed() internal {
-        require(_status == Status.Pending, ErrorCodes.WRONG_STATUS);
+        require(
+            _status == Status.Pending || _status == Status.LiquidityRequested, // todo add LimitReached status
+            ErrorCodes.WRONG_STATUS
+        );
 
         _status = Status.Confirmed;
 
         emit Confirmed();
+    }
+
+    function _setStatusLiquidityRequested(uint128 _bounty) internal {
+        require(_status == Status.Confirmed, ErrorCodes.WRONG_STATUS);
+
+        _status = Status.LiquidityRequested;
+
+        emit LiquidityRequested(_bounty);
+    }
+
+    function _setStatusLiquidityProvided(address _tokenSender) internal {
+        require(_status == Status.LiquidityRequested, ErrorCodes.WRONG_STATUS);
+
+        _status = Status.LiquidityProvided;
+
+        emit LiquidityProvided(_tokenSender);
+    }
+
+    function _setStatusCancelled() internal {
+        require(_status == Status.LiquidityRequested, ErrorCodes.WRONG_STATUS); // todo add LimitReached status
+
+        _status = Status.Cancelled;
+
+        emit Cancelled();
     }
 
     function setStatusRejected(uint16 reason) internal {
