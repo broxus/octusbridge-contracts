@@ -102,4 +102,6 @@ interface IMultiVaultTvmTvmEventAlien {
         address token_,
         optional(address) native_proxy_token_wallet
     );
+
+    function dailyLimitReached(address _approver) external;
 }

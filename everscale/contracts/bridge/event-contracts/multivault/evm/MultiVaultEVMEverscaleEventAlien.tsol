@@ -11,6 +11,7 @@ import "./../../../interfaces/event-configuration-contracts/IEthereumEverscaleEv
 import "./../../../interfaces/proxy/IEthereumEverscaleProxyExtended.tsol";
 import "./../../../interfaces/alien-token-merge/merge-pool/IMergePool_V2.tsol";
 import "./../../../interfaces/alien-token-merge/IMergeRouter.tsol";
+import "./../../../interfaces/proxy/IEvmEventCancelled.tsol";
 
 import "./../../base/evm/EthereumEverscaleBaseEvent.tsol";
 
@@ -25,6 +26,13 @@ contract MultiVaultEVMEverscaleEventAlien is
     uint128 constant POWER_BASE = 10;
 
     TvmCell public transitionalDataCell;
+    address public limitApprover;
+    bool public isLimitApproved;
+
+    modifier onlyLimitApprover() {
+        require(msg.sender == limitApprover && limitApprover.value != 0, ErrorCodes.SENDER_IS_NOT_LIMIT_APPROVER);
+        _;
+    }
 
     constructor(
         address _initializer,
@@ -236,6 +244,8 @@ contract MultiVaultEVMEverscaleEventAlien is
         TransitionalData transitionalData = getTransitionalData();
 
         TvmCell metaData = abi.encode(
+            address(this),
+            isLimitApproved,
             transitionalData.target_token,
             transitionalData.target_amount,
             eventData.recipient,
@@ -439,5 +449,46 @@ contract MultiVaultEVMEverscaleEventAlien is
             transitionalData.proxy,
             transitionalData.token
         );
+    }
+
+    function dailyLimitReached(address _approver) external override {
+        TransitionalData transitionalData = getTransitionalData();
+
+        require(msg.sender.value != 0 && msg.sender == transitionalData.proxy, ErrorCodes.SENDER_NOT_PROXY);
+
+        _setStatusLimitApprove(_approver);
+
+        limitApprover = _approver;
+    }
+
+    function approveLimit() external onlyLimitApprover {
+        isLimitApproved = true;
+
+        setStatusConfirmed();
+        onConfirm();
+    }
+
+    function rejectLimit(uint160 _refundRecipient) external onlyLimitApprover {
+        _setStatusCancelled();
+
+        EventData eventData = getEventData();
+        TransitionalData transitionalData = getTransitionalData();
+
+        TvmCell transferData = abi.encode(
+            _refundRecipient,
+            transitionalData.token,
+            initializer
+        );
+
+        TvmCell withdrawPayload = abi.encode(
+            eventData.amount,
+            eventData.recipient,
+            transferData
+        );
+
+        IEvmEventCancelled(eventInitData.configuration)
+            .onEVMEventCancelled{
+                flag: MsgFlag.ALL_NOT_RESERVED
+            }(eventInitData, withdrawPayload);
     }
 }

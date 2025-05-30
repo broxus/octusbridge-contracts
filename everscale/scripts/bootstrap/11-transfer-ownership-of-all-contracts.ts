@@ -1,30 +1,30 @@
-import { Address, Contract, toNano, WalletTypes } from "locklift";
+import { Address, Contract, toNano } from "locklift";
 
 import {
   BridgeAbi,
-  ProxyMultiVaultAlien_V8Abi,
-  ProxyMultiVaultNative_V6Abi,
+  ProxyMultiVaultAlien_V10Abi,
+  ProxyMultiVaultNative_V8Abi,
   RoundDeployerAbi,
   EthereumEverscaleEventConfigurationAbi,
   EverscaleEthereumEventConfigurationAbi,
   ConnectorAbi,
   MergeRouterAbi,
-  MergePool_V6Abi,
+  MergePool_V7Abi,
   Mediator_V2Abi,
   EventCreditFactoryAbi,
-} from "../../build_prod/factorySource";
+} from "../../build/factorySource";
 
 const NEW_OWNER = new Address("");
 
 type internalOwnerContractsType =
   | BridgeAbi
-  | ProxyMultiVaultAlien_V8Abi
-  | ProxyMultiVaultNative_V6Abi
+  | ProxyMultiVaultAlien_V10Abi
+  | ProxyMultiVaultNative_V8Abi
   | EthereumEverscaleEventConfigurationAbi
   | EverscaleEthereumEventConfigurationAbi
   | ConnectorAbi
   | MergeRouterAbi
-  | MergePool_V6Abi
+  | MergePool_V7Abi
   | Mediator_V2Abi
   | EventCreditFactoryAbi;
 

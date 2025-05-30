@@ -1,0 +1,141 @@
+pragma ever-solidity >= 0.62.0;
+
+import "./ProxyMultiVaultAlien_V10_Fees.tsol";
+
+abstract contract ProxyMultiVaultAlien_V10_Limits is ProxyMultiVaultAlien_V10_Fees {
+    function setTokenDailyLimits(
+        address _token,
+        optional(uint128) _incomingLimit,
+        optional(uint128) _outgoingLimit,
+        address _remainingGasTo
+    ) external override onlyOwner cashBackTo(_remainingGasTo) {
+        DailyLimits oldLimits = tokenToDailyLimits[_token];
+
+        bool canResetLimits = block.timestamp > oldLimits.dayStartTimestamp + 86400;
+
+        // Can continue day with new limits or start a new one
+        tokenToDailyLimits[_token] = DailyLimits({
+            incomingLimit: _incomingLimit,
+            outgoingLimit: _outgoingLimit,
+
+            dailyIncomingVolume: canResetLimits ? 0 : oldLimits.dailyIncomingVolume,
+            dailyOutgoingVolume: canResetLimits ? 0 : oldLimits.dailyOutgoingVolume,
+
+            dayStartTimestamp: canResetLimits ? block.timestamp : oldLimits.dayStartTimestamp
+        });
+    }
+
+    function getDailyLimits(address _token)
+        external
+        view
+        override
+        responsible
+        returns (DailyLimits)
+    {
+        return {
+            value: 0,
+            flag: MsgFlag.REMAINING_GAS,
+            bounce: false
+        } tokenToDailyLimits[_token];
+    }
+
+    function setLimitApprover(address _approver, address _remainingGasTo)
+        external
+        override
+        onlyOwner
+        cashBackTo(_remainingGasTo)
+    {
+        limitApprover = _approver;
+    }
+
+    function getLimitApprover()
+        external
+        view
+        override
+        responsible
+        returns (address)
+    {
+        return {
+            value: 0,
+            flag: MsgFlag.REMAINING_GAS,
+            bounce: false
+        } limitApprover;
+    }
+
+    // @return bool - is limit reached
+    // @return optional(DailyLimits) - updated daily limits
+    function _isIncomingDailyLimitReached(address _token, uint128 _amount)
+        internal
+        view
+        returns (bool, optional(DailyLimits))
+    {
+        optional(DailyLimits) limitsOpt = tokenToDailyLimits.fetch(_token);
+
+        // Limits are not set. Skip
+        if (!limitsOpt.hasValue()) {
+            return (false, null);
+        }
+
+        DailyLimits limits = limitsOpt.get();
+
+        // Incoming limit is not set. Skip
+        if (!limits.incomingLimit.hasValue()) {
+            return (false, null);
+        }
+
+        // Day is over
+        bool canResetVolumes = block.timestamp > limits.dayStartTimestamp + 86400;
+
+        if (canResetVolumes) {
+            limits.dayStartTimestamp = block.timestamp;
+            limits.dailyIncomingVolume = 0;
+            limits.dailyOutgoingVolume = 0;
+        }
+
+        limits.dailyIncomingVolume += _amount;
+
+        return (limits.dailyIncomingVolume > limits.incomingLimit.get(), limits);
+    }
+
+    // @return bool - is limit reached
+    // @return optional(DailyLimits) - updated daily limits
+    function _isOutgoingDailyLimitReached(address _token, uint128 _amount)
+        internal
+        view
+        returns (bool, optional(DailyLimits))
+    {
+        optional(DailyLimits) limitsOpt = tokenToDailyLimits.fetch(_token);
+
+        // Limits are not set. Skip
+        if (!limitsOpt.hasValue()) {
+            return (false, null);
+        }
+
+        DailyLimits limits = limitsOpt.get();
+
+        // Outgoing limit is not set. Skip
+        if (!limits.outgoingLimit.hasValue()) {
+            return (false, null);
+        }
+
+        // Day is over
+        bool canResetVolumes = block.timestamp > limits.dayStartTimestamp + 86400;
+
+        if (canResetVolumes) {
+            limits.dayStartTimestamp = block.timestamp;
+            limits.dailyIncomingVolume = 0;
+            limits.dailyOutgoingVolume = 0;
+        }
+
+        limits.dailyOutgoingVolume += _amount;
+
+        return (limits.dailyOutgoingVolume > limits.outgoingLimit.get(), limits);
+    }
+
+    function _updateDailyVolumes(address _token, optional(DailyLimits) _limits) internal {
+        // Limits were updated. Set new
+        if (_limits.hasValue()) {
+            tokenToDailyLimits[_token] = _limits.get();
+        }
+    }
+}

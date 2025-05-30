@@ -141,6 +141,33 @@
 			]
 		},
 		{
+			"name": "dailyLimitReached",
+			"inputs": [
+				{"name":"_approver","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "approveLimit",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "rejectLimit",
+			"inputs": [
+				{"name":"_newRecipient","type":"address"},
+				{"name":"_remainingGasTo","type":"address"},
+				{"name":"_expectedGas","type":"uint128"},
+				{"name":"_eventPayload","type":"optional(cell)"},
+				{"name":"_predeployedTokenData","type":"optional(cell)"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "notEnoughLiquidity",
 			"inputs": [
 			],
@@ -287,6 +314,22 @@
 			"outputs": [
 				{"name":"eventTokenWallet","type":"address"}
 			]
+		},
+		{
+			"name": "limitApprover",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"limitApprover","type":"address"}
+			]
+		},
+		{
+			"name": "isLimitApproved",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"isLimitApproved","type":"bool"}
+			]
 		}
 	],
 	"data": [
@@ -322,6 +365,14 @@
 			],
 			"outputs": [
 			]
+		},
+		{
+			"name": "LimitApprove",
+			"inputs": [
+				{"name":"approver","type":"address"}
+			],
+			"outputs": [
+			]
 		}
 	],
 	"fields": [
@@ -340,6 +391,8 @@
 		{"name":"_tokenDeployStatus","type":"uint8"},
 		{"name":"_routerDeployStatus","type":"uint8"},
 		{"name":"bounty","type":"uint128"},
-		{"name":"eventTokenWallet","type":"address"}
+		{"name":"eventTokenWallet","type":"address"},
+		{"name":"limitApprover","type":"address"},
+		{"name":"isLimitApproved","type":"bool"}
 	]
 }

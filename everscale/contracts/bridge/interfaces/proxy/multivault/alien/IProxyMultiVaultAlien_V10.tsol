@@ -1,0 +1,290 @@
+pragma ever-solidity >= 0.62.0;
+
+import "../../../event-contracts/multivault/evm/IEVMCallback.tsol";
+import "../../../event-contracts/IEverscaleSolanaEvent.tsol";
+import "../../INetworks.tsol";
+
+interface IProxyMultiVaultAlien_V10 is IEVMCallback, INetworks {
+    struct EVMConfiguration {
+        address everscaleConfiguration;
+        address[] evmConfigurations;
+
+        TvmCell alienTokenRootCode;
+        TvmCell alienTokenWalletCode;
+        TvmCell alienTokenWalletPlatformCode;
+    }
+
+    struct SolanaConfiguration {
+        address everscaleConfiguration;
+        address solanaConfiguration;
+
+        TvmCell alienTokenRootCode;
+        TvmCell alienTokenWalletCode;
+        TvmCell alienTokenWalletPlatformCode;
+    }
+
+    struct PredeployedTokenData {
+        address internalToken;
+        address externalNativeProxyWallet;
+    }
+
+    struct TVMConfiguration {
+        address[] incomingConfigurations;
+        mapping(address => PredeployedTokenData) predeployedTokens;
+
+        TvmCell alienTokenRootCode;
+        TvmCell alienTokenWalletCode;
+        TvmCell alienTokenWalletPlatformCode;
+        Fees defaultFee;
+        mapping(address => Fees) fees;
+        TvmCell tokenFeeCode;
+    }
+
+    struct Fees {
+        uint32 incoming; // deposit
+        uint32 outgoing; // withdraw
+    }
+
+    struct DailyLimits {
+        optional(uint128) incomingLimit;
+        uint128 dailyIncomingVolume;
+
+        optional(uint128) outgoingLimit;
+        uint128 dailyOutgoingVolume;
+
+        uint32 dayStartTimestamp;
+    }
+
+    function apiVersion() external view responsible returns(uint8);
+
+    // Settings
+    function getConfiguration()
+        external
+        view
+        responsible
+        returns (EVMConfiguration, SolanaConfiguration, TVMConfiguration);
+    function getPredeployedTokenData(address token)
+        external
+        view
+        responsible
+        returns (address, optional(PredeployedTokenData));
+    function getPredeployedTokens()
+        external
+        view
+        responsible
+        returns (mapping(address => PredeployedTokenData));
+    function setEVMConfiguration(
+        address _everscaleConfiguration,
+        address[] _evmConfigurations,
+        address _remainingGasTo
+    ) external;
+    function setSolanaConfiguration(
+        address _everscaleConfiguration,
+        address _solanaConfiguration,
+        address _remainingGasTo
+    ) external;
+    function setTVMConfiguration(address[] _incomingConfigurations, address _remainingGasTo) external;
+    function addPredeployedTVMToken(address _incomingExternal, PredeployedTokenData _tokenData, address _remainingGasTo) external;
+    function removePredeployedTVMToken(address _incomingExternal, address _remainingGasTo) external;
+
+    function setEVMAlienTokenRootCode(TvmCell _tokenRootCode, address _remainingGasTo) external;
+    function setEVMAlienTokenWalletCode(TvmCell _tokenWalletCode, address _remainingGasTo) external;
+    function setOnceEVMAlienTokenPlatformCode(TvmCell _tokenPlatformCode, address _remainingGasTo) external;
+
+    function setSolanaAlienTokenRootCode(TvmCell _tokenRootCode, address _remainingGasTo) external;
+    function setSolanaAlienTokenWalletCode(TvmCell _tokenWalletCode, address _remainingGasTo) external;
+    function setOnceSolanaAlienTokenPlatformCode(TvmCell _tokenPlatformCode, address _remainingGasTo) external;
+
+    function setTVMAlienTokenRootCode(TvmCell _tokenRootCode, address _remainingGasTo) external;
+    function setTVMAlienTokenWalletCode(TvmCell _tokenWalletCode, address _remainingGasTo) external;
+    function setOnceTVMAlienTokenPlatformCode(TvmCell _tokenPlatformCode, address _remainingGasTo) external;
+
+    function setTokenDailyLimits(
+        address _token,
+        optional(uint128) _incomingLimit,
+        optional(uint128) _outgoingLimit,
+        address _remainingGasTo
+    ) external;
+    function getDailyLimits(address _token) external view responsible returns (DailyLimits);
+    function setLimitApprover(address _approver, address _remainingGasTo) external;
+    function getLimitApprover() external view responsible returns (address);
+
+    // fee
+    function getTvmDefaultFee() external view responsible returns(uint32 incomingNumerator,uint32 outgoingNumerator, uint32 denominator);
+    function getTvmTokenFee(address _token) external view responsible returns(uint32 incomingNumerator, uint32 outgoingNumerator, uint32 denominator);
+    function getExpectedTokenFeeAddress(address _token)external responsible view returns(address);
+    function getPlatformCode() external view responsible returns(TvmCell);
+    function getTokenFeeCode() external view responsible returns(TvmCell);
+
+    function setTvmDefaultFeeNumerator(uint32 _incoming, uint32 _outgoing) external;
+    function setPlatformCode(TvmCell _code) external;
+    function setTokenFeeCode(TvmCell _code) external;
+    function setTvmTokenFee(address _token, uint32 _incoming, uint32 _outgoing) external;
+
+    function deleteTvmTokenFee(address _token) external;
+    function withdrawTokenFee(address _token, address _recipient) external;
+    function upgradeTokenFee(address _token, address _remainingGasTo) external view;
+
+    // Token merging
+    function setManager(address _manager) external;
+    function setMergePool(TvmCell _mergePool) external;
+    function setMergeRouter(TvmCell _mergeRouter) external;
+    function setMergePoolPlatform(TvmCell _mergePoolPlatform) external;
+
+    function upgradeMergePool(
+        address pool
+    ) external;
+
+    function deriveMergeRouter(
+        address token
+    ) external responsible returns (address);
+
+    function deployMergeRouter(
+        address token
+    ) external;
+
+    function deriveMergePool(
+        uint256 nonce
+    ) external responsible returns (address);
+
+    function deployMergePool(
+        uint256 nonce,
+        address[] tokens,
+        uint256 canonId
+    ) external;
+
+    // Merge pool deposit / withdrawal
+    function mintTokensByMergePool(
+        uint nonce,
+        address token,
+        uint128 amount,
+        address recipient,
+        address remainingGasTo,
+        TvmCell payload
+    ) external;
+
+    function withdrawTokensToEVMByMergePool(
+        uint mergePoolNonce,
+        uint32 nonce,
+        address canonToken,
+        uint128 canonAmount,
+        address token,
+        uint128 amount,
+        uint160 recipient,
+        address remainingGasTo,
+        address sender,
+        EVMCallback callback
+    ) external;
+
+    function withdrawTokensToTVMByMergePool(
+        uint mergePoolNonce,
+        uint32 nonce,
+        address _canonToken,
+        uint128 _canonAmount,
+        address token,
+        uint128 amount,
+        address remainingGasTo,
+        address sender,
+        TvmCell withdrawPayload
+    ) external;
+
+    function withdrawTokensToSolanaByMergePool(
+        uint mergePoolNonce,
+        uint32 nonce,
+        address canonToken,
+        uint128 canonAmount,
+        address token,
+        uint128 amount,
+        uint256 recipient,
+        address remainingGasTo,
+        address sender,
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
+        bool executePayloadNeeded,
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
+        bytes solanaPayload
+    ) external;
+
+    // Derive token root address
+    function deriveSolanaAlienTokenRoot(
+        uint256 base_token,
+        string name,
+        string symbol,
+        uint8 decimals
+    ) external responsible returns (address);
+
+    function deriveEVMAlienTokenRoot(
+        uint256 base_chainId,
+        uint160 base_token,
+        string name,
+        string symbol,
+        uint8 decimals
+    ) external responsible returns (address);
+
+    function deriveTVMAlienTokenRoot(
+        int32 base_chainId,
+        address base_token,
+        address native_proxy_wallet,
+        string name,
+        string symbol,
+        uint8 decimals
+    ) external responsible returns (address);
+
+    // Deploy token root
+    function deployEVMAlienToken(
+        uint256 chainId,
+        uint160 token,
+        string name,
+        string symbol,
+        uint8 decimals,
+        address remainingGasTo
+    ) external;
+
+    function deploySolanaAlienToken(
+        uint256 token,
+        string name,
+        string symbol,
+        uint8 decimals,
+        address remainingGasTo
+    ) external;
+
+    function deployTVMAlienToken(
+        int32 chainId,
+        address token,
+        address native_proxy_wallet,
+        string name,
+        string symbol,
+        uint8 decimals,
+        address remainingGasTo
+    ) external;
+
+    // deploy token fees
+    function deployTokenFee(
+        address _token,
+        address _remainingGasTo
+    ) external;
+
+    // Events specification
+    event TvmTvmAlien(
+        int32 destinationChainId,
+
+        address baseToken,
+        string name,
+        string symbol,
+        uint8 decimals,
+        address nativeProxyWallet,
+
+        address sender,
+        address recipient,
+        uint128 amount,
+
+        uint256 attachedGas,
+        uint128 expectedGas,
+        address remainingGasTo,
+        optional(TvmCell) payload
+    );
+
+    event IncomingFeeTaken(uint128 fee, address token, uint256 msgHash);
+    event OutgoingFeeTaken(uint128 fee, address token);
+
+    event OutgoingLimitReached(address token);
+}

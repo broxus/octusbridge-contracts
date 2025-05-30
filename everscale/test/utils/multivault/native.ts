@@ -5,7 +5,7 @@ import {
   EverscaleEthereumEventConfigurationAbi,
   EverscaleSolanaEventConfigurationAbi,
   FactorySource,
-  ProxyMultiVaultNative_V7Abi,
+  ProxyMultiVaultNative_V8Abi,
   SolanaEverscaleEventConfigurationAbi,
   TvmTvmEventConfigurationAbi,
   BridgeTokenFeeAbi,
@@ -32,7 +32,7 @@ export const setupNativeMultiVault = async (
     Contract<EverscaleEthereumEventConfigurationAbi>,
     Contract<SolanaEverscaleEventConfigurationAbi>,
     Contract<EverscaleSolanaEventConfigurationAbi>,
-    Contract<ProxyMultiVaultNative_V7Abi>,
+    Contract<ProxyMultiVaultNative_V8Abi>,
     Contract<TvmTvmEventConfigurationAbi>,
   ]
 > => {
@@ -41,7 +41,7 @@ export const setupNativeMultiVault = async (
 
   // Deploy proxy
   const { contract: proxy } = await locklift.factory.deployContract({
-    contract: "ProxyMultiVaultNative_V7",
+    contract: "ProxyMultiVaultNative_V8",
     constructorParams: {
       owner_: owner.address,
     },
@@ -52,7 +52,7 @@ export const setupNativeMultiVault = async (
     value: locklift.utils.toNano(15),
   });
 
-  await logContract("ProxyMultiVaultNative_V7", proxy.address);
+  await logContract("ProxyMultiVaultNative_V8", proxy.address);
 
   // Load event contracts
   const ethereumEverscaleEvent = await locklift.factory.getContractArtifacts("MultiVaultEVMEverscaleEventNative");
@@ -147,7 +147,7 @@ export const setupNativeMultiVault = async (
 export const deployBridgeTokenFeeAndSetFee = async (
   owner: Account,
   token: Contract<FactorySource["TokenRoot"]>,
-  proxy: Contract<FactorySource["ProxyMultiVaultNative_V7"]>,
+  proxy: Contract<FactorySource["ProxyMultiVaultNative_V8"]>,
   incoming: number,
   outgoing: number
 ): Promise<[Contract<BridgeTokenFeeAbi>, Contract<TokenWalletAbi>]> => {

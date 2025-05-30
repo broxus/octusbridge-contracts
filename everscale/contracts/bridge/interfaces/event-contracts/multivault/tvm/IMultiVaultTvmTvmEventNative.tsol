@@ -26,4 +26,6 @@ interface IMultiVaultTvmTvmEventNative {
         address tokenWallet_,
         uint128 bounty_
     );
+
+    function dailyLimitReached(address _approver) external;
 }

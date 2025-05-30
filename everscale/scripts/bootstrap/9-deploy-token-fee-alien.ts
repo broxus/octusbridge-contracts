@@ -1,4 +1,4 @@
-import {ProxyMultiVaultAlien_V9Abi, ProxyMultiVaultNative_V7Abi} from "../../build/factorySource";
+import {ProxyMultiVaultAlien_V10Abi, ProxyMultiVaultNative_V8Abi} from "../../build/factorySource";
 import {getConfig} from "./configs";
 import assert from "node:assert";
 
@@ -6,7 +6,7 @@ const main = async () => {
   const config = getConfig();
   assert(!!config, "Config should be defined");
   const admin = locklift.deployments.getAccount('Admin').account;
-  const proxyAlien = locklift.deployments.getContract<ProxyMultiVaultAlien_V9Abi>('ProxyMultiVaultAlien');
+  const proxyAlien = locklift.deployments.getContract<ProxyMultiVaultAlien_V10Abi>('ProxyMultiVaultAlien');
 
 // d174d4b5cc0e07bdbb1447068e2c58e287d2ab8ad644027e69ba67720ff3a08c
 //  c18475e7dad3f2229fb05a400d1907e14da4a7ce2ebdb612eef067a1578e7b3e

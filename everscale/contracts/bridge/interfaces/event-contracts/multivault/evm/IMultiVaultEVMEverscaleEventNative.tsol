@@ -26,5 +26,6 @@ interface IMultiVaultEVMEverscaleEventNative {
         address tokenWallet_
     );
 
+    function dailyLimitReached(address _approver) external;
     function notEnoughLiquidity() external;
 }

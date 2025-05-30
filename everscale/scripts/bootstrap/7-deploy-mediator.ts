@@ -1,7 +1,7 @@
 import {Address} from "locklift";
 import {logContract} from "../../test/utils/logger";
 import {isValidTonAddress} from "../../test/utils";
-import {ProxyMultiVaultNative_V6Abi} from "../../build/factorySource";
+import {ProxyMultiVaultNative_V8Abi} from "../../build/factorySource";
 const prompts = require("prompts");
 const ora = require("ora");
 
@@ -17,7 +17,7 @@ const main = async () => {
         }
     ]);
 
-    const proxyMultiVaultNative = locklift.deployments.getContract<ProxyMultiVaultNative_V6Abi>('ProxyMultiVaultNative');
+    const proxyMultiVaultNative = locklift.deployments.getContract<ProxyMultiVaultNative_V8Abi>('ProxyMultiVaultNative');
 
     const AlienTokenWalletPlatform = await locklift.factory.getContractArtifacts('AlienTokenWalletPlatform');
     const signer = (await locklift.keystore.getSigner("0"))!;

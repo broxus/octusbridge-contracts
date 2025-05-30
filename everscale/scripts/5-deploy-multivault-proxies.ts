@@ -22,7 +22,7 @@ const main = async () => {
 
   // Deploy proxy
   const { contract: proxyAlien } = await locklift.factory.deployContract({
-    contract: "ProxyMultiVaultAlien_V9",
+    contract: "ProxyMultiVaultAlien_V10",
     constructorParams: {
       owner_: response.owner,
     },
@@ -35,13 +35,13 @@ const main = async () => {
 
   spinner.stop();
 
-  await logContract("ProxyMultiVaultAlien_V9", proxyAlien.address);
+  await logContract("ProxyMultiVaultAlien_V10", proxyAlien.address);
 
   spinner.start("Deploy native proxy");
 
   // Deploy proxy
   const { contract: proxyNative } = await locklift.factory.deployContract({
-    contract: "ProxyMultiVaultNative_V7",
+    contract: "ProxyMultiVaultNative_V8",
     constructorParams: {
       owner_: response.owner,
     },
@@ -54,7 +54,7 @@ const main = async () => {
 
   spinner.stop();
 
-  await logContract("ProxyMultiVaultNative_V7", proxyNative.address);
+  await logContract("ProxyMultiVaultNative_V8", proxyNative.address);
 };
 
 main()

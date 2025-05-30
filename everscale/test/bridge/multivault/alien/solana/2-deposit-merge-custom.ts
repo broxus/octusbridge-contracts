@@ -14,7 +14,7 @@ import {
   MergePool_V3Abi,
   MergeRouterAbi,
   MultiVaultSolanaEverscaleEventAlienAbi,
-  ProxyMultiVaultAlien_V9Abi,
+  ProxyMultiVaultAlien_V10Abi,
   SolanaEverscaleEventConfigurationAbi,
   StakingMockupAbi,
   TokenRootAbi,

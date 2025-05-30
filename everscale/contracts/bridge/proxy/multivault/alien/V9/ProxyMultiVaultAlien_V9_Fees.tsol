@@ -1,7 +1,7 @@
 pragma ever-solidity >= 0.62.0;
 
 import "./ProxyMultiVaultAlien_V9_Token.tsol";
-import "../../../../../utils/Platform.tsol";
+import "../../../../../utils/TokenFeePlatform.tsol";
 import "../../../../interfaces/proxy/IBridgeTokenFee.tsol";
 
 abstract contract ProxyMultiVaultAlien_V9_Fees is ProxyMultiVaultAlien_V9_Token {
@@ -90,7 +90,7 @@ abstract contract ProxyMultiVaultAlien_V9_Fees is ProxyMultiVaultAlien_V9_Token 
     function _deployTokenFee(address _token, address _remainingGasTo) internal view {
         TvmCell emptyParams;
 
-        new Platform {
+        new TokenFeePlatform{
             stateInit: _buildTokenFeeStateInit(_token),
             value: 0,
             flag: MsgFlag.REMAINING_GAS
@@ -125,7 +125,7 @@ abstract contract ProxyMultiVaultAlien_V9_Fees is ProxyMultiVaultAlien_V9_Token 
         returns(TvmCell)
     {
         return tvm.buildStateInit({
-            contr: Platform,
+            contr: TokenFeePlatform,
             varInit: {
                 root: address(this),
                 platformType: 0,

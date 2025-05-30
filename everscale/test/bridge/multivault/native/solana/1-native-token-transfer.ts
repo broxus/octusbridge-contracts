@@ -9,7 +9,7 @@ import {
   EverscaleEthereumEventConfigurationAbi,
   EverscaleSolanaEventConfigurationAbi,
   MultiVaultEverscaleSolanaEventNativeAbi,
-  ProxyMultiVaultNative_V7Abi,
+  ProxyMultiVaultNative_V8Abi,
   SolanaEverscaleEventConfigurationAbi,
   StakingMockupAbi,
   TokenRootAbi,
@@ -36,7 +36,7 @@ let ethereumEverscaleEventConfiguration: Contract<EthereumEverscaleEventConfigur
 let everscaleEthereumEventConfiguration: Contract<EverscaleEthereumEventConfigurationAbi>;
 let solanaEverscaleEventConfiguration: Contract<SolanaEverscaleEventConfigurationAbi>;
 let everscaleSolanaEventConfiguration: Contract<EverscaleSolanaEventConfigurationAbi>;
-let proxy: Contract<ProxyMultiVaultNative_V7Abi>;
+let proxy: Contract<ProxyMultiVaultNative_V8Abi>;
 let initializer: Account;
 
 let tokenRoot: Contract<TokenRootAbi>;

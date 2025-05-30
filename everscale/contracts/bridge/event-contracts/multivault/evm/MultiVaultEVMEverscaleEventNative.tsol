@@ -36,6 +36,14 @@ contract MultiVaultEVMEverscaleEventNative is
     uint128 public bounty;
     address public eventTokenWallet;
 
+    address public limitApprover;
+    bool public isLimitApproved;
+
+    modifier onlyLimitApprover() {
+        require(msg.sender == limitApprover && limitApprover.value != 0, ErrorCodes.SENDER_IS_NOT_LIMIT_APPROVER);
+        _;
+    }
+
     constructor(
         address _initializer,
         TvmCell _meta
@@ -149,6 +157,9 @@ contract MultiVaultEVMEverscaleEventNative is
 
     function onConfirm() internal override {
         TvmCell metaData = abi.encode(
+            address(this),
+            isLimitApproved,
+            token,
             tokenWallet,
             amount,
             recipient,
@@ -158,6 +169,52 @@ contract MultiVaultEVMEverscaleEventNative is
         IEthereumEverscaleProxyExtended(eventInitData.configuration).onEventConfirmedExtended{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, metaData, initializer);
+    }
+
+    function dailyLimitReached(address _approver) external override {
+        require(msg.sender == proxy && proxy.value != 0, ErrorCodes.SENDER_NOT_PROXY);
+
+        _setStatusLimitApprove(_approver);
+
+        limitApprover = _approver;
+    }
+
+    function approveLimit() external onlyLimitApprover {
+        isLimitApproved = true;
+
+        setStatusConfirmed();
+        onConfirm();
+    }
+
+    function rejectLimit(
+        uint160 _refundRecipient,
+        string _tokenName,
+        string _tokenSymbol,
+        uint8 _tokenDecimals
+    ) external onlyLimitApprover {
+        _setStatusCancelled();
+
+        TvmCell transferData = abi.encode(
+            _refundRecipient,
+            uint256(eventInitData.chainId),
+            _tokenName,
+            _tokenSymbol,
+            _tokenDecimals,
+            token,
+            tokenWallet,
+            initializer
+        );
+
+        TvmCell withdrawPayload = abi.encode(
+            amount,
+            recipient,
+            transferData
+        );
+
+        IEvmEventCancelled(eventInitData.configuration)
+            .onEVMEventCancelled{
+                flag: MsgFlag.ALL_NOT_RESERVED
+            }(eventInitData, withdrawPayload);
     }
 
     function notEnoughLiquidity() external override {

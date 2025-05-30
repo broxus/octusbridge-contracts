@@ -6,7 +6,7 @@ import {
   EverscaleEthereumEventConfigurationAbi,
   EverscaleSolanaEventConfigurationAbi,
   FactorySource,
-  ProxyMultiVaultAlien_V9Abi,
+  ProxyMultiVaultAlien_V10Abi,
   SolanaEverscaleEventConfigurationAbi,
   TokenWalletAbi,
   TrustlessVerifierMockupAbi,
@@ -33,7 +33,7 @@ export const setupAlienMultiVault = async (
     Contract<EverscaleEthereumEventConfigurationAbi>,
     Contract<SolanaEverscaleEventConfigurationAbi>,
     Contract<EverscaleSolanaEventConfigurationAbi>,
-    Contract<ProxyMultiVaultAlien_V9Abi>,
+    Contract<ProxyMultiVaultAlien_V10Abi>,
     Contract<TvmTvmEventConfigurationAbi>,
   ]
 > => {
@@ -42,7 +42,7 @@ export const setupAlienMultiVault = async (
 
   // Deploy proxy
   const { contract: proxy } = await locklift.factory.deployContract({
-    contract: "ProxyMultiVaultAlien_V9",
+    contract: "ProxyMultiVaultAlien_V10",
     constructorParams: {
       owner_: owner.address,
     },
@@ -53,7 +53,7 @@ export const setupAlienMultiVault = async (
     value: locklift.utils.toNano(15),
   });
 
-  await logContract("ProxyMultiVaultAlien_V9", proxy.address);
+  await logContract("ProxyMultiVaultAlien_V10", proxy.address);
 
   // Load event contracts
   const ethereumEverscaleEvent = locklift.factory.getContractArtifacts("MultiVaultEVMEverscaleEventAlien");
@@ -106,7 +106,7 @@ export const setupAlienMultiVault = async (
 
   // Set merging
   const MergeRouter = locklift.factory.getContractArtifacts("MergeRouter");
-  const MergePool = locklift.factory.getContractArtifacts("MergePool_V6");
+  const MergePool = locklift.factory.getContractArtifacts("MergePool_V7");
   const MergePoolPlatform = locklift.factory.getContractArtifacts("MergePoolPlatform");
 
   await proxy.methods
@@ -150,7 +150,7 @@ export const setupAlienMultiVault = async (
 };
 
 const setEvmConfiguration = async (
-  proxy: Contract<ProxyMultiVaultAlien_V9Abi>,
+  proxy: Contract<ProxyMultiVaultAlien_V10Abi>,
   owner: Account,
   everscaleConfiguration: Contract<EverscaleEthereumEventConfigurationAbi>,
   evmConfigurations: Contract<EthereumEverscaleEventConfigurationAbi>[],
@@ -214,7 +214,7 @@ const setEvmConfiguration = async (
 };
 
 const setSolanaConfiguration = async (
-  proxy: Contract<ProxyMultiVaultAlien_V9Abi>,
+  proxy: Contract<ProxyMultiVaultAlien_V10Abi>,
   owner: Account,
   everscaleConfiguration: Contract<EverscaleSolanaEventConfigurationAbi>,
   solanaConfiguration: Contract<SolanaEverscaleEventConfigurationAbi>,
@@ -278,7 +278,7 @@ const setSolanaConfiguration = async (
 };
 
 const setTVMConfiguration = async (
-  proxy: Contract<ProxyMultiVaultAlien_V9Abi>,
+  proxy: Contract<ProxyMultiVaultAlien_V10Abi>,
   owner: Account,
   incomingConfigurations: Contract<TvmTvmEventConfigurationAbi>[],
 ): Promise<void> => {
@@ -340,11 +340,11 @@ const setTVMConfiguration = async (
 };
 
 const setCode = async (
-  proxy: Contract<ProxyMultiVaultAlien_V9Abi>,
+  proxy: Contract<ProxyMultiVaultAlien_V10Abi>,
   owner: Account
 ): Promise<void> => {
   const bridgeTokenFeeCode = locklift.factory.getContractArtifacts( "BridgeTokenFee").code;
-  const platformCode = locklift.factory.getContractArtifacts( "Platform").code;
+  const platformCode = locklift.factory.getContractArtifacts( "TokenFeePlatform").code;
 
   //set bridge token fee code
   await proxy.methods.setTokenFeeCode({_code: bridgeTokenFeeCode}).send({
@@ -361,7 +361,7 @@ const setCode = async (
 
 export const getBridgeTokenFee = async (
   token: Contract<FactorySource["TokenRoot"]>,
-  proxy: Contract<FactorySource["ProxyMultiVaultAlien_V9"]>
+  proxy: Contract<FactorySource["ProxyMultiVaultAlien_V10"]>
 ): Promise<Contract<BridgeTokenFeeAbi>> => {
 
     let bridgeTokenFee = await proxy.methods.getExpectedTokenFeeAddress({_token: token.address, answerId: 0})
@@ -373,7 +373,7 @@ export const getBridgeTokenFee = async (
 }
 
 export const setDefaultFee = async (
-  proxy: Contract<FactorySource["ProxyMultiVaultAlien_V9"]>,
+  proxy: Contract<FactorySource["ProxyMultiVaultAlien_V10"]>,
   owner: Account,
   incoming: number,
   outgoing: number
@@ -388,7 +388,7 @@ export const setDefaultFee = async (
 export const deployBridgeTokenFeeAndSetFee = async (
   owner: Account,
   token: Contract<FactorySource["TokenRoot"]>,
-  proxy: Contract<FactorySource["ProxyMultiVaultAlien_V9"]>,
+  proxy: Contract<FactorySource["ProxyMultiVaultAlien_V10"]>,
   incoming: number,
   outgoing: number
 ): Promise<[Contract<BridgeTokenFeeAbi>, Contract<TokenWalletAbi>]> => {

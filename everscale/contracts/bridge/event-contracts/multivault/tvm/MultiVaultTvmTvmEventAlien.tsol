@@ -37,6 +37,14 @@ contract MultiVaultTvmTvmEventAlien is
     uint128 public bounty;
     address public eventTokenWallet;
 
+    address public limitApprover;
+    bool public isLimitApproved;
+
+    modifier onlyLimitApprover() {
+        require(msg.sender == limitApprover && limitApprover.value != 0, ErrorCodes.SENDER_IS_NOT_LIMIT_APPROVER);
+        _;
+    }
+
     constructor(
         address _initializer,
         TvmCell _meta,
@@ -352,7 +360,7 @@ contract MultiVaultTvmTvmEventAlien is
     function onConfirm() internal override {
         // Always check that TVM-TVM event was verified and all contracts were deployed
         if (
-            status == Status.Verified &&
+            (status == Status.Verified || status == Status.LimitApprove) &&
             _tokenDeployStatus == DeployStatus.DEPLOYED &&
             _routerDeployStatus == DeployStatus.DEPLOYED
         ) {
@@ -364,6 +372,7 @@ contract MultiVaultTvmTvmEventAlien is
             TransitionalData transitionalData = getTransitionalData();
 
             TvmCell metaData = abi.encode(
+                isLimitApproved,
                 transitionalData.target_token,
                 transitionalData.target_amount,
                 eventData.recipient,
@@ -646,6 +655,46 @@ contract MultiVaultTvmTvmEventAlien is
         );
     }
 
+    function dailyLimitReached(address _approver) external override {
+        TransitionalData transitionalData = getTransitionalData();
+
+        require(msg.sender == transitionalData.proxy && transitionalData.proxy.value != 0, ErrorCodes.SENDER_NOT_PROXY);
+        require(status == Status.Confirmed, ErrorCodes.WRONG_STATUS);
+
+        status = Status.LimitApprove;
+
+        emit LimitApprove(_approver);
+
+        limitApprover = _approver;
+    }
+
+    function approveLimit() external onlyLimitApprover {
+        isLimitApproved = true;
+
+        onConfirm();
+    }
+
+    function rejectLimit(
+        address _newRecipient,
+        address _remainingGasTo,
+        uint128 _expectedGas,
+        optional(TvmCell) _eventPayload,
+        optional(TvmCell) _predeployedTokenData
+    ) external onlyLimitApprover {
+        EventData eventData = getEventData();
+
+        require(status == Status.LimitApprove, ErrorCodes.WRONG_STATUS);
+
+        _cancel(
+            eventData,
+            _newRecipient,
+            _remainingGasTo,
+            _expectedGas,
+            _eventPayload,
+            _predeployedTokenData
+        );
+    }
+
     function notEnoughLiquidity() external override {
         TransitionalData transitionalData = getTransitionalData();
 
@@ -684,11 +733,31 @@ contract MultiVaultTvmTvmEventAlien is
         require(status == Status.LiquidityRequested, ErrorCodes.WRONG_STATUS);
         require(msg.sender == eventData.recipient || msg.sender == eventData.sender, ErrorCodes.SENDER_NOT_RECIPIENT);
 
+        _cancel(
+            eventData,
+            _newRecipient,
+            _remainingGasTo,
+            _expectedGas,
+            _eventPayload,
+            _predeployedTokenData
+        );
+    }
+
+    function _cancel(
+        EventData _eventData,
+        address _newRecipient,
+        address _remainingGasTo,
+        uint128 _expectedGas,
+        optional(TvmCell) _eventPayload,
+        optional(TvmCell) _predeployedTokenData
+    ) internal {
         status = Status.Cancelled;
+
         emit Cancelled();
 
         TransitionalData transitionalData = getTransitionalData();
         TvmCell transferData;
+
         if (transitionalData.native_proxy_token_wallet.hasValue()) { // predeployed token
             (
                 string name,
@@ -718,8 +787,8 @@ contract MultiVaultTvmTvmEventAlien is
         }
 
         TvmCell withdrawPayload = abi.encode(
-            eventData.amount,
-            eventData.recipient,
+            _eventData.amount,
+            _eventData.recipient,
             transitionalData.native_proxy_token_wallet.getOrDefault(),
             transferData
         );
@@ -852,7 +921,7 @@ contract MultiVaultTvmTvmEventAlien is
     function retry() external {
         EventData eventData = getEventData();
 
-        require(status == Status.LiquidityRequested, ErrorCodes.WRONG_STATUS); // todo add LimitReached status
+        require(status == Status.LiquidityRequested || status == Status.LimitApprove, ErrorCodes.WRONG_STATUS);
         require(
             msg.sender == eventData.recipient || msg.sender == eventData.sender || msg.sender == initializer,
             ErrorCodes.SENDER_NOT_RECIPIENT

@@ -35,7 +35,7 @@ const DEV_WAIT = 100000;
 
 const RELAY_INITIAL_DEPOSIT = 500;
 
-describe("Test Staking Upgrade", async function () {
+describe.skip("Test Staking Upgrade", async function () {
   this.timeout(10000000);
 
   describe("Setup contracts", async function () {

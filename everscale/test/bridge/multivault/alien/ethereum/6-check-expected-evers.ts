@@ -11,7 +11,7 @@ import {
   EverscaleEthereumEventConfigurationAbi,
   EverscaleSolanaEventConfigurationAbi,
   MultiVaultEVMEverscaleEventAlienAbi,
-  ProxyMultiVaultAlien_V9Abi,
+  ProxyMultiVaultAlien_V10Abi,
   SolanaEverscaleEventConfigurationAbi,
   StakingMockupAbi,
 } from "../../../../../build/factorySource";
@@ -32,7 +32,7 @@ let everscaleEthereumEventConfiguration: Contract<EverscaleEthereumEventConfigur
 let solanaEverscaleEventConfiguration: Contract<SolanaEverscaleEventConfigurationAbi>;
 let everscaleSolanaEventConfiguration: Contract<EverscaleSolanaEventConfigurationAbi>;
 let initializer: Account;
-let proxy: Contract<ProxyMultiVaultAlien_V9Abi>;
+let proxy: Contract<ProxyMultiVaultAlien_V10Abi>;
 
 let eventContract: Contract<MultiVaultEVMEverscaleEventAlienAbi>;
 

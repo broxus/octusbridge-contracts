@@ -1,12 +1,7 @@
-import {Ed25519KeyPair} from "nekoton-wasm";
-import {Address, Contract} from "locklift";
-import {
-    EthereumEverscaleBaseEventAbi,
-    EverscaleEthereumBaseEventAbi, EverscaleSolanaBaseEventAbi,
-    SolanaEverscaleBaseEventAbi
-} from "../../build/factorySource";
-const logger = require("mocha-logger");
+import { Ed25519KeyPair } from "nekoton-wasm";
+import { Address } from "locklift";
 
+const logger = require("mocha-logger");
 
 export enum EventType {
     EthereumEverscale,
@@ -23,17 +18,15 @@ export enum EventAction {
 export const getRequiredVotes = async (
     eventContract_: Address,
 ): Promise<number> => {
-    const eventContract = await locklift.factory.getDeployedContract(
+    const eventContract = locklift.factory.getDeployedContract(
         "EthereumEverscaleBaseEvent",
         eventContract_
     );
 
-    const requiredVotes = await eventContract.methods
+    return eventContract.methods
         .requiredVotes()
         .call()
         .then((t) => parseInt(t.requiredVotes, 10));
-
-    return requiredVotes;
 }
 
 export const processEvent = async (
@@ -60,13 +53,17 @@ export const processEvent = async (
             );
 
             if (action_ == EventAction.Confirm) {
-                vote = locklift.tracing.trace(eventContract.methods.confirm({
-                    voteReceiver: eventContract_
-                }).sendExternal({publicKey: relay.publicKey}), {raise: false});
+                vote = locklift.transactions.waitFinalized(
+                  eventContract.methods
+                    .confirm({ voteReceiver: eventContract_ })
+                    .sendExternal({ publicKey: relay.publicKey })
+                );
             } else {
-                vote = eventContract.methods.reject({
-                    voteReceiver: eventContract_
-                }).sendExternal({publicKey: relay.publicKey});
+                vote = locklift.transactions.waitFinalized(
+                  eventContract.methods
+                    .reject({ voteReceiver: eventContract_ })
+                    .sendExternal({ publicKey: relay.publicKey })
+                );
             }
         } else if (type_ == EventType.SolanaEverscale) {
             const eventContract = locklift.factory.getDeployedContract(
@@ -75,13 +72,17 @@ export const processEvent = async (
             );
 
             if (action_ == EventAction.Confirm) {
-                vote = eventContract.methods.confirm({
-                    voteReceiver: eventContract_
-                }).sendExternal({publicKey: relay.publicKey});
+                vote = locklift.transactions.waitFinalized(
+                  eventContract.methods
+                    .confirm({ voteReceiver: eventContract_ })
+                    .sendExternal({ publicKey: relay.publicKey })
+                );
             } else {
-                vote = eventContract.methods.reject({
-                    voteReceiver: eventContract_
-                }).sendExternal({publicKey: relay.publicKey});
+                vote = locklift.transactions.waitFinalized(
+                  eventContract.methods
+                    .reject({ voteReceiver: eventContract_ })
+                    .sendExternal({ publicKey: relay.publicKey })
+                );
             }
         } else if (type_ == EventType.EverscaleSolana) {
             const eventContract = locklift.factory.getDeployedContract(
@@ -90,13 +91,17 @@ export const processEvent = async (
             );
 
             if (action_ == EventAction.Confirm) {
-                vote = eventContract.methods.confirm({
-                    voteReceiver: eventContract_,
-                }).sendExternal({publicKey: relay.publicKey});
+                vote = locklift.transactions.waitFinalized(
+                  eventContract.methods
+                    .confirm({ voteReceiver: eventContract_ })
+                    .sendExternal({ publicKey: relay.publicKey })
+                );
             } else {
-                vote = eventContract.methods.reject({
-                    voteReceiver: eventContract_,
-                }).sendExternal({publicKey: relay.publicKey});
+                vote = locklift.transactions.waitFinalized(
+                  eventContract.methods
+                    .reject({ voteReceiver: eventContract_ })
+                    .sendExternal({ publicKey: relay.publicKey })
+                );
             }
         } else if (type_ == EventType.EverscaleEthereum) {
             const eventContract = locklift.factory.getDeployedContract(
@@ -105,14 +110,20 @@ export const processEvent = async (
             );
 
             if (action_ == EventAction.Confirm) {
-                vote = eventContract.methods.confirm({
-                    voteReceiver: eventContract_,
-                    signature: ''
-                }).sendExternal({publicKey: relay.publicKey});
+                vote = locklift.transactions.waitFinalized(
+                  eventContract.methods
+                    .confirm({
+                        voteReceiver: eventContract_,
+                        signature: ''
+                    })
+                    .sendExternal({ publicKey: relay.publicKey })
+                );
             } else {
-                vote = eventContract.methods.reject({
-                    voteReceiver: eventContract_,
-                }).sendExternal({publicKey: relay.publicKey});
+                vote = locklift.transactions.waitFinalized(
+                  eventContract.methods
+                    .reject({ voteReceiver: eventContract_ })
+                    .sendExternal({ publicKey: relay.publicKey })
+                );
             }
         }
 
@@ -122,6 +133,10 @@ export const processEvent = async (
     const txs = await Promise.all(votes);
 
     // for (const tx of txs) {
-    //     await tx.traceTree.beautyPrint();
+    //   const { traceTree } = await locklift.tracing.trace(tx.extTransaction, {
+    //     raise: false,
+    //   });
+    //
+    //   await traceTree?.beautyPrint();
     // }
 }

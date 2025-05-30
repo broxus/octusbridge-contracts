@@ -348,6 +348,14 @@
 			]
 		},
 		{
+			"name": "LimitApprove",
+			"inputs": [
+				{"name":"approver","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "LiquidityRequested",
 			"inputs": [
 				{"name":"bounty","type":"uint128"}

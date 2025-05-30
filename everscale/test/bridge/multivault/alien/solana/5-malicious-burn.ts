@@ -9,7 +9,7 @@ import {
   EverscaleSolanaEventConfigurationAbi,
   SolanaEverscaleEventConfigurationAbi,
   FactorySource,
-  ProxyMultiVaultAlien_V9Abi,
+  ProxyMultiVaultAlien_V10Abi,
   StakingMockupAbi,
 } from "../../../../../build/factorySource";
 import { Account } from "everscale-standalone-client/nodejs";
@@ -32,7 +32,7 @@ let everscaleEthereumEventConfiguration: Contract<EverscaleEthereumEventConfigur
 let solanaEverscaleEventConfiguration: Contract<SolanaEverscaleEventConfigurationAbi>;
 let everscaleSolanaEventConfiguration: Contract<EverscaleSolanaEventConfigurationAbi>;
 let initializer: Account;
-let proxy: Contract<ProxyMultiVaultAlien_V9Abi>;
+let proxy: Contract<ProxyMultiVaultAlien_V10Abi>;
 
 describe("Test event contract behaviour when Alien token is incorrect", async function () {
   this.timeout(10000000);

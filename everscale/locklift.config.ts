@@ -1,12 +1,12 @@
-     import { LockliftConfig, lockliftChai } from "locklift";
-import { FactorySource } from "./build/factorySource";
+import "@broxus/locklift-verifier";
+import "@broxus/locklift-deploy";
 import "dotenv/config";
-
 import chai from "chai";
 
-import "locklift-verifier";
-import "@broxus/locklift-deploy";
+import { LockliftConfig, lockliftChai } from "locklift";
 import { Deployments } from "@broxus/locklift-deploy";
+
+import { FactorySource } from "./build/factorySource";
 
 chai.use(lockliftChai);
 
@@ -30,7 +30,7 @@ const config: LockliftConfig = {
   compiler: {
     version: "0.71.0",
     externalContracts: {
-      "../node_modules/ton-eth-bridge-token-contracts": [
+      "../node_modules/ton-eth-bridge-token-contracts/contracts": [
         "TokenRoot",
         "TokenWallet",
         "TokenRootUpgradeable",
@@ -38,6 +38,7 @@ const config: LockliftConfig = {
         "TokenWalletPlatform",
       ],
       build_prod: ["Bridge"],
+      "../node_modules/@broxus/contracts/contracts/platform": ["Platform"],
     },
   },
   linker: {
@@ -58,6 +59,7 @@ const config: LockliftConfig = {
         data: {},
       },
       keys: {
+        phrase: process.env.LOCAL_PHRASE,
         amount: 20,
       },
     },
@@ -76,6 +78,7 @@ const config: LockliftConfig = {
         key: process.env.LOCAL_GIVER_KEY!,
       },
       keys: {
+        phrase: process.env.LOCAL_PHRASE,
         amount: 20,
       },
     },

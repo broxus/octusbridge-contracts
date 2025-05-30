@@ -133,6 +133,14 @@
 			],
 			"outputs": [
 			]
+		},
+		{
+			"name": "LimitApprove",
+			"inputs": [
+				{"name":"approver","type":"address"}
+			],
+			"outputs": [
+			]
 		}
 	],
 	"fields": [

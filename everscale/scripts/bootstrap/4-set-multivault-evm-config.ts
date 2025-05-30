@@ -1,4 +1,4 @@
-import { ProxyMultiVaultAlien_V9Abi, ProxyMultiVaultNative_V7Abi } from "../../build/factorySource";
+import { ProxyMultiVaultAlien_V10Abi, ProxyMultiVaultNative_V8Abi } from "../../build/factorySource";
 
 import { getConfig } from "./configs";
 import assert from "node:assert";
@@ -15,8 +15,8 @@ const DISABLE_CONFIGURATIONS: { address: Address, endBlock?: string, endTimestam
 
 const main = async (): Promise<void> => {
     const admin = locklift.deployments.getAccount('Admin').account;
-    const proxyMultiVaultAlien = locklift.deployments.getContract<ProxyMultiVaultAlien_V9Abi>('ProxyMultiVaultAlien');
-    const proxyMultiVaultNative = locklift.deployments.getContract<ProxyMultiVaultNative_V7Abi>('ProxyMultiVaultNative');
+    const proxyMultiVaultAlien = locklift.deployments.getContract<ProxyMultiVaultAlien_V10Abi>('ProxyMultiVaultAlien');
+    const proxyMultiVaultNative = locklift.deployments.getContract<ProxyMultiVaultNative_V8Abi>('ProxyMultiVaultNative');
 
     console.log('Set ProxyMultiVaultAlienJetton EVM configuration...');
 

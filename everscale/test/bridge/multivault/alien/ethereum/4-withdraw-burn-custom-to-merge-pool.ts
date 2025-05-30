@@ -6,10 +6,10 @@ import {
   EthereumEverscaleEventConfigurationAbi,
   EverscaleEthereumEventConfigurationAbi,
   EverscaleSolanaEventConfigurationAbi,
-  MergePool_V3Abi,
+  MergePool_V7Abi,
   MergeRouterAbi,
   MultiVaultEverscaleEVMEventAlienAbi,
-  ProxyMultiVaultAlien_V9Abi,
+  ProxyMultiVaultAlien_V10Abi,
   SolanaEverscaleEventConfigurationAbi,
   StakingMockupAbi,
   TokenRootAbi,
@@ -38,13 +38,13 @@ let solanaEverscaleEventConfiguration: Contract<SolanaEverscaleEventConfiguratio
 let everscaleSolanaEventConfiguration: Contract<EverscaleSolanaEventConfigurationAbi>;
 let initializer: Account;
 let eventCloser: Account;
-let proxy: Contract<ProxyMultiVaultAlien_V9Abi>;
+let proxy: Contract<ProxyMultiVaultAlien_V10Abi>;
 
 let alienTokenRoot: Contract<TokenRootAlienEVMAbi>;
 let customTokenRoot: Contract<TokenRootAbi>;
 let initializerCustomTokenWallet: Contract<TokenWalletAbi>;
 let mergeRouter: Contract<MergeRouterAbi>;
-let mergePool: Contract<MergePool_V3Abi>;
+let mergePool: Contract<MergePool_V7Abi>;
 let eventContract: Contract<MultiVaultEverscaleEVMEventAlienAbi>;
 
 describe("Withdraw custom tokens by burning in favor of merge pool", async function () {
@@ -247,17 +247,19 @@ describe("Withdraw custom tokens by burning in favor of merge pool", async funct
       })
       .call();
 
-    const tx = await initializerCustomTokenWallet.methods
-      .burn({
-        amount,
-        remainingGasTo: eventCloser.address,
-        callbackTo: mergePool.address,
-        payload: burnPayload.value0,
-      })
-      .send({
-        from: initializer.address,
-        amount: locklift.utils.toNano(10),
-      });
+    const tx = await locklift.tracing.trace(
+      initializerCustomTokenWallet.methods
+        .burn({
+          amount,
+          remainingGasTo: eventCloser.address,
+          callbackTo: mergePool.address,
+          payload: burnPayload.value0,
+        })
+        .send({
+          from: initializer.address,
+          amount: locklift.utils.toNano(10),
+        }),
+    );
 
     logger.log(`Event initialization tx: ${tx.id.hash}`);
 

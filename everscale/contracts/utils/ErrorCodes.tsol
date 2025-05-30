@@ -56,6 +56,7 @@ library ErrorCodes {
     uint16 constant SENDER_NOT_RECIPIENT = 2332;
     uint16 constant WRONG_BOUNTY = 2333;
     uint16 constant SENDER_NOT_TOKEN_WALLET = 2334;
+    uint16 constant SENDER_IS_NOT_LIMIT_APPROVER = 2335;
 
     // Connector
     uint16 constant DEPLOYER_NOT_BRIDGE = 2420;
@@ -132,6 +133,8 @@ library ErrorCodes {
     uint16 constant NOT_TVM_CONFIG_OR_ALIEN_PROXY = 2711;
     uint16 constant NOT_EVENT_ADDRESS_KEEPER = 2712;
     uint16 constant LOW_MSG_VALUE = 2713;
+    uint16 constant SENDER_IS_NOT_OWNER_OR_WITHDRAWER = 2714;
+    uint16 constant COLD_VAULT_IS_NOT_SET = 2715;
 
     // BridgeTokenFee
      uint16 constant SENDER_IS_NOT_PROXY = 2750;

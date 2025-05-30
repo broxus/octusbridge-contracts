@@ -1,0 +1,115 @@
+pragma ever-solidity >= 0.62.0;
+
+pragma AbiHeader pubkey;
+
+import "../../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V9.tsol";
+import "./ProxyMultiVaultAlien_V10_MergeRouter.tsol";
+
+import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
+import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
+
+
+contract ProxyMultiVaultAlien_V10 is
+    ProxyMultiVaultAlien_V10_MergeRouter,
+    CheckPubKey,
+    RandomNonce
+{
+    constructor(address owner_) checkPubKey {
+        tvm.accept();
+
+        _reserveTargetBalance();
+
+        setOwnership(owner_);
+
+        owner_.transfer({
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        });
+    }
+
+    /// @notice Get current contract API version.
+    /// Each time contract is upgraded, API version is incremented.
+    /// @return Current API version
+    function apiVersion() external override view responsible returns(uint8) {
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} api_version;
+    }
+
+    function upgrade(
+        TvmCell code
+    ) external onlyOwner {
+        TvmCell data = abi.encode(
+            evmConfiguration,
+            solanaConfiguration,
+            tvmConfiguration,
+            _randomNonce,
+            api_version,
+            owner,
+            manager,
+            mergeRouter,
+            mergePool,
+            mergePoolPlatform,
+            mergePoolVersion,
+            proxyMultiVaultNative,
+            platformCode,
+            tokenToDailyLimits,
+            limitApprover
+        );
+
+        tvm.setcode(code);
+        tvm.setCurrentCode(code);
+
+        onCodeUpgrade(data);
+    }
+
+    function onCodeUpgrade(TvmCell data) /*functionID(2)*/ private {
+        tvm.resetStorage();
+
+        (
+            EVMConfiguration evmConfiguration_,
+            SolanaConfiguration solanaConfiguration_,
+            TVMConfiguration tvmConfiguration_,
+            uint _randomNonce_,
+            uint8  api_version_,
+            address owner_,
+
+            address manager_,
+            TvmCell mergeRouter_,
+            TvmCell mergePool_,
+            TvmCell mergePoolPlatform_,
+            uint8 mergePoolVersion_,
+            address proxyMultiVaultNative_,
+            TvmCell platformCode_
+        ) = abi.decode(data, (
+            EVMConfiguration,
+            SolanaConfiguration,
+            TVMConfiguration,
+            uint,
+            uint8,
+            address,
+            address,
+            TvmCell,
+            TvmCell,
+            TvmCell,
+            uint8,
+            address,
+            TvmCell
+        ));
+
+        evmConfiguration = evmConfiguration_;
+        solanaConfiguration = solanaConfiguration_;
+        tvmConfiguration = tvmConfiguration_;
+
+        _randomNonce = _randomNonce_;
+        api_version = api_version_ + 1;
+        owner = owner_;
+
+        manager = manager_;
+        mergeRouter = mergeRouter_;
+        mergePool = mergePool_;
+        mergePoolPlatform = mergePoolPlatform_;
+        mergePoolVersion = mergePoolVersion_;
+        proxyMultiVaultNative = proxyMultiVaultNative_;
+        platformCode = platformCode_;
+    }
+}

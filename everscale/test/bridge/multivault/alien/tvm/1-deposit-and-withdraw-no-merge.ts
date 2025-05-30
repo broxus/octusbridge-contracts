@@ -5,7 +5,7 @@ import { expect } from "chai";
 import {
   AlienTokenWalletUpgradeableAbi,
   CellEncoderStandaloneAbi,
-  ProxyMultiVaultAlien_V9Abi,
+  ProxyMultiVaultAlien_V10Abi,
   StakingMockupAbi,
   TrustlessVerifierMockupAbi,
   TvmTvmEventConfigurationAbi,
@@ -31,7 +31,7 @@ describe("Deposit and withdraw alien TVM token with no merging", () => {
   let alienTvmTvmEventConfiguration: Contract<TvmTvmEventConfigurationAbi>;
   let cellEncoder: Contract<CellEncoderStandaloneAbi>;
   let initializerAlienTokenWallet: Contract<AlienTokenWalletUpgradeableAbi>;
-  let alienProxy: Contract<ProxyMultiVaultAlien_V9Abi>;
+  let alienProxy: Contract<ProxyMultiVaultAlien_V10Abi>;
   let bridgeTokenFee: Contract<BridgeTokenFeeAbi>;
   let tokenRoot: Contract<TokenRootAbi>;
 
@@ -143,7 +143,6 @@ describe("Deposit and withdraw alien TVM token with no merging", () => {
         sender: bridgeOwner.address,
         recipient: bridgeOwner.address,
         amount: (450 - 45).toString(),
-        attachedGas: "9936187000",
         expectedGas: "0",
         remainingGasTo: bridgeOwner.address,
         payload: "te6ccgEBAQEAAgAAAA=="

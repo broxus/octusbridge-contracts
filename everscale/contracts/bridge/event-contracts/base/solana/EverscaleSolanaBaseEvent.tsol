@@ -57,14 +57,15 @@ contract EverscaleSolanaBaseEvent is BaseEvent, IEverscaleSolanaEvent {
         @param eventDataSignature Relay's signature of the TonEvent data
         @param voteReceiver Should be always equal to the event contract address
     */
-    function confirm(address voteReceiver) public {
+    function confirm(address voteReceiver) public externalMsg {
         _checkVoteReceiver(voteReceiver);
 
-        uint relay = msg.pubkey();
-
-        require(votes[relay] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
+        // This check was made in afterSignatureCheck
+        // require(votes[relay] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
 
         tvm.accept();
+
+        uint relay = msg.pubkey();
 
         votes[relay] = Vote.Confirm;
 
@@ -88,14 +89,15 @@ contract EverscaleSolanaBaseEvent is BaseEvent, IEverscaleSolanaEvent {
         @dev Can be called only when event configuration is in Pending status
         @param voteReceiver Should be always equal to the event contract address
     */
-    function reject(address voteReceiver) public {
+    function reject(address voteReceiver) public externalMsg {
         _checkVoteReceiver(voteReceiver);
 
-        uint relay = msg.pubkey();
-
-        require(votes[relay] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
+        // This check was made in afterSignatureCheck
+        // require(votes[relay] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
 
         tvm.accept();
+
+        uint relay = msg.pubkey();
 
         votes[relay] = Vote.Reject;
 

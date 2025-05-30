@@ -6,8 +6,8 @@ import assert from "node:assert";
 
 import {
   TvmTvmEventConfigurationFactoryAbi,
-  ProxyMultiVaultAlien_V9Abi,
-  ProxyMultiVaultNative_V7Abi,
+  ProxyMultiVaultAlien_V10Abi,
+  ProxyMultiVaultNative_V8Abi,
 } from "../../build/factorySource";
 
 import {
@@ -172,8 +172,8 @@ const main = async (): Promise<void> => {
     locklift.deployments.getContract<EverscaleEthereumEventConfigurationFactoryAbi>("EverEthEventConfigFactory");
   const tvmTvmEventConfigFactory =
     locklift.deployments.getContract<TvmTvmEventConfigurationFactoryAbi>("TvmTvmEventConfigFactory");
-  const proxyMultiVaultAlien = locklift.deployments.getContract<ProxyMultiVaultAlien_V9Abi>("ProxyMultiVaultAlien");
-  const proxyMultiVaultNative = locklift.deployments.getContract<ProxyMultiVaultNative_V7Abi>("ProxyMultiVaultNative");
+  const proxyMultiVaultAlien = locklift.deployments.getContract<ProxyMultiVaultAlien_V10Abi>("ProxyMultiVaultAlien");
+  const proxyMultiVaultNative = locklift.deployments.getContract<ProxyMultiVaultNative_V8Abi>("ProxyMultiVaultNative");
   const bridge = locklift.deployments.getContract<BridgeAbi>("Bridge");
   const roundDeployer = locklift.deployments.getContract<RoundDeployerAbi>("RoundDeployer");
 

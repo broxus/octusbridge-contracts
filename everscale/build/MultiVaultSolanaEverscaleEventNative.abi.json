@@ -47,6 +47,28 @@
 			]
 		},
 		{
+			"name": "dailyLimitReached",
+			"inputs": [
+				{"name":"_approver","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "approveLimit",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "rejectLimit",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "getEventInitData",
 			"inputs": [
 				{"name":"answerId","type":"uint32"}
@@ -213,6 +235,22 @@
 			"outputs": [
 				{"name":"nonce","type":"uint32"}
 			]
+		},
+		{
+			"name": "limitApprover",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"limitApprover","type":"address"}
+			]
+		},
+		{
+			"name": "isLimitApproved",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"isLimitApproved","type":"bool"}
+			]
 		}
 	],
 	"data": [
@@ -253,6 +291,14 @@
 			"name": "Rejected",
 			"inputs": [
 				{"name":"reason","type":"uint32"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "LimitApprove",
+			"inputs": [
+				{"name":"approver","type":"address"}
 			],
 			"outputs": [
 			]
@@ -302,6 +348,8 @@
 		{"name":"expected_evers","type":"uint256"},
 		{"name":"payload","type":"cell"},
 		{"name":"proxy","type":"address"},
-		{"name":"tokenWallet","type":"address"}
+		{"name":"tokenWallet","type":"address"},
+		{"name":"limitApprover","type":"address"},
+		{"name":"isLimitApproved","type":"bool"}
 	]
 }

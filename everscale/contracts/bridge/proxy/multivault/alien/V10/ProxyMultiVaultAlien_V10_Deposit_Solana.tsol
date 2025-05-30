@@ -1,0 +1,79 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma ever-solidity >= 0.62.0;
+
+import "../../../../libraries/BridgeOpCodes.tsol";
+
+import "../../../../libraries/EventContractNonce.tsol";
+import "./../../../../interfaces/event-contracts/ISolanaEverscaleEvent.tsol";
+import "./../../../../interfaces/proxy/ISolanaEverscaleProxyExtended.tsol";
+import "./ProxyMultiVaultAlien_V10_Deposit_TVM.tsol";
+import "../../../../interfaces/event-contracts/multivault/solana/IMultiVaultSolanaEverscaleEventAlien.tsol";
+
+abstract contract ProxyMultiVaultAlien_V10_Deposit_Solana is
+    ProxyMultiVaultAlien_V10_Deposit_TVM,
+    ISolanaEverscaleProxyExtended
+{
+    /// @notice Handles alien token transfer from Solana. Token address is derived automatically and MUST
+    /// be deployed before. See note on `deployAlienToken`
+    /// @param remainingGasTo Gas back address
+    function onSolanaEventConfirmedExtended(
+        ISolanaEverscaleEvent.SolanaEverscaleEventInitData eventInitData,
+        TvmCell meta,
+        address remainingGasTo
+    ) external override reserveAtLeastTargetBalance {
+        require(solanaConfiguration.solanaConfiguration == msg.sender, ErrorCodes.NOT_SOLANA_CONFIG);
+
+        (
+            bool isLimitApproved,
+            address eventAddress,
+            address token,
+            uint128 amount,
+            address recipient,
+            TvmCell payload
+        ) = abi.decode(meta, (
+            bool,
+            address,
+            address,
+            uint128,
+            address,
+            TvmCell
+        ));
+
+        (
+            bool isLimitReached,
+            optional(DailyLimits) newLimits
+        ) = _isIncomingDailyLimitReached(token, amount);
+
+        if (!isLimitApproved && isLimitReached) {
+            IMultiVaultSolanaEverscaleEventAlien(eventAddress)
+                .dailyLimitReached{
+                    value: 0,
+                    flag: MsgFlag.ALL_NOT_RESERVED,
+                    bounce: false
+                }(limitApprover);
+
+            return;
+        }
+
+        // Don't updated daily volumes if approved
+        if (!isLimitApproved) {
+            _updateDailyVolumes(token, newLimits);
+        }
+
+        uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
+
+        optional(TvmCell) mintPayload;
+        if (!payload.toSlice().empty()) {
+            mintPayload.set(payload);
+        }
+
+        _mintTokens(
+            token,
+            amount,
+            recipient,
+            remainingGasTo,
+            abi.encode(BridgeOpCodes.BridgeDeposit, nonce, mintPayload),
+            null
+        );
+    }
+}

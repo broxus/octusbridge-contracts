@@ -1,5 +1,5 @@
 import tokens from "../../assets/native_tokens.json";
-import {ProxyMultiVaultNative_V7Abi} from "../../build/factorySource";
+import {ProxyMultiVaultNative_V8Abi} from "../../build/factorySource";
 import {getConfig} from "./configs";
 import {Address} from "locklift";
 import assert from "node:assert";
@@ -10,7 +10,7 @@ const main = async () => {
   assert(!!config, "Config should be defined");
 
   const admin = locklift.deployments.getAccount('Admin').account;
-  const proxyNative = locklift.deployments.getContract<ProxyMultiVaultNative_V7Abi>('ProxyMultiVaultNative');
+  const proxyNative = locklift.deployments.getContract<ProxyMultiVaultNative_V8Abi>('ProxyMultiVaultNative');
 
   for (let i=0; i<tokens.length; i++) {
     let tokenRoot = locklift.factory.getDeployedContract('TokenRoot', new Address(tokens[i]));
