@@ -475,11 +475,11 @@ const deployConfigFactories = async (
   await locklift.deployments.saveContract({
     contractName: 'EthereumEverscaleEventConfigurationFactory',
     address: evmTvmEventConfigFactory.address,
-    deploymentName: 'EvmTvmEventConfigFactory',
+    deploymentName: 'EthEverEventConfigFactory',
   });
 
   console.log(
-    `EvmTvmEventConfigFactory: ${evmTvmEventConfigFactory.address.toString()}`,
+    `EthEverEventConfigFactory: ${evmTvmEventConfigFactory.address.toString()}`,
   );
 
   const { contract: tvmEvmEventConfigFactory } =
@@ -498,11 +498,11 @@ const deployConfigFactories = async (
   await locklift.deployments.saveContract({
     contractName: 'EverscaleEthereumEventConfigurationFactory',
     address: tvmEvmEventConfigFactory.address,
-    deploymentName: 'TvmEvmEventConfigFactory',
+    deploymentName: 'EverEthEventConfigFactory',
   });
 
   console.log(
-    `TvmEvmEventConfigFactory: ${tvmEvmEventConfigFactory.address.toString()}`,
+    `EverEthEventConfigFactory: ${tvmEvmEventConfigFactory.address.toString()}`,
   );
 
   const { contract: tvmTvmEventConfigFactory } =
