@@ -22,6 +22,16 @@ export type Config = {
   TRANSACTION_CHECKERS: Record<number, string>;
   TVM_EVENT_EMITTERS: Record<number, { alien: string; native: string }>;
 
+  // Can approve transfers above limits
+  LIMIT_APPROVER: string;
+
+  // Can withdraw tokens from native proxy to cold vault
+  WITHDRAWER: string;
+  COLD_VAULT: string;
+
+  // Can upgrade contracts
+  MANAGER: string;
+
   GAS: Record<string, string>;
 };
 

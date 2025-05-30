@@ -20,7 +20,7 @@ abstract contract ProxyMultiVaultNative_V8_Base is IProxyMultiVaultNative_V8, In
 
     uint8 api_version;
     address public dex_middleware;
-    address proxyMultiVaultAlien;
+    address public proxyMultiVaultAlien;
 
     uint32 constant FEE_DENOMINATOR = 100_000;
     TvmCell platformCode;
@@ -59,8 +59,13 @@ abstract contract ProxyMultiVaultNative_V8_Base is IProxyMultiVaultNative_V8, In
         external
         view
         responsible
-    returns (EVMConfiguration, SolanaConfiguration) {
-        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} (evmConfiguration, solanaConfiguration);
+        returns (EVMConfiguration, SolanaConfiguration, TVMConfiguration)
+    {
+        return{
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.REMAINING_GAS
+        } (evmConfiguration, solanaConfiguration, tvmConfiguration);
     }
 
     function setEVMConfiguration(

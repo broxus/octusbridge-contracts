@@ -298,7 +298,8 @@
 			],
 			"outputs": [
 				{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"evmConfigurations","type":"address[]"}],"name":"value0","type":"tuple"},
-				{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"solanaConfiguration","type":"address"}],"name":"value1","type":"tuple"}
+				{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"solanaConfiguration","type":"address"}],"name":"value1","type":"tuple"},
+				{"components":[{"name":"incomingConfigurations","type":"address[]"},{"name":"eventAddressKeeperCode","type":"cell"},{"components":[{"name":"incoming","type":"uint32"},{"name":"outgoing","type":"uint32"}],"name":"defaultFee","type":"tuple"},{"components":[{"name":"incoming","type":"uint32"},{"name":"outgoing","type":"uint32"}],"name":"fees","type":"map(address,tuple)"},{"name":"tokenFeeCode","type":"cell"}],"name":"value2","type":"tuple"}
 			]
 		},
 		{
@@ -394,6 +395,14 @@
 			],
 			"outputs": [
 				{"name":"dex_middleware","type":"address"}
+			]
+		},
+		{
+			"name": "proxyMultiVaultAlien",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"proxyMultiVaultAlien","type":"address"}
 			]
 		},
 		{
