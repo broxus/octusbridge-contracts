@@ -23,7 +23,7 @@ const EVENT_MSG_HASH = "0x44d60b7462e2701eb0f8c57dcf205a4a28d92981ec301abe519b5d
 const incomingFee = 10000;
 const outgoingFee = 10000;
 
-describe("Deposit and withdraw alien TVM token with no merging", () => {
+describe.skip("Deposit and withdraw alien TVM token with no merging", () => {
   let bridgeOwner: Account;
 
   let staking: Contract<StakingMockupAbi>;

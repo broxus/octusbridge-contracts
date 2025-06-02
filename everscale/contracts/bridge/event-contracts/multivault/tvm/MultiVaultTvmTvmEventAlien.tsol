@@ -410,7 +410,7 @@ contract MultiVaultTvmTvmEventAlien is
             address recipient,
             uint128 amount,
 
-            uint256 value,
+            uint128 value,
             uint128 expected_gas,
             /*remaining_gas_to*/,
             optional(TvmCell) payload
@@ -418,7 +418,7 @@ contract MultiVaultTvmTvmEventAlien is
             uint32, int32,
             address, string, string, uint8, address,
             address, address, uint128,
-            uint256, uint128, address,
+            uint128, uint128, address,
             optional(TvmCell)
         ));
 

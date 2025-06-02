@@ -103,7 +103,7 @@ contract MultiVaultTvmTvmEventNative is
             uint32, int32,
             address, string, string, uint8, address,
             address, address, uint128,
-            uint256, uint128, address,
+            uint128, uint128, address,
             optional(TvmCell)
         ));
 
