@@ -479,7 +479,7 @@
 				{"name":"sender","type":"address"},
 				{"name":"recipient","type":"address"},
 				{"name":"amount","type":"uint128"},
-				{"name":"attachedGas","type":"uint256"},
+				{"name":"attachedGas","type":"uint128"},
 				{"name":"expectedGas","type":"uint128"},
 				{"name":"remainingGasTo","type":"address"},
 				{"name":"payload","type":"optional(cell)"}

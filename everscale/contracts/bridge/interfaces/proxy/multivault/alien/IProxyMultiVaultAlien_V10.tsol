@@ -277,7 +277,7 @@ interface IProxyMultiVaultAlien_V10 is IEVMCallback, INetworks {
         address recipient,
         uint128 amount,
 
-        uint256 attachedGas,
+        uint128 attachedGas,
         uint128 expectedGas,
         address remainingGasTo,
         optional(TvmCell) payload
