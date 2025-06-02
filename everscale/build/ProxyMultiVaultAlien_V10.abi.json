@@ -177,6 +177,15 @@
 			]
 		},
 		{
+			"name": "onEVMEventCancelled",
+			"inputs": [
+				{"components":[{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"},{"name":"chainId","type":"uint32"}],"name":"value0","type":"tuple"},
+				{"name":"withdrawPayload","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "onTVMEventCancelled",
 			"inputs": [
 				{"components":[{"name":"msgHash","type":"uint256"},{"name":"configuration","type":"address"},{"name":"chainId","type":"int32"}],"name":"_eventInitData","type":"tuple"},

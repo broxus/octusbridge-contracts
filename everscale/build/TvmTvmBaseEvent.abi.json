@@ -37,13 +37,6 @@
 			]
 		},
 		{
-			"name": "notEnoughLiquidity",
-			"inputs": [
-			],
-			"outputs": [
-			]
-		},
-		{
 			"name": "processProof",
 			"inputs": [
 				{"components":[{"name":"msgHash","type":"uint256"},{"name":"messageIndex","type":"uint15"},{"name":"txBlockProof","type":"cell"},{"name":"txProof","type":"cell"}],"name":"eventVoteData","type":"tuple"}

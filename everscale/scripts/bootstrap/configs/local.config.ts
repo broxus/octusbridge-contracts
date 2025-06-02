@@ -40,6 +40,7 @@ export const config: Config = {
   WITHDRAWER: '',
   COLD_VAULT: '',
   MANAGER: '',
+  WNATIVE_ADDRESSES: [''],
 
   GAS: {
     ROUND_DEPLOYER_INSTALL_PLATFORM_ONCE: toNano(11 * GAS_COEFF),

@@ -4,6 +4,55 @@
 	"header": ["time"],
 	"functions": [
 		{
+			"name": "encodeCancelPredeployedTokenDataPayload",
+			"inputs": [
+				{"name":"_name","type":"string"},
+				{"name":"_symbol","type":"string"},
+				{"name":"_decimals","type":"uint8"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
+		},
+		{
+			"name": "encodeProvideLiquidityPayloadTvmTvmAlien",
+			"inputs": [
+				{"name":"_newRecipient","type":"address"},
+				{"name":"_remainingGasTo","type":"address"},
+				{"name":"_expectedGas","type":"uint128"},
+				{"name":"_eventPayload","type":"optional(cell)"},
+				{"name":"_name","type":"string"},
+				{"name":"_symbol","type":"string"},
+				{"name":"_decimals","type":"uint8"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
+		},
+		{
+			"name": "encodeProvideLiquidityPayloadTvmTvmNative",
+			"inputs": [
+				{"name":"_newRecipient","type":"address"},
+				{"name":"_remainingGasTo","type":"address"},
+				{"name":"_expectedGas","type":"uint128"},
+				{"name":"_eventPayload","type":"optional(cell)"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
+		},
+		{
+			"name": "encodeProvideLiquidityPayloadEvmTvmNative",
+			"inputs": [
+				{"name":"_newRecipient","type":"uint160"},
+				{"name":"_remainingGasTo","type":"address"},
+				{"name":"_callback","type":"address"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
+		},
+		{
 			"name": "encodeMediatorPayload",
 			"inputs": [
 				{"name":"operation","type":"uint8"},

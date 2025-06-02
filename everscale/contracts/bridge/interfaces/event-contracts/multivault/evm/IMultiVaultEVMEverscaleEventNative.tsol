@@ -27,5 +27,4 @@ interface IMultiVaultEVMEverscaleEventNative {
     );
 
     function dailyLimitReached(address _approver) external;
-    function notEnoughLiquidity() external;
 }

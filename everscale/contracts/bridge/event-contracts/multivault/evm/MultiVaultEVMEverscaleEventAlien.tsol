@@ -468,27 +468,63 @@ contract MultiVaultEVMEverscaleEventAlien is
         onConfirm();
     }
 
-    function rejectLimit(uint160 _refundRecipient) external onlyLimitApprover {
+    function cancel(
+        uint160 _newRecipient,
+        address _remainingGasTo,
+        IEVMCallback.EVMCallback _callback,
+        address _expectedGasReceiver
+    ) external onlyLimitApprover {
         _setStatusCancelled();
 
         EventData eventData = getEventData();
         TransitionalData transitionalData = getTransitionalData();
 
-        TvmCell transferData = abi.encode(
-            _refundRecipient,
-            transitionalData.token,
-            initializer
-        );
-
         TvmCell withdrawPayload = abi.encode(
             eventData.amount,
             eventData.recipient,
-            transferData
+            _newRecipient,
+            transitionalData.token,
+            _remainingGasTo,
+            _callback
         );
 
         IEvmEventCancelled(eventInitData.configuration)
             .onEVMEventCancelled{
-                flag: MsgFlag.ALL_NOT_RESERVED
+                value: msg.value
             }(eventInitData, withdrawPayload);
+
+        _expectedGasReceiver.transfer({
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+            bounce: false
+        });
+    }
+
+    function rejectLimit(address _expectedGasReceiver) external onlyLimitApprover {
+        require(status() == Status.LimitApprove, ErrorCodes.WRONG_STATUS);
+
+        _setStatusCancelled();
+
+        _expectedGasReceiver.transfer({
+            value: address(this).balance - msg.value,
+            bounce: false
+        });
+
+        msg.sender.transfer({
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+            bounce: false
+        });
+    }
+
+    function retry() external {
+        EventData eventData = getEventData();
+        require(
+            msg.sender == eventData.recipient || msg.sender == initializer,
+            ErrorCodes.SENDER_NOT_RECIPIENT
+        );
+
+        setStatusConfirmed();
+        onConfirm();
     }
 }

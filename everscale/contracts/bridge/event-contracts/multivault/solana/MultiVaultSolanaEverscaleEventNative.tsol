@@ -78,7 +78,7 @@ contract MultiVaultSolanaEverscaleEventNative is
             return;
         }
 
-    ISolanaEverscaleEventConfiguration(eventInitData.configuration).getDetails{
+        ISolanaEverscaleEventConfiguration(eventInitData.configuration).getDetails{
             value: gasToValue(Gas.REQUEST_CONFIGURATION_DETAILS_GAS, address(this).wid),
             callback: MultiVaultSolanaEverscaleEventNative.receiveConfigurationDetails
         }();
@@ -155,6 +155,7 @@ contract MultiVaultSolanaEverscaleEventNative is
         TvmCell metaData = abi.encode(
             address(this),
             isLimitApproved,
+            token,
             tokenWallet,
             amount,
             recipient,

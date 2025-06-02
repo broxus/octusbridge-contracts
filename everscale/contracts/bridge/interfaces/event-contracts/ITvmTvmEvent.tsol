@@ -33,5 +33,4 @@ interface ITvmTvmEvent {
     }
 
     function processProof(ITvmTvmEvent.TvmTvmEventVoteData eventVoteData) external;
-    function notEnoughLiquidity() external;
 }

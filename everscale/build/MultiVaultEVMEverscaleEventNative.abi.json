@@ -64,10 +64,7 @@
 		{
 			"name": "rejectLimit",
 			"inputs": [
-				{"name":"_refundRecipient","type":"uint160"},
-				{"name":"_tokenName","type":"string"},
-				{"name":"_tokenSymbol","type":"string"},
-				{"name":"_tokenDecimals","type":"uint8"}
+				{"name":"_expectedGasReceiver","type":"address"}
 			],
 			"outputs": [
 			]
@@ -75,6 +72,7 @@
 		{
 			"name": "notEnoughLiquidity",
 			"inputs": [
+				{"name":"_wNativeAddresses","type":"map(address,bool)"}
 			],
 			"outputs": [
 			]
@@ -84,7 +82,8 @@
 			"inputs": [
 				{"name":"_newRecipient","type":"uint160"},
 				{"name":"_remainingGasTo","type":"address"},
-				{"components":[{"name":"recipient","type":"uint160"},{"name":"payload","type":"bytes"},{"name":"strict","type":"bool"}],"name":"_callback","type":"tuple"}
+				{"components":[{"name":"recipient","type":"uint160"},{"name":"payload","type":"bytes"},{"name":"strict","type":"bool"}],"name":"_callback","type":"tuple"},
+				{"name":"_expectedGasReceiver","type":"address"}
 			],
 			"outputs": [
 			]
@@ -489,6 +488,7 @@
 		{"name":"bounty","type":"uint128"},
 		{"name":"eventTokenWallet","type":"address"},
 		{"name":"limitApprover","type":"address"},
-		{"name":"isLimitApproved","type":"bool"}
+		{"name":"isLimitApproved","type":"bool"},
+		{"name":"isWNative","type":"bool"}
 	]
 }

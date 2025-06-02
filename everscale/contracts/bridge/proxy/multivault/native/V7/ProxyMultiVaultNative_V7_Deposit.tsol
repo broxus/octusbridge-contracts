@@ -6,6 +6,7 @@ import {EventAddressKeeper} from "../../../../event-address-keeper/EventAddressK
 
 import "./../../../../interfaces/event-contracts/IEthereumEverscaleEvent.tsol";
 import "./../../../../interfaces/event-contracts/ISolanaEverscaleEvent.tsol";
+import "./../../../../interfaces/event-contracts/INotEnoughLiquidity.tsol";
 import "./../../../../interfaces/IEventAddressKeeper.tsol";
 
 import "./../../../../interfaces/proxy/IEthereumEverscaleProxyExtended.tsol";
@@ -200,11 +201,12 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
     {
         require(msg.sender == _deriveEventKeeperAddress(callId), ErrorCodes.NOT_EVENT_ADDRESS_KEEPER);
 
-        ITvmTvmEvent(eventContract)
+        mapping(address => bool) wNativeAddresses;
+        INotEnoughLiquidity(eventContract)
             .notEnoughLiquidity{
                 flag: MsgFlag.ALL_NOT_RESERVED,
                 bounce: false
-            }();
+            }(wNativeAddresses);
     }
 
     function _deriveEventKeeperAddress(

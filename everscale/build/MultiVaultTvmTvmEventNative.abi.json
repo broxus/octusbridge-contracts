@@ -67,6 +67,7 @@
 		{
 			"name": "notEnoughLiquidity",
 			"inputs": [
+				{"name":"_wNativeAddresses","type":"map(address,bool)"}
 			],
 			"outputs": [
 			]
@@ -77,7 +78,8 @@
 				{"name":"_newRecipient","type":"address"},
 				{"name":"_remainingGasTo","type":"address"},
 				{"name":"_expectedGas","type":"uint128"},
-				{"name":"_eventPayload","type":"optional(cell)"}
+				{"name":"_eventPayload","type":"optional(cell)"},
+				{"name":"_expectedGasReceiver","type":"address"}
 			],
 			"outputs": [
 			]
@@ -129,10 +131,7 @@
 		{
 			"name": "rejectLimit",
 			"inputs": [
-				{"name":"_newRecipient","type":"address"},
-				{"name":"_remainingGasTo","type":"address"},
-				{"name":"_expectedGas","type":"uint128"},
-				{"name":"_eventPayload","type":"optional(cell)"}
+				{"name":"_expectedGasReceiver","type":"address"}
 			],
 			"outputs": [
 			]
@@ -413,6 +412,7 @@
 		{"name":"bounty","type":"uint128"},
 		{"name":"eventTokenWallet","type":"address"},
 		{"name":"limitApprover","type":"address"},
-		{"name":"isLimitApproved","type":"bool"}
+		{"name":"isLimitApproved","type":"bool"},
+		{"name":"isWNative","type":"bool"}
 	]
 }

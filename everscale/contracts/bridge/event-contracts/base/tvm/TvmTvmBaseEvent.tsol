@@ -84,7 +84,5 @@ contract TvmTvmBaseEvent is ITvmTvmEvent, TransferUtils {
         );
     }
 
-    function notEnoughLiquidity() override virtual external {}
-
     function processProof(ITvmTvmEvent.TvmTvmEventVoteData eventVoteData) override virtual external {}
 }

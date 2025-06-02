@@ -32,7 +32,9 @@ contract ProxyMultiVaultNative_V8 is ProxyMultiVaultNative_V8_Deposit, CheckPubK
             tokenToDailyLimits,
             limitApprover,
             coldVault,
-            vaultWithdrawer
+            vaultWithdrawer,
+            wNativeAddresses
+
         );
 
         tvm.setcode(code);

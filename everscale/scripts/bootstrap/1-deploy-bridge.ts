@@ -425,6 +425,20 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
     }`,
   );
 
+  for (let wNative of config?.WNATIVE_ADDRESSES) {
+    await locklift.tracing.trace(
+      proxyNative.methods
+        .setWNative({ _wton: new Address(wNative) })
+          .send({
+            from: admin.address,
+            amount: config.GAS.PROXY_MULTI_VAULT_SET_ONCE_EVM_TOKEN_PLATFORM,
+            bounce: true,
+          }),
+    );
+  }
+
+  console.log('Set wNative to native proxy');
+
   await locklift.tracing.trace(
     proxyAlien.methods.setProxyMultiVaultNative({ _proxyMultiVaultNative: proxyNative.address }).send({
       from: admin.address,

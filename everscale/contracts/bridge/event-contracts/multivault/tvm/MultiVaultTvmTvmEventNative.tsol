@@ -5,9 +5,11 @@ pragma AbiHeader expire;
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.tsol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenWallet.tsol";
+import "ton-eth-bridge-token-contracts/contracts/interfaces/IBurnableTokenWallet.tsol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensTransferCallback.tsol";
 
 import "./../../../interfaces/event-contracts/multivault/tvm/IMultiVaultTvmTvmEventNative.tsol";
+import "./../../../interfaces/event-contracts/INotEnoughLiquidity.tsol";
 import "./../../../interfaces/event-configuration-contracts/ITvmTvmEventConfiguration.tsol";
 import "./../../../interfaces/proxy/ITvmTvmProxyExtended.tsol";
 import "./../../../interfaces/proxy/ITvmEventCancelled.tsol";
@@ -24,6 +26,7 @@ contract MultiVaultTvmTvmEventNative is
     TvmTvmBaseEvent,
     IMultiVaultTvmTvmEventNative,
     IOnTrustlessVerify,
+    INotEnoughLiquidity,
     IAcceptTokensTransferCallback
 {
     address public token;
@@ -50,6 +53,8 @@ contract MultiVaultTvmTvmEventNative is
 
     address public limitApprover;
     bool public isLimitApproved;
+
+    bool private isWNative;
 
     modifier onlyLimitApprover() {
         require(msg.sender == limitApprover && limitApprover.value != 0, ErrorCodes.SENDER_IS_NOT_LIMIT_APPROVER);
@@ -221,9 +226,11 @@ contract MultiVaultTvmTvmEventNative is
         }
     }
 
-    function notEnoughLiquidity() external override {
+    function notEnoughLiquidity(mapping(address => bool) _wNativeAddresses) external override {
         require(msg.sender == proxy, ErrorCodes.SENDER_NOT_PROXY);
         require(status == Status.Confirmed, ErrorCodes.WRONG_STATUS);
+
+        isWNative = _wNativeAddresses.exists(token);
 
         if (eventTokenWallet.value == 0) {
             ITokenRoot(token).walletOf{
@@ -241,10 +248,14 @@ contract MultiVaultTvmTvmEventNative is
         address _newRecipient,
         address _remainingGasTo,
         uint128 _expectedGas,
-        optional(TvmCell) _eventPayload
+        optional(TvmCell) _eventPayload,
+        address _expectedGasReceiver
     ) external {
-        require(status == Status.LiquidityRequested, ErrorCodes.WRONG_STATUS);
-        require(msg.sender == recipient || msg.sender == sender, ErrorCodes.SENDER_NOT_RECIPIENT);
+        require(
+            (msg.sender == recipient || msg.sender == sender) && status == Status.LiquidityRequested ||
+            msg.sender == limitApprover && limitApprover.value != 0 && status == Status.LimitApprove,
+            ErrorCodes.SENDER_NOT_RECIPIENT
+        );
 
         status = Status.Cancelled;
         emit Cancelled();
@@ -270,8 +281,14 @@ contract MultiVaultTvmTvmEventNative is
 
         ITvmEventCancelled(eventInitData.configuration)
             .onTVMEventCancelled{
-                flag: MsgFlag.ALL_NOT_RESERVED
+                value: msg.value
             }(eventInitData, withdrawPayload);
+
+        _expectedGasReceiver.transfer({
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+            bounce: false
+        });
     }
 
     function setBounty(uint128 _bounty) external {
@@ -329,18 +346,31 @@ contract MultiVaultTvmTvmEventNative is
         emit LiquidityProvided(_sender);
 
         // send tokens to original recipient
-        ITokenWallet(eventTokenWallet).transfer{
-            value: address(this).balance - msg.value,
-            bounce: false,
-            flag: MsgFlag.SENDER_PAYS_FEES
-        }(
-            _amount,
-            recipient,
-            Gas.getDeployTokenWalletValue(),
-            recipient,
-            payload.hasValue() ? true : false,
-            payload.get()
-        );
+        if (isWNative && !payload.hasValue()) {
+            IBurnableTokenWallet(eventTokenWallet).burn{
+                value: address(this).balance - msg.value,
+                bounce: false,
+                flag: MsgFlag.SENDER_PAYS_FEES
+            }(
+                _amount,
+                recipient,
+                recipient,
+                payload.getOrDefault()
+            );
+        } else {
+            ITokenWallet(eventTokenWallet).transfer{
+                value: address(this).balance - msg.value,
+                bounce: false,
+                flag: MsgFlag.SENDER_PAYS_FEES
+            }(
+                _amount,
+                recipient,
+                Gas.getDeployTokenWalletValue(),
+                recipient,
+                payload.hasValue() ? true : false,
+                payload.getOrDefault()
+            );
+        }
 
         // emit withdraw event to original chainId
         (
@@ -397,41 +427,22 @@ contract MultiVaultTvmTvmEventNative is
         onConfirm();
     }
 
-    function rejectLimit(
-        address _newRecipient,
-        address _remainingGasTo,
-        uint128 _expectedGas,
-        optional(TvmCell) _eventPayload
-    ) external onlyLimitApprover {
+    function rejectLimit(address _expectedGasReceiver) external onlyLimitApprover {
         require(status == Status.LimitApprove, ErrorCodes.WRONG_STATUS);
 
         status = Status.Cancelled;
-
         emit Cancelled();
 
-        TvmCell transferData = abi.encode(
-            _newRecipient,
-            eventInitData.chainId,
-            name,
-            symbol,
-            decimals,
-            token,
-            _remainingGasTo,
-            _expectedGas,
-            _eventPayload
-        );
+        _expectedGasReceiver.transfer({
+            value: address(this).balance - msg.value,
+            bounce: false
+        });
 
-        TvmCell withdrawPayload = abi.encode(
-            amount,
-            recipient,
-            proxyTokenWallet,
-            transferData
-        );
-
-        ITvmEventCancelled(eventInitData.configuration)
-            .onTVMEventCancelled{
-                flag: MsgFlag.ALL_NOT_RESERVED
-            }(eventInitData, withdrawPayload);
+        msg.sender.transfer({
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+            bounce: false
+        });
     }
 
     function retry() external {

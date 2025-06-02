@@ -116,9 +116,27 @@
 			]
 		},
 		{
+			"name": "cancel",
+			"inputs": [
+				{"name":"_newRecipient","type":"uint160"},
+				{"name":"_remainingGasTo","type":"address"},
+				{"components":[{"name":"recipient","type":"uint160"},{"name":"payload","type":"bytes"},{"name":"strict","type":"bool"}],"name":"_callback","type":"tuple"},
+				{"name":"_expectedGasReceiver","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "rejectLimit",
 			"inputs": [
-				{"name":"_refundRecipient","type":"uint160"}
+				{"name":"_expectedGasReceiver","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "retry",
+			"inputs": [
 			],
 			"outputs": [
 			]

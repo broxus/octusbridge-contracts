@@ -9,6 +9,7 @@ import "./../../../../interfaces/IEventAddressKeeper.tsol";
 import "./../../../../interfaces/event-contracts/IEthereumEverscaleEvent.tsol";
 
 import "./../../../../interfaces/event-contracts/ISolanaEverscaleEvent.tsol";
+import "./../../../../interfaces/event-contracts/INotEnoughLiquidity.tsol";
 import "./../../../../interfaces/proxy/IEthereumEverscaleProxyExtended.tsol";
 import "./../../../../interfaces/proxy/ISolanaEverscaleProxyExtended.tsol";
 
@@ -81,15 +82,27 @@ abstract contract ProxyMultiVaultNative_V8_Deposit is
             transferPayload.set(payload);
         }
 
-        _transferTokens(
-            token_wallet,
-            amount,
-            recipient,
-            remainingGasTo,
-            abi.encode(BridgeOpCodes.BridgeDeposit, nonce, transferPayload),
-            false,
-            null
-        );
+        if (wNativeAddresses.exists(token) && payload.toSlice().empty()) {
+            _burnTokens(
+                token_wallet,
+                amount,
+                recipient,
+                remainingGasTo,
+                abi.encode(BridgeOpCodes.BridgeDeposit, nonce, transferPayload),
+                false,
+                null
+            );
+        } else {
+            _transferTokens(
+                token_wallet,
+                amount,
+                recipient,
+                remainingGasTo,
+                abi.encode(BridgeOpCodes.BridgeDeposit, nonce, transferPayload),
+                false,
+                null
+            );
+        }
     }
 
     /// @notice Handles native token transfer from Solana.
@@ -102,13 +115,16 @@ abstract contract ProxyMultiVaultNative_V8_Deposit is
         require(solanaConfiguration.solanaConfiguration == msg.sender, ErrorCodes.NOT_SOLANA_CONFIG);
 
         (
+            /*address event_address*/,
+            /*bool is_limit_approved*/,
+            address token,
             address token_wallet,
             uint128 amount,
             address recipient,
             TvmCell payload
         ) = abi.decode(
             meta,
-            (address, uint128, address, TvmCell)
+            (address, bool, address, address, uint128, address, TvmCell)
         );
 
         uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
@@ -118,15 +134,27 @@ abstract contract ProxyMultiVaultNative_V8_Deposit is
             transferPayload.set(payload);
         }
 
-        _transferTokens(
-            token_wallet,
-            amount,
-            recipient,
-            remainingGasTo,
-            abi.encode(BridgeOpCodes.BridgeDeposit, nonce, transferPayload),
-            false,
-            null
-        );
+        if (wNativeAddresses.exists(token) && payload.toSlice().empty()) {
+            _burnTokens(
+                token_wallet,
+                amount,
+                recipient,
+                remainingGasTo,
+                abi.encode(BridgeOpCodes.BridgeDeposit, nonce, transferPayload),
+                false,
+                null
+            );
+        } else {
+            _transferTokens(
+                token_wallet,
+                amount,
+                recipient,
+                remainingGasTo,
+                abi.encode(BridgeOpCodes.BridgeDeposit, nonce, transferPayload),
+                false,
+                null
+            );
+        }
     }
 
     /// @notice Handles native token transfer from TVM.
@@ -149,8 +177,7 @@ abstract contract ProxyMultiVaultNative_V8_Deposit is
             uint128 amount,
             address recipient,
             optional(TvmCell) payload,
-            address eventAddress,
-            uint128 expectedGas
+            address eventAddress
         ) = abi.decode(meta, (
             bool,
             address,
@@ -158,8 +185,7 @@ abstract contract ProxyMultiVaultNative_V8_Deposit is
             uint128,
             address,
             optional(TvmCell),
-            address,
-            uint128
+            address
         ));
 
         (
@@ -207,28 +233,33 @@ abstract contract ProxyMultiVaultNative_V8_Deposit is
             stateInit: stateInit
         }(eventAddress);
 
-        _transferTokens(
-            token_wallet,
-            amount - fee,
-            recipient,
-            recipient,
-            abi.encode(BridgeOpCodes.BridgeDeposit, nonce, payload),
-            true,
-            Gas.getTransferTokenValue() + expectedGas
-        );
-
-        // Refund remaining gas to event deployer
-        remainingGasTo.transfer({
-            value: 0,
-            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
-            bounce: false
-        });
+        if (wNativeAddresses.exists(token) && !payload.hasValue()) {
+            _burnTokens(
+                token_wallet,
+                amount - fee,
+                recipient,
+                remainingGasTo,
+                abi.encode(BridgeOpCodes.BridgeDeposit, nonce, payload),
+                true,
+                null
+            );
+        } else {
+            _transferTokens(
+                token_wallet,
+                amount - fee,
+                recipient,
+                remainingGasTo,
+                abi.encode(BridgeOpCodes.BridgeDeposit, nonce, payload),
+                true,
+                null
+            );
+        }
     }
 
     onBounce(TvmSlice slice) external view reserveAtLeastTargetBalance {
         uint32 selector = slice.load(uint32);
 
-        if (selector == tvm.functionId(ITokenWallet.transfer)) {
+        if (selector == tvm.functionId(ITokenWallet.transfer) || selector == tvm.functionId(IBurnableTokenWallet.burn)) {
             (
                 ,
                 ,
@@ -261,11 +292,11 @@ abstract contract ProxyMultiVaultNative_V8_Deposit is
 
         emit NotEnoughLiquidity(eventContract);
 
-        ITvmTvmEvent(eventContract)
+        INotEnoughLiquidity(eventContract)
             .notEnoughLiquidity{
                 flag: MsgFlag.ALL_NOT_RESERVED,
                 bounce: false
-            }();
+            }(wNativeAddresses);
     }
 
     function _deriveEventKeeperAddress(

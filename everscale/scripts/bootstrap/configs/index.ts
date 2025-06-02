@@ -29,6 +29,8 @@ export type Config = {
   WITHDRAWER: string;
   COLD_VAULT: string;
 
+  WNATIVE_ADDRESSES: string[];
+
   // Can upgrade contracts
   MANAGER: string;
 

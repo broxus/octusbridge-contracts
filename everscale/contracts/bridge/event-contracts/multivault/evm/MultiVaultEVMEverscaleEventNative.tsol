@@ -5,10 +5,12 @@ pragma AbiHeader expire;
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.tsol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenWallet.tsol";
+import "ton-eth-bridge-token-contracts/contracts/interfaces/IBurnableTokenWallet.tsol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensTransferCallback.tsol";
 
 import "./../../../interfaces/event-contracts/multivault/evm/IMultiVaultEVMEverscaleEventNative.tsol";
 import "./../../../interfaces/event-contracts/multivault/evm/IEVMCallback.tsol";
+import "./../../../interfaces/event-contracts/INotEnoughLiquidity.tsol";
 import "./../../../interfaces/event-configuration-contracts/IEthereumEverscaleEventConfiguration.tsol";
 import "./../../../interfaces/proxy/IEthereumEverscaleProxyExtended.tsol";
 import "./../../../interfaces/proxy/IEvmEventCancelled.tsol";
@@ -19,7 +21,8 @@ import "./../../base/evm/EthereumEverscaleBaseEvent.tsol";
 contract MultiVaultEVMEverscaleEventNative is
     EthereumEverscaleBaseEvent,
     IMultiVaultEVMEverscaleEventNative,
-    IAcceptTokensTransferCallback
+    IAcceptTokensTransferCallback,
+    INotEnoughLiquidity
 {
     address public token;
     uint128 public amount;
@@ -38,6 +41,8 @@ contract MultiVaultEVMEverscaleEventNative is
 
     address public limitApprover;
     bool public isLimitApproved;
+
+    bool private isWNative;
 
     modifier onlyLimitApprover() {
         require(msg.sender == limitApprover && limitApprover.value != 0, ErrorCodes.SENDER_IS_NOT_LIMIT_APPROVER);
@@ -186,46 +191,34 @@ contract MultiVaultEVMEverscaleEventNative is
         onConfirm();
     }
 
-    function rejectLimit(
-        uint160 _refundRecipient,
-        string _tokenName,
-        string _tokenSymbol,
-        uint8 _tokenDecimals
-    ) external onlyLimitApprover {
+    function rejectLimit(address _expectedGasReceiver) external onlyLimitApprover {
+        require(status() == Status.LimitApprove, ErrorCodes.WRONG_STATUS);
+
         _setStatusCancelled();
 
-        TvmCell transferData = abi.encode(
-            _refundRecipient,
-            uint256(eventInitData.chainId),
-            _tokenName,
-            _tokenSymbol,
-            _tokenDecimals,
-            token,
-            tokenWallet,
-            initializer
-        );
+        _expectedGasReceiver.transfer({
+            value: address(this).balance - msg.value,
+            bounce: false
+        });
 
-        TvmCell withdrawPayload = abi.encode(
-            amount,
-            recipient,
-            transferData
-        );
-
-        IEvmEventCancelled(eventInitData.configuration)
-            .onEVMEventCancelled{
-                flag: MsgFlag.ALL_NOT_RESERVED
-            }(eventInitData, withdrawPayload);
+        msg.sender.transfer({
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+            bounce: false
+        });
     }
 
-    function notEnoughLiquidity() external override {
+    function notEnoughLiquidity(mapping(address => bool) _wNativeAddresses) external override {
         require(msg.sender == proxy, ErrorCodes.SENDER_NOT_PROXY);
+
+        isWNative = _wNativeAddresses.exists(token);
 
         if (eventTokenWallet.value == 0) {
             ITokenRoot(token).walletOf{
-                    value: 0,
-                    flag: MsgFlag.REMAINING_GAS,
-                    callback: MultiVaultEVMEverscaleEventNative.receiveEventTokenWallet
-                }(address(this));
+                value: 0,
+                flag: MsgFlag.REMAINING_GAS,
+                callback: MultiVaultEVMEverscaleEventNative.receiveEventTokenWallet
+            }(address(this));
         } else {
             _setStatusLiquidityRequested(bounty);
         }
@@ -234,9 +227,14 @@ contract MultiVaultEVMEverscaleEventNative is
     function cancel(
         uint160 _newRecipient,
         address _remainingGasTo,
-        IEVMCallback.EVMCallback _callback
+        IEVMCallback.EVMCallback _callback,
+        address _expectedGasReceiver
     ) external {
-        require(msg.sender == recipient, ErrorCodes.SENDER_NOT_RECIPIENT);
+        require(
+            msg.sender == recipient && status() == Status.LiquidityRequested ||
+            msg.sender == limitApprover && limitApprover.value != 0 && status() == Status.LimitApprove,
+            ErrorCodes.SENDER_NOT_RECIPIENT
+        );
 
         _setStatusCancelled();
 
@@ -246,13 +244,20 @@ contract MultiVaultEVMEverscaleEventNative is
             recipient,
             _callback,
             token,
+            tokenWallet,
             _remainingGasTo
         );
 
         IEvmEventCancelled(eventInitData.configuration)
             .onEVMEventCancelled{
-                flag: MsgFlag.ALL_NOT_RESERVED
+                value: msg.value
             }(eventInitData, withdrawPayload);
+
+        _expectedGasReceiver.transfer({
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+            bounce: false
+        });
     }
 
     function setBounty(uint128 _bounty) external {
@@ -307,18 +312,31 @@ contract MultiVaultEVMEverscaleEventNative is
         _setStatusLiquidityProvided(_sender);
 
         // send tokens to original recipient
-        ITokenWallet(eventTokenWallet).transfer{
-            value: address(this).balance - msg.value,
-            bounce: false,
-            flag: MsgFlag.SENDER_PAYS_FEES
-        }(
-            _amount,
-            recipient,
-            Gas.getDeployTokenWalletValue(),
-            recipient,
-            payload.toSlice().empty() ? false : true,
-            payload
-        );
+        if (isWNative && payload.toSlice().empty()) {
+            IBurnableTokenWallet(eventTokenWallet).burn{
+                value: address(this).balance - msg.value,
+                bounce: false,
+                flag: MsgFlag.SENDER_PAYS_FEES
+            }(
+                _amount,
+                recipient,
+                recipient,
+                payload
+            );
+        } else {
+            ITokenWallet(eventTokenWallet).transfer{
+                value: address(this).balance - msg.value,
+                bounce: false,
+                flag: MsgFlag.SENDER_PAYS_FEES
+            }(
+                _amount,
+                recipient,
+                Gas.getDeployTokenWalletValue(),
+                recipient,
+                payload.toSlice().empty() ? false : true,
+                payload
+            );
+        }
 
         // emit withdraw event to original chainId
         (

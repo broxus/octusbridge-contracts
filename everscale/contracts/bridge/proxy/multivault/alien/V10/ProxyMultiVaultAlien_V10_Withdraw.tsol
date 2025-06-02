@@ -8,6 +8,7 @@ import "./../../../../interfaces/event-contracts/IEverscaleEthereumEvent.tsol";
 import "./../../../../interfaces/event-configuration-contracts/IEverscaleSolanaEventConfiguration.tsol";
 import "./../../../../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.tsol";
 
+import "./../../../../interfaces/proxy/IEvmEventCancelled.tsol";
 import "./../../../../interfaces/proxy/ITvmEventCancelled.tsol";
 
 import "./ProxyMultiVaultAlien_V10_Deposit_EVM.tsol";
@@ -18,6 +19,7 @@ import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensBurnCal
 abstract contract ProxyMultiVaultAlien_V10_Withdraw is
     ProxyMultiVaultAlien_V10_Deposit_EVM,
     IAcceptTokensBurnCallback,
+    IEvmEventCancelled,
     ITvmEventCancelled
 {
     /// @notice Handles token burn.
@@ -110,6 +112,42 @@ abstract contract ProxyMultiVaultAlien_V10_Withdraw is
         }
     }
 
+    function onEVMEventCancelled(
+        IEthereumEverscaleEvent.EthereumEverscaleEventInitData /*eventData*/,
+        TvmCell withdrawPayload
+    ) external override reserveAtLeastTargetBalance {
+        require(
+            _isArrayContainsAddress(evmConfiguration.evmConfigurations, msg.sender),
+            ErrorCodes.NOT_ETHEREUM_CONFIG
+        );
+
+        (
+            uint128 amount,
+            address sender,
+            uint160 recipient,
+            address tokenRoot,
+            address remainingGasTo,
+            EVMCallback callback
+        ) = abi.decode(withdrawPayload, (
+            uint128,
+            address,
+            uint160,
+            address,
+            address,
+            EVMCallback
+        ));
+
+        _deployEVMEvent(
+            0,
+            tokenRoot,
+            amount,
+            recipient,
+            remainingGasTo,
+            sender,
+            callback
+        );
+    }
+
     function onTVMEventCancelled(
         ITvmTvmEvent.TvmTvmEventInitData _eventInitData,
         TvmCell _withdrawPayload
@@ -120,12 +158,16 @@ abstract contract ProxyMultiVaultAlien_V10_Withdraw is
         );
 
         (
+            address token,
             uint128 amount,
             address sender,
+            address remainingGasTo,
             address nativeProxyWallet,
             TvmCell transferData
         ) = abi.decode(_withdrawPayload, (
+            address,
             uint128,
+            address,
             address,
             address,
             TvmCell
@@ -142,13 +184,9 @@ abstract contract ProxyMultiVaultAlien_V10_Withdraw is
 
         (
             address recipient,
-            address token,
-            address remainingGasTo,
             uint128 expectedGas,
             optional(TvmCell) eventPayload
         ) = abi.decode(transferData, (
-            address,
-            address,
             address,
             uint128,
             optional(TvmCell)
