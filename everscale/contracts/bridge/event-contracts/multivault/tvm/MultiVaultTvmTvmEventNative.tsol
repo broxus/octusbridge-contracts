@@ -212,6 +212,7 @@ contract MultiVaultTvmTvmEventNative is
 
             TvmCell metaData = abi.encode(
                 isLimitApproved,
+                token,
                 proxyTokenWallet,
                 amount,
                 recipient,

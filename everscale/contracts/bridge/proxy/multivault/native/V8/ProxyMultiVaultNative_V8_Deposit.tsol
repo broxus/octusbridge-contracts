@@ -177,7 +177,8 @@ abstract contract ProxyMultiVaultNative_V8_Deposit is
             uint128 amount,
             address recipient,
             optional(TvmCell) payload,
-            address eventAddress
+            address eventAddress,
+            uint128 expectedGas
         ) = abi.decode(meta, (
             bool,
             address,
@@ -185,7 +186,8 @@ abstract contract ProxyMultiVaultNative_V8_Deposit is
             uint128,
             address,
             optional(TvmCell),
-            address
+            address,
+            uint128
         ));
 
         (

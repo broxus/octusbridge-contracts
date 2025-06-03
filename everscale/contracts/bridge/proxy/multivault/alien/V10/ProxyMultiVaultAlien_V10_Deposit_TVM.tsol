@@ -46,6 +46,8 @@ abstract contract ProxyMultiVaultAlien_V10_Deposit_TVM is
 
         if (nativeProxyTokenWallet.hasValue()) {
             TvmCell _meta = abi.encode(
+                isLimitApproved,
+                token,
                 nativeProxyTokenWallet.get(),
                 amount,
                 recipient,
