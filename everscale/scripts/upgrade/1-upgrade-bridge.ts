@@ -452,87 +452,165 @@ const upgradeMergePools = async (
   }
 };
 
-const deployConfigFactories = async (
-  signer: Signer,
-): Promise<{
-  evmTvmEventConfigFactory: Contract<EthereumEverscaleEventConfigurationFactoryAbi>;
-  tvmEvmEventConfigFactory: Contract<EverscaleEthereumEventConfigurationFactoryAbi>;
-  tvmTvmEventConfigFactory: Contract<TvmTvmEventConfigurationFactoryAbi>;
-}> => {
-  const { contract: evmTvmEventConfigFactory } =
-    await locklift.factory.deployContract({
-      contract: 'EthereumEverscaleEventConfigurationFactory',
-      constructorParams: {
-        _configurationCode: locklift.factory.getContractArtifacts(
-          'EthereumEverscaleEventConfiguration',
-        ).code,
-      },
-      initParams: { _randomNonce: getRandomNonce() },
-      publicKey: signer.publicKey,
-      value: toNano(1 * gasCoeff),
-    });
+const upgradeConfigFactories = async (signer: Signer): Promise<void> => {
+  let oldEvmTvmEventConfigFactory = null;
 
-  await locklift.deployments.saveContract({
-    contractName: 'EthereumEverscaleEventConfigurationFactory',
-    address: evmTvmEventConfigFactory.address,
-    deploymentName: 'EvmTvmEventConfigFactory',
-  });
+  try {
+    oldEvmTvmEventConfigFactory =
+      locklift.deployments.getContract<EthereumEverscaleEventConfigurationFactoryAbi>(
+        'EvmTvmEventConfigFactory',
+      );
+  } catch (e) {
+    console.log('EvmTvmEventConfigFactory is not deployed');
+  }
 
-  console.log(
-    `EvmTvmEventConfigFactory: ${evmTvmEventConfigFactory.address.toString()}`,
+  const oldEvmTvmEventConfigFactoryCodeHash = await oldEvmTvmEventConfigFactory
+    ?.getFullState()
+    .then((r) => r.state?.codeHash);
+  const newEvmTvmEventConfigFactory = locklift.factory.getContractArtifacts(
+    'EthereumEverscaleEventConfigurationFactory',
+  );
+  const oldEvmTvmConfigurationCodeHash =
+    await oldEvmTvmEventConfigFactory?.methods
+      .configurationCode()
+      .call()
+      .then((r) => locklift.provider.getBocHash(r.configurationCode));
+  const newEvmTvmConfigurationCode = locklift.factory.getContractArtifacts(
+    'EthereumEverscaleEventConfiguration',
   );
 
-  const { contract: tvmEvmEventConfigFactory } =
-    await locklift.factory.deployContract({
-      contract: 'EverscaleEthereumEventConfigurationFactory',
-      constructorParams: {
-        _configurationCode: locklift.factory.getContractArtifacts(
-          'EverscaleEthereumEventConfiguration',
-        ).code,
-      },
-      initParams: { _randomNonce: getRandomNonce() },
-      publicKey: signer.publicKey,
-      value: toNano(1 * gasCoeff),
+  if (
+    !oldEvmTvmEventConfigFactory ||
+    newEvmTvmConfigurationCode.codeHash !== oldEvmTvmConfigurationCodeHash ||
+    newEvmTvmEventConfigFactory.codeHash !== oldEvmTvmEventConfigFactoryCodeHash
+  ) {
+    const { contract: evmTvmEventConfigFactory } =
+      await locklift.factory.deployContract({
+        contract: 'EthereumEverscaleEventConfigurationFactory',
+        constructorParams: {
+          _configurationCode: newEvmTvmConfigurationCode.code,
+        },
+        initParams: { _randomNonce: getRandomNonce() },
+        publicKey: signer.publicKey,
+        value: toNano(1 * gasCoeff),
+      });
+
+    await locklift.deployments.saveContract({
+      contractName: 'EthereumEverscaleEventConfigurationFactory',
+      address: evmTvmEventConfigFactory.address,
+      deploymentName: 'EvmTvmEventConfigFactory',
     });
 
-  await locklift.deployments.saveContract({
-    contractName: 'EverscaleEthereumEventConfigurationFactory',
-    address: tvmEvmEventConfigFactory.address,
-    deploymentName: 'TvmEvmEventConfigFactory',
-  });
+    console.log(
+      `EvmTvmEventConfigFactory: ${evmTvmEventConfigFactory.address.toString()}`,
+    );
+  }
 
-  console.log(
-    `TvmEvmEventConfigFactory: ${tvmEvmEventConfigFactory.address.toString()}`,
+  let oldTvmEvmEventConfigFactory = null;
+
+  try {
+    oldTvmEvmEventConfigFactory =
+      locklift.deployments.getContract<EverscaleEthereumEventConfigurationFactoryAbi>(
+        'TvmEvmEventConfigFactory',
+      );
+  } catch (e) {
+    console.log('TvmEvmEventConfigFactory is not deployed');
+  }
+
+  const oldTvmEvmEventConfigFactoryCodeHash = await oldTvmEvmEventConfigFactory
+    ?.getFullState()
+    .then((r) => r.state?.codeHash);
+  const newTvmEvmEventConfigFactory = locklift.factory.getContractArtifacts(
+    'EverscaleEthereumEventConfigurationFactory',
+  );
+  const oldTvmEvmConfigurationCodeHash =
+    await oldTvmEvmEventConfigFactory?.methods
+      .configurationCode()
+      .call()
+      .then((r) => locklift.provider.getBocHash(r.configurationCode));
+  const newTvmEvmConfigurationCode = locklift.factory.getContractArtifacts(
+    'EverscaleEthereumEventConfiguration',
   );
 
-  const { contract: tvmTvmEventConfigFactory } =
-    await locklift.factory.deployContract({
-      contract: 'TvmTvmEventConfigurationFactory',
-      constructorParams: {
-        _configurationCode: locklift.factory.getContractArtifacts(
-          'TvmTvmEventConfiguration',
-        ).code,
-      },
-      initParams: { _randomNonce: getRandomNonce() },
-      publicKey: signer.publicKey,
-      value: toNano(1 * gasCoeff),
+  if (
+    !oldTvmEvmEventConfigFactory ||
+    newTvmEvmConfigurationCode.codeHash !== oldTvmEvmConfigurationCodeHash ||
+    newTvmEvmEventConfigFactory.codeHash !== oldTvmEvmEventConfigFactoryCodeHash
+  ) {
+    const { contract: tvmEvmEventConfigFactory } =
+      await locklift.factory.deployContract({
+        contract: 'EverscaleEthereumEventConfigurationFactory',
+        constructorParams: {
+          _configurationCode: newTvmEvmConfigurationCode.code,
+        },
+        initParams: { _randomNonce: getRandomNonce() },
+        publicKey: signer.publicKey,
+        value: toNano(1 * gasCoeff),
+      });
+
+    await locklift.deployments.saveContract({
+      contractName: 'EverscaleEthereumEventConfigurationFactory',
+      address: tvmEvmEventConfigFactory.address,
+      deploymentName: 'TvmEvmEventConfigFactory',
     });
 
-  await locklift.deployments.saveContract({
-    contractName: 'TvmTvmEventConfigurationFactory',
-    address: tvmTvmEventConfigFactory.address,
-    deploymentName: 'TvmTvmEventConfigFactory',
-  });
+    console.log(
+      `TvmEvmEventConfigFactory: ${tvmEvmEventConfigFactory.address.toString()}`,
+    );
+  }
 
-  console.log(
-    `TvmTvmEventConfigFactory: ${tvmTvmEventConfigFactory.address.toString()}`,
+  let oldTvmTvmEventConfigFactory = null;
+
+  try {
+    oldTvmTvmEventConfigFactory =
+      locklift.deployments.getContract<TvmTvmEventConfigurationFactoryAbi>(
+        'TvmTvmEventConfigFactory',
+      );
+  } catch (e) {
+    console.log('TvmTvmEventConfigFactory is not deployed');
+  }
+
+  const oldTvmTvmEventConfigFactoryCodeHash = await oldTvmTvmEventConfigFactory
+    ?.getFullState()
+    .then((r) => r.state?.codeHash);
+  const newTvmTvmEventConfigFactory = locklift.factory.getContractArtifacts(
+    'TvmTvmEventConfigurationFactory',
+  );
+  const oldTvmTvmConfigurationCodeHash =
+    await oldTvmTvmEventConfigFactory?.methods
+      .configurationCode()
+      .call()
+      .then((r) => locklift.provider.getBocHash(r.configurationCode));
+  const newTvmTvmConfigurationCode = locklift.factory.getContractArtifacts(
+    'TvmTvmEventConfiguration',
   );
 
-  return {
-    evmTvmEventConfigFactory,
-    tvmEvmEventConfigFactory,
-    tvmTvmEventConfigFactory,
-  };
+  if (
+    !oldTvmTvmEventConfigFactory ||
+    newTvmTvmConfigurationCode.codeHash !== oldTvmTvmConfigurationCodeHash ||
+    newTvmTvmEventConfigFactory.codeHash !== oldTvmTvmEventConfigFactoryCodeHash
+  ) {
+    const { contract: tvmTvmEventConfigFactory } =
+      await locklift.factory.deployContract({
+        contract: 'TvmTvmEventConfigurationFactory',
+        constructorParams: {
+          _configurationCode: newTvmTvmConfigurationCode.code,
+        },
+        initParams: { _randomNonce: getRandomNonce() },
+        publicKey: signer.publicKey,
+        value: toNano(1 * gasCoeff),
+      });
+
+    await locklift.deployments.saveContract({
+      contractName: 'TvmTvmEventConfigurationFactory',
+      address: tvmTvmEventConfigFactory.address,
+      deploymentName: 'TvmTvmEventConfigFactory',
+    });
+
+    console.log(
+      `TvmTvmEventConfigFactory: ${tvmTvmEventConfigFactory.address.toString()}`,
+    );
+  }
 };
 
 const upgradeRoundDeployer = async (admin: Address) => {
@@ -606,7 +684,7 @@ const main = async (): Promise<void> => {
     await upgradeMergePools(admin.account.address, alienProxy);
   }
 
-  await deployConfigFactories(admin.signer);
+  await upgradeConfigFactories(admin.signer);
   await upgradeRoundDeployer(admin.account.address);
 };
 
