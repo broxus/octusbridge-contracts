@@ -129,7 +129,7 @@ abstract contract ProxyMultiVaultNative_V8_Base is IProxyMultiVaultNative_V8, In
         address _tokenWallet,
         uint128 _amount,
         address _remainingGasTo
-    ) external override onlyOwnerOrWithdrawer {
+    ) external override reserveAtLeastTargetBalance onlyOwnerOrWithdrawer {
         require(coldVault.value != 0, ErrorCodes.COLD_VAULT_IS_NOT_SET);
 
         TvmCell empty;

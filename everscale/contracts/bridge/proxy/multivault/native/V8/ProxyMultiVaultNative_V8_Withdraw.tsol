@@ -123,6 +123,8 @@ abstract contract ProxyMultiVaultNative_V8_Withdraw is
             ) = _isOutgoingDailyLimitReached(tokenRoot, amount);
 
             if (isLimitReached) {
+                emit OutgoingLimitReached(tokenRoot);
+
                 TvmCell empty;
 
                 _transferTokens(

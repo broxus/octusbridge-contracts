@@ -3,14 +3,15 @@ pragma ever-solidity >= 0.62.0;
 
 interface ITvmTvmEvent {
     enum Status {
-        Initializing,
-        Pending,
-        Verified,
-        Confirmed,
-        Cancelled,
-        LiquidityRequested,
-        LiquidityProvided,
-        LimitApprove
+        Initializing,       // 0
+        Pending,            // 1
+        Confirmed,          // 2
+        Rejected,           // 3
+        Cancelled,          // 4
+        LimitApprove,       // 5
+        LiquidityRequested, // 6
+        LiquidityProvided,  // 7
+        Verified            // 8
     }
 
     event Confirmed();
