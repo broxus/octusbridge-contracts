@@ -96,7 +96,7 @@ const TVM_ALIEN_TRANSFER_EVENT_ABI = {
     { name: "sender", type: "address" },
     { name: "recipient", type: "address" },
     { name: "amount", type: "uint128" },
-    { name: "attachedGas", type: "uint256" },
+    { name: "attachedGas", type: "uint128" },
     { name: "expectedGas", type: "uint128" },
     { name: "remainingGasTo", type: "address" },
     { name: "payload", type: "optional(cell)" },
@@ -116,7 +116,7 @@ const TVM_NATIVE_TRANSFER_EVENT_ABI = {
     { name: "sender", type: "address" },
     { name: "recipient", type: "address" },
     { name: "amount", type: "uint128" },
-    { name: "attachedGas", type: "uint256" },
+    { name: "attachedGas", type: "uint128" },
     { name: "expectedGas", type: "uint128" },
     { name: "remainingGasTo", type: "address" },
     { name: "payload", type: "optional(cell)" },
@@ -167,9 +167,9 @@ const main = async (): Promise<void> => {
   const admin = locklift.deployments.getAccount("Admin").account;
 
   const ethEverEventConfigFactory =
-    locklift.deployments.getContract<EthereumEverscaleEventConfigurationFactoryAbi>("EthEverEventConfigFactory");
+    locklift.deployments.getContract<EthereumEverscaleEventConfigurationFactoryAbi>("EvmTvmEventConfigFactory");
   const everEthEventConfigFactory =
-    locklift.deployments.getContract<EverscaleEthereumEventConfigurationFactoryAbi>("EverEthEventConfigFactory");
+    locklift.deployments.getContract<EverscaleEthereumEventConfigurationFactoryAbi>("TvmEvmEventConfigFactory");
   const tvmTvmEventConfigFactory =
     locklift.deployments.getContract<TvmTvmEventConfigurationFactoryAbi>("TvmTvmEventConfigFactory");
   const proxyMultiVaultAlien = locklift.deployments.getContract<ProxyMultiVaultAlien_V10Abi>("ProxyMultiVaultAlien");

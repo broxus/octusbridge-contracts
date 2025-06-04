@@ -40,12 +40,17 @@ const config: LockliftConfig = {
       build_prod: ["Bridge"],
       "../node_modules/@broxus/contracts/contracts/platform": ["Platform"],
     },
+    externalContractsArtifacts: {
+      // "../node_modules/ton-eth-bridge-token-contracts": ['TokenRootUpgradable', 'TokenWalletUpgradable', 'TokenWalletPlatform'],
+      //"build_prod": ['Bridge'],
+      "precompiled": ['AlienTokenWalletUpgradeable','TokenRootAlienTVM','TokenWalletPlatform']
+    }
   },
   linker: {
     version: "0.20.6",
   },
   networks: {
-    proxy: {
+    locklift: {
       deploy: ["local/"],
       giver: {
         address: process.env.LOCAL_GIVER_ADDRESS!,
@@ -83,9 +88,29 @@ const config: LockliftConfig = {
       },
     },
 
-    devnet1: {
+    tycho: {
       connection: {
         id: 2000,
+        type: "jrpc",
+        group: "tycho",
+        data: {
+          endpoint: process.env.TYCHO_NETWORK_ENDPOINT!,
+        },
+      },
+      giver: {
+        address: process.env.TYCHO_GIVER_ADDRESS!,
+        key: process.env.TYCHO_GIVER_KEY!,
+        //phrase: process.env.TYCHO_GIVER_PHRASE!,
+        //accountId: 0,
+      },
+      keys: {
+        phrase: process.env.TYCHO_PHRASE!,
+        amount: 20,
+      },
+    },
+    devnet1: {
+      connection: {
+        id: -6001,
         type: "jrpc",
         group: "tycho",
         data: {

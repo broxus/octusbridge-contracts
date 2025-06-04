@@ -475,11 +475,11 @@ const deployConfigFactories = async (
   await locklift.deployments.saveContract({
     contractName: 'EthereumEverscaleEventConfigurationFactory',
     address: evmTvmEventConfigFactory.address,
-    deploymentName: 'EthEverEventConfigFactory',
+    deploymentName: 'EvmTvmEventConfigFactory',
   });
 
   console.log(
-    `EthEverEventConfigFactory: ${evmTvmEventConfigFactory.address.toString()}`,
+    `EvmTvmEventConfigFactory: ${evmTvmEventConfigFactory.address.toString()}`,
   );
 
   const { contract: tvmEvmEventConfigFactory } =
@@ -498,11 +498,11 @@ const deployConfigFactories = async (
   await locklift.deployments.saveContract({
     contractName: 'EverscaleEthereumEventConfigurationFactory',
     address: tvmEvmEventConfigFactory.address,
-    deploymentName: 'EverEthEventConfigFactory',
+    deploymentName: 'TvmEvmEventConfigFactory',
   });
 
   console.log(
-    `EverEthEventConfigFactory: ${tvmEvmEventConfigFactory.address.toString()}`,
+    `TvmEvmEventConfigFactory: ${tvmEvmEventConfigFactory.address.toString()}`,
   );
 
   const { contract: tvmTvmEventConfigFactory } =
@@ -556,7 +556,7 @@ const upgradeRoundDeployer = async (admin: Address) => {
     await locklift.tracing.trace(
       roundDeployer.methods
         .upgrade({ code: roundDeployerNewCode.code, send_gas_to: admin })
-        .send({ from: admin, amount: toNano(0.25 * gasCoeff), bounce: true }),
+        .send({ from: admin, amount: toNano(3 * gasCoeff), bounce: true }),
     );
 
     // Update abi in deployments and reload contract
@@ -588,7 +588,7 @@ const upgradeRoundDeployer = async (admin: Address) => {
           code: newRelayRoundCode.code,
           send_gas_to: admin,
         })
-        .send({ from: admin, amount: toNano(0.2 * gasCoeff), bounce: true }),
+        .send({ from: admin, amount: toNano(2 * gasCoeff), bounce: true }),
     );
   }
 };

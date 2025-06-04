@@ -9,8 +9,10 @@ const config = getConfig();
 assert(!!config, 'Config should be defined');
 
 const DISABLE_CONFIGURATIONS: { address: Address, endBlock?: string, endTimestamp?: string }[] = [
-    // { address: new Address('0:4434c3cce49b599be1b6d61a263e457cfe86a2cde44093d41233a80790cf2f93'), endBlock: '46144686' },
-    // { address: new Address('0:413ffdab72ff670b87f0027a3c590e0609625922a990f03912227adb50bc11ba'), endTimestamp: '46144686' }
+    // { address: new Address('0:40592b4a49ff62b25b2b97658b51b29402c337b7c45490e585e855bebd1d8583'), endBlock: '50802794' },
+    // { address: new Address('0:ea5bb42c770acfcc87666b12b543540ae7ec2d91c9ad5322013ff30642167e77'), endBlock: '50802794' },
+    // { address: new Address('0:fc038f544db4d6c8c17e3d0a6d21aaf7f49c07b825d2291fbfa169b18e508fb1'), endTimestamp: '1748948079' },
+    // { address: new Address('0:c7811b41fc80051c7d8a6696bb52189c7a77da7118b13ee832d093d796e3a97e'), endTimestamp: '1748948079' }
 ];
 
 const main = async (): Promise<void> => {
