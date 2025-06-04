@@ -179,7 +179,7 @@ contract MultiVaultEVMEverscaleEventNative is
     function dailyLimitReached(address _approver) external override {
         require(msg.sender == proxy && proxy.value != 0, ErrorCodes.SENDER_NOT_PROXY);
 
-        _setStatusLimitApprove(_approver);
+        _setStatusLimitReached(_approver);
 
         limitApprover = _approver;
     }
@@ -192,7 +192,7 @@ contract MultiVaultEVMEverscaleEventNative is
     }
 
     function rejectLimit(address _expectedGasReceiver) external onlyLimitApprover {
-        require(status() == Status.LimitApprove, ErrorCodes.WRONG_STATUS);
+        require(status() == Status.LimitReached, ErrorCodes.WRONG_STATUS);
 
         _setStatusCancelled();
 
@@ -232,7 +232,7 @@ contract MultiVaultEVMEverscaleEventNative is
     ) external {
         require(
             msg.sender == recipient && status() == Status.LiquidityRequested ||
-            msg.sender == limitApprover && limitApprover.value != 0 && status() == Status.LimitApprove,
+            msg.sender == limitApprover && limitApprover.value != 0 && status() == Status.LimitReached,
             ErrorCodes.SENDER_NOT_RECIPIENT
         );
 

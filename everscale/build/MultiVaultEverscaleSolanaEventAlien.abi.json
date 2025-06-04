@@ -362,7 +362,7 @@
 			]
 		},
 		{
-			"name": "LimitApprove",
+			"name": "LimitReached",
 			"inputs": [
 				{"name":"approver","type":"address"}
 			],

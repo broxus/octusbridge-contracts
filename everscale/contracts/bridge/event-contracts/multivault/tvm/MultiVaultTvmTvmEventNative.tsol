@@ -205,7 +205,7 @@ contract MultiVaultTvmTvmEventNative is
     }
 
     function onConfirm() internal override {
-        if ((status == Status.Verified || status == Status.LimitApprove) && setupFinished) {
+        if ((status == Status.Verified || status == Status.LimitReached) && setupFinished) {
             status = Status.Confirmed;
 
             emit Confirmed();
@@ -254,7 +254,7 @@ contract MultiVaultTvmTvmEventNative is
     ) external {
         require(
             (msg.sender == recipient || msg.sender == sender) && status == Status.LiquidityRequested ||
-            msg.sender == limitApprover && limitApprover.value != 0 && status == Status.LimitApprove,
+            msg.sender == limitApprover && limitApprover.value != 0 && status == Status.LimitReached,
             ErrorCodes.SENDER_NOT_RECIPIENT
         );
 
@@ -415,9 +415,9 @@ contract MultiVaultTvmTvmEventNative is
         require(msg.sender == proxy && proxy.value != 0, ErrorCodes.SENDER_NOT_PROXY);
         require(status == Status.Confirmed, ErrorCodes.WRONG_STATUS);
 
-        status = Status.LimitApprove;
+        status = Status.LimitReached;
 
-        emit LimitApprove(_approver);
+        emit LimitReached(_approver);
 
         limitApprover = _approver;
     }
@@ -429,7 +429,7 @@ contract MultiVaultTvmTvmEventNative is
     }
 
     function rejectLimit(address _expectedGasReceiver) external onlyLimitApprover {
-        require(status == Status.LimitApprove, ErrorCodes.WRONG_STATUS);
+        require(status == Status.LimitReached, ErrorCodes.WRONG_STATUS);
 
         status = Status.Cancelled;
         emit Cancelled();
@@ -447,7 +447,7 @@ contract MultiVaultTvmTvmEventNative is
     }
 
     function retry() external {
-        require(status == Status.LiquidityRequested || status == Status.LimitApprove, ErrorCodes.WRONG_STATUS);
+        require(status == Status.LiquidityRequested || status == Status.LimitReached, ErrorCodes.WRONG_STATUS);
         require(
             msg.sender == recipient || msg.sender == sender || msg.sender == initializer,
             ErrorCodes.SENDER_NOT_RECIPIENT

@@ -365,7 +365,7 @@ contract MultiVaultTvmTvmEventAlien is
     function onConfirm() internal override {
         // Always check that TVM-TVM event was verified and all contracts were deployed
         if (
-            (status == Status.Verified || status == Status.LimitApprove) &&
+            (status == Status.Verified || status == Status.LimitReached) &&
             _tokenDeployStatus == DeployStatus.DEPLOYED &&
             _routerDeployStatus == DeployStatus.DEPLOYED
         ) {
@@ -666,9 +666,9 @@ contract MultiVaultTvmTvmEventAlien is
         require(msg.sender == transitionalData.proxy && transitionalData.proxy.value != 0, ErrorCodes.SENDER_NOT_PROXY);
         require(status == Status.Confirmed, ErrorCodes.WRONG_STATUS);
 
-        status = Status.LimitApprove;
+        status = Status.LimitReached;
 
-        emit LimitApprove(_approver);
+        emit LimitReached(_approver);
 
         limitApprover = _approver;
     }
@@ -680,7 +680,7 @@ contract MultiVaultTvmTvmEventAlien is
     }
 
     function rejectLimit(address _expectedGasReceiver) external onlyLimitApprover {
-        require(status == Status.LimitApprove, ErrorCodes.WRONG_STATUS);
+        require(status == Status.LimitReached, ErrorCodes.WRONG_STATUS);
 
         status = Status.Cancelled;
         emit Cancelled();
@@ -737,7 +737,7 @@ contract MultiVaultTvmTvmEventAlien is
 
         require(
             (msg.sender == eventData.recipient || msg.sender == eventData.sender) && status == Status.LiquidityRequested ||
-            msg.sender == limitApprover && limitApprover.value != 0 && status == Status.LimitApprove,
+            msg.sender == limitApprover && limitApprover.value != 0 && status == Status.LimitReached,
             ErrorCodes.SENDER_NOT_RECIPIENT
         );
 
@@ -917,7 +917,7 @@ contract MultiVaultTvmTvmEventAlien is
     function retry() external {
         EventData eventData = getEventData();
 
-        require(status == Status.LiquidityRequested || status == Status.LimitApprove, ErrorCodes.WRONG_STATUS);
+        require(status == Status.LiquidityRequested || status == Status.LimitReached, ErrorCodes.WRONG_STATUS);
         require(
             msg.sender == eventData.recipient || msg.sender == eventData.sender || msg.sender == initializer,
             ErrorCodes.SENDER_NOT_RECIPIENT

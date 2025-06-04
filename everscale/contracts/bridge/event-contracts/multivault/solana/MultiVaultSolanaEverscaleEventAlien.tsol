@@ -297,7 +297,7 @@ contract MultiVaultSolanaEverscaleEventAlien is
     function dailyLimitReached(address _approver) external override {
         require(msg.sender == proxy && proxy.value != 0, ErrorCodes.SENDER_NOT_PROXY);
 
-        _setStatusLimitApprove(_approver);
+        _setStatusLimitReached(_approver);
 
         limitApprover = _approver;
     }

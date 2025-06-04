@@ -108,7 +108,7 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
 
     function setStatusConfirmed() internal {
         require(
-            _status == Status.Pending || _status == Status.LiquidityRequested || _status == Status.LimitApprove,
+            _status == Status.Pending || _status == Status.LiquidityRequested || _status == Status.LimitReached,
             ErrorCodes.WRONG_STATUS
         );
 
@@ -134,7 +134,7 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
     }
 
     function _setStatusCancelled() internal {
-        require(_status == Status.LiquidityRequested || _status == Status.LimitApprove, ErrorCodes.WRONG_STATUS);
+        require(_status == Status.LiquidityRequested || _status == Status.LimitReached, ErrorCodes.WRONG_STATUS);
 
         _status = Status.Cancelled;
 
@@ -152,12 +152,12 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
         emit Rejected(reason);
     }
 
-    function _setStatusLimitApprove(address _approver) internal {
+    function _setStatusLimitReached(address _approver) internal {
         require(_status == Status.Confirmed, ErrorCodes.WRONG_STATUS);
 
-        _status = Status.LimitApprove;
+        _status = Status.LimitReached;
 
-        emit LimitApprove(_approver);
+        emit LimitReached(_approver);
     }
 
     function _checkVoteReceiver(address voteReceiver) internal pure {

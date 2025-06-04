@@ -456,7 +456,7 @@ contract MultiVaultEVMEverscaleEventAlien is
 
         require(msg.sender.value != 0 && msg.sender == transitionalData.proxy, ErrorCodes.SENDER_NOT_PROXY);
 
-        _setStatusLimitApprove(_approver);
+        _setStatusLimitReached(_approver);
 
         limitApprover = _approver;
     }
@@ -501,7 +501,7 @@ contract MultiVaultEVMEverscaleEventAlien is
     }
 
     function rejectLimit(address _expectedGasReceiver) external onlyLimitApprover {
-        require(status() == Status.LimitApprove, ErrorCodes.WRONG_STATUS);
+        require(status() == Status.LimitReached, ErrorCodes.WRONG_STATUS);
 
         _setStatusCancelled();
 

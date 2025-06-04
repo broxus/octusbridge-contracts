@@ -9,7 +9,7 @@ interface IBasicEvent {
         Confirmed,          // 2
         Rejected,           // 3
         Cancelled,          // 4
-        LimitApprove,       // 5
+        LimitReached,       // 5
         LiquidityRequested, // 6
         LiquidityProvided   // 7
     }
@@ -18,7 +18,7 @@ interface IBasicEvent {
     event Closed();
     event Confirmed();
     event Rejected(uint32 reason);
-    event LimitApprove(address approver);
+    event LimitReached(address approver);
     event LiquidityRequested(uint128 bounty);
     event Cancelled();
     event LiquidityProvided(address tokenSender);
