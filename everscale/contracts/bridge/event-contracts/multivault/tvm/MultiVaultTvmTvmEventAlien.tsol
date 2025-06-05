@@ -685,12 +685,15 @@ contract MultiVaultTvmTvmEventAlien is
         status = Status.Cancelled;
         emit Cancelled();
 
-        _expectedGasReceiver.transfer({
-            value: address(this).balance - msg.value,
-            bounce: false
-        });
+        EventData eventData = getEventData();
+        if (eventData.expected_gas > 0) {
+            _expectedGasReceiver.transfer({
+                value: eventData.expected_gas,
+                bounce: false
+            });
+        }
 
-        msg.sender.transfer({
+        initializer.transfer({
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
             bounce: false
@@ -742,8 +745,14 @@ contract MultiVaultTvmTvmEventAlien is
         );
 
         status = Status.Cancelled;
-
         emit Cancelled();
+
+        if (eventData.expected_gas > 0) {
+            _expectedGasReceiver.transfer({
+                value: eventData.expected_gas,
+                bounce: false
+            });
+        }
 
         TransitionalData transitionalData = getTransitionalData();
         TvmCell transferData;
@@ -786,7 +795,7 @@ contract MultiVaultTvmTvmEventAlien is
                 value: msg.value
             }(eventInitData, withdrawPayload);
 
-        _expectedGasReceiver.transfer({
+        initializer.transfer({
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
             bounce: false
@@ -843,7 +852,7 @@ contract MultiVaultTvmTvmEventAlien is
         // send tokens to original recipient
         if (isWNative && !eventData.payload.hasValue()) {
             IBurnableTokenWallet(eventTokenWallet).burn{
-                value: address(this).balance - msg.value,
+                value: Gas.getTransferTokenValue() + eventData.expected_gas,
                 bounce: false,
                 flag: MsgFlag.SENDER_PAYS_FEES
             }(
@@ -854,7 +863,7 @@ contract MultiVaultTvmTvmEventAlien is
             );
         } else {
             ITokenWallet(eventTokenWallet).transfer{
-                value: address(this).balance - msg.value,
+                value: Gas.getTransferTokenValue() + eventData.expected_gas,
                 bounce: false,
                 flag: MsgFlag.SENDER_PAYS_FEES
             }(

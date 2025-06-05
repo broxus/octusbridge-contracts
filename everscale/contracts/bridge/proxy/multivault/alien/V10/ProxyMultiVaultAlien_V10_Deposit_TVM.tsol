@@ -71,10 +71,17 @@ abstract contract ProxyMultiVaultAlien_V10_Deposit_TVM is
         if (!isLimitApproved && isLimitReached) {
             IMultiVaultTvmTvmEventAlien(eventContract)
                 .dailyLimitReached{
-                    value: 0,
-                    flag: MsgFlag.ALL_NOT_RESERVED,
+                    value: Gas.getMintTokenValue() + expectedGas,
+                    flag: MsgFlag.SENDER_PAYS_FEES,
                     bounce: false
                 }(limitApprover);
+
+            // Refund remaining gas to event deployer
+            remainingGasTo.transfer({
+                value: 0,
+                flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+                bounce: false
+            });
 
             return;
         }

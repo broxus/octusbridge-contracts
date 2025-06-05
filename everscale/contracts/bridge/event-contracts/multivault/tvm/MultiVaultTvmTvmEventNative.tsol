@@ -261,6 +261,13 @@ contract MultiVaultTvmTvmEventNative is
         status = Status.Cancelled;
         emit Cancelled();
 
+        if (expected_gas > 0) {
+            _expectedGasReceiver.transfer({
+                value: expected_gas,
+                bounce: false
+            });
+        }
+
         TvmCell transferData = abi.encode(
             _newRecipient,
             eventInitData.chainId,
@@ -285,7 +292,7 @@ contract MultiVaultTvmTvmEventNative is
                 value: msg.value
             }(eventInitData, withdrawPayload);
 
-        _expectedGasReceiver.transfer({
+        initializer.transfer({
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
             bounce: false
@@ -349,7 +356,7 @@ contract MultiVaultTvmTvmEventNative is
         // send tokens to original recipient
         if (isWNative && !payload.hasValue()) {
             IBurnableTokenWallet(eventTokenWallet).burn{
-                value: address(this).balance - msg.value,
+                value: Gas.getTransferTokenValue() + expected_gas,
                 bounce: false,
                 flag: MsgFlag.SENDER_PAYS_FEES
             }(
@@ -360,7 +367,7 @@ contract MultiVaultTvmTvmEventNative is
             );
         } else {
             ITokenWallet(eventTokenWallet).transfer{
-                value: address(this).balance - msg.value,
+                value: Gas.getTransferTokenValue() + expected_gas,
                 bounce: false,
                 flag: MsgFlag.SENDER_PAYS_FEES
             }(
@@ -434,12 +441,14 @@ contract MultiVaultTvmTvmEventNative is
         status = Status.Cancelled;
         emit Cancelled();
 
-        _expectedGasReceiver.transfer({
-            value: address(this).balance - msg.value,
-            bounce: false
-        });
+        if (expected_gas > 0) {
+            _expectedGasReceiver.transfer({
+                value: expected_gas,
+                bounce: false
+            });
+        }
 
-        msg.sender.transfer({
+        initializer.transfer({
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
             bounce: false

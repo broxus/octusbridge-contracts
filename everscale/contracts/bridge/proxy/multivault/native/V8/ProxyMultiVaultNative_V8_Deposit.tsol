@@ -198,10 +198,17 @@ abstract contract ProxyMultiVaultNative_V8_Deposit is
         if (!is_limit_approved && isLimitReached) {
             IMultiVaultEVMEverscaleEventNative(eventAddress)
                 .dailyLimitReached{
-                    value: 0,
-                    flag: MsgFlag.ALL_NOT_RESERVED,
+                    value: Gas.getTransferTokenValue() + expectedGas,
+                    flag: MsgFlag.SENDER_PAYS_FEES,
                     bounce: false
                 }(limitApprover);
+
+            // Refund remaining gas to event deployer
+            remainingGasTo.transfer({
+                value: 0,
+                flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+                bounce: false
+            });
 
             return;
         }
@@ -240,22 +247,29 @@ abstract contract ProxyMultiVaultNative_V8_Deposit is
                 token_wallet,
                 amount - fee,
                 recipient,
-                remainingGasTo,
+                recipient,
                 abi.encode(BridgeOpCodes.BridgeDeposit, nonce, payload),
                 true,
-                null
+                Gas.getTransferTokenValue() + expectedGas
             );
         } else {
             _transferTokens(
                 token_wallet,
                 amount - fee,
                 recipient,
-                remainingGasTo,
+                recipient,
                 abi.encode(BridgeOpCodes.BridgeDeposit, nonce, payload),
                 true,
-                null
+                Gas.getTransferTokenValue() + expectedGas
             );
         }
+
+        // Refund remaining gas to event deployer
+        remainingGasTo.transfer({
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+            bounce: false
+        });
     }
 
     onBounce(TvmSlice slice) external view reserveAtLeastTargetBalance {
