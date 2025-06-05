@@ -23,8 +23,6 @@ const config = getConfig();
 
 assert(!!config, "Config should be defined");
 
-const START_TIMESTAMP = Math.floor(Date.now() / 1000);
-
 const ALIEN_TRANSFER_EVENT_ABI = {
   anonymous: false,
   inputs: [
@@ -213,7 +211,7 @@ const main = async (): Promise<void> => {
         networkConfiguration: {
           chainId: chainId,
           proxy: proxyMultiVaultAlien.address,
-          startTimestamp: START_TIMESTAMP,
+          startTimestamp: config?.CONFIG_START_TIMESTAMP,
           endTimestamp: 0,
         },
         _eventEmitter: new Address(config?.TVM_EVENT_EMITTERS[chainId].native),
@@ -262,7 +260,7 @@ const main = async (): Promise<void> => {
         networkConfiguration: {
           chainId: chainId,
           proxy: proxyMultiVaultNative.address,
-          startTimestamp: START_TIMESTAMP,
+          startTimestamp: config?.CONFIG_START_TIMESTAMP,
           endTimestamp: 0,
         },
         _eventEmitter: new Address(config?.TVM_EVENT_EMITTERS[chainId].alien),
@@ -408,7 +406,7 @@ const main = async (): Promise<void> => {
       networkConfiguration: {
         eventEmitter: proxyMultiVaultAlien.address,
         proxy: new BigNumber(config.ETH_MULTI_VAULT_PROXY.toLowerCase(), 16).toString(10),
-        startTimestamp: START_TIMESTAMP,
+        startTimestamp: config?.CONFIG_START_TIMESTAMP,
         endTimestamp: 0,
       },
     };
@@ -453,7 +451,7 @@ const main = async (): Promise<void> => {
       networkConfiguration: {
         eventEmitter: proxyMultiVaultNative.address,
         proxy: new BigNumber(config.ETH_MULTI_VAULT_PROXY.toLowerCase(), 16).toString(10),
-        startTimestamp: START_TIMESTAMP,
+        startTimestamp: config?.CONFIG_START_TIMESTAMP,
         endTimestamp: 0,
       },
     };

@@ -22,6 +22,10 @@ export type Config = {
   TRANSACTION_CHECKERS: Record<number, string>;
   TVM_EVENT_EMITTERS: Record<number, { alien: string; native: string }>;
 
+  CONFIG_START_TIMESTAMP: number;
+  CONFIG_END_TIMESTAMP: number;
+  CONFIG_END_BLOCK: number;
+
   // Can approve transfers above limits
   LIMIT_APPROVER: string;
 

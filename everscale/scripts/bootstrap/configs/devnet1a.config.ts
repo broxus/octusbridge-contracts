@@ -31,6 +31,10 @@ export const config: Config = {
     },
   },
 
+  CONFIG_START_TIMESTAMP: Math.floor(Date.now() / 1000),
+  CONFIG_END_TIMESTAMP: 0,
+  CONFIG_END_BLOCK: 0,
+
   LIMIT_APPROVER: '',
   WITHDRAWER: '',
   COLD_VAULT: '',
