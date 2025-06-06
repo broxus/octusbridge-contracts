@@ -27,7 +27,7 @@ export const setupTvmTvmEventConfiguration = async (
         eventCode,
       },
       networkConfiguration: {
-        chainId: -239,
+        chainId: -6001,
         proxy,
         startTimestamp: 0,
         endTimestamp: 0,

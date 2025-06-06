@@ -92,7 +92,7 @@ export const setupNativeMultiVault = async (
     proxy.address,
     tvmTvmEvent.code,
     trustlessVerifier.address,
-    new Address("0:057493dab4639b455bd9305c0c2cc44d30cf48e5b185b6cc05a0d102c91e0fe8")
+    new Address("0:92c5662b635e85eac19243888ddfa979d6d9f8de352b1b819cb4e0427ca8e4c4")
   );
 
   // Set proxy EVM configuration
@@ -152,7 +152,7 @@ export const deployBridgeTokenFeeAndSetFee = async (
   outgoing: number
 ): Promise<[Contract<BridgeTokenFeeAbi>, Contract<TokenWalletAbi>]> => {
   const bridgeTokenFeeCode = locklift.factory.getContractArtifacts( "BridgeTokenFee").code;
-  const platformCode = locklift.factory.getContractArtifacts( "Platform").code;
+  const platformCode = locklift.factory.getContractArtifacts( "TokenFeePlatform").code;
 
   //set bridge token fee code
   await proxy.methods.setTokenFeeCode({_code: bridgeTokenFeeCode}).send({
