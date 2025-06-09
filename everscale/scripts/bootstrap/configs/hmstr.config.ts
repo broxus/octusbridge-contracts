@@ -22,7 +22,7 @@ export const config: Config = {
 
   CONFIG_START_TIMESTAMP: Math.floor(Date.now() / 1000),
   CONFIG_END_TIMESTAMP: 0,
-  CONFIG_END_BLOCK: 0,
+  CONFIG_END_BLOCK: { 1: 0, 56: 0, 43114: 0 },
 
   LIMIT_APPROVER: '',
   WITHDRAWER: '',

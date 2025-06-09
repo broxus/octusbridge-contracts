@@ -24,7 +24,7 @@ export type Config = {
 
   CONFIG_START_TIMESTAMP: number;
   CONFIG_END_TIMESTAMP: number;
-  CONFIG_END_BLOCK: number;
+  CONFIG_END_BLOCK: Record<number, number>;;
 
   // Can approve transfers above limits
   LIMIT_APPROVER: string;

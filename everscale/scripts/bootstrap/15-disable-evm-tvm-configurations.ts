@@ -16,7 +16,7 @@ const main = async (): Promise<void> => {
     const alienConfiguration: Contract<EthereumEverscaleEventConfigurationAbi> =
       locklift.deployments.getContract(`NetworkConfig-EthEverAlienEvent-${chainId}`);
     await locklift.tracing.trace(
-      alienConfiguration.methods.setEndBlockNumber({endBlockNumber: config?.CONFIG_END_BLOCK}).send({
+      alienConfiguration.methods.setEndBlockNumber({endBlockNumber: config?.CONFIG_END_BLOCK[chainId]}).send({
         from: admin.address,
         amount: config.GAS.CONFIGURATION_SET_END,
         bounce: true,
@@ -24,13 +24,13 @@ const main = async (): Promise<void> => {
     );
 
     console.log(
-      `Disabled alien configuration ${alienConfiguration.address.toString()}, end block: ${config?.CONFIG_END_BLOCK}, chain id: ${chainId}`,
+      `Disabled alien configuration ${alienConfiguration.address.toString()}, end block: ${config?.CONFIG_END_BLOCK[chainId]}, chain id: ${chainId}`,
     );
 
     const nativeConfiguration: Contract<EthereumEverscaleEventConfigurationAbi> =
       locklift.deployments.getContract(`NetworkConfig-EthEverNativeEvent-${chainId}`);
     await locklift.tracing.trace(
-      nativeConfiguration.methods.setEndBlockNumber({endBlockNumber: config?.CONFIG_END_BLOCK}).send({
+      nativeConfiguration.methods.setEndBlockNumber({endBlockNumber: config?.CONFIG_END_BLOCK[chainId]}).send({
         from: admin.address,
         amount: config.GAS.CONFIGURATION_SET_END,
         bounce: true,
@@ -38,7 +38,7 @@ const main = async (): Promise<void> => {
     );
 
     console.log(
-      `Disabled native configuration ${nativeConfiguration.address.toString()}, end block: ${config?.CONFIG_END_BLOCK}, chain id: ${chainId}`,
+      `Disabled native configuration ${nativeConfiguration.address.toString()}, end block: ${config?.CONFIG_END_BLOCK[chainId]}, chain id: ${chainId}`,
     );
   }
 };
