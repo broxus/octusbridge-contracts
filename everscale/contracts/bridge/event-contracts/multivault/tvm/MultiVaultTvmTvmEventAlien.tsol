@@ -663,7 +663,11 @@ contract MultiVaultTvmTvmEventAlien is
     function dailyLimitReached(address _approver) external override {
         TransitionalData transitionalData = getTransitionalData();
 
-        require(msg.sender == transitionalData.proxy && transitionalData.proxy.value != 0, ErrorCodes.SENDER_NOT_PROXY);
+        require(
+            msg.sender == transitionalData.proxy && transitionalData.proxy.value != 0 ||
+            msg.sender == transitionalData.native_proxy && transitionalData.native_proxy.value != 0,
+            ErrorCodes.SENDER_NOT_PROXY
+        );
         require(status == Status.Confirmed, ErrorCodes.WRONG_STATUS);
 
         status = Status.LimitReached;
