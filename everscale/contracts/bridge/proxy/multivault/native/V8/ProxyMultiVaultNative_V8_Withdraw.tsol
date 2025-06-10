@@ -84,7 +84,7 @@ abstract contract ProxyMultiVaultNative_V8_Withdraw is
                         msg.sender,
                         amount,
                         sender,
-                        remainingGasTo,
+                        sender,
                         empty,
                         false,
                         null
@@ -94,7 +94,7 @@ abstract contract ProxyMultiVaultNative_V8_Withdraw is
                         msg.sender,
                         amount,
                         sender,
-                        remainingGasTo,
+                        sender,
                         empty,
                         false,
                         null
@@ -127,15 +127,27 @@ abstract contract ProxyMultiVaultNative_V8_Withdraw is
 
                 TvmCell empty;
 
-                _transferTokens(
-                    msg.sender,
-                    amount,
-                    sender,
-                    remainingGasTo,
-                    empty,
-                    false,
-                    null
-                );
+                if (wNativeAddresses.exists(tokenRoot)) {
+                    _burnTokens(
+                        msg.sender,
+                        amount,
+                        sender,
+                        sender,
+                        empty,
+                        false,
+                        null
+                    );
+                } else {
+                    _transferTokens(
+                        msg.sender,
+                        amount,
+                        sender,
+                        sender,
+                        empty,
+                        false,
+                        null
+                    );
+                }
 
                 return;
             }
