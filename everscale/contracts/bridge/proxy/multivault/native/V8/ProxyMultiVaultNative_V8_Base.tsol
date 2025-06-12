@@ -23,6 +23,8 @@ abstract contract ProxyMultiVaultNative_V8_Base is IProxyMultiVaultNative_V8, In
     address public dex_middleware;
     address public proxyMultiVaultAlien;
 
+    TvmCell eventAddressKeeperCode;
+
     uint32 constant FEE_DENOMINATOR = 100_000;
     TvmCell platformCode;
 
@@ -79,6 +81,10 @@ abstract contract ProxyMultiVaultNative_V8_Base is IProxyMultiVaultNative_V8, In
         } (evmConfiguration, solanaConfiguration, tvmConfiguration);
     }
 
+    function getEventAddressKeeperCode() external view responsible returns(TvmCell) {
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} eventAddressKeeperCode;
+    }
+
     function setEVMConfiguration(
         EVMConfiguration _config,
         address remainingGasTo
@@ -100,11 +106,11 @@ abstract contract ProxyMultiVaultNative_V8_Base is IProxyMultiVaultNative_V8, In
         tvmConfiguration.incomingConfigurations = _incomingConfigurations;
     }
 
-    function setTVMEventAddressKeeperCode(
+    function setEventAddressKeeperCode(
         TvmCell _eventAddressKeeperCode,
         address remainingGasTo
     ) override external onlyOwner cashBackTo(remainingGasTo) {
-        tvmConfiguration.eventAddressKeeperCode = _eventAddressKeeperCode;
+        eventAddressKeeperCode = _eventAddressKeeperCode;
     }
 
     function setColdVault(address _coldVault, address _remainingGasTo)

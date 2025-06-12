@@ -315,7 +315,16 @@
 			"outputs": [
 				{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"evmConfigurations","type":"address[]"}],"name":"value0","type":"tuple"},
 				{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"solanaConfiguration","type":"address"}],"name":"value1","type":"tuple"},
-				{"components":[{"name":"incomingConfigurations","type":"address[]"},{"name":"eventAddressKeeperCode","type":"cell"},{"components":[{"name":"incoming","type":"uint32"},{"name":"outgoing","type":"uint32"}],"name":"defaultFee","type":"tuple"},{"components":[{"name":"incoming","type":"uint32"},{"name":"outgoing","type":"uint32"}],"name":"fees","type":"map(address,tuple)"},{"name":"tokenFeeCode","type":"cell"}],"name":"value2","type":"tuple"}
+				{"components":[{"name":"incomingConfigurations","type":"address[]"},{"components":[{"name":"incoming","type":"uint32"},{"name":"outgoing","type":"uint32"}],"name":"defaultFee","type":"tuple"},{"components":[{"name":"incoming","type":"uint32"},{"name":"outgoing","type":"uint32"}],"name":"fees","type":"map(address,tuple)"},{"name":"tokenFeeCode","type":"cell"}],"name":"value2","type":"tuple"}
+			]
+		},
+		{
+			"name": "getEventAddressKeeperCode",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
 			]
 		},
 		{
@@ -346,7 +355,7 @@
 			]
 		},
 		{
-			"name": "setTVMEventAddressKeeperCode",
+			"name": "setEventAddressKeeperCode",
 			"inputs": [
 				{"name":"_eventAddressKeeperCode","type":"cell"},
 				{"name":"remainingGasTo","type":"address"}
@@ -530,10 +539,11 @@
 		{"name":"owner","type":"address"},
 		{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"evmConfigurations","type":"address[]"}],"name":"evmConfiguration","type":"tuple"},
 		{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"solanaConfiguration","type":"address"}],"name":"solanaConfiguration","type":"tuple"},
-		{"components":[{"name":"incomingConfigurations","type":"address[]"},{"name":"eventAddressKeeperCode","type":"cell"},{"components":[{"name":"incoming","type":"uint32"},{"name":"outgoing","type":"uint32"}],"name":"defaultFee","type":"tuple"},{"components":[{"name":"incoming","type":"uint32"},{"name":"outgoing","type":"uint32"}],"name":"fees","type":"map(address,tuple)"},{"name":"tokenFeeCode","type":"cell"}],"name":"tvmConfiguration","type":"tuple"},
+		{"components":[{"name":"incomingConfigurations","type":"address[]"},{"components":[{"name":"incoming","type":"uint32"},{"name":"outgoing","type":"uint32"}],"name":"defaultFee","type":"tuple"},{"components":[{"name":"incoming","type":"uint32"},{"name":"outgoing","type":"uint32"}],"name":"fees","type":"map(address,tuple)"},{"name":"tokenFeeCode","type":"cell"}],"name":"tvmConfiguration","type":"tuple"},
 		{"name":"api_version","type":"uint8"},
 		{"name":"dex_middleware","type":"address"},
 		{"name":"proxyMultiVaultAlien","type":"address"},
+		{"name":"eventAddressKeeperCode","type":"cell"},
 		{"name":"platformCode","type":"cell"},
 		{"components":[{"name":"incomingLimit","type":"optional(uint128)"},{"name":"dailyIncomingVolume","type":"uint128"},{"name":"outgoingLimit","type":"optional(uint128)"},{"name":"dailyOutgoingVolume","type":"uint128"},{"name":"dayStartTimestamp","type":"uint32"}],"name":"tokenToDailyLimits","type":"map(address,tuple)"},
 		{"name":"limitApprover","type":"address"},

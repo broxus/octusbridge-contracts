@@ -18,7 +18,6 @@ interface IProxyMultiVaultNative_V8 is IEVMCallback, INetworks {
 
     struct TVMConfiguration {
         address[] incomingConfigurations;
-        TvmCell eventAddressKeeperCode;
         Fees defaultFee;
         mapping(address => Fees) fees;
         TvmCell tokenFeeCode;
@@ -45,7 +44,7 @@ interface IProxyMultiVaultNative_V8 is IEVMCallback, INetworks {
     function setEVMConfiguration(EVMConfiguration _config, address gasBackAddress) external;
     function setSolanaConfiguration(SolanaConfiguration _config, address gasBackAddress) external;
     function setTVMConfiguration(address[] _incomingConfigurations, address gasBackAddress) external;
-    function setTVMEventAddressKeeperCode(TvmCell _eventAddressKeeperCode, address gasBackAddress) external;
+    function setEventAddressKeeperCode(TvmCell _eventAddressKeeperCode, address gasBackAddress) external;
     function setTokenDailyLimits(
         address _token,
         optional(uint128) _incomingLimit,

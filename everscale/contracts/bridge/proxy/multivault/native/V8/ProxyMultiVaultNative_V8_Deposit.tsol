@@ -77,6 +77,22 @@ abstract contract ProxyMultiVaultNative_V8_Deposit is
 
         uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
 
+        TvmCell stateInit = tvm.buildStateInit({
+            contr: EventAddressKeeper,
+            varInit: {
+                proxy: address(this),
+                callId: nonce
+            },
+            pubkey: 0,
+            code: eventAddressKeeperCode
+        });
+
+        new EventAddressKeeper{
+            value: gasToValue(Gas.DEPLOY_EVENT_ADDRESS_KEEPER, address(this).wid),
+            flag: MsgFlag.SENDER_PAYS_FEES,
+            stateInit: stateInit
+        }(event_address);
+
         optional(TvmCell) transferPayload;
         if (!payload.toSlice().empty()) {
             transferPayload.set(payload);
@@ -233,7 +249,7 @@ abstract contract ProxyMultiVaultNative_V8_Deposit is
             callId: nonce
         },
             pubkey: 0,
-            code: tvmConfiguration.eventAddressKeeperCode
+            code: eventAddressKeeperCode
         });
 
         new EventAddressKeeper{
@@ -329,7 +345,7 @@ abstract contract ProxyMultiVaultNative_V8_Deposit is
             callId: callId
         },
             pubkey: 0,
-            code: tvmConfiguration.eventAddressKeeperCode
+            code: eventAddressKeeperCode
         });
 
         return address(tvm.hash(stateInit));

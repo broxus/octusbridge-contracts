@@ -334,7 +334,7 @@ const upgradeProxies = async (
 
     await locklift.tracing.trace(
       nativeProxy.methods
-        .setTVMEventAddressKeeperCode({
+        .setEventAddressKeeperCode({
           _eventAddressKeeperCode: newEventAddressKeeperCode.code,
           remainingGasTo: admin,
         })

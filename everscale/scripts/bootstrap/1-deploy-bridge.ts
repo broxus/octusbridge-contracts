@@ -408,7 +408,7 @@ const deployMultiVaults = async (admin: Account, signer: Signer): Promise<void> 
 
   await locklift.tracing.trace(
     proxyNative.methods
-      .setTVMEventAddressKeeperCode({
+      .setEventAddressKeeperCode({
         _eventAddressKeeperCode: locklift.factory.getContractArtifacts("EventAddressKeeper").code,
         remainingGasTo: admin.address,
       })
