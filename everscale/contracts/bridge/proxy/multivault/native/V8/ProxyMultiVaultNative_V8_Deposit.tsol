@@ -89,7 +89,7 @@ abstract contract ProxyMultiVaultNative_V8_Deposit is
                 recipient,
                 remainingGasTo,
                 abi.encode(BridgeOpCodes.BridgeDeposit, nonce, transferPayload),
-                false,
+                true,
                 null
             );
         } else {
@@ -99,7 +99,7 @@ abstract contract ProxyMultiVaultNative_V8_Deposit is
                 recipient,
                 remainingGasTo,
                 abi.encode(BridgeOpCodes.BridgeDeposit, nonce, transferPayload),
-                false,
+                true,
                 null
             );
         }
