@@ -320,8 +320,13 @@ const upgradeProxies = async (
     );
   }
 
+  const eventAddressKeeperCode= await nativeProxy.methods
+    .getEventAddressKeeperCode({ answerId: 0 })
+    .call({ responsible: true })
+    .then((r) => r.value0);
+
   const nativeEventAddressKeeperCodeHash = await locklift.provider.getBocHash(
-    nativeTvmConfiguration.eventAddressKeeperCode,
+    eventAddressKeeperCode,
   );
 
   const newEventAddressKeeperCode =
