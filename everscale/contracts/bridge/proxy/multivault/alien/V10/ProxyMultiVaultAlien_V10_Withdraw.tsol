@@ -107,7 +107,8 @@ abstract contract ProxyMultiVaultAlien_V10_Withdraw is
                 amount,
                 remainingGasTo,
                 sender,
-                burnPayload
+                burnPayload,
+                false
             );
         }
     }
@@ -198,7 +199,8 @@ abstract contract ProxyMultiVaultAlien_V10_Withdraw is
             amount,
             remainingGasTo,
             sender,
-            abi.encode(recipient, expectedGas, eventPayload)
+            abi.encode(recipient, expectedGas, eventPayload),
+            true
         );
     }
 
@@ -283,14 +285,16 @@ abstract contract ProxyMultiVaultAlien_V10_Withdraw is
         uint128 amount,
         address remainingGasTo,
         address sender,
-        TvmCell withdrawPayload
+        TvmCell withdrawPayload,
+        bool isCancel
     ) internal pure {
         TvmCell payload = abi.encode(
 //            nonce,
             amount,
             remainingGasTo,
             sender,
-            withdrawPayload
+            withdrawPayload,
+            isCancel
         );
 
         ITokenRootAlienTVM(token).meta{
@@ -319,13 +323,15 @@ abstract contract ProxyMultiVaultAlien_V10_Withdraw is
             uint128 amount,
             address remainingGasTo,
             address sender,
-            TvmCell withdrawPayload
+            TvmCell withdrawPayload,
+            bool isCancel
         ) = abi.decode(payload, (
 //            uint32,
             uint128,
             address,
             address,
-            TvmCell
+            TvmCell,
+            bool
         ));
 
         (
@@ -339,10 +345,13 @@ abstract contract ProxyMultiVaultAlien_V10_Withdraw is
         ));
 
         // accumulate fee
-        uint128 fee = _calculateFeesWithdraw(amount, msg.sender);
-        _accumulateFee(fee, msg.sender);
+        uint128 fee = 0;
+        if (!isCancel) {
+            fee = _calculateFeesWithdraw(amount, msg.sender);
+            _accumulateFee(fee, msg.sender);
 
-        emit OutgoingFeeTaken(fee, msg.sender);
+            emit OutgoingFeeTaken(fee, msg.sender);
+        }
 
         emit TvmTvmAlien(
             baseChainId,

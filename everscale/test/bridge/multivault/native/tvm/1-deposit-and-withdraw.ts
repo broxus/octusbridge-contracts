@@ -35,7 +35,7 @@ const amount = 500;
 const incomingFee = 10000;
 const outgoingFee = 10000;
 
-describe("Deposit and withdraw native TVM token with no merging", () => {
+describe("Deposit and withdraw native TVM token", () => {
   let bridgeOwner: Account;
 
   let staking: Contract<StakingMockupAbi>;

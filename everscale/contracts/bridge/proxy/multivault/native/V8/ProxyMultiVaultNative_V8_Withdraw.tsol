@@ -161,7 +161,8 @@ abstract contract ProxyMultiVaultNative_V8_Withdraw is
                 remainingGasTo,
                 sender,
                 msg.sender,
-                transferPayload
+                transferPayload,
+                false
             );
         }
     }
@@ -236,7 +237,8 @@ abstract contract ProxyMultiVaultNative_V8_Withdraw is
             remainingGasTo,
             sender,
             nativeProxyWallet,
-            transferData
+            transferData,
+            true
         );
     }
 
@@ -325,14 +327,18 @@ abstract contract ProxyMultiVaultNative_V8_Withdraw is
         address remainingGasTo,
         address sender,
         address nativeProxyWallet,
-        TvmCell transferPayload
+        TvmCell transferPayload,
+        bool isCancel
     ) internal view {
 
         // accumulate fee
-        uint128 fee = _calculateFeesWithdraw(amount, nativeProxyWallet);
-        _accumulateFee(fee, nativeProxyWallet);
+        uint128 fee = 0;
+        if (!isCancel) {
+            fee = _calculateFeesWithdraw(amount, nativeProxyWallet);
+            _accumulateFee(fee, nativeProxyWallet);
 
-        emit OutgoingFeeTaken(fee, nativeProxyWallet);
+            emit OutgoingFeeTaken(fee, nativeProxyWallet);
+        }
 
         (
             address recipient,

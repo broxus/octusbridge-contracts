@@ -49,34 +49,34 @@ contract ProxyMultiVaultNative_V8 is ProxyMultiVaultNative_V8_Deposit, CheckPubK
         (
             EVMConfiguration evmConfiguration_,
             SolanaConfiguration solanaConfiguration_,
-            TVMConfiguration tvmConfiguration_,
+//            TVMConfiguration tvmConfiguration_,
             address owner_,
             uint8 api_version_,
             address dex_middleware_,
-            address proxyMultiVaultAlien_,
-            uint _randomNonce_,
-            TvmCell platformCode_
+//            address proxyMultiVaultAlien_,
+            uint _randomNonce_
+//            TvmCell platformCode_
         ) = abi.decode(data, (
             EVMConfiguration,
             SolanaConfiguration,
-            TVMConfiguration,
+//            TVMConfiguration,
             address,
             uint8,
             address,
-            address,
-            uint,
-            TvmCell
+//            address,
+            uint
+//            TvmCell
         ));
 
         evmConfiguration = evmConfiguration_;
         solanaConfiguration = solanaConfiguration_;
-        tvmConfiguration = tvmConfiguration_;
+//        tvmConfiguration = tvmConfiguration_;
 
         api_version = api_version_ + 1;
         dex_middleware = dex_middleware_;
-        proxyMultiVaultAlien = proxyMultiVaultAlien_;
+//        proxyMultiVaultAlien = proxyMultiVaultAlien_;
         setOwnership(owner_);
         _randomNonce = _randomNonce_;
-        platformCode = platformCode_;
+//        platformCode = platformCode_;
     }
 }
