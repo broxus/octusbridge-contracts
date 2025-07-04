@@ -212,6 +212,7 @@ contract MultiVaultEVMEverscaleEventNative is
         require(msg.sender == proxy, ErrorCodes.SENDER_NOT_PROXY);
 
         isWNative = _wNativeAddresses.exists(token);
+        isLimitApproved = true;
 
         if (eventTokenWallet.value == 0) {
             ITokenRoot(token).walletOf{

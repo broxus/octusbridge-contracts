@@ -232,6 +232,7 @@ contract MultiVaultTvmTvmEventNative is
         require(status == Status.Confirmed, ErrorCodes.WRONG_STATUS);
 
         isWNative = _wNativeAddresses.exists(token);
+        isLimitApproved = true;
 
         if (eventTokenWallet.value == 0) {
             ITokenRoot(token).walletOf{
