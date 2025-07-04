@@ -213,7 +213,7 @@
 			"inputs": [
 				{"components":[{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"},{"name":"chainId","type":"uint32"}],"name":"eventInitData","type":"tuple"},
 				{"name":"meta","type":"cell"},
-				{"name":"remainingGasTo","type":"address"}
+				{"name":"value2","type":"address"}
 			],
 			"outputs": [
 			]
@@ -223,7 +223,7 @@
 			"inputs": [
 				{"components":[{"components":[{"name":"accountSeed","type":"uint128"},{"name":"slot","type":"uint64"},{"name":"blockTime","type":"uint64"},{"name":"txSignature","type":"string"},{"name":"eventData","type":"cell"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"}],"name":"eventInitData","type":"tuple"},
 				{"name":"meta","type":"cell"},
-				{"name":"remainingGasTo","type":"address"}
+				{"name":"value2","type":"address"}
 			],
 			"outputs": [
 			]

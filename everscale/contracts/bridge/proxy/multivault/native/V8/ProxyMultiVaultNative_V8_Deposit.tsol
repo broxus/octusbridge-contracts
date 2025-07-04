@@ -25,11 +25,10 @@ abstract contract ProxyMultiVaultNative_V8_Deposit is
     ProxyMultiVaultNative_V8_Withdraw
 {
     /// @notice Handles native token transfer from EVM.
-    /// @param remainingGasTo Gas back address
     function onEventConfirmedExtended(
         IEthereumEverscaleEvent.EthereumEverscaleEventInitData eventInitData,
         TvmCell meta,
-        address remainingGasTo
+        address /*remainingGasTo*/
     ) external override reserveAtLeastTargetBalance {
         require(
             _isArrayContainsAddress(evmConfiguration.evmConfigurations, msg.sender),
@@ -103,7 +102,7 @@ abstract contract ProxyMultiVaultNative_V8_Deposit is
                 token_wallet,
                 amount,
                 recipient,
-                remainingGasTo,
+                recipient,
                 abi.encode(BridgeOpCodes.BridgeDeposit, nonce, transferPayload),
                 true,
                 null
@@ -113,7 +112,7 @@ abstract contract ProxyMultiVaultNative_V8_Deposit is
                 token_wallet,
                 amount,
                 recipient,
-                remainingGasTo,
+                recipient,
                 abi.encode(BridgeOpCodes.BridgeDeposit, nonce, transferPayload),
                 true,
                 null
@@ -122,11 +121,10 @@ abstract contract ProxyMultiVaultNative_V8_Deposit is
     }
 
     /// @notice Handles native token transfer from Solana.
-    /// @param remainingGasTo Gas back address
     function onSolanaEventConfirmedExtended(
         ISolanaEverscaleEvent.SolanaEverscaleEventInitData eventInitData,
         TvmCell meta,
-        address remainingGasTo
+        address /*remainingGasTo*/
     ) external override reserveAtLeastTargetBalance {
         require(solanaConfiguration.solanaConfiguration == msg.sender, ErrorCodes.NOT_SOLANA_CONFIG);
 
@@ -155,7 +153,7 @@ abstract contract ProxyMultiVaultNative_V8_Deposit is
                 token_wallet,
                 amount,
                 recipient,
-                remainingGasTo,
+                recipient,
                 abi.encode(BridgeOpCodes.BridgeDeposit, nonce, transferPayload),
                 false,
                 null
@@ -165,7 +163,7 @@ abstract contract ProxyMultiVaultNative_V8_Deposit is
                 token_wallet,
                 amount,
                 recipient,
-                remainingGasTo,
+                recipient,
                 abi.encode(BridgeOpCodes.BridgeDeposit, nonce, transferPayload),
                 false,
                 null

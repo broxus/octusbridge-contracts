@@ -17,11 +17,10 @@ abstract contract ProxyMultiVaultAlien_V10_Deposit_EVM is
 {
     /// @notice Handles alien token transfer from EVM. Token address is derived automatically and MUST
     /// be deployed before. See note on `deployAlienToken`
-    /// @param remainingGasTo Gas back address
     function onEventConfirmedExtended(
         IEthereumEverscaleEvent.EthereumEverscaleEventInitData eventInitData,
         TvmCell meta,
-        address remainingGasTo
+        address /*remainingGasTo*/
     ) external override reserveAtLeastTargetBalance {
         require(
             _isArrayContainsAddress(evmConfiguration.evmConfigurations, msg.sender),
@@ -76,7 +75,7 @@ abstract contract ProxyMultiVaultAlien_V10_Deposit_EVM is
             token,
             amount,
             recipient,
-            remainingGasTo,
+            recipient,
             abi.encode(BridgeOpCodes.BridgeDeposit, nonce, mintPayload),
             null
         );

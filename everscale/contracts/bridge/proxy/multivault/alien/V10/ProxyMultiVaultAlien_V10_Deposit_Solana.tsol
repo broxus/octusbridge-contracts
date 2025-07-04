@@ -15,11 +15,10 @@ abstract contract ProxyMultiVaultAlien_V10_Deposit_Solana is
 {
     /// @notice Handles alien token transfer from Solana. Token address is derived automatically and MUST
     /// be deployed before. See note on `deployAlienToken`
-    /// @param remainingGasTo Gas back address
     function onSolanaEventConfirmedExtended(
         ISolanaEverscaleEvent.SolanaEverscaleEventInitData eventInitData,
         TvmCell meta,
-        address remainingGasTo
+        address /*remainingGasTo*/
     ) external override reserveAtLeastTargetBalance {
         require(solanaConfiguration.solanaConfiguration == msg.sender, ErrorCodes.NOT_SOLANA_CONFIG);
 
@@ -71,7 +70,7 @@ abstract contract ProxyMultiVaultAlien_V10_Deposit_Solana is
             token,
             amount,
             recipient,
-            remainingGasTo,
+            recipient,
             abi.encode(BridgeOpCodes.BridgeDeposit, nonce, mintPayload),
             null
         );
