@@ -19,6 +19,7 @@ interface ITvmTvmEvent {
     event Cancelled();
     event LiquidityProvided(address tokenSender);
     event LimitReached(address approver);
+    event Rejected();
 
     struct TvmTvmEventVoteData {
         uint msgHash;

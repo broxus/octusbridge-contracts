@@ -143,7 +143,7 @@ abstract contract BaseEvent is IBasicEvent, TransferUtils {
 
     function setStatusRejected(uint16 reason) internal {
         require(
-            _status == Status.Initializing || _status == Status.Pending,
+            _status == Status.Initializing || _status == Status.Pending || _status == Status.LimitReached,
             ErrorCodes.WRONG_STATUS
         );
 

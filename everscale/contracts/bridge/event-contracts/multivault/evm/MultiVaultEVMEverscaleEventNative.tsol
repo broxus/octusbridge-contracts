@@ -194,7 +194,7 @@ contract MultiVaultEVMEverscaleEventNative is
     function rejectLimit(address _expectedGasReceiver) external onlyLimitApprover {
         require(status() == Status.LimitReached, ErrorCodes.WRONG_STATUS);
 
-        _setStatusCancelled();
+        setStatusRejected(3);
 
         _expectedGasReceiver.transfer({
             value: address(this).balance - msg.value,

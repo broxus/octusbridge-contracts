@@ -438,8 +438,8 @@ contract MultiVaultTvmTvmEventNative is
     function rejectLimit(address _expectedGasReceiver) external onlyLimitApprover {
         require(status == Status.LimitReached, ErrorCodes.WRONG_STATUS);
 
-        status = Status.Cancelled;
-        emit Cancelled();
+        status = Status.Rejected;
+        emit Rejected();
 
         if (expected_gas > 0) {
             _expectedGasReceiver.transfer({
