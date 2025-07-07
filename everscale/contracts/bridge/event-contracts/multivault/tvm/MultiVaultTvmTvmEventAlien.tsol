@@ -693,6 +693,7 @@ contract MultiVaultTvmTvmEventAlien is
         if (eventData.expected_gas > 0) {
             _expectedGasReceiver.transfer({
                 value: eventData.expected_gas,
+                flag: MsgFlag.SENDER_PAYS_FEES,
                 bounce: false
             });
         }
@@ -754,6 +755,7 @@ contract MultiVaultTvmTvmEventAlien is
         if (eventData.expected_gas > 0) {
             _expectedGasReceiver.transfer({
                 value: eventData.expected_gas,
+                flag: MsgFlag.SENDER_PAYS_FEES,
                 bounce: false
             });
         }
