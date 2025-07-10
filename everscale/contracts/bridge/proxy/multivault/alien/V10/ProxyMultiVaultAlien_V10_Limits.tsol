@@ -11,7 +11,7 @@ abstract contract ProxyMultiVaultAlien_V10_Limits is ProxyMultiVaultAlien_V10_Fe
     ) external override onlyOwner cashBackTo(_remainingGasTo) {
         DailyLimits oldLimits = tokenToDailyLimits[_token];
 
-        bool canResetLimits = block.timestamp > oldLimits.dayStartTimestamp + 86400;
+        bool canResetLimits = block.timestamp / 86400 > oldLimits.dayStartTimestamp / 86400;
 
         // Can continue day with new limits or start a new one
         tokenToDailyLimits[_token] = DailyLimits({
@@ -84,7 +84,7 @@ abstract contract ProxyMultiVaultAlien_V10_Limits is ProxyMultiVaultAlien_V10_Fe
         }
 
         // Day is over
-        bool canResetVolumes = block.timestamp > limits.dayStartTimestamp + 86400;
+        bool canResetVolumes = block.timestamp / 86400 > limits.dayStartTimestamp / 86400;
 
         if (canResetVolumes) {
             limits.dayStartTimestamp = block.timestamp;
@@ -119,7 +119,7 @@ abstract contract ProxyMultiVaultAlien_V10_Limits is ProxyMultiVaultAlien_V10_Fe
         }
 
         // Day is over
-        bool canResetVolumes = block.timestamp > limits.dayStartTimestamp + 86400;
+        bool canResetVolumes = block.timestamp / 86400 > limits.dayStartTimestamp / 86400;
 
         if (canResetVolumes) {
             limits.dayStartTimestamp = block.timestamp;
