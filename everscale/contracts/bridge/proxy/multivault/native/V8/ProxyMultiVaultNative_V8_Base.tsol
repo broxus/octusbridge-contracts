@@ -1,0 +1,210 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma ever-solidity >= 0.62.0;
+
+import "../../../../interfaces/proxy/multivault/native/IProxyMultiVaultNative_V8.tsol";
+
+import "../../../../../utils/TransferUtils.tsol";
+import "../../../../../utils/ErrorCodes.tsol";
+import "../../../.././libraries/Gas.tsol";
+
+import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenWallet.tsol";
+import "ton-eth-bridge-token-contracts/contracts/interfaces/IBurnableTokenWallet.tsol";
+
+import "@broxus/contracts/contracts/access/InternalOwner.tsol";
+import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
+
+
+abstract contract ProxyMultiVaultNative_V8_Base is IProxyMultiVaultNative_V8, InternalOwner, TransferUtils {
+    EVMConfiguration evmConfiguration;
+    SolanaConfiguration solanaConfiguration;
+    TVMConfiguration tvmConfiguration;
+
+    uint8 api_version;
+    address public dex_middleware;
+    address public proxyMultiVaultAlien;
+
+    TvmCell eventAddressKeeperCode;
+
+    uint32 constant FEE_DENOMINATOR = 100_000;
+    TvmCell platformCode;
+
+    mapping(address => DailyLimits) tokenToDailyLimits;
+    address limitApprover;
+
+    address public coldVault;
+    address public vaultWithdrawer;
+
+    mapping(address => bool) public wNativeAddresses;
+
+    modifier onlyOwnerOrWithdrawer() {
+        require(
+            msg.sender.value != 0 && (msg.sender == owner || msg.sender == vaultWithdrawer),
+            ErrorCodes.SENDER_IS_NOT_OWNER_OR_WITHDRAWER
+        );
+        _;
+    }
+
+    /// @notice Get current contract API version.
+    /// Each time contract is upgraded, API version is incremented.
+    /// @return Current API version
+    function apiVersion() external override view responsible returns(uint8) {
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} api_version;
+    }
+
+    function setDexMiddleware(address _dex_middleware) external onlyOwner cashBack {
+        dex_middleware = _dex_middleware;
+    }
+
+    function setProxyMultiVaultAlien(address _proxyMultiVaultAlien) external onlyOwner cashBack {
+        proxyMultiVaultAlien = _proxyMultiVaultAlien;
+    }
+
+    function setWNative(address _wNative) external onlyOwner cashBack {
+        wNativeAddresses.add(_wNative, true);
+    }
+
+    function removeWNative(address _wNative) external onlyOwner cashBack {
+        wNativeAddresses.getDel(_wNative);
+    }
+
+    function getConfiguration()
+        override
+        external
+        view
+        responsible
+        returns (EVMConfiguration, SolanaConfiguration, TVMConfiguration)
+    {
+        return{
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.REMAINING_GAS
+        } (evmConfiguration, solanaConfiguration, tvmConfiguration);
+    }
+
+    function getEventAddressKeeperCode() external view responsible returns(TvmCell) {
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} eventAddressKeeperCode;
+    }
+
+    function setEVMConfiguration(
+        EVMConfiguration _config,
+        address remainingGasTo
+    ) override external onlyOwner cashBackTo(remainingGasTo) {
+        evmConfiguration = _config;
+    }
+
+    function setSolanaConfiguration(
+        SolanaConfiguration _config,
+        address remainingGasTo
+    ) override external onlyOwner cashBackTo(remainingGasTo) {
+        solanaConfiguration = _config;
+    }
+
+    function setTVMConfiguration(
+        address[] _incomingConfigurations,
+        address remainingGasTo
+    ) override external onlyOwner cashBackTo(remainingGasTo) {
+        tvmConfiguration.incomingConfigurations = _incomingConfigurations;
+    }
+
+    function setEventAddressKeeperCode(
+        TvmCell _eventAddressKeeperCode,
+        address remainingGasTo
+    ) override external onlyOwner cashBackTo(remainingGasTo) {
+        eventAddressKeeperCode = _eventAddressKeeperCode;
+    }
+
+    function setColdVault(address _coldVault, address _remainingGasTo)
+        external
+        override
+        onlyOwner
+        cashBackTo(_remainingGasTo)
+    {
+        coldVault = _coldVault;
+    }
+
+    function setVaultWithdrawer(address _withdrawer, address _remainingGasTo)
+        external
+        override
+        onlyOwner
+        cashBackTo(_remainingGasTo)
+    {
+        vaultWithdrawer = _withdrawer;
+    }
+
+    function withdrawTokenToColdVault(
+        address _tokenWallet,
+        uint128 _amount,
+        address _remainingGasTo
+    ) external override reserveAtLeastTargetBalance onlyOwnerOrWithdrawer {
+        require(coldVault.value != 0, ErrorCodes.COLD_VAULT_IS_NOT_SET);
+
+        TvmCell empty;
+
+        _transferTokens(
+            _tokenWallet,
+            _amount,
+            coldVault,
+            _remainingGasTo,
+            empty,
+            false,
+            null
+        );
+    }
+
+    function _transferTokens(
+        address _tokenWallet,
+        uint128 _amount,
+        address _recipient,
+        address _remainingGasTo,
+        TvmCell _payload,
+        bool _bounce,
+        optional(uint128) _value
+    ) internal pure {
+        ITokenWallet(_tokenWallet).transfer{
+            value: _value.getOr(0),
+            bounce: _bounce,
+            flag: _value.hasValue() ? MsgFlag.SENDER_PAYS_FEES : MsgFlag.ALL_NOT_RESERVED
+        }(
+            _amount,
+            _recipient,
+            Gas.getDeployTokenWalletValue(),
+            _remainingGasTo,
+            true,
+            _payload
+        );
+    }
+
+    function _burnTokens(
+        address _tokenWallet,
+        uint128 _amount,
+        address _recipient,
+        address _remainingGasTo,
+        optional(TvmCell) _payload,
+        bool _bounce,
+        optional(uint128) _value
+    ) internal pure {
+        IBurnableTokenWallet(_tokenWallet).burn{
+            value: _value.getOr(0),
+            bounce: _bounce,
+            flag: _value.hasValue() ? MsgFlag.SENDER_PAYS_FEES : MsgFlag.ALL_NOT_RESERVED
+        }(
+            _amount,
+            _remainingGasTo,
+            _recipient,
+            _payload.getOrDefault()
+        );
+    }
+
+    function _isArrayContainsAddress(
+        address[] array,
+        address searchElement
+    ) internal pure returns (bool) {
+        for (address value: array) {
+            if (searchElement == value) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}

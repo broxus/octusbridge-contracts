@@ -1,0 +1,26 @@
+pragma ever-solidity >= 0.62.0;
+
+import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
+import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
+
+import "../interfaces/trustless-verifier/ITrustlessVerifier.tsol";
+import "../interfaces/trustless-verifier/IOnTrustlessVerify.tsol";
+
+import "../../utils/TransferUtils.tsol";
+
+contract TrustlessVerifierMockup is ITrustlessVerifier, RandomNonce, TransferUtils {
+    bool approve = false;
+
+    function setApprove(bool _approve) external cashBack {
+        approve = _approve;
+    }
+
+    function verifyTx(TvmCell, TvmCell) external functionID(0xddab5b88) override reserveTargetBalance() {
+        IOnTrustlessVerify(msg.sender)
+            .onTrustlessVerify{
+                value: 0,
+                flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+                bounce: false
+            }(approve, 333);
+    }
+}

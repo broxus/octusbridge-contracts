@@ -3,10 +3,23 @@ pragma ever-solidity >= 0.62.0;
 
 interface IBasicEvent {
     enum Vote { Reserved, Empty, Confirm, Reject }
-    enum Status { Initializing, Pending, Confirmed, Rejected }
+    enum Status {
+        Initializing,       // 0
+        Pending,            // 1
+        Confirmed,          // 2
+        Rejected,           // 3
+        Cancelled,          // 4
+        LimitReached,       // 5
+        LiquidityRequested, // 6
+        LiquidityProvided   // 7
+    }
 
     event Reject(uint relay);
     event Closed();
     event Confirmed();
     event Rejected(uint32 reason);
+    event LimitReached(address approver);
+    event LiquidityRequested(uint128 bounty);
+    event Cancelled();
+    event LiquidityProvided(address tokenSender);
 }

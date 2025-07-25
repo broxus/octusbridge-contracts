@@ -28,8 +28,24 @@ interface IProxyMultiVaultAlien_V8 is IEVMCallback, INetworks {
 
     // Settings
     function getConfiguration() external view responsible returns (EVMConfiguration, SolanaConfiguration);
-    function setEVMConfiguration(EVMConfiguration _config, address gasBackAddress) external;
-    function setSolanaConfiguration(SolanaConfiguration _config, address gasBackAddress) external;
+    function setEVMConfiguration(
+        address _everscaleConfiguration,
+        address[] _evmConfigurations,
+        address _remainingGasTo
+    ) external;
+    function setSolanaConfiguration(
+        address _everscaleConfiguration,
+        address _solanaConfiguration,
+        address _remainingGasTo
+    ) external;
+
+    function setEVMAlienTokenRootCode(TvmCell _tokenRootCode, address _remainingGasTo) external;
+    function setEVMAlienTokenWalletCode(TvmCell _tokenWalletCode, address _remainingGasTo) external;
+    function setOnceEVMAlienTokenPlatformCode(TvmCell _tokenPlatformCode, address _remainingGasTo) external;
+
+    function setSolanaAlienTokenRootCode(TvmCell _tokenRootCode, address _remainingGasTo) external;
+    function setSolanaAlienTokenWalletCode(TvmCell _tokenWalletCode, address _remainingGasTo) external;
+    function setOnceSolanaAlienTokenPlatformCode(TvmCell _tokenPlatformCode, address _remainingGasTo) external;
 
     // Token merging
     function setManager(address _manager) external;

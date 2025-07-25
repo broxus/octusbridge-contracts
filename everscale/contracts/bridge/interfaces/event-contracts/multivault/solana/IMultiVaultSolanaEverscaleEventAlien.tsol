@@ -46,4 +46,6 @@ interface IMultiVaultSolanaEverscaleEventAlien {
         address proxy_,
         address token_
     );
+
+    function dailyLimitReached(address _approver) external;
 }

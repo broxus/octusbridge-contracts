@@ -1,8 +1,21 @@
-import {LockliftConfig} from "locklift";
-import { FactorySource } from "./build/factorySource";
-const LOCAL_NETWORK_ENDPOINT = "http://localhost/graphql";
+import "@broxus/locklift-verifier";
+import "@broxus/locklift-deploy";
+import "dotenv/config";
+import chai from "chai";
 
-import "locklift-verifier";
+import { LockliftConfig, lockliftChai } from "locklift";
+import { Deployments } from "@broxus/locklift-deploy";
+
+import { FactorySource } from "./build/factorySource";
+
+chai.use(lockliftChai);
+
+declare module "locklift" {
+  //@ts-ignore
+  export interface Locklift {
+    deployments: Deployments<FactorySource>;
+  }
+}
 
 declare global {
   const locklift: import("locklift").Locklift<FactorySource>;
@@ -10,29 +23,38 @@ declare global {
 
 const config: LockliftConfig = {
   verifier: {
-    verifierVersion: "latest", // contract verifier binary, see https://github.com/broxus/everscan-verify/releases
-    apiKey: "uwJlTyvauW",
-    secretKey: "IEx2jg4hqE3V1YUqcVOY",
-    // license: "AGPL-3.0-or-later", <- this is default value and can be overrided
+    verifierVersion: "latest",
+    apiKey: process.env.EVERSCAN_API_KEY!,
+    secretKey: process.env.EVERSCAN_SECRET_KEY!,
   },
   compiler: {
-    version: "0.62.0",
-    // Specify config for extarnal contracts as in exapmple
-    // This filed for generating types only
+    version: "0.71.0",
     externalContracts: {
-      "../node_modules/ton-eth-bridge-token-contracts/build": ['TokenRoot', 'TokenWallet']
+      "../node_modules/ton-eth-bridge-token-contracts/contracts": [
+        "TokenRoot",
+        "TokenWallet",
+        "TokenRootUpgradeable",
+        "TokenWalletUpgradeable",
+        "TokenWalletPlatform",
+      ],
+      build_prod: ["Bridge"],
+      "../node_modules/@broxus/contracts/contracts/platform": ["Platform"],
+    },
+    externalContractsArtifacts: {
+      // "../node_modules/ton-eth-bridge-token-contracts": ['TokenRootUpgradable', 'TokenWalletUpgradable', 'TokenWalletPlatform'],
+      //"build_prod": ['Bridge'],
+      "precompiled": ['AlienTokenWalletUpgradeable','TokenRootAlienTVM','TokenWalletPlatform']
     }
   },
   linker: {
-    version: "0.15.48",
+    version: "0.20.6",
   },
   networks: {
-    proxy: {
+    locklift: {
       deploy: ["local/"],
       giver: {
-        // Check if you need provide custom giver
-        address: "0:ece57bcc6c530283becbbd8a3b24d3c5987cdddc3c8b7b33be6e4a6312490415",
-        key: "172af540e43a524763dd53b26a066d472a97c4de37d5498170564510608250c3",
+        address: process.env.LOCAL_GIVER_ADDRESS!,
+        key: process.env.LOCAL_GIVER_KEY!,
       },
       connection: {
         id: 1001,
@@ -42,92 +64,91 @@ const config: LockliftConfig = {
         data: {},
       },
       keys: {
-        // Use everdev to generate your phrase
-        // !!! Never commit it in your repos !!!
-        // phrase: "action inject penalty envelope rabbit element slim tornado dinner pizza off blood",
+        phrase: process.env.LOCAL_PHRASE,
         amount: 20,
       },
     },
     local: {
-      // Specify connection settings for https://github.com/broxus/everscale-standalone-client/
       connection: {
+        id: 1234,
         group: "localnet",
         type: "graphql",
         data: {
-          endpoints: [LOCAL_NETWORK_ENDPOINT],
+          endpoints: [process.env.LOCAL_NETWORK_ENDPOINT!],
           local: true,
         },
       },
-      // This giver is the default local-node giverV2
       giver: {
-        // Check if you need to provide a custom giver
-        address: "0:ece57bcc6c530283becbbd8a3b24d3c5987cdddc3c8b7b33be6e4a6312490415",
-        key: "172af540e43a524763dd53b26a066d472a97c4de37d5498170564510608250c3",
-      },
-      tracing: {
-        endpoint: LOCAL_NETWORK_ENDPOINT,
+        address: process.env.LOCAL_GIVER_ADDRESS!,
+        key: process.env.LOCAL_GIVER_KEY!,
       },
       keys: {
-        // Use everdev to generate your phrase
-        // !!! Never commit it in your repos !!!
-        // phrase: "action inject penalty envelope rabbit element slim tornado dinner pizza off blood",
+        phrase: process.env.LOCAL_PHRASE,
         amount: 20,
       },
     },
-    main: {
-      // Specify connection settings for https://github.com/broxus/everscale-standalone-client/
-      connection: "mainnetJrpc",
-      // Here, default SafeMultisig wallet is used as a giver
+
+    tycho: {
+      connection: {
+        id: 2000,
+        type: "jrpc",
+        group: "tycho",
+        data: {
+          endpoint: process.env.TYCHO_NETWORK_ENDPOINT!,
+        },
+      },
       giver: {
-        address: "0:3bcef54ea5fe3e68ac31b17799cdea8b7cffd4da75b0b1a70b93a18b5c87f723",
-        key: process.env.MAIN_GIVER_KEY ?? "",
+        address: process.env.TYCHO_GIVER_ADDRESS!,
+        key: process.env.TYCHO_GIVER_KEY!,
+        //phrase: process.env.TYCHO_GIVER_PHRASE!,
+        //accountId: 0,
       },
       keys: {
-        // Use everdev to generate your phrase
-        // !!! Never commit it in your repos !!!
-        // phrase: "action inject penalty envelope rabbit element slim tornado dinner pizza off blood",
+        phrase: process.env.TYCHO_PHRASE!,
         amount: 20,
       },
     },
-    venom_testnet: {
+    devnet1: {
       connection: {
-        id: 1000,
-        group: "group",
+        id: -6001,
         type: "jrpc",
+        group: "tycho",
         data: {
-          endpoint: "https://jrpc-testnet.venom.foundation"
+          endpoint: process.env.DEVNET1_NETWORK_ENDPOINT!,
         },
       },
       giver: {
-        address: process.env.VENOM_GIVER_ADDRESS ?? "",
-        phrase: process.env.VENOM_GIVER_PHRASE ?? "",
-        accountId: 0,
+        address: process.env.TYCHO_GIVER_ADDRESS!,
+        key: process.env.TYCHO_GIVER_KEY!,
+        //phrase: process.env.TYCHO_GIVER_PHRASE!,
+        //accountId: 0,
       },
       keys: {
-        phrase: process.env.VENOM_SEED ?? '',
-        amount: 20
-      }
+        phrase: process.env.TYCHO_PHRASE!,
+        amount: 20,
+      },
     },
-    venom_main: {
+    devnet1a: {
       connection: {
-        id: 1,
-        group: "group",
+        id: 2000,
         type: "jrpc",
+        group: "tycho",
         data: {
-          endpoint: "https://jrpc.venom.foundation"
+          endpoint: process.env.DEVNET1_NETWORK_ENDPOINT!,
         },
       },
       giver: {
-        address: process.env.VENOM_MAIN_GIVER_ADDRESS ?? "",
-        phrase: process.env.VENOM_MAIN_GIVER_PHRASE ?? "",
-        accountId: 0,
+        address: process.env.TYCHO_GIVER_ADDRESS!,
+        key: process.env.TYCHO_GIVER_KEY!,
+        //phrase: process.env.TYCHO_GIVER_PHRASE!,
+        //accountId: 0,
       },
       keys: {
-        amount: 20
-      }
+        phrase: process.env.TYCHO_PHRASE!,
+        amount: 20,
+      },
     },
   },
-  // you can use any settings that mocha framework support
   mocha: {
     timeout: 2000000,
   },

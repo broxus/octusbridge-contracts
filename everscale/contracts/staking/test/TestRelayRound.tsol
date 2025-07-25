@@ -13,8 +13,7 @@ contract TestRelayRound {
 
     uint128 min_gas = 2 ever;
 
-
-    constructor() public {
+    constructor() {
         tvm.accept();
     }
 

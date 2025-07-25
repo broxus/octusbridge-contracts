@@ -1,0 +1,67 @@
+pragma ever-solidity >= 0.62.0;
+
+import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
+import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
+
+import "../../utils/TransferUtils.tsol";
+
+import "../event-configuration-contracts/tvm/TvmTvmEventConfiguration.tsol";
+import "../interfaces/event-configuration-contracts/ITvmTvmEventConfiguration.tsol";
+
+
+contract TvmTvmEventConfigurationFactory is TransferUtils, RandomNonce, CheckPubKey {
+    TvmCell public configurationCode;
+
+    constructor(
+        TvmCell _configurationCode
+    ) checkPubKey {
+        tvm.accept();
+
+        configurationCode = _configurationCode;
+    }
+
+    function deploy(
+        address _owner,
+        uint64 _flags,
+        IBasicEventConfiguration.BasicConfiguration basicConfiguration,
+        ITvmTvmEventConfiguration.TvmTvmEventConfiguration networkConfiguration,
+        address _eventEmitter,
+        address _transactionChecker
+    ) external view reserveMinBalance(Gas.CONFIGURATION_FACTORY_INITIAL_BALANCE) {
+        TvmCell _meta;
+
+        new TvmTvmEventConfiguration{
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED,
+            code: configurationCode,
+            pubkey: 0,
+            varInit: {
+                eventEmitter: _eventEmitter,
+                transactionChecker: _transactionChecker,
+                basicConfiguration: basicConfiguration,
+                networkConfiguration: networkConfiguration
+            }
+        }(_owner, _meta, _flags);
+    }
+
+    function deriveConfigurationAddress(
+        IBasicEventConfiguration.BasicConfiguration basicConfiguration,
+        ITvmTvmEventConfiguration.TvmTvmEventConfiguration networkConfiguration,
+        address _eventEmitter,
+        address _transactionChecker
+    ) external view returns (address) {
+        TvmCell stateInit = tvm.buildStateInit({
+            contr: TvmTvmEventConfiguration,
+            varInit: {
+                eventEmitter: _eventEmitter,
+                transactionChecker: _transactionChecker,
+                basicConfiguration: basicConfiguration,
+                networkConfiguration: networkConfiguration
+            },
+            pubkey: 0,
+            code: configurationCode
+        });
+
+        return address(tvm.hash(stateInit));
+    }
+}

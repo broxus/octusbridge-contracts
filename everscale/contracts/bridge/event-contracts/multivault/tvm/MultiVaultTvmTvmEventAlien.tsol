@@ -1,0 +1,944 @@
+pragma ever-solidity >= 0.62.0;
+
+pragma AbiHeader pubkey;
+pragma AbiHeader expire;
+
+import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.tsol";
+import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenWallet.tsol";
+import "ton-eth-bridge-token-contracts/contracts/interfaces/IBurnableTokenWallet.tsol";
+import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensTransferCallback.tsol";
+
+import "./../../../interfaces/event-contracts/multivault/tvm/IMultiVaultTvmTvmEventAlien.tsol";
+import "./../../../interfaces/event-contracts/INotEnoughLiquidity.tsol";
+import "./../../../interfaces/event-configuration-contracts/ITvmTvmEventConfiguration.tsol";
+import "./../../../interfaces/proxy/ITvmTvmProxyExtended.tsol";
+import "./../../../interfaces/proxy/ITvmEventCancelled.tsol";
+import "./../../../interfaces/alien-token-merge/merge-pool/IMergePool_V2.tsol";
+import "./../../../interfaces/alien-token-merge/IMergeRouter.tsol";
+import "./../../../interfaces/trustless-verifier/ITrustlessVerifier.tsol";
+import "./../../../interfaces/trustless-verifier/IOnTrustlessVerify.tsol";
+import "./../../../libraries/BocDecoder.tsol";
+
+import "./../../base/tvm/TvmTvmBaseEvent.tsol";
+import "../../../proxy/fees/BridgeTokenFee.tsol";
+
+
+contract MultiVaultTvmTvmEventAlien is
+    TvmTvmBaseEvent,
+    IMultiVaultTvmTvmEventAlien,
+    IOnTrustlessVerify,
+    IAcceptTokensTransferCallback,
+    INotEnoughLiquidity
+{
+    uint128 constant POWER_BASE = 10;
+
+    TvmCell public transitionalDataCell;
+
+    DeployStatus private _tokenDeployStatus = DeployStatus.NONE;
+    DeployStatus private _routerDeployStatus = DeployStatus.NONE;
+
+    uint128 public bounty;
+    address public eventTokenWallet;
+
+    address public limitApprover;
+    bool public isLimitApproved;
+
+    bool private isWNative;
+
+    modifier onlyLimitApprover() {
+        require(msg.sender == limitApprover && limitApprover.value != 0, ErrorCodes.SENDER_IS_NOT_LIMIT_APPROVER);
+        _;
+    }
+
+    constructor(
+        address _initializer,
+        TvmCell _meta,
+        address _transactionChecker,
+        TvmCell _eventBody,
+        uint128 _eventInitialBalance
+    ) TvmTvmBaseEvent(_initializer, _meta, _transactionChecker, _eventBody, _eventInitialBalance) {}
+
+    function onInit() override internal {
+        status = Status.Initializing;
+
+        _init_transitional_data();
+    }
+
+    function processProof(ITvmTvmEvent.TvmTvmEventVoteData _eventVoteData) override external {
+        bool isValidStatus = status == Status.Initializing || status == Status.Pending || status == Status.Verified;
+
+        require(isValidStatus, ErrorCodes.EVENT_NOT_INITIALIZING);
+        require(msg.sender == eventInitData.configuration, ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION);
+
+        EventData eventData = getEventData();
+
+        // return gas in case event contract balance is less than required
+        if (address(this).balance < eventData.expected_gas + eventInitialBalance + msg.forwardFee - gasToValue(Gas.DEPLOY_TVM_TVM_EVENT_REMAINING, address(this).wid)) {
+            initializer.transfer({
+                value: 0,
+                bounce: false,
+                flag: MsgFlag.REMAINING_GAS
+            });
+
+            return;
+        }
+
+        if (status == Status.Initializing || status == Status.Pending) {
+            status = Status.Pending;
+
+            (
+                uint256 accountAddr,
+                uint64 lt,
+                ,
+                ,
+                uint256 hash
+            ) = BocDecoder.decodeTransactionShort(_eventVoteData.txProof);
+
+            TvmCell txProof = abi.encode(accountAddr, lt, hash);
+
+            ITrustlessVerifier(transactionChecker)
+                .verifyTx{
+                    value: gasToValue(Gas.VERIFY_TRANSACTION_GAS, address(this).wid),
+                    flag: MsgFlag.SENDER_PAYS_FEES
+                }(_eventVoteData.txBlockProof, txProof);
+        }
+
+        if (
+            _tokenDeployStatus == DeployStatus.NONE &&
+            _routerDeployStatus == DeployStatus.NONE
+        ) {
+            ITvmTvmEventConfiguration(eventInitData.configuration)
+                .getDetails{
+                    value: gasToValue(Gas.REQUEST_CONFIGURATION_DETAILS_GAS, address(this).wid),
+                    callback: MultiVaultTvmTvmEventAlien.receiveConfigurationDetails
+                }();
+
+            return;
+        }
+
+        TransitionalData transitionalData = getTransitionalData();
+
+        if (_tokenDeployStatus == DeployStatus.NOT_DEPLOYED) {
+            bool isTokenDeployed = _deployTvmAlienToken(transitionalData.proxy, eventData);
+
+            if (isTokenDeployed) {
+                _requestMergeRouter();
+            }
+
+            return;
+        }
+
+        bool isRouterDeployed = _deployMergeRouter(transitionalData.proxy, transitionalData.token);
+
+        if (isRouterDeployed) {
+            _finishSetup(transitionalData.token, eventData.amount);
+        }
+    }
+
+    function onTrustlessVerify(bool success, uint256 /*txHash*/) external functionID(0x756adff1) override {
+        require(msg.sender == transactionChecker, ErrorCodes.SENDER_NOT_TX_CHECKER);
+        require(status == Status.Pending, ErrorCodes.EVENT_NOT_PENDING);
+
+        if (success) {
+            status = Status.Verified;
+            onConfirm();
+        }
+    }
+
+    function receiveConfigurationDetails(
+        IBasicEventConfiguration.BasicConfiguration,
+        ITvmTvmEventConfiguration.TvmTvmEventConfiguration _networkConfiguration,
+        TvmCell
+    ) external override {
+        require(msg.sender == eventInitData.configuration);
+
+        _set_proxy(_networkConfiguration.proxy);
+
+        EventData eventData = getEventData();
+
+        IProxyMultiVaultAlien_V9(_networkConfiguration.proxy).getPredeployedTokenData{
+            value: gasToValue(Gas.GET_TOKEN_DATA_GAS, address(this).wid),
+            callback: MultiVaultTvmTvmEventAlien.receivePredeployedToken
+        }(eventData.base_token);
+    }
+
+    function receivePredeployedToken(
+        address nativeProxy,
+        optional(IProxyMultiVaultAlien_V9.PredeployedTokenData) tokenData
+    ) external override {
+        TransitionalData transitionalData = getTransitionalData();
+
+        require(msg.sender == transitionalData.proxy, ErrorCodes.WRONG_PROXY);
+
+        EventData eventData = getEventData();
+
+        _set_native_proxy(nativeProxy);
+
+        if (tokenData.hasValue()) {
+            IProxyMultiVaultAlien_V9.PredeployedTokenData data = tokenData.get();
+
+            require(
+                data.externalNativeProxyWallet == eventData.base_native_proxy_wallet,
+                ErrorCodes.WRONG_BASE_NATIVE_PROXY_WALLET
+            );
+
+            _set_token(data.internalToken);
+
+            ITokenRoot(data.internalToken).walletOf{
+                value: gasToValue(Gas.GET_TOKEN_DATA_GAS, address(this).wid),
+                callback: MultiVaultTvmTvmEventAlien.receiveProxyTokenWallet
+            }(nativeProxy);
+
+            return;
+        }
+
+        IProxyMultiVaultAlien_V9(transitionalData.proxy).deriveTVMAlienTokenRoot{
+            value: gasToValue(Gas.DERIVE_TOKEN_ROOT_GAS, address(this).wid),
+            callback: MultiVaultTvmTvmEventAlien.receiveAlienTokenRoot
+        }(
+            eventData.base_chainId,
+            eventData.base_token,
+            eventData.base_native_proxy_wallet,
+            eventData.name,
+            eventData.symbol,
+            eventData.decimals
+        );
+    }
+
+    function receiveProxyTokenWallet(
+        address tokenWallet_
+    ) external override {
+        TransitionalData transitionalData = getTransitionalData();
+
+        require(msg.sender == transitionalData.token, ErrorCodes.SENDER_NOT_ROOT);
+
+        _set_native_proxy_token_wallet(tokenWallet_);
+
+        // Skip deploys for predeployed token flow
+        _tokenDeployStatus = DeployStatus.DEPLOYED;
+        _routerDeployStatus = DeployStatus.DEPLOYED;
+
+        EventData eventData = getEventData();
+        _finishSetup(transitionalData.token, eventData.amount);
+    }
+
+    /// @notice Receives the alien token root address
+    /// Can be called only by `proxy`
+    /// @dev Sends the request to token to ensure it's already deployed
+    /// In case it's not - bounced message will be received, see `onBounce`
+    function receiveAlienTokenRoot(
+        address token
+    ) external override {
+        TransitionalData transitionalData = getTransitionalData();
+
+        require(msg.sender == transitionalData.proxy, ErrorCodes.WRONG_PROXY);
+
+        _set_token(token);
+
+        ITokenRoot(token).name{
+            value: gasToValue(Gas.REQUEST_TOKEN_NAME_GAS, address(this).wid),
+            bounce: true,
+            callback: MultiVaultTvmTvmEventAlien.receiveTokenName
+        }();
+    }
+
+    function receiveTokenName(
+        string // name
+    ) external override {
+        TransitionalData transitionalData = getTransitionalData();
+
+        require(msg.sender == transitionalData.token, ErrorCodes.SENDER_NOT_ROOT);
+
+        _tokenDeployStatus = DeployStatus.DEPLOYED;
+
+        _requestMergeRouter();
+    }
+
+    function _requestMergeRouter() internal view {
+        TransitionalData transitionalData = getTransitionalData();
+
+        // Token exists, no need to deploy
+        // Ask the router address
+        IProxyMultiVaultAlien_V9(transitionalData.proxy).deriveMergeRouter{
+            value: gasToValue(Gas.REQUEST_MERGE_ROUTER_GAS, address(this).wid),
+            bounce: false,
+            callback: MultiVaultTvmTvmEventAlien.receiveMergeRouter
+        }(transitionalData.token);
+    }
+
+    /// @notice Receives merge router address
+    /// Can be called only by `proxy`
+    /// @dev Sends request to the merge router to receive pool address
+    /// In case merge router is not deployed yet - the onBounce message will be received
+    /// @param router Router address
+    function receiveMergeRouter(
+        address router
+    ) external override {
+        TransitionalData transitionalData = getTransitionalData();
+
+        require(msg.sender == transitionalData.proxy, ErrorCodes.WRONG_PROXY);
+
+        _set_router(router);
+
+        // Request merge router pool
+        IMergeRouter(router).getPool{
+            value: gasToValue(Gas.REQUEST_POOL_GAS, address(this).wid),
+            bounce: true,
+            callback: MultiVaultTvmTvmEventAlien.receiveMergeRouterPool
+        }();
+    }
+
+    /// @notice Receives merge pool address
+    /// Can be called only by `router`
+    /// @dev In case pool is zero address - then finish transfer with `token` and `amount`
+    /// Otherwise - request canon token from the pool
+    /// @param pool Pool address
+    function receiveMergeRouterPool(
+        address pool
+    ) external override {
+        TransitionalData transitionalData = getTransitionalData();
+
+        require(msg.sender == transitionalData.router, ErrorCodes.WRONG_ROUTER);
+
+        _set_pool(pool);
+
+        _routerDeployStatus = DeployStatus.DEPLOYED;
+
+        if (pool.value == 0) {
+            EventData eventData = getEventData();
+
+            _finishSetup(transitionalData.token, eventData.amount);
+        } else {
+            IMergePool_V2(pool).getCanon{
+                value: gasToValue(Gas.REQUEST_CANON_GAS, address(this).wid),
+                bounce: false,
+                callback: MultiVaultTvmTvmEventAlien.receiveMergePoolCanon
+            }();
+        }
+    }
+
+    /// @notice Receives merge pool canon
+    /// @dev Canon token can be disabled, in this case user receives `token`
+    /// @param canon Canon token address
+    /// @param canonToken_ Canon token
+    function receiveMergePoolCanon(
+        address canon,
+        IMergePool_V2.Token canonToken_
+    ) external override {
+        TransitionalData transitionalData = getTransitionalData();
+
+        require(msg.sender == transitionalData.pool, ErrorCodes.WRONG_POOL);
+
+        _set_canon(canon);
+
+        EventData eventData = getEventData();
+
+        if (canonToken_.enabled == false) {
+            // Canon token specified but not enabled
+            // fallback to the `token`
+
+            _finishSetup(transitionalData.token, eventData.amount);
+        } else {
+            // Canon token specified and enabled
+
+            uint128 canon_amount;
+
+            if (eventData.decimals > canonToken_.decimals) {
+                canon_amount = eventData.amount / (POWER_BASE**(eventData.decimals - canonToken_.decimals));
+            } else if (eventData.decimals < canonToken_.decimals) {
+                canon_amount = eventData.amount * (POWER_BASE**(canonToken_.decimals - eventData.decimals));
+            } else {
+                canon_amount = eventData.amount;
+            }
+
+            // In case the token decimals is more than canon decimals
+            // And the transferred amount is too low
+            // The canon_amount may be equal to zero. In this case - mints user the original token
+            if (canon_amount == 0) {
+                _finishSetup(transitionalData.token, eventData.amount);
+            } else {
+                _finishSetup(canon, canon_amount);
+            }
+        }
+    }
+
+    function onConfirm() internal override {
+        // Always check that TVM-TVM event was verified and all contracts were deployed
+        if (
+            (status == Status.Verified || status == Status.LimitReached) &&
+            _tokenDeployStatus == DeployStatus.DEPLOYED &&
+            _routerDeployStatus == DeployStatus.DEPLOYED
+        ) {
+            status = Status.Confirmed;
+
+            emit Confirmed();
+
+            EventData eventData = getEventData();
+            TransitionalData transitionalData = getTransitionalData();
+
+            TvmCell metaData = abi.encode(
+                isLimitApproved,
+                transitionalData.target_token,
+                transitionalData.target_amount,
+                eventData.recipient,
+                eventData.payload,
+                address(this),
+                transitionalData.native_proxy_token_wallet,
+                eventData.expected_gas
+            );
+
+            ITvmTvmProxyExtended(eventInitData.configuration).onTVMEventConfirmedExtended{
+                flag: MsgFlag.ALL_NOT_RESERVED
+            }(eventInitData, metaData, initializer);
+        }
+    }
+
+    function getEventData() public override responsible returns(EventData) {
+        optional(TvmCell) data = eventBody.toSlice().load(optional(TvmCell));
+
+        (
+            /*functionId*/,
+            /*chainId*/,
+
+            address base_token,
+            string name,
+            string symbol,
+            uint8 decimals,
+            address base_native_proxy_wallet,
+
+            address sender,
+            address recipient,
+            uint128 amount,
+
+            uint128 value,
+            uint128 expected_gas,
+            /*remaining_gas_to*/,
+            optional(TvmCell) payload
+        ) = abi.decode(data.get(), (
+            uint32, int32,
+            address, string, string, uint8, address,
+            address, address, uint128,
+            uint128, uint128, address,
+            optional(TvmCell)
+        ));
+
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} EventData(
+            eventInitData.chainId,
+            base_token,
+            base_native_proxy_wallet,
+
+            name,
+            symbol,
+            decimals,
+
+            amount,
+            recipient,
+            sender,
+
+            value,
+            expected_gas,
+            payload
+        );
+    }
+
+    onBounce(TvmSlice slice) external {
+        uint32 selector = slice.load(uint32);
+
+        EventData eventData = getEventData();
+        TransitionalData transitionalData = getTransitionalData();
+
+        tvm.accept();
+
+        if (
+            selector == tvm.functionId(TIP3TokenRoot.name) &&
+            msg.sender == transitionalData.token
+        ) {
+            // Failed to request token meta
+            // Seems like corresponding token root not deployed so deploy it
+            bool isTokenDeployed = _deployTvmAlienToken(transitionalData.proxy, eventData);
+
+            if (isTokenDeployed) {
+
+                // Deploy BridgeTokenFee for this Token
+                IProxyMultiVaultAlien_V9(transitionalData.proxy).deployTokenFee{
+                    value: Gas.getDeployTokenFeeValue() + gasToValue(Gas.BRIDGE_TOKEN_FEES_EXTRA_GAS, address(this).wid),
+                    bounce: false
+                }(transitionalData.token, initializer);
+
+                _requestMergeRouter();
+            }
+        } else if (
+            selector == tvm.functionId(IMergeRouter.getPool) &&
+            msg.sender == transitionalData.router
+        ) {
+            // Failed to request router's pool
+            // Seems like corresponding router not deployed so deploy it
+            bool isRouterDeployed = _deployMergeRouter(transitionalData.proxy, transitionalData.token);
+
+            if (isRouterDeployed) {
+                _finishSetup(transitionalData.token, eventData.amount);
+            }
+        }
+    }
+
+    function _finishSetup(
+        address target_token,
+        uint128 target_amount
+    ) internal {
+        TransitionalData transitionalData = getTransitionalData();
+
+        transitionalData.target_amount = target_amount;
+        transitionalData.target_token = target_token;
+
+        _set_transitional_data(transitionalData);
+
+        onConfirm();
+    }
+
+    // ==== Deploys ====
+    function _deployTvmAlienToken(address _alienProxy, EventData _eventData) internal returns (bool) {
+        uint128 deployTokenValue = Gas.getDeployTokenRootValue();
+
+        if (address(this).balance < deployTokenValue) {
+            _tokenDeployStatus = DeployStatus.NOT_DEPLOYED;
+
+            return false;
+        }
+
+        IProxyMultiVaultAlien_V9(_alienProxy)
+            .deployTVMAlienToken{
+                value: deployTokenValue,
+                bounce: false
+            }(
+                _eventData.base_chainId,
+                _eventData.base_token,
+                _eventData.base_native_proxy_wallet,
+                _eventData.name,
+                _eventData.symbol,
+                _eventData.decimals,
+                initializer
+            );
+
+        _tokenDeployStatus = DeployStatus.DEPLOYED;
+
+        return true;
+    }
+
+    function _deployMergeRouter(address _alienProxy, address _alienToken) internal returns (bool) {
+        uint128 deployRouterValue = gasToValue(Gas.DEPLOY_MERGE_ROUTER_GAS, address(this).wid);
+
+        if (address(this).balance < deployRouterValue) {
+            _routerDeployStatus = DeployStatus.NOT_DEPLOYED;
+
+            return false;
+        }
+
+        IProxyMultiVaultAlien_V9(_alienProxy)
+            .deployMergeRouter{
+                value: deployRouterValue,
+                bounce: false
+            }(_alienToken);
+
+        _routerDeployStatus = DeployStatus.DEPLOYED;
+
+        return true;
+    }
+
+    // ==== Transitional data ====
+    function getTransitionalData() public view returns(TransitionalData) {
+        return abi.decode(transitionalDataCell, (TransitionalData));
+    }
+
+    function _init_transitional_data() internal {
+        TransitionalData transitionalData;
+
+        _set_transitional_data(transitionalData);
+    }
+
+    function _set_transitional_data(
+        TransitionalData transitionalData
+    ) internal {
+        transitionalDataCell = abi.encode(transitionalData);
+    }
+
+    function _set_proxy(address proxy) internal {
+        TransitionalData transitionalData = getTransitionalData();
+
+        transitionalData.proxy = proxy;
+
+        _set_transitional_data(transitionalData);
+    }
+
+    function _set_token(address token) internal {
+        TransitionalData transitionalData = getTransitionalData();
+
+        transitionalData.token = token;
+
+        _set_transitional_data(transitionalData);
+    }
+
+    function _set_router(address router) internal {
+        TransitionalData transitionalData = getTransitionalData();
+
+        transitionalData.router = router;
+
+        _set_transitional_data(transitionalData);
+    }
+
+    function _set_pool(address pool) internal {
+        TransitionalData transitionalData = getTransitionalData();
+
+        transitionalData.pool = pool;
+
+        _set_transitional_data(transitionalData);
+    }
+
+    function _set_canon(address canon) internal {
+        TransitionalData transitionalData = getTransitionalData();
+
+        transitionalData.canon = canon;
+
+        _set_transitional_data(transitionalData);
+    }
+
+    function _set_native_proxy(address _proxy) internal {
+        TransitionalData transitionalData = getTransitionalData();
+
+        transitionalData.native_proxy = _proxy;
+
+        _set_transitional_data(transitionalData);
+    }
+
+    function _set_native_proxy_token_wallet(address wallet) internal {
+        TransitionalData transitionalData = getTransitionalData();
+
+        transitionalData.native_proxy_token_wallet.set(wallet);
+
+        _set_transitional_data(transitionalData);
+    }
+
+    // ==== Legacy ====
+    function getDecodedData() external override responsible returns(
+        int32 base_chainId_,
+        address base_token_,
+        address base_native_proxy_wallet_,
+        string name_,
+        string symbol_,
+        uint8 decimals_,
+        uint128 amount_,
+        address recipient_,
+        uint value_,
+        uint128 expected_gas_,
+        optional(TvmCell) payload_,
+        address proxy_,
+        address token_,
+        optional(address) native_proxy_token_wallet
+    ) {
+        EventData eventData = getEventData();
+        TransitionalData transitionalData = getTransitionalData();
+
+        return {value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} (
+            eventData.base_chainId,
+            eventData.base_token,
+            eventData.base_native_proxy_wallet,
+
+            eventData.name,
+            eventData.symbol,
+            eventData.decimals,
+
+            eventData.amount,
+            eventData.recipient,
+
+            eventData.value,
+            eventData.expected_gas,
+            eventData.payload,
+
+            transitionalData.proxy,
+            transitionalData.token,
+
+            transitionalData.native_proxy_token_wallet
+        );
+    }
+
+    function dailyLimitReached(address _approver) external override {
+        TransitionalData transitionalData = getTransitionalData();
+
+        require(
+            msg.sender == transitionalData.proxy && transitionalData.proxy.value != 0 ||
+            msg.sender == transitionalData.native_proxy && transitionalData.native_proxy.value != 0,
+            ErrorCodes.SENDER_NOT_PROXY
+        );
+        require(status == Status.Confirmed, ErrorCodes.WRONG_STATUS);
+
+        status = Status.LimitReached;
+
+        emit LimitReached(_approver);
+
+        limitApprover = _approver;
+    }
+
+    function approveLimit() external onlyLimitApprover {
+        isLimitApproved = true;
+
+        onConfirm();
+    }
+
+    function rejectLimit(address _expectedGasReceiver) external onlyLimitApprover {
+        require(status == Status.LimitReached, ErrorCodes.WRONG_STATUS);
+
+        status = Status.Rejected;
+        emit Rejected();
+
+        EventData eventData = getEventData();
+        if (eventData.expected_gas > 0) {
+            _expectedGasReceiver.transfer({
+                value: eventData.expected_gas,
+                flag: MsgFlag.SENDER_PAYS_FEES,
+                bounce: false
+            });
+        }
+
+        initializer.transfer({
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+            bounce: false
+        });
+    }
+
+    function notEnoughLiquidity(mapping(address => bool) _wNativeAddresses) external override {
+        TransitionalData transitionalData = getTransitionalData();
+
+        require(msg.sender == transitionalData.native_proxy, ErrorCodes.SENDER_NOT_PROXY);
+        require(status == Status.Confirmed, ErrorCodes.WRONG_STATUS);
+
+        isWNative = _wNativeAddresses.exists(transitionalData.token);
+
+        if (eventTokenWallet.value == 0) {
+            ITokenRoot(transitionalData.token).walletOf{
+                value: MsgFlag.ALL_NOT_RESERVED,
+                callback: MultiVaultTvmTvmEventAlien.receiveEventTokenWallet
+            }(address(this));
+        } else {
+            status = Status.LiquidityRequested;
+            emit LiquidityRequested(bounty);
+        }
+    }
+
+    function receiveEventTokenWallet(
+        address tokenWallet_
+    ) external {
+        eventTokenWallet = tokenWallet_;
+
+        status = Status.LiquidityRequested;
+        emit LiquidityRequested(bounty);
+    }
+
+    function cancel(
+        address _newRecipient,
+        address _remainingGasTo,
+        uint128 _expectedGas,
+        optional(TvmCell) _eventPayload,
+        optional(TvmCell) _predeployedTokenData,
+        address _expectedGasReceiver
+    ) external {
+        EventData eventData = getEventData();
+
+        require(
+            (msg.sender == eventData.recipient || msg.sender == eventData.sender) && status == Status.LiquidityRequested ||
+            msg.sender == limitApprover && limitApprover.value != 0 && status == Status.LimitReached,
+            ErrorCodes.SENDER_NOT_RECIPIENT
+        );
+
+        status = Status.Cancelled;
+        emit Cancelled();
+
+        if (eventData.expected_gas > 0) {
+            _expectedGasReceiver.transfer({
+                value: eventData.expected_gas,
+                flag: MsgFlag.SENDER_PAYS_FEES,
+                bounce: false
+            });
+        }
+
+        TransitionalData transitionalData = getTransitionalData();
+        TvmCell transferData;
+
+        if (transitionalData.native_proxy_token_wallet.hasValue()) { // predeployed token
+            (
+                string name,
+                string symbol,
+                uint8 decimals
+            ) = _predeployedTokenData.get().toSlice().load(string, string, uint8);
+
+            transferData = abi.encode(
+                _newRecipient,
+                eventInitData.chainId,
+                name,
+                symbol,
+                decimals,
+                _expectedGas,
+                _eventPayload
+            );
+        } else {
+            transferData = abi.encode(
+                _newRecipient,
+                _expectedGas,
+                _eventPayload
+            );
+        }
+
+        TvmCell withdrawPayload = abi.encode(
+            transitionalData.token,
+            eventData.amount,
+            eventData.recipient,
+            _remainingGasTo,
+            transitionalData.native_proxy_token_wallet.getOrDefault(),
+            transferData
+        );
+
+        ITvmEventCancelled(eventInitData.configuration)
+            .onTVMEventCancelled{
+                value: msg.value
+            }(eventInitData, withdrawPayload);
+
+        initializer.transfer({
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+            bounce: false
+        });
+    }
+
+    function setBounty(uint128 _bounty) external {
+        EventData eventData = getEventData();
+
+        require(status == Status.LiquidityRequested, ErrorCodes.WRONG_STATUS);
+        require(msg.sender == eventData.recipient || msg.sender == eventData.sender, ErrorCodes.SENDER_NOT_RECIPIENT);
+        require(bounty <= eventData.amount, ErrorCodes.WRONG_BOUNTY);
+
+        bounty = _bounty;
+
+        emit LiquidityRequested(bounty);
+    }
+
+    function onAcceptTokensTransfer(
+        address /*_tokenRoot*/,
+        uint128 _amount,
+        address _sender,
+        address /*senderWallet*/,
+        address /*_remainingGasTo*/,
+        TvmCell _payload
+    ) override external {
+        require(msg.sender == eventTokenWallet, ErrorCodes.SENDER_NOT_TOKEN_WALLET);
+
+        EventData eventData = getEventData();
+
+        // return tokens to sender in case of wrong amount or incorrect status
+        if (status != Status.LiquidityRequested || _amount < eventData.amount - bounty) {
+            TvmCell empty;
+
+            ITokenWallet(eventTokenWallet).transfer{
+                value: 0,
+                bounce: false,
+                flag: MsgFlag.REMAINING_GAS
+            }(
+                _amount,
+                _sender,
+                0,
+                _sender,
+                false,
+                empty
+            );
+
+            return;
+        }
+
+        status = Status.LiquidityProvided;
+        emit LiquidityProvided(_sender);
+
+        // send tokens to original recipient
+        if (isWNative && !eventData.payload.hasValue()) {
+            IBurnableTokenWallet(eventTokenWallet).burn{
+                value: Gas.getTransferTokenValue() + eventData.expected_gas,
+                bounce: false,
+                flag: MsgFlag.SENDER_PAYS_FEES
+            }(
+                _amount,
+                eventData.recipient,
+                eventData.recipient,
+                eventData.payload.get()
+            );
+        } else {
+            ITokenWallet(eventTokenWallet).transfer{
+                value: Gas.getTransferTokenValue() + eventData.expected_gas,
+                bounce: false,
+                flag: MsgFlag.SENDER_PAYS_FEES
+            }(
+                _amount,
+                eventData.recipient,
+                Gas.getDeployTokenWalletValue(),
+                eventData.recipient,
+                eventData.payload.hasValue() ? true : false,
+                eventData.payload.get()
+            );
+        }
+
+        // emit withdraw event to original chainId
+        (
+            address newRecipient,
+            address remainingGasTo,
+            uint128 expectedGas,
+            optional(TvmCell) eventPayload,
+            TvmCell predeployedTokenData
+        ) = abi.decode(_payload, (
+            address,
+            address,
+            uint128,
+            optional(TvmCell),
+            TvmCell
+        ));
+
+        TransitionalData transitionalData = getTransitionalData();
+        (
+            string name,
+            string symbol,
+            uint8 decimals
+        ) = predeployedTokenData.toSlice().load(string, string, uint8);
+
+        TvmCell transferData = abi.encode(
+            newRecipient,
+            eventInitData.chainId,
+            name,
+            symbol,
+            decimals,
+            expectedGas,
+            eventPayload
+        );
+
+        TvmCell withdrawPayload = abi.encode(
+            transitionalData.token,
+            eventData.amount,
+            eventData.recipient,
+            remainingGasTo,
+            transitionalData.native_proxy_token_wallet.getOrDefault(),
+            transferData
+        );
+
+        ITvmEventCancelled(eventInitData.configuration)
+            .onTVMEventCancelled{
+                flag: MsgFlag.ALL_NOT_RESERVED
+            }(eventInitData, withdrawPayload);
+    }
+
+    function retry() external {
+        EventData eventData = getEventData();
+
+        require(status == Status.LiquidityRequested || status == Status.LimitReached, ErrorCodes.WRONG_STATUS);
+        require(
+            msg.sender == eventData.recipient || msg.sender == eventData.sender || msg.sender == initializer,
+            ErrorCodes.SENDER_NOT_RECIPIENT
+        );
+
+        status = Status.Verified;
+        onConfirm();
+    }
+}

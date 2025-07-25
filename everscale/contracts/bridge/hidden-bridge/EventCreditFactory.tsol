@@ -27,7 +27,7 @@ contract EventCreditFactory is InternalOwner, RandomNonce {
         TvmCell eventDeployerCode_,
         uint8 eventClosersCount,
         uint8 eventDeployersCount
-    ) public {
+    ) {
         tvm.accept();
 
         eventCloserCode = eventCloserCode_;
@@ -38,7 +38,7 @@ contract EventCreditFactory is InternalOwner, RandomNonce {
         // Deploy event deployers
         for (uint8 i; i < eventDeployersCount; i++) {
             address deployer = new EventDeployer{
-                value: EventCreditGas.EVENT_DEPLOYER_INITIAL_BALANCE + 0.5 ever,
+                value: EventCreditGas.getDeployEventDeployerValue(),
                 flag: 0,
                 bounce: false,
                 code: eventDeployerCode,
@@ -55,7 +55,7 @@ contract EventCreditFactory is InternalOwner, RandomNonce {
         // Deploy event closers
         for (uint8 i; i < eventClosersCount; i++) {
             address closer = new EventCloser{
-                value: EventCreditGas.EVENT_CLOSER_INITIAL_BALANCE + 0.5 ever,
+                value: EventCreditGas.getDeployEventCloserValue(),
                 flag: 0,
                 bounce: false,
                 code: eventCloserCode,
@@ -71,25 +71,37 @@ contract EventCreditFactory is InternalOwner, RandomNonce {
     }
 
     receive() external view {
-        uint128 value_per_deployer = (msg.value - 1 ever) / uint8(eventDeployers.length);
+        if(msg.value >= 3 ever) {
+            uint128 value_per_deployer = (msg.value - 3 ever) / uint8(eventDeployers.length);
 
-        for (address deployer: eventDeployers) {
-            deployer.transfer({
-                value: value_per_deployer,
-                bounce: false,
-                flag: 0
-            });
+            for (address deployer: eventDeployers) {
+                deployer.transfer({
+                    value: value_per_deployer,
+                    bounce: false,
+                    flag: 0
+                });
+            }
         }
     }
 
     function drainDeployers() onlyOwner view external {
         for (address deployer: eventDeployers) {
             EventDeployer(deployer).drain{
-                value: 0.1 ever,
+                value: gasToValue(EventCreditGas.DRAIN_EVENT_DEPLOYER_GAS, address(this).wid),
                 bounce: false,
                 flag: 0
             }(owner);
         }
+    }
+
+    function drainDeployer(address deployer, address receiver) onlyOwner view external {
+        require(receiver.value != 0, ErrorCodes.WRONG_GAS_RECIPIENT);
+
+        EventDeployer(deployer).drain{
+                value: gasToValue(EventCreditGas.DRAIN_EVENT_DEPLOYER_GAS, address(this).wid),
+                bounce: false,
+                flag: 0
+            }(receiver);
     }
 
     function upgrade(TvmCell code) external onlyOwner {

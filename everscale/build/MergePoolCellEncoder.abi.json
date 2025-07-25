@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.2",
+	"version": "2.3",
 	"header": ["time"],
 	"functions": [
 		{
@@ -32,6 +32,18 @@
 				{"name":"executePayloadNeeded","type":"bool"},
 				{"components":[{"name":"account","type":"uint256"},{"name":"readOnly","type":"bool"},{"name":"isSigner","type":"bool"}],"name":"executePayloadAccounts","type":"tuple[]"},
 				{"name":"payload","type":"bytes"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
+			]
+		},
+		{
+			"name": "encodeMergePoolBurnWithdrawPayloadTVM",
+			"inputs": [
+				{"name":"targetToken","type":"address"},
+				{"name":"recipient","type":"address"},
+				{"name":"expectedGas","type":"uint128"},
+				{"name":"payload","type":"optional(cell)"}
 			],
 			"outputs": [
 				{"name":"value0","type":"cell"}

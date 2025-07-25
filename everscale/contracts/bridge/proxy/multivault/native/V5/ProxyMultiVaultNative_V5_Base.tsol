@@ -6,6 +6,7 @@ import "../../../../interfaces/proxy/multivault/native/IProxyMultiVaultNative_V1
 
 import "../../../../../utils/TransferUtils.tsol";
 import "../../../../../utils/ErrorCodes.tsol";
+import "../../../../libraries/Gas.tsol";
 
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenWallet.tsol";
 
@@ -18,8 +19,6 @@ abstract contract ProxyMultiVaultNative_V5_Base is IProxyMultiVaultNative_V3, In
     SolanaConfiguration solanaConfiguration;
     uint8 api_version;
     address public dex_middleware;
-
-    uint128 constant DEPLOY_WALLET_VALUE = 0.2 ever;
 
     /// @notice Get current contract API version.
     /// Each time contract is upgraded, API version is incremented.
@@ -69,7 +68,7 @@ abstract contract ProxyMultiVaultNative_V5_Base is IProxyMultiVaultNative_V3, In
         }(
             amount,
             recipient,
-            DEPLOY_WALLET_VALUE,
+            Gas.getDeployTokenWalletValue(),
             remainingGasTo,
             true,
             payload

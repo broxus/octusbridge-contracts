@@ -16,7 +16,7 @@ contract DummyRound {
     uint256[] public ton_keys;
 
 
-    constructor() public {
+    constructor() {
         tvm.accept();
     }
 

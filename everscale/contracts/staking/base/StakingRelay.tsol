@@ -27,10 +27,10 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
         IEthereumEverscaleEvent.EthereumEverscaleEventInitData eventData,
         address gasBackAddress
     ) external override onlyEthTonConfig {
-        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require(msg.value >= Gas.getMinCallMsgValue(), ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 0);
 
-        (uint160 eth_addr, int8 wk_id, uint256 ton_addr_body) = eventData.voteData.eventData.toSlice().decode(uint160, int8, uint256);
+        (uint160 eth_addr, int8 wk_id, uint256 ton_addr_body) = eventData.voteData.eventData.toSlice().load(uint160, int8, uint256);
         address ton_staker_addr = address.makeAddrStd(wk_id, ton_addr_body);
         confirmEthAccount(ton_staker_addr, eth_addr, gasBackAddress);
     }
@@ -41,12 +41,12 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
     }
 
     function slashRelay(address relay_staker_addr, address send_gas_to) external onlyDaoRoot {
-        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (msg.value >= Gas.getMinCallMsgValue(), ErrorCodes.VALUE_TOO_LOW);
 
         tvm.rawReserve(_reserve(), 0);
 
         updatePoolInfo();
-        _upgradeUserData(relay_staker_addr, Gas.USER_DATA_UPGRADE_VALUE, send_gas_to);
+        _upgradeUserData(relay_staker_addr, gasToValue(Gas.USER_DATA_UPGRADE_GAS, address(this).wid), send_gas_to);
 
         address user_data = getUserDataAddress(relay_staker_addr);
         IUserData(user_data).slash{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(base_details.rewardRounds, send_gas_to);
@@ -119,10 +119,10 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
         uint128 ton_deposit
     ) external onlyAdmin {
         require (staker_addrs.length <= RELAY_PACK_SIZE, ErrorCodes.BAD_INPUT_ARRAYS);
-        // MIN_CALL_MSG_VALUE cover deployment of relay round and setting relays
-        require (msg.value >= Gas.MIN_CALL_MSG_VALUE + ton_deposit * staker_addrs.length, ErrorCodes.VALUE_TOO_LOW);
-        require (round_details.currentRelayRound == 0 && round_details.currentRelayRoundStartTime == 0, ErrorCodes.ORIGIN_ROUND_ALREADY_INITIALIZED);
-        require (ton_deposit > Gas.DEPLOY_USER_DATA_MIN_VALUE + 0.2 ever, ErrorCodes.VALUE_TOO_LOW);
+        // Gas.getMinCallMsgValue() cover deployment of relay round and setting relays
+        require (msg.value >= Gas.getMinCallMsgValue() + ton_deposit * staker_addrs.length, ErrorCodes.VALUE_TOO_LOW);
+        require (round_details.currentRelayRound == 1 && round_details.currentRelayRoundStartTime == 0, ErrorCodes.ORIGIN_ROUND_ALREADY_INITIALIZED);
+        require (ton_deposit > Gas.getDeployUserDataMinValue() + gasToValue(Gas.LINK_RELAY_ACCOUNTS_GAS, address(this).wid), ErrorCodes.VALUE_TOO_LOW);
         bool correct_len = staker_addrs.length == ton_pubkeys.length;
         bool correct_len_1 = ton_pubkeys.length == eth_addrs.length;
         bool correct_len_2 = eth_addrs.length == staked_tokens.length;
@@ -132,7 +132,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
         for (uint i = 0; i < staker_addrs.length; i++) {
             // manually confirm all relays
             address user_data_addr = deployUserData(staker_addrs[i]);
-            IUserData(user_data_addr).processLinkRelayAccounts{ value: ton_deposit - Gas.DEPLOY_USER_DATA_MIN_VALUE }(
+            IUserData(user_data_addr).processLinkRelayAccounts{ value: ton_deposit - Gas.getDeployUserDataMinValue() }(
                 ton_pubkeys[i], eth_addrs[i], true, code_data.user_data_version
             );
         }
@@ -140,9 +140,9 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
         // we have 0 relay rounds at the moment
         address empty = address.makeAddrNone();
         address relay_round = deployRelayRound(
-            0, now, now + relay_config.relayRoundTime, false, 1, empty, empty, MsgFlag.SENDER_PAYS_FEES
+            0, block.timestamp, block.timestamp + relay_config.relayRoundTime, false, 1, empty, empty, MsgFlag.SENDER_PAYS_FEES
         );
-        IRelayRound(relay_round).setRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
+        IStakingRelayRound(relay_round).setRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
             ton_pubkeys, eth_addrs, staker_addrs, staked_tokens
         );
     }
@@ -169,7 +169,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
     }
 
     function startElectionOnNewRound() external onlyActive {
-        require (now >= (round_details.currentRelayRoundStartTime + relay_config.timeBeforeElection), ErrorCodes.TOO_EARLY_FOR_ELECTION);
+        require (block.timestamp >= (round_details.currentRelayRoundStartTime + relay_config.timeBeforeElection), ErrorCodes.TOO_EARLY_FOR_ELECTION);
         require (round_details.currentElectionStartTime == 0, ErrorCodes.ELECTION_ALREADY_STARTED);
         require (round_details.currentRelayRoundStartTime > 0, ErrorCodes.ORIGIN_ROUND_NOT_INITIALIZED);
         require (!base_details.emergency, ErrorCodes.EMERGENCY);
@@ -177,40 +177,42 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
         // if currentElectionEnded == true, that means we are in a gap between election end and new round initialization
         require (round_details.currentElectionEnded == false, ErrorCodes.ELECTION_ALREADY_STARTED);
         // flags for election start are set on callback, so that ban duplicate calls to prevent contract gas leak
-        require (now >= lastExtCall + EXTERNAL_CALL_INTERVAL, ErrorCodes.DUPLICATE_CALL);
-
-        require (address(this).balance >= Gas.MIN_CALL_MSG_VALUE + Gas.ROOT_INITIAL_BALANCE, ErrorCodes.LOW_BALANCE);
+        require (block.timestamp >= lastExtCall + EXTERNAL_CALL_INTERVAL, ErrorCodes.DUPLICATE_CALL);
+        require (address(this).balance >= Gas.ROOT_INITIAL_BALANCE, ErrorCodes.LOW_BALANCE);
 
         tvm.accept();
 
-        lastExtCall = now;
+        require (address(this).balance >= Gas.getMinCallMsgValue() + Gas.ROOT_INITIAL_BALANCE, ErrorCodes.LOW_BALANCE);
+
+        lastExtCall = block.timestamp;
         deployElection(round_details.currentRelayRound + 1);
     }
 
     function endElection() external onlyActive {
         require (!base_details.emergency, ErrorCodes.EMERGENCY);
         require (round_details.currentElectionStartTime != 0, ErrorCodes.ELECTION_NOT_STARTED);
-        require (now >= (round_details.currentElectionStartTime + relay_config.electionTime), ErrorCodes.CANT_END_ELECTION);
+        require (block.timestamp >= (round_details.currentElectionStartTime + relay_config.electionTime), ErrorCodes.CANT_END_ELECTION);
         // flags for election end are set on callback, so that ban duplicate calls to prevent contract gas leak
-        require (now >= lastExtCall + EXTERNAL_CALL_INTERVAL, ErrorCodes.DUPLICATE_CALL);
-
-        // MIN_CALL_MSG_VALUE should be enough to cover all storage fees of all contracts in chain
-        // + deploy ton event + destroy of election and old relay round
-        uint128 required_gas = Gas.MIN_END_ELECTION_MSG_VALUE + _relaysPacksCount() * Gas.MIN_SEND_RELAYS_MSG_VALUE;
-        uint128 min_balance = required_gas + Gas.ROOT_INITIAL_BALANCE;
-        require (address(this).balance > min_balance, ErrorCodes.LOW_BALANCE);
+        require (block.timestamp >= lastExtCall + EXTERNAL_CALL_INTERVAL, ErrorCodes.DUPLICATE_CALL);
+        require (address(this).balance > Gas.ROOT_INITIAL_BALANCE, ErrorCodes.LOW_BALANCE);
 
         tvm.accept();
 
-        lastExtCall = now;
+        // Gas.getMinCallMsgValue() should be enough to cover all storage fees of all contracts in chain
+        // + deploy ton event + destroy of election and old relay round
+        uint128 required_gas = Gas.getMinEndElectionMsgValue() + _relaysPacksCount() * gasToValue(Gas.MIN_SEND_RELAYS_MSG_GAS, address(this).wid);
+        uint128 min_balance = required_gas + Gas.ROOT_INITIAL_BALANCE;
+        require (address(this).balance > min_balance, ErrorCodes.LOW_BALANCE);
+
+        lastExtCall = block.timestamp;
 
         address election_addr = getElectionAddress(round_details.currentRelayRound + 1);
         IElection(election_addr).finish{value: required_gas}(code_data.election_version);
     }
 
     function onElectionStarted(uint32 round_num) external override onlyElection(round_num) {
-        round_details.currentElectionStartTime = now;
-        emit ElectionStarted(round_num, now, now + relay_config.electionTime, msg.sender);
+        round_details.currentElectionStartTime = block.timestamp;
+        emit ElectionStarted(round_num, block.timestamp, block.timestamp + relay_config.electionTime, msg.sender);
     }
 
     function onElectionEnded(
@@ -233,8 +235,8 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
         uint32 start_time;
         uint32 end_time;
         // election ended too late, start new round later
-        if (now > round_details.currentRelayRoundEndTime - relay_config.minRoundGapTime) {
-            start_time = now + relay_config.minRoundGapTime;
+        if (block.timestamp > round_details.currentRelayRoundEndTime - relay_config.minRoundGapTime) {
+            start_time = block.timestamp + relay_config.minRoundGapTime;
             end_time = start_time + relay_config.relayRoundTime;
         // election ended in time, start new round right after cur round
         } else {
@@ -273,11 +275,11 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
             for (uint i = 0; i < _relaysPacksCount(); i++) {
                 // last pack could be smaller then other ones
                 if (i == _relaysPacksCount() - 1 && relay_config.relaysCount % RELAY_PACK_SIZE > 0) {
-                    IRelayRound(relay_round_addr).sendRelaysToRelayRound{value: Gas.MIN_SEND_RELAYS_MSG_VALUE}(
+                    IStakingRelayRound(relay_round_addr).sendRelaysToRelayRound{value: gasToValue(Gas.MIN_SEND_RELAYS_MSG_GAS, address(this).wid)}(
                         cur_round_addr, relay_config.relaysCount % RELAY_PACK_SIZE
                     );
                 } else {
-                    IRelayRound(relay_round_addr).sendRelaysToRelayRound{value: Gas.MIN_SEND_RELAYS_MSG_VALUE}(
+                    IStakingRelayRound(relay_round_addr).sendRelaysToRelayRound{value: gasToValue(Gas.MIN_SEND_RELAYS_MSG_GAS, address(this).wid)}(
                         cur_round_addr, RELAY_PACK_SIZE
                     );
                 }
@@ -290,11 +292,11 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
             for (uint i = 0; i < _relaysPacksCount(); i++) {
                 // last pack could be smaller then other ones
                 if (i == _relaysPacksCount() - 1 && relay_config.relaysCount % RELAY_PACK_SIZE > 0) {
-                    IElection(election_addr).sendRelaysToRelayRound{value: Gas.MIN_SEND_RELAYS_MSG_VALUE}(
+                    IElection(election_addr).sendRelaysToRelayRound{value: gasToValue(Gas.MIN_SEND_RELAYS_MSG_GAS, address(this).wid)}(
                         cur_round_addr, relay_config.relaysCount % RELAY_PACK_SIZE
                     );
                 } else {
-                    IElection(election_addr).sendRelaysToRelayRound{value: Gas.MIN_SEND_RELAYS_MSG_VALUE}(
+                    IElection(election_addr).sendRelaysToRelayRound{value: gasToValue(Gas.MIN_SEND_RELAYS_MSG_GAS, address(this).wid)}(
                         cur_round_addr, RELAY_PACK_SIZE
                     );
                 }
@@ -316,7 +318,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
         // this method is called with remaining balance from setRelays call of RelayRound which is lower than we need
         // so that we manually increase reservation
         // we know that balance of this contract is enough, because we checked that on 'endElection' call which triggers this action
-        tvm.rawReserve(_reserve() - tonEthEventDeployValue - tonSolEventDeployValue - Gas.DESTROY_MSG_VALUE * 2, 2);
+        tvm.rawReserve(_reserve() - tonEthEventDeployValue - tonSolEventDeployValue - gasToValue(Gas.DESTROY_MSG_GAS, address(this).wid) * 2, 2);
 
         round_details.currentElectionEnded = false;
         round_details.currentRelayRound = round_num;
@@ -329,7 +331,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
             event_builder.store(round_num); // 32
             event_builder.store(eth_keys); // ref
             event_builder.store(round_end_time);
-            IEverscaleEthereumEvent.EverscaleEthereumEventVoteData event_data_eth = IEverscaleEthereumEvent.EverscaleEthereumEventVoteData(tx.timestamp, now, event_builder.toCell());
+            IEverscaleEthereumEvent.EverscaleEthereumEventVoteData event_data_eth = IEverscaleEthereumEvent.EverscaleEthereumEventVoteData(tx.logicaltime, block.timestamp, event_builder.toCell());
             IEverscaleEthereumEventConfiguration(base_details.bridge_event_config_ton_eth).deployEvent{value: tonEthEventDeployValue}(event_data_eth);
 
             TvmBuilder event_builder2;
@@ -337,17 +339,17 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
             event_builder2.store(ton_keys);
             event_builder2.store(round_end_time);
             IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] _empty;
-            IEverscaleSolanaEvent.EverscaleSolanaEventVoteData event_data_sol = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(tx.timestamp, now, _empty, false, _empty, event_builder2.toCell());
+            IEverscaleSolanaEvent.EverscaleSolanaEventVoteData event_data_sol = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(tx.logicaltime, block.timestamp, _empty, false, _empty, event_builder2.toCell());
             IEverscaleSolanaEventConfiguration(bridge_event_config_ton_sol).deployEvent{value: tonSolEventDeployValue}(event_data_sol);
         }
 
         if (round_num > 0) {
             address election_addr = getElectionAddress(round_num);
-            IElection(election_addr).destroy{value: Gas.DESTROY_MSG_VALUE}();
+            IElection(election_addr).destroy{value: gasToValue(Gas.DESTROY_MSG_GAS, address(this).wid)}();
         }
         if (round_num >= 3) {
             address old_relay_round = getRelayRoundAddress(round_num - 3);
-            IRelayRound(old_relay_round).destroy{value: Gas.DESTROY_MSG_VALUE}();
+            IStakingRelayRound(old_relay_round).destroy{value: gasToValue(Gas.DESTROY_MSG_GAS, address(this).wid)}();
         }
         emit RelayRoundInitialized(round_num, round_start_time, round_end_time, msg.sender, relays_count, duplicate);
     }
@@ -361,7 +363,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
 
         return new Platform{
             stateInit: _buildInitData(PlatformTypes.Election, _buildElectionParams(round_num)),
-            value: Gas.DEPLOY_ELECTION_MIN_VALUE
+            value: Gas.getDeployElectionMinValue()
         }(code_data.election_code, constructor_params.toCell(), address(this));
     }
 
@@ -390,7 +392,7 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
 
         return new Platform{
             stateInit: _buildInitData(PlatformTypes.RelayRound, _buildRelayRoundParams(round_num)),
-            value: Gas.DEPLOY_RELAY_ROUND_MIN_VALUE,
+            value: Gas.getDeployRelayRoundMinValue(),
             flag: msg_flag
         }(code_data.relay_round_code, constructor_params.toCell(), address(this));
     }

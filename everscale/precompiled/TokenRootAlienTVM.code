@@ -1,0 +1,4852 @@
+.fragment JettonUtils_decodeMintMsgParams_3026925e, {
+	.loc contracts/libraries/JettonUtils.tsol, 270
+	DEPTH
+	ADDCONST -4
+	PICK
+	LDU 32
+	LDU 64
+	LDMSGADDR
+	LDVARUINT16
+	PLDREF
+	BLKDROP2 1, 4
+	.loc contracts/libraries/JettonUtils.tsol, 284
+	CTOS
+	LDU 32
+	LDU 64
+	LDVARUINT16
+	LDMSGADDR
+	LDMSGADDR
+	LDVARUINT16
+	PLDDICT
+	BLKDROP2 2, 5
+	BLKDROP2 1, 3
+	.loc contracts/libraries/JettonUtils.tsol, 304
+	TUPLE 7
+	.loc contracts/libraries/JettonUtils.tsol, 0
+}
+
+.fragment JettonUtils_decodeProvideWalletAddressMsgParams_b9769ed7, {
+	.loc contracts/libraries/JettonUtils.tsol, 343
+	DEPTH
+	ADDCONST -4
+	PICK
+	LDU 32
+	LDU 64
+	LDMSGADDR
+	PLDI 1
+	BLKDROP2 1, 3
+	.loc contracts/libraries/JettonUtils.tsol, 357
+	TRIPLE
+	.loc contracts/libraries/JettonUtils.tsol, 0
+}
+
+.fragment JettonUtils_decodeSetAdminMsgParams_8d303227, {
+	.loc contracts/libraries/JettonUtils.tsol, 321
+	DEPTH
+	ADDCONST -4
+	PICK
+	LDU 32
+	LDU 64
+	LDMSGADDR
+	DROP
+	BLKDROP2 1, 2
+	.loc contracts/libraries/JettonUtils.tsol, 333
+	PAIR
+	.loc contracts/libraries/JettonUtils.tsol, 0
+}
+
+.fragment JettonUtils_sendTakeWalletAddressCallback_8c79e9fd, {
+	.loc contracts/libraries/JettonUtils.tsol, 200
+	NEWC
+	STSLICECONST xd1735400
+	.loc contracts/libraries/JettonUtils.tsol, 201
+	ROLL 6
+	STUR 64
+	.loc contracts/libraries/JettonUtils.tsol, 202
+	ROLL 5
+	STSLICER
+	.loc contracts/libraries/JettonUtils.tsol, 203
+	ROLL 4
+	SWAP
+	STDICT
+	.loc contracts/libraries/JettonUtils.tsol, 205
+	ROTREV
+	REVERSE 4, 1
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1
+	STUR 107
+	STBREF
+	ENDC
+	SWAP
+	SENDRAWMSG
+	.loc contracts/libraries/JettonUtils.tsol, 0
+}
+
+.fragment JettonUtils_with_obj_sendExcessesCallback_2e295f58, {
+	.loc contracts/libraries/JettonUtils.tsol, 248
+	NEWC
+	STSLICECONST xd53276db
+	.loc contracts/libraries/JettonUtils.tsol, 249
+	ROLL 4
+	STUR 64
+	.loc contracts/libraries/JettonUtils.tsol, 251
+	SWAP2
+	PUXC S4, S3
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1
+	STUR 107
+	STBREF
+	ENDC
+	SWAP
+	SENDRAWMSG
+	.loc contracts/libraries/JettonUtils.tsol, 0
+}
+
+.fragment Options_getTokenIconUrl_2c090a8e, {
+	.loc contracts/Options.tsol, 11
+	NEWC
+	NULL
+	PAIR
+	PUSHREFSLICE {
+		.blob x68747470733a2f2f74766d2d372d746f6b656e732d6d6574612e636861696e636f6e6e6563742e636f6d2f696d6167652f
+	}
+	CALLREF {
+		.inline __appendSliceToStringBuilder
+	}
+	SWAP
+	CALLREF {
+		.inline __convertAddressToHexString
+	}
+	PUSHSLICE x2e737667
+	CALLREF {
+		.inline __appendSliceToStringBuilder
+	}
+	CALLREF {
+		.inline __makeString
+	}
+	.loc contracts/Options.tsol, 0
+}
+
+.fragment Options_with_obj_getTokenIconUrl_2c090a8e, {
+	.loc contracts/Options.tsol, 11
+	NEWC
+	NULL
+	PAIR
+	PUSHREFSLICE {
+		.blob x68747470733a2f2f74766d2d372d746f6b656e732d6d6574612e636861696e636f6e6e6563742e636f6d2f696d6167652f
+	}
+	CALLREF {
+		.inline __appendSliceToStringBuilder
+	}
+	OVER
+	CALLREF {
+		.inline __convertAddressToHexString
+	}
+	PUSHSLICE x2e737667
+	CALLREF {
+		.inline __appendSliceToStringBuilder
+	}
+	CALLREF {
+		.inline __makeString
+	}
+	.loc contracts/Options.tsol, 0
+}
+
+.fragment _buildWalletInitData_b9a5b881_internal, {
+	.loc contracts/TokenRootUpgradeable.tsol, 259
+	NEWC
+	PUSHPOW2 8
+	STZEROES
+	PUSHINT 0
+	NULL
+	PUSHINT 64
+	DICTUSETB
+	MYADDR
+	PUSHINT 1
+	ROT
+	PUSHINT 64
+	DICTUSET
+	PUSHINT 2
+	SWAP
+	PUSHINT 64
+	DICTUSET
+	NEWC
+	STDICT
+	ENDC
+	GETGLOB 21
+	NEWC
+	STSLICECONST x2_
+	STDICT
+	STDICT
+	STZERO
+	ENDC
+	.loc contracts/TokenRootUpgradeable.tsol, 0
+}
+
+.fragment _burnEnabled_a74f7e11_internal, {
+	.loc contracts/abstract/TokenRootBurnPausableBase.tsol, 44
+	GETGLOB 16
+	NOT
+	.loc contracts/abstract/TokenRootBurnPausableBase.tsol, 0
+}
+
+.fragment _deployWallet_0183dda2_internal, {
+	.loc contracts/TokenRootUpgradeable.tsol, 286
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	GETGLOB 22
+	GETGLOB 14
+	ROLL 5
+	DUP
+	HASHCU
+	MYADDR
+	PARSEMSGADDR
+	THIRD
+	NEWC
+	STSLICECONST x9_
+	STI 8
+	STU 256
+	ENDC
+	CTOS
+	XCHG S6
+	UFITS 120
+	PUSH S6
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 3
+	STUR 107
+	OVER
+	CALLREF {
+		CTOS
+		LDI 1
+		SWAP
+		PUSHCONT {
+			LDI 5
+			NIP
+		}
+		IF
+		LDI 1
+		SWAP
+		PUSHCONT {
+			LDI 2
+			NIP
+		}
+		IF
+		LDDICT
+		LDDICT
+		LDDICT
+		ENDS
+		BLKDROP 3
+	}
+	STREF
+	STONE
+	ROLLREV 4
+	NEWC
+	STSLICECONST x15a038fb
+	STREF
+	STU 32
+	STSLICE
+	SWAP
+	NEWC
+	STSLICE
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+	.loc contracts/TokenRootUpgradeable.tsol, 0
+}
+
+.fragment _getExpectedWalletAddress_4fdcf47c_internal, {
+	.loc contracts/abstract/TokenRootBase.tsol, 416
+	CALLREF {
+		.inline _buildWalletInitData_b9a5b881_internal
+	}
+	HASHCU
+	NEWC
+	STSLICECONST x801_
+	STU 256
+	ENDC
+	CTOS
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+}
+
+.fragment _mintEnabled_e9d7f0d3_internal, {
+	.loc contracts/abstract/TokenRootDisableableMintBase.tsol, 44
+	GETGLOB 18
+	NOT
+	.loc contracts/abstract/TokenRootDisableableMintBase.tsol, 0
+}
+
+.fragment _mint_2397df1e_internal, {
+	.loc contracts/abstract/TokenRootBase.tsol, 371
+	ROLL 5
+	CALLREF {
+		.inline _buildWalletInitData_b9a5b881_internal
+	}
+	.loc contracts/abstract/TokenRootBase.tsol, 373
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	.loc contracts/abstract/TokenRootBase.tsol, 375
+	PUSH S6
+	GTINT 0
+	PUSHCONT {
+		.loc contracts/abstract/TokenRootBase.tsol, 376
+		PUSH3 S1, S6, S5
+		CALLREF {
+			.inline _deployWallet_0183dda2_internal
+		}
+	}
+	PUSHCONT {
+		.loc contracts/abstract/TokenRootBase.tsol, 378
+		OVER
+		HASHCU
+		NEWC
+		STSLICECONST x801_
+		STU 256
+		ENDC
+		CTOS
+	}
+	IFELSE
+	NIP
+	.loc contracts/abstract/TokenRootBase.tsol, 381
+	GETGLOB 15
+	PUSH S8
+	ADD
+	UFITS 128
+	SETGLOB 15
+	.loc contracts/abstract/TokenRootBase.tsol, 383
+	SWAP2
+	NEWC
+	XCPU S1, S0
+	ISNULL
+	PUSHCONT {
+		DROP
+		STZERO
+	}
+	PUSHCONT {
+		SWAP
+		STONE
+		STU 64
+	}
+	IFELSE
+	ENDC
+	NEWC
+	STREF
+	STREF
+	ENDC
+	XCHG3 S5, S4, S0
+	XCHG3 S1, S6, S4
+	TRUE
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	PUSHINT 1
+	STUR 111
+	ROLLREV 4
+	NEWC
+	STSLICECONST x4384f298
+	STU 128
+	STSLICE
+	STI 1
+	STREF
+	STBREFR
+	ENDC
+	PUSHPOW2 7
+	SENDRAWMSG
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+	DROP2
+}
+
+.fragment _targetBalance_81a00f03_internal, {
+	.loc contracts/TokenRootUpgradeable.tsol, 250
+	PUSHINT 6000000000
+	.loc contracts/TokenRootUpgradeable.tsol, 0
+}
+
+.fragment _reserve_413ab4a8_internal, {
+	.loc contracts/abstract/TokenRootBase.tsol, 467
+	GETPARAM 7
+	FIRST
+	DEPTH
+	ADDCONST -2
+	PICK
+	SUB
+	UFITS 120
+	CALLREF {
+		.inline _targetBalance_81a00f03_internal
+	}
+	MAX
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+}
+
+.fragment acceptBurn_a48ebdb9_internal, {
+	.loc contracts/abstract/TokenRootBase.tsol, 298
+	PUSHINT 2200
+	CALLREF {
+		.inline _burnEnabled_a74f7e11_internal
+	}
+	THROWANYIFNOT
+	.loc contracts/abstract/TokenRootBase.tsol, 299
+	GETGLOB 9
+	PUSH S4
+	CALLREF {
+		.inline _getExpectedWalletAddress_4fdcf47c_internal
+	}
+	SDEQ
+	THROWIFNOT 1100
+	.loc contracts/abstract/TokenRootBase.tsol, 301
+	GETPARAM 7
+	FIRST
+	DEPTH
+	ADDCONST -2
+	PICK
+	SUB
+	UFITS 120
+	PUSHINT 2
+	RAWRESERVE
+	.loc contracts/abstract/TokenRootBase.tsol, 303
+	GETGLOB 15
+	PUSH S5
+	SUB
+	UFITS 128
+	SETGLOB 15
+	.loc contracts/abstract/TokenRootBase.tsol, 305
+	CTOS
+	LDREF
+	LDREF
+	ENDS
+	.loc contracts/abstract/TokenRootBase.tsol, 310
+	SWAP
+	CTOS
+	LDI 1
+	SWAP
+	NULLROTRIFNOT
+	PUSHCONT {
+		LDU 64
+	}
+	IF
+	ENDS
+	.loc contracts/abstract/TokenRootBase.tsol, 312
+	PUSH S2
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SDEQ
+	PUSHCONT {
+		.loc contracts/abstract/TokenRootBase.tsol, 313
+		DUP
+		ISNULL
+		PUSHCONT {
+			.loc contracts/abstract/TokenRootBase.tsol, 321
+			PUSH S3
+			NEWC
+			STSLICECONST x42_
+			STSLICE
+			PUSHINT 111
+			STZEROES
+			ENDC
+			PUSHINT 130
+			SENDRAWMSG
+		}
+		PUSHCONT {
+			.loc contracts/abstract/TokenRootBase.tsol, 314
+			PUSH3 S3, S0, S0
+			ISNULL
+			THROWIF 63
+			PUSHINT 0
+			PUSHINT 130
+			FALSE
+			CALLREF {
+				.inline JettonUtils_with_obj_sendExcessesCallback_2e295f58
+			}
+			POP S4
+		}
+		IFELSE
+		.loc contracts/abstract/TokenRootBase.tsol, 0
+	}
+	PUSHCONT {
+		.loc contracts/abstract/TokenRootBase.tsol, 328
+		PUSH2 S1, S3
+		GETGLOB 9
+		PUSH3 S7, S8, S5
+		FALSE
+		NEWC
+		STSLICECONST x6_
+		STI 1
+		STSLICECONST x1_
+		STSLICE
+		PUSHINT 1
+		STUR 111
+		ROLLREV 5
+		NEWC
+		STSLICECONST x68088d9b
+		STU 128
+		STSLICE
+		ROLLREV 3
+		NEWC
+		STSLICE
+		ROTREV
+		NEWC
+		STSLICE
+		STREF
+		STBREFR
+		STBREFR
+		STBREFR
+		ENDC
+		PUSHINT 130
+		SENDRAWMSG
+	}
+	IFELSE
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+	BLKDROP 6
+}
+
+.fragment c4_to_c7, {
+	PUSHROOT
+	CTOS
+	LDU 256 ; pubkey c4
+	LDU 64 ; pubkey timestamp c4
+	LDU 1 ; ctor flag
+	LDREF
+	LDREF
+	LDU 8
+	LDMSGADDR
+	LDREF
+	LDREF
+	ENDS
+	CTOS
+	LDU 128
+	LDI 1
+	LDI 1
+	LDI 1
+	LDU 256
+	LDMSGADDR
+	LDREF
+	LDU 32
+	LDREF
+	ENDS
+	CTOS
+	LDI 32
+	LDMSGADDR
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	ENDS
+	PUSHINT 0
+	GETGLOBVAR
+	GETGLOB 1
+	GETGLOB 2
+	GETGLOB 3
+	GETGLOB 4
+	GETGLOB 5
+	GETGLOB 6
+	GETGLOB 7
+	GETGLOB 8
+	GETGLOB 9
+	BLKSWAP 16, 10
+	PUSHINT 26
+	TUPLEVAR
+	POP C7
+	SETGLOB 6
+	SETGLOB 3
+	SETGLOB 2
+}
+
+.fragment c7_to_c4, {
+	PUSH C7
+	FALSE
+	PUSHINT 26
+	SETINDEXVARQ
+	PUSHINT 26
+	UNPACKFIRSTVAR
+	PUSHINT 26
+	PUSHINT 0
+	REVX
+	BLKDROP 10
+	GETGLOB 3
+	GETGLOB 2
+	NEWC
+	STU 256
+	STU 64
+	STONE
+	STREF
+	STREF
+	STU 8
+	STSLICE
+	STREF
+	ROLLREV 11
+	NEWC
+	STU 128
+	STI 1
+	STI 1
+	STI 1
+	STU 256
+	STSLICE
+	STREF
+	STU 32
+	ROLLREV 3
+	NEWC
+	STI 32
+	STSLICE
+	SWAP
+	NEWC
+	STSLICE
+	STBREFR
+	STBREFR
+	STBREFR
+	ENDC
+	POPROOT
+}
+
+.fragment acceptBurn, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/abstract/TokenRootBase.tsol, 286
+	OVER
+	PUSHCONT {
+		LDREF
+		ENDS
+		CTOS
+	}
+	IF
+	LDU 128
+	LDMSGADDR
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	LDREF
+	ENDS
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+	CALLREF {
+		.inline acceptBurn_a48ebdb9_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment burnByRootDisabled_53acfe01_internal, {
+	.loc contracts/abstract/TokenRootBurnableByRootBase.tsol, 77
+	GETGLOB 4
+	PUSHINT 0
+	SETINDEXQ 2
+	PUSHINT 64
+	SETINDEXQ 4
+	FALSE
+	SETINDEXQ 1
+	SETGLOB 4
+	GETGLOB 17
+	.loc contracts/abstract/TokenRootBurnableByRootBase.tsol, 0
+}
+
+.fragment burnByRootDisabled, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/abstract/TokenRootBurnableByRootBase.tsol, 76
+	LDU 32
+	GETGLOB 4
+	ROT
+	SETINDEXQ 5
+	SETGLOB 4
+	ENDS
+	.loc contracts/abstract/TokenRootBurnableByRootBase.tsol, 0
+	CALLREF {
+		.inline burnByRootDisabled_53acfe01_internal
+	}
+	OVER
+	PUSHCONT {
+		PUSH S3
+		CTOS
+		LDU 2
+		LDMSGADDR
+		DROP
+		NIP
+		NEWC
+		STSLICECONST xc
+		STSLICE
+		PUSHINT 3470878847
+		STUR 130
+		STI 1
+		ENDC
+		PUSHINT 0
+	}
+	PUSHCONT {
+		GETGLOB 4
+		DUP
+		INDEX 3
+		OVER
+		THIRD
+		GETGLOB 9
+		ROLL 3
+		SECOND
+		NEWC
+		STSLICECONST x2_
+		STI 1
+		STSLICECONST x1_
+		STSLICE
+		SWAP
+		STGRAMS
+		STDICT
+		PUSHINT 106
+		STZEROES
+		GETGLOB 4
+		INDEX 5
+		STUR 32
+		STI 1
+		ENDC
+		GETGLOB 4
+		INDEX 4
+	}
+	IFELSE
+	SENDRAWMSG
+	IFREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment burnPaused_d684534e_internal, {
+	.loc contracts/abstract/TokenRootBurnPausableBase.tsol, 25
+	GETGLOB 4
+	PUSHINT 0
+	SETINDEXQ 2
+	PUSHINT 64
+	SETINDEXQ 4
+	FALSE
+	SETINDEXQ 1
+	SETGLOB 4
+	GETGLOB 16
+	.loc contracts/abstract/TokenRootBurnPausableBase.tsol, 0
+}
+
+.fragment burnPaused, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/abstract/TokenRootBurnPausableBase.tsol, 24
+	LDU 32
+	GETGLOB 4
+	ROT
+	SETINDEXQ 5
+	SETGLOB 4
+	ENDS
+	.loc contracts/abstract/TokenRootBurnPausableBase.tsol, 0
+	CALLREF {
+		.inline burnPaused_d684534e_internal
+	}
+	OVER
+	PUSHCONT {
+		PUSH S3
+		CTOS
+		LDU 2
+		LDMSGADDR
+		DROP
+		NIP
+		NEWC
+		STSLICECONST xc
+		STSLICE
+		PUSHINT 3123178011
+		STUR 130
+		STI 1
+		ENDC
+		PUSHINT 0
+	}
+	PUSHCONT {
+		GETGLOB 4
+		DUP
+		INDEX 3
+		OVER
+		THIRD
+		GETGLOB 9
+		ROLL 3
+		SECOND
+		NEWC
+		STSLICECONST x2_
+		STI 1
+		STSLICECONST x1_
+		STSLICE
+		SWAP
+		STGRAMS
+		STDICT
+		PUSHINT 106
+		STZEROES
+		GETGLOB 4
+		INDEX 5
+		STUR 32
+		STI 1
+		ENDC
+		GETGLOB 4
+		INDEX 4
+	}
+	IFELSE
+	SENDRAWMSG
+	IFREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment burnTokens_b71b7bfe_internal, {
+	.loc contracts/abstract/TokenRootBase.tsol, 131
+	GETGLOB 13
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SDEQ
+	NOT
+	GETGLOB 13
+	GETGLOB 9
+	SDEQ
+	AND
+	THROWIFNOT 1000
+	.loc contracts/abstract/TokenRootBurnableByRootBase.tsol, 49
+	PUSHINT 2210
+	GETGLOB 17
+	NOT
+	THROWANYIFNOT
+	.loc contracts/abstract/TokenRootBurnableByRootBase.tsol, 50
+	PUSH S4
+	GTINT 0
+	THROWIFNOT 1050
+	.loc contracts/abstract/TokenRootBurnableByRootBase.tsol, 51
+	PUSH S3
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SDEQ
+	THROWIF 1021
+	.loc contracts/abstract/TokenRootBurnableByRootBase.tsol, 53
+	XCHG S2
+	BLKSWAP 2, 3
+	CALLREF {
+		.inline _getExpectedWalletAddress_4fdcf47c_internal
+	}
+	TRUE
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	PUSHINT 1
+	STUR 111
+	ROLLREV 4
+	NEWC
+	STSLICECONST x0c2ff20d
+	STU 128
+	STSLICE
+	ROTREV
+	NEWC
+	STSLICE
+	STREF
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 64
+	SENDRAWMSG
+	.loc contracts/abstract/TokenRootBurnableByRootBase.tsol, 0
+}
+
+.fragment burnTokens, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/abstract/TokenRootBurnableByRootBase.tsol, 38
+	OVER
+	PUSHCONT {
+		LDREF
+		ENDS
+		CTOS
+	}
+	IF
+	LDU 128
+	LDMSGADDR
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	LDREF
+	ENDS
+	.loc contracts/abstract/TokenRootBurnableByRootBase.tsol, 0
+	CALLREF {
+		.inline burnTokens_b71b7bfe_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment c4_to_c7_with_init_storage, {
+	PUSHROOT
+	CTOS
+	SBITS
+	GTINT 1
+	PUSHCONT {
+		PUSHINT 0
+		PUSHROOT
+		CTOS
+		PLDDICT ; D
+		PUSHINT 0
+		GETGLOBVAR
+		GETGLOB 1
+		GETGLOB 2
+		GETGLOB 3
+		GETGLOB 4
+		GETGLOB 5
+		GETGLOB 6
+		GETGLOB 7
+		GETGLOB 8
+		GETGLOB 9
+		PUSHINT 1
+		PUSH S11
+		PUSHINT 64
+		DICTUGETREF
+		PUSHCONT {
+			PUSHREF {
+			}
+		}
+		IFNOT
+		PUSHINT 2
+		PUSH S12
+		PUSHINT 64
+		DICTUGETREF
+		PUSHCONT {
+			PUSHREF {
+			}
+		}
+		IFNOT
+		PUSHINT 3
+		PUSH S13
+		PUSHINT 64
+		DICTUGET
+		ZEROSWAPIFNOT
+		PUSHCONT {
+			PLDU 8
+		}
+		IF
+		PUSHINT 4
+		PUSH S14
+		PUSHINT 64
+		DICTUGET
+		PUSHCONT {
+			PUSHREFSLICE {
+				.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+			}
+		}
+		IFNOT
+		PUSHINT 5
+		PUSH S15
+		PUSHINT 64
+		DICTUGETREF
+		PUSHCONT {
+			PUSHREF {
+			}
+		}
+		IFNOT
+		PUSHINT 0
+		BLKPUSH 3, 0
+		PUSHINT 6
+		PUSH S20
+		PUSHINT 64
+		DICTUGET
+		ZEROSWAPIFNOT
+		PUSHCONT {
+			PLDU 256
+		}
+		IF
+		PUSHINT 7
+		PUSH S21
+		PUSHINT 64
+		DICTUGET
+		PUSHCONT {
+			PUSHREFSLICE {
+				.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+			}
+		}
+		IFNOT
+		PUSHINT 8
+		PUSH S22
+		PUSHINT 64
+		DICTUGETREF
+		PUSHCONT {
+			PUSHREF {
+			}
+		}
+		IFNOT
+		PUSHINT 0
+		PUSHINT 9
+		PUSH S24
+		PUSHINT 64
+		DICTUGET
+		ZEROSWAPIFNOT
+		PUSHCONT {
+			PLDI 32
+		}
+		IF
+		PUSHINT 10
+		PUSH S25
+		PUSHINT 64
+		DICTUGET
+		PUSHCONT {
+			PUSHREFSLICE {
+				.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+			}
+		}
+		IFNOT
+		PUSHINT 11
+		PUSH S26
+		PUSHINT 64
+		DICTUGET
+		PUSHCONT {
+			PUSHREFSLICE {
+				.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+			}
+		}
+		IFNOT
+		PUSHINT 26
+		TUPLEVAR
+		POP C7
+		PUSHINT 64
+		DICTUGET
+		THROWIFNOT 61
+		PLDU 256
+		SETGLOB 2
+		PUSHINT 0 ; timestamp
+		SETGLOB 3
+	}
+	IFREFELSE {
+		.inline c4_to_c7
+	}
+}
+
+.fragment constructor, {
+	DROP
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7_with_init_storage
+	}
+	GETGLOB 6
+	THROWIF 51
+	OVER
+	PUSHCONT {
+		LDREF
+		ENDS
+		CTOS
+	}
+	IF
+	LDMSGADDR
+	LDU 128
+	LDU 128
+	LDI 1
+	LDI 1
+	LDI 1
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	ENDS
+	.loc contracts/TokenRootUpgradeable.tsol, 82
+	GETGLOB 5
+	DUP
+	ISNULL
+	PUSHCONT {
+		DROP
+		PUSHINT 0
+	}
+	IF
+	PUSHCONT {
+		.loc contracts/TokenRootUpgradeable.tsol, 83
+		GETGLOB 5
+		DUP
+		ISNULL
+		PUSHCONT {
+			DROP
+			PUSHINT 0
+		}
+		IF
+		GETGLOB 2
+		EQUAL
+		GETGLOB 20
+		PUSHREFSLICE {
+			.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+		}
+		SDEQ
+		AND
+		THROWIFNOT 1020
+		.loc contracts/TokenRootUpgradeable.tsol, 84
+		ACCEPT
+	}
+	PUSHCONT {
+		.loc contracts/TokenRootUpgradeable.tsol, 86
+		GETGLOB 20
+		PUSHREFSLICE {
+			.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+		}
+		SDEQ
+		NOT
+		GETGLOB 9
+		GETGLOB 20
+		SDEQ
+		AND
+		GETGLOB 20
+		PUSHREFSLICE {
+			.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+		}
+		SDEQ
+		GETGLOB 9
+		GETGLOB 13
+		SDEQ
+		AND
+		OR
+		THROWIFNOT 1020
+	}
+	IFELSE
+	.loc contracts/TokenRootUpgradeable.tsol, 90
+	PUSHINT 0
+	SETGLOB 15
+	.loc contracts/TokenRootUpgradeable.tsol, 91
+	ROLL 3
+	SETGLOB 18
+	.loc contracts/TokenRootUpgradeable.tsol, 92
+	ROT
+	SETGLOB 17
+	.loc contracts/TokenRootUpgradeable.tsol, 93
+	SWAP
+	SETGLOB 16
+	.loc contracts/TokenRootUpgradeable.tsol, 94
+	PUSHINT 1
+	SETGLOB 22
+	.loc contracts/TokenRootUpgradeable.tsol, 96
+	CALLREF {
+		.inline _targetBalance_81a00f03_internal
+	}
+	PUSHINT 0
+	RAWRESERVE
+	.loc contracts/TokenRootUpgradeable.tsol, 98
+	PUSH S3
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SDEQ
+	NOT
+	PUSH S3
+	NEQINT 0
+	AND
+	PUSHCONT {
+		.loc contracts/TokenRootUpgradeable.tsol, 101
+		PUSH2 S2, S3
+		OVER2
+		FALSE
+		PUSHREF {
+		}
+		NULL
+		CALLREF {
+			.inline _mint_2397df1e_internal
+		}
+	}
+	PUSHCONT {
+		DUP
+		PUSHREFSLICE {
+			.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+		}
+		SDEQ
+		PUSHCONT {
+			.loc contracts/TokenRootUpgradeable.tsol, 111
+			DUP
+			NEWC
+			STSLICECONST x42_
+			STSLICE
+			PUSHINT 111
+			STZEROES
+			ENDC
+			PUSHINT 130
+			SENDRAWMSG
+			.loc contracts/TokenRootUpgradeable.tsol, 0
+		}
+		IFNOT
+	}
+	IFELSE
+	.loc contracts/TokenRootUpgradeable.tsol, 0
+	BLKDROP 4
+	.loc contracts/bridge/TokenRootAlienTVM.tsol, 0
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment decimals_313ce567_internal, {
+	.loc contracts/abstract/TokenRootBase.tsol, 153
+	GETGLOB 4
+	PUSHINT 0
+	SETINDEXQ 2
+	PUSHINT 64
+	SETINDEXQ 4
+	FALSE
+	SETINDEXQ 1
+	SETGLOB 4
+	GETGLOB 12
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+}
+
+.fragment decimals, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/abstract/TokenRootBase.tsol, 152
+	LDU 32
+	GETGLOB 4
+	ROT
+	SETINDEXQ 5
+	SETGLOB 4
+	ENDS
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+	CALLREF {
+		.inline decimals_313ce567_internal
+	}
+	OVER
+	PUSHCONT {
+		PUSH S3
+		CTOS
+		LDU 2
+		LDMSGADDR
+		DROP
+		NIP
+		NEWC
+		STSLICECONST xc
+		STSLICE
+		PUSHINT 3542009724
+		STUR 130
+		STU 8
+		ENDC
+		PUSHINT 0
+	}
+	PUSHCONT {
+		GETGLOB 4
+		DUP
+		INDEX 3
+		OVER
+		THIRD
+		GETGLOB 9
+		ROLL 3
+		SECOND
+		NEWC
+		STSLICECONST x2_
+		STI 1
+		STSLICECONST x1_
+		STSLICE
+		SWAP
+		STGRAMS
+		STDICT
+		PUSHINT 106
+		STZEROES
+		GETGLOB 4
+		INDEX 5
+		STUR 32
+		STU 8
+		ENDC
+		GETGLOB 4
+		INDEX 4
+	}
+	IFELSE
+	SENDRAWMSG
+	IFREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment deployWallet_726ee909_internal, {
+	.loc contracts/abstract/TokenRootBase.tsol, 214
+	OVER
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SDEQ
+	THROWIF 1021
+	.loc contracts/abstract/TokenRootBase.tsol, 215
+	CALLREF {
+		.inline _reserve_413ab4a8_internal
+	}
+	PUSHINT 0
+	RAWRESERVE
+	.loc contracts/abstract/TokenRootBase.tsol, 217
+	SWAP
+	CALLREF {
+		.inline _buildWalletInitData_b9a5b881_internal
+	}
+	SWAP
+	GETGLOB 9
+	CALLREF {
+		.inline _deployWallet_0183dda2_internal
+	}
+	.loc contracts/abstract/TokenRootBase.tsol, 219
+	GETGLOB 4
+	PUSHINT 0
+	SETINDEXQ 2
+	PUSHPOW2 7
+	SETINDEXQ 4
+	FALSE
+	SETINDEXQ 1
+	SETGLOB 4
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+}
+
+.fragment deployWallet, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/abstract/TokenRootBase.tsol, 208
+	LDU 32
+	GETGLOB 4
+	ROT
+	SETINDEXQ 5
+	SETGLOB 4
+	OVER
+	PUSHCONT {
+		LDREF
+		ENDS
+		CTOS
+	}
+	IF
+	LDMSGADDR
+	LDU 128
+	ENDS
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+	CALLREF {
+		.inline deployWallet_726ee909_internal
+	}
+	OVER
+	PUSHCONT {
+		PUSH S3
+		CTOS
+		LDU 2
+		LDMSGADDR
+		DROP
+		NIP
+		NEWC
+		STSLICECONST xc
+		STSLICE
+		PUSHINT 1
+		STUR 98
+		SWAP
+		NEWC
+		STSLICECONST xb1edd4c7
+		STSLICE
+		STBREFR
+		ENDC
+		PUSHINT 0
+	}
+	PUSHCONT {
+		GETGLOB 4
+		DUP
+		INDEX 3
+		OVER
+		THIRD
+		GETGLOB 9
+		ROLL 3
+		SECOND
+		NEWC
+		STSLICECONST x2_
+		STI 1
+		STSLICECONST x1_
+		STSLICE
+		SWAP
+		STGRAMS
+		STDICT
+		PUSHINT 1
+		STUR 106
+		SWAP
+		NEWC
+		GETGLOB 4
+		INDEX 5
+		STUR 32
+		STSLICE
+		STBREFR
+		ENDC
+		GETGLOB 4
+		INDEX 4
+	}
+	IFELSE
+	SENDRAWMSG
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment disableBurnByRoot_bc2c8f23_internal, {
+	.loc contracts/abstract/TokenRootBase.tsol, 131
+	GETGLOB 13
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SDEQ
+	NOT
+	GETGLOB 13
+	GETGLOB 9
+	SDEQ
+	AND
+	THROWIFNOT 1000
+	.loc contracts/abstract/TokenRootBurnableByRootBase.tsol, 69
+	TRUE
+	SETGLOB 17
+	.loc contracts/abstract/TokenRootBurnableByRootBase.tsol, 70
+	GETGLOB 4
+	PUSHINT 0
+	SETINDEXQ 2
+	PUSHINT 64
+	SETINDEXQ 4
+	FALSE
+	SETINDEXQ 1
+	SETGLOB 4
+	GETGLOB 17
+	.loc contracts/abstract/TokenRootBurnableByRootBase.tsol, 0
+}
+
+.fragment disableBurnByRoot, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/abstract/TokenRootBurnableByRootBase.tsol, 68
+	LDU 32
+	GETGLOB 4
+	ROT
+	SETINDEXQ 5
+	SETGLOB 4
+	ENDS
+	.loc contracts/abstract/TokenRootBurnableByRootBase.tsol, 0
+	CALLREF {
+		.inline disableBurnByRoot_bc2c8f23_internal
+	}
+	OVER
+	PUSHCONT {
+		PUSH S3
+		CTOS
+		LDU 2
+		LDMSGADDR
+		DROP
+		NIP
+		NEWC
+		STSLICECONST xc
+		STSLICE
+		PUSHINT 3666791607
+		STUR 130
+		STI 1
+		ENDC
+		PUSHINT 0
+	}
+	PUSHCONT {
+		GETGLOB 4
+		DUP
+		INDEX 3
+		OVER
+		THIRD
+		GETGLOB 9
+		ROLL 3
+		SECOND
+		NEWC
+		STSLICECONST x2_
+		STI 1
+		STSLICECONST x1_
+		STSLICE
+		SWAP
+		STGRAMS
+		STDICT
+		PUSHINT 106
+		STZEROES
+		GETGLOB 4
+		INDEX 5
+		STUR 32
+		STI 1
+		ENDC
+		GETGLOB 4
+		INDEX 4
+	}
+	IFELSE
+	SENDRAWMSG
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment disableMint_34452f38_internal, {
+	.loc contracts/abstract/TokenRootBase.tsol, 131
+	GETGLOB 13
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SDEQ
+	NOT
+	GETGLOB 13
+	GETGLOB 9
+	SDEQ
+	AND
+	THROWIFNOT 1000
+	.loc contracts/abstract/TokenRootDisableableMintBase.tsol, 29
+	TRUE
+	SETGLOB 18
+	.loc contracts/abstract/TokenRootDisableableMintBase.tsol, 30
+	GETGLOB 4
+	PUSHINT 0
+	SETINDEXQ 2
+	PUSHINT 64
+	SETINDEXQ 4
+	FALSE
+	SETINDEXQ 1
+	SETGLOB 4
+	GETGLOB 18
+	.loc contracts/abstract/TokenRootDisableableMintBase.tsol, 0
+}
+
+.fragment disableMint, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/abstract/TokenRootDisableableMintBase.tsol, 28
+	LDU 32
+	GETGLOB 4
+	ROT
+	SETINDEXQ 5
+	SETGLOB 4
+	ENDS
+	.loc contracts/abstract/TokenRootDisableableMintBase.tsol, 0
+	CALLREF {
+		.inline disableMint_34452f38_internal
+	}
+	OVER
+	PUSHCONT {
+		PUSH S3
+		CTOS
+		LDU 2
+		LDMSGADDR
+		DROP
+		NIP
+		NEWC
+		STSLICECONST xc
+		STSLICE
+		PUSHINT 4242237237
+		STUR 130
+		STI 1
+		ENDC
+		PUSHINT 0
+	}
+	PUSHCONT {
+		GETGLOB 4
+		DUP
+		INDEX 3
+		OVER
+		THIRD
+		GETGLOB 9
+		ROLL 3
+		SECOND
+		NEWC
+		STSLICECONST x2_
+		STI 1
+		STSLICECONST x1_
+		STSLICE
+		SWAP
+		STGRAMS
+		STDICT
+		PUSHINT 106
+		STZEROES
+		GETGLOB 4
+		INDEX 5
+		STUR 32
+		STI 1
+		ENDC
+		GETGLOB 4
+		INDEX 4
+	}
+	IFELSE
+	SENDRAWMSG
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment fallback, {
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	PUSHCONT {
+		.loc contracts/abstract/TokenRootBase.tsol, 47
+		DEPTH
+		ADDCONST -4
+		PICK
+		LDUQ 32
+		NULLROTRIFNOT
+		DROP2
+		.loc contracts/abstract/TokenRootBase.tsol, 49
+		FALSE ; decl return flag
+		OVER
+		ISNULL
+		PUSHCONT {
+			.loc contracts/abstract/TokenRootBase.tsol, 50
+			PUSH2 S1, S1
+			ISNULL
+			THROWIF 63
+			.loc contracts/abstract/TokenRootBase.tsol, 51
+			PUSHREF {
+			}
+			.loc contracts/abstract/TokenRootBase.tsol, 53
+			OVER
+			EQINT 21
+			PUSHCONT {
+				.loc contracts/abstract/TokenRootBase.tsol, 54
+				GETGLOB 13
+				PUSHREFSLICE {
+					.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+				}
+				SDEQ
+				NOT
+				GETGLOB 13
+				GETGLOB 9
+				SDEQ
+				AND
+				THROWIFNOT 1000
+				.loc contracts/abstract/TokenRootBase.tsol, 55
+				PUSHINT 2100
+				CALLREF {
+					.inline _mintEnabled_e9d7f0d3_internal
+				}
+				THROWANYIFNOT
+				.loc contracts/abstract/TokenRootBase.tsol, 57
+				CALLREF {
+					.inline JettonUtils_decodeMintMsgParams_3026925e
+				}
+				.loc contracts/abstract/TokenRootBase.tsol, 59
+				DUP
+				INDEX 3
+				GTINT 0
+				THROWIFNOT 1050
+				.loc contracts/abstract/TokenRootBase.tsol, 60
+				DUP
+				SECOND
+				PUSHREFSLICE {
+					.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+				}
+				SDEQ
+				THROWIF 1030
+				.loc contracts/abstract/TokenRootBase.tsol, 62
+				CALLREF {
+					.inline _reserve_413ab4a8_internal
+				}
+				PUSHINT 0
+				RAWRESERVE
+				.loc contracts/abstract/TokenRootBase.tsol, 63
+				DUP
+				INDEX 3
+				OVER
+				SECOND
+				PUSH S2
+				THIRD
+				PUSH S3
+				INDEX 4
+				PUSH S4
+				INDEX 5
+				GTINT 0
+				PUSH S5
+				INDEX 6
+				ISNULL
+				PUSHCONT {
+					PUSH S6
+				}
+				PUSHCONT {
+					PUSH S5
+					INDEX 6
+					DUP
+					ISNULL
+					THROWIF 63
+				}
+				IFELSE
+				ROLL 6
+				FIRST
+				CALLREF {
+					.inline _mint_2397df1e_internal
+				}
+				.loc contracts/abstract/TokenRootBase.tsol, 73
+				BLKDROP 4
+				PUSHINT 4
+				.loc contracts/abstract/TokenRootBase.tsol, 0
+			}
+			IFJMP
+			.loc contracts/abstract/TokenRootBase.tsol, 76
+			DROP
+			DUP
+			EQINT 3
+			PUSHCONT {
+				.loc contracts/abstract/TokenRootBase.tsol, 77
+				GETGLOB 13
+				PUSHREFSLICE {
+					.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+				}
+				SDEQ
+				NOT
+				GETGLOB 13
+				GETGLOB 9
+				SDEQ
+				AND
+				THROWIFNOT 1000
+				.loc contracts/abstract/TokenRootBase.tsol, 79
+				CALLREF {
+					.inline JettonUtils_decodeSetAdminMsgParams_8d303227
+				}
+				.loc contracts/abstract/TokenRootBase.tsol, 81
+				CALLREF {
+					.inline _reserve_413ab4a8_internal
+				}
+				PUSHINT 0
+				RAWRESERVE
+				.loc contracts/abstract/TokenRootBase.tsol, 83
+				SECOND
+				SETGLOB 13
+				.loc contracts/abstract/TokenRootBase.tsol, 85
+				GETGLOB 9
+				NEWC
+				STSLICECONST x42_
+				STSLICE
+				PUSHINT 111
+				STZEROES
+				ENDC
+				PUSHINT 130
+				SENDRAWMSG
+				.loc contracts/abstract/TokenRootBase.tsol, 91
+				BLKDROP 3
+				PUSHINT 4
+				.loc contracts/abstract/TokenRootBase.tsol, 0
+			}
+			IFJMP
+			.loc contracts/abstract/TokenRootBase.tsol, 94
+			PUSHINT 745978227
+			EQUAL
+			PUSHCONT {
+				.loc contracts/abstract/TokenRootBase.tsol, 95
+				CALLREF {
+					.inline _reserve_413ab4a8_internal
+				}
+				PUSHINT 0
+				RAWRESERVE
+				.loc contracts/abstract/TokenRootBase.tsol, 97
+				CALLREF {
+					.inline JettonUtils_decodeProvideWalletAddressMsgParams_b9769ed7
+				}
+				.loc contracts/abstract/TokenRootBase.tsol, 99
+				DUP
+				SECOND
+				CALLREF {
+					.inline _getExpectedWalletAddress_4fdcf47c_internal
+				}
+				.loc contracts/abstract/TokenRootBase.tsol, 101
+				NULL
+				.loc contracts/abstract/TokenRootBase.tsol, 103
+				PUSH S2
+				THIRD
+				PUSHCONT {
+					.loc contracts/abstract/TokenRootBase.tsol, 105
+					PUSH S2
+					SECOND
+					NEWC
+					STSLICE
+					.loc contracts/abstract/TokenRootBase.tsol, 107
+					ENDC
+					NIP
+					.loc contracts/abstract/TokenRootBase.tsol, 0
+				}
+				IF
+				.loc contracts/abstract/TokenRootBase.tsol, 110
+				GETGLOB 9
+				ROLL 3
+				FIRST
+				SWAP2
+				PUSHINT 0
+				PUSHPOW2 7
+				FALSE
+				CALLREF {
+					.inline JettonUtils_sendTakeWalletAddressCallback_8c79e9fd
+				}
+				.loc contracts/abstract/TokenRootBase.tsol, 120
+				DROP2
+				PUSHINT 4
+				.loc contracts/abstract/TokenRootBase.tsol, 0
+			}
+			IFJMP
+			.loc contracts/abstract/TokenRootBase.tsol, 0
+		}
+		IFNOT
+		.loc contracts/abstract/TokenRootBase.tsol, 0
+		IFRET
+		.loc contracts/abstract/TokenRootBase.tsol, 124
+		THROW 60
+		.loc contracts/abstract/TokenRootBase.tsol, 46
+	}
+	CALLX
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+	CALLREF {
+		.inline c7_to_c4
+	}
+}
+
+.fragment pack_metadata_value_e638a88b_internal, {
+	.loc contracts/abstract/TokenRootBase.tsol, 549
+	NEWC
+	.loc contracts/abstract/TokenRootBase.tsol, 551
+	STSLICECONST x00
+	.loc contracts/abstract/TokenRootBase.tsol, 552
+	STSLICE
+	.loc contracts/abstract/TokenRootBase.tsol, 554
+	ENDC
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+}
+
+.fragment get_jetton_data_73cc4057_internal, {
+	.loc contracts/abstract/TokenRootBase.tsol, 518
+	NULL
+	.loc contracts/abstract/TokenRootBase.tsol, 520
+	FALSE
+	PUSHCONT {
+		.loc contracts/abstract/TokenRootBase.tsol, 522
+		MYADDR
+		CALLREF {
+			.inline Options_getTokenIconUrl_2c090a8e
+		}
+		NEWC
+		STREF
+		.loc contracts/abstract/TokenRootBase.tsol, 523
+		ENDC
+		CTOS
+		CALLREF {
+			.inline pack_metadata_value_e638a88b_internal
+		}
+		PUSHINT 43884663033947008978309661017057008345326326811558777475113826163084742639165
+		ROT
+		PUSHPOW2 8
+		DICTUSETREF
+		.loc contracts/abstract/TokenRootBase.tsol, 0
+	}
+	IF
+	.loc contracts/abstract/TokenRootBase.tsol, 526
+	NEWC
+	NULL
+	PAIR
+	GETGLOB 12
+	PUSHINT 0
+	DUP
+	CALLREF {
+		.inline __convertIntToString
+	}
+	CALLREF {
+		.inline __makeString
+	}
+	CTOS
+	CALLREF {
+		.inline pack_metadata_value_e638a88b_internal
+	}
+	PUSHINT 107878361799212983662495570378745491379550006934010968359181619763835345146430
+	ROT
+	PUSHPOW2 8
+	DICTUSETREF
+	.loc contracts/abstract/TokenRootBase.tsol, 527
+	GETGLOB 10
+	CTOS
+	CALLREF {
+		.inline pack_metadata_value_e638a88b_internal
+	}
+	PUSHINT 59089242681608890680090686026688704441792375738894456860693970539822503415433
+	ROT
+	PUSHPOW2 8
+	DICTUSETREF
+	.loc contracts/abstract/TokenRootBase.tsol, 528
+	GETGLOB 11
+	CTOS
+	CALLREF {
+		.inline pack_metadata_value_e638a88b_internal
+	}
+	PUSHINT 82961397245523513629401799123410942652413991882008909918554405086738284660097
+	ROT
+	PUSHPOW2 8
+	DICTUSETREF
+	.loc contracts/abstract/TokenRootBase.tsol, 530
+	NEWC
+	.loc contracts/abstract/TokenRootBase.tsol, 532
+	STSLICECONST x00
+	.loc contracts/abstract/TokenRootBase.tsol, 533
+	STDICT
+	.loc contracts/abstract/TokenRootBase.tsol, 535
+	GETGLOB 15
+	CALLREF {
+		.inline _mintEnabled_e9d7f0d3_internal
+	}
+	GETGLOB 13
+	ROLL 3
+	ENDC
+	GETGLOB 14
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+}
+
+.fragment get_jetton_data, {
+	CALLREF {
+		.inline c4_to_c7_with_init_storage
+	}
+	CALLREF {
+		.inline get_jetton_data_73cc4057_internal
+	}
+}
+
+.fragment get_jetton_platform_data_57f0e982_internal, {
+	.loc contracts/TokenRootUpgradeable.tsol, 297
+	GETGLOB 21
+	GETGLOB 22
+	.loc contracts/TokenRootUpgradeable.tsol, 0
+}
+
+.fragment get_jetton_platform_data, {
+	CALLREF {
+		.inline c4_to_c7_with_init_storage
+	}
+	CALLREF {
+		.inline get_jetton_platform_data_57f0e982_internal
+	}
+}
+
+.fragment get_wallet_address_f7ce0401_internal, {
+	.loc contracts/abstract/TokenRootBase.tsol, 545
+	CALLREF {
+		.inline _getExpectedWalletAddress_4fdcf47c_internal
+	}
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+}
+
+.fragment get_wallet_address, {
+	CALLREF {
+		.inline c4_to_c7_with_init_storage
+	}
+	CALLREF {
+		.inline get_wallet_address_f7ce0401_internal
+	}
+}
+
+.fragment meta_3e5b4542_internal, {
+	.loc contracts/bridge/TokenRootAlienTVM.tsol, 43
+	GETGLOB 4
+	PUSHINT 0
+	SETINDEXQ 2
+	FALSE
+	SETINDEXQ 1
+	PUSHINT 64
+	SETINDEXQ 4
+	SETGLOB 4
+	GETGLOB 23
+	GETGLOB 24
+	GETGLOB 25
+	GETGLOB 10
+	GETGLOB 11
+	GETGLOB 12
+	ROLL 6
+	.loc contracts/bridge/TokenRootAlienTVM.tsol, 0
+}
+
+.fragment meta, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/bridge/TokenRootAlienTVM.tsol, 34
+	LDU 32
+	GETGLOB 4
+	ROT
+	SETINDEXQ 5
+	SETGLOB 4
+	LDREF
+	ENDS
+	.loc contracts/bridge/TokenRootAlienTVM.tsol, 0
+	CALLREF {
+		.inline meta_3e5b4542_internal
+	}
+	PUSH S7
+	PUSHCONT {
+		PUSH S9
+		CTOS
+		LDU 2
+		LDMSGADDR
+		DROP
+		NIP
+		NEWC
+		STSLICECONST xc
+		STSLICE
+		PUSHINT 1
+		STUR 98
+		REVERSE 8, 0
+		NEWC
+		STSLICECONST xf76af867
+		STI 32
+		STSLICE
+		ROLLREV 5
+		NEWC
+		STSLICE
+		STREF
+		STREF
+		STU 8
+		STREF
+		STBREFR
+		STBREFR
+		ENDC
+		PUSHINT 0
+	}
+	PUSHCONT {
+		GETGLOB 4
+		DUP
+		INDEX 3
+		OVER
+		THIRD
+		GETGLOB 9
+		ROLL 3
+		SECOND
+		NEWC
+		STSLICECONST x2_
+		STI 1
+		STSLICECONST x1_
+		STSLICE
+		SWAP
+		STGRAMS
+		STDICT
+		PUSHINT 1
+		STUR 106
+		REVERSE 8, 0
+		NEWC
+		GETGLOB 4
+		INDEX 5
+		STUR 32
+		STI 32
+		STSLICE
+		ROLLREV 5
+		NEWC
+		STSLICE
+		STREF
+		STREF
+		STU 8
+		STREF
+		STBREFR
+		STBREFR
+		ENDC
+		GETGLOB 4
+		INDEX 4
+	}
+	IFELSE
+	SENDRAWMSG
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment mint_fea8ac6d_internal, {
+	.loc contracts/abstract/TokenRootBase.tsol, 131
+	GETGLOB 13
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SDEQ
+	NOT
+	GETGLOB 13
+	GETGLOB 9
+	SDEQ
+	AND
+	THROWIFNOT 1000
+	.loc contracts/abstract/TokenRootBase.tsol, 254
+	PUSHINT 2100
+	CALLREF {
+		.inline _mintEnabled_e9d7f0d3_internal
+	}
+	THROWANYIFNOT
+	.loc contracts/abstract/TokenRootBase.tsol, 255
+	PUSH S5
+	GTINT 0
+	THROWIFNOT 1050
+	.loc contracts/abstract/TokenRootBase.tsol, 256
+	PUSH S4
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SDEQ
+	THROWIF 1030
+	.loc contracts/abstract/TokenRootBase.tsol, 258
+	CALLREF {
+		.inline _reserve_413ab4a8_internal
+	}
+	PUSHINT 0
+	RAWRESERVE
+	.loc contracts/abstract/TokenRootBase.tsol, 260
+	NULL
+	CALLREF {
+		.inline _mint_2397df1e_internal
+	}
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+}
+
+.fragment mint, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/abstract/TokenRootBase.tsol, 241
+	OVER
+	PUSHCONT {
+		LDREF
+		ENDS
+		CTOS
+	}
+	IF
+	LDU 128
+	LDMSGADDR
+	LDU 128
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	LDI 1
+	LDREF
+	ENDS
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+	CALLREF {
+		.inline mint_fea8ac6d_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment mintDisabled_956feccf_internal, {
+	.loc contracts/abstract/TokenRootDisableableMintBase.tsol, 37
+	GETGLOB 4
+	PUSHINT 0
+	SETINDEXQ 2
+	PUSHINT 64
+	SETINDEXQ 4
+	FALSE
+	SETINDEXQ 1
+	SETGLOB 4
+	GETGLOB 18
+	.loc contracts/abstract/TokenRootDisableableMintBase.tsol, 0
+}
+
+.fragment mintDisabled, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/abstract/TokenRootDisableableMintBase.tsol, 36
+	LDU 32
+	GETGLOB 4
+	ROT
+	SETINDEXQ 5
+	SETGLOB 4
+	ENDS
+	.loc contracts/abstract/TokenRootDisableableMintBase.tsol, 0
+	CALLREF {
+		.inline mintDisabled_956feccf_internal
+	}
+	OVER
+	PUSHCONT {
+		PUSH S3
+		CTOS
+		LDU 2
+		LDMSGADDR
+		DROP
+		NIP
+		NEWC
+		STSLICECONST xc
+		STSLICE
+		PUSHINT 4233024975
+		STUR 130
+		STI 1
+		ENDC
+		PUSHINT 0
+	}
+	PUSHCONT {
+		GETGLOB 4
+		DUP
+		INDEX 3
+		OVER
+		THIRD
+		GETGLOB 9
+		ROLL 3
+		SECOND
+		NEWC
+		STSLICECONST x2_
+		STI 1
+		STSLICECONST x1_
+		STSLICE
+		SWAP
+		STGRAMS
+		STDICT
+		PUSHINT 106
+		STZEROES
+		GETGLOB 4
+		INDEX 5
+		STUR 32
+		STI 1
+		ENDC
+		GETGLOB 4
+		INDEX 4
+	}
+	IFELSE
+	SENDRAWMSG
+	IFREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment name_06fdde03_internal, {
+	.loc contracts/abstract/TokenRootBase.tsol, 139
+	GETGLOB 4
+	PUSHINT 0
+	SETINDEXQ 2
+	PUSHINT 64
+	SETINDEXQ 4
+	FALSE
+	SETINDEXQ 1
+	SETGLOB 4
+	GETGLOB 10
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+}
+
+.fragment name, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/abstract/TokenRootBase.tsol, 138
+	LDU 32
+	GETGLOB 4
+	ROT
+	SETINDEXQ 5
+	SETGLOB 4
+	ENDS
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+	CALLREF {
+		.inline name_06fdde03_internal
+	}
+	OVER
+	PUSHCONT {
+		PUSH S3
+		CTOS
+		LDU 2
+		LDMSGADDR
+		DROP
+		NIP
+		NEWC
+		STSLICECONST xc
+		STSLICE
+		PUSHINT 2575565894
+		STUR 130
+		STREF
+		ENDC
+		PUSHINT 0
+	}
+	PUSHCONT {
+		GETGLOB 4
+		DUP
+		INDEX 3
+		OVER
+		THIRD
+		GETGLOB 9
+		ROLL 3
+		SECOND
+		NEWC
+		STSLICECONST x2_
+		STI 1
+		STSLICECONST x1_
+		STSLICE
+		SWAP
+		STGRAMS
+		STDICT
+		PUSHINT 106
+		STZEROES
+		GETGLOB 4
+		INDEX 5
+		STUR 32
+		STREF
+		ENDC
+		GETGLOB 4
+		INDEX 4
+	}
+	IFELSE
+	SENDRAWMSG
+	IFREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment platformCode_f695c496_internal, {
+	.loc contracts/TokenRootUpgradeable.tsol, 147
+	GETGLOB 4
+	PUSHINT 0
+	SETINDEXQ 2
+	PUSHINT 64
+	SETINDEXQ 4
+	FALSE
+	SETINDEXQ 1
+	SETGLOB 4
+	GETGLOB 21
+	.loc contracts/TokenRootUpgradeable.tsol, 0
+}
+
+.fragment platformCode, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/TokenRootUpgradeable.tsol, 146
+	LDU 32
+	GETGLOB 4
+	ROT
+	SETINDEXQ 5
+	SETGLOB 4
+	ENDS
+	.loc contracts/TokenRootUpgradeable.tsol, 0
+	CALLREF {
+		.inline platformCode_f695c496_internal
+	}
+	OVER
+	PUSHCONT {
+		PUSH S3
+		CTOS
+		LDU 2
+		LDMSGADDR
+		DROP
+		NIP
+		NEWC
+		STSLICECONST xc
+		STSLICE
+		PUSHINT 2156232442
+		STUR 130
+		STREF
+		ENDC
+		PUSHINT 0
+	}
+	PUSHCONT {
+		GETGLOB 4
+		DUP
+		INDEX 3
+		OVER
+		THIRD
+		GETGLOB 9
+		ROLL 3
+		SECOND
+		NEWC
+		STSLICECONST x2_
+		STI 1
+		STSLICECONST x1_
+		STSLICE
+		SWAP
+		STGRAMS
+		STDICT
+		PUSHINT 106
+		STZEROES
+		GETGLOB 4
+		INDEX 5
+		STUR 32
+		STREF
+		ENDC
+		GETGLOB 4
+		INDEX 4
+	}
+	IFELSE
+	SENDRAWMSG
+	IFREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment requestUpgradeWallet_99f70aa9_internal, {
+	.loc contracts/TokenRootUpgradeable.tsol, 170
+	GETGLOB 9
+	ROT
+	CALLREF {
+		.inline _getExpectedWalletAddress_4fdcf47c_internal
+	}
+	SDEQ
+	THROWIFNOT 1100
+	.loc contracts/TokenRootUpgradeable.tsol, 172
+	CALLREF {
+		.inline _reserve_413ab4a8_internal
+	}
+	PUSHINT 0
+	RAWRESERVE
+	.loc contracts/TokenRootUpgradeable.tsol, 174
+	SWAP
+	GETGLOB 22
+	EQUAL
+	PUSHCONT {
+		.loc contracts/TokenRootUpgradeable.tsol, 175
+		DUP
+		NEWC
+		STSLICECONST x62_
+		STSLICE
+		PUSHINT 111
+		STZEROES
+	}
+	PUSHCONT {
+		.loc contracts/TokenRootUpgradeable.tsol, 177
+		DUP
+		GETGLOB 22
+		GETGLOB 14
+		GETGLOB 9
+		FALSE
+		NEWC
+		STSLICECONST x6_
+		STI 1
+		STSLICECONST x1_
+		STSLICE
+		PUSHINT 1
+		STUR 111
+		ROLLREV 3
+		NEWC
+		STSLICECONST x03369199
+		STREF
+		STU 32
+		STSLICE
+		STBREFR
+	}
+	IFELSE
+	ENDC
+	PUSHPOW2 7
+	SENDRAWMSG
+	.loc contracts/TokenRootUpgradeable.tsol, 0
+	DROP
+}
+
+.fragment requestUpgradeWallet, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/TokenRootUpgradeable.tsol, 162
+	OVER
+	PUSHCONT {
+		LDU 32
+		LDREF
+		ENDS
+		CTOS
+	}
+	PUSHCONT {
+		LDU 32
+	}
+	IFELSE
+	LDMSGADDR
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	ENDS
+	.loc contracts/TokenRootUpgradeable.tsol, 0
+	CALLREF {
+		.inline requestUpgradeWallet_99f70aa9_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment rootOwner_00ee220c_internal, {
+	.loc contracts/abstract/TokenRootBase.tsol, 174
+	GETGLOB 4
+	PUSHINT 0
+	SETINDEXQ 2
+	PUSHINT 64
+	SETINDEXQ 4
+	FALSE
+	SETINDEXQ 1
+	SETGLOB 4
+	GETGLOB 13
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+}
+
+.fragment rootOwner, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/abstract/TokenRootBase.tsol, 173
+	LDU 32
+	GETGLOB 4
+	ROT
+	SETINDEXQ 5
+	SETGLOB 4
+	ENDS
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+	CALLREF {
+		.inline rootOwner_00ee220c_internal
+	}
+	OVER
+	PUSHCONT {
+		PUSH S3
+		CTOS
+		LDU 2
+		LDMSGADDR
+		DROP
+		NIP
+		NEWC
+		STSLICECONST xc
+		STSLICE
+		PUSHINT 1
+		STUR 98
+		SWAP
+		NEWC
+		STSLICECONST xb65bb059
+		STSLICE
+		STBREFR
+		ENDC
+		PUSHINT 0
+	}
+	PUSHCONT {
+		GETGLOB 4
+		DUP
+		INDEX 3
+		OVER
+		THIRD
+		GETGLOB 9
+		ROLL 3
+		SECOND
+		NEWC
+		STSLICECONST x2_
+		STI 1
+		STSLICECONST x1_
+		STSLICE
+		SWAP
+		STGRAMS
+		STDICT
+		PUSHINT 1
+		STUR 106
+		SWAP
+		NEWC
+		GETGLOB 4
+		INDEX 5
+		STUR 32
+		STSLICE
+		STBREFR
+		ENDC
+		GETGLOB 4
+		INDEX 4
+	}
+	IFELSE
+	SENDRAWMSG
+	IFREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment sendSurplusGas_b75413d7_internal, {
+	.loc contracts/abstract/TokenRootBase.tsol, 131
+	GETGLOB 13
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SDEQ
+	NOT
+	GETGLOB 13
+	GETGLOB 9
+	SDEQ
+	AND
+	THROWIFNOT 1000
+	.loc contracts/abstract/TokenRootBase.tsol, 452
+	CALLREF {
+		.inline _targetBalance_81a00f03_internal
+	}
+	PUSHINT 0
+	RAWRESERVE
+	.loc contracts/abstract/TokenRootBase.tsol, 453
+	NEWC
+	STSLICECONST x42_
+	STSLICE
+	PUSHINT 111
+	STZEROES
+	ENDC
+	PUSHINT 130
+	SENDRAWMSG
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+}
+
+.fragment sendSurplusGas, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/abstract/TokenRootBase.tsol, 451
+	OVER
+	PUSHCONT {
+		LDREF
+		ENDS
+		CTOS
+	}
+	IF
+	LDMSGADDR
+	ENDS
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+	CALLREF {
+		.inline sendSurplusGas_b75413d7_internal
+	}
+	IFREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment setBurnPaused_5206e42a_internal, {
+	.loc contracts/abstract/TokenRootBase.tsol, 131
+	GETGLOB 13
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SDEQ
+	NOT
+	GETGLOB 13
+	GETGLOB 9
+	SDEQ
+	AND
+	THROWIFNOT 1000
+	.loc contracts/abstract/TokenRootBurnPausableBase.tsol, 36
+	SETGLOB 16
+	.loc contracts/abstract/TokenRootBurnPausableBase.tsol, 37
+	GETGLOB 4
+	PUSHINT 0
+	SETINDEXQ 2
+	PUSHINT 64
+	SETINDEXQ 4
+	FALSE
+	SETINDEXQ 1
+	SETGLOB 4
+	GETGLOB 16
+	.loc contracts/abstract/TokenRootBurnPausableBase.tsol, 0
+}
+
+.fragment setBurnPaused, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/abstract/TokenRootBurnPausableBase.tsol, 35
+	LDU 32
+	GETGLOB 4
+	ROT
+	SETINDEXQ 5
+	SETGLOB 4
+	LDI 1
+	ENDS
+	.loc contracts/abstract/TokenRootBurnPausableBase.tsol, 0
+	CALLREF {
+		.inline setBurnPaused_5206e42a_internal
+	}
+	OVER
+	PUSHCONT {
+		PUSH S3
+		CTOS
+		LDU 2
+		LDMSGADDR
+		DROP
+		NIP
+		NEWC
+		STSLICECONST xc
+		STSLICE
+		PUSHINT 4293839951
+		STUR 130
+		STI 1
+		ENDC
+		PUSHINT 0
+	}
+	PUSHCONT {
+		GETGLOB 4
+		DUP
+		INDEX 3
+		OVER
+		THIRD
+		GETGLOB 9
+		ROLL 3
+		SECOND
+		NEWC
+		STSLICECONST x2_
+		STI 1
+		STSLICECONST x1_
+		STSLICE
+		SWAP
+		STGRAMS
+		STDICT
+		PUSHINT 106
+		STZEROES
+		GETGLOB 4
+		INDEX 5
+		STUR 32
+		STI 1
+		ENDC
+		GETGLOB 4
+		INDEX 4
+	}
+	IFELSE
+	SENDRAWMSG
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment setWalletCode_fe914c81_internal, {
+	.loc contracts/abstract/TokenRootBase.tsol, 131
+	GETGLOB 13
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SDEQ
+	NOT
+	GETGLOB 13
+	GETGLOB 9
+	SDEQ
+	AND
+	THROWIFNOT 1000
+	.loc contracts/TokenRootUpgradeable.tsol, 200
+	CALLREF {
+		.inline _targetBalance_81a00f03_internal
+	}
+	PUSHINT 0
+	RAWRESERVE
+	.loc contracts/TokenRootUpgradeable.tsol, 201
+	SETGLOB 14
+	.loc contracts/TokenRootUpgradeable.tsol, 202
+	GETGLOB 22
+	INC
+	UFITS 32
+	SETGLOB 22
+	.loc contracts/TokenRootUpgradeable.tsol, 0
+}
+
+.fragment setWalletCode, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/TokenRootUpgradeable.tsol, 199
+	LDREF
+	ENDS
+	.loc contracts/TokenRootUpgradeable.tsol, 0
+	CALLREF {
+		.inline setWalletCode_fe914c81_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment supportsInterface_01ffc9a7_internal, {
+	.loc contracts/TokenRootUpgradeable.tsol, 123
+	GETGLOB 4
+	PUSHINT 0
+	SETINDEXQ 2
+	PUSHINT 64
+	SETINDEXQ 4
+	FALSE
+	SETINDEXQ 1
+	SETGLOB 4
+	DUP
+	PUSHINT 839183401
+	EQUAL
+	OVER
+	PUSHINT 1131534573
+	EQUAL
+	PUSH S2
+	PUSHINT 186634851
+	EQUAL
+	PUSH S3
+	PUSHINT 418893028
+	EQUAL
+	PUSH S4
+	PUSHINT 9810682
+	EQUAL
+	PUSH S5
+	PUSHINT 1170810452
+	EQUAL
+	PUSH S6
+	PUSHINT 929947644
+	EQUAL
+	PUSH S7
+	PUSHINT 502498758
+	EQUAL
+	ROLL 8
+	PUSHINT 745978209
+	EQUAL
+	OR
+	OR
+	OR
+	OR
+	OR
+	OR
+	OR
+	OR
+	.loc contracts/TokenRootUpgradeable.tsol, 0
+}
+
+.fragment supportsInterface, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/TokenRootUpgradeable.tsol, 122
+	LDU 32
+	GETGLOB 4
+	ROT
+	SETINDEXQ 5
+	SETGLOB 4
+	OVER
+	PUSHCONT {
+		LDREF
+		ENDS
+		CTOS
+	}
+	IF
+	LDU 32
+	ENDS
+	.loc contracts/TokenRootUpgradeable.tsol, 0
+	CALLREF {
+		.inline supportsInterface_01ffc9a7_internal
+	}
+	OVER
+	PUSHCONT {
+		PUSH S3
+		CTOS
+		LDU 2
+		LDMSGADDR
+		DROP
+		NIP
+		NEWC
+		STSLICECONST xc
+		STSLICE
+		PUSHINT 2986667049
+		STUR 130
+		STI 1
+		ENDC
+		PUSHINT 0
+	}
+	PUSHCONT {
+		GETGLOB 4
+		DUP
+		INDEX 3
+		OVER
+		THIRD
+		GETGLOB 9
+		ROLL 3
+		SECOND
+		NEWC
+		STSLICECONST x2_
+		STI 1
+		STSLICECONST x1_
+		STSLICE
+		SWAP
+		STGRAMS
+		STDICT
+		PUSHINT 106
+		STZEROES
+		GETGLOB 4
+		INDEX 5
+		STUR 32
+		STI 1
+		ENDC
+		GETGLOB 4
+		INDEX 4
+	}
+	IFELSE
+	SENDRAWMSG
+	IFREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment symbol_95d89b41_internal, {
+	.loc contracts/abstract/TokenRootBase.tsol, 146
+	GETGLOB 4
+	PUSHINT 0
+	SETINDEXQ 2
+	PUSHINT 64
+	SETINDEXQ 4
+	FALSE
+	SETINDEXQ 1
+	SETGLOB 4
+	GETGLOB 11
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+}
+
+.fragment symbol, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/abstract/TokenRootBase.tsol, 145
+	LDU 32
+	GETGLOB 4
+	ROT
+	SETINDEXQ 5
+	SETGLOB 4
+	ENDS
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+	CALLREF {
+		.inline symbol_95d89b41_internal
+	}
+	OVER
+	PUSHCONT {
+		PUSH S3
+		CTOS
+		LDU 2
+		LDMSGADDR
+		DROP
+		NIP
+		NEWC
+		STSLICECONST xc
+		STSLICE
+		PUSHINT 2541913245
+		STUR 130
+		STREF
+		ENDC
+		PUSHINT 0
+	}
+	PUSHCONT {
+		GETGLOB 4
+		DUP
+		INDEX 3
+		OVER
+		THIRD
+		GETGLOB 9
+		ROLL 3
+		SECOND
+		NEWC
+		STSLICECONST x2_
+		STI 1
+		STSLICECONST x1_
+		STSLICE
+		SWAP
+		STGRAMS
+		STDICT
+		PUSHINT 106
+		STZEROES
+		GETGLOB 4
+		INDEX 5
+		STUR 32
+		STREF
+		ENDC
+		GETGLOB 4
+		INDEX 4
+	}
+	IFELSE
+	SENDRAWMSG
+	IFREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment totalSupply_18160ddd_internal, {
+	.loc contracts/abstract/TokenRootBase.tsol, 160
+	GETGLOB 4
+	PUSHINT 0
+	SETINDEXQ 2
+	PUSHINT 64
+	SETINDEXQ 4
+	FALSE
+	SETINDEXQ 1
+	SETGLOB 4
+	GETGLOB 15
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+}
+
+.fragment totalSupply, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/abstract/TokenRootBase.tsol, 159
+	LDU 32
+	GETGLOB 4
+	ROT
+	SETINDEXQ 5
+	SETGLOB 4
+	ENDS
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+	CALLREF {
+		.inline totalSupply_18160ddd_internal
+	}
+	OVER
+	PUSHCONT {
+		PUSH S3
+		CTOS
+		LDU 2
+		LDMSGADDR
+		DROP
+		NIP
+		NEWC
+		STSLICECONST xc
+		STSLICE
+		PUSHINT 3776905316
+		STUR 130
+		STU 128
+		ENDC
+		PUSHINT 0
+	}
+	PUSHCONT {
+		GETGLOB 4
+		DUP
+		INDEX 3
+		OVER
+		THIRD
+		GETGLOB 9
+		ROLL 3
+		SECOND
+		NEWC
+		STSLICECONST x2_
+		STI 1
+		STSLICECONST x1_
+		STSLICE
+		SWAP
+		STGRAMS
+		STDICT
+		PUSHINT 106
+		STZEROES
+		GETGLOB 4
+		INDEX 5
+		STUR 32
+		STU 128
+		ENDC
+		GETGLOB 4
+		INDEX 4
+	}
+	IFELSE
+	SENDRAWMSG
+	IFREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment transferOwnership_7e6eb4d1_internal, {
+	.loc contracts/abstract/TokenRootBase.tsol, 131
+	GETGLOB 13
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SDEQ
+	NOT
+	GETGLOB 13
+	GETGLOB 9
+	SDEQ
+	AND
+	THROWIFNOT 1000
+	.loc contracts/abstract/TokenRootTransferableOwnershipBase.tsol, 37
+	CALLREF {
+		.inline _reserve_413ab4a8_internal
+	}
+	PUSHINT 0
+	RAWRESERVE
+	.loc contracts/abstract/TokenRootTransferableOwnershipBase.tsol, 39
+	GETGLOB 13
+	.loc contracts/abstract/TokenRootTransferableOwnershipBase.tsol, 40
+	ROLL 3
+	SETGLOB 13
+	.loc contracts/abstract/TokenRootTransferableOwnershipBase.tsol, 42
+	NULL
+	.loc contracts/abstract/TokenRootTransferableOwnershipBase.tsol, 43
+	XC2PU S0, S2, S0
+	PUSHINT 267
+	DICTMIN
+	PUSHCONT {
+		NULL
+		BLKPUSH 2, 0
+	}
+	IFREFELSE {
+		PUXC S0, S1
+		LDU 128
+		LDREF
+		ENDS
+		PAIR
+	}
+	PUSHCONT {
+		PUSH S2
+		ISNULL
+		NOT
+	}
+	PUSHCONT {
+		.loc contracts/abstract/TokenRootTransferableOwnershipBase.tsol, 44
+		OVER
+		PUSHREFSLICE {
+			.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+		}
+		SDEQ
+		PUSHCONT {
+			.loc contracts/abstract/TokenRootTransferableOwnershipBase.tsol, 45
+			PUSH2 S6, S1
+			SDEQ
+			PUSHCONT {
+				.loc contracts/abstract/TokenRootTransferableOwnershipBase.tsol, 52
+				DUP
+				SECOND
+				POP S5
+			}
+			PUSHCONT {
+				.loc contracts/abstract/TokenRootTransferableOwnershipBase.tsol, 46
+				DUP
+				SECOND
+				PUSH S7
+				GETGLOB 13
+				PUSH2 S8, S3
+				FIRST
+				UFITS 120
+				PUSH S6
+				FALSE
+				NEWC
+				STSLICECONST x6_
+				STI 1
+				STSLICECONST x1_
+				STSLICE
+				SWAP
+				STGRAMS
+				PUSHINT 1
+				STUR 107
+				ROLLREV 4
+				NEWC
+				STSLICECONST x752ab377
+				STSLICE
+				ROLLREV 3
+				NEWC
+				STSLICE
+				ROTREV
+				NEWC
+				STSLICE
+				STREF
+				STBREFR
+				STBREFR
+				STBREFR
+				ENDC
+				PUSHINT 1
+				SENDRAWMSG
+			}
+			IFELSE
+			.loc contracts/abstract/TokenRootTransferableOwnershipBase.tsol, 0
+		}
+		IFNOT
+		.loc contracts/abstract/TokenRootTransferableOwnershipBase.tsol, 0
+		XC2PU S0, S2, S3
+		PUSHINT 267
+		DICTGETNEXT
+		PUSHCONT {
+			NULL
+			BLKPUSH 2, 0
+		}
+		IFREFELSE {
+			PUXC S0, S1
+			LDU 128
+			LDREF
+			ENDS
+			PAIR
+		}
+		BLKDROP2 2, 3
+	}
+	WHILE
+	BLKDROP 4
+	.loc contracts/abstract/TokenRootTransferableOwnershipBase.tsol, 57
+	PUSH S2
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SDEQ
+	PUSHCONT {
+		.loc contracts/abstract/TokenRootTransferableOwnershipBase.tsol, 58
+		DUP
+		ISNULL
+		PUSHCONT {
+			.loc contracts/abstract/TokenRootTransferableOwnershipBase.tsol, 65
+			PUSH S2
+			NEWC
+			STSLICECONST x42_
+			STSLICE
+			PUSHINT 111
+			STZEROES
+			ENDC
+			PUSHINT 130
+		}
+		PUSHCONT {
+			.loc contracts/abstract/TokenRootTransferableOwnershipBase.tsol, 59
+			BLKPUSH 2, 0
+			ISNULL
+			THROWIF 63
+			PUSH S3
+			GETGLOB 13
+			PUSH2 S4, S5
+			FALSE
+			NEWC
+			STSLICECONST x6_
+			STI 1
+			STSLICECONST x1_
+			STSLICE
+			PUSHINT 1
+			STUR 111
+			ROLLREV 4
+			NEWC
+			STSLICECONST x752ab377
+			STSLICE
+			ROLLREV 3
+			NEWC
+			STSLICE
+			ROTREV
+			NEWC
+			STSLICE
+			STREF
+			STBREFR
+			STBREFR
+			STBREFR
+			ENDC
+			PUSHPOW2 7
+		}
+		IFELSE
+		SENDRAWMSG
+		.loc contracts/abstract/TokenRootTransferableOwnershipBase.tsol, 0
+	}
+	IFNOT
+	.loc contracts/abstract/TokenRootTransferableOwnershipBase.tsol, 0
+	BLKDROP 3
+}
+
+.fragment transferOwnership, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/abstract/TokenRootTransferableOwnershipBase.tsol, 28
+	OVER
+	PUSHCONT {
+		LDREF
+		ENDS
+		CTOS
+	}
+	IF
+	LDMSGADDR
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	LDDICT
+	ENDS
+	.loc contracts/abstract/TokenRootTransferableOwnershipBase.tsol, 0
+	CALLREF {
+		.inline transferOwnership_7e6eb4d1_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment upgrade_7916ae0d_internal, {
+	.loc contracts/abstract/TokenRootBase.tsol, 131
+	GETGLOB 13
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SDEQ
+	NOT
+	GETGLOB 13
+	GETGLOB 9
+	SDEQ
+	AND
+	THROWIFNOT 1000
+	.loc contracts/TokenRootUpgradeable.tsol, 214
+	GETGLOB 13
+	NEWC
+	STSLICE
+	.loc contracts/TokenRootUpgradeable.tsol, 215
+	GETGLOB 15
+	STUR 128
+	.loc contracts/TokenRootUpgradeable.tsol, 216
+	GETGLOB 12
+	STUR 8
+	.loc contracts/TokenRootUpgradeable.tsol, 219
+	GETGLOB 22
+	NEWC
+	STU 32
+	.loc contracts/TokenRootUpgradeable.tsol, 220
+	GETGLOB 21
+	SWAP
+	STREF
+	.loc contracts/TokenRootUpgradeable.tsol, 221
+	GETGLOB 14
+	SWAP
+	STREF
+	.loc contracts/TokenRootUpgradeable.tsol, 224
+	GETGLOB 10
+	SWAP
+	STREF
+	.loc contracts/TokenRootUpgradeable.tsol, 225
+	GETGLOB 11
+	SWAP
+	STREF
+	.loc contracts/TokenRootUpgradeable.tsol, 228
+	GETGLOB 18
+	NEWC
+	STI 1
+	.loc contracts/TokenRootUpgradeable.tsol, 229
+	GETGLOB 17
+	SWAP
+	STI 1
+	.loc contracts/TokenRootUpgradeable.tsol, 230
+	GETGLOB 16
+	SWAP
+	STI 1
+	.loc contracts/TokenRootUpgradeable.tsol, 232
+	ROT
+	NEWC
+	STBREFR
+	.loc contracts/TokenRootUpgradeable.tsol, 233
+	ROT
+	STBREFR
+	.loc contracts/TokenRootUpgradeable.tsol, 234
+	STBREF
+	.loc contracts/TokenRootUpgradeable.tsol, 236
+	OVER
+	SETCODE
+	.loc contracts/TokenRootUpgradeable.tsol, 237
+	SWAP
+	CTOS
+	BLESS
+	POP C3
+	.loc contracts/TokenRootUpgradeable.tsol, 238
+	ENDC
+	CALL 6152
+	.loc contracts/TokenRootUpgradeable.tsol, 0
+}
+
+.fragment upgrade, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/TokenRootUpgradeable.tsol, 211
+	LDREF
+	ENDS
+	.loc contracts/TokenRootUpgradeable.tsol, 0
+	CALLREF {
+		.inline upgrade_7916ae0d_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment walletCode_b9d56deb_internal, {
+	.loc contracts/abstract/TokenRootBase.tsol, 167
+	GETGLOB 4
+	PUSHINT 0
+	SETINDEXQ 2
+	PUSHINT 64
+	SETINDEXQ 4
+	FALSE
+	SETINDEXQ 1
+	SETGLOB 4
+	GETGLOB 14
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+}
+
+.fragment walletCode, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/abstract/TokenRootBase.tsol, 166
+	LDU 32
+	GETGLOB 4
+	ROT
+	SETINDEXQ 5
+	SETGLOB 4
+	ENDS
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+	CALLREF {
+		.inline walletCode_b9d56deb_internal
+	}
+	OVER
+	PUSHCONT {
+		PUSH S3
+		CTOS
+		LDU 2
+		LDMSGADDR
+		DROP
+		NIP
+		NEWC
+		STSLICECONST xc
+		STSLICE
+		PUSHINT 3864907423
+		STUR 130
+		STREF
+		ENDC
+		PUSHINT 0
+	}
+	PUSHCONT {
+		GETGLOB 4
+		DUP
+		INDEX 3
+		OVER
+		THIRD
+		GETGLOB 9
+		ROLL 3
+		SECOND
+		NEWC
+		STSLICECONST x2_
+		STI 1
+		STSLICECONST x1_
+		STSLICE
+		SWAP
+		STGRAMS
+		STDICT
+		PUSHINT 106
+		STZEROES
+		GETGLOB 4
+		INDEX 5
+		STUR 32
+		STREF
+		ENDC
+		GETGLOB 4
+		INDEX 4
+	}
+	IFELSE
+	SENDRAWMSG
+	IFREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment walletOf_1982640c_internal, {
+	.loc contracts/abstract/TokenRootBase.tsol, 191
+	DUP
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SDEQ
+	THROWIF 1021
+	.loc contracts/abstract/TokenRootBase.tsol, 192
+	GETGLOB 4
+	PUSHINT 0
+	SETINDEXQ 2
+	PUSHINT 64
+	SETINDEXQ 4
+	FALSE
+	SETINDEXQ 1
+	SETGLOB 4
+	CALLREF {
+		.inline _getExpectedWalletAddress_4fdcf47c_internal
+	}
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+}
+
+.fragment walletOf, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/abstract/TokenRootBase.tsol, 184
+	LDU 32
+	GETGLOB 4
+	ROT
+	SETINDEXQ 5
+	SETGLOB 4
+	OVER
+	PUSHCONT {
+		LDREF
+		ENDS
+		CTOS
+	}
+	IF
+	LDMSGADDR
+	ENDS
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+	CALLREF {
+		.inline walletOf_1982640c_internal
+	}
+	OVER
+	PUSHCONT {
+		PUSH S3
+		CTOS
+		LDU 2
+		LDMSGADDR
+		DROP
+		NIP
+		NEWC
+		STSLICECONST xc
+		STSLICE
+		PUSHINT 1
+		STUR 98
+		SWAP
+		NEWC
+		STSLICECONST xac160545
+		STSLICE
+		STBREFR
+		ENDC
+		PUSHINT 0
+	}
+	PUSHCONT {
+		GETGLOB 4
+		DUP
+		INDEX 3
+		OVER
+		THIRD
+		GETGLOB 9
+		ROLL 3
+		SECOND
+		NEWC
+		STSLICECONST x2_
+		STI 1
+		STSLICECONST x1_
+		STSLICE
+		SWAP
+		STGRAMS
+		STDICT
+		PUSHINT 1
+		STUR 106
+		SWAP
+		NEWC
+		GETGLOB 4
+		INDEX 5
+		STUR 32
+		STSLICE
+		STBREFR
+		ENDC
+		GETGLOB 4
+		INDEX 4
+	}
+	IFELSE
+	SENDRAWMSG
+	IFREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment walletVersion_bc517131_internal, {
+	.loc contracts/TokenRootUpgradeable.tsol, 140
+	GETGLOB 4
+	PUSHINT 0
+	SETINDEXQ 2
+	PUSHINT 64
+	SETINDEXQ 4
+	FALSE
+	SETINDEXQ 1
+	SETGLOB 4
+	GETGLOB 22
+	.loc contracts/TokenRootUpgradeable.tsol, 0
+}
+
+.fragment walletVersion, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/TokenRootUpgradeable.tsol, 139
+	LDU 32
+	GETGLOB 4
+	ROT
+	SETINDEXQ 5
+	SETGLOB 4
+	ENDS
+	.loc contracts/TokenRootUpgradeable.tsol, 0
+	CALLREF {
+		.inline walletVersion_bc517131_internal
+	}
+	OVER
+	PUSHCONT {
+		PUSH S3
+		CTOS
+		LDU 2
+		LDMSGADDR
+		DROP
+		NIP
+		NEWC
+		STSLICECONST xc
+		STSLICE
+		PUSHINT 3319522064
+		STUR 130
+		STU 32
+		ENDC
+		PUSHINT 0
+	}
+	PUSHCONT {
+		GETGLOB 4
+		DUP
+		INDEX 3
+		OVER
+		THIRD
+		GETGLOB 9
+		ROLL 3
+		SECOND
+		NEWC
+		STSLICECONST x2_
+		STI 1
+		STSLICECONST x1_
+		STSLICE
+		SWAP
+		STGRAMS
+		STDICT
+		PUSHINT 106
+		STZEROES
+		GETGLOB 4
+		INDEX 5
+		STUR 32
+		STU 32
+		ENDC
+		GETGLOB 4
+		INDEX 4
+	}
+	IFELSE
+	SENDRAWMSG
+	IFREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment public_function_selector, {
+	DUP
+	PUSHINT 552322925
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 388172858
+		LEQ
+		IFJMPREF {
+			DUP
+			PUSHINT 170124956
+			LEQ
+			IFJMPREF {
+				DUP
+				PUSHINT 8748794
+				EQUAL
+				IFJMPREF {
+					.inline platformCode
+				}
+				DUP
+				PUSHINT 170124956
+				EQUAL
+				IFJMPREF {
+					.inline constructor
+				}
+			}
+			DUP
+			PUSHINT 211314732
+			EQUAL
+			IFJMPREF {
+				.inline burnTokens
+			}
+			DUP
+			PUSHINT 352169376
+			EQUAL
+			IFJMPREF {
+				.inline requestUpgradeWallet
+			}
+			DUP
+			PUSHINT 388172858
+			EQUAL
+			IFJMPREF {
+				.inline upgrade
+			}
+		}
+		DUP
+		PUSHINT 428082246
+		LEQ
+		IFJMPREF {
+			DUP
+			PUSHINT 394429597
+			EQUAL
+			IFJMPREF {
+				.inline symbol
+			}
+			DUP
+			PUSHINT 422269361
+			EQUAL
+			IFJMPREF {
+				.inline acceptBurn
+			}
+			DUP
+			PUSHINT 428082246
+			EQUAL
+			IFJMPREF {
+				.inline name
+			}
+		}
+		DUP
+		PUSHINT 549434296
+		LEQ
+		IFJMPREF {
+			DUP
+			PUSHINT 502498758
+			EQUAL
+			IFJMPREF {
+				.inline transferOwnership
+			}
+			DUP
+			PUSHINT 549434296
+			EQUAL
+			IFJMPREF {
+				.inline mint
+			}
+		}
+		DUP
+		PUSHINT 552322925
+		EQUAL
+		IFJMPREF {
+			.inline sendSurplusGas
+		}
+	}
+	DUP
+	PUSHINT 1323395199
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 839183401
+		LEQ
+		IFJMPREF {
+			DUP
+			PUSHINT 739640645
+			EQUAL
+			IFJMPREF {
+				.inline walletOf
+			}
+			DUP
+			PUSHINT 837670087
+			EQUAL
+			IFJMPREF {
+				.inline deployWallet
+			}
+			DUP
+			PUSHINT 839183401
+			EQUAL
+			IFJMPREF {
+				.inline supportsInterface
+			}
+		}
+		DUP
+		PUSHINT 975694363
+		LEQ
+		IFJMPREF {
+			DUP
+			PUSHINT 911978585
+			EQUAL
+			IFJMPREF {
+				.inline rootOwner
+			}
+			DUP
+			PUSHINT 975694363
+			EQUAL
+			IFJMPREF {
+				.inline burnPaused
+			}
+		}
+		DUP
+		PUSHINT 1172038416
+		EQUAL
+		IFJMPREF {
+			.inline walletVersion
+		}
+		DUP
+		PUSHINT 1323395199
+		EQUAL
+		IFJMPREF {
+			.inline burnByRootDisabled
+		}
+	}
+	DUP
+	PUSHINT 1911415692
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1519307959
+		LEQ
+		IFJMPREF {
+			DUP
+			PUSHINT 1394526076
+			EQUAL
+			IFJMPREF {
+				.inline decimals
+			}
+			DUP
+			PUSHINT 1519307959
+			EQUAL
+			IFJMPREF {
+				.inline disableBurnByRoot
+			}
+		}
+		DUP
+		PUSHINT 1629421668
+		EQUAL
+		IFJMPREF {
+			.inline totalSupply
+		}
+		DUP
+		PUSHINT 1717423775
+		EQUAL
+		IFJMPREF {
+			.inline walletCode
+		}
+		DUP
+		PUSHINT 1911415692
+		EQUAL
+		IFJMPREF {
+			.inline setWalletCode
+		}
+	}
+	DUP
+	PUSHINT 2146356303
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 2003499111
+		EQUAL
+		IFJMPREF {
+			.inline meta
+		}
+		DUP
+		PUSHINT 2085541327
+		EQUAL
+		IFJMPREF {
+			.inline mintDisabled
+		}
+		DUP
+		PUSHINT 2094753589
+		EQUAL
+		IFJMPREF {
+			.inline disableMint
+		}
+		DUP
+		PUSHINT 2146356303
+		EQUAL
+		IFJMPREF {
+			.inline setBurnPaused
+		}
+	}
+}
+
+.fragment main_external, {
+	PUSHINT -1
+	PUSHROOT
+	CTOS
+	SBITS
+	NEQINT 1
+	SETGLOB 6
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SETGLOB 9
+	OVER
+	CALLREF {
+		.inline c4_to_c7_with_init_storage
+	}
+	LDU 1 ; haveSign msgSlice
+	SWAP
+	PUSHCONT {
+		PUSHPOW2 9
+		LDSLICEX
+		DUP
+		MYADDR
+		NEWC
+		STSLICE
+		STSLICE
+		ENDC
+		HASHCU
+		SWAP
+		LDU 1 ; signatureSlice hashMsgSlice hasPubkey msgSlice
+		SWAP
+		PUSHCONT {
+			LDU 256 ; signatureSlice hashMsgSlice pubkey msgSlice
+			XCHG2 S3, S3
+		}
+		PUSHCONT {
+			XCHG S2
+			GETGLOB 2
+		}
+		IFELSE
+		DUP
+		SETGLOB 5
+		CHKSIGNU
+		THROWIFNOT 40
+	}
+	PUSHCONT {
+		LDU 1 ; hasPubkey msgSlice
+		SWAP
+		THROWIF 58
+	}
+	IFELSE
+	LDU 64 ; timestamp msgSlice
+	SWAP
+	.inline __replayProtection
+	LDU 32 ; expireAt msgSlice
+	SWAP
+	NOW ; msgSlice expireAt now
+	GREATER ; msgSlice expireAt>now
+	THROWIFNOT 57
+	LDU 32 ; funcId body
+	SWAP
+	CALLREF {
+		.inline public_function_selector
+	}
+	DROP2
+	CALLREF {
+		.inline fallback
+	}
+}
+
+.fragment on_bounce, {
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/abstract/TokenRootBase.tsol, 433
+	LDU 32
+	SWAP
+	PUSHINT 1132786328
+	EQUAL
+	PUSHCONT {
+		.loc contracts/abstract/TokenRootBase.tsol, 434
+		LDU 128
+		GETGLOB 15
+		ROT
+		SUB
+		UFITS 128
+		SETGLOB 15
+		.loc contracts/abstract/TokenRootBase.tsol, 0
+	}
+	IF
+	.loc contracts/abstract/TokenRootBase.tsol, 0
+	DROP
+	CALLREF {
+		.inline c7_to_c4
+	}
+}
+
+.fragment main_internal, {
+	PUSHINT 0
+	PUSHROOT
+	CTOS
+	SBITS
+	NEQINT 1
+	SETGLOB 6
+	PUSH S2
+	CTOS
+	LDU 4 ; bounced tail
+	LDMSGADDR ; bounced src tail
+	DROP
+	SETGLOB 9
+	MODPOW2 1
+	GETGLOB 4
+	TRUE
+	SETINDEXQ 1
+	PUSHINT 10000000
+	SETINDEXQ 2
+	NULL
+	SETINDEXQ 3
+	PUSHINT 0
+	SETINDEXQ 4
+	SETGLOB 4
+	IFJMPREF {
+		OVER
+		LDSLICE 32
+		NIP
+		.inline on_bounce
+	}
+	OVER
+	SEMPTY ; isEmpty
+	IFJMPREF {
+		GETGLOB 6
+		THROWIFNOT 76
+	}
+	OVER
+	LDUQ 32  ; [funcId] body' ok
+	PUSHCONT {
+		DROP
+		CALLREF {
+			.inline fallback
+		}
+		THROW 0
+	}
+	IFNOT
+	OVER
+	IFNOTJMPREF {
+		GETGLOB 6
+		THROWIFNOT 76
+	}
+	SWAP
+	CALLREF {
+		.inline public_function_selector
+	}
+	DROP2
+	CALLREF {
+		.inline fallback
+	}
+}
+
+.fragment onCodeUpgrade_0e89a1b9_internal, {
+	DROP
+	.loc contracts/TokenRootUpgradeable.tsol, 0
+	CALLREF {
+		.inline c7_to_c4
+	}
+	COMMIT
+	THROW 0
+}
+
+.fragment upd_only_time_in_c4, {
+	PUSHROOT
+	CTOS
+	LDU 256
+	LDU 64
+	NIP
+	GETGLOB 3
+	ROT
+	NEWC
+	STU 256
+	STU 64
+	STSLICE
+	ENDC
+	POPROOT
+}
+
+.fragment JettonUtils_with_obj_walletOf_2e534ed9, {
+	.loc contracts/libraries/JettonUtils.tsol, 37
+	NEWC
+	STSLICECONST x2c76b973
+	.loc contracts/libraries/JettonUtils.tsol, 38
+	ROLL 6
+	STUR 64
+	.loc contracts/libraries/JettonUtils.tsol, 39
+	ROLL 5
+	STSLICER
+	.loc contracts/libraries/JettonUtils.tsol, 40
+	ROLL 4
+	SWAP
+	STI 1
+	.loc contracts/libraries/JettonUtils.tsol, 42
+	SWAP2
+	PUXC S4, S3
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1
+	STUR 107
+	STBREF
+	ENDC
+	SWAP
+	SENDRAWMSG
+	.loc contracts/libraries/JettonUtils.tsol, 0
+}
+
+.fragment JettonUtils_walletOf_2e534ed9, {
+	.loc contracts/libraries/JettonUtils.tsol, 37
+	NEWC
+	STSLICECONST x2c76b973
+	.loc contracts/libraries/JettonUtils.tsol, 38
+	ROLL 6
+	STUR 64
+	.loc contracts/libraries/JettonUtils.tsol, 39
+	ROLL 5
+	STSLICER
+	.loc contracts/libraries/JettonUtils.tsol, 40
+	ROLL 4
+	SWAP
+	STI 1
+	.loc contracts/libraries/JettonUtils.tsol, 42
+	ROTREV
+	REVERSE 4, 1
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1
+	STUR 107
+	STBREF
+	ENDC
+	SWAP
+	SENDRAWMSG
+	.loc contracts/libraries/JettonUtils.tsol, 0
+}
+
+.fragment JettonUtils_with_obj_mint_1bbef923, {
+	.loc contracts/libraries/JettonUtils.tsol, 65
+	NEWC
+	STSLICECONST x178d4519
+	.loc contracts/libraries/JettonUtils.tsol, 66
+	PUSH S10
+	STUR 64
+	.loc contracts/libraries/JettonUtils.tsol, 67
+	ROLL 8
+	STVARUINT16
+	.loc contracts/libraries/JettonUtils.tsol, 68
+	MYADDR
+	STSLICER
+	.loc contracts/libraries/JettonUtils.tsol, 69
+	ROLL 4
+	STSLICER
+	.loc contracts/libraries/JettonUtils.tsol, 70
+	ROLL 5
+	STVARUINT16
+	.loc contracts/libraries/JettonUtils.tsol, 71
+	ROLL 4
+	SWAP
+	STDICT
+	.loc contracts/libraries/JettonUtils.tsol, 75
+	NEWC
+	STSLICECONST x00000015
+	.loc contracts/libraries/JettonUtils.tsol, 76
+	ROLL 7
+	STUR 64
+	.loc contracts/libraries/JettonUtils.tsol, 77
+	ROLL 6
+	STSLICER
+	.loc contracts/libraries/JettonUtils.tsol, 78
+	ROLL 5
+	STVARUINT16
+	.loc contracts/libraries/JettonUtils.tsol, 79
+	SWAP
+	ENDC
+	SWAP
+	STREF
+	.loc contracts/libraries/JettonUtils.tsol, 81
+	SWAP2
+	PUXC S4, S3
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1
+	STUR 107
+	STBREF
+	ENDC
+	SWAP
+	SENDRAWMSG
+	.loc contracts/libraries/JettonUtils.tsol, 0
+}
+
+.fragment JettonUtils_mint_1bbef923, {
+	.loc contracts/libraries/JettonUtils.tsol, 65
+	NEWC
+	STSLICECONST x178d4519
+	.loc contracts/libraries/JettonUtils.tsol, 66
+	PUSH S10
+	STUR 64
+	.loc contracts/libraries/JettonUtils.tsol, 67
+	ROLL 8
+	STVARUINT16
+	.loc contracts/libraries/JettonUtils.tsol, 68
+	MYADDR
+	STSLICER
+	.loc contracts/libraries/JettonUtils.tsol, 69
+	ROLL 4
+	STSLICER
+	.loc contracts/libraries/JettonUtils.tsol, 70
+	ROLL 5
+	STVARUINT16
+	.loc contracts/libraries/JettonUtils.tsol, 71
+	ROLL 4
+	SWAP
+	STDICT
+	.loc contracts/libraries/JettonUtils.tsol, 75
+	NEWC
+	STSLICECONST x00000015
+	.loc contracts/libraries/JettonUtils.tsol, 76
+	ROLL 7
+	STUR 64
+	.loc contracts/libraries/JettonUtils.tsol, 77
+	ROLL 6
+	STSLICER
+	.loc contracts/libraries/JettonUtils.tsol, 78
+	ROLL 5
+	STVARUINT16
+	.loc contracts/libraries/JettonUtils.tsol, 79
+	SWAP
+	ENDC
+	SWAP
+	STREF
+	.loc contracts/libraries/JettonUtils.tsol, 81
+	ROTREV
+	REVERSE 4, 1
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1
+	STUR 107
+	STBREF
+	ENDC
+	SWAP
+	SENDRAWMSG
+	.loc contracts/libraries/JettonUtils.tsol, 0
+}
+
+.fragment JettonUtils_with_obj_transferJettons_09cc9039, {
+	.loc contracts/libraries/JettonUtils.tsol, 104
+	NEWC
+	STSLICECONST x0f8a7ea5
+	.loc contracts/libraries/JettonUtils.tsol, 105
+	ROLL 9
+	STUR 64
+	.loc contracts/libraries/JettonUtils.tsol, 106
+	ROLL 6
+	XCHG S7
+	STVARUINT16
+	.loc contracts/libraries/JettonUtils.tsol, 107
+	ROLL 7
+	STSLICER
+	.loc contracts/libraries/JettonUtils.tsol, 108
+	ROLL 4
+	STSLICER
+	.loc contracts/libraries/JettonUtils.tsol, 109
+	NULL
+	SWAP
+	STDICT
+	.loc contracts/libraries/JettonUtils.tsol, 110
+	ROLL 5
+	STVARUINT16
+	.loc contracts/libraries/JettonUtils.tsol, 111
+	ROLL 4
+	SWAP
+	STDICT
+	.loc contracts/libraries/JettonUtils.tsol, 113
+	SWAP2
+	PUXC S4, S3
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1
+	STUR 107
+	STBREF
+	ENDC
+	SWAP
+	SENDRAWMSG
+	.loc contracts/libraries/JettonUtils.tsol, 0
+}
+
+.fragment JettonUtils_transferJettons_09cc9039, {
+	.loc contracts/libraries/JettonUtils.tsol, 104
+	NEWC
+	STSLICECONST x0f8a7ea5
+	.loc contracts/libraries/JettonUtils.tsol, 105
+	ROLL 9
+	STUR 64
+	.loc contracts/libraries/JettonUtils.tsol, 106
+	ROLL 6
+	XCHG S7
+	STVARUINT16
+	.loc contracts/libraries/JettonUtils.tsol, 107
+	ROLL 7
+	STSLICER
+	.loc contracts/libraries/JettonUtils.tsol, 108
+	ROLL 4
+	STSLICER
+	.loc contracts/libraries/JettonUtils.tsol, 109
+	NULL
+	SWAP
+	STDICT
+	.loc contracts/libraries/JettonUtils.tsol, 110
+	ROLL 5
+	STVARUINT16
+	.loc contracts/libraries/JettonUtils.tsol, 111
+	ROLL 4
+	SWAP
+	STDICT
+	.loc contracts/libraries/JettonUtils.tsol, 113
+	ROTREV
+	REVERSE 4, 1
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1
+	STUR 107
+	STBREF
+	ENDC
+	SWAP
+	SENDRAWMSG
+	.loc contracts/libraries/JettonUtils.tsol, 0
+}
+
+.fragment JettonUtils_with_obj_burn_b07ed84c, {
+	.loc contracts/libraries/JettonUtils.tsol, 132
+	NEWC
+	STSLICECONST x595f07bc
+	.loc contracts/libraries/JettonUtils.tsol, 133
+	ROLL 6
+	STUR 64
+	.loc contracts/libraries/JettonUtils.tsol, 134
+	ROLL 5
+	STVARUINT16
+	.loc contracts/libraries/JettonUtils.tsol, 135
+	ROLL 4
+	STSLICER
+	.loc contracts/libraries/JettonUtils.tsol, 137
+	SWAP2
+	PUXC S4, S3
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1
+	STUR 107
+	STBREF
+	ENDC
+	SWAP
+	SENDRAWMSG
+	.loc contracts/libraries/JettonUtils.tsol, 0
+}
+
+.fragment JettonUtils_burn_b07ed84c, {
+	.loc contracts/libraries/JettonUtils.tsol, 132
+	NEWC
+	STSLICECONST x595f07bc
+	.loc contracts/libraries/JettonUtils.tsol, 133
+	ROLL 6
+	STUR 64
+	.loc contracts/libraries/JettonUtils.tsol, 134
+	ROLL 5
+	STVARUINT16
+	.loc contracts/libraries/JettonUtils.tsol, 135
+	ROLL 4
+	STSLICER
+	.loc contracts/libraries/JettonUtils.tsol, 137
+	ROTREV
+	REVERSE 4, 1
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1
+	STUR 107
+	STBREF
+	ENDC
+	SWAP
+	SENDRAWMSG
+	.loc contracts/libraries/JettonUtils.tsol, 0
+}
+
+.fragment JettonUtils_with_obj_setAdmin_306c7812, {
+	.loc contracts/libraries/JettonUtils.tsol, 155
+	NEWC
+	STSLICECONST x00000003
+	.loc contracts/libraries/JettonUtils.tsol, 156
+	ROLL 5
+	STUR 64
+	.loc contracts/libraries/JettonUtils.tsol, 157
+	ROLL 4
+	STSLICER
+	.loc contracts/libraries/JettonUtils.tsol, 159
+	SWAP2
+	PUXC S4, S3
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1
+	STUR 107
+	STBREF
+	ENDC
+	SWAP
+	SENDRAWMSG
+	.loc contracts/libraries/JettonUtils.tsol, 0
+}
+
+.fragment JettonUtils_setAdmin_306c7812, {
+	.loc contracts/libraries/JettonUtils.tsol, 155
+	NEWC
+	STSLICECONST x00000003
+	.loc contracts/libraries/JettonUtils.tsol, 156
+	ROLL 5
+	STUR 64
+	.loc contracts/libraries/JettonUtils.tsol, 157
+	ROLL 4
+	STSLICER
+	.loc contracts/libraries/JettonUtils.tsol, 159
+	ROTREV
+	REVERSE 4, 1
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1
+	STUR 107
+	STBREF
+	ENDC
+	SWAP
+	SENDRAWMSG
+	.loc contracts/libraries/JettonUtils.tsol, 0
+}
+
+.fragment JettonUtils_with_obj_setMeta_ff126198, {
+	.loc contracts/libraries/JettonUtils.tsol, 177
+	NEWC
+	STSLICECONST x00000004
+	.loc contracts/libraries/JettonUtils.tsol, 178
+	ROLL 5
+	STUR 64
+	.loc contracts/libraries/JettonUtils.tsol, 179
+	ROLL 4
+	SWAP
+	STREF
+	.loc contracts/libraries/JettonUtils.tsol, 181
+	SWAP2
+	PUXC S4, S3
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1
+	STUR 107
+	STBREF
+	ENDC
+	SWAP
+	SENDRAWMSG
+	.loc contracts/libraries/JettonUtils.tsol, 0
+}
+
+.fragment JettonUtils_setMeta_ff126198, {
+	.loc contracts/libraries/JettonUtils.tsol, 177
+	NEWC
+	STSLICECONST x00000004
+	.loc contracts/libraries/JettonUtils.tsol, 178
+	ROLL 5
+	STUR 64
+	.loc contracts/libraries/JettonUtils.tsol, 179
+	ROLL 4
+	SWAP
+	STREF
+	.loc contracts/libraries/JettonUtils.tsol, 181
+	ROTREV
+	REVERSE 4, 1
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1
+	STUR 107
+	STBREF
+	ENDC
+	SWAP
+	SENDRAWMSG
+	.loc contracts/libraries/JettonUtils.tsol, 0
+}
+
+.fragment JettonUtils_with_obj_sendTakeWalletAddressCallback_8c79e9fd, {
+	.loc contracts/libraries/JettonUtils.tsol, 200
+	NEWC
+	STSLICECONST xd1735400
+	.loc contracts/libraries/JettonUtils.tsol, 201
+	ROLL 6
+	STUR 64
+	.loc contracts/libraries/JettonUtils.tsol, 202
+	ROLL 5
+	STSLICER
+	.loc contracts/libraries/JettonUtils.tsol, 203
+	ROLL 4
+	SWAP
+	STDICT
+	.loc contracts/libraries/JettonUtils.tsol, 205
+	SWAP2
+	PUXC S4, S3
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1
+	STUR 107
+	STBREF
+	ENDC
+	SWAP
+	SENDRAWMSG
+	.loc contracts/libraries/JettonUtils.tsol, 0
+}
+
+.fragment JettonUtils_with_obj_sendTransferNotificationCallback_1f6af558, {
+	.loc contracts/libraries/JettonUtils.tsol, 225
+	NEWC
+	STSLICECONST x7362d09c
+	.loc contracts/libraries/JettonUtils.tsol, 226
+	ROLL 7
+	STUR 64
+	.loc contracts/libraries/JettonUtils.tsol, 227
+	ROLL 6
+	STVARUINT16
+	.loc contracts/libraries/JettonUtils.tsol, 228
+	ROLL 5
+	STSLICER
+	.loc contracts/libraries/JettonUtils.tsol, 229
+	ROLL 4
+	SWAP
+	STDICT
+	.loc contracts/libraries/JettonUtils.tsol, 231
+	SWAP2
+	PUXC S4, S3
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1
+	STUR 107
+	STBREF
+	ENDC
+	SWAP
+	SENDRAWMSG
+	.loc contracts/libraries/JettonUtils.tsol, 0
+}
+
+.fragment JettonUtils_sendTransferNotificationCallback_1f6af558, {
+	.loc contracts/libraries/JettonUtils.tsol, 225
+	NEWC
+	STSLICECONST x7362d09c
+	.loc contracts/libraries/JettonUtils.tsol, 226
+	ROLL 7
+	STUR 64
+	.loc contracts/libraries/JettonUtils.tsol, 227
+	ROLL 6
+	STVARUINT16
+	.loc contracts/libraries/JettonUtils.tsol, 228
+	ROLL 5
+	STSLICER
+	.loc contracts/libraries/JettonUtils.tsol, 229
+	ROLL 4
+	SWAP
+	STDICT
+	.loc contracts/libraries/JettonUtils.tsol, 231
+	ROTREV
+	REVERSE 4, 1
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1
+	STUR 107
+	STBREF
+	ENDC
+	SWAP
+	SENDRAWMSG
+	.loc contracts/libraries/JettonUtils.tsol, 0
+}
+
+.fragment JettonUtils_sendExcessesCallback_2e295f58, {
+	.loc contracts/libraries/JettonUtils.tsol, 248
+	NEWC
+	STSLICECONST xd53276db
+	.loc contracts/libraries/JettonUtils.tsol, 249
+	ROLL 4
+	STUR 64
+	.loc contracts/libraries/JettonUtils.tsol, 251
+	ROTREV
+	REVERSE 4, 1
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1
+	STUR 107
+	STBREF
+	ENDC
+	SWAP
+	SENDRAWMSG
+	.loc contracts/libraries/JettonUtils.tsol, 0
+}
+
+.fragment JettonUtils_decodeTransferMsgParams_96dfe5d4, {
+	.loc contracts/libraries/JettonUtils.tsol, 374
+	DEPTH
+	ADDCONST -4
+	PICK
+	LDU 32
+	LDU 64
+	LDVARUINT16
+	LDMSGADDR
+	LDMSGADDR
+	LDDICT
+	LDVARUINT16
+	PLDDICT
+	BLKDROP2 1, 7
+	BLKDROP2 1, 2
+	.loc contracts/libraries/JettonUtils.tsol, 396
+	TUPLE 6
+	.loc contracts/libraries/JettonUtils.tsol, 0
+}
+
+.fragment JettonUtils_decodeBurnMsgParams_285c6fb9, {
+	.loc contracts/libraries/JettonUtils.tsol, 414
+	DEPTH
+	ADDCONST -4
+	PICK
+	LDU 32
+	LDU 64
+	LDVARUINT16
+	LDMSGADDR
+	DROP
+	BLKDROP2 1, 3
+	.loc contracts/libraries/JettonUtils.tsol, 426
+	DEPTH
+	ADDCONST -4
+	PICK
+	DUP
+	SREFS
+	ZEROSWAPIFNOT
+	PUSHCONT {
+		LDREF
+		TRUE
+	}
+	IF
+	NULLROTRIFNOT
+	DROP2
+	.loc contracts/libraries/JettonUtils.tsol, 430
+	TUPLE 4
+	.loc contracts/libraries/JettonUtils.tsol, 0
+}
+
+.fragment default_data_dict_cell, {
+	PUSHINT 0
+	NEWC
+	STU 256
+	PUSHINT 0
+	NEWDICT
+	PUSHINT 64
+	DICTUSETB
+}
+
+; The code below forms a value of the StateInit type.
+.blob x4_ ; split_depth = nothing
+.blob x4_ ; special = nothing
+.blob xc_ ; code = just
+.cell { ; code cell
+	SETCP0
+	DICTPUSHCONST 19
+	DICTIGETJMPZ
+	THROW 11
+	.code-dict-cell 19, {
+		x00001_ = main_internal,
+		xfffff_ = main_external,
+		x326f3_ = get_wallet_address,
+		x33c5b_ = get_jetton_data,
+		x394ab_ = get_jetton_platform_data,
+		x03011_ = onCodeUpgrade_0e89a1b9_internal,
+	}
+}
+.blob xc_ ; data = just
+.cell { 
+	.blob xc_
+	.cell { 
+		.inline-computed-cell default_data_dict_cell, 0
+	}
+}
+.blob x4_ ; library = hme_empty

@@ -1,0 +1,103 @@
+{
+	"ABI version": 2,
+	"version": "2.3",
+	"header": ["time"],
+	"functions": [
+		{
+			"name": "decodeBlockProof",
+			"inputs": [
+				{"name":"answerId","type":"uint32"},
+				{"name":"_proof","type":"cell"}
+			],
+			"outputs": [
+				{"name":"chainId","type":"int32"}
+			]
+		},
+		{
+			"name": "decodeTransactionShort",
+			"inputs": [
+				{"name":"answerId","type":"uint32"},
+				{"name":"_txBoc","type":"cell"},
+				{"name":"_msgIndex","type":"optional(uint15)"}
+			],
+			"outputs": [
+				{"name":"accountAddr","type":"uint256"},
+				{"name":"lt","type":"uint64"},
+				{"name":"nowTimestamp","type":"uint32"},
+				{"name":"outMessages","type":"map(uint15,cell)"},
+				{"name":"hash","type":"uint256"}
+			]
+		},
+		{
+			"name": "decodeTransaction",
+			"inputs": [
+				{"name":"answerId","type":"uint32"},
+				{"name":"_txBoc","type":"cell"}
+			],
+			"outputs": [
+				{"name":"accountAddr","type":"uint256"},
+				{"name":"lt","type":"uint64"},
+				{"name":"prevTransHash","type":"uint256"},
+				{"name":"prevTransLt","type":"uint64"},
+				{"name":"nowTimestamp","type":"uint32"},
+				{"name":"outmsgCnt","type":"uint15"},
+				{"name":"origStatus","type":"uint2"},
+				{"name":"endStatus","type":"uint2"},
+				{"name":"inMessage","type":"optional(cell)"},
+				{"name":"outMessages","type":"map(uint15,cell)"}
+			]
+		},
+		{
+			"name": "findMessageAndDecode",
+			"inputs": [
+				{"name":"answerId","type":"uint32"},
+				{"name":"_txBoc","type":"cell"},
+				{"name":"_msgHash","type":"uint256"}
+			],
+			"outputs": [
+				{"components":[{"name":"messageType","type":"uint8"},{"name":"messageDirection","type":"uint8"},{"components":[{"name":"ihrDisabled","type":"bool"},{"name":"bounce","type":"bool"},{"name":"bounced","type":"bool"},{"name":"src","type":"address"},{"name":"dest","type":"address"},{"name":"value","type":"uint128"},{"name":"extraCurrency","type":"map(uint32,varuint32)"},{"name":"ihrFee","type":"uint128"},{"name":"fwdFee","type":"uint128"},{"name":"createdLt","type":"uint64"},{"name":"createdAt","type":"uint32"}],"name":"internalMessage","type":"optional(tuple)"},{"components":[{"name":"src","type":"address"},{"name":"dest","type":"address"},{"name":"importFee","type":"uint128"},{"name":"createdLt","type":"uint64"},{"name":"createdAt","type":"uint32"}],"name":"externalMessage","type":"optional(tuple)"}],"name":"info","type":"tuple"},
+				{"name":"init","type":"optional(cell)"},
+				{"name":"body","type":"cell"}
+			]
+		},
+		{
+			"name": "decodeMessages",
+			"inputs": [
+				{"name":"answerId","type":"uint32"},
+				{"name":"_msgBoc","type":"cell"},
+				{"name":"_direction","type":"optional(uint8)"}
+			],
+			"outputs": [
+				{"components":[{"name":"messageType","type":"uint8"},{"name":"messageDirection","type":"uint8"},{"components":[{"name":"ihrDisabled","type":"bool"},{"name":"bounce","type":"bool"},{"name":"bounced","type":"bool"},{"name":"src","type":"address"},{"name":"dest","type":"address"},{"name":"value","type":"uint128"},{"name":"extraCurrency","type":"map(uint32,varuint32)"},{"name":"ihrFee","type":"uint128"},{"name":"fwdFee","type":"uint128"},{"name":"createdLt","type":"uint64"},{"name":"createdAt","type":"uint32"}],"name":"internalMessage","type":"optional(tuple)"},{"components":[{"name":"src","type":"address"},{"name":"dest","type":"address"},{"name":"importFee","type":"uint128"},{"name":"createdLt","type":"uint64"},{"name":"createdAt","type":"uint32"}],"name":"externalMessage","type":"optional(tuple)"}],"name":"info","type":"tuple"},
+				{"name":"init","type":"optional(cell)"},
+				{"name":"body","type":"cell"}
+			]
+		},
+		{
+			"name": "constructor",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "_randomNonce",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"_randomNonce","type":"uint256"}
+			]
+		}
+	],
+	"data": [
+		{"key":1,"name":"_randomNonce","type":"uint256"}
+	],
+	"events": [
+	],
+	"fields": [
+		{"name":"_pubkey","type":"uint256"},
+		{"name":"_timestamp","type":"uint64"},
+		{"name":"_constructorFlag","type":"bool"},
+		{"name":"_randomNonce","type":"uint256"}
+	]
+}

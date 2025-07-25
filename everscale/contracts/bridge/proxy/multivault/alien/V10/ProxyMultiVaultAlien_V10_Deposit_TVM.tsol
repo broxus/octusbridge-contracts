@@ -1,0 +1,118 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma ever-solidity >= 0.62.0;
+
+import "../../../../interfaces/event-contracts/ITvmTvmEvent.tsol";
+import "../../../../interfaces/proxy/ITvmTvmProxyExtended.tsol";
+import "../../../../libraries/BridgeOpCodes.tsol";
+import "../../../../libraries/EventContractNonce.tsol";
+
+import "./ProxyMultiVaultAlien_V10_Limits.tsol";
+import "../../../../interfaces/event-contracts/multivault/tvm/IMultiVaultTvmTvmEventAlien.tsol";
+
+abstract contract ProxyMultiVaultAlien_V10_Deposit_TVM is
+    ProxyMultiVaultAlien_V10_Limits,
+    ITvmTvmProxyExtended
+{
+    function onTVMEventConfirmedExtended(
+        ITvmTvmEvent.TvmTvmEventInitData eventInitData,
+        TvmCell meta,
+        address remainingGasTo
+    ) external override reserveAtLeastTargetBalance {
+        require(
+            _isArrayContainsAddress(tvmConfiguration.incomingConfigurations, msg.sender),
+            ErrorCodes.NOT_TVM_CONFIG
+        );
+
+        (
+            bool isLimitApproved,
+            address token,
+            uint128 amount,
+            address recipient,
+            optional(TvmCell) payload,
+            address eventContract,
+            optional(address) nativeProxyTokenWallet,
+            uint128 expectedGas
+        ) = abi.decode(meta, (
+            bool,
+            address,
+            uint128,
+            address,
+            optional(TvmCell),
+            address,
+            optional(address),
+            uint128
+        ));
+
+
+        if (nativeProxyTokenWallet.hasValue()) {
+            TvmCell _meta = abi.encode(
+                isLimitApproved,
+                token,
+                nativeProxyTokenWallet.get(),
+                amount,
+                recipient,
+                payload,
+                eventContract,
+                expectedGas
+            );
+
+            ITvmTvmProxyExtended(proxyMultiVaultNative).onTVMEventConfirmedExtended{
+                flag: MsgFlag.ALL_NOT_RESERVED
+            }(eventInitData, _meta, remainingGasTo);
+
+            return;
+        }
+
+        (
+            bool isLimitReached,
+            optional(DailyLimits) newLimits
+        ) = _isIncomingDailyLimitReached(token, amount);
+
+        if (!isLimitApproved && isLimitReached) {
+            IMultiVaultTvmTvmEventAlien(eventContract)
+                .dailyLimitReached{
+                    value: Gas.getMintTokenValue() + expectedGas,
+                    flag: MsgFlag.SENDER_PAYS_FEES,
+                    bounce: false
+                }(limitApprover);
+
+            // Refund remaining gas to event deployer
+            remainingGasTo.transfer({
+                value: 0,
+                flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+                bounce: false
+            });
+
+            return;
+        }
+
+        // Don't updated daily volumes if approved
+        if (!isLimitApproved) {
+            _updateDailyVolumes(token, newLimits);
+        }
+
+        uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
+
+        // accumulate fee
+        uint128 fee = _calculateFeesDeposit(amount, token);
+        _accumulateFee(fee, token);
+
+        emit IncomingFeeTaken(fee, token, eventInitData.msgHash);
+
+        _mintTokens(
+            token,
+            amount - fee,
+            recipient,
+            recipient,
+            abi.encode(BridgeOpCodes.BridgeDeposit, nonce, payload),
+            Gas.getMintTokenValue() + expectedGas
+        );
+
+        // Refund remaining gas to event deployer
+        remainingGasTo.transfer({
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+            bounce: false
+        });
+    }
+}

@@ -1,0 +1,240 @@
+pragma ever-solidity >= 0.62.0;
+
+import "../../../../../utils/TokenFeePlatform.tsol";
+import "../../../../interfaces/proxy/IBridgeTokenFee.tsol";
+import "./ProxyMultiVaultNative_V7_Base.tsol";
+
+
+abstract contract ProxyMultiVaultNative_V7_Fees is ProxyMultiVaultNative_V7_Base {
+
+    function getTvmDefaultFee()
+        external
+        view
+        responsible
+        returns(
+            uint32 incomingNumerator,
+            uint32 outgoingNumerator,
+            uint32 denominator
+    ) {
+        return {
+                value: 0,
+                bounce: false,
+                flag: MsgFlag.REMAINING_GAS
+        } (tvmConfiguration.defaultFee.incoming, tvmConfiguration.defaultFee.outgoing, FEE_DENOMINATOR);
+    }
+
+    function getPlatformCode() external view responsible returns(TvmCell) {
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} platformCode;
+    }
+
+    function getTokenFeeCode() external view responsible returns(TvmCell) {
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} tvmConfiguration.tokenFeeCode;
+    }
+
+    function getTvmFees() external view responsible returns(mapping(address => Fees)) {
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} tvmConfiguration.fees;
+    }
+
+    function getTvmTokenFee(address _token)
+        external
+        view
+        responsible
+        returns(
+            uint32 incomingNumerator,
+            uint32 outgoingNumerator,
+            uint32 denominator
+    ) {
+
+        if (tvmConfiguration.fees.exists(_token))  {
+                return {
+                        value: 0,
+                        bounce: false,
+                        flag: MsgFlag.REMAINING_GAS
+                } (tvmConfiguration.fees[_token].incoming, tvmConfiguration.fees[_token].outgoing, FEE_DENOMINATOR);
+            } else {
+                return {
+                        value: 0,
+                        bounce: false,
+                        flag: MsgFlag.REMAINING_GAS
+                } (tvmConfiguration.defaultFee.incoming, tvmConfiguration.defaultFee.outgoing, FEE_DENOMINATOR);
+            }
+    }
+
+    function setTvmDefaultFeeNumerator(uint32 _incoming, uint32 _outgoing) external onlyOwner cashBack {
+        tvmConfiguration.defaultFee = Fees(_incoming, _outgoing);
+    }
+
+    function setPlatformCode(TvmCell _code) external onlyOwner cashBack {
+        platformCode = _code;
+    }
+
+    function setTokenFeeCode(TvmCell _code) external onlyOwner cashBack {
+        tvmConfiguration.tokenFeeCode = _code;
+    }
+
+    function setTvmTokenFee(address _token, uint32 _incoming, uint32 _outgoing) external onlyOwner cashBack {
+        if (_outgoing <= 10000  && _outgoing <= 10000) {
+            tvmConfiguration.fees[_token] = Fees(_incoming, _outgoing);
+        }
+    }
+
+    function deleteTvmTokenFee(address _token) external onlyOwner cashBack {
+        delete tvmConfiguration.fees[_token];
+    }
+
+    function deployTokenFee(address _token, address _remainingGasTo) external view {
+         require(msg.value >= Gas.getDeployTokenFeeValue(), ErrorCodes.LOW_MSG_VALUE);
+
+        _deployTokenFee(_token, _remainingGasTo);
+    }
+
+    function _deployTokenFee(address _token, address _remainingGasTo) internal view {
+        TvmCell emptyParams;
+
+        new TokenFeePlatform{
+            stateInit: _buildTokenFeeStateInit(_token),
+            value: 0,
+            flag: MsgFlag.REMAINING_GAS
+        }(
+            tvmConfiguration.tokenFeeCode,
+            emptyParams,
+            _remainingGasTo
+        );
+    }
+
+    function getExpectedTokenFeeAddress(address _token)
+        external
+        responsible
+        view
+        returns(address)
+    {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} _getExpectedTokenFeeAddress(_token);
+    }
+
+    function _getExpectedTokenFeeAddress(address _token)
+        internal
+        view
+        returns(address)
+    {
+        TvmCell state = _buildTokenFeeStateInit(_token);
+        return address(tvm.hash(state));
+    }
+
+    function _buildTokenFeeStateInit(address _token)
+        internal
+        view
+        returns(TvmCell)
+    {
+        return tvm.buildStateInit({
+            contr: TokenFeePlatform,
+            varInit: {
+                root: address(this),
+                platformType: 0,
+                initialData: abi.encode(_token)
+            },
+            code: platformCode
+        });
+    }
+
+    function _calculateFeesDeposit(uint128 _amount, address _token) internal view returns(uint128) {
+        uint128 accumulatedFees = 0;
+
+            if (tvmConfiguration.fees.exists(_token)) {
+                accumulatedFees = math.muldiv(
+                    _amount,
+                    uint128(tvmConfiguration.fees[_token].incoming),
+                    uint128(FEE_DENOMINATOR)
+                );
+            } else if (tvmConfiguration.defaultFee.incoming > 0) {
+                accumulatedFees = math.muldiv(
+                    _amount,
+                    uint128(tvmConfiguration.defaultFee.incoming),
+                    uint128(FEE_DENOMINATOR)
+                );
+            }
+        return accumulatedFees;
+    }
+
+    function _calculateFeesWithdraw(uint128 _amount, address _token) internal view returns(uint128) {
+        uint128 accumulatedFees = 0;
+
+            if (tvmConfiguration.fees.exists(_token)) {
+                accumulatedFees = math.muldiv(
+                    _amount,
+                    uint128(tvmConfiguration.fees[_token].outgoing),
+                    uint128(FEE_DENOMINATOR)
+                );
+            } else if (tvmConfiguration.defaultFee.outgoing > 0) {
+                accumulatedFees = math.muldiv(
+                    _amount,
+                    uint128(tvmConfiguration.defaultFee.outgoing),
+                    uint128(FEE_DENOMINATOR)
+                );
+            }
+        return accumulatedFees;
+    }
+
+    function _accumulateFee(uint128 _fee, address _token) internal view {
+        if(_fee > 0) {
+            IBridgeTokenFee(_getExpectedTokenFeeAddress(_token)).accumulateFee{
+                value: gasToValue(Gas.ACCUMULATE_FEES_GAS, address(this).wid),
+                flag: MsgFlag.SENDER_PAYS_FEES,
+                bounce: false
+            }(_fee);
+        }
+    }
+
+    function withdrawTokenFee(address _tokenRoot, address _recipient) external view onlyOwner {
+        require(msg.value > Gas.getDeployTokenWalletValue(), ErrorCodes.LOW_MSG_VALUE);
+
+        IBridgeTokenFee(_getExpectedTokenFeeAddress(_tokenRoot)).checkAccumulatedFee{
+            value: 0,
+            flag: MsgFlag.REMAINING_GAS,
+            bounce: false,
+            callback: ProxyMultiVaultNative_V7_Fees.onCheckAccumulatedFee
+        }(_recipient);
+    }
+
+    function onCheckAccumulatedFee(TvmCell _payload) external view reserveAtLeastTargetBalance {
+        (
+            address recipient,
+            uint128 accumulatedFees,
+            address tokenWallet
+        ) = abi.decode(_payload, (address, uint128, address));
+
+        if (accumulatedFees > 0) {
+            TvmCell emptyPayload;
+
+            ITokenWallet(tokenWallet).transfer{
+                value: 0,
+                flag: MsgFlag.ALL_NOT_RESERVED,
+                bounce: false
+            }(
+                accumulatedFees,
+                recipient,
+                Gas.getDeployTokenWalletValue(),
+                owner,
+                false,
+                emptyPayload
+            );
+        } else {
+            owner.transfer({
+				value: 0,
+				flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+				bounce: false
+			});
+        }
+    }
+
+    function upgradeTokenFee(
+        address _token,
+        address _remainingGasTo
+    ) external view onlyOwner {
+
+        IBridgeTokenFee(_getExpectedTokenFeeAddress(_token)).upgrade{
+            value: 0,
+            flag: MsgFlag.REMAINING_GAS,
+            bounce: false
+        }(tvmConfiguration.tokenFeeCode, _remainingGasTo);
+    }
+}

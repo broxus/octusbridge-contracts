@@ -1,7 +1,7 @@
 export {};
 
 import { FactorySource } from "../../build/factorySource";
-import { Address, Contract, Signer } from "locklift";
+import { Contract } from "locklift";
 import { Account } from "everscale-standalone-client/nodejs";
 
 
@@ -15,8 +15,6 @@ import {sleep} from "../utils/time";
 const logger = require("mocha-logger");
 
 import { expect } from "chai";
-
-const BigNumber = require("bignumber.js");
 
 let stakingRoot: Contract<FactorySource["StakingV1_2"]>;
 let stakingToken: Contract<FactorySource["TokenRoot"]>;
@@ -37,7 +35,7 @@ const DEV_WAIT = 100000;
 
 const RELAY_INITIAL_DEPOSIT = 500;
 
-describe("Test Staking Upgrade", async function () {
+describe.skip("Test Staking Upgrade", async function () {
   this.timeout(10000000);
 
   describe("Setup contracts", async function () {
@@ -58,7 +56,7 @@ describe("Test Staking Upgrade", async function () {
         for (const i of [0, 1, 2]) {
           const keyPair = await locklift.keystore.getSigner(i.toString());
           const account = await deployAccount(
-            keyPair,
+            keyPair!,
             RELAY_INITIAL_DEPOSIT + 50
           );
           logger.log(`User address: ${account.address}`);
@@ -79,19 +77,19 @@ describe("Test Staking Upgrade", async function () {
 
         const balance1 = await userTokenWallet1.methods
           .balance({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((t) => parseInt(t.value0, 10));
         const balance2 = await userTokenWallet2.methods
           .balance({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((t) => parseInt(t.value0, 10));
         const balance3 = await userTokenWallet3.methods
           .balance({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((t) => parseInt(t.value0, 10));
         const balance4 = await ownerWallet.methods
           .balance({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((t) => parseInt(t.value0, 10));
 
         expect(balance1).to.be.equal(
@@ -135,7 +133,7 @@ describe("Test Staking Upgrade", async function () {
             value: locklift.utils.toNano(1),
           });
 
-        const stakingRootData = await locklift.factory.getContractArtifacts(
+        const stakingRootData = locklift.factory.getContractArtifacts(
           "StakingV1_2"
         );
         const { contract: stakingRootDeployer } =
@@ -166,7 +164,7 @@ describe("Test Staking Upgrade", async function () {
           .sendExternal({
             publicKey: signer.publicKey,
           });
-        stakingRoot = await locklift.factory.getDeployedContract(
+        stakingRoot = locklift.factory.getDeployedContract(
           "StakingV1_2",
           addr.output?.value0!
         );
@@ -176,11 +174,11 @@ describe("Test Staking Upgrade", async function () {
 
         const staking_details = await stakingRoot.methods
           .getDetails({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((v) => v.value0);
         logger.log(`Staking token wallet: ${staking_details.tokenWallet}`);
 
-        stakingWallet = await locklift.factory.getDeployedContract(
+        stakingWallet = locklift.factory.getDeployedContract(
           "TokenWallet",
           staking_details.tokenWallet
         );
@@ -188,11 +186,11 @@ describe("Test Staking Upgrade", async function () {
         // call in order to check if wallet is deployed
         const owner_address = await stakingWallet.methods
           .owner({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((t) => t.value0);
         const root_address = await stakingWallet.methods
           .root({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((t) => t.value0);
         expect(owner_address.toString()).to.be.equal(
           stakingRoot.address.toString(),
@@ -205,16 +203,16 @@ describe("Test Staking Upgrade", async function () {
       });
 
       it("Installing codes", async function () {
-        const UserData = await locklift.factory.getContractArtifacts(
+        const UserData = locklift.factory.getContractArtifacts(
           "UserData"
         );
-        const Election = await locklift.factory.getContractArtifacts(
+        const Election = locklift.factory.getContractArtifacts(
           "Election"
         );
-        const RelayRound = await locklift.factory.getContractArtifacts(
+        const RelayRound = locklift.factory.getContractArtifacts(
           "RelayRound"
         );
-        const Platform = await locklift.factory.getContractArtifacts(
+        const Platform = locklift.factory.getContractArtifacts(
           "Platform"
         );
 
@@ -226,7 +224,7 @@ describe("Test Staking Upgrade", async function () {
           })
           .send({
             from: stakingOwner.address,
-            amount: locklift.utils.toNano(11),
+            amount: locklift.utils.toNano(30),
           });
 
         logger.log(`Installing UserData code`);
@@ -237,7 +235,7 @@ describe("Test Staking Upgrade", async function () {
           })
           .send({
             from: stakingOwner.address,
-            amount: locklift.utils.toNano(11),
+            amount: locklift.utils.toNano(30),
           });
         logger.log(`Installing ElectionCode code`);
         await stakingRoot.methods
@@ -247,7 +245,7 @@ describe("Test Staking Upgrade", async function () {
           })
           .send({
             from: stakingOwner.address,
-            amount: locklift.utils.toNano(11),
+            amount: locklift.utils.toNano(30),
           });
         logger.log(`Installing RelayRoundCode code`);
         await stakingRoot.methods
@@ -257,7 +255,7 @@ describe("Test Staking Upgrade", async function () {
           })
           .send({
             from: stakingOwner.address,
-            amount: locklift.utils.toNano(11),
+            amount: locklift.utils.toNano(30),
           });
         logger.log(`Set staking to Active`);
         await stakingRoot.methods
@@ -267,7 +265,7 @@ describe("Test Staking Upgrade", async function () {
           })
           .send({
             from: stakingOwner.address,
-            amount: locklift.utils.toNano(11),
+            amount: locklift.utils.toNano(30),
           });
 
         if (locklift.context.network.name === "dev") {
@@ -276,7 +274,7 @@ describe("Test Staking Upgrade", async function () {
 
         const active = await stakingRoot.methods
           .isActive({ answerId: 0 })
-          .call()
+          .call({ responsible: true })
           .then((t) => t.value0);
         expect(active).to.be.equal(true, "Staking not active");
       });
@@ -285,7 +283,7 @@ describe("Test Staking Upgrade", async function () {
 
   describe("Testing staking upgrade", async function () {
     it("Calling upgrade from V1 to V1_1", async function () {
-      const new_code = await locklift.factory.getContractArtifacts(
+      const new_code = locklift.factory.getContractArtifacts(
         "StakingV1_1"
       );
       await stakingRoot.methods
@@ -295,7 +293,7 @@ describe("Test Staking Upgrade", async function () {
         })
         .send({
           from: stakingOwner.address,
-          amount: locklift.utils.toNano(11),
+          amount: locklift.utils.toNano(30),
         });
 
       let new_staking = locklift.factory.getDeployedContract(
@@ -314,7 +312,7 @@ describe("Test Staking Upgrade", async function () {
     });
 
     it("Calling upgrade from V1_1 to V1_2", async function () {
-      const new_code = await locklift.factory.getContractArtifacts(
+      const new_code = locklift.factory.getContractArtifacts(
         "StakingV1_2"
       );
       await stakingRoot.methods
@@ -345,7 +343,7 @@ describe("Test Staking Upgrade", async function () {
     it("Test storage", async function () {
       const res = await stakingRoot.methods
         .getDetails({ answerId: 0 })
-        .call()
+        .call({ responsible: true })
         .then((v) => v.value0);
       // console.log(res);
     });

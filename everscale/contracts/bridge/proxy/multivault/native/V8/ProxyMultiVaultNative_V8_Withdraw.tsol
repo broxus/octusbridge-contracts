@@ -1,0 +1,386 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma ever-solidity >= 0.62.0;
+
+import "../../../../interfaces/event-contracts/IEverscaleEthereumEvent.tsol";
+import "../../../../interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
+import "../../../../interfaces/proxy/ITvmEventCancelled.tsol";
+import "../../../../interfaces/proxy/IEvmEventCancelled.tsol";
+
+import "../../../../interfaces/event-configuration-contracts/IEverscaleSolanaEventConfiguration.tsol";
+import "../../../../interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.tsol";
+
+import "../../../../../utils/ErrorCodes.tsol";
+
+import "./ProxyMultiVaultNative_V8_Fees.tsol";
+
+import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensTransferCallback.tsol";
+
+
+abstract contract ProxyMultiVaultNative_V8_Withdraw is
+    ProxyMultiVaultNative_V8_Fees,
+    IAcceptTokensTransferCallback,
+    ITvmEventCancelled,
+    IEvmEventCancelled
+{
+    /// @notice Handles incoming token transfer
+    /// Initializes native token withdraw
+    /// @param tokenRoot Transferred token root address.
+    /// @param amount Tokens amount
+    /// @param remainingGasTo Address to send remaining gas to
+    function onAcceptTokensTransfer(
+        address tokenRoot,
+        uint128 amount,
+        address sender,
+        address,
+        address remainingGasTo,
+        TvmCell payload
+    ) override external reserveAtLeastTargetBalance {
+        (
+            uint32 nonce,
+            Network network,
+            TvmCell transferPayload
+        ) = abi.decode(payload, (uint32, Network, TvmCell));
+
+        if (network == Network.Solana) {
+            (
+                uint256 recipient,
+                IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
+                bool executePayloadNeeded,
+                IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
+                bytes solanaPayload
+            ) = abi.decode(transferPayload, (uint256, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[], bool, IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[], bytes));
+
+            _deploySolanaEvent(
+                nonce,
+                tokenRoot,
+                amount,
+                recipient,
+                sender,
+                remainingGasTo,
+                executeAccounts ,
+                executePayloadNeeded,
+                executePayloadAccounts,
+                solanaPayload
+            );
+        } else if (network == Network.EVM) {
+            (
+                uint160 recipient,
+                uint256 chainId,
+                EVMCallback callback
+            ) = abi.decode(transferPayload, (uint160, uint256, EVMCallback));
+
+            (
+                bool isLimitReached,
+                optional(DailyLimits) newLimits
+            ) = _isOutgoingDailyLimitReached(tokenRoot, amount);
+
+            if (isLimitReached) {
+                emit OutgoingLimitReached(tokenRoot);
+
+                TvmCell empty;
+
+                if (wNativeAddresses.exists(tokenRoot)) {
+                    _burnTokens(
+                        msg.sender,
+                        amount,
+                        sender,
+                        sender,
+                        empty,
+                        false,
+                        null
+                    );
+                } else {
+                    _transferTokens(
+                        msg.sender,
+                        amount,
+                        sender,
+                        sender,
+                        empty,
+                        false,
+                        null
+                    );
+                }
+
+                return;
+            }
+
+            _updateDailyVolumes(tokenRoot, newLimits);
+
+            _deployEVMEvent(
+                nonce,
+                tokenRoot,
+                chainId,
+                amount,
+                recipient,
+                remainingGasTo,
+                sender,
+                callback
+            );
+        } else if (network == Network.TVM) {
+            (
+                bool isLimitReached,
+                optional(DailyLimits) newLimits
+            ) = _isOutgoingDailyLimitReached(tokenRoot, amount);
+
+            if (isLimitReached) {
+                emit OutgoingLimitReached(tokenRoot);
+
+                TvmCell empty;
+
+                if (wNativeAddresses.exists(tokenRoot)) {
+                    _burnTokens(
+                        msg.sender,
+                        amount,
+                        sender,
+                        sender,
+                        empty,
+                        false,
+                        null
+                    );
+                } else {
+                    _transferTokens(
+                        msg.sender,
+                        amount,
+                        sender,
+                        sender,
+                        empty,
+                        false,
+                        null
+                    );
+                }
+
+                return;
+            }
+
+            _updateDailyVolumes(tokenRoot, newLimits);
+
+            _emitTVMEvent(
+                nonce,
+                tokenRoot,
+                amount,
+                remainingGasTo,
+                sender,
+                msg.sender,
+                transferPayload,
+                false
+            );
+        }
+    }
+
+    function onEVMEventCancelled(
+        IEthereumEverscaleEvent.EthereumEverscaleEventInitData _eventInitData,
+        TvmCell _withdrawPayload
+    ) external override reserveAtLeastTargetBalance {
+        require(
+            _isArrayContainsAddress(evmConfiguration.evmConfigurations, msg.sender),
+            ErrorCodes.NOT_ETHEREUM_CONFIG
+        );
+
+        (
+            uint128 amount,
+            uint160 recipient,
+            address sender,
+            EVMCallback callback,
+            address tokenRoot,
+            address remainingGasTo
+        ) = abi.decode(_withdrawPayload, (
+            uint128,
+            uint160,
+            address,
+            EVMCallback,
+            address,
+            address
+        ));
+
+        _deployEVMEvent(
+            0,
+            tokenRoot,
+            _eventInitData.chainId,
+            amount,
+            recipient,
+            remainingGasTo,
+            sender,
+            callback
+        );
+    }
+
+    function onTVMEventCancelled(
+        ITvmTvmEvent.TvmTvmEventInitData /*eventInitData*/,
+        TvmCell withdrawPayload
+    ) external override reserveAtLeastTargetBalance {
+        require(
+            (proxyMultiVaultAlien.value != 0 && msg.sender == proxyMultiVaultAlien) ||
+            _isArrayContainsAddress(tvmConfiguration.incomingConfigurations, msg.sender),
+            ErrorCodes.NOT_TVM_CONFIG_OR_ALIEN_PROXY
+        );
+
+        (
+            address tokenRoot,
+            uint128 amount,
+            address sender,
+            address remainingGasTo,
+            address nativeProxyWallet,
+            TvmCell transferData
+        ) = abi.decode(withdrawPayload, (
+            address,
+            uint128,
+            address,
+            address,
+            address,
+            TvmCell
+        ));
+
+        _emitTVMEvent(
+            0,
+            tokenRoot,
+            amount,
+            remainingGasTo,
+            sender,
+            nativeProxyWallet,
+            transferData,
+            true
+        );
+    }
+
+    function _deploySolanaEvent(
+        uint32 nonce,
+        address token,
+        uint128 amount,
+        uint256 recipient,
+        address sender,
+        address remainingGasTo,
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
+        bool executePayloadNeeded,
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
+        bytes solanaPayload
+    ) internal view {
+        TvmCell eventData = abi.encode(
+            nonce,
+            address(this), // Proxy address
+            msg.sender, // Token wallet address, must be validated in the event contract
+            token, // Token root
+            remainingGasTo, // Remaining gas to
+            amount, // Amount of tokens to withdraw
+            recipient, // Solana recipient address
+            sender,
+            solanaPayload
+        );
+
+        IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(
+            tx.logicaltime,
+            block.timestamp,
+            executeAccounts,
+            executePayloadNeeded,
+            executePayloadAccounts,
+            eventData
+        );
+
+        IEverscaleSolanaEventConfiguration(solanaConfiguration.everscaleConfiguration).deployEvent{
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(eventVoteData);
+    }
+
+    function _deployEVMEvent(
+        uint32 nonce,
+        address token,
+        uint256 chainId,
+        uint128 amount,
+        uint160 recipient,
+        address remainingGasTo,
+        address sender,
+        EVMCallback callback
+    ) internal view {
+        TvmCell eventData = abi.encode(
+            nonce,
+            address(this), // Proxy address
+            msg.sender, // Token wallet address, must be validated in the event contract
+            token, // Token root
+            remainingGasTo, // Remaining gas to
+            amount, // Amount of tokens to withdraw
+            recipient, // EVM recipient address
+            chainId, // EVM network chain ID
+            sender,
+            callback.recipient,
+            callback.payload,
+            callback.strict
+        );
+
+        IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData = IEverscaleEthereumEvent.EverscaleEthereumEventVoteData(
+            tx.logicaltime,
+            block.timestamp,
+            eventData
+        );
+
+        IEverscaleEthereumEventConfiguration(evmConfiguration.everscaleConfiguration).deployEvent{
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(eventVoteData);
+    }
+
+    function _emitTVMEvent(
+        uint32 /*nonce*/,
+        address token,
+        uint128 amount,
+        address remainingGasTo,
+        address sender,
+        address nativeProxyWallet,
+        TvmCell transferPayload,
+        bool isCancel
+    ) internal view {
+
+        // accumulate fee
+        uint128 fee = 0;
+        if (!isCancel) {
+            fee = _calculateFeesWithdraw(amount, nativeProxyWallet);
+            _accumulateFee(fee, nativeProxyWallet);
+
+            emit OutgoingFeeTaken(fee, nativeProxyWallet);
+        }
+
+        (
+            address recipient,
+            int32 chainId,
+            string name,
+            string symbol,
+            uint8 decimals,
+            uint128 expectedGas,
+            optional(TvmCell) eventPayload
+        ) = abi.decode(transferPayload, (
+            address,
+            int32,
+            string,
+            string,
+            uint8,
+            uint128,
+            optional(TvmCell)
+        ));
+
+        emit TvmTvmNative(
+            chainId,
+
+            token,
+            name,
+            symbol,
+            decimals,
+            nativeProxyWallet,
+
+            sender,
+            recipient,
+            amount - fee,
+
+            msg.value, // todo subtract the cost of the current transaction
+            expectedGas,
+            remainingGasTo,
+            eventPayload
+        );
+
+        remainingGasTo.transfer({
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+            bounce: false
+        });
+    }
+}

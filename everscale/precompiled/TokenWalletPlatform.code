@@ -1,0 +1,383 @@
+.fragment _getExpectedAddress_31c74536_internal, {
+	.loc contracts/TokenWalletPlatform.tsol, 68
+	NEWC
+	PUSHPOW2 8
+	STZEROES
+	PUSHINT 0
+	NULL
+	PUSHINT 64
+	DICTUSETB
+	GETGLOB 10
+	PUSHINT 1
+	ROT
+	PUSHINT 64
+	DICTUSET
+	PUSHINT 2
+	SWAP
+	PUSHINT 64
+	DICTUSET
+	NEWC
+	STDICT
+	ENDC
+	MYCODE
+	NEWC
+	STSLICECONST x2_
+	STDICT
+	STDICT
+	STZERO
+	ENDC
+	.loc contracts/TokenWalletPlatform.tsol, 78
+	HASHCU
+	NEWC
+	STSLICECONST x801_
+	STU 256
+	ENDC
+	CTOS
+	.loc contracts/TokenWalletPlatform.tsol, 0
+}
+
+.fragment c4_to_c7, {
+	PUSHROOT
+	CTOS
+	LDU 256 ; pubkey c4
+	LDU 64 ; pubkey timestamp c4
+	LDU 1 ; ctor flag
+	LDMSGADDR
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	ENDS
+	SETGLOB 11
+	SETGLOB 10
+	SETGLOB 6
+	SETGLOB 3
+	SETGLOB 2
+}
+
+.fragment c4_to_c7_with_init_storage, {
+	PUSHROOT
+	CTOS
+	SBITS
+	GTINT 1
+	PUSHCONT {
+		PUSHINT 0
+		PUSHROOT
+		CTOS
+		PLDDICT ; D
+		PUSHINT 1
+		OVER
+		PUSHINT 64
+		DICTUGET
+		PUSHCONT {
+			PUSHREFSLICE {
+				.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+			}
+		}
+		IFNOT
+		PUSHINT 2
+		PUSH S2
+		PUSHINT 64
+		DICTUGET
+		PUSHCONT {
+			PUSHREFSLICE {
+				.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+			}
+		}
+		IFNOT
+		SETGLOB 11
+		SETGLOB 10
+		PUSHINT 64
+		DICTUGET
+		THROWIFNOT 61
+		PLDU 256
+		SETGLOB 2
+		PUSHINT 0 ; timestamp
+		SETGLOB 3
+	}
+	IFREFELSE {
+		.inline c4_to_c7
+	}
+}
+
+.fragment c7_to_c4, {
+	GETGLOB 10
+	GETGLOB 3
+	GETGLOB 2
+	NEWC
+	STU 256
+	STU 64
+	STONE
+	STSLICE
+	GETGLOB 11
+	NEWC
+	STSLICE
+	STBREFR
+	ENDC
+	POPROOT
+}
+
+.fragment initialize_041df5ea_internal, {
+	.loc contracts/TokenWalletPlatform.tsol, 102
+	GETGLOB 10
+	NEWC
+	STSLICE
+	.loc contracts/TokenWalletPlatform.tsol, 103
+	GETGLOB 11
+	STSLICER
+	.loc contracts/TokenWalletPlatform.tsol, 104
+	PUSHINT 160
+	STZEROES
+	.loc contracts/TokenWalletPlatform.tsol, 106
+	XCHG S1, S2
+	STU 32
+	.loc contracts/TokenWalletPlatform.tsol, 107
+	STSLICE
+	.loc contracts/TokenWalletPlatform.tsol, 109
+	MYCODE
+	SWAP
+	STREF
+	.loc contracts/TokenWalletPlatform.tsol, 111
+	OVER
+	SETCODE
+	.loc contracts/TokenWalletPlatform.tsol, 112
+	SWAP
+	CTOS
+	BLESS
+	POP C3
+	.loc contracts/TokenWalletPlatform.tsol, 114
+	ENDC
+	CALL 6152
+	.loc contracts/TokenWalletPlatform.tsol, 0
+}
+
+.fragment constructor, {
+	DROP
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7_with_init_storage
+	}
+	GETGLOB 6
+	THROWIF 51
+	OVER
+	PUSHCONT {
+		LDREF
+		LDU 32
+		LDREF
+		ENDS
+		CTOS
+	}
+	PUSHCONT {
+		LDREF
+		LDU 32
+	}
+	IFELSE
+	LDMSGADDR
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	ENDS
+	.loc contracts/TokenWalletPlatform.tsol, 40
+	GETGLOB 9
+	GETGLOB 10
+	SDEQ
+	DUP
+	PUSHCONT {
+		DROP
+		OVER
+		PUSHREFSLICE {
+			.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+		}
+		SDEQ
+		NOT
+		DUP
+		PUSHCONT {
+			DROP
+			OVER
+			CALLREF {
+				.inline _getExpectedAddress_31c74536_internal
+			}
+			GETGLOB 9
+			SDEQ
+		}
+		IF
+	}
+	IFNOT
+	PUSHCONT {
+		.loc contracts/TokenWalletPlatform.tsol, 41
+		PUSH3 S3, S2, S0
+		CALLREF {
+			.inline initialize_041df5ea_internal
+		}
+	}
+	PUSHCONT {
+		.loc contracts/TokenWalletPlatform.tsol, 43
+		DUP
+		NEWC
+		STSLICECONST x42_
+		STSLICE
+		PUSHINT 111
+		STZEROES
+		ENDC
+		PUSHINT 160
+		SENDRAWMSG
+	}
+	IFELSE
+	.loc contracts/TokenWalletPlatform.tsol, 0
+	BLKDROP 4
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment public_function_selector, {
+	DUP
+	PUSHINT 362821883
+	EQUAL
+	IFJMPREF {
+		.inline constructor
+	}
+}
+
+.fragment main_external, {
+	PUSHINT -1
+	PUSHROOT
+	CTOS
+	SBITS
+	NEQINT 1
+	SETGLOB 6
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SETGLOB 9
+	OVER
+	CALLREF {
+		.inline c4_to_c7_with_init_storage
+	}
+	LDU 1 ; haveSign msgSlice
+	SWAP
+	PUSHCONT {
+		PUSHPOW2 9
+		LDSLICEX
+		DUP
+		MYADDR
+		NEWC
+		STSLICE
+		STSLICE
+		ENDC
+		HASHCU
+		ROT
+		GETGLOB 2
+		CHKSIGNU
+		THROWIFNOT 40
+	}
+	IF
+	LDU 64 ; timestamp msgSlice
+	SWAP
+	.inline __replayProtection
+	LDU 32 ; funcId body
+	SWAP
+	CALLREF {
+		.inline public_function_selector
+	}
+	THROW 60
+}
+
+.fragment main_internal, {
+	PUSHINT 0
+	PUSHROOT
+	CTOS
+	SBITS
+	NEQINT 1
+	SETGLOB 6
+	PUSH S2
+	CTOS
+	LDU 4 ; bounced tail
+	LDMSGADDR ; bounced src tail
+	DROP
+	SETGLOB 9
+	MODPOW2 1
+	IFRET
+	OVER
+	SEMPTY ; isEmpty
+	IFJMPREF {
+		GETGLOB 6
+		THROWIFNOT 76
+	}
+	OVER
+	LDUQ 32  ; [funcId] body' ok
+	THROWIFNOT 60
+	OVER
+	IFNOTJMPREF {
+		GETGLOB 6
+		THROWIFNOT 76
+	}
+	SWAP
+	CALLREF {
+		.inline public_function_selector
+	}
+	THROW 60
+}
+
+.fragment onCodeUpgrade_0e89a1b9_internal, {
+	DROP
+	.loc contracts/TokenWalletPlatform.tsol, 0
+	CALLREF {
+		.inline c7_to_c4
+	}
+	COMMIT
+	THROW 0
+}
+
+.fragment upd_only_time_in_c4, {
+	PUSHROOT
+	CTOS
+	LDU 256
+	LDU 64
+	NIP
+	GETGLOB 3
+	ROT
+	NEWC
+	STU 256
+	STU 64
+	STSLICE
+	ENDC
+	POPROOT
+}
+
+.fragment default_data_dict_cell, {
+	PUSHINT 0
+	NEWC
+	STU 256
+	PUSHINT 0
+	NEWDICT
+	PUSHINT 64
+	DICTUSETB
+}
+
+; The code below forms a value of the StateInit type.
+.blob x4_ ; split_depth = nothing
+.blob x4_ ; special = nothing
+.blob xc_ ; code = just
+.cell { ; code cell
+	SETCP0
+	DICTPUSHCONST 19
+	DICTIGETJMPZ
+	THROW 11
+	.code-dict-cell 19, {
+		x00001_ = main_internal,
+		xfffff_ = main_external,
+		x03011_ = onCodeUpgrade_0e89a1b9_internal,
+	}
+}
+.blob xc_ ; data = just
+.cell { 
+	.blob xc_
+	.cell { 
+		.inline-computed-cell default_data_dict_cell, 0
+	}
+}
+.blob x4_ ; library = hme_empty

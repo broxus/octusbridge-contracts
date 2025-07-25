@@ -1,0 +1,272 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma ever-solidity >= 0.62.0;
+
+import "./../../../../interfaces/alien-token-merge/merge-pool/IMergePool_V2.tsol";
+
+import "../../../../alien-token-merge/MergePoolPlatform.tsol";
+import "./ProxyMultiVaultAlien_V10_Withdraw.tsol";
+
+
+abstract contract ProxyMultiVaultAlien_V10_MergePool is ProxyMultiVaultAlien_V10_Withdraw {
+    modifier onlyMergePool(uint nonce) {
+        require(deriveMergePool(nonce) == msg.sender, ErrorCodes.WRONG_MERGE_POOL_NONCE);
+
+        _;
+    }
+
+    function deriveMergePool(
+        uint256 nonce
+    ) public override responsible returns (address pool) {
+        TvmCell stateInit = _buildMergePoolPlatformInitState(nonce);
+
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
+    }
+
+    /// @notice Deploy merge pool
+    /// Can be called only by `owner` or `manager`
+    /// @param nonce Unique nonce
+    /// @param tokens List of tokens, connected in the merge pool
+    /// @param canonId Index of token from `tokens`, used as default in case of EVM-EVER transfer
+    function deployMergePool(
+        uint256 nonce,
+        address[] tokens,
+        uint256 canonId
+    ) external override reserveAtLeastTargetBalance {
+        require(msg.sender == owner || msg.sender == manager, ErrorCodes.ONLY_OWNER_OR_MANAGER);
+
+        TvmCell stateInit = _buildMergePoolPlatformInitState(nonce);
+
+        new MergePoolPlatform{
+            stateInit: stateInit,
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(
+            mergePool,
+            mergePoolVersion,
+            tokens,
+            canonId,
+            owner,
+            manager
+        );
+    }
+
+    /// @notice Handles mint request from merge pool
+    /// Mints `amount` in `token` to `recipient`
+    /// @param mergePoolNonce Merge pool nonce
+    /// @param token Token address
+    /// @param amount Amount to mint
+    /// @param recipient Token recipient
+    /// @param remainingGasTo Remaining gas to
+    function mintTokensByMergePool(
+        uint mergePoolNonce,
+        address token,
+        uint128 amount,
+        address recipient,
+        address remainingGasTo,
+        TvmCell payload
+    ) external override onlyMergePool(mergePoolNonce) reserveAtLeastTargetBalance {
+        _mintTokens(
+            token,
+            amount,
+            recipient,
+            remainingGasTo,
+            payload,
+            null
+        );
+    }
+
+    function withdrawTokensToEVMByMergePool(
+        uint mergePoolNonce,
+        uint32 nonce,
+        address _canonToken,
+        uint128 _canonAmount,
+        address token,
+        uint128 amount,
+        uint160 recipient,
+        address remainingGasTo,
+        address sender,
+        EVMCallback callback
+    ) external override onlyMergePool(mergePoolNonce) reserveAtLeastTargetBalance {
+        (
+            bool isLimitReached,
+            optional(DailyLimits) newLimits
+        ) = _isOutgoingDailyLimitReached(_canonToken, _canonAmount);
+
+        if (isLimitReached) {
+            emit OutgoingLimitReached(_canonToken);
+
+            TvmCell empty;
+
+            _mintTokens(
+                _canonToken,
+                _canonAmount,
+                sender,
+                remainingGasTo,
+                empty,
+                null
+            );
+
+            return;
+        }
+
+        _updateDailyVolumes(_canonToken, newLimits);
+
+        _deployEVMEvent(
+            nonce,
+            token,
+            amount,
+            recipient,
+            remainingGasTo,
+            sender,
+            callback
+        );
+    }
+
+    function withdrawTokensToSolanaByMergePool(
+        uint mergePoolNonce,
+        uint32 nonce,
+        address _canonToken,
+        uint128 _canonAmount,
+        address token,
+        uint128 amount,
+        uint256 recipient,
+        address remainingGasTo,
+        address sender,
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
+        bool executePayloadNeeded,
+        IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts,
+        bytes solanaPayload
+    ) external override onlyMergePool(mergePoolNonce) reserveAtLeastTargetBalance {
+        (
+            bool isLimitReached,
+            optional(DailyLimits) newLimits
+        ) = _isOutgoingDailyLimitReached(_canonToken, _canonAmount);
+
+        if (isLimitReached) {
+            emit OutgoingLimitReached(_canonToken);
+
+            TvmCell empty;
+
+            _mintTokens(
+                _canonToken,
+                _canonAmount,
+                sender,
+                remainingGasTo,
+                empty,
+                null
+            );
+
+            return;
+        }
+
+        _updateDailyVolumes(_canonToken, newLimits);
+
+        _deploySolanaEvent(
+            nonce,
+            token,
+            amount,
+            recipient,
+            sender,
+            remainingGasTo,
+            executeAccounts,
+            executePayloadNeeded,
+            executePayloadAccounts,
+            solanaPayload
+        );
+    }
+
+    function withdrawTokensToTVMByMergePool(
+        uint mergePoolNonce,
+        uint32 nonce,
+        address _canonToken,
+        uint128 _canonAmount,
+        address token,
+        uint128 amount,
+        address remainingGasTo,
+        address sender,
+        TvmCell withdrawPayload
+    ) external override onlyMergePool(mergePoolNonce) reserveAtLeastTargetBalance {
+        (
+            bool isLimitReached,
+            optional(DailyLimits) newLimits
+        ) = _isOutgoingDailyLimitReached(_canonToken, _canonAmount);
+
+        if (isLimitReached) {
+            emit OutgoingLimitReached(_canonToken);
+
+            TvmCell empty;
+
+            _mintTokens(
+                _canonToken,
+                _canonAmount,
+                sender,
+                remainingGasTo,
+                empty,
+                null
+            );
+
+            return;
+        }
+
+        _updateDailyVolumes(_canonToken, newLimits);
+
+        _emitTVMEvent(
+            nonce,
+            token,
+            amount,
+            remainingGasTo,
+            sender,
+            withdrawPayload,
+            false
+        );
+    }
+
+    function _buildMergePoolPlatformInitState(
+        uint256 mergePoolNonce
+    ) internal view returns (TvmCell) {
+        return tvm.buildStateInit({
+            contr: MergePoolPlatform,
+            varInit: {
+                proxy: address(this),
+                _randomNonce: mergePoolNonce
+            },
+            pubkey: 0,
+            code: mergePoolPlatform
+        });
+    }
+
+    /// @notice Upgrade merge pool code
+    /// Can be called only by owner
+    /// @param pool Merge pool address
+    function upgradeMergePool(
+        address pool
+    ) external override onlyOwner reserveAtLeastTargetBalance {
+        IMergePool_V2(pool).acceptUpgrade{
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED,
+            bounce: false
+        }(mergePool, mergePoolVersion);
+    }
+
+    /// @notice Set merge pool platform code
+    /// Can be called only by `owner`
+    /// @param _mergePoolPlatform New merge pool platform code
+    function setMergePoolPlatform(
+        TvmCell _mergePoolPlatform
+    ) external override onlyOwner cashBack {
+        mergePoolPlatform = _mergePoolPlatform;
+    }
+
+    /// @notice Set merge pool
+    /// Can be called only by `owner`
+    /// @dev Increments `mergePoolVersion`
+    /// @param _mergePool New merge pool code
+    function setMergePool(
+        TvmCell _mergePool
+    ) external override onlyOwner cashBack {
+        mergePool = _mergePool;
+
+        mergePoolVersion++;
+    }
+}

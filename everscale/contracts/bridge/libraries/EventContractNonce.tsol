@@ -3,8 +3,9 @@ pragma ever-solidity >= 0.62.0;
 
 import "../interfaces/event-contracts/IEthereumEverscaleEvent.tsol";
 import "../interfaces/event-contracts/IEverscaleEthereumEvent.tsol";
-import "../interfaces/event-contracts/ISolanaEverscaleEvent.tsol";
 import "../interfaces/event-contracts/IEverscaleSolanaEvent.tsol";
+import "../interfaces/event-contracts/ISolanaEverscaleEvent.tsol";
+import "../interfaces/event-contracts/ITvmTvmEvent.tsol";
 
 
 library EventContractNonce {
@@ -36,6 +37,14 @@ library EventContractNonce {
 
     function _calculateNonce(
         IEverscaleSolanaEvent.EverscaleSolanaEventInitData eventInitData
+    ) internal returns (uint32) {
+        uint dataHash = tvm.hash(abi.encode(eventInitData));
+
+        return uint32(dataHash % U32_MAX);
+    }
+
+    function _calculateNonce(
+        ITvmTvmEvent.TvmTvmEventInitData eventInitData
     ) internal returns (uint32) {
         uint dataHash = tvm.hash(abi.encode(eventInitData));
 

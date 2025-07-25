@@ -1,0 +1,368 @@
+pragma ever-solidity >= 0.62.0;
+pragma AbiHeader expire;
+
+
+import "./../../interfaces/event-configuration-contracts/ITvmTvmEventConfiguration.tsol";
+import "./../../interfaces/proxy/ITvmEventCancelled.tsol";
+import "./../../interfaces/proxy/ITvmTvmProxy.tsol";
+import "./../../interfaces/proxy/ITvmTvmProxyExtended.tsol";
+
+import "./../../event-contracts/base/tvm/TvmTvmBaseEvent.tsol";
+
+import "./../../../utils/TransferUtils.tsol";
+import "./../../../utils/ErrorCodes.tsol";
+
+import "./../../libraries/BocDecoder.tsol";
+
+import "@broxus/contracts/contracts/access/InternalOwner.tsol";
+import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
+import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
+
+
+/// @title Basic TVM-TVM event configuration contract
+/// @author https://github.com/broxus
+contract TvmTvmEventConfiguration is
+    ITvmTvmEventConfiguration,
+    ITvmTvmProxy,
+    ITvmTvmProxyExtended,
+    ITvmEventCancelled,
+    TransferUtils,
+    InternalOwner,
+    CheckPubKey
+{
+    BasicConfiguration public static basicConfiguration;
+    TvmTvmEventConfiguration public static networkConfiguration;
+
+    uint64 public flags;
+    TvmCell public meta;
+
+    address public static transactionChecker;
+    address public static eventEmitter;
+
+    /// @param _owner Event configuration owner
+    constructor(
+        address _owner,
+        TvmCell _meta,
+        uint64 _flags
+    ) checkPubKey reserveTargetBalance() {
+        tvm.accept();
+
+        setOwnership(_owner);
+
+        meta = _meta;
+        flags = _flags;
+
+        _owner.transfer({
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        });
+    }
+
+    /// @notice Set new configuration meta.
+    /// @param _meta New configuration meta
+    function setMeta(TvmCell _meta) override onlyOwner cashBack external {
+        meta = _meta;
+    }
+
+    /// @dev Set end timestamp. Can be set only in case current value is 0.
+    /// @param endTimestamp End timestamp
+    function setEndTimestamp(
+        uint32 endTimestamp
+    )
+        override
+        onlyOwner
+        cashBack
+        external
+    {
+        require(
+            networkConfiguration.endTimestamp == 0,
+            ErrorCodes.END_TIMESTAMP_ALREADY_SET
+        );
+
+        require(
+            endTimestamp >= networkConfiguration.startTimestamp,
+            ErrorCodes.TOO_LOW_END_TIMESTAMP
+        );
+
+        networkConfiguration.endTimestamp = endTimestamp;
+    }
+
+    function setFlags(
+        uint64 _flags
+    ) override onlyOwner cashBack external {
+        flags = _flags;
+    }
+
+    function setEventInitialBalance(
+        uint64 eventInitialBalance
+    ) override onlyOwner cashBack external {
+        basicConfiguration.eventInitialBalance = eventInitialBalance;
+    }
+
+    function setTransactionChecker(
+        address _transactionChecker
+    ) override onlyOwner cashBack external {
+        transactionChecker = _transactionChecker;
+    }
+
+    /// @dev Build initial data for event contract
+    /// @dev Extends event vote data with configuration params
+    /// @param msgHash Message hash
+    function buildEventInitData(
+        uint msgHash
+    ) internal view returns(
+        ITvmTvmEvent.TvmTvmEventInitData eventInitData
+    ) {
+        eventInitData.msgHash = msgHash;
+
+        eventInitData.configuration = address(this);
+        eventInitData.chainId = networkConfiguration.chainId;
+
+        return eventInitData;
+    }
+
+    /// @dev Deploy event contract
+    /// @param eventVoteData Event vote data
+    function deployEvent(
+        ITvmTvmEvent.TvmTvmEventVoteData eventVoteData
+    )
+        external
+        override
+        reserveAtLeastTargetBalance()
+    {
+        _deployEvent(eventVoteData, MsgFlag.ALL_NOT_RESERVED, 0);
+    }
+
+    function deployEvents(
+        ITvmTvmEvent.TvmTvmEventVoteData[] eventsVoteData,
+        uint128[] values
+    ) external override reserveAtLeastTargetBalance() {
+        require(values.length == eventsVoteData.length && values.length > 0);
+
+        uint counter = 0;
+
+        for (ITvmTvmEvent.TvmTvmEventVoteData eventVoteData: eventsVoteData) {
+            _deployEvent(eventVoteData, 0, values[counter]);
+            counter++;
+        }
+
+        msg.sender.transfer({ value: 0, flag: MsgFlag.IGNORE_ERRORS + MsgFlag.ALL_NOT_RESERVED, bounce: false });
+    }
+
+
+    function _deployEvent(
+        ITvmTvmEvent.TvmTvmEventVoteData eventVoteData,
+        uint8 flag,
+        uint128 value
+    ) internal view {
+        int32 chainId = BocDecoder.decodeBlockProof(eventVoteData.txBlockProof);
+        require(chainId == networkConfiguration.chainId, ErrorCodes.WRONG_DISPATCH_CHAIN_ID);
+
+        (
+            uint256 accountAddr,
+            ,
+            uint32 txTimestamp,
+            mapping(uint15 => TvmCell) outMessages,
+        ) = BocDecoder.decodeTransactionShort(eventVoteData.txProof);
+        optional(TvmCell) message = outMessages.fetch(eventVoteData.messageIndex);
+
+        require(
+            message.hasValue() && tvm.hash(message.get()) == eventVoteData.msgHash,
+            ErrorCodes.WRONG_MESSAGE_HASH
+        );
+
+        (, , TvmCell eventBody) = BocDecoder.decodeMessage(message.get(), null);
+
+        int32 globalId = tvm.rawConfigParam(19)
+            .get()
+            .toSlice()
+            .load(int32);
+        (, int32 destinationChainId) = eventBody
+            .toSlice()
+            .load(optional(TvmCell))
+            .get()
+            .toSlice()
+            .load(uint32, int32);
+
+        require(globalId == destinationChainId, ErrorCodes.WRONG_DESTINATION_CHAIN_ID);
+        require(accountAddr == eventEmitter.value, ErrorCodes.SENDER_IS_NOT_EVENT_EMITTER);
+        require(
+            txTimestamp >= networkConfiguration.startTimestamp,
+            ErrorCodes.EVENT_TIMESTAMP_LESS_THAN_START
+        );
+
+        if (networkConfiguration.endTimestamp != 0) {
+            require(
+                txTimestamp <= networkConfiguration.endTimestamp,
+                ErrorCodes.EVENT_TIMESTAMP_HIGHER_THAN_END
+            );
+        }
+
+        ITvmTvmEvent.TvmTvmEventInitData eventInitData = buildEventInitData(eventVoteData.msgHash);
+
+        address eventContract = new TvmTvmBaseEvent{
+            value: gasToValue(Gas.DEPLOY_TVM_TVM_EVENT, address(this).wid),
+            flag: 0,
+            bounce: false,
+            code: basicConfiguration.eventCode,
+            pubkey: 0,
+            varInit: { eventInitData: eventInitData }
+        }(msg.sender, meta, transactionChecker, eventBody, basicConfiguration.eventInitialBalance);
+
+        emit NewEventContract(eventContract);
+
+        uint128 deployTvmTvmEventGas = gasToValue(Gas.DEPLOY_TVM_TVM_EVENT, address(this).wid);
+
+        ITvmTvmEvent(eventContract)
+            .processProof{
+                value: value > deployTvmTvmEventGas ? value - deployTvmTvmEventGas : value,
+                flag: flag
+            }(eventVoteData);
+    }
+
+    function onTVMEventCancelled(
+        ITvmTvmEvent.TvmTvmEventInitData eventInitData,
+        TvmCell _withdrawPayload
+    ) external override reserveAtLeastTargetBalance {
+        require(
+            eventInitData.configuration == address(this),
+            ErrorCodes.SENDER_NOT_EVENT_CONTRACT
+        );
+
+        address eventContract = _deriveEventAddress(eventInitData);
+
+        require(
+            eventContract == msg.sender,
+            ErrorCodes.SENDER_NOT_EVENT_CONTRACT
+        );
+
+        ITvmEventCancelled(networkConfiguration.proxy).onTVMEventCancelled{
+                flag: MsgFlag.ALL_NOT_RESERVED
+            }(eventInitData, _withdrawPayload);
+    }
+
+    /// @dev Derive the Ethereum event contract address from it's init data
+    /// @param msgHash Message hash
+    /// @return eventContract Address of the corresponding ethereum event contract
+    function deriveEventAddress(
+        uint msgHash
+    )
+        override
+        public
+        view
+        responsible
+    returns(
+        address eventContract
+    ) {
+        ITvmTvmEvent.TvmTvmEventInitData eventInitData = buildEventInitData(msgHash);
+
+        TvmCell stateInit = tvm.buildStateInit({
+            contr: TvmTvmBaseEvent,
+            varInit: {
+                eventInitData: eventInitData
+            },
+            pubkey: 0,
+            code: basicConfiguration.eventCode
+        });
+
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} address(tvm.hash(stateInit));
+    }
+
+    /**
+        @dev Get configuration details.
+        @return _basicConfiguration Basic configuration init data
+        @return _networkConfiguration Network specific configuration init data
+    */
+    function getDetails() override public view responsible returns(
+        BasicConfiguration _basicConfiguration,
+        TvmTvmEventConfiguration _networkConfiguration,
+        TvmCell _meta
+    ) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false}(
+            basicConfiguration,
+            networkConfiguration,
+            meta
+        );
+    }
+
+    /// @dev Get event configuration type
+    /// @return _type Configuration type (enum EventType)
+    function getType() override public pure responsible returns(EventType _type) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} EventType.TvmTvm;
+    }
+
+    function getFlags() override public view responsible returns(uint64 _flags) {
+        return {value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} flags;
+    }
+
+    /// @dev Proxy V1 callback.
+    /// Receives "confirm" callback from the event contract and checks event contract correctness.
+    /// If it's correct, then sends the callback to the proxy with the same signature.
+    /// @param eventInitData Ethereum event data
+    /// @param gasBackAddress Gas back address
+    function onTVMEventConfirmed(
+        ITvmTvmEvent.TvmTvmEventInitData eventInitData,
+        address gasBackAddress
+    ) external override reserveAtLeastTargetBalance() {
+        require(
+            eventInitData.configuration == address(this),
+            ErrorCodes.SENDER_NOT_EVENT_CONTRACT
+        );
+
+        address eventContract = _deriveEventAddress(eventInitData);
+
+        require(
+            eventContract == msg.sender,
+            ErrorCodes.SENDER_NOT_EVENT_CONTRACT
+        );
+
+        ITvmTvmProxy(networkConfiguration.proxy).onTVMEventConfirmed{
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(eventInitData, gasBackAddress);
+
+    }
+
+    /// @dev Proxy V2 callback. Receives additional cell.
+    /// Receives "confirm" callback from the event contract and checks event contract correctness.
+    /// If it's correct, then sends the callback to the proxy with the same signature.
+    /// @param eventInitData Ethereum event data
+    /// @param _meta Arbitrary meta cell
+    /// @param gasBackAddress Gas back address
+    function onTVMEventConfirmedExtended(
+        ITvmTvmEvent.TvmTvmEventInitData eventInitData,
+        TvmCell _meta,
+        address gasBackAddress
+    ) external override reserveAtLeastTargetBalance {
+        require(
+            eventInitData.configuration == address(this),
+            ErrorCodes.SENDER_NOT_EVENT_CONTRACT
+        );
+
+        address eventContract = _deriveEventAddress(eventInitData);
+
+        require(
+            eventContract == msg.sender,
+            ErrorCodes.SENDER_NOT_EVENT_CONTRACT
+        );
+
+        ITvmTvmProxyExtended(networkConfiguration.proxy).onTVMEventConfirmedExtended{
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(eventInitData, _meta, gasBackAddress);
+    }
+
+    function _deriveEventAddress(
+        ITvmTvmEvent.TvmTvmEventInitData eventInitData
+    ) internal view returns (address _event) {
+        TvmCell stateInit = tvm.buildStateInit({
+            contr: TvmTvmBaseEvent,
+            varInit: {
+                eventInitData: eventInitData
+            },
+            pubkey: 0,
+            code: basicConfiguration.eventCode
+        });
+
+        _event = address(tvm.hash(stateInit));
+    }
+}

@@ -1,0 +1,104 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma ever-solidity >= 0.62.0;
+
+import "../../../event-contracts/multivault/evm/IEVMCallback.tsol";
+import "../../INetworks.tsol";
+
+
+interface IProxyMultiVaultNative_V8 is IEVMCallback, INetworks {
+    struct EVMConfiguration {
+        address everscaleConfiguration;
+        address[] evmConfigurations;
+    }
+
+    struct SolanaConfiguration {
+        address everscaleConfiguration;
+        address solanaConfiguration;
+    }
+
+    struct TVMConfiguration {
+        address[] incomingConfigurations;
+        Fees defaultFee;
+        mapping(address => Fees) fees;
+        TvmCell tokenFeeCode;
+    }
+
+    struct Fees {
+        uint32 incoming; // deposit
+        uint32 outgoing; // withdraw
+    }
+
+    struct DailyLimits {
+        optional(uint128) incomingLimit;
+        uint128 dailyIncomingVolume;
+
+        optional(uint128) outgoingLimit;
+        uint128 dailyOutgoingVolume;
+
+        uint32 dayStartTimestamp;
+    }
+
+    // Settings
+    function apiVersion() external view responsible returns(uint8);
+    function getConfiguration() external view responsible returns (EVMConfiguration, SolanaConfiguration, TVMConfiguration);
+    function setEVMConfiguration(EVMConfiguration _config, address gasBackAddress) external;
+    function setSolanaConfiguration(SolanaConfiguration _config, address gasBackAddress) external;
+    function setTVMConfiguration(address[] _incomingConfigurations, address gasBackAddress) external;
+    function setEventAddressKeeperCode(TvmCell _eventAddressKeeperCode, address gasBackAddress) external;
+    function setTokenDailyLimits(
+        address _token,
+        optional(uint128) _incomingLimit,
+        optional(uint128) _outgoingLimit,
+        address _remainingGasTo
+    ) external;
+    function getDailyLimits(address _token) external view responsible returns (DailyLimits);
+    function setLimitApprover(address _approver, address _remainingGasTo) external;
+    function getLimitApprover() external view responsible returns (address);
+
+    // fee
+    function getTvmDefaultFee() external view responsible returns(uint32 incomingNumerator,uint32 outgoingNumerator, uint32 denominator);
+    function getTvmTokenFee(address _token) external view responsible returns(uint32 incomingNumerator, uint32 outgoingNumerator, uint32 denominator);
+    function getExpectedTokenFeeAddress(address _token)external responsible view returns(address);
+    function getPlatformCode() external view responsible returns(TvmCell);
+    function getTokenFeeCode() external view responsible returns(TvmCell);
+
+    function setTvmDefaultFeeNumerator(uint32 _incoming, uint32 _outgoing) external;
+    function setPlatformCode(TvmCell _code) external;
+    function setTokenFeeCode(TvmCell _code) external;
+    function setTvmTokenFee(address _token, uint32 _incoming, uint32 _outgoing) external;
+
+    function deleteTvmTokenFee(address _token) external;
+    function withdrawTokenFee(address _token, address _recipient) external;
+    function upgradeTokenFee(address _token, address _remainingGasTo) external view;
+
+    // Cold vault
+    function setColdVault(address _coldVault, address _remainingGasTo) external;
+    function setVaultWithdrawer(address _withdrawer, address _remainingGasTo) external;
+    function withdrawTokenToColdVault(address _token, uint128 _amount, address _remainingGasTo) external;
+
+    // Events specification
+    event TvmTvmNative(
+        int32 destinationChainId,
+
+        address baseToken,
+        string name,
+        string symbol,
+        uint8 decimals,
+        address nativeProxyWallet,
+
+        address sender,
+        address recipient,
+        uint128 amount,
+
+        uint128 attachedGas,
+        uint128 expectedGas,
+        address remainingGasTo,
+        optional(TvmCell) payload
+    );
+
+    event IncomingFeeTaken(uint128 fee, address token, uint256 msgHash);
+    event OutgoingFeeTaken(uint128 fee, address token);
+
+    event OutgoingLimitReached(address token);
+    event NotEnoughLiquidity(address eventAddress);
+}

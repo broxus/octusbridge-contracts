@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.2",
+	"version": "2.3",
 	"header": ["time"],
 	"functions": [
 		{
@@ -16,48 +16,7 @@
 				{"name":"answerId","type":"uint32"}
 			],
 			"outputs": [
-				{"components":[{"name":"root","type":"address"},{"name":"round_num","type":"uint32"},{"name":"ton_keys","type":"uint256[]"},{"name":"eth_addrs","type":"uint160[]"},{"name":"staker_addrs","type":"address[]"},{"name":"staked_tokens","type":"uint128[]"},{"name":"relays_installed","type":"bool"},{"name":"code_version","type":"uint32"}],"name":"value0","type":"tuple"}
-			]
-		},
-		{
-			"name": "hasUnclaimedReward",
-			"inputs": [
-				{"name":"answerId","type":"uint32"},
-				{"name":"_relay_staker_addr","type":"address"}
-			],
-			"outputs": [
-				{"name":"has_reward","type":"bool"}
-			]
-		},
-		{
-			"name": "getRelayByStakerAddress",
-			"inputs": [
-				{"name":"answerId","type":"uint32"},
-				{"name":"_relay_staker_addr","type":"address"}
-			],
-			"outputs": [
-				{"name":"_ton_key","type":"uint256"},
-				{"name":"_eth_addr","type":"uint160"},
-				{"name":"_staker_addr","type":"address"},
-				{"name":"_staked_tokens","type":"uint128"}
-			]
-		},
-		{
-			"name": "getRewardForRound",
-			"inputs": [
-				{"name":"staker_addr","type":"address"},
-				{"name":"code_version","type":"uint32"}
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "sendRelaysToRelayRound",
-			"inputs": [
-				{"name":"relay_round_addr","type":"address"},
-				{"name":"count","type":"uint32"}
-			],
-			"outputs": [
+				{"components":[{"name":"root","type":"address"},{"name":"round_num","type":"uint32"},{"name":"ton_keys","type":"uint256[]"},{"name":"eth_keys","type":"uint160[]"},{"name":"relays_installed","type":"bool"},{"name":"code_version","type":"uint32"}],"name":"value0","type":"tuple"}
 			]
 		},
 		{
@@ -70,19 +29,10 @@
 			]
 		},
 		{
-			"name": "setEmptyRelays",
-			"inputs": [
-			],
-			"outputs": [
-			]
-		},
-		{
 			"name": "setRelays",
 			"inputs": [
 				{"name":"_ton_keys","type":"uint256[]"},
-				{"name":"_eth_addrs","type":"uint160[]"},
-				{"name":"_staker_addrs","type":"address[]"},
-				{"name":"_staked_tokens","type":"uint128[]"}
+				{"name":"_eth_keys","type":"uint160[]"}
 			],
 			"outputs": [
 			]
@@ -102,16 +52,6 @@
 				{"name":"send_gas_to","type":"address"}
 			],
 			"outputs": [
-			]
-		},
-		{
-			"name": "getUserDataAddress",
-			"inputs": [
-				{"name":"answerId","type":"uint32"},
-				{"name":"user","type":"address"}
-			],
-			"outputs": [
-				{"name":"value0","type":"address"}
 			]
 		},
 		{
@@ -137,46 +77,6 @@
 			"outputs": [
 				{"name":"end_time","type":"uint32"}
 			]
-		},
-		{
-			"name": "total_tokens_staked",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"total_tokens_staked","type":"uint128"}
-			]
-		},
-		{
-			"name": "reward_round_num",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"reward_round_num","type":"uint32"}
-			]
-		},
-		{
-			"name": "round_reward",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"round_reward","type":"uint128"}
-			]
-		},
-		{
-			"name": "duplicate",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"duplicate","type":"bool"}
-			]
-		},
-		{
-			"name": "expected_packs_num",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"expected_packs_num","type":"uint8"}
-			]
 		}
 	],
 	"data": [
@@ -199,22 +99,9 @@
 		{"name":"relays_count","type":"uint32"},
 		{"name":"start_time","type":"uint32"},
 		{"name":"end_time","type":"uint32"},
-		{"name":"total_tokens_staked","type":"uint128"},
-		{"name":"reward_round_num","type":"uint32"},
-		{"name":"round_reward","type":"uint128"},
-		{"name":"duplicate","type":"bool"},
-		{"name":"expected_packs_num","type":"uint8"},
-		{"name":"election_addr","type":"address"},
-		{"name":"prev_round_addr","type":"address"},
 		{"name":"round_num","type":"uint32"},
 		{"name":"ton_keys","type":"uint256[]"},
 		{"name":"eth_addrs","type":"uint160[]"},
-		{"name":"staker_addrs","type":"address[]"},
-		{"name":"staked_tokens","type":"uint128[]"},
-		{"name":"addr_to_idx","type":"map(address,uint256)"},
-		{"name":"reward_claimed","type":"map(address,bool)"},
-		{"name":"relay_packs_installed","type":"uint8"},
-		{"name":"relay_transfer_start_idx","type":"uint256"},
 		{"name":"current_version","type":"uint32"},
 		{"name":"platform_code","type":"cell"},
 		{"name":"root","type":"address"}

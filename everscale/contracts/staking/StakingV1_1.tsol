@@ -8,7 +8,7 @@ contract StakingV1_1 is StakingPoolRelay {
     event StakingUpdated();
 
     function upgrade(TvmCell code, address send_gas_to) external onlyAdmin {
-        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (msg.value >= Gas.getMinCallMsgValue(), ErrorCodes.VALUE_TOO_LOW);
 
         TvmCell data = abi.encode(
             send_gas_to, // address
@@ -73,11 +73,11 @@ contract StakingV1_1 is StakingPoolRelay {
         address[] _staker_addrs,
         uint128[] _staked_tokens
     ) external onlyAdmin {
-        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (msg.value >= Gas.getMinCallMsgValue(), ErrorCodes.VALUE_TOO_LOW);
         tvm.rawReserve(_reserve(), 0);
 
         address relay_round_addr = getRelayRoundAddress(relay_round);
-        IRelayRound(relay_round_addr).setRelays{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
+        IStakingRelayRound(relay_round_addr).setRelays{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(
             _ton_keys, _eth_addrs, _staker_addrs, _staked_tokens
         );
     }

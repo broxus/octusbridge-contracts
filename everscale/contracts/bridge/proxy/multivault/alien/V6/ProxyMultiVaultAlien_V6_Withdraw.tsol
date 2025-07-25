@@ -84,8 +84,8 @@ abstract contract ProxyMultiVaultAlien_V6_Withdraw is
 
         IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executePayloadAccounts;
         IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(
-            tx.timestamp,
-            now,
+            tx.logicaltime,
+            block.timestamp,
             executeAccounts,
             false,
             executePayloadAccounts,
@@ -118,8 +118,8 @@ abstract contract ProxyMultiVaultAlien_V6_Withdraw is
         );
 
         IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData = IEverscaleEthereumEvent.EverscaleEthereumEventVoteData(
-            tx.timestamp,
-            now,
+            tx.logicaltime,
+            block.timestamp,
             eventData
         );
 

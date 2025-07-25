@@ -1,3 +1,5 @@
+const { ethers } = require("hardhat");
+
 const deterministicDeployment = ['multivault-venom-main'];
 
 
@@ -24,6 +26,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         log: true,
         deterministicDeployment,
         args: [
+            ethers.constants.AddressZero,
             multivault
         ]
     });

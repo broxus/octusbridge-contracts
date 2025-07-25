@@ -17,6 +17,7 @@ import "ton-eth-bridge-token-contracts/contracts/interfaces/IBurnableTokenWallet
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenWallet.tsol";
 import "ton-eth-bridge-token-contracts/contracts/TokenWalletPlatform.tsol";
 import "./../../../utils/ErrorCodes.tsol";
+import "./../EventCreditGas.tsol";
 
 
 /// @title Mediator
@@ -38,8 +39,6 @@ contract Mediator_V2 is
         TransferToNativeProxy
     }
 
-    uint128 constant DEPLOY_WALLET_VALUE = 0.2 ever;
-
     TvmCell public alienTokenWalletPlatformCode;
     address public nativeProxy;
     address[] public eventClosers;
@@ -49,7 +48,7 @@ contract Mediator_V2 is
         address _owner,
         address _nativeProxy,
         TvmCell _alienTokenWalletPlatformCode
-    ) public checkPubKey {
+    ) checkPubKey {
         require(_owner != address(0), ErrorCodes.ZERO_ADDRESS);
         require(_nativeProxy != address(0), ErrorCodes.ZERO_ADDRESS);
         tvm.accept();
@@ -106,7 +105,7 @@ contract Mediator_V2 is
         uint128 amount,
         address remainingGasTo
     ) internal view {
-        (uint32 nonce, TvmCell payload) = abi.decode(payloadWithNonce, (uint32, TvmCell));
+        (uint32 nonce, optional(TvmCell) payload) = abi.decode(payloadWithNonce, (uint32, optional(TvmCell)));
 
         remainingGasTo = _includes(eventDeployers, remainingGasTo)
           ? _randomChoice(eventClosers)
@@ -116,7 +115,7 @@ contract Mediator_V2 is
             Operation operation,
             address proxy,
             TvmCell operationPayload
-        ) = abi.decode(payload, (Operation, address, TvmCell));
+        ) = abi.decode(payload.get(), (Operation, address, TvmCell));
 
         TvmCell withdrawPayload = _encodeWithdrawPayload(operation, operationPayload, nonce);
 
@@ -173,7 +172,7 @@ contract Mediator_V2 is
             bounce: false,
             value: 0,
             flag: MsgFlag.ALL_NOT_RESERVED
-        }(amount, proxy, DEPLOY_WALLET_VALUE, remainingGasTo, true, payload);
+        }(amount, proxy, EventCreditGas.getDeployTokenWalletValue(), remainingGasTo, true, payload);
     }
 
     function _burn(

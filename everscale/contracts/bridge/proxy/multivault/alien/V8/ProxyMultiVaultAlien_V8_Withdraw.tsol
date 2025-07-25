@@ -99,8 +99,8 @@ ProxyMultiVaultAlien_V8_Deposit_EVM,
         );
 
         IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(
-            tx.timestamp,
-            now,
+            tx.logicaltime,
+            block.timestamp,
             executeAccounts,
             executePayloadNeeded,
             executePayloadAccounts,
@@ -137,8 +137,8 @@ ProxyMultiVaultAlien_V8_Deposit_EVM,
         );
 
         IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData = IEverscaleEthereumEvent.EverscaleEthereumEventVoteData(
-            tx.timestamp,
-            now,
+            tx.logicaltime,
+            block.timestamp,
             eventData
         );
 

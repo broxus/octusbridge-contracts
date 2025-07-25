@@ -1,0 +1,47 @@
+pragma ever-solidity >= 0.68.0;
+
+import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
+
+contract TokenFeePlatform {
+    address static root;
+    uint8 static platformType;
+    TvmCell static initialData;
+
+    constructor(
+        TvmCell code,
+        TvmCell params,
+        address remainingGasTo
+    ) {
+        if (msg.sender != root && root.value != 0) {
+           msg.sender.transfer({
+               value: 0,
+               flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.DESTROY_IF_ZERO,
+               bounce: false
+           });
+        } else {
+            initialize(code, params, remainingGasTo);
+        }
+    }
+
+    function initialize(
+        TvmCell code,
+        TvmCell params,
+        address remainingGasTo
+    ) private {
+
+        TvmCell data = abi.encode(
+            root,
+            remainingGasTo,
+            initialData,
+            params,
+            tvm.code()
+        );
+
+        tvm.setcode(code);
+        tvm.setCurrentCode(code);
+
+        onCodeUpgrade(data, false);
+    }
+
+    function onCodeUpgrade(TvmCell _data, bool _upgrade) private {}
+}

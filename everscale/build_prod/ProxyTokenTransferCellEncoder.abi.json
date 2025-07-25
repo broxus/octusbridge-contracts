@@ -1,0 +1,115 @@
+{
+	"ABI version": 2,
+	"version": "2.2",
+	"header": ["time"],
+	"functions": [
+		{
+			"name": "encodeEthereumEverscaleEventData",
+			"inputs": [
+				{"name":"tokens","type":"uint256"},
+				{"name":"wid","type":"int128"},
+				{"name":"owner_addr","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
+		},
+		{
+			"name": "encodeSolanaEverscaleEventData",
+			"inputs": [
+				{"name":"sender_addr","type":"uint256"},
+				{"name":"tokens","type":"uint128"},
+				{"name":"receiver_addr","type":"address"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
+		},
+		{
+			"name": "decodeEthereumEverscaleEventData",
+			"inputs": [
+				{"name":"data","type":"cell"}
+			],
+			"outputs": [
+				{"name":"tokens","type":"uint128"},
+				{"name":"wid","type":"int8"},
+				{"name":"owner_addr","type":"uint256"}
+			]
+		},
+		{
+			"name": "decodeSolanaEverscaleEventData",
+			"inputs": [
+				{"name":"data","type":"cell"}
+			],
+			"outputs": [
+				{"name":"sender_addr","type":"uint256"},
+				{"name":"tokens","type":"uint128"},
+				{"name":"receiver_addr","type":"address"}
+			]
+		},
+		{
+			"name": "encodeEverscaleEthereumEventData",
+			"inputs": [
+				{"name":"wid","type":"int8"},
+				{"name":"addr","type":"uint256"},
+				{"name":"tokens","type":"uint128"},
+				{"name":"ethereum_address","type":"uint160"},
+				{"name":"chainId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
+		},
+		{
+			"name": "encodeEverscaleSolanaEventData",
+			"inputs": [
+				{"name":"senderAddress","type":"address"},
+				{"name":"tokens","type":"uint128"},
+				{"name":"solanaOwnerAddress","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
+		},
+		{
+			"name": "decodeEverscaleEthereumEventData",
+			"inputs": [
+				{"name":"data","type":"cell"}
+			],
+			"outputs": [
+				{"name":"wid","type":"int8"},
+				{"name":"addr","type":"uint256"},
+				{"name":"tokens","type":"uint128"},
+				{"name":"ethereum_address","type":"uint160"},
+				{"name":"chainId","type":"uint32"}
+			]
+		},
+		{
+			"name": "decodeEverscaleSolanaEventData",
+			"inputs": [
+				{"name":"data","type":"cell"}
+			],
+			"outputs": [
+				{"name":"senderAddress","type":"address"},
+				{"name":"tokens","type":"uint128"},
+				{"name":"solanaOwnerAddress","type":"uint256"}
+			]
+		},
+		{
+			"name": "constructor",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		}
+	],
+	"data": [
+	],
+	"events": [
+	],
+	"fields": [
+		{"name":"_pubkey","type":"uint256"},
+		{"name":"_timestamp","type":"uint64"},
+		{"name":"_constructorFlag","type":"bool"}
+	]
+}

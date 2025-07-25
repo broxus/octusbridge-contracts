@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.2",
+	"version": "2.3",
 	"header": ["pubkey", "time", "expire"],
 	"functions": [
 		{
@@ -23,7 +23,8 @@
 			"name": "deployEvents",
 			"inputs": [
 				{"components":[{"name":"configuration","type":"address"},{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"}],"name":"eventsVoteData","type":"tuple[]"},{"name":"values","type":"uint128[]"},{"name":"value","type":"uint128"}],"name":"requestsEVM","type":"tuple[]"},
-				{"components":[{"name":"configuration","type":"address"},{"components":[{"name":"accountSeed","type":"uint128"},{"name":"slot","type":"uint64"},{"name":"blockTime","type":"uint64"},{"name":"txSignature","type":"string"},{"name":"eventData","type":"cell"}],"name":"eventsVoteData","type":"tuple[]"},{"name":"values","type":"uint128[]"},{"name":"value","type":"uint128"}],"name":"requestsSolana","type":"tuple[]"}
+				{"components":[{"name":"configuration","type":"address"},{"components":[{"name":"accountSeed","type":"uint128"},{"name":"slot","type":"uint64"},{"name":"blockTime","type":"uint64"},{"name":"txSignature","type":"string"},{"name":"eventData","type":"cell"}],"name":"eventsVoteData","type":"tuple[]"},{"name":"values","type":"uint128[]"},{"name":"value","type":"uint128"}],"name":"requestsSolana","type":"tuple[]"},
+				{"components":[{"name":"configuration","type":"address"},{"components":[{"name":"msgHash","type":"uint256"},{"name":"messageIndex","type":"uint15"},{"name":"txBlockProof","type":"cell"},{"name":"txProof","type":"cell"}],"name":"eventsVoteData","type":"tuple[]"},{"name":"values","type":"uint128[]"},{"name":"value","type":"uint128"}],"name":"requestsTVM","type":"tuple[]"}
 			],
 			"outputs": [
 			]

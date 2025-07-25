@@ -14,6 +14,7 @@ import "./../../interfaces/event-contracts/multivault/evm/IEVMCallback.tsol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensBurnCallback.tsol";
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.tsol";
 
+import "../../libraries/Gas.tsol";
 
 /// @title Merge pool contract
 /// Basically allows to swap different alien tokens on 1:1 ratio
@@ -26,8 +27,6 @@ contract MergePool_V2 is
     IAcceptTokensBurnCallback,
     IEVMCallback
 {
-    uint128 constant ATTACH_TO_DECIMALS_REQUEST = 0.3 ever;
-
     address static proxy;
 
     uint8 public version;
@@ -54,7 +53,7 @@ contract MergePool_V2 is
         _;
     }
 
-    constructor() public {
+    constructor() {
         revert();
     }
 
@@ -306,7 +305,7 @@ contract MergePool_V2 is
 
     function _requestTokenDecimals(address token) internal pure {
         ITokenRoot(token).decimals{
-            value: ATTACH_TO_DECIMALS_REQUEST,
+            value: gasToValue(Gas.REQUEST_TOKEN_DECIMALS_GAS, address(this).wid),
             bounce: false,
             callback: MergePool_V2.receiveTokenDecimals
         }();

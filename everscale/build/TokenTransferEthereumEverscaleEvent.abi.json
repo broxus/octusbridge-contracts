@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.2",
+	"version": "2.3",
 	"header": ["pubkey", "time", "expire"],
 	"functions": [
 		{
@@ -323,6 +323,37 @@
 			"name": "Rejected",
 			"inputs": [
 				{"name":"reason","type":"uint32"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "LimitReached",
+			"inputs": [
+				{"name":"approver","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "LiquidityRequested",
+			"inputs": [
+				{"name":"bounty","type":"uint128"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "Cancelled",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "LiquidityProvided",
+			"inputs": [
+				{"name":"tokenSender","type":"address"}
 			],
 			"outputs": [
 			]

@@ -1,0 +1,5 @@
+pragma ever-solidity >= 0.62.0;
+
+interface ITrustlessVerifier {
+    function verifyTx(TvmCell blockProof, TvmCell txProof) external functionID(0xddab5b88);
+}

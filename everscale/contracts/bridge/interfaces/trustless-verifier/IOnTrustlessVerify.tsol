@@ -1,0 +1,5 @@
+pragma ever-solidity >= 0.62.0;
+
+interface IOnTrustlessVerify {
+    function onTrustlessVerify(bool _isVerified, uint256 _txHash) external functionID(0x756adff1);
+}

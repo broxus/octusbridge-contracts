@@ -1,0 +1,82 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma ever-solidity >= 0.62.0;
+
+
+import "./../../../../interfaces/proxy/multivault/native/IProxyMultiVaultNative_V8.tsol";
+import "./ProxyMultiVaultNative_V8_Deposit.tsol";
+
+import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
+import "@broxus/contracts/contracts/utils/RandomNonce.tsol";
+
+
+contract ProxyMultiVaultNative_V8 is ProxyMultiVaultNative_V8_Deposit, CheckPubKey, RandomNonce {
+    constructor(address owner_) checkPubKey {
+        tvm.accept();
+
+        setOwnership(owner_);
+    }
+
+    function upgrade(
+        TvmCell code
+    ) external onlyOwner {
+        TvmCell data = abi.encode(
+            evmConfiguration,
+            solanaConfiguration,
+            tvmConfiguration,
+            owner,
+            api_version,
+            dex_middleware,
+            proxyMultiVaultAlien,
+            _randomNonce,
+            platformCode,
+            tokenToDailyLimits,
+            limitApprover,
+            coldVault,
+            vaultWithdrawer,
+            wNativeAddresses,
+            eventAddressKeeperCode
+        );
+
+        tvm.setcode(code);
+        tvm.setCurrentCode(code);
+
+        onCodeUpgrade(data);
+    }
+
+    function onCodeUpgrade(TvmCell data) /*functionID(2)*/ private {
+        tvm.resetStorage();
+
+        (
+            EVMConfiguration evmConfiguration_,
+            SolanaConfiguration solanaConfiguration_,
+//            TVMConfiguration tvmConfiguration_,
+            address owner_,
+            uint8 api_version_,
+            address dex_middleware_,
+//            address proxyMultiVaultAlien_,
+            uint _randomNonce_
+//            TvmCell platformCode_
+        ) = abi.decode(data, (
+            EVMConfiguration,
+            SolanaConfiguration,
+//            TVMConfiguration,
+            address,
+            uint8,
+            address,
+//            address,
+            uint
+//            TvmCell
+        ));
+
+        evmConfiguration = evmConfiguration_;
+        solanaConfiguration = solanaConfiguration_;
+//        tvmConfiguration = tvmConfiguration_;
+
+        api_version = api_version_ + 1;
+        dex_middleware = dex_middleware_;
+//        proxyMultiVaultAlien = proxyMultiVaultAlien_;
+        setOwnership(owner_);
+        _randomNonce = _randomNonce_;
+//        platformCode = platformCode_;
+    }
+}

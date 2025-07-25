@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.2",
+	"version": "2.3",
 	"header": ["pubkey", "time", "expire"],
 	"functions": [
 		{
@@ -44,6 +44,84 @@
 				{"name":"payload_","type":"cell"},
 				{"name":"proxy_","type":"address"},
 				{"name":"tokenWallet_","type":"address"}
+			]
+		},
+		{
+			"name": "dailyLimitReached",
+			"inputs": [
+				{"name":"_approver","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "approveLimit",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "rejectLimit",
+			"inputs": [
+				{"name":"_expectedGasReceiver","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "notEnoughLiquidity",
+			"inputs": [
+				{"name":"_wNativeAddresses","type":"map(address,bool)"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "cancel",
+			"inputs": [
+				{"name":"_newRecipient","type":"uint160"},
+				{"name":"_remainingGasTo","type":"address"},
+				{"components":[{"name":"recipient","type":"uint160"},{"name":"payload","type":"bytes"},{"name":"strict","type":"bool"}],"name":"_callback","type":"tuple"},
+				{"name":"_expectedGasReceiver","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setBounty",
+			"inputs": [
+				{"name":"_bounty","type":"uint128"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "receiveEventTokenWallet",
+			"inputs": [
+				{"name":"tokenWallet_","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "onAcceptTokensTransfer",
+			"inputs": [
+				{"name":"value0","type":"address"},
+				{"name":"_amount","type":"uint128"},
+				{"name":"_sender","type":"address"},
+				{"name":"value3","type":"address"},
+				{"name":"value4","type":"address"},
+				{"name":"_payload","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "retry",
+			"inputs": [
+			],
+			"outputs": [
 			]
 		},
 		{
@@ -277,6 +355,38 @@
 			"outputs": [
 				{"name":"tokenWallet","type":"address"}
 			]
+		},
+		{
+			"name": "bounty",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"bounty","type":"uint128"}
+			]
+		},
+		{
+			"name": "eventTokenWallet",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"eventTokenWallet","type":"address"}
+			]
+		},
+		{
+			"name": "limitApprover",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"limitApprover","type":"address"}
+			]
+		},
+		{
+			"name": "isLimitApproved",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"isLimitApproved","type":"bool"}
+			]
 		}
 	],
 	"data": [
@@ -320,6 +430,37 @@
 			],
 			"outputs": [
 			]
+		},
+		{
+			"name": "LimitReached",
+			"inputs": [
+				{"name":"approver","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "LiquidityRequested",
+			"inputs": [
+				{"name":"bounty","type":"uint128"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "Cancelled",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "LiquidityProvided",
+			"inputs": [
+				{"name":"tokenSender","type":"address"}
+			],
+			"outputs": [
+			]
 		}
 	],
 	"fields": [
@@ -343,6 +484,11 @@
 		{"name":"expected_evers","type":"uint256"},
 		{"name":"payload","type":"cell"},
 		{"name":"proxy","type":"address"},
-		{"name":"tokenWallet","type":"address"}
+		{"name":"tokenWallet","type":"address"},
+		{"name":"bounty","type":"uint128"},
+		{"name":"eventTokenWallet","type":"address"},
+		{"name":"limitApprover","type":"address"},
+		{"name":"isLimitApproved","type":"bool"},
+		{"name":"isWNative","type":"bool"}
 	]
 }

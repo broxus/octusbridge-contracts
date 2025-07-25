@@ -4,14 +4,14 @@ pragma ever-solidity >= 0.62.0;
 contract StakingCellEncoder {
     function decodeEverscaleEthereumStakingEventData(TvmCell data) public pure returns(uint32 round_num, uint160[] eth_keys, uint32 round_end) {
         TvmSlice _slice = data.toSlice();
-        round_num = _slice.decode(uint32);
-        eth_keys = _slice.decode(uint160[]);
-        round_end = _slice.decode(uint32);
+        round_num = _slice.load(uint32);
+        eth_keys = _slice.load(uint160[]);
+        round_end = _slice.load(uint32);
         return (round_num, eth_keys, round_end);
     }
 
     function decodeEthereumEverscaleStakingEventData(TvmCell data) public pure returns(uint160 eth_addr, int8 wk_id, uint256 ton_addr_body) {
-        (eth_addr, wk_id, ton_addr_body) = data.toSlice().decode(uint160, int8, uint256);
+        (eth_addr, wk_id, ton_addr_body) = data.toSlice().load(uint160, int8, uint256);
         return (eth_addr, wk_id, ton_addr_body);
     }
 
@@ -25,9 +25,9 @@ contract StakingCellEncoder {
 
     function decodeEverscaleSolanaStakingEventData(TvmCell data) public pure returns(uint32 round_num, uint256[] sol_keys, uint32 round_end) {
         TvmSlice _slice = data.toSlice();
-        round_num = _slice.decode(uint32);
-        sol_keys = _slice.decode(uint256[]);
-        round_end = _slice.decode(uint32);
+        round_num = _slice.load(uint32);
+        sol_keys = _slice.load(uint256[]);
+        round_end = _slice.load(uint32);
         return (round_num, sol_keys, round_end);
     }
 
@@ -40,7 +40,7 @@ contract StakingCellEncoder {
     }
 
     function decodeSolanaEverscaleStakingEventData(TvmCell data) public pure returns(uint256 sol_addr, int8 wk_id, uint256 ever_addr_body) {
-        (sol_addr, wk_id, ever_addr_body) = data.toSlice().decode(uint256, int8, uint256);
+        (sol_addr, wk_id, ever_addr_body) = data.toSlice().load(uint256, int8, uint256);
         return (sol_addr, wk_id, ever_addr_body);
     }
 

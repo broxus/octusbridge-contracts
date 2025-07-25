@@ -1,0 +1,36 @@
+pragma ever-solidity >= 0.62.0;
+
+import "./IBasicEventConfiguration.tsol";
+import "./../event-contracts/ITvmTvmEvent.tsol";
+
+
+interface ITvmTvmEventConfiguration is IBasicEventConfiguration {
+    struct TvmTvmEventConfiguration {
+        int32 chainId;
+        address proxy;
+        uint32 startTimestamp;
+        uint32 endTimestamp;
+    }
+
+    function deployEvent(
+        ITvmTvmEvent.TvmTvmEventVoteData eventVoteData
+    ) external;
+
+    function deployEvents(
+        ITvmTvmEvent.TvmTvmEventVoteData[] eventsVoteData,
+        uint128[] values
+    ) external;
+
+    function deriveEventAddress(
+        uint msgHash
+    ) external view responsible returns (address eventContract);
+
+    function getDetails() external view responsible returns(
+        BasicConfiguration _basicConfiguration,
+        TvmTvmEventConfiguration _networkConfiguration,
+        TvmCell _meta
+    );
+
+    function setEndTimestamp(uint32 endTimestamp) external;
+    function setTransactionChecker(address transactionChecker) external;
+}

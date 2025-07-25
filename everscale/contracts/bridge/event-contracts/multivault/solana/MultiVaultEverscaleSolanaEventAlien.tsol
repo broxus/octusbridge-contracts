@@ -1,11 +1,10 @@
 pragma ever-solidity >= 0.62.0;
-pragma AbiHeader time;
+
 pragma AbiHeader pubkey;
 pragma AbiHeader expire;
 
-
 import "./../../../interfaces/event-contracts/multivault/solana/IMultiVaultEverscaleSolanaEventAlien.tsol";
-import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V8.tsol";
+import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V9.tsol";
 import "./../../../interfaces/alien-token/ITokenRootAlienSolana.tsol";
 
 import "./../../base/solana/EverscaleSolanaBaseEvent.tsol";
@@ -37,12 +36,12 @@ contract MultiVaultEverscaleSolanaEventAlien is
     constructor(
         address _initializer,
         TvmCell _meta
-    ) EverscaleSolanaBaseEvent(_initializer, _meta) public {}
+    ) EverscaleSolanaBaseEvent(_initializer, _meta) {}
 
     function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
-        body.decode(uint64, uint32);
+        body.load(uint64, uint32);
         TvmSlice bodyCopy = body;
-        uint32 functionId = body.decode(uint32);
+        uint32 functionId = body.load(uint32);
         if (isExternalVoteCall(functionId)){
             require(votes[msg.pubkey()] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
         }
@@ -58,7 +57,7 @@ contract MultiVaultEverscaleSolanaEventAlien is
         initial_balance = address(this).balance;
 
         ITokenRootAlienSolana(token).meta{
-            value: 1 ever,
+            value: gasToValue(Gas.GET_TOKEN_ROOT_META_GAS, address(this).wid),
             bounce: true,
             callback: MultiVaultEverscaleSolanaEventAlien.receiveTokenMeta
         }();
@@ -74,8 +73,8 @@ contract MultiVaultEverscaleSolanaEventAlien is
 
         base_token = base_token_;
 
-        IProxyMultiVaultAlien_V8(proxy).deriveSolanaAlienTokenRoot{
-            value: 1 ever,
+        IProxyMultiVaultAlien_V9(proxy).deriveSolanaAlienTokenRoot{
+            value: gasToValue(Gas.DERIVE_TOKEN_ROOT_GAS, address(this).wid),
             bounce: true,
             callback: MultiVaultEverscaleSolanaEventAlien.receiveAlienTokenRoot
         }(
@@ -139,11 +138,11 @@ contract MultiVaultEverscaleSolanaEventAlien is
     }
 
     onBounce(TvmSlice slice) external {
-        uint32 selector = slice.decode(uint32);
+        uint32 selector = slice.load(uint32);
 
         if (
             (selector == tvm.functionId(ITokenRootAlienSolana.meta) && msg.sender == token) ||
-            (selector == tvm.functionId(IProxyMultiVaultAlien_V8.deriveSolanaAlienTokenRoot) && msg.sender == proxy)
+            (selector == tvm.functionId(IProxyMultiVaultAlien_V9.deriveSolanaAlienTokenRoot) && msg.sender == proxy)
         ) {
             setStatusRejected(2);
         }

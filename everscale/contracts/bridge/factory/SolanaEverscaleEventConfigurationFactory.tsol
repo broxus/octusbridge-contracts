@@ -12,9 +12,8 @@ import "@broxus/contracts/contracts/utils/CheckPubKey.tsol";
 
 contract SolanaEverscaleEventConfigurationFactory is TransferUtils, RandomNonce, CheckPubKey {
     TvmCell public configurationCode;
-    uint128 constant MIN_CONTRACT_BALANCE = 1 ever;
 
-    constructor(TvmCell _configurationCode) public checkPubKey {
+    constructor(TvmCell _configurationCode) checkPubKey {
         tvm.accept();
 
         configurationCode = _configurationCode;
@@ -24,7 +23,7 @@ contract SolanaEverscaleEventConfigurationFactory is TransferUtils, RandomNonce,
         address _owner,
         ISolanaEverscaleEventConfiguration.BasicConfiguration basicConfiguration,
         ISolanaEverscaleEventConfiguration.SolanaEverscaleEventConfiguration networkConfiguration
-    ) external view reserveMinBalance(MIN_CONTRACT_BALANCE) {
+    ) external view reserveMinBalance(Gas.CONFIGURATION_FACTORY_INITIAL_BALANCE) {
         TvmCell _meta;
 
         new SolanaEverscaleEventConfiguration{

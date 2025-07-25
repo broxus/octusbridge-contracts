@@ -13,6 +13,8 @@ import "./../interfaces/event-contracts/IEthereumEverscaleEvent.tsol";
 import "./../interfaces/event-configuration-contracts/IEthereumEverscaleEventConfiguration.tsol";
 import "./../interfaces/event-contracts/ISolanaEverscaleEvent.tsol";
 import "./../interfaces/event-configuration-contracts/ISolanaEverscaleEventConfiguration.tsol";
+import "./../interfaces/event-contracts/ITvmTvmEvent.tsol";
+import "./../interfaces/event-configuration-contracts/ITvmTvmEventConfiguration.tsol";
 import "../../utils/ErrorCodes.tsol";
 
 import './EventCreditGas.tsol';
@@ -24,9 +26,7 @@ import './EventCreditGas.tsol';
 contract EventDeployer is ExternalOwner, RandomNonce, CheckPubKey {
     address public static factory;
 
-    constructor(
-        uint owner_
-    ) public checkPubKey {
+    constructor(uint owner_) checkPubKey {
         require(owner_ != 0, ErrorCodes.ZERO_ADDRESS);
         require(msg.sender == factory, ErrorCodes.ZERO_ADDRESS);
         tvm.accept();
@@ -44,6 +44,13 @@ contract EventDeployer is ExternalOwner, RandomNonce, CheckPubKey {
     struct DeployRequestSolana {
         address configuration;
         ISolanaEverscaleEvent.SolanaEverscaleEventVoteData[] eventsVoteData;
+        uint128[] values;
+        uint128 value;
+    }
+
+    struct DeployRequestTVM {
+        address configuration;
+        ITvmTvmEvent.TvmTvmEventVoteData[] eventsVoteData;
         uint128[] values;
         uint128 value;
     }
@@ -66,9 +73,11 @@ contract EventDeployer is ExternalOwner, RandomNonce, CheckPubKey {
     /// @dev Can be called only by external owner
     /// @param requestsEVM List of EVM requests, one request per event configuration
     /// @param requestsSolana List of Solana requests, one request per event configuration
+    /// @param requestsTVM List of TVM requests, one request per event configuration
     function deployEvents(
         DeployRequestEVM[] requestsEVM,
-        DeployRequestSolana[] requestsSolana
+        DeployRequestSolana[] requestsSolana,
+        DeployRequestTVM[] requestsTVM
     ) external onlyOwner view {
         tvm.accept();
 
@@ -82,6 +91,14 @@ contract EventDeployer is ExternalOwner, RandomNonce, CheckPubKey {
 
         for (DeployRequestSolana request: requestsSolana) {
             ISolanaEverscaleEventConfiguration(request.configuration).deployEvents{
+                value: request.value,
+                bounce: true,
+                flag: 0
+            }(request.eventsVoteData, request.values);
+        }
+
+        for (DeployRequestTVM request: requestsTVM) {
+            ITvmTvmEventConfiguration(request.configuration).deployEvents{
                 value: request.value,
                 bounce: true,
                 flag: 0

@@ -28,7 +28,7 @@ contract EventCloser is ExternalOwner, RandomNonce, TransferUtils, CheckPubKey {
     constructor(
         uint owner_,
         address[] deployers_
-    ) public checkPubKey {
+    ) checkPubKey {
         require(msg.sender == factory, ErrorCodes.ZERO_ADDRESS);
         for (address deployer: deployers_) {
             require(deployer != address(0), ErrorCodes.ZERO_ADDRESS);
@@ -58,7 +58,7 @@ contract EventCloser is ExternalOwner, RandomNonce, TransferUtils, CheckPubKey {
             EverscaleEthereumBaseEvent(e).close{
                 bounce: true,
                 flag: MsgFlag.IGNORE_ERRORS,
-                value: 0.1 ever
+                value: gasToValue(EventCreditGas.CLOSE_EVENT_GAS, address(this).wid)
             }();
         }
     }

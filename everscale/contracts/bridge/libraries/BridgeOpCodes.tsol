@@ -1,0 +1,6 @@
+pragma ever-solidity >= 0.62.0;
+
+
+library BridgeOpCodes {
+    uint16 constant BridgeDeposit = 9999;
+}

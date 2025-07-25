@@ -1,0 +1,249 @@
+{
+	"ABI version": 2,
+	"version": "2.3",
+	"header": ["time", "expire"],
+	"functions": [
+		{
+			"name": "constructor",
+			"inputs": [
+				{"name":"_owner","type":"address"},
+				{"name":"_meta","type":"cell"},
+				{"name":"_flags","type":"uint64"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setMeta",
+			"inputs": [
+				{"name":"_meta","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setEndTimestamp",
+			"inputs": [
+				{"name":"endTimestamp","type":"uint32"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setFlags",
+			"inputs": [
+				{"name":"_flags","type":"uint64"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setEventInitialBalance",
+			"inputs": [
+				{"name":"eventInitialBalance","type":"uint64"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setTransactionChecker",
+			"inputs": [
+				{"name":"_transactionChecker","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "deployEvent",
+			"inputs": [
+				{"components":[{"name":"msgHash","type":"uint256"},{"name":"messageIndex","type":"uint15"},{"name":"txBlockProof","type":"cell"},{"name":"txProof","type":"cell"}],"name":"eventVoteData","type":"tuple"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "deployEvents",
+			"inputs": [
+				{"components":[{"name":"msgHash","type":"uint256"},{"name":"messageIndex","type":"uint15"},{"name":"txBlockProof","type":"cell"},{"name":"txProof","type":"cell"}],"name":"eventsVoteData","type":"tuple[]"},
+				{"name":"values","type":"uint128[]"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "onTVMEventCancelled",
+			"inputs": [
+				{"components":[{"name":"msgHash","type":"uint256"},{"name":"configuration","type":"address"},{"name":"chainId","type":"int32"}],"name":"eventInitData","type":"tuple"},
+				{"name":"_withdrawPayload","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "deriveEventAddress",
+			"inputs": [
+				{"name":"answerId","type":"uint32"},
+				{"name":"msgHash","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"eventContract","type":"address"}
+			]
+		},
+		{
+			"name": "getDetails",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"components":[{"name":"eventABI","type":"bytes"},{"name":"staking","type":"address"},{"name":"eventInitialBalance","type":"uint64"},{"name":"eventCode","type":"cell"}],"name":"_basicConfiguration","type":"tuple"},
+				{"components":[{"name":"chainId","type":"int32"},{"name":"proxy","type":"address"},{"name":"startTimestamp","type":"uint32"},{"name":"endTimestamp","type":"uint32"}],"name":"_networkConfiguration","type":"tuple"},
+				{"name":"_meta","type":"cell"}
+			]
+		},
+		{
+			"name": "getType",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"_type","type":"uint8"}
+			]
+		},
+		{
+			"name": "getFlags",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"name":"_flags","type":"uint64"}
+			]
+		},
+		{
+			"name": "onTVMEventConfirmed",
+			"inputs": [
+				{"components":[{"name":"msgHash","type":"uint256"},{"name":"configuration","type":"address"},{"name":"chainId","type":"int32"}],"name":"eventInitData","type":"tuple"},
+				{"name":"gasBackAddress","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "onTVMEventConfirmedExtended",
+			"inputs": [
+				{"components":[{"name":"msgHash","type":"uint256"},{"name":"configuration","type":"address"},{"name":"chainId","type":"int32"}],"name":"eventInitData","type":"tuple"},
+				{"name":"_meta","type":"cell"},
+				{"name":"gasBackAddress","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "transferOwnership",
+			"inputs": [
+				{"name":"newOwner","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "renounceOwnership",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "owner",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"owner","type":"address"}
+			]
+		},
+		{
+			"name": "basicConfiguration",
+			"inputs": [
+			],
+			"outputs": [
+				{"components":[{"name":"eventABI","type":"bytes"},{"name":"staking","type":"address"},{"name":"eventInitialBalance","type":"uint64"},{"name":"eventCode","type":"cell"}],"name":"basicConfiguration","type":"tuple"}
+			]
+		},
+		{
+			"name": "networkConfiguration",
+			"inputs": [
+			],
+			"outputs": [
+				{"components":[{"name":"chainId","type":"int32"},{"name":"proxy","type":"address"},{"name":"startTimestamp","type":"uint32"},{"name":"endTimestamp","type":"uint32"}],"name":"networkConfiguration","type":"tuple"}
+			]
+		},
+		{
+			"name": "flags",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"flags","type":"uint64"}
+			]
+		},
+		{
+			"name": "meta",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"meta","type":"cell"}
+			]
+		},
+		{
+			"name": "transactionChecker",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"transactionChecker","type":"address"}
+			]
+		},
+		{
+			"name": "eventEmitter",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"eventEmitter","type":"address"}
+			]
+		}
+	],
+	"data": [
+		{"components":[{"name":"eventABI","type":"bytes"},{"name":"staking","type":"address"},{"name":"eventInitialBalance","type":"uint64"},{"name":"eventCode","type":"cell"}],"key":1,"name":"basicConfiguration","type":"tuple"},
+		{"components":[{"name":"chainId","type":"int32"},{"name":"proxy","type":"address"},{"name":"startTimestamp","type":"uint32"},{"name":"endTimestamp","type":"uint32"}],"key":2,"name":"networkConfiguration","type":"tuple"},
+		{"key":3,"name":"transactionChecker","type":"address"},
+		{"key":4,"name":"eventEmitter","type":"address"}
+	],
+	"events": [
+		{
+			"name": "OwnershipTransferred",
+			"inputs": [
+				{"name":"previousOwner","type":"address"},
+				{"name":"newOwner","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "NewEventContract",
+			"inputs": [
+				{"name":"eventContract","type":"address"}
+			],
+			"outputs": [
+			]
+		}
+	],
+	"fields": [
+		{"name":"_pubkey","type":"uint256"},
+		{"name":"_timestamp","type":"uint64"},
+		{"name":"_constructorFlag","type":"bool"},
+		{"name":"owner","type":"address"},
+		{"components":[{"name":"eventABI","type":"bytes"},{"name":"staking","type":"address"},{"name":"eventInitialBalance","type":"uint64"},{"name":"eventCode","type":"cell"}],"name":"basicConfiguration","type":"tuple"},
+		{"components":[{"name":"chainId","type":"int32"},{"name":"proxy","type":"address"},{"name":"startTimestamp","type":"uint32"},{"name":"endTimestamp","type":"uint32"}],"name":"networkConfiguration","type":"tuple"},
+		{"name":"flags","type":"uint64"},
+		{"name":"meta","type":"cell"},
+		{"name":"transactionChecker","type":"address"},
+		{"name":"eventEmitter","type":"address"}
+	]
+}

@@ -1,0 +1,6 @@
+pragma ever-solidity >= 0.62.0;
+
+
+interface IEventAddressKeeper {
+    function getEventContract() external responsible returns(address, uint32);
+}

@@ -4,4 +4,25 @@ pragma ever-solidity >= 0.62.0;
 library EventCreditGas {
     uint128 constant EVENT_CLOSER_INITIAL_BALANCE = 10 ever;
     uint128 constant EVENT_DEPLOYER_INITIAL_BALANCE = 10 ever;
+    uint128 constant TOKEN_WALLET_INITIAL_BALANCE = 0.1 ever;
+
+    uint128 constant EVENT_CLOSER_DEPLOY_GAS = 500_000;
+    uint128 constant EVENT_DEPLOYER_DEPLOY_GAS = 500_000;
+
+    uint128 constant DRAIN_EVENT_DEPLOYER_GAS = 100_000;
+    uint128 constant CLOSE_EVENT_GAS = 100_000;
+
+    function getDeployEventCloserValue() public returns(uint128) {
+        return gasToValue(EVENT_CLOSER_DEPLOY_GAS, address(this).wid) + EVENT_CLOSER_INITIAL_BALANCE;
+    }
+
+    function getDeployEventDeployerValue() public returns(uint128) {
+        return gasToValue(EVENT_DEPLOYER_DEPLOY_GAS, address(this).wid) + EVENT_DEPLOYER_INITIAL_BALANCE;
+    }
+
+    uint64 constant TOKEN_WALLET_DEPLOY_GAS = 30_000;
+
+    function getDeployTokenWalletValue() public returns(uint128) {
+        return gasToValue(TOKEN_WALLET_DEPLOY_GAS, address(this).wid) + TOKEN_WALLET_INITIAL_BALANCE;
+    }
 }

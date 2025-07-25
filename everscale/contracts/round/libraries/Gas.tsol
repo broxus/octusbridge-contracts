@@ -1,0 +1,22 @@
+pragma ever-solidity >= 0.62.0;
+
+library Gas {
+    uint64 constant ROOT_INITIAL_BALANCE = 12 ever;
+    uint64 constant RELAY_ROUND_INITIAL_BALANCE = 12 ever;
+
+    // deploy
+    uint64 constant DEPLOY_RELAY_ROUND_MIN_GAS = 1_000_000;
+
+    function getDeployRelayRoundMinValue() public returns(uint128) {
+        return gasToValue(DEPLOY_RELAY_ROUND_MIN_GAS, address(this).wid) + RELAY_ROUND_INITIAL_BALANCE;
+    }
+
+    // min values for calls
+    uint64 constant MIN_CALL_MSG_GAS = 2_000_000;
+    uint64 constant MIN_SEND_RELAYS_MSG_GAS = 2_000_000;
+    uint64 constant DESTROY_MSG_GAS = 1_000_000;
+
+    function getMinCallMsgValue() public returns(uint128) {
+        return gasToValue(MIN_CALL_MSG_GAS, address(this).wid);
+    }
+}

@@ -1,21 +1,28 @@
 pragma ever-solidity >= 0.62.0;
-pragma AbiHeader time;
+
 pragma AbiHeader pubkey;
 pragma AbiHeader expire;
 
-
 import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenRoot.tsol";
+import "ton-eth-bridge-token-contracts/contracts/interfaces/ITokenWallet.tsol";
+import "ton-eth-bridge-token-contracts/contracts/interfaces/IBurnableTokenWallet.tsol";
+import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensTransferCallback.tsol";
 
 import "./../../../interfaces/event-contracts/multivault/evm/IMultiVaultEVMEverscaleEventNative.tsol";
+import "./../../../interfaces/event-contracts/multivault/evm/IEVMCallback.tsol";
+import "./../../../interfaces/event-contracts/INotEnoughLiquidity.tsol";
 import "./../../../interfaces/event-configuration-contracts/IEthereumEverscaleEventConfiguration.tsol";
 import "./../../../interfaces/proxy/IEthereumEverscaleProxyExtended.tsol";
+import "./../../../interfaces/proxy/IEvmEventCancelled.tsol";
 
 import "./../../base/evm/EthereumEverscaleBaseEvent.tsol";
 
 
 contract MultiVaultEVMEverscaleEventNative is
     EthereumEverscaleBaseEvent,
-    IMultiVaultEVMEverscaleEventNative
+    IMultiVaultEVMEverscaleEventNative,
+    IAcceptTokensTransferCallback,
+    INotEnoughLiquidity
 {
     address public token;
     uint128 public amount;
@@ -29,19 +36,32 @@ contract MultiVaultEVMEverscaleEventNative is
     address public proxy;
     address public tokenWallet;
 
+    uint128 public bounty;
+    address public eventTokenWallet;
+
+    address public limitApprover;
+    bool public isLimitApproved;
+
+    bool private isWNative;
+
+    modifier onlyLimitApprover() {
+        require(msg.sender == limitApprover && limitApprover.value != 0, ErrorCodes.SENDER_IS_NOT_LIMIT_APPROVER);
+        _;
+    }
+
     constructor(
         address _initializer,
         TvmCell _meta
-    ) EthereumEverscaleBaseEvent(_initializer, _meta) public {}
+    ) EthereumEverscaleBaseEvent(_initializer, _meta) {}
 
     function onReject() virtual override internal {
         transferAll(initializer);
     }
 
     function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
-        body.decode(uint64, uint32);
+        body.load(uint64, uint32);
         TvmSlice bodyCopy = body;
-        uint32 functionId = body.decode(uint32);
+        uint32 functionId = body.load(uint32);
         if (isExternalVoteCall(functionId)){
             require(votes[msg.pubkey()] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
         }
@@ -88,7 +108,7 @@ contract MultiVaultEVMEverscaleEventNative is
         }
 
         IEthereumEverscaleEventConfiguration(eventInitData.configuration).getDetails{
-            value: 1 ever,
+            value: gasToValue(Gas.REQUEST_CONFIGURATION_DETAILS_GAS, address(this).wid),
             callback: MultiVaultEVMEverscaleEventNative.receiveConfigurationDetails
         }();
     }
@@ -103,7 +123,7 @@ contract MultiVaultEVMEverscaleEventNative is
         proxy = _networkConfiguration.proxy;
 
         ITokenRoot(token).walletOf{
-            value: 0.1 ever,
+            value: gasToValue(Gas.GET_TOKEN_DATA_GAS, address(this).wid),
             callback: MultiVaultEVMEverscaleEventNative.receiveProxyTokenWallet
         }(proxy);
     }
@@ -142,6 +162,9 @@ contract MultiVaultEVMEverscaleEventNative is
 
     function onConfirm() internal override {
         TvmCell metaData = abi.encode(
+            address(this),
+            isLimitApproved,
+            token,
             tokenWallet,
             amount,
             recipient,
@@ -151,5 +174,204 @@ contract MultiVaultEVMEverscaleEventNative is
         IEthereumEverscaleProxyExtended(eventInitData.configuration).onEventConfirmedExtended{
             flag: MsgFlag.ALL_NOT_RESERVED
         }(eventInitData, metaData, initializer);
+    }
+
+    function dailyLimitReached(address _approver) external override {
+        require(msg.sender == proxy && proxy.value != 0, ErrorCodes.SENDER_NOT_PROXY);
+
+        _setStatusLimitReached(_approver);
+
+        limitApprover = _approver;
+    }
+
+    function approveLimit() external onlyLimitApprover {
+        isLimitApproved = true;
+
+        setStatusConfirmed();
+        onConfirm();
+    }
+
+    function rejectLimit(address _expectedGasReceiver) external onlyLimitApprover {
+        require(status() == Status.LimitReached, ErrorCodes.WRONG_STATUS);
+
+        setStatusRejected(3);
+
+        _expectedGasReceiver.transfer({
+            value: address(this).balance - msg.value,
+            bounce: false
+        });
+
+        msg.sender.transfer({
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+            bounce: false
+        });
+    }
+
+    function notEnoughLiquidity(mapping(address => bool) _wNativeAddresses) external override {
+        require(msg.sender == proxy, ErrorCodes.SENDER_NOT_PROXY);
+
+        isWNative = _wNativeAddresses.exists(token);
+        isLimitApproved = true;
+
+        if (eventTokenWallet.value == 0) {
+            ITokenRoot(token).walletOf{
+                value: 0,
+                flag: MsgFlag.REMAINING_GAS,
+                callback: MultiVaultEVMEverscaleEventNative.receiveEventTokenWallet
+            }(address(this));
+        } else {
+            _setStatusLiquidityRequested(bounty);
+        }
+    }
+
+    function cancel(
+        uint160 _newRecipient,
+        address _remainingGasTo,
+        IEVMCallback.EVMCallback _callback,
+        address _expectedGasReceiver
+    ) external {
+        require(
+            msg.sender == recipient && status() == Status.LiquidityRequested ||
+            msg.sender == limitApprover && limitApprover.value != 0 && status() == Status.LimitReached,
+            ErrorCodes.SENDER_NOT_RECIPIENT
+        );
+
+        _setStatusCancelled();
+
+        TvmCell withdrawPayload = abi.encode(
+            amount,
+            _newRecipient,
+            recipient,
+            _callback,
+            token,
+            tokenWallet,
+            _remainingGasTo
+        );
+
+        IEvmEventCancelled(eventInitData.configuration)
+            .onEVMEventCancelled{
+                value: msg.value
+            }(eventInitData, withdrawPayload);
+
+        _expectedGasReceiver.transfer({
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+            bounce: false
+        });
+    }
+
+    function setBounty(uint128 _bounty) external {
+        require(status() == Status.LiquidityRequested, ErrorCodes.WRONG_STATUS);
+        require(msg.sender == recipient, ErrorCodes.SENDER_NOT_RECIPIENT);
+        require(bounty <= amount, ErrorCodes.WRONG_BOUNTY);
+
+        bounty = _bounty;
+
+        emit LiquidityRequested(bounty);
+    }
+
+    function receiveEventTokenWallet(
+        address tokenWallet_
+    ) external {
+        require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
+
+        eventTokenWallet = tokenWallet_;
+        _setStatusLiquidityRequested(bounty);
+    }
+
+    function onAcceptTokensTransfer(
+        address /*_tokenRoot*/,
+        uint128 _amount,
+        address _sender,
+        address /*senderWallet*/,
+        address /*_remainingGasTo*/,
+        TvmCell _payload
+    ) override external {
+        require(msg.sender == eventTokenWallet, ErrorCodes.SENDER_NOT_TOKEN_WALLET);
+
+        // return tokens to sender in case of wrong amount or incorrect status
+        if (status() != Status.LiquidityRequested || _amount < amount - bounty) {
+            TvmCell empty;
+
+            ITokenWallet(eventTokenWallet).transfer{
+                value: 0,
+                bounce: false,
+                flag: MsgFlag.REMAINING_GAS
+            }(
+                _amount,
+                _sender,
+                0,
+                _sender,
+                false,
+                empty
+            );
+
+            return;
+        }
+
+        _setStatusLiquidityProvided(_sender);
+
+        // send tokens to original recipient
+        if (isWNative && payload.toSlice().empty()) {
+            IBurnableTokenWallet(eventTokenWallet).burn{
+                value: address(this).balance - msg.value,
+                bounce: false,
+                flag: MsgFlag.SENDER_PAYS_FEES
+            }(
+                _amount,
+                recipient,
+                recipient,
+                payload
+            );
+        } else {
+            ITokenWallet(eventTokenWallet).transfer{
+                value: address(this).balance - msg.value,
+                bounce: false,
+                flag: MsgFlag.SENDER_PAYS_FEES
+            }(
+                _amount,
+                recipient,
+                Gas.getDeployTokenWalletValue(),
+                recipient,
+                payload.toSlice().empty() ? false : true,
+                payload
+            );
+        }
+
+        // emit withdraw event to original chainId
+        (
+            uint160 _newRecipient,
+            address _remainingGasTo,
+            IEVMCallback.EVMCallback _callback
+        ) = abi.decode(_payload, (
+            uint160,
+            address,
+            IEVMCallback.EVMCallback
+        ));
+
+        TvmCell withdrawPayload = abi.encode(
+            amount,
+            _newRecipient,
+            recipient,
+            _callback,
+            token,
+            _remainingGasTo
+        );
+
+        IEvmEventCancelled(eventInitData.configuration)
+            .onEVMEventCancelled{
+                flag: MsgFlag.ALL_NOT_RESERVED
+            }(eventInitData, withdrawPayload);
+    }
+
+    function retry() external {
+        require(
+            msg.sender == recipient || msg.sender == initializer,
+            ErrorCodes.SENDER_NOT_RECIPIENT
+        );
+
+        setStatusConfirmed();
+        onConfirm();
     }
 }

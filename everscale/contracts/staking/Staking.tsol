@@ -13,7 +13,7 @@ contract Staking is StakingPoolRelay {
         address _bridge_event_config_eth_ton,
         address _bridge_event_config_ton_eth,
         address _tokenRoot
-    ) public {
+    ) {
         tvm.accept();
 
         base_details.tokenRoot = _tokenRoot;
@@ -23,12 +23,12 @@ contract Staking is StakingPoolRelay {
         base_details.dao_root = _dao_root;
         base_details.rescuer = _rescuer;
         base_details.rewarder = _rewarder;
-        base_details.rewardRounds.push(RewardRound(0, 0, 0, now));
+        base_details.rewardRounds.push(RewardRound(0, 0, 0, block.timestamp));
         setUpTokenWallet();
     }
 
     function upgrade(TvmCell code, address send_gas_to) external onlyAdmin {
-        require (msg.value >= Gas.MIN_CALL_MSG_VALUE, ErrorCodes.VALUE_TOO_LOW);
+        require (msg.value >= Gas.getMinCallMsgValue(), ErrorCodes.VALUE_TOO_LOW);
 
         TvmBuilder main_builder;
 

@@ -1,5 +1,5 @@
 pragma ever-solidity >= 0.62.0;
-pragma AbiHeader time;
+
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
@@ -28,13 +28,13 @@ contract EverscaleEthereumBaseEvent is BaseEvent, IEverscaleEthereumEvent {
     constructor(
         address _initializer,
         TvmCell _meta
-    ) public {
+    ) {
         require(
             eventInitData.configuration == msg.sender,
             ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION
         );
 
-        createdAt = now;
+        createdAt = block.timestamp;
         initializer = _initializer;
         meta = _meta;
 
@@ -59,15 +59,16 @@ contract EverscaleEthereumBaseEvent is BaseEvent, IEverscaleEthereumEvent {
         @param signature Relay's signature of the EVM EverscaleEvent data
         @param voteReceiver Should be always equal to the event contract address
     */
-    function confirm(bytes signature, address voteReceiver) public {
+    function confirm(bytes signature, address voteReceiver) public externalMsg {
         _checkVoteReceiver(voteReceiver);
 
-        uint relay = msg.pubkey();
-
-        require(votes[relay] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
+        // This check was made in afterSignatureCheck
+        // require(votes[relay] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
         require(signature.length <= 65, ErrorCodes.WRONG_SIGNATURE_SIZE);
 
         tvm.accept();
+
+        uint relay = msg.pubkey();
 
         votes[relay] = Vote.Confirm;
         signatures[relay] = signature;
@@ -92,14 +93,15 @@ contract EverscaleEthereumBaseEvent is BaseEvent, IEverscaleEthereumEvent {
         @dev Can be called only by relay, who have not voted on event yet
         @param voteReceiver Should be always equal to the event contract address
     */
-    function reject(address voteReceiver) public {
+    function reject(address voteReceiver) public externalMsg {
         _checkVoteReceiver(voteReceiver);
 
-        uint relay = msg.pubkey();
-
-        require(votes[relay] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
+        // This check was made in afterSignatureCheck
+        // require(votes[relay] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
 
         tvm.accept();
+
+        uint relay = msg.pubkey();
 
         votes[relay] = Vote.Reject;
 
@@ -124,7 +126,7 @@ contract EverscaleEthereumBaseEvent is BaseEvent, IEverscaleEthereumEvent {
 
     function close() external override virtual view {
         require(
-            status() != Status.Pending || now > createdAt + FORCE_CLOSE_TIMEOUT,
+            status() != Status.Pending || block.timestamp > createdAt + FORCE_CLOSE_TIMEOUT,
             ErrorCodes.WRONG_STATUS
         );
 

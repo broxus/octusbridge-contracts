@@ -1,7 +1,3 @@
-export {};
-
-const { logContract } = require("../test/utils/logger");
-
 const main = async () => {
   const signer = (await locklift.keystore.getSigner("0"))!;
 
@@ -11,13 +7,17 @@ const main = async () => {
       constructorParams: {},
       initParams: { _randomNonce: locklift.utils.getRandomNonce() },
       publicKey: signer.publicKey,
-      value: locklift.utils.toNano(0.5),
+      value: locklift.utils.toNano(30),
     });
 
-  await logContract(
-    "cellEncoderStandalone address",
-    cellEncoderStandalone.address
-  );
+
+    await locklift.deployments.saveContract({
+        contractName: "CellEncoderStandalone",
+        address: cellEncoderStandalone.address,
+        deploymentName: "CellEncoderStandalone",
+    });
+
+    console.log(`CellEncoderStandalone: ${cellEncoderStandalone.address}`);
 };
 
 main()

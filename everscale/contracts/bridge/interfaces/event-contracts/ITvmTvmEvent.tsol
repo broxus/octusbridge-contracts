@@ -1,0 +1,38 @@
+pragma ever-solidity >= 0.62.0;
+
+
+interface ITvmTvmEvent {
+    enum Status {
+        Initializing,       // 0
+        Pending,            // 1
+        Confirmed,          // 2
+        Rejected,           // 3
+        Cancelled,          // 4
+        LimitReached,       // 5
+        LiquidityRequested, // 6
+        LiquidityProvided,  // 7
+        Verified            // 8
+    }
+
+    event Confirmed();
+    event LiquidityRequested(uint128 bounty);
+    event Cancelled();
+    event LiquidityProvided(address tokenSender);
+    event LimitReached(address approver);
+    event Rejected();
+
+    struct TvmTvmEventVoteData {
+        uint msgHash;
+        uint15 messageIndex;
+        TvmCell txBlockProof;
+        TvmCell txProof;
+    }
+
+    struct TvmTvmEventInitData {
+        uint msgHash;
+        address configuration;
+        int32 chainId;
+    }
+
+    function processProof(ITvmTvmEvent.TvmTvmEventVoteData eventVoteData) external;
+}

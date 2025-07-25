@@ -6,7 +6,6 @@ import "./../../bridge/interfaces/proxy/INetworks.tsol";
 import "./../../bridge/interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V6.tsol";
 import "./../../bridge/interfaces/event-contracts/multivault/evm/IEVMCallback.tsol";
 
-
 contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
     function encodeMultiVaultAlienEVMEverscale(
         uint256 base_chainId,
@@ -58,6 +57,16 @@ contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
         return abi.encode(uint32(0), Network.EVM, burnPayload);
     }
 
+    function encodeAlienBurnPayloadTVM(
+        address recipient,
+        uint128 expectedGas,
+        optional(TvmCell) payload
+    ) external pure returns(TvmCell) {
+        TvmCell burnPayload = abi.encode(recipient, expectedGas, payload);
+
+        return abi.encode(uint32(0), Network.TVM, burnPayload);
+    }
+
     function encodeAlienBurnPayloadSolana(
         uint256 recipient,
         IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] executeAccounts,
@@ -78,6 +87,20 @@ contract ProxyMultiVaultCellEncoder is IEVMCallback, INetworks {
         TvmCell transferPayload = abi.encode(recipient, chainId, callback);
 
         return abi.encode(uint32(0), Network.EVM, transferPayload);
+    }
+
+    function encodeNativeTransferPayloadTVM(
+        address recipient,
+        int32 chainId,
+        string name,
+        string symbol,
+        uint8 decimals,
+        uint128 expectedGas,
+        optional(TvmCell) payload
+    ) external pure returns (TvmCell) {
+        TvmCell transferPayload = abi.encode(recipient, chainId, name, symbol, decimals, expectedGas, payload);
+
+        return abi.encode(uint32(0), Network.TVM, transferPayload);
     }
 
     function decodeMultiVaultAlienEverscaleEthereum(

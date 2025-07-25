@@ -1,0 +1,36 @@
+{
+  "alien": [
+    {
+    "token": "0:0b380e731418f4120b38f737ffd76f4028a1e0108da5a04b314be9bbdf33d266",
+    "fee": {
+      "incoming": 0.1,
+      "outgoing": 0.1
+    }
+  },
+    {
+    "token": "0:3bf4e3d2454564496088a19fad3179b4ef8e2e9fe16ab2c2cd6fcc6d19f191e1",
+    "fee": {
+      "incoming": 0.1,
+      "outgoing": 0.1
+    }
+  },
+    {
+    "token": "0:a58beabb863bc289904face9b1bd390f0ec6c375608003f69c59fa05e3e85329",
+    "fee": {
+      "incoming": 0.1,
+      "outgoing": 0.1
+    }
+  }
+  ],
+
+  "native":
+  [
+    {
+    "token": "0:3344becefbaeef453f306b7227bab9d920522cdb7ba7b5bbc5ded831e8a286aa",
+    "fee": {
+      "incoming": 0.1,
+      "outgoing": 0.1
+    }
+  }
+  ]
+}

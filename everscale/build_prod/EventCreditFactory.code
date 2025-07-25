@@ -1,0 +1,964 @@
+.version sol 0.62.0
+
+.macro constructor
+DROP
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+GETGLOB 6
+THROWIF 51
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDU 256
+LDREF
+LDREF
+LDU 8
+LDU 8
+ENDS
+.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 31
+ACCEPT
+.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 33
+ROLL 3
+SETGLOB 12
+.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 34
+ROT
+SETGLOB 13
+.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 36
+ROLL 3
+CALLREF {
+	CALL $setOwnership_a7016023_internal_macro$
+}
+.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 39
+PUSHINT 0
+PUSHCONT {
+	PUSH2 S0, S1
+	LESS
+}
+PUSHCONT {
+	.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 40
+	PUSH S3
+	PUSHINT 0
+	NEWC
+	STU 256
+	PUSHINT 0
+	NEWDICT
+	PUSHINT 64
+	DICTUSETB
+	PUSH S2
+	NEWC
+	STU 256
+	PUSHINT 1
+	ROT
+	PUSHINT 64
+	DICTUSETB
+	MYADDR
+	PUSHINT 2
+	ROT
+	PUSHINT 64
+	DICTUSET
+	NEWC
+	STDICT
+	ENDC
+	GETGLOB 13
+	NEWC
+	STSLICECONST x2_
+	STOPTREF
+	STOPTREF
+	STZERO
+	ENDC
+	DUP
+	HASHCU
+	NEWC
+	STSLICECONST x801_
+	STU 256
+	ENDC
+	CTOS
+	ROTREV
+	PUSHINT 10000000000
+	PUSHINT 500000000
+	ADD
+	UFITS 128
+	PUSH S3
+	NEWC
+	STSLICECONST x42_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 3
+	STUR 107
+	OVER
+	CALLREF {
+		CTOS
+		LDI 1
+		SWAP
+		PUSHCONT {
+			LDI 5
+			NIP
+		}
+		IF
+		LDI 1
+		SWAP
+		PUSHCONT {
+			LDI 2
+			NIP
+		}
+		IF
+		LDOPTREF
+		LDOPTREF
+		LDDICT
+		ENDS
+		BLKDROP 3
+	}
+	STREF
+	STSLICECONST 1
+	SWAP
+	NEWC
+	STSLICECONST x3c91e1c5
+	STU 256
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 52
+	GETGLOB 15
+	UNPAIR
+	OVER
+	INC
+	ROLLREV 3
+	PUSHINT 32
+	DICTUSET
+	PAIR
+	SETGLOB 15
+	.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 39
+	INC
+	UFITS 8
+	.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 0
+}
+WHILE
+DROP2
+.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 56
+PUSHINT 0
+PUSHCONT {
+	PUSH2 S0, S1
+	LESS
+}
+PUSHCONT {
+	.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 57
+	GETGLOB 15
+	PUSH S3
+	PUSHINT 0
+	NEWC
+	STU 256
+	PUSHINT 0
+	NEWDICT
+	PUSHINT 64
+	DICTUSETB
+	PUSH S3
+	NEWC
+	STU 256
+	PUSHINT 1
+	ROT
+	PUSHINT 64
+	DICTUSETB
+	MYADDR
+	PUSHINT 2
+	ROT
+	PUSHINT 64
+	DICTUSET
+	NEWC
+	STDICT
+	ENDC
+	GETGLOB 12
+	NEWC
+	STSLICECONST x2_
+	STOPTREF
+	STOPTREF
+	STZERO
+	ENDC
+	DUP
+	HASHCU
+	NEWC
+	STSLICECONST x801_
+	STU 256
+	ENDC
+	CTOS
+	ROLLREV 3
+	PUSHINT 10000000000
+	PUSHINT 500000000
+	ADD
+	UFITS 128
+	PUSH S4
+	NEWC
+	STSLICECONST x42_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 3
+	STUR 107
+	OVER
+	CALLREF {
+		CTOS
+		LDI 1
+		SWAP
+		PUSHCONT {
+			LDI 5
+			NIP
+		}
+		IF
+		LDI 1
+		SWAP
+		PUSHCONT {
+			LDI 2
+			NIP
+		}
+		IF
+		LDOPTREF
+		LDOPTREF
+		LDDICT
+		ENDS
+		BLKDROP 3
+	}
+	STREF
+	STSLICECONST 1
+	ROTREV
+	NEWC
+	STSLICECONST x7f7cf86a
+	STU 256
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 69
+	GETGLOB 14
+	UNPAIR
+	OVER
+	INC
+	ROLLREV 3
+	PUSHINT 32
+	DICTUSET
+	PAIR
+	SETGLOB 14
+	.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 56
+	INC
+	UFITS 8
+	.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 0
+}
+WHILE
+BLKDROP 3
+.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 0
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro receive_macro
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 74
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 1000000000
+SUB
+UFITS 128
+GETGLOB 15
+FIRST
+UFITS 8
+DIV
+.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 76
+GETGLOB 15
+SECOND
+PUSHINT 0
+NULL
+PUSHCONT {
+	PUSH2 S1, S2
+	PUSHINT 32
+	DICTUGET
+	NULLSWAPIFNOT
+	DROP
+	DUP
+	POP S2
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 77
+	PUSH2 S3, S0
+	NEWC
+	STSLICECONST x42_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 107
+	STZEROES
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 0
+	OVER
+	INC
+	POP S2
+}
+WHILE
+BLKDROP 4
+.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 0
+DUP
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+
+.macro drainDeployers
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 85
+ENDS
+.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 0
+CALLREF {
+	CALL $drainDeployers_ac93137f_internal_macro$
+}
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.macro drainDeployers_ac93137f_internal_macro
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 15
+GETGLOB 9
+GETGLOB 10
+SDEQ
+DUP
+PUSHCONT {
+	DROP
+	GETGLOB 9
+	PARSEMSGADDR
+	INDEX 3
+	PLDU 256
+	NEQINT 0
+}
+IF
+THROWIFNOT 1101
+.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 86
+GETGLOB 15
+SECOND
+PUSHINT 0
+NULL
+PUSHCONT {
+	PUSH2 S1, S2
+	PUSHINT 32
+	DICTUGET
+	NULLSWAPIFNOT
+	DROP
+	DUP
+	POP S2
+	ISNULL
+	NOT
+}
+PUSHCONT {
+	.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 87
+	DUP
+	FALSE
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	PUSHINT 2803819077499249229031122585109857988247553
+	STUR 143
+	GETGLOB 10
+	NEWC
+	STSLICECONST x1aaff399
+	STSLICE
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 0
+	OVER
+	INC
+	POP S2
+}
+WHILE
+BLKDROP 3
+.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 0
+
+.macro upgrade
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 95
+LDREF
+ENDS
+.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 0
+CALLREF {
+	CALL $upgrade_7916ae0d_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro upgrade_7916ae0d_internal_macro
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 15
+DROP
+GETGLOB 9
+GETGLOB 10
+SDEQ
+DUP
+PUSHCONT {
+	DROP
+	GETGLOB 9
+	PARSEMSGADDR
+	INDEX 3
+	PLDU 256
+	NEQINT 0
+}
+IF
+THROWIFNOT 1101
+.loc ../contracts/bridge/hidden-bridge/EventCreditFactory.tsol, 0
+
+.globl	setOwnership_a7016023_internal
+.type	setOwnership_a7016023_internal, @function
+CALL $setOwnership_a7016023_internal_macro$
+
+.macro setOwnership_a7016023_internal_macro
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 24
+GETGLOB 10
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 26
+OVER
+SETGLOB 10
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 28
+PUSHSLICE xc0000000000000000000000001
+NEWC
+STSLICE
+ROTREV
+NEWC
+STSLICECONST x6115f072
+STSLICE
+SWAP
+NEWC
+STSLICE
+STBREFR
+STBREFR
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 0
+
+.macro transferOwnership
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 34
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+ENDS
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 0
+CALLREF {
+	CALL $transferOwnership_f2fde38b_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro transferOwnership_f2fde38b_internal_macro
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 15
+GETGLOB 9
+GETGLOB 10
+SDEQ
+DUP
+PUSHCONT {
+	DROP
+	GETGLOB 9
+	PARSEMSGADDR
+	INDEX 3
+	PLDU 256
+	NEQINT 0
+}
+IF
+THROWIFNOT 1101
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 37
+DUP
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+SDEQ
+THROWIF 1102
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 39
+CALLREF {
+	CALL $setOwnership_a7016023_internal_macro$
+}
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 0
+
+.macro renounceOwnership
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 45
+ENDS
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 0
+CALLREF {
+	CALL $renounceOwnership_715018a6_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro renounceOwnership_715018a6_internal_macro
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 15
+GETGLOB 9
+GETGLOB 10
+SDEQ
+DUP
+PUSHCONT {
+	DROP
+	GETGLOB 9
+	PARSEMSGADDR
+	INDEX 3
+	PLDU 256
+	NEQINT 0
+}
+IF
+THROWIFNOT 1101
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 46
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 48
+CALLREF {
+	CALL $setOwnership_a7016023_internal_macro$
+}
+.loc ../../node_modules/@broxus/contracts/contracts/access/InternalOwner.tsol, 0
+
+.macro c4_to_c7
+PUSHROOT
+CTOS
+LDU 256 ; pubkey c4
+LDU 64 ; pubkey timestamp c4
+LDU 1 ; ctor flag
+NIP
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDU 256
+LDREF
+LDREF
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+ENDS
+SETGLOB 15
+SETGLOB 14
+SETGLOB 13
+SETGLOB 12
+SETGLOB 11
+SETGLOB 10
+SETGLOB 3
+SETGLOB 2
+
+.macro c4_to_c7_with_init_storage
+PUSHROOT
+CTOS
+SBITS
+GTINT 1
+PUSHCONT {
+	PUSHINT 0
+	PUSHROOT
+	CTOS
+	PLDDICT ; D
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	PUSHINT 1
+	PUSH S2
+	PUSHINT 64
+	DICTUGET
+	ZEROSWAPIFNOT
+	PUSHCONT {
+		PLDU 256
+	}
+	IF
+	PUSHREF {
+	}
+	DUP
+	PUSHINT 0
+	NEWDICT
+	PAIR
+	DUP
+	SETGLOB 15
+	SETGLOB 14
+	SETGLOB 13
+	SETGLOB 12
+	SETGLOB 11
+	SETGLOB 10
+	PUSHINT 64
+	DICTUGET
+	THROWIFNOT 61
+	PLDU 256
+	SETGLOB 2
+	PUSHINT 0 ; timestamp
+	SETGLOB 3
+}
+IFREFELSE {
+	CALL $c4_to_c7$
+}
+
+.macro c7_to_c4
+GETGLOB 15
+GETGLOB 14
+GETGLOB 13
+GETGLOB 12
+GETGLOB 11
+GETGLOB 10
+GETGLOB 3
+GETGLOB 2
+NEWC
+STU 256
+STU 64
+STONE
+STSLICE
+ROLLREV 5
+NEWC
+STU 256
+STREF
+STREF
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+STBREFR
+ENDC
+POPROOT
+
+.macro upd_only_time_in_c4
+PUSHROOT
+CTOS
+LDU 256
+LDU 64
+NIP
+GETGLOB 3
+ROT
+NEWC
+STU 256
+STU 64
+STSLICE
+ENDC
+POPROOT
+
+.internal-alias :main_internal, 0
+.internal :main_internal
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSH S2
+CTOS
+LDU 4 ; bounced tail
+LDMSGADDR ; bounced src tail
+DROP
+SETGLOB 9
+MODPOW2 1
+IFRET
+OVER
+SEMPTY ; isEmpty
+DUP
+PUSHCONT {
+	DROP
+	OVER
+	LDUQ 32  ; [funcId] body' ok
+	THROWIFNOT 60
+	OVER
+	EQINT 0 ; funcId body' isZero
+	DUP
+	PUSHCONT {
+		BLKDROP2 2, 1
+	}
+	IF
+}
+IFNOT
+IFJMPREF {
+	CALL $receive_macro$
+}
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.internal-alias :main_external, -1
+.internal :main_external
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+SETGLOB 9
+OVER
+CALLREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+LDU 1 ; haveSign msgSlice
+SWAP
+PUSHCONT {
+	PUSHPOW2 9
+	LDSLICEX ; signatureSlice msgSlice
+	DUP
+	HASHSU ; signatureSlice msgSlice hashMsgSlice
+	SWAP
+	LDU 1 ; signatureSlice hashMsgSlice hasPubkey msgSlice
+	SWAP
+	PUSHCONT {
+		LDU 256 ; signatureSlice hashMsgSlice pubkey msgSlice
+		XCHG S3
+		SWAP
+	}
+	PUSHCONT {
+		XCHG S2
+		GETGLOB 2
+	}
+	IFELSE
+	CHKSIGNU ; msgSlice isSigned
+	THROWIFNOT 40
+}
+PUSHCONT {
+	LDU 1 ; hasPubkey msgSlice
+	SWAP
+	THROWIF 58
+}
+IFELSE
+LDU 64 ; timestamp msgSlice
+SWAP
+CALL $replay_protection_macro$
+LDU 32 ; expireAt msgSlice
+SWAP
+NOW ; msgSlice expireAt now
+GREATER ; msgSlice expireAt>now
+THROWIFNOT 57
+LDU 32 ; funcId body
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.macro owner
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 10
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000df0bcfde
+	NEWC
+	STSLICE
+	STSLICE
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro _randomNonce
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 11
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000bb53331f
+	NEWC
+	STSLICE
+	STU 256
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro eventClosers
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 14
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000cfd47753
+	NEWC
+	STSLICE
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro eventDeployers
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 15
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000d6d65d63
+	NEWC
+	STSLICE
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro public_function_selector
+DUP
+PUSHINT 1081670247
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 235197086
+	EQUAL
+	IFJMPREF {
+		CALL $transferOwnership$
+	}
+	DUP
+	PUSHINT 388172858
+	EQUAL
+	IFJMPREF {
+		CALL $upgrade$
+	}
+	DUP
+	PUSHINT 995308319
+	EQUAL
+	IFJMPREF {
+		CALL $_randomNonce$
+	}
+	DUP
+	PUSHINT 1081670247
+	EQUAL
+	IFJMPREF {
+		CALL $constructor$
+	}
+}
+DUP
+PUSHINT 1710346425
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 1339324243
+	EQUAL
+	IFJMPREF {
+		CALL $eventClosers$
+	}
+	DUP
+	PUSHINT 1456889187
+	EQUAL
+	IFJMPREF {
+		CALL $eventDeployers$
+	}
+	DUP
+	PUSHINT 1594609630
+	EQUAL
+	IFJMPREF {
+		CALL $owner$
+	}
+	DUP
+	PUSHINT 1710346425
+	EQUAL
+	IFJMPREF {
+		CALL $drainDeployers$
+	}
+}
+DUP
+PUSHINT 1729444094
+EQUAL
+IFJMPREF {
+	CALL $renounceOwnership$
+}
+

@@ -1,0 +1,31 @@
+pragma ever-solidity >= 0.62.0;
+
+
+import "./../../../event-configuration-contracts/ITvmTvmEventConfiguration.tsol";
+
+
+interface IMultiVaultTvmTvmEventNative {
+    function receiveConfigurationDetails(
+        IBasicEventConfiguration.BasicConfiguration,
+        ITvmTvmEventConfiguration.TvmTvmEventConfiguration _networkConfiguration,
+        TvmCell
+    ) external;
+
+    function getDecodedData() external responsible returns(
+        address token_,
+        string name_,
+        string symbol_,
+        uint8 decimals_,
+        address sender_,
+        uint128 amount_,
+        address recipient_,
+        uint value_,
+        uint128 expected_gas_,
+        optional(TvmCell) payload_,
+        address proxy_,
+        address tokenWallet_,
+        uint128 bounty_
+    );
+
+    function dailyLimitReached(address _approver) external;
+}

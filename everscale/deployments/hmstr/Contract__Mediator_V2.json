@@ -1,0 +1,257 @@
+{
+    "type": "Contract",
+    "deploymentName": "Mediator_V2",
+    "address": "0:d7ac59a742eb43a8ae63ffa5bb0409fae75ed508f129bc96ed1acd9625ff0ff9",
+    "contractName": "Mediator_V2",
+    "abi": {
+        "ABI version": 2,
+        "version": "2.2",
+        "header": [
+            "time",
+            "expire"
+        ],
+        "functions": [
+            {
+                "name": "constructor",
+                "inputs": [
+                    {
+                        "name": "_owner",
+                        "type": "address"
+                    },
+                    {
+                        "name": "_nativeProxy",
+                        "type": "address"
+                    },
+                    {
+                        "name": "_alienTokenWalletPlatformCode",
+                        "type": "cell"
+                    }
+                ],
+                "outputs": []
+            },
+            {
+                "name": "setNativeProxy",
+                "inputs": [
+                    {
+                        "name": "_nativeProxy",
+                        "type": "address"
+                    }
+                ],
+                "outputs": []
+            },
+            {
+                "name": "onAcceptTokensMint",
+                "inputs": [
+                    {
+                        "name": "value0",
+                        "type": "address"
+                    },
+                    {
+                        "name": "amount",
+                        "type": "uint128"
+                    },
+                    {
+                        "name": "remainingGasTo",
+                        "type": "address"
+                    },
+                    {
+                        "name": "payloadWithNonce",
+                        "type": "cell"
+                    }
+                ],
+                "outputs": []
+            },
+            {
+                "name": "onAcceptTokensTransfer",
+                "inputs": [
+                    {
+                        "name": "value0",
+                        "type": "address"
+                    },
+                    {
+                        "name": "amount",
+                        "type": "uint128"
+                    },
+                    {
+                        "name": "sender",
+                        "type": "address"
+                    },
+                    {
+                        "name": "value3",
+                        "type": "address"
+                    },
+                    {
+                        "name": "remainingGasTo",
+                        "type": "address"
+                    },
+                    {
+                        "name": "payloadWithNonce",
+                        "type": "cell"
+                    }
+                ],
+                "outputs": []
+            },
+            {
+                "name": "setCreditBackend",
+                "inputs": [
+                    {
+                        "name": "_eventClosers",
+                        "type": "address[]"
+                    },
+                    {
+                        "name": "_eventDeployers",
+                        "type": "address[]"
+                    }
+                ],
+                "outputs": []
+            },
+            {
+                "name": "upgrade",
+                "inputs": [
+                    {
+                        "name": "code",
+                        "type": "cell"
+                    }
+                ],
+                "outputs": []
+            },
+            {
+                "name": "transferOwnership",
+                "inputs": [
+                    {
+                        "name": "newOwner",
+                        "type": "address"
+                    }
+                ],
+                "outputs": []
+            },
+            {
+                "name": "renounceOwnership",
+                "inputs": [],
+                "outputs": []
+            },
+            {
+                "name": "owner",
+                "inputs": [],
+                "outputs": [
+                    {
+                        "name": "owner",
+                        "type": "address"
+                    }
+                ]
+            },
+            {
+                "name": "_randomNonce",
+                "inputs": [],
+                "outputs": [
+                    {
+                        "name": "_randomNonce",
+                        "type": "uint256"
+                    }
+                ]
+            },
+            {
+                "name": "alienTokenWalletPlatformCode",
+                "inputs": [],
+                "outputs": [
+                    {
+                        "name": "alienTokenWalletPlatformCode",
+                        "type": "cell"
+                    }
+                ]
+            },
+            {
+                "name": "nativeProxy",
+                "inputs": [],
+                "outputs": [
+                    {
+                        "name": "nativeProxy",
+                        "type": "address"
+                    }
+                ]
+            },
+            {
+                "name": "eventClosers",
+                "inputs": [],
+                "outputs": [
+                    {
+                        "name": "eventClosers",
+                        "type": "address[]"
+                    }
+                ]
+            },
+            {
+                "name": "eventDeployers",
+                "inputs": [],
+                "outputs": [
+                    {
+                        "name": "eventDeployers",
+                        "type": "address[]"
+                    }
+                ]
+            }
+        ],
+        "data": [
+            {
+                "key": 1,
+                "name": "_randomNonce",
+                "type": "uint256"
+            }
+        ],
+        "events": [
+            {
+                "name": "OwnershipTransferred",
+                "inputs": [
+                    {
+                        "name": "previousOwner",
+                        "type": "address"
+                    },
+                    {
+                        "name": "newOwner",
+                        "type": "address"
+                    }
+                ],
+                "outputs": []
+            }
+        ],
+        "fields": [
+            {
+                "name": "_pubkey",
+                "type": "uint256"
+            },
+            {
+                "name": "_timestamp",
+                "type": "uint64"
+            },
+            {
+                "name": "_constructorFlag",
+                "type": "bool"
+            },
+            {
+                "name": "owner",
+                "type": "address"
+            },
+            {
+                "name": "_randomNonce",
+                "type": "uint256"
+            },
+            {
+                "name": "alienTokenWalletPlatformCode",
+                "type": "cell"
+            },
+            {
+                "name": "nativeProxy",
+                "type": "address"
+            },
+            {
+                "name": "eventClosers",
+                "type": "address[]"
+            },
+            {
+                "name": "eventDeployers",
+                "type": "address[]"
+            }
+        ]
+    },
+    "codeHash": "f2b14574d2cf3e6a8aeaef490afb65d2e637ed659c6d69bac360c32953926631"
+}

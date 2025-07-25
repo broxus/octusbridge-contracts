@@ -1,8 +1,7 @@
 pragma ever-solidity >= 0.62.0;
-pragma AbiHeader time;
+
 pragma AbiHeader pubkey;
 pragma AbiHeader expire;
-
 
 import "./../../../interfaces/event-contracts/multivault/evm/IMultiVaultEverscaleEVMEventNative.tsol";
 
@@ -49,14 +48,14 @@ contract MultiVaultEverscaleEVMEventNative is
     constructor(
         address _initializer,
         TvmCell _meta
-    ) EverscaleEthereumBaseEvent(_initializer, _meta) public {
+    ) EverscaleEthereumBaseEvent(_initializer, _meta) {
         unmodifiedEventData = eventInitData.voteData.eventData;
     }
 
     function afterSignatureCheck(TvmSlice body, TvmCell /*message*/) private inline view returns (TvmSlice) {
-        body.decode(uint64, uint32);
+        body.load(uint64, uint32);
         TvmSlice bodyCopy = body;
-        uint32 functionId = body.decode(uint32);
+        uint32 functionId = body.load(uint32);
         if (isExternalVoteCall(functionId)){
             require(votes[msg.pubkey()] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
         }
@@ -89,26 +88,28 @@ contract MultiVaultEverscaleEVMEventNative is
 
         initial_balance = address(this).balance;
 
+        uint128 value = gasToValue(Gas.GET_TOKEN_DATA_GAS, address(this).wid);
+
         ITokenRoot(token).name{
-            value: 0.1 ever,
+            value: value,
             bounce: true,
             callback: MultiVaultEverscaleEVMEventNative.receiveTokenName
         }();
 
         ITokenRoot(token).symbol{
-            value: 0.1 ever,
+            value: value,
             bounce: true,
             callback: MultiVaultEverscaleEVMEventNative.receiveTokenSymbol
         }();
 
         ITokenRoot(token).decimals{
-            value: 0.1 ever,
+            value: value,
             bounce: true,
             callback: MultiVaultEverscaleEVMEventNative.receiveTokenDecimals
         }();
 
         ITokenRoot(token).walletOf{
-            value: 0.1 ever,
+            value: value,
             bounce: true,
             callback: MultiVaultEverscaleEVMEventNative.receiveProxyTokenWallet
         }(proxy);
@@ -210,7 +211,7 @@ contract MultiVaultEverscaleEVMEventNative is
     }
 
     onBounce(TvmSlice slice) external {
-        uint32 selector = slice.decode(uint32);
+        uint32 selector = slice.load(uint32);
 
         if (
             (selector == tvm.functionId(TIP3TokenRoot.name) && msg.sender == token )||

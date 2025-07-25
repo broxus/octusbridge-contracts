@@ -7,7 +7,7 @@ import "./interfaces/IStakingPool.tsol";
 import "./interfaces/IUserData.tsol";
 import "./interfaces/IUpgradableByRequest.tsol";
 import "./interfaces/IElection.tsol";
-import "./interfaces/IRelayRound.tsol";
+import "./interfaces/IStakingRelayRound.tsol";
 
 import "./../utils/ErrorCodes.tsol";
 import "./libraries/Gas.tsol";
@@ -66,7 +66,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     }
 
     // Cant be deployed directly
-    constructor() public { revert(); }
+    constructor() { revert(); }
 
     // ---------------- DAO -------------------
 
@@ -102,7 +102,7 @@ contract UserData is IUserData, IUpgradableByRequest {
                 value: 0,
                 flag: MsgFlag.REMAINING_GAS,
                 bounce: false
-            }(proposal_data.toSlice().decode(uint32));
+            }(proposal_data.toSlice().load(uint32));
         }
     }
 
@@ -123,7 +123,7 @@ contract UserData is IUserData, IUpgradableByRequest {
 
         if (slashed) error = ErrorCodes.SLASHED;
         if (code_version > current_version) error = ErrorCodes.OLD_VERSION;
-        if (msg.value < Gas.CAST_VOTE_VALUE) error = ErrorCodes.VALUE_TOO_LOW;
+        if (msg.value < gasToValue(Gas.CAST_VOTE_GAS, address(this).wid)) error = ErrorCodes.VALUE_TOO_LOW;
         if (casted_votes.exists(proposal_id)) error = ErrorCodes.ALREADY_VOTED;
         if (bytes(reason).length > MAX_REASON_LENGTH) error = ErrorCodes.REASON_IS_TOO_LONG;
 
@@ -160,7 +160,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         uint16 error;
 
         if (code_version > current_version) error = ErrorCodes.OLD_VERSION;
-        if (msg.value < Gas.UNLOCK_LOCKED_VOTE_TOKENS_VALUE) error = ErrorCodes.VALUE_TOO_LOW;
+        if (msg.value < gasToValue(Gas.UNLOCK_LOCKED_VOTE_TOKENS_GAS, address(this).wid)) error = ErrorCodes.VALUE_TOO_LOW;
         if (!created_proposals.exists(proposal_id)) error = ErrorCodes.WRONG_PROPOSAL_ID;
 
         if (error != 0){
@@ -191,7 +191,10 @@ contract UserData is IUserData, IUpgradableByRequest {
         uint16 error;
 
         if (code_version > current_version) error = ErrorCodes.OLD_VERSION;
-        if (msg.value < proposal_ids.length * Gas.UNLOCK_CASTED_VOTE_VALUE + 1 ton) error = ErrorCodes.VALUE_TOO_LOW;
+        if (msg.value < gasToValue(
+            uint128(proposal_ids.length) * Gas.UNLOCK_CASTED_VOTE_GAS + Gas.UNLOCK_CASTED_VOTES_EXTRA_GAS,
+            address(this).wid)
+        ) error = ErrorCodes.VALUE_TOO_LOW;
 
         if (error != 0){
             IVoter(user).onCastedVoteNotUnlocked{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(proposal_ids, error);
@@ -201,7 +204,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         for (uint i = 0; i < proposal_ids.length; i++) {
             if (casted_votes.exists(proposal_ids[i])) {
                 IProposal(getProposalAddress(proposal_ids[i])).unlockCastedVote{
-                    value: Gas.UNLOCK_CASTED_VOTE_VALUE,
+                    value: gasToValue(Gas.UNLOCK_CASTED_VOTE_GAS, address(this).wid),
                     flag: MsgFlag.SENDER_PAYS_FEES
                 }(user);
             }
@@ -333,13 +336,13 @@ contract UserData is IUserData, IUpgradableByRequest {
 
     function getRewardForRelayRound(uint32 round_num) external onlyRelay {
         require (!slashed, ErrorCodes.SLASHED);
-        require (address(this).balance > Gas.USER_DATA_INITIAL_BALANCE + Gas.MIN_CALL_MSG_VALUE, ErrorCodes.LOW_BALANCE);
-        require (now >= lastExtCall + EXTERNAL_CALL_INTERVAL, ErrorCodes.DUPLICATE_CALL);
+        require (address(this).balance > Gas.USER_DATA_INITIAL_BALANCE + Gas.getMinCallMsgValue(), ErrorCodes.LOW_BALANCE);
+        require (block.timestamp >= lastExtCall + EXTERNAL_CALL_INTERVAL, ErrorCodes.DUPLICATE_CALL);
 
         tvm.accept();
 
-        lastExtCall = now;
-        IStakingPool(root).processGetRewardForRelayRound{value: Gas.MIN_CALL_MSG_VALUE}(user, round_num);
+        lastExtCall = block.timestamp;
+        IStakingPool(root).processGetRewardForRelayRound{value: Gas.getMinCallMsgValue()}(user, round_num);
     }
 
     function processGetRewardForRelayRound2(
@@ -356,7 +359,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         syncRewards(reward_rounds, token_balance);
 
         address relay_round_addr = getRelayRoundAddress(round_num);
-        IRelayRound(relay_round_addr).getRewardForRound{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(user, relay_round_code_version);
+        IStakingRelayRound(relay_round_addr).getRewardForRound{value: 0, flag: MsgFlag.ALL_NOT_RESERVED}(user, relay_round_code_version);
     }
 
     function receiveRewardForRelayRound(
@@ -398,12 +401,12 @@ contract UserData is IUserData, IUpgradableByRequest {
         require (msg.pubkey() == relay_ton_pubkey, ErrorCodes.ACCOUNT_NOT_LINKED);
         require (ton_pubkey_confirmed == false, ErrorCodes.ACCOUNT_ALREADY_CONFIRMED);
         require (!slashed, ErrorCodes.SLASHED);
-        require (now >= lastExtCall + EXTERNAL_CALL_INTERVAL, ErrorCodes.DUPLICATE_CALL);
+        require (block.timestamp >= lastExtCall + EXTERNAL_CALL_INTERVAL, ErrorCodes.DUPLICATE_CALL);
 
         tvm.accept();
 
         ton_pubkey_confirmed = true;
-        lastExtCall = now;
+        lastExtCall = block.timestamp;
 
         emit TonPubkeyConfirmed(relay_ton_pubkey);
     }
@@ -423,13 +426,13 @@ contract UserData is IUserData, IUpgradableByRequest {
 
     function becomeRelayNextRound() external onlyRelay {
         require (!slashed, ErrorCodes.SLASHED);
-        require (address(this).balance > Gas.USER_DATA_INITIAL_BALANCE + Gas.MIN_CALL_MSG_VALUE, ErrorCodes.LOW_BALANCE);
-        require (now >= lastExtCall + EXTERNAL_CALL_INTERVAL, ErrorCodes.DUPLICATE_CALL);
+        require (address(this).balance > Gas.USER_DATA_INITIAL_BALANCE + Gas.getMinCallMsgValue(), ErrorCodes.LOW_BALANCE);
+        require (block.timestamp >= lastExtCall + EXTERNAL_CALL_INTERVAL, ErrorCodes.DUPLICATE_CALL);
 
         tvm.accept();
 
-        lastExtCall = now;
-        IStakingPool(root).processBecomeRelayNextRound{value: Gas.MIN_CALL_MSG_VALUE}(user);
+        lastExtCall = block.timestamp;
+        IStakingPool(root).processBecomeRelayNextRound{value: Gas.getMinCallMsgValue()}(user);
     }
 
     function processBecomeRelayNextRound2(
@@ -456,7 +459,7 @@ contract UserData is IUserData, IUpgradableByRequest {
         tvm.rawReserve(_reserve(), 0);
 
         // lock for election time + relay lock time
-        relay_lock_until = now + lock_time;
+        relay_lock_until = block.timestamp + lock_time;
 
         emit RelayMembershipRequested(round_num, tokens, ton_pubkey, eth_addr, relay_lock_until);
     }
@@ -470,7 +473,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     ) external override onlyRoot {
         require (token_balance >= _tokens_to_withdraw, ErrorCodes.LOW_TOKEN_BALANCE);
         if (!emergency) {
-            require (now >= relay_lock_until, ErrorCodes.RELAY_LOCK_ACTIVE);
+            require (block.timestamp >= relay_lock_until, ErrorCodes.RELAY_LOCK_ACTIVE);
             require (_canWithdrawVotes(), ErrorCodes.CANT_WITHDRAW_VOTES);
         }
         require (!slashed, ErrorCodes.SLASHED);
@@ -541,10 +544,10 @@ contract UserData is IUserData, IUpgradableByRequest {
     }
 
     onBounce(TvmSlice slice) external {
-        uint32 functionId = slice.decode(uint32);
+        uint32 functionId = slice.load(uint32);
         if (functionId == tvm.functionId(IProposal.castVote)) {
             tvm.rawReserve(_reserve(), 0);
-            uint32 proposal_id = slice.decode(uint32);
+            uint32 proposal_id = slice.load(uint32);
             if (casted_votes.exists(proposal_id)) {
                 delete casted_votes[proposal_id];
             }
@@ -557,18 +560,18 @@ contract UserData is IUserData, IUpgradableByRequest {
         tvm.rawReserve(_reserve(), 0);
 
         TvmSlice s = upgrade_data.toSlice();
-        (address root_, , address send_gas_to) = s.decode(address, uint8, address);
+        (address root_, , address send_gas_to) = s.load(address, uint8, address);
         root = root_;
 
         platform_code = s.loadRef();
 
         TvmSlice initialData = s.loadRefAsSlice();
-        user = initialData.decode(address);
+        user = initialData.load(address);
 
         TvmSlice params = s.loadRefAsSlice();
-        (current_version, ) = params.decode(uint32, uint32);
+        (current_version, ) = params.load(uint32, uint32);
 
-        dao_root = params.decode(address);
+        dao_root = params.load(address);
 
         rewardRounds.push(RewardRoundData(0, 0));
 

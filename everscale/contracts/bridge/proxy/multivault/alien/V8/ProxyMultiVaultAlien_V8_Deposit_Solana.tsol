@@ -8,7 +8,7 @@ import "./../../../../interfaces/proxy/ISolanaEverscaleProxyExtended.tsol";
 import "../../../../libraries/EventContractNonce.tsol";
 
 abstract contract ProxyMultiVaultAlien_V8_Deposit_Solana is
-ProxyMultiVaultAlien_V8_Token,
+    ProxyMultiVaultAlien_V8_Token,
     ISolanaEverscaleProxyExtended
 {
     /// @notice Handles alien token transfer from Solana. Token address is derived automatically and MUST

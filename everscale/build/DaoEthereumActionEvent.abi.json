@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.2",
+	"version": "2.3",
 	"header": ["pubkey", "time", "expire"],
 	"functions": [
 		{
@@ -18,7 +18,7 @@
 				{"name":"answerId","type":"uint32"}
 			],
 			"outputs": [
-				{"name":"gasBackAddress","type":"address"},
+				{"name":"_gasBackAddress","type":"address"},
 				{"name":"chainId","type":"uint32"},
 				{"components":[{"name":"value","type":"uint256"},{"name":"target","type":"uint160"},{"name":"signature","type":"string"},{"name":"callData","type":"bytes"}],"name":"actions","type":"tuple[]"}
 			]
@@ -272,6 +272,37 @@
 			"name": "Rejected",
 			"inputs": [
 				{"name":"reason","type":"uint32"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "LimitReached",
+			"inputs": [
+				{"name":"approver","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "LiquidityRequested",
+			"inputs": [
+				{"name":"bounty","type":"uint128"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "Cancelled",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "LiquidityProvided",
+			"inputs": [
+				{"name":"tokenSender","type":"address"}
 			],
 			"outputs": [
 			]

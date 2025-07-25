@@ -1,0 +1,121 @@
+pragma ever-solidity >= 0.62.0;
+pragma AbiHeader pubkey;
+//pragma AbiHeader expire;
+
+import "./RoundDeployerUpgradable.tsol";
+import "../../bridge/interfaces/event-configuration-contracts/IEverscaleEthereumEventConfiguration.tsol";
+import "../../bridge/interfaces/event-configuration-contracts/IEverscaleSolanaEventConfiguration.tsol";
+
+
+abstract contract RoundDeployerRelay is RoundDeployerUpgradable {
+
+    function setRelaysOnNewRound(
+        uint160[] eth_keys,
+        uint256[] ton_keys
+    ) external override onlyAdminOrManager onlyActive {
+        require (block.timestamp >= (round_details.currentRelayRoundStartTime + relay_config.timeBeforeSetRelays), ErrorCodes.TOO_EARLY_TO_SET_RELAYS);
+        uint256 relays_count = ton_keys.length;
+        require (relays_count == eth_keys.length, ErrorCodes.BAD_INPUT_ARRAYS);
+        require (relays_count >= relay_config.minRelaysCount, ErrorCodes.NOT_ENOUGH_RELAYS);
+        require (
+            msg.value >= tonEthEventDeployValue + tonSolEventDeployValue + Gas.getDeployRelayRoundMinValue() + gasToValue(Gas.DESTROY_MSG_GAS + Gas.MIN_SEND_RELAYS_MSG_GAS, address(this).wid),
+            ErrorCodes.VALUE_TOO_LOW
+        );
+
+        tvm.rawReserve(_reserve(), 0);
+
+        uint32 start_time;
+        uint32 round_num;
+        // origin round
+        if (round_details.currentRelayRound == 1 && round_details.currentRelayRoundStartTime == 0) {
+            round_num = 1;
+            start_time = block.timestamp;
+        } else {
+            round_num = round_details.currentRelayRound + 1;
+
+            // relays are set too late, start new round later
+            if (block.timestamp > round_details.currentRelayRoundEndTime - relay_config.minRoundGapTime) {
+                start_time = block.timestamp + relay_config.minRoundGapTime;
+            // relays are set in time, start new round right after cur round
+            } else {
+                start_time = round_details.currentRelayRoundEndTime;
+            }
+        }
+        uint32 end_time = start_time + relay_config.relayRoundTime;
+
+        address relay_address = deployRelayRound(
+            round_num,
+            start_time,
+            end_time,
+            MsgFlag.SENDER_PAYS_FEES
+        );
+
+        IRelayRound(relay_address).setRelays {
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED
+        }(ton_keys, eth_keys);
+    }
+
+    function deployRelayRound(
+        uint32 round_num,
+        uint32 start_time,
+        uint32 end_time,
+        uint16 msg_flag
+    ) private view returns (address) {
+        TvmBuilder constructor_params;
+        constructor_params.store(code_data.relay_round_version);
+        constructor_params.store(code_data.relay_round_version);
+        constructor_params.store(start_time);
+        constructor_params.store(end_time);
+
+        return new Platform{
+                stateInit: _buildInitData(PlatformTypes.RelayRound, _buildRelayRoundParams(round_num)),
+                value: Gas.getDeployRelayRoundMinValue(),
+                flag: msg_flag
+            }(code_data.relay_round_code, constructor_params.toCell(), address(this));
+    }
+
+    function onRelayRoundInitialized(
+        uint32 round_num,
+        uint32 round_start_time,
+        uint32 round_end_time,
+        uint32 relays_count,
+        uint160[] eth_keys,
+        uint256[] ton_keys
+    ) external override onlyRelayRound(round_num) {
+        tvm.rawReserve(_reserve(), 0);
+
+        round_details.currentRelayRound = round_num;
+        round_details.currentRelayRoundEndTime = round_end_time;
+        round_details.currentRelayRoundStartTime = round_start_time;
+
+        if (round_num > 0) {
+            TvmBuilder event_builder;
+            event_builder.store(round_num); // 32
+            event_builder.store(eth_keys); // ref
+            event_builder.store(round_end_time);
+            IEverscaleEthereumEvent.EverscaleEthereumEventVoteData event_data_eth = IEverscaleEthereumEvent.EverscaleEthereumEventVoteData(tx.logicaltime, block.timestamp, event_builder.toCell());
+            IEverscaleEthereumEventConfiguration(base_details.bridge_event_config_ton_eth).deployEvent{value: tonEthEventDeployValue}(event_data_eth);
+
+            TvmBuilder event_builder2;
+            event_builder2.store(round_num);
+            event_builder2.store(ton_keys);
+            event_builder2.store(round_end_time);
+            IEverscaleSolanaEvent.EverscaleSolanaExecuteAccount[] _empty;
+            IEverscaleSolanaEvent.EverscaleSolanaEventVoteData event_data_sol = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(tx.logicaltime, block.timestamp, _empty, false, _empty, event_builder2.toCell());
+            IEverscaleSolanaEventConfiguration(bridge_event_config_ton_sol).deployEvent{value: tonSolEventDeployValue}(event_data_sol);
+        }
+
+        if (round_num > 3) {
+            address old_relay_round = getRelayRoundAddress(round_num - 3);
+            IRelayRound(old_relay_round).destroy{value: gasToValue(Gas.DESTROY_MSG_GAS, address(this).wid)}();
+        }
+        emit RelayRoundInitialized(round_num, round_start_time, round_end_time, msg.sender, relays_count);
+    }
+
+    modifier onlyRelayRound(uint32 round_num) {
+        address expectedAddr = getRelayRoundAddress(round_num);
+        require (expectedAddr == msg.sender, ErrorCodes.NOT_RELAY_ROUND);
+        _;
+    }
+}

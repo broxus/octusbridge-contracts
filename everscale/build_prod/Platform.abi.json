@@ -1,0 +1,34 @@
+{
+	"ABI version": 2,
+	"version": "2.2",
+	"header": ["time"],
+	"functions": [
+		{
+			"name": "constructor",
+			"inputs": [
+				{"name":"code","type":"cell"},
+				{"name":"params","type":"cell"},
+				{"name":"sendGasTo","type":"address"}
+			],
+			"outputs": [
+			]
+		}
+	],
+	"data": [
+		{"key":1,"name":"root","type":"address"},
+		{"key":2,"name":"platformType","type":"uint8"},
+		{"key":3,"name":"initialData","type":"cell"},
+		{"key":4,"name":"platformCode","type":"cell"}
+	],
+	"events": [
+	],
+	"fields": [
+		{"name":"_pubkey","type":"uint256"},
+		{"name":"_timestamp","type":"uint64"},
+		{"name":"_constructorFlag","type":"bool"},
+		{"name":"root","type":"address"},
+		{"name":"platformType","type":"uint8"},
+		{"name":"initialData","type":"cell"},
+		{"name":"platformCode","type":"cell"}
+	]
+}

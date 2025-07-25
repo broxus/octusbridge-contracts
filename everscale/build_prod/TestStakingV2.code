@@ -1,0 +1,9764 @@
+.version sol 0.62.0
+
+.macro constructor
+DROP
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+GETGLOB 6
+THROWIF 51
+ENDS
+ACCEPT
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro upgrade
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/test/TestStakingV2.tsol, 8
+OVER
+PUSHCONT {
+	LDREF
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDREF
+}
+IFELSE
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/test/TestStakingV2.tsol, 0
+CALLREF {
+	CALL $upgrade_09b97e7c_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro upgrade_09b97e7c_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 727
+GETGLOB 9
+GETGLOB 17
+INDEX 5
+SDEQ
+IFNOTREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/staking/test/TestStakingV2.tsol, 9
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/test/TestStakingV2.tsol, 13
+NEWC
+STSLICE
+.loc ../contracts/staking/test/TestStakingV2.tsol, 17
+GETGLOB 15
+SECOND
+NEWC
+STI 1
+.loc ../contracts/staking/test/TestStakingV2.tsol, 18
+GETGLOB 15
+INDEX 3
+STUR 32
+.loc ../contracts/staking/test/TestStakingV2.tsol, 19
+GETGLOB 15
+INDEX 5
+STUR 32
+.loc ../contracts/staking/test/TestStakingV2.tsol, 20
+GETGLOB 15
+INDEX 7
+STUR 32
+.loc ../contracts/staking/test/TestStakingV2.tsol, 22
+GETGLOB 15
+FIRST
+SWAP
+STREF
+.loc ../contracts/staking/test/TestStakingV2.tsol, 23
+GETGLOB 15
+THIRD
+SWAP
+STREF
+.loc ../contracts/staking/test/TestStakingV2.tsol, 24
+GETGLOB 15
+INDEX 4
+SWAP
+STREF
+.loc ../contracts/staking/test/TestStakingV2.tsol, 25
+GETGLOB 15
+INDEX 6
+SWAP
+STREF
+.loc ../contracts/staking/test/TestStakingV2.tsol, 27
+STBREFR
+.loc ../contracts/staking/test/TestStakingV2.tsol, 31
+GETGLOB 11
+NEWC
+STU 32
+.loc ../contracts/staking/test/TestStakingV2.tsol, 32
+GETGLOB 12
+STSLICER
+.loc ../contracts/staking/test/TestStakingV2.tsol, 33
+GETGLOB 17
+FIRST
+STSLICER
+.loc ../contracts/staking/test/TestStakingV2.tsol, 34
+GETGLOB 17
+SECOND
+STSLICER
+.loc ../contracts/staking/test/TestStakingV2.tsol, 35
+GETGLOB 13
+SWAP
+STI 1
+.loc ../contracts/staking/test/TestStakingV2.tsol, 36
+GETGLOB 16
+FIRST
+STUR 32
+.loc ../contracts/staking/test/TestStakingV2.tsol, 37
+GETGLOB 16
+SECOND
+STUR 32
+.loc ../contracts/staking/test/TestStakingV2.tsol, 38
+GETGLOB 16
+THIRD
+STUR 32
+.loc ../contracts/staking/test/TestStakingV2.tsol, 39
+GETGLOB 16
+INDEX 3
+STUR 32
+.loc ../contracts/staking/test/TestStakingV2.tsol, 40
+GETGLOB 14
+STUR 32
+.loc ../contracts/staking/test/TestStakingV2.tsol, 41
+GETGLOB 16
+INDEX 4
+SWAP
+STI 1
+.loc ../contracts/staking/test/TestStakingV2.tsol, 44
+GETGLOB 17
+THIRD
+NEWC
+STSLICE
+.loc ../contracts/staking/test/TestStakingV2.tsol, 45
+GETGLOB 17
+INDEX 10
+STUR 32
+.loc ../contracts/staking/test/TestStakingV2.tsol, 46
+GETGLOB 17
+INDEX 3
+STSLICER
+.loc ../contracts/staking/test/TestStakingV2.tsol, 47
+GETGLOB 17
+INDEX 4
+STSLICER
+.loc ../contracts/staking/test/TestStakingV2.tsol, 48
+GETGLOB 17
+INDEX 8
+STUR 128
+.loc ../contracts/staking/test/TestStakingV2.tsol, 49
+GETGLOB 17
+INDEX 12
+SWAP
+STI 1
+.loc ../contracts/staking/test/TestStakingV2.tsol, 53
+GETGLOB 17
+INDEX 11
+NEWC
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+.loc ../contracts/staking/test/TestStakingV2.tsol, 55
+STBREFR
+.loc ../contracts/staking/test/TestStakingV2.tsol, 58
+GETGLOB 17
+INDEX 9
+NEWC
+STU 128
+.loc ../contracts/staking/test/TestStakingV2.tsol, 59
+GETGLOB 17
+INDEX 5
+STSLICER
+.loc ../contracts/staking/test/TestStakingV2.tsol, 60
+GETGLOB 17
+INDEX 7
+STSLICER
+.loc ../contracts/staking/test/TestStakingV2.tsol, 61
+GETGLOB 17
+INDEX 6
+STSLICER
+.loc ../contracts/staking/test/TestStakingV2.tsol, 64
+GETGLOB 19
+FIRST
+NEWC
+STU 32
+.loc ../contracts/staking/test/TestStakingV2.tsol, 65
+GETGLOB 19
+SECOND
+STUR 32
+.loc ../contracts/staking/test/TestStakingV2.tsol, 66
+GETGLOB 19
+THIRD
+STUR 32
+.loc ../contracts/staking/test/TestStakingV2.tsol, 67
+GETGLOB 19
+INDEX 3
+STUR 32
+.loc ../contracts/staking/test/TestStakingV2.tsol, 68
+GETGLOB 19
+INDEX 4
+STUR 32
+.loc ../contracts/staking/test/TestStakingV2.tsol, 69
+GETGLOB 19
+INDEX 5
+STUR 16
+.loc ../contracts/staking/test/TestStakingV2.tsol, 70
+GETGLOB 19
+INDEX 6
+STUR 16
+.loc ../contracts/staking/test/TestStakingV2.tsol, 71
+GETGLOB 19
+INDEX 7
+STUR 128
+.loc ../contracts/staking/test/TestStakingV2.tsol, 72
+GETGLOB 19
+INDEX 8
+STUR 128
+.loc ../contracts/staking/test/TestStakingV2.tsol, 73
+GETGLOB 19
+INDEX 10
+STUR 128
+.loc ../contracts/staking/test/TestStakingV2.tsol, 74
+GETGLOB 19
+INDEX 9
+STUR 128
+.loc ../contracts/staking/test/TestStakingV2.tsol, 75
+GETGLOB 20
+STUR 128
+.loc ../contracts/staking/test/TestStakingV2.tsol, 76
+GETGLOB 22
+STUR 64
+.loc ../contracts/staking/test/TestStakingV2.tsol, 77
+GETGLOB 23
+SWAP
+STDICT
+.loc ../contracts/staking/test/TestStakingV2.tsol, 79
+NEWC
+.loc ../contracts/staking/test/TestStakingV2.tsol, 80
+ROLL 4
+STBREFR
+.loc ../contracts/staking/test/TestStakingV2.tsol, 81
+ROLL 3
+STBREFR
+.loc ../contracts/staking/test/TestStakingV2.tsol, 82
+ROT
+STBREFR
+.loc ../contracts/staking/test/TestStakingV2.tsol, 83
+STBREF
+.loc ../contracts/staking/test/TestStakingV2.tsol, 85
+STBREFR
+.loc ../contracts/staking/test/TestStakingV2.tsol, 88
+OVER
+SETCODE
+.loc ../contracts/staking/test/TestStakingV2.tsol, 91
+SWAP
+CTOS
+DUP
+PUSHSLICE x8adb35
+SDEQ
+PUSHCONT {
+	PLDREFIDX 1
+	CTOS
+}
+IF
+PLDREF
+CTOS
+BLESS
+POP C3
+.loc ../contracts/staking/test/TestStakingV2.tsol, 92
+ENDC
+CALLREF {
+	CALL $:onCodeUpgrade$
+}
+.loc ../contracts/staking/test/TestStakingV2.tsol, 0
+
+.internal-alias :onCodeUpgrade, 2
+.internal :onCodeUpgrade
+.loc ../contracts/staking/test/TestStakingV2.tsol, 96
+NEWDICT
+SETGLOB 10
+PUSHINT 0
+SETGLOB 11
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+SETGLOB 12
+PUSHINT 0
+SETGLOB 13
+PUSHINT 0
+SETGLOB 14
+PUSHREF {
+}
+PUSHINT 0
+PUSHREF {
+}
+PUSHINT 0
+PUSHREF {
+}
+PUSHINT 0
+PUSHREF {
+}
+PUSHINT 0
+TUPLE 8
+SETGLOB 15
+PUSHINT 0
+BLKPUSH 4, 0
+TUPLE 5
+SETGLOB 16
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+BLKPUSH 7, 0
+PUSHINT 0
+BLKPUSH 3, 0
+NEWDICT
+PAIR
+PUSHINT 0
+TUPLE 13
+SETGLOB 17
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+SETGLOB 18
+PUSHINT 0
+BLKPUSH 10, 0
+TUPLE 11
+SETGLOB 19
+PUSHINT 0
+SETGLOB 20
+PUSHINT 0
+SETGLOB 21
+PUSHINT 0
+SETGLOB 22
+NEWDICT
+SETGLOB 23
+.loc ../contracts/staking/test/TestStakingV2.tsol, 97
+CTOS
+.loc ../contracts/staking/test/TestStakingV2.tsol, 98
+LDMSGADDR
+NIP
+.loc ../contracts/staking/test/TestStakingV2.tsol, 100
+LDREFRTOS
+.loc ../contracts/staking/test/TestStakingV2.tsol, 101
+SWAP
+LDREFRTOS
+NIP
+.loc ../contracts/staking/test/TestStakingV2.tsol, 103
+OVER
+LDI 1
+LDU 32
+LDU 32
+LDU 32
+POP S6
+REVERSE 4, 0
+GETGLOB 15
+SWAP
+SETINDEX 1
+DUP
+SETGLOB 15
+SWAP
+SETINDEX 3
+DUP
+SETGLOB 15
+SWAP
+SETINDEX 5
+DUP
+SETGLOB 15
+SWAP
+SETINDEX 7
+SETGLOB 15
+.loc ../contracts/staking/test/TestStakingV2.tsol, 110
+OVER
+LDREF
+POP S3
+GETGLOB 15
+SWAP
+SETINDEX 0
+SETGLOB 15
+.loc ../contracts/staking/test/TestStakingV2.tsol, 111
+OVER
+LDREF
+POP S3
+GETGLOB 15
+SWAP
+SETINDEX 2
+SETGLOB 15
+.loc ../contracts/staking/test/TestStakingV2.tsol, 112
+OVER
+LDREF
+POP S3
+GETGLOB 15
+SWAP
+SETINDEX 4
+SETGLOB 15
+.loc ../contracts/staking/test/TestStakingV2.tsol, 113
+SWAP
+PLDREF
+GETGLOB 15
+SWAP
+SETINDEX 6
+SETGLOB 15
+.loc ../contracts/staking/test/TestStakingV2.tsol, 115
+LDREFRTOS
+.loc ../contracts/staking/test/TestStakingV2.tsol, 116
+OVER
+LDREFRTOS
+SWAP
+POP S3
+.loc ../contracts/staking/test/TestStakingV2.tsol, 117
+PUSH S2
+LDREFRTOS
+SWAP
+POP S4
+.loc ../contracts/staking/test/TestStakingV2.tsol, 118
+ROLL 3
+LDREFRTOS
+NIP
+.loc ../contracts/staking/test/TestStakingV2.tsol, 120
+ROLL 3
+LDU 32
+LDMSGADDR
+LDMSGADDR
+LDMSGADDR
+LDI 1
+LDU 32
+LDU 32
+LDU 32
+LDU 32
+LDU 32
+PLDI 1
+REVERSE 11, 0
+SETGLOB 11
+SETGLOB 12
+GETGLOB 17
+SWAP
+SETINDEX 0
+DUP
+SETGLOB 17
+SWAP
+SETINDEX 1
+SETGLOB 17
+SETGLOB 13
+GETGLOB 16
+SWAP
+SETINDEX 0
+DUP
+SETGLOB 16
+SWAP
+SETINDEX 1
+DUP
+SETGLOB 16
+SWAP
+SETINDEX 2
+DUP
+SETGLOB 16
+SWAP
+SETINDEX 3
+SETGLOB 16
+SETGLOB 14
+GETGLOB 16
+SWAP
+SETINDEX 4
+SETGLOB 16
+.loc ../contracts/staking/test/TestStakingV2.tsol, 136
+PUSH S2
+LDMSGADDR
+LDU 32
+LDMSGADDR
+LDMSGADDR
+LDU 128
+LDI 1
+POP S9
+REVERSE 6, 0
+GETGLOB 17
+SWAP
+SETINDEX 2
+DUP
+SETGLOB 17
+SWAP
+SETINDEX 10
+DUP
+SETGLOB 17
+SWAP
+SETINDEX 3
+DUP
+SETGLOB 17
+SWAP
+SETINDEX 4
+DUP
+SETGLOB 17
+SWAP
+SETINDEX 8
+DUP
+SETGLOB 17
+SWAP
+SETINDEX 12
+SETGLOB 17
+.loc ../contracts/staking/test/TestStakingV2.tsol, 147
+ROT
+LDREFRTOS
+NIP
+.loc ../contracts/staking/test/TestStakingV2.tsol, 148
+LDU 32
+PLDDICT
+PAIR
+GETGLOB 17
+SWAP
+SETINDEX 11
+SETGLOB 17
+.loc ../contracts/staking/test/TestStakingV2.tsol, 150
+SWAP
+LDU 128
+LDMSGADDR
+LDMSGADDR
+LDMSGADDR
+DROP
+REVERSE 4, 0
+GETGLOB 17
+SWAP
+SETINDEX 9
+DUP
+SETGLOB 17
+SWAP
+SETINDEX 5
+DUP
+SETGLOB 17
+SWAP
+SETINDEX 7
+DUP
+SETGLOB 17
+SWAP
+SETINDEX 6
+SETGLOB 17
+.loc ../contracts/staking/test/TestStakingV2.tsol, 159
+LDU 32
+LDU 32
+LDU 32
+LDU 32
+LDU 32
+LDU 16
+LDU 16
+LDU 128
+LDU 128
+LDU 128
+LDU 128
+LDU 128
+LDU 64
+PLDDICT
+REVERSE 14, 0
+GETGLOB 19
+SWAP
+SETINDEX 0
+DUP
+SETGLOB 19
+SWAP
+SETINDEX 1
+DUP
+SETGLOB 19
+SWAP
+SETINDEX 2
+DUP
+SETGLOB 19
+SWAP
+SETINDEX 3
+DUP
+SETGLOB 19
+SWAP
+SETINDEX 4
+DUP
+SETGLOB 19
+SWAP
+SETINDEX 5
+DUP
+SETGLOB 19
+SWAP
+SETINDEX 6
+DUP
+SETGLOB 19
+SWAP
+SETINDEX 7
+DUP
+SETGLOB 19
+SWAP
+SETINDEX 8
+DUP
+SETGLOB 19
+SWAP
+SETINDEX 10
+DUP
+SETGLOB 19
+SWAP
+SETINDEX 9
+SETGLOB 19
+SETGLOB 20
+SETGLOB 22
+SETGLOB 23
+.loc ../contracts/staking/test/TestStakingV2.tsol, 0
+CALLREF {
+	CALL $c7_to_c4$
+}
+COMMIT
+THROW 0
+
+.macro linkRelayAccounts
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 12
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDU 256
+LDU 160
+ENDS
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+CALLREF {
+	CALL $linkRelayAccounts_d8b263bc_internal_macro$
+}
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.macro linkRelayAccounts_d8b263bc_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 755
+PUSHINT 2514
+GETGLOB 13
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 13
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+GETGLOB 19
+INDEX 8
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 14
+PUSHINT 2543
+GETGLOB 17
+INDEX 12
+NOT
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 16
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingRelay.tsol, 18
+DEPTH
+ADDCONST -2
+PICK
+RSHIFT 1
+.loc ../contracts/staking/base/StakingRelay.tsol, 20
+GETGLOB 9
+CALLREF {
+	CALL $getUserDataAddress_b432e94f_internal_macro$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 21
+GETGLOB 15
+INDEX 3
+FALSE
+ROLL 4
+BLKSWAP 3, 3
+NEWC
+STSLICECONST x62_
+STSLICE
+SWAP
+STGRAMS
+PUSHINT 1
+STUR 107
+ROLLREV 4
+NEWC
+STSLICECONST x28fed92c
+STU 256
+STU 160
+STI 1
+STU 32
+STBREFR
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+
+.macro onEventConfirmed
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 26
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDU 256
+LDU 32
+LDREF
+LDU 32
+LDU 256
+ROLLREV 5
+TUPLE 5
+SWAP
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDU 32
+ROLLREV 4
+TUPLE 4
+SWAP
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+CALLREF {
+	CALL $onEventConfirmed_34e2955a_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro onEventConfirmed_34e2955a_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 734
+PUSHINT 2525
+GETGLOB 9
+GETGLOB 17
+SECOND
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 30
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 31
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingRelay.tsol, 33
+SWAP
+INDEX2 0, 2
+CTOS
+LDU 160
+LDI 8
+PLDU 256
+.loc ../contracts/staking/base/StakingRelay.tsol, 34
+SWAP
+NEWC
+STSLICECONST x9_
+STI 8
+STU 256
+ENDC
+CTOS
+.loc ../contracts/staking/base/StakingRelay.tsol, 35
+XCHG S2
+CALLREF {
+	CALL $confirmEthAccount_e53d2d44_internal_macro$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+
+.globl	confirmEthAccount_e53d2d44_internal
+.type	confirmEthAccount_e53d2d44_internal, @function
+CALL $confirmEthAccount_e53d2d44_internal_macro$
+
+.macro confirmEthAccount_e53d2d44_internal_macro
+.loc ../contracts/staking/base/StakingRelay.tsol, 39
+ROT
+CALLREF {
+	CALL $getUserDataAddress_b432e94f_internal_macro$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 40
+XCHG S1, S2
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 1
+STUR 111
+ROTREV
+NEWC
+STSLICECONST x1fa2d2cc
+STU 160
+STSLICE
+STBREFR
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+
+.macro slashRelay
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 43
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+CALLREF {
+	CALL $slashRelay_35d45343_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro slashRelay_35d45343_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 739
+PUSHINT 2601
+GETGLOB 9
+GETGLOB 17
+FIRST
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 44
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 46
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingRelay.tsol, 48
+CALLREF {
+	CALL $updatePoolInfo_778225c4_internal_macro$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 49
+OVER
+PUSHINT 3000000000
+PUSH S2
+CALLREF {
+	CALL $_upgradeUserData_902d27f3_internal_macro$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 51
+SWAP
+CALLREF {
+	CALL $getUserDataAddress_b432e94f_internal_macro$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 52
+SWAP
+GETGLOB 17
+INDEX 11
+ROT
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 1
+STUR 111
+ROTREV
+NEWC
+STSLICECONST x3c3a9cce
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+STSLICE
+STBREFR
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+
+.globl	_syncUserRewardData_250d8b3e_internal
+.type	_syncUserRewardData_250d8b3e_internal, @function
+CALL $_syncUserRewardData_250d8b3e_internal_macro$
+
+.macro _syncUserRewardData_250d8b3e_internal_macro
+.loc ../contracts/staking/base/StakingRelay.tsol, 60
+PUSH S2
+FIRST
+DEC
+UFITS 256
+PUSHCONT {
+	DUP
+	GETGLOB 17
+	INDEX 11
+	FIRST
+	LESS
+}
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingRelay.tsol, 61
+	PUSH2 S0, S3
+	FIRST
+	GEQ
+	PUSHCONT {
+		.loc ../contracts/staking/base/StakingRelay.tsol, 62
+		PUSH S3
+		PUSHINT 0
+		NEWC
+		STU 128
+		SWAP
+		UNPAIR
+		OVER
+		INC
+		ROLLREV 3
+		PUSHINT 32
+		DICTUSETB
+		PAIR
+		POP S4
+		.loc ../contracts/staking/base/StakingRelay.tsol, 63
+		PUSH S2
+		PUSHINT 0
+		NEWC
+		STU 128
+		SWAP
+		UNPAIR
+		OVER
+		INC
+		ROLLREV 3
+		PUSHINT 32
+		DICTUSETB
+		PAIR
+		POP S3
+		.loc ../contracts/staking/base/StakingRelay.tsol, 0
+	}
+	IF
+	.loc ../contracts/staking/base/StakingRelay.tsol, 65
+	DUP2
+	GETGLOB 17
+	INDEX 11
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	CALLREF {
+		LDU 256
+		LDU 128
+		LDU 128
+		LDU 32
+		ENDS
+		TUPLE 4
+	}
+	FIRST
+	MUL
+	PUSHINT 1000000000000000000
+	DIV
+	PUSH2 S1, S3
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PLDU 128
+	SUB
+	UFITS 128
+	PUSH S4
+	UNPAIR
+	PUXC S3, S-1
+	PUSH2 S1, S2
+	LESS
+	THROWIFNOT 50
+	DUP2
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PLDU 128
+	ROLL 4
+	ADD
+	UFITS 128
+	NEWC
+	STU 128
+	ROTREV
+	PUSHINT 32
+	DICTUSETB
+	PAIR
+	POP S4
+	.loc ../contracts/staking/base/StakingRelay.tsol, 60
+	INC
+	.loc ../contracts/staking/base/StakingRelay.tsol, 0
+}
+WHILE
+BLKDROP 3
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+
+.macro confirmSlash
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 70
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 128
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+CALLREF {
+	CALL $confirmSlash_d31cec69_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro confirmSlash_d31cec69_internal_macro
+.loc ../contracts/staking/base/StakingRelay.tsol, 70
+PUSH2 S4, S4
+.loc ../contracts/staking/base/StakingBase.tsol, 749
+CALLREF {
+	CALL $getUserDataAddress_b432e94f_internal_macro$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 750
+PUSHINT 2504
+OVER
+GETGLOB 9
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 751
+BLKSWAP 5, 2
+.loc ../contracts/staking/base/StakingRelay.tsol, 77
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingRelay.tsol, 79
+CALLREF {
+	CALL $updatePoolInfo_778225c4_internal_macro$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 81
+BLKPUSH 3, 3
+CALLREF {
+	CALL $_syncUserRewardData_250d8b3e_internal_macro$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 83
+PUSHINT 0
+DUP
+.loc ../contracts/staking/base/StakingRelay.tsol, 84
+PUSHCONT {
+	PUSH2 S0, S2
+	FIRST
+	LESS
+}
+PUSHCONT {
+	PUSHCONT {
+		.loc ../contracts/staking/base/StakingRelay.tsol, 85
+		DUP
+		GETGLOB 17
+		INDEX 11
+		SECOND
+		PUSHINT 32
+		DICTUGET
+		THROWIFNOT 50
+		CALLREF {
+			LDU 256
+			LDU 128
+			LDU 128
+			LDU 32
+			ENDS
+			TUPLE 4
+		}
+		THIRD
+		IFNOTRET
+		.loc ../contracts/staking/base/StakingRelay.tsol, 90
+		PUSH2 S0, S2
+		SECOND
+		PUSHINT 32
+		DICTUGET
+		THROWIFNOT 50
+		PLDU 128
+		PUSHINT 1000000000000000000
+		MUL
+		OVER
+		GETGLOB 17
+		INDEX 11
+		SECOND
+		PUSHINT 32
+		DICTUGET
+		THROWIFNOT 50
+		CALLREF {
+			LDU 256
+			LDU 128
+			LDU 128
+			LDU 32
+			ENDS
+			TUPLE 4
+		}
+		THIRD
+		DIV
+		.loc ../contracts/staking/base/StakingRelay.tsol, 91
+		OVER
+		GETGLOB 17
+		INDEX 11
+		SECOND
+		PUSHINT 32
+		DICTUGET
+		THROWIFNOT 50
+		CALLREF {
+			LDU 256
+			LDU 128
+			LDU 128
+			LDU 32
+			ENDS
+			TUPLE 4
+		}
+		SECOND
+		MUL
+		PUSHINT 1000000000000000000
+		DIV
+		UFITS 128
+		.loc ../contracts/staking/base/StakingRelay.tsol, 93
+		PUSH2 S1, S3
+		SECOND
+		PUSHINT 32
+		DICTUGET
+		THROWIFNOT 50
+		PLDU 128
+		GETGLOB 17
+		DUP
+		INDEX 11
+		UNPAIR
+		PUXC S5, S-1
+		PUSH2 S1, S2
+		LESS
+		THROWIFNOT 50
+		DUP2
+		PUSHINT 32
+		DICTUGET
+		THROWIFNOT 50
+		CALLREF {
+			LDU 256
+			LDU 128
+			LDU 128
+			LDU 32
+			ENDS
+			TUPLE 4
+		}
+		DUP
+		THIRD
+		ROLL 6
+		SUB
+		UFITS 128
+		SETINDEX 2
+		CALLREF {
+			UNTUPLE 4
+			REVERSE 4, 0
+			NEWC
+			STU 256
+			STU 128
+			STU 128
+			STU 32
+		}
+		ROTREV
+		PUSHINT 32
+		DICTUSETB
+		PAIR
+		SETINDEX 11
+		SETGLOB 17
+		.loc ../contracts/staking/base/StakingRelay.tsol, 94
+		OVER
+		GETGLOB 17
+		INDEX 11
+		SECOND
+		PUSHINT 32
+		DICTUGET
+		THROWIFNOT 50
+		CALLREF {
+			LDU 256
+			LDU 128
+			LDU 128
+			LDU 32
+			ENDS
+			TUPLE 4
+		}
+		SECOND
+		PUSHCONT {
+			.loc ../contracts/staking/base/StakingRelay.tsol, 96
+			DROP
+			.loc ../contracts/staking/base/StakingRelay.tsol, 0
+		}
+		IFNOTJMP
+		.loc ../contracts/staking/base/StakingRelay.tsol, 99
+		DUP
+		GETGLOB 17
+		DUP
+		INDEX 11
+		UNPAIR
+		PUXC S5, S-1
+		PUSH2 S1, S2
+		LESS
+		THROWIFNOT 50
+		DUP2
+		PUSHINT 32
+		DICTUGET
+		THROWIFNOT 50
+		CALLREF {
+			LDU 256
+			LDU 128
+			LDU 128
+			LDU 32
+			ENDS
+			TUPLE 4
+		}
+		DUP
+		SECOND
+		ROLL 6
+		SUB
+		UFITS 128
+		SETINDEX 1
+		CALLREF {
+			UNTUPLE 4
+			REVERSE 4, 0
+			NEWC
+			STU 256
+			STU 128
+			STU 128
+			STU 32
+		}
+		ROTREV
+		PUSHINT 32
+		DICTUSETB
+		PAIR
+		SETINDEX 11
+		SETGLOB 17
+		.loc ../contracts/staking/base/StakingRelay.tsol, 100
+		PUSH S2
+		ADD
+		UFITS 128
+		POP S2
+		.loc ../contracts/staking/base/StakingRelay.tsol, 0
+	}
+	CALLX
+	.loc ../contracts/staking/base/StakingRelay.tsol, 84
+	INC
+	.loc ../contracts/staking/base/StakingRelay.tsol, 0
+}
+WHILE
+DROP
+.loc ../contracts/staking/base/StakingRelay.tsol, 103
+PUSH S3
+ADD
+UFITS 128
+.loc ../contracts/staking/base/StakingRelay.tsol, 105
+DUP
+GETGLOB 17
+DUP
+INDEX 11
+UNPAIR
+GETGLOB 17
+INDEX 11
+FIRST
+DEC
+UFITS 256
+TUCK
+PUSH S3
+LESS
+THROWIFNOT 50
+DUP2
+PUSHINT 32
+DICTUGET
+THROWIFNOT 50
+CALLREF {
+	LDU 256
+	LDU 128
+	LDU 128
+	LDU 32
+	ENDS
+	TUPLE 4
+}
+DUP
+SECOND
+ROLL 6
+ADD
+UFITS 128
+SETINDEX 1
+CALLREF {
+	UNTUPLE 4
+	REVERSE 4, 0
+	NEWC
+	STU 256
+	STU 128
+	STU 128
+	STU 32
+}
+ROTREV
+PUSHINT 32
+DICTUSETB
+PAIR
+SETINDEX 11
+SETGLOB 17
+.loc ../contracts/staking/base/StakingRelay.tsol, 107
+PUSH S3
+GETGLOB 17
+DUP
+INDEX 8
+ROT
+SUB
+UFITS 128
+SETINDEX 8
+SETGLOB 17
+.loc ../contracts/staking/base/StakingRelay.tsol, 108
+ROLL 3
+GETGLOB 17
+DUP
+INDEX 9
+ROT
+ADD
+UFITS 128
+SETINDEX 9
+SETGLOB 17
+.loc ../contracts/staking/base/StakingRelay.tsol, 110
+ROLL 5
+PUSHSLICE xc00000000000000000000000003db65fbf
+NEWC
+STSLICE
+STSLICE
+STU 128
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingRelay.tsol, 111
+DROP
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+BLKDROP 4
+
+.macro createOriginRelayRound
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 114
+OVER
+PUSHCONT {
+	LDU 32
+	LDDICT
+	ROTREV
+	PAIR
+	SWAP
+	LDU 32
+	LDDICT
+	ROTREV
+	PAIR
+	SWAP
+	LDU 32
+	LDDICT
+	ROTREV
+	PAIR
+	SWAP
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDU 32
+	LDDICT
+	ROTREV
+	PAIR
+	SWAP
+	LDU 32
+	LDDICT
+	ROTREV
+	PAIR
+	SWAP
+	LDU 32
+	LDDICT
+	ROTREV
+	PAIR
+	SWAP
+}
+IFELSE
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 128
+ENDS
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+CALLREF {
+	CALL $createOriginRelayRound_499d4f02_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro createOriginRelayRound_499d4f02_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 727
+GETGLOB 9
+GETGLOB 17
+INDEX 5
+SDEQ
+IFNOTREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 121
+PUSHINT 2531
+PUSH S5
+FIRST
+LESSINT 31
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 123
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+PUSH2 S3, S7
+FIRST
+MUL
+ADD
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 124
+PUSHINT 2521
+GETGLOB 16
+FIRST
+EQINT 0
+GETGLOB 16
+SECOND
+EQINT 0
+AND
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 125
+PUSHINT 2511
+OVER
+PUSHINT 3000000000
+PUSHINT 200000000
+ADD
+UFITS 64
+GREATER
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 126
+PUSH S4
+FIRST
+PUSH S4
+FIRST
+EQUAL
+.loc ../contracts/staking/base/StakingRelay.tsol, 127
+PUSH S4
+FIRST
+PUSH S4
+FIRST
+EQUAL
+.loc ../contracts/staking/base/StakingRelay.tsol, 128
+PUSH S4
+FIRST
+PUSH S4
+FIRST
+EQUAL
+.loc ../contracts/staking/base/StakingRelay.tsol, 129
+PUSHINT 2531
+ROLLREV 3
+AND
+AND
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 130
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingRelay.tsol, 132
+PUSHINT 0
+PUSHCONT {
+	PUSH2 S0, S5
+	FIRST
+	LESS
+}
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingRelay.tsol, 134
+	PUSH2 S0, S5
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	CALLREF {
+		CALL $deployUserData_e1965040_internal_macro$
+	}
+	.loc ../contracts/staking/base/StakingRelay.tsol, 135
+	GETGLOB 15
+	INDEX 3
+	TRUE
+	PUSH2 S3, S6
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PLDU 160
+	PUSH2 S4, S8
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PLDU 256
+	PUSH S6
+	PUSHINT 3000000000
+	SUB
+	UFITS 128
+	ROLL 5
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1
+	STUR 107
+	ROLLREV 4
+	NEWC
+	STSLICECONST x28fed92c
+	STU 256
+	STU 160
+	STI 1
+	STU 32
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc ../contracts/staking/base/StakingRelay.tsol, 132
+	INC
+	.loc ../contracts/staking/base/StakingRelay.tsol, 0
+}
+WHILE
+DROP2
+.loc ../contracts/staking/base/StakingRelay.tsol, 141
+PUSHSLICE x2_
+.loc ../contracts/staking/base/StakingRelay.tsol, 142
+PUSHINT 0
+NOW
+DUP
+GETGLOB 19
+SECOND
+ADD
+UFITS 32
+FALSE
+PUSHINT 1
+PUSH S5
+ROLL 6
+PUSHINT 1
+CALLREF {
+	CALL $deployRelayRound_29f238ac_internal_macro$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 145
+XCHG S1, S3
+XCHG S3, S4
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 1244193705
+STUR 143
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+
+.macro processBecomeRelayNextRound
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 150
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+CALLREF {
+	CALL $processBecomeRelayNextRound_171d1ed2_internal_macro$
+}
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.macro processBecomeRelayNextRound_171d1ed2_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 755
+PUSHINT 2514
+GETGLOB 13
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 749
+CALLREF {
+	CALL $getUserDataAddress_b432e94f_internal_macro$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 750
+PUSHINT 2504
+SWAP
+GETGLOB 9
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 151
+PUSHINT 2517
+GETGLOB 16
+INDEX 3
+NEQINT 0
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 153
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingRelay.tsol, 155
+GETGLOB 19
+THIRD
+GETGLOB 19
+FIRST
+ADD
+UFITS 32
+.loc ../contracts/staking/base/StakingRelay.tsol, 157
+GETGLOB 15
+INDEX 5
+GETGLOB 15
+INDEX 3
+GETGLOB 19
+INDEX 7
+ROLL 3
+GETGLOB 16
+FIRST
+INC
+UFITS 32
+GETGLOB 9
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 767303158
+STUR 143
+STU 32
+STU 32
+STU 128
+STU 32
+STU 32
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+
+.macro processGetRewardForRelayRound
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 162
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDU 32
+ENDS
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+CALLREF {
+	CALL $processGetRewardForRelayRound_77c56f54_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro processGetRewardForRelayRound_77c56f54_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 755
+PUSHINT 2514
+GETGLOB 13
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 756
+SWAP
+.loc ../contracts/staking/base/StakingBase.tsol, 749
+CALLREF {
+	CALL $getUserDataAddress_b432e94f_internal_macro$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 750
+PUSHINT 2504
+SWAP
+GETGLOB 9
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 163
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingRelay.tsol, 164
+CALLREF {
+	CALL $updatePoolInfo_778225c4_internal_macro$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 166
+GETGLOB 15
+INDEX 7
+GETGLOB 15
+INDEX 3
+ROT
+GETGLOB 17
+INDEX 11
+GETGLOB 9
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 1080606114
+STUR 143
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+STU 32
+STU 32
+STU 32
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+
+.macro startElectionOnNewRound
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 171
+ENDS
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+CALLREF {
+	CALL $startElectionOnNewRound_8e9b52df_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro startElectionOnNewRound_8e9b52df_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 755
+PUSHINT 2514
+GETGLOB 13
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 172
+PUSHINT 2507
+NOW
+GETGLOB 16
+SECOND
+GETGLOB 19
+INDEX 3
+ADD
+UFITS 32
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 173
+PUSHINT 2508
+GETGLOB 16
+INDEX 3
+EQINT 0
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 174
+PUSHINT 2522
+GETGLOB 16
+SECOND
+GTINT 0
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 175
+PUSHINT 2543
+GETGLOB 17
+INDEX 12
+NOT
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 178
+PUSHINT 2508
+GETGLOB 16
+INDEX 4
+FALSE
+EQUAL
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 180
+PUSHINT 2540
+NOW
+GETGLOB 14
+ADDCONST 60
+UFITS 32
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 182
+PUSHINT 2541
+GETPARAM 7
+FIRST
+PUSHINT 10000000000
+PUSHINT 2000000000
+ADD
+UFITS 64
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 184
+ACCEPT
+.loc ../contracts/staking/base/StakingRelay.tsol, 186
+NOW
+SETGLOB 14
+.loc ../contracts/staking/base/StakingRelay.tsol, 187
+GETGLOB 16
+FIRST
+INC
+UFITS 32
+CALLREF {
+	CALL $deployElection_694c40ee_internal_macro$
+}
+DROP
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+
+.macro endElection
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 190
+ENDS
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+CALLREF {
+	CALL $endElection_59f78468_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro endElection_59f78468_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 755
+PUSHINT 2514
+GETGLOB 13
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 191
+PUSHINT 2543
+GETGLOB 17
+INDEX 12
+NOT
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 192
+PUSHINT 2517
+GETGLOB 16
+INDEX 3
+NEQINT 0
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 193
+PUSHINT 2519
+NOW
+GETGLOB 16
+INDEX 3
+GETGLOB 19
+THIRD
+ADD
+UFITS 32
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 195
+PUSHINT 2540
+NOW
+GETGLOB 14
+ADDCONST 60
+UFITS 32
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 199
+PUSHINT 20000000000
+CALLREF {
+	CALL $_relaysPacksCount_fc90a925_internal_macro$
+}
+PUSHINT 2000000000
+MUL
+UFITS 64
+ADD
+UFITS 64
+.loc ../contracts/staking/base/StakingRelay.tsol, 200
+DUP
+PUSHINT 2000000000
+ADD
+UFITS 128
+.loc ../contracts/staking/base/StakingRelay.tsol, 201
+PUSHINT 2541
+GETPARAM 7
+FIRST
+ROT
+GREATER
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 203
+ACCEPT
+.loc ../contracts/staking/base/StakingRelay.tsol, 205
+NOW
+SETGLOB 14
+.loc ../contracts/staking/base/StakingRelay.tsol, 207
+GETGLOB 16
+FIRST
+INC
+UFITS 32
+CALLREF {
+	CALL $getElectionAddress_d86f37be_internal_macro$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 208
+GETGLOB 15
+INDEX 5
+ROTREV
+NEWC
+STSLICECONST x62_
+STSLICE
+SWAP
+STGRAMS
+PUSHINT 1428940967
+STUR 139
+STU 32
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+
+.macro onElectionStarted
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 211
+LDU 32
+ENDS
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+CALLREF {
+	CALL $onElectionStarted_5381cce7_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro onElectionStarted_5381cce7_internal_macro
+.loc ../contracts/staking/base/StakingRelay.tsol, 211
+DUP
+.loc ../contracts/staking/base/StakingRelay.tsol, 399
+CALLREF {
+	CALL $getElectionAddress_d86f37be_internal_macro$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 400
+PUSHINT 2509
+SWAP
+GETGLOB 9
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 212
+GETGLOB 16
+NOW
+SETINDEX 3
+SETGLOB 16
+.loc ../contracts/staking/base/StakingRelay.tsol, 213
+GETGLOB 9
+NOW
+GETGLOB 19
+THIRD
+ADD
+UFITS 32
+NOW
+ROLL 3
+PUSHSLICE xc00000000000000000000000002c6cd65f
+NEWC
+STSLICE
+STU 32
+STU 32
+STU 32
+STSLICE
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+
+.macro onElectionEnded
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 216
+LDU 32
+LDU 32
+ENDS
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+CALLREF {
+	CALL $onElectionEnded_8fb28849_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro onElectionEnded_8fb28849_internal_macro
+.loc ../contracts/staking/base/StakingRelay.tsol, 216
+OVER
+.loc ../contracts/staking/base/StakingRelay.tsol, 399
+CALLREF {
+	CALL $getElectionAddress_d86f37be_internal_macro$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 400
+PUSHINT 2509
+SWAP
+GETGLOB 9
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 220
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingRelay.tsol, 222
+DUP
+GETGLOB 19
+INDEX 6
+GEQ
+.loc ../contracts/staking/base/StakingRelay.tsol, 224
+GETGLOB 16
+PUSHINT 0
+SETINDEX 3
+DUP
+SETGLOB 16
+.loc ../contracts/staking/base/StakingRelay.tsol, 225
+TRUE
+SETINDEX 4
+SETGLOB 16
+.loc ../contracts/staking/base/StakingRelay.tsol, 227
+DUP
+ROT
+PUSH S3
+PUSHSLICE xc00000000000000000000000005efcc979
+NEWC
+STSLICE
+STU 32
+STU 32
+STI 1
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingRelay.tsol, 229
+CALLREF {
+	CALL $_relaysPacksCount_fc90a925_internal_macro$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 230
+GETGLOB 9
+.loc ../contracts/staking/base/StakingRelay.tsol, 231
+PUSH S3
+DEC
+UFITS 32
+CALLREF {
+	CALL $getRelayRoundAddress_9cd92e39_internal_macro$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 233
+PUSHINT 0
+DUP
+.loc ../contracts/staking/base/StakingRelay.tsol, 236
+NOW
+GETGLOB 16
+THIRD
+GETGLOB 19
+INDEX 4
+SUB
+UFITS 32
+GREATER
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingRelay.tsol, 237
+	NOW
+	GETGLOB 19
+	INDEX 4
+	ADD
+	UFITS 32
+	POP S2
+	.loc ../contracts/staking/base/StakingRelay.tsol, 238
+}
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingRelay.tsol, 241
+	GETGLOB 16
+	THIRD
+	POP S2
+	.loc ../contracts/staking/base/StakingRelay.tsol, 242
+}
+IFELSE
+OVER
+GETGLOB 19
+SECOND
+ADD
+UFITS 32
+NIP
+.loc ../contracts/staking/base/StakingRelay.tsol, 244
+BLKSWAP 4, 2
+BLKSWAP 4, 3
+NOT
+BLKSWAP 3, 4
+PUSHPOW2 7
+CALLREF {
+	CALL $deployRelayRound_29f238ac_internal_macro$
+}
+DROP
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+
+.globl	_relaysPacksCount_fc90a925_internal
+.type	_relaysPacksCount_fc90a925_internal, @function
+CALL $_relaysPacksCount_fc90a925_internal_macro$
+
+.macro _relaysPacksCount_fc90a925_internal_macro
+.loc ../contracts/staking/base/StakingRelay.tsol, 251
+GETGLOB 19
+INDEX 5
+PUSHINT 30
+DIV
+UFITS 8
+.loc ../contracts/staking/base/StakingRelay.tsol, 252
+GETGLOB 19
+INDEX 5
+PUSHINT 30
+MOD
+GTINT 0
+PUSHINT 1
+PUSHINT 0
+CONDSEL
+.loc ../contracts/staking/base/StakingRelay.tsol, 253
+ADD
+UFITS 8
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+
+.macro onRelayRoundDeployed
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 256
+LDU 32
+LDI 1
+ENDS
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+CALLREF {
+	CALL $onRelayRoundDeployed_3343df88_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro onRelayRoundDeployed_3343df88_internal_macro
+.loc ../contracts/staking/base/StakingRelay.tsol, 256
+PUSH2 S1, S1
+.loc ../contracts/staking/base/StakingRelay.tsol, 405
+CALLREF {
+	CALL $getRelayRoundAddress_9cd92e39_internal_macro$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 406
+PUSHINT 2515
+OVER
+GETGLOB 9
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 407
+SWAP2
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingRelay.tsol, 260
+	CALLREF {
+		CALL $_reserve_413ab4a8_internal_macro$
+	}
+	PUSHINT 0
+	RAWRESERVE
+	.loc ../contracts/staking/base/StakingRelay.tsol, 262
+	OVER
+	PUSHCONT {
+		.loc ../contracts/staking/base/StakingRelay.tsol, 264
+		DROP2
+		.loc ../contracts/staking/base/StakingRelay.tsol, 0
+	}
+	IFNOTJMP
+	.loc ../contracts/staking/base/StakingRelay.tsol, 267
+	GETGLOB 9
+	.loc ../contracts/staking/base/StakingRelay.tsol, 268
+	SWAP
+	PUSHCONT {
+		.loc ../contracts/staking/base/StakingRelay.tsol, 270
+		OVER
+		DEC
+		UFITS 32
+		CALLREF {
+			CALL $getRelayRoundAddress_9cd92e39_internal_macro$
+		}
+		.loc ../contracts/staking/base/StakingRelay.tsol, 272
+		DUP
+		NEWC
+		STSLICECONST x42_
+		STSLICE
+		PUSHINT 3112111703474754619475120804657301188247552
+		STUR 143
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+		.loc ../contracts/staking/base/StakingRelay.tsol, 273
+		PUSHINT 0
+		PUSHCONT {
+			DUP
+			CALLREF {
+				CALL $_relaysPacksCount_fc90a925_internal_macro$
+			}
+			LESS
+		}
+		PUSHCONT {
+			.loc ../contracts/staking/base/StakingRelay.tsol, 275
+			DUP
+			CALLREF {
+				CALL $_relaysPacksCount_fc90a925_internal_macro$
+			}
+			DEC
+			UFITS 8
+			EQUAL
+			DUP
+			PUSHCONT {
+				DROP
+				GETGLOB 19
+				INDEX 5
+				PUSHINT 30
+				MOD
+				GTINT 0
+			}
+			IF
+			PUSHCONT {
+				.loc ../contracts/staking/base/StakingRelay.tsol, 276
+				GETGLOB 19
+				INDEX 5
+				PUSHINT 30
+				MOD
+			}
+			PUSHCONT {
+				.loc ../contracts/staking/base/StakingRelay.tsol, 280
+				PUSHINT 30
+			}
+			IFELSE
+			OVER2
+			NEWC
+			STSLICECONST x62_
+			STSLICE
+			PUSHINT 3112111703474754619475120804657301188247553
+			STUR 143
+			ROTREV
+			NEWC
+			STSLICECONST x357073b1
+			STSLICE
+			STU 32
+			STBREFR
+			ENDC
+			PUSHINT 0
+			SENDRAWMSG
+			.loc ../contracts/staking/base/StakingRelay.tsol, 273
+			INC
+			.loc ../contracts/staking/base/StakingRelay.tsol, 0
+		}
+		WHILE
+	}
+	PUSHCONT {
+		.loc ../contracts/staking/base/StakingRelay.tsol, 287
+		OVER
+		CALLREF {
+			CALL $getElectionAddress_d86f37be_internal_macro$
+		}
+		.loc ../contracts/staking/base/StakingRelay.tsol, 289
+		DUP
+		NEWC
+		STSLICECONST x42_
+		STSLICE
+		PUSHINT 3112111703474754619475120804657301188247552
+		STUR 143
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+		.loc ../contracts/staking/base/StakingRelay.tsol, 290
+		PUSHINT 0
+		PUSHCONT {
+			DUP
+			CALLREF {
+				CALL $_relaysPacksCount_fc90a925_internal_macro$
+			}
+			LESS
+		}
+		PUSHCONT {
+			.loc ../contracts/staking/base/StakingRelay.tsol, 292
+			DUP
+			CALLREF {
+				CALL $_relaysPacksCount_fc90a925_internal_macro$
+			}
+			DEC
+			UFITS 8
+			EQUAL
+			DUP
+			PUSHCONT {
+				DROP
+				GETGLOB 19
+				INDEX 5
+				PUSHINT 30
+				MOD
+				GTINT 0
+			}
+			IF
+			PUSHCONT {
+				.loc ../contracts/staking/base/StakingRelay.tsol, 293
+				GETGLOB 19
+				INDEX 5
+				PUSHINT 30
+				MOD
+			}
+			PUSHCONT {
+				.loc ../contracts/staking/base/StakingRelay.tsol, 297
+				PUSHINT 30
+			}
+			IFELSE
+			OVER2
+			NEWC
+			STSLICECONST x62_
+			STSLICE
+			PUSHINT 3112111703474754619475120804657301188247553
+			STUR 143
+			ROTREV
+			NEWC
+			STSLICECONST x357073b1
+			STSLICE
+			STU 32
+			STBREFR
+			ENDC
+			PUSHINT 0
+			SENDRAWMSG
+			.loc ../contracts/staking/base/StakingRelay.tsol, 290
+			INC
+			.loc ../contracts/staking/base/StakingRelay.tsol, 0
+		}
+		WHILE
+	}
+	IFELSE
+	BLKDROP 4
+	.loc ../contracts/staking/base/StakingRelay.tsol, 256
+}
+CALLX
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+DROP2
+
+.macro onRelayRoundInitialized
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 305
+OVER
+PUSHCONT {
+	LDU 32
+	LDU 32
+	LDU 32
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDU 32
+	LDU 32
+	LDU 32
+}
+IFELSE
+LDU 32
+LDU 128
+LDU 32
+LDI 1
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+ENDS
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+CALLREF {
+	CALL $onRelayRoundInitialized_f2235287_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro onRelayRoundInitialized_f2235287_internal_macro
+.loc ../contracts/staking/base/StakingRelay.tsol, 305
+PUSH S8
+.loc ../contracts/staking/base/StakingRelay.tsol, 405
+CALLREF {
+	CALL $getRelayRoundAddress_9cd92e39_internal_macro$
+}
+.loc ../contracts/staking/base/StakingRelay.tsol, 406
+PUSHINT 2515
+SWAP
+GETGLOB 9
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 319
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+GETGLOB 20
+SUB
+UFITS 128
+GETGLOB 21
+SUB
+UFITS 128
+PUSHINT 2000000000
+UFITS 64
+SUB
+UFITS 128
+PUSHINT 2
+RAWRESERVE
+.loc ../contracts/staking/base/StakingRelay.tsol, 321
+GETGLOB 16
+FALSE
+SETINDEX 4
+DUP
+SETGLOB 16
+.loc ../contracts/staking/base/StakingRelay.tsol, 322
+PUSH S9
+SETINDEX 0
+DUP
+SETGLOB 16
+.loc ../contracts/staking/base/StakingRelay.tsol, 323
+PUSH S7
+SETINDEX 2
+DUP
+SETGLOB 16
+.loc ../contracts/staking/base/StakingRelay.tsol, 324
+PUSH S8
+SETINDEX 1
+SETGLOB 16
+.loc ../contracts/staking/base/StakingRelay.tsol, 325
+ROLL 4
+GETGLOB 17
+DUP
+INDEX 11
+UNPAIR
+ROLL 7
+TUCK
+PUSH S3
+LESS
+THROWIFNOT 50
+DUP2
+PUSHINT 32
+DICTUGET
+THROWIFNOT 50
+CALLREF {
+	LDU 256
+	LDU 128
+	LDU 128
+	LDU 32
+	ENDS
+	TUPLE 4
+}
+DUP
+THIRD
+ROLL 6
+ADD
+UFITS 128
+SETINDEX 2
+CALLREF {
+	UNTUPLE 4
+	REVERSE 4, 0
+	NEWC
+	STU 256
+	STU 128
+	STU 128
+	STU 32
+}
+ROTREV
+PUSHINT 32
+DICTUSETB
+PAIR
+SETINDEX 11
+SETGLOB 17
+.loc ../contracts/staking/base/StakingRelay.tsol, 327
+PUSH S6
+GTINT 0
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingRelay.tsol, 329
+	PUSH S6
+	NEWC
+	STU 32
+	.loc ../contracts/staking/base/StakingRelay.tsol, 330
+	PUSH S2
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	.loc ../contracts/staking/base/StakingRelay.tsol, 331
+	PUSH S5
+	STUR 32
+	.loc ../contracts/staking/base/StakingRelay.tsol, 332
+	LTIME
+	NOW
+	ROT
+	ENDC
+	TRIPLE
+	.loc ../contracts/staking/base/StakingRelay.tsol, 333
+	GETGLOB 20
+	GETGLOB 17
+	THIRD
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 547684567
+	STUR 139
+	SWAP
+	UNTRIPLE
+	REVERSE 4, 0
+	STU 64
+	STU 32
+	STREF
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc ../contracts/staking/base/StakingRelay.tsol, 336
+	PUSH S6
+	NEWC
+	STU 32
+	.loc ../contracts/staking/base/StakingRelay.tsol, 337
+	OVER
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	.loc ../contracts/staking/base/StakingRelay.tsol, 338
+	PUSH S5
+	STUR 32
+	.loc ../contracts/staking/base/StakingRelay.tsol, 339
+	PUSHINT 0
+	NEWDICT
+	PAIR
+	.loc ../contracts/staking/base/StakingRelay.tsol, 340
+	LTIME
+	NOW
+	PUSH S2
+	FALSE
+	BLKSWAP 2, 4
+	SWAP
+	ENDC
+	TUPLE 6
+	.loc ../contracts/staking/base/StakingRelay.tsol, 341
+	GETGLOB 21
+	GETGLOB 18
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1089435086
+	STUR 139
+	SWAP
+	UNTUPLE 6
+	REVERSE 7, 0
+	STU 64
+	STU 32
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	STI 1
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	STREF
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc ../contracts/staking/base/StakingRelay.tsol, 0
+}
+IF
+.loc ../contracts/staking/base/StakingRelay.tsol, 344
+DROP2
+PUSH S4
+GTINT 0
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingRelay.tsol, 345
+	PUSH S4
+	CALLREF {
+		CALL $getElectionAddress_d86f37be_internal_macro$
+	}
+	.loc ../contracts/staking/base/StakingRelay.tsol, 346
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	PUSHINT 12669519700468838679097577345632051794083288021588259
+	STUR 175
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc ../contracts/staking/base/StakingRelay.tsol, 0
+}
+IF
+.loc ../contracts/staking/base/StakingRelay.tsol, 348
+PUSH S4
+GTINT 2
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingRelay.tsol, 349
+	PUSH S4
+	ADDCONST -3
+	UFITS 32
+	CALLREF {
+		CALL $getRelayRoundAddress_9cd92e39_internal_macro$
+	}
+	.loc ../contracts/staking/base/StakingRelay.tsol, 350
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	PUSHINT 12669519700468838679097577345632051794083288021588259
+	STUR 175
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc ../contracts/staking/base/StakingRelay.tsol, 0
+}
+IF
+.loc ../contracts/staking/base/StakingRelay.tsol, 352
+SWAP
+GETGLOB 9
+BLKSWAP 3, 3
+XCHG S2
+PUSHSLICE xc00000000000000000000000001a63c084
+NEWC
+STSLICE
+STU 32
+STU 32
+STU 32
+STSLICE
+STU 32
+STI 1
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+
+.globl	deployElection_694c40ee_internal
+.type	deployElection_694c40ee_internal, @function
+CALL $deployElection_694c40ee_internal_macro$
+
+.macro deployElection_694c40ee_internal_macro
+.loc ../contracts/staking/base/StakingRelay.tsol, 356
+PUSHINT 2512
+OVER
+GETGLOB 16
+FIRST
+GREATER
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingRelay.tsol, 359
+GETGLOB 15
+INDEX 5
+NEWC
+STU 32
+.loc ../contracts/staking/base/StakingRelay.tsol, 360
+GETGLOB 15
+INDEX 5
+STUR 32
+.loc ../contracts/staking/base/StakingRelay.tsol, 362
+MYADDR
+SWAP
+ENDC
+GETGLOB 15
+INDEX 4
+PUSHINT 101
+ROLL 4
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 106
+NEWC
+STU 32
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 107
+ENDC
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 0
+CALLREF {
+	CALL $_buildInitData_65db94e9_internal_macro$
+}
+DUP
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+ENDC
+CTOS
+ROLLREV 4
+PUSH S4
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 3274370980303967982866698814945429188247555
+STUR 143
+OVER
+CALLREF {
+	CTOS
+	LDI 1
+	SWAP
+	PUSHCONT {
+		LDI 5
+		NIP
+	}
+	IF
+	LDI 1
+	SWAP
+	PUSHCONT {
+		LDI 2
+		NIP
+	}
+	IF
+	LDOPTREF
+	LDOPTREF
+	LDDICT
+	ENDS
+	BLKDROP 3
+}
+STREF
+STSLICECONST 1
+ROLLREV 3
+NEWC
+STSLICECONST x3f61459c
+STREF
+STREF
+STSLICE
+STBREFR
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+
+.globl	deployRelayRound_29f238ac_internal
+.type	deployRelayRound_29f238ac_internal, @function
+CALL $deployRelayRound_29f238ac_internal_macro$
+
+.macro deployRelayRound_29f238ac_internal_macro
+.loc ../contracts/staking/base/StakingRelay.tsol, 379
+GETGLOB 15
+INDEX 7
+NEWC
+STU 32
+.loc ../contracts/staking/base/StakingRelay.tsol, 380
+GETGLOB 15
+INDEX 7
+STUR 32
+.loc ../contracts/staking/base/StakingRelay.tsol, 381
+PUSH S7
+STUR 32
+.loc ../contracts/staking/base/StakingRelay.tsol, 382
+PUSH S6
+STUR 32
+.loc ../contracts/staking/base/StakingRelay.tsol, 383
+GETGLOB 17
+INDEX 11
+FIRST
+DEC
+UFITS 32
+STUR 32
+.loc ../contracts/staking/base/StakingRelay.tsol, 384
+GETGLOB 19
+INDEX 9
+BLKSWAP 2, 7
+SUBR
+UFITS 32
+MUL
+UFITS 128
+.loc ../contracts/staking/base/StakingRelay.tsol, 385
+STUR 128
+.loc ../contracts/staking/base/StakingRelay.tsol, 386
+ROLL 5
+SWAP
+STI 1
+.loc ../contracts/staking/base/StakingRelay.tsol, 387
+ROLL 4
+STUR 8
+.loc ../contracts/staking/base/StakingRelay.tsol, 388
+ROLL 3
+STSLICER
+.loc ../contracts/staking/base/StakingRelay.tsol, 389
+XCHG S1, S2
+STSLICE
+.loc ../contracts/staking/base/StakingRelay.tsol, 391
+MYADDR
+SWAP
+ENDC
+GETGLOB 15
+INDEX 6
+PUSHINT 102
+ROLL 5
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 112
+NEWC
+STU 32
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 113
+ENDC
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 0
+CALLREF {
+	CALL $_buildInitData_65db94e9_internal_macro$
+}
+DUP
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+ENDC
+CTOS
+ROLLREV 4
+PUSH S4
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 3274370980303967982866698814945429188247555
+STUR 143
+OVER
+CALLREF {
+	CTOS
+	LDI 1
+	SWAP
+	PUSHCONT {
+		LDI 5
+		NIP
+	}
+	IF
+	LDI 1
+	SWAP
+	PUSHCONT {
+		LDI 2
+		NIP
+	}
+	IF
+	LDOPTREF
+	LDOPTREF
+	LDDICT
+	ENDS
+	BLKDROP 3
+}
+STREF
+STSLICECONST 1
+ROLLREV 3
+NEWC
+STSLICECONST x3f61459c
+STREF
+STREF
+STSLICE
+STBREFR
+ENDC
+ROT
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingRelay.tsol, 0
+
+.macro installPlatformOnce
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 9
+OVER
+PUSHCONT {
+	LDREF
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDREF
+}
+IFELSE
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 0
+CALLREF {
+	CALL $installPlatformOnce_d17c69ba_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro installPlatformOnce_d17c69ba_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 727
+GETGLOB 9
+GETGLOB 17
+INDEX 5
+SDEQ
+IFNOTREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 10
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 12
+PUSHINT 2510
+GETGLOB 15
+SECOND
+NOT
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 13
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 14
+GETGLOB 15
+ROT
+SETINDEX 0
+DUP
+SETGLOB 15
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 15
+TRUE
+SETINDEX 1
+SETGLOB 15
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 16
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 0
+
+.macro installOrUpdateUserDataCode
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 19
+OVER
+PUSHCONT {
+	LDREF
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDREF
+}
+IFELSE
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 0
+CALLREF {
+	CALL $installOrUpdateUserDataCode_5e6c29a2_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro installOrUpdateUserDataCode_5e6c29a2_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 727
+GETGLOB 9
+GETGLOB 17
+INDEX 5
+SDEQ
+IFNOTREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 20
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 21
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 22
+GETGLOB 15
+ROT
+SETINDEX 2
+DUP
+SETGLOB 15
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 23
+DUP
+INDEX 3
+INC
+UFITS 32
+SETINDEX 3
+DUP
+SETGLOB 15
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 24
+INDEX 3
+PUSHSLICE xc0000000000000000000000000112c3680
+NEWC
+STSLICE
+STU 32
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 25
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 0
+
+.macro installOrUpdateElectionCode
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 28
+OVER
+PUSHCONT {
+	LDREF
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDREF
+}
+IFELSE
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 0
+CALLREF {
+	CALL $installOrUpdateElectionCode_9374f949_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro installOrUpdateElectionCode_9374f949_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 727
+GETGLOB 9
+GETGLOB 17
+INDEX 5
+SDEQ
+IFNOTREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 29
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 30
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 31
+GETGLOB 15
+ROT
+SETINDEX 4
+DUP
+SETGLOB 15
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 32
+DUP
+INDEX 5
+INC
+UFITS 32
+SETINDEX 5
+DUP
+SETGLOB 15
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 33
+INDEX 5
+PUSHSLICE xc00000000000000000000000003a50c284
+NEWC
+STSLICE
+STU 32
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 34
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 0
+
+.macro installOrUpdateRelayRoundCode
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 37
+OVER
+PUSHCONT {
+	LDREF
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDREF
+}
+IFELSE
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 0
+CALLREF {
+	CALL $installOrUpdateRelayRoundCode_8d4d6e2b_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro installOrUpdateRelayRoundCode_8d4d6e2b_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 727
+GETGLOB 9
+GETGLOB 17
+INDEX 5
+SDEQ
+IFNOTREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 38
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 39
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 40
+GETGLOB 15
+ROT
+SETINDEX 6
+DUP
+SETGLOB 15
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 41
+DUP
+INDEX 7
+INC
+UFITS 32
+SETINDEX 7
+DUP
+SETGLOB 15
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 42
+INDEX 7
+PUSHSLICE xc00000000000000000000000007b4325db
+NEWC
+STSLICE
+STU 32
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 43
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 0
+
+.macro upgradeUserData
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 47
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 0
+CALLREF {
+	CALL $upgradeUserData_0f467ff4_internal_macro$
+}
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.macro upgradeUserData_0f467ff4_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 755
+PUSHINT 2514
+GETGLOB 13
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 48
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 49
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 51
+GETGLOB 9
+PUSHINT 0
+ROT
+CALLREF {
+	CALL $_upgradeUserData_902d27f3_internal_macro$
+}
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 0
+
+.macro forceUpgradeUserData
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 54
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 0
+CALLREF {
+	CALL $forceUpgradeUserData_a68417a2_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro forceUpgradeUserData_a68417a2_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 727
+GETGLOB 9
+GETGLOB 17
+INDEX 5
+SDEQ
+IFNOTREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 58
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 59
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 61
+SWAP
+PUSHINT 0
+ROT
+CALLREF {
+	CALL $_upgradeUserData_902d27f3_internal_macro$
+}
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 0
+
+.globl	_upgradeUserData_902d27f3_internal
+.type	_upgradeUserData_902d27f3_internal, @function
+CALL $_upgradeUserData_902d27f3_internal_macro$
+
+.macro _upgradeUserData_902d27f3_internal_macro
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 65
+PUSH S2
+PUSHSLICE xc00000000000000000000000007e544398
+NEWC
+STSLICE
+STSLICE
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 66
+ROT
+CALLREF {
+	CALL $getUserDataAddress_b432e94f_internal_macro$
+}
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 67
+PUSHINT 0
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 68
+PUSH S3
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingUpgradable.tsol, 69
+	DROP
+	PUSHPOW2 7
+	.loc ../contracts/staking/base/StakingUpgradable.tsol, 0
+}
+IFNOT
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 71
+ROT
+GETGLOB 15
+INDEX 3
+GETGLOB 15
+THIRD
+BLKSWAP 2, 4
+NEWC
+STSLICECONST x62_
+STSLICE
+SWAP
+STGRAMS
+PUSHINT 1
+STUR 107
+ROLLREV 3
+NEWC
+STSLICECONST x64a578c8
+STREF
+STU 32
+STSLICE
+STBREFR
+ENDC
+SWAP
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 0
+
+.macro upgradeElection
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 78
+OVER
+PUSHCONT {
+	LDU 32
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDU 32
+}
+IFELSE
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 0
+CALLREF {
+	CALL $upgradeElection_fea41658_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro upgradeElection_fea41658_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 727
+GETGLOB 9
+GETGLOB 17
+INDEX 5
+SDEQ
+IFNOTREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 82
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 83
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 85
+OVER
+PUSHSLICE xc0000000000000000000000000059d42b0
+NEWC
+STSLICE
+STU 32
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 86
+GETGLOB 15
+INDEX 5
+GETGLOB 15
+INDEX 4
+ROLL 3
+CALLREF {
+	CALL $getElectionAddress_d86f37be_internal_macro$
+}
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 1
+STUR 111
+ROLLREV 3
+NEWC
+STSLICECONST x64a578c8
+STREF
+STU 32
+STSLICE
+STBREFR
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 0
+
+.macro upgradeRelayRound
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 91
+OVER
+PUSHCONT {
+	LDU 32
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDU 32
+}
+IFELSE
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 0
+CALLREF {
+	CALL $upgradeRelayRound_6340636e_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro upgradeRelayRound_6340636e_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 727
+GETGLOB 9
+GETGLOB 17
+INDEX 5
+SDEQ
+IFNOTREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 95
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 96
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 98
+OVER
+PUSHSLICE xc000000000000000000000000079171008
+NEWC
+STSLICE
+STU 32
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 99
+GETGLOB 15
+INDEX 7
+GETGLOB 15
+INDEX 6
+ROLL 3
+CALLREF {
+	CALL $getRelayRoundAddress_9cd92e39_internal_macro$
+}
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 1
+STUR 111
+ROLLREV 3
+NEWC
+STSLICECONST x64a578c8
+STREF
+STU 32
+STSLICE
+STBREFR
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 0
+
+.macro getElectionAddress
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 116
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+LDU 32
+ENDS
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 0
+CALLREF {
+	CALL $getElectionAddress_d86f37be_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	SWAP
+	NEWC
+	STSLICECONST xabd2608a
+	STSLICE
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	SWAP
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STSLICE
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	getElectionAddress_d86f37be_internal
+.type	getElectionAddress_d86f37be_internal, @function
+CALL $getElectionAddress_d86f37be_internal_macro$
+
+.macro getElectionAddress_d86f37be_internal_macro
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 117
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+FALSE
+SETINDEXQ 1
+PUSHINT 64
+SETINDEXQ 4
+SETGLOB 4
+PUSHINT 101
+SWAP
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 106
+NEWC
+STU 32
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 107
+ENDC
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 0
+CALLREF {
+	CALL $_buildInitData_65db94e9_internal_macro$
+}
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+ENDC
+CTOS
+
+.macro getRelayRoundAddress
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 123
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+LDU 32
+ENDS
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 0
+CALLREF {
+	CALL $getRelayRoundAddress_9cd92e39_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	SWAP
+	NEWC
+	STSLICECONST xbc631db7
+	STSLICE
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	SWAP
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STSLICE
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	getRelayRoundAddress_9cd92e39_internal
+.type	getRelayRoundAddress_9cd92e39_internal, @function
+CALL $getRelayRoundAddress_9cd92e39_internal_macro$
+
+.macro getRelayRoundAddress_9cd92e39_internal_macro
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 124
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+FALSE
+SETINDEXQ 1
+PUSHINT 64
+SETINDEXQ 4
+SETGLOB 4
+PUSHINT 102
+SWAP
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 112
+NEWC
+STU 32
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 113
+ENDC
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 0
+CALLREF {
+	CALL $_buildInitData_65db94e9_internal_macro$
+}
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+ENDC
+CTOS
+
+.macro getRelayRoundAddressFromTimestamp
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 131
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+LDU 32
+ENDS
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 0
+CALLREF {
+	CALL $getRelayRoundAddressFromTimestamp_8ebbb78d_internal_macro$
+}
+PUSH S2
+PUSHCONT {
+	PUSH S4
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	XCHG S2
+	NEWC
+	STSLICECONST xf7f56c00
+	STSLICE
+	STU 32
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	XCHG S2
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STSLICE
+	STU 32
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	getRelayRoundAddressFromTimestamp_8ebbb78d_internal
+.type	getRelayRoundAddressFromTimestamp_8ebbb78d_internal, @function
+CALL $getRelayRoundAddressFromTimestamp_8ebbb78d_internal_macro$
+
+.macro getRelayRoundAddressFromTimestamp_8ebbb78d_internal_macro
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 132
+GETGLOB 16
+SECOND
+LESS
+PUSHCONT {
+	GETGLOB 16
+	FIRST
+	DEC
+	UFITS 32
+}
+PUSHCONT {
+	GETGLOB 16
+	FIRST
+}
+IFELSE
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 133
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+FALSE
+SETINDEXQ 1
+PUSHINT 64
+SETINDEXQ 4
+SETGLOB 4
+DUP
+CALLREF {
+	CALL $getRelayRoundAddress_9cd92e39_internal_macro$
+}
+SWAP
+.loc ../contracts/staking/base/StakingUpgradable.tsol, 0
+
+.macro getDetails
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 143
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $getDetails_fbbf93a0_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	SWAP
+	NEWC
+	STSLICECONST x9bc65db8
+	SWAP
+	UNTUPLE 13
+	REVERSE 14, 0
+	STSLICE
+	ROLLREV 12
+	NEWC
+	STSLICE
+	ROLLREV 11
+	NEWC
+	STSLICE
+	ROLLREV 10
+	NEWC
+	STSLICE
+	ROLLREV 9
+	NEWC
+	STSLICE
+	ROLLREV 8
+	NEWC
+	STSLICE
+	ROLLREV 7
+	NEWC
+	STSLICE
+	ROLLREV 6
+	NEWC
+	STSLICE
+	STU 128
+	STU 128
+	STU 32
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	STI 1
+	STBREFR
+	STBREFR
+	STBREFR
+	STBREFR
+	STBREFR
+	STBREFR
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	SWAP
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	SWAP
+	UNTUPLE 13
+	REVERSE 14, 0
+	STSLICE
+	ROLLREV 12
+	NEWC
+	STSLICE
+	ROLLREV 11
+	NEWC
+	STSLICE
+	ROLLREV 10
+	NEWC
+	STSLICE
+	ROLLREV 9
+	NEWC
+	STSLICE
+	ROLLREV 8
+	NEWC
+	STSLICE
+	ROLLREV 7
+	NEWC
+	STSLICE
+	ROLLREV 6
+	NEWC
+	STSLICE
+	STU 128
+	STU 128
+	STU 32
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	STI 1
+	STBREFR
+	STBREFR
+	STBREFR
+	STBREFR
+	STBREFR
+	STBREFR
+	STBREFR
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	getDetails_fbbf93a0_internal
+.type	getDetails_fbbf93a0_internal, @function
+CALL $getDetails_fbbf93a0_internal_macro$
+
+.macro getDetails_fbbf93a0_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 144
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+FALSE
+SETINDEXQ 1
+SETGLOB 4
+GETGLOB 17
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro getCodeData
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 147
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $getCodeData_c61567e2_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 3986791025
+	STUR 130
+	SWAP
+	UNTUPLE 8
+	REVERSE 9, 0
+	STREF
+	STI 1
+	STREF
+	STU 32
+	STREF
+	STU 32
+	STREF
+	STU 32
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 106
+	STZEROES
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	SWAP
+	UNTUPLE 8
+	REVERSE 9, 0
+	STREF
+	STI 1
+	STREF
+	STU 32
+	STREF
+	STU 32
+	STREF
+	STU 32
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.macro getCodeData_c61567e2_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 148
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+FALSE
+SETINDEXQ 1
+SETGLOB 4
+GETGLOB 15
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro getRelayRoundsDetails
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 151
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $getRelayRoundsDetails_1666c2a5_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 3493364260
+	STUR 130
+	SWAP
+	UNTUPLE 5
+	REVERSE 6, 0
+	STU 32
+	STU 32
+	STU 32
+	STU 32
+	STI 1
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 106
+	STZEROES
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	SWAP
+	UNTUPLE 5
+	REVERSE 6, 0
+	STU 32
+	STU 32
+	STU 32
+	STU 32
+	STI 1
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.macro getRelayRoundsDetails_1666c2a5_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 152
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+FALSE
+SETINDEXQ 1
+SETGLOB 4
+GETGLOB 16
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro getRelayConfig
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 155
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $getRelayConfig_5ee9bf11_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	SWAP
+	NEWC
+	STSLICECONST xb058b15f
+	SWAP
+	UNTUPLE 11
+	REVERSE 12, 0
+	STU 32
+	STU 32
+	STU 32
+	STU 32
+	STU 32
+	STU 16
+	STU 16
+	STU 128
+	STU 128
+	STU 128
+	STU 128
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	SWAP
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	SWAP
+	UNTUPLE 11
+	REVERSE 12, 0
+	STU 32
+	STU 32
+	STU 32
+	STU 32
+	STU 32
+	STU 16
+	STU 16
+	STU 128
+	STU 128
+	STU 128
+	STU 128
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.macro getRelayConfig_5ee9bf11_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 156
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+FALSE
+SETINDEXQ 1
+SETGLOB 4
+GETGLOB 19
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro addDelegate
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 159
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDU 256
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $addDelegate_5bcfd212_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	addDelegate_5bcfd212_internal
+.type	addDelegate_5bcfd212_internal, @function
+CALL $addDelegate_5bcfd212_internal_macro$
+
+.macro addDelegate_5bcfd212_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 727
+GETGLOB 9
+GETGLOB 17
+INDEX 5
+SDEQ
+IFNOTREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 160
+OVER
+GETGLOB 10
+PUSHINT 267
+DICTGET
+NULLSWAPIFNOT
+PUSHCONT {
+	LDU 32
+	PLDDICT
+	PAIR
+}
+IF
+.loc ../contracts/staking/base/StakingBase.tsol, 161
+DUP
+ISNULL
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingBase.tsol, 166
+	OVER
+	PUSHINT 0
+	NEWDICT
+	PUSHINT 1
+	PUSHCONT {
+		ROT
+		NEWC
+		STU 256
+		PUSH S2
+		INC
+		XCHG S3
+		ROT
+		PUSHINT 32
+		DICTUSETB
+	}
+	REPEAT
+	PAIR
+}
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingBase.tsol, 162
+	BLKPUSH 2, 0
+	ISNULL
+	THROWIF 63
+	.loc ../contracts/staking/base/StakingBase.tsol, 163
+	PUSH S2
+	NEWC
+	STU 256
+	SWAP
+	UNPAIR
+	OVER
+	INC
+	ROLLREV 3
+	PUSHINT 32
+	DICTUSETB
+	PAIR
+	.loc ../contracts/staking/base/StakingBase.tsol, 164
+}
+IFELSE
+PUSH S3
+GETGLOB 10
+NEWC
+ROLL 3
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+ROTREV
+PUSHINT 267
+DICTSETB
+SETGLOB 10
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+BLKDROP 3
+
+.globl	_reserve_413ab4a8_internal
+.type	_reserve_413ab4a8_internal, @function
+CALL $_reserve_413ab4a8_internal_macro$
+
+.macro _reserve_413ab4a8_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 171
+GETPARAM 7
+FIRST
+DEPTH
+ADDCONST -2
+PICK
+SUB
+UFITS 128
+PUSHINT 2000000000
+MAX
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro setDaoRoot
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 174
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $setDaoRoot_a2edd839_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setDaoRoot_a2edd839_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 739
+PUSHINT 2601
+GETGLOB 9
+GETGLOB 17
+FIRST
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 175
+PUSHINT 2112
+PUSH S2
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+SDEQ
+NOT
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 176
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 177
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingBase.tsol, 178
+OVER
+PUSHSLICE xc0000000000000000000000000116de76b
+NEWC
+STSLICE
+STSLICE
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 179
+GETGLOB 17
+ROT
+SETINDEX 0
+SETGLOB 17
+.loc ../contracts/staking/base/StakingBase.tsol, 180
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro setEventDeployValues
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 183
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDU 128
+LDU 128
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $setEventDeployValues_ec7d5c80_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setEventDeployValues_ec7d5c80_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 727
+GETGLOB 9
+GETGLOB 17
+INDEX 5
+SDEQ
+IFNOTREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 184
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 185
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingBase.tsol, 187
+PUSH S2
+PUSHSLICE xc0000000000000000000000000557171ff
+NEWC
+STSLICE
+STU 128
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 188
+OVER
+PUSHSLICE xc00000000000000000000000003f14e517
+NEWC
+STSLICE
+STU 128
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 190
+ROT
+SETGLOB 20
+.loc ../contracts/staking/base/StakingBase.tsol, 191
+SWAP
+SETGLOB 21
+.loc ../contracts/staking/base/StakingBase.tsol, 193
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro setBridgeEventEthTonConfig
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 196
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $setBridgeEventEthTonConfig_893d6ff5_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setBridgeEventEthTonConfig_893d6ff5_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 727
+GETGLOB 9
+GETGLOB 17
+INDEX 5
+SDEQ
+IFNOTREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 197
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 198
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingBase.tsol, 199
+OVER
+PUSHSLICE xc0000000000000000000000000381b9f79
+NEWC
+STSLICE
+STSLICE
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 200
+GETGLOB 17
+ROT
+SETINDEX 1
+SETGLOB 17
+.loc ../contracts/staking/base/StakingBase.tsol, 201
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro setBridgeEventTonEthConfig
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 204
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $setBridgeEventTonEthConfig_86dcf301_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setBridgeEventTonEthConfig_86dcf301_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 727
+GETGLOB 9
+GETGLOB 17
+INDEX 5
+SDEQ
+IFNOTREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 205
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 206
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingBase.tsol, 207
+OVER
+PUSHSLICE xc000000000000000000000000027c45002
+NEWC
+STSLICE
+STSLICE
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 208
+GETGLOB 17
+ROT
+SETINDEX 2
+SETGLOB 17
+.loc ../contracts/staking/base/StakingBase.tsol, 209
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro setBridgeEventTonSolConfig
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 212
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $setBridgeEventTonSolConfig_2feb20ba_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setBridgeEventTonSolConfig_2feb20ba_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 727
+GETGLOB 9
+GETGLOB 17
+INDEX 5
+SDEQ
+IFNOTREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 213
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 214
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingBase.tsol, 215
+OVER
+PUSHSLICE xc000000000000000000000000042df1047
+NEWC
+STSLICE
+STSLICE
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 216
+SWAP
+SETGLOB 18
+.loc ../contracts/staking/base/StakingBase.tsol, 217
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro setAdmin
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 220
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $setAdmin_c55b6bb7_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setAdmin_c55b6bb7_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 739
+PUSHINT 2601
+GETGLOB 9
+GETGLOB 17
+FIRST
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 221
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 222
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingBase.tsol, 223
+OVER
+PUSHSLICE xc000000000000000000000000063e81821
+NEWC
+STSLICE
+STSLICE
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 224
+GETGLOB 17
+ROT
+SETINDEX 5
+SETGLOB 17
+.loc ../contracts/staking/base/StakingBase.tsol, 225
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro setRescuer
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 228
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $setRescuer_2e76be57_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setRescuer_2e76be57_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 739
+PUSHINT 2601
+GETGLOB 9
+GETGLOB 17
+FIRST
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 229
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 230
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingBase.tsol, 231
+OVER
+PUSHSLICE xc000000000000000000000000049b0dd26
+NEWC
+STSLICE
+STSLICE
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 232
+GETGLOB 17
+ROT
+SETINDEX 6
+SETGLOB 17
+.loc ../contracts/staking/base/StakingBase.tsol, 233
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro setRewarder
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 236
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $setRewarder_ad2e6eab_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setRewarder_ad2e6eab_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 739
+PUSHINT 2601
+GETGLOB 9
+GETGLOB 17
+FIRST
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 237
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 238
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingBase.tsol, 239
+OVER
+PUSHSLICE xc000000000000000000000000036ba799e
+NEWC
+STSLICE
+STSLICE
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 240
+GETGLOB 17
+ROT
+SETINDEX 7
+SETGLOB 17
+.loc ../contracts/staking/base/StakingBase.tsol, 241
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro setActive
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 245
+OVER
+PUSHCONT {
+	LDI 1
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDI 1
+}
+IFELSE
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $setActive_83dffa84_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setActive_83dffa84_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 727
+GETGLOB 9
+GETGLOB 17
+INDEX 5
+SDEQ
+IFNOTREF {
+	CALL $checkDelegate_c45d6a7d_internal_macro$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 246
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 247
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingBase.tsol, 248
+XCPU S1, S0
+PUSHCONT {
+	DROP
+	GETGLOB 17
+	FIRST
+	PARSEMSGADDR
+	INDEX 3
+	PLDU 256
+	NEQINT 0
+	DUP
+	PUSHCONT {
+		DROP
+		GETGLOB 17
+		SECOND
+		PARSEMSGADDR
+		INDEX 3
+		PLDU 256
+		NEQINT 0
+		DUP
+		PUSHCONT {
+			DROP
+			GETGLOB 17
+			THIRD
+			PARSEMSGADDR
+			INDEX 3
+			PLDU 256
+			NEQINT 0
+			GETGLOB 15
+			SECOND
+			GETGLOB 15
+			INDEX 3
+			GTINT 0
+			GETGLOB 15
+			INDEX 5
+			GTINT 0
+			GETGLOB 15
+			INDEX 7
+			GTINT 0
+			AND
+			AND
+			AND
+			AND
+		}
+		IF
+	}
+	IF
+}
+IF
+TRUE
+FALSE
+CONDSEL
+DUP
+SETGLOB 13
+.loc ../contracts/staking/base/StakingBase.tsol, 262
+PUSHSLICE xc000000000000000000000000006f5aa9c
+NEWC
+STSLICE
+STI 1
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 263
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro isActive
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 266
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $isActive_22f3e2d4_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 2712534506
+	STUR 130
+	STI 1
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 106
+	STZEROES
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STI 1
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.macro isActive_22f3e2d4_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 267
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+FALSE
+SETINDEXQ 1
+SETGLOB 4
+GETGLOB 13
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro setRelayConfig
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 270
+OVER
+PUSHCONT {
+	LDU 32
+	LDU 32
+	LDU 32
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDU 32
+	LDU 32
+	LDU 32
+}
+IFELSE
+LDU 32
+LDU 32
+LDU 16
+LDU 16
+LDU 128
+LDU 128
+LDU 128
+LDU 128
+ROLLREV 11
+TUPLE 11
+SWAP
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $setRelayConfig_ef3b79fc_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setRelayConfig_ef3b79fc_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 739
+PUSHINT 2601
+GETGLOB 9
+GETGLOB 17
+FIRST
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 271
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 272
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingBase.tsol, 275
+CALLREF {
+	CALL $updatePoolInfo_778225c4_internal_macro$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 277
+XCPU S1, S0
+SETGLOB 19
+.loc ../contracts/staking/base/StakingBase.tsol, 279
+PUSHSLICE xc0000000000000000000000000239e95fa
+NEWC
+STSLICE
+SWAP
+UNTUPLE 11
+REVERSE 12, 0
+STU 32
+STU 32
+STU 32
+STU 32
+STU 32
+STU 16
+STU 16
+STU 128
+STU 128
+STU 128
+STU 128
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 280
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.globl	setUpTokenWallet_aa46637f_internal
+.type	setUpTokenWallet_aa46637f_internal, @function
+CALL $setUpTokenWallet_aa46637f_internal_macro$
+
+.macro setUpTokenWallet_aa46637f_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 287
+PUSHINT 500000000
+MYADDR
+GETGLOB 17
+INDEX 3
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 2949852426645541256083542794369173188247553
+STUR 143
+ROTREV
+PUSHSLICE x31edd4c750bfca9f
+NEWC
+STSLICE
+STSLICE
+STU 128
+STBREFR
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro receiveTokenWalletAddress
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 298
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $receiveTokenWalletAddress_9b3a57ad_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro receiveTokenWalletAddress_9b3a57ad_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 299
+PUSHINT 2503
+GETGLOB 9
+GETGLOB 17
+INDEX 3
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 301
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingBase.tsol, 302
+GETGLOB 17
+SWAP
+SETINDEX 4
+SETGLOB 17
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro startNewRewardRound
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 305
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $startNewRewardRound_5c408c4c_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro startNewRewardRound_5c408c4c_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 744
+PUSHINT 2530
+GETGLOB 9
+GETGLOB 17
+INDEX 7
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 306
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 308
+GETGLOB 17
+INDEX 11
+FIRST
+GTINT 0
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingBase.tsol, 309
+	GETGLOB 17
+	INDEX 11
+	FIRST
+	DEC
+	UFITS 256
+	GETGLOB 17
+	INDEX 11
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	CALLREF {
+		LDU 256
+		LDU 128
+		LDU 128
+		LDU 32
+		ENDS
+		TUPLE 4
+	}
+	.loc ../contracts/staking/base/StakingBase.tsol, 310
+	PUSHINT 2526
+	SWAP
+	SECOND
+	GTINT 0
+	THROWANYIFNOT
+	.loc ../contracts/staking/base/StakingBase.tsol, 0
+}
+IF
+.loc ../contracts/staking/base/StakingBase.tsol, 313
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingBase.tsol, 315
+CALLREF {
+	CALL $updatePoolInfo_778225c4_internal_macro$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 317
+GETGLOB 17
+DUP
+INDEX 11
+PUSHINT 0
+BLKPUSH 2, 0
+NOW
+TUPLE 4
+CALLREF {
+	UNTUPLE 4
+	REVERSE 4, 0
+	NEWC
+	STU 256
+	STU 128
+	STU 128
+	STU 32
+}
+SWAP
+UNPAIR
+OVER
+INC
+ROLLREV 3
+PUSHINT 32
+DICTUSETB
+PAIR
+SETINDEX 11
+DUP
+SETGLOB 17
+.loc ../contracts/staking/base/StakingBase.tsol, 318
+INDEX 11
+FIRST
+DEC
+UFITS 32
+PUSHSLICE xc00000000000000000000000002248f9fb
+NEWC
+STSLICE
+STU 32
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 320
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro decodeDepositPayload
+DROP
+GETGLOB 6
+THROWIFNOT 76
+.loc ../contracts/staking/base/StakingBase.tsol, 324
+LDREF
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $decodeDepositPayload_94b131d7_internal_macro$
+}
+PUSH S2
+PUSHCONT {
+	PUSH S4
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 98
+	STZEROES
+	REVERSE 2, 1
+	STSLICECONST xabc57567
+	STU 8
+	STI 1
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+PUSHCONT {
+	DROP2
+}
+IFELSE
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	decodeDepositPayload_94b131d7_internal
+.type	decodeDepositPayload_94b131d7_internal, @function
+CALL $decodeDepositPayload_94b131d7_internal_macro$
+
+.macro decodeDepositPayload_94b131d7_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 326
+CTOS
+.loc ../contracts/staking/base/StakingBase.tsol, 328
+DUP
+PUSHINT 8
+PUSHINT 0
+SCHKBITREFSQ
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingBase.tsol, 329
+	PUSHINT 0
+	DUP
+	BLKDROP2 1, 2
+	.loc ../contracts/staking/base/StakingBase.tsol, 0
+}
+IFNOTJMP
+.loc ../contracts/staking/base/StakingBase.tsol, 331
+PLDU 8
+.loc ../contracts/staking/base/StakingBase.tsol, 332
+TRUE
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro onAcceptTokensTransfer
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 336
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDU 128
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $onAcceptTokensTransfer_e63f2284_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro onAcceptTokensTransfer_e63f2284_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 344
+PUSHINT 2503
+GETGLOB 9
+GETGLOB 17
+INDEX 4
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 346
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingBase.tsol, 348
+DUP
+CALLREF {
+	CALL $decodeDepositPayload_94b131d7_internal_macro$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 350
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+LESS
+GETGLOB 13
+NOT
+GETGLOB 17
+INDEX 12
+ROLL 3
+NOT
+OR
+OR
+OR
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingBase.tsol, 352
+	DROP
+	TRUE
+	ROT
+	PUSHINT 0
+	BLKSWAP 2, 5
+	SWAP
+	GETGLOB 17
+	INDEX 4
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	PUSHINT 1
+	STUR 111
+	ROLLREV 6
+	NEWC
+	STSLICECONST x73e22143
+	STU 128
+	STSLICE
+	STU 128
+	ROLLREV 3
+	NEWC
+	STSLICE
+	STI 1
+	STREF
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHPOW2 7
+	SENDRAWMSG
+	.loc ../contracts/staking/base/StakingBase.tsol, 360
+	DROP2
+	.loc ../contracts/staking/base/StakingBase.tsol, 0
+}
+IFJMP
+.loc ../contracts/staking/base/StakingBase.tsol, 363
+CALLREF {
+	CALL $updatePoolInfo_778225c4_internal_macro$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 365
+DUP
+PUSHCONT {
+	DUP
+	EQINT 1
+	PUSHCONT {
+		.loc ../contracts/staking/base/StakingBase.tsol, 372
+		PUSH S5
+		GETGLOB 17
+		DUP
+		INDEX 9
+		ROT
+		ADD
+		UFITS 128
+		SETINDEX 9
+		SETGLOB 17
+		.loc ../contracts/staking/base/StakingBase.tsol, 373
+		PUSH S5
+		GETGLOB 17
+		DUP
+		INDEX 11
+		UNPAIR
+		GETGLOB 17
+		INDEX 11
+		FIRST
+		DEC
+		UFITS 256
+		TUCK
+		PUSH S3
+		LESS
+		THROWIFNOT 50
+		DUP2
+		PUSHINT 32
+		DICTUGET
+		THROWIFNOT 50
+		CALLREF {
+			LDU 256
+			LDU 128
+			LDU 128
+			LDU 32
+			ENDS
+			TUPLE 4
+		}
+		DUP
+		SECOND
+		ROLL 6
+		ADD
+		UFITS 128
+		SETINDEX 1
+		CALLREF {
+			UNTUPLE 4
+			REVERSE 4, 0
+			NEWC
+			STU 256
+			STU 128
+			STU 128
+			STU 32
+		}
+		ROTREV
+		PUSHINT 32
+		DICTUSETB
+		PAIR
+		SETINDEX 11
+		DUP
+		SETGLOB 17
+		.loc ../contracts/staking/base/StakingBase.tsol, 374
+		INDEX 11
+		FIRST
+		DEC
+		UFITS 32
+		PUSH S6
+		PUSHSLICE xc00000000000000000000000000e4ed373
+		NEWC
+		STSLICE
+		STU 128
+		STU 32
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+		.loc ../contracts/staking/base/StakingBase.tsol, 376
+		PUSH S2
+		NEWC
+		STSLICECONST x42_
+		STSLICE
+		PUSHINT 111
+		STZEROES
+	}
+	PUSHCONT {
+		.loc ../contracts/staking/base/StakingBase.tsol, 379
+		OVER
+		TRUE
+		PUSH S4
+		PUSHINT 0
+		PUSH2 S8, S9
+		GETGLOB 17
+		INDEX 4
+		NEWC
+		STSLICECONST x62_
+		STSLICE
+		PUSHINT 1
+		STUR 111
+		ROLLREV 6
+		NEWC
+		STSLICECONST x73e22143
+		STU 128
+		STSLICE
+		STU 128
+		ROLLREV 3
+		NEWC
+		STSLICE
+		STI 1
+		STREF
+		STBREFR
+		STBREFR
+	}
+	IFELSE
+}
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingBase.tsol, 366
+	GETGLOB 22
+	INC
+	UFITS 64
+	SETGLOB 22
+	.loc ../contracts/staking/base/StakingBase.tsol, 367
+	PUSH3 S4, S5, S2
+	TRIPLE
+	GETGLOB 22
+	GETGLOB 23
+	ROT
+	CALLREF {
+		UNTRIPLE
+		XCHG S2
+		NEWC
+		STSLICE
+		STU 128
+		SWAP
+		NEWC
+		STSLICE
+		STBREFR
+	}
+	ENDC
+	ROTREV
+	PUSHINT 64
+	DICTUSETREF
+	SETGLOB 23
+	.loc ../contracts/staking/base/StakingBase.tsol, 369
+	PUSH S4
+	CALLREF {
+		CALL $getUserDataAddress_b432e94f_internal_macro$
+	}
+	.loc ../contracts/staking/base/StakingBase.tsol, 370
+	GETGLOB 15
+	INDEX 3
+	GETGLOB 17
+	INDEX 11
+	PUSH S8
+	GETGLOB 22
+	ROLL 4
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	PUSHINT 1258576856
+	STUR 143
+	STU 64
+	STU 128
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	STU 32
+}
+IFELSE
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+BLKDROP 7
+
+.macro revertDeposit
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 390
+LDU 64
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $revertDeposit_15bca5ae_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro revertDeposit_15bca5ae_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 391
+DUP
+GETGLOB 23
+PUSHINT 64
+DICTUGETREF
+PUSHCONT {
+	CTOS
+	CALLREF {
+		LDMSGADDR
+		LDU 128
+		LDREF
+		ENDS
+		CTOS
+		LDMSGADDR
+		ENDS
+		TRIPLE
+	}
+}
+PUSHCONT {
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	PUSHINT 0
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	TRIPLE
+}
+IFELSE
+.loc ../contracts/staking/base/StakingBase.tsol, 392
+DUP
+FIRST
+CALLREF {
+	CALL $getUserDataAddress_b432e94f_internal_macro$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 393
+PUSHINT 2504
+SWAP
+GETGLOB 9
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 395
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingBase.tsol, 397
+SWAP
+GETGLOB 23
+PUSHINT 64
+DICTUDEL
+DROP
+SETGLOB 23
+.loc ../contracts/staking/base/StakingBase.tsol, 398
+DUP
+SECOND
+OVER
+FIRST
+PUSHSLICE xc00000000000000000000000002dfb8ed6
+NEWC
+STSLICE
+STSLICE
+STU 128
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 400
+PUSHREF {
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 401
+TRUE
+PUSH S2
+THIRD
+PUSHINT 0
+PUSH S4
+FIRST
+ROLL 5
+SECOND
+GETGLOB 17
+INDEX 4
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 1
+STUR 111
+ROLLREV 6
+NEWC
+STSLICECONST x73e22143
+STU 128
+STSLICE
+STU 128
+ROLLREV 3
+NEWC
+STSLICE
+STI 1
+STREF
+STBREFR
+STBREFR
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro finishDeposit
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 406
+LDU 64
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $finishDeposit_86c9f56d_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro finishDeposit_86c9f56d_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 407
+DUP
+GETGLOB 23
+PUSHINT 64
+DICTUGETREF
+PUSHCONT {
+	CTOS
+	CALLREF {
+		LDMSGADDR
+		LDU 128
+		LDREF
+		ENDS
+		CTOS
+		LDMSGADDR
+		ENDS
+		TRIPLE
+	}
+}
+PUSHCONT {
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	PUSHINT 0
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	TRIPLE
+}
+IFELSE
+.loc ../contracts/staking/base/StakingBase.tsol, 408
+DUP
+FIRST
+CALLREF {
+	CALL $getUserDataAddress_b432e94f_internal_macro$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 409
+PUSHINT 2504
+SWAP
+GETGLOB 9
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 411
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingBase.tsol, 413
+DUP
+SECOND
+GETGLOB 17
+DUP
+INDEX 8
+ROT
+ADD
+UFITS 128
+SETINDEX 8
+SETGLOB 17
+.loc ../contracts/staking/base/StakingBase.tsol, 415
+DUP
+SECOND
+OVER
+FIRST
+PUSHSLICE xc000000000000000000000000057f202d9
+NEWC
+STSLICE
+STSLICE
+STU 128
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 416
+SWAP
+GETGLOB 23
+PUSHINT 64
+DICTUDEL
+DROP
+SETGLOB 23
+.loc ../contracts/staking/base/StakingBase.tsol, 418
+THIRD
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro withdraw
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 421
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDU 128
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $withdraw_1d9b0783_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	withdraw_1d9b0783_internal
+.type	withdraw_1d9b0783_internal, @function
+CALL $withdraw_1d9b0783_internal_macro$
+
+.macro withdraw_1d9b0783_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 755
+PUSHINT 2514
+GETGLOB 13
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 422
+PUSHINT 2506
+PUSH S2
+GTINT 0
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 423
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 424
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingBase.tsol, 426
+CALLREF {
+	CALL $updatePoolInfo_778225c4_internal_macro$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 428
+GETGLOB 9
+CALLREF {
+	CALL $getUserDataAddress_b432e94f_internal_macro$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 430
+GETGLOB 15
+INDEX 3
+ROT
+GETGLOB 17
+INDEX 12
+GETGLOB 17
+INDEX 11
+BLKSWAP 2, 4
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 1
+STUR 111
+ROLLREV 5
+NEWC
+STSLICECONST x43d2898e
+STU 128
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+STI 1
+STSLICE
+STU 32
+STBREFR
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro finishWithdraw
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 435
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDU 128
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $finishWithdraw_e97caa3f_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.globl	finishWithdraw_e97caa3f_internal
+.type	finishWithdraw_e97caa3f_internal, @function
+CALL $finishWithdraw_e97caa3f_internal_macro$
+
+.macro finishWithdraw_e97caa3f_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 435
+PUSH S2
+.loc ../contracts/staking/base/StakingBase.tsol, 749
+CALLREF {
+	CALL $getUserDataAddress_b432e94f_internal_macro$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 750
+PUSHINT 2504
+SWAP
+GETGLOB 9
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 440
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingBase.tsol, 442
+OVER
+GETGLOB 17
+DUP
+INDEX 8
+ROT
+SUB
+UFITS 128
+SETINDEX 8
+SETGLOB 17
+.loc ../contracts/staking/base/StakingBase.tsol, 444
+PUSH2 S1, S2
+PUSHSLICE xc000000000000000000000000072da1156
+NEWC
+STSLICE
+STSLICE
+STU 128
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 445
+PUSHREF {
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 446
+TRUE
+ROT
+PUSHINT 0
+BLKSWAP 2, 4
+GETGLOB 17
+INDEX 4
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 1
+STUR 111
+ROLLREV 6
+NEWC
+STSLICECONST x73e22143
+STU 128
+STSLICE
+STU 128
+ROLLREV 3
+NEWC
+STSLICE
+STI 1
+STREF
+STBREFR
+STBREFR
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro claimReward
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 451
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $claimReward_d279c191_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro claimReward_d279c191_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 755
+PUSHINT 2514
+GETGLOB 13
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 452
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 453
+PUSHINT 2543
+GETGLOB 17
+INDEX 12
+NOT
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 455
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingBase.tsol, 457
+CALLREF {
+	CALL $updatePoolInfo_778225c4_internal_macro$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 458
+GETGLOB 9
+CALLREF {
+	CALL $getUserDataAddress_b432e94f_internal_macro$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 460
+GETGLOB 15
+INDEX 3
+ROT
+GETGLOB 17
+INDEX 11
+ROLL 3
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 1
+STUR 111
+ROLLREV 3
+NEWC
+STSLICECONST x1ff88f73
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+STSLICE
+STU 32
+STBREFR
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro finishClaimReward
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 465
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $finishClaimReward_7ae0ac8e_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro finishClaimReward_7ae0ac8e_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 465
+PUSH S2
+.loc ../contracts/staking/base/StakingBase.tsol, 749
+CALLREF {
+	CALL $getUserDataAddress_b432e94f_internal_macro$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 750
+PUSHINT 2504
+SWAP
+GETGLOB 9
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 466
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingBase.tsol, 468
+PUSHINT 0
+DUP
+.loc ../contracts/staking/base/StakingBase.tsol, 469
+PUSHCONT {
+	PUSH2 S0, S3
+	FIRST
+	LESS
+}
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingBase.tsol, 470
+	DUP
+	GETGLOB 17
+	INDEX 11
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	CALLREF {
+		LDU 256
+		LDU 128
+		LDU 128
+		LDU 32
+		ENDS
+		TUPLE 4
+	}
+	.loc ../contracts/staking/base/StakingBase.tsol, 471
+	DUP
+	THIRD
+	GTINT 0
+	DUP
+	PUSHCONT {
+		DROP
+		PUSH2 S1, S4
+		SECOND
+		PUSHINT 32
+		DICTUGET
+		THROWIFNOT 50
+		PLDU 128
+		GTINT 0
+	}
+	IF
+	PUSHCONT {
+		.loc ../contracts/staking/base/StakingBase.tsol, 472
+		PUSH2 S1, S4
+		SECOND
+		PUSHINT 32
+		DICTUGET
+		THROWIFNOT 50
+		PLDU 128
+		PUSHINT 1000000000000000000
+		MUL
+		OVER
+		THIRD
+		DIV
+		OVER
+		SECOND
+		MUL
+		PUSHINT 1000000000000000000
+		DIV
+		UFITS 128
+		PUSH S3
+		ADD
+		UFITS 128
+		POP S3
+		.loc ../contracts/staking/base/StakingBase.tsol, 0
+	}
+	IF
+	.loc ../contracts/staking/base/StakingBase.tsol, 0
+	DROP
+	.loc ../contracts/staking/base/StakingBase.tsol, 469
+	INC
+	.loc ../contracts/staking/base/StakingBase.tsol, 0
+}
+WHILE
+DROP
+.loc ../contracts/staking/base/StakingBase.tsol, 476
+GETGLOB 17
+INDEX 9
+MIN
+.loc ../contracts/staking/base/StakingBase.tsol, 477
+DUP
+GETGLOB 17
+DUP
+INDEX 9
+ROT
+SUB
+UFITS 128
+SETINDEX 9
+SETGLOB 17
+.loc ../contracts/staking/base/StakingBase.tsol, 479
+PUSH2 S0, S3
+PUSHSLICE xc000000000000000000000000030ac724c
+NEWC
+STSLICE
+STSLICE
+STU 128
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 481
+DUP
+GTINT 0
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingBase.tsol, 482
+	PUSHREF {
+	}
+	.loc ../contracts/staking/base/StakingBase.tsol, 483
+	TRUE
+	PUSH S3
+	PUSHINT 0
+	PUSH2 S7, S4
+	GETGLOB 17
+	INDEX 4
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	PUSHINT 1
+	STUR 111
+	ROLLREV 6
+	NEWC
+	STSLICECONST x73e22143
+	STU 128
+	STSLICE
+	STU 128
+	ROLLREV 3
+	NEWC
+	STSLICE
+	STI 1
+	STREF
+	STBREFR
+	STBREFR
+}
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingBase.tsol, 487
+	OVER
+	NEWC
+	STSLICECONST x42_
+	STSLICE
+	PUSHINT 111
+	STZEROES
+}
+IFELSE
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+BLKDROP 4
+
+.macro pendingReward
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 493
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDU 256
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $pendingReward_fe283c8f_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 2193624037
+	STUR 130
+	STU 256
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	SWAP
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STU 256
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.macro pendingReward_fe283c8f_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 494
+GETGLOB 17
+INDEX 11
+.loc ../contracts/staking/base/StakingBase.tsol, 496
+NOW
+GETGLOB 17
+INDEX 10
+GREATER
+GETGLOB 17
+INDEX 8
+GTINT 0
+AND
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingBase.tsol, 498
+	NOW
+	GETGLOB 17
+	INDEX 10
+	SUB
+	UFITS 32
+	GETGLOB 19
+	INDEX 10
+	MUL
+	UFITS 128
+	.loc ../contracts/staking/base/StakingBase.tsol, 499
+	PUSH2 S0, S1
+	UNPAIR
+	PUSH S4
+	FIRST
+	DEC
+	UFITS 256
+	TUCK
+	PUSH S3
+	LESS
+	THROWIFNOT 50
+	DUP2
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	CALLREF {
+		LDU 256
+		LDU 128
+		LDU 128
+		LDU 32
+		ENDS
+		TUPLE 4
+	}
+	DUP
+	THIRD
+	ROLL 5
+	ADD
+	UFITS 128
+	SETINDEX 2
+	CALLREF {
+		UNTUPLE 4
+		REVERSE 4, 0
+		NEWC
+		STU 256
+		STU 128
+		STU 128
+		STU 32
+	}
+	ROTREV
+	PUSHINT 32
+	DICTUSETB
+	PAIR
+	POP S2
+	.loc ../contracts/staking/base/StakingBase.tsol, 500
+	PUSHINT 1000000000000000000
+	MUL
+	GETGLOB 17
+	INDEX 8
+	DIV
+	OVER
+	UNPAIR
+	ROLL 3
+	FIRST
+	DEC
+	UFITS 256
+	TUCK
+	PUSH S3
+	LESS
+	THROWIFNOT 50
+	DUP2
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	CALLREF {
+		LDU 256
+		LDU 128
+		LDU 128
+		LDU 32
+		ENDS
+		TUPLE 4
+	}
+	DUP
+	FIRST
+	ROLL 5
+	ADD
+	SETINDEX 0
+	CALLREF {
+		UNTUPLE 4
+		REVERSE 4, 0
+		NEWC
+		STU 256
+		STU 128
+		STU 128
+		STU 32
+	}
+	ROTREV
+	PUSHINT 32
+	DICTUSETB
+	PAIR
+	.loc ../contracts/staking/base/StakingBase.tsol, 0
+}
+IF
+.loc ../contracts/staking/base/StakingBase.tsol, 503
+PUSHINT 0
+DUP
+.loc ../contracts/staking/base/StakingBase.tsol, 504
+PUSHCONT {
+	PUSH2 S0, S2
+	FIRST
+	LESS
+}
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingBase.tsol, 506
+	PUSH2 S0, S3
+	FIRST
+	DEC
+	UFITS 256
+	LESS
+	PUSHCONT {
+		.loc ../contracts/staking/base/StakingBase.tsol, 508
+		PUSH2 S0, S3
+		SECOND
+		PUSHINT 32
+		DICTUGET
+		THROWIFNOT 50
+		CALLREF {
+			LDU 128
+			LDU 128
+			ENDS
+			PAIR
+		}
+		FIRST
+		PUSHINT 1000000000000000000
+		MUL
+		PUSH2 S1, S3
+		SECOND
+		PUSHINT 32
+		DICTUGET
+		THROWIFNOT 50
+		CALLREF {
+			LDU 256
+			LDU 128
+			LDU 128
+			LDU 32
+			ENDS
+			TUPLE 4
+		}
+		THIRD
+		DIV
+		.loc ../contracts/staking/base/StakingBase.tsol, 509
+		PUSH2 S1, S3
+		SECOND
+		PUSHINT 32
+		DICTUGET
+		THROWIFNOT 50
+		CALLREF {
+			LDU 256
+			LDU 128
+			LDU 128
+			LDU 32
+			ENDS
+			TUPLE 4
+		}
+		SECOND
+		MUL
+		PUSHINT 1000000000000000000
+		DIV
+		PUSH S2
+		ADD
+		POP S2
+	}
+	PUSHCONT {
+		.loc ../contracts/staking/base/StakingBase.tsol, 512
+		PUSH2 S0, S3
+		FIRST
+		GEQ
+		PUSHCONT {
+			.loc ../contracts/staking/base/StakingBase.tsol, 513
+			PUSH S3
+			PUSHINT 0
+			DUP
+			PAIR
+			CALLREF {
+				UNPAIR
+				SWAP
+				NEWC
+				STU 128
+				STU 128
+			}
+			SWAP
+			UNPAIR
+			OVER
+			INC
+			ROLLREV 3
+			PUSHINT 32
+			DICTUSETB
+			PAIR
+			POP S4
+			.loc ../contracts/staking/base/StakingBase.tsol, 0
+		}
+		IF
+		.loc ../contracts/staking/base/StakingBase.tsol, 516
+		PUSH2 S0, S2
+		SECOND
+		PUSHINT 32
+		DICTUGET
+		THROWIFNOT 50
+		CALLREF {
+			LDU 256
+			LDU 128
+			LDU 128
+			LDU 32
+			ENDS
+			TUPLE 4
+		}
+		THIRD
+		GTINT 0
+		PUSHCONT {
+			.loc ../contracts/staking/base/StakingBase.tsol, 517
+			PUSH3 S4, S0, S2
+			SECOND
+			PUSHINT 32
+			DICTUGET
+			THROWIFNOT 50
+			CALLREF {
+				LDU 256
+				LDU 128
+				LDU 128
+				LDU 32
+				ENDS
+				TUPLE 4
+			}
+			FIRST
+			MUL
+			PUSHINT 1000000000000000000
+			DIV
+			PUSH2 S1, S4
+			SECOND
+			PUSHINT 32
+			DICTUGET
+			THROWIFNOT 50
+			CALLREF {
+				LDU 128
+				LDU 128
+				ENDS
+				PAIR
+			}
+			SECOND
+			SUB
+			UFITS 256
+			.loc ../contracts/staking/base/StakingBase.tsol, 518
+			PUSH2 S1, S4
+			SECOND
+			PUSHINT 32
+			DICTUGET
+			THROWIFNOT 50
+			CALLREF {
+				LDU 128
+				LDU 128
+				ENDS
+				PAIR
+			}
+			FIRST
+			ADD
+			.loc ../contracts/staking/base/StakingBase.tsol, 519
+			PUSHINT 1000000000000000000
+			MUL
+			PUSH2 S1, S3
+			SECOND
+			PUSHINT 32
+			DICTUGET
+			THROWIFNOT 50
+			CALLREF {
+				LDU 256
+				LDU 128
+				LDU 128
+				LDU 32
+				ENDS
+				TUPLE 4
+			}
+			THIRD
+			DIV
+			.loc ../contracts/staking/base/StakingBase.tsol, 520
+			PUSH2 S1, S3
+			SECOND
+			PUSHINT 32
+			DICTUGET
+			THROWIFNOT 50
+			CALLREF {
+				LDU 256
+				LDU 128
+				LDU 128
+				LDU 32
+				ENDS
+				TUPLE 4
+			}
+			SECOND
+			MUL
+			PUSHINT 1000000000000000000
+			DIV
+			PUSH S2
+			ADD
+			POP S2
+			.loc ../contracts/staking/base/StakingBase.tsol, 0
+		}
+		IF
+	}
+	IFELSE
+	.loc ../contracts/staking/base/StakingBase.tsol, 504
+	INC
+	.loc ../contracts/staking/base/StakingBase.tsol, 0
+}
+WHILE
+DROP
+.loc ../contracts/staking/base/StakingBase.tsol, 524
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+FALSE
+SETINDEXQ 1
+SETGLOB 4
+BLKDROP2 3, 1
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.globl	updatePoolInfo_778225c4_internal
+.type	updatePoolInfo_778225c4_internal, @function
+CALL $updatePoolInfo_778225c4_internal_macro$
+
+.macro updatePoolInfo_778225c4_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 528
+NOW
+GETGLOB 17
+INDEX 10
+LEQ
+IFRET
+.loc ../contracts/staking/base/StakingBase.tsol, 532
+GETGLOB 17
+INDEX 8
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingBase.tsol, 533
+	GETGLOB 17
+	NOW
+	SETINDEX 10
+	SETGLOB 17
+	.loc ../contracts/staking/base/StakingBase.tsol, 0
+}
+IFNOTJMP
+.loc ../contracts/staking/base/StakingBase.tsol, 537
+NOW
+GETGLOB 17
+INDEX 10
+SUB
+UFITS 32
+.loc ../contracts/staking/base/StakingBase.tsol, 538
+GETGLOB 19
+INDEX 10
+MUL
+UFITS 128
+.loc ../contracts/staking/base/StakingBase.tsol, 539
+DUP
+GETGLOB 17
+DUP
+INDEX 11
+UNPAIR
+GETGLOB 17
+INDEX 11
+FIRST
+DEC
+UFITS 256
+TUCK
+PUSH S3
+LESS
+THROWIFNOT 50
+DUP2
+PUSHINT 32
+DICTUGET
+THROWIFNOT 50
+CALLREF {
+	LDU 256
+	LDU 128
+	LDU 128
+	LDU 32
+	ENDS
+	TUPLE 4
+}
+DUP
+THIRD
+ROLL 6
+ADD
+UFITS 128
+SETINDEX 2
+CALLREF {
+	UNTUPLE 4
+	REVERSE 4, 0
+	NEWC
+	STU 256
+	STU 128
+	STU 128
+	STU 32
+}
+ROTREV
+PUSHINT 32
+DICTUSETB
+PAIR
+SETINDEX 11
+DUP
+SETGLOB 17
+.loc ../contracts/staking/base/StakingBase.tsol, 540
+NOW
+SETINDEX 10
+SETGLOB 17
+.loc ../contracts/staking/base/StakingBase.tsol, 542
+PUSHINT 1000000000000000000
+MUL
+GETGLOB 17
+INDEX 8
+DIV
+GETGLOB 17
+DUP
+INDEX 11
+UNPAIR
+GETGLOB 17
+INDEX 11
+FIRST
+DEC
+UFITS 256
+TUCK
+PUSH S3
+LESS
+THROWIFNOT 50
+DUP2
+PUSHINT 32
+DICTUGET
+THROWIFNOT 50
+CALLREF {
+	LDU 256
+	LDU 128
+	LDU 128
+	LDU 32
+	ENDS
+	TUPLE 4
+}
+DUP
+FIRST
+ROLL 6
+ADD
+SETINDEX 0
+CALLREF {
+	UNTUPLE 4
+	REVERSE 4, 0
+	NEWC
+	STU 256
+	STU 128
+	STU 128
+	STU 32
+}
+ROTREV
+PUSHINT 32
+DICTUSETB
+PAIR
+SETINDEX 11
+SETGLOB 17
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.globl	_buildUserDataParams_59632948_internal
+.type	_buildUserDataParams_59632948_internal, @function
+CALL $_buildUserDataParams_59632948_internal_macro$
+
+.macro _buildUserDataParams_59632948_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 547
+NEWC
+STSLICE
+.loc ../contracts/staking/base/StakingBase.tsol, 548
+ENDC
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.globl	_buildInitData_65db94e9_internal
+.type	_buildInitData_65db94e9_internal, @function
+CALL $_buildInitData_65db94e9_internal_macro$
+
+.macro _buildInitData_65db94e9_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 552
+PUSHINT 0
+NEWC
+STU 256
+PUSHINT 0
+NEWDICT
+PUSHINT 64
+DICTUSETB
+MYADDR
+PUSHINT 1
+ROT
+PUSHINT 64
+DICTUSET
+ROT
+NEWC
+STU 8
+PUSHINT 2
+ROT
+PUSHINT 64
+DICTUSETB
+SWAP
+PUSHINT 3
+ROT
+PUSHINT 64
+DICTUSETREF
+GETGLOB 15
+FIRST
+PUSHINT 4
+ROT
+PUSHINT 64
+DICTUSETREF
+NEWC
+STDICT
+ENDC
+GETGLOB 15
+FIRST
+NEWC
+STSLICECONST x2_
+STOPTREF
+STOPTREF
+STZERO
+ENDC
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.globl	deployUserData_e1965040_internal
+.type	deployUserData_e1965040_internal, @function
+CALL $deployUserData_e1965040_internal_macro$
+
+.macro deployUserData_e1965040_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 567
+GETGLOB 15
+INDEX 3
+NEWC
+STU 32
+.loc ../contracts/staking/base/StakingBase.tsol, 568
+GETGLOB 15
+INDEX 3
+STUR 32
+.loc ../contracts/staking/base/StakingBase.tsol, 569
+GETGLOB 17
+FIRST
+STSLICER
+.loc ../contracts/staking/base/StakingBase.tsol, 571
+PUXC S1, S-1
+ENDC
+GETGLOB 15
+THIRD
+PUSHINT 100
+ROLL 4
+CALLREF {
+	CALL $_buildUserDataParams_59632948_internal_macro$
+}
+CALLREF {
+	CALL $_buildInitData_65db94e9_internal_macro$
+}
+DUP
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+ENDC
+CTOS
+ROLLREV 4
+PUSH S4
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 3274370980303967982866698814945429188247555
+STUR 143
+OVER
+CALLREF {
+	CTOS
+	LDI 1
+	SWAP
+	PUSHCONT {
+		LDI 5
+		NIP
+	}
+	IF
+	LDI 1
+	SWAP
+	PUSHCONT {
+		LDI 2
+		NIP
+	}
+	IF
+	LDOPTREF
+	LDOPTREF
+	LDDICT
+	ENDS
+	BLKDROP 3
+}
+STREF
+STSLICECONST 1
+ROLLREV 3
+NEWC
+STSLICECONST x3f61459c
+STREF
+STREF
+STSLICE
+STBREFR
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro getUserDataAddress
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 577
+LDU 32
+GETGLOB 4
+ROT
+SETINDEXQ 5
+SETGLOB 4
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $getUserDataAddress_b432e94f_internal_macro$
+}
+OVER
+PUSHCONT {
+	PUSH S3
+	CTOS
+	LDU 2
+	LDMSGADDR
+	DROP
+	NIP
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	SWAP
+	NEWC
+	STSLICECONST x84270289
+	STSLICE
+	STBREFR
+	ENDC
+	PUSHINT 0
+}
+PUSHCONT {
+	GETGLOB 4
+	DUP
+	INDEX 3
+	OVER
+	THIRD
+	GETGLOB 9
+	ROLL 3
+	SECOND
+	NEWC
+	STSLICECONST x2_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	SWAP
+	NEWC
+	GETGLOB 4
+	INDEX 5
+	STUR 32
+	STSLICE
+	STBREFR
+	ENDC
+	GETGLOB 4
+	INDEX 4
+}
+IFELSE
+SENDRAWMSG
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	getUserDataAddress_b432e94f_internal
+.type	getUserDataAddress_b432e94f_internal, @function
+CALL $getUserDataAddress_b432e94f_internal_macro$
+
+.macro getUserDataAddress_b432e94f_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 578
+GETGLOB 4
+PUSHINT 0
+SETINDEXQ 2
+PUSHINT 64
+SETINDEXQ 4
+FALSE
+SETINDEXQ 1
+SETGLOB 4
+PUSHINT 100
+SWAP
+CALLREF {
+	CALL $_buildUserDataParams_59632948_internal_macro$
+}
+CALLREF {
+	CALL $_buildInitData_65db94e9_internal_macro$
+}
+HASHCU
+NEWC
+STSLICECONST x801_
+STU 256
+ENDC
+CTOS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro castVote
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 584
+LDU 32
+LDI 1
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $castVote_18aa2445_internal_macro$
+}
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	castVote_18aa2445_internal
+.type	castVote_18aa2445_internal, @function
+CALL $castVote_18aa2445_internal_macro$
+
+.macro castVote_18aa2445_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 585
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 586
+PUSHINT 2543
+GETGLOB 17
+INDEX 12
+NOT
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 587
+PUSHREF {
+	.blob x
+}
+CALLREF {
+	CALL $_castVote_20f91e1f_internal_macro$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro castVoteWithReason
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 590
+LDU 32
+LDI 1
+LDREF
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $castVoteWithReason_3d4cd396_internal_macro$
+}
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	castVoteWithReason_3d4cd396_internal
+.type	castVoteWithReason_3d4cd396_internal, @function
+CALL $castVoteWithReason_3d4cd396_internal_macro$
+
+.macro castVoteWithReason_3d4cd396_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 595
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 596
+PUSHINT 2543
+GETGLOB 17
+INDEX 12
+NOT
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 597
+CALLREF {
+	CALL $_castVote_20f91e1f_internal_macro$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.globl	_castVote_20f91e1f_internal
+.type	_castVote_20f91e1f_internal, @function
+CALL $_castVote_20f91e1f_internal_macro$
+
+.macro _castVote_20f91e1f_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 601
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingBase.tsol, 602
+XCHG S2
+GETGLOB 15
+INDEX 3
+GETGLOB 9
+CALLREF {
+	CALL $getUserDataAddress_b432e94f_internal_macro$
+}
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 984403279
+STUR 143
+STU 32
+STU 32
+STI 1
+STREF
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro tryUnlockVoteTokens
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 608
+LDU 32
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $tryUnlockVoteTokens_eafbbfc5_internal_macro$
+}
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	tryUnlockVoteTokens_eafbbfc5_internal
+.type	tryUnlockVoteTokens_eafbbfc5_internal, @function
+CALL $tryUnlockVoteTokens_eafbbfc5_internal_macro$
+
+.macro tryUnlockVoteTokens_eafbbfc5_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 609
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 610
+PUSHINT 2543
+GETGLOB 17
+INDEX 12
+NOT
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 611
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingBase.tsol, 613
+GETGLOB 15
+INDEX 3
+GETGLOB 9
+CALLREF {
+	CALL $getUserDataAddress_b432e94f_internal_macro$
+}
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 922763808
+STUR 143
+STU 32
+STU 32
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro tryUnlockCastedVotes
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 620
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $tryUnlockCastedVotes_40dab2cb_internal_macro$
+}
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.globl	tryUnlockCastedVotes_40dab2cb_internal
+.type	tryUnlockCastedVotes_40dab2cb_internal, @function
+CALL $tryUnlockCastedVotes_40dab2cb_internal_macro$
+
+.macro tryUnlockCastedVotes_40dab2cb_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 621
+PUSHINT 2543
+GETGLOB 17
+INDEX 12
+NOT
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 622
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 623
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingBase.tsol, 625
+GETGLOB 15
+INDEX 3
+GETGLOB 9
+CALLREF {
+	CALL $getUserDataAddress_b432e94f_internal_macro$
+}
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 1270236867
+STUR 143
+STU 32
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro withdrawTonsUserEmergency
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 631
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $withdrawTonsUserEmergency_e8da7c6d_internal_macro$
+}
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.macro withdrawTonsUserEmergency_e8da7c6d_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 632
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 633
+PUSHINT 2543
+GETGLOB 17
+INDEX 12
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 635
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingBase.tsol, 637
+GETGLOB 9
+CALLREF {
+	CALL $getUserDataAddress_b432e94f_internal_macro$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 638
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 135662613
+STUR 143
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro withdrawTonsEmergency
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 644
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDU 128
+LDMSGADDR
+LDI 1
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $withdrawTonsEmergency_a8c88761_internal_macro$
+}
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+THROW 0
+
+.macro withdrawTonsEmergency_a8c88761_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 722
+PUSHINT 2542
+GETGLOB 9
+GETGLOB 17
+INDEX 6
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 645
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 646
+PUSHINT 2543
+GETGLOB 17
+INDEX 12
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 647
+PUSHINT 2511
+GETPARAM 7
+FIRST
+DEPTH
+ADDCONST -2
+PICK
+SUB
+UFITS 128
+PUSH S5
+GREATER
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 649
+PUSHINT 2000000000
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingBase.tsol, 651
+SWAP
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingBase.tsol, 653
+	PUSHINT 10000000000
+	PUSHINT 2000000000
+	SUB
+	UFITS 64
+	OVER
+	NEWC
+	STSLICECONST x42_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 107
+	STZEROES
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc ../contracts/staking/base/StakingBase.tsol, 654
+	OVER
+	NEWC
+	STSLICECONST x42_
+	STSLICE
+	PUSHINT 111
+	STZEROES
+	ENDC
+	PUSHPOW2 7
+}
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingBase.tsol, 656
+	BLKPUSH 2, 2
+	NEWC
+	STSLICECONST x42_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 107
+	STZEROES
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc ../contracts/staking/base/StakingBase.tsol, 658
+	PUSHINT 10000000000
+	PUSHINT 2000000000
+	SUB
+	UFITS 64
+	OVER
+	NEWC
+	STSLICECONST x42_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 107
+	STZEROES
+	ENDC
+	PUSHINT 0
+}
+IFELSE
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+BLKDROP 3
+
+.macro withdrawTokensEmergency
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 663
+OVER
+PUSHCONT {
+	LDREF
+	ENDS
+	CTOS
+}
+IF
+LDU 128
+LDMSGADDR
+LDI 1
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $withdrawTokensEmergency_a3703cb7_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro withdrawTokensEmergency_a3703cb7_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 722
+PUSHINT 2542
+GETGLOB 9
+GETGLOB 17
+INDEX 6
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 664
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 665
+PUSHINT 2543
+GETGLOB 17
+INDEX 12
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 666
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingBase.tsol, 669
+SWAP
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingBase.tsol, 670
+	GETGLOB 17
+	INDEX 8
+	GETGLOB 17
+	INDEX 9
+	ADD
+	UFITS 128
+	POP S3
+	.loc ../contracts/staking/base/StakingBase.tsol, 0
+}
+IF
+.loc ../contracts/staking/base/StakingBase.tsol, 673
+PUSH2 S2, S2
+.loc ../contracts/staking/base/StakingBase.tsol, 674
+GETGLOB 17
+INDEX 8
+GEQ
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingBase.tsol, 675
+	GETGLOB 17
+	PUSHINT 0
+	SETINDEX 8
+	DUP
+	SETGLOB 17
+	.loc ../contracts/staking/base/StakingBase.tsol, 676
+	INDEX 8
+	SUB
+	UFITS 128
+}
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingBase.tsol, 678
+	GETGLOB 17
+	DUP
+	INDEX 8
+	ROT
+	SUB
+	UFITS 128
+	SETINDEX 8
+	SETGLOB 17
+	.loc ../contracts/staking/base/StakingBase.tsol, 679
+	PUSHINT 0
+}
+IFELSE
+.loc ../contracts/staking/base/StakingBase.tsol, 682
+DUP
+GETGLOB 17
+INDEX 9
+GEQ
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingBase.tsol, 683
+	GETGLOB 17
+	PUSHINT 0
+}
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingBase.tsol, 685
+	DUP
+	GETGLOB 17
+	DUP
+	INDEX 9
+	ROT
+	SUB
+	UFITS 128
+}
+IFELSE
+SETINDEX 9
+SETGLOB 17
+.loc ../contracts/staking/base/StakingBase.tsol, 688
+DROP
+PUSHREF {
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 689
+TRUE
+ROT
+PUSHINT 0
+BLKSWAP 2, 4
+SWAP
+GETGLOB 17
+INDEX 4
+NEWC
+STSLICECONST x62_
+STSLICE
+PUSHINT 1
+STUR 111
+ROLLREV 6
+NEWC
+STSLICECONST x73e22143
+STU 128
+STSLICE
+STU 128
+ROLLREV 3
+NEWC
+STSLICE
+STI 1
+STREF
+STBREFR
+STBREFR
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro setEmergency
+DROP
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 694
+OVER
+PUSHCONT {
+	LDI 1
+	LDREF
+	ENDS
+	CTOS
+}
+PUSHCONT {
+	LDI 1
+}
+IFELSE
+LDMSGADDR
+ENDS
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+CALLREF {
+	CALL $setEmergency_4c434bd9_internal_macro$
+}
+DROP
+CALLREF {
+	CALL $c7_to_c4$
+}
+THROW 0
+
+.macro setEmergency_4c434bd9_internal_macro
+.loc ../contracts/staking/base/StakingBase.tsol, 722
+PUSHINT 2542
+GETGLOB 9
+GETGLOB 17
+INDEX 6
+SDEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 695
+PUSHINT 2511
+DEPTH
+ADDCONST -2
+PICK
+PUSHINT 10000000000
+GEQ
+THROWANYIFNOT
+.loc ../contracts/staking/base/StakingBase.tsol, 696
+CALLREF {
+	CALL $_reserve_413ab4a8_internal_macro$
+}
+PUSHINT 0
+RAWRESERVE
+.loc ../contracts/staking/base/StakingBase.tsol, 698
+GETGLOB 17
+PUSH S2
+SETINDEX 12
+SETGLOB 17
+.loc ../contracts/staking/base/StakingBase.tsol, 699
+SWAP
+PUSHSLICE xc0000000000000000000000000242f975e
+NEWC
+STSLICE
+STI 1
+ENDC
+PUSHINT 0
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 700
+NEWC
+STSLICECONST x42_
+STSLICE
+PUSHINT 111
+STZEROES
+ENDC
+PUSHPOW2 7
+SENDRAWMSG
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+
+.macro on_bounce_macro
+GETGLOB 6
+THROWIFNOT 76
+GETGLOB 2
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+.loc ../contracts/staking/base/StakingBase.tsol, 704
+ACCEPT
+.loc ../contracts/staking/base/StakingBase.tsol, 706
+DUP
+LDU 32
+POP S2
+.loc ../contracts/staking/base/StakingBase.tsol, 708
+PUSHINT 1258576856
+EQUAL
+PUSHCONT {
+	.loc ../contracts/staking/base/StakingBase.tsol, 709
+	CALLREF {
+		CALL $_reserve_413ab4a8_internal_macro$
+	}
+	PUSHINT 0
+	RAWRESERVE
+	.loc ../contracts/staking/base/StakingBase.tsol, 711
+	DUP
+	LDU 64
+	POP S2
+	.loc ../contracts/staking/base/StakingBase.tsol, 712
+	DUP
+	GETGLOB 23
+	PUSHINT 64
+	DICTUGETREF
+	PUSHCONT {
+		CTOS
+		CALLREF {
+			LDMSGADDR
+			LDU 128
+			LDREF
+			ENDS
+			CTOS
+			LDMSGADDR
+			ENDS
+			TRIPLE
+		}
+	}
+	PUSHCONT {
+		PUSHREFSLICE {
+			.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+		}
+		PUSHINT 0
+		PUSHREFSLICE {
+			.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+		}
+		TRIPLE
+	}
+	IFELSE
+	.loc ../contracts/staking/base/StakingBase.tsol, 713
+	DUP
+	FIRST
+	CALLREF {
+		CALL $deployUserData_e1965040_internal_macro$
+	}
+	.loc ../contracts/staking/base/StakingBase.tsol, 715
+	GETGLOB 15
+	INDEX 3
+	GETGLOB 17
+	INDEX 11
+	ROLL 3
+	SECOND
+	BLKSWAP 2, 3
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	PUSHINT 1258576856
+	STUR 143
+	STU 64
+	STU 128
+	SWAP
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	STU 32
+	ENDC
+	PUSHPOW2 7
+	SENDRAWMSG
+	.loc ../contracts/staking/base/StakingBase.tsol, 0
+}
+IF
+.loc ../contracts/staking/base/StakingBase.tsol, 0
+DROP
+DUP
+IFREF {
+	CALL $upd_only_time_in_c4$
+}
+
+.globl	checkDelegate_c45d6a7d_internal
+.type	checkDelegate_c45d6a7d_internal, @function
+CALL $checkDelegate_c45d6a7d_internal_macro$
+
+.macro checkDelegate_c45d6a7d_internal_macro
+.loc ../contracts/utils/Delegate.tsol, 11
+GETGLOB 9
+GETGLOB 10
+PUSHINT 267
+DICTGET
+NULLSWAPIFNOT
+PUSHCONT {
+	LDU 32
+	PLDDICT
+	PAIR
+}
+IF
+.loc ../contracts/utils/Delegate.tsol, 12
+DUP
+ISNULL
+THROWIF 1201
+.loc ../contracts/utils/Delegate.tsol, 13
+DUP
+ISNULL
+THROWIF 63
+.loc ../contracts/utils/Delegate.tsol, 14
+DUP
+FIRST
+.loc ../contracts/utils/Delegate.tsol, 15
+DUP
+THROWIFNOT 1202
+.loc ../contracts/utils/Delegate.tsol, 16
+DEPTH
+ADDCONST -4
+PICK
+HASHSU
+.loc ../contracts/utils/Delegate.tsol, 17
+OVER
+EQINT 1
+PUSHCONT {
+	.loc ../contracts/utils/Delegate.tsol, 18
+	PUSHINT 0
+	PUSH S3
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	THROWIFNOT 50
+	PLDU 256
+	OVER
+	EQUAL
+	THROWIFNOT 1203
+	.loc ../contracts/utils/Delegate.tsol, 19
+	GETGLOB 9
+	GETGLOB 10
+	PUSHINT 267
+	DICTDEL
+	DROP
+}
+PUSHCONT {
+	.loc ../contracts/utils/Delegate.tsol, 21
+	FALSE
+	DUP
+	.loc ../contracts/utils/Delegate.tsol, 22
+	NEWDICT
+	PAIR
+	.loc ../contracts/utils/Delegate.tsol, 23
+	PUSHINT 0
+	PUSHCONT {
+		PUSH2 S0, S4
+		LESS
+	}
+	PUSHCONT {
+		.loc ../contracts/utils/Delegate.tsol, 24
+		PUSH2 S0, S5
+		SECOND
+		PUSHINT 32
+		DICTUGET
+		THROWIFNOT 50
+		PLDU 256
+		PUSH S4
+		EQUAL
+		PUSH S3
+		NOT
+		AND
+		PUSHCONT {
+			.loc ../contracts/utils/Delegate.tsol, 25
+			TRUE
+			POP S3
+		}
+		PUSHCONT {
+			.loc ../contracts/utils/Delegate.tsol, 27
+			DUP2
+			PUSH S7
+			SECOND
+			PUSHINT 32
+			DICTUGET
+			THROWIFNOT 50
+			PLDU 256
+			NEWC
+			STU 256
+			SWAP
+			UNPAIR
+			OVER
+			INC
+			ROLLREV 3
+			PUSHINT 32
+			DICTUSETB
+			PAIR
+			POP S2
+		}
+		IFELSE
+		.loc ../contracts/utils/Delegate.tsol, 23
+		INC
+		.loc ../contracts/utils/Delegate.tsol, 0
+	}
+	WHILE
+	DROP
+	.loc ../contracts/utils/Delegate.tsol, 30
+	SWAP
+	THROWIFNOT 1203
+	.loc ../contracts/utils/Delegate.tsol, 31
+	GETGLOB 9
+	GETGLOB 10
+	NEWC
+	ROLL 3
+	UNPAIR
+	XCHG S2
+	STU 32
+	STDICT
+	ROTREV
+	PUSHINT 267
+	DICTSETB
+}
+IFELSE
+SETGLOB 10
+.loc ../contracts/utils/Delegate.tsol, 0
+BLKDROP 3
+
+.macro c4_to_c7
+PUSHROOT
+CTOS
+LDU 256 ; pubkey c4
+LDU 64 ; pubkey timestamp c4
+LDU 1 ; ctor flag
+NIP
+LDDICT
+LDU 32
+LDMSGADDR
+LDI 1
+LDU 32
+LDREF
+LDI 1
+LDREF
+LDU 32
+LDREF
+ENDS
+CTOS
+LDREF
+LDU 32
+LDREF
+LDU 32
+ROLLREV 8
+TUPLE 8
+SWAP
+LDU 32
+LDU 32
+LDU 32
+LDU 32
+LDI 1
+ROLLREV 5
+TUPLE 5
+SWAP
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDU 128
+LDU 128
+LDU 32
+LDU 32
+LDDICT
+ROTREV
+PAIR
+SWAP
+LDI 1
+ROLLREV 13
+TUPLE 13
+SWAP
+LDREF
+ENDS
+CTOS
+LDMSGADDR
+LDU 32
+LDU 32
+LDU 32
+LDU 32
+LDU 32
+LDU 16
+LDU 16
+LDU 128
+LDREF
+ENDS
+CTOS
+LDU 128
+LDU 128
+LDU 128
+ROLLREV 11
+TUPLE 11
+SWAP
+LDU 128
+LDU 128
+LDU 64
+LDDICT
+ENDS
+SETGLOB 23
+SETGLOB 22
+SETGLOB 21
+SETGLOB 20
+SETGLOB 19
+SETGLOB 18
+SETGLOB 17
+SETGLOB 16
+SETGLOB 15
+SETGLOB 14
+SETGLOB 13
+SETGLOB 12
+SETGLOB 11
+SETGLOB 10
+SETGLOB 3
+SETGLOB 2
+
+.macro c4_to_c7_with_init_storage
+PUSHROOT
+CTOS
+SBITS
+GTINT 1
+PUSHCONT {
+	PUSHINT 0
+	PUSHROOT
+	CTOS
+	PLDDICT ; D
+	NEWDICT
+	PUSHINT 1
+	PUSH S2
+	PUSHINT 64
+	DICTUGET
+	ZEROSWAPIFNOT
+	PUSHCONT {
+		PLDU 32
+	}
+	IF
+	PUSHINT 2
+	PUSH S3
+	PUSHINT 64
+	DICTUGET
+	PUSHCONT {
+		PUSHREFSLICE {
+			.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+		}
+	}
+	IFNOT
+	PUSHINT 0
+	DUP
+	PUSHREF {
+	}
+	PUSHINT 0
+	PUSHREF {
+	}
+	PUSHINT 0
+	PUSHREF {
+	}
+	PUSHINT 0
+	PUSHREF {
+	}
+	PUSHINT 0
+	TUPLE 8
+	PUSHINT 0
+	BLKPUSH 4, 0
+	TUPLE 5
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	BLKPUSH 7, 0
+	PUSHINT 0
+	BLKPUSH 3, 0
+	NEWDICT
+	PAIR
+	PUSHINT 0
+	TUPLE 13
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	PUSHINT 0
+	BLKPUSH 10, 0
+	TUPLE 11
+	PUSHINT 0
+	BLKPUSH 2, 0
+	NEWDICT
+	SETGLOB 23
+	SETGLOB 22
+	SETGLOB 21
+	SETGLOB 20
+	SETGLOB 19
+	SETGLOB 18
+	SETGLOB 17
+	SETGLOB 16
+	SETGLOB 15
+	SETGLOB 14
+	SETGLOB 13
+	SETGLOB 12
+	SETGLOB 11
+	SETGLOB 10
+	PUSHINT 64
+	DICTUGET
+	THROWIFNOT 61
+	PLDU 256
+	SETGLOB 2
+	PUSHINT 0 ; timestamp
+	SETGLOB 3
+	PUSHINT 2592000
+	PUSHINT 604800
+	PUSHINT 172800
+	PUSHINT 345600
+	PUSHINT 3600
+	PUSHINT 30
+	PUSHINT 13
+	PUSHINT 100000000000000
+	PUSHINT 500000000000
+	PUSHINT 1000000
+	DUP
+	TUPLE 11
+	SETGLOB 19
+	PUSHINT 2500000000
+	SETGLOB 20
+	PUSHINT 2500000000
+	SETGLOB 21
+	PUSHINT 0
+	SETGLOB 22
+}
+IFREFELSE {
+	CALL $c4_to_c7$
+}
+
+.macro c7_to_c4
+GETGLOB 23
+GETGLOB 22
+GETGLOB 21
+GETGLOB 20
+GETGLOB 19
+GETGLOB 18
+GETGLOB 17
+GETGLOB 16
+GETGLOB 15
+GETGLOB 14
+GETGLOB 13
+GETGLOB 12
+GETGLOB 11
+GETGLOB 10
+GETGLOB 3
+GETGLOB 2
+NEWC
+STU 256
+STU 64
+STONE
+STDICT
+STU 32
+STSLICE
+STI 1
+STU 32
+SWAP
+UNTUPLE 8
+REVERSE 9, 0
+STREF
+STI 1
+STREF
+STU 32
+ROLLREV 12
+NEWC
+STREF
+STU 32
+STREF
+STU 32
+SWAP
+UNTUPLE 5
+REVERSE 6, 0
+STU 32
+STU 32
+STU 32
+STU 32
+STI 1
+SWAP
+UNTUPLE 13
+REVERSE 14, 0
+STSLICE
+PUSHINT 18
+ROLLREVX
+NEWC
+STSLICE
+PUSHINT 17
+ROLLREVX
+NEWC
+STSLICE
+ROLLREV 16
+NEWC
+STSLICE
+ROLLREV 15
+NEWC
+STSLICE
+ROLLREV 14
+NEWC
+STSLICE
+ROLLREV 13
+NEWC
+STSLICE
+ROLLREV 12
+NEWC
+STSLICE
+STU 128
+STU 128
+STU 32
+SWAP
+UNPAIR
+XCHG S2
+STU 32
+STDICT
+STI 1
+ROLLREV 6
+NEWC
+STSLICE
+SWAP
+UNTUPLE 11
+REVERSE 12, 0
+STU 32
+STU 32
+STU 32
+STU 32
+STU 32
+STU 16
+STU 16
+STU 128
+ROLLREV 7
+NEWC
+STU 128
+STU 128
+STU 128
+STU 128
+STU 128
+STU 64
+STDICT
+STBREFR
+STBREFR
+STBREFR
+STBREFR
+STBREFR
+STBREFR
+STBREFR
+STBREFR
+STBREFR
+STBREFR
+ENDC
+POPROOT
+
+.macro upd_only_time_in_c4
+PUSHROOT
+CTOS
+LDU 256
+LDU 64
+NIP
+GETGLOB 3
+ROT
+NEWC
+STU 256
+STU 64
+STSLICE
+ENDC
+POPROOT
+
+.internal-alias :main_internal, 0
+.internal :main_internal
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSH S2
+CTOS
+LDU 4 ; bounced tail
+LDMSGADDR ; bounced src tail
+DROP
+SETGLOB 9
+MODPOW2 1
+GETGLOB 4
+TRUE
+SETINDEXQ 1
+PUSHINT 10000000
+SETINDEXQ 2
+NULL
+SETINDEXQ 3
+PUSHINT 0
+SETINDEXQ 4
+SETGLOB 4
+IFJMPREF {
+	OVER
+	LDSLICE 32
+	NIP
+	CALL $on_bounce_macro$
+}
+OVER
+SEMPTY ; isEmpty
+IFJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+OVER
+LDUQ 32  ; [funcId] body' ok
+THROWIFNOT 60
+OVER
+IFNOTJMPREF {
+	GETGLOB 6
+	THROWIFNOT 76
+}
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.internal-alias :main_external, -1
+.internal :main_external
+PUSHROOT
+CTOS
+SBITS
+NEQINT 1
+SETGLOB 6
+PUSHREFSLICE {
+	.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+}
+SETGLOB 9
+OVER
+CALLREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+LDU 1 ; haveSign msgSlice
+SWAP
+PUSHCONT {
+	PUSHPOW2 9
+	LDSLICEX ; signatureSlice msgSlice
+	DUP
+	HASHSU ; signatureSlice msgSlice hashMsgSlice
+	SWAP
+	LDU 1 ; signatureSlice hashMsgSlice hasPubkey msgSlice
+	SWAP
+	PUSHCONT {
+		LDU 256 ; signatureSlice hashMsgSlice pubkey msgSlice
+		XCHG S3
+		SWAP
+	}
+	PUSHCONT {
+		XCHG S2
+		GETGLOB 2
+	}
+	IFELSE
+	CHKSIGNU ; msgSlice isSigned
+	THROWIFNOT 40
+}
+PUSHCONT {
+	LDU 1 ; hasPubkey msgSlice
+	SWAP
+	THROWIF 58
+}
+IFELSE
+LDU 64 ; timestamp msgSlice
+SWAP
+CALL $replay_protection_macro$
+LDU 32 ; expireAt msgSlice
+SWAP
+NOW ; msgSlice expireAt now
+GREATER ; msgSlice expireAt>now
+THROWIFNOT 57
+LDU 32 ; funcId body
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+THROW 60
+
+.macro delegators
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 10
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000cfaf03fd
+	NEWC
+	STSLICE
+	STDICT
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro bridge_event_config_ton_sol
+DROP
+ENDS
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 18
+OVER
+PUSHCONT {
+	PUSHSLICE xc0000000000000000000000000d94dc925
+	NEWC
+	STSLICE
+	STSLICE
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+}
+IF
+THROW 0
+
+.macro public_function_selector
+DUP
+PUSHINT 462497419
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 69665417
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 8959777
+		EQUAL
+		IFJMPREF {
+			CALL $onEventConfirmed$
+		}
+		DUP
+		PUSHINT 32671985
+		EQUAL
+		IFJMPREF {
+			CALL $processBecomeRelayNextRound$
+		}
+		DUP
+		PUSHINT 46140389
+		EQUAL
+		IFJMPREF {
+			CALL $pendingReward$
+		}
+		DUP
+		PUSHINT 69665417
+		EQUAL
+		IFJMPREF {
+			CALL $getUserDataAddress$
+		}
+	}
+	DUP
+	PUSHINT 171622605
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 140672674
+		EQUAL
+		IFJMPREF {
+			CALL $tryUnlockVoteTokens$
+		}
+		DUP
+		PUSHINT 145730389
+		EQUAL
+		IFJMPREF {
+			CALL $finishDeposit$
+		}
+		DUP
+		PUSHINT 150952694
+		EQUAL
+		IFJMPREF {
+			CALL $setRewarder$
+		}
+		DUP
+		PUSHINT 171622605
+		EQUAL
+		IFJMPREF {
+			CALL $withdraw$
+		}
+	}
+	DUP
+	PUSHINT 415869661
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 178441452
+		EQUAL
+		IFJMPREF {
+			CALL $revertDeposit$
+		}
+		DUP
+		PUSHINT 273997743
+		EQUAL
+		IFJMPREF {
+			CALL $upgrade$
+		}
+		DUP
+		PUSHINT 367971554
+		EQUAL
+		IFJMPREF {
+			CALL $withdrawTonsUserEmergency$
+		}
+		DUP
+		PUSHINT 415869661
+		EQUAL
+		IFJMPREF {
+			CALL $onElectionEnded$
+		}
+	}
+	DUP
+	PUSHINT 462497419
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 445524984
+		EQUAL
+		IFJMPREF {
+			CALL $installOrUpdateUserDataCode$
+		}
+		DUP
+		PUSHINT 449405674
+		EQUAL
+		IFJMPREF {
+			CALL $startNewRewardRound$
+		}
+		DUP
+		PUSHINT 454122448
+		EQUAL
+		IFJMPREF {
+			CALL $upgradeRelayRound$
+		}
+		DUP
+		PUSHINT 462497419
+		EQUAL
+		IFJMPREF {
+			CALL $confirmSlash$
+		}
+	}
+}
+DUP
+PUSHINT 1013128631
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 547809316
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 465984952
+		EQUAL
+		IFJMPREF {
+			CALL $getDetails$
+		}
+		DUP
+		PUSHINT 489755333
+		EQUAL
+		IFJMPREF {
+			CALL $installOrUpdateElectionCode$
+		}
+		DUP
+		PUSHINT 510147290
+		EQUAL
+		IFJMPREF {
+			CALL $setBridgeEventEthTonConfig$
+		}
+		DUP
+		PUSHINT 547809316
+		EQUAL
+		IFJMPREF {
+			CALL $onRelayRoundInitialized$
+		}
+	}
+	DUP
+	PUSHINT 695165229
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 565050858
+		EQUAL
+		IFJMPREF {
+			CALL $isActive$
+		}
+		DUP
+		PUSHINT 667401356
+		EQUAL
+		IFJMPREF {
+			CALL $upgradeUserData$
+		}
+		DUP
+		PUSHINT 693131876
+		EQUAL
+		IFJMPREF {
+			CALL $setActive$
+		}
+		DUP
+		PUSHINT 695165229
+		EQUAL
+		IFJMPREF {
+			CALL $setRescuer$
+		}
+	}
+	DUP
+	PUSHINT 769295433
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 709734711
+		EQUAL
+		IFJMPREF {
+			CALL $setEmergency$
+		}
+		DUP
+		PUSHINT 734360935
+		EQUAL
+		IFJMPREF {
+			CALL $decodeDepositPayload$
+		}
+		DUP
+		PUSHINT 735207562
+		EQUAL
+		IFJMPREF {
+			CALL $getElectionAddress$
+		}
+		DUP
+		PUSHINT 769295433
+		EQUAL
+		IFJMPREF {
+			CALL $startElectionOnNewRound$
+		}
+	}
+	DUP
+	PUSHINT 1013128631
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 811118943
+		EQUAL
+		IFJMPREF {
+			CALL $getRelayConfig$
+		}
+		DUP
+		PUSHINT 886156940
+		EQUAL
+		IFJMPREF {
+			CALL $endElection$
+		}
+		DUP
+		PUSHINT 919397399
+		EQUAL
+		IFJMPREF {
+			CALL $claimReward$
+		}
+		DUP
+		PUSHINT 1013128631
+		EQUAL
+		IFJMPREF {
+			CALL $getRelayRoundAddress$
+		}
+	}
+}
+DUP
+PUSHINT 1657720740
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 1336869885
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1062126628
+		EQUAL
+		IFJMPREF {
+			CALL $withdrawTonsEmergency$
+		}
+		DUP
+		PUSHINT 1114700010
+		EQUAL
+		IFJMPREF {
+			CALL $setEventDeployValues$
+		}
+		DUP
+		PUSHINT 1133217191
+		EQUAL
+		IFJMPREF {
+			CALL $addDelegate$
+		}
+		DUP
+		PUSHINT 1336869885
+		EQUAL
+		IFJMPREF {
+			CALL $delegators$
+		}
+	}
+	DUP
+	PUSHINT 1365660547
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1340550040
+		EQUAL
+		IFJMPREF {
+			CALL $finishClaimReward$
+		}
+		DUP
+		PUSHINT 1345880612
+		EQUAL
+		IFJMPREF {
+			CALL $getRelayRoundsDetails$
+		}
+		DUP
+		PUSHINT 1354746527
+		EQUAL
+		IFJMPREF {
+			CALL $receiveTokenWalletAddress$
+		}
+		DUP
+		PUSHINT 1365660547
+		EQUAL
+		IFJMPREF {
+			CALL $setBridgeEventTonEthConfig$
+		}
+	}
+	DUP
+	PUSHINT 1498269989
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1390414051
+		EQUAL
+		IFJMPREF {
+			CALL $setBridgeEventTonSolConfig$
+		}
+		DUP
+		PUSHINT 1408155670
+		EQUAL
+		IFJMPREF {
+			CALL $installOrUpdateRelayRoundCode$
+		}
+		DUP
+		PUSHINT 1485857193
+		EQUAL
+		IFJMPREF {
+			CALL $linkRelayAccounts$
+		}
+		DUP
+		PUSHINT 1498269989
+		EQUAL
+		IFJMPREF {
+			CALL $bridge_event_config_ton_sol$
+		}
+	}
+	DUP
+	PUSHINT 1657720740
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1572759129
+		EQUAL
+		IFJMPREF {
+			CALL $setAdmin$
+		}
+		DUP
+		PUSHINT 1606917472
+		EQUAL
+		IFJMPREF {
+			CALL $createOriginRelayRound$
+		}
+		DUP
+		PUSHINT 1652275615
+		EQUAL
+		IFJMPREF {
+			CALL $onElectionStarted$
+		}
+		DUP
+		PUSHINT 1657720740
+		EQUAL
+		IFJMPREF {
+			CALL $setRelayConfig$
+		}
+	}
+}
+DUP
+PUSHINT 2134328500
+LEQ
+IFJMPREF {
+	DUP
+	PUSHINT 1776118055
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1684959105
+		EQUAL
+		IFJMPREF {
+			CALL $tryUnlockCastedVotes$
+		}
+		DUP
+		PUSHINT 1737482103
+		EQUAL
+		IFJMPREF {
+			CALL $castVote$
+		}
+		DUP
+		PUSHINT 1756716863
+		EQUAL
+		IFJMPREF {
+			CALL $constructor$
+		}
+		DUP
+		PUSHINT 1776118055
+		EQUAL
+		IFJMPREF {
+			CALL $slashRelay$
+		}
+	}
+	DUP
+	PUSHINT 1948133249
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1839307377
+		EQUAL
+		IFJMPREF {
+			CALL $getCodeData$
+		}
+		DUP
+		PUSHINT 1892814778
+		EQUAL
+		IFJMPREF {
+			CALL $installPlatformOnce$
+		}
+		DUP
+		PUSHINT 1893244873
+		EQUAL
+		IFJMPREF {
+			CALL $onAcceptTokensTransfer$
+		}
+		DUP
+		PUSHINT 1948133249
+		EQUAL
+		IFJMPREF {
+			CALL $castVoteWithReason$
+		}
+	}
+	DUP
+	PUSHINT 1996590644
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1949618073
+		EQUAL
+		IFJMPREF {
+			CALL $setDaoRoot$
+		}
+		DUP
+		PUSHINT 1950237810
+		EQUAL
+		IFJMPREF {
+			CALL $processGetRewardForRelayRound$
+		}
+		DUP
+		PUSHINT 1956060501
+		EQUAL
+		IFJMPREF {
+			CALL $upgradeElection$
+		}
+		DUP
+		PUSHINT 1996590644
+		EQUAL
+		IFJMPREF {
+			CALL $withdrawTokensEmergency$
+		}
+	}
+	DUP
+	PUSHINT 2134328500
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 2012572672
+		EQUAL
+		IFJMPREF {
+			CALL $getRelayRoundAddressFromTimestamp$
+		}
+		DUP
+		PUSHINT 2020174665
+		EQUAL
+		IFJMPREF {
+			CALL $finishWithdraw$
+		}
+		DUP
+		PUSHINT 2046143116
+		EQUAL
+		IFJMPREF {
+			CALL $onRelayRoundDeployed$
+		}
+		DUP
+		PUSHINT 2134328500
+		EQUAL
+		IFJMPREF {
+			CALL $forceUpgradeUserData$
+		}
+	}
+}
+

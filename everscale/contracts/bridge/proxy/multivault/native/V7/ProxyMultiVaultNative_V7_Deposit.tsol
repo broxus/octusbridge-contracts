@@ -1,0 +1,231 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma ever-solidity >= 0.62.0;
+
+import "./ProxyMultiVaultNative_V7_Withdraw.tsol";
+import {EventAddressKeeper} from "../../../../event-address-keeper/EventAddressKeeper.tsol";
+
+import "./../../../../interfaces/event-contracts/IEthereumEverscaleEvent.tsol";
+import "./../../../../interfaces/event-contracts/ISolanaEverscaleEvent.tsol";
+import "./../../../../interfaces/event-contracts/INotEnoughLiquidity.tsol";
+import "./../../../../interfaces/IEventAddressKeeper.tsol";
+
+import "./../../../../interfaces/proxy/IEthereumEverscaleProxyExtended.tsol";
+import "./../../../../interfaces/proxy/ISolanaEverscaleProxyExtended.tsol";
+import "./../../../../interfaces/proxy/ITvmTvmProxyExtended.tsol";
+
+import "../../../../libraries/EventContractNonce.tsol";
+import "../../../../libraries/BridgeOpCodes.tsol";
+
+
+abstract contract ProxyMultiVaultNative_V7_Deposit is
+    IEthereumEverscaleProxyExtended,
+    ISolanaEverscaleProxyExtended,
+    ITvmTvmProxyExtended,
+    ProxyMultiVaultNative_V7_Withdraw
+{
+    /// @notice Handles native token transfer from EVM.
+    /// @param remainingGasTo Gas back address
+    function onEventConfirmedExtended(
+        IEthereumEverscaleEvent.EthereumEverscaleEventInitData eventInitData,
+        TvmCell meta,
+        address remainingGasTo
+    ) external override reserveAtLeastTargetBalance {
+        require(
+            _isArrayContainsAddress(evmConfiguration.evmConfigurations, msg.sender),
+            ErrorCodes.NOT_ETHEREUM_CONFIG
+        );
+
+        (
+            address token_wallet,
+            uint128 amount,
+            address recipient,
+            TvmCell payload
+        ) = abi.decode(
+            meta,
+            (address, uint128, address, TvmCell)
+        );
+
+        uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
+
+        optional(TvmCell) transferPayload;
+        if (!payload.toSlice().empty()) {
+            transferPayload.set(payload);
+        }
+
+        _transferTokens(
+            token_wallet,
+            amount,
+            recipient,
+            remainingGasTo,
+            abi.encode(BridgeOpCodes.BridgeDeposit, nonce, transferPayload),
+            false,
+            null
+        );
+    }
+
+    /// @notice Handles native token transfer from Solana.
+    /// @param remainingGasTo Gas back address
+    function onSolanaEventConfirmedExtended(
+        ISolanaEverscaleEvent.SolanaEverscaleEventInitData eventInitData,
+        TvmCell meta,
+        address remainingGasTo
+    ) external override reserveAtLeastTargetBalance {
+        require(solanaConfiguration.solanaConfiguration == msg.sender, ErrorCodes.NOT_SOLANA_CONFIG);
+
+        (
+            address token_wallet,
+            uint128 amount,
+            address recipient,
+            TvmCell payload
+        ) = abi.decode(
+            meta,
+            (address, uint128, address, TvmCell)
+        );
+
+        uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
+
+        optional(TvmCell) transferPayload;
+        if (!payload.toSlice().empty()) {
+            transferPayload.set(payload);
+        }
+
+        _transferTokens(
+            token_wallet,
+            amount,
+            recipient,
+            remainingGasTo,
+            abi.encode(BridgeOpCodes.BridgeDeposit, nonce, transferPayload),
+            false,
+            null
+        );
+    }
+
+    /// @notice Handles native token transfer from TVM.
+    /// @param remainingGasTo Gas back address
+    function onTVMEventConfirmedExtended(
+        ITvmTvmEvent.TvmTvmEventInitData eventInitData,
+        TvmCell meta,
+        address remainingGasTo
+    ) external override reserveAtLeastTargetBalance {
+        require(
+            (proxyMultiVaultAlien.value != 0 && msg.sender == proxyMultiVaultAlien) ||
+            _isArrayContainsAddress(tvmConfiguration.incomingConfigurations, msg.sender),
+            ErrorCodes.NOT_TVM_CONFIG_OR_ALIEN_PROXY
+        );
+
+        (
+            address token_wallet,
+            uint128 amount,
+            address recipient,
+            optional(TvmCell) payload,
+            address eventAddress,
+            uint128 expectedGas
+        ) = abi.decode(
+            meta,
+            (address, uint128, address, optional(TvmCell), address, uint128)
+        );
+
+        uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
+
+        // accumulate fee
+        uint128 fee = _calculateFeesDeposit(amount, token_wallet);
+        _accumulateFee(fee, token_wallet);
+
+        emit IncomingFeeTaken(fee, token_wallet, eventInitData.msgHash);
+
+        TvmCell stateInit = tvm.buildStateInit({
+            contr: EventAddressKeeper,
+            varInit: {
+            proxy: address(this),
+            callId: nonce
+        },
+            pubkey: 0,
+            code: tvmConfiguration.eventAddressKeeperCode
+        });
+
+        new EventAddressKeeper{
+            value: gasToValue(Gas.DEPLOY_EVENT_ADDRESS_KEEPER, address(this).wid),
+            flag: MsgFlag.SENDER_PAYS_FEES,
+            stateInit: stateInit
+        }(eventAddress);
+
+        _transferTokens(
+            token_wallet,
+            amount - fee,
+            recipient,
+            recipient,
+            abi.encode(BridgeOpCodes.BridgeDeposit, nonce, payload),
+            true,
+            Gas.getTransferTokenValue() + expectedGas
+        );
+
+        // Refund remaining gas to event deployer
+        remainingGasTo.transfer({
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+            bounce: false
+        });
+    }
+
+    onBounce(TvmSlice slice) external view reserveAtLeastTargetBalance {
+        uint32 selector = slice.load(uint32);
+
+        if (selector == tvm.functionId(ITokenWallet.transfer)) {
+            (
+                ,
+                ,
+                ,
+                ,
+                ,
+                TvmCell payload
+            ) = slice.loadFunctionParams(ITokenWallet.transfer);
+
+            (,uint32 nonce,) = abi.decode(payload, (uint16, uint32, optional(TvmCell)));
+
+            IEventAddressKeeper(_deriveEventKeeperAddress(nonce))
+                .getEventContract{
+                    flag: MsgFlag.ALL_NOT_RESERVED,
+                    bounce: false,
+                    callback: ProxyMultiVaultNative_V7_Deposit.receiveEventContractAddress
+                }();
+        }
+    }
+
+    function receiveEventContractAddress(
+        address eventContract,
+        uint32 callId
+    )
+        external
+        view
+        reserveAtLeastTargetBalance
+    {
+        require(msg.sender == _deriveEventKeeperAddress(callId), ErrorCodes.NOT_EVENT_ADDRESS_KEEPER);
+
+        mapping(address => bool) wNativeAddresses;
+        INotEnoughLiquidity(eventContract)
+            .notEnoughLiquidity{
+                flag: MsgFlag.ALL_NOT_RESERVED,
+                bounce: false
+            }(wNativeAddresses);
+    }
+
+    function _deriveEventKeeperAddress(
+        uint32 callId
+    )
+        internal
+        view
+        returns (address)
+    {
+        TvmCell stateInit = tvm.buildStateInit({
+            contr: EventAddressKeeper,
+            varInit: {
+            proxy: address(this),
+            callId: callId
+        },
+            pubkey: 0,
+            code: tvmConfiguration.eventAddressKeeperCode
+        });
+
+        return address(tvm.hash(stateInit));
+    }
+}

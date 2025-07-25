@@ -1,8 +1,57 @@
 {
 	"ABI version": 2,
-	"version": "2.2",
+	"version": "2.3",
 	"header": ["time"],
 	"functions": [
+		{
+			"name": "encodeCancelPredeployedTokenDataPayload",
+			"inputs": [
+				{"name":"_name","type":"string"},
+				{"name":"_symbol","type":"string"},
+				{"name":"_decimals","type":"uint8"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
+		},
+		{
+			"name": "encodeProvideLiquidityPayloadTvmTvmAlien",
+			"inputs": [
+				{"name":"_newRecipient","type":"address"},
+				{"name":"_remainingGasTo","type":"address"},
+				{"name":"_expectedGas","type":"uint128"},
+				{"name":"_eventPayload","type":"optional(cell)"},
+				{"name":"_name","type":"string"},
+				{"name":"_symbol","type":"string"},
+				{"name":"_decimals","type":"uint8"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
+		},
+		{
+			"name": "encodeProvideLiquidityPayloadTvmTvmNative",
+			"inputs": [
+				{"name":"_newRecipient","type":"address"},
+				{"name":"_remainingGasTo","type":"address"},
+				{"name":"_expectedGas","type":"uint128"},
+				{"name":"_eventPayload","type":"optional(cell)"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
+		},
+		{
+			"name": "encodeProvideLiquidityPayloadEvmTvmNative",
+			"inputs": [
+				{"name":"_newRecipient","type":"uint160"},
+				{"name":"_remainingGasTo","type":"address"},
+				{"name":"_callback","type":"address"}
+			],
+			"outputs": [
+				{"name":"data","type":"cell"}
+			]
+		},
 		{
 			"name": "encodeMediatorPayload",
 			"inputs": [
@@ -43,6 +92,18 @@
 				{"name":"executePayloadNeeded","type":"bool"},
 				{"components":[{"name":"account","type":"uint256"},{"name":"readOnly","type":"bool"},{"name":"isSigner","type":"bool"}],"name":"executePayloadAccounts","type":"tuple[]"},
 				{"name":"payload","type":"bytes"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
+			]
+		},
+		{
+			"name": "encodeMergePoolBurnWithdrawPayloadTVM",
+			"inputs": [
+				{"name":"targetToken","type":"address"},
+				{"name":"recipient","type":"address"},
+				{"name":"expectedGas","type":"uint128"},
+				{"name":"payload","type":"optional(cell)"}
 			],
 			"outputs": [
 				{"name":"value0","type":"cell"}
@@ -235,6 +296,17 @@
 			]
 		},
 		{
+			"name": "encodeAlienBurnPayloadTVM",
+			"inputs": [
+				{"name":"recipient","type":"address"},
+				{"name":"expectedGas","type":"uint128"},
+				{"name":"payload","type":"optional(cell)"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
+			]
+		},
+		{
 			"name": "encodeAlienBurnPayloadSolana",
 			"inputs": [
 				{"name":"recipient","type":"uint256"},
@@ -253,6 +325,21 @@
 				{"name":"recipient","type":"uint160"},
 				{"name":"chainId","type":"uint256"},
 				{"components":[{"name":"recipient","type":"uint160"},{"name":"payload","type":"bytes"},{"name":"strict","type":"bool"}],"name":"callback","type":"tuple"}
+			],
+			"outputs": [
+				{"name":"value0","type":"cell"}
+			]
+		},
+		{
+			"name": "encodeNativeTransferPayloadTVM",
+			"inputs": [
+				{"name":"recipient","type":"address"},
+				{"name":"chainId","type":"int32"},
+				{"name":"name","type":"string"},
+				{"name":"symbol","type":"string"},
+				{"name":"decimals","type":"uint8"},
+				{"name":"expectedGas","type":"uint128"},
+				{"name":"payload","type":"optional(cell)"}
 			],
 			"outputs": [
 				{"name":"value0","type":"cell"}

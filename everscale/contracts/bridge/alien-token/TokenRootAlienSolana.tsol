@@ -1,8 +1,7 @@
 pragma ever-solidity >= 0.62.0;
-pragma AbiHeader time;
+
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
-
 
 import "./../interfaces/alien-token/ITokenRootAlienSolana.tsol";
 
@@ -21,7 +20,7 @@ contract TokenRootAlienSolana is TokenRootUpgradeable, ITokenRootAlienSolana {
         bool burnByRootDisabled,
         bool burnPaused,
         address remainingGasTo
-    ) public TokenRootUpgradeable(
+    ) TokenRootUpgradeable(
         initialSupplyTo,
         initialSupply,
         deployWalletValue,

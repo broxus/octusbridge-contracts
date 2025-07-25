@@ -30,11 +30,11 @@ const proxyadmin = {
 };
 
 const multisig = {
-  main: '0x32c6fA709EA1bB6FdcB194D4Ca8d0e667EF2A800',
-  polygon: '0x32c6fA709EA1bB6FdcB194D4Ca8d0e667EF2A800',
-  bsc: '0x32c6fA709EA1bB6FdcB194D4Ca8d0e667EF2A800',
-  fantom: '0x32c6fA709EA1bB6FdcB194D4Ca8d0e667EF2A800',
-  avalanche: '0x32c6fA709EA1bB6FdcB194D4Ca8d0e667EF2A800'
+  main: '0x840B3De19e3FAB72fa9A168bD8Dd71B678c57989',
+  polygon: '0x3C85236De762DFF9FDE8A0c796ec2E089fC63Bc7',
+  bsc: '0x3C85236De762DFF9FDE8A0c796ec2E089fC63Bc7',
+  fantom: '0xa30808d1067fb7efFEC06F31b44A24cDC6df1A90',
+  avalanche: '0xdad6133c8fA19f649769220e415Ae5EB408B207c'
 };
 
 const weth = {
@@ -129,8 +129,9 @@ const hardhatConfig = {
           optimizer: {
             enabled: true,
             runs: 200
-          }
-        }
+          },
+          evmVersion: `paris`
+        },
       },
       {
         version: '0.8.2',
@@ -144,18 +145,6 @@ const hardhatConfig = {
     ]
   },
   deterministicDeployment: {
-    "5": {
-      factory: "0x2E1C8f0a898f7C839489b3CEf82dB5509208c109",
-      deployer: "0x3b15820c35cC402Aac26687c62fA15A8267a9527",
-      funding: "1000000000000000",
-      signedTx: "0xf8a5808502540be400830186a08080b853604580600e600039806000f350fe7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf32ea0cda55714569101ddcae9fa0ebf3aa3ba24e0fdc2c28b084af6d870eb415dbd9fa00ddb09d74974cc66e809b1f317de690a4f0f6c72a0fcaded884c0afda51654bc",
-    },
-    "3": {
-      factory: "0x2E1C8f0a898f7C839489b3CEf82dB5509208c109",
-      deployer: "0x3b15820c35cC402Aac26687c62fA15A8267a9527",
-      funding: "1000000000000000",
-      signedTx: "0xf8a5808502540be400830186a08080b853604580600e600039806000f350fe7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf329a0b8b0134dfce102adb832b595305f9e84c9d7824af5aad82c80499d9915944a2aa00f9bbd1a582aded7e09f2be38924dd495d9bb0168ccba88701af415a21ef0e0c",
-    },
     "1": {
       factory: "0xcD04370a052CC2EeA4feC3f96Dc5D5c6e2129c69",
       deployer: "0xdD54d5Fca0Df238f92A0421B31Ca766A20f70F6d",
@@ -180,12 +169,6 @@ const hardhatConfig = {
       funding: "50000000000000000",
       signedTx: "0xf8a78085746a528800830186a08080b853604580600e600039806000f350fe7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf3820217a06c337d22bed572141f530759e3d6390be456630218a5084f7fd06e9f0734a8e1a00c474f88289644b0f4bfd7c6bde7b55e043027ee03e4cd65a533a756698c2d33",
     },
-    "2001": {
-      factory: "0xcD04370a052CC2EeA4feC3f96Dc5D5c6e2129c69",
-      deployer: "0xdD54d5Fca0Df238f92A0421B31Ca766A20f70F6d",
-      funding: "10000000000000000",
-      signedTx: "0xf8a78085174876e800830186a08080b853604580600e600039806000f350fe7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf3820fc6a06618d4d7b9efae446845c081827c524a36a81a421f205126f298c5872141fba3a039f63392b00cfabb22747f45168ba13e781b21557139d9b068b7df83f22e023d",
-    },
     "43114": {
       factory: "0xcD04370a052CC2EeA4feC3f96Dc5D5c6e2129c69",
       deployer: "0xdD54d5Fca0Df238f92A0421B31Ca766A20f70F6d",
@@ -196,18 +179,18 @@ const hardhatConfig = {
   networks: {
     hardhat: {
       allowUnlimitedContractSize: true,
-      forking: {
-        url: process.env.ETH_MAIN_ARCHIVE_HTTP,
-        blockNumber: 16233635,
-      },
+      // forking: {
+      //   url: process.env.ETH_MAIN_ARCHIVE_HTTP,
+      //   blockNumber: 16233635,
+      // },
       chainId: 1111,
       accounts: {
         count: 50
       }
     },
     main: {
-      url: 'https://mainnet.infura.io/v3/f3ca4333bf4a41308d0a277ae1c09336',
-      gasPrice: 30000000000, // 100 gwei
+      url: 'https://mainnet.infura.io/v3/619e6537ee3d44dbbd00c6182b897a0b',
+      gasPrice: 70000000000, // 70 gwei
       gas: 3000000,
       timeout: 1000000,
       accounts: {
@@ -216,7 +199,7 @@ const hardhatConfig = {
       },
     },
     polygon: {
-      url: 'https://matic-mainnet.chainstacklabs.com',
+      url: 'https://polygon-mainnet.infura.io/v3/619e6537ee3d44dbbd00c6182b897a0b',
       gasPrice: 300001000000, // 1.001 gwei
       gas: 3000000,
       timeout: 1000000,
@@ -338,84 +321,83 @@ const hardhatConfig = {
     },
     multivault: {
       default: '0x0000000000000000000000000000000000000000',
-      main: '0x2Dc29C87162354289cC2a1C585bb20EadA0b382d',
-      polygon: '0x2Dc29C87162354289cC2a1C585bb20EadA0b382d',
-      bsc: '0x2Dc29C87162354289cC2a1C585bb20EadA0b382d',
-      fantom: '0x2Dc29C87162354289cC2a1C585bb20EadA0b382d',
-      avalanche: '0x2Dc29C87162354289cC2a1C585bb20EadA0b382d',
+      main: '0x4aB740157721105aE503fbad756a578171512525',
+      polygon: '0x4aB740157721105aE503fbad756a578171512525',
+      bsc: '0x4aB740157721105aE503fbad756a578171512525',
+      fantom: '0x4aB740157721105aE503fbad756a578171512525',
+      avalanche: '0x4aB740157721105aE503fbad756a578171512525',
     },
     relay_1: {
       default: 10,
-      main: '0xB7CEB630183EF502f6B850471f7FbAfdfb72cB29',
-      polygon: '0xB7CEB630183EF502f6B850471f7FbAfdfb72cB29',
-      bsc: '0xB7CEB630183EF502f6B850471f7FbAfdfb72cB29',
-      fantom: '0xB7CEB630183EF502f6B850471f7FbAfdfb72cB29',
-      avalanche: '0xB7CEB630183EF502f6B850471f7FbAfdfb72cB29',
+      main: '0xf7ae6b7c4a79c3b50b0e0c78aba20980ff49ad1b',
+      polygon: '0xf7ae6b7c4a79c3b50b0e0c78aba20980ff49ad1b',
+      bsc: '0xf7ae6b7c4a79c3b50b0e0c78aba20980ff49ad1b',
+      fantom: '0xf7ae6b7c4a79c3b50b0e0c78aba20980ff49ad1b',
+      avalanche: '0xf7ae6b7c4a79c3b50b0e0c78aba20980ff49ad1b',
     },
     relay_2: {
       default: 11,
-      ropsten: '0x1bA36D24E58302A713FbBDAAFB82D7E5FB8A66BC',
-      main: '0x6a8A4CeCc1f4d7A60902DDD632B934e723E599c5',
-      polygon: '0x6a8A4CeCc1f4d7A60902DDD632B934e723E599c5',
-      bsc: '0x6a8A4CeCc1f4d7A60902DDD632B934e723E599c5',
-      fantom: '0x6a8A4CeCc1f4d7A60902DDD632B934e723E599c5',
-      avalanche: '0x6a8A4CeCc1f4d7A60902DDD632B934e723E599c5',
+      main: '0x1604ed0441d949df934be628f1ed2b0db2b29437',
+      polygon: '0x1604ed0441d949df934be628f1ed2b0db2b29437',
+      bsc: '0x1604ed0441d949df934be628f1ed2b0db2b29437',
+      fantom: '0x1604ed0441d949df934be628f1ed2b0db2b29437',
+      avalanche: '0x1604ed0441d949df934be628f1ed2b0db2b29437',
     },
     relay_3: {
       default: 12,
-      main: '0x77B4F015C6660951712B4E467Fdecebbc331C466',
-      polygon: '0x77B4F015C6660951712B4E467Fdecebbc331C466',
-      bsc: '0x77B4F015C6660951712B4E467Fdecebbc331C466',
-      fantom: '0x77B4F015C6660951712B4E467Fdecebbc331C466',
-      avalanche: '0x77B4F015C6660951712B4E467Fdecebbc331C466',
+      main: '0xbdd25b57f53d516d73a67578a64958651b6824b4',
+      polygon: '0xbdd25b57f53d516d73a67578a64958651b6824b4',
+      bsc: '0xbdd25b57f53d516d73a67578a64958651b6824b4',
+      fantom: '0xbdd25b57f53d516d73a67578a64958651b6824b4',
+      avalanche: '0xbdd25b57f53d516d73a67578a64958651b6824b4',
     },
     relay_4: {
       default: 13,
-      main: '0x38aB5e2652238EFba61e2427A3D51f3172CA0569',
-      polygon: '0x38aB5e2652238EFba61e2427A3D51f3172CA0569',
-      bsc: '0x38aB5e2652238EFba61e2427A3D51f3172CA0569',
-      fantom: '0x38aB5e2652238EFba61e2427A3D51f3172CA0569',
-      avalanche: '0x38aB5e2652238EFba61e2427A3D51f3172CA0569',
+      main: '0xb76e542f664073066e18fa76dc27dbbfefb64ec8',
+      polygon: '0xb76e542f664073066e18fa76dc27dbbfefb64ec8',
+      bsc: '0xb76e542f664073066e18fa76dc27dbbfefb64ec8',
+      fantom: '0xb76e542f664073066e18fa76dc27dbbfefb64ec8',
+      avalanche: '0xb76e542f664073066e18fa76dc27dbbfefb64ec8',
     },
     relay_5: {
       default: 14,
-      main: '0xC834Dc237193368D67C9efc61b6a86516EA110aa',
-      polygon: '0xC834Dc237193368D67C9efc61b6a86516EA110aa',
-      bsc: '0xC834Dc237193368D67C9efc61b6a86516EA110aa',
-      fantom: '0xC834Dc237193368D67C9efc61b6a86516EA110aa',
-      avalanche: '0xC834Dc237193368D67C9efc61b6a86516EA110aa',
+      main: '0xa2e2f1592e49ff8036e70bd2f3fee63084869e5a',
+      polygon: '0xa2e2f1592e49ff8036e70bd2f3fee63084869e5a',
+      bsc: '0xa2e2f1592e49ff8036e70bd2f3fee63084869e5a',
+      fantom: '0xa2e2f1592e49ff8036e70bd2f3fee63084869e5a',
+      avalanche: '0xa2e2f1592e49ff8036e70bd2f3fee63084869e5a',
     },
     relay_6: {
       default: 15,
-      main: '0x66CB9111D32999B23eCB49EA1ae21550ccC82931',
-      polygon: '0x66CB9111D32999B23eCB49EA1ae21550ccC82931',
-      bsc: '0x66CB9111D32999B23eCB49EA1ae21550ccC82931',
-      fantom: '0x66CB9111D32999B23eCB49EA1ae21550ccC82931',
-      avalanche: '0x66CB9111D32999B23eCB49EA1ae21550ccC82931',
+      main: '0xf3f04502c00e7be82c3c3a0782646302729b561f',
+      polygon: '0xf3f04502c00e7be82c3c3a0782646302729b561f',
+      bsc: '0xf3f04502c00e7be82c3c3a0782646302729b561f',
+      fantom: '0xf3f04502c00e7be82c3c3a0782646302729b561f',
+      avalanche: '0xf3f04502c00e7be82c3c3a0782646302729b561f',
     },
     relay_7: {
       default: 16,
-      main: '0xEdDCBC7cC88ff1554e80C935Da5f378a68a259d5',
-      polygon: '0xEdDCBC7cC88ff1554e80C935Da5f378a68a259d5',
-      bsc: '0xEdDCBC7cC88ff1554e80C935Da5f378a68a259d5',
-      fantom: '0xEdDCBC7cC88ff1554e80C935Da5f378a68a259d5',
-      avalanche: '0xEdDCBC7cC88ff1554e80C935Da5f378a68a259d5',
+      main: '0x4b54583d919b8e2249df7355fd8c35ba0aadc43d',
+      polygon: '0x4b54583d919b8e2249df7355fd8c35ba0aadc43d',
+      bsc: '0x4b54583d919b8e2249df7355fd8c35ba0aadc43d',
+      fantom: '0x4b54583d919b8e2249df7355fd8c35ba0aadc43d',
+      avalanche: '0x4b54583d919b8e2249df7355fd8c35ba0aadc43d',
     },
     relay_8: {
       default: 17,
-      main: '0xf575f080c22ad4facd0297af2123a6c71a5d4eb6',
-      polygon: '0xf575f080c22ad4facd0297af2123a6c71a5d4eb6',
-      bsc: '0xf575f080c22ad4facd0297af2123a6c71a5d4eb6',
-      fantom: '0xf575f080c22ad4facd0297af2123a6c71a5d4eb6',
-      avalanche: '0xf575f080c22ad4facd0297af2123a6c71a5d4eb6',
+      main: '0xbea46a1ae3fce7e59741a17cfefaf510ec5ded52',
+      polygon: '0xbea46a1ae3fce7e59741a17cfefaf510ec5ded52',
+      bsc: '0xbea46a1ae3fce7e59741a17cfefaf510ec5ded52',
+      fantom: '0xbea46a1ae3fce7e59741a17cfefaf510ec5ded52',
+      avalanche: '0xbea46a1ae3fce7e59741a17cfefaf510ec5ded52',
     },
     relay_9: {
       default: 18,
-      main: '0xE02826355Bbae81D367B1479CA2fdb3530A83d82',
-      polygon: '0xE02826355Bbae81D367B1479CA2fdb3530A83d82',
-      bsc: '0xE02826355Bbae81D367B1479CA2fdb3530A83d82',
-      fantom: '0xE02826355Bbae81D367B1479CA2fdb3530A83d82',
-      avalanche: '0xE02826355Bbae81D367B1479CA2fdb3530A83d82',
+      main: '0xdc59cbd3c0ad56e6da03b27bc599c42ce5aa02a9',
+      polygon: '0xdc59cbd3c0ad56e6da03b27bc599c42ce5aa02a9',
+      bsc: '0xdc59cbd3c0ad56e6da03b27bc599c42ce5aa02a9',
+      fantom: '0xdc59cbd3c0ad56e6da03b27bc599c42ce5aa02a9',
+      avalanche: '0xdc59cbd3c0ad56e6da03b27bc599c42ce5aa02a9',
     },
     withdrawGuardian: {
       default: 23,

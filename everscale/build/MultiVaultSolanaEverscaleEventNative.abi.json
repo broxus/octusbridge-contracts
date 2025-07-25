@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.2",
+	"version": "2.3",
 	"header": ["pubkey", "time", "expire"],
 	"functions": [
 		{
@@ -44,6 +44,28 @@
 				{"name":"payload_","type":"cell"},
 				{"name":"proxy_","type":"address"},
 				{"name":"tokenWallet_","type":"address"}
+			]
+		},
+		{
+			"name": "dailyLimitReached",
+			"inputs": [
+				{"name":"_approver","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "approveLimit",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "rejectLimit",
+			"inputs": [
+			],
+			"outputs": [
 			]
 		},
 		{
@@ -213,6 +235,22 @@
 			"outputs": [
 				{"name":"nonce","type":"uint32"}
 			]
+		},
+		{
+			"name": "limitApprover",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"limitApprover","type":"address"}
+			]
+		},
+		{
+			"name": "isLimitApproved",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"isLimitApproved","type":"bool"}
+			]
 		}
 	],
 	"data": [
@@ -256,6 +294,37 @@
 			],
 			"outputs": [
 			]
+		},
+		{
+			"name": "LimitReached",
+			"inputs": [
+				{"name":"approver","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "LiquidityRequested",
+			"inputs": [
+				{"name":"bounty","type":"uint128"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "Cancelled",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "LiquidityProvided",
+			"inputs": [
+				{"name":"tokenSender","type":"address"}
+			],
+			"outputs": [
+			]
 		}
 	],
 	"fields": [
@@ -279,6 +348,8 @@
 		{"name":"expected_evers","type":"uint256"},
 		{"name":"payload","type":"cell"},
 		{"name":"proxy","type":"address"},
-		{"name":"tokenWallet","type":"address"}
+		{"name":"tokenWallet","type":"address"},
+		{"name":"limitApprover","type":"address"},
+		{"name":"isLimitApproved","type":"bool"}
 	]
 }

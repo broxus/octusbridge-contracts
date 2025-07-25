@@ -1,6 +1,7 @@
 pragma ever-solidity >= 0.62.0;
 pragma AbiHeader expire;
 
+import "../bridge/libraries/Gas.tsol";
 
 contract TransferUtils {
     function transferAll(address receiver) internal pure {
@@ -56,6 +57,6 @@ contract TransferUtils {
     }
 
     function _targetBalance() internal pure virtual returns (uint128) {
-        return 1 ever;
+        return Gas.TARGET_BALANCE;
     }
 }

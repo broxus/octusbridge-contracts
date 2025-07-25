@@ -1,0 +1,159 @@
+{
+	"ABI version": 2,
+	"version": "2.3",
+	"header": ["pubkey", "time", "expire"],
+	"functions": [
+		{
+			"name": "constructor",
+			"inputs": [
+				{"name":"_initializer","type":"address"},
+				{"name":"_meta","type":"cell"},
+				{"name":"_transactionChecker","type":"address"},
+				{"name":"_eventBody","type":"cell"},
+				{"name":"_eventInitialBalance","type":"uint128"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "getEventInitData",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"components":[{"name":"msgHash","type":"uint256"},{"name":"configuration","type":"address"},{"name":"chainId","type":"int32"}],"name":"value0","type":"tuple"}
+			]
+		},
+		{
+			"name": "getDetails",
+			"inputs": [
+				{"name":"answerId","type":"uint32"}
+			],
+			"outputs": [
+				{"components":[{"name":"msgHash","type":"uint256"},{"name":"configuration","type":"address"},{"name":"chainId","type":"int32"}],"name":"_eventInitData","type":"tuple"},
+				{"name":"_initializer","type":"address"},
+				{"name":"_meta","type":"cell"},
+				{"name":"_status","type":"uint8"}
+			]
+		},
+		{
+			"name": "processProof",
+			"inputs": [
+				{"components":[{"name":"msgHash","type":"uint256"},{"name":"messageIndex","type":"uint15"},{"name":"txBlockProof","type":"cell"},{"name":"txProof","type":"cell"}],"name":"eventVoteData","type":"tuple"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "status",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"status","type":"uint8"}
+			]
+		},
+		{
+			"name": "initializer",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"initializer","type":"address"}
+			]
+		},
+		{
+			"name": "meta",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"meta","type":"cell"}
+			]
+		},
+		{
+			"name": "transactionChecker",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"transactionChecker","type":"address"}
+			]
+		},
+		{
+			"name": "nonce",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"nonce","type":"uint32"}
+			]
+		},
+		{
+			"name": "eventInitialBalance",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"eventInitialBalance","type":"uint128"}
+			]
+		}
+	],
+	"data": [
+		{"components":[{"name":"msgHash","type":"uint256"},{"name":"configuration","type":"address"},{"name":"chainId","type":"int32"}],"key":1,"name":"eventInitData","type":"tuple"}
+	],
+	"events": [
+		{
+			"name": "Confirmed",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "LiquidityRequested",
+			"inputs": [
+				{"name":"bounty","type":"uint128"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "Cancelled",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "LiquidityProvided",
+			"inputs": [
+				{"name":"tokenSender","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "LimitReached",
+			"inputs": [
+				{"name":"approver","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "Rejected",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		}
+	],
+	"fields": [
+		{"name":"_pubkey","type":"uint256"},
+		{"name":"_timestamp","type":"uint64"},
+		{"name":"_constructorFlag","type":"bool"},
+		{"name":"status","type":"uint8"},
+		{"name":"initializer","type":"address"},
+		{"name":"meta","type":"cell"},
+		{"name":"transactionChecker","type":"address"},
+		{"components":[{"name":"msgHash","type":"uint256"},{"name":"configuration","type":"address"},{"name":"chainId","type":"int32"}],"name":"eventInitData","type":"tuple"},
+		{"name":"nonce","type":"uint32"},
+		{"name":"eventBody","type":"cell"},
+		{"name":"eventInitialBalance","type":"uint128"}
+	]
+}

@@ -6,6 +6,8 @@ import "../../../../alien-token/TokenRootAlienSolana.tsol";
 
 import "./ProxyMultivaultAlien_V8_Base.tsol";
 
+import "../../../../libraries/Gas.tsol";
+
 
 abstract contract ProxyMultiVaultAlien_V8_Token is ProxyMultivaultAlien_V8_Base {
     function _mintTokens(
@@ -22,7 +24,7 @@ abstract contract ProxyMultiVaultAlien_V8_Token is ProxyMultivaultAlien_V8_Base 
         }(
             amount,
             recipient,
-            DEPLOY_WALLET_VALUE,
+            Gas.getDeployTokenWalletValue(),
             remainingGasTo,
             true,
             payload
@@ -59,7 +61,7 @@ abstract contract ProxyMultiVaultAlien_V8_Token is ProxyMultivaultAlien_V8_Base 
         }(
             address(this), // Initial supply recipient
             0, // Initial supply
-            DEPLOY_WALLET_VALUE, // Deploy wallet value
+            Gas.getDeployTokenWalletValue(), // Deploy wallet value
             false, // Mint disabled
             false, // Burn by root disabled
             false, // Burn paused
@@ -94,7 +96,7 @@ abstract contract ProxyMultiVaultAlien_V8_Token is ProxyMultivaultAlien_V8_Base 
         }(
             address(this), // Initial supply recipient
             0, // Initial supply
-            DEPLOY_WALLET_VALUE, // Deploy wallet value
+            Gas.getDeployTokenWalletValue(), // Deploy wallet value
             false, // Mint disabled
             false, // Burn by root disabled
             false, // Burn paused

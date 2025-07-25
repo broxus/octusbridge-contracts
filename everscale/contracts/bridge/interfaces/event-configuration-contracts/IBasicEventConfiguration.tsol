@@ -6,7 +6,8 @@ interface IBasicEventConfiguration {
         EthereumEverscale,
         EverscaleEthereum,
         SolanaEverscale,
-        EverscaleSolana
+        EverscaleSolana,
+        TvmTvm
     }
 
     struct BasicConfiguration {

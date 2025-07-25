@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.2",
+	"version": "2.3",
 	"header": ["pubkey", "time", "expire"],
 	"functions": [
 		{
@@ -98,6 +98,47 @@
 				{"name":"payload_","type":"cell"},
 				{"name":"proxy_","type":"address"},
 				{"name":"token_","type":"address"}
+			]
+		},
+		{
+			"name": "dailyLimitReached",
+			"inputs": [
+				{"name":"_approver","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "approveLimit",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "cancel",
+			"inputs": [
+				{"name":"_newRecipient","type":"uint160"},
+				{"name":"_remainingGasTo","type":"address"},
+				{"components":[{"name":"recipient","type":"uint160"},{"name":"payload","type":"bytes"},{"name":"strict","type":"bool"}],"name":"_callback","type":"tuple"},
+				{"name":"_expectedGasReceiver","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "rejectLimit",
+			"inputs": [
+				{"name":"_expectedGasReceiver","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "retry",
+			"inputs": [
+			],
+			"outputs": [
 			]
 		},
 		{
@@ -275,6 +316,22 @@
 			"outputs": [
 				{"name":"transitionalDataCell","type":"cell"}
 			]
+		},
+		{
+			"name": "limitApprover",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"limitApprover","type":"address"}
+			]
+		},
+		{
+			"name": "isLimitApproved",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"isLimitApproved","type":"bool"}
+			]
 		}
 	],
 	"data": [
@@ -318,6 +375,37 @@
 			],
 			"outputs": [
 			]
+		},
+		{
+			"name": "LimitReached",
+			"inputs": [
+				{"name":"approver","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "LiquidityRequested",
+			"inputs": [
+				{"name":"bounty","type":"uint128"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "Cancelled",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "LiquidityProvided",
+			"inputs": [
+				{"name":"tokenSender","type":"address"}
+			],
+			"outputs": [
+			]
 		}
 	],
 	"fields": [
@@ -334,6 +422,8 @@
 		{"name":"round_number","type":"uint32"},
 		{"components":[{"components":[{"name":"eventTransaction","type":"uint256"},{"name":"eventIndex","type":"uint32"},{"name":"eventData","type":"cell"},{"name":"eventBlockNumber","type":"uint32"},{"name":"eventBlock","type":"uint256"}],"name":"voteData","type":"tuple"},{"name":"configuration","type":"address"},{"name":"staking","type":"address"},{"name":"chainId","type":"uint32"}],"name":"eventInitData","type":"tuple"},
 		{"name":"nonce","type":"uint32"},
-		{"name":"transitionalDataCell","type":"cell"}
+		{"name":"transitionalDataCell","type":"cell"},
+		{"name":"limitApprover","type":"address"},
+		{"name":"isLimitApproved","type":"bool"}
 	]
 }

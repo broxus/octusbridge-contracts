@@ -82,7 +82,7 @@ export const setupEverscaleEthereumEventConfiguration = async (
             },
         },
         publicKey: signer.publicKey,
-        value: locklift.utils.toNano(2),
+        value: locklift.utils.toNano(20),
     });
 
     await logContract(

@@ -13,7 +13,7 @@ import "ton-eth-bridge-token-contracts/contracts/interfaces/IAcceptTokensTransfe
 
 
 abstract contract ProxyMultiVaultNative_V6_Withdraw is
-ProxyMultiVaultNative_V6_Base,
+    ProxyMultiVaultNative_V6_Base,
     IAcceptTokensTransferCallback
 {
     /// @notice Handles incoming token transfer
@@ -101,8 +101,8 @@ ProxyMultiVaultNative_V6_Base,
         );
 
         IEverscaleSolanaEvent.EverscaleSolanaEventVoteData eventVoteData = IEverscaleSolanaEvent.EverscaleSolanaEventVoteData(
-            tx.timestamp,
-            now,
+            tx.logicaltime,
+            block.timestamp,
             executeAccounts,
             executePayloadNeeded,
             executePayloadAccounts,
@@ -142,8 +142,8 @@ ProxyMultiVaultNative_V6_Base,
         );
 
         IEverscaleEthereumEvent.EverscaleEthereumEventVoteData eventVoteData = IEverscaleEthereumEvent.EverscaleEthereumEventVoteData(
-            tx.timestamp,
-            now,
+            tx.logicaltime,
+            block.timestamp,
             eventData
         );
 

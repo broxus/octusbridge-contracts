@@ -1,0 +1,57 @@
+pragma ever-solidity >= 0.62.0;
+
+pragma AbiHeader expire;
+pragma AbiHeader pubkey;
+
+import "@broxus/contracts/contracts/libraries/MsgFlag.tsol";
+import "ton-eth-bridge-token-contracts/contracts/TokenRootUpgradeable.tsol";
+
+import "./../interfaces/alien-token/ITokenRootAlienTVM.tsol";
+
+contract TokenRootAlienTVM is TokenRootUpgradeable, ITokenRootAlienTVM {
+    int32 static base_chainId_;
+    address static base_token_;
+    address static base_native_proxy_wallet_;
+
+    constructor(
+        address initialSupplyTo,
+        uint128 initialSupply,
+        uint128 deployWalletValue,
+        bool mintDisabled,
+        bool burnByRootDisabled,
+        bool burnPaused,
+        address remainingGasTo
+    ) TokenRootUpgradeable(
+        initialSupplyTo,
+        initialSupply,
+        deployWalletValue,
+        mintDisabled,
+        burnByRootDisabled,
+        burnPaused,
+        remainingGasTo
+    ) {}
+
+    function meta(TvmCell _payload) external override responsible returns (
+        int32 base_chainId,
+        address base_token,
+        address base_native_proxy_wallet,
+        string name,
+        string symbol,
+        uint8 decimals,
+        TvmCell payload
+    ) {
+        return {
+            value: 0,
+            bounce: false,
+            flag: MsgFlag.REMAINING_GAS
+        } (
+            base_chainId_,
+            base_token_,
+            base_native_proxy_wallet_,
+            name_,
+            symbol_,
+            decimals_,
+            _payload
+        );
+    }
+}

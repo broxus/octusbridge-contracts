@@ -1,10 +1,9 @@
 pragma ever-solidity >= 0.62.0;
-pragma AbiHeader time;
+
 pragma AbiHeader pubkey;
 pragma AbiHeader expire;
 
-
-import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V8.tsol";
+import "./../../../interfaces/proxy/multivault/alien/IProxyMultiVaultAlien_V9.tsol";
 
 import "./../../../interfaces/event-contracts/multivault/solana/IMultiVaultSolanaEverscaleEventAlien.tsol";
 import "./../../../interfaces/event-configuration-contracts/ISolanaEverscaleEventConfiguration.tsol";
@@ -47,18 +46,26 @@ contract MultiVaultSolanaEverscaleEventAlien is
     address target_token;
     uint128 target_amount;
 
+    address public limitApprover;
+    bool public isLimitApproved;
+
+    modifier onlyLimitApprover() {
+        require(msg.sender == limitApprover && limitApprover.value != 0, ErrorCodes.SENDER_IS_NOT_LIMIT_APPROVER);
+        _;
+    }
+
     constructor(
         address _initializer,
         TvmCell _meta
-    ) SolanaEverscaleBaseEvent(_initializer, _meta) public {}
+    ) SolanaEverscaleBaseEvent(_initializer, _meta) {}
 
     function afterSignatureCheck(
         TvmSlice body,
         TvmCell
     ) private inline view returns (TvmSlice) {
-        body.decode(uint64, uint32);
+        body.load(uint64, uint32);
         TvmSlice bodyCopy = body;
-        uint32 functionId = body.decode(uint32);
+        uint32 functionId = body.load(uint32);
 
         if (isExternalVoteCall(functionId)){
             require(votes[msg.pubkey()] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
@@ -103,7 +110,7 @@ contract MultiVaultSolanaEverscaleEventAlien is
         }
 
         ISolanaEverscaleEventConfiguration(eventInitData.configuration).getDetails{
-            value: 1 ever,
+            value: gasToValue(Gas.REQUEST_CONFIGURATION_DETAILS_GAS, address(this).wid),
             callback: MultiVaultSolanaEverscaleEventAlien.receiveConfigurationDetails
         }();
     }
@@ -117,8 +124,8 @@ contract MultiVaultSolanaEverscaleEventAlien is
 
         proxy = _networkConfiguration.proxy;
 
-        IProxyMultiVaultAlien_V8(proxy).deriveSolanaAlienTokenRoot{
-            value: 1 ever,
+        IProxyMultiVaultAlien_V9(proxy).deriveSolanaAlienTokenRoot{
+            value: gasToValue(Gas.DERIVE_TOKEN_ROOT_GAS, address(this).wid),
             callback: MultiVaultSolanaEverscaleEventAlien.receiveAlienTokenRoot
         }(
             base_token,
@@ -136,7 +143,7 @@ contract MultiVaultSolanaEverscaleEventAlien is
         token = token_;
 
         TIP3TokenRoot(token).name{
-            value: 1 ever,
+            value: gasToValue(Gas.REQUEST_TOKEN_NAME_GAS, address(this).wid),
             bounce: true,
             callback: MultiVaultSolanaEverscaleEventAlien.receiveTokenName
         }();
@@ -153,8 +160,8 @@ contract MultiVaultSolanaEverscaleEventAlien is
     function _requestMergeRouter() internal view {
         // Token exists, no need to deploy
         // Ask the router address
-        IProxyMultiVaultAlien_V8(proxy).deriveMergeRouter{
-            value: 1 ever,
+        IProxyMultiVaultAlien_V9(proxy).deriveMergeRouter{
+            value: gasToValue(Gas.REQUEST_MERGE_ROUTER_GAS, address(this).wid),
             bounce: false,
             callback: MultiVaultSolanaEverscaleEventAlien.receiveMergeRouter
         }(token);
@@ -174,7 +181,7 @@ contract MultiVaultSolanaEverscaleEventAlien is
 
         // Request merge router pool
         IMergeRouter(router).getPool{
-            value: 1 ever,
+            value: gasToValue(Gas.REQUEST_POOL_GAS, address(this).wid),
             bounce: true,
             callback: MultiVaultSolanaEverscaleEventAlien.receiveMergeRouterPool
         }();
@@ -196,7 +203,7 @@ contract MultiVaultSolanaEverscaleEventAlien is
             _finishSetup(token, amount);
         } else {
             IMergePool_V2(pool).getCanon{
-                value: 1 ever,
+                value: gasToValue(Gas.REQUEST_CANON_GAS, address(this).wid),
                 bounce: false,
                 callback: MultiVaultSolanaEverscaleEventAlien.receiveMergePoolCanon
             }();
@@ -246,6 +253,8 @@ contract MultiVaultSolanaEverscaleEventAlien is
 
     function onConfirm() internal override {
         TvmCell metaData = abi.encode(
+            isLimitApproved,
+            address(this),
             target_token,
             target_amount,
             recipient,
@@ -285,8 +294,28 @@ contract MultiVaultSolanaEverscaleEventAlien is
         );
     }
 
+    function dailyLimitReached(address _approver) external override {
+        require(msg.sender == proxy && proxy.value != 0, ErrorCodes.SENDER_NOT_PROXY);
+
+        _setStatusLimitReached(_approver);
+
+        limitApprover = _approver;
+    }
+
+    function approveLimit() external onlyLimitApprover {
+        isLimitApproved = true;
+
+        setStatusConfirmed();
+        onConfirm();
+    }
+
+    function rejectLimit() external onlyLimitApprover {
+        setStatusRejected(3);
+        onReject();
+    }
+
     onBounce(TvmSlice slice) external {
-        uint32 selector = slice.decode(uint32);
+        uint32 selector = slice.load(uint32);
 
         if (
             selector == tvm.functionId(TIP3TokenRoot.name) &&
@@ -294,8 +323,8 @@ contract MultiVaultSolanaEverscaleEventAlien is
         ) {
             // Failed to request token meta
             // Seems like corresponding token root not deployed so deploy it
-            IProxyMultiVaultAlien_V8(proxy).deploySolanaAlienToken{
-                value: 2 ever,
+            IProxyMultiVaultAlien_V9(proxy).deploySolanaAlienToken{
+                value: Gas.getDeployTokenRootValue(),
                 bounce: false
             }(
                 base_token,
@@ -312,8 +341,8 @@ contract MultiVaultSolanaEverscaleEventAlien is
         ) {
             // Failed to request router's pool
             // Seems like corresponding router not deployed so deploy it
-            IProxyMultiVaultAlien_V8(proxy).deployMergeRouter{
-                value: 1 ever,
+            IProxyMultiVaultAlien_V9(proxy).deployMergeRouter{
+                value: gasToValue(Gas.DEPLOY_MERGE_ROUTER_GAS, address(this).wid),
                 bounce: false
             }(token);
 

@@ -1,5 +1,5 @@
 pragma ever-solidity >= 0.62.0;
-pragma AbiHeader time;
+
 pragma AbiHeader pubkey;
 pragma AbiHeader expire;
 
@@ -11,6 +11,7 @@ import "./../../../interfaces/event-configuration-contracts/IEthereumEverscaleEv
 import "./../../../interfaces/proxy/IEthereumEverscaleProxyExtended.tsol";
 import "./../../../interfaces/alien-token-merge/merge-pool/IMergePool_V2.tsol";
 import "./../../../interfaces/alien-token-merge/IMergeRouter.tsol";
+import "./../../../interfaces/proxy/IEvmEventCancelled.tsol";
 
 import "./../../base/evm/EthereumEverscaleBaseEvent.tsol";
 
@@ -25,11 +26,18 @@ contract MultiVaultEVMEverscaleEventAlien is
     uint128 constant POWER_BASE = 10;
 
     TvmCell public transitionalDataCell;
+    address public limitApprover;
+    bool public isLimitApproved;
+
+    modifier onlyLimitApprover() {
+        require(msg.sender == limitApprover && limitApprover.value != 0, ErrorCodes.SENDER_IS_NOT_LIMIT_APPROVER);
+        _;
+    }
 
     constructor(
         address _initializer,
         TvmCell _meta
-    ) EthereumEverscaleBaseEvent(_initializer, _meta) public {}
+    ) EthereumEverscaleBaseEvent(_initializer, _meta) {}
 
     function onReject() virtual override internal {
         transferAll(initializer);
@@ -39,9 +47,9 @@ contract MultiVaultEVMEverscaleEventAlien is
         TvmSlice body,
         TvmCell
     ) private inline view returns (TvmSlice) {
-        body.decode(uint64, uint32);
+        body.load(uint64, uint32);
         TvmSlice bodyCopy = body;
-        uint32 functionId = body.decode(uint32);
+        uint32 functionId = body.load(uint32);
 
         if (isExternalVoteCall(functionId)) {
             require(votes[msg.pubkey()] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
@@ -67,7 +75,7 @@ contract MultiVaultEVMEverscaleEventAlien is
         }
 
         IEthereumEverscaleEventConfiguration(eventInitData.configuration).getDetails{
-            value: 1 ever,
+            value: gasToValue(Gas.REQUEST_CONFIGURATION_DETAILS_GAS, address(this).wid),
             callback: MultiVaultEVMEverscaleEventAlien.receiveConfigurationDetails
         }();
     }
@@ -84,7 +92,7 @@ contract MultiVaultEVMEverscaleEventAlien is
         EventData eventData = getEventData();
 
         IProxyMultiVaultAlien_V8(_networkConfiguration.proxy).deriveEVMAlienTokenRoot{
-            value: 1 ever,
+            value: gasToValue(Gas.DERIVE_TOKEN_ROOT_GAS, address(this).wid),
             callback: MultiVaultEVMEverscaleEventAlien.receiveAlienTokenRoot
         }(
             eventData.base_chainId,
@@ -109,7 +117,7 @@ contract MultiVaultEVMEverscaleEventAlien is
         _set_token(token);
 
         TIP3TokenRoot(token).name{
-            value: 1 ever,
+            value: gasToValue(Gas.REQUEST_TOKEN_NAME_GAS, address(this).wid),
             bounce: true,
             callback: MultiVaultEVMEverscaleEventAlien.receiveTokenName
         }();
@@ -131,7 +139,7 @@ contract MultiVaultEVMEverscaleEventAlien is
         // Token exists, no need to deploy
         // Ask the router address
         IProxyMultiVaultAlien_V8(transitionalData.proxy).deriveMergeRouter{
-            value: 1 ever,
+            value: gasToValue(Gas.REQUEST_MERGE_ROUTER_GAS, address(this).wid),
             bounce: false,
             callback: MultiVaultEVMEverscaleEventAlien.receiveMergeRouter
         }(transitionalData.token);
@@ -153,7 +161,7 @@ contract MultiVaultEVMEverscaleEventAlien is
 
         // Request merge router pool
         IMergeRouter(router).getPool{
-            value: 1 ever,
+            value: gasToValue(Gas.REQUEST_POOL_GAS, address(this).wid),
             bounce: true,
             callback: MultiVaultEVMEverscaleEventAlien.receiveMergeRouterPool
         }();
@@ -179,7 +187,7 @@ contract MultiVaultEVMEverscaleEventAlien is
             _finishSetup(transitionalData.token, eventData.amount);
         } else {
             IMergePool_V2(pool).getCanon{
-                value: 1 ever,
+                value: gasToValue(Gas.REQUEST_CANON_GAS, address(this).wid),
                 bounce: false,
                 callback: MultiVaultEVMEverscaleEventAlien.receiveMergePoolCanon
             }();
@@ -236,6 +244,8 @@ contract MultiVaultEVMEverscaleEventAlien is
         TransitionalData transitionalData = getTransitionalData();
 
         TvmCell metaData = abi.encode(
+            address(this),
+            isLimitApproved,
             transitionalData.target_token,
             transitionalData.target_amount,
             eventData.recipient,
@@ -293,7 +303,7 @@ contract MultiVaultEVMEverscaleEventAlien is
     }
 
     onBounce(TvmSlice slice) external {
-        uint32 selector = slice.decode(uint32);
+        uint32 selector = slice.load(uint32);
 
         EventData eventData = getEventData();
         TransitionalData transitionalData = getTransitionalData();
@@ -305,7 +315,7 @@ contract MultiVaultEVMEverscaleEventAlien is
             // Failed to request token meta
             // Seems like corresponding token root not deployed so deploy it
             IProxyMultiVaultAlien_V8(transitionalData.proxy).deployEVMAlienToken{
-                value: 2 ever,
+                value: Gas.getDeployTokenRootValue(),
                 bounce: false
             }(
                 eventData.base_chainId,
@@ -324,7 +334,7 @@ contract MultiVaultEVMEverscaleEventAlien is
             // Failed to request router's pool
             // Seems like corresponding router not deployed so deploy it
             IProxyMultiVaultAlien_V8(transitionalData.proxy).deployMergeRouter{
-                value: 1 ever,
+                value: gasToValue(Gas.DEPLOY_MERGE_ROUTER_GAS, address(this).wid),
                 bounce: false
             }(transitionalData.token);
 
@@ -439,5 +449,82 @@ contract MultiVaultEVMEverscaleEventAlien is
             transitionalData.proxy,
             transitionalData.token
         );
+    }
+
+    function dailyLimitReached(address _approver) external override {
+        TransitionalData transitionalData = getTransitionalData();
+
+        require(msg.sender.value != 0 && msg.sender == transitionalData.proxy, ErrorCodes.SENDER_NOT_PROXY);
+
+        _setStatusLimitReached(_approver);
+
+        limitApprover = _approver;
+    }
+
+    function approveLimit() external onlyLimitApprover {
+        isLimitApproved = true;
+
+        setStatusConfirmed();
+        onConfirm();
+    }
+
+    function cancel(
+        uint160 _newRecipient,
+        address _remainingGasTo,
+        IEVMCallback.EVMCallback _callback,
+        address _expectedGasReceiver
+    ) external onlyLimitApprover {
+        _setStatusCancelled();
+
+        EventData eventData = getEventData();
+        TransitionalData transitionalData = getTransitionalData();
+
+        TvmCell withdrawPayload = abi.encode(
+            eventData.amount,
+            eventData.recipient,
+            _newRecipient,
+            transitionalData.token,
+            _remainingGasTo,
+            _callback
+        );
+
+        IEvmEventCancelled(eventInitData.configuration)
+            .onEVMEventCancelled{
+                value: msg.value
+            }(eventInitData, withdrawPayload);
+
+        _expectedGasReceiver.transfer({
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+            bounce: false
+        });
+    }
+
+    function rejectLimit(address _expectedGasReceiver) external onlyLimitApprover {
+        require(status() == Status.LimitReached, ErrorCodes.WRONG_STATUS);
+
+        setStatusRejected(3);
+
+        _expectedGasReceiver.transfer({
+            value: address(this).balance - msg.value,
+            bounce: false
+        });
+
+        msg.sender.transfer({
+            value: 0,
+            flag: MsgFlag.ALL_NOT_RESERVED + MsgFlag.IGNORE_ERRORS,
+            bounce: false
+        });
+    }
+
+    function retry() external {
+        EventData eventData = getEventData();
+        require(
+            msg.sender == eventData.recipient || msg.sender == initializer,
+            ErrorCodes.SENDER_NOT_RECIPIENT
+        );
+
+        setStatusConfirmed();
+        onConfirm();
     }
 }

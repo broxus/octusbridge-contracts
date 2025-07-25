@@ -6,7 +6,7 @@ import "./interfaces/IStakingPool.tsol";
 import "./interfaces/IUserData.tsol";
 import "./interfaces/IUpgradableByRequest.tsol";
 import "./interfaces/IElection.tsol";
-import "./interfaces/IRelayRound.tsol";
+import "./interfaces/IStakingRelayRound.tsol";
 
 import "./libraries/Gas.tsol";
 import "./../utils/ErrorCodes.tsol";
@@ -48,7 +48,7 @@ contract Election is IElection {
     uint256 relay_transfer_start_idx = 0;
 
     // Cant be deployed directly
-    constructor() public { revert(); }
+    constructor() { revert(); }
 
     // return sorted list of requests
     function getRequests(uint128 limit) public view responsible returns (
@@ -216,7 +216,7 @@ contract Election is IElection {
         tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 0);
 
         if (staked_tokens[relay_transfer_start_idx] == 0) {
-            IRelayRound(relay_round_addr).setEmptyRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }();
+            IStakingRelayRound(relay_round_addr).setEmptyRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }();
             return;
         }
 
@@ -229,7 +229,7 @@ contract Election is IElection {
         ) = _getRequestsFromIdx(relays_count, relay_transfer_start_idx);
         relay_transfer_start_idx = new_start_idx;
 
-        IRelayRound(relay_round_addr).setRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
+        IStakingRelayRound(relay_round_addr).setRelays{ value: 0, flag: MsgFlag.ALL_NOT_RESERVED }(
             _ton_keys_limit, _eth_addrs_limit, _staker_addrs_limit, _staked_tokens_limit
         );
     }
@@ -328,16 +328,16 @@ contract Election is IElection {
         tvm.rawReserve(Gas.ELECTION_INITIAL_BALANCE, 0);
 
         TvmSlice s = upgrade_data.toSlice();
-        (address root_, ,) = s.decode(address, uint8, address);
+        (address root_, ,) = s.load(address, uint8, address);
         root = root_;
 
         platform_code = s.loadRef();
 
         TvmSlice initialData = s.loadRefAsSlice();
-        round_num = initialData.decode(uint32);
+        round_num = initialData.load(uint32);
 
         TvmSlice params = s.loadRefAsSlice();
-        (current_version, ) = params.decode(uint32, uint32);
+        (current_version, ) = params.load(uint32, uint32);
 
         // create origin node after contract initialization
         requests_nodes.push(Node(0, 0));

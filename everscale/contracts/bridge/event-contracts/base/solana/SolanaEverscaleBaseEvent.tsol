@@ -1,5 +1,5 @@
 pragma ever-solidity >= 0.62.0;
-pragma AbiHeader time;
+
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
@@ -23,7 +23,7 @@ contract SolanaEverscaleBaseEvent is BaseEvent, ISolanaEverscaleEvent {
     constructor(
         address _initializer,
         TvmCell _meta
-    ) public {
+    ) {
         require(
             eventInitData.configuration == msg.sender,
             ErrorCodes.SENDER_NOT_EVENT_CONFIGURATION
@@ -51,14 +51,15 @@ contract SolanaEverscaleBaseEvent is BaseEvent, ISolanaEverscaleEvent {
     /// @dev Confirm event. Can be called only by relay which is in charge at this round.
     /// Can be called only when event configuration is in Pending status
     /// @param voteReceiver Should be always equal to the event contract address
-    function confirm(address voteReceiver) public eventPending {
+    function confirm(address voteReceiver) public externalMsg eventPending {
         _checkVoteReceiver(voteReceiver);
 
-        uint relay = msg.pubkey();
-
-        require(votes[relay] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
+        // This check was made in afterSignatureCheck
+        // require(votes[relay] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
 
         tvm.accept();
+
+        uint relay = msg.pubkey();
 
         votes[relay] = Vote.Confirm;
         confirms++;
@@ -76,14 +77,15 @@ contract SolanaEverscaleBaseEvent is BaseEvent, ISolanaEverscaleEvent {
     /// Can be called only when event configuration is in Pending status. If enough rejects collected
     /// changes status to Rejected, notifies tokens receiver and withdraw balance to initializer.
     /// @param voteReceiver Should be always equal to the event contract address
-    function reject(address voteReceiver) public eventPending {
+    function reject(address voteReceiver) public externalMsg eventPending {
         _checkVoteReceiver(voteReceiver);
 
-        uint relay = msg.pubkey();
-
-        require(votes[relay] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
+        // This check was made in afterSignatureCheck
+        // require(votes[relay] == Vote.Empty, ErrorCodes.KEY_VOTE_NOT_EMPTY);
 
         tvm.accept();
+
+        uint relay = msg.pubkey();
 
         votes[relay] = Vote.Reject;
         rejects++;

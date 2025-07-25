@@ -1,0 +1,56 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma ever-solidity >= 0.62.0;
+
+
+import "./ProxyMultiVaultAlien_V9_Deposit_Solana.tsol";
+
+import "./../../../../interfaces/event-contracts/IEthereumEverscaleEvent.tsol";
+import "./../../../../interfaces/proxy/IEthereumEverscaleProxyExtended.tsol";
+import "../../../../libraries/EventContractNonce.tsol";
+import "../../../../libraries/BridgeOpCodes.tsol";
+
+
+abstract contract ProxyMultiVaultAlien_V9_Deposit_EVM is
+    ProxyMultiVaultAlien_V9_Deposit_Solana,
+    IEthereumEverscaleProxyExtended
+{
+    /// @notice Handles alien token transfer from EVM. Token address is derived automatically and MUST
+    /// be deployed before. See note on `deployAlienToken`
+    /// @param remainingGasTo Gas back address
+    function onEventConfirmedExtended(
+        IEthereumEverscaleEvent.EthereumEverscaleEventInitData eventInitData,
+        TvmCell meta,
+        address remainingGasTo
+    ) external override reserveAtLeastTargetBalance {
+        require(
+            _isArrayContainsAddress(evmConfiguration.evmConfigurations, msg.sender),
+            ErrorCodes.NOT_ETHEREUM_CONFIG
+        );
+
+        (
+            address token,
+            uint128 amount,
+            address recipient,
+            TvmCell payload
+        ) = abi.decode(
+            meta,
+            (address, uint128, address, TvmCell)
+        );
+
+        uint32 nonce = EventContractNonce._calculateNonce(eventInitData);
+
+        optional(TvmCell) mintPayload;
+        if (!payload.toSlice().empty()) {
+            mintPayload.set(payload);
+        }
+
+        _mintTokens(
+            token,
+            amount,
+            recipient,
+            remainingGasTo,
+            abi.encode(BridgeOpCodes.BridgeDeposit, nonce, mintPayload),
+            null
+        );
+    }
+}

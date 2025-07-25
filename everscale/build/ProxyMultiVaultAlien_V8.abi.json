@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.2",
+	"version": "2.3",
 	"header": ["pubkey", "time"],
 	"functions": [
 		{
@@ -241,8 +241,36 @@
 		{
 			"name": "setEVMConfiguration",
 			"inputs": [
-				{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"evmConfigurations","type":"address[]"},{"name":"alienTokenRootCode","type":"cell"},{"name":"alienTokenWalletCode","type":"cell"},{"name":"alienTokenWalletPlatformCode","type":"cell"}],"name":"_config","type":"tuple"},
-				{"name":"remainingGasTo","type":"address"}
+				{"name":"_everscaleConfiguration","type":"address"},
+				{"name":"_evmConfigurations","type":"address[]"},
+				{"name":"_remainingGasTo","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setEVMAlienTokenRootCode",
+			"inputs": [
+				{"name":"_tokenRootCode","type":"cell"},
+				{"name":"_remainingGasTo","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setEVMAlienTokenWalletCode",
+			"inputs": [
+				{"name":"_tokenWalletCode","type":"cell"},
+				{"name":"_remainingGasTo","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setOnceEVMAlienTokenPlatformCode",
+			"inputs": [
+				{"name":"_tokenPlatformCode","type":"cell"},
+				{"name":"_remainingGasTo","type":"address"}
 			],
 			"outputs": [
 			]
@@ -250,8 +278,36 @@
 		{
 			"name": "setSolanaConfiguration",
 			"inputs": [
-				{"components":[{"name":"everscaleConfiguration","type":"address"},{"name":"solanaConfiguration","type":"address"},{"name":"alienTokenRootCode","type":"cell"},{"name":"alienTokenWalletCode","type":"cell"},{"name":"alienTokenWalletPlatformCode","type":"cell"}],"name":"_config","type":"tuple"},
-				{"name":"remainingGasTo","type":"address"}
+				{"name":"_everscaleConfiguration","type":"address"},
+				{"name":"_solanaConfiguration","type":"address"},
+				{"name":"_remainingGasTo","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setSolanaAlienTokenRootCode",
+			"inputs": [
+				{"name":"_tokenRootCode","type":"cell"},
+				{"name":"_remainingGasTo","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setSolanaAlienTokenWalletCode",
+			"inputs": [
+				{"name":"_tokenWalletCode","type":"cell"},
+				{"name":"_remainingGasTo","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setOnceSolanaAlienTokenPlatformCode",
+			"inputs": [
+				{"name":"_tokenPlatformCode","type":"cell"},
+				{"name":"_remainingGasTo","type":"address"}
 			],
 			"outputs": [
 			]
