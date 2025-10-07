@@ -31,6 +31,14 @@
 			]
 		},
 		{
+			"name": "receiveTokenWalletRoot",
+			"inputs": [
+				{"name":"tokenRoot_","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "getDecodedData",
 			"inputs": [
 				{"name":"answerId","type":"uint32"}

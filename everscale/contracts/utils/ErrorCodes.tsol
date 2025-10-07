@@ -57,6 +57,7 @@ library ErrorCodes {
     uint16 constant WRONG_BOUNTY = 2333;
     uint16 constant SENDER_NOT_TOKEN_WALLET = 2334;
     uint16 constant SENDER_IS_NOT_LIMIT_APPROVER = 2335;
+    uint16 constant TOKEN_WALLET_ALREADY_SET = 2336;
 
     // Connector
     uint16 constant DEPLOYER_NOT_BRIDGE = 2420;
