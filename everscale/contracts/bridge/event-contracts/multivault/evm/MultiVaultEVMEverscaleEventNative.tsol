@@ -132,10 +132,28 @@ contract MultiVaultEVMEverscaleEventNative is
         address tokenWallet_
     ) external override {
         require(msg.sender == token, ErrorCodes.SENDER_NOT_ROOT);
+        require(tokenWallet.value == 0, ErrorCodes.TOKEN_WALLET_ALREADY_SET);
 
         tokenWallet = tokenWallet_;
 
-        loadRelays();
+        ITokenWallet(tokenWallet).root{
+            value: gasToValue(Gas.GET_TOKEN_DATA_GAS, address(this).wid),
+            callback: MultiVaultEVMEverscaleEventNative.receiveTokenWalletRoot
+        }();
+    }
+
+    function receiveTokenWalletRoot(
+        address tokenRoot_
+    ) external override {
+        require(msg.sender == tokenWallet, ErrorCodes.BAD_SENDER);
+
+        if (tokenRoot_ == token) {
+            loadRelays();
+        } else {
+            setStatusRejected(1);
+
+            onReject();
+        }
     }
 
     function getDecodedData() external override responsible returns(
