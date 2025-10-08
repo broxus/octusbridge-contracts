@@ -11,9 +11,9 @@ library Gas {
     uint128 constant REQUEST_TOKEN_DECIMALS_GAS = 300_000;
 
     // event contracts
-    uint128 constant GET_RELAY_ROUND_GAS = 1_000_000;
-    uint128 constant RELAY_KEYS_GAS = 1_000_000;
-    uint128 constant GET_TOKEN_ROOT_META_GAS = 1_000_000;
+    uint128 constant GET_RELAY_ROUND_GAS = 100_000;
+    uint128 constant RELAY_KEYS_GAS = 150_000;
+    uint128 constant GET_TOKEN_ROOT_META_GAS = 100_000;
     uint128 constant DERIVE_TOKEN_ROOT_GAS = 100_000;
     uint128 constant GET_TOKEN_DATA_GAS = 100_000;
     uint128 constant REQUEST_CONFIGURATION_DETAILS_GAS = 200_000;
