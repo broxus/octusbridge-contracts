@@ -413,7 +413,7 @@ contract StakingRelayRound is IStakingRelayRound {
     }
 
     function getUserDataAddress(address user) externalMsg internalMsg public view responsible returns (address) {
-        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } address(tvm.hash(_buildInitData(
+        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } address.makeAddrStd(address(this).wid, tvm.hash(_buildInitData(
             PlatformTypes.UserData,
             _buildUserDataParams(user)
         )));

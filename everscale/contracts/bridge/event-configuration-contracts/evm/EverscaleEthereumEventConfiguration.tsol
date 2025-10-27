@@ -205,7 +205,8 @@ contract EverscaleEthereumEventConfiguration is
                 pubkey: 0,
                 varInit: {
                     eventInitData: _eventInitData
-                }
+                },
+                wid: address(this).wid
             }(msg.sender, meta);
 
             return;
@@ -219,7 +220,8 @@ contract EverscaleEthereumEventConfiguration is
                 pubkey: 0,
                 varInit: {
                     eventInitData: _eventInitData
-                }
+                },
+                wid: address(this).wid
             }(msg.sender, meta);
 
             return;
@@ -233,7 +235,8 @@ contract EverscaleEthereumEventConfiguration is
                 pubkey: 0,
                 varInit: {
                     eventInitData: _eventInitData
-                }
+                },
+                wid: address(this).wid
             }(msg.sender, meta);
 
             return;
@@ -247,7 +250,8 @@ contract EverscaleEthereumEventConfiguration is
                 pubkey: 0,
                 varInit: {
                     eventInitData: _eventInitData
-                }
+                },
+                wid: address(this).wid
             }(msg.sender, meta);
 
             return;
@@ -261,7 +265,8 @@ contract EverscaleEthereumEventConfiguration is
                 pubkey: 0,
                 varInit: {
                     eventInitData: _eventInitData
-                }
+                },
+                wid: address(this).wid
             }(msg.sender, meta);
         }
     }
@@ -319,6 +324,6 @@ contract EverscaleEthereumEventConfiguration is
             });
         }
 
-        _event = address(tvm.hash(stateInit));
+        _event = address.makeAddrStd(address(this).wid, tvm.hash(stateInit));
     }
 }

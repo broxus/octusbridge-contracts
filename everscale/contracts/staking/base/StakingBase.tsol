@@ -584,12 +584,13 @@ abstract contract StakingPoolBase is IAcceptTokensTransferCallback, IStakingPool
 
         return new Platform{
             stateInit: _buildInitData(PlatformTypes.UserData, _buildUserDataParams(user_data_owner)),
-            value: Gas.getDeployUserDataMinValue()
+            value: Gas.getDeployUserDataMinValue(),
+            wid: address(this).wid
         }(code_data.user_data_code, constructor_params.toCell(), user_data_owner);
     }
 
     function getUserDataAddress(address user) externalMsg internalMsg public view responsible returns (address) {
-        return { value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false } address(tvm.hash(_buildInitData(
+        return { value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false } address.makeAddrStd(address(this).wid, tvm.hash(_buildInitData(
             PlatformTypes.UserData,
             _buildUserDataParams(user)
         )));

@@ -11,7 +11,7 @@ abstract contract ProxyMultiVaultAlien_V9_MergeRouter is ProxyMultiVaultAlien_V9
     ) externalMsg internalMsg external override responsible returns (address router) {
         TvmCell stateInit = _buildMergeRouterInitState(token);
 
-        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address.makeAddrStd(address(this).wid, tvm.hash(stateInit));
     }
 
     function deployMergeRouter(
@@ -23,7 +23,8 @@ abstract contract ProxyMultiVaultAlien_V9_MergeRouter is ProxyMultiVaultAlien_V9
             stateInit: stateInit,
             value: 0,
             bounce: false,
-            flag: MsgFlag.ALL_NOT_RESERVED
+            flag: MsgFlag.ALL_NOT_RESERVED,
+            wid: address(this).wid
         }(owner(), manager);
     }
 

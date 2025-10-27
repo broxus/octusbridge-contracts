@@ -385,7 +385,7 @@ contract Election is IElection {
     }
 
     function getUserDataAddress(address user) externalMsg internalMsg public view responsible returns (address) {
-        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }address(tvm.hash(_buildPlatformInitData(
+        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS }address.makeAddrStd(address(this).wid, tvm.hash(_buildPlatformInitData(
             _root,
             PlatformTypes.UserData,
             _buildUserDataParams(user)

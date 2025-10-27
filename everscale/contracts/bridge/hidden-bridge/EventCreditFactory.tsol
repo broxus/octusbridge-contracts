@@ -44,7 +44,8 @@ contract EventCreditFactory is InternalOwner, RandomNonce {
                 varInit: {
                     _randomNonce: i,
                     factory: address(this)
-                }
+                },
+                wid: address(this).wid
             }(key_);
 
             _eventDeployers.push(deployer);
@@ -61,7 +62,8 @@ contract EventCreditFactory is InternalOwner, RandomNonce {
                 varInit: {
                     _randomNonce: i,
                     factory: address(this)
-                }
+                },
+                wid: address(this).wid
             }(key_, _eventDeployers);
 
             _eventClosers.push(closer);

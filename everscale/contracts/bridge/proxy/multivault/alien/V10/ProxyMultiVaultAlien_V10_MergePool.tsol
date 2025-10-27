@@ -19,7 +19,7 @@ abstract contract ProxyMultiVaultAlien_V10_MergePool is ProxyMultiVaultAlien_V10
     ) externalMsg internalMsg public override responsible returns (address pool) {
         TvmCell stateInit = _buildMergePoolPlatformInitState(nonce);
 
-        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address.makeAddrStd(address(this).wid, tvm.hash(stateInit));
     }
 
     /// @notice Deploy merge pool

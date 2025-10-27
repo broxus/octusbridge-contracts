@@ -122,7 +122,7 @@ abstract contract ProxyMultiVaultAlien_V10_Fees is ProxyMultiVaultAlien_V10_Toke
         returns(address)
     {
         TvmCell state = _buildTokenFeeStateInit(_token);
-        return address(tvm.hash(state));
+        return address.makeAddrStd(address(this).wid, tvm.hash(state));
     }
 
     function _buildTokenFeeStateInit(address _token)

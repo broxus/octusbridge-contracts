@@ -218,7 +218,7 @@ contract Mediator_V2 is
             code: alienTokenWalletPlatformCode_
         });
 
-        return address(tvm.hash(stateInit));
+        return address.makeAddrStd(address(this).wid, tvm.hash(stateInit));
     }
 
     function setCreditBackend(

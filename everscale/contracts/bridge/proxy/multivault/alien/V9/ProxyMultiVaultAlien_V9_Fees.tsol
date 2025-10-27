@@ -97,7 +97,8 @@ abstract contract ProxyMultiVaultAlien_V9_Fees is ProxyMultiVaultAlien_V9_Token 
         new TokenFeePlatform{
             stateInit: _buildTokenFeeStateInit(_token),
             value: 0,
-            flag: MsgFlag.REMAINING_GAS
+            flag: MsgFlag.REMAINING_GAS,
+            wid: address(this).wid
         }(
             tvmConfiguration.tokenFeeCode,
             emptyParams,
@@ -122,7 +123,7 @@ abstract contract ProxyMultiVaultAlien_V9_Fees is ProxyMultiVaultAlien_V9_Token 
         returns(address)
     {
         TvmCell state = _buildTokenFeeStateInit(_token);
-        return address(tvm.hash(state));
+        return address.makeAddrStd(address(this).wid, tvm.hash(state));
     }
 
     function _buildTokenFeeStateInit(address _token)

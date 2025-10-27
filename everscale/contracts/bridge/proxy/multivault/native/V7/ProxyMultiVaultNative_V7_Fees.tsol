@@ -123,7 +123,7 @@ abstract contract ProxyMultiVaultNative_V7_Fees is ProxyMultiVaultNative_V7_Base
         returns(address)
     {
         TvmCell state = _buildTokenFeeStateInit(_token);
-        return address(tvm.hash(state));
+        return address.makeAddrStd(address(this).wid, tvm.hash(state));
     }
 
     function _buildTokenFeeStateInit(address _token)

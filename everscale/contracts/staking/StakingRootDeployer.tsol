@@ -38,7 +38,8 @@ contract StakingRootDeployer {
             varInit: {
                 deploy_nonce: _deploy_nonce,
                 deployer: address(this)
-            }
+            },
+            wid: address(this).wid
         }(_admin, _dao_root, _rewarder, _rescuer, _bridge_event_config_eth_ton, _bridge_event_config_ton_eth, _bridge_event_config_ton_sol, _tokenRoot);
     }
 }

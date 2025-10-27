@@ -41,7 +41,8 @@ contract SolanaEverscaleEventConfigurationFactory is TransferUtils, RandomNonce,
                 basicConfiguration: basicConfiguration,
                 networkConfiguration: networkConfiguration,
                 eventAction: eventAction
-            }
+            },
+            wid: address(this).wid
         }(_owner, _meta);
     }
 
@@ -61,6 +62,6 @@ contract SolanaEverscaleEventConfigurationFactory is TransferUtils, RandomNonce,
             code: configurationCode_
         });
 
-        return address(tvm.hash(stateInit));
+        return address.makeAddrStd(address(this).wid, tvm.hash(stateInit));
     }
 }

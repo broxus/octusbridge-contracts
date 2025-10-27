@@ -91,7 +91,8 @@ abstract contract ProxyMultiVaultAlien_V6_Token is ProxyMultivaultAlien_V6_Base 
         new TokenRootAlienEVM {
             stateInit: stateInit,
             value: 0,
-            flag: MsgFlag.ALL_NOT_RESERVED
+            flag: MsgFlag.ALL_NOT_RESERVED,
+            wid: address(this).wid
         }(
             address(this), // Initial supply recipient
             0, // Initial supply
@@ -159,7 +160,7 @@ abstract contract ProxyMultiVaultAlien_V6_Token is ProxyMultivaultAlien_V6_Base 
             decimals
         );
 
-        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address.makeAddrStd(address(this).wid, tvm.hash(stateInit));
     }
 
     /// @notice Derives root address for alien token, without deploying it
@@ -180,7 +181,7 @@ abstract contract ProxyMultiVaultAlien_V6_Token is ProxyMultivaultAlien_V6_Base 
             decimals
         );
 
-        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address.makeAddrStd(address(this).wid, tvm.hash(stateInit));
     }
 
     function _buildEVMAlienTokenRootInitState(

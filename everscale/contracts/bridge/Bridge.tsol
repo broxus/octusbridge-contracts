@@ -132,7 +132,7 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
             code: connectorCode_
         });
 
-        return address(tvm.hash(stateInit));
+        return address.makeAddrStd(address(this).wid, tvm.hash(stateInit));
     }
 
     /// @dev Derive connector address by it's id
@@ -173,7 +173,8 @@ contract Bridge is IBridge, InternalOwner, RandomNonce, CheckPubKey, TransferUti
             varInit: {
                 id: connectorCounter_,
                 bridge: address(this)
-            }
+            },
+            wid: address(this).wid
         }(_eventConfiguration, manager_);
 
         connectorCounter_++;

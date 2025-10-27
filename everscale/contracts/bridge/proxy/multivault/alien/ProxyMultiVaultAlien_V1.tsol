@@ -132,7 +132,7 @@ contract ProxyMultiVaultAlien_V1 is
         );
 
         // TODO: check all responsible returns
-        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address.makeAddrStd(address(this).wid, tvm.hash(stateInit));
     }
 
     /// @notice Deploys Everscale token for any EVM token

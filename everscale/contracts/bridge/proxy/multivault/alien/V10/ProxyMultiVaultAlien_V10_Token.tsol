@@ -160,7 +160,7 @@ abstract contract ProxyMultiVaultAlien_V10_Token is ProxyMultivaultAlien_V10_Bas
             decimals
         );
 
-        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address.makeAddrStd(address(this).wid, tvm.hash(stateInit));
     }
 
     /// @notice Derives root address for alien token, without deploying it
@@ -181,7 +181,7 @@ abstract contract ProxyMultiVaultAlien_V10_Token is ProxyMultivaultAlien_V10_Bas
             decimals
         );
 
-        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address.makeAddrStd(address(this).wid, tvm.hash(stateInit));
     }
 
     function deriveTVMAlienTokenRoot(
@@ -205,7 +205,7 @@ abstract contract ProxyMultiVaultAlien_V10_Token is ProxyMultivaultAlien_V10_Bas
             value: 0,
             bounce: false,
             flag: MsgFlag.REMAINING_GAS
-        } address(tvm.hash(stateInit));
+        } address.makeAddrStd(address(this).wid, tvm.hash(stateInit));
     }
 
     function _buildEVMAlienTokenRootInitState(

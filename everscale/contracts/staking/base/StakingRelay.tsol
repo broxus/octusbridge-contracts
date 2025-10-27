@@ -363,7 +363,8 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
 
         return new Platform{
             stateInit: _buildInitData(PlatformTypes.Election, _buildElectionParams(round_num)),
-            value: Gas.getDeployElectionMinValue()
+            value: Gas.getDeployElectionMinValue(),
+            wid: address(this).wid
         }(code_data.election_code, constructor_params.toCell(), address(this));
     }
 
@@ -393,7 +394,8 @@ abstract contract StakingPoolRelay is StakingPoolUpgradable, IEthereumEverscaleP
         return new Platform{
             stateInit: _buildInitData(PlatformTypes.RelayRound, _buildRelayRoundParams(round_num)),
             value: Gas.getDeployRelayRoundMinValue(),
-            flag: msg_flag
+            flag: msg_flag,
+            wid: address(this).wid
         }(code_data.relay_round_code, constructor_params.toCell(), address(this));
     }
 

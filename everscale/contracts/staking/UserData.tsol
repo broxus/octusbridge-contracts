@@ -528,7 +528,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     }
 
     function getProposalAddress(uint32 proposal_id) private view returns (address) {
-        return address(tvm.hash(_buildPlatformInitData(
+        return address.makeAddrStd(address(this).wid, tvm.hash(_buildPlatformInitData(
             dao_root,
             uint8(DaoPlatformTypes.PlatformType.Proposal),
             _buildProposalInitialData(proposal_id)))
@@ -536,7 +536,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     }
 
     function getElectionAddress(uint32 round_num) private view returns (address) {
-        return address(tvm.hash(_buildPlatformInitData(
+        return address.makeAddrStd(address(this).wid, tvm.hash(_buildPlatformInitData(
             root,
             PlatformTypes.Election,
             _buildElectionParams(round_num)
@@ -544,7 +544,7 @@ contract UserData is IUserData, IUpgradableByRequest {
     }
 
     function getRelayRoundAddress(uint32 round_num) private view returns (address) {
-        return address(tvm.hash(_buildPlatformInitData(
+        return address.makeAddrStd(address(this).wid, tvm.hash(_buildPlatformInitData(
             root,
             PlatformTypes.RelayRound,
             _buildRelayRoundParams(round_num)

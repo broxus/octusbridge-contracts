@@ -48,7 +48,8 @@ contract TvmTvmEventConfigurationFactory is TransferUtils, RandomNonce, CheckPub
                 basicConfiguration: basicConfiguration,
                 networkConfiguration: networkConfiguration,
                 eventAction: eventAction
-            }
+            },
+            wid: address(this).wid
         }(_owner, _meta, _flags);
     }
 
@@ -72,6 +73,6 @@ contract TvmTvmEventConfigurationFactory is TransferUtils, RandomNonce, CheckPub
             code: configurationCode_
         });
 
-        return address(tvm.hash(stateInit));
+        return address.makeAddrStd(address(this).wid, tvm.hash(stateInit));
     }
 }

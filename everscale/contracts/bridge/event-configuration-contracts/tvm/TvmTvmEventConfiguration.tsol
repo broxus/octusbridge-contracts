@@ -365,7 +365,8 @@ contract TvmTvmEventConfiguration is
                 pubkey: 0,
                 varInit: {
                     eventInitData: _eventInitData
-                }
+                },
+                wid: address(this).wid
             }(msg.sender, meta, transactionChecker, _eventBody, basicConfiguration.eventInitialBalance);
         } else if (eventAction == EventAction.MultivaultNative) {
             newEvent = new MultiVaultTvmTvmEventNative{
@@ -375,7 +376,8 @@ contract TvmTvmEventConfiguration is
                 pubkey: 0,
                 varInit: {
                     eventInitData: _eventInitData
-                }
+                },
+                wid: address(this).wid
             }(msg.sender, meta, transactionChecker, _eventBody, basicConfiguration.eventInitialBalance);
         }
 
@@ -408,6 +410,6 @@ contract TvmTvmEventConfiguration is
             });
         }
 
-        _event = address(tvm.hash(stateInit));
+        _event = address.makeAddrStd(address(this).wid, tvm.hash(stateInit));
     }
 }

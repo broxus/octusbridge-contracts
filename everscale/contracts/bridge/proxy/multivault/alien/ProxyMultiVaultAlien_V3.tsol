@@ -221,7 +221,7 @@ contract ProxyMultiVaultAlien_V3 is
         );
 
         // TODO: check all responsible returns
-        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address.makeAddrStd(address(this).wid, tvm.hash(stateInit));
     }
 
     /// @notice Deploys Everscale token for any EVM token
@@ -267,7 +267,7 @@ contract ProxyMultiVaultAlien_V3 is
     ) externalMsg internalMsg external override responsible returns (address router) {
         TvmCell stateInit = _buildMergeRouterInitState(token);
 
-        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address.makeAddrStd(address(this).wid, tvm.hash(stateInit));
     }
 
     function deployMergeRouter(
@@ -288,7 +288,7 @@ contract ProxyMultiVaultAlien_V3 is
     ) externalMsg internalMsg public override responsible returns (address pool) {
         TvmCell stateInit = _buildMergePoolPlatformInitState(nonce);
 
-        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address(tvm.hash(stateInit));
+        return{value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS} address.makeAddrStd(address(this).wid, tvm.hash(stateInit));
     }
 
     /// @notice Upgrade merge pool code

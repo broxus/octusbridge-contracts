@@ -228,6 +228,6 @@ abstract contract ProxyMultiVaultNative_V7_Deposit is
             code: tvmConfiguration.eventAddressKeeperCode
         });
 
-        return address(tvm.hash(stateInit));
+        return address.makeAddrStd(address(this).wid, tvm.hash(stateInit));
     }
 }

@@ -206,7 +206,7 @@ contract Proposal is IProposal, IUpgradableByRequest, PlatformBase, DaoPlatformT
     }
 
     function expectedAccountAddress(address accountOwner) private view returns (address) {
-        return address(tvm.hash(_buildStakingInitData(StakingPlatformTypes.UserData, _buildAccountInitialData(accountOwner))));
+        return address.makeAddrStd(address(this).wid, tvm.hash(_buildStakingInitData(StakingPlatformTypes.UserData, _buildAccountInitialData(accountOwner))));
     }
 
     function _buildAccountInitialData(address accountOwner) private inline pure returns (TvmCell) {

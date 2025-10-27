@@ -117,11 +117,11 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
     }
 
     function expectedProposalAddress(uint32 proposalId) externalMsg internalMsg override public responsible view returns (address) {
-        return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} address(tvm.hash(buildProposalStateInit(proposalId)));
+        return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} address.makeAddrStd(address(this).wid, tvm.hash(buildProposalStateInit(proposalId)));
     }
 
     function expectedStakingAccountAddress(address accountOwner) externalMsg internalMsg override public responsible view returns (address) {
-        return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} address(tvm.hash(buildStakingAccountStateInit(accountOwner)));
+        return{value: 0, flag: MsgFlag.REMAINING_GAS, bounce: false} address.makeAddrStd(address(this).wid, tvm.hash(buildStakingAccountStateInit(accountOwner)));
     }
 
 
@@ -187,7 +187,8 @@ contract DaoRoot is DaoCellEncoder, IDaoRoot, IUpgradable, Delegate, CheckPubKey
         new Platform{
             stateInit: buildProposalStateInit(proposalCount),
             value: 0,
-            flag: MsgFlag.ALL_NOT_RESERVED
+            flag: MsgFlag.ALL_NOT_RESERVED,
+            wid: address(this).wid
         }(proposalCode, params, accountOwner);
     }
 

@@ -115,14 +115,14 @@ abstract contract StakingPoolUpgradable is StakingPoolBase {
     }
 
     function getElectionAddress(uint32 round_num) externalMsg internalMsg public view responsible returns (address) {
-        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } address(tvm.hash(_buildInitData(
+        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } address.makeAddrStd(address(this).wid, tvm.hash(_buildInitData(
             PlatformTypes.Election,
             _buildElectionParams(round_num)
         )));
     }
 
     function getRelayRoundAddress(uint32 round_num) externalMsg internalMsg public view responsible returns (address) {
-        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } address(tvm.hash(_buildInitData(
+        return { value: 0, bounce: false, flag: MsgFlag.REMAINING_GAS } address.makeAddrStd(address(this).wid, tvm.hash(_buildInitData(
             PlatformTypes.RelayRound,
             _buildRelayRoundParams(round_num)
         )));
